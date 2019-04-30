@@ -2,80 +2,61 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9318310323
-	for <lists+linux-raid@lfdr.de>; Wed,  1 May 2019 01:11:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A21B410360
+	for <lists+linux-raid@lfdr.de>; Wed,  1 May 2019 01:39:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbfD3XLW (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 30 Apr 2019 19:11:22 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43583 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfD3XLW (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 30 Apr 2019 19:11:22 -0400
-Received: by mail-pl1-f196.google.com with SMTP id n8so7423010plp.10;
-        Tue, 30 Apr 2019 16:11:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:in-reply-to
-         :references:date:mime-version:content-transfer-encoding;
-        bh=FXARXwM4QgylrliYg9gnUX5NvhFipcGymsRDeHVQDJI=;
-        b=EEszlnFYLyXHCGK5hVK0TR7ZzvNEwOdDnqYjozZAoFe0xvR+BEdJQ+532/3wiY6FY6
-         DeRVqssAglwf/rRWBeEYZIsKlpmkd6bMRhRwch9y+Rafnu3vxla7k21A0PokIBopxIBP
-         uRTcWVfcs2jIEZIIyQOFCTMbl4KpSOxP6NQcG1oLIgO/tyOyywokqoYOND/mwl4a+unc
-         VX3yoLh2Wn+miEdMT5ij82k7TM0AUIIGoguSXyDkG4+6hrzw2LXBo+x4dB4S6C50Jjrh
-         wcel9QF6oYT776DK/Uqm+UQ9o6ZXKFqlU0wRP/GO4oC1ytO/25tIkjSJ8mHKwbg4Y/Fn
-         LQ5w==
-X-Gm-Message-State: APjAAAWT+ChIYm4EN5V5lxORfhYwBGM6etgb93iylUqXL1Dw9zUmovzi
-        MrnQSfxKEoNzpjA+45v7HzOCNbBu52Q=
-X-Google-Smtp-Source: APXvYqys1BucDtRUXPE4Fmk0HX7m44pS+2KC6COLjJjMw17jqNuDtWeHvo+lbF0SCeqblFlEPlmj1g==
-X-Received: by 2002:a17:902:b715:: with SMTP id d21mr73635351pls.103.1556665881547;
-        Tue, 30 Apr 2019 16:11:21 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2cd:203:5cdc:422c:7b28:ebb5? ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
-        by smtp.gmail.com with ESMTPSA id f63sm62903342pfc.180.2019.04.30.16.11.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Apr 2019 16:11:20 -0700 (PDT)
-Message-ID: <1556664925.161891.183.camel@acm.org>
-Subject: Re: [PATCH 1/2] block: Fix a NULL pointer dereference in 
- generic_make_request()
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
-        linux-block@vger.kernel.org, linux-raid@vger.kernel.org
-Cc:     dm-devel@redhat.com, axboe@kernel.dk, gavin.guo@canonical.com,
-        jay.vosburgh@canonical.com, kernel@gpiccoli.net,
-        stable@vger.kernel.org
-In-Reply-To: <20190430223722.20845-1-gpiccoli@canonical.com>
-References: <20190430223722.20845-1-gpiccoli@canonical.com>
-Content-Type: text/plain; charset="UTF-7"
-Date:   Tue, 30 Apr 2019 15:55:25 -0700
-Mime-Version: 1.0
-X-Mailer: Evolution 3.26.2-1 
+        id S1727001AbfD3XjU (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 30 Apr 2019 19:39:20 -0400
+Received: from smtp.hosts.co.uk ([85.233.160.19]:44026 "EHLO smtp.hosts.co.uk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726105AbfD3XjU (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 30 Apr 2019 19:39:20 -0400
+Received: from [81.156.88.27] (helo=[192.168.1.82])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1hLcLG-00063p-3R; Wed, 01 May 2019 00:39:18 +0100
+Subject: Re: RAID5 mdadm --grow wrote nothing (Reshape Status : 0% complete)
+ and cannot assemble anymore
+To:     Julien ROBIN <julien.robin28@free.fr>, linux-raid@vger.kernel.org
+References: <a87383aa-3c49-0f62-6a93-9b9cb2fc60dd@free.fr>
+ <96216021-6834-66ae-135d-ed654d64e5c0@free.fr>
+ <cf3a34eb-2151-0903-116b-8c6fe1a63f52@free.fr>
+From:   Wols Lists <antlists@youngman.org.uk>
+Message-ID: <5CC8DCA5.8000903@youngman.org.uk>
+Date:   Wed, 1 May 2019 00:39:17 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.7.0
+MIME-Version: 1.0
+In-Reply-To: <cf3a34eb-2151-0903-116b-8c6fe1a63f52@free.fr>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Tue, 2019-04-30 at 19:37 -0300, Guilherme G. Piccoli wrote:
-+AD4 Commit 37f9579f4c31 (+ACI-blk-mq: Avoid that submitting a bio concurrently
-+AD4 with device removal triggers a crash+ACI) introduced a NULL pointer
-+AD4 dereference in generic+AF8-make+AF8-request(). The patch sets q to NULL and
-+AD4 enter+AF8-succeeded to false+ADs right after, there's an 'if (enter+AF8-succeeded)'
-+AD4 which is not taken, and then the 'else' will dereference q in
-+AD4 blk+AF8-queue+AF8-dying(q).
-+AD4 
-+AD4 This patch just moves the 'q +AD0 NULL' to a point in which it won't trigger
-+AD4 the oops, although the semantics of this NULLification remains untouched.
-+AD4 
-+AD4 A simple test case/reproducer is as follows:
-+AD4 a) Build kernel v5.1-rc7 with CONFIG+AF8-BLK+AF8-CGROUP+AD0-n.
-+AD4 
-+AD4 b) Create a raid0 md array with 2 NVMe devices as members, and mount it
-+AD4 with an ext4 filesystem.
-+AD4 
-+AD4 c) Run the following oneliner (supposing the raid0 is mounted in /mnt):
-+AD4 (dd of+AD0-/mnt/tmp if+AD0-/dev/zero bs+AD0-1M count+AD0-999 +ACY)+ADs sleep 0.3+ADs
-+AD4 echo 1 +AD4 /sys/block/nvme0n1/device/device/remove
-+AD4 (whereas nvme0n1 is the 2nd array member)
+On 30/04/19 09:25, Julien ROBIN wrote:
+> I'm about to play the following command :
+> 
+> mdadm --create /dev/md0 --level=5 --raid-devices=3 /dev/sdd1 /dev/sde1
+> /dev/sdb1 --assume-clean
+> 
+> Is it fine ?
 
-Reviewed-by: Bart Van Assche +ADw-bvanassche+AEA-acm.org+AD4
+You clearly haven't read the raid wiki
+https://raid.wiki.kernel.org/index.php/Linux_Raid
 
+It states NEVER EVER use mdadm --create on an existing array unless you
+(or the person helping you) really knows what they are doing.
 
+Another thing it says is always update to the latest mdadm. I don't
+remember you telling us what version you're using, and the problem you
+describe sounds very much like something I suspect has been fixed in the
+latest versions.
+
+Not that it matters too much now, you've got your array back, but I
+would make sure you have the latest mdadm, and read the wiki so you'll
+know a bit more for next time.
+
+Cheers,
+Wol
