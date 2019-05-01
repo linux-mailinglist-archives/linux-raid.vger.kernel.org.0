@@ -2,139 +2,84 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A0FFA10A1A
-	for <lists+linux-raid@lfdr.de>; Wed,  1 May 2019 17:34:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9415E10AD0
+	for <lists+linux-raid@lfdr.de>; Wed,  1 May 2019 18:13:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbfEAPeK (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 1 May 2019 11:34:10 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45255 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbfEAPeK (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 1 May 2019 11:34:10 -0400
-Received: by mail-qt1-f194.google.com with SMTP id b3so20315222qtc.12;
-        Wed, 01 May 2019 08:34:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=N7BVof8zcWOlmgfoNNTzY2OrKwZHtJkNJJ/tVCOczZQ=;
-        b=LJOCQpTuAOMonbbFd+HFYKhAdfAuYbz/YN7leE+vqtSDSU77hZTmtUm3kYo7OdSMgM
-         bH+Uv1E5hNu61ylGEuBOy/k+G8bWfbgx1x4bt1RyzeeGPtU4wtJFqhNrbXKVLmh94P5W
-         H3JUZA9DgRHA5jzjjyiyGIQ0AqNMI6bzImj/vOm9YVV4oR/FGuBfYGCrY5ue21OVzIdv
-         oBsJuDbw1wtIi+98ifSfhjY4bQJVSklHmKuSmnCSGb3iwN/kbnqBhhGyP68b00fF+kuh
-         9J7hQkjNfqRKZOp//X4aLOdG0KSktlZqMG5xgHHuyoM6+AgFw6h7NDcSqZqnr21zte0i
-         lb6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N7BVof8zcWOlmgfoNNTzY2OrKwZHtJkNJJ/tVCOczZQ=;
-        b=h/hTBNedrkrOUCYqYHNM3Hz5ikRud9Y+DDk9KA3nMGtuk0I72PxcfSox2YUZa/5B6a
-         TIAxMHHCc27k+1JWAKABlAlEVBVc1qNN9CNHwvtdO4Pd520Dss19xU5PcugQWLqwEY53
-         zWyIeyvFthmVU9JSOACAwQ0wd0LkykfHn53VJtAeZuS/mDnYIWszJNhcrMturReP1Z54
-         Ofh/l3hhyvVBEqblpPl5XC/HMUtfu1PA044wJVUE2JGkjPQCrtVg3dH5IvVJjUrql8cn
-         mGpoSlkYbz/qQFyLr2V/3K7b+uPFu+n1wVtXPwQUzq+jiDJ/rc23QoXyZBk1mcTIoyGE
-         Q/dw==
-X-Gm-Message-State: APjAAAVvSGkRn8x3AoslH4uKx+46P4aO/6Ul0habDp9qpxwuBQCZcrni
-        C8aurwo4OEVDnI1mapL2N4kLUw96fo04gJGHxYQAd6f/
-X-Google-Smtp-Source: APXvYqzROLS7CvGrZASPPcvG/dxihfU9bAmIpDLNRjhMKwZG33h79JY5/Yot97nB/NsbR3Hm3m6NGf/lJdTltx6q0ic=
-X-Received: by 2002:ac8:25b8:: with SMTP id e53mr24425025qte.194.1556724849335;
- Wed, 01 May 2019 08:34:09 -0700 (PDT)
+        id S1726522AbfEAQNd (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 1 May 2019 12:13:33 -0400
+Received: from smtp1-g21.free.fr ([212.27.42.1]:34974 "EHLO smtp1-g21.free.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726224AbfEAQNd (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 1 May 2019 12:13:33 -0400
+Received: from [192.168.28.40] (unknown [86.74.176.27])
+        (Authenticated sender: julien.robin28)
+        by smtp1-g21.free.fr (Postfix) with ESMTPSA id 68A88B005C3
+        for <linux-raid@vger.kernel.org>; Wed,  1 May 2019 18:13:30 +0200 (CEST)
+Subject: Re: RAID5 mdadm --grow wrote nothing (Reshape Status : 0% complete)
+ and cannot assemble anymore
+To:     linux-raid@vger.kernel.org
+References: <a87383aa-3c49-0f62-6a93-9b9cb2fc60dd@free.fr>
+ <96216021-6834-66ae-135d-ed654d64e5c0@free.fr>
+ <cf3a34eb-2151-0903-116b-8c6fe1a63f52@free.fr>
+ <20190430092347.GA4799@metamorpher.de>
+ <deffabb8-51e8-0120-8c63-ade9e5dfdf9b@free.fr>
+ <20190430135152.GA20515@metamorpher.de>
+ <8109d116-dd63-15be-2360-7763b9376393@free.fr>
+ <5CC95C0E.7000702@youngman.org.uk>
+From:   Julien ROBIN <julien.robin28@free.fr>
+Message-ID: <c32c4ffa-cfbc-7c74-c035-6f23b91c923f@free.fr>
+Date:   Wed, 1 May 2019 18:13:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190418220448.7219-1-gpiccoli@canonical.com> <CAPhsuW4k5zz2pJBPL60VzjTcj6NTnhBh-RjvWASLcOxAk+yDEw@mail.gmail.com>
- <b39b96ea-2540-a407-2232-1af91e3e6658@canonical.com>
-In-Reply-To: <b39b96ea-2540-a407-2232-1af91e3e6658@canonical.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Wed, 1 May 2019 08:33:58 -0700
-Message-ID: <CAPhsuW65EW8JgjE8zknPQPXYcmDhX9LEhTKGb0KHywqKuZkUcA@mail.gmail.com>
-Subject: Re: [RFC] [PATCH V2 0/1] Introduce emergency raid0 stop for mounted arrays
-To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-Cc:     axboe@kernel.dk, linux-raid <linux-raid@vger.kernel.org>,
-        Jay Vosburgh <jay.vosburgh@canonical.com>, kernel@gpiccoli.net,
-        NeilBrown <neilb@suse.com>, dm-devel@redhat.com,
-        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-block@vger.kernel.org, gavin.guo@canonical.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5CC95C0E.7000702@youngman.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 3:41 PM Guilherme G. Piccoli
-<gpiccoli@canonical.com> wrote:
->
-> > On 19/04/2019 14:08, Song Liu wrote:
-> > [...]
-> > I read through the discussion in V1, and I would agree with Neil that
-> > current behavior is reasonable.
-> >
-> > For the following example:
-> >
-> > fd = open("file", "w");
-> > write(fd, buf, size);
-> > ret = fsync(fd);
-> >
-> > If "size" is big enough, the write is not expected to be atomic for
-> > md or other drives. If we remove the underlining block device
-> > after write() and before fsync(), the file could get corrupted. This
-> > is the same for md or NVMe/SCSI drives.
-> >
-> > The application need to check "ret" from fsync(), the data is safe
-> > only when fsync() returns 0.
-> >
-> > Does this make sense?
-> >
->
-> Hi Song, thanks for your quick response, and sorry for my delay.
-> I've noticed after v4.18 kernel started to crash when we remove one
-> raid0 member while writing, so I was investigating this
-> before perform your test (in fact, found 2 issues [0]), hence my delay.
->
-> Your test does make sense; in fact I've tested your scenario with the
-> following code (with the patches from [0]):
-> https://pastebin.ubuntu.com/p/cyqpDqpM7x/
->
-> Indeed, fsync returns -1 in this case.
-> Interestingly, when I do a "dd if=<some_file> of=<raid0_mount>" and try
-> to "sync -f <some_file>" and "sync", it succeeds and the file is
-> written, although corrupted.
+Hi folks,
 
-I guess this is some issue with sync command, but I haven't got time
-to look into it. How about running dd with oflag=sync or oflag=direct?
+tl;dr : Some more information/confirmation, and mdadm 4.1-1 test coming.
 
->
-> Do you think this behavior is correct? In other devices, like a pure
-> SCSI disk or NVMe, the 'dd' write fails.
-> Also, what about the status of the raid0 array in mdadm - it shows as
-> "clean" even after the member is removed, should we change that?
+Even if I have some difficulty to reproduce the issue into another 
+computer (it happened only once in a big amount of tests), on the real 
+server, it failed exactly the same a second time during the night, so it 
+seems that this can be repeated more easily on it. This time the ext4 
+filesystem wasn't mounted.
 
-I guess this is because the kernel hasn't detect the array is gone? In
-that case, I think reducing the latency would be useful for some use
-cases.
+So I'll upgrade it to Debian 10 which is using Linux 4.19 and mdadm 
+4.1-1, and do the test again; in order to tell you if the problem is 
+still here.
 
-Thanks,
-Song
+By the way, doing some tests on another computer, playing --create over 
+an existing array after switching from 3.4-4 to 4.1-1, needs to specify 
+the data-offset, because it changed. If changed and not given, the array 
+filesystem isn't readable until you create it with the right data-offset 
+value.
 
->
->
-> > Also, could you please highlight changes from V1 (if more than
-> > just rebase)?
->
-> No changes other than rebase. Worth mentioning here that a kernel bot
-> (and Julia Lawall) found an issue in my patch; I forgot a
-> "mutex_lock(&mddev->open_mutex);" in line 6053, which caused the first
-> caveat (hung mdadm and persistent device in /dev). Thanks for pointing
-> this silly mistake from me! in case this patch gets some traction, I'll
-> re-submit with that fixed.
->
-> Cheers,
->
->
-> Guilherme
->
-> [0] https://marc.info/?l=linux-block&m=155666385707413
->
-> >
-> > Thanks,
-> > Song
-> >
+That is, in case of same failure (is no actual data changed - but mdadm 
+cannot assemble anymore), after the upgrade, the exact sentence for 
+recovering my server's RAID will be :
+
+mdadm --create /dev/md0 --level=5 --chunk=512K --metadata=1.2 --layout 
+left-symmetric --data-offset=262144s --raid-devices=3 /dev/sdd1 
+/dev/sde1 /dev/sdb1 --assume-clean
+
+It also implies that /dev/sdd1 /dev/sde1 /dev/sdb1 didn't moved (I know 
+what are the associated serial numbers - so it's easy to check). If 
+wrong, the array filesystem isn't readable until you create it with the 
+right positions.
+
+By doing some archeology on the list archive about "grow" subjects, I 
+found this guy who suffered from what looks like the same problem on 
+same Debian 9 too (his thing about inserting the disk to the VM seems 
+not to be a real difference - and he found another way to get it started 
+again).
+https://marc.info/?t=153183310600004&r=1&w=2
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=884719
+
+I'll probably keep you informed tonight !
