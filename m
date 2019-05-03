@@ -2,173 +2,128 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C15E119A4
-	for <lists+linux-raid@lfdr.de>; Thu,  2 May 2019 15:01:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7884013370
+	for <lists+linux-raid@lfdr.de>; Fri,  3 May 2019 19:58:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbfEBNBc (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 2 May 2019 09:01:32 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:35506 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfEBNBc (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 2 May 2019 09:01:32 -0400
-Received: by mail-qt1-f196.google.com with SMTP id e5so2315025qtq.2
-        for <linux-raid@vger.kernel.org>; Thu, 02 May 2019 06:01:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mjSNwc3DJ0Ki3ZxmNccjIkvn3kxoImDtmrH9VIPFQls=;
-        b=sUavbyEpK9eINms7GIrfmHBKhlbtWLSu3rfvKEzAFr8zxKxe0SrSuF3HpoAzM5T+GF
-         7guyXA8JW+eokEI7QNI5CD76IZzkvQgGr3mLt3cgFtwbouj2iKmYKYs5+oBFhlBQ/JNx
-         kLRLRpQyqBZ//3hrBdRZpQLWg9KGvpfhRrwWaGY56xEJmBJWnVJ3vR1AA0ks7QlYI4FN
-         XlopJFWu5CxoRqoyKxUN8ODX4pG/L2cYRW20H7GSNPGItFwVqHCeDrxTuy8QbUX24Ac0
-         KdLWikVA+zjBNoRj8CT0cqPvUj7L632/MC7BWh6KIUs6onLxyKewKS+y4eJdoXhlK/Gr
-         rmfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mjSNwc3DJ0Ki3ZxmNccjIkvn3kxoImDtmrH9VIPFQls=;
-        b=PcSf/AhcFhEP8eP4NMvxOPaJ71dH91VQYhIGT5cfJsabAX4orpug7jQe7JDKInTyGq
-         TqXsHloaHjrqajfJ8kWJLP/03831vfD7WolFSnrWojmqbseC5Hw7m0mmZNtSUMRoUMiY
-         IMxaqkVETkMv6UvLRkF3l7h5KFLf3QBAzLHbc6zQTABo2eQJP0t8ouzbKWtsWKdhVqTI
-         WYtljHlQaneAxijuQ0eRFbwXLSodaLgjGY8lYqb35tT5IqyyEwTVIUFF7INE2Bv+Off8
-         LQ+YbYk6MwfkKX7g/i+QytCwRq6/BFPmggcWTzsGQZw6k9xn2bAv35lIIgVMMoUQ9/3f
-         xeqA==
-X-Gm-Message-State: APjAAAWqTVG4naaSaf7r1GHOIFYaLmODnJ5BBcjnQdetdcyzNemNtVOh
-        ce8e+Rp7lGc2R9ufGP+dCTH/7M7Mr81GdzrjpuM=
-X-Google-Smtp-Source: APXvYqwxIZ8Wg/h0X202jB2VzvT9Ocz9b9KwuwU/6ELhSw0nAdni6nllmbWgxEkcctYm/FcjgpyXMbxebc8Z9qlXWFc=
-X-Received: by 2002:a0c:994a:: with SMTP id i10mr1528707qvd.48.1556802091024;
- Thu, 02 May 2019 06:01:31 -0700 (PDT)
+        id S1728655AbfECR6t (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 3 May 2019 13:58:49 -0400
+Received: from smtp1-g21.free.fr ([212.27.42.1]:55526 "EHLO smtp1-g21.free.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727226AbfECR6s (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 3 May 2019 13:58:48 -0400
+Received: from [192.168.28.40] (unknown [86.74.176.27])
+        (Authenticated sender: julien.robin28)
+        by smtp1-g21.free.fr (Postfix) with ESMTPSA id 4F5C5B0053F
+        for <linux-raid@vger.kernel.org>; Fri,  3 May 2019 19:58:43 +0200 (CEST)
+From:   Julien ROBIN <julien.robin28@free.fr>
+Subject: Re: RAID5 mdadm --grow wrote nothing (Reshape Status : 0% complete)
+ and cannot assemble anymore
+To:     linux-raid@vger.kernel.org
+References: <a87383aa-3c49-0f62-6a93-9b9cb2fc60dd@free.fr>
+ <96216021-6834-66ae-135d-ed654d64e5c0@free.fr>
+ <cf3a34eb-2151-0903-116b-8c6fe1a63f52@free.fr>
+ <20190430092347.GA4799@metamorpher.de>
+ <deffabb8-51e8-0120-8c63-ade9e5dfdf9b@free.fr>
+ <20190430135152.GA20515@metamorpher.de>
+ <8109d116-dd63-15be-2360-7763b9376393@free.fr>
+ <5CC95C0E.7000702@youngman.org.uk>
+ <c32c4ffa-cfbc-7c74-c035-6f23b91c923f@free.fr>
+Message-ID: <88320b1f-645b-046a-b092-4e2558a5e1e6@free.fr>
+Date:   Fri, 3 May 2019 19:58:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <CAH6h+heMSyHvFRNwkn5XjZJt=fzmKJwzinifP8H75k47A774Ow@mail.gmail.com>
-In-Reply-To: <CAH6h+heMSyHvFRNwkn5XjZJt=fzmKJwzinifP8H75k47A774Ow@mail.gmail.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Thu, 2 May 2019 06:01:19 -0700
-Message-ID: <CAPhsuW5eO3v3bWjz5KtzX+0p5qtyaRHEENGOY+kgt=nDtHUVYA@mail.gmail.com>
-Subject: Re: WARNING: CPU: 13 PID: 3786 at drivers/md/raid5.c:4611 break_stripe_batch_list+0x86/0x1fb
-To:     Marc Smith <msmith626@gmail.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <c32c4ffa-cfbc-7c74-c035-6f23b91c923f@free.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Wed, May 1, 2019 at 1:43 PM Marc Smith <msmith626@gmail.com> wrote:
->
-> Hi,
->
-> I'm using some MD RAID5 arrays with Linux 4.14.91. Everything has been
-> working great for sometime now, but this morning I noticed the
-> following snippet of kernel messages:
-> --snip--
-> Apr 30 23:49:09 node1 kernel: [10496.092367] stripe state: 2001
-> Apr 30 23:49:09 node1 kernel: [10496.092395] ------------[ cut here
-> ]------------
-> Apr 30 23:49:09 node1 kernel: [10496.092408] WARNING: CPU: 13 PID:
-> 3786 at drivers/md/raid5.c:4611 break_stripe_batch_list+0x86/0x1fb
-> Apr 30 23:49:09 node1 kernel: [10496.092410] Modules linked in:
-> scst_qla2xxx(O) fcst(O) scst_changer(O) scst_tape(O) scst_vdisk(O)
-> scst_disk(O) ib_srpt(O) isert_scst(O) iscsi_scst(O) scst(O) qla2xxx(O)
-> bonding ntb_netdev ntb_hw_switchtec(O) cls(O) mlx5_core bna ib_umad
-> rdma_ucm ib_uverbs ib_srp iw_nes iw_cxgb4 cxgb4 iw_cxgb3 ib_qib rdmavt
-> mlx4_ib ib_mthca
-> Apr 30 23:49:09 node1 kernel: [10496.092450] CPU: 13 PID: 3786 Comm:
-> md125_raid5 Tainted: G           O    4.14.91-esos.prod #1
-> Apr 30 23:49:09 node1 kernel: [10496.092452] Hardware name:
-> CELESTICA-CSS Athena/Athena-MB, BIOS COL00708 11/26/2018
-> Apr 30 23:49:09 node1 kernel: [10496.092455] task: ffff888f84183b40
-> task.stack: ffffc9000b2ec000
-> Apr 30 23:49:09 node1 kernel: [10496.092459] RIP:
-> 0010:break_stripe_batch_list+0x86/0x1fb
-> Apr 30 23:49:09 node1 kernel: [10496.092462] RSP:
-> 0018:ffffc9000b2efc40 EFLAGS: 00010286
-> Apr 30 23:49:09 node1 kernel: [10496.092465] RAX: 0000000000000012
-> RBX: ffff888f182aaad0 RCX: 0000000000000000
-> Apr 30 23:49:09 node1 kernel: [10496.092467] RDX: ffff88903fb5d001
-> RSI: ffff88903fb554c8 RDI: ffff88903fb554c8
-> Apr 30 23:49:09 node1 kernel: [10496.092469] RBP: ffff888f25222240
-> R08: 0000000000000001 R09: 0000000000020300
-> Apr 30 23:49:09 node1 kernel: [10496.092471] R10: 0000000000000000
-> R11: 00000000000fe6b4 R12: 0000000000000000
-> Apr 30 23:49:09 node1 kernel: [10496.092473] R13: ffff888f4b1e3360
-> R14: 0000000000001c04 R15: ffff888efcffab18
-> Apr 30 23:49:09 node1 kernel: [10496.092476] FS:
-> 0000000000000000(0000) GS:ffff88903fb40000(0000)
-> knlGS:0000000000000000
-> Apr 30 23:49:09 node1 kernel: [10496.092478] CS:  0010 DS: 0000 ES:
-> 0000 CR0: 0000000080050033
-> Apr 30 23:49:09 node1 kernel: [10496.092480] CR2: 00007f834dbce698
-> CR3: 0000000002812005 CR4: 00000000007606e0
-> Apr 30 23:49:09 node1 kernel: [10496.092483] DR0: 0000000000000000
-> DR1: 0000000000000000 DR2: 0000000000000000
-> Apr 30 23:49:09 node1 kernel: [10496.092485] DR3: 0000000000000000
-> DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Apr 30 23:49:09 node1 kernel: [10496.092486] PKRU: 55555554
-> Apr 30 23:49:09 node1 kernel: [10496.092487] Call Trace:
-> Apr 30 23:49:09 node1 kernel: [10496.092498]  handle_stripe+0xcdf/0x1958
-> Apr 30 23:49:09 node1 kernel: [10496.092507]  ? enqueue_task_fair+0x219/0x96b
-> Apr 30 23:49:09 node1 kernel: [10496.092513]
-> handle_active_stripes.isra.26+0x329/0x396
-> Apr 30 23:49:09 node1 kernel: [10496.092518]  raid5d+0x302/0x47f
-> Apr 30 23:49:09 node1 kernel: [10496.092522]  ? del_timer_sync+0x22/0x2c
-> Apr 30 23:49:09 node1 kernel: [10496.092530]  ? md_register_thread+0xc1/0xc1
-> Apr 30 23:49:09 node1 kernel: [10496.092534]  ? md_thread+0x12b/0x13d
-> Apr 30 23:49:09 node1 kernel: [10496.092537]  md_thread+0x12b/0x13d
-> Apr 30 23:49:09 node1 kernel: [10496.092544]  ? wait_woken+0x68/0x68
-> Apr 30 23:49:09 node1 kernel: [10496.092552]  kthread+0x117/0x11f
-> Apr 30 23:49:09 node1 kernel: [10496.092557]  ? kthread_create_on_node+0x3a/0x3a
-> Apr 30 23:49:09 node1 kernel: [10496.092564]  ret_from_fork+0x35/0x40
-> Apr 30 23:49:09 node1 kernel: [10496.092568] Code: 48 89 83 90 00 00
-> 00 f7 c6 a9 c2 eb 00 74 1e 80 3d 12 74 f6 00 00 75 15 48 c7 c7 bf c8
-> 56 82 c6 05 02 74 f6 00 01 e8 4b 6f 6b ff <0f> 0b 48 8b 75 48 f7 c6 20
-> 00 08 00 74 1e 80 3d e7 73 f6 00 00
-> Apr 30 23:49:09 node1 kernel: [10496.092629] ---[ end trace
-> 90e17afe3799d471 ]---
-> --snip--
->
-> I see that comes from break_stripe_batch_list() in
-> linux-4.14.91/drivers/md/raid5.c:
-> --snip--
->                 WARN_ONCE(sh->state & ((1 << STRIPE_ACTIVE) |
->                                           (1 << STRIPE_SYNCING) |
->                                           (1 << STRIPE_REPLACED) |
->                                           (1 << STRIPE_DELAYED) |
->                                           (1 << STRIPE_BIT_DELAY) |
->                                           (1 << STRIPE_FULL_WRITE) |
->                                           (1 << STRIPE_BIOFILL_RUN) |
->                                           (1 << STRIPE_COMPUTE_RUN)  |
->                                           (1 << STRIPE_OPS_REQ_PENDING) |
->                                           (1 << STRIPE_DISCARD) |
->                                           (1 << STRIPE_BATCH_READY) |
->                                           (1 << STRIPE_BATCH_ERR) |
->                                           (1 << STRIPE_BITMAP_PENDING)),
->                         "stripe state: %lx\n", sh->state);
-> --snip--
->
-> I see the "stripe state: 2001" value in the log. I can go through and
-> decode, but I'm still probably not going to be sure what's expected or
-> wrong. The MD array seems to be functioning correctly, I'm not seeing
-> anymore errors but I do understand the statement above is WARN_ONCE().
+It seems that the problem didn't happened after upgrading to Debian 10 
+(mdadm 4.1-1) - this is not a proof, but a hope that it is solved! Let's 
+hope nobody will never complain for such a problem starting from this 
+version.
 
-So for 0x2001, it is just the STRIPE_ACTIVE bit.
+----------------------------------------------------------------------
+Given the fact RAID is a pretty fixed standard for a long time already, 
+seeing every subject into the mailing list archive (unknown errors that 
+nobody understands clearly, reverts, patches everywhere, deadlocks, null 
+pointers, RFC...), after so much development years about mdadm, tends to 
+indicates that mdadm isn't converging into something really stable. 
+Unless it's really slow but progressing the right way ?
 
->
-> Is this a sign of corruption / serious issue, or transient problem?
-> Any additional debug steps that I can perform to collect more data? I
-> searched a bit on Google for this error, but didn't get any relevant
-> hits. Any help would be greatly appreciated.
+Only a precise bug tracking system would have the ability to provide 
+that information in a dependable way
 
-This one looks like race condition in head_sh and sh in the list, so it
-doesn't seem too bad.
+Also as it's about a critical feature aiming to protect valuable data as 
+much as possible (even if it's not a sufficient backup in case something 
+is overwritten or several disks are lost), changes that are not proved to be
+  * mandatory
+  * proven to solve a really existing bug or problem,
+  * proven to have no chance of adding any new bug or any unnecessary 
+complexity
+should probably better be forbidden in such a critical functionality. In 
+the other hand I also understand that freedom is an essential part of 
+this kind of projects, but here this is quite critical!
+----------------------------------------------------------------------
 
-Could you try reboot the system and see whether this happen again?
+Anyway that's may be all for this case, still thanks for a work that I'm 
+still happy to be able to use (yet a little more cautious than before!).
 
-Thanks,
-Song
+I'll probably propose some bits of new documentation and helps about 
+serious failures recovery into the wiki, using some knowledge and 
+observations I earned during my searches and tests (after ensuring that 
+none of those bits of information could turn to be wrong, or likely to 
+introduce any wrong behavior or data lost - because this can be really 
+serious and distressing subject).
 
->
-> Thanks,
->
-> Marc
+Best regards
+Julien
+
+
+On 5/1/19 6:13 PM, Julien ROBIN wrote:
+> Hi folks,
+> 
+> tl;dr : Some more information/confirmation, and mdadm 4.1-1 test coming.
+> 
+> Even if I have some difficulty to reproduce the issue into another 
+> computer (it happened only once in a big amount of tests), on the real 
+> server, it failed exactly the same a second time during the night, so it 
+> seems that this can be repeated more easily on it. This time the ext4 
+> filesystem wasn't mounted.
+> 
+> So I'll upgrade it to Debian 10 which is using Linux 4.19 and mdadm 
+> 4.1-1, and do the test again; in order to tell you if the problem is 
+> still here.
+> 
+> By the way, doing some tests on another computer, playing --create over 
+> an existing array after switching from 3.4-4 to 4.1-1, needs to specify 
+> the data-offset, because it changed. If changed and not given, the array 
+> filesystem isn't readable until you create it with the right data-offset 
+> value.
+> 
+> That is, in case of same failure (is no actual data changed - but mdadm 
+> cannot assemble anymore), after the upgrade, the exact sentence for 
+> recovering my server's RAID will be :
+> 
+> mdadm --create /dev/md0 --level=5 --chunk=512K --metadata=1.2 --layout 
+> left-symmetric --data-offset=262144s --raid-devices=3 /dev/sdd1 
+> /dev/sde1 /dev/sdb1 --assume-clean
+> 
+> It also implies that /dev/sdd1 /dev/sde1 /dev/sdb1 didn't moved (I know 
+> what are the associated serial numbers - so it's easy to check). If 
+> wrong, the array filesystem isn't readable until you create it with the 
+> right positions.
+> 
+> By doing some archeology on the list archive about "grow" subjects, I 
+> found this guy who suffered from what looks like the same problem on 
+> same Debian 9 too (his thing about inserting the disk to the VM seems 
+> not to be a real difference - and he found another way to get it started 
+> again).
+> https://marc.info/?t=153183310600004&r=1&w=2
+> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=884719
+> 
+> I'll probably keep you informed tonight !
