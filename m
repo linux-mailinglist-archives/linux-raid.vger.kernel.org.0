@@ -2,102 +2,252 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 85DCE13FDC
-	for <lists+linux-raid@lfdr.de>; Sun,  5 May 2019 16:00:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8AC8141AE
+	for <lists+linux-raid@lfdr.de>; Sun,  5 May 2019 20:00:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbfEEOAp (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 5 May 2019 10:00:45 -0400
-Received: from zimbra.karlsbakk.net ([193.29.58.196]:41132 "EHLO
-        zimbra.karlsbakk.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbfEEOAp (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 5 May 2019 10:00:45 -0400
-X-Greylist: delayed 524 seconds by postgrey-1.27 at vger.kernel.org; Sun, 05 May 2019 10:00:44 EDT
-Received: from localhost (localhost.localdomain [IPv6:::1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id E29523C0224;
-        Sun,  5 May 2019 15:51:58 +0200 (CEST)
-Received: from zimbra.karlsbakk.net ([IPv6:::1])
-        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id HH0GpHCqLyq4; Sun,  5 May 2019 15:51:57 +0200 (CEST)
-Received: from localhost (localhost.localdomain [IPv6:::1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id 8A0313C023E;
-        Sun,  5 May 2019 15:51:57 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra.karlsbakk.net 8A0313C023E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=karlsbakk.net;
-        s=1DC131FE-D37A-11E7-BD32-3AD4DFE620DF; t=1557064317;
-        bh=nY9FxM6G7VdwKFnVcb7Gjd/JPzbT7PRd6RSWi4zhERc=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=DKWC4qJ3DcI69ELDrKFtygrQdF+vGu7F+9Y+6VjYBq01xeTdWxmLRHFyex1U6CPzR
-         0BnaIkOjsX8qFE3jzXwz3RYeTUBQg0hByj/iYMEl4zp8dwSY6rNBcxZ+D/PSQor7+2
-         WY2J7q70aIAuiitoomsz0buZs/4ZOmTO70fTDlpdBJ7Ea7hESkXyEEzD6t94G7fgCl
-         MGEoNBOE1a3EijH5Q033IJNiCjH5KpHW6wMYBXNt1/ok7wi0cim8XDUq4w/f3xw+kL
-         nehGUp+hBaIS3PaMJRLJKvxn/yKYfMJ8TC7e+Clpqs/sJxZZdnT9cvbTfdvxs3J/W/
-         PRH7KtnIyynMg==
-X-Virus-Scanned: amavisd-new at zimbra.karlsbakk.net
-Received: from zimbra.karlsbakk.net ([IPv6:::1])
-        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id BVc0CHOjGe8K; Sun,  5 May 2019 15:51:57 +0200 (CEST)
-Received: from zimbra.karlsbakk.net (localhost.localdomain [127.0.0.1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id 5D5C93C0224;
-        Sun,  5 May 2019 15:51:57 +0200 (CEST)
-Date:   Sun, 5 May 2019 15:51:57 +0200 (CEST)
-From:   Roy Sigurd Karlsbakk <roy@karlsbakk.net>
-To:     Gandalf Corvotempesta <gandalf.corvotempesta@gmail.com>
-Cc:     Carsten Aulbert <carsten.aulbert@aei.mpg.de>,
-        Linux Raid <linux-raid@vger.kernel.org>
-Message-ID: <696361643.11485543.1557064317062.JavaMail.zimbra@karlsbakk.net>
-In-Reply-To: <CAJH6TXgumKC4exPfDXkYoDLc8rudPs-8rcnf3zNfiaHuFDKg1w@mail.gmail.com>
-References: <CAJH6TXgE10cF=+greYkDOCZVbGSZnQxbKg2+kdUBaw_ie+gWMw@mail.gmail.com> <CAJH6TXgJ3822AgdhUWj+h458O1A=_tRtiW2+GUuFM05DxJuS0Q@mail.gmail.com> <9fc493d1-b7e5-1134-6117-398aaa007e44@aei.mpg.de> <CAJH6TXgumKC4exPfDXkYoDLc8rudPs-8rcnf3zNfiaHuFDKg1w@mail.gmail.com>
-Subject: Re: best way to replace all disks
+        id S1727454AbfEESAz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 5 May 2019 14:00:55 -0400
+Received: from smtp1-g21.free.fr ([212.27.42.1]:44692 "EHLO smtp1-g21.free.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727325AbfEESAz (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sun, 5 May 2019 14:00:55 -0400
+Received: from [192.168.28.30] (unknown [86.74.176.27])
+        (Authenticated sender: julien.robin28)
+        by smtp1-g21.free.fr (Postfix) with ESMTPSA id 15356B00571
+        for <linux-raid@vger.kernel.org>; Sun,  5 May 2019 20:00:47 +0200 (CEST)
+To:     linux-raid@vger.kernel.org
+From:   Julien ROBIN <julien.robin28@free.fr>
+Subject: Working 2 disks RAID0 : failed mdadm --add command : problem at
+ reboot
+Message-ID: <13922dd6-12bc-aa7b-5a56-42edbded8400@free.fr>
+Date:   Sun, 5 May 2019 20:00:44 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [::ffff:91.186.71.4]
-X-Mailer: Zimbra 8.8.10_GA_3781 (ZimbraWebClient - FF66 (Mac)/8.8.10_GA_3786)
-Thread-Topic: best way to replace all disks
-Thread-Index: KNbTtg6PAcp7OSpV0fAoOSlO/GfL8w==
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-> unfortunately I can't change the server. I have tons of custom,
-> closed-source software
-> that won't run on newer hardware, that's why i have to use the current on=
-e.
->=20
-> Yes, i'm planning a replacement, but is not something quick to do,
-> i'll need many month
-> redeveloping, in-house, the current closed-source software. Until
-> that, I have to keep the
-> data safe.
->=20
-> technically I can use a new hardware, but I can't upgrade the
-> operating system (a very old slackware,
-> if I remember properly) or these closed-source software wont run anymore
->=20
-> maybe the faster solution would be to add a cheap (which one?) HBA
-> controller that supports more than 4 SATA disks,
-> move all disks to this new controller and then convert, one by one,
-> each 2way mirror to a 3way mirror:
+Hi folks,
 
-I'd suggest you get a new and fancy machine with good, large drives and a l=
-ot of memory. Use two smallish drives for the root and the rest for the dat=
-a in whatever RAID leve you prefer. Then setup kvm on top and create a new,=
- empty virtual machine onto which you rsync the old machine with everything=
- there. If it's an old slackware, chances are it's running lilo and not gru=
-b. This should also be doable, although perhaps some issues with virt-manag=
-er (the gui from which you can manage the VMs). This is what I've done with=
- old, outdated machines to keep them safe until they eventually die or are =
-replaced by something new.
+I don't know if this problem is known (and if it's considered as 
+normal?). It happens on mdadm 4.1-1 and 3.4-4. I noticed it during my 
+tests this weekend. It's not critical as the array can be assembled 
+again manually.
 
-Vennlig hilsen
+If I create a RAID0 with 2 drives (and it's running fine):
+mdadm --create /dev/md0 --level=0 --raid-devices=2 /dev/sdc1 /dev/sdd1
 
-roy
---
-Roy Sigurd Karlsbakk
-(+47) 98013356
-http://blogg.karlsbakk.net/
-GPG Public key: http://karlsbakk.net/roysigurdkarlsbakk.pubkey.txt
---
-Hi=C3=B0 g=C3=B3=C3=B0a skaltu =C3=AD stein h=C3=B6ggva, hi=C3=B0 illa =C3=
-=AD snj=C3=B3 rita.
+# mdadm --detail /dev/md0
+/dev/md0:
+            Version : 1.2
+      Creation Time : Sun May  5 18:53:39 2019
+         Raid Level : raid0
+         Array Size : 4091904 (3.90 GiB 4.19 GB)
+       Raid Devices : 2
+      Total Devices : 2
+        Persistence : Superblock is persistent
+
+        Update Time : Sun May  5 18:53:39 2019
+              State : clean
+     Active Devices : 2
+    Working Devices : 2
+     Failed Devices : 0
+      Spare Devices : 0
+
+         Chunk Size : 512K
+
+Consistency Policy : none
+
+               Name : Camera-PC:0  (local to host Camera-PC)
+               UUID : e3b954a6:ab381819:0aab441c:e1557ee4
+             Events : 0
+
+     Number   Major   Minor   RaidDevice State
+        0       8       33        0      active sync   /dev/sdc1
+        1       8       49        1      active sync   /dev/sdd1
+
+Then I play --add with some 3rd disk
+mdadm --manage /dev/md0 --add /dev/sde1
+mdadm: add new device failed for /dev/sde1 as 2: Invalid argument.
+
+Nothing seems to have happened, mdadm --detail /dev/md0 shows no change. 
+But the /dev/sde1 disk is now shown as Linux RAID member (version 1.2) 
+and using the same UUID like the 2 others: it has been like prepared as 
+a spare member of the array.
+
+root@Camera-PC:/home/user# mdadm --examine /dev/sdc1:
+           Magic : a92b4efc
+         Version : 1.2
+     Feature Map : 0x0
+      Array UUID : e3b954a6:ab381819:0aab441c:e1557ee4
+            Name : Camera-PC:0  (local to host Camera-PC)
+   Creation Time : Sun May  5 18:53:39 2019
+      Raid Level : raid0
+    Raid Devices : 2
+
+  Avail Dev Size : 4091904 (1998.00 MiB 2095.05 MB)
+     Data Offset : 4096 sectors
+    Super Offset : 8 sectors
+    Unused Space : before=4016 sectors, after=0 sectors
+           State : clean
+     Device UUID : b3d9733c:009fea7e:f5b4ffb3:0bfa381a
+
+     Update Time : Sun May  5 18:53:39 2019
+   Bad Block Log : 512 entries available at offset 8 sectors
+        Checksum : 62a315de - correct
+          Events : 0
+
+      Chunk Size : 512K
+
+    Device Role : Active device 0
+    Array State : AA ('A' == active, '.' == missing, 'R' == replacing)
+
+root@Camera-PC:/home/user# mdadm --examine /dev/sdd1
+/dev/sdd1:
+           Magic : a92b4efc
+         Version : 1.2
+     Feature Map : 0x0
+      Array UUID : e3b954a6:ab381819:0aab441c:e1557ee4
+            Name : Camera-PC:0  (local to host Camera-PC)
+   Creation Time : Sun May  5 18:53:39 2019
+      Raid Level : raid0
+    Raid Devices : 2
+
+  Avail Dev Size : 4091904 (1998.00 MiB 2095.05 MB)
+     Data Offset : 4096 sectors
+    Super Offset : 8 sectors
+    Unused Space : before=4016 sectors, after=0 sectors
+           State : clean
+     Device UUID : fbc9fbbe:db663cf8:9221f6f4:5701f13c
+
+     Update Time : Sun May  5 18:53:39 2019
+   Bad Block Log : 512 entries available at offset 8 sectors
+        Checksum : c22b41ec - correct
+          Events : 0
+
+      Chunk Size : 512K
+
+    Device Role : Active device 1
+    Array State : AA ('A' == active, '.' == missing, 'R' == replacing)
+
+root@Camera-PC:/home/user# mdadm --examine /dev/sde1
+/dev/sde1:
+           Magic : a92b4efc
+         Version : 1.2
+     Feature Map : 0x0
+      Array UUID : e3b954a6:ab381819:0aab441c:e1557ee4
+            Name : Camera-PC:0  (local to host Camera-PC)
+   Creation Time : Sun May  5 18:53:39 2019
+      Raid Level : raid0
+    Raid Devices : 2
+
+  Avail Dev Size : 4091904 (1998.00 MiB 2095.05 MB)
+     Data Offset : 4096 sectors
+    Super Offset : 8 sectors
+    Unused Space : before=4016 sectors, after=0 sectors
+           State : clean
+     Device UUID : dba1b29b:4dc661da:a0fa8289:77f16512
+
+     Update Time : Sun May  5 18:53:39 2019
+   Bad Block Log : 512 entries available at offset 8 sectors
+        Checksum : eb09426c - correct
+          Events : 0
+
+      Chunk Size : 512K
+
+    Device Role : spare
+    Array State : AA ('A' == active, '.' == missing, 'R' == replacing)
+
+
+After a reboot :
+# mdadm --detail /dev/md127
+/dev/md127:
+            Version : 1.2
+      Creation Time : Sun May  5 18:53:39 2019
+         Raid Level : raid0
+       Raid Devices : 2
+      Total Devices : 3
+        Persistence : Superblock is persistent
+
+        Update Time : Sun May  5 18:53:39 2019
+              State : active, FAILED, Not Started
+     Active Devices : 2
+    Working Devices : 3
+     Failed Devices : 0
+      Spare Devices : 1
+
+         Chunk Size : 512K
+
+Consistency Policy : unknown
+
+               Name : Camera-PC:0  (local to host Camera-PC)
+               UUID : e3b954a6:ab381819:0aab441c:e1557ee4
+             Events : 0
+
+     Number   Major   Minor   RaidDevice State
+        -       0        0        0      removed
+        -       0        0        1      removed
+
+        -       8       81        -      spare   /dev/sde1
+        -       8       49        1      sync   /dev/sdd1
+        -       8       33        0      sync   /dev/sdc1
+
+# mdadm --manage /dev/md127 --remove /dev/sde1
+mdadm: hot removed /dev/sde1 from /dev/md127
+
+# mdadm --detail /dev/md127
+/dev/md127:
+            Version : 1.2
+      Creation Time : Sun May  5 18:53:39 2019
+         Raid Level : raid0
+       Raid Devices : 2
+      Total Devices : 2
+        Persistence : Superblock is persistent
+
+        Update Time : Sun May  5 18:53:39 2019
+              State : active, FAILED, Not Started
+     Active Devices : 2
+    Working Devices : 2
+     Failed Devices : 0
+      Spare Devices : 0
+
+         Chunk Size : 512K
+
+Consistency Policy : unknown
+
+               Name : Camera-PC:0  (local to host Camera-PC)
+               UUID : e3b954a6:ab381819:0aab441c:e1557ee4
+             Events : 0
+
+     Number   Major   Minor   RaidDevice State
+        -       0        0        0      removed
+        -       0        0        1      removed
+
+        -       8       49        1      sync   /dev/sdd1
+        -       8       33        0      sync   /dev/sdc1
+
+Playing mdadm --stop /dev/md127 and assemble it again with /dev/sdc1 and 
+/dev/sdd1 is fine but the problem is back after reboot.
+
+In fact, the 3rd disk should be reformatted or removed from the computer 
+for the problem to disappear at reboot. If not, the auto-assemble 
+mechanism at startup seems to be running this command:
+
+root@Camera-PC:/home/user# mdadm --assemble /dev/md0 /dev/sdc1 /dev/sdd1 
+/dev/sde1
+
+Which gives the above mdadm --detail result, and the following output :
+mdadm: failed to RUN_ARRAY /dev/md0: Invalid argument
+
+I don't know if running the --add command (with nothing more) to a RAID0 
+array should refuse to run, of if maybe spares members into a RAID0 
+array shouldn't be causing this problem?
+
+In case this feedback is useful.
+
+Julien
