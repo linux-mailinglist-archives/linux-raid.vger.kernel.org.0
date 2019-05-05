@@ -2,65 +2,48 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F366141B0
-	for <lists+linux-raid@lfdr.de>; Sun,  5 May 2019 20:02:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 736E814292
+	for <lists+linux-raid@lfdr.de>; Sun,  5 May 2019 23:42:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbfEESCH (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 5 May 2019 14:02:07 -0400
-Received: from smtp1-g21.free.fr ([212.27.42.1]:54916 "EHLO smtp1-g21.free.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727034AbfEESCH (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sun, 5 May 2019 14:02:07 -0400
-Received: from [192.168.28.30] (unknown [86.74.176.27])
-        (Authenticated sender: julien.robin28)
-        by smtp1-g21.free.fr (Postfix) with ESMTPSA id 114E7B00571
-        for <linux-raid@vger.kernel.org>; Sun,  5 May 2019 20:02:05 +0200 (CEST)
-From:   Julien ROBIN <julien.robin28@free.fr>
-Subject: New complete guide for irreversible mdadm failures recovery
+        id S1727367AbfEEVmE (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 5 May 2019 17:42:04 -0400
+Received: from p3plsmtpa07-06.prod.phx3.secureserver.net ([173.201.192.235]:46189
+        "EHLO p3plsmtpa07-06.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726905AbfEEVmE (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 5 May 2019 17:42:04 -0400
+X-Greylist: delayed 438 seconds by postgrey-1.27 at vger.kernel.org; Sun, 05 May 2019 17:42:04 EDT
+Received: from localhost ([181.120.156.54])
+        by :SMTPAUTH: with ESMTPA
+        id NOmQhoIxgCOngNOmTh3vVQ; Sun, 05 May 2019 14:34:46 -0700
+Date:   Sun, 5 May 2019 17:34:39 -0400
+From:   "Renaud (Ron) OLGIATI" <renaud@olgiati-in-paraguay.org>
 To:     Linux Raid <linux-raid@vger.kernel.org>
-Message-ID: <b40052a0-5228-869d-a534-18dd7c366705@free.fr>
-Date:   Sun, 5 May 2019 20:02:02 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+Subject: Raid1 syncing every Sunday morning.
+Message-ID: <20190505173439.1ba86d9d@olgiati-in-paraguay.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-mandriva-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfLhbLgCAm+pc/AH5kCBm1dqvZc9eqw0K3nS2rXZzPpJdFE5Z3GQHdlLrHtIPjvGOS6VeQwSTnZPdRFjXzRCRmR5ovagXm7qU45G88rwJ5vQfr0I1na/V
+ j6Oj8zyvIn0JaRrw+vhwgRBZ1sfiXkrZAkkd9k3sf3tGMD9pWoCZ5kcudmRAqfql956ZGTyx+MvaRg==
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi folks,
 
-In my previous mail I said that having found really valuable 
-information, interesting tests on the Internet, and thanks to a lot of 
-attempts and tests I've done on my own with a dedicated machine, I would 
-have some time to add a lot of valuable information that isn't into the 
-official wiki about recovering from situation that could have been 
-considered as definitely lost.
+It has come to my notice that for the last five Sundays, when I logged-in on my computer in the morning, I find rhe Raid1 arrays re-syncing. mornings, I
 
-It took me some more time, and a lot of validation and thorough tests 
-(as no error, bad advice, or unverified supposition can be allowed). I 
-also managed to understand (and show) how to very simply use overlays so 
-that write operation can't happen to any real RAID member.
+ I have checked (crontab -l) both the root and user crontabs, nothing there that is planned for Sundays.
 
-The guide is about everything to know when recreating a new array over a 
-not working anymore or seriously screwed past existing one. After a 
-clear introduction about what it technically covers and implies.
+Any idea ?
 
-It's also about recovery of accidentally overwritten member(s), and/or 
-understanding about rebuild process effects on the different members of 
-an array. In case of RAID6 for example, an erroneous full rewrite of 
-every member can surprisingly be recovered in some situations - and in 
-which case which rewritten disk has been rewritten with what - and is it 
-recoverable, and how.
-
-https://raid.wiki.kernel.org/index.php/Irreversible_mdadm_failure_recovery
-
-I did my best efforts for the English correctness; anyway feel free to 
-feedback or correct if you see some errors (be it English or technical 
-things, although it has been thoroughly tested).
-
-Best regards,
-Julien Robin
+Cheers,
+ 
+Ron.
+-- 
+                   Immortality -- a fate worse than death.
+                                        -- Edgar A. Shoaff
+                                    
+                   -- http://www.olgiati-in-paraguay.org --
+ 
