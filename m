@@ -2,50 +2,55 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2371A153D6
-	for <lists+linux-raid@lfdr.de>; Mon,  6 May 2019 20:48:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A31F71553D
+	for <lists+linux-raid@lfdr.de>; Mon,  6 May 2019 23:07:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbfEFSsL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 6 May 2019 14:48:11 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:49153 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726280AbfEFSsK (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 6 May 2019 14:48:10 -0400
-Received: from mail-qk1-f200.google.com ([209.85.222.200])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <gpiccoli@canonical.com>)
-        id 1hNiem-0007H3-Bb
-        for linux-raid@vger.kernel.org; Mon, 06 May 2019 18:48:08 +0000
-Received: by mail-qk1-f200.google.com with SMTP id h16so2727022qke.11
-        for <linux-raid@vger.kernel.org>; Mon, 06 May 2019 11:48:08 -0700 (PDT)
+        id S1726476AbfEFVH3 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 6 May 2019 17:07:29 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:38662 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726322AbfEFVH3 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 6 May 2019 17:07:29 -0400
+Received: by mail-qk1-f194.google.com with SMTP id a64so3003797qkg.5;
+        Mon, 06 May 2019 14:07:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4ndijvnNkt+c4ltTY2hyx/k7eCwa3nQG1K0KFz8eGCo=;
+        b=JAHDSRCO6ityOJT6r/V3YG3CEWoALP5vVAl7YUsywrn7yNhxz3yPvabEMNsFojl17Z
+         oYHQxvRY/w+V+OWH0hXUXcjrd+xNQvMif+q9dp/4rml5lzR9CwvnrhlecvAfqBp8HLpu
+         RT7rQIf54ftUCcF41NCXUe+bKM4rpU3c+WV1vUAeSdwnsdh8NVLhrox1T1zRLujcsEiC
+         zkqh1aBtlHmwR8/DMXYtU1SPEQP0kPvfNB2KPMT/NGsDh1exofQ+Wd9pYUaUn9CadJVe
+         36k7EGEE6XE3w9OSafxCIqgo0zZLLl3zxS0gYAoqA2/ClGduUhcn3ep4GcZnaH2nk4Js
+         LZOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=bC2THTg10tW16ub7PNyNptaheYbyDqPTCbofTdADo6U=;
-        b=hvGHpt8/YwPu+4wBt1HEkT0Y5clk4VAAdrquJB/KQPboatWfIxqKb53VXwdECAKy/2
-         ZLJ5nVTOW89bWp4aM7T49cDTevvvqILObxeH4W0MIwjmqsoNKOcudIUG2sCxm1mWImGV
-         pWWEIuEsSBdHhpy7YIeU2XqPu+DQUQKn2bJsIaGx1mZxl16u0gn+fJduHOlh3zmA/9rN
-         SR0BKUq1uz0Rc1jPmTsFJx179U7N3RgBXsX9KJAOfkTKNCxVZ4ZBGtoLFO+5J4pjDfxx
-         Jq705lzgdWES3rb/m25C1Pmhs1VXPrRlejKUqt7+JziWZqWkQCaR60JIP2WePNUmjjgj
-         UieA==
-X-Gm-Message-State: APjAAAXPcmk/2Ht/DGDrl0IygHKjkKLzlO4FPzvkvZ2yPYsJ3naRrRe0
-        sQM/Jf4cTtwPfKe1NTEk7yv85d3p6OPUg+rCbgk2UJky5PBjAlNBgl1EDjRM+OewfCxgX5O73jB
-        pTN3yh/lqtD469GsB33Y6b02SGc0G20MuA2tcgdY=
-X-Received: by 2002:ac8:1c39:: with SMTP id a54mr20851833qtk.344.1557168487499;
-        Mon, 06 May 2019 11:48:07 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwli31XV/EPuqTTwm6MSINbZHcbpJYoivTjqAbSmdTKZRc/DelL2WjDxPfeSm6BWH7j+Norfw==
-X-Received: by 2002:ac8:1c39:: with SMTP id a54mr20851815qtk.344.1557168487296;
-        Mon, 06 May 2019 11:48:07 -0700 (PDT)
-Received: from [192.168.0.239] ([177.183.163.179])
-        by smtp.gmail.com with ESMTPSA id j123sm6316420qkf.23.2019.05.06.11.48.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 11:48:06 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4ndijvnNkt+c4ltTY2hyx/k7eCwa3nQG1K0KFz8eGCo=;
+        b=UdF0Ujcf7AZB/UEtTdwgLD9qcBjzRvdA4XgR+sfRYkAChpdUz2eu0LVIq6RbMM9ngS
+         z+NrDudHTv1zRYX9gOiJCqQ8+G1HmykAX5ypQX1Nv31sR94cPn2rUzkCcWC883+OPzLK
+         zUFLKEUyAGhwlf7FI4M6YqWBXDOGIDYc/pSy+dQarzj2vU3W3lpo/KgcgjGiWS5V5wvb
+         pPSdwIKaj5i+dCoudFVeGJr6STIzXv1BTvnieZ3PVOI/+UD5baYvJ+7bLyq+ZXOekSOQ
+         l+nF9UjH1mBDCHG6Je4znSyDZKUZYtO/U1lNwleVKOtMruPRx8WEtkPHtJpgvSUpxMy9
+         k8Fw==
+X-Gm-Message-State: APjAAAWWPKhKKio8LgqjQ6k98neokg0gAiuF0R7UcOWjSdmLgiaAqIr8
+        Y4I6DA8jg+5SP05Dn/kjuvwHXJZQg+Kx4TBkgbs=
+X-Google-Smtp-Source: APXvYqy0cewLmOJ/voV9XvczblnnlIzNNvgjOehbgCWnmm79W69Rbb0K6eoBkS/uoxVXEVkLB/YMPNpGYFmWMBlj73o=
+X-Received: by 2002:a05:620a:1423:: with SMTP id k3mr20774846qkj.120.1557176847994;
+ Mon, 06 May 2019 14:07:27 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190430223722.20845-1-gpiccoli@canonical.com>
+ <20190430223722.20845-2-gpiccoli@canonical.com> <CAPhsuW4SeUhNOJJkEf9wcLjbbc9qX0=C8zqbyCtC7Q8fdL91hw@mail.gmail.com>
+ <c8721ba3-5d38-7906-5049-e2b16e967ecf@canonical.com>
+In-Reply-To: <c8721ba3-5d38-7906-5049-e2b16e967ecf@canonical.com>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Mon, 6 May 2019 17:07:16 -0400
+Message-ID: <CAPhsuW6ahmkUhCgns=9WHPXSvYefB0Gmr1oB7gdZiD86sKyHFg@mail.gmail.com>
 Subject: Re: [PATCH 2/2] md/raid0: Do not bypass blocking queue entered for
  raid0 bios
-To:     Song Liu <liu.song.a23@gmail.com>
+To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>
 Cc:     linux-block@vger.kernel.org,
         linux-raid <linux-raid@vger.kernel.org>, dm-devel@redhat.com,
         axboe@kernel.dk, Gavin Guo <gavin.guo@canonical.com>,
@@ -53,83 +58,57 @@ Cc:     linux-block@vger.kernel.org,
         Ming Lei <ming.lei@redhat.com>,
         Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
         stable@vger.kernel.org
-References: <20190430223722.20845-1-gpiccoli@canonical.com>
- <20190430223722.20845-2-gpiccoli@canonical.com>
- <CAPhsuW4SeUhNOJJkEf9wcLjbbc9qX0=C8zqbyCtC7Q8fdL91hw@mail.gmail.com>
-From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gpiccoli@canonical.com; prefer-encrypt=mutual; keydata=
- mQENBFpVBxcBCADPNKmu2iNKLepiv8+Ssx7+fVR8lrL7cvakMNFPXsXk+f0Bgq9NazNKWJIn
- Qxpa1iEWTZcLS8ikjatHMECJJqWlt2YcjU5MGbH1mZh+bT3RxrJRhxONz5e5YILyNp7jX+Vh
- 30rhj3J0vdrlIhPS8/bAt5tvTb3ceWEic9mWZMsosPavsKVcLIO6iZFlzXVu2WJ9cov8eQM/
- irIgzvmFEcRyiQ4K+XUhuA0ccGwgvoJv4/GWVPJFHfMX9+dat0Ev8HQEbN/mko/bUS4Wprdv
- 7HR5tP9efSLucnsVzay0O6niZ61e5c97oUa9bdqHyApkCnGgKCpg7OZqLMM9Y3EcdMIJABEB
- AAG0LUd1aWxoZXJtZSBHLiBQaWNjb2xpIDxncGljY29saUBjYW5vbmljYWwuY29tPokBNwQT
- AQgAIQUCWmClvQIbAwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDOR5EF9K/7Gza3B/9d
- 5yczvEwvlh6ksYq+juyuElLvNwMFuyMPsvMfP38UslU8S3lf+ETukN1S8XVdeq9yscwtsRW/
- 4YoUwHinJGRovqy8gFlm3SAtjfdqysgJqUJwBmOtcsHkmvFXJmPPGVoH9rMCUr9s6VDPox8f
- q2W5M7XE9YpsfchS/0fMn+DenhQpV3W6pbLtuDvH/81GKrhxO8whSEkByZbbc+mqRhUSTdN3
- iMpRL0sULKPVYbVMbQEAnfJJ1LDkPqlTikAgt3peP7AaSpGs1e3pFzSEEW1VD2jIUmmDku0D
- LmTHRl4t9KpbU/H2/OPZkrm7809QovJGRAxjLLPcYOAP7DUeltveuQENBFpVBxcBCADbxD6J
- aNw/KgiSsbx5Sv8nNqO1ObTjhDR1wJw+02Bar9DGuFvx5/qs3ArSZkl8qX0X9Vhptk8rYnkn
- pfcrtPBYLoux8zmrGPA5vRgK2ItvSc0WN31YR/6nqnMfeC4CumFa/yLl26uzHJa5RYYQ47jg
- kZPehpc7IqEQ5IKy6cCKjgAkuvM1rDP1kWQ9noVhTUFr2SYVTT/WBHqUWorjhu57/OREo+Tl
- nxI1KrnmW0DbF52tYoHLt85dK10HQrV35OEFXuz0QPSNrYJT0CZHpUprkUxrupDgkM+2F5LI
- bIcaIQ4uDMWRyHpDbczQtmTke0x41AeIND3GUc+PQ4hWGp9XABEBAAGJAR8EGAEIAAkFAlpV
- BxcCGwwACgkQzkeRBfSv+xv1wwgAj39/45O3eHN5pK0XMyiRF4ihH9p1+8JVfBoSQw7AJ6oU
- 1Hoa+sZnlag/l2GTjC8dfEGNoZd3aRxqfkTrpu2TcfT6jIAsxGjnu+fUCoRNZzmjvRziw3T8
- egSPz+GbNXrTXB8g/nc9mqHPPprOiVHDSK8aGoBqkQAPZDjUtRwVx112wtaQwArT2+bDbb/Y
- Yh6gTrYoRYHo6FuQl5YsHop/fmTahpTx11IMjuh6IJQ+lvdpdfYJ6hmAZ9kiVszDF6pGFVkY
- kHWtnE2Aa5qkxnA2HoFpqFifNWn5TyvJFpyqwVhVI8XYtXyVHub/WbXLWQwSJA4OHmqU8gDl
- X18zwLgdiQ==
-Message-ID: <c8721ba3-5d38-7906-5049-e2b16e967ecf@canonical.com>
-Date:   Mon, 6 May 2019 15:48:01 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CAPhsuW4SeUhNOJJkEf9wcLjbbc9qX0=C8zqbyCtC7Q8fdL91hw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 06/05/2019 13:50, Song Liu wrote:
-> [...] 
-> IIUC, we need this for all raid types. Is it possible to fix that in md.c so
-> all types get the fix?
-> 
-> Thanks,
-> Song
-> 
+On Mon, May 6, 2019 at 2:48 PM Guilherme G. Piccoli
+<gpiccoli@canonical.com> wrote:
+>
+> On 06/05/2019 13:50, Song Liu wrote:
+> > [...]
+> > IIUC, we need this for all raid types. Is it possible to fix that in md.c so
+> > all types get the fix?
+> >
+> > Thanks,
+> > Song
+> >
+>
+> Hi Song, thanks again for reviewing my code and provide input, much
+> appreciated!
+>
+> I understand this could in theory affects all the RAID levels, but in
+> practice I don't think it'll happen. RAID0 is the only "blind" mode of
+> RAID, in the sense it's the only one that doesn't care at all with
+> failures. In fact, this was the origin of my other thread [0], regarding
+> the change of raid0's behavior in error cases..because it currently does
+> not care with members being removed and rely only in filesystem failures
+> (after submitting many BIOs to the removed device).
+>
+> That said, in this change I've only took care of raid0, since in my
+> understanding the other levels won't submit BIOs to dead devices; we can
+> experiment that to see if it's true.
 
-Hi Song, thanks again for reviewing my code and provide input, much
-appreciated!
+Could you please run a quick test with raid5? I am wondering whether
+some race condition could get us into similar crash. If we cannot easily
+trigger the bug, we can process with this version.
 
-I understand this could in theory affects all the RAID levels, but in
-practice I don't think it'll happen. RAID0 is the only "blind" mode of
-RAID, in the sense it's the only one that doesn't care at all with
-failures. In fact, this was the origin of my other thread [0], regarding
-the change of raid0's behavior in error cases..because it currently does
-not care with members being removed and rely only in filesystem failures
-(after submitting many BIOs to the removed device).
+Thanks,
+Song
 
-That said, in this change I've only took care of raid0, since in my
-understanding the other levels won't submit BIOs to dead devices; we can
-experiment that to see if it's true.
-
-But I'd be happy to change all other levels also if you think it's
-appropriate (or a simple generic change to md.c if it is enough). Do you
-think we could go ahead with this change, and further improve that (to
-cover all raid cases if necessary)?
-
-Cheers,
-
-
-Guilherme
-
-
-
-[0] https://marc.info/?l=linux-raid&m=155562509905735
+>
+> But I'd be happy to change all other levels also if you think it's
+> appropriate (or a simple generic change to md.c if it is enough). Do you
+> think we could go ahead with this change, and further improve that (to
+> cover all raid cases if necessary)?
+>
+> Cheers,
+>
+>
+> Guilherme
+>
+>
+>
+> [0] https://marc.info/?l=linux-raid&m=155562509905735
