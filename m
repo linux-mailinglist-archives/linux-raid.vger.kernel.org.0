@@ -2,52 +2,134 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E0D9153C8
-	for <lists+linux-raid@lfdr.de>; Mon,  6 May 2019 20:39:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2371A153D6
+	for <lists+linux-raid@lfdr.de>; Mon,  6 May 2019 20:48:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbfEFSjS (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 6 May 2019 14:39:18 -0400
-Received: from smtp.hosts.co.uk ([85.233.160.19]:23908 "EHLO smtp.hosts.co.uk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726277AbfEFSjR (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 6 May 2019 14:39:17 -0400
-Received: from [81.156.88.27] (helo=[192.168.1.118])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1hNiWB-0006CC-4W; Mon, 06 May 2019 19:39:15 +0100
-Subject: Re: New complete guide for irreversible mdadm failures recovery
-To:     Julien ROBIN <julien.robin28@free.fr>,
-        Linux Raid <linux-raid@vger.kernel.org>
-References: <b40052a0-5228-869d-a534-18dd7c366705@free.fr>
-From:   Wols Lists <antlists@youngman.org.uk>
-Message-ID: <5CD07F52.5010601@youngman.org.uk>
-Date:   Mon, 6 May 2019 19:39:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.7.0
+        id S1726365AbfEFSsL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 6 May 2019 14:48:11 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:49153 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726280AbfEFSsK (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 6 May 2019 14:48:10 -0400
+Received: from mail-qk1-f200.google.com ([209.85.222.200])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <gpiccoli@canonical.com>)
+        id 1hNiem-0007H3-Bb
+        for linux-raid@vger.kernel.org; Mon, 06 May 2019 18:48:08 +0000
+Received: by mail-qk1-f200.google.com with SMTP id h16so2727022qke.11
+        for <linux-raid@vger.kernel.org>; Mon, 06 May 2019 11:48:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=bC2THTg10tW16ub7PNyNptaheYbyDqPTCbofTdADo6U=;
+        b=hvGHpt8/YwPu+4wBt1HEkT0Y5clk4VAAdrquJB/KQPboatWfIxqKb53VXwdECAKy/2
+         ZLJ5nVTOW89bWp4aM7T49cDTevvvqILObxeH4W0MIwjmqsoNKOcudIUG2sCxm1mWImGV
+         pWWEIuEsSBdHhpy7YIeU2XqPu+DQUQKn2bJsIaGx1mZxl16u0gn+fJduHOlh3zmA/9rN
+         SR0BKUq1uz0Rc1jPmTsFJx179U7N3RgBXsX9KJAOfkTKNCxVZ4ZBGtoLFO+5J4pjDfxx
+         Jq705lzgdWES3rb/m25C1Pmhs1VXPrRlejKUqt7+JziWZqWkQCaR60JIP2WePNUmjjgj
+         UieA==
+X-Gm-Message-State: APjAAAXPcmk/2Ht/DGDrl0IygHKjkKLzlO4FPzvkvZ2yPYsJ3naRrRe0
+        sQM/Jf4cTtwPfKe1NTEk7yv85d3p6OPUg+rCbgk2UJky5PBjAlNBgl1EDjRM+OewfCxgX5O73jB
+        pTN3yh/lqtD469GsB33Y6b02SGc0G20MuA2tcgdY=
+X-Received: by 2002:ac8:1c39:: with SMTP id a54mr20851833qtk.344.1557168487499;
+        Mon, 06 May 2019 11:48:07 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwli31XV/EPuqTTwm6MSINbZHcbpJYoivTjqAbSmdTKZRc/DelL2WjDxPfeSm6BWH7j+Norfw==
+X-Received: by 2002:ac8:1c39:: with SMTP id a54mr20851815qtk.344.1557168487296;
+        Mon, 06 May 2019 11:48:07 -0700 (PDT)
+Received: from [192.168.0.239] ([177.183.163.179])
+        by smtp.gmail.com with ESMTPSA id j123sm6316420qkf.23.2019.05.06.11.48.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 May 2019 11:48:06 -0700 (PDT)
+Subject: Re: [PATCH 2/2] md/raid0: Do not bypass blocking queue entered for
+ raid0 bios
+To:     Song Liu <liu.song.a23@gmail.com>
+Cc:     linux-block@vger.kernel.org,
+        linux-raid <linux-raid@vger.kernel.org>, dm-devel@redhat.com,
+        axboe@kernel.dk, Gavin Guo <gavin.guo@canonical.com>,
+        Jay Vosburgh <jay.vosburgh@canonical.com>, kernel@gpiccoli.net,
+        Ming Lei <ming.lei@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        stable@vger.kernel.org
+References: <20190430223722.20845-1-gpiccoli@canonical.com>
+ <20190430223722.20845-2-gpiccoli@canonical.com>
+ <CAPhsuW4SeUhNOJJkEf9wcLjbbc9qX0=C8zqbyCtC7Q8fdL91hw@mail.gmail.com>
+From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gpiccoli@canonical.com; prefer-encrypt=mutual; keydata=
+ mQENBFpVBxcBCADPNKmu2iNKLepiv8+Ssx7+fVR8lrL7cvakMNFPXsXk+f0Bgq9NazNKWJIn
+ Qxpa1iEWTZcLS8ikjatHMECJJqWlt2YcjU5MGbH1mZh+bT3RxrJRhxONz5e5YILyNp7jX+Vh
+ 30rhj3J0vdrlIhPS8/bAt5tvTb3ceWEic9mWZMsosPavsKVcLIO6iZFlzXVu2WJ9cov8eQM/
+ irIgzvmFEcRyiQ4K+XUhuA0ccGwgvoJv4/GWVPJFHfMX9+dat0Ev8HQEbN/mko/bUS4Wprdv
+ 7HR5tP9efSLucnsVzay0O6niZ61e5c97oUa9bdqHyApkCnGgKCpg7OZqLMM9Y3EcdMIJABEB
+ AAG0LUd1aWxoZXJtZSBHLiBQaWNjb2xpIDxncGljY29saUBjYW5vbmljYWwuY29tPokBNwQT
+ AQgAIQUCWmClvQIbAwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDOR5EF9K/7Gza3B/9d
+ 5yczvEwvlh6ksYq+juyuElLvNwMFuyMPsvMfP38UslU8S3lf+ETukN1S8XVdeq9yscwtsRW/
+ 4YoUwHinJGRovqy8gFlm3SAtjfdqysgJqUJwBmOtcsHkmvFXJmPPGVoH9rMCUr9s6VDPox8f
+ q2W5M7XE9YpsfchS/0fMn+DenhQpV3W6pbLtuDvH/81GKrhxO8whSEkByZbbc+mqRhUSTdN3
+ iMpRL0sULKPVYbVMbQEAnfJJ1LDkPqlTikAgt3peP7AaSpGs1e3pFzSEEW1VD2jIUmmDku0D
+ LmTHRl4t9KpbU/H2/OPZkrm7809QovJGRAxjLLPcYOAP7DUeltveuQENBFpVBxcBCADbxD6J
+ aNw/KgiSsbx5Sv8nNqO1ObTjhDR1wJw+02Bar9DGuFvx5/qs3ArSZkl8qX0X9Vhptk8rYnkn
+ pfcrtPBYLoux8zmrGPA5vRgK2ItvSc0WN31YR/6nqnMfeC4CumFa/yLl26uzHJa5RYYQ47jg
+ kZPehpc7IqEQ5IKy6cCKjgAkuvM1rDP1kWQ9noVhTUFr2SYVTT/WBHqUWorjhu57/OREo+Tl
+ nxI1KrnmW0DbF52tYoHLt85dK10HQrV35OEFXuz0QPSNrYJT0CZHpUprkUxrupDgkM+2F5LI
+ bIcaIQ4uDMWRyHpDbczQtmTke0x41AeIND3GUc+PQ4hWGp9XABEBAAGJAR8EGAEIAAkFAlpV
+ BxcCGwwACgkQzkeRBfSv+xv1wwgAj39/45O3eHN5pK0XMyiRF4ihH9p1+8JVfBoSQw7AJ6oU
+ 1Hoa+sZnlag/l2GTjC8dfEGNoZd3aRxqfkTrpu2TcfT6jIAsxGjnu+fUCoRNZzmjvRziw3T8
+ egSPz+GbNXrTXB8g/nc9mqHPPprOiVHDSK8aGoBqkQAPZDjUtRwVx112wtaQwArT2+bDbb/Y
+ Yh6gTrYoRYHo6FuQl5YsHop/fmTahpTx11IMjuh6IJQ+lvdpdfYJ6hmAZ9kiVszDF6pGFVkY
+ kHWtnE2Aa5qkxnA2HoFpqFifNWn5TyvJFpyqwVhVI8XYtXyVHub/WbXLWQwSJA4OHmqU8gDl
+ X18zwLgdiQ==
+Message-ID: <c8721ba3-5d38-7906-5049-e2b16e967ecf@canonical.com>
+Date:   Mon, 6 May 2019 15:48:01 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <b40052a0-5228-869d-a534-18dd7c366705@free.fr>
+In-Reply-To: <CAPhsuW4SeUhNOJJkEf9wcLjbbc9qX0=C8zqbyCtC7Q8fdL91hw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 05/05/19 19:02, Julien ROBIN wrote:
+On 06/05/2019 13:50, Song Liu wrote:
+> [...] 
+> IIUC, we need this for all raid types. Is it possible to fix that in md.c so
+> all types get the fix?
 > 
-> https://raid.wiki.kernel.org/index.php/Irreversible_mdadm_failure_recovery
+> Thanks,
+> Song
 > 
-> I did my best efforts for the English correctness; anyway feel free to
-> feedback or correct if you see some errors (be it English or technical
-> things, although it has been thoroughly tested).
 
-I spotted this over the weekend. It's brilliant, thanks.
+Hi Song, thanks again for reviewing my code and provide input, much
+appreciated!
 
-I will probably go through it and improve the English at some point, but
-rest assured you've done a far better job in English than I would have
-done in French! It's more than readable, although some quirks are visible.
+I understand this could in theory affects all the RAID levels, but in
+practice I don't think it'll happen. RAID0 is the only "blind" mode of
+RAID, in the sense it's the only one that doesn't care at all with
+failures. In fact, this was the origin of my other thread [0], regarding
+the change of raid0's behavior in error cases..because it currently does
+not care with members being removed and rely only in filesystem failures
+(after submitting many BIOs to the removed device).
 
-Thanks again very much!
+That said, in this change I've only took care of raid0, since in my
+understanding the other levels won't submit BIOs to dead devices; we can
+experiment that to see if it's true.
+
+But I'd be happy to change all other levels also if you think it's
+appropriate (or a simple generic change to md.c if it is enough). Do you
+think we could go ahead with this change, and further improve that (to
+cover all raid cases if necessary)?
 
 Cheers,
-Wol
+
+
+Guilherme
+
+
+
+[0] https://marc.info/?l=linux-raid&m=155562509905735
