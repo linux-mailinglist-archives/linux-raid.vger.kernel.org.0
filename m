@@ -2,80 +2,135 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 938751659A
-	for <lists+linux-raid@lfdr.de>; Tue,  7 May 2019 16:26:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48B7816D4E
+	for <lists+linux-raid@lfdr.de>; Tue,  7 May 2019 23:51:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfEGO0H (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 7 May 2019 10:26:07 -0400
-Received: from zimbra.karlsbakk.net ([193.29.58.196]:45136 "EHLO
-        zimbra.karlsbakk.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbfEGO0G (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 7 May 2019 10:26:06 -0400
-Received: from localhost (localhost.localdomain [IPv6:::1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id 812DD3C0220
-        for <linux-raid@vger.kernel.org>; Tue,  7 May 2019 16:26:05 +0200 (CEST)
-Received: from zimbra.karlsbakk.net ([IPv6:::1])
-        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id GB2QdVEbmmmY for <linux-raid@vger.kernel.org>;
-        Tue,  7 May 2019 16:26:04 +0200 (CEST)
-Received: from localhost (localhost.localdomain [IPv6:::1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id DC6593C02B4
-        for <linux-raid@vger.kernel.org>; Tue,  7 May 2019 16:26:03 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra.karlsbakk.net DC6593C02B4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=karlsbakk.net;
-        s=1DC131FE-D37A-11E7-BD32-3AD4DFE620DF; t=1557239163;
-        bh=3rATxNxK2gitjGLLqlmEx1mA6KuCaYwKNIlJUl1SMZE=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=dRvEWKwvWTYfTUQ8APkP04sq1EUf8xeq9lCb1iDPQde5NdYGzYrToSqaxzkA/FY0/
-         5YbdEp0KartI0/Xq4kLOqhXML93IXHHlCmcj1NVHckmDW8mCQaDy9Fh2qK5Mj7tMKQ
-         PljL0aktLBwQGCogx5GbrI2IMN4uq5a5qhSgc+J13u90br7O45EAqcZFo5lGE2t7Xc
-         ZK62B56U2IwR21l/U5rJAJ0vV4wmqAwnA8pb/aGhgPAtroPUO3y3nZbKmitC1OeE2Z
-         qyFzZ1AjU9aDDGfv5etGmn7FTLOxwaDXMWZ5TYZm4pI5xtrMqBcs9PtWFqn/ZtMbU/
-         PPD+mgkllMDmg==
-X-Virus-Scanned: amavisd-new at zimbra.karlsbakk.net
-Received: from zimbra.karlsbakk.net ([IPv6:::1])
-        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id 5HvBGQeY0RYk for <linux-raid@vger.kernel.org>;
-        Tue,  7 May 2019 16:26:03 +0200 (CEST)
-Received: from zimbra.karlsbakk.net (localhost.localdomain [127.0.0.1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id B8AF43C0220
-        for <linux-raid@vger.kernel.org>; Tue,  7 May 2019 16:26:03 +0200 (CEST)
-Date:   Tue, 7 May 2019 16:26:03 +0200 (CEST)
-From:   Roy Sigurd Karlsbakk <roy@karlsbakk.net>
-To:     Linux RAID Mailing List <linux-raid@vger.kernel.org>
-Message-ID: <1059881755.12544793.1557239163561.JavaMail.zimbra@karlsbakk.net>
-Subject: Spare pool documentation
+        id S1728482AbfEGVvr (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 7 May 2019 17:51:47 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53188 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727355AbfEGVvr (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 7 May 2019 17:51:47 -0400
+Received: from mail-qk1-f197.google.com ([209.85.222.197])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <gpiccoli@canonical.com>)
+        id 1hO801-0007QV-BW
+        for linux-raid@vger.kernel.org; Tue, 07 May 2019 21:51:45 +0000
+Received: by mail-qk1-f197.google.com with SMTP id a64so15753884qkf.8
+        for <linux-raid@vger.kernel.org>; Tue, 07 May 2019 14:51:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ABxz2zyv5bmpxAzqyzrtcoqu224yUlyjNfm0bz0RUYo=;
+        b=gEu3kt8FxIE8Qm6lTJ/vTxauplEUOYAKwDI3xPu8IQOYjR0Pnjg7w0WIq8y0LmNFaV
+         DRL9TDu4RSPFlrFIlDPhXWXJNZxCrCVAc4GwycnUd29EAZr1cTsevxzrfPHs++/yv3xj
+         u9knCHU5ePCDMwZjRzsZlvMAcc2LeQ3L3CuW5ZTts/FRq7h0RXxHK3iwEj30YF6CPGDn
+         mLb0lT78pXjKg9qhpGdhvBxQTg/uM8LmCkOpkIDHpALQSrIHXiMgWpZ2MCxHaXbMq0Dm
+         PE+ETss/TGxdD1bwkABTYljPZpJ5Qccr1NeLC8pcwxTmrR5VVKYLUdjMTfXOtxdwGXdd
+         KtZg==
+X-Gm-Message-State: APjAAAV5PquE9OrHz6dwYcmPAplMhtIqGzQpOoMgcweOS0McCAX1I17B
+        rxh/sFR7hOzY5JPT1oUn/rsCof8ltl0MrijGwYyBZBtzUXSUcnCAzQjvLQSjD9cgxwVzXwLdo+m
+        2de4Ty5cXJzklGXE2UxdMXfISiFQ/V6FKMsruzuY=
+X-Received: by 2002:ac8:8c4:: with SMTP id y4mr568115qth.334.1557265904500;
+        Tue, 07 May 2019 14:51:44 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxqmyA8mbiqIMGA6UVYNcKNbJyCt+/9kos8Zg0GnTOlwY7lwTrsVbbrcPB3iSk/BlNaK4k9rQ==
+X-Received: by 2002:ac8:8c4:: with SMTP id y4mr568099qth.334.1557265904325;
+        Tue, 07 May 2019 14:51:44 -0700 (PDT)
+Received: from [192.168.1.205] (201-92-248-20.dsl.telesp.net.br. [201.92.248.20])
+        by smtp.gmail.com with ESMTPSA id d41sm2961824qta.22.2019.05.07.14.51.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 May 2019 14:51:43 -0700 (PDT)
+Subject: Re: [PATCH 2/2] md/raid0: Do not bypass blocking queue entered for
+ raid0 bios
+To:     Song Liu <liu.song.a23@gmail.com>
+Cc:     linux-block@vger.kernel.org,
+        linux-raid <linux-raid@vger.kernel.org>, dm-devel@redhat.com,
+        axboe@kernel.dk, Gavin Guo <gavin.guo@canonical.com>,
+        Jay Vosburgh <jay.vosburgh@canonical.com>, kernel@gpiccoli.net,
+        Ming Lei <ming.lei@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        stable@vger.kernel.org
+References: <20190430223722.20845-1-gpiccoli@canonical.com>
+ <20190430223722.20845-2-gpiccoli@canonical.com>
+ <CAPhsuW4SeUhNOJJkEf9wcLjbbc9qX0=C8zqbyCtC7Q8fdL91hw@mail.gmail.com>
+ <c8721ba3-5d38-7906-5049-e2b16e967ecf@canonical.com>
+ <CAPhsuW6ahmkUhCgns=9WHPXSvYefB0Gmr1oB7gdZiD86sKyHFg@mail.gmail.com>
+From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gpiccoli@canonical.com; prefer-encrypt=mutual; keydata=
+ mQENBFpVBxcBCADPNKmu2iNKLepiv8+Ssx7+fVR8lrL7cvakMNFPXsXk+f0Bgq9NazNKWJIn
+ Qxpa1iEWTZcLS8ikjatHMECJJqWlt2YcjU5MGbH1mZh+bT3RxrJRhxONz5e5YILyNp7jX+Vh
+ 30rhj3J0vdrlIhPS8/bAt5tvTb3ceWEic9mWZMsosPavsKVcLIO6iZFlzXVu2WJ9cov8eQM/
+ irIgzvmFEcRyiQ4K+XUhuA0ccGwgvoJv4/GWVPJFHfMX9+dat0Ev8HQEbN/mko/bUS4Wprdv
+ 7HR5tP9efSLucnsVzay0O6niZ61e5c97oUa9bdqHyApkCnGgKCpg7OZqLMM9Y3EcdMIJABEB
+ AAG0LUd1aWxoZXJtZSBHLiBQaWNjb2xpIDxncGljY29saUBjYW5vbmljYWwuY29tPokBNwQT
+ AQgAIQUCWmClvQIbAwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDOR5EF9K/7Gza3B/9d
+ 5yczvEwvlh6ksYq+juyuElLvNwMFuyMPsvMfP38UslU8S3lf+ETukN1S8XVdeq9yscwtsRW/
+ 4YoUwHinJGRovqy8gFlm3SAtjfdqysgJqUJwBmOtcsHkmvFXJmPPGVoH9rMCUr9s6VDPox8f
+ q2W5M7XE9YpsfchS/0fMn+DenhQpV3W6pbLtuDvH/81GKrhxO8whSEkByZbbc+mqRhUSTdN3
+ iMpRL0sULKPVYbVMbQEAnfJJ1LDkPqlTikAgt3peP7AaSpGs1e3pFzSEEW1VD2jIUmmDku0D
+ LmTHRl4t9KpbU/H2/OPZkrm7809QovJGRAxjLLPcYOAP7DUeltveuQENBFpVBxcBCADbxD6J
+ aNw/KgiSsbx5Sv8nNqO1ObTjhDR1wJw+02Bar9DGuFvx5/qs3ArSZkl8qX0X9Vhptk8rYnkn
+ pfcrtPBYLoux8zmrGPA5vRgK2ItvSc0WN31YR/6nqnMfeC4CumFa/yLl26uzHJa5RYYQ47jg
+ kZPehpc7IqEQ5IKy6cCKjgAkuvM1rDP1kWQ9noVhTUFr2SYVTT/WBHqUWorjhu57/OREo+Tl
+ nxI1KrnmW0DbF52tYoHLt85dK10HQrV35OEFXuz0QPSNrYJT0CZHpUprkUxrupDgkM+2F5LI
+ bIcaIQ4uDMWRyHpDbczQtmTke0x41AeIND3GUc+PQ4hWGp9XABEBAAGJAR8EGAEIAAkFAlpV
+ BxcCGwwACgkQzkeRBfSv+xv1wwgAj39/45O3eHN5pK0XMyiRF4ihH9p1+8JVfBoSQw7AJ6oU
+ 1Hoa+sZnlag/l2GTjC8dfEGNoZd3aRxqfkTrpu2TcfT6jIAsxGjnu+fUCoRNZzmjvRziw3T8
+ egSPz+GbNXrTXB8g/nc9mqHPPprOiVHDSK8aGoBqkQAPZDjUtRwVx112wtaQwArT2+bDbb/Y
+ Yh6gTrYoRYHo6FuQl5YsHop/fmTahpTx11IMjuh6IJQ+lvdpdfYJ6hmAZ9kiVszDF6pGFVkY
+ kHWtnE2Aa5qkxnA2HoFpqFifNWn5TyvJFpyqwVhVI8XYtXyVHub/WbXLWQwSJA4OHmqU8gDl
+ X18zwLgdiQ==
+Message-ID: <21d2ab66-4295-6b69-ef85-d798f3406fbd@canonical.com>
+Date:   Tue, 7 May 2019 18:51:36 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <CAPhsuW6ahmkUhCgns=9WHPXSvYefB0Gmr1oB7gdZiD86sKyHFg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [::ffff:91.186.71.4]
-X-Mailer: Zimbra 8.8.10_GA_3781 (ZimbraWebClient - FF66 (Mac)/8.8.10_GA_3786)
-Thread-Index: vZgptUfofUglm4aFOdjLI06Cz9G5og==
-Thread-Topic: Spare pool documentation
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi
+On 06/05/2019 18:07, Song Liu wrote:
+>> [...]
+>> I understand this could in theory affects all the RAID levels, but in
+>> practice I don't think it'll happen. RAID0 is the only "blind" mode of
+>> RAID, in the sense it's the only one that doesn't care at all with
+>> failures. In fact, this was the origin of my other thread [0], regarding
+>> the change of raid0's behavior in error cases..because it currently does
+>> not care with members being removed and rely only in filesystem failures
+>> (after submitting many BIOs to the removed device).
+>>
+>> That said, in this change I've only took care of raid0, since in my
+>> understanding the other levels won't submit BIOs to dead devices; we can
+>> experiment that to see if it's true.
+> 
+> Could you please run a quick test with raid5? I am wondering whether
+> some race condition could get us into similar crash. If we cannot easily
+> trigger the bug, we can process with this version.
+> 
+> Thanks,
+> Song
 
-I came across the phenomonen of 'spare pools', merely mentioned in the manu=
-al pages I've found, but just, so I did some testing in my raidtest vm to s=
-ee if I could make it work. It seems fine by me, but so far I don't have mo=
-re than one raidset (plus the small one for the root). Are there any offici=
-al documentation on this except for the few lines in the manual pages?
+Hi Song, I've tested both RAID5 (with 3 disks, removing one at a time),
+and also RAID 1 (2 disks, also removing one at a time); no issues
+observed in kernel 5.1. We can see one interesting message in kernel
+log: "super_written gets error=10", which corresponds to md detecting
+the error (bi_status == BLK_STS_IOERROR) and instantly failing the
+write, making FS read-only.
 
-I wrote about my tests here: https://wiki.malinux.no/index.php/Roy's_notes#=
-Spare_pools
+So, I think really the issue happens only in RAID0, which writes
+"blindly" to its components.
+Let me know your thoughts - thanks again for your input!
 
-Vennlig hilsen
+Cheers,
 
-roy
---
-Roy Sigurd Karlsbakk
-(+47) 98013356
-http://blogg.karlsbakk.net/
-GPG Public key: http://karlsbakk.net/roysigurdkarlsbakk.pubkey.txt
---
-Hi=C3=B0 g=C3=B3=C3=B0a skaltu =C3=AD stein h=C3=B6ggva, hi=C3=B0 illa =C3=
-=AD snj=C3=B3 rita.
+
+Guilherme
