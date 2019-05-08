@@ -2,77 +2,54 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3138C181B7
-	for <lists+linux-raid@lfdr.de>; Wed,  8 May 2019 23:41:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 274DB1824C
+	for <lists+linux-raid@lfdr.de>; Thu,  9 May 2019 00:35:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfEHVlv (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 8 May 2019 17:41:51 -0400
-Received: from zimbra.karlsbakk.net ([193.29.58.196]:55250 "EHLO
-        zimbra.karlsbakk.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfEHVlv (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 8 May 2019 17:41:51 -0400
-Received: from localhost (localhost.localdomain [IPv6:::1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id 8EFEB3C023D
-        for <linux-raid@vger.kernel.org>; Wed,  8 May 2019 23:41:49 +0200 (CEST)
-Received: from zimbra.karlsbakk.net ([IPv6:::1])
-        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id HASbJeBScIKQ for <linux-raid@vger.kernel.org>;
-        Wed,  8 May 2019 23:41:48 +0200 (CEST)
-Received: from localhost (localhost.localdomain [IPv6:::1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id 33A5F3C02B8
-        for <linux-raid@vger.kernel.org>; Wed,  8 May 2019 23:41:48 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra.karlsbakk.net 33A5F3C02B8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=karlsbakk.net;
-        s=1DC131FE-D37A-11E7-BD32-3AD4DFE620DF; t=1557351708;
-        bh=sIvucU7h5DtMbMklc7XLpc67u2DVAosPr5/dOwxlnYM=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=qZG388TflpVQr/kQf83gwQAp3fnijy4z0baMtrQ6Za7mRrN+N1idbIyoAa4W0WhdL
-         NzVneHW5VodqSgRv1FwKdRelNrHj20FGbW62shO8pAa6gP/xOMLCqHo7/xS8QxEgql
-         jTOl63+YXJE3Zt4MFPm3ATL61XW6/rgttbUB6PJjKalFJ5H0wokax/BsPbrImEc8RE
-         NUf2+SiN6DkxmhJfnv0DD+2z3jXb80+llGnBwoEC65hcUPOqv16PEcmWJ9MCKBcrLN
-         RMPitnRIYZuNiHRgKrvSPSBhTbMNJeZ75AdfMJsXhG64klxPmiKhaqsd4z5R+njgGC
-         U/00rFwpotbtw==
-X-Virus-Scanned: amavisd-new at zimbra.karlsbakk.net
-Received: from zimbra.karlsbakk.net ([IPv6:::1])
-        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id Lg9PLCK2dMEp for <linux-raid@vger.kernel.org>;
-        Wed,  8 May 2019 23:41:48 +0200 (CEST)
-Received: from zimbra.karlsbakk.net (localhost.localdomain [127.0.0.1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id 18EF53C023D
-        for <linux-raid@vger.kernel.org>; Wed,  8 May 2019 23:41:48 +0200 (CEST)
-Date:   Wed, 8 May 2019 23:41:47 +0200 (CEST)
-From:   Roy Sigurd Karlsbakk <roy@karlsbakk.net>
+        id S1726875AbfEHWfK (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 8 May 2019 18:35:10 -0400
+Received: from pide.tip.net.au ([203.10.76.2]:35865 "EHLO pide.tip.net.au"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726163AbfEHWfK (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 8 May 2019 18:35:10 -0400
+X-Greylist: delayed 513 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 May 2019 18:35:09 EDT
+Received: from pide.tip.net.au (pide.tip.net.au [IPv6:2401:fc00:0:107::2])
+        by mailhost.tip.net.au (Postfix) with ESMTP id 44zrfz1YfgzFvY8
+        for <linux-raid@vger.kernel.org>; Thu,  9 May 2019 08:26:35 +1000 (AEST)
+Received: from e7.eyal.emu.id.au (203-214-110-141.dyn.iinet.net.au [203.214.110.141])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pide.tip.net.au (Postfix) with ESMTPSA id 44zrfz10qDz980M
+        for <linux-raid@vger.kernel.org>; Thu,  9 May 2019 08:26:35 +1000 (AEST)
+Subject: Re: ID 5 Reallocated Sectors Count
 To:     Linux RAID Mailing List <linux-raid@vger.kernel.org>
-Message-ID: <1471924184.12974949.1557351707986.JavaMail.zimbra@karlsbakk.net>
-Subject: ID 5 Reallocated Sectors Count
+References: <1471924184.12974949.1557351707986.JavaMail.zimbra@karlsbakk.net>
+From:   Eyal Lebedinsky <eyal@eyal.emu.id.au>
+Message-ID: <2aff655d-0495-1f7d-a305-adf23f9800bb@eyal.emu.id.au>
+Date:   Thu, 9 May 2019 08:26:34 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [::ffff:51.175.163.250]
-X-Mailer: Zimbra 8.8.10_GA_3781 (ZimbraWebClient - FF66 (Mac)/8.8.10_GA_3786)
-Thread-Index: RPYl4K/l9xIEPV7/bI1qkbFEGycyvw==
-Thread-Topic: ID 5 Reallocated Sectors Count
+In-Reply-To: <1471924184.12974949.1557351707986.JavaMail.zimbra@karlsbakk.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi
+On 9/5/19 7:41 am, Roy Sigurd Karlsbakk wrote:
+> Hi
+> 
+> I'm monitoring this box and it seems ID 5 Reallocated Sectors Count (from SMART) is climbing frantically on one disk. It's a r6 so it shouldn't be much of an issue once the disk eventually fails, but does anyone out there know how many reallocated sectors you can have on a drive? This is an older 1TB ST31000524NS
 
-I'm monitoring this box and it seems ID 5 Reallocated Sectors Count (from S=
-MART) is climbing frantically on one disk. It's a r6 so it shouldn't be muc=
-h of an issue once the disk eventually fails, but does anyone out there kno=
-w how many reallocated sectors you can have on a drive? This is an older 1T=
-B ST31000524NS
+My rule, and what is often suggested in raid documents, is that once the number start to visibly climb (you say 'frantically') I replace the disk.
 
-Vennlig hilsen
+> Vennlig hilsen
+> 
+> roy
 
-roy
---
-Roy Sigurd Karlsbakk
-(+47) 98013356
-http://blogg.karlsbakk.net/
-GPG Public key: http://karlsbakk.net/roysigurdkarlsbakk.pubkey.txt
---
-Hi=C3=B0 g=C3=B3=C3=B0a skaltu =C3=AD stein h=C3=B6ggva, hi=C3=B0 illa =C3=
-=AD snj=C3=B3 rita.
+Regards,
+
+-- 
+Eyal at Home (eyal@eyal.emu.id.au)
