@@ -2,74 +2,80 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 229CB184E6
-	for <lists+linux-raid@lfdr.de>; Thu,  9 May 2019 07:40:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A0E871858C
+	for <lists+linux-raid@lfdr.de>; Thu,  9 May 2019 08:50:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfEIFkm (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 9 May 2019 01:40:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47654 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726540AbfEIFkm (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 9 May 2019 01:40:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 008F0ABD4;
-        Thu,  9 May 2019 05:40:40 +0000 (UTC)
-From:   NeilBrown <neilb@suse.com>
-To:     Roy Sigurd Karlsbakk <roy@karlsbakk.net>,
-        Linux RAID Mailing List <linux-raid@vger.kernel.org>
-Date:   Thu, 09 May 2019 15:40:35 +1000
+        id S1726415AbfEIGuo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 9 May 2019 02:50:44 -0400
+Received: from zimbra.karlsbakk.net ([193.29.58.196]:38000 "EHLO
+        zimbra.karlsbakk.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbfEIGuo (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 9 May 2019 02:50:44 -0400
+Received: from localhost (localhost.localdomain [IPv6:::1])
+        by zimbra.karlsbakk.net (Postfix) with ESMTP id CAAAA3C023D;
+        Thu,  9 May 2019 08:50:39 +0200 (CEST)
+Received: from zimbra.karlsbakk.net ([IPv6:::1])
+        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id w7teOIT-6vAA; Thu,  9 May 2019 08:50:38 +0200 (CEST)
+Received: from localhost (localhost.localdomain [IPv6:::1])
+        by zimbra.karlsbakk.net (Postfix) with ESMTP id 4C1583C0246;
+        Thu,  9 May 2019 08:50:38 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra.karlsbakk.net 4C1583C0246
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=karlsbakk.net;
+        s=1DC131FE-D37A-11E7-BD32-3AD4DFE620DF; t=1557384638;
+        bh=Es/eK16psBfUOZGnT8GOqquDfGfrpT38pvgsoZtraJo=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=tZLERhAsyIVKrrdMOSAIxDhy6A/N8ol++dn2WAj0C4CYwq+0du8QydwzeRHP7mjiM
+         p10yUrp9IKsorns5g3utxwLb+McNoTVllBC8MSnWpF+jWkE1JZl0Fp8YpPUhV4/a1c
+         Y+r5cwlLXj95mWBF4dWCxPzOAYk6KH7nYbAn+i5zP00baM3j+SQTxlRwcNdGpAUZgA
+         cIbc3HiZCD96QOZ3gBip85oLiFb+vatEWNS76d0456HPtbq8VVA00IYZGFddulhvO7
+         tQrnobmdPvDPdeyiKCPMyO32x0CaJKbP/46abahwNXvW99L3NH2PapZC3YMsX2EiPl
+         NaSc2afefLdEw==
+X-Virus-Scanned: amavisd-new at zimbra.karlsbakk.net
+Received: from zimbra.karlsbakk.net ([IPv6:::1])
+        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id 767CLnrL-cB1; Thu,  9 May 2019 08:50:38 +0200 (CEST)
+Received: from zimbra.karlsbakk.net (localhost.localdomain [127.0.0.1])
+        by zimbra.karlsbakk.net (Postfix) with ESMTP id 265043C023D;
+        Thu,  9 May 2019 08:50:38 +0200 (CEST)
+Date:   Thu, 9 May 2019 08:50:36 +0200 (CEST)
+From:   Roy Sigurd Karlsbakk <roy@karlsbakk.net>
+To:     NeilBrown <neilb@suse.com>
+Cc:     Linux Raid <linux-raid@vger.kernel.org>
+Message-ID: <1345381911.13103226.1557384636899.JavaMail.zimbra@karlsbakk.net>
+In-Reply-To: <87ef58yylo.fsf@notabene.neil.brown.name>
+References: <1059881755.12544793.1557239163561.JavaMail.zimbra@karlsbakk.net> <87ef58yylo.fsf@notabene.neil.brown.name>
 Subject: Re: Spare pool documentation
-In-Reply-To: <1059881755.12544793.1557239163561.JavaMail.zimbra@karlsbakk.net>
-References: <1059881755.12544793.1557239163561.JavaMail.zimbra@karlsbakk.net>
-Message-ID: <87ef58yylo.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [::ffff:176.11.89.245]
+X-Mailer: Zimbra 8.8.10_GA_3781 (ZimbraWebClient - FF66 (Mac)/8.8.10_GA_3786)
+Thread-Topic: Spare pool documentation
+Thread-Index: 1IHgEiuE+Uv+5lWock/XXQOXcHL/nQ==
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+>> I came across the phenomonen of 'spare pools', merely mentioned in the manual
+>> pages I've found, but just, so I did some testing in my raidtest vm to see if I
+>> could make it work. It seems fine by me, but so far I don't have more than one
+>> raidset (plus the small one for the root). Are there any official documentation
+>> on this except for the few lines in the manual pages?
+>>
+>> I wrote about my tests here:
+>> https://wiki.malinux.no/index.php/Roy's_notes#Spare_pools
+> 
+> Thank you for sharing your notes.
+> There is also
+>   https://raid.wiki.kernel.org/index.php/Tweaking,_tuning_and_troubleshooting#Sharing_spare_disks_between_different_arrays
+> 
+> It is always possible to improve the documentation.  If you have
+> specific suggestions of change to make to specific documents, please
+> share them.  Maybe even send a patch.
 
-On Tue, May 07 2019, Roy Sigurd Karlsbakk wrote:
 
-> Hi
->
-> I came across the phenomonen of 'spare pools', merely mentioned in the manual pages I've found, but just, so I did some testing in my raidtest vm to see if I could make it work. It seems fine by me, but so far I don't have more than one raidset (plus the small one for the root). Are there any official documentation on this except for the few lines in the manual pages?
->
-> I wrote about my tests here: https://wiki.malinux.no/index.php/Roy's_notes#Spare_pools
+I have no idea where to find the thing to path, but if you want to, you can just grab my example code there. It should be sufficient for most users, (more or less?) regardless of their level of knowledge, since an example is easier to understand than the current text.
 
-Thank you for sharing your notes.
-There is also
-   https://raid.wiki.kernel.org/index.php/Tweaking,_tuning_and_troubleshooting#Sharing_spare_disks_between_different_arrays
-
-It is always possible to improve the documentation.  If you have
-specific suggestions of change to make to specific documents, please
-share them.  Maybe even send a patch.
-
-Thanks,
-NeilBrown
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlzTvVMACgkQOeye3VZi
-gblM7w//fmG2VgB+z0QkyZYnubeJ6NKr9NGVLITmYx4mVA1hSX+16+H5IREvyOBp
-flkcb+dtf4BqkAdaeQkTV2I6e0RuQmnSUIL7WXyKXQbesgL1J1BNTSU4FQFw/qxS
-7eFbob0PJx2aitGWLPBv6rVdk1O8ycPJrvB9HpvezzGdCCcxEnbVJqM0MBB4tEOW
-/yLJ+iTbfqA7ijXHLgk8nDQxcoYpfmiJ0A5wOI51dTji4ZFMoLyLkOfp2KdP2w9T
-1iKbPQXHjfBgVnGZR2BNs70TznBlyePBLShUerVLgPtpJQpKHa8mB8ENEGo89ibQ
-bV+Dlcd9iYaI5RQEcU04JSyilSvAKN7B3qU8xq1o5SZOeqWKkLuywYrulxOvqZ4E
-H7h5Map+k+vGk8hBdtsw3g86L+4RJeFVmxcEybuzCEEacN5thpO+sTtpXhT5mxrh
-js7Gu+8xdNuw9iyJSapOj1e7NaIwzZnRZW9RkNvOC1Q2pCnzKcu5OvwHJOFKVasZ
-VeIOXVXouKd6Pd5OXxtFYhDmePxhGNeewltYzsaiFV7JGZb3NMkBQchHsl6W6wjN
-8bvh8s0HFUtrKyz8hq5A8GjiMNX8Nid4odtD/3oPQKqMMW1azQO89wz9OFE8xstT
-n+SwLSCisGPg01BS2HqAvlKR9SC9WhRByCgazh0micWDbTTIZ+0=
-=5Z9Z
------END PGP SIGNATURE-----
---=-=-=--
+roy
