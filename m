@@ -2,113 +2,209 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7945718591
-	for <lists+linux-raid@lfdr.de>; Thu,  9 May 2019 08:52:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BEB47188D6
+	for <lists+linux-raid@lfdr.de>; Thu,  9 May 2019 13:19:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbfEIGwt (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 9 May 2019 02:52:49 -0400
-Received: from zimbra.karlsbakk.net ([193.29.58.196]:38084 "EHLO
-        zimbra.karlsbakk.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbfEIGwt (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 9 May 2019 02:52:49 -0400
-Received: from localhost (localhost.localdomain [IPv6:::1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id 74B3C3C0246;
-        Thu,  9 May 2019 08:52:47 +0200 (CEST)
-Received: from zimbra.karlsbakk.net ([IPv6:::1])
-        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id b1wBrAXMF5Ip; Thu,  9 May 2019 08:52:46 +0200 (CEST)
-Received: from localhost (localhost.localdomain [IPv6:::1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id 295673C02B9;
-        Thu,  9 May 2019 08:52:46 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra.karlsbakk.net 295673C02B9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=karlsbakk.net;
-        s=1DC131FE-D37A-11E7-BD32-3AD4DFE620DF; t=1557384766;
-        bh=XkdGim09iGQnzgiQncJopt9VvsGhVNpa4Fb6Va9/30Y=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=qRtpoZw3/WESKNTvMI8ze1aIhSJ2/+sHak8YXbEAllstD4Mba4gWlnV46T/Jn8i40
-         YbA4GI0AJqlIpjY2gIClpRM/vU8Sod26e4cWl3n4vxG6KWBUkJXDp45Bz2nW9+/1fv
-         wbIArmSewoMu10EoOdLLPtbyaAVy4AGBZ1F3W+oLOmMTCVO1wH7QYL1NGfz3KRPxSB
-         dhMmGDayPKsrydu8VjfCTXnzLxAViKTIKMk5B3t/FnR5X/RBD4/4cic9fFGZPe98nP
-         Wlg8Jdnoo304VCYsTUinVwsLB8hBTkQNf5s8qcrWDuhTaj/idgFlTF9b8KhmqA8kDQ
-         RBB4QQvNbN3oA==
-X-Virus-Scanned: amavisd-new at zimbra.karlsbakk.net
-Received: from zimbra.karlsbakk.net ([IPv6:::1])
-        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id Ds4QVotapANb; Thu,  9 May 2019 08:52:46 +0200 (CEST)
-Received: from zimbra.karlsbakk.net (localhost.localdomain [127.0.0.1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id 0C6AF3C0246;
-        Thu,  9 May 2019 08:52:46 +0200 (CEST)
-Date:   Thu, 9 May 2019 08:52:45 +0200 (CEST)
-From:   Roy Sigurd Karlsbakk <roy@karlsbakk.net>
-To:     Wols Lists <antlists@youngman.org.uk>
-Cc:     Linux Raid <linux-raid@vger.kernel.org>
-Message-ID: <824237673.13103228.1557384765880.JavaMail.zimbra@karlsbakk.net>
-In-Reply-To: <5CD37280.9080309@youngman.org.uk>
-References: <1471924184.12974949.1557351707986.JavaMail.zimbra@karlsbakk.net> <2aff655d-0495-1f7d-a305-adf23f9800bb@eyal.emu.id.au> <1426313842.12996928.1557357572484.JavaMail.zimbra@karlsbakk.net> <5CD37280.9080309@youngman.org.uk>
-Subject: Re: ID 5 Reallocated Sectors Count
+        id S1726448AbfEILTK (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 9 May 2019 07:19:10 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36481 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbfEILTK (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 9 May 2019 07:19:10 -0400
+Received: by mail-ed1-f68.google.com with SMTP id a8so1691417edx.3;
+        Thu, 09 May 2019 04:19:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/Svie9yUR/Ki3ERUJrCqza9pq7RGH5A+LU5XetAHZSY=;
+        b=lRoMKFszdaZJXqdKVeaIsXxiaARvYZ0Yf1JHwCDUwRDmQuL9eCEjpJelCnhhWZsvzY
+         yxj38hYULI9qscPUamGzBPjFQradK7txRfFQcDw9mv9eHdzDPQk5WxFMvtyjIW4wAC8Y
+         xbib3RucZ9PZpigU012rkrGjQgbDMZb9wNpDq3S2bWezcO2CREUMgDbhQTbj/LspgqkZ
+         7h3pDrtuwsF38yZIBbBY5idgTCUI0jtkHdMfK8xp+RnmtMuDzZEAVhLI2T+y/JoJbhPk
+         GEi4Hk8yqCWjXC68CeZS56kDye5pB/LPj5daU/WcP0pPYPcUisL0+vP3J17GXjLPi8pJ
+         EoIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/Svie9yUR/Ki3ERUJrCqza9pq7RGH5A+LU5XetAHZSY=;
+        b=sDjOdK89nYlsMj4o0c5pO/UjlXqPXukGSwRcF9ql8W2O6d4aZsSZ+qqRgaRr4/RZU1
+         jW1yufBhJBCF+IgeJM+7rVIyYzG/G5OAkCVwCGM7+OQC/mjglUgUU5zrarPLcGKPPlpe
+         79mom8wtct3dlCalgE/oyY2N0UkQle8+/JJPhWXJ71MMF0OkvxpFuZ+FAX0DDieWSp0L
+         ZaPZYb6AxBfA1OYEhZjlk5HHPc7YtHSfoSZuqFFS9zJXO2DVhZ+r52wr2tgBwCVs109U
+         pfDWN9gV0E71zWryxisZcLaoQ43bjoRcei2wUnDZwo7LqmnMZwYgXHZfXd4PtmbLynyy
+         Uddg==
+X-Gm-Message-State: APjAAAV5h7ZidImViu4LmP7qFCqKLGm/sQoZQraVPvpBkZUmRMGxMTNh
+        fDwlXycrZNL578skmXR5QiE2JfmE
+X-Google-Smtp-Source: APXvYqyrKGN7RnGuN/OiBPlVnzUaz82ehvNxbBnu8pq6PN5SG9ycY6kGXiNHW8M/Nxz2rnpxRS98FA==
+X-Received: by 2002:a17:906:2447:: with SMTP id a7mr2693190ejb.235.1557400747703;
+        Thu, 09 May 2019 04:19:07 -0700 (PDT)
+Received: from geeko.suse.cz (189.114.218.127.dynamic.adsl.gvt.net.br. [189.114.218.127])
+        by smtp.gmail.com with ESMTPSA id j3sm290382edh.82.2019.05.09.04.19.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 04:19:05 -0700 (PDT)
+From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     neilb@suse.com, Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
+        Shaohua Li <shli@kernel.org>,
+        linux-raid@vger.kernel.org (open list:SOFTWARE RAID (Multiple Disks)
+        SUPPORT)
+Subject: [PATCH] drivers: md: Unify common definitions of raid1 and raid10
+Date:   Thu,  9 May 2019 08:18:49 -0300
+Message-Id: <20190509111849.22927-1-marcos.souza.org@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [::ffff:176.11.89.245]
-X-Mailer: Zimbra 8.8.10_GA_3781 (ZimbraWebClient - FF66 (Mac)/8.8.10_GA_3786)
-Thread-Topic: ID 5 Reallocated Sectors Count
-Thread-Index: xmOyk5v4ZfhW+FT9kwWNnr91EoJ2Lg==
+Content-Transfer-Encoding: 8bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-> On 09/05/19 00:19, Roy Sigurd Karlsbakk wrote:
->>> On 9/5/19 7:41 am, Roy Sigurd Karlsbakk wrote:
->>>> Hi
->>>>
->>>> I'm monitoring this box and it seems ID 5 Reallocated Sectors Count (f=
-rom SMART)
->>>> is climbing frantically on one disk. It's a r6 so it shouldn't be much=
- of an
->>>> issue once the disk eventually fails, but does anyone out there know h=
-ow many
->>>> reallocated sectors you can have on a drive? This is an older 1TB ST31=
-000524NS
->>>
->>> My rule, and what is often suggested in raid documents, is that once th=
-e number
->>> start to visibly climb (you say 'frantically') I replace the disk.
->>=20
->> That's more or less my understanding of it as well. The question was mor=
-e of a
->> theoretical question: How many sectors can it reallocate before theey st=
-art to
->> go "pending"?
->>=20
-> I'm not sure of the exact meaning of "pending sectors", but I'm pretty
-> certain your question doesn't make sense. Sectors go "pending" BEFORE
-> they are re-allocated, not after.
+These definitions are being moved to raid1-10.c.
 
-197 Current_Pending_Sector  0x0032   200   200   000    Old_age   Always   =
-    -       0
+Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+---
+ drivers/md/raid1-10.c | 25 +++++++++++++++++++++++++
+ drivers/md/raid1.c    | 29 ++---------------------------
+ drivers/md/raid10.c   | 27 +--------------------------
+ 3 files changed, 28 insertions(+), 53 deletions(-)
 
->=20
-> I suspect that if a read fails, the sector goes pending. If a "write
-> then verify" fails, the sector is re-allocated. And if the disk runs out
-> of space to re-allocate, it commits suicide.
->=20
-> So you can have thousands of "pendings", and it's independent of
-> "reallocated". But if there's a real problem (like surface damage) any
-> attempt to rewrite those pendings will result in a rapidly climbing
-> reallocated count - like you've just seen - and as others have said, it
-> looks like your drive is on the way out ...
+diff --git a/drivers/md/raid1-10.c b/drivers/md/raid1-10.c
+index 400001b815db..7d968bf08e54 100644
+--- a/drivers/md/raid1-10.c
++++ b/drivers/md/raid1-10.c
+@@ -3,6 +3,31 @@
+ #define RESYNC_BLOCK_SIZE (64*1024)
+ #define RESYNC_PAGES ((RESYNC_BLOCK_SIZE + PAGE_SIZE-1) / PAGE_SIZE)
+ 
++/*
++ * Number of guaranteed raid bios in case of extreme VM load:
++ */
++#define	NR_RAID_BIOS 256
++
++/* when we get a read error on a read-only array, we redirect to another
++ * device without failing the first device, or trying to over-write to
++ * correct the read error.  To keep track of bad blocks on a per-bio
++ * level, we store IO_BLOCKED in the appropriate 'bios' pointer
++ */
++#define IO_BLOCKED ((struct bio *)1)
++/* When we successfully write to a known bad-block, we need to remove the
++ * bad-block marking which must be done from process context.  So we record
++ * the success by setting devs[n].bio to IO_MADE_GOOD
++ */
++#define IO_MADE_GOOD ((struct bio *)2)
++
++#define BIO_SPECIAL(bio) ((unsigned long)bio <= 2)
++
++/* When there are this many requests queue to be written by
++ * the raid thread, we become 'congested' to provide back-pressure
++ * for writeback.
++ */
++static int max_queued_requests = 1024;
++
+ /* for managing resync I/O pages */
+ struct resync_pages {
+ 	void		*raid_bio;
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 0c8a098d220e..bb052c35bf29 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -50,31 +50,6 @@
+ 	 (1L << MD_HAS_PPL) |		\
+ 	 (1L << MD_HAS_MULTIPLE_PPLS))
+ 
+-/*
+- * Number of guaranteed r1bios in case of extreme VM load:
+- */
+-#define	NR_RAID1_BIOS 256
+-
+-/* when we get a read error on a read-only array, we redirect to another
+- * device without failing the first device, or trying to over-write to
+- * correct the read error.  To keep track of bad blocks on a per-bio
+- * level, we store IO_BLOCKED in the appropriate 'bios' pointer
+- */
+-#define IO_BLOCKED ((struct bio *)1)
+-/* When we successfully write to a known bad-block, we need to remove the
+- * bad-block marking which must be done from process context.  So we record
+- * the success by setting devs[n].bio to IO_MADE_GOOD
+- */
+-#define IO_MADE_GOOD ((struct bio *)2)
+-
+-#define BIO_SPECIAL(bio) ((unsigned long)bio <= 2)
+-
+-/* When there are this many requests queue to be written by
+- * the raid1 thread, we become 'congested' to provide back-pressure
+- * for writeback.
+- */
+-static int max_queued_requests = 1024;
+-
+ static void allow_barrier(struct r1conf *conf, sector_t sector_nr);
+ static void lower_barrier(struct r1conf *conf, sector_t sector_nr);
+ 
+@@ -2955,7 +2930,7 @@ static struct r1conf *setup_conf(struct mddev *mddev)
+ 	if (!conf->poolinfo)
+ 		goto abort;
+ 	conf->poolinfo->raid_disks = mddev->raid_disks * 2;
+-	err = mempool_init(&conf->r1bio_pool, NR_RAID1_BIOS, r1bio_pool_alloc,
++	err = mempool_init(&conf->r1bio_pool, NR_RAID_BIOS, r1bio_pool_alloc,
+ 			   r1bio_pool_free, conf->poolinfo);
+ 	if (err)
+ 		goto abort;
+@@ -3240,7 +3215,7 @@ static int raid1_reshape(struct mddev *mddev)
+ 	newpoolinfo->mddev = mddev;
+ 	newpoolinfo->raid_disks = raid_disks * 2;
+ 
+-	ret = mempool_init(&newpool, NR_RAID1_BIOS, r1bio_pool_alloc,
++	ret = mempool_init(&newpool, NR_RAID_BIOS, r1bio_pool_alloc,
+ 			   r1bio_pool_free, newpoolinfo);
+ 	if (ret) {
+ 		kfree(newpoolinfo);
+diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+index 3b6880dd648d..24cb116d950f 100644
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -73,31 +73,6 @@
+  *    [B A] [D C]    [B A] [E C D]
+  */
+ 
+-/*
+- * Number of guaranteed r10bios in case of extreme VM load:
+- */
+-#define	NR_RAID10_BIOS 256
+-
+-/* when we get a read error on a read-only array, we redirect to another
+- * device without failing the first device, or trying to over-write to
+- * correct the read error.  To keep track of bad blocks on a per-bio
+- * level, we store IO_BLOCKED in the appropriate 'bios' pointer
+- */
+-#define IO_BLOCKED ((struct bio *)1)
+-/* When we successfully write to a known bad-block, we need to remove the
+- * bad-block marking which must be done from process context.  So we record
+- * the success by setting devs[n].bio to IO_MADE_GOOD
+- */
+-#define IO_MADE_GOOD ((struct bio *)2)
+-
+-#define BIO_SPECIAL(bio) ((unsigned long)bio <= 2)
+-
+-/* When there are this many requests queued to be written by
+- * the raid10 thread, we become 'congested' to provide back-pressure
+- * for writeback.
+- */
+-static int max_queued_requests = 1024;
+-
+ static void allow_barrier(struct r10conf *conf);
+ static void lower_barrier(struct r10conf *conf);
+ static int _enough(struct r10conf *conf, int previous, int ignore);
+@@ -3684,7 +3659,7 @@ static struct r10conf *setup_conf(struct mddev *mddev)
+ 
+ 	conf->geo = geo;
+ 	conf->copies = copies;
+-	err = mempool_init(&conf->r10bio_pool, NR_RAID10_BIOS, r10bio_pool_alloc,
++	err = mempool_init(&conf->r10bio_pool, NR_RAID_BIOS, r10bio_pool_alloc,
+ 			   r10bio_pool_free, conf);
+ 	if (err)
+ 		goto out;
+-- 
+2.21.0
 
-AFAICS "pending" means "I know htese are bad, but I haven't reallocated the=
-m (yet). Sometimes they never even get reallocated.
-Vennlig hilsen
-
-roy
---
-Roy Sigurd Karlsbakk
-(+47) 98013356
-http://blogg.karlsbakk.net/
-GPG Public key: http://karlsbakk.net/roysigurdkarlsbakk.pubkey.txt
---
-Hi=C3=B0 g=C3=B3=C3=B0a skaltu =C3=AD stein h=C3=B6ggva, hi=C3=B0 illa =C3=
-=AD snj=C3=B3 rita.
