@@ -2,90 +2,95 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 362C51992A
-	for <lists+linux-raid@lfdr.de>; Fri, 10 May 2019 09:45:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7334A19FF6
+	for <lists+linux-raid@lfdr.de>; Fri, 10 May 2019 17:17:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfEJHpq (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 10 May 2019 03:45:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36196 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727010AbfEJHpp (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 10 May 2019 03:45:45 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 96F24308339A;
-        Fri, 10 May 2019 07:45:45 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-8-23.pek2.redhat.com [10.72.8.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1147210027BB;
-        Fri, 10 May 2019 07:45:41 +0000 (UTC)
-From:   Xiao Ni <xni@redhat.com>
-To:     linux-raid@vger.kernel.org
-Cc:     heinzm@redhat.com, ncroxon@redhat.com, songliubraving@fb.com
-Subject: [PATCH 1/1] raid5-cache: rename r5l_flush_stripe_to_raid to r5l_flush_stripe_to_journal
-Date:   Fri, 10 May 2019 15:45:39 +0800
-Message-Id: <1557474339-18962-1-git-send-email-xni@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 10 May 2019 07:45:45 +0000 (UTC)
+        id S1727549AbfEJPRA (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 10 May 2019 11:17:00 -0400
+Received: from mail-lf1-f52.google.com ([209.85.167.52]:39419 "EHLO
+        mail-lf1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727353AbfEJPRA (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 10 May 2019 11:17:00 -0400
+Received: by mail-lf1-f52.google.com with SMTP id f1so4413583lfl.6
+        for <linux-raid@vger.kernel.org>; Fri, 10 May 2019 08:16:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=wNeQfkei9d9to8479UlrG19Zd1Sl/xiFqVxADCMcvvQ=;
+        b=f0yhCahIuYSdnez+fdooj8enER0rNvdu5ji282OwTE8qF6cI0Wv8iXowhCjM1k0n2T
+         p/l146HJzVhsI0LCI7cbXyWLZKnbrc63N7lf0C5BQWZd5tQqCwYCseJOu//k/tRU1pfO
+         N5O3goAWroDen40JXCyIw8XV57K8t7SdvK/rldKW5OljFYmkjzJTr7Biioqh9oglzaHt
+         bNxJtzdgapZ5F2a+QaQhAYO0APWAGrIRxP6ukXMRsvdTLuGZX554TbGJGfCCLBubQqlT
+         3nKOkhFHiUP4H/S7Ko1L8Qgjlb2ib96kqdk+oRKq5c1h32E5YUhVmtfSdAX/MpAKXt79
+         BH0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=wNeQfkei9d9to8479UlrG19Zd1Sl/xiFqVxADCMcvvQ=;
+        b=SPvaWmzaq4coVyodRkIJrTmw+nAw3DLRgAIluoO61iGXdPAQPWktHhgD3x9vKR+Dyq
+         pnq5f6g9pjpLgspaPhGkl1wZUTEMYSLhm4pJhlgBQvTgbTaYT9Hlx53OGv/wHUPwb3eg
+         u10gpMww+dzYUJjIsBe7N08d9MhPvERIKuFwFCfinsqg+gLlAiFyPZ3zSt3Zxrh6l+eA
+         LMqNEtbkXC0b3X72kLOZarRovpg9bzI2O1Vbrp60HzVLdPjWOrsNAvp+j7Yl3VFEAD9l
+         wks2b+Xplm9J0Pc4XIBHVnTmVD/ZydAczQKbTBjOZzn1r0UYyl3HsovK5Uh3X+DBLWJq
+         Cy7g==
+X-Gm-Message-State: APjAAAVUWzSaXZ2TXQR3q4oh4DXadZErA4VV3RNChZ9w2WxZ2ofGv5b+
+        tE1VSQmURE7yGfa5WDrqpjDAM7ucA2j3XpTnStcRIA==
+X-Google-Smtp-Source: APXvYqwoRMU3YbLoVauM+DrznTRHchLMjxIOL6G8N8nRf7V1oS9RDD1oXS4WXd143TCbk92x99LrT7G0pWyv8vhfk2k=
+X-Received: by 2002:ac2:443c:: with SMTP id w28mr6324099lfl.38.1557501417521;
+ Fri, 10 May 2019 08:16:57 -0700 (PDT)
+MIME-Version: 1.0
+References: <1471924184.12974949.1557351707986.JavaMail.zimbra@karlsbakk.net> <1486566915.13433540.1557468499945.JavaMail.zimbra@karlsbakk.net>
+In-Reply-To: <1486566915.13433540.1557468499945.JavaMail.zimbra@karlsbakk.net>
+From:   Roger Heflin <rogerheflin@gmail.com>
+Date:   Fri, 10 May 2019 10:16:45 -0500
+Message-ID: <CAAMCDecuOER88FMdvpoBpGTy8wHBSXVtaf5u7xJzyGHC4qoK6Q@mail.gmail.com>
+Subject: Re: ID 5 Reallocated Sectors Count
+To:     Roy Sigurd Karlsbakk <roy@karlsbakk.net>
+Cc:     Linux Raid <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-When journal device supports volatile write cache, it needs to flush to make sure data is settled
-down in journal device. It's the usage of function r5l_flush_stripe_to_raid. The data is flushed
-from stripe cache to journal device. Rename the function name to make it more proper.
+I have found the max number it can get to depends on the disk/mfg.
+Older seagates only did 512, newer 1.5's could get to 4096 if I am
+remembering correctly.  I do know for sure that the newer disk I had
+went much higher before the disk itself officially failed.
 
-Signed-off-by: Xiao Ni <xni@redhat.com>
----
- drivers/md/raid5-cache.c | 2 +-
- drivers/md/raid5.c       | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+I have found disks that aren't reporting re-allocates, but respond
+poorly, and seem to be hitting close to the 7 second timeout and cause
+large IO pauses, and it is just best to replace the disk when it
+starts acting up like that.
 
-diff --git a/drivers/md/raid5-cache.c b/drivers/md/raid5-cache.c
-index cbbe6b6..689a59e 100644
---- a/drivers/md/raid5-cache.c
-+++ b/drivers/md/raid5-cache.c
-@@ -1294,7 +1294,7 @@ static void r5l_log_flush_endio(struct bio *bio)
-  * only write stripes of an io_unit to raid disks till the io_unit is the first
-  * one whose data/parity is in log.
-  */
--void r5l_flush_stripe_to_raid(struct r5l_log *log)
-+void r5l_flush_stripe_to_journal(struct r5l_log *log)
- {
- 	bool do_flush;
- 
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 7fde645..56d9e6e 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -6206,7 +6206,7 @@ static int handle_active_stripes(struct r5conf *conf, int group,
- 	release_inactive_stripe_list(conf, temp_inactive_list,
- 				     NR_STRIPE_HASH_LOCKS);
- 
--	r5l_flush_stripe_to_raid(conf->log);
-+	r5l_flush_stripe_to_journal(conf->log);
- 	if (release_inactive) {
- 		spin_lock_irq(&conf->device_lock);
- 		return 0;
-@@ -6262,7 +6262,7 @@ static void raid5_do_work(struct work_struct *work)
- 
- 	flush_deferred_bios(conf);
- 
--	r5l_flush_stripe_to_raid(conf->log);
-+	r5l_flush_stripe_to_journal(conf->log);
- 
- 	async_tx_issue_pending_all();
- 	blk_finish_plug(&plug);
-@@ -6349,7 +6349,7 @@ static void raid5d(struct md_thread *thread)
- 
- 	flush_deferred_bios(conf);
- 
--	r5l_flush_stripe_to_raid(conf->log);
-+	r5l_flush_stripe_to_journal(conf->log);
- 
- 	async_tx_issue_pending_all();
- 	blk_finish_plug(&plug);
--- 
-2.7.5
-
+On Fri, May 10, 2019 at 1:10 AM Roy Sigurd Karlsbakk <roy@karlsbakk.net> wr=
+ote:
+>
+> > I'm monitoring this box and it seems ID 5 Reallocated Sectors Count (fr=
+om SMART)
+> > is climbing frantically on one disk. It's a r6 so it shouldn't be much =
+of an
+> > issue once the disk eventually fails, but does anyone out there know ho=
+w many
+> > reallocated sectors you can have on a drive? This is an older 1TB ST310=
+00524NS
+>
+> To sum this up, it climbed quite a bit until the whole machine just hung,=
+ reponsiveless. After this, the named disk was replaced and the new disk ad=
+ded to the raid. Things work now, and I (or we) have learned that if given =
+flag climbes this quickly, better replace the bugger in the first place :)
+>
+> Vennlig hilsen
+>
+> roy
+> --
+> Roy Sigurd Karlsbakk
+> (+47) 98013356
+> http://blogg.karlsbakk.net/
+> GPG Public key: http://karlsbakk.net/roysigurdkarlsbakk.pubkey.txt
+> --
+> Hi=C3=B0 g=C3=B3=C3=B0a skaltu =C3=AD stein h=C3=B6ggva, hi=C3=B0 illa =
+=C3=AD snj=C3=B3 rita.
