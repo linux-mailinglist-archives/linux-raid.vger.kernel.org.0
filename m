@@ -2,54 +2,246 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A3CF01AE3F
-	for <lists+linux-raid@lfdr.de>; Sun, 12 May 2019 23:29:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 782F61CC3B
+	for <lists+linux-raid@lfdr.de>; Tue, 14 May 2019 17:48:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbfELV3i (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 12 May 2019 17:29:38 -0400
-Received: from icebox.esperi.org.uk ([81.187.191.129]:38976 "EHLO
-        mail.esperi.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726509AbfELV3i (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 12 May 2019 17:29:38 -0400
-X-Greylist: delayed 602 seconds by postgrey-1.27 at vger.kernel.org; Sun, 12 May 2019 17:29:38 EDT
-Received: from loom (nix@sidle.srvr.nix [192.168.14.8])
-        by mail.esperi.org.uk (8.15.2/8.15.2) with ESMTP id x4CLFEJB012963;
-        Sun, 12 May 2019 22:15:14 +0100
-From:   Nix <nix@esperi.org.uk>
-To:     Wols Lists <antlists@youngman.org.uk>
-Cc:     Roy Sigurd Karlsbakk <roy@karlsbakk.net>,
-        Linux Raid <linux-raid@vger.kernel.org>
-Subject: Re: ID 5 Reallocated Sectors Count
-References: <1471924184.12974949.1557351707986.JavaMail.zimbra@karlsbakk.net>
-        <2aff655d-0495-1f7d-a305-adf23f9800bb@eyal.emu.id.au>
-        <1426313842.12996928.1557357572484.JavaMail.zimbra@karlsbakk.net>
-        <5CD37280.9080309@youngman.org.uk>
-Emacs:  ... it's not just a way of life, it's a text editor!
-Date:   Sun, 12 May 2019 22:19:27 +0100
-In-Reply-To: <5CD37280.9080309@youngman.org.uk> (Wols Lists's message of "Thu,
-        9 May 2019 01:21:20 +0100")
-Message-ID: <875zqfpe00.fsf@esperi.org.uk>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.50 (gnu/linux)
+        id S1726013AbfENPss (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 14 May 2019 11:48:48 -0400
+Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:24287 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfENPss (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 14 May 2019 11:48:48 -0400
+Received: from [192.168.8.29] ([86.214.62.250])
+        by mwinf5d07 with ME
+        id CFol2000g5Px8Mi03Fom0g; Tue, 14 May 2019 17:48:46 +0200
+X-ME-Helo: [192.168.8.29]
+X-ME-Auth: ZXJpYy52YWxldHRlNkB3YW5hZG9vLmZy
+X-ME-Date: Tue, 14 May 2019 17:48:46 +0200
+X-ME-IP: 86.214.62.250
+Reply-To: eric.valette@free.fr
+From:   Eric Valette <eric.valette@free.fr>
+Subject: Help restoring a raid10 Array (4 disk + one spare) after a hard disk
+ failure at power on
+Organization: HOME
+To:     linux-raid@vger.kernel.org
+Message-ID: <87d22dc0-4b45-e13f-86e1-d3e9fbd7f55d@free.fr>
+Date:   Tue, 14 May 2019 17:48:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-DCC-URT-Metrics: loom 1060; Body=3 Fuz1=3 Fuz2=3
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 9 May 2019, Wols Lists said:
+I have a dedicated hardware nas that runs a self maintained debian 10.
 
-> I suspect that if a read fails, the sector goes pending. If a "write
-> then verify" fails, the sector is re-allocated. And if the disk runs out
-> of space to re-allocate, it commits suicide.
+before the hardware disk problem (before/after)
 
-No: it just starts emitting write errors rather than covering them up by
-sparing sectors out.
+sda : system disk OK/OK no raid
+sdb : first disk of the raid10 array OK/OK
+sdc : second disk of the raid10 array OK/OK
+sdd : third disk of the raid10 array OK/KO
+sde : fourth disk of the raid10 array OK/OK but is now sdd
+sdf : spare disk for the array is now sde
 
-You have to go to SSDs before you find disks so cavalier with their data
-that they make it all vanish when they think they've worn out (indeed,
-in some cases, vanishing off the PCI bus entirely and forever).
+After the failure the BIOS does not detect the original third disk. Disk 
+are renamed and I think sde has become sdd and sdf -> sde
+
+Below are more detailed info. Feel free to ask for other things as I can 
+log into the machine via ssh
+
+So I have several questions :
+
+	1) How to I repair the raid10 array using the spare disk without 
+replacing the faulty one immediately?
+	2) What should I do once I receive the new disk (hopefully soon)
+	3) Is there a way to use persistent naming for disk array?
+
+Sorry to annoy you but my kid wants to see a film on the nas and annoys 
+me badly. And I prefer to ask rather than doing mistakes.
+
+Thanks for any
+
+
+
+mdadm --examine /dev/sdb
+/dev/sdb:
+    MBR Magic : aa55
+Partition[0] :   4294967295 sectors at            1 (type ee)
+root@nas2:~# mdadm --examine /dev/sdb
+/dev/sdb:
+    MBR Magic : aa55
+Partition[0] :   4294967295 sectors at            1 (type ee)
+root@nas2:~# mdadm --examine /dev/sdb1
+/dev/sdb1:
+           Magic : a92b4efc
+         Version : 1.2
+     Feature Map : 0x0
+      Array UUID : 6abe1f20:90c629de:fadd8dc0:ca14c928
+            Name : nas2:0  (local to host nas2)
+   Creation Time : Wed Jun 20 23:56:59 2012
+      Raid Level : raid10
+    Raid Devices : 4
+
+  Avail Dev Size : 5860268943 (2794.39 GiB 3000.46 GB)
+      Array Size : 5860268032 (5588.79 GiB 6000.91 GB)
+   Used Dev Size : 5860268032 (2794.39 GiB 3000.46 GB)
+     Data Offset : 262144 sectors
+    Super Offset : 8 sectors
+    Unused Space : before=262064 sectors, after=911 sectors
+           State : clean
+     Device UUID : ce9d878a:37a4f3a3:936bd905:c4ed9970
+
+     Update Time : Wed May  8 11:39:40 2019
+        Checksum : cf841c9f - correct
+          Events : 1193
+
+          Layout : near=2
+      Chunk Size : 512K
+
+    Device Role : Active device 0
+    Array State : AAAA ('A' == active, '.' == missing, 'R' == replacing)
+root@nas2:~# mdadm --examine /dev/sdc
+/dev/sdc:
+    MBR Magic : aa55
+Partition[0] :   4294967295 sectors at            1 (type ee)
+root@nas2:~# mdadm --examine /dev/sdc1
+/dev/sdc1:
+           Magic : a92b4efc
+         Version : 1.2
+     Feature Map : 0x0
+      Array UUID : 6abe1f20:90c629de:fadd8dc0:ca14c928
+            Name : nas2:0  (local to host nas2)
+   Creation Time : Wed Jun 20 23:56:59 2012
+      Raid Level : raid10
+    Raid Devices : 4
+
+  Avail Dev Size : 5860268943 (2794.39 GiB 3000.46 GB)
+      Array Size : 5860268032 (5588.79 GiB 6000.91 GB)
+   Used Dev Size : 5860268032 (2794.39 GiB 3000.46 GB)
+     Data Offset : 262144 sectors
+    Super Offset : 8 sectors
+    Unused Space : before=262064 sectors, after=911 sectors
+           State : clean
+     Device UUID : 8c89bdf8:4f3f8ace:c15b5634:7a874071
+
+     Update Time : Wed May  8 11:39:40 2019
+        Checksum : 97744edb - correct
+          Events : 1193
+
+          Layout : near=2
+      Chunk Size : 512K
+
+    Device Role : Active device 1
+    Array State : AAAA ('A' == active, '.' == missing, 'R' == replacing)
+root@nas2:~# mdadm --examine /dev/sdd
+/dev/sdd:
+    MBR Magic : aa55
+Partition[0] :   4294967295 sectors at            1 (type ee)
+root@nas2:~# mdadm --examine /dev/sdd1
+/dev/sdd1:
+           Magic : a92b4efc
+         Version : 1.2
+     Feature Map : 0x0
+      Array UUID : 6abe1f20:90c629de:fadd8dc0:ca14c928
+            Name : nas2:0  (local to host nas2)
+   Creation Time : Wed Jun 20 23:56:59 2012
+      Raid Level : raid10
+    Raid Devices : 4
+
+  Avail Dev Size : 5860268943 (2794.39 GiB 3000.46 GB)
+      Array Size : 5860268032 (5588.79 GiB 6000.91 GB)
+   Used Dev Size : 5860268032 (2794.39 GiB 3000.46 GB)
+     Data Offset : 262144 sectors
+    Super Offset : 8 sectors
+    Unused Space : before=262064 sectors, after=911 sectors
+           State : clean
+     Device UUID : c97b767a:84d2e7e2:52557d30:51c39784
+
+     Update Time : Wed May  8 11:39:40 2019
+        Checksum : 3d08e837 - correct
+          Events : 1193
+
+          Layout : near=2
+      Chunk Size : 512K
+
+    Device Role : Active device 3
+    Array State : AAAA ('A' == active, '.' == missing, 'R' == replacing)
+root@nas2:~# mdadm --examine /dev/sde
+/dev/sde:
+    MBR Magic : aa55
+Partition[0] :   4294967295 sectors at            1 (type ee)
+root@nas2:~# mdadm --examine /dev/sde1
+/dev/sde1:
+           Magic : a92b4efc
+         Version : 1.2
+     Feature Map : 0x0
+      Array UUID : 6abe1f20:90c629de:fadd8dc0:ca14c928
+            Name : nas2:0  (local to host nas2)
+   Creation Time : Wed Jun 20 23:56:59 2012
+      Raid Level : raid10
+    Raid Devices : 4
+
+  Avail Dev Size : 5860268943 (2794.39 GiB 3000.46 GB)
+      Array Size : 5860268032 (5588.79 GiB 6000.91 GB)
+   Used Dev Size : 5860268032 (2794.39 GiB 3000.46 GB)
+     Data Offset : 262144 sectors
+    Super Offset : 8 sectors
+    Unused Space : before=262064 sectors, after=911 sectors
+           State : clean
+     Device UUID : 82667e81:a6158319:85e0282e:845eec1c
+
+     Update Time : Wed May  8 11:00:29 2019
+        Checksum : 10ac3349 - correct
+          Events : 1193
+
+          Layout : near=2
+      Chunk Size : 512K
+
+    Device Role : spare
+    Array State : AAAA ('A' == active, '.' == missing, 'R' == replacing)
+root@nas2:~#
+
+mdadm --detail /dev/md0
+/dev/md0:
+            Version : 1.2
+         Raid Level : raid0
+      Total Devices : 4
+        Persistence : Superblock is persistent
+
+              State : inactive
+    Working Devices : 4
+
+               Name : nas2:0  (local to host nas2)
+               UUID : 6abe1f20:90c629de:fadd8dc0:ca14c928
+             Events : 1193
+
+     Number   Major   Minor   RaidDevice
+
+        -       8       65        -        /dev/sde1
+        -       8       49        -        /dev/sdd1
+        -       8       33        -        /dev/sdc1
+        -       8       17        -        /dev/sdb1
+
+cat /proc/mdstat
+Personalities : [raid10]
+md0 : inactive sdc1[1](S) sdb1[0](S) sde1[4](S) sdd1[3](S)
+       11720537886 blocks super 1.2
+
+unused devices: <none>
 
 -- 
-NULL && (void)
+    __
+   /  `                   	Eric Valette
+  /--   __  o _.          	6 rue Paul Le Flem
+(___, / (_(_(__         	35740 Pace
+
+Tel: +33 (0)2 99 85 26 76	Fax: +33 (0)2 99 85 26 76
+E-mail: eric.valette@free.fr
+
+
+
