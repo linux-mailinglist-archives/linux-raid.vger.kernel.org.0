@@ -2,70 +2,49 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1449122003
-	for <lists+linux-raid@lfdr.de>; Sat, 18 May 2019 00:04:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B24EA22075
+	for <lists+linux-raid@lfdr.de>; Sat, 18 May 2019 00:53:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbfEQWEh (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 17 May 2019 18:04:37 -0400
-Received: from use.bitfolk.com ([85.119.80.223]:52039 "EHLO mail.bitfolk.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726726AbfEQWEh (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 17 May 2019 18:04:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bitfolk.com; s=alpha;
-        h=Content-Type:MIME-Version:Message-ID:Subject:To:From:Date; bh=GKHkvWwRl5ygv+NPnS/yCBUhmI+D+Emv/eycIBDdI+8=;
-        b=XW97RTBHnyqxc2GIu2NAAwUTut1+X4kqrvyXkfEFJpUj2JXLus40Uk3OidTR/sPtyGYm0uWEu1viN0W1RKdHOQR3Eh2Q4WB/YEjOIvXyaulr3WOXDkadoBGSmy80QnV9S5qlK3xs3b4wKO6y7ubT4G6rFiaVZP7VNpxXakg8CThHSzSglv/6mo7gRp4OTsHecLCfWCllBzsFMr83aaWwjxDqKZ9LHteYTc4+hDqazI9yZC966I89UEB7s2zo2RuCJ41HIO/h9T2nJmou7Y2L0DJVYymveNznh4DYBJgzHKhEXeC5mpnanPHY0U2kW8KXHebFvAE54S4Q1j2CDzs+Ig==;
-Received: from andy by mail.bitfolk.com with local (Exim 4.84_2)
-        (envelope-from <andy@strugglers.net>)
-        id 1hRkxw-0004tl-Io
-        for linux-raid@vger.kernel.org; Fri, 17 May 2019 22:04:36 +0000
-Date:   Fri, 17 May 2019 22:04:36 +0000
-From:   Andy Smith <andy@strugglers.net>
-To:     linux-raid@vger.kernel.org
-Subject: Is --write-mostly supposed to do anything for SSD- and NVMe-class
+        id S1727730AbfEQWw7 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 17 May 2019 18:52:59 -0400
+Received: from mail.thelounge.net ([91.118.73.15]:41851 "EHLO
+        mail.thelounge.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727181AbfEQWw7 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 17 May 2019 18:52:59 -0400
+Received: from srv-rhsoft.rhsoft.net  (Authenticated sender: h.reindl@thelounge.net) by mail.thelounge.net (THELOUNGE MTA) with ESMTPSA id 455NqC4p7SzXqy
+        for <linux-raid@vger.kernel.org>; Sat, 18 May 2019 00:52:50 +0200 (CEST)
+Subject: Re: Is --write-mostly supposed to do anything for SSD- and NVMe-class
  devices?
-Message-ID: <20190517220436.GJ4569@bitfolk.com>
-Mail-Followup-To: linux-raid@vger.kernel.org
+To:     linux-raid@vger.kernel.org
+References: <20190517220436.GJ4569@bitfolk.com>
+From:   Reindl Harald <h.reindl@thelounge.net>
+Openpgp: id=9D2B46CDBC140A36753AE4D733174D5A5892B7B8;
+ url=https://arrakis-tls.thelounge.net/gpg/h.reindl_thelounge.net.pub.txt
+Organization: the lounge interactive design
+Message-ID: <b6add019-67a2-846c-dbe3-3db2f2a6e962@thelounge.net>
+Date:   Sat, 18 May 2019 00:52:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-OpenPGP: id=BF15490B; url=http://strugglers.net/~andy/pubkey.asc
-X-URL:  http://strugglers.net/wiki/User:Andy
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: andy@strugglers.net
-X-SA-Exim-Scanned: No (on mail.bitfolk.com); SAEximRunCond expanded to false
+In-Reply-To: <20190517220436.GJ4569@bitfolk.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-CH
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi,
 
-I have a machine with one SATA SSD and one NVMe device. Of course
-even the SSD is pretty high performance and the NVMe is over 4 times
-faster than that, if we're talking about IOPS.
 
-I've never used --write-mostly before but I thought maybe if I put
-them both in a RAID-10 but set the SSD device to --write-mostly then
-most reads would come from the NVMe and benefit from its increased
-performance. I have not, however, been able to demonstrate that. It
-doesn't appear to do anything different compared to not using
---write-mostly.
-
-Here's some fio stats:
-
-    https://tools.bitfolk.com/wiki/User:Strugglers/write-mostly
-
-Am I testing it incorrectly or are my expectations wrong? Is it just
-not expected to do anything with devices like these?
-
-I realised that I only tested things with a single fio process with
-a queue depth of 32, so I tried some more tests with 4 processes and
-a queue depth of 64, but again the results were indistinguishable.
-
-Debian testing (buster), which has mdadm package version 4.1-1 and
-kernel package version linux-image-4.19.0-4-amd64 4.19.28-2. The git
-HEAD version of fio was used.
-
-Cheers,
-Andy
+Am 18.05.19 um 00:04 schrieb Andy Smith:
+> I have a machine with one SATA SSD and one NVMe device. Of course
+> even the SSD is pretty high performance and the NVMe is over 4 times
+> faster than that, if we're talking about IOPS.
+> 
+> I've never used --write-mostly before but I thought maybe if I put
+> them both in a RAID-10 but set the SSD device to --write-mostly then
+> most reads would come from the NVMe and benefit from its increased
+> performance.
+sdaly RAID10 don't support --write-mostly, otherwise i won't have bought
+4 expensive 2 TB SSD's in the last two years.....
