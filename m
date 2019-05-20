@@ -2,193 +2,92 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 42AC7220A9
-	for <lists+linux-raid@lfdr.de>; Sat, 18 May 2019 01:11:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAA3F22A05
+	for <lists+linux-raid@lfdr.de>; Mon, 20 May 2019 04:43:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727637AbfEQXLq (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 17 May 2019 19:11:46 -0400
-Received: from use.bitfolk.com ([85.119.80.223]:49783 "EHLO mail.bitfolk.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726757AbfEQXLq (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 17 May 2019 19:11:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bitfolk.com; s=alpha;
-        h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:Subject:To:From:Date; bh=meJs/MjZubIKitmsSlbcM4Fl6nq8tB4waYCiqpbnDWg=;
-        b=sK0dyjdfK3LJ5XF77pRFQrkNmQgWy0+wWQl5L2m92hnMKtjwlbFf0N3Li/J5HGA6xOeyvoNJoOS7OxRMSvHNo/DFQNcwhZGwtelcK6OXxX9Zrwq3QEyRpGB/7OHU1FXiTSu6F66GIJdlsmRNQ2lq1E5J9rE00gu5dDO7Bby6qGiluonKQ7qo7PCSELFCSnTy0BQ39Yjl3RDySzPlhaQJr+zrakjlnTC+YZo1FWLY0SPTOzmZYhpUGvmEdvHs+PtmeSpVM+iMPIsiLXtNLezg7gcbVZKXFOc4mw+VSdhwWG5FHOqGZF+pBFVmDt5FYE4GNRFgLl+eykGmoRSEoIUWmA==;
-Received: from andy by mail.bitfolk.com with local (Exim 4.84_2)
-        (envelope-from <andy@strugglers.net>)
-        id 1hRm0t-00075o-Lq
-        for linux-raid@vger.kernel.org; Fri, 17 May 2019 23:11:43 +0000
-Date:   Fri, 17 May 2019 23:11:43 +0000
-From:   Andy Smith <andy@strugglers.net>
-To:     linux-raid@vger.kernel.org
-Subject: Re: Is --write-mostly supposed to do anything for SSD- and
- NVMe-class devices?
-Message-ID: <20190517231143.GL4569@bitfolk.com>
-Mail-Followup-To: linux-raid@vger.kernel.org
-References: <20190517220436.GJ4569@bitfolk.com>
- <b6add019-67a2-846c-dbe3-3db2f2a6e962@thelounge.net>
+        id S1729729AbfETCn5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 19 May 2019 22:43:57 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:52159 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727371AbfETCn4 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 19 May 2019 22:43:56 -0400
+Received: by mail-it1-f196.google.com with SMTP id m3so16752251itl.1;
+        Sun, 19 May 2019 19:43:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8Oz/YZayaErdzdzhKp0fyhCZgzFhmaZCIFKkjQCJwlc=;
+        b=mLbts5Y3adqCCNOiBTBvLEF/D/VgYwgALLSOeLQSx8p8FyDSSJWEO5SOBOpdUY4oHF
+         pzTft49wWnlzo+V9/gMcK5j2VXwSRb0rS8aUzseZ8l/T8DJHgeMM2V/vRZUQLEClutO5
+         0OhAXfagAk0ZlFMd0dw+zbEz3VRRwMyRGe1P3MyprNgqbHdKpzzulM0mM4jaELXnGuVn
+         v6f2fZ8DkIpVTNRIMZh/QYtxQB1fTHcgjCO3yDpDikXbR4Q4exHekEFITwHqpaATKgBR
+         W75JUllIhs+tKXuZbtG82RRlMuGN1zOwwrlZKqIVx6z3uAIY/crrVSnd2mRtKe1+RW/t
+         LNHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8Oz/YZayaErdzdzhKp0fyhCZgzFhmaZCIFKkjQCJwlc=;
+        b=T7J5mqs+jvH6LSeGdeMEEaihrrByeR9dUT8gwvJo/c8ESwqOfNWKnEuZ0/sOEwpi9h
+         k6r8gg8Z+h4RVRnk3IrCkhubFAY+MZsgnJQDC734nzZ4ugTLHHHTQFeAGdqtvBwCQeNT
+         Jpo/a2lADv90rH6mDmBJ6p0gGdS1C2Wq9MluoHDzPEDMvq0/NmDqAtZwNdB7MYDqPK4q
+         Lmxo2G8e4seo/0p7Zr1bQ7+tbQYVYoh/OWdJekhdrd+X/PZenJvMh6g2dRHzJP1H5h8u
+         R2darQhnkvZniqmZ0AcRLn5nZ6py+g4jRXGZNL9GeWO/biK0RzZBEOuw+FCjRYQB8SoS
+         dSpQ==
+X-Gm-Message-State: APjAAAU6Nw2quuFlYn6d8HbUVVR9xTLzzgDwjNR5kmEXakKfsmWrCKia
+        +jaQH8MCPcEbEEs9tw9Yleq97cE2uF1nNwAh3MQ=
+X-Google-Smtp-Source: APXvYqwX83EyMWnhZTroZgn/yFXpCshf1utCd63Zo5lr+tdPYblxILai87WFk5neVpwdrOXIgQWX0a0ubNLlqRZAiYQ=
+X-Received: by 2002:a24:f983:: with SMTP id l125mr28527609ith.62.1558320235895;
+ Sun, 19 May 2019 19:43:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b6add019-67a2-846c-dbe3-3db2f2a6e962@thelounge.net>
-OpenPGP: id=BF15490B; url=http://strugglers.net/~andy/pubkey.asc
-X-URL:  http://strugglers.net/wiki/User:Andy
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: andy@strugglers.net
-X-SA-Exim-Scanned: No (on mail.bitfolk.com); SAEximRunCond expanded to false
+References: <20190430223722.20845-1-gpiccoli@canonical.com>
+ <CAKM4Aez=eC96uyqJa+=Aom2M2eQnknQW_uY4v9NMVpROSiuKSg@mail.gmail.com> <CALJn8nME9NQGsSqLXHQPEizFfKUzxozfYy-2510MHyMPHRzhfw@mail.gmail.com>
+In-Reply-To: <CALJn8nME9NQGsSqLXHQPEizFfKUzxozfYy-2510MHyMPHRzhfw@mail.gmail.com>
+From:   Eric Ren <renzhengeek@gmail.com>
+Date:   Mon, 20 May 2019 10:43:44 +0800
+Message-ID: <CAKM4AeyJs8KUB3vi=GPDnb-yjED2oFYvn7O=CPNi3Er3orAbfg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] block: Fix a NULL pointer dereference in generic_make_request()
+To:     "Guilherme G. Piccoli" <kernel@gpiccoli.net>
+Cc:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
+        linux-block@vger.kernel.org,
+        linux-raid <linux-raid@vger.kernel.org>, dm-devel@redhat.com,
+        axboe@kernel.dk, Gavin Guo <gavin.guo@canonical.com>,
+        Jay Vosburgh <jay.vosburgh@canonical.com>,
+        Bart Van Assche <bvanassche@acm.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hello,
+Hi,
 
-On Sat, May 18, 2019 at 12:52:50AM +0200, Reindl Harald wrote:
-> sdaly RAID10 don't support --write-mostly, otherwise i won't have bought
-> 4 expensive 2 TB SSD's in the last two years.....
+On Sat, 18 May 2019 at 00:17, Guilherme G. Piccoli <kernel@gpiccoli.net> wrote:
+>
+> On Fri, May 17, 2019 at 12:33 AM Eric Ren <renzhengeek@gmail.com> wrote:
+> >
+> > Hello,
+> > [...]
+> > Thanks for the bugfix. I also had a panic having very similar
+> > calltrace below as this one,
+> > when using devicemapper in container scenario and deleting many thin
+> > snapshots by dmsetup
+> > remove_all -f, meanwhile executing lvm command like vgs.
+> >
+> > After applied this one, my testing doesn't crash kernel any more for
+> > one week.  Could the block
+> > developers please give more feedback/priority on this one?
+> >
+>
+> Thanks Eric, for the testing! I think you could send your Tested-by[0]
+> tag, which could be added
+> in the patch before merge. It's good to know the patch helped somebody
+> and your testing improves
+> confidence in the change.
 
-Interesting. It certainly looks like you are correct:
+Please consider Ming's comments and send patch v2, then feel free to add:
+Tested-by: Eric Ren <renzhengeek@gmail.com>
 
-$ cat /proc/mdstat
-Personalities : [linear] [multipath] [raid0] [raid1] [raid10] [raid6] [raid5] [raid4]
-
-md4 : active raid1 sdc[1](W) nvme0n1[0]
-      10485760 blocks super 1.2 [2/2] [UU]
-[…]
-
-$ /opt/fio/bin/fio --ioengine=libaio --direct=1 --gtod_reduce=1 --name=limoncello_ro_
-mdwritemostly_4jobs --filename=/mnt/fio --bs=32k --iodepth=64 --numjobs=1 --size=8G -
--readwrite=randread --group_reporting
-limoncello_ro_mdwritemostly_4jobs: (g=0): rw=randread, bs=(R) 32.0KiB-32.0KiB, (W) 32
-.0KiB-32.0KiB, (T) 32.0KiB-32.0KiB, ioengine=libaio, iodepth=64
-fio-3.13-42-g8066f
-Starting 1 process
-limoncello_ro_mdwritemostly_4jobs: Laying out IO file (1 file / 8192MiB)
-Jobs: 1 (f=1): [r(1)][100.0%][r=2439MiB/s][r=78.0k IOPS][eta 00m:00s]
-limoncello_ro_mdwritemostly_4jobs: (groupid=0, jobs=1): err= 0: pid=24347: Fri May 17
- 22:58:13 2019
-  read: IOPS=77.0k, BW=2437MiB/s (2556MB/s)(8192MiB/3361msec)
-   bw (  MiB/s): min= 2433, max= 2441, per=100.00%, avg=2438.45, stdev= 3.26, samples
-=6
-   iops        : min=77876, max=78130, avg=78030.33, stdev=104.35, samples=6
-  cpu          : usr=7.02%, sys=36.13%, ctx=161966, majf=0, minf=519
-  IO depths    : 1=0.1%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=0.1%, >=64=100.0%
-     submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
-     complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.1%, >=64=0.0%
-     issued rwts: total=262144,0,0,0 short=0,0,0,0 dropped=0,0,0,0
-     latency   : target=0, window=0, percentile=100.00%, depth=64
-
-Run status group 0 (all jobs):
-   READ: bw=2437MiB/s (2556MB/s), 2437MiB/s-2437MiB/s (2556MB/s-2556MB/s), io=8192MiB
- (8590MB), run=3361-3361msec
-
-Disk stats (read/write):
-    md4: ios=252936/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%, aggrios=131072/0
-, aggrmerge=0/0, aggrticks=106599/0, aggrin_queue=106384, aggrutil=95.78%
-  nvme0n1: ios=262144/0, merge=0/0, ticks=213198/0, in_queue=212768, util=95.78%
-  sdc: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%
-
-(note no IOs to sdc)
-
-But it actually gets faster when IOs are allowed to go to both!
-
-$ echo -writemostly | sudo tee /sys/block/md4/md/dev-sdc/state
--writemostly
-$ /opt/fio/bin/fio --ioengine=libaio --direct=1 --gtod_reduce=1 --name=limoncello_ro_
-mdwritemostly_4jobs --filename=/mnt/fio --bs=32k --iodepth=64 --numjobs=1 --size=8G -
--readwrite=randread --group_reporting
-limoncello_ro_mdwritemostly_4jobs: (g=0): rw=randread, bs=(R) 32.0KiB-32.0KiB, (W) 32
-.0KiB-32.0KiB, (T) 32.0KiB-32.0KiB, ioengine=libaio, iodepth=64
-fio-3.13-42-g8066f
-Starting 1 process
-Jobs: 1 (f=1)
-limoncello_ro_mdwritemostly_4jobs: (groupid=0, jobs=1): err= 0: pid=24385: Fri May 17
- 22:59:44 2019
-  read: IOPS=92.6k, BW=2894MiB/s (3034MB/s)(8192MiB/2831msec)
-   bw (  MiB/s): min= 2888, max= 2904, per=100.00%, avg=2895.91, stdev= 6.50, samples
-=5
-   iops        : min=92434, max=92940, avg=92669.60, stdev=207.52, samples=5
-  cpu          : usr=9.61%, sys=42.83%, ctx=120747, majf=0, minf=521
-  IO depths    : 1=0.1%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=0.1%, >=64=100.0%
-     submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
-     complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.1%, >=64=0.0%
-     issued rwts: total=262144,0,0,0 short=0,0,0,0 dropped=0,0,0,0
-     latency   : target=0, window=0, percentile=100.00%, depth=64
-
-Run status group 0 (all jobs):
-   READ: bw=2894MiB/s (3034MB/s), 2894MiB/s-2894MiB/s (3034MB/s-3034MB/s), io=8192MiB
- (8590MB), run=2831-2831msec
-
-Disk stats (read/write):
-    md4: ios=245417/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%, aggrios=131067/0
-, aggrmerge=4/0, aggrticks=89358/0, aggrin_queue=89192, aggrutil=94.99%
-  nvme0n1: ios=215218/0, merge=0/0, ticks=88984/0, in_queue=88700, util=94.99%
-  sdc: ios=46917/0, merge=9/0, ticks=89733/0, in_queue=89684, util=94.99%
-
-(92.6k IOPS vs 77k IOPS)
-
-It's also interesting that the exact same fio job against a RAID-10 only
-achieves 36.2k IOPS:
-
-$ sudo mdadm --create --verbose --assume-clean /dev/md4 --level=10 --raid-devices=2 --size=10G /dev/nvme0n1 /dev/sdc
-mdadm: layout defaults to n2
-mdadm: layout defaults to n2
-mdadm: chunk size defaults to 512K
-mdadm: largest drive (/dev/nvm0n1) exceeds size (10485760K) by more than 1%
-Continue creating array? y
-mdadm: Defaulting to version 1.2 metadata
-mdadm: array /dev/md4 started.
-$ sudo mkfs.ext4 -E lazy_itable_init=0,lazy_journal_init=0 /dev/md4
-mke2fs 1.44.5 (15-Dec-2018)
-/dev/md4 contains a ext4 file system
-        last mounted on /mnt on Fri May 17 22:55:53 2019
-Proceed anyway? (y,N) y
-Discarding device blocks: done
-Creating filesystem with 2621440 4k blocks and 655360 inodes
-Filesystem UUID: 22c2c0d1-494b-4435-8da2-114c868d966c
-Superblock backups stored on blocks:
-        32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632
-
-Allocating group tables: done
-Writing inode tables: done
-Creating journal (16384 blocks): done
-Writing superblocks and filesystem accounting information: done
-
-$ sudo mount /dev/md4 /mnt
-$ sudo chown andy: /mnt
-$ /opt/fio/bin/fio --ioengine=libaio --direct=1 --gtod_reduce=1 --name=limoncello_ro_mdwritemostly_4jobs --filename=/mnt/fio --bs=32k --iodepth=64 --numjobs=1 --size=8G --readwrite=randread --group_reporting
-limoncello_ro_mdwritemostly_4jobs: (g=0): rw=randread, bs=(R) 32.0KiB-32.0KiB, (W) 32.0KiB-32.0KiB, (T) 32.0KiB-32.0KiB, ioengine=libaio, iodepth=64
-fio-3.13-42-g8066f
-Starting 1 process
-limoncello_ro_mdwritemostly_4jobs: Laying out IO file (1 file / 8192MiB)
-Jobs: 1 (f=1): [r(1)][100.0%][r=1127MiB/s][r=36.1k IOPS][eta 00m:00s]
-limoncello_ro_mdwritemostly_4jobs: (groupid=0, jobs=1): err= 0: pid=24570: Fri May 17 23:05:59 2019
-  read: IOPS=36.2k, BW=1133MiB/s (1188MB/s)(8192MiB/7232msec)
-   bw (  MiB/s): min= 1118, max= 1145, per=99.94%, avg=1132.12, stdev= 9.09, samples=14
-   iops        : min=35786, max=36656, avg=36227.71, stdev=290.84, samples=14
-  cpu          : usr=5.46%, sys=26.12%, ctx=189495, majf=0, minf=519
-  IO depths    : 1=0.1%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=0.1%, >=64=100.0%
-     submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
-     complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.1%, >=64=0.0%
-     issued rwts: total=262144,0,0,0 short=0,0,0,0 dropped=0,0,0,0
-     latency   : target=0, window=0, percentile=100.00%, depth=64
-
-Run status group 0 (all jobs):
-   READ: bw=1133MiB/s (1188MB/s), 1133MiB/s-1133MiB/s (1188MB/s-1188MB/s), io=8192MiB (8590MB), run=7232-7232msec
-
-Disk stats (read/write):
-    md4: ios=260907/3, merge=0/0, ticks=0/0, in_queue=0, util=0.00%, aggrios=130711/4, aggrmerge=361/1, aggrticks=228765/8, aggrin_queue=126206, aggrutil=98.07%
-  nvme0n1: ios=142323/4, merge=0/1, ticks=21914/0, in_queue=21392, util=96.50%
-  sdc: ios=119099/5, merge=722/1, ticks=435617/17, in_queue=231020, util=98.07%
-
-So maybe I should just be using RAID-1 of these and forget about
---write-mostly?
-
-Should the non-implementation of --write-mostly on RAID-10 be
-reported as a bug, since mdadm silently accepts it and reports its
-use in /proc/mdstat?
-
-Cheers,
-Andy
+Thanks!
+Eric
