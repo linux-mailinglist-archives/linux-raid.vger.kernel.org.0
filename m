@@ -2,85 +2,187 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 53B132412A
-	for <lists+linux-raid@lfdr.de>; Mon, 20 May 2019 21:26:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CEF5524307
+	for <lists+linux-raid@lfdr.de>; Mon, 20 May 2019 23:44:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725616AbfETT0j (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 20 May 2019 15:26:39 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:52972 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfETT0i (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 20 May 2019 15:26:38 -0400
-Received: from mail-wr1-f71.google.com ([209.85.221.71])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <guilherme.piccoli@canonical.com>)
-        id 1hSnvg-0003s5-9o
-        for linux-raid@vger.kernel.org; Mon, 20 May 2019 19:26:36 +0000
-Received: by mail-wr1-f71.google.com with SMTP id p3so7033129wrw.0
-        for <linux-raid@vger.kernel.org>; Mon, 20 May 2019 12:26:36 -0700 (PDT)
+        id S1726678AbfETVor (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 20 May 2019 17:44:47 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:39645 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726557AbfETVoq (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 20 May 2019 17:44:46 -0400
+Received: by mail-qt1-f196.google.com with SMTP id y42so18132562qtk.6;
+        Mon, 20 May 2019 14:44:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Z6wj9uCNAgZU3i37+Q6Xt259Bwsf4HXrCdW34hRDdek=;
+        b=uYXSqMnw+Qu/bdyyJ7hU6ANulSnhgvdwH5cEiNeyroXWomxYyJAWJuQzsChssEQbOi
+         76vi/9Wvou+9gs4KNlZUil7LRe6CeEYOHp7CljEQKDK/K5IBbdceWw2ZKIGrRjD5xcHY
+         sxCJ7OCLh0DzGxZKxw8VRGXwf008AnXID6RGBS3FGir1lXpH1F37ALFr4EP2brXsjLc2
+         O+wgikm/x2AjQeGCLNC4Ug30DX84tm30lmWiK8FyeK56911qbdFyiWbol5coCKJoPP9y
+         fj34gspVlD2Z+MhiNbunmd1qJDKZjTfneafhT8TqeOUKyPBqk4VMhekBJkqXbe4i8R3M
+         6BaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lxbg0Zx+exe/5ojq2vGcbLz6N2dA2JR9VJrKe0f54rA=;
-        b=tUZE55fkzMiFv5B5NmPYs721LR1QsgbhWolBlTusMketZAps5ez3KPO08J1pnVSVy0
-         FO+tGoABnK1evhQe08/8A1n/4+qFruJohOjB/Vn2jviQI0E7DZ+c9TM5mO7PEKmRkUti
-         UcutjdjTPiM0XJ/xmjOTIN8FmNDp4GEiJEbUAk5qQsCJtf2eW4Q/L4fmp75UR+2I1HSY
-         muCUJO/JdhFWQpcKafG6j8hAKfBwerOyK0zrciQDcB/935TxSYF/LJkqmFoWVSvCnEj3
-         cungsAHBeozNvrbiEgxL9SOS3ygjK/CzjqDkP7Lg0Rt1HcFR5kCQrusMB4ON86f1dmvi
-         nLew==
-X-Gm-Message-State: APjAAAW8606gkCUfmZNtdinnX0MABkyduju//ocbVTRKdkxeFy+LJK/w
-        Z819J47dqfGBSQvwQjHSQmeLuorF/M4qmOsbB6ilU80cGZyxCV2si93/KJ/pkyN+GoNAHAiU6Q8
-        QzH1BAgC7b37UrJ44wRRrDQqCfFVvSvwU/SQN0ata/oTPX8ntujm0QPY=
-X-Received: by 2002:a7b:cd0e:: with SMTP id f14mr475700wmj.127.1558380396082;
-        Mon, 20 May 2019 12:26:36 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxxJweMgqMgBbY4mcMB78+O5hkcmDDdJ88xym5ZgH6LwviQZapg7tnDsKjXSPPGYbumV/l4HBVtseOW4pY1BAo=
-X-Received: by 2002:a7b:cd0e:: with SMTP id f14mr475684wmj.127.1558380395603;
- Mon, 20 May 2019 12:26:35 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Z6wj9uCNAgZU3i37+Q6Xt259Bwsf4HXrCdW34hRDdek=;
+        b=j0Hlw9XexFcCNZoyg6cAwbmBoEXkElryfGa/+gDqONz1U1IeNUYdd+MX7aEj13seGl
+         zF0Yq4TbDkrrv5nPzxFjUzzjlImdFUwwDn2ROI0gU0FKkJVIY4vLOJ0p4QEP+R79T7An
+         IXXvzwr4DNDhVLbyHfvR88PTSm6BEGgxwZvB/KORptuMnE+fYZ08oQ4XFQBw0g2TBVVO
+         jzxUxTjS/Rw0cuQh7DOKNhHPBlQx7M6PsxNluTNIAan+lh9yUWMTqUNzq/hueRyqqra4
+         c/pjIZjJJz0iVEq9qPQFKiDBABhRDqZ182qB/wyCDsBuxWCpRNYYcFFmYt/NX9edPwXv
+         bIfQ==
+X-Gm-Message-State: APjAAAUdtGeuUDADj0zda0r/b88rxbmdrIlSazeHC4r3wiWpO6L4NOVS
+        BNdBKAZObI60GwwjG7e3d41RhzU3
+X-Google-Smtp-Source: APXvYqzlrTl03PRyQEgmjdhOt6FdTHh/QDge50r8lJ0Z9InwIRM60KjbcJiVHuDNjVhpzwmS+0oqiA==
+X-Received: by 2002:ac8:1ad3:: with SMTP id h19mr53256900qtk.47.1558388685141;
+        Mon, 20 May 2019 14:44:45 -0700 (PDT)
+Received: from localhost.localdomain ([179.185.210.219])
+        by smtp.gmail.com with ESMTPSA id t30sm11427530qtc.80.2019.05.20.14.44.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 20 May 2019 14:44:44 -0700 (PDT)
+From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
+        Shaohua Li <shli@kernel.org>,
+        linux-raid@vger.kernel.org (open list:SOFTWARE RAID (Multiple Disks)
+        SUPPORT)
+Subject: [PATCH 1/4] md: raid1-10: Unify r{1,10}bio_pool_free
+Date:   Mon, 20 May 2019 18:44:24 -0300
+Message-Id: <20190520214427.18729-2-marcos.souza.org@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190520214427.18729-1-marcos.souza.org@gmail.com>
+References: <20190520214427.18729-1-marcos.souza.org@gmail.com>
 MIME-Version: 1.0
-References: <20190430223722.20845-1-gpiccoli@canonical.com>
- <20190430223722.20845-2-gpiccoli@canonical.com> <CAPhsuW4SeUhNOJJkEf9wcLjbbc9qX0=C8zqbyCtC7Q8fdL91hw@mail.gmail.com>
- <c8721ba3-5d38-7906-5049-e2b16e967ecf@canonical.com> <CAPhsuW6ahmkUhCgns=9WHPXSvYefB0Gmr1oB7gdZiD86sKyHFg@mail.gmail.com>
- <5CD2A172.4010302@youngman.org.uk> <0ad36b2f-ec36-6930-b587-da0526613567@gpiccoli.net>
- <5CD3096B.4030302@youngman.org.uk> <CALJn8nOTCcOtFJ1SzZAuJxNuxzf2Tq7Yw34h1E5XE-mbn5CUbg@mail.gmail.com>
- <CAPhsuW7AwsWiHiqaW55paqtiCLvt3U9C+sQ50fbBr1v=czATyg@mail.gmail.com>
-In-Reply-To: <CAPhsuW7AwsWiHiqaW55paqtiCLvt3U9C+sQ50fbBr1v=czATyg@mail.gmail.com>
-From:   Guilherme Piccoli <gpiccoli@canonical.com>
-Date:   Mon, 20 May 2019 16:25:59 -0300
-Message-ID: <CAHD1Q_zYXvqAGT3shFx=GcfQ=ZV91LZGEEK1wXsOuBMhrrTyDQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] md/raid0: Do not bypass blocking queue entered for
- raid0 bios
-To:     Song Liu <liu.song.a23@gmail.com>
-Cc:     "Guilherme G. Piccoli" <kernel@gpiccoli.net>,
-        Wols Lists <antlists@youngman.org.uk>, axboe@kernel.dk,
-        linux-block@vger.kernel.org,
-        linux-raid <linux-raid@vger.kernel.org>, dm-devel@redhat.com,
-        Gavin Guo <gavin.guo@canonical.com>,
-        Jay Vosburgh <jay.vosburgh@canonical.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Mon, May 20, 2019 at 1:24 PM Song Liu <liu.song.a23@gmail.com> wrote:
->
-> On Fri, May 17, 2019 at 9:19 AM Guilherme G. Piccoli
->
-> I will process it. It was delayed due to the merge window.
->
-> Thanks,
-> Song
+Avoiding duplicated code, since they just execute a kfree.
 
+Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+---
+ drivers/md/raid1-10.c |  5 +++++
+ drivers/md/raid1.c    | 13 ++++---------
+ drivers/md/raid10.c   | 11 +++--------
+ 3 files changed, 12 insertions(+), 17 deletions(-)
 
-Thank you Song! I'm ready to send a v2, just to match the v2 of patch
-"1/2" of this series (but no
-change in this one, except rebase to 5.2-rc1).
+diff --git a/drivers/md/raid1-10.c b/drivers/md/raid1-10.c
+index 7d968bf08e54..54db34163968 100644
+--- a/drivers/md/raid1-10.c
++++ b/drivers/md/raid1-10.c
+@@ -34,6 +34,11 @@ struct resync_pages {
+ 	struct page	*pages[RESYNC_PAGES];
+ };
+ 
++static void rbio_pool_free(void *rbio, void *data)
++{
++	kfree(rbio);
++}
++
+ static inline int resync_alloc_pages(struct resync_pages *rp,
+ 				     gfp_t gfp_flags)
+ {
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index bb052c35bf29..3787c7e45849 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -76,11 +76,6 @@ static void * r1bio_pool_alloc(gfp_t gfp_flags, void *data)
+ 	return kzalloc(size, gfp_flags);
+ }
+ 
+-static void r1bio_pool_free(void *r1_bio, void *data)
+-{
+-	kfree(r1_bio);
+-}
+-
+ #define RESYNC_DEPTH 32
+ #define RESYNC_SECTORS (RESYNC_BLOCK_SIZE >> 9)
+ #define RESYNC_WINDOW (RESYNC_BLOCK_SIZE * RESYNC_DEPTH)
+@@ -156,7 +151,7 @@ static void * r1buf_pool_alloc(gfp_t gfp_flags, void *data)
+ 	kfree(rps);
+ 
+ out_free_r1bio:
+-	r1bio_pool_free(r1_bio, data);
++	rbio_pool_free(r1_bio, data);
+ 	return NULL;
+ }
+ 
+@@ -176,7 +171,7 @@ static void r1buf_pool_free(void *__r1_bio, void *data)
+ 	/* resync pages array stored in the 1st bio's .bi_private */
+ 	kfree(rp);
+ 
+-	r1bio_pool_free(r1bio, data);
++	rbio_pool_free(r1bio, data);
+ }
+ 
+ static void put_all_bios(struct r1conf *conf, struct r1bio *r1_bio)
+@@ -2931,7 +2926,7 @@ static struct r1conf *setup_conf(struct mddev *mddev)
+ 		goto abort;
+ 	conf->poolinfo->raid_disks = mddev->raid_disks * 2;
+ 	err = mempool_init(&conf->r1bio_pool, NR_RAID_BIOS, r1bio_pool_alloc,
+-			   r1bio_pool_free, conf->poolinfo);
++			   rbio_pool_free, conf->poolinfo);
+ 	if (err)
+ 		goto abort;
+ 
+@@ -3216,7 +3211,7 @@ static int raid1_reshape(struct mddev *mddev)
+ 	newpoolinfo->raid_disks = raid_disks * 2;
+ 
+ 	ret = mempool_init(&newpool, NR_RAID_BIOS, r1bio_pool_alloc,
+-			   r1bio_pool_free, newpoolinfo);
++			   rbio_pool_free, newpoolinfo);
+ 	if (ret) {
+ 		kfree(newpoolinfo);
+ 		return ret;
+diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+index 24cb116d950f..c0d9ee4311d4 100644
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -107,11 +107,6 @@ static void * r10bio_pool_alloc(gfp_t gfp_flags, void *data)
+ 	return kzalloc(size, gfp_flags);
+ }
+ 
+-static void r10bio_pool_free(void *r10_bio, void *data)
+-{
+-	kfree(r10_bio);
+-}
+-
+ #define RESYNC_SECTORS (RESYNC_BLOCK_SIZE >> 9)
+ /* amount of memory to reserve for resync requests */
+ #define RESYNC_WINDOW (1024*1024)
+@@ -217,7 +212,7 @@ static void * r10buf_pool_alloc(gfp_t gfp_flags, void *data)
+ 	}
+ 	kfree(rps);
+ out_free_r10bio:
+-	r10bio_pool_free(r10_bio, conf);
++	rbio_pool_free(r10_bio, conf);
+ 	return NULL;
+ }
+ 
+@@ -245,7 +240,7 @@ static void r10buf_pool_free(void *__r10_bio, void *data)
+ 	/* resync pages array stored in the 1st bio's .bi_private */
+ 	kfree(rp);
+ 
+-	r10bio_pool_free(r10bio, conf);
++	rbio_pool_free(r10bio, conf);
+ }
+ 
+ static void put_all_bios(struct r10conf *conf, struct r10bio *r10_bio)
+@@ -3660,7 +3655,7 @@ static struct r10conf *setup_conf(struct mddev *mddev)
+ 	conf->geo = geo;
+ 	conf->copies = copies;
+ 	err = mempool_init(&conf->r10bio_pool, NR_RAID_BIOS, r10bio_pool_alloc,
+-			   r10bio_pool_free, conf);
++			   rbio_pool_free, conf);
+ 	if (err)
+ 		goto out;
+ 
+-- 
+2.21.0
 
-Cheers,
-
-Guilherme
