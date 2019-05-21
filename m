@@ -2,66 +2,65 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 87D2424EA7
-	for <lists+linux-raid@lfdr.de>; Tue, 21 May 2019 14:08:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C09CE24EFC
+	for <lists+linux-raid@lfdr.de>; Tue, 21 May 2019 14:34:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbfEUMIT (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 21 May 2019 08:08:19 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:41056 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726344AbfEUMIS (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 21 May 2019 08:08:18 -0400
-Received: from mail-wr1-f69.google.com ([209.85.221.69])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <guilherme.piccoli@canonical.com>)
-        id 1hT3Z2-0006uf-Ci
-        for linux-raid@vger.kernel.org; Tue, 21 May 2019 12:08:16 +0000
-Received: by mail-wr1-f69.google.com with SMTP id x1so7953394wrd.15
-        for <linux-raid@vger.kernel.org>; Tue, 21 May 2019 05:08:16 -0700 (PDT)
+        id S1726953AbfEUMeg (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 21 May 2019 08:34:36 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:40963 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726705AbfEUMeg (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 21 May 2019 08:34:36 -0400
+Received: by mail-ua1-f66.google.com with SMTP id l14so1798944uah.8
+        for <linux-raid@vger.kernel.org>; Tue, 21 May 2019 05:34:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=suXGgrKtPcDmUx72Y/oHjN3Qfa+7yW84fWKLo2dmurA=;
+        b=W4xM8jdqeSoYEFYxnmqHUYJcmEKt6QjCMCyUDF4lsOKwD3ymKuJTwpAkUv24fL9ss8
+         HidiCkc3b5y+TtL4W3BnNKyoNRUOnIouqG8pKJcmYb45umQBhpg4HoNmO/WCuE4Htyat
+         55JwUO/tNvsoGZWACrctPQC4gpSk0NCZ0I7c12w4JmTVggKHLjSJ7gN5+3bB9HxBFytc
+         i4NCOxKO5RMBypuJbKBH+uL42k9ZRhcH4Ile0DmE34tWUmRY/cPEFzMBr2utEs0KNk6K
+         NT6XYkfD1RVlmYmjIN1sV/N5LN0k7nMnoyXMhRJUr70RCK0qqycwm4w84RhzTZrhLup/
+         i5lA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eXhU7/Nn4406vWILE1V7HnwbpPCsuskWXUNv5gI4pr8=;
-        b=iJCLOxoBeyVQdCz1cF5zrS2LqyY9KlYj1COw8eOD2odJxj5kjEJ9tXeZLqOfStkWMI
-         /g1T4tewfqLlX6bY0RW0lx5hloVsx9D/7dM/WBgfl8MqmACNwNmGcFfOIC7VKsqaRMzH
-         6pYEpKNU5BlnLKrr9lUkUUy3MXNJeF/IDky0v7jv2ArAh2ebVZevUBrdzRFrMb4bde89
-         PpJwmQoGKeVhuQ6TJIfmcePMw3VNmj7V7jfDAzMAR/sfJs5EsPMx6yDZ9yFsBrJl+P+X
-         DBv+B3/ibQ4ZinIDARTe5vyZKqVRxP6FifF9vwtGqiD9hrLAHViRrLtkaRLyNZqkMeNV
-         83uw==
-X-Gm-Message-State: APjAAAV3caZ9YVyymWn0ds3ycmOrSH+PSdm/GegLCbyu5OJjY2BMX6Ii
-        GDdrhuIUqKnv0Rp9CxHWir8Nj/NZmCbIYa/RXU3hs0xq+EXgZ9oO+KdL60Shkl3DDtDvhLYolNS
-        7o+03j6XdknqNecOdt3PUy0c/JceQlOuZOXnj35VMfBcfZaUXfQSUyX0=
-X-Received: by 2002:adf:8306:: with SMTP id 6mr37224325wrd.155.1558440496033;
-        Tue, 21 May 2019 05:08:16 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxFs6jLle8rolj8Uvchcc0hIOU9iziAkdiGdWrTuNrb0vVhuvAlwYbeJAsL050r5pHjQwVAgcnfki4xEyGbzcU=
-X-Received: by 2002:adf:8306:: with SMTP id 6mr37224310wrd.155.1558440495856;
- Tue, 21 May 2019 05:08:15 -0700 (PDT)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=suXGgrKtPcDmUx72Y/oHjN3Qfa+7yW84fWKLo2dmurA=;
+        b=XQ/sc3FkRprulSSmxWvR7mqhkaBCIJ3rkMZGFW1hiqxNeV7eJ5bIWeMp2Cx0BmUFE/
+         cWJWmGoITesjlM9uGGQQWi5wloN+sUZoNF65wvHAH2CVsP1MQyHP92RdR9E49OfHtjO3
+         lSKqJdfMZtI2tBCtKCe3iI4UbEmIh7OwXSk8hUjYCHI1ouCW/J0gAkDaFEkePCUF8Z2o
+         19D5Pj2ptojG6nFNGPw/KQXhdS3+FkLPzrbEzCJ+Ee88zzgqM/akPWl9plEjrH6o9vmK
+         L2b44GrEpM9g+/onL7vlCHqQXmC02JzMAU/eEbaesZgeXhYbTDha8X3fiUTAPeaJOE0E
+         /dPA==
+X-Gm-Message-State: APjAAAVEmkiU3BMPSQSF3HHoo7trx26o/3hSOR6G4oaU1UIIo4EsqZtw
+        z3bulR8sZg+WBBvlk+lvnP4PiYqD39z8vlcmSJY=
+X-Google-Smtp-Source: APXvYqxYJA/zNt8wt129lkzh0W1SsZNORvKkEOQTOxrD/VDsP9L8liPbFMWbk2Q53zFqHLssgph7TApa41hpP2p6Q08=
+X-Received: by 2002:ab0:2c15:: with SMTP id l21mr465547uar.139.1558442075631;
+ Tue, 21 May 2019 05:34:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190520220911.25192-1-gpiccoli@canonical.com> <CAPhsuW6KayaNR-0eFHpvPG-LVuPFL_1OFjvZpOcnapVFe2vC9Q@mail.gmail.com>
-In-Reply-To: <CAPhsuW6KayaNR-0eFHpvPG-LVuPFL_1OFjvZpOcnapVFe2vC9Q@mail.gmail.com>
-From:   Guilherme Piccoli <gpiccoli@canonical.com>
-Date:   Tue, 21 May 2019 09:07:38 -0300
-Message-ID: <CAHD1Q_wkziJYx4z0JcBavmQRzTh3a4g5xZG8bhVX+TYTkhaTrg@mail.gmail.com>
-Subject: Re: [PATCH V2 1/2] block: Fix a NULL pointer dereference in generic_make_request()
-To:     Song Liu <liu.song.a23@gmail.com>
-Cc:     linux-block@vger.kernel.org,
-        linux-raid <linux-raid@vger.kernel.org>, dm-devel@redhat.com,
-        axboe@kernel.dk, Gavin Guo <gavin.guo@canonical.com>,
-        Jay Vosburgh <jay.vosburgh@canonical.com>,
-        "Guilherme G. Piccoli" <kernel@gpiccoli.net>,
-        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Eric Ren <renzhengeek@gmail.com>
+Received: by 2002:a67:794e:0:0:0:0:0 with HTTP; Tue, 21 May 2019 05:34:34
+ -0700 (PDT)
+Reply-To: yoannasikying@gmail.com
+From:   Frau Yoanna Sik-ying <bamgrace721@gmail.com>
+Date:   Tue, 21 May 2019 14:34:34 +0200
+Message-ID: <CAGseWOVjO2Cnf6q-9=hY2jtm4648yT5fYPDEmEfgP9mfaP=mpA@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Tue, May 21, 2019 at 2:59 AM Song Liu <liu.song.a23@gmail.com> wrote:
-> Applied both patches! Thanks for the fix!
->
+--=20
+ Sch=C3=B6ner Tag
 
-Thanks Song!
+     Ich bin Frau Yoanna Sik-ying f=C3=BCr die Mitarbeiter der CITIBANK
+HONG KONG hier in Hongkong. Kann ich Geld von $ 15.356.669 =C3=BCberweisen?
+Vertrauen?
+
+Sch=C3=B6ne Gr=C3=BC=C3=9Fe
