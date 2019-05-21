@@ -2,227 +2,66 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C5B1247BA
-	for <lists+linux-raid@lfdr.de>; Tue, 21 May 2019 07:59:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87D2424EA7
+	for <lists+linux-raid@lfdr.de>; Tue, 21 May 2019 14:08:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbfEUF7x (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 21 May 2019 01:59:53 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46307 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbfEUF7x (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 21 May 2019 01:59:53 -0400
-Received: by mail-qt1-f195.google.com with SMTP id z19so19072044qtz.13;
-        Mon, 20 May 2019 22:59:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AFJexFuFkQtgep9ej8Oax/FWg9d9zce2LMAbaZR8bz0=;
-        b=AXaHRONsav7diI2ncW4TwuNgXcylolW1VNwsd89FVxhq96s2Y5WA4Rp4zITKEjUIQZ
-         fYlyPKAz4DUY47zRSIDQgsqcapiH0nBmv/e7dXebSQUe3u0Pmvlf2hdjoNzTPZFP+98r
-         CegOC0cljHpjpBMcdFZYftRfLpkniu8nEtN/kkrIgdG7rNMdqfQb3XLW6Zi8pqbm6iZU
-         MYanbICS3xQNwQTonClX4Tx78EFsB6+XVM3LA9DJ/al90SiIiukhGTZ4zXJ70opvKJqb
-         xRz350cIsJOAN5YuSgVupdXq5WcID3AI1FlzDE6JkA60cIqzwiFQceWcpCgwbzykIm9g
-         b+DQ==
+        id S1727060AbfEUMIT (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 21 May 2019 08:08:19 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41056 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726344AbfEUMIS (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 21 May 2019 08:08:18 -0400
+Received: from mail-wr1-f69.google.com ([209.85.221.69])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <guilherme.piccoli@canonical.com>)
+        id 1hT3Z2-0006uf-Ci
+        for linux-raid@vger.kernel.org; Tue, 21 May 2019 12:08:16 +0000
+Received: by mail-wr1-f69.google.com with SMTP id x1so7953394wrd.15
+        for <linux-raid@vger.kernel.org>; Tue, 21 May 2019 05:08:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=AFJexFuFkQtgep9ej8Oax/FWg9d9zce2LMAbaZR8bz0=;
-        b=PBqXz82H+5leOpu4GCr1flCfmz4QyuR+hkqzEOcfL5DSoas7XbQIwzwZ5YOlY06+Eo
-         NPBEpdaoUHpqp+GoBg+TvwOC7OBSVhDj0u5mzmNu0Oo5RXgz0elhK+uYAHT/P8I3J5j7
-         M706o9I24YVb1dKFoBZY77zaZuGhbSpXbvRCE3TAzRO4Wjxsri/Q/Fttnb1rTf4FCmhr
-         UqKZNSTpS4YrgJbmToWGAqeVLA8t5wiPpDIG4ARtfEw0mBhvlRM79lzsyv4SA3769n4q
-         KJIh/GfeKMU0kn0lQXB6tMrgSox47Wofc2GnhKPlDaSHxz0ElnbV/2oKTrUkadXYiXkR
-         5xpA==
-X-Gm-Message-State: APjAAAVp6t5XgPITw2xU/ndW8gFAK3gCeNmRSSghilffDbcJPnzg4NA8
-        r9bhTYwO1FrYm1lzsRPN+CLSJte/OdoRWIXYCLE=
-X-Google-Smtp-Source: APXvYqyR2aJsBCaBYckwTtOZqKD3r6TKlC4VXsZVZgw5xchddWWenYIB+8d9YwG0W330ejG8oZ3q/cen8KU5Ev0pEMY=
-X-Received: by 2002:ac8:2af4:: with SMTP id c49mr46564688qta.83.1558418391734;
- Mon, 20 May 2019 22:59:51 -0700 (PDT)
+        bh=eXhU7/Nn4406vWILE1V7HnwbpPCsuskWXUNv5gI4pr8=;
+        b=iJCLOxoBeyVQdCz1cF5zrS2LqyY9KlYj1COw8eOD2odJxj5kjEJ9tXeZLqOfStkWMI
+         /g1T4tewfqLlX6bY0RW0lx5hloVsx9D/7dM/WBgfl8MqmACNwNmGcFfOIC7VKsqaRMzH
+         6pYEpKNU5BlnLKrr9lUkUUy3MXNJeF/IDky0v7jv2ArAh2ebVZevUBrdzRFrMb4bde89
+         PpJwmQoGKeVhuQ6TJIfmcePMw3VNmj7V7jfDAzMAR/sfJs5EsPMx6yDZ9yFsBrJl+P+X
+         DBv+B3/ibQ4ZinIDARTe5vyZKqVRxP6FifF9vwtGqiD9hrLAHViRrLtkaRLyNZqkMeNV
+         83uw==
+X-Gm-Message-State: APjAAAV3caZ9YVyymWn0ds3ycmOrSH+PSdm/GegLCbyu5OJjY2BMX6Ii
+        GDdrhuIUqKnv0Rp9CxHWir8Nj/NZmCbIYa/RXU3hs0xq+EXgZ9oO+KdL60Shkl3DDtDvhLYolNS
+        7o+03j6XdknqNecOdt3PUy0c/JceQlOuZOXnj35VMfBcfZaUXfQSUyX0=
+X-Received: by 2002:adf:8306:: with SMTP id 6mr37224325wrd.155.1558440496033;
+        Tue, 21 May 2019 05:08:16 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxFs6jLle8rolj8Uvchcc0hIOU9iziAkdiGdWrTuNrb0vVhuvAlwYbeJAsL050r5pHjQwVAgcnfki4xEyGbzcU=
+X-Received: by 2002:adf:8306:: with SMTP id 6mr37224310wrd.155.1558440495856;
+ Tue, 21 May 2019 05:08:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190509111849.22927-1-marcos.souza.org@gmail.com>
- <20190516112317.GA8611@geeko> <CAPhsuW6i2N-pLcUEC7g3VZxBOMOhEJ8=cS3FwQonf3529=x_Mg@mail.gmail.com>
-In-Reply-To: <CAPhsuW6i2N-pLcUEC7g3VZxBOMOhEJ8=cS3FwQonf3529=x_Mg@mail.gmail.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Mon, 20 May 2019 22:59:40 -0700
-Message-ID: <CAPhsuW6VqPh7RWwNYa+r8sim_4+LQio5+JNSAhDahbF=o0qrjw@mail.gmail.com>
-Subject: Re: [PATCH] drivers: md: Unify common definitions of raid1 and raid10
-To:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        NeilBrown <neilb@suse.com>, Shaohua Li <shli@kernel.org>,
-        "open list:SOFTWARE RAID (Multiple Disks) SUPPORT" 
-        <linux-raid@vger.kernel.org>
+References: <20190520220911.25192-1-gpiccoli@canonical.com> <CAPhsuW6KayaNR-0eFHpvPG-LVuPFL_1OFjvZpOcnapVFe2vC9Q@mail.gmail.com>
+In-Reply-To: <CAPhsuW6KayaNR-0eFHpvPG-LVuPFL_1OFjvZpOcnapVFe2vC9Q@mail.gmail.com>
+From:   Guilherme Piccoli <gpiccoli@canonical.com>
+Date:   Tue, 21 May 2019 09:07:38 -0300
+Message-ID: <CAHD1Q_wkziJYx4z0JcBavmQRzTh3a4g5xZG8bhVX+TYTkhaTrg@mail.gmail.com>
+Subject: Re: [PATCH V2 1/2] block: Fix a NULL pointer dereference in generic_make_request()
+To:     Song Liu <liu.song.a23@gmail.com>
+Cc:     linux-block@vger.kernel.org,
+        linux-raid <linux-raid@vger.kernel.org>, dm-devel@redhat.com,
+        axboe@kernel.dk, Gavin Guo <gavin.guo@canonical.com>,
+        Jay Vosburgh <jay.vosburgh@canonical.com>,
+        "Guilherme G. Piccoli" <kernel@gpiccoli.net>,
+        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Eric Ren <renzhengeek@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu, May 16, 2019 at 8:39 AM Song Liu <liu.song.a23@gmail.com> wrote:
+On Tue, May 21, 2019 at 2:59 AM Song Liu <liu.song.a23@gmail.com> wrote:
+> Applied both patches! Thanks for the fix!
 >
-> On Thu, May 16, 2019 at 4:24 AM Marcos Paulo de Souza
-> <marcos.souza.org@gmail.com> wrote:
-> >
-> > ping.
-> >
 
-Applied to https://github.com/liu-song-6/linux/tree/md-next.
-
->
-> Thanks for the patch. I will process it after the merge window closes.
->
-> Song
->
-> > On Thu, May 09, 2019 at 08:18:49AM -0300, Marcos Paulo de Souza wrote:
-> > > These definitions are being moved to raid1-10.c.
-> > >
-> > > Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-> > > ---
-> > >  drivers/md/raid1-10.c | 25 +++++++++++++++++++++++++
-> > >  drivers/md/raid1.c    | 29 ++---------------------------
-> > >  drivers/md/raid10.c   | 27 +--------------------------
-> > >  3 files changed, 28 insertions(+), 53 deletions(-)
-> > >
-> > > diff --git a/drivers/md/raid1-10.c b/drivers/md/raid1-10.c
-> > > index 400001b815db..7d968bf08e54 100644
-> > > --- a/drivers/md/raid1-10.c
-> > > +++ b/drivers/md/raid1-10.c
-> > > @@ -3,6 +3,31 @@
-> > >  #define RESYNC_BLOCK_SIZE (64*1024)
-> > >  #define RESYNC_PAGES ((RESYNC_BLOCK_SIZE + PAGE_SIZE-1) / PAGE_SIZE)
-> > >
-> > > +/*
-> > > + * Number of guaranteed raid bios in case of extreme VM load:
-> > > + */
-> > > +#define      NR_RAID_BIOS 256
-> > > +
-> > > +/* when we get a read error on a read-only array, we redirect to another
-> > > + * device without failing the first device, or trying to over-write to
-> > > + * correct the read error.  To keep track of bad blocks on a per-bio
-> > > + * level, we store IO_BLOCKED in the appropriate 'bios' pointer
-> > > + */
-> > > +#define IO_BLOCKED ((struct bio *)1)
-> > > +/* When we successfully write to a known bad-block, we need to remove the
-> > > + * bad-block marking which must be done from process context.  So we record
-> > > + * the success by setting devs[n].bio to IO_MADE_GOOD
-> > > + */
-> > > +#define IO_MADE_GOOD ((struct bio *)2)
-> > > +
-> > > +#define BIO_SPECIAL(bio) ((unsigned long)bio <= 2)
-> > > +
-> > > +/* When there are this many requests queue to be written by
-> > > + * the raid thread, we become 'congested' to provide back-pressure
-> > > + * for writeback.
-> > > + */
-> > > +static int max_queued_requests = 1024;
-> > > +
-> > >  /* for managing resync I/O pages */
-> > >  struct resync_pages {
-> > >       void            *raid_bio;
-> > > diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-> > > index 0c8a098d220e..bb052c35bf29 100644
-> > > --- a/drivers/md/raid1.c
-> > > +++ b/drivers/md/raid1.c
-> > > @@ -50,31 +50,6 @@
-> > >        (1L << MD_HAS_PPL) |           \
-> > >        (1L << MD_HAS_MULTIPLE_PPLS))
-> > >
-> > > -/*
-> > > - * Number of guaranteed r1bios in case of extreme VM load:
-> > > - */
-> > > -#define      NR_RAID1_BIOS 256
-> > > -
-> > > -/* when we get a read error on a read-only array, we redirect to another
-> > > - * device without failing the first device, or trying to over-write to
-> > > - * correct the read error.  To keep track of bad blocks on a per-bio
-> > > - * level, we store IO_BLOCKED in the appropriate 'bios' pointer
-> > > - */
-> > > -#define IO_BLOCKED ((struct bio *)1)
-> > > -/* When we successfully write to a known bad-block, we need to remove the
-> > > - * bad-block marking which must be done from process context.  So we record
-> > > - * the success by setting devs[n].bio to IO_MADE_GOOD
-> > > - */
-> > > -#define IO_MADE_GOOD ((struct bio *)2)
-> > > -
-> > > -#define BIO_SPECIAL(bio) ((unsigned long)bio <= 2)
-> > > -
-> > > -/* When there are this many requests queue to be written by
-> > > - * the raid1 thread, we become 'congested' to provide back-pressure
-> > > - * for writeback.
-> > > - */
-> > > -static int max_queued_requests = 1024;
-> > > -
-> > >  static void allow_barrier(struct r1conf *conf, sector_t sector_nr);
-> > >  static void lower_barrier(struct r1conf *conf, sector_t sector_nr);
-> > >
-> > > @@ -2955,7 +2930,7 @@ static struct r1conf *setup_conf(struct mddev *mddev)
-> > >       if (!conf->poolinfo)
-> > >               goto abort;
-> > >       conf->poolinfo->raid_disks = mddev->raid_disks * 2;
-> > > -     err = mempool_init(&conf->r1bio_pool, NR_RAID1_BIOS, r1bio_pool_alloc,
-> > > +     err = mempool_init(&conf->r1bio_pool, NR_RAID_BIOS, r1bio_pool_alloc,
-> > >                          r1bio_pool_free, conf->poolinfo);
-> > >       if (err)
-> > >               goto abort;
-> > > @@ -3240,7 +3215,7 @@ static int raid1_reshape(struct mddev *mddev)
-> > >       newpoolinfo->mddev = mddev;
-> > >       newpoolinfo->raid_disks = raid_disks * 2;
-> > >
-> > > -     ret = mempool_init(&newpool, NR_RAID1_BIOS, r1bio_pool_alloc,
-> > > +     ret = mempool_init(&newpool, NR_RAID_BIOS, r1bio_pool_alloc,
-> > >                          r1bio_pool_free, newpoolinfo);
-> > >       if (ret) {
-> > >               kfree(newpoolinfo);
-> > > diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-> > > index 3b6880dd648d..24cb116d950f 100644
-> > > --- a/drivers/md/raid10.c
-> > > +++ b/drivers/md/raid10.c
-> > > @@ -73,31 +73,6 @@
-> > >   *    [B A] [D C]    [B A] [E C D]
-> > >   */
-> > >
-> > > -/*
-> > > - * Number of guaranteed r10bios in case of extreme VM load:
-> > > - */
-> > > -#define      NR_RAID10_BIOS 256
-> > > -
-> > > -/* when we get a read error on a read-only array, we redirect to another
-> > > - * device without failing the first device, or trying to over-write to
-> > > - * correct the read error.  To keep track of bad blocks on a per-bio
-> > > - * level, we store IO_BLOCKED in the appropriate 'bios' pointer
-> > > - */
-> > > -#define IO_BLOCKED ((struct bio *)1)
-> > > -/* When we successfully write to a known bad-block, we need to remove the
-> > > - * bad-block marking which must be done from process context.  So we record
-> > > - * the success by setting devs[n].bio to IO_MADE_GOOD
-> > > - */
-> > > -#define IO_MADE_GOOD ((struct bio *)2)
-> > > -
-> > > -#define BIO_SPECIAL(bio) ((unsigned long)bio <= 2)
-> > > -
-> > > -/* When there are this many requests queued to be written by
-> > > - * the raid10 thread, we become 'congested' to provide back-pressure
-> > > - * for writeback.
-> > > - */
-> > > -static int max_queued_requests = 1024;
-> > > -
-> > >  static void allow_barrier(struct r10conf *conf);
-> > >  static void lower_barrier(struct r10conf *conf);
-> > >  static int _enough(struct r10conf *conf, int previous, int ignore);
-> > > @@ -3684,7 +3659,7 @@ static struct r10conf *setup_conf(struct mddev *mddev)
-> > >
-> > >       conf->geo = geo;
-> > >       conf->copies = copies;
-> > > -     err = mempool_init(&conf->r10bio_pool, NR_RAID10_BIOS, r10bio_pool_alloc,
-> > > +     err = mempool_init(&conf->r10bio_pool, NR_RAID_BIOS, r10bio_pool_alloc,
-> > >                          r10bio_pool_free, conf);
-> > >       if (err)
-> > >               goto out;
-> > > --
-> > > 2.21.0
-> > >
-> >
-> > --
-> > Thanks,
-> > Marcos
+Thanks Song!
