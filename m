@@ -2,181 +2,134 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 69DE4285AA
-	for <lists+linux-raid@lfdr.de>; Thu, 23 May 2019 20:10:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D499F285AF
+	for <lists+linux-raid@lfdr.de>; Thu, 23 May 2019 20:12:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731153AbfEWSKE (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 23 May 2019 14:10:04 -0400
-Received: from mail-qt1-f180.google.com ([209.85.160.180]:44807 "EHLO
-        mail-qt1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731117AbfEWSKE (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 23 May 2019 14:10:04 -0400
-Received: by mail-qt1-f180.google.com with SMTP id f24so7816084qtk.11
-        for <linux-raid@vger.kernel.org>; Thu, 23 May 2019 11:10:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7OYnyEcy7slTa9QcAJHom/Igbzw8StUyhZJTfyWe7VY=;
-        b=DnLos3Afqu5VfnMQDemlHleb4iyMVYwc36KeQ5HoFPBIg8bxSknQDmjaRZhzJ1e5Bx
-         bLUly1nIDTfNcCerZlAzh4LZL2oyYIXGN+T7wwTUkcBJaly5Slf46uAEcec89VehLE9o
-         KGIG4/PEkuNsjG3/KIh8fbd0/TcGLDoot+rfkK5Meuo1Nm6NAFguuGbcvKhN3j3V6tZj
-         6XoVVb76QwpbbHup8YlN7onF1MpHVfwLD70hVfH5E9khqxT+7WexzPUF3PZlZJWH/AHP
-         L80LXaVSwn2lkTxK3xlBstWBAW3ExHRY+QlK73zLfl9dhYK+KcCdo8AvLUeZukaWE/Ah
-         swqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7OYnyEcy7slTa9QcAJHom/Igbzw8StUyhZJTfyWe7VY=;
-        b=GxA0WvwHMxv2L18tkbbcA3NuyPt5OBqzgEHMyhP6vQHyqBwqjjq6bZRz91JwcVKO3/
-         dIuWtVRAg1wHw+FizGJyFUlvxEnDJjOo+AiuVRkxTuDLGEDJ0SlykWNVz4tUyGTR45ZJ
-         ft1SprVARdArxnOON/0Zydz+uiAgrC2S3I+4QewsjPtHvV3yOyMsBTpDVltlB5SZ9unY
-         fawUH9bo8gp4npt/VSflgmJ2zcTo5vkPnkvxx5FImmZ7nUyswML3QSgg7JQ/jWjT0DIw
-         HePo88UatBDoRIeAOf/bCs5d513Xg0lwZeVyA4seDnF/s9ih52GTw5wyLmPaCR3UEQJV
-         FXHw==
-X-Gm-Message-State: APjAAAWYfWg5uetY4TmylraLHhFxIv+2jjIzlHDMu0FOyalbzJ7bWdG+
-        Qf0smdMJsxJhagJV8entzE9qKp5ywUyx8+h04H4c1g==
-X-Google-Smtp-Source: APXvYqwUnlJuPNKIQdOG44tSoNeRJW6FQqEQ52LMDmhEfbmxXgLcdeS5z5fO6eDaK6ENJneqFdorl0quobUg6IetQmQ=
-X-Received: by 2002:a0c:9539:: with SMTP id l54mr25822351qvl.24.1558635003500;
- Thu, 23 May 2019 11:10:03 -0700 (PDT)
+        id S1731264AbfEWSMl (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 23 May 2019 14:12:41 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:44616 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731117AbfEWSMl (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 23 May 2019 14:12:41 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4NIAjfS026622;
+        Thu, 23 May 2019 11:11:53 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=tEh99UFUuIoCQbF7Y2Fx93vLTN/9CrGvFYwbWli1O8I=;
+ b=T5hYNRzR4wjMg3r3DR8Ai3FPT6JwEx22EP9zHRqsTRDAGnSX0SCY2Ypy21r+22UHnaXy
+ 722rAJEh/Nt9GWJb5vKP7enCe/oIWFOm1J+TnhpdE186yfgGdnnnysnYoOG3S7i5e6Qv
+ 6z/p6b/OtQF4+pBXHv3+g5yD77SKFm3NLNA= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2snxsv0eks-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 23 May 2019 11:11:53 -0700
+Received: from ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) by
+ ash-exhub104.TheFacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 23 May 2019 11:11:22 -0700
+Received: from NAM05-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 23 May 2019 11:11:22 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tEh99UFUuIoCQbF7Y2Fx93vLTN/9CrGvFYwbWli1O8I=;
+ b=Y4NiRpAyJlII8r5eTQi39CXwWxAYR7zlErYZtrJWQVqJ6GB1ikDqXFBCHYizpf3qSjgQeo2FOdhJHGAosCQmeaHltX+4Oo4c5RZXvjTK+WLJ3ydaII8xaHtjSTX3YBbzUKKpVrMNDw/LbQUWG6s9XChVcgurnhToJyqMYtXH8Ps=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.2.19) by
+ MWHPR15MB1344.namprd15.prod.outlook.com (10.175.3.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.18; Thu, 23 May 2019 18:11:20 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::85b5:614:bc49:8a15]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::85b5:614:bc49:8a15%11]) with mapi id 15.20.1900.020; Thu, 23 May 2019
+ 18:11:20 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Greg KH <greg@kroah.com>
+CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        linux-raid <linux-raid@vger.kernel.org>,
+        Nigel Croxon <ncroxon@redhat.com>,
+        "linux@thorsten-knabe.de" <linux@thorsten-knabe.de>
+Subject: Re: Fix bad backport to stable v3.16+
+Thread-Topic: Fix bad backport to stable v3.16+
+Thread-Index: AQHVELut6an29Mq8+UC+F4U28QLXqqZ4/OWAgAAHeoA=
+Date:   Thu, 23 May 2019 18:11:20 +0000
+Message-ID: <C62D2B83-3773-42FA-8918-53C31AB56F97@fb.com>
+References: <5F8253BF-1167-4A48-A3AC-E0728E1EE6CB@fb.com>
+ <20190523174433.GB29438@kroah.com>
+In-Reply-To: <20190523174433.GB29438@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.11)
+x-originating-ip: [2620:10d:c090:180::fd85]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b214f981-f019-40e0-5375-08d6dfaa0ed8
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR15MB1344;
+x-ms-traffictypediagnostic: MWHPR15MB1344:
+x-microsoft-antispam-prvs: <MWHPR15MB1344644F52E99CF5E4103924B3010@MWHPR15MB1344.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:972;
+x-forefront-prvs: 00462943DE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(396003)(39860400002)(136003)(376002)(199004)(189003)(86362001)(8676002)(6116002)(81166006)(99286004)(4326008)(14454004)(81156014)(486006)(229853002)(6246003)(2616005)(33656002)(6436002)(6486002)(25786009)(446003)(11346002)(76176011)(53936002)(476003)(66446008)(64756008)(66556008)(66476007)(6916009)(66946007)(6506007)(50226002)(76116006)(53546011)(316002)(83716004)(71200400001)(73956011)(82746002)(71190400001)(186003)(2906002)(57306001)(54906003)(5660300002)(478600001)(305945005)(7736002)(36756003)(68736007)(4744005)(102836004)(256004)(6512007)(8936002)(46003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1344;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: pwQlGGxuZIl1dFeDXfb+/ETxT3ejeiOAiqUq2XjDLuK9oUb38/CziFcX7V/IzZzM4SBVQplfKNm9voPeCJU/8v64YN/WAEjAYxHVnZIL8kRb9a/x8CDbcGKIm5eeG74ENYVjWDRmUYubWB5GvklvPxVjS9Fg+ADQfz+fzgJtzYCmMwPM5/bPHWgLZlGHTfolkyToqeXm7OQcFpnV8wSpnoQ5VbXDYXn+5VIho7TfFBvBIs1rMJ0LLUdhX7KXmdQaqu8saWcUCPLpSCqleEmLyPywBpYoGwrtR+VFYE/gimc4hCIECU39YuHcPZLduOVEzYiyG1W0qTRHw3q0JLdbVEcuCQIz5r/dVRPR5tz5DVP842YEZGsGoL+8hHkFIhmipRDSa2EKfyeJ/RPIhMMdUcuj5pQXEdeboL4woq7aN2k=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <C1251FEDB522C04F96DCE9A4F6B0936A@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <0fd0ab3a-7e7e-b4d5-fffe-c34f3868a8dd@ziu.info>
- <CAPhsuW4ZetsxTjuACOBekboNTtbqc0pYbXn01KtE1oZ8MoKU3w@mail.gmail.com> <ae69671c-7763-916e-5b45-0ff4741293eb@ziu.info>
-In-Reply-To: <ae69671c-7763-916e-5b45-0ff4741293eb@ziu.info>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Thu, 23 May 2019 11:09:51 -0700
-Message-ID: <CAPhsuW4yMSjzb0FCQsRWJCYmXNQM5Y2o_LCOE-6C7gTOcCNrEQ@mail.gmail.com>
-Subject: Re: Few questions about (attempting to use) write journal + call traces
-To:     Michal Soltys <soltys@ziu.info>
-Cc:     linux-raid <linux-raid@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: b214f981-f019-40e0-5375-08d6dfaa0ed8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2019 18:11:20.4335
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1344
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-23_15:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905230121
+X-FB-Internal: deliver
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu, May 23, 2019 at 3:42 AM Michal Soltys <soltys@ziu.info> wrote:
->
-> On 5/22/19 8:27 PM, Song Liu wrote:
-> > On Wed, May 22, 2019 at 6:18 AM Michal Soltys <soltys@ziu.info> wrote:
-> >>
-> >> Hi,
-> >>
-> >> As I started experimenting with journaled raids:
-> >>
-> >> 1) can another (raid1) device or lvm mirror (using md underneath) be used formally as a write journal ?
-> >> 2) for the testing purposes, are loopback devices expected to work ?
-> >>
-> >> I know I can successfully create both of the above (case scenario below), but any attempt to write to such md device ends with hung tasks and D states.
-> >>
-> >>
-> >> kernel 5.1.3
-> >> mdadm 4.1
-> >> btrfs filesystem with /var subvolume (where losetup files were created with fallocate)
-> >>
-> >> What I did:
-> >>
-> >> - six 10gb files as backings for /dev/loop[0-5]
-> >> - /dev/loop[4-5] - raid1
-> >> - /dev/loop[0-3] - raid5
-> >>
-> >> Now at this point both raids work just fine, separately. The problem starts if I create raid1 as raid5's journal (doesn't matter whether w-t or w-b). Any attempt to write to a device like that instantly ends with D and respective traces in dmesg:
-> >
-> > Hi Michal,
-> >
-> > Yes, the journal _should_ work with another md, lvm, or loop device.
-> > Could you please share the commands you used in this test?
-> >
-> > Thanks,
-> > Song
-> >
->
-> Actually, this seems to be unreleated to underlying devices - the culprit seems to be attempting to write to an array after adding journal, without stopping and reassembling it first. Details below.
 
-Thanks for these experiments. Your analysis makes perfect sense.
 
-Do you think you can continue the  experiments with the write journal before
-this issue got fixed?
+> On May 23, 2019, at 10:44 AM, Greg KH <greg@kroah.com> wrote:
+>=20
+> On Wed, May 22, 2019 at 04:30:33PM +0000, Song Liu wrote:
+>> Hi,=20
+>>=20
+>> As reported by Thorsten Knabe <linux@thorsten-knabe.de>.=20
+>>=20
+>> commit 4f4fd7c5798b ("Don't jump to compute_result state from check_resu=
+lt state") =20
+>> was back ported to v3.16+. However, this fix was wrong. =20
+>>=20
+>> Please back port the following two commits to fix this issue.=20
+>>=20
+>> commit a25d8c327bb4 ("Revert "Don't jump to compute_result state from ch=
+eck_result state"")
+>> commit b2176a1dfb51 ("md/raid: raid5 preserve the writeback action after=
+ the parity check")
+>=20
+> Added to 4.4+ for now.
+>=20
+> thanks,
+>=20
+> greg k-h
 
-I am asking because this is not on the top of my list at this time. If
-this is not
-blocking other important tests, I would prefer to fix it at a later time.
+Thanks Greg!!
 
-Thanks,
-Song
-
->
-> 0) Common start
->
-> # cd /var/tmp
-> # for x in {0..5}; do fallocate -l 10g $x; done
-> # for x in {0..5}; do losetup /dev/loop$x $x; done
->
->
->
-> 1) Following from (0), *works*:
->
-> # mdadm -C /dev/md/journ -N journ  -n2 -l1 -e1.2 /dev/loop[45]
-> (wait for sync / or create with --assume-clean)
-> # mdadm -C /dev/md/master -N master  -n4 -l5 -e1.2 --write-journal /dev/md/journ /dev/loop[0123]
-> (wait for sync / or create with --assume-clean)
-> # mdadm -Es >>/dev/mdadm.conf
->
-> # dd if=/dev/zero of=/dev/md/master bs=262144 count=1
-> (works)
->
-> # mdadm -Ss
-> # mdadm -A /dev/md/journ
-> # mdadm -A /dev/md/master
->
-> # dd if=/dev/zero of=/dev/md/master bs=262144 count=1
-> (works)
->
->
->
-> 2) Following from (0), *does not* work (adding journal afterwards):
->
-> # mdadm -C /dev/md/journ -N journ  -n2 -l1 -e1.2 /dev/loop[45]
-> (wait for sync / or create with --assume-clean)
-> # mdadm -C /dev/md/master -N master  -n4 -l5 -e1.2 /dev/loop[0123]
-> (wait for sync / or create with --assume-clean)
->
-> # mdadm --readonly /dev/md/master
-> # mdadm /dev/md/master --add-journal /dev/md/journ
->
-> # dd if=/dev/zero of=/dev/md/master bs=262144 count=1
-> (hangs)
->
-> Variation of the above that does work:
->
-> - adding journal afterwards
-> - stopping both arrays
-> - assembly
-> - writing
->
->
-> 3) Following from (0), *does not* work (adding correct journal after assembly with missing one):
->
-> mdadm -C /dev/md/journ -N journ  -n2 -l1 -e1.2 /dev/loop[45]
-> (wait for sync / or create with --assume-clean)
-> mdadm -C /dev/md/master -N master  -n4 -l5 -e1.2 --write-journal /dev/md/journ /dev/loop[0123]
-> (wait for sync / or create with --assume-clean)
-> mdadm -Es >>/dev/mdadm.conf
-> mdadm -Ss
->
-> # mdadm -A --force /dev/md/master
-> mdadm: Journal is missing or stale, starting array read only.
-> mdadm: /dev/md/master has been started with 4 drives.
->
-> # mdadm -A  /dev/md/journ
-> mdadm: /dev/md/journ has been started with 2 drives.
->
-> # mdadm /dev/md/master --add-journal /dev/md/journ
-> mdadm: Journal added successfully, making /dev/md/master read-write
-> mdadm: added /dev/md/journ
->
-> # dd if=/dev/zero of=/dev/md/master bs=262144 count=1
-> (hangs)
->
-> Same variation as in (2) - stopping and assembling normally - works as well.
+Song=
