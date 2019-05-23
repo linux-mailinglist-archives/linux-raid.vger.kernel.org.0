@@ -2,116 +2,150 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 14338277BE
-	for <lists+linux-raid@lfdr.de>; Thu, 23 May 2019 10:13:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92B0827AF1
+	for <lists+linux-raid@lfdr.de>; Thu, 23 May 2019 12:43:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbfEWIN3 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 23 May 2019 04:13:29 -0400
-Received: from smtp2.provo.novell.com ([137.65.250.81]:50142 "EHLO
-        smtp2.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725814AbfEWIN2 (ORCPT
-        <rfc822;groupwise-linux-raid@vger.kernel.org:0:0>);
-        Thu, 23 May 2019 04:13:28 -0400
-Received: from linux-2xn2.suse.asia (prva10-snat226-1.provo.novell.com [137.65.226.35])
-        by smtp2.provo.novell.com with ESMTP (TLS encrypted); Thu, 23 May 2019 02:13:24 -0600
-From:   Guoqing Jiang <gqjiang@suse.com>
-To:     jes.sorensen@gmail.com
-Cc:     linux-raid@vger.kernel.org, Guoqing Jiang <gqjiang@suse.com>,
-        NeilBrown <neilb@suse.com>
-Subject: [RFC PATCH] mdadm/md.4: add the descriptions for bitmap sysfs nodes
-Date:   Thu, 23 May 2019 16:32:02 +0800
-Message-Id: <20190523083202.12294-1-gqjiang@suse.com>
-X-Mailer: git-send-email 2.12.3
+        id S1728184AbfEWKm4 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 23 May 2019 06:42:56 -0400
+Received: from drutsystem.com ([84.10.39.251]:42903 "EHLO drutsystem.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727434AbfEWKm4 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 23 May 2019 06:42:56 -0400
+From:   Michal Soltys <soltys@ziu.info>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ziu.info; s=ziu;
+        t=1558608170; bh=moEqkI2KO/Ylp0HReZfOhp1zxghyVX49K4sl1IFh5xw=;
+        h=From:Subject:To:Cc:References:Date:In-Reply-To;
+        b=FNi1zcz9lK4xldcOyt0NTPSd68i9lQQ6Mbv2t1cKVkLS7TuD4PqdwghJfyXwCNckX
+         9ehd6O8+Sw3zRlucVePUvyYhwg4C3u8VKE6zUD5LBW4IAks/aOcSZFuVgz5H7v5JRh
+         GqHyioqb942h+z6Kont5aD7NCL3AdUChQ0f7RGCQ=
+Subject: Re: Few questions about (attempting to use) write journal + call
+ traces
+To:     Song Liu <liu.song.a23@gmail.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>
+References: <0fd0ab3a-7e7e-b4d5-fffe-c34f3868a8dd@ziu.info>
+ <CAPhsuW4ZetsxTjuACOBekboNTtbqc0pYbXn01KtE1oZ8MoKU3w@mail.gmail.com>
+Message-ID: <ae69671c-7763-916e-5b45-0ff4741293eb@ziu.info>
+Date:   Thu, 23 May 2019 12:42:49 +0200
+MIME-Version: 1.0
+In-Reply-To: <CAPhsuW4ZetsxTjuACOBekboNTtbqc0pYbXn01KtE1oZ8MoKU3w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US-large
+Content-Transfer-Encoding: 7bit
+X-MailScanner-ID: 7ABA87467BF.A1DEE
+X-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-MailScanner-From: soltys@ziu.info
+X-Spam-Status: No
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-The sysfs nodes under bitmap are not recorded in md.4,
-add them based on md.rst and kernel source code.
+On 5/22/19 8:27 PM, Song Liu wrote:
+> On Wed, May 22, 2019 at 6:18 AM Michal Soltys <soltys@ziu.info> wrote:
+>>
+>> Hi,
+>>
+>> As I started experimenting with journaled raids:
+>>
+>> 1) can another (raid1) device or lvm mirror (using md underneath) be used formally as a write journal ?
+>> 2) for the testing purposes, are loopback devices expected to work ?
+>>
+>> I know I can successfully create both of the above (case scenario below), but any attempt to write to such md device ends with hung tasks and D states.
+>>
+>>
+>> kernel 5.1.3
+>> mdadm 4.1
+>> btrfs filesystem with /var subvolume (where losetup files were created with fallocate)
+>>
+>> What I did:
+>>
+>> - six 10gb files as backings for /dev/loop[0-5]
+>> - /dev/loop[4-5] - raid1
+>> - /dev/loop[0-3] - raid5
+>>
+>> Now at this point both raids work just fine, separately. The problem starts if I create raid1 as raid5's journal (doesn't matter whether w-t or w-b). Any attempt to write to a device like that instantly ends with D and respective traces in dmesg:
+> 
+> Hi Michal,
+> 
+> Yes, the journal _should_ work with another md, lvm, or loop device.
+> Could you please share the commands you used in this test?
+> 
+> Thanks,
+> Song
+> 
 
-Cc: NeilBrown <neilb@suse.com>
-Signed-off-by: Guoqing Jiang <gqjiang@suse.com>
----
-Hi,
+Actually, this seems to be unreleated to underlying devices - the culprit seems to be attempting to write to an array after adding journal, without stopping and reassembling it first. Details below.
 
-Please feel free to correct the descriptions since my understanding
-could be wrong.
+0) Common start
 
-Thanks,
-Guoqing
+# cd /var/tmp
+# for x in {0..5}; do fallocate -l 10g $x; done
+# for x in {0..5}; do losetup /dev/loop$x $x; done
 
- md.4 | 57 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
 
-diff --git a/md.4 b/md.4
-index 3a1d6777e5b7..e81f38e40e77 100644
---- a/md.4
-+++ b/md.4
-@@ -1101,6 +1101,63 @@ stripe that requires some "prereading".  For fairness this defaults to
- maximizes sequential-write throughput at the cost of fairness to threads
- doing small or random writes.
- 
-+.TP
-+.B md/bitmap/backlog
-+This is only available on RAID1. when write-mostly devices are active,
-+write requests to those devices proceed in the background.
-+
-+This variable sets a limit on the number of concurrent background writes,
-+the valid values are 0 to 256, 0 means that write-behind is not allowed,
-+while any other number means it can happen. If there are more write request
-+than the number, new writes will by synchronous.
-+
-+.TP
-+.B md/bitmap/can_clear
-+Write 'true' to 'bitmap/can_clear' will allow bits in the bitmap to be
-+cleared again, write 'false' means bits in the bitmap don't need to be
-+cleared.
-+
-+.TP
-+.B md/bitmap/chunksize
-+The bitmap chunksize can only be changed when no bitmap is active, and
-+the value should be power of 2 and bigger than 512.
-+
-+.TP
-+.B md/bitmap/location
-+This indicates where the write-intent bitmap for the array is stored.
-+
-+Write 'none' to 'bitmap/location' will clear bitmap, and the previous
-+location value must be write to it to restore bitmap.
-+
-+.TP
-+.B md/bitmap/max_backlog_used
-+This keeps track of the maximum number of concurrent write-behind requests
-+for an md array, writing any value to this file will clear it.
-+
-+.TP
-+.B md/bitmap/metadata
-+This can be either 'internal' or 'external'. 'internal' is set by default,
-+which means the metadata for bitmap is stored in the first 256 bytes of
-+the bitmap space. 'external' means that bitmap metadata is managed externally
-+to the kernel.
-+
-+.TP
-+.B md/bitmap/space
-+This shows the space (in sectors) which is available at md/bitmap/location,
-+and allows the kernel to know when it is safe to resize the bitmap to match
-+a resized array. It should big enough to contain the total bytes in the bitmap.
-+
-+For 1.0 metadata, assume we can use up to the superblock if before, else
-+to 4K beyond superblock. For other metadata versions, assume no change is
-+possible.
-+
-+.TP
-+.B md/bitmap/time_base
-+This shows the time (in seconds) between disk flushes, and is used to looking
-+for bits in the bitmap to be cleared.
-+
-+The default value is 5 seconds, and it should be an unsigned long value.
-+
- .SS KERNEL PARAMETERS
- 
- The md driver recognised several different kernel parameters.
--- 
-2.12.3
 
+1) Following from (0), *works*:
+
+# mdadm -C /dev/md/journ -N journ  -n2 -l1 -e1.2 /dev/loop[45]
+(wait for sync / or create with --assume-clean)
+# mdadm -C /dev/md/master -N master  -n4 -l5 -e1.2 --write-journal /dev/md/journ /dev/loop[0123]
+(wait for sync / or create with --assume-clean)
+# mdadm -Es >>/dev/mdadm.conf
+
+# dd if=/dev/zero of=/dev/md/master bs=262144 count=1
+(works)
+
+# mdadm -Ss
+# mdadm -A /dev/md/journ
+# mdadm -A /dev/md/master
+
+# dd if=/dev/zero of=/dev/md/master bs=262144 count=1
+(works)
+
+
+
+2) Following from (0), *does not* work (adding journal afterwards):
+
+# mdadm -C /dev/md/journ -N journ  -n2 -l1 -e1.2 /dev/loop[45]
+(wait for sync / or create with --assume-clean)
+# mdadm -C /dev/md/master -N master  -n4 -l5 -e1.2 /dev/loop[0123]
+(wait for sync / or create with --assume-clean)
+
+# mdadm --readonly /dev/md/master
+# mdadm /dev/md/master --add-journal /dev/md/journ
+
+# dd if=/dev/zero of=/dev/md/master bs=262144 count=1
+(hangs)
+
+Variation of the above that does work:
+
+- adding journal afterwards
+- stopping both arrays
+- assembly
+- writing 
+
+
+3) Following from (0), *does not* work (adding correct journal after assembly with missing one):
+
+mdadm -C /dev/md/journ -N journ  -n2 -l1 -e1.2 /dev/loop[45]
+(wait for sync / or create with --assume-clean)
+mdadm -C /dev/md/master -N master  -n4 -l5 -e1.2 --write-journal /dev/md/journ /dev/loop[0123]
+(wait for sync / or create with --assume-clean)
+mdadm -Es >>/dev/mdadm.conf
+mdadm -Ss
+
+# mdadm -A --force /dev/md/master
+mdadm: Journal is missing or stale, starting array read only.
+mdadm: /dev/md/master has been started with 4 drives.
+
+# mdadm -A  /dev/md/journ
+mdadm: /dev/md/journ has been started with 2 drives.
+
+# mdadm /dev/md/master --add-journal /dev/md/journ
+mdadm: Journal added successfully, making /dev/md/master read-write
+mdadm: added /dev/md/journ
+
+# dd if=/dev/zero of=/dev/md/master bs=262144 count=1
+(hangs)
+
+Same variation as in (2) - stopping and assembling normally - works as well.
