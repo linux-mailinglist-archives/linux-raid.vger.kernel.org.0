@@ -2,92 +2,92 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5367427FD2
-	for <lists+linux-raid@lfdr.de>; Thu, 23 May 2019 16:36:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F7F028480
+	for <lists+linux-raid@lfdr.de>; Thu, 23 May 2019 19:06:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730729AbfEWOgF (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 23 May 2019 10:36:05 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:51934 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730710AbfEWOgF (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 23 May 2019 10:36:05 -0400
-Received: from mail-qk1-f200.google.com ([209.85.222.200])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <gpiccoli@canonical.com>)
-        id 1hTomd-0004cF-PD
-        for linux-raid@vger.kernel.org; Thu, 23 May 2019 14:33:27 +0000
-Received: by mail-qk1-f200.google.com with SMTP id l185so5578707qkd.14
-        for <linux-raid@vger.kernel.org>; Thu, 23 May 2019 07:33:27 -0700 (PDT)
+        id S1731171AbfEWRGk (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 23 May 2019 13:06:40 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34576 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730867AbfEWRGk (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 23 May 2019 13:06:40 -0400
+Received: by mail-qt1-f195.google.com with SMTP id h1so7629832qtp.1;
+        Thu, 23 May 2019 10:06:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tzAHR5rmfh/TFIXYIHzSw6buL7+70H5Ot5Wu7FBJYBo=;
+        b=jDsWohnysffIeI5APcrXrgR6fZ5MhkH09iEGmhgZ7kCViXYEOhyCd7y91chqUmipEt
+         2FrDCGIeKkQFN1tObQUQrbWMrtirnRaUkr3eft07i55kERGDhIXgXnq0/6wLFc/CGQ3/
+         AtEyxF4daRvXgqxCj1agF+7krmG7CUq9ytikxiGSnwjEdB5pT8o0YTyYjGUAga0mCfwF
+         zpfVTtCw46jMJpmznBtD3FNtoie2Jar4l4RqUs01Xgg+fD5e3Oi5nn6VHFgaclmYRENo
+         1OQ1EuP9DHtDkIqJpJfAQPZBoW08gQ3valir3Kb3v7KhHTcFpL/eVEFwSCfwZQ58zypp
+         vrvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+W0ZBRDPuAaLAeSp2LgbinBlDum/QNL/K+lovUbkcD4=;
-        b=NA66qWcw6xx3OF8m3QORnO+F3GL4OaDTK/VqtxjMR6h7NFKENqgiSZgAufELe/xbG4
-         6Z0V0MnmWVenH17zZVSuDJCITAqx5VEhGpArLnh7nI52bZSLP1HVKWjm0OocI/C7Y9Ea
-         qPApL/51KXh9QUxChjbJ6hhM42Dq1me4CpDFMVEN6+AYrC/rOOH1bjYLqHOyGpWR7XG+
-         Isg/YsqbOimXceHL+C2Ep5b546LQOBFq9HSSx9+CQD9p2lmWNtBGtqDQN9RgpBlKBZGv
-         SaQdbOU8/OF7rhQyaWKuRavv5LJ5nOR33I1nKzrBi1Vo6n28Oyvud0YAQrdgjGQQPmpC
-         Zyew==
-X-Gm-Message-State: APjAAAXyV0dTLbV/JozXjt2LHet4pL94qEn4/N/JIBvMosRbEnze+jbe
-        4JID+U20fuMTbmjKBbstbppyRHTEUpqFrCClEq+tIlzHoE0PuSw0SeuGbvFj+HoEr7uw9SRqnrU
-        1RRaB9RZisRMPnSYQcLvTkcpCULUpZ7K/H37Tj1I=
-X-Received: by 2002:a05:620a:158d:: with SMTP id d13mr16893969qkk.271.1558622007011;
-        Thu, 23 May 2019 07:33:27 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqz4fx9yFrXtTha0kc9WnfvL/SpBlMkzsC3W/wxnbxEkRyUOM5BUYVF5f7rIG11P0f6vMljE7g==
-X-Received: by 2002:a05:620a:158d:: with SMTP id d13mr16893950qkk.271.1558622006798;
-        Thu, 23 May 2019 07:33:26 -0700 (PDT)
-Received: from [192.168.1.205] (189-47-79-212.dsl.telesp.net.br. [189.47.79.212])
-        by smtp.gmail.com with ESMTPSA id m8sm17911949qta.10.2019.05.23.07.33.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 07:33:26 -0700 (PDT)
-Subject: Re: [PATCH V2 1/2] block: Fix a NULL pointer dereference in
- generic_make_request()
-To:     Song Liu <liu.song.a23@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tzAHR5rmfh/TFIXYIHzSw6buL7+70H5Ot5Wu7FBJYBo=;
+        b=EcAehFuc8COPYiTh2d4jWkJvUtFCsTC1S+mbkaCdHpt2MK6GdYxc2V302DsmDJKqjd
+         Q4B+XCsrbDgKVv+sxDAyXV5qRiOtX2SlFrei6rg2/BybCSywJWefFSONRVxieHL2ZBTD
+         5bTZxMkYbJu8bxHI8YHYoDqtY5+jmyDW4BgybbgXPM1SE8NI1g4REZP1m87+WCYS54Ia
+         P6loP8VbNSasdZhKh5JXU4kQfH/vOn7ra3+zJ+1wNawO9+/BhVvkJEfPAOieEA0n6wJ/
+         ycLWyrWCD9NRapD6cOuE6ixkrVDMEtSrHh7+y09l5T3adqCkQOjffjeX7vncpCUa3rov
+         AT/A==
+X-Gm-Message-State: APjAAAXuPFuxmRu2HoVn14RGrtKtVcidVVZk8xwsgEgvW3py6byE9jV+
+        hvONXEO9aB6lBZQSTcvGGpaLY3F4cOGnXjtSTXA=
+X-Google-Smtp-Source: APXvYqyoqxK6/SVoOZtsXHuNMWFHMGBI1KxeWNxGegcBVtTenide+MA2bCnqDhY+dBeXRgVq/5iUc/zWBy6uAqEpyTE=
+X-Received: by 2002:ac8:16a4:: with SMTP id r33mr54894808qtj.118.1558631199474;
+ Thu, 23 May 2019 10:06:39 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190520220911.25192-1-gpiccoli@canonical.com>
+ <CAPhsuW6KayaNR-0eFHpvPG-LVuPFL_1OFjvZpOcnapVFe2vC9Q@mail.gmail.com> <3e583b2d-742a-3238-69ed-7a2e6cce417b@canonical.com>
+In-Reply-To: <3e583b2d-742a-3238-69ed-7a2e6cce417b@canonical.com>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Thu, 23 May 2019 10:06:28 -0700
+Message-ID: <CAPhsuW7o9bj5DYnUDkCqDeW7NnfNTSBBWJC5_ZVxhoomDEEJcg@mail.gmail.com>
+Subject: Re: [PATCH V2 1/2] block: Fix a NULL pointer dereference in generic_make_request()
+To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>
 Cc:     linux-block@vger.kernel.org,
         linux-raid <linux-raid@vger.kernel.org>, dm-devel@redhat.com,
-        axboe@kernel.dk, Gavin Guo <gavin.guo@canonical.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Gavin Guo <gavin.guo@canonical.com>,
         Jay Vosburgh <jay.vosburgh@canonical.com>,
         "Guilherme G. Piccoli" <kernel@gpiccoli.net>,
         stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
         Ming Lei <ming.lei@redhat.com>,
         Eric Ren <renzhengeek@gmail.com>, hch@infradead.org
-References: <20190520220911.25192-1-gpiccoli@canonical.com>
- <CAPhsuW6KayaNR-0eFHpvPG-LVuPFL_1OFjvZpOcnapVFe2vC9Q@mail.gmail.com>
-From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-Message-ID: <3e583b2d-742a-3238-69ed-7a2e6cce417b@canonical.com>
-Date:   Thu, 23 May 2019 11:33:21 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CAPhsuW6KayaNR-0eFHpvPG-LVuPFL_1OFjvZpOcnapVFe2vC9Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 21/05/2019 02:59, Song Liu wrote:
-> 
-> Applied both patches! Thanks for the fix!
+On Thu, May 23, 2019 at 7:36 AM Guilherme G. Piccoli
+<gpiccoli@canonical.com> wrote:
+>
+> On 21/05/2019 02:59, Song Liu wrote:
+> >
+> > Applied both patches! Thanks for the fix!
+>
+> Hi Song, sorry for the annoyance, but the situation of both patches is a
+> bit confused for me heheh
+>
+> You mention you've applied both patches - I couldn't find your tree.
+> Also, Christoph noticed Ming's series fixes both issues and suggested to
+> drop both my patches in favor of Ming's clean-up, or at least make them
+> -stable only.
+>
+> So, what is the current status of the patches? Can we have them on
+> -stable trees at least? If so, how should I proceed?
+>
+> Thanks in advance for the clarification!
+> Cheers,
+>
+>
+> Guilherme
 
-Hi Song, sorry for the annoyance, but the situation of both patches is a
-bit confused for me heheh
+Sorry for the confusion and delay. I will send patches to stable@.
 
-You mention you've applied both patches - I couldn't find your tree.
-Also, Christoph noticed Ming's series fixes both issues and suggested to
-drop both my patches in favor of Ming's clean-up, or at least make them
--stable only.
-
-So, what is the current status of the patches? Can we have them on
--stable trees at least? If so, how should I proceed?
-
-Thanks in advance for the clarification!
-Cheers,
-
-
-Guilherme
+Song
