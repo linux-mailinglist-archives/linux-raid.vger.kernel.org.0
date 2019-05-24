@@ -2,78 +2,88 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E58F428B8B
-	for <lists+linux-raid@lfdr.de>; Thu, 23 May 2019 22:31:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 561F828F3D
+	for <lists+linux-raid@lfdr.de>; Fri, 24 May 2019 04:45:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387611AbfEWUbb (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 23 May 2019 16:31:31 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:58853 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387544AbfEWUbb (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 23 May 2019 16:31:31 -0400
-Received: from mail-wr1-f70.google.com ([209.85.221.70])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <guilherme.piccoli@canonical.com>)
-        id 1hTuN7-0007wB-3k
-        for linux-raid@vger.kernel.org; Thu, 23 May 2019 20:31:29 +0000
-Received: by mail-wr1-f70.google.com with SMTP id z15so698306wrv.21
-        for <linux-raid@vger.kernel.org>; Thu, 23 May 2019 13:31:29 -0700 (PDT)
+        id S2387669AbfEXCpQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 23 May 2019 22:45:16 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:45766 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387622AbfEXCpQ (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 23 May 2019 22:45:16 -0400
+Received: by mail-qk1-f196.google.com with SMTP id j1so5162051qkk.12;
+        Thu, 23 May 2019 19:45:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JiwhV2okxhWw5WJSJ6pbgrKM3HJLc/AAgQnHKtq5ncg=;
+        b=t+uVdxVAGAcOb/aB7ycv9PCCCXQruAWc0ZKqBSL3I2sZQfrHWAX5EmAkLmGFvCzmkx
+         TQcuwfpzpza4Mwy05RHpOc2p9+u2ewc4g0H/vudJJ+NVdIFL+iFGOM1dig+sSX/Vi4XN
+         /VCdOx3/AGLNrR48awdSfS1Rs269uilzpWZbnKDhx4jfZ7s952hTNt4LSIRBmqmmxbIm
+         PrzgJButzpLehxYlOHLJNxfJIFvGzcxQoPOQ0dJmAKLz9beGb8oKJieIQibs6LILvCc3
+         xRL5mfvr4pfiUqD8pPBb6Z9nQfNvDM5ZDUPLgONQU6yh2esjAZ2Ma3B1aSrp+uFgeel2
+         DqkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0dW+h03iOHL9hXzrG72krYhdVbEtg0vyFtbtFz1jJYI=;
-        b=rR3+koV7RNim8wPYjHkPwUA4ZHWK5EwyVqTRmMniqquz44tRAnH3oNRbVnfcYKHijh
-         N0K+Rug6yX/s7Tarcwglkm+Zsnhim8Y2QUXGbSFKBD+AzdxeUhDhw2IRlH7ndUwOS3bz
-         iZU7lxfa4ZXW90/CJLabvXo2sCh5GX249qFPdhLw7eXQzincwq4wX6Vg/i5X5J3ECUZm
-         m1DFW4VinpUyXSgEe5JD80WGbrRcRel/v8MLeOKmu6aQOvb3HLOTAiGoXAg4CxNrqVpX
-         sze4kTVft6PZnaCtUsT4mnaN3ADQqBaLXchL3h3fGrcsPzDU71c/d0qKwx2lZae9TN00
-         +dnw==
-X-Gm-Message-State: APjAAAXcjZsUeAQ55rlG/6OQ7qoWncKcKsiLv56RyTNCqarOJ13onPyA
-        0oa4MyIWCyHyQRy4AvdyBt/wXFwOap2Md437n7dUDid6ZTxdeMbvfh5x2w/FvjNXIZzAmmvnyyc
-        syuXuGt43sTGUF3SDRlfVm5KrwG+RQQkQMWM6sWQbgg5z+H0M+BzYYgA=
-X-Received: by 2002:a1c:7d8e:: with SMTP id y136mr12828723wmc.129.1558643488520;
-        Thu, 23 May 2019 13:31:28 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxzZrVtJmlEUBWpf3yRAcENU+Y5IToKvqA0uAnb6p0nV/TUnSml7P2OrLKKphRhi6bSed9/gBVCt8Ff7XZ2eEU=
-X-Received: by 2002:a1c:7d8e:: with SMTP id y136mr12828709wmc.129.1558643488390;
- Thu, 23 May 2019 13:31:28 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JiwhV2okxhWw5WJSJ6pbgrKM3HJLc/AAgQnHKtq5ncg=;
+        b=rAFBUeCv33gktfw2Gt2huFyzx2/2WgsJTsVPgDUYOJiI/2cJtV3NUyGFIgit0tV8fG
+         41Iy4TUs/5wnvmyzD+CczmVleMAt0wxRovEXLqWXc7R1BDm/eONUFSoUehDYv2OWM8OE
+         YTmhtc7y4qMd6rXNbZAr5pfOcw+8yLoaaNf8zK5KpW4D3HaslTrhQHWghwIw3u1tSM4S
+         BhidCmbxghRhz8MKWU4oJiccZnK34jSmd88Xu+B9+MhF2HIWNR3zFp14rAKMcQfRxFwz
+         4gbq29Xhyc6X/6TlMK9/n4lAtxCardhpcqi+BpOGWcFHFrt4Bo2MSR2oSCBZ5efZYPAD
+         CNAQ==
+X-Gm-Message-State: APjAAAU9qe8H/4bBnUJgOMSb7C93aQ+z1KVfgotMYoRdJeF/y1umbCqz
+        VojPcpyDTMdXLIEODgGRF5FeW8rH
+X-Google-Smtp-Source: APXvYqwll1VcnQrzoF/oHPk7JFo+XRy22y7eY0y698BFWgLD0hsWT53P68nHfqkqo1OvV1yhW3pJ3g==
+X-Received: by 2002:a37:8dc1:: with SMTP id p184mr59037678qkd.226.1558665914865;
+        Thu, 23 May 2019 19:45:14 -0700 (PDT)
+Received: from localhost.localdomain (189.26.176.134.dynamic.adsl.gvt.net.br. [189.26.176.134])
+        by smtp.gmail.com with ESMTPSA id g20sm695968qtc.53.2019.05.23.19.45.10
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 23 May 2019 19:45:13 -0700 (PDT)
+From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     liu.song.a23@gmail.com,
+        Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
+        Shaohua Li <shli@kernel.org>,
+        linux-raid@vger.kernel.org (open list:SOFTWARE RAID (Multiple Disks)
+        SUPPORT)
+Subject: [PATCH] md: md.c: Return -ENODEV when mddev is NULL in rdev_attr_show
+Date:   Thu, 23 May 2019 23:44:59 -0300
+Message-Id: <20190524024459.6875-1-marcos.souza.org@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190520220911.25192-1-gpiccoli@canonical.com>
- <CAPhsuW6KayaNR-0eFHpvPG-LVuPFL_1OFjvZpOcnapVFe2vC9Q@mail.gmail.com>
- <3e583b2d-742a-3238-69ed-7a2e6cce417b@canonical.com> <CAPhsuW7o9bj5DYnUDkCqDeW7NnfNTSBBWJC5_ZVxhoomDEEJcg@mail.gmail.com>
-In-Reply-To: <CAPhsuW7o9bj5DYnUDkCqDeW7NnfNTSBBWJC5_ZVxhoomDEEJcg@mail.gmail.com>
-From:   Guilherme Piccoli <gpiccoli@canonical.com>
-Date:   Thu, 23 May 2019 17:30:52 -0300
-Message-ID: <CAHD1Q_zCkmiDN24Njjr5Nfuc11hSxN5fgw98MX9j5LJoiwgXPA@mail.gmail.com>
-Subject: Re: [PATCH V2 1/2] block: Fix a NULL pointer dereference in generic_make_request()
-To:     Song Liu <liu.song.a23@gmail.com>
-Cc:     linux-block@vger.kernel.org,
-        linux-raid <linux-raid@vger.kernel.org>, dm-devel@redhat.com,
-        Jens Axboe <axboe@kernel.dk>,
-        Gavin Guo <gavin.guo@canonical.com>,
-        Jay Vosburgh <jay.vosburgh@canonical.com>,
-        "Guilherme G. Piccoli" <kernel@gpiccoli.net>,
-        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Eric Ren <renzhengeek@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu, May 23, 2019 at 2:06 PM Song Liu <liu.song.a23@gmail.com> wrote:
->
->
-> Sorry for the confusion and delay. I will send patches to stable@.
->
-> Song
+Commit c42d3240990814eec1e4b2b93fa0487fc4873aed
+("md: return -ENODEV if rdev has no mddev assigned") changed rdev_attr_store to
+return -ENODEV when rdev->mddev is NULL, now do the same to rdev_attr_show.
 
+Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+---
+ drivers/md/md.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hi Song, no problem at all! Thanks a lot for the clarification.
-Cheers,
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 45ffa23fa85d..0b391e7e063b 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -3363,7 +3363,7 @@ rdev_attr_show(struct kobject *kobj, struct attribute *attr, char *page)
+ 	if (!entry->show)
+ 		return -EIO;
+ 	if (!rdev->mddev)
+-		return -EBUSY;
++		return -ENODEV;
+ 	return entry->show(rdev, page);
+ }
+ 
+-- 
+2.21.0
 
-
-Guilherme
