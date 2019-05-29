@@ -2,82 +2,46 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 59B582D64E
-	for <lists+linux-raid@lfdr.de>; Wed, 29 May 2019 09:27:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82B012DAE0
+	for <lists+linux-raid@lfdr.de>; Wed, 29 May 2019 12:35:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726102AbfE2H1e (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 29 May 2019 03:27:34 -0400
-Received: from mifritscher.de ([188.40.170.105]:58446 "EHLO
-        mail.mifritscher.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbfE2H1e (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 29 May 2019 03:27:34 -0400
-X-Greylist: delayed 492 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 May 2019 03:27:33 EDT
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.mifritscher.de (Postfix) with ESMTP id 9BBE63A96E0;
-        Wed, 29 May 2019 09:19:20 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at mifritscher.vserverkompetenz.de
-Received: from mail.mifritscher.de ([127.0.0.1])
-        by localhost (mail.mifritscher.vserverkompetenz.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 62EqK5h_9W7f; Wed, 29 May 2019 09:19:20 +0200 (CEST)
-Received: from mifritscher.de (localhost.localdomain [127.0.0.1])
-        by mail.mifritscher.de (Postfix) with ESMTPA id 4B8793A91C6;
-        Wed, 29 May 2019 09:19:20 +0200 (CEST)
+        id S1725948AbfE2KfR (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 29 May 2019 06:35:17 -0400
+Received: from smtp.hosts.co.uk ([85.233.160.19]:42616 "EHLO smtp.hosts.co.uk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725874AbfE2KfR (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 29 May 2019 06:35:17 -0400
+Received: from [86.177.149.27] (helo=[192.168.1.118])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1hVvvP-0007I7-Cm; Wed, 29 May 2019 11:35:16 +0100
+Subject: Re: [RFC PATCH V2] mdadm/md.4: add the descriptions for bitmap sysfs
+ nodes
+To:     Guoqing Jiang <gqjiang@suse.com>, jes.sorensen@gmail.com
+References: <20190527040523.24032-1-gqjiang@suse.com>
+Cc:     linux-raid@vger.kernel.org, NeilBrown <neilb@suse.com>
+From:   Wols Lists <antlists@youngman.org.uk>
+Message-ID: <5CEE6062.1090604@youngman.org.uk>
+Date:   Wed, 29 May 2019 11:35:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20190527040523.24032-1-gqjiang@suse.com>
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 29 May 2019 09:19:20 +0200
-From:   michael@fritscher.net
-To:     Xiao Ni <xni@redhat.com>
-Cc:     Song Liu <liu.song.a23@gmail.com>,
-        Matthew Moore <matthew@moore.sydney>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        linux-raid-owner@vger.kernel.org
-Subject: Re: Optimising raid on 4k devices
-In-Reply-To: <263f25f0-e4e3-ace5-e8cc-96c8367549bf@redhat.com>
-References: <3a28d64f-9f13-277a-a8f9-3cdf87034200@moore.sydney>
- <CAPhsuW5ngOxnddZp37nKe0KtsRTYxi-N1O2ARUqBbHbYJ=ASSg@mail.gmail.com>
- <263f25f0-e4e3-ace5-e8cc-96c8367549bf@redhat.com>
-Message-ID: <d689cdb8feb428a15ceca4aac2769dec@fritscher.net>
-X-Sender: michael@fritscher.net
-User-Agent: Roundcube Webmail/1.2.3
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Am 2019-05-29 09:09, schrieb Xiao Ni:
-> On 05/29/2019 12:21 AM, Song Liu wrote:
->> On Sun, May 26, 2019 at 2:27 AM Matthew Moore <matthew@moore.sydney> 
->> wrote:
->>> Hi all,
->>> 
->>> I'm setting up a RAID6 array on 8 * 8TB drives, which are obviously
->>> using 4k sectors.  The high-level view is XFS-on-LUKS-on-mdraid6.
->> Are these driver 4kB native or 512e?
-> 
-> Hi Song
-> 
-> What's the meaning of "4kB native" and "512e" here?
-> The sector size is 4kB or 512 byte?
-> 
->> 
->> For 4kB native, you don't need to do anything.
->> 
->> For 512e, just make sure NOT to create RAID on top of non-4kB-aligned
->> partitions.
-> 
-> Could you explain more about this?
-> 
-> Regards
-> Xiao
+On 27/05/19 05:05, Guoqing Jiang wrote:
+> +This variable sets a limit on the number of concurrent background writes,
+> +the valid values are 0 to 256, 0 means that write-behind is not allowed,
+> +while any other number means it can happen.  If there are more write requests
+> +than the number, new writes will by synchronous.
 
-Hello,
+Is this a byte-wide or an integer field? 0 to 256 is an odd number -
+surely it should be 255 (0xff)?
 
-4kB = they expose their 4k sectors also at the interface.
-512e = internally, they use (in far the most cases) 4kB sectors 
-internally, but emulate 512 byte sectors at the interface. Which can 
-make things slow if structures are not aligned at 4kB boundaries.
-
-Best regards,
-Michael Fritscher
+Cheers,
+Wol
