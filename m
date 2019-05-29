@@ -2,101 +2,84 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 860022E13B
-	for <lists+linux-raid@lfdr.de>; Wed, 29 May 2019 17:36:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAE642E585
+	for <lists+linux-raid@lfdr.de>; Wed, 29 May 2019 21:41:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbfE2Pgw (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 29 May 2019 11:36:52 -0400
-Received: from mail-qt1-f169.google.com ([209.85.160.169]:45754 "EHLO
-        mail-qt1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfE2Pgw (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 29 May 2019 11:36:52 -0400
-Received: by mail-qt1-f169.google.com with SMTP id t1so3085190qtc.12;
-        Wed, 29 May 2019 08:36:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Uh+uCvg9Ehlaf4PsAsYgISeDSBil4a+MqI32Y7jAvJA=;
-        b=oDh+RgDOkQCRBxWgYMB4AGxlvrPnYUvMC/2C8w151oc5uI8PjyZNxOgV+63Argut26
-         Y6FBLzKI2Qaftjq0W9cmSakjrCdzkkpg9ZG59D6DPb4XHnCE4dTfJwgU/VP0L7tOtv37
-         gah6svGEoH72Rr7fkGmWKfSoTs99mxhRlCf1V6Vs9g4VgPIdwBU68z3kvEP6zkLZeOG5
-         2Q4KCnZcO5Lpv25m++9A1f7PIWkPcwwJMHI3/jvnNqn8CnnJtgOE/+KCrtryFBOoFjXz
-         3va6V4fza7XzYIbV9Q/QUlyeiSXbnZ2CvKaxX/w/Ksn4n82qVZTDQ6VzLcuBQpGdwXvA
-         RV4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Uh+uCvg9Ehlaf4PsAsYgISeDSBil4a+MqI32Y7jAvJA=;
-        b=MmJTRnpXsZ4aWUQB2YPjjIsVZXsc9iutV/+cmp/p0bVDkOL503cDszL7hc1Haau7GB
-         R9KlER3/eg0BV2Mg4UMf6fHPcb/UUO8w6okcTKl91E9ugqE37W/3lkbGqasC0caustWh
-         RwfPnaDHp5N/C6rUT6KHw2oUhB77hDYhzyAaClVjY0HN5lx431mW17JJtVz1B/Ng/0xd
-         GLPoUtlCFMKU7ag9V36AofjTvWUjJ5O3qiMyla6WlICU3G5K87nefmJI+tPIgleLwNmr
-         hObswU5M7cTYWcK62cJiw2Ov12J8NquVkalAbcl9D6ce2b8ej/8Kpdb+DMsZYq5HjmND
-         oEjQ==
-X-Gm-Message-State: APjAAAXNlggLha2rC8VYZnBnrPfSsstyPYxcPUEByRqNRQ5DPxJIRX8b
-        qwT1sGr5Q7xXvZHdfN1law4i80CFinX38onaQwo=
-X-Google-Smtp-Source: APXvYqx8MjdIIDxEGAah4McIj00qG9T4qDZL7XhKg4RCy3IFrNtYcGg8t6BNDwNXFpN47MfGiH3xki6t8+QjG8pPGXU=
-X-Received: by 2002:a0c:87cb:: with SMTP id 11mr4898969qvk.190.1559144211489;
- Wed, 29 May 2019 08:36:51 -0700 (PDT)
+        id S1726054AbfE2Tlh (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 29 May 2019 15:41:37 -0400
+Received: from use.bitfolk.com ([85.119.80.223]:45064 "EHLO mail.bitfolk.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbfE2Tlh (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 29 May 2019 15:41:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bitfolk.com; s=alpha;
+        h=Content-Type:MIME-Version:Message-ID:Subject:To:From:Date; bh=MwH5wTdJW1agyzU28/2mqxPnZ+2GfBaj47TG2suRCd8=;
+        b=F8ZVx0fRBtbnwRWM1DJ6ei/8VbbJUnjWJJwFvK1RcdVA4xN3Zunq+0KzWi21FU0lhm33UMCb6BaZ4n79zTsKEYvtOLIz3ldihlgvC1ykN9rj4nC/42Ig9p64oCwkIcLKRnqEzl0JEQZXasAaaJ/pNppN7G4zRq5kCP5Ngk39Oj75zzsFAI33MjAtvFvt97V0S9XXo6UCn3C5T3a5+CX/FU0VKfI4TH4YVRc/62JfriXpIvP+YxwT+p5Fj9dG6P2tPEYlFacPLciaXX33F1O2snSR2WAxVhbB81LCj+19+A4Y8F+FKFsZGOCCmqiw5tYfkMG7FvCCoPyoWCXGvsPKIw==;
+Received: from andy by mail.bitfolk.com with local (Exim 4.84_2)
+        (envelope-from <andy@strugglers.net>)
+        id 1hW4S8-00068a-Jf
+        for linux-raid@vger.kernel.org; Wed, 29 May 2019 19:41:36 +0000
+Date:   Wed, 29 May 2019 19:41:36 +0000
+From:   Andy Smith <andy@strugglers.net>
+To:     linux-raid@vger.kernel.org
+Subject: RAID-1 can (sometimes) be 3x faster than RAID-10
+Message-ID: <20190529194136.GW4569@bitfolk.com>
+Mail-Followup-To: linux-raid@vger.kernel.org
 MIME-Version: 1.0
-References: <3a28d64f-9f13-277a-a8f9-3cdf87034200@moore.sydney>
- <CAPhsuW5ngOxnddZp37nKe0KtsRTYxi-N1O2ARUqBbHbYJ=ASSg@mail.gmail.com>
- <263f25f0-e4e3-ace5-e8cc-96c8367549bf@redhat.com> <d689cdb8feb428a15ceca4aac2769dec@fritscher.net>
-In-Reply-To: <d689cdb8feb428a15ceca4aac2769dec@fritscher.net>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Wed, 29 May 2019 08:36:40 -0700
-Message-ID: <CAPhsuW74OKdQEauzGnk=WcKh1eNovXJb8d_yu_vmBG=fNJJcBA@mail.gmail.com>
-Subject: Re: Optimising raid on 4k devices
-To:     michael@fritscher.net
-Cc:     Xiao Ni <xni@redhat.com>, Matthew Moore <matthew@moore.sydney>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        linux-raid-owner@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+OpenPGP: id=BF15490B; url=http://strugglers.net/~andy/pubkey.asc
+X-URL:  http://strugglers.net/wiki/User:Andy
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: andy@strugglers.net
+X-SA-Exim-Scanned: No (on mail.bitfolk.com); SAEximRunCond expanded to false
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Wed, May 29, 2019 at 12:19 AM <michael@fritscher.net> wrote:
->
-> Am 2019-05-29 09:09, schrieb Xiao Ni:
-> > On 05/29/2019 12:21 AM, Song Liu wrote:
-> >> On Sun, May 26, 2019 at 2:27 AM Matthew Moore <matthew@moore.sydney>
-> >> wrote:
-> >>> Hi all,
-> >>>
-> >>> I'm setting up a RAID6 array on 8 * 8TB drives, which are obviously
-> >>> using 4k sectors.  The high-level view is XFS-on-LUKS-on-mdraid6.
-> >> Are these driver 4kB native or 512e?
-> >
-> > Hi Song
-> >
-> > What's the meaning of "4kB native" and "512e" here?
-> > The sector size is 4kB or 512 byte?
-> >
-> >>
-> >> For 4kB native, you don't need to do anything.
-> >>
-> >> For 512e, just make sure NOT to create RAID on top of non-4kB-aligned
-> >> partitions.
-> >
-> > Could you explain more about this?
-> >
-> > Regards
-> > Xiao
->
-> Hello,
->
-> 4kB = they expose their 4k sectors also at the interface.
-> 512e = internally, they use (in far the most cases) 4kB sectors
-> internally, but emulate 512 byte sectors at the interface. Which can
-> make things slow if structures are not aligned at 4kB boundaries.
->
-> Best regards,
-> Michael Fritscher
+Hi,
 
-Thanks Michael! That's exactly what I meant.
+I have a server with a fast device (a SATA SSD) and a very fast
+device (NVMe). I was experimenting with different Linux RAID
+configurations to see which worked best. While doing so I discovered
+that in this situation, RAID-1 and RAID-10 can perform VERY
+differently.
 
-Song
+A RAID-1 of these devices will parallelise reads resulting in ~84% of
+the read IOs hitting the NVMe and an average IOPS close to
+that of the NVMe.
+
+By contrast RAID-10 seems to split the IOs much more evenly: 53% hit
+the NVMe, and the average IOPS was only 35% that of RAID-1.
+
+Is this expected?
+
+I suppose so since it is documented that RAID-1 can parallelise
+reads but RAID-10 will stripe them. That is normally presented as a
+*benefit* of RAID-10 though; I'm not sure that it is obvious that if
+your devices have dramatically different performance characteristics
+that RAID-10 could hobble you.
+
+I did try out --write-mostly, by the way, in an attempt to force
+~100% of the reads to go to the NVMe, but this actually made
+performance worse. I think that --write-mostly may only make sense
+when the performance gap is much bigger (e.g. between rotational and
+fast flash), where any read to the slow half will kill performance.
+
+I wrote up my tests here:
+
+http://strugglers.net/~andy/blog/2019/05/29/linux-raid-10-may-not-always-be-the-best-performer-but-i-dont-know-why/
+
+There are still a bunch of open questions ("Summary of open
+questions" section) and some results I could not explain. I included
+some tests against slow HDDs and couldn't explain why I achieved 256
+read IOPS there, for example. I don't believe that was the page
+cache.
+
+If you have any ideas about that, can see any problems with my
+testing methodology, have suggestions for other tests etc then
+please do let me know.
+
+Thanks,
+Andy
