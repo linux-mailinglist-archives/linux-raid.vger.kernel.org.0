@@ -2,129 +2,101 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EACAA2E139
-	for <lists+linux-raid@lfdr.de>; Wed, 29 May 2019 17:36:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 860022E13B
+	for <lists+linux-raid@lfdr.de>; Wed, 29 May 2019 17:36:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbfE2PgF (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 29 May 2019 11:36:05 -0400
-Received: from mail-qk1-f175.google.com ([209.85.222.175]:36768 "EHLO
-        mail-qk1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfE2PgE (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 29 May 2019 11:36:04 -0400
-Received: by mail-qk1-f175.google.com with SMTP id g18so1773190qkl.3
-        for <linux-raid@vger.kernel.org>; Wed, 29 May 2019 08:36:04 -0700 (PDT)
+        id S1726373AbfE2Pgw (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 29 May 2019 11:36:52 -0400
+Received: from mail-qt1-f169.google.com ([209.85.160.169]:45754 "EHLO
+        mail-qt1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbfE2Pgw (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 29 May 2019 11:36:52 -0400
+Received: by mail-qt1-f169.google.com with SMTP id t1so3085190qtc.12;
+        Wed, 29 May 2019 08:36:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=33ujMkhYRMlEl9qCz9vLUYEQe6UGNTgkgLROz1vUI5Q=;
-        b=IPmgLyNSp3jKYUSARKo8UKtkW8oq3KTIOtkJb3N9X7el/qQnd8dkJZ4v1eNbCSBWTT
-         Y5/8fBiNaUmQKxlxhhsBXu2qwfmg2P/RBBMx3JwSy4MVOJ31YZ9Llhrr0srcjidtE2IT
-         2f8BiRsReJMZkLIxTa7MS0LwtYgs7y9eLDC7DqOTXWh70hZXC8oq9L1GQkZn09RHmQ27
-         GncU345DvRDzzR6mM5YYnr3MCYbEEhd0EamsRZgyymsjPPqNESTjwPSuv14Ag4yDZEx9
-         elsStnb6V4rdTK4enfOSMgADMuN+lcdAHh18zx9p7n0EnDR57X/dQB/iso7QQZEeRrtQ
-         qNxQ==
+        bh=Uh+uCvg9Ehlaf4PsAsYgISeDSBil4a+MqI32Y7jAvJA=;
+        b=oDh+RgDOkQCRBxWgYMB4AGxlvrPnYUvMC/2C8w151oc5uI8PjyZNxOgV+63Argut26
+         Y6FBLzKI2Qaftjq0W9cmSakjrCdzkkpg9ZG59D6DPb4XHnCE4dTfJwgU/VP0L7tOtv37
+         gah6svGEoH72Rr7fkGmWKfSoTs99mxhRlCf1V6Vs9g4VgPIdwBU68z3kvEP6zkLZeOG5
+         2Q4KCnZcO5Lpv25m++9A1f7PIWkPcwwJMHI3/jvnNqn8CnnJtgOE/+KCrtryFBOoFjXz
+         3va6V4fza7XzYIbV9Q/QUlyeiSXbnZ2CvKaxX/w/Ksn4n82qVZTDQ6VzLcuBQpGdwXvA
+         RV4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=33ujMkhYRMlEl9qCz9vLUYEQe6UGNTgkgLROz1vUI5Q=;
-        b=jsM66yvxQxf2vVBzb07lmbNluGDlF72OuSYhhln8shLX3+88yWhcTZ5MpbdA4/tW9M
-         fe/SeZWvYLw3g7uDvXSyrGh+E1CoL1ebk7cDdUJlYGR1sjGD8DbDu96O3v2mdfY1FQrM
-         umViv0/N60cos8FQ1Jx2df5SjyacpI5q2Y81P/9qdgijWzKIx+AxYF63BTDY+LUy7irb
-         Z3cxjJdLXsTrX1aml4DJsrAYQCmJey1pMCy1d7U0NFFjTGG5+6vtuRAAnmM9CSWkVIK0
-         lqySvKzsgCK6fHoseBEB+dkFBE2sdIqOIV7ON8awNEinCd3ypYhgJXciUvrLIlqG8nJ8
-         Xr0w==
-X-Gm-Message-State: APjAAAWkpX+EyJwINHqQGU/gulQWpL4Z9AGJ5fcXQ7wp/IJ6AuDCuQce
-        s+XDLuT0qRuhFydayBj4Z5asNtkQhP8Fc72ZU+s=
-X-Google-Smtp-Source: APXvYqxhg7sVIKhA3n9b+m0JDiw886YYQR5/vlY9zTK2ZypgHpVJ0K+FD6jcV6th5z08NRoyxJeO0plCyKixcQDlbv8=
-X-Received: by 2002:ae9:ee0b:: with SMTP id i11mr16186742qkg.96.1559144163725;
- Wed, 29 May 2019 08:36:03 -0700 (PDT)
+        bh=Uh+uCvg9Ehlaf4PsAsYgISeDSBil4a+MqI32Y7jAvJA=;
+        b=MmJTRnpXsZ4aWUQB2YPjjIsVZXsc9iutV/+cmp/p0bVDkOL503cDszL7hc1Haau7GB
+         R9KlER3/eg0BV2Mg4UMf6fHPcb/UUO8w6okcTKl91E9ugqE37W/3lkbGqasC0caustWh
+         RwfPnaDHp5N/C6rUT6KHw2oUhB77hDYhzyAaClVjY0HN5lx431mW17JJtVz1B/Ng/0xd
+         GLPoUtlCFMKU7ag9V36AofjTvWUjJ5O3qiMyla6WlICU3G5K87nefmJI+tPIgleLwNmr
+         hObswU5M7cTYWcK62cJiw2Ov12J8NquVkalAbcl9D6ce2b8ej/8Kpdb+DMsZYq5HjmND
+         oEjQ==
+X-Gm-Message-State: APjAAAXNlggLha2rC8VYZnBnrPfSsstyPYxcPUEByRqNRQ5DPxJIRX8b
+        qwT1sGr5Q7xXvZHdfN1law4i80CFinX38onaQwo=
+X-Google-Smtp-Source: APXvYqx8MjdIIDxEGAah4McIj00qG9T4qDZL7XhKg4RCy3IFrNtYcGg8t6BNDwNXFpN47MfGiH3xki6t8+QjG8pPGXU=
+X-Received: by 2002:a0c:87cb:: with SMTP id 11mr4898969qvk.190.1559144211489;
+ Wed, 29 May 2019 08:36:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <0fd0ab3a-7e7e-b4d5-fffe-c34f3868a8dd@ziu.info>
- <CAPhsuW4ZetsxTjuACOBekboNTtbqc0pYbXn01KtE1oZ8MoKU3w@mail.gmail.com>
- <ae69671c-7763-916e-5b45-0ff4741293eb@ziu.info> <CAPhsuW4yMSjzb0FCQsRWJCYmXNQM5Y2o_LCOE-6C7gTOcCNrEQ@mail.gmail.com>
- <32f8bf8c-6a81-0490-f702-fa9cc41c38e9@ziu.info> <CAPhsuW6FOoOxfCMov0bTUeLrWYN6f8-ZisW9HLCRXKPJhHE1Hw@mail.gmail.com>
- <de217f41-52e1-886a-fa60-52cd830864ad@ziu.info> <CAPhsuW6cwWToqd7ag7xZWb2uosFO=qc5a2d4DFdmwc7gOrcX7g@mail.gmail.com>
- <a6f2f02b-f0c9-99be-48c0-19dad8d5cb82@ziu.info>
-In-Reply-To: <a6f2f02b-f0c9-99be-48c0-19dad8d5cb82@ziu.info>
+References: <3a28d64f-9f13-277a-a8f9-3cdf87034200@moore.sydney>
+ <CAPhsuW5ngOxnddZp37nKe0KtsRTYxi-N1O2ARUqBbHbYJ=ASSg@mail.gmail.com>
+ <263f25f0-e4e3-ace5-e8cc-96c8367549bf@redhat.com> <d689cdb8feb428a15ceca4aac2769dec@fritscher.net>
+In-Reply-To: <d689cdb8feb428a15ceca4aac2769dec@fritscher.net>
 From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Wed, 29 May 2019 08:35:52 -0700
-Message-ID: <CAPhsuW6zKZOx0x4iof_GYQzzDjsC2yy=uVeb3M_g4n1s42FA5g@mail.gmail.com>
-Subject: Re: Few questions about (attempting to use) write journal + call traces
-To:     Michal Soltys <soltys@ziu.info>
-Cc:     Xiao Ni <xni@redhat.com>, linux-raid <linux-raid@vger.kernel.org>
+Date:   Wed, 29 May 2019 08:36:40 -0700
+Message-ID: <CAPhsuW74OKdQEauzGnk=WcKh1eNovXJb8d_yu_vmBG=fNJJcBA@mail.gmail.com>
+Subject: Re: Optimising raid on 4k devices
+To:     michael@fritscher.net
+Cc:     Xiao Ni <xni@redhat.com>, Matthew Moore <matthew@moore.sydney>,
+        linux-raid <linux-raid@vger.kernel.org>,
+        linux-raid-owner@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Wed, May 29, 2019 at 5:31 AM Michal Soltys <soltys@ziu.info> wrote:
+On Wed, May 29, 2019 at 12:19 AM <michael@fritscher.net> wrote:
 >
-> On 5/28/19 6:31 PM, Song Liu wrote:
-> > On Mon, May 27, 2019 at 2:46 AM Michal Soltys <soltys@ziu.info> wrote:
-> >>>>
-> >>>> Question though - other than trying to add journal to existing live raid
-> >>>> - is this feature overall safe to use (or are there any other know
-> >>>> issues one should be aware of beforehand) ?
-> >>>>
-> >>> We (Facebook) have done some tests with it. However, we didn't put
-> >>> it into production. The reason behind this decision was not reliability, but
-> >>> performance concerns and high level directions. I think Redhat is
-> >>> evaluating it.
+> Am 2019-05-29 09:09, schrieb Xiao Ni:
+> > On 05/29/2019 12:21 AM, Song Liu wrote:
+> >> On Sun, May 26, 2019 at 2:27 AM Matthew Moore <matthew@moore.sydney>
+> >> wrote:
+> >>> Hi all,
 > >>>
+> >>> I'm setting up a RAID6 array on 8 * 8TB drives, which are obviously
+> >>> using 4k sectors.  The high-level view is XFS-on-LUKS-on-mdraid6.
+> >> Are these driver 4kB native or 512e?
+> >
+> > Hi Song
+> >
+> > What's the meaning of "4kB native" and "512e" here?
+> > The sector size is 4kB or 512 byte?
+> >
 > >>
-> >> Well I will give it a shot probably. My case scenario is that a bunch of
-> >> sync-happy VMs on top of lvm+raid seem to be crushing performance
-> >> (unless there are other reasons), even with very small disk usage.
+> >> For 4kB native, you don't need to do anything.
 > >>
-> >> Out of curiosity - is the journal in writeback mode controllable in some
-> >> way (e.g. frequency of how often it flushes to raid disks, whether it's
-> >> space or time (or both) based ?).
+> >> For 512e, just make sure NOT to create RAID on top of non-4kB-aligned
+> >> partitions.
 > >
-> > It is combination of both time and space:
+> > Could you explain more about this?
 > >
-> > /*
-> >   * log->max_free_space is min(1/4 disk size, 10G reclaimable space).
-> >   *
-> >   * In write through mode, the reclaim runs every log->max_free_space.
-> >   * This can prevent the recovery scans for too long
-> >   */
-> > #define RECLAIM_MAX_FREE_SPACE (10 * 1024 * 1024 * 2) /* sector */
-> > #define RECLAIM_MAX_FREE_SPACE_SHIFT (2)
-> >
-> > /* wake up reclaim thread periodically */
-> > #define R5C_RECLAIM_WAKEUP_INTERVAL (30 * HZ)
-> > /* start flush with these full stripes */
-> > #define R5C_FULL_STRIPE_FLUSH_BATCH(conf) (conf->max_nr_stripes / 4)
-> > /* reclaim stripes in groups */
-> > #define R5C_RECLAIM_STRIPE_GROUP (NR_STRIPE_HASH_LOCKS * 2)
-> >
-> > However, we didn't expose knobs to tune these on a live system.
-> >
+> > Regards
+> > Xiao
 >
-> Would (probably) be awesome one day to have those exposed somehow.
-
-I think Shaohua spent quite some time to make them work well without
-tuning. But we sure can add knobs if we see clear benefits.
-
+> Hello,
 >
-> Few extra questions:
+> 4kB = they expose their 4k sectors also at the interface.
+> 512e = internally, they use (in far the most cases) 4kB sectors
+> internally, but emulate 512 byte sectors at the interface. Which can
+> make things slow if structures are not aligned at 4kB boundaries.
 >
-> 1) if I have journal in w-b mode, will echoing write-through to
-> journal_mode block until all the data is safe on the actual raid devices ?
+> Best regards,
+> Michael Fritscher
 
-Yes, it will first flush all data in cache.
+Thanks Michael! That's exactly what I meant.
 
->
-> 2) if (for any reason) I need to remove the journal device live -
-> assuming (1) is sufficient - is --fail & --remove the correct way to do so ?
->
-I think the best way is to make it write-through first, then do --fail
-and --remove.
-After that, the array will be read-only. We need to reassemble it and force it
-to run without journal.
-
-Thanks,
 Song
