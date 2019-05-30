@@ -2,51 +2,84 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D2CF42FFD6
-	for <lists+linux-raid@lfdr.de>; Thu, 30 May 2019 18:01:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 917D130026
+	for <lists+linux-raid@lfdr.de>; Thu, 30 May 2019 18:24:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726375AbfE3QBb (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 30 May 2019 12:01:31 -0400
-Received: from mail.thelounge.net ([91.118.73.15]:27009 "EHLO
-        mail.thelounge.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbfE3QBb (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 30 May 2019 12:01:31 -0400
-Received: from srv-rhsoft.rhsoft.net  (Authenticated sender: h.reindl@thelounge.net) by mail.thelounge.net (THELOUNGE MTA) with ESMTPSA id 45FC4T33HwzXQV;
-        Thu, 30 May 2019 18:01:29 +0200 (CEST)
-Subject: Re: RAID-1 can (sometimes) be 3x faster than RAID-10
+        id S1726430AbfE3QYe (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 30 May 2019 12:24:34 -0400
+Received: from smtp1.servermx.com ([134.19.178.79]:46270 "EHLO
+        smtp1.servermx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726355AbfE3QYe (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 30 May 2019 12:24:34 -0400
+X-Greylist: delayed 490 seconds by postgrey-1.27 at vger.kernel.org; Thu, 30 May 2019 12:24:33 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=servermx.com; s=servermx; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=uROp7UbdsVBfZnbqH76DpMDrNX05wU4Q7NGs0Fslz2o=; b=WEbrpAgTIj9ZDlXbSJd/aDPkg
+        IGhSKzSrCMMsYHTFxXy+ueP4D2IQ9fj0GftSBfef7utAsjy3m0YlcD5VtIVUmXwQACywg0zRoKLh5
+        JFFWzLfBSdFYCIe2GUTJM1WbYnQrKaoNW7/6ooev3QpQWHwFRqiIlSIh1+87FLXH9vyZY=;
+Received: by exim4; Thu, 30 May 2019 18:16:19 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=servermx.com; s=servermx; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=uROp7UbdsVBfZnbqH76DpMDrNX05wU4Q7NGs0Fslz2o=; b=WEbrpAgTIj9ZDlXbSJd/aDPkg
+        IGhSKzSrCMMsYHTFxXy+ueP4D2IQ9fj0GftSBfef7utAsjy3m0YlcD5VtIVUmXwQACywg0zRoKLh5
+        JFFWzLfBSdFYCIe2GUTJM1WbYnQrKaoNW7/6ooev3QpQWHwFRqiIlSIh1+87FLXH9vyZY=;
+Received: by exim4; Thu, 30 May 2019 18:16:18 +0200
+Received: by cthulhu.home.robinhill.me.uk (Postfix, from userid 1000)
+        id 542BE6A0732; Thu, 30 May 2019 17:16:14 +0100 (BST)
+Date:   Thu, 30 May 2019 17:16:14 +0100
+From:   Robin Hill <robin@robinhill.me.uk>
 To:     keld@keldix.com
-Cc:     linux-raid@vger.kernel.org
+Cc:     Reindl Harald <h.reindl@thelounge.net>, linux-raid@vger.kernel.org
+Subject: Re: RAID-1 can (sometimes) be 3x faster than RAID-10
+Message-ID: <20190530161614.GA16683@cthulhu.home.robinhill.me.uk>
+Mail-Followup-To: keld@keldix.com, Reindl Harald <h.reindl@thelounge.net>,
+        linux-raid@vger.kernel.org
 References: <20190529194136.GW4569@bitfolk.com>
  <20190530100420.GA7106@www5.open-std.org>
  <bd4ac362-6d91-df02-d7df-84de54dd90bf@thelounge.net>
  <20190530155834.GA21315@www5.open-std.org>
-From:   Reindl Harald <h.reindl@thelounge.net>
-Openpgp: id=9D2B46CDBC140A36753AE4D733174D5A5892B7B8;
- url=https://arrakis-tls.thelounge.net/gpg/h.reindl_thelounge.net.pub.txt
-Organization: the lounge interactive design
-Message-ID: <0f5dcfb4-bb86-6f46-cf19-9d5b97608fac@thelounge.net>
-Date:   Thu, 30 May 2019 18:01:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <20190530155834.GA21315@www5.open-std.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-CH
-Content-Transfer-Encoding: 7bit
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Feedback-ID: outgoingmessage:robin@robinhill.me.uk:ns02.servermx.com:servermx.com
+X-AuthUser: bimu5pypsh
+X-Mailgun-Native-Send: true
+X-AuthUser: bimu5pypsh
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+On Thu May 30, 2019 at 05:58:34PM +0200, keld@keldix.com wrote:
 
+> On Thu, May 30, 2019 at 04:37:43PM +0200, Reindl Harald wrote:
+> > 
+> > 
+> > Am 30.05.19 um 12:04 schrieb keld@keldix.com:
+> > > you need to clarify which layout you use with md raid10.
+> > > the layouts are near, far and offset, with very different performance characteristics.
+> > > far and offset are designed to be faster than near, which I understand that you use.
+> > > So why are you using the slowest md raid10 layout, and not mentioning this fact?
+> > 
+> > besides that when you install a distribution like Fedora "near" is
+> > default for pure reads it shouldn't be slower than RAID1 at all, just
+> > read from both mirrors of the stripe
+> 
+> near is mdadm default, so people often do not realize the faster options.
+>  
+Are they not only faster on physical disks? The OP indicated they have
+an SSD and an NVMe, so I don't see why any of the RAID-10 variations
+would perform any better.
 
-Am 30.05.19 um 17:58 schrieb keld@keldix.com:
-> so you will not get performance gains if you read one file sequentially in raid10,near
-> nor md raid1, reading 2 different files concurrently theoretcally should give the same
-> speed in md raid1 an mdraid10,near - but I think raid10,near only reads from one device.
-> so it is a driver issue.
-
-but why?
-
-you have two simple mirrors, read from both disks, one half from mirror1
-and the second from mirror2
+Cheers,
+    Robin
