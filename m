@@ -2,84 +2,72 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DAE642E585
-	for <lists+linux-raid@lfdr.de>; Wed, 29 May 2019 21:41:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBFE32F6FF
+	for <lists+linux-raid@lfdr.de>; Thu, 30 May 2019 07:01:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726054AbfE2Tlh (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 29 May 2019 15:41:37 -0400
-Received: from use.bitfolk.com ([85.119.80.223]:45064 "EHLO mail.bitfolk.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbfE2Tlh (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 29 May 2019 15:41:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bitfolk.com; s=alpha;
-        h=Content-Type:MIME-Version:Message-ID:Subject:To:From:Date; bh=MwH5wTdJW1agyzU28/2mqxPnZ+2GfBaj47TG2suRCd8=;
-        b=F8ZVx0fRBtbnwRWM1DJ6ei/8VbbJUnjWJJwFvK1RcdVA4xN3Zunq+0KzWi21FU0lhm33UMCb6BaZ4n79zTsKEYvtOLIz3ldihlgvC1ykN9rj4nC/42Ig9p64oCwkIcLKRnqEzl0JEQZXasAaaJ/pNppN7G4zRq5kCP5Ngk39Oj75zzsFAI33MjAtvFvt97V0S9XXo6UCn3C5T3a5+CX/FU0VKfI4TH4YVRc/62JfriXpIvP+YxwT+p5Fj9dG6P2tPEYlFacPLciaXX33F1O2snSR2WAxVhbB81LCj+19+A4Y8F+FKFsZGOCCmqiw5tYfkMG7FvCCoPyoWCXGvsPKIw==;
-Received: from andy by mail.bitfolk.com with local (Exim 4.84_2)
-        (envelope-from <andy@strugglers.net>)
-        id 1hW4S8-00068a-Jf
-        for linux-raid@vger.kernel.org; Wed, 29 May 2019 19:41:36 +0000
-Date:   Wed, 29 May 2019 19:41:36 +0000
-From:   Andy Smith <andy@strugglers.net>
-To:     linux-raid@vger.kernel.org
-Subject: RAID-1 can (sometimes) be 3x faster than RAID-10
-Message-ID: <20190529194136.GW4569@bitfolk.com>
-Mail-Followup-To: linux-raid@vger.kernel.org
+        id S1728254AbfE3FBB (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 30 May 2019 01:01:01 -0400
+Received: from smtp2.provo.novell.com ([137.65.250.81]:33323 "EHLO
+        smtp2.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727564AbfE3DJ2 (ORCPT
+        <rfc822;groupwise-linux-raid@vger.kernel.org:0:0>);
+        Wed, 29 May 2019 23:09:28 -0400
+Received: from linux-fcij.suse (prva10-snat226-2.provo.novell.com [137.65.226.36])
+        by smtp2.provo.novell.com with ESMTP (TLS encrypted); Wed, 29 May 2019 21:09:17 -0600
+Subject: Re: [RFC PATCH V2] mdadm/md.4: add the descriptions for bitmap sysfs
+ nodes
+To:     Wols Lists <antlists@youngman.org.uk>, jes.sorensen@gmail.com
+Cc:     linux-raid@vger.kernel.org, NeilBrown <neilb@suse.com>
+References: <20190527040523.24032-1-gqjiang@suse.com>
+ <5CEE6062.1090604@youngman.org.uk>
+From:   Guoqing Jiang <gqjiang@suse.com>
+Message-ID: <176983e7-b3f4-b650-0e6d-afdcb1491ad1@suse.com>
+Date:   Thu, 30 May 2019 11:09:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-OpenPGP: id=BF15490B; url=http://strugglers.net/~andy/pubkey.asc
-X-URL:  http://strugglers.net/wiki/User:Andy
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: andy@strugglers.net
-X-SA-Exim-Scanned: No (on mail.bitfolk.com); SAEximRunCond expanded to false
+In-Reply-To: <5CEE6062.1090604@youngman.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi,
 
-I have a server with a fast device (a SATA SSD) and a very fast
-device (NVMe). I was experimenting with different Linux RAID
-configurations to see which worked best. While doing so I discovered
-that in this situation, RAID-1 and RAID-10 can perform VERY
-differently.
 
-A RAID-1 of these devices will parallelise reads resulting in ~84% of
-the read IOs hitting the NVMe and an average IOPS close to
-that of the NVMe.
+On 5/29/19 6:35 PM, Wols Lists wrote:
+> On 27/05/19 05:05, Guoqing Jiang wrote:
+>> +This variable sets a limit on the number of concurrent background writes,
+>> +the valid values are 0 to 256, 0 means that write-behind is not allowed,
+>> +while any other number means it can happen.  If there are more write requests
+>> +than the number, new writes will by synchronous.
+> Is this a byte-wide or an integer field? 0 to 256 is an odd number -
+> surely it should be 255 (0xff)?
 
-By contrast RAID-10 seems to split the IOs much more evenly: 53% hit
-the NVMe, and the average IOPS was only 35% that of RAID-1.
+Thanks for the checking.
 
-Is this expected?
+Actually the range should from 0 to 16383,  since there is one checking 
+inside kernel.
 
-I suppose so since it is documented that RAID-1 can parallelise
-reads but RAID-10 will stripe them. That is normally presented as a
-*benefit* of RAID-10 though; I'm not sure that it is obvious that if
-your devices have dramatically different performance characteristics
-that RAID-10 could hobble you.
+                             if (backlog > COUNTER_MAX)
+                                         return -EINVAL;
 
-I did try out --write-mostly, by the way, in an attempt to force
-~100% of the reads to go to the NVMe, but this actually made
-performance worse. I think that --write-mostly may only make sense
-when the performance gap is much bigger (e.g. between rotational and
-fast flash), where any read to the slow half will kill performance.
+#define COUNTER_BITS 16
+#define RESYNC_MASK ((bitmap_counter_t) (1 << (COUNTER_BITS - 2)))
+#define COUNTER_MAX ((bitmap_counter_t) RESYNC_MASK - 1)
 
-I wrote up my tests here:
+And mdadm has similar code.
 
-http://strugglers.net/~andy/blog/2019/05/29/linux-raid-10-may-not-always-be-the-best-performer-but-i-dont-know-why/
+                                 s.write_behind = parse_num(optarg);
+                                 if (s.write_behind < 0 ||
+                                     s.write_behind > 16383) {
+                                         pr_err("Invalid value for 
+maximum outstanding write-behind writes: %s.\n\tMust be between 0 and 
+16383.\n", optarg);
+                                         exit(2);
+                                 }
 
-There are still a bunch of open questions ("Summary of open
-questions" section) and some results I could not explain. I included
-some tests against slow HDDs and couldn't explain why I achieved 256
-read IOPS there, for example. I don't believe that was the page
-cache.
-
-If you have any ideas about that, can see any problems with my
-testing methodology, have suggestions for other tests etc then
-please do let me know.
-
-Thanks,
-Andy
+Thanks & Regards,
+Guoqing
