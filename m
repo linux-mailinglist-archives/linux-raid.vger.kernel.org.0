@@ -2,70 +2,127 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E33430648
-	for <lists+linux-raid@lfdr.de>; Fri, 31 May 2019 03:43:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CDBC3065E
+	for <lists+linux-raid@lfdr.de>; Fri, 31 May 2019 03:50:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbfEaBno (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 30 May 2019 21:43:44 -0400
-Received: from smtp2.provo.novell.com ([137.65.250.81]:55997 "EHLO
+        id S1726668AbfEaBuz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 30 May 2019 21:50:55 -0400
+Received: from smtp2.provo.novell.com ([137.65.250.81]:44387 "EHLO
         smtp2.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfEaBno (ORCPT
+        with ESMTP id S1726372AbfEaBuy (ORCPT
         <rfc822;groupwise-linux-raid@vger.kernel.org:0:0>);
-        Thu, 30 May 2019 21:43:44 -0400
-Received: from linux-fcij.suse (prva10-snat226-2.provo.novell.com [137.65.226.36])
-        by smtp2.provo.novell.com with ESMTP (TLS encrypted); Thu, 30 May 2019 19:43:40 -0600
-Subject: Re: RAID-1 can (sometimes) be 3x faster than RAID-10
-To:     andy@strugglers.net
-References: <20190529194136.GW4569@bitfolk.com>
+        Thu, 30 May 2019 21:50:54 -0400
+Received: from linux-2xn2.suse.asia (prva10-snat226-2.provo.novell.com [137.65.226.36])
+        by smtp2.provo.novell.com with ESMTP (TLS encrypted); Thu, 30 May 2019 19:50:47 -0600
 From:   Guoqing Jiang <gqjiang@suse.com>
-Cc:     linux-raid@vger.kernel.org
-Message-ID: <6b34f202-65c4-b6f9-0ae1-cbb517c2b8f2@suse.com>
-Date:   Fri, 31 May 2019 09:43:35 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.0
-MIME-Version: 1.0
-In-Reply-To: <20190529194136.GW4569@bitfolk.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+To:     jes.sorensen@gmail.com
+Cc:     linux-raid@vger.kernel.org, Guoqing Jiang <gqjiang@suse.com>,
+        NeilBrown <neilb@suse.com>
+Subject: [RFC PATCH V3] mdadm/md.4: add the descriptions for bitmap sysfs nodes
+Date:   Fri, 31 May 2019 10:10:00 +0800
+Message-Id: <20190531021000.16971-1-gqjiang@suse.com>
+X-Mailer: git-send-email 2.12.3
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+The sysfs nodes under bitmap are not recorded in md.4,
+add them based on md.rst and kernel source code.
 
+Cc: NeilBrown <neilb@suse.com>
+Signed-off-by: Guoqing Jiang <gqjiang@suse.com>
+---
+V3 changes:
+1. update the valid value range for backlog
 
-On 5/30/19 3:41 AM, Andy Smith wrote:
-> Hi,
->
-> I have a server with a fast device (a SATA SSD) and a very fast
-> device (NVMe). I was experimenting with different Linux RAID
-> configurations to see which worked best. While doing so I discovered
-> that in this situation, RAID-1 and RAID-10 can perform VERY
-> differently.
->
-> A RAID-1 of these devices will parallelise reads resulting in ~84% of
-> the read IOs hitting the NVMe and an average IOPS close to
-> that of the NVMe.
->
-> By contrast RAID-10 seems to split the IOs much more evenly: 53% hit
-> the NVMe, and the average IOPS was only 35% that of RAID-1.
->
-> Is this expected?
->
-> I suppose so since it is documented that RAID-1 can parallelise
-> reads but RAID-10 will stripe them. That is normally presented as a
-> *benefit* of RAID-10 though; I'm not sure that it is obvious that if
-> your devices have dramatically different performance characteristics
-> that RAID-10 could hobble you.
+V2 changes:
+1. use the description for can_clear node from Neil
+2. tweak descriptions for backlog, chunksize, location and metadata
 
-There are some optimizations in raid1's read_balance for ssd, unfortunately,
-raid10 didn't have similar code. I guess the below commits are related.
+ md.4 | 69 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
 
-commit 9dedf60313fa4dddfd5b9b226a0ef12a512bf9dc ("md/raid1: read balance 
-chooses idlest disk for SSD")
-commit 12cee5a8a29e7263e39953f1d941f723c617ca5f ("md/raid1: prevent 
-merging too large request")
+diff --git a/md.4 b/md.4
+index 3a1d6777e5b7..e86707a2cbb3 100644
+--- a/md.4
++++ b/md.4
+@@ -1101,6 +1101,75 @@ stripe that requires some "prereading".  For fairness this defaults to
+ maximizes sequential-write throughput at the cost of fairness to threads
+ doing small or random writes.
+ 
++.TP
++.B md/bitmap/backlog
++The value stored in the file only has any effect on RAID1 when write-mostly
++devices are active, and write requests to those devices are proceed in the
++background.
++
++This variable sets a limit on the number of concurrent background writes,
++the valid values are 0 to 16383, 0 means that write-behind is not allowed,
++while any other number means it can happen.  If there are more write requests
++than the number, new writes will by synchronous.
++
++.TP
++.B md/bitmap/can_clear
++This is for externally managed bitmaps, where the kernel writes the bitmap
++itself, but metadata describing the bitmap is managed by mdmon or similar.
++
++When the array is degraded, bits mustn't be cleared. When the array becomes
++optimal again, bit can be cleared, but first the metadata needs to record
++the current event count. So md sets this to 'false' and notifies mdmon,
++then mdmon updates the metadata and writes 'true'.
++
++There is no code in mdmon to actually do this, so maybe it doesn't even
++work.
++
++.TP
++.B md/bitmap/chunksize
++The bitmap chunksize can only be changed when no bitmap is active, and
++the value should be power of 2 and at least 512.
++
++.TP
++.B md/bitmap/location
++This indicates where the write-intent bitmap for the array is stored.
++It can be "none" or "file" or a signed offset from the array metadata
++- measured in sectors. You cannot set a file by writing here - that can
++only be done with the SET_BITMAP_FILE ioctl.
++
++Write 'none' to 'bitmap/location' will clear bitmap, and the previous
++location value must be write to it to restore bitmap.
++
++.TP
++.B md/bitmap/max_backlog_used
++This keeps track of the maximum number of concurrent write-behind requests
++for an md array, writing any value to this file will clear it.
++
++.TP
++.B md/bitmap/metadata
++This can be 'internal' or 'clustered' or 'external'. 'internal' is set
++by default, which means the metadata for bitmap is stored in the first 256
++bytes of the bitmap space. 'clustered' means separate bitmap metadata are
++used for each cluster node. 'external' means that bitmap metadata is managed
++externally to the kernel.
++
++.TP
++.B md/bitmap/space
++This shows the space (in sectors) which is available at md/bitmap/location,
++and allows the kernel to know when it is safe to resize the bitmap to match
++a resized array. It should big enough to contain the total bytes in the bitmap.
++
++For 1.0 metadata, assume we can use up to the superblock if before, else
++to 4K beyond superblock. For other metadata versions, assume no change is
++possible.
++
++.TP
++.B md/bitmap/time_base
++This shows the time (in seconds) between disk flushes, and is used to looking
++for bits in the bitmap to be cleared.
++
++The default value is 5 seconds, and it should be an unsigned long value.
++
+ .SS KERNEL PARAMETERS
+ 
+ The md driver recognised several different kernel parameters.
+-- 
+2.12.3
 
-Thanks,
-Guoqing
