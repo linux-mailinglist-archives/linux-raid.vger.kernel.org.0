@@ -2,88 +2,75 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DCFAE31FDA
-	for <lists+linux-raid@lfdr.de>; Sat,  1 Jun 2019 18:03:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91A6B32125
+	for <lists+linux-raid@lfdr.de>; Sun,  2 Jun 2019 01:31:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726044AbfFAQDa (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 1 Jun 2019 12:03:30 -0400
-Received: from mail.thelounge.net ([91.118.73.15]:24585 "EHLO
-        mail.thelounge.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726009AbfFAQDa (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 1 Jun 2019 12:03:30 -0400
-Received: from srv-rhsoft.rhsoft.net  (Authenticated sender: h.reindl@thelounge.net) by mail.thelounge.net (THELOUNGE MTA) with ESMTPSA id 45GR1q4jXMzXQV;
-        Sat,  1 Jun 2019 18:03:22 +0200 (CEST)
+        id S1726531AbfFAXbw (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 1 Jun 2019 19:31:52 -0400
+Received: from use.bitfolk.com ([85.119.80.223]:57801 "EHLO mail.bitfolk.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726485AbfFAXbw (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sat, 1 Jun 2019 19:31:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bitfolk.com; s=alpha;
+        h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:To:From:Date; bh=GlB4LbwpIWyXukrBuF2+wB9AuFCP9skiq/VWLXWOBUM=;
+        b=Hs9UP8bJ07DXFa0bHvGFVQY7YiX/gp+qXSB0N4p+FG4wN44mshc54myDt9ogkggv651DhtmsGeBLct6Ugw5CWBK4jVPAAZkP7I17ikH+sCfy6nl5Jz7TfTjCX7TiAkH6OxVLD0UfB24MGViRPkKAWHaL0Pmfl/jHr9gvk1YsREAMeLtdJIgg8ciKoDtDgMNlAhGadJGHLGzEvqQEfDioy1zks7+dX6jkzDkzzsDBubRUVjX8qr1L/zAHQ4L2oO7CIdcPKogb3/05wIIVFt9BGoRIlqW222UyolXWYz075aa47yQdM5LdebbcIg0/71M2WFsfa3o7ugCt9Q4et8G8vQ==;
+Received: from andy by mail.bitfolk.com with local (Exim 4.84_2)
+        (envelope-from <andy@strugglers.net>)
+        id 1hXDTb-0002id-Ce
+        for linux-raid@vger.kernel.org; Sat, 01 Jun 2019 23:31:51 +0000
+Date:   Sat, 1 Jun 2019 23:31:51 +0000
+From:   Andy Smith <andy@strugglers.net>
+To:     linux-raid@vger.kernel.org
 Subject: Re: RAID-1 can (sometimes) be 3x faster than RAID-10
-To:     keld@keldix.com
-Cc:     linux-raid@vger.kernel.org
+Message-ID: <20190601233151.GP4569@bitfolk.com>
+Mail-Followup-To: linux-raid@vger.kernel.org
 References: <20190529194136.GW4569@bitfolk.com>
  <6b34f202-65c4-b6f9-0ae1-cbb517c2b8f2@suse.com>
- <20190601053925.GO4569@bitfolk.com> <20190601085024.GA7575@www5.open-std.org>
- <2d01a882-0902-b7b6-a359-80e04a919aaa@thelounge.net>
- <20190601154302.GA27756@www5.open-std.org>
-From:   Reindl Harald <h.reindl@thelounge.net>
-Openpgp: id=9D2B46CDBC140A36753AE4D733174D5A5892B7B8;
- url=https://arrakis-tls.thelounge.net/gpg/h.reindl_thelounge.net.pub.txt
-Organization: the lounge interactive design
-Message-ID: <67a47528-541d-09ec-c9f9-560c382b6760@thelounge.net>
-Date:   Sat, 1 Jun 2019 18:03:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ <20190601053925.GO4569@bitfolk.com>
+ <20190601085024.GA7575@www5.open-std.org>
 MIME-Version: 1.0
-In-Reply-To: <20190601154302.GA27756@www5.open-std.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-CH
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190601085024.GA7575@www5.open-std.org>
+OpenPGP: id=BF15490B; url=http://strugglers.net/~andy/pubkey.asc
+X-URL:  http://strugglers.net/wiki/User:Andy
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: andy@strugglers.net
+X-SA-Exim-Scanned: No (on mail.bitfolk.com); SAEximRunCond expanded to false
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+Hi,
 
-
-Am 01.06.19 um 17:43 schrieb keld@keldix.com:
-> On Sat, Jun 01, 2019 at 04:03:05PM +0200, Reindl Harald wrote:
->> well, it would be nice just skip optimizations for rotating disks
->> entirely when the whole 4 disk RAID10 is built of SSD's
+On Sat, Jun 01, 2019 at 10:50:24AM +0200, keld@keldix.com wrote:
+> Still, Andy, you need to cover all layouts of md raid10.
 > 
-> yes, possibly, if there is a gain in this.
+> L know that for the far layout we actually had something that meant choosing the faster drives
+> an thus it violated the striping on HDs, degrading read performance severely. A patch fixed that.
 > 
-> as I wrote layout offset may already do the right thing.
-> and raid1 probably also does it.
-> I think raid10 offers extra functionlity over raid1 that could be useful
->  for raids of drives with different speeds.
-> Even layout far may be advantageaous to use with ssds, this was reported to the list some time ago.
+> this patch did not apply  to the offset layout, so maybe that layout could satisfy your needs.
 
-problem is that you can't switch layouts and given that "near" is
-default when you setup a distribution with RAID10 in the installer you
-get that
+Okay. Which layout combinations are you interested in seeing results
+for? Obviously I've done 'n2' already as it's the default, so is it
+just 'f2' and 'o2' that you would be interested in? I don't think
+there is any point in changing the number of copies from 2, do you?
 
-if i would have known that in 2011 at least md2 where VMs are running
-would have been created after the inital setup, now that ship has sailed
-because the whole point of RAID10 was "never install from scratch, just
-repplace dead disks and in case of switch the hardware create a
-non-hostonly initrd and move the drives"
+Is it enough to stick with a random read test (best at exposing the
+differences we are talking about in this thread) or would you like
+to see the other tests like sequential read/write and random write
+too in case there are other differences?
 
-now it's more about reduce overhead in general because for a SSD all the
-optimizations trying to take head movement into account are useless,
-just read from as much drives as possible
+Finally, do you consider 4KiB IO sufficient? RAID-10 should allow
+striping and there is not much opportunity for that with 4KiB IO and
+a default 512KiB chunk size.
 
-for dives with different speeds "writemostly" would be perfect and two
-years ago that was my lan not realizing that Linux RAID10 is not the
-same as a ordinary RAID10 and on a testing VM the param was recognized
-for RAID10 too but turned out not to work in reality after replace two
-drives with SSD
+What I can't do is test more than 2 devices nor equal performance
+devices (unless you are interested in what happens with two 5.4kRPM
+HDDs, that is), because all I have in a test host right now is the
+SSD and the NVMe.
 
-for my primary machine it don't no longer matter, already 4x2 TB SSD
-RAID10 but for example i have a HP Microserver Gen8 with 4x6 TB RAID10
-"far layout" for the storage running a NFS storgae for a VMware
-Backup-Appliance
-
-May '19      2.47 TiB |   68.09 TiB
-
-as you can see there is a 1/28 ratio reads/writes and so replace two of
-that disks with a SSD would dramatically improve real workload
-performance with half of the costs when reads don't go to the HDD at all
-as long all 4 drives are up
-
-
+Cheers,
+Andy
