@@ -2,127 +2,70 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CDBC3065E
-	for <lists+linux-raid@lfdr.de>; Fri, 31 May 2019 03:50:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94D40319C7
+	for <lists+linux-raid@lfdr.de>; Sat,  1 Jun 2019 07:39:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfEaBuz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 30 May 2019 21:50:55 -0400
-Received: from smtp2.provo.novell.com ([137.65.250.81]:44387 "EHLO
-        smtp2.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfEaBuy (ORCPT
-        <rfc822;groupwise-linux-raid@vger.kernel.org:0:0>);
-        Thu, 30 May 2019 21:50:54 -0400
-Received: from linux-2xn2.suse.asia (prva10-snat226-2.provo.novell.com [137.65.226.36])
-        by smtp2.provo.novell.com with ESMTP (TLS encrypted); Thu, 30 May 2019 19:50:47 -0600
-From:   Guoqing Jiang <gqjiang@suse.com>
-To:     jes.sorensen@gmail.com
-Cc:     linux-raid@vger.kernel.org, Guoqing Jiang <gqjiang@suse.com>,
-        NeilBrown <neilb@suse.com>
-Subject: [RFC PATCH V3] mdadm/md.4: add the descriptions for bitmap sysfs nodes
-Date:   Fri, 31 May 2019 10:10:00 +0800
-Message-Id: <20190531021000.16971-1-gqjiang@suse.com>
-X-Mailer: git-send-email 2.12.3
+        id S1725901AbfFAFj1 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 1 Jun 2019 01:39:27 -0400
+Received: from use.bitfolk.com ([85.119.80.223]:46764 "EHLO mail.bitfolk.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725892AbfFAFj1 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sat, 1 Jun 2019 01:39:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bitfolk.com; s=alpha;
+        h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:Subject:To:From:Date; bh=Pk75OQopuwyuPIJNr3GD/Gd2BL1NhwKgfoIeg50KClM=;
+        b=vyOnKLZ71Zd9ixfa8P7XF0McEL/PPOF6YrJbgLe9SW3+2VLTppQygz0iRcP8K47D7XuyERi3waIRPHq7PexdSLgbwiIinwmUBf4woZ0yhMTzRAH/3icCyN8YeL2CH0gb2HykKxhrX8gYGWgj3m/6L0p1EtaJ6gAG/YO5A3gVNcUKCYag0Qise0Zsy9FN1rAA2qosuMsAYiqN5NlT60zZ0DK0xfXe8X8P1OI45S/EYAO0ST50ZFSloCtBDR+hCTNTundpJfmm2DmYxm4mGSww5mXyMsjUtbWirwoUkC8DMNUkbU/QafnWJ5hJ98EoPtJ/Fsi9WREnM66/O8p06W7T4g==;
+Received: from andy by mail.bitfolk.com with local (Exim 4.84_2)
+        (envelope-from <andy@strugglers.net>)
+        id 1hWwjl-0005IQ-Ec
+        for linux-raid@vger.kernel.org; Sat, 01 Jun 2019 05:39:25 +0000
+Date:   Sat, 1 Jun 2019 05:39:25 +0000
+From:   Andy Smith <andy@strugglers.net>
+To:     linux-raid@vger.kernel.org
+Subject: Re: RAID-1 can (sometimes) be 3x faster than RAID-10
+Message-ID: <20190601053925.GO4569@bitfolk.com>
+Mail-Followup-To: linux-raid@vger.kernel.org
+References: <20190529194136.GW4569@bitfolk.com>
+ <6b34f202-65c4-b6f9-0ae1-cbb517c2b8f2@suse.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6b34f202-65c4-b6f9-0ae1-cbb517c2b8f2@suse.com>
+OpenPGP: id=BF15490B; url=http://strugglers.net/~andy/pubkey.asc
+X-URL:  http://strugglers.net/wiki/User:Andy
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: andy@strugglers.net
+X-SA-Exim-Scanned: No (on mail.bitfolk.com); SAEximRunCond expanded to false
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-The sysfs nodes under bitmap are not recorded in md.4,
-add them based on md.rst and kernel source code.
+Hi,
 
-Cc: NeilBrown <neilb@suse.com>
-Signed-off-by: Guoqing Jiang <gqjiang@suse.com>
----
-V3 changes:
-1. update the valid value range for backlog
+On Fri, May 31, 2019 at 09:43:35AM +0800, Guoqing Jiang wrote:
+> On 5/30/19 3:41 AM, Andy Smith wrote:
+> >By contrast RAID-10 seems to split the IOs much more evenly: 53% hit
+> >the NVMe, and the average IOPS was only 35% that of RAID-1.
+> >
+> >Is this expected?
 
-V2 changes:
-1. use the description for can_clear node from Neil
-2. tweak descriptions for backlog, chunksize, location and metadata
+[…]
 
- md.4 | 69 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+> There are some optimizations in raid1's read_balance for ssd, unfortunately,
+> raid10 didn't have similar code.
 
-diff --git a/md.4 b/md.4
-index 3a1d6777e5b7..e86707a2cbb3 100644
---- a/md.4
-+++ b/md.4
-@@ -1101,6 +1101,75 @@ stripe that requires some "prereading".  For fairness this defaults to
- maximizes sequential-write throughput at the cost of fairness to threads
- doing small or random writes.
- 
-+.TP
-+.B md/bitmap/backlog
-+The value stored in the file only has any effect on RAID1 when write-mostly
-+devices are active, and write requests to those devices are proceed in the
-+background.
-+
-+This variable sets a limit on the number of concurrent background writes,
-+the valid values are 0 to 16383, 0 means that write-behind is not allowed,
-+while any other number means it can happen.  If there are more write requests
-+than the number, new writes will by synchronous.
-+
-+.TP
-+.B md/bitmap/can_clear
-+This is for externally managed bitmaps, where the kernel writes the bitmap
-+itself, but metadata describing the bitmap is managed by mdmon or similar.
-+
-+When the array is degraded, bits mustn't be cleared. When the array becomes
-+optimal again, bit can be cleared, but first the metadata needs to record
-+the current event count. So md sets this to 'false' and notifies mdmon,
-+then mdmon updates the metadata and writes 'true'.
-+
-+There is no code in mdmon to actually do this, so maybe it doesn't even
-+work.
-+
-+.TP
-+.B md/bitmap/chunksize
-+The bitmap chunksize can only be changed when no bitmap is active, and
-+the value should be power of 2 and at least 512.
-+
-+.TP
-+.B md/bitmap/location
-+This indicates where the write-intent bitmap for the array is stored.
-+It can be "none" or "file" or a signed offset from the array metadata
-+- measured in sectors. You cannot set a file by writing here - that can
-+only be done with the SET_BITMAP_FILE ioctl.
-+
-+Write 'none' to 'bitmap/location' will clear bitmap, and the previous
-+location value must be write to it to restore bitmap.
-+
-+.TP
-+.B md/bitmap/max_backlog_used
-+This keeps track of the maximum number of concurrent write-behind requests
-+for an md array, writing any value to this file will clear it.
-+
-+.TP
-+.B md/bitmap/metadata
-+This can be 'internal' or 'clustered' or 'external'. 'internal' is set
-+by default, which means the metadata for bitmap is stored in the first 256
-+bytes of the bitmap space. 'clustered' means separate bitmap metadata are
-+used for each cluster node. 'external' means that bitmap metadata is managed
-+externally to the kernel.
-+
-+.TP
-+.B md/bitmap/space
-+This shows the space (in sectors) which is available at md/bitmap/location,
-+and allows the kernel to know when it is safe to resize the bitmap to match
-+a resized array. It should big enough to contain the total bytes in the bitmap.
-+
-+For 1.0 metadata, assume we can use up to the superblock if before, else
-+to 4K beyond superblock. For other metadata versions, assume no change is
-+possible.
-+
-+.TP
-+.B md/bitmap/time_base
-+This shows the time (in seconds) between disk flushes, and is used to looking
-+for bits in the bitmap to be cleared.
-+
-+The default value is 5 seconds, and it should be an unsigned long value.
-+
- .SS KERNEL PARAMETERS
- 
- The md driver recognised several different kernel parameters.
--- 
-2.12.3
+Thanks Guoqing, that certainly seems to explain it.
 
+Would it be worth mentioning in the man page and/or wiki that when
+there are devices that are very mismatched, performance wise, RAID-1
+is likely to be able to direct more reads to the faster device(s),
+whereas RAID-10 can't do that?
+
+Is it just that no one has tried to apply the same optimizations to
+RAID-10, or is it technically difficult/impossible to do this in
+RAID-10?
+
+Thanks,
+Andy
