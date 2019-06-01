@@ -2,84 +2,82 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 00A7531D6E
-	for <lists+linux-raid@lfdr.de>; Sat,  1 Jun 2019 15:30:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A7C431FA2
+	for <lists+linux-raid@lfdr.de>; Sat,  1 Jun 2019 16:03:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729900AbfFAN1H (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 1 Jun 2019 09:27:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57704 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728169AbfFAN1G (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sat, 1 Jun 2019 09:27:06 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F68E273CB;
-        Sat,  1 Jun 2019 13:27:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559395625;
-        bh=8dJthh1jYsngYIJ74T3O79DJE0/Xj/gr+R9BWBUL8gI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LYWQApqnLTC9qgr+xT2ocmHVtgLxAz9de3iN/SXsm+NfU01/VNcHVytZtQoDnNmft
-         IdKf0dzUWlSqAg2Ux7pnozO1L4Is1zugq2SEd/FS+v35+vdJ69UEeTGEzrSscGjAAw
-         GYejvMfDwACv8Lr1EgSeDQ0Hr3whOdv44Btkm8+s=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yufen Yu <yuyufen@huawei.com>, Xiao Ni <xni@redhat.com>,
-        NeilBrown <neilb@suse.com>, Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 38/56] md: add mddev->pers to avoid potential NULL pointer dereference
-Date:   Sat,  1 Jun 2019 09:25:42 -0400
-Message-Id: <20190601132600.27427-38-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
-References: <20190601132600.27427-1-sashal@kernel.org>
+        id S1726211AbfFAODO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 1 Jun 2019 10:03:14 -0400
+Received: from mail.thelounge.net ([91.118.73.15]:27909 "EHLO
+        mail.thelounge.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726135AbfFAODO (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 1 Jun 2019 10:03:14 -0400
+Received: from srv-rhsoft.rhsoft.net  (Authenticated sender: h.reindl@thelounge.net) by mail.thelounge.net (THELOUNGE MTA) with ESMTPSA id 45GNM25mfSzXQV;
+        Sat,  1 Jun 2019 16:03:05 +0200 (CEST)
+Subject: Re: RAID-1 can (sometimes) be 3x faster than RAID-10
+To:     keld@keldix.com, linux-raid@vger.kernel.org
+References: <20190529194136.GW4569@bitfolk.com>
+ <6b34f202-65c4-b6f9-0ae1-cbb517c2b8f2@suse.com>
+ <20190601053925.GO4569@bitfolk.com> <20190601085024.GA7575@www5.open-std.org>
+From:   Reindl Harald <h.reindl@thelounge.net>
+Openpgp: id=9D2B46CDBC140A36753AE4D733174D5A5892B7B8;
+ url=https://arrakis-tls.thelounge.net/gpg/h.reindl_thelounge.net.pub.txt
+Organization: the lounge interactive design
+Message-ID: <2d01a882-0902-b7b6-a359-80e04a919aaa@thelounge.net>
+Date:   Sat, 1 Jun 2019 16:03:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190601085024.GA7575@www5.open-std.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-CH
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Yufen Yu <yuyufen@huawei.com>
 
-[ Upstream commit ee37e62191a59d253fc916b9fc763deb777211e2 ]
 
-When doing re-add, we need to ensure rdev->mddev->pers is not NULL,
-which can avoid potential NULL pointer derefence in fallowing
-add_bound_rdev().
+Am 01.06.19 um 10:50 schrieb keld@keldix.com:
+> On Sat, Jun 01, 2019 at 05:39:25AM +0000, Andy Smith wrote:
+>> Hi,
+>>
+>> On Fri, May 31, 2019 at 09:43:35AM +0800, Guoqing Jiang wrote:
+>>> On 5/30/19 3:41 AM, Andy Smith wrote:
+>>>> By contrast RAID-10 seems to split the IOs much more evenly: 53% hit
+>>>> the NVMe, and the average IOPS was only 35% that of RAID-1.
+>>>>
+>>>> Is this expected?
+>>
+>> [???]
+>>
+>>> There are some optimizations in raid1's read_balance for ssd, unfortunately,
+>>> raid10 didn't have similar code.
+>>
+>> Thanks Guoqing, that certainly seems to explain it.
+>>
+>> Would it be worth mentioning in the man page and/or wiki that when
+>> there are devices that are very mismatched, performance wise, RAID-1
+>> is likely to be able to direct more reads to the faster device(s),
+>> whereas RAID-10 can't do that?
+>>
+>> Is it just that no one has tried to apply the same optimizations to
+>> RAID-10, or is it technically difficult/impossible to do this in
+>> RAID-10?
+> 
+> Still, Andy, you need to cover all layouts of md raid10.
+> 
+> L know that for the far layout we actually had something that meant choosing the faster drives
+> an thus it violated the striping on HDs, degrading read performance severely. A patch fixed that.
+> 
+> this patch did not apply  to the offset layout, so maybe that layout could satisfy your needs.
+> 
+> 
+> it seems that there may be special code for SSDs in the md drivers.
+> 
+> I would like if we could use more precise terminology, RAID-10 could easily be understood
+> as normal raid where you need 4 drives. The name "md raid10" is actually a bit misleading, 
+> as for the 4-drive version it is actually a RAID-01 layout, which has poorer redudancy properties.
 
-Fixes: a6da4ef85cef ("md: re-add a failed disk")
-Cc: Xiao Ni <xni@redhat.com>
-Cc: NeilBrown <neilb@suse.com>
-Cc: <stable@vger.kernel.org> # 4.4+
-Reviewed-by: NeilBrown <neilb@suse.com>
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/md/md.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 07f307402351b..f71cca28dddac 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -2690,8 +2690,10 @@ state_store(struct md_rdev *rdev, const char *buf, size_t len)
- 			err = 0;
- 		}
- 	} else if (cmd_match(buf, "re-add")) {
--		if (test_bit(Faulty, &rdev->flags) && (rdev->raid_disk == -1) &&
--			rdev->saved_raid_disk >= 0) {
-+		if (!rdev->mddev->pers)
-+			err = -EINVAL;
-+		else if (test_bit(Faulty, &rdev->flags) && (rdev->raid_disk == -1) &&
-+				rdev->saved_raid_disk >= 0) {
- 			/* clear_bit is performed _after_ all the devices
- 			 * have their local Faulty bit cleared. If any writes
- 			 * happen in the meantime in the local node, they
--- 
-2.20.1
-
+well, it would be nice just skip optimizations for rotating disks
+entirely when the whole 4 disk RAID10 is built of SSD's
