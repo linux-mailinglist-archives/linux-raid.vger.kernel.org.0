@@ -2,36 +2,37 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 91A6B32125
-	for <lists+linux-raid@lfdr.de>; Sun,  2 Jun 2019 01:31:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16FA4321AD
+	for <lists+linux-raid@lfdr.de>; Sun,  2 Jun 2019 05:26:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbfFAXbw (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 1 Jun 2019 19:31:52 -0400
-Received: from use.bitfolk.com ([85.119.80.223]:57801 "EHLO mail.bitfolk.com"
+        id S1726649AbfFBD0L (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 1 Jun 2019 23:26:11 -0400
+Received: from use.bitfolk.com ([85.119.80.223]:45950 "EHLO mail.bitfolk.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726485AbfFAXbw (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sat, 1 Jun 2019 19:31:52 -0400
+        id S1726531AbfFBD0L (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sat, 1 Jun 2019 23:26:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bitfolk.com; s=alpha;
-        h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:To:From:Date; bh=GlB4LbwpIWyXukrBuF2+wB9AuFCP9skiq/VWLXWOBUM=;
-        b=Hs9UP8bJ07DXFa0bHvGFVQY7YiX/gp+qXSB0N4p+FG4wN44mshc54myDt9ogkggv651DhtmsGeBLct6Ugw5CWBK4jVPAAZkP7I17ikH+sCfy6nl5Jz7TfTjCX7TiAkH6OxVLD0UfB24MGViRPkKAWHaL0Pmfl/jHr9gvk1YsREAMeLtdJIgg8ciKoDtDgMNlAhGadJGHLGzEvqQEfDioy1zks7+dX6jkzDkzzsDBubRUVjX8qr1L/zAHQ4L2oO7CIdcPKogb3/05wIIVFt9BGoRIlqW222UyolXWYz075aa47yQdM5LdebbcIg0/71M2WFsfa3o7ugCt9Q4et8G8vQ==;
+        h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:To:From:Date; bh=Hy1ef1NsfTFp5hyHDldgpdUQIXk7K4n0VChcgVs0V08=;
+        b=U4oey91j1BrLaNzwI9hJsiG546P8zTkabQtTce3ggJnPzn7eZCJORSBVIoZowpOqirJP/R+8yRdScPJ9okvs29zvK0CyGkP5SmExtiLi/fEanBVvB+uay9A12DURvLIr/GcMo00GIhL752FKyq93T+9KVSmnjPAn4u8rHtY0vmoR9ojybMTAiwSKzEVdwLo6AxPMnLFNdnY9i/Pq2MyIDoqTmB1FGuk20Szr7oRU/9jTuXty6zY2lqzufucvUYo53+PqpHHAdhm0wTF5yWNQICp5VusDZeq3uVurOQBirVcamsvG2XRzcxyC6S0V31ysJ8mfGMFY2oYCaBJVzeLU2A==;
 Received: from andy by mail.bitfolk.com with local (Exim 4.84_2)
         (envelope-from <andy@strugglers.net>)
-        id 1hXDTb-0002id-Ce
-        for linux-raid@vger.kernel.org; Sat, 01 Jun 2019 23:31:51 +0000
-Date:   Sat, 1 Jun 2019 23:31:51 +0000
+        id 1hXH8L-0003RB-TG
+        for linux-raid@vger.kernel.org; Sun, 02 Jun 2019 03:26:09 +0000
+Date:   Sun, 2 Jun 2019 03:26:09 +0000
 From:   Andy Smith <andy@strugglers.net>
 To:     linux-raid@vger.kernel.org
 Subject: Re: RAID-1 can (sometimes) be 3x faster than RAID-10
-Message-ID: <20190601233151.GP4569@bitfolk.com>
+Message-ID: <20190602032609.GQ4569@bitfolk.com>
 Mail-Followup-To: linux-raid@vger.kernel.org
 References: <20190529194136.GW4569@bitfolk.com>
  <6b34f202-65c4-b6f9-0ae1-cbb517c2b8f2@suse.com>
  <20190601053925.GO4569@bitfolk.com>
  <20190601085024.GA7575@www5.open-std.org>
+ <20190601233151.GP4569@bitfolk.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190601085024.GA7575@www5.open-std.org>
+In-Reply-To: <20190601233151.GP4569@bitfolk.com>
 OpenPGP: id=BF15490B; url=http://strugglers.net/~andy/pubkey.asc
 X-URL:  http://strugglers.net/wiki/User:Andy
 User-Agent: Mutt/1.5.23 (2014-03-12)
@@ -43,34 +44,27 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi,
+On Sat, Jun 01, 2019 at 11:31:51PM +0000, Andy Smith wrote:
+> Okay. Which layout combinations are you interested in seeing results
+> for? Obviously I've done 'n2' already as it's the default, so is it
+> just 'f2' and 'o2' that you would be interested in? I don't think
+> there is any point in changing the number of copies from 2, do you?
 
-On Sat, Jun 01, 2019 at 10:50:24AM +0200, keld@keldix.com wrote:
-> Still, Andy, you need to cover all layouts of md raid10.
-> 
-> L know that for the far layout we actually had something that meant choosing the faster drives
-> an thus it violated the striping on HDs, degrading read performance severely. A patch fixed that.
-> 
-> this patch did not apply  to the offset layout, so maybe that layout could satisfy your needs.
+I see number of copies is limited to the number of devices anyway so
+for me, 2 is the only option.
 
-Okay. Which layout combinations are you interested in seeing results
-for? Obviously I've done 'n2' already as it's the default, so is it
-just 'f2' and 'o2' that you would be interested in? I don't think
-there is any point in changing the number of copies from 2, do you?
+I tried out f2 and o2 (in addition to the n2 default that was
+already done):
 
-Is it enough to stick with a random read test (best at exposing the
-differences we are talking about in this thread) or would you like
-to see the other tests like sequential read/write and random write
-too in case there are other differences?
+    http://strugglers.net/~andy/blog/2019/06/02/exploring-different-linux-raid-10-layouts-with-unbalanced-devices/
 
-Finally, do you consider 4KiB IO sufficient? RAID-10 should allow
-striping and there is not much opportunity for that with 4KiB IO and
-a default 512KiB chunk size.
+TL;DR: For this setup non-default layouts were worse (~77% of
+default) for sequential read and no different to default layout for
+everything else.
 
-What I can't do is test more than 2 devices nor equal performance
-devices (unless you are interested in what happens with two 5.4kRPM
-HDDs, that is), because all I have in a test host right now is the
-SSD and the NVMe.
+I reran the benchmark several times for sequential read and got very
+consistent results, so far/offset are definitely worse than near for
+sequential 4KiB reads on these devices.
 
 Cheers,
 Andy
