@@ -2,17 +2,17 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B3CFA3761E
-	for <lists+linux-raid@lfdr.de>; Thu,  6 Jun 2019 16:11:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 891F837620
+	for <lists+linux-raid@lfdr.de>; Thu,  6 Jun 2019 16:12:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728678AbfFFOLs (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 6 Jun 2019 10:11:48 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:41940 "EHLO huawei.com"
+        id S1728249AbfFFOLw (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 6 Jun 2019 10:11:52 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41942 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726092AbfFFOLs (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 6 Jun 2019 10:11:48 -0400
+        id S1726092AbfFFOLw (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 6 Jun 2019 10:11:52 -0400
 Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D843C13855F021F13C91
+        by Forcepoint Email with ESMTP id D08B3C49ACED63F18956
         for <linux-raid@vger.kernel.org>; Thu,  6 Jun 2019 22:11:45 +0800 (CST)
 Received: from huawei.com (10.175.124.28) by DGGEMS411-HUB.china.huawei.com
  (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Thu, 6 Jun 2019
@@ -20,9 +20,9 @@ Received: from huawei.com (10.175.124.28) by DGGEMS411-HUB.china.huawei.com
 From:   Yufen Yu <yuyufen@huawei.com>
 To:     <linux-raid@vger.kernel.org>
 CC:     <liu.song.a23@gmail.com>
-Subject: [PATCH 1/2] md: fix spelling typo and add necessary space
-Date:   Thu, 6 Jun 2019 22:29:17 +0800
-Message-ID: <20190606142918.36376-2-yuyufen@huawei.com>
+Subject: [PATCH 2/2] md/raid1: get rid of extra blank line and space
+Date:   Thu, 6 Jun 2019 22:29:18 +0800
+Message-ID: <20190606142918.36376-3-yuyufen@huawei.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20190606142918.36376-1-yuyufen@huawei.com>
 References: <20190606142918.36376-1-yuyufen@huawei.com>
@@ -35,64 +35,63 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-This patch fix a spelling typo and add necessary space for code.
-In addition, the patch get rid of the unnecessary 'if'.
+This patch get rid of extra blank line and space, and
+add necessary space for code.
 
 Signed-off-by: Yufen Yu <yuyufen@huawei.com>
 ---
- drivers/md/md.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ drivers/md/raid1.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 04f4f131f9d6..614704252da9 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -5639,8 +5639,7 @@ int md_run(struct mddev *mddev)
- 	spin_unlock(&mddev->lock);
- 	rdev_for_each(rdev, mddev)
- 		if (rdev->raid_disk >= 0)
--			if (sysfs_link_rdev(mddev, rdev))
--				/* failure here is OK */;
-+			sysfs_link_rdev(mddev, rdev); /* failure here is OK */
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 2aa36e570e04..9532408c1f7a 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -1449,7 +1449,6 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
+ 		if (!r1_bio->bios[i])
+ 			continue;
  
- 	if (mddev->degraded && !mddev->ro)
- 		/* This ensures that recovering status is reported immediately
-@@ -8190,8 +8189,7 @@ void md_do_sync(struct md_thread *thread)
- {
- 	struct mddev *mddev = thread->mddev;
- 	struct mddev *mddev2;
--	unsigned int currspeed = 0,
--		 window;
-+	unsigned int currspeed = 0, window;
- 	sector_t max_sectors,j, io_sectors, recovery_done;
- 	unsigned long mark[SYNC_MARKS];
- 	unsigned long update_time;
-@@ -8248,7 +8246,7 @@ void md_do_sync(struct md_thread *thread)
- 	 * 0 == not engaged in resync at all
- 	 * 2 == checking that there is no conflict with another sync
- 	 * 1 == like 2, but have yielded to allow conflicting resync to
--	 *		commense
-+	 *		commence
- 	 * other == active in resync - this many blocks
- 	 *
- 	 * Before starting a resync we must have set curr_resync to
-@@ -8379,7 +8377,7 @@ void md_do_sync(struct md_thread *thread)
- 	/*
- 	 * Tune reconstruction:
- 	 */
--	window = 32*(PAGE_SIZE/512);
-+	window = 32 * (PAGE_SIZE / 512);
- 	pr_debug("md: using %dk window, over a total of %lluk.\n",
- 		 window/2, (unsigned long long)max_sectors/2);
- 
-@@ -9192,7 +9190,6 @@ static void check_sb_changes(struct mddev *mddev, struct md_rdev *rdev)
- 				 * perform resync with the new activated disk */
- 				set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
- 				md_wakeup_thread(mddev->thread);
 -
- 			}
- 			/* device faulty
- 			 * We just want to do the minimum to mark the disk
+ 		if (first_clone) {
+ 			/* do behind I/O ?
+ 			 * Not if there are too many, or cannot
+@@ -1729,9 +1728,8 @@ static int raid1_add_disk(struct mddev *mddev, struct md_rdev *rdev)
+ 		first = last = rdev->saved_raid_disk;
+ 
+ 	for (mirror = first; mirror <= last; mirror++) {
+-		p = conf->mirrors+mirror;
++		p = conf->mirrors + mirror;
+ 		if (!p->rdev) {
+-
+ 			if (mddev->gendisk)
+ 				disk_stack_limits(mddev->gendisk, rdev->bdev,
+ 						  rdev->data_offset << 9);
+@@ -2888,7 +2886,6 @@ static sector_t raid1_sync_request(struct mddev *mddev, sector_t sector_nr,
+ 		if (read_targets == 1)
+ 			bio->bi_opf &= ~MD_FAILFAST;
+ 		generic_make_request(bio);
+-
+ 	}
+ 	return nr_sectors;
+ }
+@@ -3089,7 +3086,7 @@ static int raid1_run(struct mddev *mddev)
+ 	}
+ 
+ 	mddev->degraded = 0;
+-	for (i=0; i < conf->raid_disks; i++)
++	for (i = 0; i < conf->raid_disks; i++)
+ 		if (conf->mirrors[i].rdev == NULL ||
+ 		    !test_bit(In_sync, &conf->mirrors[i].rdev->flags) ||
+ 		    test_bit(Faulty, &conf->mirrors[i].rdev->flags))
+@@ -3124,7 +3121,7 @@ static int raid1_run(struct mddev *mddev)
+ 						  mddev->queue);
+ 	}
+ 
+-	ret =  md_integrity_register(mddev);
++	ret = md_integrity_register(mddev);
+ 	if (ret) {
+ 		md_unregister_thread(&mddev->thread);
+ 		raid1_free(mddev, conf);
 -- 
 2.17.2
 
