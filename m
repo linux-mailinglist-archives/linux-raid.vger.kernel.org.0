@@ -2,92 +2,65 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EE89D3852B
-	for <lists+linux-raid@lfdr.de>; Fri,  7 Jun 2019 09:40:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2547B388E4
+	for <lists+linux-raid@lfdr.de>; Fri,  7 Jun 2019 13:22:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727752AbfFGHkP (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 7 Jun 2019 03:40:15 -0400
-Received: from smtp4.iitb.ac.in ([103.21.127.18]:46304 "EHLO smtp1.iitb.ac.in"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725497AbfFGHkP (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 7 Jun 2019 03:40:15 -0400
-X-Greylist: delayed 3735 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 Jun 2019 03:40:14 EDT
-Received: from ldns2.iitb.ac.in (ldns2.iitb.ac.in [10.200.12.2])
-        by smtp1.iitb.ac.in (Postfix) with SMTP id 68576105945D
-        for <linux-raid@vger.kernel.org>; Fri,  7 Jun 2019 12:02:11 +0530 (IST)
-Received: (qmail 32253 invoked by uid 510); 7 Jun 2019 12:02:06 +0530
-X-Qmail-Scanner-Diagnostics: from 10.200.1.25 by ldns2 (envelope-from <rws@aero.iitb.ac.in>, uid 501) with qmail-scanner-2.11
- spamassassin: 3.4.1. mhr: 1.0. {clamdscan: 0.100.0/25472} 
- Clear:RC:1(10.200.1.25):SA:0(1.5/7.0):. Processed in 3.223095 secs; 07 Jun 2019 12:02:06 +0530
-X-Spam-Checker-Version: SpamAssassin 3.4.1 (2015-04-28) on ldns2.iitb.ac.in
-X-Spam-Level: *
-X-Spam-Status: No, score=1.5 required=7.0 tests=BAYES_50,IITB_ORIG,
-        MISSING_HEADERS,PROPER_IITB_MSGID autolearn=disabled version=3.4.1
-X-Spam-Pyzor: Reported 1 times.
-X-Envelope-From: rws@aero.iitb.ac.in
-X-Qmail-Scanner-Mime-Attachments: |
-X-Qmail-Scanner-Zip-Files: |
-Received: from unknown (HELO ldns2.iitb.ac.in) (10.200.1.25)
-  by ldns2.iitb.ac.in with SMTP; 7 Jun 2019 12:02:03 +0530
-Received: from vayu.aero.iitb.ac.in (vayu.aero.iitb.ac.in [10.101.1.1])
-        by ldns2.iitb.ac.in (Postfix) with ESMTP id E507834194A;
-        Fri,  7 Jun 2019 12:01:54 +0530 (IST)
-Received: from localhost (localhost [127.0.0.1])
-        by vayu.aero.iitb.ac.in (Postfix) with ESMTP id C66148902E548;
-        Fri,  7 Jun 2019 12:01:54 +0530 (IST)
-Received: from vayu.aero.iitb.ac.in ([127.0.0.1])
-        by localhost (vayu.aero.iitb.ac.in [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Dsp2o8aWBuLF; Fri,  7 Jun 2019 12:01:54 +0530 (IST)
-Received: from localhost (localhost [127.0.0.1])
-        by vayu.aero.iitb.ac.in (Postfix) with ESMTP id CBA298902E540;
-        Fri,  7 Jun 2019 12:01:53 +0530 (IST)
-X-Virus-Scanned: amavisd-new at aero.iitb.ac.in
-Received: from vayu.aero.iitb.ac.in ([127.0.0.1])
-        by localhost (vayu.aero.iitb.ac.in [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id XJzHEtFw4Nf5; Fri,  7 Jun 2019 12:01:53 +0530 (IST)
-Received: from vayu.aero.iitb.ac.in (vayu.aero.iitb.ac.in [10.101.1.1])
-        by vayu.aero.iitb.ac.in (Postfix) with ESMTP id 752AD8902E537;
-        Fri,  7 Jun 2019 12:01:49 +0530 (IST)
-Date:   Fri, 7 Jun 2019 12:01:49 +0530 (IST)
-From:   Martins Henry <rws@aero.iitb.ac.in>
-Message-ID: <630023291.60470.1559889109394.JavaMail.zimbra@aero.iitb.ac.in>
-Subject: Thanks and I wait for your answer
+        id S1728199AbfFGLWV (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 7 Jun 2019 07:22:21 -0400
+Received: from use.bitfolk.com ([85.119.80.223]:44541 "EHLO mail.bitfolk.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727754AbfFGLWU (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 7 Jun 2019 07:22:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bitfolk.com; s=alpha;
+        h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:Subject:To:From:Date; bh=sesVp8mbKCuT5JjDQezLR6ocih2Ib8g9D61RxSbbNco=;
+        b=jj9woDaZc3ZDqmDh+Vhqmb2fisMsG+R6lSGIaXqwk2u8+mJ0s8VGofNni0X61tWeXf8tdG+kN78WoEaOD8cx94FhNLvkmxMu6WUuX3Llma9gvxvexa1LYhKtB0uLHYnpVbfUJokq2qLDNINe4jcEEnslOY86ctXmlnUVsf6r/gz4fiN9AtsWVuWTMwzG/FIi2KCpP0SKXaKBEK0auIINRiEG1EZyzLgub/Eaj7qJ+fRm6rfUevPUDmx8omHVd5hsP6dxJVCiVyvdeCcPTyZ6fWfgWghv659NlHE1mt/lJUyVFmuDjgUVgcl9vDjNUp9NWJnaSmLlUYy6ncnTWdRWpw==;
+Received: from andy by mail.bitfolk.com with local (Exim 4.84_2)
+        (envelope-from <andy@strugglers.net>)
+        id 1hZCwt-00080z-QB
+        for linux-raid@vger.kernel.org; Fri, 07 Jun 2019 11:22:19 +0000
+Date:   Fri, 7 Jun 2019 11:22:19 +0000
+From:   Andy Smith <andy@strugglers.net>
+To:     linux-raid@vger.kernel.org
+Subject: Re: RAID-1 can (sometimes) be 3x faster than RAID-10
+Message-ID: <20190607112219.GA4569@bitfolk.com>
+Mail-Followup-To: linux-raid@vger.kernel.org
+References: <20190529194136.GW4569@bitfolk.com>
+ <6b34f202-65c4-b6f9-0ae1-cbb517c2b8f2@suse.com>
+ <20190601053925.GO4569@bitfolk.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.101.1.5]
-X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF11 (Win)/8.8.12_GA_3794)
-Thread-Index: Z4di5DXkV78PrTTCqXhStc9XBmMYjg==
-Thread-Topic: Thanks and I wait for your answer
-To:     unlisted-recipients:; (no To-header on input)
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190601053925.GO4569@bitfolk.com>
+OpenPGP: id=BF15490B; url=http://strugglers.net/~andy/pubkey.asc
+X-URL:  http://strugglers.net/wiki/User:Andy
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: andy@strugglers.net
+X-SA-Exim-Scanned: No (on mail.bitfolk.com); SAEximRunCond expanded to false
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hello,
+On Sat, Jun 01, 2019 at 05:39:25AM +0000, Andy Smith wrote:
+> On Fri, May 31, 2019 at 09:43:35AM +0800, Guoqing Jiang wrote:
+> > There are some optimizations in raid1's read_balance for ssd, unfortunately,
+> > raid10 didn't have similar code.
 
-I am Martin Henry, An American Citizen; I am the personal secretary to
-Mr. Donald Railton, the controller of a Lottery Company. Please I am
-having big problem now, I have a 6yrs old daughter who has leukemia, a
-disease of the blood, and she needs a bone marrow transplant or she
-will die.
+[…]
 
-Please I am only asking for your help and you will benefit from it
-also. As an insider with Lottery Firm, working as the personal
-secretary to the controller, I want you to send me your name to play,
-I have some numbers that are going to win, stored in his secret data
-system in the office. The Lottery is an online entry with credit card
-anywhere with a name and address. All I want you to do is to send your
-name to play it and I will send confirmation to you.
+> Is it just that no one has tried to apply the same optimizations to
+> RAID-10, or is it technically difficult/impossible to do this in
+> RAID-10?
 
-I will play with my card on your name and the Prize will be shared
-equally between us. Immediately the results are released they will
-contact you for payment as the oversea winner. The lotto can be played
-with 9.00 dollars, or 50 dollars but the prize will be Millions.
-Remember that I am playing on your name with my card; I just want to
-front you for this, because I need this money to save the life of my
-little daughter.
+Guoqing sent me a patch off-list that implements these same device
+selection optimizations to RAID-10, and it seems to work. RAID-10
+random read performance in this setup is now the same as RAID-1
+(both very near to fastest device) and sequential read is even
+better than RAID-1.
 
-Thanks and I wait for your answer
-Martin Henry.
+    http://strugglers.net/~andy/blog/2019/06/06/linux-raid-10-fixed-on-imbalanced-devices/
+
+Cheers,
+Andy
