@@ -2,129 +2,102 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D53CD3C8BE
-	for <lists+linux-raid@lfdr.de>; Tue, 11 Jun 2019 12:21:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F272A3CE93
+	for <lists+linux-raid@lfdr.de>; Tue, 11 Jun 2019 16:23:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405310AbfFKKVF (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 11 Jun 2019 06:21:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39784 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405303AbfFKKVF (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 11 Jun 2019 06:21:05 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5AEF713A4D;
-        Tue, 11 Jun 2019 10:21:05 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-8-28.pek2.redhat.com [10.72.8.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 660A1100033E;
-        Tue, 11 Jun 2019 10:21:02 +0000 (UTC)
+        id S2388194AbfFKOXF (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 11 Jun 2019 10:23:05 -0400
+Received: from arcturus.uberspace.de ([185.26.156.30]:55564 "EHLO
+        arcturus.uberspace.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387767AbfFKOXF (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 11 Jun 2019 10:23:05 -0400
+X-Greylist: delayed 402 seconds by postgrey-1.27 at vger.kernel.org; Tue, 11 Jun 2019 10:23:05 EDT
+Received: (qmail 23080 invoked from network); 11 Jun 2019 14:16:21 -0000
+Received: from localhost (HELO localhost) (127.0.0.1)
+  by arcturus.uberspace.de with SMTP; 11 Jun 2019 14:16:21 -0000
+Date:   Tue, 11 Jun 2019 16:16:21 +0200
+From:   Andreas Klauer <Andreas.Klauer@metamorpher.de>
+To:     Colt Boyd <coltboyd@gmail.com>
+Cc:     linux-raid@vger.kernel.org
 Subject: Re: RAID-6 aborted reshape
-To:     ColtBoyd@Gmail.com, linux-raid@vger.kernel.org
+Message-ID: <20190611141621.GA16779@metamorpher.de>
 References: <CANrzNyh-dSfxGojcQqdg+FeycdvPEfH_0qJwYFQCFcVeKGgMhQ@mail.gmail.com>
- <008b01d52000$d1628040$742780c0$@Gmail.com>
-From:   Xiao Ni <xni@redhat.com>
-Message-ID: <039a6e10-b3f7-a803-2895-98068ea9de06@redhat.com>
-Date:   Tue, 11 Jun 2019 18:21:01 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
 MIME-Version: 1.0
-In-Reply-To: <008b01d52000$d1628040$742780c0$@Gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Tue, 11 Jun 2019 10:21:05 +0000 (UTC)
+In-Reply-To: <CANrzNyh-dSfxGojcQqdg+FeycdvPEfH_0qJwYFQCFcVeKGgMhQ@mail.gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+On Sat, Jun 08, 2019 at 10:47:30AM -0500, Colt Boyd wrote:
+> I’ve also since tried to reassemble it with the following create but
+> the XFS fs is not accessible:
+> 'mdadm --create /dev/md0 --data-offset=1024 --level=6 --raid-devices=5
+> --chunk=1024K --name=OMV:0 /dev/sdb1 /dev/sde1 /dev/sdc1 /dev/sdd1
+> /dev/sdf1 --assume-clean --readonly'
 
+Well, all sorts of things can go wrong with a re-create.
+You should be using overlays for such experiments.
 
-On 06/11/2019 10:53 AM, Colt Boyd wrote:
-> Is there anything that can be done?
->
-> -----Original Message-----
-> From: Colt Boyd <coltboyd@gmail.com>
-> Sent: Saturday, June 8, 2019 10:48 AM
-> To: linux-raid@vger.kernel.org
-> Subject: RAID-6 aborted reshape
->
-> I was resizing a raid6 array with a internal write intent bitmap from
-> 5 3TB drives (in RAID6) to 6 drives. It was aborted very early in reshape via reboot and then reassembled with:
-> 'mdadm -A /dev/md0 --force --verbose --update=revert-reshape --invalid-backup /dev/sdb1 /dev/sdc1 /dev/sdd1 /dev/sde1 /dev/sdf1 /dev/sdg1'
+https://raid.wiki.kernel.org/index.php/Recovering_a_failed_software_RAID#Making_the_harddisks_read-only_using_an_overlay_file
 
-Does this command finish? I tried this myself with this command. The 
-filesystem is good after this command.
-I interrupt the reshape by `mdadm -S /dev/md0` before assembling it.
+Also, which kernel version are you running?
 
-Then I did another test. I interrupted the reshape by `echo b > 
-/proc/sysrq-trigger`. Then tried to assemble the raid
-by your command. It gave the error message:
+I think there was a RAID6 bug recently in kernel 5.1.3 or so.
 
-[root@dell-per720-08 home]# mdadm -A /dev/md0 --force --verbose 
---update=revert-reshape --invalid-backup /dev/loop[0-4]
-mdadm: looking for devices for /dev/md0
-mdadm: Reshape position is not suitably aligned.
-mdadm: Try normal assembly and stop again
+https://www.spinics.net/lists/raid/msg62645.html
 
+> /dev/sdg1:
+>           Magic : a92b4efc
+>         Version : 1.2
+>     Feature Map : 0x1
+>      Array UUID : f8fdf8d4:d173da32:eaa97186:eaf88ded
+>            Name : OMV:0
+>   Creation Time : Mon Feb 24 18:19:36 2014
+>      Raid Level : raid6
+>    Raid Devices : 6
+> 
+>  Avail Dev Size : 5858529280 (2793.56 GiB 2999.57 GB)
+>      Array Size : 11717054464 (11174.25 GiB 11998.26 GB)
+>   Used Dev Size : 5858527232 (2793.56 GiB 2999.57 GB)
+>     Data Offset : 2048 sectors
+>    Super Offset : 8 sectors
+>    Unused Space : before=1960 sectors, after=2048 sectors
+>           State : clean
+>     Device UUID : 92e022c9:ee6fbc26:74da4bcc:5d0e0409
+> 
+> Internal Bitmap : 8 sectors from superblock
+>     Update Time : Thu Jun  6 10:24:34 2019
+>   Bad Block Log : 512 entries available at offset 72 sectors
+>        Checksum : 8f0d9eb9 - correct
+>          Events : 1010399
+> 
+>          Layout : left-symmetric
+>      Chunk Size : 1024K
+> 
+>    Device Role : Active device 5
+>    Array State : AAAAAA ('A' == active, '.' == missing, 'R' == replacing)
 
-Then I used this command to try to assemble it:
-mdadm -A /dev/md0  --verbose  --invalid-backup /dev/loop[0-4]
+This already believes to have 6 drives, not in mid-reshape.
+What you created has 5 drives... that's a bit odd.
 
-The filesystem is good too.
+It could still be normal, metadata for drives that get kicked out 
+is no longer updated after all, and I haven't tested it myself...
 
-By the way I used the latest upstream version.
+--examine of the other drives (before re-create) would be interesting.
+If those are not available, maybe syslogs of the original assembly, 
+reshape and subsequent recreate.
+
+Otherwise you have to look at the raw data (or try blindly) 
+to figure out the data layout.
+
+Please use overlays for experiments...
+
+Good luck.
 
 Regards
-Xiao
->
-> When I reassembled it this way I incorrectly thought the backup file was zero bytes. It wasn't. I still have the intact backup file.
->
-> I’ve also since tried to reassemble it with the following create but the XFS fs is not accessible:
-> 'mdadm --create /dev/md0 --data-offset=1024 --level=6 --raid-devices=5 --chunk=1024K --name=OMV:0 /dev/sdb1 /dev/sde1 /dev/sdc1 /dev/sdd1
-> /dev/sdf1 --assume-clean --readonly'
->
-> I can see the XFS FS on the drives, example:
-> root@OMV1:~# dd if=/dev/sde1 bs=512k count=5 | hexdump -C <snip>
-> 00200000  58 46 53 42 00 00 10 00  00 00 00 00 82 f2 c3 00  |XFSB............|
-> 00200010  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-> 00200020  4e 2b 04 64 e8 1b 49 d9  a5 20 b5 74 79 94 52 f8  |N+.d..I.. .ty.R.| <snip>
->
-> This is what it looked like immediately following the aborted reshape and before attempting to recreate it. This is from the drive that was being added at the time.
->
-> /dev/sdg1:
->            Magic : a92b4efc
->          Version : 1.2
->      Feature Map : 0x1
->       Array UUID : f8fdf8d4:d173da32:eaa97186:eaf88ded
->             Name : OMV:0
->    Creation Time : Mon Feb 24 18:19:36 2014
->       Raid Level : raid6
->     Raid Devices : 6
->
->   Avail Dev Size : 5858529280 (2793.56 GiB 2999.57 GB)
->       Array Size : 11717054464 (11174.25 GiB 11998.26 GB)
->    Used Dev Size : 5858527232 (2793.56 GiB 2999.57 GB)
->      Data Offset : 2048 sectors
->     Super Offset : 8 sectors
->     Unused Space : before=1960 sectors, after=2048 sectors
->            State : clean
->      Device UUID : 92e022c9:ee6fbc26:74da4bcc:5d0e0409
->
-> Internal Bitmap : 8 sectors from superblock
->      Update Time : Thu Jun  6 10:24:34 2019
->    Bad Block Log : 512 entries available at offset 72 sectors
->         Checksum : 8f0d9eb9 - correct
->           Events : 1010399
->
->           Layout : left-symmetric
->       Chunk Size : 1024K
->
->     Device Role : Active device 5
->     Array State : AAAAAA ('A' == active, '.' == missing, 'R' == replacing)
->
-> Where can I go from here to get this back?
->
-
+Andreas Klauer
