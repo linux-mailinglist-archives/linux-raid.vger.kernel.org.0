@@ -2,308 +2,238 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2519F3D3E7
-	for <lists+linux-raid@lfdr.de>; Tue, 11 Jun 2019 19:23:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70E5C41708
+	for <lists+linux-raid@lfdr.de>; Tue, 11 Jun 2019 23:40:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406016AbfFKRXF (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 11 Jun 2019 13:23:05 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:44430 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405821AbfFKRXF (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 11 Jun 2019 13:23:05 -0400
-Received: by mail-io1-f67.google.com with SMTP id s7so10551670iob.11
-        for <linux-raid@vger.kernel.org>; Tue, 11 Jun 2019 10:23:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=1ku3dYP2qLQ4OqGNJOhHu48By5FPjhdQV0tqee8zSos=;
-        b=U06rj7Q36FVDu+b1hdDDb0jLuLtzrgKVmXDLtjpzoqFJGboucY1VfPh/v/bk6EGqPJ
-         g4TlxN2HMVQdQaG0daakqdi5XTFL7hCJgkjgk4hM75eCl7Vcv6cJAZ93D1Qlg7A3fP7r
-         J1hUhCkITBLpDMC+GI2ygMNzscnYqlLnguXWemWUPs+QBcjJ6ooOoc1JezDlHIm9IxVg
-         1qfJTKtb0ad2bPaS1aw95Idzd8CPF3DXJPaWYi/NJeibZLQCvqjTnLxA8a7XK1hknIdb
-         LqmJWfJAep/+yYyzqDRDXI1mYpEFsn/s3P8euJj87RURzOJKu6yd4jjDFxOYsMgC3MHn
-         RgBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1ku3dYP2qLQ4OqGNJOhHu48By5FPjhdQV0tqee8zSos=;
-        b=cgzdFbUo5IgzoVHbNgwyGiQuOp6u3SPm7GpVW31pQANPdQlDd6GTls1jtI8/Ya7n4R
-         hF5xx4KTxPb17PDwpAsXx41A4Y0/EzDSV/1Gcs9oflz3CTGrhpjh9DlkViQiONPzKUCl
-         ZAHfAPsjR7K8G83IPGC6oRQD8UZYGt57Zo3zO/r208qLx0maxNShZT129A0aj7gshaje
-         iL60Bm+CegIxvUYeYRZRDWq4E1Eml6oD9jY6hIDNKBgf8ed0+fqb2HtTjtdFts73RrJu
-         1lukaOFUuTzFxZVRyMWNFq8TaW+LcdGW9ss8pvt9TflShyN7CJnaHGEveKNpGjjxfOcg
-         MR6w==
-X-Gm-Message-State: APjAAAV1y7HKgFQ9bmmlbnehE+GaFQxEn1EvowbMbmzo0ZIEMWENSsB8
-        OC98JuDBSdLbezawwsCNzcmS3WZUPiFTifFCXnU=
-X-Google-Smtp-Source: APXvYqzskvSjjvlrH1QSooLyfjZ4R6hdpPcAQU+bkL08S2xzCM2E2Nf08KC/TyjsGnCVeM9JexEKS6NU6UgHfR1K69Q=
-X-Received: by 2002:a6b:8b51:: with SMTP id n78mr51098451iod.192.1560273784133;
- Tue, 11 Jun 2019 10:23:04 -0700 (PDT)
+        id S2403843AbfFKVkS (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 11 Jun 2019 17:40:18 -0400
+Received: from mail-40130.protonmail.ch ([185.70.40.130]:38429 "EHLO
+        mail-40130.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387764AbfFKVkS (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 11 Jun 2019 17:40:18 -0400
+Date:   Tue, 11 Jun 2019 21:40:08 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=default; t=1560289214;
+        bh=SPeUsLnQfp3dKglPWtPAMj69N/28pS5yzvXsQX9ZzsM=;
+        h=Date:To:From:Reply-To:Subject:Feedback-ID:From;
+        b=hC358rHpoY92gmMHMyw5zOHRUFbgMsnqKswTKT0MBR50orCzNerWGvIng7LyxK3aY
+         YBAlYFQju8hxTZ2k8G5yK9Gq2fIyOtPn4AjQPgljc2O4Iv0helc5HN/4MhoUmFsZlH
+         znldsoKtIBk6UrJ4ddfLtaHt1xvc30vYoxX+AzMk=
+To:     "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>
+From:   listmailer273 <listmailer273@protonmail.com>
+Reply-To: listmailer273 <listmailer273@protonmail.com>
+Subject: mdadm: /dev/dm-4 not large enough to join array
+Message-ID: <dG0b9ztaXq7nnBqDpNSWA78L_GWp4ZR4ZtYEZSN3QhHJtREVYtNSOhWoVU0BqgPAoPZ4IndRERfrzbLy8dGT6mRBMATSZk8iqLALin2D8r4=@protonmail.com>
+Feedback-ID: Fd2eok_VZvV9qRUlslsjKtrrBxHNHXYlqffBaU6nm5OzC147N48I09ApizhQdIxA2KaFG6TNkp7B5i-05Mz4EQ==:Ext:ProtonMail
 MIME-Version: 1.0
-References: <CANrzNyh-dSfxGojcQqdg+FeycdvPEfH_0qJwYFQCFcVeKGgMhQ@mail.gmail.com>
- <20190611141621.GA16779@metamorpher.de> <CANrzNyiCF3Fhn30pJ_hWVcGyvaMrRBLAWkPD8o4+TpCDSWTkHw@mail.gmail.com>
-In-Reply-To: <CANrzNyiCF3Fhn30pJ_hWVcGyvaMrRBLAWkPD8o4+TpCDSWTkHw@mail.gmail.com>
-From:   Colt Boyd <coltboyd@gmail.com>
-Date:   Tue, 11 Jun 2019 12:22:53 -0500
-Message-ID: <CANrzNyiQQ1BFV87CRi7gE3-k=10Swg6U8cNa2qUpS3oo0ZW32w@mail.gmail.com>
-Subject: Re: RAID-6 aborted reshape
-To:     Andreas Klauer <Andreas.Klauer@metamorpher.de>
-Cc:     linux-raid@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-0.7 required=7.0 tests=ALL_TRUSTED,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FILL_THIS_FORM,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT
+        autolearn=no autolearn_force=no version=3.4.2
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mail.protonmail.ch
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 12:15 PM Colt Boyd <coltboyd@gmail.com> wrote:
->
-> On Tue, Jun 11, 2019 at 9:16 AM Andreas Klauer
-> <Andreas.Klauer@metamorpher.de> wrote:
-> >
-> > On Sat, Jun 08, 2019 at 10:47:30AM -0500, Colt Boyd wrote:
-> > > I=E2=80=99ve also since tried to reassemble it with the following cre=
-ate but
-> > > the XFS fs is not accessible:
-> > > 'mdadm --create /dev/md0 --data-offset=3D1024 --level=3D6 --raid-devi=
-ces=3D5
-> > > --chunk=3D1024K --name=3DOMV:0 /dev/sdb1 /dev/sde1 /dev/sdc1 /dev/sdd=
-1
-> > > /dev/sdf1 --assume-clean --readonly'
-> >
-> > Well, all sorts of things can go wrong with a re-create.
-> > You should be using overlays for such experiments.
-> >
-> > https://raid.wiki.kernel.org/index.php/Recovering_a_failed_software_RAI=
-D#Making_the_harddisks_read-only_using_an_overlay_file
->
-> Thanks, I am now using overlays, but was not during the first hour
-> after disaster. I still have the superblock intact on the 6th device
-> (raid device 5) but the superblocks were overwritten on raid devices
-> 0-4 when I tried the create.
->
-> > Also, which kernel version are you running?
->
-> 4.19.0-0.bpo.2-amd64
->
-> > I think there was a RAID6 bug recently in kernel 5.1.3 or so.
-> >
-> > https://www.spinics.net/lists/raid/msg62645.html
-> >
-> > > /dev/sdg1:
-> > >           Magic : a92b4efc
-> > >         Version : 1.2
-> > >     Feature Map : 0x1
-> > >      Array UUID : f8fdf8d4:d173da32:eaa97186:eaf88ded
-> > >            Name : OMV:0
-> > >   Creation Time : Mon Feb 24 18:19:36 2014
-> > >      Raid Level : raid6
-> > >    Raid Devices : 6
-> > >
-> > >  Avail Dev Size : 5858529280 (2793.56 GiB 2999.57 GB)
-> > >      Array Size : 11717054464 (11174.25 GiB 11998.26 GB)
-> > >   Used Dev Size : 5858527232 (2793.56 GiB 2999.57 GB)
-> > >     Data Offset : 2048 sectors
-> > >    Super Offset : 8 sectors
-> > >    Unused Space : before=3D1960 sectors, after=3D2048 sectors
-> > >           State : clean
-> > >     Device UUID : 92e022c9:ee6fbc26:74da4bcc:5d0e0409
-> > >
-> > > Internal Bitmap : 8 sectors from superblock
-> > >     Update Time : Thu Jun  6 10:24:34 2019
-> > >   Bad Block Log : 512 entries available at offset 72 sectors
-> > >        Checksum : 8f0d9eb9 - correct
-> > >          Events : 1010399
-> > >
-> > >          Layout : left-symmetric
-> > >      Chunk Size : 1024K
-> > >
-> > >    Device Role : Active device 5
-> > >    Array State : AAAAAA ('A' =3D=3D active, '.' =3D=3D missing, 'R' =
-=3D=3D replacing)
-> >
-> > This already believes to have 6 drives, not in mid-reshape.
-> > What you created has 5 drives... that's a bit odd.
-> >
-> > It could still be normal, metadata for drives that get kicked out
-> > is no longer updated after all, and I haven't tested it myself...
-> >
-> > --examine of the other drives (before re-create) would be interesting.
-> > If those are not available, maybe syslogs of the original assembly,
-> > reshape and subsequent recreate.
->
-> The other drives got their superblocks overwritten (with the exception
-> of raid device 5 that was being added). Here are the applicable
-> sections from the syslogs.
->
-> Jun  6 10:12:25 OMV1 kernel: [    2.141772] md/raid:md0: device sde1
-> operational as raid disk 1
-> Jun  6 10:12:25 OMV1 kernel: [    2.141774] md/raid:md0: device sdc1
-> operational as raid disk 2
-> Jun  6 10:12:25 OMV1 kernel: [    2.141789] md/raid:md0: device sdd1
-> operational as raid disk 3
-> Jun  6 10:12:25 OMV1 kernel: [    2.141792] md/raid:md0: device sdf1
-> operational as raid disk 4
-> Jun  6 10:12:25 OMV1 kernel: [    2.141796] md/raid:md0: device sdb1
-> operational as raid disk 0
-> Jun  6 10:12:25 OMV1 kernel: [    2.142877] md/raid:md0: raid level 6
-> active with 5 out of 5 devices, algorithm 2
-> Jun  6 10:12:25 OMV1 kernel: [    2.196783] md0: detected capacity
-> change from 0 to 8998697828352
-> Jun  6 10:12:25 OMV1 kernel: [    3.885628] XFS (md0): Mounting V4 Filesy=
-stem
-> Jun  6 10:12:25 OMV1 kernel: [    4.213947] XFS (md0): Ending clean mount
-> Jun  6 10:12:25 OMV1 kernel: [    4.220989] XFS (md0): Quotacheck
-> needed: Please wait.
-> Jun  6 10:12:25 OMV1 kernel: [    7.200429] XFS (md0): Quotacheck: Done.
-> <snip>
-> Jun  6 10:17:40 OMV1 kernel: [  321.232145] md: reshape of RAID array md0
-> Jun  6 10:17:40 OMV1 systemd[1]: Created slice
-> system-mdadm\x2dgrow\x2dcontinue.slice.
-> Jun  6 10:17:40 OMV1 systemd[1]: Started Manage MD Reshape on /dev/md0.
-> Jun  6 10:17:40 OMV1 systemd[1]: mdadm-grow-continue@md0.service: Main
-> process exited, code=3Dexited, status=3D2/INVALIDARGUMENT
-> Jun  6 10:17:40 OMV1 systemd[1]: mdadm-grow-continue@md0.service: Unit
-> entered failed state.
-> Jun  6 10:17:40 OMV1 systemd[1]: mdadm-grow-continue@md0.service:
-> Failed with result 'exit-code'.
-> Jun  6 10:18:02 OMV1 monit[1170]:
-> 'filesystem_media_4e2b0464-e81b-49d9-a520-b574799452f8' space usage
-> 88.1% matches resource limit [space usage>85.0%]
-> Jun  6 10:18:32 OMV1 monit[1170]:
-> 'filesystem_media_4e2b0464-e81b-49d9-a520-b574799452f8' space usage
-> 88.1% matches resource limit [space usage>85.0%]
-> Jun  6 10:19:02 OMV1 monit[1170]:
-> 'filesystem_media_4e2b0464-e81b-49d9-a520-b574799452f8' space usage
-> 88.1% matches resource limit [space usage>85.0%]
-> Jun  6 10:19:32 OMV1 monit[1170]:
-> 'filesystem_media_4e2b0464-e81b-49d9-a520-b574799452f8' space usage
-> 88.1% matches resource limit [space usage>85.0%]
-> Jun  6 10:20:02 OMV1 monit[1170]:
-> 'filesystem_media_4e2b0464-e81b-49d9-a520-b574799452f8' space usage
-> 88.1% matches resource limit [space usage>85.0%]
-> Jun  6 10:20:32 OMV1 monit[1170]:
-> 'filesystem_media_4e2b0464-e81b-49d9-a520-b574799452f8' space usage
-> 88.1% matches resource limit [space usage>85.0%]
-> Jun  6 10:21:02 OMV1 monit[1170]:
-> 'filesystem_media_4e2b0464-e81b-49d9-a520-b574799452f8' space usage
-> 88.1% matches resource limit [space usage>85.0%]
-> Jun  6 10:21:32 OMV1 monit[1170]:
-> 'filesystem_media_4e2b0464-e81b-49d9-a520-b574799452f8' space usage
-> 88.1% matches resource limit [space usage>85.0%]
-> Jun  6 10:22:02 OMV1 monit[1170]:
-> 'filesystem_media_4e2b0464-e81b-49d9-a520-b574799452f8' space usage
-> 88.1% matches resource limit [space usage>85.0%]
-> Jun  6 10:22:32 OMV1 monit[1170]:
-> 'filesystem_media_4e2b0464-e81b-49d9-a520-b574799452f8' space usage
-> 88.1% matches resource limit [space usage>85.0%]
-> Jun  6 10:23:02 OMV1 monit[1170]:
-> 'filesystem_media_4e2b0464-e81b-49d9-a520-b574799452f8' space usage
-> 88.1% matches resource limit [space usage>85.0%]
-> Jun  6 10:23:32 OMV1 monit[1170]:
-> 'filesystem_media_4e2b0464-e81b-49d9-a520-b574799452f8' space usage
-> 88.1% matches resource limit [space usage>85.0%]
-> Jun  6 10:24:02 OMV1 monit[1170]:
-> 'filesystem_media_4e2b0464-e81b-49d9-a520-b574799452f8' space usage
-> 88.1% matches resource limit [space usage>85.0%]
-> Jun  6 10:24:28 OMV1 systemd[1]: Unmounting /export/Shared...
-> Jun  6 10:24:28 OMV1 systemd[1]: Removed slice
-> system-mdadm\x2dgrow\x2dcontinue.slice.
-> <snip> - server shutting down
-> Jun  6 10:24:28 OMV1 systemd[1]: openmediavault-engined.service:
-> Killing process 1214 (omv-engined) with signal SIGKILL.
+Hi, I'm having trouble readding a disk to an array. The array was created p=
+robably 9 years ago, I've had many instances of drives casually dropping ou=
+t and coming back. Eventually I enabled the write-intent bitmap to handle t=
+he five-day resyncs. (They became essentially immediate.)
 
-There is also these:
+I have a disk now that has dropped, and I'm not able to get it back into th=
+e array. I'm concerned it could be related to an ancient bug regarding v1.x=
+ metadata:
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D500309
 
-Jun  6 10:39:18 OMV1 kernel: [  120.022361] md0: detected capacity
-change from 11998263771136 to 0
-Jun  6 10:39:18 OMV1 kernel: [  120.022371] md: md0 stopped.
-Jun  6 10:40:39 OMV1 kernel: [  200.948894] md: md0 stopped.
-Jun  6 10:40:39 OMV1 kernel: [  201.692933] md: md0 stopped.
-Jun  6 10:41:11 OMV1 kernel: [  233.338779] md: md0 stopped.
-Jun  6 10:43:11 OMV1 kernel: [  353.828080] md: md0 stopped.
-Jun  6 10:43:55 OMV1 kernel: [  397.202545] md: md0 stopped.
-Jun  6 10:44:12 OMV1 kernel: [  414.195911] md: md0 stopped.
-Jun  6 10:44:15 OMV1 kernel: [  417.271865] md: md0 stopped.
-Jun  6 10:44:45 OMV1 kernel: [  447.195016] md: md0 stopped.
-Jun  6 10:44:47 OMV1 kernel: [  449.499203] md: md0 stopped.
-Jun  6 10:44:47 OMV1 kernel: [  449.511291] md/raid:md0: device sdb1
-operational as raid disk 0
-Jun  6 10:44:47 OMV1 kernel: [  449.511294] md/raid:md0: device sdf1
-operational as raid disk 4
-Jun  6 10:44:47 OMV1 kernel: [  449.511297] md/raid:md0: device sdd1
-operational as raid disk 3
-Jun  6 10:44:47 OMV1 kernel: [  449.511299] md/raid:md0: device sdc1
-operational as raid disk 2
-Jun  6 10:44:47 OMV1 kernel: [  449.511302] md/raid:md0: device sde1
-operational as raid disk 1
-Jun  6 10:44:47 OMV1 kernel: [  449.512553] md/raid:md0: raid level 6
-active with 5 out of 6 devices, algorithm 2
-Jun  6 10:44:47 OMV1 kernel: [  449.554738] md0: detected capacity
-change from 0 to 11998263771136
-Jun  6 10:44:48 OMV1 postfix/smtp[2514]: 9672F6B4: replace: header
-Subject: DegradedArray event on /dev/md0:OMV1: Subject:
-[OMV1.veldanet.local] DegradedArray event on /dev/md0:OMV1
-Jun  6 10:46:25 OMV1 kernel: [  547.047912] XFS (md0): Mounting V4 Filesyst=
-em
-Jun  6 10:46:28 OMV1 kernel: [  550.226215] XFS (md0): Log
-inconsistent (didn't find previous header)
-Jun  6 10:46:28 OMV1 kernel: [  550.226224] XFS (md0): failed to find log h=
-ead
-Jun  6 10:46:28 OMV1 kernel: [  550.226227] XFS (md0): log
-mount/recovery failed: error -5
-Jun  6 10:46:28 OMV1 kernel: [  550.226264] XFS (md0): log mount failed
-Jun  6 10:48:29 OMV1 kernel: [  671.505718] md0: detected capacity
-change from 11998263771136 to 0
-Jun  6 10:48:29 OMV1 kernel: [  671.505731] md: md0 stopped.
-Jun  6 10:48:53 OMV1 kernel: [  695.670961] md: md0 stopped.
-Jun  6 10:48:53 OMV1 kernel: [  695.682191] md/raid:md0: device sdb1
-operational as raid disk 0
-Jun  6 10:48:53 OMV1 kernel: [  695.682193] md/raid:md0: device sdg1
-operational as raid disk 5
-Jun  6 10:48:53 OMV1 kernel: [  695.682195] md/raid:md0: device sdf1
-operational as raid disk 4
-Jun  6 10:48:53 OMV1 kernel: [  695.682197] md/raid:md0: device sdd1
-operational as raid disk 3
-Jun  6 10:48:53 OMV1 kernel: [  695.682199] md/raid:md0: device sdc1
-operational as raid disk 2
-Jun  6 10:48:53 OMV1 kernel: [  695.682200] md/raid:md0: device sde1
-operational as raid disk 1
-Jun  6 10:48:53 OMV1 kernel: [  695.683023] md/raid:md0: raid level 6
-active with 6 out of 6 devices, algorithm 2
-Jun  6 10:48:53 OMV1 kernel: [  695.760209] md0: detected capacity
-change from 0 to 11998263771136
-Jun  6 10:51:24 OMV1 kernel: [  846.532095] XFS (md0): Mounting V4 Filesyst=
-em
-Jun  6 10:51:27 OMV1 kernel: [  849.779906] XFS (md0): Log
-inconsistent (didn't find previous header)
-Jun  6 10:51:27 OMV1 kernel: [  849.779924] XFS (md0): failed to find log h=
-ead
-Jun  6 10:51:27 OMV1 kernel: [  849.779931] XFS (md0): log
-mount/recovery failed: error -5
-Jun  6 10:51:27 OMV1 kernel: [  849.780000] XFS (md0): log mount failed
-Jun  6 10:52:22 OMV1 systemd[1]: Starting Cleanup of Temporary Directories.=
-..
-Jun  6 10:52:22 OMV1 systemd[1]: Started Cleanup of Temporary Directories.
-Jun  6 10:52:52 OMV1 kernel: [  934.000472] md0: detected capacity
-change from 11998263771136 to 0
-Jun  6 10:52:52 OMV1 kernel: [  934.000480] md: md0 stopped.
 
->
-> > Otherwise you have to look at the raw data (or try blindly)
-> > to figure out the data layout.
-> >
-> > Please use overlays for experiments...
-> >
-> > Good luck.
->
-> I am now, if only I was to start with this may be easier. Anyway to
-> rebuild superblocks from the remaing drive and / or the backup file?
-> And if so, would that be better?
->
-> Thanks,
-> Colt
->
-> > Regards
-> > Andreas Klauer
+# mdadm --add /dev/md104  /dev/dm-4
+mdadm: /dev/dm-4 not large enough to join array
+
+Has anyone seen this, or know how I might recover from this state?
+
+=3D=3D=3D=3D=3D=3D=3D=3D
+Array information:
+
+# mdadm --version
+mdadm - v4.1 - 2018-10-01
+# uname -a
+Linux Host 4.14.120-gentoo #1 SMP PREEMPT Sat May 18 13:16:28 EDT 2019
+x86_64 Intel(R) Xeon(R) CPU W3690 @ 3.47GHz GenuineIntel GNU/Linux
+
+The disk just fell out of the array a day ago. (Running Gentoo sources
+with the latest mdadm.)
+
+The array,
+md104 : active raid6 dm-8[6] dm-6[11] dm-5[8] dm-3[12] dm-2[9] dm-1[10]
+dm-0[7]
+       23442102912 blocks super 1.2 level 6, 64k chunk, algorithm 2
+[8/7] [U_UUUUUU]
+
+and detail,
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+# mdadm --detail /dev/md104
+/dev/md104:
+Version : 1.2
+Creation Time : Wed Feb 26 00:01:32 2014
+Raid Level : raid6
+Array Size : 23442102912 (22356.13 GiB 24004.71 GB)
+Used Dev Size : 3907017152 (3726.02 GiB 4000.79 GB)
+Raid Devices : 8
+Total Devices : 7
+Persistence : Superblock is persistent
+
+Update Time : Wed Jun  5 21:43:57 2019
+State : clean, degraded
+Active Devices : 7
+Working Devices : 7
+Failed Devices : 0
+Spare Devices : 0
+
+Layout : left-symmetric
+Chunk Size : 64K
+
+Consistency Policy : resync
+
+Name : Host:104  (local to host Host)
+UUID : 8627xxxx:uuuu:iiii:dddda772
+Events : 23692137
+
+Number   Major   Minor   RaidDevice State
+7     252        0        0      active sync   /dev/dm-0
+-       0        0        1      removed
+6     252        8        2      active sync   /dev/dm-8
+10     252        1        3      active sync   /dev/dm-1
+9     252        2        4      active sync   /dev/dm-2
+8     252        5        5      active sync   /dev/dm-5
+11     252        6        6      active sync   /dev/dm-6
+12     252        3        7      active sync   /dev/dm-3
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+
+
+and one of the existing disks,
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+# mdadm --examine /dev/dm-1
+/dev/dm-1:
+           Magic : a92b4efc
+         Version : 1.2
+     Feature Map : 0x0
+      Array UUID : 8627xxxx:uuuu:iiii:dddda772
+            Name : Host:104  (local to host Host)
+   Creation Time : Wed Feb 26 00:01:32 2014
+      Raid Level : raid6
+    Raid Devices : 8
+
+  Avail Dev Size : 7814035376 (3726.02 GiB 4000.79 GB)
+      Array Size : 23442102912 (22356.13 GiB 24004.71 GB)
+   Used Dev Size : 7814034304 (3726.02 GiB 4000.79 GB)
+     Data Offset : 640 sectors
+    Super Offset : 8 sectors
+    Unused Space : before=3D552 sectors, after=3D1712 sectors
+           State : active
+     Device UUID : 85c9xxxx:uuuu:iiii:dddd
+
+     Update Time : Wed Jun  5 21:45:49 2019
+   Bad Block Log : 512 entries available at offset 72 sectors
+        Checksum : ac693b84 - correct
+          Events : 23692354
+
+          Layout : left-symmetric
+      Chunk Size : 64K
+
+    Device Role : Active device 3
+    Array State : A.AAAAAA ('A' =3D=3D active, '.' =3D=3D missing, 'R' =3D=
+=3D replacing)
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+
+Consider the disk in question (must be disk 2), /dev/dm-4.
+
+# fdisk -l /dev/dm-4
+Disk /dev/dm-4: 3.7 TiB, 4000786767872 bytes, 7814036656 sectors
+Units: sectors of 1 * 512 =3D 512 bytes
+Sector size (logical/physical): 512 bytes / 4096 bytes
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+
+an examine,
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+# mdadm --examine /dev/dm-4
+/dev/dm-4:
+           Magic : a92b4efc
+         Version : 1.2
+     Feature Map : 0x1
+      Array UUID : 8627xxxx:uuuu:iiii:dddda772
+            Name : Host:104  (local to host Host)
+   Creation Time : Wed Feb 26 00:01:32 2014
+      Raid Level : raid6
+    Raid Devices : 8
+
+  Avail Dev Size : 7814035376 (3726.02 GiB 4000.79 GB)
+      Array Size : 23442102912 (22356.13 GiB 24004.71 GB)
+   Used Dev Size : 7814034304 (3726.02 GiB 4000.79 GB)
+     Data Offset : 640 sectors
+    Super Offset : 8 sectors
+    Unused Space : before=3D560 sectors, after=3D1712 sectors
+           State : active
+     Device UUID : eb03xxxx:uuuu:iiii:dddd
+
+Internal Bitmap : 8 sectors from superblock
+     Update Time : Sun Jun  2 16:32:03 2019
+        Checksum : e4922d44 - correct
+          Events : 23087316
+
+          Layout : left-symmetric
+      Chunk Size : 64K
+
+    Device Role : Active device 1
+    Array State : AAAAAAAA ('A' =3D=3D active, '.' =3D=3D missing, 'R' =3D=
+=3D replacing)
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+
+
+The array UUID is the same:
+# mdadm --examine /dev/dm-4 | grep Array.UUID | ~/bin/crc32
+3D3E1222
+# mdadm --examine /dev/dm-1 | grep Array.UUID | ~/bin/crc32
+3D3E1222
+The Host name is the same on the disks and the array.
+
+Just to be sure the disk isn't having a problem at the start or end around =
+some metadata,
+# dd if=3D/dev/dm-1 bs=3D65536 skip=3D$(( 7814035376 / (65536 / 512) - 1000=
+ )) of=3D/dev/null
+1010+1 records in / 1010+1 records out
+66215936 bytes (66 MB, 63 MiB) copied, 1.19822 s, 55.3 MB/s
+
+# dd if=3D/dev/dm-4 bs=3D65536 skip=3D$(( 7814035376 / (65536 / 512) - 1000=
+ )) of=3D/dev/null
+1010+1 records in / 1010+1 records out
+66215936 bytes (66 MB, 63 MiB) copied, 1.70529 s, 38.8 MB/s
+
+# dd if=3D/dev/dm-4 bs=3D65536 count=3D10000 of=3D/dev/null
+10000+0 records in / 10000+0 records out
+655360000 bytes (655 MB, 625 MiB) copied, 4.49685 s, 146 MB/s
+
+Both disks are WD40EFRX.
+
+
+Since having this error, I saw the relation of the above bug to the write-i=
+ntent bitmap, so I turned it
+off: mdadm --grow /dev/md104 --bitmap=3Dnone /dev/md104.
+The result is still the same: "mdadm: /dev/dm-4 not large enough to join ar=
+ray".
+
+All of the information above is after turning off the write-intent bitmap f=
+or the array. Yesterday I tried downgrading to mdadm 3.4 and the same messa=
+ge. "<mdadm - v3.4 - 28th January 2016". "mdadm: /dev/dm-4 not large enough=
+ to join array".
+
+Does anyone know if this is a bug, or how I might recover from this state?
