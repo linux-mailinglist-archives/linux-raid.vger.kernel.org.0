@@ -2,91 +2,68 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B3F9B417E3
-	for <lists+linux-raid@lfdr.de>; Wed, 12 Jun 2019 00:06:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1E2A4261D
+	for <lists+linux-raid@lfdr.de>; Wed, 12 Jun 2019 14:41:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407857AbfFKWGD (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 11 Jun 2019 18:06:03 -0400
-Received: from arcturus.uberspace.de ([185.26.156.30]:34070 "EHLO
-        arcturus.uberspace.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405693AbfFKWGD (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 11 Jun 2019 18:06:03 -0400
-Received: (qmail 22724 invoked from network); 11 Jun 2019 22:05:57 -0000
-Received: from localhost (HELO localhost) (127.0.0.1)
-  by arcturus.uberspace.de with SMTP; 11 Jun 2019 22:05:57 -0000
-Date:   Wed, 12 Jun 2019 00:05:53 +0200
-From:   Andreas Klauer <Andreas.Klauer@metamorpher.de>
-To:     Colt Boyd <coltboyd@gmail.com>
-Cc:     linux-raid@vger.kernel.org
-Subject: Re: RAID-6 aborted reshape
-Message-ID: <20190611220553.GA23970@metamorpher.de>
-References: <CANrzNyh-dSfxGojcQqdg+FeycdvPEfH_0qJwYFQCFcVeKGgMhQ@mail.gmail.com>
- <20190611141621.GA16779@metamorpher.de>
- <CANrzNyiCF3Fhn30pJ_hWVcGyvaMrRBLAWkPD8o4+TpCDSWTkHw@mail.gmail.com>
- <CANrzNyiQQ1BFV87CRi7gE3-k=10Swg6U8cNa2qUpS3oo0ZW32w@mail.gmail.com>
+        id S2409121AbfFLMk4 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 12 Jun 2019 08:40:56 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:46384 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2409117AbfFLMk4 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 12 Jun 2019 08:40:56 -0400
+Received: from mail-wr1-f69.google.com ([209.85.221.69])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <guilherme.piccoli@canonical.com>)
+        id 1hb2Yg-0006O2-E8
+        for linux-raid@vger.kernel.org; Wed, 12 Jun 2019 12:40:54 +0000
+Received: by mail-wr1-f69.google.com with SMTP id q2so7298757wrr.18
+        for <linux-raid@vger.kernel.org>; Wed, 12 Jun 2019 05:40:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VrK+5w6wVdk7h4HwgR7kIxMZIIwMUW/I2VBxJs4ejPI=;
+        b=Q/6CcxcQfT0yyTveOMmSfgTUvV7D5cBPpe/vM/GXhJXDorXD4qpo+sITWW9i8L9YM7
+         uqw2e+2id/nL5diL/Fwi3Rq52rq3lPLL8uInN7bMPOhVgIF+45bO8pfTlEGr5XgYKcJQ
+         K2BBdTbLbQo8k24BqmBCaUI+l+cj9jTDIUKcVM7bDoPEsoPp6gpVB50qrFgkZrwF1cKk
+         TkxIzN76pSPO6mdjUmQOM6kbsAC/A5lGiL/mIRMhSFFR59OvpljydrrRK5wMVQGfeCxy
+         ejxoYhvO/HfoD/AtFRBi1P1aQ6nD4edRTQrAHRfqcEgN5wzeytL6b4oxDUxZ6V0D/OIE
+         oY7Q==
+X-Gm-Message-State: APjAAAVmct2pUrbadyHJJgARNkqstg9yWOMHkN9RZy36OB27GcfdJCFJ
+        okKR3MIJe2qrch8UNoOobCFDQGsjYIC+sYSvf4sgD9xHx1dJZZrcHcZcc7J4b1z4PuO54FwcjvL
+        QCig9jVNgXSfu5GWnpEYRzaPg+JsWjfJngu7fHYhPGX6UINOtcKh8N6I=
+X-Received: by 2002:a5d:53d2:: with SMTP id a18mr4871537wrw.98.1560343253834;
+        Wed, 12 Jun 2019 05:40:53 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyBvfuiEuBGRitbfJWHXkAkAE1jkdz65wRyMFsexu514qahpb7YWU71NUv1iIYi0hX0WSYub+LVT8liks8ZR0A=
+X-Received: by 2002:a5d:53d2:: with SMTP id a18mr4871531wrw.98.1560343253700;
+ Wed, 12 Jun 2019 05:40:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANrzNyiQQ1BFV87CRi7gE3-k=10Swg6U8cNa2qUpS3oo0ZW32w@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <20190523172345.1861077-1-songliubraving@fb.com> <20190523172345.1861077-2-songliubraving@fb.com>
+In-Reply-To: <20190523172345.1861077-2-songliubraving@fb.com>
+From:   Guilherme Piccoli <gpiccoli@canonical.com>
+Date:   Wed, 12 Jun 2019 09:40:17 -0300
+Message-ID: <CAHD1Q_wraiFkLP72pFfGhON+KZe7yo3ktXvsAA40QVcXvzviSA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] md/raid0: Do not bypass blocking queue entered for
+ raid0 bios
+To:     stable@vger.kernel.org, gregkh@linuxfoundation.org,
+        sashal@kernel.org
+Cc:     Song Liu <songliubraving@fb.com>,
+        linux-raid <linux-raid@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
+        Song Liu <liu.song.a23@gmail.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 12:22:53PM -0500, Colt Boyd wrote:
-> > Jun  6 10:12:25 OMV1 kernel: [    2.142877] md/raid:md0: raid level 6
-> > active with 5 out of 5 devices, algorithm 2
-> > Jun  6 10:12:25 OMV1 kernel: [    2.196783] md0: detected capacity
-> > change from 0 to 8998697828352
-> > Jun  6 10:12:25 OMV1 kernel: [    3.885628] XFS (md0): Mounting V4 Filesystem
-> > Jun  6 10:12:25 OMV1 kernel: [    4.213947] XFS (md0): Ending clean mount
-> 
-> There is also these:
-> 
-> Jun  6 10:44:47 OMV1 kernel: [  449.554738] md0: detected capacity
-> change from 0 to 11998263771136
-> Jun  6 10:44:48 OMV1 postfix/smtp[2514]: 9672F6B4: replace: header
-> Subject: DegradedArray event on /dev/md0:OMV1: Subject:
-> [OMV1.veldanet.local] DegradedArray event on /dev/md0:OMV1
-> Jun  6 10:46:25 OMV1 kernel: [  547.047912] XFS (md0): Mounting V4 Filesystem
-> Jun  6 10:46:28 OMV1 kernel: [  550.226215] XFS (md0): Log
-> inconsistent (didn't find previous header)
-> Jun  6 10:46:28 OMV1 kernel: [  550.226224] XFS (md0): failed to find log head
+Hi Greg and Sasha, is there any news about these patches?
+Just checked the stable branches 5.1.y and 5.0.y, they seem not merged.
 
-See, this is very odd.
+If there's anything pending from my side, let me know.
+Thanks in advance,
 
-You had a md0 device with 8998697828352 capacity.
 
-In a 5 disk RAID-6 that would come down to 2999565942784 per disk.
-
-But then (halfhour later) you have a RAID-6 with 11998263771136 capacity.
-
-Went up by 2999565942784... one disk worth.
-
-Now, the way growing RAID works, you only get to use the added capacity 
-once the rebuild is finished. Cause otherwise you still have old data 
-sitting in the place new data has to go to and it would overwrite 
-each other. So you can't use extra capacity before finishing rebuild.
-
-So for some reason, your RAID believed the rebuild to be completed, 
-whether or not that was actually the case - the mount failure suggests 
-it went very wrong somehow.
-
-So it didn't work as 6-drive, and neither when re-creating as 5-drive, 
-guess you have to look at raw data to figure out if it makes any sense 
-at all (find an offset that has non-zero non-identical data across 
-all drives, see if the parity looks like a 5-disk or 6-disk array).
-
-If it's both (6 drive for lower and 5 drive for higher offsets) 
-then it would still be stuck in mid-reshape after all and you'd 
-have to create both (two sets of overlays), find the reshape position 
-and stitch it together with dm-linear
-
-Or some such method... that's all assuming it wasn't mounted, 
-didn't corrupt in other ways while it was in a bad state, 
-had no bugs in the kernel itself and all that.
-
-Good luck
-
-Andreas Klauer
+Guilherme
