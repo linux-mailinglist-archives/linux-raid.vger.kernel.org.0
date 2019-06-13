@@ -2,87 +2,159 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 834A242F4C
-	for <lists+linux-raid@lfdr.de>; Wed, 12 Jun 2019 20:48:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A110743EC8
+	for <lists+linux-raid@lfdr.de>; Thu, 13 Jun 2019 17:53:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbfFLSsj (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 12 Jun 2019 14:48:39 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:55276 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbfFLSsj (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 12 Jun 2019 14:48:39 -0400
-Received: from mail-wr1-f71.google.com ([209.85.221.71])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <guilherme.piccoli@canonical.com>)
-        id 1hb8IW-0008JB-SC
-        for linux-raid@vger.kernel.org; Wed, 12 Jun 2019 18:48:36 +0000
-Received: by mail-wr1-f71.google.com with SMTP id e6so7701251wrv.20
-        for <linux-raid@vger.kernel.org>; Wed, 12 Jun 2019 11:48:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d/sqcpVKxZj4PB2u1+J3qG3Iq9vFtOeiH35zGJmow4g=;
-        b=t0u6p6263W/Ut0WFdy+6xQc+M1w3x54ruL0sv2DOt/tiLSOzTY+3+weYrrUPnZymdY
-         pGZiGCSFu/Q+hs2TU73PQV61ceP9PIOY/w34DulrqDJURjIRHTp/pk4n+d11kyXFB12/
-         bASf9xyR/osuA46lXdL0npgdBkPYDAOPGAsgDrel4o9n4C6lowjBJWOjknJA/I33f2vD
-         28rh7e/Efxuygv3ct1lc1neibvzLCIpGi/Kv2moVKSJTZaBI9WDPD4uAJnq4dY2TOcyd
-         lUo0DqJDOx18u99yI3P4sRTZwF/3UD9oVOCWUVOtgd4C/Wg0qfUxTczTVncZK+zvAI1a
-         t51g==
-X-Gm-Message-State: APjAAAVygayMII22k4XLevjHjigwmFyQf6ZdCphhTv3nVcsKe+4AtK+H
-        gSvX7Tl/dr0VjH+d/1pAK1WNHOAtBNIbYTOuYHSVat0R4/oV20Ok+vAGs8zRrSYytCNU6qAshdC
-        PKRxUD7oSHEplyhJ/FzL6ieHv8HELK+krnpiHnvwFHL3zoGLHQDmYqCQ=
-X-Received: by 2002:a7b:cd8e:: with SMTP id y14mr414109wmj.155.1560365316506;
-        Wed, 12 Jun 2019 11:48:36 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqx6phQL1bo7mvDjvbreNkFlAF5JIygP0kbJi5i6SVxhCaUFSkGll1cKNcDFnl9xf3OlftrPj+7NtBdxiMP+r4g=
-X-Received: by 2002:a7b:cd8e:: with SMTP id y14mr414095wmj.155.1560365316327;
- Wed, 12 Jun 2019 11:48:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190523172345.1861077-1-songliubraving@fb.com>
- <20190523172345.1861077-2-songliubraving@fb.com> <3d77dc37-e4be-2395-7067-5a9b6a71bf3a@canonical.com>
- <20190612164958.GB31124@kroah.com> <CAHD1Q_yoda7MUWDU5H4FKGK6tgmFXEEK9cvg20QJNrsgNgHnZQ@mail.gmail.com>
- <20190612184322.GF1513@sasha-vm>
-In-Reply-To: <20190612184322.GF1513@sasha-vm>
-From:   Guilherme Piccoli <gpiccoli@canonical.com>
-Date:   Wed, 12 Jun 2019 15:48:00 -0300
-Message-ID: <CAHD1Q_w76cZy9_6vTXuK-OOc-BgxXrjp_dfgox-+tZq=gA0Hnw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] md/raid0: Do not bypass blocking queue entered for
- raid0 bios
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
-        Song Liu <songliubraving@fb.com>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
-        Song Liu <liu.song.a23@gmail.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Content-Type: text/plain; charset="UTF-8"
+        id S1731787AbfFMPw7 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 13 Jun 2019 11:52:59 -0400
+Received: from smtp2.provo.novell.com ([137.65.250.81]:56347 "EHLO
+        smtp2.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731628AbfFMJF7 (ORCPT
+        <rfc822;groupwise-linux-raid@vger.kernel.org:0:0>);
+        Thu, 13 Jun 2019 05:05:59 -0400
+Received: from linux-2xn2.suse.asia (prva10-snat226-2.provo.novell.com [137.65.226.36])
+        by smtp2.provo.novell.com with ESMTP (TLS encrypted); Thu, 13 Jun 2019 03:05:49 -0600
+From:   Guoqing Jiang <gqjiang@suse.com>
+To:     linux-raid@vger.kernel.org
+Cc:     liu.song.a23@gmail.com, Guoqing Jiang <gqjiang@suse.com>
+Subject: [PATCH V2] md/raid10: read balance chooses idlest disk for SSD
+Date:   Thu, 13 Jun 2019 17:26:09 +0800
+Message-Id: <20190613092609.9276-1-gqjiang@suse.com>
+X-Mailer: git-send-email 2.12.3
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-OK perfect, thank you both!
+Andy reported that raid10 array with SSD disks has poor
+read performance. Compared with raid1, RAID-1 can be 3x
+faster than RAID-10 sometimes [1].
 
-On Wed, Jun 12, 2019 at 3:43 PM Sasha Levin <sashal@kernel.org> wrote:
->
-> On Wed, Jun 12, 2019 at 03:07:11PM -0300, Guilherme Piccoli wrote:
-> >On Wed, Jun 12, 2019 at 1:50 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >>
-> >> On Wed, Jun 12, 2019 at 01:37:24PM -0300, Guilherme G. Piccoli wrote:
-> >> > +Greg, Sasha
-> >>
-> >> Please resend them in a format that they can be applied in.
-> >>
-> >> Also, I need a TON of descriptions about why this differs from what is
-> >> in Linus's tree, as it is, what you have below does not show that at
-> >> all, they seem to be valud for 5.2-rc1.
-> >
-> >Thanks Greg, I'll work on it. Can this "ton" of description be a cover-letter?
->
-> Please just add it to the commit message. We might need to refer to it
-> in the future and cover letter will just get lost.
->
-> --
-> Thanks,
-> Sasha
+The thing is that raid10 chooses the low distance disk
+for read request, however, the approach doesn't work
+well for SSD device since it doesn't have spindle like
+HDD, we should just read from the SSD which has less
+pending IO like commit 9dedf60313fa4 ("md/raid1: read
+balance chooses idlest disk for SSD").
+
+So this commit selects the idlest SSD disk for read if
+array has none rotational disk, otherwise, read_balance
+uses the previous distance priority algorithm. With the
+change, the performance of raid10 gets increased largely
+per Andy's test [2].
+
+[1]. https://marc.info/?l=linux-raid&m=155915890004761&w=2
+[2]. https://marc.info/?l=linux-raid&m=155990654223786&w=2
+
+Tested-by: Andy Smith <andy@strugglers.net>
+Signed-off-by: Guoqing Jiang <gqjiang@suse.com>
+---
+v2:
+1. use "bool has_nonrot_disk = false" per Song's comment.
+
+ drivers/md/raid10.c | 45 +++++++++++++++++++++++++++++++++------------
+ 1 file changed, 33 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+index aea11476fee6..bd9d29f46834 100644
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -737,15 +737,19 @@ static struct md_rdev *read_balance(struct r10conf *conf,
+ 	int sectors = r10_bio->sectors;
+ 	int best_good_sectors;
+ 	sector_t new_distance, best_dist;
+-	struct md_rdev *best_rdev, *rdev = NULL;
++	struct md_rdev *best_dist_rdev, *best_pending_rdev, *rdev = NULL;
+ 	int do_balance;
+-	int best_slot;
++	int best_dist_slot, best_pending_slot;
++	bool has_nonrot_disk = false;
++	unsigned int min_pending;
+ 	struct geom *geo = &conf->geo;
+ 
+ 	raid10_find_phys(conf, r10_bio);
+ 	rcu_read_lock();
+-	best_slot = -1;
+-	best_rdev = NULL;
++	best_dist_slot = -1;
++	min_pending = UINT_MAX;
++	best_dist_rdev = NULL;
++	best_pending_rdev = NULL;
+ 	best_dist = MaxSector;
+ 	best_good_sectors = 0;
+ 	do_balance = 1;
+@@ -767,6 +771,8 @@ static struct md_rdev *read_balance(struct r10conf *conf,
+ 		sector_t first_bad;
+ 		int bad_sectors;
+ 		sector_t dev_sector;
++		unsigned int pending;
++		bool nonrot;
+ 
+ 		if (r10_bio->devs[slot].bio == IO_BLOCKED)
+ 			continue;
+@@ -803,8 +809,8 @@ static struct md_rdev *read_balance(struct r10conf *conf,
+ 					first_bad - dev_sector;
+ 				if (good_sectors > best_good_sectors) {
+ 					best_good_sectors = good_sectors;
+-					best_slot = slot;
+-					best_rdev = rdev;
++					best_dist_slot = slot;
++					best_dist_rdev = rdev;
+ 				}
+ 				if (!do_balance)
+ 					/* Must read from here */
+@@ -817,14 +823,23 @@ static struct md_rdev *read_balance(struct r10conf *conf,
+ 		if (!do_balance)
+ 			break;
+ 
+-		if (best_slot >= 0)
++		nonrot = blk_queue_nonrot(bdev_get_queue(rdev->bdev));
++		has_nonrot_disk |= nonrot;
++		pending = atomic_read(&rdev->nr_pending);
++		if (min_pending > pending && nonrot) {
++			min_pending = pending;
++			best_pending_slot = slot;
++			best_pending_rdev = rdev;
++		}
++
++		if (best_dist_slot >= 0)
+ 			/* At least 2 disks to choose from so failfast is OK */
+ 			set_bit(R10BIO_FailFast, &r10_bio->state);
+ 		/* This optimisation is debatable, and completely destroys
+ 		 * sequential read speed for 'far copies' arrays.  So only
+ 		 * keep it for 'near' arrays, and review those later.
+ 		 */
+-		if (geo->near_copies > 1 && !atomic_read(&rdev->nr_pending))
++		if (geo->near_copies > 1 && !pending)
+ 			new_distance = 0;
+ 
+ 		/* for far > 1 always use the lowest address */
+@@ -833,15 +848,21 @@ static struct md_rdev *read_balance(struct r10conf *conf,
+ 		else
+ 			new_distance = abs(r10_bio->devs[slot].addr -
+ 					   conf->mirrors[disk].head_position);
++
+ 		if (new_distance < best_dist) {
+ 			best_dist = new_distance;
+-			best_slot = slot;
+-			best_rdev = rdev;
++			best_dist_slot = slot;
++			best_dist_rdev = rdev;
+ 		}
+ 	}
+ 	if (slot >= conf->copies) {
+-		slot = best_slot;
+-		rdev = best_rdev;
++		if (has_nonrot_disk) {
++			slot = best_pending_slot;
++			rdev = best_pending_rdev;
++		} else {
++			slot = best_dist_slot;
++			rdev = best_dist_rdev;
++		}
+ 	}
+ 
+ 	if (slot >= 0) {
+-- 
+2.12.3
+
