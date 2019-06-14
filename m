@@ -2,194 +2,104 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F34946C79
-	for <lists+linux-raid@lfdr.de>; Sat, 15 Jun 2019 00:41:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8055046C92
+	for <lists+linux-raid@lfdr.de>; Sat, 15 Jun 2019 00:56:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbfFNWlm (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 14 Jun 2019 18:41:42 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:43294 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726373AbfFNWll (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 14 Jun 2019 18:41:41 -0400
-Received: from pps.filterd (m0001255.ppops.net [127.0.0.1])
-        by mx0b-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5EMam8K010028
-        for <linux-raid@vger.kernel.org>; Fri, 14 Jun 2019 15:41:40 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=rGX2zxVQ8dy4tvWkTplsglMMVxKssIJx+Vf6E6BBlPs=;
- b=JgBKeovRtgQ3DSu5+TWB+hWjXxlS1ZFFn/hwAdzuuTZJ0T1Z7FtpnYik2yt1rE4wUa9j
- 2W9QjflVb18Ghtcu/37tT7o12PCvu/EoViBm+BVGQDnqbGXNUi43X8O3a+N9NsgsDxGl
- bGbKgwDfUieNmvlu797dfg2u6BBLMJPUV7M= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0b-00082601.pphosted.com with ESMTP id 2t4kf2g6vu-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-raid@vger.kernel.org>; Fri, 14 Jun 2019 15:41:40 -0700
-Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Fri, 14 Jun 2019 15:41:38 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id B1B7762E307F; Fri, 14 Jun 2019 15:41:37 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <linux-raid@vger.kernel.org>
-CC:     <axboe@kernel.dk>, <kernel-team@fb.com>,
-        Guoqing Jiang <gqjiang@suse.com>,
-        Song Liu <songliubraving@fb.com>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH 8/8] md/raid10: read balance chooses idlest disk for SSD
-Date:   Fri, 14 Jun 2019 15:41:11 -0700
-Message-ID: <20190614224111.3485077-9-songliubraving@fb.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190614224111.3485077-1-songliubraving@fb.com>
-References: <20190614224111.3485077-1-songliubraving@fb.com>
-X-FB-Internal: Safe
+        id S1725993AbfFNW4p (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 14 Jun 2019 18:56:45 -0400
+Received: from smtp03.mail.qldc.ch ([212.60.46.172]:51480 "EHLO
+        smtp03.mail.qldc.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbfFNW4p (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 14 Jun 2019 18:56:45 -0400
+X-Greylist: delayed 533 seconds by postgrey-1.27 at vger.kernel.org; Fri, 14 Jun 2019 18:56:44 EDT
+Received: from tuxedo.ath.cx (55-153-16-94.dyn.cable.fcom.ch [94.16.153.55])
+        by smtp03.mail.qldc.ch (Postfix) with ESMTPS id D479F23016
+        for <linux-raid@vger.kernel.org>; Sat, 15 Jun 2019 00:47:50 +0200 (CEST)
+Received: from [10.0.70.110] (neptun.gms.local [10.0.70.110])
+        by tuxedo.ath.cx (Postfix) with ESMTP id 14068344A8F
+        for <linux-raid@vger.kernel.org>; Sat, 15 Jun 2019 00:47:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=tuxedo.dynu.net;
+        s=mail; t=1560552470;
+        bh=bupq9NAAzjFwkXqDBMOwJoIRuTDwXx9OrMD6Mu2+3+M=;
+        h=To:From:Subject:Date:From;
+        b=GCYEwSXLRwKfhebbarLwRNu1jMODLzi99IWNxmLbL1mSLQpFGLneK9QZfV3nKWlqM
+         deNMNlvg6kgD3trUHqAn6Kr/yTpQwX0h0mDfCTLY1S3Gwf+HcZJvV6xrtOH9yzkdtZ
+         0/y0DeyNRdw4I+vH+Cu/piuBLFEhcNwMYFpt8wUw=
+To:     linux-raid@vger.kernel.org
+From:   Mathias G <newsnet-mg-2016@tuxedo.ath.cx>
+Subject: md0: bitmap file is out of date, resync
+Openpgp: preference=signencrypt
+Message-ID: <92ce64ba-2c55-8ef8-3ddf-3bbf867ec4f8@tuxedo.ath.cx>
+Date:   Sat, 15 Jun 2019 00:47:48 +0200
+User-Agent: Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.8pre)
+ Gecko/20071022 Thunderbird/2.0.0.6 Mnenhy/0.7.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-14_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906140178
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=iso-8859-15
+Content-Language: de-CH
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.0 required=5.0 tests=ALL_TRUSTED
+        autolearn=unavailable autolearn_force=no version=3.4.2
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on tuxedo.ath.cx
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Guoqing Jiang <gqjiang@suse.com>
+Hello together
 
-Andy reported that raid10 array with SSD disks has poor
-read performance. Compared with raid1, RAID-1 can be 3x
-faster than RAID-10 sometimes [1].
+For a long time now (surely since the beginning of 2018) I have the
+problem that every now and then after a reboot of the system (PC
+workstation) the RAID-1 is resynchronized.
 
-The thing is that raid10 chooses the low distance disk
-for read request, however, the approach doesn't work
-well for SSD device since it doesn't have spindle like
-HDD, we should just read from the SSD which has less
-pending IO like commit 9dedf60313fa4 ("md/raid1: read
-balance chooses idlest disk for SSD").
+Possibly the problem occurs mostly or always after an kernel update
+kernel, but there are cases (like today) where no update was made.
 
-So this commit selects the idlest SSD disk for read if
-array has none rotational disk, otherwise, read_balance
-uses the previous distance priority algorithm. With the
-change, the performance of raid10 gets increased largely
-per Andy's test [2].
+The RAID-1 consisting of 2x 2TB SATA HDD
 
-[1]. https://marc.info/?l=linux-raid&m=155915890004761&w=2
-[2]. https://marc.info/?l=linux-raid&m=155990654223786&w=2
+The RAID is built with mdadm, at the earlier days with header version
+0.x, but also completely rebuilt (because of this problem) with header
+version 1.2
 
-Tested-by: Andy Smith <andy@strugglers.net>
-Signed-off-by: Guoqing Jiang <gqjiang@suse.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
----
- drivers/md/raid10.c | 45 +++++++++++++++++++++++++++++++++------------
- 1 file changed, 33 insertions(+), 12 deletions(-)
+The Linux system is a Debian "testing" (version 10.0)
 
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index c9a149b2ec86..8a1354a08a1a 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -707,15 +707,19 @@ static struct md_rdev *read_balance(struct r10conf *conf,
- 	int sectors = r10_bio->sectors;
- 	int best_good_sectors;
- 	sector_t new_distance, best_dist;
--	struct md_rdev *best_rdev, *rdev = NULL;
-+	struct md_rdev *best_dist_rdev, *best_pending_rdev, *rdev = NULL;
- 	int do_balance;
--	int best_slot;
-+	int best_dist_slot, best_pending_slot;
-+	bool has_nonrot_disk = false;
-+	unsigned int min_pending;
- 	struct geom *geo = &conf->geo;
- 
- 	raid10_find_phys(conf, r10_bio);
- 	rcu_read_lock();
--	best_slot = -1;
--	best_rdev = NULL;
-+	best_dist_slot = -1;
-+	min_pending = UINT_MAX;
-+	best_dist_rdev = NULL;
-+	best_pending_rdev = NULL;
- 	best_dist = MaxSector;
- 	best_good_sectors = 0;
- 	do_balance = 1;
-@@ -737,6 +741,8 @@ static struct md_rdev *read_balance(struct r10conf *conf,
- 		sector_t first_bad;
- 		int bad_sectors;
- 		sector_t dev_sector;
-+		unsigned int pending;
-+		bool nonrot;
- 
- 		if (r10_bio->devs[slot].bio == IO_BLOCKED)
- 			continue;
-@@ -773,8 +779,8 @@ static struct md_rdev *read_balance(struct r10conf *conf,
- 					first_bad - dev_sector;
- 				if (good_sectors > best_good_sectors) {
- 					best_good_sectors = good_sectors;
--					best_slot = slot;
--					best_rdev = rdev;
-+					best_dist_slot = slot;
-+					best_dist_rdev = rdev;
- 				}
- 				if (!do_balance)
- 					/* Must read from here */
-@@ -787,14 +793,23 @@ static struct md_rdev *read_balance(struct r10conf *conf,
- 		if (!do_balance)
- 			break;
- 
--		if (best_slot >= 0)
-+		nonrot = blk_queue_nonrot(bdev_get_queue(rdev->bdev));
-+		has_nonrot_disk |= nonrot;
-+		pending = atomic_read(&rdev->nr_pending);
-+		if (min_pending > pending && nonrot) {
-+			min_pending = pending;
-+			best_pending_slot = slot;
-+			best_pending_rdev = rdev;
-+		}
-+
-+		if (best_dist_slot >= 0)
- 			/* At least 2 disks to choose from so failfast is OK */
- 			set_bit(R10BIO_FailFast, &r10_bio->state);
- 		/* This optimisation is debatable, and completely destroys
- 		 * sequential read speed for 'far copies' arrays.  So only
- 		 * keep it for 'near' arrays, and review those later.
- 		 */
--		if (geo->near_copies > 1 && !atomic_read(&rdev->nr_pending))
-+		if (geo->near_copies > 1 && !pending)
- 			new_distance = 0;
- 
- 		/* for far > 1 always use the lowest address */
-@@ -803,15 +818,21 @@ static struct md_rdev *read_balance(struct r10conf *conf,
- 		else
- 			new_distance = abs(r10_bio->devs[slot].addr -
- 					   conf->mirrors[disk].head_position);
-+
- 		if (new_distance < best_dist) {
- 			best_dist = new_distance;
--			best_slot = slot;
--			best_rdev = rdev;
-+			best_dist_slot = slot;
-+			best_dist_rdev = rdev;
- 		}
- 	}
- 	if (slot >= conf->copies) {
--		slot = best_slot;
--		rdev = best_rdev;
-+		if (has_nonrot_disk) {
-+			slot = best_pending_slot;
-+			rdev = best_pending_rdev;
-+		} else {
-+			slot = best_dist_slot;
-+			rdev = best_dist_rdev;
-+		}
- 	}
- 
- 	if (slot >= 0) {
+Current kernel version: 4.19.0-5-amd64 #1 SMP Debian 4.19.37-3
+(2019-05-15) x86_64 GNU/Linux
+
+But the problem was already at version: 4.17.0-1-amd64 #1 SMP Debian
+4.17.8-1 (2018-07-20) x86_64 GNU/Linux
+
+The log entry in kern.log (after restart) when the RAID needs to be
+resynchronized:
+> Jun 14 23:11:01 $hostname kernel: [    2.132085] md/raid1:md0: not clean -- starting background reconstruction
+> Jun 14 23:11:01 $hostname kernel: [    2.132088] md/raid1:md0: active with 2 out of 2 mirrors
+> Jun 14 23:11:01 $hostname kernel: [    2.132245] md0: bitmap file is out of date (228834 < 228835) -- forcing full recovery
+> Jun 14 23:11:01 $hostname kernel: [    2.132297] md0: bitmap file is out of date, doing full recovery
+
+The new synchronization will look like this (today):
+> $ cat /proc/mdstat 
+> Personalities : [raid1] [linear] [multipath] [raid0] [raid6] [raid5] [raid4] [raid10] 
+> md0 : active raid1 sdb1[0] sdc1[3]
+>       1953382464 blocks super 1.2 [2/2] [UU]
+>       [=====>...............]  resync = 25.7% (502785344/1953382464) finish=216.8min speed=111498K/sec
+>       bitmap: 13/15 pages [52KB], 65536KB chunk
+> 
+> unused devices: <none>
+
+I suspected once that something would not stop correctly before shutting
+down, but how could you debug something like that?
+
+I already tried to replug all SATA cables - without success. In the
+meantime even a new mainboard/CPU/RAM is installed and one of the two
+SATA 2TB disks is replaced by a new one. But the the problem remained :-/
+
+While searching the internet I found a partially similar problem [1] but
+without an solution.
+
+Does anyone have any idea how I could narrow down or fix the problem?
+
+Thanks a lot!
+
+[1] https://www.spinics.net/lists/raid/msg47475.html
 -- 
-2.17.1
-
+kind regards
+ mathias
