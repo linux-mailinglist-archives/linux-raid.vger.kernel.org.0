@@ -2,112 +2,78 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5133A4A535
-	for <lists+linux-raid@lfdr.de>; Tue, 18 Jun 2019 17:21:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D45D4AB3A
+	for <lists+linux-raid@lfdr.de>; Tue, 18 Jun 2019 21:53:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729249AbfFRPVn (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 18 Jun 2019 11:21:43 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40213 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729209AbfFRPVn (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 18 Jun 2019 11:21:43 -0400
-Received: by mail-qt1-f194.google.com with SMTP id a15so15775074qtn.7
-        for <linux-raid@vger.kernel.org>; Tue, 18 Jun 2019 08:21:42 -0700 (PDT)
+        id S1730403AbfFRTxc (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 18 Jun 2019 15:53:32 -0400
+Received: from mail-ed1-f50.google.com ([209.85.208.50]:34416 "EHLO
+        mail-ed1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730189AbfFRTxb (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 18 Jun 2019 15:53:31 -0400
+Received: by mail-ed1-f50.google.com with SMTP id s49so23512981edb.1
+        for <linux-raid@vger.kernel.org>; Tue, 18 Jun 2019 12:53:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FIdhO5r8AUBtehE0A36kELF3aKO79PbE6MPQIIKCmCk=;
-        b=d2w9StWIOHVIa8npUMJH1bN5AvHU/sSKpHxc++cucxo9ld29MQz0Ii2Lp2DM1Bn/yx
-         jMQP3XV6cCqFGKzkAfK4ZibX1BCcdXn+UffgqFMLvX2FiAguyq3NuUilShOSAPQAX5Gq
-         8hA0dBvMPmTkpHSd3vW6nE+HMxrqLvZVfYTF3trrN7hdYXlUwBAX/fkeUhpVkPkS1cIx
-         8l+uPyTK05jQjgopc6LknQSH+JDKrGkcWFhT6VtIyi6r4cCSpJYx/2E93XCPmXa2OdYe
-         YJ4g/HtjJu9iRqFfUSbyYpLbr7FSg9khYWXQg4A8OZqSLxpTtwSIdxFc1vm+2GzH66vZ
-         mZqg==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=IQvD+22XeYnYT4Zoo9LJU70Jo9Q+YCBwqTepMrcgtbY=;
+        b=ZS7N2FGA5ApQoxuABGTf2oNS9ev2c3l4SvPtxZvVEPBoIJZs7zNmDn1Rd8dZwKMvtc
+         aPzwhLYVTJs6AphkJA+WxAzbfhJucJcwC0UVsUVOsBawfv5GgKc6T1PFO1V0R78X+Aqd
+         ohPSpHuh682RS8Zb6/TGiMK3NMJ51yUTkqslgnOnI+kILXCSrVvGmpG7V2cfpK1767By
+         CGguTsiL+0uwkw47ztpbD5jXbhJTBEWhQ2/WHxLNm0ics22XXlvTz3kWk+hCeg/UKJAW
+         gXA9OSc8WZRBVfThwD0UqGcSZYOlEhzkgm4z2I6Xrl8H4jFijrm71SZs1OWpklDmyf9f
+         Gdcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FIdhO5r8AUBtehE0A36kELF3aKO79PbE6MPQIIKCmCk=;
-        b=BTpIgg3YY2r49Ndyo4rnEyhWjxtqs9uKAmxDBIQgxcimLcNxv7SEKjEkUKVP7DJQ7X
-         CMopGzRdymxcR+id2cbfZ8utighpoIV80vYTv/tucK/vQulatsR+bcp+gCvxZbXXM65Q
-         JYR2JazWqdw/jW55z13ymAPYaANeI5uTNwA5NzKddguLDbVyZ1aiMdjNjJ8bqixatLlr
-         WpFM+im56CljYBId48wjC0UqdCbC3j8XT8WFwLLaXVtJgys5vqWdYWWrqIa/fnU62+89
-         oM8MySdLUSyV5M9GLwMCKxgCsRRgjzfC2jczdP4VgltcFQo6Fquac6yjziPCOtmJ9oxn
-         oY9Q==
-X-Gm-Message-State: APjAAAWgxe+wXABSr9EJXWgJ9Vtb8tUzc/n1AhZvCFlOJrpQLi7+l/4h
-        ge/no0cGywGZ0M2qhC0jLDDmxCisuYsC8QlCoiI=
-X-Google-Smtp-Source: APXvYqylpggUamHBRrGzkarepM2I+2LLuLrUDeFFfRU1bsOpR3Pv3qydmV7Vnm8U7uhyGrS9mmdldtHD9Qazc8mG5hw=
-X-Received: by 2002:a0c:d0fc:: with SMTP id b57mr28169152qvh.78.1560871302217;
- Tue, 18 Jun 2019 08:21:42 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IQvD+22XeYnYT4Zoo9LJU70Jo9Q+YCBwqTepMrcgtbY=;
+        b=e1s6AgXsQd2OowlimDv15ueT1ENBJFxfoOMy2FkLJa5MYJB2IZoQc5w6/kxltH0X2X
+         +uh76B/VE5pZKqJ8KLrd6mBm2BOf+i8D99KJwzOsqG3m68r5gpw2PuyBuD8oYlMb+4ph
+         9PzOOQklXYZM6O+JAk4wdJmOXgjYFJcb3jFiC37eZwEZjgo+N+OvB3EJHezVVtgaTvJ5
+         9k6GP0uRLa7Dqrj7am5/yOCL8jsB/u3du5PvejL1G9nUzuHnvcvmJZaOFIRblt9LOwX8
+         jf72uBI3KbtrySYDK1LwJRTr6y2vDaV8OPrLkYBNoJK8NEWvaMP8Z3SSdq6r1HcmaV5y
+         nl1Q==
+X-Gm-Message-State: APjAAAXbs53IVnn6KnlhCw50XOtfGHfIxt+XWVfjjKWK+39/7yOut+96
+        w9no39fdKDqelOp3K8FM6bR5zw==
+X-Google-Smtp-Source: APXvYqyCyOnwXB651pKK+ovyqzgNpu7vgdQ3ta2oxyUYF0ntAGSWM+0Sshq101HMBhi+p7wgnUW+Ag==
+X-Received: by 2002:a50:86dc:: with SMTP id 28mr100266027edu.132.1560887610126;
+        Tue, 18 Jun 2019 12:53:30 -0700 (PDT)
+Received: from [192.168.0.115] (xd520f250.cust.hiper.dk. [213.32.242.80])
+        by smtp.gmail.com with ESMTPSA id k21sm2831694ejk.86.2019.06.18.12.53.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 12:53:29 -0700 (PDT)
+Subject: Re: [GIT PULL] md fixes 20190618
+To:     Song Liu <songliubraving@fb.com>,
+        linux-raid <linux-raid@vger.kernel.org>
+Cc:     Kernel Team <Kernel-team@fb.com>,
+        Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
+References: <D941D6D8-65E9-42F8-91D4-78129823F742@fb.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <ef85a8fc-73d3-1413-3d0e-2e36c24e427d@kernel.dk>
+Date:   Tue, 18 Jun 2019 13:53:28 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190613141141.15483-1-mariusz.tkaczyk@intel.com> <CAPhsuW7-LgfVi-ucTZCDEA0+4raQvNaHeWVJxBLcBDTLWLv8mA@mail.gmail.com>
-In-Reply-To: <CAPhsuW7-LgfVi-ucTZCDEA0+4raQvNaHeWVJxBLcBDTLWLv8mA@mail.gmail.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Tue, 18 Jun 2019 08:21:31 -0700
-Message-ID: <CAPhsuW5pE1fvMqoOe5e=4o=zV3a3aY=WG0GRVoEV9sOzbo4h3g@mail.gmail.com>
-Subject: Re: [PATCH] md: fix for divide error in status_resync
-To:     Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        Song Liu <songliubraving@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <D941D6D8-65E9-42F8-91D4-78129823F742@fb.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 2:48 PM Song Liu <liu.song.a23@gmail.com> wrote:
->
-> On Thu, Jun 13, 2019 at 8:09 AM Mariusz Tkaczyk
-> <mariusz.tkaczyk@intel.com> wrote:
-> >
-> > Stopping external metadata arrays during resync/recovery causes
-> > retries, loop of interrupting and starting reconstruction, until it
-> > hit at good moment to stop completely. While these retries
-> > curr_mark_cnt can be small- especially on HDD drives, so subtraction
-> > result can be smaller than 0. However it is casted to uint without
-> > checking. As a result of it the status bar in /proc/mdstat while stopping
-> > is strange (it jumps between 0% and 99%).
-> >
-> > The real problem occurs here after commit 72deb455b5ec ("block: remove
-> > CONFIG_LBDAF"). Sector_div() macro has been changed, now the
-> > divisor is casted to uint32. For db = -8 the divisior(db/32-1) becomes 0.
-> >
-> > Check if db value can be really counted and replace these macro by
-> > div64_u64() inline.
-> >
-> > Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
->
-> This looks good! Thanks for the fix.
->
-> > ---
-> >  drivers/md/md.c | 17 +++++++++++------
-> >  1 file changed, 11 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/md/md.c b/drivers/md/md.c
-> > index 04f4f131f9d6..9a8b258ce1ef 100644
-> > --- a/drivers/md/md.c
-> > +++ b/drivers/md/md.c
-> > @@ -7607,9 +7607,9 @@ static void status_unused(struct seq_file *seq)
-> >  static int status_resync(struct seq_file *seq, struct mddev *mddev)
-> >  {
-> >         sector_t max_sectors, resync, res;
-> > -       unsigned long dt, db;
-> > -       sector_t rt;
-> > -       int scale;
-> > +       unsigned long dt, db = 0;
-> > +       sector_t rt, curr_mark_cnt, resync_mark_cnt;
-> > +       int scale, recovery_active;
-> >         unsigned int per_milli;
-> >
-> >         if (test_bit(MD_RECOVERY_SYNC, &mddev->recovery) ||
-> > @@ -7709,11 +7709,16 @@ static int status_resync(struct seq_file *seq, struct mddev *mddev)
-> >          */
->
-> Could you please also update comments before this section? (sector_t
-> is always u64 now).
+On 6/18/19 9:20 AM, Song Liu wrote:
+> Hi Jens,
+> 
+> Please consider pulling the following fix for md on top of your for-linus
+> branch.
 
-Never mind, I fixed the comments while applying the patch.
+Pulled, thanks.
 
-Song
+-- 
+Jens Axboe
+
