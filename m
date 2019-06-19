@@ -2,112 +2,279 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CBE004B348
-	for <lists+linux-raid@lfdr.de>; Wed, 19 Jun 2019 09:45:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A12824B4AD
+	for <lists+linux-raid@lfdr.de>; Wed, 19 Jun 2019 11:10:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730826AbfFSHo5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 19 Jun 2019 03:44:57 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53890 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbfFSHo4 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 19 Jun 2019 03:44:56 -0400
-Received: by mail-wm1-f66.google.com with SMTP id x15so611303wmj.3
-        for <linux-raid@vger.kernel.org>; Wed, 19 Jun 2019 00:44:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oldum-net.20150623.gappssmtp.com; s=20150623;
-        h=from:reply-to:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=Gqu4cFB3mBTQv0dKWB6D+EctUG3zh77SwkXur28gE2w=;
-        b=TSsHMwEXqRzIzZzAxLhwZ+77WDs2HXfkcQs7DGk+4x2YBQUXtHu+XWnexCSZjvF7N5
-         jABmAEiXrUOw5IXxVDq0CfD4c68Fl0boUhg1kOyf9sjU5QxLHSc8DzST47a2oJBVtu4Z
-         Cti0GJ/FwDGM5cT2GEHqTIKJQYX/swgzermIZLjKz+0pOVtRxoBjWOs6FXW3aGM/N0GE
-         djkgJ7G5DJNIKDNpcx8khWmOFsz5jMezQmr3MzOHx8rCvOqT6SMTqDL88C7NF7yu1yFC
-         Tg/KTSe1jdbbQmpOWF6c1okmHdTESHz19YvUbSQrTUqPgFgSO2KieDaSEUECkyBlQH8Y
-         UrJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:reply-to:subject:to:cc:references
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-transfer-encoding:content-language;
-        bh=Gqu4cFB3mBTQv0dKWB6D+EctUG3zh77SwkXur28gE2w=;
-        b=oUfp1DPpm3tFkL2bx2MWmbiKpmlSHYYOh0mcn+ux2zmq3sl/2YGbFMXDP1JgapbXk7
-         Ikah0uPmwscR6p0JbtMPBOSTGkmhyNk4KgN6QcLWhiBcik66moF4aYLXjrdl3KIT/8vG
-         9SFPwXFR6VJh1CvmryzCjnKEB0Md5tuYsCQ37t1ypVoJhb5vOLUQt8bYija99Javc6y0
-         mzdXAAeTkNb+vOxeymsB8oZx2cXOG9M+b6eqoIGNMCHEQ//1dIqWyihRDRDOA5Zk3Ub8
-         ai6NhqQFUPVNSeHlalPFFwIlLKlvlKW2TQl/QweoGTUz0MsZrGUesCLczaepHYqLmZvM
-         mV2Q==
-X-Gm-Message-State: APjAAAUZ7pCbgf7HH/3u+CshCdFPbAqCwhj8Ik0O/w5C/snbkdKZQ56f
-        moJ/duFXkIlpgbFr0Yje568CTPeJOMCpNA==
-X-Google-Smtp-Source: APXvYqx+YZ30QYLk0xHVxboaDuJ8s/+/nQbtoOvxNH0RMDVA2lruFdtlIM0n1JjqPgSOuowwrGUvHQ==
-X-Received: by 2002:a1c:10f:: with SMTP id 15mr7063093wmb.142.1560930293794;
-        Wed, 19 Jun 2019 00:44:53 -0700 (PDT)
-Received: from [192.168.178.34] (external.oldum.net. [82.161.240.76])
-        by smtp.googlemail.com with ESMTPSA id t12sm20352716wrw.53.2019.06.19.00.44.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Jun 2019 00:44:52 -0700 (PDT)
-From:   Nikolay Kichukov <hijacker@oldum.net>
-X-Google-Original-From: Nikolay Kichukov <nikolay@oldum.net>
-Reply-To: nikolay@oldum.net
-Subject: Re: [PATCH 1/5] md/raid1: fix potential data inconsistency issue with
- write behind device
-To:     Guoqing Jiang <gqjiang@suse.com>, Song Liu <liu.song.a23@gmail.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>
-References: <20190614091039.32461-1-gqjiang@suse.com>
- <20190614091039.32461-2-gqjiang@suse.com>
- <CAPhsuW6eYaqxmHzHeu8UzXXx+DH-2FkEtQcWfvHp-YKTVe2U6Q@mail.gmail.com>
- <a8504a6a-6ecf-798a-0d3b-1243936b5588@suse.com>
- <CAPhsuW4YqH46jiSH9OEzUMf3rBCoJPa_=+ekVEi5s==sx=SWRQ@mail.gmail.com>
- <545a6f2a-7dab-e6b6-649a-6e6e67f10e0e@suse.com>
- <dcc1af10-6e45-464a-bb6d-e4f5e446788a@oldum.net>
- <25524d6e-ad56-8da3-f0ae-bbb935c7e2b0@suse.com>
-Message-ID: <46d2e7bb-61ba-dc36-ed8c-6ee9c08d9a32@oldum.net>
-Date:   Wed, 19 Jun 2019 09:45:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <25524d6e-ad56-8da3-f0ae-bbb935c7e2b0@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        id S1731329AbfFSJKh (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 19 Jun 2019 05:10:37 -0400
+Received: from smtp2.provo.novell.com ([137.65.250.81]:48344 "EHLO
+        smtp2.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731321AbfFSJKh (ORCPT
+        <rfc822;groupwise-linux-raid@vger.kernel.org:0:0>);
+        Wed, 19 Jun 2019 05:10:37 -0400
+Received: from linux-2xn2.suse.asia (prva10-snat226-2.provo.novell.com [137.65.226.36])
+        by smtp2.provo.novell.com with ESMTP (TLS encrypted); Wed, 19 Jun 2019 03:10:29 -0600
+From:   Guoqing Jiang <gqjiang@suse.com>
+To:     linux-raid@vger.kernel.org
+Cc:     liu.song.a23@gmail.com, Guoqing Jiang <gqjiang@suse.com>
+Subject: [PATCH 1/5 V2] md/raid1: fix potential data inconsistency issue with write behind device
+Date:   Wed, 19 Jun 2019 17:30:46 +0800
+Message-Id: <20190619093046.14066-1-gqjiang@suse.com>
+X-Mailer: git-send-email 2.12.3
+In-Reply-To: <20190614091039.32461-2-gqjiang@suse.com>
+References: <20190614091039.32461-2-gqjiang@suse.com>
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hello Guoqing,
+For write-behind mode, we think write IO is complete once it has
+reached all the non-writemostly devices. It works fine for single
+queue devices.
 
-Rebase is not required as I can easily go to any kernel version,
-GNU/Gentoo Linux here. Currently I am at 5.1.7 but happy to upgrade.
-Where is the repo with those suggested changes where I can clone the
-patch from?
+But for multiqueue device, if there are lots of IOs come from upper
+layer, then the write-behind device could issue those IOs to different
+queues, depends on the each queue's delay, so there is no guarantee
+that those IOs can arrive in order.
 
-Thank you,
--N
+To address the issue, we need to check the collision among write
+behind IOs, we can only continue without collision, otherwise wait
+for the completion of previous collisioned IO.
 
-On 6/19/19 6:38 AM, Guoqing Jiang wrote:
-> Hi,
->
-> On 6/18/19 5:30 PM, Nikolay Kichukov wrote:
->> Hello,
->>
->> Is there a proper patch formatted variant of this where I can download
->> and test? Or is it included in a released kernel already?
->>
->
-> As you can see, it is still in review stage, so the patch is not in
-> any released kernel.
->
-> I suppose you can get the patch from the archive, but I am not sure
-> if it can apply directly.
->
->> I am seeing an issue, where one of the write-mostly disks in a 3 disk
->> raid1 array consisting of one ssd and 2 spinning disks(write-mostly) is
->> causing the mismatch_cnt to go as high as 1,5 million and a repair does
->> not fix it. So this looks like a good potential resolver.
->>
->
-> You are more than welcome to test the patch. And I can rebase the patch
-> to your kernel version if needed.
->
-> Thanks,
-> Guoqing
+And WBCollision is introduced for multiqueue device which is worked
+under write-behind mode.
+
+But this patch doesn't handle below cases which could have the data
+inconsistency issue as well, these cases will be handled in later
+patches.
+
+1. modify max_write_behind by write backlog node.
+2. add or remove array's bitmap dynamically.
+3. the change of member disk.
+
+Reviewed-by: NeilBrown <neilb@suse.com>
+Signed-off-by: Guoqing Jiang <gqjiang@suse.com>
+---
+V2 Changes:
+1. use temp_wi in list_for_each_entry, thanks for Song's review. 
+
+ drivers/md/md.c    | 41 ++++++++++++++++++++++++++++++++
+ drivers/md/md.h    | 21 +++++++++++++++++
+ drivers/md/raid1.c | 68 +++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 129 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 45ffa23fa85d..3f816e4d4dd8 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -131,6 +131,19 @@ static inline int speed_max(struct mddev *mddev)
+ 		mddev->sync_speed_max : sysctl_speed_limit_max;
+ }
+ 
++static int rdev_init_wb(struct md_rdev *rdev)
++{
++	if (rdev->bdev->bd_queue->nr_hw_queues == 1)
++		return 0;
++
++	spin_lock_init(&rdev->wb_list_lock);
++	INIT_LIST_HEAD(&rdev->wb_list);
++	init_waitqueue_head(&rdev->wb_io_wait);
++	set_bit(WBCollisionCheck, &rdev->flags);
++
++	return 1;
++}
++
+ static struct ctl_table_header *raid_table_header;
+ 
+ static struct ctl_table raid_table[] = {
+@@ -5604,6 +5617,32 @@ int md_run(struct mddev *mddev)
+ 		md_bitmap_destroy(mddev);
+ 		goto abort;
+ 	}
++
++	if (mddev->bitmap_info.max_write_behind > 0) {
++		bool creat_pool = false;
++
++		rdev_for_each(rdev, mddev) {
++			if (test_bit(WriteMostly, &rdev->flags) &&
++			    rdev_init_wb(rdev))
++				creat_pool = true;
++		}
++		if (creat_pool && mddev->wb_info_pool == NULL) {
++			mddev->wb_info_pool =
++				mempool_create_kmalloc_pool(NR_WB_INFOS,
++						    sizeof(struct wb_info));
++			if (!mddev->wb_info_pool) {
++				err = -ENOMEM;
++				mddev_detach(mddev);
++				if (mddev->private)
++					pers->free(mddev, mddev->private);
++				mddev->private = NULL;
++				module_put(pers->owner);
++				md_bitmap_destroy(mddev);
++				goto abort;
++			}
++		}
++	}
++
+ 	if (mddev->queue) {
+ 		bool nonrot = true;
+ 
+@@ -5833,6 +5872,8 @@ static void __md_stop_writes(struct mddev *mddev)
+ 			mddev->in_sync = 1;
+ 		md_update_sb(mddev, 1);
+ 	}
++	mempool_destroy(mddev->wb_info_pool);
++	mddev->wb_info_pool = NULL;
+ }
+ 
+ void md_stop_writes(struct mddev *mddev)
+diff --git a/drivers/md/md.h b/drivers/md/md.h
+index 257cb4c9e22b..ce9eb6db0538 100644
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -116,6 +116,14 @@ struct md_rdev {
+ 					   * for reporting to userspace and storing
+ 					   * in superblock.
+ 					   */
++
++	/*
++	 * The members for check collision of write behind IOs.
++	 */
++	struct list_head wb_list;
++	spinlock_t wb_list_lock;
++	wait_queue_head_t wb_io_wait;
++
+ 	struct work_struct del_work;	/* used for delayed sysfs removal */
+ 
+ 	struct kernfs_node *sysfs_state; /* handle for 'state'
+@@ -200,6 +208,10 @@ enum flag_bits {
+ 				 * it didn't fail, so don't use FailFast
+ 				 * any more for metadata
+ 				 */
++	WBCollisionCheck,	/*
++				 * multiqueue device should check if there
++				 * is collision between write behind bios.
++				 */
+ };
+ 
+ static inline int is_badblock(struct md_rdev *rdev, sector_t s, int sectors,
+@@ -252,6 +264,14 @@ enum mddev_sb_flags {
+ 	MD_SB_NEED_REWRITE,	/* metadata write needs to be repeated */
+ };
+ 
++#define NR_WB_INFOS	8
++/* record current range of write behind IOs */
++struct wb_info {
++	sector_t lo;
++	sector_t hi;
++	struct list_head list;
++};
++
+ struct mddev {
+ 	void				*private;
+ 	struct md_personality		*pers;
+@@ -468,6 +488,7 @@ struct mddev {
+ 					  */
+ 	struct work_struct flush_work;
+ 	struct work_struct event_work;	/* used by dm to report failure event */
++	mempool_t *wb_info_pool;
+ 	void (*sync_super)(struct mddev *mddev, struct md_rdev *rdev);
+ 	struct md_cluster_info		*cluster_info;
+ 	unsigned int			good_device_nr;	/* good device num within cluster raid */
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 0c8a098d220e..f1ea17b14b6e 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -83,6 +83,57 @@ static void lower_barrier(struct r1conf *conf, sector_t sector_nr);
+ 
+ #include "raid1-10.c"
+ 
++static int check_and_add_wb(struct md_rdev *rdev, sector_t lo, sector_t hi)
++{
++	struct wb_info *wi, *temp_wi;
++	unsigned long flags;
++	int ret = 0;
++	struct mddev *mddev = rdev->mddev;
++
++	wi = mempool_alloc(mddev->wb_info_pool, GFP_NOIO);
++
++	spin_lock_irqsave(&rdev->wb_list_lock, flags);
++	list_for_each_entry(temp_wi, &rdev->wb_list, list) {
++		/* collision happened */
++		if (hi > temp_wi->lo && lo < temp_wi->hi) {
++			ret = -EBUSY;
++			break;
++		}
++	}
++
++	if (!ret) {
++		wi->lo = lo;
++		wi->hi = hi;
++		list_add(&wi->list, &rdev->wb_list);
++	} else
++		mempool_free(wi, mddev->wb_info_pool);
++	spin_unlock_irqrestore(&rdev->wb_list_lock, flags);
++
++	return ret;
++}
++
++static void remove_wb(struct md_rdev *rdev, sector_t lo, sector_t hi)
++{
++	struct wb_info *wi;
++	unsigned long flags;
++	int found = 0;
++	struct mddev *mddev = rdev->mddev;
++
++	spin_lock_irqsave(&rdev->wb_list_lock, flags);
++	list_for_each_entry(wi, &rdev->wb_list, list)
++		if (hi == wi->hi && lo == wi->lo) {
++			list_del(&wi->list);
++			mempool_free(wi, mddev->wb_info_pool);
++			found = 1;
++			break;
++		}
++
++	if (!found)
++		WARN_ON("The write behind IO is not recorded\n");
++	spin_unlock_irqrestore(&rdev->wb_list_lock, flags);
++	wake_up(&rdev->wb_io_wait);
++}
++
+ /*
+  * for resync bio, r1bio pointer can be retrieved from the per-bio
+  * 'struct resync_pages'.
+@@ -484,6 +535,12 @@ static void raid1_end_write_request(struct bio *bio)
+ 	}
+ 
+ 	if (behind) {
++		if (test_bit(WBCollisionCheck, &rdev->flags)) {
++			sector_t lo = r1_bio->sector;
++			sector_t hi = r1_bio->sector + r1_bio->sectors;
++
++			remove_wb(rdev, lo, hi);
++		}
+ 		if (test_bit(WriteMostly, &rdev->flags))
+ 			atomic_dec(&r1_bio->behind_remaining);
+ 
+@@ -1482,7 +1539,16 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
+ 			mbio = bio_clone_fast(bio, GFP_NOIO, &mddev->bio_set);
+ 
+ 		if (r1_bio->behind_master_bio) {
+-			if (test_bit(WriteMostly, &conf->mirrors[i].rdev->flags))
++			struct md_rdev *rdev = conf->mirrors[i].rdev;
++
++			if (test_bit(WBCollisionCheck, &rdev->flags)) {
++				sector_t lo = r1_bio->sector;
++				sector_t hi = r1_bio->sector + r1_bio->sectors;
++
++				wait_event(rdev->wb_io_wait,
++					   check_and_add_wb(rdev, lo, hi) == 0);
++			}
++			if (test_bit(WriteMostly, &rdev->flags))
+ 				atomic_inc(&r1_bio->behind_remaining);
+ 		}
+ 
+-- 
+2.12.3
+
