@@ -2,67 +2,65 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A892B4EFA4
-	for <lists+linux-raid@lfdr.de>; Fri, 21 Jun 2019 21:51:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 690BF4F717
+	for <lists+linux-raid@lfdr.de>; Sat, 22 Jun 2019 18:29:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726017AbfFUTvj (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 21 Jun 2019 15:51:39 -0400
-Received: from smtp04.mail.qldc.ch ([212.60.46.173]:57748 "EHLO
-        smtp04.mail.qldc.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbfFUTvj (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 21 Jun 2019 15:51:39 -0400
-Received: from tuxedo.ath.cx (55-153-16-94.dyn.cable.fcom.ch [94.16.153.55])
-        by smtp04.mail.qldc.ch (Postfix) with ESMTPS id 7EEB620277;
-        Fri, 21 Jun 2019 21:51:36 +0200 (CEST)
-Received: from [10.0.70.110] (neptun.gms.local [10.0.70.110])
-        by tuxedo.ath.cx (Postfix) with ESMTP id B1F8A344240;
-        Fri, 21 Jun 2019 21:51:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=tuxedo.dynu.net;
-        s=mail; t=1561146695;
-        bh=NRnkP9eSBVCwVPRUAbbnyPuQCLhIv/BWp5MxEssqPpg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=aEz1ql9qJ4IsFS4TKjrAgwzGGJNuHr5rRSlwMUr3q3lw6hXD2TZ9yKEg1UoVl2D31
-         emI6AJ7ylWhhT5ON7iWDJ7EZUNdtDs+jjOu7m9FTYTP3vqDVRhYsyPVsF2M4EyrPXT
-         BJnxABfc4/MRB1Hvtn0lpaCBfrK8gPwYQrewow/4=
-Subject: Re: md0: bitmap file is out of date, resync
-To:     Song Liu <liu.song.a23@gmail.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>
-References: <92ce64ba-2c55-8ef8-3ddf-3bbf867ec4f8@tuxedo.ath.cx>
- <CAPhsuW4Gss2ie2wv_GmT2Xz-5vU+XP=KR6cxh-qOOQPKtOz9ag@mail.gmail.com>
- <a2e4b1a0-e614-2eb3-c673-96fbfbc5ae69@tuxedo.ath.cx>
- <CAPhsuW6+ooVkKznfT19x4HquN+g4WVb-31PvKKt=01fE_wJZEg@mail.gmail.com>
-From:   Mathias G <newsnet-mg-2016@tuxedo.ath.cx>
-Message-ID: <1942a84d-ec30-b089-1e17-62e032e5f728@tuxedo.ath.cx>
-Date:   Fri, 21 Jun 2019 21:51:33 +0200
-User-Agent: Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.8pre)
- Gecko/20071022 Thunderbird/2.0.0.6 Mnenhy/0.7.5.0
+        id S1726463AbfFVQ3T (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 22 Jun 2019 12:29:19 -0400
+Received: from sonic316-11.consmr.mail.bf2.yahoo.com ([74.6.130.121]:35916
+        "EHLO sonic316-11.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726466AbfFVQ3J (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Sat, 22 Jun 2019 12:29:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1561220948; bh=3fXYToOZXvh5MOJ1JSawYDThjnynC/Ekt2gucIg6zZg=; h=Date:From:Reply-To:Subject:From:Subject; b=Sqmma7rQCC9csXbuiUU3W2/3JNoNH7S8264Vtax3p6vjP/GOy3xpD3wbU2PRR9kt9Hpkf+FIWW9PMCnOCaw1O79buHof/+e4XCSgtAjG8InDhCml6NU6QqPjKJ3zDc6ntgnpVqWtJnbhtjoUqIbv1W6GU8NTi8qVdCcmhrTc1IZ6aiOxpvBar7FQmN3jAwZcqruMWVYBgbk1LAoNqGvQ8jjOiTjNhCDJjpcLi94EE60gk+qIfYgu1AQDdd9wVo7X6i3XlVR9KCYw0l7ikZmlDSVkcSrrmJBlognD3+QlW4wko0RiyOGAXy+sEMAa8UXhFfxEEhf+A0WfqKBKwkVQbg==
+X-YMail-OSG: 3TA6aNEVM1mHk4tfSNROwYxIcekGBuzt5YSl8uAf.0_HHQ2LGDBhX2FGT2.Do_z
+ _0DV280q.YGRxDLoRDSJM82e2d5hsgoPZVcKxWsle6Z3oHX8Omo6hY9bu5QjJLY68zQNKFXygJQb
+ l1z62dHRy69xOFvl6tq.81EbMsOh1_cirrcCk2fMX_Jmwx0sebG__1rhE6wzzo_NDP9VbvIqZ9bR
+ 2icQk1E4jS_eT.9i5S8Sf0xsdShl9dMibpAXRU93yOYuHTQIa_P77tZTcStgCsIVxKiDvC3a0NxY
+ 8gZtRhwFdS641nFzLb368UTov.mB4xMHIDhTJv9NazaTg1j8sw18ET29s.TqlBmXHg8vLU94qBpd
+ 5PlUttniCcoNFEJpnLF3UUydECDiL8Z11cc18YJXwsIeDfFkYqHGX5XdA4jNj054mfKUIhoNEakn
+ WUKps59xvPMOhDCVBujS9v_vJClG4fXrBtjl.W_LQqwsSCutxIcdvaqHEtURhc6MkAEPdp4bTGI.
+ srA9smb.rYGHYAQmfGBYSrMpzCORaFwD3sLBOdwCdBjEVVdu.sBEOGddWsx2T8AZRYYy5nvR9Foz
+ bPsz41tE4__SqGjxrktEJ2_s2wIQAUza2deZFDGXc6T62eXwgZpA4Pp2nGTmGbFQ6h4nAMd51HJh
+ T3GzQn8s4GOn.0BKRwZDpwf7w10rv6JPk5nAgLZOaX7LfFs2yeq7fnFrg4OCOiG9MCMxrUNq6gf7
+ VomHdE0MTMCDmL3Ebk4K0YUhXaCTht27MRDaoJusaRVRGavzgn0vj3Z4n7xxu27l7AAqrNZTRmUI
+ n_b8fWLMzkIFoI7ZcmL_O5d2bYctv7x0WqIS4U6onMjRr4HtPSPFTejqwRtmzChG01EgeDt1Xu9J
+ 3fp8ciCxthupmhAtFqCrukMze7VttucN.DpeM8bKmVw1EDgn.s_L.L9fVdDwg2umGkLNazDxoP0_
+ dzbgtjASRdO1.JaxkowN5gRT6rna4oVoAmbHsjQ4rLTjBWSWz8ZqQDlV43apY.buigbJvn4Qmvf1
+ GxhsPAlHlnnGfjZ9pr3BSAVXKd_Qs83vYaBOYxWdXDlwxBl9.1.bnCTqFBLXCTND1BZASE2pli5W
+ fu842ttK3BMCdw5COU_fvmE4HTFnTUQ5tN2a6KHryWZiInkZpWdo8I9xFucw8IlPI3qY2rDSegZk
+ LLEiGCawsrUj04Yg3uv6LVIzJaVvTytAzboyOeQVTgoj.0EfkvEtgpXm3
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.bf2.yahoo.com with HTTP; Sat, 22 Jun 2019 16:29:08 +0000
+Date:   Sat, 22 Jun 2019 16:29:03 +0000 (UTC)
+From:   "Miss.Fatima Yusuf" <fatimayusuf5@outlook.fr>
+Reply-To: miss.fmayusuf11@gmail.com
+Message-ID: <1743094696.311303.1561220943310@mail.yahoo.com>
+Subject: From:Miss: Fatima Yusuf.
 MIME-Version: 1.0
-In-Reply-To: <CAPhsuW6+ooVkKznfT19x4HquN+g4WVb-31PvKKt=01fE_wJZEg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.0 required=5.0 tests=ALL_TRUSTED
-        autolearn=unavailable autolearn_force=no version=3.4.2
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on tuxedo.ath.cx
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi Song
 
-On 15.06.19 17:30, Song Liu wrote:
-> The events count is just off by 1, so it looks like the bitmap's super
-> block didn't got update properly. From the code in latest upstream,
-> we write the superblock with REQ_SYNC, but not REQ_OP_FLUSH
-> or REQ_FUA, so this _might_ be the problem.
-Ok
 
-> Question: are you running the two drives with write cache on?
-> If yes, and if your application is not heavy on writes, could you try
-> turn off HDD write cache and see if the issue repros?
-Thanks for this. I just disabled the write cache with hdparm in rc.local
-for both RAID members and will let you know if the problem occurs again.
--- 
-kind regards
- mathias
+From:Miss: Fatima Yusuf.
+
+For sure this mail would definitely come to you as a surprise, but do take your good time to go through it, My name is Ms. Fatima Yusuf,i am from Ivory Coast.
+
+I lost my parents a year and couple of months ago. My father was a serving director of the Agro-exporting board until his death. He was assassinated by his business partners.Before his death, he made a deposit of US$9.7 Million Dollars here in Cote d'ivoire which was for the purchase of cocoa processing machine and development of another factory before his untimely death.
+
+Being that this part of the world experiences political and crises time without number, there is no guarantee of lives and properties. I cannot invest this money here any long, despite the fact it had been my late father's industrial plans.
+
+I want you to do me a favor to receive this funds into your country or any safer place as the beneficiary, I have plans to invest this money in continuation with the investment vision of my late father, but not in this place again rather in your country. I have the vision of going into real estate and industrial production or any profitable business venture.
+
+I will be ready to compensate you with 20% of the total Amount, now all my hope is banked on you and i really wants to invest this money in your country, where there is stability of Government, political and economic welfare.
+
+My greatest worry now is how to move out of this country because my uncle is threatening to kill me as he killed my father,Please do not let anybody hear about this, it is between me and you alone because of my security reason.
+
+I am waiting to hear from you.
+Yours Sincerely,
+Miss.Fatima Yusuf.
