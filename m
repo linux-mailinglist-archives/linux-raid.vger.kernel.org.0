@@ -2,76 +2,132 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D120357204
-	for <lists+linux-raid@lfdr.de>; Wed, 26 Jun 2019 21:49:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AB3D577EE
+	for <lists+linux-raid@lfdr.de>; Thu, 27 Jun 2019 02:51:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbfFZTtj (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 26 Jun 2019 15:49:39 -0400
-Received: from mail-pg1-f181.google.com ([209.85.215.181]:38954 "EHLO
-        mail-pg1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfFZTtj (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 26 Jun 2019 15:49:39 -0400
-Received: by mail-pg1-f181.google.com with SMTP id 196so1692490pgc.6
-        for <linux-raid@vger.kernel.org>; Wed, 26 Jun 2019 12:49:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=Z7ANcLu5cAvDj3+P/cTiSaUFLCOhEwwx/zZzamstMvo=;
-        b=u7ipS2BKqwERoes+Jae1VGR/FAEnHNFDexsR0FZghKT54D7cUXxT4IUKkqsgQxXjyV
-         nbfdSEw/JVUcRzc0Xyy1l9CEFWqsC/Qwlufh51L4RDT5X8vBGOss/LS9EuWVnkbltuTz
-         fqCVt5xel+d0yBRwwngZikT5EMFBIsSm998o+fydszaE5cHLohAzq+w3nQE7LUEvr3pa
-         ITOA3AyR4y+9nBqnCjVqxfhXKKhXr1XXG4UD4/3Vjh+SqJczL0j/UJw49m+/fID+E+0K
-         fjnYUsDk9gkzH7QINy4uxgsyjeYrCmAnnheiml70hzm4utWQMwZ6qRslo6+FK/r+Ou2i
-         +Elw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Z7ANcLu5cAvDj3+P/cTiSaUFLCOhEwwx/zZzamstMvo=;
-        b=MzuL8SItvFmen3iiPCea6oIZt+BZSqesZS6UfapzGQNhDTptaDPgauZxZoc0C1XhTd
-         RvT34nGIJiUlkCQ6yeM8EsRIBRBggEdhr6TU0KFissolkrtryOPjr2WtLo+X8qfLF2C5
-         JRqsrnRmlNoJnTApnv5yRxClTJ6A3krr9g9UhXn3NBBh+Hsabj95Oj+H5kQLAJyfO9OP
-         XFJchsCDj9sb+56CD+wjlsWhziBjuNdq7eYOtU+hrMCNj+iVyriNeIKzmZrlw35/ADv/
-         Ste9knuI2WACSS8gk1mnBHrsMry+rPzrrLRP4/iLgc1KaYg3G6RcvqNSdmbO4R9eKe0E
-         ML2g==
-X-Gm-Message-State: APjAAAV6nStAflY37Cfw+Jo3fyVMSuLIN6+AZxxAwI0uTqhEFdxOKWIW
-        EfWb56MuwCT1vAP2vJ5v2JVQ6HnK57zzEQ==
-X-Google-Smtp-Source: APXvYqyOMD4ynm4GQlPzT70TDzzckryt4VXlwSLTQSSePHA8URN/47lpLiqdBbpEJblLxlfVouOwFw==
-X-Received: by 2002:a17:90a:1b0c:: with SMTP id q12mr1011530pjq.76.1561578578039;
-        Wed, 26 Jun 2019 12:49:38 -0700 (PDT)
-Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
-        by smtp.gmail.com with ESMTPSA id q5sm11575414pgj.49.2019.06.26.12.49.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Jun 2019 12:49:37 -0700 (PDT)
-Subject: Re: [GIT PULL] fix for md-next 20190626
-To:     Song Liu <songliubraving@fb.com>,
-        linux-raid <linux-raid@vger.kernel.org>
-References: <526C01BF-475E-42A2-A994-B6B9741D6749@fb.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <4f43963c-0aab-4bfb-3ee2-96cfb31e32dd@kernel.dk>
-Date:   Wed, 26 Jun 2019 13:49:35 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        id S1727634AbfF0Ae6 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 26 Jun 2019 20:34:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39262 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728166AbfF0Ae6 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:34:58 -0400
+Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7462720659;
+        Thu, 27 Jun 2019 00:34:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561595697;
+        bh=ManI2DyUmefDqP+96l4J/k9yFjDxluZgJ0klKLlt3+8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=S+VXVbe06j2nyotR41LKqbGx+BmVlvL1YdVl49yWJnAUUxVb9MfKX0cyae5waWBhR
+         BgR9Ifdi6fMjUC7WsmZfhMDYl0HAZzfz4qEMT8GbPVEojLmpc6qDP3u+A8AWNhNbhG
+         xiVGlYIa/trpDZN5s+3jB46L7VeNWG0CoFFfMaZg=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 83/95] md: fix for divide error in status_resync
+Date:   Wed, 26 Jun 2019 20:30:08 -0400
+Message-Id: <20190627003021.19867-83-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
+References: <20190627003021.19867-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <526C01BF-475E-42A2-A994-B6B9741D6749@fb.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 6/26/19 1:36 PM, Song Liu wrote:
-> Hi Jens,
-> 
-> Please consider pulling the following fix on top of your for-5.3/block
-> branch.
+From: Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
 
-Pulled, thanks.
+[ Upstream commit 9642fa73d073527b0cbc337cc17a47d545d82cd2 ]
 
+Stopping external metadata arrays during resync/recovery causes
+retries, loop of interrupting and starting reconstruction, until it
+hit at good moment to stop completely. While these retries
+curr_mark_cnt can be small- especially on HDD drives, so subtraction
+result can be smaller than 0. However it is casted to uint without
+checking. As a result of it the status bar in /proc/mdstat while stopping
+is strange (it jumps between 0% and 99%).
+
+The real problem occurs here after commit 72deb455b5ec ("block: remove
+CONFIG_LBDAF"). Sector_div() macro has been changed, now the
+divisor is casted to uint32. For db = -8 the divisior(db/32-1) becomes 0.
+
+Check if db value can be really counted and replace these macro by
+div64_u64() inline.
+
+Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/md/md.c | 36 ++++++++++++++++++++++--------------
+ 1 file changed, 22 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 295ff09cff4c..84aec3647994 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -7617,9 +7617,9 @@ static void status_unused(struct seq_file *seq)
+ static int status_resync(struct seq_file *seq, struct mddev *mddev)
+ {
+ 	sector_t max_sectors, resync, res;
+-	unsigned long dt, db;
+-	sector_t rt;
+-	int scale;
++	unsigned long dt, db = 0;
++	sector_t rt, curr_mark_cnt, resync_mark_cnt;
++	int scale, recovery_active;
+ 	unsigned int per_milli;
+ 
+ 	if (test_bit(MD_RECOVERY_SYNC, &mddev->recovery) ||
+@@ -7708,22 +7708,30 @@ static int status_resync(struct seq_file *seq, struct mddev *mddev)
+ 	 * db: blocks written from mark until now
+ 	 * rt: remaining time
+ 	 *
+-	 * rt is a sector_t, so could be 32bit or 64bit.
+-	 * So we divide before multiply in case it is 32bit and close
+-	 * to the limit.
+-	 * We scale the divisor (db) by 32 to avoid losing precision
+-	 * near the end of resync when the number of remaining sectors
+-	 * is close to 'db'.
+-	 * We then divide rt by 32 after multiplying by db to compensate.
+-	 * The '+1' avoids division by zero if db is very small.
++	 * rt is a sector_t, which is always 64bit now. We are keeping
++	 * the original algorithm, but it is not really necessary.
++	 *
++	 * Original algorithm:
++	 *   So we divide before multiply in case it is 32bit and close
++	 *   to the limit.
++	 *   We scale the divisor (db) by 32 to avoid losing precision
++	 *   near the end of resync when the number of remaining sectors
++	 *   is close to 'db'.
++	 *   We then divide rt by 32 after multiplying by db to compensate.
++	 *   The '+1' avoids division by zero if db is very small.
+ 	 */
+ 	dt = ((jiffies - mddev->resync_mark) / HZ);
+ 	if (!dt) dt++;
+-	db = (mddev->curr_mark_cnt - atomic_read(&mddev->recovery_active))
+-		- mddev->resync_mark_cnt;
++
++	curr_mark_cnt = mddev->curr_mark_cnt;
++	recovery_active = atomic_read(&mddev->recovery_active);
++	resync_mark_cnt = mddev->resync_mark_cnt;
++
++	if (curr_mark_cnt >= (recovery_active + resync_mark_cnt))
++		db = curr_mark_cnt - (recovery_active + resync_mark_cnt);
+ 
+ 	rt = max_sectors - resync;    /* number of remaining sectors */
+-	sector_div(rt, db/32+1);
++	rt = div64_u64(rt, db/32+1);
+ 	rt *= dt;
+ 	rt >>= 5;
+ 
 -- 
-Jens Axboe
+2.20.1
 
