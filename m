@@ -2,38 +2,38 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3304F57786
-	for <lists+linux-raid@lfdr.de>; Thu, 27 Jun 2019 02:48:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F231C57746
+	for <lists+linux-raid@lfdr.de>; Thu, 27 Jun 2019 02:46:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729000AbfF0AjA (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 26 Jun 2019 20:39:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43234 "EHLO mail.kernel.org"
+        id S1729434AbfF0AlG (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 26 Jun 2019 20:41:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728992AbfF0Ai7 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:38:59 -0400
+        id S1727521AbfF0AlB (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:41:01 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C59C5217F9;
-        Thu, 27 Jun 2019 00:38:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D108205ED;
+        Thu, 27 Jun 2019 00:40:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595938;
-        bh=PUaeXSgtWZvmx8CAp+lBU9kRZAMQL1MOJ0W+0PuGnm8=;
+        s=default; t=1561596060;
+        bh=iV+Bg6t3I0LRCL9itsF7w5SRr5OpONX9g8yj0PsqQkY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rNsxru7T8dgjBDyYlQaaDOZtvIj6h4G/insK5jycB5e0l1ep5UwptZWytsWy4TxyQ
-         NLs1Mik4PAyLzMPw2x95E97DRqVCKPgN4ckiPKTyhdScXeOT5fonEQ6q5+5wqHBlec
-         y5ekJGUWzttsK+6e779TK39eulhPiPXvTv7h4hyA=
+        b=RtjPxSPM+peGqzZiEWo5n5bCZe5mwldplcpp+nRNdDx+ORoco0oxQ3eVGC2J31GND
+         1uKsSUUaQilbFD50XQJlcA8mMJdfxjy5skQM+U3I6qSbimruYT2iDD8yn7h+58L8NG
+         p/aQoGDw6qgVQQFjp+uwhn19i4/w2bnIdHMhbgns=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>,
         Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 51/60] md: fix for divide error in status_resync
-Date:   Wed, 26 Jun 2019 20:36:06 -0400
-Message-Id: <20190627003616.20767-51-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 28/35] md: fix for divide error in status_resync
+Date:   Wed, 26 Jun 2019 20:39:16 -0400
+Message-Id: <20190627003925.21330-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190627003616.20767-1-sashal@kernel.org>
-References: <20190627003616.20767-1-sashal@kernel.org>
+In-Reply-To: <20190627003925.21330-1-sashal@kernel.org>
+References: <20190627003925.21330-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -70,10 +70,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 22 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/md/md.c b/drivers/md/md.c
-index b924f62e2cd5..fb5d702e43b5 100644
+index b27a69388dcd..764ed9c46629 100644
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -7625,9 +7625,9 @@ static void status_unused(struct seq_file *seq)
+@@ -7605,9 +7605,9 @@ static void status_unused(struct seq_file *seq)
  static int status_resync(struct seq_file *seq, struct mddev *mddev)
  {
  	sector_t max_sectors, resync, res;
@@ -86,7 +86,7 @@ index b924f62e2cd5..fb5d702e43b5 100644
  	unsigned int per_milli;
  
  	if (test_bit(MD_RECOVERY_SYNC, &mddev->recovery) ||
-@@ -7716,22 +7716,30 @@ static int status_resync(struct seq_file *seq, struct mddev *mddev)
+@@ -7677,22 +7677,30 @@ static int status_resync(struct seq_file *seq, struct mddev *mddev)
  	 * db: blocks written from mark until now
  	 * rt: remaining time
  	 *
