@@ -2,32 +2,32 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D03B5BA70
-	for <lists+linux-raid@lfdr.de>; Mon,  1 Jul 2019 13:16:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 832235BFC3
+	for <lists+linux-raid@lfdr.de>; Mon,  1 Jul 2019 17:28:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728315AbfGALQt (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 1 Jul 2019 07:16:49 -0400
-Received: from mout.web.de ([212.227.17.12]:35283 "EHLO mout.web.de"
+        id S1728716AbfGAP2T (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 1 Jul 2019 11:28:19 -0400
+Received: from mout.web.de ([212.227.17.12]:39627 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727239AbfGALQs (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 1 Jul 2019 07:16:48 -0400
+        id S1727784AbfGAP2T (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 1 Jul 2019 11:28:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1561979803;
-        bh=dZ4VcO9pNxsQV4z29dsXRp5NdEoer3A955Q78CzC6Gw=;
+        s=dbaedf251592; t=1561994894;
+        bh=jNhErwSMTeNELfsM9KLdpW5pjmYfL5y8hYO3Mt6I18k=;
         h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
-        b=T0FjnRPeKHYk6XmnMGFJW9iGNjFPVjhw8lbwgwalXdCIIvJBAUimTGXfHUpSewV/+
-         gkzr5US0/gnRfFEA7MBRdSUr1wsJKWfDxuItyd+p+/Iy+Zge09PnJ5J86PJl9Yb/CQ
-         l/wJUgs9g9hvvGvOL8ZcJ0SgRH0I6DxGtiWL+aNk=
+        b=DXIZYB0p6EBxANR/9bvZ+Qsbq7vZiFK+xonemPQg/TT+uPB8w00fx2SOs647CkhHx
+         mKbPMxwNoiymJKXQcignX6VCqvavfKkLVOtWs17rDOJo2lkMlFEqaf6n4wAp96Anms
+         sIAXZqqANFn5UYifXWOVC2P4ILskrflz9QArUCTs=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.131.202]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0M3T5g-1iYUt129Zo-00qyEw; Mon, 01
- Jul 2019 13:16:43 +0200
+Received: from [192.168.1.2] ([93.131.131.202]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0M6DuI-1iRqa41w42-00yBFi; Mon, 01
+ Jul 2019 17:28:14 +0200
 To:     linux-raid@vger.kernel.org, Shaohua Li <shli@kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         kernel-janitors@vger.kernel.org
 From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] md-multipath: Replace a seq_printf() call by seq_putc() in
- multipath_status()
+Subject: [PATCH] md/raid: Replace a seq_printf() call by seq_putc() in three
+ functions
 Openpgp: preference=signencrypt
 Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
@@ -72,43 +72,43 @@ Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
  x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
  pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <ad2e4b58-268e-c9e5-8a66-8cb5dee8d91e@web.de>
-Date:   Mon, 1 Jul 2019 13:16:42 +0200
+Message-ID: <50f0f51c-16c6-8d31-b265-8a007e6f7251@web.de>
+Date:   Mon, 1 Jul 2019 17:28:13 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:1c20TXWNrjNbZ4TuxWQThN9i7ALgGwSyB2fkS0vBGm1yF0ch/zq
- PI7KsJfdMxrVBMDom7mdNkGR+wDf12qP0BEwjAnka7nhHmNtsv6GSYK0jGawJOpzKUFyGh/
- ura5+DD/uv7fdWyYLo19+noZaty+tQskevsk6Uh0P3EmAx6qRpAdzkelzD6p1czcl+Q25i1
- VI/P7et4lQ6ntibv6SAIw==
+X-Provags-ID: V03:K1:ywUpMb787bQvtiUb0KKGmPA/weiTP8ya+diTTLJcflrI6wQK1P6
+ lvV0C8Ou5LDpkmLBa3OR5+7+dre/phbamNmCxO6/D9y6WJ4Lvf8Ti7wT9V5FTZ7pdKZrOfZ
+ e4sXhAmr8dIaXg2AF5PT0oEIyH51NbbrIeNfoxXjN79vWYxCFN0vdTVcjh35mSRjMrZgyxe
+ CJmm47OPxZhoNlVo+CgPw==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0eZuVMS2BKE=:L4wXZcJHrCyntAOgsKTguO
- EKRZ+UUMQzsnohTfiZaha9je1XhPC/3U8yGMDZtJgCnUvhnOFJuZMW22E39qDakwHoJpIlSoB
- Ca2KsxqShwypsOH8eIcduItHzJQDuVovDkIpnI1QdQKCpMGT/aXWuCEdc42HYXYp9KOlKre3F
- Y66bpONpIiwofsxKwCJAyvaNBA2vemMLTyF05xAkCRkOBJ3fl/ncX10IGaKFGPEMGKhxzh4wP
- 4h7A/QFYAq2qJW2WgU1hmRYsc6bd4B6wUYdmAKnPzcJFg2U0wfJY9ejmjVvwIi1UI2u4vlnpB
- cJXr73fskkj8sy+WY+WggMYxLhNNdaIHhfP4IrQ/G+grZJ9NT8TYjLAV6PfOf08fG8gLfD1yH
- wntpuQO5XauHzQCQVXxfWBbXxwrlHLDZQuWvt5v1aN7dludNE0lhrSolHOpVo+Ua+cZBFLvWO
- 3c1SLluQIphqwdg3Ca/JJNKT0lnL77CGI8i2VDO22meAypumiEAK3mPOmlZc9oJVmq0pj8a2g
- KcjIVh0kQsS97ioDWm7Yi594x9UbJxBr3jd3EGgwD1xrdtc+uocQx5m46n8AEO/1f1hKo0pBX
- Q3Cnd86/RQ0Zv5tlhNeb/p53sU1Tts5XP9ajSZaxSHOEA7N+F3p7l8mlPQUb5EkCmsJPGc74U
- P6ovKJOdHG2J7+kG2NTyBBEa5aUltO9fKIE92XPtQc02WVqrtSMbeglCgu6YONGtzdm5HrTF7
- YSqzAZZLqG4tPIqIhMq+q017dQh2qL05U1FYPqbuexKBJbCZBhQoqauw04D/BS4iaJVI+Nbnk
- wiky5o76RLHmblbnZ0ixJeQAUBOmPtcw6UmFOlbg5cEcb0gDDXHVZvnd7Z+w5RX03u4favs+i
- ArHZFkcP8fV5h4v6NFEitKq6sv/C2EZg0GC8KS1v0YBfaXuIdF9saN+3U6AdcDx5bZQ9BOcts
- 1d3usfEHCiQABjgeDHckBTk6TIu2MVgh4vcJIeSrLqehvhKb6KtHUTBUSNZTCgmOb91ytjE1W
- Xv+8dMwTLpsw8QndqVaxERRdzSxpDqhKkzjIzKI+vy8j1KbswPO2eFJnwvJT5IWUOi1ny5c3y
- kOM+OfR2Yn0Kx9FriiMG4JJZdRY/0SXmSUM
+X-UI-Out-Filterresults: notjunk:1;V03:K0:kBCzHH4kDGE=:zfbc1xODO51Rdqp4DdDvZr
+ rBnMPFTAbrFw3oy7CuEjHyHkGkvcsptVSc31RSNG3dGSYC2Qh+tX6PzsQcVF9XqJJcB9qFKu2
+ cZ9LmqJunaE6ZL0gf6vgMxjckS+KetaOxPVMXN6Vl9WjO4iQT2kMWIp/XVQlRzCZ6miCr+/+l
+ T6N8ggJXbNoPMV88qN1uGcU0xIQAtqXL0pmLSLHFq01VhpSS14VGZ1SuNSFZN7ijbocRYL5x6
+ ySRI0WLhGZl7PMIy1gdh36MgGx/LGXKYFH8n5XEyxMNlZ8cUx1IgdEK/gjyQ71AAJUETQ8PuX
+ /qk6y85M5wuTwK+uh9IDri+WxKUd6ou/QX8a9awV1v7y6L1elZTHFChd3WTMhBlbiD7iA5PPw
+ eYHFKs64xhHb43fwEzEPpplBUIQzWyiQxd3LOoyqs8ui6GqxHupyAcgvi5Tvw0cbjpGqClAnG
+ /OwVKFMSYOVC4GtpotOG7F/gBAYLn9lO5lxLygNH4FPhhiSd2dcVWKG1y9/VWmkm6LDhJAlY/
+ wrkpeetUvaRaMrDgQA0IjEa1+cgHPoqV1/DFGVe8vnQfMRGqBRbfqxH4WO+BqhD5FXTNcaAa1
+ n0r6zQ9FlRgZs/4+NUfJsn2RMD2JatEMjoKL45MyTc/pvhqFu7BKiKsDVSWsmXcvYv84SWBZV
+ rbhnUEmgVvVhIHx92HmRBHHzqTbPxa+CAZUv3+Xzmau3KcLlMG5F4hKq5ANCaiNqyrIN7a6OZ
+ 9LdFaeoXXqiS6NVq4OiXBAXDH9309HBHbfqAgDBHTW3IpG/GmwA0P43FLs0ElcdS20dx7UhI7
+ 7zbs6lCDyNPZWBp9T7aBk1yTf0rKHjdAqZTG5ds/mfWhchpy4d/pvwnfWbkTTZngJT7uun0K/
+ yH618zIgi5dw02tNu3L22MpDOXKsVnCyf5Ioes51OeAQr8RalqxlFlOaMRg4wMIOC2jSYLZ4u
+ bUmbRbzNqWu0wsLR86X6FUuYfdXP047O4ihCszn0XbzHnmzf+N+2W8ROX9nrUl/GR+57US1oo
+ XIBMWk4cRIpg177XQ4ancEHYFpjsVvMPCxUvmb1ajhqAaqFDNl5rB+Wb8E9TYvft8RjFV5Mqf
+ WP8jEDeE6lu63J5TGDfBobab7flWsLSc3S9
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
 From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Mon, 1 Jul 2019 13:07:55 +0200
+Date: Mon, 1 Jul 2019 17:10:13 +0200
 
 A single character (depending on a condition check) should be put
 into a sequence. Thus use the corresponding function =E2=80=9Cseq_putc=E2=
@@ -118,25 +118,56 @@ This issue was detected by using the Coccinelle software.
 
 Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 =2D--
- drivers/md/md-multipath.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/md/raid1.c  | 4 ++--
+ drivers/md/raid10.c | 3 ++-
+ drivers/md/raid5.c  | 3 ++-
+ 3 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/md/md-multipath.c b/drivers/md/md-multipath.c
-index 6780938d2991..3bf6f97ea264 100644
-=2D-- a/drivers/md/md-multipath.c
-+++ b/drivers/md/md-multipath.c
-@@ -146,7 +146,8 @@ static void multipath_status(struct seq_file *seq, str=
-uct mddev *mddev)
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 34e26834ad28..769d79a1d2cf 100644
+=2D-- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -1597,7 +1597,7 @@ static void raid1_status(struct seq_file *seq, struc=
+t mddev *mddev)
  	rcu_read_lock();
  	for (i =3D 0; i < conf->raid_disks; i++) {
- 		struct md_rdev *rdev =3D rcu_dereference(conf->multipaths[i].rdev);
+ 		struct md_rdev *rdev =3D rcu_dereference(conf->mirrors[i].rdev);
+-		seq_printf(seq, "%s",
+-			   rdev && test_bit(In_sync, &rdev->flags) ? "U" : "_");
++		seq_putc(seq,
++			 rdev && test_bit(In_sync, &rdev->flags) ? 'U' : '_');
+ 	}
+ 	rcu_read_unlock();
+diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+index 8a1354a08a1a..4e7da5dcbf86 100644
+=2D-- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -1572,6 +1572,7 @@ static void raid10_status(struct seq_file *seq, stru=
+ct mddev *mddev)
+ 	rcu_read_lock();
+ 	for (i =3D 0; i < conf->geo.raid_disks; i++) {
+ 		struct md_rdev *rdev =3D rcu_dereference(conf->mirrors[i].rdev);
+-		seq_printf(seq, "%s", rdev && test_bit(In_sync, &rdev->flags) ? "U" : "=
+_");
++		seq_putc(seq,
++			 rdev && test_bit(In_sync, &rdev->flags) ? 'U' : '_');
+ 	}
+ 	rcu_read_unlock();
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index 3de4e13bde98..4b0e93869801 100644
+=2D-- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -7510,6 +7510,7 @@ static void raid5_status(struct seq_file *seq, struc=
+t mddev *mddev)
+ 	rcu_read_lock();
+ 	for (i =3D 0; i < conf->raid_disks; i++) {
+ 		struct md_rdev *rdev =3D rcu_dereference(conf->disks[i].rdev);
 -		seq_printf (seq, "%s", rdev && test_bit(In_sync, &rdev->flags) ? "U" : =
 "_");
 +		seq_putc(seq,
 +			 rdev && test_bit(In_sync, &rdev->flags) ? 'U' : '_');
  	}
  	rcu_read_unlock();
- 	seq_putc(seq, ']');
 =2D-
 2.22.0
 
