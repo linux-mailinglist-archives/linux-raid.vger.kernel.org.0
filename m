@@ -2,187 +2,141 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 989B75A6D4
-	for <lists+linux-raid@lfdr.de>; Sat, 29 Jun 2019 00:21:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D03B5BA70
+	for <lists+linux-raid@lfdr.de>; Mon,  1 Jul 2019 13:16:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbfF1WVM (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 28 Jun 2019 18:21:12 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:49897 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbfF1WVM (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 28 Jun 2019 18:21:12 -0400
-Received: from mail-qt1-f198.google.com ([209.85.160.198])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <gpiccoli@canonical.com>)
-        id 1hgzCH-0004r9-T6
-        for linux-raid@vger.kernel.org; Fri, 28 Jun 2019 22:18:22 +0000
-Received: by mail-qt1-f198.google.com with SMTP id g30so7504209qtm.17
-        for <linux-raid@vger.kernel.org>; Fri, 28 Jun 2019 15:18:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eU5oGuW9La28t+68D36cpP8/gkaEFB1F4a4O+Bgz2zY=;
-        b=DW0tCB/DiW8zgqL4qPEazXdnQSuMVKi75shZ3MTMQJ5KmDyfkm6BJu2CpdgJ+LwdwS
-         qCFCH7hUuPWCyctoWUpleoeEPGo1qhK6Ip2R/ZuNg1oBnFYrGz6TYvlBkYrJuCAA8HU+
-         iuN01/Tou6+qnxDZi+oA3sQ7T5uRgBM68S+L3qf1H7tyvH8KgzObUjFNmtlWsjcDQ++9
-         XQqskUBzzrgbDDEWQMSg3SZfRSDdMnixe9FjsU+O41BXm7F9mz9TWBBdp60kzyUFHFo2
-         b3OtBFjgvrUJl4aE6raDQqimmnw5AcjGmRUwcahaR35e9cCIbWUzVVuAgMH7TV9ec2EH
-         LbSA==
-X-Gm-Message-State: APjAAAVn0G8HwA94mBE2XQljpRP5d1XzflPbfuOVtLmPNWofm57vwkct
-        12PasoeV1TmpXYgnBVVm74VrizzMfS6udfNooJ9i7nN69c4EVUZP8bJAg93dg9WobbbEX61LU+Y
-        YoIhKDmydHhLJ69+9MV3GKCqAbzB7fZK09qThaPM=
-X-Received: by 2002:ac8:25d9:: with SMTP id f25mr10149284qtf.256.1561760301016;
-        Fri, 28 Jun 2019 15:18:21 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwXflS3fVT7sl7MEqs9zXpsmfGIy8mVABLEYn4jY1JzbGKQVFnhhjFC5EeMXcdL1+8hZ1l0tg==
-X-Received: by 2002:ac8:25d9:: with SMTP id f25mr10149268qtf.256.1561760300804;
-        Fri, 28 Jun 2019 15:18:20 -0700 (PDT)
-Received: from localhost ([179.110.97.158])
-        by smtp.gmail.com with ESMTPSA id l6sm1532557qkc.89.2019.06.28.15.18.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 28 Jun 2019 15:18:20 -0700 (PDT)
-From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-To:     stable@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, sashal@kernel.org,
-        linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
-        gpiccoli@canonical.com, jay.vosburgh@canonical.com,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Song Liu <songliubraving@fb.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Subject: [4.19.y PATCH 2/2] md/raid0: Do not bypass blocking queue entered for raid0 bios
-Date:   Fri, 28 Jun 2019 19:17:59 -0300
-Message-Id: <20190628221759.18274-2-gpiccoli@canonical.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190628221759.18274-1-gpiccoli@canonical.com>
-References: <20190628221759.18274-1-gpiccoli@canonical.com>
+        id S1728315AbfGALQt (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 1 Jul 2019 07:16:49 -0400
+Received: from mout.web.de ([212.227.17.12]:35283 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727239AbfGALQs (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 1 Jul 2019 07:16:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1561979803;
+        bh=dZ4VcO9pNxsQV4z29dsXRp5NdEoer3A955Q78CzC6Gw=;
+        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
+        b=T0FjnRPeKHYk6XmnMGFJW9iGNjFPVjhw8lbwgwalXdCIIvJBAUimTGXfHUpSewV/+
+         gkzr5US0/gnRfFEA7MBRdSUr1wsJKWfDxuItyd+p+/Iy+Zge09PnJ5J86PJl9Yb/CQ
+         l/wJUgs9g9hvvGvOL8ZcJ0SgRH0I6DxGtiWL+aNk=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.131.202]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0M3T5g-1iYUt129Zo-00qyEw; Mon, 01
+ Jul 2019 13:16:43 +0200
+To:     linux-raid@vger.kernel.org, Shaohua Li <shli@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] md-multipath: Replace a seq_printf() call by seq_putc() in
+ multipath_status()
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
+ +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
+ mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
+ lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
+ YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
+ GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
+ rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
+ 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
+ jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
+ BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
+ cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
+ Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
+ g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
+ OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
+ CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
+ LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
+ sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
+ kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
+ i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
+ g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
+ q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
+ NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
+ nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
+ 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
+ 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
+ wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
+ riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
+ DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
+ fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
+ 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
+ xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
+ qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
+ Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
+ Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
+ +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
+ hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
+ /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
+ tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
+ qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
+ Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
+ x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
+ pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
+Message-ID: <ad2e4b58-268e-c9e5-8a66-8cb5dee8d91e@web.de>
+Date:   Mon, 1 Jul 2019 13:16:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:1c20TXWNrjNbZ4TuxWQThN9i7ALgGwSyB2fkS0vBGm1yF0ch/zq
+ PI7KsJfdMxrVBMDom7mdNkGR+wDf12qP0BEwjAnka7nhHmNtsv6GSYK0jGawJOpzKUFyGh/
+ ura5+DD/uv7fdWyYLo19+noZaty+tQskevsk6Uh0P3EmAx6qRpAdzkelzD6p1czcl+Q25i1
+ VI/P7et4lQ6ntibv6SAIw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:0eZuVMS2BKE=:L4wXZcJHrCyntAOgsKTguO
+ EKRZ+UUMQzsnohTfiZaha9je1XhPC/3U8yGMDZtJgCnUvhnOFJuZMW22E39qDakwHoJpIlSoB
+ Ca2KsxqShwypsOH8eIcduItHzJQDuVovDkIpnI1QdQKCpMGT/aXWuCEdc42HYXYp9KOlKre3F
+ Y66bpONpIiwofsxKwCJAyvaNBA2vemMLTyF05xAkCRkOBJ3fl/ncX10IGaKFGPEMGKhxzh4wP
+ 4h7A/QFYAq2qJW2WgU1hmRYsc6bd4B6wUYdmAKnPzcJFg2U0wfJY9ejmjVvwIi1UI2u4vlnpB
+ cJXr73fskkj8sy+WY+WggMYxLhNNdaIHhfP4IrQ/G+grZJ9NT8TYjLAV6PfOf08fG8gLfD1yH
+ wntpuQO5XauHzQCQVXxfWBbXxwrlHLDZQuWvt5v1aN7dludNE0lhrSolHOpVo+Ua+cZBFLvWO
+ 3c1SLluQIphqwdg3Ca/JJNKT0lnL77CGI8i2VDO22meAypumiEAK3mPOmlZc9oJVmq0pj8a2g
+ KcjIVh0kQsS97ioDWm7Yi594x9UbJxBr3jd3EGgwD1xrdtc+uocQx5m46n8AEO/1f1hKo0pBX
+ Q3Cnd86/RQ0Zv5tlhNeb/p53sU1Tts5XP9ajSZaxSHOEA7N+F3p7l8mlPQUb5EkCmsJPGc74U
+ P6ovKJOdHG2J7+kG2NTyBBEa5aUltO9fKIE92XPtQc02WVqrtSMbeglCgu6YONGtzdm5HrTF7
+ YSqzAZZLqG4tPIqIhMq+q017dQh2qL05U1FYPqbuexKBJbCZBhQoqauw04D/BS4iaJVI+Nbnk
+ wiky5o76RLHmblbnZ0ixJeQAUBOmPtcw6UmFOlbg5cEcb0gDDXHVZvnd7Z+w5RX03u4favs+i
+ ArHZFkcP8fV5h4v6NFEitKq6sv/C2EZg0GC8KS1v0YBfaXuIdF9saN+3U6AdcDx5bZQ9BOcts
+ 1d3usfEHCiQABjgeDHckBTk6TIu2MVgh4vcJIeSrLqehvhKb6KtHUTBUSNZTCgmOb91ytjE1W
+ Xv+8dMwTLpsw8QndqVaxERRdzSxpDqhKkzjIzKI+vy8j1KbswPO2eFJnwvJT5IWUOi1ny5c3y
+ kOM+OfR2Yn0Kx9FriiMG4JJZdRY/0SXmSUM
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
------------------------------------------------------------------
-This patch is not on mainline and is meant to 4.19 stable *only*.
-After the patch description there's a reasoning about that.
------------------------------------------------------------------
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Mon, 1 Jul 2019 13:07:55 +0200
 
-Commit cd4a4ae4683d ("block: don't use blocking queue entered for
-recursive bio submits") introduced the flag BIO_QUEUE_ENTERED in order
-split bios bypass the blocking queue entering routine and use the live
-non-blocking version. It was a result of an extensive discussion in
-a linux-block thread[0], and the purpose of this change was to prevent
-a hung task waiting on a reference to drop.
+A single character (depending on a condition check) should be put
+into a sequence. Thus use the corresponding function =E2=80=9Cseq_putc=E2=
+=80=9D.
 
-Happens that md raid0 split bios all the time, and more important,
-it changes their underlying device to the raid member. After the change
-introduced by this flag's usage, we experience various crashes if a raid0
-member is removed during a large write. This happens because the bio
-reaches the live queue entering function when the queue of the raid0
-member is dying.
+This issue was detected by using the Coccinelle software.
 
-A simple reproducer of this behavior is presented below:
-a) Build kernel v4.19.56-stable with CONFIG_BLK_DEV_THROTTLING=y.
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/md/md-multipath.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-b) Create a raid0 md array with 2 NVMe devices as members, and mount
-it with an ext4 filesystem.
-
-c) Run the following oneliner (supposing the raid0 is mounted in /mnt):
-(dd of=/mnt/tmp if=/dev/zero bs=1M count=999 &); sleep 0.3;
-echo 1 > /sys/block/nvme1n1/device/device/remove
-(whereas nvme1n1 is the 2nd array member)
-
-This will trigger the following warning/oops:
-
-------------[ cut here ]------------
-BUG: unable to handle kernel NULL pointer dereference at 0000000000000155
-PGD 0 P4D 0
-Oops: 0000 [#1] SMP PTI
-RIP: 0010:blk_throtl_bio+0x45/0x970
-[...]
-Call Trace:
- generic_make_request_checks+0x1bf/0x690
- generic_make_request+0x64/0x3f0
- raid0_make_request+0x184/0x620 [raid0]
- ? raid0_make_request+0x184/0x620 [raid0]
- md_handle_request+0x126/0x1a0
- md_make_request+0x7b/0x180
- generic_make_request+0x19e/0x3f0
- submit_bio+0x73/0x140
-[...]
-
-This patch changes raid0 driver to fallback to the "old" blocking queue
-entering procedure, by clearing the BIO_QUEUE_ENTERED from raid0 bios.
-This prevents the crashes and restores the regular behavior of raid0
-arrays when a member is removed during a large write.
-
-[0] lore.kernel.org/linux-block/343bbbf6-64eb-879e-d19e-96aebb037d47@I-love.SAKURA.ne.jp
-
-----------------------------
-Why this is not on mainline?
-----------------------------
-
-The patch was originally submitted upstream in linux-raid and
-linux-block mailing-lists - it was initially accepted by Song Liu,
-but Christoph Hellwig[1] observed that there was a clean-up series
-ready to be accepted from Ming Lei[2] that fixed the same issue.
-
-The accepted patches from Ming's series in upstream are: commit
-47cdee29ef9d ("block: move blk_exit_queue into __blk_release_queue") and
-commit fe2008640ae3 ("block: don't protect generic_make_request_checks
-with blk_queue_enter"). Those patches basically do a clean-up in the
-block layer involving:
-
-1) Putting back blk_exit_queue() logic into __blk_release_queue(); that
-path was changed in the past and the logic from blk_exit_queue() was
-added to blk_cleanup_queue().
-
-2) Removing the guard/protection in generic_make_request_checks() with
-blk_queue_enter().
-
-The problem with Ming's series for -stable is that it relies in the
-legacy request IO path removal. So it's "backport-able" to v5.0+,
-but doing that for early versions (like 4.19) would incur in complex
-code changes. Hence, it was suggested by Christoph and Song Liu that
-this patch was submitted to stable only; otherwise merging it upstream
-would add code to fix a path removed in a subsequent commit.
-
-[1] lore.kernel.org/linux-block/20190521172258.GA32702@infradead.org
-[2] lore.kernel.org/linux-block/20190515030310.20393-1-ming.lei@redhat.com
-
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Fixes: cd4a4ae4683d ("block: don't use blocking queue entered for recursive bio submits")
-Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
----
- drivers/md/raid0.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
-index ac1cffd2a09b..f4daa56d204d 100644
---- a/drivers/md/raid0.c
-+++ b/drivers/md/raid0.c
-@@ -547,6 +547,7 @@ static void raid0_handle_discard(struct mddev *mddev, struct bio *bio)
- 			trace_block_bio_remap(bdev_get_queue(rdev->bdev),
- 				discard_bio, disk_devt(mddev->gendisk),
- 				bio->bi_iter.bi_sector);
-+		bio_clear_flag(bio, BIO_QUEUE_ENTERED);
- 		generic_make_request(discard_bio);
+diff --git a/drivers/md/md-multipath.c b/drivers/md/md-multipath.c
+index 6780938d2991..3bf6f97ea264 100644
+=2D-- a/drivers/md/md-multipath.c
++++ b/drivers/md/md-multipath.c
+@@ -146,7 +146,8 @@ static void multipath_status(struct seq_file *seq, str=
+uct mddev *mddev)
+ 	rcu_read_lock();
+ 	for (i =3D 0; i < conf->raid_disks; i++) {
+ 		struct md_rdev *rdev =3D rcu_dereference(conf->multipaths[i].rdev);
+-		seq_printf (seq, "%s", rdev && test_bit(In_sync, &rdev->flags) ? "U" : =
+"_");
++		seq_putc(seq,
++			 rdev && test_bit(In_sync, &rdev->flags) ? 'U' : '_');
  	}
- 	bio_endio(bio);
-@@ -602,6 +603,7 @@ static bool raid0_make_request(struct mddev *mddev, struct bio *bio)
- 				disk_devt(mddev->gendisk), bio_sector);
- 	mddev_check_writesame(mddev, bio);
- 	mddev_check_write_zeroes(mddev, bio);
-+	bio_clear_flag(bio, BIO_QUEUE_ENTERED);
- 	generic_make_request(bio);
- 	return true;
- }
--- 
+ 	rcu_read_unlock();
+ 	seq_putc(seq, ']');
+=2D-
 2.22.0
 
