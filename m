@@ -2,82 +2,135 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 927CF5CFA4
-	for <lists+linux-raid@lfdr.de>; Tue,  2 Jul 2019 14:40:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C21685D089
+	for <lists+linux-raid@lfdr.de>; Tue,  2 Jul 2019 15:24:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfGBMkI (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 2 Jul 2019 08:40:08 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:42019 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbfGBMkI (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 2 Jul 2019 08:40:08 -0400
-Received: by mail-qk1-f196.google.com with SMTP id b18so13745631qkc.9
-        for <linux-raid@vger.kernel.org>; Tue, 02 Jul 2019 05:40:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yHtx68ZAjHL05zsf8LKl4/8R07AsUTWAQujQvNWAE98=;
-        b=oHwuFj4e9SAbvqhR2aQMwet8YcjiY+Ithrn86T/ZrGtZgeMAf8/KjO9c3jVW8u9quC
-         nVf9CR+mChysXl97I3KmSjwcNGtAP2+kqf2D9g4fG2riUQu7cZ9V8n2UZ4tWQSByiq1X
-         lZ2ACn1dptflYSNFDdxUsqq4pd2517L4XvjjJqelSF9cUVQ44Umex5uJg5XrKVJM48LR
-         bdIrx/6SwlHvIU+U7GUPoyq90fjqm4UG72fUTm5m1b1bDussDqbcRoAXYHERL+nqaG4x
-         xGm1HfE44WnS6xoLOgQK5N7i1CuZ2p8BNeujFbb3XTLwDfgtGl3V91s0yUXnciO++2NQ
-         7urQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yHtx68ZAjHL05zsf8LKl4/8R07AsUTWAQujQvNWAE98=;
-        b=ct1fxmbmwjweKf0PpyqnSjV2OdGYwLgeopNul2eEeKl6sRIG5h6TuefcxeIQgmonrC
-         6g/mHf2JYkkYwf50efawbzyEHbthXyhICs3KYfLE4/2Q/O3xPDQ+iEHPpumOZkajSdw7
-         lTYjakpsObuZug8DJip+ngbuJrtmmNma9GCYsXsEzWKc+S55Xi9z6lqdd72pVAd63fXX
-         rUu9B98fW+GWWTsLl0aEt8iKXewVKTX8DrX/4Zq/fYOOhwFofKT9o//kxoqqtZSTzRDx
-         Z9aHrVO1rGiVRrq973t0U1Bp8f1Ga+VvIIJunyb6GS3ag89zrR/Yh5Qupk9aUNye6yxE
-         XYzw==
-X-Gm-Message-State: APjAAAVJXJyMov81l2VIcGNqQHIGUlnAP3m2ZNyBH2WXlhBVh4ngHu2n
-        ieQfc2NVSOD1hi4u7SYFSLs3lVP3mXs=
-X-Google-Smtp-Source: APXvYqyaquUX9f6AenGMpZynnOJgAOiBgp6e0NDnprvZG0nsVyR2t8cManaI4YRnOM+6V3/W0Eu2Bg==
-X-Received: by 2002:a37:7dc1:: with SMTP id y184mr6834062qkc.58.1562071206929;
-        Tue, 02 Jul 2019 05:40:06 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c0a8:11c1::1019? ([2620:10d:c091:480::c41e])
-        by smtp.gmail.com with ESMTPSA id l63sm6068001qkb.124.2019.07.02.05.40.05
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 05:40:06 -0700 (PDT)
-From:   Jes Sorensen <jes.sorensen@gmail.com>
-X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
-Subject: Re: [PATCH] Enable probe_roms to scan more than 6 roms.
-To:     Roman Sobanski <roman.sobanski@intel.com>
-Cc:     linux-raid@vger.kernel.org
-References: <20190702112927.22733-1-roman.sobanski@intel.com>
-Message-ID: <3f7d2810-27ba-0e30-8049-962be43f56db@gmail.com>
-Date:   Tue, 2 Jul 2019 08:40:03 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1727174AbfGBNYL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 2 Jul 2019 09:24:11 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:40948 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725922AbfGBNXw (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 2 Jul 2019 09:23:52 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 87E0E767180E0E09C15A;
+        Tue,  2 Jul 2019 21:23:49 +0800 (CST)
+Received: from huawei.com (10.90.53.225) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Tue, 2 Jul 2019
+ 21:23:41 +0800
+From:   Hou Tao <houtao1@huawei.com>
+To:     <linux-raid@vger.kernel.org>, <songliubraving@fb.com>
+CC:     <neilb@suse.com>, <linux-block@vger.kernel.org>,
+        <snitzer@redhat.com>, <agk@redhat.com>, <dm-devel@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <houtao1@huawei.com>
+Subject: [RFC PATCH 0/3] md: export internal stats through debugfs
+Date:   Tue, 2 Jul 2019 21:29:15 +0800
+Message-ID: <20190702132918.114818-1-houtao1@huawei.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <20190702112927.22733-1-roman.sobanski@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 7/2/19 7:29 AM, Roman Sobanski wrote:
-> In some cases if more than 6 oroms exist, resource for particular
-> controller may not be found. Change method for storing
-> adapter_rom_resources from array to list.
-> 
-> Signed-off-by: Roman Sobanski <roman.sobanski@intel.com>
-> ---
->  probe_roms.c | 98 ++++++++++++++++++++++++++++++++++--------------------------
->  1 file changed, 56 insertions(+), 42 deletions(-)
+Hi,
 
-Applied!
+There are so many io counters, stats and flags in md, so I think
+export these info to userspace will be helpful for online-debugging,
+especially when the vmlinux file and the crash utility are not
+available. And these info can also be utilized during code
+understanding.
 
-Thanks!
-Jes
+MD has already exported some stats through sysfs files under
+/sys/block/mdX/md, but using sysfs file to export more internal
+stats are not a good choice, because we need to create a single
+sysfs file for each internal stat according to the use convention
+of sysfs and there are too many internal stats. Further, the
+newly-created sysfs files would become APIs for userspace tools,
+but that is not we wanted, because these files are related with
+internal stats and internal stats may change from time to time.
 
+And I think debugfs is a better choice. Because we can show multiple
+related stats in a debugfs file, and the debugfs file will never be
+used as an userspace API.
+
+Two debugfs files are created to expose these internal stats:
+* iostat: io counters and io related stats (e.g., mddev->active_io,
+	r1conf->nr_pending, or r1confi->retry_list)
+* stat: normal stats/flags (e.g., mddev->recovery, conf->array_frozen)
+
+Because internal stats are spreaded all over md-core and md-personality,
+so both md-core and md-personality will create these two debugfs files
+under different debugfs directory.
+
+Patch 1 factors out the debugfs files creation routine for md-core and
+md-personality, patch 2 creates two debugfs files: iostat & stat under
+/sys/kernel/debug/block/mdX for md-core, and patch 3 creates two debugfs
+files: iostat & stat under /sys/kernel/debug/block/mdX/raid1 for md-raid1.
+
+The following lines show the hierarchy and the content of these debugfs
+files for a RAID1 device:
+
+$ pwd
+/sys/kernel/debug/block/md0
+$ tree
+.
+├── iostat
+├── raid1
+│   ├── iostat
+│   └── stat
+└── stat
+
+$ cat iostat
+active_io 0
+sb_wait 0 pending_writes 0
+recovery_active 0
+bitmap pending_writes 0
+
+$ cat stat
+flags 0x20
+sb_flags 0x0
+recovery 0x0
+
+$ cat raid1/iostat
+retry_list active 0
+bio_end_io_list active 0
+pending_bio_list active 0 cnt 0
+sync_pending 0
+nr_pending 0
+nr_waiting 0
+nr_queued 0
+barrier 0
+
+$ cat raid1/stat
+array_frozen 0
+
+I'm not sure whether the division of internal stats is appropriate and
+whether the internal stats in debugfs files are sufficient, so questions
+and comments are weclome.
+
+Regards,
+Tao
+
+Hou Tao (3):
+  md-debugfs: add md_debugfs_create_files()
+  md: export inflight io counters and internal stats in debugfs
+  raid1: export inflight io counters and internal stats in debugfs
+
+ drivers/md/Makefile     |  2 +-
+ drivers/md/md-debugfs.c | 35 ++++++++++++++++++
+ drivers/md/md-debugfs.h | 16 +++++++++
+ drivers/md/md.c         | 65 ++++++++++++++++++++++++++++++++++
+ drivers/md/md.h         |  1 +
+ drivers/md/raid1.c      | 78 +++++++++++++++++++++++++++++++++++++++++
+ drivers/md/raid1.h      |  1 +
+ 7 files changed, 197 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/md/md-debugfs.c
+ create mode 100644 drivers/md/md-debugfs.h
+
+-- 
+2.22.0
 
