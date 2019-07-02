@@ -2,240 +2,82 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 965B85CE68
-	for <lists+linux-raid@lfdr.de>; Tue,  2 Jul 2019 13:29:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 927CF5CFA4
+	for <lists+linux-raid@lfdr.de>; Tue,  2 Jul 2019 14:40:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbfGBL3x (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 2 Jul 2019 07:29:53 -0400
-Received: from mga04.intel.com ([192.55.52.120]:34494 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725835AbfGBL3x (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 2 Jul 2019 07:29:53 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jul 2019 04:29:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,443,1557212400"; 
-   d="scan'208";a="174564619"
-Received: from rsobans-desk.igk.intel.com ([10.102.102.26])
-  by orsmga002.jf.intel.com with ESMTP; 02 Jul 2019 04:29:51 -0700
-From:   Roman Sobanski <roman.sobanski@intel.com>
-To:     jes.sorensen@gmail.com
-Cc:     linux-raid@vger.kernel.org,
-        Roman Sobanski <roman.sobanski@intel.com>
-Subject: [PATCH] Enable probe_roms to scan more than 6 roms.
-Date:   Tue,  2 Jul 2019 13:29:27 +0200
-Message-Id: <20190702112927.22733-1-roman.sobanski@intel.com>
-X-Mailer: git-send-email 2.16.4
+        id S1726636AbfGBMkI (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 2 Jul 2019 08:40:08 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:42019 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbfGBMkI (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 2 Jul 2019 08:40:08 -0400
+Received: by mail-qk1-f196.google.com with SMTP id b18so13745631qkc.9
+        for <linux-raid@vger.kernel.org>; Tue, 02 Jul 2019 05:40:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yHtx68ZAjHL05zsf8LKl4/8R07AsUTWAQujQvNWAE98=;
+        b=oHwuFj4e9SAbvqhR2aQMwet8YcjiY+Ithrn86T/ZrGtZgeMAf8/KjO9c3jVW8u9quC
+         nVf9CR+mChysXl97I3KmSjwcNGtAP2+kqf2D9g4fG2riUQu7cZ9V8n2UZ4tWQSByiq1X
+         lZ2ACn1dptflYSNFDdxUsqq4pd2517L4XvjjJqelSF9cUVQ44Umex5uJg5XrKVJM48LR
+         bdIrx/6SwlHvIU+U7GUPoyq90fjqm4UG72fUTm5m1b1bDussDqbcRoAXYHERL+nqaG4x
+         xGm1HfE44WnS6xoLOgQK5N7i1CuZ2p8BNeujFbb3XTLwDfgtGl3V91s0yUXnciO++2NQ
+         7urQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yHtx68ZAjHL05zsf8LKl4/8R07AsUTWAQujQvNWAE98=;
+        b=ct1fxmbmwjweKf0PpyqnSjV2OdGYwLgeopNul2eEeKl6sRIG5h6TuefcxeIQgmonrC
+         6g/mHf2JYkkYwf50efawbzyEHbthXyhICs3KYfLE4/2Q/O3xPDQ+iEHPpumOZkajSdw7
+         lTYjakpsObuZug8DJip+ngbuJrtmmNma9GCYsXsEzWKc+S55Xi9z6lqdd72pVAd63fXX
+         rUu9B98fW+GWWTsLl0aEt8iKXewVKTX8DrX/4Zq/fYOOhwFofKT9o//kxoqqtZSTzRDx
+         Z9aHrVO1rGiVRrq973t0U1Bp8f1Ga+VvIIJunyb6GS3ag89zrR/Yh5Qupk9aUNye6yxE
+         XYzw==
+X-Gm-Message-State: APjAAAVJXJyMov81l2VIcGNqQHIGUlnAP3m2ZNyBH2WXlhBVh4ngHu2n
+        ieQfc2NVSOD1hi4u7SYFSLs3lVP3mXs=
+X-Google-Smtp-Source: APXvYqyaquUX9f6AenGMpZynnOJgAOiBgp6e0NDnprvZG0nsVyR2t8cManaI4YRnOM+6V3/W0Eu2Bg==
+X-Received: by 2002:a37:7dc1:: with SMTP id y184mr6834062qkc.58.1562071206929;
+        Tue, 02 Jul 2019 05:40:06 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c0a8:11c1::1019? ([2620:10d:c091:480::c41e])
+        by smtp.gmail.com with ESMTPSA id l63sm6068001qkb.124.2019.07.02.05.40.05
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 05:40:06 -0700 (PDT)
+From:   Jes Sorensen <jes.sorensen@gmail.com>
+X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
+Subject: Re: [PATCH] Enable probe_roms to scan more than 6 roms.
+To:     Roman Sobanski <roman.sobanski@intel.com>
+Cc:     linux-raid@vger.kernel.org
+References: <20190702112927.22733-1-roman.sobanski@intel.com>
+Message-ID: <3f7d2810-27ba-0e30-8049-962be43f56db@gmail.com>
+Date:   Tue, 2 Jul 2019 08:40:03 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190702112927.22733-1-roman.sobanski@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-In some cases if more than 6 oroms exist, resource for particular
-controller may not be found. Change method for storing
-adapter_rom_resources from array to list.
+On 7/2/19 7:29 AM, Roman Sobanski wrote:
+> In some cases if more than 6 oroms exist, resource for particular
+> controller may not be found. Change method for storing
+> adapter_rom_resources from array to list.
+> 
+> Signed-off-by: Roman Sobanski <roman.sobanski@intel.com>
+> ---
+>  probe_roms.c | 98 ++++++++++++++++++++++++++++++++++--------------------------
+>  1 file changed, 56 insertions(+), 42 deletions(-)
 
-Signed-off-by: Roman Sobanski <roman.sobanski@intel.com>
----
- probe_roms.c | 98 ++++++++++++++++++++++++++++++++++--------------------------
- 1 file changed, 56 insertions(+), 42 deletions(-)
+Applied!
 
-diff --git a/probe_roms.c b/probe_roms.c
-index b0b08833..7ea04c7a 100644
---- a/probe_roms.c
-+++ b/probe_roms.c
-@@ -35,6 +35,9 @@ static const int rom_len = 0xf0000 - 0xc0000; /* option-rom memory region */
- static int _sigbus;
- static unsigned long rom_align;
- 
-+static void roms_deinit(void);
-+static int roms_init(void);
-+
- static void sigbus(int sig)
- {
- 	_sigbus = 1;
-@@ -75,6 +78,7 @@ void probe_roms_exit(void)
- 		munmap(rom_mem, rom_len);
- 		rom_mem = MAP_FAILED;
- 	}
-+	roms_deinit();
- }
- 
- int probe_roms_init(unsigned long align)
-@@ -91,6 +95,9 @@ int probe_roms_init(unsigned long align)
- 	else
- 		return -1;
- 
-+	if (roms_init())
-+		return -1;
-+
- 	if (signal(SIGBUS, sigbus) == SIG_ERR)
- 		rc = -1;
- 	if (rc == 0) {
-@@ -131,6 +138,7 @@ struct resource {
- 	unsigned long end;
- 	unsigned long data;
- 	const char *name;
-+	struct resource *next;
- };
- 
- static struct resource system_rom_resource = {
-@@ -147,37 +155,7 @@ static struct resource extension_rom_resource = {
- 	.end	= 0xeffff,
- };
- 
--static struct resource adapter_rom_resources[] = { {
--	.name	= "Adapter ROM",
--	.start	= 0xc8000,
--	.data   = 0,
--	.end	= 0,
--}, {
--	.name	= "Adapter ROM",
--	.start	= 0,
--	.data   = 0,
--	.end	= 0,
--}, {
--	.name	= "Adapter ROM",
--	.start	= 0,
--	.data   = 0,
--	.end	= 0,
--}, {
--	.name	= "Adapter ROM",
--	.start	= 0,
--	.data   = 0,
--	.end	= 0,
--}, {
--	.name	= "Adapter ROM",
--	.start	= 0,
--	.data   = 0,
--	.end	= 0,
--}, {
--	.name	= "Adapter ROM",
--	.start	= 0,
--	.data   = 0,
--	.end	= 0,
--} };
-+static struct resource *adapter_rom_resources;
- 
- static struct resource video_rom_resource = {
- 	.name	= "Video ROM",
-@@ -186,8 +164,35 @@ static struct resource video_rom_resource = {
- 	.end	= 0xc7fff,
- };
- 
-+static int roms_init(void)
-+{
-+	adapter_rom_resources = malloc(sizeof(struct resource));
-+	if (adapter_rom_resources == NULL)
-+		return 1;
-+	adapter_rom_resources->name = "Adapter ROM";
-+	adapter_rom_resources->start = 0xc8000;
-+	adapter_rom_resources->data = 0;
-+	adapter_rom_resources->end = 0;
-+	adapter_rom_resources->next = NULL;
-+	return 0;
-+}
-+
-+static void roms_deinit(void)
-+{
-+	struct resource *res;
-+
-+	res = adapter_rom_resources;
-+	while (res) {
-+		struct resource *tmp = res;
-+
-+		res = res->next;
-+		free(tmp);
-+	}
-+}
-+
- #define ROMSIGNATURE 0xaa55
- 
-+
- static int romsignature(const unsigned char *rom)
- {
- 	const unsigned short * const ptr = (const unsigned short *)rom;
-@@ -208,16 +213,14 @@ static int romchecksum(const unsigned char *rom, unsigned long length)
- int scan_adapter_roms(scan_fn fn)
- {
- 	/* let scan_fn examing each of the adapter roms found by probe_roms */
--	unsigned int i;
-+	struct resource *res = adapter_rom_resources;
- 	int found;
- 
- 	if (rom_fd < 0)
- 		return 0;
- 
- 	found = 0;
--	for (i = 0; i < ARRAY_SIZE(adapter_rom_resources); i++) {
--		struct resource *res = &adapter_rom_resources[i];
--
-+	while (res) {
- 		if (res->start) {
- 			found = fn(isa_bus_to_virt(res->start),
- 				   isa_bus_to_virt(res->end),
-@@ -226,6 +229,7 @@ int scan_adapter_roms(scan_fn fn)
- 				break;
- 		} else
- 			break;
-+		res = res->next;
- 	}
- 
- 	return found;
-@@ -241,14 +245,14 @@ void probe_roms(void)
- 	const void *rom;
- 	unsigned long start, length, upper;
- 	unsigned char c;
--	unsigned int i;
-+	struct resource *res = adapter_rom_resources;
- 	__u16 val=0;
- 
- 	if (rom_fd < 0)
- 		return;
- 
- 	/* video rom */
--	upper = adapter_rom_resources[0].start;
-+	upper = res->start;
- 	for (start = video_rom_resource.start; start < upper; start += rom_align) {
- 		rom = isa_bus_to_virt(start);
- 		if (!romsignature(rom))
-@@ -283,8 +287,9 @@ void probe_roms(void)
- 			upper = extension_rom_resource.start;
- 	}
- 
-+	struct resource *prev_res = res;
- 	/* check for adapter roms on 2k boundaries */
--	for (i = 0; i < ARRAY_SIZE(adapter_rom_resources) && start < upper; start += rom_align) {
-+	for (; start < upper; start += rom_align) {
- 		rom = isa_bus_to_virt(start);
- 		if (!romsignature(rom))
- 			continue;
-@@ -308,10 +313,19 @@ void probe_roms(void)
- 		if (!length || start + length > upper || !romchecksum(rom, length))
- 			continue;
- 
--		adapter_rom_resources[i].start = start;
--		adapter_rom_resources[i].data = start + (unsigned long) val;
--		adapter_rom_resources[i].end = start + length - 1;
-+		if (res == NULL) {
-+			res = calloc(1, sizeof(struct resource));
-+			if (res == NULL)
-+				return;
-+			prev_res->next = res;
-+		}
-+
-+		res->start = start;
-+		res->data = start + (unsigned long)val;
-+		res->end = start + length - 1;
- 
--		start = adapter_rom_resources[i++].end & ~(rom_align - 1);
-+		start = res->end & ~(rom_align - 1);
-+		prev_res = res;
-+		res = res->next;
- 	}
- }
--- 
-2.16.4
+Thanks!
+Jes
+
 
