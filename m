@@ -2,79 +2,71 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B40315E3AB
-	for <lists+linux-raid@lfdr.de>; Wed,  3 Jul 2019 14:18:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 443EF5E3B2
+	for <lists+linux-raid@lfdr.de>; Wed,  3 Jul 2019 14:19:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbfGCMSH (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 3 Jul 2019 08:18:07 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:32938 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfGCMSH (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 3 Jul 2019 08:18:07 -0400
-Received: by mail-qt1-f194.google.com with SMTP id h24so2668101qto.0;
-        Wed, 03 Jul 2019 05:18:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=IjB7eIx91cGzvCzJPmHdtVCISw8X3L0amGAAfmCgnb8=;
-        b=SKS+5XM1x7Q2aAlwFM+0FFl021AbmFPeJWur5gPnzvrcDlOWGesHuHrReXgapS7D6H
-         HvB6jEeOyjTk69U4MugVZAZ8AV3wrWLMTe8QiShPEh1k1RRfV2y74vHiugcdfMyAqKF+
-         69BTwqfDfPbks2mtGThiF7QkN+hKJgAPGzkJfou7gPMSxYS8gdpkGRFTO2xrDwSs81iq
-         1BTfM0VeiE0d4m6JDguO0zhMzQn5pxDsVAIgx+rbaExD/NMkQWTTk7xrCU+Q12X8Q8l+
-         Fm0SVIHSvRXCNZa3zu4QQzPy5pMV9iwjndzM2FYse1EmZlxDkYcWLguuq2vBWtd4OMa0
-         QRMA==
+        id S1726621AbfGCMTa (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 3 Jul 2019 08:19:30 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54693 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfGCMTa (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 3 Jul 2019 08:19:30 -0400
+Received: from mail-wm1-f72.google.com ([209.85.128.72])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <guilherme.piccoli@canonical.com>)
+        id 1hieER-0004xw-Ka
+        for linux-raid@vger.kernel.org; Wed, 03 Jul 2019 12:19:27 +0000
+Received: by mail-wm1-f72.google.com with SMTP id c190so497537wme.8
+        for <linux-raid@vger.kernel.org>; Wed, 03 Jul 2019 05:19:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=IjB7eIx91cGzvCzJPmHdtVCISw8X3L0amGAAfmCgnb8=;
-        b=sJLZVxxnWuRyigVAdx36T5tFJqoZi7MD7KFOVcOTpa9zAv7LOW4WtzwsdgyrKnh6mU
-         GixrbcOY+Il2GMXqBJaB5jlFAUonsqyTfBje8yuMQsRLkZB+tI1hJXy/3UVclNDqEr4k
-         dL/E7ed403wgGNDL/Qd7D2dOIfx6fsjX+1sDcvASEpRNW4jxdOhChLbetsCM4zkj9qXS
-         PotcZhtnJZTXCbRNfdTdZRekyQad9yc29VSg7lIYUe3D2/swXmiL+ARcA+eoz/o5S4Ic
-         GX4vokak33dCINvfOhgrIqaQuSAl5MwinDlIJDUgL5lUUWBeErDJiJAQqeyyfpQEWwSU
-         vGaw==
-X-Gm-Message-State: APjAAAU/tc8PYB4/EbpF7HABTyjWqBCAUVGtafvTqH/287F14ZaU/vYV
-        kk/sO4D1qUD6gHZ6njS0Z5Prfd6if3tAgR8pfOnvnlVD
-X-Google-Smtp-Source: APXvYqwGgM5Phb3RLVd4Z4Ax+sqyMgVnOmoG73XQaHgqBxim7OM82B4e7D+F3YtEkaU8KgLKnUOB4WnOnJ6qFelDqsE=
-X-Received: by 2002:aed:38c2:: with SMTP id k60mr28886147qte.83.1562156286006;
- Wed, 03 Jul 2019 05:18:06 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=hl4IN+UFShyWybz5Y9nFx/v6kLwn65u0JGDKlBXalYE=;
+        b=qH+Rm5px5WuXdBZ1ttnK6HGYrDMtL/VpbKmo/v7ApsoCW63P6kv2OA+0wDNLdMRRrh
+         viXI8olYv02qZKWbli2Czs6NZ1Xx1vfkySMVIizUe/uAs0KOGDTnj8II1CdqhubofpQM
+         t9AnyXPiqHw8UykLKXUZ3FjpZb45/fZnKAKIuDpLJDFtA5Tr1ZfSgEMpzqCJ7gXm1u3h
+         zaHczEC805C93Dwx29dy4mSnctJCtlrkWD1QiKcwF+OrzU6XZRwRnKf1WdotTffMOamr
+         PIyuaweCobR7zgYNwmu7pUI54cDB/vEZwkujNJtuPtcEx1dgshxlqkNa9TRF/2iXJe8V
+         pZFg==
+X-Gm-Message-State: APjAAAUw83cxYvCoWbHYWNmPWKCUpTf4ZED57ue9JVKWwntPMhR3jBAY
+        fjUFuYmXsG5sWHy6QbAlR4Xw7yaisbJZIG7v5QBtKc1rd6OFMzemhZyRvmDBZlQbJNb+WtP34Sm
+        qFnsoE8T3xB7UYdrjat1AHwXz4v0vLnPyKMoj1LDCDLyMHtqKOmfd9U0=
+X-Received: by 2002:a1c:7304:: with SMTP id d4mr7806060wmb.39.1562156367411;
+        Wed, 03 Jul 2019 05:19:27 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzWDxudz+dZ2eL2tgM1xv05DBOxBXD5d9mfD6trqmEZtBgjgFSRf5Jats2GQunAnlnOsWSWp007ri9L831lJAw=
+X-Received: by 2002:a1c:7304:: with SMTP id d4mr7806046wmb.39.1562156367242;
+ Wed, 03 Jul 2019 05:19:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <ad2e4b58-268e-c9e5-8a66-8cb5dee8d91e@web.de>
-In-Reply-To: <ad2e4b58-268e-c9e5-8a66-8cb5dee8d91e@web.de>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Wed, 3 Jul 2019 05:17:54 -0700
-Message-ID: <CAPhsuW7CAfu07Y319eHUUi3Ln422-jMmpTHmy0rT+MxZnO8BBA@mail.gmail.com>
-Subject: Re: [PATCH] md-multipath: Replace a seq_printf() call by seq_putc()
- in multipath_status()
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     linux-raid <linux-raid@vger.kernel.org>,
-        Shaohua Li <shli@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
+References: <20190628221759.18274-1-gpiccoli@canonical.com> <20190703121700.GE7784@kroah.com>
+In-Reply-To: <20190703121700.GE7784@kroah.com>
+From:   Guilherme Piccoli <gpiccoli@canonical.com>
+Date:   Wed, 3 Jul 2019 09:18:51 -0300
+Message-ID: <CAHD1Q_z+V7NgL1cT3hWioWwWfpViNHDLbhpK=USbBnE=MY7X+A@mail.gmail.com>
+Subject: Re: [4.19.y PATCH 1/2] block: Fix a NULL pointer dereference in generic_make_request()
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org,
+        linux-raid <linux-raid@vger.kernel.org>,
+        Jay Vosburgh <jay.vosburgh@canonical.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Song Liu <songliubraving@fb.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Eric Ren <renzhengeek@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Mon, Jul 1, 2019 at 5:25 AM Markus Elfring <Markus.Elfring@web.de> wrote=
-:
->
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Mon, 1 Jul 2019 13:07:55 +0200
->
-> A single character (depending on a condition check) should be put
-> into a sequence. Thus use the corresponding function =E2=80=9Cseq_putc=E2=
-=80=9D.
->
-> This issue was detected by using the Coccinelle software.
->
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+On Wed, Jul 3, 2019 at 9:17 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> [...]
+> Both patches now queued up, thanks.
 
-Can you explain why this is necessary?
+Thanks a lot Song and Greg!
+Cheers,
 
-Thanks,
-Song
+
+Guilherme
