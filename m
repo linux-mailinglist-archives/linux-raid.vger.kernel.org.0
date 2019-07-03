@@ -2,194 +2,124 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C0325D9CA
-	for <lists+linux-raid@lfdr.de>; Wed,  3 Jul 2019 02:53:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ADD055DE81
+	for <lists+linux-raid@lfdr.de>; Wed,  3 Jul 2019 09:13:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbfGCAxj (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 2 Jul 2019 20:53:39 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:38256 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727089AbfGCAxj (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 2 Jul 2019 20:53:39 -0400
-Received: by mail-qk1-f196.google.com with SMTP id a27so448666qkk.5;
-        Tue, 02 Jul 2019 17:53:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cTgua9G58q50LFVixMsdybnWckR256ux0PIIDP1wQ5Y=;
-        b=eNnvNTFXUtK2ZmwHM5eqnMuzDgJPwkqHrI+PkZhmUjI//R1v14BzZDCU5xRUnbQYp8
-         Ys7Z4llzJPYIq260gYIW+o9qlLnHJ+O9uOVD1zyeBW+7ZZtGIti58RWbqvaiXD6Jq1HV
-         IiHX54MaIDkl3JDO31+FKWsp4hOeE6VspxxOMH/w2WazIhRAD08Iw9KPTwpRM4L6ohkU
-         Sxqk8lfvxoTpGJdqwRZc6t50tDDwgUDLJ372Lp6rAVRtD37xaQJw8ztLhM39zvLY1YRv
-         lGgchql7l2XVg1ulSTuWeb2JfGqqlFenKDasfdxLDALl3noeXRJS7RMyClKqiXo7xKCB
-         hFoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cTgua9G58q50LFVixMsdybnWckR256ux0PIIDP1wQ5Y=;
-        b=RxuIW2Ad2mluHPSFQ0njm6wofPlIH/kRQcs/K1c9YuZU48bFghBSqnnVbFu3L54T9c
-         yKvDd8+78Cs/prKoI2OC8YBX7u4mP+60qTTrrveEq5OyhrN254R5G+5Xe+dImHyB2+iv
-         P4XOp7aKhIqANs3naWzV6CItAK4I63WJEV4Vg/vNuve4LRKArle8y+hHkOceVqh5Z1S7
-         L1l1y6ZimqMXsZ3VFU0aEig/t3ELTEGhZZny0wD9yfN6mbPuTucEevX5UFZSQLjDN8dm
-         oUHboSRt2PmzKJ88zrKDUR5zsVMTDUbgksYdyF7SciO6dFWKncqAtyAGAiLr10x0AsDQ
-         zGIQ==
-X-Gm-Message-State: APjAAAWDwEAO0uwACQj92mnzqH6DmN6YKswPP++Pq9qdcp1M8TE0aVJC
-        NysdaF1WwS9hadNaPzKgtK9QnhLOJmQOkHGFop5sx+EcOw8=
-X-Google-Smtp-Source: APXvYqwXZMt+P2u8xEdlyca/T+BvLbvy+lm3kwU603/Ditp8soNe+beEqZROzQ8SEe4b0yK/AWH15xcSeRFtprWNMT0=
-X-Received: by 2002:ae9:e40f:: with SMTP id q15mr25697889qkc.241.1562111637578;
- Tue, 02 Jul 2019 16:53:57 -0700 (PDT)
+        id S1727169AbfGCHN6 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 3 Jul 2019 03:13:58 -0400
+Received: from mga07.intel.com ([134.134.136.100]:57731 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726236AbfGCHN6 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 3 Jul 2019 03:13:58 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 00:13:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,446,1557212400"; 
+   d="scan'208";a="166439236"
+Received: from unknown (HELO linux-spw6.localnet) ([10.102.102.170])
+  by orsmga003.jf.intel.com with ESMTP; 03 Jul 2019 00:13:56 -0700
+From:   Mariusz Dabrowski <mariusz.dabrowski@intel.com>
+To:     John Stoffel <john@stoffel.org>
+Cc:     jes.sorensen@gmail.com, linux-raid@vger.kernel.org,
+        Krzysztof Smolinski <krzysztof.smolinski@intel.com>
+Subject: Re: [PATCH] mdadm: load default sysfs attributes after assemblation
+Date:   Wed, 03 Jul 2019 09:11:51 +0200
+Message-ID: <2854351.AXMWJ9dCLp@linux-spw6>
+In-Reply-To: <23834.26751.380798.383341@quad.stoffel.home>
+References: <20190626075006.4815-1-mariusz.dabrowski@intel.com> <23834.26751.380798.383341@quad.stoffel.home>
 MIME-Version: 1.0
-References: <20190628221759.18274-1-gpiccoli@canonical.com> <20190628221759.18274-2-gpiccoli@canonical.com>
-In-Reply-To: <20190628221759.18274-2-gpiccoli@canonical.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Tue, 2 Jul 2019 16:53:46 -0700
-Message-ID: <CAPhsuW6NpgM5HXHcuqt4oL3kORrTrMWvdTNANuBr=9Px5H4vEQ@mail.gmail.com>
-Subject: Re: [4.19.y PATCH 2/2] md/raid0: Do not bypass blocking queue entered
- for raid0 bios
-To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-Cc:     stable@vger.kernel.org, gregkh@linuxfoundation.org,
-        sashal@kernel.org, linux-block@vger.kernel.org,
-        linux-raid <linux-raid@vger.kernel.org>,
-        Jay Vosburgh <jay.vosburgh@canonical.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Song Liu <songliubraving@fb.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 3:18 PM Guilherme G. Piccoli
-<gpiccoli@canonical.com> wrote:
->
-> -----------------------------------------------------------------
-> This patch is not on mainline and is meant to 4.19 stable *only*.
-> After the patch description there's a reasoning about that.
-> -----------------------------------------------------------------
->
-> Commit cd4a4ae4683d ("block: don't use blocking queue entered for
-> recursive bio submits") introduced the flag BIO_QUEUE_ENTERED in order
-> split bios bypass the blocking queue entering routine and use the live
-> non-blocking version. It was a result of an extensive discussion in
-> a linux-block thread[0], and the purpose of this change was to prevent
-> a hung task waiting on a reference to drop.
->
-> Happens that md raid0 split bios all the time, and more important,
-> it changes their underlying device to the raid member. After the change
-> introduced by this flag's usage, we experience various crashes if a raid0
-> member is removed during a large write. This happens because the bio
-> reaches the live queue entering function when the queue of the raid0
-> member is dying.
->
-> A simple reproducer of this behavior is presented below:
-> a) Build kernel v4.19.56-stable with CONFIG_BLK_DEV_THROTTLING=y.
->
-> b) Create a raid0 md array with 2 NVMe devices as members, and mount
-> it with an ext4 filesystem.
->
-> c) Run the following oneliner (supposing the raid0 is mounted in /mnt):
-> (dd of=/mnt/tmp if=/dev/zero bs=1M count=999 &); sleep 0.3;
-> echo 1 > /sys/block/nvme1n1/device/device/remove
-> (whereas nvme1n1 is the 2nd array member)
->
-> This will trigger the following warning/oops:
->
-> ------------[ cut here ]------------
-> BUG: unable to handle kernel NULL pointer dereference at 0000000000000155
-> PGD 0 P4D 0
-> Oops: 0000 [#1] SMP PTI
-> RIP: 0010:blk_throtl_bio+0x45/0x970
-> [...]
-> Call Trace:
->  generic_make_request_checks+0x1bf/0x690
->  generic_make_request+0x64/0x3f0
->  raid0_make_request+0x184/0x620 [raid0]
->  ? raid0_make_request+0x184/0x620 [raid0]
->  md_handle_request+0x126/0x1a0
->  md_make_request+0x7b/0x180
->  generic_make_request+0x19e/0x3f0
->  submit_bio+0x73/0x140
-> [...]
->
-> This patch changes raid0 driver to fallback to the "old" blocking queue
-> entering procedure, by clearing the BIO_QUEUE_ENTERED from raid0 bios.
-> This prevents the crashes and restores the regular behavior of raid0
-> arrays when a member is removed during a large write.
->
-> [0] lore.kernel.org/linux-block/343bbbf6-64eb-879e-d19e-96aebb037d47@I-love.SAKURA.ne.jp
->
-> ----------------------------
-> Why this is not on mainline?
-> ----------------------------
->
-> The patch was originally submitted upstream in linux-raid and
-> linux-block mailing-lists - it was initially accepted by Song Liu,
-> but Christoph Hellwig[1] observed that there was a clean-up series
-> ready to be accepted from Ming Lei[2] that fixed the same issue.
->
-> The accepted patches from Ming's series in upstream are: commit
-> 47cdee29ef9d ("block: move blk_exit_queue into __blk_release_queue") and
-> commit fe2008640ae3 ("block: don't protect generic_make_request_checks
-> with blk_queue_enter"). Those patches basically do a clean-up in the
-> block layer involving:
->
-> 1) Putting back blk_exit_queue() logic into __blk_release_queue(); that
-> path was changed in the past and the logic from blk_exit_queue() was
-> added to blk_cleanup_queue().
->
-> 2) Removing the guard/protection in generic_make_request_checks() with
-> blk_queue_enter().
->
-> The problem with Ming's series for -stable is that it relies in the
-> legacy request IO path removal. So it's "backport-able" to v5.0+,
-> but doing that for early versions (like 4.19) would incur in complex
-> code changes. Hence, it was suggested by Christoph and Song Liu that
-> this patch was submitted to stable only; otherwise merging it upstream
-> would add code to fix a path removed in a subsequent commit.
->
-> [1] lore.kernel.org/linux-block/20190521172258.GA32702@infradead.org
-> [2] lore.kernel.org/linux-block/20190515030310.20393-1-ming.lei@redhat.com
->
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: Song Liu <songliubraving@fb.com>
-> Cc: Ming Lei <ming.lei@redhat.com>
-> Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> Fixes: cd4a4ae4683d ("block: don't use blocking queue entered for recursive bio submits")
-> Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
+On Monday, July 1, 2019 10:09:35 PM CEST John Stoffel wrote:
+> >>>>> "Mariusz" == Mariusz Dabrowski <mariusz.dabrowski@intel.com> writes:
+> Mariusz> Added new type of line to mdadm.conf which allows to specify
+> Mariusz> values of sysfs attributes for MD devices that should be
+> Mariusz> loaded after assemblation.  Each line is interpreted as list
+> Mariusz> of structures containing sysname of MD device (md126 etc.)
+> Mariusz> and list of sysfs attributes and their values.
+> 
+> So what does this buy us?  Looking at your example, you hard code
+> devices to a raid name, but also include a UUID setting.  Don't you
+> think that's a bad idea?
+The UUID and name are two ways to identify the device. In my examples, I have 
+placed the UUID for the first device and the name for the second device.
 
-Acked-by: Song Liu <songliubraving@fb.com>
+> 
+> 
+> 
+> Mariusz> +.TP
+> Mariusz> +.B SYSFS
+> Mariusz> +The SYSFS line lists custom values of MD device's sysfs attributes
+> which will be Mariusz> +stored in sysfs after assemblation. Multiple lines
+> are allowed and each line has
+> 
+> This should be "after assembly." Or maybe "after the array is
+> assembled." instead.
+> 
+> Mariusz> +to contain uuid or name of the device to which it relates.
+> 
+> ... "contain the uuid" ...
+> 
+> Mariusz> +.RS 4
+> Mariusz> +.TP
+> Mariusz> +.B uuid=
+> Mariusz> +hexadecimal identifier of MD device. This must match the uuid
+> stored in the Mariusz> +superblock.
+> Mariusz> +.TP
+> Mariusz> +.B name=
+> Mariusz> +name of the MD device as was given to
+> Mariusz> +.I mdadm
+> Mariusz> +when the array was created. It will be ignored if
+> Mariusz> +.B uuid
+> Mariusz> +is not empty.
+> Mariusz> +.TP
+> Mariusz> +.RS 7
+> Mariusz> +
+> Mariusz>  .SH EXAMPLE
+> Mariusz>  DEVICE /dev/sd[bcdjkl]1
+> Mariusz>  .br
+> Mariusz> @@ -657,6 +677,11 @@ CREATE group=system mode=0640 auto=part\-8
+> Mariusz>  HOMEHOST <system>
+> Mariusz>  .br
+> Mariusz>  AUTO +1.x homehost \-all
+> Mariusz> +.br
+> Mariusz> +SYSFS name=/dev/md/raid5 group_thread_cnt=4 sync_speed_max=1000000
+> Mariusz> +.br
+> Mariusz> +SYSFS uuid=bead5eb6:31c17a27:da120ba2:7dfda40d group_thread_cnt=4
+> Mariusz> +sync_speed_max=1000000
+> 
+> So according to the docs above, since you have a SYSFS uuid=... entry,
+> won't the name be ignored?
+The name will be ignored if it is given next to uuid in the same entry, for 
+example:
+SYSFS uuid=bead5eb6:31c17a27:da120ba2:7dfda40d name=/dev/md/raid 
+group_thread_cnt=4
 
-Thanks for the fix!
+> 
+> Also, it's not clear if the case of these SYSFS atttribures matters or
+> not.  I'd *hope* they don't, because I can see people putting in
+> 
+>  "SYSFS UUID=... "
+> 
+> Just like the regular ARRAY /dev/md3 UUID=... stuff in mdadm.conf
+> already.
+Case of UUID= and NAME= doesn't matter, but sysfs attribute name like 
+"group_thread_count" have to be given in the same form as it is present in /
+sys/block/mdX/md/.
 
-> ---
->  drivers/md/raid0.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
-> index ac1cffd2a09b..f4daa56d204d 100644
-> --- a/drivers/md/raid0.c
-> +++ b/drivers/md/raid0.c
-> @@ -547,6 +547,7 @@ static void raid0_handle_discard(struct mddev *mddev, struct bio *bio)
->                         trace_block_bio_remap(bdev_get_queue(rdev->bdev),
->                                 discard_bio, disk_devt(mddev->gendisk),
->                                 bio->bi_iter.bi_sector);
-> +               bio_clear_flag(bio, BIO_QUEUE_ENTERED);
->                 generic_make_request(discard_bio);
->         }
->         bio_endio(bio);
-> @@ -602,6 +603,7 @@ static bool raid0_make_request(struct mddev *mddev, struct bio *bio)
->                                 disk_devt(mddev->gendisk), bio_sector);
->         mddev_check_writesame(mddev, bio);
->         mddev_check_write_zeroes(mddev, bio);
-> +       bio_clear_flag(bio, BIO_QUEUE_ENTERED);
->         generic_make_request(bio);
->         return true;
->  }
-> --
-> 2.22.0
->
+> 
+> Cheers,
+> John
+Regards,
+Mariusz
+
+
+
+
