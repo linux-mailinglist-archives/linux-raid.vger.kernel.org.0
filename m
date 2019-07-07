@@ -2,89 +2,74 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AB2360EFE
-	for <lists+linux-raid@lfdr.de>; Sat,  6 Jul 2019 06:49:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58875614F0
+	for <lists+linux-raid@lfdr.de>; Sun,  7 Jul 2019 14:39:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725894AbfGFEti (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 6 Jul 2019 00:49:38 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:47806 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725870AbfGFEti (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sat, 6 Jul 2019 00:49:38 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id C9E28E79059B659F3216;
-        Sat,  6 Jul 2019 12:49:27 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.14) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Sat, 6 Jul 2019
- 12:49:22 +0800
+        id S1726976AbfGGMjT (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 7 Jul 2019 08:39:19 -0400
+Received: from smtp03.mail.qldc.ch ([212.60.46.172]:39450 "EHLO
+        smtp03.mail.qldc.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbfGGMjT (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 7 Jul 2019 08:39:19 -0400
+Received: from tuxedo.ath.cx (55-153-16-94.dyn.cable.fcom.ch [94.16.153.55])
+        by smtp03.mail.qldc.ch (Postfix) with ESMTPS id B35AC20255;
+        Sun,  7 Jul 2019 14:39:15 +0200 (CEST)
+Received: from [10.0.70.110] (neptun.gms.local [10.0.70.110])
+        by tuxedo.ath.cx (Postfix) with ESMTP id D806F345B5A;
+        Sun,  7 Jul 2019 14:39:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=tuxedo.dynu.net;
+        s=mail; t=1562503155;
+        bh=3ItjQids/T7XD6EKlCln15oxc763GJWZf90SGgAha94=;
+        h=Subject:To:References:Cc:From:Date:In-Reply-To:From;
+        b=s5gMzAtDs3jhB75yjVLGGMmJfza6invCXGGRS53VoSvWLd/0VGsMHcw79XSsLoitd
+         kDKyuywDM/aqTnK7rRWAGdYvSYZHkhcNmNPtnSajOOPMqibfv7aZJ2ic9znQ8O7uEv
+         YGztyholfBxSLvT9bRZ4kex7iGR1cHm4m9mK4q1I=
 Subject: Re: md0: bitmap file is out of date, resync
-To:     Mathias G <newsnet-mg-2016@tuxedo.ath.cx>,
-        Song Liu <liu.song.a23@gmail.com>
-CC:     linux-raid <linux-raid@vger.kernel.org>
+To:     Hou Tao <houtao1@huawei.com>, Song Liu <liu.song.a23@gmail.com>
 References: <92ce64ba-2c55-8ef8-3ddf-3bbf867ec4f8@tuxedo.ath.cx>
  <CAPhsuW4Gss2ie2wv_GmT2Xz-5vU+XP=KR6cxh-qOOQPKtOz9ag@mail.gmail.com>
  <a2e4b1a0-e614-2eb3-c673-96fbfbc5ae69@tuxedo.ath.cx>
  <CAPhsuW6+ooVkKznfT19x4HquN+g4WVb-31PvKKt=01fE_wJZEg@mail.gmail.com>
  <1942a84d-ec30-b089-1e17-62e032e5f728@tuxedo.ath.cx>
  <11eb3461-b801-0808-614a-766e090ecdc8@tuxedo.ath.cx>
-From:   Hou Tao <houtao1@huawei.com>
-Message-ID: <08cf0895-dd00-5499-4d22-c03f3676eb25@huawei.com>
-Date:   Sat, 6 Jul 2019 12:49:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.8.0
+ <08cf0895-dd00-5499-4d22-c03f3676eb25@huawei.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>
+From:   Mathias G <newsnet-mg-2016@tuxedo.ath.cx>
+Message-ID: <b2ba92ab-f97b-aab2-91a2-1a7dbbcab69d@tuxedo.ath.cx>
+Date:   Sun, 7 Jul 2019 14:39:12 +0200
+User-Agent: Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.8pre)
+ Gecko/20071022 Thunderbird/2.0.0.6 Mnenhy/0.7.5.0
 MIME-Version: 1.0
-In-Reply-To: <11eb3461-b801-0808-614a-766e090ecdc8@tuxedo.ath.cx>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <08cf0895-dd00-5499-4d22-c03f3676eb25@huawei.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.31.14]
-X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.0 required=5.0 tests=ALL_TRUSTED
+        autolearn=unavailable autolearn_force=no version=3.4.2
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on tuxedo.ath.cx
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi,
+Hi Tao
 
-On 2019/6/28 18:57, Mathias G wrote:
-> Hi Song
-> 
-> On 21.06.19 21:51, Mathias G wrote:
->>> Question: are you running the two drives with write cache on?
->>> If yes, and if your application is not heavy on writes, could you try
->>> turn off HDD write cache and see if the issue repros?
->> Thanks for this. I just disabled the write cache with hdparm in rc.local
->> for both RAID members and will let you know if the problem occurs again.
-> 
-> Today the problem occurred again:
-> 
-> kern.log
->> Jun 28 12:39:11 $hostname kernel: [    2.098096] md/raid1:md0: not clean -- starting background reconstruction
->> Jun 28 12:39:11 $hostname kernel: [    2.098099] md/raid1:md0: active with 2 out of 2 mirrors
+Thank you for your reply.
 
-"not clean" means the resync has not been completed yet. Is the array still "not clean" in the previous boot/reboot or not ?
-If it is only "not clean" in the reproduced boot, that may mean the final update of MD super block is lost and the lagging
-behind of the events in bitmap super-block will be possible.
+On 06.07.19 06:49, Hou Tao wrote:
+> "not clean" means the resync has not been completed yet. Is the array still "not clean" in the previous boot/reboot or not ?
+> If it is only "not clean" in the reproduced boot, that may mean the final update of MD super block is lost and the lagging
+> behind of the events in bitmap super-block will be possible.
+The array is in a clean state before the reboot.
 
-If the array is also "not clean" in the previous boot/reboot, could you please check when does the status of array
-change from "clean" to "not clean" ?
+> Is the RAID array (md0) used as rootfs or other fs ? And how do you reproduce the problem ? Just rebooting continuously
+> until the problem reoccurs ? And not suddenly power-cut ?
+Its not in use as root-fs, the array is mounted as /home/ dir.
 
-Is the RAID array (md0) used as rootfs or other fs ? And how do you reproduce the problem ? Just rebooting continuously
-until the problem reoccurs ? And not suddenly power-cut ?
+I never tried to reboot until the problem occured again, just continuous
+more or less daily usage (as workstation)
 
-Regards,
-Tao
-
->> Jun 28 12:39:11 $hostname kernel: [    2.098201] md0: bitmap file is out of date (236662 < 236663) -- forcing full recovery
->> Jun 28 12:39:11 $hostname kernel: [    2.098252] md0: bitmap file is out of date, doing full recovery
-> 
-> And the write cache is disabled for both RAID members:
->> # hdparm -i /dev/sdb |grep WriteCache
->>  AdvancedPM=yes: disabled (255) WriteCache=disabled
-> 
->> # hdparm -i /dev/sdc |grep WriteCache
->>  AdvancedPM=no WriteCache=disabled
-> 
-> I'm a little at a loss..
-> 
-
+All reboots were clean reboots without power-cuts.
+-- 
+regards
+ mathias
