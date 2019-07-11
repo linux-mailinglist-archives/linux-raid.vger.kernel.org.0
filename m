@@ -2,153 +2,81 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 566D865221
-	for <lists+linux-raid@lfdr.de>; Thu, 11 Jul 2019 08:59:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5834965887
+	for <lists+linux-raid@lfdr.de>; Thu, 11 Jul 2019 16:10:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbfGKG7R (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 11 Jul 2019 02:59:17 -0400
-Received: from mga07.intel.com ([134.134.136.100]:60427 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728057AbfGKG7R (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 11 Jul 2019 02:59:17 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jul 2019 23:59:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,476,1557212400"; 
-   d="scan'208";a="171149182"
-Received: from linux-h5ai.igk.intel.com ([10.102.102.116])
-  by orsmga006.jf.intel.com with ESMTP; 10 Jul 2019 23:59:15 -0700
-From:   Blazej Kucman <blazej.kucman@intel.com>
-To:     linux-raid@vger.kernel.org
-Cc:     Jes.Sorensen@gmail.com, Blazej Kucman <blazej.kucman@intel.com>
-Subject: [PATCH] imsm: Change in --detail-platform for NVMe devices
-Date:   Thu, 11 Jul 2019 08:59:11 +0200
-Message-Id: <20190711065911.3237-1-blazej.kucman@intel.com>
-X-Mailer: git-send-email 2.16.4
+        id S1728330AbfGKOKS (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 11 Jul 2019 10:10:18 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:33028 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbfGKOKS (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 11 Jul 2019 10:10:18 -0400
+Received: by mail-ua1-f66.google.com with SMTP id g11so2526212uak.0
+        for <linux-raid@vger.kernel.org>; Thu, 11 Jul 2019 07:10:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=MN3Bi1S2xrd4ujHVxTpiRUcSQD4rSoXK+fFtaeXrQoE=;
+        b=MvSqlWipQzSgBuQh6rykc/SsEYcSa5Bp9g8fG65R3NCzxnFICArmXSKVZP2LZTc7Sv
+         PwemHUoiQEFXVn8ElMZvFZlBhVLv1KcxlJgkZJkusR5odWj3QfC6pcCQvfvg7C5TSi+X
+         cTNeCB4McSn/T+qRQ12xbYu41xe1jIkS4eIJvguS4Gl+iGPg+o3sSr59Uc0FwEYExqqk
+         3Eby0r1XvRg9Lf2r0dQGCkxk2A09NOzaZcvm3KXxvz05P7BpLatPdMd6xualvH0Z2lKo
+         1HQ/tziHBuc5NZZ1JHcIPdsA/KRLxRbNORa4HhuGjzikVO6obyiuluYTULiYr9MyDBap
+         QBSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MN3Bi1S2xrd4ujHVxTpiRUcSQD4rSoXK+fFtaeXrQoE=;
+        b=uhyNFvo2+Rg4G7pPo+cT4H+lyV976wYH4xoklljyYeNFkbY/ppXPrBdzmThL0T0+5I
+         n9Hm0idgVGj9d/kZHsTDQC2MDpwwe321SfxtNFr8h4UPoKm5pjA0yUWsizt4vGS2sloZ
+         DgjMCUH70w85B8NcPgl1ZqHGWCkTB+37dwbUUfqf1Tm3zQ+ZVsgvZxDBRitA4nQWE/rj
+         usNjbbxOES7dzSwYKGp4ZUHvqUL/JQ2N+/U2QrDsRNegwYTDZDJ6jOSQBGKL16KibPKl
+         SQ5U98OrBsHEMboeGmOxr//ijHSplC+OaWRHJuTKwbpf0vvrzpHDsK9iY8Z6+2vigqtk
+         SrNQ==
+X-Gm-Message-State: APjAAAXksVYVpG/CPnopa0RFPZK2bri2Eh8jUuXp4wI1gg1ufScCgO+B
+        n1syK4Hhf32wjSXUH/qleMEjuxlUnIA=
+X-Google-Smtp-Source: APXvYqy2XWMupMQhXPTSUxqe8iB6wSl2CEHD220I3iTbWOw1h5Sg10fQzyGLZ+tw1mp2GCFs51pmWQ==
+X-Received: by 2002:ab0:740e:: with SMTP id r14mr4471273uap.108.1562854216363;
+        Thu, 11 Jul 2019 07:10:16 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c0a8:11c1::1004? ([2620:10d:c091:480::b609])
+        by smtp.gmail.com with ESMTPSA id u65sm1793870vsu.34.2019.07.11.07.10.14
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Jul 2019 07:10:15 -0700 (PDT)
+From:   Jes Sorensen <jes.sorensen@gmail.com>
+X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
+Subject: Re: [PATCH] imsm: Change in --detail-platform for NVMe devices
+To:     Blazej Kucman <blazej.kucman@intel.com>, linux-raid@vger.kernel.org
+References: <20190711065911.3237-1-blazej.kucman@intel.com>
+Message-ID: <2465b2ae-f3d4-a050-7161-ed6c9525110f@gmail.com>
+Date:   Thu, 11 Jul 2019 10:10:13 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <20190711065911.3237-1-blazej.kucman@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Change NVMe controller path to device node path
-in mdadm --detail-platform and print serial number.
+On 7/11/19 2:59 AM, Blazej Kucman wrote:
+> Change NVMe controller path to device node path
+> in mdadm --detail-platform and print serial number.
+> 
+> Signed-off-by: Blazej Kucman <blazej.kucman@intel.com>
+> ---
+>  super-intel.c | 75 ++++++++++++++++++++++++++++++-----------------------------
+>  1 file changed, 38 insertions(+), 37 deletions(-)
 
-Signed-off-by: Blazej Kucman <blazej.kucman@intel.com>
----
- super-intel.c | 75 ++++++++++++++++++++++++++++++-----------------------------
- 1 file changed, 38 insertions(+), 37 deletions(-)
+So my primary concern with this patch is if it has any negative impact
+on older kernels, given that you change the assumptions for how it walks
+/sys? I didn't look in detail, but I want to make sure we don't break
+things if we don't have to.
 
-diff --git a/super-intel.c b/super-intel.c
-index 520abf5d..23ea4f92 100644
---- a/super-intel.c
-+++ b/super-intel.c
-@@ -2283,58 +2283,59 @@ static int ahci_enumerate_ports(const char *hba_path, int port_count, int host_b
- 	return err;
- }
- 
--static int print_vmd_attached_devs(struct sys_dev *hba)
-+static int print_nvme_info(struct sys_dev *hba)
- {
-+	char buf[1024];
- 	struct dirent *ent;
- 	DIR *dir;
--	char path[292];
--	char link[256];
--	char *c, *rp;
--
--	if (hba->type != SYS_DEV_VMD)
--		return 1;
-+	char *rp;
-+	int fd;
- 
--	/* scroll through /sys/dev/block looking for devices attached to
--	 * this hba
--	 */
--	dir = opendir("/sys/bus/pci/drivers/nvme");
-+	dir = opendir("/sys/block/");
- 	if (!dir)
- 		return 1;
- 
- 	for (ent = readdir(dir); ent; ent = readdir(dir)) {
--		int n;
--
--		/* is 'ent' a device? check that the 'subsystem' link exists and
--		 * that its target matches 'bus'
--		 */
--		sprintf(path, "/sys/bus/pci/drivers/nvme/%s/subsystem",
--			ent->d_name);
--		n = readlink(path, link, sizeof(link));
--		if (n < 0 || n >= (int)sizeof(link))
--			continue;
--		link[n] = '\0';
--		c = strrchr(link, '/');
--		if (!c)
--			continue;
--		if (strncmp("pci", c+1, strlen("pci")) != 0)
--			continue;
--
--		sprintf(path, "/sys/bus/pci/drivers/nvme/%s", ent->d_name);
--
--		rp = realpath(path, NULL);
--		if (!rp)
--			continue;
-+		if (strstr(ent->d_name, "nvme")) {
-+			sprintf(buf, "/sys/block/%s", ent->d_name);
-+			rp = realpath(buf, NULL);
-+			if (!rp)
-+				continue;
-+			if (path_attached_to_hba(rp, hba->path)) {
-+				fd = open_dev(ent->d_name);
-+				if (fd < 0) {
-+					free(rp);
-+					continue;
-+				}
- 
--		if (path_attached_to_hba(rp, hba->path)) {
--			printf(" NVMe under VMD : %s\n", rp);
-+				fd2devname(fd, buf);
-+				if (hba->type == SYS_DEV_VMD)
-+					printf(" NVMe under VMD : %s", buf);
-+				else if (hba->type == SYS_DEV_NVME)
-+					printf("    NVMe Device : %s", buf);
-+				if (!imsm_read_serial(fd, NULL, (__u8 *)buf))
-+					printf(" (%.*s)\n", MAX_RAID_SERIAL_LEN,
-+					       buf);
-+				else
-+					printf("()\n");
-+				close(fd);
-+			}
-+			free(rp);
- 		}
--		free(rp);
- 	}
- 
- 	closedir(dir);
- 	return 0;
- }
- 
-+static int print_vmd_attached_devs(struct sys_dev *hba)
-+{
-+	if (hba->type != SYS_DEV_VMD)
-+		return 1;
-+
-+	return print_nvme_info(hba);
-+}
-+
- static void print_found_intel_controllers(struct sys_dev *elem)
- {
- 	for (; elem; elem = elem->next) {
-@@ -2558,7 +2559,7 @@ static int detail_platform_imsm(int verbose, int enumerate_only, char *controlle
- 		if (entry->type == SYS_DEV_NVME) {
- 			for (hba = list; hba; hba = hba->next) {
- 				if (hba->type == SYS_DEV_NVME)
--					printf("    NVMe Device : %s\n", hba->path);
-+					print_nvme_info(hba);
- 			}
- 			printf("\n");
- 			continue;
--- 
-2.16.4
-
+Cheers,
+Jes
