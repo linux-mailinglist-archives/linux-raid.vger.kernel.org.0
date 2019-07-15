@@ -2,71 +2,50 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 29F2668442
-	for <lists+linux-raid@lfdr.de>; Mon, 15 Jul 2019 09:23:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE46F68559
+	for <lists+linux-raid@lfdr.de>; Mon, 15 Jul 2019 10:31:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728933AbfGOHXj (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 15 Jul 2019 03:23:39 -0400
-Received: from mga14.intel.com ([192.55.52.115]:48637 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726748AbfGOHXj (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 15 Jul 2019 03:23:39 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jul 2019 00:23:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,493,1557212400"; 
-   d="scan'208";a="190475851"
-Received: from mtkaczyk-devel.igk.intel.com ([10.102.102.23])
-  by fmsmga004.fm.intel.com with ESMTP; 15 Jul 2019 00:23:37 -0700
-From:   Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
-To:     jes.sorensen@gmail.com
-Cc:     linux-raid@vger.kernel.org
-Subject: [PATCH] imsm: close removed drive fd.
-Date:   Mon, 15 Jul 2019 09:25:35 +0200
-Message-Id: <20190715072535.9256-1-mariusz.tkaczyk@intel.com>
-X-Mailer: git-send-email 2.16.4
+        id S1729537AbfGOIab (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 15 Jul 2019 04:30:31 -0400
+Received: from s2mx02.siteserve.jp ([210.248.135.119]:22508 "EHLO
+        s2mx02.siteserve.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbfGOIaa (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 15 Jul 2019 04:30:30 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by s2mx02.siteserve.jp (Postfix) with ESMTP id 5CD6C11BF16;
+        Mon, 15 Jul 2019 17:10:52 +0900 (JST)
+X-Virus-Scanned: amavisd-new at s2mx02.siteserve.jp
+Received: from s2mx02.siteserve.jp ([127.0.0.1])
+        by localhost (mail.siteserve.jp [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id xrzqXF2rmh7E; Mon, 15 Jul 2019 17:10:51 +0900 (JST)
+Received: from webmail.nakagawa-consul.com (localhost.localdomain [127.0.0.1])
+        by s2mx02.siteserve.jp (Postfix) with ESMTP id D280B11BDB1;
+        Mon, 15 Jul 2019 17:10:49 +0900 (JST)
+Received: from 174.128.236.106
+        (RisuMail authenticated user morita@nakagawa-consul.com)
+        by webmail.nakagawa-consul.com with HTTP;
+        Mon, 15 Jul 2019 17:10:50 +0900 (JST)
+Message-ID: <50258.174.128.236.106.1563178250.risu@webmail.nakagawa-consul.com>
+Date:   Mon, 15 Jul 2019 17:10:50 +0900 (JST)
+Subject: Loan offer !!
+From:   "Smith Jerry" <morita@nakagawa-consul.com>
+Reply-To: kasaperkoloans@yahoo.com.hk
+User-Agent: RisuMail 3.1
+X-Mailer: RisuMail 3.1
+MIME-Version: 1.0
+Content-Type: text/plain;charset=us-ascii
+Content-Transfer-Encoding: 8bit
+X-Priority: 3 (Normal)
+Importance: Normal
+To:     undisclosed-recipients:;
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-When member drive fails, managemon prepares metadata update and adds
-the drive to disk_mgmt_list with DISK_REMOVE flag. It fills only
-minor and major. It is enough to recognize the device later.
 
-Monitor thread while processing this update will remove the drive from
-super only if it is a spare. It never removes failed member from
-disks list. As a result, it still keeps opened descriptor to 
-non-existing device.
 
-If removed drive is not a spare fill fd in disk_cfg structure
-(prepared by managemon), monitor will close fd during freeing it.
 
-Also set this drive fd to -1 in super to avoid double closing because
-monitor will close the fd (if needed) while replacing removed drive
-in array.
-
-Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
----
- super-intel.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/super-intel.c b/super-intel.c
-index 2ba045aa..d26063fc 100644
---- a/super-intel.c
-+++ b/super-intel.c
-@@ -9200,6 +9200,9 @@ static int add_remove_disk_update(struct intel_super *super)
- 					remove_disk_super(super,
- 							  disk_cfg->major,
- 							  disk_cfg->minor);
-+				} else {
-+					disk_cfg->fd = disk->fd;
-+					disk->fd = -1;
- 				}
- 			}
- 			/* release allocate disk structure */
--- 
-2.16.4
+Do you need a Loan? email us now on kasaperkoloans@yahoo.com.hk and get
+more details on the loan we offer
 
