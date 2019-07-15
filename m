@@ -2,78 +2,71 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 48B6C6837F
-	for <lists+linux-raid@lfdr.de>; Mon, 15 Jul 2019 08:19:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29F2668442
+	for <lists+linux-raid@lfdr.de>; Mon, 15 Jul 2019 09:23:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbfGOGTb (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 15 Jul 2019 02:19:31 -0400
-Received: from mail5.windriver.com ([192.103.53.11]:52212 "EHLO mail5.wrs.com"
+        id S1728933AbfGOHXj (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 15 Jul 2019 03:23:39 -0400
+Received: from mga14.intel.com ([192.55.52.115]:48637 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbfGOGTb (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 15 Jul 2019 02:19:31 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x6F6Itm6002412
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
-        for <linux-raid@vger.kernel.org>; Sun, 14 Jul 2019 23:19:20 -0700
-Received: from pek-lpg-core2.corp.ad.wrs.com (128.224.153.41) by
- ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
- 14.3.468.0; Sun, 14 Jul 2019 23:18:59 -0700
-From:   <mingli.yu@windriver.com>
-To:     <linux-raid@vger.kernel.org>
-Subject: [PATCH] Revert "tests: wait for complete rebuild in integrity checks"
-Date:   Mon, 15 Jul 2019 14:18:58 +0800
-Message-ID: <1563171538-127463-1-git-send-email-mingli.yu@windriver.com>
-X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain
+        id S1726748AbfGOHXj (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 15 Jul 2019 03:23:39 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jul 2019 00:23:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,493,1557212400"; 
+   d="scan'208";a="190475851"
+Received: from mtkaczyk-devel.igk.intel.com ([10.102.102.23])
+  by fmsmga004.fm.intel.com with ESMTP; 15 Jul 2019 00:23:37 -0700
+From:   Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
+To:     jes.sorensen@gmail.com
+Cc:     linux-raid@vger.kernel.org
+Subject: [PATCH] imsm: close removed drive fd.
+Date:   Mon, 15 Jul 2019 09:25:35 +0200
+Message-Id: <20190715072535.9256-1-mariusz.tkaczyk@intel.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Mingli Yu <Mingli.Yu@windriver.com>
+When member drive fails, managemon prepares metadata update and adds
+the drive to disk_mgmt_list with DISK_REMOVE flag. It fills only
+minor and major. It is enough to recognize the device later.
 
-This reverts commit e2a8e9dcf67a28bc722fa5ab2c49b0bc452d4d74
-as the logic "check state 'U*'" will make the test enters
-infinite loop especially in qemu env, so revert it to
-use the previous logic "check wait" which also used
-commonly by other tests such as tests/02r5grow, tests/07revert-grow
-and etc.
+Monitor thread while processing this update will remove the drive from
+super only if it is a spare. It never removes failed member from
+disks list. As a result, it still keeps opened descriptor to 
+non-existing device.
+
+If removed drive is not a spare fill fd in disk_cfg structure
+(prepared by managemon), monitor will close fd during freeing it.
+
+Also set this drive fd to -1 in super to avoid double closing because
+monitor will close the fd (if needed) while replacing removed drive
+in array.
+
+Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
 ---
- tests/01r5integ    | 2 +-
- tests/01raid6integ | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ super-intel.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tests/01r5integ b/tests/01r5integ
-index 48676a2..ffb30ce 100644
---- a/tests/01r5integ
-+++ b/tests/01r5integ
-@@ -27,7 +27,7 @@ do
-      exit 1
-     fi
-     mdadm $md0 -a $i
--    while ! (check state 'U*'); do check wait; sleep 0.2; done
-+   check wait
-   done
-   mdadm -S $md0
- done
-diff --git a/tests/01raid6integ b/tests/01raid6integ
-index 12f4d81..c6fcdae 100644
---- a/tests/01raid6integ
-+++ b/tests/01raid6integ
-@@ -47,10 +47,10 @@ do
-          exit 1
-        fi
-        mdadm $md0 -a $first
--       while ! (check state 'U*_U*'); do check wait; sleep 0.2; done
-+       check wait
-     done
-     mdadm $md0 -a $second
--    while ! (check state 'U*'); do check wait; sleep 0.2; done
-+    check wait
-     totest="$totest $second"
-   done
-   mdadm -S $md0
+diff --git a/super-intel.c b/super-intel.c
+index 2ba045aa..d26063fc 100644
+--- a/super-intel.c
++++ b/super-intel.c
+@@ -9200,6 +9200,9 @@ static int add_remove_disk_update(struct intel_super *super)
+ 					remove_disk_super(super,
+ 							  disk_cfg->major,
+ 							  disk_cfg->minor);
++				} else {
++					disk_cfg->fd = disk->fd;
++					disk->fd = -1;
+ 				}
+ 			}
+ 			/* release allocate disk structure */
 -- 
-2.7.4
+2.16.4
 
