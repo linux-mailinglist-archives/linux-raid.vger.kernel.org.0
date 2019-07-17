@@ -2,48 +2,50 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D5616C215
-	for <lists+linux-raid@lfdr.de>; Wed, 17 Jul 2019 22:28:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F1ED6C232
+	for <lists+linux-raid@lfdr.de>; Wed, 17 Jul 2019 22:35:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727166AbfGQU17 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 17 Jul 2019 16:27:59 -0400
-Received: from azure.uno.uk.net ([95.172.254.11]:43518 "EHLO azure.uno.uk.net"
+        id S1727386AbfGQUfM (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 17 Jul 2019 16:35:12 -0400
+Received: from azure.uno.uk.net ([95.172.254.11]:43576 "EHLO azure.uno.uk.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727104AbfGQU16 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 17 Jul 2019 16:27:58 -0400
-X-Greylist: delayed 800 seconds by postgrey-1.27 at vger.kernel.org; Wed, 17 Jul 2019 16:27:58 EDT
+        id S1727307AbfGQUfM (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 17 Jul 2019 16:35:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sabi.unospace.net; s=default; h=From:References:In-Reply-To:Subject:To:Date
         :Message-ID:Content-Transfer-Encoding:Content-Type:MIME-Version:Sender:
         Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Y9S3uGmo8qjxAuO14PyxNjHWadOmTl1176434kmvfM4=; b=uSGqxN8F103CWzG2ku0uQ6z/na
-        ExxljBWi7RspmI2bEQv9SIND6TAYmm9rCSc1kh7tjp2wfKwjog0qnZZuaYhOr4mWPHFBmaHWYYTuy
-        76emJXNRQYifw5xNF4qwN+TnU1pQx2oQxuV15hJuH/4j+Jsk/ww99c4l6lQK0yvuYDia29+iWFX8Y
-        WUB/hpPLEHYKBt8pXZvSNR5jLIHz3UcjErUB4KERJ3jruE7MnyofQWiJNll882CwyV0nv1+CjEP/O
-        tDPQfyYhxe0USKCnVmTy6vIEK0Gv4BrDeT/RtoP83BbydUtL/ztRv3x94/4PRqHeOhj+ysw8fafYT
-        xRZSuKRA==;
-Received: from w-50.cust-u6066.ip.static.uno.uk.net ([95.172.224.50]:54504 helo=ty.sabi.co.UK)
+        bh=5czBecMTxL4+emNfx/F9FtBClHp/+dZCBWDlhX6YXfs=; b=ogdAm3xF1cMnOSgXfdnN9HogK7
+        bY7NyZPR8I9Iw76D+5QZ9iUg6oiodWWqt/ncPU19rn9qYrJiBXZnk8Qz0+gtBaS6ms7rePmdMZFJi
+        Z4e5wZ9eIRI8DKmXaTYpc43Qeah8INM9YwPg1Ga8dg9nozNLsTpg5MwfGhnnVUZyjD8rVstW53z1b
+        JDkzOlWteXBpvBaqH2JWNC0MkNk1B7elDIdcvmGXKBM5K0a2SeR54f3bBSyrkytmaIuZsThxDYVSj
+        +6WlAB9g00ilsoaLbs6hv+sXfadS2YKnXjVYROCuvZGVb63FDNIB8cZJkHcpMVdm0Lp8Kf2PIp7j+
+        OSj/ZldA==;
+Received: from w-50.cust-u6066.ip.static.uno.uk.net ([95.172.224.50]:54196 helo=ty.sabi.co.UK)
         by azure.uno.uk.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.92)
         (envelope-from <postmaster@mail.for.sabi.co.uk>)
-        id 1hnqWr-007kNo-JK
-        for linux-raid@vger.kernel.org; Wed, 17 Jul 2019 21:27:57 +0100
+        id 1hnqJu-007jqE-So
+        for linux-raid@vger.kernel.org; Wed, 17 Jul 2019 21:14:34 +0100
 Received: from from [127.0.0.1] (helo=base.ty.sabi.co.uk)
         by ty.sabi.co.UK with esmtps(Cipher TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)(Exim 4.86_2 2)
-        id 1hnqWm-0003Vf-4d
-        for <linux-raid@vger.kernel.org>; Wed, 17 Jul 2019 21:27:52 +0100
+        id 1hnqJm-0003Q0-Fp
+        for <linux-raid@vger.kernel.org>; Wed, 17 Jul 2019 21:14:26 +0100
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Message-ID: <23855.33990.595530.291667@base.ty.sabi.co.uk>
-Date:   Wed, 17 Jul 2019 21:27:50 +0100
+Message-ID: <23855.33185.759034.421593@base.ty.sabi.co.uk>
+Date:   Wed, 17 Jul 2019 21:14:25 +0100
+X-Face: SMJE]JPYVBO-9UR%/8d'mG.F!@.,l@c[f'[%S8'BZIcbQc3/">GrXDwb#;fTRGNmHr^JFb
+ SAptvwWc,0+z+~p~"Gdr4H$(|N(yF(wwCM2bW0~U?HPEE^fkPGx^u[*[yV.gyB!hDOli}EF[\cW*S
+ H<GG"+i\3#fp@@EeWZWBv;]LA5n1pS2VO%Vv[yH?kY'lEWr30WfIU?%>&spRGFL}{`bj1TaD^l/"[
+ msn( /TH#THs{Hpj>)]f><W}Ck9%2?H"AEM)+9<@D;3Kv=^?4$1/+#Qs:-aSsBTUS]iJ$6
 To:     Linux RAID <linux-raid@vger.kernel.org>
 Subject: Re: slow BLKDISCARD on RAID10 md block devices
-In-Reply-To: <20190717113352.GA13079@metamorpher.de>
+In-Reply-To: <20190717090200.GD2080@wantstofly.org>
 References: <20190717090200.GD2080@wantstofly.org>
-        <20190717113352.GA13079@metamorpher.de>
 X-Mailer: VM 8.2.0b under 24.5.1 (x86_64-pc-linux-gnu)
 From:   pg@mdraid.list.sabi.co.UK (Peter Grandi)
 X-Disclaimer: This message contains only personal opinions
@@ -62,22 +64,39 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-[...]
-> Total time (this is tmpfs-backed, no real I/O)
+> I've been running into an issue with background fstrim on
+> large xfs filesystems on RAID10d SSDs taking a lot of time to
+> complete and starving out other I/O to the filesystem. There
+> seem to be a few different issues involved here, [...] Doing
+> this on actual 4x7.68TB or 6x7.68TB SSD arrays instead of with
+> loop devices takes many many hours.
 
-That's not even remotely realistic.
+Amazingly unexpected news :-). Stop the presses! "Complex and
+expensive operation based on a misdesigned primitive takes a
+long time when scaled to huge volumes!!!!!!!!!!!!!!!!!!!!!!!".
+In other news ursinids have been see relieving themselves in
+areas with many trees.
 
-> (Why XFS trims 900G when I said 500G is a bit of a mystery...
+> Any ideas on what I can try to speed this up? [...]
 
->> # time fstrim -v --minimum 64M --offset 0G --length 500G /mnt/tmp/
+Develop a time machine and travel back in time to persuade the
+authors of the TRIM spec to make it non-blocking?
+Send patches to improve most host adapter and disk firmware?
 
-My guess is that those limiting options are advisory: they rely
-on the ability of the filesystem code to easily and cheaply
-check whether a given range of physical addresses is free or
-used. Many filesystems have a "free list" optimized for the
-forward mapping fast "find a free block", not the reverse
-mapping "check whether a block is free".
+> but the main one appears to be that BLKDISCARD on a RAID10 md
+> block device sends many small discard requests down to the
+> underlying component devices (while this doesn't seem to be an
+> issue for RAID0 or for RAID1).
 
-A good option would have been to not do 'fstrim'/'blkdiscard'
-and put TRIM in 'fsck' (apparently that happens under MacOS X
-and 'e2fsck' also allows that).
+If you think that can be improved (and it can be improved, at a
+very high cost), send patches :-).
+
+> [...] the completion time is somewhat inversely proportional
+> to the RAID chunk size. [...]
+
+How strange is that! :-)
+
+> It's quite easy to reproduce this with just using in-memory
+> loop devices [...]
+
+For pretty small values of "reproduce"...
