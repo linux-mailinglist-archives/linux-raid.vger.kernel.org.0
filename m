@@ -2,72 +2,175 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4388C70C9C
-	for <lists+linux-raid@lfdr.de>; Tue, 23 Jul 2019 00:30:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EFB770D56
+	for <lists+linux-raid@lfdr.de>; Tue, 23 Jul 2019 01:31:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733178AbfGVWat (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 22 Jul 2019 18:30:49 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35522 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733176AbfGVWat (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 22 Jul 2019 18:30:49 -0400
-Received: by mail-qk1-f196.google.com with SMTP id r21so29746033qke.2
-        for <linux-raid@vger.kernel.org>; Mon, 22 Jul 2019 15:30:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JwJ6+/0TysY7qDfcAsN/HYPHoTZSm1HNKXvxa4JEf7g=;
-        b=M+AW4ZDpAZTUOScCykD6f3UyOwUdqQetpZ3apf/Z7Lwswco7HCwXQ4wYCqBZVxbBbG
-         /u3ltZq+6RnURT533ryBQodOXFMVz2Q95eKTmVBnujo60DgPnVZqpbVk0S7077+7pvsv
-         sSusBWtamwR1rBsPP3PQSbSXgH1OzINoFHj1QNpmRntq1OV7ZQcd2WVJ2Qsv78hYy0u+
-         dyZNnH8RO0azuJSSgoSpCCVYsb6e3c94f/BXYBJgYWQyem8dUfzAWDhXqclvJbfG0v01
-         u+mLTMtzABN0M4Ak9X8y4CIHCqsyXBM2byDoOWfbjM8C605MTApJwf2NqnzVIRNfz9fz
-         1Z5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JwJ6+/0TysY7qDfcAsN/HYPHoTZSm1HNKXvxa4JEf7g=;
-        b=IZKs4OGaWsb6+qbXHdRCeDMzc3H6ZQu4KG6lhKQmAlfQ42SdcjcH1vxm/Mt6s/jQQx
-         WAZB90BsdVx3LC9ikdBg3DsSmnWMY8sJjLyBTBYUaKgzAprHhNWsWcA1SOYH2c5Xh8+C
-         eHDPietcupw7tM0lyVuXdNiu8F+QUq4b+IHcItA+3DlmwQA5k9fmorlLWkFa5QY8I5gD
-         hmuqX0rBXqMKDQO3UeT9HgOt9AnerP6WcsQ9iQ/l0s8HrC/W5hcELC9ylg5lCqlmR1sc
-         QEMy6aWptPoq2yGzPMw2zYk0rVMAZd0bhcJaUOwL1ovIN/wG5P1X4PGjzEULfJtj7O0j
-         012w==
-X-Gm-Message-State: APjAAAX8spdD5ac+q7yX75SvuCcR+3DBu8Q8hoc3vprBsQpliICxV9mE
-        BJncBrSZ/S05a2UyjmNhokgRyUvfmtxGtfezsSY=
-X-Google-Smtp-Source: APXvYqzR5GNhHzWnQ9vsBkpqh0Pd8Fl3YPKLt6bEdDUk5mNW7vy+0Ph+1zOFjCVLlU7ykvY61RBQHfAgdkZYfbpo7Ys=
-X-Received: by 2002:a37:6d85:: with SMTP id i127mr47966765qkc.74.1563834648143;
- Mon, 22 Jul 2019 15:30:48 -0700 (PDT)
+        id S1730604AbfGVXbL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 22 Jul 2019 19:31:11 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:48956 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727157AbfGVXbL (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 22 Jul 2019 19:31:11 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6MNTCdL104363;
+        Mon, 22 Jul 2019 23:30:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=ZOinQjjkfv+8JYlsnjKtWVora/RDCEJ06rc6HsclIrg=;
+ b=2y5dCRqNbyDeHDW0jO++e2I1na2Hzhb0IYMqCXazV73vVweZ4OOd8KSFXiqhSyPL/eem
+ iXesaIm/WdS+KhEKF6eZ68fZEQTJoluEaEKrd7STPFx+IQffTHYYhJ543/d0UaYk+pmf
+ MGTEO88kQsEaOzcNiR5TXyYkL1k4AwSs7+1do0/FOkeAymeiVs6+Im8IHK6XodjXW6Rr
+ dM5lAOwvQUdebQviltw1VTHfLR2jpc1Z/PVcidXg9ld9vlb78FoECgHwBnwhfyGHfj3f
+ eDEefmgyPeKhTIPH4C3fUOM934zI2/pGn0ZQuNNo018pzFMzr1uxRWmAxyh7uPY5VdJd 5Q== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2tutctaeaa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 Jul 2019 23:30:47 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6MNRu3t087843;
+        Mon, 22 Jul 2019 23:30:46 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2tut9mkw89-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 Jul 2019 23:30:46 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6MNUjZ1000912;
+        Mon, 22 Jul 2019 23:30:45 GMT
+Received: from [192.168.1.14] (/180.165.87.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 22 Jul 2019 16:30:44 -0700
+Subject: Re: [RFC PATCH 0/3] md: export internal stats through debugfs
+To:     Hou Tao <houtao1@huawei.com>, linux-raid@vger.kernel.org,
+        songliubraving@fb.com
+Cc:     neilb@suse.com, linux-block@vger.kernel.org, snitzer@redhat.com,
+        agk@redhat.com, dm-devel@redhat.com, linux-kernel@vger.kernel.org
+References: <20190702132918.114818-1-houtao1@huawei.com>
+From:   Bob Liu <bob.liu@oracle.com>
+Message-ID: <1ebcf2e8-f3ce-7417-4060-b9264a5a4e51@oracle.com>
+Date:   Tue, 23 Jul 2019 07:30:38 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190719054847.140905-1-yuyufen@huawei.com>
-In-Reply-To: <20190719054847.140905-1-yuyufen@huawei.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Mon, 22 Jul 2019 15:30:37 -0700
-Message-ID: <CAPhsuW64mgCmnBAg0Rn4ay14AGn84xAiP+Lutu2yRtSWoLRYug@mail.gmail.com>
-Subject: Re: [PATCH 0/2] md: not need error handling when device faulty
-To:     Yufen Yu <yuyufen@huawei.com>
-Cc:     NeilBrown <neilb@suse.com>, Jens Axboe <axboe@kernel.dk>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        Hou Tao <houtao1@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190702132918.114818-1-houtao1@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9326 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907220248
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9326 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907220248
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 10:43 PM Yufen Yu <yuyufen@huawei.com> wrote:
->
+On 7/2/19 9:29 PM, Hou Tao wrote:
 > Hi,
->
-> This patchset optimize write error handling for raid1 and raid10.
-> When the device has been set faulty, error write bio did not need
-> to queue for error handling by raid daemon thread.
->
->
+> 
+> There are so many io counters, stats and flags in md, so I think
+> export these info to userspace will be helpful for online-debugging,
 
-Applied to my local branch.
+For online-debugging, I'd suggest you have a try eBPF which can be very helpful.
 
-Thanks,
-Song
+-Bob
+
+> especially when the vmlinux file and the crash utility are not
+> available. And these info can also be utilized during code
+> understanding.
+> 
+> MD has already exported some stats through sysfs files under
+> /sys/block/mdX/md, but using sysfs file to export more internal
+> stats are not a good choice, because we need to create a single
+> sysfs file for each internal stat according to the use convention
+> of sysfs and there are too many internal stats. Further, the
+> newly-created sysfs files would become APIs for userspace tools,
+> but that is not we wanted, because these files are related with
+> internal stats and internal stats may change from time to time.
+> 
+> And I think debugfs is a better choice. Because we can show multiple
+> related stats in a debugfs file, and the debugfs file will never be
+> used as an userspace API.
+> 
+> Two debugfs files are created to expose these internal stats:
+> * iostat: io counters and io related stats (e.g., mddev->active_io,
+> 	r1conf->nr_pending, or r1confi->retry_list)
+> * stat: normal stats/flags (e.g., mddev->recovery, conf->array_frozen)
+> 
+> Because internal stats are spreaded all over md-core and md-personality,
+> so both md-core and md-personality will create these two debugfs files
+> under different debugfs directory.
+> 
+> Patch 1 factors out the debugfs files creation routine for md-core and
+> md-personality, patch 2 creates two debugfs files: iostat & stat under
+> /sys/kernel/debug/block/mdX for md-core, and patch 3 creates two debugfs
+> files: iostat & stat under /sys/kernel/debug/block/mdX/raid1 for md-raid1.
+> 
+> The following lines show the hierarchy and the content of these debugfs
+> files for a RAID1 device:
+> 
+> $ pwd
+> /sys/kernel/debug/block/md0
+> $ tree
+> .
+> ├── iostat
+> ├── raid1
+> │   ├── iostat
+> │   └── stat
+> └── stat
+> 
+> $ cat iostat
+> active_io 0
+> sb_wait 0 pending_writes 0
+> recovery_active 0
+> bitmap pending_writes 0
+> 
+> $ cat stat
+> flags 0x20
+> sb_flags 0x0
+> recovery 0x0
+> 
+> $ cat raid1/iostat
+> retry_list active 0
+> bio_end_io_list active 0
+> pending_bio_list active 0 cnt 0
+> sync_pending 0
+> nr_pending 0
+> nr_waiting 0
+> nr_queued 0
+> barrier 0
+> 
+> $ cat raid1/stat
+> array_frozen 0
+> 
+> I'm not sure whether the division of internal stats is appropriate and
+> whether the internal stats in debugfs files are sufficient, so questions
+> and comments are weclome.
+> 
+> Regards,
+> Tao
+> 
+> Hou Tao (3):
+>   md-debugfs: add md_debugfs_create_files()
+>   md: export inflight io counters and internal stats in debugfs
+>   raid1: export inflight io counters and internal stats in debugfs
+> 
+>  drivers/md/Makefile     |  2 +-
+>  drivers/md/md-debugfs.c | 35 ++++++++++++++++++
+>  drivers/md/md-debugfs.h | 16 +++++++++
+>  drivers/md/md.c         | 65 ++++++++++++++++++++++++++++++++++
+>  drivers/md/md.h         |  1 +
+>  drivers/md/raid1.c      | 78 +++++++++++++++++++++++++++++++++++++++++
+>  drivers/md/raid1.h      |  1 +
+>  7 files changed, 197 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/md/md-debugfs.c
+>  create mode 100644 drivers/md/md-debugfs.h
+> 
+
