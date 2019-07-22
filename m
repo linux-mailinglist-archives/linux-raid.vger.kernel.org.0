@@ -2,142 +2,70 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8208E70B6A
-	for <lists+linux-raid@lfdr.de>; Mon, 22 Jul 2019 23:31:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD32770BEA
+	for <lists+linux-raid@lfdr.de>; Mon, 22 Jul 2019 23:46:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732614AbfGVVbc (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 22 Jul 2019 17:31:32 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:41126 "EHLO
+        id S1730274AbfGVVqQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 22 Jul 2019 17:46:16 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:37424 "EHLO
         mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728016AbfGVVbc (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 22 Jul 2019 17:31:32 -0400
-Received: by mail-qk1-f195.google.com with SMTP id v22so29586061qkj.8;
-        Mon, 22 Jul 2019 14:31:31 -0700 (PDT)
+        with ESMTP id S1729624AbfGVVqQ (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 22 Jul 2019 17:46:16 -0400
+Received: by mail-qk1-f195.google.com with SMTP id d15so29609336qkl.4;
+        Mon, 22 Jul 2019 14:46:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=bkMB9iLdWFSQkbPy5t3JV4F68RV6jUdrJD2bOwvoIn8=;
-        b=iWMC3L/LEDt/vVKsPAdSv09UkpyAiOkpNWdyKMDQ4qn5+thSgKDnX58gIlCo4DoNxi
-         C3lWKOEbiXHIBK8nK3usgWV8PbRWDhyRVFstWCg+XzVeeo/J52lRxI61zK/lK4utFsPg
-         hCarZQxcXI5I3HSxxUSkhTDdp1NQP63hAu2G+Ie6OWwqio0azTTg3kHGHoFH6RkPWLV6
-         5/WEGxN/+9HdYKyjrMXdavay3PlbXFIEr9a2QyvS18wAuJHdd2XLD6T/5lG7fRhaPHkO
-         TJSFtElGws2zIsFGKEmkGDCFJuU0gJOvSCdZuAM9jAAnFGvbcaPrOLDFq5+FkATx8oA0
-         2X4w==
+         :cc;
+        bh=Y5NLHCvyvtEY+fLnxFgCWbb8gW3X9ssvxOBTPCkuHdE=;
+        b=puFbiiJsm0MXZ/zSTAfUMYUKLi0H4vYdLibW/lNqNMWvk5i0vKklONa3o9HBA/LehJ
+         0UU7NycEmierrY6s/YH5Tfq0C7THnC9ezLo/Z3lIoMXQAOQ41CudOUpDdQL52h63mafJ
+         4yl5B0IayHkKVns2oA8xDwV+F4+xx7lqnjl4TkYmX5yYip3wAw85Gm02smxbjJDJaSUi
+         1Rb8LrNPsdmBI+Qy79d/odFUhXJ8YDpk5nrD0iv7RAIgRtioRu4gWBeUYKZ8k9tuJLtK
+         nukNZO8kNx5KcjlZZbYF6VmQmKNLdwWPlMRi4qaoYJCqv3K8CwzFajlq9KrgPagPcLcX
+         AD6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bkMB9iLdWFSQkbPy5t3JV4F68RV6jUdrJD2bOwvoIn8=;
-        b=cGpaQVnnmDTc/G2tJsDyo7vtuUgtlV3jtN7zeezgODccHgJ6tO0trxbCh56VX5LHot
-         pHOC+bSQ3kNUtHRFpiPzQLb9nv2Wd3kOY+MF+K28xQostISfeDcdi2DWy9NWQMBsg7Yv
-         s8ZCduuAThk39kPyiPfWvqqasTGWI+f6tkreJYJYnaPlXDJ36arzYHu3PcfIvqo3HZ/i
-         AhpMtC1K3Qnelz34aJP/9OAtDm6WORKHZjU9OxslI+CiG3fiUsBTEESapZ/+/H0fCh3K
-         1x6dTCut2J2yPZEnynDu0hXGLnN7U+xMcPPtCvf+B1jJwe4yEuqIieZg8Rg7Tp9+Wi+p
-         Aggg==
-X-Gm-Message-State: APjAAAWHxb3+JzG7Wu9AKas25MRmq1+labwP4KFH8YH8bSCvRWnzB2zq
-        f58YsGEnO869hymp8KwAWgxV/AEGz/WfoiaQG7AhRQ==
-X-Google-Smtp-Source: APXvYqwU28I7FEeqRZ7j23Bk/5Hg6qUpt29zYyXnWc5oz7DnGYIqKvtek6EVowUlxJB6Y0AZq/4kLgLDlc2EVw1QrkE=
-X-Received: by 2002:a37:4d82:: with SMTP id a124mr46359152qkb.72.1563831091271;
- Mon, 22 Jul 2019 14:31:31 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=Y5NLHCvyvtEY+fLnxFgCWbb8gW3X9ssvxOBTPCkuHdE=;
+        b=pU87ERFNEnymn3YfWyBoDMELh2up0SoivTDFC628uYwlLtlot75LwzKMnJ+JRsDcCq
+         i0KDDRR2+rHJRCatf2HXuwMv8osvQ4+bEfUyE4T+Xu1nZuQAdNOoGWhiqLlNJmyjyCJw
+         +VVlZpDPLRnuhc3MQC/hamUesHUcGSlKj8fLD22wp/zzcdYCBk5tAVom8DgUXoQlH+kq
+         hV8TXM0MDl5TrFV49LVONdEMGo5pay6boKf90F24pU6zdIEXxi2B4IT1QsWvwqOZypJG
+         UZi0Izbmzau260TbMB2p/vyCPK6T0VJHXYVKSVxktblFdNliHNZfs9uwRZsN2h3/9QIE
+         PGVA==
+X-Gm-Message-State: APjAAAXmDrarcIVocCfploqB2xOXLRooedEMoMWuU211spQgVBhRWL8n
+        s8/gnDvIGXQhKpO6YK+XO9xYm7R44QXKYmnrF9c=
+X-Google-Smtp-Source: APXvYqxsj0FW8dlomAaE61phQvZRgy/maiojZrYq6ePiB945N0OFcnrUMP60+OMGhUvQybteQdDSIv5a9BR6pXkGrlc=
+X-Received: by 2002:a37:4d82:: with SMTP id a124mr46381963qkb.72.1563831975659;
+ Mon, 22 Jul 2019 14:46:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190702132918.114818-1-houtao1@huawei.com>
-In-Reply-To: <20190702132918.114818-1-houtao1@huawei.com>
+References: <20190702143548.133020-1-houtao1@huawei.com>
+In-Reply-To: <20190702143548.133020-1-houtao1@huawei.com>
 From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Mon, 22 Jul 2019 14:31:20 -0700
-Message-ID: <CAPhsuW6yH7np1=+e5Rgutp3m1VA0TPvtANeX=0ZdpJaRKEvBkQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/3] md: export internal stats through debugfs
+Date:   Mon, 22 Jul 2019 14:46:04 -0700
+Message-ID: <CAPhsuW5S0h66GxHeypS=3aGO=FAJ_J7TxoUatffXhOSiBzWCXg@mail.gmail.com>
+Subject: Re: [PATCH] raid1: use an int as the return value of raise_barrier()
 To:     Hou Tao <houtao1@huawei.com>
 Cc:     linux-raid <linux-raid@vger.kernel.org>,
-        Song Liu <songliubraving@fb.com>, NeilBrown <neilb@suse.com>,
-        linux-block@vger.kernel.org, snitzer@redhat.com, agk@redhat.com,
-        dm-devel@redhat.com, open list <linux-kernel@vger.kernel.org>
+        Song Liu <songliubraving@fb.com>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Tue, Jul 2, 2019 at 6:25 AM Hou Tao <houtao1@huawei.com> wrote:
+On Tue, Jul 2, 2019 at 7:30 AM Hou Tao <houtao1@huawei.com> wrote:
 >
-> Hi,
+> Using a sector_t as the return value is misleading, because
+> raise_barrier() only return 0 or -EINTR.
 >
-> There are so many io counters, stats and flags in md, so I think
-> export these info to userspace will be helpful for online-debugging,
-> especially when the vmlinux file and the crash utility are not
-> available. And these info can also be utilized during code
-> understanding.
+> Also add comments for the return values of raise_barrier().
 >
-> MD has already exported some stats through sysfs files under
-> /sys/block/mdX/md, but using sysfs file to export more internal
-> stats are not a good choice, because we need to create a single
-> sysfs file for each internal stat according to the use convention
-> of sysfs and there are too many internal stats. Further, the
-> newly-created sysfs files would become APIs for userspace tools,
-> but that is not we wanted, because these files are related with
-> internal stats and internal stats may change from time to time.
->
-> And I think debugfs is a better choice. Because we can show multiple
-> related stats in a debugfs file, and the debugfs file will never be
-> used as an userspace API.
->
-> Two debugfs files are created to expose these internal stats:
-> * iostat: io counters and io related stats (e.g., mddev->active_io,
->         r1conf->nr_pending, or r1confi->retry_list)
-> * stat: normal stats/flags (e.g., mddev->recovery, conf->array_frozen)
->
-> Because internal stats are spreaded all over md-core and md-personality,
-> so both md-core and md-personality will create these two debugfs files
-> under different debugfs directory.
->
-> Patch 1 factors out the debugfs files creation routine for md-core and
-> md-personality, patch 2 creates two debugfs files: iostat & stat under
-> /sys/kernel/debug/block/mdX for md-core, and patch 3 creates two debugfs
-> files: iostat & stat under /sys/kernel/debug/block/mdX/raid1 for md-raid1=
-.
->
-> The following lines show the hierarchy and the content of these debugfs
-> files for a RAID1 device:
->
-> $ pwd
-> /sys/kernel/debug/block/md0
-> $ tree
-> .
-> =E2=94=9C=E2=94=80=E2=94=80 iostat
-> =E2=94=9C=E2=94=80=E2=94=80 raid1
-> =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 iostat
-> =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 stat
-> =E2=94=94=E2=94=80=E2=94=80 stat
->
-> $ cat iostat
-> active_io 0
-> sb_wait 0 pending_writes 0
-> recovery_active 0
-> bitmap pending_writes 0
->
-> $ cat stat
-> flags 0x20
-> sb_flags 0x0
-> recovery 0x0
->
-> $ cat raid1/iostat
-> retry_list active 0
-> bio_end_io_list active 0
-> pending_bio_list active 0 cnt 0
-> sync_pending 0
-> nr_pending 0
-> nr_waiting 0
-> nr_queued 0
-> barrier 0
+> Signed-off-by: Hou Tao <houtao1@huawei.com>
 
-Hi,
+Applied. Thanks for the patch.
 
-Sorry for the late reply.
-
-I think these information are really debug information that we should not
-show in /sys. Once we expose them in /sys, we need to support them
-because some use space may start searching data from them.
-
-Thanks,
 Song
