@@ -2,131 +2,142 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A0467059D
-	for <lists+linux-raid@lfdr.de>; Mon, 22 Jul 2019 18:40:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8208E70B6A
+	for <lists+linux-raid@lfdr.de>; Mon, 22 Jul 2019 23:31:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731125AbfGVQko (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 22 Jul 2019 12:40:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42650 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731069AbfGVQkn (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 22 Jul 2019 12:40:43 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C3F2EAD55;
-        Mon, 22 Jul 2019 16:40:41 +0000 (UTC)
-Subject: Re: slow BLKDISCARD on RAID10 md block devices
-To:     Lennert Buytenhek <buytenh@wantstofly.org>,
-        linux-raid@vger.kernel.org
-References: <20190717090200.GD2080@wantstofly.org>
-From:   Coly Li <colyli@suse.de>
-Openpgp: preference=signencrypt
-Organization: SUSE Labs
-Message-ID: <3a8e5b2e-e1a4-8023-f489-0813668a5f8a@suse.de>
-Date:   Tue, 23 Jul 2019 00:40:34 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        id S1732614AbfGVVbc (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 22 Jul 2019 17:31:32 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:41126 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728016AbfGVVbc (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 22 Jul 2019 17:31:32 -0400
+Received: by mail-qk1-f195.google.com with SMTP id v22so29586061qkj.8;
+        Mon, 22 Jul 2019 14:31:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=bkMB9iLdWFSQkbPy5t3JV4F68RV6jUdrJD2bOwvoIn8=;
+        b=iWMC3L/LEDt/vVKsPAdSv09UkpyAiOkpNWdyKMDQ4qn5+thSgKDnX58gIlCo4DoNxi
+         C3lWKOEbiXHIBK8nK3usgWV8PbRWDhyRVFstWCg+XzVeeo/J52lRxI61zK/lK4utFsPg
+         hCarZQxcXI5I3HSxxUSkhTDdp1NQP63hAu2G+Ie6OWwqio0azTTg3kHGHoFH6RkPWLV6
+         5/WEGxN/+9HdYKyjrMXdavay3PlbXFIEr9a2QyvS18wAuJHdd2XLD6T/5lG7fRhaPHkO
+         TJSFtElGws2zIsFGKEmkGDCFJuU0gJOvSCdZuAM9jAAnFGvbcaPrOLDFq5+FkATx8oA0
+         2X4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=bkMB9iLdWFSQkbPy5t3JV4F68RV6jUdrJD2bOwvoIn8=;
+        b=cGpaQVnnmDTc/G2tJsDyo7vtuUgtlV3jtN7zeezgODccHgJ6tO0trxbCh56VX5LHot
+         pHOC+bSQ3kNUtHRFpiPzQLb9nv2Wd3kOY+MF+K28xQostISfeDcdi2DWy9NWQMBsg7Yv
+         s8ZCduuAThk39kPyiPfWvqqasTGWI+f6tkreJYJYnaPlXDJ36arzYHu3PcfIvqo3HZ/i
+         AhpMtC1K3Qnelz34aJP/9OAtDm6WORKHZjU9OxslI+CiG3fiUsBTEESapZ/+/H0fCh3K
+         1x6dTCut2J2yPZEnynDu0hXGLnN7U+xMcPPtCvf+B1jJwe4yEuqIieZg8Rg7Tp9+Wi+p
+         Aggg==
+X-Gm-Message-State: APjAAAWHxb3+JzG7Wu9AKas25MRmq1+labwP4KFH8YH8bSCvRWnzB2zq
+        f58YsGEnO869hymp8KwAWgxV/AEGz/WfoiaQG7AhRQ==
+X-Google-Smtp-Source: APXvYqwU28I7FEeqRZ7j23Bk/5Hg6qUpt29zYyXnWc5oz7DnGYIqKvtek6EVowUlxJB6Y0AZq/4kLgLDlc2EVw1QrkE=
+X-Received: by 2002:a37:4d82:: with SMTP id a124mr46359152qkb.72.1563831091271;
+ Mon, 22 Jul 2019 14:31:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190717090200.GD2080@wantstofly.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190702132918.114818-1-houtao1@huawei.com>
+In-Reply-To: <20190702132918.114818-1-houtao1@huawei.com>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Mon, 22 Jul 2019 14:31:20 -0700
+Message-ID: <CAPhsuW6yH7np1=+e5Rgutp3m1VA0TPvtANeX=0ZdpJaRKEvBkQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/3] md: export internal stats through debugfs
+To:     Hou Tao <houtao1@huawei.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>,
+        Song Liu <songliubraving@fb.com>, NeilBrown <neilb@suse.com>,
+        linux-block@vger.kernel.org, snitzer@redhat.com, agk@redhat.com,
+        dm-devel@redhat.com, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 2019/7/17 5:02 下午, Lennert Buytenhek wrote:
-> Hello!
-> 
-> I've been running into an issue with background fstrim on large xfs
-> filesystems on RAID10d SSDs taking a lot of time to complete and
-> starving out other I/O to the filesystem.  There seem to be a few
-> different issues involved here, but the main one appears to be that
-> BLKDISCARD on a RAID10 md block device sends many small discard
-> requests down to the underlying component devices (while this doesn't
-> seem to be an issue for RAID0 or for RAID1).
-> 
-> It's quite easy to reproduce this with just using in-memory loop
-> devices, for example by doing:
-> 
->         cd /dev/shm
->         touch loop0
->         touch loop1
->         touch loop2
->         touch loop3
->         truncate -s 7681501126656 loop0
->         truncate -s 7681501126656 loop1
->         truncate -s 7681501126656 loop2
->         truncate -s 7681501126656 loop3
->         losetup /dev/loop0 loop0
->         losetup /dev/loop1 loop1
->         losetup /dev/loop2 loop2
->         losetup /dev/loop3 loop3
-> 
->         mdadm --create -n 4 -c 512 -l 0 --assume-clean /dev/md0 /dev/loop[0123]
->         time blkdiscard /dev/md0
-> 
->         mdadm --stop /dev/md0
-> 
->         mdadm --create -n 4 -c 512 -l 1 --assume-clean /dev/md0 /dev/loop[0123]
->         time blkdiscard /dev/md0
-> 
->         mdadm --stop /dev/md0
-> 
->         mdadm --create -n 4 -c 512 -l 10 --assume-clean /dev/md0 /dev/loop[0123]
->         time blkdiscard /dev/md0
-> 
+On Tue, Jul 2, 2019 at 6:25 AM Hou Tao <houtao1@huawei.com> wrote:
+>
+> Hi,
+>
+> There are so many io counters, stats and flags in md, so I think
+> export these info to userspace will be helpful for online-debugging,
+> especially when the vmlinux file and the crash utility are not
+> available. And these info can also be utilized during code
+> understanding.
+>
+> MD has already exported some stats through sysfs files under
+> /sys/block/mdX/md, but using sysfs file to export more internal
+> stats are not a good choice, because we need to create a single
+> sysfs file for each internal stat according to the use convention
+> of sysfs and there are too many internal stats. Further, the
+> newly-created sysfs files would become APIs for userspace tools,
+> but that is not we wanted, because these files are related with
+> internal stats and internal stats may change from time to time.
+>
+> And I think debugfs is a better choice. Because we can show multiple
+> related stats in a debugfs file, and the debugfs file will never be
+> used as an userspace API.
+>
+> Two debugfs files are created to expose these internal stats:
+> * iostat: io counters and io related stats (e.g., mddev->active_io,
+>         r1conf->nr_pending, or r1confi->retry_list)
+> * stat: normal stats/flags (e.g., mddev->recovery, conf->array_frozen)
+>
+> Because internal stats are spreaded all over md-core and md-personality,
+> so both md-core and md-personality will create these two debugfs files
+> under different debugfs directory.
+>
+> Patch 1 factors out the debugfs files creation routine for md-core and
+> md-personality, patch 2 creates two debugfs files: iostat & stat under
+> /sys/kernel/debug/block/mdX for md-core, and patch 3 creates two debugfs
+> files: iostat & stat under /sys/kernel/debug/block/mdX/raid1 for md-raid1=
+.
+>
+> The following lines show the hierarchy and the content of these debugfs
+> files for a RAID1 device:
+>
+> $ pwd
+> /sys/kernel/debug/block/md0
+> $ tree
+> .
+> =E2=94=9C=E2=94=80=E2=94=80 iostat
+> =E2=94=9C=E2=94=80=E2=94=80 raid1
+> =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 iostat
+> =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 stat
+> =E2=94=94=E2=94=80=E2=94=80 stat
+>
+> $ cat iostat
+> active_io 0
+> sb_wait 0 pending_writes 0
+> recovery_active 0
+> bitmap pending_writes 0
+>
+> $ cat stat
+> flags 0x20
+> sb_flags 0x0
+> recovery 0x0
+>
+> $ cat raid1/iostat
+> retry_list active 0
+> bio_end_io_list active 0
+> pending_bio_list active 0 cnt 0
+> sync_pending 0
+> nr_pending 0
+> nr_waiting 0
+> nr_queued 0
+> barrier 0
 
-Hi Lennert,
+Hi,
 
-> This simulates trimming RAID0/1/10 arrays with 4x7.68TB component
-> devices, and the blkdiscard completion times are as follows:
-> 
->         RAID0   0m0.213s
+Sorry for the late reply.
 
-For raid0, see commit 29efc390b946 ("md/md0: optimize raid0 discard
-handling"), Shaohua did magic code to combine huge number of small split
-DISCARD bios into much less bigger ones (from 512KB to 4GB) in ideal
-condition.
+I think these information are really debug information that we should not
+show in /sys. Once we expose them in /sys, we need to support them
+because some use space may start searching data from them.
 
->         RAID1   0m2.667s
-
-For raid1, see commit fd76863e37fe ("RAID1: a new I/O barrier
-implementation to remove resync window"), which sets
-BARRIER_UNIT_SECTOR_SIZE to 64MB, so 4GB DISCARD bio size will be split
-into 64MB. Comparing to 4GB DISCARD bio size, 64MB is smaller, but
-comparing to 512KB DISCARD bio size, it is much bigger.
-
->         RAID10  10m44.814s
-> 
-
-For raid10, neither DISCARD nor barrier bucket optimization exists,
-upper layer 4GB DISCARD bio will be split into 512KB small bio due to
-the raid0 chunk size. For a large SSD device, processing such huge
-number of small bio in serial order will take a lot of time.
-
-
-> For the RAID10 case, it spends almost 11 minutes pegged at 100% CPU
-> (in the md0_raid10 and loop[0123] threads), and as expected, the
-> completion time is somewhat inversely proportional to the RAID chunk
-> size.  Doing this on actual 4x7.68TB or 6x7.68TB SSD arrays instead
-> of with loop devices takes many many hours.
-> 
-> Any ideas on what I can try to speed this up?  I'm seeing this on
-> 4.15 and on 5.1.
-> 
-
-Try to port the following ideas into raid10 code,
-- commit 29efc390b946 ("md/md0: optimize raid0 discard handling")
-- commit fd76863e37fe ("RAID1: a new I/O barrier implementation to
-remove resync window")
-- commit 824e47daddbf ("RAID1: avoid unnecessary spin locks in I/O
-barrier code")
-
-For the first patch, I still have no idea how to port it to md raid10
-code, which is really smart code IMHO.
-
--- 
-
-Coly Li
+Thanks,
+Song
