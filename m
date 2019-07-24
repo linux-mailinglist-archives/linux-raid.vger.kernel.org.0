@@ -2,104 +2,75 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 176EA72392
-	for <lists+linux-raid@lfdr.de>; Wed, 24 Jul 2019 03:07:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3E8572A24
+	for <lists+linux-raid@lfdr.de>; Wed, 24 Jul 2019 10:33:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbfGXBH2 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 23 Jul 2019 21:07:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50748 "EHLO mx1.redhat.com"
+        id S1726391AbfGXIc7 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 24 Jul 2019 04:32:59 -0400
+Received: from drutsystem.com ([84.10.39.251]:58239 "EHLO drutsystem.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbfGXBH1 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 23 Jul 2019 21:07:27 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 96AC5307D85B;
-        Wed, 24 Jul 2019 01:07:27 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-8-21.pek2.redhat.com [10.72.8.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 324975D71A;
-        Wed, 24 Jul 2019 01:07:24 +0000 (UTC)
-Subject: Re: Raid 1 vs Raid 5 suggestion
-To:     Luca Lazzarin <luca.lazzarin@gmail.com>,
-        Wol's lists <antlists@youngman.org.uk>,
-        Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
-Cc:     linux-raid@vger.kernel.org
-References: <0155f98d-7ffc-a631-a7c5-259192c0df00@gmail.com>
- <5D25196A.9020606@youngman.org.uk>
- <da428a60-aa9a-1cd9-d766-237fd885d425@redhat.com>
- <5D25A4A4.2000609@youngman.org.uk>
- <6e20bc11-9afb-3183-102e-2305990d5c89@redhat.com>
- <20190710173354.GA5523@lazy.lzy>
- <08871cf8-8ae7-cde1-7b45-0d75fe42026e@gmail.com>
- <1a8b3284-1338-9165-6359-5fdc71430b22@youngman.org.uk>
- <6359befe-4287-8ca1-b411-5dd907c9e262@gmail.com>
-From:   Xiao Ni <xni@redhat.com>
-Message-ID: <9858780a-3b47-a731-316b-ae6622c7870f@redhat.com>
-Date:   Wed, 24 Jul 2019 09:07:22 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        id S1726260AbfGXIc7 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 24 Jul 2019 04:32:59 -0400
+X-Greylist: delayed 599 seconds by postgrey-1.27 at vger.kernel.org; Wed, 24 Jul 2019 04:32:59 EDT
+Received: from [10.227.137.2] (89-76-20-72.dynamic.chello.pl [89.76.20.72])
+        by drutsystem.com (Postfix) with ESMTPA id BC4707B042A;
+        Wed, 24 Jul 2019 10:22:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ziu.info; s=ziu;
+        t=1563956573; bh=Iggd/pcaVpchBbUdRXt5ZsN0uddra+U+boa5oM/zp8M=;
+        h=Subject:To:References:From:Cc:Date:In-Reply-To;
+        b=7Yh4hkAoLye4cSnjM5g217IeL1UD5JtikWTq2T3x2juEswvRaX19EM22uIhRFqiO/
+         aZ5ohxUXonQYMFOqIYO8YXj7UBXrcr8bM3TEar/GFBZeHNP02GtLYPqWSSnBDFrBd/
+         J+uVJr5r103us8Jof6m/YAY4bQhFrlNDgiqS2o+I=
+Subject: Re: slow BLKDISCARD on RAID10 md block devices
+To:     Lennert Buytenhek <buytenh@wantstofly.org>
+References: <20190717090200.GD2080@wantstofly.org>
+From:   Michal Soltys <soltys@ziu.info>
+Cc:     linux-raid@vger.kernel.org, Song Liu <liu.song.a23@gmail.com>,
+        colyli@suse.de
+Message-ID: <6bf5708a-28ee-9018-82c0-4637ce6e59b2@ziu.info>
+Date:   Wed, 24 Jul 2019 10:23:03 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <6359befe-4287-8ca1-b411-5dd907c9e262@gmail.com>
+In-Reply-To: <20190717090200.GD2080@wantstofly.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 24 Jul 2019 01:07:27 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
+X-MailScanner-ID: BC4707B042A.A2FCB
+X-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-MailScanner-From: soltys@ziu.info
+X-Spam-Status: No
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi Luca and Wol
+On 19/07/17 11:02, Lennert Buytenhek wrote:
+> Hello!
+> 
+> I've been running into an issue with background fstrim on large xfs
+> filesystems on RAID10d SSDs taking a lot of time to complete and
+> starving out other I/O to the filesystem.  There seem to be a few
+> different issues involved here, but the main one appears to be that
+> BLKDISCARD on a RAID10 md block device sends many small discard
+> requests down to the underlying component devices (while this doesn't
+> seem to be an issue for RAID0 or for RAID1).
+> 
 
-Now it has a problem about the combination of raid6 and dm-integrity. If 
-there are many read failures at a time,
+It seems to have super weird friction with blkdiscard sized that are not 
+multiple of the chunk - and as a result did very werid things.
 
-it can set the member as faulty.
+If you force a size that is nominally a multiple of one (from my 
+testings) it will work with sensible speed (in context of raid10).
 
-                 } else if (atomic_read(&rdev->read_errors)
-                          > conf->max_nr_stripes)
-                         printk(KERN_WARNING
-                                "md/raid:%s: Too many read errors, 
-failing device %s.\n",
-                                mdname(conf->mddev), bdn);
+You can find more in the thread I did some time ago:
 
-But now it just can be reproduced on virtual machines and we modify 
-about 500MB data of the disk. And in real world I think it's hard to 
-trigger this.
+https://www.spinics.net/lists/raid/msg62094.html
 
-@Luca, this combination can fix the silent data corruption 
-automatically. If there are some data is broken on some sectors, this 
-combination can
+While this was originally about raid456 (different issue there), check out:
 
-fix it automatically. I pasted one link several days before. You can 
-check it.
+https://www.spinics.net/lists/raid/msg62115.html
+https://www.spinics.net/lists/raid/msg62134.html
 
-Regards
-
-Xiao
-
-
-On 07/24/2019 04:34 AM, Luca Lazzarin wrote:
-> I do not know it. Could you please link me to some infos?
->
-> Why do you suggest it?
-> I mean, which benefits will it give to me?
->
-> Thanks :-)
->
-> On 23/07/19 22:30, Wol's lists wrote:
->> On 23/07/2019 21:16, Luca Lazzarin wrote:
->>> Thank you all for your suggestiong.
->>>
->>> I'll probably choose RAID6.
->>
->> Any chance of putting it on top of dm-integrity? If you do can you 
->> post about it (seeing as it's new), but it sounds like it's something 
->> all raids should have.
->>
->> Cheers,
->> Wol
->
->
-
+ From blktraces you can see it sent e.g. single sized blkdiscards 
+backwards across the whole array.
