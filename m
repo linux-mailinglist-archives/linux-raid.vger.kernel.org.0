@@ -2,54 +2,66 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B931B73261
-	for <lists+linux-raid@lfdr.de>; Wed, 24 Jul 2019 17:00:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EB6174FEF
+	for <lists+linux-raid@lfdr.de>; Thu, 25 Jul 2019 15:45:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387549AbfGXPAz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 24 Jul 2019 11:00:55 -0400
-Received: from mail.vodokanal.poltava.ua ([91.219.220.27]:25243 "EHLO
-        mail.vodokanal.poltava.ua" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfGXPAy (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 24 Jul 2019 11:00:54 -0400
-Received: by mail.vodokanal.poltava.ua (Postfix, from userid 80)
-        id C4B5222AFB3; Wed, 24 Jul 2019 12:03:57 +0300 (EEST)
-Received: from 192.168.0.119
-        (SquirrelMail authenticated user test@vodokanal.poltava.ua)
-        by mail.vodokanal.poltava.ua with HTTP;
-        Wed, 24 Jul 2019 10:03:57 +0100
-Message-ID: <729c4d48ebb3b54501abbbd9b3f6e8a0.squirrel@mail.vodokanal.poltava.ua>
-Date:   Wed, 24 Jul 2019 10:03:57 +0100
-Subject: LOANS !!!
-From:   "DIAL DIRECT LOANS SA" <dialdirect@info.org>
-Reply-To: dialdirectloanssa@mail2consultant.com
-User-Agent: SquirrelMail/1.4.21
+        id S2390317AbfGYNpg (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 25 Jul 2019 09:45:36 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2756 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728133AbfGYNpg (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 25 Jul 2019 09:45:36 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9C97B31AA2DBEFB430B2;
+        Thu, 25 Jul 2019 21:45:33 +0800 (CST)
+Received: from huawei.com (10.90.53.225) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Thu, 25 Jul 2019
+ 21:45:24 +0800
+From:   Yufen Yu <yuyufen@huawei.com>
+To:     <liu.song.a23@gmail.com>
+CC:     <neilb@suse.com>, <linux-raid@vger.kernel.org>,
+        <yuyufen@huawei.com>
+Subject: [PATCH] md: do not set suspend_hi when ->quiesce is null
+Date:   Thu, 25 Jul 2019 21:51:08 +0800
+Message-ID: <20190725135108.108064-1-yuyufen@huawei.com>
+X-Mailer: git-send-email 2.16.2.dirty
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Priority: 3 (Normal)
-Importance: Normal
-To:     undisclosed-recipients:;
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+Only when md personality have defined ->sync_request,
+suspend_lo and suspend_hi can be created in md sysfs
+directory. For now, all the personality which have
+defined ->sync_request also have defined ->quiesce.
+Thus, it will not cause any error in suspend_hi_store().
 
-Dial Direct Loan SA
+But, we may need to add the condition to avoid potential
+NULL pointer error, as same as suspend_lo_store().
 
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+---
+ drivers/md/md.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Consolidate your debts with Dial Direct Loan SA for your peace of
-mind at a fixed interest rate of 4.75%,personal and business loans
-are also welcome.For details  file in your applications by sending an email
-to:dialdirectloanssa@mail2consultant.com.
-
-
-
-Yours in Service,
-Susan Muller (Mrs.),
-Senior Consultant,
-Loan Application Team
-Dial Direct Loan SA
-Tel No: +27717231058
-
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index a114b05e3db4..5c30e598e19c 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -4977,7 +4977,8 @@ suspend_hi_store(struct mddev *mddev, const char *buf, size_t len)
+ 	if (err)
+ 		return err;
+ 	err = -EINVAL;
+-	if (mddev->pers == NULL)
++	if (mddev->pers == NULL ||
++			mddev->pers->quiesce == NULL)
+ 		goto unlock;
+ 
+ 	mddev_suspend(mddev);
+-- 
+2.16.2.dirty
 
