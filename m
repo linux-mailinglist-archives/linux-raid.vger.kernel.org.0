@@ -2,66 +2,96 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EB6174FEF
-	for <lists+linux-raid@lfdr.de>; Thu, 25 Jul 2019 15:45:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF1A875D33
+	for <lists+linux-raid@lfdr.de>; Fri, 26 Jul 2019 04:47:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390317AbfGYNpg (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 25 Jul 2019 09:45:36 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2756 "EHLO huawei.com"
+        id S1726067AbfGZCrZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 25 Jul 2019 22:47:25 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2758 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728133AbfGYNpg (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:45:36 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 9C97B31AA2DBEFB430B2;
-        Thu, 25 Jul 2019 21:45:33 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Thu, 25 Jul 2019
- 21:45:24 +0800
-From:   Yufen Yu <yuyufen@huawei.com>
-To:     <liu.song.a23@gmail.com>
-CC:     <neilb@suse.com>, <linux-raid@vger.kernel.org>,
-        <yuyufen@huawei.com>
-Subject: [PATCH] md: do not set suspend_hi when ->quiesce is null
-Date:   Thu, 25 Jul 2019 21:51:08 +0800
-Message-ID: <20190725135108.108064-1-yuyufen@huawei.com>
-X-Mailer: git-send-email 2.16.2.dirty
+        id S1725852AbfGZCrZ (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 25 Jul 2019 22:47:25 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 8516FA1187D1382CBF4A;
+        Fri, 26 Jul 2019 10:47:23 +0800 (CST)
+Received: from [127.0.0.1] (10.177.219.49) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 26 Jul 2019
+ 10:47:19 +0800
+Subject: Re: [PATCH 2/3] md: don't set In_sync if array is frozen
+To:     Guoqing Jiang <jgq516@gmail.com>, <liu.song.a23@gmail.com>
+CC:     <linux-raid@vger.kernel.org>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+References: <20190724090921.13296-1-guoqing.jiang@cloud.ionos.com>
+ <20190724090921.13296-3-guoqing.jiang@cloud.ionos.com>
+From:   yuyufen <yuyufen@huawei.com>
+Message-ID: <42036d10-faf8-69de-e710-c44baac243bb@huawei.com>
+Date:   Fri, 26 Jul 2019 10:47:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
+In-Reply-To: <20190724090921.13296-3-guoqing.jiang@cloud.ionos.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.177.219.49]
 X-CFilter-Loop: Reflected
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Only when md personality have defined ->sync_request,
-suspend_lo and suspend_hi can be created in md sysfs
-directory. For now, all the personality which have
-defined ->sync_request also have defined ->quiesce.
-Thus, it will not cause any error in suspend_hi_store().
+Hi, Guoqing
 
-But, we may need to add the condition to avoid potential
-NULL pointer error, as same as suspend_lo_store().
 
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
----
- drivers/md/md.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On 2019/7/24 17:09, Guoqing Jiang wrote:
+> When a disk is added to array, the following path is called in mdadm.
+>
+> Manage_subdevs -> sysfs_freeze_array
+>                 -> Manage_add
+>                 -> sysfs_set_str(&info, NULL, "sync_action","idle")
+>
+> Then from kernel side, Manage_add invokes the path (add_new_disk ->
+> validate_super = super_1_validate) to set In_sync flag.
+>
+> Since In_sync means "device is in_sync with rest of array", and the new
+> added disk need to resync thread to help the synchronization of data.
+> And md_reap_sync_thread would call spare_active to set In_sync for the
+> new added disk finally. So don't set In_sync if array is in frozen.
+>
+> Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+> ---
+>   drivers/md/md.c | 11 +++++++++--
+>   1 file changed, 9 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 0ced0933d246..d0223316064d 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -1826,8 +1826,15 @@ static int super_1_validate(struct mddev *mddev, struct md_rdev *rdev)
+>   				if (!(le32_to_cpu(sb->feature_map) &
+>   				      MD_FEATURE_RECOVERY_BITMAP))
+>   					rdev->saved_raid_disk = -1;
+> -			} else
+> -				set_bit(In_sync, &rdev->flags);
+> +			} else {
+> +				/*
+> +				 * If the array is FROZEN, then the device can't
+> +				 * be in_sync with rest of array.
+> +				 */
+> +				if (!test_bit(MD_RECOVERY_FROZEN,
+> +					      &mddev->recovery))
+> +					set_bit(In_sync, &rdev->flags);
+> +			}
+>   			rdev->raid_disk = role;
+>   			break;
+>   		}
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index a114b05e3db4..5c30e598e19c 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -4977,7 +4977,8 @@ suspend_hi_store(struct mddev *mddev, const char *buf, size_t len)
- 	if (err)
- 		return err;
- 	err = -EINVAL;
--	if (mddev->pers == NULL)
-+	if (mddev->pers == NULL ||
-+			mddev->pers->quiesce == NULL)
- 		goto unlock;
- 
- 	mddev_suspend(mddev);
--- 
-2.16.2.dirty
+super_1_validate() set rdev with 'In_sync', while add_new_disk() will 
+clear the flag bit again after that.
+
+         clear_bit(In_sync, &rdev->flags); /* just to be sure */
+
+So, I think there is no bad influence without test FROZEN. Am I ignoring 
+anything?
+
 
