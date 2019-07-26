@@ -2,86 +2,95 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ED5A0772B8
-	for <lists+linux-raid@lfdr.de>; Fri, 26 Jul 2019 22:26:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5A73772BF
+	for <lists+linux-raid@lfdr.de>; Fri, 26 Jul 2019 22:28:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727719AbfGZU0E (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 26 Jul 2019 16:26:04 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:40096 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727164AbfGZU0D (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 26 Jul 2019 16:26:03 -0400
-Received: by mail-qt1-f195.google.com with SMTP id a15so53860524qtn.7
-        for <linux-raid@vger.kernel.org>; Fri, 26 Jul 2019 13:26:03 -0700 (PDT)
+        id S1726555AbfGZU2T (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 26 Jul 2019 16:28:19 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:43481 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbfGZU2T (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 26 Jul 2019 16:28:19 -0400
+Received: by mail-qt1-f193.google.com with SMTP id w17so9576502qto.10;
+        Fri, 26 Jul 2019 13:28:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=rHUURRnzGnrmLI5y4M5ySmRm+i79H61bknDL487SEsw=;
-        b=Ky+oFGHUTw/6mQqaD7C5ZRVcCxNmBXDfJAcdycpejoTYmtMm/dCMSaghHFnu5h3iWs
-         F63ppvrLZPEjQD+7NZCli5d+mwL+KzkJKxmpqwLoQ9q9yoqAOy+Y4DqHbaSWHEHX2dPE
-         rs+jt8PLOAQhS1vjdjtBOwGRFTrivUDbM2yIFdfe3dNKuskGa9+oacXZ9Ht0hXoLNSxr
-         SFVpQnImIcJ+dCiRN6n5t9YeLtIChAINQowIbBH9ACfOMGwzLs9RuX4bzoFkwSnBne+6
-         YS/vwoIlZlzv2grUqXLI6d/8eYVEALuYW+JAHykvaT+43BgLS40pS9iSgsxz/fraCgno
-         5MTQ==
+        bh=zRwRthds5sxGM5kfR5jug7OQtqPlV1fvrZmHuKtivu4=;
+        b=RL08XvlNq8d34uXmoAGids7utM9j0vfFLnJJu2H6dAgiCfcdLMiXIz0OnK1b9SQeha
+         v9HXyQZ9Q7ZnShzlMlRVIXWGiaUC9xBelNgH0xnFIbUdUVaQESvv9C6LVA6wZ+344Q4a
+         Ru358BRKySgvEYQew4jvPGam+cr4PUGJlO1/H9RiYZly56tjs2+6on7TUW7jK901mx7e
+         HhbM0Nwim7agX87fRH8Zw7rv/NkiQMOXJVPbGE8jkUo/T9oYfQRlpMXFI0hXt7bhT4DI
+         w2iRUwlh4DjGMVZDLm8qbRdnAfaVLbuyfxHVbkwi7ARmgfEHgg3ZodegvZees/p+OT5l
+         2yTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=rHUURRnzGnrmLI5y4M5ySmRm+i79H61bknDL487SEsw=;
-        b=lbP3NCsRMfqbuT4v7/cIB31Z/CukZQnoQkdL2C19hNdl9ZdaszGRwbhWVnLuQt9CGA
-         gSz0UDWwa0dFhO/hBraV10JJsxv4JLEtZ0kpy/L+XL7mZGEA/qhaolNjNwafcMPbGzoE
-         QcBOk2sk5vAhbX0w59REP9/uyN5B3DzhOSfhVyAKhhRrTUva/WpS2yvWM3g4vEObsDGt
-         irR2PxTtkDbJnl4vVsqZICoTcnKyWpmOFFQyIbL4jAQg5oxKZm0/a3SkVawq2MN7QJYW
-         4N8qdGrbH9m/tuE3TOa9itNz5e3IzPRO7GWEwvwODcWifxsOmfkUkvqJ4TyHcaWNVf2I
-         HSnQ==
-X-Gm-Message-State: APjAAAVHI3I3N3nFEK98er+S/bQR6P/ZS+K5Prh9XS9einmyBR5X/6jw
-        Yv7qCtQBxMzycQt68xqS15QxIyR+QggjVkzo0g4=
-X-Google-Smtp-Source: APXvYqyREAB3T1bswRbTZ87L8vjuCz+foeySP2HZyMM6SUJq8m74Sb3LU9sS+dxQBMU2AsPOtq04rvMq91HdgcSiZmE=
-X-Received: by 2002:aed:38c2:: with SMTP id k60mr64464232qte.83.1564172762771;
- Fri, 26 Jul 2019 13:26:02 -0700 (PDT)
+        bh=zRwRthds5sxGM5kfR5jug7OQtqPlV1fvrZmHuKtivu4=;
+        b=JIS3zbiZklARm6Gx642d4vCEITdYJNjR6AMJgyTrD5OMk/vF9pWLFPLmRTn2uFwtLW
+         tUbrSINiXtFG0Ou7IEyduwTmXBJHkYMcSyyD2hAV9JMlHc1G+ckNF9NBHoii0fUU204I
+         mgqnMmoZ/NFM48/sfwzIXmkz0ngoZYQPmeF8Qyc6cZZiYvBgoZTUqUImBfvey/Z0YyGe
+         swOZOxVfw9ww4vDEte814RyxmJHeCd/FpvF4TkBVNRgzLmib7tbz+bXK18aZzdM+gjok
+         KlKbHtOVqOAAcplUGAMC40X+Lw3DnZOgXcWRSDlH96jjts7IaDQ09+7P0F9yox1dtz9m
+         2GIw==
+X-Gm-Message-State: APjAAAX2k6I1+oiICG6umkFadY/4QNKcH2OBWRizwgODgKuKY2QcIUxb
+        m/GFzXP8DOazhXsQOCBtxtD35WRDzgtnuEEMc1SN6Q==
+X-Google-Smtp-Source: APXvYqyN9uAoG3/56GbpRR2bJQadMzuyWHXyuiQK1fINq5tDnhyPXmV9Fi2yXbv5G4D9dNdsZYFSNOBumz+tCqdP9p8=
+X-Received: by 2002:ac8:34aa:: with SMTP id w39mr69149026qtb.118.1564172898646;
+ Fri, 26 Jul 2019 13:28:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190724090921.13296-1-guoqing.jiang@cloud.ionos.com>
-In-Reply-To: <20190724090921.13296-1-guoqing.jiang@cloud.ionos.com>
+References: <20190723204155.71531-1-andriy.shevchenko@linux.intel.com>
+ <20190726164823.GB9224@smile.fi.intel.com> <F7CF9393-B366-4810-B127-876C6D5A72A1@fb.com>
+ <20190726185825.GC9224@smile.fi.intel.com>
+In-Reply-To: <20190726185825.GC9224@smile.fi.intel.com>
 From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Fri, 26 Jul 2019 13:25:51 -0700
-Message-ID: <CAPhsuW6063CtvnnjMdVcnY88HseEvtO4P8jUB6WOR3R3GZOPzw@mail.gmail.com>
-Subject: Re: [PATCH 0/3] enable fail last device in raid1/10 array
-To:     Guoqing Jiang <jgq516@gmail.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Date:   Fri, 26 Jul 2019 13:28:07 -0700
+Message-ID: <CAPhsuW5Y8XB7tWU+gLN=Z6aXiQm=TNX6jGsJDuZbpoJ7ALcE2g@mail.gmail.com>
+Subject: Re: [PATCH v1] md: Convert to use int_pow()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Song Liu <songliubraving@fb.com>, Shaohua Li <shli@kernel.org>,
+        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Mike Snitzer <snitzer@redhat.com>, Coly Li <colyli@suse.de>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 2:09 AM Guoqing Jiang <jgq516@gmail.com> wrote:
+On Fri, Jul 26, 2019 at 12:50 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> Hi,
+> On Fri, Jul 26, 2019 at 05:18:09PM +0000, Song Liu wrote:
+> >
+> >
+> > > On Jul 26, 2019, at 9:48 AM, Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+> > > On Tue, Jul 23, 2019 at 11:41:55PM +0300, Andy Shevchenko wrote:
+> > >> Instead of linear approach to calculate power of 10, use generic int_pow()
+> > >> which does it better.
+> > >
+> > > I took into Cc drivers/dm guys as they might have known something about md raid
+> > > state of affairs. Sorry if I mistakenly added somebody.
+> > >
+> > > Who is doing this?
+> > > Should it be orphaned?
+> > >
+> > > (I got a bounce from Shaohua address)
+> >
+> > I process the patch. Sorry for the delay.
 >
-> The first patch adds the support for fail the last device in raid1/10 array,
-> and other two patches fix issue that the new added disk is set with In_sync
-> even it doesn't complete the synchorization of data.
+> Ah, no problem, thanks!
 >
-> Thanks,
-> Guoqing
+> Perhaps someone can update MAINTAINERS data base?
 
-Applied to my local branch. Thanks!
+I will discuss this with Jens.
 
->
-> Guoqing Jiang (3):
->   md: allow last device to be forcibly removed from RAID1/RAID10.
->   md: don't set In_sync if array is frozen
->   md: don't call spare_active in md_reap_sync_thread if all member
->     devices can't work
->
->  drivers/md/md.c     | 45 +++++++++++++++++++++++++++++++++++++++++----
->  drivers/md/md.h     |  1 +
->  drivers/md/raid1.c  |  6 +++---
->  drivers/md/raid10.c |  6 +++---
->  4 files changed, 48 insertions(+), 10 deletions(-)
->
-> --
-> 2.17.1
->
+I applied this patch to my local branch. It will go to Jens' tree for 5.4.
+
+Thanks,
+Song
