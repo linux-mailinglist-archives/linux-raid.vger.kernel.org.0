@@ -2,206 +2,65 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DB16675EA5
-	for <lists+linux-raid@lfdr.de>; Fri, 26 Jul 2019 07:55:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6B9176256
+	for <lists+linux-raid@lfdr.de>; Fri, 26 Jul 2019 11:48:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726023AbfGZFz0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 26 Jul 2019 01:55:26 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:39384 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725842AbfGZFzZ (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 26 Jul 2019 01:55:25 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 5402A7A4BBD87E1EF24F;
-        Fri, 26 Jul 2019 13:55:23 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Fri, 26 Jul 2019
- 13:55:13 +0800
-From:   Yufen Yu <yuyufen@huawei.com>
-To:     <liu.song.a23@gmail.com>
-CC:     <linux-raid@vger.kernel.org>, <neilb@suse.com>,
-        <houtao1@huawei.com>, <zou_wei@huawei.com>
-Subject: [PATCH] md/raid1: fix a race between removing rdev and access conf->mirrors[i].rdev
-Date:   Fri, 26 Jul 2019 14:00:51 +0800
-Message-ID: <20190726060051.16630-1-yuyufen@huawei.com>
-X-Mailer: git-send-email 2.16.2.dirty
+        id S1726129AbfGZJsx (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 26 Jul 2019 05:48:53 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33979 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfGZJsx (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 26 Jul 2019 05:48:53 -0400
+Received: by mail-ot1-f68.google.com with SMTP id n5so54806489otk.1
+        for <linux-raid@vger.kernel.org>; Fri, 26 Jul 2019 02:48:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=AC45XpU1qpc3u8+TUTn7d/un/g1ifPipmK0MBcSJUW0=;
+        b=RVwQnvPm+FT082DFOJEmPK5EzFWKoUc/d9xPc1WOuahffAfrEIyfoaEcLI7InOTKAe
+         M7JOYA2dboDRtBYVKTDeO0dd9yYx+3t9cQ6ZeSFn4IkLyIC/hcYG+qayJ4oI/4CR+lio
+         CIVKodTwsFYvCmQ0xWiFF0lD2AK1NIcN7B+e04Vxp/Gea4k/AoaFeoabD55kmPf2b9Zr
+         kqZXetIf9QDLirFCSnxovAEK3IctjdM0Kt4s54KQ+0d31ET26TDc3JshEpJRUgIl4Esx
+         HWxLNf+3ifyYGekHm8PCHnPex2/xKLV3b82S5Zv56Np7JcUfpLObuk+hpjrI7BqeiEOz
+         AwRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=AC45XpU1qpc3u8+TUTn7d/un/g1ifPipmK0MBcSJUW0=;
+        b=sDqzcRbE/k4nrhjS6W27+5Br4/7Dnlc8D9Z3JI5ZtK5n9EQe6tc+o+lUAwpPR8y4Yl
+         C2i+9qRJsLHGOCxE4X2vFTMHQxzb8octIJFZ3vDD6XPtnJzJ7ldpHye6yKjlWPgb9qM4
+         beDjvCEvGqOZh/QvmfOzA1wO280cfVsS7fY+lqa5cC44TcIXyi4dVXw0BtnuLfdj8ATY
+         Fc30y5hVtAoHKo4GAxF3iSC6jHC7hW84J94EfXKmzIsOCO6GuaqrSnNw8vKjrw8DM39F
+         vFb8w04xK8qXAmh2aQULdjFY5c5OkLWvr54cLclYKAVNZXyUWoKGv0OBRWi0XrZtZBfV
+         Ajuw==
+X-Gm-Message-State: APjAAAV0L1qUCdzdpR0C9CwvxCuIkNodxrKKt6tbdhl7qnQiDRorUwKO
+        IkWZGbLyHD2xSYnNmtaeAwM3k2biqh0fPWAK+ug=
+X-Google-Smtp-Source: APXvYqzxSOS3gZxYtv2+SsjV/0PYmze3Vm6/ADO0Gi5+37K+szFLqpP5p0l3nSJXBvjL2mZbkTpU7mEjsdpxF1WvCZ4=
+X-Received: by 2002:a9d:620e:: with SMTP id g14mr51133770otj.317.1564134532505;
+ Fri, 26 Jul 2019 02:48:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+Received: by 2002:a05:6830:1287:0:0:0:0 with HTTP; Fri, 26 Jul 2019 02:48:51
+ -0700 (PDT)
+Reply-To: guanyinshum@gmail.com
+From:   Frau Guan-yin Shum <sherinzek@gmail.com>
+Date:   Fri, 26 Jul 2019 11:48:51 +0200
+Message-ID: <CACsa0K7tQ-ikYnZnnK=wdYwGb-5KT0p-rsjVnm0Gg9o_ZW72Tw@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-We get a NULL pointer dereference oops when test raid1 as follow:
+--=20
+Sch=C3=B6ner Tag
 
-mdadm -CR /dev/md1 -l 1 -n 2 /dev/sd[ab]
+    Ich bin Frau Guan-yin Shum  f=C3=BCr die Mitarbeiter der CITIBANK HONG
+KONG hier in Hongkong. Kann ich Geld von $ 15.356.669 =C3=BCberweisen?
+Vertrauen?
 
-mdadm /dev/md1 -f /dev/sda
-mdadm /dev/md1 -r /dev/sda
-mdadm /dev/md1 -a /dev/sda
-sleep 5
-mdadm /dev/md1 -f /dev/sdb
-mdadm /dev/md1 -r /dev/sdb
-mdadm /dev/md1 -a /dev/sdb
-
-After a disk(/dev/sda) has been removed, we add the disk to raid
-array again, which would trigger recovery action. Since the rdev
-current state is 'spare', read/write bio can be issued to the disk.
-
-Then we set the other disk (/dev/sdb) faulty. Since the raid array
-is now in degraded state and /dev/sdb is the only 'In_sync' disk,
-raid1_error() will return but without set faulty success.
-
-However, that can interrupt the recovery action and
-md_check_recovery will try to call remove_and_add_spares() to
-remove the spare disk. And the race condition between
-remove_and_add_spares() and raid1_write_request() in follow
-can cause NULL pointer dereference for conf->mirrors[i].rdev:
-
-raid1_write_request()   md_check_recovery    raid1_error()
-rcu_read_lock()
-rdev != NULL
-!test_bit(Faulty, &rdev->flags)
-
-                                           conf->recovery_disabled=
-                                             mddev->recovery_disabled;
-                                            return busy
-
-                        remove_and_add_spares
-                        raid1_remove_disk
-                        rdev->nr_pending == 0
-
-atomic_inc(&rdev->nr_pending);
-rcu_read_unlock()
-
-                        p->rdev=NULL
-
-conf->mirrors[i].rdev->data_offset
-NULL pointer deref!!!
-
-                        if (!test_bit(RemoveSynchronized,
-                          &rdev->flags))
-                         synchronize_rcu();
-                         p->rdev=rdev
-
-To fix the race condition, we add a new flag 'WantRemove' for rdev,
-which means rdev will be removed from the raid array.
-Before access conf->mirrors[i].rdev, we need to ensure the rdev
-without 'WantRemove' bit.
-
-Reported-by: Zou Wei <zou_wei@huawei.com>
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
----
- drivers/md/md.h    |  4 ++++
- drivers/md/raid1.c | 28 ++++++++++++++++++++++------
- 2 files changed, 26 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index 10f98200e2f8..ebab9340af11 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -205,6 +205,10 @@ enum flag_bits {
- 				 * multiqueue device should check if there
- 				 * is collision between write behind bios.
- 				 */
-+	WantRemove,		/* Before set conf->mirrors[i] as NULL,
-+				 * we set the bit first, avoiding access the
-+				 * conf->mirrors[i] after it set NULL.
-+				 */
- };
- 
- static inline int is_badblock(struct md_rdev *rdev, sector_t s, int sectors,
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 34e26834ad28..838e619cd2d8 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -622,7 +622,8 @@ static int read_balance(struct r1conf *conf, struct r1bio *r1_bio, int *max_sect
- 		rdev = rcu_dereference(conf->mirrors[disk].rdev);
- 		if (r1_bio->bios[disk] == IO_BLOCKED
- 		    || rdev == NULL
--		    || test_bit(Faulty, &rdev->flags))
-+		    || test_bit(Faulty, &rdev->flags)
-+			|| test_bit(WantRemove, &rdev->flags))
- 			continue;
- 		if (!test_bit(In_sync, &rdev->flags) &&
- 		    rdev->recovery_offset < this_sector + sectors)
-@@ -751,7 +752,8 @@ static int read_balance(struct r1conf *conf, struct r1bio *r1_bio, int *max_sect
- 
- 	if (best_disk >= 0) {
- 		rdev = rcu_dereference(conf->mirrors[best_disk].rdev);
--		if (!rdev)
-+		if (!rdev || test_bit(Faulty, &rdev->flags)
-+				|| test_bit(WantRemove, &rdev->flags))
- 			goto retry;
- 		atomic_inc(&rdev->nr_pending);
- 		sectors = best_good_sectors;
-@@ -1389,7 +1391,8 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
- 			break;
- 		}
- 		r1_bio->bios[i] = NULL;
--		if (!rdev || test_bit(Faulty, &rdev->flags)) {
-+		if (!rdev || test_bit(Faulty, &rdev->flags)
-+				|| test_bit(WantRemove, &rdev->flags)) {
- 			if (i < conf->raid_disks)
- 				set_bit(R1BIO_Degraded, &r1_bio->state);
- 			continue;
-@@ -1772,6 +1775,7 @@ static int raid1_add_disk(struct mddev *mddev, struct md_rdev *rdev)
- 
- 			p->head_position = 0;
- 			rdev->raid_disk = mirror;
-+			clear_bit(WantRemove, &rdev->flags);
- 			err = 0;
- 			/* As all devices are equivalent, we don't need a full recovery
- 			 * if this was recently any drive of the array
-@@ -1786,6 +1790,7 @@ static int raid1_add_disk(struct mddev *mddev, struct md_rdev *rdev)
- 			/* Add this device as a replacement */
- 			clear_bit(In_sync, &rdev->flags);
- 			set_bit(Replacement, &rdev->flags);
-+			clear_bit(WantRemove, &rdev->flags);
- 			rdev->raid_disk = mirror;
- 			err = 0;
- 			conf->fullsync = 1;
-@@ -1825,16 +1830,26 @@ static int raid1_remove_disk(struct mddev *mddev, struct md_rdev *rdev)
- 			err = -EBUSY;
- 			goto abort;
- 		}
--		p->rdev = NULL;
-+
-+		/*
-+		 * Before set p->rdev = NULL, we set WantRemove bit avoiding
-+		 * race between rdev remove and issue bio, which can cause
-+		 * NULL pointer deference of rdev by conf->mirrors[i].rdev.
-+		 */
-+		set_bit(WantRemove, &rdev->flags);
-+
- 		if (!test_bit(RemoveSynchronized, &rdev->flags)) {
- 			synchronize_rcu();
- 			if (atomic_read(&rdev->nr_pending)) {
- 				/* lost the race, try later */
- 				err = -EBUSY;
--				p->rdev = rdev;
-+				clear_bit(WantRemove, &rdev->flags);
- 				goto abort;
- 			}
- 		}
-+
-+		p->rdev = NULL;
-+
- 		if (conf->mirrors[conf->raid_disks + number].rdev) {
- 			/* We just removed a device that is being replaced.
- 			 * Move down the replacement.  We drain all IO before
-@@ -2732,7 +2747,8 @@ static sector_t raid1_sync_request(struct mddev *mddev, sector_t sector_nr,
- 
- 		rdev = rcu_dereference(conf->mirrors[i].rdev);
- 		if (rdev == NULL ||
--		    test_bit(Faulty, &rdev->flags)) {
-+		    test_bit(Faulty, &rdev->flags) ||
-+			test_bit(WantRemove, &rdev->flags)) {
- 			if (i < conf->raid_disks)
- 				still_degraded = 1;
- 		} else if (!test_bit(In_sync, &rdev->flags)) {
--- 
-2.16.2.dirty
-
+Sch=C3=B6ne Gr=C3=BC=C3=9Fe
