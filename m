@@ -2,128 +2,122 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E86A1799E9
-	for <lists+linux-raid@lfdr.de>; Mon, 29 Jul 2019 22:27:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5529179A05
+	for <lists+linux-raid@lfdr.de>; Mon, 29 Jul 2019 22:32:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbfG2U1b (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 29 Jul 2019 16:27:31 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:43013 "EHLO
+        id S2387720AbfG2UcI (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 29 Jul 2019 16:32:08 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43109 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbfG2U1a (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 29 Jul 2019 16:27:30 -0400
-Received: from mail-pg1-f199.google.com ([209.85.215.199])
+        with ESMTP id S1726717AbfG2UcI (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 29 Jul 2019 16:32:08 -0400
+Received: from mail-pf1-f199.google.com ([209.85.210.199])
         by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
         (Exim 4.76)
         (envelope-from <gpiccoli@canonical.com>)
-        id 1hsCEy-0001c8-Rb
-        for linux-raid@vger.kernel.org; Mon, 29 Jul 2019 20:27:29 +0000
-Received: by mail-pg1-f199.google.com with SMTP id t18so28991861pgu.20
-        for <linux-raid@vger.kernel.org>; Mon, 29 Jul 2019 13:27:28 -0700 (PDT)
+        id 1hsCJR-0001qM-KW
+        for linux-raid@vger.kernel.org; Mon, 29 Jul 2019 20:32:05 +0000
+Received: by mail-pf1-f199.google.com with SMTP id f25so39157705pfk.14
+        for <linux-raid@vger.kernel.org>; Mon, 29 Jul 2019 13:32:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=MaekBACqSdm0Cv0kET0YVM5UjbEWf5Z7KHF+w2h47zE=;
-        b=Rp+CXnMD4/dSFqpvc00xeqDxUKAu9I71TbHPl8xACpXiHd3Ks0KfGB//vlmdwl9JFs
-         1A8BlJ/naADnNIGBR1QTJtZcwQJYt4WAF6qxwSmnaWW3MveqyJ3o0aivWCRp/5GMuT5j
-         4H7MUFdsMbHGNyWW+SIJ8WCUpoL4YROUOi2p722Y/jUcQHAfH0eUkSPcJ7cGir0t4Enr
-         E0mGFeukT1mL3IyBKKIO/vNjVt13/sTP9U1CLai6/uhmjrv0/6mwcVf29Us2b9NoWlDD
-         iTRNMZFR7hhtVjqrIdSjLNVIo6yPAgDDOD4UPNKcNaNvn4yFZW4RtvXu4EzfZmAzSbdA
-         kWzg==
-X-Gm-Message-State: APjAAAUm6ifN97xvKQNS/uu45JYJRg78cXrUBstZ42waCEuAVjcmpUT0
-        ltj4kIUQunS+PPeaHaZumG35az3aAnftvo/eNfxUF/sn+WcaU1H/zy5zBY93X+rjv8CXXPjEV4H
-        /xc8tkykkSTKv9f2LCnJupAalzqAjmTFIMciBocM=
-X-Received: by 2002:a63:5c15:: with SMTP id q21mr79513509pgb.199.1564432047546;
-        Mon, 29 Jul 2019 13:27:27 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqw4/pLh9DzTr1UAut9rnbFH5HGyR6rsm/IUS1OMP3fUvcNHL6cpZohM6eqwe61q/Bvb+ZovXw==
-X-Received: by 2002:a63:5c15:: with SMTP id q21mr79513486pgb.199.1564432047257;
-        Mon, 29 Jul 2019 13:27:27 -0700 (PDT)
-Received: from [192.168.1.202] ([152.254.214.186])
-        by smtp.gmail.com with ESMTPSA id q24sm56238914pjp.14.2019.07.29.13.27.21
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VMfAWDCqrjBeE42rbQCRmwqZEuUIVCeOcgzSaEx81J8=;
+        b=AornWxt7/rVrLXNUcW+hy4W/fABr2J3D0MA2TC9vgGuw6XJ3+bSHXJk9wH0zpB64RR
+         1sY3wUsZ0c6EcqaPhCCNG1HPfg8dOoDs4ZnvOAwBNXZQ5Aspc5QufYNkmNPjenfgEYD5
+         4cSDzLOS02ByHy1UxfVlLy/ncMAwWWbF5bELFdQ82FFA1/YeKndsCubNaf1/mu8ggLTl
+         N7WLF0r998sytxeu5tqOBVKrejR7N5i+73JxHbc4zgRMpZYPVHxQM9sHCMD7NjE3YOZ3
+         budb/Cb4FutApeLIYjxDxdtmNyXITMaGZS5QVGl7xRVzv99d7vM7ICiRGJbCsVy7i8YJ
+         Gdqw==
+X-Gm-Message-State: APjAAAVb4haBAI1b7nDd0ckj8r+41e+uLQI4PstQDwKq/jYE/r99lTEV
+        g2lC/9kuy82arnsy+DQP0AgR8pPLqA7tuiTNsbm5+VBEADXQbL+JXR9Gd52EI30cfX1WjyWSX7V
+        7w/wuzbD5WmIVewIP0YIesos07hX+14qpQ+HrZG4=
+X-Received: by 2002:a17:902:788f:: with SMTP id q15mr113783958pll.236.1564432324028;
+        Mon, 29 Jul 2019 13:32:04 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqy5CwXyWbTEeZiJ87HQ6jaOLVqakwH/nw+0O+WCPiV0SFTLFFtXdaAewFJs6dO9mSgODGZ6tA==
+X-Received: by 2002:a17:902:788f:: with SMTP id q15mr113783942pll.236.1564432323845;
+        Mon, 29 Jul 2019 13:32:03 -0700 (PDT)
+Received: from localhost ([152.254.214.186])
+        by smtp.gmail.com with ESMTPSA id i74sm122266922pje.16.2019.07.29.13.32.01
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jul 2019 13:27:26 -0700 (PDT)
-Subject: Re: [PATCH] md/raid0: Fail BIOs if their underlying block device is
- gone
-To:     Roman Mamedov <rm@romanrm.net>
-Cc:     linux-raid@vger.kernel.org, linux-block@vger.kernel.org,
-        dm-devel@redhat.com, jay.vosburgh@canonical.com,
-        NeilBrown <neilb@suse.com>, Song Liu <songliubraving@fb.com>
-References: <20190729193359.11040-1-gpiccoli@canonical.com>
- <20190730011850.2f19e140@natsu>
+        Mon, 29 Jul 2019 13:32:02 -0700 (PDT)
 From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gpiccoli@canonical.com; prefer-encrypt=mutual; keydata=
- mQENBFpVBxcBCADPNKmu2iNKLepiv8+Ssx7+fVR8lrL7cvakMNFPXsXk+f0Bgq9NazNKWJIn
- Qxpa1iEWTZcLS8ikjatHMECJJqWlt2YcjU5MGbH1mZh+bT3RxrJRhxONz5e5YILyNp7jX+Vh
- 30rhj3J0vdrlIhPS8/bAt5tvTb3ceWEic9mWZMsosPavsKVcLIO6iZFlzXVu2WJ9cov8eQM/
- irIgzvmFEcRyiQ4K+XUhuA0ccGwgvoJv4/GWVPJFHfMX9+dat0Ev8HQEbN/mko/bUS4Wprdv
- 7HR5tP9efSLucnsVzay0O6niZ61e5c97oUa9bdqHyApkCnGgKCpg7OZqLMM9Y3EcdMIJABEB
- AAG0LUd1aWxoZXJtZSBHLiBQaWNjb2xpIDxncGljY29saUBjYW5vbmljYWwuY29tPokBNwQT
- AQgAIQUCWmClvQIbAwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDOR5EF9K/7Gza3B/9d
- 5yczvEwvlh6ksYq+juyuElLvNwMFuyMPsvMfP38UslU8S3lf+ETukN1S8XVdeq9yscwtsRW/
- 4YoUwHinJGRovqy8gFlm3SAtjfdqysgJqUJwBmOtcsHkmvFXJmPPGVoH9rMCUr9s6VDPox8f
- q2W5M7XE9YpsfchS/0fMn+DenhQpV3W6pbLtuDvH/81GKrhxO8whSEkByZbbc+mqRhUSTdN3
- iMpRL0sULKPVYbVMbQEAnfJJ1LDkPqlTikAgt3peP7AaSpGs1e3pFzSEEW1VD2jIUmmDku0D
- LmTHRl4t9KpbU/H2/OPZkrm7809QovJGRAxjLLPcYOAP7DUeltveuQENBFpVBxcBCADbxD6J
- aNw/KgiSsbx5Sv8nNqO1ObTjhDR1wJw+02Bar9DGuFvx5/qs3ArSZkl8qX0X9Vhptk8rYnkn
- pfcrtPBYLoux8zmrGPA5vRgK2ItvSc0WN31YR/6nqnMfeC4CumFa/yLl26uzHJa5RYYQ47jg
- kZPehpc7IqEQ5IKy6cCKjgAkuvM1rDP1kWQ9noVhTUFr2SYVTT/WBHqUWorjhu57/OREo+Tl
- nxI1KrnmW0DbF52tYoHLt85dK10HQrV35OEFXuz0QPSNrYJT0CZHpUprkUxrupDgkM+2F5LI
- bIcaIQ4uDMWRyHpDbczQtmTke0x41AeIND3GUc+PQ4hWGp9XABEBAAGJAR8EGAEIAAkFAlpV
- BxcCGwwACgkQzkeRBfSv+xv1wwgAj39/45O3eHN5pK0XMyiRF4ihH9p1+8JVfBoSQw7AJ6oU
- 1Hoa+sZnlag/l2GTjC8dfEGNoZd3aRxqfkTrpu2TcfT6jIAsxGjnu+fUCoRNZzmjvRziw3T8
- egSPz+GbNXrTXB8g/nc9mqHPPprOiVHDSK8aGoBqkQAPZDjUtRwVx112wtaQwArT2+bDbb/Y
- Yh6gTrYoRYHo6FuQl5YsHop/fmTahpTx11IMjuh6IJQ+lvdpdfYJ6hmAZ9kiVszDF6pGFVkY
- kHWtnE2Aa5qkxnA2HoFpqFifNWn5TyvJFpyqwVhVI8XYtXyVHub/WbXLWQwSJA4OHmqU8gDl
- X18zwLgdiQ==
-Message-ID: <053c88e1-06ec-0db1-de8f-68f63a3a1305@canonical.com>
-Date:   Mon, 29 Jul 2019 17:27:15 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+To:     linux-raid@vger.kernel.org
+Cc:     linux-block@vger.kernel.org, dm-devel@redhat.com,
+        gpiccoli@canonical.com, jay.vosburgh@canonical.com, neilb@suse.com,
+        songliubraving@fb.com
+Subject: [PATCH 0/2] Introduce new raid0 state 'broken'
+Date:   Mon, 29 Jul 2019 17:31:33 -0300
+Message-Id: <20190729203135.12934-1-gpiccoli@canonical.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <20190730011850.2f19e140@natsu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+Currently the md/raid0 device behaves quite differently of other block
+devices when it comes to failure. While other md levels contain vast
+logic to deal with failures, and other non-md devices like scsi disks
+or nvme rely on a dying queue when they fail, md/raid0 for instance
+does not signal failures if an array member is removed while the array
+is mounted; in that case, udev signals the device removal but mdadm
+cannot succeed in the STOP_ARRAY ioctl, since it's mounted.
 
+This behavior was tentatively changed in the past to match the scsi/nvme
+devices (see [0]), but this attempt was quite complex, it had some corner
+cases and (the few) community reviews weren't generally positive.
+So, we are trying again with a simpler approach this time.
 
-On 29/07/2019 17:18, Roman Mamedov wrote:
-> On Mon, 29 Jul 2019 16:33:59 -0300
-> "Guilherme G. Piccoli" <gpiccoli@canonical.com> wrote:
-> 
->> Currently md/raid0 is not provided with any mechanism to validate if
->> an array member got removed or failed. The driver keeps sending BIOs
->> regardless of the state of array members. This leads to the following
->> situation: if a raid0 array member is removed and the array is mounted,
->> some user writing to this array won't realize that errors are happening
->> unless they check kernel log or perform one fsync per written file.
->>
->> In other words, no -EIO is returned and writes (except direct ones) appear
->> normal. Meaning the user might think the wrote data is correctly stored in
->> the array, but instead garbage was written given that raid0 does stripping
->> (and so, it requires all its members to be working in order to not corrupt
->> data).
-> 
-> If that's correct, then this seems to be a critical weak point in cases when
-> we have a RAID0 as a member device in RAID1/5/6/10 arrays.
-> 
+This series introduces a new array state 'broken' (for raid0 only), which
+mimics the state 'clean'. The main goal for this new state is a way to
+signal the user that something is wrong with the array. We also included a
+warn_once-style message in kernel log to alert the user when the array has
+one failed member.
 
-Hi Roman, I don't think this is usual setup. I understand that there are
-RAID10 (also known as RAID 0+1) in which we can have like 4 devices, and
-they pair in 2 sets of two disks using stripping, then these sets are
-paired using mirroring. This is handled by raid10 driver however, so it
-won't suffer for this issue.
+The series encompass changes in the kernel and in mdadm tool. To get the
+'broken' state completely functional one requires both changes, but mdadm
+and kernel can live without their counterpart changes (in case some users
+gets an updated mdadm for example, but keeps using an old kernel).
 
-I don't think it's common or even makes sense to back a raid1 with 2
-pure raid0 devices.
-Thanks for your comment!
+This series does not affect at all the way md/raid0 will react to I/O
+failures. It was discussed in [0] that it should be better if raid0 could
+fail faster in case it gets a member removed; we just proposed a change in
+that realm too (see [1]), but it seems better to have them reviewed/treated
+separately.
+
+This series was tested with raid0 arrays holding both an ext4 and xfs
+filesystems. Thanks in advance for the reviews/feedbacks.
 Cheers,
 
 
 Guilherme
+
+
+[0] lore.kernel.org/linux-block/20190418220448.7219-1-gpiccoli@canonical.com
+[1] lore.kernel.org/linux-block/20190729193359.11040-1-gpiccoli@canonical.com
+
+
+Guilherme G. Piccoli (1):
+  md/raid0: Introduce new array state 'broken' for raid0
+
+[kernel part]
+ drivers/md/md.c    | 23 +++++++++++++++++++----
+ drivers/md/md.h    |  2 ++
+ drivers/md/raid0.c | 26 ++++++++++++++++++++++++++
+ 3 files changed, 47 insertions(+), 4 deletions(-)
+
+[mdadm]
+ Detail.c  | 16 ++++++++++++++--
+ Monitor.c |  9 +++++++--
+ maps.c    |  1 +
+ mdadm.h   |  1 +
+ mdmon.h   |  2 +-
+ monitor.c |  4 ++--
+ 6 files changed, 26 insertions(+), 7 deletions(-)
+
+-- 
+2.22.0
+
