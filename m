@@ -2,70 +2,101 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 99D0079D3F
-	for <lists+linux-raid@lfdr.de>; Tue, 30 Jul 2019 02:11:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB19B7A12C
+	for <lists+linux-raid@lfdr.de>; Tue, 30 Jul 2019 08:21:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbfG3AL0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 29 Jul 2019 20:11:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36134 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728406AbfG3AL0 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 29 Jul 2019 20:11:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 83FABAC9A;
-        Tue, 30 Jul 2019 00:11:24 +0000 (UTC)
-From:   NeilBrown <neilb@suse.com>
+        id S1726118AbfG3GVC (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 30 Jul 2019 02:21:02 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:59680 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfG3GVC (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 30 Jul 2019 02:21:02 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6U6J3Xv053912;
+        Tue, 30 Jul 2019 06:20:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=5n8OzrZ77RhnGg+5veAoaGbh8/tBKL2m5epcFu44MYY=;
+ b=42eqip90AAbtzB6ZvgXhwkI8XAN/OPvcHZWvZpDlRDSyQ3Eo0whNMYnPKK+EVZXdKFqI
+ Vp7VJpukJfhi00uVfoT3yYoxbdrCNyA17f71tQmkObzsmYMOC7XydFZRk+4dBCqleqED
+ vilZteBonMT8gK0iiIXUmmz8+5GXnrDvKN0d2/J49xSCFqT0TLC9Iai7LQ9LJ690S3TN
+ +TbTDBtpAF6xTWMKMns+MMPz3dORLffCZh4/PDkWAdm/rJwF7UfnKHEJjvdW+Csb5m3c
+ T17T80i7nmSsp+ZUP7Auo9RV8QzLTs28eITV1UAqMq44Ag+ogSJOKAEMOrD0fImEl9Li LA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2u0e1tmap5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Jul 2019 06:20:39 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6U67pDb073545;
+        Tue, 30 Jul 2019 06:20:39 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2u0ee4u69w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Jul 2019 06:20:38 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6U6KbGR031036;
+        Tue, 30 Jul 2019 06:20:37 GMT
+Received: from [192.168.1.24] (/180.169.93.2)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 29 Jul 2019 23:20:37 -0700
+Subject: Re: [PATCH 1/2] md/raid0: Introduce new array state 'broken' for
+ raid0
 To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
         linux-raid@vger.kernel.org
-Date:   Tue, 30 Jul 2019 10:11:17 +1000
-Cc:     jay.vosburgh@canonical.com, songliubraving@fb.com,
-        dm-devel@redhat.com, Neil F Brown <nfbrown@suse.com>,
-        linux-block@vger.kernel.org
-Subject: Re: [PATCH 1/2] md/raid0: Introduce new array state 'broken' for raid0
-In-Reply-To: <20190729203135.12934-2-gpiccoli@canonical.com>
-References: <20190729203135.12934-1-gpiccoli@canonical.com> <20190729203135.12934-2-gpiccoli@canonical.com>
-Message-ID: <87wog0l6u2.fsf@notabene.neil.brown.name>
+Cc:     linux-block@vger.kernel.org, dm-devel@redhat.com,
+        jay.vosburgh@canonical.com, neilb@suse.com, songliubraving@fb.com
+References: <20190729203135.12934-1-gpiccoli@canonical.com>
+ <20190729203135.12934-2-gpiccoli@canonical.com>
+From:   Bob Liu <bob.liu@oracle.com>
+Message-ID: <d730c417-a328-3df3-1e31-32b6df48b6ad@oracle.com>
+Date:   Tue, 30 Jul 2019 14:20:34 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+In-Reply-To: <20190729203135.12934-2-gpiccoli@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9333 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1907300065
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9333 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1907300066
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jul 29 2019,  Guilherme G. Piccoli  wrote:
-
+On 7/30/19 4:31 AM, Guilherme G. Piccoli wrote:
 > Currently if a md/raid0 array gets one or more members removed while
 > being mounted, kernel keeps showing state 'clean' in the 'array_state'
 > sysfs attribute. Despite udev signaling the member device is gone, 'mdadm'
-> cannot issue the STOP_ARRAY ioctl successfully, given the array is mounte=
-d.
->
-> Nothing else hints that something is wrong (except that the removed devic=
-es
+> cannot issue the STOP_ARRAY ioctl successfully, given the array is mounted.
+> 
+> Nothing else hints that something is wrong (except that the removed devices
 > don't show properly in the output of 'mdadm detail' command). There is no
 > other property to be checked, and if user is not performing reads/writes
 > to the array, even kernel log is quiet and doesn't give a clue about the
 > missing member.
->
+> 
 > This patch changes this behavior; when 'array_state' is read we introduce
 > a non-expensive check (only for raid0) that relies in the comparison of
-> the total number of disks when array was assembled with gendisk flags of
-> those devices to validate if all members are available and functional.
+> the total number of disks when array was assembled with gendisk flags of> those devices to validate if all members are available and functional.
 > A new array state 'broken' was added: it mimics the state 'clean' in every
 > aspect, being useful only to distinguish if such array has some member
 > missing. Also, we show a rate-limited warning in kernel log in such case.
->
-> This patch has no proper functional change other than adding a 'clean'-li=
-ke
+> 
+> This patch has no proper functional change other than adding a 'clean'-like
 > state; it was tested with ext4 and xfs filesystems. It requires a 'mdadm'
 > counterpart to handle the 'broken' state.
->
+> 
 > Cc: NeilBrown <neilb@suse.com>
 > Cc: Song Liu <songliubraving@fb.com>
 > Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
@@ -74,7 +105,7 @@ ke
 >  drivers/md/md.h    |  2 ++
 >  drivers/md/raid0.c | 26 ++++++++++++++++++++++++++
 >  3 files changed, 47 insertions(+), 4 deletions(-)
->
+> 
 > diff --git a/drivers/md/md.c b/drivers/md/md.c
 > index fba49918d591..b80f36084ec1 100644
 > --- a/drivers/md/md.c
@@ -88,55 +119,51 @@ ke
 > + *     It's useful because RAID0 mounted-arrays aren't stopped
 > + *     when a member is gone, so this state will at least alert
 > + *     the user that something is wrong.
+
+
+Curious why only raid0 has this issue? 
+
+Thanks, -Bob
+
 > + *
 >   */
->  enum array_state { clear, inactive, suspended, readonly, read_auto, clea=
-n, active,
+>  enum array_state { clear, inactive, suspended, readonly, read_auto, clean, active,
 > -		   write_pending, active_idle, bad_word};
 > +		   write_pending, active_idle, broken, bad_word};
->  static char *array_states[] =3D {
->  	"clear", "inactive", "suspended", "readonly", "read-auto", "clean", "ac=
-tive",
+>  static char *array_states[] = {
+>  	"clear", "inactive", "suspended", "readonly", "read-auto", "clean", "active",
 > -	"write-pending", "active-idle", NULL };
 > +	"write-pending", "active-idle", "broken", NULL };
->=20=20
+>  
 >  static int match_word(const char *word, char **list)
 >  {
 > @@ -4181,7 +4187,7 @@ array_state_show(struct mddev *mddev, char *page)
 >  {
->  	enum array_state st =3D inactive;
->=20=20
+>  	enum array_state st = inactive;
+>  
 > -	if (mddev->pers)
 > +	if (mddev->pers) {
 >  		switch(mddev->ro) {
 >  		case 1:
->  			st =3D readonly;
+>  			st = readonly;
 > @@ -4201,7 +4207,15 @@ array_state_show(struct mddev *mddev, char *page)
->  				st =3D active;
+>  				st = active;
 >  			spin_unlock(&mddev->lock);
 >  		}
 > -	else {
 > +
-> +		if ((mddev->pers->level =3D=3D 0) &&
-
-Don't test if ->level is 0.  Instead, test if ->is_missing_dev is not
-NULL.
-
-NeilBrown
-
-
-> +		   ((st =3D=3D clean) || (st =3D=3D broken))) {
+> +		if ((mddev->pers->level == 0) &&
+> +		   ((st == clean) || (st == broken))) {
 > +			if (mddev->pers->is_missing_dev(mddev))
-> +				st =3D broken;
+> +				st = broken;
 > +			else
-> +				st =3D clean;
+> +				st = clean;
 > +		}
 > +	} else {
 >  		if (list_empty(&mddev->disks) &&
->  		    mddev->raid_disks =3D=3D 0 &&
->  		    mddev->dev_sectors =3D=3D 0)
-> @@ -4315,6 +4329,7 @@ array_state_store(struct mddev *mddev, const char *=
-buf, size_t len)
+>  		    mddev->raid_disks == 0 &&
+>  		    mddev->dev_sectors == 0)
+> @@ -4315,6 +4329,7 @@ array_state_store(struct mddev *mddev, const char *buf, size_t len)
 >  		break;
 >  	case write_pending:
 >  	case active_idle:
@@ -155,73 +182,51 @@ buf, size_t len)
 > +	/* Check if there is any missing/failed members - RAID0 only for now. */
 > +	bool (*is_missing_dev)(struct mddev *mddev);
 >  };
->=20=20
+>  
 >  struct md_sysfs_entry {
 > diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
 > index 58a9cc5193bf..79618a6ae31a 100644
 > --- a/drivers/md/raid0.c
 > +++ b/drivers/md/raid0.c
-> @@ -455,6 +455,31 @@ static inline int is_io_in_chunk_boundary(struct mdd=
-ev *mddev,
+> @@ -455,6 +455,31 @@ static inline int is_io_in_chunk_boundary(struct mddev *mddev,
 >  	}
 >  }
->=20=20
+>  
 > +bool raid0_is_missing_dev(struct mddev *mddev)
 > +{
 > +	struct md_rdev *rdev;
 > +	static int already_missing;
-> +	int def_disks, work_disks =3D 0;
-> +	struct r0conf *conf =3D mddev->private;
+> +	int def_disks, work_disks = 0;
+> +	struct r0conf *conf = mddev->private;
 > +
-> +	def_disks =3D conf->strip_zone[0].nb_dev;
+> +	def_disks = conf->strip_zone[0].nb_dev;
 > +	rdev_for_each(rdev, mddev)
 > +		if (rdev->bdev->bd_disk->flags & GENHD_FL_UP)
 > +			work_disks++;
 > +
 > +	if (unlikely(def_disks - work_disks)) {
 > +		if (!already_missing) {
-> +			already_missing =3D 1;
+> +			already_missing = 1;
 > +			pr_warn("md: %s: raid0 array has %d missing/failed members\n",
 > +				mdname(mddev), (def_disks - work_disks));
 > +		}
 > +		return true;
 > +	}
 > +
-> +	already_missing =3D 0;
+> +	already_missing = 0;
 > +	return false;
 > +}
 > +
 >  static void raid0_handle_discard(struct mddev *mddev, struct bio *bio)
 >  {
->  	struct r0conf *conf =3D mddev->private;
-> @@ -789,6 +814,7 @@ static struct md_personality raid0_personality=3D
->  	.takeover	=3D raid0_takeover,
->  	.quiesce	=3D raid0_quiesce,
->  	.congested	=3D raid0_congested,
-> +	.is_missing_dev	=3D raid0_is_missing_dev,
+>  	struct r0conf *conf = mddev->private;
+> @@ -789,6 +814,7 @@ static struct md_personality raid0_personality=
+>  	.takeover	= raid0_takeover,
+>  	.quiesce	= raid0_quiesce,
+>  	.congested	= raid0_congested,
+> +	.is_missing_dev	= raid0_is_missing_dev,
 >  };
->=20=20
+>  
 >  static int __init raid0_init (void)
-> --=20
-> 2.22.0
+> 
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl0/iyUACgkQOeye3VZi
-gblnEQ/+NamZPUglUnNVstM5Jl6QtOiUnrvb2fgle89GT0fps4Ef3ZhRcXM8TQ4l
-fr2ooqdO0tgdPXY7m/pJhvg7IQLKedll9KDsuOe4DzTjBxxSs8kOutkHlFwmK8iL
-P+rFdOd59xg1EFuLEkPteiGI8JaZzfUd/cFhQukOy+yFVWk7Pvh4xLCIUCfG3sp/
-jSwRrym+rHyEYlaPxOT0qn6rrONVDs/fayXvCqvjeLWwMRP9hFkYd8fZBfgXmB5j
-3jzSBtAafp4WlK/+z5OT94QB+43rOK+WM2pLL25aEnamjZF/SmmjIy+6+VV1/bUf
-WFduwc6Sc1ILNbiPF09bNV7ul1X7XW8kF7xt49Kkpaqf3Hr1vAajlNvFU1ye49co
-DwpR0MGx0TGulB/S9Hg+oGryfGwQgLQn7+noKh3Fpjktjy5q1KOnB4KpsPypu1/1
-nBXOXzO6f3KHLr2RiSdTqa/wl/3r1mUHCSWFMDe1wupuFVxltEVm/WtRzVpGDEAw
-pM63fd5/IHnIqweTJN2YAThKc5Lyc4Ou7BN3lg/VQtnirWCuJPS7c4/JIiUpqluH
-uhg9qzSiuKXtlhXEEo7E/OEhE2NH4Rg+/JrntygSNQJoQ8oQJrDx67bH0PoWjV1p
-MjLl855yMwXwOaHOhEKSbE/erRLklajWJ9oeKaO4tOB6TXe3zPI=
-=pDFz
------END PGP SIGNATURE-----
---=-=-=--
