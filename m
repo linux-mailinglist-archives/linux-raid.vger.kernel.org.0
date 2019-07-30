@@ -2,65 +2,177 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 667AB79C7F
-	for <lists+linux-raid@lfdr.de>; Tue, 30 Jul 2019 00:39:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15E3279D33
+	for <lists+linux-raid@lfdr.de>; Tue, 30 Jul 2019 02:08:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbfG2WjI (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 29 Jul 2019 18:39:08 -0400
-Received: from icebox.esperi.org.uk ([81.187.191.129]:35844 "EHLO
-        mail.esperi.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbfG2WjI (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 29 Jul 2019 18:39:08 -0400
-X-Greylist: delayed 3859 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Jul 2019 18:39:07 EDT
-Received: from loom (nix@sidle.srvr.nix [192.168.14.8])
-        by mail.esperi.org.uk (8.15.2/8.15.2) with ESMTP id x6TLMVPI010249;
-        Mon, 29 Jul 2019 22:22:31 +0100
-From:   Nix <nix@esperi.org.uk>
-To:     pg@mdraid.list.sabi.co.UK (Peter Grandi)
-Cc:     Linux RAID <linux-raid@vger.kernel.org>
-Subject: Re: slow BLKDISCARD on RAID10 md block devices
-References: <20190717090200.GD2080@wantstofly.org>
-        <20190717113352.GA13079@metamorpher.de>
-        <23855.33990.595530.291667@base.ty.sabi.co.uk>
-        <26ef3b9b-54d0-e660-8614-a45ddd2a4b1e@thelounge.net>
-        <23855.35565.981137.953275@base.ty.sabi.co.uk>
-Emacs:  because you deserve a brk today.
-Date:   Mon, 29 Jul 2019 22:34:45 +0100
-In-Reply-To: <23855.35565.981137.953275@base.ty.sabi.co.uk> (Peter Grandi's
-        message of "Wed, 17 Jul 2019 21:54:05 +0100")
-Message-ID: <87mugwcyoa.fsf@esperi.org.uk>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.50 (gnu/linux)
+        id S1727499AbfG3AIz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 29 Jul 2019 20:08:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35878 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725925AbfG3AIz (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 29 Jul 2019 20:08:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2051CAC9A;
+        Tue, 30 Jul 2019 00:08:53 +0000 (UTC)
+From:   NeilBrown <neilb@suse.com>
+To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
+        linux-raid@vger.kernel.org
+Date:   Tue, 30 Jul 2019 10:08:45 +1000
+Cc:     jay.vosburgh@canonical.com, Song Liu <songliubraving@fb.com>,
+        dm-devel@redhat.com, Neil F Brown <nfbrown@suse.com>,
+        linux-block@vger.kernel.org
+Subject: Re: [PATCH] md/raid0: Fail BIOs if their underlying block device is gone
+In-Reply-To: <20190729193359.11040-1-gpiccoli@canonical.com>
+References: <20190729193359.11040-1-gpiccoli@canonical.com>
+Message-ID: <87zhkwl6ya.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-DCC-x.dcc-servers-Metrics: loom 104; Body=2 Fuz1=2 Fuz2=2
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 17 Jul 2019, Peter Grandi said:
-> I am aware that the opinion that "reboot at all and then check
-> your filesystems" (and presumably other maintenance operations)
-> should be or can be performed rarely is very popular among many
-> sysadmins, being very low cost; to an extreme example I have
-> seen systems in semi production use for which hardware and
-> software went EOL in 2007 and untouched since then, and still
-> "work". But some people get away with it, some don't.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-The people who believe this include the developers of both the ext4 and
-xfs filesystems. The recommended ext4 approach is to occasionally
-snapshot the fs and fsck the snapshot to see if it needs to do anything,
-and only if does raise the alarm so the sysadmin can schedule a later
-fsck: the xfs recommendation is only to run a manual xfs_repair iff the
-filesystem tells you to (and coming down the pipe for xfs is continuous
-health monitoring and online fsck, hopefully in the end eliminating the
-need to do xfs_repair ever).
+On Mon, Jul 29 2019,  Guilherme G. Piccoli  wrote:
 
-Frankly, with modern filesystem sizes, it has become utterly impractical
-to fsck everything while the system is not fully up and not responding
-to requests: not unless you *like* your maintenance windows to include
-multiple hours in which the system is doing nothing other than an fs
-check that will almost certainly find *nothing whatsoever wrong*.
+> Currently md/raid0 is not provided with any mechanism to validate if
+> an array member got removed or failed. The driver keeps sending BIOs
+> regardless of the state of array members. This leads to the following
+> situation: if a raid0 array member is removed and the array is mounted,
+> some user writing to this array won't realize that errors are happening
+> unless they check kernel log or perform one fsync per written file.
+>
+> In other words, no -EIO is returned and writes (except direct ones) appear
+> normal. Meaning the user might think the wrote data is correctly stored in
+> the array, but instead garbage was written given that raid0 does stripping
+> (and so, it requires all its members to be working in order to not corrupt
+> data).
+>
+> This patch proposes a small change in this behavior: we check if the block
+> device's gendisk is UP when submitting the BIO to the array member, and if
+> it isn't, we flag the md device as broken and fail subsequent I/Os. In ca=
+se
+> the array is restored (i.e., the missing array member is back), the flag =
+is
+> cleared and we can submit BIOs normally.
+>
+> With this patch, the filesystem reacts much faster to the event of missing
+> array member: after some I/O errors, ext4 for instance aborts the journal
+> and prevents corruption. Without this change, we're able to keep writing
+> in the disk and after a machine reboot, e2fsck shows some severe fs errors
+> that demand fixing. This patch was tested in both ext4 and xfs
+> filesystems.
+>
+> Cc: NeilBrown <neilb@suse.com>
+> Cc: Song Liu <songliubraving@fb.com>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
+> ---
+>
+> After an attempt to change the way md/raid0 fails in case one of its
+> members gets removed (see [0]), we got not so great feedback from the
+> community and also, the change was complex and had corner cases.
+> One of the points which seemed to be a consensus in that attempt was
+> that raid0 could benefit from a way of failing faster in case a member
+> gets removed. This patch aims for that, in a simpler way than earlier
+> proposed. Any feedbacks are welcome, thanks in advance!
+>
+>
+> Guilherme
+>
+>
+> [0] lore.kernel.org/linux-block/20190418220448.7219-1-gpiccoli@canonical.=
+com
+>
+>
+>  drivers/md/md.c    | 5 +++++
+>  drivers/md/md.h    | 3 +++
+>  drivers/md/raid0.c | 8 ++++++++
+>  3 files changed, 16 insertions(+)
+>
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 24638ccedce4..fba49918d591 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -376,6 +376,11 @@ static blk_qc_t md_make_request(struct request_queue=
+ *q, struct bio *bio)
+>  	struct mddev *mddev =3D q->queuedata;
+>  	unsigned int sectors;
+>=20=20
+> +	if (unlikely(test_bit(MD_BROKEN, &mddev->flags))) {
+> +		bio_io_error(bio);
+> +		return BLK_QC_T_NONE;
+> +	}
 
--- 
-NULL && (void)
+I think this should only fail WRITE requests, not READ requests.
+
+Otherwise the patch is probably reasonable.
+
+NeilBrown
+
+
+> +
+>  	blk_queue_split(q, &bio);
+>=20=20
+>  	if (mddev =3D=3D NULL || mddev->pers =3D=3D NULL) {
+> diff --git a/drivers/md/md.h b/drivers/md/md.h
+> index 10f98200e2f8..41552e615c4c 100644
+> --- a/drivers/md/md.h
+> +++ b/drivers/md/md.h
+> @@ -248,6 +248,9 @@ enum mddev_flags {
+>  	MD_UPDATING_SB,		/* md_check_recovery is updating the metadata
+>  				 * without explicitly holding reconfig_mutex.
+>  				 */
+> +	MD_BROKEN,              /* This is used in RAID-0 only, to stop I/O
+> +				 * in case an array member is gone/failed.
+> +				 */
+>  };
+>=20=20
+>  enum mddev_sb_flags {
+> diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
+> index bf5cf184a260..58a9cc5193bf 100644
+> --- a/drivers/md/raid0.c
+> +++ b/drivers/md/raid0.c
+> @@ -586,6 +586,14 @@ static bool raid0_make_request(struct mddev *mddev, =
+struct bio *bio)
+>=20=20
+>  	zone =3D find_zone(mddev->private, &sector);
+>  	tmp_dev =3D map_sector(mddev, zone, sector, &sector);
+> +
+> +	if (unlikely(!(tmp_dev->bdev->bd_disk->flags & GENHD_FL_UP))) {
+> +		set_bit(MD_BROKEN, &mddev->flags);
+> +		bio_io_error(bio);
+> +		return true;
+> +	}
+> +
+> +	clear_bit(MD_BROKEN, &mddev->flags);
+>  	bio_set_dev(bio, tmp_dev->bdev);
+>  	bio->bi_iter.bi_sector =3D sector + zone->dev_start +
+>  		tmp_dev->data_offset;
+> --=20
+> 2.22.0
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl0/io4ACgkQOeye3VZi
+gbkPnw//ZDAHleCZDsGZjuID2XCXBfEvuRDbTSMrk2NaIj/z/DlsSQOkNDYYGP5m
+H4g7AssCnA49f67+F8sfkH/Fy+crnjR9p0e22bzKdXSi3O0HOGvkHkqHLjtWt7Pu
++atITqeUB/riI/v0b9y9whdFO1P3itEuZ+Nv+3hf3AlQ7P01Pv3v9ntpFycztqgG
+VN0EkaGudLA5lkCphHmajgUUfLWF4GmP0dLsCHvd9GYCqpKGChImrHLrqgVPXTKz
+T5BLp5l+icj59dM7Gn1iF3Hmub46QkGlfF0Flfp0jduqADB/khx7+smapYcBPXBu
+pVsCV/fZtnWE/82CjYQiGeU+z6YZ2mFQRnRmgUFGE/Da6Te51DdyipU1NwYRRHB4
+EgBOO76o9EaKBfqPzWMmxAuBUbdvZI2Dk1ZvYhSL0tZ2kFHXmlQwlY98VOc+D8WK
+0bEMNJYmiiNkQzIqS3W1BiNFfG+ZDAgw6gC2quVlTVXgMpW205QpN1CbyRpC4Ayi
+MSEHFyMDUQMLeehZ5HWK/51PvyvXlrWTjGWvv13EdqhROjzQ0TykR4RbPcrVK/00
+ZPxKUZWwk9lh/ko6vfh1ZzcmPEnZ6Ft1pnvbdrH0wd3WOM7cRgjOYMqo/O7nHOQX
+PkZVA3CNUYC4Y6oZNTXX9Re8W87Ola4kh00+jT2qddVprwuiaOQ=
+=0n/S
+-----END PGP SIGNATURE-----
+--=-=-=--
