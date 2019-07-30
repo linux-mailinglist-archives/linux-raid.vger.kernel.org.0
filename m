@@ -2,114 +2,178 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DABA47A882
-	for <lists+linux-raid@lfdr.de>; Tue, 30 Jul 2019 14:30:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54E777AE2F
+	for <lists+linux-raid@lfdr.de>; Tue, 30 Jul 2019 18:41:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729503AbfG3Mas (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 30 Jul 2019 08:30:48 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37369 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728361AbfG3Maq (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 30 Jul 2019 08:30:46 -0400
-Received: from mail-pg1-f199.google.com ([209.85.215.199])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <gpiccoli@canonical.com>)
-        id 1hsRHA-0005je-70
-        for linux-raid@vger.kernel.org; Tue, 30 Jul 2019 12:30:44 +0000
-Received: by mail-pg1-f199.google.com with SMTP id 30so40439204pgk.16
-        for <linux-raid@vger.kernel.org>; Tue, 30 Jul 2019 05:30:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=epsg8o9SJ8QYu2h+n3GBIMR7ashpfZp82u6PNELR9R0=;
-        b=ZokmzKYE9Hgg0toyubmKLaTBTtAe5NvQ+PpTrH6bpkoIUBNhC7zCYkKfuB4wIHB9nN
-         T4eGZ7dscMZIyWDYtzhmufSzzhFdHeDybF2okzJoWvHMMTbq+WE1C/qWZHhmql+BJKdp
-         dOni0IsD/pRq1Pvn0aB5j/8/0eerKwt1BqwfTTK1pQxULsuUVqLxepb9MuHIm5CBleQp
-         cXih1seQEvnaZkUOD0vHxgBTTlxfgwnSB3Upe7iXhR1xFV97+5MIllMB8hZwL+nNhkYb
-         /27YiFusjbdJDbyXyrJWzAka6C0aeXH0/CXWgcKdCFNQcd72RpPkI+bjlPgXjlFFX1qj
-         GZLA==
-X-Gm-Message-State: APjAAAXx9XG/bTcS8jQB/tjHemykzwnDh5sW6kzxGV26mmLAsAZje5kC
-        DrEtiV6VqA6G33bTUxvK/MOguKnnyLjm1g6Y5kOn+BhN5/D4GRAYsCvz/H7OX25rK9a3Toijkcl
-        shh+C1GaOA2tA/Ua30QRYUXIrPa3wmLMZuwTfjOU=
-X-Received: by 2002:a17:902:8a94:: with SMTP id p20mr114567049plo.312.1564489842818;
-        Tue, 30 Jul 2019 05:30:42 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy0VsDJiydDk2IU/zaDnE7MxD9OWWEeZZZ3QAEoamnUMMOh2M43oOlEha15TE8IWLdFKfsSxA==
-X-Received: by 2002:a17:902:8a94:: with SMTP id p20mr114567041plo.312.1564489842701;
-        Tue, 30 Jul 2019 05:30:42 -0700 (PDT)
-Received: from [192.168.1.202] ([152.254.214.186])
-        by smtp.gmail.com with ESMTPSA id 85sm69146580pfv.130.2019.07.30.05.30.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 05:30:41 -0700 (PDT)
-Subject: Re: [PATCH] md/raid0: Fail BIOs if their underlying block device is
- gone
-To:     NeilBrown <neilb@suse.com>, linux-raid@vger.kernel.org
-Cc:     jay.vosburgh@canonical.com, Song Liu <songliubraving@fb.com>,
-        dm-devel@redhat.com, Neil F Brown <nfbrown@suse.com>,
-        linux-block@vger.kernel.org
-References: <20190729193359.11040-1-gpiccoli@canonical.com>
- <87zhkwl6ya.fsf@notabene.neil.brown.name>
-From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gpiccoli@canonical.com; prefer-encrypt=mutual; keydata=
- mQENBFpVBxcBCADPNKmu2iNKLepiv8+Ssx7+fVR8lrL7cvakMNFPXsXk+f0Bgq9NazNKWJIn
- Qxpa1iEWTZcLS8ikjatHMECJJqWlt2YcjU5MGbH1mZh+bT3RxrJRhxONz5e5YILyNp7jX+Vh
- 30rhj3J0vdrlIhPS8/bAt5tvTb3ceWEic9mWZMsosPavsKVcLIO6iZFlzXVu2WJ9cov8eQM/
- irIgzvmFEcRyiQ4K+XUhuA0ccGwgvoJv4/GWVPJFHfMX9+dat0Ev8HQEbN/mko/bUS4Wprdv
- 7HR5tP9efSLucnsVzay0O6niZ61e5c97oUa9bdqHyApkCnGgKCpg7OZqLMM9Y3EcdMIJABEB
- AAG0LUd1aWxoZXJtZSBHLiBQaWNjb2xpIDxncGljY29saUBjYW5vbmljYWwuY29tPokBNwQT
- AQgAIQUCWmClvQIbAwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDOR5EF9K/7Gza3B/9d
- 5yczvEwvlh6ksYq+juyuElLvNwMFuyMPsvMfP38UslU8S3lf+ETukN1S8XVdeq9yscwtsRW/
- 4YoUwHinJGRovqy8gFlm3SAtjfdqysgJqUJwBmOtcsHkmvFXJmPPGVoH9rMCUr9s6VDPox8f
- q2W5M7XE9YpsfchS/0fMn+DenhQpV3W6pbLtuDvH/81GKrhxO8whSEkByZbbc+mqRhUSTdN3
- iMpRL0sULKPVYbVMbQEAnfJJ1LDkPqlTikAgt3peP7AaSpGs1e3pFzSEEW1VD2jIUmmDku0D
- LmTHRl4t9KpbU/H2/OPZkrm7809QovJGRAxjLLPcYOAP7DUeltveuQENBFpVBxcBCADbxD6J
- aNw/KgiSsbx5Sv8nNqO1ObTjhDR1wJw+02Bar9DGuFvx5/qs3ArSZkl8qX0X9Vhptk8rYnkn
- pfcrtPBYLoux8zmrGPA5vRgK2ItvSc0WN31YR/6nqnMfeC4CumFa/yLl26uzHJa5RYYQ47jg
- kZPehpc7IqEQ5IKy6cCKjgAkuvM1rDP1kWQ9noVhTUFr2SYVTT/WBHqUWorjhu57/OREo+Tl
- nxI1KrnmW0DbF52tYoHLt85dK10HQrV35OEFXuz0QPSNrYJT0CZHpUprkUxrupDgkM+2F5LI
- bIcaIQ4uDMWRyHpDbczQtmTke0x41AeIND3GUc+PQ4hWGp9XABEBAAGJAR8EGAEIAAkFAlpV
- BxcCGwwACgkQzkeRBfSv+xv1wwgAj39/45O3eHN5pK0XMyiRF4ihH9p1+8JVfBoSQw7AJ6oU
- 1Hoa+sZnlag/l2GTjC8dfEGNoZd3aRxqfkTrpu2TcfT6jIAsxGjnu+fUCoRNZzmjvRziw3T8
- egSPz+GbNXrTXB8g/nc9mqHPPprOiVHDSK8aGoBqkQAPZDjUtRwVx112wtaQwArT2+bDbb/Y
- Yh6gTrYoRYHo6FuQl5YsHop/fmTahpTx11IMjuh6IJQ+lvdpdfYJ6hmAZ9kiVszDF6pGFVkY
- kHWtnE2Aa5qkxnA2HoFpqFifNWn5TyvJFpyqwVhVI8XYtXyVHub/WbXLWQwSJA4OHmqU8gDl
- X18zwLgdiQ==
-Message-ID: <6400083b-3cf3-cbc6-650a-c3ae6629b14c@canonical.com>
-Date:   Tue, 30 Jul 2019 09:30:31 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <87zhkwl6ya.fsf@notabene.neil.brown.name>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1726805AbfG3Qke (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 30 Jul 2019 12:40:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34366 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726631AbfG3Qkd (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 30 Jul 2019 12:40:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0A6A1AC9B;
+        Tue, 30 Jul 2019 16:40:32 +0000 (UTC)
+From:   Coly Li <colyli@suse.de>
+To:     jes.sorensen@gmail.com, linux-raid@vger.kernel.org
+Cc:     Coly Li <colyli@suse.de>, Neil Brown <neilb@suse.com>
+Subject: [PATCH 1/2] mdadm: add --no-devices to avoid component devices detail information
+Date:   Wed, 31 Jul 2019 00:40:23 +0800
+Message-Id: <20190730164024.97862-1-colyli@suse.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 29/07/2019 21:08, NeilBrown wrote:
->[...]
->> +	if (unlikely(test_bit(MD_BROKEN, &mddev->flags))) {
->> +		bio_io_error(bio);
->> +		return BLK_QC_T_NONE;
->> +	}
-> 
-> I think this should only fail WRITE requests, not READ requests.
-> 
-> Otherwise the patch is probably reasonable.
-> 
-> NeilBrown
+When people assemble a md raid device with a large number of
+component deivces (e.g. 1500 DASD disks), the raid device detail
+information generated by 'mdadm --detail --export $devnode' is very
+large. It is because the detail information contains information of
+all the component disks (even the missing/failed ones).
 
-Thanks for the feedback Neil! I thought about it; it seemed to me better
-to deny/fail the reads instead of returning "wrong" reads, since a file
-read in a raid0 will be incomplete if one member is missing.
-But it's fine for me to change that in the next iteration of this patch.
+In such condition, when udev-md-raid-arrays.rules is triggered and
+internally calls "mdadm --detail --no-devices --export $devnode",
+user may observe systemd error message ""invalid message length". It
+is because the following on-stack raw message buffer in systemd code
+is not big enough,
+	systemd/src/libudev/libudev-monitor.c
+	_public_ struct udev_device *udev_monito ...
+		struct ucred *cred;
+		union {
+			struct udev_monitor_netlink_header nlh;
+			char raw[8192];
+		} buf;
+Even change size of raw[] from 8KB to larger size, it may still be not
+enough for detail message of a md raid device with much larger number of
+component devices.
 
-Cheers,
+To fix this problem, an extra option '--no-devices' is added (the
+original idea is proposed by Neil Brown). When printing detailed
+information of a md raid device, if '--no-devices' is specified, then
+all component devices information will not be printed, then the output
+message size can be restricted to a small number, even with the systemd
+only has 8KB on-disk raw buffer, the md raid array udev rules can work
+correctly without failure message.
 
+Signed-off-by: Coly Li <colyli@suse.de>
+Cc: Neil Brown <neilb@suse.com>
+---
+ Detail.c | 17 +++++++++++++----
+ ReadMe.c |  1 +
+ mdadm.c  |  4 ++++
+ mdadm.h  |  2 ++
+ 4 files changed, 20 insertions(+), 4 deletions(-)
 
-Guilherme
+diff --git a/Detail.c b/Detail.c
+index 20ea03a..879ca3b 100644
+--- a/Detail.c
++++ b/Detail.c
+@@ -56,7 +56,7 @@ int Detail(char *dev, struct context *c)
+ 	 */
+ 	int fd = open(dev, O_RDONLY);
+ 	mdu_array_info_t array;
+-	mdu_disk_info_t *disks;
++	mdu_disk_info_t *disks = NULL;
+ 	int next;
+ 	int d;
+ 	time_t atime;
+@@ -280,7 +280,8 @@ int Detail(char *dev, struct context *c)
+ 			}
+ 			map_free(map);
+ 		}
+-		if (sra) {
++
++		if (!c->no_devices && sra) {
+ 			struct mdinfo *mdi;
+ 			for (mdi  = sra->devs; mdi; mdi = mdi->next) {
+ 				char *path;
+@@ -654,18 +655,23 @@ This is pretty boring
+ 				closedir(dir);
+ 			printf("\n\n");
+ 		}
++	}
+ 
++	if (!c->no_devices && !c->brief) {
+ 		if (array.raid_disks)
+ 			printf("    Number   Major   Minor   RaidDevice State\n");
+ 		else
+ 			printf("    Number   Major   Minor   RaidDevice\n");
+ 	}
+-	free(info);
+ 
+ 	for (d = 0; d < max_disks * 2; d++) {
+ 		char *dv;
+ 		mdu_disk_info_t disk = disks[d];
+ 
++		/* if --no_devices specified, quit devices iteration loop */
++		if (c->no_devices)
++			break;
++
+ 		if (d >= array.raid_disks * 2 &&
+ 		    disk.major == 0 && disk.minor == 0)
+ 			continue;
+@@ -766,8 +772,11 @@ This is pretty boring
+ 	    !enough(array.level, array.raid_disks, array.layout, 1, avail))
+ 		rv = 2;
+ 
+-	free(disks);
+ out:
++	if (disks)
++		free(disks);
++	if (info)
++		free(info);
+ 	close(fd);
+ 	free(subarray);
+ 	free(avail);
+diff --git a/ReadMe.c b/ReadMe.c
+index 12ccf83..eaf1042 100644
+--- a/ReadMe.c
++++ b/ReadMe.c
+@@ -181,6 +181,7 @@ struct option long_options[] = {
+ 
+     /* For Detail/Examine */
+     {"brief",	  0, 0, Brief},
++    {"no-devices",0, 0, NoDevices},
+     {"export",	  0, 0, 'Y'},
+     {"sparc2.2",  0, 0, Sparc22},
+     {"test",      0, 0, 't'},
+diff --git a/mdadm.c b/mdadm.c
+index 25a1abd..1fb8086 100644
+--- a/mdadm.c
++++ b/mdadm.c
+@@ -159,6 +159,10 @@ int main(int argc, char *argv[])
+ 			c.brief = 1;
+ 			continue;
+ 
++		case NoDevices:
++			c.no_devices = 1;
++			continue;
++
+ 		case 'Y': c.export++;
+ 			continue;
+ 
+diff --git a/mdadm.h b/mdadm.h
+index c36d7fd..e96f271 100644
+--- a/mdadm.h
++++ b/mdadm.h
+@@ -442,6 +442,7 @@ enum special_options {
+ 	NoSharing,
+ 	HelpOptions,
+ 	Brief,
++	NoDevices,
+ 	ManageOpt,
+ 	Add,
+ 	AddSpare,
+@@ -552,6 +553,7 @@ struct context {
+ 	int	runstop;
+ 	int	verbose;
+ 	int	brief;
++	int	no_devices;
+ 	int	force;
+ 	char	*homehost;
+ 	int	require_homehost;
+-- 
+2.16.4
+
