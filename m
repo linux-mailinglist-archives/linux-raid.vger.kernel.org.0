@@ -2,134 +2,302 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B319F7B910
-	for <lists+linux-raid@lfdr.de>; Wed, 31 Jul 2019 07:32:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BAE847BE8D
+	for <lists+linux-raid@lfdr.de>; Wed, 31 Jul 2019 12:41:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbfGaFcD (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 31 Jul 2019 01:32:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48370 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725209AbfGaFcD (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 31 Jul 2019 01:32:03 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C0CCBAEC7;
-        Wed, 31 Jul 2019 05:32:01 +0000 (UTC)
-Subject: Re: [PATCH 1/2] mdadm: add --no-devices to avoid component devices
- detail information
-To:     NeilBrown <neilb@suse.com>
-Cc:     jes.sorensen@gmail.com, linux-raid@vger.kernel.org,
-        Neil F Brown <nfbrown@suse.com>
-References: <20190730164024.97862-1-colyli@suse.de>
- <87o91bkqt6.fsf@notabene.neil.brown.name>
-From:   Coly Li <colyli@suse.de>
-Openpgp: preference=signencrypt
-Organization: SUSE Labs
-Message-ID: <0a5c117a-a171-df6d-696e-753afb15469f@suse.de>
-Date:   Wed, 31 Jul 2019 13:31:53 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        id S1728283AbfGaKlN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 31 Jul 2019 06:41:13 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38613 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbfGaKlN (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 31 Jul 2019 06:41:13 -0400
+Received: by mail-ed1-f66.google.com with SMTP id r12so30447276edo.5
+        for <linux-raid@vger.kernel.org>; Wed, 31 Jul 2019 03:41:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=wBzaB4shsnr/5Yj4K30WiFvJEZAKDqHlevOEbzB2wso=;
+        b=OIFJhrmxvdIQsuIlRZYv5j0xgu1eEucGTdfNuAN+e3h7zYZ9CmD43QrPNmosULpwiO
+         lA8As/zt4PD6k/3Zp+QLSRIlpCZnwbTfBWYM8R2JSekRSie/7+8342XvhvqnenjcNvq3
+         qPi5zlZ3xVaw2NM9+RKhwFwy6uE7UXcdfOKIQoN3W9haEbj03luRh0lDIzPEmrvHvm2p
+         Sa5j53ayokicIzIjF2js7Rb1P8hHTpPpSf9IDP5FgeiSPh667sxnaDN19BV0qgj2uJwO
+         eQy6lCKeHu7tdsFk/Y18q0KdEkw/hWFeY29Rrwi4wytjNxd+GGhNHSeSSNlPoRInwWZT
+         VHEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=wBzaB4shsnr/5Yj4K30WiFvJEZAKDqHlevOEbzB2wso=;
+        b=mmRbmaOel7x6lC/deC/3rYt8S+v9Y/My6oEj3pR1ii2WUYbervq0x7xOd3BXnjEKUP
+         ecs9uhYZQDeXonvRb33Y1DyiGcPL0f+2UdyQ5ZWwlP/Sli/4i3h6gAULlJ++6yG+3uFG
+         SHv3MP/OZ+B224avqsgitrjHPrdLTzxYdqKdHsddaPl5esG0SDcUd0vMbzT4qDG8yDVd
+         Yq2IJCgN28YrSbfFetyS+bCucR5b1+VENU1+zQvbuFrCJh1lDmCXVNkxSSqzAJnEkA8h
+         S0K74vDBYV9iPRwVHEiu8anq7XF9vIv35hOYRVrO6oxMmKvNeFuP4x4mkK+dtduirOYI
+         w/uA==
+X-Gm-Message-State: APjAAAXKTl0a2HVD8Rug1oBZECDR8mXzh7r1dr11oVXa+ImO88bwyzzo
+        eINFJamokEaEi6Cnrn3FBPEigeolBdg=
+X-Google-Smtp-Source: APXvYqzD2bN3SSrYbQFQ2dCwAWeiQeVSOim1Sh2eHVgUD/S4E3h0UZAk0mrxTejrqfLZlxyD+EyC6g==
+X-Received: by 2002:a50:b66f:: with SMTP id c44mr106347538ede.171.1564569669226;
+        Wed, 31 Jul 2019 03:41:09 -0700 (PDT)
+Received: from ?IPv6:2a02:247f:ffff:2540:4085:2488:da48:c2e0? ([2001:1438:4010:2540:4085:2488:da48:c2e0])
+        by smtp.gmail.com with ESMTPSA id n17sm6030142ejk.46.2019.07.31.03.41.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 03:41:08 -0700 (PDT)
+Subject: Re: [PATCH] md/raid1: fix a race between removing rdev and access
+ conf->mirrors[i].rdev
+To:     Yufen Yu <yuyufen@huawei.com>, liu.song.a23@gmail.com
+Cc:     neilb@suse.com, houtao1@huawei.com, zou_wei@huawei.com,
+        linux-raid@vger.kernel.org
+References: <20190726060051.16630-1-yuyufen@huawei.com>
+ <e387c59b-4de4-eb6e-5bfd-2e5ba10ca741@cloud.ionos.com>
+ <b98073c3-4b81-dd4a-09b1-47e277c24961@huawei.com>
+ <538db63a-d316-5783-f45b-b8310d19b7b9@cloud.ionos.com>
+ <d3bec7ef-4e35-8a32-8b11-cda5e99b453d@cloud.ionos.com>
+ <3e6b5faf-a588-8cf0-1c49-8ffd15532a19@cloud.ionos.com>
+ <913a04be-a00c-849c-a064-f2cde477dbe6@huawei.com>
+ <d123f888-0f3c-2ba1-5c53-c13586236551@cloud.ionos.com>
+ <23c6e9b1-fe59-1536-9fcf-b4acf2805b4a@huawei.com>
+ <e04b36d7-9a12-3af2-d5fd-0dfab37a64ea@cloud.ionos.com>
+ <0ce98e64-3b25-0b19-5319-c4b1a54a6847@huawei.com>
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Message-ID: <a96357de-5341-cd23-9b6d-616ec8502916@cloud.ionos.com>
+Date:   Wed, 31 Jul 2019 12:41:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <87o91bkqt6.fsf@notabene.neil.brown.name>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <0ce98e64-3b25-0b19-5319-c4b1a54a6847@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 2019/7/31 8:09 上午, NeilBrown wrote:
-> On Wed, Jul 31 2019, Coly Li wrote:
-> 
->> When people assemble a md raid device with a large number of 
->> component deivces (e.g. 1500 DASD disks), the raid device detail 
->> information generated by 'mdadm --detail --export $devnode' is
->> very large. It is because the detail information contains
->> information of all the component disks (even the missing/failed
->> ones).
->> 
->> In such condition, when udev-md-raid-arrays.rules is triggered
->> and internally calls "mdadm --detail --no-devices --export
->> $devnode", user may observe systemd error message ""invalid
->> message length". It is because the following on-stack raw message
->> buffer in systemd code is not big enough, 
->> systemd/src/libudev/libudev-monitor.c _public_ struct udev_device
->> *udev_monito ... struct ucred *cred; union { struct
->> udev_monitor_netlink_header nlh; char raw[8192]; } buf; Even
->> change size of raw[] from 8KB to larger size, it may still be
->> not enough for detail message of a md raid device with much
->> larger number of component devices.
->> 
->> To fix this problem, an extra option '--no-devices' is added
->> (the original idea is proposed by Neil Brown). When printing
->> detailed information of a md raid device, if '--no-devices' is
->> specified, then all component devices information will not be
->> printed, then the output message size can be restricted to a
->> small number, even with the systemd only has 8KB on-disk raw
->> buffer, the md raid array udev rules can work correctly without
->> failure message.
->> 
->> Signed-off-by: Coly Li <colyli@suse.de> Cc: Neil Brown
->> <neilb@suse.com> --- Detail.c | 17 +++++++++++++---- ReadMe.c |
->> 1 + mdadm.c  |  4 ++++ mdadm.h  |  2 ++ 4 files changed, 20
->> insertions(+), 4 deletions(-)
->> 
->> diff --git a/Detail.c b/Detail.c index 20ea03a..879ca3b 100644 
->> --- a/Detail.c +++ b/Detail.c @@ -56,7 +56,7 @@ int Detail(char
->> *dev, struct context *c) */ int fd = open(dev, O_RDONLY); 
->> mdu_array_info_t array; -	mdu_disk_info_t *disks; +
->> mdu_disk_info_t *disks = NULL; int next; int d; time_t atime; @@
->> -280,7 +280,8 @@ int Detail(char *dev, struct context *c) } 
->> map_free(map); } -		if (sra) { + +		if (!c->no_devices && sra) { 
->> struct mdinfo *mdi; for (mdi  = sra->devs; mdi; mdi = mdi->next)
->> { char *path; @@ -654,18 +655,23 @@ This is pretty boring 
->> closedir(dir); printf("\n\n"); } +	}
->> 
->> +	if (!c->no_devices && !c->brief) { if (array.raid_disks) 
->> printf("    Number   Major   Minor   RaidDevice State\n"); else 
->> printf("    Number   Major   Minor   RaidDevice\n");
-> 
-> I would prefer this if statement say inside the 'else' branch
-> above. That does mean it needs to be indented more, but I think it
-> is worth the cost.
-> 
-> 
->> } -	free(info);
->> 
->> for (d = 0; d < max_disks * 2; d++) { char *dv; mdu_disk_info_t
->> disk = disks[d];
->> 
->> +		/* if --no_devices specified, quit devices iteration loop */ +
->> if (c->no_devices) +			break;
-> 
-> Again, I would put this outside the loop, even though it mean more
-> indents.
-> 
->> + if (d >= array.raid_disks * 2 && disk.major == 0 && disk.minor
->> == 0) continue; @@ -766,8 +772,11 @@ This is pretty boring 
->> !enough(array.level, array.raid_disks, array.layout, 1, avail)) 
->> rv = 2;
->> 
->> -	free(disks); out: +	if (disks) +		free(disks); +	if (info) +
->> free(info);
-> 
-> free is documented as "If ptr is NULL, no operation is performed".
-> So just free(disks); free(info);
-> 
-> is sufficient.
-> 
-
-Hi Neil,
-
-All the above issues are fixed and v2 patches are posted.
 
 
-> These are all minor cosmetic issues though, so Reviewed-by:
-> NeilBrown <neilb@suse.com>
+On 7/30/19 10:36 AM, Yufen Yu wrote:
+>
+>
+> On 2019/7/29 23:29, Guoqing Jiang wrote:
+>>
+>>
+>> On 7/29/19 3:23 PM, Yufen Yu wrote:
+>>>
+>>>
+>>> On 2019/7/29 19:54, Guoqing Jiang wrote:
+>>>>
+>>>>
+>>>> On 7/29/19 1:36 PM, Yufen Yu wrote:
+>>>>> I don't think this can fix the race condition completely.
+>>>>>
+>>>>> -               p->rdev = NULL;
+>>>>>                   if (!test_bit(RemoveSynchronized, &rdev->flags)) {
+>>>>>                           synchronize_rcu();
+>>>>> +                       p->rdev = NULL;
+>>>>>                           if (atomic_read(&rdev->nr_pending)) {
+>>>>>
+>>>>> If we access conf->mirrors[i].rdev (e.g. raid1_write_request()) 
+>>>>> after RCU grace period,
+>>>>> synchronize_rcu() will not wait the reader. Then, it also can 
+>>>>> cause NULL pointer dereference.
+>>>>>
+>>>>> That is the reason why we add the new flag 'WantRemove'. It can 
+>>>>> prevent the reader to access
+>>>>> the 'rdev' after RCU grace period.
+>>>>
+>>>
+>>> Sorry for my wrong description. It is  ** after RCU grace start **, 
+>>> not 'after RCU grace period'.
+>>>
+>>>
+>>>>
+>>>> How about move it to the else branch?
+>>>>
+>>>> @@ -1825,7 +1828,6 @@ static int raid1_remove_disk(struct mddev 
+>>>> *mddev, struct md_rdev *rdev)
+>>>>                         err = -EBUSY;
+>>>>                         goto abort;
+>>>>                 }
+>>>> -               p->rdev = NULL;
+>>>>                 if (!test_bit(RemoveSynchronized, &rdev->flags)) {
+>>>>                         synchronize_rcu();
+>>>>                         if (atomic_read(&rdev->nr_pending)) {
+>>>> @@ -1833,8 +1835,10 @@ static int raid1_remove_disk(struct mddev 
+>>>> *mddev, struct md_rdev *rdev)
+>>>>                                 err = -EBUSY;
+>>>>                                 p->rdev = rdev;
+>>>>                                 goto abort;
+>>>> -                       }
+>>>> -               }
+>>>> +                       } else
+>>>> +                               p->rdev = NULL;
+>>>> +               } else
+>>>> +                       p->rdev = NULL;
+>>>>
+>>>> After rcu period, the nr_pending should be not zero in your case.
+>>>>
+>>>
+>>> I also don't think this can work.
+>>>
+>>>     +                              +
+>>>      |                                |
+>>>      |                                |
+>>>      |  +--->Reader         |          +--->Reader nr_pending++
+>>>      |                                |
+>>>      |                                |
+>>>      |                                |
+>>>     +                               +
+>>> start rcu period             end rcu period
+>>> call synchronize_rcu()    return synchronize_rcu()
+>>>
+>>> If the reader try to read conf->mirrors[i].rdev after rcu peroid start,
+>>> synchronize_rcu() will not wait the reader. We assume the current
+>>> value of nr_pending is 0. Then, raid1_remove_disk will set 'p->rdev 
+>>> = NULL'.
+>>>
+>>> After that the reader add 'nr_pending' to 1 and try to access 
+>>> conf->mirrors[i].rdev,
+>>> It can cause NULL pointer dereference.
+>>>
+>>> Adding the new flag 'WantRemove' can prevent the reader to access
+>>> conf->mirrors[i].rdev after ** start rcu period **.
+>>
+>> I have to admit that I don't know RCU well, but add an additional 
+>> flag to address rcu related
+>> stuff is not a right way from my understanding ...
+>>
+>> And your original patch set p->rdev to NULL finally which is not 
+>> correct I think, I also wonder
+>> what will happen if "raid1_remove_disk set WantRemove and p->rdev = 
+>> NULL" happens between rcu_read_lock/unlock and access 
+>> conf->mirrors[i].rdev.
+>>
+>
+> We should not forget there is 'synchronize_rcu()' between set 
+> 'WantRemove'
+> and 'p->rdev = NULL'. If your worried scenes is true, it means that 
+> the reader
+> call rcu_read_lock() before synchronize_rcu().  Then, 
+> synchronize_rcu() will wait
+> until the reader call rcu_read_unlock(), which is inconsistent with 
+> the worried scenes.
 
-Thank you for the review :-)
+I could misunderstood your description.  For write request, two parts in 
+it need to
+dereference rdev, one has the protection of rcu lock while another 
+didn't have the
+protection.
 
--- 
+1. raid1_write_request
+part 1.a has rcu_read_lock, rcu_dereference(rdev) and rcu_read_unlock.
 
-Coly Li
+part 1.b:
+use rdev to dereference without the protection of rcu read lock, such as
+"conf->mirrors[i].rdev->data_offset" in your description.
+
+Now raid1_remove_disk set WantRemove flag before rdev is set to NULL, 
+let's say
+part 2.a includes those lines: "set_bit(WantRemove, &rdev->flags)", 
+synchronize_rcu
+and "p->rdev = NULL".
+
+If 2.a is called between 1.a and 1.b, the dereference issue still 
+exists, no? So my
+naive thinking is to add protection to part 1.b as well.
+
+>
+>> Anyway, I hope something like this can work.
+>>
+>> gjiang@ls00508:/media/gjiang/opensource-tree/linux$ git diff 
+>> drivers/md/raid1.c
+>> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+>> index 34e26834ad28..62d0b3b69628 100644
+>> --- a/drivers/md/raid1.c
+>> +++ b/drivers/md/raid1.c
+>> @@ -1471,8 +1471,15 @@ static void raid1_write_request(struct mddev 
+>> *mddev, struct bio *bio,
+>>
+>>         first_clone = 1;
+>>
+>> +       rcu_read_lock();
+>>         for (i = 0; i < disks; i++) {
+>>                 struct bio *mbio = NULL;
+>> +               struct md_rdev *rdev = 
+>> rcu_dereference(conf->mirrors[i].rdev);
+>> +               if (!rdev || test_bit(Faulty, &rdev->flags))
+>> +                       continue;
+>>                 if (!r1_bio->bios[i])
+>>                         continue;
+>>
+>> @@ -1500,7 +1507,6 @@ static void raid1_write_request(struct mddev 
+>> *mddev, struct bio *bio,
+>>                         mbio = bio_clone_fast(bio, GFP_NOIO, 
+>> &mddev->bio_set);
+>>
+>>                 if (r1_bio->behind_master_bio) {
+>> -                       struct md_rdev *rdev = conf->mirrors[i].rdev;
+>>
+>>                         if (test_bit(WBCollisionCheck, &rdev->flags)) {
+>>                                 sector_t lo = r1_bio->sector;
+>> @@ -1551,6 +1557,7 @@ static void raid1_write_request(struct mddev 
+>> *mddev, struct bio *bio,
+>>                         md_wakeup_thread(mddev->thread);
+>>                 }
+>>         }
+>> +       rcu_read_unlock();
+>>
+>
+> The region may sleep to wait memory allocate. So, I don't think it is 
+> reasonable
+> to add rcu_read_lock/unlock().
+
+Thanks for the investigation, that is why rcu_read_lock/unlock are not 
+called here.
+
+>
+>> r1_bio_write_done(r1_bio);
+>>
+>> @@ -1825,16 +1832,19 @@ static int raid1_remove_disk(struct mddev 
+>> *mddev, struct md_rdev *rdev)
+>>                         err = -EBUSY;
+>>                         goto abort;
+>>                 }
+>> -               p->rdev = NULL;
+>>                 if (!test_bit(RemoveSynchronized, &rdev->flags)) {
+>>                         synchronize_rcu();
+>>                         if (atomic_read(&rdev->nr_pending)) {
+>>                                 /* lost the race, try later */
+>>                                 err = -EBUSY;
+>> -                               p->rdev = rdev;
+>> +                               rcu_assign_pointer(p->rdev, rdev);
+>>                                 goto abort;
+>> +                       } else {
+>> +                               RCU_INIT_POINTER(p->rdev, NULL);
+>> +                               synchronize_rcu();
+>
+> What is the purpose of adding 'synchronize_rcu()' here?
+
+Just follow some code in kernel since I don't know RCU well as I said.
+
+Another way comes to my mind (totally untested),  and I think this way 
+is more reasonable.
+BTW, I had no luck to hit the issue since the race is happened in a 
+short window, so I can't
+verify the change.
+
+@@ -8769,7 +8776,8 @@ static int remove_and_add_spares(struct mddev *mddev,
+         int removed = 0;
+         bool remove_some = false;
+
+-       if (this && test_bit(MD_RECOVERY_RUNNING, &mddev->recovery))
++       if (this && (test_bit(MD_RECOVERY_RUNNING, &mddev->recovery) ||
++                    (test_bit(MD_RECOVERY_NEEDED, &mddev->recovery))))
+                 /* Mustn't remove devices when resync thread */
+                 return 0;
+
+
+Thanks,
+Guoqing
