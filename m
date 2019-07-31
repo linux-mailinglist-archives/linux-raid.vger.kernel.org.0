@@ -2,27 +2,31 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B91F7B68C
-	for <lists+linux-raid@lfdr.de>; Wed, 31 Jul 2019 02:10:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83A6A7B72F
+	for <lists+linux-raid@lfdr.de>; Wed, 31 Jul 2019 02:28:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbfGaAK5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 30 Jul 2019 20:10:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37588 "EHLO mx1.suse.de"
+        id S1726167AbfGaA2v (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 30 Jul 2019 20:28:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41428 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726253AbfGaAK5 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 30 Jul 2019 20:10:57 -0400
+        id S1725947AbfGaA2u (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 30 Jul 2019 20:28:50 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A6C75AD88;
-        Wed, 31 Jul 2019 00:10:56 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 83660B019;
+        Wed, 31 Jul 2019 00:28:49 +0000 (UTC)
 From:   NeilBrown <neilb@suse.com>
-To:     Coly Li <colyli@suse.de>, jes.sorensen@gmail.com,
+To:     Bob Liu <bob.liu@oracle.com>,
+        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
         linux-raid@vger.kernel.org
-Date:   Wed, 31 Jul 2019 10:10:49 +1000
-Subject: Re: [PATCH 2/2] udev: add --no-devices option for calling 'mdadm --detail'
-In-Reply-To: <20190730164024.97862-2-colyli@suse.de>
-References: <20190730164024.97862-1-colyli@suse.de> <20190730164024.97862-2-colyli@suse.de>
-Message-ID: <87lfwfkqra.fsf@notabene.neil.brown.name>
+Date:   Wed, 31 Jul 2019 10:28:41 +1000
+Cc:     jay.vosburgh@canonical.com, songliubraving@fb.com,
+        dm-devel@redhat.com, Neil F Brown <nfbrown@suse.com>,
+        linux-block@vger.kernel.org
+Subject: Re: [PATCH 1/2] md/raid0: Introduce new array state 'broken' for raid0
+In-Reply-To: <d730c417-a328-3df3-1e31-32b6df48b6ad@oracle.com>
+References: <20190729203135.12934-1-gpiccoli@canonical.com> <20190729203135.12934-2-gpiccoli@canonical.com> <d730c417-a328-3df3-1e31-32b6df48b6ad@oracle.com>
+Message-ID: <87ftmnkpxi.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
 Content-Type: multipart/signed; boundary="=-=-=";
         micalg=pgp-sha256; protocol="application/pgp-signature"
@@ -35,73 +39,33 @@ X-Mailing-List: linux-raid@vger.kernel.org
 Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 31 2019, Coly Li wrote:
-
-> When creating symlink of a md raid device, the detailed information of
-> component disks are unnecessary for rule udev-md-raid-arrays.rules. For
-> md raid devices with huge number of component disks (e.g. 1500 DASD
-> disks), the detail information of component devices can be very large
-> and exceed udev monitor's on-stack message buffer.
+On Tue, Jul 30 2019, Bob Liu wrote:
 >
-> This patch adds '--no-devices' option when calling mdadm by,
-> IMPORT{program}=3D"BINDIR/mdadm --detail --no-devices --export $devnode"
 >
-> Now the detailed output won't include component disks information,
-> and the error message "invalid message length" reported by systemd can
-> be removed.
->
-> Signed-off-by: Coly Li <colyli@suse.de>
-> Cc: Neil Brown <<neilb@suse.com>
+> Curious why only raid0 has this issue?=20
 
-Reviewed-by: NeilBrown <neilb@suse.com>
-
-Thanks for these!
+Actually, it isn't only raid0.  'linear' has the same issue.
+Probably the fix for raid0 should be applied to linear too.
 
 NeilBrown
-
-
-> ---
->  udev-md-raid-arrays.rules | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/udev-md-raid-arrays.rules b/udev-md-raid-arrays.rules
-> index 5b99d58..d391665 100644
-> --- a/udev-md-raid-arrays.rules
-> +++ b/udev-md-raid-arrays.rules
-> @@ -17,7 +17,7 @@ TEST!=3D"md/array_state", ENV{SYSTEMD_READY}=3D"0", GOT=
-O=3D"md_end"
->  ATTR{md/array_state}=3D=3D"|clear|inactive", ENV{SYSTEMD_READY}=3D"0", G=
-OTO=3D"md_end"
->  LABEL=3D"md_ignore_state"
->=20=20
-> -IMPORT{program}=3D"BINDIR/mdadm --detail --export $devnode"
-> +IMPORT{program}=3D"BINDIR/mdadm --detail --no-devices --export $devnode"
->  ENV{DEVTYPE}=3D=3D"disk", ENV{MD_NAME}=3D=3D"?*", SYMLINK+=3D"disk/by-id=
-/md-name-$env{MD_NAME}", OPTIONS+=3D"string_escape=3Dreplace"
->  ENV{DEVTYPE}=3D=3D"disk", ENV{MD_UUID}=3D=3D"?*", SYMLINK+=3D"disk/by-id=
-/md-uuid-$env{MD_UUID}"
->  ENV{DEVTYPE}=3D=3D"disk", ENV{MD_DEVNAME}=3D=3D"?*", SYMLINK+=3D"md/$env=
-{MD_DEVNAME}"
-> --=20
-> 2.16.4
 
 --=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl1A3IoACgkQOeye3VZi
-gbkwGw/9H48je3H1aPsaRCOkFREmFMIsVOo1ht7spOrqZW2qUmoANckaOvoK8deQ
-qA4gd//PnZD74BEONWTx+kTC/3Le2muh/6Po8mHWn653OHeN6d0kVoTX+H6dLi9M
-qCoSVVM1xCTrGpPH/FOJ6s6NTMVbWVjOKq8Cd9BzKfUjiiqpbThXLdG06HgTLop5
-GJvWGqSPxgBwxRLpJ/m5rKl4guWw3plCxBR2tXdyngbaWivFPF43vwaKfqgTgMdR
-xhUFdJmg0yfYM5SbjLFxsn6A1vAtWEX6f0b7Ihj5pIQtHT3MJfuKZJZ6na7YQHg1
-kxhe8OsT07VZgX7RmxCImznZ4kV/2Myynb/GKZDCWTFuZEUgOv4pDtKTuWEU5E6P
-6tQ8ntg+Ihz2wtE8D834Rn3Si2J0H4sQCzaahcldK7+1F3EMgM/WPgzo7GesPNao
-B+Kc0wUKdLYoz9hI4hAlZklYt1qK2Rd7i+vPpKtknXpSXsu4S84TaSeaAoW/TuUl
-umVoXmhSS1YejwTiuCrmEDL9h+mz5RaBw0vz2uLt5mxOX31/2ptFjvi7IzbRFf0L
-sUZ1HucpcJ7igXbugMjR2jfV5sO3AgvtCDtjEwfuKaxbXpBJW1HcxWwkchQcFE67
-IfhbZZXvesFpE3mWdvHLwatctB4h0K0lGgO2YVaFv8W/3U9yhs0=
-=LPoh
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl1A4LoACgkQOeye3VZi
+gbn0wRAAuH9h2Qxza5xLzWsV8tlEajzIAXMeAxp4Q+IY9Na0AgXSZPtyyE5lv2TR
+wcQhQPFc+rDV+GF2rWoDOkhLKhJENtiTUoGH8ZrhU4C9hW5NRjDx80DruXKwBRll
+G5OxcVY9kCDAOPtJnQHw6YjUwvWCiuoYnGqwBqoilnprsH13gPs1YFgaX+wvAj3P
+ReAYsTxXQnPOQScQLJQlyis6s+unhCb8++viZmEVSnjK7i+W4i16p2xKyZTWXmXe
+FZ+rsOiSll2aaYaBHIGH4oIW7wTNFeOt0z9hJ+Ce0aoQDynccbrNgtoKvkS7NN2O
+k8Ci9sGX/GAmUmMD1pZgbJaRaPzMmY61gtVh25hKBMXSe9BTn+B1X9dYm44wQdP0
++hI0lSo4aP0v+aH2KByTg8e2VOOKEgtxJbeqDybgkxjGAiKW8Q82PnCt7jPmAbth
+MCFuLsRp/jBClDvvvQUAYTa5rX4rASKzdFs9bQ3O7xG78SUoBBm9qyXu2HjAbYWO
+BBXKWLqOXkjol1m5NWJMvY8XIvIhl8SDZNy4kzFdbuSD7eXIWBrp+RXFo7aMdRv9
+krY0LAjQKYrzB7TmK7JJmI3rvGnSzBi4pQrJNc6NjOTyaCYF2qg/4LexXa27fNXj
+lmWELXJmHvz4WHPJvjhPY5FAO2NjeNNDGpb5AJy4eDhyuF7hfH8=
+=ErRK
 -----END PGP SIGNATURE-----
 --=-=-=--
