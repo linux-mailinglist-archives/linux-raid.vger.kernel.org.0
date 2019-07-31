@@ -2,302 +2,116 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BAE847BE8D
-	for <lists+linux-raid@lfdr.de>; Wed, 31 Jul 2019 12:41:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76D8F7C2B1
+	for <lists+linux-raid@lfdr.de>; Wed, 31 Jul 2019 15:04:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728283AbfGaKlN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 31 Jul 2019 06:41:13 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:38613 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbfGaKlN (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 31 Jul 2019 06:41:13 -0400
-Received: by mail-ed1-f66.google.com with SMTP id r12so30447276edo.5
-        for <linux-raid@vger.kernel.org>; Wed, 31 Jul 2019 03:41:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=wBzaB4shsnr/5Yj4K30WiFvJEZAKDqHlevOEbzB2wso=;
-        b=OIFJhrmxvdIQsuIlRZYv5j0xgu1eEucGTdfNuAN+e3h7zYZ9CmD43QrPNmosULpwiO
-         lA8As/zt4PD6k/3Zp+QLSRIlpCZnwbTfBWYM8R2JSekRSie/7+8342XvhvqnenjcNvq3
-         qPi5zlZ3xVaw2NM9+RKhwFwy6uE7UXcdfOKIQoN3W9haEbj03luRh0lDIzPEmrvHvm2p
-         Sa5j53ayokicIzIjF2js7Rb1P8hHTpPpSf9IDP5FgeiSPh667sxnaDN19BV0qgj2uJwO
-         eQy6lCKeHu7tdsFk/Y18q0KdEkw/hWFeY29Rrwi4wytjNxd+GGhNHSeSSNlPoRInwWZT
-         VHEg==
+        id S1727338AbfGaNEj (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 31 Jul 2019 09:04:39 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:40428 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726259AbfGaNEi (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 31 Jul 2019 09:04:38 -0400
+Received: from mail-pl1-f198.google.com ([209.85.214.198])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <gpiccoli@canonical.com>)
+        id 1hsoHU-0004Zn-EW
+        for linux-raid@vger.kernel.org; Wed, 31 Jul 2019 13:04:36 +0000
+Received: by mail-pl1-f198.google.com with SMTP id q11so37427154pll.22
+        for <linux-raid@vger.kernel.org>; Wed, 31 Jul 2019 06:04:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=wBzaB4shsnr/5Yj4K30WiFvJEZAKDqHlevOEbzB2wso=;
-        b=mmRbmaOel7x6lC/deC/3rYt8S+v9Y/My6oEj3pR1ii2WUYbervq0x7xOd3BXnjEKUP
-         ecs9uhYZQDeXonvRb33Y1DyiGcPL0f+2UdyQ5ZWwlP/Sli/4i3h6gAULlJ++6yG+3uFG
-         SHv3MP/OZ+B224avqsgitrjHPrdLTzxYdqKdHsddaPl5esG0SDcUd0vMbzT4qDG8yDVd
-         Yq2IJCgN28YrSbfFetyS+bCucR5b1+VENU1+zQvbuFrCJh1lDmCXVNkxSSqzAJnEkA8h
-         S0K74vDBYV9iPRwVHEiu8anq7XF9vIv35hOYRVrO6oxMmKvNeFuP4x4mkK+dtduirOYI
-         w/uA==
-X-Gm-Message-State: APjAAAXKTl0a2HVD8Rug1oBZECDR8mXzh7r1dr11oVXa+ImO88bwyzzo
-        eINFJamokEaEi6Cnrn3FBPEigeolBdg=
-X-Google-Smtp-Source: APXvYqzD2bN3SSrYbQFQ2dCwAWeiQeVSOim1Sh2eHVgUD/S4E3h0UZAk0mrxTejrqfLZlxyD+EyC6g==
-X-Received: by 2002:a50:b66f:: with SMTP id c44mr106347538ede.171.1564569669226;
-        Wed, 31 Jul 2019 03:41:09 -0700 (PDT)
-Received: from ?IPv6:2a02:247f:ffff:2540:4085:2488:da48:c2e0? ([2001:1438:4010:2540:4085:2488:da48:c2e0])
-        by smtp.gmail.com with ESMTPSA id n17sm6030142ejk.46.2019.07.31.03.41.08
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ZVJqYCt6y7kDQk5e4VajzmV5IXeiBUBYB5EIHeYIrC0=;
+        b=HcGonF/vQyiFc1w8ITi8iy4ZVfLMLYGxlJYM4jJCKlxKVeDVocqvX2w/It8Q695cL6
+         pPySfJ+LIMllk5DfDb1vmKGFzljpjOLVjUp5O2SnGXZBARwdRhR09G3dePJzm+wo64Fj
+         QqfWoRnR7F/Dks+EFkM45OUX4KanYkl943tinbOj1OHXNrIyZDMNEOfvIIMTFYDk299C
+         pcS5us7KRVbQtMN4aZzcCtgNu/pAYn0YD7KITl7gNBYw7wBCbnzDugNelFKA3Lec6DKk
+         2acP7ryLH0n8U+NAqayHmYl8htriTwiFXZ+u6/j1NZfmjf0hf88ijoD6cKoadvA6B9cR
+         5j2Q==
+X-Gm-Message-State: APjAAAXWfrj39e0+ZkSngXAu5X06YLETiHfY9gpfDtwl9PVcn32Mea9w
+        Xnl28mRtO9xWm7TVFikqPZaHJhFKnPOkIkVqCTdldPrVjVIksYOOoCltLSDBBnBZ/EnQG5vFZkA
+        iPQaSxRSFs58GbaFgV//AlymgPuyns5lAtyFl1BU=
+X-Received: by 2002:a17:902:b591:: with SMTP id a17mr39314899pls.96.1564578275201;
+        Wed, 31 Jul 2019 06:04:35 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwR1CH6m9mU2cXXtekQvrfWE11ZuQqjWDIftLSWs2cw2Yuy7o81N8NFr/tfEfOAEV580sOfRw==
+X-Received: by 2002:a17:902:b591:: with SMTP id a17mr39314886pls.96.1564578275053;
+        Wed, 31 Jul 2019 06:04:35 -0700 (PDT)
+Received: from [192.168.1.202] ([152.254.214.186])
+        by smtp.gmail.com with ESMTPSA id b126sm103400673pfa.126.2019.07.31.06.04.28
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 03:41:08 -0700 (PDT)
-Subject: Re: [PATCH] md/raid1: fix a race between removing rdev and access
- conf->mirrors[i].rdev
-To:     Yufen Yu <yuyufen@huawei.com>, liu.song.a23@gmail.com
-Cc:     neilb@suse.com, houtao1@huawei.com, zou_wei@huawei.com,
+        Wed, 31 Jul 2019 06:04:34 -0700 (PDT)
+Subject: Re: [PATCH 1/2] md/raid0: Introduce new array state 'broken' for
+ raid0
+To:     NeilBrown <neilb@suse.com>, Bob Liu <bob.liu@oracle.com>,
         linux-raid@vger.kernel.org
-References: <20190726060051.16630-1-yuyufen@huawei.com>
- <e387c59b-4de4-eb6e-5bfd-2e5ba10ca741@cloud.ionos.com>
- <b98073c3-4b81-dd4a-09b1-47e277c24961@huawei.com>
- <538db63a-d316-5783-f45b-b8310d19b7b9@cloud.ionos.com>
- <d3bec7ef-4e35-8a32-8b11-cda5e99b453d@cloud.ionos.com>
- <3e6b5faf-a588-8cf0-1c49-8ffd15532a19@cloud.ionos.com>
- <913a04be-a00c-849c-a064-f2cde477dbe6@huawei.com>
- <d123f888-0f3c-2ba1-5c53-c13586236551@cloud.ionos.com>
- <23c6e9b1-fe59-1536-9fcf-b4acf2805b4a@huawei.com>
- <e04b36d7-9a12-3af2-d5fd-0dfab37a64ea@cloud.ionos.com>
- <0ce98e64-3b25-0b19-5319-c4b1a54a6847@huawei.com>
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Message-ID: <a96357de-5341-cd23-9b6d-616ec8502916@cloud.ionos.com>
-Date:   Wed, 31 Jul 2019 12:41:07 +0200
+Cc:     jay.vosburgh@canonical.com, songliubraving@fb.com,
+        dm-devel@redhat.com, Neil F Brown <nfbrown@suse.com>,
+        linux-block@vger.kernel.org
+References: <20190729203135.12934-1-gpiccoli@canonical.com>
+ <20190729203135.12934-2-gpiccoli@canonical.com>
+ <d730c417-a328-3df3-1e31-32b6df48b6ad@oracle.com>
+ <87ftmnkpxi.fsf@notabene.neil.brown.name>
+From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gpiccoli@canonical.com; prefer-encrypt=mutual; keydata=
+ mQENBFpVBxcBCADPNKmu2iNKLepiv8+Ssx7+fVR8lrL7cvakMNFPXsXk+f0Bgq9NazNKWJIn
+ Qxpa1iEWTZcLS8ikjatHMECJJqWlt2YcjU5MGbH1mZh+bT3RxrJRhxONz5e5YILyNp7jX+Vh
+ 30rhj3J0vdrlIhPS8/bAt5tvTb3ceWEic9mWZMsosPavsKVcLIO6iZFlzXVu2WJ9cov8eQM/
+ irIgzvmFEcRyiQ4K+XUhuA0ccGwgvoJv4/GWVPJFHfMX9+dat0Ev8HQEbN/mko/bUS4Wprdv
+ 7HR5tP9efSLucnsVzay0O6niZ61e5c97oUa9bdqHyApkCnGgKCpg7OZqLMM9Y3EcdMIJABEB
+ AAG0LUd1aWxoZXJtZSBHLiBQaWNjb2xpIDxncGljY29saUBjYW5vbmljYWwuY29tPokBNwQT
+ AQgAIQUCWmClvQIbAwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDOR5EF9K/7Gza3B/9d
+ 5yczvEwvlh6ksYq+juyuElLvNwMFuyMPsvMfP38UslU8S3lf+ETukN1S8XVdeq9yscwtsRW/
+ 4YoUwHinJGRovqy8gFlm3SAtjfdqysgJqUJwBmOtcsHkmvFXJmPPGVoH9rMCUr9s6VDPox8f
+ q2W5M7XE9YpsfchS/0fMn+DenhQpV3W6pbLtuDvH/81GKrhxO8whSEkByZbbc+mqRhUSTdN3
+ iMpRL0sULKPVYbVMbQEAnfJJ1LDkPqlTikAgt3peP7AaSpGs1e3pFzSEEW1VD2jIUmmDku0D
+ LmTHRl4t9KpbU/H2/OPZkrm7809QovJGRAxjLLPcYOAP7DUeltveuQENBFpVBxcBCADbxD6J
+ aNw/KgiSsbx5Sv8nNqO1ObTjhDR1wJw+02Bar9DGuFvx5/qs3ArSZkl8qX0X9Vhptk8rYnkn
+ pfcrtPBYLoux8zmrGPA5vRgK2ItvSc0WN31YR/6nqnMfeC4CumFa/yLl26uzHJa5RYYQ47jg
+ kZPehpc7IqEQ5IKy6cCKjgAkuvM1rDP1kWQ9noVhTUFr2SYVTT/WBHqUWorjhu57/OREo+Tl
+ nxI1KrnmW0DbF52tYoHLt85dK10HQrV35OEFXuz0QPSNrYJT0CZHpUprkUxrupDgkM+2F5LI
+ bIcaIQ4uDMWRyHpDbczQtmTke0x41AeIND3GUc+PQ4hWGp9XABEBAAGJAR8EGAEIAAkFAlpV
+ BxcCGwwACgkQzkeRBfSv+xv1wwgAj39/45O3eHN5pK0XMyiRF4ihH9p1+8JVfBoSQw7AJ6oU
+ 1Hoa+sZnlag/l2GTjC8dfEGNoZd3aRxqfkTrpu2TcfT6jIAsxGjnu+fUCoRNZzmjvRziw3T8
+ egSPz+GbNXrTXB8g/nc9mqHPPprOiVHDSK8aGoBqkQAPZDjUtRwVx112wtaQwArT2+bDbb/Y
+ Yh6gTrYoRYHo6FuQl5YsHop/fmTahpTx11IMjuh6IJQ+lvdpdfYJ6hmAZ9kiVszDF6pGFVkY
+ kHWtnE2Aa5qkxnA2HoFpqFifNWn5TyvJFpyqwVhVI8XYtXyVHub/WbXLWQwSJA4OHmqU8gDl
+ X18zwLgdiQ==
+Message-ID: <9dd836f8-7358-834f-8d29-cd0db717d01b@canonical.com>
+Date:   Wed, 31 Jul 2019 10:04:23 -0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <0ce98e64-3b25-0b19-5319-c4b1a54a6847@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <87ftmnkpxi.fsf@notabene.neil.brown.name>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-
-
-On 7/30/19 10:36 AM, Yufen Yu wrote:
->
->
-> On 2019/7/29 23:29, Guoqing Jiang wrote:
+On 30/07/2019 21:28, NeilBrown wrote:
+> On Tue, Jul 30 2019, Bob Liu wrote:
 >>
 >>
->> On 7/29/19 3:23 PM, Yufen Yu wrote:
->>>
->>>
->>> On 2019/7/29 19:54, Guoqing Jiang wrote:
->>>>
->>>>
->>>> On 7/29/19 1:36 PM, Yufen Yu wrote:
->>>>> I don't think this can fix the race condition completely.
->>>>>
->>>>> -               p->rdev = NULL;
->>>>>                   if (!test_bit(RemoveSynchronized, &rdev->flags)) {
->>>>>                           synchronize_rcu();
->>>>> +                       p->rdev = NULL;
->>>>>                           if (atomic_read(&rdev->nr_pending)) {
->>>>>
->>>>> If we access conf->mirrors[i].rdev (e.g. raid1_write_request()) 
->>>>> after RCU grace period,
->>>>> synchronize_rcu() will not wait the reader. Then, it also can 
->>>>> cause NULL pointer dereference.
->>>>>
->>>>> That is the reason why we add the new flag 'WantRemove'. It can 
->>>>> prevent the reader to access
->>>>> the 'rdev' after RCU grace period.
->>>>
->>>
->>> Sorry for my wrong description. It is  ** after RCU grace start **, 
->>> not 'after RCU grace period'.
->>>
->>>
->>>>
->>>> How about move it to the else branch?
->>>>
->>>> @@ -1825,7 +1828,6 @@ static int raid1_remove_disk(struct mddev 
->>>> *mddev, struct md_rdev *rdev)
->>>>                         err = -EBUSY;
->>>>                         goto abort;
->>>>                 }
->>>> -               p->rdev = NULL;
->>>>                 if (!test_bit(RemoveSynchronized, &rdev->flags)) {
->>>>                         synchronize_rcu();
->>>>                         if (atomic_read(&rdev->nr_pending)) {
->>>> @@ -1833,8 +1835,10 @@ static int raid1_remove_disk(struct mddev 
->>>> *mddev, struct md_rdev *rdev)
->>>>                                 err = -EBUSY;
->>>>                                 p->rdev = rdev;
->>>>                                 goto abort;
->>>> -                       }
->>>> -               }
->>>> +                       } else
->>>> +                               p->rdev = NULL;
->>>> +               } else
->>>> +                       p->rdev = NULL;
->>>>
->>>> After rcu period, the nr_pending should be not zero in your case.
->>>>
->>>
->>> I also don't think this can work.
->>>
->>>     +                              +
->>>      |                                |
->>>      |                                |
->>>      |  +--->Reader         |          +--->Reader nr_pending++
->>>      |                                |
->>>      |                                |
->>>      |                                |
->>>     +                               +
->>> start rcu period             end rcu period
->>> call synchronize_rcu()    return synchronize_rcu()
->>>
->>> If the reader try to read conf->mirrors[i].rdev after rcu peroid start,
->>> synchronize_rcu() will not wait the reader. We assume the current
->>> value of nr_pending is 0. Then, raid1_remove_disk will set 'p->rdev 
->>> = NULL'.
->>>
->>> After that the reader add 'nr_pending' to 1 and try to access 
->>> conf->mirrors[i].rdev,
->>> It can cause NULL pointer dereference.
->>>
->>> Adding the new flag 'WantRemove' can prevent the reader to access
->>> conf->mirrors[i].rdev after ** start rcu period **.
->>
->> I have to admit that I don't know RCU well, but add an additional 
->> flag to address rcu related
->> stuff is not a right way from my understanding ...
->>
->> And your original patch set p->rdev to NULL finally which is not 
->> correct I think, I also wonder
->> what will happen if "raid1_remove_disk set WantRemove and p->rdev = 
->> NULL" happens between rcu_read_lock/unlock and access 
->> conf->mirrors[i].rdev.
->>
->
-> We should not forget there is 'synchronize_rcu()' between set 
-> 'WantRemove'
-> and 'p->rdev = NULL'. If your worried scenes is true, it means that 
-> the reader
-> call rcu_read_lock() before synchronize_rcu().  Then, 
-> synchronize_rcu() will wait
-> until the reader call rcu_read_unlock(), which is inconsistent with 
-> the worried scenes.
+>> Curious why only raid0 has this issue? 
+> 
+> Actually, it isn't only raid0.  'linear' has the same issue.
+> Probably the fix for raid0 should be applied to linear too.
+> 
+> NeilBrown
+> 
 
-I could misunderstood your description.  For write request, two parts in 
-it need to
-dereference rdev, one has the protection of rcu lock while another 
-didn't have the
-protection.
+Thanks Neil, it makes sense! I didn't considered "linear" and indeed,
+after some testing, it reacts exactly as raid0/stripping.
 
-1. raid1_write_request
-part 1.a has rcu_read_lock, rcu_dereference(rdev) and rcu_read_unlock.
-
-part 1.b:
-use rdev to dereference without the protection of rcu read lock, such as
-"conf->mirrors[i].rdev->data_offset" in your description.
-
-Now raid1_remove_disk set WantRemove flag before rdev is set to NULL, 
-let's say
-part 2.a includes those lines: "set_bit(WantRemove, &rdev->flags)", 
-synchronize_rcu
-and "p->rdev = NULL".
-
-If 2.a is called between 1.a and 1.b, the dereference issue still 
-exists, no? So my
-naive thinking is to add protection to part 1.b as well.
-
->
->> Anyway, I hope something like this can work.
->>
->> gjiang@ls00508:/media/gjiang/opensource-tree/linux$ git diff 
->> drivers/md/raid1.c
->> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
->> index 34e26834ad28..62d0b3b69628 100644
->> --- a/drivers/md/raid1.c
->> +++ b/drivers/md/raid1.c
->> @@ -1471,8 +1471,15 @@ static void raid1_write_request(struct mddev 
->> *mddev, struct bio *bio,
->>
->>         first_clone = 1;
->>
->> +       rcu_read_lock();
->>         for (i = 0; i < disks; i++) {
->>                 struct bio *mbio = NULL;
->> +               struct md_rdev *rdev = 
->> rcu_dereference(conf->mirrors[i].rdev);
->> +               if (!rdev || test_bit(Faulty, &rdev->flags))
->> +                       continue;
->>                 if (!r1_bio->bios[i])
->>                         continue;
->>
->> @@ -1500,7 +1507,6 @@ static void raid1_write_request(struct mddev 
->> *mddev, struct bio *bio,
->>                         mbio = bio_clone_fast(bio, GFP_NOIO, 
->> &mddev->bio_set);
->>
->>                 if (r1_bio->behind_master_bio) {
->> -                       struct md_rdev *rdev = conf->mirrors[i].rdev;
->>
->>                         if (test_bit(WBCollisionCheck, &rdev->flags)) {
->>                                 sector_t lo = r1_bio->sector;
->> @@ -1551,6 +1557,7 @@ static void raid1_write_request(struct mddev 
->> *mddev, struct bio *bio,
->>                         md_wakeup_thread(mddev->thread);
->>                 }
->>         }
->> +       rcu_read_unlock();
->>
->
-> The region may sleep to wait memory allocate. So, I don't think it is 
-> reasonable
-> to add rcu_read_lock/unlock().
-
-Thanks for the investigation, that is why rcu_read_lock/unlock are not 
-called here.
-
->
->> r1_bio_write_done(r1_bio);
->>
->> @@ -1825,16 +1832,19 @@ static int raid1_remove_disk(struct mddev 
->> *mddev, struct md_rdev *rdev)
->>                         err = -EBUSY;
->>                         goto abort;
->>                 }
->> -               p->rdev = NULL;
->>                 if (!test_bit(RemoveSynchronized, &rdev->flags)) {
->>                         synchronize_rcu();
->>                         if (atomic_read(&rdev->nr_pending)) {
->>                                 /* lost the race, try later */
->>                                 err = -EBUSY;
->> -                               p->rdev = rdev;
->> +                               rcu_assign_pointer(p->rdev, rdev);
->>                                 goto abort;
->> +                       } else {
->> +                               RCU_INIT_POINTER(p->rdev, NULL);
->> +                               synchronize_rcu();
->
-> What is the purpose of adding 'synchronize_rcu()' here?
-
-Just follow some code in kernel since I don't know RCU well as I said.
-
-Another way comes to my mind (totally untested),  and I think this way 
-is more reasonable.
-BTW, I had no luck to hit the issue since the race is happened in a 
-short window, so I can't
-verify the change.
-
-@@ -8769,7 +8776,8 @@ static int remove_and_add_spares(struct mddev *mddev,
-         int removed = 0;
-         bool remove_some = false;
-
--       if (this && test_bit(MD_RECOVERY_RUNNING, &mddev->recovery))
-+       if (this && (test_bit(MD_RECOVERY_RUNNING, &mddev->recovery) ||
-+                    (test_bit(MD_RECOVERY_NEEDED, &mddev->recovery))))
-                 /* Mustn't remove devices when resync thread */
-                 return 0;
+In case this patch gets good acceptance I can certainly include
+md/linear in that!
+Cheers,
 
 
-Thanks,
-Guoqing
+Guilherme
