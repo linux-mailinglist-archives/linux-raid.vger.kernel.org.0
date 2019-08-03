@@ -2,149 +2,292 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 121848016C
-	for <lists+linux-raid@lfdr.de>; Fri,  2 Aug 2019 21:53:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 031EF8058B
+	for <lists+linux-raid@lfdr.de>; Sat,  3 Aug 2019 11:25:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393600AbfHBTw7 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 2 Aug 2019 15:52:59 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:40467 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732050AbfHBTw7 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 2 Aug 2019 15:52:59 -0400
-Received: from [10.0.101.109] (unknown [62.214.191.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2388130AbfHCJZe (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 3 Aug 2019 05:25:34 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:21284 "EHLO mx2.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388126AbfHCJZd (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sat, 3 Aug 2019 05:25:33 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 7F5DE201A3C37;
-        Fri,  2 Aug 2019 21:52:56 +0200 (CEST)
-Subject: Re: Kernel 4.14 + has 100 times higher IO latency than Kernel 4.4
- with raid1
-To:     Jinpu Wang <jinpu.wang@cloud.ionos.com>,
-        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org
-Cc:     Alexandr Iarygin <alexandr.iarygin@cloud.ionos.com>
-References: <CAMGffEkotpvVz8FA78vNFh0qZv3kEMNrXXfVPEUC=MhH0pMCZA@mail.gmail.com>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Message-ID: <0a83fde3-1a74-684c-0d70-fb44b9021f96@molgen.mpg.de>
-Date:   Fri, 2 Aug 2019 21:52:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mx2.mailbox.org (Postfix) with ESMTPS id 1C984A2213;
+        Sat,  3 Aug 2019 11:25:31 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
+        with ESMTP id yZ-fnTDszare; Sat,  3 Aug 2019 11:25:21 +0200 (CEST)
+From:   Hauke Mehrtens <hauke@hauke-m.de>
+To:     neilb@suse.de, Jes.Sorensen@gmail.com
+Cc:     linux-raid@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>
+Subject: [mdadm PATCH] Add missing include file sys/sysmacros.h
+Date:   Sat,  3 Aug 2019 11:25:01 +0200
+Message-Id: <20190803092501.5429-1-hauke@hauke-m.de>
 MIME-Version: 1.0
-In-Reply-To: <CAMGffEkotpvVz8FA78vNFh0qZv3kEMNrXXfVPEUC=MhH0pMCZA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Dear Jinpu,
+This include file is needed for makedev(), major() and minor() which are
+used in these functions. In musl 1.1.23 sys/sysmacros.h is not included
+indirectly any more and mdadm fails to compile.
 
+Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+---
+ Assemble.c       | 1 +
+ Build.c          | 1 +
+ Create.c         | 1 +
+ Detail.c         | 1 +
+ Grow.c           | 1 +
+ Incremental.c    | 1 +
+ Manage.c         | 1 +
+ Monitor.c        | 1 +
+ Query.c          | 1 +
+ lib.c            | 1 +
+ mapfile.c        | 1 +
+ mdadm.c          | 1 +
+ mdopen.c         | 1 +
+ platform-intel.c | 1 +
+ policy.c         | 1 +
+ super-ddf.c      | 1 +
+ super-intel.c    | 1 +
+ sysfs.c          | 1 +
+ util.c           | 1 +
+ 19 files changed, 19 insertions(+)
 
-On 02.08.19 16:48, Jinpu Wang wrote:
+diff --git a/Assemble.c b/Assemble.c
+index b2e6914..f610636 100644
+--- a/Assemble.c
++++ b/Assemble.c
+@@ -24,6 +24,7 @@
+ 
+ #include	"mdadm.h"
+ #include	<ctype.h>
++#include	<sys/sysmacros.h>
+ 
+ static int name_matches(char *found, char *required, char *homehost, int require_homehost)
+ {
+diff --git a/Build.c b/Build.c
+index 962c2e3..1c85d34 100644
+--- a/Build.c
++++ b/Build.c
+@@ -23,6 +23,7 @@
+  */
+ 
+ #include "mdadm.h"
++#include <sys/sysmacros.h>
+ 
+ int Build(char *mddev, struct mddev_dev *devlist,
+ 	  struct shape *s, struct context *c)
+diff --git a/Create.c b/Create.c
+index 292f92a..268b862 100644
+--- a/Create.c
++++ b/Create.c
+@@ -26,6 +26,7 @@
+ #include	"md_u.h"
+ #include	"md_p.h"
+ #include	<ctype.h>
++#include	<sys/sysmacros.h>
+ 
+ static int round_size_and_verify(unsigned long long *size, int chunk)
+ {
+diff --git a/Detail.c b/Detail.c
+index 20ea03a..48a8b52 100644
+--- a/Detail.c
++++ b/Detail.c
+@@ -27,6 +27,7 @@
+ #include	"md_u.h"
+ #include	<ctype.h>
+ #include	<dirent.h>
++#include	<sys/sysmacros.h>
+ 
+ static int cmpstringp(const void *p1, const void *p2)
+ {
+diff --git a/Grow.c b/Grow.c
+index 764374f..5ec355a 100644
+--- a/Grow.c
++++ b/Grow.c
+@@ -27,6 +27,7 @@
+ #include	<stddef.h>
+ #include	<stdint.h>
+ #include	<signal.h>
++#include	<sys/sysmacros.h>
+ #include	<sys/wait.h>
+ 
+ #if ! defined(__BIG_ENDIAN) && ! defined(__LITTLE_ENDIAN)
+diff --git a/Incremental.c b/Incremental.c
+index 98dbcd9..76924d8 100644
+--- a/Incremental.c
++++ b/Incremental.c
+@@ -29,6 +29,7 @@
+  */
+ 
+ #include	"mdadm.h"
++#include	<sys/sysmacros.h>
+ #include	<sys/wait.h>
+ #include	<dirent.h>
+ #include	<ctype.h>
+diff --git a/Manage.c b/Manage.c
+index 21536f5..0806c3c 100644
+--- a/Manage.c
++++ b/Manage.c
+@@ -26,6 +26,7 @@
+ #include "md_u.h"
+ #include "md_p.h"
+ #include <ctype.h>
++#include <sys/sysmacros.h>
+ 
+ int Manage_ro(char *devname, int fd, int readonly)
+ {
+diff --git a/Monitor.c b/Monitor.c
+index 036103f..4417d9a 100644
+--- a/Monitor.c
++++ b/Monitor.c
+@@ -25,6 +25,7 @@
+ #include	"mdadm.h"
+ #include	"md_p.h"
+ #include	"md_u.h"
++#include	<sys/sysmacros.h>
+ #include	<sys/wait.h>
+ #include	<signal.h>
+ #include	<limits.h>
+diff --git a/Query.c b/Query.c
+index 23fbf8a..6b94d74 100644
+--- a/Query.c
++++ b/Query.c
+@@ -25,6 +25,7 @@
+ #include	"mdadm.h"
+ #include	"md_p.h"
+ #include	"md_u.h"
++#include	<sys/sysmacros.h>
+ 
+ int Query(char *dev)
+ {
+diff --git a/lib.c b/lib.c
+index 60890b9..454a561 100644
+--- a/lib.c
++++ b/lib.c
+@@ -25,6 +25,7 @@
+ #include	"mdadm.h"
+ #include	"dlink.h"
+ #include	<ctype.h>
++#include	<sys/sysmacros.h>
+ 
+ /* This fill contains various 'library' style function.  They
+  * have no dependency on anything outside this file.
+diff --git a/mapfile.c b/mapfile.c
+index 8d7acb3..aa11322 100644
+--- a/mapfile.c
++++ b/mapfile.c
+@@ -44,6 +44,7 @@
+  */
+ #include	"mdadm.h"
+ #include	<sys/file.h>
++#include	<sys/sysmacros.h>
+ #include	<ctype.h>
+ 
+ #define MAP_READ 0
+diff --git a/mdadm.c b/mdadm.c
+index 25a1abd..7432c69 100644
+--- a/mdadm.c
++++ b/mdadm.c
+@@ -28,6 +28,7 @@
+ #include "mdadm.h"
+ #include "md_p.h"
+ #include <ctype.h>
++#include <sys/sysmacros.h>
+ 
+ static int scan_assemble(struct supertype *ss,
+ 			 struct context *c,
+diff --git a/mdopen.c b/mdopen.c
+index 98c54e4..298e475 100644
+--- a/mdopen.c
++++ b/mdopen.c
+@@ -25,6 +25,7 @@
+ #include "mdadm.h"
+ #include "md_p.h"
+ #include <ctype.h>
++#include <sys/sysmacros.h>
+ 
+ void make_parts(char *dev, int cnt)
+ {
+diff --git a/platform-intel.c b/platform-intel.c
+index 04bffc5..ebfca4c 100644
+--- a/platform-intel.c
++++ b/platform-intel.c
+@@ -28,6 +28,7 @@
+ #include <sys/mman.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
++#include <sys/sysmacros.h>
+ #include <limits.h>
+ 
+ static int devpath_to_ll(const char *dev_path, const char *entry,
+diff --git a/policy.c b/policy.c
+index 3c53bd3..f1887dc 100644
+--- a/policy.c
++++ b/policy.c
+@@ -26,6 +26,7 @@
+ #include <dirent.h>
+ #include <fnmatch.h>
+ #include <ctype.h>
++#include <sys/sysmacros.h>
+ #include "dlink.h"
+ /*
+  * Policy module for mdadm.
+diff --git a/super-ddf.c b/super-ddf.c
+index c095e8a..357179b 100644
+--- a/super-ddf.c
++++ b/super-ddf.c
+@@ -31,6 +31,7 @@
+ #include "sha1.h"
+ #include <values.h>
+ #include <stddef.h>
++#include <sys/sysmacros.h>
+ 
+ /* a non-official T10 name for creation GUIDs */
+ static char T10[] = "Linux-MD";
+diff --git a/super-intel.c b/super-intel.c
+index d7e8a65..207c734 100644
+--- a/super-intel.c
++++ b/super-intel.c
+@@ -24,6 +24,7 @@
+ #include "platform-intel.h"
+ #include <values.h>
+ #include <scsi/sg.h>
++#include <sys/sysmacros.h>
+ #include <ctype.h>
+ #include <dirent.h>
+ 
+diff --git a/sysfs.c b/sysfs.c
+index c313781..b47d6a9 100644
+--- a/sysfs.c
++++ b/sysfs.c
+@@ -26,6 +26,7 @@
+ #include	"mdadm.h"
+ #include	<dirent.h>
+ #include	<ctype.h>
++#include	<sys/sysmacros.h>
+ #include	"dlink.h"
+ 
+ #define MAX_SYSFS_PATH_LEN	120
+diff --git a/util.c b/util.c
+index c26cf5f..3b1a558 100644
+--- a/util.c
++++ b/util.c
+@@ -29,6 +29,7 @@
+ #include	<sys/wait.h>
+ #include	<sys/un.h>
+ #include	<sys/resource.h>
++#include	<sys/sysmacros.h>
+ #include	<sys/vfs.h>
+ #include	<sys/mman.h>
+ #include	<linux/magic.h>
+-- 
+2.20.1
 
-> We found a problem regarding much higher IO latency when running
-> kernel 4.4.131 compare to 4.14.133, tried with latest upstream
-> 5.3-rc2, same result.
-> 
-> Reproducer:
-> 1 create md raid1 with 2 ram disks:
-> sudo mdadm -C /dev/md0 -l1 -n2 -e1.2 --bitmap=internal /dev/ram[0-1]
-> 2 run fio command with rate_iops:
-> fio  --rw=write --ioengine=libaio --iodepth=32  --size=1000MB
-> --rate_iops=5000 --direct=1 --numjobs=1 --runtime=20 --time_based
-> --name=write-test --filename=/dev/md0
-> 
-> result on 4.4 kernel:
-> root@ib2:~# fio  --rw=write --ioengine=libaio --iodepth=32
-> --size=1000MB --rate_iops=5000 --direct=1 --numjobs=1 --runtime=20
-> --time_based --name=write-test --filename=/dev/md0
-> write-test: (g=0): rw=write, bs=4K-4K/4K-4K/4K-4K, ioengine=libaio, iodepth=32
-> fio-2.2.10
-> Starting 1 process
-> Jobs: 1 (f=1), CR=5000/0 IOPS: [W(1)] [100.0% done] [0KB/20008KB/0KB
-> /s] [0/5002/0 iops] [eta 00m:00s]
-> write-test: (groupid=0, jobs=1): err= 0: pid=3351: Fri Aug  2 15:31:26 2019
->    write: io=400004KB, bw=19999KB/s, iops=4999, runt= 20001msec
->      slat (usec): min=3, max=26, avg= 3.12, stdev= 0.36
->      clat (usec): min=0, max=116, avg= 2.04, stdev= 1.33
->       lat (usec): min=3, max=141, avg= 5.19, stdev= 1.39
->      clat percentiles (usec):
->       |  1.00th=[    1],  5.00th=[    2], 10.00th=[    2], 20.00th=[    2],
->       | 30.00th=[    2], 40.00th=[    2], 50.00th=[    2], 60.00th=[    2],
->       | 70.00th=[    2], 80.00th=[    2], 90.00th=[    2], 95.00th=[    3],
->       | 99.00th=[    3], 99.50th=[    3], 99.90th=[    3], 99.95th=[    3],
->       | 99.99th=[   86]
->      bw (KB  /s): min=20000, max=20008, per=100.00%, avg=20005.54, stdev= 3.74
->      lat (usec) : 2=3.37%, 4=96.60%, 10=0.01%, 20=0.01%, 50=0.01%
->      lat (usec) : 100=0.01%, 250=0.01%
->    cpu          : usr=4.25%, sys=0.00%, ctx=198550, majf=0, minf=11
->    IO depths    : 1=100.0%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=0.1%, >=64=0.0%
->       submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
->       complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
->       issued    : total=r=0/w=100001/d=0, short=r=0/w=0/d=0, drop=r=0/w=0/d=0
->       latency   : target=0, window=0, percentile=100.00%, depth=32
-> 
-> Run status group 0 (all jobs):
->    WRITE: io=400004KB, aggrb=19999KB/s, minb=19999KB/s, maxb=19999KB/s,
-> mint=20001msec, maxt=20001msec
-> 
-> Disk stats (read/write):
->      md0: ios=61/99539, merge=0/0, ticks=0/0, in_queue=0, util=0.00%,
-> aggrios=0/0, aggrmerge=0/0, aggrticks=0/0, aggrin_queue=0,
-> aggrutil=0.00%
-> 
-> result on 5.3 kernel
-> root@ib1:/home/jwang# fio  --rw=write --ioengine=libaio --iodepth=32
-> --size=1000MB --rate_iops=5 --direct=1 --numjobs=1 --runtime=20
-> --time_based --name=write-test --filename=/dev/md0
-> write-test: (g=0): rw=write, bs=4K-4K/4K-4K/4K-4K, ioengine=libaio, iodepth=32
-> fio-2.2.10
-> Starting 1 process
-> Jobs: 1 (f=1), CR=5/0 IOPS: [W(1)] [100.0% done] [0KB/20KB/0KB /s]
-> [0/5/0 iops] [eta 00m:00s]
-> write-test: (groupid=0, jobs=1): err= 0: pid=1651: Fri Aug  2 17:16:18 2019
->    write: io=413696B, bw=20683B/s, iops=5, runt= 20001msec
->      slat (usec): min=2, max=51803, avg=1028.62, stdev=7250.96
->      clat (usec): min=0, max=91, avg=17.76, stdev=28.07
->       lat (usec): min=3, max=51892, avg=1046.50, stdev=7254.89
->      clat percentiles (usec):
->       |  1.00th=[    0],  5.00th=[    0], 10.00th=[    0], 20.00th=[    0],
->       | 30.00th=[    1], 40.00th=[    1], 50.00th=[    1], 60.00th=[    1],
->       | 70.00th=[   19], 80.00th=[   44], 90.00th=[   68], 95.00th=[   80],
->       | 99.00th=[   88], 99.50th=[   91], 99.90th=[   91], 99.95th=[   91],
->       | 99.99th=[   91]
->      bw (KB  /s): min=   20, max=   21, per=100.00%, avg=20.04, stdev= 0.21
->      lat (usec) : 2=67.33%, 10=0.99%, 20=1.98%, 50=11.88%, 100=17.82%
->    cpu          : usr=0.00%, sys=0.00%, ctx=77, majf=0, minf=10
->    IO depths    : 1=68.3%, 2=2.0%, 4=4.0%, 8=7.9%, 16=15.8%, 32=2.0%, >=64=0.0%
->       submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
->       complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
->       issued    : total=r=0/w=101/d=0, short=r=0/w=0/d=0, drop=r=0/w=0/d=0
->       latency   : target=0, window=0, percentile=100.00%, depth=32
-> 
-> Run status group 0 (all jobs):
->    WRITE: io=404KB, aggrb=20KB/s, minb=20KB/s, maxb=20KB/s,
-> mint=20001msec, maxt=20001msec
-> 
-> Disk stats (read/write):
->      md0: ios=0/100, merge=0/0, ticks=0/0, in_queue=0, util=0.00%,
-> aggrios=0/0, aggrmerge=0/0, aggrticks=0/0, aggrin_queue=0,
-> aggrutil=0.00%
->    ram0: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%
->    ram1: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%
-> 
-> During the tests the following kernel parameters are applied:
-> processor.max_cstate=0 idle=poll mitigations=off
-> 
-> Could anyone give us a hint, what could lead to such a huge difference?
-
-Sorry, I have no idea, but as you can easily reproduce it with RAM 
-disks, bisecting the commit causing this quite easily.
-
-Your tests should also be added to some test suite (kselftest)?
-
-
-Kind regards,
-
-Paul
