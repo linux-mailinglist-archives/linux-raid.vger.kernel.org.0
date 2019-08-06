@@ -2,104 +2,98 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C36FD8283D
-	for <lists+linux-raid@lfdr.de>; Tue,  6 Aug 2019 01:46:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C52DD8293A
+	for <lists+linux-raid@lfdr.de>; Tue,  6 Aug 2019 03:33:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730036AbfHEXqi (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 5 Aug 2019 19:46:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45214 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728483AbfHEXqi (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 5 Aug 2019 19:46:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 69E73ACCA;
-        Mon,  5 Aug 2019 23:46:37 +0000 (UTC)
-From:   NeilBrown <neilb@suse.com>
-To:     Jinpu Wang <jinpu.wang@cloud.ionos.com>,
-        linux-raid <linux-raid@vger.kernel.org>
-Date:   Tue, 06 Aug 2019 09:46:27 +1000
-Cc:     Alexandr Iarygin <alexandr.iarygin@cloud.ionos.com>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: Bisected: Kernel 4.14 + has 3 times higher write IO latency than Kernel 4.4 with raid1
-In-Reply-To: <CAMGffEkcXcQC+kjwdH0iVSrFDk-o+dp+b3Q1qz4z=R=6D+QqLQ@mail.gmail.com>
-References: <CAMGffEkotpvVz8FA78vNFh0qZv3kEMNrXXfVPEUC=MhH0pMCZA@mail.gmail.com> <0a83fde3-1a74-684c-0d70-fb44b9021f96@molgen.mpg.de> <CAMGffE=_kPoBmSwbxvrqdqbhpR5Cu2Vbe4ArGqm9ns9+iVEH_g@mail.gmail.com> <CAMGffEkcXcQC+kjwdH0iVSrFDk-o+dp+b3Q1qz4z=R=6D+QqLQ@mail.gmail.com>
-Message-ID: <87h86vjhv0.fsf@notabene.neil.brown.name>
+        id S1731266AbfHFBdP (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 5 Aug 2019 21:33:15 -0400
+Received: from mail-qk1-f172.google.com ([209.85.222.172]:43134 "EHLO
+        mail-qk1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728870AbfHFBdP (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 5 Aug 2019 21:33:15 -0400
+Received: by mail-qk1-f172.google.com with SMTP id m14so35969822qka.10
+        for <linux-raid@vger.kernel.org>; Mon, 05 Aug 2019 18:33:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-transfer-encoding:content-language;
+        bh=0k+cuamUdDVdN4d6B4zYoRDL9NpuUH05OEeJy4cmmco=;
+        b=rpBbUeHoFKP/TgEqVpqzijV5goomCN0I29kNkBAqaNtvADaOSlWlchKIJQ/w1CXD86
+         F3XpH3OooH2mRcesUHDYF/9haf0zK1zX97/4xjx5EP/NxESyNunlLxLi69uYeoAQ/hCE
+         IcjUqkTynw/WDu2PS39XaFznu/5PSwRl2bV84s8MnbFLZ8TGkQ7jeSXAC8bW+vsFFi2K
+         6uPV65B1IfLqMpqB1agzm/IocJNVh+fiATpXPE1etT294asYvrCWULcJ+kEyMzIbuh58
+         Tto6VmALNXT7vwyNRJKUSJHwKcX3Fta7d2DZ/FTn8i+gapOWwwRG2S4ExuGl6eBCbMfK
+         bRPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=0k+cuamUdDVdN4d6B4zYoRDL9NpuUH05OEeJy4cmmco=;
+        b=VRa26mgsWy7HUZm/gSmMWpGuYa0G7MPc72Zqnj6GM+TUg3OxczXHGTEOKjvwsPCJ1y
+         k7NgtZiqWnwpT5fSng85AQqehI+yZESMs7491acdxEJnbKDHdia6pqRVBnjgydYzMHjy
+         fhTIkNFPNOMtxTDE0Aso8hjhS72g9rqJfZKe9P8p/vYN6dKcPOVBCXrZHm+/sJf5mj0k
+         EKB2j4a+pQy48AikjUGLLEQNqhZWtJULssG0Muj2QGGNnS5ACbsmw2FNfGoYMQbqZ4MI
+         MNpAH3lqUBg5sdAwyjAnnp1vr63aXZ7BeXo1l4Q01pcB9mFimBzvfPBlJmFKPDpdVu61
+         1FZg==
+X-Gm-Message-State: APjAAAXgXndfi6aEsKNqO1Nw+Eq2JH1HP2Xcs8l622DlW6bAiYoywUHV
+        dXU8+EjdTXkU6YK0IrdKVDuczFmC970=
+X-Google-Smtp-Source: APXvYqwFk2lCRZCe1Yhe+rPTNfzeQoKSr5DtqCNmE/0sSIEvmucnoaEA6hxT4NXph4XnUr6L991lhA==
+X-Received: by 2002:a37:484a:: with SMTP id v71mr1081607qka.29.1565055193750;
+        Mon, 05 Aug 2019 18:33:13 -0700 (PDT)
+Received: from [10.10.10.77] (c-73-114-170-41.hsd1.ma.comcast.net. [73.114.170.41])
+        by smtp.gmail.com with ESMTPSA id f133sm39160144qke.62.2019.08.05.18.33.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Aug 2019 18:33:12 -0700 (PDT)
+Subject: Re: Raid5 2 drive failure (and my spare failed too)
+To:     Reindl Harald <h.reindl@thelounge.net>, linux-raid@vger.kernel.org
+References: <8006bdd5-55df-f5f6-9e2e-299a7fd1e64a@gmail.com>
+ <019fb3fb-38e3-4080-2198-d5049a9cb46e@thelounge.net>
+From:   Ryan Heath <gaauuool@gmail.com>
+Message-ID: <0658bed2-ebc1-5de1-c2fa-4beb8d488972@gmail.com>
+Date:   Mon, 5 Aug 2019 21:33:11 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+In-Reply-To: <019fb3fb-38e3-4080-2198-d5049a9cb46e@thelounge.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+So this is the approximately response I expected however I do want to 
+pose a few additional queries:
 
-On Mon, Aug 05 2019, Jinpu Wang wrote:
+So if I read the output correctly it appears that /dev/sdb is the most 
+recent drive to fail it does appear that it is only slightly out of sync 
+with the rest four drives that are currently functioning, what is it 
+exactly that keeps things from being forced back online?
 
-> Hi Neil,
+If as I suspect /dev/sdb was the last drive to fail... I have looked at 
+it via smartctl and the drive still appears to be functional so wouldn't 
+recreating be an option? I think this is the area which I was suspecting 
+I might need guidance.
+
+On 8/4/19 4:03 PM, Reindl Harald wrote:
 >
-> For the md higher write IO latency problem, I bisected it to these commit=
-s:
+> Am 04.08.19 um 20:49 schrieb Ryan Heath:
+>> I have a 6 drive raid5 with two failed drives (and unbeknownst to me my
+>> spare died awhile back). I noticed the first failed drive a short time
+>> ago and got a drive to replace it (and a new spare too) but before I
+>> could replace it a second drive failed. I was hoping to force the array
+>> back online since the recently failed drive appears to be only slightly
+>> out of sync but get:
+>>
+>> mdadm: /dev/md127 assembled from 4 drives - not enough to start the array.
+>>
+>> I put some important data on this array so I'm really hoping someone can
+>> provide guidance to force this array online, or otherwise get this array
+>> back to a state allowing me to rebuild.
+> there is not enough data for a rebuild on a RAID5
 >
-> 4ad23a97 MD: use per-cpu counter for writes_pending
-> 210f7cd percpu-refcount: support synchronous switch to atomic mode.
->
-> Do you maybe have an idea? How can we fix it?
+> you now learned backups the hard way as well as watch your log in
+> context of "and unbeknownst to me my spare died awhile back"
 
-Hmmm.... not sure.
-
-My guess is that the set_in_sync() call from md_check_recovery()
-is taking a long time, and is being called too often.
-
-Could you try two experiments please.
-
-1/ set  /sys/block/md0/md/safe_mode_delay=20
-   to 20 or more.  It defaults to about 0.2.
-
-2/ comment out the call the set_in_sync() in md_check_recovery().
-
-Then run the least separately after each of these changes.
-
-I the second one makes a difference, I'd like to know how often it gets
-called - and why.  The test
-	if ( ! (
-		(mddev->sb_flags & ~ (1<<MD_SB_CHANGE_PENDING)) ||
-		test_bit(MD_RECOVERY_NEEDED, &mddev->recovery) ||
-		test_bit(MD_RECOVERY_DONE, &mddev->recovery) ||
-		(mddev->external =3D=3D 0 && mddev->safemode =3D=3D 1) ||
-		(mddev->safemode =3D=3D 2
-		 && !mddev->in_sync && mddev->recovery_cp =3D=3D MaxSector)
-		))
-		return;
-
-should normally return when doing lots of IO - I'd like to know
-which condition causes it to not return.
-
-Thanks,
-NeilBrown
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl1Iv9MACgkQOeye3VZi
-gbmI5g/+JKHQonxW3qKWWf3giQwBF/hwLPxqfbX1AfXyzbJvMgMgptQWQo/Vce6W
-O0OApPtiUrkkpC7KIYc5fSwFfPXFZt+TT7e+eRSOyVWpHU1B8OkJmEnMtI6MEqOU
-AKKwJ6LdxcSJaP1Z/8b+2r7M2d5jFRgo10GdRDkn2a9RV4oD2LsyydIf5lTq8yvH
-vD45/5YbDwmaiEqmG2HYh9+lm5AH4jqrOEimT90KpERZjW0/vWRm8ZilN2o62+Or
-oSMcaC7YtgYE4MMWoiMLbRPD3CbT4Iitytggn29v+ZxrTvumat1hYEkcnWSz2oZs
-CHMMP7vI6XIPATZ5wzL7YA0w9mgkanW+nsE3geZ4x5K+wmXTUZNiQzxKINagQ33Y
-vmcMsY7uLZejWrajOXmmg/nNi0zCmRbfm1sKikz50H9ysGaAJhhBUzqwt7jb6UFo
-c23oKdS8KYNIQ4AuxmXyMM+w2Nnix9GSGc3cM5jsC5ZGFrMk9P7GiZz6UzoMcTVQ
-tB0p8nJ5EsS6Ook7kEKpG5BUs3N++fq78EF0xwfdOd+UIkIBOa7DPTyihM8b6sUM
-aWgSLsXtWjPHxt/7mm20lL1F2SJ3cfrCz77cCOg6X1VHE5h3PsoeghG/oQIRd9LZ
-6aWzsj/W/fByGG4wsPm2aCL1bWMgnXl2mBb4d4dILAG+3gbQ50M=
-=PJk4
------END PGP SIGNATURE-----
---=-=-=--
