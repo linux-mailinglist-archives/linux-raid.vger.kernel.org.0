@@ -2,98 +2,159 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C52DD8293A
-	for <lists+linux-raid@lfdr.de>; Tue,  6 Aug 2019 03:33:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08FFC82AA7
+	for <lists+linux-raid@lfdr.de>; Tue,  6 Aug 2019 06:57:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731266AbfHFBdP (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 5 Aug 2019 21:33:15 -0400
-Received: from mail-qk1-f172.google.com ([209.85.222.172]:43134 "EHLO
-        mail-qk1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728870AbfHFBdP (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 5 Aug 2019 21:33:15 -0400
-Received: by mail-qk1-f172.google.com with SMTP id m14so35969822qka.10
-        for <linux-raid@vger.kernel.org>; Mon, 05 Aug 2019 18:33:14 -0700 (PDT)
+        id S1726076AbfHFE5d (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 6 Aug 2019 00:57:33 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:45389 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbfHFE5d (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 6 Aug 2019 00:57:33 -0400
+Received: by mail-qk1-f194.google.com with SMTP id s22so61998363qkj.12;
+        Mon, 05 Aug 2019 21:57:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-transfer-encoding:content-language;
-        bh=0k+cuamUdDVdN4d6B4zYoRDL9NpuUH05OEeJy4cmmco=;
-        b=rpBbUeHoFKP/TgEqVpqzijV5goomCN0I29kNkBAqaNtvADaOSlWlchKIJQ/w1CXD86
-         F3XpH3OooH2mRcesUHDYF/9haf0zK1zX97/4xjx5EP/NxESyNunlLxLi69uYeoAQ/hCE
-         IcjUqkTynw/WDu2PS39XaFznu/5PSwRl2bV84s8MnbFLZ8TGkQ7jeSXAC8bW+vsFFi2K
-         6uPV65B1IfLqMpqB1agzm/IocJNVh+fiATpXPE1etT294asYvrCWULcJ+kEyMzIbuh58
-         Tto6VmALNXT7vwyNRJKUSJHwKcX3Fta7d2DZ/FTn8i+gapOWwwRG2S4ExuGl6eBCbMfK
-         bRPg==
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=H5PoLaRUzQ7jHFWVXQJdD4uOXG4zKCbWnQmupq/zCJs=;
+        b=YBmEhAP9JCHQHshoxwy7MynYbmigYP7ttZ1qmo415zJMDLoedmtyqPCVRFPhZXlf+u
+         WcPsKZeLheFJ2MfkmT6+bBkdSD6gL6RxJyvdzCiqVtdyJt41bBeG0RDALTTLvh5DTmeC
+         6dyLGBulL/3t4Ycq7G5X/MK2xQz1ry7bsJUS9aX7ifJ5yAnI0Y4WM9YKPFikx+uG2XIs
+         1xWc2SOqts7VNTuOidON7WfKH/ol2Kq3mA/AN9DxXRmkOvFR9PFaGr4VYF4OS4d5l0RE
+         1i5/XNWLj4TPJrXbfD0cHii2cjD7/0Wlww0PbcvcLCdF8iWux8CGN/hFGoQJwWSpJrWa
+         eTGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=0k+cuamUdDVdN4d6B4zYoRDL9NpuUH05OEeJy4cmmco=;
-        b=VRa26mgsWy7HUZm/gSmMWpGuYa0G7MPc72Zqnj6GM+TUg3OxczXHGTEOKjvwsPCJ1y
-         k7NgtZiqWnwpT5fSng85AQqehI+yZESMs7491acdxEJnbKDHdia6pqRVBnjgydYzMHjy
-         fhTIkNFPNOMtxTDE0Aso8hjhS72g9rqJfZKe9P8p/vYN6dKcPOVBCXrZHm+/sJf5mj0k
-         EKB2j4a+pQy48AikjUGLLEQNqhZWtJULssG0Muj2QGGNnS5ACbsmw2FNfGoYMQbqZ4MI
-         MNpAH3lqUBg5sdAwyjAnnp1vr63aXZ7BeXo1l4Q01pcB9mFimBzvfPBlJmFKPDpdVu61
-         1FZg==
-X-Gm-Message-State: APjAAAXgXndfi6aEsKNqO1Nw+Eq2JH1HP2Xcs8l622DlW6bAiYoywUHV
-        dXU8+EjdTXkU6YK0IrdKVDuczFmC970=
-X-Google-Smtp-Source: APXvYqwFk2lCRZCe1Yhe+rPTNfzeQoKSr5DtqCNmE/0sSIEvmucnoaEA6hxT4NXph4XnUr6L991lhA==
-X-Received: by 2002:a37:484a:: with SMTP id v71mr1081607qka.29.1565055193750;
-        Mon, 05 Aug 2019 18:33:13 -0700 (PDT)
-Received: from [10.10.10.77] (c-73-114-170-41.hsd1.ma.comcast.net. [73.114.170.41])
-        by smtp.gmail.com with ESMTPSA id f133sm39160144qke.62.2019.08.05.18.33.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Aug 2019 18:33:12 -0700 (PDT)
-Subject: Re: Raid5 2 drive failure (and my spare failed too)
-To:     Reindl Harald <h.reindl@thelounge.net>, linux-raid@vger.kernel.org
-References: <8006bdd5-55df-f5f6-9e2e-299a7fd1e64a@gmail.com>
- <019fb3fb-38e3-4080-2198-d5049a9cb46e@thelounge.net>
-From:   Ryan Heath <gaauuool@gmail.com>
-Message-ID: <0658bed2-ebc1-5de1-c2fa-4beb8d488972@gmail.com>
-Date:   Mon, 5 Aug 2019 21:33:11 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=H5PoLaRUzQ7jHFWVXQJdD4uOXG4zKCbWnQmupq/zCJs=;
+        b=DnfatXGhUj8rGch78zUIxHo7oRN8f3v6qqZOWhOKb9E4zvAtdGfF3QOw3QtGuZjYAW
+         VYzhFBhHxZ9bI5Uy9hRcWq9pF/EJDo8Ui1cxKmUPgdQGcYxt0jJnyp5lvSjYs2vqL+JW
+         zJIkMYEmDwD38BlaidYITIHTZ1fqlj7GGoHHqahOQK0Q5fqu45xVYgthfk5dPjcaRrxm
+         DeDqvpLtEeY3a4Tofgp6k/9VvsEuOniZuTyHxMgyOg69r8xkLDZT/8hIklBQfGLfzhIC
+         qNS3rLXMk6XBV422sdMmxDWc59w1bYTj4MEatMOaYLlZlU56QKfciHJ0UkFoUfQGA7+g
+         YcYA==
+X-Gm-Message-State: APjAAAVUOyhqnBC/bvz6wJJiDUmrGBclqjC9kG9EY6IxwDHTlkfBB1uF
+        BGuc5j6AZ7lhYQPdL63Z8k05KtWIYj4UMg==
+X-Google-Smtp-Source: APXvYqxqi/D52g8sg7EAn/oUQfAvhDRugqEh5ndW/Lwq8P4N/Pcmd7LkaRCUnyGgdNxOmqJP7ysx0g==
+X-Received: by 2002:ae9:edcf:: with SMTP id c198mr1389828qkg.79.1565067452446;
+        Mon, 05 Aug 2019 21:57:32 -0700 (PDT)
+Received: from ricksfedoradesktop.metrodesignoffice.com (209-6-49-13.s3339.c3-0.smr-cbr1.sbo-smr.ma.cable.rcncustomer.com. [209.6.49.13])
+        by smtp.gmail.com with ESMTPSA id z33sm38836391qtc.56.2019.08.05.21.57.31
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 05 Aug 2019 21:57:31 -0700 (PDT)
+Message-ID: <6a1dcbe6e3ddb03912f8904a368d40c09dd22bd1.camel@gmail.com>
+Subject: Re: Bisected: Kernel 4.14 + has 3 times higher write IO latency
+ than Kernel 4.4 with raid1
+From:   riccardofarabia@gmail.com
+To:     NeilBrown <neilb@suse.com>,
+        Jinpu Wang <jinpu.wang@cloud.ionos.com>,
+        linux-raid <linux-raid@vger.kernel.org>
+Cc:     Alexandr Iarygin <alexandr.iarygin@cloud.ionos.com>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 06 Aug 2019 00:57:30 -0400
+In-Reply-To: <87h86vjhv0.fsf@notabene.neil.brown.name>
+References: <CAMGffEkotpvVz8FA78vNFh0qZv3kEMNrXXfVPEUC=MhH0pMCZA@mail.gmail.com>
+         <0a83fde3-1a74-684c-0d70-fb44b9021f96@molgen.mpg.de>
+         <CAMGffE=_kPoBmSwbxvrqdqbhpR5Cu2Vbe4ArGqm9ns9+iVEH_g@mail.gmail.com>
+         <CAMGffEkcXcQC+kjwdH0iVSrFDk-o+dp+b3Q1qz4z=R=6D+QqLQ@mail.gmail.com>
+         <87h86vjhv0.fsf@notabene.neil.brown.name>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <019fb3fb-38e3-4080-2198-d5049a9cb46e@thelounge.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-So this is the approximately response I expected however I do want to 
-pose a few additional queries:
+Hello Linux raid folks?
 
-So if I read the output correctly it appears that /dev/sdb is the most 
-recent drive to fail it does appear that it is only slightly out of sync 
-with the rest four drives that are currently functioning, what is it 
-exactly that keeps things from being forced back online?
+I've joined this email ring to ask for help (I'd be happy to try to
+help in return, but I doubt that I could help anyone with advanced raid
+issues.  Maybe I can return any love in other non-raid ways?  Ah well..
+I've been using linux raid for a quite a few years, but until now, I
+haven't had to rescue data from an array.
 
-If as I suspect /dev/sdb was the last drive to fail... I have looked at 
-it via smartctl and the drive still appears to be functional so wouldn't 
-recreating be an option? I think this is the area which I was suspecting 
-I might need guidance.
+I have some data on a 5-disk, raid 10 array that was set-up as the os
+for a fedora 28 box that I used as both a hypervisor and workstation /
+desktop.  I set that up with anaconda, the fedora installer, and I set
+the raid level to 10, used lvm2 and xfs as the file system.  So there
+is one lvm volume / group, on the physical raid, that group has several
+partitions for /root, /var, /swap and etc.
 
-On 8/4/19 4:03 PM, Reindl Harald wrote:
->
-> Am 04.08.19 um 20:49 schrieb Ryan Heath:
->> I have a 6 drive raid5 with two failed drives (and unbeknownst to me my
->> spare died awhile back). I noticed the first failed drive a short time
->> ago and got a drive to replace it (and a new spare too) but before I
->> could replace it a second drive failed. I was hoping to force the array
->> back online since the recently failed drive appears to be only slightly
->> out of sync but get:
->>
->> mdadm: /dev/md127 assembled from 4 drives - not enough to start the array.
->>
->> I put some important data on this array so I'm really hoping someone can
->> provide guidance to force this array online, or otherwise get this array
->> back to a state allowing me to rebuild.
-> there is not enough data for a rebuild on a RAID5
->
-> you now learned backups the hard way as well as watch your log in
-> context of "and unbeknownst to me my spare died awhile back"
+I would ordinarily have completd back-ups (actualy I usually use NAS
+for all data and never keep data locally) and use the disks as door
+stops, but I wouldn't mind getting some pictures and videos back that
+are on this array.  Also there's a current vm on there that I'd like to
+get back if I can.  I had to rebuild this box because the raid array
+seemed to have failed and the last box wouldn't boot.
+
+Can I ask for help from this group?
+
+I have attached the drives to another box, this one that I'm using now.
+It is running fedora 30 (nice os / distro). I can see the drives, and I
+can start the array with 4 of 5 disks, using mdadm -assemble and the
+devices or the UUID, but I can't seem to mount the array to see the
+data.
+
+I've checked all the disks with the SMART test routine of the gnome
+disks gui utility.  A couple have bad sectors but they all are labeled
+as OKAY but the SMART Test...
+
+I'm working through the RAID Recovery pages from the wiki that gave me
+this email ring.  https://raid.wiki.kernel.org/index.php/RAID_Recovery
+
+Thanks for considering!
+
+Rick Nilsson
+
+On Tue, 2019-08-06 at 09:46 +1000, NeilBrown wrote:
+> On Mon, Aug 05 2019, Jinpu Wang wrote:
+> 
+> > Hi Neil,
+> > 
+> > For the md higher write IO latency problem, I bisected it to these
+> > commits:
+> > 
+> > 4ad23a97 MD: use per-cpu counter for writes_pending
+> > 210f7cd percpu-refcount: support synchronous switch to atomic mode.
+> > 
+> > Do you maybe have an idea? How can we fix it?
+> 
+> Hmmm.... not sure.
+> 
+> My guess is that the set_in_sync() call from md_check_recovery()
+> is taking a long time, and is being called too often.
+> 
+> Could you try two experiments please.
+> 
+> 1/ set  /sys/block/md0/md/safe_mode_delay 
+>    to 20 or more.  It defaults to about 0.2.
+> 
+> 2/ comment out the call the set_in_sync() in md_check_recovery().
+> 
+> Then run the least separately after each of these changes.
+> 
+> I the second one makes a difference, I'd like to know how often it
+> gets
+> called - and why.  The test
+> 	if ( ! (
+> 		(mddev->sb_flags & ~ (1<<MD_SB_CHANGE_PENDING)) ||
+> 		test_bit(MD_RECOVERY_NEEDED, &mddev->recovery) ||
+> 		test_bit(MD_RECOVERY_DONE, &mddev->recovery) ||
+> 		(mddev->external == 0 && mddev->safemode == 1) ||
+> 		(mddev->safemode == 2
+> 		 && !mddev->in_sync && mddev->recovery_cp == MaxSector)
+> 		))
+> 		return;
+> 
+> should normally return when doing lots of IO - I'd like to know
+> which condition causes it to not return.
+> 
+> Thanks,
+> NeilBrown
 
