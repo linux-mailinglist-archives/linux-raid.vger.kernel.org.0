@@ -2,65 +2,94 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A80B6852F9
-	for <lists+linux-raid@lfdr.de>; Wed,  7 Aug 2019 20:27:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B23F585462
+	for <lists+linux-raid@lfdr.de>; Wed,  7 Aug 2019 22:15:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389214AbfHGS15 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 7 Aug 2019 14:27:57 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38018 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388029AbfHGS15 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 7 Aug 2019 14:27:57 -0400
-Received: by mail-pl1-f196.google.com with SMTP id m12so3424672plt.5
-        for <linux-raid@vger.kernel.org>; Wed, 07 Aug 2019 11:27:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yxqFikm+raH6Mw+5MSz56q7hyv/Q2E3BjnTc+h+hMKg=;
-        b=fLEBtwtD/cRQaxUwRZvUKNZh5Tb/ij6d08WPgGZap5eSKKbFDaH7QroegH9iQZOiYu
-         vBWBPCeVxiVkUTc5QE8tLSiK+DqNjc46vRuSmlyqYUKEjGMXirS9XYg8VW1mlQcDWVvz
-         fK+e9T0zx2xqy4M9BXfphEd2fUBZUJqYxqXlnxXKENm6HuHzd2m4mpPTWLIcfUIa9K9o
-         k1M51J919oYNFPnfVWgEt95lIS2OgG4/9sy1/fQylpm5j8vXrc4ebTnFa3sGaMY5P6i7
-         vLBEJq8QUQ8BffLmlQ3FlGoBDAeMvWCBbYaax56hm9/ebha/L1M4qMstxnWenAEq0FdT
-         pYVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yxqFikm+raH6Mw+5MSz56q7hyv/Q2E3BjnTc+h+hMKg=;
-        b=hOMnwwSsIiZyCmaQZwPkmiQBjlKVkstwZtU7ymfcIrgb34czlo8CjZlJGqHhH8zDXG
-         1Ro4cp3ASshIu8XJ/fEebppOs4n7a5kJn3bVhJDaMFwDJ77uRyCUcNN0SUZSz4jNQ2MX
-         +qd4krsqK1nfURySi7fauaWl3INdjQcn3Rx0tA7ASfcdW4YD/yNUQGAT9r4BF/PEH/ED
-         AdKYrds0sYDYrbx0hIa7tIbAuOyaNm7RCh1gXGbpO9ir42Um1GKhoT8j3yEKNnXQDQYd
-         phxpCSG72qEOvj0FPkEowbrzm1uU23NlCs66gzk66p8xu0hDzK5KGB1kv22O+ijGmEEq
-         mZgA==
-X-Gm-Message-State: APjAAAXAtaecxx+rfDlyiG694eALuR25QWgW3vXS0Djyt1lBJn59N6CL
-        WZF9aOffye9B+qxfNFGqOOhOvw==
-X-Google-Smtp-Source: APXvYqyyi2wc8HhzIYFysju67q1UTie+2ONRYlen3WA05ndHZ9rmYjxDEblz1UILFMZ0kTPiJzmq4Q==
-X-Received: by 2002:a62:fb15:: with SMTP id x21mr11045658pfm.233.1565202476527;
-        Wed, 07 Aug 2019 11:27:56 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:83a1:8dfd:af83:2:106a? ([2605:e000:100e:83a1:8dfd:af83:2:106a])
-        by smtp.gmail.com with ESMTPSA id q126sm97318490pfq.123.2019.08.07.11.27.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 07 Aug 2019 11:27:55 -0700 (PDT)
-Subject: Re: [GIT PULL] md-next 20190807
-To:     Song Liu <songliubraving@fb.com>,
-        linux-raid <linux-raid@vger.kernel.org>
-Cc:     Kernel Team <Kernel-team@fb.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "guoqing.jiang@cloud.ionos.com" <guoqing.jiang@cloud.ionos.com>,
-        "houtao1@huawei.com" <houtao1@huawei.com>,
-        Xiao Ni <xni@redhat.com>, Yufen Yu <yuyufen@huawei.com>
-References: <5EF8F057-3ADB-41D5-855B-0FBAE7A43E6D@fb.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <764cd191-b5d9-14d4-5bb5-d42793752e10@kernel.dk>
-Date:   Wed, 7 Aug 2019 11:27:53 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S2389251AbfHGUPh (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 7 Aug 2019 16:15:37 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:20866 "EHLO mx2.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387985AbfHGUPg (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 7 Aug 2019 16:15:36 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2.mailbox.org (Postfix) with ESMTPS id 5E78AA1201;
+        Wed,  7 Aug 2019 22:15:34 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
+        with ESMTP id ka_5JYbfDplG; Wed,  7 Aug 2019 22:15:26 +0200 (CEST)
+Subject: Re: [PATCH] mdadm.h: include sysmacros.h unconditionally
+To:     Baruch Siach <baruch@tkos.co.il>, Jes Sorensen <jsorensen@fb.com>
+Cc:     linux-raid@vger.kernel.org
+References: <6c781ad75d92c6f65832810c44afcba1b2dffc41.1565096723.git.baruch@tkos.co.il>
+From:   Hauke Mehrtens <hauke@hauke-m.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=hauke@hauke-m.de; keydata=
+ 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
+Message-ID: <da2a0bf0-767f-9673-b98a-92c21aaf0023@hauke-m.de>
+Date:   Wed, 7 Aug 2019 22:15:23 +0200
 MIME-Version: 1.0
-In-Reply-To: <5EF8F057-3ADB-41D5-855B-0FBAE7A43E6D@fb.com>
+In-Reply-To: <6c781ad75d92c6f65832810c44afcba1b2dffc41.1565096723.git.baruch@tkos.co.il>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -69,27 +98,36 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 8/7/19 10:39 AM, Song Liu wrote:
-> Hi Jens,
+On 8/6/19 3:05 PM, Baruch Siach wrote:
+> musl libc now also requires sys/sysmacros.h for the major/minor macros.
+> All supported libc implementations carry sys/sysmacros.h, including
+> diet-libc, klibc, and uclibc-ng.
 > 
-> Please consider pulling the following changes for md on top of your
-> for-5.4/block branch.
-> 
-> Thanks,
-> Song
-> 
-> 
-> The following changes since commit 00ec4f3039a9e36cbccd1aea82d06c77c440a51c:
-> 
->    block: stop exporting bio_map_kern (2019-08-06 08:20:10 -0600)
-> 
-> are available in the Git repository at:
-> 
->    https://github.com/liu-song-6/linux.git md-next
+> Cc: Hauke Mehrtens <hauke@hauke-m.de>
+> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
 
-Pulled, but nudge nudge on using signed tags for security. I brought
-this up once before.
+Acked-by: Hauke Mehrtens <hauke@hauke-m.de>
 
--- 
-Jens Axboe
+I was not aware of this compile switch and it looks better than my patch.
+
+> ---
+>  mdadm.h | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/mdadm.h b/mdadm.h
+> index c36d7fdb10f6..d61a9ca82dc1 100644
+> --- a/mdadm.h
+> +++ b/mdadm.h
+> @@ -45,10 +45,8 @@ extern __off64_t lseek64 __P ((int __fd, __off64_t __offset, int __whence));
+>  #include	<errno.h>
+>  #include	<string.h>
+>  #include	<syslog.h>
+> -#ifdef __GLIBC__
+>  /* Newer glibc requires sys/sysmacros.h directly for makedev() */
+>  #include	<sys/sysmacros.h>
+> -#endif
+>  #ifdef __dietlibc__
+>  #include	<strings.h>
+>  /* dietlibc has deprecated random and srandom!! */
+> 
 
