@@ -2,61 +2,61 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5399B8A825
-	for <lists+linux-raid@lfdr.de>; Mon, 12 Aug 2019 22:12:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 929BF8A83D
+	for <lists+linux-raid@lfdr.de>; Mon, 12 Aug 2019 22:17:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727592AbfHLUKO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 12 Aug 2019 16:10:14 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:41533 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727440AbfHLUKO (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 12 Aug 2019 16:10:14 -0400
-Received: by mail-qt1-f194.google.com with SMTP id d17so25187901qtj.8
-        for <linux-raid@vger.kernel.org>; Mon, 12 Aug 2019 13:10:13 -0700 (PDT)
+        id S1727211AbfHLURf (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 12 Aug 2019 16:17:35 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:45580 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726910AbfHLURf (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 12 Aug 2019 16:17:35 -0400
+Received: by mail-qk1-f194.google.com with SMTP id m2so4124278qki.12
+        for <linux-raid@vger.kernel.org>; Mon, 12 Aug 2019 13:17:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7dfKaWW4Pz72U0iWiExuHBPoVpMTqKcxDigJBweNJd8=;
-        b=oSsnoCTenXSBMvVBBC6lgCp3fLHo3bNeHVgoC7ksHwHZ161DbY3Siqfm0rSvY0AZiF
-         g+zSvWlrzKsCePtuflCWDKKQZtpjhcIKZuYc0yEw5YukauRjG+4sqVT//wpYQMbw1L1O
-         NJSjuxHq43vnxsO2GHnCeGgRgikwkO4pl4DX0NoO4/9eClyciVMwjBPmlQyydWDJqwBr
-         5PsxcHyjP3Ohyu//Ujvop4zm5sKdEWkF95vW9CFtP7ytDfEcJsoXC2Np1KHo2Rc/DJEC
-         BqpprEBLEk42VyZ9EfEuOIx2Gwbex6uF8tRDj4A9MKsd3Y+7GKzfi5537gTqOSsEFdqe
-         O9gw==
+        h=from:subject:to:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=VAIYdkKcn+yIOGUw0PehsqKPZZWnSHr3qlfWyrXOr3I=;
+        b=hxS+vWL6ct9OW1yBNi78XEim2EagaqxfyEm3RxNaM2ji+RjLEWaxEaADVrYyC8cSpM
+         r2nymGKdjSxVjOOrDGU13uJsCzKvxt77cSrVPVem4OB8eOpDSqmKBjl3DFMHRXi2yGeh
+         GFleiHw5EoXBQBg5r8mp/U02Y6zOrAq2xPz51x8f3jj9mF4XPOlO2Q2SuJRAalWvydaQ
+         S6qtPwezk43h1lKe322NpOIDaqhe5fCfJUbY4VOV3RCkXyADr2YlFgt94oF45WzY1GqR
+         vmzS1zWVxQJFSAih7yJnvPg/VTg/YNTl2kwAVAuF2mpigggQI4gbs66iEmmn1nmZaMPE
+         zhuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+        h=x-gm-message-state:from:subject:to:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=7dfKaWW4Pz72U0iWiExuHBPoVpMTqKcxDigJBweNJd8=;
-        b=OujPv6EA/xMmz/Hh6KgxJJlgpRS7QmUSuQQF6lHCqFZuVlROD4P5Dz5CyUw1U29ZkD
-         mxMYy+spXXLARGqdFn81iLGOebmfDW05YiuRviZGhIHx3y6YLGr8/Mj21G7VyFhogzEJ
-         +q70BBcD2JSlYpl+nKo0eqU4X7O1eL5yPa+3kixGECTAdDoolblXzgcHUQw2K7ghZ+CN
-         iZePre/A702hhhifsv1eShkShqs+6KOOcVBIoSqsYtqirbO4urgheAQr1zZTj10x43zQ
-         T7QLdtlef1HmUYrNNv3G1A1Nr2HtAwx8PI3FXZBVGGUFhNHHtHbcBbkxgTaWXTzYrFeR
-         O9MA==
-X-Gm-Message-State: APjAAAWTa7z/bXKZ/k0vltL+LNy2EynK+N6uF0tBFL4D8qLY9cvUBqNX
-        s3O5/dPy1YeU1yk0GiRzawMF2N4O
-X-Google-Smtp-Source: APXvYqxzQiIpqlNammtEsvomepmlNpTmoZXHzMcx6Ex7B4ZvkIoZTH7LAGfLOSv3YLzEdiPryIOZrg==
-X-Received: by 2002:a0c:a8d1:: with SMTP id h17mr31426013qvc.117.1565640612726;
-        Mon, 12 Aug 2019 13:10:12 -0700 (PDT)
+        bh=VAIYdkKcn+yIOGUw0PehsqKPZZWnSHr3qlfWyrXOr3I=;
+        b=tOdSOSZ5ukBlaXcL8dXfEqzm5Npz6vJ6FToxmHa813yKXKuCikEpFDexd0Z3XhAiV+
+         qxv5CX04J7nwKoS2xbePROdjkkla5L4FdNcB6u6fmGcn2BKvozb2+zm2O4ARXiKxcTgp
+         u/ACH5ImIcV6aO2ie8smyP6CJVxNFwtspxr6TaCIPVheuM/tV5ZHuhcO83SXLyAF3a44
+         JZGCvibQ1uZAgdJ51eTSFDD2Lf1A8a+EBNZ9kKYig2lDekzZlKWFqkun6ipo0G73T9Ea
+         /sOUtSuYhh88IrbTBWLtVMueXra7elNzbuqwmi3cMYlVnmrwi7WbhDtzrZQNeCtrsv3c
+         j/IA==
+X-Gm-Message-State: APjAAAU46Qz8JWPIss82LwYCa0Iofw2/U3jUcns/ynIHyuPM6A2r7gKR
+        2N9UfPntSo9cYKWF5Cp6y+tbvbh8
+X-Google-Smtp-Source: APXvYqwA+LUbK/5d6XjvqJXP7zarj5ux7XfuEvQE1Tby8PCdVRjPZ8MeehP4gbUQKwqSkGVFt/nwzg==
+X-Received: by 2002:ae9:edcf:: with SMTP id c198mr27867055qkg.79.1565641053889;
+        Mon, 12 Aug 2019 13:17:33 -0700 (PDT)
 Received: from ?IPv6:2620:10d:c0a8:11c9::1085? ([2620:10d:c091:480::d0c4])
-        by smtp.gmail.com with ESMTPSA id u126sm47382927qkf.132.2019.08.12.13.10.11
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 13:10:12 -0700 (PDT)
+        by smtp.gmail.com with ESMTPSA id o29sm3502745qtf.19.2019.08.12.13.17.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 Aug 2019 13:17:33 -0700 (PDT)
 From:   Jes Sorensen <jes.sorensen@gmail.com>
 X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
-Subject: Re: [PATCH] mdadm.h: include sysmacros.h unconditionally
-To:     Baruch Siach <baruch@tkos.co.il>
-Cc:     linux-raid@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>
-References: <6c781ad75d92c6f65832810c44afcba1b2dffc41.1565096723.git.baruch@tkos.co.il>
-Message-ID: <a729bd46-e16f-1aa5-8449-3bebc84d0fa6@gmail.com>
-Date:   Mon, 12 Aug 2019 16:10:10 -0400
+Subject: Re: [PATCH v2 1/2] mdadm: add --no-devices to avoid component devices
+ detail information
+To:     Coly Li <colyli@suse.de>, linux-raid@vger.kernel.org
+References: <20190731052930.108303-1-colyli@suse.de>
+Message-ID: <d7c02557-a359-a7c2-26bb-0419a86a1a12@gmail.com>
+Date:   Mon, 12 Aug 2019 16:17:31 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <6c781ad75d92c6f65832810c44afcba1b2dffc41.1565096723.git.baruch@tkos.co.il>
+In-Reply-To: <20190731052930.108303-1-colyli@suse.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -65,19 +65,43 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 8/6/19 9:05 AM, Baruch Siach wrote:
-> musl libc now also requires sys/sysmacros.h for the major/minor macros.
-> All supported libc implementations carry sys/sysmacros.h, including
-> diet-libc, klibc, and uclibc-ng.
+On 7/31/19 1:29 AM, Coly Li wrote:
+> When people assemble a md raid device with a large number of
+> component deivces (e.g. 1500 DASD disks), the raid device detail
+> information generated by 'mdadm --detail --export $devnode' is very
+> large. It is because the detail information contains information of
+> all the component disks (even the missing/failed ones).
 > 
-> Cc: Hauke Mehrtens <hauke@hauke-m.de>
-> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> ---
->  mdadm.h | 2 --
->  1 file changed, 2 deletions(-)
+> In such condition, when udev-md-raid-arrays.rules is triggered and
+> internally calls "mdadm --detail --no-devices --export $devnode",
+> user may observe systemd error message ""invalid message length". It
+> is because the following on-stack raw message buffer in systemd code
+> is not big enough,
+>         systemd/src/libudev/libudev-monitor.c
+>         _public_ struct udev_device *udev_monito ...
+>                 struct ucred *cred;
+>                 union {
+>                         struct udev_monitor_netlink_header nlh;
+>                         char raw[8192];
+>                 } buf;
+> Even change size of raw[] from 8KB to larger size, it may still be not
+> enough for detail message of a md raid device with much larger number of
+> component devices.
+> 
+> To fix this problem, an extra option '--no-devices' is added (the
+> original idea is proposed by Neil Brown). When printing detailed
+> information of a md raid device, if '--no-devices' is specified, then
+> all component devices information will not be printed, then the output
+> message size can be restricted to a small number, even with the systemd
+> only has 8KB on-disk raw buffer, the md raid array udev rules can work
+> correctly without failure message.
+> 
+> Signed-off-by: Coly Li <colyli@suse.de>
+> Reviewed-by: NeilBrown <neilb@suse.com>
 
 Applied!
 
-Thanks
+Thanks,
 Jes
+
 
