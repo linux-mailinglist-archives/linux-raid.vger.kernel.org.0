@@ -2,86 +2,104 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 672958E07C
-	for <lists+linux-raid@lfdr.de>; Thu, 15 Aug 2019 00:14:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1F608F625
+	for <lists+linux-raid@lfdr.de>; Thu, 15 Aug 2019 23:02:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729908AbfHNWO1 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 14 Aug 2019 18:14:27 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:34981 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729352AbfHNWOV (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 14 Aug 2019 18:14:21 -0400
-Received: by mail-qt1-f195.google.com with SMTP id u34so395942qte.2
-        for <linux-raid@vger.kernel.org>; Wed, 14 Aug 2019 15:14:20 -0700 (PDT)
+        id S1731346AbfHOVCl (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 15 Aug 2019 17:02:41 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:37797 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbfHOVCl (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 15 Aug 2019 17:02:41 -0400
+Received: by mail-qt1-f194.google.com with SMTP id y26so3854210qto.4
+        for <linux-raid@vger.kernel.org>; Thu, 15 Aug 2019 14:02:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=p6m83mGjllDiHyeRTSS1oVMHX5M/xE6ILn6PPhzsgs4=;
-        b=l5PC+4msT+R1VOq1FIInu61dIh2STHPN9aSBt/Y5M3n644FfA169IT6wzP+sfbruwG
-         5vHd8QNfmmF7FOlV1OW4+1ls9+argQAW0MZ9696kjqRFjMtNiRxkPVvom8CpuMz6+P3J
-         lvnykAE+N5ClLjt8+21Oenlj55mmWn47h6bOufTUj3iAyACG+cL0ImoQgj5m6u3w1/lr
-         fVPm9fs++0X3Li7mpOQ13No26+jYpH9OobXYps5GGnrfpp0Xq6qTsPtsJRMHzlRsuSi2
-         Q5RuPSHMeFGhG1MzboDTj+tp2IBpQDy9TN5wUYjWC528WeGARQxpLHz2F9meUvIkEvkQ
-         sSPA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JXbhT7KJ8wU6jUdyNEpsuiRjaO59R696+ysrWt0P0R0=;
+        b=JtEWRWMZSGOGJhtgvuzjqceZbx/1IZTlbAa/kkw0v3KqZ8U2owFCTftoqjOgzNbChv
+         uL2fsNPLWXuZoZsEVEoA/0jM2DaRk886OXiqNuptbHREqz05jcPxgVkdJHEBtmWCLx23
+         qQbfNMl0tMcy3Rwo1MPHkHHZBtOAz9IWWYLCnKRJT7Rgwp5m6yMytJW/cj45QmVKRG0a
+         hc4uFx/IF0pRh/t5R7enx6YnXj/MTHDz2pG00Zxbfu3xJCuLEKmVSnwY4HEjJ4rlYtOL
+         pMLDpVydJsAoLkPVAheViPqrX1JXixnc6bhxqKnBy62CZlOvZHAdEy1I4fBA7Jn5uZwl
+         Jkaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=p6m83mGjllDiHyeRTSS1oVMHX5M/xE6ILn6PPhzsgs4=;
-        b=aLMi7T0vVPpvmscPgZ6fIRluBOcqNbWSpkljwcX0stAQTfRq7vH7ZjRkASl5rM7obH
-         0c4Uj8KqRBF2+eP3mDPo1pnTgkbtSWxIA8MdMuJ58TCFrj7OKMuFJ37VF/VegEqQtSY8
-         tDtSWoNJU9odzUYJg5J4NyFoTdkDzM/g+bZLO+kpfjhn0oIKleu7jU27a+MUIyvdl4Gv
-         MVLusqHvtCTxolMoMYBaypMvKEsivli0RVkvPTarwwZC2XeJ+VJKXEYuUMZhxNqHIKQm
-         Szs4/8iPcFaBDmUyruWZBCPjxHyt26fvI9nVK5u38vQQK1h5E1zSfCHUFhaHchEbUSlr
-         TKAQ==
-X-Gm-Message-State: APjAAAV4RbYfzmQNVHNuKR4AvXSUdV0bi05Kbt8OQyFXRAZfhgPmKx/3
-        8pAktoQqjYOB1SZtsTtG3XOqoFdkRKLefgoJnm0=
-X-Google-Smtp-Source: APXvYqwvEwq36YC/YcFdGthiFQqEswOUmu8y33AXL4ty34gsygcaTEjmhvj04/dFUfa1vFoE719aJcDSjuFoUwkSVes=
-X-Received: by 2002:aed:3826:: with SMTP id j35mr1333309qte.54.1565820860049;
- Wed, 14 Aug 2019 15:14:20 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JXbhT7KJ8wU6jUdyNEpsuiRjaO59R696+ysrWt0P0R0=;
+        b=M+1hHGy9s9Mhe1Ne03vfquvjVEwv8TRMDbRiTYOxf84Qe1jBAOV8xont8AP7y3WrLx
+         WtQa0y+Xy5d/nKlGGufCM0+HuhF0z69SSdH0mKMH5MlyVMsmLjpiY005mV6XqnKqpNTS
+         csMpBvZ1HNXxy59zsGBz9d6wiNl3xa923uNySmylOdEFNw0qXjkVeSbqgdvctJXTxRSb
+         wrIKdEJOnGUljSndqPJqS7jj4PenqxatYAHpIWBd9ERrZGq7G9TRyIaDV1BSCZUqRzcE
+         lRW/Z9vtev/a/GqioFkfmtswflLnXuamyRX8uOM3Zu6tjhcEiMaHYz7gNttvmro5oC+y
+         y+mw==
+X-Gm-Message-State: APjAAAWnFCmtMTA7HvN+LMJYx8alG2Q4d5Npco6u9X1sO183/FY131sz
+        QadwyoKMBRumfdRH+vcBqdyYY7kpLCzZkD2VvHA=
+X-Google-Smtp-Source: APXvYqwesLTNDQQFw6//M9diFSBue6i33rE7XX1maFvSYQrpLJapveW2l5ssAwsHidGnSpNFH/tL+mxtq4+yDxk91n0=
+X-Received: by 2002:ac8:3258:: with SMTP id y24mr5635888qta.183.1565902960614;
+ Thu, 15 Aug 2019 14:02:40 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:aed:3544:0:0:0:0:0 with HTTP; Wed, 14 Aug 2019 15:14:19
- -0700 (PDT)
-Reply-To: Katerinejones19@gmail.com
-From:   "MS. MARYANNA B. THOMASON" <westernunion.benin982@gmail.com>
-Date:   Wed, 14 Aug 2019 23:14:19 +0100
-Message-ID: <CAP=nHB+U+By16HzeUHiDfPT5KNtemGam6gniZhL2s7_itZ3F8w@mail.gmail.com>
-Subject: TODAY, Wed, Aug 14, 2019 I AM READY FOR COMING TO YOUR ADDRESS WITH
- THIS ATM CARD
-To:     undisclosed-recipients:;
+References: <20190812153039.13604-1-ncroxon@redhat.com> <f79ead58-9feb-4b0b-5f29-fd1a4f10342f@redhat.com>
+In-Reply-To: <f79ead58-9feb-4b0b-5f29-fd1a4f10342f@redhat.com>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Thu, 15 Aug 2019 14:02:29 -0700
+Message-ID: <CAPhsuW5+vk4Ln84JSe-QEt-O2xee9d63B8aGEpxFLVfZWADEfA@mail.gmail.com>
+Subject: Re: [PATCH] raid5 improve too many read errors msg by adding limits
+To:     Xiao Ni <xni@redhat.com>, NeilBrown <neilb@suse.com>
+Cc:     Nigel Croxon <ncroxon@redhat.com>,
+        linux-raid <linux-raid@vger.kernel.org>,
+        Heinz Mauelshagen <heinzm@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-ATTN DEAR PARCEL BENEFICIARY.
+On Mon, Aug 12, 2019 at 4:38 PM Xiao Ni <xni@redhat.com> wrote:
+>
+>
+>
+> On 08/12/2019 11:30 PM, Nigel Croxon wrote:
+> > Often limits can be changed by admin. When discussing such things
+> > it helps if you can provide "self-sustained" facts. Also
+> > sometimes the admin thinks he changed a limit, but it did not
+> > take effect for some reason or he changed the wrong thing.
+> >
+> > Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
+> > ---
+> >   drivers/md/raid5.c | 4 ++--
+> >   1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+> > index 522398f61eea..e2b58b58018b 100644
+> > --- a/drivers/md/raid5.c
+> > +++ b/drivers/md/raid5.c
+> > @@ -2566,8 +2566,8 @@ static void raid5_end_read_request(struct bio * bi, int error)
+> >                               bdn);
+> >               } else if (atomic_read(&rdev->read_errors)
+> >                        > conf->max_nr_stripes)
+> > -                     pr_warn("md/raid:%s: Too many read errors, failing device %s.\n",
+> > -                            mdname(conf->mddev), bdn);
+> > +                     pr_warn("md/raid:%s: Too many read errors (%d), failing device %s.\n",
+> > +                            mdname(conf->mddev), conf->max_nr_stripes, bdn);
+> >               else
+> >                       retry = 1;
+> >               if (set_bad && test_bit(In_sync, &rdev->flags)
+>
+> Hi Nigel
+>
+> Is it better to print rdev->read_errors too? So it can know the error
+> numbers and the max nr stripes
 
-I AM CATHY JONES,DIPLOMATIC AGENT ASIGNED ON THE DELIVERY OF YOUR ATM
-CARD THROUGH MS. MARYANNA B. THOMASON, DHL MANAGEMENT DIRECTOR NEW
-YORK.
-TODAY, Wed, Aug 14, 2019 I AM READY FOR COMING TO YOUR ADDRESS WITH
-THIS ATM CARD, So before i deliver I want you to send me.
-official diplomatic agent delivery fee sum of $150.00 us
- only. I am here at JFK Airport,Florida. USA
+I think rdev->read_errors is more useful here.
 
-SEND THIS FEE BY WESTERN UNION OR MONEY WITH RECEIVER'S NAME AND ADDRESS BELOW.
+Hi Neil,
 
-RECEIVER'S NAME-----------------ERROL PRINGLE
-ADDRESS----------------3500 OLD DENTON RD APT 208; CARROLLTON, TEXAS 75007
-COUNTRY----------------USA
-AMOUNT--------------------$150.00 ONLY
-TEST QUESTION----------------WHO IS THE CREATOR
-ANSWER------------------GOD
- meanwhile this $150.00 is required by the Custom Service,USA Homeland
-Security,for protection of your delivery, it will make the ATM CARD
-and funds worth $15.8MILLION US DOLLARS secure, Beleiev me, this is my
-word, remark my word,you will receive your delivery from me, Mrs.
-Cathy Jones once you send this only $150.00 today.
-I WAIT ON YOUR PAYMENT CONFIRMATION, ONCE I GOT YOUR PAYMENT, I WILL
-FINALLY ARRIVE TO YOUR NEAREST ADDRESS. today
-THANKS AND MAY GOD BLESS  YOU
-CATHY JONES,DIPLOMATIC AGENT
-EMAIL; katerinejones19@gmail.com
-CALL OR TEXT ME, DIPLOMATIC AGENT MS. CATHY JONES
-Phone Number; (408) 650-6103,
+I have a question for this case: this patch changes an existing pr_warn() line,
+which in theory, may break user scripts that grep for this line from dmesg.
+How much do we care about these scripts?
+
+Thanks,
+Song
