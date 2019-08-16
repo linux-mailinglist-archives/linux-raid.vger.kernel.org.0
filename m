@@ -2,198 +2,363 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 885A78FEC1
-	for <lists+linux-raid@lfdr.de>; Fri, 16 Aug 2019 11:15:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E54DE8FF0A
+	for <lists+linux-raid@lfdr.de>; Fri, 16 Aug 2019 11:28:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbfHPJPt (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 16 Aug 2019 05:15:49 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:42833 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726753AbfHPJPs (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 16 Aug 2019 05:15:48 -0400
-Received: from rabammel.molgen.mpg.de (rabammel.molgen.mpg.de [141.14.30.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 8F7B520225718;
-        Fri, 16 Aug 2019 11:15:45 +0200 (CEST)
-Subject: Re: [PATCH,v2] mdadm: check value returned by snprintf against errors
-To:     Krzysztof Smolinski <krzysztof.smolinski@intel.com>,
-        Jes Sorensen <jes.sorensen@gmail.com>
-Cc:     linux-raid@vger.kernel.org
-References: <20190816090617.12679-1-krzysztof.smolinski@intel.com>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Message-ID: <d78bd5b0-a694-7e68-e0d4-7302f3680915@molgen.mpg.de>
-Date:   Fri, 16 Aug 2019 11:15:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190816090617.12679-1-krzysztof.smolinski@intel.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms030805050004000704020804"
+        id S1727028AbfHPJ2x (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 16 Aug 2019 05:28:53 -0400
+Received: from mga11.intel.com ([192.55.52.93]:6189 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726987AbfHPJ2w (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 16 Aug 2019 05:28:52 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 02:28:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,391,1559545200"; 
+   d="scan'208";a="352497006"
+Received: from linux-qgmk.igk.intel.com ([10.102.102.210])
+  by orsmga005.jf.intel.com with ESMTP; 16 Aug 2019 02:28:50 -0700
+From:   Krzysztof Smolinski <krzysztof.smolinski@intel.com>
+To:     jes.sorensen@gmail.com
+Cc:     linux-raid@vger.kernel.org,
+        Krzysztof Smolinski <krzysztof.smolinski@intel.com>
+Subject: [PATCH] imsm: data offset support during first volume creation
+Date:   Fri, 16 Aug 2019 11:26:33 +0200
+Message-Id: <20190816092633.12889-1-krzysztof.smolinski@intel.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-This is a cryptographically signed message in MIME format.
+When creating first volume in IMSM container --data-offset
+parameter can be provided to specify volume data offset (reserve
+space preceding volume start). When no value is provided then 1 MiB
+default value is used.
 
---------------ms030805050004000704020804
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Krzysztof Smolinski <krzysztof.smolinski@intel.com>
+---
+ mdadm.8.in    | 12 ++++++---
+ mdadm.c       | 28 +++++++++++++--------
+ mdadm.h       |  7 +++---
+ super-intel.c | 80 +++++++++++++++++++++++++++++++++++++++++++++++++++--------
+ util.c        |  2 +-
+ 5 files changed, 101 insertions(+), 28 deletions(-)
 
-Dear Krzysztof,
+diff --git a/mdadm.8.in b/mdadm.8.in
+index 9aec9f4f..4060ef07 100644
+--- a/mdadm.8.in
++++ b/mdadm.8.in
+@@ -820,9 +820,9 @@ being reshaped.
+ 
+ .TP
+ .B \-\-data\-offset=
+-Arrays with 1.x metadata can leave a gap between the start of the
+-device and the start of array data.  This gap can be used for various
+-metadata.  The start of data is known as the
++Arrays with 1.x and IMSM metadata can leave a gap between the start
++of the device and the start of array data.  This gap can be used for
++various metadata.  The start of data is known as the
+ .IR data\-offset .
+ Normally an appropriate data offset is computed automatically.
+ However it can be useful to set it explicitly such as when re-creating
+@@ -830,6 +830,12 @@ an array which was originally created using a different version of
+ .I mdadm
+ which computed a different offset.
+ 
++For IMSM arrays
++.B \-\-data\-offset
++is valid only when creating first volume inside a container.  Default
++.B \-\-data\-offset
++value for such volume is 1 MiB.
++
+ Setting the offset explicitly over-rides the default.  The value given
+ is in Kilobytes unless a suffix of 'K', 'M' or 'G' is used to explicitly
+ indicate Kilobytes, Megabytes or Gigabytes respectively.
+diff --git a/mdadm.c b/mdadm.c
+index 1fb80860..7fdad606 100644
+--- a/mdadm.c
++++ b/mdadm.c
+@@ -384,21 +384,27 @@ int main(int argc, char *argv[])
+ 		case O(CREATE,ChunkSize):
+ 		case O(BUILD,'c'): /* chunk or rounding */
+ 		case O(BUILD,ChunkSize): /* chunk or rounding */
++		{
++			unsigned long long tmp_chunk;
++
+ 			if (s.chunk) {
+ 				pr_err("chunk/rounding may only be specified once. Second value is %s.\n", optarg);
+ 				exit(2);
+ 			}
+-			s.chunk = parse_size(optarg);
+-			if (s.chunk == INVALID_SECTORS ||
+-			    s.chunk < 8 || (s.chunk&1)) {
++			tmp_chunk = parse_size(optarg);
++			if (tmp_chunk == INVALID_SECTORS ||
++			    tmp_chunk > INT_MAX ||
++			    tmp_chunk < 8 ||
++			    (tmp_chunk&1)) {
+ 				pr_err("invalid chunk/rounding value: %s\n",
+ 					optarg);
+ 				exit(2);
+ 			}
++			s.chunk = (int) tmp_chunk;
+ 			/* Convert sectors to K */
+ 			s.chunk /= 2;
+ 			continue;
+-
++		}
+ 		case O(INCREMENTAL, 'e'):
+ 		case O(CREATE,'e'):
+ 		case O(ASSEMBLE,'e'):
+@@ -1181,17 +1187,19 @@ int main(int argc, char *argv[])
+ 		case O(GROW,BitmapChunk):
+ 		case O(BUILD,BitmapChunk):
+ 		case O(CREATE,BitmapChunk): /* bitmap chunksize */
+-			s.bitmap_chunk = parse_size(optarg);
+-			if (s.bitmap_chunk == 0 ||
+-			    s.bitmap_chunk == INVALID_SECTORS ||
+-			    s.bitmap_chunk & (s.bitmap_chunk - 1)) {
++		{
++			unsigned long long tmp_chunk = parse_size(optarg);
++
++			if (tmp_chunk == INVALID_SECTORS ||
++			    tmp_chunk > INT_MAX / 512 ||
++			    tmp_chunk == 0 || tmp_chunk & (tmp_chunk - 1)) {
+ 				pr_err("invalid bitmap chunksize: %s\n",
+ 				       optarg);
+ 				exit(2);
+ 			}
+-			s.bitmap_chunk = s.bitmap_chunk * 512;
++			s.bitmap_chunk = (int) (tmp_chunk * 512);
+ 			continue;
+-
++		}
+ 		case O(GROW, WriteBehind):
+ 		case O(BUILD, WriteBehind):
+ 		case O(CREATE, WriteBehind): /* write-behind mode */
+diff --git a/mdadm.h b/mdadm.h
+index 43b07d57..99719c8d 100644
+--- a/mdadm.h
++++ b/mdadm.h
+@@ -45,6 +45,7 @@ extern __off64_t lseek64 __P ((int __fd, __off64_t __offset, int __whence));
+ #include	<errno.h>
+ #include	<string.h>
+ #include	<syslog.h>
++#include	<limits.h>
+ /* Newer glibc requires sys/sysmacros.h directly for makedev() */
+ #include	<sys/sysmacros.h>
+ #ifdef __dietlibc__
+@@ -598,7 +599,7 @@ struct mddev_dev {
+ 	enum flag_mode writemostly;
+ 	enum flag_mode failfast;
+ 	int used;		/* set when used */
+-	long long data_offset;
++	unsigned long long data_offset;
+ 	struct mddev_dev *next;
+ };
+ 
+@@ -1824,6 +1825,6 @@ char *xstrdup(const char *str);
+ /* We want to use unsigned numbers for sector counts, but need
+  * a value for 'invalid'.  Use '1'.
+  */
+-#define INVALID_SECTORS 1
++#define INVALID_SECTORS ULLONG_MAX
+ /* And another special number needed for --data_offset=variable */
+-#define VARIABLE_OFFSET 3
++#define VARIABLE_OFFSET (ULLONG_MAX-1)
+diff --git a/super-intel.c b/super-intel.c
+index d7e8a65f..ba80628c 100644
+--- a/super-intel.c
++++ b/super-intel.c
+@@ -292,6 +292,10 @@ static char *map_state_str[] = { "normal", "uninitialized", "degraded", "failed"
+ 
+ #define PPL_ENTRY_SPACE (128 * 1024) /* Size of single PPL, without the header */
+ 
++#define DEFAULT_VOLUME_DATA_OFFSET (1024*1024) /* First volume created with
++						* default 1M offset
++						*/
++
+ struct migr_record {
+ 	__u32 rec_status;	    /* Status used to determine how to restart
+ 				     * migration in case it aborts
+@@ -1691,6 +1695,11 @@ static void print_imsm_disk(struct imsm_disk *disk,
+ 	       human_size(sz * 512));
+ }
+ 
++unsigned long long convert_to_4k_data_offset(unsigned long long data_offset)
++{
++	return ROUND_UP(data_offset, IMSM_4K_DIV) / IMSM_4K_DIV;
++}
++
+ void convert_to_4k_imsm_migr_rec(struct intel_super *super)
+ {
+ 	struct migr_record *migr_rec = super->migr_rec;
+@@ -5395,7 +5404,7 @@ static int check_name(struct intel_super *super, char *name, int quiet)
+ static int init_super_imsm_volume(struct supertype *st, mdu_array_info_t *info,
+ 				  struct shape *s, char *name,
+ 				  char *homehost, int *uuid,
+-				  long long data_offset)
++				  unsigned long long data_offset)
+ {
+ 	/* We are creating a volume inside a pre-existing container.
+ 	 * so st->sb is already set.
+@@ -5485,6 +5494,25 @@ static int init_super_imsm_volume(struct supertype *st, mdu_array_info_t *info,
+ 		}
+ 	}
+ 
++	if (data_offset == VARIABLE_OFFSET) {
++		pr_err("data-offset=variable is not supported by imsm.\n");
++		return 0;
++	}
++
++	if (data_offset != INVALID_SECTORS) {
++		if (super->current_vol > 0) {
++			pr_err("data-offset is only supported for first imsm volume.\n");
++			return 0;
++		}
++		if (sector_size == 4096)
++			super->create_offset = convert_to_4k_data_offset(data_offset);
++		else
++			super->create_offset = data_offset;
++	} else if (data_offset == INVALID_SECTORS && super->current_vol == 0) {
++		// set default data offset for first volume
++		super->create_offset = DEFAULT_VOLUME_DATA_OFFSET / super->sector_size;
++	}
++
+ 	if (!check_name(super, name, 0))
+ 		return 0;
+ 	dv = xmalloc(sizeof(*dv));
+@@ -5597,11 +5625,6 @@ static int init_super_imsm(struct supertype *st, mdu_array_info_t *info,
+ 	size_t mpb_size;
+ 	char *version;
+ 
+-	if (data_offset != INVALID_SECTORS) {
+-		pr_err("data-offset not supported by imsm\n");
+-		return 0;
+-	}
+-
+ 	if (st->sb)
+ 		return init_super_imsm_volume(st, info, s, name, homehost, uuid,
+ 					      data_offset);
+@@ -7330,7 +7353,9 @@ static int validate_geometry_imsm_volume(struct supertype *st, int level,
+ }
+ 
+ static int imsm_get_free_size(struct supertype *st, int raiddisks,
+-			 unsigned long long size, int chunk,
++			 unsigned long long size,
++			 unsigned long long data_offset,
++			 int chunk,
+ 			 unsigned long long *freesize)
+ {
+ 	struct intel_super *super = st->sb;
+@@ -7341,6 +7366,7 @@ static int imsm_get_free_size(struct supertype *st, int raiddisks,
+ 	struct extent *e;
+ 	unsigned long long maxsize;
+ 	unsigned long long minsize;
++	unsigned long long offset_size;
+ 	int cnt;
+ 	int used;
+ 
+@@ -7385,6 +7411,27 @@ static int imsm_get_free_size(struct supertype *st, int raiddisks,
+ 		return 0; /* No enough free spaces large enough */
+ 	}
+ 
++	if (mpb->num_raid_devs == 0) {
++		if (super->sector_size == 4096) {
++			data_offset = convert_to_4k_data_offset(data_offset);
++			if (data_offset != INVALID_SECTORS)
++				offset_size = (data_offset*(super->sector_size/1024));
++			else
++				offset_size = DEFAULT_VOLUME_DATA_OFFSET;
++		} else {
++			offset_size = data_offset != INVALID_SECTORS ?
++					(data_offset*2) : DEFAULT_VOLUME_DATA_OFFSET;
++		}
++
++		offset_size *= raiddisks;
++
++		if (offset_size > maxsize) {
++			pr_err("attempting to create first volume with too large data offset. Aborting...\n");
++			return 0;
++		}
++		maxsize -= offset_size;
++	}
++
+ 	if (size == 0) {
+ 		size = maxsize;
+ 		if (chunk) {
+@@ -7393,6 +7440,12 @@ static int imsm_get_free_size(struct supertype *st, int raiddisks,
+ 		}
+ 		maxsize = size;
+ 	}
++
++	if (size > maxsize) {
++		pr_err("attempting to create first volume witch exceeds available space. Aborting...\n");
++		return 0;
++	}
++
+ 	if (!check_env("IMSM_NO_PLATFORM") &&
+ 	    mpb->num_raid_devs > 0 && size && size != maxsize) {
+ 		pr_err("attempting to create a second volume with size less then remaining space. Aborting...\n");
+@@ -7411,7 +7464,9 @@ static int imsm_get_free_size(struct supertype *st, int raiddisks,
+ }
+ 
+ static int reserve_space(struct supertype *st, int raiddisks,
+-			 unsigned long long size, int chunk,
++			 unsigned long long size,
++			 unsigned long long data_offset,
++			 int chunk,
+ 			 unsigned long long *freesize)
+ {
+ 	struct intel_super *super = st->sb;
+@@ -7419,7 +7474,8 @@ static int reserve_space(struct supertype *st, int raiddisks,
+ 	int cnt;
+ 	int rv = 0;
+ 
+-	rv = imsm_get_free_size(st, raiddisks, size, chunk, freesize);
++	rv = imsm_get_free_size(st, raiddisks, size, data_offset,
++				chunk, freesize);
+ 	if (rv) {
+ 		cnt = 0;
+ 		for (dl = super->disks; dl; dl = dl->next)
+@@ -7491,9 +7547,11 @@ static int validate_geometry_imsm(struct supertype *st, int level, int layout,
+ 					return 0;
+ 				}
+ 			}
++
+ 			if (freesize)
+ 				return reserve_space(st, raiddisks, size,
+-						     *chunk, freesize);
++							data_offset, *chunk,
++							freesize);
+ 		}
+ 		return 1;
+ 	}
+@@ -11566,7 +11624,7 @@ enum imsm_reshape_type imsm_analyze_change(struct supertype *st,
+ 		/* check the maximum available size
+ 		 */
+ 		rv =  imsm_get_free_size(st, dev->vol.map->num_members,
+-					 0, chunk, &free_size);
++					 0, 0, chunk, &free_size);
+ 		if (rv == 0)
+ 			/* Cannot find maximum available space
+ 			 */
+diff --git a/util.c b/util.c
+index c26cf5f3..5e4fd5d7 100644
+--- a/util.c
++++ b/util.c
+@@ -396,7 +396,7 @@ unsigned long long parse_size(char *size)
+ 	 */
+ 	char *c;
+ 	long long s = strtoll(size, &c, 10);
+-	if (s > 0) {
++	if (s >= 0) {
+ 		switch (*c) {
+ 		case 'K':
+ 			c++;
+-- 
+2.16.4
 
-
-On 16.08.19 11:06, Krzysztof Smolinski wrote:
-> GCC 8 checks possible truncation during snprintf more strictly
-> than GCC 7 which result in compilation errors. To fix this
-> problem checking result of snprintf against errors has been added.
->=20
-> Signed-off-by: Krzysztof Smolinski <krzysztof.smolinski@intel.com>
-> ---
->  sysfs.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
->=20
-> diff --git a/sysfs.c b/sysfs.c
-> index c3137818..2995713d 100644
-> --- a/sysfs.c
-> +++ b/sysfs.c
-> @@ -1023,12 +1023,20 @@ int sysfs_rules_apply_check(const struct mdinfo=
- *sra,
->  	char dname[MAX_SYSFS_PATH_LEN];
->  	char resolved_path[PATH_MAX];
->  	char resolved_dir[PATH_MAX];
-> +	int result;
-> =20
->  	if (sra =3D=3D NULL || ent =3D=3D NULL)
->  		return -1;
-> =20
-> -	snprintf(dname, MAX_SYSFS_PATH_LEN, "/sys/block/%s/md/", sra->sys_nam=
-e);
-> -	snprintf(fname, MAX_SYSFS_PATH_LEN, "%s/%s", dname, ent->name);
-> +	result =3D snprintf(dname, MAX_SYSFS_PATH_LEN,
-> +			  "/sys/block/%s/md/", sra->sys_name);
-> +	if (result < 0 || result >=3D MAX_SYSFS_PATH_LEN)
-> +		return -1;
-> +
-> +	result =3D snprintf(fname, MAX_SYSFS_PATH_LEN,
-> +			  "%s/%s", dname, ent->name);
-> +	if (result < 0 || result >=3D MAX_SYSFS_PATH_LEN)
-> +		return -1;
-> =20
->  	if (realpath(fname, resolved_path) =3D=3D NULL ||
->  	    realpath(dname, resolved_dir) =3D=3D NULL)
-
-Looks good to me. Thank you very much. In a separate patch, mdadm
-could probably be improved to return error messages for the user.
-
-
-Kind regards,
-
-Paul
-
-
---------------ms030805050004000704020804
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
-EFowggUSMIID+qADAgECAgkA4wvV+K8l2YEwDQYJKoZIhvcNAQELBQAwgYIxCzAJBgNVBAYT
-AkRFMSswKQYDVQQKDCJULVN5c3RlbXMgRW50ZXJwcmlzZSBTZXJ2aWNlcyBHbWJIMR8wHQYD
-VQQLDBZULVN5c3RlbXMgVHJ1c3QgQ2VudGVyMSUwIwYDVQQDDBxULVRlbGVTZWMgR2xvYmFs
-Um9vdCBDbGFzcyAyMB4XDTE2MDIyMjEzMzgyMloXDTMxMDIyMjIzNTk1OVowgZUxCzAJBgNV
-BAYTAkRFMUUwQwYDVQQKEzxWZXJlaW4genVyIEZvZXJkZXJ1bmcgZWluZXMgRGV1dHNjaGVu
-IEZvcnNjaHVuZ3NuZXR6ZXMgZS4gVi4xEDAOBgNVBAsTB0RGTi1QS0kxLTArBgNVBAMTJERG
-Ti1WZXJlaW4gQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgMjCCASIwDQYJKoZIhvcNAQEBBQAD
-ggEPADCCAQoCggEBAMtg1/9moUHN0vqHl4pzq5lN6mc5WqFggEcVToyVsuXPztNXS43O+FZs
-FVV2B+pG/cgDRWM+cNSrVICxI5y+NyipCf8FXRgPxJiZN7Mg9mZ4F4fCnQ7MSjLnFp2uDo0p
-eQcAIFTcFV9Kltd4tjTTwXS1nem/wHdN6r1ZB+BaL2w8pQDcNb1lDY9/Mm3yWmpLYgHurDg0
-WUU2SQXaeMpqbVvAgWsRzNI8qIv4cRrKO+KA3Ra0Z3qLNupOkSk9s1FcragMvp0049ENF4N1
-xDkesJQLEvHVaY4l9Lg9K7/AjsMeO6W/VRCrKq4Xl14zzsjz9AkH4wKGMUZrAcUQDBHHWekC
-AwEAAaOCAXQwggFwMA4GA1UdDwEB/wQEAwIBBjAdBgNVHQ4EFgQUk+PYMiba1fFKpZFK4OpL
-4qIMz+EwHwYDVR0jBBgwFoAUv1kgNgB5oKAia4zV8mHSuCzLgkowEgYDVR0TAQH/BAgwBgEB
-/wIBAjAzBgNVHSAELDAqMA8GDSsGAQQBga0hgiwBAQQwDQYLKwYBBAGBrSGCLB4wCAYGZ4EM
-AQICMEwGA1UdHwRFMEMwQaA/oD2GO2h0dHA6Ly9wa2kwMzM2LnRlbGVzZWMuZGUvcmwvVGVs
-ZVNlY19HbG9iYWxSb290X0NsYXNzXzIuY3JsMIGGBggrBgEFBQcBAQR6MHgwLAYIKwYBBQUH
-MAGGIGh0dHA6Ly9vY3NwMDMzNi50ZWxlc2VjLmRlL29jc3ByMEgGCCsGAQUFBzAChjxodHRw
-Oi8vcGtpMDMzNi50ZWxlc2VjLmRlL2NydC9UZWxlU2VjX0dsb2JhbFJvb3RfQ2xhc3NfMi5j
-ZXIwDQYJKoZIhvcNAQELBQADggEBAIcL/z4Cm2XIVi3WO5qYi3FP2ropqiH5Ri71sqQPrhE4
-eTizDnS6dl2e6BiClmLbTDPo3flq3zK9LExHYFV/53RrtCyD2HlrtrdNUAtmB7Xts5et6u5/
-MOaZ/SLick0+hFvu+c+Z6n/XUjkurJgARH5pO7917tALOxrN5fcPImxHhPalR6D90Bo0fa3S
-PXez7vTXTf/D6OWST1k+kEcQSrCFWMBvf/iu7QhCnh7U3xQuTY+8npTD5+32GPg8SecmqKc2
-2CzeIs2LgtjZeOJVEqM7h0S2EQvVDFKvaYwPBt/QolOLV5h7z/0HJPT8vcP9SpIClxvyt7bP
-ZYoaorVyGTkwggWNMIIEdaADAgECAgwcOtRQhH7u81j4jncwDQYJKoZIhvcNAQELBQAwgZUx
-CzAJBgNVBAYTAkRFMUUwQwYDVQQKEzxWZXJlaW4genVyIEZvZXJkZXJ1bmcgZWluZXMgRGV1
-dHNjaGVuIEZvcnNjaHVuZ3NuZXR6ZXMgZS4gVi4xEDAOBgNVBAsTB0RGTi1QS0kxLTArBgNV
-BAMTJERGTi1WZXJlaW4gQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgMjAeFw0xNjExMDMxNTI0
-NDhaFw0zMTAyMjIyMzU5NTlaMGoxCzAJBgNVBAYTAkRFMQ8wDQYDVQQIDAZCYXllcm4xETAP
-BgNVBAcMCE11ZW5jaGVuMSAwHgYDVQQKDBdNYXgtUGxhbmNrLUdlc2VsbHNjaGFmdDEVMBMG
-A1UEAwwMTVBHIENBIC0gRzAyMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnhx4
-59Lh4WqgOs/Md04XxU2yFtfM15ZuJV0PZP7BmqSJKLLPyqmOrADfNdJ5PIGBto2JBhtRRBHd
-G0GROOvTRHjzOga95WOTeura79T21FWwwAwa29OFnD3ZplQs6HgdwQrZWNi1WHNJxn/4mA19
-rNEBUc5urSIpZPvZi5XmlF3v3JHOlx3KWV7mUteB4pwEEfGTg4npPAJbp2o7arxQdoIq+Pu2
-OsvqhD7Rk4QeaX+EM1QS4lqd1otW4hE70h/ODPy1xffgbZiuotWQLC6nIwa65Qv6byqlIX0q
-Zuu99Vsu+r3sWYsL5SBkgecNI7fMJ5tfHrjoxfrKl/ErTAt8GQIDAQABo4ICBTCCAgEwEgYD
-VR0TAQH/BAgwBgEB/wIBATAOBgNVHQ8BAf8EBAMCAQYwKQYDVR0gBCIwIDANBgsrBgEEAYGt
-IYIsHjAPBg0rBgEEAYGtIYIsAQEEMB0GA1UdDgQWBBTEiKUH7rh7qgwTv9opdGNSG0lwFjAf
-BgNVHSMEGDAWgBST49gyJtrV8UqlkUrg6kviogzP4TCBjwYDVR0fBIGHMIGEMECgPqA8hjpo
-dHRwOi8vY2RwMS5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNhL3B1Yi9jcmwvY2Fjcmwu
-Y3JsMECgPqA8hjpodHRwOi8vY2RwMi5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNhL3B1
-Yi9jcmwvY2FjcmwuY3JsMIHdBggrBgEFBQcBAQSB0DCBzTAzBggrBgEFBQcwAYYnaHR0cDov
-L29jc3AucGNhLmRmbi5kZS9PQ1NQLVNlcnZlci9PQ1NQMEoGCCsGAQUFBzAChj5odHRwOi8v
-Y2RwMS5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNhL3B1Yi9jYWNlcnQvY2FjZXJ0LmNy
-dDBKBggrBgEFBQcwAoY+aHR0cDovL2NkcDIucGNhLmRmbi5kZS9nbG9iYWwtcm9vdC1nMi1j
-YS9wdWIvY2FjZXJ0L2NhY2VydC5jcnQwDQYJKoZIhvcNAQELBQADggEBABLpeD5FygzqOjj+
-/lAOy20UQOGWlx0RMuPcI4nuyFT8SGmK9lD7QCg/HoaJlfU/r78ex+SEide326evlFAoJXIF
-jVyzNltDhpMKrPIDuh2N12zyn1EtagqPL6hu4pVRzcBpl/F2HCvtmMx5K4WN1L1fmHWLcSap
-dhXLvAZ9RG/B3rqyULLSNN8xHXYXpmtvG0VGJAndZ+lj+BH7uvd3nHWnXEHC2q7iQlDUqg0a
-wIqWJgdLlx1Q8Dg/sodv0m+LN0kOzGvVDRCmowBdWGhhusD+duKV66pBl+qhC+4LipariWaM
-qK5ppMQROATjYeNRvwI+nDcEXr2vDaKmdbxgDVwwggWvMIIEl6ADAgECAgweKlJIhfynPMVG
-/KIwDQYJKoZIhvcNAQELBQAwajELMAkGA1UEBhMCREUxDzANBgNVBAgMBkJheWVybjERMA8G
-A1UEBwwITXVlbmNoZW4xIDAeBgNVBAoMF01heC1QbGFuY2stR2VzZWxsc2NoYWZ0MRUwEwYD
-VQQDDAxNUEcgQ0EgLSBHMDIwHhcNMTcxMTE0MTEzNDE2WhcNMjAxMTEzMTEzNDE2WjCBizEL
-MAkGA1UEBhMCREUxIDAeBgNVBAoMF01heC1QbGFuY2stR2VzZWxsc2NoYWZ0MTQwMgYDVQQL
-DCtNYXgtUGxhbmNrLUluc3RpdHV0IGZ1ZXIgbW9sZWt1bGFyZSBHZW5ldGlrMQ4wDAYDVQQL
-DAVNUElNRzEUMBIGA1UEAwwLUGF1bCBNZW56ZWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw
-ggEKAoIBAQDIh/UR/AX/YQ48VWWDMLTYtXjYJyhRHMc81ZHMMoaoG66lWB9MtKRTnB5lovLZ
-enTIUyPsCrMhTqV9CWzDf6v9gOTWVxHEYqrUwK5H1gx4XoK81nfV8oGV4EKuVmmikTXiztGz
-peyDmOY8o/EFNWP7YuRkY/lPQJQBeBHYq9AYIgX4StuXu83nusq4MDydygVOeZC15ts0tv3/
-6WmibmZd1OZRqxDOkoBbY3Djx6lERohs3IKS6RKiI7e90rCSy9rtidJBOvaQS9wvtOSKPx0a
-+2pAgJEVzZFjOAfBcXydXtqXhcpOi2VCyl+7+LnnTz016JJLsCBuWEcB3kP9nJYNAgMBAAGj
-ggIxMIICLTAJBgNVHRMEAjAAMA4GA1UdDwEB/wQEAwIF4DAdBgNVHSUEFjAUBggrBgEFBQcD
-AgYIKwYBBQUHAwQwHQYDVR0OBBYEFHM0Mc3XjMLlhWpp4JufRELL4A/qMB8GA1UdIwQYMBaA
-FMSIpQfuuHuqDBO/2il0Y1IbSXAWMCAGA1UdEQQZMBeBFXBtZW56ZWxAbW9sZ2VuLm1wZy5k
-ZTB9BgNVHR8EdjB0MDigNqA0hjJodHRwOi8vY2RwMS5wY2EuZGZuLmRlL21wZy1nMi1jYS9w
-dWIvY3JsL2NhY3JsLmNybDA4oDagNIYyaHR0cDovL2NkcDIucGNhLmRmbi5kZS9tcGctZzIt
-Y2EvcHViL2NybC9jYWNybC5jcmwwgc0GCCsGAQUFBwEBBIHAMIG9MDMGCCsGAQUFBzABhido
-dHRwOi8vb2NzcC5wY2EuZGZuLmRlL09DU1AtU2VydmVyL09DU1AwQgYIKwYBBQUHMAKGNmh0
-dHA6Ly9jZHAxLnBjYS5kZm4uZGUvbXBnLWcyLWNhL3B1Yi9jYWNlcnQvY2FjZXJ0LmNydDBC
-BggrBgEFBQcwAoY2aHR0cDovL2NkcDIucGNhLmRmbi5kZS9tcGctZzItY2EvcHViL2NhY2Vy
-dC9jYWNlcnQuY3J0MEAGA1UdIAQ5MDcwDwYNKwYBBAGBrSGCLAEBBDARBg8rBgEEAYGtIYIs
-AQEEAwYwEQYPKwYBBAGBrSGCLAIBBAMGMA0GCSqGSIb3DQEBCwUAA4IBAQCQs6bUDROpFO2F
-Qz2FMgrdb39VEo8P3DhmpqkaIMC5ZurGbbAL/tAR6lpe4af682nEOJ7VW86ilsIJgm1j0ueY
-aOuL8jrN4X7IF/8KdZnnNnImW3QVni6TCcc+7+ggci9JHtt0IDCj5vPJBpP/dKXLCN4M+exl
-GXYpfHgxh8gclJPY1rquhQrihCzHfKB01w9h9tWZDVMtSoy9EUJFhCXw7mYUsvBeJwZesN2B
-fndPkrXx6XWDdU3S1LyKgHlLIFtarLFm2Hb5zAUR33h+26cN6ohcGqGEEzgIG8tXS8gztEaj
-1s2RyzmKd4SXTkKR3GhkZNVWy+gM68J7jP6zzN+cMYIDmjCCA5YCAQEwejBqMQswCQYDVQQG
-EwJERTEPMA0GA1UECAwGQmF5ZXJuMREwDwYDVQQHDAhNdWVuY2hlbjEgMB4GA1UECgwXTWF4
-LVBsYW5jay1HZXNlbGxzY2hhZnQxFTATBgNVBAMMDE1QRyBDQSAtIEcwMgIMHipSSIX8pzzF
-RvyiMA0GCWCGSAFlAwQCAQUAoIIB8TAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqG
-SIb3DQEJBTEPFw0xOTA4MTYwOTE1NDVaMC8GCSqGSIb3DQEJBDEiBCA03+pxiVUzyMg7vNSt
-8VQ5aO01D6AgwVqiP3LjtN9C6DBsBgkqhkiG9w0BCQ8xXzBdMAsGCWCGSAFlAwQBKjALBglg
-hkgBZQMEAQIwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCAMA0GCCqGSIb3DQMCAgFAMAcG
-BSsOAwIHMA0GCCqGSIb3DQMCAgEoMIGJBgkrBgEEAYI3EAQxfDB6MGoxCzAJBgNVBAYTAkRF
-MQ8wDQYDVQQIDAZCYXllcm4xETAPBgNVBAcMCE11ZW5jaGVuMSAwHgYDVQQKDBdNYXgtUGxh
-bmNrLUdlc2VsbHNjaGFmdDEVMBMGA1UEAwwMTVBHIENBIC0gRzAyAgweKlJIhfynPMVG/KIw
-gYsGCyqGSIb3DQEJEAILMXygejBqMQswCQYDVQQGEwJERTEPMA0GA1UECAwGQmF5ZXJuMREw
-DwYDVQQHDAhNdWVuY2hlbjEgMB4GA1UECgwXTWF4LVBsYW5jay1HZXNlbGxzY2hhZnQxFTAT
-BgNVBAMMDE1QRyBDQSAtIEcwMgIMHipSSIX8pzzFRvyiMA0GCSqGSIb3DQEBAQUABIIBACR2
-KaqPiPbnf9UJg8Xqnt6awVqFxEekLWsXkDoR/CRmwURrPcyPE2MUZ6I9k71Liys4wkwEHPDS
-TVgP8R+m+LV5FKFxhcXg61hIr+Slou196VUcOMxCRoTllX2VzMx7w81/fVQK1oVoGmh9DXjH
-v0t7rB7hLHVoAh4152YrUjjN7aRda8Ope7Ddpl7z6fwHkD9xrQCtEIZH+pjOWPywnU2kAqdO
-7xrxuVNP4Z66QtsAnz6OckrkcDLYvI5996ZQ/33vpo3aXgADyO9g7Dbk6WoRjVZ7xBIgCMzg
-qUWD5+T3BIu2S2fOU3LQYbmmaXvwReEZwsoyuh1Zv2OPueoVBsoAAAAAAAA=
---------------ms030805050004000704020804--
