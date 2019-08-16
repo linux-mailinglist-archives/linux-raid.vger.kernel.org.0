@@ -2,64 +2,59 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 705EF9035F
-	for <lists+linux-raid@lfdr.de>; Fri, 16 Aug 2019 15:45:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B42D59036C
+	for <lists+linux-raid@lfdr.de>; Fri, 16 Aug 2019 15:48:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbfHPNp5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 16 Aug 2019 09:45:57 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54928 "EHLO
+        id S1727337AbfHPNs1 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 16 Aug 2019 09:48:27 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54967 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726742AbfHPNp5 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 16 Aug 2019 09:45:57 -0400
-Received: from mail-qt1-f197.google.com ([209.85.160.197])
+        with ESMTP id S1727278AbfHPNs1 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 16 Aug 2019 09:48:27 -0400
+Received: from mail-qk1-f198.google.com ([209.85.222.198])
         by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
         (Exim 4.76)
         (envelope-from <gpiccoli@canonical.com>)
-        id 1hycYF-0001bm-Ii
-        for linux-raid@vger.kernel.org; Fri, 16 Aug 2019 13:45:55 +0000
-Received: by mail-qt1-f197.google.com with SMTP id j10so5894964qtl.23
-        for <linux-raid@vger.kernel.org>; Fri, 16 Aug 2019 06:45:55 -0700 (PDT)
+        id 1hycaf-0001r4-LP
+        for linux-raid@vger.kernel.org; Fri, 16 Aug 2019 13:48:25 +0000
+Received: by mail-qk1-f198.google.com with SMTP id q62so543242qkd.3
+        for <linux-raid@vger.kernel.org>; Fri, 16 Aug 2019 06:48:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+        h=x-gm-message-state:subject:from:to:cc:references:openpgp:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=yQ7ZqGhNs6hoTT3VOscezDfSlNkxdejGDFgNpEXCUTQ=;
-        b=nyMHhEeYVstnA7R3wx30VStDdWQnR1JTFx+favKSHT2DfIX4dQsTzmJf1qPQ8e2D5k
-         EnaoP4j5rK7By2kbDWyx/VLBq5/nM47zIuqRAgR5pa1nUVlkE0rYTQVt86CxdecmjmBT
-         7/O7TZIWUTYaIjJlQmLs43ZKOcpsKX+1g5EZhH0p7043VhZ463LjdNe2niVkunTq00DS
-         DU0eWXeaJ9lf753L9cbep1f877HssWwaB3ywejoF6MqjD798UZn3m8Ojl6CpgSz9Niew
-         BH+GVpGgQSFeOEeg+uSUXswQCL2HhQluQN91wonEleQTOGoiecGsIQLstpm7ICXpXy/q
-         o97w==
-X-Gm-Message-State: APjAAAWAU0tBAwZGVcW6JwMaXNWu4+6ubek2kEh99fm92yWGfvkYwh5G
-        7yoNg8rH49Ge6+r6H8/q2IGFWs81JJoOQaf/YjzyPBFYVOO7FYcrkQv+bab9SjnJLdw3llE+fAV
-        M9NIoGuOzyHSuvcynQMxGP5zhkZdfdBBFJ/H0rvE=
-X-Received: by 2002:a05:620a:1456:: with SMTP id i22mr8551560qkl.272.1565963154824;
-        Fri, 16 Aug 2019 06:45:54 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqw5gXfy/6A7axKULrd+X/hnmjkeHFTrxSIH2xhnbcphEt8DuTT36yrjtyewW/+PSg2DVsc4Hw==
-X-Received: by 2002:a05:620a:1456:: with SMTP id i22mr8551542qkl.272.1565963154691;
-        Fri, 16 Aug 2019 06:45:54 -0700 (PDT)
+        bh=79d/sdbXYtwwOa4n/jMG+dfgVY7Mn4hMqbid0OI3YuY=;
+        b=kJbhc3/HzDVwwrhvDxttUDy3qStEgND5tdpwrsV/FtbaqDBZcWqm6XbRCA85PTcPRM
+         Ne3FuTqQN2sp/i7QQufbyeds2x2dA7Tlwhz0Yk/34cnyjF6y2Xl58NxbJPMOs9RvTbOp
+         SUJnMqkEZ3Wilwyd3dPtjnRs2UE6tnYLYtsbDp5Rg6bqo0Xu0/USeAoNJokEq7P2GUNQ
+         Sz00OCIdadubJuW/ogNk/S0cFLJv/tvX5OzRuoutpxW0ipbO248VbBd0tNGegK3PcCgS
+         uExD4VJPCecb/8qL7qboGSEQfFHoiHZ6RQxSyvPM7rSmniCvOMqI2YB4YbCiidsn1qRV
+         CesQ==
+X-Gm-Message-State: APjAAAVZWovIBQMGpkV/LJu+aCV90VA1di61T7OYaNzZ7edej8lyvcOr
+        zsLdSH9FcAjKXj4iaiejc/g4kx4HSrP26SPOL7nKO6Ie5HcQ7ySiyZoTHLAj8Ff03abomtsdcLh
+        ZZ2kriQAjDZfuT6r6iB7nkqTGtgzHWrZ/l7+WABs=
+X-Received: by 2002:ac8:5053:: with SMTP id h19mr8734963qtm.196.1565963304913;
+        Fri, 16 Aug 2019 06:48:24 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqy+eQMJ4sK3OxMayt6beDeiCE3aW7VAeep53Nvc9Y39FVuY4gVpby6z0uWwsqhOuvJf18sOxw==
+X-Received: by 2002:ac8:5053:: with SMTP id h19mr8734946qtm.196.1565963304788;
+        Fri, 16 Aug 2019 06:48:24 -0700 (PDT)
 Received: from [192.168.1.203] ([191.13.19.2])
-        by smtp.gmail.com with ESMTPSA id u45sm2749604qta.13.2019.08.16.06.45.51
+        by smtp.gmail.com with ESMTPSA id e15sm2185377qtr.51.2019.08.16.06.48.21
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 16 Aug 2019 06:45:53 -0700 (PDT)
-Subject: Re: [PATCH] md/raid0: Fail BIOs if their underlying block device is
- gone
-To:     Song Liu <songliubraving@fb.com>
-Cc:     Song Liu <liu.song.a23@gmail.com>, NeilBrown <neilb@suse.com>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        Jay Vosburgh <jay.vosburgh@canonical.com>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        Neil F Brown <nfbrown@suse.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-References: <20190729193359.11040-1-gpiccoli@canonical.com>
- <87zhkwl6ya.fsf@notabene.neil.brown.name>
- <6400083b-3cf3-cbc6-650a-c3ae6629b14c@canonical.com>
- <CAPhsuW69YrpHqBCOob2b5wzzWS9FM087sfe3iC0odX8kZWRwmA@mail.gmail.com>
- <CAPhsuW5zB=Kik4rq9YA-xBer7Z-h-23QV4WSCWe-jvhFgGc0Cw@mail.gmail.com>
- <9674ca8f-4325-3023-8a1d-39782103f55d@canonical.com>
- <72C166DF-3984-4330-8C60-BBDA07358771@fb.com>
+        Fri, 16 Aug 2019 06:48:24 -0700 (PDT)
+Subject: Re: [PATCH 1/2] md/raid0: Introduce new array state 'broken' for
+ raid0
 From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+To:     Song Liu <liu.song.a23@gmail.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>,
+        linux-block@vger.kernel.org, dm-devel@redhat.com,
+        Jay Vosburgh <jay.vosburgh@canonical.com>,
+        NeilBrown <neilb@suse.com>, Song Liu <songliubraving@fb.com>
+References: <20190729203135.12934-1-gpiccoli@canonical.com>
+ <20190729203135.12934-2-gpiccoli@canonical.com>
+ <CAPhsuW5n9TCZjVT3QnFhHkbfPTvh7ifFiNXypOHouL5ByZS7+w@mail.gmail.com>
+ <037ef0ef-1a34-f522-6b31-e388906a87fa@canonical.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=gpiccoli@canonical.com; prefer-encrypt=mutual; keydata=
  mQENBFpVBxcBCADPNKmu2iNKLepiv8+Ssx7+fVR8lrL7cvakMNFPXsXk+f0Bgq9NazNKWJIn
@@ -85,12 +80,12 @@ Autocrypt: addr=gpiccoli@canonical.com; prefer-encrypt=mutual; keydata=
  Yh6gTrYoRYHo6FuQl5YsHop/fmTahpTx11IMjuh6IJQ+lvdpdfYJ6hmAZ9kiVszDF6pGFVkY
  kHWtnE2Aa5qkxnA2HoFpqFifNWn5TyvJFpyqwVhVI8XYtXyVHub/WbXLWQwSJA4OHmqU8gDl
  X18zwLgdiQ==
-Message-ID: <47eea35a-c932-66e6-159e-37936b8e60f6@canonical.com>
-Date:   Fri, 16 Aug 2019 10:45:48 -0300
+Message-ID: <5c63662a-2cea-bcd7-9f09-b09a68a156c4@canonical.com>
+Date:   Fri, 16 Aug 2019 10:48:19 -0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <72C166DF-3984-4330-8C60-BBDA07358771@fb.com>
+In-Reply-To: <037ef0ef-1a34-f522-6b31-e388906a87fa@canonical.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -99,32 +94,8 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 01/08/2019 19:43, Song Liu wrote:
-> 
-> [...]
->> Hi Song, thanks for the feedback! After changing the patch and testing a
->> bit, it behaves exactly as you said, we got either valid data read from
->> the healthy devices or -EIO for the data tentatively read from the
->> failed/missing array members.
-> 
-> Thanks for testing this out. 
-> 
->>
->> So, I'll resubmit with that change. Also, I've noticed clearing the
->> BROKEN flag seem unnecessary, if user stops the array in order to fix
->> the missing member, it'll require a re-assembly and the array is gonna
->> work again.
->>
->> Do you / Neil considers this fix relevant to md/linear too? If so, I can
->> also include that in the V2.
-> 
-> Yes, please also include fix for md/linear. 
-> 
-> Song
-> 
-
 V2 just sent:
-lore.kernel.org/linux-block/20190816133441.29350-1-gpiccoli@canonical.com
+lore.kernel.org/linux-block/20190816134059.29751-1-gpiccoli@canonical.com
 
 Thanks,
 
