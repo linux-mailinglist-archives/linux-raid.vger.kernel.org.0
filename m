@@ -2,139 +2,72 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BBA18FD49
-	for <lists+linux-raid@lfdr.de>; Fri, 16 Aug 2019 10:11:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90E698FD94
+	for <lists+linux-raid@lfdr.de>; Fri, 16 Aug 2019 10:19:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfHPIK4 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 16 Aug 2019 04:10:56 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37882 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfHPIK4 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 16 Aug 2019 04:10:56 -0400
-Received: by mail-wr1-f68.google.com with SMTP id z11so704931wrt.4
-        for <linux-raid@vger.kernel.org>; Fri, 16 Aug 2019 01:10:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MS61GMgEvdHYUsX/D1TRCCawW8p8Qqopt15uSqVsXJY=;
-        b=Y0WaWiAsWj46fzLNk/Pk0gg1cBEpKiTtG9ViFT+7Egli+OeoljqrIP2l00vNM64iHo
-         N6F3+VxxeK3ilnbUrBoUj5t4ZOPkUtcxGtBbGUq48YlLWIUtumboc8S/DQw9tMFIa6ZN
-         IiYMgeMsDdVAvOxwFYwMlkwivyiCtw5gZSEE6Trpuqq2JHCHldvD8yF0DFkiEfboJSqb
-         6mf8wA34wB0R0oMrWzPHIEGkVTQQ2secG6Lnll1IomQRQTrUvacMAdWQFqglRF93HmQP
-         Ex3HBc8K1O+05TmmMWjdfeufc4NoUCBcFl1GvxLxxPL4WjLVy3pvwz7+lBZuor5chmyZ
-         0/eQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MS61GMgEvdHYUsX/D1TRCCawW8p8Qqopt15uSqVsXJY=;
-        b=ea1Y8G7HIl4LZT51eO52zy1JVjJyZnnAQRrqBUIwLYONIoCg4jUdrVS3xT2yD5dHou
-         s0/MQ58iWtSBloWkGqSc0+Rf+O8qN7ziBcQHpZD+ZwN7vYof1KBrzqSajreK8u412c+u
-         w/csTIf4apm0J4BtCShRByreeWf41ihXbbnr55qwUDjspzlcGsnSH82DB8kpup7EMIC/
-         NI5Eio6AJMJMUsDMn5X1rm6I3mXEUT1q0oqSxhL0H/uvTlBgMxxk+zo6u/UNQBmXvtPC
-         Hr9Dbl/Cw6LSa6/76QG3b47xQu4kUlDF4pt5tHUmGVRlngDtUsiQOWIsgLAPkcO8r8Qt
-         hkiQ==
-X-Gm-Message-State: APjAAAUn9QYE+IF674LVTO+qEWcxafvmT2TdCRxrI61Tmk3PH/UvyMsd
-        o/8D1FSeJlZ4vOFXQT0oxc4oazQmF2yQY6WUwzoibg==
-X-Google-Smtp-Source: APXvYqwafOormkwlcyK+ZlFMv6/CTaDla48+B+XDU17HTGTU4m3SZ5JBPeSo9IVg/8m6HDIO35UgWA3sUADVHt57e7Q=
-X-Received: by 2002:a5d:5701:: with SMTP id a1mr9260849wrv.95.1565943054219;
- Fri, 16 Aug 2019 01:10:54 -0700 (PDT)
+        id S1726749AbfHPITB (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 16 Aug 2019 04:19:01 -0400
+Received: from mga02.intel.com ([134.134.136.20]:53611 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726575AbfHPITB (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 16 Aug 2019 04:19:01 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Aug 2019 01:14:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,391,1559545200"; 
+   d="scan'208";a="328620040"
+Received: from irsmsx151.ger.corp.intel.com ([163.33.192.59])
+  by orsmga004.jf.intel.com with ESMTP; 16 Aug 2019 01:14:26 -0700
+Received: from irsmsx156.ger.corp.intel.com (10.108.20.68) by
+ IRSMSX151.ger.corp.intel.com (163.33.192.59) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 16 Aug 2019 09:14:25 +0100
+Received: from irsmsx105.ger.corp.intel.com ([169.254.7.73]) by
+ IRSMSX156.ger.corp.intel.com ([169.254.3.87]) with mapi id 14.03.0439.000;
+ Fri, 16 Aug 2019 09:14:26 +0100
+From:   "Smolinski, Krzysztof" <krzysztof.smolinski@intel.com>
+To:     "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>
+CC:     Jes Sorensen <jes.sorensen@gmail.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>
+Subject: RE: [PATCH] mdadm: fixed mdadm compilation on gcc8
+Thread-Topic: [PATCH] mdadm: fixed mdadm compilation on gcc8
+Thread-Index: AQHVUb1eG41lRzJaNEeIDeHfxcbHbab40tgAgASdlBA=
+Date:   Fri, 16 Aug 2019 08:14:25 +0000
+Message-ID: <17A1AC191FC9154087149BFFF6E034224294D0A7@irsmsx105.ger.corp.intel.com>
+References: <20190813095552.32445-1-mariusz.dabrowski@intel.com>
+ <1a82bc79-0bc8-7686-daec-352a80f1f88d@molgen.mpg.de>
+In-Reply-To: <1a82bc79-0bc8-7686-daec-352a80f1f88d@molgen.mpg.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNGE0MzIzMTAtMWI3ZS00MzliLTk0NWItOWU1ZjMyNWIxOTE2IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiK2JTRXZ0TGtCUmFOVU00UTZiK3E2cDUwQ0VTd2VGdkZMVlJPUGZCWjdqZGlcLzNJcHdjZUdPTmI5bW9vK0p5b0YifQ==
+x-ctpclassification: CTP_NT
+x-originating-ip: [163.33.239.181]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <CAMGffEkotpvVz8FA78vNFh0qZv3kEMNrXXfVPEUC=MhH0pMCZA@mail.gmail.com>
- <0a83fde3-1a74-684c-0d70-fb44b9021f96@molgen.mpg.de> <CAMGffE=_kPoBmSwbxvrqdqbhpR5Cu2Vbe4ArGqm9ns9+iVEH_g@mail.gmail.com>
- <CAMGffEkcXcQC+kjwdH0iVSrFDk-o+dp+b3Q1qz4z=R=6D+QqLQ@mail.gmail.com>
- <87h86vjhv0.fsf@notabene.neil.brown.name> <CAMGffEnKXQJBbDS8Yi0S5ZKEMHVJ2_SKVPHeb9Rcd6oT_8eTuw@mail.gmail.com>
- <CAMGffEkfs0KsuWX8vGY==1dym78d6wsao_otSjzBAPzwGtoQcw@mail.gmail.com>
- <87blx1kglx.fsf@notabene.neil.brown.name> <CAMGffE=cpxumr0QqJsiGGKpmZr+4a0BiCx3n0_twa5KPs=yX1g@mail.gmail.com>
- <CAMGffEm41+-DvUu_MhfbVURL_LOY8KP1QkTWDcFf7nyGLK7Y3A@mail.gmail.com>
-In-Reply-To: <CAMGffEm41+-DvUu_MhfbVURL_LOY8KP1QkTWDcFf7nyGLK7Y3A@mail.gmail.com>
-From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Date:   Fri, 16 Aug 2019 10:10:43 +0200
-Message-ID: <CAMGffEn8FkjoQjno0kDzQcr6pcSXr3PGGfsErnhv0HN0+zEwhg@mail.gmail.com>
-Subject: Re: Bisected: Kernel 4.14 + has 3 times higher write IO latency than
- Kernel 4.4 with raid1
-To:     NeilBrown <neilb@suse.com>
-Cc:     Neil F Brown <nfbrown@suse.com>,
-        Alexandr Iarygin <alexandr.iarygin@cloud.ionos.com>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        linux-kernel@vger.kernel.org,
-        linux-raid <linux-raid@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Wed, Aug 7, 2019 at 2:35 PM Jinpu Wang <jinpu.wang@cloud.ionos.com> wrote:
->
-> On Wed, Aug 7, 2019 at 8:36 AM Jinpu Wang <jinpu.wang@cloud.ionos.com> wrote:
-> >
-> > On Wed, Aug 7, 2019 at 1:40 AM NeilBrown <neilb@suse.com> wrote:
-> > >
-> > > On Tue, Aug 06 2019, Jinpu Wang wrote:
-> > >
-> > > > On Tue, Aug 6, 2019 at 9:54 AM Jinpu Wang <jinpu.wang@cloud.ionos.com> wrote:
-> > > >>
-> > > >> On Tue, Aug 6, 2019 at 1:46 AM NeilBrown <neilb@suse.com> wrote:
-> > > >> >
-> > > >> > On Mon, Aug 05 2019, Jinpu Wang wrote:
-> > > >> >
-> > > >> > > Hi Neil,
-> > > >> > >
-> > > >> > > For the md higher write IO latency problem, I bisected it to these commits:
-> > > >> > >
-> > > >> > > 4ad23a97 MD: use per-cpu counter for writes_pending
-> > > >> > > 210f7cd percpu-refcount: support synchronous switch to atomic mode.
-> > > >> > >
-> > > >> > > Do you maybe have an idea? How can we fix it?
-> > > >> >
-> > > >> > Hmmm.... not sure.
-> > > >> Hi Neil,
-> > > >>
-> > > >> Thanks for reply, detailed result in line.
-> > >
-> > > Thanks for the extra testing.
-> > > ...
-> > > > [  105.133299] md md0 in_sync is 0, sb_flags 2, recovery 3, external
-> > > > 0, safemode 0, recovery_cp 524288
-> > > ...
-> > >
-> > > ahh - the resync was still happening.  That explains why set_in_sync()
-> > > is being called so often.  If you wait for sync to complete (or create
-> > > the array with --assume-clean) you should see more normal behaviour.
-> > I've updated my tests accordingly, thanks for the hint.
-> > >
-> > > This patch should fix it.  I think we can do better but it would be more
-> > > complex so no suitable for backports to -stable.
-> > >
-> > > Once you confirm it works, I'll send it upstream with a
-> > > Reported-and-Tested-by from you.
-> > >
-> > > Thanks,
-> > > NeilBrown
-> >
-> > Thanks a lot, Neil, my quick test show, yes, it fixed the problem for me.
-> >
-> > I will run more tests to be sure, will report back the test result.
-> Hi Neil,
->
-> I've run our regression tests with your patch, everything works fine
-> as expected.
->
-> So Reported-and-Tested-by: Jack Wang <jinpu.wang@cloud.ionos.com>
->
-> Thank you for your quick fix.
->
-> The patch should go to stable 4.12+
-
-Hi Neil,
-
-I hope you're doing well, just a soft ping? do you need further
-testing from my side?
-
-Please let me know how can we move the fix forward.
-
-Thanks,
-Jack Wang
+PknigJlkIHVzZSBpbXBlcmF0aXZlIG1vb2QgaW4gdGhlIGNvbW1pdCBtZXNzYWdlLCBhbmQgYmUg
+bW9yZSBleHBsaWNpdC4NCj4NCj4+IG1kYWRtOiBVc2UgUEFUSF9NQVggb3ZlciBNQVhfU1lTRlNf
+UEFUSF9MRU4NCj4NCj4+IEdDQzggbWFrZSBtb3JlIHN0cmljdCBjaGVja3Mgb2YgcG9zc2libGUg
+dHJ1bmNhdGlvbiBkdXJpbmcgc25wcmludGYNCj4NCj5zL21ha2UvbWFrZXMvDQo+DQo+b3I6IEdD
+QyA4IGNoZWNrcyBwb3NzaWJsZSB0cnVuY2F0aW9uIGR1cmluZyBzbnByaW50ZiBtb3JlIHN0cmlj
+dGx5IHRoYW4NCj5HQ0MgNy4NCj4NCj4+IGNhbGxzIHRoYW4gR0NDNyB3aGljaCBjYXVzZSBjb21w
+aWxhdGlvbiBlcnJvcnMuIFRoaXMgcGF0Y2gNCj4+IGZpeGVzIGNvbXBpbGF0aW9uIG9mIG1kYWRt
+IG9uIEdDQzggY29tcGlsZXIuDQo+DQo+U28geW91IGluY3JlYXNlIHRoZSBidWZmZXIgc2l6ZSBm
+cm9tIDEyMCB0byBQQVRIX01BWCAoNDA5Nik/IFdoYXQgaXMNCj50aGUgbG9naWMgYmVoaW5kIHRo
+YXQgYmVzaWRlcyBqdXN0IGJlaW5nIGJpZ2dlcj8NCj4NCj5QQVRIX01BWCBzZWVtcyB0byBiZSB0
+cmlja3k6IGh0dHBzOi8vZWtsaXR6a2Uub3JnL3BhdGgtbWF4LWlzLXRyaWNreQ0KDQpJIGFncmVl
+IHdpdGggeW91IHJlZ2FyZGluZyBzb2x1dGlvbiB1c2luZyBQQVRIX01BWC4gTUFYX1NZU0ZTX1BB
+VEhfTEVOIGRlZmluZXMgbWF4IHBhdGggYW5kIHRoaXMgdmFsdWUgc2hvdWxkIGJlIHVzZWQuIEkg
+d2lsbCB1cGxvYWQgc2Vjb25kIHZlcnNpb24gb2YgcGF0Y2ggd2l0aCBjaGVjayBhZ2FpbnN0IGVy
+cm9ycyBhbmQgdHJ1bmNhdGlvbi4NCg0KQmVzdCByZWdhcmRzLA0KS3J6eXN6dG9mDQo=
