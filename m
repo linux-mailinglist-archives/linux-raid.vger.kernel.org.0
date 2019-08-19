@@ -2,68 +2,94 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6748594BA8
-	for <lists+linux-raid@lfdr.de>; Mon, 19 Aug 2019 19:30:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7574D94C68
+	for <lists+linux-raid@lfdr.de>; Mon, 19 Aug 2019 20:11:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbfHSR0i (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 19 Aug 2019 13:26:38 -0400
-Received: from guest-port.merlins.org ([173.11.111.148]:44134 "EHLO
-        mail1.merlins.org" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1727653AbfHSR0i (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 19 Aug 2019 13:26:38 -0400
-Received: from merlin by mail1.merlins.org with local (Exim 4.92 #3)
-        id 1hzlQS-0007yT-Sp by authid <merlin>; Mon, 19 Aug 2019 10:26:36 -0700
-Date:   Mon, 19 Aug 2019 10:26:36 -0700
-From:   Marc MERLIN <marc@merlins.org>
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     o1bigtenor@gmail.com, linux-block@vger.kernel.org,
-        Linux-RAID <linux-raid@vger.kernel.org>
-Subject: Re: 5.1.21 Dell 2950 terrible swraid5 I/O performance with swraid on top of Perc 5/i raid0/jbod
-Message-ID: <20190819172636.GG5431@merlins.org>
-References: <20190819070823.GH12521@merlins.org> <5DCAD3D8-07B6-4A5D-A3C1-A1DF4055C5BD@linaro.org> <20190819164053.GF5431@merlins.org> <68ADE81A-2A48-4E95-91F6-60826FFDAF6F@linaro.org>
+        id S1727908AbfHSSLI (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 19 Aug 2019 14:11:08 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:36174 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbfHSSLI (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 19 Aug 2019 14:11:08 -0400
+Received: by mail-qk1-f196.google.com with SMTP id d23so2216639qko.3;
+        Mon, 19 Aug 2019 11:11:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QUo3vv/nySNtkH4c0ejok0wACVdS9AW/rtC9nJIa5ZM=;
+        b=VJfj0iMxpeahYQMEN/7zlKXbBZDjF9zBVgVDxANzrksehdvUz7XgEtKf9Ea/tNl5Sr
+         gZ2/6W19/E9GgzvlLV/hKct0W/NtqA2UnI3qbpeRPs902j64StagLGCGmn13bSQPLvV9
+         dcPC4rpo/Y4jaUqW2LWcFO/lrd4YgLgt9d9Cjy8O4bvQzrrTFvFRdo00APQSPQDMOYdj
+         06KVMu8jncjqAP8Uy3b/a2C9qcwizlFjyKqIBBmSOm/2FXn7zRdZRclOb1jiVTOLmCVn
+         tknQVkPKGnMBKk4QtX/m0F8Y624pnE47/OBPKemYV01IOwa5e1iF3zJUywmUVCKKm0XH
+         W1PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QUo3vv/nySNtkH4c0ejok0wACVdS9AW/rtC9nJIa5ZM=;
+        b=T4RfC/vwTCc8D824gkVsuor9J2a8ZeVwyIrhInjnJYBttEJWAQBXnJxHf+LC1drSEf
+         ULkfH8fHmTrX/TPgc5iwBfUzVNwffledudeFVbZtJP9pZmG1pkugScbZ2jmB11kkZ6zM
+         7xd4kdDnFRecxtgx84tITCp+NBrPNPJiWopZFTywi5XrowoBiqMZT1AAttmTWgw+gPRG
+         9O+8QBM9XLw/9RPkXqgS1EB3u4S5LipZNbqT/qBzHfdxnlVv5vEacuPnadnE4cvi2iNX
+         zEJlaYj9tVbLyDqMEil6hRsyjS9stg5zYGS2lKA6JRZwu20MVAL6pWqYndGG3VoLoTQm
+         c5Pw==
+X-Gm-Message-State: APjAAAWSmeFUm9eF0CvhWpp0QBP4Y4GFihbepp41QiEty6lDVvG0H7cH
+        N15Y3KPK2/kKKfPxGgA3RTZs9QOiML54BIKqK5k=
+X-Google-Smtp-Source: APXvYqzLdH7ejeArb92iobT856dPrFHhyxu76ltyuadDWvLzMWNjn3Nho+gdzzKjbbLPdamdiOJQEobLjuXHwZdxQXs=
+X-Received: by 2002:a37:a142:: with SMTP id k63mr22046145qke.487.1566238267635;
+ Mon, 19 Aug 2019 11:11:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <68ADE81A-2A48-4E95-91F6-60826FFDAF6F@linaro.org>
-X-Sysadmin: BOFH
-X-URL:  http://marc.merlins.org/
-User-Agent: Mutt/1.5.13 (2006-08-11)
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: marc@merlins.org
+References: <20190816134059.29751-1-gpiccoli@canonical.com>
+In-Reply-To: <20190816134059.29751-1-gpiccoli@canonical.com>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Mon, 19 Aug 2019 11:10:56 -0700
+Message-ID: <CAPhsuW7aGze5p9DgNAe=KakJGXTNqRZpNCtvi8nKxzS2MPXrNQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] md raid0/linear: Introduce new array state 'broken'
+To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>,
+        linux-block@vger.kernel.org, dm-devel@redhat.com,
+        Jay Vosburgh <jay.vosburgh@canonical.com>,
+        NeilBrown <neilb@suse.com>, Song Liu <songliubraving@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 07:05:42PM +0200, Paolo Valente wrote:
-> > newmagic:~# hdparm -t /dev/md2
-> > /dev/md2:
-> > HDIO_DRIVE_CMD(identify) failed: Inappropriate ioctl for device
-> >  Timing buffered disk reads:   2 MB in  5.76 seconds = 355.42 kB/sec
-> > 
-> > I think things hang a bit less, which I suppose it good, but the system is
-> > still unusable overall.
-> 
-> Ok, I'm sorry it didn't help.  Unless someone spots the problem
-> somewhere outside BFQ, I'm willing to analyze this apparently tough
-> scenario, as an opportunity to improve BFQ.  If fine for you, just
-> contact me offline.
+On Fri, Aug 16, 2019 at 6:41 AM Guilherme G. Piccoli
+<gpiccoli@canonical.com> wrote:
+>
+> Currently if md raid0/linear array gets one or more members removed while
+> being mounted, kernel keeps showing state 'clean' in the 'array_state'
+> sysfs attribute. Despite udev signaling the member device is gone, 'mdadm'
+> cannot issue the STOP_ARRAY ioctl successfully, given the array is mounted.
+>
+> Nothing else hints that something is wrong (except that the removed devices
+> don't show properly in the output of 'mdadm detail' command). There is no
+> other property to be checked, and if user is not performing reads/writes
+> to the array, even kernel log is quiet and doesn't give a clue about the
+> missing member.
+>
+> This patch changes this behavior; when 'array_state' is read we introduce
+> a non-expensive check (only for raid0/md-linear) that relies in the
+> comparison of the total number of disks when array was assembled with
+> gendisk flags of those devices to validate if all members are available
+> and functional. A new array state 'broken' was added: it mimics the state
+> 'clean' in every aspect, being useful only to distinguish if such array
+> has some member missing. Also, we show a rate-limited warning in kernel
+> log in such case.
+>
+> This patch has no proper functional change other than adding the
+> 'clean'-like state; it was tested with ext4 and xfs filesystems. It
+> requires a 'mdadm' counterpart to handle the 'broken' state.
+>
+> Cc: NeilBrown <neilb@suse.com>
+> Cc: Song Liu <songliubraving@fb.com>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
 
-I'm sure there is something very wrong somewhere, and that it's not BFQ's
-fault. I just haven't been able to pinpoint the problem.
+If we merge this with the MD_BROKEN patch, would the code look simpler?
 
-I ended up finding an H700 card with cables that should fit, so I'm going to
-try this first, and see what happens, thanks o1bigtenor for the suggestion.
-
-Linux-raid folks, the original post still has a warning likely worth looking
-into:
-[14852.341924] WARNING: CPU: 0 PID: 2530 at drivers/md/md.c:8180 md_write_inc+0x15/0x40 [md_mod]
-which in turn put the array in dirty mode.
-
-Best,
-Marc
--- 
-"A mouse is a device used to point at the xterm you want to type in" - A.S.R.
-Microsoft is to operating systems ....
-                                      .... what McDonalds is to gourmet cooking
-Home page: http://marc.merlins.org/  
+Thanks,
+Song
