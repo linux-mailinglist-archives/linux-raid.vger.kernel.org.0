@@ -2,140 +2,59 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C1A11952C1
-	for <lists+linux-raid@lfdr.de>; Tue, 20 Aug 2019 02:28:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 41866956DB
+	for <lists+linux-raid@lfdr.de>; Tue, 20 Aug 2019 07:49:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbfHTA2I (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 19 Aug 2019 20:28:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49344 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728578AbfHTA2H (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 19 Aug 2019 20:28:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BF64AAC28;
-        Tue, 20 Aug 2019 00:28:05 +0000 (UTC)
-From:   NeilBrown <neilb@suse.com>
-To:     Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Date:   Tue, 20 Aug 2019 10:27:58 +1000
-Cc:     Alexandr Iarygin <alexandr.iarygin@cloud.ionos.com>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Neil F Brown <nfbrown@suse.com>,
-        linux-kernel@vger.kernel.org,
-        linux-raid <linux-raid@vger.kernel.org>
-Subject: Re: Bisected: Kernel 4.14 + has 3 times higher write IO latency than Kernel 4.4 with raid1
-In-Reply-To: <CAMGffEn8FkjoQjno0kDzQcr6pcSXr3PGGfsErnhv0HN0+zEwhg@mail.gmail.com>
-References: <CAMGffEkotpvVz8FA78vNFh0qZv3kEMNrXXfVPEUC=MhH0pMCZA@mail.gmail.com> <0a83fde3-1a74-684c-0d70-fb44b9021f96@molgen.mpg.de> <CAMGffE=_kPoBmSwbxvrqdqbhpR5Cu2Vbe4ArGqm9ns9+iVEH_g@mail.gmail.com> <CAMGffEkcXcQC+kjwdH0iVSrFDk-o+dp+b3Q1qz4z=R=6D+QqLQ@mail.gmail.com> <87h86vjhv0.fsf@notabene.neil.brown.name> <CAMGffEnKXQJBbDS8Yi0S5ZKEMHVJ2_SKVPHeb9Rcd6oT_8eTuw@mail.gmail.com> <CAMGffEkfs0KsuWX8vGY==1dym78d6wsao_otSjzBAPzwGtoQcw@mail.gmail.com> <87blx1kglx.fsf@notabene.neil.brown.name> <CAMGffE=cpxumr0QqJsiGGKpmZr+4a0BiCx3n0_twa5KPs=yX1g@mail.gmail.com> <CAMGffEm41+-DvUu_MhfbVURL_LOY8KP1QkTWDcFf7nyGLK7Y3A@mail.gmail.com> <CAMGffEn8FkjoQjno0kDzQcr6pcSXr3PGGfsErnhv0HN0+zEwhg@mail.gmail.com>
-Message-ID: <87pnl0he9d.fsf@notabene.neil.brown.name>
+        id S1729150AbfHTFtO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 20 Aug 2019 01:49:14 -0400
+Received: from guest-port.merlins.org ([173.11.111.148]:49457 "EHLO
+        mail1.merlins.org" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbfHTFtN (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 20 Aug 2019 01:49:13 -0400
+Received: from merlin by mail1.merlins.org with local (Exim 4.92 #3)
+        id 1hzx16-0004Q8-Bl by authid <merlin>; Mon, 19 Aug 2019 22:49:12 -0700
+Date:   Mon, 19 Aug 2019 22:49:12 -0700
+From:   Marc MERLIN <marc@merlins.org>
+To:     o1bigtenor <o1bigtenor@gmail.com>
+Cc:     linux-block@vger.kernel.org,
+        Linux-RAID <linux-raid@vger.kernel.org>
+Subject: Re: 5.1.21 Dell 2950 terrible swraid5 I/O performance with swraid on top of Perc 5/i raid0/jbod
+Message-ID: <20190820054912.GJ5431@merlins.org>
+References: <20190819070823.GH12521@merlins.org> <CAPpdf5-82P0ri7KB34g_eWS6SKdVapCgUtYphwOL6E+HUwimcg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPpdf5-82P0ri7KB34g_eWS6SKdVapCgUtYphwOL6E+HUwimcg@mail.gmail.com>
+X-Sysadmin: BOFH
+X-URL:  http://marc.merlins.org/
+User-Agent: Mutt/1.5.13 (2006-08-11)
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: marc@merlins.org
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+On Mon, Aug 19, 2019 at 06:42:23AM -0500, o1bigtenor wrote:
+> Not to discourage you from a possibly interesting and fruitful endeavor
+> but when I bought myself a slightly newer dell server I traded out the
+> PERC card for a newer version (model 700 IIRC) and then I things
+> were quite a big different. Said board, bought used, wasn't very
+> expensive. YMMV
 
-On Fri, Aug 16 2019, Jinpu Wang wrote:
+Well, just received my H700 today, plugged it in, not everything is perfect
+because I'm missing a cable, but sure enough, my rebuild speeds got 8 times
+faster and the system stopped hanging all the time if I do any I/O.
 
-> On Wed, Aug 7, 2019 at 2:35 PM Jinpu Wang <jinpu.wang@cloud.ionos.com> wrote:
->>
->> On Wed, Aug 7, 2019 at 8:36 AM Jinpu Wang <jinpu.wang@cloud.ionos.com> wrote:
->> >
->> > On Wed, Aug 7, 2019 at 1:40 AM NeilBrown <neilb@suse.com> wrote:
->> > >
->> > > On Tue, Aug 06 2019, Jinpu Wang wrote:
->> > >
->> > > > On Tue, Aug 6, 2019 at 9:54 AM Jinpu Wang <jinpu.wang@cloud.ionos.com> wrote:
->> > > >>
->> > > >> On Tue, Aug 6, 2019 at 1:46 AM NeilBrown <neilb@suse.com> wrote:
->> > > >> >
->> > > >> > On Mon, Aug 05 2019, Jinpu Wang wrote:
->> > > >> >
->> > > >> > > Hi Neil,
->> > > >> > >
->> > > >> > > For the md higher write IO latency problem, I bisected it to these commits:
->> > > >> > >
->> > > >> > > 4ad23a97 MD: use per-cpu counter for writes_pending
->> > > >> > > 210f7cd percpu-refcount: support synchronous switch to atomic mode.
->> > > >> > >
->> > > >> > > Do you maybe have an idea? How can we fix it?
->> > > >> >
->> > > >> > Hmmm.... not sure.
->> > > >> Hi Neil,
->> > > >>
->> > > >> Thanks for reply, detailed result in line.
->> > >
->> > > Thanks for the extra testing.
->> > > ...
->> > > > [  105.133299] md md0 in_sync is 0, sb_flags 2, recovery 3, external
->> > > > 0, safemode 0, recovery_cp 524288
->> > > ...
->> > >
->> > > ahh - the resync was still happening.  That explains why set_in_sync()
->> > > is being called so often.  If you wait for sync to complete (or create
->> > > the array with --assume-clean) you should see more normal behaviour.
->> > I've updated my tests accordingly, thanks for the hint.
->> > >
->> > > This patch should fix it.  I think we can do better but it would be more
->> > > complex so no suitable for backports to -stable.
->> > >
->> > > Once you confirm it works, I'll send it upstream with a
->> > > Reported-and-Tested-by from you.
->> > >
->> > > Thanks,
->> > > NeilBrown
->> >
->> > Thanks a lot, Neil, my quick test show, yes, it fixed the problem for me.
->> >
->> > I will run more tests to be sure, will report back the test result.
->> Hi Neil,
->>
->> I've run our regression tests with your patch, everything works fine
->> as expected.
->>
->> So Reported-and-Tested-by: Jack Wang <jinpu.wang@cloud.ionos.com>
->>
->> Thank you for your quick fix.
->>
->> The patch should go to stable 4.12+
->
-> Hi Neil,
->
-> I hope you're doing well, just a soft ping? do you need further
-> testing from my side?
+I still think there was something fairly unexpected/wrong with the Perc 5/i
+outside of it being a cheap card, but I have other things to worry about to
+spend more time to find out :)
+That said, if anyone wants the card for cost of shipping (US only please,
+shipping abroad is too much of a pain), let me know and I'll give it to you.
 
-Thanks for the reminder.  I've sent out the patch now.
-
-NeilBrown
-
-
->
-> Please let me know how can we move the fix forward.
->
-> Thanks,
-> Jack Wang
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl1bPo4ACgkQOeye3VZi
-gblYVg/8Dexb3Ia8ZpTQaD7fgTUi9kZ89sfPTzDBTxpcXiuYbGm2F2cCk3Uf12R4
-Zfdr1EFajzmPo98CVCNcB7pzkbHqvtH5rx1XwxV6gQ0pIGJzWp3pnDSnfoLalj4k
-BeKs/zWjo5NHyUH0VTXQJmOhKuSk7RCSkEfNJVdV0q07ShK1uegy2khv7PEfmhdl
-5e8vsf3aXNDfZnparqaY6fJanrMvv+Psq0lQUtQYVTLgk8Ty9NOTDh07aRoj2ZjJ
-u3Pxyt80jMIgkVOiBghdziDnapxCixPydXs8Pdj5y9IbSiii8noRDiHDnN3dLgg3
-6VWy1uk3cp83Op0Nm+6Fe/IgPTRFZN8K9UGb1woOTsP4Abpe6K275k41CkgZ5HQF
-TsFD0icnEnjHH6O5yYn4oGLWf/LEl1H2B1sWN7K/HP+RzQNvwKistYTuxpacShwa
-L4xKm3b3anaQoMNm+rC+SfsVWjY0lFcFcy+sfZytcr2BrBfSgV5efD1aMeEKhtbm
-jLkI15kvfmPbl+mqMOc3A4B7jT3I/Y5J2Vgv5KIWCrm/4zrDN5TZ6AU4Yy4B+rMi
-QxrMcKYkXTvKF3jz56s3rHtgyLs6kopXVcX3Krqw4n7SIhV8Q0G/4nTLV0DPryAr
-lV1dRxQi4BuL5adBWDd6TDxXqPO6ukPXVF3lqbVz0e4x6duIjK0=
-=TyQL
------END PGP SIGNATURE-----
---=-=-=--
+Marc
+-- 
+"A mouse is a device used to point at the xterm you want to type in" - A.S.R.
+Microsoft is to operating systems ....
+                                      .... what McDonalds is to gourmet cooking
+Home page: http://marc.merlins.org/  
