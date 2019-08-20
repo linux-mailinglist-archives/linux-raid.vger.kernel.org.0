@@ -2,132 +2,140 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F5CF952BF
-	for <lists+linux-raid@lfdr.de>; Tue, 20 Aug 2019 02:26:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1A11952C1
+	for <lists+linux-raid@lfdr.de>; Tue, 20 Aug 2019 02:28:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728682AbfHTA0m (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 19 Aug 2019 20:26:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49184 "EHLO mx1.suse.de"
+        id S1728714AbfHTA2I (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 19 Aug 2019 20:28:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49344 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728351AbfHTA0m (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 19 Aug 2019 20:26:42 -0400
+        id S1728578AbfHTA2H (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 19 Aug 2019 20:28:07 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1F2A9ABF4;
-        Tue, 20 Aug 2019 00:26:41 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id BF64AAC28;
+        Tue, 20 Aug 2019 00:28:05 +0000 (UTC)
 From:   NeilBrown <neilb@suse.com>
-To:     Song Liu <liu.song.a23@gmail.com>
-Date:   Tue, 20 Aug 2019 10:21:09 +1000
-Subject: [PATCH 2/2] md: don't report active array_state until after
- revalidate_disk() completes.
-Cc:     linux-raid@vger.kernel.org
-Message-ID: <156626046966.15343.2000781542596751688.stgit@noble.brown>
-In-Reply-To: <156626036792.15343.14564114570071245486.stgit@noble.brown>
-References: <156626036792.15343.14564114570071245486.stgit@noble.brown>
-User-Agent: StGit/0.17.1-dirty
+To:     Jinpu Wang <jinpu.wang@cloud.ionos.com>
+Date:   Tue, 20 Aug 2019 10:27:58 +1000
+Cc:     Alexandr Iarygin <alexandr.iarygin@cloud.ionos.com>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Neil F Brown <nfbrown@suse.com>,
+        linux-kernel@vger.kernel.org,
+        linux-raid <linux-raid@vger.kernel.org>
+Subject: Re: Bisected: Kernel 4.14 + has 3 times higher write IO latency than Kernel 4.4 with raid1
+In-Reply-To: <CAMGffEn8FkjoQjno0kDzQcr6pcSXr3PGGfsErnhv0HN0+zEwhg@mail.gmail.com>
+References: <CAMGffEkotpvVz8FA78vNFh0qZv3kEMNrXXfVPEUC=MhH0pMCZA@mail.gmail.com> <0a83fde3-1a74-684c-0d70-fb44b9021f96@molgen.mpg.de> <CAMGffE=_kPoBmSwbxvrqdqbhpR5Cu2Vbe4ArGqm9ns9+iVEH_g@mail.gmail.com> <CAMGffEkcXcQC+kjwdH0iVSrFDk-o+dp+b3Q1qz4z=R=6D+QqLQ@mail.gmail.com> <87h86vjhv0.fsf@notabene.neil.brown.name> <CAMGffEnKXQJBbDS8Yi0S5ZKEMHVJ2_SKVPHeb9Rcd6oT_8eTuw@mail.gmail.com> <CAMGffEkfs0KsuWX8vGY==1dym78d6wsao_otSjzBAPzwGtoQcw@mail.gmail.com> <87blx1kglx.fsf@notabene.neil.brown.name> <CAMGffE=cpxumr0QqJsiGGKpmZr+4a0BiCx3n0_twa5KPs=yX1g@mail.gmail.com> <CAMGffEm41+-DvUu_MhfbVURL_LOY8KP1QkTWDcFf7nyGLK7Y3A@mail.gmail.com> <CAMGffEn8FkjoQjno0kDzQcr6pcSXr3PGGfsErnhv0HN0+zEwhg@mail.gmail.com>
+Message-ID: <87pnl0he9d.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Until revalidate_disk() has completed, the size of a new md array will
-appear to be zero.
-So we shouldn't report, through array_state, that the array is active
-until that time.
-udev rules check array_state to see if the array is ready.  As soon as
-it appear to be zero, fsck can be run.  If it find the size to be
-zero, it will fail.
+--=-=-=
+Content-Type: text/plain
 
-So add a new flag to provide an interlock between do_md_run() and
-array_state_show().  This flag is set while do_md_run() is active and
-it prevents array_state_show() from reporting that the array is
-active.
+On Fri, Aug 16 2019, Jinpu Wang wrote:
 
-Before do_md_run() is called, ->pers will be NULL so array is
-definitely not active.
-After do_md_run() is called, revalidate_disk() will have run and the
-array will be completely ready.
+> On Wed, Aug 7, 2019 at 2:35 PM Jinpu Wang <jinpu.wang@cloud.ionos.com> wrote:
+>>
+>> On Wed, Aug 7, 2019 at 8:36 AM Jinpu Wang <jinpu.wang@cloud.ionos.com> wrote:
+>> >
+>> > On Wed, Aug 7, 2019 at 1:40 AM NeilBrown <neilb@suse.com> wrote:
+>> > >
+>> > > On Tue, Aug 06 2019, Jinpu Wang wrote:
+>> > >
+>> > > > On Tue, Aug 6, 2019 at 9:54 AM Jinpu Wang <jinpu.wang@cloud.ionos.com> wrote:
+>> > > >>
+>> > > >> On Tue, Aug 6, 2019 at 1:46 AM NeilBrown <neilb@suse.com> wrote:
+>> > > >> >
+>> > > >> > On Mon, Aug 05 2019, Jinpu Wang wrote:
+>> > > >> >
+>> > > >> > > Hi Neil,
+>> > > >> > >
+>> > > >> > > For the md higher write IO latency problem, I bisected it to these commits:
+>> > > >> > >
+>> > > >> > > 4ad23a97 MD: use per-cpu counter for writes_pending
+>> > > >> > > 210f7cd percpu-refcount: support synchronous switch to atomic mode.
+>> > > >> > >
+>> > > >> > > Do you maybe have an idea? How can we fix it?
+>> > > >> >
+>> > > >> > Hmmm.... not sure.
+>> > > >> Hi Neil,
+>> > > >>
+>> > > >> Thanks for reply, detailed result in line.
+>> > >
+>> > > Thanks for the extra testing.
+>> > > ...
+>> > > > [  105.133299] md md0 in_sync is 0, sb_flags 2, recovery 3, external
+>> > > > 0, safemode 0, recovery_cp 524288
+>> > > ...
+>> > >
+>> > > ahh - the resync was still happening.  That explains why set_in_sync()
+>> > > is being called so often.  If you wait for sync to complete (or create
+>> > > the array with --assume-clean) you should see more normal behaviour.
+>> > I've updated my tests accordingly, thanks for the hint.
+>> > >
+>> > > This patch should fix it.  I think we can do better but it would be more
+>> > > complex so no suitable for backports to -stable.
+>> > >
+>> > > Once you confirm it works, I'll send it upstream with a
+>> > > Reported-and-Tested-by from you.
+>> > >
+>> > > Thanks,
+>> > > NeilBrown
+>> >
+>> > Thanks a lot, Neil, my quick test show, yes, it fixed the problem for me.
+>> >
+>> > I will run more tests to be sure, will report back the test result.
+>> Hi Neil,
+>>
+>> I've run our regression tests with your patch, everything works fine
+>> as expected.
+>>
+>> So Reported-and-Tested-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+>>
+>> Thank you for your quick fix.
+>>
+>> The patch should go to stable 4.12+
+>
+> Hi Neil,
+>
+> I hope you're doing well, just a soft ping? do you need further
+> testing from my side?
 
-We also move various sysfs_notify*() calls out of md_run() into
-do_md_run() after MD_NOT_READY is cleared.  This ensure the
-information is ready before the notification is sent.
+Thanks for the reminder.  I've sent out the patch now.
 
-Prior to v4.12, array_state_show() was called with the
-mddev->reconfig_mutex held, which provided exclusion with do_md_run().
-
-Note that MD_NOT_READY cleared twice.  This is deliberate to cover
-both success and error paths with minimal noise.
-
-Fixes: b7b17c9b67e5 ("md: remove mddev_lock() from md_attr_show()")
-Cc: stable@vger.kernel.org (v4.12++)
-Signed-off-by: NeilBrown <neilb@suse.com>
----
- drivers/md/md.c |   11 +++++++----
- drivers/md/md.h |    3 +++
- 2 files changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 624cf1ac43dc..1f70ec595282 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -4176,7 +4176,7 @@ array_state_show(struct mddev *mddev, char *page)
- {
- 	enum array_state st = inactive;
- 
--	if (mddev->pers)
-+	if (mddev->pers && !test_bit(MD_NOT_READY, &mddev->flags))
- 		switch(mddev->ro) {
- 		case 1:
- 			st = readonly;
-@@ -5744,9 +5744,6 @@ int md_run(struct mddev *mddev)
- 		md_update_sb(mddev, 0);
- 
- 	md_new_event(mddev);
--	sysfs_notify_dirent_safe(mddev->sysfs_state);
--	sysfs_notify_dirent_safe(mddev->sysfs_action);
--	sysfs_notify(&mddev->kobj, NULL, "degraded");
- 	return 0;
- 
- bitmap_abort:
-@@ -5767,6 +5764,7 @@ static int do_md_run(struct mddev *mddev)
- {
- 	int err;
- 
-+	set_bit(MD_NOT_READY, &mddev->flags);
- 	err = md_run(mddev);
- 	if (err)
- 		goto out;
-@@ -5787,9 +5785,14 @@ static int do_md_run(struct mddev *mddev)
- 
- 	set_capacity(mddev->gendisk, mddev->array_sectors);
- 	revalidate_disk(mddev->gendisk);
-+	clear_bit(MD_NOT_READY, &mddev->flags);
- 	mddev->changed = 1;
- 	kobject_uevent(&disk_to_dev(mddev->gendisk)->kobj, KOBJ_CHANGE);
-+	sysfs_notify_dirent_safe(mddev->sysfs_state);
-+	sysfs_notify_dirent_safe(mddev->sysfs_action);
-+	sysfs_notify(&mddev->kobj, NULL, "degraded");
- out:
-+	clear_bit(MD_NOT_READY, &mddev->flags);
- 	return err;
- }
- 
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index 10f98200e2f8..08f2aee383e8 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -248,6 +248,9 @@ enum mddev_flags {
- 	MD_UPDATING_SB,		/* md_check_recovery is updating the metadata
- 				 * without explicitly holding reconfig_mutex.
- 				 */
-+	MD_NOT_READY,		/* do_md_run() is active, so 'array_state'
-+				 * must not report that array is ready yet
-+				 */
- };
- 
- enum mddev_sb_flags {
+NeilBrown
 
 
+>
+> Please let me know how can we move the fix forward.
+>
+> Thanks,
+> Jack Wang
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl1bPo4ACgkQOeye3VZi
+gblYVg/8Dexb3Ia8ZpTQaD7fgTUi9kZ89sfPTzDBTxpcXiuYbGm2F2cCk3Uf12R4
+Zfdr1EFajzmPo98CVCNcB7pzkbHqvtH5rx1XwxV6gQ0pIGJzWp3pnDSnfoLalj4k
+BeKs/zWjo5NHyUH0VTXQJmOhKuSk7RCSkEfNJVdV0q07ShK1uegy2khv7PEfmhdl
+5e8vsf3aXNDfZnparqaY6fJanrMvv+Psq0lQUtQYVTLgk8Ty9NOTDh07aRoj2ZjJ
+u3Pxyt80jMIgkVOiBghdziDnapxCixPydXs8Pdj5y9IbSiii8noRDiHDnN3dLgg3
+6VWy1uk3cp83Op0Nm+6Fe/IgPTRFZN8K9UGb1woOTsP4Abpe6K275k41CkgZ5HQF
+TsFD0icnEnjHH6O5yYn4oGLWf/LEl1H2B1sWN7K/HP+RzQNvwKistYTuxpacShwa
+L4xKm3b3anaQoMNm+rC+SfsVWjY0lFcFcy+sfZytcr2BrBfSgV5efD1aMeEKhtbm
+jLkI15kvfmPbl+mqMOc3A4B7jT3I/Y5J2Vgv5KIWCrm/4zrDN5TZ6AU4Yy4B+rMi
+QxrMcKYkXTvKF3jz56s3rHtgyLs6kopXVcX3Krqw4n7SIhV8Q0G/4nTLV0DPryAr
+lV1dRxQi4BuL5adBWDd6TDxXqPO6ukPXVF3lqbVz0e4x6duIjK0=
+=TyQL
+-----END PGP SIGNATURE-----
+--=-=-=--
