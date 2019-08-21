@@ -2,72 +2,77 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D5D898206
-	for <lists+linux-raid@lfdr.de>; Wed, 21 Aug 2019 19:58:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3684398247
+	for <lists+linux-raid@lfdr.de>; Wed, 21 Aug 2019 20:05:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730436AbfHUR6N (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 21 Aug 2019 13:58:13 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:39709 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727257AbfHUR6M (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 21 Aug 2019 13:58:12 -0400
-Received: by mail-qt1-f194.google.com with SMTP id l9so4117993qtu.6
-        for <linux-raid@vger.kernel.org>; Wed, 21 Aug 2019 10:58:11 -0700 (PDT)
+        id S1727195AbfHUSDx (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 21 Aug 2019 14:03:53 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:44271 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726857AbfHUSDx (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 21 Aug 2019 14:03:53 -0400
+Received: by mail-qk1-f194.google.com with SMTP id d79so2612701qke.11
+        for <linux-raid@vger.kernel.org>; Wed, 21 Aug 2019 11:03:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Z09c3yHGYouaWmD7DjP1NR9m4akIcxuzDL7mrJsBShA=;
-        b=gzm8MLs4dtDAoXRE1IjWZEge8ngNeneliZL2YVq557aZeQcQ3w7ZaABfvP/r2LJm7i
-         meshqohXzVYGMNOE+89PIWeMRwZ9TN1oj/Fh8fcvA0RFH7qkM3XFNtgIncF2pz+B7Rkn
-         kpMP+52hJi4raZ17FJBKojVA97bU/BGdFQAERCZOQRhTBImJMUhuPG9ygI/oIVAhaWBY
-         lyL6wEEM4nf0WFmzpSShFZ3SjmhJGkZfGeKX2Ehq5Uwfkkv7TCpgoes2qFSWB0ZMiJR6
-         TYxMwbp7xo0AjAPIu8KOVa/sSBeGwK0ZFYE9J1Z1/elsBwTe+o1XZGhzJ+712MptwW+n
-         TDfw==
+        bh=r4BVtX3Nl2tj62n2bvGi8pYuPdmlt4gqa9bgDOvdEwA=;
+        b=CYRCpTfKw9HKcEil4dI4Jr7XiRH2hMkwgvSSK9qsXzBMlIFlQ0/3pDR4XsSPQbUSdl
+         vdppIGTvhUFUxiz0qIPoS/jmO5bTYdHDuKWNJNF1iK76iyO4bGviJaSyv63Ddd2L7AJQ
+         6OF4iEqmuAF7GtmE+MHCap4CQkxsxggPcKbhYIgfup6wn5RnJ4oxvXEp15d2L7z/Wp0I
+         WmdW69y5B5lLNM/bYrBm+Mr9F1Ouk6YVr24qVcoSZLKKuGYdjQmx5O8mQ60E7m+zbIvI
+         QGujc5InKQzY/co46GBmrCP8vuNxrtjH4Oz76yq1YkeR0KpmwSBrU9GSQp1p27YmfEAH
+         Qg+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Z09c3yHGYouaWmD7DjP1NR9m4akIcxuzDL7mrJsBShA=;
-        b=bbpRXYlmcPVEg6eYy66mNgPAOIQJKFw5DnGWgQifCto1YTua6Aka3gGKi3XsY54ijD
-         c5wAOF/kuxXtl3v7Olld0TahhrWAdD0YarVYR8D4n3mvRupP2D7oWar/q0DOZQukFstZ
-         hgmEJG49xgmShm0DeTZnv12dcTB9JOPK+z5PRIdGne4csrJjW8xTSb7MPvUtLyh7L/BL
-         A1eZFhYOqVYXjMtLKfEGSAvq6MB4q0Kp8dwwx10sQzhlGm5j4jZdMJocta4UCqXKPOzH
-         cuPjVxuPVbOqgELZW9W2aMc42yBCb13+W6du9xTEheKQVq3r01RPV3Suf/fobRP00itt
-         VQtg==
-X-Gm-Message-State: APjAAAV2eutaWW3ifkI85lg0mnCef4kuwhLM3SaiRvEF34s5fsiTvSMW
-        +mget5zL+jNQHr2GhGyRRz9HbDfsUbK69Fx2ckI=
-X-Google-Smtp-Source: APXvYqz9KznGI5eyz45qzbaQQjGDdqq/HWq7c04rX91yWp0E5/hmE5jcp4UnDsyaDuN6MehdQVfZvr3vrW6Hl0lkDYY=
-X-Received: by 2002:ac8:3258:: with SMTP id y24mr32209522qta.183.1566410291404;
- Wed, 21 Aug 2019 10:58:11 -0700 (PDT)
+        bh=r4BVtX3Nl2tj62n2bvGi8pYuPdmlt4gqa9bgDOvdEwA=;
+        b=TGrHfcbcN5VCjkaz+t59QvqwSEZwzxFiyABCXNH/HeMUHn46VpaCCLMGCMlkrBjfTX
+         WiBkLdAFsp0pjSfoh8AavtpRXQ4/j7j0QQVKl9ax2ojalmhxhBGkw0otjXIwZg5KHMAD
+         T+m8pgGrVv3AwKtuVlfC4/ChYW6j1CL8fcrRgvTNrkDuiEKqWJbFiiJrxHkCQD7C0mrn
+         +yavpfhDALUBmIzGnhEEAWsjL6QRV/CDnZ8ZNUbXeLNXuuMCjPJfnRypxNusXRgDOSC+
+         CgTAJ7h+m8lMI+5+WguO98UTft1qowtTPkXbzeE+SJbt1TGFw6Lq1+yU+ilbvV0wJ1d9
+         GLiA==
+X-Gm-Message-State: APjAAAX9RsKe2hA50QBxUJLu7PZiXYrJRB9fODGczispPuybNa4lTmf/
+        C7ZTr/44XAihP4Hr6cM3sEiswTp5L5qBr2+fQk4=
+X-Google-Smtp-Source: APXvYqyBS/hyWeYNSzUAHy424lq/nVFmSTcZWOWxSqnVgXg6HIAq9g37vVFemdwjeq09LURGl7fojJR3fhEbMoJam7U=
+X-Received: by 2002:ae9:e118:: with SMTP id g24mr32864120qkm.378.1566410632304;
+ Wed, 21 Aug 2019 11:03:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190821132708.31378-1-ncroxon@redhat.com>
-In-Reply-To: <20190821132708.31378-1-ncroxon@redhat.com>
+References: <156626036792.15343.14564114570071245486.stgit@noble.brown>
+In-Reply-To: <156626036792.15343.14564114570071245486.stgit@noble.brown>
 From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Wed, 21 Aug 2019 10:58:00 -0700
-Message-ID: <CAPhsuW6231Eh=bJRA7jJHnJOP=eFh7thOcNuEJX8_xN37PetvQ@mail.gmail.com>
-Subject: Re: [PATCH] raid5 improve too many read errors msg by adding limits
-To:     Nigel Croxon <ncroxon@redhat.com>
+Date:   Wed, 21 Aug 2019 11:03:41 -0700
+Message-ID: <CAPhsuW7cN6uZduEogDkBvigH6a7znjyAUYXbnPz+ULUTmwbRaw@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Two md fixes suitable for -stable
+To:     NeilBrown <neilb@suse.com>
 Cc:     linux-raid <linux-raid@vger.kernel.org>,
-        NeilBrown <neilb@suse.com>,
-        Heinz Mauelshagen <heinzm@redhat.com>, Xiao Ni <xni@redhat.com>
+        Jack Wang <jinpu.wang@cloud.ionos.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 6:27 AM Nigel Croxon <ncroxon@redhat.com> wrote:
+On Mon, Aug 19, 2019 at 5:26 PM NeilBrown <neilb@suse.com> wrote:
 >
-> Often limits can be changed by admin. When discussing such things
-> it helps if you can provide "self-sustained" facts. Also
-> sometimes the admin thinks he changed a limit, but it did not
-> take effect for some reason or he changed the wrong thing.
+> Hi,
+>  follow two patches fix two unrelated issues in md.
+>  The second patch does address a real race, but doesn't completely
+>  fix the customers symptom, so there might be a follow-on patch
+>  once I understand what is really happening.
 >
-> V3: Only pr_warn when Faulty is 0.
-> V2: Add read_errors value to pr_warn.
+>  And Song ... have you considered update the MAINTAINERS file
+>  with your details - I think that would good!
 >
-> Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
+> Thanks,
+> NeilBrown
+>
 
-Applied. Thanks!
+Applied both patches. Thanks!
+
+I will send patch to update MAINTAINERS file shortly.
+
 Song
