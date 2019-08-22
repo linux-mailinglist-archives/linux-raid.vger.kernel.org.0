@@ -2,62 +2,61 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BB421988B8
-	for <lists+linux-raid@lfdr.de>; Thu, 22 Aug 2019 02:52:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 196509890D
+	for <lists+linux-raid@lfdr.de>; Thu, 22 Aug 2019 03:41:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727316AbfHVAwW (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 21 Aug 2019 20:52:22 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44501 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726693AbfHVAwW (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 21 Aug 2019 20:52:22 -0400
-Received: by mail-pl1-f193.google.com with SMTP id t14so2317531plr.11
-        for <linux-raid@vger.kernel.org>; Wed, 21 Aug 2019 17:52:22 -0700 (PDT)
+        id S1728406AbfHVBlD (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 21 Aug 2019 21:41:03 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44207 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727875AbfHVBlD (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 21 Aug 2019 21:41:03 -0400
+Received: by mail-pl1-f196.google.com with SMTP id t14so2384934plr.11;
+        Wed, 21 Aug 2019 18:41:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=3BwfZddPISiWTAepsKyyO7g4JReLyhQhGUH1LXlCS2o=;
-        b=Ui0ETZ/tulBr+t0qixC90uvNkSgfKD9PNXkRxjNbt3C0isf0xUBDVPI0UOJ1bl7hqH
-         1E91A3d6WNAlYgq5pOF4m68c9DC+e2jPy/53Co/tcM6XDDXhETsekb2o5JypddeDRSBd
-         vAK9lpwEUA7dkT8vrXeFm+PWLLs62Um7Lzqbgo4ev/X8vvo0u3M990J0zM+VmtYjO/y/
-         zPomr6FwPU+zEDXcW21ZV5szEDQrSd4juwSnN2CCy3QiynNYa2300GiMfauyXdylQUC0
-         HyahDSxNiie92H7CMNFBmHcFDpUxHucrkRrRPHX3idJj3GMEHBK1H9RghNxF0muj7BG4
-         3w+w==
+        d=gmail.com; s=20161025;
+        h=subject:from:to:references:cc:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cmve+98ILYTXN2zA6jhwjwq7AFTYXqn7fwxiy9UT/Ts=;
+        b=hWuCPOffRan2AGULbNSKephnvby1c2MzZxz7PPZEFiQqVP6e5/NiMjhfeTPGGLzlXH
+         CiAg6OmnQde2UJC0UAhDtUH45xb3y7FaEjCeB1L48V5vUN0yyW4pEBZ7azbbzitlWAzf
+         SaDlv5JN4MxUxOZegKKO3IAud18NVo00Wo1AjglbcerGldexxaLZ7oXjofxZxKX5/1r1
+         UOgKczcNxFoGFuWvaAGrsKv3IjZIOSVL9Xk3A3K9TCN3nKj0aN5jGO4n/8WFuaub0tjl
+         TitTK6kZlj5A+IdIz88HY4RCpVz/Bwqwf+bIjHt7/mh5K8n4q7ey7rJQz8sVz5NHAoSx
+         MnSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
+        h=x-gm-message-state:subject:from:to:references:cc:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=3BwfZddPISiWTAepsKyyO7g4JReLyhQhGUH1LXlCS2o=;
-        b=EBrrVRQt1OJ47HT4JrisjZ10HLrmWJbxPnP5gi73lOHCny0KQTYqWHaxgMGCJyMMlb
-         7v9ZoLh4bt5LDaPNCpcVCvZoRdHZkHntoVS4kXZHdrhG5QG/CAGjNjD8MDD8ao1yjdw0
-         aGwqY1YKdCrViD2L5Ami3lkKIKnWUvlmady2aQ9uUsywi3Ve8M6d6ZgDBNPI/sD3PK2T
-         osQWIvAywbI+eCcGinfK9xnB2mcIjVDKCFRIdy0jyplFRnDOFAeHA0xA/CEaGyWBRLWx
-         w9ELIUtmes+L+lO/037ICpJpmRpUhcqUHUldeWG3hY6KhkI8HyjrYgA1VtM381iC0VLa
-         Q55g==
-X-Gm-Message-State: APjAAAVZ2E9das1RN9WBmoq6BGUrEZJf/qh8UHd3W1mMSav2ewFkDQRu
-        aXs4JYtCu13mNlRUnIvttoktu2dQtUeNfg==
-X-Google-Smtp-Source: APXvYqxZW67yIMYAvt8jiQooj2oM34aIr9lW1IFfNzsyZmtwcvYEe+Ck8cMHeCQz0ebA69bRu+jZpg==
-X-Received: by 2002:a17:902:306:: with SMTP id 6mr36608582pld.86.1566435141401;
-        Wed, 21 Aug 2019 17:52:21 -0700 (PDT)
-Received: from [192.168.1.188] (66.29.164.166.static.utbb.net. [66.29.164.166])
-        by smtp.gmail.com with ESMTPSA id m125sm25154988pfm.139.2019.08.21.17.52.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 21 Aug 2019 17:52:20 -0700 (PDT)
-Subject: Re: [PATCH] md: update MAINTAINERS info
-To:     NeilBrown <neilb@suse.com>, Song Liu <songliubraving@fb.com>,
-        linux-raid@vger.kernel.org
-References: <20190821184525.1459041-1-songliubraving@fb.com>
- <51398ca1-44de-3b80-6381-54f594b6c251@kernel.dk>
- <87h86aghmo.fsf@notabene.neil.brown.name>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <e24cfc57-9855-c85d-b875-da8fa4c90a60@kernel.dk>
-Date:   Wed, 21 Aug 2019 18:52:18 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        bh=cmve+98ILYTXN2zA6jhwjwq7AFTYXqn7fwxiy9UT/Ts=;
+        b=dkKG+f7VOL5fzNncm8aBcMs1OkfqjZzecHF9MXM3i9KHrZ1Rq3f1Fc+zvlMaOYLsTq
+         3eXUl4hWcf4LILK/51bCT1SeBzSMu7+khJrLkX29FuXyxjOuylzgEzJb1U6BMZ6nvsWE
+         IkJoJYExoxsSEi7ywTqRWOuUAMXjsFrWO4UbydhVDHpqQ5rkhCn1/nMlH5HMD3Q9HzHC
+         AY1NevpRz0ga61S8eDWEUHuTzwHHXfDVJ59kOBJn0p0ZQjbLGKAVrpxtzIYC5f1JC/Yi
+         DAetD7f+igRoOMdfMCIsUk4Ke7RL5hwiNQcXT6R7VVC6YxRDvJ1eMC1P65L+39V1TIlc
+         7AuQ==
+X-Gm-Message-State: APjAAAUv/NBmSy/HpoDHATQkIKe/JnfqEKeMJ2T4AG+joQ7iOsqn9gE8
+        oSPO+/4V0C+1pFxoZEhJI9I=
+X-Google-Smtp-Source: APXvYqxq78ERkQnesCE27keqgm9VHMwNknJ4whikJ1lXfQRlmnUyMbQIWWy39ey8xL4tPtoTkV1L/w==
+X-Received: by 2002:a17:902:3281:: with SMTP id z1mr4422916plb.302.1566438062630;
+        Wed, 21 Aug 2019 18:41:02 -0700 (PDT)
+Received: from [0.0.0.0] ([47.244.239.6])
+        by smtp.gmail.com with ESMTPSA id a128sm25045067pfb.185.2019.08.21.18.41.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Aug 2019 18:41:02 -0700 (PDT)
+Subject: Re: Issues about the merge_bvec_fn callback in 3.10 series
+From:   Jianchao Wang <jianchao.wan9@gmail.com>
+To:     linux-block@vger.kernel.org, linux-raid@vger.kernel.org
+References: <S1732749AbfE3EBS/20190530040119Z+834@vger.kernel.org>
+ <e93566fe-febf-5e99-d3e9-96a0c1f6ba13@gmail.com>
+Cc:     axboe@kernel.dk, neilb@suse.com, songliubraving@fb.com
+Message-ID: <c91b2d29-1c5c-68a6-0471-32c21c5a93c4@gmail.com>
+Date:   Thu, 22 Aug 2019 09:41:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101
+ Thunderbird/67.0
 MIME-Version: 1.0
-In-Reply-To: <87h86aghmo.fsf@notabene.neil.brown.name>
+In-Reply-To: <e93566fe-febf-5e99-d3e9-96a0c1f6ba13@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -66,27 +65,84 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 8/21/19 6:37 PM, NeilBrown wrote:
-> On Wed, Aug 21 2019, Jens Axboe wrote:
-> 
->> On 8/21/19 12:45 PM, Song Liu wrote:
->>> I haven't been reviewing patches for md in the past few months. So I
->>      ^^^^^^^
->>
->> have?
->>
->>> guess I should just be the maintainer.
->>
->> I'm fine with it. Neil?
-> 
-> I'm very happy that Song has stepped up here.  He appears to be
-> appropriately responsive and competent at review - neither too accepting
-> or too dismissive.
-> I support his request to officially be maintainer.
+Would anyone please give some comment here ?
 
-Thanks Neil, and I do agree. Song, I'll apply your patch with some of
-the verbiage changed.
+Should we discard the merge_bvec_fn for raid5 and backport the bio split code there ?
 
--- 
-Jens Axboe
+Thanks in advance.
+Jianchao
+
+
+On 2019/8/21 19:42, Jianchao Wang wrote:
+> Hi dear all
+> 
+> This is a question in older kernel versions.
+> 
+> We are using 3.10 series kernel in our production. And we encountered issue as below,
+> 
+> When add a page into a bio, .merge_bvec_fn will be invoked down to the bottom,
+> and the bio->bi_rw would be saved into bvec_merge_data.bi_rw as the following code,
+> 
+> __bio_add_page
+> ---
+> 	if (q->merge_bvec_fn) {
+> 		struct  bvm = {
+> 			.bi_bdev = bio->bi_bdev,
+> 			.bi_sector = bio->bi_iter.bi_sector,
+> 			.bi_size = bio->bi_iter.bi_size,
+> 			.bi_rw = bio->bi_rw,
+> 		};
+> 
+> 		/*
+> 		 * merge_bvec_fn() returns number of bytes it can accept
+> 		 * at this offset
+> 		 */
+> 		if (q->merge_bvec_fn(q, &bvm, bvec) < bvec->bv_len) {
+> 			bvec->bv_page = NULL;
+> 			bvec->bv_len = 0;
+> 			bvec->bv_offset = 0;
+> 			return 0;
+> 		}
+> 	}
+> ---
+> 
+> However, it seems that the bio->bi_rw has not been set at the moment (set by submit_bio), 
+> so it is always zero.
+> 
+> We have a raid5 and the raid5_mergeable_bvec would always handle the write as read and then
+> we always get a write bio with a stripe chunk size which is not expected and would degrade the
+> performance. This is code,
+> 
+> raid5_mergeable_bvec
+> ---
+> 	if ((bvm->bi_rw & 1) == WRITE)
+> 		return biovec->bv_len; /* always allow writes to be mergeable */
+> 
+> 	if (mddev->new_chunk_sectors < mddev->chunk_sectors)
+> 		chunk_sectors = mddev->new_chunk_sectors;
+> 	max =  (chunk_sectors - ((sector & (chunk_sectors - 1)) + bio_sectors)) << 9;
+> 	if (max < 0) max = 0;
+> 	if (max <= biovec->bv_len && bio_sectors == 0)
+> 		return biovec->bv_len;
+> 	else
+> 		return max;
+> 
+> ---
+> 
+> I have checked   
+> v3.10.108
+> v3.18.140
+> v4.1.49
+> but there seems not fix for it.
+> 
+> And maybe it would be fixed until 
+> 8ae126660fddbeebb9251a174e6fa45b6ad8f932
+> block: kill merge_bvec_fn() completely
+> 
+> Would anyone please give some suggestion on this ?
+> Any comment will be welcomed.
+> 
+> Thanks in advance
+> Jianchao
+> 
 
