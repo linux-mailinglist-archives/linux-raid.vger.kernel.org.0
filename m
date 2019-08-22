@@ -2,124 +2,91 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F13F399101
-	for <lists+linux-raid@lfdr.de>; Thu, 22 Aug 2019 12:38:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FD88993B4
+	for <lists+linux-raid@lfdr.de>; Thu, 22 Aug 2019 14:33:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387724AbfHVKid (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 22 Aug 2019 06:38:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:32850 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729113AbfHVKid (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 22 Aug 2019 06:38:33 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 46E78B05C;
-        Thu, 22 Aug 2019 10:38:31 +0000 (UTC)
-To:     linux-raid@vger.kernel.org, Song Liu <songliubraving@fb.com>
-From:   Coly Li <colyli@suse.de>
-Subject: [RFC] How to handle an ugly md raid0 sector map bug ?
-Openpgp: preference=signencrypt
-Organization: SUSE Labs
-Cc:     NeilBrown <neilb@suse.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-Message-ID: <10ca59ff-f1ba-1464-030a-0d73ff25d2de@suse.de>
-Date:   Thu, 22 Aug 2019 18:38:25 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        id S2388608AbfHVMd0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 22 Aug 2019 08:33:26 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40838 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388614AbfHVMdZ (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 22 Aug 2019 08:33:25 -0400
+Received: by mail-lj1-f194.google.com with SMTP id e27so5373188ljb.7
+        for <linux-raid@vger.kernel.org>; Thu, 22 Aug 2019 05:33:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=aWwEGZ7IKPwlD1SyN53LweuoS+rG8j2WBRgPDxMagPA=;
+        b=iVbicIO0p0gRad2mojfMoXPK1bvee8m7TQDWF1D1ACPE9HqmNhL2GBY+oHjfleXep+
+         wlwnOwIGGXywTfWnwFY2sQ2+h7NA0iPrPVMp/fpPZz0TCkDtzEkceGvTPOs+5VsA+PDA
+         bog9JENsSaOIYx1EC+/cR0/9HBbgj+daWMstdn5zms4O325GD0AQaD/ms3ETHmSt6uto
+         Q6665qufcUQQcAyfjYrg0fnfHXit5ax05ENYUjOrRwG/w//Vr5t0ubPdCTC7BmhWIJWz
+         mQQKKeL+2FnzNGwY3o/OwTiNkaLGMTHC1jVl8gl5NMf5tKp3Dcziy6EpzKOnIMzsAz/Z
+         Gt/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=aWwEGZ7IKPwlD1SyN53LweuoS+rG8j2WBRgPDxMagPA=;
+        b=XLagquw3cMiBrwyC19v0URVtIuwHQ3lLYVKxjfXK9Op3/7tqvE2z/Cxl1HJZP7Sq1f
+         FFK3DfB+6hzZ+yS6IfmwuBORS5DWekhuSBg2B2UwiDBqzLLTFm/eVpMFRpU46AiTAWHR
+         1OQmx0zVPi73o5LqCO6kgWJNdEB0JRNVv2vhGdX2Ylgrpj8jPlD70X3Q/6NaTN/szVhj
+         155rN5R0xzhcGNxikF2rPAgNOG8qVqxMtse3SfRWCRCSYBrYLAlrIMEckF5cgdXN/JrJ
+         MlPoK2RDXuqrL8CvHOKGCLdujZgIr7AahehHxmP6+crFnHa2vUP47Ap+sMlc5oSyWGWL
+         59ag==
+X-Gm-Message-State: APjAAAXmsR6LbE/ECt72/Dt+8Qrhmf6F4sF/Fa8ZuhYb7hBh18S40M/I
+        K69koMU0T4H9l1S3Xde9LI/ns3xCN7kjV3WTf5I=
+X-Google-Smtp-Source: APXvYqzw94KeAGRPQVwAh+UJFBQ7DOYzf35Giv9H76e1wjU00JCNb63boziaVgpph5IBHV5hsn94tmvSTLyQYtVZmJc=
+X-Received: by 2002:a2e:63cd:: with SMTP id s74mr17881307lje.3.1566477203899;
+ Thu, 22 Aug 2019 05:33:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: by 2002:ab3:6a0f:0:0:0:0:0 with HTTP; Thu, 22 Aug 2019 05:33:23
+ -0700 (PDT)
+Reply-To: eku.lawfirm@gmail.com
+From:   "Law firm(Eku and Associates)" <ezeobodo1@gmail.com>
+Date:   Thu, 22 Aug 2019 12:33:23 +0000
+Message-ID: <CAN-_bTaBz=R_5Eq36MajojFPC316zxdyXEEVzKzzZgeSdGG98A@mail.gmail.com>
+Subject: MY $25,000,000.00 INVESTMENT PROPOSAL WITH YOU AND IN YOUR COUNTRY.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi folks,
+--=20
+Dear,
+With due respect this is not spam or Scam mail, because I have
+contacted you before and there was no response from you,I apologise if
+the contents of this mail are contrary to your moral ethics, which I
+feel may be of great disturbance to your person, but please treat this
+with absolute confidentiality, believing that this email reaches you
+in good faith. My contacting you is not a mistake or a coincidence
+because God can use any person known or unknown to accomplish great
+things.
+I am a lawyer and I have an investment business proposal to offer you.
+It is not official but should be considered as legal and confidential
+business. I have a customer's deposit of $US25 million dollars ready
+to be moved for investment if you can partner with us. We are ready to
+offer you 10% of this total amount as your compensation for supporting
+the transaction to completion. If you are interested to help me please
+reply me with your full details as stated below:
+(1) Your full names:
+(2) Your address:
+(3) Your occupation:
+(4) Your mobile telephone number:
+(5) Your nationality:
+(6) Your present location:
+(7) Your age:
+So that I will provide you more details on what to do and what is
+required for successful completion.
+Note: DO NOT REPLY ME IF YOU ARE NOT INTERESTED AND WITHOUT THE ABOVE
+MENTIONED DETAILS
 
-First line: This bug only influences md raid0 device which applies all
-the following conditions,
-1) Assembled by component disks with different sizes.
-2) Created and used under Linux kernel before (including) Linux v3.12,
-then upgrade to Linux kernel after (including) Linux v3.13.
-3) New data are written to md raid0 in new kernel >= Linux v3.13.
-Then the md raid0 may have inconsistent sector mapping and experience
-data corruption.
-
-Recently I receive a bug report that customer encounter file system
-corruption after upgrading their kernel from Linux 3.12 to 4.4. It turns
-out to be the underlying md raid0 corruption after the kernel upgrade.
-
-I find it is because a sector map bug in md raid0 code include and
-before Linux v3.12. Here is the buggy code piece I copied from stable
-Linux v3.12.74 drivers/md/raid0.c:raid0_make_request(),
-
-547         sector_offset = bio->bi_sector;
-548         zone = find_zone(mddev->private, &sector_offset);
-549         tmp_dev = map_sector(mddev, zone, bio->bi_sector,
-550                              &sector_offset);
-
-At line 548 after find_zone() returns, sector_offset is updated to be an
-offset inside current zone. Then at line 549 the third parameter of
-calling map_sector() should be the updated sector_offset, but
-bio->bi_sector (original LBA or md raid0 device) is used. If the raid0
-device has *multiple zones*, except the first zone, the mapping <dev,
-sector> pair returned by map_sector() for all rested zones are
-unexpected and wrong.
-
-The buggy code was introduced since Linux v2.6.31 in commit fbb704efb784
-("md: raid0 :Enables chunk size other than powers of 2."), unfortunate
-the mistaken mapping calculation has stable and unique result too, so it
-works without obvious problem until commit 20d0189b1012 ("block:
-Introduce new bio_split()") merged into Linux v3.13.
-
-This patch fixed the mistaken mapping in the following lines of change,
-654 -       sector_offset = bio->bi_iter.bi_sector;
-655 -       zone = find_zone(mddev->private, &sector_offset);
-656 -       tmp_dev = map_sector(mddev, zone, bio->bi_iter.bi_sector,
-657 -                            &sector_offset);
-
-694 +               zone = find_zone(mddev->private, &sector);
-695 +               tmp_dev = map_sector(mddev, zone, sector, &sector);
-At line 695 of this patch, the third parameter of calling map_sector()
-is fixed to 'sector', this is the correct value which contains the
-sector offset inside the corresponding zone.
-
-The this patch implicitly *changes* md raid0 on-disk layout. If a md
-raid0 has component disks with *different* sizes, then it will contain
-multiple zones. If such multiple zones raid0 device is created before
-Linux v3.13, all data chunks after first zone will be mapped to
-different location in kernel after (including) Linux v3.13. The result
-is, data written in the LBA after first zone will be treated as
-corruption. A worse case is, if the md raid0 has data chunks filled in
-first md raid0 zone in Linux v3.12 (or earlier kernels), then update to
-Linux v3.13 (or later kernels) and fill more data chunks in second and
-rested zone. Then in neither Linux v3.12 no Linux v3.13, there is always
-partial data corrupted.
-
-Currently there is no way to tell whether a md raid0 device is mapped in
-wrong calculation in kernel before (including) Linux v3.12 or in correct
-calculation in kernels after (including) Linux v3.13. If a md raid0
-device (contains multiple zones) created and used crossing these kernel
-version, there is possibility and different mapping calculation
-generation different/inconsistent on-disk layout in different md raid0
-zones, and results data corruption.
-
-For our enterprise Linux products we can handle it properly for a few
-product number of kernels. But for upstream and stable kernels, I don't
-have idea how to fix this ugly problem in a generic way.
-
-Neil Brown discussed with me offline, he proposed a temporary workaround
-that only permit to assemble md raid0 device with identical component
-disk size, and reject to assemble md raid0 device with component disks
-with different sizes. We can stop this workaround when there is a proper
-way to fix the problem.
-
-I suggest our developer community to work together for a solution, this
-is the motivation I post this email for your comments.
-
-Thanks in advance.
-
--- 
-
-Coly Li
+Sinc=C3=A8rement v=C3=B4tre,
+Avocat Etienne Eku Esq.(Lawfirm)
+Procureur principal. De Cabinet d=E2=80=99avocats de l=E2=80=99Afrique de l=
+=E2=80=99ouest.
+Skype:westafricalawfirm
