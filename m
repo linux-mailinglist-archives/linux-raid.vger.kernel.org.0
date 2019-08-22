@@ -2,147 +2,120 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 196509890D
-	for <lists+linux-raid@lfdr.de>; Thu, 22 Aug 2019 03:41:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F83498E52
+	for <lists+linux-raid@lfdr.de>; Thu, 22 Aug 2019 10:49:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728406AbfHVBlD (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 21 Aug 2019 21:41:03 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44207 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727875AbfHVBlD (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 21 Aug 2019 21:41:03 -0400
-Received: by mail-pl1-f196.google.com with SMTP id t14so2384934plr.11;
-        Wed, 21 Aug 2019 18:41:02 -0700 (PDT)
+        id S1731567AbfHVItz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 22 Aug 2019 04:49:55 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:45695 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbfHVItz (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 22 Aug 2019 04:49:55 -0400
+Received: by mail-ed1-f65.google.com with SMTP id x19so6772191eda.12
+        for <linux-raid@vger.kernel.org>; Thu, 22 Aug 2019 01:49:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:references:cc:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cmve+98ILYTXN2zA6jhwjwq7AFTYXqn7fwxiy9UT/Ts=;
-        b=hWuCPOffRan2AGULbNSKephnvby1c2MzZxz7PPZEFiQqVP6e5/NiMjhfeTPGGLzlXH
-         CiAg6OmnQde2UJC0UAhDtUH45xb3y7FaEjCeB1L48V5vUN0yyW4pEBZ7azbbzitlWAzf
-         SaDlv5JN4MxUxOZegKKO3IAud18NVo00Wo1AjglbcerGldexxaLZ7oXjofxZxKX5/1r1
-         UOgKczcNxFoGFuWvaAGrsKv3IjZIOSVL9Xk3A3K9TCN3nKj0aN5jGO4n/8WFuaub0tjl
-         TitTK6kZlj5A+IdIz88HY4RCpVz/Bwqwf+bIjHt7/mh5K8n4q7ey7rJQz8sVz5NHAoSx
-         MnSg==
+        d=cloud.ionos.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=GB3BnyX//0LxQUlKZs1v5lBLtwZq+I1BzkyauFnkReM=;
+        b=GIl7zRle9i0EKht1Uzvu/mFqu4kZOQg45K+ctg9n4+TY1CqIcwBcEbsnBkAdGUaQTY
+         Tfqwq8L/1hg79X3UoVdHfw9/GnGVR5FOqRV1knbsHHHNwWno1VEfIlPvIJIfUNE+8107
+         MzIPGen33ngySUAzd8vc56pak69gvF+rOLvGq3FkeDtgTBqEiQszrs4zCPcORRmszq3T
+         z+vUiH3a82s9N5vgIX/Q0twetwuFiwtEg87dZfjQQbIDdTHlUFTh3umJUqi4gpnszVHD
+         GoWy8r8C55UqiQyT2Hy0pk8oEhWh9zFZAnrYOFLytFOaPWbU+ytl9U3oO+EIIx52fy4A
+         dyCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:references:cc:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cmve+98ILYTXN2zA6jhwjwq7AFTYXqn7fwxiy9UT/Ts=;
-        b=dkKG+f7VOL5fzNncm8aBcMs1OkfqjZzecHF9MXM3i9KHrZ1Rq3f1Fc+zvlMaOYLsTq
-         3eXUl4hWcf4LILK/51bCT1SeBzSMu7+khJrLkX29FuXyxjOuylzgEzJb1U6BMZ6nvsWE
-         IkJoJYExoxsSEi7ywTqRWOuUAMXjsFrWO4UbydhVDHpqQ5rkhCn1/nMlH5HMD3Q9HzHC
-         AY1NevpRz0ga61S8eDWEUHuTzwHHXfDVJ59kOBJn0p0ZQjbLGKAVrpxtzIYC5f1JC/Yi
-         DAetD7f+igRoOMdfMCIsUk4Ke7RL5hwiNQcXT6R7VVC6YxRDvJ1eMC1P65L+39V1TIlc
-         7AuQ==
-X-Gm-Message-State: APjAAAUv/NBmSy/HpoDHATQkIKe/JnfqEKeMJ2T4AG+joQ7iOsqn9gE8
-        oSPO+/4V0C+1pFxoZEhJI9I=
-X-Google-Smtp-Source: APXvYqxq78ERkQnesCE27keqgm9VHMwNknJ4whikJ1lXfQRlmnUyMbQIWWy39ey8xL4tPtoTkV1L/w==
-X-Received: by 2002:a17:902:3281:: with SMTP id z1mr4422916plb.302.1566438062630;
-        Wed, 21 Aug 2019 18:41:02 -0700 (PDT)
-Received: from [0.0.0.0] ([47.244.239.6])
-        by smtp.gmail.com with ESMTPSA id a128sm25045067pfb.185.2019.08.21.18.41.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Aug 2019 18:41:02 -0700 (PDT)
-Subject: Re: Issues about the merge_bvec_fn callback in 3.10 series
-From:   Jianchao Wang <jianchao.wan9@gmail.com>
-To:     linux-block@vger.kernel.org, linux-raid@vger.kernel.org
-References: <S1732749AbfE3EBS/20190530040119Z+834@vger.kernel.org>
- <e93566fe-febf-5e99-d3e9-96a0c1f6ba13@gmail.com>
-Cc:     axboe@kernel.dk, neilb@suse.com, songliubraving@fb.com
-Message-ID: <c91b2d29-1c5c-68a6-0471-32c21c5a93c4@gmail.com>
-Date:   Thu, 22 Aug 2019 09:41:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101
- Thunderbird/67.0
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=GB3BnyX//0LxQUlKZs1v5lBLtwZq+I1BzkyauFnkReM=;
+        b=q4Y0/8/XqXO9tDeYFrcrLasggekWABoPChc4de8elC06aNEyraa6X/Ddbprc8K9m2W
+         ei1/oL/6vgbgaBYcRQpAxn/fEW/zk4Rvy94MyqLL+Fezr7qSDwxddeZykFf8yVCiRiyy
+         7PGLHKS8WVgMMEbbdVhS37y9KDt0CXco0hjkM1PfLUcVsBHlyb5XjAyqCX1gg1QBP4T7
+         LLbNhZGilkuTaziQx5MxtEx6NH3vXoucrrwlcj0wpzwg3bHA3SSMdVaLqrFJhEBf38iQ
+         kOEi3jvVwC4jYCuUEIPr6JP5UgblD2hVDDEOPKaJlM0enOhVKbB+i1ZOVhYJnvgL5Zhb
+         P3Nw==
+X-Gm-Message-State: APjAAAVTD9yqFExR+V8YlsbmBGQz68dDWYBIeXu1s+D4YEAR8bAw1ZMX
+        NH2FmBhziN3baDUvj+E0hLj6eg==
+X-Google-Smtp-Source: APXvYqxbm7VmKEK9AjIgqdGk2W27jQvIU5lbFU+j3iGT6v4bhB05KXOOtrjr3CKqcfVDi/ILILf38g==
+X-Received: by 2002:a17:906:70c3:: with SMTP id g3mr30062420ejk.195.1566463793384;
+        Thu, 22 Aug 2019 01:49:53 -0700 (PDT)
+Received: from ?IPv6:2a02:247f:ffff:2540:a882:5953:17cf:1b5f? ([2001:1438:4010:2540:a882:5953:17cf:1b5f])
+        by smtp.gmail.com with ESMTPSA id ns22sm3556760ejb.9.2019.08.22.01.49.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 22 Aug 2019 01:49:52 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] md raid0/linear: Introduce new array state
+ 'broken'
+To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
+        linux-raid@vger.kernel.org
+Cc:     linux-block@vger.kernel.org, dm-devel@redhat.com,
+        jay.vosburgh@canonical.com, NeilBrown <neilb@suse.com>,
+        Song Liu <songliubraving@fb.com>
+References: <20190816134059.29751-1-gpiccoli@canonical.com>
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Message-ID: <ca2096ca-8cb2-468f-89d4-24cd059b8a6b@cloud.ionos.com>
+Date:   Thu, 22 Aug 2019 10:49:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <e93566fe-febf-5e99-d3e9-96a0c1f6ba13@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190816134059.29751-1-gpiccoli@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Would anyone please give some comment here ?
+Hi,
 
-Should we discard the merge_bvec_fn for raid5 and backport the bio split code there ?
+On 8/16/19 3:40 PM, Guilherme G. Piccoli wrote:
+> +static bool linear_is_missing_dev(struct mddev *mddev)
+> +{
+> +	struct md_rdev *rdev;
+> +	static int already_missing;
+> +	int def_disks, work_disks = 0;
+> +
+> +	def_disks = mddev->raid_disks;
+> +	rdev_for_each(rdev, mddev)
+> +		if (rdev->bdev->bd_disk->flags & GENHD_FL_UP)
+> +			work_disks++;
+> +
+> +	if (unlikely(def_disks - work_disks)) {
 
-Thanks in advance.
-Jianchao
+If my understanding is correct, after enter the branch,
+
+> +		if (already_missing < (def_disks - work_disks)) {
+
+the above is always true since already_missing should be '0', right?
+If so, maybe the above checking is pointless.
+
+> +			already_missing = def_disks - work_disks;
+> +			pr_warn("md: %s: linear array has %d missing/failed members\n",
+> +				mdname(mddev), already_missing);
+> +		}
+> +		return true;
+> +	}
+> +
+> +	already_missing = 0;
+> +	return false;
+> +}
+> +.
+
+I'd suggest something like, just FYI.
+
+bool already_missing = false;
+int missing_disks;
+
+missing_disks = def_disks - work_disks;
+if (unlikely(missing_disks)) {
+	already_missing = true;
+	pr_warn("md: %s: linear array has %d missing/failed members\n", mdname(mddev), missing_disks);
+}
+return already_missing;
 
 
-On 2019/8/21 19:42, Jianchao Wang wrote:
-> Hi dear all
-> 
-> This is a question in older kernel versions.
-> 
-> We are using 3.10 series kernel in our production. And we encountered issue as below,
-> 
-> When add a page into a bio, .merge_bvec_fn will be invoked down to the bottom,
-> and the bio->bi_rw would be saved into bvec_merge_data.bi_rw as the following code,
-> 
-> __bio_add_page
-> ---
-> 	if (q->merge_bvec_fn) {
-> 		struct  bvm = {
-> 			.bi_bdev = bio->bi_bdev,
-> 			.bi_sector = bio->bi_iter.bi_sector,
-> 			.bi_size = bio->bi_iter.bi_size,
-> 			.bi_rw = bio->bi_rw,
-> 		};
-> 
-> 		/*
-> 		 * merge_bvec_fn() returns number of bytes it can accept
-> 		 * at this offset
-> 		 */
-> 		if (q->merge_bvec_fn(q, &bvm, bvec) < bvec->bv_len) {
-> 			bvec->bv_page = NULL;
-> 			bvec->bv_len = 0;
-> 			bvec->bv_offset = 0;
-> 			return 0;
-> 		}
-> 	}
-> ---
-> 
-> However, it seems that the bio->bi_rw has not been set at the moment (set by submit_bio), 
-> so it is always zero.
-> 
-> We have a raid5 and the raid5_mergeable_bvec would always handle the write as read and then
-> we always get a write bio with a stripe chunk size which is not expected and would degrade the
-> performance. This is code,
-> 
-> raid5_mergeable_bvec
-> ---
-> 	if ((bvm->bi_rw & 1) == WRITE)
-> 		return biovec->bv_len; /* always allow writes to be mergeable */
-> 
-> 	if (mddev->new_chunk_sectors < mddev->chunk_sectors)
-> 		chunk_sectors = mddev->new_chunk_sectors;
-> 	max =  (chunk_sectors - ((sector & (chunk_sectors - 1)) + bio_sectors)) << 9;
-> 	if (max < 0) max = 0;
-> 	if (max <= biovec->bv_len && bio_sectors == 0)
-> 		return biovec->bv_len;
-> 	else
-> 		return max;
-> 
-> ---
-> 
-> I have checked   
-> v3.10.108
-> v3.18.140
-> v4.1.49
-> but there seems not fix for it.
-> 
-> And maybe it would be fixed until 
-> 8ae126660fddbeebb9251a174e6fa45b6ad8f932
-> block: kill merge_bvec_fn() completely
-> 
-> Would anyone please give some suggestion on this ?
-> Any comment will be welcomed.
-> 
-> Thanks in advance
-> Jianchao
-> 
+Thanks,
+Guoqing
 
