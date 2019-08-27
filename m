@@ -2,103 +2,85 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 63A539D732
-	for <lists+linux-raid@lfdr.de>; Mon, 26 Aug 2019 22:07:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B97509DBEB
+	for <lists+linux-raid@lfdr.de>; Tue, 27 Aug 2019 05:13:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731140AbfHZUH0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 26 Aug 2019 16:07:26 -0400
-Received: from mail-qk1-f173.google.com ([209.85.222.173]:42274 "EHLO
-        mail-qk1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730217AbfHZUH0 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 26 Aug 2019 16:07:26 -0400
-Received: by mail-qk1-f173.google.com with SMTP id 201so15118771qkm.9
-        for <linux-raid@vger.kernel.org>; Mon, 26 Aug 2019 13:07:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Wei0oIDnaIZn4tEVB6quf1zPLivQm8RlmHUa9K6EIbw=;
-        b=H1GRISm38QOT4wMZzCjDLna2Dsj1CbRrM7MGn8H4HA3NtKNDuDmsvoAgH04WViEwZr
-         21wng8GnnJaDOt9GRt1ADSYY/qiqWBvlATeLnizJ9kDE/IaUS2ObHihIdhOQ+V6INFkj
-         kf/2DwwqcGoLSeGNtfBBL3usTZrl+xcSg31VKIV8gLfzybiHmHFXyq+wGRJcf31eudGR
-         FXYEy+gjxgOvTfRhjaTZ/6+JVBP7laofGeFf25eSnktKBHipnxatP5bxlpKd7fTYPTc6
-         ZBbSK9bqiKtCOksMHaTtI66fB3JLpqrLRC3AKiwUGIFuPlLIm9R16EtmWBXbIh7StK33
-         B32A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Wei0oIDnaIZn4tEVB6quf1zPLivQm8RlmHUa9K6EIbw=;
-        b=Gn+175tQLlrDzHgtf9tKxQ2FdPZJU6PkD93q5RW45Tm0YVybSLXJMb+sSxKa/twA/g
-         sB0toTRClR0J7iRRp37j7SbrQ0VzEl5UBAsrK0hNEGMwM1ACqNLbCWvEwsdtwRl7LQ4L
-         m/JHEqiQl62J5NiDcOUj2OlUNKadk75Dq0ZPz+dmzbUbep7OWomZzHhNRz/48CYYJpqr
-         bbIYOFo+T6Nx+94R9KaaHje98d8K1mpwjldIYNuziLTFk3IgzgtcLqTcRxvKtw/cyQu8
-         ofw2bHCe6um4qugRKtpYnF2twP7s8WYvGOK3yFZY3w4pP0KOi7J3UOw/bo4cmiDa0Jba
-         6+dg==
-X-Gm-Message-State: APjAAAVo7YS1SI4nQBDzaGyxsS/yYjirURu88prtFGufY1P2hXi4r1QY
-        oomQXHBU4w0ig0Ch8LNAFCbDg2MM9QBLo7uBNAg=
-X-Google-Smtp-Source: APXvYqw5fzZW1ywTMSjheLToA+1csUWaFPPSlLSt+fHGuH0m8z6n0Cr6mKYUaIRztkbtSrp84B42fKbKhw4R/NUZ+0Y=
-X-Received: by 2002:a37:a142:: with SMTP id k63mr17908944qke.487.1566850045545;
- Mon, 26 Aug 2019 13:07:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <7401b3e0-fb0c-8ed7-b1cb-28494fbac967@cloud.ionos.com> <e2aad07c-1f67-12c7-ac33-6df9cbdac43c@cloud.ionos.com>
-In-Reply-To: <e2aad07c-1f67-12c7-ac33-6df9cbdac43c@cloud.ionos.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Mon, 26 Aug 2019 13:07:14 -0700
-Message-ID: <CAPhsuW4gu4BaU=2cTNSGQoLEp4xeixRMgDrqfw0Eoxiu=QfeBw@mail.gmail.com>
-Subject: Re: WARNING in break_stripe_batch_list with "stripe state: 2001"
-To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>, NeilBrown <neilb@suse.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S1728859AbfH0DNk (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 26 Aug 2019 23:13:40 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:58370 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728345AbfH0DNk (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 26 Aug 2019 23:13:40 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7R39Hem037971
+        for <linux-raid@vger.kernel.org>; Tue, 27 Aug 2019 03:13:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
+ date : message-id; s=corp-2019-08-05;
+ bh=p9kDwWhfXxE64Pqad4UaNk1Eq/hJJ1lZorE7yie7JFU=;
+ b=EXoK/CHW4fAOb6VzivXOUCysKsZNVibl3dF+89kxcqpHad5IBYs9rAkDOAogq182gCr/
+ OeTnDIcYIxjX7buxgmLBTVIL/OxVkRHXYKjLmPsNsJY6NwykKAe3legKWvRCLvj09izY
+ jc/UQmxJT/n7AzQduzt74Nx1JGxAHhCoT4fa8RvnL11DdrtziiXGQn21XE2SvVNGSYOA
+ ib3xhJZqNjKWUUdRymSrcpSKrjmYG9iy6CHAOSpH2ZUeOqpxe0+tfbJydcKONGzn2Z/P
+ ikwb2N8nRXskZ1Z1Kvr3YFbMgAwKmDRTCVF5SaOS0IcH4eZr2uJXZbFr/B18xTZH3eDj og== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2umuga87uq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-raid@vger.kernel.org>; Tue, 27 Aug 2019 03:13:39 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7R37au2155241
+        for <linux-raid@vger.kernel.org>; Tue, 27 Aug 2019 03:12:34 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2umj1txunx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-raid@vger.kernel.org>; Tue, 27 Aug 2019 03:12:34 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7R3CXja014087
+        for <linux-raid@vger.kernel.org>; Tue, 27 Aug 2019 03:12:33 GMT
+Received: from ol6u9ext3.cn.oracle.com (/10.182.71.225)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 26 Aug 2019 20:12:33 -0700
+From:   Shuning Zhang <sunny.s.zhang@oracle.com>
+To:     linux-raid@vger.kernel.org
+Subject: [PATCH] raid5: fix spelling mistake \"bion\" -> \"bios\"
+Date:   Tue, 27 Aug 2019 11:12:00 +0800
+Message-Id: <1566875520-5340-1-git-send-email-sunny.s.zhang@oracle.com>
+X-Mailer: git-send-email 1.7.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9361 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=895
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908270033
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9361 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=972 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908270033
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi Guoqing,
+There is apelling mistake in raid5, fix it.
 
-Sorry for the delay.
+Signed-off-by: Shuning Zhang <sunny.s.zhang@oracle.com>
+---
+ drivers/md/raid5.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Mon, Aug 26, 2019 at 6:46 AM Guoqing Jiang
-<guoqing.jiang@cloud.ionos.com> wrote:
->
-[...]
-> >
-> > Maybe it makes sense to remove the checking of STRIPE_ACTIVE just like
-> > commit 550da24f8d62f
-> > ("md/raid5: preserve STRIPE_PREREAD_ACTIVE in break_stripe_batch_list").
-> >
-> > @@ -4606,8 +4607,7 @@ static void break_stripe_batch_list(struct
-> > stripe_head *head_sh,
-> >
-> >                 list_del_init(&sh->batch_list);
-> >
-> > -               WARN_ONCE(sh->state & ((1 << STRIPE_ACTIVE) |
-> > -                                         (1 << STRIPE_SYNCING) |
-> > +               WARN_ONCE(sh->state & ((1 << STRIPE_SYNCING) |
-> >                                           (1 << STRIPE_REPLACED) |
-> >                                           (1 << STRIPE_DELAYED) |
-> >                                           (1 << STRIPE_BIT_DELAY) |
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index 3de4e13..2a33b13 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -3189,7 +3189,7 @@ schedule_reconstruction(struct stripe_head *sh, struct stripe_head_state *s,
+ }
+ 
+ /*
+- * Each stripe/dev can have one or more bion attached.
++ * Each stripe/dev can have one or more bios attached.
+  * toread/towrite point to the first in a chain.
+  * The bi_next chain must be in order.
+  */
+-- 
+2.7.4
 
-This part looks good to me.
-
-> > @@ -4626,6 +4626,7 @@ static void break_stripe_batch_list(struct
-> > stripe_head *head_sh,
-> >
-> >                 set_mask_bits(&sh->state, ~(STRIPE_EXPAND_SYNC_FLAGS |
-> >                                             (1 <<
-> > STRIPE_PREREAD_ACTIVE) |
-> > +                                           (1 << STRIPE_ACTIVE) |
-> >                                             (1 << STRIPE_DEGRADED) |
-> >                                             (1 <<
-> > STRIPE_ON_UNPLUG_LIST)),
-> >                               head_sh->state & (1 << STRIPE_INSYNC));
-> >
-
-But I think we should not clear STRIPE_ACTIVE here. It should be
-cleared at the end of handle_stripe().
-
-Does this make sense?
-
-Thanks,
-Song
