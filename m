@@ -2,147 +2,121 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DB6AF9F3BC
-	for <lists+linux-raid@lfdr.de>; Tue, 27 Aug 2019 22:05:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA47D9FBC1
+	for <lists+linux-raid@lfdr.de>; Wed, 28 Aug 2019 09:30:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730221AbfH0UFx (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 27 Aug 2019 16:05:53 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44915 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727484AbfH0UFx (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 27 Aug 2019 16:05:53 -0400
-Received: by mail-io1-f65.google.com with SMTP id j4so995825iog.11
-        for <linux-raid@vger.kernel.org>; Tue, 27 Aug 2019 13:05:53 -0700 (PDT)
+        id S1726293AbfH1HaP (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 28 Aug 2019 03:30:15 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:36051 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbfH1HaP (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 28 Aug 2019 03:30:15 -0400
+Received: by mail-ed1-f67.google.com with SMTP id g24so1868351edu.3
+        for <linux-raid@vger.kernel.org>; Wed, 28 Aug 2019 00:30:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NpJRUAxfDhQCCxfwlZTeIe73nAzvPLl+flaFew2/aK0=;
-        b=SqQDyaR6XAWj96uh56tJkMJdhxwTw4/z8YAsM0DI4SMgn9O1kFVXjJLw12XG3m1H9H
-         q5sxvcHTJuOJZ0SF+rxwp232oZU1SxWf0rsS+jph3MRNRNgSyUT5ykGuXzoMI5IGCtr1
-         hbJbfSHh5w3DLsopZmdMg54psoyCRL7nIMu+QMq3dHV6KGxNW04JyWorm/ahWjK/Oym+
-         eoo2crVa6igqnxDqgklHlIKk8fF5f7f1xRv1X+SM4bE+SimuQYD/OdyVBDMhlPKszb6I
-         1cXKi7hnaLEA/6V6km0T8foYGEZFLAj8gUw5jsKtGJkbSjZ3wfRAtQkq08U+PA2hJweH
-         UX1Q==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=uW1Eqy55odGxidRpoU4aOaneIkj3hUr55sAFiBDr43Q=;
+        b=BNgdkKAgqrPe9uz5/6k/2uelmfgyNHcdGGid+/RsVQ7GwiKRRczTvRUhd/OYvS7xM+
+         j8CwEeGNP/JukB/dWnqrbiGKK7ifKgOI7xNdsW8Wfxtw4Of/fU01nx4gMmZDk0Z+fpy1
+         eAET4jj3eSXJCF63Uqlmurq8en6dDL66WVupYLkR0hvW9yS+IMtROMbaxLFwKZ5Dshva
+         oTwnI3jLWYAkX52vWtEH1ELMY8Bb9IpJc8ECp1blVHwgc0zZQsKCy/8qbMhDRjeQexH9
+         0qSRwnv/g1cQZZFIC0VzNE/dyC1O62mCHpKFlr79lZihSRS6KRefhyttdK3bhv1YseqC
+         yQCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NpJRUAxfDhQCCxfwlZTeIe73nAzvPLl+flaFew2/aK0=;
-        b=hz/jsJdeCvkPswTPhnV/WAvsW23sNkkGF2PFhx6D1gN6k0Jqsp4knv7mUHNUEncnSL
-         JAnrLUyJ/XuX617TZrn0W3aa9qKQnWnT2TtMRnhU3wTV7e5yFFx2nNxbd0+LMMNi3CL7
-         Ms+Ne2OYzlfOGMh3wgNr9Kard6qNcHj58OUK9s5yCOwppc1EDYVNUtcU3DFwqm1a9qzt
-         crC8r4Uialc8QWTIjzKsIJBQKaWt5EYzk9LbnBJZ/z+SBD1OntAbGAEDWjtmxfw3xI1Y
-         6WN7eFNnDduGTYPx59hraEkWhQQzm90NOmt3vdj51o29OBqQFCbvgejMoPuWz98bR051
-         dp1w==
-X-Gm-Message-State: APjAAAUwT71fLv5UE2wkJbFI9fBZiV6SrMomTbFE2Cp+1P7mA8SZbyiz
-        XqMUeVxkZKcl9LKn+W451cbK4A==
-X-Google-Smtp-Source: APXvYqwqFm2zxsMeIfdtAX733CpmOiqgG1iaR5pbLJiV6ih10qJUaeAVrGGtGlteW9HVbKnC+NC3pA==
-X-Received: by 2002:a02:caa8:: with SMTP id e8mr590991jap.67.1566936352645;
-        Tue, 27 Aug 2019 13:05:52 -0700 (PDT)
-Received: from [192.168.1.50] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id v23sm124224ioh.58.2019.08.27.13.05.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 27 Aug 2019 13:05:51 -0700 (PDT)
-Subject: Re: [GIT PULL] md-next 20190827
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>,
-        NeilBrown <neilb@suse.com>, Nigel Croxon <ncroxon@redhat.com>,
-        Kernel Team <Kernel-team@fb.com>
-References: <D4B2FC6B-6939-4EFB-A8A6-9105C04AFAFB@fb.com>
- <43e21a6d-b1e5-b91d-9320-2b90bd230cab@kernel.dk>
- <2E921D63-D2AB-43D0-B7D8-6A10CD06CA4B@fb.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <7259a5b2-966b-159a-dcb3-3a88de184b4e@kernel.dk>
-Date:   Tue, 27 Aug 2019 14:05:50 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <2E921D63-D2AB-43D0-B7D8-6A10CD06CA4B@fb.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=uW1Eqy55odGxidRpoU4aOaneIkj3hUr55sAFiBDr43Q=;
+        b=InwqDZUFGSICb00ToCClXstqxVLJN95mWDJel+DXpGiBd1cKsWXqAa0fJ3+WoyMhWd
+         OCNgxBJTM2UDjjegEXTAsqWQotzqi46RvxAen1Ch7L0KODIc7RGe/lPFmcdGceCG0SQv
+         bRgXVz/e70pDWO1rgeqENDuyjYEk9xz5CLDaQoZ0mq2EZFQG4Xj9q6empbc45dQfLvAS
+         7P5RL83LRqNpZ4Cpts+ahOOAZgMGKLYkV/E8mEGTxdeyKsQmznwKjyZ0N0pDQS9bGNbt
+         918pcKosw8rcpGAVwekHLuEjauy8sih8ezLBllzogmwte4P9sXPBKzanxHIqt3eGLCWY
+         rMpQ==
+X-Gm-Message-State: APjAAAWgi1VjBEq+lktOJleUhM3AUB9qYlkoUUcZLJ2ItbtIUEdwAyZR
+        KhTAyOdu4XvNEX1kU9uIdMo=
+X-Google-Smtp-Source: APXvYqwFI6PJiWyVr7fsmgk3BwM3Kh+9IlE4uLZzdLY2JN4758Tgao9emni0mX8AvKLVnFyDviDfYA==
+X-Received: by 2002:a17:906:7f01:: with SMTP id d1mr1788938ejr.310.1566977414064;
+        Wed, 28 Aug 2019 00:30:14 -0700 (PDT)
+Received: from ls00508.pb.local ([2001:1438:4010:2540:4572:6688:9441:afde])
+        by smtp.gmail.com with ESMTPSA id y25sm286770edt.29.2019.08.28.00.30.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 00:30:13 -0700 (PDT)
+From:   Guoqing Jiang <jgq516@gmail.com>
+X-Google-Original-From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+To:     songliubraving@fb.com, linux-raid@vger.kernel.org
+Cc:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Subject: [PATCH] raid5: don't warn with STRIPE_SYNCING flag in break_stripe_batch_list
+Date:   Wed, 28 Aug 2019 09:29:56 +0200
+Message-Id: <20190828072956.30467-1-guoqing.jiang@cloud.ionos.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 8/27/19 2:03 PM, Song Liu wrote:
-> Hi Jens,
-> 
->> On Aug 27, 2019, at 12:58 PM, Jens Axboe <axboe@kernel.dk> wrote:
->>
->> On 8/27/19 1:47 PM, Song Liu wrote:
->>> Hi Jens,
->>>
->>> Please consider pulling the following patches for md on top of your for-5.4/block
->>> branch.
->>>
->>> Thanks,
->>> Song
->>>
->>>
->>>
->>> The following changes since commit 97b27821b4854ca744946dae32a3f2fd55bcd5bc:
->>>
->>>    writeback, memcg: Implement foreign dirty flushing (2019-08-27 09:22:38 -0600)
->>>
->>> are available in the Git repository at:
->>>
->>>    git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git md-next
->>>
->>> for you to fetch changes up to 0009fad033370802de75e4cedab54f4d86450e22:
->>>
->>>    raid5 improve too many read errors msg by adding limits (2019-08-27 12:36:37 -0700)
->>>
->>> ----------------------------------------------------------------
->>> NeilBrown (2):
->>>        md: only call set_in_sync() when it is expected to succeed.
->>>        md: don't report active array_state until after revalidate_disk() completes.
->>>
->>> Nigel Croxon (1):
->>>        raid5 improve too many read errors msg by adding limits
->>
->> You've cut the bottom part of this off, which is a bit problematic as I
->> always verify that the diffstat matches between what you send and what
->> I pull.
->>
-> 
-> Sorry for this problem. Here is the full note from git-request-pull:
-> 
-> Thanks,
-> Song
-> 
-> 
-> 
-> The following changes since commit 97b27821b4854ca744946dae32a3f2fd55bcd5bc:
-> 
->    writeback, memcg: Implement foreign dirty flushing (2019-08-27 09:22:38 -0600)
-> 
-> are available in the Git repository at:
-> 
->    git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git md-next
-> 
-> for you to fetch changes up to 0009fad033370802de75e4cedab54f4d86450e22:
-> 
->    raid5 improve too many read errors msg by adding limits (2019-08-27 12:36:37 -0700)
-> 
-> ----------------------------------------------------------------
-> NeilBrown (2):
->        md: only call set_in_sync() when it is expected to succeed.
->        md: don't report active array_state until after revalidate_disk() completes.
-> 
-> Nigel Croxon (1):
->        raid5 improve too many read errors msg by adding limits
-> 
->   drivers/md/md.c    | 14 +++++++++-----
->   drivers/md/md.h    |  3 +++
->   drivers/md/raid5.c | 14 ++++++++++----
->   3 files changed, 22 insertions(+), 9 deletions(-)
+The break_stripe_batch_list function is called by handle_stripe and
+handle_stripe_clean_event (it is also called by handle_stripe), so
+the original caller of break_stripe_batch_list is handle_stripe.
 
-Thanks, that's what I got, too.
+Since handle_stripe set STRIPE_ACTIVE flag at the beginning, and it is
+cleared at the end of handle_stripe, which means break_stripe_batch_list
+always triggers the below warning if it is called.
 
+[7028915.431770] stripe state: 2001
+[7028915.431815] ------------[ cut here ]------------
+[7028915.431828] WARNING: CPU: 18 PID: 29089 at drivers/md/raid5.c:4614 break_stripe_batch_list+0x203/0x240 [raid456]
+[...]
+[7028915.431879] CPU: 18 PID: 29089 Comm: kworker/u82:5 Tainted: G           O    4.14.86-1-storage #4.14.86-1.2~deb9
+[7028915.431881] Hardware name: Supermicro SSG-2028R-ACR24L/X10DRH-iT, BIOS 3.1 06/18/2018
+[7028915.431888] Workqueue: raid5wq raid5_do_work [raid456]
+[7028915.431890] task: ffff9ab0ef36d7c0 task.stack: ffffb72926f84000
+[7028915.431896] RIP: 0010:break_stripe_batch_list+0x203/0x240 [raid456]
+[7028915.431898] RSP: 0018:ffffb72926f87ba8 EFLAGS: 00010286
+[7028915.431900] RAX: 0000000000000012 RBX: ffff9aaa84a98000 RCX: 0000000000000000
+[7028915.431901] RDX: 0000000000000000 RSI: ffff9ab2bfa15458 RDI: ffff9ab2bfa15458
+[7028915.431902] RBP: ffff9aaa8fb4e900 R08: 0000000000000001 R09: 0000000000002eb4
+[7028915.431903] R10: 00000000ffffffff R11: 0000000000000000 R12: ffff9ab1736f1b00
+[7028915.431904] R13: 0000000000000000 R14: ffff9aaa8fb4e900 R15: 0000000000000001
+[7028915.431906] FS:  0000000000000000(0000) GS:ffff9ab2bfa00000(0000) knlGS:0000000000000000
+[7028915.431907] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[7028915.431908] CR2: 00007ff953b9f5d8 CR3: 0000000bf4009002 CR4: 00000000003606e0
+[7028915.431909] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[7028915.431910] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[7028915.431910] Call Trace:
+[7028915.431923]  handle_stripe+0x8e7/0x2020 [raid456]
+[7028915.431930]  ? __wake_up_common_lock+0x89/0xc0
+[7028915.431935]  handle_active_stripes.isra.58+0x35f/0x560 [raid456]
+[7028915.431939]  raid5_do_work+0xc6/0x1f0 [raid456]
+
+But break_stripe_batch_list is called under conditions: too many failed
+devices, write error happened or failure of pdisk/qdisk etc, which means
+the warning is happened rarely. Though I still found the same issue was
+reported in list [1].
+
+So let's remove the checking of STRIPE_ACTIVE inside WARN_ONCE.
+
+[1]. https://www.spinics.net/lists/raid/msg62552.html
+
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+---
+ drivers/md/raid5.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index 88e56ee98976..e3dced8ad1b5 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -4612,8 +4612,7 @@ static void break_stripe_batch_list(struct stripe_head *head_sh,
+ 
+ 		list_del_init(&sh->batch_list);
+ 
+-		WARN_ONCE(sh->state & ((1 << STRIPE_ACTIVE) |
+-					  (1 << STRIPE_SYNCING) |
++		WARN_ONCE(sh->state & ((1 << STRIPE_SYNCING) |
+ 					  (1 << STRIPE_REPLACED) |
+ 					  (1 << STRIPE_DELAYED) |
+ 					  (1 << STRIPE_BIT_DELAY) |
 -- 
-Jens Axboe
+2.17.1
 
