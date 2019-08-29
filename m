@@ -2,102 +2,267 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E224AA16F1
-	for <lists+linux-raid@lfdr.de>; Thu, 29 Aug 2019 12:52:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E07C8A1A76
+	for <lists+linux-raid@lfdr.de>; Thu, 29 Aug 2019 14:51:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbfH2KvO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 29 Aug 2019 06:51:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59066 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728532AbfH2KvN (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:51:13 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB16D2341B;
-        Thu, 29 Aug 2019 10:51:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567075872;
-        bh=0lCEHDxLOQ6yt9rOsavR/pLvEJ18xUFl2UqvqIea3jk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=IiASg/y94fjeGLtAettQ6DUoUDBK5us1ylRqDceB8nSWu3AIvf4MMoTPA2F1kaiIn
-         wmJTIW8O/dthpABqSlGBFcEfx5Z16wSK9iB47ZEdX+agDgGHidulcHpnSwrhx27Kfc
-         48xP94K475K9eQ/zaR8ssiuNVaSjyplXFFXWm4Sw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 1/6] Revert "dm bufio: fix deadlock with loop device"
-Date:   Thu, 29 Aug 2019 06:51:05 -0400
-Message-Id: <20190829105110.2748-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        id S1726979AbfH2Mv4 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 29 Aug 2019 08:51:56 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:47096 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726852AbfH2Mvz (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 29 Aug 2019 08:51:55 -0400
+Received: from mail-pl1-f197.google.com ([209.85.214.197])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <gpiccoli@canonical.com>)
+        id 1i3Ju4-0003sM-7b
+        for linux-raid@vger.kernel.org; Thu, 29 Aug 2019 12:51:52 +0000
+Received: by mail-pl1-f197.google.com with SMTP id v13so1926020plo.4
+        for <linux-raid@vger.kernel.org>; Thu, 29 Aug 2019 05:51:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:cc:references:to:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=KXReb5C5sWPqimLePcMad/fib0dL8OM+ZShWXJO5G38=;
+        b=BsFaPtSjPmiEIGbDLKwEssB4sSTDuF/JClIPTtpXMhZ91A+dIibSCgHDpN0SqK3Ozo
+         9Pig+akyuaPWwKL89wPZF3ZYyiogaJlo2sPA1Vi6Y8HAeJ9UrL9soFCmVP36soD7NcKx
+         zGA6puxO9MFgm708vzSxKBBqsohPyK974cRBeG1CGLcsbWLMBidQ12Z/W7tAGsPJu6Z4
+         VqyNzWbLaZQDw0p95LW+9FRf2gz34M+fwZpkZrNoxaZ7rVG8nVMU7neK3ctRGJql64B4
+         tVWxnHEs6qDI3B5xsUSa5aULvAir7keI9ynyH77miTWaBFAJhl2CB7KSSqN6Jx7R7CGj
+         Izng==
+X-Gm-Message-State: APjAAAUmKmIRZmAaBqDp2GJ+7NS0mYZcXpeUaL3kkgZnhnb1S92YMHta
+        sH68DrF1AgJHe2FMiHWlVxls6ZYQvSA5eTneuszR4fX/l5FsmrVyfXBBW4ImBRwZCyFwz2xnEzL
+        sEm4AsJ8oh+liWH729/Sfyie6MyfG7RtuMnkHCYI=
+X-Received: by 2002:a62:be04:: with SMTP id l4mr8474332pff.247.1567083110987;
+        Thu, 29 Aug 2019 05:51:50 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqw7Y2jT58CB/26WQrcl+PZJqvLOlVtaqsnZLf+cdod1RHd8cPHHCKYYbS46eDmcnXhqa5PRKw==
+X-Received: by 2002:a62:be04:: with SMTP id l4mr8474308pff.247.1567083110752;
+        Thu, 29 Aug 2019 05:51:50 -0700 (PDT)
+Received: from [192.168.1.75] (200-232-247-150.dsl.telesp.net.br. [200.232.247.150])
+        by smtp.gmail.com with ESMTPSA id j1sm2797676pfh.174.2019.08.29.05.51.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 29 Aug 2019 05:51:49 -0700 (PDT)
+Subject: Re: [PATCH v3 2/2] mdadm: Introduce new array state 'broken' for
+ raid0/linear
+Cc:     linux-raid@vger.kernel.org, linux-block@vger.kernel.org,
+        dm-devel@redhat.com, jay.vosburgh@canonical.com,
+        liu.song.a23@gmail.com, NeilBrown <neilb@suse.com>,
+        Song Liu <songliubraving@fb.com>
+References: <20190822161318.26236-1-gpiccoli@canonical.com>
+ <20190822161318.26236-2-gpiccoli@canonical.com>
+To:     jes.sorensen@gmail.com
+From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gpiccoli@canonical.com; prefer-encrypt=mutual; keydata=
+ mQENBFpVBxcBCADPNKmu2iNKLepiv8+Ssx7+fVR8lrL7cvakMNFPXsXk+f0Bgq9NazNKWJIn
+ Qxpa1iEWTZcLS8ikjatHMECJJqWlt2YcjU5MGbH1mZh+bT3RxrJRhxONz5e5YILyNp7jX+Vh
+ 30rhj3J0vdrlIhPS8/bAt5tvTb3ceWEic9mWZMsosPavsKVcLIO6iZFlzXVu2WJ9cov8eQM/
+ irIgzvmFEcRyiQ4K+XUhuA0ccGwgvoJv4/GWVPJFHfMX9+dat0Ev8HQEbN/mko/bUS4Wprdv
+ 7HR5tP9efSLucnsVzay0O6niZ61e5c97oUa9bdqHyApkCnGgKCpg7OZqLMM9Y3EcdMIJABEB
+ AAG0LUd1aWxoZXJtZSBHLiBQaWNjb2xpIDxncGljY29saUBjYW5vbmljYWwuY29tPokBNwQT
+ AQgAIQUCWmClvQIbAwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDOR5EF9K/7Gza3B/9d
+ 5yczvEwvlh6ksYq+juyuElLvNwMFuyMPsvMfP38UslU8S3lf+ETukN1S8XVdeq9yscwtsRW/
+ 4YoUwHinJGRovqy8gFlm3SAtjfdqysgJqUJwBmOtcsHkmvFXJmPPGVoH9rMCUr9s6VDPox8f
+ q2W5M7XE9YpsfchS/0fMn+DenhQpV3W6pbLtuDvH/81GKrhxO8whSEkByZbbc+mqRhUSTdN3
+ iMpRL0sULKPVYbVMbQEAnfJJ1LDkPqlTikAgt3peP7AaSpGs1e3pFzSEEW1VD2jIUmmDku0D
+ LmTHRl4t9KpbU/H2/OPZkrm7809QovJGRAxjLLPcYOAP7DUeltveuQENBFpVBxcBCADbxD6J
+ aNw/KgiSsbx5Sv8nNqO1ObTjhDR1wJw+02Bar9DGuFvx5/qs3ArSZkl8qX0X9Vhptk8rYnkn
+ pfcrtPBYLoux8zmrGPA5vRgK2ItvSc0WN31YR/6nqnMfeC4CumFa/yLl26uzHJa5RYYQ47jg
+ kZPehpc7IqEQ5IKy6cCKjgAkuvM1rDP1kWQ9noVhTUFr2SYVTT/WBHqUWorjhu57/OREo+Tl
+ nxI1KrnmW0DbF52tYoHLt85dK10HQrV35OEFXuz0QPSNrYJT0CZHpUprkUxrupDgkM+2F5LI
+ bIcaIQ4uDMWRyHpDbczQtmTke0x41AeIND3GUc+PQ4hWGp9XABEBAAGJAR8EGAEIAAkFAlpV
+ BxcCGwwACgkQzkeRBfSv+xv1wwgAj39/45O3eHN5pK0XMyiRF4ihH9p1+8JVfBoSQw7AJ6oU
+ 1Hoa+sZnlag/l2GTjC8dfEGNoZd3aRxqfkTrpu2TcfT6jIAsxGjnu+fUCoRNZzmjvRziw3T8
+ egSPz+GbNXrTXB8g/nc9mqHPPprOiVHDSK8aGoBqkQAPZDjUtRwVx112wtaQwArT2+bDbb/Y
+ Yh6gTrYoRYHo6FuQl5YsHop/fmTahpTx11IMjuh6IJQ+lvdpdfYJ6hmAZ9kiVszDF6pGFVkY
+ kHWtnE2Aa5qkxnA2HoFpqFifNWn5TyvJFpyqwVhVI8XYtXyVHub/WbXLWQwSJA4OHmqU8gDl
+ X18zwLgdiQ==
+Message-ID: <d8185107-e517-2ce7-7f9b-aa029a97924a@canonical.com>
+Date:   Thu, 29 Aug 2019 09:51:38 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190822161318.26236-2-gpiccoli@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+On 22/08/2019 13:13, Guilherme G. Piccoli wrote:
+> Currently if a md raid0/linear array gets one or more members removed while
+> being mounted, kernel keeps showing state 'clean' in the 'array_state'
+> sysfs attribute. Despite udev signaling the member device is gone, 'mdadm'
+> cannot issue the STOP_ARRAY ioctl successfully, given the array is mounted.
+> 
+> Nothing else hints that something is wrong (except that the removed devices
+> don't show properly in the output of mdadm 'detail' command). There is no
+> other property to be checked, and if user is not performing reads/writes
+> to the array, even kernel log is quiet and doesn't give a clue about the
+> missing member.
+> 
+> This patch is the mdadm counterpart of kernel new array state 'broken'.
+> The 'broken' state mimics the state 'clean' in every aspect, being useful
+> only to distinguish if an array has some member missing. All necessary
+> paths in mdadm were changed to deal with 'broken' state, and in case the
+> tool runs in a kernel that is not updated, it'll work normally, i.e., it
+> doesn't require the 'broken' state in order to work.
+> Also, this patch changes the way the array state is showed in the 'detail'
+> command (for raid0/linear only) - now it takes the 'array_state' sysfs
+> attribute into account instead of only rely in the MD_SB_CLEAN flag.
+> 
+> Cc: NeilBrown <neilb@suse.com>
+> Cc: Song Liu <songliubraving@fb.com>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
+> ---
+> 
+> v2 -> v3:
+> * Nothing changed.
+> 
+> v1 -> v2:
+> * Added handling for md/linear 'broken' state.
+> 
+> 
+>  Detail.c  | 17 +++++++++++++++--
+>  Monitor.c |  9 +++++++--
+>  maps.c    |  1 +
+>  mdadm.h   |  1 +
+>  mdmon.h   |  2 +-
+>  monitor.c |  4 ++--
+>  6 files changed, 27 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Detail.c b/Detail.c
+> index ad60434..cc7e9f1 100644
+> --- a/Detail.c
+> +++ b/Detail.c
+> @@ -81,6 +81,7 @@ int Detail(char *dev, struct context *c)
+>  	int external;
+>  	int inactive;
+>  	int is_container = 0;
+> +	char arrayst[12] = { 0 }; /* no state is >10 chars currently */
+>  
+>  	if (fd < 0) {
+>  		pr_err("cannot open %s: %s\n",
+> @@ -485,9 +486,21 @@ int Detail(char *dev, struct context *c)
+>  			else
+>  				st = ", degraded";
+>  
+> +			if (array.state & (1 << MD_SB_CLEAN)) {
+> +				if ((array.level == 0) ||
+> +				    (array.level == LEVEL_LINEAR))
+> +					strncpy(arrayst,
+> +						map_num(sysfs_array_states,
+> +							sra->array_state),
+> +						sizeof(arrayst)-1);
+> +				else
+> +					strncpy(arrayst, "clean",
+> +						sizeof(arrayst)-1);
+> +			} else
+> +				strncpy(arrayst, "active", sizeof(arrayst)-1);
+> +
+>  			printf("             State : %s%s%s%s%s%s \n",
+> -			       (array.state & (1 << MD_SB_CLEAN)) ?
+> -			       "clean" : "active", st,
+> +			       arrayst, st,
+>  			       (!e || (e->percent < 0 &&
+>  				       e->percent != RESYNC_PENDING &&
+>  				       e->percent != RESYNC_DELAYED)) ?
+> diff --git a/Monitor.c b/Monitor.c
+> index 036103f..9fd5406 100644
+> --- a/Monitor.c
+> +++ b/Monitor.c
+> @@ -1055,8 +1055,12 @@ int Wait(char *dev)
+>  	}
+>  }
+>  
+> +/* The state "broken" is used only for RAID0/LINEAR - it's the same as
+> + * "clean", but used in case the array has one or more members missing.
+> + */
+> +#define CLEAN_STATES_LAST_POS	5
+>  static char *clean_states[] = {
+> -	"clear", "inactive", "readonly", "read-auto", "clean", NULL };
+> +	"clear", "inactive", "readonly", "read-auto", "clean", "broken", NULL };
+>  
+>  int WaitClean(char *dev, int verbose)
+>  {
+> @@ -1116,7 +1120,8 @@ int WaitClean(char *dev, int verbose)
+>  			rv = read(state_fd, buf, sizeof(buf));
+>  			if (rv < 0)
+>  				break;
+> -			if (sysfs_match_word(buf, clean_states) <= 4)
+> +			if (sysfs_match_word(buf, clean_states)
+> +			    <= CLEAN_STATES_LAST_POS)
+>  				break;
+>  			rv = sysfs_wait(state_fd, &delay);
+>  			if (rv < 0 && errno != EINTR)
+> diff --git a/maps.c b/maps.c
+> index 02a0474..49b7f2c 100644
+> --- a/maps.c
+> +++ b/maps.c
+> @@ -150,6 +150,7 @@ mapping_t sysfs_array_states[] = {
+>  	{ "read-auto", ARRAY_READ_AUTO },
+>  	{ "clean", ARRAY_CLEAN },
+>  	{ "write-pending", ARRAY_WRITE_PENDING },
+> +	{ "broken", ARRAY_BROKEN },
+>  	{ NULL, ARRAY_UNKNOWN_STATE }
+>  };
+>  
+> diff --git a/mdadm.h b/mdadm.h
+> index 43b07d5..c88ceab 100644
+> --- a/mdadm.h
+> +++ b/mdadm.h
+> @@ -373,6 +373,7 @@ struct mdinfo {
+>  		ARRAY_ACTIVE,
+>  		ARRAY_WRITE_PENDING,
+>  		ARRAY_ACTIVE_IDLE,
+> +		ARRAY_BROKEN,
+>  		ARRAY_UNKNOWN_STATE,
+>  	} array_state;
+>  	struct md_bb bb;
+> diff --git a/mdmon.h b/mdmon.h
+> index 818367c..b3d72ac 100644
+> --- a/mdmon.h
+> +++ b/mdmon.h
+> @@ -21,7 +21,7 @@
+>  extern const char Name[];
+>  
+>  enum array_state { clear, inactive, suspended, readonly, read_auto,
+> -		   clean, active, write_pending, active_idle, bad_word};
+> +		   clean, active, write_pending, active_idle, broken, bad_word};
+>  
+>  enum sync_action { idle, reshape, resync, recover, check, repair, bad_action };
+>  
+> diff --git a/monitor.c b/monitor.c
+> index 81537ed..e0d3be6 100644
+> --- a/monitor.c
+> +++ b/monitor.c
+> @@ -26,7 +26,7 @@
+>  
+>  static char *array_states[] = {
+>  	"clear", "inactive", "suspended", "readonly", "read-auto",
+> -	"clean", "active", "write-pending", "active-idle", NULL };
+> +	"clean", "active", "write-pending", "active-idle", "broken", NULL };
+>  static char *sync_actions[] = {
+>  	"idle", "reshape", "resync", "recover", "check", "repair", NULL
+>  };
+> @@ -476,7 +476,7 @@ static int read_and_act(struct active_array *a, fd_set *fds)
+>  		a->next_state = clean;
+>  		ret |= ARRAY_DIRTY;
+>  	}
+> -	if (a->curr_state == clean) {
+> +	if ((a->curr_state == clean) || (a->curr_state == broken)) {
+>  		a->container->ss->set_array_state(a, 1);
+>  	}
+>  	if (a->curr_state == active ||
+> 
 
-[ Upstream commit cf3591ef832915892f2499b7e54b51d4c578b28c ]
+Hi Jes, is there anything to improve in this patch? I'll submit V4 soon
+to include some suggestions from Song (in the driver), so if you have
+suggestions here I could add them to v4.
+Thanks in advance,
 
-Revert the commit bd293d071ffe65e645b4d8104f9d8fe15ea13862. The proper
-fix has been made available with commit d0a255e795ab ("loop: set
-PF_MEMALLOC_NOIO for the worker thread").
 
-Note that the fix offered by commit bd293d071ffe doesn't really prevent
-the deadlock from occuring - if we look at the stacktrace reported by
-Junxiao Bi, we see that it hangs in bit_wait_io and not on the mutex -
-i.e. it has already successfully taken the mutex. Changing the mutex
-from mutex_lock to mutex_trylock won't help with deadlocks that happen
-afterwards.
-
-PID: 474    TASK: ffff8813e11f4600  CPU: 10  COMMAND: "kswapd0"
-   #0 [ffff8813dedfb938] __schedule at ffffffff8173f405
-   #1 [ffff8813dedfb990] schedule at ffffffff8173fa27
-   #2 [ffff8813dedfb9b0] schedule_timeout at ffffffff81742fec
-   #3 [ffff8813dedfba60] io_schedule_timeout at ffffffff8173f186
-   #4 [ffff8813dedfbaa0] bit_wait_io at ffffffff8174034f
-   #5 [ffff8813dedfbac0] __wait_on_bit at ffffffff8173fec8
-   #6 [ffff8813dedfbb10] out_of_line_wait_on_bit at ffffffff8173ff81
-   #7 [ffff8813dedfbb90] __make_buffer_clean at ffffffffa038736f [dm_bufio]
-   #8 [ffff8813dedfbbb0] __try_evict_buffer at ffffffffa0387bb8 [dm_bufio]
-   #9 [ffff8813dedfbbd0] dm_bufio_shrink_scan at ffffffffa0387cc3 [dm_bufio]
-  #10 [ffff8813dedfbc40] shrink_slab at ffffffff811a87ce
-  #11 [ffff8813dedfbd30] shrink_zone at ffffffff811ad778
-  #12 [ffff8813dedfbdc0] kswapd at ffffffff811ae92f
-  #13 [ffff8813dedfbec0] kthread at ffffffff810a8428
-  #14 [ffff8813dedfbf50] ret_from_fork at ffffffff81745242
-
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Cc: stable@vger.kernel.org
-Fixes: bd293d071ffe ("dm bufio: fix deadlock with loop device")
-Depends-on: d0a255e795ab ("loop: set PF_MEMALLOC_NOIO for the worker thread")
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/md/dm-bufio.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/md/dm-bufio.c b/drivers/md/dm-bufio.c
-index 8a6e7646e1c98..b1d5fa0bc8f7b 100644
---- a/drivers/md/dm-bufio.c
-+++ b/drivers/md/dm-bufio.c
-@@ -1561,7 +1561,9 @@ dm_bufio_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
- 	unsigned long freed;
- 
- 	c = container_of(shrink, struct dm_bufio_client, shrinker);
--	if (!dm_bufio_trylock(c))
-+	if (sc->gfp_mask & __GFP_FS)
-+		dm_bufio_lock(c);
-+	else if (!dm_bufio_trylock(c))
- 		return SHRINK_STOP;
- 
- 	freed  = __scan(c, sc->nr_to_scan, sc->gfp_mask);
--- 
-2.20.1
-
+Guilherme
