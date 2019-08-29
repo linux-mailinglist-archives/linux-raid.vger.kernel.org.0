@@ -2,160 +2,104 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 072D8A144E
-	for <lists+linux-raid@lfdr.de>; Thu, 29 Aug 2019 11:05:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FADFA175E
+	for <lists+linux-raid@lfdr.de>; Thu, 29 Aug 2019 12:56:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725939AbfH2JFP (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 29 Aug 2019 05:05:15 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39224 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbfH2JFO (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 29 Aug 2019 05:05:14 -0400
-Received: by mail-ed1-f67.google.com with SMTP id g8so3211589edm.6
-        for <linux-raid@vger.kernel.org>; Thu, 29 Aug 2019 02:05:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=JRI0nPniI38X+pKRpGzBrIIS60UyAoEfbv1DH2qoytk=;
-        b=bDwlVHQ1toCguj3fWX3nQI7E8Q6eE+aKak3clsoIIl3LkkeYM7OgqHPJNsc2EjM9Dx
-         T9QP68nEdFRWbBPfKODekgXFmNWgddd6n6Vain0tzWeo9MR4As27a7Bdtr5SiMWyY0cj
-         HxNIV0duWSfjCwBO8wOw7J3R3942D0KWVEoZGJLWIdt9gaP/0E+2KHFlbW4QqjHGnYlD
-         MgiC6bpEYGOD13ddnlcew1LbWxlFue3WiH3u97kGE9Lf5BfbfT6q0veZ2jCtepjjHMvc
-         dI8KIW5SmIVg14h9E54325qY1AR0ns+9JZaAMwVyuIuRubolHvB8sT0Vqrz6+w0Exog1
-         CALQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=JRI0nPniI38X+pKRpGzBrIIS60UyAoEfbv1DH2qoytk=;
-        b=OJ6GFg+myAn39Qh2oS3wsD+e04yn68pzuWfUeWeW58/mRlgzE91IwrKqSHcIC17PzB
-         5wWYNvmQEaurccT/f4zzBbSs33+Ns5y+WSJYdnKPWr1S+v94ZZl29iOIKWrkm4hJDkM/
-         68kWXfQeKuw8e8U4XzZQFiP6oOGPpk+ndkLYjYPzmwA2mB4uctDzkXc1rrnRabBHZcKV
-         Wyu4gWxQvJIeOFeqZNZSHPwga5FftIsq9adaBEZIZO0jNN3T23zC4mBNMXeXZSIoS7OA
-         MbRy33I9jxaLF/fl4Nzoqv9y0Cw87alsx2cYEm3mknJVEyhwe/V7j44oOXojE7cBJ2wY
-         o4bA==
-X-Gm-Message-State: APjAAAUpOwwYFlAY9ZnZaNclG/6iCJJznhfJ7NWfCrpW3mGc37SDuZwJ
-        VFQiKDjr5cnnyHIJkHnmjalyCsHyB/I=
-X-Google-Smtp-Source: APXvYqyOyf6UcssweKOt4cBKstRSK9rBmosV4EfPuCDmaJxoKD0w32XjMrDNUjaksIufMUC/gnC3aQ==
-X-Received: by 2002:aa7:c1da:: with SMTP id d26mr8269407edp.208.1567069512053;
-        Thu, 29 Aug 2019 02:05:12 -0700 (PDT)
-Received: from ?IPv6:2a02:247f:ffff:2540:cdb3:d5a4:4e7e:3d4b? ([2001:1438:4010:2540:cdb3:d5a4:4e7e:3d4b])
-        by smtp.gmail.com with ESMTPSA id x42sm328938edm.77.2019.08.29.02.05.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 29 Aug 2019 02:05:11 -0700 (PDT)
-Subject: Re: [PATCH] raid5: don't warn with STRIPE_SYNCING flag in
- break_stripe_batch_list
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>
-References: <20190828072956.30467-1-guoqing.jiang@cloud.ionos.com>
- <DD8E1764-7CA6-4D9E-8CA7-4988C2FE5740@fb.com>
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Message-ID: <94a850d9-be0e-5b17-a6ab-7db50f1c0961@cloud.ionos.com>
-Date:   Thu, 29 Aug 2019 11:05:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1727386AbfH2KuO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 29 Aug 2019 06:50:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57352 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727183AbfH2KuN (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:50:13 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEED523405;
+        Thu, 29 Aug 2019 10:50:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567075812;
+        bh=tI7BVHUHMKckWqBXe4y7OV4tqVnz9jbrLOH9mlq0l1M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aI4s/MbEjcRdNxGnRUYsejtMd2cSOi61dlnPQJT5S49UPv7JR7WfgIKjFjsKH3Oy7
+         oar6VbpR/wVoO5hpzHf9AIgtYnzSgLPqkGadlgw7bYadZB4Fh3cLqab49e+S8AtEp2
+         pHUtZAfwig5Nfbq+8kQD206JvT0jJfupxG5JOwZo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 02/29] Revert "dm bufio: fix deadlock with loop device"
+Date:   Thu, 29 Aug 2019 06:49:42 -0400
+Message-Id: <20190829105009.2265-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190829105009.2265-1-sashal@kernel.org>
+References: <20190829105009.2265-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <DD8E1764-7CA6-4D9E-8CA7-4988C2FE5740@fb.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+From: Mikulas Patocka <mpatocka@redhat.com>
 
+[ Upstream commit cf3591ef832915892f2499b7e54b51d4c578b28c ]
 
-On 8/29/19 7:42 AM, Song Liu wrote:
->> drivers/md/raid5.c | 3 +--
->> 1 file changed, 1 insertion(+), 2 deletions(-)
->>
->> diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
->> index 88e56ee98976..e3dced8ad1b5 100644
->> --- a/drivers/md/raid5.c
->> +++ b/drivers/md/raid5.c
->> @@ -4612,8 +4612,7 @@ static void break_stripe_batch_list(struct stripe_head *head_sh,
->>
->> 		list_del_init(&sh->batch_list);
->>
->> -		WARN_ONCE(sh->state & ((1 << STRIPE_ACTIVE) |
->> -					  (1 << STRIPE_SYNCING) |
->> +		WARN_ONCE(sh->state & ((1 << STRIPE_SYNCING) |
->> 					  (1 << STRIPE_REPLACED) |
->> 					  (1 << STRIPE_DELAYED) |
->> 					  (1 << STRIPE_BIT_DELAY) |
-> I read the code again, and now I am not sure whether we are fixing the issue.
-> This WARN_ONCE() does not run for head_sh, which should have STRIPE_ACTIVE.
-> It only runs on other stripes in the batch, which should not have STRIPE_ACTIVE.
->
-> Does this make sense?
+Revert the commit bd293d071ffe65e645b4d8104f9d8fe15ea13862. The proper
+fix has been made available with commit d0a255e795ab ("loop: set
+PF_MEMALLOC_NOIO for the worker thread").
 
-Yes, maybe some stripes are added to batch_list with STRIPE_ACTIVE is set.
-could it possible caused by the path?
+Note that the fix offered by commit bd293d071ffe doesn't really prevent
+the deadlock from occuring - if we look at the stacktrace reported by
+Junxiao Bi, we see that it hangs in bit_wait_io and not on the mutex -
+i.e. it has already successfully taken the mutex. Changing the mutex
+from mutex_lock to mutex_trylock won't help with deadlocks that happen
+afterwards.
 
-retry_aligned_read -> sh = raid5_get_active_stripe(conf, sector, 0, 1, 1)
-                                     ...
-                                     if (!add_stripe_bio(sh, raid_bio, 
-dd_idx, 0, 0))
-                                     ...
-                                     handle_stripe(sh)
+PID: 474    TASK: ffff8813e11f4600  CPU: 10  COMMAND: "kswapd0"
+   #0 [ffff8813dedfb938] __schedule at ffffffff8173f405
+   #1 [ffff8813dedfb990] schedule at ffffffff8173fa27
+   #2 [ffff8813dedfb9b0] schedule_timeout at ffffffff81742fec
+   #3 [ffff8813dedfba60] io_schedule_timeout at ffffffff8173f186
+   #4 [ffff8813dedfbaa0] bit_wait_io at ffffffff8174034f
+   #5 [ffff8813dedfbac0] __wait_on_bit at ffffffff8173fec8
+   #6 [ffff8813dedfbb10] out_of_line_wait_on_bit at ffffffff8173ff81
+   #7 [ffff8813dedfbb90] __make_buffer_clean at ffffffffa038736f [dm_bufio]
+   #8 [ffff8813dedfbbb0] __try_evict_buffer at ffffffffa0387bb8 [dm_bufio]
+   #9 [ffff8813dedfbbd0] dm_bufio_shrink_scan at ffffffffa0387cc3 [dm_bufio]
+  #10 [ffff8813dedfbc40] shrink_slab at ffffffff811a87ce
+  #11 [ffff8813dedfbd30] shrink_zone at ffffffff811ad778
+  #12 [ffff8813dedfbdc0] kswapd at ffffffff811ae92f
+  #13 [ffff8813dedfbec0] kthread at ffffffff810a8428
+  #14 [ffff8813dedfbf50] ret_from_fork at ffffffff81745242
 
-The sh is added to batch_list by add_stripe_bio -> stripe_add_to_batch_list,
-then the state is set to STRIPE_ACTIVE at the beginning of handle_stripe.
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: bd293d071ffe ("dm bufio: fix deadlock with loop device")
+Depends-on: d0a255e795ab ("loop: set PF_MEMALLOC_NOIO for the worker thread")
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/md/dm-bufio.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Maybe introduce a flag to show that the stripe is in batch_list, and 
-don't call
-handle_stripe for that stripe, some rough changes like.
+diff --git a/drivers/md/dm-bufio.c b/drivers/md/dm-bufio.c
+index b1d0ae2dbd3dd..dc385b70e4c33 100644
+--- a/drivers/md/dm-bufio.c
++++ b/drivers/md/dm-bufio.c
+@@ -1602,7 +1602,9 @@ dm_bufio_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
+ 	unsigned long freed;
+ 
+ 	c = container_of(shrink, struct dm_bufio_client, shrinker);
+-	if (!dm_bufio_trylock(c))
++	if (sc->gfp_mask & __GFP_FS)
++		dm_bufio_lock(c);
++	else if (!dm_bufio_trylock(c))
+ 		return SHRINK_STOP;
+ 
+ 	freed  = __scan(c, sc->nr_to_scan, sc->gfp_mask);
+-- 
+2.20.1
 
-gjiang@ls00508:/media/gjiang/opensource-tree/md$ git diff
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index e3dced8ad1b5..c04d5b55848a 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -817,12 +817,14 @@ static void stripe_add_to_batch_list(struct r5conf 
-*conf, struct stripe_head *sh
-                  * can still add the stripe to batch list
-                  */
-                 list_add(&sh->batch_list, &head->batch_list);
-+               set_bit(STRIPE_IN_BATCH_LIST, &sh->state);
-spin_unlock(&head->batch_head->batch_lock);
-         } else {
-                 head->batch_head = head;
-                 sh->batch_head = head->batch_head;
-                 spin_lock(&head->batch_lock);
-                 list_add_tail(&sh->batch_list, &head->batch_list);
-+               set_bit(STRIPE_IN_BATCH_LIST, &sh->state);
-                 spin_unlock(&head->batch_lock);
-         }
-
-@@ -6161,7 +6163,8 @@ static int  retry_aligned_read(struct r5conf 
-*conf, struct bio *raid_bio,
-                 }
-
-                 set_bit(R5_ReadNoMerge, &sh->dev[dd_idx].flags);
--               handle_stripe(sh);
-+               if (!test_bit(STRIPE_IN_BATCH_LIST, &sh->state))
-+                       handle_stripe(sh);
-                 raid5_release_stripe(sh);
-                 handled++;
-         }
-diff --git a/drivers/md/raid5.h b/drivers/md/raid5.h
-index cf991f13403e..dee7a1dee505 100644
---- a/drivers/md/raid5.h
-+++ b/drivers/md/raid5.h
-@@ -390,6 +390,7 @@ enum {
-                                  * in conf->r5c_full_stripe_list)
-                                  */
-         STRIPE_R5C_PREFLUSH,    /* need to flush journal device */
-+       STRIPE_IN_BATCH_LIST,   /* the stripe is already added to batch 
-list */
-  };
-
-  #define STRIPE_EXPAND_SYNC_FLAGS \
-
-What do you think about it? Thanks.
-
-Regards,
-Guoqing
