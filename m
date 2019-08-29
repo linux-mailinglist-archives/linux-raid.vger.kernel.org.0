@@ -2,35 +2,35 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D294A1705
-	for <lists+linux-raid@lfdr.de>; Thu, 29 Aug 2019 12:52:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E224AA16F1
+	for <lists+linux-raid@lfdr.de>; Thu, 29 Aug 2019 12:52:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728444AbfH2KvE (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 29 Aug 2019 06:51:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58712 "EHLO mail.kernel.org"
+        id S1727314AbfH2KvO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 29 Aug 2019 06:51:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728406AbfH2KvD (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 29 Aug 2019 06:51:03 -0400
+        id S1728532AbfH2KvN (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 29 Aug 2019 06:51:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE07123427;
-        Thu, 29 Aug 2019 10:51:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB16D2341B;
+        Thu, 29 Aug 2019 10:51:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567075862;
-        bh=W9/8cZ2NH+5BLpKFeiMoDnXmV9ygV43yv2Ej3121GIY=;
+        s=default; t=1567075872;
+        bh=0lCEHDxLOQ6yt9rOsavR/pLvEJ18xUFl2UqvqIea3jk=;
         h=From:To:Cc:Subject:Date:From;
-        b=f6m0pJree6dZZkdpfsQF+jXYHHNUpieX4K/OitJqNjKXp4bcQwKsH/mJejHZWyhqo
-         b4m3vXq5dUBhWpg084tdvnOeEaTdVWmfFrzuCR9Sy3N00+t3tTrwaDTa+ECfMYSezy
-         4888n2SnNl2iqbr01Gsq44qWW+d5JnhXSnNzU/d8=
+        b=IiASg/y94fjeGLtAettQ6DUoUDBK5us1ylRqDceB8nSWu3AIvf4MMoTPA2F1kaiIn
+         wmJTIW8O/dthpABqSlGBFcEfx5Z16wSK9iB47ZEdX+agDgGHidulcHpnSwrhx27Kfc
+         48xP94K475K9eQ/zaR8ssiuNVaSjyplXFFXWm4Sw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Mikulas Patocka <mpatocka@redhat.com>,
         Mike Snitzer <snitzer@redhat.com>,
         Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 1/8] Revert "dm bufio: fix deadlock with loop device"
-Date:   Thu, 29 Aug 2019 06:50:53 -0400
-Message-Id: <20190829105100.2649-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 1/6] Revert "dm bufio: fix deadlock with loop device"
+Date:   Thu, 29 Aug 2019 06:51:05 -0400
+Message-Id: <20190829105110.2748-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 X-stable: review
@@ -84,10 +84,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/md/dm-bufio.c b/drivers/md/dm-bufio.c
-index 673ce38735ff7..c837defb5e4dd 100644
+index 8a6e7646e1c98..b1d5fa0bc8f7b 100644
 --- a/drivers/md/dm-bufio.c
 +++ b/drivers/md/dm-bufio.c
-@@ -1585,7 +1585,9 @@ dm_bufio_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
+@@ -1561,7 +1561,9 @@ dm_bufio_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
  	unsigned long freed;
  
  	c = container_of(shrink, struct dm_bufio_client, shrinker);
