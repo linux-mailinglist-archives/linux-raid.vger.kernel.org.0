@@ -2,149 +2,56 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 703B2A3315
-	for <lists+linux-raid@lfdr.de>; Fri, 30 Aug 2019 10:45:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA11FA3530
+	for <lists+linux-raid@lfdr.de>; Fri, 30 Aug 2019 12:47:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbfH3Inz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 30 Aug 2019 04:43:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58112 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728604AbfH3Iny (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 30 Aug 2019 04:43:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BC1EEABB2;
-        Fri, 30 Aug 2019 08:43:52 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Song Liu <liu.song.a23@gmail.com>
-Date:   Fri, 30 Aug 2019 18:43:46 +1000
-Cc:     Neil F Brown <nfbrown@suse.com>,
-        linux-raid <linux-raid@vger.kernel.org>
-Subject: Re: WARNING in break_stripe_batch_list with "stripe state: 2001"
-In-Reply-To: <a2536d84-68df-3422-b677-66c666ebb35b@cloud.ionos.com>
-References: <7401b3e0-fb0c-8ed7-b1cb-28494fbac967@cloud.ionos.com> <e2aad07c-1f67-12c7-ac33-6df9cbdac43c@cloud.ionos.com> <CAPhsuW4gu4BaU=2cTNSGQoLEp4xeixRMgDrqfw0Eoxiu=QfeBw@mail.gmail.com> <a2536d84-68df-3422-b677-66c666ebb35b@cloud.ionos.com>
-Message-ID: <874l1zf3gd.fsf@notabene.neil.brown.name>
+        id S1727170AbfH3Kr1 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 30 Aug 2019 06:47:27 -0400
+Received: from smtp.hosts.co.uk ([85.233.160.19]:64312 "EHLO smtp.hosts.co.uk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726660AbfH3Kr1 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 30 Aug 2019 06:47:27 -0400
+Received: from [81.153.82.187] (helo=[192.168.1.118])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1i3eRB-0000pe-3q; Fri, 30 Aug 2019 11:47:25 +0100
+Subject: Re: [PATCH v3 1/2] md raid0/linear: Mark array as 'broken' and fail
+ BIOs if a member is gone
+To:     Song Liu <songliubraving@fb.com>,
+        "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+References: <20190822161318.26236-1-gpiccoli@canonical.com>
+ <73C4747E-7A9E-4833-8393-B6A06C935DBE@fb.com>
+ <8163258e-839c-e0b8-fc4b-74c94c9dae1d@canonical.com>
+ <F0E716F8-76EC-4315-933D-A547B52F1D27@fb.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "dm-devel@redhat.com" <dm-devel@redhat.com>,
+        Jay Vosburgh <jay.vosburgh@canonical.com>,
+        Song Liu <liu.song.a23@gmail.com>, NeilBrown <neilb@suse.com>
+From:   Wols Lists <antlists@youngman.org.uk>
+Message-ID: <5D68FEBC.9060709@youngman.org.uk>
+Date:   Fri, 30 Aug 2019 11:47:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+In-Reply-To: <F0E716F8-76EC-4315-933D-A547B52F1D27@fb.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+On 23/08/19 18:51, Song Liu wrote:
+> I guess md_is_broken() should return bool? Otherwise, looks good to me. 
 
-On Tue, Aug 27 2019, Guoqing Jiang wrote:
+Just an outsider's observation - if the function is actually checking
+whether a member is missing maybe it should read
 
-> Hi Song,
->
-> Thanks a lot for your reply.
->
-> On 8/26/19 10:07 PM, Song Liu wrote:
->> Hi Guoqing,
->>
->> Sorry for the delay.
->>
->> On Mon, Aug 26, 2019 at 6:46 AM Guoqing Jiang
->> <guoqing.jiang@cloud.ionos.com> wrote:
->> [...]
->>>> Maybe it makes sense to remove the checking of STRIPE_ACTIVE just like
->>>> commit 550da24f8d62f
->>>> ("md/raid5: preserve STRIPE_PREREAD_ACTIVE in break_stripe_batch_list"=
-).
->>>>
->>>> @@ -4606,8 +4607,7 @@ static void break_stripe_batch_list(struct
->>>> stripe_head *head_sh,
->>>>
->>>>                  list_del_init(&sh->batch_list);
->>>>
->>>> -               WARN_ONCE(sh->state & ((1 << STRIPE_ACTIVE) |
->>>> -                                         (1 << STRIPE_SYNCING) |
->>>> +               WARN_ONCE(sh->state & ((1 << STRIPE_SYNCING) |
->>>>                                            (1 << STRIPE_REPLACED) |
->>>>                                            (1 << STRIPE_DELAYED) |
->>>>                                            (1 << STRIPE_BIT_DELAY) |
->> This part looks good to me.
->>
->>>> @@ -4626,6 +4626,7 @@ static void break_stripe_batch_list(struct
->>>> stripe_head *head_sh,
->>>>
->>>>                  set_mask_bits(&sh->state, ~(STRIPE_EXPAND_SYNC_FLAGS |
->>>>                                              (1 <<
->>>> STRIPE_PREREAD_ACTIVE) |
->>>> +                                           (1 << STRIPE_ACTIVE) |
->>>>                                              (1 << STRIPE_DEGRADED) |
->>>>                                              (1 <<
->>>> STRIPE_ON_UNPLUG_LIST)),
->>>>                                head_sh->state & (1 << STRIPE_INSYNC));
->>>>
->> But I think we should not clear STRIPE_ACTIVE here. It should be
->> cleared at the end of handle_stripe().
->
-> Yes, actually "clear_bit_unlock(STRIPE_ACTIVE, &sh->state)" is the last
-> line in handle_stripe. So we only need to do one line change like.
->
->
-> @@ -4606,8 +4607,7 @@ static void break_stripe_batch_list(struct=20
-> stripe_head *head_sh,
->
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 list_del_init(&sh->batch_list);
->
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 WARN_ONCE(sh->state & ((1 << STRIPE_ACTIVE) |
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 (1 << STRIPE_SYNCING) |
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 WARN_ONCE(sh->state & ((1 << STRIPE_SYNCING) |
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 (1 << STRIPE_REPLACED) |
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 (1 << STRIPE_DELAYED) |
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 (1 << STRIPE_BIT_DELAY) |
->
-> I will send formal patch if you are fine with above, thanks again.
+   broken = md_member_is_missing();
 
-This is probably OK.
+That way the function says what it does, and the assignment says what
+you're doing with it.
 
-I think that when the 'handle_flags' argument is zero, an error has
-occurred and STRIPE_ACTIVE is expected to be set.
-When it is non-zero, it shouldn't be set.
-I'm not sure it is worth encoding that in the warning, but it probably
-is worth making that clear in the commit message.
-
-Thanks,
-NeilBrown
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl1o4cIACgkQOeye3VZi
-gblUPQ/+IHKcuNLXm4wzSfjGqRpo8THXLy0k2VryUdEEmnj7wJlYl9K5TQvnC0pd
-kZGJyy5963fAYnWga7LV5iyLYfHk4wXWEcD2b5BiI8frPIDr1Dcvac8gdHRrcC/7
-uK30mB3gvIeLhBEN9xGo3dnxLEwJ42HzPSXM1nb2S/9esjpbb1hQdjczf+oaoqXd
-pQvjq8PTTcb4k+xBDeWhPVdq9wNjnnee+BKrMB6uGIDjRdn1/bOFxDRki3+82qAQ
-N3+PwOq+3/9OIH0xjpfyrIPTcvMwziBgNvwK2+aQ877q3XHE1WQ4bjt1jYwHPVJP
-J6bLymIvX8MYUhlredkPcgYfQNrAOYbMoGwyqEOBXgl7NoaFvfTjPYDmkN6zj6WU
-QQZgaxyFqGgWJYxzDWUlarkoL7272rO2jEQnljoTySIPOt5SoDXYvqONdBDUAUQY
-34Ded2ayFzNsYVpHF7PcTd52OHdUi5Qh7tnG8ATq1U4bytW/Q0ZPRwT3y6z6A1XR
-FpazMv2WiKhx3hJJ9j2jH8kEGOwyqk4snby3QGDDC4veYY1M8EGlt16fbsqwTiAT
-XqjE/ZdKgiU+WmZjofHM/JaLulmeao057HATzlPp1Aiy4fZXXQirK/zWKQZORjLa
-NdmxGhBcIPKfRMrXuypnadldMG3E4fnvHyROaLm39ZjufTaPJN8=
-=s4IR
------END PGP SIGNATURE-----
---=-=-=--
+Cheers,
+Wol
