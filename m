@@ -2,157 +2,283 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 48177A2AA6
-	for <lists+linux-raid@lfdr.de>; Fri, 30 Aug 2019 01:27:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2AD8A31DE
+	for <lists+linux-raid@lfdr.de>; Fri, 30 Aug 2019 10:08:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbfH2X1V (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 29 Aug 2019 19:27:21 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:6846 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726526AbfH2X1V (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 29 Aug 2019 19:27:21 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id x7TNODs1015684;
-        Thu, 29 Aug 2019 16:27:19 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=FsBrCWwUVOuK/PdBNXNLatj1qXyfc8LBwqvPKU/jq+4=;
- b=bA6RSfKTvyasw5P35rYNNmlDqSG8UvtS60hijfdRfN5rFXIFckpJkjyh3Ma8f+PLnMWK
- mTGo2vBRKoU0sNKcGhNVQU8xkeDCPVFruMqmikWG7mNfrVqF3XeCljN7yZpRr+4CPtbO
- a0qZZg+FoZufjEsx4YjVy6YiFDcnett5hmc= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0089730.ppops.net with ESMTP id 2uphf425g2-9
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 29 Aug 2019 16:27:19 -0700
-Received: from ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) by
- ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 29 Aug 2019 16:26:50 -0700
-Received: from ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) by
- ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 29 Aug 2019 16:26:50 -0700
-Received: from NAM03-BY2-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 29 Aug 2019 16:26:50 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H1uzsHYWLzvIk6JOpQ1ErEvcH1P0WtoG931e83fvtNytFW6m3UyjD+3J4DtUi47IWzDPQYN87A4xldskhY7eeEYic9jbOJc0dtM2/WheWG2CLKElrn+M/YpwjQI49M4A0Zg2sREY8iXMAP+0+rvpUOKVdeIBZDNt5L9z8Ske11kM631xMDJFziEZZTNQZHvz0JOE6qx4ilExnHD54n8oCe4VZo0TDssSlHRb9Semi0SHXAXzIfkMbkBoE5yrxvMhxmwegKXhXMq1cDgW/qyb3G1mU2k9398w/kcyCiGPUGvDFJ6TTI2XzKy0kKzFki9npj27pLLY6myPziRJ9X2vWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FsBrCWwUVOuK/PdBNXNLatj1qXyfc8LBwqvPKU/jq+4=;
- b=b+Sl97nuemsjWNXDnWYYWbhADHKt3JSm+KcE1fqqICSOKcTCumiuwoyuKIIm1CbF/rVaarZJK9d7yH4wjJwMJtGElV4cpZAgm9OuS2DrwkMM4N4CkRDzT4Kwe+h/RghY/hEODS2mDISGZUjLbHID+adlN60eRVcgqTtNSK1RhCNTgOTry4amVF3GCCbOmNDrRlOSY2EQYSWD7ECwxTHRcjc9tlxCK85sUbgL+r+LVv5kAVLs4eeHb5fmDcklc+oUmFDnlVZQXgmPAj/NSeRdgfQO/DN/YAWFpui1qCCqeSQg/7ReWe4NMnb2nZkrEniioT0/xwNCAkYcMZs6dsHyTw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FsBrCWwUVOuK/PdBNXNLatj1qXyfc8LBwqvPKU/jq+4=;
- b=bQ9DLocW5sNiQLilG8ILm//GV9rDASmBE5mOEC+6JEKG/rs43r6OXwXGT+0aHDrWdDUh9fY2jk1WZyHtjllwjIMUP9hO1Q6NKEzQPFrNKPkqHd4ChZYOr17mV+QUluwVCuTITQUkQ53Y7RHLYnnFJuKNsYLvkX/rT/e6q6tSFBA=
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
- MWHPR15MB1790.namprd15.prod.outlook.com (10.174.97.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.20; Thu, 29 Aug 2019 23:26:48 +0000
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::45ee:bc50:acfa:60a5]) by MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::45ee:bc50:acfa:60a5%3]) with mapi id 15.20.2199.021; Thu, 29 Aug 2019
- 23:26:48 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-CC:     Guoqing Jiang <jgq516@gmail.com>,
-        linux-raid <linux-raid@vger.kernel.org>
-Subject: Re: [PATCH] raid5: don't warn with STRIPE_SYNCING flag in
- break_stripe_batch_list
-Thread-Topic: [PATCH] raid5: don't warn with STRIPE_SYNCING flag in
- break_stripe_batch_list
-Thread-Index: AQHVXXJ5FXpHdA2IaUmgjRFDKVxJWKcRniOAgACb0wCAAI2YgA==
-Date:   Thu, 29 Aug 2019 23:26:48 +0000
-Message-ID: <167E280B-5D21-4A31-A772-E913E2252298@fb.com>
-References: <20190828072956.30467-1-guoqing.jiang@cloud.ionos.com>
- <DD8E1764-7CA6-4D9E-8CA7-4988C2FE5740@fb.com>
- <781b7172-4ddf-4c1c-0817-d6ce11df6bcc@cloud.ionos.com>
-In-Reply-To: <781b7172-4ddf-4c1c-0817-d6ce11df6bcc@cloud.ionos.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3445.104.11)
-x-originating-ip: [2620:10d:c090:200::1:3161]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9b245001-6cfe-4aaa-49c8-08d72cd85d37
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1790;
-x-ms-traffictypediagnostic: MWHPR15MB1790:
-x-microsoft-antispam-prvs: <MWHPR15MB1790838BF86B36339AAD155DB3A20@MWHPR15MB1790.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:350;
-x-forefront-prvs: 0144B30E41
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(396003)(39860400002)(366004)(136003)(189003)(199004)(305945005)(81156014)(36756003)(186003)(53546011)(66446008)(6436002)(14444005)(54906003)(76116006)(8936002)(2616005)(256004)(5660300002)(486006)(6246003)(6506007)(86362001)(53936002)(476003)(64756008)(66556008)(6512007)(6486002)(2906002)(11346002)(71200400001)(71190400001)(446003)(66946007)(4744005)(25786009)(316002)(6116002)(46003)(102836004)(50226002)(57306001)(99286004)(6916009)(66476007)(478600001)(8676002)(76176011)(7736002)(14454004)(33656002)(229853002)(4326008)(81166006);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1790;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: lyip6PRHfBxhN/V3MpXcTzHMmaUmpCw8uws5AePysvfMyWwE4MA3W5llPlmGvxp+g2YAK9jd4W316gTamomTx+y/+JqbZag0+rH2l1GAZq/kK37DN3M7W33RU/Fb6L09tmSi0ntbZH8XjtDQVBDjrE1NTjtIR3PeTYZYiOlpeI1LmLY9yVVMyyAwhOQJ3AX6eSIPYMt5mhRytJZphab7dHPk5Fer7ZMqpxDmN2+tjBTxlbKGbz9lfC98RytbAyYEXU9ODddeO1XrmLdP76koCKK9cnYqyOWIOmgOph8UAridQe39SSMefVEj3ZONLgrgftvTtvN61oXzYxWMHI15Qc1ECn/WpNPZwz0NeATC1C2kPR8auUA/FtvK1ImLFmNOzRtjKZh9rqeFM47CdMk3YOOY3upjMYWr2ZdRaeosVww=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <C1A20A01D390AD4EA18D05270635B84C@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S1727994AbfH3IIX (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 30 Aug 2019 04:08:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59418 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726978AbfH3IIW (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 30 Aug 2019 04:08:22 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CF2FBB65A;
+        Fri, 30 Aug 2019 08:08:20 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
+        linux-raid@vger.kernel.org
+Date:   Fri, 30 Aug 2019 18:08:10 +1000
+Cc:     jay.vosburgh@canonical.com, Song Liu <songliubraving@fb.com>,
+        liu.song.a23@gmail.com, dm-devel@redhat.com,
+        Neil F Brown <nfbrown@suse.com>, linux-block@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] md raid0/linear: Mark array as 'broken' and fail BIOs if a member is gone
+In-Reply-To: <20190822161318.26236-1-gpiccoli@canonical.com>
+References: <20190822161318.26236-1-gpiccoli@canonical.com>
+Message-ID: <87d0gnf53p.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b245001-6cfe-4aaa-49c8-08d72cd85d37
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2019 23:26:48.3097
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +Ccmwo94RRtkM7V+xLzdrzIN3riTq78Xz8nqC1tTw+fHNaxBeD8ClQb00QEEk1nTZqQikmZ24GbPFUYW2TgcWQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1790
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-08-29_09:2019-08-29,2019-08-29 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0 bulkscore=0
- clxscore=1015 suspectscore=0 impostorscore=0 mlxlogscore=999
- priorityscore=1501 spamscore=0 malwarescore=0 phishscore=0 adultscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1906280000 definitions=main-1908290234
-X-FB-Internal: deliver
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Aug 22 2019,  Guilherme G. Piccoli  wrote:
+
+> Currently md raid0/linear are not provided with any mechanism to validate
+> if an array member got removed or failed. The driver keeps sending BIOs
+> regardless of the state of array members, and kernel shows state 'clean'
+> in the 'array_state' sysfs attribute. This leads to the following
+> situation: if a raid0/linear array member is removed and the array is
+> mounted, some user writing to this array won't realize that errors are
+> happening unless they check dmesg or perform one fsync per written file.
+> Despite udev signaling the member device is gone, 'mdadm' cannot issue the
+> STOP_ARRAY ioctl successfully, given the array is mounted.
+>
+> In other words, no -EIO is returned and writes (except direct ones) appear
+> normal. Meaning the user might think the wrote data is correctly stored in
+> the array, but instead garbage was written given that raid0 does stripping
+> (and so, it requires all its members to be working in order to not corrupt
+> data). For md/linear, writes to the available members will work fine, but
+> if the writes go to the missing member(s), it'll cause a file corruption
+> situation, whereas the portion of the writes to the missing devices aren't
+> written effectively.
+>
+> This patch changes this behavior: we check if the block device's gendisk
+> is UP when submitting the BIO to the array member, and if it isn't, we fl=
+ag
+> the md device as MD_BROKEN and fail subsequent I/Os to that device; a read
+> request to the array requiring data from a valid member is still complete=
+d.
+> While flagging the device as MD_BROKEN, we also show a rate-limited warni=
+ng
+> in the kernel log.
+>
+> A new array state 'broken' was added too: it mimics the state 'clean' in
+> every aspect, being useful only to distinguish if the array has some memb=
+er
+> missing. We rely on the MD_BROKEN flag to put the array in the 'broken'
+> state. This state cannot be written in 'array_state' as it just shows
+> one or more members of the array are missing but acts like 'clean', it
+> wouldn't make sense to write it.
+>
+> With this patch, the filesystem reacts much faster to the event of missing
+> array member: after some I/O errors, ext4 for instance aborts the journal
+> and prevents corruption. Without this change, we're able to keep writing
+> in the disk and after a machine reboot, e2fsck shows some severe fs errors
+> that demand fixing. This patch was tested in ext4 and xfs filesystems, and
+> requires a 'mdadm' counterpart to handle the 'broken' state.
+>
+> Cc: NeilBrown <neilb@suse.com>
+> Cc: Song Liu <songliubraving@fb.com>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
+> ---
+>
+> v2 -> v3:
+> * Rebased against md-next.
+>
+> * Merged both patches in a single one (thanks Song for the
+> suggestion); now we fail BIOs and mark array as MD_BROKEN
+> when a member is missing. We rely in the MD_BROKEN flag
+> to set array to 'broken' state.
+>
+> * Function is_missing_dev() was removed due to the above.
+>
+> v1 -> v2:
+> * Added handling for md/linear 'broken' state;
+> * Check for is_missing_dev() instead of personality (thanks Neil for
+> the suggestion);
+> * Changed is_missing_dev() handlers to static;
+> * Print rate-limited warning in case of more members go away, not only
+> the first.
+>
+> Cover-letter from v1:
+> lore.kernel.org/linux-block/20190729203135.12934-1-gpiccoli@canonical.com
+>
+>
+>  drivers/md/md-linear.c |  9 +++++++++
+>  drivers/md/md.c        | 22 ++++++++++++++++++----
+>  drivers/md/md.h        |  3 +++
+>  drivers/md/raid0.c     | 10 ++++++++++
+>  4 files changed, 40 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/md/md-linear.c b/drivers/md/md-linear.c
+> index 7354466ddc90..0479ccdbdeeb 100644
+> --- a/drivers/md/md-linear.c
+> +++ b/drivers/md/md-linear.c
+> @@ -258,6 +258,15 @@ static bool linear_make_request(struct mddev *mddev,=
+ struct bio *bio)
+>  		     bio_sector < start_sector))
+>  		goto out_of_bounds;
+>=20=20
+> +	if (unlikely(!(tmp_dev->rdev->bdev->bd_disk->flags & GENHD_FL_UP))) {
+> +		if (!test_bit(MD_BROKEN, &mddev->flags))
+> +			pr_warn("md: %s: linear array has a missing/failed member\n",
+> +				mdname(mddev));
+> +		set_bit(MD_BROKEN, &mddev->flags);
+
+It is a minor point, but I think this would look nicer as
+   if (!test_and_set_bit(MD_BROKEN, ....) { .. . }
 
 
-> On Aug 29, 2019, at 8:00 AM, Guoqing Jiang <guoqing.jiang@cloud.ionos.com=
-> wrote:
->=20
-> Hi Song,
->=20
-> On 8/29/19 7:42 AM, Song Liu wrote:
->> I read the code again, and now I am not sure whether we are fixing the i=
-ssue.
->> This WARN_ONCE() does not run for head_sh, which should have STRIPE_ACTI=
-VE.
->> It only runs on other stripes in the batch, which should not have STRIPE=
-_ACTIVE.
->=20
-> From the original commit which introduced batch write, it has the descrip=
-tion
-> which I think is align with your above sentence.
->=20
-> "With below patch, we will automatically batch adjacent full stripe write
-> together. Such stripes will be added to the batch list. Only the first st=
-ripe
-> of the list will be put to handle_list and so run handle_stripe().".
->=20
-> Could you point me related code which achieve the above purpose? Thanks.
+> +		bio_io_error(bio);
+> +		return true;
+> +	}
+> +
+>  	if (unlikely(bio_end_sector(bio) > end_sector)) {
+>  		/* This bio crosses a device boundary, so we have to split it */
+>  		struct bio *split =3D bio_split(bio, end_sector - bio_sector,
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index b46bb143e3c5..e7612033005f 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -376,6 +376,11 @@ static blk_qc_t md_make_request(struct request_queue=
+ *q, struct bio *bio)
+>  	struct mddev *mddev =3D q->queuedata;
+>  	unsigned int sectors;
+>=20=20
+> +	if (unlikely(test_bit(MD_BROKEN, &mddev->flags)) && (rw =3D=3D WRITE)) {
+> +		bio_io_error(bio);
+> +		return BLK_QC_T_NONE;
+> +	}
+> +
+>  	blk_queue_split(q, &bio);
+>=20=20
+>  	if (mddev =3D=3D NULL || mddev->pers =3D=3D NULL) {
+> @@ -4158,12 +4163,17 @@ __ATTR_PREALLOC(resync_start, S_IRUGO|S_IWUSR,
+>   * active-idle
+>   *     like active, but no writes have been seen for a while (100msec).
+>   *
+> + * broken
+> + *     RAID0/LINEAR-only: same as clean, but array is missing a member.
+> + *     It's useful because RAID0/LINEAR mounted-arrays aren't stopped
+> + *     when a member is gone, so this state will at least alert the
+> + *     user that something is wrong.
+>   */
+>  enum array_state { clear, inactive, suspended, readonly, read_auto, clea=
+n, active,
+> -		   write_pending, active_idle, bad_word};
+> +		   write_pending, active_idle, broken, bad_word};
+>  static char *array_states[] =3D {
+>  	"clear", "inactive", "suspended", "readonly", "read-auto", "clean", "ac=
+tive",
+> -	"write-pending", "active-idle", NULL };
+> +	"write-pending", "active-idle", "broken", NULL };
+>=20=20
+>  static int match_word(const char *word, char **list)
+>  {
+> @@ -4179,7 +4189,7 @@ array_state_show(struct mddev *mddev, char *page)
+>  {
+>  	enum array_state st =3D inactive;
+>=20=20
+> -	if (mddev->pers && !test_bit(MD_NOT_READY, &mddev->flags))
+> +	if (mddev->pers && !test_bit(MD_NOT_READY, &mddev->flags)) {
+>  		switch(mddev->ro) {
+>  		case 1:
+>  			st =3D readonly;
+> @@ -4199,7 +4209,10 @@ array_state_show(struct mddev *mddev, char *page)
+>  				st =3D active;
+>  			spin_unlock(&mddev->lock);
+>  		}
+> -	else {
+> +
+> +		if (unlikely(test_bit(MD_BROKEN, &mddev->flags)) && st =3D=3D clean)
 
-Do you mean which code makes sure the batched stripe will not be handled?
-This is done via properly maintain STRIPE_HANDLE bit.=20
+I prefer to keep "unlikely" for performance-sensitive code.  This is not
+performance sensitive.
 
-Btw: do you have a solid repro of the WARNING message?
+Even without those changes:
+  Reviewed-by: NeilBrown <neilb@suse.de>
+
 
 Thanks,
-Song
+NeilBrown
 
+> +			st =3D broken;
+> +	} else {
+>  		if (list_empty(&mddev->disks) &&
+>  		    mddev->raid_disks =3D=3D 0 &&
+>  		    mddev->dev_sectors =3D=3D 0)
+> @@ -4313,6 +4326,7 @@ array_state_store(struct mddev *mddev, const char *=
+buf, size_t len)
+>  		break;
+>  	case write_pending:
+>  	case active_idle:
+> +	case broken:
+>  		/* these cannot be set */
+>  		break;
+>  	}
+> diff --git a/drivers/md/md.h b/drivers/md/md.h
+> index 1edcd967eb8e..240de65e15e8 100644
+> --- a/drivers/md/md.h
+> +++ b/drivers/md/md.h
+> @@ -251,6 +251,9 @@ enum mddev_flags {
+>  	MD_NOT_READY,		/* do_md_run() is active, so 'array_state'
+>  				 * must not report that array is ready yet
+>  				 */
+> +	MD_BROKEN,              /* This is used in RAID-0/LINEAR only, to stop
+> +				 * I/O in case an array member is gone/failed.
+> +				 */
+>  };
+>=20=20
+>  enum mddev_sb_flags {
+> diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
+> index bf5cf184a260..7772f5350bf2 100644
+> --- a/drivers/md/raid0.c
+> +++ b/drivers/md/raid0.c
+> @@ -586,6 +586,16 @@ static bool raid0_make_request(struct mddev *mddev, =
+struct bio *bio)
+>=20=20
+>  	zone =3D find_zone(mddev->private, &sector);
+>  	tmp_dev =3D map_sector(mddev, zone, sector, &sector);
+> +
+> +	if (unlikely(!(tmp_dev->bdev->bd_disk->flags & GENHD_FL_UP))) {
+> +		if (!test_bit(MD_BROKEN, &mddev->flags))
+> +			pr_warn("md: %s: raid0 array has a missing/failed member\n",
+> +				mdname(mddev));
+> +		set_bit(MD_BROKEN, &mddev->flags);
+> +		bio_io_error(bio);
+> +		return true;
+> +	}
+> +
+>  	bio_set_dev(bio, tmp_dev->bdev);
+>  	bio->bi_iter.bi_sector =3D sector + zone->dev_start +
+>  		tmp_dev->data_offset;
+> --=20
+> 2.22.0
 
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl1o2WsACgkQOeye3VZi
+gbnEahAAh7csw4AcVbuP23lk6OnyJaDC57BKbTiWM9IhMjR+hLfTwWeXo6QNnwvq
+1/geFX/p8iGZT5hUM1lCYe6FEpw8vYtOnciXldaaJrdcB/QNc68oJ8P0DMIkJGxT
+dEQS6mrX5e1dWPaWWA3ZP8woXgHr+RuQMBpuukn65obsvwfv3IOsuCCUMorO2H9v
+JnpPd8Y3RnZIdAdg/HW2CN+rIEptU4DYK3ZwBCDglH+DDoWXmBGJQZENw9KykZ3k
+p23Kw+WwNi9PoeqyHwxqlne6Xt5Q7GHXVqFp8OQM71TtGOQCXUN6LA5hgKLzl73E
+6Aus59MW4zNlPxgZPu2gdh5vt1G54H1kXO+7Cvdy353wRXa6DpG+3ppHrOYG63z8
+cMT7FcTlGK76qzbpNQ9AijCuH4fUT+HJEQrQSQdEGsyuqjUx9hnGLCRcpFPUbyqa
+w4foUg/2LR00k8RGWhgOx6tznxjPMRhYlCSJgfAqV9EqxRG71fgAfho3yjGn2ltW
+/uvwYv+TbRTw2w9oK0WmhPvstxl3Jg1iqr7NABIKVz4j1BQLBGI8LKLtNjpwImbL
+V16RdU1MqHQwuLqPNQjGvhJhC9UQaRD30lEeFRK2beSzdPcevHBYCeLknaTja/pE
+jnNZhYdjtnVfytrhFVWg3mPchbr4w4O3HQfQovpHWfWilUDOb/A=
+=pmHU
+-----END PGP SIGNATURE-----
+--=-=-=--
