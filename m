@@ -2,124 +2,83 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EAD82A46A6
-	for <lists+linux-raid@lfdr.de>; Sun,  1 Sep 2019 02:41:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A880DA497E
+	for <lists+linux-raid@lfdr.de>; Sun,  1 Sep 2019 14:50:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbfIAAlN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 31 Aug 2019 20:41:13 -0400
-Received: from de1.gusev.co ([84.16.227.28]:37544 "EHLO mail.gusev.co"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727338AbfIAAlN (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sat, 31 Aug 2019 20:41:13 -0400
-Received: from [10.0.0.5] (78-57-160-222.static.zebra.lt [78.57.160.222])
-        by mail.gusev.co (Postfix) with ESMTPSA id 6B4C223F06;
-        Sun,  1 Sep 2019 03:41:10 +0300 (EEST)
-From:   Dmitrij Gusev <dmitrij@gusev.co>
-Subject: Kernel error at a LVM snapshot creation
-To:     linux-raid@vger.kernel.org
-References: <20190829081514.29660-1-yuyufen@huawei.com>
- <877e6vf45p.fsf@notabene.neil.brown.name>
- <07ffeca5-6b69-0602-0981-2221cfb682af@huawei.com>
-Message-ID: <80b41a78-d2db-90fa-885a-a03098b5b82e@gusev.co>
-Date:   Sun, 1 Sep 2019 03:41:10 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1728808AbfIAMuC (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 1 Sep 2019 08:50:02 -0400
+Received: from smtp05.mail.qldc.ch ([212.60.46.174]:35824 "EHLO
+        smtp05.mail.qldc.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbfIAMuB (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 1 Sep 2019 08:50:01 -0400
+Received: from tuxedo.ath.cx (55-153-16-94.dyn.cable.fcom.ch [94.16.153.55])
+        by smtp05.mail.qldc.ch (Postfix) with ESMTPS id 1850923AAC;
+        Sun,  1 Sep 2019 14:49:58 +0200 (CEST)
+Received: from [10.0.70.110] (neptun.gms.local [10.0.70.110])
+        by tuxedo.ath.cx (Postfix) with ESMTP id 05C55344B49;
+        Sun,  1 Sep 2019 14:49:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=tuxedo.dynu.net;
+        s=mail; t=1567342197;
+        bh=2acswb5HtsbfPv0u/VxRauZ2FetIbhVhieFcdd5heG8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=N7nkTjEeEPE2cM4e5qYOqX0Nyjm4sqm1DvjBZZNtWAzRfFqn4sn4lTKZ5sqHMDBWt
+         FJaqcKLo4PJmB5aYcX9NYCg1NdagYp5i682QU01alUhmaSLjx4zJ8EB/vbGOmPBNfK
+         /ZXQR/N89FgyVcugZCuktdFdKdR1Adwe1tagZ8H4=
+Subject: Re: md0: bitmap file is out of date, resync
+To:     Hou Tao <houtao1@huawei.com>, Song Liu <liu.song.a23@gmail.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>
+References: <92ce64ba-2c55-8ef8-3ddf-3bbf867ec4f8@tuxedo.ath.cx>
+ <CAPhsuW4Gss2ie2wv_GmT2Xz-5vU+XP=KR6cxh-qOOQPKtOz9ag@mail.gmail.com>
+ <a2e4b1a0-e614-2eb3-c673-96fbfbc5ae69@tuxedo.ath.cx>
+ <CAPhsuW6+ooVkKznfT19x4HquN+g4WVb-31PvKKt=01fE_wJZEg@mail.gmail.com>
+ <1942a84d-ec30-b089-1e17-62e032e5f728@tuxedo.ath.cx>
+ <11eb3461-b801-0808-614a-766e090ecdc8@tuxedo.ath.cx>
+ <08cf0895-dd00-5499-4d22-c03f3676eb25@huawei.com>
+ <4e2077ec-454b-2adc-69bc-4e04cf7f24ea@tuxedo.ath.cx>
+ <949eebea-e4b7-7f89-da16-d227fa8521f9@huawei.com>
+From:   Mathias G <newsnet-mg-2016@tuxedo.ath.cx>
+Message-ID: <03e58a31-8f47-22d2-51c5-91214f63c544@tuxedo.ath.cx>
+Date:   Sun, 1 Sep 2019 14:49:55 +0200
+User-Agent: Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.8pre)
+ Gecko/20071022 Thunderbird/2.0.0.6 Mnenhy/0.7.5.0
 MIME-Version: 1.0
-In-Reply-To: <07ffeca5-6b69-0602-0981-2221cfb682af@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <949eebea-e4b7-7f89-da16-d227fa8521f9@huawei.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.0 required=5.0 tests=ALL_TRUSTED
+        autolearn=unavailable autolearn_force=no version=3.4.2
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on tuxedo.ath.cx
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hello.
+Hi Tao
 
-I get a kernel error every time I create LVM snapshot - at the creation 
-and at boot time, though the snapshot itself is working properly.
+On 23.08.19 14:15, Hou Tao wrote:
+> Could you please save the following script as /usr/lib/systemd/system-shutdown/md_debug.sh and make it executable:
+> 
+> #!/bin/bash
+> mount -o remount,rw /
+> mdadm -D /dev/md* > /md_debug.txt
+> mdadm -S /dev/md* >> /md_debug.txt
+> mount -o remount,ro /
+> 
+> The script will dump the details of md devices to the /md_debug.txt and stop the md devices forcibly before shutdown or reboot.
+> And we can check the content of md_debug.txt if the problem reoccurs.
 
-Sorry if I'm writing to the incorrect mailing list, please direct me to 
-the correct one. (I wasn't able to find LVM related).
+Thanks for the code snipped. I tried to put the script to
+/usr/lib/systemd/system-shutdown/
 
-Linux nexus 4.19.69 #2 SMP Thu Aug 29 16:33:35 CDT 2019 x86_64 Intel(R) 
-Xeon(R) E-2174G CPU @ 3.80GHz GenuineIntel GNU/Linux
+but it was not executed at all.
 
-At boot log:
+I remembered that I tried to create some debug info by myself and I had
+to put the script to:
+/lib/systemd/system-shutdown/
+instead to make it working. No idea why, the execute bit was set.
 
-[   17.160402] ------------[ cut here ]------------
-[   17.160900] generic_make_request: Trying to write to read-only 
-block-device dm-4 (partno 0)
-[   17.161424] WARNING: CPU: 3 PID: 941 at block/blk-core.c:2176 
-generic_make_request_checks+0x28d/0x6a0
-[   17.161935] Modules linked in: fuse hid_generic usbhid hid i2c_dev 
-mei_wdt eeepc_wmi asus_wmi evdev sparse_keymap rfkill wmi_bmof 
-snd_hda_codec_hdmi coretemp snd_hda_codec_realtek intel_rapl 
-snd_hda_codec_generic x86_pkg_temp_thermal intel_powerclamp kvm_intel 
-crct10dif_pclmul crc32_pclmul i915 crc32c_intel ghash_clmulni_intel 
-intel_cstate snd_hda_intel snd_hda_codec kvmgt vfio_mdev intel_rapl_perf 
-mdev vfio_iommu_type1 vfio kvm snd_hda_core snd_hwdep igb snd_pcm 
-snd_timer snd e1000e soundcore irqbypass cec rc_core hwmon dca i2c_i801 
-drm_kms_helper drm intel_gtt agpgart thermal fan i2c_algo_bit 
-fb_sys_fops syscopyarea sysfillrect sysimgblt i2c_core video mei_me mei 
-xhci_pci xhci_hcd button pcc_cpufreq wmi acpi_pad acpi_tad loop 
-dm_snapshot dm_bufio ext4 mbcache jbd2
-[   17.165955] CPU: 3 PID: 941 Comm: kworker/3:3 Not tainted 4.19.69 #2
-[   17.166464] Hardware name: ASUSTeK COMPUTER INC. System Product 
-Name/WS C246 PRO, BIOS 1003 06/04/2019
-[   17.166952] Workqueue: kcopyd do_work
-[   17.167467] RIP: 0010:generic_make_request_checks+0x28d/0x6a0
-[   17.167952] Code: 5c 03 00 00 48 89 ef 48 8d 74 24 08 c6 05 11 47 f3 
-00 01 e8 55 60 01 00 48 c7 c7 d0 5d 08 bd 48 89 c6 44 89 e2 e8 22 cd cc 
-ff <0f> 0b 4c 8b 65 08 8b 45 30 c1 e8 09 49 8b 74 24 50 85 c0 0f 84 5f
-[   17.169020] RSP: 0018:ffff9df3c400faf8 EFLAGS: 00010282
-[   17.169533] RAX: 0000000000000000 RBX: ffff927c05350988 RCX: 
-0000000000000311
-[   17.170049] RDX: 0000000000000001 RSI: 0000000000000082 RDI: 
-0000000000000246
-[   17.170562] RBP: ffff927c06a64900 R08: 0000000000000000 R09: 
-0000000000000311
-[   17.171106] R10: 0000000000aaaaaa R11: 0000000000000000 R12: 
-0000000000000000
-[   17.171616] R13: 0000000000000000 R14: 0000000000001000 R15: 
-ffff927c05472b80
-[   17.172130] FS:  0000000000000000(0000) GS:ffff927c0bb80000(0000) 
-knlGS:0000000000000000
-[   17.172646] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   17.173191] CR2: 00007f40a05f9ff0 CR3: 000000015a20a004 CR4: 
-00000000003606e0
-[   17.173711] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 
-0000000000000000
-[   17.174238] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 
-0000000000000400
-[   17.174752] Call Trace:
-[   17.175279]  ? kmem_cache_alloc+0x37/0x1c0
-[   17.175771]  generic_make_request+0x5b/0x400
-[   17.176247]  submit_bio+0x43/0x130
-[   17.176726]  ? bio_add_page+0x48/0x60
-[   17.177195]  dispatch_io+0x1c8/0x460
-[   17.177689]  ? dm_hash_remove_all.cold+0x21/0x21
-[   17.178168]  ? list_get_page+0x30/0x30
-[   17.178624]  ? dm_kcopyd_do_callback+0x40/0x40
-[   17.179102]  dm_io+0x11c/0x210
-[   17.179545]  ? dm_hash_remove_all.cold+0x21/0x21
-[   17.179990]  ? list_get_page+0x30/0x30
-[   17.180429]  run_io_job+0xd4/0x1c0
-[   17.180863]  ? dm_kcopyd_do_callback+0x40/0x40
-[   17.181293]  ? dm_kcopyd_client_destroy+0x140/0x140
-[   17.181719]  process_jobs+0x82/0x1b0
-[   17.182147]  do_work+0xb9/0xf0
-[   17.182570]  process_one_work+0x1ba/0x3d0
-[   17.182992]  worker_thread+0x4d/0x3d0
-[   17.183441]  ? process_one_work+0x3d0/0x3d0
-[   17.183857]  kthread+0x117/0x130
-[   17.184270]  ? kthread_create_worker_on_cpu+0x70/0x70
-[   17.184680]  ret_from_fork+0x35/0x40
-[   17.185082] ---[ end trace f01c6b7a501faa64 ]---
-
-Best regards,
-
-Dmitrij Gusev
-
-
-
+This is what I also did, I'll let you know about the debug output.
+-- 
+kind regards
+ mathias
