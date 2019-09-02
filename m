@@ -2,168 +2,146 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 29E07A4CDD
-	for <lists+linux-raid@lfdr.de>; Mon,  2 Sep 2019 02:41:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C04E8A4F64
+	for <lists+linux-raid@lfdr.de>; Mon,  2 Sep 2019 08:56:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729206AbfIBAlg (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 1 Sep 2019 20:41:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54252 "EHLO mx1.suse.de"
+        id S1729586AbfIBG4B (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 2 Sep 2019 02:56:01 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5710 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729117AbfIBAlg (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sun, 1 Sep 2019 20:41:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 89FC3AE49;
-        Mon,  2 Sep 2019 00:41:34 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Dmitrij Gusev <dmitrij@gusev.co>, linux-raid@vger.kernel.org
-Date:   Mon, 02 Sep 2019 10:41:28 +1000
-Subject: Re: Kernel error at a LVM snapshot creation
-In-Reply-To: <80b41a78-d2db-90fa-885a-a03098b5b82e@gusev.co>
-References: <20190829081514.29660-1-yuyufen@huawei.com> <877e6vf45p.fsf@notabene.neil.brown.name> <07ffeca5-6b69-0602-0981-2221cfb682af@huawei.com> <80b41a78-d2db-90fa-885a-a03098b5b82e@gusev.co>
-Message-ID: <87v9ubedhj.fsf@notabene.neil.brown.name>
+        id S1729393AbfIBG4B (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 2 Sep 2019 02:56:01 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 16899FB8CC5BBBBF3952;
+        Mon,  2 Sep 2019 14:55:59 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Mon, 2 Sep 2019
+ 14:55:48 +0800
+From:   Yufen Yu <yuyufen@huawei.com>
+To:     <songliubraving@fb.com>
+CC:     <linux-raid@vger.kernel.org>, <neilb@suse.de>, <yuyufen@huawei.com>
+Subject: [PATCH] md: no longer compare spare disk superblock events in super_load
+Date:   Mon, 2 Sep 2019 15:16:23 +0800
+Message-ID: <20190902071623.21388-1-yuyufen@huawei.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+We have a test case as follow:
 
-On Sun, Sep 01 2019, Dmitrij Gusev wrote:
+  mdadm -CR /dev/md1 -l 1 -n 4 /dev/sd[a-d] --assume-clean --bitmap=internal
+  mdadm -S /dev/md1
+  mdadm -A /dev/md1 /dev/sd[b-c] --run --force
 
-> Hello.
->
-> I get a kernel error every time I create LVM snapshot - at the creation=20
-> and at boot time, though the snapshot itself is working properly.
+  mdadm --zero /dev/sda
+  mdadm /dev/md1 -a /dev/sda
 
-Wrong email list. Easy mistake to make though.
-Please use  dm-devel@redhat.com
+  echo offline > /sys/block/sdc/device/state
+  echo offline > /sys/block/sdb/device/state
+  sleep 5
+  mdadm -S /dev/md1
 
-NeilBrown
+  echo running > /sys/block/sdb/device/state
+  echo running > /sys/block/sdc/device/state
+  mdadm -A /dev/md1 /dev/sd[a-c] --run --force
 
+When we readd /dev/sda to the array, it started to do recovery.
+After offline the other two disks in md1, the recovery have
+been interrupted and superblock update info cannot be written
+to the offline disks. While the spare disk (/dev/sda) can continue
+to update superblock info.
 
->
-> Sorry if I'm writing to the incorrect mailing list, please direct me to=20
-> the correct one. (I wasn't able to find LVM related).
->
-> Linux nexus 4.19.69 #2 SMP Thu Aug 29 16:33:35 CDT 2019 x86_64 Intel(R)=20
-> Xeon(R) E-2174G CPU @ 3.80GHz GenuineIntel GNU/Linux
->
-> At boot log:
->
-> [=C2=A0=C2=A0 17.160402] ------------[ cut here ]------------
-> [=C2=A0=C2=A0 17.160900] generic_make_request: Trying to write to read-on=
-ly=20
-> block-device dm-4 (partno 0)
-> [=C2=A0=C2=A0 17.161424] WARNING: CPU: 3 PID: 941 at block/blk-core.c:217=
-6=20
-> generic_make_request_checks+0x28d/0x6a0
-> [=C2=A0=C2=A0 17.161935] Modules linked in: fuse hid_generic usbhid hid i=
-2c_dev=20
-> mei_wdt eeepc_wmi asus_wmi evdev sparse_keymap rfkill wmi_bmof=20
-> snd_hda_codec_hdmi coretemp snd_hda_codec_realtek intel_rapl=20
-> snd_hda_codec_generic x86_pkg_temp_thermal intel_powerclamp kvm_intel=20
-> crct10dif_pclmul crc32_pclmul i915 crc32c_intel ghash_clmulni_intel=20
-> intel_cstate snd_hda_intel snd_hda_codec kvmgt vfio_mdev intel_rapl_perf=
-=20
-> mdev vfio_iommu_type1 vfio kvm snd_hda_core snd_hwdep igb snd_pcm=20
-> snd_timer snd e1000e soundcore irqbypass cec rc_core hwmon dca i2c_i801=20
-> drm_kms_helper drm intel_gtt agpgart thermal fan i2c_algo_bit=20
-> fb_sys_fops syscopyarea sysfillrect sysimgblt i2c_core video mei_me mei=20
-> xhci_pci xhci_hcd button pcc_cpufreq wmi acpi_pad acpi_tad loop=20
-> dm_snapshot dm_bufio ext4 mbcache jbd2
-> [=C2=A0=C2=A0 17.165955] CPU: 3 PID: 941 Comm: kworker/3:3 Not tainted 4.=
-19.69 #2
-> [=C2=A0=C2=A0 17.166464] Hardware name: ASUSTeK COMPUTER INC. System Prod=
-uct=20
-> Name/WS C246 PRO, BIOS 1003 06/04/2019
-> [=C2=A0=C2=A0 17.166952] Workqueue: kcopyd do_work
-> [=C2=A0=C2=A0 17.167467] RIP: 0010:generic_make_request_checks+0x28d/0x6a0
-> [=C2=A0=C2=A0 17.167952] Code: 5c 03 00 00 48 89 ef 48 8d 74 24 08 c6 05 =
-11 47 f3=20
-> 00 01 e8 55 60 01 00 48 c7 c7 d0 5d 08 bd 48 89 c6 44 89 e2 e8 22 cd cc=20
-> ff <0f> 0b 4c 8b 65 08 8b 45 30 c1 e8 09 49 8b 74 24 50 85 c0 0f 84 5f
-> [=C2=A0=C2=A0 17.169020] RSP: 0018:ffff9df3c400faf8 EFLAGS: 00010282
-> [=C2=A0=C2=A0 17.169533] RAX: 0000000000000000 RBX: ffff927c05350988 RCX:=
-=20
-> 0000000000000311
-> [=C2=A0=C2=A0 17.170049] RDX: 0000000000000001 RSI: 0000000000000082 RDI:=
-=20
-> 0000000000000246
-> [=C2=A0=C2=A0 17.170562] RBP: ffff927c06a64900 R08: 0000000000000000 R09:=
-=20
-> 0000000000000311
-> [=C2=A0=C2=A0 17.171106] R10: 0000000000aaaaaa R11: 0000000000000000 R12:=
-=20
-> 0000000000000000
-> [=C2=A0=C2=A0 17.171616] R13: 0000000000000000 R14: 0000000000001000 R15:=
-=20
-> ffff927c05472b80
-> [=C2=A0=C2=A0 17.172130] FS:=C2=A0 0000000000000000(0000) GS:ffff927c0bb8=
-0000(0000)=20
-> knlGS:0000000000000000
-> [=C2=A0=C2=A0 17.172646] CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0: 0000000080=
-050033
-> [=C2=A0=C2=A0 17.173191] CR2: 00007f40a05f9ff0 CR3: 000000015a20a004 CR4:=
-=20
-> 00000000003606e0
-> [=C2=A0=C2=A0 17.173711] DR0: 0000000000000000 DR1: 0000000000000000 DR2:=
-=20
-> 0000000000000000
-> [=C2=A0=C2=A0 17.174238] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:=
-=20
-> 0000000000000400
-> [=C2=A0=C2=A0 17.174752] Call Trace:
-> [=C2=A0=C2=A0 17.175279]=C2=A0 ? kmem_cache_alloc+0x37/0x1c0
-> [=C2=A0=C2=A0 17.175771]=C2=A0 generic_make_request+0x5b/0x400
-> [=C2=A0=C2=A0 17.176247]=C2=A0 submit_bio+0x43/0x130
-> [=C2=A0=C2=A0 17.176726]=C2=A0 ? bio_add_page+0x48/0x60
-> [=C2=A0=C2=A0 17.177195]=C2=A0 dispatch_io+0x1c8/0x460
-> [=C2=A0=C2=A0 17.177689]=C2=A0 ? dm_hash_remove_all.cold+0x21/0x21
-> [=C2=A0=C2=A0 17.178168]=C2=A0 ? list_get_page+0x30/0x30
-> [=C2=A0=C2=A0 17.178624]=C2=A0 ? dm_kcopyd_do_callback+0x40/0x40
-> [=C2=A0=C2=A0 17.179102]=C2=A0 dm_io+0x11c/0x210
-> [=C2=A0=C2=A0 17.179545]=C2=A0 ? dm_hash_remove_all.cold+0x21/0x21
-> [=C2=A0=C2=A0 17.179990]=C2=A0 ? list_get_page+0x30/0x30
-> [=C2=A0=C2=A0 17.180429]=C2=A0 run_io_job+0xd4/0x1c0
-> [=C2=A0=C2=A0 17.180863]=C2=A0 ? dm_kcopyd_do_callback+0x40/0x40
-> [=C2=A0=C2=A0 17.181293]=C2=A0 ? dm_kcopyd_client_destroy+0x140/0x140
-> [=C2=A0=C2=A0 17.181719]=C2=A0 process_jobs+0x82/0x1b0
-> [=C2=A0=C2=A0 17.182147]=C2=A0 do_work+0xb9/0xf0
-> [=C2=A0=C2=A0 17.182570]=C2=A0 process_one_work+0x1ba/0x3d0
-> [=C2=A0=C2=A0 17.182992]=C2=A0 worker_thread+0x4d/0x3d0
-> [=C2=A0=C2=A0 17.183441]=C2=A0 ? process_one_work+0x3d0/0x3d0
-> [=C2=A0=C2=A0 17.183857]=C2=A0 kthread+0x117/0x130
-> [=C2=A0=C2=A0 17.184270]=C2=A0 ? kthread_create_worker_on_cpu+0x70/0x70
-> [=C2=A0=C2=A0 17.184680]=C2=A0 ret_from_fork+0x35/0x40
-> [=C2=A0=C2=A0 17.185082] ---[ end trace f01c6b7a501faa64 ]---
->
-> Best regards,
->
-> Dmitrij Gusev
+After stopping the array and assemble it, we found the array
+run fail, with the follow kernel message:
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+[  172.986064] md: kicking non-fresh sdb from array!
+[  173.004210] md: kicking non-fresh sdc from array!
+[  173.022383] md/raid1:md1: active with 0 out of 4 mirrors
+[  173.022406] md1: failed to create bitmap (-5)
+[  173.023466] md: md1 stopped.
 
------BEGIN PGP SIGNATURE-----
+Since both sdb and sdc have the value of 'sb->events' smaller than
+that in sda, they have been kicked from the array. However, the only
+remained disk sda is in 'spare' state before stop and it cannot be
+added to conf->mirrors[] array. In the end, raid array assemble and run fail.
 
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl1sZTgACgkQOeye3VZi
-gblj2xAAvrFNtFt7FPyMPeb8Lh2ENQRqp6xqZRetW3EjvFUCLbYcRPKZj/VahP2q
-xkMTtJddZPdN0CJtLCDXkO0MarMWPSpABAdvK0ybNlAfk5sDToEPLoBXAjSCEZKt
-TygQOPQqnmKqtGhDiFdisv/41KbGL5FaPpTz8Fzrq65wGjUe2ynRSn3decoxhzTj
-eCuFWxreYKwqicI2sVJkxNzPKc7PRoaI+hF9/Zza9wXf6JDMsEna07nR26NENLrR
-RyJ6ejIo9hTj8gbUhZzmQppsGuSuctIBqC+VeAqzP+CMqK5KAzo6W4o4znOzXFnc
-prhU61a/09sl7c/eAPbtXODiEbpP+t8LFW7LmBdvJ8GG8dteR9wd3WzSKbHyPcWq
-n4nE7pV1E4/+gb4piiLoZZh7kvHU9QbJUbdo+FSSczwX2NyPl5684KxGHeBxTn/B
-0/wBO+2sEUtLu0t3CSsWbECnQV0B5+1wBlSIYW1gQnTZRX2aYYDjZU9Z/F/Grl0K
-jII+tzz/UqqGIU/1YA/uJBrBP+vrbs9rEVloPkCFXMIh8QrVkAh9r9A+jQ+I59Iv
-52OnXSJNie4+sE3w+Gn8a0dtXH++I7cH94gwtxj7NIbAp5aQmOTt7d3/RWSS5cv/
-836/vZdeSgrgNKbSpVBJ8w3UMNZR2vR3XJ8uks1cFHysdrhlX58=
-=1mz1
------END PGP SIGNATURE-----
---=-=-=--
+In fact, we can use the older disk sdb or sdc to assemble the array.
+That means we should not choose the 'spare' disk as the fresh disk in
+analyze_sbs().
+
+To fix the problem, we do not compare superblock events when it is
+a spare disk, as same as validate_super.
+
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+---
+ drivers/md/md.c | 27 +++++++++++++++++----------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 24638ccedce4..350e1f152e97 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -1092,7 +1092,7 @@ static int super_90_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor
+ {
+ 	char b[BDEVNAME_SIZE], b2[BDEVNAME_SIZE];
+ 	mdp_super_t *sb;
+-	int ret;
++	int ret = 0;
+ 
+ 	/*
+ 	 * Calculate the position of the superblock (512byte sectors),
+@@ -1160,10 +1160,13 @@ static int super_90_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor
+ 		}
+ 		ev1 = md_event(sb);
+ 		ev2 = md_event(refsb);
+-		if (ev1 > ev2)
+-			ret = 1;
+-		else
+-			ret = 0;
++
++		/* Insist on good event counter while assembling, except
++		 * for spares (which don't need an event count) */
++		if (sb->disks[rdev->desc_nr].state & (
++			(1<<MD_DISK_SYNC) | (1 << MD_DISK_ACTIVE)))
++			if (ev1 > ev2)
++				ret = 1;
+ 	}
+ 	rdev->sectors = rdev->sb_start;
+ 	/* Limit to 4TB as metadata cannot record more than that.
+@@ -1513,7 +1516,7 @@ static __le32 calc_sb_1_csum(struct mdp_superblock_1 *sb)
+ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_version)
+ {
+ 	struct mdp_superblock_1 *sb;
+-	int ret;
++	int ret = 0;
+ 	sector_t sb_start;
+ 	sector_t sectors;
+ 	char b[BDEVNAME_SIZE], b2[BDEVNAME_SIZE];
+@@ -1665,10 +1668,14 @@ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_
+ 		ev1 = le64_to_cpu(sb->events);
+ 		ev2 = le64_to_cpu(refsb->events);
+ 
+-		if (ev1 > ev2)
+-			ret = 1;
+-		else
+-			ret = 0;
++		/* Insist of good event counter while assembling, except for
++		 * spares (which don't need an event count) */
++		if (rdev->desc_nr >= 0 &&
++		    rdev->desc_nr < le32_to_cpu(sb->max_dev) &&
++		    (le16_to_cpu(sb->dev_roles[rdev->desc_nr]) < MD_DISK_ROLE_MAX ||
++		     le16_to_cpu(sb->dev_roles[rdev->desc_nr]) == MD_DISK_ROLE_JOURNAL))
++			if (ev1 > ev2)
++				ret = 1;
+ 	}
+ 	if (minor_version) {
+ 		sectors = (i_size_read(rdev->bdev->bd_inode) >> 9);
+-- 
+2.17.2
+
