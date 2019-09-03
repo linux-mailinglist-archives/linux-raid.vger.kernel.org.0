@@ -2,119 +2,146 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 65FCBA740F
-	for <lists+linux-raid@lfdr.de>; Tue,  3 Sep 2019 21:53:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96775A75AB
+	for <lists+linux-raid@lfdr.de>; Tue,  3 Sep 2019 22:52:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725962AbfICTxf (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 3 Sep 2019 15:53:35 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:57682 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfICTxe (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 3 Sep 2019 15:53:34 -0400
-Received: from mail-pf1-f197.google.com ([209.85.210.197])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <gpiccoli@canonical.com>)
-        id 1i5Ers-0005Th-Ol
-        for linux-raid@vger.kernel.org; Tue, 03 Sep 2019 19:53:32 +0000
-Received: by mail-pf1-f197.google.com with SMTP id c5so6457498pfo.17
-        for <linux-raid@vger.kernel.org>; Tue, 03 Sep 2019 12:53:32 -0700 (PDT)
+        id S1726770AbfICUwi (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 3 Sep 2019 16:52:38 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46249 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726394AbfICUwi (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 3 Sep 2019 16:52:38 -0400
+Received: by mail-qt1-f196.google.com with SMTP id v11so828041qto.13
+        for <linux-raid@vger.kernel.org>; Tue, 03 Sep 2019 13:52:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Qv5DBvzJclWf1sGwRpXpHmjZdp8k7G1ivBkLrGwGkUc=;
+        b=otnNTQXXwhcoM6/sBv7yLGx8QHIX2c4XuHV6RcVL8PijDQAeJIHNAkZYuwVgNU31KR
+         hKyOb8oZ5+NWG1j5wNOA2gXjJrQ8xTnz69cyc3Tsgnxtm3c6XZjFUz0akSYbO1GTBwar
+         65ccsGfHW3+BmQwgAhbcC0kuJjzQ38IdvDC9pTJhIg4EoB3iXtFq4lC6iF4McAlsZAM1
+         R0ooGAwdXZmL8ADLC2W0UBTaqxuwuIw1P+QQ9Ln0NpSvTfwLy+E3DTw7Q8qF/9l8ObBq
+         3tDeOsjji9kruCbE1bNLaGXWzUyaXfBkoc/7QfmlN3ZjfpUIl4CiBu/pNIl5xR9Zwa7O
+         p79A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:cc:references:to:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=m4/iGFxysoqiJX5l6xY9vaEh4ZOwU9TUKtScGeLuxk4=;
-        b=La3UjAt0ijC9r7n7dhBCbG+frDAxE/B/IA5Xz7t8AY3yfJmlI1CkudfBx6XGe3ZfgH
-         bN1G8awZNIb/YhfDBzKxMxih+7iTA8Fxftvp7Kq3VTGhEjGET70pO4czAWkbIucqAnZh
-         Ph8XsCses/4A5yEu3Jhksg6f0QTJV9gPN17ahbe/9jholzxsQo4fla+g46tNu+ClRw4W
-         V+o3Q+jlm62Ho1BDbB2i0d970PE/njfv1pjZosIa6ftBoc00DrOguf9pu6x40aSuwlBT
-         Ka1QHra42TWzM0kZ88oRzW98GM4NfwKjma4mE+nGKTrDogQTyrcHRofbuZBsj0lLJobt
-         xp2g==
-X-Gm-Message-State: APjAAAVwkEZI3OiCFWC5RRtalqFe7cqOtqMOuVaC7xvR1LsxyKL1VvjN
-        h3W7tFwjf1T+JNZm8/DK5QWrVsHMSigy1XNR6wYyZXg0c8DPrJ1tn9mWHfwB66hisWs7QsvOH1S
-        Pqgkojsad4CLOh3DWjDuHABV/A/jVx12Up/Nz794=
-X-Received: by 2002:a17:90a:c086:: with SMTP id o6mr1041225pjs.24.1567540411619;
-        Tue, 03 Sep 2019 12:53:31 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwiwXv/UYVHujb2Lh/xxxZ5lvm9Dvm2/i4Zu0bum67gm5u4ULLDhXn+dzw+u/pQGQ1xWX4NCw==
-X-Received: by 2002:a17:90a:c086:: with SMTP id o6mr1041217pjs.24.1567540411500;
-        Tue, 03 Sep 2019 12:53:31 -0700 (PDT)
-Received: from [192.168.1.203] (201-93-37-171.dial-up.telesp.net.br. [201.93.37.171])
-        by smtp.gmail.com with ESMTPSA id d20sm24787555pfq.88.2019.09.03.12.53.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Sep 2019 12:53:30 -0700 (PDT)
-Subject: Re: [PATCH v3 1/2] md raid0/linear: Mark array as 'broken' and fail
- BIOs if a member is gone
-From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-Cc:     Song Liu <songliubraving@fb.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        Jay Vosburgh <jay.vosburgh@canonical.com>,
-        Song Liu <liu.song.a23@gmail.com>, NeilBrown <neilb@suse.com>
-References: <20190822161318.26236-1-gpiccoli@canonical.com>
- <73C4747E-7A9E-4833-8393-B6A06C935DBE@fb.com>
- <8163258e-839c-e0b8-fc4b-74c94c9dae1d@canonical.com>
- <F0E716F8-76EC-4315-933D-A547B52F1D27@fb.com>
- <5D68FEBC.9060709@youngman.org.uk>
- <CAHD1Q_ypdBKhYRVLrg_kf4L8LdXk8rgiiSQjtmoC=jyRv5M5jQ@mail.gmail.com>
-To:     Wols Lists <antlists@youngman.org.uk>,
-        linux-raid <linux-raid@vger.kernel.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gpiccoli@canonical.com; prefer-encrypt=mutual; keydata=
- mQENBFpVBxcBCADPNKmu2iNKLepiv8+Ssx7+fVR8lrL7cvakMNFPXsXk+f0Bgq9NazNKWJIn
- Qxpa1iEWTZcLS8ikjatHMECJJqWlt2YcjU5MGbH1mZh+bT3RxrJRhxONz5e5YILyNp7jX+Vh
- 30rhj3J0vdrlIhPS8/bAt5tvTb3ceWEic9mWZMsosPavsKVcLIO6iZFlzXVu2WJ9cov8eQM/
- irIgzvmFEcRyiQ4K+XUhuA0ccGwgvoJv4/GWVPJFHfMX9+dat0Ev8HQEbN/mko/bUS4Wprdv
- 7HR5tP9efSLucnsVzay0O6niZ61e5c97oUa9bdqHyApkCnGgKCpg7OZqLMM9Y3EcdMIJABEB
- AAG0LUd1aWxoZXJtZSBHLiBQaWNjb2xpIDxncGljY29saUBjYW5vbmljYWwuY29tPokBNwQT
- AQgAIQUCWmClvQIbAwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDOR5EF9K/7Gza3B/9d
- 5yczvEwvlh6ksYq+juyuElLvNwMFuyMPsvMfP38UslU8S3lf+ETukN1S8XVdeq9yscwtsRW/
- 4YoUwHinJGRovqy8gFlm3SAtjfdqysgJqUJwBmOtcsHkmvFXJmPPGVoH9rMCUr9s6VDPox8f
- q2W5M7XE9YpsfchS/0fMn+DenhQpV3W6pbLtuDvH/81GKrhxO8whSEkByZbbc+mqRhUSTdN3
- iMpRL0sULKPVYbVMbQEAnfJJ1LDkPqlTikAgt3peP7AaSpGs1e3pFzSEEW1VD2jIUmmDku0D
- LmTHRl4t9KpbU/H2/OPZkrm7809QovJGRAxjLLPcYOAP7DUeltveuQENBFpVBxcBCADbxD6J
- aNw/KgiSsbx5Sv8nNqO1ObTjhDR1wJw+02Bar9DGuFvx5/qs3ArSZkl8qX0X9Vhptk8rYnkn
- pfcrtPBYLoux8zmrGPA5vRgK2ItvSc0WN31YR/6nqnMfeC4CumFa/yLl26uzHJa5RYYQ47jg
- kZPehpc7IqEQ5IKy6cCKjgAkuvM1rDP1kWQ9noVhTUFr2SYVTT/WBHqUWorjhu57/OREo+Tl
- nxI1KrnmW0DbF52tYoHLt85dK10HQrV35OEFXuz0QPSNrYJT0CZHpUprkUxrupDgkM+2F5LI
- bIcaIQ4uDMWRyHpDbczQtmTke0x41AeIND3GUc+PQ4hWGp9XABEBAAGJAR8EGAEIAAkFAlpV
- BxcCGwwACgkQzkeRBfSv+xv1wwgAj39/45O3eHN5pK0XMyiRF4ihH9p1+8JVfBoSQw7AJ6oU
- 1Hoa+sZnlag/l2GTjC8dfEGNoZd3aRxqfkTrpu2TcfT6jIAsxGjnu+fUCoRNZzmjvRziw3T8
- egSPz+GbNXrTXB8g/nc9mqHPPprOiVHDSK8aGoBqkQAPZDjUtRwVx112wtaQwArT2+bDbb/Y
- Yh6gTrYoRYHo6FuQl5YsHop/fmTahpTx11IMjuh6IJQ+lvdpdfYJ6hmAZ9kiVszDF6pGFVkY
- kHWtnE2Aa5qkxnA2HoFpqFifNWn5TyvJFpyqwVhVI8XYtXyVHub/WbXLWQwSJA4OHmqU8gDl
- X18zwLgdiQ==
-Message-ID: <8a55b0b6-25a9-d76b-1a6a-8aaed8bde8a7@canonical.com>
-Date:   Tue, 3 Sep 2019 16:53:20 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Qv5DBvzJclWf1sGwRpXpHmjZdp8k7G1ivBkLrGwGkUc=;
+        b=kFVgcKjxDQhBhtSMMxpIGXEVao6jv6QegXDAzfUH/tULrBbCUwnBA5WGbRUeK3rBW4
+         A94+rDkSb5Da+DNmaWFP5zv9rlR6cWslvTq0hBMGzPAHox/SY0JEzCQiypfxaqjWW/FN
+         DcYAYz87ypbT9/zg2BziUbQ8zGvVB4TmN1ihDLn50GIZ3D0PQp9datY3/kEPruD55kRN
+         67qzV7B44lvm/r++gxcZVxNA8kAf7ZUODSIZVYCk8GHmm8jFC0UYx1yLoumiJK9VDHoU
+         G/oGhmNoZbL6B0SPUxC/0vM6w70c8besEt2rD+uPzd/Crkux4ChmhU+4U+giIXQZD1qO
+         rdhQ==
+X-Gm-Message-State: APjAAAXHJs/0iSG9yKJal7/2To4jf6PkUYMMQf+L0v+NlTFfW72smyNl
+        3h2JBoR9X3UX2lucVOITEosskeeMDcmo9ftAvVA=
+X-Google-Smtp-Source: APXvYqxJbVA4b7f5G7AAdxq2HQ45bSawAFuVbHEru9EEqYqSL9rxM93zrIH11QuWC79hKUYqUPfZbXblIVVOLg9N8Ak=
+X-Received: by 2002:ac8:3021:: with SMTP id f30mr29902069qte.193.1567543957020;
+ Tue, 03 Sep 2019 13:52:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHD1Q_ypdBKhYRVLrg_kf4L8LdXk8rgiiSQjtmoC=jyRv5M5jQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190902071623.21388-1-yuyufen@huawei.com>
+In-Reply-To: <20190902071623.21388-1-yuyufen@huawei.com>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Tue, 3 Sep 2019 13:52:25 -0700
+Message-ID: <CAPhsuW6DsR3qJg5M81UZQCoXCENfZ_b-q8h5G4QBPn9fbitudQ@mail.gmail.com>
+Subject: Re: [PATCH] md: no longer compare spare disk superblock events in super_load
+To:     Yufen Yu <yuyufen@huawei.com>
+Cc:     Song Liu <songliubraving@fb.com>,
+        linux-raid <linux-raid@vger.kernel.org>, neilb@suse.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 30/08/2019 08:25, Guilherme Piccoli wrote:
-> Thanks a lot for all the suggestions Song, Neil and Wol - I'll
-> implement them and resubmit
-> (hopefully) Monday.
-> 
-> Cheers,
-> 
-> 
-> Guilherme
-> 
+On Mon, Sep 2, 2019 at 12:04 AM Yufen Yu <yuyufen@huawei.com> wrote:
+>
+> We have a test case as follow:
+>
+>   mdadm -CR /dev/md1 -l 1 -n 4 /dev/sd[a-d] --assume-clean --bitmap=internal
+>   mdadm -S /dev/md1
+>   mdadm -A /dev/md1 /dev/sd[b-c] --run --force
+>
+>   mdadm --zero /dev/sda
+>   mdadm /dev/md1 -a /dev/sda
+>
+>   echo offline > /sys/block/sdc/device/state
+>   echo offline > /sys/block/sdb/device/state
+>   sleep 5
+>   mdadm -S /dev/md1
+>
+>   echo running > /sys/block/sdb/device/state
+>   echo running > /sys/block/sdc/device/state
+>   mdadm -A /dev/md1 /dev/sd[a-c] --run --force
+>
+> When we readd /dev/sda to the array, it started to do recovery.
+> After offline the other two disks in md1, the recovery have
+> been interrupted and superblock update info cannot be written
+> to the offline disks. While the spare disk (/dev/sda) can continue
+> to update superblock info.
+>
+> After stopping the array and assemble it, we found the array
+> run fail, with the follow kernel message:
+>
+> [  172.986064] md: kicking non-fresh sdb from array!
+> [  173.004210] md: kicking non-fresh sdc from array!
+> [  173.022383] md/raid1:md1: active with 0 out of 4 mirrors
+> [  173.022406] md1: failed to create bitmap (-5)
+> [  173.023466] md: md1 stopped.
+>
+> Since both sdb and sdc have the value of 'sb->events' smaller than
+> that in sda, they have been kicked from the array. However, the only
+> remained disk sda is in 'spare' state before stop and it cannot be
+> added to conf->mirrors[] array. In the end, raid array assemble and run fail.
+>
+> In fact, we can use the older disk sdb or sdc to assemble the array.
+> That means we should not choose the 'spare' disk as the fresh disk in
+> analyze_sbs().
+>
+> To fix the problem, we do not compare superblock events when it is
+> a spare disk, as same as validate_super.
+>
+> Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+> ---
+>  drivers/md/md.c | 27 +++++++++++++++++----------
+>  1 file changed, 17 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 24638ccedce4..350e1f152e97 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -1092,7 +1092,7 @@ static int super_90_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor
+>  {
+>         char b[BDEVNAME_SIZE], b2[BDEVNAME_SIZE];
+>         mdp_super_t *sb;
+> -       int ret;
+> +       int ret = 0;
+>
+>         /*
+>          * Calculate the position of the superblock (512byte sectors),
+> @@ -1160,10 +1160,13 @@ static int super_90_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor
+>                 }
+>                 ev1 = md_event(sb);
+>                 ev2 = md_event(refsb);
+> -               if (ev1 > ev2)
+> -                       ret = 1;
+> -               else
+> -                       ret = 0;
+> +
+> +               /* Insist on good event counter while assembling, except
+> +                * for spares (which don't need an event count) */
+> +               if (sb->disks[rdev->desc_nr].state & (
+> +                       (1<<MD_DISK_SYNC) | (1 << MD_DISK_ACTIVE)))
+> +                       if (ev1 > ev2)
+> +                               ret = 1;
 
-V4 sent:
-https://lore.kernel.org/linux-block/20190903194901.13524-1-gpiccoli@canonical.com/T/#t
+Instead of skipping the test, I guess we should make sure refsb passes
+a non-spare sb?
+In other words, we should fix the refdev of the super_*_load function.
 
-Wols, in order to reduce code size and for clarity, I've kept the helper
-as "is_mddev_broken()" - thanks for the suggestion anyway!
-Cheers,
+Does this make sense?
 
-
-Guilherme
+Thanks,
+Song
