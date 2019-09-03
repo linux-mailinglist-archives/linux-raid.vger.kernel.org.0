@@ -2,134 +2,91 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 429C7A5E79
-	for <lists+linux-raid@lfdr.de>; Tue,  3 Sep 2019 02:23:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 967D5A5EBA
+	for <lists+linux-raid@lfdr.de>; Tue,  3 Sep 2019 03:03:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbfICAWc (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 2 Sep 2019 20:22:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42174 "EHLO mx1.suse.de"
+        id S1726185AbfICBDu (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 2 Sep 2019 21:03:50 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5715 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727814AbfICAWc (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 2 Sep 2019 20:22:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8D679AEBB;
-        Tue,  3 Sep 2019 00:22:29 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Yufen Yu <yuyufen@huawei.com>, songliubraving@fb.com
-Date:   Tue, 03 Sep 2019 10:22:23 +1000
-Cc:     linux-raid@vger.kernel.org
-Subject: Re: [PATCH] md/raid1: fail run raid1 array when active disk less than one
-In-Reply-To: <9529c6d5-37f3-a7c4-db86-3ebf04a8c893@huawei.com>
-References: <20190902072436.23225-1-yuyufen@huawei.com> <87pnkjdudc.fsf@notabene.neil.brown.name> <9529c6d5-37f3-a7c4-db86-3ebf04a8c893@huawei.com>
-Message-ID: <87ef0ydy9s.fsf@notabene.neil.brown.name>
+        id S1725955AbfICBDu (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 2 Sep 2019 21:03:50 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 116ED54D418B88D496B0;
+        Tue,  3 Sep 2019 09:03:49 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.14) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Tue, 3 Sep 2019
+ 09:03:45 +0800
+Subject: Re: md0: bitmap file is out of date, resync
+To:     Mathias G <newsnet-mg-2016@tuxedo.ath.cx>,
+        Song Liu <liu.song.a23@gmail.com>
+CC:     linux-raid <linux-raid@vger.kernel.org>
+References: <92ce64ba-2c55-8ef8-3ddf-3bbf867ec4f8@tuxedo.ath.cx>
+ <CAPhsuW4Gss2ie2wv_GmT2Xz-5vU+XP=KR6cxh-qOOQPKtOz9ag@mail.gmail.com>
+ <a2e4b1a0-e614-2eb3-c673-96fbfbc5ae69@tuxedo.ath.cx>
+ <CAPhsuW6+ooVkKznfT19x4HquN+g4WVb-31PvKKt=01fE_wJZEg@mail.gmail.com>
+ <1942a84d-ec30-b089-1e17-62e032e5f728@tuxedo.ath.cx>
+ <11eb3461-b801-0808-614a-766e090ecdc8@tuxedo.ath.cx>
+ <08cf0895-dd00-5499-4d22-c03f3676eb25@huawei.com>
+ <4e2077ec-454b-2adc-69bc-4e04cf7f24ea@tuxedo.ath.cx>
+ <949eebea-e4b7-7f89-da16-d227fa8521f9@huawei.com>
+ <03e58a31-8f47-22d2-51c5-91214f63c544@tuxedo.ath.cx>
+From:   Hou Tao <houtao1@huawei.com>
+Message-ID: <523fd84a-905b-95fb-6fb2-d9eee87e9e39@huawei.com>
+Date:   Tue, 3 Sep 2019 09:03:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+In-Reply-To: <03e58a31-8f47-22d2-51c5-91214f63c544@tuxedo.ath.cx>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.31.14]
+X-CFilter-Loop: Reflected
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi Mathias,
 
-On Mon, Sep 02 2019, Yufen Yu wrote:
-
-> On 2019/9/2 15:34, NeilBrown wrote:
->> On Mon, Sep 02 2019, Yufen Yu wrote:
+On 2019/9/1 20:49, Mathias G wrote:
+> Hi Tao
+> 
+> On 23.08.19 14:15, Hou Tao wrote:
+>> Could you please save the following script as /usr/lib/systemd/system-shutdown/md_debug.sh and make it executable:
 >>
->>> When active disk in raid1 array less than one, we need to return
->>> fail to run.
->> Seems reasonable, but how can this happen?
->> As we never fail the last device in a RAID1, there should always
->> appear to be one that is working.
+>> #!/bin/bash
+>> mount -o remount,rw /
+>> mdadm -D /dev/md* > /md_debug.txt
+>> mdadm -S /dev/md* >> /md_debug.txt
+>> mount -o remount,ro /
 >>
->> Have you had a situation where this in actually needed?
->
-> There is a situation we found in follow patch.
-> https://marc.info/?l=3Dlinux-raid&m=3D156740736305042&w=3D2
+>> The script will dump the details of md devices to the /md_debug.txt and stop the md devices forcibly before shutdown or reboot.
+>> And we can check the content of md_debug.txt if the problem reoccurs.
+> 
+> Thanks for the code snipped. I tried to put the script to
 
-Ahhh - thanks.   Multiple cascading failures there, but is certainly
-could happen.
-As I said, I think the patch make sense.  IT might be a good idea to add
-the reproduced from the linked email to the patch description.
-You can also add
-  Reviewed-by: NeilBrown <neilb@suse.de>
+As showed in the following lines, we should use "&>" and "&>>" to save the
+output from both the standard output and standard error output:
 
-Thanks,
-NeilBrown
+mdadm -D /dev/md* &> /md_debug.txt
+mdadm -S /dev/md* &>> /md_debug.txt
 
+Could you please update the code snippet accordingly ?
 
->
-> Though we can fix that situation, I am not sure whether other situation
-> can also cause the active disk less than one.
->
-> Thanks
-> Yufen
->
->>
->> Thanks,
->> NeilBrown
->>
->>> Signed-off-by: Yufen Yu <yuyufen@huawei.com>
->>> ---
->>>   drivers/md/raid1.c | 13 ++++++++++++-
->>>   1 file changed, 12 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
->>> index 34e26834ad28..2a554464d6a4 100644
->>> --- a/drivers/md/raid1.c
->>> +++ b/drivers/md/raid1.c
->>> @@ -3127,6 +3127,13 @@ static int raid1_run(struct mddev *mddev)
->>>   		    !test_bit(In_sync, &conf->mirrors[i].rdev->flags) ||
->>>   		    test_bit(Faulty, &conf->mirrors[i].rdev->flags))
->>>   			mddev->degraded++;
->>> +	/*
->>> +	 * RAID1 needs at least one disk in active
->>> +	 */
->>> +	if (conf->raid_disks - mddev->degraded < 1) {
->>> +		ret =3D -EINVAL;
->>> +		goto abort;
->>> +	}
->>>=20=20=20
->>>   	if (conf->raid_disks - mddev->degraded =3D=3D 1)
->>>   		mddev->recovery_cp =3D MaxSector;
->>> @@ -3160,8 +3167,12 @@ static int raid1_run(struct mddev *mddev)
->>>   	ret =3D md_integrity_register(mddev);
->>>   	if (ret) {
->>>   		md_unregister_thread(&mddev->thread);
->>> -		raid1_free(mddev, conf);
->>> +		goto abort;
->>>   	}
->>> +	return 0;
->>> +
->>> +abort:
->>> +	raid1_free(mddev, conf);
->>>   	return ret;
->>>   }
->>>=20=20=20
->>> --=20
->>> 2.17.2
+Regards,
+Tao
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+> /usr/lib/systemd/system-shutdown/
+> 
+> but it was not executed at all.
+> 
+> I remembered that I tried to create some debug info by myself and I had
+> to put the script to:
+> /lib/systemd/system-shutdown/
+> instead to make it working. No idea why, the execute bit was set.
+> 
+> This is what I also did, I'll let you know about the debug output.
+> 
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl1tsj8ACgkQOeye3VZi
-gblSJRAAoaHZUQY4y13UXZNbuA0XzySC9eTTdV2uptwN2Fi1ElH2NeptEDx+1hMB
-1henjP3lXK38R54xSL7RBYSDfgAMUVXulxKby9kvglp6lJrvIl9KtY52jT/L8Isy
-f6H3wukxu2V9etNfQ9GvabPAIVVGoUSZK/IEVOG37ICW3RS3Tt2PsRxI80W4BE3I
-81+mNKFrJvkwsNrzDtLGVfmlW54EZ/77g1GdOv2dopwonFGUnLWoUndUA3kF+RV5
-ykqdPAJ3En4rwDvRAKa3GBPR2rgNifatnguzB0CZJEEn0q6zSuehTIoxyFhqrQa8
-8qDUzgyH7ZQ0npg/quM4wSDLtbTpFpoV9luSyEr1aKFtZmoYjvElPNxJDwix2sTu
-7oa7hB5H5DiqcvLNCFKh0zYNPG1x7AGx/SNfGLEc39r/X/XfA2gDiVT2WwfnJ58x
-xgmXgXiq0euOpm8yJhwdLIto0GwpovWPg1FgFYUWpeOG7800qqi6wodJT4wGmxzX
-oE8cZkFcEpwJspHpbjFtUbiURrepxqaDfKD8O2BOSTsKfRPX4ER+byKPrNPYAzR/
-TtE8GNSeYhU3DycCaaupPTKpiFErgZctV6ZtH1XGMNehQXHlFs84Tm998of+VH7+
-sp9SAtyO+uONOO/anOYAVPKcC8VHG2oTqcMwMtXXwSdcyD6Fo1E=
-=5cB0
------END PGP SIGNATURE-----
---=-=-=--
