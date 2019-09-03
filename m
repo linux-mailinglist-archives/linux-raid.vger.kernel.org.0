@@ -2,29 +2,27 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EE09A5E72
-	for <lists+linux-raid@lfdr.de>; Tue,  3 Sep 2019 02:19:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 429C7A5E79
+	for <lists+linux-raid@lfdr.de>; Tue,  3 Sep 2019 02:23:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbfICAS6 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 2 Sep 2019 20:18:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41536 "EHLO mx1.suse.de"
+        id S1727930AbfICAWc (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 2 Sep 2019 20:22:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42174 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727933AbfICAS5 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 2 Sep 2019 20:18:57 -0400
+        id S1727814AbfICAWc (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 2 Sep 2019 20:22:32 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 29BA3AE8D;
-        Tue,  3 Sep 2019 00:18:55 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 8D679AEBB;
+        Tue,  3 Sep 2019 00:22:29 +0000 (UTC)
 From:   NeilBrown <neilb@suse.de>
-To:     Krzysztof =?utf-8?Q?Jak=C3=B3bczyk?= 
-        <krzysiek.jakobczyk@gmail.com>, Phil Turmel <philip@turmel.org>
-Date:   Tue, 03 Sep 2019 10:18:47 +1000
-Cc:     Neil F Brown <nfbrown@suse.com>, linux-raid@vger.kernel.org,
-        Wols Lists <antlists@youngman.org.uk>
-Subject: Re: Fwd: mdadm RAID5 to RAID6 migration thrown exceptions, access to data lost
-In-Reply-To: <CA+ojRwmnpg6eLbzvXU51sLUmUVUdZnpbF71oafKtvdoApX3e1Q@mail.gmail.com>
-References: <CA+ojRw=iw3uNHjmZcQyz6VsV6O0zTwZXNj5Y6_QEj70ugXAHrw@mail.gmail.com> <CA+ojRwmzNOUyCWXmCzZ5MG-aW3ykFZ1=o6q4o1pKv=c35zehDA@mail.gmail.com> <5D6CF46B.8090905@youngman.org.uk> <CA+ojRw=ph+zhqsiGvXhnj8tbQT7sz8q17u=LbiLxxcHYi=SBag@mail.gmail.com> <2ce6bd67-d373-e0fc-4dba-c6220aa4d8cb@turmel.org> <CA+ojRwmnpg6eLbzvXU51sLUmUVUdZnpbF71oafKtvdoApX3e1Q@mail.gmail.com>
-Message-ID: <87h85udyfs.fsf@notabene.neil.brown.name>
+To:     Yufen Yu <yuyufen@huawei.com>, songliubraving@fb.com
+Date:   Tue, 03 Sep 2019 10:22:23 +1000
+Cc:     linux-raid@vger.kernel.org
+Subject: Re: [PATCH] md/raid1: fail run raid1 array when active disk less than one
+In-Reply-To: <9529c6d5-37f3-a7c4-db86-3ebf04a8c893@huawei.com>
+References: <20190902072436.23225-1-yuyufen@huawei.com> <87pnkjdudc.fsf@notabene.neil.brown.name> <9529c6d5-37f3-a7c4-db86-3ebf04a8c893@huawei.com>
+Message-ID: <87ef0ydy9s.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
 Content-Type: multipart/signed; boundary="=-=-=";
         micalg=pgp-sha256; protocol="application/pgp-signature"
@@ -34,89 +32,104 @@ List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
 --=-=-=
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 02 2019, Krzysztof Jak=C3=B3bczyk wrote:
+On Mon, Sep 02 2019, Yufen Yu wrote:
 
-> Gentlemen,
+> On 2019/9/2 15:34, NeilBrown wrote:
+>> On Mon, Sep 02 2019, Yufen Yu wrote:
+>>
+>>> When active disk in raid1 array less than one, we need to return
+>>> fail to run.
+>> Seems reasonable, but how can this happen?
+>> As we never fail the last device in a RAID1, there should always
+>> appear to be one that is working.
+>>
+>> Have you had a situation where this in actually needed?
 >
-> Just in order for me not to mix anything important I will quickly
-> summarize what I'm about to do:
-> I will try to release all the files that are being used on the target
-> md0, by checking what is still being used with "lsof /data" and then
-> will kill the processes that are still trying to use the array.
+> There is a situation we found in follow patch.
+> https://marc.info/?l=3Dlinux-raid&m=3D156740736305042&w=3D2
 
-You won't be able to kill those processes, and there is half a chance
-that the "lsof /data" will hang and be unkillable.
-
-> After the files are being unlocked I will perform the outdated host shutd=
-own.
-
-I would
-   sync &
-   wait a little while
-   reboot -f -n
-
-A Linux system should always survive "reboot -f -n" with little data
-loss, usually none.
-
-> I will boot a thumbstick on that computer with SystemRescueCD and will
-> try to assemble the array with the "mdadm --assemble --scan -v --run"
-> applying --force if necessary.
-
-=2D-force shouldn't be necessary, so if the first version doesn't work,
-check with us first.
->
-> Please confirm me if my understanding is correct.
-
-I'd like some more details: particular "mdadm -E" of one or more
-component drives.  I'm curious what the data offset is.  As you didn't
-need to git a "--backup=3D...." arg to mdadm, I suspect it is reasonably
-large, which is good.
-Sometimes raid reshape needs an 'mdadm' running to help the kernel, and
-if that mdadm gets killed, the reshape will hang.
-But with a largeish data-offset, no mdadm helper is needed.
-
-The hang was reported 307 seconds after a "read error corrected"
-message. And by that time it had hung for at least 120 seconds - maybe
-as much as 240.  So there isn't obviously a strong connection, but maybe
-there is a cause/effect there.
-
-Looking at code fixes since 3.16, I can see a couple of live-lock bugs
-fixed, but they were fixed well before 2016-12-30, so probably got back
-ported to the Debian kernel.
-
-So I cannot easily find an explanation.
-
-I suspect that if you just rebooted, the reshape would restart and
-continue happily (unless/until another read error was found).
-Rebooting to a rescue CD is likely to be safer.
-Likely worst case is that it will hang again, and we'll need to look
-more deeply.
-
-In any case, I'd like to see that "mdadm --examine" output.
+Ahhh - thanks.   Multiple cascading failures there, but is certainly
+could happen.
+As I said, I think the patch make sense.  IT might be a good idea to add
+the reproduced from the linked email to the patch description.
+You can also add
+  Reviewed-by: NeilBrown <neilb@suse.de>
 
 Thanks,
 NeilBrown
+
+
+>
+> Though we can fix that situation, I am not sure whether other situation
+> can also cause the active disk less than one.
+>
+> Thanks
+> Yufen
+>
+>>
+>> Thanks,
+>> NeilBrown
+>>
+>>> Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+>>> ---
+>>>   drivers/md/raid1.c | 13 ++++++++++++-
+>>>   1 file changed, 12 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+>>> index 34e26834ad28..2a554464d6a4 100644
+>>> --- a/drivers/md/raid1.c
+>>> +++ b/drivers/md/raid1.c
+>>> @@ -3127,6 +3127,13 @@ static int raid1_run(struct mddev *mddev)
+>>>   		    !test_bit(In_sync, &conf->mirrors[i].rdev->flags) ||
+>>>   		    test_bit(Faulty, &conf->mirrors[i].rdev->flags))
+>>>   			mddev->degraded++;
+>>> +	/*
+>>> +	 * RAID1 needs at least one disk in active
+>>> +	 */
+>>> +	if (conf->raid_disks - mddev->degraded < 1) {
+>>> +		ret =3D -EINVAL;
+>>> +		goto abort;
+>>> +	}
+>>>=20=20=20
+>>>   	if (conf->raid_disks - mddev->degraded =3D=3D 1)
+>>>   		mddev->recovery_cp =3D MaxSector;
+>>> @@ -3160,8 +3167,12 @@ static int raid1_run(struct mddev *mddev)
+>>>   	ret =3D md_integrity_register(mddev);
+>>>   	if (ret) {
+>>>   		md_unregister_thread(&mddev->thread);
+>>> -		raid1_free(mddev, conf);
+>>> +		goto abort;
+>>>   	}
+>>> +	return 0;
+>>> +
+>>> +abort:
+>>> +	raid1_free(mddev, conf);
+>>>   	return ret;
+>>>   }
+>>>=20=20=20
+>>> --=20
+>>> 2.17.2
 
 --=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl1tsWcACgkQOeye3VZi
-gbnV1g//TqoCwPKr8iwWm/kUQMuJaj6NB25AvNESOwaclMEFDODQlLRSeukU4yHR
-QlEVmtHBWiKed0ZZD5k976dLmXsmSmYOsrJQ01R94Yu1v5MJcXDYBe1hXn+tCHqx
-9JMn1cOdh4adAsmgVcNtCGwJsfZTKB+dFnx8Sona7ezJ6ewXVwO+B9hDvJz6Ldwa
-qTZREEGiL9FPcFOQ/DFhIsBjjZhwYbQidPfq8RHzT1wmVK6Rapc9R5hppwhfhTYP
-YU4VZXNr92zTpuKG7Fq4seTvbEuNfwqUkQ/D/2McVXEj8zhiqeIx6JBp46nGFBqm
-4AW7VoIW5FjBCFB+cy+w75yf3u53v/5AD1STPf1SqdQ7uJxPKy/UwamDn+dgmG1i
-Gl4EwOyyhWJhkQTE8v/zVxykxUkzPMeKq8wDSnrKeWBXCNwmAZg4Spcey4LS++jU
-CbhlScowAdMjW2VAfggXqDqGBDMdR7FYhGnJRDnpwO4j5KjfUmpEWpVI1bK+pKew
-nVr2UIgJRdaeX2owbF5K6U1CIsuB2wxjmz6QGBJc+CfaP8M8jdqOJTST0s4b7+wM
-GnpbqsFFslvh1+kRiKKarCpD/mRqJRR2Ho29T7s1VMeUcZ7Tl3eT7nSstOEqNwu1
-W2a6BOWyoBKkkoXrypfJgyaIdqFNMx5jIhaFoIaTf5jxaZYwAFw=
-=WvxS
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl1tsj8ACgkQOeye3VZi
+gblSJRAAoaHZUQY4y13UXZNbuA0XzySC9eTTdV2uptwN2Fi1ElH2NeptEDx+1hMB
+1henjP3lXK38R54xSL7RBYSDfgAMUVXulxKby9kvglp6lJrvIl9KtY52jT/L8Isy
+f6H3wukxu2V9etNfQ9GvabPAIVVGoUSZK/IEVOG37ICW3RS3Tt2PsRxI80W4BE3I
+81+mNKFrJvkwsNrzDtLGVfmlW54EZ/77g1GdOv2dopwonFGUnLWoUndUA3kF+RV5
+ykqdPAJ3En4rwDvRAKa3GBPR2rgNifatnguzB0CZJEEn0q6zSuehTIoxyFhqrQa8
+8qDUzgyH7ZQ0npg/quM4wSDLtbTpFpoV9luSyEr1aKFtZmoYjvElPNxJDwix2sTu
+7oa7hB5H5DiqcvLNCFKh0zYNPG1x7AGx/SNfGLEc39r/X/XfA2gDiVT2WwfnJ58x
+xgmXgXiq0euOpm8yJhwdLIto0GwpovWPg1FgFYUWpeOG7800qqi6wodJT4wGmxzX
+oE8cZkFcEpwJspHpbjFtUbiURrepxqaDfKD8O2BOSTsKfRPX4ER+byKPrNPYAzR/
+TtE8GNSeYhU3DycCaaupPTKpiFErgZctV6ZtH1XGMNehQXHlFs84Tm998of+VH7+
+sp9SAtyO+uONOO/anOYAVPKcC8VHG2oTqcMwMtXXwSdcyD6Fo1E=
+=5cB0
 -----END PGP SIGNATURE-----
 --=-=-=--
