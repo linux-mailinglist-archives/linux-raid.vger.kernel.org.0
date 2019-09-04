@@ -2,50 +2,114 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B287A7719
-	for <lists+linux-raid@lfdr.de>; Wed,  4 Sep 2019 00:36:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E995AA77B7
+	for <lists+linux-raid@lfdr.de>; Wed,  4 Sep 2019 02:01:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbfICWgT (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 3 Sep 2019 18:36:19 -0400
-Received: from smtp.hosts.co.uk ([85.233.160.19]:24018 "EHLO smtp.hosts.co.uk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726079AbfICWgT (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 3 Sep 2019 18:36:19 -0400
-Received: from [81.153.82.187] (helo=[192.168.1.118])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1i5HPM-00051Y-Cj; Tue, 03 Sep 2019 23:36:17 +0100
-Subject: Re: [PATCH v3 1/2] md raid0/linear: Mark array as 'broken' and fail
- BIOs if a member is gone
-To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
-        linux-raid <linux-raid@vger.kernel.org>
-References: <20190822161318.26236-1-gpiccoli@canonical.com>
- <73C4747E-7A9E-4833-8393-B6A06C935DBE@fb.com>
- <8163258e-839c-e0b8-fc4b-74c94c9dae1d@canonical.com>
- <F0E716F8-76EC-4315-933D-A547B52F1D27@fb.com>
- <5D68FEBC.9060709@youngman.org.uk>
- <CAHD1Q_ypdBKhYRVLrg_kf4L8LdXk8rgiiSQjtmoC=jyRv5M5jQ@mail.gmail.com>
- <8a55b0b6-25a9-d76b-1a6a-8aaed8bde8a7@canonical.com>
-From:   Wols Lists <antlists@youngman.org.uk>
-Message-ID: <5D6EEAE0.7060400@youngman.org.uk>
-Date:   Tue, 3 Sep 2019 23:36:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.7.0
+        id S1727428AbfIDABD (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 3 Sep 2019 20:01:03 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37860 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbfIDABD (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 3 Sep 2019 20:01:03 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b10so3612327plr.4
+        for <linux-raid@vger.kernel.org>; Tue, 03 Sep 2019 17:01:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RnuUMog/mqADgy4UcbFGn3fI0+nYFMOY2y8uUmfr9MY=;
+        b=bGe1vE7vuoSCVHSa75d/I/FSCF5TTNllmTmQZBQqzIMSJ0k3jTWmetc7wjl/M21zPW
+         DI/nGczG3tPSksZVBUGC0WxIe9QFFpjFca2NOWY3LzW3QmUj1+xjctBAhp0Kwi9zncJ5
+         vw5y9rU5XMy27sGj4AcROCbuvVws98lfgEWWP+Vrrv/GlMawudT825eEkt72a2F03Qka
+         OmNBlpbbaZxsAol65z/bcdOukIcri9rl/lCPClxrUc+DmarfYhaQXgBpse4z/0ClZxXI
+         6PrNqXw8MVo25I1CN1oxOBZp7Tnuu2/xnuHZDJ88K6rupBlW0f1dsTFaH7TqJduHWbZ0
+         Szqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RnuUMog/mqADgy4UcbFGn3fI0+nYFMOY2y8uUmfr9MY=;
+        b=A0I8UZcnqE9JY5smEzYcZvjknAf7Ir8xu/4AKDF+tOC+9yjoKMOxVcalexYIRvLjc2
+         IFlJvGxxRjf9rSPtOOXvakFD7iJb7IjcV5HoChW5J7x9zic6VhKTldW12DnsKwZQMNvp
+         Rf1qNJm0G88wHJ3CZuPuhYMh5DzyEGHAEO8gTA446UnLVEcX//C3vidT5d/O7X6rIJ+v
+         nyWdsH6RaooyVP0NMLoH2RJ+U4DBW2F6IFswma3ksjdDaE4SiTa6ug/i6foxMlx2PycP
+         RV/+hAlUSI5x5KRYOlc5UORczEn8TlCOK2QS5W2fiw9hVzN1/enNLV1ow8VhXnxXiUj2
+         ST4g==
+X-Gm-Message-State: APjAAAVUd6ZJo5ye8U+ta7oWvqXLYpS8khPDGjsgTl5K845/JC79FF0C
+        tvHdY8oDPK0u7FjeIMWDSeyFfw==
+X-Google-Smtp-Source: APXvYqzzNRubWr4FjvVLXyReSV5RzpU13qQvE39A9lVOeFFmAQHw+0a57cws24RAdhCjW8VmIfe0dg==
+X-Received: by 2002:a17:902:142:: with SMTP id 60mr38258121plb.155.1567555262237;
+        Tue, 03 Sep 2019 17:01:02 -0700 (PDT)
+Received: from [192.168.1.188] (66.29.164.166.static.utbb.net. [66.29.164.166])
+        by smtp.gmail.com with ESMTPSA id v67sm31411511pfb.45.2019.09.03.17.01.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Sep 2019 17:01:01 -0700 (PDT)
+Subject: Re: [GIT PULL] md-next 20190903
+To:     Song Liu <songliubraving@fb.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>,
+        Yufen Yu <yuyufen@huawei.com>,
+        Guoqing Jiang <jgq516@gmail.com>,
+        "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+References: <F9513FD6-D5AD-485C-9079-FD320F4325AC@fb.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <b4955975-2956-6254-0e5f-67a54b44c233@kernel.dk>
+Date:   Tue, 3 Sep 2019 18:00:59 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <8a55b0b6-25a9-d76b-1a6a-8aaed8bde8a7@canonical.com>
+In-Reply-To: <F9513FD6-D5AD-485C-9079-FD320F4325AC@fb.com>
 Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 03/09/19 20:53, Guilherme G. Piccoli wrote:
-> Wols, in order to reduce code size and for clarity, I've kept the helper
-> as "is_mddev_broken()" - thanks for the suggestion anyway!
+On 9/3/19 4:00 PM, Song Liu wrote:
+> Hi Jens,
+> 
+> Please consider pulling the following changes for md on top of your
+> for-5.4/block branch.
+> 
+> Thanks,
+> Song
+> 
+> 
+> 
+> The following changes since commit a22a9602b88fabf10847f238ff81fde5f906fef7:
+> 
+>    closures: fix a race on wakeup from closure_sync (2019-09-03 08:08:31 -0600)
+> 
+> are available in the Git repository at:
+> 
+>    git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git md-next
+> 
+> for you to fetch changes up to b0f01ecf293c49d841abbf8b55c4b717936ab11e:
+> 
+>    md/raid5: use bio_end_sector to calculate last_sector (2019-09-03 14:52:38 -0700)
+> 
+> ----------------------------------------------------------------
+> Guilherme G. Piccoli (1):
+>        md raid0/linear: Mark array as 'broken' and fail BIOs if a member is gone
+> 
+> Guoqing Jiang (1):
+>        md/raid5: use bio_end_sector to calculate last_sector
+> 
+> Yufen Yu (1):
+>        md/raid1: fail run raid1 array when active disk less than one
+> 
+>   drivers/md/md-linear.c |  5 +++++
+>   drivers/md/md.c        | 22 ++++++++++++++++++----
+>   drivers/md/md.h        | 16 ++++++++++++++++
+>   drivers/md/raid0.c     |  6 ++++++
+>   drivers/md/raid1.c     | 13 ++++++++++++-
+>   drivers/md/raid5.c     |  2 +-
+>   6 files changed, 58 insertions(+), 6 deletions(-)
 
-That's fine - it was just a suggestion and if you feel your version is
-clearer ...
+Pulled, thanks.
 
-Cheers,
-Wol
+-- 
+Jens Axboe
+
