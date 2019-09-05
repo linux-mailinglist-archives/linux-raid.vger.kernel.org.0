@@ -2,73 +2,57 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C5FCAADD0
-	for <lists+linux-raid@lfdr.de>; Thu,  5 Sep 2019 23:27:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7031AAEEC
+	for <lists+linux-raid@lfdr.de>; Fri,  6 Sep 2019 01:04:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390400AbfIEV11 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 5 Sep 2019 17:27:27 -0400
-Received: from smtp.hosts.co.uk ([85.233.160.19]:36554 "EHLO smtp.hosts.co.uk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731418AbfIEV10 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 5 Sep 2019 17:27:26 -0400
-Received: from [81.153.82.187] (helo=[192.168.1.118])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1i5zHn-0001T8-7q
-        for linux-raid@vger.kernel.org; Thu, 05 Sep 2019 22:27:23 +0100
+        id S1727171AbfIEXEO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 5 Sep 2019 19:04:14 -0400
+Received: from mail.thelounge.net ([91.118.73.15]:47259 "EHLO
+        mail.thelounge.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726908AbfIEXEO (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 5 Sep 2019 19:04:14 -0400
+Received: from srv-rhsoft.rhsoft.net  (Authenticated sender: h.reindl@thelounge.net) by mail.thelounge.net (THELOUNGE MTA) with ESMTPSA id 46Pbpz1lGfzXYc;
+        Fri,  6 Sep 2019 01:04:11 +0200 (CEST)
 Subject: Re: raid6 with dm-integrity should not cause device to fail
-To:     Linux-RAID <linux-raid@vger.kernel.org>
+To:     Chris Murphy <lists@colorremedies.com>,
+        Linux-RAID <linux-raid@vger.kernel.org>
 References: <9dd94796-4398-55c5-b4b6-4adfa2b88901@redhat.com>
  <fc3391a1-2337-4f9a-1f09-8a0882000084@redhat.com>
  <7429a69e-0b27-53de-2ad8-01d8ebbc2bb4@redhat.com>
  <20190905160512.GA17672@cthulhu.home.robinhill.me.uk>
  <CAJCQCtTiJS437Dc9FOiYNKr-=MX7xHabX-G0O=2TbgqR5nz+uw@mail.gmail.com>
  <20190905190558.GA8212@cthulhu.home.robinhill.me.uk>
- <CAJCQCtRzUxGE9Y6g7pEDP5CnPPprW==Rjs=yeaz_cEdieKaVLA@mail.gmail.com>
-From:   Wols Lists <antlists@youngman.org.uk>
-X-Enigmail-Draft-Status: N1110
-Message-ID: <5D717DBA.2030506@youngman.org.uk>
-Date:   Thu, 5 Sep 2019 22:27:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.7.0
+From:   Reindl Harald <h.reindl@thelounge.net>
+Openpgp: id=9D2B46CDBC140A36753AE4D733174D5A5892B7B8;
+ url=https://arrakis-tls.thelounge.net/gpg/h.reindl_thelounge.net.pub.txt
+Organization: the lounge interactive design
+Message-ID: <a100d6e4-c949-d288-a71a-e77276b68b70@thelounge.net>
+Date:   Fri, 6 Sep 2019 01:04:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAJCQCtRzUxGE9Y6g7pEDP5CnPPprW==Rjs=yeaz_cEdieKaVLA@mail.gmail.com>
+In-Reply-To: <20190905190558.GA8212@cthulhu.home.robinhill.me.uk>
 Content-Type: text/plain; charset=utf-8
+Content-Language: de-CH
 Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 05/09/19 21:15, Chris Murphy wrote:
->> You think that most people using this will be monitoring for
->> > dm-intergity reported errors? If all the errors are just rewritten
->> > silently then it's likely the only sign of an issue will be a
->> > performance impact, with no obvious sign as to where it's coming from.
-> I very well might want a policy that says, send a notification if more
-> than 10 errors of any nature are encountered within 1 minute or less.
-> Maybe that drive gets scheduled for swap out sooner than later, but
-> not urgently. But ejecting the drive, upon many errors, to act as the
-> notification of a problem, I don't like that design. Those are
-> actually two different problems, and I'm not being informed of the
-> initial cause only of the far more urgent "drive ejected" case.
 
-My immediate reaction, on reading this, was "has dm-integrity been set
-up on a disk with old data, and the drive not been initialised?"
 
-That would lead, I presume, to exactly this scenario ... think of raid's
---assume-clean option if the drive isn't clean ... the OP made me think
-this could well be the scenario. In which case, of course, it sounds
-like an implementation error in dm-integrity, or a user mistake. Do we
-need more information about the scenario that is generating this?
+Am 05.09.19 um 21:05 schrieb Robin Hill:
+> On Thu Sep 05, 2019 at 12:19:19PM -0600, Chris Murphy wrote:
+>> I don't agree that a heavy hammer is needed in order to send a notification.
+>>
+> You think that most people using this will be monitoring for
+> dm-intergity reported errors? If all the errors are just rewritten
+> silently then it's likely the only sign of an issue will be a
+> performance impact, with no obvious sign as to where it's coming from
 
-Otherwise, we do have a seriously corrupt disk, and while it might be
-nice to have some option to force-override what's going on, it also is
-not wise to continue without at least seeking to diagnose the cause of
-the corruption!
+what is the differene mdmonitor trigger an email *before* a disk or
+array is completly "spit out" or only "hey, you have lost"
 
-I think we need to know why dm-integrity is blowing up - if we don't
-know that then we shouldn't try to deal with it in the raid layer.
-
-Cheers,
-Wol
+it's up to mdmonitor to do the right thing and people which don't look
+and monitor at all are lost anyways - so what's your point?
