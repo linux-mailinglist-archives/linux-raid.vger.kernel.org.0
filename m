@@ -2,78 +2,83 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6408AAEEC7
-	for <lists+linux-raid@lfdr.de>; Tue, 10 Sep 2019 17:45:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FF19AEED4
+	for <lists+linux-raid@lfdr.de>; Tue, 10 Sep 2019 17:46:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436554AbfIJPpW (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 10 Sep 2019 11:45:22 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:62254 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726664AbfIJPpW (ORCPT
+        id S2436650AbfIJPqC (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 10 Sep 2019 11:46:02 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:36734 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726664AbfIJPqB (ORCPT
         <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 10 Sep 2019 11:45:22 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8AFdYT5027036;
-        Tue, 10 Sep 2019 08:44:20 -0700
+        Tue, 10 Sep 2019 11:46:01 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8AFjXA1008138;
+        Tue, 10 Sep 2019 08:45:56 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : references : in-reply-to : content-type : content-id
  : content-transfer-encoding : mime-version; s=facebook;
- bh=j11f4/MemeTkPj3hlWj1qfjIXyE4psy2WDFrk/OgbeI=;
- b=Ose+ENGndAi6TJk0cdpblv6NRWOrZbgZeMhN2hETupnu/fdJ6vTxGqSCx/UftN0Or2WY
- 2UIKGh6KQLlglwvYImrkVU7N0TWiMOEyWOL9B6ffX5L827D/3dS7wmvq9z5ONEFazwmI
- SL1cMiVcaNigwOmQ8IxocrrfzMkK1TkLsGc= 
+ bh=MqB4O7U0Nqk2CM5qpwFvNPMYBahUgSyopIztqGRrerM=;
+ b=fQFltN1lTAc9tPEpyhk/pcV+ZPkM5/wQsVkLfkSxodEnzoYusNFYtz1guBMir9CZqvZP
+ nUE5D7IQHcFOQc2LUZXUqBi7jqyez2P1h5jXckdt/osAbNboLd4o52/lRsIgornYQ5Vj
+ NrAxy365wr7Dd8q8dKTS+McJgXPz+EnEM+U= 
 Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2uwxh2usmq-1
+        by mx0a-00082601.pphosted.com with ESMTP id 2uwrs8njc6-20
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 10 Sep 2019 08:44:19 -0700
-Received: from prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) by
- prn-hub05.TheFacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Tue, 10 Sep 2019 08:44:18 -0700
+        Tue, 10 Sep 2019 08:45:55 -0700
 Received: from prn-hub01.TheFacebook.com (2620:10d:c081:35::125) by
- prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) with Microsoft SMTP Server
+ prn-hub03.TheFacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Tue, 10 Sep 2019 08:44:18 -0700
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (192.168.54.28)
+ 15.1.1713.5; Tue, 10 Sep 2019 08:45:37 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (192.168.54.28)
  by o365-in.thefacebook.com (192.168.16.25) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Tue, 10 Sep 2019 08:44:18 -0700
+ via Frontend Transport; Tue, 10 Sep 2019 08:45:37 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LITOP8PZtZ6PxmSEZYYAxt2zBNsw3dRdVkOmd3X4t8kltMYBcxUrYttdH2EHbyLZL34n03CI6aj9KGA8i6U0qdZhPBIRNmEwotZJht9+OEhmPpjgruUmjfVGReMcpM20Q6Kk9xB3CSKAD6PfKW9HsoIIGgrxSS2RlZWlJMaDqk2OtC5eqmikD2XZEIfWnF5DK2fvhHTMbQck9ReXPGMaKuAo3YqnbVzdveQ6BLNpC7GamAYXcnmeGkLgQRxbwca/O8Vcjlpk9gAJjteowO43oXOqj0HpK49E5F85EubXHo8+zFK8HF9iKuYTcdhjLtvdcAcMKoY5Q5KB88bdH/Hxwg==
+ b=iBG0kvCin2XA9MFnJpRyK4vhu6PACzS2dQEHKMYAOKejbqmNli8XzzVeWqu6IsrpdGDPbOaTHEe/91WJPZ2w5RxHlTBxeYnn6VLgC3q16TgH3fzFyBWeRXkJ15U2y2S8+vR43m8F/HAI9NIETjAQv1LtYEbK7ZMgSYx5Rd9xoPuZBaSU62mcijve2OpUnkPVLWQztUoJYrGZ5QJ2VFVVWV/uByqOLWKrb32m0KX5w0wKrwNlcRW6OAZPrEPUgUbX62EnVlzTeTOozwHbGQiP03H4XMLLxdj0ohRqPM0Rgdn1JuOWbNa7s9ftfNpWFDGMZ+ZeO2cKGnxrw2JxITd9bA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j11f4/MemeTkPj3hlWj1qfjIXyE4psy2WDFrk/OgbeI=;
- b=U7J6MxRmPBzwf7y9bqeLztOLuqIoEbgj93ZyTuN3dqCSn/Ey7Nzn6pgRkvAunzn1Ng0QXhMkdL8svgZt5Ntj/ErBBaR2zkDw7RlQzBdZy1EeXBfVjv06vK8qS0ZyRe0I8SdyF0bTN1sqZ5jn9i39b96Q61/SHCCxtATGAzF6aQ2r4c+IoaaAa0GUFP8rpCGiyXeHHDxEYUfLQINtb/JrfM9TQkHpyNqoxs4wEFvDKoHZzeAMu06S+1gIEGrWgKgXUGcGssqKnoE+7jj10qAJx19ElaJ0OhP+Z2oOONpwOfUaI0p6LpfcY1lmJl9Qhnxk49/YNlWmQ2R4aKQNYWtm9A==
+ bh=MqB4O7U0Nqk2CM5qpwFvNPMYBahUgSyopIztqGRrerM=;
+ b=kWoOppU4GFvcmkx2Q4i6ShD27gU2FbVkJpbPlO8RIbB31XvLI982M1LbpbxYoNvCMk1ZsJLXGp1xX1gAWt7IPog21fgBvJGNpCKH3pxFFeKjh8RLLfmnoRGRUm59cSMTdKdXmN8n0inZytTwELrMsL/AWn5/b0Bxsd2Vnpw1hc26uJFQFvBADlYgv+eqwUs4VpnjllbybLIVWuKmWOFYC/hieZTg/Fj2SgHzAf0VG8lBLcNrfYfKqxKTO9m+dCq4IMoHpJlvl4St+ZvZ1tBssXmWZBQ3nE2iaMPhuH39soTBYswYZVu1LueRRY5m7yDh3zKIISX9Fyid6czTFEaeEQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
  header.d=fb.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
  s=selector2-fb-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j11f4/MemeTkPj3hlWj1qfjIXyE4psy2WDFrk/OgbeI=;
- b=TL9X1v9HAPBLhsAVPQ4ffCN2MOXlYBqVW5czE2GYoL1nZeEIgaa+yPTAsaW27+KuvLLYM9ZU1S/oVb9J5aGYR8lIalduCF8r8K8D6RhuhnsG0FnVhhp+Su0SE5CUkprCjStZh3Az0/Web77Q4Z/XqASygD6DJ5/kgmHPXlUtr/M=
+ bh=MqB4O7U0Nqk2CM5qpwFvNPMYBahUgSyopIztqGRrerM=;
+ b=B/eHwJ3JNjZ4k2G3yr6CgzNcSVwdLa/SwXQu/y05IHsUayb9HfZxcofrgiyaMqJhJiQFvR3JsuWmezbmPffrRshlSZDdf9Ps6IzthA0tgpLtrGFhaQRhnIejKRapL5FrUWPuw7z8mDncWVes8b5HB8z2VB7+RtLo5/Qq9fgaJ1s=
 Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
- MWHPR15MB1392.namprd15.prod.outlook.com (10.173.234.19) with Microsoft SMTP
+ MWHPR15MB1727.namprd15.prod.outlook.com (10.174.96.17) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.18; Tue, 10 Sep 2019 15:44:16 +0000
+ 15.20.2241.14; Tue, 10 Sep 2019 15:45:36 +0000
 Received: from MWHPR15MB1165.namprd15.prod.outlook.com
  ([fe80::a828:5750:379d:b9a1]) by MWHPR15MB1165.namprd15.prod.outlook.com
  ([fe80::a828:5750:379d:b9a1%8]) with mapi id 15.20.2241.018; Tue, 10 Sep 2019
- 15:44:16 +0000
+ 15:45:36 +0000
 From:   Song Liu <songliubraving@fb.com>
-To:     Yufen Yu <yuyufen@huawei.com>
-CC:     "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "neilb@suse.de" <neilb@suse.de>
-Subject: Re: [PATCH v2] md: don't let spare disk become the fresh disk in
- analyze_sbs()
-Thread-Topic: [PATCH v2] md: don't let spare disk become the fresh disk in
- analyze_sbs()
-Thread-Index: AQHVZ8tCJThDYmGmJEiUKfbpNGDv46clDZyA
-Date:   Tue, 10 Sep 2019 15:44:16 +0000
-Message-ID: <F8E49799-63D1-4F2B-8E66-F9F1DD7B9ADD@fb.com>
-References: <20190910115134.12328-1-yuyufen@huawei.com>
-In-Reply-To: <20190910115134.12328-1-yuyufen@huawei.com>
+To:     NeilBrown <neilb@suse.de>, Guoqing Jiang <jgq516@gmail.com>
+CC:     Coly Li <colyli@suse.de>, NeilBrown <neilb@suse.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        linux-raid <linux-raid@vger.kernel.org>
+Subject: Re: [PATCH] md/raid0: avoid RAID0 data corruption due to layout
+ confusion.
+Thread-Topic: [PATCH] md/raid0: avoid RAID0 data corruption due to layout
+ confusion.
+Thread-Index: AQHVZtvuq+/vbU8ZR0SmUI7K9ys1D6cjb+CAgACQdACAAQ+GgA==
+Date:   Tue, 10 Sep 2019 15:45:36 +0000
+Message-ID: <33AD3B45-E20D-4019-91FA-CA90B9B3C3A9@fb.com>
+References: <10ca59ff-f1ba-1464-030a-0d73ff25d2de@suse.de>
+ <87blwghhq7.fsf@notabene.neil.brown.name>
+ <FBF1B443-64C9-472A-9F41-5303738C0DC7@fb.com>
+ <f3c41c4b-5b1d-bd2f-ad2d-9aa5108ad798@suse.de>
+ <9008538C-A2BE-429C-A90E-18FBB91E7B34@fb.com>
+ <bede41a5-45c5-0ea0-25af-964bb854a94c@suse.de>
+ <87pnkaardl.fsf@notabene.neil.brown.name>
+ <242E3FBD-C969-44E1-8DC7-BFE9E7CBE7FD@fb.com>
+ <87ftl5avtx.fsf@notabene.neil.brown.name>
+In-Reply-To: <87ftl5avtx.fsf@notabene.neil.brown.name>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -81,38 +86,39 @@ X-MS-TNEF-Correlator:
 x-mailer: Apple Mail (2.3445.104.11)
 x-originating-ip: [2620:10d:c092:180::1:cd76]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 81b8b3ce-cf5b-4db9-8313-08d73605bcdf
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1392;
-x-ms-traffictypediagnostic: MWHPR15MB1392:
-x-microsoft-antispam-prvs: <MWHPR15MB13925EF40857C359DB53F08BB3B60@MWHPR15MB1392.namprd15.prod.outlook.com>
+x-ms-office365-filtering-correlation-id: 9bdff2e5-de21-4a2d-4772-08d73605ec5f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1727;
+x-ms-traffictypediagnostic: MWHPR15MB1727:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <MWHPR15MB1727451ECA7C48BAA5DC04DEB3B60@MWHPR15MB1727.namprd15.prod.outlook.com>
 x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-forefront-prvs: 01565FED4C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(366004)(376002)(346002)(39860400002)(199004)(189003)(66446008)(99286004)(36756003)(11346002)(4326008)(2616005)(5660300002)(186003)(305945005)(91956017)(25786009)(86362001)(6486002)(7736002)(46003)(6916009)(229853002)(6512007)(14454004)(8676002)(76176011)(33656002)(54906003)(8936002)(446003)(14444005)(256004)(6436002)(81156014)(81166006)(76116006)(6246003)(2906002)(53546011)(478600001)(486006)(476003)(6506007)(102836004)(316002)(53936002)(66556008)(64756008)(66476007)(6116002)(50226002)(71200400001)(66946007)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1392;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(396003)(39860400002)(366004)(136003)(346002)(51914003)(199004)(189003)(46003)(2616005)(53936002)(86362001)(486006)(476003)(446003)(6246003)(11346002)(33656002)(6486002)(71200400001)(71190400001)(5660300002)(256004)(6306002)(25786009)(229853002)(4326008)(6512007)(91956017)(66556008)(66476007)(64756008)(50226002)(76116006)(66446008)(99286004)(14454004)(966005)(76176011)(8936002)(54906003)(478600001)(7736002)(305945005)(6436002)(8676002)(81156014)(186003)(6116002)(81166006)(2906002)(36756003)(6506007)(53546011)(102836004)(66946007)(110136005)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1727;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: fb.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: RMbAjm7E5XWiSQ3nFUuIhkgf5NnetG7GTnUmoiRTxCgE/3rdTsY1sF13jSBcb2DxL+9QfXke0crRqzK3H6jTPCcSGVfCAHG+YSZIn2Hg9h4rjobyeAYWsc1TVqMiGoiJihH7+xlb6jmMGReEgYuRjFy+O1BjjaKfbWTvpgf3iWdnKc0prpxZ7frxLrjDH0byCC96lBgMhsMkJEwaeMd9oyCVXfQr8xF2knR+3dDLoLU424IhHBi13Br7o+pfBrxOgNI50iJ5lEoRnsrFCZJy5ANpa8J4m9mO3j426ILVdgeM2rqIfScfeptw4C4TkAsWWoBTKyZTzbtq4yY8GYXFW5qr4mnyegDb1x91vrue1bVps/Xi0CELre7g1UIQrUhGVwQjeysa/RPKkLrsEW+LgMsdrGVHfykRqAFwAtfDf9U=
+x-microsoft-antispam-message-info: sNX/WqircJOekVfo8hHlZEG6mn875O5aIx2gYUxkxh5GamzjFB0AazZhMkHACsXjFzAElqpNvAw6eRROrvxJKsW8p77D14IdfgS1Q0fZ4hTKAPEAUaKD/PsNpDHSPTTIhCdh+FqEJUy4cKbge7r5tTRs3e1WHCwhykVM9n6bq6Bbv/YfeomWhGlGNxEQgGmNqp0MqZhGzeVkfxVmSFuqSBH8+LzL1V2JaYL/ZQSYGfnBLK89m4PXbNfk5j6aTXQvLokHeMtcwvH5VmwVc6AziKeKF3RUAymtNVLjR+3zCCGpELjqPsDFQr9uOgPdT/vP6Z9lXwnkgvn1EuP2HfqK9+pU8XLP4+r1r/5iJBGe2RUsM4F5kNAylGlG0vkVDZvUEHphEbD2E1QfX+aQYV9hgIiHPbt/0m3qTIMqq7AbE+E=
 x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <4F27FF035259064A8BD1FB6487D03070@namprd15.prod.outlook.com>
+Content-ID: <D15D8757B3FC1546BD475AEB07161B59@namprd15.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 81b8b3ce-cf5b-4db9-8313-08d73605bcdf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Sep 2019 15:44:16.6526
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9bdff2e5-de21-4a2d-4772-08d73605ec5f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Sep 2019 15:45:36.3058
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eLxVOtz2PCWgqE/AtfemchUY/BwnklGkpR9DFRnscvoxQxD/R7XebuatpuB8H2NXWUaHfspoQ4j5EpKeuOC3kg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1392
+X-MS-Exchange-CrossTenant-userprincipalname: 5yY2YtLB44hbbBsdtAFvbXMIrCC7WQ8jDmXLVLf6+YCQFR9si+qxOJe87CGntbIaALBscNACRdxUOxk/BsusqQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1727
 X-OriginatorOrg: fb.com
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
  definitions=2019-09-10_11:2019-09-10,2019-09-10 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0 mlxscore=0
- bulkscore=0 malwarescore=0 priorityscore=1501 mlxlogscore=999
- suspectscore=0 clxscore=1015 adultscore=0 impostorscore=0 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1906280000 definitions=main-1909100148
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0
+ lowpriorityscore=0 phishscore=0 adultscore=0 suspectscore=0 malwarescore=0
+ bulkscore=0 priorityscore=1501 clxscore=1015 mlxlogscore=999 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1906280000 definitions=main-1909100149
 X-FB-Internal: deliver
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
@@ -121,99 +127,54 @@ X-Mailing-List: linux-raid@vger.kernel.org
 
 
 
-> On Sep 10, 2019, at 12:51 PM, Yufen Yu <yuyufen@huawei.com> wrote:
+> On Sep 10, 2019, at 12:33 AM, NeilBrown <neilb@suse.de> wrote:
 >=20
-> We have a test case as follow:
+> On Mon, Sep 09 2019, Song Liu wrote:
 >=20
->  mdadm -CR /dev/md1 -l 1 -n 4 /dev/sd[a-d] --assume-clean --bitmap=3Dinte=
-rnal
->  mdadm -S /dev/md1
->  mdadm -A /dev/md1 /dev/sd[b-c] --run --force
+>> Hi Neil,
+>>=20
+>>> On Sep 9, 2019, at 7:57 AM, NeilBrown <neilb@suse.de> wrote:
+>>>=20
+>>>=20
+>>> If the drives in a RAID0 are not all the same size, the array is
+>>> divided into zones.
+>>> The first zone covers all drives, to the size of the smallest.
+>>> The second zone covers all drives larger than the smallest, up to
+>>> the size of the second smallest - etc.
+>>>=20
+>>> A change in Linux 3.14 unintentionally changed the layout for the
+>>> second and subsequent zones.  All the correct data is still stored, but
+>>> each chunk may be assigned to a different device than in pre-3.14 kerne=
+ls.
+>>> This can lead to data corruption.
+>>>=20
+>>> It is not possible to determine what layout to use - it depends which
+>>> kernel the data was written by.
+>>> So we add a module parameter to allow the old (0) or new (1) layout to =
+be
+>>> specified, and refused to assemble an affected array if that parameter =
+is
+>>> not set.
+>>>=20
+>>> Fixes: 20d0189b1012 ("block: Introduce new bio_split()")
+>>> cc: stable@vger.kernel.org (3.14+)
+>>> Signed-off-by: NeilBrown <neilb@suse.de>
+>>=20
+>> Thanks for the patches. They look great. However, I am having problem
+>> apply them (not sure whether it is a problem on my side). Could you=20
+>> please push it somewhere so I can use cherry-pick instead?
 >=20
->  mdadm --zero /dev/sda
->  mdadm /dev/md1 -a /dev/sda
+> I rebased them on block/for-next, fixed the problems that Guoqing found,
+> and pushed them to=20
+>  https://github.com/neilbrown/linux md/raid0
 >=20
->  echo offline > /sys/block/sdc/device/state
->  echo offline > /sys/block/sdb/device/state
->  sleep 5
->  mdadm -S /dev/md1
->=20
->  echo running > /sys/block/sdb/device/state
->  echo running > /sys/block/sdc/device/state
->  mdadm -A /dev/md1 /dev/sd[a-c] --run --force
->=20
-> When we readd /dev/sda to the array, it started to do recovery.
-> After offline the other two disks in md1, the recovery have
-> been interrupted and superblock update info cannot be written
-> to the offline disks. While the spare disk (/dev/sda) can continue
-> to update superblock info.
->=20
-> After stopping the array and assemble it, we found the array
-> run fail, with the follow kernel message:
->=20
-> [  172.986064] md: kicking non-fresh sdb from array!
-> [  173.004210] md: kicking non-fresh sdc from array!
-> [  173.022383] md/raid1:md1: active with 0 out of 4 mirrors
-> [  173.022406] md1: failed to create bitmap (-5)
-> [  173.023466] md: md1 stopped.
->=20
-> Since both sdb and sdc have the value of 'sb->events' smaller than
-> that in sda, they have been kicked from the array. However, the only
-> remained disk sda is in 'spare' state before stop and it cannot be
-> added to conf->mirrors[] array. In the end, raid array assemble and run f=
-ail.
->=20
-> In fact, we can use the older disk sdb or sdc to assemble the array.
-> That means we should not choose the 'spare' disk as the fresh disk in
-> analyze_sbs().
->=20
-> Signed-off-by: Yufen Yu <yuyufen@huawei.com>
-> ---
-> drivers/md/md.c | 51 ++++++++++++++++++++++++++++++++++++++++++++++---
-> 1 file changed, 48 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index 24638ccedce4..5a566750afc1 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -3571,18 +3571,56 @@ static struct md_rdev *md_import_device(dev_t new=
-dev, int super_format, int supe
-> 	return ERR_PTR(err);
-> }
->=20
-> +static int disk_is_spare(struct mddev *mddev, struct md_rdev *rdev)
-> +{
-> +	int err;
-> +
-> +	err =3D super_types[mddev->major_version].
-> +			load_super(rdev, NULL, mddev->minor_version);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	if (mddev->major_version =3D=3D 0) {
-> +		mdp_super_t *sb;
-> +		sb =3D page_address(rdev->sb_page);
-> +
-> +		if (sb->disks[rdev->desc_nr].state &
-> +			((1<<MD_DISK_SYNC) | (1 << MD_DISK_ACTIVE)))
-> +			return 0;
-> +
-> +	} else if (mddev->major_version =3D=3D 1){
-> +		struct mdp_superblock_1 *sb;
-> +		sb =3D page_address(rdev->sb_page);
-> +
-> +		if (rdev->desc_nr >=3D 0 &&
-> +			rdev->desc_nr < le32_to_cpu(sb->max_dev) &&
-> +			(le16_to_cpu(sb->dev_roles[rdev->desc_nr]) < MD_DISK_ROLE_MAX ||
-> +			le16_to_cpu(sb->dev_roles[rdev->desc_nr]) =3D=3D MD_DISK_ROLE_JOURNAL=
-))
-> +			return 0;
-> +	}
-> +
-> +	return 1;
-> +}
+> NeilBrown
 
-We should add "disk_is_spare" to struct super_type.=20
+Thanks Neil!
+
+Guoqing, if this looks good, please reply with your Reviewed-by
+or Acked-by.=20
 
 Thanks,
-Song=
+Song
+
