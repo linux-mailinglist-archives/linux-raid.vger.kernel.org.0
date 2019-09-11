@@ -2,156 +2,108 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9219CAF9A2
-	for <lists+linux-raid@lfdr.de>; Wed, 11 Sep 2019 11:56:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 895F1AF9E8
+	for <lists+linux-raid@lfdr.de>; Wed, 11 Sep 2019 12:06:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbfIKJ4v (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 11 Sep 2019 05:56:51 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:34472 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbfIKJ4v (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 11 Sep 2019 05:56:51 -0400
-Received: by mail-qk1-f194.google.com with SMTP id q203so20198639qke.1;
-        Wed, 11 Sep 2019 02:56:50 -0700 (PDT)
+        id S1727547AbfIKKGo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 11 Sep 2019 06:06:44 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:40412 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727289AbfIKKGn (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 11 Sep 2019 06:06:43 -0400
+Received: by mail-qt1-f193.google.com with SMTP id g4so24541435qtq.7
+        for <linux-raid@vger.kernel.org>; Wed, 11 Sep 2019 03:06:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=SbOJQdjzyccaSb6mfd+E5KOchM3Q8NLZ/FNshUuA6q4=;
-        b=s+FubhSIf3tOMGNDgXOMZWXr98x8fyiHUQsmu3h8v+9+SJgo5khMS0IlpMWR04/iZR
-         4sQmy5V5Hd6D/qegn1mayzJYc7x09OG4ABCm8G0A9sX75h8JLszaGvQAThXs+5MyGXcg
-         Eu92hjIbSNMZjCfpayb4lgXaXeNUVC3JoWoiuRKRSLaLfRC/BPch0BpS4cibqxQodW5K
-         TO3MhEtL0j8ihjy+xZ8aJqYhBDaytB1pC/SuKWTGGM8qj/OSYfK7NgKPPO2254Ktxjbs
-         Zqrb3jQZKlOJAaeUhu/fw2BjlbrLXY2UFPVuQohAdsQGmwv3fdw5d+cv5HPxYpKirZQZ
-         nf1A==
+        bh=7TDsHwFaqeLPUP+aN+GOzvJWkdinR+TKu4EJVVJVf9k=;
+        b=SepWo+gv3rgUeQnHQmxEikQowVMsHLa/4Kf9ueKZn73euaOvhf+uyoN+E0V9kieoFw
+         Sb47YaNct+/r6traWamkJ4wyjIFpmwruXwq6CZgQ49yFGLBhmQLoPo637mWrQHx58T25
+         QPOLG481xmwX1SRI4sqKhQtlII5HMg9vtwPiuSa9iCM1+Vhd59qxZc82Ds9qATWtTafw
+         /OPDPKwxGtK+RJVGYOGqy8bFbtHfsmZSceHfGKSMMMjkMKL0yiDs7S8sAa+F1Ey7inbh
+         rAPOlpXd9jy5RqccbJcaBglzgU0kWN20gVoxk2DTyufXhLRMPShzk+XCz+PtYmCNofOU
+         N1Vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=SbOJQdjzyccaSb6mfd+E5KOchM3Q8NLZ/FNshUuA6q4=;
-        b=EWVyyVIEhnXMakIpsszqNvqNIIVCK76nGfOO9osq2J3mTXHgZYqIh/FY+UQLPdB6rg
-         +berzdUwo4lddSB0/3FbJUVgE9me8U7lcrv2hHpX7UXzwPK3uRDIHP/V5xXdVbO8/M/t
-         Tto6cXdW+0wXnsCTzsqk+G7yPF3rqJAjLAGBYyQAYBW8AC4xPr7ncP66CQCvp5dTCFFM
-         Qg7+T5t1a9r+QkUS1/MhD/tRo9kskbcbhXXSix4QgmC1qgb+8ARVENnQmxKe+RCLAZNl
-         YpwEy4Vnnno8igrmOT6NX9mP66jSEMkqU7ByaMHaKfIWG+dGMxhxkG9Ck2Vso2kANnO0
-         DxQA==
-X-Gm-Message-State: APjAAAVzipa5x7M9lXfXCebfCk9msCcDGnJSKvIvObGXZfA4Qrri2hbH
-        12EHA7McxXwdpq7yDobySkI6EcGd/33H4V98xe4=
-X-Google-Smtp-Source: APXvYqy495AoitoVWFQXwZRElfdaaJVf/Xgn2Xz0X9IENf3ngd7rGaiycbhywm0HBEFVWGJdvcrS9lZ0YqoR5kbf1nE=
-X-Received: by 2002:a37:4c9:: with SMTP id 192mr35467011qke.177.1568195809535;
- Wed, 11 Sep 2019 02:56:49 -0700 (PDT)
+        bh=7TDsHwFaqeLPUP+aN+GOzvJWkdinR+TKu4EJVVJVf9k=;
+        b=I97cszXZ0iBKPgBxkLgzc9dkKS/JaB3Kuvn7eVWBri+Tj47WJykMyWIkednB82zjQJ
+         GJks5LZ8NsAlX6+yrIdcqs5H6kHLgVo4+ajsp0i11Cu26kEw9A1KYAsdVcIl6hIwPUnH
+         7yOvmc7q4SwQawkqazbpClUGDM/27Smd2NEZmsL4Ff6MWqoyAa5S2vjY8Ss46xC+A8BT
+         LhaNW0tBOK5YWFKGAkioHiViy3TKY5y2KUvG5aMMmPDefjsNc8o8xMB43ELAidXI1Sz2
+         IqS3YSiSA00vD/XG0qZgzoPQzqoRNzAroSAu5FvJGU3cVKpAIYgBio0TcCrFoh8wOxRO
+         5e+g==
+X-Gm-Message-State: APjAAAUJeEFfRULvZRwHS1cWv9hEGponufhPqWYA4Gw4v1u4K0d7VE7I
+        LayyyP48z2C9Z0W1XqJyYR6NbRaBKMFAf84WfOc=
+X-Google-Smtp-Source: APXvYqwgDDmwDkQnc9XlAXcUo0uU0fAlcQ3LwJijD7Q+h0NbWbymM1PvemLN5Uet33/dW7Lavxx1HFSYIqJeaxPpC3Y=
+X-Received: by 2002:a05:6214:15d1:: with SMTP id p17mr21789551qvz.74.1568196402217;
+ Wed, 11 Sep 2019 03:06:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <10ca59ff-f1ba-1464-030a-0d73ff25d2de@suse.de> <87blwghhq7.fsf@notabene.neil.brown.name>
- <FBF1B443-64C9-472A-9F41-5303738C0DC7@fb.com> <f3c41c4b-5b1d-bd2f-ad2d-9aa5108ad798@suse.de>
- <9008538C-A2BE-429C-A90E-18FBB91E7B34@fb.com> <bede41a5-45c5-0ea0-25af-964bb854a94c@suse.de>
- <87pnkaardl.fsf@notabene.neil.brown.name> <242E3FBD-C969-44E1-8DC7-BFE9E7CBE7FD@fb.com>
- <87ftl5avtx.fsf@notabene.neil.brown.name> <33AD3B45-E20D-4019-91FA-CA90B9B3C3A9@fb.com>
- <58722139-ebc0-f49f-424a-c3b1aa455dd8@cloud.ionos.com> <877e6fbvh2.fsf@notabene.neil.brown.name>
-In-Reply-To: <877e6fbvh2.fsf@notabene.neil.brown.name>
+References: <20190911080629.5180-1-guoqing.jiang@cloud.ionos.com>
+In-Reply-To: <20190911080629.5180-1-guoqing.jiang@cloud.ionos.com>
 From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Wed, 11 Sep 2019 10:56:37 +0100
-Message-ID: <CAPhsuW6obHkwKdYU=dt2x0t4kPK=eMfXO6S3a79i4PnMgskcqg@mail.gmail.com>
-Subject: Re: [PATCH] md/raid0: avoid RAID0 data corruption due to layout confusion.
-To:     NeilBrown <neilb@suse.de>
-Cc:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Song Liu <songliubraving@fb.com>,
-        Guoqing Jiang <jgq516@gmail.com>, Coly Li <colyli@suse.de>,
-        NeilBrown <neilb@suse.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        linux-raid <linux-raid@vger.kernel.org>
+Date:   Wed, 11 Sep 2019 11:06:31 +0100
+Message-ID: <CAPhsuW4yU880QGa5ZDXoW0R60q6Cwbyqfe6HyfHg+rqXK17pDA@mail.gmail.com>
+Subject: Re: [PATCH] raid5: don't set STRIPE_HANDLE to stripe which is in
+ batch list
+To:     Guoqing Jiang <jgq516@gmail.com>
+Cc:     Song Liu <songliubraving@fb.com>,
+        linux-raid <linux-raid@vger.kernel.org>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 12:10 AM NeilBrown <neilb@suse.de> wrote:
+On Wed, Sep 11, 2019 at 9:07 AM <jgq516@gmail.com> wrote:
 >
-> On Tue, Sep 10 2019, Guoqing Jiang wrote:
+> From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 >
-> > On 9/10/19 5:45 PM, Song Liu wrote:
-> >>
-> >>
-> >>> On Sep 10, 2019, at 12:33 AM, NeilBrown <neilb@suse.de> wrote:
-> >>>
-> >>> On Mon, Sep 09 2019, Song Liu wrote:
-> >>>
-> >>>> Hi Neil,
-> >>>>
-> >>>>> On Sep 9, 2019, at 7:57 AM, NeilBrown <neilb@suse.de> wrote:
-> >>>>>
-> >>>>>
-> >>>>> If the drives in a RAID0 are not all the same size, the array is
-> >>>>> divided into zones.
-> >>>>> The first zone covers all drives, to the size of the smallest.
-> >>>>> The second zone covers all drives larger than the smallest, up to
-> >>>>> the size of the second smallest - etc.
-> >>>>>
-> >>>>> A change in Linux 3.14 unintentionally changed the layout for the
-> >>>>> second and subsequent zones.  All the correct data is still stored, but
-> >>>>> each chunk may be assigned to a different device than in pre-3.14 kernels.
-> >>>>> This can lead to data corruption.
-> >>>>>
-> >>>>> It is not possible to determine what layout to use - it depends which
-> >>>>> kernel the data was written by.
-> >>>>> So we add a module parameter to allow the old (0) or new (1) layout to be
-> >>>>> specified, and refused to assemble an affected array if that parameter is
-> >>>>> not set.
-> >>>>>
-> >>>>> Fixes: 20d0189b1012 ("block: Introduce new bio_split()")
-> >>>>> cc: stable@vger.kernel.org (3.14+)
-> >>>>> Signed-off-by: NeilBrown <neilb@suse.de>
-> >>>>
-> >>>> Thanks for the patches. They look great. However, I am having problem
-> >>>> apply them (not sure whether it is a problem on my side). Could you
-> >>>> please push it somewhere so I can use cherry-pick instead?
-> >>>
-> >>> I rebased them on block/for-next, fixed the problems that Guoqing found,
-> >>> and pushed them to
-> >>>   https://github.com/neilbrown/linux md/raid0
-> >>>
-> >>> NeilBrown
-> >>
-> >> Thanks Neil!
-> >
-> > Thanks for the explanation about set the flag.
-> >
-> >>
-> >> Guoqing, if this looks good, please reply with your Reviewed-by
-> >> or Acked-by.
-> >
-> > No more comments from my side, but I am not sure if it is better/possible to use one
-> > sysfs node to control the behavior instead of module parameter, then we can support
-> > different raid0 layout dynamically.
+> If stripe in batch list is set with STRIPE_HANDLE flag, then the stripe
+> could be set with STRIPE_ACTIVE by the handle_stripe function. And if
+> error happens to the batch_head at the same time, break_stripe_batch_list
+> is called, then below warning could happen (the same report in [1]), it
+> means a member of batch list was set with STRIPE_ACTIVE.
 >
-> A strength of module parameters is that you can set them in
->   /etc/modprobe.d/00-local.conf
-> and then they are automatically set on boot.
-> For sysfs, you need some tool to set them.
+> [7028915.431770] stripe state: 2001
+> [7028915.431815] ------------[ cut here ]------------
+> [7028915.431828] WARNING: CPU: 18 PID: 29089 at drivers/md/raid5.c:4614 break_stripe_batch_list+0x203/0x240 [raid456]
+> [...]
+> [7028915.431879] CPU: 18 PID: 29089 Comm: kworker/u82:5 Tainted: G           O    4.14.86-1-storage #4.14.86-1.2~deb9
+> [7028915.431881] Hardware name: Supermicro SSG-2028R-ACR24L/X10DRH-iT, BIOS 3.1 06/18/2018
+> [7028915.431888] Workqueue: raid5wq raid5_do_work [raid456]
+> [7028915.431890] task: ffff9ab0ef36d7c0 task.stack: ffffb72926f84000
+> [7028915.431896] RIP: 0010:break_stripe_batch_list+0x203/0x240 [raid456]
+> [7028915.431898] RSP: 0018:ffffb72926f87ba8 EFLAGS: 00010286
+> [7028915.431900] RAX: 0000000000000012 RBX: ffff9aaa84a98000 RCX: 0000000000000000
+> [7028915.431901] RDX: 0000000000000000 RSI: ffff9ab2bfa15458 RDI: ffff9ab2bfa15458
+> [7028915.431902] RBP: ffff9aaa8fb4e900 R08: 0000000000000001 R09: 0000000000002eb4
+> [7028915.431903] R10: 00000000ffffffff R11: 0000000000000000 R12: ffff9ab1736f1b00
+> [7028915.431904] R13: 0000000000000000 R14: ffff9aaa8fb4e900 R15: 0000000000000001
+> [7028915.431906] FS:  0000000000000000(0000) GS:ffff9ab2bfa00000(0000) knlGS:0000000000000000
+> [7028915.431907] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [7028915.431908] CR2: 00007ff953b9f5d8 CR3: 0000000bf4009002 CR4: 00000000003606e0
+> [7028915.431909] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [7028915.431910] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [7028915.431910] Call Trace:
+> [7028915.431923]  handle_stripe+0x8e7/0x2020 [raid456]
+> [7028915.431930]  ? __wake_up_common_lock+0x89/0xc0
+> [7028915.431935]  handle_active_stripes.isra.58+0x35f/0x560 [raid456]
+> [7028915.431939]  raid5_do_work+0xc6/0x1f0 [raid456]
 >
-> >
-> > Anyway, Acked-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-> >
+> Also commit 59fc630b8b5f9f ("RAID5: batch adjacent full stripe write")
+> said "If a stripe is added to batch list, then only the first stripe
+> of the list should be put to handle_list and run handle_stripe."
+>
+> So don't set STRIPE_HANDLE to stripe which is already in batch list,
+> otherwise the stripe could be put to handle_list and run handle_stripe,
+> then the above warning could be triggered.
+>
+> [1]. https://www.spinics.net/lists/raid/msg62552.html
+>
+> Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 
-I am adding the following change to the 1/2. Please let me know if it doesn't
-make sense.
-
-Thanks,
-Song
-
-diff --git i/drivers/md/raid0.c w/drivers/md/raid0.c
-index a9fcff50bbfc..54d0064787a8 100644
---- i/drivers/md/raid0.c
-+++ w/drivers/md/raid0.c
-@@ -615,6 +615,10 @@ static bool raid0_make_request(struct mddev
-*mddev, struct bio *bio)
-        case RAID0_ALT_MULTIZONE_LAYOUT:
-                tmp_dev = map_sector(mddev, zone, sector, &sector);
-                break;
-+       default:
-+               WARN("md/raid0:%s: Invalid layout\n", mdname(mddev));
-+               bio_io_error(bio);
-+               return true;
-        }
-
-        if (unlikely(is_mddev_broken(tmp_dev, "raid0"))) {
+Applied. Thanks!
