@@ -2,85 +2,68 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D89AAFB4A
-	for <lists+linux-raid@lfdr.de>; Wed, 11 Sep 2019 13:21:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B705AFBDE
+	for <lists+linux-raid@lfdr.de>; Wed, 11 Sep 2019 13:50:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727656AbfIKLVv (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 11 Sep 2019 07:21:51 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2214 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725616AbfIKLVv (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 11 Sep 2019 07:21:51 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 190DB971D6B7D194E5EF;
-        Wed, 11 Sep 2019 19:21:50 +0800 (CST)
-Received: from [127.0.0.1] (10.177.219.49) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Wed, 11 Sep 2019
- 19:21:46 +0800
-Subject: Re: [PATCH v3 0/2] skip spare disk as freshest disk
-To:     Song Liu <liu.song.a23@gmail.com>
-CC:     Song Liu <songliubraving@fb.com>,
-        linux-raid <linux-raid@vger.kernel.org>
-References: <20190911030142.49105-1-yuyufen@huawei.com>
- <CAPhsuW7Q=YsMkMQGMS54vskTRjM24oRMWP7534n_pkOhyGvJUA@mail.gmail.com>
-From:   Yufen Yu <yuyufen@huawei.com>
-Message-ID: <3c5a5ede-d1a1-dd55-2dde-73b72a9c475d@huawei.com>
-Date:   Wed, 11 Sep 2019 19:21:46 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        id S1727581AbfIKLug (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 11 Sep 2019 07:50:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59348 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726657AbfIKLug (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 11 Sep 2019 07:50:36 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 15F7720E1;
+        Wed, 11 Sep 2019 11:50:36 +0000 (UTC)
+Received: from localhost (dhcp-17-171.bos.redhat.com [10.18.17.171])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D82A85DD61;
+        Wed, 11 Sep 2019 11:50:35 +0000 (UTC)
+From:   Nigel Croxon <ncroxon@redhat.com>
+To:     linux-raid@vger.kernel.org, jes.sorensen@gmail.com, xni@redhat.com
+Subject: [PATCH] mdadm: force a uuid swap on big endian
+Date:   Wed, 11 Sep 2019 07:50:35 -0400
+Message-Id: <20190911115035.9507-1-ncroxon@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAPhsuW7Q=YsMkMQGMS54vskTRjM24oRMWP7534n_pkOhyGvJUA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.177.219.49]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Wed, 11 Sep 2019 11:50:36 +0000 (UTC)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+The code path for metadata 0.90 calls a common routine
+fname_from_uuid that uses metadata 1.2. The code expects member
+swapuuid to be setup and usable. But it is only setup when using
+metadata 1.2. Since the metadata 0.90 did not create swapuuid
+and set it. The test (st->ss == &super1) ? 1 : st->ss->swapuuid
+fails. The swapuuid is set at compile time based on byte order.
+Any call based on metadata 0.90 and on big endian processors,
+the --export uuid will be incorrect.
 
+Signed-Off-by: Nigel Croxon <ncroxon@redhat.com>
+---
+ util.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-On 2019/9/11 17:38, Song Liu wrote:
-> On Wed, Sep 11, 2019 at 3:44 AM Yufen Yu <yuyufen@huawei.com> wrote:
->> Hi,
->>          For this patchset , we add a new entry .disk_is_spare in super_type
->>          to check if the disk is in 'spare' state. If a disk is in spare,
->>          analyze_sbs() should skip the disk to be freshest disk. Otherwise,
->>          it may cause md run fail. There is a fail example in the second patch.
->>
-> I think we need go a different path. I am sorry that some of early comments
-> are misleading.
->
-> We can extend the output of load_super() to have "2" for spares. And this
-> _should_ make the code simpler.
->
-> Does this make sense?
->
-
-I think we don't need to add extra output value '2'.
-
-For now, only analyze_sbs() use the output of load_super(). The others 
-caller just
-check whether load_super() have failed, which will return a negative value.
-
-My first version patch directly modify load_super() and return '0' for 
-'spare' disk.
-Then analyze_sbs() can skip the spare disk as fresher disk. I think it 
-does work.
-https://www.spinics.net/lists/raid/msg63136.html
-
-BTW, I don't know how to return '2' from load_super(), which pass events 
-test as
-you say in the first patch. At the same time , it does not affect the 
-other caller.
-
-Thanks
-Yufen
-
-
->
->
-
+diff --git a/util.c b/util.c
+index c26cf5f..64dd409 100644
+--- a/util.c
++++ b/util.c
+@@ -685,8 +685,12 @@ char *fname_from_uuid(struct supertype *st, struct mdinfo *info,
+ 	// work, but can't have it set if we want this printout to match
+ 	// all the other uuid printouts in super1.c, so we force swapuuid
+ 	// to 1 to make our printout match the rest of super1
++#if __BYTE_ORDER == BIG_ENDIAN
++	return __fname_from_uuid(info->uuid, 1, buf, sep);
++#else
+ 	return __fname_from_uuid(info->uuid, (st->ss == &super1) ? 1 :
+ 				 st->ss->swapuuid, buf, sep);
++#endif
+ }
+ 
+ int check_ext2(int fd, char *name)
+-- 
+2.20.1
 
