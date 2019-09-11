@@ -2,162 +2,102 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 55ADCB05BF
-	for <lists+linux-raid@lfdr.de>; Thu, 12 Sep 2019 00:49:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01329B05D2
+	for <lists+linux-raid@lfdr.de>; Thu, 12 Sep 2019 00:59:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfIKWs7 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 11 Sep 2019 18:48:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47546 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726761AbfIKWs7 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 11 Sep 2019 18:48:59 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4797EABBE;
-        Wed, 11 Sep 2019 22:48:57 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Song Liu <liu.song.a23@gmail.com>
-Date:   Thu, 12 Sep 2019 08:48:41 +1000
-Cc:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Song Liu <songliubraving@fb.com>,
-        Guoqing Jiang <jgq516@gmail.com>, Coly Li <colyli@suse.de>,
-        NeilBrown <neilb@suse.com>,
-        "linux-block\@vger.kernel.org" <linux-block@vger.kernel.org>,
-        linux-raid <linux-raid@vger.kernel.org>
-Subject: Re: [PATCH] md/raid0: avoid RAID0 data corruption due to layout confusion.
-In-Reply-To: <CAPhsuW6obHkwKdYU=dt2x0t4kPK=eMfXO6S3a79i4PnMgskcqg@mail.gmail.com>
-References: <10ca59ff-f1ba-1464-030a-0d73ff25d2de@suse.de> <87blwghhq7.fsf@notabene.neil.brown.name> <FBF1B443-64C9-472A-9F41-5303738C0DC7@fb.com> <f3c41c4b-5b1d-bd2f-ad2d-9aa5108ad798@suse.de> <9008538C-A2BE-429C-A90E-18FBB91E7B34@fb.com> <bede41a5-45c5-0ea0-25af-964bb854a94c@suse.de> <87pnkaardl.fsf@notabene.neil.brown.name> <242E3FBD-C969-44E1-8DC7-BFE9E7CBE7FD@fb.com> <87ftl5avtx.fsf@notabene.neil.brown.name> <33AD3B45-E20D-4019-91FA-CA90B9B3C3A9@fb.com> <58722139-ebc0-f49f-424a-c3b1aa455dd8@cloud.ionos.com> <877e6fbvh2.fsf@notabene.neil.brown.name> <CAPhsuW6obHkwKdYU=dt2x0t4kPK=eMfXO6S3a79i4PnMgskcqg@mail.gmail.com>
-Message-ID: <874l1ibgae.fsf@notabene.neil.brown.name>
+        id S1728370AbfIKW7X (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 11 Sep 2019 18:59:23 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:37785 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728296AbfIKW7X (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 11 Sep 2019 18:59:23 -0400
+Received: by mail-qk1-f195.google.com with SMTP id u184so19686876qkd.4
+        for <linux-raid@vger.kernel.org>; Wed, 11 Sep 2019 15:59:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lhZos980lS0G8QbxLzs6QnP157PxVsJoTC+IKjVU2m8=;
+        b=r1naAFIIm9BWEcJBXb57cnReBXFKG2mU48eFUweQqOxwFaOXs+gI+v4+io9dHJvqxO
+         Vj10y20Vg1Jm708kl20ED7vJsqG02d8qUuIbPeuMCWhJUtlVru2OFhktzCxHRjeTwzI3
+         6Sd4N2a0j5kGAtkm9eVFYdS2lsJFZjs3EpM11maaMdT9nXrSOldHawcPkgDWe6ugMbEL
+         TrrMLw9DaR+Np6/JPlfw+sYfp7F+PySVMWwLPW1H2lWuDCBv6sOdEq8CvW5ao0egO9Rn
+         lwXOsPtt1F7IFQWeIY8WCRmLtW6Poi1PSqZiHMf9W7Qkyxtqia2o00bsdR4oOBGUKYCN
+         7NWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lhZos980lS0G8QbxLzs6QnP157PxVsJoTC+IKjVU2m8=;
+        b=DXkZrHZdRuVIUhBX6KuQynV0qhB1zJuWwyeHhn+NsGHw0i3Tl9EsB26r1Tk03Jlljt
+         cUAYNBxAsMw3LHUECbyonIORbYN5Swd+IuqpCI4ypFneFAOShEp0UfdxE38/nUYIcWWx
+         tcRSIjkY/Ttu+v76EUBnAE9M5wAegTYYqaIf3uR6dajOHS3ESAwtIkw6ZCh96nknoIR7
+         5Tz4hKErWoZAhKrsDNbAep80AxOvohxDfpIc4OzHfG2Ypn3F1WqqhsCCX+kQPCAgmVa7
+         0Um1JWXuJGrdQe2GBgbu/ReuzXrVEDSFnX8m0KXFm1s86F6kzJic6L5t3qsGKWtcF45u
+         TWJA==
+X-Gm-Message-State: APjAAAVhLo2q9UHLsVmgzWz6816CTDvKrZqihXH/WJYDlUKfTGQrxSrC
+        dF2bxmpRvELcaNDCew5ITkFZfRykdTwE21yjwa8=
+X-Google-Smtp-Source: APXvYqy+kBHs3zyJPjTJbrUFKK24z+4YJ2OSIAB+APdZax5H5pwWk3A24oHapTYIYuqlmKXWKn7rLcRNNvuKEsQeTro=
+X-Received: by 2002:a37:aac9:: with SMTP id t192mr37788933qke.31.1568242760915;
+ Wed, 11 Sep 2019 15:59:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+References: <20190911030142.49105-1-yuyufen@huawei.com> <CAPhsuW7Q=YsMkMQGMS54vskTRjM24oRMWP7534n_pkOhyGvJUA@mail.gmail.com>
+ <3c5a5ede-d1a1-dd55-2dde-73b72a9c475d@huawei.com>
+In-Reply-To: <3c5a5ede-d1a1-dd55-2dde-73b72a9c475d@huawei.com>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Wed, 11 Sep 2019 23:59:09 +0100
+Message-ID: <CAPhsuW73B=MX_pCEb313h7HWsDj4raWDOhD5M_PqWtbqP8PtsA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] skip spare disk as freshest disk
+To:     Yufen Yu <yuyufen@huawei.com>
+Cc:     Song Liu <songliubraving@fb.com>,
+        linux-raid <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-
-On Wed, Sep 11 2019, Song Liu wrote:
-
-> On Wed, Sep 11, 2019 at 12:10 AM NeilBrown <neilb@suse.de> wrote:
->>
->> On Tue, Sep 10 2019, Guoqing Jiang wrote:
->>
->> > On 9/10/19 5:45 PM, Song Liu wrote:
->> >>
->> >>
->> >>> On Sep 10, 2019, at 12:33 AM, NeilBrown <neilb@suse.de> wrote:
->> >>>
->> >>> On Mon, Sep 09 2019, Song Liu wrote:
->> >>>
->> >>>> Hi Neil,
->> >>>>
->> >>>>> On Sep 9, 2019, at 7:57 AM, NeilBrown <neilb@suse.de> wrote:
->> >>>>>
->> >>>>>
->> >>>>> If the drives in a RAID0 are not all the same size, the array is
->> >>>>> divided into zones.
->> >>>>> The first zone covers all drives, to the size of the smallest.
->> >>>>> The second zone covers all drives larger than the smallest, up to
->> >>>>> the size of the second smallest - etc.
->> >>>>>
->> >>>>> A change in Linux 3.14 unintentionally changed the layout for the
->> >>>>> second and subsequent zones.  All the correct data is still stored, but
->> >>>>> each chunk may be assigned to a different device than in pre-3.14 kernels.
->> >>>>> This can lead to data corruption.
->> >>>>>
->> >>>>> It is not possible to determine what layout to use - it depends which
->> >>>>> kernel the data was written by.
->> >>>>> So we add a module parameter to allow the old (0) or new (1) layout to be
->> >>>>> specified, and refused to assemble an affected array if that parameter is
->> >>>>> not set.
->> >>>>>
->> >>>>> Fixes: 20d0189b1012 ("block: Introduce new bio_split()")
->> >>>>> cc: stable@vger.kernel.org (3.14+)
->> >>>>> Signed-off-by: NeilBrown <neilb@suse.de>
->> >>>>
->> >>>> Thanks for the patches. They look great. However, I am having problem
->> >>>> apply them (not sure whether it is a problem on my side). Could you
->> >>>> please push it somewhere so I can use cherry-pick instead?
->> >>>
->> >>> I rebased them on block/for-next, fixed the problems that Guoqing found,
->> >>> and pushed them to
->> >>>   https://github.com/neilbrown/linux md/raid0
->> >>>
->> >>> NeilBrown
->> >>
->> >> Thanks Neil!
->> >
->> > Thanks for the explanation about set the flag.
->> >
->> >>
->> >> Guoqing, if this looks good, please reply with your Reviewed-by
->> >> or Acked-by.
->> >
->> > No more comments from my side, but I am not sure if it is better/possible to use one
->> > sysfs node to control the behavior instead of module parameter, then we can support
->> > different raid0 layout dynamically.
->>
->> A strength of module parameters is that you can set them in
->>   /etc/modprobe.d/00-local.conf
->> and then they are automatically set on boot.
->> For sysfs, you need some tool to set them.
->>
->> >
->> > Anyway, Acked-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
->> >
+On Wed, Sep 11, 2019 at 12:21 PM Yufen Yu <yuyufen@huawei.com> wrote:
 >
-> I am adding the following change to the 1/2. Please let me know if it doesn't
-> make sense.
-
-I don't object, through with the current code it is impossible for that
-warning to fire.
-Code might change in the future though, and it's better to be safe than
-sorry.
-
-Thanks,
-NeilBrown
-
 >
-> Thanks,
-> Song
 >
-> diff --git i/drivers/md/raid0.c w/drivers/md/raid0.c
-> index a9fcff50bbfc..54d0064787a8 100644
-> --- i/drivers/md/raid0.c
-> +++ w/drivers/md/raid0.c
-> @@ -615,6 +615,10 @@ static bool raid0_make_request(struct mddev
-> *mddev, struct bio *bio)
->         case RAID0_ALT_MULTIZONE_LAYOUT:
->                 tmp_dev = map_sector(mddev, zone, sector, &sector);
->                 break;
-> +       default:
-> +               WARN("md/raid0:%s: Invalid layout\n", mdname(mddev));
-> +               bio_io_error(bio);
-> +               return true;
->         }
+> On 2019/9/11 17:38, Song Liu wrote:
+> > On Wed, Sep 11, 2019 at 3:44 AM Yufen Yu <yuyufen@huawei.com> wrote:
+> >> Hi,
+> >>          For this patchset , we add a new entry .disk_is_spare in super_type
+> >>          to check if the disk is in 'spare' state. If a disk is in spare,
+> >>          analyze_sbs() should skip the disk to be freshest disk. Otherwise,
+> >>          it may cause md run fail. There is a fail example in the second patch.
+> >>
+> > I think we need go a different path. I am sorry that some of early comments
+> > are misleading.
+> >
+> > We can extend the output of load_super() to have "2" for spares. And this
+> > _should_ make the code simpler.
+> >
+> > Does this make sense?
+> >
 >
->         if (unlikely(is_mddev_broken(tmp_dev, "raid0"))) {
+> I think we don't need to add extra output value '2'.
+>
+> For now, only analyze_sbs() use the output of load_super(). The others
+> caller just
+> check whether load_super() have failed, which will return a negative value.
+>
+> My first version patch directly modify load_super() and return '0' for
+> 'spare' disk.
+> Then analyze_sbs() can skip the spare disk as fresher disk. I think it
+> does work.
+> https://www.spinics.net/lists/raid/msg63136.html
+>
+> BTW, I don't know how to return '2' from load_super(), which pass events
+> test as
+> you say in the first patch. At the same time , it does not affect the
+> other caller.
+>
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+You are right that we don't really need output value '2'.
 
------BEGIN PGP SIGNATURE-----
+I think v1 is closer to the best solution. Let me comment on that again.
 
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl15ecoACgkQOeye3VZi
-gblNbBAApwgTJAdRntP2iwLSl/clM+7wOdmLaNH0udoQNSA2JvSCXr/Hum4m8+4K
-wldnD48axnqW484k0yDvR3ibQYkmokavlPOIdsQa6TOOV2Vp900oAe1GDRRMhK5+
-Y4qsV9+UEzzJA7acQKn44EBlNPV2CACfvcUvxCVfefF36mBWg+4gRqNRlhArQxk4
-WoP522COQ9rceUe0z1igo0JHtRkZIcu7b3Nr8yrPQQhf5Gcx5db1xbXqq6OKR3I1
-6yeog+rWgVkHiF9s0y10+jajrx2O5z1fNEd2tvB+RP7h8p59G/NJJhgEGWS3rI2r
-bueIMPUU2rVXlajQTGsS3EAbLuAv6HrcgKO4t8tzMfcS0oNixYp9CXq9aKxzxH/P
-LnB3EzI6M5uaClkefw4Q37Io1G8VBOrCmrg62Az6POs5ZDLpqf9khJXmpw4lwwVG
-vUfuE8J52IgJI16rIS5fgzA9OsBykRvxJiqt/5yXKqZnG3G/8zRn7lE8Rpz8SwWD
-IX5A/6s6N2hpBHX1jM1ytRRn6DLfC6l3CQyv/+GPl6qpNy9g58rT2I01HfdIixPC
-LjV2famMlvJt4NlhOsJzs05jvyyP8eVmwt1UtFUTnEyAdfYusMG2CREC78fj78Yi
-o7uJ9FVdqA6hCBLEJaycEKvonuw3GpfnsqiZrSzjMH6ViaZf61U=
-=ijDV
------END PGP SIGNATURE-----
---=-=-=--
+Song
