@@ -2,102 +2,172 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 01329B05D2
-	for <lists+linux-raid@lfdr.de>; Thu, 12 Sep 2019 00:59:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40D8BB05D7
+	for <lists+linux-raid@lfdr.de>; Thu, 12 Sep 2019 01:04:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728370AbfIKW7X (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 11 Sep 2019 18:59:23 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:37785 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728296AbfIKW7X (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 11 Sep 2019 18:59:23 -0400
-Received: by mail-qk1-f195.google.com with SMTP id u184so19686876qkd.4
-        for <linux-raid@vger.kernel.org>; Wed, 11 Sep 2019 15:59:21 -0700 (PDT)
+        id S1727581AbfIKXE0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 11 Sep 2019 19:04:26 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:38054 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbfIKXE0 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 11 Sep 2019 19:04:26 -0400
+Received: by mail-qk1-f196.google.com with SMTP id x5so22577758qkh.5
+        for <linux-raid@vger.kernel.org>; Wed, 11 Sep 2019 16:04:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=lhZos980lS0G8QbxLzs6QnP157PxVsJoTC+IKjVU2m8=;
-        b=r1naAFIIm9BWEcJBXb57cnReBXFKG2mU48eFUweQqOxwFaOXs+gI+v4+io9dHJvqxO
-         Vj10y20Vg1Jm708kl20ED7vJsqG02d8qUuIbPeuMCWhJUtlVru2OFhktzCxHRjeTwzI3
-         6Sd4N2a0j5kGAtkm9eVFYdS2lsJFZjs3EpM11maaMdT9nXrSOldHawcPkgDWe6ugMbEL
-         TrrMLw9DaR+Np6/JPlfw+sYfp7F+PySVMWwLPW1H2lWuDCBv6sOdEq8CvW5ao0egO9Rn
-         lwXOsPtt1F7IFQWeIY8WCRmLtW6Poi1PSqZiHMf9W7Qkyxtqia2o00bsdR4oOBGUKYCN
-         7NWQ==
+        bh=xaj/u99mrBv2SBExEK7NMyJ4bi+MELOAg4QNW+VTDlI=;
+        b=fbOTtfCDznFMXLPX1VlsOO9CiCIjqEq1wbLkSUvZ2P/pDUDhm4KXvJmw9AJnXmkx1j
+         IMOI9tIXObFuvFEFaqPJeWlt/OTpvPZNtGozXo6p6MwLHCmmGoznx2TL10L6tDwQzWGB
+         8EswHOMR6A+2t2BhAsrPSjZfr1X33QsdWHoZqvki1iM6hJumRKKo8ze3WqaSmrGPyPeR
+         lHXYXRfBiFq/7RrEZtO4NSKeMcK7Xj63urUCuQsXy2wxIQqUmoi9/YDmu0bfF4l9f0M3
+         gsBrax0GiKYJfxftZwG0z9k2/o2h0LNvxkYDwcgGhphAW7ur8gGsAe2T8NyvkqNmnCNf
+         5Gsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lhZos980lS0G8QbxLzs6QnP157PxVsJoTC+IKjVU2m8=;
-        b=DXkZrHZdRuVIUhBX6KuQynV0qhB1zJuWwyeHhn+NsGHw0i3Tl9EsB26r1Tk03Jlljt
-         cUAYNBxAsMw3LHUECbyonIORbYN5Swd+IuqpCI4ypFneFAOShEp0UfdxE38/nUYIcWWx
-         tcRSIjkY/Ttu+v76EUBnAE9M5wAegTYYqaIf3uR6dajOHS3ESAwtIkw6ZCh96nknoIR7
-         5Tz4hKErWoZAhKrsDNbAep80AxOvohxDfpIc4OzHfG2Ypn3F1WqqhsCCX+kQPCAgmVa7
-         0Um1JWXuJGrdQe2GBgbu/ReuzXrVEDSFnX8m0KXFm1s86F6kzJic6L5t3qsGKWtcF45u
-         TWJA==
-X-Gm-Message-State: APjAAAVhLo2q9UHLsVmgzWz6816CTDvKrZqihXH/WJYDlUKfTGQrxSrC
-        dF2bxmpRvELcaNDCew5ITkFZfRykdTwE21yjwa8=
-X-Google-Smtp-Source: APXvYqy+kBHs3zyJPjTJbrUFKK24z+4YJ2OSIAB+APdZax5H5pwWk3A24oHapTYIYuqlmKXWKn7rLcRNNvuKEsQeTro=
-X-Received: by 2002:a37:aac9:: with SMTP id t192mr37788933qke.31.1568242760915;
- Wed, 11 Sep 2019 15:59:20 -0700 (PDT)
+        bh=xaj/u99mrBv2SBExEK7NMyJ4bi+MELOAg4QNW+VTDlI=;
+        b=QXGsYTMpZYfYispypDOSOCRbYYJN40qXozXvYxsvBFjb7PpB+ck3/t/rxGFHN8/HAZ
+         FJhywBWWRXqdFwThegzhrqtsp5Wfbm2HXm5ak/5LQtfnN978f5dbDUWpZ4Ai8wuK/aPG
+         jsxyJe5UJuixBSDjNajfpZQDDsT+LzBDs2BHShIm4ryUiygSAyG0zwmDhmOkP9QhUfeW
+         p+1yfM8l6mFN0trOd30CEO8F+RqxhaC3QL/+/7TNWuhQufqbv3nE1k4JzvDoCSQu7Og/
+         4ISve23rbdtHyH2uJm1yk3Zv+P0Gmh3TtOg5Aj+dyRXITDjORazbO6yeBI07uBqBKtYn
+         xRnA==
+X-Gm-Message-State: APjAAAXSio/5j0D+QL19f5HfDWEjp+BqLhvzGk7l1MjVXxcdHFTbbMoG
+        5U3flkCtMI2VITQkW/dnz6d//n9D16P+MxlTrARP+pfw+Uk=
+X-Google-Smtp-Source: APXvYqwIM0I0ITQGAkvKcl7pOc5LbaVxc6AKpws4NdxidSK2eUI/XIrPotl+6a81nXpbUNVskyoMpUeRQIDMmVGQviA=
+X-Received: by 2002:a37:aac9:: with SMTP id t192mr37813725qke.31.1568243064393;
+ Wed, 11 Sep 2019 16:04:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190911030142.49105-1-yuyufen@huawei.com> <CAPhsuW7Q=YsMkMQGMS54vskTRjM24oRMWP7534n_pkOhyGvJUA@mail.gmail.com>
- <3c5a5ede-d1a1-dd55-2dde-73b72a9c475d@huawei.com>
-In-Reply-To: <3c5a5ede-d1a1-dd55-2dde-73b72a9c475d@huawei.com>
+References: <20190902071623.21388-1-yuyufen@huawei.com>
+In-Reply-To: <20190902071623.21388-1-yuyufen@huawei.com>
 From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Wed, 11 Sep 2019 23:59:09 +0100
-Message-ID: <CAPhsuW73B=MX_pCEb313h7HWsDj4raWDOhD5M_PqWtbqP8PtsA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] skip spare disk as freshest disk
+Date:   Thu, 12 Sep 2019 00:04:13 +0100
+Message-ID: <CAPhsuW5f+ai26=6op9Jbud_9U=w-VGHGv0suSu1C=oZ8sJ9S1g@mail.gmail.com>
+Subject: Re: [PATCH] md: no longer compare spare disk superblock events in super_load
 To:     Yufen Yu <yuyufen@huawei.com>
 Cc:     Song Liu <songliubraving@fb.com>,
-        linux-raid <linux-raid@vger.kernel.org>
+        linux-raid <linux-raid@vger.kernel.org>, neilb@suse.de
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 12:21 PM Yufen Yu <yuyufen@huawei.com> wrote:
+On Mon, Sep 2, 2019 at 8:04 AM Yufen Yu <yuyufen@huawei.com> wrote:
 >
+> We have a test case as follow:
 >
+>   mdadm -CR /dev/md1 -l 1 -n 4 /dev/sd[a-d] --assume-clean --bitmap=internal
+>   mdadm -S /dev/md1
+>   mdadm -A /dev/md1 /dev/sd[b-c] --run --force
 >
-> On 2019/9/11 17:38, Song Liu wrote:
-> > On Wed, Sep 11, 2019 at 3:44 AM Yufen Yu <yuyufen@huawei.com> wrote:
-> >> Hi,
-> >>          For this patchset , we add a new entry .disk_is_spare in super_type
-> >>          to check if the disk is in 'spare' state. If a disk is in spare,
-> >>          analyze_sbs() should skip the disk to be freshest disk. Otherwise,
-> >>          it may cause md run fail. There is a fail example in the second patch.
-> >>
-> > I think we need go a different path. I am sorry that some of early comments
-> > are misleading.
-> >
-> > We can extend the output of load_super() to have "2" for spares. And this
-> > _should_ make the code simpler.
-> >
-> > Does this make sense?
-> >
+>   mdadm --zero /dev/sda
+>   mdadm /dev/md1 -a /dev/sda
 >
-> I think we don't need to add extra output value '2'.
+>   echo offline > /sys/block/sdc/device/state
+>   echo offline > /sys/block/sdb/device/state
+>   sleep 5
+>   mdadm -S /dev/md1
 >
-> For now, only analyze_sbs() use the output of load_super(). The others
-> caller just
-> check whether load_super() have failed, which will return a negative value.
+>   echo running > /sys/block/sdb/device/state
+>   echo running > /sys/block/sdc/device/state
+>   mdadm -A /dev/md1 /dev/sd[a-c] --run --force
 >
-> My first version patch directly modify load_super() and return '0' for
-> 'spare' disk.
-> Then analyze_sbs() can skip the spare disk as fresher disk. I think it
-> does work.
-> https://www.spinics.net/lists/raid/msg63136.html
+> When we readd /dev/sda to the array, it started to do recovery.
+> After offline the other two disks in md1, the recovery have
+> been interrupted and superblock update info cannot be written
+> to the offline disks. While the spare disk (/dev/sda) can continue
+> to update superblock info.
 >
-> BTW, I don't know how to return '2' from load_super(), which pass events
-> test as
-> you say in the first patch. At the same time , it does not affect the
-> other caller.
+> After stopping the array and assemble it, we found the array
+> run fail, with the follow kernel message:
 >
+> [  172.986064] md: kicking non-fresh sdb from array!
+> [  173.004210] md: kicking non-fresh sdc from array!
+> [  173.022383] md/raid1:md1: active with 0 out of 4 mirrors
+> [  173.022406] md1: failed to create bitmap (-5)
+> [  173.023466] md: md1 stopped.
+>
+> Since both sdb and sdc have the value of 'sb->events' smaller than
+> that in sda, they have been kicked from the array. However, the only
+> remained disk sda is in 'spare' state before stop and it cannot be
+> added to conf->mirrors[] array. In the end, raid array assemble and run fail.
+>
+> In fact, we can use the older disk sdb or sdc to assemble the array.
+> That means we should not choose the 'spare' disk as the fresh disk in
+> analyze_sbs().
+>
+> To fix the problem, we do not compare superblock events when it is
+> a spare disk, as same as validate_super.
+>
+> Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+> ---
+>  drivers/md/md.c | 27 +++++++++++++++++----------
+>  1 file changed, 17 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 24638ccedce4..350e1f152e97 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -1092,7 +1092,7 @@ static int super_90_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor
+>  {
+>         char b[BDEVNAME_SIZE], b2[BDEVNAME_SIZE];
+>         mdp_super_t *sb;
+> -       int ret;
+> +       int ret = 0;
+>
+>         /*
+>          * Calculate the position of the superblock (512byte sectors),
+> @@ -1160,10 +1160,13 @@ static int super_90_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor
+>                 }
+>                 ev1 = md_event(sb);
+>                 ev2 = md_event(refsb);
+> -               if (ev1 > ev2)
+> -                       ret = 1;
+> -               else
+> -                       ret = 0;
+> +
+> +               /* Insist on good event counter while assembling, except
+> +                * for spares (which don't need an event count) */
+> +               if (sb->disks[rdev->desc_nr].state & (
+> +                       (1<<MD_DISK_SYNC) | (1 << MD_DISK_ACTIVE)))
 
-You are right that we don't really need output value '2'.
+Can we just check 1<<MD_DISK_ACTIVE? I think MD_DISK_SYNC is not
+necessary.
 
-I think v1 is closer to the best solution. Let me comment on that again.
+> +                       if (ev1 > ev2)
+> +                               ret = 1;
+>         }
+>         rdev->sectors = rdev->sb_start;
+>         /* Limit to 4TB as metadata cannot record more than that.
+> @@ -1513,7 +1516,7 @@ static __le32 calc_sb_1_csum(struct mdp_superblock_1 *sb)
+>  static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_version)
+>  {
+>         struct mdp_superblock_1 *sb;
+> -       int ret;
+> +       int ret = 0;
+>         sector_t sb_start;
+>         sector_t sectors;
+>         char b[BDEVNAME_SIZE], b2[BDEVNAME_SIZE];
+> @@ -1665,10 +1668,14 @@ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_
+>                 ev1 = le64_to_cpu(sb->events);
+>                 ev2 = le64_to_cpu(refsb->events);
+>
+> -               if (ev1 > ev2)
+> -                       ret = 1;
+> -               else
+> -                       ret = 0;
+> +               /* Insist of good event counter while assembling, except for
+> +                * spares (which don't need an event count) */
+> +               if (rdev->desc_nr >= 0 &&
+> +                   rdev->desc_nr < le32_to_cpu(sb->max_dev) &&
+> +                   (le16_to_cpu(sb->dev_roles[rdev->desc_nr]) < MD_DISK_ROLE_MAX ||
+> +                    le16_to_cpu(sb->dev_roles[rdev->desc_nr]) == MD_DISK_ROLE_JOURNAL))
 
+Can we use MD_DISK_ROLE_SPARE in this check?
+
+Thanks,
 Song
