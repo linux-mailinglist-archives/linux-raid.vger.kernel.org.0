@@ -2,51 +2,61 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E199B3557
-	for <lists+linux-raid@lfdr.de>; Mon, 16 Sep 2019 09:12:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EAEB4B376A
+	for <lists+linux-raid@lfdr.de>; Mon, 16 Sep 2019 11:45:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbfIPHMt (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 16 Sep 2019 03:12:49 -0400
-Received: from mga06.intel.com ([134.134.136.31]:43287 "EHLO mga06.intel.com"
+        id S1728985AbfIPJpu (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 16 Sep 2019 05:45:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59734 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726084AbfIPHMt (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 16 Sep 2019 03:12:49 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 00:12:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,510,1559545200"; 
-   d="scan'208";a="211063795"
-Received: from apaszkie-desk.igk.intel.com (HELO [10.102.102.225]) ([10.102.102.225])
-  by fmsmga004.fm.intel.com with ESMTP; 16 Sep 2019 00:12:46 -0700
-Subject: Re: Linux RAID 1 Not Working
-To:     "David F." <df7729@gmail.com>,
-        "Tkaczyk, Mariusz" <mariusz.tkaczyk@intel.com>
-Cc:     Linux-RAID <linux-raid@vger.kernel.org>
-References: <CAGRSmLvhPOw+KO7yAenXqyLDq__=vSLHMHQJ5f_0iOJ5E5b=Mg@mail.gmail.com>
- <3100213.Shkhs8viAj@mtkaczyk-devel.igk.intel.com>
- <CAGRSmLt6xsNXsXV0YoHihe2g8N5+w0jN2p7gmGSokrY8owsQ7Q@mail.gmail.com>
-From:   Artur Paszkiewicz <artur.paszkiewicz@intel.com>
-Message-ID: <1d098e10-a2f9-12e4-5b8c-1312f6612eaa@intel.com>
-Date:   Mon, 16 Sep 2019 09:12:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <CAGRSmLt6xsNXsXV0YoHihe2g8N5+w0jN2p7gmGSokrY8owsQ7Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1727666AbfIPJpu (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 16 Sep 2019 05:45:50 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 34658C004E8D;
+        Mon, 16 Sep 2019 09:45:50 +0000 (UTC)
+Received: from localhost.localdomain.com (ovpn-8-22.pek2.redhat.com [10.72.8.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E8F835D6A3;
+        Mon, 16 Sep 2019 09:45:46 +0000 (UTC)
+From:   Xiao Ni <xni@redhat.com>
+To:     linux-raid@vger.kernel.org
+Cc:     djeffery@redhat.com, ncroxon@redhat.com, heinzm@redhat.com,
+        neilb@suse.de, songliubraving@fb.com
+Subject: [PATCH 1/1] Call md_handle_request directly in md_flush_request
+Date:   Mon, 16 Sep 2019 17:45:45 +0800
+Message-Id: <1568627145-14210-1-git-send-email-xni@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 16 Sep 2019 09:45:50 +0000 (UTC)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 9/16/19 1:30 AM, David F. wrote:
-> Now I have a question, if mdadm is reading from UEFI, is it needing
-> the efivarfs mounted?  because it's not mounted by defau
+pers->make_request can fail sometimes. It can't handle the bio again
+if pers->make_request fails. The bio can never return to upper layer
+again. It should use md_handle_request to do this job.
 
-That's right, efivars is required.
+Fixes: 2bc13b8 (md: batch flush requests.)
+Suggested-by: David Jeffery <djeffery@redhat.com>
+Signed-off-by: Xiao Ni <xni@redhat.com>
+---
+ drivers/md/md.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Regards,
-Artur
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index daa885e..8ed19b4 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -570,7 +570,7 @@ void md_flush_request(struct mddev *mddev, struct bio *bio)
+ 			bio_endio(bio);
+ 		else {
+ 			bio->bi_opf &= ~REQ_PREFLUSH;
+-			mddev->pers->make_request(mddev, bio);
++			md_handle_request(mddev, bio);
+ 		}
+ 	}
+ }
+-- 
+2.7.5
+
