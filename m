@@ -2,245 +2,100 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C186B5A17
-	for <lists+linux-raid@lfdr.de>; Wed, 18 Sep 2019 05:21:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AFD2B5AB9
+	for <lists+linux-raid@lfdr.de>; Wed, 18 Sep 2019 07:13:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbfIRDVY (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 17 Sep 2019 23:21:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49598 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726396AbfIRDVY (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 17 Sep 2019 23:21:24 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 15895368CF;
-        Wed, 18 Sep 2019 03:21:24 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-8-24.pek2.redhat.com [10.72.8.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8C5BC100194E;
-        Wed, 18 Sep 2019 03:21:18 +0000 (UTC)
-Subject: Re: [PATCH 1/1] Call md_handle_request directly in md_flush_request
-To:     David Jeffery <djeffery@redhat.com>
-Cc:     linux-raid@vger.kernel.org, ncroxon@redhat.com, heinzm@redhat.com,
-        neilb@suse.de, songliubraving@fb.com
-References: <1568627145-14210-1-git-send-email-xni@redhat.com>
- <20190916171514.GA1970@redhat>
-From:   Xiao Ni <xni@redhat.com>
-Message-ID: <b7271fd2-5fea-092f-860c-a129d43c3a7a@redhat.com>
-Date:   Wed, 18 Sep 2019 11:21:16 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        id S1727216AbfIRFNF (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 18 Sep 2019 01:13:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42758 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727213AbfIRFNF (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 18 Sep 2019 01:13:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A8F9FB06B;
+        Wed, 18 Sep 2019 05:13:03 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Jes Sorensen <jes.sorensen@gmail.com>
+Date:   Wed, 18 Sep 2019 15:12:55 +1000
+Subject: [PATCH] udev: allow for udev attribute reading bug.
+cc:     linux-raid <linux-raid@vger.kernel.org>
+Message-ID: <87impq9oh4.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-In-Reply-To: <20190916171514.GA1970@redhat>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Wed, 18 Sep 2019 03:21:24 +0000 (UTC)
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
 
-On 09/17/2019 01:15 AM, David Jeffery wrote:
-> Calling md_handle_request is certainly the simplest way to fix the issue,
-> but after more thought I don't think it's the best way.  When the code gets
-> to md_flush_request, the code already has md_handle_request and the raid
-> driver's make_request function in the stack.
->
-> To fix the lost I/O, instead of recursing back into md_handle_request we
-> can pass back a bool to indicate if the original make_request call should
-> continue to handle the I/O and instead of assuming the flush logic will
-> push it to completion.
->
-> This patch converts md_flush_request to return a bool and no longer calls
-> the raid driver's make_request function.  If the return is true, then the
-> md flush logic has or will complete the bio and the md make_request call
-> is done.  If false, then the md make_request function needs to keep
-> processing like it is a normal I/O carrying bio. Let the original call to
-> md_handle_request handle any need to retry sending the bio to the raid
-> driver's make_request function should it be needed.
->
-> This also marks md_flush_request and the make_request function pointer as
-> __must_check to issue warnings should these critical return values be
-> ignored.
->
->
-> Signed-of-by: David Jeffery <djeffery@redhat.com>
->
->
-> diff --git a/drivers/md/md-linear.c b/drivers/md/md-linear.c
-> index 7354466ddc90..afcf1d388300 100644
-> --- a/drivers/md/md-linear.c
-> +++ b/drivers/md/md-linear.c
-> @@ -244,10 +244,9 @@ static bool linear_make_request(struct mddev *mddev, struct bio *bio)
->   	sector_t start_sector, end_sector, data_offset;
->   	sector_t bio_sector = bio->bi_iter.bi_sector;
->   
-> -	if (unlikely(bio->bi_opf & REQ_PREFLUSH)) {
-> -		md_flush_request(mddev, bio);
-> +	if (unlikely(bio->bi_opf & REQ_PREFLUSH)
-> +	    && md_flush_request(mddev, bio))
->   		return true;
-> -	}
->   
->   	tmp_dev = which_dev(mddev, bio_sector);
->   	start_sector = tmp_dev->end_sector - tmp_dev->rdev->sectors;
-> diff --git a/drivers/md/md-multipath.c b/drivers/md/md-multipath.c
-> index 6780938d2991..152f9e65a226 100644
-> --- a/drivers/md/md-multipath.c
-> +++ b/drivers/md/md-multipath.c
-> @@ -104,10 +104,9 @@ static bool multipath_make_request(struct mddev *mddev, struct bio * bio)
->   	struct multipath_bh * mp_bh;
->   	struct multipath_info *multipath;
->   
-> -	if (unlikely(bio->bi_opf & REQ_PREFLUSH)) {
-> -		md_flush_request(mddev, bio);
-> +	if (unlikely(bio->bi_opf & REQ_PREFLUSH)
-> +	    && md_flush_request(mddev, bio))
->   		return true;
-> -	}
->   
->   	mp_bh = mempool_alloc(&conf->pool, GFP_NOIO);
->   
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index 24638ccedce4..d2c23f7b1008 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -545,7 +545,13 @@ static void md_submit_flush_data(struct work_struct *ws)
->   	}
->   }
->   
-> -void md_flush_request(struct mddev *mddev, struct bio *bio)
-> +/*
-> + * Manages consolidation of flushes and submitting any flushes needed for
-> + * a bio with REQ_PREFLUSH.  Returns true if the bio is finished or is
-> + * being finished in another context.  Returns false if the flushing is
-> + * complete but still needs the I/O portion of the bio to be processed.
-> + */
-> +bool md_flush_request(struct mddev *mddev, struct bio *bio)
->   {
->   	ktime_t start = ktime_get_boottime();
->   	spin_lock_irq(&mddev->lock);
-> @@ -570,9 +576,10 @@ void md_flush_request(struct mddev *mddev, struct bio *bio)
->   			bio_endio(bio);
->   		else {
->   			bio->bi_opf &= ~REQ_PREFLUSH;
-> -			mddev->pers->make_request(mddev, bio);
-> +			return false;
->   		}
->   	}
-> +	return true;
->   }
->   EXPORT_SYMBOL(md_flush_request);
-Hi David
+There is a bug in udev (which will hopefully get fixed, but
+we should allow for it anways).
+When reading a sysfs attribute, it first reads the whole
+value of the attribute, then reads again expecting to get
+a read of 0 bytes, like you would with an ordinary file.
+If the sysfs attribute changed between these two reads, it can
+get a mixture of two values.
 
-md_flush_request returns false when one flush bio has data and 
-pers->make_request function go
-on handling it. For example the raid device is raid1. md_flush_request 
-returns false, raid1_make_request
-go on handling the bio. If raid1_make_request fails, the bio is still 
-lost. Now it looks like only md_handle_request
-checks the return value of pers->make_request and go on handling the bio 
-if pers->make_request fails.
+In particular, if it reads when 'array_state' is changing from
+'clear' to 'inactive', it can find the value as "clear\nve".
 
-There should not be a deadlock if it calls md_handle_request directly.  
-Am I right? If there is a risk, we
-can put those bios into a list and queue a work in workqueue to handle 
-them. Is it a better way?
+This causes the test for "|clear|active" to fail, so systemd is allowed
+to think that the array is ready - when it isn't.
 
-Regards
-Xiao
->   
-> diff --git a/drivers/md/md.h b/drivers/md/md.h
-> index 10f98200e2f8..70d1dddf410b 100644
-> --- a/drivers/md/md.h
-> +++ b/drivers/md/md.h
-> @@ -543,7 +543,7 @@ struct md_personality
->   	int level;
->   	struct list_head list;
->   	struct module *owner;
-> -	bool (*make_request)(struct mddev *mddev, struct bio *bio);
-> +	bool __must_check (*make_request)(struct mddev *mddev, struct bio *bio);
->   	/*
->   	 * start up works that do NOT require md_thread. tasks that
->   	 * requires md_thread should go into start()
-> @@ -696,7 +696,7 @@ extern void md_error(struct mddev *mddev, struct md_rdev *rdev);
->   extern void md_finish_reshape(struct mddev *mddev);
->   
->   extern int mddev_congested(struct mddev *mddev, int bits);
-> -extern void md_flush_request(struct mddev *mddev, struct bio *bio);
-> +extern bool __must_check md_flush_request(struct mddev *mddev, struct bio *bio);
->   extern void md_super_write(struct mddev *mddev, struct md_rdev *rdev,
->   			   sector_t sector, int size, struct page *page);
->   extern int md_super_wait(struct mddev *mddev);
-> diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
-> index bf5cf184a260..2071437b80ca 100644
-> --- a/drivers/md/raid0.c
-> +++ b/drivers/md/raid0.c
-> @@ -554,10 +554,9 @@ static bool raid0_make_request(struct mddev *mddev, struct bio *bio)
->   	unsigned chunk_sects;
->   	unsigned sectors;
->   
-> -	if (unlikely(bio->bi_opf & REQ_PREFLUSH)) {
-> -		md_flush_request(mddev, bio);
-> +	if (unlikely(bio->bi_opf & REQ_PREFLUSH)
-> +	    && md_flush_request(mddev, bio))
->   		return true;
-> -	}
->   
->   	if (unlikely((bio_op(bio) == REQ_OP_DISCARD))) {
->   		raid0_handle_discard(mddev, bio);
-> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-> index 34e26834ad28..576c02eae286 100644
-> --- a/drivers/md/raid1.c
-> +++ b/drivers/md/raid1.c
-> @@ -1562,10 +1562,9 @@ static bool raid1_make_request(struct mddev *mddev, struct bio *bio)
->   {
->   	sector_t sectors;
->   
-> -	if (unlikely(bio->bi_opf & REQ_PREFLUSH)) {
-> -		md_flush_request(mddev, bio);
-> +	if (unlikely(bio->bi_opf & REQ_PREFLUSH)
-> +	    && md_flush_request(mddev, bio))
->   		return true;
-> -	}
->   
->   	/*
->   	 * There is a limit to the maximum size, but
-> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-> index 8a1354a08a1a..c5c134b3868b 100644
-> --- a/drivers/md/raid10.c
-> +++ b/drivers/md/raid10.c
-> @@ -1523,10 +1523,9 @@ static bool raid10_make_request(struct mddev *mddev, struct bio *bio)
->   	int chunk_sects = chunk_mask + 1;
->   	int sectors = bio_sectors(bio);
->   
-> -	if (unlikely(bio->bi_opf & REQ_PREFLUSH)) {
-> -		md_flush_request(mddev, bio);
-> +	if (unlikely(bio->bi_opf & REQ_PREFLUSH)
-> +	    && md_flush_request(mddev, bio))
->   		return true;
-> -	}
->   
->   	if (!md_write_start(mddev, bio))
->   		return false;
-> diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-> index 3de4e13bde98..ce935e95e32f 100644
-> --- a/drivers/md/raid5.c
-> +++ b/drivers/md/raid5.c
-> @@ -5584,8 +5584,8 @@ static bool raid5_make_request(struct mddev *mddev, struct bio * bi)
->   		if (ret == 0)
->   			return true;
->   		if (ret == -ENODEV) {
-> -			md_flush_request(mddev, bi);
-> -			return true;
-> +			if (md_flush_request(mddev, bi))
-> +				return true;
->   		}
->   		/* ret == -EAGAIN, fallback */
->   		/*
->
+So change the pattern to allow for this but adding a wildcard at
+the end.
+Also don't allow for an empty string - reading array_state will
+never return an empty string - if it exists at all, it will be
+non-empty.
 
+Signed-off-by: NeilBrown <neilb@suse.de>
+=2D--
+ udev-md-raid-arrays.rules | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/udev-md-raid-arrays.rules b/udev-md-raid-arrays.rules
+index d3916651cf5c..c8fa8e89ef69 100644
+=2D-- a/udev-md-raid-arrays.rules
++++ b/udev-md-raid-arrays.rules
+@@ -14,7 +14,7 @@ ENV{DEVTYPE}=3D=3D"partition", GOTO=3D"md_ignore_state"
+ # never leave state 'inactive'
+ ATTR{md/metadata_version}=3D=3D"external:[A-Za-z]*", ATTR{md/array_state}=
+=3D=3D"inactive", GOTO=3D"md_ignore_state"
+ TEST!=3D"md/array_state", ENV{SYSTEMD_READY}=3D"0", GOTO=3D"md_end"
+=2DATTR{md/array_state}=3D=3D"|clear|inactive", ENV{SYSTEMD_READY}=3D"0", G=
+OTO=3D"md_end"
++ATTR{md/array_state}=3D=3D"clear*|inactive", ENV{SYSTEMD_READY}=3D"0", GOT=
+O=3D"md_end"
+ LABEL=3D"md_ignore_state"
+=20
+ IMPORT{program}=3D"BINDIR/mdadm --detail --no-devices --export $devnode"
+=2D-=20
+2.14.0.rc0.dirty
+
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl2BvNgACgkQOeye3VZi
+gbnRoA/+NIXYCVAnFm6gdaR174G6MFQKDxIUIr525YVZCCDYmYCiYIN1OCarzXfc
+/cAyspqxbbQmYiltEVe7iddVr89NKLgZPZ/OrttgvHwaIC64h0uDoq0q5hfg6Rtu
+duIAKkl1nFa/RWiyUgcld1Hb+dYCwi8puwef9rpIscBuomhwBtlA+cXJ3m+e2zJz
+Pv604D8SpqPIXRGIlQWg4hGGSAr7Zun+lDlDKQ8kEh5VPDVueL4f3Hd6mwqx8Hyj
+rCzGQgk45DE25/1ZbCi1ph4nY/UjM0Qta0pjzOLi7Vs1ddCduoGwPZV4nYOOzcTz
+6uHWGI9e4eJoODLpwKXZKRbENP5/rcZI8qMxffzE4UM/wGUgRv1iB/94fe6YPiSp
+1PpWtSv1vPnosPNpYVMbun4S4UpX2UtA6XKZQYK50UCkyM9oho6UdBl2GjJLCrdJ
+d0RhY83S1B6Hx61ihdwIJ9Z5Mx8nUfcZpaSddggr96el2x8sTjhiOga4KfJ1Ugx6
+//NBTMcDl1fRGaqDPdUjX3d1mUs4IPozbnHl44ohds8emM+ocGdysZh3GMH7pHvK
+BcHsyLUGJm0VAkDypYdU7opXhQvUMaO9Z6DUhc2pvUXTxlTbFsS6SzYec5AYkvUE
+8NLH5VvZ6Fua9XocpNGjy/OmOMxJKOqEAWoBM8MaGObYQax4yXY=
+=XwvP
+-----END PGP SIGNATURE-----
+--=-=-=--
