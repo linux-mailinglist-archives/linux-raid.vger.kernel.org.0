@@ -2,129 +2,90 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D0F11B691D
-	for <lists+linux-raid@lfdr.de>; Wed, 18 Sep 2019 19:31:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49D90B6BDA
+	for <lists+linux-raid@lfdr.de>; Wed, 18 Sep 2019 21:15:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727569AbfIRRb1 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 18 Sep 2019 13:31:27 -0400
-Received: from mtax.cdmx.gob.mx ([187.141.35.197]:8981 "EHLO mtaw.cdmx.gob.mx"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727056AbfIRRb1 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 18 Sep 2019 13:31:27 -0400
-X-NAI-Header: Modified by McAfee Email Gateway (4500)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cdmx.gob.mx; s=72359050-3965-11E6-920A-0192F7A2F08E;
-        t=1568827145; h=X-Virus-Scanned:Content-Type:
-         MIME-Version:Content-Transfer-Encoding:Content-Description:
-         Subject:To:From:Date:Reply-To:Message-Id:X-AnalysisOut:
-         X-AnalysisOut:X-AnalysisOut:X-AnalysisOut:
-         X-AnalysisOut:X-AnalysisOut:X-AnalysisOut:
-         X-SAAS-TrackingID:X-NAIMIME-Disclaimer:X-NAIMIME-Modified:
-         X-NAI-Spam-Flag:X-NAI-Spam-Threshold:X-NAI-Spam-Score:
-         X-NAI-Spam-Rules:X-NAI-Spam-Version; bh=K
-        jij0GhOpdKSaBiEpb4h9F2ukULK7Zgku7ZRRhmMNN
-        U=; b=ITwbsqW++Izdu9GUvXh5z8gJ7OeMpXP9/+30CbVr4O5v
-        KwlaPQrwlxHrgdu8Bqw1vOLDpxpdMsAMcAM2Pm2lRucmhiWwpB
-        /OLjyLOdkYGG7I9irQWeWp78UKY+wP82PyHf20qQTsceaXMQ3r
-        lelOCmfqNVouu7/dQqsH+XwLv9k=
-Received: from correo.seciti.cdmx.gob.mx (gdf-correo.cdmx.gob.mx [10.250.102.17]) by mtaw.cdmx.gob.mx with smtp
-         id 7281_1abf_ef32d07a_bbeb_44ed_95c3_65de8f86b98c;
-        Wed, 18 Sep 2019 12:19:04 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by gdf-correo.df.gob.mx (Postfix) with ESMTP id 4B2B43AB5;
-        Wed, 18 Sep 2019 12:19:00 -0500 (CDT)
-Received: from correo.seciti.cdmx.gob.mx ([127.0.0.1])
-        by localhost (gdf-correo.df.gob.mx [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 04b1iqdL_WvI; Wed, 18 Sep 2019 12:19:00 -0500 (CDT)
-Received: from localhost (localhost [127.0.0.1])
-        by gdf-correo.df.gob.mx (Postfix) with ESMTP id 88FD73744;
-        Wed, 18 Sep 2019 12:15:49 -0500 (CDT)
-X-Virus-Scanned: amavisd-new at gdf-correo.df.gob.mx
-Received: from correo.seciti.cdmx.gob.mx ([127.0.0.1])
-        by localhost (gdf-correo.df.gob.mx [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 38asEql11dem; Wed, 18 Sep 2019 12:15:49 -0500 (CDT)
-Received: from [41.148.42.229] (8ta-148-42-229.telkomadsl.co.za [41.148.42.229])
-        by gdf-correo.df.gob.mx (Postfix) with ESMTPSA id 176743422;
-        Wed, 18 Sep 2019 12:13:45 -0500 (CDT)
-Content-Type: text/plain;
-  charset="utf-8"
+        id S1728213AbfIRTPa (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 18 Sep 2019 15:15:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50708 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725909AbfIRTP3 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 18 Sep 2019 15:15:29 -0400
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 84C217FDCD
+        for <linux-raid@vger.kernel.org>; Wed, 18 Sep 2019 19:15:29 +0000 (UTC)
+Received: by mail-io1-f70.google.com with SMTP id n8so1220346ioh.23
+        for <linux-raid@vger.kernel.org>; Wed, 18 Sep 2019 12:15:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xv3sp+Pux8s4oM5fbW+IThAko5zE0cP1zvxQk6wtn7M=;
+        b=m4j/NvFpcaDpcIi1lNbI/1EyCVZudUWF8sKo0+w4gBia3f6SSw6Mvmkh0Nl2dovY5V
+         P8iO8eKGEoftxEXouLgG8WJjoK2X4M5b87fGSNVa8WOMWrORMf+o9RPLv+P4EELrhrEf
+         N/0WZKcVQR+3iqAzQPTdzTsi5DES9WJK7svHkZv9ODa0UyaEtjAJ8B2NNTYZdEKWVyIL
+         htJmadAVSnBBtWjAsczL2u7X8MRqE2c6bEw+cYyXRJRIjYFYfIvzzT88rE7ylC97b7nf
+         VSxBRbDHmgIB14+16czSR4TkddpAbHUMephClhQsjv/T3wr1ONON18OR9+tbCCLmKmC6
+         oZhw==
+X-Gm-Message-State: APjAAAU9XPF4wz6fSXePG7Ykx9lrNcRPJUEKiYVCa10xljSNbvmnFGTV
+        pcsnljU2AxWBcgRipDKRj2V/nLXKEo1BhJebSgFS+c1bnf4R1LrNuhdjE1dcT2tfEXVNn6nonAN
+        iXFlULwMxJu9X/aqv6ImlVTHHl0rZmXc8A+GoHQ==
+X-Received: by 2002:a6b:8b8b:: with SMTP id n133mr4659781iod.34.1568834129010;
+        Wed, 18 Sep 2019 12:15:29 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxqc0mo2fRChoeB7OQOpohdwUpBnxQIA7DJqKxU0ywk5ZwzGxMPq5kl5Br6994H+x5gWOJXZzPYWdKC1VJILNA=
+X-Received: by 2002:a6b:8b8b:: with SMTP id n133mr4659750iod.34.1568834128703;
+ Wed, 18 Sep 2019 12:15:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Description: Mail message body
-Subject: Spende von 5 Millionen Euro
-To:     Recipients <mramirezg@mexicocity.gob.mx>
-From:   "Shane Missler" <mramirezg@mexicocity.gob.mx>
-Date:   Wed, 18 Sep 2019 19:13:32 +0200
-Reply-To: shanemissler3@gmail.com
-Message-Id: <20190918171346.176743422@gdf-correo.df.gob.mx>
-X-AnalysisOut: [v=2.2 cv=TNY1cxta c=1 sm=1 tr=0 p=ELT1L0JgSr8A:10 p=09-KjH]
-X-AnalysisOut: [S_CW8A:10 p=bEr4i4eggGkA:10 p=emDABjehN2fqPHqc8RbT:22 p=Ly]
-X-AnalysisOut: [qu6MUUigPyaOuRX7ce:22 a=KsSCQl7LcZej77FuluUcQw==:117 a=oLf]
-X-AnalysisOut: [NtqljNgXPa7RrmTwnGA==:17 a=IkcTkHD0fZMA:10 a=x7bEGLp0ZPQA:]
-X-AnalysisOut: [10 a=J70Eh1EUuV4A:10 a=pGLkceISAAAA:8 a=wN7rT8hNlMSaUXRpxS]
-X-AnalysisOut: [gA:9 a=K7tsimcRO30Sg2YH:21 a=QOCYt1FwmxBrUrRv:21 a=QEXdDO2]
-X-AnalysisOut: [ut3YA:10]
-X-SAAS-TrackingID: 907628d5.0.82577178.00-2253.138805943.s12p02m016.mxlogic.net
-X-NAIMIME-Disclaimer: 1
-X-NAIMIME-Modified: 1
-X-NAI-Spam-Flag: NO
-X-NAI-Spam-Threshold: 3
-X-NAI-Spam-Score: -5000
-X-NAI-Spam-Rules: 1 Rules triggered
-        WHITELISTED=-5000
-X-NAI-Spam-Version: 2.3.0.9418 : core <6637> : inlines <7143> : streams
- <1833132> : uri <2906079>
+References: <1568627145-14210-1-git-send-email-xni@redhat.com>
+ <20190916171514.GA1970@redhat> <b7271fd2-5fea-092f-860c-a129d43c3a7a@redhat.com>
+In-Reply-To: <b7271fd2-5fea-092f-860c-a129d43c3a7a@redhat.com>
+From:   David Jeffery <djeffery@redhat.com>
+Date:   Wed, 18 Sep 2019 15:15:17 -0400
+Message-ID: <CA+-xHTEaYtctDGfY=hq_XuxTW01+sriNb6xyS5-aqtvAkkrZNw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] Call md_handle_request directly in md_flush_request
+To:     Xiao Ni <xni@redhat.com>
+Cc:     linux-raid@vger.kernel.org, ncroxon@redhat.com, heinzm@redhat.com,
+        neilb@suse.de, songliubraving@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-RGllcyBpc3QgZWluZSBwZXJzw7ZubGljaGUgTWFpbCwgZGllIGljaCBhbiBTaWUgYWRyZXNzaWVy
-ZS4gSWNoIGJpbiBTSEFORSBNSVNTTEVSIGF1cyBGbG9yaWRhLCBVU0EuIFdpZSBTaWUgYmVyZWl0
-cyB3aXNzZW4sIGhhYmUgaWNoIGVpbmVuIExvdHRvLUphY2twb3QgaW4gSMO2aGUgdm9uIDQ1MSBN
-aW8uIFVTRCAoMzMwIE1pby4gR0JQKSBnZXdvbm5lbiB1bmQgZGFzIEdlbGQgaGF0IG1laW4gTGVi
-ZW4gdW5kIG1laW4gRmFtaWxpZW5sZWJlbiB2ZXLDpG5kZXJ0LCBhYmVyIGVzIHdpcmQgbWVpbiBI
-ZXJ6IG5pY2h0IHZlcsOkbmRlcm4sIHdpZSBpY2ggYW4gZGVtIFRhZyBzYWd0ZSwgYW4gZGVtIGlj
-aCBtZWluIEdlbGQgaGFiZSwgZGFzIGljaCB2ZXJ3ZW5kZW4gd2VyZGUgRGllc2VzIEdlbGQgZsO8
-ciBkaWUgSGlsZmUgZGVyIE1lbnNjaGhlaXQuIEljaCBoYWJlIGJlc2NobG9zc2VuLCBJaG5lbiB1
-bmQgSWhyZXIgR2VtZWluZGUgZWluZW4gQmV0cmFnIHZvbiA1IE1pbGxpb25lbiBFdXJvIHp1IHNw
-ZW5kZW4sIHVtIGRpZXNlIFNwZW5kZSBhbnp1Zm9yZGVybi4gRS1NYWlsOiAoc2hhbmVtaXNzbGVy
-MEBnbWFpbC5jb20pCgoKQ2VjaSBlc3QgdW4gY291cnJpZXIgcGVyc29ubmVsIHF1ZSBqZSB2b3Vz
-IGFkcmVzc2UuIEplIHN1aXMgU0hBTkUgTUlTU0xFUiwgZGUgRmxvcmlkZSwgw4l0YXRzLVVuaXMu
-IENvbW1lIHZvdXMgbGUgc2F2ZXogZMOpasOgLCBqJ2FpIGdhZ27DqSA0NTEgbWlsbGlvbnMgZGUg
-ZG9sbGFycyAoTG90dG8gSmFja3BvdCkgZXQgbCdhcmdlbnQgYSBjaGFuZ8OpIG1hIHZpZSBldCBj
-ZWxsZSBkZSBtYSBmYW1pbGxlLCBtYWlzIGNlbGEgbmUgY2hhbmdlcmEgcGFzIG1vbiBjxZN1ciwg
-Y29tbWUgamUgbCdhaSBkaXQgbGUgam91ciBvw7kgaidhaSBtb24gYXJnZW50LCBqJ3V0aWxpc2Vy
-YWkgY2V0IGFyZ2VudCBwb3VyIGwnYWlkZSBkZSBsJ2h1bWFuaXTDqS5KJ2FpIGTDqWNpZMOpIGRl
-IHZvdXMgZG9ubmVyIGxhIHNvbW1lIGRlIDUgbWlsbGlvbnMgZCdldXJvcyDDoCB2b3VzIGV0IMOg
-IHZvdHJlIGNvbW11bmF1dMOpLCBwb3VyIHLDqWNsYW1lciBjZSBkb24sIGVtYWlsLSAoc2hhbmVt
-aXNzbGVyMEBnbWFpbC5jb20pCgoKCgouLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4KCgpMYSBpbmZvcm1hY2lvbiBjb250ZW5pZGEgZW4gZXN0ZSBjb3JyZW8sIGFzaSBj
-b21vIGxhIGNvbnRlbmlkYSBlbiBsb3MgZG9jdW1lbnRvcyBhbmV4b3MsIHB1ZWRlIGNvbnRlbmVy
-IGRhdG9zIHBlcnNvbmFsZXMsIHBvciBsbyBxdWUgc3UgZGlmdXNpb24gZXMgcmVzcG9uc2FiaWxp
-ZGFkIGRlIHF1aWVuIGxvcyB0cmFuc21pdGUgeSBxdWllbiBsb3MgcmVjaWJlLCBlbiB0w6lybWlu
-b3MgZGUgbG8gZGlzcHVlc3RvIHBvciBsYXMgZnJhY2Npb25lcyBJSSB5IFZJSSBkZWwgYXJ0aWN1
-bG8gNCwgdWx0aW1vIHBhcnJhZm8gZGVsIGFydGljdWxvIDgsIGFydGljdWxvIDM2IHBhcnJhZm8g
-SUksIDM4IGZyYWNjaW9uIEkgeSBkZW1hcyBhcGxpY2FibGVzIGRlIGxhIExleSBkZSBUcmFuc3Bh
-cmVuY2lhIHkgQWNjZXNvIGEgbGEgSW5mb3JtYWNpb24gUHVibGljYSBkZWwgRGlzdHJpdG8gRmVk
-ZXJhbC4NCkxvcyBEYXRvcyBQZXJzb25hbGVzIHNlIGVuY3VlbnRyYW4gcHJvdGVnaWRvcyBwb3Ig
-bGEgTGV5IGRlIFByb3RlY2Npb24gZGUgRGF0b3MgUGVyc29uYWxlcyBkZWwgRGlzdHJpdG8gRmVk
-ZXJhbCwgcG9yIGxvIHF1ZSBzdSBkaWZ1c2lvbiBzZSBlbmN1ZW50cmEgdHV0ZWxhZGEgZW4gc3Vz
-IGFydGljdWxvcyAyLCA1LCAxNiwgMjEsIDQxIHkgZGVtYXMgcmVsYXRpdm9zIHkgYXBsaWNhYmxl
-cywgZGViaWVuZG8gc3VqZXRhcnNlIGVuIHN1IGNhc28sIGEgbGFzIGRpc3Bvc2ljaW9uZXMgcmVs
-YXRpdmFzIGEgbGEgY3JlYWNpb24sIG1vZGlmaWNhY2lvbiBvIHN1cHJlc2lvbiBkZSBkYXRvcyBw
-ZXJzb25hbGVzIHByZXZpc3Rvcy4gQXNpbWlzbW8sIGRlYmVyYSBlc3RhcnNlIGEgbG8gc2XDsWFs
-YWRvIGVuIGxvcyBudW1lcmFsZXMgMSAsIDMsIDEyLCAxOCwgMTksIDIwLCAyMSwgMjMsIDI0LCAy
-OSwgMzUgeSBkZW1hcyBhcGxpY2FibGVzIGRlIGxvcyBMaW5lYW1pZW50b3MgcGFyYSBsYSBQcm90
-ZWNjaW9uIGRlIERhdG9zIFBlcnNvbmFsZXMgZW4gZWwgRGlzdHJpdG8gRmVkZXJhbC4NCkVuIGVs
-IHVzbyBkZSBsYXMgdGVjbm9sb2dpYXMgZGUgbGEgaW5mb3JtYWNpb24geSBjb211bmljYWNpb25l
-cyBkZWwgR29iaWVybm8gZGVsIERpc3RyaXRvIEZlZGVyYWwsIGRlYmVyYSBvYnNlcnZhcnNlIHB1
-bnR1YWxtZW50ZSBsbyBkaXNwdWVzdG8gcG9yIGxhIExleSBHb2JpZXJubyBFbGVjdHJvbmljbyBk
-ZWwgRGlzdHJpdG8gRmVkZXJhbCwgbGEgbGV5IHBhcmEgaGFjZXIgZGUgbGEgQ2l1ZGFkIGRlIE1l
-eGljbyB1bmEgQ2l1ZGFkIE1hcyBBYmllcnRhLCBlbCBhcGFydGFkbyAxMCBkZSBsYSBDaXJjdWxh
-ciBVbm8gdmlnZW50ZSB5IGxhcyBOb3JtYXMgR2VuZXJhbGVzIHF1ZSBkZWJlcmFuIG9ic2VydmFy
-c2UgZW4gbWF0ZXJpYSBkZSBTZWd1cmlkYWQgZGUgbGEgSW5mb3JtYWNpb24gZW4gbGEgQWRtaW5p
-c3RyYWNpb24gUHVibGljYSBkZWwgRGlzdHJpdG8gRmVkZXJhbC4K
+On Tue, Sep 17, 2019 at 11:21 PM Xiao Ni <xni@redhat.com> wrote:
+>
+> md_flush_request returns false when one flush bio has data and
+> pers->make_request function go
+> on handling it. For example the raid device is raid1. md_flush_request
+> returns false, raid1_make_request
+> go on handling the bio. If raid1_make_request fails, the bio is still
+> lost. Now it looks like only md_handle_request
+> checks the return value of pers->make_request and go on handling the bio
+> if pers->make_request fails.
+
+But the bio isn't lost.  Using raid1 as an example, the calling sequence is
+md_handle_request -> raid1_make_request -> md_flush_request.
+raid1_make_request is already wrapped by md_handle_request.  So this
+earlier call to md_handle_request will re-submit the bio if raid1_make_request
+returns false after md_flush_request returns false.  Anything which calls an
+mddev->pers->make_request function (only md_handle_request after patch)
+must already handle a return of false or it would also have a bug allowing I/O
+to be lost.
+
+>
+> There should not be a deadlock if it calls md_handle_request directly.
+> Am I right? If there is a risk, we
+> can put those bios into a list and queue a work in workqueue to handle
+> them. Is it a better way?
+
+I don't see a deadlock with calling md_handle_request from md_flush_request.
+It's just more stack and overhead when we could instead let the first calls to
+these functions advance the I/O instead of recursing into new instances.
+
+>
+> Regards
+> Xiao
+
+David Jeffery
