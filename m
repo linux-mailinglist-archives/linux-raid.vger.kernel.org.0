@@ -2,83 +2,187 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D4F5B7163
-	for <lists+linux-raid@lfdr.de>; Thu, 19 Sep 2019 04:06:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1C95B82F9
+	for <lists+linux-raid@lfdr.de>; Thu, 19 Sep 2019 22:55:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387723AbfISCGv (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 18 Sep 2019 22:06:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49746 "EHLO mx1.redhat.com"
+        id S1732362AbfISUzd convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-raid@lfdr.de>); Thu, 19 Sep 2019 16:55:33 -0400
+Received: from mail.ugal.ro ([193.231.148.6]:47226 "EHLO MAIL.ugal.ro"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387591AbfISCGv (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 18 Sep 2019 22:06:51 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3D07718C426C;
-        Thu, 19 Sep 2019 02:06:51 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-8-24.pek2.redhat.com [10.72.8.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EE18B1001281;
-        Thu, 19 Sep 2019 02:06:46 +0000 (UTC)
-Subject: Re: [PATCH 1/1] Call md_handle_request directly in md_flush_request
-To:     David Jeffery <djeffery@redhat.com>
-Cc:     linux-raid@vger.kernel.org, ncroxon@redhat.com, heinzm@redhat.com,
-        neilb@suse.de, songliubraving@fb.com
-References: <1568627145-14210-1-git-send-email-xni@redhat.com>
- <20190916171514.GA1970@redhat>
- <b7271fd2-5fea-092f-860c-a129d43c3a7a@redhat.com>
- <CA+-xHTEaYtctDGfY=hq_XuxTW01+sriNb6xyS5-aqtvAkkrZNw@mail.gmail.com>
-From:   Xiao Ni <xni@redhat.com>
-Message-ID: <fbeffe99-afd0-abe7-ba87-85de5ce5c8bb@redhat.com>
-Date:   Thu, 19 Sep 2019 10:06:43 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        id S1730064AbfISUzc (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 19 Sep 2019 16:55:32 -0400
+X-Greylist: delayed 579 seconds by postgrey-1.27 at vger.kernel.org; Thu, 19 Sep 2019 16:55:28 EDT
+Received: from localhost (unknown [127.0.0.1])
+        by MAIL.ugal.ro (Postfix) with ESMTP id C9DD213A2ED6A
+        for <linux-raid@vger.kernel.org>; Thu, 19 Sep 2019 20:45:48 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at ugal.ro
+Received: from MAIL.ugal.ro ([127.0.0.1])
+        by localhost (mail.ugal.ro [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id wvk_8ikvjBHO for <linux-raid@vger.kernel.org>;
+        Thu, 19 Sep 2019 23:45:47 +0300 (EEST)
+Received: from LPETCU (unknown [10.11.10.80])
+        (Authenticated sender: lpetcu)
+        by MAIL.ugal.ro (Postfix) with ESMTPA id 6AF3913A276FF
+        for <linux-raid@vger.kernel.org>; Thu, 19 Sep 2019 23:45:47 +0300 (EEST)
+Reply-To: <Liviu.Petcu@ugal.ro>
+From:   "Liviu Petcu" <Liviu.Petcu@ugal.ro>
+To:     <linux-raid@vger.kernel.org>
+Subject: RAID 10 with 2 failed drives
+Date:   Thu, 19 Sep 2019 23:45:56 +0300
+Organization: =?UTF-8?Q?Universitatea_=E2=80=9EDunarea_de_Jos=E2=80=9D_d?=
+        =?UTF-8?Q?in_Gala=3Fi?=
+Message-ID: <08df01d56f2b$3c52bdb0$b4f83910$@ugal.ro>
 MIME-Version: 1.0
-In-Reply-To: <CA+-xHTEaYtctDGfY=hq_XuxTW01+sriNb6xyS5-aqtvAkkrZNw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Thu, 19 Sep 2019 02:06:51 +0000 (UTC)
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AdVvKzv1iQqcb9bCRTS96XeHx9ssow==
+Content-Language: ro
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+Hello,
 
+Please let me know if in this situation detailed below, there are chances of restoring the RAID 10 array and how I can do it safely. 
+Thank you!
 
-On 09/19/2019 03:15 AM, David Jeffery wrote:
-> On Tue, Sep 17, 2019 at 11:21 PM Xiao Ni <xni@redhat.com> wrote:
->> md_flush_request returns false when one flush bio has data and
->> pers->make_request function go
->> on handling it. For example the raid device is raid1. md_flush_request
->> returns false, raid1_make_request
->> go on handling the bio. If raid1_make_request fails, the bio is still
->> lost. Now it looks like only md_handle_request
->> checks the return value of pers->make_request and go on handling the bio
->> if pers->make_request fails.
-> But the bio isn't lost.  Using raid1 as an example, the calling sequence is
-> md_handle_request -> raid1_make_request -> md_flush_request.
-> raid1_make_request is already wrapped by md_handle_request.  So this
-> earlier call to md_handle_request will re-submit the bio if raid1_make_request
-> returns false after md_flush_request returns false.  Anything which calls an
-> mddev->pers->make_request function (only md_handle_request after patch)
-> must already handle a return of false or it would also have a bug allowing I/O
-> to be lost.
+Liviu Petcu
 
-Thanks for the explanation. You are right. The bio can't be lost.
+# mdadm --examine /dev/sd[abcdef]2
 
-Regards
-Xiao
->
->> There should not be a deadlock if it calls md_handle_request directly.
->> Am I right? If there is a risk, we
->> can put those bios into a list and queue a work in workqueue to handle
->> them. Is it a better way?
-> I don't see a deadlock with calling md_handle_request from md_flush_request.
-> It's just more stack and overhead when we could instead let the first calls to
-> these functions advance the I/O instead of recursing into new instances.
->
->> Regards
->> Xiao
-> David Jeffery
+/dev/sda2:
+          Magic : a92b4efc
+        Version : 0.90.00
+           UUID : df4ee56a:547f33ee:32bb33b1:ae294b6e
+  Creation Time : Fri Aug 14 12:11:48 2015
+     Raid Level : raid10
+  Used Dev Size : 1945124864 (1855.02 GiB 1991.81 GB)
+     Array Size : 5835374592 (5565.05 GiB 5975.42 GB)
+   Raid Devices : 6
+  Total Devices : 6
+Preferred Minor : 1
+
+    Update Time : Thu Sep 19 21:05:15 2019
+          State : active
+ Active Devices : 4
+Working Devices : 4
+ Failed Devices : 2
+  Spare Devices : 0
+       Checksum : e528c455 - correct
+         Events : 271498
+
+         Layout : offset=2
+     Chunk Size : 256K
+
+      Number   Major   Minor   RaidDevice State
+this     5       8        2        5      active sync   /dev/sda2
+
+   0     0       8       18        0      active sync   /dev/sdb2
+   1     1       0        0        1      faulty removed
+   2     2       0        0        2      faulty removed
+   3     3       8       66        3      active sync   /dev/sde2
+   4     4       8       82        4      active sync   /dev/sdf2
+   5     5       8        2        5      active sync   /dev/sda2
+/dev/sdb2:
+          Magic : a92b4efc
+        Version : 0.90.00
+           UUID : df4ee56a:547f33ee:32bb33b1:ae294b6e
+  Creation Time : Fri Aug 14 12:11:48 2015
+     Raid Level : raid10
+  Used Dev Size : 1945124864 (1855.02 GiB 1991.81 GB)
+     Array Size : 5835374592 (5565.05 GiB 5975.42 GB)
+   Raid Devices : 6
+  Total Devices : 6
+Preferred Minor : 1
+
+    Update Time : Thu Sep 19 21:05:15 2019
+          State : active
+ Active Devices : 4
+Working Devices : 4
+ Failed Devices : 2
+  Spare Devices : 0
+       Checksum : e528c45b - correct
+         Events : 271498
+
+         Layout : offset=2
+     Chunk Size : 256K
+
+      Number   Major   Minor   RaidDevice State
+this     0       8       18        0      active sync   /dev/sdb2
+
+   0     0       8       18        0      active sync   /dev/sdb2
+   1     1       0        0        1      faulty removed
+   2     2       0        0        2      faulty removed
+   3     3       8       66        3      active sync   /dev/sde2
+   4     4       8       82        4      active sync   /dev/sdf2
+   5     5       8        2        5      active sync   /dev/sda2
+/dev/sde2:
+          Magic : a92b4efc
+        Version : 0.90.00
+           UUID : df4ee56a:547f33ee:32bb33b1:ae294b6e
+  Creation Time : Fri Aug 14 12:11:48 2015
+     Raid Level : raid10
+  Used Dev Size : 1945124864 (1855.02 GiB 1991.81 GB)
+     Array Size : 5835374592 (5565.05 GiB 5975.42 GB)
+   Raid Devices : 6
+  Total Devices : 6
+Preferred Minor : 1
+
+    Update Time : Thu Sep 19 21:05:16 2019
+          State : clean
+ Active Devices : 4
+Working Devices : 4
+ Failed Devices : 2
+  Spare Devices : 0
+       Checksum : e52ce91f - correct
+         Events : 271499
+
+         Layout : offset=2
+     Chunk Size : 256K
+
+      Number   Major   Minor   RaidDevice State
+this     3       8       66        3      active sync   /dev/sde2
+
+   0     0       8       18        0      active sync   /dev/sdb2
+   1     1       0        0        1      faulty removed
+   2     2       0        0        2      faulty removed
+   3     3       8       66        3      active sync   /dev/sde2
+   4     4       8       82        4      active sync   /dev/sdf2
+   5     5       8        2        5      active sync   /dev/sda2
+/dev/sdf2:
+          Magic : a92b4efc
+        Version : 0.90.00
+           UUID : df4ee56a:547f33ee:32bb33b1:ae294b6e
+  Creation Time : Fri Aug 14 12:11:48 2015
+     Raid Level : raid10
+  Used Dev Size : 1945124864 (1855.02 GiB 1991.81 GB)
+     Array Size : 5835374592 (5565.05 GiB 5975.42 GB)
+   Raid Devices : 6
+  Total Devices : 6
+Preferred Minor : 1
+
+    Update Time : Thu Sep 19 21:05:16 2019
+          State : clean
+ Active Devices : 4
+Working Devices : 4
+ Failed Devices : 2
+  Spare Devices : 0
+       Checksum : e52ce931 - correct
+         Events : 271499
+
+         Layout : offset=2
+     Chunk Size : 256K
+
+      Number   Major   Minor   RaidDevice State
+this     4       8       82        4      active sync   /dev/sdf2
+
+   0     0       8       18        0      active sync   /dev/sdb2
+   1     1       0        0        1      faulty removed
+   2     2       0        0        2      faulty removed
+   3     3       8       66        3      active sync   /dev/sde2
+   4     4       8       82        4      active sync   /dev/sdf2
+   5     5       8        2        5      active sync   /dev/sda2
 
