@@ -2,205 +2,104 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A92FB87E3
-	for <lists+linux-raid@lfdr.de>; Fri, 20 Sep 2019 00:59:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35C47B87EA
+	for <lists+linux-raid@lfdr.de>; Fri, 20 Sep 2019 01:02:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404292AbfISW7N (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 19 Sep 2019 18:59:13 -0400
-Received: from li1843-175.members.linode.com ([172.104.24.175]:32892 "EHLO
-        mail.stoffel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392063AbfISW7N (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 19 Sep 2019 18:59:13 -0400
-X-Greylist: delayed 357 seconds by postgrey-1.27 at vger.kernel.org; Thu, 19 Sep 2019 18:59:12 EDT
-Received: from quad.stoffel.org (66-189-75-104.dhcp.oxfr.ma.charter.com [66.189.75.104])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.stoffel.org (Postfix) with ESMTPSA id 934A31E4AE;
-        Thu, 19 Sep 2019 18:53:15 -0400 (EDT)
-Received: by quad.stoffel.org (Postfix, from userid 1000)
-        id 31197A5B49; Thu, 19 Sep 2019 18:53:15 -0400 (EDT)
+        id S2392269AbfISXCR (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 19 Sep 2019 19:02:17 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40393 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392190AbfISXCR (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 19 Sep 2019 19:02:17 -0400
+Received: by mail-wm1-f65.google.com with SMTP id b24so202319wmj.5
+        for <linux-raid@vger.kernel.org>; Thu, 19 Sep 2019 16:02:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ll/IFhFbgbp6kK2WIL4W7/BKROf/sUamaKfI4BE/9Qs=;
+        b=Ti/SuyVHT+f/9kHa27iriN5huro9Vtr5GTZFuOZFJRS25tk59esJg+YYJvb/Gy4RVT
+         wzcUmwdNj2XShFqAcMaf0JsZ5+T5pxz58S0eSadBC0OQPDl8BqB4lZ0xl9lw9fv3Gfy7
+         Tk2PygtQtUbgCMWze7u6S3vh0zlef2Grud6QGT7plFODA/q/yqcgFwgaNHXdulrrYJmZ
+         a2C1M7QqrDTCnKA+qKaeZl6HozdwglRzhxFIbn5y+9taKRQh+WgWC+D8Lh4uVXVPxGjp
+         u/k/i+vC1nPsU4Ng0hxchk+NzTx5qvz9TP0a4gvbYYkqvAid054AKtB3g3Kwg58ZR5hP
+         RTGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ll/IFhFbgbp6kK2WIL4W7/BKROf/sUamaKfI4BE/9Qs=;
+        b=P466t9jkoS5kWqTR9nPUejwmiOgzprg3n2wDYVCd6yuNwh5JM9SP+wVvAUeWsdslYj
+         jg9T4aKTuFMkn/vKLzqu5Gsh/bBxeFcqUd62E1L23K8QhtRoavLKR/0ugN/tGjutUTTG
+         U7cGY8Xariliqe6FYA3tE1KqFSuF2XAyQhIXOs92PN8Y1gpgwbT+DTl5rPwB78lp7D12
+         UoQcEWQwx4sQhXdXqK5omeXJomDoIxcGKzPm3ptgBxpILdlrN2CupbZnjUALevh+iAd3
+         ZmEfRJAQ9A49jesY9OR5+4L0xiNSbEHn3QMM3l4qmcI430w6m04pZkVyUdHuYs14zO3T
+         AdYg==
+X-Gm-Message-State: APjAAAXECH7v8oy8kNMjYaDo+Kzh0+CPokPoKkdztJGBAMA9wjXp5YU3
+        ICFBfnoYOjkNFpkkV3sF4jHeXHHlBjoNoZ42o0U=
+X-Google-Smtp-Source: APXvYqyc8vnZ/y7oPpr9f6zWfwecb33fTmz4t8nrIFD1YzupPFgQiUZcxjnSN6/6bjv/V6bnXucq3bv/Lm0jdPo55O0=
+X-Received: by 2002:a1c:2d85:: with SMTP id t127mr206135wmt.81.1568934133470;
+ Thu, 19 Sep 2019 16:02:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Message-ID: <23940.1755.134402.954287@quad.stoffel.home>
-Date:   Thu, 19 Sep 2019 18:53:15 -0400
-From:   "John Stoffel" <john@stoffel.org>
-To:     <Liviu.Petcu@ugal.ro>
-Cc:     <linux-raid@vger.kernel.org>
-Subject: Re: RAID 10 with 2 failed drives
-In-Reply-To: <08df01d56f2b$3c52bdb0$b4f83910$@ugal.ro>
-References: <08df01d56f2b$3c52bdb0$b4f83910$@ugal.ro>
-X-Mailer: VM 8.2.0b under 25.1.1 (x86_64-pc-linux-gnu)
+References: <87impq9oh4.fsf@notabene.neil.brown.name>
+In-Reply-To: <87impq9oh4.fsf@notabene.neil.brown.name>
+From:   "David F." <df7729@gmail.com>
+Date:   Thu, 19 Sep 2019 16:02:02 -0700
+Message-ID: <CAGRSmLsH4a20Hed10ekGbprQXoXXasazgQT6cz+6dps7E1CUAA@mail.gmail.com>
+Subject: Re: [PATCH] udev: allow for udev attribute reading bug.
+To:     NeilBrown <neilb@suse.de>
+Cc:     Jes Sorensen <jes.sorensen@gmail.com>,
+        linux-raid <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+does this apply to eudev as well?  I'm thinking of upgrading from an
+older udev to eudev on our boot media.
 
-Liviu> Please let me know if in this situation detailed below, there
-Liviu> are chances of restoring the RAID 10 array and how I can do it
-Liviu> safely.  Thank you!
-
-It depends.  Do you have either of the two missing disks (/dev/sdc and
-/dev/sdd) available at all?  Have you tried doing a badblocks recovery
-of either of those disks onto a replacement disk and then trying to
-re-assemble your array?
-
-What happens if you do:
-
-  mdadm --assemble --scan
-
-or instead
-
-  mdadm --assemble md99 /dev/sd[abcdef]1
-
-Can you post the output message(s) you get when you try this?
-
-I'm not an export on how the 0.90 version of the metadata mirrors data
-across pairs, and then stripes across the pairs.  But if you've lost
-both halves of a pair, then you're probably out of luck.
-
-Have you looked at the raid wiki as well?  There's a bunch of good
-advice there.
-
- https://raid.wiki.kernel.org/index.php/Linux_Raid
-
-Good luck!  And post more details of your system as well.
-
-Liviu> Liviu Petcu
-
-Liviu> # mdadm --examine /dev/sd[abcdef]2
-
-Liviu> /dev/sda2:
-Liviu>           Magic : a92b4efc
-Liviu>         Version : 0.90.00
-Liviu>            UUID : df4ee56a:547f33ee:32bb33b1:ae294b6e
-Liviu>   Creation Time : Fri Aug 14 12:11:48 2015
-Liviu>      Raid Level : raid10
-Liviu>   Used Dev Size : 1945124864 (1855.02 GiB 1991.81 GB)
-Liviu>      Array Size : 5835374592 (5565.05 GiB 5975.42 GB)
-Liviu>    Raid Devices : 6
-Liviu>   Total Devices : 6
-Liviu> Preferred Minor : 1
-
-Liviu>     Update Time : Thu Sep 19 21:05:15 2019
-Liviu>           State : active
-Liviu>  Active Devices : 4
-Liviu> Working Devices : 4
-Liviu>  Failed Devices : 2
-Liviu>   Spare Devices : 0
-Liviu>        Checksum : e528c455 - correct
-Liviu>          Events : 271498
-
-Liviu>          Layout : offset=2
-Liviu>      Chunk Size : 256K
-
-Liviu>       Number   Major   Minor   RaidDevice State
-Liviu> this     5       8        2        5      active sync   /dev/sda2
-
-Liviu>    0     0       8       18        0      active sync   /dev/sdb2
-Liviu>    1     1       0        0        1      faulty removed
-Liviu>    2     2       0        0        2      faulty removed
-Liviu>    3     3       8       66        3      active sync   /dev/sde2
-Liviu>    4     4       8       82        4      active sync   /dev/sdf2
-Liviu>    5     5       8        2        5      active sync   /dev/sda2
-Liviu> /dev/sdb2:
-Liviu>           Magic : a92b4efc
-Liviu>         Version : 0.90.00
-Liviu>            UUID : df4ee56a:547f33ee:32bb33b1:ae294b6e
-Liviu>   Creation Time : Fri Aug 14 12:11:48 2015
-Liviu>      Raid Level : raid10
-Liviu>   Used Dev Size : 1945124864 (1855.02 GiB 1991.81 GB)
-Liviu>      Array Size : 5835374592 (5565.05 GiB 5975.42 GB)
-Liviu>    Raid Devices : 6
-Liviu>   Total Devices : 6
-Liviu> Preferred Minor : 1
-
-Liviu>     Update Time : Thu Sep 19 21:05:15 2019
-Liviu>           State : active
-Liviu>  Active Devices : 4
-Liviu> Working Devices : 4
-Liviu>  Failed Devices : 2
-Liviu>   Spare Devices : 0
-Liviu>        Checksum : e528c45b - correct
-Liviu>          Events : 271498
-
-Liviu>          Layout : offset=2
-Liviu>      Chunk Size : 256K
-
-Liviu>       Number   Major   Minor   RaidDevice State
-Liviu> this     0       8       18        0      active sync   /dev/sdb2
-
-Liviu>    0     0       8       18        0      active sync   /dev/sdb2
-Liviu>    1     1       0        0        1      faulty removed
-Liviu>    2     2       0        0        2      faulty removed
-Liviu>    3     3       8       66        3      active sync   /dev/sde2
-Liviu>    4     4       8       82        4      active sync   /dev/sdf2
-Liviu>    5     5       8        2        5      active sync   /dev/sda2
-Liviu> /dev/sde2:
-Liviu>           Magic : a92b4efc
-Liviu>         Version : 0.90.00
-Liviu>            UUID : df4ee56a:547f33ee:32bb33b1:ae294b6e
-Liviu>   Creation Time : Fri Aug 14 12:11:48 2015
-Liviu>      Raid Level : raid10
-Liviu>   Used Dev Size : 1945124864 (1855.02 GiB 1991.81 GB)
-Liviu>      Array Size : 5835374592 (5565.05 GiB 5975.42 GB)
-Liviu>    Raid Devices : 6
-Liviu>   Total Devices : 6
-Liviu> Preferred Minor : 1
-
-Liviu>     Update Time : Thu Sep 19 21:05:16 2019
-Liviu>           State : clean
-Liviu>  Active Devices : 4
-Liviu> Working Devices : 4
-Liviu>  Failed Devices : 2
-Liviu>   Spare Devices : 0
-Liviu>        Checksum : e52ce91f - correct
-Liviu>          Events : 271499
-
-Liviu>          Layout : offset=2
-Liviu>      Chunk Size : 256K
-
-Liviu>       Number   Major   Minor   RaidDevice State
-Liviu> this     3       8       66        3      active sync   /dev/sde2
-
-Liviu>    0     0       8       18        0      active sync   /dev/sdb2
-Liviu>    1     1       0        0        1      faulty removed
-Liviu>    2     2       0        0        2      faulty removed
-Liviu>    3     3       8       66        3      active sync   /dev/sde2
-Liviu>    4     4       8       82        4      active sync   /dev/sdf2
-Liviu>    5     5       8        2        5      active sync   /dev/sda2
-Liviu> /dev/sdf2:
-Liviu>           Magic : a92b4efc
-Liviu>         Version : 0.90.00
-Liviu>            UUID : df4ee56a:547f33ee:32bb33b1:ae294b6e
-Liviu>   Creation Time : Fri Aug 14 12:11:48 2015
-Liviu>      Raid Level : raid10
-Liviu>   Used Dev Size : 1945124864 (1855.02 GiB 1991.81 GB)
-Liviu>      Array Size : 5835374592 (5565.05 GiB 5975.42 GB)
-Liviu>    Raid Devices : 6
-Liviu>   Total Devices : 6
-Liviu> Preferred Minor : 1
-
-Liviu>     Update Time : Thu Sep 19 21:05:16 2019
-Liviu>           State : clean
-Liviu>  Active Devices : 4
-Liviu> Working Devices : 4
-Liviu>  Failed Devices : 2
-Liviu>   Spare Devices : 0
-Liviu>        Checksum : e52ce931 - correct
-Liviu>          Events : 271499
-
-Liviu>          Layout : offset=2
-Liviu>      Chunk Size : 256K
-
-Liviu>       Number   Major   Minor   RaidDevice State
-Liviu> this     4       8       82        4      active sync   /dev/sdf2
-
-Liviu>    0     0       8       18        0      active sync   /dev/sdb2
-Liviu>    1     1       0        0        1      faulty removed
-Liviu>    2     2       0        0        2      faulty removed
-Liviu>    3     3       8       66        3      active sync   /dev/sde2
-Liviu>    4     4       8       82        4      active sync   /dev/sdf2
-Liviu>    5     5       8        2        5      active sync   /dev/sda2
-
+On Tue, Sep 17, 2019 at 11:11 PM NeilBrown <neilb@suse.de> wrote:
+>
+>
+> There is a bug in udev (which will hopefully get fixed, but
+> we should allow for it anways).
+> When reading a sysfs attribute, it first reads the whole
+> value of the attribute, then reads again expecting to get
+> a read of 0 bytes, like you would with an ordinary file.
+> If the sysfs attribute changed between these two reads, it can
+> get a mixture of two values.
+>
+> In particular, if it reads when 'array_state' is changing from
+> 'clear' to 'inactive', it can find the value as "clear\nve".
+>
+> This causes the test for "|clear|active" to fail, so systemd is allowed
+> to think that the array is ready - when it isn't.
+>
+> So change the pattern to allow for this but adding a wildcard at
+> the end.
+> Also don't allow for an empty string - reading array_state will
+> never return an empty string - if it exists at all, it will be
+> non-empty.
+>
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
+>  udev-md-raid-arrays.rules | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/udev-md-raid-arrays.rules b/udev-md-raid-arrays.rules
+> index d3916651cf5c..c8fa8e89ef69 100644
+> --- a/udev-md-raid-arrays.rules
+> +++ b/udev-md-raid-arrays.rules
+> @@ -14,7 +14,7 @@ ENV{DEVTYPE}=="partition", GOTO="md_ignore_state"
+>  # never leave state 'inactive'
+>  ATTR{md/metadata_version}=="external:[A-Za-z]*", ATTR{md/array_state}=="inactive", GOTO="md_ignore_state"
+>  TEST!="md/array_state", ENV{SYSTEMD_READY}="0", GOTO="md_end"
+> -ATTR{md/array_state}=="|clear|inactive", ENV{SYSTEMD_READY}="0", GOTO="md_end"
+> +ATTR{md/array_state}=="clear*|inactive", ENV{SYSTEMD_READY}="0", GOTO="md_end"
+>  LABEL="md_ignore_state"
+>
+>  IMPORT{program}="BINDIR/mdadm --detail --no-devices --export $devnode"
+> --
+> 2.14.0.rc0.dirty
+>
