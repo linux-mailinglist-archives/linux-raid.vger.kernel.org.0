@@ -2,56 +2,82 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DC8F7B9491
-	for <lists+linux-raid@lfdr.de>; Fri, 20 Sep 2019 17:53:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7986CB94B1
+	for <lists+linux-raid@lfdr.de>; Fri, 20 Sep 2019 17:58:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404637AbfITPxq (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 20 Sep 2019 11:53:46 -0400
-Received: from mail.prgmr.com ([71.19.149.6]:58244 "EHLO mail.prgmr.com"
+        id S1727529AbfITP6l (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 20 Sep 2019 11:58:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:25168 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404191AbfITPxq (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 20 Sep 2019 11:53:46 -0400
-X-Greylist: delayed 586 seconds by postgrey-1.27 at vger.kernel.org; Fri, 20 Sep 2019 11:53:46 EDT
-Received: from [192.168.2.33] (c-174-62-72-237.hsd1.ca.comcast.net [174.62.72.237])
-        (Authenticated sender: srn)
-        by mail.prgmr.com (Postfix) with ESMTPSA id 91A2D72008B;
-        Fri, 20 Sep 2019 16:39:16 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.prgmr.com 91A2D72008B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prgmr.com;
-        s=default; t=1569011956;
-        bh=6OgIybeJf2r2yRYtd6fxgI++DZ7gPX8pv8TFHlHA7iQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=OUJxOHnnUC13gFpg/URrGWryHwG0VhX93t9JT95Pj16VkkKMOlVWBMU6PDNE9Heno
-         O45ARenY43ai0ejkQkpP2ia6ljOO8jxVLf//OIA66t3UQxpCpCXB5bmOPDjqwbMlVi
-         GwXsmSurLMeoJ8lRam8iVQHRt35tEnmIvg+1/bBA=
-Subject: Re: RAID 10 with 2 failed drives
-To:     Liviu.Petcu@ugal.ro
-Cc:     linux-raid@vger.kernel.org
-References: <08df01d56f2b$3c52bdb0$b4f83910$@ugal.ro>
- <23940.1755.134402.954287@quad.stoffel.home>
- <094701d56f7c$95225260$bf66f720$@ugal.ro>
-From:   Sarah Newman <srn@prgmr.com>
-Message-ID: <cf597586-a450-f85a-51e1-76df59f22839@prgmr.com>
-Date:   Fri, 20 Sep 2019 08:44:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726828AbfITP6l (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 20 Sep 2019 11:58:41 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1263F308FBFC;
+        Fri, 20 Sep 2019 15:58:41 +0000 (UTC)
+Received: from asgard.redhat.com (ovpn-112-68.ams2.redhat.com [10.36.112.68])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C33F51001B12;
+        Fri, 20 Sep 2019 15:58:36 +0000 (UTC)
+Date:   Fri, 20 Sep 2019 17:58:13 +0200
+From:   Eugene Syromiatnikov <esyr@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Shaohua Li <shli@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, linux-raid@vger.kernel.org,
+        Song Liu <song@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH v3 0/3] Fix typo in RWH_WRITE_LIFE_NOT_SET constant name
+Message-ID: <cover.1568994791.git.esyr@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <094701d56f7c$95225260$bf66f720$@ugal.ro>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 20 Sep 2019 15:58:41 +0000 (UTC)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 9/19/19 11:28 PM, Liviu Petcu wrote:
-> Thank you John Stoffel.
-> 
-> So far I have done nothing but mdadm - exams.  Both disks seem to be gone
-> and have no led activity. Below are the system information and the details
-> of the event from /var/log/messages.
+Hello.
 
-Maybe try reseating the drives, or reseating cables, or put the drives in a different server? Two drives being kicked at the same time sounds like a 
-problem other than the hard drives themselves, unless you haven't been running any sort of SMART self tests or raid checks.
+This is a small fix of a typo (or, more specifically, some remnant of
+the old patch version spelling) in RWH_WRITE_LIFE_NOT_SET constant,
+which is named as RWF_WRITE_LIFE_NOT_SET currently.  Since the name
+with "H" is used in man page and everywhere else, it's probably worth
+to make the name used in the fcntl.h UAPI header in line with it.
+The two follow-up patches update usage sites of this constant in kernel
+to use the new spelling.
+
+The old name is retained as it is part of UAPI now.
+
+Changes since v2[1]:
+ * Updated RWF_WRITE_LIFE_NOT_SET constant usage
+   in drivers/md/raid5-ppl.c:ppl_init_log().
+
+Changes since v1[2]:
+ * Changed format of the commit ID in the commit message of the first patch.
+ * Removed bogus Signed-off-by that snuck into the resend of the series.
+
+[1] https://lkml.org/lkml/2018/10/30/34
+[2] https://lkml.org/lkml/2018/10/26/88
+
+Eugene Syromiatnikov (3):
+  fcntl: fix typo in RWH_WRITE_LIFE_NOT_SET r/w hint name
+  drivers/md/raid5.c: use the new spelling of RWH_WRITE_LIFE_NOT_SET
+  drivers/md/raid5-ppl.c: use the new spelling of RWH_WRITE_LIFE_NOT_SET
+
+ drivers/md/raid5-ppl.c           | 2 +-
+ drivers/md/raid5.c               | 4 ++--
+ fs/fcntl.c                       | 2 +-
+ include/uapi/linux/fcntl.h       | 9 ++++++++-
+ tools/include/uapi/linux/fcntl.h | 9 ++++++++-
+ 5 files changed, 20 insertions(+), 6 deletions(-)
+
+-- 
+2.1.4
 
