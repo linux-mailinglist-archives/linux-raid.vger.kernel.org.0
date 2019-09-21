@@ -2,60 +2,94 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 54CE0B98AC
-	for <lists+linux-raid@lfdr.de>; Fri, 20 Sep 2019 22:52:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5B09B9C82
+	for <lists+linux-raid@lfdr.de>; Sat, 21 Sep 2019 08:00:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387703AbfITUv5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 20 Sep 2019 16:51:57 -0400
-Received: from li1843-175.members.linode.com ([172.104.24.175]:39176 "EHLO
-        mail.stoffel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387597AbfITUvy (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 20 Sep 2019 16:51:54 -0400
-Received: from quad.stoffel.org (66-189-75-104.dhcp.oxfr.ma.charter.com [66.189.75.104])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.stoffel.org (Postfix) with ESMTPSA id 34B502403F;
-        Fri, 20 Sep 2019 16:51:54 -0400 (EDT)
-Received: by quad.stoffel.org (Postfix, from userid 1000)
-        id 3ED1CA5B51; Fri, 20 Sep 2019 16:51:53 -0400 (EDT)
+        id S1730924AbfIUGAq (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 21 Sep 2019 02:00:46 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:37850 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbfIUGAp (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 21 Sep 2019 02:00:45 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8L603gp125363;
+        Sat, 21 Sep 2019 06:00:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
+ bh=SMoq7TZ0NiQ8MxwG7eDaPmFmoJSB00R5hX+Hdmm23DU=;
+ b=e9F2FhzKB9HwNYraob4tnlRcxJM+Iso37WuafIE7+YVkeoJeiQHf6Q7roNQxj183DXr0
+ x4Jp6awk1sfeBi+bFs+UHVkmllwANrVTLEcnaYEO660MuCbh45eI4+HZUrJ01SNkSSpA
+ YquicE8QOhZAeW0Ex6LRkFIPb+ZcUbG2KM2pxsFWy5DkWTjab+Czs0tfinvebnnjk/J4
+ Um5i1AbYjvTQeCmodOTY5Nvx6ifKBxha4wtoEWzCuhxr92wDkXTAYJ2hdXfjG4X9EqM+
+ u6UGO7ax8yxnx3yRXFfrXEzfjka09psln+ZEvKg6TC1nL8WBNjJ5OE1hPaFJV474AU6t eQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2v5b9t87wc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 21 Sep 2019 06:00:40 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8L5wc19114889;
+        Sat, 21 Sep 2019 06:00:40 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2v59x8vpp5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 21 Sep 2019 06:00:39 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8L60csn018213;
+        Sat, 21 Sep 2019 06:00:38 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 21 Sep 2019 06:00:37 +0000
+Date:   Sat, 21 Sep 2019 09:00:31 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Song Liu <song@kernel.org>, NeilBrown <neilb@suse.de>
+Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] md/raid0: Fix an error message in raid0_make_request()
+Message-ID: <20190921060031.GB18726@mwanda>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Message-ID: <23941.15337.175082.79768@quad.stoffel.home>
-Date:   Fri, 20 Sep 2019 16:51:53 -0400
-From:   "John Stoffel" <john@stoffel.org>
-To:     Sarah Newman <srn@prgmr.com>
-Cc:     Liviu.Petcu@ugal.ro, linux-raid@vger.kernel.org
-Subject: Re: RAID 10 with 2 failed drives
-In-Reply-To: <cf597586-a450-f85a-51e1-76df59f22839@prgmr.com>
-References: <08df01d56f2b$3c52bdb0$b4f83910$@ugal.ro>
-        <23940.1755.134402.954287@quad.stoffel.home>
-        <094701d56f7c$95225260$bf66f720$@ugal.ro>
-        <cf597586-a450-f85a-51e1-76df59f22839@prgmr.com>
-X-Mailer: VM 8.2.0b under 25.1.1 (x86_64-pc-linux-gnu)
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9386 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909210065
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9386 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909210066
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
->>>>> "Sarah" == Sarah Newman <srn@prgmr.com> writes:
+The first argument to WARN() is supposed to be a condition.  The
+original code will just print the mdname() instead of the full warning
+message.
 
-Sarah> On 9/19/19 11:28 PM, Liviu Petcu wrote:
->> Thank you John Stoffel.
->> 
->> So far I have done nothing but mdadm - exams.  Both disks seem to be gone
->> and have no led activity. Below are the system information and the details
->> of the event from /var/log/messages.
+Fixes: c84a1372df92 ("md/raid0: avoid RAID0 data corruption due to layout confusion.")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/md/raid0.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Sarah> Maybe try reseating the drives, or reseating cables, or put the
-Sarah> drives in a different server? Two drives being kicked at the
-Sarah> same time sounds like a problem other than the hard drives
-Sarah> themselves, unless you haven't been running any sort of SMART
-Sarah> self tests or raid checks.
+diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
+index f61693e59684..3956ea502f97 100644
+--- a/drivers/md/raid0.c
++++ b/drivers/md/raid0.c
+@@ -615,7 +615,7 @@ static bool raid0_make_request(struct mddev *mddev, struct bio *bio)
+ 		tmp_dev = map_sector(mddev, zone, sector, &sector);
+ 		break;
+ 	default:
+-		WARN("md/raid0:%s: Invalid layout\n", mdname(mddev));
++		WARN(1, "md/raid0:%s: Invalid layout\n", mdname(mddev));
+ 		bio_io_error(bio);
+ 		return true;
+ 	}
+-- 
+2.20.1
 
-
-I agree with Sarah, make sure those two drives are really dead first.
-If you have a USB3 port and one of those USB->SATA dongles, that might
-be a quick and easy way to confirm.
-
-I've been super busy at work today, just finally checking my own email.
