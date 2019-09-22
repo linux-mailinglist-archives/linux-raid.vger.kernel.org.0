@@ -2,38 +2,38 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B1623BA8E0
-	for <lists+linux-raid@lfdr.de>; Sun, 22 Sep 2019 21:51:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 787DBBA89F
+	for <lists+linux-raid@lfdr.de>; Sun, 22 Sep 2019 21:50:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393839AbfIVTJO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 22 Sep 2019 15:09:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34430 "EHLO mail.kernel.org"
+        id S1730098AbfIVTGL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 22 Sep 2019 15:06:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438827AbfIVS7U (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:59:20 -0400
+        id S2436521AbfIVTAi (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sun, 22 Sep 2019 15:00:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9852206C2;
-        Sun, 22 Sep 2019 18:59:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C040121907;
+        Sun, 22 Sep 2019 19:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178759;
-        bh=Is2ZghF4pScJ0Qc5jlZLN3T8yEWLs1UROC01YDkaX04=;
+        s=default; t=1569178837;
+        bh=JCa/BC/0Z0jvGevwM8437KXjIIr8XTy5Qbm6AGkSZS8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZjyV+PstiI0hw3SDkRnU+qyGSDTUfcWTdXzBZgLOhwoqzpLWu56BFEPD49ay9hs9l
-         r1MtKh7OXOJakGQk27jsv1J58uAKHSnjwqfkIsQZOCWHBbxBuhO/ToJqTU/r/WpqVc
-         Wjg/FwX0cX4VQ6l8oCmC3TMxm8YuJhlHNx9esN8U=
+        b=GYk/hFgYs1h6fbz92FJX0zPhZmlAaOvq7nMp0OnrTB0myAv2ydZIo+djiKzMOHLC9
+         T742Nk15BF4PBK0WBOnm2KWC28ybASBCmzg0LwifNkDEzA+Vr2TrzSO0WDf0FtfWWh
+         dLJKHasXQSFcAgLMtwTEHxYSImLISa4aXNUArVJc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nigel Croxon <ncroxon@redhat.com>,
+Cc:     Yufen Yu <yuyufen@huawei.com>, NeilBrown <neilb@suse.de>,
         Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 81/89] raid5: don't increment read_errors on EILSEQ return
-Date:   Sun, 22 Sep 2019 14:57:09 -0400
-Message-Id: <20190922185717.3412-81-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 46/60] md/raid1: fail run raid1 array when active disk less than one
+Date:   Sun, 22 Sep 2019 14:59:19 -0400
+Message-Id: <20190922185934.4305-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
-References: <20190922185717.3412-1-sashal@kernel.org>
+In-Reply-To: <20190922185934.4305-1-sashal@kernel.org>
+References: <20190922185934.4305-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -43,44 +43,76 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Nigel Croxon <ncroxon@redhat.com>
+From: Yufen Yu <yuyufen@huawei.com>
 
-[ Upstream commit b76b4715eba0d0ed574f58918b29c1b2f0fa37a8 ]
+[ Upstream commit 07f1a6850c5d5a65c917c3165692b5179ac4cb6b ]
 
-While MD continues to count read errors returned by the lower layer.
-If those errors are -EILSEQ, instead of -EIO, it should NOT increase
-the read_errors count.
+When run test case:
+  mdadm -CR /dev/md1 -l 1 -n 4 /dev/sd[a-d] --assume-clean --bitmap=internal
+  mdadm -S /dev/md1
+  mdadm -A /dev/md1 /dev/sd[b-c] --run --force
 
-When RAID6 is set up on dm-integrity target that detects massive
-corruption, the leg will be ejected from the array.  Even if the
-issue is correctable with a sector re-write and the array has
-necessary redundancy to correct it.
+  mdadm --zero /dev/sda
+  mdadm /dev/md1 -a /dev/sda
 
-The leg is ejected because it runs up the rdev->read_errors beyond
-conf->max_nr_stripes.  The return status in dm-drypt when there is
-a data integrity error is -EILSEQ (BLK_STS_PROTECTION).
+  echo offline > /sys/block/sdc/device/state
+  echo offline > /sys/block/sdb/device/state
+  sleep 5
+  mdadm -S /dev/md1
 
-Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
+  echo running > /sys/block/sdb/device/state
+  echo running > /sys/block/sdc/device/state
+  mdadm -A /dev/md1 /dev/sd[a-c] --run --force
+
+mdadm run fail with kernel message as follow:
+[  172.986064] md: kicking non-fresh sdb from array!
+[  173.004210] md: kicking non-fresh sdc from array!
+[  173.022383] md/raid1:md1: active with 0 out of 4 mirrors
+[  173.022406] md1: failed to create bitmap (-5)
+
+In fact, when active disk in raid1 array less than one, we
+need to return fail in raid1_run().
+
+Reviewed-by: NeilBrown <neilb@suse.de>
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
 Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/raid5.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/md/raid1.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index cc0bd528136db..9f2059e185f7f 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -2538,7 +2538,8 @@ static void raid5_end_read_request(struct bio * bi)
- 		int set_bad = 0;
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 53048bf0b2b81..9892c41de4419 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -2960,6 +2960,13 @@ static int raid1_run(struct mddev *mddev)
+ 		    !test_bit(In_sync, &conf->mirrors[i].rdev->flags) ||
+ 		    test_bit(Faulty, &conf->mirrors[i].rdev->flags))
+ 			mddev->degraded++;
++	/*
++	 * RAID1 needs at least one disk in active
++	 */
++	if (conf->raid_disks - mddev->degraded < 1) {
++		ret = -EINVAL;
++		goto abort;
++	}
  
- 		clear_bit(R5_UPTODATE, &sh->dev[i].flags);
--		atomic_inc(&rdev->read_errors);
-+		if (!(bi->bi_status == BLK_STS_PROTECTION))
-+			atomic_inc(&rdev->read_errors);
- 		if (test_bit(R5_ReadRepl, &sh->dev[i].flags))
- 			pr_warn_ratelimited(
- 				"md/raid:%s: read error on replacement device (sector %llu on %s).\n",
+ 	if (conf->raid_disks - mddev->degraded == 1)
+ 		mddev->recovery_cp = MaxSector;
+@@ -2994,8 +3001,12 @@ static int raid1_run(struct mddev *mddev)
+ 	ret =  md_integrity_register(mddev);
+ 	if (ret) {
+ 		md_unregister_thread(&mddev->thread);
+-		raid1_free(mddev, conf);
++		goto abort;
+ 	}
++	return 0;
++
++abort:
++	raid1_free(mddev, conf);
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
