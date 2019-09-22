@@ -2,107 +2,85 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B3A78BA1B9
-	for <lists+linux-raid@lfdr.de>; Sun, 22 Sep 2019 12:06:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E521FBA3E8
+	for <lists+linux-raid@lfdr.de>; Sun, 22 Sep 2019 20:45:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728125AbfIVKG4 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-raid@lfdr.de>); Sun, 22 Sep 2019 06:06:56 -0400
-Received: from mail.ugal.ro ([193.231.148.6]:51755 "EHLO MAIL.ugal.ro"
+        id S2389572AbfIVSpp (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 22 Sep 2019 14:45:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727741AbfIVKG4 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sun, 22 Sep 2019 06:06:56 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by MAIL.ugal.ro (Postfix) with ESMTP id 2823F13A2F54A;
-        Sun, 22 Sep 2019 10:06:48 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at ugal.ro
-Received: from MAIL.ugal.ro ([127.0.0.1])
-        by localhost (mail.ugal.ro [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id FXE2bG4K5Lb7; Sun, 22 Sep 2019 13:06:46 +0300 (EEST)
-Received: from LPETCU (unknown [10.11.10.80])
-        (Authenticated sender: lpetcu)
-        by MAIL.ugal.ro (Postfix) with ESMTPA id 5EA4813A2F444;
-        Sun, 22 Sep 2019 13:06:46 +0300 (EEST)
-Reply-To: <Liviu.Petcu@ugal.ro>
-From:   "Liviu Petcu" <Liviu.Petcu@ugal.ro>
-To:     "'Sarah Newman'" <srn@prgmr.com>
-Cc:     "'John Stoffel'" <john@stoffel.org>, <linux-raid@vger.kernel.org>
-References: <08df01d56f2b$3c52bdb0$b4f83910$@ugal.ro> <23940.1755.134402.954287@quad.stoffel.home> <094701d56f7c$95225260$bf66f720$@ugal.ro> <cf597586-a450-f85a-51e1-76df59f22839@prgmr.com> <23941.15337.175082.79768@quad.stoffel.home> <001e01d5705d$b1785360$1468fa20$@ugal.ro> <8a277324-d9b8-f2c9-bec0-5ed90c6e3eb4@prgmr.com> <004f01d570aa$48705410$d950fc30$@ugal.ro> <006301d570c4$f0353f20$d09fbd60$@ugal.ro> <65e41893-8f77-1bbe-ed58-328364a87f3d@prgmr.com>
-In-Reply-To: <65e41893-8f77-1bbe-ed58-328364a87f3d@prgmr.com>
-Subject: RE: RAID 10 with 2 failed drives
-Date:   Sun, 22 Sep 2019 13:06:27 +0300
-Organization: =?utf-8?Q?Universitatea_=E2=80=9EDunarea_de_Jos=E2=80=9D_d?=
-        =?utf-8?Q?in_Gala=3Fi?=
-Message-ID: <009a01d5712d$65f54ee0$31dfeca0$@ugal.ro>
+        id S2389547AbfIVSpn (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:45:43 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1101D2196E;
+        Sun, 22 Sep 2019 18:45:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569177942;
+        bh=c0HS9vBTQOn2wgK3HorCqLxirZgXOoitDmt8CKIkcZw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ViMI0aGE88mihPcGM+NypivROnrHv0YwbayqhUv7FAQbKgCBLqNqeBlRhhDchsRi9
+         Uj+DONrqmVxeL0DKaYG+0WZMcVvQucVR3gPAee9VdFXviIK7Cd69TuKxAQArBw1HRS
+         O5oqBS+aBLzs4vEGF9PEZer5D6+YxBuPMaqcl18M=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Guoqing Jiang <jgq516@gmail.com>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 051/203] md: don't call spare_active in md_reap_sync_thread if all member devices can't work
+Date:   Sun, 22 Sep 2019 14:41:17 -0400
+Message-Id: <20190922184350.30563-51-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
+References: <20190922184350.30563-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AQLQ1+hi3KIqiub/RHQRSTvcyI2F0wLfsDrkAugv2EMBTTr/eQIDR3BRAZijxEMB9pN1IQH07GyeAc9ve1QBiwO4z6Sw6LWQ
-Content-Language: ro
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
->>On 9/21/19 2:38 PM, Liviu Petcu wrote:
->> 
->> # mdadm --assemble --force /dev/md1 /dev/loop0p2 /dev/loop1p2 /dev/loop2p2 /dev/loop3p2 /dev/loop4p2 /dev/loop5p2
->> mdadm: cannot open device /dev/loop0p2: No such file or directory
->> mdadm: /dev/loop0p2 has no superblock - assembly aborted
->> 
->> It is wrong? Or something I broke?
+From: Guoqing Jiang <jgq516@gmail.com>
 
->You need to run kpartx -av on each loopback device and then access the partitions in /dev/mapper.
+[ Upstream commit 0d8ed0e9bf9643f27f4816dca61081784dedb38d ]
 
-I used kpartx like this:
+When add one disk to array, the md_reap_sync_thread is responsible
+to activate the spare and set In_sync flag for the new member in
+spare_active().
 
-#kpartx -avr /mnt/usb/discX.img
+But if raid1 has one member disk A, and disk B is added to the array.
+Then we offline A before all the datas are synchronized from A to B,
+obviously B doesn't have the latest data as A, but B is still marked
+with In_sync flag.
 
-The results:
-# ls -al /dev/mapper/
+So let's not call spare_active under the condition, otherwise B is
+still showed with 'U' state which is not correct.
 
-total 0
-drwxr-xr-x  2 root root     260 Sep 22 12:16 .
-drwxr-xr-x 19 root root   10440 Sep 22 12:16 ..
-crw-------  1 root root 10, 236 Sep 22 07:05 control
-lrwxrwxrwx  1 root root       7 Sep 22 12:15 loop0p1 -> ../dm-0
-lrwxrwxrwx  1 root root       7 Sep 22 12:15 loop0p2 -> ../dm-1
-lrwxrwxrwx  1 root root       7 Sep 22 12:15 loop1p1 -> ../dm-2
-lrwxrwxrwx  1 root root       7 Sep 22 12:15 loop1p2 -> ../dm-3
-lrwxrwxrwx  1 root root       7 Sep 22 12:16 loop2p1 -> ../dm-4
-lrwxrwxrwx  1 root root       7 Sep 22 12:16 loop2p2 -> ../dm-5
-lrwxrwxrwx  1 root root       7 Sep 22 12:16 loop3p1 -> ../dm-6
-lrwxrwxrwx  1 root root       7 Sep 22 12:16 loop3p2 -> ../dm-7
-lrwxrwxrwx  1 root root       7 Sep 22 12:16 loop4p1 -> ../dm-8
-lrwxrwxrwx  1 root root       7 Sep 22 12:16 loop4p2 -> ../dm-9
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/md/md.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-#cat /proc/mdstat
-
-Personalities : [linear] [raid0] [raid1] [raid10] [raid6] [raid5] [raid4] [multipath]
-md126 : active raid1 dm-8[6](F) dm-6[0] dm-4[7](F) dm-2[8](F)
-      4193216 blocks [6/1] [U_____]
-
-md127 : inactive dm-9[3](S) dm-7[0](S) dm-5[5](S) dm-3[4](S) dm-1[2](S)
-      9746595840 blocks
-
-unused devices: <none>
-
-But comparing with the mdadm status at the time of failure, it looks different:
-
-#cat mdstat.txt
-
-Personalities : [raid1] [raid10] 
-md1 : active raid10 sdb2[0] sda2[5] sdf2[4] sde2[3] sdd2[6](F) sdc2[7](F)
-      5835374592 blocks 256K chunks 2 offset-copies [6/4] [U__UUU]
-      
-md0 : active raid1 sdb1[0] sda1[5] sdf1[4] sde1[3] sdd1[6](F) sdc1[7](F)
-      4193216 blocks [6/4] [U__UUU]
-
-My question is: is it possible that these differences are due to the fact that I initially started the system with a live cd to copy the discs? 
-I saw then that it tried to start the raid and then I shutdown the system and removed the disks and installed them on another computer to copy them...
-
-Thank you.
-
-
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 24638ccedce42..fd62be3ca2871 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -9043,7 +9043,8 @@ void md_reap_sync_thread(struct mddev *mddev)
+ 	/* resync has finished, collect result */
+ 	md_unregister_thread(&mddev->sync_thread);
+ 	if (!test_bit(MD_RECOVERY_INTR, &mddev->recovery) &&
+-	    !test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery)) {
++	    !test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery) &&
++	    mddev->degraded != mddev->raid_disks) {
+ 		/* success...*/
+ 		/* activate any spares */
+ 		if (mddev->pers->spare_active(mddev)) {
+-- 
+2.20.1
 
