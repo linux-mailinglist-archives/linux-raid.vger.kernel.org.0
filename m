@@ -2,38 +2,37 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DDD1BA475
-	for <lists+linux-raid@lfdr.de>; Sun, 22 Sep 2019 20:56:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CAEEDBA4A9
+	for <lists+linux-raid@lfdr.de>; Sun, 22 Sep 2019 20:57:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391888AbfIVSs5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 22 Sep 2019 14:48:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45874 "EHLO mail.kernel.org"
+        id S2404632AbfIVSuv (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 22 Sep 2019 14:50:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391864AbfIVSsz (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:48:55 -0400
+        id S2404614AbfIVSuu (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:50:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 345E821479;
-        Sun, 22 Sep 2019 18:48:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1592821BE5;
+        Sun, 22 Sep 2019 18:50:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178135;
-        bh=55epLifv/9ypt2pWBrwbCrVU96q+XbcR0MUL9tS6NaA=;
+        s=default; t=1569178249;
+        bh=WIctwk9L72Om2Ui1kbxR8vV1p8YYAz6Te+AeYjGT+5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tb080fzcea1f3yGtTMjbTNmM6VxTVHTS2d8bqRDtnoikMwPnZLNy9qVTmh3wM7PQ7
-         MmywxsbZnmpYkw5cTlBsQrsPjL0Bj9yQnB8d8pyLZphpnFYF3MZjqN+ces/CRbghGA
-         WaikZbjJEZzkN/CMLt94Tztev1ZzvMrsaAGumMG0=
+        b=BxGBl9C21xcV/lwWRAxk5exI30B+PdBEJ1TvWnfTBRf2KzsbVfBwR1Q2vzIur6R1D
+         8/R2YenSbh/hQ4sCFKiPWzfrsZUd17fNjQERmYV5MqqfUuANJmekb6ikvZZTe1kTb1
+         qFixc7TWdZ02rKxtchsHWh9YKwHZxlEJfZmlIBrI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nigel Croxon <ncroxon@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
+Cc:     Yufen Yu <yuyufen@huawei.com>, Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 186/203] raid5: don't increment read_errors on EILSEQ return
-Date:   Sun, 22 Sep 2019 14:43:32 -0400
-Message-Id: <20190922184350.30563-186-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 042/185] md/raid1: end bio when the device faulty
+Date:   Sun, 22 Sep 2019 14:47:00 -0400
+Message-Id: <20190922184924.32534-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
-References: <20190922184350.30563-1-sashal@kernel.org>
+In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
+References: <20190922184924.32534-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -43,44 +42,73 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Nigel Croxon <ncroxon@redhat.com>
+From: Yufen Yu <yuyufen@huawei.com>
 
-[ Upstream commit b76b4715eba0d0ed574f58918b29c1b2f0fa37a8 ]
+[ Upstream commit eeba6809d8d58908b5ed1b5ceb5fcb09a98a7cad ]
 
-While MD continues to count read errors returned by the lower layer.
-If those errors are -EILSEQ, instead of -EIO, it should NOT increase
-the read_errors count.
+When write bio return error, it would be added to conf->retry_list
+and wait for raid1d thread to retry write and acknowledge badblocks.
 
-When RAID6 is set up on dm-integrity target that detects massive
-corruption, the leg will be ejected from the array.  Even if the
-issue is correctable with a sector re-write and the array has
-necessary redundancy to correct it.
+In narrow_write_error(), the error bio will be split in the unit of
+badblock shift (such as one sector) and raid1d thread issues them
+one by one. Until all of the splited bio has finished, raid1d thread
+can go on processing other things, which is time consuming.
 
-The leg is ejected because it runs up the rdev->read_errors beyond
-conf->max_nr_stripes.  The return status in dm-drypt when there is
-a data integrity error is -EILSEQ (BLK_STS_PROTECTION).
+But, there is a scene for error handling that is not necessary.
+When the device has been set faulty, flush_bio_list() may end
+bios in pending_bio_list with error status. Since these bios
+has not been issued to the device actually, error handlding to
+retry write and acknowledge badblocks make no sense.
 
-Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
+Even without that scene, when the device is faulty, badblocks info
+can not be written out to the device. Thus, we also no need to
+handle the error IO.
+
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
 Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/raid5.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/md/raid1.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 21514edb2bea3..d574701185db9 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -2526,7 +2526,8 @@ static void raid5_end_read_request(struct bio * bi)
- 		int set_bad = 0;
- 
- 		clear_bit(R5_UPTODATE, &sh->dev[i].flags);
--		atomic_inc(&rdev->read_errors);
-+		if (!(bi->bi_status == BLK_STS_PROTECTION))
-+			atomic_inc(&rdev->read_errors);
- 		if (test_bit(R5_ReadRepl, &sh->dev[i].flags))
- 			pr_warn_ratelimited(
- 				"md/raid:%s: read error on replacement device (sector %llu on %s).\n",
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 2aa36e570e049..a26731a9b38e7 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -426,19 +426,21 @@ static void raid1_end_write_request(struct bio *bio)
+ 		    /* We never try FailFast to WriteMostly devices */
+ 		    !test_bit(WriteMostly, &rdev->flags)) {
+ 			md_error(r1_bio->mddev, rdev);
+-			if (!test_bit(Faulty, &rdev->flags))
+-				/* This is the only remaining device,
+-				 * We need to retry the write without
+-				 * FailFast
+-				 */
+-				set_bit(R1BIO_WriteError, &r1_bio->state);
+-			else {
+-				/* Finished with this branch */
+-				r1_bio->bios[mirror] = NULL;
+-				to_put = bio;
+-			}
+-		} else
++		}
++
++		/*
++		 * When the device is faulty, it is not necessary to
++		 * handle write error.
++		 * For failfast, this is the only remaining device,
++		 * We need to retry the write without FailFast.
++		 */
++		if (!test_bit(Faulty, &rdev->flags))
+ 			set_bit(R1BIO_WriteError, &r1_bio->state);
++		else {
++			/* Finished with this branch */
++			r1_bio->bios[mirror] = NULL;
++			to_put = bio;
++		}
+ 	} else {
+ 		/*
+ 		 * Set R1BIO_Uptodate in our master bio, so that we
 -- 
 2.20.1
 
