@@ -2,36 +2,35 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BADE3BA935
-	for <lists+linux-raid@lfdr.de>; Sun, 22 Sep 2019 21:51:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96A87BA8E9
+	for <lists+linux-raid@lfdr.de>; Sun, 22 Sep 2019 21:51:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436763AbfIVTMh (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 22 Sep 2019 15:12:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60618 "EHLO mail.kernel.org"
+        id S1730430AbfIVTJh (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 22 Sep 2019 15:09:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404906AbfIVS55 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:57:57 -0400
+        id S2395008AbfIVS7G (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:59:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DDB2208C2;
-        Sun, 22 Sep 2019 18:57:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB0852186A;
+        Sun, 22 Sep 2019 18:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178677;
-        bh=14EbOH0XAvEPQOaJJj0L0hn8plnIwTmS2PmGUyKvBX0=;
+        s=default; t=1569178745;
+        bh=Y1kShC29f9/xSMhQ3125LErCyuq33vFLzj/paWB00Ms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QINcUmHPsGn2x9ipwlnq1+3bk2HvE77TRXGxaIEuO45ddfGAXiAt2muAx+pUqrjDW
-         x4kCqBu1/+OMQqGTaMLB9fUwZXHj0jDObrL/JhvNvsQgePHsYr8dpw3iAIje76SueT
-         S8sF1RbaqzBv2t0ykqWQwstWEYfIo1ZeL0gchxDk=
+        b=HMOTEDieXcABpmYoo/IyubkZhbrHCz0Y7rIF9PT7ZExnt+EnKC1c3bZaIRkBw7XOf
+         hrW+XTRsASmF2AdHtkP9t09qlgejP1YULaHCHgD7PsIGblr4rHnUHRP9SL9VK2q3yA
+         JysivKXiNGc0+OffBbL7ESBXX5FyPdwhwTvJTuVA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guoqing Jiang <jgq516@gmail.com>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+Cc:     Yufen Yu <yuyufen@huawei.com>, NeilBrown <neilb@suse.de>,
         Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 26/89] md: don't set In_sync if array is frozen
-Date:   Sun, 22 Sep 2019 14:56:14 -0400
-Message-Id: <20190922185717.3412-26-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 71/89] md/raid1: fail run raid1 array when active disk less than one
+Date:   Sun, 22 Sep 2019 14:56:59 -0400
+Message-Id: <20190922185717.3412-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
 References: <20190922185717.3412-1-sashal@kernel.org>
@@ -44,53 +43,76 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Guoqing Jiang <jgq516@gmail.com>
+From: Yufen Yu <yuyufen@huawei.com>
 
-[ Upstream commit 062f5b2ae12a153644c765e7ba3b0f825427be1d ]
+[ Upstream commit 07f1a6850c5d5a65c917c3165692b5179ac4cb6b ]
 
-When a disk is added to array, the following path is called in mdadm.
+When run test case:
+  mdadm -CR /dev/md1 -l 1 -n 4 /dev/sd[a-d] --assume-clean --bitmap=internal
+  mdadm -S /dev/md1
+  mdadm -A /dev/md1 /dev/sd[b-c] --run --force
 
-Manage_subdevs -> sysfs_freeze_array
-               -> Manage_add
-               -> sysfs_set_str(&info, NULL, "sync_action","idle")
+  mdadm --zero /dev/sda
+  mdadm /dev/md1 -a /dev/sda
 
-Then from kernel side, Manage_add invokes the path (add_new_disk ->
-validate_super = super_1_validate) to set In_sync flag.
+  echo offline > /sys/block/sdc/device/state
+  echo offline > /sys/block/sdb/device/state
+  sleep 5
+  mdadm -S /dev/md1
 
-Since In_sync means "device is in_sync with rest of array", and the new
-added disk need to resync thread to help the synchronization of data.
-And md_reap_sync_thread would call spare_active to set In_sync for the
-new added disk finally. So don't set In_sync if array is in frozen.
+  echo running > /sys/block/sdb/device/state
+  echo running > /sys/block/sdc/device/state
+  mdadm -A /dev/md1 /dev/sd[a-c] --run --force
 
-Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+mdadm run fail with kernel message as follow:
+[  172.986064] md: kicking non-fresh sdb from array!
+[  173.004210] md: kicking non-fresh sdc from array!
+[  173.022383] md/raid1:md1: active with 0 out of 4 mirrors
+[  173.022406] md1: failed to create bitmap (-5)
+
+In fact, when active disk in raid1 array less than one, we
+need to return fail in raid1_run().
+
+Reviewed-by: NeilBrown <neilb@suse.de>
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
 Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/md/raid1.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index d185725e100c0..f86082ee62a69 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -1763,8 +1763,15 @@ static int super_1_validate(struct mddev *mddev, struct md_rdev *rdev)
- 				if (!(le32_to_cpu(sb->feature_map) &
- 				      MD_FEATURE_RECOVERY_BITMAP))
- 					rdev->saved_raid_disk = -1;
--			} else
--				set_bit(In_sync, &rdev->flags);
-+			} else {
-+				/*
-+				 * If the array is FROZEN, then the device can't
-+				 * be in_sync with rest of array.
-+				 */
-+				if (!test_bit(MD_RECOVERY_FROZEN,
-+					      &mddev->recovery))
-+					set_bit(In_sync, &rdev->flags);
-+			}
- 			rdev->raid_disk = role;
- 			break;
- 		}
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 762d21c84774a..f46ac9db9edb2 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -3099,6 +3099,13 @@ static int raid1_run(struct mddev *mddev)
+ 		    !test_bit(In_sync, &conf->mirrors[i].rdev->flags) ||
+ 		    test_bit(Faulty, &conf->mirrors[i].rdev->flags))
+ 			mddev->degraded++;
++	/*
++	 * RAID1 needs at least one disk in active
++	 */
++	if (conf->raid_disks - mddev->degraded < 1) {
++		ret = -EINVAL;
++		goto abort;
++	}
+ 
+ 	if (conf->raid_disks - mddev->degraded == 1)
+ 		mddev->recovery_cp = MaxSector;
+@@ -3132,8 +3139,12 @@ static int raid1_run(struct mddev *mddev)
+ 	ret =  md_integrity_register(mddev);
+ 	if (ret) {
+ 		md_unregister_thread(&mddev->thread);
+-		raid1_free(mddev, conf);
++		goto abort;
+ 	}
++	return 0;
++
++abort:
++	raid1_free(mddev, conf);
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
