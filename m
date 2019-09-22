@@ -2,38 +2,37 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 31BA7BA846
-	for <lists+linux-raid@lfdr.de>; Sun, 22 Sep 2019 21:49:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E432BAB5B
+	for <lists+linux-raid@lfdr.de>; Sun, 22 Sep 2019 21:55:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395348AbfIVTB6 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 22 Sep 2019 15:01:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38280 "EHLO mail.kernel.org"
+        id S2403759AbfIVThm (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 22 Sep 2019 15:37:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393226AbfIVTB5 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sun, 22 Sep 2019 15:01:57 -0400
+        id S2389541AbfIVSpm (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:45:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAB6D208C2;
-        Sun, 22 Sep 2019 19:01:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08FEE222C2;
+        Sun, 22 Sep 2019 18:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178916;
-        bh=gJXf0m846H7nSaBfT45ol9cDA4hQTRNe/xed/jgri1w=;
+        s=default; t=1569177941;
+        bh=wHCe2eLqeBayLHrTaC81ulGiWcK3ZH12sxzE0bgkK5E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iT2KTTVJ0NzGkaWetw8n0acURdf9S+UhX7vmehPSRJSFUqDpQeX6dAkunGsncvk6H
-         bo2yQyXd6iRNi+hXmvGg8x+qFpO9mqOHKGffSQI78qE00buWudVN8v4WoO+SBQ4uhS
-         V/xZBlds5XyogZKrWvesHdZYM14D7EfZ+u0Nz8fg=
+        b=meLW7Odhl6RqRgZk2CrTSO1dBjADj/TKyMDGeka5XDUVmLZd8mdvz0XtMUrJwJEHT
+         +krwcrhebrjJ12dA8apB6nka62liAeUVmoUWgP5mmqc8H9C98HW9Ry4Qd4NEq/XPjW
+         JMFyeujDWj6aU3aoYPpU81N3Xc8Mwpk7M/x/SWnc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yufen Yu <yuyufen@huawei.com>, NeilBrown <neilb@suse.de>,
-        Song Liu <songliubraving@fb.com>,
+Cc:     Yufen Yu <yuyufen@huawei.com>, Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 34/44] md/raid1: fail run raid1 array when active disk less than one
-Date:   Sun, 22 Sep 2019 15:00:52 -0400
-Message-Id: <20190922190103.4906-34-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 050/203] md/raid1: end bio when the device faulty
+Date:   Sun, 22 Sep 2019 14:41:16 -0400
+Message-Id: <20190922184350.30563-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190922190103.4906-1-sashal@kernel.org>
-References: <20190922190103.4906-1-sashal@kernel.org>
+In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
+References: <20190922184350.30563-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -45,74 +44,71 @@ X-Mailing-List: linux-raid@vger.kernel.org
 
 From: Yufen Yu <yuyufen@huawei.com>
 
-[ Upstream commit 07f1a6850c5d5a65c917c3165692b5179ac4cb6b ]
+[ Upstream commit eeba6809d8d58908b5ed1b5ceb5fcb09a98a7cad ]
 
-When run test case:
-  mdadm -CR /dev/md1 -l 1 -n 4 /dev/sd[a-d] --assume-clean --bitmap=internal
-  mdadm -S /dev/md1
-  mdadm -A /dev/md1 /dev/sd[b-c] --run --force
+When write bio return error, it would be added to conf->retry_list
+and wait for raid1d thread to retry write and acknowledge badblocks.
 
-  mdadm --zero /dev/sda
-  mdadm /dev/md1 -a /dev/sda
+In narrow_write_error(), the error bio will be split in the unit of
+badblock shift (such as one sector) and raid1d thread issues them
+one by one. Until all of the splited bio has finished, raid1d thread
+can go on processing other things, which is time consuming.
 
-  echo offline > /sys/block/sdc/device/state
-  echo offline > /sys/block/sdb/device/state
-  sleep 5
-  mdadm -S /dev/md1
+But, there is a scene for error handling that is not necessary.
+When the device has been set faulty, flush_bio_list() may end
+bios in pending_bio_list with error status. Since these bios
+has not been issued to the device actually, error handlding to
+retry write and acknowledge badblocks make no sense.
 
-  echo running > /sys/block/sdb/device/state
-  echo running > /sys/block/sdc/device/state
-  mdadm -A /dev/md1 /dev/sd[a-c] --run --force
+Even without that scene, when the device is faulty, badblocks info
+can not be written out to the device. Thus, we also no need to
+handle the error IO.
 
-mdadm run fail with kernel message as follow:
-[  172.986064] md: kicking non-fresh sdb from array!
-[  173.004210] md: kicking non-fresh sdc from array!
-[  173.022383] md/raid1:md1: active with 0 out of 4 mirrors
-[  173.022406] md1: failed to create bitmap (-5)
-
-In fact, when active disk in raid1 array less than one, we
-need to return fail in raid1_run().
-
-Reviewed-by: NeilBrown <neilb@suse.de>
 Signed-off-by: Yufen Yu <yuyufen@huawei.com>
 Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/raid1.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/md/raid1.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 82e284d2b202b..abb99515068b1 100644
+index 34e26834ad28b..501a3b4d82f33 100644
 --- a/drivers/md/raid1.c
 +++ b/drivers/md/raid1.c
-@@ -2958,6 +2958,13 @@ static int run(struct mddev *mddev)
- 		    !test_bit(In_sync, &conf->mirrors[i].rdev->flags) ||
- 		    test_bit(Faulty, &conf->mirrors[i].rdev->flags))
- 			mddev->degraded++;
-+	/*
-+	 * RAID1 needs at least one disk in active
-+	 */
-+	if (conf->raid_disks - mddev->degraded < 1) {
-+		ret = -EINVAL;
-+		goto abort;
-+	}
- 
- 	if (conf->raid_disks - mddev->degraded == 1)
- 		mddev->recovery_cp = MaxSector;
-@@ -2992,8 +2999,12 @@ static int run(struct mddev *mddev)
- 	ret =  md_integrity_register(mddev);
- 	if (ret) {
- 		md_unregister_thread(&mddev->thread);
--		raid1_free(mddev, conf);
-+		goto abort;
- 	}
-+	return 0;
+@@ -447,19 +447,21 @@ static void raid1_end_write_request(struct bio *bio)
+ 		    /* We never try FailFast to WriteMostly devices */
+ 		    !test_bit(WriteMostly, &rdev->flags)) {
+ 			md_error(r1_bio->mddev, rdev);
+-			if (!test_bit(Faulty, &rdev->flags))
+-				/* This is the only remaining device,
+-				 * We need to retry the write without
+-				 * FailFast
+-				 */
+-				set_bit(R1BIO_WriteError, &r1_bio->state);
+-			else {
+-				/* Finished with this branch */
+-				r1_bio->bios[mirror] = NULL;
+-				to_put = bio;
+-			}
+-		} else
++		}
 +
-+abort:
-+	raid1_free(mddev, conf);
- 	return ret;
- }
- 
++		/*
++		 * When the device is faulty, it is not necessary to
++		 * handle write error.
++		 * For failfast, this is the only remaining device,
++		 * We need to retry the write without FailFast.
++		 */
++		if (!test_bit(Faulty, &rdev->flags))
+ 			set_bit(R1BIO_WriteError, &r1_bio->state);
++		else {
++			/* Finished with this branch */
++			r1_bio->bios[mirror] = NULL;
++			to_put = bio;
++		}
+ 	} else {
+ 		/*
+ 		 * Set R1BIO_Uptodate in our master bio, so that we
 -- 
 2.20.1
 
