@@ -2,75 +2,94 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E7DFBBAE0
-	for <lists+linux-raid@lfdr.de>; Mon, 23 Sep 2019 20:03:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D5D3BC7B7
+	for <lists+linux-raid@lfdr.de>; Tue, 24 Sep 2019 14:15:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440280AbfIWSDF (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 23 Sep 2019 14:03:05 -0400
-Received: from mailsrv.ugal.ro ([193.231.148.5]:16393 "EHLO MAIL.ugal.ro"
+        id S1730256AbfIXMPW convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-raid@lfdr.de>); Tue, 24 Sep 2019 08:15:22 -0400
+Received: from mga14.intel.com ([192.55.52.115]:56869 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393421AbfIWSDF (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 23 Sep 2019 14:03:05 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by MAIL.ugal.ro (Postfix) with ESMTP id 85AC413A2F58F;
-        Mon, 23 Sep 2019 18:02:54 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at ugal.ro
-Received: from MAIL.ugal.ro ([127.0.0.1])
-        by localhost (mail.ugal.ro [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 9GwxwvPs6zLI; Mon, 23 Sep 2019 21:02:49 +0300 (EEST)
-Received: from LPETCU (unknown [10.11.10.80])
-        (Authenticated sender: lpetcu)
-        by MAIL.ugal.ro (Postfix) with ESMTPA id 22AE613A2F58D;
-        Mon, 23 Sep 2019 21:02:49 +0300 (EEST)
-Reply-To: <Liviu.Petcu@ugal.ro>
-From:   "Liviu Petcu" <Liviu.Petcu@ugal.ro>
-To:     "'Wols Lists'" <antlists@youngman.org.uk>,
-        "'John Stoffel'" <john@stoffel.org>,
-        "'Sarah Newman'" <srn@prgmr.com>
-Cc:     <linux-raid@vger.kernel.org>
-References: <08df01d56f2b$3c52bdb0$b4f83910$@ugal.ro> <23940.1755.134402.954287@quad.stoffel.home> <094701d56f7c$95225260$bf66f720$@ugal.ro> <cf597586-a450-f85a-51e1-76df59f22839@prgmr.com> <23941.15337.175082.79768@quad.stoffel.home> <001e01d5705d$b1785360$1468fa20$@ugal.ro> <5D863E19.4000309@youngman.org.uk>
-In-Reply-To: <5D863E19.4000309@youngman.org.uk>
-Subject: RE: RAID 10 with 2 failed drives
-Date:   Mon, 23 Sep 2019 21:02:33 +0300
-Organization: =?us-ascii?Q?Universitatea_=22Dunarea_de_Jos=22_din_Gala=3Fi?=
-Message-ID: <01d601d57239$13098130$391c8390$@ugal.ro>
+        id S1728080AbfIXMPV (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 24 Sep 2019 08:15:21 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 05:15:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,544,1559545200"; 
+   d="scan'208";a="182895240"
+Received: from irsmsx110.ger.corp.intel.com ([163.33.3.25])
+  by orsmga008.jf.intel.com with ESMTP; 24 Sep 2019 05:15:20 -0700
+Received: from irsmsx155.ger.corp.intel.com (163.33.192.3) by
+ irsmsx110.ger.corp.intel.com (163.33.3.25) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 24 Sep 2019 13:15:19 +0100
+Received: from irsmsx107.ger.corp.intel.com ([169.254.10.7]) by
+ irsmsx155.ger.corp.intel.com ([169.254.14.139]) with mapi id 14.03.0439.000;
+ Tue, 24 Sep 2019 13:15:19 +0100
+From:   "Tkaczyk, Mariusz" <mariusz.tkaczyk@intel.com>
+To:     Jes Sorensen <jes.sorensen@gmail.com>
+CC:     "Smolinski, Krzysztof" <krzysztof.smolinski@intel.com>,
+        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        "Dabrowski, Mariusz" <mariusz.dabrowski@intel.com>
+Subject: Re: [PATCH,v2] mdadm: check value returned by snprintf against
+ errors
+Thread-Topic: [PATCH,v2] mdadm: check value returned by snprintf against
+ errors
+Thread-Index: AQHVVBJFLDAWHlxZxE6D35wniA2Hqab9v0oAgD0rQgA=
+Date:   Tue, 24 Sep 2019 12:15:18 +0000
+Message-ID: <14012545.AkVXcDBcQu@mtkaczyk-devel.igk.intel.com>
+References: <20190816090617.12679-1-krzysztof.smolinski@intel.com>
+ <d540ec64-ffb2-dab1-c792-f088594330c2@gmail.com>
+In-Reply-To: <d540ec64-ffb2-dab1-c792-f088594330c2@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [163.33.7.139]
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <7544E0EDFF980C48A4C8AD63596405A6@intel.com>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AQLQ1+hi3KIqiub/RHQRSTvcyI2F0wLfsDrkAugv2EMBTTr/eQIDR3BRAZijxEMAtOeTYqTnigzQ
-Content-Language: ro
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
->On 21/09/19 10:19, Liviu Petcu wrote:
->> Yes. Only one of the 2 disks reported by mdadm as failed, is broken. I
->> almost finished making images of all the discs, and for the second
-"failed"
->> disc ddrescue reported error-free copying. I intend to use the images to
->> recreate the array. I haven't done this before, but I hope I can handle
->> it...
+Hi Jes,
 
->Could be that failure that knocked the other drive out of the array too.
->Dunno why it should happen with SATA, they're supposedly independent,
->but certainly with the old PATA disks in pairs, a problem with one drive
->could affect the other.
+Did you setup new key? We had some patches to send upstream.
+Also, some patches are waiting for your feedback.
 
-Hello,
-You were right Wol. Only one of the disks was damaged. I reinstalled the 5
-drive plus a new one and started the system. I copied the partition table
-from one drive to the new drive and then added the partitions to the 2
-arrays. The recovery has started. It  seems to be almost all right. On raid
-10 array md1 is a Xen Storage, and some VMs that have XFS file system,
-booted up but report errors like "XFS (dm-2): Internal error
-XFS_WANT_CORRUPTED_GOTO". But this is probably the subject of another
-discussion...
-Thank you all for your support and advices.
+Please let me know when you will be ready.
 
-Cheers,
-Liviu
+Thanks,
+Mariusz
+
+On Friday, August 16, 2019 4:08:38 PM CEST Jes Sorensen wrote:
+> On 8/16/19 5:06 AM, Krzysztof Smolinski wrote:
+> > GCC 8 checks possible truncation during snprintf more strictly
+> > than GCC 7 which result in compilation errors. To fix this
+> > problem checking result of snprintf against errors has been added.
+> > 
+> > Signed-off-by: Krzysztof Smolinski <krzysztof.smolinski@intel.com>
+> > ---
+> > 
+> >  sysfs.c | 12 ++++++++++--
+> >  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> Applied thanks!
+> 
+> Note my ubi key fried itself so I need to setup a new one before I can
+> push to kernel.org.
+>
+> I am glad to see some of this addressed, but the problem is much bigger.
+> We need to fixup super-intel.c to build with gcc 9, not just gcc 8. I
+> did a bunch of stuff, but the bigger problems remain. I am not a huge
+> fan of just hiding it via typecasts, I'd like to see a proper solution.
+> 
+> Cheers,
+> Jes
+
+
 
 
