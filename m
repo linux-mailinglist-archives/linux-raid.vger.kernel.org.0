@@ -2,69 +2,78 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 51443BCBA6
-	for <lists+linux-raid@lfdr.de>; Tue, 24 Sep 2019 17:39:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12231BD06C
+	for <lists+linux-raid@lfdr.de>; Tue, 24 Sep 2019 19:15:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388572AbfIXPjZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 24 Sep 2019 11:39:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43844 "EHLO mx1.redhat.com"
+        id S2406833AbfIXRPw (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 24 Sep 2019 13:15:52 -0400
+Received: from smtp.hosts.co.uk ([85.233.160.19]:50122 "EHLO smtp.hosts.co.uk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388457AbfIXPjZ (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 24 Sep 2019 11:39:25 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 915143A206;
-        Tue, 24 Sep 2019 15:39:25 +0000 (UTC)
-Received: from localhost (dhcp-17-171.bos.redhat.com [10.18.17.171])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 605385D721;
-        Tue, 24 Sep 2019 15:39:25 +0000 (UTC)
-From:   Nigel Croxon <ncroxon@redhat.com>
-To:     jes.sorensen@gmail.com, linux-raid@vger.kernel.org, xni@redhat.com,
-        heinzm@redhat.com
-Subject: [PATCH] mdadm: force a uuid swap on big endian
-Date:   Tue, 24 Sep 2019 11:39:24 -0400
-Message-Id: <20190924153924.12503-1-ncroxon@redhat.com>
+        id S2437027AbfIXRPw (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 24 Sep 2019 13:15:52 -0400
+Received: from [86.132.37.92] (helo=[192.168.1.118])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1iCnuX-000728-4t; Tue, 24 Sep 2019 17:43:33 +0100
+Subject: Re: RAID 10 with 2 failed drives
+To:     Liviu.Petcu@ugal.ro, 'John Stoffel' <john@stoffel.org>,
+        'Sarah Newman' <srn@prgmr.com>
+References: <08df01d56f2b$3c52bdb0$b4f83910$@ugal.ro>
+ <23940.1755.134402.954287@quad.stoffel.home>
+ <094701d56f7c$95225260$bf66f720$@ugal.ro>
+ <cf597586-a450-f85a-51e1-76df59f22839@prgmr.com>
+ <23941.15337.175082.79768@quad.stoffel.home>
+ <001e01d5705d$b1785360$1468fa20$@ugal.ro> <5D863E19.4000309@youngman.org.uk>
+ <01d601d57239$13098130$391c8390$@ugal.ro>
+Cc:     linux-raid@vger.kernel.org
+From:   Wols Lists <antlists@youngman.org.uk>
+Message-ID: <5D8A47B4.9000206@youngman.org.uk>
+Date:   Tue, 24 Sep 2019 17:43:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 24 Sep 2019 15:39:25 +0000 (UTC)
+In-Reply-To: <01d601d57239$13098130$391c8390$@ugal.ro>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-The code path for metadata 0.90 calls a common routine
-fname_from_uuid that uses metadata 1.2. The code expects member
-swapuuid to be setup and usable. But it is only setup when using
-metadata 1.2. Since the metadata 0.90 did not create swapuuid
-and set it. The test (st->ss == &super1) ? 1 : st->ss->swapuuid
-fails. The swapuuid is set at compile time based on byte order.
-Any call based on metadata 0.90 and on big endian processors,
-the --export uuid will be incorrect.
+On 23/09/19 19:02, Liviu Petcu wrote:
+>> On 21/09/19 10:19, Liviu Petcu wrote:
+>>> Yes. Only one of the 2 disks reported by mdadm as failed, is broken. I
+>>> almost finished making images of all the discs, and for the second
+> "failed"
+>>> disc ddrescue reported error-free copying. I intend to use the images to
+>>> recreate the array. I haven't done this before, but I hope I can handle
+>>> it...
+> 
+>> Could be that failure that knocked the other drive out of the array too.
+>> Dunno why it should happen with SATA, they're supposedly independent,
+>> but certainly with the old PATA disks in pairs, a problem with one drive
+>> could affect the other.
+> 
+> Hello,
+> You were right Wol. Only one of the disks was damaged. I reinstalled the 5
+> drive plus a new one and started the system. I copied the partition table
+> from one drive to the new drive and then added the partitions to the 2
+> arrays. The recovery has started. It  seems to be almost all right. On raid
+> 10 array md1 is a Xen Storage, and some VMs that have XFS file system,
+> booted up but report errors like "XFS (dm-2): Internal error
+> XFS_WANT_CORRUPTED_GOTO". But this is probably the subject of another
+> discussion...
+> Thank you all for your support and advices.
+> 
+Couple of points. Seeing as you're running mirrors, read up on
+dm-integrity. It's good for any raid but especially mirrors - it will
+check-sum writes so if data gets corrupted (it does happen) it will
+return a read error rather than duff data.
 
-Signed-Off-by: Nigel Croxon <ncroxon@redhat.com>
----
- util.c | 4 ++++
- 1 file changed, 4 insertions(+)
+And secondly, I think it's okay with MBR but definitely don't use dd to
+copy a GPT partition table. GPT has uuids, and the same uuid on more
+than one disk or partition will lead to chaos ... :-)
 
-diff --git a/util.c b/util.c
-index c26cf5f..64dd409 100644
---- a/util.c
-+++ b/util.c
-@@ -685,8 +685,12 @@ char *fname_from_uuid(struct supertype *st, struct mdinfo *info,
- 	// work, but can't have it set if we want this printout to match
- 	// all the other uuid printouts in super1.c, so we force swapuuid
- 	// to 1 to make our printout match the rest of super1
-+#if __BYTE_ORDER == BIG_ENDIAN
-+	return __fname_from_uuid(info->uuid, 1, buf, sep);
-+#else
- 	return __fname_from_uuid(info->uuid, (st->ss == &super1) ? 1 :
- 				 st->ss->swapuuid, buf, sep);
-+#endif
- }
- 
- int check_ext2(int fd, char *name)
--- 
-2.20.1
+Cheers,
+Wol
 
