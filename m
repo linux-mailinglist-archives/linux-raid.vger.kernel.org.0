@@ -2,129 +2,95 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 82758BD4D0
-	for <lists+linux-raid@lfdr.de>; Wed, 25 Sep 2019 00:10:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0895ABD66B
+	for <lists+linux-raid@lfdr.de>; Wed, 25 Sep 2019 04:37:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394191AbfIXWKQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 24 Sep 2019 18:10:16 -0400
-Received: from mtax.cdmx.gob.mx ([187.141.35.197]:12005 "EHLO mtaw.cdmx.gob.mx"
+        id S2411399AbfIYChs (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 24 Sep 2019 22:37:48 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2713 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387532AbfIXWKQ (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 24 Sep 2019 18:10:16 -0400
-X-NAI-Header: Modified by McAfee Email Gateway (4500)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cdmx.gob.mx; s=72359050-3965-11E6-920A-0192F7A2F08E;
-        t=1569362954; h=X-Virus-Scanned:Content-Type:
-         MIME-Version:Content-Transfer-Encoding:Content-Description:
-         Subject:To:From:Date:Reply-To:Message-Id:X-AnalysisOut:
-         X-AnalysisOut:X-AnalysisOut:X-AnalysisOut:
-         X-AnalysisOut:X-AnalysisOut:X-AnalysisOut:
-         X-SAAS-TrackingID:X-NAIMIME-Disclaimer:X-NAIMIME-Modified:
-         X-NAI-Spam-Flag:X-NAI-Spam-Threshold:X-NAI-Spam-Score:
-         X-NAI-Spam-Rules:X-NAI-Spam-Version; bh=1
-        +99+kFrDLgaQ8R5/6EBfZ45Xi1kJbcxywFSs4cH3f
-        g=; b=e4b1rp3cSfliU/JQu9inbeLskUXFItIoUccGK84AknPI
-        vr8CJxAQvbRBY6pkKUytaRlXCxMu574PN+FVGo1BsBHBBX9BnR
-        /VFxwZhnMwwSuKnW6pwQoO1Yng+swnCXTRTMbAuHh22YBq3+NT
-        69BkxU1GsXSxG42DoVIYxjzaibc=
-Received: from correo.seciti.cdmx.gob.mx (gdf-correo.cdmx.gob.mx [10.250.102.17]) by mtaw.cdmx.gob.mx with smtp
-         id 1a9e_28b1_d4b4bbe8_b6b1_4f92_b874_a4594b20639c;
-        Tue, 24 Sep 2019 17:09:14 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by gdf-correo.df.gob.mx (Postfix) with ESMTP id 75EB556A0;
-        Tue, 24 Sep 2019 17:09:10 -0500 (CDT)
-Received: from correo.seciti.cdmx.gob.mx ([127.0.0.1])
-        by localhost (gdf-correo.df.gob.mx [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id UknR2dllMExd; Tue, 24 Sep 2019 17:09:10 -0500 (CDT)
-Received: from localhost (localhost [127.0.0.1])
-        by gdf-correo.df.gob.mx (Postfix) with ESMTP id 3F6E5581C;
-        Tue, 24 Sep 2019 16:57:47 -0500 (CDT)
-X-Virus-Scanned: amavisd-new at gdf-correo.df.gob.mx
-Received: from correo.seciti.cdmx.gob.mx ([127.0.0.1])
-        by localhost (gdf-correo.df.gob.mx [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 3-6-51XWR9VV; Tue, 24 Sep 2019 16:57:46 -0500 (CDT)
-Received: from [10.152.195.110] (unknown [107.150.30.178])
-        by gdf-correo.df.gob.mx (Postfix) with ESMTPSA id 2230839C8;
-        Tue, 24 Sep 2019 16:52:53 -0500 (CDT)
-Content-Type: text/plain;
-  charset="utf-8"
+        id S2389764AbfIYChs (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 24 Sep 2019 22:37:48 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 70BDD9AACD6A96869ADF;
+        Wed, 25 Sep 2019 10:37:46 +0800 (CST)
+Received: from [127.0.0.1] (10.177.219.49) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Wed, 25 Sep 2019
+ 10:37:41 +0800
+Subject: Re: [PATCH] md: no longer compare spare disk superblock events in
+ super_load
+To:     <songliubraving@fb.com>
+CC:     <linux-raid@vger.kernel.org>, <neilb@suse.de>
+References: <20190902071623.21388-1-yuyufen@huawei.com>
+From:   Yufen Yu <yuyufen@huawei.com>
+Message-ID: <cbef4c78-dbe1-20e8-3c31-f96ec6a99275@huawei.com>
+Date:   Wed, 25 Sep 2019 10:37:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Description: Mail message body
-Subject: Spende von 5 Millionen Euro
-To:     Recipients <mramirezg@mexicocity.gob.mx>
-From:   "Shane Missler" <mramirezg@mexicocity.gob.mx>
-Date:   Tue, 24 Sep 2019 23:52:15 +0200
-Reply-To: shanemissler.spende1@gmail.com
-Message-Id: <20190924215254.2230839C8@gdf-correo.df.gob.mx>
-X-AnalysisOut: [v=2.2 cv=E+O9neVl c=1 sm=1 tr=0 p=NAessOE28N0A:10 p=09-KjH]
-X-AnalysisOut: [S_CW8A:10 p=bEr4i4eggGkA:10 p=-7VjjQDN59lQbO9EsjZ6:22 p=Ly]
-X-AnalysisOut: [qu6MUUigPyaOuRX7ce:22 a=KsSCQl7LcZej77FuluUcQw==:117 a=QVl]
-X-AnalysisOut: [0Y2YvxGgORTTHWQRBRg==:17 a=IkcTkHD0fZMA:10 a=x7bEGLp0ZPQA:]
-X-AnalysisOut: [10 a=J70Eh1EUuV4A:10 a=pGLkceISAAAA:8 a=wN7rT8hNlMSaUXRpxS]
-X-AnalysisOut: [gA:9 a=K7tsimcRO30Sg2YH:21 a=QOCYt1FwmxBrUrRv:21 a=QEXdDO2]
-X-AnalysisOut: [ut3YA:10]
-X-SAAS-TrackingID: a049a8d5.0.95830392.00-2212.161306755.s12p02m001.mxlogic.net
-X-NAIMIME-Disclaimer: 1
-X-NAIMIME-Modified: 1
-X-NAI-Spam-Flag: NO
-X-NAI-Spam-Threshold: 3
-X-NAI-Spam-Score: -5000
-X-NAI-Spam-Rules: 1 Rules triggered
-        WHITELISTED=-5000
-X-NAI-Spam-Version: 2.3.0.9418 : core <6641> : inlines <7145> : streams
- <1833725> : uri <2910292>
+In-Reply-To: <20190902071623.21388-1-yuyufen@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.177.219.49]
+X-CFilter-Loop: Reflected
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-RGllcyBpc3QgZWluZSBwZXJzw7ZubGljaGUgTWFpbCwgZGllIGljaCBhbiBTaWUgYWRyZXNzaWVy
-ZS4gSWNoIGJpbiBTSEFORSBNSVNTTEVSIGF1cyBGbG9yaWRhLCBVU0EuIFdpZSBTaWUgYmVyZWl0
-cyB3aXNzZW4sIGhhYmUgaWNoIGVpbmVuIExvdHRvLUphY2twb3QgaW4gSMO2aGUgdm9uIDQ1MSBN
-aW8uIFVTRCAoMzMwIE1pby4gR0JQKSBnZXdvbm5lbiB1bmQgZGFzIEdlbGQgaGF0IG1laW4gTGVi
-ZW4gdW5kIG1laW4gRmFtaWxpZW5sZWJlbiB2ZXLDpG5kZXJ0LCBhYmVyIGVzIHdpcmQgbWVpbiBI
-ZXJ6IG5pY2h0IHZlcsOkbmRlcm4sIHdpZSBpY2ggYW4gZGVtIFRhZyBzYWd0ZSwgYW4gZGVtIGlj
-aCBtZWluIEdlbGQgaGFiZSwgZGFzIGljaCB2ZXJ3ZW5kZW4gd2VyZGUgRGllc2VzIEdlbGQgZsO8
-ciBkaWUgSGlsZmUgZGVyIE1lbnNjaGhlaXQuIEljaCBoYWJlIGJlc2NobG9zc2VuLCBJaG5lbiB1
-bmQgSWhyZXIgR2VtZWluZGUgZWluZW4gQmV0cmFnIHZvbiA1IE1pbGxpb25lbiBFdXJvIHp1IHNw
-ZW5kZW4sIHVtIGRpZXNlIFNwZW5kZSBhbnp1Zm9yZGVybi4gRS1NYWlsOiAoc2hhbmVtaXNzbGVy
-MEBnbWFpbC5jb20pCgoKCgpDZWNpIGVzdCB1biBjb3VycmllciBwZXJzb25uZWwgcXVlIGplIHZv
-dXMgYWRyZXNzZS4gSmUgc3VpcyBTSEFORSBNSVNTTEVSLCBkZSBGbG9yaWRlLCDDiXRhdHMtVW5p
-cy4gQ29tbWUgdm91cyBsZSBzYXZleiBkw6lqw6AsIGonYWkgZ2FnbsOpIDQ1MSBtaWxsaW9ucyBk
-ZSBkb2xsYXJzIChMb3R0byBKYWNrcG90KSBldCBsJ2FyZ2VudCBhIGNoYW5nw6kgbWEgdmllIGV0
-IGNlbGxlIGRlIG1hIGZhbWlsbGUsIG1haXMgY2VsYSBuZSBjaGFuZ2VyYSBwYXMgbW9uIGPFk3Vy
-LCBjb21tZSBqZSBsJ2FpIGRpdCBsZSBqb3VyIG/DuSBqJ2FpIG1vbiBhcmdlbnQsIGondXRpbGlz
-ZXJhaSBjZXQgYXJnZW50IHBvdXIgbCdhaWRlIGRlIGwnaHVtYW5pdMOpLkonYWkgZMOpY2lkw6kg
-ZGUgdm91cyBkb25uZXIgbGEgc29tbWUgZGUgNSBtaWxsaW9ucyBkJ2V1cm9zIMOgIHZvdXMgZXQg
-w6Agdm90cmUgY29tbXVuYXV0w6ksIHBvdXIgcsOpY2xhbWVyIGNlIGRvbiwgZW1haWwtIChzaGFu
-ZW1pc3NsZXIwQGdtYWlsLmNvbSkKCgotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0KCgpMYSBpbmZvcm1hY2lvbiBjb250ZW5pZGEgZW4gZXN0ZSBjb3Jy
-ZW8sIGFzaSBjb21vIGxhIGNvbnRlbmlkYSBlbiBsb3MgZG9jdW1lbnRvcyBhbmV4b3MsIHB1ZWRl
-IGNvbnRlbmVyIGRhdG9zIHBlcnNvbmFsZXMsIHBvciBsbyBxdWUgc3UgZGlmdXNpb24gZXMgcmVz
-cG9uc2FiaWxpZGFkIGRlIHF1aWVuIGxvcyB0cmFuc21pdGUgeSBxdWllbiBsb3MgcmVjaWJlLCBl
-biB0w6lybWlub3MgZGUgbG8gZGlzcHVlc3RvIHBvciBsYXMgZnJhY2Npb25lcyBJSSB5IFZJSSBk
-ZWwgYXJ0aWN1bG8gNCwgdWx0aW1vIHBhcnJhZm8gZGVsIGFydGljdWxvIDgsIGFydGljdWxvIDM2
-IHBhcnJhZm8gSUksIDM4IGZyYWNjaW9uIEkgeSBkZW1hcyBhcGxpY2FibGVzIGRlIGxhIExleSBk
-ZSBUcmFuc3BhcmVuY2lhIHkgQWNjZXNvIGEgbGEgSW5mb3JtYWNpb24gUHVibGljYSBkZWwgRGlz
-dHJpdG8gRmVkZXJhbC4NCkxvcyBEYXRvcyBQZXJzb25hbGVzIHNlIGVuY3VlbnRyYW4gcHJvdGVn
-aWRvcyBwb3IgbGEgTGV5IGRlIFByb3RlY2Npb24gZGUgRGF0b3MgUGVyc29uYWxlcyBkZWwgRGlz
-dHJpdG8gRmVkZXJhbCwgcG9yIGxvIHF1ZSBzdSBkaWZ1c2lvbiBzZSBlbmN1ZW50cmEgdHV0ZWxh
-ZGEgZW4gc3VzIGFydGljdWxvcyAyLCA1LCAxNiwgMjEsIDQxIHkgZGVtYXMgcmVsYXRpdm9zIHkg
-YXBsaWNhYmxlcywgZGViaWVuZG8gc3VqZXRhcnNlIGVuIHN1IGNhc28sIGEgbGFzIGRpc3Bvc2lj
-aW9uZXMgcmVsYXRpdmFzIGEgbGEgY3JlYWNpb24sIG1vZGlmaWNhY2lvbiBvIHN1cHJlc2lvbiBk
-ZSBkYXRvcyBwZXJzb25hbGVzIHByZXZpc3Rvcy4gQXNpbWlzbW8sIGRlYmVyYSBlc3RhcnNlIGEg
-bG8gc2XDsWFsYWRvIGVuIGxvcyBudW1lcmFsZXMgMSAsIDMsIDEyLCAxOCwgMTksIDIwLCAyMSwg
-MjMsIDI0LCAyOSwgMzUgeSBkZW1hcyBhcGxpY2FibGVzIGRlIGxvcyBMaW5lYW1pZW50b3MgcGFy
-YSBsYSBQcm90ZWNjaW9uIGRlIERhdG9zIFBlcnNvbmFsZXMgZW4gZWwgRGlzdHJpdG8gRmVkZXJh
-bC4NCkVuIGVsIHVzbyBkZSBsYXMgdGVjbm9sb2dpYXMgZGUgbGEgaW5mb3JtYWNpb24geSBjb211
-bmljYWNpb25lcyBkZWwgR29iaWVybm8gZGVsIERpc3RyaXRvIEZlZGVyYWwsIGRlYmVyYSBvYnNl
-cnZhcnNlIHB1bnR1YWxtZW50ZSBsbyBkaXNwdWVzdG8gcG9yIGxhIExleSBHb2JpZXJubyBFbGVj
-dHJvbmljbyBkZWwgRGlzdHJpdG8gRmVkZXJhbCwgbGEgbGV5IHBhcmEgaGFjZXIgZGUgbGEgQ2l1
-ZGFkIGRlIE1leGljbyB1bmEgQ2l1ZGFkIE1hcyBBYmllcnRhLCBlbCBhcGFydGFkbyAxMCBkZSBs
-YSBDaXJjdWxhciBVbm8gdmlnZW50ZSB5IGxhcyBOb3JtYXMgR2VuZXJhbGVzIHF1ZSBkZWJlcmFu
-IG9ic2VydmFyc2UgZW4gbWF0ZXJpYSBkZSBTZWd1cmlkYWQgZGUgbGEgSW5mb3JtYWNpb24gZW4g
-bGEgQWRtaW5pc3RyYWNpb24gUHVibGljYSBkZWwgRGlzdHJpdG8gRmVkZXJhbC4K
+
+
+On 2019/9/2 15:16, Yufen Yu wrote:
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 24638ccedce4..350e1f152e97 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -1092,7 +1092,7 @@ static int super_90_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor
+>   {
+>   	char b[BDEVNAME_SIZE], b2[BDEVNAME_SIZE];
+>   	mdp_super_t *sb;
+> -	int ret;
+> +	int ret = 0;
+>   
+>   	/*
+>   	 * Calculate the position of the superblock (512byte sectors),
+> @@ -1160,10 +1160,13 @@ static int super_90_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor
+>   		}
+>   		ev1 = md_event(sb);
+>   		ev2 = md_event(refsb);
+> -		if (ev1 > ev2)
+> -			ret = 1;
+> -		else
+> -			ret = 0;
+> +
+> +		/* Insist on good event counter while assembling, except
+> +		 * for spares (which don't need an event count) */
+> +		if (sb->disks[rdev->desc_nr].state & (
+> +			(1<<MD_DISK_SYNC) | (1 << MD_DISK_ACTIVE)))
+> +			if (ev1 > ev2)
+> +				ret = 1;
+>   	}
+>   	rdev->sectors = rdev->sb_start;
+
+super_90_load will set 'ret = -EINVAL' before checking event count, as 
+follow:
+
+     ret = read_disk_sb(rdev, MD_SB_BYTES);
+     if (ret)
+         return ret;
+
+     ret = -EINVAL;
+
+So, we cannot write 'if' statement like that, which will  lead to 
+super_90_load
+return '-EINVAL' for spare disks. Then, test cases in mdadm , such as 
+00linear, 00raid0,
+will report failed.
+
+I will resend the fixed version.
+
+Thanks,
+Yufen
+
+
