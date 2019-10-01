@@ -2,89 +2,132 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 80EB4C4182
-	for <lists+linux-raid@lfdr.de>; Tue,  1 Oct 2019 22:02:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F3EF9C43E4
+	for <lists+linux-raid@lfdr.de>; Wed,  2 Oct 2019 00:44:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbfJAUCO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 1 Oct 2019 16:02:14 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36627 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726300AbfJAUCO (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 1 Oct 2019 16:02:14 -0400
-Received: by mail-wr1-f67.google.com with SMTP id y19so17000290wrd.3
-        for <linux-raid@vger.kernel.org>; Tue, 01 Oct 2019 13:02:13 -0700 (PDT)
+        id S1728156AbfJAWo1 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 1 Oct 2019 18:44:27 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40659 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727111AbfJAWo1 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 1 Oct 2019 18:44:27 -0400
+Received: by mail-qk1-f194.google.com with SMTP id y144so12941825qkb.7
+        for <linux-raid@vger.kernel.org>; Tue, 01 Oct 2019 15:44:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=GRIUfOUw0spd6fma+pqMCS+JA2Xr8wF6o2U1EvsAQwY=;
-        b=q2ERC0A6Fr1C/5n+9rsjVR+Av2T+5aVt0jmNE90p+o0+Qowhy8Gjdq6ZOecny3fI/3
-         Mci6kmZzTb6fhMqiMZJ2wi5zV06ZcOh6nxesJhbvD0Ck1P+tuTm/9NsbXln4k+NWP4dN
-         rrWVFgMqer+vzU0hK1+UqpaLjKjIYZVl5ROxDUTZ88F0ENDHDulCnF/iruZS5ht7iLVf
-         mXvb7XxGy1OO0rjZHF5y13TfZL1bnBB/HVxAsptyY4jaaTMWv2I9aYd10BZ7Ri0PwGa3
-         dbf8n5J2F/D3DRCHKmTfXomMotciObHyITKxw1egHutYW5YojSE759gsAsw+HHCNmNXF
-         c45A==
+        bh=Ygc3TIRij4f/MqWnfl8Yn7wp4XjhM1ZwFDT8uxM7XM8=;
+        b=UvlNI5g8eo/69rc+hcRTeNQbenSJmCVhWmbUYxSkUXgxE/qinG8uxdSogQ1OO1qg9T
+         MVEBJHLBaQagRRm/4EsMCJuJmfscHWkkM+pHmaJxE6iNxqkLlgEedRyRayd1V1qg/33L
+         BvOk1jkHaTJkMC8wBdVjSpcx2sl/IgjfyG7xw/zAD/6k0e/sjzYvFe0d0Ows5/4tcKFC
+         7ITY/8HiK6lShbvKoesYUtaXG3jYG9TcsUxoeteadVLGui6NwTF2OWwy0bu8DP545udy
+         puUvBo1yL8FF+fu7UjHXTGr6mkMh3tzRsNPIE/jyetbpmO1JdM0CY3+5jifgsg/2q5ab
+         3kvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=GRIUfOUw0spd6fma+pqMCS+JA2Xr8wF6o2U1EvsAQwY=;
-        b=br4qOw1QGRUdDHboEES3hfvo/gJJqC12xGytQyugaJT8V6MHKxamrItoEbXJsM1Zuq
-         xWdxPX4b0FzEWbzMz/mHPo6ypadDqbYHIVMEsHT8tglVajk2g/Dt8F5jvu4tholp7Rfv
-         OdtG80aViGlhLPnDOFnv0B9Ps0lTbC7vA2EkMqtMZ3ao5v1RKTySdtYM3jcKZ4ALXo3E
-         6J3TeHQnpJU7gWCgj6UuD07ftdQ26+cOnV2xqn1F4Lu/iWD1X0HQWgGuBF6lnKl4DWo8
-         l474xe1qcsru0qZA+6BmWY5ALbrvIsD5wo6M8A71sJ9p4x17ORH1w/IZuQbOToVracK1
-         lMWg==
-X-Gm-Message-State: APjAAAVSKzlap6yf3hwBTovY6sxid7IFLF5KuiNrIIHaWx7rprNkFeJx
-        c10SKMHzPeIqRNVAK5zqOHESxhkxS6iIE08R4Jc=
-X-Google-Smtp-Source: APXvYqzwT8kwEOiym3g0GkVDw0NJ0OEiyG4CxVIq4IS74ioBoU1egZSEcayHymsAefx8fQH3o4gQmHJTQzQO/B9mJVk=
-X-Received: by 2002:adf:e545:: with SMTP id z5mr20401862wrm.263.1569960132652;
- Tue, 01 Oct 2019 13:02:12 -0700 (PDT)
+        bh=Ygc3TIRij4f/MqWnfl8Yn7wp4XjhM1ZwFDT8uxM7XM8=;
+        b=VKnd9eQG5yHsYssUuLkxxRKLR7bEbLupeN3a+V/bqzHNVFHVTNRGnixV23uj7nWhDD
+         +ce87teesdLQlM3G+OiIpELa33xvl+KhLxCw/KdiA2eVjSiS04Jc85GB0LcgT9q9e4pP
+         O5ZTbUt/ocRtfhbkzuokcHRfddttwqnk3C8rt5gzLImyja/Vc+Yp5m+CMcu9LvRXFIxj
+         W04PZsBC9bwPP08j+SlSg17QANzTi58vHPR0QVbj+LE2UZyKBYSm5PA7rS8/Zp9WmRVQ
+         G7FlTmw+U4fladciJOqZ17+glK+hmZ+IPx7dD40J9aajTXjQbUX0aDMZ6qY6I7n7XWct
+         vkuA==
+X-Gm-Message-State: APjAAAXk9/CNIegFj+7nDGqbVScYroZQ8sLw7D+pvx7H2kirUYrOcKqK
+        cfsPwpgvu+/vb1Z0/HXz8+l1DC809wvLZpWggVBl9A==
+X-Google-Smtp-Source: APXvYqwacnKPednpTxF0ETtBOHylmcf+B9p742iba7mkYV5v2a6AyVGImtPJQ6CNCysWLM+sW6F8aqLfS76INq2b82g=
+X-Received: by 2002:a37:5f47:: with SMTP id t68mr584803qkb.497.1569969864473;
+ Tue, 01 Oct 2019 15:44:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAGRSmLs+nyQ0pp_VPt36MxXDqumcyqLSR_vhkOqtFXir18puEA@mail.gmail.com>
- <20190930101443.GA2751@metamorpher.de> <6026f55f-82c9-7b99-8c2b-8d03dfe8f52e@suddenlinkmail.com>
- <CAGRSmLvHc-gOVmr-fHTo0upUeDNjrQgCk9rSqpALFV1FiHra+g@mail.gmail.com> <20191001195510.GA33475@metamorpher.de>
-In-Reply-To: <20191001195510.GA33475@metamorpher.de>
-From:   "David F." <df7729@gmail.com>
-Date:   Tue, 1 Oct 2019 13:02:01 -0700
-Message-ID: <CAGRSmLszFWkaFCd2qLye_ATZcnVyhpTgEbCs=BhGj6ur_sSnpw@mail.gmail.com>
-Subject: Re: Fix for fd0 and sr0 in /proc/partitions
-To:     Andreas Klauer <Andreas.Klauer@metamorpher.de>
-Cc:     "David C. Rankin" <drankinatty@suddenlinkmail.com>,
-        mdraid <linux-raid@vger.kernel.org>
+References: <20190926115350.7111-1-guoqing.jiang@cloud.ionos.com>
+In-Reply-To: <20190926115350.7111-1-guoqing.jiang@cloud.ionos.com>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Tue, 1 Oct 2019 15:44:13 -0700
+Message-ID: <CAPhsuW5dk944r_fQdoZodOoLoJNqyfwESMsWUvPhOMY+KQ+Uew@mail.gmail.com>
+Subject: Re: [PATCH] md/bitmap: avoid race window between md_bitmap_resize and bitmap_file_clear_bit
+To:     Guoqing Jiang <jgq516@gmail.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>,
+        NeilBrown <neilb@suse.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Right, mdadm should skip those.  For me, I also want the option to not
-add at least fd0 to /proc/partitions but that's nothing to do with
-mdadm (I maintain a portable emergency boot disk that has to work on
-countless unknown system configurations).  That is the way it was
-before updating udev which now needs devtmpfs.   I already patched
-mdadm to ignore the floppy and cdrom device types so at least it
-doesn't hang on boot, only when things like fdisk -l are run.
+On Thu, Sep 26, 2019 at 4:55 AM <jgq516@gmail.com> wrote:
+>
+> From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+>
+> We need to move "spin_lock_irq(&bitmap->counts.lock)" before unmap the previous
+> storage, otherwise panic like belows could happen as follows.
+>
+> [  902.353802] sdl: detected capacity change from 1077936128 to 3221225472
+> [  902.616948] general protection fault: 0000 [#1] SMP
+> [snip]
+> [  902.618588] CPU: 12 PID: 33698 Comm: md0_raid1 Tainted: G           O    4.14.144-1-pserver #4.14.144-1.1~deb10
+> [  902.618870] Hardware name: Supermicro SBA-7142G-T4/BHQGE, BIOS 3.00       10/24/2012
+> [  902.619120] task: ffff9ae1860fc600 task.stack: ffffb52e4c704000
+> [  902.619301] RIP: 0010:bitmap_file_clear_bit+0x90/0xd0 [md_mod]
+> [  902.619464] RSP: 0018:ffffb52e4c707d28 EFLAGS: 00010087
+> [  902.619626] RAX: ffe8008b0d061000 RBX: ffff9ad078c87300 RCX: 0000000000000000
+> [  902.619792] RDX: ffff9ad986341868 RSI: 0000000000000803 RDI: ffff9ad078c87300
+> [  902.619986] RBP: ffff9ad0ed7a8000 R08: 0000000000000000 R09: 0000000000000000
+> [  902.620154] R10: ffffb52e4c707ec0 R11: ffff9ad987d1ed44 R12: ffff9ad0ed7a8360
+> [  902.620320] R13: 0000000000000003 R14: 0000000000060000 R15: 0000000000000800
+> [  902.620487] FS:  0000000000000000(0000) GS:ffff9ad987d00000(0000) knlGS:0000000000000000
+> [  902.620738] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  902.620901] CR2: 000055ff12aecec0 CR3: 0000001005207000 CR4: 00000000000406e0
+> [  902.621068] Call Trace:
+> [  902.621256]  bitmap_daemon_work+0x2dd/0x360 [md_mod]
+> [  902.621429]  ? find_pers+0x70/0x70 [md_mod]
+> [  902.621597]  md_check_recovery+0x51/0x540 [md_mod]
+> [  902.621762]  raid1d+0x5c/0xeb0 [raid1]
+> [  902.621939]  ? try_to_del_timer_sync+0x4d/0x80
+> [  902.622102]  ? del_timer_sync+0x35/0x40
+> [  902.622265]  ? schedule_timeout+0x177/0x360
+> [  902.622453]  ? call_timer_fn+0x130/0x130
+> [  902.622623]  ? find_pers+0x70/0x70 [md_mod]
+> [  902.622794]  ? md_thread+0x94/0x150 [md_mod]
+> [  902.622959]  md_thread+0x94/0x150 [md_mod]
+> [  902.623121]  ? wait_woken+0x80/0x80
+> [  902.623280]  kthread+0x119/0x130
+> [  902.623437]  ? kthread_create_on_node+0x60/0x60
+> [  902.623600]  ret_from_fork+0x22/0x40
+> [  902.624225] RIP: bitmap_file_clear_bit+0x90/0xd0 [md_mod] RSP: ffffb52e4c707d28
+>
+> Because mdadm was running on another cpu to do resize, so bitmap_resize was
+> called to replace bitmap as below shows.
+>
+> PID: 38801  TASK: ffff9ad074a90e00  CPU: 0   COMMAND: "mdadm"
+>    [exception RIP: queued_spin_lock_slowpath+56]
+>    [snip]
+> --- <NMI exception stack> ---
+>  #5 [ffffb52e60f17c58] queued_spin_lock_slowpath at ffffffff9c0b27b8
+>  #6 [ffffb52e60f17c58] bitmap_resize at ffffffffc0399877 [md_mod]
+>  #7 [ffffb52e60f17d30] raid1_resize at ffffffffc0285bf9 [raid1]
+>  #8 [ffffb52e60f17d50] update_size at ffffffffc038a31a [md_mod]
+>  #9 [ffffb52e60f17d70] md_ioctl at ffffffffc0395ca4 [md_mod]
+>
+> And the procedure to keep resize bitmap safe is allocate new storage space,
+> then quiesce, copy bits, replace bitmap, and re-start.
+>
+> However the daemon (bitmap_daemon_work) could happen even the array is quiesced,
+> which means when bitmap_file_clear_bit is triggered by raid1d, then it thinks it
+> should be fine to access store->filemap since counts->lock is held, but resize
+> could change the storage without the protection of the lock.
+>
+> Cc: Jack Wang <jinpu.wang@cloud.ionos.com>
+> Cc: NeilBrown <neilb@suse.com>
+> Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 
-On Tue, Oct 1, 2019 at 12:55 PM Andreas Klauer
-<Andreas.Klauer@metamorpher.de> wrote:
->
-> On Tue, Oct 01, 2019 at 11:59:14AM -0700, David F. wrote:
-> > mdadm shouldn't be scanning fd0 or sr0 by default
->
-> First of all I apologize, it's my misunderstanding completely.
-> For some reason I thought you wanted it removed from /proc/partitions...
->
-> For mdadm, there are plenty of devices it should not touch.
-> Such as device mapper, network block device, and md devices.
-> Well, that applies for my system anyway.
->
-> Hence my mdadm.conf restricts it to /dev/sd* /dev/loop*
-> And loop devices are only included because I like to
-> experiment with those.
->
-> Since it can be configured I never had an issue with it,
-> so not sure what the default should be.
->
-> Regards
-> Andreas Klauer
+This looks good to me.
+
+I will apply it to md-next.
+
+Thanks,
+Song
