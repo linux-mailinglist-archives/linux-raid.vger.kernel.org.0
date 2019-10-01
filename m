@@ -2,85 +2,91 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D4A72C3032
-	for <lists+linux-raid@lfdr.de>; Tue,  1 Oct 2019 11:29:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99E85C3F92
+	for <lists+linux-raid@lfdr.de>; Tue,  1 Oct 2019 20:17:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbfJAJ3e convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-raid@lfdr.de>); Tue, 1 Oct 2019 05:29:34 -0400
-Received: from mailout6.zih.tu-dresden.de ([141.30.67.75]:40520 "EHLO
-        mailout6.zih.tu-dresden.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727326AbfJAJ3e (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 1 Oct 2019 05:29:34 -0400
-X-Greylist: delayed 1036 seconds by postgrey-1.27 at vger.kernel.org; Tue, 01 Oct 2019 05:29:33 EDT
-Received: from mail.zih.tu-dresden.de ([141.76.14.4] helo=umx-horde-web5.mailcluster.zih.tu-dresden.de)
-        by mailout6.zih.tu-dresden.de with esmtps (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.84_2)
-        (envelope-from <sebastian.hegler@tu-dresden.de>)
-        id 1iFECe-0002co-5A; Tue, 01 Oct 2019 11:12:16 +0200
-Received: from hfsync.ifn.et.tu-dresden.de ([141.30.128.60] helo=[192.168.128.2])
-        by umx-horde-web5.mailcluster.zih.tu-dresden.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-SHA:256)
-        (Exim 4.92)
-        (envelope-from <sebastian.hegler@tu-dresden.de>)
-        id 1iFECd-000Np4-9l; Tue, 01 Oct 2019 11:12:15 +0200
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: RAID6: "Bad block number requested"
-From:   Sebastian Hegler <sebastian.hegler@tu-dresden.de>
-In-Reply-To: <506BB5FA-F184-4768-BC74-D9D499A20C70@tu-dresden.de>
-Date:   Tue, 1 Oct 2019 11:12:13 +0200
-Cc:     linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <8C7BD3C3-262C-4DB9-B8D0-423F4CAD7263@tu-dresden.de>
-References: <165E54F8-0494-4430-B8A5-0C7DCDF1D91C@tu-dresden.de>
- <1528729598.4000.2.camel@HansenPartnership.com>
- <506BB5FA-F184-4768-BC74-D9D499A20C70@tu-dresden.de>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-TUD-Original-From: sebastian.hegler@tu-dresden.de
-X-TUD-Virus-Scanned: mailout6.zih.tu-dresden.de
+        id S1731451AbfJASOs (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 1 Oct 2019 14:14:48 -0400
+Received: from omta02.suddenlink.net ([208.180.40.72]:50199 "EHLO
+        omta02.suddenlink.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727012AbfJASOs (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 1 Oct 2019 14:14:48 -0400
+X-Greylist: delayed 360 seconds by postgrey-1.27 at vger.kernel.org; Tue, 01 Oct 2019 14:14:47 EDT
+Received: from [192.168.6.104] (really [66.76.46.195])
+          by dalofep04.suddenlink.net
+          (InterMail vM.8.04.03.22.02 201-2389-100-169-20190213) with ESMTP
+          id <20191001180842.ZWHV13146.dalofep04.suddenlink.net@[192.168.6.104]>
+          for <linux-raid@vger.kernel.org>; Tue, 1 Oct 2019 13:08:42 -0500
+Subject: Re: Fix for fd0 and sr0 in /proc/partitions
+To:     mdraid <linux-raid@vger.kernel.org>
+References: <CAGRSmLs+nyQ0pp_VPt36MxXDqumcyqLSR_vhkOqtFXir18puEA@mail.gmail.com>
+ <20190930101443.GA2751@metamorpher.de>
+From:   "David C. Rankin" <drankinatty@suddenlinkmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=drankinatty@suddenlinkmail.com; prefer-encrypt=mutual;
+ keydata=
+ xsBNBFkinL8BCADU5H9ZxEu+IIMb75pSmVXhW7ujTM7p2TzjZiyTT3Lfbxuoso1rWyAaAti6
+ Jyfw2pk0SJYw+8afn1+Ag/BtmSGm7wiuGdpHlDL0e/2sbyCYoFExpFLecgd5+mU+M6GCNUaM
+ vZ79BaM2wn+c4r1r0LcPmy7uweHhaVXGlocfMChd2fBweonL2jd4bX64XZbB5YErpkzxFN69
+ kM+I4CmkzOaSSLfN6//EUgc2zBKGVJhM6fpZjVE4Wm8S+khvrJwFG0ZoaPC1Ol/b47iyqZcf
+ jFZs75i2Tjd3AYyQ6Ai3ZNGrwv2PJSAawR+hfZLeNf5aMaIqoG099SsAN3j8wW97DDjbABEB
+ AAHNRERhdmlkIEMuIFJhbmtpbiwgSi5ELixQLkUuICh3aXphcmQpIDxkcmFua2luYXR0eUBz
+ dWRkZW5saW5rbWFpbC5jb20+wsCOBBMBCAA4FiEEUoo6wDEaJyRJMG0RyQVv1wIPCIcFAlki
+ nL8CGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQyQVv1wIPCId/wgf/b+9BBzhRr2i+
+ LDa5qHwlxmRbvQZp9yYzFbJV6s4Djyukir7CGYrzAvuFUWBIFiExBspGdHuQ3b/UA66/uupf
+ 6DlzRRTs62WMjK9DTZbQfFxqnx+EWCDKbBlXMsaIu/FjtBtc13uOzza967OdE8l2uxUH7+B4
+ /S8ReppJ+FXm2pzo4qlq1YYNtX0cd7BymZdn0G2ogeHos2Ay5bYOfiYWFVwb7fnZ54DCsOfb
+ H0M9RUIhA5ZKeChsCOAZvtiMMemIr/xihE8Ds7INbtEXxm00o4xgRiWSSJeuoOfeSilHbVjJ
+ Ry26E/KhKvkZbcnGCJsQRo8DPq5P/O5UQn0HVvGyTs7ATQRZIpy/AQgAwX/4Z6vfnfWsr8WA
+ qV6WYKK8FtIrWXBjEeztxiCAJydMwZkPQRbOJlZElLpZvWLHFp68mbMfrcv23dMJCH+jE5XB
+ La/p7XZp10IHzBhedZbI2MBBsnfrqqCdrf0KNPfS9bD6+37ued+O8ONm4ELhzHfjlGojNddB
+ vMEu7EQKY19u/X2sINiYvrAOX6ss21E4r4AoVojQqaL7fmrRCD2uI76z7O9zC3mQ0/JpkuEo
+ 0Yi97H+P3d3qSDb0IovPPyfioMAy7KIGSAYCHzxd47zvkYWlfSEWQ1aenAAvGgqKrZ3/KP9a
+ V1ekGimYYIpnT/JJ67DPDx9gKlQD9f1YZVcQvwARAQABwsB2BBgBCAAgFiEEUoo6wDEaJyRJ
+ MG0RyQVv1wIPCIcFAlkinL8CGwwACgkQyQVv1wIPCIffjwf/YXoinAWabuqugYxSNafvBcXA
+ GEE5arTYSGSXhUWBER1Oz0U5BjeWAKKtan88pHkFrdHYW8su5A6Dn7jDxUWAVjXzRvA0LNbJ
+ fKOrBw7knGJSqYQD7gdeBJZOSLf0Mt9g9evkxhR4cLFHG0mWH07H1yIreLNFTs+i0B3tKY44
+ P5bsNcAzMwD2G1rJehiFTbxRlAiCc6v61rzu80XaDKLEJFHVYhCJRXrla04DoGZdZKfc6urF
+ g/aUn+7z1pO70uumOnKvLViitsJ6IsxAsfhZp4KPBbbkTjixcTPfJAQGzQhcoZS22jGTPg1N
+ 7G4xtqMT/M34TbodTbaIO0HkA4n1Hw==
+Organization: Rankin Law Firm, PLLC
+Message-ID: <6026f55f-82c9-7b99-8c2b-8d03dfe8f52e@suddenlinkmail.com>
+Date:   Tue, 1 Oct 2019 13:08:40 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20190930101443.GA2751@metamorpher.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authentication-Info: Submitted using SMTP AUTH PLAIN at dalofep04.suddenlink.net from [66.76.46.195] using ID drankinatty@suddenlinkmail.com at Tue, 1 Oct 2019 13:08:42 -0500
+X-CM-Analysis: v=2.3 cv=D8g51cZj c=1 sm=1 tr=0 cx=a_idp_d a=/cos1G3ae6AqFCvJLv+j9g==:117 a=/cos1G3ae6AqFCvJLv+j9g==:17 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=IkcTkHD0fZMA:10 a=XobE76Q3jBoA:10 a=A1jyNYAxBm8A:10 a=8sKdtE0U54Yq33AJ424A:9 a=QEXdDO2ut3YA:10 a=pHzHmUro8NiASowvMSCR:22 a=nt3jZW36AmriUCFCBwmW:22
+X-CM-Envelope: MS4wfETwwJPZobrwNctqzSyxNoNba+caxXaSjrLu8aHIFUk0Dnh4NJGyNp4zibOjEcnhcLCHkRWQmjK2JGSsvaJHlQIUdNm6qQ0wReOxZwEjyKYBnZKvxmn6 t139Tarl0ttZQGvnVcAh/z+vgUITlMhnBNTF6qk+K5bopWY4Kuzp1xt6JIKTBzAsasfIk1p4ZkTY+A==
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Dear James, dear all,
-
-this is to let you know that I'll not pursue this issue further. I spent some days building a test system, but I could not reproduce the error.
-There's a tool named HUGO by HGST/Western Digital to re-configure the HDD's firmware to use 512byte blocks, which solved the problem for me.
-
-Sorry about the bad news.
-
-Yours,
-Sebastian
-
-
-Am 14.06.2018 um 14:11 schrieb Sebastian Hegler <sebastian.hegler@tu-dresden.de>:
-> Dear James, dear all!
+On 09/30/2019 05:14 AM, Andreas Klauer wrote:
+> On Sun, Sep 29, 2019 at 03:54:41PM -0700, David F. wrote:
+>> So /proc/partitions can have floppy and optical drives on it.
 > 
-> Am 11.06.2018 um 17:06 schrieb James Bottomley <James.Bottomley@HansenPartnership.com>:
->> This means that somehow, something sent a non 4k aligned 4k sized
->> request. SCSI here is just the messenger.  However, if you apply this
->> patch, it will capture the stack trace of what above it triggered this,
->> which may help us in debugging.  It could be we may also want to see
->> what the values of block and blk_rq_sectors(rq) actually are, but lets
->> begin with the stack trace.
->> ---
->> 
->> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
->> index 9421d9877730..ac865e048533 100644
->> --- a/drivers/scsi/sd.c
->> +++ b/drivers/scsi/sd.c
->> @@ -1109,6 +1109,7 @@ static int sd_setup_read_write_cmnd(struct scsi_cmnd *SCpnt)
->> 		if ((block & 7) || (blk_rq_sectors(rq) & 7)) {
->> 			scmd_printk(KERN_ERR, SCpnt,
->> 				    "Bad block number requested\n");
->> +			WARN_ON_ONCE(1);
->> 			goto out;
->> 		} else {
->> 			block = block >> 3;
-> I'll give that a try. But don't expect to hear from me soon, I'll need to build a test system for that. The error occurred in a production system, which I am very hesitant to re-boot, let alone insert drives that cause error messages.
+> And people might rely on that so removing it is the wrong approach.
 > 
-> Yours sincerely,
-> Sebastian
 
+and people do...
+
+cat /proc/partitions
+major minor  #blocks  name
+
+   2        0          4 fd0
+   8       16  976762584 sdb
+   8        0  976762584 sda
+   8       32  732574584 sdc
+  11        0    1048575 sr0
+
+
+
+
+-- 
+David C. Rankin, J.D.,P.E.
