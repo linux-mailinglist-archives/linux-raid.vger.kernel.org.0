@@ -2,91 +2,91 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 99E85C3F92
-	for <lists+linux-raid@lfdr.de>; Tue,  1 Oct 2019 20:17:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EB26C408E
+	for <lists+linux-raid@lfdr.de>; Tue,  1 Oct 2019 21:00:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731451AbfJASOs (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 1 Oct 2019 14:14:48 -0400
-Received: from omta02.suddenlink.net ([208.180.40.72]:50199 "EHLO
-        omta02.suddenlink.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727012AbfJASOs (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 1 Oct 2019 14:14:48 -0400
-X-Greylist: delayed 360 seconds by postgrey-1.27 at vger.kernel.org; Tue, 01 Oct 2019 14:14:47 EDT
-Received: from [192.168.6.104] (really [66.76.46.195])
-          by dalofep04.suddenlink.net
-          (InterMail vM.8.04.03.22.02 201-2389-100-169-20190213) with ESMTP
-          id <20191001180842.ZWHV13146.dalofep04.suddenlink.net@[192.168.6.104]>
-          for <linux-raid@vger.kernel.org>; Tue, 1 Oct 2019 13:08:42 -0500
-Subject: Re: Fix for fd0 and sr0 in /proc/partitions
-To:     mdraid <linux-raid@vger.kernel.org>
-References: <CAGRSmLs+nyQ0pp_VPt36MxXDqumcyqLSR_vhkOqtFXir18puEA@mail.gmail.com>
- <20190930101443.GA2751@metamorpher.de>
-From:   "David C. Rankin" <drankinatty@suddenlinkmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=drankinatty@suddenlinkmail.com; prefer-encrypt=mutual;
- keydata=
- xsBNBFkinL8BCADU5H9ZxEu+IIMb75pSmVXhW7ujTM7p2TzjZiyTT3Lfbxuoso1rWyAaAti6
- Jyfw2pk0SJYw+8afn1+Ag/BtmSGm7wiuGdpHlDL0e/2sbyCYoFExpFLecgd5+mU+M6GCNUaM
- vZ79BaM2wn+c4r1r0LcPmy7uweHhaVXGlocfMChd2fBweonL2jd4bX64XZbB5YErpkzxFN69
- kM+I4CmkzOaSSLfN6//EUgc2zBKGVJhM6fpZjVE4Wm8S+khvrJwFG0ZoaPC1Ol/b47iyqZcf
- jFZs75i2Tjd3AYyQ6Ai3ZNGrwv2PJSAawR+hfZLeNf5aMaIqoG099SsAN3j8wW97DDjbABEB
- AAHNRERhdmlkIEMuIFJhbmtpbiwgSi5ELixQLkUuICh3aXphcmQpIDxkcmFua2luYXR0eUBz
- dWRkZW5saW5rbWFpbC5jb20+wsCOBBMBCAA4FiEEUoo6wDEaJyRJMG0RyQVv1wIPCIcFAlki
- nL8CGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQyQVv1wIPCId/wgf/b+9BBzhRr2i+
- LDa5qHwlxmRbvQZp9yYzFbJV6s4Djyukir7CGYrzAvuFUWBIFiExBspGdHuQ3b/UA66/uupf
- 6DlzRRTs62WMjK9DTZbQfFxqnx+EWCDKbBlXMsaIu/FjtBtc13uOzza967OdE8l2uxUH7+B4
- /S8ReppJ+FXm2pzo4qlq1YYNtX0cd7BymZdn0G2ogeHos2Ay5bYOfiYWFVwb7fnZ54DCsOfb
- H0M9RUIhA5ZKeChsCOAZvtiMMemIr/xihE8Ds7INbtEXxm00o4xgRiWSSJeuoOfeSilHbVjJ
- Ry26E/KhKvkZbcnGCJsQRo8DPq5P/O5UQn0HVvGyTs7ATQRZIpy/AQgAwX/4Z6vfnfWsr8WA
- qV6WYKK8FtIrWXBjEeztxiCAJydMwZkPQRbOJlZElLpZvWLHFp68mbMfrcv23dMJCH+jE5XB
- La/p7XZp10IHzBhedZbI2MBBsnfrqqCdrf0KNPfS9bD6+37ued+O8ONm4ELhzHfjlGojNddB
- vMEu7EQKY19u/X2sINiYvrAOX6ss21E4r4AoVojQqaL7fmrRCD2uI76z7O9zC3mQ0/JpkuEo
- 0Yi97H+P3d3qSDb0IovPPyfioMAy7KIGSAYCHzxd47zvkYWlfSEWQ1aenAAvGgqKrZ3/KP9a
- V1ekGimYYIpnT/JJ67DPDx9gKlQD9f1YZVcQvwARAQABwsB2BBgBCAAgFiEEUoo6wDEaJyRJ
- MG0RyQVv1wIPCIcFAlkinL8CGwwACgkQyQVv1wIPCIffjwf/YXoinAWabuqugYxSNafvBcXA
- GEE5arTYSGSXhUWBER1Oz0U5BjeWAKKtan88pHkFrdHYW8su5A6Dn7jDxUWAVjXzRvA0LNbJ
- fKOrBw7knGJSqYQD7gdeBJZOSLf0Mt9g9evkxhR4cLFHG0mWH07H1yIreLNFTs+i0B3tKY44
- P5bsNcAzMwD2G1rJehiFTbxRlAiCc6v61rzu80XaDKLEJFHVYhCJRXrla04DoGZdZKfc6urF
- g/aUn+7z1pO70uumOnKvLViitsJ6IsxAsfhZp4KPBbbkTjixcTPfJAQGzQhcoZS22jGTPg1N
- 7G4xtqMT/M34TbodTbaIO0HkA4n1Hw==
-Organization: Rankin Law Firm, PLLC
-Message-ID: <6026f55f-82c9-7b99-8c2b-8d03dfe8f52e@suddenlinkmail.com>
-Date:   Tue, 1 Oct 2019 13:08:40 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1726300AbfJAS72 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 1 Oct 2019 14:59:28 -0400
+Received: from mail-wr1-f51.google.com ([209.85.221.51]:43142 "EHLO
+        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbfJAS72 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 1 Oct 2019 14:59:28 -0400
+Received: by mail-wr1-f51.google.com with SMTP id q17so16802186wrx.10
+        for <linux-raid@vger.kernel.org>; Tue, 01 Oct 2019 11:59:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iDPjotCjsxHuXGoELEUMC0nmqHCI8zTEJl4hn4LHiEE=;
+        b=Kj7EwHydvogT2KwJuVWmuxKRus/5xLw8rD3iAIe2R51FxxdlsjaLTgatxnAl93gLQ1
+         04JcPXzI90/h2TY/HUlbcRdVhsqrY2HWB0UtEQ1LtIWwFoxgdCbE0lQzAXRAjkN4hdpp
+         WHBaZA0L0h2lus3w0FHWoc8CT+FC0yNzYLFSV1a7AHWsc++s8gbtgslqxQYCMY8fjzot
+         efbW7uas46+CEZmtDZ3YZA41FPXfNoZP9BuWDfpRF5QYNhdEAdc3dMIxFW8mD+efz83D
+         Jc83tGdvfM1gWoDW3Bz4Neg70qNwaMSsLvQjahlNXABAFrcZeNCEGM1Ik7ld5CjUm2sL
+         fD6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iDPjotCjsxHuXGoELEUMC0nmqHCI8zTEJl4hn4LHiEE=;
+        b=CNatAwliU7uxJj7Xsn4swXdgO4eP1g0LQ8Ms3aYPMHzt/R5jVLwn/2eVb4QPUQ9A8l
+         LU7FvqLimjdMTw9VgyqMBwieCOMcOwsGMadrWmy8J5e2vh/ixiv++t0vjJIp/OXRQZ4G
+         /HMTxlubQ/r0+Ob2T/I8cJEPsOvxpWBI/i3Mbua+6nWMN0ctPXaWC1Hrgg2n0rP+m/Wn
+         ijN5RnF3sF5IcZEPcLwOYIXaVTVKsKZGiLpXzYBO+pj33hsWgPEgV2s2afRHR8fwJ/wY
+         wIzVvZe6ZIa4v6CO+dvWLjz0dRP1F6jW2dpCRZu7DkuLxxpXIDw3MnS1Xh347YMItFst
+         AA7A==
+X-Gm-Message-State: APjAAAXLbIZ0U97387vbBJGDShjv2GsxsBSSX55Hqy8YqXX3bNPHYdfR
+        MGLm0Go5gt0yHA8e+nzV/nNF5qecLJHSfLftOZh+ZbF8
+X-Google-Smtp-Source: APXvYqy5FjXX1x/KIAIkphSnS0nkmr/Z23jRS/sNSlcZR+KOpMKjfZYRu7rpAxFkUGDYR5MQ1TnxbaIPv1GxocgtbcU=
+X-Received: by 2002:adf:8b13:: with SMTP id n19mr20378834wra.203.1569956365280;
+ Tue, 01 Oct 2019 11:59:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190930101443.GA2751@metamorpher.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authentication-Info: Submitted using SMTP AUTH PLAIN at dalofep04.suddenlink.net from [66.76.46.195] using ID drankinatty@suddenlinkmail.com at Tue, 1 Oct 2019 13:08:42 -0500
-X-CM-Analysis: v=2.3 cv=D8g51cZj c=1 sm=1 tr=0 cx=a_idp_d a=/cos1G3ae6AqFCvJLv+j9g==:117 a=/cos1G3ae6AqFCvJLv+j9g==:17 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=IkcTkHD0fZMA:10 a=XobE76Q3jBoA:10 a=A1jyNYAxBm8A:10 a=8sKdtE0U54Yq33AJ424A:9 a=QEXdDO2ut3YA:10 a=pHzHmUro8NiASowvMSCR:22 a=nt3jZW36AmriUCFCBwmW:22
-X-CM-Envelope: MS4wfETwwJPZobrwNctqzSyxNoNba+caxXaSjrLu8aHIFUk0Dnh4NJGyNp4zibOjEcnhcLCHkRWQmjK2JGSsvaJHlQIUdNm6qQ0wReOxZwEjyKYBnZKvxmn6 t139Tarl0ttZQGvnVcAh/z+vgUITlMhnBNTF6qk+K5bopWY4Kuzp1xt6JIKTBzAsasfIk1p4ZkTY+A==
+References: <CAGRSmLs+nyQ0pp_VPt36MxXDqumcyqLSR_vhkOqtFXir18puEA@mail.gmail.com>
+ <20190930101443.GA2751@metamorpher.de> <6026f55f-82c9-7b99-8c2b-8d03dfe8f52e@suddenlinkmail.com>
+In-Reply-To: <6026f55f-82c9-7b99-8c2b-8d03dfe8f52e@suddenlinkmail.com>
+From:   "David F." <df7729@gmail.com>
+Date:   Tue, 1 Oct 2019 11:59:14 -0700
+Message-ID: <CAGRSmLvHc-gOVmr-fHTo0upUeDNjrQgCk9rSqpALFV1FiHra+g@mail.gmail.com>
+Subject: Re: Fix for fd0 and sr0 in /proc/partitions
+To:     "David C. Rankin" <drankinatty@suddenlinkmail.com>
+Cc:     mdraid <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 09/30/2019 05:14 AM, Andreas Klauer wrote:
-> On Sun, Sep 29, 2019 at 03:54:41PM -0700, David F. wrote:
->> So /proc/partitions can have floppy and optical drives on it.
-> 
-> And people might rely on that so removing it is the wrong approach.
-> 
+mdadm shouldn't be scanning fd0 or sr0 by default, maybe an option to
+make it scan them if they exist would be better.
 
-and people do...
+also because so many tools use /proc/partitions and non partitioned
+devices (in real-world, not theoretical or testing) are in there,
+maybe better to have option if sr and fd devices should populate there
+at all.
 
-cat /proc/partitions
-major minor  #blocks  name
-
-   2        0          4 fd0
-   8       16  976762584 sdb
-   8        0  976762584 sda
-   8       32  732574584 sdc
-  11        0    1048575 sr0
-
-
-
-
--- 
-David C. Rankin, J.D.,P.E.
+On Tue, Oct 1, 2019 at 11:15 AM David C. Rankin
+<drankinatty@suddenlinkmail.com> wrote:
+>
+> On 09/30/2019 05:14 AM, Andreas Klauer wrote:
+> > On Sun, Sep 29, 2019 at 03:54:41PM -0700, David F. wrote:
+> >> So /proc/partitions can have floppy and optical drives on it.
+> >
+> > And people might rely on that so removing it is the wrong approach.
+> >
+>
+> and people do...
+>
+> cat /proc/partitions
+> major minor  #blocks  name
+>
+>    2        0          4 fd0
+>    8       16  976762584 sdb
+>    8        0  976762584 sda
+>    8       32  732574584 sdc
+>   11        0    1048575 sr0
+>
+>
+>
+>
+> --
+> David C. Rankin, J.D.,P.E.
