@@ -2,76 +2,85 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 93173C29F5
-	for <lists+linux-raid@lfdr.de>; Tue,  1 Oct 2019 00:48:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4A72C3032
+	for <lists+linux-raid@lfdr.de>; Tue,  1 Oct 2019 11:29:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729640AbfI3Ws3 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 30 Sep 2019 18:48:29 -0400
-Received: from mail-wm1-f54.google.com ([209.85.128.54]:53846 "EHLO
-        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726350AbfI3Ws3 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 30 Sep 2019 18:48:29 -0400
-Received: by mail-wm1-f54.google.com with SMTP id i16so1136521wmd.3
-        for <linux-raid@vger.kernel.org>; Mon, 30 Sep 2019 15:48:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VOLNyCZXFMCR4mFyKy8HpcRX7Q/yX9n1elzMZh3B/mU=;
-        b=arQ166ARYQv83Hrr9Cf0Bpt/TL6nC4lxMeFm3pMMIOaXl03NYs6JFdMkVuNYKp25yk
-         QsLfxgHEvxiu/zi15FyW7InihO6DJcIBQDhEFWl8Y9kUXLeIET9E9mf5To+CFTO7qy+b
-         hkdNmK3wMRxhPJQ04BfqTudQgsBfddyHjpwiNmKT5A5Dtqnfz6P8/wN1YQHzHOx5xFZe
-         +HJS19wV9VonkJkhgE2SBEJnlav+kg/4Gg+FVGQZhVEv8T/q0A64e+8XNHLL8zz/Tj9i
-         y/LuFb33ohS+M1zQVq/1qeqN7KdrnY17kjlg0LUvYX+/YVxhGk7LIMq1XSVsYUA1xhUR
-         DSfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VOLNyCZXFMCR4mFyKy8HpcRX7Q/yX9n1elzMZh3B/mU=;
-        b=nNnzdPkNy+kTtxKuZ+2YXAJvw6aFu9wrxXaSew8jIcfQAmESC5v6CxTlMbiadIGDBP
-         Di6xkv0lA+X4cDSn3lNjzMN6p9M1KM9/dKHap6skuCqT4v0nDsEbgyF/m39omPHpVqud
-         Czoht/Z3nAHqLlc0Y9bWwmH39C8qSWDCDFsd1DYz2Rf+jXWyETS/L/T4flrhjp8BSmn3
-         NBpDwu6L9cVX3XfW4EZp3F1Al1deFbru+E6s168rpslUW3o2d9P7VNPjwHUBA4xc7gD0
-         zertXWy/Fm7vCmHI9aFRyhwpwlbe2vKNO79fMgu9s8krf74Lxqf2SpcWvQ6u8gzzMueA
-         dbYw==
-X-Gm-Message-State: APjAAAV6KTsEFQ+lZuqCQ3c6eFzC47DsUu2dQQmVov+aoTVHiqPSbThx
-        kY5Wcc+QqGR2saun+znCibrEX8FNQV3NemlSkydSag==
-X-Google-Smtp-Source: APXvYqxIoeRS5/ImQA+Rn4hXe3zkGRVfI9xhK/UPNd7UBHKcZ0zbD6KdMyn4SCQBFqW+hGdF3gMMv2c2qC2AHIHRY2w=
-X-Received: by 2002:a7b:cc0b:: with SMTP id f11mr1078355wmh.112.1569883707198;
- Mon, 30 Sep 2019 15:48:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAGRSmLs+nyQ0pp_VPt36MxXDqumcyqLSR_vhkOqtFXir18puEA@mail.gmail.com>
- <20190930101443.GA2751@metamorpher.de> <CAGRSmLtpC_5HV9xfU+YHPEbCa+bMPTVCuGumK=4SmVm9pHODMg@mail.gmail.com>
-In-Reply-To: <CAGRSmLtpC_5HV9xfU+YHPEbCa+bMPTVCuGumK=4SmVm9pHODMg@mail.gmail.com>
-From:   "David F." <df7729@gmail.com>
-Date:   Mon, 30 Sep 2019 15:48:16 -0700
-Message-ID: <CAGRSmLuPquwR-VNbzhwHEdrVhDB2CWXD=4VQTx2AGdY7NyS1YQ@mail.gmail.com>
-Subject: Re: Fix for fd0 and sr0 in /proc/partitions
-To:     Andreas Klauer <Andreas.Klauer@metamorpher.de>
-Cc:     "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1728708AbfJAJ3e convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-raid@lfdr.de>); Tue, 1 Oct 2019 05:29:34 -0400
+Received: from mailout6.zih.tu-dresden.de ([141.30.67.75]:40520 "EHLO
+        mailout6.zih.tu-dresden.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727326AbfJAJ3e (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 1 Oct 2019 05:29:34 -0400
+X-Greylist: delayed 1036 seconds by postgrey-1.27 at vger.kernel.org; Tue, 01 Oct 2019 05:29:33 EDT
+Received: from mail.zih.tu-dresden.de ([141.76.14.4] helo=umx-horde-web5.mailcluster.zih.tu-dresden.de)
+        by mailout6.zih.tu-dresden.de with esmtps (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.84_2)
+        (envelope-from <sebastian.hegler@tu-dresden.de>)
+        id 1iFECe-0002co-5A; Tue, 01 Oct 2019 11:12:16 +0200
+Received: from hfsync.ifn.et.tu-dresden.de ([141.30.128.60] helo=[192.168.128.2])
+        by umx-horde-web5.mailcluster.zih.tu-dresden.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-SHA:256)
+        (Exim 4.92)
+        (envelope-from <sebastian.hegler@tu-dresden.de>)
+        id 1iFECd-000Np4-9l; Tue, 01 Oct 2019 11:12:15 +0200
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: RAID6: "Bad block number requested"
+From:   Sebastian Hegler <sebastian.hegler@tu-dresden.de>
+In-Reply-To: <506BB5FA-F184-4768-BC74-D9D499A20C70@tu-dresden.de>
+Date:   Tue, 1 Oct 2019 11:12:13 +0200
+Cc:     linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <8C7BD3C3-262C-4DB9-B8D0-423F4CAD7263@tu-dresden.de>
+References: <165E54F8-0494-4430-B8A5-0C7DCDF1D91C@tu-dresden.de>
+ <1528729598.4000.2.camel@HansenPartnership.com>
+ <506BB5FA-F184-4768-BC74-D9D499A20C70@tu-dresden.de>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-TUD-Original-From: sebastian.hegler@tu-dresden.de
+X-TUD-Virus-Scanned: mailout6.zih.tu-dresden.de
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Do you know how /proc/partitions gets populated?
+Dear James, dear all,
 
-On Mon, Sep 30, 2019 at 9:07 AM David F. <df7729@gmail.com> wrote:
->
-> One isn't defined, there is a mdadm.conf-default file but no actual
-> file, so using the default.
->
-> On Mon, Sep 30, 2019 at 3:14 AM Andreas Klauer
-> <Andreas.Klauer@metamorpher.de> wrote:
-> >
-> > On Sun, Sep 29, 2019 at 03:54:41PM -0700, David F. wrote:
-> > > So /proc/partitions can have floppy and optical drives on it.
-> >
-> > And people might rely on that so removing it is the wrong approach.
-> >
-> > What does your mdadm.conf look like, DEVICE devices?
-> >
-> > Regards
-> > Andreas Klauer
+this is to let you know that I'll not pursue this issue further. I spent some days building a test system, but I could not reproduce the error.
+There's a tool named HUGO by HGST/Western Digital to re-configure the HDD's firmware to use 512byte blocks, which solved the problem for me.
+
+Sorry about the bad news.
+
+Yours,
+Sebastian
+
+
+Am 14.06.2018 um 14:11 schrieb Sebastian Hegler <sebastian.hegler@tu-dresden.de>:
+> Dear James, dear all!
+> 
+> Am 11.06.2018 um 17:06 schrieb James Bottomley <James.Bottomley@HansenPartnership.com>:
+>> This means that somehow, something sent a non 4k aligned 4k sized
+>> request. SCSI here is just the messenger.  However, if you apply this
+>> patch, it will capture the stack trace of what above it triggered this,
+>> which may help us in debugging.  It could be we may also want to see
+>> what the values of block and blk_rq_sectors(rq) actually are, but lets
+>> begin with the stack trace.
+>> ---
+>> 
+>> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+>> index 9421d9877730..ac865e048533 100644
+>> --- a/drivers/scsi/sd.c
+>> +++ b/drivers/scsi/sd.c
+>> @@ -1109,6 +1109,7 @@ static int sd_setup_read_write_cmnd(struct scsi_cmnd *SCpnt)
+>> 		if ((block & 7) || (blk_rq_sectors(rq) & 7)) {
+>> 			scmd_printk(KERN_ERR, SCpnt,
+>> 				    "Bad block number requested\n");
+>> +			WARN_ON_ONCE(1);
+>> 			goto out;
+>> 		} else {
+>> 			block = block >> 3;
+> I'll give that a try. But don't expect to hear from me soon, I'll need to build a test system for that. The error occurred in a production system, which I am very hesitant to re-boot, let alone insert drives that cause error messages.
+> 
+> Yours sincerely,
+> Sebastian
+
