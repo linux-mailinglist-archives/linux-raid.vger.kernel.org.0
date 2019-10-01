@@ -2,50 +2,50 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F3EF9C43E4
-	for <lists+linux-raid@lfdr.de>; Wed,  2 Oct 2019 00:44:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98B52C4414
+	for <lists+linux-raid@lfdr.de>; Wed,  2 Oct 2019 01:02:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbfJAWo1 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 1 Oct 2019 18:44:27 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:40659 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727111AbfJAWo1 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 1 Oct 2019 18:44:27 -0400
-Received: by mail-qk1-f194.google.com with SMTP id y144so12941825qkb.7
-        for <linux-raid@vger.kernel.org>; Tue, 01 Oct 2019 15:44:25 -0700 (PDT)
+        id S1727143AbfJAXCQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 1 Oct 2019 19:02:16 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:39672 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726754AbfJAXCP (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 1 Oct 2019 19:02:15 -0400
+Received: by mail-qk1-f193.google.com with SMTP id 4so12997159qki.6
+        for <linux-raid@vger.kernel.org>; Tue, 01 Oct 2019 16:02:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Ygc3TIRij4f/MqWnfl8Yn7wp4XjhM1ZwFDT8uxM7XM8=;
-        b=UvlNI5g8eo/69rc+hcRTeNQbenSJmCVhWmbUYxSkUXgxE/qinG8uxdSogQ1OO1qg9T
-         MVEBJHLBaQagRRm/4EsMCJuJmfscHWkkM+pHmaJxE6iNxqkLlgEedRyRayd1V1qg/33L
-         BvOk1jkHaTJkMC8wBdVjSpcx2sl/IgjfyG7xw/zAD/6k0e/sjzYvFe0d0Ows5/4tcKFC
-         7ITY/8HiK6lShbvKoesYUtaXG3jYG9TcsUxoeteadVLGui6NwTF2OWwy0bu8DP545udy
-         puUvBo1yL8FF+fu7UjHXTGr6mkMh3tzRsNPIE/jyetbpmO1JdM0CY3+5jifgsg/2q5ab
-         3kvQ==
+        bh=6aZGAlu2aY7VKl0Eg2Hm4PRs7TtK3NkkAwv58VCthck=;
+        b=ODhReki7oZmnFZ6uWTuA3l7702MxbAKEHG7oeH+9Uo1BS9IJrZhyI3E8rC6r67bPTo
+         RcUJedcFOWrc9otTSeFaBVhnFa6dxb8vlWT5ztJzw4/cEOD8kW3y1eg2IGi7P0v5NRkn
+         7DCzVtWFtboWR82nO7dI6ODl5fDFjdQyUBYQz1XUddsqWgxUcIRdscSmJRIMeFxK5amo
+         xZ1xCkIt6j27LyvD/r3PFGKO+A8MdjY0zGDQW+3ZGQgdPra7zR0TLKIbrdOP+a9WXM22
+         1vYqG3VxuNUKhhfsn6ORKE6B6hv8oJBhm1F7sgQ46Kf2EQjApWy+tv+nnlRnkagrn8gZ
+         eVUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Ygc3TIRij4f/MqWnfl8Yn7wp4XjhM1ZwFDT8uxM7XM8=;
-        b=VKnd9eQG5yHsYssUuLkxxRKLR7bEbLupeN3a+V/bqzHNVFHVTNRGnixV23uj7nWhDD
-         +ce87teesdLQlM3G+OiIpELa33xvl+KhLxCw/KdiA2eVjSiS04Jc85GB0LcgT9q9e4pP
-         O5ZTbUt/ocRtfhbkzuokcHRfddttwqnk3C8rt5gzLImyja/Vc+Yp5m+CMcu9LvRXFIxj
-         W04PZsBC9bwPP08j+SlSg17QANzTi58vHPR0QVbj+LE2UZyKBYSm5PA7rS8/Zp9WmRVQ
-         G7FlTmw+U4fladciJOqZ17+glK+hmZ+IPx7dD40J9aajTXjQbUX0aDMZ6qY6I7n7XWct
-         vkuA==
-X-Gm-Message-State: APjAAAXk9/CNIegFj+7nDGqbVScYroZQ8sLw7D+pvx7H2kirUYrOcKqK
-        cfsPwpgvu+/vb1Z0/HXz8+l1DC809wvLZpWggVBl9A==
-X-Google-Smtp-Source: APXvYqwacnKPednpTxF0ETtBOHylmcf+B9p742iba7mkYV5v2a6AyVGImtPJQ6CNCysWLM+sW6F8aqLfS76INq2b82g=
-X-Received: by 2002:a37:5f47:: with SMTP id t68mr584803qkb.497.1569969864473;
- Tue, 01 Oct 2019 15:44:24 -0700 (PDT)
+        bh=6aZGAlu2aY7VKl0Eg2Hm4PRs7TtK3NkkAwv58VCthck=;
+        b=o9jSN6m4W//0jpHMsdwGDyfQ+8TtwZpx6kvJSJQ9CiqjLDzdMYcV3+omYXOK6x566c
+         X+FVdXnxSt3ts8hucYNDE6RxYevgAuh2cXCkD1jWZJLojmaS+PURUFu0R2+jZM20S4WV
+         B15E2X94H5zfulu5ox2YPJ237eHOdIjEvL4KS/gwzwltOkwki6psEzFFLwch4DUdGDx3
+         KOqWF+oPU7DazR49IvhuTDfuLJUpuGdy3mPXVaMwb16x/lqUYCIP4KxDvtvZAoAv4JJg
+         LghrMFOpcoo7jNGyWkBOL9yLFwE35bG4hUuJzO1NzhvNkLcge6Ey6BbasurHzPfoe+No
+         TEXw==
+X-Gm-Message-State: APjAAAViEMWB7nH+wQ+bRVcp7TcdM+Cms2SY1C4uaZl0SsTFbrN1nQcN
+        SJXx1VabZ65uw2QJev9Su6+ucXZPKfjRs3hpGzQ=
+X-Google-Smtp-Source: APXvYqwOr3GVWMFcHSJFabjBgbZA092l9kSYsyHRlzoXGjKHN2mEqQPlmkEBRiOjB/62U8guwt8GEBrQR6h0GcvSd/A=
+X-Received: by 2002:a05:620a:49b:: with SMTP id 27mr627712qkr.89.1569970934895;
+ Tue, 01 Oct 2019 16:02:14 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190926115350.7111-1-guoqing.jiang@cloud.ionos.com>
 In-Reply-To: <20190926115350.7111-1-guoqing.jiang@cloud.ionos.com>
 From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Tue, 1 Oct 2019 15:44:13 -0700
-Message-ID: <CAPhsuW5dk944r_fQdoZodOoLoJNqyfwESMsWUvPhOMY+KQ+Uew@mail.gmail.com>
+Date:   Tue, 1 Oct 2019 16:02:04 -0700
+Message-ID: <CAPhsuW5-NFRh4_NNgG1FfFazBuSNyfK+vrxxjB47jfk6gpzJLA@mail.gmail.com>
 Subject: Re: [PATCH] md/bitmap: avoid race window between md_bitmap_resize and bitmap_file_clear_bit
 To:     Guoqing Jiang <jgq516@gmail.com>
 Cc:     linux-raid <linux-raid@vger.kernel.org>,
@@ -107,27 +107,18 @@ On Thu, Sep 26, 2019 at 4:55 AM <jgq516@gmail.com> wrote:
 >    [exception RIP: queued_spin_lock_slowpath+56]
 >    [snip]
 > --- <NMI exception stack> ---
->  #5 [ffffb52e60f17c58] queued_spin_lock_slowpath at ffffffff9c0b27b8
->  #6 [ffffb52e60f17c58] bitmap_resize at ffffffffc0399877 [md_mod]
->  #7 [ffffb52e60f17d30] raid1_resize at ffffffffc0285bf9 [raid1]
->  #8 [ffffb52e60f17d50] update_size at ffffffffc038a31a [md_mod]
->  #9 [ffffb52e60f17d70] md_ioctl at ffffffffc0395ca4 [md_mod]
->
-> And the procedure to keep resize bitmap safe is allocate new storage space,
-> then quiesce, copy bits, replace bitmap, and re-start.
->
-> However the daemon (bitmap_daemon_work) could happen even the array is quiesced,
-> which means when bitmap_file_clear_bit is triggered by raid1d, then it thinks it
-> should be fine to access store->filemap since counts->lock is held, but resize
-> could change the storage without the protection of the lock.
->
-> Cc: Jack Wang <jinpu.wang@cloud.ionos.com>
-> Cc: NeilBrown <neilb@suse.com>
-> Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 
-This looks good to me.
+nit: this ---  above will trim the rest of the commit log. So I
+updated it before applying.
 
-I will apply it to md-next.
+Also, checkpatch.pl complains
+
+WARNING: Possible unwrapped commit description (prefer a maximum 75
+chars per line)
+
+for multiple lines. I fixed them before applying.
+
+In the future, please check the patch before sending.
 
 Thanks,
 Song
