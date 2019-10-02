@@ -2,109 +2,106 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CD2CFC4433
-	for <lists+linux-raid@lfdr.de>; Wed,  2 Oct 2019 01:16:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12BB7C4534
+	for <lists+linux-raid@lfdr.de>; Wed,  2 Oct 2019 02:55:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728957AbfJAXQx (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 1 Oct 2019 19:16:53 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44924 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727078AbfJAXQx (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 1 Oct 2019 19:16:53 -0400
-Received: by mail-qk1-f195.google.com with SMTP id u22so13023880qkk.11
-        for <linux-raid@vger.kernel.org>; Tue, 01 Oct 2019 16:16:52 -0700 (PDT)
+        id S1729545AbfJBAzu (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 1 Oct 2019 20:55:50 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36592 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729493AbfJBAzt (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 1 Oct 2019 20:55:49 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 23so2401966pgk.3
+        for <linux-raid@vger.kernel.org>; Tue, 01 Oct 2019 17:55:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vJyz/b01Be3qjh9Tm8GwEBEHk6iRYpqrsNsNSgOLXJ0=;
-        b=mzqzqyLS3e3NLWT/U9izStlniCQVQ+qYwjVSlvjA7Jpcdo7+Lhdeu32unrDxLWYqYO
-         JZ3Qgz02LJFHWcnACQJA6YqcdFjfFx5umSS2h3eiuJS+fRYqU7mpFSOt3Ux8fDpgeG2q
-         ewlIEFie6zI9lN1gnjc2QU/bvktzWldu0/CGGZMBQh5ESflsMumnnEBsNGWtY9VG5xnX
-         xmpDIjT5WE4aLr8hLg916nz76RRanFTMBTrzrsrC5LeQROHHgy/pt5ssGiLIyuC/FsKE
-         nJEJq8shP/KVmXqma4nsI+AKq75vSz9DbfbJyyupM/HSCELeyC2jTcbRR+beInHJ4urO
-         Y5IQ==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DDsLE/BVSvW2ad3pzPsUne4j3kAv3DTYOSaOyiuU1vs=;
+        b=RQNzOyfEw0J+eQ9dS8vs9E6pylLYp/Ngw7gRmrVGdNyY2VIjuZTok2HmqbBPbl9IN5
+         MXPXS/P/CxMO5/k4p1IgI3QV+EWJ3qo9yjjLnndW0ebYkxINoWM0Utr4LR7TrCVhcrfe
+         FacFXdH6Hs8c1Ev8EtUnt4TM7hpQNDSsV1IYsYvFJf2QhGmyNqw4F6rnrgqVXRSZGMmL
+         gQMHDKPUdzHqyOkhT0XaR4S/wjTy+zCTpP4GR0peM1YFvfxF9K7Yk8cazGZS6nOpcvlb
+         qd9ZJ4EVUjISgOyhvn2hzz+laPFuc33brFh1rTvOFzXZHokCByCvhO72cGcQiLo9kKDm
+         tHOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vJyz/b01Be3qjh9Tm8GwEBEHk6iRYpqrsNsNSgOLXJ0=;
-        b=hGA9IOBR48kFv+vuLPfZcf6FnAunlFnwmv070T0/zgUcynxgzAc2HPnivxTeHYdn4z
-         rwCoGcN1Qy94Ubzj8acF8IpLCpgAELQphK4xi3DUFGkJRc+NwxUDf9NRKgFPRHexSX9F
-         C24zWrfFTOiadX/6THAUvGcQh/BWUD0s7WG/q5mRQWCqwVCZ+ggLrJAno8Ljuls1DPsS
-         5KUs40os3brEOpFUpqL83MgnnBsMnP9jFO6csIbtxVOLAwSuUhacE3M+RpTjYHzyORQC
-         +783Z52DmjAOmL09ZSqSurq0ydeqzjOr8RdPUMwWmwWaW8xR8FvNVTIMKkKhBVu76hDd
-         lNGw==
-X-Gm-Message-State: APjAAAVxcSxyZltO93GxJXUq3pn1nGFZBjK1sw+vF27+egh8wKq/C6X4
-        4WC8Iz1sc3+1dets3rCw3Edfff0vPkHJsYAv9aE=
-X-Google-Smtp-Source: APXvYqy6Inxz0LRQ3qLVYW2n+D8uUgP3bUsYEkYGNTSXZkZFk3TDm++++UgcWXplU4/h4HxpFzymgyKrz1bg1w4Dc8A=
-X-Received: by 2002:ae9:dec2:: with SMTP id s185mr742169qkf.203.1569971812054;
- Tue, 01 Oct 2019 16:16:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <1568627145-14210-1-git-send-email-xni@redhat.com>
- <20190916171514.GA1970@redhat> <b7271fd2-5fea-092f-860c-a129d43c3a7a@redhat.com>
- <CA+-xHTEaYtctDGfY=hq_XuxTW01+sriNb6xyS5-aqtvAkkrZNw@mail.gmail.com> <fbeffe99-afd0-abe7-ba87-85de5ce5c8bb@redhat.com>
-In-Reply-To: <fbeffe99-afd0-abe7-ba87-85de5ce5c8bb@redhat.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Tue, 1 Oct 2019 16:16:40 -0700
-Message-ID: <CAPhsuW5n0N-tkPJXFoJeAFj9wzyJN33zz_eDh23jUJwmDNTQfg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] Call md_handle_request directly in md_flush_request
-To:     Xiao Ni <xni@redhat.com>
-Cc:     David Jeffery <djeffery@redhat.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DDsLE/BVSvW2ad3pzPsUne4j3kAv3DTYOSaOyiuU1vs=;
+        b=PZN5AY+QYeS2ROWD3w/d3mdoqHHa8CQo9qayG3l9LOGUCztFBhWuaprWg9k+on60Ym
+         bSn6LmxFiagDwTjFCtMObcylG59TTGpoo/8x69x+3CD0BGhJTR2y82u7sE4YRF+RgT7w
+         tuoBKnWXrG+KIZIHLdWvqNSv7MCn+YcfLT4F289kDVhXB0igPjqzsoF+9g1bpUhE6WUn
+         VRI0o4KfgI2xDwZO/skr2tLUyVsLkROtS17mggGRamFQFMh1J89j4TT82+lWBjHnNirM
+         IfpyZ9YAf0fCoRxxM+pUOAt+zbdH2i2qUQdBxq37+NFG5e8DREpuT9hIk1LUe54GUrrB
+         0oHQ==
+X-Gm-Message-State: APjAAAX5EmMmfdWnINaSa1KrmxBkarvR2paS50JLlWjqOX8NrPRV+bWw
+        Ne1w+hXhho0s8Kp4TigJ1tPzlA==
+X-Google-Smtp-Source: APXvYqw7rkTFtEmZJ7JOM2Ir9iOI1H5xXEco5/xFDhmBX+XL1WhzRIbgcmK6r3KXj4olzvZLIXPwzg==
+X-Received: by 2002:a62:5c82:: with SMTP id q124mr1389925pfb.177.1569977747497;
+        Tue, 01 Oct 2019 17:55:47 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.79])
+        by smtp.gmail.com with ESMTPSA id e3sm3281565pjs.15.2019.10.01.17.55.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 01 Oct 2019 17:55:46 -0700 (PDT)
+Subject: Re: [PATCH v3 0/3] Fix typo in RWH_WRITE_LIFE_NOT_SET constant name
+To:     Song Liu <liu.song.a23@gmail.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Shaohua Li <shli@kernel.org>,
         linux-raid <linux-raid@vger.kernel.org>,
-        Nigel Croxon <ncroxon@redhat.com>,
-        Heinz Mauelshagen <heinzm@redhat.com>,
-        NeilBrown <neilb@suse.de>, Song Liu <songliubraving@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>
+References: <cover.1568994791.git.esyr@redhat.com>
+ <CAPhsuW5CvJNRP5OO_M6XVd9q0x-CH9eADWR5oqdJP20eFScCFw@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <87d4b42f-7aa2-5372-27e4-a28e4c724f37@kernel.dk>
+Date:   Tue, 1 Oct 2019 18:55:43 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <CAPhsuW5CvJNRP5OO_M6XVd9q0x-CH9eADWR5oqdJP20eFScCFw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 10:19 PM Xiao Ni <xni@redhat.com> wrote:
->
->
->
-> On 09/19/2019 03:15 AM, David Jeffery wrote:
-> > On Tue, Sep 17, 2019 at 11:21 PM Xiao Ni <xni@redhat.com> wrote:
-> >> md_flush_request returns false when one flush bio has data and
-> >> pers->make_request function go
-> >> on handling it. For example the raid device is raid1. md_flush_request
-> >> returns false, raid1_make_request
-> >> go on handling the bio. If raid1_make_request fails, the bio is still
-> >> lost. Now it looks like only md_handle_request
-> >> checks the return value of pers->make_request and go on handling the bio
-> >> if pers->make_request fails.
-> > But the bio isn't lost.  Using raid1 as an example, the calling sequence is
-> > md_handle_request -> raid1_make_request -> md_flush_request.
-> > raid1_make_request is already wrapped by md_handle_request.  So this
-> > earlier call to md_handle_request will re-submit the bio if raid1_make_request
-> > returns false after md_flush_request returns false.  Anything which calls an
-> > mddev->pers->make_request function (only md_handle_request after patch)
-> > must already handle a return of false or it would also have a bug allowing I/O
-> > to be lost.
->
-> Thanks for the explanation. You are right. The bio can't be lost.
->
-> Regards
-> Xiao
-> >
-> >> There should not be a deadlock if it calls md_handle_request directly.
-> >> Am I right? If there is a risk, we
-> >> can put those bios into a list and queue a work in workqueue to handle
-> >> them. Is it a better way?
-> > I don't see a deadlock with calling md_handle_request from md_flush_request.
-> > It's just more stack and overhead when we could instead let the first calls to
-> > these functions advance the I/O instead of recursing into new instances.
-> >
-> >> Regards
-> >> Xiao
-> > David Jeffery
+On 10/1/19 5:12 PM, Song Liu wrote:
+> On Fri, Sep 20, 2019 at 8:58 AM Eugene Syromiatnikov <esyr@redhat.com> wrote:
+>>
+>> Hello.
+>>
+>> This is a small fix of a typo (or, more specifically, some remnant of
+>> the old patch version spelling) in RWH_WRITE_LIFE_NOT_SET constant,
+>> which is named as RWF_WRITE_LIFE_NOT_SET currently.  Since the name
+>> with "H" is used in man page and everywhere else, it's probably worth
+>> to make the name used in the fcntl.h UAPI header in line with it.
+>> The two follow-up patches update usage sites of this constant in kernel
+>> to use the new spelling.
+>>
+>> The old name is retained as it is part of UAPI now.
+>>
+>> Changes since v2[1]:
+>>   * Updated RWF_WRITE_LIFE_NOT_SET constant usage
+>>     in drivers/md/raid5-ppl.c:ppl_init_log().
+>>
+>> Changes since v1[2]:
+>>   * Changed format of the commit ID in the commit message of the first patch.
+>>   * Removed bogus Signed-off-by that snuck into the resend of the series.
+> 
+> Applied to md-next.
 
-Sorry to jumping late.
+I think the core fs change should core in through a core tree, then
+the md bits can go in at will after that.
 
-@Xiao, does David's patch look good to you? If so, please reply with your
-Reviewed-by and/or Tested-by.
+-- 
+Jens Axboe
 
-Thanks,
-Song
