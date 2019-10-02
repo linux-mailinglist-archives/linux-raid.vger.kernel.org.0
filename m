@@ -2,99 +2,99 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4445AC8776
-	for <lists+linux-raid@lfdr.de>; Wed,  2 Oct 2019 13:39:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A10ACC8F0B
+	for <lists+linux-raid@lfdr.de>; Wed,  2 Oct 2019 18:55:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727284AbfJBLj4 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 2 Oct 2019 07:39:56 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39213 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfJBLj4 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 2 Oct 2019 07:39:56 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v17so6617768wml.4
-        for <linux-raid@vger.kernel.org>; Wed, 02 Oct 2019 04:39:54 -0700 (PDT)
+        id S1727282AbfJBQzW (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 2 Oct 2019 12:55:22 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:41461 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfJBQzW (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 2 Oct 2019 12:55:22 -0400
+Received: by mail-qk1-f194.google.com with SMTP id p10so15708872qkg.8;
+        Wed, 02 Oct 2019 09:55:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jvg9OEUzjj3EmhIUQl+wIratpIlNGBWZoiNFSxBHUuM=;
-        b=Be0Pad3cath3BsN5oSbLIfRJWOi80anTvApT42MpxHUtt9yPbS+82Xk/PRTBz3EQIy
-         +E61aUxGClyTQE56EQToOZ3cDxLYt5SnknsIFQmFon3Zye/qxlVrXncVGMhRTYEt3och
-         3dpK1JFBgeh76BzhGcd+gCEqOOrd327hV6i9ngl6GwiRuGltvoUyZizUNAnnzsymns2V
-         ax9JXBpN4luefG2sCYjYkYmtC6KFcTu1Ou0UidNMzdxEYPo+B0NN/odIjvImRHUxwbWM
-         Bl5kvMNMLHhYMV+bbqjwdqGa4ZhXMzEb0OMK5gcP2PO3sgetfS/7ProUY/l2Xv8C4fjW
-         gaGQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iwP070FtmeuK+3N75GeFgnRVrcbqBEsCTG6FQeHO1Dc=;
+        b=sc5MKpK0FOi6wTaqxv0zmq/glDWjP01Ln7lGfhEjL/hAy0nOY7RJSJO9+Opy9fBM3V
+         BsjFfT0FR1QRuq67piWtm/1Yq/6K5cVrkQZGE92EcBHsj/y53WMixNIMaE18jXEuhF3I
+         aUTIzBsjBIiegFbGWfcuQJyJ9q4fjnnYJcuOcMzKv3pLpRIZyvTORxCSxO/GOQL2f02C
+         2DaCbjFvNKWCj5on8F+jf+EJGQ/ql7vh3ewEXnQmVP4QBrdbNAnbknCUx7AdioHcGm+m
+         5Y08bIb+XVtB6omolG5PRQqK6+5XA4ZnRG2/nOoSyKo4qGfRpIr5ZfQCjfMSZrN0n2h2
+         k1+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jvg9OEUzjj3EmhIUQl+wIratpIlNGBWZoiNFSxBHUuM=;
-        b=eWb1RqNLMj8ZMeD4o/bODZsE+GRc6YNDaHhiP2qT+MtKD3AxjYCLnLU8X8K+LFQ2gq
-         qXz51w5XM2S7aHv4hddsOd+sJvXLBiTudGCm+Xg3JfpHukExs4gas2ZIkDlLff44Y/0Y
-         fv97MtGxEUERwjOZA4pd2dohCJx2VXOs2lwCwoGGW5/ar1JM0rV1G8RFxBndT6C8Lu35
-         Q06zKBvVD1gvn/URRzofPUU2x9T9dQi/tlMW3iwj7KwCkQmp8ZahtjnEcc+oSVgK3trt
-         PwWhcOe3tjEuhLvBEjA42eM7kPQb4pZe9cCG+8uM4SZiXlIqQ+F/3r40TUWmzR/+Dwig
-         /DUw==
-X-Gm-Message-State: APjAAAVWN0csyazejdany0RnW5ll/yxg3xA/QTsAB/LG9XjWGTNTjrrV
-        nnUVGY3IBuk0LMlOrQcdmdb1gcaO
-X-Google-Smtp-Source: APXvYqy8qFCM1vpuoqVzTY69At8VTfAPGia1T6sgWCNcn14IB2wBX1JIiU1ClaSMu11j70GcbOzajQ==
-X-Received: by 2002:a05:600c:241:: with SMTP id 1mr2518929wmj.32.1570016393250;
-        Wed, 02 Oct 2019 04:39:53 -0700 (PDT)
-Received: from [192.168.99.123] (pool-108-6-208-218.nycmny.fios.verizon.net. [108.6.208.218])
-        by smtp.gmail.com with ESMTPSA id s1sm25836874wrg.80.2019.10.02.04.39.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Oct 2019 04:39:51 -0700 (PDT)
-From:   Jes Sorensen <jes.sorensen@gmail.com>
-X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
-Subject: Re: [PATCH] udev: allow for udev attribute reading bug.
-To:     NeilBrown <neilb@suse.de>
-Cc:     linux-raid <linux-raid@vger.kernel.org>
-References: <87impq9oh4.fsf@notabene.neil.brown.name>
-Message-ID: <9d532652-0cf9-1187-9fa9-59be922b9c49@gmail.com>
-Date:   Tue, 1 Oct 2019 10:09:18 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iwP070FtmeuK+3N75GeFgnRVrcbqBEsCTG6FQeHO1Dc=;
+        b=TqNTWnXnWgcEmx6Jlq+VCQTWuxmgbWis9+XSNgfMWz8vw8ykKJC58WScQ040Jo2M/d
+         ghNb3KbX52n24QtYtPmZL/xSYwHPUsvfwkhunuf+VH+ksj2DNwtTy2/QRB+o2E9dazFs
+         9uGRDqrJcmXWu44ydJ7hsw+hcZYWSzIQIDBnMIYVqmYw3L6aXGohIxtS+Mh8z8R8bZlw
+         lJLsELoTB+gIA/rEJDDDTc7uQK9K7kE3AxH9Jw6RPcwCBhP66+9vi/UpQVZqzvD/XrmO
+         RqORwhkRQSqIp6aSrwVPBrtnF/bCh84EC+fDt210Pix6nGI5C+b0Ods26GkaEj9ZCnc4
+         GDMQ==
+X-Gm-Message-State: APjAAAX8hkn/B2cRHKlD/a0ywR59Q3gE1RZB3apnRV0rlgKFeWOeTu73
+        BrW0DeIQ1BbKcgvqiAaWqIDgo3bhGOvZqSRRgrQ=
+X-Google-Smtp-Source: APXvYqznJfvsAqic7Yte0Cfh1sZVR0edCsCDW5/5o6K1NNRJiOV9X7R2gWkisKyDfH5T0CNTlj8XPfGp1ZnIWK0TLV4=
+X-Received: by 2002:a05:620a:113a:: with SMTP id p26mr4871408qkk.353.1570035319775;
+ Wed, 02 Oct 2019 09:55:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87impq9oh4.fsf@notabene.neil.brown.name>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1568994791.git.esyr@redhat.com> <CAPhsuW5CvJNRP5OO_M6XVd9q0x-CH9eADWR5oqdJP20eFScCFw@mail.gmail.com>
+ <87d4b42f-7aa2-5372-27e4-a28e4c724f37@kernel.dk>
+In-Reply-To: <87d4b42f-7aa2-5372-27e4-a28e4c724f37@kernel.dk>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Wed, 2 Oct 2019 09:55:08 -0700
+Message-ID: <CAPhsuW68rK3zGF3A8HnwArh7bs+-AAvZBtVkt4gcxPnFCGxwAQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] Fix typo in RWH_WRITE_LIFE_NOT_SET constant name
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Eugene Syromiatnikov <esyr@redhat.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Shaohua Li <shli@kernel.org>,
+        linux-raid <linux-raid@vger.kernel.org>,
+        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 9/18/19 1:12 AM, NeilBrown wrote:
-> 
-> There is a bug in udev (which will hopefully get fixed, but
-> we should allow for it anways).
-> When reading a sysfs attribute, it first reads the whole
-> value of the attribute, then reads again expecting to get
-> a read of 0 bytes, like you would with an ordinary file.
-> If the sysfs attribute changed between these two reads, it can
-> get a mixture of two values.
-> 
-> In particular, if it reads when 'array_state' is changing from
-> 'clear' to 'inactive', it can find the value as "clear\nve".
-> 
-> This causes the test for "|clear|active" to fail, so systemd is allowed
-> to think that the array is ready - when it isn't.
-> 
-> So change the pattern to allow for this but adding a wildcard at
-> the end.
-> Also don't allow for an empty string - reading array_state will
-> never return an empty string - if it exists at all, it will be
-> non-empty.
-> 
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
->   udev-md-raid-arrays.rules | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, Oct 1, 2019 at 5:55 PM Jens Axboe <axboe@kernel.dk> wrote:
+>
+> On 10/1/19 5:12 PM, Song Liu wrote:
+> > On Fri, Sep 20, 2019 at 8:58 AM Eugene Syromiatnikov <esyr@redhat.com> wrote:
+> >>
+> >> Hello.
+> >>
+> >> This is a small fix of a typo (or, more specifically, some remnant of
+> >> the old patch version spelling) in RWH_WRITE_LIFE_NOT_SET constant,
+> >> which is named as RWF_WRITE_LIFE_NOT_SET currently.  Since the name
+> >> with "H" is used in man page and everywhere else, it's probably worth
+> >> to make the name used in the fcntl.h UAPI header in line with it.
+> >> The two follow-up patches update usage sites of this constant in kernel
+> >> to use the new spelling.
+> >>
+> >> The old name is retained as it is part of UAPI now.
+> >>
+> >> Changes since v2[1]:
+> >>   * Updated RWF_WRITE_LIFE_NOT_SET constant usage
+> >>     in drivers/md/raid5-ppl.c:ppl_init_log().
+> >>
+> >> Changes since v1[2]:
+> >>   * Changed format of the commit ID in the commit message of the first patch.
+> >>   * Removed bogus Signed-off-by that snuck into the resend of the series.
+> >
+> > Applied to md-next.
+>
+> I think the core fs change should core in through a core tree, then
+> the md bits can go in at will after that.
 
-Applied!
+Good point. I guess I will wait until it shows up in for-5.5/block?
 
-Thanks,
-Jes
-
-
+Song
