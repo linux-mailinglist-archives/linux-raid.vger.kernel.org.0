@@ -2,66 +2,67 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 49E19CF338
-	for <lists+linux-raid@lfdr.de>; Tue,  8 Oct 2019 09:09:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96DFFCF4CB
+	for <lists+linux-raid@lfdr.de>; Tue,  8 Oct 2019 10:16:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730112AbfJHHJZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 8 Oct 2019 03:09:25 -0400
-Received: from mail-wr1-f46.google.com ([209.85.221.46]:40570 "EHLO
-        mail-wr1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730057AbfJHHJZ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 8 Oct 2019 03:09:25 -0400
-Received: by mail-wr1-f46.google.com with SMTP id h4so9275211wrv.7
-        for <linux-raid@vger.kernel.org>; Tue, 08 Oct 2019 00:09:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=pM231LI1EL7VKC1KPlHu3Bju2DPdpPhK18v4LsCNYYU=;
-        b=NdOm318QDZ11iSBqHqbV/5IuummtDw+haE+Ut8OjsHIAUxPyodRprdXUGtildHEJOd
-         4qoCuzdO2mAi8IfjyUlvWuA3PobOZxIwREEABK1ye0FDCl09NfNozstRKZPJcNFAF/fi
-         7iQoJqpXRoi/157FP5t2c2eYXw4cUId/FiNhc5ooyszJmegGz+OyznXSc574+LnvKQdQ
-         c4Ag/cw0RSwbwoMm7m5eQ2MCrqZ+gpLAxll9MvatEBFR6bcnsm/c+IdY47l6Vuf4hD5v
-         DxSrJa/OxGQVFAPH+EoKg/fdVamPXsUKXS+Ty31ZUI/stwMZGgO2QGRT0S47bpAICoAX
-         EE5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=pM231LI1EL7VKC1KPlHu3Bju2DPdpPhK18v4LsCNYYU=;
-        b=WN+PV33JXd34PNjZlLAGnh+uoWkOML4WLn7xcb+UKuWx97cULJOoa0rHN08/YwWMYE
-         rxZBSyTMh0Lhb2Y4S0XF0l5Ltqf57BIaTDedtM34wox554sNIpZM6tGK4wuHwFh1WpL7
-         aPBugbZybsoB4rG93Aff77J3XYqAuI4k3MIoQJMEs5SHOtLoaOSzE4ZErKYLn2+YyjgW
-         yQjhrHV6GIAjQPTYrN0HjbKvdbKl8He6ed+2D0Ur2syYqKtwDaP2RWksCnjzUjinNfu/
-         EPlew0RU3aIdWItC+0yhfbTdlSxRNq4ca0WPcRSewvJw5zX8SsRfU3xZ1LNx5LUhi/8/
-         Oq5A==
-X-Gm-Message-State: APjAAAXeVg10uebf8B3jnjz/Hkj5YqmxP80S3lDEx8S1HpWiJzS8Oo+m
-        9NrClx5NqKD0n7kD8M1m2fENyC/1wIwKQ9bqkQEmJwEq
-X-Google-Smtp-Source: APXvYqz3e5LA48i+Lnp9yhboHiVOxFFPbnaiv4hhACIXMW8i90OHEUa/HwcVhWuMXy02e4a+giUFoX3TyIGOQrku0wM=
-X-Received: by 2002:a5d:6b52:: with SMTP id x18mr658337wrw.56.1570518563489;
- Tue, 08 Oct 2019 00:09:23 -0700 (PDT)
+        id S1730490AbfJHIQb (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 8 Oct 2019 04:16:31 -0400
+Received: from arcturus.uberspace.de ([185.26.156.30]:46514 "EHLO
+        arcturus.uberspace.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730410AbfJHIQb (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 8 Oct 2019 04:16:31 -0400
+Received: (qmail 14161 invoked from network); 8 Oct 2019 08:16:29 -0000
+Received: from localhost (HELO localhost) (127.0.0.1)
+  by arcturus.uberspace.de with SMTP; 8 Oct 2019 08:16:29 -0000
+Date:   Tue, 8 Oct 2019 10:16:28 +0200
+From:   Andreas Klauer <Andreas.Klauer@metamorpher.de>
+To:     "David F." <df7729@gmail.com>
+Cc:     "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        NeilBrown <neilb@suse.de>
+Subject: Re: md/raid0: avoid RAID0 data corruption due to layout confusion. ?
+Message-ID: <20191008081628.GA5526@metamorpher.de>
+References: <CAGRSmLtoqBrW40rVwazwC464ma_qjPxnJ3uobpfPRbCOagnnJQ@mail.gmail.com>
 MIME-Version: 1.0
-From:   "David F." <df7729@gmail.com>
-Date:   Tue, 8 Oct 2019 00:09:12 -0700
-Message-ID: <CAGRSmLtoqBrW40rVwazwC464ma_qjPxnJ3uobpfPRbCOagnnJQ@mail.gmail.com>
-Subject: md/raid0: avoid RAID0 data corruption due to layout confusion. ?
-To:     "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>
-Cc:     NeilBrown <neilb@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGRSmLtoqBrW40rVwazwC464ma_qjPxnJ3uobpfPRbCOagnnJQ@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi,
+On Tue, Oct 08, 2019 at 12:09:12AM -0700, David F. wrote:
+> Hi,
+> 
+> "So we add a module parameter to allow the old (0) or new (1) layout
+> to be specified, and refused to assemble an affected array if that
+> parameter is not set."
 
-"So we add a module parameter to allow the old (0) or new (1) layout
-to be specified, and refused to assemble an affected array if that
-parameter is not set."
+Not 100% sure about this but I think it's new (1) and old (2) vs. unset (0).
 
-What does this mean for portable linux boot disks?  I don't recall
-installing a module directly, but just running mdadm.  Where is this
-parameter set?
+You can set it like any other kernel/module parameter 
+or with sysfs in /sys/module/raid0/parameters/default_layout
+ 
+> Why couldn't it use an integrity logic check to determine which layout
+> version is used so it just works?
 
-Why couldn't it use an integrity logic check to determine which layout
-version is used so it just works?
+Define integrity logic check. Check what and how?
+Same reason why md can't decide correctness on parity mismatch.
 
-Thanks.
+So unfortunately this is outsourced to the sysadmins great 
+and unmatched wisdom. Which is a difficult choice to make, 
+as if I understand correctly, the corruption would be at 
+the end of the device where it's harder to notice than if 
+the superblock at the start was missing...
+
+Unless you know the mismatch-size raid0 was created a long 
+time ago or running off old kernel, try new first, then old.
+
+(
+    What happens if you happen to have one RAID of each type?
+    Shouldn't this be recorded in metadata then...?
+)
+
+Regards
+Andreas Klauer
