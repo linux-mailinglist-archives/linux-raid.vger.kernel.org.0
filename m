@@ -2,67 +2,130 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 96DFFCF4CB
-	for <lists+linux-raid@lfdr.de>; Tue,  8 Oct 2019 10:16:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B0F1D0190
+	for <lists+linux-raid@lfdr.de>; Tue,  8 Oct 2019 21:55:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730490AbfJHIQb (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 8 Oct 2019 04:16:31 -0400
-Received: from arcturus.uberspace.de ([185.26.156.30]:46514 "EHLO
-        arcturus.uberspace.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730410AbfJHIQb (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 8 Oct 2019 04:16:31 -0400
-Received: (qmail 14161 invoked from network); 8 Oct 2019 08:16:29 -0000
-Received: from localhost (HELO localhost) (127.0.0.1)
-  by arcturus.uberspace.de with SMTP; 8 Oct 2019 08:16:29 -0000
-Date:   Tue, 8 Oct 2019 10:16:28 +0200
-From:   Andreas Klauer <Andreas.Klauer@metamorpher.de>
-To:     "David F." <df7729@gmail.com>
-Cc:     "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        NeilBrown <neilb@suse.de>
-Subject: Re: md/raid0: avoid RAID0 data corruption due to layout confusion. ?
-Message-ID: <20191008081628.GA5526@metamorpher.de>
-References: <CAGRSmLtoqBrW40rVwazwC464ma_qjPxnJ3uobpfPRbCOagnnJQ@mail.gmail.com>
+        id S1730909AbfJHTzX (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 8 Oct 2019 15:55:23 -0400
+Received: from mail-ed1-f51.google.com ([209.85.208.51]:43750 "EHLO
+        mail-ed1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730832AbfJHTzX (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 8 Oct 2019 15:55:23 -0400
+Received: by mail-ed1-f51.google.com with SMTP id r9so16819012edl.10
+        for <linux-raid@vger.kernel.org>; Tue, 08 Oct 2019 12:55:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=d9t6Rq0RbZ7PXIZmIcLbP2JTBMFny2QBILsKgMXZe9M=;
+        b=aMQQgi7dIXVBnmVMSSMCLgb3oXTzeafbZdgWl2Y7dgh9d3yilS1+9yTnvWoS7+GzUk
+         LWbTYKnbDzuBJ3/U6U4a0Txwis4unkVKDohWYyBjnKYrTLghN7laSYeGp1/FcmznDyEO
+         GS9pgiMN+uT0qCjbihaa5wuvtHOM98vqOW8UVjJ7Cv+EprgLSNS8LJdhrjnJyNqQEN56
+         5sfOyU15h4kpoOXNgzNljIz5N8IZnpl4XHLYJYLCwvTOpHMRDfM3ywlgrk+4Qs+isMtv
+         bwWMXB9P8rpPXCaQx70qpw2S2sG0Q07XznOIe3PPQ9uFVdh7+iWMtRM+rtyrWFblwrYM
+         wXZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=d9t6Rq0RbZ7PXIZmIcLbP2JTBMFny2QBILsKgMXZe9M=;
+        b=Ju5stfo06H4k9yAnhzZ4TR+CNPubFLNWiN8fihfmbyLPB9LBKjy8ThBa7ixpvMf3EU
+         yohf/c537MeYkewZ2uBkVOJG+BsXXFbhx/IiMEXmVFC17whUgNxa0bttR7SUpvGKcHkU
+         310nY+Kvur5o0GD/bBW72pqJ8koKMnyqk1BdO7PjDgSMkDT5WXuRymEwIZhEU7qWK8r0
+         zWfghkuei56GA7jgZ9dqjlrRHt7EVRHSV1aUX0/7iZcYvYfMeTYOAZnhNvc7vMkh7N/F
+         Za3rOQfrqah3BXFGXNiUANLkT/hBscDivSOrUyJeukhxt+VbJ9De3E8qIkFJ6KtDKVKs
+         QaUw==
+X-Gm-Message-State: APjAAAVxnwQTL6axIt3FsiZ0LgXK4uTDby45zJdqsyH1c4CQ3kjuSonc
+        TXhV6aymnOWWxLNuojsXdWO0O2LWDiqRL61RgaY=
+X-Google-Smtp-Source: APXvYqxaZfvXk0/G1PfPN40JEbEfue6b7v2Lk/SQWmnUxoxmnZyxXwpPNC4UPIh9mJw4kQ9atMHeHG1Orcb22TWXOSk=
+X-Received: by 2002:a50:c306:: with SMTP id a6mr36339639edb.108.1570564517490;
+ Tue, 08 Oct 2019 12:55:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGRSmLtoqBrW40rVwazwC464ma_qjPxnJ3uobpfPRbCOagnnJQ@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Received: by 2002:a17:906:cc89:0:0:0:0 with HTTP; Tue, 8 Oct 2019 12:55:16
+ -0700 (PDT)
+Reply-To: moneygram.1820@outlook.fr
+From:   MONEY GRAM <currency1000000@gmail.com>
+Date:   Tue, 8 Oct 2019 20:55:16 +0100
+Message-ID: <CAPqfnSEO==O6BEtBbcMMZfh3qcY4Bz0qndhCqbcLqZx4DCs44A@mail.gmail.com>
+Subject: HERE IS YOUR MONEY GRAM PAYMENT HAS BEEN SENT TO YOU HERE IS THE M.T.C.N:78393135
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 12:09:12AM -0700, David F. wrote:
-> Hi,
-> 
-> "So we add a module parameter to allow the old (0) or new (1) layout
-> to be specified, and refused to assemble an affected array if that
-> parameter is not set."
+HERE IS YOUR MONEY GRAM PAYMENT HAS BEEN SENT TO YOU HERE IS THE
+M.T.C.N:78393135
 
-Not 100% sure about this but I think it's new (1) and old (2) vs. unset (0).
+Attn: Beneficiary,
 
-You can set it like any other kernel/module parameter 
-or with sysfs in /sys/module/raid0/parameters/default_layout
- 
-> Why couldn't it use an integrity logic check to determine which layout
-> version is used so it just works?
+This is to inform you that the America Embassy office was instructed
+to transfer your fund $980,000.00 U.S Dollars compensating all the
+SCAM VICTIMS and your email was found as one of the VICTIMS. by
+America security leading team and America representative officers so
+between today the 8th of October till 1ST Of December 2019 you will
+be receiving MONEY GRAM the sum of $6,000 dollars per day. However be informed
+that we have already sent the $6,000 dollars this morning to avoid
+cancellation of your payment, remain the total sum of $980,000.00.
 
-Define integrity logic check. Check what and how?
-Same reason why md can't decide correctness on parity mismatch.
+You have only six hours to call this office upon the receipt of this
+email the maximum amount you will be receiving per a day starting from
+today's $6,000 and the Money Transfer Control Number of today is
+below.
 
-So unfortunately this is outsourced to the sysadmins great 
-and unmatched wisdom. Which is a difficult choice to make, 
-as if I understand correctly, the corruption would be at 
-the end of the device where it's harder to notice than if 
-the superblock at the start was missing...
+NOTE; The sent $6,000 is on hold because of the instruction from IMF
+office, they asked us to place it on hold by requesting the (Clean
+Bill Record Certificate) which will cost you $25 in order to fulfill
+all the necessary obligation to avoid any hitches while sending you
+the payment through MONEY GRAM money transfer, the necessary
+obligation I mean here is to obtain the (Clean Bill Record
+Certificate)
 
-Unless you know the mismatch-size raid0 was created a long 
-time ago or running off old kernel, try new first, then old.
+Below is the information of today track it in our
 
-(
-    What happens if you happen to have one RAID of each type?
-    Shouldn't this be recorded in metadata then...?
-)
+websitehttps://moneygarm.com/asp/orderStatus.asp?country=global
+to see is available to pick up by the receiver, but if we didn't here
+from you soon we'll pickup it up from line for security reason to
+avoid hackers stealing the money online.
 
-Regards
-Andreas Klauer
+Money Transfer Control Number M.T.C.N)::78393135
+SENDERS FIRST NAME: John
+SENDERS LAST NAME: Chun
+SENDERS COUNTRY...BENIN REPUBLIC
+TEXT QUESTION: A
+ANSWER: B
+AMOUNT: $6,000
+
+We need the below details from you, to enable us place the payment to
+your name and transfer the fund to you.
+
+(Full Receivers name)...................
+(You're Country)................................
+(Address)......................................
+(Phone NuMBER-...............................
+(You're Age)............................
+(OCCUPATION)..REAL ESTATE..................
+(A Copy of Your ID CARD).SEE ATTACHMENTS.............
+
+HOWEVER YOU HAVE TO PAY $25 FOR THE (Clean Bill Record Certificate)
+AND THAT IS ALL YOU HAVE TO DO ASAP.
+
+The payment will be sending to below information, such as:
+
+Receiver.............. ALAN UDE
+Country................Benin Republic
+Amount: ....................$25
+Question: .....................A
+Answer:................... B
+Sender...............Name:
+MTCN :..............
+
+According to the instruction and order we received from IMF the their
+requested $25 must be made directly to the above info's.
+
+Furthermore you are advised to call us as the instruction was passed
+that within 6hours without hearing from you, Count your payment
+canceled. Number to call is below listed manager director office of
+release order:
+DR.ALAN UDE
+Director MONEY GRAM-Benin
