@@ -2,91 +2,77 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2483CD185A
-	for <lists+linux-raid@lfdr.de>; Wed,  9 Oct 2019 21:14:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A4A21D2AEA
+	for <lists+linux-raid@lfdr.de>; Thu, 10 Oct 2019 15:17:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731946AbfJITLU (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 9 Oct 2019 15:11:20 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:44075 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731925AbfJITLU (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 9 Oct 2019 15:11:20 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Ml6Zo-1hohFn2sKC-00lYdf; Wed, 09 Oct 2019 21:11:15 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-kernel@vger.kernel.org, y2038@lists.linaro.org,
-        linux-fsdevel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        linux-raid@vger.kernel.org, Song Liu <song@kernel.org>
-Subject: [PATCH v6 27/43] compat_ioctl: remove last RAID handling code
-Date:   Wed,  9 Oct 2019 21:10:27 +0200
-Message-Id: <20191009191044.308087-27-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191009190853.245077-1-arnd@arndb.de>
-References: <20191009190853.245077-1-arnd@arndb.de>
+        id S2388277AbfJJNRv (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 10 Oct 2019 09:17:51 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42720 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388291AbfJJNRo (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 10 Oct 2019 09:17:44 -0400
+Received: by mail-ot1-f65.google.com with SMTP id c10so4804908otd.9
+        for <linux-raid@vger.kernel.org>; Thu, 10 Oct 2019 06:17:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ub-ac-id.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=QTZIdVmjWEaVgfwGRupI4vAqJVGET3VIX90hz2R16m0=;
+        b=kbDD0ETnfb+9T5ky4afnuU19WL5B3TgSTtrvr8/78l52RfSJ/bD7cjcm8C45XsJ4wr
+         kY8zUv/ms1sLDr56E/0rqAcpldgbTirzVsO1TqrlTRt5AL5IhxusLfWbWkCQZqSDApog
+         xVZixZPZF5pv+wD9wYHHFszyBuRJ0Z0/71+2E/SGgHwnMzv66/86w9uplcX1z0grTv9p
+         1TYZ7MtIagYr+hnMPgyspL8CH18dkY1RexU6NSgr6L6/lGHi7jHNMmmGOoiBuh2azqNd
+         aWHFVXbx5cxjkbX5kJe7PAp4IU2wf06fogqa+YoO9ylF7jna+POCU+xNsHXT6R2wFQg9
+         YqYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=QTZIdVmjWEaVgfwGRupI4vAqJVGET3VIX90hz2R16m0=;
+        b=ExHYNlNsAiPwXr+WhuHwi7AZmRMQYXmsOz/9cMS5tK5gNep0yeAmtXbm8g/gvR4pyt
+         +MIhVPcISFWvH1Pcg+978ST0i66zzRV1tf9vpHyKM3gs27oFwy8hCtKp/yfaGIgJB2FS
+         BgvAh+OFUGkbTOVMG83lEVscRGYylQoJ21P1rJERXJHoSd7rD5vg/IwJ4rRAOAkN/fLu
+         qn3Dl0QcBYLjH2tixWQenj3NWLZg93KRx90mfqITz+MGtBLeUUWgDk8oGzMf78fEzPDE
+         pFm6lv2zJMBHebD7WoWxQ+GTUnrTuzQjOv/bZ+lkVFn4VtI8IBMRjALGSl0oo4kS6kSi
+         mc6g==
+X-Gm-Message-State: APjAAAVtN1NPrxc989XQpf8kmW1FCA4jOPXrgzoV/wyK/CuMsL+eL/bM
+        PyHBFCgHRhYTmbit1nTKyWmbBHcnJRRpmdbyz4YA
+X-Google-Smtp-Source: APXvYqwe5B6z/3dUuNDQtQ0n2oQYOsdY3HQR3dkIin1gqVhu0NNteov05tKzv4DhJBBR4bjK2RG7Phnj6WUHoBrkRYc=
+X-Received: by 2002:a05:6830:1103:: with SMTP id w3mr7909437otq.312.1570713462861;
+ Thu, 10 Oct 2019 06:17:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:3CRT9Z12XUAyRUQyiP/Ny9jsvP99Xt3bB4wOaOH4lYcwl+MCQmr
- 4ny/SJ3flpq9XK569lBll1lT+ZebWGdnOOHMhvGO3qCwoz3R1rpUDMrZlo3M/drYoWDwS97
- fHvSUA8p0sJNSXSBi2aKEM5iDl0xiG4oz9jUNO3T4N9PHEyZTyWhwc5eOnRcJolaM34C1Cw
- +qLzsqgP6uZJnGqvz02Tg==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Q7U5lfH9wpw=:NS4oi3Rk6pVuu5vooRritq
- cps6Gej39jDT2cTqPxuf34ErLBzJwUGbB9MHBLGdxFjlZ/BTru2GpXZI1bTfCCCuZ+0rUTasl
- xW6GAbhakr3dpYLVvCIcRfAoC/W7nOo4muDIL6OrOt8LRkhBQszFs7KInwH2hwZs2FS+cHQU8
- N0NJuAQn1l4YAvTkkUPHnxDtUKEnx1Znl9aNbVSXwL5WA2jrcS0Nl5mXBamrkbfbLEhaOyw4C
- hqKkI96iPLmGYNwJGA4JC9S1uSIza7xXW+aYpZq3uasQAEEDgMuhXNXbN2/DHnyiM4uXdgwoB
- VTCUMQBCZIQDSca7ZyanfcjhQfGWxWiqAVqhDSQEppX/ZmxU+TJzHDcXg2gjzBU1BnHIEmAVH
- GdLqDg4mrT7dkULbGuvDiwhKlbnpdzYYyts0e9HmXsD7m4U04tW7USN1szd1Pqn1xercATVMv
- P+NkntIgTyWqM2Y/WTtdmUoIXqLvYP5r/DgXUwf6uKRqWMM9uu5sqgDfE39d0Vn1pRxL49bQm
- Q/dTVVHR+6M8f8ltlaI/aXDeMpWOuH4O1/QBVTCOfb1QSjULoid4X+Suh/pYR/9O6kGSdcP41
- 7S/8IBIHfDS1XJQmSEMB06ZlPF5egvAADFn+pEdw5nGlyt5PKKSy4sRXwUyndJ1eKsCCP1FDo
- pto1YyLZmQxa3Of/gudfvp4mGSNUKISXxtBUlu5CYQZHRFx5YO/wkWXAZOC89Pa8ZLiYLXyFi
- BXEerVpyU1zR5QL3cKpidsyN6Cn6zCags5Exsxglfn+3h7+l/r7MnkqH5KFFx2RzIO2X8Z2Jt
- CWZS8ZdZVV275ynQNraysjmfCUP6dXdE2oXnTjzwdLThEuOlPtFLS1zXl+UTd03zc59oNqV6m
- pyOKfuVdbxzihoVzqPDA==
+Received: by 2002:a4a:3346:0:0:0:0:0 with HTTP; Thu, 10 Oct 2019 06:17:41
+ -0700 (PDT)
+Reply-To: sunrisefundingltd50@gmail.com
+From:   Valentina Yurina <v_yurina@ub.ac.id>
+Date:   Thu, 10 Oct 2019 14:17:41 +0100
+Message-ID: <CAKoEkvu4vc5Yn9-hzxQ5dYmUL=oO69=GSP0FC7O+CGz9Jni8+Q@mail.gmail.com>
+Subject: Apply For Financial investment at a lower rate 2%
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Commit aa98aa31987a ("md: move compat_ioctl handling into md.c")
-already removed the COMPATIBLE_IOCTL() table entries and added
-a complete implementation, but a few lines got left behind and
-should also be removed here.
-
-Cc: linux-raid@vger.kernel.org
-Cc: Song Liu <song@kernel.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- fs/compat_ioctl.c | 13 -------------
- 1 file changed, 13 deletions(-)
-
-diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
-index 6070481f2b6a..1ed32cca2176 100644
---- a/fs/compat_ioctl.c
-+++ b/fs/compat_ioctl.c
-@@ -462,19 +462,6 @@ static long do_ioctl_trans(unsigned int cmd,
- #endif
- 	}
- 
--	/*
--	 * These take an integer instead of a pointer as 'arg',
--	 * so we must not do a compat_ptr() translation.
--	 */
--	switch (cmd) {
--	/* RAID */
--	case HOT_REMOVE_DISK:
--	case HOT_ADD_DISK:
--	case SET_DISK_FAULTY:
--	case SET_BITMAP_FILE:
--		return vfs_ioctl(file, cmd, arg);
--	}
--
- 	return -ENOIOCTLCMD;
- }
- 
 -- 
-2.20.0
+Hello,
 
+We are private lenders based in UK.
+
+Do you need a loan (credit) as soon as possible. Are you in search of
+money to solve your personal needs or finance your business venture,
+then get Your desired loan today! Consult us at Sunrise Funding Ltd.
+
+* We offer personal loan & huge capital loan at 2% interest rate to
+the general public both locally and internationally.
+* Credit amount range from $5,000.00 -- $500,000.00 and above.
+* Special $10,000,000.00 Loan offer for huge project also available.
+* Loan period of 6 months -- 10 years.
+* Loan is granted 24 hours after approval and accredited, directly in
+hand or bank account.
+
+Please note that you are advised to contact us for more details via
+the following e-mail address below;
+
+EMAIL : sunrisefundingltd50@gmail.com
+FIRM : Sunrise Funding Ltd UK.
