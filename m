@@ -2,77 +2,100 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A4A21D2AEA
-	for <lists+linux-raid@lfdr.de>; Thu, 10 Oct 2019 15:17:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18AB6D4B0B
+	for <lists+linux-raid@lfdr.de>; Sat, 12 Oct 2019 01:37:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388277AbfJJNRv (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 10 Oct 2019 09:17:51 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42720 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388291AbfJJNRo (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 10 Oct 2019 09:17:44 -0400
-Received: by mail-ot1-f65.google.com with SMTP id c10so4804908otd.9
-        for <linux-raid@vger.kernel.org>; Thu, 10 Oct 2019 06:17:44 -0700 (PDT)
+        id S1727541AbfJKXhU (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 11 Oct 2019 19:37:20 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46083 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726243AbfJKXhT (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 11 Oct 2019 19:37:19 -0400
+Received: by mail-qt1-f196.google.com with SMTP id u22so16242324qtq.13
+        for <linux-raid@vger.kernel.org>; Fri, 11 Oct 2019 16:37:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ub-ac-id.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=QTZIdVmjWEaVgfwGRupI4vAqJVGET3VIX90hz2R16m0=;
-        b=kbDD0ETnfb+9T5ky4afnuU19WL5B3TgSTtrvr8/78l52RfSJ/bD7cjcm8C45XsJ4wr
-         kY8zUv/ms1sLDr56E/0rqAcpldgbTirzVsO1TqrlTRt5AL5IhxusLfWbWkCQZqSDApog
-         xVZixZPZF5pv+wD9wYHHFszyBuRJ0Z0/71+2E/SGgHwnMzv66/86w9uplcX1z0grTv9p
-         1TYZ7MtIagYr+hnMPgyspL8CH18dkY1RexU6NSgr6L6/lGHi7jHNMmmGOoiBuh2azqNd
-         aWHFVXbx5cxjkbX5kJe7PAp4IU2wf06fogqa+YoO9ylF7jna+POCU+xNsHXT6R2wFQg9
-         YqYQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=okWhpn+GzFD6qEDYdUqL6MsUUEVQynHQQBiXZa7K9N8=;
+        b=fMuhtbjjixB6/c5aiKEvS1kKq5R7AeO8/VvDBiL8iPW14OJPGyram4urrQRHrjWlb+
+         /+48+SZqcj8HSIMG3NpIImxzUcBVEp0RO3JVZXKZ7JdgbugCj9Gq8x32IbP6kgrwm3PR
+         bxr3J08VceZFbWE50OUZiZr0lfgTZM+iyPRKC+FpCl0B4wqPvxC3LySJtTvBQEkKZ7g0
+         cVjFDwyznFAZOTmKo3cDxvFaA4ibIPYzZczRbYINeqa3NfZDlT4WVuPa+gb4rn7Gc//Q
+         utZ9AInCVdpvOcxcESO/m/F/VIEDVtIVj+ySZWcrF7bGA8t4zFT6tkQQfhqta3pcchhY
+         OF4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=QTZIdVmjWEaVgfwGRupI4vAqJVGET3VIX90hz2R16m0=;
-        b=ExHYNlNsAiPwXr+WhuHwi7AZmRMQYXmsOz/9cMS5tK5gNep0yeAmtXbm8g/gvR4pyt
-         +MIhVPcISFWvH1Pcg+978ST0i66zzRV1tf9vpHyKM3gs27oFwy8hCtKp/yfaGIgJB2FS
-         BgvAh+OFUGkbTOVMG83lEVscRGYylQoJ21P1rJERXJHoSd7rD5vg/IwJ4rRAOAkN/fLu
-         qn3Dl0QcBYLjH2tixWQenj3NWLZg93KRx90mfqITz+MGtBLeUUWgDk8oGzMf78fEzPDE
-         pFm6lv2zJMBHebD7WoWxQ+GTUnrTuzQjOv/bZ+lkVFn4VtI8IBMRjALGSl0oo4kS6kSi
-         mc6g==
-X-Gm-Message-State: APjAAAVtN1NPrxc989XQpf8kmW1FCA4jOPXrgzoV/wyK/CuMsL+eL/bM
-        PyHBFCgHRhYTmbit1nTKyWmbBHcnJRRpmdbyz4YA
-X-Google-Smtp-Source: APXvYqwe5B6z/3dUuNDQtQ0n2oQYOsdY3HQR3dkIin1gqVhu0NNteov05tKzv4DhJBBR4bjK2RG7Phnj6WUHoBrkRYc=
-X-Received: by 2002:a05:6830:1103:: with SMTP id w3mr7909437otq.312.1570713462861;
- Thu, 10 Oct 2019 06:17:42 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=okWhpn+GzFD6qEDYdUqL6MsUUEVQynHQQBiXZa7K9N8=;
+        b=j+bANlNy+KFVQzMHsfoneZxeni/UdAIiW1GVLwpZUpvuMnxF6NtQ40o4e/GYUKzM3x
+         EZtcViED84L7GncbEWm31gDZ2OryydH2FUpbDbKz6dtTFwS6R9eMToSZ9My4Tv0Z1oQS
+         l5t/Vato0VlrsRqE3rwpCYnTk7jx9yLPyNepAofxbn72iZcsDyQ1x6vUM4kO8WhrcrJi
+         /KiGog+181RKZYRo/JnjabPDMugXiVbZ8xQDo0y/sSrMWDCKqqhBL2Tj4891fp8vWSJh
+         98+V80zBdsZkkV/ioGkdTSyIlrzzwrgcPSQ6JPuLIZ8bcbWdYw0Qqi+fHXbaZL6jSBEf
+         1bWA==
+X-Gm-Message-State: APjAAAUdqmtoVNtg6kvKCd6neaim63A+hz8HYOM9KocRJnrHoguBEjsF
+        dM+XgK3xeVrd7f2Gq6D6iOFwyDz097MeS+HaUXg=
+X-Google-Smtp-Source: APXvYqwYBQswftPfmWZSm4ljUIy4Yw8NBl3qUu96F4PF62/PiaAcp1ilvA2xn7v0Ad1vhj/TmnIG2HFu2KH6QRa0v00=
+X-Received: by 2002:ad4:50a8:: with SMTP id d8mr19138820qvq.8.1570837038944;
+ Fri, 11 Oct 2019 16:37:18 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a4a:3346:0:0:0:0:0 with HTTP; Thu, 10 Oct 2019 06:17:41
- -0700 (PDT)
-Reply-To: sunrisefundingltd50@gmail.com
-From:   Valentina Yurina <v_yurina@ub.ac.id>
-Date:   Thu, 10 Oct 2019 14:17:41 +0100
-Message-ID: <CAKoEkvu4vc5Yn9-hzxQ5dYmUL=oO69=GSP0FC7O+CGz9Jni8+Q@mail.gmail.com>
-Subject: Apply For Financial investment at a lower rate 2%
-To:     undisclosed-recipients:;
+References: <CAGRSmLtoqBrW40rVwazwC464ma_qjPxnJ3uobpfPRbCOagnnJQ@mail.gmail.com>
+ <20191008081628.GA5526@metamorpher.de>
+In-Reply-To: <20191008081628.GA5526@metamorpher.de>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Fri, 11 Oct 2019 16:37:07 -0700
+Message-ID: <CAPhsuW4gLcQU+6BJWJ7Lda=d5UFjNk5R5KmQNp-BN8X+CnXwnw@mail.gmail.com>
+Subject: Re: md/raid0: avoid RAID0 data corruption due to layout confusion. ?
+To:     Andreas Klauer <Andreas.Klauer@metamorpher.de>
+Cc:     "David F." <df7729@gmail.com>,
+        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        NeilBrown <neilb@suse.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
--- 
-Hello,
+On Tue, Oct 8, 2019 at 1:17 AM Andreas Klauer
+<Andreas.Klauer@metamorpher.de> wrote:
+>
+> On Tue, Oct 08, 2019 at 12:09:12AM -0700, David F. wrote:
+> > Hi,
+> >
+> > "So we add a module parameter to allow the old (0) or new (1) layout
+> > to be specified, and refused to assemble an affected array if that
+> > parameter is not set."
+>
+> Not 100% sure about this but I think it's new (1) and old (2) vs. unset (0).
+>
+> You can set it like any other kernel/module parameter
+> or with sysfs in /sys/module/raid0/parameters/default_layout
+>
+> > Why couldn't it use an integrity logic check to determine which layout
+> > version is used so it just works?
+>
+> Define integrity logic check. Check what and how?
+> Same reason why md can't decide correctness on parity mismatch.
+>
+> So unfortunately this is outsourced to the sysadmins great
+> and unmatched wisdom. Which is a difficult choice to make,
+> as if I understand correctly, the corruption would be at
+> the end of the device where it's harder to notice than if
+> the superblock at the start was missing...
+>
+> Unless you know the mismatch-size raid0 was created a long
+> time ago or running off old kernel, try new first, then old.
+>
+> (
+>     What happens if you happen to have one RAID of each type?
+>     Shouldn't this be recorded in metadata then...?
+> )
 
-We are private lenders based in UK.
+Thanks Andreas!
 
-Do you need a loan (credit) as soon as possible. Are you in search of
-money to solve your personal needs or finance your business venture,
-then get Your desired loan today! Consult us at Sunrise Funding Ltd.
+David, you may consider adding "raid0.default_layout=?" to your kernel
+command line options.
 
-* We offer personal loan & huge capital loan at 2% interest rate to
-the general public both locally and internationally.
-* Credit amount range from $5,000.00 -- $500,000.00 and above.
-* Special $10,000,000.00 Loan offer for huge project also available.
-* Loan period of 6 months -- 10 years.
-* Loan is granted 24 hours after approval and accredited, directly in
-hand or bank account.
-
-Please note that you are advised to contact us for more details via
-the following e-mail address below;
-
-EMAIL : sunrisefundingltd50@gmail.com
-FIRM : Sunrise Funding Ltd UK.
+Song
