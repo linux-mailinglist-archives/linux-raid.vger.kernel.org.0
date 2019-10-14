@@ -2,120 +2,131 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EDBED6C5F
-	for <lists+linux-raid@lfdr.de>; Tue, 15 Oct 2019 02:06:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D71ABD6C63
+	for <lists+linux-raid@lfdr.de>; Tue, 15 Oct 2019 02:15:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfJOAGt (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 14 Oct 2019 20:06:49 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:36543 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbfJOAGs (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 14 Oct 2019 20:06:48 -0400
-Received: by mail-qk1-f193.google.com with SMTP id y189so17566358qkc.3
-        for <linux-raid@vger.kernel.org>; Mon, 14 Oct 2019 17:06:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=smotI4xETmXp5rQVYd1OFXjaRAoweMXOdsU1vpG8dsc=;
-        b=LbO+msOb/4ucytccy7DVI5apkRY/rmqFI+LWDDlkGQslHL4eVF1XbRuYMayGpPc8Kj
-         uW9+8ZyaO57LTOaChVEe5vpVvE1yNGm15y4kXMBylcqf+eYtPJfxmjo2cPgiWNsbHJn/
-         U2n/OcSln5ZczrR13cFU+or7FVGCRWAKjuFPhDbpuOcKjSVvDDAjVhN1quDsqruoOKzR
-         XoaU/vAMBkcbyCB3TGHhRQTysUZ/FO8ORZqWYFesnmQ+02GJDqnJON9j22JwZMddOhex
-         +++AYG+ENkltAB3pe081dnHrx4d8RUurdDoJsrYk7iI5I9EE576/R8c+63Qg2mLfMYs7
-         yo2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=smotI4xETmXp5rQVYd1OFXjaRAoweMXOdsU1vpG8dsc=;
-        b=KV32EMZKv84MJ0znSB6UjvKAkulftsEdd/zjSHn5sC7aLIZtk1ing4F3SL4TCrcju7
-         wbxk+dtXtPCg0+MeGn+yeTBnzCkl/m5MTpXtugR/WJ69Uu1aW9NXMW9XKrUb3wXhdhmz
-         WrzTk2CLFl8ZteIC3NMVuzSsKT2LMuf/rXU7Gob/gKr0XrC8qOzvT5YLyjNEBh595Hjf
-         MzlWuY2uCl5KH/F/c0vPrjyx8IZ/WZ7hk2gcUeHcpBkej8aKsxe5E05VP4dkFQV0Figc
-         dqOrMWb910A0KI1AMBMH8rC+ub2r1sQSdSlr1XFlXDPQW+J20fK4ZVjOIyKPsQ4LwKLm
-         7dLw==
-X-Gm-Message-State: APjAAAX11ulAHi0To2mENLmzLQOnOqvA2Hc3VJ7GZsWY2PhPYBv9fu4S
-        1tbmR7iVgDXJmKQVw2+yIZGRaf7Gt/z2ochBGYQ=
-X-Google-Smtp-Source: APXvYqyKzqJTd2l2eTwovyHPeAXJD9FYf24V8y1kqvLp3gCIbjUH50om5WabxEGFPiFBPCr19PKfJJeF9m0/uyINhYo=
-X-Received: by 2002:a37:553:: with SMTP id 80mr33040912qkf.353.1571098007888;
- Mon, 14 Oct 2019 17:06:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <b9b8f42f-cc55-b165-2430-f0c9731002d1@gmail.com> <CAPhsuW5WiJ9+bKi7Sfra36gCBXF2=38eBu7O_xYL9NYhgn0WbA@mail.gmail.com>
-In-Reply-To: <CAPhsuW5WiJ9+bKi7Sfra36gCBXF2=38eBu7O_xYL9NYhgn0WbA@mail.gmail.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Mon, 14 Oct 2019 17:06:35 -0700
-Message-ID: <CAPhsuW4V6_jV3w+oY+03Vhd9kgyLY773FWmJ=1dqmPHTpkHW4Q@mail.gmail.com>
-Subject: Re: md/raid0: avoid RAID0 data corruption due to layout confusion. ?
-To:     DrYak <doktor.yak@gmail.com>, NeilBrown <neilb@suse.de>
-Cc:     linux-raid <linux-raid@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1726905AbfJOAPF (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 14 Oct 2019 20:15:05 -0400
+Received: from 195-159-176-226.customer.powertech.no ([195.159.176.226]:41174
+        "EHLO blaine.gmane.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726899AbfJOAPF (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 14 Oct 2019 20:15:05 -0400
+Received: from list by blaine.gmane.org with local (Exim 4.89)
+        (envelope-from <linux-raid@m.gmane.org>)
+        id 1iKAUQ-000KfN-0U
+        for linux-raid@vger.kernel.org; Tue, 15 Oct 2019 02:15:02 +0200
+X-Injected-Via-Gmane: http://gmane.org/
+To:     linux-raid@vger.kernel.org
+From:   Curtis Vaughan <curtis@npc-usa.com>
+Subject: Degraded RAID1
+Date:   Mon, 14 Oct 2019 23:56:17 -0000 (UTC)
+Message-ID: <qo31v1$31rr$2@blaine.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+User-Agent: Pan/0.145 (Duplicitous mercenary valetism; d7e168a
+ git.gnome.org/pan2)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 9:30 AM Song Liu <liu.song.a23@gmail.com> wrote:
->
-> On Mon, Oct 14, 2019 at 2:23 AM DrYak <doktor.yak@gmail.com> wrote:
-> >
-> > Hello,
-> >
-> > I just wanted to point a small thing:
-> >
-> > On 2019-10-12 01:37, Song Liu wrote:
-> > >
-> > > David, you may consider adding "raid0.default_layout=?" to your kernel
-> > > command line options.
-> > >
-> > > Song
-> >
-> > Currently there is a slight mis-match in the actual kernel module:
-> > the warning message display "raid.default_layout=?" (missing zero)
-> > instead of "raid0..." (how indeed it should be used).
->
-> Good catch! The warning should say raid0. Let me fix it.
->
+I have reason to believe one HD in a RAID1 is dying. But I'm trying to 
+understand what the logs and results of various commands are telling me. 
+Searching on the Internet is very confusing. BTW, this is for and Ubuntu 
+Server 18.04.2 LTS.
 
-I am about to push the following patch.
+It seems to me that the following information is telling me on device is 
+missing. It would seem to me that sda is gone.
 
-Is your official name DrYak?
+Anyhow, for example, I received an email:
 
-@Neil, could you please review this change?
+A DegradedArray event had been detected on md device /dev/md0.
 
-Thanks,
-Song
+Faithfully yours, etc.
 
-====================================================
+P.S. The /proc/mdstat file currently contains the following:
 
-From ab2b8af0b8ebafe57d66f440acdf9dc9d6190556 Mon Sep 17 00:00:00 2001
-From: Song Liu <songliubraving@fb.com>
-Date: Mon, 14 Oct 2019 16:58:35 -0700
-Subject: [PATCH] md/raid0: fix warning message for parameter default_layout
+Personalities : [raid1] [linear] [multipath] [raid0] [raid6] [raid5] 
+[raid4] [raid10] 
+md1 : active raid1 sdb2[1]
+      968949696 blocks [2/1] [_U]
+      
+md0 : active raid1 sdb1[1]
+      7811008 blocks [2/1] [_U]
+      
+unused devices: <none>
 
-The message should match the parameter, i.e. raid0.default_layout.
 
-Cc: NeilBrown <neilb@suse.de>
-Reported-by: DrYak <doktor.yak@gmail.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
----
- drivers/md/raid0.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Looking at the logs:
+[    3.305090] md: kicking non-fresh sda2 from array!
+[    3.314209] md: kicking non-fresh sda1 from array!
+[    3.337251] md/raid1:md1: active with 1 out of 2 mirrors
+[    3.337270] md/raid1:md0: active with 1 out of 2 mirrors
+[    3.337296] md1: detected capacity change from 0 to 992204488704
+[    3.337305] md0: detected capacity change from 0 to 7998472192
 
-diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
-index f61693e59684..1e772287b1c8 100644
---- a/drivers/md/raid0.c
-+++ b/drivers/md/raid0.c
-@@ -154,7 +154,7 @@ static int create_strip_zones(struct mddev *mddev,
-struct r0conf **private_conf)
-        } else {
-                pr_err("md/raid0:%s: cannot assemble multi-zone RAID0
-with default_layout setting\n",
-                       mdname(mddev));
--               pr_err("md/raid0: please set raid.default_layout to 1 or 2\n");
-+               pr_err("md/raid0: please set raid0.default_layout to 1 or 2\n");
-                err = -ENOTSUPP;
-                goto abort;
-        }
---
-2.17.1
+
+
+The following command hopefully provides more info:
+
+mdadm --examine /dev/sdb*
+/dev/sdb:
+   MBR Magic : aa55
+Partition[0] :     15622144 sectors at         2048 (type fd)
+Partition[1] :   1937899520 sectors at     15624192 (type fd)
+/dev/sdb1:
+          Magic : a92b4efc
+        Version : 0.90.00
+           UUID : 7414ac79:580af0ce:e6bbe02b:915fa44a
+  Creation Time : Wed Jul 18 15:00:44 2012
+     Raid Level : raid1
+  Used Dev Size : 7811008 (7.45 GiB 8.00 GB)
+     Array Size : 7811008 (7.45 GiB 8.00 GB)
+   Raid Devices : 2
+  Total Devices : 1
+Preferred Minor : 0
+
+    Update Time : Mon Oct 14 16:28:54 2019
+          State : clean
+ Active Devices : 1
+Working Devices : 1
+ Failed Devices : 0
+  Spare Devices : 0
+       Checksum : 9b89db2a - correct
+         Events : 417
+
+
+      Number   Major   Minor   RaidDevice State
+this     1       8       17        1      active sync   /dev/sdb1
+
+   0     0       0        0        0      removed
+   1     1       8       17        1      active sync   /dev/sdb1
+/dev/sdb2:
+          Magic : a92b4efc
+        Version : 0.90.00
+           UUID : ac37ca92:939d7053:3b802bf3:08298597
+  Creation Time : Wed Jul 18 15:00:53 2012
+     Raid Level : raid1
+  Used Dev Size : 968949696 (924.06 GiB 992.20 GB)
+     Array Size : 968949696 (924.06 GiB 992.20 GB)
+   Raid Devices : 2
+  Total Devices : 1
+Preferred Minor : 1
+
+    Update Time : Mon Oct 14 16:39:46 2019
+          State : clean
+ Active Devices : 1
+Working Devices : 1
+ Failed Devices : 0
+  Spare Devices : 0
+       Checksum : 1418e24f - correct
+         Events : 46734
+
+
+      Number   Major   Minor   RaidDevice State
+this     1       8       18        1      active sync   /dev/sdb2
+
+   0     0       0        0        0      removed
+   1     1       8       18        1      active sync   /dev/sdb2
+
