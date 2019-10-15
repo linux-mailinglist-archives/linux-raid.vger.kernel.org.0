@@ -2,61 +2,225 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C2D9DD6D3D
-	for <lists+linux-raid@lfdr.de>; Tue, 15 Oct 2019 04:35:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23A32D6D43
+	for <lists+linux-raid@lfdr.de>; Tue, 15 Oct 2019 04:41:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbfJOCfe (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 14 Oct 2019 22:35:34 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:57050 "EHLO huawei.com"
+        id S1727208AbfJOClM (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 14 Oct 2019 22:41:12 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3755 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726430AbfJOCfd (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 14 Oct 2019 22:35:33 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1B0AF165A658E53FDD25;
-        Tue, 15 Oct 2019 10:35:32 +0800 (CST)
-Received: from [127.0.0.1] (10.177.219.49) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Tue, 15 Oct 2019
- 10:35:30 +0800
-Subject: Re: [PATCH v2] md: no longer compare spare disk superblock events in
- super_load
-To:     Song Liu <liu.song.a23@gmail.com>
-CC:     Song Liu <songliubraving@fb.com>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        NeilBrown <neilb@suse.de>, <stable@vger.kernel.org>
-References: <20190925055449.30091-1-yuyufen@huawei.com>
- <5bce906d-3493-982e-63b1-66d1b9813e1e@huawei.com>
- <CAPhsuW6BMA5RXo8JwWBLWNA9B6Kq0RfvG-vdkjrsNANybvrORQ@mail.gmail.com>
+        id S1727202AbfJOClM (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 14 Oct 2019 22:41:12 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 0240245799898A22F5F3;
+        Tue, 15 Oct 2019 10:41:10 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Tue, 15 Oct 2019
+ 10:41:08 +0800
 From:   Yufen Yu <yuyufen@huawei.com>
-Message-ID: <3d1773d5-6923-8a26-3f1c-8b06a0c4d094@huawei.com>
-Date:   Tue, 15 Oct 2019 10:35:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+To:     <songliubraving@fb.com>
+CC:     <linux-raid@vger.kernel.org>, <neilb@suse.de>
+Subject: [PATCH v3] md: no longer compare spare disk superblock events in super_load
+Date:   Tue, 15 Oct 2019 11:02:30 +0800
+Message-ID: <20191015030230.13642-1-yuyufen@huawei.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-In-Reply-To: <CAPhsuW6BMA5RXo8JwWBLWNA9B6Kq0RfvG-vdkjrsNANybvrORQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.177.219.49]
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
 X-CFilter-Loop: Reflected
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+We have a test case as follow:
 
+  mdadm -CR /dev/md1 -l 1 -n 4 /dev/sd[a-d] \
+	--assume-clean --bitmap=internal
+  mdadm -S /dev/md1
+  mdadm -A /dev/md1 /dev/sd[b-c] --run --force
 
-On 2019/10/15 8:31, Song Liu wrote:
-> On Fri, Oct 11, 2019 at 6:35 PM Yufen Yu <yuyufen@huawei.com> wrote:
->> ping
-> Sorry for the late reply.
->
-> The patch looks good over all. Please fix issues reported by
-> ./scripts/checkpatch.pl
-> and resubmit.
+  mdadm --zero /dev/sda
+  mdadm /dev/md1 -a /dev/sda
 
-Sorry for forgetting to check the patch by checkpatch.pl.
-And thanks a lot for your review and response.
+  echo offline > /sys/block/sdc/device/state
+  echo offline > /sys/block/sdb/device/state
+  sleep 5
+  mdadm -S /dev/md1
 
-Thanks,
-Yufen
+  echo running > /sys/block/sdb/device/state
+  echo running > /sys/block/sdc/device/state
+  mdadm -A /dev/md1 /dev/sd[a-c] --run --force
+
+When we readd /dev/sda to the array, it started to do recovery.
+After offline the other two disks in md1, the recovery have
+been interrupted and superblock update info cannot be written
+to the offline disks. While the spare disk (/dev/sda) can continue
+to update superblock info.
+
+After stopping the array and assemble it, we found the array
+run fail, with the follow kernel message:
+
+[  172.986064] md: kicking non-fresh sdb from array!
+[  173.004210] md: kicking non-fresh sdc from array!
+[  173.022383] md/raid1:md1: active with 0 out of 4 mirrors
+[  173.022406] md1: failed to create bitmap (-5)
+[  173.023466] md: md1 stopped.
+
+Since both sdb and sdc have the value of 'sb->events' smaller than
+that in sda, they have been kicked from the array. However, the only
+remained disk sda is in 'spare' state before stop and it cannot be
+added to conf->mirrors[] array. In the end, raid array assemble
+and run fail.
+
+In fact, we can use the older disk sdb or sdc to assemble the array.
+That means we should not choose the 'spare' disk as the fresh disk in
+analyze_sbs().
+
+To fix the problem, we do not compare superblock events when it is
+a spare disk, as same as validate_super.
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+
+v1->v2:
+  fix wrong return value in super_90_load
+v2->v3:
+  adjust the patch format to avoid scripts/checkpatch.pl warning
+---
+ drivers/md/md.c | 51 +++++++++++++++++++++++++++++--------------------
+ 1 file changed, 30 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 1be7abeb24fd..1be1deca3e3a 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -1097,7 +1097,7 @@ static int super_90_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor
+ {
+ 	char b[BDEVNAME_SIZE], b2[BDEVNAME_SIZE];
+ 	mdp_super_t *sb;
+-	int ret;
++	int ret = 0;
+ 
+ 	/*
+ 	 * Calculate the position of the superblock (512byte sectors),
+@@ -1111,14 +1111,12 @@ static int super_90_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = -EINVAL;
+-
+ 	bdevname(rdev->bdev, b);
+ 	sb = page_address(rdev->sb_page);
+ 
+ 	if (sb->md_magic != MD_SB_MAGIC) {
+ 		pr_warn("md: invalid raid superblock magic on %s\n", b);
+-		goto abort;
++		return -EINVAL;
+ 	}
+ 
+ 	if (sb->major_version != 0 ||
+@@ -1126,15 +1124,15 @@ static int super_90_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor
+ 	    sb->minor_version > 91) {
+ 		pr_warn("Bad version number %d.%d on %s\n",
+ 			sb->major_version, sb->minor_version, b);
+-		goto abort;
++		return -EINVAL;
+ 	}
+ 
+ 	if (sb->raid_disks <= 0)
+-		goto abort;
++		return -EINVAL;
+ 
+ 	if (md_csum_fold(calc_sb_csum(sb)) != md_csum_fold(sb->sb_csum)) {
+ 		pr_warn("md: invalid superblock checksum on %s\n", b);
+-		goto abort;
++		return -EINVAL;
+ 	}
+ 
+ 	rdev->preferred_minor = sb->md_minor;
+@@ -1156,19 +1154,24 @@ static int super_90_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor
+ 		if (!md_uuid_equal(refsb, sb)) {
+ 			pr_warn("md: %s has different UUID to %s\n",
+ 				b, bdevname(refdev->bdev,b2));
+-			goto abort;
++			return -EINVAL;
+ 		}
+ 		if (!md_sb_equal(refsb, sb)) {
+ 			pr_warn("md: %s has same UUID but different superblock to %s\n",
+ 				b, bdevname(refdev->bdev, b2));
+-			goto abort;
++			return -EINVAL;
+ 		}
+ 		ev1 = md_event(sb);
+ 		ev2 = md_event(refsb);
+-		if (ev1 > ev2)
+-			ret = 1;
+-		else
+-			ret = 0;
++
++		/*
++		 * Insist on good event counter while assembling, except
++		 * for spares (which don't need an event count)
++		 */
++		if (sb->disks[rdev->desc_nr].state & (
++			(1<<MD_DISK_SYNC) | (1 << MD_DISK_ACTIVE)))
++			if (ev1 > ev2)
++				ret = 1;
+ 	}
+ 	rdev->sectors = rdev->sb_start;
+ 	/* Limit to 4TB as metadata cannot record more than that.
+@@ -1180,9 +1183,8 @@ static int super_90_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor
+ 
+ 	if (rdev->sectors < ((sector_t)sb->size) * 2 && sb->level >= 1)
+ 		/* "this cannot possibly happen" ... */
+-		ret = -EINVAL;
++		return -EINVAL;
+ 
+- abort:
+ 	return ret;
+ }
+ 
+@@ -1520,7 +1522,7 @@ static __le32 calc_sb_1_csum(struct mdp_superblock_1 *sb)
+ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_version)
+ {
+ 	struct mdp_superblock_1 *sb;
+-	int ret;
++	int ret = 0;
+ 	sector_t sb_start;
+ 	sector_t sectors;
+ 	char b[BDEVNAME_SIZE], b2[BDEVNAME_SIZE];
+@@ -1661,7 +1663,7 @@ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_
+ 	if (!refdev) {
+ 		ret = 1;
+ 	} else {
+-		__u64 ev1, ev2;
++		__u64 ev1, ev2, role;
+ 		struct mdp_superblock_1 *refsb = page_address(refdev->sb_page);
+ 
+ 		if (memcmp(sb->set_uuid, refsb->set_uuid, 16) != 0 ||
+@@ -1676,10 +1678,17 @@ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_
+ 		ev1 = le64_to_cpu(sb->events);
+ 		ev2 = le64_to_cpu(refsb->events);
+ 
+-		if (ev1 > ev2)
+-			ret = 1;
+-		else
+-			ret = 0;
++		/*
++		 * Insist of good event counter while assembling, except for
++		 * spares (which don't need an event count)
++		 */
++		role = le16_to_cpu(sb->dev_roles[rdev->desc_nr]);
++		if (rdev->desc_nr >= 0 &&
++		    rdev->desc_nr < le32_to_cpu(sb->max_dev) &&
++			(role < MD_DISK_ROLE_MAX ||
++			 role == MD_DISK_ROLE_JOURNAL))
++			if (ev1 > ev2)
++				ret = 1;
+ 	}
+ 	if (minor_version) {
+ 		sectors = (i_size_read(rdev->bdev->bd_inode) >> 9);
+-- 
+2.17.2
 
