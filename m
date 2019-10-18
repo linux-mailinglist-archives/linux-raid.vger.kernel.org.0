@@ -2,59 +2,82 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A01CDD13A
-	for <lists+linux-raid@lfdr.de>; Fri, 18 Oct 2019 23:33:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF034DD416
+	for <lists+linux-raid@lfdr.de>; Sat, 19 Oct 2019 00:23:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506155AbfJRVdj (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 18 Oct 2019 17:33:39 -0400
-Received: from [221.146.236.9] ([221.146.236.9]:52978 "EHLO theworld.email"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2506134AbfJRVdj (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 18 Oct 2019 17:33:39 -0400
-Received: from [207.236.10.14]
-        by 127.0.0.1 with SMTP;
-        Thu, 17 Oct 2019 20:25:55 +0200
-Message-ID: <907$j1-27tn-b-2482-i-xtnf5-f37@v6737t9ngh.y03>
-From:   "Mr Barrister Hans Erich" <Barrister_Hans@stationlibraryjhelum.com>
-Reply-To: "Mr Barrister Hans Erich" <Barrister_Hans@stationlibraryjhelum.com>
-To:     hj1638hj@hotmail.com
-Subject: RE:PERSONAL LETTER FROM MRS RASHIA AMIRA
-Date:   Thu, 17 Oct 19 20:25:55 GMT
+        id S1730188AbfJRWFu (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 18 Oct 2019 18:05:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37750 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730156AbfJRWFs (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:05:48 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14C6020679;
+        Fri, 18 Oct 2019 22:05:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571436347;
+        bh=z0DvuLwhSC3a8DkNEt/tFpheLuPJ9uCVXMkkz4YfGcM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1MbKwwh2cX19V3xN9QjLwALj28XH+R+Dn4APYv8bEwcET/qfdm54tpeJSFKGhQNim
+         xpmqZ931L2XSp8Vo6XYkXKUxM9pHEo2y2NJCm4/huUlcJbOUG/Tpv5N2y2xpYpy5il
+         e2+GlgPwzd5M9xAK/lJL26o24xnrrWSTIRAB1RB8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org,
+        linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 013/100] bcache: fix input overflow to writeback_rate_minimum
+Date:   Fri, 18 Oct 2019 18:03:58 -0400
+Message-Id: <20191018220525.9042-13-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
+References: <20191018220525.9042-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-        boundary="F13_88.B0_7FDA_7F.C2B0"
-X-Priority: 3
-X-MSMail-Priority: Normal
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+From: Coly Li <colyli@suse.de>
 
---F13_88.B0_7FDA_7F.C2B0
-Content-Type: text/plain;
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit dab71b2db98dcdd4657d151b01a7be88ce10f9d1 ]
 
-Greetings
+dc->writeback_rate_minimum is type unsigned integer variable, it is set
+via sysfs interface, and converte from input string to unsigned integer
+by d_strtoul_nonzero(). When the converted input value is larger than
+UINT_MAX, overflow to unsigned integer happens.
 
-My name is Barrister Hans Erich.
+This patch fixes the overflow by using sysfs_strotoul_clamp() to
+convert input string and limit the value in range [1, UINT_MAX], then
+the overflow can be avoided.
 
-I have a client who is interested to invest in your country, she is a well=
- known politician in her country and deserve a lucrative investment partne=
-rship with you outside her country without any delay   Please can you mana=
-ge such investment please Kindly reply for further details.
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/md/bcache/sysfs.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Your full names ---------
-
-
-Your urgent response will be appreciated
-
-Thank you and God bless you.
-
-Barrister Hans Erich
-
-Yours sincerely,
-Barrister Hans Erich
-
---F13_88.B0_7FDA_7F.C2B0--
+diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
+index 5bb81e564ce88..3e8d1f1b562f8 100644
+--- a/drivers/md/bcache/sysfs.c
++++ b/drivers/md/bcache/sysfs.c
+@@ -289,7 +289,9 @@ STORE(__cached_dev)
+ 	sysfs_strtoul_clamp(writeback_rate_p_term_inverse,
+ 			    dc->writeback_rate_p_term_inverse,
+ 			    1, UINT_MAX);
+-	d_strtoul_nonzero(writeback_rate_minimum);
++	sysfs_strtoul_clamp(writeback_rate_minimum,
++			    dc->writeback_rate_minimum,
++			    1, UINT_MAX);
+ 
+ 	sysfs_strtoul_clamp(io_error_limit, dc->error_limit, 0, INT_MAX);
+ 
+-- 
+2.20.1
 
