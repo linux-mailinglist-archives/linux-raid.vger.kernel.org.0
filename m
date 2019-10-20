@@ -2,32 +2,21 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 97522DDB94
-	for <lists+linux-raid@lfdr.de>; Sun, 20 Oct 2019 02:07:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54133DDBBA
+	for <lists+linux-raid@lfdr.de>; Sun, 20 Oct 2019 02:30:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbfJTAG5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 19 Oct 2019 20:06:57 -0400
-Received: from MAIL.NPC-USA.COM ([173.160.187.9]:51044 "EHLO
-        nautilus.npc-usa.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726148AbfJTAG4 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 19 Oct 2019 20:06:56 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by nautilus.npc-usa.com (Postfix) with ESMTP id 7EB121DC01B9
-        for <linux-raid@vger.kernel.org>; Sat, 19 Oct 2019 17:06:55 -0700 (PDT)
-X-Virus-Scanned: Debian amavisd-new at npc-usa.com
-Received: from nautilus.npc-usa.com ([127.0.0.1])
-        by localhost (mail.npc-usa.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id SBTFOxmoKbci for <linux-raid@vger.kernel.org>;
-        Sat, 19 Oct 2019 17:06:53 -0700 (PDT)
-Received: from [192.168.88.34] (c-73-254-66-50.hsd1.wa.comcast.net [73.254.66.50])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: curtis)
-        by nautilus.npc-usa.com (Postfix) with ESMTPSA id B16341DC008F
-        for <linux-raid@vger.kernel.org>; Sat, 19 Oct 2019 17:06:53 -0700 (PDT)
-Reply-To: curtis@npc-usa.com
+        id S1726148AbfJTAai (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 19 Oct 2019 20:30:38 -0400
+Received: from smtp.hosts.co.uk ([85.233.160.19]:41604 "EHLO smtp.hosts.co.uk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726036AbfJTAai (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sat, 19 Oct 2019 20:30:38 -0400
+Received: from [81.153.126.205] (helo=[192.168.1.118])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1iLz7D-00067J-9w; Sun, 20 Oct 2019 01:30:35 +0100
 Subject: Re: Degraded RAID1
-To:     linux-raid@vger.kernel.org
+To:     curtis@npc-usa.com, linux-raid@vger.kernel.org
 References: <qo31v1$31rr$2@blaine.gmane.org>
  <5DA5165E.8070609@youngman.org.uk>
  <9bfd62ed-a41c-8093-b522-db0ccbe32b89@npc-usa.com>
@@ -39,55 +28,74 @@ References: <qo31v1$31rr$2@blaine.gmane.org>
  <5212dd1b-b67d-f7fd-a96b-6281f0501740@youngman.org.uk>
  <ac4a6b63-b886-1c0c-3aad-f77b54246226@npc-usa.com>
  <9864d7bd-f2f7-b25e-fa6d-9ca06a9e6b87@youngman.org.uk>
-From:   Curtis Vaughan <curtis@npc-usa.com>
-Organization: North Pacific Corporation
-Message-ID: <5a153cf6-e53d-35d9-6775-e09028799721@npc-usa.com>
-Date:   Sat, 19 Oct 2019 17:06:52 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+ <5a153cf6-e53d-35d9-6775-e09028799721@npc-usa.com>
+From:   Wols Lists <antlists@youngman.org.uk>
+X-Enigmail-Draft-Status: N1110
+Message-ID: <5DABAAAA.4050904@youngman.org.uk>
+Date:   Sun, 20 Oct 2019 01:30:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.7.0
 MIME-Version: 1.0
-In-Reply-To: <9864d7bd-f2f7-b25e-fa6d-9ca06a9e6b87@youngman.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <5a153cf6-e53d-35d9-6775-e09028799721@npc-usa.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-
-On 10/16/19 2:33 PM, Wol wrote:
-> On 16/10/2019 22:15, Curtis Vaughan wrote:
->> Think I got it working, just want to make sure I did this right. Using
->> fdisk I recreated the exact same partitions on sda as on sdb.
+On 20/10/19 01:06, Curtis Vaughan wrote:
+> 
+> On 10/16/19 2:33 PM, Wol wrote:
+>> On 16/10/2019 22:15, Curtis Vaughan wrote:
+>>> Think I got it working, just want to make sure I did this right. Using
+>>> fdisk I recreated the exact same partitions on sda as on sdb.
+>>>
+>>> Then I ran the mdadm --re-add for each partition to each raid volume. So
+>>> now here are some outputs to various commands. Does everything look
+>>> right?
 >>
->> Then I ran the mdadm --re-add for each partition to each raid volume. So
->> now here are some outputs to various commands. Does everything look 
->> right?
->
-> Yup. Looks fine.
->
-> Because we have two raids on one disk, the rebuild is throttled such 
-> that only one rebuild is proceeding at a time.
->
-> md1 is rebuilding, as it says. Once that completes then all the status 
-> stuff will look normal, and md0 will start rebuilding.
->
-> Don't know how long it will take, but because the raid doesn't know 
-> what bits of the disk are used and what are not, the complete rebuild 
-> will take however long it takes to read a 1gig drive from end to end, 
-> and that is quite a long time ...
->
-> Cheers,
-> Wol
->
-Actually, I still seem to have a problem.
+>> Yup. Looks fine.
+>>
+>> Because we have two raids on one disk, the rebuild is throttled such
+>> that only one rebuild is proceeding at a time.
+>>
+>> md1 is rebuilding, as it says. Once that completes then all the status
+>> stuff will look normal, and md0 will start rebuilding.
+>>
+>> Don't know how long it will take, but because the raid doesn't know
+>> what bits of the disk are used and what are not, the complete rebuild
+>> will take however long it takes to read a 1gig drive from end to end,
+>> and that is quite a long time ...
+>>
+>> Cheers,
+>> Wol
+>>
+> Actually, I still seem to have a problem.
+> 
+> After updates I decided to reboot, but it would never reboot until I
+> removed the new drive. I'm wondering if it has something to do with
+> needing to installl grub on the new drive?
+> 
+> Anyhow, now that I've pulled the new drive out and started the server,
+> the old drive is now sda. So does that mean I should issue the commands
+> to add the new drive back to the raid but as sdb?
+> 
+If you haven't modified the array, it should just sort itself out.
 
-After updates I decided to reboot, but it would never reboot until I 
-removed the new drive. I'm wondering if it has something to do with 
-needing to installl grub on the new drive?
+If you *have* modified the array, I'm not sure if there's a re-add
+command. If you've got a bitmap file or journal or anything like that,
+it should just sort itself out.
 
-Anyhow, now that I've pulled the new drive out and started the server, 
-the old drive is now sda. So does that mean I should issue the commands 
-to add the new drive back to the raid but as sdb?
+As for not rebooting because of grub, I suspect you're right. Because
+the two drives are mirrored, you probably mirrored grub on both drives.
+When the original sda failed and was removed, sdb became sda as the
+first drive found. When you replaced sda, that became the first drive
+and didn't have grub on it.
 
+Try moving sdb's cable to where sda was on the motherboard, and putting
+the new drive where sdb was. I guess your system will now boot fine, but
+you'll need to put grub on the new drive ready for the next failure ... :-)
+
+Cheers,
+Wol
