@@ -2,80 +2,62 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BB673DE08D
-	for <lists+linux-raid@lfdr.de>; Sun, 20 Oct 2019 22:52:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AE57DFEC4
+	for <lists+linux-raid@lfdr.de>; Tue, 22 Oct 2019 09:56:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbfJTUw1 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 20 Oct 2019 16:52:27 -0400
-Received: from secmail.pro ([146.185.132.44]:51448 "EHLO secmail.pro"
+        id S1730619AbfJVH4O (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 22 Oct 2019 03:56:14 -0400
+Received: from mga09.intel.com ([134.134.136.24]:42673 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbfJTUw1 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sun, 20 Oct 2019 16:52:27 -0400
-X-Greylist: delayed 501 seconds by postgrey-1.27 at vger.kernel.org; Sun, 20 Oct 2019 16:52:26 EDT
-Received: by secmail.pro (Postfix, from userid 33)
-        id 9643ADF398; Sun, 20 Oct 2019 20:42:08 +0000 (UTC)
-Received: from secmailw453j7piv.onion (localhost [IPv6:::1])
-        by secmail.pro (Postfix) with ESMTP id B8EFB1F32F7
-        for <linux-raid@vger.kernel.org>; Sun, 20 Oct 2019 13:44:02 -0700 (PDT)
-Received: from 127.0.0.1
-        (SquirrelMail authenticated user hhardly@secmail.pro)
-        by giyzk7o6dcunb2ry.onion with HTTP;
-        Sun, 20 Oct 2019 13:44:02 -0700
-Message-ID: <0a32d9235127ec7760334c3308ee6384.squirrel@giyzk7o6dcunb2ry.onion>
-Date:   Sun, 20 Oct 2019 13:44:02 -0700
-Subject: How to assemble Intel RST Matrix volumes?
-From:   hhardly@secmail.pro
-To:     linux-raid@vger.kernel.org
-User-Agent: SquirrelMail/1.4.22
+        id S1726978AbfJVH4O (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 22 Oct 2019 03:56:14 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 00:56:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,326,1566889200"; 
+   d="scan'208";a="222727121"
+Received: from apaszkie-desk.igk.intel.com (HELO [10.102.102.225]) ([10.102.102.225])
+  by fmsmga004.fm.intel.com with ESMTP; 22 Oct 2019 00:56:13 -0700
+Subject: Re: How to assemble Intel RST Matrix volumes?
+To:     hhardly@secmail.pro, linux-raid@vger.kernel.org
+References: <0a32d9235127ec7760334c3308ee6384.squirrel@giyzk7o6dcunb2ry.onion>
+From:   Artur Paszkiewicz <artur.paszkiewicz@intel.com>
+Message-ID: <aff61b6a-15e1-555a-e507-f8dcfcfd3135@intel.com>
+Date:   Tue, 22 Oct 2019 09:56:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: 8bit
-X-Priority: 3 (Normal)
-Importance: Normal
+In-Reply-To: <0a32d9235127ec7760334c3308ee6384.squirrel@giyzk7o6dcunb2ry.onion>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hello everyone,
+On 10/20/19 10:44 PM, hhardly@secmail.pro wrote:
+> With only the parent container assembled I have this:
+> 
+> # cat /proc/mdstat
+> Personalities :
+> md0 : inactive sdc[0](S)
+>       5201 blocks super external:imsm
+> 
+> Is "inactive" a problem? Adding --run to the --assemble makes no
+> difference. Is the small block count only for the superblocks?
+> 
+> How can I assemble and access those Intel Matrix volumes?
 
-I have a Intel RST RAID 1 array composed of 2 physical drives and then
-split into a 2-volume Intel Matrix. One physical drive appears to have
-gone bad. I am trying to recover the data on another computer without the
-RST controller. I am working on copies of the original drives but the bad
-drive copy doesn't look usable (its --examine output is very different).
+The "inactive" state is normal for containers. Try doing this now:
 
-Using only the copy of the good drive, mdadm seems to assemble and run it
-without having to force it with --run which looks promising.
+# IMSM_NO_PLATFORM=1 mdadm --incremental /dev/md0 --run
 
-# IMSM_NO_PLATFORM=1 mdadm --assemble -e imsm -v /dev/md0 /dev/sdc
-mdadm: looking for devices for /dev/md0
-mdadm: /dev/sdc is identified as a member of /dev/md0, slot -1.
-mdadm: added /dev/sdc to /dev/md0 as -1
-mdadm: Container /dev/md0 has been assembled with 1 drive
+It should assemble both volumes as degraded. If that doesn't work, please send
+the output from "mdadm -E /dev/sdc".
 
-After this I get stuck trying to assemble the Matrix volumes. When I
---examine the physical drive I see a UUID at the top, and this matches the
-UUID of the currently assembled device (according to --detail). There are
-two volumes listed below that, each with their own different UUID. I think
-I'm supposed to use the --incremental mode to continue adding the volumes,
-but this fails:
-
-# IMSM_NO_PLATFORM=1 mdadm --incremental -e imsm -v /dev/md0
-mdadm: /dev/md0 is not part of an md array.
-
-I have also tried using --assemble using just those UUID separately in a
-number of ways, all unsuccessful.
-
-With only the parent container assembled I have this:
-
-# cat /proc/mdstat
-Personalities :
-md0 : inactive sdc[0](S)
-      5201 blocks super external:imsm
-
-Is "inactive" a problem? Adding --run to the --assemble makes no
-difference. Is the small block count only for the superblocks?
-
-How can I assemble and access those Intel Matrix volumes?
+Regards,
+Artur
 
