@@ -2,415 +2,166 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 80467E3C3A
-	for <lists+linux-raid@lfdr.de>; Thu, 24 Oct 2019 21:42:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8CFAE3C83
+	for <lists+linux-raid@lfdr.de>; Thu, 24 Oct 2019 21:52:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403794AbfJXTmq (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 24 Oct 2019 15:42:46 -0400
-Received: from mail-lj1-f172.google.com ([209.85.208.172]:46812 "EHLO
-        mail-lj1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390785AbfJXTmq (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 24 Oct 2019 15:42:46 -0400
-Received: by mail-lj1-f172.google.com with SMTP id d1so26276835ljl.13
-        for <linux-raid@vger.kernel.org>; Thu, 24 Oct 2019 12:42:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding:date:from
-         :to:cc:subject:in-reply-to:references:user-agent:message-id;
-        bh=1KDZVY4BKwzH1PoJPcu7nz7wgPInlQ9oTwG5Kavir34=;
-        b=rOyLuqP/gcLiHibka7LlY25A3LR04skgXElXK+WHty1tvn1YmskHeoozj1zn/H/Ak8
-         mIrxGuURPCi+aKZnBRvI8qqQrMU6cdgsGuQSTOQY8d56hlJWSKR4iJTJStnHfYoUNeMF
-         hC4AdYbgpuuBpPXQ8fsTa7BeZQVAVBzPfGvetn8+HrVE0zqZ272D1jHUTLfsJyxtgX0L
-         N7iXPcptDcH1CDGZ0dYU8oW5lElb8Bce0agYPYHXTOdBYl0EEGf00DH1AMXyDo8hHjJK
-         AQPp0q4Nywi947QhtOdiNNDIChxWaQGUNCyY/Su1WyRIML2ByeSNLrdcAILOsZTVJDJZ
-         +CXQ==
-X-Gm-Message-State: APjAAAV2AqYN84hS63UtBO5RfJhuNINWfltrUhsmRyR5YlhEDSy/CgtN
-        psU2O7YveRmkRVtMnU09vhmDG/7ggT0=
-X-Google-Smtp-Source: APXvYqwU/hhF1CdFz7zjooO339G9m8HspT5hyV8byOHKTdXzmGEqmuzBefw4fHZHHFEV3OiXl2IEYA==
-X-Received: by 2002:a2e:88c1:: with SMTP id a1mr8532061ljk.204.1571946162816;
-        Thu, 24 Oct 2019 12:42:42 -0700 (PDT)
-Received: from mail.onse.fi ([109.204.156.230])
-        by smtp.gmail.com with ESMTPSA id x16sm2838807ljd.69.2019.10.24.12.42.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 12:42:39 -0700 (PDT)
-Received: from mail.onse.fi (delta.onse.fi [127.0.0.1])
-        by mail.onse.fi (Postfix) with ESMTP id 0DA3C40272;
-        Thu, 24 Oct 2019 22:42:39 +0300 (EEST)
+        id S2391753AbfJXTvy (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 24 Oct 2019 15:51:54 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:51206 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2390431AbfJXTvx (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 24 Oct 2019 15:51:53 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id x9OJdLJr030060;
+        Thu, 24 Oct 2019 12:50:58 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : content-type : content-id :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=dqHFcMwGjwthqdNh3pDTgT16yl6Zc6wxi6NolbEwDUA=;
+ b=Piob50Sjxja+qhlzmVPCoDjKuVn5FlK2JIu/bTfgLLoWpgWk9LyYpEiQZLYxLSCApZv7
+ olwYb7qxZKqEPrDzRKegwqw+Iks9oe3iG2jszzV4NhpV+zymaihagrw7SjDR6c3Lj6qF
+ Eh5UK8GLqtf2n91ofdB0JrNtEQGxVxO6Rfk= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by m0089730.ppops.net with ESMTP id 2vuja7r1dm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 24 Oct 2019 12:50:58 -0700
+Received: from prn-hub02.TheFacebook.com (2620:10d:c081:35::126) by
+ prn-hub02.TheFacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Thu, 24 Oct 2019 12:50:56 -0700
+Received: from NAM05-BY2-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.26) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Thu, 24 Oct 2019 12:50:56 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kQHQkY3UgPP+2U4wdFcCnp/3+gyf2ziuWLvFnzREyQhLquYK581Lehx1CVbnEz5a/pjmjYM4q0qf6/6N2nkbnz61CWYe1ydpZ+BpIcVJCAX3+TCP5Nu2hBNvf0QknpmnLFwkh7/KFtxpeGTToBGyCEHV9bsHhrXnp7wgAySmTbesMo0wZmlF0yp2avKNCHxACdVcqmDUAXQxYUB7bj0viRLNpTCZQlq1CRPnddDod6erSld4yyHopmX2fsXMcRTRa5lPzXDc92hnF+aZ8qPkgzzBUdGFp1oDvjxOGzLSdJIdjAh6Pz7MDbF41XYZyXQh5yYaUi7Gr8+X4WTh7PQ7gw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dqHFcMwGjwthqdNh3pDTgT16yl6Zc6wxi6NolbEwDUA=;
+ b=bc7+1wVNR7SP1rN3DioWHP992W5vh6LWz/3U1MmP/CPbaApMHCYOcoHYFbkrY2LDvMd2hZsX26TOF5EvacOJw7ayTLu23Wra8ToOK53J7VUdOOEu4i9+7SXMFrvtQjN+BhrH3P+Ggmdo6yv77MBPwO5TuwEuxV7yxBFG4rgolNSeOcaCmQxVtrJrt4UODN/xOmKaJMyNMfSYZQmMFHUL6Gfn/MNYk9JysvYjj4a1bcBhJGf/wmTb3+HB+0XOaCpCNJo4hwGq56vllIc0Tjc1dgCmV8M+Jl9NoyRfWu7wn8Zd/HGYrT5csa4DzLaxW1hHLd0zcp1zlo+smzml17tVmA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dqHFcMwGjwthqdNh3pDTgT16yl6Zc6wxi6NolbEwDUA=;
+ b=LYaOf6WGvR5CrG7lihaDuOm6zQGb3ARkoc3qSMLXIS5HxV7KBGsSIDqxjDj9rLGeRkeqh9Wa50NvoNT4GyulY7qsZQGba++U7lhQ+G5JGdM89vNZvknwvfKTAkUxXWaR684OYwOXafsxhL5DVR3IhT3TFaYcPEtvL+tbi3KhpOg=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
+ MWHPR15MB1648.namprd15.prod.outlook.com (10.175.141.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.22; Thu, 24 Oct 2019 19:50:56 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::fdc8:5546:bace:15f5]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::fdc8:5546:bace:15f5%5]) with mapi id 15.20.2387.023; Thu, 24 Oct 2019
+ 19:50:55 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Jens Axboe <axboe@kernel.dk>,
+        linux-raid <linux-raid@vger.kernel.org>
+CC:     Dan Carpenter <dan.carpenter@oracle.com>,
+        David Jeffery <djeffery@redhat.com>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        "Guoqing Jiang" <jgq516@gmail.com>, Yufen Yu <yuyufen@huawei.com>,
+        Xiao Ni <xni@redhat.com>, Kernel Team <Kernel-team@fb.com>
+Subject: [GIT PULL] md-next 20191024
+Thread-Topic: [GIT PULL] md-next 20191024
+Thread-Index: AQHViqRZGiILNO5uSUyVzyhNu9jE4w==
+Date:   Thu, 24 Oct 2019 19:50:55 +0000
+Message-ID: <ED0B162E-09AC-420D-9620-849EAB38C195@fb.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3594.4.19)
+x-originating-ip: [2620:10d:c090:200::3:e83f]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: afd1ee6f-d487-4f56-d0f0-08d758bb7c10
+x-ms-traffictypediagnostic: MWHPR15MB1648:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR15MB16485267D01D9A648590B2F3B36A0@MWHPR15MB1648.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1468;
+x-forefront-prvs: 0200DDA8BE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(39860400002)(366004)(376002)(396003)(136003)(199004)(189003)(8676002)(71190400001)(36756003)(966005)(316002)(6512007)(6306002)(50226002)(478600001)(486006)(46003)(4326008)(7736002)(476003)(5660300002)(6486002)(4001150100001)(186003)(66946007)(76116006)(66476007)(14454004)(102836004)(64756008)(6506007)(2616005)(6436002)(305945005)(66446008)(66556008)(2906002)(81156014)(81166006)(8936002)(25786009)(256004)(71200400001)(14444005)(110136005)(6116002)(33656002)(54906003)(99286004)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1648;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5x059VOz7VUXkA0gqzUiNH+jr61KoMPjCr7htmOy1+vUPFxFA/qBeGSWAubh8W3MMHf3bxTBB4Tq0nh3gEwC3vYImQ95mwgPcjI2Shxt3H5LoqHsqNOsiQRz7neQlG3c9FvPnnXjat2ynNrBJpQsWZc6BlrkDQoy4e1daiyX++R3jwGzfDZvdDUuVb9CfpzgOdPzrd0eMULbjBANBarBQuwDsdJkT0UBBvJuF4EWMUaWZoqH4nVbLGfR3QJYHgopvzZ9XjWnd2BUedRVNpgb88OwZ822FD/2ujdyG2F6ca7D7oxhO6nmmm+21zIdq3jeOGUbcxtdu3khke4hvRAt3roDpm65/TuqkkNTC8Uc6Giv6a7YYuxukvNdIFK9mu34dHkPnCd0KNkQtXm4SMD6W+LItISjrWbJXPHrPcsOw5LdmSBLwHFoPVeii5fGkzSHK/B87/fAT9ZGJlJi5jCaIJWEyenN0WUMq/uQoA1jt4Y=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <CFEDF54308831042811628218B823672@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 24 Oct 2019 22:42:39 +0300
-From:   Anssi Hannula <anssi.hannula@iki.fi>
-To:     Song Liu <liu.song.a23@gmail.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>
-Subject: Re: RAID6 gets stuck during reshape with 100% CPU
-In-Reply-To: <CAPhsuW51S=tO+A0SDb1EvtoCG9pVSC91e9euG2nsp+rZiUgF7A@mail.gmail.com>
-References: <25373b220163b01b8990aa049fec9d18@iki.fi>
- <CAPhsuW51S=tO+A0SDb1EvtoCG9pVSC91e9euG2nsp+rZiUgF7A@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4-rc2
-Message-ID: <f1de00a04761370d90018f288b9b2996@iki.fi>
-X-Sender: anssi.hannula@iki.fi
+X-MS-Exchange-CrossTenant-Network-Message-Id: afd1ee6f-d487-4f56-d0f0-08d758bb7c10
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Oct 2019 19:50:55.8500
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GqGUelNMlND/jg32NamaMvYlNKGM36kPj6gB4siO6E5rFi+YFc/OMYQ5DUR4zfLASmOqt8jvpritJaaK0Dnvlg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1648
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-24_11:2019-10-23,2019-10-24 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
+ impostorscore=0 mlxscore=0 bulkscore=0 suspectscore=0 spamscore=0
+ phishscore=0 adultscore=0 priorityscore=1501 malwarescore=0 clxscore=1011
+ mlxlogscore=949 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910240184
+X-FB-Internal: deliver
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Song Liu kirjoitti 2019-10-24 21:50:
-> Sorry for delayed reply.
+Hi Jens,=20
 
-No problem :)
+Please consider pulling the following changes for md-next on top of your=20
+for-5.5/block branch.=20
 
-> On Sat, Oct 19, 2019 at 2:10 AM Anssi Hannula <anssi.hannula@iki.fi> 
-> wrote:
->> 
->> Hi all,
->> 
->> I'm seeing a reshape issue where the array gets stuck with requests
->> seemingly getting blocked and md0_raid6 process taking 100% CPU 
->> whenever
->> I --continue the reshape.
->> 
->>  From what I can tell, the md0_raid6 process is stuck processing a set 
->> of
->> stripes over and over via handle_stripe() without progressing.
->> 
->> Log excerpt of one handle_stripe() of an affected stripe with some 
->> extra
->> logging is below.
->> The 4600-5200 integers are line numbers for
->> http://onse.fi/files/reshape-infloop-issue/raid5.c .
-> 
-> Maybe add sh->sector to DEBUGPRINT()?
-
-Note that the XX debug printing was guarded by
-
-  bool debout = (sh->sector == 198248960) && __ratelimit(&_rsafasfas);
-
-So everything was for sector 198248960 and rate limited every 20sec to 
-avoid a flood.
-
-> Also, please add more DEBUGPRINT() in the
-> 
-> if (sh->reconstruct_state == reconstruct_state_result) {
-> 
-> case.
-
-OK, added prints there.
-
-Though after logging I noticed that the execution never gets there, 
-sh->reconstruct_state is always reconstruct_state_idle at that point.
-It gets cleared on the "XX too many failed" log message (line 4798).
+Thanks,
+Song
 
 
->> 
->> 0x1401 = STRIPE_ACTIVE STRIPE_EXPANDING STRIPE_EXPAND_READY
->> 0x1402 = STRIPE_HANDLE STRIPE_EXPANDING STRIPE_EXPAND_READY
->> 
->> 0x813 = R5_UPTODATE R5_LOCKED R5_Insync R5_Expanded
->> 0x811 = R5_UPTODATE R5_Insync R5_Expanded
->> 0xa01 = R5_UPTODATE R5_ReadError R5_Expanded
->> 
->> [  499.262769] XX handle_stripe 4694, state 0x1402, reconstr 6
->> [  499.263376] XX handle_stripe 4703, state 0x1401, reconstr 6
->> [  499.263681] XX handle_stripe 4709, state 0x1401, reconstr 6
->> [  499.263988] XX handle_stripe 4713, state 0x1401, reconstr 6
->> [  499.264355] XX handle_stripe 4732, state 0x1401, reconstr 6
->> [  499.264657] handling stripe 198248960, state=0x1401 cnt=1, 
->> pd_idx=19,
->> qd_idx=0
->>                 , check:0, reconstruct:6
->> [  499.265304] check 19: state 0x813 read 000000000bfabb56 write
->> 000000000bfabb56 written 000000000bfabb56
->> [  499.265649] check 18: state 0xa01 read 000000000bfabb56 write
->> 000000000bfabb56 written 000000000bfabb56
->> [  499.265978] check 17: state 0xa01 read 000000000bfabb56 write
->> 000000000bfabb56 written 000000000bfabb56
->> [  499.266337] check 16: state 0xa01 read 000000000bfabb56 write
->> 000000000bfabb56 written 000000000bfabb56
->> [  499.266658] check 15: state 0x811 read 000000000bfabb56 write
->> 000000000bfabb56 written 000000000bfabb56
->> [  499.266988] check 14: state 0xa01 read 000000000bfabb56 write
->> 000000000bfabb56 written 000000000bfabb56
->> [  499.267335] check 13: state 0xa01 read 000000000bfabb56 write
->> 000000000bfabb56 written 000000000bfabb56
->> [  499.267657] check 12: state 0xa01 read 000000000bfabb56 write
->> 000000000bfabb56 written 000000000bfabb56
->> [  499.267985] check 11: state 0x811 read 000000000bfabb56 write
->> 000000000bfabb56 written 000000000bfabb56
->> [  499.268349] check 10: state 0x811 read 000000000bfabb56 write
->> 000000000bfabb56 written 000000000bfabb56
->> [  499.268670] check 9: state 0x811 read 000000000bfabb56 write
->> 000000000bfabb56 written 000000000bfabb56
->> [  499.269021] check 8: state 0x811 read 000000000bfabb56 write
->> 000000000bfabb56 written 000000000bfabb56
->> [  499.269371] check 7: state 0xa01 read 000000000bfabb56 write
->> 000000000bfabb56 written 000000000bfabb56
->> [  499.269695] check 6: state 0xa01 read 000000000bfabb56 write
->> 000000000bfabb56 written 000000000bfabb56
->> [  499.270027] check 5: state 0xa01 read 000000000bfabb56 write
->> 000000000bfabb56 written 000000000bfabb56
->> [  499.270376] check 4: state 0xa01 read 000000000bfabb56 write
->> 000000000bfabb56 written 000000000bfabb56
->> [  499.270700] check 3: state 0x811 read 000000000bfabb56 write
->> 000000000bfabb56 written 000000000bfabb56
->> [  499.271031] check 2: state 0x811 read 000000000bfabb56 write
->> 000000000bfabb56 written 000000000bfabb56
->> [  499.271380] check 1: state 0x811 read 000000000bfabb56 write
->> 000000000bfabb56 written 000000000bfabb56
->> [  499.271707] check 0: state 0x813 read 000000000bfabb56 write
->> 000000000bfabb56 written 000000000bfabb56
->> [  499.272039] XX handle_stripe 4742, state 0x1401, reconstr 6
->> [  499.272410] XX handle_stripe 4746, state 0x1401, reconstr 6
->> [  499.272740] XX handle_stripe 4753, state 0x1401, reconstr 6
->> [  499.273093] XX handle_stripe 4765, state 0x1401, reconstr 6
->> [  499.273446] locked=2 uptodate=20 to_read=0 to_write=0 failed=10
->> failed_num=18,17
->> [  499.273786] XX too many failed
->> [  499.274174] XX handle_stripe 4834, state 0x1401, reconstr 0
->> [  499.274523] XX handle_stripe 4847, state 0x1401, reconstr 0
->> [  499.274877] XX handle_stripe 4874, state 0x1401, reconstr 0
->> [  499.275250] XX handle_stripe 4882, state 0x1401, reconstr 0
->> [  499.275591] XX handle_stripe 4893, state 0x1401, reconstr 0
->> [  499.275939] XX handle_stripe 4923, state 0x1401, reconstr 0
->> [  499.276324] XX handle_stripe 4939, state 0x1401, reconstr 0
->> [  499.276666] XX handle_stripe 4956, state 0x1401, reconstr 0
->> [  499.277033] XX handle_stripe 4965, state 0x1401, reconstr 0
->> [  499.277399] XX handle_stripe 4990, state 0x1401, reconstr 0
->> [  499.277742] XX handle_stripe 5019, state 0x1401, reconstr 0
->> [  499.278090] handle_stripe: 5026
->> [  499.278477] XX handle_stripe 5035, state 0x1401, reconstr 3
->> [  499.278831] XX handle_stripe 5040, state 0x1401, reconstr 3
->> [  499.279198] XX handle_stripe 5043, state 0x1401, reconstr 3
->> [  499.279547] XX handle_stripe 5057, state 0x1401, reconstr 3
->> [  499.279898] XX handle_stripe 5087, state 0x1401, reconstr 3
->> [ ... raid_run_ops() call with STRIPE_OP_RECONSTRUCT ... ]
->> [  499.280292] XX handle_stripe 5091, state 0x1403, reconstr 6
->> [  499.280645] XX handle_stripe 5094, state 0x1403, reconstr 6
-> After this the stripe should be handled again, but I didn't find it in
-> the dmesg file.
-> Could you please retry with the extra debug information?
+The following changes since commit 48d9b0d43105e0da2b7c135eedd24e51234fb5e4=
+:
 
-Yes, it was rate limited and I didn't wait long enough for the limiter 
-to allow logging again.
+  block: account statistics for passthrough requests (2019-10-10 17:52:31 -=
+0600)
 
-I now dropped the rate limiting and instead logged the first 100 
-handle_stripe() calls for that sector, so we now got 100 consecutive 
-handle_stripe() calls for sector 198248960 in the log.
+are available in the Git repository at:
 
-Below is a new excerpt, with full log at 
-http://onse.fi/files/reshape-infloop-issue/dmesg-2.txt , source file 
-http://onse.fi/files/reshape-infloop-issue/raid5-2.c .
+  https://git.kernel.org/pub/scm/linux/kernel/git/song/md.git md-next
 
->> [  499.281042] XX handle_stripe 5108, state now 0x1402
-> 
+for you to fetch changes up to 58075d924cf9fbdd4e96108a7bb973c8304ffcb4:
 
+  md: no longer compare spare disk superblock events in super_load (2019-10=
+-24 12:39:36 -0700)
 
-[  274.866530] XX handle_stripe 4705, state 0x1402, reconstr 6, sector 
-198248960
-[  274.867060] XX handle_stripe 4714, state 0x1401, reconstr 6, sector 
-198248960
-[  274.867607] XX handle_stripe 4720, state 0x1401, reconstr 6, sector 
-198248960
-[  274.868132] XX handle_stripe 4724, state 0x1401, reconstr 6, sector 
-198248960
-[  274.868659] XX handle_stripe 4743, state 0x1401, reconstr 6, sector 
-198248960
-[  274.869189] handling stripe 198248960, state=0x1401 cnt=1, pd_idx=19, 
-qd_idx=0
-                , check:0, reconstruct:6
-[  274.870281] check 19: state 0x813 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.870840] check 18: state 0xa01 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.871376] check 17: state 0xa01 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.871930] check 16: state 0xa01 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.872465] check 15: state 0x811 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.873042] check 14: state 0xa01 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.873596] check 13: state 0xa01 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.874132] check 12: state 0xa01 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.874677] check 11: state 0x811 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.875203] check 10: state 0x811 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.875747] check 9: state 0x811 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.876272] check 8: state 0x811 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.876818] check 7: state 0xa01 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.877344] check 6: state 0xa01 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.877869] check 5: state 0xa01 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.878398] check 4: state 0xa01 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.878939] check 3: state 0x811 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.879455] check 2: state 0x811 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.879997] check 1: state 0x811 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.880520] check 0: state 0x813 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.881029] XX handle_stripe 4753, state 0x1401, reconstr 6, sector 
-198248960
-[  274.881544] XX handle_stripe 4757, state 0x1401, reconstr 6, sector 
-198248960
-[  274.882063] XX handle_stripe 4764, state 0x1401, reconstr 6, sector 
-198248960
-[  274.882594] XX handle_stripe 4776, state 0x1401, reconstr 6, sector 
-198248960
-[  274.883109] locked=2 uptodate=20 to_read=0 to_write=0 failed=10 
-failed_num=18,17
-[  274.883649] XX too many failed
-[  274.884168] XX handle_stripe 4845, state 0x1401, reconstr 0, sector 
-198248960
-[  274.884713] XX handle_stripe 4858, state 0x1401, reconstr 0, sector 
-198248960
-[  274.885236] XX handle_stripe 4885, state 0x1401, reconstr 0, sector 
-198248960
-[  274.885777] XX handle_stripe 4893, state 0x1401, reconstr 0, sector 
-198248960
-[  274.886304] XX handle_stripe 4904, state 0x1401, reconstr 0, sector 
-198248960
-[  274.886848] XX handle_stripe 4934, state 0x1401, reconstr 0, sector 
-198248960
-[  274.887370] XX handle_stripe 4950, state 0x1401, reconstr 0, sector 
-198248960
-[  274.887914] XX handle_stripe 4967, state 0x1401, reconstr 0, sector 
-198248960
-[  274.888435] XX handle_stripe 4976, state 0x1401, reconstr 0, sector 
-198248960
-[  274.888991] XX handle_stripe 5001, state 0x1401, reconstr 0, sector 
-198248960
-[  274.889522] XX handle_stripe 5034, state 0x1401, reconstr 0, sector 
-198248960
-[  274.890048] handle_stripe: 5041
-[  274.890586] XX handle_stripe 5050, state 0x1401, reconstr 3, sector 
-198248960
-[  274.891111] XX handle_stripe 5055, state 0x1401, reconstr 3, sector 
-198248960
-[  274.891656] XX handle_stripe 5058, state 0x1401, reconstr 3, sector 
-198248960
-[  274.892180] XX handle_stripe 5072, state 0x1401, reconstr 3, sector 
-198248960
-[  274.892721] XX handle_stripe 5102, state 0x1401, reconstr 3, sector 
-198248960
-[  274.893250] XX handle_stripe 5106, state 0x1403, reconstr 6, sector 
-198248960
-[  274.893773] XX handle_stripe 5109, state 0x1403, reconstr 6, sector 
-198248960
-[  274.894347] XX handle_stripe 5123, state now 0x1402
-[  274.894942] XX handle_stripe 4705, state 0x1402, reconstr 6, sector 
-198248960
-[  274.895459] XX handle_stripe 4714, state 0x1401, reconstr 6, sector 
-198248960
-[  274.896017] XX handle_stripe 4720, state 0x1401, reconstr 6, sector 
-198248960
-[  274.896531] XX handle_stripe 4724, state 0x1401, reconstr 6, sector 
-198248960
-[  274.897047] XX handle_stripe 4743, state 0x1401, reconstr 6, sector 
-198248960
-[  274.897584] handling stripe 198248960, state=0x1401 cnt=1, pd_idx=19, 
-qd_idx=0
-                , check:0, reconstruct:6
-[  274.898621] check 19: state 0x813 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.899199] check 18: state 0xa01 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.899747] check 17: state 0xa01 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.900271] check 16: state 0xa01 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.900795] check 15: state 0x811 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.901317] check 14: state 0xa01 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.901865] check 13: state 0xa01 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.902402] check 12: state 0xa01 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.902943] check 11: state 0x811 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.903458] check 10: state 0x811 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.904017] check 9: state 0x811 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.904535] check 8: state 0x811 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.905051] check 7: state 0xa01 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.905587] check 6: state 0xa01 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.906118] check 5: state 0xa01 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.906654] check 4: state 0xa01 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.907166] check 3: state 0x811 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.907697] check 2: state 0x811 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.908203] check 1: state 0x811 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.908702] check 0: state 0x813 read 00000000b79fab11 write 
-00000000b79fab11 written 00000000b79fab11
-[  274.909202] XX handle_stripe 4753, state 0x1401, reconstr 6, sector 
-198248960
-[  274.909726] XX handle_stripe 4757, state 0x1401, reconstr 6, sector 
-198248960
-[  274.910242] XX handle_stripe 4764, state 0x1401, reconstr 6, sector 
-198248960
-[  274.910768] XX handle_stripe 4776, state 0x1401, reconstr 6, sector 
-198248960
-[  274.911271] locked=2 uptodate=20 to_read=0 to_write=0 failed=10 
-failed_num=18,17
-[  274.911801] XX too many failed
-[  274.912311] XX handle_stripe 4845, state 0x1401, reconstr 0, sector 
-198248960
-[  274.912830] XX handle_stripe 4858, state 0x1401, reconstr 0, sector 
-198248960
-[  274.913348] XX handle_stripe 4885, state 0x1401, reconstr 0, sector 
-198248960
-[  274.913882] XX handle_stripe 4893, state 0x1401, reconstr 0, sector 
-198248960
-[  274.914405] XX handle_stripe 4904, state 0x1401, reconstr 0, sector 
-198248960
-[  274.914939] XX handle_stripe 4934, state 0x1401, reconstr 0, sector 
-198248960
-[  274.915451] XX handle_stripe 4950, state 0x1401, reconstr 0, sector 
-198248960
-[  274.915996] XX handle_stripe 4967, state 0x1401, reconstr 0, sector 
-198248960
-[  274.916497] XX handle_stripe 4976, state 0x1401, reconstr 0, sector 
-198248960
-[  274.917002] XX handle_stripe 5001, state 0x1401, reconstr 0, sector 
-198248960
-[  274.917535] XX handle_stripe 5034, state 0x1401, reconstr 0, sector 
-198248960
-[  274.918058] handle_stripe: 5041
-[  274.918595] XX handle_stripe 5050, state 0x1401, reconstr 3, sector 
-198248960
-[  274.919111] XX handle_stripe 5055, state 0x1401, reconstr 3, sector 
-198248960
-[  274.919647] XX handle_stripe 5058, state 0x1401, reconstr 3, sector 
-198248960
-[  274.920161] XX handle_stripe 5072, state 0x1401, reconstr 3, sector 
-198248960
-[  274.920679] XX handle_stripe 5102, state 0x1401, reconstr 3, sector 
-198248960
-[  274.921205] XX handle_stripe 5106, state 0x1403, reconstr 6, sector 
-198248960
-[  274.921745] XX handle_stripe 5109, state 0x1403, reconstr 6, sector 
-198248960
-[  274.922302] XX handle_stripe 5123, state now 0x1402
+----------------------------------------------------------------
+Dan Carpenter (1):
+      md/raid0: Fix an error message in raid0_make_request()
 
+David Jeffery (1):
+      md: improve handling of bio with REQ_PREFLUSH in md_flush_request()
 
--- 
-Anssi Hannula
+Guoqing Jiang (1):
+      md/bitmap: avoid race window between md_bitmap_resize and bitmap_file=
+_clear_bit
+
+Yufen Yu (1):
+      md: no longer compare spare disk superblock events in super_load
+
+ drivers/md/md-bitmap.c    |  2 +-
+ drivers/md/md-linear.c    |  5 ++---
+ drivers/md/md-multipath.c |  5 ++---
+ drivers/md/md.c           | 68 +++++++++++++++++++++++++++++++++++++++++++=
++++++++++++++++++--------
+ drivers/md/md.h           |  4 ++--
+ drivers/md/raid0.c        |  7 +++----
+ drivers/md/raid1.c        |  5 ++---
+ drivers/md/raid10.c       |  5 ++---
+ drivers/md/raid5.c        |  4 ++--
+ 9 files changed, 76 insertions(+), 29 deletions(-)=
