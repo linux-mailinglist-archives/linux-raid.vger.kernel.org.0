@@ -2,95 +2,111 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 97711E3F64
-	for <lists+linux-raid@lfdr.de>; Fri, 25 Oct 2019 00:32:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 861ECE3FC3
+	for <lists+linux-raid@lfdr.de>; Fri, 25 Oct 2019 00:56:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731693AbfJXWcp (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 24 Oct 2019 18:32:45 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41330 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731152AbfJXWcp (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 24 Oct 2019 18:32:45 -0400
-Received: by mail-pg1-f193.google.com with SMTP id l3so168157pgr.8
-        for <linux-raid@vger.kernel.org>; Thu, 24 Oct 2019 15:32:45 -0700 (PDT)
+        id S1732934AbfJXW4Q (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 24 Oct 2019 18:56:16 -0400
+Received: from mail-qk1-f173.google.com ([209.85.222.173]:41236 "EHLO
+        mail-qk1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732658AbfJXW4Q (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 24 Oct 2019 18:56:16 -0400
+Received: by mail-qk1-f173.google.com with SMTP id p10so14520qkg.8
+        for <linux-raid@vger.kernel.org>; Thu, 24 Oct 2019 15:56:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uWJEpFAU8GyMmZQYfwuKKPGG08uBbFAjaPlqhioLZRY=;
-        b=WXuycdeXFDzZ1GdGwqEkwr+R9Vvi24XmsmddbxJEXCN7icHw/hmXDSYaPF0SaoQsNU
-         dOlzN0EaxieCAWjT1jcCyrlD7OhdAWASrZegbmJ5x1OlAhDvIe/jh4ov+xp0u8SrCnmf
-         39Zox/dJKe+2DcWim1Z/91zr8Gv3FWiwIBeuJDbSkPafSZwbgj3wz5vmbN83WKrF+EwE
-         rq9PUN0+4KM2aMteDTXsXRvEmB/hCb0ScR/zdKD1yCIBlsZAc4CwTZrlMz+qS40p2+/K
-         YC5VsRx8bpu4o626+AW2xCsupkn5pZQHfxPEuml1ML637mQJrnLK7hIAgvX4ZKKsWxJU
-         STvQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z3sxMe8r5j1HP72PhsV+QBASxR6tl7O7yvgQyieLvN8=;
+        b=dkNF5uxs4A3DskontcXsLY2pzlEGwUWFD0EhwBQsL8Gmd467cgXaZxrFETRU0yxRfp
+         n6a4QRdm8+38dzoWMl1BLOLWcsBXm1+KFXi4sMd1RlXgrhgPiVm57cZIIldwVlZbwWk/
+         Me/JjSikJcczYllM0HjgqGOgHihNyuLxDErqyWNBTcS66I+1IRh9wka5UO0L7KTBNXZu
+         T5xljslhsKeXYI5r7TmCu0Bz6EBBY412K3wXX+8zl2em3fc2WaW4EIpVABDPZvcfe2fE
+         CepIHdzGqq8c7YIc6fqajuxmTO7sisg2oks9I2UGSBWPZu1mA9RTm9tmcwuaKO/rW/Tj
+         ABsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uWJEpFAU8GyMmZQYfwuKKPGG08uBbFAjaPlqhioLZRY=;
-        b=RLG/col2ipHMc1JATLaDn0oqVJpbmwDPAZw3HDnZIKIjV13lXwgaiEsJWKTDSMUsGO
-         gq8FIsB5mcxIlGDfu99RqmHyVZ2yeDNvbbSuV2b6JQGJmTEm4aBf0QHVCYmUdqcJnino
-         yElnBjfSsw5LN6XwASdwpNieKhGSjCSn9jFfF7Jub6V+9V293UIJPK1V9gXtlPlD0sgl
-         zo25AC5x04W7Wvsktxqh4Q4YJGX2i2RN/qKMQhlTwTxVKbkcVBamF0cf2NGxPtzvwKF9
-         Hym7ykKXvLdDYCPIOy+/81Lf9zzpwb4oCWcJ42vLLD0B7lRAJwpHCM9t656MjgG9fFaI
-         oAyA==
-X-Gm-Message-State: APjAAAUwGMV17p7scIpyfY2MdJty28k/GXDWicxBJbWSRsrcLY+/lQEh
-        rJr+KFRoxD5gm4HVbRO8uMUo0w==
-X-Google-Smtp-Source: APXvYqyMzvFcNto9tC0VGw/zbjOmdoaXi1MUf7zO8zrgWQP0Ik2Guwe1H1E6uSvcCEJlqmSgoJdkNQ==
-X-Received: by 2002:a17:90a:ad0c:: with SMTP id r12mr9976782pjq.1.1571956364887;
-        Thu, 24 Oct 2019 15:32:44 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.79])
-        by smtp.gmail.com with ESMTPSA id q3sm14282pgj.54.2019.10.24.15.32.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 24 Oct 2019 15:32:44 -0700 (PDT)
-Subject: Re: [GIT PULL] md-next 20191024
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        David Jeffery <djeffery@redhat.com>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Guoqing Jiang <jgq516@gmail.com>,
-        Yufen Yu <yuyufen@huawei.com>, Xiao Ni <xni@redhat.com>,
-        Kernel Team <Kernel-team@fb.com>
-References: <ED0B162E-09AC-420D-9620-849EAB38C195@fb.com>
- <d452324f-ce01-2220-0ea2-19f23e46dba2@kernel.dk>
- <F2681048-5B87-49A9-883D-FB892EF6831E@fb.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <ea7bfbd6-628b-556e-8a0b-192228211134@kernel.dk>
-Date:   Thu, 24 Oct 2019 16:32:41 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z3sxMe8r5j1HP72PhsV+QBASxR6tl7O7yvgQyieLvN8=;
+        b=eAinctQqM9LjZxfy+K91V2zqEo2aiabkQpFGC2RmsFgrFkBERIJk1XXODKtsydq9TM
+         1yGvP36p/z0XpnHf4Nhnu7b8xJtuoJWZvlydIRBKQ2MeeDuonrEt6KSjGLfdIF5F5IJh
+         jFiXsDfiS8DyPXm+mAOlRvJzSyqZbbYT5wGrgxgMmPM3h5uPvWuM94VyJXkCP0i7n7P3
+         W+NssylhxF2hBDLpaOcMLemnasXebnXHwajYnYlkdW0YaUScAHEiqsMpKWiwU+Qr41b9
+         tVumX1/DrAqe5mlr70pH6u2x+ed0v+sBBlo04ll70hFzp05GGznpsnBZQ8D/ltd78GGR
+         Y4dA==
+X-Gm-Message-State: APjAAAWDV3ypyHN44PUgtaLz8Jf66oBBiqN3SpSM9ukChPj0t94JP7CU
+        yzx1uYWAza8AACvHxspSsDbiLHnL44ZfzCbN7T4=
+X-Google-Smtp-Source: APXvYqwW5N4r51v3UkXKaFp1vhyQ3SM9audOYj6M1y+ah11Xb8agWxlzCqzJxzxlgnzHYMnQ0qVAZQgid7EwJD4IgoQ=
+X-Received: by 2002:a37:553:: with SMTP id 80mr151198qkf.353.1571957775205;
+ Thu, 24 Oct 2019 15:56:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <F2681048-5B87-49A9-883D-FB892EF6831E@fb.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <25373b220163b01b8990aa049fec9d18@iki.fi> <CAPhsuW51S=tO+A0SDb1EvtoCG9pVSC91e9euG2nsp+rZiUgF7A@mail.gmail.com>
+ <f1de00a04761370d90018f288b9b2996@iki.fi>
+In-Reply-To: <f1de00a04761370d90018f288b9b2996@iki.fi>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Thu, 24 Oct 2019 15:56:04 -0700
+Message-ID: <CAPhsuW4pddLHge+tkz2pvsPv9xgXi=WvVH3ck5KTF7EkNgE2iA@mail.gmail.com>
+Subject: Re: RAID6 gets stuck during reshape with 100% CPU
+To:     Anssi Hannula <anssi.hannula@iki.fi>
+Cc:     linux-raid <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 10/24/19 4:27 PM, Song Liu wrote:
-> 
-> 
->> On Oct 24, 2019, at 3:19 PM, Jens Axboe <axboe@kernel.dk> wrote:
->>
->> On 10/24/19 1:50 PM, Song Liu wrote:
->>> Hi Jens,
->>>
->>> Please consider pulling the following changes for md-next on top of your
->>> for-5.5/block branch.
->>
->> Would you mind rebasing this on top of for-5.5/drivers? Linus wanted me
->> to have stronger separation between the two, so...
->>
-> 
-> Sure! Please find updated request below.
+On Thu, Oct 24, 2019 at 12:42 PM Anssi Hannula <anssi.hannula@iki.fi> wrote:
+>
+> Song Liu kirjoitti 2019-10-24 21:50:
+> > Sorry for delayed reply.
+>
+> No problem :)
+>
+> > On Sat, Oct 19, 2019 at 2:10 AM Anssi Hannula <anssi.hannula@iki.fi>
+> > wrote:
+> >>
+> >> Hi all,
+> >>
+> >> I'm seeing a reshape issue where the array gets stuck with requests
+> >> seemingly getting blocked and md0_raid6 process taking 100% CPU
+> >> whenever
+> >> I --continue the reshape.
+> >>
+> >>  From what I can tell, the md0_raid6 process is stuck processing a set
+> >> of
+> >> stripes over and over via handle_stripe() without progressing.
+> >>
+> >> Log excerpt of one handle_stripe() of an affected stripe with some
+> >> extra
+> >> logging is below.
+> >> The 4600-5200 integers are line numbers for
+> >> http://onse.fi/files/reshape-infloop-issue/raid5.c .
+> >
+> > Maybe add sh->sector to DEBUGPRINT()?
+>
+> Note that the XX debug printing was guarded by
+>
+>   bool debout = (sh->sector == 198248960) && __ratelimit(&_rsafasfas);
+>
+> So everything was for sector 198248960 and rate limited every 20sec to
+> avoid a flood.
+>
+> > Also, please add more DEBUGPRINT() in the
+> >
+> > if (sh->reconstruct_state == reconstruct_state_result) {
+> >
+> > case.
+>
+> OK, added prints there.
+>
+> Though after logging I noticed that the execution never gets there,
+> sh->reconstruct_state is always reconstruct_state_idle at that point.
+> It gets cleared on the "XX too many failed" log message (line 4798).
+>
+I guess the failed = 10 is the problem here..
 
-Thanks, pulled!
+What does /proc/mdstat say?
 
--- 
-Jens Axboe
-
+Thanks,
+Song
