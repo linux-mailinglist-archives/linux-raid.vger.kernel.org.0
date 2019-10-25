@@ -2,129 +2,85 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C3291E550B
-	for <lists+linux-raid@lfdr.de>; Fri, 25 Oct 2019 22:21:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 085EBE56EB
+	for <lists+linux-raid@lfdr.de>; Sat, 26 Oct 2019 01:08:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728181AbfJYUVh (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 25 Oct 2019 16:21:37 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:43643 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726285AbfJYUVh (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 25 Oct 2019 16:21:37 -0400
-Received: by mail-io1-f66.google.com with SMTP id c11so3812619iom.10
-        for <linux-raid@vger.kernel.org>; Fri, 25 Oct 2019 13:21:37 -0700 (PDT)
+        id S1725955AbfJYXIE (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 25 Oct 2019 19:08:04 -0400
+Received: from mail-qt1-f175.google.com ([209.85.160.175]:44719 "EHLO
+        mail-qt1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfJYXID (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 25 Oct 2019 19:08:03 -0400
+Received: by mail-qt1-f175.google.com with SMTP id z22so5682327qtq.11
+        for <linux-raid@vger.kernel.org>; Fri, 25 Oct 2019 16:08:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Dc4k+UabI6V6/G33XeJs4WPRz9SFvXw6O8X8BNO/mAM=;
-        b=CdRXolyPRltkKpwl7x2YxfqiOpAnZ+u7DtSVzeqIsnHElmLPdttG7EcG/wlrHpCujV
-         s4BtY9l/WSSL8MTQS67S8JiXKyy4rBENARGlWyyc8IEwhPTNlI8QsYg3VLoxmjaQvKCc
-         PeKjGHX5acSgNqfmd302Me581aFiY7gVuLElqz//7vxi+RXeZDqTW2gDETrnjUEXxdu4
-         bF/VWrD6DnMHigtC0mmme4dWzg5cce9LdaUzGwLSFRYvugM3lm8+ql2GYmkduvje3k42
-         s9ctj14iB8H+y+y+AQZYLgwY/LRFa1o+I6tVnkncIr8GYgz85LHkJnB2R6npxgETWYEZ
-         ZiJA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yBzn6lJisslfuW0z/QBmTSQZVtdONoAUSm85xXwwXQE=;
+        b=O8+5HnJqgRVAabVwe30jAY5HHqkLixSOQ0l+LsLMgsSP7/73pTe6nz3lh0dkgi+mjs
+         qq7cM5GV46iaQdYsOdMSb97yI8LCCKUh57B3zVNe4YrYvA0uXo14NM1pOMIhvIhpbgcQ
+         EAto8dlqhvy0nLu7/Gi5Zv883FJh9DePYRApv2jfssoiDCQOpZjBUcFLt4cJdSb8PzZl
+         n2UOyqcFouK1RLuUOIKvHTGjvCwYhCjGWYsg35XnhBYKT6eGiMpIF4CAQIDSE3Hr+hth
+         irVAm47UqLfyntpMdEFxdNGu2hSVTC1TVNTJ6Y7SqO6KuEeHj+T92/v4g8WNytFN7bIw
+         XPyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Dc4k+UabI6V6/G33XeJs4WPRz9SFvXw6O8X8BNO/mAM=;
-        b=t4+OZkJ1KkSzp7gFbHDMrl+B0QW6SO0x1Gt8mLil+hclI7w3uSv8a8MQSA+kUL0HMs
-         uc/40I8RX21AQ5iVm3mtQVXk057dDJ8kIM4zZZQdovePSDFJ8pgdJehhByuxvlRHuH/O
-         NtpCZilvPMOZcqQNobPhh+BZtBwP7Czbg51grPek1Dy2bZ2rTeqiTTkCzA6uqOM53I0D
-         sGMd1QxV9NlkWj1TJhsp1pgk0+STkgZGdJg4GZEUCGoq02taIwt6ckdWvnvo/TGwZnji
-         ZQh7MjkqzLC+p9aI/t66BgDjxIp9p0UefdoONh+4c+f21F1bhbIopGcnrMKrYVOIP/z6
-         q40Q==
-X-Gm-Message-State: APjAAAVdF1Z7BjjQRmpKRvz3+cZJo/KXe9gIvEnVr/5RoCnnaquV7WFu
-        NUDz6zqPgfdsOg0g6K0iaMIlV9A3kRAlTQ==
-X-Google-Smtp-Source: APXvYqzYQEt9eGDLQO+yrcS97tWMQknVwlPPwhhqDw9EwJO5uwRH8+rKZdCSuf/bhSYRvTkLLoPEhg==
-X-Received: by 2002:a02:1006:: with SMTP id 6mr5549470jay.140.1572034896612;
-        Fri, 25 Oct 2019 13:21:36 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id d197sm345135iog.15.2019.10.25.13.21.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 25 Oct 2019 13:21:35 -0700 (PDT)
-Subject: Re: [PATCH v3 0/3] Fix typo in RWH_WRITE_LIFE_NOT_SET constant name
-To:     Song Liu <liu.song.a23@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     Eugene Syromiatnikov <esyr@redhat.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>
-References: <cover.1568994791.git.esyr@redhat.com>
- <CAPhsuW5CvJNRP5OO_M6XVd9q0x-CH9eADWR5oqdJP20eFScCFw@mail.gmail.com>
- <87d4b42f-7aa2-5372-27e4-a28e4c724f37@kernel.dk>
- <CAPhsuW68rK3zGF3A8HnwArh7bs+-AAvZBtVkt4gcxPnFCGxwAQ@mail.gmail.com>
- <CAPhsuW6ZSbKLYPpUk3DT+HxTfcuOVPG64rQ057aoLGgrGSeGHA@mail.gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <87964005-1790-007b-4117-3b6abbb67f36@kernel.dk>
-Date:   Fri, 25 Oct 2019 14:21:34 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yBzn6lJisslfuW0z/QBmTSQZVtdONoAUSm85xXwwXQE=;
+        b=qKyT2LhuH2ynt3Hspi2aBzs2HAFAe2brOUHvuV1X6haFku4LTRDCALsFQbbUktXrpO
+         6IzCVsclP4fBpq2vAu/xlumzcP1tZR2ZlqiE4PwNhJ56Wy+yZ2KAVk2UUHWAxCdkIoSG
+         L7sdzkScTFf+k0XTjbyNN7O/3W3iLRv7KCtd1rdsZ0fENwwGevSpsu410YOnYtvaU0sH
+         8xoB3GW9/VYRtIhc7X3Eyyqsw5PPAG+KnEi1NeqJhsNQ3dnNMoVxturBR8HvGExNvdQ/
+         K41pXvA4W6HNqI2Ld8WUV0wtg7Ue7IzhFY/GUb7+jhg5WbY+Jx3tc9Dz3UOczPXzHop0
+         n/Nw==
+X-Gm-Message-State: APjAAAVGfjVTMEn6+41aITbIzLzCcTERmfsRIimpYhNek9/+5R7gnj3+
+        reb5Y4texiuvGYFTi7fV3/Vq1hM6d/EsiMwj8/Y=
+X-Google-Smtp-Source: APXvYqyjun+udRNj3iuDavf8yH0k9VxHp1kGduho4U7ooE/zE6tG91R9c++YZ1GvIICQAHVyA33O0Gu1ZKMEuqlNY78=
+X-Received: by 2002:ac8:2f45:: with SMTP id k5mr5786434qta.183.1572044881287;
+ Fri, 25 Oct 2019 16:08:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAPhsuW6ZSbKLYPpUk3DT+HxTfcuOVPG64rQ057aoLGgrGSeGHA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191025003117.GA19595@xps13.dannf>
+In-Reply-To: <20191025003117.GA19595@xps13.dannf>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Fri, 25 Oct 2019 16:07:50 -0700
+Message-ID: <CAPhsuW6eYTF3AaisW+QsjEneABsh+fitw7bRz_NtD3Eo_gN0eg@mail.gmail.com>
+Subject: Re: admin-guide page for raid0 layout issue
+To:     dann frazier <dann.frazier@canonical.com>
+Cc:     NeilBrown <neilb@suse.de>, linux-raid <linux-raid@vger.kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Ivan Topolsky <doktor.yak@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 10/16/19 11:00 AM, Song Liu wrote:
-> Hi Jeff and J. Bruce,
-> 
-> On Wed, Oct 2, 2019 at 9:55 AM Song Liu <liu.song.a23@gmail.com> wrote:
->>
->> On Tue, Oct 1, 2019 at 5:55 PM Jens Axboe <axboe@kernel.dk> wrote:
->>>
->>> On 10/1/19 5:12 PM, Song Liu wrote:
->>>> On Fri, Sep 20, 2019 at 8:58 AM Eugene Syromiatnikov <esyr@redhat.com> wrote:
->>>>>
->>>>> Hello.
->>>>>
->>>>> This is a small fix of a typo (or, more specifically, some remnant of
->>>>> the old patch version spelling) in RWH_WRITE_LIFE_NOT_SET constant,
->>>>> which is named as RWF_WRITE_LIFE_NOT_SET currently.  Since the name
->>>>> with "H" is used in man page and everywhere else, it's probably worth
->>>>> to make the name used in the fcntl.h UAPI header in line with it.
->>>>> The two follow-up patches update usage sites of this constant in kernel
->>>>> to use the new spelling.
->>>>>
->>>>> The old name is retained as it is part of UAPI now.
->>>>>
->>>>> Changes since v2[1]:
->>>>>    * Updated RWF_WRITE_LIFE_NOT_SET constant usage
->>>>>      in drivers/md/raid5-ppl.c:ppl_init_log().
->>>>>
->>>>> Changes since v1[2]:
->>>>>    * Changed format of the commit ID in the commit message of the first patch.
->>>>>    * Removed bogus Signed-off-by that snuck into the resend of the series.
->>>>
->>>> Applied to md-next.
->>>
->>> I think the core fs change should core in through a core tree, then
->>> the md bits can go in at will after that.
-> 
-> As Jens suggested, we should route core fs patches through core tree. Could
-> you please apply these patches? Since the change is small, probably you can
-> also apply md patches?
-> 
-> Thanks,
-> Song
-> 
-> PS: for the series:
-> 
-> Acked-by: Song Liu <songliubraving@fb.com>
+On Fri, Oct 25, 2019 at 12:16 PM dann frazier
+<dann.frazier@canonical.com> wrote:
+>
+> hey,
+>   I recently hit the raid0 default_layout issue and found the warning
+> message to be lacking (and google hits show that I'm not the
+> only one). It wasn't clear to me that it was referring to a kernel
+> parameter, also wasn't clear how I should decide which setting to use,
+> and definitely not clear that picking the wrong one could *cause
+> corruption* (which, AIUI, is the case). What are your thoughts on
+> adding a more admin-friendly explanation/steps on resolving the
+> problem to the admin-guide, and include a URL to it in the warning
+> message? As prior art:
+>
+>   https://github.com/torvalds/linux/commit/6a012288d6906fee1dbc244050ade1dafe4a9c8d
+>
+> If the idea has merit, let me know if you'd like me to take a stab at
+> a strawdog.
 
-I applied 1/3 to the for-5.5/block core branch.
+I think it is good to provide some more information for the admin.
+But I am not sure whether we need to point to a url, or just put
+everything in the message.
 
--- 
-Jens Axboe
+Please feel free to try add this information and submit patches.
 
+Thanks,
+Song
