@@ -2,38 +2,38 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 81F34E5C2C
-	for <lists+linux-raid@lfdr.de>; Sat, 26 Oct 2019 15:28:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6595E5BDD
+	for <lists+linux-raid@lfdr.de>; Sat, 26 Oct 2019 15:26:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728703AbfJZNUu (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 26 Oct 2019 09:20:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42576 "EHLO mail.kernel.org"
+        id S1729293AbfJZNWE (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 26 Oct 2019 09:22:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728690AbfJZNUt (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:20:49 -0400
+        id S1729286AbfJZNWC (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:22:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 556BD20867;
-        Sat, 26 Oct 2019 13:20:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADE66214DA;
+        Sat, 26 Oct 2019 13:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096049;
-        bh=zhytEn9wiMWAWKG/pEwDB42Xwia8paifsE5KfbVGHTo=;
+        s=default; t=1572096122;
+        bh=3p+USwtJUTtC3toj8T7Yn7zw6NH0GsG2ccFhvAY7IXI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TOK/FgKxWIiqng8HN4Z0WgaW6gJfNKkvWiU4whKfv6urEtFyHpvDVp0APpm1G9vuR
-         KDjDggbiTQBzT293/ceuMBLnNGC6HFe2gyYgejey+n1jJHl36+LhKb+KzRWFFNRkvh
-         wD/0AWCDhISBbT8lwCZyROn1M5KHUk1zLgmZ6d/U=
+        b=ikBB86cNWegeuvgQmKfpMybQDwtbwPL0joiiwq0do4vJvwJJH7DhAmgvSbqLDDa+e
+         pVNjbO1LT84AuPvbFMLtk/massytk1t3JDSAwcarPKfhd6jPEtPU3665R3ixmojHFz
+         UZqE3cnJmHJadgOvSv2hncuxkOiIXtXJVQMtf718=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Song Liu <songliubraving@fb.com>, NeilBrown <neilb@suse.de>,
         Ivan Topolsky <doktor.yak@gmail.com>,
         Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 50/59] md/raid0: fix warning message for parameter default_layout
-Date:   Sat, 26 Oct 2019 09:19:01 -0400
-Message-Id: <20191026131910.3435-50-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 26/33] md/raid0: fix warning message for parameter default_layout
+Date:   Sat, 26 Oct 2019 09:21:03 -0400
+Message-Id: <20191026132110.4026-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
-References: <20191026131910.3435-1-sashal@kernel.org>
+In-Reply-To: <20191026132110.4026-1-sashal@kernel.org>
+References: <20191026132110.4026-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,7 +59,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
-index 43fa7dbf844b0..3cafbfd655f5d 100644
+index 28fb717217706..449c4dd060fcd 100644
 --- a/drivers/md/raid0.c
 +++ b/drivers/md/raid0.c
 @@ -158,7 +158,7 @@ static int create_strip_zones(struct mddev *mddev, struct r0conf **private_conf)
