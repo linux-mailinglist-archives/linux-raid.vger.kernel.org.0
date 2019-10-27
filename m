@@ -2,75 +2,52 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AF518E5CBC
-	for <lists+linux-raid@lfdr.de>; Sat, 26 Oct 2019 15:32:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39752E6127
+	for <lists+linux-raid@lfdr.de>; Sun, 27 Oct 2019 07:38:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbfJZNcn (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 26 Oct 2019 09:32:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40188 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727804AbfJZNS0 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:18:26 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 659F721871;
-        Sat, 26 Oct 2019 13:18:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095906;
-        bh=SdgeleUwGEEy+z0NNe6GfPZ8rgoZzZqSWIh5LtBgLFc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HAljH+MpzbSNrmSslBMtPWE3byLCscgtfjDzki1kO3TdgPvTegzRfj81+Qehlxkrh
-         o8BlyMiVqiyZOd7HfMpFEM310gSUekMgTKX1v1sjLGydZljJggPDNWLFZrmCG3vG4P
-         ckpAFeqcfW4DQPVxYqbY99NlHqjeoxy3VUbGMXt4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Song Liu <songliubraving@fb.com>, NeilBrown <neilb@suse.de>,
-        Ivan Topolsky <doktor.yak@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 81/99] md/raid0: fix warning message for parameter default_layout
-Date:   Sat, 26 Oct 2019 09:15:42 -0400
-Message-Id: <20191026131600.2507-81-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
-References: <20191026131600.2507-1-sashal@kernel.org>
+        id S1726030AbfJ0GiJ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 27 Oct 2019 02:38:09 -0400
+Received: from hn.kd.ny.adsl ([42.231.162.229]:2131 "HELO zoosbook.com"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
+        id S1725965AbfJ0GiJ (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sun, 27 Oct 2019 02:38:09 -0400
+X-Greylist: delayed 131732 seconds by postgrey-1.27 at vger.kernel.org; Sun, 27 Oct 2019 02:38:07 EDT
+Received: from [115.34.178.89] by mmx09.tilkbans.com with LOCAL; Sun, 27 Oct 2019 07:24:59 +0100
+Received: from [191.211.16.161] by rly04.hottestmile.com with LOCAL; Sun, 27 Oct 2019 07:21:51 +0100
+Received: from public.micromail.com.au [115.92.118.36] by mx03.listsystemsf.net with SMTP; Sun, 27 Oct 2019 07:21:35 +0100
+Message-ID: <95B7F6BF.F24EB0E4@zoosbook.com>
+Date:   Sun, 27 Oct 2019 07:00:25 +0100
+From:   "zoosbook.com" <admin@zoosbook.com>
+User-Agent: Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.18) Gecko/20081125 Thunderbird/2.0.0.18
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+To:     <linux-assembly@vger.kernel.org>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-msdos@vger.kernel.org>,
+        <linux-raid@vger.kernel.org>
+Subject: FREE Bestiality Social Network
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Song Liu <songliubraving@fb.com>
+Hello, 
 
-[ Upstream commit 3874d73e06c9b9dc15de0b7382fc223986d75571 ]
+Bestiality Social Networking Platform. With pictures, videos and friend
+about bestiality and zoophilia porn. 
+Here you can meet and talk with people that love zoo sex.
 
-The message should match the parameter, i.e. raid0.default_layout.
+Register for a free account with us today
+https://www.zoosbook.com/register
 
-Fixes: c84a1372df92 ("md/raid0: avoid RAID0 data corruption due to layout confusion.")
-Cc: NeilBrown <neilb@suse.de>
-Reported-by: Ivan Topolsky <doktor.yak@gmail.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/md/raid0.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Let your animalic thoughts get alive.
 
-diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
-index 297bbc0f41f05..c3445d2cedb9d 100644
---- a/drivers/md/raid0.c
-+++ b/drivers/md/raid0.c
-@@ -151,7 +151,7 @@ static int create_strip_zones(struct mddev *mddev, struct r0conf **private_conf)
- 	} else {
- 		pr_err("md/raid0:%s: cannot assemble multi-zone RAID0 with default_layout setting\n",
- 		       mdname(mddev));
--		pr_err("md/raid0: please set raid.default_layout to 1 or 2\n");
-+		pr_err("md/raid0: please set raid0.default_layout to 1 or 2\n");
- 		err = -ENOTSUPP;
- 		goto abort;
- 	}
--- 
-2.20.1
+After you`ll get a feeling of the things inside, please give us a nice
+review here
+https://www.scamadviser.com/check-website/zoosbook.com
+
+
+See you inside
+
 
