@@ -2,82 +2,92 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 871A7E9113
-	for <lists+linux-raid@lfdr.de>; Tue, 29 Oct 2019 21:52:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CFBEE91EF
+	for <lists+linux-raid@lfdr.de>; Tue, 29 Oct 2019 22:21:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbfJ2UwO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 29 Oct 2019 16:52:14 -0400
-Received: from smtp.hosts.co.uk ([85.233.160.19]:47634 "EHLO smtp.hosts.co.uk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726401AbfJ2UwO (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 29 Oct 2019 16:52:14 -0400
-Received: from [86.155.171.62] (helo=[192.168.1.78])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1iPYTL-00036z-6t; Tue, 29 Oct 2019 20:52:11 +0000
-Subject: Re: RAID6 gets stuck during reshape with 100% CPU
-To:     Anssi Hannula <anssi.hannula@iki.fi>,
-        Song Liu <liu.song.a23@gmail.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>
-References: <25373b220163b01b8990aa049fec9d18@iki.fi>
- <CAPhsuW51S=tO+A0SDb1EvtoCG9pVSC91e9euG2nsp+rZiUgF7A@mail.gmail.com>
- <f1de00a04761370d90018f288b9b2996@iki.fi>
- <CAPhsuW4pddLHge+tkz2pvsPv9xgXi=WvVH3ck5KTF7EkNgE2iA@mail.gmail.com>
- <2054f286c123d9b9bcc66faf0d6f7d10@iki.fi>
- <CAPhsuW68wmVQ6eH3o_eE+BkDXSfWHy7kEcsMj04uEzAGigbwkg@mail.gmail.com>
- <0d3573affc5c44ff169120f8667f5780@iki.fi>
-From:   Wol's lists <antlists@youngman.org.uk>
-Message-ID: <ed49e70f-ddb7-e399-a130-105649494b86@youngman.org.uk>
-Date:   Tue, 29 Oct 2019 21:52:05 +0000
+        id S1728679AbfJ2VV3 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 29 Oct 2019 17:21:29 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:40837 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728592AbfJ2VV2 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 29 Oct 2019 17:21:28 -0400
+Received: from [IPv6:2001:980:b8b2:1:953c:3bd3:747b:48b4]
+ ([IPv6:2001:980:b8b2:1:953c:3bd3:747b:48b4])
+        by smtp-cloud9.xs4all.net with ESMTPSA
+        id PYvdiVL9XsBskPYveiJ36O; Tue, 29 Oct 2019 22:21:26 +0100
+To:     linux-raid@vger.kernel.org
+From:   Andreas <a@hegyi.info>
+Subject: raid0 layout issue documentation / confusions
+Message-ID: <1389f13b-eaf0-7ae2-d99b-697ae008f2c9@hegyi.info>
+Date:   Tue, 29 Oct 2019 22:21:25 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <0d3573affc5c44ff169120f8667f5780@iki.fi>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfH/8nABs4xloWWTTi7z1auKZS84xZFv8V3GEf9iqlIxVVujP5hdDle7nDrNeTjhx+8dIrfeUvxI2HkwL/n2rMpriTuxHezJtgTvUHc+0srzeqdRzzD9p
+ A96h6GknBw7yXAh6VhEeoKYnUdDhrS/MZ2f+nBC1sYclqn46jvJ7XPAijBLe0m3WYFMCwHJky6bIhLzCMOGWjQfIzggzkX1yupaGJwU7+nKEJqz1V7v4vUEn
+ YXHLBad0lXJYPtyDW+2fR3fWqbFIsMsMsxnBiFaPzKg=
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 29/10/2019 19:05, Anssi Hannula wrote:
-> As mentioned in my first message and seen in 
-> http://onse.fi/files/reshape-infloop-issue/examine-all.txt , the MD bad 
-> block lists contain blocks (suspiciously identical across devices).
-> So maybe the code can't properly handle the case where 10 devices have 
-> the same block in their bad block list. Not quite sure what "handle" 
-> should mean in this case but certainly something else than a 
-> handle_stripe() loop :)
-> There is a "bad" block on 10 devices on sector 198504960, which I guess 
-> matches sh->sector 198248960 due to data offset of 256000 sectors (per 
-> --examine).
-> 
-> I've wondered if "dd if=/dev/md0 of=/dev/md0" for the affected blocks 
-> would clear the bad blocks and avoid this issue, but I haven't tried 
-> that yet so that the infinite loop issue can be investigated/fixed 
-> first. I already checked that /dev/md0 is fully readable (which also 
-> confuses me a bit since md(8) says "Attempting to read from a known bad 
-> block will cause a read error"... maybe I'm missing something).
+(I wanted to react to the thread "admin-guide page for raid0 layout issue", but I just registered and I don't know how to respond to
+existing messages.)
 
-Hmmm ...
+I would like to make some suggestions regarding the recent raid0 layout patch, as it made my system unbootable, and it took me quite some 
+time to figure out what was wrong and how to fix it. I also encountered  confusion on the web. I am just a regular user, not a programmer or 
+linux guru, so take my suggestions as such.
 
-Bear in mind that bad-blocks is considered by many an anti-feature, and 
-it's strongly suspected that identical bad-block lists across multiple 
-disks is a bug ...
+* Everywhere where the values are documented, all three of 0, 1, and 2 should be explicitly documented (not only two of them). If I am not 
+mistaken, 0 means "unset", 1 means "old layout" (kernel 3.14 and older), 2 means "new layout" (3.15 and later).
 
-I hesitate to suggest trying to clear the bad-blocks but doing a dd will 
-definitely not do what you want - the md bad blocks list is implemented 
-within the md layer, so doing something with dd is unlikely to touch it.
+* When trying to assemble existing array but without the kernel parameter set (i.e. set to 0) it silently fails. Only in the kernel ring 
+buffer there is a message:
+  md/raid0:md0: cannot assemble multi-zone RAID0 with default_layout setting
+  md/raid0: please set raid.default_layout to 1 or 2
 
-Plus, as a software implementation, you should NEVER under normal 
-circumstances have any bad blocks - it doesn't make sense - so it's 
-pretty certain you've fallen foul of a bug in the bad blocks setup.
+   When trying to create a raid0 array, it gives an error, but it is not helpful:
+     mdadm: Defaulting to version 1.2 metadata
+     mdadm: RUN_ARRAY failed: Unknown error 524
 
-Sorry I can't offer any solutions, other than very hesitantly suggesting 
-just a --remove-badblocks --force or whatever the option is.
+For both cases, and both places (mdamd and dmesg) should be more informative.
 
-Hopefully this gives you a few ideas ...
+* The recommended parameter value for new raid0 arrays should be made clear. I guess it's 2.
 
-Cheers,
-Wol
+* Various places where documentation could (or should) be added:
+	- mdamd error messags
+	- kernel ring buffer messages
+	- mdadm man page
+	- mdadm wiki
+	- kernel parameter documentation pages
+
+Confusions:
+* The definition of the parameter values is wrong in the patch description:
+https://github.com/torvalds/linux/commit/c84a1372df929033cb1a0441fb57bd3932f39ac9#diff-158c54ea7ccae01a77ae3f5d44ab0f94 it says 0 is old, 1 
+is new. Please fix, because this contributes to confusion, and may even lead to data corruption.
+
+* On the raid mailing list https://www.spinics.net/lists/raid/msg63337.html someone said "new (1) and old (2) vs. unset (0)". No one 
+objected, but I guess that this is also wrong?
+
+* Two webpages (of the rare ones on this issue) are conflicting on what is the meaning of parameter 1 and 2.
+         https://blog.icod.de/2019/10/10/caution-kernel-5-3-4-and-raid0-default_layout/ says 1 is old, 2 is new.
+         https://www.reddit.com/r/linuxquestions/comments/debx7w/mdadm_raid0_default_layout/ says 2 is old, 1 is new.
+
+* https://blog.icod.de/2019/10/10/caution-kernel-5-3-4-and-raid0-default_layout/ suggests that the kernel parameters should be set in GRUB 
+as GRUB_CMDLINE_LINUX_DEFAULT="raid0.default_layout=2" (or 1), but in my opinion it should set GRUB_CMDLINE_LINUX_DEFAULT because 
+GRUB_CMDLINE_LINUX_DEFAULT is not used in recovery mode, but GRUB_CMDLINE_LINUX is. So, please document all possible (recommended) ways to 
+set the parameter: GRUB,  /etc/modprobe.d/00-local.conf, and /sys/module/raid0/parameters/default_layout.
+
+* I was also wondering why the patch had to disable assembling if it was a working array on my system. Isn't it obvious, based on the kernel 
+version with which it worked before the update, whether it should be 1 or 2? Why wasn't it possible to first automatically set the default 
+kernel variable in grub.cfg and then do the update?
+
+* Why is this parameter actually a *kernel* parameter. While not very likely, it is possible that two arrays with different layouts (needing 
+different parameter settings) will end up in the same machine. In such a case any parameter choice may lead to data corruption. I would 
+think that the layout parameter is a property of the specific array, so it should be in the meta-data of the array itself.
+
+
