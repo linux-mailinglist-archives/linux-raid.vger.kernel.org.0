@@ -2,111 +2,89 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 114BFE7ED2
-	for <lists+linux-raid@lfdr.de>; Tue, 29 Oct 2019 04:20:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D210E7FF5
+	for <lists+linux-raid@lfdr.de>; Tue, 29 Oct 2019 06:56:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728676AbfJ2DU1 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 28 Oct 2019 23:20:27 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5215 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726464AbfJ2DU1 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 28 Oct 2019 23:20:27 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id EEC5B6DF7BE9D355DD00;
-        Tue, 29 Oct 2019 11:20:24 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Tue, 29 Oct 2019
- 11:20:22 +0800
-From:   Yufen Yu <yuyufen@huawei.com>
-To:     <songliubraving@fb.com>
-CC:     <linux-raid@vger.kernel.org>
-Subject: [PATCH] md: avoid invalid memory access for array sb->dev_roles
-Date:   Tue, 29 Oct 2019 11:41:43 +0800
-Message-ID: <20191029034143.47039-1-yuyufen@huawei.com>
-X-Mailer: git-send-email 2.17.2
+        id S1731814AbfJ2F4B (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 29 Oct 2019 01:56:01 -0400
+Received: from magic.merlins.org ([209.81.13.136]:36024 "EHLO
+        mail1.merlins.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731519AbfJ2F4B (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 29 Oct 2019 01:56:01 -0400
+Received: from svh-gw.merlins.org ([173.11.111.145]:52318 helo=saruman.merlins.org)
+        by mail1.merlins.org with esmtps 
+        (Cipher TLS1.2:DHE_RSA_AES_128_CBC_SHA1:128) (Exim 4.92 #3)
+        id 1iPKU3-0004eZ-1S; Mon, 28 Oct 2019 22:55:59 -0700
+Received: from merlin by saruman.merlins.org with local (Exim 4.80)
+        (envelope-from <marc@merlins.org>)
+        id 1iPKU2-0006m7-GT; Mon, 28 Oct 2019 22:55:58 -0700
+Date:   Mon, 28 Oct 2019 22:55:58 -0700
+From:   Marc MERLIN <marc@merlins.org>
+To:     Roman Mamedov <rm@romanrm.net>
+Cc:     linux-raid@vger.kernel.org
+Message-ID: <20191029055558.GI18282@merlins.org>
+References: <20191028202732.GV15771@merlins.org>
+ <20191029023445.15022961@natsu>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191029023445.15022961@natsu>
+X-Sysadmin: BOFH
+X-URL:  http://marc.merlins.org/
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 173.11.111.145
+X-SA-Exim-Mail-From: marc@merlins.org
+X-Spam-Checker-Version: SpamAssassin 3.4.2-mmrules_20121111 (2018-09-13) on
+        magic.merlins.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.5 required=7.0 tests=GREYLIST_ISWHITE,SPF_SOFTFAIL,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+        version=3.4.2-mmrules_20121111
+X-Spam-Report: *  0.0 URIBL_BLOCKED ADMINISTRATOR NOTICE: The query to URIBL was
+        *      blocked.  See
+        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
+        *      for more information.
+        *      [URIs: merlins.org]
+        *  1.0 SPF_SOFTFAIL SPF: sender does not match SPF record (softfail)
+        * -1.5 GREYLIST_ISWHITE The incoming server has been whitelisted for
+        *      this receipient and sender
+Subject: Re: Cannot fix Current_Pending_Sector even after check and repair
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-we need to gurantee 'desc_nr' valid before access array of sb->dev_roles.
-
-Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-Addresses-Coverity-ID: 1487373 ("Memory - illegal accesses")
-Fixes: 6a5cb53aaa4e ("md: no longer compare spare disk superblock events in super_load")
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
----
- drivers/md/md.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index fc6ae8276a92..8832ab70e34d 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -1153,7 +1153,8 @@ static int super_90_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor
- 		 * Insist on good event counter while assembling, except
- 		 * for spares (which don't need an event count)
- 		 */
--		if (sb->disks[rdev->desc_nr].state & (
-+		if (rdev->desc_nr >= 0 &&
-+			sb->disks[rdev->desc_nr].state & (
- 			(1<<MD_DISK_SYNC) | (1 << MD_DISK_ACTIVE)))
- 			ret = 1;
- 		else
-@@ -1178,7 +1179,8 @@ static int super_90_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor
- 		 * Insist on good event counter while assembling, except
- 		 * for spares (which don't need an event count)
- 		 */
--		if (sb->disks[rdev->desc_nr].state & (
-+		if (rdev->desc_nr >= 0 &&
-+			sb->disks[rdev->desc_nr].state & (
- 			(1<<MD_DISK_SYNC) | (1 << MD_DISK_ACTIVE)) &&
- 			(ev1 > ev2))
- 			ret = 1;
-@@ -1540,7 +1542,6 @@ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_
- 	sector_t sectors;
- 	char b[BDEVNAME_SIZE], b2[BDEVNAME_SIZE];
- 	int bmask;
--	__u64 role;
+On Tue, Oct 29, 2019 at 02:34:45AM +0500, Roman Mamedov wrote:
+> On Mon, 28 Oct 2019 13:27:32 -0700
+> Marc MERLIN <marc@merlins.org> wrote:
+> 
+> > Out of desperation, I ran hdrecover /dev/sdx on all my drives. It reads the
+> > whole drive block by block, allowing to re-read a block many times to try
+> > and rescue data from it, or just re-write it with 0's.
+> > That one again, ran fine, no error.
+> 
+> It is weird that this succeeds, usually a "pending sector" means it's
+> unreadable until overwritten.
+> 
+> One possibility is that your RAID card either sets up a HPA at the end of each
+> drive to store metadata there, or just presents them as somewhat smaller than
+> their actual size to the OS. If the pending sectors happen to be in that
+> walled off area, then no wonder that no OS tools can get to them.
  
- 	/*
- 	 * Calculate the position of the superblock in 512byte sectors.
-@@ -1674,8 +1675,6 @@ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_
- 	    sb->level != 0)
- 		return -EINVAL;
- 
--	role = le16_to_cpu(sb->dev_roles[rdev->desc_nr]);
--
- 	if (!refdev) {
- 		/*
- 		 * Insist of good event counter while assembling, except for
-@@ -1683,8 +1682,8 @@ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_
- 		 */
- 		if (rdev->desc_nr >= 0 &&
- 		    rdev->desc_nr < le32_to_cpu(sb->max_dev) &&
--			(role < MD_DISK_ROLE_MAX ||
--			 role == MD_DISK_ROLE_JOURNAL))
-+			(le16_to_cpu(sb->dev_roles[rdev->desc_nr]) < MD_DISK_ROLE_MAX ||
-+			 le16_to_cpu(sb->dev_roles[rdev->desc_nr]) == MD_DISK_ROLE_JOURNAL))
- 			ret = 1;
- 		else
- 			ret = 0;
-@@ -1710,8 +1709,9 @@ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_
- 		 */
- 		if (rdev->desc_nr >= 0 &&
- 		    rdev->desc_nr < le32_to_cpu(sb->max_dev) &&
--			(role < MD_DISK_ROLE_MAX ||
--			 role == MD_DISK_ROLE_JOURNAL) && ev1 > ev2)
-+			(le16_to_cpu(sb->dev_roles[rdev->desc_nr]) < MD_DISK_ROLE_MAX ||
-+			 le16_to_cpu(sb->dev_roles[rdev->desc_nr]) == MD_DISK_ROLE_JOURNAL)
-+			 && ev1 > ev2)
- 			ret = 1;
- 		else
- 			ret = 0;
+You are correct, the raid card does wall off a very small portion of the
+drive, but I'm pretty sure it's fewer sectors than the number of pending
+sectors I already have.
+
+> See `hdparm -N`, or if possible compare `blockdev --getsize64` with the same
+> model drives which are not connected via a RAID controller.
+
+Not easy to do, but I do know that indeed not the entire drive is
+visible by the OS. Sigh, I hate those silly raid cards without
+real passthrough :(
+
+Marc
 -- 
-2.17.2
-
+"A mouse is a device used to point at the xterm you want to type in" - A.S.R.
+Microsoft is to operating systems ....
+                                      .... what McDonalds is to gourmet cooking
+Home page: http://marc.merlins.org/                       | PGP 7F55D5F27AAF9D08
