@@ -2,110 +2,84 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 598F4E951C
-	for <lists+linux-raid@lfdr.de>; Wed, 30 Oct 2019 03:53:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B541EE9736
+	for <lists+linux-raid@lfdr.de>; Wed, 30 Oct 2019 08:34:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfJ3Cxx (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 29 Oct 2019 22:53:53 -0400
-Received: from magic.merlins.org ([209.81.13.136]:33072 "EHLO
-        mail1.merlins.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726831AbfJ3Cxw (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 29 Oct 2019 22:53:52 -0400
-Received: from merlin by mail1.merlins.org with local (Exim 4.92 #3)
-        id 1iPe7G-0007GJ-60 by authid <merlin>; Tue, 29 Oct 2019 19:53:46 -0700
-Date:   Tue, 29 Oct 2019 19:53:46 -0700
-From:   Marc MERLIN <marc@merlins.org>
-To:     Tim Small <tim@buttersideup.com>,
-        Jorge Bastos <jorge.mrbastos@gmail.com>,
-        Roman Mamedov <rm@romanrm.net>
-Cc:     linux-raid@vger.kernel.org
-Subject: Re: Cannot fix Current_Pending_Sector even after check and repair
-Message-ID: <20191030025346.GA24750@merlins.org>
+        id S1726065AbfJ3He1 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 30 Oct 2019 03:34:27 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5650 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725923AbfJ3He1 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 30 Oct 2019 03:34:27 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 21F5868A3D0B414F78C6;
+        Wed, 30 Oct 2019 15:34:24 +0800 (CST)
+Received: from [127.0.0.1] (10.177.219.49) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 30 Oct 2019
+ 15:34:18 +0800
+Subject: Re: [PATCH] md: avoid invalid memory access for array sb->dev_roles
+To:     Song Liu <songliubraving@fb.com>
+CC:     "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>
+References: <20191029034143.47039-1-yuyufen@huawei.com>
+ <0B3C835E-3CC8-4FC7-9DDF-2AF0A043E479@fb.com>
+From:   Yufen Yu <yuyufen@huawei.com>
+Message-ID: <9d9d2a54-20ce-9563-4de4-b6455f349986@huawei.com>
+Date:   Wed, 30 Oct 2019 15:34:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191029172747.7cbe6e32@natsu>
- <CAHzMYBSAzB+rjixTx9DSgs48WOHkGybFGyGOEy3b7mtqnLHLgQ@mail.gmail.com>
- <eb24a24e-c268-0f3c-742a-5bde650c18dc@buttersideup.com>
-X-Sysadmin: BOFH
-X-URL:  http://marc.merlins.org/
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: marc@merlins.org
+In-Reply-To: <0B3C835E-3CC8-4FC7-9DDF-2AF0A043E479@fb.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.177.219.49]
+X-CFilter-Loop: Reflected
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 11:04:21AM +0000, Tim Small wrote:
-> I've seen this a few times.  Sometimes there is a pending sector, but
-> it's not user-addressable, sometimes the firmware seems to get the count
-> wrong.
-> You could try doing a full-self-test and see if that terminates without
-> error.
 
-See below
 
-> If you can temporarily take the drive out of service, you could also try
-> doing a secure erase using hdparm, to see if that gets the count to zero.
+On 2019/10/30 0:39, Song Liu wrote:
+>
+>> On Oct 28, 2019, at 8:41 PM, Yufen Yu <yuyufen@huawei.com> wrote:
+>>
+>> we need to gurantee 'desc_nr' valid before access array of sb->dev_roles.
+>>
+>> Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+>> Addresses-Coverity-ID: 1487373 ("Memory - illegal accesses")
+>> Fixes: 6a5cb53aaa4e ("md: no longer compare spare disk superblock events in super_load")
+>> Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+>> ---
+>> drivers/md/md.c | 18 +++++++++---------
+>> 1 file changed, 9 insertions(+), 9 deletions(-)
+>>
+>>
+>> 	 * Calculate the position of the superblock in 512byte sectors.
+>> @@ -1674,8 +1675,6 @@ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_
+>> 	    sb->level != 0)
+>> 		return -EINVAL;
+>>
+>> -	role = le16_to_cpu(sb->dev_roles[rdev->desc_nr]);
+>> -
+>> 	if (!refdev) {
+>> 		/*
+>> 		 * Insist of good event counter while assembling, except for
+>> @@ -1683,8 +1682,8 @@ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_
+>> 		 */
+>> 		if (rdev->desc_nr >= 0 &&
+>> 		    rdev->desc_nr < le32_to_cpu(sb->max_dev) &&
+>> -			(role < MD_DISK_ROLE_MAX ||
+>> -			 role == MD_DISK_ROLE_JOURNAL))
+>> +			(le16_to_cpu(sb->dev_roles[rdev->desc_nr]) < MD_DISK_ROLE_MAX ||
+>> +			 le16_to_cpu(sb->dev_roles[rdev->desc_nr]) == MD_DISK_ROLE_JOURNAL))
+> Same concern for LEVEL_MULTIPATH applies here. And maybe we can make this
+> code simpler?
 
-I can wipe the whole drive, but this puts me in degraded mode for a
-while without actually needing to be from what I can tell, so it's not
-my first choice.
-
-On Tue, Oct 29, 2019 at 12:05:02PM +0000, Jorge Bastos wrote:
-> Same, especially with WD drives, they appear to be false positives, if
-> you can take the disk offline a full disk write will usually get rid
-> of them.
-
-I see. So somehow reading all the sectors with hdrecover does not
-trigger anything, but dd'ing 0s over the entire drive would reset this?
-
-On Tue, Oct 29, 2019 at 05:27:47PM +0500, Roman Mamedov wrote:
-> Oh and talking of "especially WD" and especially Green, such transient errors
-> are a a sure symptom of rust developing on PCB contact pads:
-> https://www.youtube.com/watch?v=tDTt_yjYYQ8
-> 
-> E.g. Hitachi doesn't have this issue (they have drops of solder on each
-> contact pad); not much experience with Seagate; and WD themselves later
-> improved the design of this connection (redesigned type seen at least on a 6TB
-> WD Red).
-
-But wouldn't that show real errors when I'm reading the whole drive?
-SMART Self-test log structure revision number 1
-Num  Test_Description    Status                  Remaining  LifeTime(hours)  LBA_of_first_error
-# 1  Extended offline    Completed without error       00%     21804         -
-# 2  Short offline       Completed without error       00%     21788         -
-# 3  Short offline       Completed without error       00%     21765         -
-# 4  Short offline       Completed without error       00%     21742         -
-# 5  Extended offline    Completed: read failure       10%     21731         3457756336
-# 6  Short offline       Completed without error       00%     21717         -
-# 7  Short offline       Completed without error       00%     21693         -
-# 8  Short offline       Completed without error       00%     21670         -
-# 9  Short offline       Completed without error       00%     21646         -
-#10  Short offline       Completed without error       00%     21623         -
-#11  Short offline       Completed without error       00%     21599         -
-#12  Short offline       Completed without error       00%     21575         -
-#13  Extended offline    Completed: read failure       10%     21562         2905616752
-#14  Short offline       Completed without error       00%     21551         -
-#15  Short offline       Completed without error       00%     21527         -
-#16  Short offline       Completed without error       00%     21503         -
-#17  Short offline       Completed without error       00%     21479         -
-#18  Short offline       Completed without error       00%     21455         -
-#19  Short offline       Completed without error       00%     21431         -
-#20  Short offline       Completed without error       00%     21408         -
-#21  Extended offline    Completed without error       00%     21398         -
-2 of 2 failed self-tests are outdated by newer successful extended offline self-test # 1
-
-That said my pending sectors is still 9:
-197 Current_Pending_Sector  0x0032   200   200   000    Old_age   Always       -       9
-
-This is still perplexing. Would a full offline test verify every sector?
+I will send v2 to fix wrong return value for LEVEL_MULTIPATH and try to 
+simplify the code.
 
 Thanks,
-Marc
--- 
-"A mouse is a device used to point at the xterm you want to type in" - A.S.R.
-Microsoft is to operating systems ....
-                                      .... what McDonalds is to gourmet cooking
-Home page: http://marc.merlins.org/  
+Yufen
+
