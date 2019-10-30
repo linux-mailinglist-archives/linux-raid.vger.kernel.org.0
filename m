@@ -2,85 +2,129 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A144E9F2B
-	for <lists+linux-raid@lfdr.de>; Wed, 30 Oct 2019 16:35:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CADE5EA344
+	for <lists+linux-raid@lfdr.de>; Wed, 30 Oct 2019 19:25:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfJ3Pfa (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 30 Oct 2019 11:35:30 -0400
-Received: from magic.merlins.org ([209.81.13.136]:46704 "EHLO
-        mail1.merlins.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfJ3Pfa (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 30 Oct 2019 11:35:30 -0400
-Received: from svh-gw.merlins.org ([173.11.111.145]:51550 helo=saruman.merlins.org)
-        by mail1.merlins.org with esmtps 
-        (Cipher TLS1.2:DHE_RSA_AES_128_CBC_SHA1:128) (Exim 4.92 #3)
-        id 1iPq0C-0003Vt-5J; Wed, 30 Oct 2019 08:35:18 -0700
-Received: from merlin by saruman.merlins.org with local (Exim 4.80)
-        (envelope-from <marc@merlins.org>)
-        id 1iPq0B-0005Fg-RT; Wed, 30 Oct 2019 08:35:15 -0700
-Date:   Wed, 30 Oct 2019 08:35:15 -0700
-From:   Marc MERLIN <marc@merlins.org>
-To:     Wols Lists <antlists@youngman.org.uk>
-Cc:     Tim Small <tim@buttersideup.com>,
-        Jorge Bastos <jorge.mrbastos@gmail.com>,
-        Roman Mamedov <rm@romanrm.net>, linux-raid@vger.kernel.org
-Message-ID: <20191030153515.GC28297@merlins.org>
-References: <20191030025346.GA24750@merlins.org>
- <5DB9A9CC.9090007@youngman.org.uk>
+        id S1726407AbfJ3SZf (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 30 Oct 2019 14:25:35 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33540 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726259AbfJ3SZf (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 30 Oct 2019 14:25:35 -0400
+Received: by mail-lf1-f66.google.com with SMTP id y127so2354324lfc.0
+        for <linux-raid@vger.kernel.org>; Wed, 30 Oct 2019 11:25:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding:date:from
+         :to:cc:subject:in-reply-to:references:user-agent:message-id;
+        bh=iKrOPZaQFQ3NBW+RUhUP0kgQfPiu0TcsP7Oh1KDw3p8=;
+        b=QuaByFzQD2NVs8y+ha1g80xdwYsA/aKD9OZOyLkcpUSFNTI31ubaloBagY5PV2thAz
+         iqM0+u+ELZ8a0nmlAUPPQGT/LS/Jz41U8RcQKjtRyNrprlT9uRtjssqrtZgvhAzY7mPy
+         +KLj4HjYg8RQuY3+dyAXB1GcX7SZ+I/ZVDktudcyLyBV1jFnMWGjZmGxN2k/jDQ82+Ei
+         09Q9iMKmdh+4rodB5MjHjWfNfRzDW68tglljHCsJqA49XXFEnAkYjn4Pk1UYA1JwFo1S
+         PaWS2BV/FZe+baw79/AOr+KcrlC9Xm5kiR4K53d3oWWjuaPyNFAVGZSkuIIVisZBaiSe
+         /9XA==
+X-Gm-Message-State: APjAAAXOFIBkoG+bwkYgS2uqmdJmkl0rupsrbMMAenErgWQ4Q0Q1NRMB
+        8LJJN6GXb9FR+kH4jY/EsSw=
+X-Google-Smtp-Source: APXvYqxPC1u5VWPn3frAWsumoiS8SXHSwFaPcx/DbAOS4JQYVsmidCh2LAcIq24r8WRLgqHMKn3NMw==
+X-Received: by 2002:a19:6f0e:: with SMTP id k14mr371966lfc.34.1572459933647;
+        Wed, 30 Oct 2019 11:25:33 -0700 (PDT)
+Received: from mail.onse.fi ([109.204.156.230])
+        by smtp.gmail.com with ESMTPSA id o18sm374958ljj.27.2019.10.30.11.25.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 11:25:32 -0700 (PDT)
+Received: from mail.onse.fi (delta.onse.fi [127.0.0.1])
+        by mail.onse.fi (Postfix) with ESMTP id 8314B4074C;
+        Wed, 30 Oct 2019 20:25:31 +0200 (EET)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5DB9A9CC.9090007@youngman.org.uk>
-X-Sysadmin: BOFH
-X-URL:  http://marc.merlins.org/
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 173.11.111.145
-X-SA-Exim-Mail-From: marc@merlins.org
-X-Spam-Checker-Version: SpamAssassin 3.4.2-mmrules_20121111 (2018-09-13) on
-        magic.merlins.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=7.0 tests=GREYLIST_ISWHITE,SPF_SOFTFAIL,
-        URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-        version=3.4.2-mmrules_20121111
-X-Spam-Report: *  0.0 URIBL_BLOCKED ADMINISTRATOR NOTICE: The query to URIBL was
-        *      blocked.  See
-        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
-        *      for more information.
-        *      [URIs: merlins.org]
-        *  1.0 SPF_SOFTFAIL SPF: sender does not match SPF record (softfail)
-        * -1.5 GREYLIST_ISWHITE The incoming server has been whitelisted for
-        *      this receipient and sender
-Subject: Re: Cannot fix Current_Pending_Sector even after check and repair
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 30 Oct 2019 20:25:31 +0200
+From:   Anssi Hannula <anssi.hannula@iki.fi>
+To:     Song Liu <liu.song.a23@gmail.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>
+Subject: Re: RAID6 gets stuck during reshape with 100% CPU
+In-Reply-To: <CAPhsuW6HsL2GS+G5cYfjhjiZi4ZGsSj60ov=YgQUngbNkt9bPw@mail.gmail.com>
+References: <25373b220163b01b8990aa049fec9d18@iki.fi>
+ <CAPhsuW51S=tO+A0SDb1EvtoCG9pVSC91e9euG2nsp+rZiUgF7A@mail.gmail.com>
+ <f1de00a04761370d90018f288b9b2996@iki.fi>
+ <CAPhsuW4pddLHge+tkz2pvsPv9xgXi=WvVH3ck5KTF7EkNgE2iA@mail.gmail.com>
+ <2054f286c123d9b9bcc66faf0d6f7d10@iki.fi>
+ <CAPhsuW68wmVQ6eH3o_eE+BkDXSfWHy7kEcsMj04uEzAGigbwkg@mail.gmail.com>
+ <0d3573affc5c44ff169120f8667f5780@iki.fi>
+ <CAPhsuW5hj6-BOwifzQ5DRBaAWTCazgNF8oS3MtFf=4r-ioBaRw@mail.gmail.com>
+ <2952af29aba2680d5c6d17b9351bc15d@iki.fi>
+ <CAPhsuW6HsL2GS+G5cYfjhjiZi4ZGsSj60ov=YgQUngbNkt9bPw@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4-rc2
+Message-ID: <c8b37bc022aca270102fe7114be7051e@iki.fi>
+X-Sender: anssi.hannula@iki.fi
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 03:18:36PM +0000, Wols Lists wrote:
-> On 30/10/19 02:53, Marc MERLIN wrote:
-> > On Tue, Oct 29, 2019 at 12:05:02PM +0000, Jorge Bastos wrote:
-> >> > Same, especially with WD drives, they appear to be false positives, if
-> >> > you can take the disk offline a full disk write will usually get rid
-> >> > of them.
+Song Liu kirjoitti 2019-10-29 23:55:
+> On Tue, Oct 29, 2019 at 1:45 PM Anssi Hannula <anssi.hannula@iki.fi> 
+> wrote:
+>> 
+>> Song Liu kirjoitti 2019-10-29 22:28:
+>> > On Tue, Oct 29, 2019 at 12:05 PM Anssi Hannula <anssi.hannula@iki.fi>
+>> > wrote:
+>> >>
+>> >> Song Liu kirjoitti 2019-10-29 08:04:
+>> >> > I guess we get into "is_bad", case, but it should not be the case?
+>> >>
+>> >> Right, is_bad is set, which causes R5_Insync and R5_ReadError to be
+>> >> set
+>> >> on lines 4497-4498, and R5_Insync to be cleared on line 4554 (if
+>> >> R5_ReadError then clear R5_Insync).
+>> >>
+>> >> As mentioned in my first message and seen in
+>> >> http://onse.fi/files/reshape-infloop-issue/examine-all.txt , the MD
+>> >> bad
+>> >> block lists contain blocks (suspiciously identical across devices).
+>> >> So maybe the code can't properly handle the case where 10 devices have
+>> >> the same block in their bad block list. Not quite sure what "handle"
+>> >> should mean in this case but certainly something else than a
+>> >> handle_stripe() loop :)
+>> >> There is a "bad" block on 10 devices on sector 198504960, which I
+>> >> guess
+>> >> matches sh->sector 198248960 due to data offset of 256000 sectors (per
+>> >> --examine).
+>> >
+>> > OK, it makes sense now. I didn't add the data offset when checking the
+>> > bad
+>> > block data.
+>> >
+>> >>
+>> >> I've wondered if "dd if=/dev/md0 of=/dev/md0" for the affected blocks
+>> >> would clear the bad blocks and avoid this issue, but I haven't tried
+>> >> that yet so that the infinite loop issue can be investigated/fixed
+>> >> first. I already checked that /dev/md0 is fully readable (which also
+>> >> confuses me a bit since md(8) says "Attempting to read from a known
+>> >> bad
+>> >> block will cause a read error"... maybe I'm missing something).
+>> >>
+>> >
+>> > Maybe try these steps?
+>> >
+>> > https://raid.wiki.kernel.org/index.php/The_Badblocks_controversy#How_do_I_fix_a_Bad_Blocks_problem.3F
+>> 
+>> Yeah, I guess those steps would probably resolve my situation. BTW,
+>> "--update=force-no-bbl" is not mentioned on mdadm(8), is it on 
+>> purpose?
+>> I was trying to find such an option earlier.
+>> 
+>> If you don't need anything more from the array, I'll go ahead and try
+>> clearing the seemingly bogus bad block lists.
 > 
-> > I see. So somehow reading all the sectors with hdrecover does not
-> > trigger anything, but dd'ing 0s over the entire drive would reset this?
-> 
-> Because a "pending" error is a sector that is unreadable, but if you
-> don't write to it, the drive can't test whether the error is "transient"
-> corruption, or whether the sector needs to be relocated. And of course,
-> because it can't read the sector it can't do a transparent write because
-> it doesn't know what was there to start with to write back ...
+> Please go ahead. We already got quite a few logs.
 
-I understand that, but if hdrecover can read the sector, it never
-rewrites it given that it was read fine, so nothing happens.
-But the drive should see that the block with issues, just got read, and
-reset the sector as non pending.
-Clearly that isn't happening, though.
+Seems that was indeed the issue, clearing the bad block log allowed the 
+reshape to continue normally.
 
-Marc
+Thanks for your help.
+
 -- 
-"A mouse is a device used to point at the xterm you want to type in" - A.S.R.
-Microsoft is to operating systems ....
-                                      .... what McDonalds is to gourmet cooking
-Home page: http://marc.merlins.org/                       | PGP 7F55D5F27AAF9D08
+Anssi Hannula
