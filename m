@@ -2,165 +2,110 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 29317E93FE
-	for <lists+linux-raid@lfdr.de>; Wed, 30 Oct 2019 01:05:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 598F4E951C
+	for <lists+linux-raid@lfdr.de>; Wed, 30 Oct 2019 03:53:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726068AbfJ3AFZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 29 Oct 2019 20:05:25 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:56772 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbfJ3AFZ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 29 Oct 2019 20:05:25 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <dann.frazier@canonical.com>)
-        id 1iPbUI-0007qe-Ll
-        for linux-raid@vger.kernel.org; Wed, 30 Oct 2019 00:05:22 +0000
-Received: by mail-il1-f199.google.com with SMTP id a17so510508ilb.20
-        for <linux-raid@vger.kernel.org>; Tue, 29 Oct 2019 17:05:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2MC+npABTTHSznlud1g4Ic4IEIM45pQgB7RdFM+yQxU=;
-        b=WxDV69eI6C189Twu5JBL35EQL5+M2j1jp8qhGMiueyDLAlryB109y0AfFfPAi1J2WO
-         Z3JbwT193OStBbunONcq/zLZ1FjH/nAPXJw4W3Y+u7ZdhbOyxbbw8bMyzWXBxBK0GDeO
-         4rpByvJMdbF0hHJQQyFz4Dp7ZPyXMfQHndo9rMtVfzlszKCPfN/bi/XubjClPh7gVJvJ
-         I/d/BKt/nLxC1rNH+67s5hrHjwMAyNqo5cyvdnKCM6f0E3ONud6aoPW1Wmpqj/7FKBXZ
-         uHT9BIENadEqI2F9CytQ9XFtenUwIkmW99v5HG4H4HdfZAmQDDoOqnuFqOMWV8PKbbmD
-         Bhjg==
-X-Gm-Message-State: APjAAAWhoyTvVAPcR9Lfhk+u7nKxVoepQ3nYpT5MgqVfwDD/fzTiK3kx
-        5QgK022xCaoNZnpFt4rrOzVj9bl1Nl1yw3kh4kz/7Sm6H2VNzG8zL5JFxbsj18hUcge3T6VK3FV
-        0rw9Ps0AOlG6QviWrigfhTT7rTDyOaCIFna/DP30=
-X-Received: by 2002:a92:b314:: with SMTP id p20mr30342702ilh.80.1572393921317;
-        Tue, 29 Oct 2019 17:05:21 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxSkZ99TYYAYa+/0mjI+DpuLMvr9or2TGdmOIyMAKaG9K1C8sXijtsfK7F5TK1vB2IpT0u/xg==
-X-Received: by 2002:a92:b314:: with SMTP id p20mr30342656ilh.80.1572393920850;
-        Tue, 29 Oct 2019 17:05:20 -0700 (PDT)
-Received: from xps13.canonical.com (c-71-56-235-36.hsd1.co.comcast.net. [71.56.235.36])
-        by smtp.gmail.com with ESMTPSA id d197sm51088iog.15.2019.10.29.17.05.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 17:05:20 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 18:05:19 -0600
-From:   dann frazier <dann.frazier@canonical.com>
-To:     Andreas <a@hegyi.info>
+        id S1726905AbfJ3Cxx (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 29 Oct 2019 22:53:53 -0400
+Received: from magic.merlins.org ([209.81.13.136]:33072 "EHLO
+        mail1.merlins.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726831AbfJ3Cxw (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 29 Oct 2019 22:53:52 -0400
+Received: from merlin by mail1.merlins.org with local (Exim 4.92 #3)
+        id 1iPe7G-0007GJ-60 by authid <merlin>; Tue, 29 Oct 2019 19:53:46 -0700
+Date:   Tue, 29 Oct 2019 19:53:46 -0700
+From:   Marc MERLIN <marc@merlins.org>
+To:     Tim Small <tim@buttersideup.com>,
+        Jorge Bastos <jorge.mrbastos@gmail.com>,
+        Roman Mamedov <rm@romanrm.net>
 Cc:     linux-raid@vger.kernel.org
-Subject: Re: raid0 layout issue documentation / confusions
-Message-ID: <20191030000519.GA2854@xps13.dannf>
-References: <1389f13b-eaf0-7ae2-d99b-697ae008f2c9@hegyi.info>
+Subject: Re: Cannot fix Current_Pending_Sector even after check and repair
+Message-ID: <20191030025346.GA24750@merlins.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1389f13b-eaf0-7ae2-d99b-697ae008f2c9@hegyi.info>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191029172747.7cbe6e32@natsu>
+ <CAHzMYBSAzB+rjixTx9DSgs48WOHkGybFGyGOEy3b7mtqnLHLgQ@mail.gmail.com>
+ <eb24a24e-c268-0f3c-742a-5bde650c18dc@buttersideup.com>
+X-Sysadmin: BOFH
+X-URL:  http://marc.merlins.org/
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: marc@merlins.org
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 10:21:25PM +0100, Andreas wrote:
-> (I wanted to react to the thread "admin-guide page for raid0 layout issue", but I just registered and I don't know how to respond to
-> existing messages.)
+On Tue, Oct 29, 2019 at 11:04:21AM +0000, Tim Small wrote:
+> I've seen this a few times.  Sometimes there is a pending sector, but
+> it's not user-addressable, sometimes the firmware seems to get the count
+> wrong.
+> You could try doing a full-self-test and see if that terminates without
+> error.
+
+See below
+
+> If you can temporarily take the drive out of service, you could also try
+> doing a secure erase using hdparm, to see if that gets the count to zero.
+
+I can wipe the whole drive, but this puts me in degraded mode for a
+while without actually needing to be from what I can tell, so it's not
+my first choice.
+
+On Tue, Oct 29, 2019 at 12:05:02PM +0000, Jorge Bastos wrote:
+> Same, especially with WD drives, they appear to be false positives, if
+> you can take the disk offline a full disk write will usually get rid
+> of them.
+
+I see. So somehow reading all the sectors with hdrecover does not
+trigger anything, but dd'ing 0s over the entire drive would reset this?
+
+On Tue, Oct 29, 2019 at 05:27:47PM +0500, Roman Mamedov wrote:
+> Oh and talking of "especially WD" and especially Green, such transient errors
+> are a a sure symptom of rust developing on PCB contact pads:
+> https://www.youtube.com/watch?v=tDTt_yjYYQ8
 > 
-> I would like to make some suggestions regarding the recent
-> raid0 layout patch, as it made my system unbootable, and
-> it took me quite some time to figure out what was wrong
-> and how to fix it. I also encountered  confusion on the
-> web. I am just a regular user, not a programmer or linux
-> guru, so take my suggestions as such.
->
-> * Everywhere where the values are documented, all three of
-> 0, 1, and 2 should be explicitly documented (not only two
-> of them). If I am not mistaken, 0 means "unset", 1 means
-> "old layout" (kernel 3.14 and older), 2 means "new layout"
-> (3.15 and later).
+> E.g. Hitachi doesn't have this issue (they have drops of solder on each
+> contact pad); not much experience with Seagate; and WD themselves later
+> improved the design of this connection (redesigned type seen at least on a 6TB
+> WD Red).
 
-Off-by-one there - it is older than 3.14 vs. 3.14 and later.
+But wouldn't that show real errors when I'm reading the whole drive?
+SMART Self-test log structure revision number 1
+Num  Test_Description    Status                  Remaining  LifeTime(hours)  LBA_of_first_error
+# 1  Extended offline    Completed without error       00%     21804         -
+# 2  Short offline       Completed without error       00%     21788         -
+# 3  Short offline       Completed without error       00%     21765         -
+# 4  Short offline       Completed without error       00%     21742         -
+# 5  Extended offline    Completed: read failure       10%     21731         3457756336
+# 6  Short offline       Completed without error       00%     21717         -
+# 7  Short offline       Completed without error       00%     21693         -
+# 8  Short offline       Completed without error       00%     21670         -
+# 9  Short offline       Completed without error       00%     21646         -
+#10  Short offline       Completed without error       00%     21623         -
+#11  Short offline       Completed without error       00%     21599         -
+#12  Short offline       Completed without error       00%     21575         -
+#13  Extended offline    Completed: read failure       10%     21562         2905616752
+#14  Short offline       Completed without error       00%     21551         -
+#15  Short offline       Completed without error       00%     21527         -
+#16  Short offline       Completed without error       00%     21503         -
+#17  Short offline       Completed without error       00%     21479         -
+#18  Short offline       Completed without error       00%     21455         -
+#19  Short offline       Completed without error       00%     21431         -
+#20  Short offline       Completed without error       00%     21408         -
+#21  Extended offline    Completed without error       00%     21398         -
+2 of 2 failed self-tests are outdated by newer successful extended offline self-test # 1
 
-> * When trying to assemble existing array but without the
-> kernel parameter set (i.e. set to 0) it silently fails.
-> Only in the kernel ring buffer there is a message:
->  md/raid0:md0: cannot assemble multi-zone RAID0 with default_layout setting
->  md/raid0: please set raid.default_layout to 1 or 2
-> 
->   When trying to create a raid0 array, it gives an error, but it is not helpful:
->     mdadm: Defaulting to version 1.2 metadata
->     mdadm: RUN_ARRAY failed: Unknown error 524
-> 
-> For both cases, and both places (mdamd and dmesg) should be more informative.
-> 
-> * The recommended parameter value for new raid0 arrays should be made clear. I guess it's 2.
+That said my pending sectors is still 9:
+197 Current_Pending_Sector  0x0032   200   200   000    Old_age   Always       -       9
 
-Thanks for mentioning this - my understanding is that neither is
-inherently better than the other, and I've noted as much in my patch.
+This is still perplexing. Would a full offline test verify every sector?
 
-> * Various places where documentation could (or should) be added:
-> 	- mdamd error messags
-> 	- kernel ring buffer messages
-> 	- mdadm man page
-> 	- mdadm wiki
-> 	- kernel parameter documentation pages
-> 
-> Confusions:
-> * The definition of the parameter values is wrong in the patch description:
-> https://github.com/torvalds/linux/commit/c84a1372df929033cb1a0441fb57bd3932f39ac9#diff-158c54ea7ccae01a77ae3f5d44ab0f94
-> it says 0 is old, 1 is new. Please fix, because this
-> contributes to confusion, and may even lead to data
-> corruption.
-
-Sorry, we can't retroactively change a commit message.
-
-> * On the raid mailing list
-> https://www.spinics.net/lists/raid/msg63337.html someone
-> said "new (1) and old (2) vs. unset (0)". No one objected,
-> but I guess that this is also wrong?
-> 
-> * Two webpages (of the rare ones on this issue) are conflicting on what is the meaning of parameter 1 and 2.
->         https://blog.icod.de/2019/10/10/caution-kernel-5-3-4-and-raid0-default_layout/ says 1 is old, 2 is new.
->         https://www.reddit.com/r/linuxquestions/comments/debx7w/mdadm_raid0_default_layout/ says 2 is old, 1 is new.
-> 
-> * https://blog.icod.de/2019/10/10/caution-kernel-5-3-4-and-raid0-default_layout/
-> suggests that the kernel parameters should be set in GRUB
-> as GRUB_CMDLINE_LINUX_DEFAULT="raid0.default_layout=2" (or
-> 1), but in my opinion it should set
-> GRUB_CMDLINE_LINUX_DEFAULT because
-> GRUB_CMDLINE_LINUX_DEFAULT is not used in recovery mode,
-> but GRUB_CMDLINE_LINUX is. So, please document all
-> possible (recommended) ways to set the parameter: GRUB,
-> /etc/modprobe.d/00-local.conf, and
-> /sys/module/raid0/parameters/default_layout.
-
-Getting into the specifics of configuring individual bootloaders in
-the kernel docs is a slippery slope. We can tell you what to set, but your
-bootloader docs (or pages like the above) need to tell you how to set it.
-That said, if you find incorrect documentation out there, it would be
-appreciated if you could ask the site owner to correct it.
-
-> * I was also wondering why the patch had to disable
-> assembling if it was a working array on my system. Isn't
-> it obvious, based on the kernel version with which it
-> worked before the update, whether it should be 1 or 2? Why
-> wasn't it possible to first automatically set the default
-> kernel variable in grub.cfg and then do the update?
-
-IMO, that's really an issue for distributions to consider, as the kernel
-doesn't know what version you previously booted. However, note that
-just because you're upgrading from say 5.0.1 to 5.0.2, doesn't mean
-that you hadn't written to your array with, say, 3.12 in the past. And
-maybe all of your data was written w/ 3.12 and layout=1 is the best
-choice.
-
-> * Why is this parameter actually a *kernel* parameter.
-> While not very likely, it is possible that two arrays with
-> different layouts (needing different parameter settings)
-> will end up in the same machine. In such a case any
-> parameter choice may lead to data corruption. I would
-> think that the layout parameter is a property of the
-> specific array, so it should be in the meta-data of the
-> array itself.
-
-It is - as noted in my admin-guide patch, you can also set this on a
-per-array basis via sysfs while the array is stopped.
-
-  -dann
+Thanks,
+Marc
+-- 
+"A mouse is a device used to point at the xterm you want to type in" - A.S.R.
+Microsoft is to operating systems ....
+                                      .... what McDonalds is to gourmet cooking
+Home page: http://marc.merlins.org/  
