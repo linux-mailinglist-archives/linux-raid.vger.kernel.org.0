@@ -2,97 +2,53 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE21EE9CB1
-	for <lists+linux-raid@lfdr.de>; Wed, 30 Oct 2019 14:53:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F1D47E9EB8
+	for <lists+linux-raid@lfdr.de>; Wed, 30 Oct 2019 16:18:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbfJ3NxB (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 30 Oct 2019 09:53:01 -0400
-Received: from mail-lj1-f174.google.com ([209.85.208.174]:39387 "EHLO
-        mail-lj1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726209AbfJ3NxB (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 30 Oct 2019 09:53:01 -0400
-Received: by mail-lj1-f174.google.com with SMTP id y3so2773233ljj.6
-        for <linux-raid@vger.kernel.org>; Wed, 30 Oct 2019 06:52:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UfvL3qW5nIUyFkbvZFaZ0bq3aTO3outOnT8BedV0p5c=;
-        b=FvuAaU28+gBazJJPB9+aiUgvUWGLUw3nCAs5z070unBxkpaeKATHh6D12Sbu+HtYp/
-         rBfGIQXCfBdd6nIlxXGIa1Ykw+7uMAjLdoDDxwq2pLdKtpBkfuF2tiC3r3tZ1uBUvTba
-         /5hFeRuosvQz9Mrx+TqG0Vf/k+uVWtU/A+jRultiLGoMmR9XRjsj2hiWf2wzZ1VjoJxl
-         bMHN5LmZhTXEP3uHzvoDMg0+Zif0rocYhfJJkOe2WR/g8C6+EFJPONtCgOnSGy4lDAz3
-         aLL84d9LefJaMWu8QOMEntyl7uImBNpCT646nO4u8dkxnoFY8erDoRCfV9yU8Pbbpk1Q
-         XElg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UfvL3qW5nIUyFkbvZFaZ0bq3aTO3outOnT8BedV0p5c=;
-        b=cI0xaJXy1NOEnMl4NLUKzyVMRTm5mVnRIgiJoSbzHDe/kye41qD3ADUxa2j+8JD9iH
-         qMRqv6uy5txbzQmh/mFGT3jqgHxXTw+NQdt3w8LN5Dcd0m3diRKExM4UH/XHTOqxmWEN
-         RT4M/ZangnADDSFAJfpGrj/ZW/jeaF2l6993Pg0kSXsVup53Yb9AAFRthTDpI57uTou8
-         /Vo4QUPUPCp6Nv5442lCyUM50TrRr3jPVVi6KWduc2unKz0zf/3K4O6Cu+/Oy4tn/wbP
-         IKklua58EoiabN7SiWdl3O5QioRR4uQqBmDed18Lllp7M4pDHVLoNAj19jAyCxdAHKc+
-         fcsA==
-X-Gm-Message-State: APjAAAVa+5hFXNtcoW94ZPQd+1k6bpp6HZANrCvsFD4lKNSpWEqo+7HC
-        f9O262fJ7N249SrTM2RnnVYl5xoD9MP64kN932Q=
-X-Google-Smtp-Source: APXvYqw9p005dhtX9BrAj8Y0RQCBADvYrA0/8cZKzbX+dAmjyrDujyEcehJN+klIlpUeWcqbTEp846aAIlppqNW+oH4=
-X-Received: by 2002:a2e:a16d:: with SMTP id u13mr7159464ljl.214.1572443578901;
- Wed, 30 Oct 2019 06:52:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191029172747.7cbe6e32@natsu> <CAHzMYBSAzB+rjixTx9DSgs48WOHkGybFGyGOEy3b7mtqnLHLgQ@mail.gmail.com>
- <eb24a24e-c268-0f3c-742a-5bde650c18dc@buttersideup.com> <20191030025346.GA24750@merlins.org>
- <20191030101255.GA3373@metamorpher.de>
-In-Reply-To: <20191030101255.GA3373@metamorpher.de>
-From:   Roger Heflin <rogerheflin@gmail.com>
-Date:   Wed, 30 Oct 2019 08:52:47 -0500
-Message-ID: <CAAMCDef7MNeSLhorLRiFZbdtTdWf+ZPQo=Z6CqDcKCCCcx1Pvg@mail.gmail.com>
+        id S1726907AbfJ3PSk (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 30 Oct 2019 11:18:40 -0400
+Received: from smtp.hosts.co.uk ([85.233.160.19]:10139 "EHLO smtp.hosts.co.uk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726596AbfJ3PSk (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:18:40 -0400
+Received: from [86.155.171.62] (helo=[192.168.1.118])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1iPpk5-0003oT-95; Wed, 30 Oct 2019 15:18:38 +0000
 Subject: Re: Cannot fix Current_Pending_Sector even after check and repair
-To:     Andreas Klauer <Andreas.Klauer@metamorpher.de>
-Cc:     Marc MERLIN <marc@merlins.org>, Tim Small <tim@buttersideup.com>,
+To:     Marc MERLIN <marc@merlins.org>, Tim Small <tim@buttersideup.com>,
         Jorge Bastos <jorge.mrbastos@gmail.com>,
-        Roman Mamedov <rm@romanrm.net>,
-        Linux RAID <linux-raid@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Roman Mamedov <rm@romanrm.net>
+References: <20191030025346.GA24750@merlins.org>
+Cc:     linux-raid@vger.kernel.org
+From:   Wols Lists <antlists@youngman.org.uk>
+Message-ID: <5DB9A9CC.9090007@youngman.org.uk>
+Date:   Wed, 30 Oct 2019 15:18:36 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.7.0
+MIME-Version: 1.0
+In-Reply-To: <20191030025346.GA24750@merlins.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-I would run repeated extended offline tests.  You should get several
-tests a day, and if it is a normal failing sector, a number of the
-tests should fail on the same few sector (or close to the same
-sector).  Mine always seem to fail in 64sector groups.   I have also
-had luck with a lot of extended tests seeming to catch errors and
-correct them before the sectors go bad.  I have a troublesome disk
-that I am aggressively testing and it seems to result in the disk
-working better (less read failures to the kernel).
+On 30/10/19 02:53, Marc MERLIN wrote:
+> On Tue, Oct 29, 2019 at 12:05:02PM +0000, Jorge Bastos wrote:
+>> > Same, especially with WD drives, they appear to be false positives, if
+>> > you can take the disk offline a full disk write will usually get rid
+>> > of them.
 
-On Wed, Oct 30, 2019 at 5:15 AM Andreas Klauer
-<Andreas.Klauer@metamorpher.de> wrote:
->
-> On Tue, Oct 29, 2019 at 07:53:46PM -0700, Marc MERLIN wrote:
-> > I can wipe the whole drive, but this puts me in degraded mode for a
-> > while without actually needing to be from what I can tell, so it's not
-> > my first choice.
->
-> Use mdadm --replace to get it out of your RAID without degrading it.
-> Then you can safely use secure erase and other forms of scrubbing to
-> see if it changes anything.
->
-> > But wouldn't that show real errors when I'm reading the whole drive?
-> > SMART Self-test log structure revision number 1
-> > Num  Test_Description    Status                  Remaining  LifeTime(hours)  LBA_of_first_error
-> > # 1  Extended offline    Completed without error       00%     21804         -
-> > # 5  Extended offline    Completed: read failure       10%     21731         3457756336
-> > #13  Extended offline    Completed: read failure       10%     21562         2905616752
->
-> > 2 of 2 failed self-tests are outdated by newer successful extended offline self-test # 1
->
-> "Outdated" (few hours apart) is a very optimistic way of looking
-> at these test results. At least it shows the drive didn't just
-> invent those pending sectors.
->
-> Regards
-> Andreas Klauer
+> I see. So somehow reading all the sectors with hdrecover does not
+> trigger anything, but dd'ing 0s over the entire drive would reset this?
+
+Because a "pending" error is a sector that is unreadable, but if you
+don't write to it, the drive can't test whether the error is "transient"
+corruption, or whether the sector needs to be relocated. And of course,
+because it can't read the sector it can't do a transparent write because
+it doesn't know what was there to start with to write back ...
+
+Cheers,
+Wol
