@@ -2,74 +2,54 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CB4F3EC632
-	for <lists+linux-raid@lfdr.de>; Fri,  1 Nov 2019 16:56:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 39367ECD48
+	for <lists+linux-raid@lfdr.de>; Sat,  2 Nov 2019 06:22:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbfKAP4Q (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 1 Nov 2019 11:56:16 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:33145 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729305AbfKAP4K (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 1 Nov 2019 11:56:10 -0400
-Received: by mail-il1-f196.google.com with SMTP id s6so9109762iln.0
-        for <linux-raid@vger.kernel.org>; Fri, 01 Nov 2019 08:56:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=KqYLJklOErTzrVm5Bzbb6HQh9gI4PrbbORQE30GcC5Y=;
-        b=jkikiuxKNQxBjumG32R/xAOzBpTQzIQOGlQ9PlZMzROUxuROhIRW7LOTcmmKqgHbY3
-         GOAi1JnMWEnE/cHrGKrepuphWKFno/pbedjX9XbUWfuIb71+aWSjlL5ZBdl2tkqhPPKE
-         upGJ5iT/1C19qe7FISRldhXG8lpP7RchXgCPpOby1LewLJ9oB1SrBH33yMLjEi7ivjNF
-         o703S5ww1Ql1WeM1aVK41ldtWwBkirNy1eGYI9RnsPVvXaYfqhEH77U0dn8RQUxe2Nnp
-         f+7QOSjXXt7VdhDDkepSvRzDGCUBO3iHq8K6k3uKK4gkq+wr+4nHyD89dMwGRy4pl6Pa
-         lYoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=KqYLJklOErTzrVm5Bzbb6HQh9gI4PrbbORQE30GcC5Y=;
-        b=Ws1HIgu6DNy0OFLgxU6++NiIR6Den8qNq2p33/R6eZIBRND5oL6xlz3EotOTctAj7H
-         ywZhwCPPDiF6Zel52906SWyGnoq6BFYqF4qyA+fhap5H7qBswKVCHJJHHIZuWm0iiuo4
-         2aiSKwiNz/TRWAAH+YettuZziltP3icgnZ35d/XpEy1OWMUHmaLnsYduh/aAIGYlxmDD
-         DTS35LwZ7XFqKa0k32XeQ48fBpXmlHA1vZbixQmQ9zjx1h/W0/pc4HBGn17C3IeOffP1
-         uWZQbz4Mr4jwRHE0twW3j/Bv337JHaC5Ahl2KhiqNW3Cq0A6V9fHSvKzfplMs+BVZ9z5
-         zu3w==
-X-Gm-Message-State: APjAAAXzWaN1co3T4/WYlaYznLtEJZs4PtJIsJ4eViZ5ELiC07XtFzJ5
-        peo4lUEtLybvfpyYY8BQ01c90O5LWRuASVbRMw==
-X-Google-Smtp-Source: APXvYqykJV+0/JwFtVH+nsMp7ykNvWlhcV0rRy9Az9oSoBx/tmbFcQXrrs+n9sPNEOpMU4VQknLk5nY+7hLQNduMfzM=
-X-Received: by 2002:a92:9ac2:: with SMTP id c63mr13404416ill.8.1572623769676;
- Fri, 01 Nov 2019 08:56:09 -0700 (PDT)
+        id S1726220AbfKBFVz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 2 Nov 2019 01:21:55 -0400
+Received: from hn.kd.ny.adsl ([42.231.162.229]:1730 "HELO zoosbook.com"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
+        id S1725820AbfKBFVz (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sat, 2 Nov 2019 01:21:55 -0400
+Received: from relay37.vosimerkam.net [44.80.224.246] by mail.naihautsui.co.kr with ESMTP; Sat, 02 Nov 2019 08:18:06 +0300
+Received: from unknown (HELO relay.2yahoo.com) (Sat, 02 Nov 2019 08:01:56 +0300)
+        by rsmail.alkoholic.net with ASMTP; Sat, 02 Nov 2019 08:01:56 +0300
+Received: from unknown (34.86.30.149)
+        by mail.webhostings4u.com with SMTP; Sat, 02 Nov 2019 07:56:24 +0300
+Received: from group21.345mail.com [141.24.205.28] by asx121.turbo-inline.com with NNFMP; Sat, 02 Nov 2019 07:38:17 +0300
+Message-ID: <37BFBAE5.BB3087DD@zoosbook.com>
+Date:   Sat, 02 Nov 2019 07:26:07 +0300
+Reply-To: "zoosbook.com" <admin@zoosbook.com>
+From:   "zoosbook.com" <admin@zoosbook.com>
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2.4) Gecko/20100608 Lightning/1.0b2 Thunderbird/3.1
+X-Accept-Language: en-us
 MIME-Version: 1.0
-Received: by 2002:a02:7749:0:0:0:0:0 with HTTP; Fri, 1 Nov 2019 08:56:08 -0700 (PDT)
-Reply-To: moneygram.1820@outlook.fr
-From:   "Mary Coster, I.M.F director-Benin" 
-        <info.zennitbankplcnigerian@gmail.com>
-Date:   Fri, 1 Nov 2019 16:56:08 +0100
-Message-ID: <CABHzvrmbRd3tt-E2+9AO2XvrMQFKQcn+kao_7DN4rb=grxZAcA@mail.gmail.com>
-Subject: Contact Money Gram international service-Benin to receive your
- payment funds US$2.500,000 Million
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+To:     <linux-assembly@vger.kernel.org>
+Subject: FREE Bestiality Social Network
+Content-Type: text/plain;
+        charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Attn Dear,Funds Beneficiary.
-Contact Money Gram international service-Benin to receive your payment
-funds US$2.500,000 Million approved this morning through the UN
-payment settlement organization.
-Contact Person, Mr. John Dave.
-Official Director.Money Gram-Benin
-Email: moneygram.1820@outlook.fr
-Telephone +229 62619517
-Once you get intouch with Mr. John Dave, Money Gram Director, send to
-him your address including your phone numbers. He will be sending the
-transfer to you  $5000.00 USD daily until you received your complete
-payment $2.5m from the office.
-Note,I have paid the whole service fees for you but only small money
-you been required to send to this office is $23.00 only via Money Gram
-transfer.
-God bless
-Mary Coster, I.M.F director-Benin
-m.coster@aol.com
+Hello, 
+
+Bestiality Social Networking Platform. With pictures, videos and friend
+about bestiality and zoophilia porn. 
+Here you can meet and talk with people that love zoo sex.
+
+Register for a free account with us today
+https://www.zoosbook.com/register
+
+Let your animalic thoughts get alive.
+
+After you`ll get a feeling of the things inside, please give us a nice
+review here
+https://www.scamadviser.com/check-website/zoosbook.com
+
+
+See you inside
+
+
