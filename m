@@ -2,52 +2,49 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DA24EEDA1A
-	for <lists+linux-raid@lfdr.de>; Mon,  4 Nov 2019 08:47:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E5C8EDDCA
+	for <lists+linux-raid@lfdr.de>; Mon,  4 Nov 2019 12:40:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbfKDHri (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 4 Nov 2019 02:47:38 -0500
-Received: from smtp.hosts.co.uk ([85.233.160.19]:10889 "EHLO smtp.hosts.co.uk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726391AbfKDHri (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 4 Nov 2019 02:47:38 -0500
-Received: from [86.155.171.62] (helo=[192.168.1.118])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1iRX5M-0001Fx-Af; Mon, 04 Nov 2019 07:47:36 +0000
-Subject: Re: [PATCH 1/2] Create: add support for RAID0 layouts.
-To:     NeilBrown <neilb@suse.de>, Jes Sorensen <jes.sorensen@gmail.com>
-References: <157283799101.17723.14738560497847478383.stgit@noble.brown>
- <157247951643.8013.12020039865359474811.stgit@noble.brown>
- <157283806994.17723.2465574926328635872.stgit@noble.brown>
-Cc:     linux-raid@vger.kernel.org,
-        dann frazier <dann.frazier@canonical.com>,
-        Song Liu <liu.song.a23@gmail.com>
-From:   Wols Lists <antlists@youngman.org.uk>
-Message-ID: <5DBFD797.3010605@youngman.org.uk>
-Date:   Mon, 4 Nov 2019 07:47:35 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.7.0
+        id S1728634AbfKDLk1 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 4 Nov 2019 06:40:27 -0500
+Received: from hn.kd.ny.adsl ([42.231.162.229]:1903 "HELO zoosbook.com"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
+        id S1728554AbfKDLk0 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 4 Nov 2019 06:40:26 -0500
+Received: from [165.88.155.125] by snmp.otwaloow.com with ESMTP; Mon, 04 Nov 2019 19:36:42 +0800
+Message-ID: <8EFDF329.64BADA4E@zoosbook.com>
+Date:   Mon, 04 Nov 2019 19:13:20 +0800
+Reply-To: "zoosbook.com" <admin@zoosbook.com>
+From:   "zoosbook.com" <admin@zoosbook.com>
+User-Agent: The Bat! (v3.95.6) Professional
+X-Accept-Language: en-us
 MIME-Version: 1.0
-In-Reply-To: <157283806994.17723.2465574926328635872.stgit@noble.brown>
-Content-Type: text/plain; charset=utf-8
+To:     <linux-raid@vger.kernel.org>
+Subject: FREE Bestiality Social Network
+Content-Type: text/plain;
+        charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 04/11/19 03:27, NeilBrown wrote:
-> Since Linux 5.4 a layout is needed for RAID0 arrays with
-> varying device sizes.
-> This patch makes the layout of an array visible (via --examine)
-> and sets the layout on newly created arrays.
-> --layout=dangerous
-> can be used to avoid setting a layout so that they array
+Hello, 
 
-s/they/the/
+Bestiality Social Networking Platform. With pictures, videos and friend
+about bestiality and zoophilia porn. 
+Here you can meet and talk with people that love zoo sex.
 
-> can be used on older kernels.
+Register for a free account with us today
+https://www.zoosbook.com/register
 
-Cheers,
-Wol
+Let your animalic thoughts get alive.
+
+After you`ll get a feeling of the things inside, please give us a nice
+review here
+https://www.scamadviser.com/check-website/zoosbook.com
+
+
+See you inside
+
+
