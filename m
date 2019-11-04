@@ -2,101 +2,370 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CE725ED808
-	for <lists+linux-raid@lfdr.de>; Mon,  4 Nov 2019 04:25:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B5041ED80C
+	for <lists+linux-raid@lfdr.de>; Mon,  4 Nov 2019 04:29:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729006AbfKDDZm (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 3 Nov 2019 22:25:42 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44128 "EHLO mx1.suse.de"
+        id S1729153AbfKDD32 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 3 Nov 2019 22:29:28 -0500
+Received: from mx2.suse.de ([195.135.220.15]:44310 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728847AbfKDDZm (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sun, 3 Nov 2019 22:25:42 -0500
+        id S1728444AbfKDD32 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sun, 3 Nov 2019 22:29:28 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 174C1B463;
-        Mon,  4 Nov 2019 03:25:41 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id B1925B463;
+        Mon,  4 Nov 2019 03:29:24 +0000 (UTC)
 From:   NeilBrown <neilb@suse.de>
-To:     dann frazier <dann.frazier@canonical.com>
-Date:   Mon, 04 Nov 2019 14:25:35 +1100
-Cc:     Jes Sorensen <jes.sorensen@gmail.com>, linux-raid@vger.kernel.org,
+To:     Jes Sorensen <jes.sorensen@gmail.com>
+Date:   Mon, 04 Nov 2019 14:27:49 +1100
+Subject: [PATCH 1/2] Create: add support for RAID0 layouts.
+Cc:     linux-raid@vger.kernel.org,
+        dann frazier <dann.frazier@canonical.com>,
         Song Liu <liu.song.a23@gmail.com>
-Subject: Re: [PATCH 2/2] Assemble: add support for RAID0 layouts.
-In-Reply-To: <20191031220311.GC24512@xps13.dannf>
-References: <157247951643.8013.12020039865359474811.stgit@noble.brown> <157247976452.8013.2396485247609220571.stgit@noble.brown> <20191031220311.GC24512@xps13.dannf>
-Message-ID: <87zhhccogg.fsf@notabene.neil.brown.name>
+Message-ID: <157283806994.17723.2465574926328635872.stgit@noble.brown>
+In-Reply-To: <157283799101.17723.14738560497847478383.stgit@noble.brown>
+References: <157283799101.17723.14738560497847478383.stgit@noble.brown> <157247951643.8013.12020039865359474811.stgit@noble.brown>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Since Linux 5.4 a layout is needed for RAID0 arrays with
+varying device sizes.
+This patch makes the layout of an array visible (via --examine)
+and sets the layout on newly created arrays.
+--layout=dangerous
+can be used to avoid setting a layout so that they array
+can be used on older kernels.
 
-On Thu, Oct 31 2019, dann frazier wrote:
+Tested-by: dann frazier <dann.frazier@canonical.com>
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+ Create.c   |   11 +++++++++++
+ Detail.c   |    5 +++++
+ maps.c     |   12 ++++++++++++
+ md.4       |   14 ++++++++++++++
+ mdadm.8.in |   30 +++++++++++++++++++++++++++++-
+ mdadm.c    |    8 ++++++++
+ mdadm.h    |    8 +++++++-
+ super0.c   |    6 ++++++
+ super1.c   |   30 +++++++++++++++++++++++++++++-
+ 9 files changed, 121 insertions(+), 3 deletions(-)
 
-> On Thu, Oct 31, 2019 at 10:56:04AM +1100, NeilBrown wrote:
->> If you have a RAID0 array with varying sized devices
->> on a kernel before 5.4, you cannot assembling it on
->> 5.4 or later without explicitly setting the layout.
->> This is now possible with
->>   --update=3Dlayout-original (For 3.13 and earlier kernels)
->> or
->>   --update=3Dlayout-alternate (for 3.15 and later kernels)
->
-> s/3.15/3.14/
->
->> Signed-off-by: NeilBrown <neilb@suse.de>
->> ---
->>  Assemble.c |    8 ++++++++
->>  md.4       |    7 +++++++
->>  mdadm.8.in |   17 +++++++++++++++++
->>  mdadm.c    |    4 ++++
->>  super1.c   |   12 +++++++++++-
->>  5 files changed, 47 insertions(+), 1 deletion(-)
->>=20
->> diff --git a/Assemble.c b/Assemble.c
->> index b2e69144f1a2..4066f93e977f 100644
->> --- a/Assemble.c
->> +++ b/Assemble.c
->> @@ -1031,6 +1031,11 @@ static int start_array(int mdfd,
->>  				pr_err("failed to add %s to %s: %s\n",
->>  				       devices[j].devname, mddev,
->>  				       strerror(errno));
->> +				if (errno =3D=3D EINVAL && content->array.level =3D=3D 0 &&
->> +				    content->array.layout !=3D 0) {
->> +					cont_err("Possibly your kernel doesn't support RAID0 layouts.\n");
->
-> Why possibly?
+diff --git a/Create.c b/Create.c
+index 292f92a9ae63..6f84e5b0de99 100644
+--- a/Create.c
++++ b/Create.c
+@@ -51,6 +51,9 @@ static int default_layout(struct supertype *st, int level, int verbose)
+ 		default: /* no layout */
+ 			layout = 0;
+ 			break;
++		case 0:
++			layout = RAID0_ORIG_LAYOUT;
++			break;
+ 		case 10:
+ 			layout = 0x102; /* near=2, far=1 */
+ 			if (verbose > 0)
+@@ -950,6 +953,11 @@ int Create(struct supertype *st, char *mddev,
+ 				if (rv) {
+ 					pr_err("ADD_NEW_DISK for %s failed: %s\n",
+ 					       dv->devname, strerror(errno));
++					if (errno == EINVAL &&
++					    info.array.level == 0) {
++						pr_err("Possibly your kernel doesn't support RAID0 layouts.\n");
++						pr_err("Either upgrade, or use --layout=dangerous\n");
++					}
+ 					goto abort_locked;
+ 				}
+ 				break;
+@@ -1046,6 +1054,9 @@ int Create(struct supertype *st, char *mddev,
+ 			if (ioctl(mdfd, RUN_ARRAY, &param)) {
+ 				pr_err("RUN_ARRAY failed: %s\n",
+ 				       strerror(errno));
++				if (errno == 524 /* ENOTSUP */ &&
++				    info.array.level == 0)
++					cont_err("Please use --layout=original or --layout=alternate\n");
+ 				if (info.array.chunk_size & (info.array.chunk_size-1)) {
+ 					cont_err("Problem may be that chunk size is not a power of 2\n");
+ 				}
+diff --git a/Detail.c b/Detail.c
+index 3e61e372fe9f..b77644d72d9f 100644
+--- a/Detail.c
++++ b/Detail.c
+@@ -525,6 +525,11 @@ int Detail(char *dev, struct context *c)
+ 			printf("            Layout : %s\n",
+ 			       str ? str : "-unknown-");
+ 		}
++		if (array.level == 0 && array.layout) {
++			str = map_num(r0layout, array.layout);
++			printf("            Layout : %s\n",
++			       str ? str : "-unknown-");
++		}
+ 		if (array.level == 6) {
+ 			str = map_num(r6layout, array.layout);
+ 			printf("            Layout : %s\n",
+diff --git a/maps.c b/maps.c
+index 49b7f2c2d274..a4fd27977c36 100644
+--- a/maps.c
++++ b/maps.c
+@@ -73,6 +73,18 @@ mapping_t r6layout[] = {
+ 	{ NULL, UnSet }
+ };
+ 
++/* raid0 layout is only needed because of a bug in 3.14 which changed
++ * the effective layout of raid0 arrays with varying device sizes.
++ */
++mapping_t r0layout[] = {
++	{ "original", RAID0_ORIG_LAYOUT},
++	{ "alternate", RAID0_ALT_MULTIZONE_LAYOUT},
++	{ "1", 1}, /* aka ORIG */
++	{ "2", 2}, /* aka ALT */
++	{ "dangerous", 0},
++	{ NULL, UnSet},
++};
++
+ mapping_t pers[] = {
+ 	{ "linear", LEVEL_LINEAR},
+ 	{ "raid0", 0},
+diff --git a/md.4 b/md.4
+index e86707a2cbb3..6fe275541abd 100644
+--- a/md.4
++++ b/md.4
+@@ -193,6 +193,20 @@ smallest device has been exhausted, the RAID0 driver starts
+ collecting chunks into smaller stripes that only span the drives which
+ still have remaining space.
+ 
++A bug was introduced in linux 3.14 which changed the layout of blocks in
++a RAID0 beyond the region that is striped over all devices.  This bug
++does not affect an array with all devices the same size, but can affect
++other RAID0 arrays.
++
++Linux 5.4 (and some stable kernels to which the change was backported)
++will not normally assemble such an array as it cannot know which layout
++to use.  There is a module parameter "raid0.default_layout" which can be
++set to "1" to force the kernel to use the pre-3.14 layout or to "2" to
++force it to use the 3.14-and-later layout.  when creating a new RAID0
++array,
++.I mdadm
++will record the chosen layout in the metadata in a way that allows newer
++kernels to assemble the array without needing a module parameter.
+ 
+ .SS RAID1
+ 
+diff --git a/mdadm.8.in b/mdadm.8.in
+index 9aec9f4f7259..fc9b6a66c088 100644
+--- a/mdadm.8.in
++++ b/mdadm.8.in
+@@ -593,6 +593,8 @@ to change the RAID level in some cases.  See LEVEL CHANGES below.
+ This option configures the fine details of data layout for RAID5, RAID6,
+ and RAID10 arrays, and controls the failure modes for
+ .IR faulty .
++It can also be used for working around a kernel bug with RAID0, but generally
++doesn't need to be used explicitly.
+ 
+ The layout of the RAID5 parity block can be one of
+ .BR left\-asymmetric ,
+@@ -652,7 +654,7 @@ option to set subsequent failure modes.
+ "clear" or "none" will remove any pending or periodic failure modes,
+ and "flush" will clear any persistent faults.
+ 
+-Finally, the layout options for RAID10 are one of 'n', 'o' or 'f' followed
++The layout options for RAID10 are one of 'n', 'o' or 'f' followed
+ by a small number.  The default is 'n2'.  The supported options are:
+ 
+ .I 'n'
+@@ -677,6 +679,32 @@ devices in the array.  It does not need to divide evenly into that
+ number (e.g. it is perfectly legal to have an 'n2' layout for an array
+ with an odd number of devices).
+ 
++A bug introduced in Linux 3.14 means that RAID0 arrays
++.B "with devices of differing sizes"
++started using a different layout.  This could lead to
++data corruption.  Since Linux 5.4 (and various stable releases that received
++backports), the kernel will not accept such an array unless
++a layout is explictly set.  It can be set to
++.RB ' original '
++or
++.RB ' alternate '.
++When creating a new array,
++.I mdadm
++will select
++.RB ' original '
++by default, so the layout does not normally need to be set.
++An array created for either
++.RB ' original '
++or
++.RB ' alternate '
++will not be recognized by an (unpatched) kernel prior to 5.4.  To create
++a RAID0 array with devices of differing sizes that can be used on an
++older kernel, you can set the layout to
++.RB ' dangerous '.
++This will use whichever layout the running kernel supports, so the data
++on the array may become corrupt when changing kernel from pre-3.14 to a
++later kernel.
++
+ When an array is converted between RAID5 and RAID6 an intermediate
+ RAID6 layout is used in which the second parity block (Q) is always on
+ the last device.  To convert a RAID5 to RAID6 and leave it in this new
+diff --git a/mdadm.c b/mdadm.c
+index 1fb8086050ee..e438f9c864da 100644
+--- a/mdadm.c
++++ b/mdadm.c
+@@ -550,6 +550,14 @@ int main(int argc, char *argv[])
+ 				pr_err("raid level must be given before layout.\n");
+ 				exit(2);
+ 
++			case 0:
++				s.layout = map_name(r0layout, optarg);
++				if (s.layout == UnSet) {
++					pr_err("layout %s not understood for raid0.\n",
++						optarg);
++					exit(2);
++				}
++				break;
+ 			case 5:
+ 				s.layout = map_name(r5layout, optarg);
+ 				if (s.layout == UnSet) {
+diff --git a/mdadm.h b/mdadm.h
+index c88ceab01875..242fd864d657 100644
+--- a/mdadm.h
++++ b/mdadm.h
+@@ -763,7 +763,8 @@ extern int restore_stripes(int *dest, unsigned long long *offsets,
+ 
+ extern char *map_num(mapping_t *map, int num);
+ extern int map_name(mapping_t *map, char *name);
+-extern mapping_t r5layout[], r6layout[], pers[], modes[], faultylayout[];
++extern mapping_t r0layout[], r5layout[], r6layout[],
++	pers[], modes[], faultylayout[];
+ extern mapping_t consistency_policies[], sysfs_array_states[];
+ 
+ extern char *map_dev_preferred(int major, int minor, int create,
+@@ -1757,6 +1758,11 @@ char *xstrdup(const char *str);
+ #define makedev(M,m) (((M)<<8) | (m))
+ #endif
+ 
++enum r0layout {
++	RAID0_ORIG_LAYOUT = 1,
++	RAID0_ALT_MULTIZONE_LAYOUT = 2,
++};
++
+ /* for raid4/5/6 */
+ #define ALGORITHM_LEFT_ASYMMETRIC	0
+ #define ALGORITHM_RIGHT_ASYMMETRIC	1
+diff --git a/super0.c b/super0.c
+index 42989b9f66eb..9adb33480783 100644
+--- a/super0.c
++++ b/super0.c
+@@ -1291,6 +1291,12 @@ static int validate_geometry0(struct supertype *st, int level,
+ 	if (*chunk == UnSet)
+ 		*chunk = DEFAULT_CHUNK;
+ 
++	if (level == 0 && layout != UnSet) {
++		if (verbose)
++			pr_err("0.90 metadata does not support layouts for RAID0\n");
++		return 0;
++	}
++
+ 	if (!subdev)
+ 		return 1;
+ 
+diff --git a/super1.c b/super1.c
+index b85dc20ca605..511ac444ae7c 100644
+--- a/super1.c
++++ b/super1.c
+@@ -43,7 +43,7 @@ struct mdp_superblock_1 {
+ 
+ 	__u64	ctime;		/* lo 40 bits are seconds, top 24 are microseconds or 0*/
+ 	__u32	level;		/* -4 (multipath), -1 (linear), 0,1,4,5 */
+-	__u32	layout;		/* only for raid5 currently */
++	__u32	layout;		/* used for raid5, raid6, raid10, and raid0 */
+ 	__u64	size;		/* used size of component devices, in 512byte sectors */
+ 
+ 	__u32	chunksize;	/* in 512byte sectors */
+@@ -144,6 +144,7 @@ struct misc_dev_info {
+ #define	MD_FEATURE_JOURNAL		512 /* support write journal */
+ #define	MD_FEATURE_PPL			1024 /* support PPL */
+ #define	MD_FEATURE_MUTLIPLE_PPLS	2048 /* support for multiple PPLs */
++#define	MD_FEATURE_RAID0_LAYOUT		4096 /* layout is meaningful in RAID0 */
+ #define	MD_FEATURE_ALL			(MD_FEATURE_BITMAP_OFFSET	\
+ 					|MD_FEATURE_RECOVERY_OFFSET	\
+ 					|MD_FEATURE_RESHAPE_ACTIVE	\
+@@ -155,6 +156,7 @@ struct misc_dev_info {
+ 					|MD_FEATURE_JOURNAL		\
+ 					|MD_FEATURE_PPL			\
+ 					|MD_FEATURE_MULTIPLE_PPLS	\
++					|MD_FEATURE_RAID0_LAYOUT	\
+ 					)
+ 
+ static int role_from_sb(struct mdp_superblock_1 *sb)
+@@ -498,6 +500,11 @@ static void examine_super1(struct supertype *st, char *homehost)
+ 	printf("         Events : %llu\n",
+ 	       (unsigned long long)__le64_to_cpu(sb->events));
+ 	printf("\n");
++	if (__le32_to_cpu(sb->level) == 0 &&
++	    (sb->feature_map & __cpu_to_le32(MD_FEATURE_RAID0_LAYOUT))) {
++		c = map_num(r0layout, __le32_to_cpu(sb->layout));
++		printf("         Layout : %s\n", c?c:"-unknown-");
++	}
+ 	if (__le32_to_cpu(sb->level) == 5) {
+ 		c = map_num(r5layout, __le32_to_cpu(sb->layout));
+ 		printf("         Layout : %s\n", c?c:"-unknown-");
+@@ -1646,6 +1653,7 @@ struct devinfo {
+ 	int fd;
+ 	char *devname;
+ 	long long data_offset;
++	unsigned long long dev_size;
+ 	mdu_disk_info_t disk;
+ 	struct devinfo *next;
+ };
+@@ -1687,6 +1695,7 @@ static int add_to_super1(struct supertype *st, mdu_disk_info_t *dk,
+ 	di->devname = devname;
+ 	di->disk = *dk;
+ 	di->data_offset = data_offset;
++	get_dev_size(fd, NULL, &di->dev_size);
+ 	di->next = NULL;
+ 	*dip = di;
+ 
+@@ -1888,10 +1897,25 @@ static int write_init_super1(struct supertype *st)
+ 	unsigned long long sb_offset;
+ 	unsigned long long data_offset;
+ 	long bm_offset;
++	int raid0_need_layout = 0;
+ 
+ 	for (di = st->info; di; di = di->next) {
+ 		if (di->disk.state & (1 << MD_DISK_JOURNAL))
+ 			sb->feature_map |= __cpu_to_le32(MD_FEATURE_JOURNAL);
++		if (sb->level == 0 && sb->layout != 0) {
++			struct devinfo *di2 = st->info;
++			unsigned long long s1, s2;
++			s1 = di->dev_size;
++			if (di->data_offset != INVALID_SECTORS)
++				s1 -= di->data_offset;
++			s1 /= __le32_to_cpu(sb->chunksize);
++			s2 = di2->dev_size;
++			if (di2->data_offset != INVALID_SECTORS)
++				s2 -= di2->data_offset;
++			s2 /= __le32_to_cpu(sb->chunksize);
++			if (s1 != s2)
++				raid0_need_layout = 1;
++		}
+ 	}
+ 
+ 	for (di = st->info; di; di = di->next) {
+@@ -2039,6 +2063,10 @@ static int write_init_super1(struct supertype *st)
+ 			sb->bblog_offset = 0;
+ 		}
+ 
++		/* RAID0 needs a layout if devices aren't all the same size */
++		if (raid0_need_layout)
++			sb->feature_map |= __cpu_to_le32(MD_FEATURE_RAID0_LAYOUT);
++
+ 		sb->sb_csum = calc_sb_1_csum(sb);
+ 		rv = store_super1(st, di->fd);
+ 
 
-Because there might be other circumstances that could result in EINVAL.
-I tend to be cautious when determining the cause for a particular
-effect.
 
-I've made all the changes you suggested.  Thanks a lot.
-
-NeilBrown
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl2/mi8ACgkQOeye3VZi
-gblsLA/6AqxI3y/Y+jMkZxtgvtWDsuPGoKp62FkreaCNSN00gL2lx9ykIKC9rKj7
-ReP7ikUf9cE23vCvYATGXFvLwsYrF81THURWW41sKaFNzF6rDmh4Y2xNJ3pRPXmG
-n1xsthB7ZAPpUaIVEQxTvR8GIsuKLOJ2HZCdFxA40SE32iMJWBuz/mRwqFHBUxto
-ZZlPlD8LRYePj/v66EpCRlsQ0fJaQWm8LDb/ucESlt0ZnuMGryFaEO00TGRDAz1A
-fxM3rnj801h4ljs5Xp1DMbP2MUPw/PjzzWPTDnNXwuc3SjY9XY+PVJKaXn2FOojt
-oAK35+d7H5WrwYGd4RQw79YyFDybvG+rawygqkGOnFUU8PemsQRg3odXwPBHi3X+
-P9RjkTpWv+5iccJVXRGzwtgvdfysxxK2M6lGaLaM4HWTDWcApSgAi1lzQCm9jmQ+
-CYTNJqrbqynaOcmCXn0BcNO6XwbqSdDvdK6kwIqEs4qqUo/4W6IKOyiq+MdxF2Xa
-3lLHgFEr5Aj2lJ0FsAFGqOcCHLHjuO/5xnpI9r2KgwPB1yBe4horPBVBpmniTOU9
-PmdNKNUQfI50ILYb4bP+fs7h6huQM3UjcU+XvQ9y3G8oaD0omY3jAI30DtTM0vI5
-VA/5R97G+E5w6pwdp+dmm95zeV7lkVx/OydRarDM8k7KnWOqZxc=
-=jElX
------END PGP SIGNATURE-----
---=-=-=--
