@@ -2,82 +2,126 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A266BF07DC
-	for <lists+linux-raid@lfdr.de>; Tue,  5 Nov 2019 22:11:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BFBCF07FA
+	for <lists+linux-raid@lfdr.de>; Tue,  5 Nov 2019 22:14:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729880AbfKEVLc (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 5 Nov 2019 16:11:32 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:40409 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725806AbfKEVLc (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 5 Nov 2019 16:11:32 -0500
-Received: by mail-qk1-f195.google.com with SMTP id a18so4945279qkk.7
-        for <linux-raid@vger.kernel.org>; Tue, 05 Nov 2019 13:11:32 -0800 (PST)
+        id S1729948AbfKEVOm (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 5 Nov 2019 16:14:42 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:38382 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729915AbfKEVOm (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 5 Nov 2019 16:14:42 -0500
+Received: by mail-qt1-f193.google.com with SMTP id p20so12967341qtq.5
+        for <linux-raid@vger.kernel.org>; Tue, 05 Nov 2019 13:14:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Ux8C3pyrQrbTMbeUIHNrN9hXEijWGi7sMC+DuRdBmdY=;
-        b=cSWGW3OnhwCdVoDnYRl+vnMlXhPIc6bEwgzspEDOuKXjcJnylZKB2kUMLAbMwMk1/w
-         8Z/wVpTcHZ1hfROaHr9h4fNZA93/cpMRmuECXV+wQFHKQmMxFa6cHuYbv4M/tLGXq/vQ
-         8dr71EsZmzyq2g9swS6/aYAD+6KMSKjeYaJ3whBYAFWS1DyVa4GDm3r3Qp6LiybrLYD9
-         1DYUorWyoAFBkhExiupuF590b6e/QxzsDGVb39zDGyqifxSmF7KnvEU0nXHNTdHe1CUn
-         2ItFtgU7C11ZprruHtuuCQBVCpLwQUObduhjJbKBpFrwRzQKlak90qn8RwYTCK0YjW6Y
-         La1Q==
+        bh=C80ad+6svXp0DS0DoHtoC1qZcQoGwsgkypayjqyc/pw=;
+        b=cyt4s5l9f4sxowoXeRKW/N+wZair3qKtdvBiN5Obbgs2dT6OIaQpbXsWpO8xYhgGOr
+         yyoRTxzc9y5AxSuksQ28A73RaqJKqBONqazLC2FDBt3pQoKFuhWgqsZ+48z84fD141lO
+         NVKIS7GMomMfikAsBCjZIsrR0A24wZBgt3TF/ZlXM7AANR1UqCK9OgqNLQIcPOkohG6c
+         CIcoBT5gP9qInYJZHrMP1EffFFBBwrMi7kQM0Qq+uO2nk3gBQnsUOPUNjqgFdq20inzy
+         nszr/KcGCh8CFis0MsvDAh1TaPCd6qM5KrLequKx5lyYwjNuVKKuV9vVQ6Hue5TUQvi8
+         lBZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Ux8C3pyrQrbTMbeUIHNrN9hXEijWGi7sMC+DuRdBmdY=;
-        b=SpjZm7d8NMzfaD3Q3OgeLoaymwLw8IiWzjeCbJ2UO0wh2c3ELKPfDFaiZCeEOSfkwt
-         9h+kn6T06WzKWOY38VGNM7gFGGBc/cvOg2P4NjTw/cuH7IkEUyt5uPZwA3buFnNLzklS
-         u8zrd4m7RuEua4xAlZAzNZKni9ISmN31U0Et7zFI1KEmIxLM6ctIoGRvYQuxa2jKM1Sn
-         Mvz9A5GfiPXSaKVrT4IovurzJICNbZHSgN/YSIMEWxTYai4iEQsdtrckLufnZHcCUtj0
-         Pi4f0Sms8hfIB35ZO9RNRsbPwk0ctaiCvafo/VEzE3nYQzE1nOBMFQVnBIo9ExYYhJU/
-         6mxg==
-X-Gm-Message-State: APjAAAXdgFnv5BPIad4amGURryeoVDROLdS2CntSqcb7lfb/KjeYtVCr
-        ovgHm58po+6A4vc66M7miDebptPyZXVhQH0Mqm0ZIg==
-X-Google-Smtp-Source: APXvYqxTvbMdUdxlac//Gx59A4Xp/D9MQIw9MXo2sfKgfQ/2OMoTfksy/BeoMpe87xzVzrx/4LxBAZyXoAHH6QPJOVg=
-X-Received: by 2002:a37:b801:: with SMTP id i1mr9660443qkf.497.1572988291466;
- Tue, 05 Nov 2019 13:11:31 -0800 (PST)
+        bh=C80ad+6svXp0DS0DoHtoC1qZcQoGwsgkypayjqyc/pw=;
+        b=qyKfs//PgWCZ4nDdJAjPs+L2sCxGGZt39Jjqn7ZA+WXD3MNvpM2mT5r/weJ/AGQDZu
+         RCkPTcPgoUYmcafCDuiL8HG+DTqwC3PbXtEKKEOLJCsNW6MNTkf6SgfugAxnOysZuJhc
+         WY2i6haHRGNbuav1FEwk+wXt4GdJt8pz98eptEGWqhKFzuc+mnmv1F0oaPCK0qBenkf+
+         yIC0jRTA5WmKMqbcDcotwFic/2aAm9qTiPAERqh4XKCmqGQ+6/6ax/JJMryTknc8wCEy
+         X2zRYyFWcfAB7/GoExhFMnD4oVFkQk+7o6nM8YaiWbIzmHFw/KsZKnsFkiUIZam22AzC
+         nzbw==
+X-Gm-Message-State: APjAAAWndbLfpQkkKTN0+aMbQxY/51obW/L/eZtzQvOUw9rMPWBzxN+N
+        KjHP5CWjkCqysgePYbN8kZHsMy4mecuXeC316wo=
+X-Google-Smtp-Source: APXvYqxOlfwt0LdIkk8yPAy84Oc0oxYEgKPYGJaxMpunB7Motcx/X2kP/6iCN7PtAiLNkC+JFPx8vybtR3Ip9YItRc4=
+X-Received: by 2002:ac8:2f45:: with SMTP id k5mr19777659qta.183.1572988480854;
+ Tue, 05 Nov 2019 13:14:40 -0800 (PST)
 MIME-Version: 1.0
-References: <20191104200157.31656-1-ncroxon@redhat.com> <5DC0C34B.1040102@youngman.org.uk>
-In-Reply-To: <5DC0C34B.1040102@youngman.org.uk>
+References: <20191104200157.31656-1-ncroxon@redhat.com>
+In-Reply-To: <20191104200157.31656-1-ncroxon@redhat.com>
 From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Tue, 5 Nov 2019 13:11:20 -0800
-Message-ID: <CAPhsuW5bkFEk+t06JQufyYbzr-ckUfpQtgctoe6jy4wxzesBhw@mail.gmail.com>
+Date:   Tue, 5 Nov 2019 13:14:30 -0800
+Message-ID: <CAPhsuW7J-3ewXRvB9H1m44L_sVnuKBGTLcuRiKKN4YLRNivxtQ@mail.gmail.com>
 Subject: Re: [PATCH] raid456: avoid second retry of read-error
-To:     Wols Lists <antlists@youngman.org.uk>
-Cc:     Nigel Croxon <ncroxon@redhat.com>,
-        linux-raid <linux-raid@vger.kernel.org>
+To:     Nigel Croxon <ncroxon@redhat.com>,
+        Wols Lists <antlists@youngman.org.uk>
+Cc:     linux-raid <linux-raid@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 4:33 PM Wols Lists <antlists@youngman.org.uk> wrote:
+On Mon, Nov 4, 2019 at 12:02 PM Nigel Croxon <ncroxon@redhat.com> wrote:
 >
-> On 04/11/19 20:01, Nigel Croxon wrote:
-> > The MD driver for level-456 should prevent re-reading read errors.
-> >
-> > For redundant raid it makes no sense to retry the operation:
-> > When one of the disks in the array hits a read error, that will
-> > cause a stall for the reading process:
-> > - either the read succeeds (e.g. after 4 seconds the HDD error
-> > strategy could read the sector)
-> > - or it fails after HDD imposed timeout (w/TLER, e.g. after 7
-> > seconds (might be even longer)
+> The MD driver for level-456 should prevent re-reading read errors.
 >
-> Okay, I'm being completely naive here, but what is going on? Are you
-> saying that if we hit a read error, we just carry on, ignore it, and
-> calculate the missing block from parity?
+> For redundant raid it makes no sense to retry the operation:
+> When one of the disks in the array hits a read error, that will
+> cause a stall for the reading process:
+> - either the read succeeds (e.g. after 4 seconds the HDD error
+> strategy could read the sector)
+> - or it fails after HDD imposed timeout (w/TLER, e.g. after 7
+> seconds (might be even longer)
 >
-> If so, what happens if we hit two errors on a raid-5, or 3 on a raid-6,
-> or whatever ... :-)
+> The user can enable/disable this functionality by the following
+> commands:
+> To Enable:
+> echo 1 > /proc/sys/dev/raid/raid456_retry_read_error
+>
+> To Disable, type the following at anytime:
+> echo 0 > /proc/sys/dev/raid/raid456_retry_read_error
+>
+> Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
+> ---
+>  drivers/md/md.c    | 43 +++++++++++++++++++++++++++++++++++++++++++
+>  drivers/md/md.h    |  3 +++
+>  drivers/md/raid5.c |  3 ++-
+>  3 files changed, 48 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 6f0ecfe8eab2..75b8b0615328 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -125,6 +125,12 @@ static inline int speed_max(struct mddev *mddev)
+>                 mddev->sync_speed_max : sysctl_speed_limit_max;
+>  }
+>
+> +static int sysctl_raid456_retry_read_error = 0;
+> +static inline void set_raid456_retry_re(struct mddev *mddev, int re)
+> +{
+> +       (re ? set_bit : clear_bit)(MD_RAID456_RETRY_RE, &mddev->flags);
 
-Based on my understanding (no data on this), the drive will retry read
-internally before return error. Therefore, host level retry doesn't really
-help. But I could be wrong.
+Let's just keep this
+if (re)
+     set_bit(...);
+else
+     clear_bit(..);
 
+> +}
+> +
+>  static int rdev_init_wb(struct md_rdev *rdev)
+>  {
+>         if (rdev->bdev->bd_queue->nr_hw_queues == 1)
+> @@ -213,6 +219,13 @@ static struct ctl_table raid_table[] = {
+>                 .mode           = S_IRUGO|S_IWUSR,
+>                 .proc_handler   = proc_dointvec,
+>         },
+> +       {
+> +               .procname       = "raid456_retry_read_error",
+> +               .data           = &sysctl_raid456_retry_read_error,
+> +               .maxlen         = sizeof(int),
+> +               .mode           = S_IRUGO|S_IWUSR,
+> +               .proc_handler   = proc_dointvec,
+> +       },
+>         { }
+>  };
+
+How about we add this to md_redundancy_attrs instead?
+
+Thanks,
 Song
