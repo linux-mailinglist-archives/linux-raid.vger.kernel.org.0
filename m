@@ -2,71 +2,86 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CEDC3F08F8
-	for <lists+linux-raid@lfdr.de>; Tue,  5 Nov 2019 23:03:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CDB1F09BE
+	for <lists+linux-raid@lfdr.de>; Tue,  5 Nov 2019 23:46:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730057AbfKEWDk (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 5 Nov 2019 17:03:40 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:41639 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729830AbfKEWDj (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 5 Nov 2019 17:03:39 -0500
-Received: by mail-qk1-f193.google.com with SMTP id m125so22696398qkd.8
-        for <linux-raid@vger.kernel.org>; Tue, 05 Nov 2019 14:03:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uk23NQuv3GFa0LiOClOvQWv2cCRKfoCMx6hE1c+vHz4=;
-        b=LyQNxx0SQFoeAXfBeTJszf5ML69RnHQxDY0j9742iOvRERvvXMRJls+8bMc20NPTKs
-         sp/WgHC/haE8818SlrIydHgGq0c3trCi4J2azNuJsbkktrrYbjrgL7+RZwWnwN4JF0UA
-         1N//maGVggM6Zy+plam3yiWgazOPOpn0F81xU98Oq6TklQUOMKHUSLQTRoOp9ju6ku97
-         wFZIGPZo9VmDaj7Y6nHgtKqGdQG5FSatRPl52+cOKfy1td4dMjqHgPsPNQDrCW5aFpxp
-         HQ6gTaW6ZEbnoO6xEh6nunjjhEHy+1uGVv7wi1G0jS7tHt1rGe1h7L1CfzQkfzPIlS6o
-         KM3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uk23NQuv3GFa0LiOClOvQWv2cCRKfoCMx6hE1c+vHz4=;
-        b=LZ/9dVijXtBzf4OTHvV2SMbbjkm7lUOg1wtFi0zzBRUpbQt3IA1lkAclbRLuGweHel
-         X7ae085+XZgQn0nRQlB6mQ8f8YBRlAFrTThRJfe//ls0tV+1Mo/uwk4KBo8sH4JOwev9
-         76xlyBaYMq/4jKsBu5CPJFDqC5JHfWjsSpgzAZr4DrAb8UUOkuoExKsV9geqUuObN++i
-         XlhxUD0OVk4Q88Y+NxQmhQrdo8sj/Wt+6kHIMS6uCOskUS4IzNwCv5Dy7KDWXCmO3v/L
-         2BJDQnnFN7m7jdG8M7BFhn6GaekKFlYPBwDO5eZePwkGQF8PrduGMgub726cysDmJi3N
-         GkyQ==
-X-Gm-Message-State: APjAAAXTCd7MkHMbJhKOLbcEM6DFRvt3GeeE0EygddnR5qcrKTFOLLv7
-        3LaUzDbjOQnPLqP4N8PfPGdeE0+jkX1tplBj67g=
-X-Google-Smtp-Source: APXvYqwbJoz9+rpoGcZPucu4sP6u2bQeLYC6T0LotYalFIRfy/lR0cHBJ34skybm7W8CGYa3bp+YC7wyaY5VVBWSY9k=
-X-Received: by 2002:ae9:ef06:: with SMTP id d6mr12828749qkg.168.1572991418839;
- Tue, 05 Nov 2019 14:03:38 -0800 (PST)
+        id S1730266AbfKEWqM (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 5 Nov 2019 17:46:12 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:29916 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728515AbfKEWqM (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 5 Nov 2019 17:46:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572993971;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=So8Cf3GelXsUjBgLfzLC23CHNsQSgKI9J7EOShl7N1Y=;
+        b=MCNuNalm2Dv4ntEPMr1dT117QlZgvv3P5HuBDtdMzewjdWqKaPTf112P8QAqRJKxyrhyyX
+        mu3TOO+uARfcipr2X0HdRTPqi6aCrDL7fAXLmwIsxplqeG4bdIT9tHQV74SPLWZ7KIn+0u
+        1qmECgB1zEw6p10RN7JXgk3oVLW84MQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-240-EMRnalkwNG-t0gOqJPCRpw-1; Tue, 05 Nov 2019 17:46:07 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 248021005500;
+        Tue,  5 Nov 2019 22:46:06 +0000 (UTC)
+Received: from [10.10.123.46] (ovpn-123-46.rdu2.redhat.com [10.10.123.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8685019C4F;
+        Tue,  5 Nov 2019 22:46:05 +0000 (UTC)
+From:   Nigel Croxon <ncroxon@redhat.com>
+Subject: Re: [PATCH] raid456: avoid second retry of read-error
+To:     Wols Lists <antlists@youngman.org.uk>, linux-raid@vger.kernel.org,
+        liu.song.a23@gmail.com
+References: <20191104200157.31656-1-ncroxon@redhat.com>
+ <5DC0C34B.1040102@youngman.org.uk>
+Message-ID: <dc736544-465e-f4eb-ca6d-e7b135074839@redhat.com>
+Date:   Tue, 5 Nov 2019 17:46:04 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20191101142231.23359-1-guoqing.jiang@cloud.ionos.com> <20191101142231.23359-7-guoqing.jiang@cloud.ionos.com>
-In-Reply-To: <20191101142231.23359-7-guoqing.jiang@cloud.ionos.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Tue, 5 Nov 2019 14:03:27 -0800
-Message-ID: <CAPhsuW4tFUO4UAWyRoMsPTWKBq7=fe0jj-9ojP=r2oF2_OgrQw@mail.gmail.com>
-Subject: Re: [PATCH 6/8] md: switch from list to rb tree for IO serialization
-To:     Guoqing Jiang <jgq516@gmail.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5DC0C34B.1040102@youngman.org.uk>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: EMRnalkwNG-t0gOqJPCRpw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Fri, Nov 1, 2019 at 7:23 AM <jgq516@gmail.com> wrote:
->
-> From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
->
-> Obviously, IO serialization could cause the degradation of
-> performance. In order to reduce the degradation, it is better
-> to replace link list with rb tree.
->
-> And with the inspiration of drbd_interval.c, a simpler
 
-Can we reuse the logic in drdb_interval.c instead of duplicating it?
+On 11/4/19 7:33 PM, Wols Lists wrote:
+> On 04/11/19 20:01, Nigel Croxon wrote:
+>> The MD driver for level-456 should prevent re-reading read errors.
+>>
+>> For redundant raid it makes no sense to retry the operation:
+>> When one of the disks in the array hits a read error, that will
+>> cause a stall for the reading process:
+>> - either the read succeeds (e.g. after 4 seconds the HDD error
+>> strategy could read the sector)
+>> - or it fails after HDD imposed timeout (w/TLER, e.g. after 7
+>> seconds (might be even longer)
+> Okay, I'm being completely naive here, but what is going on? Are you
+> saying that if we hit a read error, we just carry on, ignore it, and
+> calculate the missing block from parity?
+>
+> If so, what happens if we hit two errors on a raid-5, or 3 on a raid-6,
+> or whatever ... :-)
+>
+> Cheers,
+> Wol
 
-Thanks,
-Song
+This allows the device (disk) to fail faster.=A0 All logic is the same.
+
+If there is a read error, it does not retry that read, it calculates
+
+the data from the other disks.=A0 This patch removes the retry.
+
+-Nigel
+
