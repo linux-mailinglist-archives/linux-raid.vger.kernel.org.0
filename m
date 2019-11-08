@@ -2,30 +2,31 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 16443F618B
-	for <lists+linux-raid@lfdr.de>; Sat,  9 Nov 2019 21:59:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F2FD9F61C0
+	for <lists+linux-raid@lfdr.de>; Sat,  9 Nov 2019 23:33:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbfKIU7V (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 9 Nov 2019 15:59:21 -0500
-Received: from static-dsl-170.87-197-152.telecom.sk ([87.197.152.170]:38180
+        id S1726582AbfKIWdm (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 9 Nov 2019 17:33:42 -0500
+Received: from static-dsl-170.87-197-152.telecom.sk ([87.197.152.170]:55370
         "EHLO sldom.sldom" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726470AbfKIU7V (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 9 Nov 2019 15:59:21 -0500
-X-Greylist: delayed 71359 seconds by postgrey-1.27 at vger.kernel.org; Sat, 09 Nov 2019 15:59:20 EST
+        with ESMTP id S1726467AbfKIWdl (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 9 Nov 2019 17:33:41 -0500
 Received: from 127.0.0.1 (localhost [127.0.0.1])
-        by sldom.sldom (Postfix) with SMTP id 9CF4A1D4D6D;
-        Fri,  8 Nov 2019 11:26:38 +0100 (CET)
-Received: from [25.107.136.127] by 127.0.0.1 with ESMTP id 92968714; Fri, 08 Nov 2019 07:15:46 -0300
-Message-ID: <3$hr65-4t-2$9s$9@fnxi.9sr>
+        by sldom.sldom (Postfix) with SMTP id DAB4720D9EE;
+        Fri,  8 Nov 2019 15:39:54 +0100 (CET)
+Received: from [206.24.13.247]
+        by 127.0.0.1 SMTP id Hrb434k7Xx8DfQ;
+        Fri, 08 Nov 2019 19:31:10 +0500
+Message-ID: <bo$-nvh1-6-$g$-c$0fd0$41@0lh.ais>
 From:   "Simon Oliver" <olivia_simon@lihat.dds-akaun.com>
 Reply-To: "Simon Oliver" <olivia_simon@lihat.dds-akaun.com>
-To:     bluewin.ch@aol.com
+To:     ahbg@mktoob.com
 Subject: Seeking Investment Opportunities
-Date:   Fri, 08 Nov 19 07:15:46 GMT
-X-Mailer: QUALCOMM Windows Eudora Version 5.1
+Date:   Fri, 08 Nov 19 19:31:10 GMT
+X-Mailer: eGroups Message Poster
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
-        boundary="509C0775..1__0_"
+        boundary="D7__BF68D.DC"
 X-Priority: 3
 X-MSMail-Priority: Normal
 Sender: linux-raid-owner@vger.kernel.org
@@ -34,7 +35,7 @@ List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
 
---509C0775..1__0_
+--D7__BF68D.DC
 Content-Type: text/plain;
 Content-Transfer-Encoding: quoted-printable
 
@@ -52,5 +53,5 @@ one number and Occupation.
 Thank you
 Oliver Simon
 
---509C0775..1__0_--
+--D7__BF68D.DC--
 
