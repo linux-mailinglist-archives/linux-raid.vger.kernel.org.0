@@ -2,210 +2,148 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 43A99FCEEE
-	for <lists+linux-raid@lfdr.de>; Thu, 14 Nov 2019 20:49:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D8A52FD158
+	for <lists+linux-raid@lfdr.de>; Fri, 15 Nov 2019 00:09:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfKNTtX (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 14 Nov 2019 14:49:23 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60790 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbfKNTtX (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 14 Nov 2019 14:49:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573760962;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jlGqonlZvcKCuc0M6ru6hYkyJlBT0fQkG453cFncDR8=;
-        b=iX9rNkrcjzJnMK8AmURpuNC+2tnIp8JRf/b+YyjBMnpaaR+Unk7TK7I1RmWaDfDKAzmVjm
-        7S/W/sW0EYc4YIhtL8kQnuRyYM5njDChuInqZD01o7jxb01NOqrVE05kKW57Y1Z3FIoH/B
-        u3vBCFfnUGnb8Oeuq1cAngB27cNP9g8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-13-eK-keCAtMQSiN1kkfeM6vw-1; Thu, 14 Nov 2019 14:49:20 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A956A800C73
-        for <linux-raid@vger.kernel.org>; Thu, 14 Nov 2019 19:49:19 +0000 (UTC)
-Received: from localhost (dhcp-17-171.bos.redhat.com [10.18.17.171])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7B3705C21A
-        for <linux-raid@vger.kernel.org>; Thu, 14 Nov 2019 19:49:19 +0000 (UTC)
-From:   Nigel Croxon <ncroxon@redhat.com>
-To:     linux-raid@vger.kernel.org
-Subject: [PATCH] raid5: avoid second retry of read-error
-Date:   Thu, 14 Nov 2019 14:49:18 -0500
-Message-Id: <20191114194918.16688-1-ncroxon@redhat.com>
-In-Reply-To: <3d433e66-d9c5-d30c-2a12-cc145cfb8c17@redhat.com>
-References: <3d433e66-d9c5-d30c-2a12-cc145cfb8c17@redhat.com>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: eK-keCAtMQSiN1kkfeM6vw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
+        id S1727112AbfKNXJe (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 14 Nov 2019 18:09:34 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:45196 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726852AbfKNXJe (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 14 Nov 2019 18:09:34 -0500
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAEN5Uql004824;
+        Thu, 14 Nov 2019 15:09:30 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : content-type : content-id :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=uczZPyKNNBm3v6syLVt4asE4D5050HOilxyrbotezkw=;
+ b=PNlLgzmhMYXnslT2acjRs4SUVPBXlHhU7KOMrjWHPArIGLGoe/szxeOrOmjdi9mYY6fm
+ UqgH+JcIp9lxPxJ/S0Mp++XNPpcua+UnrOUkOxzKbNkBdUk+Wn05I5iRSCvsDK9PIoKI
+ WwXbjXs10XyMz9OAbjO5t6CP05nDiIaovbQ= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2w8w21qr6r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 14 Nov 2019 15:09:30 -0800
+Received: from ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) by
+ ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 14 Nov 2019 15:09:28 -0800
+Received: from ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) by
+ ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 14 Nov 2019 15:09:28 -0800
+Received: from NAM01-SN1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 14 Nov 2019 15:09:28 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MhbJl+MxGjX0Sos6qNxw6lp+1Bj3tax3UqDq6v7+x1Af4pyX6PWKmepLrat/U17U1gGdzFJKAMsPRpV4CiOIyXXYOoOU6/SDYdJ/iGaeI+4wXfDetTwVg74Hys6MsB0RSMipo1qcxXySU5Bp3GwidnFELrYP5U0iMqawDd/IzG+oTNVhwqpdR9jmK6Yf9zXGtYYXbOn5KOgt1kOeFWNcVoxONEtA+2Vf2M+0m6eTiVAOs68EWEh541kT+LpCsQJu3Xqi+NlH12yx8upa5bhPuoJlY/HVXLzfkqzSi3cwaSYQcZqgIGPwLiKSVyD0so4Jb18PzL/KIouSGB1QiypPzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uczZPyKNNBm3v6syLVt4asE4D5050HOilxyrbotezkw=;
+ b=fAYQaN86Jr0jcClhYr8WBM5djn4I43CElEPsowAKMGre2BY1iPWBPQiHOqMzlvYr0tqdn/lsS6qQ3XzoshfnFfLXEg0kHBEayzaTljo2LGUD3MVH1gQ031zHhvb8NNUxOxpdo12PC26LCHogRxVl1A8ar7FKXDQmiyWBIejAEgQyZNKTcogEc3hosI8SnewzoZUGx2IkIvqWFSENGaHo0cCQj0ewSDLRXCk2flgMAFn87sgC5j7+DxfXI/LSC9mLPj/spU5bMpakH9BKC31urB1bOCCJ0E16136XMZ02n4svdGEGbgqWUanMumo9b92GXuURth6Gk+fJMkPToQnnqQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uczZPyKNNBm3v6syLVt4asE4D5050HOilxyrbotezkw=;
+ b=LoN0QuuGjNMNrbZrBbagr7iG6Hjbkiz5xtQxyD9LWcLoqUiuP+97QMUc7TrYzAON9J52b9CPTHI2OQNPZg1OTQmVFP8KZVRr4HZjVBErkcuAerqQ20CrOXxsBjrVa33y25YVaYNHNMts4UGgFP33SV7Sq6jq2DgdfWfaKI2qQpk=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
+ MWHPR15MB1455.namprd15.prod.outlook.com (10.173.234.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.22; Thu, 14 Nov 2019 23:09:27 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::f831:d112:6187:90d9]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::f831:d112:6187:90d9%4]) with mapi id 15.20.2451.027; Thu, 14 Nov 2019
+ 23:09:27 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Jens Axboe <axboe@kernel.dk>,
+        linux-raid <linux-raid@vger.kernel.org>
+CC:     Eugene Syromiatnikov <esyr@redhat.com>
+Subject: [GIT PULL] md-next 20191114
+Thread-Topic: [GIT PULL] md-next 20191114
+Thread-Index: AQHVm0CP5w6BUO39VES8JFR1s/pJLw==
+Date:   Thu, 14 Nov 2019 23:09:27 +0000
+Message-ID: <3B22CE6D-0244-41C8-81EA-2FA72505FDCE@fb.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3601.0.10)
+x-originating-ip: [2620:10d:c090:200::3:e9ac]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: da6f2d87-fd65-4d0a-747b-08d76957b291
+x-ms-traffictypediagnostic: MWHPR15MB1455:
+x-microsoft-antispam-prvs: <MWHPR15MB1455598CEB108D046CC2990BB3710@MWHPR15MB1455.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2000;
+x-forefront-prvs: 02213C82F8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(39860400002)(396003)(136003)(366004)(189003)(199004)(2906002)(5660300002)(316002)(6512007)(256004)(33656002)(305945005)(6116002)(478600001)(14454004)(110136005)(7736002)(81156014)(486006)(186003)(476003)(86362001)(6486002)(46003)(2616005)(25786009)(4744005)(50226002)(6506007)(64756008)(102836004)(6436002)(71190400001)(99286004)(66446008)(8936002)(66556008)(76116006)(66476007)(36756003)(8676002)(81166006)(66946007)(4326008)(71200400001)(4001150100001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1455;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: MPuw0QtufYNndU7GeT8vbwJWfbeE3JvqcyT/8yBl1GPORB8xWwFwDKfJbb7RHH/ty96uasZmwjEUT3kS/7guKIJWzZiT/NWn44i9u5QmVC1mRBcH+8Xi3XhurKhUoSWDVA/gWdPtXQMxwp9efrRM39sRQ52rFWUPZLxzfLcDBOFWd8nbYLE+3GFAXGb/hZAU/Bi7Vw8LSKAYmkf7UEUNQGU1hXYOic6xK031rkgD2mOH1ko8KZ8QXrKgq8nzBNgPcmYxetGsAuSMUrcgtSTLTf5HvSgmoIHtf6HW5ltiVMfpdES8Tn+DsEgnku3E2ZuRL4TWj2IMV1G1rw0xhdikVl6e6YjImjR0SNy9fR4mb4vOTVfqJXo80qTiLQ0n7N3cD7+1TdkdxBRLW1ajRj/a8q91uwOp7JwpytOXE71n1BTVybLe7ozdg4akj4jvPTHq
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <45BB4EF4914FD64AA4593AC3BA017081@namprd15.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: da6f2d87-fd65-4d0a-747b-08d76957b291
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Nov 2019 23:09:27.2493
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: K7wc5NIXWZXuqFpF0jbhsmAAKWjeQuZqk5d6P4lR2GocfXrb5qB2jAPZlHd2xedhC1ATK6Lb24ZF6vy3MOB6IA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1455
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-14_05:2019-11-14,2019-11-14 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
+ mlxlogscore=924 clxscore=1011 mlxscore=0 lowpriorityscore=0
+ priorityscore=1501 phishscore=0 bulkscore=0 adultscore=0 spamscore=0
+ suspectscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-1911140188
+X-FB-Internal: deliver
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-The MD driver for level-456 should prevent re-reading read errors.
+Hi Jens,=20
 
-For redundant raid it makes no sense to retry the operation:
-When one of the disks in the array hits a read error, that will
-cause a stall for the reading process:
-- either the read succeeds (e.g. after 4 seconds the HDD error
-strategy could read the sector)
-- or it fails after HDD imposed timeout (w/TLER, e.g. after 7
-seconds (might be even longer)
+Please consider pulling the following changes for md-next on top of your=20
+for-5.5/drivers branch.
 
-The user can enable/disable this functionality by the following
-commands:
-To Enable:
-echo 1 > /proc/sys/dev/raid/raid456_retry_read_error
+Thanks,
+Song
 
-To Disable, type the following at anytime:
-echo 0 > /proc/sys/dev/raid/raid456_retry_read_error
 
-Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
----
- drivers/md/md.c    | 46 ++++++++++++++++++++++++++++++++++++++++++++++
- drivers/md/md.h    |  3 +++
- drivers/md/raid5.c |  4 +++-
- 3 files changed, 52 insertions(+), 1 deletion(-)
+The following changes since commit 15fbb2312f32cf99bd8e0247ac0240c9bce0ba47=
+:
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 1be7abeb24fd..6f47489e0b23 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -125,6 +125,15 @@ static inline int speed_max(struct mddev *mddev)
- =09=09mddev->sync_speed_max : sysctl_speed_limit_max;
- }
-=20
-+static int sysctl_raid5_retry_read_error =3D 0;
-+static inline void set_raid5_retry_re(struct mddev *mddev, int re)
-+{
-+=09if (re)
-+=09=09set_bit(MD_RAID5_RETRY_RE, &mddev->flags);
-+=09else
-+=09=09clear_bit(MD_RAID5_RETRY_RE, &mddev->flags);
-+}
-+
- static int rdev_init_wb(struct md_rdev *rdev)
- {
- =09if (rdev->bdev->bd_queue->nr_hw_queues =3D=3D 1)
-@@ -213,6 +222,13 @@ static struct ctl_table raid_table[] =3D {
- =09=09.mode=09=09=3D S_IRUGO|S_IWUSR,
- =09=09.proc_handler=09=3D proc_dointvec,
- =09},
-+=09{
-+=09=09.procname=09=3D "raid5_retry_read_error",
-+=09=09.data=09=09=3D &sysctl_raid5_retry_read_error,
-+=09=09.maxlen=09=09=3D sizeof(int),
-+=09=09.mode=09=09=3D S_IRUGO|S_IWUSR,
-+=09=09.proc_handler=09=3D proc_dointvec,
-+=09},
- =09{ }
- };
-=20
-@@ -4721,6 +4737,32 @@ mismatch_cnt_show(struct mddev *mddev, char *page)
-=20
- static struct md_sysfs_entry md_mismatches =3D __ATTR_RO(mismatch_cnt);
-=20
-+static ssize_t
-+raid5_retry_re_show(struct mddev *mddev, char *page)
-+{
-+=09return sprintf(page, "RAID456 retry Read Error =3D %u\n",
-+=09=09       test_bit(MD_RAID5_RETRY_RE, &mddev->flags));
-+}
-+
-+static ssize_t raid5_retry_re_store(struct mddev *mddev, const char *buf, =
-size_t len)
-+{
-+=09int retry;
-+
-+=09if (!mddev->private)
-+=09=09return -ENODEV;
-+
-+=09if (len > 1 ||
-+=09    kstrtoint(buf, 10, &retry) ||
-+=09    retry < 0 || retry > 1)
-+=09=09return -EINVAL;
-+
-+=09set_raid5_retry_re(mddev, retry);
-+=09return len;
-+}
-+
-+static struct md_sysfs_entry md_raid5_retry_read_error =3D
-+__ATTR(raid5_retry_read_error, S_IRUGO|S_IWUSR, raid5_retry_re_show, raid5=
-_retry_re_store);
-+
- static ssize_t
- sync_min_show(struct mddev *mddev, char *page)
- {
-@@ -5272,6 +5314,7 @@ static struct attribute *md_redundancy_attrs[] =3D {
- =09&md_suspend_hi.attr,
- =09&md_bitmap.attr,
- =09&md_degraded.attr,
-+=09&md_raid5_retry_read_error.attr,
- =09NULL,
- };
- static struct attribute_group md_redundancy_group =3D {
-@@ -5833,6 +5876,8 @@ static int do_md_run(struct mddev *mddev)
- =09if (mddev_is_clustered(mddev))
- =09=09md_allow_write(mddev);
-=20
-+=09set_raid5_retry_re(mddev, sysctl_raid5_retry_read_error);
-+
- =09/* run start up tasks that require md_thread */
- =09md_start(mddev);
-=20
-@@ -8411,6 +8456,7 @@ void md_do_sync(struct md_thread *thread)
- =09else
- =09=09desc =3D "recovery";
-=20
-+=09set_raid5_retry_re(mddev, sysctl_raid5_retry_read_error);
- =09mddev->last_sync_action =3D action ?: desc;
-=20
- =09/* we overload curr_resync somewhat here.
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index c5e3ff398b59..6703a7d0b633 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -254,6 +254,9 @@ enum mddev_flags {
- =09MD_BROKEN,              /* This is used in RAID-0/LINEAR only, to stop
- =09=09=09=09 * I/O in case an array member is gone/failed.
- =09=09=09=09 */
-+=09MD_RAID5_RETRY_RE,=09/* allow user-space to request RAID456
-+=09=09=09=09 * retry read errors
-+=09=09=09=09 */
- };
-=20
- enum mddev_sb_flags {
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 223e97ab27e6..0b627fface78 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -2567,7 +2567,8 @@ static void raid5_end_read_request(struct bio * bi)
- =09=09if (retry)
- =09=09=09if (sh->qd_idx >=3D 0 && sh->pd_idx =3D=3D i)
- =09=09=09=09set_bit(R5_ReadError, &sh->dev[i].flags);
--=09=09=09else if (test_bit(R5_ReadNoMerge, &sh->dev[i].flags)) {
-+=09=09=09else if ((test_bit(R5_ReadNoMerge, &sh->dev[i].flags)) ||
-+=09=09=09      (test_bit(MD_RAID5_RETRY_RE, &conf->mddev->flags))) {
- =09=09=09=09set_bit(R5_ReadError, &sh->dev[i].flags);
- =09=09=09=09clear_bit(R5_ReadNoMerge, &sh->dev[i].flags);
- =09=09=09} else
-@@ -6163,6 +6164,7 @@ static int  retry_aligned_read(struct r5conf *conf, s=
-truct bio *raid_bio,
- =09=09}
-=20
- =09=09set_bit(R5_ReadNoMerge, &sh->dev[dd_idx].flags);
-+=09=09set_bit(R5_ReadError, &sh->dev[dd_idx].flags);
- =09=09handle_stripe(sh);
- =09=09raid5_release_stripe(sh);
- =09=09handled++;
---=20
-2.18.1
+  bcache: don't export symbols (2019-11-13 15:42:51 -0700)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git md-next
+
+for you to fetch changes up to 0815ef3c019d280eb1b38e63ca7280f0f7db2bf8:
+
+  drivers/md/raid5-ppl.c: use the new spelling of RWH_WRITE_LIFE_NOT_SET (2=
+019-11-14 14:59:15 -0800)
+
+----------------------------------------------------------------
+Eugene Syromiatnikov (2):
+      drivers/md/raid5.c: use the new spelling of RWH_WRITE_LIFE_NOT_SET
+      drivers/md/raid5-ppl.c: use the new spelling of RWH_WRITE_LIFE_NOT_SE=
+T
+
+ drivers/md/raid5-ppl.c | 2 +-
+ drivers/md/raid5.c     | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)=
