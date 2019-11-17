@@ -2,86 +2,29 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 947C2FE1E1
-	for <lists+linux-raid@lfdr.de>; Fri, 15 Nov 2019 16:49:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AACAFF740
+	for <lists+linux-raid@lfdr.de>; Sun, 17 Nov 2019 03:17:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727723AbfKOPtt (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 15 Nov 2019 10:49:49 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39664 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727709AbfKOPtq (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 15 Nov 2019 10:49:46 -0500
-Received: by mail-io1-f66.google.com with SMTP id k1so10922749ioj.6
-        for <linux-raid@vger.kernel.org>; Fri, 15 Nov 2019 07:49:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=X5NAAOrJ3bS32ihsXavVCESX6DNfXdWEE7aVqtLVIHM=;
-        b=T96mBsWswYjsm0w7ecYkWpV509ib/ulk9bHbI0Xwo0rzkePegh7rSfOcmzGbyf8vTc
-         lns/HOXyf4/6jOYDVIgZ/CZyIfN2m2y88qVdmXSABhNsP0MXDIRsHGSOOd7wWkwuGiQx
-         ehcoBpFXp6INIFq3jwmveina1L3fsWjpzHRhMvlhwo8OJ8Dy4xuFXwCrYZiL/Ja/dmiU
-         sEvBblBcC09ww5H/W1Li3rJXBc1TYjMn46kjeboNwYGUiqFeNnjz46iJxarBlBzUTpau
-         7EU4w1MkRxjhgPFrJ2/ipVqnuE4IawmENFYcW1JVUg9OFLrEKZvfb77T8+3XayPV4Zd+
-         KrHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=X5NAAOrJ3bS32ihsXavVCESX6DNfXdWEE7aVqtLVIHM=;
-        b=oB4M1D3D1bUxT0ypFo2FRZLfvx+dUqiEN3Qeyq6s5Dloxo6uNX5e80I8LGBF9G2yeQ
-         HIIOsiGFUsdVvvMszVn8tfsICRy7tLruYj1XWYMEX52HIPKM97VL2OQ9TwfI73JfAh49
-         Z1lwhNwG7nEDLoJUcWNjLcK+nNhya4ntPLVmzD1wfPLRTsjWmOxaTougS+DePw+Yyzy2
-         cdo1ERGl04H9TpoAsJvlLtCwafZcHeJvvnuazuRglHAuDE6lFt0nqT9OruYSDAHVSANz
-         1X0EtaeJhTm1o2A7RitMwSh6dttbnJ3nNMgVihm/lBw3FwNjMVZtJmOVXAMmxM8EH9H4
-         kpXQ==
-X-Gm-Message-State: APjAAAWD5DO4pI6H2Yn9mvsFGUHi50F+562bUGgNXbI7DQBQLUo9RqOy
-        s7npFATTfZlo2QRblQxgp5ILgNXvCCM7kzr3Pw==
-X-Google-Smtp-Source: APXvYqxEj1beLI6zhjihT/lmX2Dk324PGcIr8veC5c+0F/PFQKT7AeNYgljOGh72OwNqCMMZvqGkvMbSAqCkDjgGkjg=
-X-Received: by 2002:a5e:8e02:: with SMTP id a2mr1343031ion.269.1573832982053;
- Fri, 15 Nov 2019 07:49:42 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:a02:7749:0:0:0:0:0 with HTTP; Fri, 15 Nov 2019 07:49:41
- -0800 (PST)
-Reply-To: moneygram.1820@outlook.fr
-From:   "Ms.Mary Coster" <info.zennitbankplcnigerian@gmail.com>
-Date:   Fri, 15 Nov 2019 16:49:41 +0100
-Message-ID: <CABHzvrkUQbbmg0Gr7foD3OjAJiY7Fd37=SW3mU=fnOPOcOyNdQ@mail.gmail.com>
-Subject: Goodnews, I have deposited your transfer total amount US$4.8million
- Dollars with Money Gram this morning. we agreed you will be receiving it
- $5000.00 daily.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+        id S1725901AbfKQCRU (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 16 Nov 2019 21:17:20 -0500
+Received: from [104.248.89.94] ([104.248.89.94]:53578 "EHLO TEST.localdomain"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725839AbfKQCRU (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sat, 16 Nov 2019 21:17:20 -0500
+X-Greylist: delayed 3327 seconds by postgrey-1.27 at vger.kernel.org; Sat, 16 Nov 2019 21:17:19 EST
+Received: from localhost (TEST [127.0.0.1])
+        by TEST.localdomain (Postfix) with SMTP id 300C519FCF9
+        for <linux-raid@vger.kernel.org>; Sun, 17 Nov 2019 01:02:05 +0000 (UTC)
+From:   linux-raid@vger.kernel.org
+To:     linux-raid@vger.kernel.org
+Reply-To: prodawez@teleworm.us
+Subject: Zdravstvujte! Vas interesujut bazy dannyh dlja prodazhi Vashih tovarov i uslug?
+Message-Id: <20191117010205.300C519FCF9@TEST.localdomain>
+Date:   Sun, 17 Nov 2019 01:02:05 +0000 (UTC)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Attn, Dear
-Goodnews, I have deposited your transfer total amount US$4.8million
-Dollars with Money Gram this morning. we agreed you will be receiving
-it $5000.00 daily.
-Contact Mr. John Dave Director, Money Gram to pick up your first Money
-Gram payment $5000.00 today.
-Contact Person; Mr. John Dave Director, Money Gram,International
-Remittance-Benin
-Email; moneygram.1820@outlook.fr
-Telephone; +229 62619517
-Please re-confirm your address to him once again such as listed below.
-1.Your Full Name..............................
-2.Address.........................
-3.Country....................
-4.Sex.........................................
-5.Your telephone numbers..........................
-6. Copy of your ID...........................
-This is to avoid sending your funds to wrong person, He is waiting to
-hear from you urgent today.
-Let me know once you pick up your transfer $5000.00 today.
-Finally, Note I have paid for the service fees, but only money will
-send to him is $90.00 transfer fee before you can pick up the transfer
-today.
-Ask, Mr. John Dave Director, Money Gram to give you direction where to
-send your transfer fee $90.00 only to Him Immediately so that you can
-pick up $5000.00 us dollars today.
-Thanks for undrstanding.
-Mary Coster
-m.coster@aol.com
+Zdravstvujte! Vas interesujut bazy dannyh dlja prodazhi Vashih tovarov i uslug?
+
