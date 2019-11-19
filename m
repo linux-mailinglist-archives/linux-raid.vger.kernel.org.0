@@ -2,83 +2,102 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 06C24100DE7
-	for <lists+linux-raid@lfdr.de>; Mon, 18 Nov 2019 22:42:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D872610279B
+	for <lists+linux-raid@lfdr.de>; Tue, 19 Nov 2019 16:05:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbfKRVmg (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 18 Nov 2019 16:42:36 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:42419 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbfKRVmg (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 18 Nov 2019 16:42:36 -0500
-Received: by mail-qv1-f66.google.com with SMTP id n4so4123479qvq.9
-        for <linux-raid@vger.kernel.org>; Mon, 18 Nov 2019 13:42:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cHZSLl4jn2Zv8yl5i2ZrnA3h/IOq3vYsYfM8BaBsZwk=;
-        b=SuNE1vdUXn3CVdtAkgB2J3PoxoastE+HMgZsM4kMeqSaMilTbj9oDFESG3WtdyvOsz
-         JXxCJwbft/Yet2ibeqWs68O51gCoqDGW42Hw8BiEPRPjodG6y7zmUNDzfZzHnW5CKiH4
-         DE2RV8dGerbnvidqAE3Enio03uHo+8yLsIFEryhJQ5J+t0oxMmJhDenD1lzN4jjNBcRL
-         jtEpvS2xoWq6koKBDma/tvppsC1/QYa3ksGDSJ8+WcD2e6ARWx0CbzOOqi39QMA8t9bh
-         5jBhD32+vVTpy914/iTBlkeB7eNQdaOlR7Q8401rUMQ/6+HU9/bx0JYZ9wZNTPwx+xwn
-         CUdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cHZSLl4jn2Zv8yl5i2ZrnA3h/IOq3vYsYfM8BaBsZwk=;
-        b=HjXYu2B1+sCsPB2xZ0C+cUYhGRFF+O6tNX/bgoPaomqGEcA8SgNMI0aG8LTmqPQVpn
-         /2JDnx69HmoTOdSSGDDBZ2XTstcBBb3AWJ13xQx3ML4CSkB+s63tU1iF8gVNxh6saNNN
-         BVoenkycak8XsfRbsgaAKLFD7+FjW9C++K9bCPOE5LPF5DrJE6I+ornRu/bFmfGjRU+k
-         qpnIKvRPDU87P4SaHRahrO6j+gTwrCC3hryWdEuLdAmm/gkAErRYhK41ELQt9IlC8cCM
-         30UO7ras82KG+8D/fHmp7WD8hdH05jc9IiBuHPkAgkjQJaSxvYu0lMynDngDPRhK9Mto
-         xodg==
-X-Gm-Message-State: APjAAAVqbkrLTRvSTclX5wa9Dzv2TEIprXhWa3490MM6grH+IlL7MSgc
-        F7QZkvGRjEPHCwERFxuzhGYgm0wtdJWq7eIbeMs=
-X-Google-Smtp-Source: APXvYqxWfSeskVweeoxabURgkS/y8l1Ic0VEtqS8oVPi+Zf0hBhfgcmvwVTwR0LzN0lk9N3XooE9gZinYP6I7ajNyzI=
-X-Received: by 2002:a05:6214:852:: with SMTP id dg18mr7452122qvb.8.1574113355619;
- Mon, 18 Nov 2019 13:42:35 -0800 (PST)
+        id S1728054AbfKSPFT (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 19 Nov 2019 10:05:19 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46176 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727066AbfKSPFS (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 19 Nov 2019 10:05:18 -0500
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1iX548-0006Z9-Eq; Tue, 19 Nov 2019 15:05:16 +0000
+Received: from ben by deadeye with local (Exim 4.93-RC1)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1iX548-0002N9-2O; Tue, 19 Nov 2019 15:05:16 +0000
+Message-ID: <46dc1928560995ad297c47de39c067b66f0babc4.camel@decadent.org.uk>
+Subject: Re: Fix bad backport to stable v3.16+
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Song Liu <songliubraving@fb.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Cc:     linux-raid <linux-raid@vger.kernel.org>,
+        Nigel Croxon <ncroxon@redhat.com>,
+        "linux@thorsten-knabe.de" <linux@thorsten-knabe.de>
+Date:   Tue, 19 Nov 2019 15:05:10 +0000
+In-Reply-To: <5F8253BF-1167-4A48-A3AC-E0728E1EE6CB@fb.com>
+References: <5F8253BF-1167-4A48-A3AC-E0728E1EE6CB@fb.com>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-HOTLde77X4/KNkvQnvHn"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-References: <3d433e66-d9c5-d30c-2a12-cc145cfb8c17@redhat.com> <20191114194918.16688-1-ncroxon@redhat.com>
-In-Reply-To: <20191114194918.16688-1-ncroxon@redhat.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Mon, 18 Nov 2019 13:42:24 -0800
-Message-ID: <CAPhsuW44z1TOzqvpnryOsw_Pm5wTHUmgfSYv377KANEn1iedRA@mail.gmail.com>
-Subject: Re: [PATCH] raid5: avoid second retry of read-error
-To:     Nigel Croxon <ncroxon@redhat.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 11:50 AM Nigel Croxon <ncroxon@redhat.com> wrote:
->
-> The MD driver for level-456 should prevent re-reading read errors.
->
-> For redundant raid it makes no sense to retry the operation:
-> When one of the disks in the array hits a read error, that will
-> cause a stall for the reading process:
-> - either the read succeeds (e.g. after 4 seconds the HDD error
-> strategy could read the sector)
-> - or it fails after HDD imposed timeout (w/TLER, e.g. after 7
-> seconds (might be even longer)
->
-> The user can enable/disable this functionality by the following
-> commands:
-> To Enable:
-> echo 1 > /proc/sys/dev/raid/raid456_retry_read_error
->
-> To Disable, type the following at anytime:
-> echo 0 > /proc/sys/dev/raid/raid456_retry_read_error
->
-> Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
 
-Is this just the resend of the earlier patch? If this is a new version,
-please highlight the changes from previous version.
+--=-HOTLde77X4/KNkvQnvHn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Song
+On Wed, 2019-05-22 at 16:30 +0000, Song Liu wrote:
+> Hi,=20
+>=20
+> As reported by Thorsten Knabe <linux@thorsten-knabe.de>.=20
+>=20
+> commit 4f4fd7c5798b ("Don't jump to compute_result state from check_resul=
+t state") =20
+> was back ported to v3.16+. However, this fix was wrong. =20
+
+I never backported it to 3.16=E2=80=A6
+
+> Please back port the following two commits to fix this issue.=20
+>=20
+> commit a25d8c327bb4 ("Revert "Don't jump to compute_result state from che=
+ck_result state"")
+
+=E2=80=A6so I didn't need this=E2=80=A6
+
+> commit b2176a1dfb51 ("md/raid: raid5 preserve the writeback action after =
+the parity check")
+
+=E2=80=A6but I have queued this up, thanks.
+
+Ben.
+
+--=20
+Ben Hutchings
+Theory and practice are closer in theory than in practice - John Levine
+
+
+
+--=-HOTLde77X4/KNkvQnvHn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl3UBKYACgkQ57/I7JWG
+EQm+XRAAjuq7lPYfpLakVu9CkQzfx2ts5oLLvYalovtkpktY5i/sFChs+Y+K5J2N
+gpcRCz+sF2nvp8fMEC7jisO3Gt3KYKAAtsjWgbMY8w0KL8QC8CgPGxW7Bwil4VNh
+/I/A6Khncldln5N1xa9CqN3ix37aUGe+j1BQARgsAd47K9OmMmd4FOMZOpqj3u5Z
+pih2aJuNxsWP9ncwNFHg5K0ehQQ5pxo15N1Ov2fLsLbx1JHT2ZkhrwWaEgERHfZA
+r8edwi82bXRhEcFSLjbl/Z4Qk1ZtRfXtO3EklSMC61jelABFRyPZTIqIp42zCbOJ
+XNHPTqOnIdqUeJA8c8mq7b1CN9Y+pvQ7QVlcrmUNk146KYvDMXBWuIzbY6BnK4qU
+qKT8NJiuCbc1L1F4NUOhq+tL6rhjH6j0Haedfy2Obyt7HGvgNYpqnCrXRWx2qTUn
+LUwb+pqB62VbLvw6bwj+xznsMamv5pTIhsk29RykopfhoLG76nKR9ZRW4j2yi/9g
+L94Ot9hhxfDf62afzDvV6hjy946tbXcQqx+sNZnm0JzVW3vsxdcsUE35iaUjE7zU
+Y4Bapxg2QuNxilhDQ86E5hnJBTCigjv0sIEgbzvQTO4Mr6p5lTKoQb5AQ7zAVSlx
+e8fc3KHS6k2wiJ47i5UNRLfUYZMzfHgan9MVPAGD1LTYrdqhNm4=
+=ioIL
+-----END PGP SIGNATURE-----
+
+--=-HOTLde77X4/KNkvQnvHn--
