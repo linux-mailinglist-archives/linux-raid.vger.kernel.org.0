@@ -2,171 +2,71 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7238E103C29
-	for <lists+linux-raid@lfdr.de>; Wed, 20 Nov 2019 14:41:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 30A46103EE6
+	for <lists+linux-raid@lfdr.de>; Wed, 20 Nov 2019 16:37:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731350AbfKTNlQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 20 Nov 2019 08:41:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49044 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731345AbfKTNlQ (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:41:16 -0500
-Received: from localhost.localdomain (unknown [118.189.143.39])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728903AbfKTPhb (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 20 Nov 2019 10:37:31 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:41070 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728891AbfKTPha (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 20 Nov 2019 10:37:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574264250;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1oeX4HvnbdjlAVzs2i1AWWqc0xKPVJCrywIABoIQHa8=;
+        b=Yt6Fq/Vhc0pOFlKY1mcddRxfjWsgMb9S4o4x2WaPV2RVpW+zrKrjsBueTWGSB0F6wYJgO2
+        69DNQZpnnilp+PzQE3HJyv7roulVT4bvQUXOZZjVs44EbUObaMjb/bR0j2ILqg4kxx7ZEk
+        X/O13NLBeyVL9kIxqVoZ2N0fCW+kXZY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-108-squxWzVpPgqTfkzSkCuR1w-1; Wed, 20 Nov 2019 10:37:26 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD670224FC;
-        Wed, 20 Nov 2019 13:41:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574257274;
-        bh=QMt/9sM/Cr69KFoh7gNUZgDY5vce/DxM6f8X5cqS0Fs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=GpUgyiz/QkIj7LHGXOHz+iU2cAIlFYgHvgFy3wGEIlk4Y4UdPi2yH64R6xgyl+CWp
-         UQtLBNqWHNx9Gz71uiRl/QAW3ktOZ63KvxyIDRNVH4/0aTt6VDK0KVT8fqJOaUUxag
-         KLJF8rDSqBKO+dmBFmabRsIQhSDnLoc+ph5UYCv0=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
-        Song Liu <song@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH] md: Fix Kconfig indentation
-Date:   Wed, 20 Nov 2019 21:41:10 +0800
-Message-Id: <20191120134110.14859-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D20EEDB20;
+        Wed, 20 Nov 2019 15:37:25 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3FA8E5C1D4;
+        Wed, 20 Nov 2019 15:37:23 +0000 (UTC)
+Date:   Wed, 20 Nov 2019 10:37:22 -0500
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Alasdair Kergon <agk@redhat.com>,
+        dm-devel@redhat.com, Song Liu <song@kernel.org>,
+        linux-raid@vger.kernel.org
+Subject: Re: md: Fix Kconfig indentation
+Message-ID: <20191120153722.GA24993@redhat.com>
+References: <20191120134110.14859-1-krzk@kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <20191120134110.14859-1-krzk@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: squxWzVpPgqTfkzSkCuR1w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Adjust indentation from spaces to tab (+optional two spaces) as in
-coding style with command like:
-	$ sed -e 's/^        /\t/' -i */Kconfig
+On Wed, Nov 20 2019 at  8:41am -0500,
+Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/md/Kconfig | 54 +++++++++++++++++++++++-----------------------
- 1 file changed, 27 insertions(+), 27 deletions(-)
+> Adjust indentation from spaces to tab (+optional two spaces) as in
+> coding style with command like:
+> =09$ sed -e 's/^        /\t/' -i */Kconfig
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-diff --git a/drivers/md/Kconfig b/drivers/md/Kconfig
-index aa98953f4462..d6d5ab23c088 100644
---- a/drivers/md/Kconfig
-+++ b/drivers/md/Kconfig
-@@ -38,9 +38,9 @@ config MD_AUTODETECT
- 	default y
- 	---help---
- 	  If you say Y here, then the kernel will try to autodetect raid
--	  arrays as part of its boot process. 
-+	  arrays as part of its boot process.
- 
--	  If you don't use raid and say Y, this autodetection can cause 
-+	  If you don't use raid and say Y, this autodetection can cause
- 	  a several-second delay in the boot time due to various
- 	  synchronisation steps that are part of this step.
- 
-@@ -290,7 +290,7 @@ config DM_SNAPSHOT
-        depends on BLK_DEV_DM
-        select DM_BUFIO
-        ---help---
--         Allow volume managers to take writable snapshots of a device.
-+	 Allow volume managers to take writable snapshots of a device.
- 
- config DM_THIN_PROVISIONING
-        tristate "Thin provisioning target"
-@@ -298,7 +298,7 @@ config DM_THIN_PROVISIONING
-        select DM_PERSISTENT_DATA
-        select DM_BIO_PRISON
-        ---help---
--         Provides thin provisioning and snapshots that share a data store.
-+	 Provides thin provisioning and snapshots that share a data store.
- 
- config DM_CACHE
-        tristate "Cache target (EXPERIMENTAL)"
-@@ -307,23 +307,23 @@ config DM_CACHE
-        select DM_PERSISTENT_DATA
-        select DM_BIO_PRISON
-        ---help---
--         dm-cache attempts to improve performance of a block device by
--         moving frequently used data to a smaller, higher performance
--         device.  Different 'policy' plugins can be used to change the
--         algorithms used to select which blocks are promoted, demoted,
--         cleaned etc.  It supports writeback and writethrough modes.
-+	 dm-cache attempts to improve performance of a block device by
-+	 moving frequently used data to a smaller, higher performance
-+	 device.  Different 'policy' plugins can be used to change the
-+	 algorithms used to select which blocks are promoted, demoted,
-+	 cleaned etc.  It supports writeback and writethrough modes.
- 
- config DM_CACHE_SMQ
-        tristate "Stochastic MQ Cache Policy (EXPERIMENTAL)"
-        depends on DM_CACHE
-        default y
-        ---help---
--         A cache policy that uses a multiqueue ordered by recent hits
--         to select which blocks should be promoted and demoted.
--         This is meant to be a general purpose policy.  It prioritises
--         reads over writes.  This SMQ policy (vs MQ) offers the promise
--         of less memory utilization, improved performance and increased
--         adaptability in the face of changing workloads.
-+	 A cache policy that uses a multiqueue ordered by recent hits
-+	 to select which blocks should be promoted and demoted.
-+	 This is meant to be a general purpose policy.  It prioritises
-+	 reads over writes.  This SMQ policy (vs MQ) offers the promise
-+	 of less memory utilization, improved performance and increased
-+	 adaptability in the face of changing workloads.
- 
- config DM_WRITECACHE
- 	tristate "Writecache target"
-@@ -343,9 +343,9 @@ config DM_ERA
-        select DM_PERSISTENT_DATA
-        select DM_BIO_PRISON
-        ---help---
--         dm-era tracks which parts of a block device are written to
--         over time.  Useful for maintaining cache coherency when using
--         vendor snapshots.
-+	 dm-era tracks which parts of a block device are written to
-+	 over time.  Useful for maintaining cache coherency when using
-+	 vendor snapshots.
- 
- config DM_CLONE
-        tristate "Clone target (EXPERIMENTAL)"
-@@ -353,20 +353,20 @@ config DM_CLONE
-        default n
-        select DM_PERSISTENT_DATA
-        ---help---
--         dm-clone produces a one-to-one copy of an existing, read-only source
--         device into a writable destination device. The cloned device is
--         visible/mountable immediately and the copy of the source device to the
--         destination device happens in the background, in parallel with user
--         I/O.
-+	 dm-clone produces a one-to-one copy of an existing, read-only source
-+	 device into a writable destination device. The cloned device is
-+	 visible/mountable immediately and the copy of the source device to the
-+	 destination device happens in the background, in parallel with user
-+	 I/O.
- 
--         If unsure, say N.
-+	 If unsure, say N.
- 
- config DM_MIRROR
-        tristate "Mirror target"
-        depends on BLK_DEV_DM
-        ---help---
--         Allow volume managers to mirror logical volumes, also
--         needed for live data migration tools such as 'pvmove'.
-+	 Allow volume managers to mirror logical volumes, also
-+	 needed for live data migration tools such as 'pvmove'.
- 
- config DM_LOG_USERSPACE
- 	tristate "Mirror userspace logging"
-@@ -483,7 +483,7 @@ config DM_FLAKEY
-        tristate "Flakey target"
-        depends on BLK_DEV_DM
-        ---help---
--         A target that intermittently fails I/O for debugging purposes.
-+	 A target that intermittently fails I/O for debugging purposes.
- 
- config DM_VERITY
- 	tristate "Verity target support"
--- 
-2.17.1
+Thanks, I've picked this up but changed the subject from "md:" to "dm:"
+considering the bulk of the changes relate to DM config sections.
+
+Mike
 
