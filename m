@@ -2,212 +2,232 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 853911040CD
-	for <lists+linux-raid@lfdr.de>; Wed, 20 Nov 2019 17:29:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C22A6104435
+	for <lists+linux-raid@lfdr.de>; Wed, 20 Nov 2019 20:22:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729443AbfKTQ3m (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 20 Nov 2019 11:29:42 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39670 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727192AbfKTQ3l (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 20 Nov 2019 11:29:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574267380;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=dn1DGdvj9ZgVAu/GBTd959WpG3gJsRVVVCWzCDVqvc4=;
-        b=DjRJdz3jAihAKZ+D4QbriDLT+wbUtT/YvZjuhQJsxehXr3Q+nqSU21ICQMsOqqVxAkVDz7
-        H467i5k8+5Jm5CGDkohaPAa4wXWxbTHgXaNBOJhH3xy3B0UMyfh7lDi2u/nGj0mFKp5KNu
-        Wfffldpdb9OYXK/WuGg2LeKokkjcEvE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-318-A1KtTv-qNUayabZK_Ve9nQ-1; Wed, 20 Nov 2019 11:29:37 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 187E1802689;
-        Wed, 20 Nov 2019 16:29:36 +0000 (UTC)
-Received: from localhost (dhcp-17-171.bos.redhat.com [10.18.17.171])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DC7C42AA9E;
-        Wed, 20 Nov 2019 16:29:35 +0000 (UTC)
-From:   Nigel Croxon <ncroxon@redhat.com>
-To:     liu.song.a23@gmail.com, linux-raid@vger.kernel.org
-Subject: [PATCH V2] raid5: avoid second retry of read-error
-Date:   Wed, 20 Nov 2019 11:29:35 -0500
-Message-Id: <20191120162935.9617-1-ncroxon@redhat.com>
+        id S1727367AbfKTTWe (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 20 Nov 2019 14:22:34 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:34632 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbfKTTWe (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 20 Nov 2019 14:22:34 -0500
+Received: by mail-qk1-f196.google.com with SMTP id b188so876047qkg.1
+        for <linux-raid@vger.kernel.org>; Wed, 20 Nov 2019 11:22:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/rCqXwAwI31zuYry+y2TROKuf76K9dxa1/zd+MANWCo=;
+        b=ZLbbug+aqxwvbjHK4BHhNAGZdxAv9HmZKuwAP6d9XdMvT1sehArD7r/1UMJhTno+FI
+         go3aO1HLczSkTcRVpYs5YlDg1JeuiHZhUPI/MUnnIB6fEb4i+6UrQehc5AkrarhEDuxc
+         qsWedPgz+BHe+GJtOKUbaMnUtDzR/xC78ZRb8HJIC2no+gi6+gaDRzw6IGsn5RWrryl0
+         aMA5MsVnI3L3sVGNxUxybjaA1Puh9UOJL2WaYGHeqvJ8+EjM3kRCW19bCry6CT3G+K2b
+         qqgmsaTaUaNtMjcwu68ElQAPqP3CBKbrkRIhha999wfL2K8B0rW8kfvsJTlQV+sQgEdn
+         a16g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/rCqXwAwI31zuYry+y2TROKuf76K9dxa1/zd+MANWCo=;
+        b=fWqYoMhPx/pwiZd2j44PffwkiOUC0V79eEYjnRv7qKTvM2cpTUa2sAiuHNYuJEPHw2
+         XhJvyvcIPCOFBeKmGh5OWkpkFotAFmuyXqAzADI5FtoSLzAhTBJh5d988j9Aj995HBgI
+         AKlbrac3b/JXXyftJngGzlUw8aGcatagV68zeav8UHKzLgX5stH97Dr8ExyquFxai43y
+         hARvy5J/we6VKK0DNBUDcS0P6hHUL2f8RYd1X0HDfSzpRzzgei7+o88ieg/8eYutp8Qs
+         rMTAI4aqgmtNwuqB1/f7mhEBOxE+/l7eHxTJOcQBKym2P0ch2PX4HGQdQ/Xv9ttPCB4e
+         /LKw==
+X-Gm-Message-State: APjAAAWZoM7TK1gzVK4A2CxBU6l0Nn8TuoqZWAORkDXA21AMYN3Jq8nY
+        /POKHGOPDrKbtoql3VUdVQmiJMJmqY/BX++p4aM=
+X-Google-Smtp-Source: APXvYqx5pUGPomiGKxOfr9DMZ01sifz6JcMZ8SpmZQ1us/MLn9wBpKw4TUfos6i7uqon8tTj2B3d/6cqUWo40u7acig=
+X-Received: by 2002:ae9:de07:: with SMTP id s7mr3833919qkf.89.1574277751302;
+ Wed, 20 Nov 2019 11:22:31 -0800 (PST)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: A1KtTv-qNUayabZK_Ve9nQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+References: <20191120162935.9617-1-ncroxon@redhat.com>
+In-Reply-To: <20191120162935.9617-1-ncroxon@redhat.com>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Wed, 20 Nov 2019 11:22:20 -0800
+Message-ID: <CAPhsuW4H-0R20M382uH--rvCoH1kjP-WmtkeiCM0P0F3k2Ozhg@mail.gmail.com>
+Subject: Re: [PATCH V2] raid5: avoid second retry of read-error
+To:     Nigel Croxon <ncroxon@redhat.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-The MD driver for level-456 should prevent re-reading read errors.
+On Wed, Nov 20, 2019 at 8:29 AM Nigel Croxon <ncroxon@redhat.com> wrote:
+>
+> The MD driver for level-456 should prevent re-reading read errors.
+>
+> For redundant raid it makes no sense to retry the operation:
+> When one of the disks in the array hits a read error, that will
+> cause a stall for the reading process:
+> - either the read succeeds (e.g. after 4 seconds the HDD error
+> strategy could read the sector)
+> - or it fails after HDD imposed timeout (w/TLER, e.g. after 7
+> seconds (might be even longer)
 
-For redundant raid it makes no sense to retry the operation:
-When one of the disks in the array hits a read error, that will
-cause a stall for the reading process:
-- either the read succeeds (e.g. after 4 seconds the HDD error
-strategy could read the sector)
-- or it fails after HDD imposed timeout (w/TLER, e.g. after 7
-seconds (might be even longer)
+I am ok with the idea. But we need to be more careful.
 
-The user can enable/disable this functionality by the following
-commands:
-To Enable:
-echo 1 > /proc/sys/dev/raid/raid456_retry_read_error
+>
+> The user can enable/disable this functionality by the following
+> commands:
+> To Enable:
+> echo 1 > /proc/sys/dev/raid/raid456_retry_read_error
+>
+> To Disable, type the following at anytime:
+> echo 0 > /proc/sys/dev/raid/raid456_retry_read_error
+>
+> Version 2:
+> * Renamed *raid456* to *raid5*.
+> * Changed set_raid5_retry_re routine to use 'if-then' to make cleaner.
+> * Added set_bit R5_ReadError in retry_aligned_read routine.
+>
+> Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
+> ---
+>  drivers/md/md.c    | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/md/md.h    |  3 +++
+>  drivers/md/raid5.c |  4 +++-
+>  3 files changed, 52 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 1be7abeb24fd..6f47489e0b23 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -125,6 +125,15 @@ static inline int speed_max(struct mddev *mddev)
+>                 mddev->sync_speed_max : sysctl_speed_limit_max;
+>  }
+>
+> +static int sysctl_raid5_retry_read_error = 0;
 
-To Disable, type the following at anytime:
-echo 0 > /proc/sys/dev/raid/raid456_retry_read_error
+I don't think we need the sysctl. Per device knob should be sufficient.
 
-Version 2:
-* Renamed *raid456* to *raid5*.
-* Changed set_raid5_retry_re routine to use 'if-then' to make cleaner.
-* Added set_bit R5_ReadError in retry_aligned_read routine.
+> +static inline void set_raid5_retry_re(struct mddev *mddev, int re)
+> +{
+> +       if (re)
+> +               set_bit(MD_RAID5_RETRY_RE, &mddev->flags);
+> +       else
+> +               clear_bit(MD_RAID5_RETRY_RE, &mddev->flags);
+> +}
+> +
+>  static int rdev_init_wb(struct md_rdev *rdev)
+>  {
+>         if (rdev->bdev->bd_queue->nr_hw_queues == 1)
+> @@ -213,6 +222,13 @@ static struct ctl_table raid_table[] = {
+>                 .mode           = S_IRUGO|S_IWUSR,
+>                 .proc_handler   = proc_dointvec,
+>         },
+> +       {
+> +               .procname       = "raid5_retry_read_error",
+> +               .data           = &sysctl_raid5_retry_read_error,
+> +               .maxlen         = sizeof(int),
+> +               .mode           = S_IRUGO|S_IWUSR,
+> +               .proc_handler   = proc_dointvec,
+> +       },
+>         { }
+>  };
+>
+> @@ -4721,6 +4737,32 @@ mismatch_cnt_show(struct mddev *mddev, char *page)
+>
+>  static struct md_sysfs_entry md_mismatches = __ATTR_RO(mismatch_cnt);
+>
+> +static ssize_t
+> +raid5_retry_re_show(struct mddev *mddev, char *page)
+> +{
+> +       return sprintf(page, "RAID456 retry Read Error = %u\n",
+> +                      test_bit(MD_RAID5_RETRY_RE, &mddev->flags));
+> +}
+> +
+> +static ssize_t raid5_retry_re_store(struct mddev *mddev, const char *buf, size_t len)
+> +{
+> +       int retry;
+> +
+> +       if (!mddev->private)
+> +               return -ENODEV;
+> +
+> +       if (len > 1 ||
+> +           kstrtoint(buf, 10, &retry) ||
+> +           retry < 0 || retry > 1)
+> +               return -EINVAL;
+> +
+> +       set_raid5_retry_re(mddev, retry);
+> +       return len;
+> +}
+> +
+> +static struct md_sysfs_entry md_raid5_retry_read_error =
+> +__ATTR(raid5_retry_read_error, S_IRUGO|S_IWUSR, raid5_retry_re_show, raid5_retry_re_store);
+> +
+>  static ssize_t
+>  sync_min_show(struct mddev *mddev, char *page)
+>  {
+> @@ -5272,6 +5314,7 @@ static struct attribute *md_redundancy_attrs[] = {
+>         &md_suspend_hi.attr,
+>         &md_bitmap.attr,
+>         &md_degraded.attr,
+> +       &md_raid5_retry_read_error.attr,
+>         NULL,
+>  };
+>  static struct attribute_group md_redundancy_group = {
+> @@ -5833,6 +5876,8 @@ static int do_md_run(struct mddev *mddev)
+>         if (mddev_is_clustered(mddev))
+>                 md_allow_write(mddev);
+>
+> +       set_raid5_retry_re(mddev, sysctl_raid5_retry_read_error);
+> +
+>         /* run start up tasks that require md_thread */
+>         md_start(mddev);
+>
+> @@ -8411,6 +8456,7 @@ void md_do_sync(struct md_thread *thread)
+>         else
+>                 desc = "recovery";
+>
+> +       set_raid5_retry_re(mddev, sysctl_raid5_retry_read_error);
+>         mddev->last_sync_action = action ?: desc;
+>
+>         /* we overload curr_resync somewhat here.
+> diff --git a/drivers/md/md.h b/drivers/md/md.h
+> index c5e3ff398b59..6703a7d0b633 100644
+> --- a/drivers/md/md.h
+> +++ b/drivers/md/md.h
+> @@ -254,6 +254,9 @@ enum mddev_flags {
+>         MD_BROKEN,              /* This is used in RAID-0/LINEAR only, to stop
+>                                  * I/O in case an array member is gone/failed.
+>                                  */
+> +       MD_RAID5_RETRY_RE,      /* allow user-space to request RAID456
+> +                                * retry read errors
+> +                                */
 
-Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
----
- drivers/md/md.c    | 46 ++++++++++++++++++++++++++++++++++++++++++++++
- drivers/md/md.h    |  3 +++
- drivers/md/raid5.c |  4 +++-
- 3 files changed, 52 insertions(+), 1 deletion(-)
+The use of "RE" and "re" is not clear. Let's just keep full name like
+*retry_read.
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 1be7abeb24fd..6f47489e0b23 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -125,6 +125,15 @@ static inline int speed_max(struct mddev *mddev)
- =09=09mddev->sync_speed_max : sysctl_speed_limit_max;
- }
-=20
-+static int sysctl_raid5_retry_read_error =3D 0;
-+static inline void set_raid5_retry_re(struct mddev *mddev, int re)
-+{
-+=09if (re)
-+=09=09set_bit(MD_RAID5_RETRY_RE, &mddev->flags);
-+=09else
-+=09=09clear_bit(MD_RAID5_RETRY_RE, &mddev->flags);
-+}
-+
- static int rdev_init_wb(struct md_rdev *rdev)
- {
- =09if (rdev->bdev->bd_queue->nr_hw_queues =3D=3D 1)
-@@ -213,6 +222,13 @@ static struct ctl_table raid_table[] =3D {
- =09=09.mode=09=09=3D S_IRUGO|S_IWUSR,
- =09=09.proc_handler=09=3D proc_dointvec,
- =09},
-+=09{
-+=09=09.procname=09=3D "raid5_retry_read_error",
-+=09=09.data=09=09=3D &sysctl_raid5_retry_read_error,
-+=09=09.maxlen=09=09=3D sizeof(int),
-+=09=09.mode=09=09=3D S_IRUGO|S_IWUSR,
-+=09=09.proc_handler=09=3D proc_dointvec,
-+=09},
- =09{ }
- };
-=20
-@@ -4721,6 +4737,32 @@ mismatch_cnt_show(struct mddev *mddev, char *page)
-=20
- static struct md_sysfs_entry md_mismatches =3D __ATTR_RO(mismatch_cnt);
-=20
-+static ssize_t
-+raid5_retry_re_show(struct mddev *mddev, char *page)
-+{
-+=09return sprintf(page, "RAID456 retry Read Error =3D %u\n",
-+=09=09       test_bit(MD_RAID5_RETRY_RE, &mddev->flags));
-+}
-+
-+static ssize_t raid5_retry_re_store(struct mddev *mddev, const char *buf, =
-size_t len)
-+{
-+=09int retry;
-+
-+=09if (!mddev->private)
-+=09=09return -ENODEV;
-+
-+=09if (len > 1 ||
-+=09    kstrtoint(buf, 10, &retry) ||
-+=09    retry < 0 || retry > 1)
-+=09=09return -EINVAL;
-+
-+=09set_raid5_retry_re(mddev, retry);
-+=09return len;
-+}
-+
-+static struct md_sysfs_entry md_raid5_retry_read_error =3D
-+__ATTR(raid5_retry_read_error, S_IRUGO|S_IWUSR, raid5_retry_re_show, raid5=
-_retry_re_store);
-+
- static ssize_t
- sync_min_show(struct mddev *mddev, char *page)
- {
-@@ -5272,6 +5314,7 @@ static struct attribute *md_redundancy_attrs[] =3D {
- =09&md_suspend_hi.attr,
- =09&md_bitmap.attr,
- =09&md_degraded.attr,
-+=09&md_raid5_retry_read_error.attr,
- =09NULL,
- };
- static struct attribute_group md_redundancy_group =3D {
-@@ -5833,6 +5876,8 @@ static int do_md_run(struct mddev *mddev)
- =09if (mddev_is_clustered(mddev))
- =09=09md_allow_write(mddev);
-=20
-+=09set_raid5_retry_re(mddev, sysctl_raid5_retry_read_error);
-+
- =09/* run start up tasks that require md_thread */
- =09md_start(mddev);
-=20
-@@ -8411,6 +8456,7 @@ void md_do_sync(struct md_thread *thread)
- =09else
- =09=09desc =3D "recovery";
-=20
-+=09set_raid5_retry_re(mddev, sysctl_raid5_retry_read_error);
- =09mddev->last_sync_action =3D action ?: desc;
-=20
- =09/* we overload curr_resync somewhat here.
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index c5e3ff398b59..6703a7d0b633 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -254,6 +254,9 @@ enum mddev_flags {
- =09MD_BROKEN,              /* This is used in RAID-0/LINEAR only, to stop
- =09=09=09=09 * I/O in case an array member is gone/failed.
- =09=09=09=09 */
-+=09MD_RAID5_RETRY_RE,=09/* allow user-space to request RAID456
-+=09=09=09=09 * retry read errors
-+=09=09=09=09 */
- };
-=20
- enum mddev_sb_flags {
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 223e97ab27e6..0b627fface78 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -2567,7 +2567,8 @@ static void raid5_end_read_request(struct bio * bi)
- =09=09if (retry)
- =09=09=09if (sh->qd_idx >=3D 0 && sh->pd_idx =3D=3D i)
- =09=09=09=09set_bit(R5_ReadError, &sh->dev[i].flags);
--=09=09=09else if (test_bit(R5_ReadNoMerge, &sh->dev[i].flags)) {
-+=09=09=09else if ((test_bit(R5_ReadNoMerge, &sh->dev[i].flags)) ||
-+=09=09=09      (test_bit(MD_RAID5_RETRY_RE, &conf->mddev->flags))) {
- =09=09=09=09set_bit(R5_ReadError, &sh->dev[i].flags);
- =09=09=09=09clear_bit(R5_ReadNoMerge, &sh->dev[i].flags);
- =09=09=09} else
-@@ -6163,6 +6164,7 @@ static int  retry_aligned_read(struct r5conf *conf, s=
-truct bio *raid_bio,
- =09=09}
-=20
- =09=09set_bit(R5_ReadNoMerge, &sh->dev[dd_idx].flags);
-+=09=09set_bit(R5_ReadError, &sh->dev[dd_idx].flags);
- =09=09handle_stripe(sh);
- =09=09raid5_release_stripe(sh);
- =09=09handled++;
---=20
-2.18.1
+Also, please keep the default as "do retry". So it is the same behavior as
+older kernels.
 
+>  };
+>
+>  enum mddev_sb_flags {
+> diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+> index 223e97ab27e6..0b627fface78 100644
+> --- a/drivers/md/raid5.c
+> +++ b/drivers/md/raid5.c
+> @@ -2567,7 +2567,8 @@ static void raid5_end_read_request(struct bio * bi)
+>                 if (retry)
+
+Can we include checks for MD_RAID5_RETRY_RE in the logic to decide whether
+to do "retry = 1"? I think that will keep the logic cleaner.
+
+>                         if (sh->qd_idx >= 0 && sh->pd_idx == i)
+>                                 set_bit(R5_ReadError, &sh->dev[i].flags);
+> -                       else if (test_bit(R5_ReadNoMerge, &sh->dev[i].flags)) {
+> +                       else if ((test_bit(R5_ReadNoMerge, &sh->dev[i].flags)) ||
+> +                             (test_bit(MD_RAID5_RETRY_RE, &conf->mddev->flags))) {
+>                                 set_bit(R5_ReadError, &sh->dev[i].flags);
+>                                 clear_bit(R5_ReadNoMerge, &sh->dev[i].flags);
+>                         } else
+> @@ -6163,6 +6164,7 @@ static int  retry_aligned_read(struct r5conf *conf, struct bio *raid_bio,
+>                 }
+>
+>                 set_bit(R5_ReadNoMerge, &sh->dev[dd_idx].flags);
+> +               set_bit(R5_ReadError, &sh->dev[dd_idx].flags);
+
+Do we need this w/ and w/o MD_RAID5_RETRY_RE?
