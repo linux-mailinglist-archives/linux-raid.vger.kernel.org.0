@@ -2,232 +2,115 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C22A6104435
-	for <lists+linux-raid@lfdr.de>; Wed, 20 Nov 2019 20:22:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B99010509D
+	for <lists+linux-raid@lfdr.de>; Thu, 21 Nov 2019 11:37:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727367AbfKTTWe (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 20 Nov 2019 14:22:34 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:34632 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbfKTTWe (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 20 Nov 2019 14:22:34 -0500
-Received: by mail-qk1-f196.google.com with SMTP id b188so876047qkg.1
-        for <linux-raid@vger.kernel.org>; Wed, 20 Nov 2019 11:22:31 -0800 (PST)
+        id S1726454AbfKUKhk (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 21 Nov 2019 05:37:40 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:34603 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbfKUKhk (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 21 Nov 2019 05:37:40 -0500
+Received: by mail-ed1-f66.google.com with SMTP id b72so2378705edf.1
+        for <linux-raid@vger.kernel.org>; Thu, 21 Nov 2019 02:37:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/rCqXwAwI31zuYry+y2TROKuf76K9dxa1/zd+MANWCo=;
-        b=ZLbbug+aqxwvbjHK4BHhNAGZdxAv9HmZKuwAP6d9XdMvT1sehArD7r/1UMJhTno+FI
-         go3aO1HLczSkTcRVpYs5YlDg1JeuiHZhUPI/MUnnIB6fEb4i+6UrQehc5AkrarhEDuxc
-         qsWedPgz+BHe+GJtOKUbaMnUtDzR/xC78ZRb8HJIC2no+gi6+gaDRzw6IGsn5RWrryl0
-         aMA5MsVnI3L3sVGNxUxybjaA1Puh9UOJL2WaYGHeqvJ8+EjM3kRCW19bCry6CT3G+K2b
-         qqgmsaTaUaNtMjcwu68ElQAPqP3CBKbrkRIhha999wfL2K8B0rW8kfvsJTlQV+sQgEdn
-         a16g==
+        h=from:to:cc:subject:date:message-id;
+        bh=hioRSS16588Xth6ROWnwU8eInUskBsxsljXyckGZ61o=;
+        b=LKAIpZHNCLRDYkgfS3NnvOKFCT1riTOwLBsst6VoWYUXRan4TqtwXQXqmS10cezVoL
+         NXmbczc7C+pJqXboHt1ZMQDJ3psARAK3w5R+K8pwduflRq04gGV/1JPjmlCkJ48FqMkU
+         Mwhf2iE8QkBqfUjEUqXJvVWB96tzV3oaEdnngCtkCGNbBlYAV9615v0GdYVUIl/GnabE
+         dTZX3Q/3+5bRKguXbtuhbgoA5/bQ0Ecjj1JzF7hD0+ylmo8Vjwo9kDXtxOm52mSt3goe
+         +AKyREw1ogHi7y4kNBwAIuhlzrhpXhIYAGDv4cRHAtFFswdIrCJNO4OscVIhT6jmuZyg
+         Yb6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/rCqXwAwI31zuYry+y2TROKuf76K9dxa1/zd+MANWCo=;
-        b=fWqYoMhPx/pwiZd2j44PffwkiOUC0V79eEYjnRv7qKTvM2cpTUa2sAiuHNYuJEPHw2
-         XhJvyvcIPCOFBeKmGh5OWkpkFotAFmuyXqAzADI5FtoSLzAhTBJh5d988j9Aj995HBgI
-         AKlbrac3b/JXXyftJngGzlUw8aGcatagV68zeav8UHKzLgX5stH97Dr8ExyquFxai43y
-         hARvy5J/we6VKK0DNBUDcS0P6hHUL2f8RYd1X0HDfSzpRzzgei7+o88ieg/8eYutp8Qs
-         rMTAI4aqgmtNwuqB1/f7mhEBOxE+/l7eHxTJOcQBKym2P0ch2PX4HGQdQ/Xv9ttPCB4e
-         /LKw==
-X-Gm-Message-State: APjAAAWZoM7TK1gzVK4A2CxBU6l0Nn8TuoqZWAORkDXA21AMYN3Jq8nY
-        /POKHGOPDrKbtoql3VUdVQmiJMJmqY/BX++p4aM=
-X-Google-Smtp-Source: APXvYqx5pUGPomiGKxOfr9DMZ01sifz6JcMZ8SpmZQ1us/MLn9wBpKw4TUfos6i7uqon8tTj2B3d/6cqUWo40u7acig=
-X-Received: by 2002:ae9:de07:: with SMTP id s7mr3833919qkf.89.1574277751302;
- Wed, 20 Nov 2019 11:22:31 -0800 (PST)
-MIME-Version: 1.0
-References: <20191120162935.9617-1-ncroxon@redhat.com>
-In-Reply-To: <20191120162935.9617-1-ncroxon@redhat.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Wed, 20 Nov 2019 11:22:20 -0800
-Message-ID: <CAPhsuW4H-0R20M382uH--rvCoH1kjP-WmtkeiCM0P0F3k2Ozhg@mail.gmail.com>
-Subject: Re: [PATCH V2] raid5: avoid second retry of read-error
-To:     Nigel Croxon <ncroxon@redhat.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=hioRSS16588Xth6ROWnwU8eInUskBsxsljXyckGZ61o=;
+        b=MIPQ1wOzkPMeOP2h8UgyMDPKZgHOo4pN8uLsBMVb5H+O2BfC1JGlrVb7scxyBKjnHD
+         1Kxfu4Mv3TtWszP56ZD7yLHmcBjdCxa4tr4ccp4rrptxa8FYAKks8dp3CMvYffiJL1Hq
+         pTNUi7a3ZdZnzVOPOWjTwexMmajWs8lTlaJ3kGw6gLDlQmQyzVxswJoE7grG56ysw+7p
+         c9YLvJb5SBBsdU8oZg3pkeEYLEAlhMIC35EpbB1K8wU/Yc5WFS/y1t/a/IkLB/2BVSUV
+         VEGvelEieBOZ0f4FguStVQfrJglWXTXPEeve/XjUQFR80CvAN14DMvm5RJbo2hwkzDnY
+         yP/A==
+X-Gm-Message-State: APjAAAX0PWfI1d9MqjImWwhfKMh8MbKB4i+NeFiADe5DLZDL8+9mQNbo
+        y/g0ey/IEQ4PY7/QJfzpA9c=
+X-Google-Smtp-Source: APXvYqwsB9y/ZpgQndOFz0Pxi1fsSyMtB8Mwu9gR7VIxkB7kqNcG+7UpZSi/aWevfV0rxD5Qe3zuGw==
+X-Received: by 2002:a17:906:4304:: with SMTP id j4mr12812880ejm.10.1574332658102;
+        Thu, 21 Nov 2019 02:37:38 -0800 (PST)
+Received: from ls00508.pb.local ([2001:1438:4010:2540:4465:ea1d:c50c:3d03])
+        by smtp.gmail.com with ESMTPSA id x29sm87441edi.20.2019.11.21.02.37.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 02:37:37 -0800 (PST)
+From:   jgq516@gmail.com
+X-Google-Original-From: guoqing.jiang@cloud.ionos.com
+To:     liu.song.a23@gmail.com
+Cc:     linux-raid@vger.kernel.org,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Subject: [PATCH v2 0/9] raid1 io serialization
+Date:   Thu, 21 Nov 2019 11:37:19 +0100
+Message-Id: <20191121103728.18919-1-guoqing.jiang@cloud.ionos.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 8:29 AM Nigel Croxon <ncroxon@redhat.com> wrote:
->
-> The MD driver for level-456 should prevent re-reading read errors.
->
-> For redundant raid it makes no sense to retry the operation:
-> When one of the disks in the array hits a read error, that will
-> cause a stall for the reading process:
-> - either the read succeeds (e.g. after 4 seconds the HDD error
-> strategy could read the sector)
-> - or it fails after HDD imposed timeout (w/TLER, e.g. after 7
-> seconds (might be even longer)
+From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 
-I am ok with the idea. But we need to be more careful.
+Major changes:
 
->
-> The user can enable/disable this functionality by the following
-> commands:
-> To Enable:
-> echo 1 > /proc/sys/dev/raid/raid456_retry_read_error
->
-> To Disable, type the following at anytime:
-> echo 0 > /proc/sys/dev/raid/raid456_retry_read_error
->
-> Version 2:
-> * Renamed *raid456* to *raid5*.
-> * Changed set_raid5_retry_re routine to use 'if-then' to make cleaner.
-> * Added set_bit R5_ReadError in retry_aligned_read routine.
->
-> Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
-> ---
->  drivers/md/md.c    | 46 ++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/md/md.h    |  3 +++
->  drivers/md/raid5.c |  4 +++-
->  3 files changed, 52 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index 1be7abeb24fd..6f47489e0b23 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -125,6 +125,15 @@ static inline int speed_max(struct mddev *mddev)
->                 mddev->sync_speed_max : sysctl_speed_limit_max;
->  }
->
-> +static int sysctl_raid5_retry_read_error = 0;
+1. rename 0002 patch and change the patch header accordingly.
+2. show "n/a" for non raid1 in serialize_policy_show in 0003.
+3. 0004 patch is introduced to make two scenarios (both of them could
+   enable serialization) can coexists.
+4. use generical rb interval tree and introduce struct serial_in_rdev
+   in 0007.
 
-I don't think we need the sysctl. Per device knob should be sufficient.
+----------------------------------- v1 --------------------------------------
+Hi,
 
-> +static inline void set_raid5_retry_re(struct mddev *mddev, int re)
-> +{
-> +       if (re)
-> +               set_bit(MD_RAID5_RETRY_RE, &mddev->flags);
-> +       else
-> +               clear_bit(MD_RAID5_RETRY_RE, &mddev->flags);
-> +}
-> +
->  static int rdev_init_wb(struct md_rdev *rdev)
->  {
->         if (rdev->bdev->bd_queue->nr_hw_queues == 1)
-> @@ -213,6 +222,13 @@ static struct ctl_table raid_table[] = {
->                 .mode           = S_IRUGO|S_IWUSR,
->                 .proc_handler   = proc_dointvec,
->         },
-> +       {
-> +               .procname       = "raid5_retry_read_error",
-> +               .data           = &sysctl_raid5_retry_read_error,
-> +               .maxlen         = sizeof(int),
-> +               .mode           = S_IRUGO|S_IWUSR,
-> +               .proc_handler   = proc_dointvec,
-> +       },
->         { }
->  };
->
-> @@ -4721,6 +4737,32 @@ mismatch_cnt_show(struct mddev *mddev, char *page)
->
->  static struct md_sysfs_entry md_mismatches = __ATTR_RO(mismatch_cnt);
->
-> +static ssize_t
-> +raid5_retry_re_show(struct mddev *mddev, char *page)
-> +{
-> +       return sprintf(page, "RAID456 retry Read Error = %u\n",
-> +                      test_bit(MD_RAID5_RETRY_RE, &mddev->flags));
-> +}
-> +
-> +static ssize_t raid5_retry_re_store(struct mddev *mddev, const char *buf, size_t len)
-> +{
-> +       int retry;
-> +
-> +       if (!mddev->private)
-> +               return -ENODEV;
-> +
-> +       if (len > 1 ||
-> +           kstrtoint(buf, 10, &retry) ||
-> +           retry < 0 || retry > 1)
-> +               return -EINVAL;
-> +
-> +       set_raid5_retry_re(mddev, retry);
-> +       return len;
-> +}
-> +
-> +static struct md_sysfs_entry md_raid5_retry_read_error =
-> +__ATTR(raid5_retry_read_error, S_IRUGO|S_IWUSR, raid5_retry_re_show, raid5_retry_re_store);
-> +
->  static ssize_t
->  sync_min_show(struct mddev *mddev, char *page)
->  {
-> @@ -5272,6 +5314,7 @@ static struct attribute *md_redundancy_attrs[] = {
->         &md_suspend_hi.attr,
->         &md_bitmap.attr,
->         &md_degraded.attr,
-> +       &md_raid5_retry_read_error.attr,
->         NULL,
->  };
->  static struct attribute_group md_redundancy_group = {
-> @@ -5833,6 +5876,8 @@ static int do_md_run(struct mddev *mddev)
->         if (mddev_is_clustered(mddev))
->                 md_allow_write(mddev);
->
-> +       set_raid5_retry_re(mddev, sysctl_raid5_retry_read_error);
-> +
->         /* run start up tasks that require md_thread */
->         md_start(mddev);
->
-> @@ -8411,6 +8456,7 @@ void md_do_sync(struct md_thread *thread)
->         else
->                 desc = "recovery";
->
-> +       set_raid5_retry_re(mddev, sysctl_raid5_retry_read_error);
->         mddev->last_sync_action = action ?: desc;
->
->         /* we overload curr_resync somewhat here.
-> diff --git a/drivers/md/md.h b/drivers/md/md.h
-> index c5e3ff398b59..6703a7d0b633 100644
-> --- a/drivers/md/md.h
-> +++ b/drivers/md/md.h
-> @@ -254,6 +254,9 @@ enum mddev_flags {
->         MD_BROKEN,              /* This is used in RAID-0/LINEAR only, to stop
->                                  * I/O in case an array member is gone/failed.
->                                  */
-> +       MD_RAID5_RETRY_RE,      /* allow user-space to request RAID456
-> +                                * retry read errors
-> +                                */
+If asynchronous write io happened in raid1 array, data could be inconsistent
+among member devices though usually people would think the data should always
+be the same in each devices for raid1.
 
-The use of "RE" and "re" is not clear. Let's just keep full name like
-*retry_read.
+And since we had addressed data inconsistency issue for write behind device
+if it is a multiqueue device, then it is possible and straightforward to extend
+the same mechanism to address similar issue.
 
-Also, please keep the default as "do retry". So it is the same behavior as
-older kernels.
+with this patchset, we can enable io serialization for write. Of course, the
+performance is not better than before, it could drop around 10% during my
+tests.
 
->  };
->
->  enum mddev_sb_flags {
-> diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-> index 223e97ab27e6..0b627fface78 100644
-> --- a/drivers/md/raid5.c
-> +++ b/drivers/md/raid5.c
-> @@ -2567,7 +2567,8 @@ static void raid5_end_read_request(struct bio * bi)
->                 if (retry)
+Patch 1 just renames all the write-behind stuffs, no function change.
+Patch 2 adds is_force parameter to mddev_create/destroy_serial_pool.
+Patch 3 serialize_policy sysfs node is added to enable/disable serialization.
+Patch 4 serializes the overlap write.
+Patch 5 makes serial_info_pool still available if serialize_policy is true.
+Patch 6 replaces list with rb tree for performance reason.
+Patch 7 uses bucket based mechanism to improve performance further.
+Patch 8 reorgnizes code.
 
-Can we include checks for MD_RAID5_RETRY_RE in the logic to decide whether
-to do "retry = 1"? I think that will keep the logic cleaner.
+Thanks,
+Guoqing
 
->                         if (sh->qd_idx >= 0 && sh->pd_idx == i)
->                                 set_bit(R5_ReadError, &sh->dev[i].flags);
-> -                       else if (test_bit(R5_ReadNoMerge, &sh->dev[i].flags)) {
-> +                       else if ((test_bit(R5_ReadNoMerge, &sh->dev[i].flags)) ||
-> +                             (test_bit(MD_RAID5_RETRY_RE, &conf->mddev->flags))) {
->                                 set_bit(R5_ReadError, &sh->dev[i].flags);
->                                 clear_bit(R5_ReadNoMerge, &sh->dev[i].flags);
->                         } else
-> @@ -6163,6 +6164,7 @@ static int  retry_aligned_read(struct r5conf *conf, struct bio *raid_bio,
->                 }
->
->                 set_bit(R5_ReadNoMerge, &sh->dev[dd_idx].flags);
-> +               set_bit(R5_ReadError, &sh->dev[dd_idx].flags);
+Guoqing Jiang (9):
+  md: rename wb stuffs
+  md: prepare for enable raid1 io serialization
+  md: add serialize_policy sysfs node for raid1
+  md: reorgnize mddev_create/destroy_serial_pool
+  raid1: serialize the overlap write
+  md: don't destroy serial_info_pool if serialize_policy is true
+  md: introduce a new struct for IO serialization
+  md/raid1: use bucket based mechanism for IO serialization
+  md/raid1: introduce wait_for_serialization
 
-Do we need this w/ and w/o MD_RAID5_RETRY_RE?
+ drivers/md/md-bitmap.c |  20 ++--
+ drivers/md/md.c        | 249 ++++++++++++++++++++++++++++++++---------
+ drivers/md/md.h        |  45 +++++---
+ drivers/md/raid1.c     | 111 +++++++++---------
+ 4 files changed, 295 insertions(+), 130 deletions(-)
+
+-- 
+2.17.1
+
