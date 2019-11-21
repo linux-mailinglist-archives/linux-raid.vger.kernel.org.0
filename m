@@ -2,181 +2,262 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C350C105643
-	for <lists+linux-raid@lfdr.de>; Thu, 21 Nov 2019 16:59:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B9F0A105AE1
+	for <lists+linux-raid@lfdr.de>; Thu, 21 Nov 2019 21:14:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbfKUP7W convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-raid@lfdr.de>); Thu, 21 Nov 2019 10:59:22 -0500
-Received: from li1843-175.members.linode.com ([172.104.24.175]:48860 "EHLO
-        mail.stoffel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbfKUP7W (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 21 Nov 2019 10:59:22 -0500
-X-Greylist: delayed 490 seconds by postgrey-1.27 at vger.kernel.org; Thu, 21 Nov 2019 10:59:21 EST
-Received: from quad.stoffel.org (66-189-75-104.dhcp.oxfr.ma.charter.com [66.189.75.104])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        id S1726722AbfKUUOB (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 21 Nov 2019 15:14:01 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37977 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726655AbfKUUOB (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 21 Nov 2019 15:14:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574367240;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0bPRzpYoVPrfcsn4tkzEvc0HNIpYEJ4wBCLiMXjjBjE=;
+        b=gr6BloKCx2oCoo8GyF58r5CO0PCsdODCD5qcLe3JL/09kznZUsm46nyJXiJWuHnNv7WMg9
+        XSId5srFI5dpHOvDHW2Pxunjw0bfx2KvS/Q9qJ0dPa372bN1+o6eF1JQH2nb0yCNrTbc0b
+        J7CC9oB/66MZdllZ/KouvurwB7IHH+8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-75-OwEZk41qP7mC0hUPNpJvvQ-1; Thu, 21 Nov 2019 15:13:56 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.stoffel.org (Postfix) with ESMTPSA id 60EEF22A99;
-        Thu, 21 Nov 2019 10:51:11 -0500 (EST)
-Received: by quad.stoffel.org (Postfix, from userid 1000)
-        id BE255A5D3F; Thu, 21 Nov 2019 10:51:10 -0500 (EST)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D1D57800054;
+        Thu, 21 Nov 2019 20:13:55 +0000 (UTC)
+Received: from [10.10.120.116] (ovpn-120-116.rdu2.redhat.com [10.10.120.116])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6CEDA69500;
+        Thu, 21 Nov 2019 20:13:55 +0000 (UTC)
+Subject: Re: [PATCH V2] raid5: avoid second retry of read-error
+To:     Song Liu <liu.song.a23@gmail.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>
+References: <20191120162935.9617-1-ncroxon@redhat.com>
+ <CAPhsuW4H-0R20M382uH--rvCoH1kjP-WmtkeiCM0P0F3k2Ozhg@mail.gmail.com>
+From:   Nigel Croxon <ncroxon@redhat.com>
+Message-ID: <d5a909c8-fb1f-37fd-cf6c-3522d34c2535@redhat.com>
+Date:   Thu, 21 Nov 2019 15:13:54 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
-Message-ID: <24022.45678.691077.153563@quad.stoffel.home>
-Date:   Thu, 21 Nov 2019 10:51:10 -0500
-From:   "John Stoffel" <john@stoffel.org>
-To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>, shinrairis@gmail.com,
-        colyli@suse.de, Song Liu <liu.song.a23@gmail.com>
-Subject: Re: About raid5 lock up
-In-Reply-To: <a9f64be8-0f57-83f7-e7dd-2d6d4386a6f4@cloud.ionos.com>
-References: <a9f64be8-0f57-83f7-e7dd-2d6d4386a6f4@cloud.ionos.com>
-X-Mailer: VM 8.2.0b under 25.1.1 (x86_64-pc-linux-gnu)
+In-Reply-To: <CAPhsuW4H-0R20M382uH--rvCoH1kjP-WmtkeiCM0P0F3k2Ozhg@mail.gmail.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: OwEZk41qP7mC0hUPNpJvvQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
->>>>> "Guoqing" == Guoqing Jiang <guoqing.jiang@cloud.ionos.com> writes:
 
-Guoqing> Recently, we got a report about raid5 lockup with 4.4.62
-Guoqing> kernel as follows, but I failed to reproduce it locally.
+On 11/20/19 2:22 PM, Song Liu wrote:
+> On Wed, Nov 20, 2019 at 8:29 AM Nigel Croxon <ncroxon@redhat.com> wrote:
+>> The MD driver for level-456 should prevent re-reading read errors.
+>>
+>> For redundant raid it makes no sense to retry the operation:
+>> When one of the disks in the array hits a read error, that will
+>> cause a stall for the reading process:
+>> - either the read succeeds (e.g. after 4 seconds the HDD error
+>> strategy could read the sector)
+>> - or it fails after HDD imposed timeout (w/TLER, e.g. after 7
+>> seconds (might be even longer)
+> I am ok with the idea. But we need to be more careful.
+>
+>> The user can enable/disable this functionality by the following
+>> commands:
+>> To Enable:
+>> echo 1 > /proc/sys/dev/raid/raid456_retry_read_error
+>>
+>> To Disable, type the following at anytime:
+>> echo 0 > /proc/sys/dev/raid/raid456_retry_read_error
+>>
+>> Version 2:
+>> * Renamed *raid456* to *raid5*.
+>> * Changed set_raid5_retry_re routine to use 'if-then' to make cleaner.
+>> * Added set_bit R5_ReadError in retry_aligned_read routine.
+>>
+>> Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
+>> ---
+>>   drivers/md/md.c    | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+>>   drivers/md/md.h    |  3 +++
+>>   drivers/md/raid5.c |  4 +++-
+>>   3 files changed, 52 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/md/md.c b/drivers/md/md.c
+>> index 1be7abeb24fd..6f47489e0b23 100644
+>> --- a/drivers/md/md.c
+>> +++ b/drivers/md/md.c
+>> @@ -125,6 +125,15 @@ static inline int speed_max(struct mddev *mddev)
+>>                  mddev->sync_speed_max : sysctl_speed_limit_max;
+>>   }
+>>
+>> +static int sysctl_raid5_retry_read_error =3D 0;
+> I don't think we need the sysctl. Per device knob should be sufficient.
 
-Guoqing>   21:40:57 >>> [4783749.306796] NMI watchdog: Watchdog detected hard 
-Guoqing> LOCKUP on cpu 22
-Guoqing>   21:40:58 >>> [4783749.743367] NMI watchdog: Watchdog detected hard 
-Guoqing> LOCKUP on cpu 39
-Guoqing>   21:40:59 >>> [4783750.324941] NMI watchdog: Watchdog detected hard 
-Guoqing> LOCKUP on cpu 5
-Guoqing>   21:41:00 >>> [4783751.739422] NMI watchdog: Watchdog detected hard 
-Guoqing> LOCKUP on cpu 16
-Guoqing>   21:41:00 >>> [4783752.115471] NMI watchdog: Watchdog detected hard 
-Guoqing> LOCKUP on cpu 21
-Guoqing>   21:41:01 >>> [4783752.355232] NMI watchdog: Watchdog detected hard 
-Guoqing> LOCKUP on cpu 17
-Guoqing>   21:41:01 >>> [4783752.627075] NMI watchdog: Watchdog detected hard 
-Guoqing> LOCKUP on cpu 4
-Guoqing>   21:41:01 >>> [4783752.775597] NMI watchdog: Watchdog detected hard 
-Guoqing> LOCKUP on cpu 0
-Guoqing>   21:41:01 >>> [4783752.941282] NMI watchdog: Watchdog detected hard 
-Guoqing> LOCKUP on cpu 11
-Guoqing>   21:41:04 >>> [4783755.955468] NMI watchdog: Watchdog detected hard 
-Guoqing> LOCKUP on cpu 9
-Guoqing>   21:41:04 >>> [4783756.142500] NMI watchdog: Watchdog detected hard 
-Guoqing> LOCKUP on cpu 23
-Guoqing>   21:41:04 >>> [4783756.211894] NMI watchdog: Watchdog detected hard 
-Guoqing> LOCKUP on cpu 6
-Guoqing>   21:41:04 >>> [4783756.264305] NMI watchdog: Watchdog detected hard 
-Guoqing> LOCKUP on cpu 8
-Guoqing>   21:41:07 >>> [4783759.284782] NMI watchdog: Watchdog detected hard 
-Guoqing> LOCKUP on cpu 41
-Guoqing>   21:42:17 >>> [4783828.834689] NMI watchdog: BUG: soft lockup - CPU#2 
-Guoqing> stuck for 22s! [ppd:3164]
-Guoqing>   21:42:45 >>> [4783856.835762] NMI watchdog: BUG: soft lockup - CPU#2 
-Guoqing> stuck for 22s! [ppd:3164]
-Guoqing>   21:43:13 >>> [4783884.837093] NMI watchdog: BUG: soft lockup - CPU#2 
-Guoqing> stuck for 22s! [ppd:3164]
-Guoqing>   21:43:41 >>> [4783912.838201] NMI watchdog: BUG: soft lockup - CPU#2 
-Guoqing> stuck for 23s! [ppd:3164]
-Guoqing>   21:44:02 >>> [4783933.941087] NMI watchdog: Watchdog detected hard 
-Guoqing> LOCKUP on cpu 2
-Guoqing>   22:04:02 >>> [4785134.037889] NMI watchdog: Watchdog detected hard 
-Guoqing> LOCKUP on cpu 3
-Guoqing>   22:05:37 >>> [4785228.764631] NMI watchdog: Watchdog detected hard 
-Guoqing> LOCKUP on cpu 10
-Guoqing>   22:07:03 >>> [4785315.326793] NMI watchdog: Watchdog detected hard 
-Guoqing> LOCKUP on cpu 27
-Guoqing>   22:08:40 >>> [4785411.462601] NMI watchdog: Watchdog detected hard 
-Guoqing> LOCKUP on cpu 35
+Have an example?
 
-Guoqing> And most hard lockups have similar calltrace like this.
+Remember, someone might want to enable this before the initial sync.
 
-Guoqing> 21:42:17 kernel: [4783749.306796] NMI watchdog: Watchdog detected hard 
-Guoqing> LOCKUP on cpu 22
-Guoqing> 21:42:17 kernel: [4783749.306911] Modules linked in: dm_snapshot 
-Guoqing> dm_bufio cpufreq_ondemand cpufreq_powersave cpufreq_stats 
-Guoqing> cpufreq_userspace cpufreq_conservative ipmi_devintf rdma_ucm ib_ipoib 
-Guoqing> ib_uverbs ib_umad x86_pkg_te
-Guoqing> mp_thermal crct10dif_pclmul crc32_pclmul ghash_clmulni_intel 
-Guoqing> sha256_ssse3 sha256_generic hmac drbg ansi_cprng aesni_intel aes_x86_64 
-Guoqing> glue_helper ablk_helper cryptd efi_pstore efivars ipmi_si 
-Guoqing> ipmi_msghandler acpi_power_meter hwmon acpi_cpu
-Guoqing> freq acpi_pad button scst_vdisk yars(O) ib_srpt scst rdma_cm iw_cm ib_cm 
-Guoqing> efivarfs raid456 libcrc32c async_raid6_recov async_memcpy async_pq 
-Guoqing> async_xor xor async_tx raid6_pq mlx4_ib ib_sa ib_mad ib_core ib_addr 
-Guoqing> ipv6 ib_netlink hid_generic u
-Guoqing> sbhid sg crc32c_intel mlx4_core mlx_compat mpt3sas xhci_pci i2c_i801 
-Guoqing> ahci i2c_core xhci_hcd libahci
-Guoqing>   21:42:17 kernel: [4783749.310231] CPU: 22 PID: 33558 Comm: 
-Guoqing> 649175e1dc3_0 Tainted: G        W  O    4.4.62-1-storage #4.4.62-1.3
-Guoqing>   21:42:17 kernel: [4783749.310233] Hardware name: Supermicro 
-Guoqing> SSG-2029P-ACR24L/X11DPH-T, BIOS 3.1 05/22/2019
-Guoqing>   21:42:17 kernel: [4783749.310235] task: ffff880bdab08000 ti: 
-Guoqing> ffff880fba8e8000 task.ti: ffff880fba8e8000
-Guoqing>   21:42:17 kernel: [4783749.310237] RIP: 0010:[<ffffffff81099fb1>]  
-Guoqing> [<ffffffff81099fb1>] queued_spin_lock_slowpath+0xf1/0x160
-Guoqing>   21:42:17 kernel: [4783749.310245] RSP: 0018:ffff880fba8eb738 EFLAGS: 
-Guoqing> 00000046
-Guoqing>   21:42:17 kernel: [4783749.310246] RAX: 0000000000000000 RBX: 
-Guoqing> ffff880c6d7b8800 RCX: ffff88086fc35d80
-Guoqing>   21:42:17 kernel: [4783749.310247] RDX: ffff88107fc95d80 RSI: 
-Guoqing> 00000000005c0000 RDI: ffff880c6d7b8ad4
-Guoqing>   21:42:17 kernel: [4783749.310248] RBP: ffff880fba8eb738 R08: 
-Guoqing> 0000000000000001 R09: 00000000633946d0
-Guoqing>   21:42:17 kernel: [4783749.310249] R10: 0000000000000000 R11: 
-Guoqing> 0000000000000002 R12: ffff880c6d7b8810
-Guoqing>   21:42:17 kernel: [4783749.310250] R13: 0000000000000000 R14: 
-Guoqing> ffff880bf7fe8000 R15: ffff880bf7fe8000
-Guoqing>   21:42:17 kernel: [4783749.310251] FS:  0000000000000000(0000) 
-Guoqing> GS:ffff88107fc80000(0000) knlGS:0000000000000000
-Guoqing>   21:42:17 kernel: [4783749.310253] CS:  0010 DS: 0000 ES: 0000 CR0: 
-Guoqing> 0000000080050033
-Guoqing>   21:42:17 kernel: [4783749.310254] CR2: 0000558286fd0a08 CR3: 
-Guoqing> 0000000001a09000 CR4: 00000000003406e0
-Guoqing>   21:42:17 kernel: [4783749.310255] DR0: 0000000000000000 DR1: 
-Guoqing> 0000000000000000 DR2: 0000000000000000
-Guoqing>   21:42:17 kernel: [4783749.310256] DR3: 0000000000000000 DR6: 
-Guoqing> 00000000fffe0ff0 DR7: 0000000000000400
-Guoqing>   21:42:17 kernel: [4783749.310257] Stack:
-Guoqing>   21:42:17 kernel: [4783749.310258]  ffff880fba8eb748 ffffffff81598060 
-Guoqing> ffff880fba8eb800 ffffffffa0230b0a
-Guoqing>   21:42:17 kernel: [4783749.310261]  ffff880fb74c1c00 0000000002011200 
-Guoqing> ffff88046fc03700 ffff880fba8eb7b0
-Guoqing>   21:42:17 kernel: [4783749.310263]  ffff880c6d7b8808 0000000000000002 
-Guoqing> ffff880c6d7b89d0 0000000001265000
-Guoqing>   21:42:17 kernel: [4783749.310265] Call Trace:
-Guoqing>   21:42:17 kernel: [4783749.310272]  [<ffffffff81598060>] 
-Guoqing> _raw_spin_lock+0x20/0x30
-Guoqing>   21:42:17 kernel: [4783749.310275]  [<ffffffffa0230b0a>] 
-Guoqing> raid5_get_active_stripe+0x1da/0x5250 [raid456]
-Guoqing>   21:42:17 kernel: [4783749.310281]  [<ffffffff8112d165>] ? 
-Guoqing> mempool_alloc_slab+0x15/0x20
-Guoqing>   21:42:17 kernel: [4783749.310283]  [<ffffffffa0231174>] 
-Guoqing> raid5_get_active_stripe+0x844/0x5250 [raid456]
-Guoqing>   21:42:17 kernel: [4783749.310289]  [<ffffffff812d5574>] ? 
-Guoqing> generic_make_request+0x24/0x2b0
-Guoqing>   21:42:17 kernel: [4783749.310293]  [<ffffffff810938b0>] ? 
-Guoqing> wait_woken+0x90/0x90
-Guoqing>   21:42:17 kernel: [4783749.310298]  [<ffffffff814a2adc>] 
-Guoqing> md_make_request+0xfc/0x250
-Guoqing>   21:42:17 kernel: [4783749.310309]  [<ffffffff812d5867>] 
-Guoqing> submit_bio+0x67/0x150
+>
+>> +static inline void set_raid5_retry_re(struct mddev *mddev, int re)
+>> +{
+>> +       if (re)
+>> +               set_bit(MD_RAID5_RETRY_RE, &mddev->flags);
+>> +       else
+>> +               clear_bit(MD_RAID5_RETRY_RE, &mddev->flags);
+>> +}
+>> +
+>>   static int rdev_init_wb(struct md_rdev *rdev)
+>>   {
+>>          if (rdev->bdev->bd_queue->nr_hw_queues =3D=3D 1)
+>> @@ -213,6 +222,13 @@ static struct ctl_table raid_table[] =3D {
+>>                  .mode           =3D S_IRUGO|S_IWUSR,
+>>                  .proc_handler   =3D proc_dointvec,
+>>          },
+>> +       {
+>> +               .procname       =3D "raid5_retry_read_error",
+>> +               .data           =3D &sysctl_raid5_retry_read_error,
+>> +               .maxlen         =3D sizeof(int),
+>> +               .mode           =3D S_IRUGO|S_IWUSR,
+>> +               .proc_handler   =3D proc_dointvec,
+>> +       },
+>>          { }
+>>   };
+>>
+>> @@ -4721,6 +4737,32 @@ mismatch_cnt_show(struct mddev *mddev, char *page=
+)
+>>
+>>   static struct md_sysfs_entry md_mismatches =3D __ATTR_RO(mismatch_cnt)=
+;
+>>
+>> +static ssize_t
+>> +raid5_retry_re_show(struct mddev *mddev, char *page)
+>> +{
+>> +       return sprintf(page, "RAID456 retry Read Error =3D %u\n",
+>> +                      test_bit(MD_RAID5_RETRY_RE, &mddev->flags));
+>> +}
+>> +
+>> +static ssize_t raid5_retry_re_store(struct mddev *mddev, const char *bu=
+f, size_t len)
+>> +{
+>> +       int retry;
+>> +
+>> +       if (!mddev->private)
+>> +               return -ENODEV;
+>> +
+>> +       if (len > 1 ||
+>> +           kstrtoint(buf, 10, &retry) ||
+>> +           retry < 0 || retry > 1)
+>> +               return -EINVAL;
+>> +
+>> +       set_raid5_retry_re(mddev, retry);
+>> +       return len;
+>> +}
+>> +
+>> +static struct md_sysfs_entry md_raid5_retry_read_error =3D
+>> +__ATTR(raid5_retry_read_error, S_IRUGO|S_IWUSR, raid5_retry_re_show, ra=
+id5_retry_re_store);
+>> +
+>>   static ssize_t
+>>   sync_min_show(struct mddev *mddev, char *page)
+>>   {
+>> @@ -5272,6 +5314,7 @@ static struct attribute *md_redundancy_attrs[] =3D=
+ {
+>>          &md_suspend_hi.attr,
+>>          &md_bitmap.attr,
+>>          &md_degraded.attr,
+>> +       &md_raid5_retry_read_error.attr,
+>>          NULL,
+>>   };
+>>   static struct attribute_group md_redundancy_group =3D {
+>> @@ -5833,6 +5876,8 @@ static int do_md_run(struct mddev *mddev)
+>>          if (mddev_is_clustered(mddev))
+>>                  md_allow_write(mddev);
+>>
+>> +       set_raid5_retry_re(mddev, sysctl_raid5_retry_read_error);
+>> +
+>>          /* run start up tasks that require md_thread */
+>>          md_start(mddev);
+>>
+>> @@ -8411,6 +8456,7 @@ void md_do_sync(struct md_thread *thread)
+>>          else
+>>                  desc =3D "recovery";
+>>
+>> +       set_raid5_retry_re(mddev, sysctl_raid5_retry_read_error);
+>>          mddev->last_sync_action =3D action ?: desc;
+>>
+>>          /* we overload curr_resync somewhat here.
+>> diff --git a/drivers/md/md.h b/drivers/md/md.h
+>> index c5e3ff398b59..6703a7d0b633 100644
+>> --- a/drivers/md/md.h
+>> +++ b/drivers/md/md.h
+>> @@ -254,6 +254,9 @@ enum mddev_flags {
+>>          MD_BROKEN,              /* This is used in RAID-0/LINEAR only, =
+to stop
+>>                                   * I/O in case an array member is gone/=
+failed.
+>>                                   */
+>> +       MD_RAID5_RETRY_RE,      /* allow user-space to request RAID456
+>> +                                * retry read errors
+>> +                                */
+> The use of "RE" and "re" is not clear. Let's just keep full name like
+> *retry_read.
+>
+> Also, please keep the default as "do retry". So it is the same behavior a=
+s
+> older kernels.
 
-Guoqing> My understanding is that there could be two possible reasons for lockup:
+I agree, and also like the full name. Will change for next time.
 
-Guoqing> 1. There is deadlock inside raid5 code somewhere which should
-Guoqing> be fixed.  2. Since spin_lock/unlock_irq are called in
-Guoqing> raid5_get_active_stripe, then if the function need to handle
-Guoqing> massive IOs, could it possible hard lockup was triggered due
-Guoqing> to IRQs are disabled more than 10s? If so, maybe we need to
-Guoqing> touch nmi watchdog before disable irq.
+Agreed on the second point.=C2=A0 Default is to retry.
 
-Could you use something like a bunch of RAM disks on a large memory
-system to stress test the spin_lock?  Esp if you put in some dm-faulty
-devices on top?  
++static int sysctl_raid5_retry_read_error =3D 0;
 
-REally load it down with FIO tests, and then turn on a faulty disk to
-see how it reacts?
+>>   };
+>>
+>>   enum mddev_sb_flags {
+>> diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+>> index 223e97ab27e6..0b627fface78 100644
+>> --- a/drivers/md/raid5.c
+>> +++ b/drivers/md/raid5.c
+>> @@ -2567,7 +2567,8 @@ static void raid5_end_read_request(struct bio * bi=
+)
+>>                  if (retry)
+> Can we include checks for MD_RAID5_RETRY_RE in the logic to decide whethe=
+r
+> to do "retry =3D 1"? I think that will keep the logic cleaner.
+yes, but it does duplicate 2 lines of code.
+>
+>>                          if (sh->qd_idx >=3D 0 && sh->pd_idx =3D=3D i)
+>>                                  set_bit(R5_ReadError, &sh->dev[i].flags=
+);
+>> -                       else if (test_bit(R5_ReadNoMerge, &sh->dev[i].fl=
+ags)) {
+>> +                       else if ((test_bit(R5_ReadNoMerge, &sh->dev[i].f=
+lags)) ||
+>> +                             (test_bit(MD_RAID5_RETRY_RE, &conf->mddev-=
+>flags))) {
+>>                                  set_bit(R5_ReadError, &sh->dev[i].flags=
+);
+>>                                  clear_bit(R5_ReadNoMerge, &sh->dev[i].f=
+lags);
+>>                          } else
+>> @@ -6163,6 +6164,7 @@ static int  retry_aligned_read(struct r5conf *conf=
+, struct bio *raid_bio,
+>>                  }
+>>
+>>                  set_bit(R5_ReadNoMerge, &sh->dev[dd_idx].flags);
+>> +               set_bit(R5_ReadError, &sh->dev[dd_idx].flags);
+> Do we need this w/ and w/o MD_RAID5_RETRY_RE
 
-Just a thought...
-John
+I will double check on this.
+
+>
+
