@@ -2,177 +2,211 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FD811050A8
-	for <lists+linux-raid@lfdr.de>; Thu, 21 Nov 2019 11:38:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FE4A105414
+	for <lists+linux-raid@lfdr.de>; Thu, 21 Nov 2019 15:14:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbfKUKht (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 21 Nov 2019 05:37:49 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:45551 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726792AbfKUKhr (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 21 Nov 2019 05:37:47 -0500
-Received: by mail-ed1-f65.google.com with SMTP id b5so2308322eds.12
-        for <linux-raid@vger.kernel.org>; Thu, 21 Nov 2019 02:37:46 -0800 (PST)
+        id S1726722AbfKUOOM (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 21 Nov 2019 09:14:12 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:34810 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbfKUOOM (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 21 Nov 2019 09:14:12 -0500
+Received: by mail-ed1-f68.google.com with SMTP id b72so2926827edf.1
+        for <linux-raid@vger.kernel.org>; Thu, 21 Nov 2019 06:14:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=oSxf5ZuS0CB1reY7S02uGY+o4tw4NpliMs1HHxE6Y0w=;
-        b=q/AnXhD+/p+MDC8wT0hOE8fHCxf1YshtSC6WTsJIR8Q/fJ493McrZx9EaxEvC1q8tS
-         H/BikgU8WVDag5bT/PpPpF+G8yuK8K5h9eopaMoBIhGdx0nQyirjRQclW37j4vcCkAJV
-         +PxIkgdpm2hMZjsq2krel68brDbCaO19R6ep744cQ7EIYs8kqm9UwYzd4Nw2QIw1hPJy
-         fRtklCkL1rtfiIhuoaikXDZ92yTO+qw2cbchC5juRvQiydacEf4tzOIuGm/g3FRfo8hx
-         ZdueW66K56iNXAeriU/1Aa5dI3kUbGZMC9HlJ0ID/Bt//1wcSrHvDTAIp4Vm0W+bfDZj
-         od4g==
+        d=cloud.ionos.com; s=google;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-transfer-encoding:content-language;
+        bh=3Oa0vry7VD1C0UQHQQoA7ScyLP5QONEnUaH4lvkHBlw=;
+        b=HYamN4A5/s0WeHhSR1X9/IOY91UC0vi8pI36jlsIlmtig1NyKMeMAvs6PfAejMv1K3
+         c21bWRKz3LD45deg9hQ5SDU5Jw4klIqxV64oBGDEbpAxc8zZUHXGXKHN2p58wZcDH+/6
+         bUzPnInCJqr/pT9tthCjowgPGUBL5nfU3mMW2XgELlEsBlt0PHbT9eDBcMYKd29W45pT
+         +f2fVpeFjNAz4NwoojLuEb/68py9M0IMiQN4Lg50rlLP8P/B6qnE+VBTROSZAFveAhln
+         RPCF+b3UdLWV3HbQqxU6dPLEp4o1Y5nnClwZjGaPi/WgpufhbAQppsBqHUs7H3bGuGmI
+         0bSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=oSxf5ZuS0CB1reY7S02uGY+o4tw4NpliMs1HHxE6Y0w=;
-        b=bDUR80XzFT9+0tijdZIuPCqgMm4KOTAD5cAK9ryxVfiXqwRDxLVS0KWJSJRDanWe0F
-         MsoLdtNB629AiPdm5wXZdodfrIk9ibhcx+NvHYZWeyVIFT2dUrog9PmIHQ2PYqkyeNW4
-         B7uNrx02e0he4bx+FRnfAsAf3v8qeJFWHfXY/og+mozeuEhp0gTC+9SMYAeRzqvQa1t3
-         aUvbo7JgFcUw56c1BWlikw4Wm/OmHyiEgZe4d9bSVyN1rhZeBPUNLmkfwiqIrL0UtxAd
-         2ZambfHreiYgZM7d43omjGAN9h6Hw0QXz1aNgdt9vV8B5qFWzTRt5/vCfOH8Zb7gWFJx
-         HuPQ==
-X-Gm-Message-State: APjAAAUZSbBFRQ9u6hBP7kA9fekVJTuO5gjBnovQKr13zhTpknzbs0up
-        7JF4YGU46Pz5QD34Eet1f+s=
-X-Google-Smtp-Source: APXvYqyt6Hn0yBhTtX5hz9hBh2lQYnIkWSQwOVMIMsPvqGXMmR+6nNMQ5eeqoyndFMP66fc0F3ImYw==
-X-Received: by 2002:a17:906:6006:: with SMTP id o6mr12760958ejj.51.1574332665964;
-        Thu, 21 Nov 2019 02:37:45 -0800 (PST)
-Received: from ls00508.pb.local ([2001:1438:4010:2540:4465:ea1d:c50c:3d03])
-        by smtp.gmail.com with ESMTPSA id x29sm87441edi.20.2019.11.21.02.37.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 02:37:45 -0800 (PST)
-From:   jgq516@gmail.com
-X-Google-Original-From: guoqing.jiang@cloud.ionos.com
-To:     liu.song.a23@gmail.com
-Cc:     linux-raid@vger.kernel.org,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Subject: [PATCH v2 9/9] md/raid1: introduce wait_for_serialization
-Date:   Thu, 21 Nov 2019 11:37:28 +0100
-Message-Id: <20191121103728.18919-10-guoqing.jiang@cloud.ionos.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191121103728.18919-1-guoqing.jiang@cloud.ionos.com>
-References: <20191121103728.18919-1-guoqing.jiang@cloud.ionos.com>
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-transfer-encoding:content-language;
+        bh=3Oa0vry7VD1C0UQHQQoA7ScyLP5QONEnUaH4lvkHBlw=;
+        b=io6y+JKqRoW0BMjVdgYvLZ/lRzJ3AKuvala2cr5t+PYG5dXhS5kvx59vzq3xH+j7J6
+         WnpBTxAXPOmT38YoLxThp1AseKohvRIX7Rm/fQ8UHLKautfTf/v17yz6xDzrF20oyluG
+         fE3CQ+a1BNDL0VwegRNUiycCBH+DZjcxjQNNbUXzBvNSJpZIvtGBdP7YBLsYw5xNAlW3
+         cmOOVGhk2Sbio4shaEdX5spiRGKv/yil3uRkYVcrxpiT8e0ksX5xMEJYOo3OfMxvh7j7
+         wewx6ciw0uNWa3KdttyU0VVc2iahqDiQqwxh/6ZUxNadZ7cPB47mH8x0sOqfCX0HrNIi
+         Gwrw==
+X-Gm-Message-State: APjAAAWbKt3Cjf2p4yBtyvcL1mcHBhMhGr90XX49XpneORR+hpOAJ0KO
+        KnJe+LsvMXIE4iCMtOhCveyhqg==
+X-Google-Smtp-Source: APXvYqwBvkSm/pb+RpDptWR5xwu8nR5KCr3MejWgsFW9p9MCHFe8SC2G3jUVqBj+3uiVZ72BhVkNFA==
+X-Received: by 2002:a17:906:d96c:: with SMTP id rp12mr14376018ejb.253.1574345648105;
+        Thu, 21 Nov 2019 06:14:08 -0800 (PST)
+Received: from ?IPv6:2a02:247f:ffff:2540:4465:ea1d:c50c:3d03? ([2001:1438:4010:2540:4465:ea1d:c50c:3d03])
+        by smtp.gmail.com with ESMTPSA id 64sm106692edi.26.2019.11.21.06.14.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Nov 2019 06:14:07 -0800 (PST)
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Subject: About raid5 lock up
+To:     linux-raid <linux-raid@vger.kernel.org>
+Cc:     shinrairis@gmail.com, colyli@suse.de,
+        Song Liu <liu.song.a23@gmail.com>
+Message-ID: <a9f64be8-0f57-83f7-e7dd-2d6d4386a6f4@cloud.ionos.com>
+Date:   Thu, 21 Nov 2019 15:14:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Hi All,
 
-Previously, we call check_and_add_serial when serialization is
-enabled for write IO, but it could allocate and free memory
-back and forth.
+Recently, we got a report about raid5 lockup with 4.4.62 kernel as 
+follows, but I failed to
+reproduce it locally.
 
-Now, let's just get an element from memory pool with the new
-function, then insert node to rb tree if no collision happens.
+  21:40:57 >>> [4783749.306796] NMI watchdog: Watchdog detected hard 
+LOCKUP on cpu 22
+  21:40:58 >>> [4783749.743367] NMI watchdog: Watchdog detected hard 
+LOCKUP on cpu 39
+  21:40:59 >>> [4783750.324941] NMI watchdog: Watchdog detected hard 
+LOCKUP on cpu 5
+  21:41:00 >>> [4783751.739422] NMI watchdog: Watchdog detected hard 
+LOCKUP on cpu 16
+  21:41:00 >>> [4783752.115471] NMI watchdog: Watchdog detected hard 
+LOCKUP on cpu 21
+  21:41:01 >>> [4783752.355232] NMI watchdog: Watchdog detected hard 
+LOCKUP on cpu 17
+  21:41:01 >>> [4783752.627075] NMI watchdog: Watchdog detected hard 
+LOCKUP on cpu 4
+  21:41:01 >>> [4783752.775597] NMI watchdog: Watchdog detected hard 
+LOCKUP on cpu 0
+  21:41:01 >>> [4783752.941282] NMI watchdog: Watchdog detected hard 
+LOCKUP on cpu 11
+  21:41:04 >>> [4783755.955468] NMI watchdog: Watchdog detected hard 
+LOCKUP on cpu 9
+  21:41:04 >>> [4783756.142500] NMI watchdog: Watchdog detected hard 
+LOCKUP on cpu 23
+  21:41:04 >>> [4783756.211894] NMI watchdog: Watchdog detected hard 
+LOCKUP on cpu 6
+  21:41:04 >>> [4783756.264305] NMI watchdog: Watchdog detected hard 
+LOCKUP on cpu 8
+  21:41:07 >>> [4783759.284782] NMI watchdog: Watchdog detected hard 
+LOCKUP on cpu 41
+  21:42:17 >>> [4783828.834689] NMI watchdog: BUG: soft lockup - CPU#2 
+stuck for 22s! [ppd:3164]
+  21:42:45 >>> [4783856.835762] NMI watchdog: BUG: soft lockup - CPU#2 
+stuck for 22s! [ppd:3164]
+  21:43:13 >>> [4783884.837093] NMI watchdog: BUG: soft lockup - CPU#2 
+stuck for 22s! [ppd:3164]
+  21:43:41 >>> [4783912.838201] NMI watchdog: BUG: soft lockup - CPU#2 
+stuck for 23s! [ppd:3164]
+  21:44:02 >>> [4783933.941087] NMI watchdog: Watchdog detected hard 
+LOCKUP on cpu 2
+  22:04:02 >>> [4785134.037889] NMI watchdog: Watchdog detected hard 
+LOCKUP on cpu 3
+  22:05:37 >>> [4785228.764631] NMI watchdog: Watchdog detected hard 
+LOCKUP on cpu 10
+  22:07:03 >>> [4785315.326793] NMI watchdog: Watchdog detected hard 
+LOCKUP on cpu 27
+  22:08:40 >>> [4785411.462601] NMI watchdog: Watchdog detected hard 
+LOCKUP on cpu 35
 
-Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
----
- drivers/md/raid1.c | 41 ++++++++++++++++++++++-------------------
- 1 file changed, 22 insertions(+), 19 deletions(-)
+And most hard lockups have similar calltrace like this.
 
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index e5b2336febfe..2e602dbc921a 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -56,32 +56,43 @@ static void lower_barrier(struct r1conf *conf, sector_t sector_nr);
- INTERVAL_TREE_DEFINE(struct serial_info, node, sector_t, _subtree_last,
- 		     START, LAST, static inline, raid1_rb);
- 
--static int check_and_add_serial(struct md_rdev *rdev, sector_t lo, sector_t hi)
-+static int check_and_add_serial(struct md_rdev *rdev, struct r1bio *r1_bio,
-+				struct serial_info *si, int idx)
- {
--	struct serial_info *si;
- 	unsigned long flags;
- 	int ret = 0;
--	struct mddev *mddev = rdev->mddev;
--	int idx = sector_to_idx(lo);
-+	sector_t lo = r1_bio->sector;
-+	sector_t hi = lo + r1_bio->sectors;
- 	struct serial_in_rdev *serial = &rdev->serial[idx];
- 
--	si = mempool_alloc(mddev->serial_info_pool, GFP_NOIO);
--
- 	spin_lock_irqsave(&serial->serial_lock, flags);
- 	/* collision happened */
- 	if (raid1_rb_iter_first(&serial->serial_rb, lo, hi))
- 		ret = -EBUSY;
--	if (!ret) {
-+	else {
- 		si->start = lo;
- 		si->last = hi;
- 		raid1_rb_insert(si, &serial->serial_rb);
--	} else
--		mempool_free(si, mddev->serial_info_pool);
-+	}
- 	spin_unlock_irqrestore(&serial->serial_lock, flags);
- 
- 	return ret;
- }
- 
-+static void wait_for_serialization(struct md_rdev *rdev, struct r1bio *r1_bio)
-+{
-+	struct mddev *mddev = rdev->mddev;
-+	struct serial_info *si;
-+	int idx = sector_to_idx(r1_bio->sector);
-+	struct serial_in_rdev *serial = &rdev->serial[idx];
-+
-+	if (WARN_ON(!mddev->serial_info_pool))
-+		return;
-+	si = mempool_alloc(mddev->serial_info_pool, GFP_NOIO);
-+	wait_event(serial->serial_io_wait,
-+		   check_and_add_serial(rdev, r1_bio, si, idx) == 0);
-+}
-+
- static void remove_serial(struct md_rdev *rdev, sector_t lo, sector_t hi)
- {
- 	struct serial_info *si;
-@@ -1341,7 +1352,6 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
- 	struct raid1_plug_cb *plug = NULL;
- 	int first_clone;
- 	int max_sectors;
--	sector_t lo, hi;
- 
- 	if (mddev_is_clustered(mddev) &&
- 	     md_cluster_ops->area_resyncing(mddev, WRITE,
-@@ -1369,8 +1379,6 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
- 
- 	r1_bio = alloc_r1bio(mddev, bio);
- 	r1_bio->sectors = max_write_sectors;
--	lo = r1_bio->sector;
--	hi = r1_bio->sector + r1_bio->sectors;
- 
- 	if (conf->pending_count >= max_queued_requests) {
- 		md_wakeup_thread(mddev->thread);
-@@ -1487,8 +1495,6 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
- 	for (i = 0; i < disks; i++) {
- 		struct bio *mbio = NULL;
- 		struct md_rdev *rdev = conf->mirrors[i].rdev;
--		int idx = sector_to_idx(lo);
--		struct serial_in_rdev *serial = &rdev->serial[idx];
- 		if (!r1_bio->bios[i])
- 			continue;
- 
-@@ -1517,14 +1523,11 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
- 
- 		if (r1_bio->behind_master_bio) {
- 			if (test_bit(CollisionCheck, &rdev->flags))
--				wait_event(serial->serial_io_wait,
--					   check_and_add_serial(rdev, lo, hi)
--					   == 0);
-+				wait_for_serialization(rdev, r1_bio);
- 			if (test_bit(WriteMostly, &rdev->flags))
- 				atomic_inc(&r1_bio->behind_remaining);
- 		} else if (mddev->serialize_policy)
--			wait_event(serial->serial_io_wait,
--				   check_and_add_serial(rdev, lo, hi) == 0);
-+			wait_for_serialization(rdev, r1_bio);
- 
- 		r1_bio->bios[i] = mbio;
- 
--- 
-2.17.1
+21:42:17 kernel: [4783749.306796] NMI watchdog: Watchdog detected hard 
+LOCKUP on cpu 22
+21:42:17 kernel: [4783749.306911] Modules linked in: dm_snapshot 
+dm_bufio cpufreq_ondemand cpufreq_powersave cpufreq_stats 
+cpufreq_userspace cpufreq_conservative ipmi_devintf rdma_ucm ib_ipoib 
+ib_uverbs ib_umad x86_pkg_te
+mp_thermal crct10dif_pclmul crc32_pclmul ghash_clmulni_intel 
+sha256_ssse3 sha256_generic hmac drbg ansi_cprng aesni_intel aes_x86_64 
+glue_helper ablk_helper cryptd efi_pstore efivars ipmi_si 
+ipmi_msghandler acpi_power_meter hwmon acpi_cpu
+freq acpi_pad button scst_vdisk yars(O) ib_srpt scst rdma_cm iw_cm ib_cm 
+efivarfs raid456 libcrc32c async_raid6_recov async_memcpy async_pq 
+async_xor xor async_tx raid6_pq mlx4_ib ib_sa ib_mad ib_core ib_addr 
+ipv6 ib_netlink hid_generic u
+sbhid sg crc32c_intel mlx4_core mlx_compat mpt3sas xhci_pci i2c_i801 
+ahci i2c_core xhci_hcd libahci
+  21:42:17 kernel: [4783749.310231] CPU: 22 PID: 33558 Comm: 
+649175e1dc3_0 Tainted: G        W  O    4.4.62-1-storage #4.4.62-1.3
+  21:42:17 kernel: [4783749.310233] Hardware name: Supermicro 
+SSG-2029P-ACR24L/X11DPH-T, BIOS 3.1 05/22/2019
+  21:42:17 kernel: [4783749.310235] task: ffff880bdab08000 ti: 
+ffff880fba8e8000 task.ti: ffff880fba8e8000
+  21:42:17 kernel: [4783749.310237] RIP: 0010:[<ffffffff81099fb1>]  
+[<ffffffff81099fb1>] queued_spin_lock_slowpath+0xf1/0x160
+  21:42:17 kernel: [4783749.310245] RSP: 0018:ffff880fba8eb738 EFLAGS: 
+00000046
+  21:42:17 kernel: [4783749.310246] RAX: 0000000000000000 RBX: 
+ffff880c6d7b8800 RCX: ffff88086fc35d80
+  21:42:17 kernel: [4783749.310247] RDX: ffff88107fc95d80 RSI: 
+00000000005c0000 RDI: ffff880c6d7b8ad4
+  21:42:17 kernel: [4783749.310248] RBP: ffff880fba8eb738 R08: 
+0000000000000001 R09: 00000000633946d0
+  21:42:17 kernel: [4783749.310249] R10: 0000000000000000 R11: 
+0000000000000002 R12: ffff880c6d7b8810
+  21:42:17 kernel: [4783749.310250] R13: 0000000000000000 R14: 
+ffff880bf7fe8000 R15: ffff880bf7fe8000
+  21:42:17 kernel: [4783749.310251] FS:  0000000000000000(0000) 
+GS:ffff88107fc80000(0000) knlGS:0000000000000000
+  21:42:17 kernel: [4783749.310253] CS:  0010 DS: 0000 ES: 0000 CR0: 
+0000000080050033
+  21:42:17 kernel: [4783749.310254] CR2: 0000558286fd0a08 CR3: 
+0000000001a09000 CR4: 00000000003406e0
+  21:42:17 kernel: [4783749.310255] DR0: 0000000000000000 DR1: 
+0000000000000000 DR2: 0000000000000000
+  21:42:17 kernel: [4783749.310256] DR3: 0000000000000000 DR6: 
+00000000fffe0ff0 DR7: 0000000000000400
+  21:42:17 kernel: [4783749.310257] Stack:
+  21:42:17 kernel: [4783749.310258]  ffff880fba8eb748 ffffffff81598060 
+ffff880fba8eb800 ffffffffa0230b0a
+  21:42:17 kernel: [4783749.310261]  ffff880fb74c1c00 0000000002011200 
+ffff88046fc03700 ffff880fba8eb7b0
+  21:42:17 kernel: [4783749.310263]  ffff880c6d7b8808 0000000000000002 
+ffff880c6d7b89d0 0000000001265000
+  21:42:17 kernel: [4783749.310265] Call Trace:
+  21:42:17 kernel: [4783749.310272]  [<ffffffff81598060>] 
+_raw_spin_lock+0x20/0x30
+  21:42:17 kernel: [4783749.310275]  [<ffffffffa0230b0a>] 
+raid5_get_active_stripe+0x1da/0x5250 [raid456]
+  21:42:17 kernel: [4783749.310281]  [<ffffffff8112d165>] ? 
+mempool_alloc_slab+0x15/0x20
+  21:42:17 kernel: [4783749.310283]  [<ffffffffa0231174>] 
+raid5_get_active_stripe+0x844/0x5250 [raid456]
+  21:42:17 kernel: [4783749.310289]  [<ffffffff812d5574>] ? 
+generic_make_request+0x24/0x2b0
+  21:42:17 kernel: [4783749.310293]  [<ffffffff810938b0>] ? 
+wait_woken+0x90/0x90
+  21:42:17 kernel: [4783749.310298]  [<ffffffff814a2adc>] 
+md_make_request+0xfc/0x250
+  21:42:17 kernel: [4783749.310309]  [<ffffffff812d5867>] 
+submit_bio+0x67/0x150
 
+My understanding is that there could be two possible reasons for lockup:
+
+1. There is deadlock inside raid5 code somewhere which should be fixed.
+2. Since spin_lock/unlock_irq are called in raid5_get_active_stripe, 
+then if the function need to
+handle massive IOs, could it possible hard lockup was triggered due to 
+IRQs are disabled more
+than 10s? If so, maybe we need to touch nmi watchdog before disable irq.
+
+Coly and Dennis had reported raid5 lock up issues with different kernel 
+versions (4.2.8, 4.7.0-rc7
+and 4.8-rc5), not sure it they are related or not, but I guess it is not 
+fixed in latest code.
+
+Any thoughts?
+
+[1]. https://marc.info/?l=linux-raid&m=150348807422853&w=2
+[2]. https://marc.info/?l=linux-raid&m=146883211430999&w=2
+
+
+Thanks.
+Guoqing
