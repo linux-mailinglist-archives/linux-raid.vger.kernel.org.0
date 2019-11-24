@@ -2,28 +2,30 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1717A10853C
-	for <lists+linux-raid@lfdr.de>; Sun, 24 Nov 2019 23:07:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C2B310855D
+	for <lists+linux-raid@lfdr.de>; Sun, 24 Nov 2019 23:42:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbfKXWHS (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 24 Nov 2019 17:07:18 -0500
-Received: from eggs.gnu.org ([209.51.188.92]:60307 "EHLO eggs.gnu.org"
+        id S1726942AbfKXWmd (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 24 Nov 2019 17:42:33 -0500
+Received: from eggs.gnu.org ([209.51.188.92]:34937 "EHLO eggs.gnu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726842AbfKXWHR (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sun, 24 Nov 2019 17:07:17 -0500
-Received: from fencepost.gnu.org ([2001:470:142:3::e]:53502)
+        id S1726855AbfKXWmd (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sun, 24 Nov 2019 17:42:33 -0500
+Received: from fencepost.gnu.org ([2001:470:142:3::e]:53774)
         by eggs.gnu.org with esmtp (Exim 4.71)
         (envelope-from <sudoman@gnu.org>)
-        id 1iZ02G-0000w8-4N
-        for linux-raid@vger.kernel.org; Sun, 24 Nov 2019 17:07:16 -0500
-Received: from jumpgate.fsf.org ([74.94.156.211]:50946 helo=[172.16.0.64])
+        id 1iZ0aN-000448-JK
+        for linux-raid@vger.kernel.org; Sun, 24 Nov 2019 17:42:31 -0500
+Received: from jumpgate.fsf.org ([74.94.156.211]:51272 helo=[172.16.0.64])
         by fencepost.gnu.org with esmtpsa (TLS1.2:DHE_RSA_AES_128_CBC_SHA1:128)
         (Exim 4.82)
         (envelope-from <sudoman@gnu.org>)
-        id 1iZ02F-00069n-Pw
-        for linux-raid@vger.kernel.org; Sun, 24 Nov 2019 17:07:15 -0500
+        id 1iZ0aN-0007Kv-6e
+        for linux-raid@vger.kernel.org; Sun, 24 Nov 2019 17:42:31 -0500
+Subject: Re: Deep into potential data loss issue
 From:   Andrew Engelbrecht <sudoman@gnu.org>
-Subject: Deep into potential data loss issue
+To:     linux-raid@vger.kernel.org
+References: <3fc5f3df-0589-645c-f36a-2eee83e8bccd@gnu.org>
 Openpgp: preference=signencrypt
 Autocrypt: addr=sudoman@gnu.org; prefer-encrypt=mutual; keydata=
  xsFNBFh1XPABEADXorlGKWsNvc3woSZ+9xj6OLYHTnxKzdWBMUtfxzg2CSpoVnIAl62rgcpv
@@ -68,62 +70,41 @@ Autocrypt: addr=sudoman@gnu.org; prefer-encrypt=mutual; keydata=
  OVkytOnBKbjI9YnSM8SlPtN2+92wEzFhtDAePRhGxRj+I41vST8FODj3H5ufJ9oPRlmRv6YQ
  qw3+ZNmBVFac9A2p4TK/uroKYrQfnAPJgRYcZQ1B8DuXKgsS3lVwWSsYmu4PL2nsM1uRIbL/
  074QweOPoYvVRQw=
-To:     linux-raid@vger.kernel.org
-Message-ID: <3fc5f3df-0589-645c-f36a-2eee83e8bccd@gnu.org>
-Date:   Sun, 24 Nov 2019 17:07:14 -0500
+Message-ID: <1c3d5370-812d-2ffb-035d-538a69bbf40d@gnu.org>
+Date:   Sun, 24 Nov 2019 17:42:29 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
  Icedove/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <3fc5f3df-0589-645c-f36a-2eee83e8bccd@gnu.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-detected-operating-system: by eggs.gnu.org: GNU/Linux 2.2.x-3.x [generic]
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hello RAID mailing list,
+On 11/24/2019 05:07 PM, Andrew Engelbrecht wrote:
 
-We recently ran into an issue with a degraded raid array. The drive in
-question was able to read, but writes were in some sort of failure state
-due to a lack of re-mappable sectors.
+> md127 : inactive sde1[0] sdg1[3] sdd2[5](R)
+>       702896904 blocks super 1.2
+> 
+> 
+> The number of events on sdd1, which was originally in the array, is less
+> than sde1, sdg1 and sdd2, which all have the same number of events.
+> 
+> Is it safe to attempt to re-assemble a degraded array with three members
+> using --force on sde1, sdg1 and sdd2?
 
---replace wasn't an option with our version of mdadm, so we tried
-removing the faulty partition and adding a new one (using a partition
-from another drive already in the array). that failed when a bad block
-was discovered. We tried re-adding the faulty drive, but it died completely.
+We're currently backing up partitions using ddrescue.
 
-One of our admins went into the data center, and unfortunately unplugged
-the wrong drive, then plugged it back in. Oddly enough, the drive letter
-did not change for that drive partition. All looked okay.
+We noticed this line in the output of mdadm --examine /dev/sdd2
 
-A bit later, the new partition we had tried to add earlier was a part of
-the array again, and there was a syncing process taking place, possibly
-by setting the "0xfd" disk label for "Linux raid autodetect" earlier on
-that drive. This partition had a new drive letter, unlike the one that
-remained in the array.
+Recovery Offset : 18446744073709551615 sectors
 
-We decided to shut down the machine so we could add in sata cables to
-add more drives to aid with recovery. However the raid array did not
-come back.
+We may try using --force on the array after backing everything up, but I
+suspect that we may have to restore from our backup server.
 
-We are unable to start the array with either sdd1 or sdd2 (sdd2 is the
-one that we tried adding previously) and the --run option. sdd1 can't
-get added to the array at all. Bitmaps are not shown for the device.
-sdd2 is marked with (R), which I am told means "replacing", but I don't
-know more than that.
-
-
-md127 : inactive sde1[0] sdg1[3] sdd2[5](R)
-      702896904 blocks super 1.2
-
-
-The number of events on sdd1, which was originally in the array, is less
-than sde1, sdg1 and sdd2, which all have the same number of events.
-
-Is it safe to attempt to re-assemble a degraded array with three members
-using --force on sde1, sdg1 and sdd2?
-
-Thanks for your help,
+Thanks,
 Andrew
