@@ -2,79 +2,117 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B8510109729
-	for <lists+linux-raid@lfdr.de>; Tue, 26 Nov 2019 01:02:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 64B9D109A55
+	for <lists+linux-raid@lfdr.de>; Tue, 26 Nov 2019 09:43:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfKZACc (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 25 Nov 2019 19:02:32 -0500
-Received: from sender11-op-o12.zoho.eu ([185.20.211.226]:17494 "EHLO
-        sender11-op-o12.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbfKZACc (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 25 Nov 2019 19:02:32 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1574726548; cv=none; 
-        d=zohomail.eu; s=zohoarc; 
-        b=Ef8pAbUujpOfzLOfSOXepQnoR10BkrrYk6OwBxNBNHuueyyW5nwpx2myVy0BRudBW3xjRONL2rZSeow6BWzh0gchyU8W7EJoaXVra7iu3ouzSJuJ+2QPQsDWcILNUXM+8ZPoiTlFp68SLqVv3zLiXoVhmWX0EoPFGpCk7p2Q0k4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1574726548; h=Content-Type:Content-Transfer-Encoding:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=ph0ouagL9oB/3EZJacSXxwbANSLthDhYWPnBI4JZd+Y=; 
-        b=OOzw2m37HyzT6sByxIEfZFeO/4/NcQD/R0pXnUpmdwbuc+FDBfyRfqeXtyPxlevV7RkapetIOdxOqHHotVN6XLX7axACKh3woYQOkzeZQ79ZFaFIyRn03K1E0qkWGg1+1+9HTcsp+SO6x19X2hQI2emqtZ079WFR9XYW+nbHBsg=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-        dkim=pass  header.i=trained-monkey.org;
-        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
-        dmarc=pass header.from=<jes@trained-monkey.org> header.from=<jes@trained-monkey.org>
-Received: from [172.30.98.102] (163.114.130.1 [163.114.130.1]) by mx.zoho.eu
-        with SMTPS id 1574726547566419.9640616104408; Tue, 26 Nov 2019 01:02:27 +0100 (CET)
-Subject: Re: [PATCH] Change warning message
-To:     Kinga Tanska <kinga.tanska@intel.com>, linux-raid@vger.kernel.org
-References: <20191120104948.9461-1-kinga.tanska@intel.com>
-From:   Jes Sorensen <jes@trained-monkey.org>
-Message-ID: <172dbb61-50db-efde-c967-4aa3d08a682d@trained-monkey.org>
-Date:   Mon, 25 Nov 2019 19:02:26 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S1727158AbfKZIm7 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 26 Nov 2019 03:42:59 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33568 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbfKZIm7 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 26 Nov 2019 03:42:59 -0500
+Received: by mail-wr1-f68.google.com with SMTP id w9so21422843wrr.0
+        for <linux-raid@vger.kernel.org>; Tue, 26 Nov 2019 00:42:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JHNZUTPIMG+8vm9Xx7nqvxw7Hrw7f/tddmrI9dcAnk8=;
+        b=CJV6ZYyKMABUO8sf/kvxRG1FphfBIzrIl/CVoIglL0z9uB6aMJrRc6kD0mwGKBlb5w
+         IqPm6qOrqH2nyG0KPUls1bgLf9VGY6Hv+QYX8BF0KfscBWJmjkuurdbFuAXutMeSvhMP
+         dG5tRgq7FJSADMvInlQA/GdDSbTK2HFx4h590=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=JHNZUTPIMG+8vm9Xx7nqvxw7Hrw7f/tddmrI9dcAnk8=;
+        b=tt1qh9Qw28pY/h7cVjDqyhg3fONcigzXn+UQC/8Mv8U8MxvdO9IF9ZtPe+ofes9OAY
+         ptXq0IQ9lbZGscauGA5hpeWq44humccv8yQo+KcG2G+HxpetSZjd7Art+GGfNxMS/YJW
+         8hKZZIpWofhQ7pCnxUny5RLPyj1SfG+wBgxFGYAPRu/e2tB5GLb1zWeI4z50tmVz+d+B
+         jVeK4wsUJPQsCE+x2+a2+YSEOHradHqX1H3aBCfcqg8fovTyglMPP6d06hEBch4unuV+
+         I0T5H3vGMttz1n79ZiZfEGVn1posl1tqX576DXHyQCiDCvw8rBF/3ywqfZR5Jk/aHZNM
+         DVwQ==
+X-Gm-Message-State: APjAAAXjlAjm+rIjvhTN0So1MA60czymgJyxlAyM6DZTGHwbL6KELf5S
+        /VJrUTPOcOeHad01mJFkCy8vHQ==
+X-Google-Smtp-Source: APXvYqyLSv+QdXGnFV3g1p8B1aJHrD8G2pitYUfElplL8wg7O0YAPimG7NTzRuqe30vr+WEPIOitpQ==
+X-Received: by 2002:adf:cf0a:: with SMTP id o10mr22353641wrj.340.1574757775944;
+        Tue, 26 Nov 2019 00:42:55 -0800 (PST)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id b1sm14040556wrs.74.2019.11.26.00.42.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Nov 2019 00:42:55 -0800 (PST)
+Date:   Tue, 26 Nov 2019 09:42:53 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     syzbot <syzbot+1e46a0864c1a6e9bd3d8@syzkaller.appspotmail.com>
+Cc:     airlied@linux.ie, chris@chris-wilson.co.uk,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        rafael.antognolli@intel.com, rodrigo.vivi@intel.com,
+        shli@kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: WARNING in md_ioctl
+Message-ID: <20191126084253.GP29965@phenom.ffwll.local>
+Mail-Followup-To: syzbot <syzbot+1e46a0864c1a6e9bd3d8@syzkaller.appspotmail.com>,
+        airlied@linux.ie, chris@chris-wilson.co.uk,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        rafael.antognolli@intel.com, rodrigo.vivi@intel.com,
+        shli@kernel.org, syzkaller-bugs@googlegroups.com
+References: <000000000000a52337056b065fb3@google.com>
+ <000000000000f4160705983366e8@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20191120104948.9461-1-kinga.tanska@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000f4160705983366e8@google.com>
+X-Operating-System: Linux phenom 5.3.0-2-amd64 
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 11/20/19 5:49 AM, Kinga Tanska wrote:
-> In commit 039b7225e6 ("md: allow creation of mdNNN arrays via
-> md_mod/parameters/new_array") support for name like mdNNN
-> was added. Special warning, when kernel is unable to handle
-> request, was added in commit 7105228e19
-> ("mdadm/mdopen: create new function create_named_array for
-> writing to new_array"), but it was not adequate enough,
-> because in this situation mdadm tries to do it in old way.
-> This commit changes warning to be more relevant when
-> creating RAID container with "/dev/mdNNN" name and mdadm
-> back to old approach.
+On Mon, Nov 25, 2019 at 02:37:01PM -0800, syzbot wrote:
+> syzbot has bisected this bug to:
 > 
-> Signed-off-by: Kinga Tanska <kinga.tanska@intel.com>
-> ---
->   mdopen.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+> commit 4b6ce6810a5dc0af387a238e8c852e0d3822381f
+> Author: Rafael Antognolli <rafael.antognolli@intel.com>
+> Date:   Mon Feb 5 23:33:30 2018 +0000
 > 
-> diff --git a/mdopen.c b/mdopen.c
-> index 98c54e4..905a770 100644
-> --- a/mdopen.c
-> +++ b/mdopen.c
-> @@ -120,7 +120,8 @@ int create_named_array(char *devnm)
->   		close(fd);
->   	}
->   	if (fd < 0 || n != (int)strlen(devnm)) {
-> -		pr_err("Fail create %s when using %s\n", devnm, new_array_file);
-> +		pr_err("Fail to create %s when using %s, fallback to old approach\n",
+>     drm/i915/cnl: WaPipeControlBefore3DStateSamplePattern
 
-I don't think "fallback to old approach" is a good description, it may 
-not mean anything to the user. Maybe you can make it more elaborate.
+This seems very unlikely, the reproducer doesn't open a drm device, and
+I'd be surprised if your gcd instances have an actual i915 device in them
+(but I can't check because boot log isn't provided, didn't find it on the
+dashboard either).
 
-Thanks,
-Jes
+Since i915 is built-in I suspect this simply moved something else in the
+kernel image around which provokes the bug.
+-Daniel
 
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13aeb522e00000
+> start commit:   c61a56ab Merge branch 'x86-urgent-for-linus' of git://git...
+> git tree:       upstream
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=106eb522e00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17aeb522e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=4013180e7c7a9ff9
+> dashboard link: https://syzkaller.appspot.com/bug?extid=1e46a0864c1a6e9bd3d8
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16bca207800000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14819a47800000
+> 
+> Reported-by: syzbot+1e46a0864c1a6e9bd3d8@syzkaller.appspotmail.com
+> Fixes: 4b6ce6810a5d ("drm/i915/cnl:
+> WaPipeControlBefore3DStateSamplePattern")
+> 
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
