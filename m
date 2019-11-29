@@ -2,144 +2,203 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5893C10D49A
-	for <lists+linux-raid@lfdr.de>; Fri, 29 Nov 2019 12:15:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A03CB10D6E2
+	for <lists+linux-raid@lfdr.de>; Fri, 29 Nov 2019 15:21:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbfK2LPh (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 29 Nov 2019 06:15:37 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:41559 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbfK2LPh (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 29 Nov 2019 06:15:37 -0500
-Received: by mail-ed1-f66.google.com with SMTP id n24so4079419edo.8
-        for <linux-raid@vger.kernel.org>; Fri, 29 Nov 2019 03:15:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=wc4UdE/y3hiWs45SlEnpdcsx3c2UyoG8MxxT4Dpqq1s=;
-        b=Nsb5dYIwcBI9Z2+psT1oP2bNMnaC5eIKT//3MuKeOa+GhMwGM/kWiSZCmfBY3s7RHS
-         zLczewnwiR8W3paVnidaIRcbmtSl6EiTPBn6nEtO0l1DecUg/h38yK20vhWl0i/CJoFC
-         Fqai0OJAvcpTOcXwLHE+HE7vwFICLqrAZ6IfEm46tdBtBO4vtS1vtDKvT2CGQLKhm7HC
-         wib4bqghtXI51afUbH5wgabMTsoygCg4k2hBQ8FuzjZPayh+SV6HhWdYy9WTDC1C24wS
-         a+S6WwMbr2TtcEwPb3PGS9DgnhRSRCvPgwIAntXj/z1kdXaIw2YdKAk1YcxfIRzragol
-         TCkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=wc4UdE/y3hiWs45SlEnpdcsx3c2UyoG8MxxT4Dpqq1s=;
-        b=NoDWy+g/ReRu7ZJqO/I7ye/FZecN+0i4Jc9R8LUAYX0z4LUab+DC+gQwtlGkpU1EYB
-         DS+t7CJHMKzANk6IHcB2G61tGNsuz8ah+qVZDQq1YsG5FDLLShJSr6Nb31Ce1aAuy/mQ
-         P70KtYkEFMlZlGP3Mbdth5NdjnfLk7BRUO+n4ODwt/q6WpBKA/CkBjXkRvl71TT+8AJG
-         isVMC6zi5xuRQxAuj0eH9M59fOuhK12sMJ+4xuo6p/YhNXxirdeCOVcCHSFbDf5moKDm
-         HoiJxK0+o/1HLN8tYoNqUCHJwgjWV9mqc6cETa0DrTZJmQi1ErD0VoNhFgzY/l2d/h1g
-         8SXg==
-X-Gm-Message-State: APjAAAXjv9E5PtowLTc1+pErazcSdCqnj+6lQO7T3kbW1S9j9tsmt4XG
-        JdHPo+A2S06R2xN86j0/bLzkpw==
-X-Google-Smtp-Source: APXvYqx8ZYihkd/OhFY2IewFUvGXx5y7EhNGLTLQXoP8Dizk86zzZBy7+XmM/Ah8yYyXPfqTvG7SXw==
-X-Received: by 2002:a17:906:7c5:: with SMTP id m5mr59619474ejc.231.1575026135918;
-        Fri, 29 Nov 2019 03:15:35 -0800 (PST)
-Received: from ?IPv6:2a02:247f:ffff:2540:4017:9af3:167b:9d3? ([2001:1438:4010:2540:4017:9af3:167b:9d3])
-        by smtp.gmail.com with ESMTPSA id e24sm983286edc.13.2019.11.29.03.15.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 29 Nov 2019 03:15:35 -0800 (PST)
-Subject: Re: About raid5 lock up
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-To:     linux-raid <linux-raid@vger.kernel.org>
-Cc:     shinrairis@gmail.com, colyli@suse.de,
-        Song Liu <liu.song.a23@gmail.com>
-References: <a9f64be8-0f57-83f7-e7dd-2d6d4386a6f4@cloud.ionos.com>
-Message-ID: <a96ba13a-6400-06cd-76be-fec12ebbc5e8@cloud.ionos.com>
-Date:   Fri, 29 Nov 2019 12:15:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <a9f64be8-0f57-83f7-e7dd-2d6d4386a6f4@cloud.ionos.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        id S1727051AbfK2OVN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 29 Nov 2019 09:21:13 -0500
+Received: from mga11.intel.com ([192.55.52.93]:40856 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726975AbfK2OVN (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 29 Nov 2019 09:21:13 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Nov 2019 06:21:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,257,1571727600"; 
+   d="scan'208";a="207440517"
+Received: from linux-myjy.igk.intel.com ([10.102.102.116])
+  by fmsmga007.fm.intel.com with ESMTP; 29 Nov 2019 06:21:11 -0800
+From:   Blazej Kucman <blazej.kucman@intel.com>
+To:     linux-raid@vger.kernel.org
+Cc:     jes.sorensen@gmail.com
+Subject: [PATCH] imsm: return correct uuid for volume in detail
+Date:   Fri, 29 Nov 2019 15:21:08 +0100
+Message-Id: <20191129142108.10536-1-blazej.kucman@intel.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+Fixes the side effect of the patch b6180160f ("imsm: save current_vol number")
+- wrong UUID is printed in detail for each volume.
+New parameter "subarray" is added to determine what info should be extracted
+from metadata (subarray or container).
+The parameter affects only IMSM metadata.
 
+Signed-off-by: Blazej Kucman <blazej.kucman@intel.com>
+---
+ Detail.c      |  4 ++--
+ mdadm.h       |  5 +++--
+ super-ddf.c   |  5 +++--
+ super-intel.c | 20 ++++++++++++++++++--
+ super0.c      |  4 ++--
+ super1.c      |  4 ++--
+ 6 files changed, 30 insertions(+), 12 deletions(-)
 
-On 11/21/19 3:14 PM, Guoqing Jiang wrote:
->
-> My understanding is that there could be two possible reasons for lockup:
->
-> 1. There is deadlock inside raid5 code somewhere which should be fixed.
-> 2. Since spin_lock/unlock_irq are called in raid5_get_active_stripe, 
-> then if the function need to
-> handle massive IOs, could it possible hard lockup was triggered due to 
-> IRQs are disabled more
-> than 10s? If so, maybe we need to touch nmi watchdog before disable irq.
->
-> Coly and Dennis had reported raid5 lock up issues with different 
-> kernel versions (4.2.8, 4.7.0-rc7
-> and 4.8-rc5), not sure it they are related or not, but I guess it is 
-> not fixed in latest code.
->
-> Any thoughts?
->
-> [1]. https://marc.info/?l=linux-raid&m=150348807422853&w=2
-> [2]. https://marc.info/?l=linux-raid&m=146883211430999&w=2
+diff --git a/Detail.c b/Detail.c
+index 3e61e372..24fa462e 100644
+--- a/Detail.c
++++ b/Detail.c
+@@ -623,7 +623,7 @@ This is pretty boring
+ 		free_mdstat(ms);
+ 
+ 		if (st && st->sb)
+-			st->ss->detail_super(st, c->homehost);
++			st->ss->detail_super(st, c->homehost, subarray);
+ 
+ 		if (array.raid_disks == 0 && sra &&
+ 		    sra->array.major_version == -1 &&
+@@ -767,7 +767,7 @@ skip_devices_state:
+ 	if (spares && c->brief && array.raid_disks)
+ 		printf(" spares=%d", spares);
+ 	if (c->brief && st && st->sb)
+-		st->ss->brief_detail_super(st);
++		st->ss->brief_detail_super(st, subarray);
+ 	if (st)
+ 		st->ss->free_super(st);
+ 
+diff --git a/mdadm.h b/mdadm.h
+index c88ceab0..91f13386 100644
+--- a/mdadm.h
++++ b/mdadm.h
+@@ -847,8 +847,9 @@ extern struct superswitch {
+ 	/* Used to report details of an active array.
+ 	 * ->load_super was possibly given a 'component' string.
+ 	 */
+-	void (*detail_super)(struct supertype *st, char *homehost);
+-	void (*brief_detail_super)(struct supertype *st);
++	void (*detail_super)(struct supertype *st, char *homehost,
++			     char *subarray);
++	void (*brief_detail_super)(struct supertype *st, char *subarray);
+ 	void (*export_detail_super)(struct supertype *st);
+ 
+ 	/* Optional: platform hardware / firmware details */
+diff --git a/super-ddf.c b/super-ddf.c
+index c095e8a2..78020634 100644
+--- a/super-ddf.c
++++ b/super-ddf.c
+@@ -1730,7 +1730,8 @@ err:
+ 	return 1;
+ }
+ 
+-static void detail_super_ddf(struct supertype *st, char *homehost)
++static void detail_super_ddf(struct supertype *st, char *homehost,
++			     char *subarray)
+ {
+ 	struct ddf_super *sb = st->sb;
+ 	int cnt = be16_to_cpu(sb->virt->populated_vdes);
+@@ -1787,7 +1788,7 @@ static void uuid_of_ddf_subarray(const struct ddf_super *ddf,
+ 	memcpy(uuid, sha, 4*4);
+ }
+ 
+-static void brief_detail_super_ddf(struct supertype *st)
++static void brief_detail_super_ddf(struct supertype *st, char *subarray)
+ {
+ 	struct mdinfo info;
+ 	char nbuf[64];
+diff --git a/super-intel.c b/super-intel.c
+index e02bbd7a..0e959339 100644
+--- a/super-intel.c
++++ b/super-intel.c
+@@ -2163,23 +2163,39 @@ err:
+ 	return 1;
+ }
+ 
+-static void detail_super_imsm(struct supertype *st, char *homehost)
++static void detail_super_imsm(struct supertype *st, char *homehost,
++			      char *subarray)
+ {
+ 	struct mdinfo info;
+ 	char nbuf[64];
++	struct intel_super *super = st->sb;
++	int temp_vol = super->current_vol;
++
++	if (subarray)
++		super->current_vol = strtoul(subarray, NULL, 10);
+ 
+ 	getinfo_super_imsm(st, &info, NULL);
+ 	fname_from_uuid(st, &info, nbuf, ':');
+ 	printf("\n              UUID : %s\n", nbuf + 5);
++
++	super->current_vol = temp_vol;
+ }
+ 
+-static void brief_detail_super_imsm(struct supertype *st)
++static void brief_detail_super_imsm(struct supertype *st, char *subarray)
+ {
+ 	struct mdinfo info;
+ 	char nbuf[64];
++	struct intel_super *super = st->sb;
++	int temp_vol = super->current_vol;
++
++	if (subarray)
++		super->current_vol = strtoul(subarray, NULL, 10);
++
+ 	getinfo_super_imsm(st, &info, NULL);
+ 	fname_from_uuid(st, &info, nbuf, ':');
+ 	printf(" UUID=%s", nbuf + 5);
++
++	super->current_vol = temp_vol;
+ }
+ 
+ static int imsm_read_serial(int fd, char *devname, __u8 *serial);
+diff --git a/super0.c b/super0.c
+index 42989b9f..6b7c0e3d 100644
+--- a/super0.c
++++ b/super0.c
+@@ -348,7 +348,7 @@ err:
+ 	return 1;
+ }
+ 
+-static void detail_super0(struct supertype *st, char *homehost)
++static void detail_super0(struct supertype *st, char *homehost, char *subarray)
+ {
+ 	mdp_super_t *sb = st->sb;
+ 	printf("              UUID : ");
+@@ -368,7 +368,7 @@ static void detail_super0(struct supertype *st, char *homehost)
+ 	printf("\n            Events : %d.%d\n\n", sb->events_hi, sb->events_lo);
+ }
+ 
+-static void brief_detail_super0(struct supertype *st)
++static void brief_detail_super0(struct supertype *st, char *subarray)
+ {
+ 	mdp_super_t *sb = st->sb;
+ 	printf(" UUID=");
+diff --git a/super1.c b/super1.c
+index b85dc20c..929466d6 100644
+--- a/super1.c
++++ b/super1.c
+@@ -833,7 +833,7 @@ err:
+ 	return 1;
+ }
+ 
+-static void detail_super1(struct supertype *st, char *homehost)
++static void detail_super1(struct supertype *st, char *homehost, char *subarray)
+ {
+ 	struct mdp_superblock_1 *sb = st->sb;
+ 	bitmap_super_t *bms = (bitmap_super_t*)(((char*)sb) + MAX_SB_SIZE);
+@@ -857,7 +857,7 @@ static void detail_super1(struct supertype *st, char *homehost)
+ 	       (unsigned long long)__le64_to_cpu(sb->events));
+ }
+ 
+-static void brief_detail_super1(struct supertype *st)
++static void brief_detail_super1(struct supertype *st, char *subarray)
+ {
+ 	struct mdp_superblock_1 *sb = st->sb;
+ 	int i;
+-- 
+2.16.4
 
-Hmm, looks release_stripe_plug is lock free, means it could add sh to 
-plug list whether it is already
-in other lists. For example, the same sh could be handled by 
-raid5_release_stripe which is also lock
-free, it does two things in case "sh->count == 1":
-
-1.  add sh to released_stripes
-
-Or
-
-2. go to slow path if sh is already set with ON_RELEASE_LIST.
-
-Either 1 or 2 could trigger do_release_stripe finally, this function 
-mainly move sh->lru to different lists
-such as delayed_list, handle_list or temp_inactive_list etc.
-
-So list is corrupted since one node could in different lists, which 
-makes raid5_unplug could stick in the
-while loop with hold device_lock, means raid5_get_active_stripe doesn't 
-have chance to get device_lock,
-then calltrace happens.
-
-Call Trace:
-[<ffffffff81598060>] _raw_spin_lock+0x20/0x30
-[<ffffffffa0230b0a>] raid5_get_active_stripe+0x1da/0x5250 [raid456]
-[<ffffffff8112d165>] ? mempool_alloc_slab+0x15/0x20
-[<ffffffffa0231174>] raid5_get_active_stripe+0x844/0x5250 [raid456]
-[<ffffffff812d5574>] ? generic_make_request+0x24/0x2b0
-[<ffffffff810938b0>] ? wait_woken+0x90/0x90
-[<ffffffff814a2adc>] md_make_request+0xfc/0x250
-[<ffffffff812d5867>] submit_bio+0x67/0x150
-
-
-If the analysis is correct, we at least need to add more checks like:
-
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 09d4caf674e0..caab91ce60ec 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -5482,7 +5482,9 @@ static void release_stripe_plug(struct mddev *mddev,
-                         INIT_LIST_HEAD(cb->temp_inactive_list + i);
-         }
-
--       if (!test_and_set_bit(STRIPE_ON_UNPLUG_LIST, &sh->state))
-+       if (atomic_read(&sh->count) != 0 &&
-+           !test_bit(STRIPE_ON_RELEASE_LIST, &sh->state) &&
-+           !test_and_set_bit(STRIPE_ON_UNPLUG_LIST, &sh->state))
-                 list_add_tail(&sh->lru, &cb->list);
-         else
-                 raid5_release_stripe(sh);
-
-Thoughts?
-
-Thanks,
-Guoqing
