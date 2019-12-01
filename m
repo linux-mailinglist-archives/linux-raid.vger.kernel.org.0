@@ -2,203 +2,89 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A03CB10D6E2
-	for <lists+linux-raid@lfdr.de>; Fri, 29 Nov 2019 15:21:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 178EE10E31A
+	for <lists+linux-raid@lfdr.de>; Sun,  1 Dec 2019 19:28:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbfK2OVN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 29 Nov 2019 09:21:13 -0500
-Received: from mga11.intel.com ([192.55.52.93]:40856 "EHLO mga11.intel.com"
+        id S1727308AbfLAS2Q (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 1 Dec 2019 13:28:16 -0500
+Received: from mtax.cdmx.gob.mx ([187.141.35.197]:12185 "EHLO mtax.cdmx.gob.mx"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726975AbfK2OVN (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 29 Nov 2019 09:21:13 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Nov 2019 06:21:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,257,1571727600"; 
-   d="scan'208";a="207440517"
-Received: from linux-myjy.igk.intel.com ([10.102.102.116])
-  by fmsmga007.fm.intel.com with ESMTP; 29 Nov 2019 06:21:11 -0800
-From:   Blazej Kucman <blazej.kucman@intel.com>
-To:     linux-raid@vger.kernel.org
-Cc:     jes.sorensen@gmail.com
-Subject: [PATCH] imsm: return correct uuid for volume in detail
-Date:   Fri, 29 Nov 2019 15:21:08 +0100
-Message-Id: <20191129142108.10536-1-blazej.kucman@intel.com>
-X-Mailer: git-send-email 2.16.4
+        id S1727169AbfLAS2Q (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sun, 1 Dec 2019 13:28:16 -0500
+X-Greylist: delayed 7072 seconds by postgrey-1.27 at vger.kernel.org; Sun, 01 Dec 2019 13:28:15 EST
+X-NAI-Header: Modified by McAfee Email Gateway (4500)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cdmx.gob.mx; s=72359050-3965-11E6-920A-0192F7A2F08E;
+        t=1575217636; h=DKIM-Filter:X-Virus-Scanned:
+         Content-Type:MIME-Version:Content-Transfer-Encoding:
+         Content-Description:Subject:To:From:Date:Message-Id:
+         X-AnalysisOut:X-AnalysisOut:X-AnalysisOut:
+         X-AnalysisOut:X-AnalysisOut:X-SAAS-TrackingID:
+         X-NAI-Spam-Flag:X-NAI-Spam-Threshold:X-NAI-Spam-Score:
+         X-NAI-Spam-Rules:X-NAI-Spam-Version; bh=M
+        8rWdUYQ57RAYAgTWJQ4Rsch0kO0UXllaAVDzocOs4
+        8=; b=fjwJ06VLcaQ+qdmvn3awRq+LGr1B1BJV7doxr8x9GBiE
+        nfnqZ7MXcaxUDgccidjDVEKzPTs6hfnYClbglV06DK79F/rFhE
+        HbmUBrtu17RO8PdCjklwFchn3PWNb75mvXpW8GZ6Jsoqt+RDSz
+        hbtioPfY9QyiJ0mJ58J7+8hV6cI=
+Received: from cdmx.gob.mx (correo.cdmx.gob.mx [10.250.108.150]) by mtax.cdmx.gob.mx with smtp
+        (TLS: TLSv1/SSLv3,256bits,ECDHE-RSA-AES256-GCM-SHA384)
+         id 217f_63f3_20f55a2d_bef2_4048_9893_66ad7c7d3b63;
+        Sun, 01 Dec 2019 10:27:16 -0600
+Received: from localhost (localhost [127.0.0.1])
+        by cdmx.gob.mx (Postfix) with ESMTP id 91D481E21CB;
+        Sun,  1 Dec 2019 10:18:50 -0600 (CST)
+Received: from cdmx.gob.mx ([127.0.0.1])
+        by localhost (cdmx.gob.mx [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id v0p_IgkHLo7b; Sun,  1 Dec 2019 10:18:50 -0600 (CST)
+Received: from localhost (localhost [127.0.0.1])
+        by cdmx.gob.mx (Postfix) with ESMTP id 4751E1E274D;
+        Sun,  1 Dec 2019 10:14:17 -0600 (CST)
+DKIM-Filter: OpenDKIM Filter v2.9.2 cdmx.gob.mx 4751E1E274D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cdmx.gob.mx;
+        s=72359050-3965-11E6-920A-0192F7A2F08E; t=1575216857;
+        bh=M8rWdUYQ57RAYAgTWJQ4Rsch0kO0UXllaAVDzocOs48=;
+        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:To:
+         From:Date:Message-Id;
+        b=sFEblJTR75SnwbaMgVfur9Id8T7F+WHe9/L0+ZBx1oFp5kOAdndWBw1PJz/ptUxqL
+         vnvgKmv5YcjZYLDiAxyjTPij+FG5zX51x0Ikv403gQ6ynagbMBg8PmQRnsQa/llvEv
+         8qA80KGy50ndLIJTT8o5nbb2+jTmfcbXzV49LG9Q=
+X-Virus-Scanned: amavisd-new at cdmx.gob.mx
+Received: from cdmx.gob.mx ([127.0.0.1])
+        by localhost (cdmx.gob.mx [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id yHiivamYxpY1; Sun,  1 Dec 2019 10:14:17 -0600 (CST)
+Received: from [192.168.0.104] (unknown [188.125.168.160])
+        by cdmx.gob.mx (Postfix) with ESMTPSA id 1AF961E2565;
+        Sun,  1 Dec 2019 10:05:20 -0600 (CST)
+Content-Type: text/plain; charset="iso-8859-1"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: Congratulations
+To:     Recipients <aac-styfe@cdmx.gob.mx>
+From:   "Bishop Johnr" <aac-styfe@cdmx.gob.mx>
+Date:   Sun, 01 Dec 2019 17:05:13 +0100
+Message-Id: <20191201160521.1AF961E2565@cdmx.gob.mx>
+X-AnalysisOut: [v=2.2 cv=ONdX5WSB c=1 sm=1 tr=0 p=6K-Ig8iNAUou4E5wYCEA:9 p]
+X-AnalysisOut: [=zRI05YRXt28A:10 a=T6zFoIZ12MK39YzkfxrL7A==:117 a=9152RP8M]
+X-AnalysisOut: [6GQqDhC/mI/QXQ==:17 a=8nJEP1OIZ-IA:10 a=pxVhFHJ0LMsA:10 a=]
+X-AnalysisOut: [pGLkceISAAAA:8 a=wPNLvfGTeEIA:10 a=M8O0W8wq6qAA:10 a=Ygvjr]
+X-AnalysisOut: [iKHvHXA2FhpO6d-:22]
+X-SAAS-TrackingID: 2e9e3ed5.0.105119256.00-2255.176728427.s12p02m015.mxlogic.net
+X-NAI-Spam-Flag: NO
+X-NAI-Spam-Threshold: 3
+X-NAI-Spam-Score: -5000
+X-NAI-Spam-Rules: 1 Rules triggered
+        WHITELISTED=-5000
+X-NAI-Spam-Version: 2.3.0.9418 : core <6686> : inlines <7165> : streams
+ <1840193> : uri <2949750>
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Fixes the side effect of the patch b6180160f ("imsm: save current_vol number")
-- wrong UUID is printed in detail for each volume.
-New parameter "subarray" is added to determine what info should be extracted
-from metadata (subarray or container).
-The parameter affects only IMSM metadata.
+Money was donated to you by Mr and Mrs Allen and Violet Large, just contact=
+ them with this email for more information =
 
-Signed-off-by: Blazej Kucman <blazej.kucman@intel.com>
----
- Detail.c      |  4 ++--
- mdadm.h       |  5 +++--
- super-ddf.c   |  5 +++--
- super-intel.c | 20 ++++++++++++++++++--
- super0.c      |  4 ++--
- super1.c      |  4 ++--
- 6 files changed, 30 insertions(+), 12 deletions(-)
 
-diff --git a/Detail.c b/Detail.c
-index 3e61e372..24fa462e 100644
---- a/Detail.c
-+++ b/Detail.c
-@@ -623,7 +623,7 @@ This is pretty boring
- 		free_mdstat(ms);
- 
- 		if (st && st->sb)
--			st->ss->detail_super(st, c->homehost);
-+			st->ss->detail_super(st, c->homehost, subarray);
- 
- 		if (array.raid_disks == 0 && sra &&
- 		    sra->array.major_version == -1 &&
-@@ -767,7 +767,7 @@ skip_devices_state:
- 	if (spares && c->brief && array.raid_disks)
- 		printf(" spares=%d", spares);
- 	if (c->brief && st && st->sb)
--		st->ss->brief_detail_super(st);
-+		st->ss->brief_detail_super(st, subarray);
- 	if (st)
- 		st->ss->free_super(st);
- 
-diff --git a/mdadm.h b/mdadm.h
-index c88ceab0..91f13386 100644
---- a/mdadm.h
-+++ b/mdadm.h
-@@ -847,8 +847,9 @@ extern struct superswitch {
- 	/* Used to report details of an active array.
- 	 * ->load_super was possibly given a 'component' string.
- 	 */
--	void (*detail_super)(struct supertype *st, char *homehost);
--	void (*brief_detail_super)(struct supertype *st);
-+	void (*detail_super)(struct supertype *st, char *homehost,
-+			     char *subarray);
-+	void (*brief_detail_super)(struct supertype *st, char *subarray);
- 	void (*export_detail_super)(struct supertype *st);
- 
- 	/* Optional: platform hardware / firmware details */
-diff --git a/super-ddf.c b/super-ddf.c
-index c095e8a2..78020634 100644
---- a/super-ddf.c
-+++ b/super-ddf.c
-@@ -1730,7 +1730,8 @@ err:
- 	return 1;
- }
- 
--static void detail_super_ddf(struct supertype *st, char *homehost)
-+static void detail_super_ddf(struct supertype *st, char *homehost,
-+			     char *subarray)
- {
- 	struct ddf_super *sb = st->sb;
- 	int cnt = be16_to_cpu(sb->virt->populated_vdes);
-@@ -1787,7 +1788,7 @@ static void uuid_of_ddf_subarray(const struct ddf_super *ddf,
- 	memcpy(uuid, sha, 4*4);
- }
- 
--static void brief_detail_super_ddf(struct supertype *st)
-+static void brief_detail_super_ddf(struct supertype *st, char *subarray)
- {
- 	struct mdinfo info;
- 	char nbuf[64];
-diff --git a/super-intel.c b/super-intel.c
-index e02bbd7a..0e959339 100644
---- a/super-intel.c
-+++ b/super-intel.c
-@@ -2163,23 +2163,39 @@ err:
- 	return 1;
- }
- 
--static void detail_super_imsm(struct supertype *st, char *homehost)
-+static void detail_super_imsm(struct supertype *st, char *homehost,
-+			      char *subarray)
- {
- 	struct mdinfo info;
- 	char nbuf[64];
-+	struct intel_super *super = st->sb;
-+	int temp_vol = super->current_vol;
-+
-+	if (subarray)
-+		super->current_vol = strtoul(subarray, NULL, 10);
- 
- 	getinfo_super_imsm(st, &info, NULL);
- 	fname_from_uuid(st, &info, nbuf, ':');
- 	printf("\n              UUID : %s\n", nbuf + 5);
-+
-+	super->current_vol = temp_vol;
- }
- 
--static void brief_detail_super_imsm(struct supertype *st)
-+static void brief_detail_super_imsm(struct supertype *st, char *subarray)
- {
- 	struct mdinfo info;
- 	char nbuf[64];
-+	struct intel_super *super = st->sb;
-+	int temp_vol = super->current_vol;
-+
-+	if (subarray)
-+		super->current_vol = strtoul(subarray, NULL, 10);
-+
- 	getinfo_super_imsm(st, &info, NULL);
- 	fname_from_uuid(st, &info, nbuf, ':');
- 	printf(" UUID=%s", nbuf + 5);
-+
-+	super->current_vol = temp_vol;
- }
- 
- static int imsm_read_serial(int fd, char *devname, __u8 *serial);
-diff --git a/super0.c b/super0.c
-index 42989b9f..6b7c0e3d 100644
---- a/super0.c
-+++ b/super0.c
-@@ -348,7 +348,7 @@ err:
- 	return 1;
- }
- 
--static void detail_super0(struct supertype *st, char *homehost)
-+static void detail_super0(struct supertype *st, char *homehost, char *subarray)
- {
- 	mdp_super_t *sb = st->sb;
- 	printf("              UUID : ");
-@@ -368,7 +368,7 @@ static void detail_super0(struct supertype *st, char *homehost)
- 	printf("\n            Events : %d.%d\n\n", sb->events_hi, sb->events_lo);
- }
- 
--static void brief_detail_super0(struct supertype *st)
-+static void brief_detail_super0(struct supertype *st, char *subarray)
- {
- 	mdp_super_t *sb = st->sb;
- 	printf(" UUID=");
-diff --git a/super1.c b/super1.c
-index b85dc20c..929466d6 100644
---- a/super1.c
-+++ b/super1.c
-@@ -833,7 +833,7 @@ err:
- 	return 1;
- }
- 
--static void detail_super1(struct supertype *st, char *homehost)
-+static void detail_super1(struct supertype *st, char *homehost, char *subarray)
- {
- 	struct mdp_superblock_1 *sb = st->sb;
- 	bitmap_super_t *bms = (bitmap_super_t*)(((char*)sb) + MAX_SB_SIZE);
-@@ -857,7 +857,7 @@ static void detail_super1(struct supertype *st, char *homehost)
- 	       (unsigned long long)__le64_to_cpu(sb->events));
- }
- 
--static void brief_detail_super1(struct supertype *st)
-+static void brief_detail_super1(struct supertype *st, char *subarray)
- {
- 	struct mdp_superblock_1 *sb = st->sb;
- 	int i;
--- 
-2.16.4
-
+EMail: allenandvioletlargeaward@gmail.com
