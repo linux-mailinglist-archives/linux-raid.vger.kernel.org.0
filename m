@@ -2,89 +2,234 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 178EE10E31A
-	for <lists+linux-raid@lfdr.de>; Sun,  1 Dec 2019 19:28:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF66810E7FA
+	for <lists+linux-raid@lfdr.de>; Mon,  2 Dec 2019 10:52:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbfLAS2Q (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 1 Dec 2019 13:28:16 -0500
-Received: from mtax.cdmx.gob.mx ([187.141.35.197]:12185 "EHLO mtax.cdmx.gob.mx"
+        id S1727362AbfLBJwJ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 2 Dec 2019 04:52:09 -0500
+Received: from mga05.intel.com ([192.55.52.43]:49058 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727169AbfLAS2Q (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sun, 1 Dec 2019 13:28:16 -0500
-X-Greylist: delayed 7072 seconds by postgrey-1.27 at vger.kernel.org; Sun, 01 Dec 2019 13:28:15 EST
-X-NAI-Header: Modified by McAfee Email Gateway (4500)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cdmx.gob.mx; s=72359050-3965-11E6-920A-0192F7A2F08E;
-        t=1575217636; h=DKIM-Filter:X-Virus-Scanned:
-         Content-Type:MIME-Version:Content-Transfer-Encoding:
-         Content-Description:Subject:To:From:Date:Message-Id:
-         X-AnalysisOut:X-AnalysisOut:X-AnalysisOut:
-         X-AnalysisOut:X-AnalysisOut:X-SAAS-TrackingID:
-         X-NAI-Spam-Flag:X-NAI-Spam-Threshold:X-NAI-Spam-Score:
-         X-NAI-Spam-Rules:X-NAI-Spam-Version; bh=M
-        8rWdUYQ57RAYAgTWJQ4Rsch0kO0UXllaAVDzocOs4
-        8=; b=fjwJ06VLcaQ+qdmvn3awRq+LGr1B1BJV7doxr8x9GBiE
-        nfnqZ7MXcaxUDgccidjDVEKzPTs6hfnYClbglV06DK79F/rFhE
-        HbmUBrtu17RO8PdCjklwFchn3PWNb75mvXpW8GZ6Jsoqt+RDSz
-        hbtioPfY9QyiJ0mJ58J7+8hV6cI=
-Received: from cdmx.gob.mx (correo.cdmx.gob.mx [10.250.108.150]) by mtax.cdmx.gob.mx with smtp
-        (TLS: TLSv1/SSLv3,256bits,ECDHE-RSA-AES256-GCM-SHA384)
-         id 217f_63f3_20f55a2d_bef2_4048_9893_66ad7c7d3b63;
-        Sun, 01 Dec 2019 10:27:16 -0600
-Received: from localhost (localhost [127.0.0.1])
-        by cdmx.gob.mx (Postfix) with ESMTP id 91D481E21CB;
-        Sun,  1 Dec 2019 10:18:50 -0600 (CST)
-Received: from cdmx.gob.mx ([127.0.0.1])
-        by localhost (cdmx.gob.mx [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id v0p_IgkHLo7b; Sun,  1 Dec 2019 10:18:50 -0600 (CST)
-Received: from localhost (localhost [127.0.0.1])
-        by cdmx.gob.mx (Postfix) with ESMTP id 4751E1E274D;
-        Sun,  1 Dec 2019 10:14:17 -0600 (CST)
-DKIM-Filter: OpenDKIM Filter v2.9.2 cdmx.gob.mx 4751E1E274D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cdmx.gob.mx;
-        s=72359050-3965-11E6-920A-0192F7A2F08E; t=1575216857;
-        bh=M8rWdUYQ57RAYAgTWJQ4Rsch0kO0UXllaAVDzocOs48=;
-        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:To:
-         From:Date:Message-Id;
-        b=sFEblJTR75SnwbaMgVfur9Id8T7F+WHe9/L0+ZBx1oFp5kOAdndWBw1PJz/ptUxqL
-         vnvgKmv5YcjZYLDiAxyjTPij+FG5zX51x0Ikv403gQ6ynagbMBg8PmQRnsQa/llvEv
-         8qA80KGy50ndLIJTT8o5nbb2+jTmfcbXzV49LG9Q=
-X-Virus-Scanned: amavisd-new at cdmx.gob.mx
-Received: from cdmx.gob.mx ([127.0.0.1])
-        by localhost (cdmx.gob.mx [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id yHiivamYxpY1; Sun,  1 Dec 2019 10:14:17 -0600 (CST)
-Received: from [192.168.0.104] (unknown [188.125.168.160])
-        by cdmx.gob.mx (Postfix) with ESMTPSA id 1AF961E2565;
-        Sun,  1 Dec 2019 10:05:20 -0600 (CST)
-Content-Type: text/plain; charset="iso-8859-1"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: Congratulations
-To:     Recipients <aac-styfe@cdmx.gob.mx>
-From:   "Bishop Johnr" <aac-styfe@cdmx.gob.mx>
-Date:   Sun, 01 Dec 2019 17:05:13 +0100
-Message-Id: <20191201160521.1AF961E2565@cdmx.gob.mx>
-X-AnalysisOut: [v=2.2 cv=ONdX5WSB c=1 sm=1 tr=0 p=6K-Ig8iNAUou4E5wYCEA:9 p]
-X-AnalysisOut: [=zRI05YRXt28A:10 a=T6zFoIZ12MK39YzkfxrL7A==:117 a=9152RP8M]
-X-AnalysisOut: [6GQqDhC/mI/QXQ==:17 a=8nJEP1OIZ-IA:10 a=pxVhFHJ0LMsA:10 a=]
-X-AnalysisOut: [pGLkceISAAAA:8 a=wPNLvfGTeEIA:10 a=M8O0W8wq6qAA:10 a=Ygvjr]
-X-AnalysisOut: [iKHvHXA2FhpO6d-:22]
-X-SAAS-TrackingID: 2e9e3ed5.0.105119256.00-2255.176728427.s12p02m015.mxlogic.net
-X-NAI-Spam-Flag: NO
-X-NAI-Spam-Threshold: 3
-X-NAI-Spam-Score: -5000
-X-NAI-Spam-Rules: 1 Rules triggered
-        WHITELISTED=-5000
-X-NAI-Spam-Version: 2.3.0.9418 : core <6686> : inlines <7165> : streams
- <1840193> : uri <2949750>
+        id S1726087AbfLBJwJ (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 2 Dec 2019 04:52:09 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Dec 2019 01:52:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,268,1571727600"; 
+   d="scan'208";a="241877986"
+Received: from linux-myjy.igk.intel.com ([10.102.102.116])
+  by fmsmga002.fm.intel.com with ESMTP; 02 Dec 2019 01:52:08 -0800
+From:   Blazej Kucman <blazej.kucman@intel.com>
+To:     linux-raid@vger.kernel.org
+Cc:     jes.sorensen@gmail.com
+Subject: [PATCH] imsm: Change the way of printing nvme drives in detail-platform.
+Date:   Mon,  2 Dec 2019 10:52:05 +0100
+Message-Id: <20191202095205.16308-1-blazej.kucman@intel.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Money was donated to you by Mr and Mrs Allen and Violet Large, just contact=
- them with this email for more information =
+Change NVMe controller path to device node path
+in mdadm --detail-platform and print serial number.
+The method imsm_read_serial always trimes serial to
+MAX_RAID_SERIAL_LEN, added parameter 'serial_buf_len'
+will be used to check the serial fit
+to passed buffor, if not, will be trimed.
 
+Signed-off-by: Blazej Kucman <blazej.kucman@intel.com>
+---
+ super-intel.c | 97 ++++++++++++++++++++++++++++-------------------------------
+ 1 file changed, 46 insertions(+), 51 deletions(-)
 
-EMail: allenandvioletlargeaward@gmail.com
+diff --git a/super-intel.c b/super-intel.c
+index a103a3fc..0d2eea29 100644
+--- a/super-intel.c
++++ b/super-intel.c
+@@ -2182,7 +2182,8 @@ static void brief_detail_super_imsm(struct supertype *st)
+ 	printf(" UUID=%s", nbuf + 5);
+ }
+ 
+-static int imsm_read_serial(int fd, char *devname, __u8 *serial);
++static int imsm_read_serial(int fd, char *devname, __u8 *serial,
++			    size_t serial_buf_len);
+ static void fd2devname(int fd, char *name);
+ 
+ static int ahci_enumerate_ports(const char *hba_path, int port_count, int host_base, int verbose)
+@@ -2328,8 +2329,9 @@ static int ahci_enumerate_ports(const char *hba_path, int port_count, int host_b
+ 		else {
+ 			fd2devname(fd, buf);
+ 			printf("          Port%d : %s", port, buf);
+-			if (imsm_read_serial(fd, NULL, (__u8 *) buf) == 0)
+-				printf(" (%.*s)\n", MAX_RAID_SERIAL_LEN, buf);
++			if (imsm_read_serial(fd, NULL, (__u8 *)buf,
++					     sizeof(buf)) == 0)
++				printf(" (%s)\n", buf);
+ 			else
+ 				printf(" ()\n");
+ 			close(fd);
+@@ -2352,52 +2354,45 @@ static int ahci_enumerate_ports(const char *hba_path, int port_count, int host_b
+ 	return err;
+ }
+ 
+-static int print_vmd_attached_devs(struct sys_dev *hba)
++static int print_nvme_info(struct sys_dev *hba)
+ {
++	char buf[1024];
+ 	struct dirent *ent;
+ 	DIR *dir;
+-	char path[292];
+-	char link[256];
+-	char *c, *rp;
+-
+-	if (hba->type != SYS_DEV_VMD)
+-		return 1;
++	char *rp;
++	int fd;
+ 
+-	/* scroll through /sys/dev/block looking for devices attached to
+-	 * this hba
+-	 */
+-	dir = opendir("/sys/bus/pci/drivers/nvme");
++	dir = opendir("/sys/block/");
+ 	if (!dir)
+ 		return 1;
+ 
+ 	for (ent = readdir(dir); ent; ent = readdir(dir)) {
+-		int n;
+-
+-		/* is 'ent' a device? check that the 'subsystem' link exists and
+-		 * that its target matches 'bus'
+-		 */
+-		sprintf(path, "/sys/bus/pci/drivers/nvme/%s/subsystem",
+-			ent->d_name);
+-		n = readlink(path, link, sizeof(link));
+-		if (n < 0 || n >= (int)sizeof(link))
+-			continue;
+-		link[n] = '\0';
+-		c = strrchr(link, '/');
+-		if (!c)
+-			continue;
+-		if (strncmp("pci", c+1, strlen("pci")) != 0)
+-			continue;
+-
+-		sprintf(path, "/sys/bus/pci/drivers/nvme/%s", ent->d_name);
+-
+-		rp = realpath(path, NULL);
+-		if (!rp)
+-			continue;
++		if (strstr(ent->d_name, "nvme")) {
++			sprintf(buf, "/sys/block/%s", ent->d_name);
++			rp = realpath(buf, NULL);
++			if (!rp)
++				continue;
++			if (path_attached_to_hba(rp, hba->path)) {
++				fd = open_dev(ent->d_name);
++				if (fd < 0) {
++					free(rp);
++					continue;
++				}
+ 
+-		if (path_attached_to_hba(rp, hba->path)) {
+-			printf(" NVMe under VMD : %s\n", rp);
++				fd2devname(fd, buf);
++				if (hba->type == SYS_DEV_VMD)
++					printf(" NVMe under VMD : %s", buf);
++				else if (hba->type == SYS_DEV_NVME)
++					printf("    NVMe Device : %s", buf);
++				if (!imsm_read_serial(fd, NULL, (__u8 *)buf,
++						      sizeof(buf)))
++					printf(" (%s)\n", buf);
++				else
++					printf("()\n");
++				close(fd);
++			}
++			free(rp);
+ 		}
+-		free(rp);
+ 	}
+ 
+ 	closedir(dir);
+@@ -2612,7 +2607,7 @@ static int detail_platform_imsm(int verbose, int enumerate_only, char *controlle
+ 					char buf[PATH_MAX];
+ 					printf(" I/O Controller : %s (%s)\n",
+ 						vmd_domain_to_controller(hba, buf), get_sys_dev_type(hba->type));
+-					if (print_vmd_attached_devs(hba)) {
++					if (print_nvme_info(hba)) {
+ 						if (verbose > 0)
+ 							pr_err("failed to get devices attached to VMD domain.\n");
+ 						result |= 2;
+@@ -2627,7 +2622,7 @@ static int detail_platform_imsm(int verbose, int enumerate_only, char *controlle
+ 		if (entry->type == SYS_DEV_NVME) {
+ 			for (hba = list; hba; hba = hba->next) {
+ 				if (hba->type == SYS_DEV_NVME)
+-					printf("    NVMe Device : %s\n", hba->path);
++					print_nvme_info(hba);
+ 			}
+ 			printf("\n");
+ 			continue;
+@@ -3992,11 +3987,11 @@ static int nvme_get_serial(int fd, void *buf, size_t buf_len)
+ extern int scsi_get_serial(int fd, void *buf, size_t buf_len);
+ 
+ static int imsm_read_serial(int fd, char *devname,
+-			    __u8 serial[MAX_RAID_SERIAL_LEN])
++			    __u8 *serial, size_t serial_buf_len)
+ {
+ 	char buf[50];
+ 	int rv;
+-	int len;
++	size_t len;
+ 	char *dest;
+ 	char *src;
+ 	unsigned int i;
+@@ -4039,13 +4034,13 @@ static int imsm_read_serial(int fd, char *devname,
+ 	len = dest - buf;
+ 	dest = buf;
+ 
+-	/* truncate leading characters */
+-	if (len > MAX_RAID_SERIAL_LEN) {
+-		dest += len - MAX_RAID_SERIAL_LEN;
+-		len = MAX_RAID_SERIAL_LEN;
++	if (len > serial_buf_len) {
++		/* truncate leading characters */
++		dest += len - serial_buf_len;
++		len = serial_buf_len;
+ 	}
+ 
+-	memset(serial, 0, MAX_RAID_SERIAL_LEN);
++	memset(serial, 0, serial_buf_len);
+ 	memcpy(serial, dest, len);
+ 
+ 	return 0;
+@@ -4100,7 +4095,7 @@ load_imsm_disk(int fd, struct intel_super *super, char *devname, int keep_fd)
+ 	char name[40];
+ 	__u8 serial[MAX_RAID_SERIAL_LEN];
+ 
+-	rv = imsm_read_serial(fd, devname, serial);
++	rv = imsm_read_serial(fd, devname, serial, MAX_RAID_SERIAL_LEN);
+ 
+ 	if (rv != 0)
+ 		return 2;
+@@ -5808,7 +5803,7 @@ int mark_spare(struct dl *disk)
+ 		return ret_val;
+ 
+ 	ret_val = 0;
+-	if (!imsm_read_serial(disk->fd, NULL, serial)) {
++	if (!imsm_read_serial(disk->fd, NULL, serial, MAX_RAID_SERIAL_LEN)) {
+ 		/* Restore disk serial number, because takeover marks disk
+ 		 * as failed and adds to serial ':0' before it becomes
+ 		 * a spare disk.
+@@ -5859,7 +5854,7 @@ static int add_to_super_imsm(struct supertype *st, mdu_disk_info_t *dk,
+ 	dd->fd = fd;
+ 	dd->e = NULL;
+ 	dd->action = DISK_ADD;
+-	rv = imsm_read_serial(fd, devname, dd->serial);
++	rv = imsm_read_serial(fd, devname, dd->serial, MAX_RAID_SERIAL_LEN);
+ 	if (rv) {
+ 		pr_err("failed to retrieve scsi serial, aborting\n");
+ 		if (dd->devname)
+-- 
+2.16.4
+
