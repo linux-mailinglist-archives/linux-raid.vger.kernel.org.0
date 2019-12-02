@@ -2,88 +2,81 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E41010EDF8
-	for <lists+linux-raid@lfdr.de>; Mon,  2 Dec 2019 18:13:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B633A10EE06
+	for <lists+linux-raid@lfdr.de>; Mon,  2 Dec 2019 18:18:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727618AbfLBRNq (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 2 Dec 2019 12:13:46 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:42034 "EHLO
+        id S1727646AbfLBRSZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 2 Dec 2019 12:18:25 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:45114 "EHLO
         mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727529AbfLBRNq (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 2 Dec 2019 12:13:46 -0500
-Received: by mail-qv1-f65.google.com with SMTP id q19so106583qvy.9
-        for <linux-raid@vger.kernel.org>; Mon, 02 Dec 2019 09:13:45 -0800 (PST)
+        with ESMTP id S1727493AbfLBRSZ (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 2 Dec 2019 12:18:25 -0500
+Received: by mail-qv1-f65.google.com with SMTP id c2so103555qvp.12
+        for <linux-raid@vger.kernel.org>; Mon, 02 Dec 2019 09:18:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=rZmOSD5mnS4iwDUkSAVmGGdIj0c4m4pKG5vTz9Lzv80=;
-        b=u3tVNE4H0fMNSEg5bUIFLkMtnNE9uD1qsoMwQR7mLhEIP6rYnjoZRidd+PeBVx+H3Q
-         MYQyAN5oUmFRj8lbx+EPXjH7trjTSx7OLteV3K2plZO4eAvFFiBS7DqZg6tVRyeBvkhd
-         yYoy1frZqlxdo5mLjyp53xNm88ywolFS6wJ4b7PZG8KfmVMmPlFgilkGlEa+WfNXK0OT
-         QXHAoKc+kCyoqvaX5rAPE8Bp1+6dc8694p6xGJBLCjYy9zsG8WM4qFhB8MhCLSbtm6qo
-         v411FvTrdfI8d+mTVZyXYe6lxGDvlsM4WgdjXmLCJdhytS0Z2yEaMur+iQ/KY2eY8D6P
-         BkgQ==
+        bh=jGzR27wy69+EjWxN2zfLzVCHQ96cZFbdpeYytzEQVvE=;
+        b=IXDxd9xbIVRJU9rVe3wAJw1bitM6x+vgQZMiSt8CdBrQZ8wGusvMifn3npedCKG5Kk
+         Jw+AjGRgLnYA8oFGzrrRaebGFdUc9+OkZwZp+CnCKY8DBxX2G1aTezc5tc3UizQw4eA1
+         LCUm2biK6gtaT2MHjBZGJP867xX8b9a8x+hpcxKngwKjybE/GWYmDLRoXavq3ZNlTMk8
+         82U0GLuIsEJgaC1Bp0RZCYb8/XVuaWG/rEAejWxt89Y4e5qIgtdnmhXrfSoy/y1HWq84
+         RXWundAeKcse1wLJqlgqZGgpgJMsNFGCKG7cc64FKcZZJck54aXeCyUlksBoIt9ywX3q
+         vcdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=rZmOSD5mnS4iwDUkSAVmGGdIj0c4m4pKG5vTz9Lzv80=;
-        b=YYnPUB6XCAHknbjiz8WOE5QgmzdXTTKJsRVbcmPsxClRigQ7/cZbRSOlShjwSsFwqv
-         gGULj7DKy/RrOa5t2LbKkHQBSDnCbAgjOl67cFLwU0m/C90vMyQE2VTo52gIA5pspUmX
-         7qu1F6p3NimqZBSE1vh6i6g0sJq6AmoP4fpqdkbLiBaIH/mOWyrfUaeQXlQLhB+RTjHV
-         xurj/xFOyMjUC6zpDIowoT30Sjb425XXyeF4dXHrOYAO9uS07fDtDaBZ/WbS1uqmUmdl
-         Uriwi7AWO14Z+jExUQqF9/BLUVNd0fE9dRY6kzra04QmlPgebVDZtEYiRmPvHo/o+LHN
-         2ZBw==
-X-Gm-Message-State: APjAAAWnZyUnRKx/VXdRMkAoXbckD2Tjt3zLFL+213rlB+7zUOZjfAHF
-        UrfNb/dS9UthuaXnGqlQuTlkxaMu/LDxBe0WQUIrZQ==
-X-Google-Smtp-Source: APXvYqycrigTp5uTmmN88JP5LFVGuzM7pSk/UEF+9xglA11fh0yQKW+070vFjDM8uvGWYctqblx5nD+kyKxSCWdaOjI=
-X-Received: by 2002:ad4:580b:: with SMTP id dd11mr33568191qvb.242.1575306825111;
- Mon, 02 Dec 2019 09:13:45 -0800 (PST)
+        bh=jGzR27wy69+EjWxN2zfLzVCHQ96cZFbdpeYytzEQVvE=;
+        b=rYk+K7Xn2+MeSsvio2K5K/zY1zirzqQpx2inNu1WoNmPgrdUY+2A3EBBFP9zSwSLne
+         tmM3DO2Q5d5tXCB6lwB3N8p0h2e7qNYv1XFqy7pEaiB3cpSC42l+G3RxCpSGTQaPfsiR
+         Q2OXNIYZIGj+BKmGZL4NRO9nb8OIgH60in/OIIX0drqYkc7rSZIrtfp1V/TLLAkT/Eoi
+         Xe0ZmyROENC3oMJ7OlGS7Y6h6d0CbkpO2LCtpXIaMV3URMiDGIO1/i6JzAvj83KIaOY8
+         VKX/HvbKLVQfNRBVRfiQ2wVmJDP1ADK9tt+e+umK4VBj1vt1WqQFkt1R0PiS+IvSnzVu
+         rLjQ==
+X-Gm-Message-State: APjAAAWOPU86AbDQmTj4x0/W0qq4gvelSJ2wKDIgXrRNac2T0WidP5ia
+        tvJdWkFoawUBm7h29F+rmI8AFrhVXjNYz4gcj/4=
+X-Google-Smtp-Source: APXvYqyyS9sZ+SxGV0ZlmLsuaCimipGJ6ZFaJCrw6gAyT1uYVfe+ADSWtdzQkAhOs5VKum/Z075N+vAiQvHnzHfYlFs=
+X-Received: by 2002:ad4:580b:: with SMTP id dd11mr33594889qvb.242.1575307104569;
+ Mon, 02 Dec 2019 09:18:24 -0800 (PST)
 MIME-Version: 1.0
-References: <1574759811-11360-1-git-send-email-liuzhengyuan@kylinos.cn>
-In-Reply-To: <1574759811-11360-1-git-send-email-liuzhengyuan@kylinos.cn>
+References: <20191127165750.21317-1-guoqing.jiang@cloud.ionos.com>
+In-Reply-To: <20191127165750.21317-1-guoqing.jiang@cloud.ionos.com>
 From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Mon, 2 Dec 2019 09:13:32 -0800
-Message-ID: <CAPhsuW7rcBoMTpxd4O76+JVe47Waox0vOSL9itMmYUyF=9xR-w@mail.gmail.com>
-Subject: Re: [PATCH] md/raid6: fix algorithm choice under larger PAGE_SIZE
-To:     Zhengyuan Liu <liuzhengyuan@kylinos.cn>
-Cc:     linux-raid <linux-raid@vger.kernel.org>, hpa@zytor.com
+Date:   Mon, 2 Dec 2019 09:18:11 -0800
+Message-ID: <CAPhsuW59uJ6dyVJOQ5t67peAdQNn9_gqVgEnbfTuLiVbODsuvg@mail.gmail.com>
+Subject: Re: [PATCH] raid5: need to set STRIPE_HANDLE for batch head
+To:     Guoqing Jiang <jgq516@gmail.com>, Xiao Ni <xni@redhat.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 1:17 AM Zhengyuan Liu <liuzhengyuan@kylinos.cn> wrote:
->
-> For raid6, we need at least 4 disks to calculate the best algorithm.
-> But, currently we assume we are always under 4k PAGE_SIZE, when come
-> to larger page size, such as 64K, we may get a wrong xor() and gen().
+Thanks for the fix!
 
-Please provide more information about the error. Something like "function x()
-will generate wrong value."
+On Wed, Nov 27, 2019 at 8:58 AM <jgq516@gmail.com> wrote:
+>
+> From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+>
+> With commit 6ce220dd2f8ea71d6afc29b9a7524c12e39f374a ("raid5: don't set
 
->
-> This patch tries to fix the problem by supporting arbitrarily page size.
->
-> Signed-off-by: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
-> ---
->  lib/raid6/algos.c | 25 +++++++++++++++----------
->  1 file changed, 15 insertions(+), 10 deletions(-)
->
-> diff --git a/lib/raid6/algos.c b/lib/raid6/algos.c
-> index 17417ee..0df7d99 100644
-> --- a/lib/raid6/algos.c
-> +++ b/lib/raid6/algos.c
-> @@ -118,6 +118,7 @@ const struct raid6_recov_calls *const raid6_recov_algos[] = {
->
->  #ifdef __KERNEL__
->  #define RAID6_TIME_JIFFIES_LG2 4
-> +#define RAID6_DATA_BLOCK_LEN   4096
+In the future, please keep only 12 bytes of the commit hash. I will
+fix it this time.
 
-Why define this inside "#ifdef __KERNEL__"? This would break ! __KERNEL__
-case, right? Have you tried this with lib/raid6/test/ ?
+> STRIPE_HANDLE to stripe which is in batch list"), we don't want to set
+> STRIPE_HANDLE flag for sh which is already in batch list.
+>
+> However, the stripe which is the head of batch list should set this flag,
+> otherwise panic could happen inside init_stripe at BUG_ON(sh->batch_head),
+> it is reproducible with raid5 on top of nvdimm devices per Xiao oberserved.
+>
+> Thanks for Xiao's effort to verify the change.
+
+Xiao, please reply with your "Tested-by".
 
 Thanks,
 Song
