@@ -2,81 +2,57 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B633A10EE06
-	for <lists+linux-raid@lfdr.de>; Mon,  2 Dec 2019 18:18:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A867F10F1D1
+	for <lists+linux-raid@lfdr.de>; Mon,  2 Dec 2019 21:59:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfLBRSZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 2 Dec 2019 12:18:25 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:45114 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727493AbfLBRSZ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 2 Dec 2019 12:18:25 -0500
-Received: by mail-qv1-f65.google.com with SMTP id c2so103555qvp.12
-        for <linux-raid@vger.kernel.org>; Mon, 02 Dec 2019 09:18:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jGzR27wy69+EjWxN2zfLzVCHQ96cZFbdpeYytzEQVvE=;
-        b=IXDxd9xbIVRJU9rVe3wAJw1bitM6x+vgQZMiSt8CdBrQZ8wGusvMifn3npedCKG5Kk
-         Jw+AjGRgLnYA8oFGzrrRaebGFdUc9+OkZwZp+CnCKY8DBxX2G1aTezc5tc3UizQw4eA1
-         LCUm2biK6gtaT2MHjBZGJP867xX8b9a8x+hpcxKngwKjybE/GWYmDLRoXavq3ZNlTMk8
-         82U0GLuIsEJgaC1Bp0RZCYb8/XVuaWG/rEAejWxt89Y4e5qIgtdnmhXrfSoy/y1HWq84
-         RXWundAeKcse1wLJqlgqZGgpgJMsNFGCKG7cc64FKcZZJck54aXeCyUlksBoIt9ywX3q
-         vcdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jGzR27wy69+EjWxN2zfLzVCHQ96cZFbdpeYytzEQVvE=;
-        b=rYk+K7Xn2+MeSsvio2K5K/zY1zirzqQpx2inNu1WoNmPgrdUY+2A3EBBFP9zSwSLne
-         tmM3DO2Q5d5tXCB6lwB3N8p0h2e7qNYv1XFqy7pEaiB3cpSC42l+G3RxCpSGTQaPfsiR
-         Q2OXNIYZIGj+BKmGZL4NRO9nb8OIgH60in/OIIX0drqYkc7rSZIrtfp1V/TLLAkT/Eoi
-         Xe0ZmyROENC3oMJ7OlGS7Y6h6d0CbkpO2LCtpXIaMV3URMiDGIO1/i6JzAvj83KIaOY8
-         VKX/HvbKLVQfNRBVRfiQ2wVmJDP1ADK9tt+e+umK4VBj1vt1WqQFkt1R0PiS+IvSnzVu
-         rLjQ==
-X-Gm-Message-State: APjAAAWOPU86AbDQmTj4x0/W0qq4gvelSJ2wKDIgXrRNac2T0WidP5ia
-        tvJdWkFoawUBm7h29F+rmI8AFrhVXjNYz4gcj/4=
-X-Google-Smtp-Source: APXvYqyyS9sZ+SxGV0ZlmLsuaCimipGJ6ZFaJCrw6gAyT1uYVfe+ADSWtdzQkAhOs5VKum/Z075N+vAiQvHnzHfYlFs=
-X-Received: by 2002:ad4:580b:: with SMTP id dd11mr33594889qvb.242.1575307104569;
- Mon, 02 Dec 2019 09:18:24 -0800 (PST)
+        id S1725825AbfLBU7u (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 2 Dec 2019 15:59:50 -0500
+Received: from sender11-op-o12.zoho.eu ([185.20.211.226]:17458 "EHLO
+        sender11-op-o12.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbfLBU7t (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 2 Dec 2019 15:59:49 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1575320383; cv=none; 
+        d=zohomail.eu; s=zohoarc; 
+        b=BD73pr5K0kvQllDwYrflNXsycaqhvJmN7iORH1e7I95BECCNRbeDp8Vzi9fdOUYcAO/MOiDE+caVUFHnA9qezZJuXdwq+7OgC7XQxionvKNBw/eMP5z8Nj98kjupikc6yJXRG32wx2JFG+YocVe94HjUXjyU2CCvt79WllJ94hM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+        t=1575320383; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=KZcSHbGPJLaDRMK2grcX/S2/vValpclzCW3YHOGl7ag=; 
+        b=L0IvdLcsKr/h+fiP5BI9hoDgloxxViJ6xWpwSddJ/BQNlvMKSi6cyoI5QxssHQQZIgL0xQQmNFneQQ7bHlJ2fsk6YXeGoBUgANeevSwqNjW+f54m60lLgrpCf250cP71IIVPrrYu1xHWatDdJsb4W0C2Lh0+Ycv1q01WeFXxP7w=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+        dkim=pass  header.i=trained-monkey.org;
+        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
+        dmarc=pass header.from=<jes@trained-monkey.org> header.from=<jes@trained-monkey.org>
+Received: from [172.30.221.108] (163.114.130.128 [163.114.130.128]) by mx.zoho.eu
+        with SMTPS id 1575320383157318.604030980915; Mon, 2 Dec 2019 21:59:43 +0100 (CET)
+Subject: Re: [PATCH 1/1] Remove unused code
+To:     Xiao Ni <xni@redhat.com>, jes.sorensen@gmail.com
+Cc:     artur.paszkiewicz@intel.com, linux-raid@vger.kernel.org
+References: <1575018887-5138-1-git-send-email-xni@redhat.com>
+From:   Jes Sorensen <jes@trained-monkey.org>
+Message-ID: <7f6ef8bd-c096-7a3d-cb5b-9e191392c4a9@trained-monkey.org>
+Date:   Mon, 2 Dec 2019 15:59:41 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20191127165750.21317-1-guoqing.jiang@cloud.ionos.com>
-In-Reply-To: <20191127165750.21317-1-guoqing.jiang@cloud.ionos.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Mon, 2 Dec 2019 09:18:11 -0800
-Message-ID: <CAPhsuW59uJ6dyVJOQ5t67peAdQNn9_gqVgEnbfTuLiVbODsuvg@mail.gmail.com>
-Subject: Re: [PATCH] raid5: need to set STRIPE_HANDLE for batch head
-To:     Guoqing Jiang <jgq516@gmail.com>, Xiao Ni <xni@redhat.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1575018887-5138-1-git-send-email-xni@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Thanks for the fix!
+On 11/29/19 4:14 AM, Xiao Ni wrote:
+> Signed-off-by: Xiao Ni <xni@redhat.com>
+> ---
+>   platform-intel.h | 1 -
+>   1 file changed, 1 deletion(-)
 
-On Wed, Nov 27, 2019 at 8:58 AM <jgq516@gmail.com> wrote:
->
-> From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
->
-> With commit 6ce220dd2f8ea71d6afc29b9a7524c12e39f374a ("raid5: don't set
-
-In the future, please keep only 12 bytes of the commit hash. I will
-fix it this time.
-
-> STRIPE_HANDLE to stripe which is in batch list"), we don't want to set
-> STRIPE_HANDLE flag for sh which is already in batch list.
->
-> However, the stripe which is the head of batch list should set this flag,
-> otherwise panic could happen inside init_stripe at BUG_ON(sh->batch_head),
-> it is reproducible with raid5 on top of nvdimm devices per Xiao oberserved.
->
-> Thanks for Xiao's effort to verify the change.
-
-Xiao, please reply with your "Tested-by".
+Applied!
 
 Thanks,
-Song
+Jes
+
+
