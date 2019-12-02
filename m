@@ -2,39 +2,39 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A867F10F1D1
-	for <lists+linux-raid@lfdr.de>; Mon,  2 Dec 2019 21:59:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A026C10F1D3
+	for <lists+linux-raid@lfdr.de>; Mon,  2 Dec 2019 22:02:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725825AbfLBU7u (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 2 Dec 2019 15:59:50 -0500
-Received: from sender11-op-o12.zoho.eu ([185.20.211.226]:17458 "EHLO
+        id S1725835AbfLBVCB (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 2 Dec 2019 16:02:01 -0500
+Received: from sender11-op-o12.zoho.eu ([185.20.211.226]:17481 "EHLO
         sender11-op-o12.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfLBU7t (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 2 Dec 2019 15:59:49 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1575320383; cv=none; 
+        with ESMTP id S1725775AbfLBVCB (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 2 Dec 2019 16:02:01 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1575320517; cv=none; 
         d=zohomail.eu; s=zohoarc; 
-        b=BD73pr5K0kvQllDwYrflNXsycaqhvJmN7iORH1e7I95BECCNRbeDp8Vzi9fdOUYcAO/MOiDE+caVUFHnA9qezZJuXdwq+7OgC7XQxionvKNBw/eMP5z8Nj98kjupikc6yJXRG32wx2JFG+YocVe94HjUXjyU2CCvt79WllJ94hM=
+        b=KtCEcNqird75UhamN5KUBoFUSIE6QaW9cBQTJGSmRedEVCDaTU+dgIdHwdPmKiNXKmViiBuAH2J5Qd7kEKzmVwh7c9fg58PmkpttQnTGPKp6xjprP2VWwUGQ+L5pYWBT0pfkl39aKCM0NhGAX3jQYM0R3X4lCRHiWsbP/3dVDyo=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1575320383; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=KZcSHbGPJLaDRMK2grcX/S2/vValpclzCW3YHOGl7ag=; 
-        b=L0IvdLcsKr/h+fiP5BI9hoDgloxxViJ6xWpwSddJ/BQNlvMKSi6cyoI5QxssHQQZIgL0xQQmNFneQQ7bHlJ2fsk6YXeGoBUgANeevSwqNjW+f54m60lLgrpCf250cP71IIVPrrYu1xHWatDdJsb4W0C2Lh0+Ycv1q01WeFXxP7w=
+        t=1575320517; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=3zMZirE6pnJgZvrcWYA0THaH54clV9TWnML7IAQcyrA=; 
+        b=TWicWhn4j1EEG6af1anNfTMoDBq6e7OIULGeyKRF6B62bqaAobPkQ2stOugU1csy8sG+MAriGFPcM4QBq+FmnM2bGtKOrN1yRe8YO6Frln1A5Z+ddo2UO86lgThfszuVcFL7IOBumJud6efVyOEXb3jkxaSpCSUJCEWXT4hquGM=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
         dkim=pass  header.i=trained-monkey.org;
         spf=pass  smtp.mailfrom=jes@trained-monkey.org;
         dmarc=pass header.from=<jes@trained-monkey.org> header.from=<jes@trained-monkey.org>
 Received: from [172.30.221.108] (163.114.130.128 [163.114.130.128]) by mx.zoho.eu
-        with SMTPS id 1575320383157318.604030980915; Mon, 2 Dec 2019 21:59:43 +0100 (CET)
-Subject: Re: [PATCH 1/1] Remove unused code
-To:     Xiao Ni <xni@redhat.com>, jes.sorensen@gmail.com
-Cc:     artur.paszkiewicz@intel.com, linux-raid@vger.kernel.org
-References: <1575018887-5138-1-git-send-email-xni@redhat.com>
+        with SMTPS id 1575320516921932.4756766277326; Mon, 2 Dec 2019 22:01:56 +0100 (CET)
+Subject: Re: [PATCH] imsm: return correct uuid for volume in detail
+To:     Blazej Kucman <blazej.kucman@intel.com>
+Cc:     linux-raid@vger.kernel.org
+References: <20191129142108.10536-1-blazej.kucman@intel.com>
 From:   Jes Sorensen <jes@trained-monkey.org>
-Message-ID: <7f6ef8bd-c096-7a3d-cb5b-9e191392c4a9@trained-monkey.org>
-Date:   Mon, 2 Dec 2019 15:59:41 -0500
+Message-ID: <e676bad2-2747-e86d-73fd-f809922a2f83@trained-monkey.org>
+Date:   Mon, 2 Dec 2019 16:01:56 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <1575018887-5138-1-git-send-email-xni@redhat.com>
+In-Reply-To: <20191129142108.10536-1-blazej.kucman@intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -44,11 +44,22 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 11/29/19 4:14 AM, Xiao Ni wrote:
-> Signed-off-by: Xiao Ni <xni@redhat.com>
+On 11/29/19 9:21 AM, Blazej Kucman wrote:
+> Fixes the side effect of the patch b6180160f ("imsm: save current_vol number")
+> - wrong UUID is printed in detail for each volume.
+> New parameter "subarray" is added to determine what info should be extracted
+> from metadata (subarray or container).
+> The parameter affects only IMSM metadata.
+> 
+> Signed-off-by: Blazej Kucman <blazej.kucman@intel.com>
 > ---
->   platform-intel.h | 1 -
->   1 file changed, 1 deletion(-)
+>   Detail.c      |  4 ++--
+>   mdadm.h       |  5 +++--
+>   super-ddf.c   |  5 +++--
+>   super-intel.c | 20 ++++++++++++++++++--
+>   super0.c      |  4 ++--
+>   super1.c      |  4 ++--
+>   6 files changed, 30 insertions(+), 12 deletions(-)
 
 Applied!
 
