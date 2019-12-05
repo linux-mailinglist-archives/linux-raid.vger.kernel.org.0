@@ -2,110 +2,95 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 03462112B5A
-	for <lists+linux-raid@lfdr.de>; Wed,  4 Dec 2019 13:22:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6865B113A3F
+	for <lists+linux-raid@lfdr.de>; Thu,  5 Dec 2019 04:14:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727503AbfLDMWZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 4 Dec 2019 07:22:25 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33176 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727792AbfLDMWS (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 4 Dec 2019 07:22:18 -0500
-Received: by mail-ed1-f68.google.com with SMTP id l63so6498697ede.0
-        for <linux-raid@vger.kernel.org>; Wed, 04 Dec 2019 04:22:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=SWzs3svZdfoJNhQZue5B0UPApGf3QNVhTsPQAsjB3v0=;
-        b=itksFv5A2JLOzo6XVqVzXmSzWKIpGqZTNHrb4xFvrqPmHJ7WwaeLkksg0/ZJSVtv31
-         pzvXZ3OHhHMsql2Vo9oheJQHErj5CDGd5ZvPVjxDn+I4JgVPrQl1nkJy5Nb7wvQoUvM+
-         46lpgbsOy0h7DJvRAy1OQQg0Oi/exT7Imiyfeu4Gtmu6VGYFysEjNlBfvwObnE6M1THW
-         GbhC/d5DVONSKdw6y/qH20L4wjeyxlxCBE+xa1i44NzWc0HgEODgSNCM/bGDvmjdXP55
-         pwYVn13D99Hhzzv+p4qHdhRZEM3zwIJF+S9QDszHcSxOoAqtygRSNU+xVzjWpE9QCD88
-         4SHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=SWzs3svZdfoJNhQZue5B0UPApGf3QNVhTsPQAsjB3v0=;
-        b=J1SoYLSsNSyp5tSMhm4S2q14azOOwkpVsOVDAQuWqLG2zju9WXg+0kZcG/8cXjPbBM
-         JmeBUxRk/lNqdnELV/wiGtIHbE2zSbYvjm2GvqFh0ulBWcDAtULj3t3L6O+KqIIT2BPO
-         GniDo+sAbwX59R75h1XuRyOHO3Mo+WrJWcJn4/VvVdSpdD6NVas0PjkEX15PqI/eADD+
-         0acMo5EmxGP1ts+pGj7SGlQDBQRpcP5ng1nsWPXGIQ3fcOS20WQIJ+dfk4YHRIuK7u8l
-         600+FTtu8AHdgOgaKBXYvLJTy6xuYj6pQRfH+PwLugjajYXimkSMqCM1SWHR7S8dfkad
-         TGyA==
-X-Gm-Message-State: APjAAAWcCvL0UbDhd1UvDBriPx8VhoIjA0tm2guvGXqVND6AzdivguNL
-        Vdp2bCD1gwRKTg8azTFChQ5zZpOrgjOO95f61as=
-X-Google-Smtp-Source: APXvYqwlH4d/NgUk6+TTgeshJl/W0Z846j+vPwdmJMmvDKA5s5alEIOymc5OFboGvVzTvSBGNMpJNF0KpHbTN+gxpY4=
-X-Received: by 2002:aa7:d84b:: with SMTP id f11mr3689948eds.96.1575462136339;
- Wed, 04 Dec 2019 04:22:16 -0800 (PST)
+        id S1728321AbfLEDO2 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 4 Dec 2019 22:14:28 -0500
+Received: from smtpbgbr2.qq.com ([54.207.22.56]:50493 "EHLO smtpbgbr2.qq.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728393AbfLEDO2 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 4 Dec 2019 22:14:28 -0500
+X-QQ-mid: bizesmtp23t1575515613teackr2p
+Received: from localhost.localdomain (unknown [218.76.23.26])
+        by esmtp10.qq.com (ESMTP) with 
+        id ; Thu, 05 Dec 2019 11:13:19 +0800 (CST)
+X-QQ-SSF: 01400000002000I0ZG41000A0000000
+X-QQ-FEAT: vRxJyNZKtn5KODKFc32lUA8PB6i0f+bnXVHN1XgR7lxiafTFYLcyw1X9/NXoC
+        gjgdG8Lnmon/CWCfZWr8V3iDiht/TytCl1iy4EcFsI5dK33LgcYDR9ydzstMZ6/Lt608ier
+        1XHyyItr1ZgDMHo8CtzWpIqmjuNfgvVh8pnn1lkMiX/OMpYGjfDZmJ5QNS6zGZaYudefHtx
+        +llqJhIbdQLHO/j35GZHmpOesqlyeFqvCq/FYiw1m4WGdL3LLLBapo9SnrwR0e3R2Ncisly
+        HCM3vZGJwehI1NVJDoG/NiFisxEkHF7PxqyjJHIB0eyH+aerAYEGqt9lkUy8SwxpLIlKv69
+        BvJwuPAOj+tblEl0x+BYBh+Xz5j6w==
+X-QQ-GoodBg: 2
+From:   Zhengyuan Liu <liuzhengyuan@kylinos.cn>
+To:     liu.song.a23@gmail.com
+Cc:     linux-raid@vger.kernel.org, hpa@zytor.com,
+        liuzhengyuang521@gmail.com
+Subject: [PATCH v2 1/2] raid6/test: fix the compilation error and warning
+Date:   Thu,  5 Dec 2019 11:13:17 +0800
+Message-Id: <20191205031318.7098-1-liuzhengyuan@kylinos.cn>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Received: by 2002:a05:6402:22dc:0:0:0:0 with HTTP; Wed, 4 Dec 2019 04:22:15
- -0800 (PST)
-Reply-To: moneygram.1820@outlook.fr
-From:   "Rev.Dr Emmanuel Okoye CEO Ecobank-benin" <eco.bank1204@gmail.com>
-Date:   Wed, 4 Dec 2019 13:22:15 +0100
-Message-ID: <CAOE+jABwsq4QTifFZJGuzmZ8p9kMY_tMmS5N39hvEALE6d=OJw@mail.gmail.com>
-Subject: God has remembered your prayers I have already sent you Money Gram
- payment of $5000.00 today, MG 1029-8096
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:kylinos.cn:qybgforeign:qybgforeign5
+X-QQ-Bgrelay: 1
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Attn, dear Beneficiary.
+The compilation error of redeclaration was indroduced by commit 54d50897d54
+("linux/kernel.h: split *_MAX and *_MIN macros into <linux/limits.h>"). Fix
+it by removing useless header limit.h.
 
-God has remembered your prayers
-I have already sent you Money Gram payment of $5000.00 today, MG 1029-8096
-This is because we have finally concluded to effect your transfer
-funds of $4.8,000.000usd
-through MONEY GRAM International Fund transfer Service
-Each payment will be sending to you by $5000.00 daily until the
-($4.8,000.000usd) is completely transferred
-we have this morning sent  MONEY GRAM payment of $5,000.00 in your name today
-So contact the MONEY GRAM Agent to pick up this first payment of $5000 now
+The compilation warning was redefination of macro EXPORT_SYMBOL*.
 
-Contact person Mrs. Alan Ude
-Dir. MONEY GRAM Service,Benin
-Phone number: +229 98856728
-E-mail: moneygram.1820@outlook.fr
+Signed-off-by: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
+---
+ include/linux/raid/pq.h | 3 ++-
+ lib/raid6/mktables.c    | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-Ask him to give you the complete mtcn, sender name, question and
-answer to enable you
-pick up the $5000.00 sent today,
-Also you are instructed to re-confirm your information's
-to Mrs.Alan Ude as listed below to avoid wrong transactions.
+diff --git a/include/linux/raid/pq.h b/include/linux/raid/pq.h
+index 0832c9b..e0ddb47 100644
+--- a/include/linux/raid/pq.h
++++ b/include/linux/raid/pq.h
+@@ -27,7 +27,6 @@ extern const char raid6_empty_zero_page[PAGE_SIZE];
+ 
+ #include <errno.h>
+ #include <inttypes.h>
+-#include <limits.h>
+ #include <stddef.h>
+ #include <sys/mman.h>
+ #include <sys/time.h>
+@@ -59,7 +58,9 @@ extern const char raid6_empty_zero_page[PAGE_SIZE];
+ #define enable_kernel_altivec()
+ #define disable_kernel_altivec()
+ 
++#undef	EXPORT_SYMBOL
+ #define EXPORT_SYMBOL(sym)
++#undef	EXPORT_SYMBOL_GPL
+ #define EXPORT_SYMBOL_GPL(sym)
+ #define MODULE_LICENSE(licence)
+ #define MODULE_DESCRIPTION(desc)
+diff --git a/lib/raid6/mktables.c b/lib/raid6/mktables.c
+index 9c485df..f02e10f 100644
+--- a/lib/raid6/mktables.c
++++ b/lib/raid6/mktables.c
+@@ -56,8 +56,8 @@ int main(int argc, char *argv[])
+ 	uint8_t v;
+ 	uint8_t exptbl[256], invtbl[256];
+ 
+-	printf("#include <linux/raid/pq.h>\n");
+ 	printf("#include <linux/export.h>\n");
++	printf("#include <linux/raid/pq.h>\n");
+ 
+ 	/* Compute multiplication table */
+ 	printf("\nconst u8  __attribute__((aligned(256)))\n"
+-- 
+2.7.4
 
-(1Your Full name:............................................
-(2 Phone number.....................................................
-(3 Contact address:.....................................
-(4 Age:..................................................................
-(5 Country..............................................
-(6) Sex .................................................................
-(7) your occupation...........................................
 
-(8)Passport/By Attach or Drivers License Number:
-Contact Mrs. Alan Ude for your MONEY GRAM payment of $4.8,000.000usd
-Note please: I have paid service fees for you but the only money you
-are required
-to send to Mrs. Alan Ude is $90.00 only Transfer fee before you can
-pick up your transfer today.
 
-Send it to via Money Gram
-Receiver's Name-----Alan Ude
-Country----------Benin
-Address-----------Cotonou
-Quest--------Honest
-Ans-----------Trust
-
-I done all my best for you to receive your transfer now ok.
-We need your urgent reply
-Best Regards
-Rev.Dr Emmanuel Okoye
-CEO Ecobank-benin
-
-If we did not receive it urgent from you today,
-I will go ahead and release you funds to Mrs. Lyndia Ppaulson as your
-representative.
