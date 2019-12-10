@@ -2,39 +2,39 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D49C51196D4
-	for <lists+linux-raid@lfdr.de>; Tue, 10 Dec 2019 22:29:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D08C1198AF
+	for <lists+linux-raid@lfdr.de>; Tue, 10 Dec 2019 22:45:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727678AbfLJVKF (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 10 Dec 2019 16:10:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59418 "EHLO mail.kernel.org"
+        id S1729876AbfLJVd6 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 10 Dec 2019 16:33:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727335AbfLJVKE (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:04 -0500
+        id S1728153AbfLJVdz (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:33:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A09F5246B7;
-        Tue, 10 Dec 2019 21:10:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46CA4214AF;
+        Tue, 10 Dec 2019 21:33:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012203;
-        bh=lQWO+C9E/2DvDDFpuBRLbjb4xQNC/RBlTuZzvuro7Q4=;
+        s=default; t=1576013634;
+        bh=1Ybdl3YQkMwccnYHF0UQNi1FGLHTjOF7XaloQgt7bmA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Cr8P4J3TcDhDaH/E5r8DSDdF3pxu+OLbltJ/G2gLFvftCgUPJy0aYfhKzlwfwaA6
-         JT9SUTp4wjrJqpJjruLeP+uvSD3rDFzW5McpJZK4cB1GcECSHFVOsSYNf4fuIHRFUl
-         NP74WMi6DtMvPsOOJz/hMfwBfES/1GWMr3Bdvw1g=
+        b=ZlXIdgoAZj1gfhd2K16NGzokOBSPQUBQvMgmLzalaZZCvQRxE8QPNyQMuPmam8SV5
+         8NubyGnDROdYUx1dMAmE6+R8U6Aq8/cPR5JwySrS4bLpHQKO5cDJQUPW+RYTDPmq76
+         zobJXL5JRZxsCthCyVDz4WrPXc+/iwlzj8U8w13E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
         Jack Wang <jinpu.wang@cloud.ionos.com>,
         NeilBrown <neilb@suse.com>, Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 156/350] md/bitmap: avoid race window between md_bitmap_resize and bitmap_file_clear_bit
-Date:   Tue, 10 Dec 2019 16:04:21 -0500
-Message-Id: <20191210210735.9077-117-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 075/177] md/bitmap: avoid race window between md_bitmap_resize and bitmap_file_clear_bit
+Date:   Tue, 10 Dec 2019 16:30:39 -0500
+Message-Id: <20191210213221.11921-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
-References: <20191210210735.9077-1-sashal@kernel.org>
+In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
+References: <20191210213221.11921-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -117,10 +117,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-index b092c7b5282f9..3ad18246fcb3c 100644
+index 2fc8c113977fb..fd8607124bdbb 100644
 --- a/drivers/md/md-bitmap.c
 +++ b/drivers/md/md-bitmap.c
-@@ -2139,6 +2139,7 @@ int md_bitmap_resize(struct bitmap *bitmap, sector_t blocks,
+@@ -2132,6 +2132,7 @@ int md_bitmap_resize(struct bitmap *bitmap, sector_t blocks,
  		memcpy(page_address(store.sb_page),
  		       page_address(bitmap->storage.sb_page),
  		       sizeof(bitmap_super_t));
@@ -128,7 +128,7 @@ index b092c7b5282f9..3ad18246fcb3c 100644
  	md_bitmap_file_unmap(&bitmap->storage);
  	bitmap->storage = store;
  
-@@ -2154,7 +2155,6 @@ int md_bitmap_resize(struct bitmap *bitmap, sector_t blocks,
+@@ -2147,7 +2148,6 @@ int md_bitmap_resize(struct bitmap *bitmap, sector_t blocks,
  	blocks = min(old_counts.chunks << old_counts.chunkshift,
  		     chunks << chunkshift);
  
