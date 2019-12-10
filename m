@@ -2,90 +2,229 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 70411118F5B
-	for <lists+linux-raid@lfdr.de>; Tue, 10 Dec 2019 18:53:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 493D81196E6
+	for <lists+linux-raid@lfdr.de>; Tue, 10 Dec 2019 22:30:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfLJRxU (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 10 Dec 2019 12:53:20 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:37911 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727259AbfLJRxU (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 10 Dec 2019 12:53:20 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <dann.frazier@canonical.com>)
-        id 1iejhG-0000L7-JN
-        for linux-raid@vger.kernel.org; Tue, 10 Dec 2019 17:53:18 +0000
-Received: by mail-io1-f71.google.com with SMTP id p206so97145iod.13
-        for <linux-raid@vger.kernel.org>; Tue, 10 Dec 2019 09:53:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4uVxvhnwYal33PxGgC8vyajMTY17WNQ2yzbPS8Matrw=;
-        b=h9LxfuXiTxcUDT6+369ULSCO8i5C8Mmn26UT4EkNlU2/QENrCq/7UKF9F0NEwVmIAk
-         vvthH5VZ7JimNZWDwFRt+NHdI4L6474U5h5+5C626Qo8XERcS5QD3FAJigN4gNhfnW/e
-         m84CPjFHLqpMYjGJfjm08LITV8Z5dp3zCDIs+VZVrtKOo1vW4naBbKwDDcwo0Z2JBAPi
-         8nWcR3+mcQynDR+ebT2ZWbna9zrR+LM9oRymVR/GvHB3WXnsX/uvQbpeirTN1nYEmhb0
-         4eDgxGFIbY3ial0FuON50/3s/pzaJI7hqxSoh0JDS63aNtm1vRJ2wTiR0RGpCQes8w9P
-         5n1g==
-X-Gm-Message-State: APjAAAXNZ9vvIPCasmN3UqADBGs+1XQAOCwymY2EQBgym09MXje2j2u4
-        lzjInOHxqogedG9q7roI6Be+ShS2CtgNojztwvL/WAP82/XVP3MWLirPV5mMUiyXbMT8jgjPJy1
-        RBzRpYedRs6VrWp52wsZ/XkwxRIFgBqrorDErL+o=
-X-Received: by 2002:a6b:f60e:: with SMTP id n14mr5223551ioh.241.1576000397644;
-        Tue, 10 Dec 2019 09:53:17 -0800 (PST)
-X-Google-Smtp-Source: APXvYqygnzYgBJkiCVm2Zl/roEzOFTXYIyNJcvM/uLYmwq+yRK+u0tsL/8nGzbk1ky9eelk2V6pmyw==
-X-Received: by 2002:a6b:f60e:: with SMTP id n14mr5223530ioh.241.1576000397321;
-        Tue, 10 Dec 2019 09:53:17 -0800 (PST)
-Received: from xps13.canonical.com (c-71-56-235-36.hsd1.co.comcast.net. [71.56.235.36])
-        by smtp.gmail.com with ESMTPSA id s10sm851470ioc.4.2019.12.10.09.53.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 09:53:16 -0800 (PST)
-Date:   Tue, 10 Dec 2019 10:53:15 -0700
-From:   dann frazier <dann.frazier@canonical.com>
-To:     Jes Sorensen <jes@trained-monkey.org>
-Cc:     Helmut Grohne <helmut@subdivi.de>, linux-raid@vger.kernel.org,
-        "Maxin B. John" <maxin.john@intel.com>
-Subject: Re: [PATCH] Respect $(CROSS_COMPILE) when $(CC) is the default
-Message-ID: <20191210175315.GA99871@xps13.dannf>
-References: <20191209205413.6839-1-dann.frazier@canonical.com>
+        id S1727640AbfLJV3t (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 10 Dec 2019 16:29:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59352 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728340AbfLJVKC (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:02 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F190246A2;
+        Tue, 10 Dec 2019 21:10:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576012201;
+        bh=HS2yMRgLoBvhUBaJzQDEMtttAvYj/xzUw9IBwGl19ME=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=i4eMBnS6S0P//OoB6ddBy5XERUpmOmfvgh+gavO7IqNIc4MVRACXHqtdZxoXLI9tj
+         1SGx2GkK6Ev+Wa7OKlqOItiqyoXAeBZXGFTew5ODmcjhkqhdz//aXg43Ek/aALkZQm
+         90gaFny5oqxd5Y0ODdRDBQ8A1ClSEhPymB1IzwX8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Yufen Yu <yuyufen@huawei.com>, Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 154/350] md: no longer compare spare disk superblock events in super_load
+Date:   Tue, 10 Dec 2019 16:04:19 -0500
+Message-Id: <20191210210735.9077-115-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
+References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191209205413.6839-1-dann.frazier@canonical.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-[ + Maxin - apologies for omitting you for the original ]
+From: Yufen Yu <yuyufen@huawei.com>
 
-On Mon, Dec 09, 2019 at 01:54:13PM -0700, dann frazier wrote:
-> Commit 1180ed5 told make to only respect $(CROSS_COMPILE) when $(CC)
-> was unset. But that will never be the case, as make provides
-> a default value for $(CC). Change this logic to respect $(CROSS_COMPILE)
-> when $(CC) is the default. Patch originally by Helmet Grohne.
-> 
-> Fixes: 1180ed5 ("Makefile: make the CC definition conditional")
-> Signed-off-by: dann frazier <dann.frazier@canonical.com>
-> ---
->  Makefile | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Makefile b/Makefile
-> index dfe00b0a..a33319a8 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -46,7 +46,9 @@ ifdef COVERITY
->  COVERITY_FLAGS=-include coverity-gcc-hack.h
->  endif
->  
-> -CC ?= $(CROSS_COMPILE)gcc
-> +ifeq ($(origin CC),default)
-> +CC := $(CROSS_COMPILE)gcc
-> +endif
->  CXFLAGS ?= -ggdb
->  CWFLAGS = -Wall -Werror -Wstrict-prototypes -Wextra -Wno-unused-parameter
->  ifdef WARN_UNUSED
+[ Upstream commit 6a5cb53aaa4ef515ddeffa04ce18b771121127b4 ]
+
+We have a test case as follow:
+
+  mdadm -CR /dev/md1 -l 1 -n 4 /dev/sd[a-d] \
+	--assume-clean --bitmap=internal
+  mdadm -S /dev/md1
+  mdadm -A /dev/md1 /dev/sd[b-c] --run --force
+
+  mdadm --zero /dev/sda
+  mdadm /dev/md1 -a /dev/sda
+
+  echo offline > /sys/block/sdc/device/state
+  echo offline > /sys/block/sdb/device/state
+  sleep 5
+  mdadm -S /dev/md1
+
+  echo running > /sys/block/sdb/device/state
+  echo running > /sys/block/sdc/device/state
+  mdadm -A /dev/md1 /dev/sd[a-c] --run --force
+
+When we readd /dev/sda to the array, it started to do recovery.
+After offline the other two disks in md1, the recovery have
+been interrupted and superblock update info cannot be written
+to the offline disks. While the spare disk (/dev/sda) can continue
+to update superblock info.
+
+After stopping the array and assemble it, we found the array
+run fail, with the follow kernel message:
+
+[  172.986064] md: kicking non-fresh sdb from array!
+[  173.004210] md: kicking non-fresh sdc from array!
+[  173.022383] md/raid1:md1: active with 0 out of 4 mirrors
+[  173.022406] md1: failed to create bitmap (-5)
+[  173.023466] md: md1 stopped.
+
+Since both sdb and sdc have the value of 'sb->events' smaller than
+that in sda, they have been kicked from the array. However, the only
+remained disk sda is in 'spare' state before stop and it cannot be
+added to conf->mirrors[] array. In the end, raid array assemble
+and run fail.
+
+In fact, we can use the older disk sdb or sdc to assemble the array.
+That means we should not choose the 'spare' disk as the fresh disk in
+analyze_sbs().
+
+To fix the problem, we do not compare superblock events when it is
+a spare disk, as same as validate_super.
+
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/md/md.c | 57 +++++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 51 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 1be7abeb24fdc..fc6ae8276a92f 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -1149,7 +1149,15 @@ static int super_90_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor
+ 		rdev->desc_nr = sb->this_disk.number;
+ 
+ 	if (!refdev) {
+-		ret = 1;
++		/*
++		 * Insist on good event counter while assembling, except
++		 * for spares (which don't need an event count)
++		 */
++		if (sb->disks[rdev->desc_nr].state & (
++			(1<<MD_DISK_SYNC) | (1 << MD_DISK_ACTIVE)))
++			ret = 1;
++		else
++			ret = 0;
+ 	} else {
+ 		__u64 ev1, ev2;
+ 		mdp_super_t *refsb = page_address(refdev->sb_page);
+@@ -1165,7 +1173,14 @@ static int super_90_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor
+ 		}
+ 		ev1 = md_event(sb);
+ 		ev2 = md_event(refsb);
+-		if (ev1 > ev2)
++
++		/*
++		 * Insist on good event counter while assembling, except
++		 * for spares (which don't need an event count)
++		 */
++		if (sb->disks[rdev->desc_nr].state & (
++			(1<<MD_DISK_SYNC) | (1 << MD_DISK_ACTIVE)) &&
++			(ev1 > ev2))
+ 			ret = 1;
+ 		else
+ 			ret = 0;
+@@ -1525,6 +1540,7 @@ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_
+ 	sector_t sectors;
+ 	char b[BDEVNAME_SIZE], b2[BDEVNAME_SIZE];
+ 	int bmask;
++	__u64 role;
+ 
+ 	/*
+ 	 * Calculate the position of the superblock in 512byte sectors.
+@@ -1658,8 +1674,20 @@ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_
+ 	    sb->level != 0)
+ 		return -EINVAL;
+ 
++	role = le16_to_cpu(sb->dev_roles[rdev->desc_nr]);
++
+ 	if (!refdev) {
+-		ret = 1;
++		/*
++		 * Insist of good event counter while assembling, except for
++		 * spares (which don't need an event count)
++		 */
++		if (rdev->desc_nr >= 0 &&
++		    rdev->desc_nr < le32_to_cpu(sb->max_dev) &&
++			(role < MD_DISK_ROLE_MAX ||
++			 role == MD_DISK_ROLE_JOURNAL))
++			ret = 1;
++		else
++			ret = 0;
+ 	} else {
+ 		__u64 ev1, ev2;
+ 		struct mdp_superblock_1 *refsb = page_address(refdev->sb_page);
+@@ -1676,7 +1704,14 @@ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_
+ 		ev1 = le64_to_cpu(sb->events);
+ 		ev2 = le64_to_cpu(refsb->events);
+ 
+-		if (ev1 > ev2)
++		/*
++		 * Insist of good event counter while assembling, except for
++		 * spares (which don't need an event count)
++		 */
++		if (rdev->desc_nr >= 0 &&
++		    rdev->desc_nr < le32_to_cpu(sb->max_dev) &&
++			(role < MD_DISK_ROLE_MAX ||
++			 role == MD_DISK_ROLE_JOURNAL) && ev1 > ev2)
+ 			ret = 1;
+ 		else
+ 			ret = 0;
+@@ -3597,7 +3632,7 @@ static struct md_rdev *md_import_device(dev_t newdev, int super_format, int supe
+  * Check a full RAID array for plausibility
+  */
+ 
+-static void analyze_sbs(struct mddev *mddev)
++static int analyze_sbs(struct mddev *mddev)
+ {
+ 	int i;
+ 	struct md_rdev *rdev, *freshest, *tmp;
+@@ -3618,6 +3653,12 @@ static void analyze_sbs(struct mddev *mddev)
+ 			md_kick_rdev_from_array(rdev);
+ 		}
+ 
++	/* Cannot find a valid fresh disk */
++	if (!freshest) {
++		pr_warn("md: cannot find a valid disk\n");
++		return -EINVAL;
++	}
++
+ 	super_types[mddev->major_version].
+ 		validate_super(mddev, freshest);
+ 
+@@ -3652,6 +3693,8 @@ static void analyze_sbs(struct mddev *mddev)
+ 			clear_bit(In_sync, &rdev->flags);
+ 		}
+ 	}
++
++	return 0;
+ }
+ 
+ /* Read a fixed-point number.
+@@ -5570,7 +5613,9 @@ int md_run(struct mddev *mddev)
+ 	if (!mddev->raid_disks) {
+ 		if (!mddev->persistent)
+ 			return -EINVAL;
+-		analyze_sbs(mddev);
++		err = analyze_sbs(mddev);
++		if (err)
++			return -EINVAL;
+ 	}
+ 
+ 	if (mddev->level != LEVEL_NONE)
+-- 
+2.20.1
+
