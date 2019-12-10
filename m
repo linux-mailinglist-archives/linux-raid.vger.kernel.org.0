@@ -2,58 +2,66 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CF1E1118101
-	for <lists+linux-raid@lfdr.de>; Tue, 10 Dec 2019 08:02:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E6DB011860D
+	for <lists+linux-raid@lfdr.de>; Tue, 10 Dec 2019 12:19:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbfLJHCN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 10 Dec 2019 02:02:13 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:46568 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727004AbfLJHCN (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 10 Dec 2019 02:02:13 -0500
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id E5818BCB630BD0D3C4FA;
-        Tue, 10 Dec 2019 15:02:10 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Tue, 10 Dec 2019
- 15:02:03 +0800
-From:   Yufen Yu <yuyufen@huawei.com>
-To:     <songliubraving@fb.com>
-CC:     <linux-raid@vger.kernel.org>, <houtao1@huawei.com>
-Subject: [PATCH] md: make sure desc_nr less than MD_SB_DISKS
-Date:   Tue, 10 Dec 2019 15:01:29 +0800
-Message-ID: <20191210070129.2704-1-yuyufen@huawei.com>
-X-Mailer: git-send-email 2.17.2
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+        id S1727114AbfLJLTb (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 10 Dec 2019 06:19:31 -0500
+Received: from mga12.intel.com ([192.55.52.136]:39815 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726915AbfLJLTb (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 10 Dec 2019 06:19:31 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 03:19:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,299,1571727600"; 
+   d="scan'208";a="207248998"
+Received: from linux-3rn9.igk.intel.com ([10.102.102.97])
+  by orsmga008.jf.intel.com with ESMTP; 10 Dec 2019 03:19:30 -0800
+From:   Kinga Tanska <kinga.tanska@intel.com>
+To:     linux-raid@vger.kernel.org
+Cc:     jes.sorensen@gmail.com
+Subject: [PATCH, v2] Change warning message
+Date:   Tue, 10 Dec 2019 12:21:21 +0100
+Message-Id: <20191210112121.20377-1-kinga.tanska@intel.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-For super_90_load, we need to make sure 'desc_nr' less
-than MD_SB_DISKS, avoiding invalid memory access of 'sb->disks'.
+In commit 039b7225e6 ("md: allow creation of mdNNN arrays via
+md_mod/parameters/new_array") support for name like mdNNN
+was added. Special warning, when kernel is unable to handle
+request, was added in commit 7105228e19
+("mdadm/mdopen: create new function create_named_array for
+writing to new_array"), but it was not adequate enough,
+because in this situation mdadm tries to do it in old way.
+This commit changes warning to be more relevant when
+creating RAID container with "/dev/mdNNN" name and mdadm
+back to old approach.
 
-Fixes: 228fc7d76db6 ("md: avoid invalid memory access for array sb->dev_roles")
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Kinga Tanska <kinga.tanska@intel.com>
 ---
- drivers/md/md.c | 1 +
- 1 file changed, 1 insertion(+)
+ mdopen.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 805b33e27496..4e7c9f398bc6 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -1159,6 +1159,7 @@ static int super_90_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor
- 	/* not spare disk, or LEVEL_MULTIPATH */
- 	if (sb->level == LEVEL_MULTIPATH ||
- 		(rdev->desc_nr >= 0 &&
-+		 rdev->desc_nr < MD_SB_DISKS &&
- 		 sb->disks[rdev->desc_nr].state &
- 		 ((1<<MD_DISK_SYNC) | (1 << MD_DISK_ACTIVE))))
- 		spare_disk = false;
+diff --git a/mdopen.c b/mdopen.c
+index 98c54e4..245be53 100644
+--- a/mdopen.c
++++ b/mdopen.c
+@@ -120,7 +120,8 @@ int create_named_array(char *devnm)
+ 		close(fd);
+ 	}
+ 	if (fd < 0 || n != (int)strlen(devnm)) {
+-		pr_err("Fail create %s when using %s\n", devnm, new_array_file);
++		pr_err("Fail to create %s when using %s, fallback to creation via node\n",
++			devnm, new_array_file);
+ 		return 0;
+ 	}
+ 
 -- 
-2.17.2
+2.16.4
 
