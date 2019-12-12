@@ -2,76 +2,77 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B8C211C466
-	for <lists+linux-raid@lfdr.de>; Thu, 12 Dec 2019 04:50:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2832211C46A
+	for <lists+linux-raid@lfdr.de>; Thu, 12 Dec 2019 04:50:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbfLLDsh (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 11 Dec 2019 22:48:37 -0500
-Received: from li1843-175.members.linode.com ([172.104.24.175]:58314 "EHLO
-        mail.stoffel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbfLLDsg (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 11 Dec 2019 22:48:36 -0500
-Received: from quad.stoffel.org (66-189-75-104.dhcp.oxfr.ma.charter.com [66.189.75.104])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.stoffel.org (Postfix) with ESMTPSA id D8F541EF96;
-        Wed, 11 Dec 2019 22:48:35 -0500 (EST)
-Received: by quad.stoffel.org (Postfix, from userid 1000)
-        id 561E5A5DFF; Wed, 11 Dec 2019 22:48:35 -0500 (EST)
+        id S1727571AbfLLDuX (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 11 Dec 2019 22:50:23 -0500
+Received: from mail-pj1-f51.google.com ([209.85.216.51]:44130 "EHLO
+        mail-pj1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726823AbfLLDuX (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 11 Dec 2019 22:50:23 -0500
+Received: by mail-pj1-f51.google.com with SMTP id w5so423655pjh.11
+        for <linux-raid@vger.kernel.org>; Wed, 11 Dec 2019 19:50:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=IrZENYe21/WJhbxZbAQLOgLQcfcKitNnofQUePCFcPA=;
+        b=jOOJpuydpGj9uOirubfB6JQznyRPD7piSSuEqPEuMYcvplAy8hVf4z5zP4bG02iwRs
+         SWLXbnzrIMIQn2/sM+HlNZHMy/s5zEc6NvPLTuaLC91p7DimRUFk05RqPm+DzQ6yRg+I
+         PWl/6Jyx3OI9KgeGksD11EtKN2zyp3RiKIss08Ft9XqdINu0cSGSVrQQ942kLVp57VzP
+         /Ci9uF8/ytOj2vk1pLQWxPMAw8fCcWvau7NFhJtbPQ+4aKUU+m/64OFsalytKPH4i8ef
+         7TvdDteiOIc4l2DBCAE9Vj0TLAx+WcdDIWOTa6UVlNE3Pxv66ESDK8kPX/70AeOt+K2t
+         UnwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IrZENYe21/WJhbxZbAQLOgLQcfcKitNnofQUePCFcPA=;
+        b=gdkf4AOEKZSt+p/rzDc9yNtdBeqvN7fRv0iXWa3+wxl8yYMHSZQ2vjvX1/h2J5XyoA
+         C+xkw+Gata6yM7hwA5aC+aaEVYvAJX9YPKzeSVisJCUFBPOV47oIdBWVyO/0gRIx9qL/
+         b/rBnUVieRQ7MYhbG7VLQbxp5RDwaS5R0tg/BJz/xLatWeTXgNrpmD6sWWPVfAtQ7ffD
+         VO0QRgmz08jzQOpbzaP7bv98aCuzab9RATanVYZqeSkooqKB4QzoCGLQlM0bqN1ObIva
+         9ZMd1kjDz1lw41cWyusWrjT06q9EuX4cc0ZDyTAReWynvYNEJ7MPHtAoMa9XhqqGDbNY
+         ctAg==
+X-Gm-Message-State: APjAAAX1AyHUQCrWv9A+0wkfJYKWXJf2iPwx8tHrxNTyOzr9d5naF7yu
+        OueHWfZeTGCfI5uAuoTdny0/gTCL3PS/Tg==
+X-Google-Smtp-Source: APXvYqyMS8mgvcphLUeDzkMDnykabgr/Lni/AoBt/It28HRX1Pq6xgyPgaFjfhDZZJjh+Vuls0K+5g==
+X-Received: by 2002:a17:90a:804a:: with SMTP id e10mr7622976pjw.41.1576122621806;
+        Wed, 11 Dec 2019 19:50:21 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id s15sm4319911pgq.4.2019.12.11.19.50.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 19:50:21 -0800 (PST)
+Subject: Re: [GIT PULL] md-fixes 20191211
+To:     Song Liu <songliubraving@fb.com>,
+        linux-raid <linux-raid@vger.kernel.org>
+Cc:     Kernel Team <Kernel-team@fb.com>
+References: <D4EC2793-CDD7-44D7-9169-90129D7E8779@fb.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <bacc157a-a402-58fd-37b1-be9067bbfa31@kernel.dk>
+Date:   Wed, 11 Dec 2019 20:50:17 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <D4EC2793-CDD7-44D7-9169-90129D7E8779@fb.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Message-ID: <24049.47251.286105.88377@quad.stoffel.home>
-Date:   Wed, 11 Dec 2019 22:48:35 -0500
-From:   "John Stoffel" <john@stoffel.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.14 32/58] bcache: at least try to shrink 1 node in bch_mca_scan()
-In-Reply-To: <20191211152831.23507-32-sashal@kernel.org>
-References: <20191211152831.23507-1-sashal@kernel.org>
-        <20191211152831.23507-32-sashal@kernel.org>
-X-Mailer: VM 8.2.0b under 25.1.1 (x86_64-pc-linux-gnu)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
->>>>> "Sasha" == Sasha Levin <sashal@kernel.org> writes:
+On 12/11/19 4:00 PM, Song Liu wrote:
+> Hi Jens, 
+> 
+> Please consider pulling the following changes for md-fixes on top of your
+> for-linus branch. 
 
-Sasha> From: Coly Li <colyli@suse.de>
-Sasha> [ Upstream commit 9fcc34b1a6dd4b8e5337e2b6ef45e428897eca6b ]
+Pulled, thanks Song.
 
-Sasha> In bch_mca_scan(), the number of shrinking btree node is calculated
-Sasha> by code like this,
-Sasha> 	unsigned long nr = sc->nr_to_scan;
+-- 
+Jens Axboe
 
-Sasha>         nr /= c->btree_pages;
-Sasha>         nr = min_t(unsigned long, nr, mca_can_free(c));
-Sasha> variable sc->nr_to_scan is number of objects (here is bcache B+tree
-Sasha> nodes' number) to shrink, and pointer variable sc is sent from memory
-Sasha> management code as parametr of a callback.
-
-Sasha> If sc->nr_to_scan is smaller than c->btree_pages, after the above
-Sasha> calculation, variable 'nr' will be 0 and nothing will be shrunk. It is
-Sasha> frequeently observed that only 1 or 2 is set to sc->nr_to_scan and make
-Sasha> nr to be zero. Then bch_mca_scan() will do nothing more then acquiring
-Sasha> and releasing mutex c->bucket_lock.
-
-Sasha> This patch checkes whether nr is 0 after the above calculation, if 0
-Sasha> is the result then set 1 to variable 'n'. Then at least bch_mca_scan()
-Sasha> will try to shrink a single B+tree node.
-
-Sasha>  	nr /= c->btree_pages;
-Sasha> +	if (nr == 0)
-Sasha> +		nr = 1;
-
-
-Wouldn't it be even more clear with:
-
-   nr /= c->bree_pages || 1;
-
-instead?
-
-John
