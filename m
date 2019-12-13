@@ -2,27 +2,27 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EEC5A11DE91
-	for <lists+linux-raid@lfdr.de>; Fri, 13 Dec 2019 08:23:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 79C3D11DEA9
+	for <lists+linux-raid@lfdr.de>; Fri, 13 Dec 2019 08:30:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725809AbfLMHXw (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 13 Dec 2019 02:23:52 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39024 "EHLO mx1.suse.de"
+        id S1725747AbfLMHaW (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 13 Dec 2019 02:30:22 -0500
+Received: from mx2.suse.de ([195.135.220.15]:40914 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725747AbfLMHXw (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 13 Dec 2019 02:23:52 -0500
+        id S1725497AbfLMHaW (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 13 Dec 2019 02:30:22 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E7541AC22;
-        Fri, 13 Dec 2019 07:23:50 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id CA1D3AD73;
+        Fri, 13 Dec 2019 07:30:20 +0000 (UTC)
 From:   Coly Li <colyli@suse.de>
-To:     linux-raid@vger.kernel.org
+To:     jsorensen@fb.com, linux-raid@vger.kernel.org
 Cc:     Coly Li <colyli@suse.de>, NeilBrown <neilb@suse.de>,
         Paul Menzel <pmenzel@molgen.mpg.de>,
         Wols Lists <antlists@youngman.org.uk>, Nix <nix@esperi.org.uk>
 Subject: [PATCH v2] mdadm.8: add note information for raid0 growing operation
-Date:   Fri, 13 Dec 2019 15:23:37 +0800
-Message-Id: <20191213072337.99324-1-colyli@suse.de>
+Date:   Fri, 13 Dec 2019 15:29:34 +0800
+Message-Id: <20191213072934.99549-1-colyli@suse.de>
 X-Mailer: git-send-email 2.16.4
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
@@ -48,6 +48,7 @@ backup size.
 
 Signed-off-by: Coly Li <colyli@suse.de>
 Cc: NeilBrown <neilb@suse.de>
+Cc: Jes Sorensen <jsorensen@fb.com>
 Cc: Paul Menzel <pmenzel@molgen.mpg.de>
 Cc: Wols Lists <antlists@youngman.org.uk>
 Cc: Nix <nix@esperi.org.uk>
