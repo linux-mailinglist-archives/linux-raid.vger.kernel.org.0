@@ -2,32 +2,32 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BC46511EB7E
-	for <lists+linux-raid@lfdr.de>; Fri, 13 Dec 2019 21:05:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E4FF911EBC2
+	for <lists+linux-raid@lfdr.de>; Fri, 13 Dec 2019 21:18:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729025AbfLMUF2 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 13 Dec 2019 15:05:28 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:50933 "EHLO
+        id S1728967AbfLMURP (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 13 Dec 2019 15:17:15 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:41107 "EHLO
         mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728696AbfLMUF2 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 13 Dec 2019 15:05:28 -0500
+        id S1728578AbfLMURO (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 13 Dec 2019 15:17:14 -0500
 Received: from [IPv6:2601:646:8600:3281:90ef:ce89:f69e:2b3c] ([IPv6:2601:646:8600:3281:90ef:ce89:f69e:2b3c])
         (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id xBDK5Dwc1511426
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id xBDKH6eV1515506
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Fri, 13 Dec 2019 12:05:17 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com xBDK5Dwc1511426
+        Fri, 13 Dec 2019 12:17:06 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com xBDKH6eV1515506
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019111901; t=1576267517;
-        bh=Oc6jxZwlSj+vvft4s/AmwCStCDFnORJPz/jg/nmnMUc=;
+        s=2019111901; t=1576268227;
+        bh=hP5r9+ebR4i6c1zOjrBw3oU3B1zCY82K7wxozuPI2vw=;
         h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=yYNmsUd0rKTpRcRR5FcdxBlWXFkFnNxQhoeEWgGIi0sjRSwOhXBMMiA7UtIoIHPIw
-         aX6U4+jyF+zdEvADmo3Ezl8I0r8cOhFuQ591VSExBkAiVr/LNKYEzye5014aIp0MFM
-         liKEnsTr6GzNu6WxL4ZwjZrLLJe+4ZLDVicm8SOdx+umbGspIYgxyv0rj1sgs3gkiW
-         eXwbGmSCzPO3tIxGMSq6Tu9g3Q1KGgLn357iaoE6Siz4bvkjTmYbAc1+m8q//I2GpD
-         L+8TFPcsug4672n+fR2YkdfZwrbujFaRxHrE4GO8maHDIoMb/zSOdkxuWmCImPhGWG
-         A4G7v5dU4ZCZA==
-Date:   Fri, 13 Dec 2019 12:05:05 -0800
+        b=OmUJq5tIb0mr0GswtH3YB71lC1+KQyLnTFN+o6bG+My/83K3J6LXK5afUPl2VRIEz
+         EEo47m3OYzVz00rNBDmapX+KO34znh8R/18ecRU8rgJ2tR52v8HvZU3YuTFUZGCrx9
+         Lyqj3WJyf8phcgBLC8IELv9XGq9NCTQsP/1n0a78fvCemro1YI6E2t++loxHrt1+6P
+         +Bvgk1XOb9k80I77rjNXtu0hZLC6V0YgwDy2jK7lzrcSMdbGzzGySFLrimbqZKUe53
+         O46rOT7HElK0J1MxhFHYCl4ecr72P4zodpEdlXj7J4NUREUJUYzaQueLce0tE57qiP
+         M52XQrQd0bCPg==
+Date:   Fri, 13 Dec 2019 12:16:58 -0800
 User-Agent: K-9 Mail for Android
 In-Reply-To: <215873cc-999c-b627-ed7e-348c1acc4e1a@kylinos.cn>+94A324C49A619E37
 References: <20191205031318.7098-1-liuzhengyuan@kylinos.cn> <20191205031318.7098-2-liuzhengyuan@kylinos.cn> <CAPhsuW7ZYYB6CQY48TjQ86cRJianE5dL07gNKJA-WLYM_AMmsQ@mail.gmail.com> <2b57d709-aa3e-5e3a-25b7-b530ffb6902e@kylinos.cn> <D472AFC5-4C38-457E-A841-C9C2D712FFCE@zytor.com> <215873cc-999c-b627-ed7e-348c1acc4e1a@kylinos.cn>+94A324C49A619E37
@@ -40,7 +40,7 @@ To:     Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
         Song Liu <liu.song.a23@gmail.com>
 CC:     linux-raid <linux-raid@vger.kernel.org>, liuzhengyuang521@gmail.com
 From:   hpa@zytor.com
-Message-ID: <2B01C1CB-25CD-4D1A-981D-9550D248C75E@zytor.com>
+Message-ID: <A6BE4D77-6622-4810-A062-7B0C9AB7222A@zytor.com>
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
@@ -173,31 +173,10 @@ d
 >
 >To make things as simple as possible,I think we can just copy table=2E
 
-A PRNG would actually be better; the table is highly suboptimal exactly be=
-cause it is Galois-field derived=2E The reason it works is that the data pa=
-ttern really doesn't matter; no sane implementation is going to have data d=
-ependencies here=2E
+You're right, we have more or less come fill circle=2E=2E=2E I still think=
+ it is the best choice=2E
 
-A better choice than multiplication is circular multiplication, which also=
- has the advantage of being nearly as cheap as a plain multiply on most sys=
-tems:
-
-static inline u32 circular_mult(u32 x, u32 y)
-{
-    u64 z =3D x * y;
-    return (u32)(z >> 32) + (u32)z;
-}
-
-If people want more nonlinearity I suggest simply making it quadratic:
-
-x =3D circular_mult(circular_mult(A, x) + B, x) + C;
-
-=2E=2E=2E with A, B, and C being large prime numbers just to improve diffu=
-sion=2E
-
-The kernel *text* section would also work, but I don't know if any archite=
-ctures do X-only text=2E
-
-If you post something like that I'll back you up on it=2E
+Maybe use plain kmalloc() instead, though, and I strongly suggest using __=
+GFP_NOFAIL instead of failing to initialize=2E
 --=20
 Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
