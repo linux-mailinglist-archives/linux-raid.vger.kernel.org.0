@@ -2,477 +2,62 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A809E11EF89
-	for <lists+linux-raid@lfdr.de>; Sat, 14 Dec 2019 02:32:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4505211F2EE
+	for <lists+linux-raid@lfdr.de>; Sat, 14 Dec 2019 18:36:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfLNBcX (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 13 Dec 2019 20:32:23 -0500
-Received: from mout.gmx.net ([212.227.17.22]:50347 "EHLO mout.gmx.net"
+        id S1726687AbfLNRgd (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 14 Dec 2019 12:36:33 -0500
+Received: from smtp.hosts.co.uk ([85.233.160.19]:48944 "EHLO smtp.hosts.co.uk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726208AbfLNBcW (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 13 Dec 2019 20:32:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1576287132;
-        bh=IvYica3F7kzlYAIt9x1XvT0XdRoCsb3Sr5E3/8CeR+s=;
-        h=X-UI-Sender-Class:To:From:Subject:Date;
-        b=kthuu6iFnIPB+J+rZu0m9EIPOrKqqk/uFZ9WjT0cBkjGgMzKEpMtltxhEWjITe1Ex
-         n/aMHqYszdTqAo04aruxklB083cx/iIaQ+rthuzCDgnLTnFrHtvbGYhhAqgauO3H9z
-         q8vZXmfVRtZ96T8amC6xz2RRjitEbs0DoTaZttLg=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from fu.lan ([167.179.136.129]) by mail.gmx.com (mrgmx105
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1N6KUT-1heYy221CT-016fga for
- <linux-raid@vger.kernel.org>; Sat, 14 Dec 2019 02:32:12 +0100
-To:     linux-raid@vger.kernel.org
-From:   Angus Montgomery <sugna@gmx.com>
-Subject: Help recover from interrupted reshape.
-Message-ID: <149182d7-7c9b-f40d-781a-8ba9f266959d@gmx.com>
-Date:   Sat, 14 Dec 2019 12:32:09 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1726411AbfLNRgd (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sat, 14 Dec 2019 12:36:33 -0500
+Received: from [86.148.134.145] (helo=[192.168.1.162])
+        by smtp.hosts.co.uk with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1igBLD-0005j4-3L; Sat, 14 Dec 2019 17:36:31 +0000
+Subject: Re: Help recover from interrupted reshape.
+To:     Angus Montgomery <sugna@gmx.com>, linux-raid@vger.kernel.org
+References: <149182d7-7c9b-f40d-781a-8ba9f266959d@gmx.com>
+From:   Wol <antlists@youngman.org.uk>
+Message-ID: <84788a78-7526-33d7-f930-d82bdc9c826f@youngman.org.uk>
+Date:   Sat, 14 Dec 2019 17:36:13 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------5718D4CA7F9C7F64FDC250B6"
-Content-Language: en-US
-X-Provags-ID: V03:K1:fYsFxu4/60tPN+npekZmr79l3OuUJscIxWFhslUn1CLeB2ab0C8
- FkrDzVkZmpWRvFLTNAlPF4WS2/F7KKHaKjFOpF/vTwjXtGnYtNekvGlTp7I80RfJsMumddf
- buh3uQ9BWP7dnnZh1ljTGl/XHkZ6Zk+1tt+r7oiMylC01QoeX03Wi+OkuoTU5W37j2YS1rl
- admZ1qwpw55Fs8eIkDkSg==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:CMOMe2CgR3I=:TI01SDOKuy+vRhpDtqDAwZ
- FyUlYb3aREqd+s1CK1JYtJDBh7B6+Q4O2WHnX05N5NWJHCgPLGtJOMNJDgbyvZkOF1TWn/xYi
- xjIid62/xa5h4/vt6ioIJ5E3L6J7IjAiQ3nh6DcW0nN2JZM8E/aIVYpddzwKrBDG+4EVihl5+
- gSEKTeEF1REkGO8GeJqhTEIOoyOE1/UCgQs4VNYa2lt19TsV0ajAnpRcrsPQCIFYn/UbVVQGG
- OK/LSI+nqTa0fO9RiIhBRNBA7X03yA/4eaPxrLuQOIMOtTUU/vI0mM/s3In2DzLLwcvsV8boc
- PSFy3Ph/KSj72oRIPSz2al4Owiv7DR5weZQ+9bXpvB9cdpfadDPu1Vj1rCzSThV0R7uPOd2cX
- V1DUS3rHYTpTkd/gUoG4L85ffxTGZ4ExPyte2afpcER49jcUao+6hDZv+FSzF9c71BVMUqfLG
- kp8pUfNMFCprTuhtzipUCH6ttAIvEO7StDxjDOgh+BvRf9Qm3YtORCaS639FXvH7v0tKv4vub
- zNbrXs44LZfMlfif1o8drXkn27P8t3phNIt+o5IRtcbRq7kkVwWmPTzrb1a7OtdLZsDBWW32R
- Xu4dB8JBmZtaT2Ec/bYzsW5+az+mA5om1pJpNttxDlzKK0AagSq4ZE9JZ9nj2O8owCbzmTSZY
- KYJfQ7mkFVN4f2UDAz8NSN0pd7r90LuUyx66s6UZvdALBmHmSKw4112WqK2paRWg99e54u8n8
- GVaqeEkYYQNU6QhkQWo1Jv+awzgdVyCDvZ6GhmpuNNql7KhmM+20sseDalPr954tzHJvAqrYE
- X0hTNPkV9Hr+Pmgoj6K9qN+0631jWFGduLQsYV0IzVsCzCWnJ5YhvhsC31zK6DHG0VyosyKYR
- aYc71gZc5EsgLTGyiLUCvfKg96Ujrsl73HCMCDchtceMXs04Iolt/ND2L6oXNF6EreyL1uRRJ
- ehWw9MXxEpCH0G+M8EnKnctPjd11jAaffTsJPFK6vEs6vOTCkExJLx6n+buRE8H4mm/ki8xs9
- StGoR8eTW/YvfA8WTg2QVS2GnL9i7WHQsTYMsPLYVKi9ug1iteLYJTYXz5fxBEtZ3FWE/L9V6
- foxYy/FqhpRDjW62w13K1KMVG49H9cxLj+pbn6U+JOYbhaLPuSWQcc4ZR2px2H6Fh+/tzcbWM
- ueUmf89cZ8rA4TzXIHZc6j13UormSH+eVeDGGQG52ZSBr+udOhxSLxM1luor6zj2a0Wo6fQFx
- AehZQlOpYXuqRpakk3UhdJXeFxlHj8LSUasJJsw==
+In-Reply-To: <149182d7-7c9b-f40d-781a-8ba9f266959d@gmx.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------5718D4CA7F9C7F64FDC250B6
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+On 14/12/2019 01:32, Angus Montgomery wrote:
+> Hi RAIDers
+> 
+> I did a silly thing and now I'm stuck.
+> I rebooted with an unstarted/in-progress raid5 reshape from 3 disks to 4
+> (reshape position is 0).
+> The backup file is gone.
 
+This looks very promising. The fact it's stuck at zero means that it 
+hasn't started, so if we can force the revert, everything will be fine. 
+Plus it's actually a well-known problem - I'm sure if you search the 
+list archives you'll find plenty of examples of it. I'm sorry, though, I 
+can't give you the fix off the top of my head.
 
-Hi RAIDers
+One important detail you appear to have missed, though, that would be 
+good is what version of linux / mdadm you're running. Can you give us 
+the output of "uname -a" and "mdadm --version"?
 
-I did a silly thing and now I'm stuck.
-I rebooted with an unstarted/in-progress raid5 reshape from 3 disks to 4
-(reshape position is 0).
-The backup file is gone.
+I can't say for certain that it will work, but I strongly suspect if you 
+get an up-to-date rescue CD with the latest mdadm, it'll sort out your 
+revert, and then fix your reshape.
 
-(md125 in /proc/mdstat was something like this before the reshape)
-md125 : active raid5 sde7[4] sdc7[1] sdd7[2] sdf7[3](S)
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1953485568 blocks super 1.2 level 5, 64k ch=
-unk, algorithm 2 [3/3]
-[UUU]
+Note that you shouldn't need a backup file, and you're much better 
+without one unless mdadm insists.
 
-(md125 in /proc/mdstat was something like this after the reshape)
-md125 : active raid5 sde7[4] sdc7[1] sdd7[2] sdf7[3]
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1953485568 blocks super 1.2 level 5, 64k ch=
-unk, algorithm 2 [4/4]
-[UUUU]
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 resync=3DDELAYED
-
-Here is where I'm at now:
-
-This assemble fails.
-
-# OVERLAYS=3D/dev/mapper/sdd7 /dev/mapper/sdc7 /dev/mapper/sdf7
-/dev/mapper/sde7
-# mdadm --assemble /dev/md125 --force --run --verbose --invalid-backup
-$OVERLAYS
-mdadm: looking for devices for /dev/md125
-mdadm: /dev/mapper/sdd7 is identified as a member of /dev/md125, slot 0.
-mdadm: /dev/mapper/sdc7 is identified as a member of /dev/md125, slot 1.
-mdadm: /dev/mapper/sdf7 is identified as a member of /dev/md125, slot 2.
-mdadm: /dev/mapper/sde7 is identified as a member of /dev/md125, slot 3.
-mdadm: /dev/md125 has an active reshape - checking if critical section
-needs to be restored
-mdadm: No backup metadata on device-3
-mdadm: Failed to find backup of critical section
-mdadm: continuing without restoring backup
-mdadm: added /dev/mapper/sdc7 to /dev/md125 as 1
-mdadm: added /dev/mapper/sdf7 to /dev/md125 as 2
-mdadm: added /dev/mapper/sde7 to /dev/md125 as 3
-mdadm: added /dev/mapper/sdd7 to /dev/md125 as 0
-mdadm: failed to RUN_ARRAY /dev/md125: Invalid argument
-
-This assemble runs, but it must be wrong, as I end up with no
-resync/reshape.
-
-# mdadm --assemble /dev/md125 --force --run --verbose --invalid-backup
-=2D-update=3Drevert-reshape $OVERLAYS
-
-(md125 in /proc/mdstat after revert-reshape)
-md125 : active raid5 dm-9[4] dm-7[1] dm-6[2] dm-8[3]
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 2930228352 blocks super 1.2 level 5, 64k ch=
-unk, algorithm 2 [4/4]
-[UUUU]
-
-My disks are happy, so no smartctl data attached.
-
-Attached:
-=C2=A0- /proc/mdstat output
-=C2=A0- mdadm --examine output of sd[cdef]7 (partitions for md125)
-=C2=A0- mdadm --examine output of sd[cdef]5 (partitions for md127)
-=C2=A0- mdadm --detail output of /dev/md125 (the array in question)
-=C2=A0- mdadm --detail output of /dev/md125 (after revert-reshape)
-=C2=A0- mdadm --detail output of /dev/md127 (a similar but working array)
-
-Any insights welcome.
-
-Cheers
-
-- Angus
-
-
---------------5718D4CA7F9C7F64FDC250B6
-Content-Type: text/plain; charset=UTF-8;
- name="md124.detail"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
- filename="md124.detail"
-
-L2Rldi9tZDEyNDoKICAgICAgICAgICBWZXJzaW9uIDogMS4yCiAgICAgQ3JlYXRpb24gVGlt
-ZSA6IFRodSBTZXAgMjggMTY6MzY6NTMgMjAxNwogICAgICAgIFJhaWQgTGV2ZWwgOiByYWlk
-MQogICAgICAgIEFycmF5IFNpemUgOiA5NzY2NDY1MjggKDkzMS40MCBHaUIgMTAwMC4wOSBH
-QikKICAgICBVc2VkIERldiBTaXplIDogOTc2NjQ2NTI4ICg5MzEuNDAgR2lCIDEwMDAuMDkg
-R0IpCiAgICAgIFJhaWQgRGV2aWNlcyA6IDIKICAgICBUb3RhbCBEZXZpY2VzIDogMgogICAg
-ICAgUGVyc2lzdGVuY2UgOiBTdXBlcmJsb2NrIGlzIHBlcnNpc3RlbnQKCiAgICAgICBVcGRh
-dGUgVGltZSA6IFNhdCBEZWMgMTQgMDc6MzQ6MzAgMjAxOQogICAgICAgICAgICAgU3RhdGUg
-OiBjbGVhbiAKICAgIEFjdGl2ZSBEZXZpY2VzIDogMgogICBXb3JraW5nIERldmljZXMgOiAy
-CiAgICBGYWlsZWQgRGV2aWNlcyA6IDAKICAgICBTcGFyZSBEZXZpY2VzIDogMAoKQ29uc2lz
-dGVuY3kgUG9saWN5IDogcmVzeW5jCgogICAgICAgICAgICAgIE5hbWUgOiBib2Q0Lmxhbjo1
-CiAgICAgICAgICAgICAgVVVJRCA6IDMyOGMxM2YyOmJhZmI2MTlmOjFmMjkwNDAyOjMwZWJl
-NWU3CiAgICAgICAgICAgIEV2ZW50cyA6IDExODIyOQoKICAgIE51bWJlciAgIE1ham9yICAg
-TWlub3IgICBSYWlkRGV2aWNlIFN0YXRlCiAgICAgICAyICAgICAgIDggICAgICAgNDAgICAg
-ICAgIDAgICAgICBhY3RpdmUgc3luYyAgIC9kZXYvc2RjOAogICAgICAgMSAgICAgICA4ICAg
-ICAgIDU2ICAgICAgICAxICAgICAgYWN0aXZlIHN5bmMgICAvZGV2L3NkZDgK
---------------5718D4CA7F9C7F64FDC250B6
-Content-Type: text/plain; charset=UTF-8;
- name="md125.detail"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
- filename="md125.detail"
-
-L2Rldi9tZDEyNToKICAgICAgICAgICBWZXJzaW9uIDogMS4yCiAgICAgICAgUmFpZCBMZXZl
-bCA6IHJhaWQwCiAgICAgVG90YWwgRGV2aWNlcyA6IDQKICAgICAgIFBlcnNpc3RlbmNlIDog
-U3VwZXJibG9jayBpcyBwZXJzaXN0ZW50CgogICAgICAgICAgICAgU3RhdGUgOiBpbmFjdGl2
-ZQogICBXb3JraW5nIERldmljZXMgOiA0CgogICAgIERlbHRhIERldmljZXMgOiAxLCAoLTEt
-PjApCiAgICAgICAgIE5ldyBMZXZlbCA6IHJhaWQ1CiAgICAgICAgTmV3IExheW91dCA6IGxl
-ZnQtc3ltbWV0cmljCiAgICAgTmV3IENodW5rc2l6ZSA6IDY0SwoKICAgICAgICAgICAgICBO
-YW1lIDogYm9kNDozCiAgICAgICAgICAgICAgVVVJRCA6IDU4NzhjZTcyOjJhZGYxYzYyOjNj
-ZGQwNzlhOmU4ZDI4NzhiCiAgICAgICAgICAgIEV2ZW50cyA6IDE1ODE5NQoKICAgIE51bWJl
-ciAgIE1ham9yICAgTWlub3IgICBSYWlkRGV2aWNlCgogICAgICAgLSAgICAgMjUzICAgICAg
-ICA3ICAgICAgICAtICAgICAgICAvZGV2L2RtLTcKICAgICAgIC0gICAgIDI1MyAgICAgICAg
-OCAgICAgICAgLSAgICAgICAgL2Rldi9kbS04CiAgICAgICAtICAgICAyNTMgICAgICAgIDYg
-ICAgICAgIC0gICAgICAgIC9kZXYvZG0tNgogICAgICAgLSAgICAgMjUzICAgICAgICA5ICAg
-ICAgICAtICAgICAgICAvZGV2L2RtLTkK
---------------5718D4CA7F9C7F64FDC250B6
-Content-Type: text/plain; charset=UTF-8;
- name="md125-revert.detail"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
- filename="md125-revert.detail"
-
-L2Rldi9tZDEyNToKICAgICAgICAgICBWZXJzaW9uIDogMS4yCiAgICAgQ3JlYXRpb24gVGlt
-ZSA6IFNhdCBKdWwgMjUgMTY6NTc6MjEgMjAxNQogICAgICAgIFJhaWQgTGV2ZWwgOiByYWlk
-NQogICAgICAgIEFycmF5IFNpemUgOiAyOTMwMjI4MzUyICgyNzk0LjQ4IEdpQiAzMDAwLjU1
-IEdCKQogICAgIFVzZWQgRGV2IFNpemUgOiA5NzY3NDI3ODQgKDkzMS40OSBHaUIgMTAwMC4x
-OCBHQikKICAgICAgUmFpZCBEZXZpY2VzIDogNAogICAgIFRvdGFsIERldmljZXMgOiA0CiAg
-ICAgICBQZXJzaXN0ZW5jZSA6IFN1cGVyYmxvY2sgaXMgcGVyc2lzdGVudAoKICAgICAgIFVw
-ZGF0ZSBUaW1lIDogVGh1IERlYyAxMiAxMTo0Mjo0NiAyMDE5CiAgICAgICAgICAgICBTdGF0
-ZSA6IGNsZWFuIAogICAgQWN0aXZlIERldmljZXMgOiA0CiAgIFdvcmtpbmcgRGV2aWNlcyA6
-IDQKICAgIEZhaWxlZCBEZXZpY2VzIDogMAogICAgIFNwYXJlIERldmljZXMgOiAwCgogICAg
-ICAgICAgICBMYXlvdXQgOiBsZWZ0LXN5bW1ldHJpYwogICAgICAgIENodW5rIFNpemUgOiA2
-NEsKCkNvbnNpc3RlbmN5IFBvbGljeSA6IHJlc3luYwoKICAgICAgICAgICAgICBOYW1lIDog
-Ym9kNDozCiAgICAgICAgICAgICAgVVVJRCA6IDU4NzhjZTcyOjJhZGYxYzYyOjNjZGQwNzlh
-OmU4ZDI4NzhiCiAgICAgICAgICAgIEV2ZW50cyA6IDE1ODE5NQoKICAgIE51bWJlciAgIE1h
-am9yICAgTWlub3IgICBSYWlkRGV2aWNlIFN0YXRlCiAgICAgICA0ICAgICAyNTMgICAgICAg
-IDkgICAgICAgIDAgICAgICBhY3RpdmUgc3luYyAgIC9kZXYvZG0tOQogICAgICAgMyAgICAg
-MjUzICAgICAgICA4ICAgICAgICAxICAgICAgYWN0aXZlIHN5bmMgICAvZGV2L2RtLTgKICAg
-ICAgIDIgICAgIDI1MyAgICAgICAgNiAgICAgICAgMiAgICAgIGFjdGl2ZSBzeW5jICAgL2Rl
-di9kbS02CiAgICAgICAxICAgICAyNTMgICAgICAgIDcgICAgICAgIDMgICAgICBhY3RpdmUg
-c3luYyAgIC9kZXYvZG0tNwo=
---------------5718D4CA7F9C7F64FDC250B6
-Content-Type: text/plain; charset=UTF-8;
- name="md126.detail"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
- filename="md126.detail"
-
-L2Rldi9tZDEyNjoKICAgICAgICAgICBWZXJzaW9uIDogMS4yCiAgICAgQ3JlYXRpb24gVGlt
-ZSA6IE1vbiBGZWIgMTEgMTQ6MDM6MjAgMjAxMwogICAgICAgIFJhaWQgTGV2ZWwgOiByYWlk
-NQogICAgICAgIEFycmF5IFNpemUgOiAyOTMwMjI4MzUyICgyNzk0LjQ4IEdpQiAzMDAwLjU1
-IEdCKQogICAgIFVzZWQgRGV2IFNpemUgOiA5NzY3NDI3ODQgKDkzMS40OSBHaUIgMTAwMC4x
-OCBHQikKICAgICAgUmFpZCBEZXZpY2VzIDogNAogICAgIFRvdGFsIERldmljZXMgOiA0CiAg
-ICAgICBQZXJzaXN0ZW5jZSA6IFN1cGVyYmxvY2sgaXMgcGVyc2lzdGVudAoKICAgICAgIFVw
-ZGF0ZSBUaW1lIDogU2F0IERlYyAxNCAwNzozNDozMCAyMDE5CiAgICAgICAgICAgICBTdGF0
-ZSA6IGNsZWFuIAogICAgQWN0aXZlIERldmljZXMgOiA0CiAgIFdvcmtpbmcgRGV2aWNlcyA6
-IDQKICAgIEZhaWxlZCBEZXZpY2VzIDogMAogICAgIFNwYXJlIERldmljZXMgOiAwCgogICAg
-ICAgICAgICBMYXlvdXQgOiBsZWZ0LXN5bW1ldHJpYwogICAgICAgIENodW5rIFNpemUgOiA2
-NEsKCkNvbnNpc3RlbmN5IFBvbGljeSA6IHJlc3luYwoKICAgICAgICAgICAgICBOYW1lIDog
-Ym9kNDo0CiAgICAgICAgICAgICAgVVVJRCA6IDVlODllYTQyOmFjZWJlOGZhOjg2MjUyZWQ3
-OjNlNGZjNTk1CiAgICAgICAgICAgIEV2ZW50cyA6IDg2MTc0NDUKCiAgICBOdW1iZXIgICBN
-YWpvciAgIE1pbm9yICAgUmFpZERldmljZSBTdGF0ZQogICAgICAgNCAgICAgICA4ICAgICAg
-IDg2ICAgICAgICAwICAgICAgYWN0aXZlIHN5bmMgICAvZGV2L3NkZjYKICAgICAgIDMgICAg
-ICAgOCAgICAgICA1NCAgICAgICAgMSAgICAgIGFjdGl2ZSBzeW5jICAgL2Rldi9zZGQ2CiAg
-ICAgICA1ICAgICAgIDggICAgICAgMzggICAgICAgIDIgICAgICBhY3RpdmUgc3luYyAgIC9k
-ZXYvc2RjNgogICAgICAgMiAgICAgICA4ICAgICAgIDcwICAgICAgICAzICAgICAgYWN0aXZl
-IHN5bmMgICAvZGV2L3NkZTYK
---------------5718D4CA7F9C7F64FDC250B6
-Content-Type: text/plain; charset=UTF-8;
- name="md127.detail"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
- filename="md127.detail"
-
-L2Rldi9tZDEyNzoKICAgICAgICAgICBWZXJzaW9uIDogMS4yCiAgICAgQ3JlYXRpb24gVGlt
-ZSA6IFdlZCBGZWIgIDYgMTQ6MzQ6MzIgMjAxMwogICAgICAgIFJhaWQgTGV2ZWwgOiByYWlk
-NQogICAgICAgIEFycmF5IFNpemUgOiAyOTE2MDgyOTQ0ICgyNzgwLjk5IEdpQiAyOTg2LjA3
-IEdCKQogICAgIFVzZWQgRGV2IFNpemUgOiA5NzIwMjc2NDggKDkyNy4wMCBHaUIgOTk1LjM2
-IEdCKQogICAgICBSYWlkIERldmljZXMgOiA0CiAgICAgVG90YWwgRGV2aWNlcyA6IDQKICAg
-ICAgIFBlcnNpc3RlbmNlIDogU3VwZXJibG9jayBpcyBwZXJzaXN0ZW50CgogICAgICAgVXBk
-YXRlIFRpbWUgOiBTYXQgRGVjIDE0IDA3OjM0OjMwIDIwMTkKICAgICAgICAgICAgIFN0YXRl
-IDogY2xlYW4gCiAgICBBY3RpdmUgRGV2aWNlcyA6IDQKICAgV29ya2luZyBEZXZpY2VzIDog
-NAogICAgRmFpbGVkIERldmljZXMgOiAwCiAgICAgU3BhcmUgRGV2aWNlcyA6IDAKCiAgICAg
-ICAgICAgIExheW91dCA6IGxlZnQtc3ltbWV0cmljCiAgICAgICAgQ2h1bmsgU2l6ZSA6IDY0
-SwoKQ29uc2lzdGVuY3kgUG9saWN5IDogcmVzeW5jCgogICAgICAgICAgICAgIE5hbWUgOiBi
-b2Q0OjIKICAgICAgICAgICAgICBVVUlEIDogNDJhYWJmNDg6ODg3NmE1MDA6MTk3MzYwOTM6
-YmUxNmI3NzkKICAgICAgICAgICAgRXZlbnRzIDogNjMwMDUwNAoKICAgIE51bWJlciAgIE1h
-am9yICAgTWlub3IgICBSYWlkRGV2aWNlIFN0YXRlCiAgICAgICA1ICAgICAgIDggICAgICAg
-ODUgICAgICAgIDAgICAgICBhY3RpdmUgc3luYyAgIC9kZXYvc2RmNQogICAgICAgMyAgICAg
-ICA4ICAgICAgIDY5ICAgICAgICAxICAgICAgYWN0aXZlIHN5bmMgICAvZGV2L3NkZTUKICAg
-ICAgIDQgICAgICAgOCAgICAgICA1MyAgICAgICAgMiAgICAgIGFjdGl2ZSBzeW5jICAgL2Rl
-di9zZGQ1CiAgICAgICA2ICAgICAgIDggICAgICAgMzcgICAgICAgIDMgICAgICBhY3RpdmUg
-c3luYyAgIC9kZXYvc2RjNQo=
---------------5718D4CA7F9C7F64FDC250B6
-Content-Type: text/plain; charset=UTF-8;
- name="mdstat.out"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
- filename="mdstat.out"
-
-UGVyc29uYWxpdGllcyA6IFtyYWlkMV0gW3JhaWQ2XSBbcmFpZDVdIFtyYWlkNF0gCm1kMTI1
-IDogaW5hY3RpdmUgZG0tN1sxXShTKSBkbS05WzRdKFMpIGRtLTZbMl0oUykgZG0tOFszXShT
-KQogICAgICAzOTA2OTcxNzEyIGJsb2NrcyBzdXBlciAxLjIKICAgICAgIAptZDEyNyA6IGFj
-dGl2ZSByYWlkNSBzZGY1WzVdIHNkYzVbNl0gc2RkNVs0XSBzZGU1WzNdCiAgICAgIDI5MTYw
-ODI5NDQgYmxvY2tzIHN1cGVyIDEuMiBsZXZlbCA1LCA2NGsgY2h1bmssIGFsZ29yaXRobSAy
-IFs0LzRdIFtVVVVVXQogICAgICAKbWQxMjQgOiBhY3RpdmUgKGF1dG8tcmVhZC1vbmx5KSBy
-YWlkMSBzZGQ4WzFdIHNkYzhbMl0KICAgICAgOTc2NjQ2NTI4IGJsb2NrcyBzdXBlciAxLjIg
-WzIvMl0gW1VVXQogICAgICAKbWQxMjYgOiBhY3RpdmUgKGF1dG8tcmVhZC1vbmx5KSByYWlk
-NSBzZGU2WzJdIHNkZjZbNF0gc2RkNlszXSBzZGM2WzVdCiAgICAgIDI5MzAyMjgzNTIgYmxv
-Y2tzIHN1cGVyIDEuMiBsZXZlbCA1LCA2NGsgY2h1bmssIGFsZ29yaXRobSAyIFs0LzRdIFtV
-VVVVXQogICAgICAKdW51c2VkIGRldmljZXM6IDxub25lPgo=
---------------5718D4CA7F9C7F64FDC250B6
-Content-Type: text/plain; charset=UTF-8;
- name="sdc5.examine"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
- filename="sdc5.examine"
-
-L2Rldi9zZGM1OgogICAgICAgICAgTWFnaWMgOiBhOTJiNGVmYwogICAgICAgIFZlcnNpb24g
-OiAxLjIKICAgIEZlYXR1cmUgTWFwIDogMHgwCiAgICAgQXJyYXkgVVVJRCA6IDQyYWFiZjQ4
-Ojg4NzZhNTAwOjE5NzM2MDkzOmJlMTZiNzc5CiAgICAgICAgICAgTmFtZSA6IGJvZDQ6Mgog
-IENyZWF0aW9uIFRpbWUgOiBXZWQgRmViICA2IDE0OjM0OjMyIDIwMTMKICAgICBSYWlkIExl
-dmVsIDogcmFpZDUKICAgUmFpZCBEZXZpY2VzIDogNAoKIEF2YWlsIERldiBTaXplIDogMTk0
-NDA1NTY4MCAoOTI3LjAwIEdpQiA5OTUuMzYgR0IpCiAgICAgQXJyYXkgU2l6ZSA6IDI5MTYw
-ODI5NDQgKDI3ODAuOTkgR2lCIDI5ODYuMDcgR0IpCiAgVXNlZCBEZXYgU2l6ZSA6IDE5NDQw
-NTUyOTYgKDkyNy4wMCBHaUIgOTk1LjM2IEdCKQogICAgRGF0YSBPZmZzZXQgOiAyMDQ4IHNl
-Y3RvcnMKICAgU3VwZXIgT2Zmc2V0IDogOCBzZWN0b3JzCiAgIFVudXNlZCBTcGFjZSA6IGJl
-Zm9yZT0xOTY4IHNlY3RvcnMsIGFmdGVyPTM4NCBzZWN0b3JzCiAgICAgICAgICBTdGF0ZSA6
-IGNsZWFuCiAgICBEZXZpY2UgVVVJRCA6IDU2YzdmMmZiOjNlYjUwZjFkOmUxMDA4MjM2OjE4
-YWY1M2M4CgogICAgVXBkYXRlIFRpbWUgOiBTYXQgRGVjIDE0IDA3OjM0OjMwIDIwMTkKICAg
-ICAgIENoZWNrc3VtIDogM2VhMGE3NjcgLSBjb3JyZWN0CiAgICAgICAgIEV2ZW50cyA6IDYz
-MDA1MDQKCiAgICAgICAgIExheW91dCA6IGxlZnQtc3ltbWV0cmljCiAgICAgQ2h1bmsgU2l6
-ZSA6IDY0SwoKICAgRGV2aWNlIFJvbGUgOiBBY3RpdmUgZGV2aWNlIDMKICAgQXJyYXkgU3Rh
-dGUgOiBBUkFBICgnQScgPT0gYWN0aXZlLCAnLicgPT0gbWlzc2luZywgJ1InID09IHJlcGxh
-Y2luZykK
---------------5718D4CA7F9C7F64FDC250B6
-Content-Type: text/plain; charset=UTF-8;
- name="sdc7.examine"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
- filename="sdc7.examine"
-
-L2Rldi9tYXBwZXIvc2RjNzoKICAgICAgICAgIE1hZ2ljIDogYTkyYjRlZmMKICAgICAgICBW
-ZXJzaW9uIDogMS4yCiAgICBGZWF0dXJlIE1hcCA6IDB4NAogICAgIEFycmF5IFVVSUQgOiA1
-ODc4Y2U3MjoyYWRmMWM2MjozY2RkMDc5YTplOGQyODc4YgogICAgICAgICAgIE5hbWUgOiBi
-b2Q0OjMKICBDcmVhdGlvbiBUaW1lIDogU2F0IEp1bCAyNSAxNjo1NzoyMSAyMDE1CiAgICAg
-UmFpZCBMZXZlbCA6IHJhaWQ1CiAgIFJhaWQgRGV2aWNlcyA6IDQKCiBBdmFpbCBEZXYgU2l6
-ZSA6IDE5NTM0ODU4NTYgKDkzMS40OSBHaUIgMTAwMC4xOCBHQikKICAgICBBcnJheSBTaXpl
-IDogMjkzMDIyODM1MiAoMjc5NC40OCBHaUIgMzAwMC41NSBHQikKICBVc2VkIERldiBTaXpl
-IDogMTk1MzQ4NTU2OCAoOTMxLjQ5IEdpQiAxMDAwLjE4IEdCKQogICAgRGF0YSBPZmZzZXQg
-OiAyMDQ4IHNlY3RvcnMKICAgU3VwZXIgT2Zmc2V0IDogOCBzZWN0b3JzCiAgIFVudXNlZCBT
-cGFjZSA6IGJlZm9yZT0xOTY4IHNlY3RvcnMsIGFmdGVyPTI4OCBzZWN0b3JzCiAgICAgICAg
-ICBTdGF0ZSA6IGNsZWFuCiAgICBEZXZpY2UgVVVJRCA6IDdjMDFmMDRjOjk5OTQzOWYzOmE5
-MzM1ZDY5OmI1YzRmNGZmCgogIFJlc2hhcGUgcG9zJ24gOiAwCiAgRGVsdGEgRGV2aWNlcyA6
-IDEgKDMtPjQpCgogICAgVXBkYXRlIFRpbWUgOiBUaHUgRGVjIDEyIDExOjQyOjQ2IDIwMTkK
-ICAgICAgIENoZWNrc3VtIDogMWUxMTYzYzYgLSBjb3JyZWN0CiAgICAgICAgIEV2ZW50cyA6
-IDE1ODE5NQoKICAgICAgICAgTGF5b3V0IDogbGVmdC1zeW1tZXRyaWMKICAgICBDaHVuayBT
-aXplIDogNjRLCgogICBEZXZpY2UgUm9sZSA6IEFjdGl2ZSBkZXZpY2UgMQogICBBcnJheSBT
-dGF0ZSA6IEFBQUEgKCdBJyA9PSBhY3RpdmUsICcuJyA9PSBtaXNzaW5nLCAnUicgPT0gcmVw
-bGFjaW5nKQo=
---------------5718D4CA7F9C7F64FDC250B6
-Content-Type: text/plain; charset=UTF-8;
- name="sdd5.examine"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
- filename="sdd5.examine"
-
-L2Rldi9zZGQ1OgogICAgICAgICAgTWFnaWMgOiBhOTJiNGVmYwogICAgICAgIFZlcnNpb24g
-OiAxLjIKICAgIEZlYXR1cmUgTWFwIDogMHgwCiAgICAgQXJyYXkgVVVJRCA6IDQyYWFiZjQ4
-Ojg4NzZhNTAwOjE5NzM2MDkzOmJlMTZiNzc5CiAgICAgICAgICAgTmFtZSA6IGJvZDQ6Mgog
-IENyZWF0aW9uIFRpbWUgOiBXZWQgRmViICA2IDE0OjM0OjMyIDIwMTMKICAgICBSYWlkIExl
-dmVsIDogcmFpZDUKICAgUmFpZCBEZXZpY2VzIDogNAoKIEF2YWlsIERldiBTaXplIDogMTk0
-NDA1NTY4MCAoOTI3LjAwIEdpQiA5OTUuMzYgR0IpCiAgICAgQXJyYXkgU2l6ZSA6IDI5MTYw
-ODI5NDQgKDI3ODAuOTkgR2lCIDI5ODYuMDcgR0IpCiAgVXNlZCBEZXYgU2l6ZSA6IDE5NDQw
-NTUyOTYgKDkyNy4wMCBHaUIgOTk1LjM2IEdCKQogICAgRGF0YSBPZmZzZXQgOiAyMDQ4IHNl
-Y3RvcnMKICAgU3VwZXIgT2Zmc2V0IDogOCBzZWN0b3JzCiAgIFVudXNlZCBTcGFjZSA6IGJl
-Zm9yZT0xOTY4IHNlY3RvcnMsIGFmdGVyPTM4NCBzZWN0b3JzCiAgICAgICAgICBTdGF0ZSA6
-IGNsZWFuCiAgICBEZXZpY2UgVVVJRCA6IGMwM2Y0ODdjOjQwNDJlYmQwOjNjM2E1ZjhkOjQy
-MDFlZTNhCgogICAgVXBkYXRlIFRpbWUgOiBTYXQgRGVjIDE0IDA3OjM0OjMwIDIwMTkKICAg
-ICAgIENoZWNrc3VtIDogM2M0OTM4NTYgLSBjb3JyZWN0CiAgICAgICAgIEV2ZW50cyA6IDYz
-MDA1MDQKCiAgICAgICAgIExheW91dCA6IGxlZnQtc3ltbWV0cmljCiAgICAgQ2h1bmsgU2l6
-ZSA6IDY0SwoKICAgRGV2aWNlIFJvbGUgOiBBY3RpdmUgZGV2aWNlIDIKICAgQXJyYXkgU3Rh
-dGUgOiBBUkFBICgnQScgPT0gYWN0aXZlLCAnLicgPT0gbWlzc2luZywgJ1InID09IHJlcGxh
-Y2luZykK
---------------5718D4CA7F9C7F64FDC250B6
-Content-Type: text/plain; charset=UTF-8;
- name="sdd7.examine"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
- filename="sdd7.examine"
-
-L2Rldi9tYXBwZXIvc2RkNzoKICAgICAgICAgIE1hZ2ljIDogYTkyYjRlZmMKICAgICAgICBW
-ZXJzaW9uIDogMS4yCiAgICBGZWF0dXJlIE1hcCA6IDB4NAogICAgIEFycmF5IFVVSUQgOiA1
-ODc4Y2U3MjoyYWRmMWM2MjozY2RkMDc5YTplOGQyODc4YgogICAgICAgICAgIE5hbWUgOiBi
-b2Q0OjMKICBDcmVhdGlvbiBUaW1lIDogU2F0IEp1bCAyNSAxNjo1NzoyMSAyMDE1CiAgICAg
-UmFpZCBMZXZlbCA6IHJhaWQ1CiAgIFJhaWQgRGV2aWNlcyA6IDQKCiBBdmFpbCBEZXYgU2l6
-ZSA6IDE5NTM0ODU4NTYgKDkzMS40OSBHaUIgMTAwMC4xOCBHQikKICAgICBBcnJheSBTaXpl
-IDogMjkzMDIyODM1MiAoMjc5NC40OCBHaUIgMzAwMC41NSBHQikKICBVc2VkIERldiBTaXpl
-IDogMTk1MzQ4NTU2OCAoOTMxLjQ5IEdpQiAxMDAwLjE4IEdCKQogICAgRGF0YSBPZmZzZXQg
-OiAyMDQ4IHNlY3RvcnMKICAgU3VwZXIgT2Zmc2V0IDogOCBzZWN0b3JzCiAgIFVudXNlZCBT
-cGFjZSA6IGJlZm9yZT0xOTY4IHNlY3RvcnMsIGFmdGVyPTI4OCBzZWN0b3JzCiAgICAgICAg
-ICBTdGF0ZSA6IGNsZWFuCiAgICBEZXZpY2UgVVVJRCA6IDhhYTJlNzdkOmJhODc2NzVjOjYy
-ZGNlNDk1OjI5NjFlODk0CgogIFJlc2hhcGUgcG9zJ24gOiAwCiAgRGVsdGEgRGV2aWNlcyA6
-IDEgKDMtPjQpCgogICAgVXBkYXRlIFRpbWUgOiBUaHUgRGVjIDEyIDExOjQyOjQ2IDIwMTkK
-ICAgICAgIENoZWNrc3VtIDogNzliMjNkMjIgLSBjb3JyZWN0CiAgICAgICAgIEV2ZW50cyA6
-IDE1ODE5NQoKICAgICAgICAgTGF5b3V0IDogbGVmdC1zeW1tZXRyaWMKICAgICBDaHVuayBT
-aXplIDogNjRLCgogICBEZXZpY2UgUm9sZSA6IEFjdGl2ZSBkZXZpY2UgMAogICBBcnJheSBT
-dGF0ZSA6IEFBQUEgKCdBJyA9PSBhY3RpdmUsICcuJyA9PSBtaXNzaW5nLCAnUicgPT0gcmVw
-bGFjaW5nKQo=
---------------5718D4CA7F9C7F64FDC250B6
-Content-Type: text/plain; charset=UTF-8;
- name="sde5.examine"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
- filename="sde5.examine"
-
-L2Rldi9zZGU1OgogICAgICAgICAgTWFnaWMgOiBhOTJiNGVmYwogICAgICAgIFZlcnNpb24g
-OiAxLjIKICAgIEZlYXR1cmUgTWFwIDogMHgwCiAgICAgQXJyYXkgVVVJRCA6IDQyYWFiZjQ4
-Ojg4NzZhNTAwOjE5NzM2MDkzOmJlMTZiNzc5CiAgICAgICAgICAgTmFtZSA6IGJvZDQ6Mgog
-IENyZWF0aW9uIFRpbWUgOiBXZWQgRmViICA2IDE0OjM0OjMyIDIwMTMKICAgICBSYWlkIExl
-dmVsIDogcmFpZDUKICAgUmFpZCBEZXZpY2VzIDogNAoKIEF2YWlsIERldiBTaXplIDogMTk0
-NDA1NTY4MCAoOTI3LjAwIEdpQiA5OTUuMzYgR0IpCiAgICAgQXJyYXkgU2l6ZSA6IDI5MTYw
-ODI5NDQgKDI3ODAuOTkgR2lCIDI5ODYuMDcgR0IpCiAgVXNlZCBEZXYgU2l6ZSA6IDE5NDQw
-NTUyOTYgKDkyNy4wMCBHaUIgOTk1LjM2IEdCKQogICAgRGF0YSBPZmZzZXQgOiAyMDQ4IHNl
-Y3RvcnMKICAgU3VwZXIgT2Zmc2V0IDogOCBzZWN0b3JzCiAgIFVudXNlZCBTcGFjZSA6IGJl
-Zm9yZT0xOTY4IHNlY3RvcnMsIGFmdGVyPTM4NCBzZWN0b3JzCiAgICAgICAgICBTdGF0ZSA6
-IGNsZWFuCiAgICBEZXZpY2UgVVVJRCA6IDZkMGI3MGYwOjYwZTA0YzYwOjk2NThjNDI1OmNi
-ODgwMWM2CgogICAgVXBkYXRlIFRpbWUgOiBTYXQgRGVjIDE0IDA3OjM0OjMwIDIwMTkKICAg
-ICAgIENoZWNrc3VtIDogNjM0OTQ4MDYgLSBjb3JyZWN0CiAgICAgICAgIEV2ZW50cyA6IDYz
-MDA1MDQKCiAgICAgICAgIExheW91dCA6IGxlZnQtc3ltbWV0cmljCiAgICAgQ2h1bmsgU2l6
-ZSA6IDY0SwoKICAgRGV2aWNlIFJvbGUgOiBBY3RpdmUgZGV2aWNlIDEKICAgQXJyYXkgU3Rh
-dGUgOiBBQUFBICgnQScgPT0gYWN0aXZlLCAnLicgPT0gbWlzc2luZywgJ1InID09IHJlcGxh
-Y2luZykK
---------------5718D4CA7F9C7F64FDC250B6
-Content-Type: text/plain; charset=UTF-8;
- name="sde7.examine"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
- filename="sde7.examine"
-
-L2Rldi9tYXBwZXIvc2RlNzoKICAgICAgICAgIE1hZ2ljIDogYTkyYjRlZmMKICAgICAgICBW
-ZXJzaW9uIDogMS4yCiAgICBGZWF0dXJlIE1hcCA6IDB4NAogICAgIEFycmF5IFVVSUQgOiA1
-ODc4Y2U3MjoyYWRmMWM2MjozY2RkMDc5YTplOGQyODc4YgogICAgICAgICAgIE5hbWUgOiBi
-b2Q0OjMKICBDcmVhdGlvbiBUaW1lIDogU2F0IEp1bCAyNSAxNjo1NzoyMSAyMDE1CiAgICAg
-UmFpZCBMZXZlbCA6IHJhaWQ1CiAgIFJhaWQgRGV2aWNlcyA6IDQKCiBBdmFpbCBEZXYgU2l6
-ZSA6IDE5NTM0ODU4NTYgKDkzMS40OSBHaUIgMTAwMC4xOCBHQikKICAgICBBcnJheSBTaXpl
-IDogMjkzMDIyODM1MiAoMjc5NC40OCBHaUIgMzAwMC41NSBHQikKICBVc2VkIERldiBTaXpl
-IDogMTk1MzQ4NTU2OCAoOTMxLjQ5IEdpQiAxMDAwLjE4IEdCKQogICAgRGF0YSBPZmZzZXQg
-OiAyMDQ4IHNlY3RvcnMKICAgU3VwZXIgT2Zmc2V0IDogOCBzZWN0b3JzCiAgIFVudXNlZCBT
-cGFjZSA6IGJlZm9yZT0xOTY4IHNlY3RvcnMsIGFmdGVyPTI4OCBzZWN0b3JzCiAgICAgICAg
-ICBTdGF0ZSA6IGNsZWFuCiAgICBEZXZpY2UgVVVJRCA6IGRjNDg4ZGU1OjM1NjQ3ZTIwOjBh
-MzhlOTFlOjI4NWIwZDQzCgogIFJlc2hhcGUgcG9zJ24gOiAwCiAgRGVsdGEgRGV2aWNlcyA6
-IDEgKDMtPjQpCgogICAgVXBkYXRlIFRpbWUgOiBUaHUgRGVjIDEyIDExOjQyOjQ2IDIwMTkK
-ICAgICAgIENoZWNrc3VtIDogZGM5ODE1OTIgLSBjb3JyZWN0CiAgICAgICAgIEV2ZW50cyA6
-IDE1ODE5NQoKICAgICAgICAgTGF5b3V0IDogbGVmdC1zeW1tZXRyaWMKICAgICBDaHVuayBT
-aXplIDogNjRLCgogICBEZXZpY2UgUm9sZSA6IEFjdGl2ZSBkZXZpY2UgMwogICBBcnJheSBT
-dGF0ZSA6IEFBQUEgKCdBJyA9PSBhY3RpdmUsICcuJyA9PSBtaXNzaW5nLCAnUicgPT0gcmVw
-bGFjaW5nKQo=
---------------5718D4CA7F9C7F64FDC250B6
-Content-Type: text/plain; charset=UTF-8;
- name="sdf5.examine"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
- filename="sdf5.examine"
-
-L2Rldi9zZGY1OgogICAgICAgICAgTWFnaWMgOiBhOTJiNGVmYwogICAgICAgIFZlcnNpb24g
-OiAxLjIKICAgIEZlYXR1cmUgTWFwIDogMHgwCiAgICAgQXJyYXkgVVVJRCA6IDQyYWFiZjQ4
-Ojg4NzZhNTAwOjE5NzM2MDkzOmJlMTZiNzc5CiAgICAgICAgICAgTmFtZSA6IGJvZDQ6Mgog
-IENyZWF0aW9uIFRpbWUgOiBXZWQgRmViICA2IDE0OjM0OjMyIDIwMTMKICAgICBSYWlkIExl
-dmVsIDogcmFpZDUKICAgUmFpZCBEZXZpY2VzIDogNAoKIEF2YWlsIERldiBTaXplIDogMTk0
-NDA1NTY4MCAoOTI3LjAwIEdpQiA5OTUuMzYgR0IpCiAgICAgQXJyYXkgU2l6ZSA6IDI5MTYw
-ODI5NDQgKDI3ODAuOTkgR2lCIDI5ODYuMDcgR0IpCiAgVXNlZCBEZXYgU2l6ZSA6IDE5NDQw
-NTUyOTYgKDkyNy4wMCBHaUIgOTk1LjM2IEdCKQogICAgRGF0YSBPZmZzZXQgOiAyMDQ4IHNl
-Y3RvcnMKICAgU3VwZXIgT2Zmc2V0IDogOCBzZWN0b3JzCiAgIFVudXNlZCBTcGFjZSA6IGJl
-Zm9yZT0xOTY4IHNlY3RvcnMsIGFmdGVyPTM4NCBzZWN0b3JzCiAgICAgICAgICBTdGF0ZSA6
-IGNsZWFuCiAgICBEZXZpY2UgVVVJRCA6IDA4MGYyYzUwOjQ2NTY5ZmNlOmZjYjUzYzViOjdh
-MTBkMmNkCgogICAgVXBkYXRlIFRpbWUgOiBTYXQgRGVjIDE0IDA3OjM0OjMwIDIwMTkKICAg
-ICAgIENoZWNrc3VtIDogNmVhMmFhM2QgLSBjb3JyZWN0CiAgICAgICAgIEV2ZW50cyA6IDYz
-MDA1MDQKCiAgICAgICAgIExheW91dCA6IGxlZnQtc3ltbWV0cmljCiAgICAgQ2h1bmsgU2l6
-ZSA6IDY0SwoKICAgRGV2aWNlIFJvbGUgOiBBY3RpdmUgZGV2aWNlIDAKICAgQXJyYXkgU3Rh
-dGUgOiBBUkFBICgnQScgPT0gYWN0aXZlLCAnLicgPT0gbWlzc2luZywgJ1InID09IHJlcGxh
-Y2luZykK
---------------5718D4CA7F9C7F64FDC250B6
-Content-Type: text/plain; charset=UTF-8;
- name="sdf7.examine"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
- filename="sdf7.examine"
-
-L2Rldi9tYXBwZXIvc2RmNzoKICAgICAgICAgIE1hZ2ljIDogYTkyYjRlZmMKICAgICAgICBW
-ZXJzaW9uIDogMS4yCiAgICBGZWF0dXJlIE1hcCA6IDB4NAogICAgIEFycmF5IFVVSUQgOiA1
-ODc4Y2U3MjoyYWRmMWM2MjozY2RkMDc5YTplOGQyODc4YgogICAgICAgICAgIE5hbWUgOiBi
-b2Q0OjMKICBDcmVhdGlvbiBUaW1lIDogU2F0IEp1bCAyNSAxNjo1NzoyMSAyMDE1CiAgICAg
-UmFpZCBMZXZlbCA6IHJhaWQ1CiAgIFJhaWQgRGV2aWNlcyA6IDQKCiBBdmFpbCBEZXYgU2l6
-ZSA6IDE5NTM0ODU4NTYgKDkzMS40OSBHaUIgMTAwMC4xOCBHQikKICAgICBBcnJheSBTaXpl
-IDogMjkzMDIyODM1MiAoMjc5NC40OCBHaUIgMzAwMC41NSBHQikKICBVc2VkIERldiBTaXpl
-IDogMTk1MzQ4NTU2OCAoOTMxLjQ5IEdpQiAxMDAwLjE4IEdCKQogICAgRGF0YSBPZmZzZXQg
-OiAyMDQ4IHNlY3RvcnMKICAgU3VwZXIgT2Zmc2V0IDogOCBzZWN0b3JzCiAgIFVudXNlZCBT
-cGFjZSA6IGJlZm9yZT0xOTY4IHNlY3RvcnMsIGFmdGVyPTI4OCBzZWN0b3JzCiAgICAgICAg
-ICBTdGF0ZSA6IGNsZWFuCiAgICBEZXZpY2UgVVVJRCA6IGU4MTEwYWQzOmJlNjUyMzhlOjIy
-OTQ0ZjNjOmViNzg4YzYyCgogIFJlc2hhcGUgcG9zJ24gOiAwCiAgRGVsdGEgRGV2aWNlcyA6
-IDEgKDMtPjQpCgogICAgVXBkYXRlIFRpbWUgOiBUaHUgRGVjIDEyIDExOjQyOjQ2IDIwMTkK
-ICAgICAgIENoZWNrc3VtIDogNzQ5ZjVhMDQgLSBjb3JyZWN0CiAgICAgICAgIEV2ZW50cyA6
-IDE1ODE5NQoKICAgICAgICAgTGF5b3V0IDogbGVmdC1zeW1tZXRyaWMKICAgICBDaHVuayBT
-aXplIDogNjRLCgogICBEZXZpY2UgUm9sZSA6IEFjdGl2ZSBkZXZpY2UgMgogICBBcnJheSBT
-dGF0ZSA6IEFBQUEgKCdBJyA9PSBhY3RpdmUsICcuJyA9PSBtaXNzaW5nLCAnUicgPT0gcmVw
-bGFjaW5nKQo=
---------------5718D4CA7F9C7F64FDC250B6--
+Cheers,
+Wol
