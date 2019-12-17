@@ -2,80 +2,59 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 93FDC123366
-	for <lists+linux-raid@lfdr.de>; Tue, 17 Dec 2019 18:22:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 959B91234C0
+	for <lists+linux-raid@lfdr.de>; Tue, 17 Dec 2019 19:25:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbfLQRWe (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 17 Dec 2019 12:22:34 -0500
-Received: from smtp.hosts.co.uk ([85.233.160.19]:26606 "EHLO smtp.hosts.co.uk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726887AbfLQRWe (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 17 Dec 2019 12:22:34 -0500
-Received: from [86.148.134.145] (helo=[192.168.1.118])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1ihGYI-0005p4-9E; Tue, 17 Dec 2019 17:22:31 +0000
+        id S1728009AbfLQSZM (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 17 Dec 2019 13:25:12 -0500
+Received: from arcturus.uberspace.de ([185.26.156.30]:50080 "EHLO
+        arcturus.uberspace.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727904AbfLQSZM (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 17 Dec 2019 13:25:12 -0500
+Received: (qmail 12274 invoked from network); 17 Dec 2019 18:25:09 -0000
+Received: from localhost (HELO localhost) (127.0.0.1)
+  by arcturus.uberspace.de with SMTP; 17 Dec 2019 18:25:09 -0000
+Date:   Tue, 17 Dec 2019 19:25:09 +0100
+From:   Andreas Klauer <Andreas.Klauer@metamorpher.de>
+To:     Patrick Pearcy <patrick.pearcy@gmail.com>
+Cc:     linux-raid@vger.kernel.org
 Subject: Re: WD MyCloud PR4100 RAID Failure
-To:     Patrick Pearcy <patrick.pearcy@gmail.com>,
-        linux-raid@vger.kernel.org
+Message-ID: <20191217182509.GA16121@metamorpher.de>
 References: <CAM-0FgP5dXnTbri-wB-2LJU-QE5wd9nsq=kzMW9kXND=wF=z8w@mail.gmail.com>
-From:   Wols Lists <antlists@youngman.org.uk>
-X-Enigmail-Draft-Status: N1110
-Message-ID: <5DF9173F.6000203@youngman.org.uk>
-Date:   Tue, 17 Dec 2019 17:58:23 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.7.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <CAM-0FgP5dXnTbri-wB-2LJU-QE5wd9nsq=kzMW9kXND=wF=z8w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 17/12/19 16:54, Patrick Pearcy wrote:
-> Hi everyone, I am hoping that someone is able to assist me with
-> recreating my 'failed' WD My Cloud PR4100 RAID.  I experienced a
-> series of short power interruptions and despite having a UPS and dual
-> power sources for my WD MyCloud, it reported that I had: (a) failed
-> drive 1, (b) installed a new drive 1, (c) failed drive 2 and (d)
-> installed a new drive 2.   ALL without my touching the system.  I have
-> a little knowledge of Linux (enough to follow instructions) so I was
-> able to run SMARTCTL on all 4 drives (no errors) and MDADM examine
-> (see below).  When trying to force an assemble, I receive the error
-> that no superblock was found on sda or sdb.  WD support referred me to
-> a data recovery service that wants me to send all disks to them.  I
-> believe the data is still present, I just don't know how to get the
-> array back.  Any assistance or suggestions would be greatly
-> appreciated.  Thanks!  Patrick
-> 
-> mdadm - v2.6.7.1 - 15th October 2008
+On Tue, Dec 17, 2019 at 11:54:43AM -0500, Patrick Pearcy wrote:
+> MDADM Examine:
+> /dev/sda1:
+>           Magic : a92b4efc
+>         Version : 00.90.00
+>            UUID : 3593a169:b2495fbf:90fa7060:4cac0d65
+>   Creation Time : Tue Dec 17 10:56:15 2019
 
-Ouch! That is an OLD version of mdadm. Is that the version that comes
-with the WD?
+This was re-created...
 
-The drives themselves. Are they 2GB drives? That's tiny by today's
-standards. I'd get a big 500GB or 1TB drive and image them on to the new
-drive. That way you have a backup, and you can play.
+>      Raid Level : raid1
 
-Can you run a modern version of mdadm over the drives? It's now up to 4.0.
+...with Level 1 (Mirror)...
 
-And you say you can follow instructions. Did you find the linux raid
-wiki? I guess not since it asks for rather more information, including
-things like mdadm --detail, and lsdrv.
+>   Used Dev Size : 2097088 (2048.28 MiB 2147.42 MB)
+>      Array Size : 2097088 (2048.28 MiB 2147.42 MB)
+>    Raid Devices : 4
 
-https://raid.wiki.kernel.org/index.php/Linux_Raid#When_Things_Go_Wrogn
-https://raid.wiki.kernel.org/index.php/Asking_for_help
+...across 4 devices? With that all data would be gone, 
+cause it would have replicated anything on disk #1 to 
+the other disks.
 
-If it has lost the superblock, I'm guessing an mdadm --create will fix
-it BUT DO NOT EVEN *T*H*I*N*K* of running that over the original drives
-- if you back them up on to a big drive you can run it on the backups.
+Oh, it's just 2GiB. A firmware/boot partition, maybe?
 
-I'm optimistic you can get your data back. But you might need some help
-from the experts. And try and put those backups I mentioned on a
-snapshot-based filesystem like lvm or btrfs, so you can snapshot it, try
-various rescue tactics, and revert to the snapshot if they don't work.
+Do you have examine for the data partitions?
 
-Cheers,
-Wol
+Regards
+Andreas Klauer
