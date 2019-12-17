@@ -2,98 +2,188 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A589123115
-	for <lists+linux-raid@lfdr.de>; Tue, 17 Dec 2019 17:06:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 91DCB123302
+	for <lists+linux-raid@lfdr.de>; Tue, 17 Dec 2019 17:54:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbfLQQF6 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 17 Dec 2019 11:05:58 -0500
-Received: from mail-yw1-f47.google.com ([209.85.161.47]:39602 "EHLO
-        mail-yw1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727737AbfLQQF6 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 17 Dec 2019 11:05:58 -0500
-Received: by mail-yw1-f47.google.com with SMTP id h126so4141395ywc.6
-        for <linux-raid@vger.kernel.org>; Tue, 17 Dec 2019 08:05:57 -0800 (PST)
+        id S1727720AbfLQQy5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 17 Dec 2019 11:54:57 -0500
+Received: from mail-ed1-f49.google.com ([209.85.208.49]:44575 "EHLO
+        mail-ed1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbfLQQy5 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 17 Dec 2019 11:54:57 -0500
+Received: by mail-ed1-f49.google.com with SMTP id bx28so5409526edb.11
+        for <linux-raid@vger.kernel.org>; Tue, 17 Dec 2019 08:54:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-transfer-encoding:content-language;
-        bh=xcnAMeLzZ/asZVTS9y+dHHtZxfqaTzAw+7x3pTCv+YM=;
-        b=QXS7TYWtn/M1r+njYPS801574JJFCW5se0MlIXdSjFlMSnQ7ZM+lCXUcIxkvk3Kk8f
-         hu5SiRAQpfDXYnn11V98KywDTxH3MMh8Db5mIlc8uFJJKzC+TmHKe7KDVBqiVqnvIH6X
-         jIJg9PhJIiAl9N2LsWNTTVjWUWTpq6xC7XBNAaYlwPJiCOLhfdGjGJ/MT0c2/2XwS5oy
-         qHszHQWIKUGyk9EYncOtuMttDywSgcpJpYttuSsvCCQSMO48S4Hjic92KkPqn3mF9dVq
-         Shr6xf2qEAFIpPnbDLrbt7aX3szTeez50C6Uz33Gc0BTii9vfR/V6vlK6sh10Z7Vf/mj
-         hmaQ==
+        h=mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=DFPau643FOOLqcKSolM03xRWenbTC8XH95Y8C76G2Ss=;
+        b=aPXcem/6lcGKWRHd54bkjGhuPB0A0aPScq6lFt9p+0tu8RMxUAfQhSSvJUrJkUPx2X
+         7gOfzPHsDbwkrAfZTGmyIZ+np3U7uBhIu5ko+ndAg8SG8fWxZ55Dz9DyYz5rmF8Q2D5e
+         Xtdk08JXXx0XSDJLBDMcBxrRgFqfZMmnRo9QGZ00sdj2x5FEgeyLzEUBI+QyZj46OZ9G
+         qVgpfxKWlJXzfs/4baTxhHQF0CKuBZO9v5H5RDY1qwMWsT/FipPlAobiTRLBGV5ICNnP
+         0pM73nLdrdfT/aQjbkEfNJ8mYbBpzGYSYEpr8OWnskAr9awCMpJjQAaZKPRENESn6U/Y
+         6Rog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=xcnAMeLzZ/asZVTS9y+dHHtZxfqaTzAw+7x3pTCv+YM=;
-        b=d8QR+OwJS6vs3U5ZI4LONn7tSPGwkiFEK/79MKcXNq+k/tGWHi82e5hvC3EbBwLoq9
-         G71Gfhcjc363sjEd5xWC7bgA0Tx1VW42muwUaLqF+1yfPu/JPhuj7CCqQtuojQ4PsjuD
-         FqIzGosKY7VeUwDlxIFRCqrCf52C1c9yLefpAe784BNBIW4mhYRS6pYbhtQ0xVU+OsrM
-         YWGh8sxp7ZWgNKKM7/gLeKoyUJ9hk4sJaLCgD6KdjWPy7cMBBkhBSy/mMFkhrKYvVVgd
-         z2FHUTlO4IWoDEjXcRWHuCRUyANlYU7318l2mHcAJdrq7rvWpWmET/B0MbDn4LIucvxi
-         Iydg==
-X-Gm-Message-State: APjAAAUn25ncPwqZniAP9QlUMF5MQn9cZIpOD3J6vwmzvORyu2jC9xCv
-        ekIpdZEVhuJZSd/V9CiljFxUdwJqw60=
-X-Google-Smtp-Source: APXvYqx2pH/BM47HwEIH5SC9aMIjg2rrfLcCj8EebpYA+d9I0y+MLRcGSpQ/eEIhyMb9uGn3mZolTw==
-X-Received: by 2002:a0d:cb0c:: with SMTP id n12mr19433392ywd.375.1576598756986;
-        Tue, 17 Dec 2019 08:05:56 -0800 (PST)
-Received: from [192.168.125.2] (quantum.benjammin.net. [173.161.90.37])
-        by smtp.gmail.com with ESMTPSA id d10sm8771494ywd.107.2019.12.17.08.05.56
-        for <linux-raid@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Dec 2019 08:05:56 -0800 (PST)
-Subject: Re: Keeping existing RAID6's safe during upgrade from CentOS 6 to
- CentOS 8
-To:     Linux-RAID <linux-raid@vger.kernel.org>
-References: <e7e9ed61-c611-3b40-2c78-6c5c47f77148@gmail.com>
- <CAAMCDedHgQzQx=0U=7=nrJoBYqfzE-DCfYxMd-L8B-NRft8TNg@mail.gmail.com>
-From:   Benjammin2068 <benjammin2068@gmail.com>
-Message-ID: <8fff49b9-e2e3-990b-2750-1e950397903b@gmail.com>
-Date:   Tue, 17 Dec 2019 10:05:52 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=DFPau643FOOLqcKSolM03xRWenbTC8XH95Y8C76G2Ss=;
+        b=ADbIg7pzSmM4DhVb3mLzdwjCUdt6CATVl6a6yrzpHlUYAKkq0H1MP05EGgBnrfzB6P
+         MuSCvWssZm6PwK2I6mOh2eWySRYIbXssZOuzcM9cXEwm9l05JhaO1HLiPhqIx84HxbbS
+         a9axtdF4n5aW52gYTvFCq5eXTBdWuNNXnr9LsmwgDXJ5AxyZHjTmYgs6FPrr+ZCIvCYi
+         KvBxjaORUxReoB1E7BWQ+83A5YIlESOe7f5syL67fR7y++2sf9pubsIt5BGNeL1HtsjI
+         EHzaxnVwPdbIFfmW60WU5s4ViiD4madl6azAkF5HtJQVMPuejhIKhVCpxmwjPtN/Fa7c
+         ojxA==
+X-Gm-Message-State: APjAAAVcQs48kqK+JtTTRkMOCanxDk+LnbunHzI1gcNLbQA7tjWSzZjw
+        fhidnnNZxqb7GvRAuqaoMYJwuz91zjzvfQCWEaFvjZ4h
+X-Google-Smtp-Source: APXvYqwkFusC96ZSe5FfVgJsIgjMIL8eyFqbuD50H/AGKV7Xz62zv3cq+srX0U0lTGc3hAIHVHWj88G/oNEiSstAb4Y=
+X-Received: by 2002:a05:6402:2c3:: with SMTP id b3mr6259778edx.207.1576601694632;
+ Tue, 17 Dec 2019 08:54:54 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAAMCDedHgQzQx=0U=7=nrJoBYqfzE-DCfYxMd-L8B-NRft8TNg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+From:   Patrick Pearcy <patrick.pearcy@gmail.com>
+Date:   Tue, 17 Dec 2019 11:54:43 -0500
+Message-ID: <CAM-0FgP5dXnTbri-wB-2LJU-QE5wd9nsq=kzMW9kXND=wF=z8w@mail.gmail.com>
+Subject: WD MyCloud PR4100 RAID Failure
+To:     linux-raid@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+Hi everyone, I am hoping that someone is able to assist me with
+recreating my 'failed' WD My Cloud PR4100 RAID.  I experienced a
+series of short power interruptions and despite having a UPS and dual
+power sources for my WD MyCloud, it reported that I had: (a) failed
+drive 1, (b) installed a new drive 1, (c) failed drive 2 and (d)
+installed a new drive 2.   ALL without my touching the system.  I have
+a little knowledge of Linux (enough to follow instructions) so I was
+able to run SMARTCTL on all 4 drives (no errors) and MDADM examine
+(see below).  When trying to force an assemble, I receive the error
+that no superblock was found on sda or sdb.  WD support referred me to
+a data recovery service that wants me to send all disks to them.  I
+believe the data is still present, I just don't know how to get the
+array back.  Any assistance or suggestions would be greatly
+appreciated.  Thanks!  Patrick
 
-On 12/17/19 8:43 AM, Roger Heflin wrote:
-> If you do pull the drives, make sure to pull them with the machine
-> off, and make sure to insert them with the machine off.
+mdadm - v2.6.7.1 - 15th October 2008
 
-Absolutely. It's also give me a chance to blow the dust off them.
+MDADM Examine:
+/dev/sda1:
+          Magic : a92b4efc
+        Version : 00.90.00
+           UUID : 3593a169:b2495fbf:90fa7060:4cac0d65
+  Creation Time : Tue Dec 17 10:56:15 2019
+     Raid Level : raid1
+  Used Dev Size : 2097088 (2048.28 MiB 2147.42 MB)
+     Array Size : 2097088 (2048.28 MiB 2147.42 MB)
+   Raid Devices : 4
+  Total Devices : 4
+Preferred Minor : 0
+    Update Time : Tue Dec 17 10:56:16 2019
+          State : clean
+Internal Bitmap : present
+ Active Devices : 4
+Working Devices : 4
+ Failed Devices : 0
+  Spare Devices : 0
+       Checksum : 2ac0c510 - correct
+         Events : 1
 
-They're on 24/7 and the server chassis doesn't have filter material in these pull-out trays, so I added some.
+      Number   Major   Minor   RaidDevice State
+this     0       8        1        0      active sync   /dev/sda1
+   0     0       8        1        0      active sync   /dev/sda1
+   1     1       8       17        1      active sync   /dev/sdb1
+   2     2       8       33        2      active sync   /dev/sdc1
+   3     3       8       49        3      active sync   /dev/sdd1
+/dev/sdb1:
+          Magic : a92b4efc
+        Version : 00.90.00
+           UUID : 3593a169:b2495fbf:90fa7060:4cac0d65
+  Creation Time : Tue Dec 17 10:56:15 2019
+     Raid Level : raid1
+  Used Dev Size : 2097088 (2048.28 MiB 2147.42 MB)
+     Array Size : 2097088 (2048.28 MiB 2147.42 MB)
+   Raid Devices : 4
+  Total Devices : 4
+Preferred Minor : 0
+    Update Time : Tue Dec 17 10:56:16 2019
+          State : clean
+Internal Bitmap : present
+ Active Devices : 4
+Working Devices : 4
+ Failed Devices : 0
+  Spare Devices : 0
+       Checksum : 2ac0c522 - correct
+         Events : 1
 
-With them running for almost 10yrs, vacuuming only sucks out so much dust... it's time to replace. :D
+      Number   Major   Minor   RaidDevice State
+this     1       8       17        1      active sync   /dev/sdb1
+   0     0       8        1        0      active sync   /dev/sda1
+   1     1       8       17        1      active sync   /dev/sdb1
+   2     2       8       33        2      active sync   /dev/sdc1
+   3     3       8       49        3      active sync   /dev/sdd1
+/dev/sdc1:
+          Magic : a92b4efc
+        Version : 00.90.00
+           UUID : 3593a169:b2495fbf:90fa7060:4cac0d65
+  Creation Time : Tue Dec 17 10:56:15 2019
+     Raid Level : raid1
+  Used Dev Size : 2097088 (2048.28 MiB 2147.42 MB)
+     Array Size : 2097088 (2048.28 MiB 2147.42 MB)
+   Raid Devices : 4
+  Total Devices : 4
+Preferred Minor : 0
+    Update Time : Tue Dec 17 10:56:16 2019
+          State : clean
+Internal Bitmap : present
+ Active Devices : 4
+Working Devices : 4
+ Failed Devices : 0
+  Spare Devices : 0
+       Checksum : 2ac0c534 - correct
+         Events : 1
+
+      Number   Major   Minor   RaidDevice State
+this     2       8       33        2      active sync   /dev/sdc1
+   0     0       8        1        0      active sync   /dev/sda1
+   1     1       8       17        1      active sync   /dev/sdb1
+   2     2       8       33        2      active sync   /dev/sdc1
+   3     3       8       49        3      active sync   /dev/sdd1
+/dev/sdd1:
+          Magic : a92b4efc
+        Version : 00.90.00
+           UUID : 3593a169:b2495fbf:90fa7060:4cac0d65
+  Creation Time : Tue Dec 17 10:56:15 2019
+     Raid Level : raid1
+  Used Dev Size : 2097088 (2048.28 MiB 2147.42 MB)
+     Array Size : 2097088 (2048.28 MiB 2147.42 MB)
+   Raid Devices : 4
+  Total Devices : 4
+Preferred Minor : 0
+    Update Time : Tue Dec 17 10:56:16 2019
+          State : clean
+Internal Bitmap : present
+ Active Devices : 4
+Working Devices : 4
+ Failed Devices : 0
+  Spare Devices : 0
+       Checksum : 2ac0c546 - correct
+         Events : 1
+
+      Number   Major   Minor   RaidDevice State
+this     3       8       49        3      active sync   /dev/sdd1
+   0     0       8        1        0      active sync   /dev/sda1
+   1     1       8       17        1      active sync   /dev/sdb1
+   2     2       8       33        2      active sync   /dev/sdc1
+   3     3       8       49        3      active sync   /dev/sdd1
 
 
-> Not having the machine off would cause mdraid to fail the raid as the
-> drives are removed, and not having it off when inserting them would
-> make it activate them one at a time which may or may not quite work.
-
-Yep. I'm aware.
-
-I was soliciting for any bad installer behavior on the part of anaconda and the like.
-
-> I have done my updates without pulling the drives (at least 1-2 fedora
-> reinstalls) and just made sure to not let anaconda mess with the
-> larger raid disks.  Without the conf file it will still find the
-> raids, it just won't have the same md* names.  I have also installed a
-> disk elsewhere and made sure the dracut config was setup to include
-> all drivers (change to hostonly=no).  6 does hostonly=no, 7 does
-> hostonly=yes, not sure what 8 does by default.
-
-Thanks for chiming in!
-
-  -Ben
+ReplyForward
+1.31 GB (8%) of 15 GB used
+Manage
+Last account activity: 7 minutes ago
+Details
+Send =E2=80=AA(Ctrl-Enter)=E2=80=AC
