@@ -2,104 +2,78 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 56058123AC7
-	for <lists+linux-raid@lfdr.de>; Wed, 18 Dec 2019 00:26:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA04F123AFD
+	for <lists+linux-raid@lfdr.de>; Wed, 18 Dec 2019 00:39:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726470AbfLQX0Y (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 17 Dec 2019 18:26:24 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:34441 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbfLQX0Y (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 17 Dec 2019 18:26:24 -0500
-Received: by mail-qk1-f195.google.com with SMTP id j9so278515qkk.1
-        for <linux-raid@vger.kernel.org>; Tue, 17 Dec 2019 15:26:23 -0800 (PST)
+        id S1726360AbfLQXjK (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 17 Dec 2019 18:39:10 -0500
+Received: from mail-qk1-f181.google.com ([209.85.222.181]:44119 "EHLO
+        mail-qk1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbfLQXjJ (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 17 Dec 2019 18:39:09 -0500
+Received: by mail-qk1-f181.google.com with SMTP id w127so9883304qkb.11
+        for <linux-raid@vger.kernel.org>; Tue, 17 Dec 2019 15:39:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wmBVbiAYL9J52YVcQ+6OdV0nAQRcmtI2icE7oDas9oM=;
-        b=YA1T/7135VWRB3eM8O689VeuI/BWAnTKrPl9vFdiRjthGWYI6c9achQ8rBRAj+JPTj
-         sSwVCbvvJTjhbnK2SAWjs9ytMHp41HS61UTsASWffJgkSGmFrouA9HaPIntcifq5Rcgq
-         G5Zglzcnjq+PjwZA0n7KuIGFnltTUrfVzfKRXGbTRwg8c+5kdwFIzBxpF+FaubEoZ1LK
-         sERP1uGUiaDz9x3IayFVAc0kD3gRXU9gWjFDGNaUqK9rdiRxH2cjE7cXXN7Scyxu/4D2
-         v0pP4qSZlY8nD/PX5Cw16Y4ZKS5hVrr7aVPGUcQMYDYxJjEBBrSagXFnGGT2bG256ciy
-         GiZQ==
+        bh=Yh6Rx/uAoHqShzXRqwWwo0U18YqcgTMe9gBfxxSW9sw=;
+        b=ch2e4Z2iUexs2jTIEzhpY10ANoxXrJ9a7clQbxub67cg8bq54gGgPQXOSRebYn+30m
+         CFZCDak+YrCuHh/32MM+vQB/RSBp4Mon4bhKeq+K8YWTssSHnMQ8Nn9jdVsERtLWpMwS
+         ICRbg/ecdCtkwn52cO1EMfOLulM+th7ayf2d6Ti6/GqCya1KyuxH+REAb6/l4bpZ7FPt
+         dZZvbHbnHOi6xEFGhV1kXfXRUEY9hCpmzoukNdEIii4qI9TD000BlGaQ2qxJZsXR+G4K
+         aPLhCFAOB4OL+8cOin7lt9O18l7Az45AIHcUEVH6k5naTcx7IcbP7GJ64WEJgeLPwa8K
+         8uLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wmBVbiAYL9J52YVcQ+6OdV0nAQRcmtI2icE7oDas9oM=;
-        b=TL2miJ0pChk2NuBAEF7iOYNsnHAnNd5Pp8WknPRP8IjYRyEKgYySi8jDFBqCtOojyR
-         BKm1GqupIoW57Bs8L6LavF8mWknSjhgg60ZODmd+ktyu+MYkhdW4knLeS+gVEl/zOsO6
-         Cy9d/qQWgHnw+mTJ18pzyzTNrQpZoDeBIA1jk3yN75mvh5OOZnUxA69hfpvRrb2Rxo/s
-         tDmkz5pSQbTT529k9lHB4gMZ+P67NeMqpZ5bP6XNnjyEBNvFhDV7Ym4SliDZXULtmtoH
-         eDC0hlH6gyhynkmojXfF80ZS3QfswWM0Vumq/JkEvXwxKSNhKllYhawjJcxW2jXQj/dP
-         cIIA==
-X-Gm-Message-State: APjAAAUBfkXk68uzogpxcR07nv2tO4xYBp533p7jhGgzKubn8lvbB4N1
-        mlTYARnP/8ARk35O9EMHirLO0iSVj10xaOygUu4B/Q==
-X-Google-Smtp-Source: APXvYqwjlBBnqpdrHGPbVwjB28rxETkUkZeg/pQUn14xNG7XyX/3F7ij7PU7/8aMj4nUZ6DI/ibMtcA0GjLCWOdCJkE=
-X-Received: by 2002:a37:8b85:: with SMTP id n127mr565429qkd.353.1576625183153;
- Tue, 17 Dec 2019 15:26:23 -0800 (PST)
+        bh=Yh6Rx/uAoHqShzXRqwWwo0U18YqcgTMe9gBfxxSW9sw=;
+        b=Ytm+bz19QQuSD7ULtBn2j8AQyKkrC/jGmghyadHtiQPz4ZlXy6+YOsAf7mKdL5Wexc
+         4RtRCDDm45RMxf7PKtbKQSQGUvjWEelMBS1y6InWBwBzL/VZ2ZhoJpaovTrH+SvOD+nK
+         vCywBi0PRI/bU1T9cMSLl9s/hkAxTrqAx1g6EHT3Yc/rR4XIljFfeqzwgduDKvZ1Zgq3
+         jpkPPwQNfwM9eAWwud79bKYu1vmRTgVK8BhDtpWS5tUY/vhjHhaxzUvam4ZjRQqc/ZkD
+         p0pVN1zR0LSqWzlm+ldyEyROqSOxZEO8r7oYZdg84yf97QOn28AZlASTUsiR+2tBzcvG
+         4AmQ==
+X-Gm-Message-State: APjAAAUByaYBrQg49t5W14qVvkVeeYIex1i4nLcwlo5q0i0tTXyAQYwJ
+        z0PWV7n6UEPlJ5XX98+3tjM0W1uGcBYsw9314EM=
+X-Google-Smtp-Source: APXvYqzGBkfs6nVTmKrFp/cTz7/HR+P5R7MmF8YMattzwVameGtzZjl6hZ6wo7KLaypkyBAJlAgu6ku0JxelF6eEdC8=
+X-Received: by 2002:a37:7b43:: with SMTP id w64mr617200qkc.203.1576625948342;
+ Tue, 17 Dec 2019 15:39:08 -0800 (PST)
 MIME-Version: 1.0
-References: <20191216130933.13254-1-liuzhengyuan@kylinos.cn> <20191216130933.13254-2-liuzhengyuan@kylinos.cn>
-In-Reply-To: <20191216130933.13254-2-liuzhengyuan@kylinos.cn>
+References: <b0701f30-5df9-059e-95f1-74a887782528@huawei.com>
+ <f684ec06-cb01-b296-33bd-0e429af01077@huawei.com> <CAPhsuW5raVXg3BrVpinQ6x-pZgskEMQmd5=uxS+nBk=wO4mrDg@mail.gmail.com>
+In-Reply-To: <CAPhsuW5raVXg3BrVpinQ6x-pZgskEMQmd5=uxS+nBk=wO4mrDg@mail.gmail.com>
 From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Tue, 17 Dec 2019 15:26:11 -0800
-Message-ID: <CAPhsuW4FnPFoErW8z05vw2TC2Qhv0URMHjbmme=R2REbikDh=Q@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] md/raid6: fix algorithm choice under larger PAGE_SIZE
-To:     Zhengyuan Liu <liuzhengyuan@kylinos.cn>
-Cc:     hpa@zytor.com, linux-raid <linux-raid@vger.kernel.org>
+Date:   Tue, 17 Dec 2019 15:38:57 -0800
+Message-ID: <CAPhsuW4FD8vm8-nfBGiC1K-UvqgnGZN5YNpxACb564WjmDvTQw@mail.gmail.com>
+Subject: Re: [PATCH] md-bitmap: small cleanups
+To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Cc:     Song Liu <songliubraving@fb.com>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        linux-raid <linux-raid@vger.kernel.org>,
+        Mingfangsen <mingfangsen@huawei.com>, guiyao@huawei.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 5:09 AM Zhengyuan Liu <liuzhengyuan@kylinos.cn> wrote:
+On Fri, Dec 13, 2019 at 10:08 AM Song Liu <liu.song.a23@gmail.com> wrote:
 >
-[...]
-> ---
->  include/linux/raid/pq.h | 17 +++++++---
->  lib/raid6/algos.c       | 71 +++++++++++++++++++++++++++--------------
->  2 files changed, 59 insertions(+), 29 deletions(-)
+> On Wed, Dec 11, 2019 at 6:39 PM Zhiqiang Liu <liuzhiqiang26@huawei.com> wrote:
+> >
+> > Friendly ping...
 >
-> diff --git a/include/linux/raid/pq.h b/include/linux/raid/pq.h
-> index e0ddb47f4402..6b68b9590a6b 100644
-> --- a/include/linux/raid/pq.h
-> +++ b/include/linux/raid/pq.h
-> @@ -8,6 +8,8 @@
->  #ifndef LINUX_RAID_RAID6_H
->  #define LINUX_RAID_RAID6_H
+> Sorry for the delay. This looks good to me. I will apply it to md-next.
 >
-> +#define RAID6_DISKS 8
-
-Maybe rename as RAID6_TEST_DISKS.
-
-[...]
-
-> +#endif
->  extern const char raid6_empty_zero_page[PAGE_SIZE];
+> Song
 >
->  #define __init
-> @@ -168,11 +174,12 @@ void raid6_dual_recov(int disks, size_t bytes, int faila, int failb,
->  # define pr_err(format, ...) fprintf(stderr, format, ## __VA_ARGS__)
->  # define pr_info(format, ...) fprintf(stdout, format, ## __VA_ARGS__)
->  # define GFP_KERNEL    0
-> -# define __get_free_pages(x, y)        ((unsigned long)mmap(NULL, PAGE_SIZE << (y), \
-> -                                                    PROT_READ|PROT_WRITE,   \
-> -                                                    MAP_PRIVATE|MAP_ANONYMOUS,\
-> -                                                    0, 0))
-> -# define free_pages(x, y)      munmap((void *)(x), PAGE_SIZE << (y))
-> +# define kmalloc(x, y) ((unsigned long)mmap(NULL, (x), PROT_READ|PROT_WRITE, \
-> +                                                MAP_PRIVATE|MAP_ANONYMOUS,   \
-> +                                                0, 0))
-> +# define kfree(x)      munmap((void *)(x), (RAID6_DISKS - 2) * PAGE_SIZE     \
-> +                                               <= 65536 ? 2 * PAGE_SIZE :    \
-> +                                               (RAID6_DISKS - 2) * PAGE_SIZE)
 
-Why do we change __get_free_pages to kmalloc?
+Applied to md-next.
+
+I changed "Author" from "liuzhiqiang (I) <liuzhiqiang26@huawei.com>"
+to "Zhiqiang Liu <liuzhiqiang26@huawei.com>".
 
 Thanks,
 Song
-
-[...]
