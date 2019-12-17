@@ -2,188 +2,80 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 91DCB123302
-	for <lists+linux-raid@lfdr.de>; Tue, 17 Dec 2019 17:54:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 93FDC123366
+	for <lists+linux-raid@lfdr.de>; Tue, 17 Dec 2019 18:22:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbfLQQy5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 17 Dec 2019 11:54:57 -0500
-Received: from mail-ed1-f49.google.com ([209.85.208.49]:44575 "EHLO
-        mail-ed1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbfLQQy5 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 17 Dec 2019 11:54:57 -0500
-Received: by mail-ed1-f49.google.com with SMTP id bx28so5409526edb.11
-        for <linux-raid@vger.kernel.org>; Tue, 17 Dec 2019 08:54:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=DFPau643FOOLqcKSolM03xRWenbTC8XH95Y8C76G2Ss=;
-        b=aPXcem/6lcGKWRHd54bkjGhuPB0A0aPScq6lFt9p+0tu8RMxUAfQhSSvJUrJkUPx2X
-         7gOfzPHsDbwkrAfZTGmyIZ+np3U7uBhIu5ko+ndAg8SG8fWxZ55Dz9DyYz5rmF8Q2D5e
-         Xtdk08JXXx0XSDJLBDMcBxrRgFqfZMmnRo9QGZ00sdj2x5FEgeyLzEUBI+QyZj46OZ9G
-         qVgpfxKWlJXzfs/4baTxhHQF0CKuBZO9v5H5RDY1qwMWsT/FipPlAobiTRLBGV5ICNnP
-         0pM73nLdrdfT/aQjbkEfNJ8mYbBpzGYSYEpr8OWnskAr9awCMpJjQAaZKPRENESn6U/Y
-         6Rog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=DFPau643FOOLqcKSolM03xRWenbTC8XH95Y8C76G2Ss=;
-        b=ADbIg7pzSmM4DhVb3mLzdwjCUdt6CATVl6a6yrzpHlUYAKkq0H1MP05EGgBnrfzB6P
-         MuSCvWssZm6PwK2I6mOh2eWySRYIbXssZOuzcM9cXEwm9l05JhaO1HLiPhqIx84HxbbS
-         a9axtdF4n5aW52gYTvFCq5eXTBdWuNNXnr9LsmwgDXJ5AxyZHjTmYgs6FPrr+ZCIvCYi
-         KvBxjaORUxReoB1E7BWQ+83A5YIlESOe7f5syL67fR7y++2sf9pubsIt5BGNeL1HtsjI
-         EHzaxnVwPdbIFfmW60WU5s4ViiD4madl6azAkF5HtJQVMPuejhIKhVCpxmwjPtN/Fa7c
-         ojxA==
-X-Gm-Message-State: APjAAAVcQs48kqK+JtTTRkMOCanxDk+LnbunHzI1gcNLbQA7tjWSzZjw
-        fhidnnNZxqb7GvRAuqaoMYJwuz91zjzvfQCWEaFvjZ4h
-X-Google-Smtp-Source: APXvYqwkFusC96ZSe5FfVgJsIgjMIL8eyFqbuD50H/AGKV7Xz62zv3cq+srX0U0lTGc3hAIHVHWj88G/oNEiSstAb4Y=
-X-Received: by 2002:a05:6402:2c3:: with SMTP id b3mr6259778edx.207.1576601694632;
- Tue, 17 Dec 2019 08:54:54 -0800 (PST)
+        id S1727015AbfLQRWe (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 17 Dec 2019 12:22:34 -0500
+Received: from smtp.hosts.co.uk ([85.233.160.19]:26606 "EHLO smtp.hosts.co.uk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726887AbfLQRWe (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 17 Dec 2019 12:22:34 -0500
+Received: from [86.148.134.145] (helo=[192.168.1.118])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1ihGYI-0005p4-9E; Tue, 17 Dec 2019 17:22:31 +0000
+Subject: Re: WD MyCloud PR4100 RAID Failure
+To:     Patrick Pearcy <patrick.pearcy@gmail.com>,
+        linux-raid@vger.kernel.org
+References: <CAM-0FgP5dXnTbri-wB-2LJU-QE5wd9nsq=kzMW9kXND=wF=z8w@mail.gmail.com>
+From:   Wols Lists <antlists@youngman.org.uk>
+X-Enigmail-Draft-Status: N1110
+Message-ID: <5DF9173F.6000203@youngman.org.uk>
+Date:   Tue, 17 Dec 2019 17:58:23 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.7.0
 MIME-Version: 1.0
-From:   Patrick Pearcy <patrick.pearcy@gmail.com>
-Date:   Tue, 17 Dec 2019 11:54:43 -0500
-Message-ID: <CAM-0FgP5dXnTbri-wB-2LJU-QE5wd9nsq=kzMW9kXND=wF=z8w@mail.gmail.com>
-Subject: WD MyCloud PR4100 RAID Failure
-To:     linux-raid@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAM-0FgP5dXnTbri-wB-2LJU-QE5wd9nsq=kzMW9kXND=wF=z8w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi everyone, I am hoping that someone is able to assist me with
-recreating my 'failed' WD My Cloud PR4100 RAID.  I experienced a
-series of short power interruptions and despite having a UPS and dual
-power sources for my WD MyCloud, it reported that I had: (a) failed
-drive 1, (b) installed a new drive 1, (c) failed drive 2 and (d)
-installed a new drive 2.   ALL without my touching the system.  I have
-a little knowledge of Linux (enough to follow instructions) so I was
-able to run SMARTCTL on all 4 drives (no errors) and MDADM examine
-(see below).  When trying to force an assemble, I receive the error
-that no superblock was found on sda or sdb.  WD support referred me to
-a data recovery service that wants me to send all disks to them.  I
-believe the data is still present, I just don't know how to get the
-array back.  Any assistance or suggestions would be greatly
-appreciated.  Thanks!  Patrick
+On 17/12/19 16:54, Patrick Pearcy wrote:
+> Hi everyone, I am hoping that someone is able to assist me with
+> recreating my 'failed' WD My Cloud PR4100 RAID.  I experienced a
+> series of short power interruptions and despite having a UPS and dual
+> power sources for my WD MyCloud, it reported that I had: (a) failed
+> drive 1, (b) installed a new drive 1, (c) failed drive 2 and (d)
+> installed a new drive 2.   ALL without my touching the system.  I have
+> a little knowledge of Linux (enough to follow instructions) so I was
+> able to run SMARTCTL on all 4 drives (no errors) and MDADM examine
+> (see below).  When trying to force an assemble, I receive the error
+> that no superblock was found on sda or sdb.  WD support referred me to
+> a data recovery service that wants me to send all disks to them.  I
+> believe the data is still present, I just don't know how to get the
+> array back.  Any assistance or suggestions would be greatly
+> appreciated.  Thanks!  Patrick
+> 
+> mdadm - v2.6.7.1 - 15th October 2008
 
-mdadm - v2.6.7.1 - 15th October 2008
+Ouch! That is an OLD version of mdadm. Is that the version that comes
+with the WD?
 
-MDADM Examine:
-/dev/sda1:
-          Magic : a92b4efc
-        Version : 00.90.00
-           UUID : 3593a169:b2495fbf:90fa7060:4cac0d65
-  Creation Time : Tue Dec 17 10:56:15 2019
-     Raid Level : raid1
-  Used Dev Size : 2097088 (2048.28 MiB 2147.42 MB)
-     Array Size : 2097088 (2048.28 MiB 2147.42 MB)
-   Raid Devices : 4
-  Total Devices : 4
-Preferred Minor : 0
-    Update Time : Tue Dec 17 10:56:16 2019
-          State : clean
-Internal Bitmap : present
- Active Devices : 4
-Working Devices : 4
- Failed Devices : 0
-  Spare Devices : 0
-       Checksum : 2ac0c510 - correct
-         Events : 1
+The drives themselves. Are they 2GB drives? That's tiny by today's
+standards. I'd get a big 500GB or 1TB drive and image them on to the new
+drive. That way you have a backup, and you can play.
 
-      Number   Major   Minor   RaidDevice State
-this     0       8        1        0      active sync   /dev/sda1
-   0     0       8        1        0      active sync   /dev/sda1
-   1     1       8       17        1      active sync   /dev/sdb1
-   2     2       8       33        2      active sync   /dev/sdc1
-   3     3       8       49        3      active sync   /dev/sdd1
-/dev/sdb1:
-          Magic : a92b4efc
-        Version : 00.90.00
-           UUID : 3593a169:b2495fbf:90fa7060:4cac0d65
-  Creation Time : Tue Dec 17 10:56:15 2019
-     Raid Level : raid1
-  Used Dev Size : 2097088 (2048.28 MiB 2147.42 MB)
-     Array Size : 2097088 (2048.28 MiB 2147.42 MB)
-   Raid Devices : 4
-  Total Devices : 4
-Preferred Minor : 0
-    Update Time : Tue Dec 17 10:56:16 2019
-          State : clean
-Internal Bitmap : present
- Active Devices : 4
-Working Devices : 4
- Failed Devices : 0
-  Spare Devices : 0
-       Checksum : 2ac0c522 - correct
-         Events : 1
+Can you run a modern version of mdadm over the drives? It's now up to 4.0.
 
-      Number   Major   Minor   RaidDevice State
-this     1       8       17        1      active sync   /dev/sdb1
-   0     0       8        1        0      active sync   /dev/sda1
-   1     1       8       17        1      active sync   /dev/sdb1
-   2     2       8       33        2      active sync   /dev/sdc1
-   3     3       8       49        3      active sync   /dev/sdd1
-/dev/sdc1:
-          Magic : a92b4efc
-        Version : 00.90.00
-           UUID : 3593a169:b2495fbf:90fa7060:4cac0d65
-  Creation Time : Tue Dec 17 10:56:15 2019
-     Raid Level : raid1
-  Used Dev Size : 2097088 (2048.28 MiB 2147.42 MB)
-     Array Size : 2097088 (2048.28 MiB 2147.42 MB)
-   Raid Devices : 4
-  Total Devices : 4
-Preferred Minor : 0
-    Update Time : Tue Dec 17 10:56:16 2019
-          State : clean
-Internal Bitmap : present
- Active Devices : 4
-Working Devices : 4
- Failed Devices : 0
-  Spare Devices : 0
-       Checksum : 2ac0c534 - correct
-         Events : 1
+And you say you can follow instructions. Did you find the linux raid
+wiki? I guess not since it asks for rather more information, including
+things like mdadm --detail, and lsdrv.
 
-      Number   Major   Minor   RaidDevice State
-this     2       8       33        2      active sync   /dev/sdc1
-   0     0       8        1        0      active sync   /dev/sda1
-   1     1       8       17        1      active sync   /dev/sdb1
-   2     2       8       33        2      active sync   /dev/sdc1
-   3     3       8       49        3      active sync   /dev/sdd1
-/dev/sdd1:
-          Magic : a92b4efc
-        Version : 00.90.00
-           UUID : 3593a169:b2495fbf:90fa7060:4cac0d65
-  Creation Time : Tue Dec 17 10:56:15 2019
-     Raid Level : raid1
-  Used Dev Size : 2097088 (2048.28 MiB 2147.42 MB)
-     Array Size : 2097088 (2048.28 MiB 2147.42 MB)
-   Raid Devices : 4
-  Total Devices : 4
-Preferred Minor : 0
-    Update Time : Tue Dec 17 10:56:16 2019
-          State : clean
-Internal Bitmap : present
- Active Devices : 4
-Working Devices : 4
- Failed Devices : 0
-  Spare Devices : 0
-       Checksum : 2ac0c546 - correct
-         Events : 1
+https://raid.wiki.kernel.org/index.php/Linux_Raid#When_Things_Go_Wrogn
+https://raid.wiki.kernel.org/index.php/Asking_for_help
 
-      Number   Major   Minor   RaidDevice State
-this     3       8       49        3      active sync   /dev/sdd1
-   0     0       8        1        0      active sync   /dev/sda1
-   1     1       8       17        1      active sync   /dev/sdb1
-   2     2       8       33        2      active sync   /dev/sdc1
-   3     3       8       49        3      active sync   /dev/sdd1
+If it has lost the superblock, I'm guessing an mdadm --create will fix
+it BUT DO NOT EVEN *T*H*I*N*K* of running that over the original drives
+- if you back them up on to a big drive you can run it on the backups.
 
+I'm optimistic you can get your data back. But you might need some help
+from the experts. And try and put those backups I mentioned on a
+snapshot-based filesystem like lvm or btrfs, so you can snapshot it, try
+various rescue tactics, and revert to the snapshot if they don't work.
 
-ReplyForward
-1.31 GB (8%) of 15 GB used
-Manage
-Last account activity: 7 minutes ago
-Details
-Send =E2=80=AA(Ctrl-Enter)=E2=80=AC
+Cheers,
+Wol
