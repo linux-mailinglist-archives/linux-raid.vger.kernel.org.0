@@ -2,94 +2,85 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9334D124B2F
-	for <lists+linux-raid@lfdr.de>; Wed, 18 Dec 2019 16:14:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 41D74124B79
+	for <lists+linux-raid@lfdr.de>; Wed, 18 Dec 2019 16:21:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbfLRPOJ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 18 Dec 2019 10:14:09 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38716 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727397AbfLRPOE (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 18 Dec 2019 10:14:04 -0500
-Received: by mail-io1-f68.google.com with SMTP id v3so2344084ioj.5
-        for <linux-raid@vger.kernel.org>; Wed, 18 Dec 2019 07:14:04 -0800 (PST)
+        id S1726931AbfLRPVx (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 18 Dec 2019 10:21:53 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:39740 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbfLRPVx (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 18 Dec 2019 10:21:53 -0500
+Received: by mail-ed1-f68.google.com with SMTP id t17so1962921eds.6
+        for <linux-raid@vger.kernel.org>; Wed, 18 Dec 2019 07:21:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=R9l9mbjTMtC+3agOxuj88vgGSGUSi1shzIvbtHPQHDA=;
-        b=RfaUJbE64AqObBUWyZFAX00yFzfv+PMQBeMlfEbyOTSSIZSlP9dNPzblRe9C4/Xp5G
-         OOrfzjlEIPRCszaxaclLviha/Gl6J+8MNE2wJIlQr3g8uWJn+m5NNx6dyOIWXJDzHKAu
-         CFfw6ayoPSChbR+RAE0+B68G/pEf5o1uZqam8GCW/DM3JVJn1rrKg09G5nyaA4x8K46C
-         DidFmOGbhUnnebgzWtKvL2IYqcm0dJ4hRYsroJX5h4wZl5ygcdMBOrPylnEG0iZgtaC4
-         tctA6UVKTV1ZO7eaOpJeM3zJ9lY8Otzi6Az77Sm1wv6CYLTS/yvcKPbBaIHIL7wY9gk+
-         23sQ==
+        d=cloud.ionos.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=w2TYc3X5F1+pKlPGMTDMJxTpnr4QeJUwqvIFBGbUsRo=;
+        b=LzNhIq0udSz5l1vL2aoBDzkNqnaLDS+Bf3b7mUnl3KV7EckS/RwcfS0oFBEEEYZFp8
+         7WaVKRsF39qmndaj6eZ/6pizc3qL4sW0Lqy6+7luczfQuoXk9n9Aw9VkZKNm3j4zsHcS
+         ego0HmRNMbTXloLiOXdRJmFiZXJHK3NDaNOwOS7JcSvBE+tAceDI0EMmaYF/Y3Sr6cvI
+         gn/fIXxO+VFlFAfHPGepIP4OoAP0xKRrm2riEMpe15vtDjxewVkMJLzWXfTNpPrxmUqg
+         ikCw9DImAsVkul+BdxYuX0xE/IbjZwle8mpgEMBvtXenFCIc31ZesdksvB7SxldcokZ5
+         ni4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=R9l9mbjTMtC+3agOxuj88vgGSGUSi1shzIvbtHPQHDA=;
-        b=VaimRjneTMmWdiMyNnQnzMbD/qu/D7HUcr0zJVZSio8hgNItSozO82/9n8ruHTEfZ8
-         PW+wra8OxwsowiSLWowQ+rznH4BIEOZiAxdkrOFCmXc4Zrm4X/QoRROKuwGaOZokYBxZ
-         n0lNVmSEwseMkF538m/flbZhVIfjNvozXCkKkwyWt2pEBO6Acj0kR2YAkVA2JVDQLxC/
-         GrLJaL3HrQu8TlDMViSNQwHvElHyvZFaxGnpOCJ/L935FDSVBBeZg8IR6OYxxkKrd3Gf
-         Wfb+HlWz5EmA3EtZ1fYfOC6oOzapkFTYDQfKOcoVKSsLhgetoynVRYcvHVlGgz4umaPe
-         nHIA==
-X-Gm-Message-State: APjAAAWvzHMF08UCH65aYYStDHdIuksDwGN9v1qD0pelEysM3SlOBmYp
-        s4Kj3BZQHdFdO2/aDsxPWNiXsfomJ3M44z0iZA==
-X-Google-Smtp-Source: APXvYqyIz9CrpHcrXivylieLEiE1VxRyGUw+E9DXz6VIYz+kYlOCef915g/qsmML8+OoqrwbsBK3G0eW6o6RBALrF/E=
-X-Received: by 2002:a05:6638:950:: with SMTP id f16mr2789501jad.107.1576682043767;
- Wed, 18 Dec 2019 07:14:03 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=w2TYc3X5F1+pKlPGMTDMJxTpnr4QeJUwqvIFBGbUsRo=;
+        b=kAC7mwwHPmXrtuuB86AE2K6OXKBFCXEnr1qpkmPKBtQ9mEKJUzjS5fPXnq2irVFw1P
+         OFVf9f8/qJNQ/C1wF9KAMwELYHLciWj5KmR5d49Ox9NJnrAH5h5QcSSZs3FQKjcDYyCt
+         DWDgWHumGPhGQbHeLGbhnlh+qhB/x5KukNEmfrT5YhLrR+dFowklaZeF7vp6/2gxi+wA
+         Z6Z+0ZEIpsm/DCU/5jUmFuboExPUYTlPoE2V3qJWo0JC5Ykz1VdTFtX+3aeXZvXwfHCz
+         5uh0nV9QmK18vjqO4DosjnZI26C+vTTM51n92zYC0a79+8t/i3bn2qMwjH9qMqslhav4
+         P6Aw==
+X-Gm-Message-State: APjAAAU3i482KFgnWaOoB0H5PGBw7+1nGcYahje4H0xKV+bARnRo86vL
+        HzfXNQLCNUS9Iemup/mXU+JtBoXOl68=
+X-Google-Smtp-Source: APXvYqxQWdSGevlibmSscxTRAUgermtlC2BDuWSUXJ9Vz/ek9pxBWWpla1SVY5eVm5zHDu09G5K6gw==
+X-Received: by 2002:a50:cd1c:: with SMTP id z28mr3012049edi.20.1576682511225;
+        Wed, 18 Dec 2019 07:21:51 -0800 (PST)
+Received: from ?IPv6:2a02:247f:ffff:2540:980f:fddd:828f:9ec3? ([2001:1438:4010:2540:980f:fddd:828f:9ec3])
+        by smtp.gmail.com with ESMTPSA id nq3sm105488ejb.73.2019.12.18.07.21.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 18 Dec 2019 07:21:50 -0800 (PST)
+Subject: Re: [PATCH v2 2/9] md: prepare for enable raid1 io serialization
+To:     Song Liu <liu.song.a23@gmail.com>, Guoqing Jiang <jgq516@gmail.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>
+References: <20191121103728.18919-1-guoqing.jiang@cloud.ionos.com>
+ <20191121103728.18919-3-guoqing.jiang@cloud.ionos.com>
+ <CAPhsuW6aKNVcRQR9Hov2=cO2X8L-qGO9VFPKq7DNA+7M_TMw4A@mail.gmail.com>
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Message-ID: <1ec78b34-8e03-ef59-260b-f37070ea505b@cloud.ionos.com>
+Date:   Wed, 18 Dec 2019 16:21:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Received: by 2002:a02:6603:0:0:0:0:0 with HTTP; Wed, 18 Dec 2019 07:14:03
- -0800 (PST)
-Reply-To: dhl.expresscourier102156@outlook.fr
-From:   "MS. MARYANNA B. THOMASON" <info.zennitbankplcnigerian@gmail.com>
-Date:   Wed, 18 Dec 2019 16:14:03 +0100
-Message-ID: <CABHzvr=Pq7-TqhY8TPvFCsr+5-DhDQy=XOg-TM13qqbFWeemfQ@mail.gmail.com>
-Subject: =?UTF-8?Q?Urgent_delivery_Notification_of_your_ATM_MASTER_CARD?=
-        =?UTF-8?Q?_Amount=2C=2415=2E800=E2=80=99000=E2=80=9900=2C?=
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAPhsuW6aKNVcRQR9Hov2=cO2X8L-qGO9VFPKq7DNA+7M_TMw4A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Attn Dear.
 
-Urgent delivery Notification of your ATM MASTER CARD, Dhl-Benin is
-ready for delivery of your ATM Master card worth $15.800=E2=80=99000=E2=80=
-=9900, as
-approved this morning, Date, 18/12/2019. Through the Intruction from
-INTERNATIONAL MONETARY FUNDS, I.M.F official Directors.
 
-REGISTRATION NO :EG58945
-PARCEL NUMBER: 140479
-Delivery Schuleded now,
-Finally all we required from you is your ATM Card Proccessing Delivery
-fees $19.00 only which you must send to this DHL service to enable us
-dispatch the parcel to your destination today.
+On 12/18/19 2:17 AM, Song Liu wrote:
+> On Thu, Nov 21, 2019 at 2:37 AM <jgq516@gmail.com> wrote:
+>> From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+>>
+>> 1. The related resources (spin_lock, list and waitqueue) are needed for
+>> address raid1 reorder overlap issue too, so add "is_force" parameter to
+>> funcs (mddev_create/destroy_serial_pool). The parameter is set to true
+>> if we want to enable or disable raid1 io serialization in later patch.
+> Looks like is_force is always the same as "rdev == NULL"? Can we remove the
+> is_force argument and use rdev == NULL instead? I guess it will also simplify
+> the functions.
 
-Here is our receiving payment details.
-You are advised to send it Via Money Gram Service.
+Ok, will remove it.
 
-Receiver's Name--------Alan Ude
-Country-------Benin Republic.
-City/ Address--------Cotonou
-Test Question--------In God
-Answer-------We Trust
-Amount------------$US19.00 only
-Mtcn-------------
-Sender's Name-------
-
-Your delivery  ATM card worth $15.800=E2=80=99000=E2=80=9900,
-Is Due for delivery to your address today upon confirmation of
-required fee from you asap.
-
-Call us on this phone number for any inquiry. +229 62819378
-Awaiting your urgent response.
-
-MS. MARYANNA B. THOMASON, Shipment director, DHL Express
-Courier Company-Benin
+Thanks,
+Guoqing
