@@ -2,81 +2,94 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CA14A123FCA
-	for <lists+linux-raid@lfdr.de>; Wed, 18 Dec 2019 07:46:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9334D124B2F
+	for <lists+linux-raid@lfdr.de>; Wed, 18 Dec 2019 16:14:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725930AbfLRGq3 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 18 Dec 2019 01:46:29 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55385 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725797AbfLRGq3 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 18 Dec 2019 01:46:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576651588;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=DMunPiXDGsswR2ED7amyW8S789pl3mo5xYrsVrOqiAs=;
-        b=Tt0cVru/LMdYRapI5BSvLrlTQfz1hmmGRLH5TMdDauD0vroypXJZGLAgETdUZUQr/07Olf
-        hzSkDLC84Llbk/n+ay2ivmK9An2FqL2dlHoGoAo7K6QSgUJy1+62dKErfJmzRy5K8/YeO3
-        GJ35SfrufxAkXAO6GQ+xONduCNcDbso=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-328-1CVuJj82MemQBq_PUZ5l5g-1; Wed, 18 Dec 2019 01:46:26 -0500
-X-MC-Unique: 1CVuJj82MemQBq_PUZ5l5g-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BDACC189CD00;
-        Wed, 18 Dec 2019 06:46:25 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-8-27.pek2.redhat.com [10.72.8.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 938A019757;
-        Wed, 18 Dec 2019 06:46:23 +0000 (UTC)
-From:   Xiao Ni <xni@redhat.com>
-To:     jes.sorensen@gmail.com
-Cc:     linux-raid@vger.kernel.org
-Subject: [mdadm PATCH 1/1] mdcheck service can't start succesfully because of syntax error
-Date:   Wed, 18 Dec 2019 14:46:21 +0800
-Message-Id: <1576651581-5135-1-git-send-email-xni@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        id S1727435AbfLRPOJ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 18 Dec 2019 10:14:09 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38716 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727397AbfLRPOE (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 18 Dec 2019 10:14:04 -0500
+Received: by mail-io1-f68.google.com with SMTP id v3so2344084ioj.5
+        for <linux-raid@vger.kernel.org>; Wed, 18 Dec 2019 07:14:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=R9l9mbjTMtC+3agOxuj88vgGSGUSi1shzIvbtHPQHDA=;
+        b=RfaUJbE64AqObBUWyZFAX00yFzfv+PMQBeMlfEbyOTSSIZSlP9dNPzblRe9C4/Xp5G
+         OOrfzjlEIPRCszaxaclLviha/Gl6J+8MNE2wJIlQr3g8uWJn+m5NNx6dyOIWXJDzHKAu
+         CFfw6ayoPSChbR+RAE0+B68G/pEf5o1uZqam8GCW/DM3JVJn1rrKg09G5nyaA4x8K46C
+         DidFmOGbhUnnebgzWtKvL2IYqcm0dJ4hRYsroJX5h4wZl5ygcdMBOrPylnEG0iZgtaC4
+         tctA6UVKTV1ZO7eaOpJeM3zJ9lY8Otzi6Az77Sm1wv6CYLTS/yvcKPbBaIHIL7wY9gk+
+         23sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=R9l9mbjTMtC+3agOxuj88vgGSGUSi1shzIvbtHPQHDA=;
+        b=VaimRjneTMmWdiMyNnQnzMbD/qu/D7HUcr0zJVZSio8hgNItSozO82/9n8ruHTEfZ8
+         PW+wra8OxwsowiSLWowQ+rznH4BIEOZiAxdkrOFCmXc4Zrm4X/QoRROKuwGaOZokYBxZ
+         n0lNVmSEwseMkF538m/flbZhVIfjNvozXCkKkwyWt2pEBO6Acj0kR2YAkVA2JVDQLxC/
+         GrLJaL3HrQu8TlDMViSNQwHvElHyvZFaxGnpOCJ/L935FDSVBBeZg8IR6OYxxkKrd3Gf
+         Wfb+HlWz5EmA3EtZ1fYfOC6oOzapkFTYDQfKOcoVKSsLhgetoynVRYcvHVlGgz4umaPe
+         nHIA==
+X-Gm-Message-State: APjAAAWvzHMF08UCH65aYYStDHdIuksDwGN9v1qD0pelEysM3SlOBmYp
+        s4Kj3BZQHdFdO2/aDsxPWNiXsfomJ3M44z0iZA==
+X-Google-Smtp-Source: APXvYqyIz9CrpHcrXivylieLEiE1VxRyGUw+E9DXz6VIYz+kYlOCef915g/qsmML8+OoqrwbsBK3G0eW6o6RBALrF/E=
+X-Received: by 2002:a05:6638:950:: with SMTP id f16mr2789501jad.107.1576682043767;
+ Wed, 18 Dec 2019 07:14:03 -0800 (PST)
+MIME-Version: 1.0
+Received: by 2002:a02:6603:0:0:0:0:0 with HTTP; Wed, 18 Dec 2019 07:14:03
+ -0800 (PST)
+Reply-To: dhl.expresscourier102156@outlook.fr
+From:   "MS. MARYANNA B. THOMASON" <info.zennitbankplcnigerian@gmail.com>
+Date:   Wed, 18 Dec 2019 16:14:03 +0100
+Message-ID: <CABHzvr=Pq7-TqhY8TPvFCsr+5-DhDQy=XOg-TM13qqbFWeemfQ@mail.gmail.com>
+Subject: =?UTF-8?Q?Urgent_delivery_Notification_of_your_ATM_MASTER_CARD?=
+        =?UTF-8?Q?_Amount=2C=2415=2E800=E2=80=99000=E2=80=9900=2C?=
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-It reports error when starting mdcheck_start and mdcheck_continue service.
-Invalid environment assignment, ignoring: MDADM_CHECK_DURATION="6 hours"
+Attn Dear.
 
-Signed-off-by: Xiao Ni <xni@redhat.com>
----
- systemd/mdcheck_continue.service | 2 +-
- systemd/mdcheck_start.service    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Urgent delivery Notification of your ATM MASTER CARD, Dhl-Benin is
+ready for delivery of your ATM Master card worth $15.800=E2=80=99000=E2=80=
+=9900, as
+approved this morning, Date, 18/12/2019. Through the Intruction from
+INTERNATIONAL MONETARY FUNDS, I.M.F official Directors.
 
-diff --git a/systemd/mdcheck_continue.service b/systemd/mdcheck_continue.service
-index deac695..aa02dde 100644
---- a/systemd/mdcheck_continue.service
-+++ b/systemd/mdcheck_continue.service
-@@ -11,7 +11,7 @@ ConditionPathExistsGlob = /var/lib/mdcheck/MD_UUID_*
- 
- [Service]
- Type=oneshot
--Environment= MDADM_CHECK_DURATION="6 hours"
-+Environment= "MDADM_CHECK_DURATION=6 hours"
- EnvironmentFile=-/run/sysconfig/mdadm
- ExecStartPre=-/usr/lib/mdadm/mdadm_env.sh
- ExecStart=/usr/share/mdadm/mdcheck --continue --duration ${MDADM_CHECK_DURATION}
-diff --git a/systemd/mdcheck_start.service b/systemd/mdcheck_start.service
-index f17f1aa..da62d5f 100644
---- a/systemd/mdcheck_start.service
-+++ b/systemd/mdcheck_start.service
-@@ -11,7 +11,7 @@ Wants=mdcheck_continue.timer
- 
- [Service]
- Type=oneshot
--Environment= MDADM_CHECK_DURATION="6 hours"
-+Environment= "MDADM_CHECK_DURATION=6 hours"
- EnvironmentFile=-/run/sysconfig/mdadm
- ExecStartPre=-/usr/lib/mdadm/mdadm_env.sh
- ExecStart=/usr/share/mdadm/mdcheck --duration ${MDADM_CHECK_DURATION}
--- 
-2.7.5
+REGISTRATION NO :EG58945
+PARCEL NUMBER: 140479
+Delivery Schuleded now,
+Finally all we required from you is your ATM Card Proccessing Delivery
+fees $19.00 only which you must send to this DHL service to enable us
+dispatch the parcel to your destination today.
 
+Here is our receiving payment details.
+You are advised to send it Via Money Gram Service.
+
+Receiver's Name--------Alan Ude
+Country-------Benin Republic.
+City/ Address--------Cotonou
+Test Question--------In God
+Answer-------We Trust
+Amount------------$US19.00 only
+Mtcn-------------
+Sender's Name-------
+
+Your delivery  ATM card worth $15.800=E2=80=99000=E2=80=9900,
+Is Due for delivery to your address today upon confirmation of
+required fee from you asap.
+
+Call us on this phone number for any inquiry. +229 62819378
+Awaiting your urgent response.
+
+MS. MARYANNA B. THOMASON, Shipment director, DHL Express
+Courier Company-Benin
