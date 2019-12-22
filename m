@@ -2,383 +2,107 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D0942128AA8
-	for <lists+linux-raid@lfdr.de>; Sat, 21 Dec 2019 18:42:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 937AB128DFF
+	for <lists+linux-raid@lfdr.de>; Sun, 22 Dec 2019 14:04:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbfLURms (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 21 Dec 2019 12:42:48 -0500
-Received: from mail-ed1-f42.google.com ([209.85.208.42]:46233 "EHLO
-        mail-ed1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726114AbfLURms (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 21 Dec 2019 12:42:48 -0500
-Received: by mail-ed1-f42.google.com with SMTP id m8so11629990edi.13
-        for <linux-raid@vger.kernel.org>; Sat, 21 Dec 2019 09:42:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0/+T5MTcfuhRXWPVf2j9A5UcLTnutKlCImISz9QhvsQ=;
-        b=ANgiEjVAzJmTNZELeYQbJrF0N6t7r8m++RjQ8aaxjX/gH3MnEzhDr0/ahs+aug2zGa
-         wlLH0eK7/ejfYMHQ6hbbkFpepbCBlXy5yOaS5fhFixudU3xXDlQ028YfN/enEBZQCCfe
-         8Gc96FlbS8eeYqT5YL0DasnWxODhIxHuzdxSpXPLfNJr6Dv6Y2JmYzEL3fnojCLiI67I
-         S3Y3OAexLyNkfK8osHOAsi43Je/QAv1s0lNVN4X3PafWZbBIh56BmWeWDjo9CS3tJYKu
-         pqXuQC2Oa+EDBPa0Vc2TjAUINMSwhfpM5tXF6SGhZ9OyO2hvrMNhimAfBPuewccVD0lu
-         3Ajw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0/+T5MTcfuhRXWPVf2j9A5UcLTnutKlCImISz9QhvsQ=;
-        b=SGsnjTm5vOk+GlILl2UOcG7IG7somNMamJr0/EoVmckT4rIPSUH62fOeK+ZN+rfjYU
-         f0P6RixkuA8pTjyn3FMYVFnjJShafY24k2sjQOBPRr0aSK5ZezN5U/UP/MyYiIfpxbyM
-         HAw0u8wbjm2TbGeVnXDG6c+KmsHOVCkm0moxEaYGZCEExS2yj6C2zkZgUlUntgSmLmol
-         UGy9kspaWWzus0RBBfk9cUFTs+O7cXBXul/Pg4I4W5g/fN5+liJbNY+vfVfPR2pry2Lw
-         eIH0o2k3zDJ9e0KZnJMuaGRAoLkYlFnjQ103A7WW7ThEsue+e7Xt0Xy7i/cVAXdEtJrK
-         m68g==
-X-Gm-Message-State: APjAAAXZRnNwRh7r/mnsWrh8NI61cC73Yo2/MarGBqobPo5hbvXHuJNB
-        0g6ihl4CoYRwFq9Aics44RvN0s6UzzSi2f5XBfMfgijffM8=
-X-Google-Smtp-Source: APXvYqy7/Muecoyp8cri2YQ0MEGVfdUsStwPnF8ibom49gTPAonInwO2DIsWiAFdB3roAw/d1qSrZSbG94TylNCOM7c=
-X-Received: by 2002:aa7:d1d0:: with SMTP id g16mr23707485edp.56.1576950165712;
- Sat, 21 Dec 2019 09:42:45 -0800 (PST)
-MIME-Version: 1.0
+        id S1725839AbfLVNE4 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 22 Dec 2019 08:04:56 -0500
+Received: from arcturus.uberspace.de ([185.26.156.30]:48040 "EHLO
+        arcturus.uberspace.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbfLVNEz (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 22 Dec 2019 08:04:55 -0500
+Received: (qmail 22642 invoked from network); 22 Dec 2019 13:04:53 -0000
+Received: from localhost (HELO localhost) (127.0.0.1)
+  by arcturus.uberspace.de with SMTP; 22 Dec 2019 13:04:53 -0000
+Date:   Sun, 22 Dec 2019 14:04:52 +0100
+From:   Andreas Klauer <Andreas.Klauer@metamorpher.de>
+To:     Patrick Pearcy <patrick.pearcy@gmail.com>
+Cc:     linux-raid@vger.kernel.org
+Subject: Re: WD MyCloud PR4100 RAID Failure
+Message-ID: <20191222130452.GA2580@metamorpher.de>
 References: <CAM-0FgP5dXnTbri-wB-2LJU-QE5wd9nsq=kzMW9kXND=wF=z8w@mail.gmail.com>
  <20191217182509.GA16121@metamorpher.de>
-In-Reply-To: <20191217182509.GA16121@metamorpher.de>
-From:   Patrick Pearcy <patrick.pearcy@gmail.com>
-Date:   Sat, 21 Dec 2019 12:42:35 -0500
-Message-ID: <CAM-0FgOpi4EGuhM7DXSutRtxRSJ4nb9kLzM0U_3LZi-jxUDVWQ@mail.gmail.com>
-Subject: Re: WD MyCloud PR4100 RAID Failure
-To:     Andreas Klauer <Andreas.Klauer@metamorpher.de>
-Cc:     linux-raid@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+ <CAM-0FgOpi4EGuhM7DXSutRtxRSJ4nb9kLzM0U_3LZi-jxUDVWQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM-0FgOpi4EGuhM7DXSutRtxRSJ4nb9kLzM0U_3LZi-jxUDVWQ@mail.gmail.com>
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Andreas,
+On Sat, Dec 21, 2019 at 12:42:35PM -0500, Patrick Pearcy wrote:
+> Andreas,
+> 
+> Sorry for late reply (e-mail was in SPAM folder).   Here is the
+> results of MDADM on partition #2.   Thanks for your assistance!!!
+> 
+> - Best Regards Patrick.
 
-Sorry for late reply (e-mail was in SPAM folder).   Here is the
-results of MDADM on partition #2.   Thanks for your assistance!!!
+OK, so you have two failed drives (/dev/sda2 and /dev/sdb2) in a RAID 5.
 
-- Best Regards Patrick.
+They got kicked from the array for some reason and thus it stopped working.
+Unless there are logfiles, it's probably impossible to determine the cause.
+The "failed, failed, failed..." should be harmless attempts to re-assemble.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~``
+Event Count and Update Time is identical for all drives, so it's unclear
+which order this happened in and which drive has better data for recovery.
+Sometimes this doesn't matter and sometimes it matters a lot...
 
-/dev/sda2:
-          Magic : a92b4efc
-        Version : 1.0
-    Feature Map : 0x1
-     Array UUID : 85b920ec:ad30b4b9:e6fea107:6a14bcf6
-           Name : 1
-  Creation Time : Thu Feb  2 03:28:56 2017
-     Raid Level : raid5
-   Raid Devices : 4
- Avail Dev Size : 15619661552 (7448.04 GiB 7997.27 GB)
-     Array Size : 46858984320 (22344.11 GiB 23991.80 GB)
-  Used Dev Size : 15619661440 (7448.04 GiB 7997.27 GB)
-   Super Offset : 15619661808 sectors
-          State : clean
-    Device UUID : 00e63dcc:6ef28f57:fef06206:f60ddc6b
-Internal Bitmap : 2 sectors from superblock
-    Update Time : Thu Nov 21 15:11:27 2019
-       Checksum : 821d602f - correct
-         Events : 36
-         Layout : left-symmetric
-     Chunk Size : 64K
-    Array Slot : 0 (empty, empty, 2, 3, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed)
-   Array State : __uu 380 failed
-/dev/sdb2:
-          Magic : a92b4efc
-        Version : 1.0
-    Feature Map : 0x1
-     Array UUID : 85b920ec:ad30b4b9:e6fea107:6a14bcf6
-           Name : 1
-  Creation Time : Thu Feb  2 03:28:56 2017
-     Raid Level : raid5
-   Raid Devices : 4
- Avail Dev Size : 15619661552 (7448.04 GiB 7997.27 GB)
-     Array Size : 46858984320 (22344.11 GiB 23991.80 GB)
-  Used Dev Size : 15619661440 (7448.04 GiB 7997.27 GB)
-   Super Offset : 15619661808 sectors
-          State : clean
-    Device UUID : 7442af2a:e3ad9816:8ae564b4:ee70262b
-Internal Bitmap : 2 sectors from superblock
-    Update Time : Thu Nov 21 15:11:27 2019
-       Checksum : ce3cf9d - correct
-         Events : 36
-         Layout : left-symmetric
-     Chunk Size : 64K
-    Array Slot : 1 (empty, empty, 2, 3, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed)
-   Array State : __uu 380 failed
-/dev/sdc2:
-          Magic : a92b4efc
-        Version : 1.0
-    Feature Map : 0x1
-     Array UUID : 85b920ec:ad30b4b9:e6fea107:6a14bcf6
-           Name : 1
-  Creation Time : Thu Feb  2 03:28:56 2017
-     Raid Level : raid5
-   Raid Devices : 4
- Avail Dev Size : 15619661552 (7448.04 GiB 7997.27 GB)
-     Array Size : 46858984320 (22344.11 GiB 23991.80 GB)
-  Used Dev Size : 15619661440 (7448.04 GiB 7997.27 GB)
-   Super Offset : 15619661808 sectors
-          State : clean
-    Device UUID : 6daba591:58037e27:243658e8:98cb746e
-Internal Bitmap : 2 sectors from superblock
-    Update Time : Thu Nov 21 15:11:27 2019
-       Checksum : fc013950 - correct
-         Events : 36
-         Layout : left-symmetric
-     Chunk Size : 64K
-    Array Slot : 2 (empty, empty, 2, 3, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed)
-   Array State : __Uu 380 failed
-/dev/sdd2:
-          Magic : a92b4efc
-        Version : 1.0
-    Feature Map : 0x1
-     Array UUID : 85b920ec:ad30b4b9:e6fea107:6a14bcf6
-           Name : 1
-  Creation Time : Thu Feb  2 03:28:56 2017
-     Raid Level : raid5
-   Raid Devices : 4
- Avail Dev Size : 15619661552 (7448.04 GiB 7997.27 GB)
-     Array Size : 46858984320 (22344.11 GiB 23991.80 GB)
-  Used Dev Size : 15619661440 (7448.04 GiB 7997.27 GB)
-   Super Offset : 15619661808 sectors
-          State : clean
-    Device UUID : 321fb3b3:93f4b66d:3e0d6f9d:a980741a
-Internal Bitmap : 2 sectors from superblock
-    Update Time : Thu Nov 21 15:11:27 2019
-       Checksum : c55e2a7c - correct
-         Events : 36
-         Layout : left-symmetric
-     Chunk Size : 64K
-    Array Slot : 3 (empty, empty, 2, 3, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed, failed, failed, failed, failed, failed, failed, failed,
-failed)
-   Array State : __uU 380 failed
+So you can only try both possibilities, attempt recovery using
+either /dev/sd{a,c,d}2 or /dev/sd{b,c,d}2.
 
+Now, you could do that with an up-to-date Linux/mdadm environment,
+keep drives read-only and experiment with copy-on-write overlays:
 
-On Tue, Dec 17, 2019 at 1:25 PM Andreas Klauer
-<Andreas.Klauer@metamorpher.de> wrote:
->
-> On Tue, Dec 17, 2019 at 11:54:43AM -0500, Patrick Pearcy wrote:
-> > MDADM Examine:
-> > /dev/sda1:
-> >           Magic : a92b4efc
-> >         Version : 00.90.00
-> >            UUID : 3593a169:b2495fbf:90fa7060:4cac0d65
-> >   Creation Time : Tue Dec 17 10:56:15 2019
->
-> This was re-created...
->
-> >      Raid Level : raid1
->
-> ...with Level 1 (Mirror)...
->
-> >   Used Dev Size : 2097088 (2048.28 MiB 2147.42 MB)
-> >      Array Size : 2097088 (2048.28 MiB 2147.42 MB)
-> >    Raid Devices : 4
->
-> ...across 4 devices? With that all data would be gone,
-> cause it would have replicated anything on disk #1 to
-> the other disks.
->
-> Oh, it's just 2GiB. A firmware/boot partition, maybe?
->
-> Do you have examine for the data partitions?
->
-> Regards
-> Andreas Klauer
+- https://raid.wiki.kernel.org/index.php/Recovering_a_failed_software_RAID#Making_the_harddisks_read-only_using_an_overlay_file
+- https://unix.stackexchange.com/a/131927/30851
+
+But it might result in an array that won't run in your NAS
+that uses old Linux/mdadm enviornment. You might have to
+get rid of new features like bad block log etc., anything 
+the older system won't understand and might take offense to.
+
+So in terms of compatibility, it might be better to attempt recovery
+directly on the NAS itself, but it probably won't support failsafes
+like overlays and old mdadm will behave different from guidance
+you find online, so it's riskier.
+
+Personally what I would probably do here is screw it all and just
+edit the metadata directly (dd and hexedit). For my arrays I actually
+do keep backups of "healthy" metadata just in case it falls apart
+for no reason and I'm too lazy to do a more involved recovery.
+
+But of course, there's tons of things that can go wrong here, too :-)
+
+For a quick survey, provided you do have SSH access to the NAS, 
+you could create a bunch of virtual drives on a Linux PC:
+
+   for disk in sda2 sdb2 sdc2 sdd2
+   do
+       # grab a data sample (128M or any size you like)
+       ssh root@nas dd if=/dev/"$disk" bs=1M count=128  > "$disk".start
+       # grab md 1.0 end-of-disk metadata (by used dev size / super offset)
+       ssh root@nas dd if=/dev/"$disk" skip=15619661440 > "$disk".end
+       # create a sparse image file [must be on a linux filesystem]
+       cp "$disk".start "$disk".img
+       truncate -s $((15619661440)) "$disk".img
+       cat "$disk".end >> "$disk".img
+       losetup --find --show "$disk".img
+   done
+
+That should give you 4 readonly loop devices to play with and 
+get a better grasp of the situation. The filesystem won't really 
+work as most of the data is zeroes, but you could determine what 
+(up-to-date) mdadm makes of the metadata.
+
+Another way to do this would be to have the NAS export the drives 
+using Network Block Device or similar method. Just make sure to 
+keep it read only on the NAS side of things. Don't write until 
+you're very sure it won't do any harm.
+
+(If you had plenty of spare drives you could do full copies...)
+
+Regards
+Andreas Klauer
