@@ -2,55 +2,55 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EB7641293C3
-	for <lists+linux-raid@lfdr.de>; Mon, 23 Dec 2019 10:49:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 613701293C4
+	for <lists+linux-raid@lfdr.de>; Mon, 23 Dec 2019 10:49:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbfLWJtQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 23 Dec 2019 04:49:16 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:36305 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726764AbfLWJtQ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 23 Dec 2019 04:49:16 -0500
-Received: by mail-ed1-f67.google.com with SMTP id j17so14785957edp.3
+        id S1726805AbfLWJtS (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 23 Dec 2019 04:49:18 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:33272 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726257AbfLWJtR (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 23 Dec 2019 04:49:17 -0500
+Received: by mail-ed1-f66.google.com with SMTP id r21so14786865edq.0
         for <linux-raid@vger.kernel.org>; Mon, 23 Dec 2019 01:49:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=+6rErxbWS6HULYMCGuSff76MZMMnS9bm0ajPuFSo9rw=;
-        b=HtI6t5FThxoRzm7N1Lyxd1ThY5taKImSfit3SAET1pmIt0qZbZeors/PTRKuIe3L4c
-         lvbInOwZNDS1LgOs2x2Im5bDT6zHrhjQyckPWyHaRlUFAQpjnkXoglI36shTcdw/vkLK
-         tk/bqNUsGsdhSQ/Fw48SL3GdA7nGs33D4e8ocXo1m1CcPAbCjtEc6WOYLYV+CnzjIP4R
-         8Jl4TWQTwet0SJeC73Yrj7unzX5CEwGvjpzoRzQYDRXw6j7f0UWdgEVdsSwkLDtT8HGz
-         MglKVKeLCu36bfmVF6DR1uNpJveP3ct3Qu34FrWzj7MrYHAcYy/UrVSinLgzOyMdKYOs
-         bODA==
+        bh=wDRLDd3R+vyE6gh0CVIWO8nEUt6PldtTkxeQiLykTiw=;
+        b=RxiJj29+fGfoBxWr3UKdPmrgVQqcGvmNBl7hi4ZCmHZyKbvFzcNcYvcSgyn2DP1WH5
+         cvmoSgw08gDv9CdcIA0eF97WLsWmZ4YNeXVNAwrE6ZD6pcMsWwjHo8shUNc+S12HcwD8
+         ewnXCoFvcKfmODNwSCJ7ud4nn3EK+Si1ggYNN4tVSmVcMmXCKJo2GbosnMDETkBqso2E
+         WErL8csKIUiT/edZAM6/xmeO9yOyA8wSyHbSqNLbLI9sThtT87jfS/4DU0/UYwkbJLBi
+         QaLZX6QFcDP4F7e/Fq9tDbRuM6GsOjy1f3Q3K0j5fNNXDfzmlPng3Zbu2ihdOsSbvS9V
+         17wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=+6rErxbWS6HULYMCGuSff76MZMMnS9bm0ajPuFSo9rw=;
-        b=FaydRtAzLtP2O5Drvu+y1Uv0KeqaU+oWiyQchRlZ4lUU3DUSAJmo88JecTWfdjcrAL
-         tdXzk23ZIsCsciiYcxXn6VYKgqYIX5KMWFF7CHM5hwoLI5mZob8NaIsRSCkQaJaApZP7
-         wBz1zaokDcouUqJADUduOCfMDmDKB+t0Qe0gahEtLgA/z43Y/Y5EGhGRFnWZy49Ewnko
-         DedGCf1XGyjHQUFfXPrw46XWAiKBM8VMPO61Gxyt6vseiXwdTkTR3kZoBLPDxbOAbXRR
-         GqFw5RUpD1nddWn60/Jcybsktcjqw8DJpg7Xyj5u8lduTrb90rzKRpFFQ1iPhRsvcycl
-         wm4A==
-X-Gm-Message-State: APjAAAUZI8HHfIauyyxsijyOhuvUuE0TdCUzJOuAm3Yg7/F10CfeV7Lp
-        iB2m7qbatoxAr76AO6j9Qd8=
-X-Google-Smtp-Source: APXvYqyQJ6bLaPW7MQ8cltszBdl4miyngWavrhuAzYauKng5YrmScHU+tud1K4mAGtSms+gD3VMslA==
-X-Received: by 2002:a17:906:2cd6:: with SMTP id r22mr12697407ejr.313.1577094554404;
-        Mon, 23 Dec 2019 01:49:14 -0800 (PST)
+        bh=wDRLDd3R+vyE6gh0CVIWO8nEUt6PldtTkxeQiLykTiw=;
+        b=ikS9+3xaPkiDniZVKGMli+1wNDunOeV3AFpRFP+eh4I7Q49egBkdfI7t9sgBqPdPst
+         GMiUVwkwphHvChsjJ3TbgwOwTEDxIbvAxX9/CL3cgU9eKTg+Se6aa/cmRlOPG/OzN/iB
+         wQt9v29ewo8xI2KO1zBmYYES8ap55KQKmBvGQXfesAwHhtymdaoCJfBZjD4Cq3gAP5Is
+         CFazF6h+YEFEwfuSoD5une7fFzPwuwwZpfGkylPsXew0x1Bx/OQ+nuAy0yT9NzsBGYfP
+         dLqEU4khCpIEMZIKqnG70AIm0XF0ji1RlAhDwvWWDN27wxkUrqJ5y2KsQ6tTblIogv1f
+         3eSQ==
+X-Gm-Message-State: APjAAAVPeuu1Up79FZl+Cv9pDqa9mMdeI4RxRC8gHHttCqxXEUxQhYEo
+        x9/1UYA9esbQjvyOYw0SMMQ=
+X-Google-Smtp-Source: APXvYqy97YAgQTt5jhOWJbY5eNP1mfVA1LtYeuFFxcbgTv6P8TjQwgEbRzqldFPgIz9JKMoz7z/Wsw==
+X-Received: by 2002:a17:906:4681:: with SMTP id a1mr31364514ejr.256.1577094555291;
+        Mon, 23 Dec 2019 01:49:15 -0800 (PST)
 Received: from ls00508.pb.local ([2001:1438:4010:2540:a04e:c36f:204b:a84d])
-        by smtp.gmail.com with ESMTPSA id b13sm1059461ejl.5.2019.12.23.01.49.13
+        by smtp.gmail.com with ESMTPSA id b13sm1059461ejl.5.2019.12.23.01.49.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Dec 2019 01:49:13 -0800 (PST)
+        Mon, 23 Dec 2019 01:49:14 -0800 (PST)
 From:   jgq516@gmail.com
 X-Google-Original-From: guoqing.jiang@cloud.ionos.com
 To:     liu.song.a23@gmail.com
 Cc:     linux-raid@vger.kernel.org,
         Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Subject: [PATCH V3 06/10] raid1: serialize the overlap write
-Date:   Mon, 23 Dec 2019 10:48:58 +0100
-Message-Id: <20191223094902.12704-7-guoqing.jiang@cloud.ionos.com>
+Subject: [PATCH V3 07/10] md: don't destroy serial_info_pool if serialize_policy is true
+Date:   Mon, 23 Dec 2019 10:48:59 +0100
+Message-Id: <20191223094902.12704-8-guoqing.jiang@cloud.ionos.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191223094902.12704-1-guoqing.jiang@cloud.ionos.com>
 References: <20191223094902.12704-1-guoqing.jiang@cloud.ionos.com>
@@ -61,102 +61,44 @@ X-Mailing-List: linux-raid@vger.kernel.org
 
 From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 
-Before dispatch write bio, raid1 array which enables
-serialize_policy need to check if overlap exists between
-this bio and previous on-flying bios. If there is overlap,
-then it has to wait until the collision is disappeared.
+The serial_info_pool is needed if array sets serialize_policy to
+true, so don't destroy it.
 
 Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 ---
- drivers/md/raid1.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+ drivers/md/md-bitmap.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 0439f674ab14..3ad2f5a59d08 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -430,6 +430,8 @@ static void raid1_end_write_request(struct bio *bio)
- 	int mirror = find_bio_disk(r1_bio, bio);
- 	struct md_rdev *rdev = conf->mirrors[mirror].rdev;
- 	bool discard_error;
-+	sector_t lo = r1_bio->sector;
-+	sector_t hi = r1_bio->sector + r1_bio->sectors;
+diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
+index 87d3b5ef877c..5dcf23837f1b 100644
+--- a/drivers/md/md-bitmap.c
++++ b/drivers/md/md-bitmap.c
+@@ -1790,8 +1790,10 @@ void md_bitmap_destroy(struct mddev *mddev)
+ 		return;
  
- 	discard_error = bio->bi_status && bio_op(bio) == REQ_OP_DISCARD;
+ 	md_bitmap_wait_behind_writes(mddev);
+-	mempool_destroy(mddev->serial_info_pool);
+-	mddev->serial_info_pool = NULL;
++	if (!mddev->serialize_policy) {
++		mempool_destroy(mddev->serial_info_pool);
++		mddev->serial_info_pool = NULL;
++	}
  
-@@ -499,12 +501,8 @@ static void raid1_end_write_request(struct bio *bio)
- 	}
- 
- 	if (behind) {
--		if (test_bit(CollisionCheck, &rdev->flags)) {
--			sector_t lo = r1_bio->sector;
--			sector_t hi = r1_bio->sector + r1_bio->sectors;
--
-+		if (test_bit(CollisionCheck, &rdev->flags))
- 			remove_serial(rdev, lo, hi);
--		}
- 		if (test_bit(WriteMostly, &rdev->flags))
- 			atomic_dec(&r1_bio->behind_remaining);
- 
-@@ -527,7 +525,8 @@ static void raid1_end_write_request(struct bio *bio)
- 				call_bio_endio(r1_bio);
- 			}
- 		}
--	}
-+	} else if (rdev->mddev->serialize_policy)
-+		remove_serial(rdev, lo, hi);
- 	if (r1_bio->bios[mirror] == NULL)
- 		rdev_dec_pending(rdev, conf->mddev);
- 
-@@ -1337,6 +1336,7 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
- 	struct raid1_plug_cb *plug = NULL;
- 	int first_clone;
- 	int max_sectors;
-+	sector_t lo, hi;
- 
- 	if (mddev_is_clustered(mddev) &&
- 	     md_cluster_ops->area_resyncing(mddev, WRITE,
-@@ -1364,6 +1364,8 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
- 
- 	r1_bio = alloc_r1bio(mddev, bio);
- 	r1_bio->sectors = max_write_sectors;
-+	lo = r1_bio->sector;
-+	hi = r1_bio->sector + r1_bio->sectors;
- 
- 	if (conf->pending_count >= max_queued_requests) {
- 		md_wakeup_thread(mddev->thread);
-@@ -1479,6 +1481,7 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
- 
- 	for (i = 0; i < disks; i++) {
- 		struct bio *mbio = NULL;
-+		struct md_rdev *rdev = conf->mirrors[i].rdev;
- 		if (!r1_bio->bios[i])
- 			continue;
- 
-@@ -1506,19 +1509,15 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
- 			mbio = bio_clone_fast(bio, GFP_NOIO, &mddev->bio_set);
- 
- 		if (r1_bio->behind_master_bio) {
--			struct md_rdev *rdev = conf->mirrors[i].rdev;
--
--			if (test_bit(CollisionCheck, &rdev->flags)) {
--				sector_t lo = r1_bio->sector;
--				sector_t hi = r1_bio->sector + r1_bio->sectors;
--
-+			if (test_bit(CollisionCheck, &rdev->flags))
- 				wait_event(rdev->serial_io_wait,
- 					   check_and_add_serial(rdev, lo, hi)
- 					   == 0);
--			}
- 			if (test_bit(WriteMostly, &rdev->flags))
- 				atomic_inc(&r1_bio->behind_remaining);
--		}
-+		} else if (mddev->serialize_policy)
-+			wait_event(rdev->serial_io_wait,
-+				   check_and_add_serial(rdev, lo, hi) == 0);
- 
- 		r1_bio->bios[i] = mbio;
- 
+ 	mutex_lock(&mddev->bitmap_info.mutex);
+ 	spin_lock(&mddev->lock);
+@@ -2477,8 +2479,10 @@ backlog_store(struct mddev *mddev, const char *buf, size_t len)
+ 	mddev->bitmap_info.max_write_behind = backlog;
+ 	if (!backlog && mddev->serial_info_pool) {
+ 		/* serial_info_pool is not needed if backlog is zero */
+-		mempool_destroy(mddev->serial_info_pool);
+-		mddev->serial_info_pool = NULL;
++		if (!mddev->serialize_policy) {
++			mempool_destroy(mddev->serial_info_pool);
++			mddev->serial_info_pool = NULL;
++		}
+ 	} else if (backlog && !mddev->serial_info_pool) {
+ 		/* serial_info_pool is needed since backlog is not zero */
+ 		struct md_rdev *rdev;
 -- 
 2.17.1
 
