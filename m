@@ -2,128 +2,91 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DE9812A413
-	for <lists+linux-raid@lfdr.de>; Tue, 24 Dec 2019 21:19:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B29812AE46
+	for <lists+linux-raid@lfdr.de>; Thu, 26 Dec 2019 20:19:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726203AbfLXUTG (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 24 Dec 2019 15:19:06 -0500
-Received: from mail-lf1-f49.google.com ([209.85.167.49]:36169 "EHLO
-        mail-lf1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726184AbfLXUTG (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 24 Dec 2019 15:19:06 -0500
-Received: by mail-lf1-f49.google.com with SMTP id n12so15743991lfe.3
-        for <linux-raid@vger.kernel.org>; Tue, 24 Dec 2019 12:19:05 -0800 (PST)
+        id S1726827AbfLZTT3 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 26 Dec 2019 14:19:29 -0500
+Received: from mail-ed1-f44.google.com ([209.85.208.44]:33513 "EHLO
+        mail-ed1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfLZTT3 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 26 Dec 2019 14:19:29 -0500
+Received: by mail-ed1-f44.google.com with SMTP id r21so23529068edq.0
+        for <linux-raid@vger.kernel.org>; Thu, 26 Dec 2019 11:19:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=QYS0ypUHPwN7avkpDki6rg+4KGLZ7XQeBvSzzaDlvqw=;
-        b=sdjLxUy/E2rwNRjWQnXo0qyUBTNNS7seOWdqMzHveml5h3TZyq3HEyPyR69ru8+wgN
-         pck1QHeVuzj3utTwxsIUFHfNVlYqEv9on0J8mS/MdGmRRo8QMFLvKSOUSI51hFXqUoKr
-         V9GpO5gnAAeiXYGAj1Hrdm4jy1NH537MqD26vaAxyqJxfEPjLzjl/ProG01v8mc3lxsW
-         52clYans6qHrwVClUpHm1gPwJ8KPdFm4T8E9G2zhYYNBsb9tkMz/dkd1NTxXeOdbgNV+
-         NE6ighnUXSSxZavm7Sfnkg6CuaKphUxKYavkAX02X/7z82uLVqy9W2vTgVdhJDwX/zla
-         E4YQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=olbCkqegvjcroEOpYLrC9RxdmsumgcpfRr0UAxoR5xw=;
+        b=iLVTIVHpmTF4ACSfF/4/HPnDttis0tCD0NmihisjoR9FXXF/icqldHZZht2LldAeCM
+         lL4d5uyeadz9TTduD27Jotk628B5BHwmO7iVwijJ90mTBZbBtQXtb0xqnJH486/CocSO
+         TS6BZeNkN1uvp0NI3c1nXVQQSdG9b8rJcR0uRt1qRKSaq0+nN3waeCm0AiiRXRsFJivm
+         gyEKeK8Dw6j+NVqdQaZZ987Jw3dUrMwXvNmLFMlL/bGR7/mvbSMcbgItBVhunYdXhQIZ
+         K10hTKMi1x8mF2/u1bbXqvsnQebwY1hg63T9/VW9Ja77OxJlDPd5wFT1BzTHm2oIS+uy
+         5EzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=QYS0ypUHPwN7avkpDki6rg+4KGLZ7XQeBvSzzaDlvqw=;
-        b=DDmUcKqWlwC0LYIucDv3bdvgzG43EtyYMSyuogj7vhUXqNfFROaBsGFVrHBn+WZSyD
-         xFyw2LaXBuAxoD+lenrlt1+6LbsjbmLQgzRMx0287M4NMZoiXgZy+Y14KTIjnWWb7mJW
-         DxsN/X6Y7DdlQpbrDjkawirNpYN38l93ES70rDAfVk84kw97rIW68Q9Po+IFsGr2PFWl
-         LM8UVot3LH5yrYfAOfd6p4XkC27urnysAtcVSFBti8Znff22WaiibOJ7eIXm6Zn/nlL9
-         yMRfyDRh9pCboLnZBlkTK1bSOKhNL2bYFnWccWS9X/A0I7mWpmzNWWYbgTBlT/StYwQT
-         KboQ==
-X-Gm-Message-State: APjAAAX1s86IsWEwpjeW9e6ZvGXlROs1Uc2xR1fNXlvWuH3Hhv+E6LFA
-        KKjJnyZR9F/qwY+j1p1l/+pGMl6MJt2sh76Ro7TsnewI
-X-Google-Smtp-Source: APXvYqwaGm0RS9HLHHfPj8WzCNXT1708hvJ/kxKTEfDR8baBWn7X/eLd41NSNU0wzloSrJmd4CIVGXREnx4JQlQ8POU=
-X-Received: by 2002:ac2:599c:: with SMTP id w28mr21759347lfn.78.1577218743795;
- Tue, 24 Dec 2019 12:19:03 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=olbCkqegvjcroEOpYLrC9RxdmsumgcpfRr0UAxoR5xw=;
+        b=Cby0+ukeKjDi2ApBMm7/iCmZn0m7qdUDezd7vqacvBX+GNsRSzCu8XmgeyU0bKQ9DX
+         ynbR2H5Wid5VYHKGBlp2VwTtD92ZWXHiJLxQVt2YE9PENi2gGtG7d7lUrzjIbVPGACJv
+         AeIlsaDbJ5mxoilmWUl1p3jAQnshKNrzY6GY8k0eLIFKRjquelIsj2EaKmkAgmdKrXyj
+         ACgIUfXWDxWTJGcJURdd12ZZ8BS9LSjo4wVAmLpEa4tibs+a+H5rnebUvjAh/pQWodls
+         T1RZq4GwGB2xwVrowSfEvSkzs5GESLgUe0fnJAtMY4WJgSc48BhSWhZ60vQIgkEzLKX4
+         0SmA==
+X-Gm-Message-State: APjAAAWlCOwOYNNdtJQm6tyZY0zSuXNWDWRZbqFFrrPfnc6+kTTFrwkS
+        do8g3CJ8wGZTa8HK9HWmcsEl8sP1xlCVYVMar7fBzWSr9Tw=
+X-Google-Smtp-Source: APXvYqy5w4UtXkxIhrZvxdgXhz2FsH37rfTLGz9vjotxJEUVvB50oSChSpb4JRKlHLRmSRiuwwSs3IhpxWEi164Q3UQ=
+X-Received: by 2002:aa7:d1d0:: with SMTP id g16mr52594586edp.56.1577387967359;
+ Thu, 26 Dec 2019 11:19:27 -0800 (PST)
 MIME-Version: 1.0
-From:   Alexander Lyakas <alex.bolshoy@gmail.com>
-Date:   Tue, 24 Dec 2019 22:18:52 +0200
-Message-ID: <CAGRgLy4Yi1HNqNO0MLq5xjRRgWe7EaByRYF5sA3fFVa1tmpNvA@mail.gmail.com>
-Subject: hung-task panic in raid5_make_request
-To:     linux-raid <linux-raid@vger.kernel.org>, liu.song.a23@gmail.com
+References: <CAM-0FgP5dXnTbri-wB-2LJU-QE5wd9nsq=kzMW9kXND=wF=z8w@mail.gmail.com>
+ <20191217182509.GA16121@metamorpher.de> <CAM-0FgOpi4EGuhM7DXSutRtxRSJ4nb9kLzM0U_3LZi-jxUDVWQ@mail.gmail.com>
+ <20191222130452.GA2580@metamorpher.de> <20191222134019.GA3770@metamorpher.de>
+In-Reply-To: <20191222134019.GA3770@metamorpher.de>
+From:   Patrick Pearcy <patrick.pearcy@gmail.com>
+Date:   Thu, 26 Dec 2019 14:19:15 -0500
+Message-ID: <CAM-0FgNegq5Ujd=K9Rjk-Vi9Y2zzb1U3YXScs6MxrDbC2xmbeg@mail.gmail.com>
+Subject: Re: WD MyCloud PR4100 RAID Failure
+To:     Andreas Klauer <Andreas.Klauer@metamorpher.de>
+Cc:     linux-raid@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Greetings,
+Hi Andreas -
 
-We are hitting the following hung-task panic[1] with raid5 in kernel
-4.14.99. It is happening every couple of days.
+THANKS!!!  Following the link pointers (RAID Recovery - Linus Raid)
+you provided, I was successful in re-creating the Array using:
 
-The raid5 in question contains three devices and has been created with command:
-mdadm --create /dev/md5 --force  --raid-devices=3 --size=1522566M
---chunk=64 --level=raid5 --bitmap=internal --name=5
---uuid=47952090192D4408BDABC9628E16FD06 --run --auto=md --metadata=1.2
---homehost=zadara_vc --verbose --verbose /dev/dm-13 /dev/dm-14
-/dev/dm-15
+1. mdadm --create --assume-clean --level=5 --raid-devices=4 /dev/md1
+/dev/sda2 /dev/sdb2 /dev/sdc2 /dev/sdd2  (I took a chance at this as I
+didn't have spare drives to copy 24TB of info to)
+2. I then re-booted the PR4100.  Upon reboot, I still got the message
+in the admin console that the Device was not configured and asked if I
+wanted to create an array.  I ran mdadm --assemble --force --verbose
+/dev/md1 /dev/sda2 /dev/sdb2 /dev/sdc2 /dev/sdd2  without any errors.
+3. I mounted the array to /mnt/HD with mount /dev/md1 /mnt/HD and was
+able to change directories/view the folders & files in the Array.
 
-The array is not undergoing any kind of rebuild or reshape.
+HOWEVER,
 
-Similar issue for kernel 4.14.37 was reported in
-https://bugzilla.kernel.org/show_bug.cgi?id=199539.
+Upon reboot of the PR4100 - the array etc. went away and I was back to
+configure the file system message.   I successfully re-ran the mdadm
+--assemble and mount commands so I can 'see the data' but I can't
+figure out how to 'copy' the data from the PR4100 (i.e., how to share
+the directory) OR mount the array (and shares) in the PR4100
+automatically...   Any suggestions??
 
-We recently moved to kernel 4.14 (long term kernel) from kernel 3.18.
-With kernel 3.18 we haven't seen this issue.
+- Best wishes Patrick
 
-Looking at the code, raid5_make_request seems to be stuck waiting for
-a free stripe via raid5_make_request => raid5_get_active_stripe =>
-wait_event_lock_irq().
-Looking with gdb:
-
-(gdb) l *raid5_make_request+0x1b7
-0xa697 is in raid5_make_request (./include/linux/compiler.h:183).
-178     })
-179
-180     static __always_inline
-181     void __read_once_size(const volatile void *p, void *res, int size)
-182     {
-183             __READ_ONCE_SIZE;
-184     }
-185
-186     #ifdef CONFIG_KASAN
-187     /*
-
-The READ_ONCE call seems to be used by list_empty, which is called
-from wait_event_lock_irq [2]
-
-How can this be debugged further?
-
-Thanks,
-Alex.
-
-[1]
-[155653.946408] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[155653.947333] kworker/u4:94   D    0  6178      2 0x80000000
-[155653.949159] Call Trace:
-[155653.949576]  ? __schedule+0x290/0x8a0
-[155653.950052]  ? blk_flush_plug_list+0xc1/0x250
-[155653.950688]  schedule+0x2f/0x90
-[155653.951173]  raid5_make_request+0x1b7/0xb10 [raid456]
-[155653.951765]  ? wait_woken+0x80/0x80
-[155653.952216]  ? wait_woken+0x80/0x80
-[155653.952673]  md_handle_request+0x131/0x1a0 [md_mod]
-[155653.953310]  md_make_request+0x65/0x170 [md_mod]
-[155653.953963]  generic_make_request+0x123/0x320
-[155653.954473]  ? submit_bio+0x6c/0x140
-[155653.954981]  submit_bio+0x6c/0x140
-
-[2]
-
-if (!sh) {
-set_bit(R5_INACTIVE_BLOCKED,
-&conf->cache_state);
-r5l_wake_reclaim(conf->log, 0);
-wait_event_lock_irq(
-conf->wait_for_stripe,
-!list_empty(conf->inactive_list + hash) &&
-(atomic_read(&conf->active_stripes)
-< (conf->max_nr_stripes * 3 / 4)
-|| !test_bit(R5_INACTIVE_BLOCKED,
-     &conf->cache_state)),
-*(conf->hash_locks + hash));
+On Sun, Dec 22, 2019 at 8:40 AM Andreas Klauer
+<Andreas.Klauer@metamorpher.de> wrote:
+>
+> On Sun, Dec 22, 2019 at 02:04:52PM +0100, Andreas Klauer wrote:
+> >        truncate -s $((15619661440)) "$disk".img
+>
+> whoops, should be $((15619661440*512))
