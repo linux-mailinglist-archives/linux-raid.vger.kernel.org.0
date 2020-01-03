@@ -2,129 +2,160 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E0C1612F8FB
-	for <lists+linux-raid@lfdr.de>; Fri,  3 Jan 2020 14:56:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 870EB12FBCF
+	for <lists+linux-raid@lfdr.de>; Fri,  3 Jan 2020 18:51:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbgACN4s (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 3 Jan 2020 08:56:48 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35599 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727508AbgACN4s (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 3 Jan 2020 08:56:48 -0500
-Received: by mail-wr1-f66.google.com with SMTP id g17so42497112wro.2
-        for <linux-raid@vger.kernel.org>; Fri, 03 Jan 2020 05:56:47 -0800 (PST)
+        id S1728185AbgACRvP (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 3 Jan 2020 12:51:15 -0500
+Received: from mail-lj1-f182.google.com ([209.85.208.182]:35433 "EHLO
+        mail-lj1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728110AbgACRvP (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 3 Jan 2020 12:51:15 -0500
+Received: by mail-lj1-f182.google.com with SMTP id j1so37244045lja.2
+        for <linux-raid@vger.kernel.org>; Fri, 03 Jan 2020 09:51:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=9hvBB6Gtq/IYyH6Hieh+oRrm10PhTEuHXpJq9Et1044=;
-        b=daTl/FXLNM5inYYSkNVOX6M3OU/+mapUe9ko1PJ550QyPvgYwk113dus8jkOzgxULC
-         d9vYcVLYVDG4h1048U0+Np4ZdX290VZpCmfoqImLzavbyNCdhY4UG/XqvdjpZKMuJ5+s
-         LxBwVzmBZylZYdOmiw7GvI0CrHiJCqLMpagU+rmmgr5zsf3Hmk1TVRaMGMUXFezAxpKA
-         ngF9YAmlD1YeYCBCl5vVia3wr1Z8S2SqaMUPL9HFHof1WidnYD+5uBZtpEq7l0w2nH+M
-         +tp9oxZwUnGSqPRL8iYyVv0vxMsGWT5XM6IqrIFtGs+GqUWrOX+x22sRoq/LufDVmKMd
-         50qQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=7xUsI1dn7ntRMRoVI9v4qeEwDMRbxgPkrtRkkwPLCNk=;
+        b=GN0nZBLPySQbY1KTHebMyg0yfOO6Ib0Weho9LEPV9WalanMAjkmZz1L1QJTRCJa5Wv
+         r53OfxXeB7SiynJEhFj1xw5tobAvzIRNRXwZHjeDgX5OCjXbmAgyd13cyGctaciIpXBC
+         fn7l1wT+FeXNXtPmblcowELm8/H2mhiB3brFN52nNBFBJHg+882gnAFiJ9qhZ2viPZJ0
+         jTWC/B+SDaG1LNiP0C2Z+b1x96SmSZnGpn06DOk5H01QN4C68o2sj0rdcGDmkJO+fVBZ
+         Nz1mRHKOqV0M7ubYwru4nynURzAP4V505gB26ZfkZvvFmN0HX6mTB07jN2vrzUIOOXM/
+         tF1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=9hvBB6Gtq/IYyH6Hieh+oRrm10PhTEuHXpJq9Et1044=;
-        b=cTuopwe2WCc3+z/wjZP0HEliK3xU0DW85GeVSEheUhOQoxnO4K8NL8MA1ZS2dvX2pX
-         HdA/8E2MU32o5V4VKAf1GR4HU9QLVefqds02tuunGzhK0MAX35r5foJtJc4n1xCkN4bh
-         CPEJSub4i7/x3VEUFC0AmplsRnOnjX1hd8uxdgE3OUpdHD/zRLDQVObELm8yZOpY5PV/
-         gLiP/m3AvW6vuNX6aULmaAln5ZyniGX5dVkgPNWlwCAWnBpYkDp+52jJhjOphwx4++2Z
-         66sqhSF4/8u98twKF4SM3fM6AZpb8G4y7rhIrAqZX0rqpT4BEByPrV1aCH2tvY7FvaRM
-         7anA==
-X-Gm-Message-State: APjAAAUraDCMHAK6Dq6CGP/ckDtx+dorPAAgeK2/tCpz9IchqXeUKtFK
-        K2JoySG2SuAl3nzZduGSeTM=
-X-Google-Smtp-Source: APXvYqyvRJ3TLLOYkVciOCSQawYQf1aW8SSpvsS4hSgrLO8xL5/HCZkR2l8ryaiyxfMqWXCj4Qb3Cw==
-X-Received: by 2002:adf:a285:: with SMTP id s5mr1726633wra.118.1578059807113;
-        Fri, 03 Jan 2020 05:56:47 -0800 (PST)
-Received: from ls00508.pb.local ([2001:1438:4010:2540:51b:bcb9:ca0e:d784])
-        by smtp.gmail.com with ESMTPSA id m3sm59710991wrs.53.2020.01.03.05.56.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 05:56:46 -0800 (PST)
-From:   jgq516@gmail.com
-X-Google-Original-From: guoqing.jiang@cloud.ionos.com
-To:     liu.song.a23@gmail.com
-Cc:     linux-raid@vger.kernel.org,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Subject: [PATCH RESEND] raid5: add more checks before add sh->lru to plug cb list
-Date:   Fri,  3 Jan 2020 14:56:28 +0100
-Message-Id: <20200103135628.3185-1-guoqing.jiang@cloud.ionos.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=7xUsI1dn7ntRMRoVI9v4qeEwDMRbxgPkrtRkkwPLCNk=;
+        b=umXPAGwNobXt3xno+SucCiIsA6pqMDldHNL55PaKksf3eL7JDEmbDuLWon6/228WRX
+         t60nsuLoTvuR3ckjFBENdz5Gx4xVtBTZF8mWIJ2F9JXW/SYDLJ6jLjLagrfXM0Q8un2d
+         oMn0vbr2RwNTg8K5N+gHuostFyP+5H1eqO7pGQITNy4oWpbf2HFJY+Ukms0nhXu34x4B
+         h/j/zoyoD0TrNOtMoMYfMfdOOKvpKTWoz0keIS9Gz1mnu2cqUoDFqyDk9kAsRV64nnWM
+         o+QvJaUeGl9EOpYbRyb0a1YO+1fXbQz+b/613Rx1H+Ipy1f3YTwtSBLour6pef95cC3I
+         AxWQ==
+X-Gm-Message-State: APjAAAVkm6Ao0hzu6aSjAtOmA97tupsHJhM+Rl7Wpr8iQE0XYSO7PGY8
+        d+a3gNp0P85de4bRrPs2SyrpSYy0/WrC3JG1xd39Pg==
+X-Google-Smtp-Source: APXvYqxhsUQGXiSsAwyh7UHSAAkgCXOj2LnVIwz57cHyneI/Oj/CdjCIjfwCIxrW+uk9E2mEImyEPbPyr57GSmeqaMw=
+X-Received: by 2002:a2e:6c06:: with SMTP id h6mr50751578ljc.246.1578073872829;
+ Fri, 03 Jan 2020 09:51:12 -0800 (PST)
+MIME-Version: 1.0
+References: <20191122172502.vffyfxlqejthjib6@macbook-pro-91.dhcp.thefacebook.com>
+In-Reply-To: <20191122172502.vffyfxlqejthjib6@macbook-pro-91.dhcp.thefacebook.com>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Fri, 3 Jan 2020 09:51:00 -0800
+Message-ID: <CAPhsuW4K=EBPrDzLAcz_AJiUnr8F-Fxm=W05d79JFjPfPaKwUQ@mail.gmail.com>
+Subject: Fwd: LSF/MM/BPF: 2020: Call for Proposals
+To:     linux-raid <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+---------- Forwarded message ---------
+From: Josef Bacik <josef@toxicpanda.com>
+Date: Fri, Nov 22, 2019 at 9:25 AM
+Subject: LSF/MM/BPF: 2020: Call for Proposals
+To: <lsf-pc@lists.linuxfoundation.org>
+Cc: <linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
+<linux-block@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+<linux-nvme@lists.infradead.org>, <bpf@vger.kernel.org>,
+<linux-kernel@vger.kernel.org>
 
-release_stripe_plug adds lru to unplug list, then raid5_unplug
-iterates unplug list and release the stripe in the list. But
-sh->lru could exist in another list as well since there is no
-protection of the race since release_stripe_plug is lock free.
 
-For example, the same sh could be handled by raid5_release_stripe
-which is lock free too, it does two things in case "sh->count == 1".
+The annual Linux Storage, Filesystem, Memory Management, and BPF
+(LSF/MM/BPF) Summit for 2020 will be held from April 27 - April 29 at
+The Riviera Palm Springs, A Tribute Portfolio Resort in Palm Springs,
+California. LSF/MM/BPF is an invitation-only technical workshop to map
+out improvements to the Linux storage, filesystem, BPF, and memory
+management subsystems that will make their way into the mainline kernel
+within the coming years.
 
-1. add sh to released_stripes.
+LSF/MM/BPF 2020 will be a three day, stand-alone conference with four
+subsystem-specific tracks, cross-track discussions, as well as BoF and
+hacking sessions.
 
-Or
+On behalf of the committee I am issuing a call for agenda proposals
+that are suitable for cross-track discussion as well as technical
+subjects for the breakout sessions.
 
-2. go to slow path if sh is already set with ON_RELEASE_LIST.
+If advance notice is required for visa applications then please point
+that out in your proposal or request to attend, and submit the topic
+as soon as possible.
 
-Either 1 or 2 could trigger do_release_stripe finally, and this
-function mainly move sh->lru to different lists such as delayed_list,
-handle_list or temp_inactive_list etc.
+This year will be a little different for requesting attendance.  Please
+do the following by February 15th, 2020.
 
-Then the same node could be in different lists, which causes
-raid5_unplug sticks with "while (!list_empty(&cb->list))", and
-since spin_lock_irq(&conf->device_lock) is called before, it
-causes:
+1) Fill out the following Google form to request attendance and
+suggest any topics
 
-1. hard lock up in [1], [2] and [3] since irq is disabled.
+        https://forms.gle/voWi1j9kDs13Lyqf9
 
-2. raid5_get_active_stripe can't get device_lock and calltrace
-happens.
+In previous years we have accidentally missed people's attendance
+requests because they either didn't cc lsf-pc@ or we simply missed them
+in the flurry of emails we get.  Our community is large and our
+volunteers are busy, filling this out will help us make sure we don't
+miss anybody.
 
-[<ffffffff81598060>] _raw_spin_lock+0x20/0x30
-[<ffffffffa0230b0a>] raid5_get_active_stripe+0x1da/0x5250 [raid456]
-[<ffffffff8112d165>] ? mempool_alloc_slab+0x15/0x20
-[<ffffffffa0231174>] raid5_get_active_stripe+0x844/0x5250 [raid456]
-[<ffffffff812d5574>] ? generic_make_request+0x24/0x2b0
-[<ffffffff810938b0>] ? wait_woken+0x90/0x90
-[<ffffffff814a2adc>] md_make_request+0xfc/0x250
-[<ffffffff812d5867>] submit_bio+0x67/0x150
+2) Proposals for agenda topics should still be sent to the following
+lists to allow for discussion among your peers.  This will help us
+figure out which topics are important for the agenda.
 
-So add two more checkings before add sh->lru to cb->list to avoid
-potential list corruption.
+        lsf-pc@lists.linux-foundation.org
 
-1. the sh should not be handling by do_release_stripe.
-2. ensure the sh is not release list.
+and CC the mailing lists that are relevant for the topic in question:
 
-[1]. https://marc.info/?l=linux-raid&m=150348807422853&w=2
-[2]. https://marc.info/?l=linux-raid&m=146883211430999&w=2
-[3]. https://marc.info/?l=linux-raid&m=157434565331673&w=2
+        FS:     linux-fsdevel@vger.kernel.org
+        MM:     linux-mm@kvack.org
+        Block:  linux-block@vger.kernel.org
+        ATA:    linux-ide@vger.kernel.org
+        SCSI:   linux-scsi@vger.kernel.org
+        NVMe:   linux-nvme@lists.infradead.org
+        BPF:    bpf@vger.kernel.org
 
-Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
----
- drivers/md/raid5.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Please tag your proposal with [LSF/MM/BPF TOPIC] to make it easier to
+track. In addition, please make sure to start a new thread for each
+topic rather than following up to an existing one. Agenda topics and
+attendees will be selected by the program committee, but the final
+agenda will be formed by consensus of the attendees on the day.
 
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index d4d3b67ffbba..70ef2367fa64 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -5481,7 +5481,9 @@ static void release_stripe_plug(struct mddev *mddev,
- 			INIT_LIST_HEAD(cb->temp_inactive_list + i);
- 	}
- 
--	if (!test_and_set_bit(STRIPE_ON_UNPLUG_LIST, &sh->state))
-+	if (!atomic_read(&sh->count) == 0 &&
-+	    !test_bit(STRIPE_ON_RELEASE_LIST, &sh->state) &&
-+	    !test_and_set_bit(STRIPE_ON_UNPLUG_LIST, &sh->state))
- 		list_add_tail(&sh->lru, &cb->list);
- 	else
- 		raid5_release_stripe(sh);
--- 
-2.17.1
+We will try to cap attendance at around 25-30 per track to facilitate
+discussions although the final numbers will depend on the room sizes
+at the venue.
 
+For discussion leaders, slides and visualizations are encouraged to
+outline the subject matter and focus the discussions. Please refrain
+from lengthy presentations and talks; the sessions are supposed to be
+interactive, inclusive discussions.
+
+There will be no recording or audio bridge. However, we expect that
+written minutes will be published as we did in previous years:
+
+2019: https://lwn.net/Articles/lsfmm2019/
+
+2018: https://lwn.net/Articles/lsfmm2018/
+
+2017: https://lwn.net/Articles/lsfmm2017/
+
+2016: https://lwn.net/Articles/lsfmm2016/
+
+2015: https://lwn.net/Articles/lsfmm2015/
+
+2014: http://lwn.net/Articles/LSFMM2014/
+
+3) If you have feedback on last year's meeting that we can use to
+improve this year's, please also send that to:
+
+        lsf-pc@lists.linux-foundation.org
+
+Thank you on behalf of the program committee:
+
+        Josef Bacik (Filesystems)
+        Amir Goldstein (Filesystems)
+        Martin K. Petersen (Storage)
+        Omar Sandoval (Storage)
+        Michal Hocko (MM)
+        Dan Williams (MM)
+        Alexei Starovoitov (BPF)
+        Daniel Borkmann (BPF)
