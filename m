@@ -2,120 +2,143 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 893A7130A3F
-	for <lists+linux-raid@lfdr.de>; Sun,  5 Jan 2020 23:26:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 53200130D87
+	for <lists+linux-raid@lfdr.de>; Mon,  6 Jan 2020 07:27:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgAEW0t (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 5 Jan 2020 17:26:49 -0500
-Received: from smtp.hosts.co.uk ([85.233.160.19]:19180 "EHLO smtp.hosts.co.uk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726851AbgAEW0t (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sun, 5 Jan 2020 17:26:49 -0500
-Received: from [86.147.199.110] (helo=[192.168.1.162])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1ioE0i-000406-5Z; Sun, 05 Jan 2020 22:04:37 +0000
+        id S1726875AbgAFG1D (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 6 Jan 2020 01:27:03 -0500
+Received: from arcturus.uberspace.de ([185.26.156.30]:45608 "EHLO
+        arcturus.uberspace.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbgAFG1D (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 6 Jan 2020 01:27:03 -0500
+Received: (qmail 24902 invoked from network); 6 Jan 2020 06:27:00 -0000
+Received: from localhost (HELO localhost) (127.0.0.1)
+  by arcturus.uberspace.de with SMTP; 6 Jan 2020 06:27:00 -0000
+Date:   Mon, 6 Jan 2020 07:27:00 +0100
+From:   Andreas Klauer <Andreas.Klauer@metamorpher.de>
+To:     William Morgan <therealbrewer@gmail.com>
+Cc:     linux-raid@vger.kernel.org
 Subject: Re: Two raid5 arrays are inactive and have changed UUIDs
-To:     William Morgan <therealbrewer@gmail.com>,
-        linux-raid@vger.kernel.org
+Message-ID: <20200106062700.GA2563@metamorpher.de>
 References: <CALc6PW4OKR2KVFgzoEbRJ0TRwvqi5EZAdC__HOx+vJKMT0TXYQ@mail.gmail.com>
-From:   Wol's lists <antlists@youngman.org.uk>
-Message-ID: <959ca414-0c97-2e8d-7715-a7cb75790fcd@youngman.org.uk>
-Date:   Sun, 5 Jan 2020 22:04:34 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <CALc6PW4OKR2KVFgzoEbRJ0TRwvqi5EZAdC__HOx+vJKMT0TXYQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 05/01/2020 20:06, William Morgan wrote:
-> Hello,
-> 
-> I'm new here and likely don't understand the etiquette. Please be
-> patient with me.
+On Sun, Jan 05, 2020 at 02:06:06PM -0600, William Morgan wrote:
+> bill@bill-desk:~$ echo ; for x in {c,d,e,f,j,k,l,m}; do echo
+> "$x$x$x$x$x$x$x$x" ; echo ; sudo smartctl -H -i -l scterc /dev/sd$x ;
+> echo ; echo ; done
 
-You're fine :-) Beautiful problem report, I have to say ...
-> 
-> I have two raid 5 arrays connected through an LSI 9601-16e (SAS2116)
-> card. I also have a few other single drives connected to the SAS card.
-> I was mounting both arrays through fstab using the original UUIDs of
-> the arrays. The system had been working great, remounting both arrays
-> on boot, etc. until yesterday when I shut the system off to remove one
-> of the single drives.
-> I didn't touch the raid array drives at all, but when I rebooted the
-> system, neither raid array mounted successfully. When I checked their
-> status, I noticed both arrays had changed to "inactive", and further
+Don't use smartctl -H for anything, it'll say passed for broken drives, 
+which makes it completely useless for any kind of troubleshooting.
+
+You have to check smartctl -a for any pending, offline, reallocated sectors 
+and other things. You should have smartd running and also emailing you, 
+with automated selftests on top.
+ 
+> Device is:        Not in smartctl database [for details use: -P showall]
+
+I don't have this type of drive, and some drives are simply unknown,
+but see if your smartctl database is up to date anyway.
+
 > investigation showed that the UUIDs of both arrays had changed.
-> I started investigating using the troubleshooting page of the Linux
-> raid wiki. I tried to reassemble (no --force however) but it wasn't
-> successful. Here is a summary of what I noticed:
-> 
-> Smart data seems OK for all drives.I found some reports of bad blocks,
-> non-identical event counts, and some missing array members.
 
-One array looks pretty good, the other one less so ...
-> 
-> md0 consists of 4x 8TB drives:
-> 
-> role drive events state
->   0    sdc   10080  A.AA (bad blocks reported on this drive)
->   1    sdd   10070  AAAA
->   2    sde   10070  AAAA
->   3    sdf   10080  A.AA (bad blocks reported on this drive)
-> 
-This array looks good. I'm wondering whether the new UUID is something 
-to do with the fact that it thinks it's a raid0. I'm sure I've seen this 
-before, and it's not anything to worry about. Plus all your event counts 
-are very close. My main concern is that two drives have one event count, 
-and two have the other, which means that a little data loss is a 
-distinct possibility.
+Where do you see changed UUIDs?
 
-Look at the page on overlays, if you've got a spare disk you can put 
-overlay files on, then do a force-assemble, and everything will probably 
-be (almost) fine. Do a couple of fscks until it's clean, check 
-everything's okay, and if it is you can do a force-assemble on the array 
-directly. So this array is pretty good.
-> 
-> md1 consists of 4x 4TB drives:
-> 
-> role drive events state
->   0    sdj    5948  AAAA
->   1    sdk   38643  .AAA
->   2    sdl   38643  .AAA
->   3    sdm   38643  .AAA
+| ARRAY /dev/md/0  metadata=1.2 UUID=06ad8de5:3a7a15ad:88116f44:fcdee150
+| /dev/sdc1:
+|      Array UUID : 06ad8de5:3a7a15ad:88116f44:fcdee150
+|      Raid Level : raid5
+|     Update Time : Sat Jan  4 16:58:47 2020
+|   Bad Block Log : 512 entries available at offset 40 sectors - bad blocks present.
+|          Events : 10080
+|     Device Role : Active device 0
+| /dev/sdd1:
+|      Array UUID : 06ad8de5:3a7a15ad:88116f44:fcdee150
+|      Raid Level : raid5
+|     Update Time : Sat Jan  4 16:56:09 2020
+|          Events : 10070
+|     Device Role : Active device 1
+| /dev/sde1:
+|      Array UUID : 06ad8de5:3a7a15ad:88116f44:fcdee150
+|      Raid Level : raid5
+|     Update Time : Sat Jan  4 16:56:09 2020
+|          Events : 10070
+|     Device Role : Active device 2
+| /dev/sdf1:
+|      Array UUID : 06ad8de5:3a7a15ad:88116f44:fcdee150
+|      Raid Level : raid5
+|     Update Time : Sat Jan  4 16:58:47 2020
+|   Bad Block Log : 512 entries available at offset 40 sectors - bad blocks present.
+|          Events : 10080
+|     Device Role : Active device 3
 
-This array *should* be easy to recover. Again, use overlays, and 
-force-assemble sdk, sdl, and sdm. DO NOT include sdj - this was ejected 
-from the array a long time ago, and including it will seriously mess up 
-your array. This means you've actually been running a 3-disk raid-0 for 
-quite a while, so provided nothing more goes wrong, you'll have a 
-perfect recovery, but any trouble and your data is toast. Is there any 
-way you can ddrescue these three drives before attempting a recovery?
+sdd & sde got kicked for some reason.
+Check if you have logfiles for Sat Jan 4 16:56 2020.
 
-If it does assemble fine with overlays, then assemble the array with 
-those three drives, then re-add sdj. This is where the danger lies - sdj 
-will have to be rebuilt and that will place the other three drives in 
-danger.
-> 
-> These are the things that stand out to me, but there may be other
-> issues I've overlooked. I have included the full output of the
-> troubleshooting commands below. I don't understand why the UUIDs would
-> have changed, but even after mkconf created a new mdadm.conf file, the
-> arrays would not assemble or mount. And I don't know how to fix the
-> situation without losing data. Please let me know how to proceed.
-> 
-> Thanks,
-> Bill
-> 
-Hopefully some more experienced posters will chime in and add more info, 
-but if you're happy using overlays, then you can check out my advice 
-safely and if it works recover your arrays.
+For the bad blocks log, check --examine-badblocks
 
-Cheers,
-Wol
+To get rid of it, you can use --update=force-no-bbl 
+but you should double check smart before that...
+You can also try reading those specific sectors with dd.
+
+If there are no (physical) bad sectors, assemble force 
+should work for this array. Otherwise ddrescue instead.
+
+| /dev/sdj1:
+|      Array UUID : 723f939b:62b73a3e:e86e1fe1:e37131dc
+|      Raid Level : raid5
+|     Update Time : Thu Nov 28 09:41:00 2019
+|          Events : 5948
+|     Device Role : Active device 0
+| /dev/sdk1:
+|      Array UUID : 723f939b:62b73a3e:e86e1fe1:e37131dc
+|      Raid Level : raid5
+| Internal Bitmap : 8 sectors from superblock
+|     Update Time : Sat Jan  4 16:52:59 2020
+|          Events : 38643
+|     Device Role : Active device 1
+| /dev/sdl1:
+|      Array UUID : 723f939b:62b73a3e:e86e1fe1:e37131dc
+|      Raid Level : raid5
+|     Update Time : Sat Jan  4 16:52:59 2020
+|          Events : 38643
+|     Device Role : Active device 2
+| /dev/sdm1:
+|      Array UUID : 723f939b:62b73a3e:e86e1fe1:e37131dc
+|      Raid Level : raid5
+| Internal Bitmap : 8 sectors from superblock
+|     Update Time : Sat Jan  4 16:52:59 2020
+|          Events : 38643
+|     Device Role : Active device 3
+
+sdj1 got kicked ages ago (Nov 28 2019)
+
+You absolutely must not force that into the array.
+It needs a proper re-sync.
+
+And you need proper monitoring and email notification.
+
+Otherwise it looks like this array should still be 
+up and running with 3 drives. Do you have dmesg of 
+the assembly process?
+
+If there's nothing, you can try mdadm --stop 
+and assemble manually here (with out force option, 
+and without sdj1 which you can --add later...
+
+For all experiments, use overlays:
+
+https://raid.wiki.kernel.org/index.php/Recovering_a_failed_software_RAID#Making_the_harddisks_read-only_using_an_overlay_file
+
+But overlays also need 100% working drives so if there are 
+any physical bad sectors, consider ddrescue first.
+
+Regards
+Andreas Klauer
