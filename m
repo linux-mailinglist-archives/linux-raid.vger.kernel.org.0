@@ -2,106 +2,76 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CFF671375EF
-	for <lists+linux-raid@lfdr.de>; Fri, 10 Jan 2020 19:17:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B9621137BEC
+	for <lists+linux-raid@lfdr.de>; Sat, 11 Jan 2020 08:07:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgAJSRM (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 10 Jan 2020 13:17:12 -0500
-Received: from mx009.vodafonemail.xion.oxcs.net ([153.92.174.39]:10589 "EHLO
-        mx009.vodafonemail.xion.oxcs.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726346AbgAJSRM (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 10 Jan 2020 13:17:12 -0500
-Received: from vsmx002.vodafonemail.xion.oxcs.net (unknown [192.168.75.192])
-        by mta-6-out.mta.xion.oxcs.net (Postfix) with ESMTP id DE156605024;
-        Fri, 10 Jan 2020 18:17:10 +0000 (UTC)
-Received: from lazy.lzy (unknown [79.214.221.251])
-        by mta-6-out.mta.xion.oxcs.net (Postfix) with ESMTPA id 8DD37603EC3;
-        Fri, 10 Jan 2020 18:17:04 +0000 (UTC)
-Received: from lazy.lzy (localhost [127.0.0.1])
-        by lazy.lzy (8.15.2/8.14.5) with ESMTPS id 00AIH3xj007049
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 10 Jan 2020 19:17:03 +0100
-Received: (from red@localhost)
-        by lazy.lzy (8.15.2/8.15.2/Submit) id 00AIH3sL007048;
-        Fri, 10 Jan 2020 19:17:03 +0100
-Date:   Fri, 10 Jan 2020 19:17:03 +0100
-From:   Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
-To:     Gandalf Corvotempesta <gandalf.corvotempesta@gmail.com>
-Cc:     Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>,
-        Linux RAID Mailing List <linux-raid@vger.kernel.org>
-Subject: Re: Last scrub date and result
-Message-ID: <20200110181703.GA7028@lazy.lzy>
-References: <CAJH6TXjryixcArdcu_oVzmkEyktpMSb62YaUJvUv_Nd7k3mbDg@mail.gmail.com>
- <CAJH6TXgvvgg3w096PJ+wKT==ixxH8VTzzoRjTTcMhTJ_SDf2xQ@mail.gmail.com>
- <20200110173114.GA3701@lazy.lzy>
- <CAJH6TXgByNnaWkFo25SrkbR15XgN47b5VhzgWLX=LvMhH-A1VQ@mail.gmail.com>
+        id S1728448AbgAKHHK (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 11 Jan 2020 02:07:10 -0500
+Received: from mail-io1-f52.google.com ([209.85.166.52]:35542 "EHLO
+        mail-io1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728430AbgAKHHK (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 11 Jan 2020 02:07:10 -0500
+Received: by mail-io1-f52.google.com with SMTP id h8so4517892iob.2
+        for <linux-raid@vger.kernel.org>; Fri, 10 Jan 2020 23:07:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=/2WFF1hlfnSMxprVweNRchylNvZq260qDVqqKZYZ6mQ=;
+        b=FcwBXsLYESc5TZNeHnUYh6ruH7LDwLXk9ZgZ2j5op+yN9KVWDEdRBiZPYufNHhyG7s
+         /aDu+p2avjYuIZRRPK1CB63DdTQ5Hz9LaF73m9KTcGiigL9Xe9VoY3lUCxg2hyDajr4c
+         Ff+YSkeaxiWv/ik67dLgvVeQ7SpkXcQjHKfIG4uJCGWnYDVwIN/NJgDqTJAJv9fkhvQM
+         Sgkt2d+ws8QjYEaZYh3bIaE7E9WtxRvHf4MqbqxTw4xHKU+BL7ho20ALu0Ja6Vh1ycTV
+         OGNu08mRGy22kaLpHHpPnb+3up1NvlHK7IxhP9yjnvTIlj/CaWICv8mAQHNXe3zC+s+a
+         iJmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=/2WFF1hlfnSMxprVweNRchylNvZq260qDVqqKZYZ6mQ=;
+        b=BCdQIKb8mSBJnKv0SbDIXGKQEgGqipPX6NNSu1r/wcIF6D9NIj8/jftH00qEFPvOa7
+         Hys1Ons5NtWlZeUh19KyxtWx3Vnm6ROlmF/XVzJTlAcTuO9Ykcp1/xkEhOc43nyY/+Bu
+         qjwA7P1yEpEsOttzq1Efo6Nwcfx6fWWjp6eZMvTFR5e2vXu2ehXmE2iM/amrerJsH4uu
+         6bdpESUuQ3/CiqL41+PduI9FFCTCoqdqHXbFtZQxjt+GOw0aX9vGxGofU4+0zkCTdk9U
+         AA1havZiO8S6SqWsti+KT3ip/HVZ0Df6tKJrXRYgf6GuoDtCoGdQJlIulaXLhS9SEkTl
+         TJSw==
+X-Gm-Message-State: APjAAAVJFxVf6FScPRE+x27txYwCDPVVNrZzLkr2jUe8bWcPwbkAWXeC
+        5tYtBwua2PHiSBhucelEc7rbTjl4Pu8LJxpBhRoLME7p
+X-Google-Smtp-Source: APXvYqyCrKPnlhQi9Hv27Yzb0WQSDac9veqfKhYId0+zqUrY+MA2C8pno2nepITWQio7C4lOK2qQY7s92WSOZWxQAZs=
+X-Received: by 2002:a5d:85ce:: with SMTP id e14mr5387620ios.181.1578726429097;
+ Fri, 10 Jan 2020 23:07:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJH6TXgByNnaWkFo25SrkbR15XgN47b5VhzgWLX=LvMhH-A1VQ@mail.gmail.com>
-X-VADE-STATUS: LEGIT
+From:   Gandalf Corvotempesta <gandalf.corvotempesta@gmail.com>
+Date:   Sat, 11 Jan 2020 08:06:58 +0100
+Message-ID: <CAJH6TXhWd-AGi0_KnbnepxZXsOvpMQGwkisFuuX14dMe157jWw@mail.gmail.com>
+Subject: RAID10, 3 copies, 3 disks
+To:     Linux RAID Mailing List <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi,
+Hi to all
+i've read that with md is possible to create non-standard RAID layouts
+like RAID10 but without being forced to use an even number of disks to
+create the mirrors (like a standard RAID10)
 
-On Fri, Jan 10, 2020 at 07:07:30PM +0100, Gandalf Corvotempesta wrote:
-> Is triggered by a cron but is MD that does the scrub
-> 
-> As the scrub procedure is async, is not easy to log the scrub result,
-> that's why i'm asking for something "native" that mdadm -D could show.
+So, would be possible to create a 4-disks RAID10, with redundancy set
+to 3 (I need to survive up to to ANY 2 disks failures, like with
+RAID6) ?
 
-well, the time is available at script
-level and this can be logged.
-About the result, I guess it is possible
-to log as well.
-One option to investigate would be the
-"--wait" of mdadm.
+I think it would be something like the following?
 
-bye,
+A1 A1 A1 A2
+A2 A2 A3 A3
+A3 A4 A4 A4
 
-pg
+Currently, when i need something similar, i use a 3-way RAID1 with LVM
+on top of it to aggregate multiple mirrors in one bigger volume, but
+this requires 3 drives for each mirror.
 
-> Il ven 10 gen 2020, 18:31 Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
-> ha scritto:
-> 
-> > Hi,
-> >
-> > On Fri, Jan 10, 2020 at 12:17:21PM +0100, Gandalf Corvotempesta wrote:
-> > > Any thought ? Is this a stupid suggestion ?
-> > >
-> > > Il giorno lun 6 gen 2020 alle ore 12:49 Gandalf Corvotempesta
-> > > <gandalf.corvotempesta@gmail.com> ha scritto:
-> > > >
-> > > > Would be possible to add, in mdadm --detail output, the date of last
-> > > > scrub and it's result ?
-> > > > Looking through logs is not always possible (and much more harder to
-> > > > script something), having something like:
-> > > >
-> > > > Update Time : Mon Jan  6 12:47:29 2020
-> > > >           State : clean
-> > > > Last scrub Time: Mon Jan  4 12:47:29 2020
-> > > > Last scrub result: success
-> > > >
-> > > > would be great!
-> >
-> > as far as I know, the scrub is triggered by
-> > a cron job, so, very likely, the logging of
-> > time and result could / should be done there.
-> >
-> > I do not think mdadm is the right place to
-> > keep this information, but I might be wrong.
-> >
-> > bye,
-> >
-> > --
-> >
-> > piergiorgio
-> >
+Other solutions ? I don't wan't to use any parity raid this time.
+(wasting space with a 3way mirror and LVM on top would be ok, is
+nothing better is available)
 
--- 
-
-piergiorgio
+The raid *must* be scalable, i need to grow it on-the-fly by adding
+one or more disks, when needed.
