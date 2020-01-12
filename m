@@ -2,77 +2,67 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2581613867B
-	for <lists+linux-raid@lfdr.de>; Sun, 12 Jan 2020 13:48:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A6191386AD
+	for <lists+linux-raid@lfdr.de>; Sun, 12 Jan 2020 14:42:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732825AbgALMry (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 12 Jan 2020 07:47:54 -0500
-Received: from li1843-175.members.linode.com ([172.104.24.175]:48810 "EHLO
-        mail.stoffel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732823AbgALMry (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 12 Jan 2020 07:47:54 -0500
-Received: from quad.stoffel.org (66-189-75-104.dhcp.oxfr.ma.charter.com [66.189.75.104])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.stoffel.org (Postfix) with ESMTPSA id B9822225DC;
-        Sun, 12 Jan 2020 07:47:53 -0500 (EST)
-Received: by quad.stoffel.org (Postfix, from userid 1000)
-        id 532D1A5EE9; Sun, 12 Jan 2020 07:47:53 -0500 (EST)
+        id S1732914AbgALNm2 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 12 Jan 2020 08:42:28 -0500
+Received: from mail-io1-f50.google.com ([209.85.166.50]:37525 "EHLO
+        mail-io1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732912AbgALNm2 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 12 Jan 2020 08:42:28 -0500
+Received: by mail-io1-f50.google.com with SMTP id k24so6799152ioc.4
+        for <linux-raid@vger.kernel.org>; Sun, 12 Jan 2020 05:42:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=jzSMe5px7cJl60kAVrg644u+ZvGoArzfvAK8BusG+ag=;
+        b=XD9SS/gKbmI1nzZBlpCOZFDVRuTpRzDZKckj7W4NwOSBBYfDRQGvByBsTx/+0jpF/9
+         Ugv+MkBAzwVMt15l6h5FIHiYvbQQVsNmASGj6uY+BUEniaITfF0BL9o+lLjkwALHFhba
+         y+ckVy9MsyTYJNkb34a4+yy0jKADCh+yNmiMejEndW1uH+xYeavnoqPE+lvNoVi199xV
+         zyLpvjLVGLIjdfnFQ2FP6Fr0ylGkz2QKUXDH/UrrFTF31ELaw3OO+PM7c58o5pKkywA5
+         TWyGxpja6yKJbsmBQdGsBD9ALknjGDVWEd7Hm509Fjea7yYbpimdRmU5B/J9UhDVJMGp
+         LPbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=jzSMe5px7cJl60kAVrg644u+ZvGoArzfvAK8BusG+ag=;
+        b=M9ncmcjFk2C8pvT8ls3dM45rPVMIPh7c9HAGdeoP2hW300EbQnZ/Bx8bXlQwFetNKY
+         fXiz/Y2b/riIk4ynShhCNQHb/dPFjc3twc4bp1u07oqUB+FtFgbKgCO5KRMuTp96C2wm
+         qPg4QUM1r66qB3owZhzaLMaQ32taJK33ic1T2azbAudqfk2AS1syz5ne+iOR3zr3UBEB
+         oP8sOKUKfdINTWwgTHAKto4Ff0ntu0C/+yqE9bsz4ZGBcQx81YODv91iB4vQwaeUN2ip
+         0BxmhB9rHMJtsthjiE8G/LU5Z9RMpA4Pz8Lr/gIx85OdxPPrPid0pVvmHOZac2DjCYzG
+         78dw==
+X-Gm-Message-State: APjAAAVAuIaUuPeiV0qqwf+zazNUnMzC3Z99zaUdn3j+sT6LX/AMWpCj
+        Y8rgXLR78UUgbwt9XO7N1wglfssLVBrPmD+w50hHRpz54ws=
+X-Google-Smtp-Source: APXvYqzV8V7BrigEgPC2Sy54jMbf95jo1qdOYhio0AWV/CiTaPSGio4BDGsDGwztyvdpGQZShC9mw/g3ZSw7hC6DccY=
+X-Received: by 2002:a5e:8f41:: with SMTP id x1mr9845631iop.113.1578836547665;
+ Sun, 12 Jan 2020 05:42:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Message-ID: <24091.5497.253499.381022@quad.stoffel.home>
-Date:   Sun, 12 Jan 2020 07:47:53 -0500
-From:   "John Stoffel" <john@stoffel.org>
-To:     Leslie Rhorer <lesrhorer@att.net>
-Cc:     linux-raid@vger.kernel.org
-Subject: Re: mdadm not sending email
-In-Reply-To: <6c7766cb-8698-e44e-e767-000d5dea5833@att.net>
-References: <87skiztloo.fsf@hades.wkstn.nix>
-        <6c7766cb-8698-e44e-e767-000d5dea5833@att.net>
-X-Mailer: VM 8.2.0b under 25.1.1 (x86_64-pc-linux-gnu)
+From:   Gandalf Corvotempesta <gandalf.corvotempesta@gmail.com>
+Date:   Sun, 12 Jan 2020 14:42:16 +0100
+Message-ID: <CAJH6TXhnkB10BUENn0P+qXy4nunwY6QVtgDvaFVpfGDpvE-V=Q@mail.gmail.com>
+Subject: dm-integrity
+To:     Linux RAID Mailing List <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+I'm testing dm-integrity.
+Simple question: when corrupted data are found, repair is done
+immediately or on next scrub?
 
-Leslie>  ??? I recently upgraded one of my servers to Debian Buster.?
-Leslie> I have been using sSMTP as my MTA, but unfortunately it is no
-Leslie> longer maintained.? I installed msmtp, instead, but now my
-Leslie> mesages are no longer going out from mdadm.? I can run the
-Leslie> command:
+This is what I have:
 
-This is a problem with your mail setup, not with mdadm.  I suspect you
-need to configure msmtp to use TLS and/or to submit the email to port
-587 on att.net, where you do a full authenticated login.
+[ 6727.395808] md: data-check of RAID array md0
+[ 6727.528589] device-mapper: integrity: Checksum failed at sector 0xe228
+[ 6727.938689] md: md0: data-check done.
+[ 6749.125075] md: data-check of RAID array md0
+[ 6749.664269] md: md0: data-check done.
 
-Look at the examples here:
-
-https://wiki.alpinelinux.org/wiki/Relay_email_to_gmail_(msmtp,_mailx,_sendmail
-https://wiki.debian.org/msmtp
-
-And follow the debuging info these guides give.  Once you get email
-working properly, mdadm will send emails.  
-
-
-Leslie> echo "Subject: Test: | sendmail lesrhorer@att.net
-
-Leslie> and it works.? If I try:
-
-Leslie> mdadm --monitor --scan --test -1
-
-Leslie> I get:
-
-Leslie> sendmail: the server did not accept the mail
-Leslie> sendmail: server message: 550 Request failed; Mailbox unavailable
-Leslie> sendmail: could not send mail (account default from /etc/msmtprc)
-
-Leslie> and from /var/log/mail.err:
-
-Leslie> Jan 12 03:43:40 RAID-Server msmtp: host=outbound.att.net tls=on auth=on 
-Leslie> user=lesrhorer@att.net from=lesrhorer@att.net 
-Leslie> recipients=lesrhorer@att.net smtpstatus=550 smtpmsg='550 Request failed; 
-Leslie> Mailbox unavailable' errormsg='the server did not accept the mail' 
-Leslie> exitcode=EX_UNAVAILABLE
-
+if repair is done immediatly, would be possible to add a single log
+line saying that ?
+something like:
+[ 6727.528589] md: md0: Repaired data at sector 0xe228
