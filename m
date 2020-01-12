@@ -2,157 +2,80 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CDEC138590
-	for <lists+linux-raid@lfdr.de>; Sun, 12 Jan 2020 09:24:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D24941385B6
+	for <lists+linux-raid@lfdr.de>; Sun, 12 Jan 2020 10:48:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732421AbgALIYP (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 12 Jan 2020 03:24:15 -0500
-Received: from mail-io1-f53.google.com ([209.85.166.53]:41537 "EHLO
-        mail-io1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732406AbgALIYP (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 12 Jan 2020 03:24:15 -0500
-Received: by mail-io1-f53.google.com with SMTP id c16so6419091ioo.8
-        for <linux-raid@vger.kernel.org>; Sun, 12 Jan 2020 00:24:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=0djHV9h5vFPsnQ18u5fIGfRdlYX7l4/wpvYFGTOjDfI=;
-        b=itP5EcCXffzU7TNjcs4W4+YdCtNRDIOQuX0bxYIOYW0/1XfUb18szN7OrLPq37liJo
-         TZSyP4GRGREBncNVg8WZ64i9eTg8ACBvwQisguqrfDQJc/Rki8sLHdB6g0AKT3PVraRj
-         Rh2sMNxZ6vDW7FBbJnjIPgmECioJB/Za8rd++vr5C09UhGB+lWzFKUnacVkki9iYq7fn
-         Ft2IEQfU3NJPAFbVnvHRMugHErQ77hm7nfpLieQ5n/dF0pWsdjgI2cHUO57OeTW1rxjT
-         KU+wGyTHUnC/AOb2Ovs8w4pDh8Uej+mF1l0EiE5YqVUIX3fnC7m9sc9wm5Ef2TWa/CPW
-         mAMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=0djHV9h5vFPsnQ18u5fIGfRdlYX7l4/wpvYFGTOjDfI=;
-        b=PXnhDzNFJ/KpFhBQPzl8/su4ETOwwU/u8eqR21ZNLw52e69DSzqFYxpBEfKEYrfAB4
-         8TYuSRFxRkGcgKbnhBFBdd0qVn3I+1fhUtAFabSygrKinjgmqEMDObw7NOFD14tzY/4x
-         6YFoy8wS57vpQZ0l+maHgdYw3Q0+Io+yce+DEmdYFQ4koAYFmetkUQeng9afy0ACNZV5
-         vaJ+X4sR2kTDosPdJhgKG8FZ/JqUfsAEj2txtP+t7HY10ONKFxFZBoxvDCO15AkymEA6
-         J+YIp/MkpYz0zw+jE6IK9G+n08spNxXUANbTxumlrUILmnSIouG2vwDqydVAIYlh/bMo
-         hezg==
-X-Gm-Message-State: APjAAAUXQNFKDrsZmy2UoQLuZ9ldqLB/4vcmHQow+Yc1wqgLF6ulPtbE
-        sI+3z7MtXfiqvHyaZrF7gOWdjtqQzEBxVOSupKS+g012zvM=
-X-Google-Smtp-Source: APXvYqxzcN890Lss0g90175OOXWzzljWBBKRy1PzaFB9z84thdzThda7nRs6vmez9gOBqoBgzfY9t6lupRQSoRX6+1o=
-X-Received: by 2002:a02:c646:: with SMTP id k6mr10131575jan.34.1578817454276;
- Sun, 12 Jan 2020 00:24:14 -0800 (PST)
+        id S1732536AbgALJsc (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 12 Jan 2020 04:48:32 -0500
+Received: from sonic316-16.consmr.mail.bf2.yahoo.com ([74.6.130.126]:43703
+        "EHLO sonic316-16.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732381AbgALJsc (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Sun, 12 Jan 2020 04:48:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=att.net; s=s1024; t=1578822511; bh=H8wS6TIDaGdPnMtoq1QTgtygWTvyk9t75ZgFmZIvu7w=; h=Subject:To:References:From:Date:In-Reply-To:From:Subject; b=00ZrJN9FEOYBSfvJKsaJ5+KRlTdzztXWRrC9IpRpcpQ6p25vL7NI2SqPI75LZ8+6+yn/JvLy2KSD2viLR8Hkv1kQol9cszhmnpuZPQ2RXSsf9qoqaMypRjK1Cpv3VEL2mUZCAZQsNjEmu76rLtLh+NKnsvLgPyuDsph0Ad/kgeQ=
+X-YMail-OSG: mL2E7G4VM1l7b6cx9kpNaVq0OZHWmXtgrg9P1zJSTZXNI80OaQE7A80IILRaQFf
+ rnDMBov4l4PCXaxWE06KWSUt710O.bg1Ommcdew7xIdyLfdl8iSWjYay2HcSQxE9jP1ZOD73S.ET
+ k5mAF6oRzigYEHzT_UkhcrVwE3q8zWS4bgKmuQ0g.wtHlgTE76gBPfslmYT5Ewo1K5fI0idBh0sC
+ mNto3HEseYlm268uc6IvX_mix8DSTmVnGLa.mXfWoHtnidJbmoYn_v6zu_d4M0GcSd5ssAYeqAi_
+ MtmHiras33KOw4TAzY.QQqnVWy7LwnPGohN_44AlP3z8A15lDO_irQmkcwwiiSXrOPMLeSI1_UXt
+ 2EXNUs9jSKk8EY.B8ODA_AMFaxe6t7xi7eXQ3PzBCPMAZ7wKbMiNThaJbkoDWw9rvlhkiq0xK6n0
+ 8f5iUAeYiYgTd6zYlhB6SWSFyO3yHlxwI7sbL_0znfVIc8UG6ZRpOV7EKlPx1eSWBB.REG.tkq.T
+ qgF008u08aRoJTgQzW1OQl.aztz2th9F3LhzgHBU3SuDdp1N6JC3AJ1oBR8D_QMmI_uA3sH1Xzr3
+ idwwkorGpYA53fKhIWv3yh.VYsUGOqJIPD8mphMr_VHP3bqWCitn7LMJGse6M0yEwMa1eBaIk6cc
+ 8TYc.nvahmyhPvUfxK.POQHRhAIM1B1J8ewnuxTPMnMpzq9SWzIBCvuPheoOTEjlwUlCFczTt_rU
+ GD8_AJdRZNJ5ohvzxpcuRjiMUSyLWV5MMCj.jdpzSsUIfabGTrEkYjjAX2rR08a0t6bZcyfVClQT
+ rITrUQrChWJ8SOZdUH4B8dYDn_q9f6f8R62Mhp72ZtPsaYDRgKpkT99fMuGRX9mvCApNM18VlL5E
+ DIGhnq2VR0oQprMDCyTxqB3.rA3FeIb.76zu5XoH9uJXVa4g38zOSsLZKiuNHmgdGSLyKfMenwel
+ JxEduaTsVnDZwxdFg_k.6sl_0r5ViT0onZnzHgRGqEjMga9HOz8KtQboe.MPTurZKMVBO1F8WLEC
+ VvkRYPvey56wqV6C84jfvz40mg8ildMKhTzj7yhuvq_P9GxnivrtL9Ib5_kwsKrYz8WLG4r415WS
+ SUYD.Y4lVAciEXuLF3UGexlNLOxWPt8pq10qtPA3.cTqshNRcyOU6Nqc36aD1hj2ceT6SkGmUDFW
+ x4YosAxsPgMe3T6bSsA2hpIRBstVQdCT0qSTSz51g4YnhSrkgM.Qqo0NzdRR4p4YRVdVHjYDcpgr
+ N0Sw1xC5drG0rB3_qlPRTwpf7jrO5ri.p_mt9GTl7HcpTENVMoZM7v.v0Yq5lO24VK5cEgpAHEPc
+ rcyaOBBPUuHh2TanbTbiuYd0d7J7XuqE.Ke6UYLZ9I.ls0pwaCGfxWtnMN5ylmWGCNw--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.bf2.yahoo.com with HTTP; Sun, 12 Jan 2020 09:48:31 +0000
+Received: by smtp403.mail.ne1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 0a5c1d3f78552b693f1d1ebd584e797f;
+          Sun, 12 Jan 2020 09:48:27 +0000 (UTC)
+Subject: mdadm not sending email
+To:     linux-raid@vger.kernel.org
+References: <87skiztloo.fsf@hades.wkstn.nix>
+From:   Leslie Rhorer <lesrhorer@att.net>
+Message-ID: <6c7766cb-8698-e44e-e767-000d5dea5833@att.net>
+Date:   Sun, 12 Jan 2020 03:48:26 -0600
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-From:   Gandalf Corvotempesta <gandalf.corvotempesta@gmail.com>
-Date:   Sun, 12 Jan 2020 09:24:03 +0100
-Message-ID: <CAJH6TXgQtbxU4Pe9PxvKUyEYsU6-na+5JNvtCHC1jqTmNLcVYQ@mail.gmail.com>
-Subject: Growing a 3-way mirrors RAID10
-To:     Linux RAID Mailing List <linux-raid@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87skiztloo.fsf@hades.wkstn.nix>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Mailer: WebService/1.1.14873 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-I'm trying to test a setup that I need in a couple of days.
-a 3way mirrored RAID10, so i'm using a n3 layout.
+ ??? I recently upgraded one of my servers to Debian Buster.? I have 
+been using sSMTP as my MTA, but unfortunately it is no longer 
+maintained.? I installed msmtp, instead, but now my mesages are no 
+longer going out from mdadm.? I can run the command:
 
-i'm starting with just 3 disks, these 3 would be mirrored together, obviously:
+echo "Subject: Test: | sendmail lesrhorer@att.net
 
-sudo mdadm --create /dev/md0 --level=10 --layout=n3 --raid-devices=3
-/dev/loop17 /dev/loop18 /dev/loop19
-mdadm: Defaulting to version 1.2 metadata
-mdadm: array /dev/md0 started.
+and it works.? If I try:
 
-$ sudo mdadm --detail /dev/md0
-/dev/md0:
-           Version : 1.2
-     Creation Time : Sun Jan 12 09:13:37 2020
-        Raid Level : raid10
-        Array Size : 100352 (98.00 MiB 102.76 MB)
-     Used Dev Size : 100352 (98.00 MiB 102.76 MB)
-      Raid Devices : 3
-     Total Devices : 3
-       Persistence : Superblock is persistent
+mdadm --monitor --scan --test -1
 
-       Update Time : Sun Jan 12 09:13:37 2020
-             State : clean
-    Active Devices : 3
-   Working Devices : 3
-    Failed Devices : 0
-     Spare Devices : 0
+I get:
 
-            Layout : near=3
-        Chunk Size : 512K
+sendmail: the server did not accept the mail
+sendmail: server message: 550 Request failed; Mailbox unavailable
+sendmail: could not send mail (account default from /etc/msmtprc)
 
-Consistency Policy : resync
+and from /var/log/mail.err:
 
-              Name : ale-XPS13-9333:0  (local to host ale-XPS13-9333)
-              UUID : 5b0e8009:7df3ed1a:a56e9edb:aff8f7c3
-            Events : 17
+Jan 12 03:43:40 RAID-Server msmtp: host=outbound.att.net tls=on auth=on 
+user=lesrhorer@att.net from=lesrhorer@att.net 
+recipients=lesrhorer@att.net smtpstatus=550 smtpmsg='550 Request failed; 
+Mailbox unavailable' errormsg='the server did not accept the mail' 
+exitcode=EX_UNAVAILABLE
 
-    Number   Major   Minor   RaidDevice State
-       0       7       17        0      active sync set-A   /dev/loop17
-       1       7       18        1      active sync set-B   /dev/loop18
-       2       7       19        2      active sync set-C   /dev/loop19
-
-
-The array looks good to me, but why used dev size is equal to array size ?
-In a 3way mirror it should be 3 times the array size.
-
-Anyway, let's add 3 disks more:
-
-$ sudo mdadm --add /dev/md0 /dev/loop20 /dev/loop21 /dev/loop22
-mdadm: added /dev/loop20
-mdadm: added /dev/loop21
-mdadm: added /dev/loop22
-
-$ sudo mdadm --grow /dev/md0 --raid-devices=6
-
-$ sudo mdadm --detail /dev/md0
-/dev/md0:
-           Version : 1.2
-     Creation Time : Sun Jan 12 09:13:37 2020
-        Raid Level : raid10
-        Array Size : 200704 (196.00 MiB 205.52 MB)
-     Used Dev Size : 100352 (98.00 MiB 102.76 MB)
-      Raid Devices : 6
-     Total Devices : 6
-       Persistence : Superblock is persistent
-
-       Update Time : Sun Jan 12 09:19:19 2020
-             State : clean, resyncing
-    Active Devices : 6
-   Working Devices : 6
-    Failed Devices : 0
-     Spare Devices : 0
-
-            Layout : near=3
-        Chunk Size : 512K
-
-Consistency Policy : resync
-
-     Resync Status : 74% complete
-
-              Name : ale-XPS13-9333:0  (local to host ale-XPS13-9333)
-              UUID : 5b0e8009:7df3ed1a:a56e9edb:aff8f7c3
-            Events : 33
-
-    Number   Major   Minor   RaidDevice State
-       0       7       17        0      active sync set-A   /dev/loop17
-       1       7       18        1      active sync set-B   /dev/loop18
-       2       7       19        2      active sync set-C   /dev/loop19
-       5       7       22        3      active sync set-A   /dev/loop22
-       4       7       21        4      active sync set-B   /dev/loop21
-       3       7       20        5      active sync set-C   /dev/loop20
-
-
-Now array size is doubled, but used dev is still the same.
-Is this normal ? Is this the right procedure to grow from a 3way
-mirrors raid10 to a 3way mirrors raid10 with 6 disks ?
-
-Other question: set-A, set-B, set-C means that disk on set-A is
-replicated on set-B and set-C, right ? So I can't remove more than 2
-disks (set-B and set-C, in example) but i can remove set-A from the
-first line and set-B and set-C from the last two lines, as they are on
-different mirrors.
-
-Is possible to have a better output ? A RAID1+0 output is much easier
-to understand, because I know that I can't remove multiple disks from
-a single RAID1 subset.
