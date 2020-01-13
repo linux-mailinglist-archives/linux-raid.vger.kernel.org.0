@@ -2,89 +2,76 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 07857138FD6
-	for <lists+linux-raid@lfdr.de>; Mon, 13 Jan 2020 12:10:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16BB71392E6
+	for <lists+linux-raid@lfdr.de>; Mon, 13 Jan 2020 14:59:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgAMLKw (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 13 Jan 2020 06:10:52 -0500
-Received: from mail-ed1-f42.google.com ([209.85.208.42]:37994 "EHLO
-        mail-ed1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbgAMLKw (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 13 Jan 2020 06:10:52 -0500
-Received: by mail-ed1-f42.google.com with SMTP id i16so8077720edr.5
-        for <linux-raid@vger.kernel.org>; Mon, 13 Jan 2020 03:10:50 -0800 (PST)
+        id S1728991AbgAMN6x (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 13 Jan 2020 08:58:53 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38874 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729101AbgAMN6t (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 13 Jan 2020 08:58:49 -0500
+Received: by mail-ed1-f66.google.com with SMTP id i16so8524486edr.5
+        for <linux-raid@vger.kernel.org>; Mon, 13 Jan 2020 05:58:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloud.ionos.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=gB9V8qXF2rHl+R6Qs3+Et39V71kM95tp905vvHBm+FQ=;
-        b=hGVbq7usjUKljeRlyz2q2lMm6sZSl3e0O7nABxTXief+0etzSyuR4sIyGnaIlSIyTv
-         XD4da6ViK5qWsC4hrW1ygl/dEIljSkpg/3xvemJ8lfgQClL3p3Ohcvp+rX1VvnXCqs/G
-         K1l8y4AGMIkKgll4pSk3K63TyhHJzzmSzMD/lrwBvIAz/ZtqhRlh/ur2fFYpqgdkQa4q
-         2tBiGwdrzRAXiyr4DOekOWRIMcOLeRmC4OvBV2jHIaFfo8oj9VmcAorLFwn8I12ai2Xj
-         Pr/7yRHn+L/6r6HH38fzgQV0mFGsQXl5vJbXqwVLOmdz44w5qy/Nr+h44xbaoiIAcT/h
-         lx0w==
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-transfer-encoding:content-language;
+        bh=+t/pZS98XefACFlnNoUdDYtOWbisiAfMSZO9J6UoAtE=;
+        b=Fe7xCyH2+2eIlKY+8QsrCrgKfjT5W+byxcndcmE2V3WuY1I/b8L6lKxWM9OhKKvVgb
+         +DpRuKZV/egKfuc/vf5Nc5TKLguaJcnAgrXG2qPOIj7fVC0uXCbMUQhz6qJyDbBptaap
+         uR9H78rBqJnPvjEzCC/MFgXDgVQC+y8s5wHkwYYUg2wBRWOg4psDowwQUJe8znYxnp76
+         UVoDYfEag7AeQbxzkg5QsG4iKMkmjHxM45ZSnvwrOS3ThIrtCoDOsRw5FrjO0cQgmNcl
+         bxkNMhsSbebgDfqnm+/gfp2GLt1p+s8N4N/kaUad4GTNjbLUS4KtT6TGonZKaBtkoCWG
+         iW6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-transfer-encoding
          :content-language;
-        bh=gB9V8qXF2rHl+R6Qs3+Et39V71kM95tp905vvHBm+FQ=;
-        b=C6s7u28B+u6IZXiSUU7EToEDglghpm52z5Zx5L5aAni9f7xIKrj/FaYgyHRM5jU0ax
-         5LYRcblnodLK92sPU8sZUVSKPFqJ7kUU0gGKKFarIXfxPHV2OO2PGDLvnr8jazVopZ+R
-         0PPveOrwvNCekrQwZ8R2a/WPB4aBDYUjOsR9ruPRGc9MQtZetBkgGCAALZCzfuOk3X0o
-         2nMGLyieuY8qvGRVIJdy4L1Gc8bEQpNzpXKel4Hhwwv5sQnb4srTeIoqXilmZvMKwm8t
-         B8Wqz0iGOFPA+Fc6rrEkwTg9sjAyHA/KsmMCIjUCrkc43hf4pLLveYg02fkffyCw6+w4
-         /iag==
-X-Gm-Message-State: APjAAAXlehWgP4yp6O/iDzzi2R3NkYqTnWT6VNW/ACBITHKMmkNxKr3m
-        GEKzqaN5HBRp+IaymWiQZ72G5y9UDb4=
-X-Google-Smtp-Source: APXvYqybMts4i4+a8CV98K1ghb/x6kZNz02i5/gWM5U7TItIYAjpV7NRTn/bKC7ypXcMn0/1o/uZdg==
-X-Received: by 2002:a17:906:d935:: with SMTP id rn21mr13360626ejb.147.1578913850101;
-        Mon, 13 Jan 2020 03:10:50 -0800 (PST)
-Received: from ?IPv6:2a02:247f:ffff:2540:d9a:2eb8:42f1:918d? ([2001:1438:4010:2540:d9a:2eb8:42f1:918d])
-        by smtp.gmail.com with ESMTPSA id qw15sm457995ejb.92.2020.01.13.03.10.48
+        bh=+t/pZS98XefACFlnNoUdDYtOWbisiAfMSZO9J6UoAtE=;
+        b=Xe+lHuOJDZPo7MYl76hNgQX0eDlghC5nVB/52oSxyBrm8hil9SI7b/UJIwksv8FnJb
+         RQOWPRCXU6pB+haL12TWlUC9gYwCPLqaqHHEpW1Zy949Z9sV+VbpNzLnwT3tlW3DeSKX
+         UKsDdfbpjZOqOGfzKwh6GppPf2muYj838dVO8hB6fzshesl7coAGZ7Kxxijm0EVT4GJU
+         2yAfc/oIxuD1AG1eJQFWNI8qy6RcBKbYCrgqEmI0Jhcdsip7fo7gHPfGBPjrXRqUNsyR
+         idBkQC+GWIIaIXzwWmX02apyhNZ2KAkdhLypfWH9a3FUfybM8jnWlcOs7tsBfCMMu9aR
+         sKyw==
+X-Gm-Message-State: APjAAAWSpo0JIeKBhFbSRH5+NiLSCL4b8utdWi9cMqKtv+gnYhd21Rk0
+        VkLVjQJ48awFGcze83s7hgVxxQ==
+X-Google-Smtp-Source: APXvYqzZ5p+1xLSk4PlbhDTTQ/eUUaJjmRN0iZSnwsBtGV3VnqC071+aaoIKoNunNSCURlAWSf8P4A==
+X-Received: by 2002:a17:907:20a8:: with SMTP id pw8mr16564057ejb.248.1578923928225;
+        Mon, 13 Jan 2020 05:58:48 -0800 (PST)
+Received: from ?IPv6:2a02:247f:ffff:2540:5486:b91d:1617:ce4e? ([2001:1438:4010:2540:5486:b91d:1617:ce4e])
+        by smtp.gmail.com with ESMTPSA id y5sm458893ejm.57.2020.01.13.05.58.47
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 Jan 2020 03:10:49 -0800 (PST)
+        Mon, 13 Jan 2020 05:58:47 -0800 (PST)
 Subject: Re: hung-task panic in raid5_make_request
-To:     Alexander Lyakas <alex.bolshoy@gmail.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>, liu.song.a23@gmail.com
+To:     Alexander Lyakas <alex.bolshoy@gmail.com>,
+        linux-raid <linux-raid@vger.kernel.org>, liu.song.a23@gmail.com
 References: <CAGRgLy4Yi1HNqNO0MLq5xjRRgWe7EaByRYF5sA3fFVa1tmpNvA@mail.gmail.com>
- <09e8a682-3f91-6b34-58a0-235dbb130901@cloud.ionos.com>
- <CAGRgLy4netkysnF6CS2MkVBp17ipZr5D4Z4wQ6B0w2XXg51OkQ@mail.gmail.com>
- <CAGRgLy6xx5dT0StoiUNLThVknLvNUR5Emc0mEg_dnJmWth3=9A@mail.gmail.com>
 From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Message-ID: <2a9e8231-c5e2-8f63-2fc4-bed24fc21959@cloud.ionos.com>
-Date:   Mon, 13 Jan 2020 12:10:47 +0100
+Message-ID: <cde80def-2832-2a45-28fa-055e6be88d05@cloud.ionos.com>
+Date:   Mon, 13 Jan 2020 14:58:46 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAGRgLy6xx5dT0StoiUNLThVknLvNUR5Emc0mEg_dnJmWth3=9A@mail.gmail.com>
+In-Reply-To: <CAGRgLy4Yi1HNqNO0MLq5xjRRgWe7EaByRYF5sA3fFVa1tmpNvA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi Alex,
-
-On 1/12/20 8:46 AM, Alexander Lyakas wrote:
-> Hi Guoqing,
->
-> We have tried the proposed patch, but still hit the hung-task panic in
-> the same place[1]. How can we debug this further?
-
-Can you print the information (atomic_read(&conf->active_stripes),
-conf->max_nr_stripes and conf->cache_state)  just before the
-wait_event_lock_irq? Then we can verify which condition is not meet
-here. Also pls dump the value of sysfs nodes, something like.
-
-linux:/sys/block/md5/md # find -mindepth 1 -maxdepth 1 -type 
-f|sort|xargs -r egrep .
 
 
-BTW, could you try latest kernel? And is it possible to reproduce the panic?
+On 12/24/19 9:18 PM, Alexander Lyakas wrote:
+> We recently moved to kernel 4.14 (long term kernel) from kernel 3.18.
+> With kernel 3.18 we haven't seen this issue.
+
+Could you bisect commits between 3.18 and 4.14 to identify
+which commit may related to the issue?
 
 Thanks,
 Guoqing
