@@ -2,72 +2,53 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 85C7F138B40
-	for <lists+linux-raid@lfdr.de>; Mon, 13 Jan 2020 06:52:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB300138D86
+	for <lists+linux-raid@lfdr.de>; Mon, 13 Jan 2020 10:17:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733294AbgAMFw3 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 13 Jan 2020 00:52:29 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:32877 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733204AbgAMFw1 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 13 Jan 2020 00:52:27 -0500
-Received: by mail-oi1-f194.google.com with SMTP id v140so7227318oie.0
-        for <linux-raid@vger.kernel.org>; Sun, 12 Jan 2020 21:52:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=Rjbe3pVeMfYVPdmVklZ4b2stSqI32LIYp+bn/8NyJvk=;
-        b=El5YZgtDEXJCHEtZrRB1ujEJT5GnrR9nqQvx3oNXkD1KXWKAy5lE4fahagwXmNRBuY
-         Z373bCStdjZZAvrcMmyjZhqXNYKD7qS8gpQ1uKt4Zm/CJYofbOmd6y2KCfdaIf8lu4gx
-         e04Qq2Wd5k0QzXhgODgXLh9+BTAbr7mIJG1kvrHD2cB5892G2QaMtoQjZ8YbwAsn/v/R
-         qN1ulSwy8kLJzDOOwwvDkEa6g0paOaNUUW6lO8NcaOsOsQMTh2eV34LXY/bnRxfyDcL+
-         OFIAYoYpyWTxvo4nB11oXa8J2BNLiFXnr18VfN4DCPOmpXqWPT8f/9GzmZX8VWLxs4VK
-         s+8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=Rjbe3pVeMfYVPdmVklZ4b2stSqI32LIYp+bn/8NyJvk=;
-        b=Wv5DuQiTltPjMT9Rr6VHCFVxP5nKoYo0p235oXHyGorNBZ2epOzcHBOkUkSR7zW5lY
-         Ny5gtI1ZiguqZakxVPlGR7gHqWtRLHgU9HO7/Z1zln/0jjTR6HVkk1S2xskiBdafHSVe
-         32WIU/6SjlKFsEKXupZ5r8av9cKaC/E7qlpR4AuEYZRBhFGaO3qn0EDEHFLKCg4W8qv2
-         lAzutpV0KX2o///KVnjjn8s4yZaAyrqiEjKfuFCtDYBU19sE0PfMygm1SpNiuptw21Ts
-         4Anh/Lj2tcuWvf2C2kPxw6qkGRqzIU1pvtCvbOgO7N3O8onhEvx35ESbpSig87z2oOr1
-         /MQQ==
-X-Gm-Message-State: APjAAAV6iL7U/SWK3BTxT5EXDZM/KkVvVvXqkKYn5l6FSz6p1No1hFe+
-        tRwFuBcmaztFHhC/pd+LVXd/3Opr3gkDnSKsEPKNezsc
-X-Google-Smtp-Source: APXvYqy7JhGBt0ZjJ/1t4CT74GIhTuvbOMnCynReBbsGRcTAfZPwoiLBCe9XiPA9xaK1JAPmy14eucUMWI9DLkbKsUo=
-X-Received: by 2002:a54:4713:: with SMTP id k19mr11513430oik.113.1578894745174;
- Sun, 12 Jan 2020 21:52:25 -0800 (PST)
+        id S1726399AbgAMJRx (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 13 Jan 2020 04:17:53 -0500
+Received: from mail.realbizit.com ([80.211.67.81]:41688 "EHLO
+        mail.realbizit.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgAMJRx (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 13 Jan 2020 04:17:53 -0500
+X-Greylist: delayed 309 seconds by postgrey-1.27 at vger.kernel.org; Mon, 13 Jan 2020 04:17:52 EST
+Received: by mail.realbizit.com (Postfix, from userid 1001)
+        id 81ECAA229F; Mon, 13 Jan 2020 09:10:59 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=realbizit.com;
+        s=mail; t=1578906762;
+        bh=me+5xVjFZ4dgdR0nJfX/VTpCVMgLYdkpiIyY61IhsSU=;
+        h=Date:From:To:Subject:From;
+        b=j5AHc8cf4ZW6g6Pgl/ayxl7aIB2Xn294NaVLoJ/sV7XyvG3w/OHtkHb025m595QcY
+         ePUYU3tGL2CvqdNMrLdAYYaOpZXBhqT48OPdhIJQLA7KC9qewSHVSAVV32Iywi0IwV
+         1PdFS8q3i2/IoNuFShB6CjT0oa7qbO5RvlVZWeO1Djs4Fo3qziKCdZRsG/ZTh5stIO
+         CblLORWmstuxFHpyA8ivAoBMi2BWnRZqTtKIiYZ7+momeIsMxFYNpuqTy6FfsGwuU6
+         gfMmaLuo85ipY7LrFB3VJxuEd5U7eps7l8ZVlsCIEhvuYhgM0dy0cU3uthnLghS8QT
+         zpdb+eoLkqlkQ==
+Received: by mail.realbizit.com for <linux-raid@vger.kernel.org>; Mon, 13 Jan 2020 09:10:28 GMT
+Message-ID: <20200113090904-0.1.r.143j.0.eqnbqukpqd@realbizit.com>
+Date:   Mon, 13 Jan 2020 09:10:28 GMT
+From:   "Damien Ganthier" <damien@realbizit.com>
+To:     <linux-raid@vger.kernel.org>
+Subject: =?UTF-8?Q?V=C3=A9rification_du_v=C3=A9hicule?=
+X-Mailer: mail.realbizit.com
 MIME-Version: 1.0
-Received: by 2002:a4a:41cb:0:0:0:0:0 with HTTP; Sun, 12 Jan 2020 21:52:24
- -0800 (PST)
-Reply-To: rickschaech@gmail.com
-From:   Rick Schaech <cathben72@gmail.com>
-Date:   Mon, 13 Jan 2020 01:52:24 -0400
-Message-ID: <CAEcBxO=TAnFn5LzizHa22hUC0Db5FuiZJF28m=yX3_9m--jRqg@mail.gmail.com>
-Subject: I wait for your swift response,
-To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Dear, I'm Mr Rick Schaech, I am the General Account Auditor, Though i
-know we have not meet each other before but sometimes in life God have
-a reason of bringing two people from two different countries together
-as business partners or life partners.
-
-My dear friend, I have the sum of 15.7 Million USD i wish to put in
-your name due to the death of my late client who died several years
-ago as his next of kin column still remain blank. Though the internet
-medium is highly abuse these days but am assuring you that this
-transaction is legitimate and I am contacting you that we may have a
-deal, note for your cooperation and collaboration 40% of the sum will
-be for you while the other 60% will be for me as well. I wait for your
-swift response for more details. please forward your response to my
-personal E-mail: rickschaech@gmail.com
-
-Yours sincerely,
-Rick Schaech.
+Bonjour,
+=20
+Les entrepreneurs qui surveillent les v=C3=A9hicules de l'entreprise en t=
+emps r=C3=A9el, y compris le kilom=C3=A9trage et la consommation de carbu=
+rant, r=C3=A9duisent les co=C3=BBts d'entretien du parc de pr=C3=A8s de 2=
+0% et am=C3=A9liorent l'organisation des livraisons.
+=20
+Seriez-vous int=C3=A9ress=C3=A9 par ce type de solution?
+N'h=C3=A9sitez pas =C3=A0 me contacter pour toute question que vous aurie=
+z.
+Veuillez recevoir mes plus cordiales salutations.
+Damien Ganthier
+damien@realbizit.com
