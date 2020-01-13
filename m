@@ -2,75 +2,86 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B4DE5139BC5
-	for <lists+linux-raid@lfdr.de>; Mon, 13 Jan 2020 22:41:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A3739139CB8
+	for <lists+linux-raid@lfdr.de>; Mon, 13 Jan 2020 23:40:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbgAMVlh (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 13 Jan 2020 16:41:37 -0500
-Received: from mail-io1-f53.google.com ([209.85.166.53]:41413 "EHLO
-        mail-io1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726488AbgAMVlh (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 13 Jan 2020 16:41:37 -0500
-Received: by mail-io1-f53.google.com with SMTP id c16so11503218ioo.8
-        for <linux-raid@vger.kernel.org>; Mon, 13 Jan 2020 13:41:37 -0800 (PST)
+        id S1728733AbgAMWkn (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 13 Jan 2020 17:40:43 -0500
+Received: from mail-vs1-f53.google.com ([209.85.217.53]:41792 "EHLO
+        mail-vs1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbgAMWkn (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 13 Jan 2020 17:40:43 -0500
+Received: by mail-vs1-f53.google.com with SMTP id k188so6994481vsc.8
+        for <linux-raid@vger.kernel.org>; Mon, 13 Jan 2020 14:40:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=pWazVMOmHzaOUtcU+FiUiw5RhB3z9UoELGtPgC0EWiY=;
-        b=IERLt5Dzc1vlVv8tMQtfyXzxYzce2ZWpA72GSXT9450fBnHXvvNCCfiJkH29mvl7qv
-         798lUflsM5skZMFIwYXQgwgiDBaz0dqyqG+Nx09SFYvzSlQyqBbGznuAiV7VFoWVBYas
-         QU+UzQEm+qaxjQtOmsSur11trFFjKN4EdRe7AcFlHmbk+RIvIsaXGgOMSOOENTNjboru
-         J6d6I9hJ7KIxamtNUSkylNlSvJYokuCDWFF0I7xebDGsLZZOysfam8WOjSqGBBFlqrfz
-         7rq20Su9n8t86wxxny6MBH1kg9KL65OPLn7vbcG77p3XGQ1jfur0w2K7teIu9vyCAOcx
-         r+7Q==
+        bh=eYtee+YhyjaGxGsNP74+8IT2G3PMwJkaYhTgNz85A4U=;
+        b=h2KnHruMyKNXG7m4CegX3lHgeejUAx1aK2nTv5QBNqnkXiFplkpEXVAanFd8iVtS0B
+         U+jcDAEso+FelNEyNjPN7aC492r4hrDLeZZjJ83NZeAthphkrvHtCY846HX6ToZtTaQh
+         Q/F1vlwuUf87pewHN9gnIw+vbkPLEXYK//ea4fSK4cRqdU0r8WjXpZ1s7qDgXwzojLNj
+         qcsO6Fq6BWWr9ZGOqI54gFiG6A9ccgV9DXozjEuYMTQUH3e0/cCk5GrEGyrrXfvuqkvS
+         G4WQ3YVGu2T/E1xPncNYPNvLyouZEjiWmvjQYvRBfJzcJkI4awgjkXkk8VL44ELqY+SN
+         J9bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=pWazVMOmHzaOUtcU+FiUiw5RhB3z9UoELGtPgC0EWiY=;
-        b=U8vXTnFuL5M1QAMUQLMfG05tib6Wo4EmEPTEbOqfyLjYFN01i2NZSQVVfblxUNNCXd
-         mG7R1Lm4loNaXMlWuQoYY43teW1zeSt04IoEkEdBtNbSYQxfC8h+CEVMvZ1IL+hXplzk
-         OuvMFS4ykg9nSTzOKRcKNC/tFwFAk+8D4ea1gVghz8FkOsBWpZzWT8jbzOKKCtzpc+je
-         2aueKD8PMMZHftkasokB2baKGMrenLgyar6y4z5+KB1f1pHRxo/jGIHQaH/uE5bScpUE
-         dCTbL+rWbOenxtgV0rjRucKEOaHvCm6poTOjUQisbdS900j96+wrQdAn24BcPbmyuGoS
-         MH1Q==
-X-Gm-Message-State: APjAAAW/YmoDZnF+MqLtMUII71uOG3XqulHu1LnMwD+p929igXwkAiEq
-        yPo0AezGT9jfcv/UDt++EsAcG7V1jAERtWGw0hk=
-X-Google-Smtp-Source: APXvYqxZeZlCxIuPAVJ6nlbCoCwNlZ0XsgSjpxTvTGEftmi0aiYSRVfkp5w2PVZfIfGIjomOMVVZrY2fKJLsT9d/izI=
-X-Received: by 2002:a6b:6118:: with SMTP id v24mr14598612iob.73.1578951696654;
- Mon, 13 Jan 2020 13:41:36 -0800 (PST)
+        bh=eYtee+YhyjaGxGsNP74+8IT2G3PMwJkaYhTgNz85A4U=;
+        b=c1wy+Gdu6O5uFHiMiCMV8oHUxujNP2sNHPG7PkqplHSjzAg6K4WCpsaPdlYlOsUzgr
+         mKn/M/2PudD2NcgsB4OH5wFnTkg6bFCN6jlwsEHl84vWwK5lfH3wDqwdi0j1EPiOyr1s
+         clWAi1C2HGJJSQL2+detD7Nu8GeZgqhjS4PM9Tq5BAcCBKV9wMGnBbJ2VU1bo3pHMO/x
+         J2/X8CqEtUiBQdhtrN5BD3eDpV7DHbFdnhNguima63GYITaabR2l9+Y31NHintSbm/Y8
+         B6LvN4vjZQMihuGmL9NLRjWyRAGmPxgxGz/rLENq9dsHr+uK8aSolcm19hx91C5CCHhA
+         IPsg==
+X-Gm-Message-State: APjAAAXrPp3LMI3dbtErCkadBAavuI1TKDsnBU8l7s2CxdQsXDBFKYp2
+        0Lk2MLUx1gpKdORlIPCrmwdM0c6EK22Jt5zR0VKHS6LJ
+X-Google-Smtp-Source: APXvYqyMyoltcfj29O4djf3KtFEMn9LID1EULcSaVQ2mC73aXWdVXfaAnOo6WdEry0DLTinrAVUW0/YR38+Uxai3fOU=
+X-Received: by 2002:a67:f541:: with SMTP id z1mr7012004vsn.70.1578955242409;
+ Mon, 13 Jan 2020 14:40:42 -0800 (PST)
 MIME-Version: 1.0
-References: <CAJH6TXhnkB10BUENn0P+qXy4nunwY6QVtgDvaFVpfGDpvE-V=Q@mail.gmail.com>
- <CAPhsuW6srGADYYD4dsUbVVBcz4bfJ-taoOy6ccpXjyU26jVTEg@mail.gmail.com>
- <20200113181654.GA7645@lazy.lzy> <CAPhsuW6urOBa5s9od-znfn9J2jhz3cCOxmqu6tABvyoCEx5BHQ@mail.gmail.com>
-In-Reply-To: <CAPhsuW6urOBa5s9od-znfn9J2jhz3cCOxmqu6tABvyoCEx5BHQ@mail.gmail.com>
-From:   Gandalf Corvotempesta <gandalf.corvotempesta@gmail.com>
-Date:   Mon, 13 Jan 2020 22:41:25 +0100
-Message-ID: <CAJH6TXjN8V4a4jE6AECCg=quMd9FPA=ST0_9ZtZcGKUzvY5wYg@mail.gmail.com>
-Subject: Re: dm-integrity
-To:     Song Liu <song@kernel.org>
-Cc:     Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>,
-        dm-devel@redhat.com,
-        Linux RAID Mailing List <linux-raid@vger.kernel.org>
+References: <CALc6PW4OKR2KVFgzoEbRJ0TRwvqi5EZAdC__HOx+vJKMT0TXYQ@mail.gmail.com>
+ <959ca414-0c97-2e8d-7715-a7cb75790fcd@youngman.org.uk> <CALc6PW7276uYYWpL7j2xsFJRy3ayZeeSJ9kNCGHvB6Ndb6m1-Q@mail.gmail.com>
+ <5E17D999.5010309@youngman.org.uk>
+In-Reply-To: <5E17D999.5010309@youngman.org.uk>
+From:   William Morgan <therealbrewer@gmail.com>
+Date:   Mon, 13 Jan 2020 16:40:31 -0600
+Message-ID: <CALc6PW5DrTkVR7rLngDcJ5i8kTpqfT1-K+ki-WjnXAYP5TXXZg@mail.gmail.com>
+Subject: Re: Two raid5 arrays are inactive and have changed UUIDs
+To:     Wols Lists <antlists@youngman.org.uk>
+Cc:     linux-raid@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Il giorno lun 13 gen 2020 alle ore 19:58 Song Liu <song@kernel.org> ha scritto:
-> Right now, md_done_sync() doesn't really print any message. I think this is
-> easy to add. However, md check/recovery is at block granularity, so we
-> probably cannot print exact which sector got fixed.
+> >>> md1 consists of 4x 4TB drives:
+> >>>
+> >>> role drive events state
+> >>>   0    sdj    5948  AAAA
+> >>>   1    sdk   38643  .AAA
+> >>>   2    sdl   38643  .AAA
+> >>>   3    sdm   38643  .AAA
 
-Well, having the exact sector fixed is not mandatory, but really useful.
-Better than nothing would be md logging that has fixed "something" and
-it's location (a setor, a block, ....)
-9 times out of 10 the dm-integrity log would be just above the md log,
-so a match between dm-integrity sector and md block would be easy,
-just read the line below or above.
+> If you're not happy using overlays, having ddrescue'd the disks you
+> could always assemble the array directly from the copies and make sure
+> everything's okay there, before trying it with the original disks.
 
-I think that md should be a little bit more verbose on certain
-actions. (in example, saying what was fixed, the last time of scrub
-and it's result, as per my previous thread and so on)
+I successfully ddrescued all four drives /dev/sd[j,k,l,m], each to new
+disk, with no errors reported. I have the copies on /dev/sd[n,o,p,q].
+
+Now if I want to force assemble the three copies with event counts
+that agree [o,p,q], should I just do:
+
+mdadm --assemble --force /dev/md1 /dev/sdo1 /dev/sdp1 /dev/sdq1
+
+Or should I assemble the copies into a new array, say /dev/md2?
+
+I'm worried that assembling the copies might merge them into the
+existing (inactive) array. Is that what's supposed to happen? I'm
+unclear here.
+
+Thanks for your help,
+Bill
