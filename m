@@ -2,101 +2,72 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 97D581386CE
-	for <lists+linux-raid@lfdr.de>; Sun, 12 Jan 2020 15:35:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 85C7F138B40
+	for <lists+linux-raid@lfdr.de>; Mon, 13 Jan 2020 06:52:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733025AbgALOfd (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 12 Jan 2020 09:35:33 -0500
-Received: from mail-io1-f42.google.com ([209.85.166.42]:42325 "EHLO
-        mail-io1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733023AbgALOfc (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 12 Jan 2020 09:35:32 -0500
-Received: by mail-io1-f42.google.com with SMTP id n11so6860295iom.9
-        for <linux-raid@vger.kernel.org>; Sun, 12 Jan 2020 06:35:32 -0800 (PST)
+        id S1733294AbgAMFw3 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 13 Jan 2020 00:52:29 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:32877 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733204AbgAMFw1 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 13 Jan 2020 00:52:27 -0500
+Received: by mail-oi1-f194.google.com with SMTP id v140so7227318oie.0
+        for <linux-raid@vger.kernel.org>; Sun, 12 Jan 2020 21:52:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p6f61roFMwn9imwglUJ5lH6bZ4A1VftqE2Dlw4XgUtw=;
-        b=BXzAaQYNbF2afd4UM2RnxJsEYUTQhGbnem6XPQo70boESrE8pqCcZD81jDfu0XUWB5
-         zvZFWCP0Kq4J5P65l65sTriXkiU1ZI1dswX42VN2eilyDeF1b7X3X0Q+77Er65865jbO
-         8Lgj6Z1GZlGkeb3k3lrkeGbpMuaYBktDMraBL1Gy0fgmLns8BF3p4p8+SUsMc50DVLHB
-         Z0cAtaWNHBBWnYCvCgLDLQ1FyUUIMAJds0qBKSFbp1E0SpbM11jUYyoURD+MRe+gXctw
-         D66BGntOw6X8bjHuLQhwNaa27ppzUagGiRAp8bz7nqrC1NKvVUguzt+6D+kQY4Oa8KKw
-         HToA==
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=Rjbe3pVeMfYVPdmVklZ4b2stSqI32LIYp+bn/8NyJvk=;
+        b=El5YZgtDEXJCHEtZrRB1ujEJT5GnrR9nqQvx3oNXkD1KXWKAy5lE4fahagwXmNRBuY
+         Z373bCStdjZZAvrcMmyjZhqXNYKD7qS8gpQ1uKt4Zm/CJYofbOmd6y2KCfdaIf8lu4gx
+         e04Qq2Wd5k0QzXhgODgXLh9+BTAbr7mIJG1kvrHD2cB5892G2QaMtoQjZ8YbwAsn/v/R
+         qN1ulSwy8kLJzDOOwwvDkEa6g0paOaNUUW6lO8NcaOsOsQMTh2eV34LXY/bnRxfyDcL+
+         OFIAYoYpyWTxvo4nB11oXa8J2BNLiFXnr18VfN4DCPOmpXqWPT8f/9GzmZX8VWLxs4VK
+         s+8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p6f61roFMwn9imwglUJ5lH6bZ4A1VftqE2Dlw4XgUtw=;
-        b=KFkPltALKqUis3LyXCPpEE9kMJ+tEYaUcjtqLEqtax2uXhEAfOxj1Rj6KnUw584V5R
-         rXs9VnU6YLyPPyL0ud4OGuigHBB9ErAaiWe0f1IR1VcFo9soKYmNkrm1rjCCBIZ2Bc/x
-         QSR8TAaXiP9aqxfYLLQYK1VU5yHIOONZFEyhtS7z2SBHGNhqgkuB2DNJcweHQhaRHg77
-         SP3jr8SWreW7i+8dHpao9qCsHIUVOBGw+GmDfzyxn6U7180AcBlc0Ts6Mbe8oPx0ZmnJ
-         gZRTC/inV2TPI7q30y9/v2wwJFq5FiQVddyFUs0AJR2YGPe8SaVh7fDqyofhPhea32Ao
-         JNxQ==
-X-Gm-Message-State: APjAAAXPT/KfMB7MVwpqv5GRtTceJNnfzz49jdpELn18GrGbvSz+Mt7E
-        hcU79fZqFpQ/X4sRqh3IFpkhCeKYn3Jj5v0QOm2XZyTV
-X-Google-Smtp-Source: APXvYqweAGgFJ5uRFc1ASfpWvi6rOCfGDU21tp1jJO7HcTDmtWtqwblaqC2OyUc99onhXhND7qaAOS+8dpG9S6GNV3s=
-X-Received: by 2002:a6b:cb06:: with SMTP id b6mr1817545iog.181.1578839732017;
- Sun, 12 Jan 2020 06:35:32 -0800 (PST)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=Rjbe3pVeMfYVPdmVklZ4b2stSqI32LIYp+bn/8NyJvk=;
+        b=Wv5DuQiTltPjMT9Rr6VHCFVxP5nKoYo0p235oXHyGorNBZ2epOzcHBOkUkSR7zW5lY
+         Ny5gtI1ZiguqZakxVPlGR7gHqWtRLHgU9HO7/Z1zln/0jjTR6HVkk1S2xskiBdafHSVe
+         32WIU/6SjlKFsEKXupZ5r8av9cKaC/E7qlpR4AuEYZRBhFGaO3qn0EDEHFLKCg4W8qv2
+         lAzutpV0KX2o///KVnjjn8s4yZaAyrqiEjKfuFCtDYBU19sE0PfMygm1SpNiuptw21Ts
+         4Anh/Lj2tcuWvf2C2kPxw6qkGRqzIU1pvtCvbOgO7N3O8onhEvx35ESbpSig87z2oOr1
+         /MQQ==
+X-Gm-Message-State: APjAAAV6iL7U/SWK3BTxT5EXDZM/KkVvVvXqkKYn5l6FSz6p1No1hFe+
+        tRwFuBcmaztFHhC/pd+LVXd/3Opr3gkDnSKsEPKNezsc
+X-Google-Smtp-Source: APXvYqy7JhGBt0ZjJ/1t4CT74GIhTuvbOMnCynReBbsGRcTAfZPwoiLBCe9XiPA9xaK1JAPmy14eucUMWI9DLkbKsUo=
+X-Received: by 2002:a54:4713:: with SMTP id k19mr11513430oik.113.1578894745174;
+ Sun, 12 Jan 2020 21:52:25 -0800 (PST)
 MIME-Version: 1.0
-References: <0155f98d-7ffc-a631-a7c5-259192c0df00@gmail.com>
- <5D25196A.9020606@youngman.org.uk> <9a71fbbd-8a41-5d59-dd89-5e98bb22a11a@gmail.com>
- <8033f679-84cc-78f9-064d-dc0a191f5a31@websitemanagers.com.au>
- <006fbf98-ec73-818d-f9d1-fbe315dc0f60@thelounge.net> <30c63d5e-34fb-47ce-71f7-272fb4ef3d17@websitemanagers.com.au>
- <0640dd81-a4fe-5847-ec26-3a7dedd5872f@thelounge.net> <cb440d7c-e7eb-1826-3f9d-e7b44ab359f6@websitemanagers.com.au>
- <5e40eefb-8158-8c2c-f28d-e9fb657fe6ce@thelounge.net> <4c4338ea-f5a2-21cf-1c54-2a3a5819d89f@websitemanagers.com.au>
- <72148027-089c-3f7f-1bf7-a7747e9f8f63@thelounge.net>
-In-Reply-To: <72148027-089c-3f7f-1bf7-a7747e9f8f63@thelounge.net>
-From:   Gandalf Corvotempesta <gandalf.corvotempesta@gmail.com>
-Date:   Sun, 12 Jan 2020 15:35:20 +0100
-Message-ID: <CAJH6TXg_aJ2wa59HuEgNZdaAT_P+NSh_h41_jX3O5705H8Qdbw@mail.gmail.com>
-Subject: Re: Raid 1 vs Raid 5 suggestion
-To:     Reindl Harald <h.reindl@thelounge.net>
-Cc:     Adam Goryachev <mailinglists@websitemanagers.com.au>,
-        Luca Lazzarin <luca.lazzarin@gmail.com>,
-        Wols Lists <antlists@youngman.org.uk>,
-        Linux RAID Mailing List <linux-raid@vger.kernel.org>
+Received: by 2002:a4a:41cb:0:0:0:0:0 with HTTP; Sun, 12 Jan 2020 21:52:24
+ -0800 (PST)
+Reply-To: rickschaech@gmail.com
+From:   Rick Schaech <cathben72@gmail.com>
+Date:   Mon, 13 Jan 2020 01:52:24 -0400
+Message-ID: <CAEcBxO=TAnFn5LzizHa22hUC0Db5FuiZJF28m=yX3_9m--jRqg@mail.gmail.com>
+Subject: I wait for your swift response,
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Il giorno mer 10 lug 2019 alle ore 05:23 Reindl Harald
-<h.reindl@thelounge.net> ha scritto:
-> i yet need to see an array with 6 different disks where 2 are failing at
-> the same time which in this case needs to be the two right ones making a
-> stripe-mirror.... at least you have decent write performance while a
-> RAID1 with 6 mirrors sucks
+Dear, I'm Mr Rick Schaech, I am the General Account Auditor, Though i
+know we have not meet each other before but sometimes in life God have
+a reason of bringing two people from two different countries together
+as business partners or life partners.
 
-Happened to me. Two times in a row.
-6 disks RAID10: 2 disks failed in a couple of hours, both disks were
-part of the same mirror.
+My dear friend, I have the sum of 15.7 Million USD i wish to put in
+your name due to the death of my late client who died several years
+ago as his next of kin column still remain blank. Though the internet
+medium is highly abuse these days but am assuring you that this
+transaction is legitimate and I am contacting you that we may have a
+deal, note for your cooperation and collaboration 40% of the sum will
+be for you while the other 60% will be for me as well. I wait for your
+swift response for more details. please forward your response to my
+personal E-mail: rickschaech@gmail.com
 
-10 days later, another server with the same raid topology.
-
-It's not unusual, if you buy 6 disks at once, you have a very hight chance that
-these disks are coming from the same batch from the same factory (most of the
-time, the serial number is sequential). In a RAID1 (even if not part
-of a RAID1+0)
-you are writing the same date at the same time to both disks, thus you have the
-same write pattern on both disks.
-
-When one disk fails, you have to read the other disk, putting an
-additional stress
-in addition to the same pattern used by both disks for years. The
-probabily to hit a new failure
-is high.
-
-Also, you have to consider some hardware issue not directly related to
-disks. I had multiple disks kicked out
-during a rebuild. One disk failed, another disk was kicked out,
-hopefully this time I had a RAID-6
-The first 2 ports on the backplane was defective, but with a RAID10,
-if this happens, you are fucked.
-
-Disks are not the only thing that could fail on a server. A RAID10 is
-based luck. You have to be luck that a second failure is not impacting
-the same mirror.
+Yours sincerely,
+Rick Schaech.
