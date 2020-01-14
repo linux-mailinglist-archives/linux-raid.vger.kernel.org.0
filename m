@@ -2,81 +2,145 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E13E513A93C
-	for <lists+linux-raid@lfdr.de>; Tue, 14 Jan 2020 13:28:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC1C013AC98
+	for <lists+linux-raid@lfdr.de>; Tue, 14 Jan 2020 15:48:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726106AbgANM2a (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 14 Jan 2020 07:28:30 -0500
-Received: from icebox.esperi.org.uk ([81.187.191.129]:45890 "EHLO
-        mail.esperi.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbgANM23 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 14 Jan 2020 07:28:29 -0500
-Received: from loom (nix@sidle.srvr.nix [192.168.14.8])
-        by mail.esperi.org.uk (8.15.2/8.15.2) with ESMTP id 00ECSRB0026264;
-        Tue, 14 Jan 2020 12:28:27 GMT
-From:   Nix <nix@esperi.org.uk>
-To:     Gandalf Corvotempesta <gandalf.corvotempesta@gmail.com>
-Cc:     Wols Lists <antlists@youngman.org.uk>,
-        Linux RAID Mailing List <linux-raid@vger.kernel.org>
-Subject: Re: RAID10, 3 copies, 3 disks
-References: <CAJH6TXhWd-AGi0_KnbnepxZXsOvpMQGwkisFuuX14dMe157jWw@mail.gmail.com>
-        <82a7d9ec-f991-ad25-bf1f-eee74be90b1b@youngman.org.uk>
-        <CAJH6TXji3e1Tp8xDDiqfqy36fpMC4kZTLaYj0Le9A6Cyg8EnGg@mail.gmail.com>
-        <5E1A3D4F.30205@youngman.org.uk>
-        <CAJH6TXjQ+vLSOJGH_7-mAeRREBSSTS5DTxXFtz2SU06wfhc4gA@mail.gmail.com>
-Emacs:  a Lisp interpreter masquerading as ... a Lisp interpreter!
-Date:   Tue, 14 Jan 2020 12:28:27 +0000
-In-Reply-To: <CAJH6TXjQ+vLSOJGH_7-mAeRREBSSTS5DTxXFtz2SU06wfhc4gA@mail.gmail.com>
-        (Gandalf Corvotempesta's message of "Sat, 11 Jan 2020 22:36:21 +0100")
-Message-ID: <87sgki2pec.fsf@esperi.org.uk>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.50 (gnu/linux)
+        id S1728933AbgANOsI (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 14 Jan 2020 09:48:08 -0500
+Received: from mail-vs1-f48.google.com ([209.85.217.48]:36618 "EHLO
+        mail-vs1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728828AbgANOsI (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 14 Jan 2020 09:48:08 -0500
+Received: by mail-vs1-f48.google.com with SMTP id u14so8369641vsu.3
+        for <linux-raid@vger.kernel.org>; Tue, 14 Jan 2020 06:48:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NmBLlRTzbDnhDAgO/2BWihQE7eGKEkwVS6Xuz4B5waw=;
+        b=Zxez9xQ6KKfeL/yLUw6AAj/Hpb6QI6qMGwwKVFY3IzibkVaG/En3yQEsapCK5KmevM
+         SM5Z3pxk2/LTjlVZ4Ud53CbEOHtZr5M4kP9BWBjrRWwTaZANNJcyvfRqxRFvGsVvL/kz
+         8JGMKIwKWXN4iMqCALQiONBHMw2ezcorhuMPeunTXGRCDNpqI86VH3B0wkNPra58SgFB
+         i9NI89q+kRMZ4e3gCkG8KzYiPqtSgTbUNoTY18Im4Q7dMb6QRjEq4TmesjbIeyspd2nw
+         0KZFwk+RsTBLE2Oi8tsn9JIaQXTlB83c5ErKb6IAY016Y5ML2s2oLbeQgT/2G0SgE1sr
+         Xngg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NmBLlRTzbDnhDAgO/2BWihQE7eGKEkwVS6Xuz4B5waw=;
+        b=TnhU9Plyq/wCEVvUoYWQOqVHoX3PJimwExOUInrQYZX1vZwFMmv0tcHuDFcGcSPM6V
+         wLXwjGvcc5R/gT97j8KuWuLtQPS0b91/btyfRuq8VM9nipPr7Jr7ngUGpfGYALNZHg+a
+         rGYv/QAj/06UAfOSA7rjpKEydXuedWt1IkvHIMFJoI75ai0KuxR9JlOwWrAlxNPE/P/Q
+         BwKjB7Kr7IbuicmthAcmKWNa51M2mb7aN8tfAzTWFEwSl5kt6kjyc8Fg4rxbLPMfjvCg
+         +Bg7X7HNxIVD98qxaoGPh/a/Cpu+2bw79bPb7Z94Fb1PLNVoyrBXdrl/o2uSNSDLllKo
+         EsBg==
+X-Gm-Message-State: APjAAAXLQGNxdIt8sTJJjy5s51wOmue+n/aFOpxw2ice4YbdFjMebM/n
+        QDtPZyzpPn3yDamDRSc7iaH8J3snJ+Axk6xtZrfxwxGI
+X-Google-Smtp-Source: APXvYqxfB+EDv4VZvzLzweZhPgzVjqCK68k0xkYKzsO73S8OXhsRpmguKbiG9XSmvcXnN7xGVwFArYa0RfLPgiXSCnA=
+X-Received: by 2002:a05:6102:190:: with SMTP id r16mr1458370vsq.215.1579013287410;
+ Tue, 14 Jan 2020 06:48:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-DCC--Metrics: loom 1480; Body=3 Fuz1=3 Fuz2=3
+References: <CALc6PW4OKR2KVFgzoEbRJ0TRwvqi5EZAdC__HOx+vJKMT0TXYQ@mail.gmail.com>
+ <959ca414-0c97-2e8d-7715-a7cb75790fcd@youngman.org.uk> <CALc6PW7276uYYWpL7j2xsFJRy3ayZeeSJ9kNCGHvB6Ndb6m1-Q@mail.gmail.com>
+ <5E17D999.5010309@youngman.org.uk> <CALc6PW5DrTkVR7rLngDcJ5i8kTpqfT1-K+ki-WjnXAYP5TXXZg@mail.gmail.com>
+In-Reply-To: <CALc6PW5DrTkVR7rLngDcJ5i8kTpqfT1-K+ki-WjnXAYP5TXXZg@mail.gmail.com>
+From:   William Morgan <therealbrewer@gmail.com>
+Date:   Tue, 14 Jan 2020 08:47:56 -0600
+Message-ID: <CALc6PW7hwT9VDNyA8wfMzjMoUFmrFV5z=Ve+qvR-P7CPstegvw@mail.gmail.com>
+Subject: Re: Two raid5 arrays are inactive and have changed UUIDs
+To:     Wols Lists <antlists@youngman.org.uk>
+Cc:     linux-raid@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 11 Jan 2020, Gandalf Corvotempesta said:
+Well, I went ahead and tried the forced assembly:
 
-> Il giorno sab 11 gen 2020 alle ore 22:25 Wols Lists
-> <antlists@youngman.org.uk> ha scritto:
->> Multiple 3-way mirrors (1+0) requires disks in multiples of 3. Raid10
->> simply requires "4 or more" disks. If you expect/want to expand your
->> storage in small increments, then 10 is clearly better. BUT.
->
-> I'll start with 8TB usable (more than enough for me atm) and would be ok
-> for at least 1 year, thus saving space is not a problem. Next year, if needed,
-> i'll add 3 disks more (or i'll grow the existing ones)
->
->> Depending on your filesystem - for example XFS - changing the disk
->> layout underneath it can severely impact performance - when the
->> filesystem is created it queries the layout and optimises for it. When I
->> discussed it with one of the XFS guys he said "use 1+0 and add a fresh
->> *set* of disks (or completely recreate the filesystem), because XFS
->> optimises layout based on what disks it thinks its got."
->
-> No XFS, i'll use ext4.
+bill@bill-desk:~$ sudo mdadm --assemble --force /dev/md1 /dev/sdg1
+/dev/sdh1 /dev/sdi1
+[sudo] password for bill:
+mdadm: Merging with already-assembled /dev/md/1
+mdadm: Marking array /dev/md/1 as 'clean'
+mdadm: failed to RUN_ARRAY /dev/md/1: Input/output error
 
-ext4 does the same thing. In both cases you can specify the layout by
-hand, and sometimes you have to because not all block device layers pass
-the layout up: e.g. my layering of md->lvm->bcache->cryptsetup->fs loses
-the layout at (at least) the bcache level.
+(The drive letters have changed because I removed a bunch of other
+drives. The original drives are now on sd[b,c,d,e] and the copies are
+on sd[f,g,h,i] with sdf being a copy of the presumably bad sdb with
+the event count which doesn't agree with the other 3 disks.)
 
-What I did when I knew I had a reshape coming up (because I was buying
-another disk a few months after buying a machine, and reshaping onto it)
-was to create the original array with the filesystem told about the
-*intended final* shape, and verify after reshaping that everything was
-fine (as with alignment, you can check this with blktrace's btrace tool,
-doing stuff and seeing if most changes come a whole stripe at a time or
-if all are misaligned and cross stripes). That way the fs starts off
-less than optimal and improves after the reshape -- if you got
-everything right, which sometimes feels like tightrope-walking.
+So, it failed. dmesg shows:
 
-For ext4, the mkfs options to look for are -E stride=and -E
-stripe-width=, usually used together. For XFS, the options to look for
-are sunit and swidth (and often agcount is useful too).
+152144.483755] md: array md1 already has disks!
+[152144.483772] md: kicking non-fresh sdb1 from array!
+[152144.520313] md/raid:md1: not clean -- starting background reconstruction
+[152144.520345] md/raid:md1: device sdd1 operational as raid disk 2
+[152144.520346] md/raid:md1: device sde1 operational as raid disk 1
+[152144.520348] md/raid:md1: device sdc1 operational as raid disk 3
+[152144.522219] md/raid:md1: cannot start dirty degraded array.
+[152144.566782] md/raid:md1: failed to run raid set.
+[152144.566785] md: pers->run() failed ...
+[152144.568169] md1: ADD_NEW_DISK not supported
+[152144.569894] md1: ADD_NEW_DISK not supported
+[152144.571498] md1: ADD_NEW_DISK not supported
+[152144.573964] md1: ADD_NEW_DISK not supported
 
--- 
-NULL && (void)
+mdstat shows sdb no longer part of the array:
+
+bill@bill-desk:~$ cat /proc/mdstat
+Personalities : [linear] [multipath] [raid0] [raid1] [raid6] [raid5]
+[raid4] [raid10]
+md1 : inactive sdd1[2] sde1[1] sdc1[4]
+      11720653824 blocks super 1.2
+
+details of the array:
+
+ill@bill-desk:~$ sudo mdadm -D /dev/md1
+/dev/md1:
+           Version : 1.2
+     Creation Time : Tue Sep 25 23:31:31 2018
+        Raid Level : raid5
+     Used Dev Size : 18446744073709551615
+      Raid Devices : 4
+     Total Devices : 3
+       Persistence : Superblock is persistent
+
+       Update Time : Sat Jan  4 16:52:59 2020
+             State : active, FAILED, Not Started
+    Active Devices : 3
+   Working Devices : 3
+    Failed Devices : 0
+     Spare Devices : 0
+
+            Layout : left-symmetric
+        Chunk Size : 64K
+
+Consistency Policy : unknown
+
+              Name : bill-desk:1  (local to host bill-desk)
+              UUID : 723f939b:62b73a3e:e86e1fe1:e37131dc
+            Events : 38643
+
+    Number   Major   Minor   RaidDevice State
+       -       0        0        0      removed
+       -       0        0        1      removed
+       -       0        0        2      removed
+       -       0        0        3      removed
+
+       -       8       65        1      sync   /dev/sde1
+       -       8       49        2      sync   /dev/sdd1
+       -       8       33        3      sync   /dev/sdc1
+
+Now if I try the forced assemble again I get:
+
+ill@bill-desk:~$ sudo mdadm --assemble --force /dev/md1 /dev/sdg1
+/dev/sdh1 /dev/sdi1
+mdadm: Found some drive for an array that is already active: /dev/md/1
+mdadm: giving up.
+
+I'm lost now. Not sure what to do anymore. Do I need to edit
+mdadm.conf? Do I need to remove the original drives? Any ideas Wols?
+
+Bill
