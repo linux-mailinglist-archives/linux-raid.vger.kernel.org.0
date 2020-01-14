@@ -2,82 +2,106 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0317B139E2A
-	for <lists+linux-raid@lfdr.de>; Tue, 14 Jan 2020 01:28:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 94D8A13A1A0
+	for <lists+linux-raid@lfdr.de>; Tue, 14 Jan 2020 08:24:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbgANA2S (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 13 Jan 2020 19:28:18 -0500
-Received: from mail-pg1-f182.google.com ([209.85.215.182]:39960 "EHLO
-        mail-pg1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727382AbgANA2R (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 13 Jan 2020 19:28:17 -0500
-Received: by mail-pg1-f182.google.com with SMTP id k25so5517371pgt.7
-        for <linux-raid@vger.kernel.org>; Mon, 13 Jan 2020 16:28:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=tQDUzDmt3jnJIukdVNCfWhIvKFVS5h302KklE9IZK+I=;
-        b=C1phCWFldQ5O5dqjxHqlVa/j9lqlLai1G6NwVuGuq6gk9FRSAfyQGIBhrSnxE6Alo1
-         GanxxyqzgKZn/auuBEiBdx02/7GPMdWoJcSrIWWp2WbOAMSV+hU8+WU6UN1S/qeo1ydt
-         RpcWg0Bp0NRisnXLi/MRWRoLiUhnPoHAilFtJRW+J/od3WqreWrJAGSb+9BCS9QWgUTV
-         iXVFnR0Nij+Vn+cZmrvk8kiV43yX3rm/H8gHRuPSSa0InsDfdtprmIQo7Lj+nYTBFW3O
-         o313pJ07DZyZDV6UDuiD1Btnfut3LMHtwCTXHr1UjqYhJwkLvxU3Hsp8KlxYJrD0lhnq
-         Xjug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tQDUzDmt3jnJIukdVNCfWhIvKFVS5h302KklE9IZK+I=;
-        b=U3M52yvFXCjwUBgC/m9bab9iCaRY9O5e5WH0kjgUkjqQPyuhlTJ757JJhgGpBmMz6R
-         DS6f/xrVM4DCud2PIVr909e8xvfTIHOrpSqEDFMt4yf2VhI+Zrn099RYsiqZTo/15BR8
-         IiPMncyoGDDKn/X3W+zssy1d/aBGlFDd4rL6495blvT2ksLO7p8G4vJl6Ic2DgdMsNXV
-         B9zwmqStV4ACERLr27nPBO66bXT/rQMntTnuPMgxCH2i5HA85b04QIs43NKQlXEMmCdG
-         8cZ/Q5VjWLz420guMHsuQoUxkJEF7fNCV9bnanmba3a5n56oZNb05Q4/DDmElwsYyOa5
-         9/Rg==
-X-Gm-Message-State: APjAAAWnA4rFfe471mXVDy4AxDICK1za2KZ/Cvs8fXgm12liqR/9kyJg
-        gJI3xvRx/qMCV8XGe/wnzXADTA==
-X-Google-Smtp-Source: APXvYqzEEMDPOHSf4D+xOflh6QER6ECsMWgh7rLZejE3PkkXrn2bkxe5AkjN10ltzVLCl6DMrJJOWA==
-X-Received: by 2002:a63:4c4f:: with SMTP id m15mr23652135pgl.346.1578961696536;
-        Mon, 13 Jan 2020 16:28:16 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id y197sm15715827pfc.79.2020.01.13.16.28.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jan 2020 16:28:16 -0800 (PST)
-Subject: Re: [GIT PULL] md-next 20200113
-To:     Song Liu <songliubraving@fb.com>,
-        linux-raid <linux-raid@vger.kernel.org>
-Cc:     Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        "liuzhengyuan@kylinos.cn" <liuzhengyuan@kylinos.cn>,
-        Kernel Team <Kernel-team@fb.com>
-References: <153C0E51-CDFC-430C-8125-486CCC73406D@fb.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <c51a429c-dbe7-7631-361b-eae2d27bb876@kernel.dk>
-Date:   Mon, 13 Jan 2020 17:28:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1728877AbgANHYD (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 14 Jan 2020 02:24:03 -0500
+Received: from smtp.hosts.co.uk ([85.233.160.19]:64610 "EHLO smtp.hosts.co.uk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728831AbgANHYD (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 14 Jan 2020 02:24:03 -0500
+Received: from [81.135.72.163] (helo=[192.168.1.118])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1irGYR-0006l1-8d; Tue, 14 Jan 2020 07:24:00 +0000
+Subject: Re: Debian Squeeze raid 1 0
+To:     Rickard Svensson <myhex2020@gmail.com>, linux-raid@vger.kernel.org
+References: <CAC4UdkbjUVSpkBM88HB0UJMqXh+Pd7CRLaya=s81xMGs-9+m_Q@mail.gmail.com>
+From:   Wols Lists <antlists@youngman.org.uk>
+X-Enigmail-Draft-Status: N1110
+Message-ID: <5E1D6C8E.8030607@youngman.org.uk>
+Date:   Tue, 14 Jan 2020 07:23:58 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.7.0
 MIME-Version: 1.0
-In-Reply-To: <153C0E51-CDFC-430C-8125-486CCC73406D@fb.com>
+In-Reply-To: <CAC4UdkbjUVSpkBM88HB0UJMqXh+Pd7CRLaya=s81xMGs-9+m_Q@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 1/13/20 12:55 PM, Song Liu wrote:
-> Hi Jens, 
+On 13/01/20 23:34, Rickard Svensson wrote:
+> Hi all
 > 
-> Please consider pull the following changes for md-next on top of your for-5.6/block 
-> branch (I didn't find for-5.6/drivers branch). 
+> One disk in my raid 1 0 failed the other night.
+> It has been running for +8 years, on my server, a Debian Squeeze.
 
-No driver changes are queued up yet, the core is very slow as well.
-It'll be a slow round! I forked off the driver branch with this pull,
-thanks.
+8 years old, debian squeeze, what version of mdadm is that.
 
--- 
-Jens Axboe
+> (And yes, I was just about to update them, bought the HD's and everything)
+> 
+Great. First things first, ddrescue all drives on to the new ones! I
+think recovering your data won't be too hard, so might as well back up
+the data on to your new drives then recover that.
+
+> I thought that i would be able to backup the data, but i got ext4
+> error aswell, and when i tried to repair that with fsck i got:
+> "
+> # fsck -n /dev/md0
+> fsck.ext4: Attempt to read block from filesystem resulted in short
+> read while trying to open /dev/md0
+> Could this be a zero-length partition?
+> "
+My fu isn't good here but I strongly suspect the read failed with an
+"array not running" problem ...
+> 
+> So i am wondering if my mdadm raid is okay.
+> The "State  [clean|active]" and "Array State : AA.."    is not so easy
+> to interpret, tried to read parts of the threads, but at the same time
+> is worried that more disks should failt... And I'm starting to get
+> really stressed :(
+
+All the more reason to ddrescue your disks ...
+> 
+> All the disk are the same type.  And apparently does not support SCT,
+> which I was not aware of before.
+> /dev/sde2  seems to be gone.
+> 
+Can you check the drive in another system? Is it the drive, or is it a
+controller issue?
+
+The fact that the three event counts we have are near-identical is a
+good sign. The worry is that sde2 disappeared a long time ago - have you
+been monitoring the system? If you ddrescue it will it give an event
+count almost the same as the others? If it does, that makes me suspect a
+controller issue has knocked two drives out, one of which has recovered
+and the other hasn't ...
+> "
+> cat /proc/mdstat
+> Personalities : [raid10]
+> md0 : active raid10 sda2[0] sde2[3](F) sdc2[2](F) sdb2[1]
+>       5840999424 blocks super 1.2 512K chunks 2 near-copies [4/2] [UU__]
+> "
+
+<snip>
+> 
+> 
+> I really hope someone can help me!
+> 
+https://raid.wiki.kernel.org/index.php/Linux_Raid#When_Things_Go_Wrogn
+
+Note that when it says "use the latest version of mdadm" it means it - I
+suspect your version may be well out-of-date.
+
+Give us a bit more information, especially the version of mdadm you're
+using. See if you can ddrescue /dev/sde, and what that tells us, and I
+strongly suspect a forced assembly of (copies of) your surviving disks
+will recover almost everything.
+
+Cheers,
+Wol
+
 
