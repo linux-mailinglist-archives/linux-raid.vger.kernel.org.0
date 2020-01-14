@@ -2,77 +2,138 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A06F113A27E
-	for <lists+linux-raid@lfdr.de>; Tue, 14 Jan 2020 09:08:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BAC513A869
+	for <lists+linux-raid@lfdr.de>; Tue, 14 Jan 2020 12:28:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729164AbgANII6 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 14 Jan 2020 03:08:58 -0500
-Received: from mail-io1-f43.google.com ([209.85.166.43]:36570 "EHLO
-        mail-io1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728992AbgANII6 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 14 Jan 2020 03:08:58 -0500
-Received: by mail-io1-f43.google.com with SMTP id d15so12870348iog.3
-        for <linux-raid@vger.kernel.org>; Tue, 14 Jan 2020 00:08:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kD53nLEULqQATX/ariOKcqa3ViMz3/Dv8++o17SiXhs=;
-        b=fJWFvw+IJ1KJWbYafMSTI1Ctb2TG3tiP2gTVJpVBsmNI23d4KDztKMI4HvZFKkexx5
-         +jAxLO84i+eDjx9/bqyL+O3mZ+hFZ02Ze/KP92I0ahzrbJd1wd3wIZnCIsfPQh+2qhxo
-         QQImJ7nf92IvtK39svMUwHaPMa5s+qZtex7JG10fiXFPTtTd/xrX4/0P+tNPWKvcIxaC
-         yBhMyjeOqFb3gQya08gitqH2+xY0Wq4FR+bdM+5+eBR30pbXocR+z2DOgGnlbDUxC35B
-         Nz5JTBNi2HP145GkSIy+0Wyk/lnwGi0g1QJEjJUk8HbUKkN5W8mWFsQYWZ4fFm8rbP1s
-         GG+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kD53nLEULqQATX/ariOKcqa3ViMz3/Dv8++o17SiXhs=;
-        b=MTxRBK5KHkaImXL3NQi4OWHlSKPu0GvC0YgfcQB0iOPO6Qfj1rLBmWsPbAvFFx2GyL
-         rmWJfbQum96shJDu1930G4vIifbQY8A+23ZheybGsw0uiTNwxe5HDpFjELNxzT6HKPAV
-         zo3tAsOi/YVMCThV706YKiD5GwivacveUUAUXX8SlB72MEx2qmYkwdFjWL+ou6ZIge9c
-         rfXEve7ZgtxsWNIuFcqACCFPzCF4mxOl1zf5047bAHyEAeo8VVQLSBfRiH74DCFjc4GW
-         0iR1IEuTvD+QAVR48GqC2Ivc3Zw83J6yofJgCV5VGZ6XL/tb3BWdJTNcLb44eBRURoKC
-         s1vw==
-X-Gm-Message-State: APjAAAWSn3G1jy480jt2sfVsQM/QZgEY6T4juUE9N4APT4odE35cun+A
-        51AP5ts4+K18g+02moV6fJgxCVEY1NAqs5NByLc=
-X-Google-Smtp-Source: APXvYqwX9HnPLYO9gyXi6QqskBejWIKfXOJJKWvC37jspmDiryVArgNi20/cpemgxtHCRnSUuwvAx0QVuqGBOBKv+hI=
-X-Received: by 2002:a6b:6118:: with SMTP id v24mr16388526iob.73.1578989337699;
- Tue, 14 Jan 2020 00:08:57 -0800 (PST)
+        id S1726053AbgANL2O (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 14 Jan 2020 06:28:14 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:39081 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbgANL2N (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 14 Jan 2020 06:28:13 -0500
+Received: from [10.11.0.129] ([82.194.117.200]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MwwuJ-1jbkzN3YQV-00yPGH; Tue, 14 Jan 2020 12:28:06 +0100
+To:     linux-raid <linux-raid@vger.kernel.org>,
+        Wols Lists <antlists@youngman.org.uk>
+From:   Christian Deufel <christian.deufel@inview.de>
+Subject: Re: Reassembling Raid5 in degraded state
+Message-ID: <13b11d17-a23a-3063-70cb-de63d9fa7d09@inview.de>
+Date:   Tue, 14 Jan 2020 12:28:06 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <CAC4UdkbjUVSpkBM88HB0UJMqXh+Pd7CRLaya=s81xMGs-9+m_Q@mail.gmail.com>
- <5E1D6C8E.8030607@youngman.org.uk>
-In-Reply-To: <5E1D6C8E.8030607@youngman.org.uk>
-From:   Gandalf Corvotempesta <gandalf.corvotempesta@gmail.com>
-Date:   Tue, 14 Jan 2020 09:08:46 +0100
-Message-ID: <CAJH6TXjaTiSyXLF61irJdZ4QUyMwdc0+dGV+sYRDGJsO15P_XQ@mail.gmail.com>
-Subject: Re: Debian Squeeze raid 1 0
-To:     Wols Lists <antlists@youngman.org.uk>
-Cc:     Rickard Svensson <myhex2020@gmail.com>,
-        Linux RAID Mailing List <linux-raid@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:bE3aI60c9iNK0k0kGM5CjkzZac6MHcc8QCKvODTAREtmRasxv+l
+ oC0kagq8YPJa46xOo6IkmZjUknJrIB4V6TVBMxhYfJJXRFg8luWHmerJpKp+QWiyaC3z/Dn
+ XaChX/jlgofdFIdz37cL/t/lohZ5xN6NpWzH1l3MR9CHTQQbFlDqUYwHcReAvEgIjCV5FIn
+ Xz1o3A5EigHp39UxoC2kA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:o2S/gJmJbE8=:9ucJ4+qAk5KAa5xokyR0We
+ j6OieosuX/EWpvDsniBtu+ssG51ZC+0R9Ps6YdUstOsl9TarZOmQmSm6MfUI8HRJMNjbnskFa
+ eUGBjXDL0LmhG3bH4Al+597INArJt2Wv7HljOnItd9jjuT0TeFf63BXI0Moho0JDJTOG7/cdo
+ 5iHvdsPu/pwURV22oi8AevVuUz5hYdKQfjbDbrSaeReMvzxnq40trekXBAuPY9TIiX79uRnz8
+ /eMr1CwYFmYr91yo0biQoNlvLugA9Djai8g1cpAL1uiiKeDwXJklzBA0ey4zmlS2y1SXTkyW/
+ 7YnwVXHda7QH4ejfi129CUJAcJjCHtnDmpeRbo6ivHtEmI7CBwke2LRozEtofVEUnjpvjbTBY
+ e/BP56y+er8Jwi4uUwod3I4hnwfD6/zTSdcHaJEZ7q/21z7pwmZn88pVsXloZ0Yo8dtGGuWqO
+ 50nyd5VvUlKLR0tKwUfo+J6k/MMSYp9LRFFxTkff+NRjKMtnSsmSvU0XcoDn6wvi3JvT+O5Pp
+ SeSUjU9iR6FquHCIXr2pcC3xnrDPudjVkjD2DfFGOPNg6zHRHEhXyTNYkWT9r/laoWvVasNhV
+ +xKFHoA4TgiCf1702lejNEe0tFRn2qvZmwHpEa38Yd1wn65ZKBexdPwnDRxilaADwQviIAIkc
+ 8iI61RWTVHuRvBPfHReiY3Je6G+S0RHK29hnEglfKR6aSo/ufN/iyuSIZuPGtqeRNHmqD16IK
+ pyCvNHaWAkl2GS3bAy7oEZ0augJ+c1+weH3pqU6WhNsFIupyzfFL3IV+q95+Hgx8rMoqDq8nQ
+ Cg9zrUOgfcMdekuocA2g6S+BE44MtD4wZSFnNUoo/EjHqPdrv1X1BAvpej5uiBiXJXpWu03DH
+ WdwVXC/orHUtoLS2WecLsEzy8zXVBGOkwUhbenZnc=
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Il giorno mar 14 gen 2020 alle ore 08:24 Wols Lists
-<antlists@youngman.org.uk> ha scritto:
-> The fact that the three event counts we have are near-identical is a
-> good sign. The worry is that sde2 disappeared a long time ago - have you
-> been monitoring the system? If you ddrescue it will it give an event
-> count almost the same as the others? If it does, that makes me suspect a
-> controller issue has knocked two drives out, one of which has recovered
-> and the other hasn't ...
+Hey Wol
 
-But as I can see, two drives are out on a RAID1+0 array, so the array is gone.
-I think we can only hope that these two disks were on different
-mirrors (but this isn't
-easily readable on mdadm output, I think i've sent an email asking for
-a better output
-some days ago)
+ > My plan now would be to run mdadm --assemble --force /dev/md3 with 3
+ > disk, to get the Raid going in a degraded state.
 
-That's why I really really really hate anything with redundancy < 2,
-like a standard RAID1+0
-Only 3way mirrors or RAID6 here.
+ >Yup, this would almost certainly work. I would recommend overlays and
+ >running a fsck just to check it's all okay before actually doing it on
+ >the actual disks. The event counts say to me that you'll probably lose
+ >little to nothing.
+
+So as I was trying to reassemble my Raid it crashed again. But this time 
+sdc vanished.
+
+I get the following output:
+
+[root@dirvish ~]# mdadm --stop /dev/md3
+mdadm: stopped /dev/md3
+[root@dirvish ~]# mdadm --assemble --force /dev/md3 /dev/sdc1 /dev/sdd1 
+/dev/sdf            1
+mdadm: forcing event count in /dev/sdc1(2) from 5995154 upto 5995162
+mdadm: clearing FAULTY flag for device 0 in /dev/md3 for /dev/sdc1
+mdadm: failed to add /dev/sdc1 to /dev/md3: Invalid argument
+mdadm: /dev/md3 assembled from 2 drives - not enough to start the array.
+
+and when I checked with fdisk sdc wasn't there anymore.
+
+[root@dirvish ~]# fdisk -l
+
+Disk /dev/sda: 250.0 GB, 250059350016 bytes
+255 heads, 63 sectors/track, 30401 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+
+    Device Boot      Start         End      Blocks   Id  System
+/dev/sda1   *           1          13      104391   fd  Linux raid 
+autodetect
+/dev/sda2              14         535     4192965   fd  Linux raid 
+autodetect
+/dev/sda3             536       30401   239898645   fd  Linux raid 
+autodetect
+
+Disk /dev/sdb: 250.0 GB, 250059350016 bytes
+255 heads, 63 sectors/track, 30401 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+
+    Device Boot      Start         End      Blocks   Id  System
+/dev/sdb1   *           1          13      104391   fd  Linux raid 
+autodetect
+/dev/sdb2              14         535     4192965   fd  Linux raid 
+autodetect
+/dev/sdb3             536       30401   239898645   fd  Linux raid 
+autodetect
+
+Disk /dev/sdd: 2000.3 GB, 2000398934016 bytes
+255 heads, 63 sectors/track, 243201 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+
+    Device Boot      Start         End      Blocks   Id  System
+/dev/sdd1   *           1      243201  1953512001   fd  Linux raid 
+autodetect
+
+Disk /dev/sde: 2000.3 GB, 2000398934016 bytes
+255 heads, 63 sectors/track, 243201 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+
+    Device Boot      Start         End      Blocks   Id  System
+/dev/sde1   *           1      243201  1953512001   fd  Linux raid 
+autodetect
+
+Disk /dev/sdf: 2000.3 GB, 2000398934016 bytes
+255 heads, 63 sectors/track, 243201 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+
+    Device Boot      Start         End      Blocks   Id  System
+/dev/sdf1               1      243201  1953512001   83  Linux
+
+...
+
+After a reboot of the system sdc was back again but vanished again after 
+I retried the assembly.
+
+Would the assembly also work with my 4th HDD, sde1 although in the mdadm 
+--eaxmine it is labeld as spare?
+
+Greetings
+
+Christian
+
+
