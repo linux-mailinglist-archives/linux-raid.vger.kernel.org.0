@@ -2,138 +2,81 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BAC513A869
-	for <lists+linux-raid@lfdr.de>; Tue, 14 Jan 2020 12:28:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E13E513A93C
+	for <lists+linux-raid@lfdr.de>; Tue, 14 Jan 2020 13:28:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726053AbgANL2O (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 14 Jan 2020 06:28:14 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:39081 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbgANL2N (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 14 Jan 2020 06:28:13 -0500
-Received: from [10.11.0.129] ([82.194.117.200]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MwwuJ-1jbkzN3YQV-00yPGH; Tue, 14 Jan 2020 12:28:06 +0100
-To:     linux-raid <linux-raid@vger.kernel.org>,
-        Wols Lists <antlists@youngman.org.uk>
-From:   Christian Deufel <christian.deufel@inview.de>
-Subject: Re: Reassembling Raid5 in degraded state
-Message-ID: <13b11d17-a23a-3063-70cb-de63d9fa7d09@inview.de>
-Date:   Tue, 14 Jan 2020 12:28:06 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1726106AbgANM2a (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 14 Jan 2020 07:28:30 -0500
+Received: from icebox.esperi.org.uk ([81.187.191.129]:45890 "EHLO
+        mail.esperi.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbgANM23 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 14 Jan 2020 07:28:29 -0500
+Received: from loom (nix@sidle.srvr.nix [192.168.14.8])
+        by mail.esperi.org.uk (8.15.2/8.15.2) with ESMTP id 00ECSRB0026264;
+        Tue, 14 Jan 2020 12:28:27 GMT
+From:   Nix <nix@esperi.org.uk>
+To:     Gandalf Corvotempesta <gandalf.corvotempesta@gmail.com>
+Cc:     Wols Lists <antlists@youngman.org.uk>,
+        Linux RAID Mailing List <linux-raid@vger.kernel.org>
+Subject: Re: RAID10, 3 copies, 3 disks
+References: <CAJH6TXhWd-AGi0_KnbnepxZXsOvpMQGwkisFuuX14dMe157jWw@mail.gmail.com>
+        <82a7d9ec-f991-ad25-bf1f-eee74be90b1b@youngman.org.uk>
+        <CAJH6TXji3e1Tp8xDDiqfqy36fpMC4kZTLaYj0Le9A6Cyg8EnGg@mail.gmail.com>
+        <5E1A3D4F.30205@youngman.org.uk>
+        <CAJH6TXjQ+vLSOJGH_7-mAeRREBSSTS5DTxXFtz2SU06wfhc4gA@mail.gmail.com>
+Emacs:  a Lisp interpreter masquerading as ... a Lisp interpreter!
+Date:   Tue, 14 Jan 2020 12:28:27 +0000
+In-Reply-To: <CAJH6TXjQ+vLSOJGH_7-mAeRREBSSTS5DTxXFtz2SU06wfhc4gA@mail.gmail.com>
+        (Gandalf Corvotempesta's message of "Sat, 11 Jan 2020 22:36:21 +0100")
+Message-ID: <87sgki2pec.fsf@esperi.org.uk>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.50 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:bE3aI60c9iNK0k0kGM5CjkzZac6MHcc8QCKvODTAREtmRasxv+l
- oC0kagq8YPJa46xOo6IkmZjUknJrIB4V6TVBMxhYfJJXRFg8luWHmerJpKp+QWiyaC3z/Dn
- XaChX/jlgofdFIdz37cL/t/lohZ5xN6NpWzH1l3MR9CHTQQbFlDqUYwHcReAvEgIjCV5FIn
- Xz1o3A5EigHp39UxoC2kA==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:o2S/gJmJbE8=:9ucJ4+qAk5KAa5xokyR0We
- j6OieosuX/EWpvDsniBtu+ssG51ZC+0R9Ps6YdUstOsl9TarZOmQmSm6MfUI8HRJMNjbnskFa
- eUGBjXDL0LmhG3bH4Al+597INArJt2Wv7HljOnItd9jjuT0TeFf63BXI0Moho0JDJTOG7/cdo
- 5iHvdsPu/pwURV22oi8AevVuUz5hYdKQfjbDbrSaeReMvzxnq40trekXBAuPY9TIiX79uRnz8
- /eMr1CwYFmYr91yo0biQoNlvLugA9Djai8g1cpAL1uiiKeDwXJklzBA0ey4zmlS2y1SXTkyW/
- 7YnwVXHda7QH4ejfi129CUJAcJjCHtnDmpeRbo6ivHtEmI7CBwke2LRozEtofVEUnjpvjbTBY
- e/BP56y+er8Jwi4uUwod3I4hnwfD6/zTSdcHaJEZ7q/21z7pwmZn88pVsXloZ0Yo8dtGGuWqO
- 50nyd5VvUlKLR0tKwUfo+J6k/MMSYp9LRFFxTkff+NRjKMtnSsmSvU0XcoDn6wvi3JvT+O5Pp
- SeSUjU9iR6FquHCIXr2pcC3xnrDPudjVkjD2DfFGOPNg6zHRHEhXyTNYkWT9r/laoWvVasNhV
- +xKFHoA4TgiCf1702lejNEe0tFRn2qvZmwHpEa38Yd1wn65ZKBexdPwnDRxilaADwQviIAIkc
- 8iI61RWTVHuRvBPfHReiY3Je6G+S0RHK29hnEglfKR6aSo/ufN/iyuSIZuPGtqeRNHmqD16IK
- pyCvNHaWAkl2GS3bAy7oEZ0augJ+c1+weH3pqU6WhNsFIupyzfFL3IV+q95+Hgx8rMoqDq8nQ
- Cg9zrUOgfcMdekuocA2g6S+BE44MtD4wZSFnNUoo/EjHqPdrv1X1BAvpej5uiBiXJXpWu03DH
- WdwVXC/orHUtoLS2WecLsEzy8zXVBGOkwUhbenZnc=
+Content-Type: text/plain
+X-DCC--Metrics: loom 1480; Body=3 Fuz1=3 Fuz2=3
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hey Wol
+On 11 Jan 2020, Gandalf Corvotempesta said:
 
- > My plan now would be to run mdadm --assemble --force /dev/md3 with 3
- > disk, to get the Raid going in a degraded state.
+> Il giorno sab 11 gen 2020 alle ore 22:25 Wols Lists
+> <antlists@youngman.org.uk> ha scritto:
+>> Multiple 3-way mirrors (1+0) requires disks in multiples of 3. Raid10
+>> simply requires "4 or more" disks. If you expect/want to expand your
+>> storage in small increments, then 10 is clearly better. BUT.
+>
+> I'll start with 8TB usable (more than enough for me atm) and would be ok
+> for at least 1 year, thus saving space is not a problem. Next year, if needed,
+> i'll add 3 disks more (or i'll grow the existing ones)
+>
+>> Depending on your filesystem - for example XFS - changing the disk
+>> layout underneath it can severely impact performance - when the
+>> filesystem is created it queries the layout and optimises for it. When I
+>> discussed it with one of the XFS guys he said "use 1+0 and add a fresh
+>> *set* of disks (or completely recreate the filesystem), because XFS
+>> optimises layout based on what disks it thinks its got."
+>
+> No XFS, i'll use ext4.
 
- >Yup, this would almost certainly work. I would recommend overlays and
- >running a fsck just to check it's all okay before actually doing it on
- >the actual disks. The event counts say to me that you'll probably lose
- >little to nothing.
+ext4 does the same thing. In both cases you can specify the layout by
+hand, and sometimes you have to because not all block device layers pass
+the layout up: e.g. my layering of md->lvm->bcache->cryptsetup->fs loses
+the layout at (at least) the bcache level.
 
-So as I was trying to reassemble my Raid it crashed again. But this time 
-sdc vanished.
+What I did when I knew I had a reshape coming up (because I was buying
+another disk a few months after buying a machine, and reshaping onto it)
+was to create the original array with the filesystem told about the
+*intended final* shape, and verify after reshaping that everything was
+fine (as with alignment, you can check this with blktrace's btrace tool,
+doing stuff and seeing if most changes come a whole stripe at a time or
+if all are misaligned and cross stripes). That way the fs starts off
+less than optimal and improves after the reshape -- if you got
+everything right, which sometimes feels like tightrope-walking.
 
-I get the following output:
+For ext4, the mkfs options to look for are -E stride=and -E
+stripe-width=, usually used together. For XFS, the options to look for
+are sunit and swidth (and often agcount is useful too).
 
-[root@dirvish ~]# mdadm --stop /dev/md3
-mdadm: stopped /dev/md3
-[root@dirvish ~]# mdadm --assemble --force /dev/md3 /dev/sdc1 /dev/sdd1 
-/dev/sdf            1
-mdadm: forcing event count in /dev/sdc1(2) from 5995154 upto 5995162
-mdadm: clearing FAULTY flag for device 0 in /dev/md3 for /dev/sdc1
-mdadm: failed to add /dev/sdc1 to /dev/md3: Invalid argument
-mdadm: /dev/md3 assembled from 2 drives - not enough to start the array.
-
-and when I checked with fdisk sdc wasn't there anymore.
-
-[root@dirvish ~]# fdisk -l
-
-Disk /dev/sda: 250.0 GB, 250059350016 bytes
-255 heads, 63 sectors/track, 30401 cylinders
-Units = cylinders of 16065 * 512 = 8225280 bytes
-
-    Device Boot      Start         End      Blocks   Id  System
-/dev/sda1   *           1          13      104391   fd  Linux raid 
-autodetect
-/dev/sda2              14         535     4192965   fd  Linux raid 
-autodetect
-/dev/sda3             536       30401   239898645   fd  Linux raid 
-autodetect
-
-Disk /dev/sdb: 250.0 GB, 250059350016 bytes
-255 heads, 63 sectors/track, 30401 cylinders
-Units = cylinders of 16065 * 512 = 8225280 bytes
-
-    Device Boot      Start         End      Blocks   Id  System
-/dev/sdb1   *           1          13      104391   fd  Linux raid 
-autodetect
-/dev/sdb2              14         535     4192965   fd  Linux raid 
-autodetect
-/dev/sdb3             536       30401   239898645   fd  Linux raid 
-autodetect
-
-Disk /dev/sdd: 2000.3 GB, 2000398934016 bytes
-255 heads, 63 sectors/track, 243201 cylinders
-Units = cylinders of 16065 * 512 = 8225280 bytes
-
-    Device Boot      Start         End      Blocks   Id  System
-/dev/sdd1   *           1      243201  1953512001   fd  Linux raid 
-autodetect
-
-Disk /dev/sde: 2000.3 GB, 2000398934016 bytes
-255 heads, 63 sectors/track, 243201 cylinders
-Units = cylinders of 16065 * 512 = 8225280 bytes
-
-    Device Boot      Start         End      Blocks   Id  System
-/dev/sde1   *           1      243201  1953512001   fd  Linux raid 
-autodetect
-
-Disk /dev/sdf: 2000.3 GB, 2000398934016 bytes
-255 heads, 63 sectors/track, 243201 cylinders
-Units = cylinders of 16065 * 512 = 8225280 bytes
-
-    Device Boot      Start         End      Blocks   Id  System
-/dev/sdf1               1      243201  1953512001   83  Linux
-
-...
-
-After a reboot of the system sdc was back again but vanished again after 
-I retried the assembly.
-
-Would the assembly also work with my 4th HDD, sde1 although in the mdadm 
---eaxmine it is labeld as spare?
-
-Greetings
-
-Christian
-
-
+-- 
+NULL && (void)
