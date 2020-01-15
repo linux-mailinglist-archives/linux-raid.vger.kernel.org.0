@@ -2,114 +2,130 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CB1D913B68F
-	for <lists+linux-raid@lfdr.de>; Wed, 15 Jan 2020 01:42:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F11FD13BA54
+	for <lists+linux-raid@lfdr.de>; Wed, 15 Jan 2020 08:30:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728795AbgAOAmJ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 14 Jan 2020 19:42:09 -0500
-Received: from smtp.hosts.co.uk ([85.233.160.19]:24988 "EHLO smtp.hosts.co.uk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728774AbgAOAmJ (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 14 Jan 2020 19:42:09 -0500
-Received: from [81.135.72.163] (helo=[192.168.1.118])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1irWCu-0002j4-Bw; Wed, 15 Jan 2020 00:06:49 +0000
-Subject: Re: Debian Squeeze raid 1 0
-To:     Rickard Svensson <myhex2020@gmail.com>, linux-raid@vger.kernel.org
-References: <CAC4UdkbjUVSpkBM88HB0UJMqXh+Pd7CRLaya=s81xMGs-9+m_Q@mail.gmail.com>
- <5E1D6C8E.8030607@youngman.org.uk>
- <CAC4UdkbwYvPHgufBPjNTWzcZW0FcGgGrbmFD_k_mc-Z7NVH9Pw@mail.gmail.com>
-From:   Wols Lists <antlists@youngman.org.uk>
-X-Enigmail-Draft-Status: N1110
-Message-ID: <5E1E5798.60406@youngman.org.uk>
-Date:   Wed, 15 Jan 2020 00:06:48 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.7.0
+        id S1726473AbgAOHaF (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 15 Jan 2020 02:30:05 -0500
+Received: from mail-vk1-f180.google.com ([209.85.221.180]:45521 "EHLO
+        mail-vk1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbgAOHaE (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 15 Jan 2020 02:30:04 -0500
+Received: by mail-vk1-f180.google.com with SMTP id g7so4409014vkl.12
+        for <linux-raid@vger.kernel.org>; Tue, 14 Jan 2020 23:30:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5Ni9bRMVShW8s56o4vwZ/G7h5broRTIrtYdzJwKPCdg=;
+        b=MpOiTlZPCtpkDo2gGjJaYb8pD/BCfH3ziHXHn5q1cixIGtJ9f3XbGNVLrtZb2mfuwn
+         Ei+Y9OTnvRLFEf8V0UXj1rObE+XVFtzHRvwi8XDnl6Epxo6+/BjBNiKbIcwWhth9Jax7
+         kvSpAuwW3FE7OjGz3Yq+XTiqtBKYC+Sul0LiNi1Unrsg/phfgxrt8dbmB9ECiFcTkSAr
+         w2mtjI5SzP32JAiJ0Bcm1YtkyOJ86WPmgZ98EVooMz5EROSbmguCfcOdypGdO2yOo0+V
+         V5acHvoDPDb5B9bB0aD6YG1KY+8cdcJyn+X2lMjkb4gnkCu9nTkIX89IXyB2WRxnjRWh
+         4KIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5Ni9bRMVShW8s56o4vwZ/G7h5broRTIrtYdzJwKPCdg=;
+        b=bZHwHi7rSIuaQNJDivDrXavBNMhfqqfXSSCTtXjXVZmrB7HxuL9+FzTe7K/WbuOgQC
+         WCUX4I+2HT0zsW2VFtAz6wZLGh4dXKwMdQyoQGH4eCqB/JfWV2IxAqoap/megf8hNzqe
+         jyLv8z7pzOdNQ3STw1hEIzFAjSbR7STdkXQb5YVJubJ460vPK7usQ2SQXjImwE1wfuEh
+         7e4pnTspyVI1IwzrnlJydHd9bA8ZVqq4HUrIp6X4Vat2wcusHkDwds5HcwfS7idigUsE
+         cSuaN7XGSJnfDqoT2a36eTT+GFXauHTegiXTwyYOdWYqYqdVRxt4PuPYi3lddC6Qek5+
+         CBcg==
+X-Gm-Message-State: APjAAAXfyA55S8Oml6CUDIxEeZ223h92rl8WLpAV/2Gh9CkZmCnzI4tf
+        ARSeCD7axxNhMg9V0OfouI9JTb5nHA1vufsS2g/UBA==
+X-Google-Smtp-Source: APXvYqwRdtiNnRdeEw924tuDunHJmNxZG01p5VrL9pubFANaE/FlMJCcNHicXDKk+GvdjGeFhf32g5er1LXRm5g6LoE=
+X-Received: by 2002:a1f:8f44:: with SMTP id r65mr16616412vkd.8.1579073403439;
+ Tue, 14 Jan 2020 23:30:03 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAC4UdkbwYvPHgufBPjNTWzcZW0FcGgGrbmFD_k_mc-Z7NVH9Pw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+References: <CAEWf3EDf-CwMz660RjRAtL==fa-Xc2XVpbrJL_Xqw24ZTZ18Zg@mail.gmail.com>
+ <20200108122538.GB16146@metamorpher.de>
+In-Reply-To: <20200108122538.GB16146@metamorpher.de>
+From:   Marco Heiming <myx00r@gmail.com>
+Date:   Wed, 15 Jan 2020 08:31:01 +0100
+Message-ID: <CAEWf3EA4rG_Xa-xvDNTMuQLQhOh1RuDaogttfAZ1_CWvBb0zfQ@mail.gmail.com>
+Subject: Re: Raid 5 cannot be re-assembled after disk was removed
+To:     Andreas Klauer <Andreas.Klauer@metamorpher.de>
+Cc:     linux-raid@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 14/01/20 23:11, Rickard Svensson wrote:
-> Hi, I'm very grateful for all  help!
-> 
-> The Debian 6  mdadm version is:
-> mdadm - v3.1.4 - 31st August 2010
+Thank you so far Andreas.
 
-Mmmmm ... yes using the new mdadm is very much advisable ...
-> 
-> I have avoided doing much with the server...
-> And the server is still running, did not want to stop it...  But I
-> should stop it now?
+I was able to re-assemble the array with the defective disk (sdd in
+this case) and the old spare (sde).
+It was rebuilding over night and now it looks like this:
 
-Have you got an esata port? Can you hook up the replacement drive(s) to
-it? That sounds a good plan. You could use USB, but that's probably
-going to be a LOT slower.
+mdadm --detail -v /dev/md0
+/dev/md0:
+           Version : 1.2
+     Creation Time : Wed Jan  7 18:14:37 2015
+        Raid Level : raid5
+        Array Size : 8790405120 (8383.18 GiB 9001.37 GB)
+     Used Dev Size : 2930135040 (2794.39 GiB 3000.46 GB)
+      Raid Devices : 4
+     Total Devices : 4
+       Persistence : Superblock is persistent
 
-I can understand not wanting to shut the server down.
-> 
-> Attaches  below a summary in the log, /sde died by the 9th, but came
-> back as /sdf  ???
-> And the 12th /sdc dies, and the morning after I discover the problem.
-> What I've done since then is only.
-> * Remont drive as read only
-> * Unmounted ext4, to run fsck
-> And that's when I realized it might be even worse.
-> 
-Well, so long as nothing has written to the drives, and you can recover
-a copy, then you should be okay ... cross fingers ...
-> 
-> My idea is to make a ddrescue copy of the problem disks, and then in a
-> new Debian 10 with new mdadm, try to start the raid on the new hd
-> copy..?
+     Intent Bitmap : Internal
 
-Yup
-> 
-> Yes, backing up via ddrescue sounds right.
-> BTW it is gddrescue?  ddrescue in Debian 10 seems to be a Windows
-> rescue program.
-> 
-Never heard of gddrescue. ddrescue is supposed to be a drop-in
-replacement for dd, just that it doesn't error out on read failures and
-has a large repertoire of tricks to try and get round errors if it can.
+       Update Time : Thu Jan  9 19:37:16 2020
+             State : clean
+    Active Devices : 4
+   Working Devices : 4
+    Failed Devices : 0
+     Spare Devices : 0
 
-> I'm change to raid 1 now on the server later on, I have two new 10Tb
-> drives, so not the same setup.
-> But I have a 6 Tb drive, which I intend to use for this rescue.
-> 
-> A question about the copy. is it possible to copy to a different
-> partition, for example copy sdc2 TO (new 6 TB disk) sdx1,  and then
-> sde2 TO (same new disk!) sdx2...
+  Layout : left-symmetric
+  Chunk Size : 512K
 
-Not a problem - raid (and linux in general) doesn't care about where the
-data is, it just expects to be given a block device. It'll just slow
-things down a bit. Hopefully with multiple heads per drive, not too
-much, but I don't know in detail how these things work.
+Consistency Policy : bitmap
 
-> And mdadm should (with same luck) be able to put it to the same md0 device.
-> Or I'm asking, a copy of a partition will be the same, from what mdadm
-> is looking for?
-> 
-Probably /dev/md126. At the end of the day, you shouldn't care. All you
-want to do is assemble the array, see what it gives you as the array
-device, and mount that. That should give your ext filesystem back. Run a
-"no modify" fsck over it, and if it looks pretty clean (there might be a
-little bit of corruption) try mounting it ro and looking it over for
-problems.
+              Name : NAS:0  (local to host NAS)
+              UUID : 7b0eee59:07f87155:bdad1d0e:6e3cbad6
+            Events : 280445
 
-When you move over to your 10TB drives (will that be a straight raid-1?)
-look at dm-integrity (warning - it's experimental with raid but seems
-solid for raid-1). And look at using named, not numbered, arrays. My
-raid 1's are called /dev/root, /dev/home, and /dev/var.
+    Number   Major   Minor   RaidDevice State
+       4       8       64        0      active sync   /dev/sde
+       1       8       16        1      active sync   /dev/sdb
+       3       8       32        2      active sync   /dev/sdc
+       0       8       48        3      active sync   /dev/sdd
 
-(Fixed number raid arrays are deprecated - it counts down from 126 by
-default now.)
+I was able to mount the array in read-only and it looks like the data
+is fine; i also ran a btrfs check in read-only mode and it found no
+errors.
+So far so good :)
 
-Cheers,
-Wol
+Although disk sdd is still reporting an increasing read error rate via SMART:
+smartctl -a /dev/sdd | grep "Raw_Read_Error_Rate"
+  1 Raw_Read_Error_Rate     0x002f   200   200   051    Pre-fail
+Always       -       764
+therefore i need to replace this disk in the next days.
 
+Thank you so far for your help.
+
+
+Am Mi., 8. Jan. 2020 um 13:25 Uhr schrieb Andreas Klauer
+<Andreas.Klauer@metamorpher.de>:
+>
+> On Wed, Jan 08, 2020 at 10:31:28AM +0100, Marco Heiming wrote:
+> >        0       8        0        -      spare   /dev/sda
+>
+> Your spare was /dev/sda
+>
+> > mdadm --examine /dev/sd[b-z]
+>
+> Here you deliberately examine sdb-z, so what happened to sda?
+>
+> You mentioned drive letters changed, but is it really not there anymore?
+>
+> If you don't know which drives you synced in the array then who does...?
+>
+> Regards
+> Andreas Klauer
