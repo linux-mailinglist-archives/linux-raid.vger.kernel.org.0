@@ -2,61 +2,70 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1447D13D0C0
-	for <lists+linux-raid@lfdr.de>; Thu, 16 Jan 2020 00:44:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7421913D5FE
+	for <lists+linux-raid@lfdr.de>; Thu, 16 Jan 2020 09:34:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731165AbgAOXol (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 15 Jan 2020 18:44:41 -0500
-Received: from smtp.hosts.co.uk ([85.233.160.19]:45556 "EHLO smtp.hosts.co.uk"
+        id S1731081AbgAPIer (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 16 Jan 2020 03:34:47 -0500
+Received: from mga01.intel.com ([192.55.52.88]:50041 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730677AbgAOXol (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 15 Jan 2020 18:44:41 -0500
-Received: from [81.135.72.163] (helo=[192.168.1.118])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1irsL1-0003x0-BH; Wed, 15 Jan 2020 23:44:39 +0000
-Subject: Re: Two raid5 arrays are inactive and have changed UUIDs
-To:     William Morgan <therealbrewer@gmail.com>
-References: <CALc6PW4OKR2KVFgzoEbRJ0TRwvqi5EZAdC__HOx+vJKMT0TXYQ@mail.gmail.com>
- <959ca414-0c97-2e8d-7715-a7cb75790fcd@youngman.org.uk>
- <CALc6PW7276uYYWpL7j2xsFJRy3ayZeeSJ9kNCGHvB6Ndb6m1-Q@mail.gmail.com>
- <5E17D999.5010309@youngman.org.uk>
- <CALc6PW5DrTkVR7rLngDcJ5i8kTpqfT1-K+ki-WjnXAYP5TXXZg@mail.gmail.com>
- <CALc6PW7hwT9VDNyA8wfMzjMoUFmrFV5z=Ve+qvR-P7CPstegvw@mail.gmail.com>
- <5E1DDCFC.1080105@youngman.org.uk>
- <CALc6PW5Y-SvUZ5HOWZLk2YcggepUwK0N===G=42uMR88pDfAVA@mail.gmail.com>
-Cc:     linux-raid@vger.kernel.org
-From:   Wols Lists <antlists@youngman.org.uk>
-X-Enigmail-Draft-Status: N1110
-Message-ID: <5E1FA3E6.2070303@youngman.org.uk>
-Date:   Wed, 15 Jan 2020 23:44:38 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.7.0
-MIME-Version: 1.0
-In-Reply-To: <CALc6PW5Y-SvUZ5HOWZLk2YcggepUwK0N===G=42uMR88pDfAVA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+        id S1726864AbgAPIer (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 16 Jan 2020 03:34:47 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 00:34:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,325,1574150400"; 
+   d="scan'208";a="273911187"
+Received: from linux-myjy.igk.intel.com ([10.102.102.116])
+  by FMSMGA003.fm.intel.com with ESMTP; 16 Jan 2020 00:34:46 -0800
+From:   Blazej Kucman <blazej.kucman@intel.com>
+To:     linux-raid@vger.kernel.org
+Cc:     jes.sorensen@gmail.com
+Subject: [PATCH] imsm: Update grow manual.
+Date:   Thu, 16 Jan 2020 09:34:44 +0100
+Message-Id: <20200116083444.4971-1-blazej.kucman@intel.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 15/01/20 22:12, William Morgan wrote:
-> All 4 drives have the same event count and all four show the same
-> state of AAAA, but the first and last drive still show bad blocks
-> present. Is that because ddrescue copied literally everything from the
-> original drives, including the list of bad blocks? How should I go
-> about clearing those bad blocks? Is there something more I should do
-> to verify the integrity of the data?
+Update --grow option description in manual, according to
+the supported grow operations by IMSM.
 
-Read the wiki - the section on badblocks will be - enlightening - shall
-we say.
+Signed-off-by: Blazej Kucman <blazej.kucman@intel.com>
+---
+ mdadm.8.in | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-https://raid.wiki.kernel.org/index.php/The_Badblocks_controversy
+diff --git a/mdadm.8.in b/mdadm.8.in
+index 6b63bb41..ca02a338 100644
+--- a/mdadm.8.in
++++ b/mdadm.8.in
+@@ -481,9 +481,7 @@ still be larger than any replacement.
+ This value can be set with
+ .B \-\-grow
+ for RAID level 1/4/5/6 though
+-.B CONTAINER
+-based arrays such as those with IMSM metadata may not be able to
+-support this.
++DDF arrays may not be able to support this.
+ If the array was created with a size smaller than the currently
+ active drives, the extra space can be accessed using
+ .BR \-\-grow .
+@@ -2759,9 +2757,7 @@ container format.  The number of devices in a container can be
+ increased - which affects all arrays in the container - or an array
+ in a container can be converted between levels where those levels are
+ supported by the container, and the conversion is on of those listed
+-above.  Resizing arrays in an IMSM container with
+-.B "--grow --size"
+-is not yet supported.
++above.
+ 
+ .PP
+ Notes:
+-- 
+2.16.4
 
-Yes, the bad blocks are implemented within md, so they got copied across
-along with everything else. So your array should be perfectly fine
-despite the badblocks allegedly there ...
-
-Cheers,
-Wol
