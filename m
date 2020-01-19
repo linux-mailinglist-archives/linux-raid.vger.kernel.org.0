@@ -2,86 +2,62 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CD50141F37
-	for <lists+linux-raid@lfdr.de>; Sun, 19 Jan 2020 18:41:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1492141F61
+	for <lists+linux-raid@lfdr.de>; Sun, 19 Jan 2020 19:44:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgASRlL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 19 Jan 2020 12:41:11 -0500
-Received: from smtp.hosts.co.uk ([85.233.160.19]:34671 "EHLO smtp.hosts.co.uk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727060AbgASRlL (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sun, 19 Jan 2020 12:41:11 -0500
-Received: from [81.135.72.163] (helo=[192.168.1.118])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1itEZQ-0003Ml-82; Sun, 19 Jan 2020 17:41:08 +0000
-Subject: Re: Two raid5 arrays are inactive and have changed UUIDs
-To:     William Morgan <therealbrewer@gmail.com>
-References: <CALc6PW4OKR2KVFgzoEbRJ0TRwvqi5EZAdC__HOx+vJKMT0TXYQ@mail.gmail.com>
- <959ca414-0c97-2e8d-7715-a7cb75790fcd@youngman.org.uk>
- <CALc6PW7276uYYWpL7j2xsFJRy3ayZeeSJ9kNCGHvB6Ndb6m1-Q@mail.gmail.com>
- <5E17D999.5010309@youngman.org.uk>
- <CALc6PW5DrTkVR7rLngDcJ5i8kTpqfT1-K+ki-WjnXAYP5TXXZg@mail.gmail.com>
- <CALc6PW7hwT9VDNyA8wfMzjMoUFmrFV5z=Ve+qvR-P7CPstegvw@mail.gmail.com>
- <5E1DDCFC.1080105@youngman.org.uk>
- <CALc6PW5Y-SvUZ5HOWZLk2YcggepUwK0N===G=42uMR88pDfAVA@mail.gmail.com>
- <5E1FA3E6.2070303@youngman.org.uk>
- <CALc6PW4-yMdprmube0bKku0FJVKghYt4tjhep26sy3F9Q5cB4g@mail.gmail.com>
-Cc:     linux-raid@vger.kernel.org
-From:   Wols Lists <antlists@youngman.org.uk>
-X-Enigmail-Draft-Status: N1110
-Message-ID: <5E2494B3.9010006@youngman.org.uk>
-Date:   Sun, 19 Jan 2020 17:41:07 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.7.0
+        id S1728826AbgASSoU (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 19 Jan 2020 13:44:20 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:33985 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728655AbgASSoU (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 19 Jan 2020 13:44:20 -0500
+Received: by mail-il1-f196.google.com with SMTP id s15so25538069iln.1
+        for <linux-raid@vger.kernel.org>; Sun, 19 Jan 2020 10:44:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=/o+CA7VDRA7UR3HGeT8+/tYzwEnOXwq5B8ZHP2/HeYc=;
+        b=MveYcniUJUB532f0dlOoihdmkjAHV60cDj8LBHI8M4h+3H+egt8ZCsWSnQoG7CEhld
+         h286H+k74rDzfRQOoY/f9M81WRQr88YRuubiH3HanhIDyXki4cyulA7bNdgdh/npcklQ
+         CvJo43u8PBPBkMgEH5HatRsI+u5tlB3wEJ1Th3FBUvpApZQxsvg7pL4HfvgLhjM/SAbt
+         Wln7BJPpvNYZtoiRQX3zkLZKrm4kgBMldFao5RktgQ8gLQFv0TsxI7xopop5Q61lnjsD
+         O+Nqof9tzp5qXVHsDImBQ0OOhN8D0ZvK4JC9Zw+KV08LpajVcASte5dFUKOIeqnCFHwC
+         Gp1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=/o+CA7VDRA7UR3HGeT8+/tYzwEnOXwq5B8ZHP2/HeYc=;
+        b=uaZ5R1PeWIrGIFUSElq1eXJr4CnHoVwDLftUq/vL30ylu4/Pq/KI0J+iso9ZHE/2xa
+         c2q6N6vHjo/+D0jDHUidRD8z1N2rAYacMV/NXmS/ZHZPPK5einZBdQOY0SCeV+LVvL74
+         FkoXqg2nDtO6UwcZZmkW63l6IcJXBLJVyF/AHKAkToQaXYlo4VALRWoceem3legx9D70
+         B+nHLnolplH8oQe10Bad2hDdmhYFGUx3nRkPy6BTkHiijPusx29sx9/vcMZRhyUhQOpC
+         IOX1pVoprc1arBjK0cBnl3TnPwOAD1/1Jlicp9eWU+J4C236SRNeol8QxhuYJ27KXGoH
+         Xz0w==
+X-Gm-Message-State: APjAAAWAjmKl7z8AX0VUjX3XYtkry9L1gke1L72Bkr1aSH9EqwGRspKe
+        WXCkXdAD71MqV7RHNjpbaKskbli5zyv80dVHN2o=
+X-Google-Smtp-Source: APXvYqzrfoOpFYdPx6ke6uIX585SnMDBN6pXKvD7iN8x9MT//+KimK2aFC33ps3ZC6gjq3Pi1pIlacgfKiFCQZrpYZA=
+X-Received: by 2002:a92:d1c1:: with SMTP id u1mr7477573ilg.66.1579459459106;
+ Sun, 19 Jan 2020 10:44:19 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CALc6PW4-yMdprmube0bKku0FJVKghYt4tjhep26sy3F9Q5cB4g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a02:95c8:0:0:0:0:0 with HTTP; Sun, 19 Jan 2020 10:44:18
+ -0800 (PST)
+Reply-To: favordens@email.com
+From:   Favor Desmond <contecindy5@gmail.com>
+Date:   Sun, 19 Jan 2020 18:44:18 +0000
+Message-ID: <CAOfCPNxgSoAU_ns0j9jYL-ArKfcD=i8NkJvHsR4-OGvFBVDMZg@mail.gmail.com>
+Subject: HELLO
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 19/01/20 17:02, William Morgan wrote:
-> But then I get confused about the UUIDs. I'm trying to automount the
-> array using fstab (no unusual settings in there, just defaults), but
-> I'm not sure which of the two UUIDs above to use. So I look at mdadm
-> for help:
-> 
-> bill@bill-desk:~$ sudo mdadm --examine --scan
-> ARRAY /dev/md/0  metadata=1.2 UUID=06ad8de5:3a7a15ad:88116f44:fcdee150
-> name=bill-desk:0
-> 
-> However, if I use this UUID starting with "06ad", then I get an error:
-
-Looking at your output (and no I'm not that good at reading traces) it
-looks to me like this 06ad8de5 uuid should be that of ONE of your
-partitions. But it looks like it's been cloned to ALL partitions.
-
-You didn't do anything daft like partitioning one disk, and then just
-dd'ing or cp'ing the partition table across? Never a good idea.
-> 
-> bill@bill-desk:~$ sudo mount -all
-> mount: /media/bill/STUFF: mount(2) system call failed: Structure needs cleaning.
-> 
-> But I don't know how to clean it if fsck says it's OK.
-> 
-> On the other hand, if I use the UUID above starting with "ceef", then
-> it mounts and everything seems OK.
-
-Yup. That looks like the correct UUID for the array.
-> 
-> Basically, I don't understand why lsblk lists two UUIDs for the array,
-> and why mdadm gives the wrong one in terms of mounting. This is where
-> I was confused before about the UUID changing. Any insight here?
-> 
-Well it LOOKS to me like something has changed all the partition UUIDs
-to the array UUID, and then the array UUID has changed to avoid a
-collision.
-
-I dunno - let's hope someone else has some ideas ...
-
-Cheers,
-Wol
-
+Hello Dear
+Greetings to you,I am Favor Desmond from Ivory coast currently living
+in  Togo Republic,I would like to know you more, so that i can tell
+you little amount myself and my photo, email address is
+favordens@email.com
+Thanks
+Favor
