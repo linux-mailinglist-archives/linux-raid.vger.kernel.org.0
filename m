@@ -2,106 +2,67 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 99E6514289D
-	for <lists+linux-raid@lfdr.de>; Mon, 20 Jan 2020 11:56:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C216142D88
+	for <lists+linux-raid@lfdr.de>; Mon, 20 Jan 2020 15:28:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgATK4t (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 20 Jan 2020 05:56:49 -0500
-Received: from smtp.hosts.co.uk ([85.233.160.19]:48475 "EHLO smtp.hosts.co.uk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbgATK4t (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 20 Jan 2020 05:56:49 -0500
-Received: from [81.135.72.163] (helo=[192.168.1.118])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1itUjb-0000qs-7H; Mon, 20 Jan 2020 10:56:47 +0000
-Subject: Re: Repairing a RAID1 with non-zero mismatch_cnt
-To:     andrewbass@gmail.com, linux-raid@vger.kernel.org
-References: <CADSg1Jh1i+OPq0_hWOvHxK0xroUbn_w0_ZjxjwcnrbSsBXGY5A@mail.gmail.com>
-From:   Wols Lists <antlists@youngman.org.uk>
-X-Enigmail-Draft-Status: N1110
-Message-ID: <5E25876A.1030004@youngman.org.uk>
-Date:   Mon, 20 Jan 2020 10:56:42 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.7.0
+        id S1726860AbgATO26 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 20 Jan 2020 09:28:58 -0500
+Received: from mail-il1-f171.google.com ([209.85.166.171]:34654 "EHLO
+        mail-il1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726626AbgATO26 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 20 Jan 2020 09:28:58 -0500
+Received: by mail-il1-f171.google.com with SMTP id s15so27445181iln.1
+        for <linux-raid@vger.kernel.org>; Mon, 20 Jan 2020 06:28:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=SqkLjWYmPf8iY9FtNvyy87SkZYtulmhUxgfVCee18jY=;
+        b=UXeHRMddSFdOuKCn8ZtOhlPSoCQgz8VINm0FnssmilKpP4jiecIjXJgwNcwbCu1OZg
+         5Ch1ohVvtmLUGfqmxySWawgrRu3VODDJirSLzoy8Z4ljxAKiJzAe1jmhaKCwqgCzmYL0
+         cy/JNVUGe9rbOCXDUFoUjlLdkJMV7KgQMg4GMPSIl5LkP2h5pDPuDtgT3HXbzUQxsDIK
+         3Pwi7BUsoTarH1J6sw8yEg6jaguohQcxdFnz1TyT6v9yYNUwhkniioPwOux9MjF1nH0I
+         9lDnfY97fVLXV4ZF95Qg96OP16yiCydhaEbVZjCosypqIfyByonXBknMLTqp0OyDgWA2
+         G71Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=SqkLjWYmPf8iY9FtNvyy87SkZYtulmhUxgfVCee18jY=;
+        b=hTvPF8jI5N3K73l5VgOIELn4a83TO5bdq437lXXcylPWhVLMR3lpJVQZm1xV+53rom
+         pOxkveqZBYUXzqsjclwtqBKHz9OjePPseUDuJ5Fz00IUIDFLfoAFxPc0n9lUcolxureh
+         NUAOrnQG4qxo33gCA4+mTeq2yR6kSOnsmXOILE8YE7ODUjHv8RzUB8644NtTjuIOG32k
+         VKpqJfSJzbbr1cR+08nWmeJaaYkFyhEUosTnvF8toj3T/rYOQyH0HBYo9HpsjdzAj4jY
+         VapJSKdUSyKGRT/gXt56h1pDykPgVVtE7q4H/mWlPIYA/Ep/pyUA6T7lLqnzv41LZrx6
+         qMTw==
+X-Gm-Message-State: APjAAAXTb9WuaWNeTizZrn1UfNrzGTJelVqOQnebPTnxrTJ7mMz9S7ZM
+        mpoKQdh/RIqgEmJnIsmRtAYXTnbwE4wJORF5GFYZ4m1I9fA=
+X-Google-Smtp-Source: APXvYqzzmkG1bzqfo7CVWkM1OJoE64/NQ2vonpNuwhk5fcGtS1djDt84XVmG5mKM2UjEiO/w3fTS46Iph/VKr7Ir7Kg=
+X-Received: by 2002:a92:da41:: with SMTP id p1mr11685564ilq.113.1579530537399;
+ Mon, 20 Jan 2020 06:28:57 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CADSg1Jh1i+OPq0_hWOvHxK0xroUbn_w0_ZjxjwcnrbSsBXGY5A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+References: <CAJH6TXjryixcArdcu_oVzmkEyktpMSb62YaUJvUv_Nd7k3mbDg@mail.gmail.com>
+In-Reply-To: <CAJH6TXjryixcArdcu_oVzmkEyktpMSb62YaUJvUv_Nd7k3mbDg@mail.gmail.com>
+From:   Gandalf Corvotempesta <gandalf.corvotempesta@gmail.com>
+Date:   Mon, 20 Jan 2020 15:29:10 +0100
+Message-ID: <CAJH6TXiK0_v5sHqrphT1Q2oOVngT4TPGzvGKCPw35hAMRUHt4w@mail.gmail.com>
+Subject: Re: Last scrub date and result
+To:     Linux RAID Mailing List <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 20/01/20 10:02, Andrey ``Bass'' Shcheglov wrote:
-> Greetings,
-> 
-> I have a question on how to repair a RAID1 array (consisting of 2
-> physical hard drives, metadata version 1.2) which went split-brain.
-> 
-> One of my md-devices repeatedly shows a non-zero mismatch_cnt:
-> 
-> # cat /sys/block/md4/md/mismatch_cnt
-> 1024
-> 
-> Zeroing out free space (with `zerofree`, as recommended here:
-> <http://decafbad.net/2017/01/03/mismatch_cnt,-raid1,-and-a-clever-fix/>)
-> and disabling the swap both retain the mismatch count at the very same
-> level.
-> Also, none of the drives is failing (18x and 19x SMART attributes are ok).
-> Checking file systems (ext4) doesn't show any problem, either, so the
-> file system metadata is most probably correct, too.
-> 
-> The usual suspects ruled out, I'm starting to think it my data got
-> corrupted, and at least one out of two replicas is affected.
-> Of course I can
-> 
-> # echo repair > /sys/block/md0/md/sync_action
-> 
-> but I have a 50% chance of losing information stored on the "right" replica.
-> 
-> 
-> So, assuming my /dev/md0 is now assembled from /dev/sda1 and /dev/sdb1,
-> I feel like assemble and run two separate degraded mirrors from
-> /dev/sda1 and /dev/sdb1, respectively (`mdadm -A`),
-> mount the corresponding file systems R/O,
-> create two backups (one backup per replica)
-> and then compare them with each other (`diff -urN`).
-> 
-> 
-> The question is: is it possible to assemble an array in a read-only mode,
-> so that the underlying block device is never written to,
-> the metadata in the superblock remains intact and the event count is
-> not incremented?
-> 
-> My intention is to avoid the resync when my original /dev/md0 is
-> reassembled from /dev/sda1 and /dev/sdb1.
-> 
-Then how (assuming one drive is corrupt) are you going to re-assemble
-the array without forcing a resync on that drive?
-> 
-> If you have any other recommendations on how to interactively repair
-> the array (I want to be able to peek at the data being synced),
-> I'd appreciate you sharing them.
-> 
-My inclination (no warranty included!) would be to shut down the array,
-then assemble it with "/dev/sda1 missing" and --force if necessary. fsck
-that, then rinse and repeat with the second drive.
+Il giorno lun 6 gen 2020 alle ore 12:49 Gandalf Corvotempesta
+<gandalf.corvotempesta@gmail.com> ha scritto:
+> Update Time : Mon Jan  6 12:47:29 2020
+>           State : clean
+> Last scrub Time: Mon Jan  4 12:47:29 2020
+> Last scrub result: success
 
-Assuming neither drive has problems, you should then be able to assemble
---assume-clean, which will prevent the sync, otherwise you'll have to
-just re-add the duff drive and let it resync.
+something similiar to ZFS:
 
-(In other words, why worry about the resync, because if you find the
-problem then you're going to have to resync to fix it, anyway.)
+scan: resilvered 817G in 0 days 01:33:48 with 0 errors on Wed Jan 15
+19:36:08 2020
 
-Hint - look at dm-integrity. I believe you can put the integrity
-information elsewhere (if you've got a spare bit of disk space) so this
-issue won't arise again. It's new with raid, but apparently works fine
-with raid-1. Don't try it with the higher raids - 5 or 6 - yet.
-
-> Regards,
-> Andrey.
-> 
-Cheers,
-Wol
+this is for a resilver, but a scub is similiar
