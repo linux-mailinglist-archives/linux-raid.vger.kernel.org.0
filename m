@@ -2,115 +2,219 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EAA11433EE
-	for <lists+linux-raid@lfdr.de>; Mon, 20 Jan 2020 23:30:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 74FDF143993
+	for <lists+linux-raid@lfdr.de>; Tue, 21 Jan 2020 10:35:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgATWax (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 20 Jan 2020 17:30:53 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41331 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726607AbgATWax (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 20 Jan 2020 17:30:53 -0500
-Received: by mail-qt1-f195.google.com with SMTP id k40so1073588qtk.8
-        for <linux-raid@vger.kernel.org>; Mon, 20 Jan 2020 14:30:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=Vrcg/FOdYbQ2+B6h9Dv+4Ty/iwP+WfFBGEbajMZ9ia4=;
-        b=nBoWZRA0rn+7Bar949kfVKukeiQ7Vbfva4rBAMzzojP9q3rS7lYnlNiAragJCV1qTx
-         JNvYssGIHibqlDz20znR20+XQCEdsNnnyuaD19XzagM2EqQB+9hNnvqi7qsqY7XVvHbl
-         skUeSfRey7Vb1ig1vxBE+b67o0WPWGpgxLQJfY5yl1KpxRxFs2TnKBFvWDumEhOacmy7
-         9uBKBxBtvYiZeYM0K8VK7fyQDOi4XiBLmMwPzVCYkUpa8Lm6OgNdgNoY0CHYS+DNOnp5
-         6+KsHD7h8+j4IO1tUc6i6VJ3yCa2hlHHaH9qcxGFvvAK6QWYLI0VnAxgRQl95E3hTlHs
-         TA0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=Vrcg/FOdYbQ2+B6h9Dv+4Ty/iwP+WfFBGEbajMZ9ia4=;
-        b=e3jmm+51BqrfThoNWGlsLGPvP41gHycvrcJzICGuD5RLikiF1vSlLmVrEPpkrquTpx
-         fOimmrB+U9e5el471EYnsDcAFcuA6Wm50gY4U2SYWtdPxjICRDZlMiCFPAhvOBapivM/
-         QNuFEwHhfU5/RrGJDvJTWP3wNFbzH54zDGzHyrnVuj+yXt+2FdymxWrMrbPtZaFO8Cv1
-         ao3Olq5q8YbmqL0Juy6T++/K6ZaR5eEg3luC4JNSQBav4ZHGBKPSMnhyWBCaA4K82dX+
-         Lp5f5UeYea3aHx0gNv+BszQdQiu70DGjRBGBg7IA4htIX1FhQwoRnwvzpXAD6g57LGFT
-         j2rw==
-X-Gm-Message-State: APjAAAWmQ27W2tnyDFqI6enGV0zCWzE3f1DKWHvxNAZ3NRGY+Bq1D2BT
-        iAEhgk4athfewk7AOkR8FhuqCG9eqQzrC+AOzIU=
-X-Google-Smtp-Source: APXvYqwKTySS+oeu6MfnneagPeTk8ZC5mntUuPUYEw6kcmt/yFDVkOTvsCy0PyAZO4n3Tam2QKKfOWeE4gmXXa8TdSI=
-X-Received: by 2002:ac8:4689:: with SMTP id g9mr1588478qto.121.1579559452300;
- Mon, 20 Jan 2020 14:30:52 -0800 (PST)
-MIME-Version: 1.0
-References: <CADSg1Jh1i+OPq0_hWOvHxK0xroUbn_w0_ZjxjwcnrbSsBXGY5A@mail.gmail.com>
- <5E25876A.1030004@youngman.org.uk>
-In-Reply-To: <5E25876A.1030004@youngman.org.uk>
-Reply-To: andrewbass@gmail.com
-From:   "Andrey ``Bass'' Shcheglov" <andrewbass@gmail.com>
-Date:   Tue, 21 Jan 2020 01:30:41 +0300
-Message-ID: <CADSg1Jj3XmD_RmSedn3AT9uCXbHQGa6ATBK1UP33onS8Vi=60g@mail.gmail.com>
-Subject: Re: Repairing a RAID1 with non-zero mismatch_cnt
-To:     Wols Lists <antlists@youngman.org.uk>
-Cc:     linux-raid@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        id S1728765AbgAUJfm (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 21 Jan 2020 04:35:42 -0500
+Received: from mga04.intel.com ([192.55.52.120]:21661 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727962AbgAUJfm (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 21 Jan 2020 04:35:42 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 01:35:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,345,1574150400"; 
+   d="scan'208";a="258994740"
+Received: from linux-3rn9.igk.intel.com ([10.102.102.97])
+  by fmsmga002.fm.intel.com with ESMTP; 21 Jan 2020 01:35:40 -0800
+From:   Kinga Tanska <kinga.tanska@intel.com>
+To:     linux-raid@vger.kernel.org
+Cc:     jes.sorensen@gmail.com
+Subject: [PATCH, v2] Add support for Tebibytes
+Date:   Tue, 21 Jan 2020 10:38:52 +0100
+Message-Id: <20200121093852.21240-1-kinga.tanska@intel.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Many thanks for your response, Wol.
+Adding support for Tebibytes enables display size of
+volumes in Tebibytes and Terabytes when they are
+bigger than 2048 GiB (or GB).
 
-On Mon, 20 Jan 2020 at 13:56, Wols Lists <antlists@youngman.org.uk> wrote:
->
-> > The question is: is it possible to assemble an array in a read-only mode,
-> > so that the underlying block device is never written to,
-> > the metadata in the superblock remains intact and the event count is
-> > not incremented?
-> >
-> > My intention is to avoid the resync when my original /dev/md0 is
-> > reassembled from /dev/sda1 and /dev/sdb1.
-> >
-> Then how (assuming one drive is corrupt) are you going to re-assemble
-> the array without forcing a resync on that drive?
+Signed-off-by: Kinga Tanska <kinga.tanska@intel.com>
+---
+ mdadm.8.in | 20 ++++++++++----------
+ util.c     | 47 +++++++++++++++++++++++++++++++++--------------
+ 2 files changed, 43 insertions(+), 24 deletions(-)
 
-Well, of course I will resync eventually, but
+diff --git a/mdadm.8.in b/mdadm.8.in
+index 9aec9f4..ad7a0aa 100644
+--- a/mdadm.8.in
++++ b/mdadm.8.in
+@@ -467,8 +467,8 @@ If this is not specified
+ size, though if there is a variance among the drives of greater than 1%, a warning is
+ issued.
+ 
+-A suffix of 'K', 'M' or 'G' can be given to indicate Kilobytes, Megabytes or
+-Gigabytes respectively.
++A suffix of 'K', 'M', 'G' or 'T' can be given to indicate Kilobytes,
++Megabytes, Gigabytes or Terabytes respectively.
+ 
+ Sometimes a replacement drive can be a little smaller than the
+ original drives though this should be minimised by IDEMA standards.
+@@ -534,8 +534,8 @@ problems the array can be made bigger again with no loss with another
+ .B "\-\-grow \-\-array\-size="
+ command.
+ 
+-A suffix of 'K', 'M' or 'G' can be given to indicate Kilobytes, Megabytes or
+-Gigabytes respectively.
++A suffix of 'K', 'M', 'G' or 'T' can be given to indicate Kilobytes,
++Megabytes, Gigabytes or Terabytes respectively.
+ A value of
+ .B max
+ restores the apparent size of the array to be whatever the real
+@@ -553,8 +553,8 @@ This is only meaningful for RAID0, RAID4, RAID5, RAID6, and RAID10.
+ RAID4, RAID5, RAID6, and RAID10 require the chunk size to be a power
+ of 2.  In any case it must be a multiple of 4KB.
+ 
+-A suffix of 'K', 'M' or 'G' can be given to indicate Kilobytes, Megabytes or
+-Gigabytes respectively.
++A suffix of 'K', 'M', 'G' or 'T' can be given to indicate Kilobytes,
++Megabytes, Gigabytes or Terabytes respectively.
+ 
+ .TP
+ .BR \-\-rounding=
+@@ -741,8 +741,8 @@ When using an
+ bitmap, the chunksize defaults to 64Meg, or larger if necessary to
+ fit the bitmap into the available space.
+ 
+-A suffix of 'K', 'M' or 'G' can be given to indicate Kilobytes, Megabytes or
+-Gigabytes respectively.
++A suffix of 'K', 'M', 'G' or 'T' can be given to indicate Kilobytes,
++Megabytes, Gigabytes or Terabytes respectively.
+ 
+ .TP
+ .BR \-W ", " \-\-write\-mostly
+@@ -831,8 +831,8 @@ an array which was originally created using a different version of
+ which computed a different offset.
+ 
+ Setting the offset explicitly over-rides the default.  The value given
+-is in Kilobytes unless a suffix of 'K', 'M' or 'G' is used to explicitly
+-indicate Kilobytes, Megabytes or Gigabytes respectively.
++is in Kilobytes unless a suffix of 'K', 'M', 'G' or 'T' is used to explicitly
++indicate Kilobytes, Megabytes, Gigabytes or Terabytes respectively.
+ 
+ Since Linux 3.4,
+ .B \-\-data\-offset
+diff --git a/util.c b/util.c
+index 64dd409..07f9dc3 100644
+--- a/util.c
++++ b/util.c
+@@ -389,7 +389,7 @@ int mdadm_version(char *version)
+ unsigned long long parse_size(char *size)
+ {
+ 	/* parse 'size' which should be a number optionally
+-	 * followed by 'K', 'M', or 'G'.
++	 * followed by 'K', 'M'. 'G' or 'T'.
+ 	 * Without a suffix, K is assumed.
+ 	 * Number returned is in sectors (half-K)
+ 	 * INVALID_SECTORS returned on error.
+@@ -411,6 +411,10 @@ unsigned long long parse_size(char *size)
+ 			c++;
+ 			s *= 1024 * 1024 * 2;
+ 			break;
++		case 'T':
++			c++;
++			s *= 1024 * 1024 * 1024 * 2LL;
++			break;
+ 		case 's': /* sectors */
+ 			c++;
+ 			break;
+@@ -893,13 +897,14 @@ char *human_size(long long bytes)
+ {
+ 	static char buf[47];
+ 
+-	/* We convert bytes to either centi-M{ega,ibi}bytes or
+-	 * centi-G{igi,ibi}bytes, with appropriate rounding,
+-	 * and then print 1/100th of those as a decimal.
++	/* We convert bytes to either centi-M{ega,ibi}bytes,
++	 * centi-G{igi,ibi}bytes or centi-T{era,ebi}bytes
++	 * with appropriate rounding, and then print
++	 * 1/100th of those as a decimal.
+ 	 * We allow upto 2048Megabytes before converting to
+-	 * gigabytes, as that shows more precision and isn't
++	 * gigabytes and 2048Gigabytes before converting to
++	 * terabytes, as that shows more precision and isn't
+ 	 * too large a number.
+-	 * Terabytes are not yet handled.
+ 	 */
+ 
+ 	if (bytes < 5000*1024)
+@@ -909,11 +914,16 @@ char *human_size(long long bytes)
+ 		long cMB  = (bytes / ( 1000000LL / 200LL ) +1) /2;
+ 		snprintf(buf, sizeof(buf), " (%ld.%02ld MiB %ld.%02ld MB)",
+ 			cMiB/100, cMiB % 100, cMB/100, cMB % 100);
+-	} else {
++	} else if (bytes < 2*1024LL*1024LL*1024LL*1024LL) {
+ 		long cGiB = (bytes * 200LL / (1LL<<30) +1) / 2;
+ 		long cGB  = (bytes / (1000000000LL/200LL ) +1) /2;
+ 		snprintf(buf, sizeof(buf), " (%ld.%02ld GiB %ld.%02ld GB)",
+ 			cGiB/100, cGiB % 100, cGB/100, cGB % 100);
++	} else {
++		long cTiB = (bytes * 200LL / (1LL<<40) + 1) / 2;
++		long cTB  = (bytes / (1000000000000LL / 200LL) + 1) / 2;
++		snprintf(buf, sizeof(buf), " (%ld.%02ld TiB %ld.%02ld TB)",
++			cTiB/100, cTiB % 100, cTB/100, cTB % 100);
+ 	}
+ 	return buf;
+ }
+@@ -922,13 +932,14 @@ char *human_size_brief(long long bytes, int prefix)
+ {
+ 	static char buf[30];
+ 
+-	/* We convert bytes to either centi-M{ega,ibi}bytes or
+-	 * centi-G{igi,ibi}bytes, with appropriate rounding,
+-	 * and then print 1/100th of those as a decimal.
++	/* We convert bytes to either centi-M{ega,ibi}bytes,
++	 * centi-G{igi,ibi}bytes or centi-T{era,ebi}bytes
++	 * with appropriate rounding, and then print
++	 * 1/100th of those as a decimal.
+ 	 * We allow upto 2048Megabytes before converting to
+-	 * gigabytes, as that shows more precision and isn't
++	 * gigabytes and 2048Gigabytes before converting to
++	 * terabytes, as that shows more precision and isn't
+ 	 * too large a number.
+-	 * Terabytes are not yet handled.
+ 	 *
+ 	 * If prefix == IEC, we mean prefixes like kibi,mebi,gibi etc.
+ 	 * If prefix == JEDEC, we mean prefixes like kilo,mega,giga etc.
+@@ -941,10 +952,14 @@ char *human_size_brief(long long bytes, int prefix)
+ 			long cMiB = (bytes * 200LL / (1LL<<20) +1) /2;
+ 			snprintf(buf, sizeof(buf), "%ld.%02ldMiB",
+ 				 cMiB/100, cMiB % 100);
+-		} else {
++		} else if (bytes < 2*1024LL*1024LL*1024LL*1024LL) {
+ 			long cGiB = (bytes * 200LL / (1LL<<30) +1) /2;
+ 			snprintf(buf, sizeof(buf), "%ld.%02ldGiB",
+ 				 cGiB/100, cGiB % 100);
++		} else {
++			long cTiB = (bytes * 200LL / (1LL<<40) + 1) / 2;
++			snprintf(buf, sizeof(buf), "%ld.%02ldTiB",
++				 cTiB/100, cTiB % 100);
+ 		}
+ 	}
+ 	else if (prefix == JEDEC) {
+@@ -952,10 +967,14 @@ char *human_size_brief(long long bytes, int prefix)
+ 			long cMB  = (bytes / ( 1000000LL / 200LL ) +1) /2;
+ 			snprintf(buf, sizeof(buf), "%ld.%02ldMB",
+ 				 cMB/100, cMB % 100);
+-		} else {
++		} else if (bytes < 2*1024LL*1024LL*1024LL*1024LL) {
+ 			long cGB  = (bytes / (1000000000LL/200LL ) +1) /2;
+ 			snprintf(buf, sizeof(buf), "%ld.%02ldGB",
+ 				 cGB/100, cGB % 100);
++		} else {
++			long cTB  = (bytes / (1000000000000LL / 200LL) + 1) / 2;
++			snprintf(buf, sizeof(buf), "%ld.%02ldTB",
++				 cTB/100, cTB % 100);
+ 		}
+ 	}
+ 	else
+-- 
+2.16.4
 
-1. My original intention was to find the files residing on top of
-corrupted blocks and then restore (rewrite) them using the data
-recovered from the intact replica.
-2. From my experience, an MD array may start re-syncing automatically
-at system boot, and this is what I'd rather avoid -- I want to proceed
-through all the steps manually, fully understanding what I is being
-done.
-
-> >
-> > If you have any other recommendations on how to interactively repair
-> > the array (I want to be able to peek at the data being synced),
-> > I'd appreciate you sharing them.
-> >
-> My inclination (no warranty included!) would be to shut down the array,
-> then assemble it with "/dev/sda1 missing" and --force if necessary. fsck
-> that, then rinse and repeat with the second drive.
->
-> Assuming neither drive has problems, you should then be able to assemble
-> --assume-clean, which will prevent the sync, otherwise you'll have to
-> just re-add the duff drive and let it resync.
->
-> (In other words, why worry about the resync, because if you find the
-> problem then you're going to have to resync to fix it, anyway.)
-
-Thanks, will try that.
-
-Does it make any sense to backup the superblocks of the replicas (e.
-g.: using `dd`)?
-And if so, then what precautions should be made before restoring the
-superblock from a backup?
-
-> Hint - look at dm-integrity. I believe you can put the integrity
-> information elsewhere (if you've got a spare bit of disk space) so this
-> issue won't arise again. It's new with raid, but apparently works fine
-> with raid-1. Don't try it with the higher raids - 5 or 6 - yet.
-
-Thanks, I'll give it a try.
-
-Regards,
-Andrey.
