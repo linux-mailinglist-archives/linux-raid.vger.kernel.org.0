@@ -2,57 +2,62 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D43714830C
-	for <lists+linux-raid@lfdr.de>; Fri, 24 Jan 2020 12:33:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C62F5148693
+	for <lists+linux-raid@lfdr.de>; Fri, 24 Jan 2020 15:10:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404529AbgAXLc7 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 24 Jan 2020 06:32:59 -0500
-Received: from mail.megasuccess.eu ([212.237.8.43]:58260 "EHLO
-        mail.megasuccess.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404521AbgAXLc6 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 24 Jan 2020 06:32:58 -0500
-X-Greylist: delayed 580 seconds by postgrey-1.27 at vger.kernel.org; Fri, 24 Jan 2020 06:32:58 EST
-Received: by mail.megasuccess.eu (Postfix, from userid 1001)
-        id 9A485A2292; Fri, 24 Jan 2020 11:22:27 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megasuccess.eu;
-        s=mail; t=1579864995;
-        bh=umPvfxz8s00qCGzmwF6aXrKlGUMk56yjRngPa79Wwj0=;
-        h=Date:From:To:Subject:From;
-        b=l9/5Oa6cprEW6f0BmozlaM8V66oifc22hJ+9NhqtA2LePSJDYldfdTtk9gjvnO7aM
-         NSBTp6gbdW8dR/ukHmxM0tFBR+xObkbVkXq5bwnfH4eFzmDAAyrOnLf9u8VnoEzHCk
-         apxobg0aSc+bRaQeQ+RgckWolKwZwQ8giKy7cwj9fbV4zcOqxWEHP5sd9dzcKOeSWf
-         CbgpqIyLbobbO+c1jixnxfiXeXQTVxdZBq4YLg249pfPX5BTQCPv3TMSJZohj6VN8Y
-         23WNFwdvTI98/6zVeCUBSWDDs7On5vQkdgLhMhBAK0PD2t7rOOT3dliim7IXykwSs/
-         xZwTFudWCDlvg==
-Received: by mail.megasuccess.eu for <linux-raid@vger.kernel.org>; Fri, 24 Jan 2020 11:22:04 GMT
-Message-ID: <20200124112123-0.1.o.16fk.0.zo2lrkpia6@megasuccess.eu>
-Date:   Fri, 24 Jan 2020 11:22:04 GMT
-From:   "Nathalie Benoit" <n.benoit@megasuccess.eu>
-To:     <linux-raid@vger.kernel.org>
-Subject: =?UTF-8?Q?Productivit=C3=A9_de_votre_flotte?=
-X-Mailer: mail.megasuccess.eu
+        id S2389836AbgAXOKD (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 24 Jan 2020 09:10:03 -0500
+Received: from icebox.esperi.org.uk ([81.187.191.129]:57632 "EHLO
+        mail.esperi.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387482AbgAXOKD (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 24 Jan 2020 09:10:03 -0500
+Received: from loom (nix@sidle.srvr.nix [192.168.14.8])
+        by mail.esperi.org.uk (8.15.2/8.15.2) with ESMTP id 00OEA05m024849;
+        Fri, 24 Jan 2020 14:10:00 GMT
+From:   Nix <nix@esperi.org.uk>
+To:     "Wol's lists" <antlists@youngman.org.uk>
+Cc:     William Morgan <therealbrewer@gmail.com>,
+        linux-raid@vger.kernel.org
+Subject: Re: Two raid5 arrays are inactive and have changed UUIDs
+References: <CALc6PW4OKR2KVFgzoEbRJ0TRwvqi5EZAdC__HOx+vJKMT0TXYQ@mail.gmail.com>
+        <959ca414-0c97-2e8d-7715-a7cb75790fcd@youngman.org.uk>
+        <CALc6PW7276uYYWpL7j2xsFJRy3ayZeeSJ9kNCGHvB6Ndb6m1-Q@mail.gmail.com>
+        <5E17D999.5010309@youngman.org.uk>
+        <CALc6PW5DrTkVR7rLngDcJ5i8kTpqfT1-K+ki-WjnXAYP5TXXZg@mail.gmail.com>
+        <CALc6PW7hwT9VDNyA8wfMzjMoUFmrFV5z=Ve+qvR-P7CPstegvw@mail.gmail.com>
+        <5E1DDCFC.1080105@youngman.org.uk>
+        <CALc6PW5Y-SvUZ5HOWZLk2YcggepUwK0N===G=42uMR88pDfAVA@mail.gmail.com>
+        <5E1FA3E6.2070303@youngman.org.uk>
+        <CALc6PW4-yMdprmube0bKku0FJVKghYt4tjhep26sy3F9Q5cB4g@mail.gmail.com>
+        <5E2494B3.9010006@youngman.org.uk>
+        <CALc6PW6r8jn7nJcq-ceTboRkP5TYj0863bo856SS3TAus0mTSA@mail.gmail.com>
+        <917bd12e-3b76-2f27-8340-686dd71b1408@youngman.org.uk>
+Emacs:  the definitive fritterware.
+Date:   Fri, 24 Jan 2020 14:10:00 +0000
+In-Reply-To: <917bd12e-3b76-2f27-8340-686dd71b1408@youngman.org.uk> (Wol's
+        lists's message of "Sun, 19 Jan 2020 21:10:40 +0000")
+Message-ID: <87y2txvtc7.fsf@esperi.org.uk>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.50 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-DCC--Metrics: loom 1102; Body=3 Fuz1=3 Fuz2=3
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Bonjour,
+On 19 Jan 2020, Wol's lists verbalised:
+> It would be nice if we had some decent docu on what all these assorted id's and uuid's and all that were, but I haven't managed to
+> find any. Probably somewhere in the info pages for grub - given that I really don't like hypertext the fact that grub docu is very
+> much hypertext is rather off-putting ...
 
-Je souhaiterais vous pr=C3=A9senter bri=C3=A8vement une solution de gesti=
-on de flotte qui pourrait vous aider =C3=A0 augmenter la productivit=C3=A9=
- de votre entreprise.
+It's just perfectly ordinary Texinfo. There are lots of non-hypertext
+output formats, e.g. plain text:
+<https://www.gnu.org/software/grub/manual/grub/grub.txt.gz> or DVI:
+<https://www.gnu.org/software/grub/manual/grub/grub.dvi.gz>. (Though the
+DVI, like the PDF, contains specials that can implement hyperlinks if
+your viewer can render them, I'm fairly sure the plain text version
+doesn't.)
 
-Vous souhaitez traiter plus de commandes ? Am=C3=A9liorer la planificatio=
-n de vos interventions/livraison et r=C3=A9agir vite en cas d=E2=80=99imp=
-r=C3=A9vu ? R=C3=A9duire vos co=C3=BBts de carburant ? Augmenter la satis=
-faction de vos clients ?
-
-Contactez-moi d=C3=A8s aujourd=E2=80=99hui pour en savoir plus et b=C3=A9=
-n=C3=A9ficier d=E2=80=99une d=C3=A9monstration gratuite
-
-
-Cordialement,
-Nathalie Benoit
+-- 
+NULL && (void)
