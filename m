@@ -2,101 +2,116 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BBB2A14A54C
-	for <lists+linux-raid@lfdr.de>; Mon, 27 Jan 2020 14:42:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A2BE14A72C
+	for <lists+linux-raid@lfdr.de>; Mon, 27 Jan 2020 16:26:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbgA0Nmv (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 27 Jan 2020 08:42:51 -0500
-Received: from us.icdsoft.com ([192.252.146.184]:54250 "EHLO us.icdsoft.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725990AbgA0Nmv (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 27 Jan 2020 08:42:51 -0500
-Received: (qmail 24713 invoked by uid 1001); 27 Jan 2020 13:42:50 -0000
-Received: from 45.98.145.213.in-addr.arpa (HELO ?213.145.98.45?) (gnikolov@icdsoft.com@213.145.98.45)
-  by 192.252.159.165 with ESMTPA; 27 Jan 2020 13:42:50 -0000
-To:     song@kernel.org
-Cc:     linux-raid@vger.kernel.org
-From:   Georgi Nikolov <gnikolov@icdsoft.com>
-Subject: Pausing md check hangs
-Message-ID: <2ce8813c-fd3e-5e78-39ac-049ddfa79ff6@icdsoft.com>
-Date:   Mon, 27 Jan 2020 15:42:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1729396AbgA0P01 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 27 Jan 2020 10:26:27 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25559 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729146AbgA0P00 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 27 Jan 2020 10:26:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580138786;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=3MHwEnmX+Xgwqww0FNEQ1SuxG06m7GkK77ivzDYVq+Q=;
+        b=ftNn5sJCKa5PAJrQJi0RQlCLpMFEDPsT7NQ6GzmMoC2tP4QseeK/xC74OsL+6niTXeD88J
+        v3uaxdruOV5uEJdRFbkbWxHRtnWUBpXFiPIdTg3JbCzO4mOTvNimTeul5v1vkpir5xR3o9
+        Ha9T650dWeXlP+6n/vHhqnqBw4/bzg0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-326-tNky1pSuM3Ge8B4ZKHs8Yg-1; Mon, 27 Jan 2020 10:26:22 -0500
+X-MC-Unique: tNky1pSuM3Ge8B4ZKHs8Yg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D4C2D7A62A;
+        Mon, 27 Jan 2020 15:26:21 +0000 (UTC)
+Received: from redhat (ovpn-123-160.rdu2.redhat.com [10.10.123.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 73D875DA66;
+        Mon, 27 Jan 2020 15:26:21 +0000 (UTC)
+Date:   Mon, 27 Jan 2020 10:26:19 -0500
+From:   David Jeffery <djeffery@redhat.com>
+To:     linux-raid@vger.kernel.org
+Cc:     Song Liu <song@kernel.org>
+Subject: [PATCH] md/raid1: release pending accounting for an I/O only after
+ write-behind is also finished
+Message-ID: <20200127152619.GA3596@redhat>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi,
+When using RAID1 and write-behind, md can deadlock when errors occur. With
+write-behind, r1bio structs can be accounted by raid1 as queued but not
+counted as pending. The pending count is dropped when the original bio is
+returned complete but write-behind for the r1bio may still be active.
 
-I posted a kernel bug about this a month ago but it did not receive any 
-attention: https://bugzilla.kernel.org/show_bug.cgi?id=205929
-Here is a copy of the bug report and I hope that this is the correct 
-place to discuss this:
+This breaks the accounting used in some conditions to know when the raid1
+md device has reached an idle state. It can result in calls to
+freeze_array deadlocking. freeze_array will never complete from a negative
+"unqueued" value being calculated due to a queued count larger than the
+pending count.
 
-I have a Supermicro server with 10 md raid6 arrays each consisting of 8 
-SATA drives. SATA drives are Hitachi/HGST Ultrastar 7K4000 8T.
-When i try to pause array check with "echo idle > 
-"/sys/block/<md_dev>/md/sync_action" it randomly hangs at different md 
-device.
-Process "mdX_raid6" is at 100% cpu usage. cat 
-/sys/block/mdX/md/journal_mode hungs forever.
+To properly account for write-behind, move the call to allow_barrier from
+call_bio_endio to raid_end_bio_io. When using write-behind, md can call
+call_bio_endio before all write-behind I/O is complete. Using
+raid_end_bio_io for the point to call allow_barrier will release the
+pending count at a point where all I/O for an r1bio, even write-behind, is
+done.
 
-Here is the state at the moment of crash for one of the md devices:
+Signed-off-by: David Jeffery <djeffery@redhat.com>
+---
 
-root@supermicro:/sys/block/mdX/md# find -mindepth 1 -maxdepth 1 -type 
-f|sort|grep -v journal_mode|xargs -r egrep .
-./array_size:default
-./array_state:write-pending
-grep: ./bitmap_set_bits: Permission denied
-./chunk_size:524288
-./component_size:7813895168
-./consistency_policy:resync
-./degraded:0
-./group_thread_cnt:4
-./last_sync_action:check
-./layout:2
-./level:raid6
-./max_read_errors:20
-./metadata_version:1.2
-./mismatch_cnt:0
-grep: ./new_dev: Permission denied
-./preread_bypass_threshold:1
-./raid_disks:8
-./reshape_direction:forwards
-./reshape_position:none
-./resync_start:none
-./rmw_level:1
-./safe_mode_delay:0.204
-./skip_copy:0
-./stripe_cache_active:13173
-./stripe_cache_size:8192
-./suspend_hi:0
-./suspend_lo:0
-./sync_action:check
-./sync_completed:3566405120 / 15627790336
-./sync_force_parallel:0
-./sync_max:max
-./sync_min:1821385984
-./sync_speed:126
-./sync_speed_max:1000 (local)
-./sync_speed_min:1000 (system)
-
-root@supermicro:~# cat /proc/mdstat
-Personalities : [raid1] [linear] [multipath] [raid0] [raid6] [raid5] 
-[raid4] [raid10]
-md4 : active raid6 sdaa[2] sdab[3] sdy[0] sdae[6] sdac[4] sdad[5] 
-sdaf[7] sdz[1]
-       46883371008 blocks super 1.2 level 6, 512k chunk, algorithm 2 
-[8/8] [UUUUUUUU]
-       [====>................]  check = 22.8% (1784112640/7813895168) 
-finish=20571.7min speed=4884K/sec
+ raid1.c |   13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
 
-Regards,
-Georgi Nikolov
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 201fd8aec59a..0196a9d9f7e9 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -279,22 +279,17 @@ static void reschedule_retry(struct r1bio *r1_bio)
+ static void call_bio_endio(struct r1bio *r1_bio)
+ {
+ 	struct bio *bio = r1_bio->master_bio;
+-	struct r1conf *conf = r1_bio->mddev->private;
+ 
+ 	if (!test_bit(R1BIO_Uptodate, &r1_bio->state))
+ 		bio->bi_status = BLK_STS_IOERR;
+ 
+ 	bio_endio(bio);
+-	/*
+-	 * Wake up any possible resync thread that waits for the device
+-	 * to go idle.
+-	 */
+-	allow_barrier(conf, r1_bio->sector);
+ }
+ 
+ static void raid_end_bio_io(struct r1bio *r1_bio)
+ {
+ 	struct bio *bio = r1_bio->master_bio;
++	struct r1conf *conf = r1_bio->mddev->private;
+ 
+ 	/* if nobody has done the final endio yet, do it now */
+ 	if (!test_and_set_bit(R1BIO_Returned, &r1_bio->state)) {
+@@ -305,6 +300,12 @@ static void raid_end_bio_io(struct r1bio *r1_bio)
+ 
+ 		call_bio_endio(r1_bio);
+ 	}
++	/*
++	 * Wake up any possible resync thread that waits for the device
++	 * to go idle.  All I/Os, even write-behind writes, are done.
++	 */
++	allow_barrier(conf, r1_bio->sector);
++
+ 	free_r1bio(r1_bio);
+ }
+ 
 
