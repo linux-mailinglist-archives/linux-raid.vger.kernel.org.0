@@ -2,29 +2,29 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C8AE14A158
-	for <lists+linux-raid@lfdr.de>; Mon, 27 Jan 2020 10:58:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BBB2A14A54C
+	for <lists+linux-raid@lfdr.de>; Mon, 27 Jan 2020 14:42:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbgA0J6q (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 27 Jan 2020 04:58:46 -0500
-Received: from us.icdsoft.com ([192.252.146.184]:60906 "EHLO us.icdsoft.com"
+        id S1727453AbgA0Nmv (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 27 Jan 2020 08:42:51 -0500
+Received: from us.icdsoft.com ([192.252.146.184]:54250 "EHLO us.icdsoft.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726858AbgA0J6q (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 27 Jan 2020 04:58:46 -0500
-Received: (qmail 4371 invoked by uid 1001); 27 Jan 2020 09:52:05 -0000
+        id S1725990AbgA0Nmv (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 27 Jan 2020 08:42:51 -0500
+Received: (qmail 24713 invoked by uid 1001); 27 Jan 2020 13:42:50 -0000
 Received: from 45.98.145.213.in-addr.arpa (HELO ?213.145.98.45?) (gnikolov@icdsoft.com@213.145.98.45)
-  by 192.252.159.165 with ESMTPA; 27 Jan 2020 09:52:05 -0000
-To:     shli@kernel.org, linux-raid@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+  by 192.252.159.165 with ESMTPA; 27 Jan 2020 13:42:50 -0000
+To:     song@kernel.org
+Cc:     linux-raid@vger.kernel.org
 From:   Georgi Nikolov <gnikolov@icdsoft.com>
 Subject: Pausing md check hangs
-Message-ID: <01ea67c2-244c-0427-0be7-c565fac97092@icdsoft.com>
-Date:   Mon, 27 Jan 2020 11:52:03 +0200
+Message-ID: <2ce8813c-fd3e-5e78-39ac-049ddfa79ff6@icdsoft.com>
+Date:   Mon, 27 Jan 2020 15:42:48 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
@@ -38,13 +38,18 @@ attention: https://bugzilla.kernel.org/show_bug.cgi?id=205929
 Here is a copy of the bug report and I hope that this is the correct 
 place to discuss this:
 
-I have a Supermicro server with 10 md raid6 arrays each consisting of 8 SATA drives. SATA drives are Hitachi/HGST Ultrastar 7K4000 8T.
-When i try to pause array check with "echo idle > "/sys/block/<md_dev>/md/sync_action" it randomly hangs at different md device.
-Process "mdX_raid6" is at 100% cpu usage. cat /sys/block/mdX/md/journal_mode hungs forever.
+I have a Supermicro server with 10 md raid6 arrays each consisting of 8 
+SATA drives. SATA drives are Hitachi/HGST Ultrastar 7K4000 8T.
+When i try to pause array check with "echo idle > 
+"/sys/block/<md_dev>/md/sync_action" it randomly hangs at different md 
+device.
+Process "mdX_raid6" is at 100% cpu usage. cat 
+/sys/block/mdX/md/journal_mode hungs forever.
 
 Here is the state at the moment of crash for one of the md devices:
 
-root@supermicro:/sys/block/mdX/md# find -mindepth 1 -maxdepth 1 -type f|sort|grep -v journal_mode|xargs -r egrep .
+root@supermicro:/sys/block/mdX/md# find -mindepth 1 -maxdepth 1 -type 
+f|sort|grep -v journal_mode|xargs -r egrep .
 ./array_size:default
 ./array_state:write-pending
 grep: ./bitmap_set_bits: Permission denied
@@ -82,10 +87,14 @@ grep: ./new_dev: Permission denied
 ./sync_speed_min:1000 (system)
 
 root@supermicro:~# cat /proc/mdstat
-Personalities : [raid1] [linear] [multipath] [raid0] [raid6] [raid5] [raid4] [raid10]
-md4 : active raid6 sdaa[2] sdab[3] sdy[0] sdae[6] sdac[4] sdad[5] sdaf[7] sdz[1]
-       46883371008 blocks super 1.2 level 6, 512k chunk, algorithm 2 [8/8] [UUUUUUUU]
-       [====>................]  check = 22.8% (1784112640/7813895168) finish=20571.7min speed=4884K/sec
+Personalities : [raid1] [linear] [multipath] [raid0] [raid6] [raid5] 
+[raid4] [raid10]
+md4 : active raid6 sdaa[2] sdab[3] sdy[0] sdae[6] sdac[4] sdad[5] 
+sdaf[7] sdz[1]
+       46883371008 blocks super 1.2 level 6, 512k chunk, algorithm 2 
+[8/8] [UUUUUUUU]
+       [====>................]  check = 22.8% (1784112640/7813895168) 
+finish=20571.7min speed=4884K/sec
 
 
 Regards,
