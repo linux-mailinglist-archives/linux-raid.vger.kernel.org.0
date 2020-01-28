@@ -2,44 +2,45 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E1F5314BF20
-	for <lists+linux-raid@lfdr.de>; Tue, 28 Jan 2020 19:04:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B1ED914C09F
+	for <lists+linux-raid@lfdr.de>; Tue, 28 Jan 2020 20:08:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgA1SEP (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 28 Jan 2020 13:04:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46434 "EHLO mail.kernel.org"
+        id S1727169AbgA1TIh (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 28 Jan 2020 14:08:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbgA1SEO (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 28 Jan 2020 13:04:14 -0500
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+        id S1727177AbgA1TIh (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 28 Jan 2020 14:08:37 -0500
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCCC322522
-        for <linux-raid@vger.kernel.org>; Tue, 28 Jan 2020 18:04:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A86820CC7
+        for <linux-raid@vger.kernel.org>; Tue, 28 Jan 2020 19:08:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580234654;
-        bh=MP+R/Zov678VqWsHKV3RvXEUXFrOM/ceRE+7s1iGBmY=;
+        s=default; t=1580238516;
+        bh=jkFTx6B6oy02ecRn0cK1SY6RFYszqK7jZh+SDaYZ2JU=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=C9htH62qUnHV/jl2K+q16Jx9hComTeiBQLjROyLXTokmMEMRgkJ7opGO7s6EXQR3S
-         SI2glkoK0OhsVYOtVCU7Azm3AO+m+52hzbcOygSp24qwuZCfQPUoZPl6OKKp+rVdg2
-         mqO5IAODBc/7lDW3u8YfeTQf1CYcD3W4iF/6qZGE=
-Received: by mail-lj1-f173.google.com with SMTP id x14so13297428ljd.13
-        for <linux-raid@vger.kernel.org>; Tue, 28 Jan 2020 10:04:13 -0800 (PST)
-X-Gm-Message-State: APjAAAUoGm9rnkvrE55RtsD/2KPwepw9qPkUi16mLO3IlNrMEUeGUfLh
-        i1HbZOQ4QfiWccOVvHxJqe58aioV25/HYRqXjxc=
-X-Google-Smtp-Source: APXvYqx/lY3J/G84B+4I3NDopSxvrwySdkhYxtZ9JfLsxIRcfF0xBrbQWSbqDMdh5yw3WC0nxWpW+VP4lBJlw3s6Gfk=
-X-Received: by 2002:a2e:9183:: with SMTP id f3mr13932883ljg.64.1580234651671;
- Tue, 28 Jan 2020 10:04:11 -0800 (PST)
+        b=vpPsuibGukQ2L4KSXdJvMO1snuMQH+L2Abu3QbqVpYxjcJVvBMw2p5b3pjtlEOqVx
+         +oKGeUWwGn5Nb+p+9UJssZekqzFI1fippBfrxzV0BBlQ9VhWeoID3GQJMk5Qu94R0x
+         9WXebQ77B0Kdh6e9EHKWzZ3jMcH5uEbqd7We/puo=
+Received: by mail-lf1-f43.google.com with SMTP id l18so9978125lfc.1
+        for <linux-raid@vger.kernel.org>; Tue, 28 Jan 2020 11:08:36 -0800 (PST)
+X-Gm-Message-State: APjAAAVF01NhjQr/QSBZZQ0VL2YHRGJxzm7dMC00t5YSY7OPPbY9Sy7e
+        LNb8c0R5VmOLOlj2Fp/hNCclhBHu2WIN+WVd/no=
+X-Google-Smtp-Source: APXvYqxkoFvAvFGG/L0wG2qy2WdDDFPCPe6VZwyi28MdEWm1NEvSLcn1o4q53BKdSIPt7ckm60wUaBt65KLOr+874Do=
+X-Received: by 2002:ac2:5612:: with SMTP id v18mr3004998lfd.172.1580238514523;
+ Tue, 28 Jan 2020 11:08:34 -0800 (PST)
 MIME-Version: 1.0
-References: <2ce8813c-fd3e-5e78-39ac-049ddfa79ff6@icdsoft.com>
- <CAPhsuW4Jc-qef9uW-JSut90qOpDc_4VoAFpMU8KwqnK7EeT_xg@mail.gmail.com> <ac3ae81d-8dad-8b4e-bc61-fc37514e3929@icdsoft.com>
-In-Reply-To: <ac3ae81d-8dad-8b4e-bc61-fc37514e3929@icdsoft.com>
+References: <20200127152619.GA3596@redhat> <CAPhsuW628WHm_Rifm9uMPeH+mwmeH121p85KbgvLt+SQTngW4A@mail.gmail.com>
+ <CA+-xHTGJr5M9Ge1MCPPZWueM56Ap5=qcsG0KkddBMJOCAOWWpw@mail.gmail.com>
+In-Reply-To: <CA+-xHTGJr5M9Ge1MCPPZWueM56Ap5=qcsG0KkddBMJOCAOWWpw@mail.gmail.com>
 From:   Song Liu <song@kernel.org>
-Date:   Tue, 28 Jan 2020 10:04:00 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW4JJiDroE33m0=XE9PxtUOncK3--waY_zxxbAT9j+1m6g@mail.gmail.com>
-Message-ID: <CAPhsuW4JJiDroE33m0=XE9PxtUOncK3--waY_zxxbAT9j+1m6g@mail.gmail.com>
-Subject: Re: Pausing md check hangs
-To:     Georgi Nikolov <gnikolov@icdsoft.com>
+Date:   Tue, 28 Jan 2020 11:08:23 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW7XJzdWxkLDbRG9VS3BJB6qaAoEC_sDOtMRaw1ZvMj1dw@mail.gmail.com>
+Message-ID: <CAPhsuW7XJzdWxkLDbRG9VS3BJB6qaAoEC_sDOtMRaw1ZvMj1dw@mail.gmail.com>
+Subject: Re: [PATCH] md/raid1: release pending accounting for an I/O only
+ after write-behind is also finished
+To:     David Jeffery <djeffery@redhat.com>
 Cc:     linux-raid <linux-raid@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
@@ -47,19 +48,71 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 12:11 AM Georgi Nikolov <gnikolov@icdsoft.com> wrote:
+On Mon, Jan 27, 2020 at 11:56 AM David Jeffery <djeffery@redhat.com> wrote:
 >
-> Yes the kernel is 4.19.67-2+deb10u2. I have tried with 5.4.8-1~bpo10+1
-> and same thing happened.
-> Before this i have used same thing for a long time with kernel 4.9.189-3.
-> It happens most often when there is some heavy IO.
+> On Mon, Jan 27, 2020 at 12:29 PM Song Liu <song@kernel.org> wrote:
+> >
+> > On Mon, Jan 27, 2020 at 7:26 AM David Jeffery <djeffery@redhat.com> wrote:
+> > >
+> > > When using RAID1 and write-behind, md can deadlock when errors occur. With
+> > > write-behind, r1bio structs can be accounted by raid1 as queued but not
+> > > counted as pending. The pending count is dropped when the original bio is
+> > > returned complete but write-behind for the r1bio may still be active.
+> > >
+> > > This breaks the accounting used in some conditions to know when the raid1
+> > > md device has reached an idle state. It can result in calls to
+> > > freeze_array deadlocking. freeze_array will never complete from a negative
+> > > "unqueued" value being calculated due to a queued count larger than the
+> > > pending count.
+> > >
+> > > To properly account for write-behind, move the call to allow_barrier from
+> > > call_bio_endio to raid_end_bio_io. When using write-behind, md can call
+> > > call_bio_endio before all write-behind I/O is complete. Using
+> > > raid_end_bio_io for the point to call allow_barrier will release the
+> > > pending count at a point where all I/O for an r1bio, even write-behind, is
+> > > done.
+> > >
+> > > Signed-off-by: David Jeffery <djeffery@redhat.com>
+> > > ---
+> > >
+> > >  raid1.c |   13 +++++++------
+> > >  1 file changed, 7 insertions(+), 6 deletions(-)
+> > >
+> > >
+> > > diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+> > > index 201fd8aec59a..0196a9d9f7e9 100644
+> > > --- a/drivers/md/raid1.c
+> > > +++ b/drivers/md/raid1.c
+> > > @@ -279,22 +279,17 @@ static void reschedule_retry(struct r1bio *r1_bio)
+> > >  static void call_bio_endio(struct r1bio *r1_bio)
+> > >  {
+> > >         struct bio *bio = r1_bio->master_bio;
+> > > -       struct r1conf *conf = r1_bio->mddev->private;
+> > >
+> > >         if (!test_bit(R1BIO_Uptodate, &r1_bio->state))
+> > >                 bio->bi_status = BLK_STS_IOERR;
+> > >
+> > >         bio_endio(bio);
+> > > -       /*
+> > > -        * Wake up any possible resync thread that waits for the device
+> > > -        * to go idle.
+> > > -        */
+> > > -       allow_barrier(conf, r1_bio->sector);
+> >
+> > raid1_end_write_request() also calls call_bio_endio(). Do we need to fix
+> > that?
+>
+> This basically is the problem the patch is fixing.  We don't want
+> allow_barrier() being called when call_bio_endio() is called directly
+> from raid1_end_write_request().  Write-behind can still be active here
+> so it was dropping the pending accounting too early.  We only want it
+> called when all I/O for the r1bio is complete, which shifting the
+> allow_barrier() call to raid_end_bio_io() does.
 
-Thanks for the information. I suspect the hang is waiting for md_lock().
+Thanks for the explanation. This looks good to me. I will process it
+after the merge window.
 
-Could you please dump the mdX_raid6 stack when the hang happens?
-You can do it by:
+I will also re-evaluate whether we need it for stable.
 
-    cat /proc/$(pidof mdX_raid6)/stack
-
-Thanks,
+Thanks again,
 Song
