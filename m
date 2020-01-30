@@ -2,93 +2,123 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0889514D31A
-	for <lists+linux-raid@lfdr.de>; Wed, 29 Jan 2020 23:32:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EEBF514D574
+	for <lists+linux-raid@lfdr.de>; Thu, 30 Jan 2020 05:02:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgA2WcR (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 29 Jan 2020 17:32:17 -0500
-Received: from mail-ot1-f43.google.com ([209.85.210.43]:34512 "EHLO
-        mail-ot1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbgA2WcR (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 29 Jan 2020 17:32:17 -0500
-Received: by mail-ot1-f43.google.com with SMTP id a15so1269341otf.1
-        for <linux-raid@vger.kernel.org>; Wed, 29 Jan 2020 14:32:17 -0800 (PST)
+        id S1726774AbgA3EBy (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 29 Jan 2020 23:01:54 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41311 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbgA3EBx (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 29 Jan 2020 23:01:53 -0500
+Received: by mail-pf1-f193.google.com with SMTP id w62so773872pfw.8
+        for <linux-raid@vger.kernel.org>; Wed, 29 Jan 2020 20:01:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-transfer-encoding:content-language;
-        bh=ceXV6PVS2rNd2v4spBbYfooMIfBC49B2iFSQjROScsU=;
-        b=p2NRaFJIAICFq43Xey4GFfeexlxg0wh9syYo/6AZbcLaVU21tR2KhwACr1leu1tuaS
-         E6c8Xc81m/18AvWHfhAyJrVVUwOSDqizObcsBejY/XUA3VW/o6oe4hrT//9RFgVeaL4D
-         af1kCpl1pilCAbc5A87oZbUZ8mhhnb5OVl5uFqm5gnIPLjVw3D4qxRLsG0vJJJfIXbfK
-         Zo1p/A4ZJkU6+quv50kgipNUCDqU6EfWfU1AkHMlFJlNPtkptVmm37UhXxedSIJDjgOb
-         08oQxFebH5KE+pCPkazYRqrTTvmWGjn25qRqQ9yAH3uMmxXmg+7fFATdsJisq86pXbZV
-         HnxA==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0l4DJgLIXCRFuUpZPD/nKDAWnBZ6DMkiOzCjCg1IyjQ=;
+        b=nOV1KCwvZk8F8XYCa/VmcUCXfHHQXvNM2Eup4z+qNijEjBmCuH+O6eH2CzRyZlutym
+         9blVkqZPAXjDOyM725E6EP3GaiUmFOIr3mNRc3V8lNzanZG1gD9p4/cZdKgmS2qpQzwf
+         kmvA2KU6G/Q+VVPhgFrGsbZXJw63PKricNKPbI4RpbY6gIch0gv6NYi2a1heaJzdSZj9
+         zSLMpqYnZqyb0+XZuDs1gMDU49JyeDyvPX00pdrj/N00tGDHc/w7wolkfYRR9c8CYqxO
+         qc7fWFHSeQgS7GWnnLqte/TabZiE8UKYk/Qbv960jbGNdBYrXPPt9C7mmdDfdeHCtjGH
+         RnVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=ceXV6PVS2rNd2v4spBbYfooMIfBC49B2iFSQjROScsU=;
-        b=HLJeHe1dQzFucmE3pqRaKxh96kBv8Nzw3xmygswbEmx4Z3PixFHVYkmx5axo3Qov5m
-         NkvQ4a1nmyLbFf90RCdtY7Xm2gBRH8z8PoUT4JktIabzhr6rZlmnVmSE0lrNJmWHFfGd
-         KPVcYnCPSYRxHYM2zumHLkdDssb/etIx3k2aizmxqvWbTWO0YaEKE/Qe8HH1p/w52+8o
-         /DFZjvc07EDP4NcOe0RQ7e6MJiVSjsFg9NXfLnyT5xC0sEVNGI+E345iH1I+by+Al6lS
-         XIS9QRmNPiAOB7+q4BBmQGsgf3annF5MNZBHRypq8H6kZV/9skawWO+1UBVT7At5fJ+3
-         Tf2A==
-X-Gm-Message-State: APjAAAUjXiKmfR4UxJKSmmEm9CyDAMUTRNa58DYjo9f7NNa7Bj2aRpP8
-        7JqaxTZFu6+KxHnuC46ABCL4Uj45
-X-Google-Smtp-Source: APXvYqzjQEuqs2aJ+UpfdTfwU2aSgRphl52QXHl/qSc8XXItp8tF7dMErnpsC/3rSE0f13WV/C+73A==
-X-Received: by 2002:a9d:4c14:: with SMTP id l20mr1194213otf.125.1580337136522;
-        Wed, 29 Jan 2020 14:32:16 -0800 (PST)
-Received: from [192.168.3.59] ([47.187.193.82])
-        by smtp.googlemail.com with ESMTPSA id b9sm1143358otf.56.2020.01.29.14.32.15
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0l4DJgLIXCRFuUpZPD/nKDAWnBZ6DMkiOzCjCg1IyjQ=;
+        b=HtNB5vmhcxMnoWMFCPgB6l6pnRFQ2a5i3n0ltQCHwJKk6P65TX4qpfTROO+3rbXCPc
+         Lny1W3t8u/YrKfp1hOikprB1R4TtAPukD3arAc2KATBDpz/lvGHDjz+YJvh84nkZvlxh
+         rZR1eTDihkcvodd0lnPRJBAwIZQQiJxGjYSrahjF2XKgJvmqvGP8gnWNHIcl+A9/8xpY
+         SwdMHLDEQ8C3WwaIJ26Hwd0FrLhd2pXEFE85AIF8YwBy9fUMtSCcfKb2h+vW93CcCd5v
+         K6iPq7VQ/25/xOZSGWfqy4XNcN6h0g/O7kuqck2hov13fLyvWpBttgC8aqVKsoutCNAl
+         Jogw==
+X-Gm-Message-State: APjAAAU98NiRO51NnCbF/eXXpVpa/WBb5pj+alqlLg1b8o6iW9KHq70N
+        Cz/NTBFb4FuDWBes6DWuVjND7R0FlT0=
+X-Google-Smtp-Source: APXvYqznUOBPd9Nnnlg3RZXWzXpIt0bdEmhovGPOGqm5DvjPSzJHYLU/2/WcgLsL4qTBw+gCr5wjRg==
+X-Received: by 2002:aa7:93a4:: with SMTP id x4mr3034307pff.42.1580356911747;
+        Wed, 29 Jan 2020 20:01:51 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id a185sm4328733pge.15.2020.01.29.20.01.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jan 2020 14:32:16 -0800 (PST)
-Subject: Re: Is it possible to break one full RAID-1 to two degraded RAID-1?
-To:     Reindl Harald <h.reindl@thelounge.net>,
-        Linux Raid <linux-raid@vger.kernel.org>
-References: <1120831b-13e6-6a5d-8908-ee6a312e7302@gmail.com>
- <aa41492c-1ad7-070f-9bc6-646977364758@thelounge.net>
-From:   Ram Ramesh <rramesh2400@gmail.com>
-Message-ID: <2c4fedff-a1c9-6ca3-5385-72b542a4a0b4@gmail.com>
-Date:   Wed, 29 Jan 2020 16:32:15 -0600
+        Wed, 29 Jan 2020 20:01:51 -0800 (PST)
+Subject: Re: [PATCH 1/2] block: introduce polling on bio level
+To:     Andrzej Jakowski <andrzej.jakowski@linux.intel.com>,
+        song@kernel.org
+Cc:     linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
+        Artur Paszkiewicz <artur.paszkiewicz@intel.com>
+References: <20200126044138.5066-1-andrzej.jakowski@linux.intel.com>
+ <20200126044138.5066-2-andrzej.jakowski@linux.intel.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <de27b35e-a713-dc9d-5164-0397c0dff285@kernel.dk>
+Date:   Wed, 29 Jan 2020 21:01:49 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <aa41492c-1ad7-070f-9bc6-646977364758@thelounge.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200126044138.5066-2-andrzej.jakowski@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 1/28/20 10:09 PM, Reindl Harald wrote:
->
-> Am 29.01.20 um 04:17 schrieb Ram Ramesh:
->> I have my entire debian 9.0 installation (root/usr/home etc) in two nvme
->> RAID-1 mirror. Is it possible to break them in to two degraded arrays?
->>
->> Specifically I want to do this.
->>
->> 1. Break current debian 9 full RAID1 into two degraded RAID1 A & RAID1  B
->> 2. Boot only A and upgrade to debian 10 and make sure it works
->> 3. If it works, add B back into A and get Debian 10 in fully complete RAID1
->> 4. If it does not work, I boot B and add A back and get back debian 9
->>     in full working RAID1
-> i would simply remove one disk completly and in case i want to keep the
-> upgraded system wipe it and resync afterwards or when i want back to the
-> old one put it back and wipe the modified
->
-> full resync, done
+On 1/25/20 9:41 PM, Andrzej Jakowski wrote:
+> In current implementation it is possible to perform IO polling if
+> underlying device is block-mq device. Is is not possible however to do
+> polled IO on stackable block devices like MD.
+> 
+> We have explored two paths for enabling IO polling on bio devices. First
+> idea revolved around rewriting MD to block-mq interface but it proved to
+> be complex. In the second idea we have built a prototype which
+> introduced new operation on request_queue - bio_poll_fn. bio_poll_fn if
+> provided by stackable block driver is called when user polls for IO
+> completion. bio_poll_fn approach was initially discussed and confirmed
+> with Jens.
+> 
+> We managed to collect performance data on RAID-0 volume built on top of
+> 2xP4800X devices with polling on and off. Here are the results:
+> Polling      QD       Latency         IOPS
+> ----------------------------------------------
+> off           1       12.03us         78800
+> off           2       13.27us        144000
+> off           4       15.83us        245000
+> off           8       31.14us        253000
+> off          16       63.03us        252000
+> off          32      128.89us        247000
+> off          64      259.10us        246000
+> off         128      517.27us        247000
+> on            1        9.00us        108000
+> on            2        9.07us        214000
+> on            4       12.00us        327000
+> on            8       21.43us        369000
+> on           16       43.18us        369000
+> on           32       85.75us        372000
+> on           64      169.87us        376000
+> on          128      346.15us        370000
 
-Thanks. I thought of this, but both disk in question are nvme ssd with 
-manually added heat sink. It will be a hassle to remove and reinstall. I 
-think I will go with the back up rather than remove disk physically. I 
-was just exploring if I can avoid back up by using one of the RAID1 
-disks. After all, mirror just means that.
+blk_poll() used to be a pointer in the queue, but since we just had
+one implementation, we got rid of it. Might make sense to
+reintroduce that, and just make it an optimized indirect call. I
+think that would be prettier than add the bio hack in the middle of
+it, and you're having to add a queue pointer anyway.
 
-Regards
-Ramesh
+Alternatively, do it like you did, but have it be:
+
+if (q->poll_fn)
+	return q->poll_fn(...);
+
+instead of duplicating most of the core of the function with essentially
+the same thing, just calling ->bio_poll_fn() instead of mq_ops->poll().
+
+In other words, I like the feature, but I think the implementation
+currently leaves a lot to be desired. It should be nicely integrated,
+not some hack off to the side.
+
+-- 
+Jens Axboe
+
