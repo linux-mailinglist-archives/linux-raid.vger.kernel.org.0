@@ -2,16 +2,16 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BCF014E568
+	by mail.lfdr.de (Postfix) with ESMTP id 0126B14E567
 	for <lists+linux-raid@lfdr.de>; Thu, 30 Jan 2020 23:15:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbgA3WPB (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 30 Jan 2020 17:15:01 -0500
-Received: from sonic302-6.consmr.mail.bf2.yahoo.com ([74.6.135.45]:40056 "EHLO
-        sonic302-6.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726264AbgA3WPA (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
+        id S1726294AbgA3WPA (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
         Thu, 30 Jan 2020 17:15:00 -0500
+Received: from sonic302-6.consmr.mail.bf2.yahoo.com ([74.6.135.45]:32834 "EHLO
+        sonic302-6.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725907AbgA3WO7 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 30 Jan 2020 17:14:59 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=att.net; s=s1024; t=1580422498; bh=2KZGOKYnGUVt4LqHaFnvNvxm9h2b1LuH9rrXYHH4UJI=; h=From:Subject:To:Cc:References:Date:In-Reply-To:From:Subject; b=G7unGdwfhQedoRyOMkoL57Mj2O/ioawPWuU5fqevY/4pzUcOewznQznXe6eak4QWssM/Q8YGk/kBAD/LlU8lB7EJHHW6k2ZL8Su+f3T2qNW0MdqpvtebGU0b8jxIsRDbKRtRM7PxYC7QsOjkgiJJ8x64IE7mUXkIxpUKNx+M3Ps=
 X-YMail-OSG: FKoQSv0VM1mz_Rg201YVxnCCE8QbEngV27.PekE5oMqua7Ch7WjJkXjhenNP1fd
  .TXS17kkSsbQTW9wkgCZ3VMN0OOcGxAByqAtjpQkSU6gXS2FhKBE8oBj0zOPbn791ltLTRP2hpOV
