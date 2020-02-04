@@ -2,85 +2,108 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 450831513A4
-	for <lists+linux-raid@lfdr.de>; Tue,  4 Feb 2020 01:26:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B455151F20
+	for <lists+linux-raid@lfdr.de>; Tue,  4 Feb 2020 18:18:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbgBDA0E (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 3 Feb 2020 19:26:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43870 "EHLO mail.kernel.org"
+        id S1727398AbgBDRSU (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 4 Feb 2020 12:18:20 -0500
+Received: from drutsystem.com ([84.10.39.251]:44624 "EHLO drutsystem.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726834AbgBDA0E (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 3 Feb 2020 19:26:04 -0500
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 692C920CC7;
-        Tue,  4 Feb 2020 00:26:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580775963;
-        bh=DEnhTGeqYfIEzDziYGUHBt/C1mOgjcVIIMoH0OSvRRU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=SXMxF1CntPRqjFankbOjPB9lqULjP5rosZEhKcAGQTsJrBCvIgAkjfHFgqTyWIe7j
-         CVyxMKuQ5pQQXSi4yefdV1FwIGSHYjgMQ8364BVhTmqSBl2Gy7Ge+1a52UPPCZj97h
-         Soh4l59P/Q1q6Ic+l7pVf92EhOlB+ROyhE0xfb2c=
-Received: by mail-lj1-f170.google.com with SMTP id q8so16624006ljb.2;
-        Mon, 03 Feb 2020 16:26:03 -0800 (PST)
-X-Gm-Message-State: APjAAAV3frYcc3qmKY8Vniik2rvkxmcA/Xg1y9J6RlZXoaR4/sHfPWoj
-        1ceAeF10V8JP9ur05YICDFczhNFawBtgppPU4cc=
-X-Google-Smtp-Source: APXvYqzTusJ+pjfJoFX+ywErYaY8hX/RTm5VsLAItbJ23Up+JMRKi46LwfDxhZObieJ14r9nIZPXVF9K9anoU0IeYxE=
-X-Received: by 2002:a2e:810d:: with SMTP id d13mr15391339ljg.113.1580775961545;
- Mon, 03 Feb 2020 16:26:01 -0800 (PST)
+        id S1727440AbgBDRSU (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 4 Feb 2020 12:18:20 -0500
+X-Greylist: delayed 363 seconds by postgrey-1.27 at vger.kernel.org; Tue, 04 Feb 2020 12:18:18 EST
+To:     linux-raid@vger.kernel.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=drutsystem.com;
+        s=ziu; t=1580836330;
+        bh=oyJSNjJNarvLD/8F86hFXG+2iNIVAR2zX2JW57mrJUs=;
+        h=To:From:Subject:Date;
+        b=2YHAKEIsy9Vi8xGrq056+D6h2hkmI22q3z4VGk71sXI5fXDyraAWKeDX8VQawRNJa
+         04VizS0A4g7LV33vwFp7thtHdwwDghSjFtaBsi1r0jBLja/3iKhvGqWQ0QkHJEe0yM
+         kWNEwDvy0hx3rZsArj9FHXRTIx8wnx7eHXIHYBxE=
+From:   Michal Soltys <soltys@drutsystem.com>
+Subject: md/mdadm and restore from hibernate issue
+Message-ID: <4f15ea34-195c-8bb9-42bb-042265589ea0@drutsystem.com>
+Date:   Tue, 4 Feb 2020 18:12:09 +0100
 MIME-Version: 1.0
-References: <20200129181437.25155-1-dave@stgolabs.net> <a7358719-55af-6510-952e-df8f202f1ab9@cloud.ionos.com>
-In-Reply-To: <a7358719-55af-6510-952e-df8f202f1ab9@cloud.ionos.com>
-From:   Song Liu <song@kernel.org>
-Date:   Mon, 3 Feb 2020 16:25:50 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW6k10vZju0r_=HG81gWkZGMQD-0e5Rk-b3tZN7yDTi+jQ@mail.gmail.com>
-Message-ID: <CAPhsuW6k10vZju0r_=HG81gWkZGMQD-0e5Rk-b3tZN7yDTi+jQ@mail.gmail.com>
-Subject: Re: [PATCH] md: optimize barrier usage for Rmw atomic bitops
-To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Cc:     Davidlohr Bueso <dave@stgolabs.net>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dbueso@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US-large
+Content-Transfer-Encoding: 7bit
+X-MailScanner-ID: F4021931465.A82B8
+X-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-MailScanner-From: soltys@drutsystem.com
+X-Spam-Status: No
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 8:43 AM Guoqing Jiang
-<guoqing.jiang@cloud.ionos.com> wrote:
->
->
->
-> On 1/29/20 7:14 PM, Davidlohr Bueso wrote:
-> > For both set and clear_bit, we can avoid the unnecessary barrier
-> > on non LL/SC architectures, such as x86. Instead, use the
-> > smp_mb__{before,after}_atomic() calls.
-> >
-> > Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
+Hi,
 
-./scripts/checkpatch.pl reports the following:
+I had resume-from-hibernation issue yesterday, with logs stating that mdadm couldn't have been freezed:
 
-=============== 8< =================
-WARNING: memory barrier without comment
-#81: FILE: drivers/md/md.c:2564:
-+                       smp_mb__before_atomic();
+[   19.124753] PM: Image signature found, resuming
+[   19.124757] PM: resume from hibernation
+[   19.185972] Freezing user space processes ... 
+[   39.188867] Freezing of tasks failed after 20.002 seconds (1 tasks refusing to freeze, wq_busy=0):
+[   39.198921] mdadm           D    0   592    368 0x00004006
+[   39.198939] Call Trace:
+[   39.201685]  ? __schedule+0x2bb/0x660
+[   39.205784]  schedule+0x2f/0xa0
+[   39.209310]  schedule_timeout+0x20d/0x310
+[   39.213793]  ? __schedule+0x2c3/0x660
+[   39.217906]  io_schedule_timeout+0x19/0x40
+[   39.222488]  wait_for_completion_io+0x11f/0x190
+[   39.227567]  ? wake_up_q+0x80/0x80
+[   39.231384]  submit_bio_wait+0x5b/0x80
+[   39.235598]  sync_page_io+0x127/0x160 [md_mod]
+[   39.240581]  r5l_recovery_replay_one_stripe.isra.30+0xd5/0x210 [raid456]
+[   39.247690]  r5c_recovery_replay_stripes+0x60/0xa0 [raid456]
+[   39.254029]  r5l_start+0xb44/0xee0 [raid456]
+[   39.258806]  md_start.part.41+0x2e/0x50 [md_mod]
+[   39.263980]  do_md_run+0x56/0xc0 [md_mod]
+[   39.268463]  md_ioctl+0xe7d/0x17c0 [md_mod]
+[   39.273143]  blkdev_ioctl+0x4d0/0xa10
+[   39.277241]  block_ioctl+0x39/0x40
+[   39.281098]  do_vfs_ioctl+0xa4/0x630
+[   39.285102]  ksys_ioctl+0x60/0x90
+[   39.288812]  __x64_sys_ioctl+0x16/0x20
+[   39.293005]  do_syscall_64+0x53/0x130
+[   39.297104]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[   39.302758] RIP: 0033:0x7fcc23774427
+[   39.306761] Code: Bad RIP value.
+[   39.310322] RSP: 002b:00007ffe776fac48 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+[   39.318778] RAX: ffffffffffffffda RBX: 00007ffe776fd624 RCX: 00007fcc23774427
+[   39.326856] RDX: 0000000000000000 RSI: 00000000400c0930 RDI: 0000000000000004
+[   39.334930] RBP: 000056408fb857f0 R08: 000000000000004f R09: 000056408fb87610
+[   39.342922] R10: 0000000000000003 R11: 0000000000000246 R12: 00007ffe776fbb00
+[   39.350892] R13: 0000000000000004 R14: 000056408fb86bb0 R15: 0000000000000000
+[   39.350895] OOM killer enabled.
+[   39.350895] Restarting tasks ... done.
+[   39.420402] PM: resume from hibernation failed (-16)
 
-WARNING: memory barrier without comment
-#112: FILE: drivers/md/raid5.c:367:
-+               smp_mb__before_atomic();
+This is the fragment from the initramfs stage, with 3 of the 4 arrays assembled (the 4th uses external bitmap, so it's handled far later and outside initramfs) - before an attempt to resume from hibernation was attempted. This was on debian's kernel (5.2.0-0.bpo.3-amd64, so based on 5.2.17 from what I can see).
 
-WARNING: Missing Signed-off-by: line by nominal patch author
-'Davidlohr Bueso <dave@stgolabs.net>'
+Out of those 3 arrays:
 
-total: 0 errors, 3 warnings, 42 lines checked
-=============== 8< =================
+- md127 is raid1 serving as a journal (nominally write-back, but it was changed to write-through before hibernation) for md126; this one was assembled and activated (capacity change ...)
 
-Since we are on it, let's add comments for the barriers. Also, please
-double check the email
-is correct.
+- md126 is raid5 consisting of 4 disks, that uses md127 as its journal device; it was assmebled but wasn't activated (no capacity change message, and it looks like it was in recovery ?)
 
-Thanks,
-Song
+- md125 is raid5 with internal bitmap, it assembled and activated fine (nevermind possible race condition between udev scripts and debian's script in local-block, judging from '[    8.898089] md: array md125 already has disks!')
+
+The md126 array activated 2+ minutes later:
+
+Feb 03 20:54:44 xs22 systemd-udevd[756]: md126: Worker [823] processing SEQNUM=4194 is taking a long time
+....
+Feb 03 20:55:59 xs22 kernel: md/raid:md126: recovering 0 data-only stripes and 358258 data-parity stripes
+Feb 03 20:55:59 xs22 kernel: md126: detected capacity change from 0 to 11999596511232
++dmesg timestamps:
+[  219.195721] md/raid:md126: recovering 0 data-only stripes and 358258 data-parity stripes
+[  219.235388] md126: detected capacity change from 0 to 11999596511232
+
+So it looks like one of incremental-assembly mdadms was stuck waiting for the array's activation. Still, I had to "push" it with mdadm -As to assembly correctly from the console (unless there was race here and my mdadm invocation had no effect - but I'm 99% it was manual mdadm that nudged the array into life).
+
+Overall I'm scratching my head what happened. Hibernation went (allegedly) fine, journal was in w-t mode.
+Is raid5+journal a viable configuration to be used with hibernation - or is it asking for problems ?
+
+Any ideas / hints appreciated.
