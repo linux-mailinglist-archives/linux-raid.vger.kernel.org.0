@@ -2,71 +2,68 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 74CB3156002
-	for <lists+linux-raid@lfdr.de>; Fri,  7 Feb 2020 21:44:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB7EA156165
+	for <lists+linux-raid@lfdr.de>; Fri,  7 Feb 2020 23:58:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727546AbgBGUoK (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 7 Feb 2020 15:44:10 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38193 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbgBGUoJ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 7 Feb 2020 15:44:09 -0500
-Received: by mail-ot1-f67.google.com with SMTP id z9so599683oth.5
-        for <linux-raid@vger.kernel.org>; Fri, 07 Feb 2020 12:44:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=8cDRXBFOpE9J1p6S5H+HXSQg9q3m7pUJ3iUuQ5MPcDc=;
-        b=WJgFJ9PR0yBQ+ciD08Pby60OVZzn3dTgtieZ17slfRQssKmPnwQmAwZPgDIpR6heck
-         dDY9m0nAiR73dL1CtCDLlqWI9lV6barO9i6phYUUcmMyI9lhyUunotwwGjtLNjZZXHps
-         B+ZJy7kS8IDHqb+LatDXLkBcGkPTiMku+kX9Fb92ZmFsnK1n3liOHkc4TmrSz2VBzqpm
-         gOXxQUuwBna/l8aq9nu864h1RGE/T5vMQdJwoV4IagKfmqrsTX7n4WpDLnLJobosvK0X
-         9Z7fBUirFx02ZREq+PBFhuGxFcksAi/eOnsjoHpvtfcuXe3k+tw0qtyYWnKvHtkX+Drl
-         CMWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=8cDRXBFOpE9J1p6S5H+HXSQg9q3m7pUJ3iUuQ5MPcDc=;
-        b=opKa2263ocevlIB9Wc6syYKvWLnBkGyPOQbRmEEu4dCbhpw3HPfK6uTTPuFHmKBO5r
-         hLQkz1cc+ko6i4r5WSXmSzWf53yJ85gXzfK7mfsNcHuPPBUVBBhnKwYHqSmLlbLItCRk
-         VijCzzQ3obzWraaSJDF8iVB160MRtYoXAYitTF1lcOA+RXIol+0DaMmIBStJR0NS9uKf
-         bxewv+D3seMmujRid94yudKHC7kchzwQizX3MNJzgjY9OGV53776Jbxc+KUCjs4G9eB2
-         RLhCKGWMzsfyTYl2Zik6vxOPkBOr5LzNLQtyTKywifA6pIcQq0OjJ1aF8NnntREgV1EN
-         hyPw==
-X-Gm-Message-State: APjAAAXvm3FXfxMgnCDk+F2ORJrFgzU1qNoK7aYgMVFzcQvbVHdoW/lP
-        p75tgans33Aq5sUA7cojLim6O9u/xT2BSyRL4n0=
-X-Google-Smtp-Source: APXvYqxZ0BHxezvYatUCwR5ujJY2IO6fZCUlpHww8WEnDHAAAY+0VvtiMdEe6JnWZWwDRH8AP8uVvx3q0Y+IviYPdhQ=
-X-Received: by 2002:a9d:7305:: with SMTP id e5mr948882otk.64.1581108248790;
- Fri, 07 Feb 2020 12:44:08 -0800 (PST)
+        id S1727075AbgBGW6Y (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 7 Feb 2020 17:58:24 -0500
+Received: from mail.prgmr.com ([71.19.149.6]:57372 "EHLO mail.prgmr.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727048AbgBGW6Y (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 7 Feb 2020 17:58:24 -0500
+X-Greylist: delayed 480 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 Feb 2020 17:58:24 EST
+Received: from [192.168.2.33] (c-174-62-72-237.hsd1.ca.comcast.net [174.62.72.237])
+        (Authenticated sender: srn)
+        by mail.prgmr.com (Postfix) with ESMTPSA id A4DFE720127;
+        Fri,  7 Feb 2020 22:52:27 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.prgmr.com A4DFE720127
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prgmr.com;
+        s=default; t=1581133947;
+        bh=OZGeo6gOC9huuZwLa5osSbrTy5qgUVoZCipkHF/RzVU=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=Lmpq+v9v2x/V9LgWJweIEsEcR35mXkkUMmGVvQ5Ugq3uh8LIytVjwyKAFJ0HOW8Cb
+         Vxt0DH5WtPJyZ3PT+36vh1AjbhvRggkDSyv8XXKKxGiC1F1dM0QHY15TTJrijkYC8G
+         ZK8jAoX402hHccWvBLsyc/zO0XwlKpR3/WJs6pwY=
+Subject: Re: Question
+To:     o1bigtenor <o1bigtenor@gmail.com>,
+        Linux-RAID <linux-raid@vger.kernel.org>
+References: <CAPpdf5-FJ0cP36pOLm40ESBOws8x5R6XbUOssFFCsY6xtb4_xw@mail.gmail.com>
+From:   Sarah Newman <srn@prgmr.com>
+Message-ID: <7af58e5b-7047-a3a8-f4b2-840ea6851dea@prgmr.com>
+Date:   Fri, 7 Feb 2020 14:50:23 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Received: by 2002:a4a:d508:0:0:0:0:0 with HTTP; Fri, 7 Feb 2020 12:44:08 -0800 (PST)
-Reply-To: auch197722@gmail.com
-From:   "Mr. Theophilus Odadudu" <cristinamedina0010@gmail.com>
-Date:   Fri, 7 Feb 2020 15:44:08 -0500
-Message-ID: <CAPNvSTj-8q7w5QPmnH26+_3xCKjEWyE+9xcb8QyQs9Xie+iYgg@mail.gmail.com>
-Subject: LETTER OF INQUIRY
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAPpdf5-FJ0cP36pOLm40ESBOws8x5R6XbUOssFFCsY6xtb4_xw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Good Day,
+On 2/7/20 7:49 AM, o1bigtenor wrote:
+> Greetings
+> 
+> Running a Raid-10 array made up of 4 - 1 TB drives on a debian testing
+> (11) system.
+> mdadm - v4.1 - 2018-10-01 is the version being used.
+> 
+> Some weirdness is happening - - - vis a vis - - - I have one directory
+> (not small) that has disappeared. I last accessed said directory
+> (still have the pdf open which is how I could get this information)
+> 'Last accessed 2020-01-19 6:32 A.M.'  as indicated in the 'Properties'
+> section of the file in question.
 
-I work as a clerk in a Bank here in Nigeria, I have a very
-confidential Business Proposition for you. There is a said amount of
-money floating in the bank unclaimed, belonging to the bank Foreign
-customer who die with his family in the Ethiopian Airline crash of
-March 11, 2019.
+I assume you've looked at lsof?
 
-I seek your good collaboration to move the fund for our benefit. we
-have agreed that 40% be yours once you help claim.
+https://www.linux.com/news/bring-back-deleted-files-lsof/
 
-Do get back to with 1) Your Full Name: (2) Residential Address: (3)
-Phone, Mobile  (4) Scan Copy of Your ID. to apply for claims of the
-funds.
+If it is a software problem, it just as likely, if not more likely, that it is a file system problem rather than a raid problem. You don't mention 
+what file system. You're possibly also actually looking at data in the in-memory disk cache rather than what's actually stored on disk given there's 
+been no reboot.
 
-Regards
-Theophilus Odadudu
+Is there anything suspicious in dmesg?
+
+
