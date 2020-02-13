@@ -2,71 +2,93 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A42B15CBDA
-	for <lists+linux-raid@lfdr.de>; Thu, 13 Feb 2020 21:19:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA4F415CEBE
+	for <lists+linux-raid@lfdr.de>; Fri, 14 Feb 2020 00:43:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbgBMUTo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 13 Feb 2020 15:19:44 -0500
-Received: from mga02.intel.com ([134.134.136.20]:15839 "EHLO mga02.intel.com"
+        id S1727658AbgBMXm7 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 13 Feb 2020 18:42:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727864AbgBMUTo (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 13 Feb 2020 15:19:44 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 12:19:43 -0800
-X-IronPort-AV: E=Sophos;i="5.70,437,1574150400"; 
-   d="scan'208";a="227363660"
-Received: from vkarunag-mobl1.amr.corp.intel.com (HELO localhost.localdomain) ([10.232.115.134])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 13 Feb 2020 12:19:43 -0800
-Subject: Re: [PATCH v2 2/2] md: enable io polling
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     axboe@kernel.dk, song@kernel.org, linux-block@vger.kernel.org,
-        linux-raid@vger.kernel.org,
-        Artur Paszkiewicz <artur.paszkiewicz@intel.com>
-References: <20200211191729.4745-1-andrzej.jakowski@linux.intel.com>
- <20200211191729.4745-3-andrzej.jakowski@linux.intel.com>
- <20200211211334.GB3837@redsun51.ssa.fujisawa.hgst.com>
- <e9941d4d-c403-4177-526d-b3086207f31a@linux.intel.com>
- <20200212214207.GA6409@redsun51.ssa.fujisawa.hgst.com>
-From:   Andrzej Jakowski <andrzej.jakowski@linux.intel.com>
-Message-ID: <f516e2b2-1988-03ca-f966-5f26771717ff@linux.intel.com>
-Date:   Thu, 13 Feb 2020 13:19:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1727594AbgBMXm7 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 13 Feb 2020 18:42:59 -0500
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89F6D2467D;
+        Thu, 13 Feb 2020 23:42:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581637378;
+        bh=QvXr0ccIUZIRsqUcy6mdX4RvItZ/HQGPAVqIR5RAVyo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cPo6gRm2riJCg2de4KFKjGUPyih5I99+ID98XQlsTTxOWt9KQ5Pfqdzsd5F8lPb46
+         PWQzSbOz7vIG+xvGz7PfCbmDfooxlwTbJpl1r0D3JFRAOkqSLvkxfK8/0KLnmSKU0Y
+         1H66ieYG9DmRRXq2PvYmmF1St6fRqy/EY5GTTf3U=
+Received: by mail-lj1-f182.google.com with SMTP id v17so8650836ljg.4;
+        Thu, 13 Feb 2020 15:42:58 -0800 (PST)
+X-Gm-Message-State: APjAAAUb1CfRx2QXhgS6f3LnmqO1jgROFnwsemZxbhjIQIyd3pwJn9VF
+        m+rbhCifUv5Zkw30EnyNy1zzXRKHtCfuRH3rsRU=
+X-Google-Smtp-Source: APXvYqyMTY5BiLP/4jYWIAjsVYrB8h/h7Ek++s0e6pxXO6PqFXN3+xu4BLWRYI1/YeOOm0rQ6bFf5+MVwGHlLSORLHc=
+X-Received: by 2002:a2e:a553:: with SMTP id e19mr168246ljn.64.1581637376641;
+ Thu, 13 Feb 2020 15:42:56 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200212214207.GA6409@redsun51.ssa.fujisawa.hgst.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200213141823.2174236-1-mplaneta@os.inf.tu-dresden.de>
+ <20200213153645.GA11313@redhat.com> <82715589-8b59-5cfd-a32f-1e57871327fe@os.inf.tu-dresden.de>
+In-Reply-To: <82715589-8b59-5cfd-a32f-1e57871327fe@os.inf.tu-dresden.de>
+From:   Song Liu <song@kernel.org>
+Date:   Thu, 13 Feb 2020 15:42:45 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW70_HtmxA0qmUVLk4L+Ls5t=0j0k5D4fbT4fNY59L2UpQ@mail.gmail.com>
+Message-ID: <CAPhsuW70_HtmxA0qmUVLk4L+Ls5t=0j0k5D4fbT4fNY59L2UpQ@mail.gmail.com>
+Subject: Re: Remove WQ_CPU_INTENSIVE flag from unbound wq's
+To:     Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
+Cc:     Mike Snitzer <snitzer@redhat.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alasdair Kergon <agk@redhat.com>, dm-devel@redhat.com,
+        Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-crypto@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-raid <linux-raid@vger.kernel.org>,
+        linux-erofs@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 2/12/20 2:42 PM, Keith Busch wrote:
-> On Wed, Feb 12, 2020 at 02:00:10PM -0700, Andrzej Jakowski wrote:
->> On 2/11/20 2:13 PM, Keith Busch wrote:
->>> I must be missing something: md's make_request_fn always returns
->>> BLK_QC_T_NONE for the cookie, and that couldn't get past blk_poll's
->>> blk_qc_t_valid(cookie) check. How does the initial blk_poll() caller get
->>> a valid cookie for an md backing device's request_queue? And how is the
->>> same cookie valid for more than one request_queue?
->> That's true md_make_request() always returns BLK_QC_T_NONE. md_make_request()
->> recursively calls generic_make_request() for the underlying device (e.g. nvme).
->> That block io request directed to member disk is added into bio_list and is 
->> processed later by top level generic_make_request(). generic_make_request() 
->> returns cookie that is returned by blk_mq_make_request().
->> That cookie is later used to poll for completion. 
-> Okay, that's a nice subtlety. But it means the original caller gets the
-> cookie from the last submission in the chain. If md recieves a single
-> request that has to be split among more than one member disk, the cookie
-> you're using to control the polling is valid only for one of the
-> request_queue's and may break others.
+On Thu, Feb 13, 2020 at 8:19 AM Maksym Planeta
+<mplaneta@os.inf.tu-dresden.de> wrote:
+>
+>
+>
+> On 13/02/2020 16:36, Mike Snitzer wrote:
+> > On Thu, Feb 13 2020 at  9:18am -0500,
+> > Maksym Planeta <mplaneta@os.inf.tu-dresden.de> wrote:
+> >
+> >> The documentation [1] says that WQ_CPU_INTENSIVE is "meaningless" for
+> >> unbound wq. I remove this flag from places where unbound queue is
+> >> allocated. This is supposed to improve code readability.
+> >>
+> >> 1. https://www.kernel.org/doc/html/latest/core-api/workqueue.html#flags
+> >>
+> >> Signed-off-by: Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
+> >
+> > What the Documentation says aside, have you cross referenced with the
+> > code?  And/or have you done benchmarks to verify no changes?
+> >
+>
+> It seems so from the code. Although, I'm not 100% confident. I did not
+> run benchmarks, instead I relied that on the assumption that
+> documentation is correct.
 
-Correct, I agree that it is an issue. I can see at least two ways how to solve it:
- 1. Provide a mechanism in md accounting for outstanding IOs, storing cookie information 
-    for them. md_poll() will then use valid cookie's
- 2. Provide similar mechanism abstracted for stackable block devices and block layer could
-    handle completions for subordinate bios in an abstracted way in blk_poll() routine.
-How do you Guys see this going?
+From the code, WQ_CPU_INTENSIVE is only used to set
+WORKER_CPU_INTENSIVE, and WORKER_CPU_INTENSIVE is only used
+as part of WORKER_NOT_RUNNING, which includes WORKER_UNBOUND.
+So, I agree that with current code, WQ_CPU_INTENSIVE with WQ_UNBOUND
+is same as WQ_UNBOUND alone.
+
+However, I don't think it is necessary to make the changes. They don't really
+improve readability of the code.
+
+Thanks,
+Song
