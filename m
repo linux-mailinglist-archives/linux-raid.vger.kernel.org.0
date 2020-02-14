@@ -2,38 +2,38 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4458D15EEE4
-	for <lists+linux-raid@lfdr.de>; Fri, 14 Feb 2020 18:44:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F15315F438
+	for <lists+linux-raid@lfdr.de>; Fri, 14 Feb 2020 19:23:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388656AbgBNRny (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 14 Feb 2020 12:43:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50070 "EHLO mail.kernel.org"
+        id S2404609AbgBNSTl (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 14 Feb 2020 13:19:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388889AbgBNQDL (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:03:11 -0500
+        id S1730444AbgBNPuX (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:50:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6656E24681;
-        Fri, 14 Feb 2020 16:03:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36BDF22314;
+        Fri, 14 Feb 2020 15:50:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696191;
+        s=default; t=1581695423;
         bh=F1Trexx99c5lKvDtbQFpRyhfDrMxurBJs0BaHnCMNeE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QGS6Od08BPiiCrTCRku8lhBAQt/yg+ECUc+Ghb10lhp4AyPr+JubQFBfpZ71dojU2
-         k6ZQR62Z09a56u7vsguw3Qthel0o6d2skKXUsuM4eWx7Acn/9+H29bUkAFUow6YC13
-         Z21BD0m5EhGqb270oozRqNJyjGm3T4a3pwP0WA+k=
+        b=lsJY1t05qEXhzxadKHKhYQbpPk2YIMiPUFb48ptC6U0FQOAPDF5OQi4eGUgANEMnw
+         Izi4MrysZeAGYKkdM7ZtIOsVdNJ9H/TAsSh8t/YEMappY4/p/qFd4MCW555nE+pXpH
+         uwo3ZoE3yn3ng0dr5DoivPO7rpbqCSOfjd+Txoj4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
         Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 059/459] raid6/test: fix a compilation error
-Date:   Fri, 14 Feb 2020 10:55:09 -0500
-Message-Id: <20200214160149.11681-59-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 067/542] raid6/test: fix a compilation error
+Date:   Fri, 14 Feb 2020 10:40:59 -0500
+Message-Id: <20200214154854.6746-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
-References: <20200214160149.11681-1-sashal@kernel.org>
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
