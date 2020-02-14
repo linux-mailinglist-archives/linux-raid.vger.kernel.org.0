@@ -2,93 +2,144 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AA4F415CEBE
-	for <lists+linux-raid@lfdr.de>; Fri, 14 Feb 2020 00:43:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BEE8E15CF85
+	for <lists+linux-raid@lfdr.de>; Fri, 14 Feb 2020 02:40:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727658AbgBMXm7 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 13 Feb 2020 18:42:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50548 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727594AbgBMXm7 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 13 Feb 2020 18:42:59 -0500
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89F6D2467D;
-        Thu, 13 Feb 2020 23:42:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581637378;
-        bh=QvXr0ccIUZIRsqUcy6mdX4RvItZ/HQGPAVqIR5RAVyo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cPo6gRm2riJCg2de4KFKjGUPyih5I99+ID98XQlsTTxOWt9KQ5Pfqdzsd5F8lPb46
-         PWQzSbOz7vIG+xvGz7PfCbmDfooxlwTbJpl1r0D3JFRAOkqSLvkxfK8/0KLnmSKU0Y
-         1H66ieYG9DmRRXq2PvYmmF1St6fRqy/EY5GTTf3U=
-Received: by mail-lj1-f182.google.com with SMTP id v17so8650836ljg.4;
-        Thu, 13 Feb 2020 15:42:58 -0800 (PST)
-X-Gm-Message-State: APjAAAUb1CfRx2QXhgS6f3LnmqO1jgROFnwsemZxbhjIQIyd3pwJn9VF
-        m+rbhCifUv5Zkw30EnyNy1zzXRKHtCfuRH3rsRU=
-X-Google-Smtp-Source: APXvYqyMTY5BiLP/4jYWIAjsVYrB8h/h7Ek++s0e6pxXO6PqFXN3+xu4BLWRYI1/YeOOm0rQ6bFf5+MVwGHlLSORLHc=
-X-Received: by 2002:a2e:a553:: with SMTP id e19mr168246ljn.64.1581637376641;
- Thu, 13 Feb 2020 15:42:56 -0800 (PST)
-MIME-Version: 1.0
-References: <20200213141823.2174236-1-mplaneta@os.inf.tu-dresden.de>
- <20200213153645.GA11313@redhat.com> <82715589-8b59-5cfd-a32f-1e57871327fe@os.inf.tu-dresden.de>
-In-Reply-To: <82715589-8b59-5cfd-a32f-1e57871327fe@os.inf.tu-dresden.de>
-From:   Song Liu <song@kernel.org>
-Date:   Thu, 13 Feb 2020 15:42:45 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW70_HtmxA0qmUVLk4L+Ls5t=0j0k5D4fbT4fNY59L2UpQ@mail.gmail.com>
-Message-ID: <CAPhsuW70_HtmxA0qmUVLk4L+Ls5t=0j0k5D4fbT4fNY59L2UpQ@mail.gmail.com>
-Subject: Re: Remove WQ_CPU_INTENSIVE flag from unbound wq's
+        id S1728061AbgBNBkt (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 13 Feb 2020 20:40:49 -0500
+Received: from szxga03-in.huawei.com ([45.249.212.189]:2569 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727848AbgBNBkt (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 13 Feb 2020 20:40:49 -0500
+Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id 1345E3E420F2A9B5488E;
+        Fri, 14 Feb 2020 09:40:47 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 14 Feb 2020 09:40:46 +0800
+Received: from architecture4 (10.160.196.180) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Fri, 14 Feb 2020 09:40:46 +0800
+Date:   Fri, 14 Feb 2020 09:39:33 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
-Cc:     Mike Snitzer <snitzer@redhat.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
+CC:     Zhou Wang <wangzhou1@hisilicon.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>,
-        Alasdair Kergon <agk@redhat.com>, dm-devel@redhat.com,
-        Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-crypto@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
+        Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>, <dm-devel@redhat.com>,
+        Song Liu <song@kernel.org>, Gao Xiang <xiang@kernel.org>,
+        Chao Yu <chao@kernel.org>, <linux-crypto@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-raid@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>
+Subject: Re: [PATCH] Remove WQ_CPU_INTENSIVE flag from unbound wq's
+Message-ID: <20200214013932.GA73422@architecture4>
+References: <20200213141823.2174236-1-mplaneta@os.inf.tu-dresden.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200213141823.2174236-1-mplaneta@os.inf.tu-dresden.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.160.196.180]
+X-ClientProxiedBy: dggeme720-chm.china.huawei.com (10.1.199.116) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 8:19 AM Maksym Planeta
-<mplaneta@os.inf.tu-dresden.de> wrote:
->
->
->
-> On 13/02/2020 16:36, Mike Snitzer wrote:
-> > On Thu, Feb 13 2020 at  9:18am -0500,
-> > Maksym Planeta <mplaneta@os.inf.tu-dresden.de> wrote:
-> >
-> >> The documentation [1] says that WQ_CPU_INTENSIVE is "meaningless" for
-> >> unbound wq. I remove this flag from places where unbound queue is
-> >> allocated. This is supposed to improve code readability.
-> >>
-> >> 1. https://www.kernel.org/doc/html/latest/core-api/workqueue.html#flags
-> >>
-> >> Signed-off-by: Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
-> >
-> > What the Documentation says aside, have you cross referenced with the
-> > code?  And/or have you done benchmarks to verify no changes?
-> >
->
-> It seems so from the code. Although, I'm not 100% confident. I did not
-> run benchmarks, instead I relied that on the assumption that
-> documentation is correct.
+On Thu, Feb 13, 2020 at 03:18:23PM +0100, Maksym Planeta wrote:
+> The documentation [1] says that WQ_CPU_INTENSIVE is "meaningless" for
+> unbound wq. I remove this flag from places where unbound queue is
+> allocated. This is supposed to improve code readability.
+> 
+> 1. https://www.kernel.org/doc/html/latest/core-api/workqueue.html#flags
+> 
+> Signed-off-by: Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
+> ---
+>  drivers/crypto/hisilicon/qm.c | 3 +--
+>  drivers/md/dm-crypt.c         | 2 +-
+>  drivers/md/dm-verity-target.c | 2 +-
+>  drivers/md/raid5.c            | 2 +-
+>  fs/erofs/zdata.c              | 2 +-
 
-From the code, WQ_CPU_INTENSIVE is only used to set
-WORKER_CPU_INTENSIVE, and WORKER_CPU_INTENSIVE is only used
-as part of WORKER_NOT_RUNNING, which includes WORKER_UNBOUND.
-So, I agree that with current code, WQ_CPU_INTENSIVE with WQ_UNBOUND
-is same as WQ_UNBOUND alone.
+I'm okay for EROFS part,
 
-However, I don't think it is necessary to make the changes. They don't really
-improve readability of the code.
+Acked-by: Gao Xiang <gaoxiang25@huawei.com>
 
 Thanks,
-Song
+Gao Xiang
+
+>  5 files changed, 5 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
+> index b57da5ef8b5b..4a39cb2c6a0b 100644
+> --- a/drivers/crypto/hisilicon/qm.c
+> +++ b/drivers/crypto/hisilicon/qm.c
+> @@ -1148,8 +1148,7 @@ struct hisi_qp *hisi_qm_create_qp(struct hisi_qm *qm, u8 alg_type)
+>  	qp->qp_id = qp_id;
+>  	qp->alg_type = alg_type;
+>  	INIT_WORK(&qp->work, qm_qp_work_func);
+> -	qp->wq = alloc_workqueue("hisi_qm", WQ_UNBOUND | WQ_HIGHPRI |
+> -				 WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM, 0);
+> +	qp->wq = alloc_workqueue("hisi_qm", WQ_UNBOUND | WQ_HIGHPRI | WQ_MEM_RECLAIM, 0);
+>  	if (!qp->wq) {
+>  		ret = -EFAULT;
+>  		goto err_free_qp_mem;
+> diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
+> index c6a529873d0f..44d56325fa27 100644
+> --- a/drivers/md/dm-crypt.c
+> +++ b/drivers/md/dm-crypt.c
+> @@ -3032,7 +3032,7 @@ static int crypt_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+>  						  1, devname);
+>  	else
+>  		cc->crypt_queue = alloc_workqueue("kcryptd/%s",
+> -						  WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM | WQ_UNBOUND,
+> +						  WQ_MEM_RECLAIM | WQ_UNBOUND,
+>  						  num_online_cpus(), devname);
+>  	if (!cc->crypt_queue) {
+>  		ti->error = "Couldn't create kcryptd queue";
+> diff --git a/drivers/md/dm-verity-target.c b/drivers/md/dm-verity-target.c
+> index 0d61e9c67986..20f92c7ea07e 100644
+> --- a/drivers/md/dm-verity-target.c
+> +++ b/drivers/md/dm-verity-target.c
+> @@ -1190,7 +1190,7 @@ static int verity_ctr(struct dm_target *ti, unsigned argc, char **argv)
+>  	}
+>  
+>  	/* WQ_UNBOUND greatly improves performance when running on ramdisk */
+> -	v->verify_wq = alloc_workqueue("kverityd", WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM | WQ_UNBOUND, num_online_cpus());
+> +	v->verify_wq = alloc_workqueue("kverityd", WQ_MEM_RECLAIM | WQ_UNBOUND, num_online_cpus());
+>  	if (!v->verify_wq) {
+>  		ti->error = "Cannot allocate workqueue";
+>  		r = -ENOMEM;
+> diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+> index ba00e9877f02..cd93a1731b82 100644
+> --- a/drivers/md/raid5.c
+> +++ b/drivers/md/raid5.c
+> @@ -8481,7 +8481,7 @@ static int __init raid5_init(void)
+>  	int ret;
+>  
+>  	raid5_wq = alloc_workqueue("raid5wq",
+> -		WQ_UNBOUND|WQ_MEM_RECLAIM|WQ_CPU_INTENSIVE|WQ_SYSFS, 0);
+> +		WQ_UNBOUND|WQ_MEM_RECLAIM|WQ_SYSFS, 0);
+>  	if (!raid5_wq)
+>  		return -ENOMEM;
+>  
+> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+> index 80e47f07d946..b2a679f720e9 100644
+> --- a/fs/erofs/zdata.c
+> +++ b/fs/erofs/zdata.c
+> @@ -43,7 +43,7 @@ void z_erofs_exit_zip_subsystem(void)
+>  static inline int z_erofs_init_workqueue(void)
+>  {
+>  	const unsigned int onlinecpus = num_possible_cpus();
+> -	const unsigned int flags = WQ_UNBOUND | WQ_HIGHPRI | WQ_CPU_INTENSIVE;
+> +	const unsigned int flags = WQ_UNBOUND | WQ_HIGHPRI;
+>  
+>  	/*
+>  	 * no need to spawn too many threads, limiting threads could minimum
+> -- 
+> 2.24.1
+> 
