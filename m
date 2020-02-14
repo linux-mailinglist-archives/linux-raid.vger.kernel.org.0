@@ -2,29 +2,23 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BEE8E15CF85
-	for <lists+linux-raid@lfdr.de>; Fri, 14 Feb 2020 02:40:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 51D0815D0BA
+	for <lists+linux-raid@lfdr.de>; Fri, 14 Feb 2020 04:47:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbgBNBkt (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 13 Feb 2020 20:40:49 -0500
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2569 "EHLO huawei.com"
+        id S1728261AbgBNDry (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 13 Feb 2020 22:47:54 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:56220 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727848AbgBNBkt (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 13 Feb 2020 20:40:49 -0500
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 1345E3E420F2A9B5488E;
-        Fri, 14 Feb 2020 09:40:47 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 14 Feb 2020 09:40:46 +0800
-Received: from architecture4 (10.160.196.180) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Fri, 14 Feb 2020 09:40:46 +0800
-Date:   Fri, 14 Feb 2020 09:39:33 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
-CC:     Zhou Wang <wangzhou1@hisilicon.com>,
+        id S1728089AbgBNDrx (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 13 Feb 2020 22:47:53 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C36B0383C2D9BD887B39;
+        Fri, 14 Feb 2020 11:47:50 +0800 (CST)
+Received: from [127.0.0.1] (10.63.139.185) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Fri, 14 Feb 2020
+ 11:47:47 +0800
+Subject: Re: [PATCH] Remove WQ_CPU_INTENSIVE flag from unbound wq's
+To:     Maksym Planeta <mplaneta@os.inf.tu-dresden.de>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>,
         Alasdair Kergon <agk@redhat.com>,
@@ -33,24 +27,24 @@ CC:     Zhou Wang <wangzhou1@hisilicon.com>,
         Chao Yu <chao@kernel.org>, <linux-crypto@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-raid@vger.kernel.org>,
         <linux-erofs@lists.ozlabs.org>
-Subject: Re: [PATCH] Remove WQ_CPU_INTENSIVE flag from unbound wq's
-Message-ID: <20200214013932.GA73422@architecture4>
 References: <20200213141823.2174236-1-mplaneta@os.inf.tu-dresden.de>
+From:   Zhou Wang <wangzhou1@hisilicon.com>
+Message-ID: <5E461863.3000004@hisilicon.com>
+Date:   Fri, 14 Feb 2020 11:47:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
 In-Reply-To: <20200213141823.2174236-1-mplaneta@os.inf.tu-dresden.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.160.196.180]
-X-ClientProxiedBy: dggeme720-chm.china.huawei.com (10.1.199.116) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.63.139.185]
 X-CFilter-Loop: Reflected
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 03:18:23PM +0100, Maksym Planeta wrote:
+On 2020/2/13 22:18, Maksym Planeta wrote:
 > The documentation [1] says that WQ_CPU_INTENSIVE is "meaningless" for
 > unbound wq. I remove this flag from places where unbound queue is
 > allocated. This is supposed to improve code readability.
@@ -64,14 +58,6 @@ On Thu, Feb 13, 2020 at 03:18:23PM +0100, Maksym Planeta wrote:
 >  drivers/md/dm-verity-target.c | 2 +-
 >  drivers/md/raid5.c            | 2 +-
 >  fs/erofs/zdata.c              | 2 +-
-
-I'm okay for EROFS part,
-
-Acked-by: Gao Xiang <gaoxiang25@huawei.com>
-
-Thanks,
-Gao Xiang
-
 >  5 files changed, 5 insertions(+), 6 deletions(-)
 > 
 > diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
@@ -85,6 +71,12 @@ Gao Xiang
 > -	qp->wq = alloc_workqueue("hisi_qm", WQ_UNBOUND | WQ_HIGHPRI |
 > -				 WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM, 0);
 > +	qp->wq = alloc_workqueue("hisi_qm", WQ_UNBOUND | WQ_HIGHPRI | WQ_MEM_RECLAIM, 0);
+
+I am OK with qm code.
+
+Thanks!
+Zhou
+
 >  	if (!qp->wq) {
 >  		ret = -EFAULT;
 >  		goto err_free_qp_mem;
@@ -140,6 +132,5 @@ Gao Xiang
 >  
 >  	/*
 >  	 * no need to spawn too many threads, limiting threads could minimum
-> -- 
-> 2.24.1
 > 
+
