@@ -2,79 +2,77 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CFCB15F6CC
-	for <lists+linux-raid@lfdr.de>; Fri, 14 Feb 2020 20:25:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EDEDE160B7D
+	for <lists+linux-raid@lfdr.de>; Mon, 17 Feb 2020 08:20:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387603AbgBNTZd (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 14 Feb 2020 14:25:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54316 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387576AbgBNTZd (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 14 Feb 2020 14:25:33 -0500
-Received: from redsun51.ssa.fujisawa.hgst.com (unknown [199.255.47.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1401F20848;
-        Fri, 14 Feb 2020 19:25:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581708333;
-        bh=tyju13CgUvbXPl2B9jTqCRzgT5ohzts5EZFKsOU+Dcs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tlSpAFXxo/0djg8LXjILp/J8v1iYkBQLN9it0AYOrkaH8NgJSjhuPxSL5Uyahgsvp
-         024Jm8nkjI31Y8bN3p0U7FcdlXnGyDq+Fkru7gbW8s7cyPLAr5qhJ39D8KnOEtlQ8F
-         QkFaU3SVIFzxb2uiUTyvHkEFrWVRkhlrdm940ffc=
-Date:   Sat, 15 Feb 2020 04:25:26 +0900
-From:   Keith Busch <kbusch@kernel.org>
-To:     Andrzej Jakowski <andrzej.jakowski@linux.intel.com>
-Cc:     axboe@kernel.dk, song@kernel.org, linux-block@vger.kernel.org,
-        linux-raid@vger.kernel.org,
-        Artur Paszkiewicz <artur.paszkiewicz@intel.com>
-Subject: Re: [PATCH v2 2/2] md: enable io polling
-Message-ID: <20200214192526.GA10991@redsun51.ssa.fujisawa.hgst.com>
-References: <20200211191729.4745-1-andrzej.jakowski@linux.intel.com>
- <20200211191729.4745-3-andrzej.jakowski@linux.intel.com>
- <20200211211334.GB3837@redsun51.ssa.fujisawa.hgst.com>
- <e9941d4d-c403-4177-526d-b3086207f31a@linux.intel.com>
- <20200212214207.GA6409@redsun51.ssa.fujisawa.hgst.com>
- <f516e2b2-1988-03ca-f966-5f26771717ff@linux.intel.com>
+        id S1726267AbgBQHUO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 17 Feb 2020 02:20:14 -0500
+Received: from mail-40132.protonmail.ch ([185.70.40.132]:17161 "EHLO
+        mail-40132.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbgBQHUN (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 17 Feb 2020 02:20:13 -0500
+Date:   Mon, 17 Feb 2020 07:20:04 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=default; t=1581924011;
+        bh=Umclqrr3M9xAOBnxx2lploaTb7BvSybm44MPoM8O9hs=;
+        h=Date:To:From:Reply-To:Subject:Feedback-ID:From;
+        b=d2fpW3870P3cZEQG+afbxz6c4Ts8SQHOtLYo/WkvmX/DGgwzBKuYHbkuWV8DUVsak
+         6G7Ngsv3aWmFKj+yFohKn86bZWXFoeiq8xTYDxRw2t2Aup/9K3NOHKF93n4yjW4YZR
+         t1epgmqg1n561RznsNIEsI0lpro6S4jzlwemMVMo=
+To:     "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>
+From:   Fisher <fisherthepooh@protonmail.com>
+Reply-To: Fisher <fisherthepooh@protonmail.com>
+Subject: mdadm: not zeroing non-valid bad block log content in newly added disk
+Message-ID: <ZCC5pso8ZQLBtsLjK-LJY3XYVwZVB69vRPXXqmhgUeOBf9wpb5h2pjqpvvS2O9n5ztEtGmG3izyYpjZmrS1wIRSwO2vPXPzVOSBgvpvzhVM=@protonmail.com>
+Feedback-ID: 9Qu1KKHEcnQ-bKszPau2cdh2be1P4X3006lMkI1eP2SK_OSh15c0De44Tu-Egx84xTck3dONeTWRCjCwoqkXdw==:Ext:ProtonMail
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f516e2b2-1988-03ca-f966-5f26771717ff@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.2 required=7.0 tests=ALL_TRUSTED,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM shortcircuit=no
+        autolearn=disabled version=3.4.4
+X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on mail.protonmail.ch
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 01:19:42PM -0700, Andrzej Jakowski wrote:
-> On 2/12/20 2:42 PM, Keith Busch wrote:
-> > Okay, that's a nice subtlety. But it means the original caller gets the
-> > cookie from the last submission in the chain. If md recieves a single
-> > request that has to be split among more than one member disk, the cookie
-> > you're using to control the polling is valid only for one of the
-> > request_queue's and may break others.
-> 
-> Correct, I agree that it is an issue. I can see at least two ways how to solve it:
->  1. Provide a mechanism in md accounting for outstanding IOs, storing cookie information 
->     for them. md_poll() will then use valid cookie's
->  2. Provide similar mechanism abstracted for stackable block devices and block layer could
->     handle completions for subordinate bios in an abstracted way in blk_poll() routine.
-> How do you Guys see this going?
+Hi,
 
-Honestly, I don't see how this is can be successful without a more
-significant change than you may be anticipating. I'd be happy to hear if
-there's a better solution, but here's what I'm thinking:
+I got a 2-disk raid1 and I was trying to add a new disk to this array,
 
-You'd need each stacking layer to return a cookie that its poll function
-can turn into a list of { request_queue, blk_qc_t } tuples for each bio
-the stacking layer created so that it can chain the poll request to the
-next layers.
+right after it was added in, before any IOs came in
 
-The problems are that the stacking layers don't get a cookie for the
-bio's it submits from within the same md_make_request() context. Even if
-you could get the cookie associated with those bios, you either allocate
-more memory to track these things, or need polling bio list link fields
-added 'struct bio', neither of which seem very appealing.
+I found there're bad blocks present from mdadm --examine
 
-Do you have a better way in mind?
+and the bad block log content was like
+
+    8664206884405890 for 512 sectors
+    8664206884406402 for 125 sectors
+    8798941702130700 for 49 sectors
+   18014398509481983 for 512 sectors
+
+those offset and size weren't even valid
+
+if I first zeroing the whole disk I would get
+
+         0 for 0 sectors
+         0 for 0 sectors
+         0 for 0 sectors
+         0 for 0 sectors
+
+mdadm copied the superblock from one of the component disk to
+
+the new disk before adding it to array, and that disk happened to
+
+have bad blocks, so the new disk would have bad block flag set
+
+but with a bunch of non-valid content in the log, there're chances
+
+that this disk might be rejected by kernel while loading bad block list.
+
+Looks like it was a false alarm, I was wondering is there any
+
+reason not to clean bad block log before new disk adding in?
+
+Thanks,
