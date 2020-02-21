@@ -2,62 +2,94 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5300D164572
-	for <lists+linux-raid@lfdr.de>; Wed, 19 Feb 2020 14:25:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F53016817F
+	for <lists+linux-raid@lfdr.de>; Fri, 21 Feb 2020 16:26:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgBSNZj convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-raid@lfdr.de>); Wed, 19 Feb 2020 08:25:39 -0500
-Received: from scm.imp.edu.mx ([132.247.16.103]:52996 "EHLO scm.imp.edu.mx"
+        id S1728970AbgBUPZt (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 21 Feb 2020 10:25:49 -0500
+Received: from mga11.intel.com ([192.55.52.93]:14131 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727849AbgBSNZj (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 19 Feb 2020 08:25:39 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by scm.imp.edu.mx (Postfix) with ESMTP id D3B6618AD6C;
-        Wed, 19 Feb 2020 06:11:29 -0600 (CST)
-X-Virus-Scanned: by SpamTitan at imp.edu.mx
-Received: from scm.imp.edu.mx (localhost [127.0.0.1])
-        by scm.imp.edu.mx (Postfix) with ESMTP id 9D3E4187E4B;
-        Wed, 19 Feb 2020 04:51:48 -0600 (CST)
-Authentication-Results: scm.imp.edu.mx; none
-Received: from imp.edu.mx (unknown [10.249.93.105])
-        by scm.imp.edu.mx (Postfix) with ESMTP id A57A518DA0C;
-        Wed, 19 Feb 2020 04:51:44 -0600 (CST)
-Received: from localhost (localhost [127.0.0.1])
-        by imp.edu.mx (Postfix) with ESMTP id 42659180635F4D;
-        Wed, 19 Feb 2020 04:51:45 -0600 (CST)
-Received: from imp.edu.mx ([127.0.0.1])
-        by localhost (imp.edu.mx [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id AEHVIyCtmFWh; Wed, 19 Feb 2020 04:51:45 -0600 (CST)
-Received: from localhost (localhost [127.0.0.1])
-        by imp.edu.mx (Postfix) with ESMTP id 22AF8180635F48;
-        Wed, 19 Feb 2020 04:51:45 -0600 (CST)
-X-Virus-Scanned: amavisd-new at imp.edu.mx
-Received: from imp.edu.mx ([127.0.0.1])
-        by localhost (imp.edu.mx [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id v4mRbSAMbTIG; Wed, 19 Feb 2020 04:51:45 -0600 (CST)
-Received: from [45.147.4.119] (unknown [45.147.4.119])
-        by imp.edu.mx (Postfix) with ESMTPSA id F32BF180635F43;
-        Wed, 19 Feb 2020 04:51:43 -0600 (CST)
-Content-Type: text/plain; charset="iso-8859-1"
+        id S1728002AbgBUPZt (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 21 Feb 2020 10:25:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 07:25:48 -0800
+X-IronPort-AV: E=Sophos;i="5.70,468,1574150400"; 
+   d="scan'208";a="225243362"
+Received: from ajakowsk-mobl1.amr.corp.intel.com (HELO localhost.localdomain) ([10.78.27.169])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 21 Feb 2020 07:25:47 -0800
+Subject: Re: [PATCH v2 2/2] md: enable io polling
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     axboe@kernel.dk, song@kernel.org, linux-block@vger.kernel.org,
+        linux-raid@vger.kernel.org,
+        Artur Paszkiewicz <artur.paszkiewicz@intel.com>
+References: <20200211191729.4745-1-andrzej.jakowski@linux.intel.com>
+ <20200211191729.4745-3-andrzej.jakowski@linux.intel.com>
+ <20200211211334.GB3837@redsun51.ssa.fujisawa.hgst.com>
+ <e9941d4d-c403-4177-526d-b3086207f31a@linux.intel.com>
+ <20200212214207.GA6409@redsun51.ssa.fujisawa.hgst.com>
+ <f516e2b2-1988-03ca-f966-5f26771717ff@linux.intel.com>
+ <20200214192526.GA10991@redsun51.ssa.fujisawa.hgst.com>
+From:   Andrzej Jakowski <andrzej.jakowski@linux.intel.com>
+Message-ID: <db131d8e-b622-ec80-411e-2ca7643997a7@linux.intel.com>
+Date:   Fri, 21 Feb 2020 08:25:47 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: 19-02-2020
-To:     Recipients <mucios@imp.edu.mx>
-From:   "urs portmann" <mucios@imp.edu.mx>
-Date:   Wed, 19 Feb 2020 21:51:42 +1100
-Reply-To: onube@qq.com
-Message-Id: <20200219105143.F32BF180635F43@imp.edu.mx>
+In-Reply-To: <20200214192526.GA10991@redsun51.ssa.fujisawa.hgst.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Guten Morgen,
-                                          19-02-2020
-Wir haben versucht, Sie zu erreichen und haben noch nichts von Ihnen gehört. Haben Sie unsere letzte E-Mail über Ihre S.p.e.n.d.e erhalten? Wenn nicht, melden Sie sich bitte bei uns, um weitere Informationen zu erhalten.
+On 2/14/20 12:25 PM, Keith Busch wrote:
+> On Thu, Feb 13, 2020 at 01:19:42PM -0700, Andrzej Jakowski wrote:
+>> On 2/12/20 2:42 PM, Keith Busch wrote:
+>>> Okay, that's a nice subtlety. But it means the original caller gets the
+>>> cookie from the last submission in the chain. If md recieves a single
+>>> request that has to be split among more than one member disk, the cookie
+>>> you're using to control the polling is valid only for one of the
+>>> request_queue's and may break others.
+>> Correct, I agree that it is an issue. I can see at least two ways how to solve it:
+>>  1. Provide a mechanism in md accounting for outstanding IOs, storing cookie information 
+>>     for them. md_poll() will then use valid cookie's
+>>  2. Provide similar mechanism abstracted for stackable block devices and block layer could
+>>     handle completions for subordinate bios in an abstracted way in blk_poll() routine.
+>> How do you Guys see this going?
+> Honestly, I don't see how this is can be successful without a more
+> significant change than you may be anticipating. I'd be happy to hear if
+> there's a better solution, but here's what I'm thinking:
+> 
+> You'd need each stacking layer to return a cookie that its poll function
+> can turn into a list of { request_queue, blk_qc_t } tuples for each bio
+> the stacking layer created so that it can chain the poll request to the
+> next layers.
+> 
+> The problems are that the stacking layers don't get a cookie for the
+> bio's it submits from within the same md_make_request() context. Even if
+> you could get the cookie associated with those bios, you either allocate
+> more memory to track these things, or need polling bio list link fields
+> added 'struct bio', neither of which seem very appealing.
+> 
+> Do you have a better way in mind?
 
-Wir warten darauf, von Ihnen zu hören, sobald Sie diese Nachricht erhalten, die Sie bei der weiteren Vorgehensweise unterstützt.
+Your proposal makes sense to me, yet still it requires significant rework
+in generic_make_request(). I believe that generic_make_request() would 
+have to return/store cookie for each subordinate bio. I'm wondering why 
+cookie is needed for polling at all? From my understanding it looks 
+like cookie info is used to find HW context which to poll on. Hybrid
+polling uses it to find particular IO request and set its 'RQF_MQ_POLL_SLEPT'
+flag. 
 
-Mfg
-urs portmann
+Now, if we assume that cookie is not passed to polling function, poll_fn
+would need to find HW context to poll on in different way. Perhaps reference
+to it could be stored in request_queue itself? Polling in stackable block
+drivers would be much simpler -- they would call polling for underlying MQ
+device, which in turn would poll on correct HW context.
+
+Does this approach sound reasonable? 
+
