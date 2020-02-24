@@ -2,61 +2,78 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D7E5E16A758
-	for <lists+linux-raid@lfdr.de>; Mon, 24 Feb 2020 14:36:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AD77116B16B
+	for <lists+linux-raid@lfdr.de>; Mon, 24 Feb 2020 22:04:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726236AbgBXNgf (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 24 Feb 2020 08:36:35 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42984 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbgBXNgf (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 24 Feb 2020 08:36:35 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 12990AC67;
-        Mon, 24 Feb 2020 13:36:34 +0000 (UTC)
-From:   Petr Vorel <pvorel@suse.cz>
-To:     linux-raid@vger.kernel.org
-Cc:     colyli <colyli@suse.coly>, NeilBrown <neilb@suse.com>,
-        Petr Vorel <pvorel@suse.cz>, Coly Li <colyli@suse.de>
-Subject: [RESENT PATCH 1/1] Makefile: install mdadm_env.sh to /usr/lib/mdadm
-Date:   Mon, 24 Feb 2020 14:36:25 +0100
-Message-Id: <20200224133625.16050-1-pvorel@suse.cz>
-X-Mailer: git-send-email 2.25.1
+        id S1727421AbgBXVEH (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 24 Feb 2020 16:04:07 -0500
+Received: from sender11-of-f72.zoho.eu ([31.186.226.244]:17809 "EHLO
+        sender11-of-f72.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726996AbgBXVEH (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 24 Feb 2020 16:04:07 -0500
+Received: from [172.30.220.169] (163.114.130.128 [163.114.130.128]) by mx.zoho.eu
+        with SMTPS id 1582578220731710.0907332082263; Mon, 24 Feb 2020 22:03:40 +0100 (CET)
+Subject: Re: [PATCH v2 1/1] mdadm.8: add note information for raid0 growing
+ operation
+To:     Petr Vorel <pvorel@suse.cz>, linux-raid@vger.kernel.org
+Cc:     Coly Li <colyli@suse.de>, NeilBrown <neilb@suse.de>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Wols Lists <antlists@youngman.org.uk>, Nix <nix@esperi.org.uk>
+References: <20200224113409.11137-1-pvorel@suse.cz>
+From:   Jes Sorensen <jes@trained-monkey.org>
+Message-ID: <0ad0fd3a-b8bc-a47f-de8a-b991248d2e0b@trained-monkey.org>
+Date:   Mon, 24 Feb 2020 16:03:39 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200224113409.11137-1-pvorel@suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: colyli <colyli@suse.coly>
+On 2/24/20 6:34 AM, Petr Vorel wrote:
+> From: Coly Li <colyli@suse.de>
+> 
+> When growing a raid0 device, if the new component disk size is not
+> big enough, the grow operation may fail due to lack of backup space.
+> 
+> The minimum backup space should be larger than:
+>  LCM(old, new) * chunk-size * 2
+> 
+> where LCM() is the least common multiple of the old and new count of
+> component disks, and "* 2" comes from the fact that mdadm refuses to
+> use more than half of a spare device for backup space.
+> 
+> There are users reporting such failure when they grew a raid0 array
+> with small component disk. Neil Brown points out this is not a bug
+> and how the failure comes. This patch adds note information into
+> mdadm(8) man page in the Notes part of GROW MODE section to explain
+> the minimum size requirement of new component disk size or external
+> backup size.
+> 
+> Reviewed-by: Petr Vorel <pvorel@suse.cz>
+> Cc: NeilBrown <neilb@suse.de>
+> Cc: Jes Sorensen <jsorensen@fb.com>
+> Cc: Paul Menzel <pmenzel@molgen.mpg.de>
+> Cc: Wols Lists <antlists@youngman.org.uk>
+> Cc: Nix <nix@esperi.org.uk>
+> Signed-off-by: Coly Li <colyli@suse.de>
+> ---
+> Hi,
+> 
+> Coly haven't sent v2, but it's already prepared in openSUSE package [1],
+> therefore sending it on his behalf.
+> 
+> Kind regards,
+> Petr
 
-Current Makefile installs mdadm_env.sh to /usr/libexec/mdadm but calls it
-from /usr/lib/mdadm. This patch changes the installation directory to
-/usr/lib/mdadm to make things working.
+Applied!
 
-Fixes: f93b797 ("Move mdadm_env.sh out of /usr/lib/systemd")
-
-Reviewed-by: Petr Vorel <pvorel@suse.cz>
-Signed-off-by: Coly Li <colyli@suse.de>
----
- Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Makefile b/Makefile
-index a33319a..0f2fffd 100644
---- a/Makefile
-+++ b/Makefile
-@@ -91,7 +91,7 @@ MDMON_DIR = $(RUN_DIR)
- # place for autoreplace cookies
- FAILED_SLOTS_DIR = $(RUN_DIR)/failed-slots
- SYSTEMD_DIR=/lib/systemd/system
--LIB_DIR=/usr/libexec/mdadm
-+LIB_DIR=/usr/lib/mdadm
- 
- COROSYNC:=$(shell [ -d /usr/include/corosync ] || echo -DNO_COROSYNC)
- DLM:=$(shell [ -f /usr/include/libdlm.h ] || echo -DNO_DLM)
--- 
-2.25.1
+Thanks,
+Jes
 
