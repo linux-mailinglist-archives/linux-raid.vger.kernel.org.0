@@ -2,56 +2,61 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AD07017534C
-	for <lists+linux-raid@lfdr.de>; Mon,  2 Mar 2020 06:25:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FD5F17538C
+	for <lists+linux-raid@lfdr.de>; Mon,  2 Mar 2020 07:13:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726030AbgCBFZo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 2 Mar 2020 00:25:44 -0500
-Received: from len.romanrm.net ([91.121.86.59]:48398 "EHLO len.romanrm.net"
+        id S1726263AbgCBGN0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 2 Mar 2020 01:13:26 -0500
+Received: from mail.dsns.gov.ua ([194.0.148.101]:47304 "EHLO mail.dsns.gov.ua"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbgCBFZo (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 2 Mar 2020 00:25:44 -0500
-Received: from natsu (natsu.40.romanrm.net [IPv6:fd39:aa:c499:6515:e99e:8f1b:cfc9:ccb8])
-        by len.romanrm.net (Postfix) with SMTP id 887D243397;
-        Mon,  2 Mar 2020 05:25:42 +0000 (UTC)
-Date:   Mon, 2 Mar 2020 10:25:42 +0500
-From:   Roman Mamedov <rm@romanrm.net>
-To:     "David C. Rankin" <drankinatty@suddenlinkmail.com>
-Cc:     mdraid <linux-raid@vger.kernel.org>
-Subject: Re: Linux 5.5 Breaks Raid1 on Device instead of Partition, Unusable
- I/O
-Message-ID: <20200302102542.309e2d19@natsu>
-In-Reply-To: <e46b2ae7-3b88-05f2-58d7-94ee3df449e4@suddenlinkmail.com>
-References: <e46b2ae7-3b88-05f2-58d7-94ee3df449e4@suddenlinkmail.com>
+        id S1725446AbgCBGNZ (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 2 Mar 2020 01:13:25 -0500
+X-Greylist: delayed 25093 seconds by postgrey-1.27 at vger.kernel.org; Mon, 02 Mar 2020 01:13:21 EST
+Received: from localhost (localhost [127.0.0.1])
+        by mail.dsns.gov.ua (Postfix) with ESMTP id BBE291FC7B1A;
+        Sun,  1 Mar 2020 22:27:30 +0200 (EET)
+Received: from mail.dsns.gov.ua ([127.0.0.1])
+        by localhost (mail.dsns.gov.ua [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id S75rTB7JEydT; Sun,  1 Mar 2020 22:27:30 +0200 (EET)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.dsns.gov.ua (Postfix) with ESMTP id 5BA411FA620B;
+        Sun,  1 Mar 2020 22:21:45 +0200 (EET)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.dsns.gov.ua 5BA411FA620B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dsns.gov.ua;
+        s=1E60DAC0-2607-11E9-81E6-7A77C2B36653; t=1583094106;
+        bh=njlCkWFc0hcw8eBX6ul4CN7Q0eDgIqGtksJn7ge99kc=;
+        h=Date:From:Message-ID:MIME-Version;
+        b=MNqv7wxPb5ptLZpegGrPa1iHEdOJdTNOKGb2U9Q58t3BFdT49XFh6vgS/zn8rC/5g
+         kv0SFE7rEwzovJv/Mhtz0k+GVvpPt7OCD6QywRS3XLVVTQ78OZWx7bJkET3c0Qby4R
+         GlMOw+XvvGVgeWiXN9SkeMoUw7yQdk4qHeiKR3brBdFqXyTdhi1fcOA0x5ea9y4Mdf
+         uJ+lLv+3ajPY0nYC6Y5zKKiMiGl1+zwhzFU1RmzBc/0/750Vn7x0OrSXsrCa3svrBg
+         LELzoQhKe29LUs7spnxLrcWYu/C9WVYycts6au+voFgGIbvN7QkHkUp9tFmmQWi/eZ
+         UlVPHz07I6+5Q==
+X-Virus-Scanned: amavisd-new at dsns.gov.ua
+Received: from mail.dsns.gov.ua ([127.0.0.1])
+        by localhost (mail.dsns.gov.ua [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 6j_p4uF_JICh; Sun,  1 Mar 2020 22:21:45 +0200 (EET)
+Received: from mail.dsns.gov.ua (localhost [127.0.0.1])
+        by mail.dsns.gov.ua (Postfix) with ESMTP id A04FF1FC5450;
+        Sun,  1 Mar 2020 21:59:28 +0200 (EET)
+Date:   Sun, 1 Mar 2020 21:59:28 +0200 (EET)
+From:   Peter Wong <sport08@dsns.gov.ua>
+Reply-To: petrwong@hotmail.com
+Message-ID: <464635221.3674166.1583092768623.JavaMail.zimbra@dsns.gov.ua>
+Subject: Hello
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [5.154.174.49, 172.68.102.151]
+X-Mailer: Zimbra 8.8.15_GA_3899 (zclient/8.8.15_GA_3899)
+Thread-Index: 3O/8ccrlbZdxQ9U2SgkVgLNKDcW1Og==
+Thread-Topic: Hello
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Sun, 1 Mar 2020 19:50:03 -0600
-"David C. Rankin" <drankinatty@suddenlinkmail.com> wrote:
 
->   Let me know if there is anything else I can send, and let me know if I
-> should stop the scrub or just let it run. I'm happy to run any diagnostic you
-> can think of that might help. Thanks.
 
-It doesn't seem convincing that the issue is raw devices vs partitions, or
-even kernel version related, especially since you rolled it back and the issue
-remains.
-
-What else you could send is "smartctl -a" of all devices;
-
-and most importantly, while the "slow" scrub is running on md4, start:
-
-  iostat -x 2 /dev/sdc /dev/sdd
-
-(enlarge the terminal window) and see if any of the 2 devices is pegged into
-100.0 in the last "%util" column, or just showing much higher values there
-than the other one.
-
--- 
-With respect,
-Roman
+Can we talk now?
