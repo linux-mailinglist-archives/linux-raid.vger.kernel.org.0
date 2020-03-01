@@ -2,60 +2,66 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A167A174ED6
-	for <lists+linux-raid@lfdr.de>; Sun,  1 Mar 2020 19:07:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 77F7D174F17
+	for <lists+linux-raid@lfdr.de>; Sun,  1 Mar 2020 20:08:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbgCASHi (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 1 Mar 2020 13:07:38 -0500
-Received: from mail-vs1-f49.google.com ([209.85.217.49]:33273 "EHLO
-        mail-vs1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbgCASHi (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 1 Mar 2020 13:07:38 -0500
-Received: by mail-vs1-f49.google.com with SMTP id n27so5137830vsa.0
-        for <linux-raid@vger.kernel.org>; Sun, 01 Mar 2020 10:07:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=o+81Lq2oNASTdR7Zm+IfR+mvnKtgl+t6Iowabh1lT7U=;
-        b=TE2K1sVzNlNGJCcXpmicOmptBy3hauICAVBriRCF6jwlF9B6xlM5GuDgXjJsBDQPmh
-         qxynjOnisHdlUw3gPLAHW0mvr4SHH3OdQGFjK4A3AjtIEDPDAUVn4C7sjt4+ZBBF0PQE
-         9P2RRPO3OVIBAEpiAj1CCaf7sjzunBZQUr3caehy5coNkh/nYDjBDVpdHFXPHC1WkPuV
-         4BsvdhXhmNfxyoudMY7hNjPtlC42uhEEZNUDj/3zjBKVGNwIecKjnYXDELeh5D2JJJJc
-         avuJ7DLoeYv+/876T6apHOcB8g/NkabfRM9dX+kRn3IE2tdUgC/+BqbqCHbiFuULv3hG
-         Vl0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=o+81Lq2oNASTdR7Zm+IfR+mvnKtgl+t6Iowabh1lT7U=;
-        b=dbl1gcOLW2uPhKAFmC4n8tEJsXo7xSa1mxq/q9NsYCg0ggcW2dgfMNPnNfOrJDoVY/
-         HPR97bTgEel3rSGWyvzaLiDUn8CkeGPX5dLRg7CINdSLbuwzDpo7w9TjKzYZs7Tc6Ebf
-         Q7PLbSHHg7qjHjCXNUZZOdSwShKk8ZFUVHZHcSEp1hTotW24G15/MONZbQBgNiyA3j+T
-         hFJL+RMFYo0zpAlD7p41MGzqThXFhoKknTxOM/oQDIaO/lJGnbO1AUQ6DARqwWmv1S7u
-         LWThDMNWG/p3JHDRQBzW4bHeyhSXzfFjJUnV0RlbWdNThB9HXrp3qF7WdvmLQD3sAq3a
-         cSqw==
-X-Gm-Message-State: ANhLgQ1fzkmm48hZw7tmD4ja7E74ujQLWLko4jkXRCyWUOv7v9DqrvSU
-        nHTnNIzpKgQs+Oi/t6LNBaR6g92ZrmoQkKjmNa2DfA==
-X-Google-Smtp-Source: ADFU+vuaYkElvOTInqTX78oZgUmDe+YXC43+/EzFtLyG+FEK45OZEqm8aGyK3dlXmje96T00ELELkeuYZqQbWzvSrI0=
-X-Received: by 2002:a67:1983:: with SMTP id 125mr7199490vsz.63.1583086057351;
- Sun, 01 Mar 2020 10:07:37 -0800 (PST)
+        id S1726418AbgCATH6 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 1 Mar 2020 14:07:58 -0500
+Received: from smtp.hosts.co.uk ([85.233.160.19]:13269 "EHLO smtp.hosts.co.uk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726146AbgCATH5 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sun, 1 Mar 2020 14:07:57 -0500
+Received: from [86.155.171.124] (helo=[192.168.1.225])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1j8TwR-0001tj-55; Sun, 01 Mar 2020 19:07:55 +0000
+Subject: Re: Grow array and convert from raid 5 to 6
+To:     William Morgan <therealbrewer@gmail.com>,
+        linux-raid@vger.kernel.org
+References: <CALc6PW7C30Z6bccQLXLPf8zYuM=aBVZ_hLgW3i5gqZFVsLRpfA@mail.gmail.com>
+From:   antlists <antlists@youngman.org.uk>
+Message-ID: <fa393999-3f56-0bcf-b097-462a209f1eae@youngman.org.uk>
+Date:   Sun, 1 Mar 2020 19:07:56 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-From:   William Morgan <therealbrewer@gmail.com>
-Date:   Sun, 1 Mar 2020 12:07:26 -0600
-Message-ID: <CALc6PW7C30Z6bccQLXLPf8zYuM=aBVZ_hLgW3i5gqZFVsLRpfA@mail.gmail.com>
-Subject: Grow array and convert from raid 5 to 6
-To:     linux-raid@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CALc6PW7C30Z6bccQLXLPf8zYuM=aBVZ_hLgW3i5gqZFVsLRpfA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-I have a healthy 4 disk raid 5 array (data only, non booting) that is
-running out of space. I'd like to add 4 more disks for additional
-space, as well as convert to raid 6 for additional fault tolerance.
-I've read through the wiki page on converting an existing system, but
-I'm still not sure how to proceed. Can anyone outline the steps for
-me? Thanks for your help.
+On 01/03/2020 18:07, William Morgan wrote:
+> I have a healthy 4 disk raid 5 array (data only, non booting) that is
+> running out of space. I'd like to add 4 more disks for additional
+> space, as well as convert to raid 6 for additional fault tolerance.
+> I've read through the wiki page on converting an existing system, but
+> I'm still not sure how to proceed. Can anyone outline the steps for
+> me? Thanks for your help.
+
+> Looks like you looked at the wrong section ... :-) Look at "a guide to mdadm".
+
+The subsection "upgrading a mirror raid to a parity raid" contains the 
+information you need, just not laid out nicely for you.
+
+You want to "grow" your raid, and you could do it in one hit, or in 
+several steps. I'd probably add the drives first, "--grow --add disk1 
+--add disk2 ..." to give an array with 4 active drives and 4 spares. 
+Then you can upgrade to raid 6 - "--grow --level=6 --raid-devices=8".
+
+> A little bit of advice - MAKE SURE you have the latest mdadm, and if 
+> possible an up-to-date kernel. What mdadm and kernel do you have?
+
+If your kernel/mdadm is older, the reshape might hang at 0%. The easiest 
+fix is to reboot into an up-to-date rescue disk and re-assemble the 
+array, at which point it'll kick off fine. The only snag, of course, is 
+that means your system is not available for normal use until the reshape 
+is complete and you can reboot back into your normal setup.
 
 Cheers,
-Bill
+
+Wol
+
