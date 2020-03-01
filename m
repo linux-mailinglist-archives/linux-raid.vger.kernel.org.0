@@ -2,52 +2,60 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 842A1174A7B
-	for <lists+linux-raid@lfdr.de>; Sun,  1 Mar 2020 01:33:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A167A174ED6
+	for <lists+linux-raid@lfdr.de>; Sun,  1 Mar 2020 19:07:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbgCAAdV (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 29 Feb 2020 19:33:21 -0500
-Received: from smtp.hosts.co.uk ([85.233.160.19]:38112 "EHLO smtp.hosts.co.uk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726786AbgCAAdV (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sat, 29 Feb 2020 19:33:21 -0500
-Received: from [86.155.171.124] (helo=[192.168.1.225])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1j8CXn-0003Ob-7I; Sun, 01 Mar 2020 00:33:19 +0000
-Subject: Re: Choosing a SATA HD for RAID1
-To:     Hans Malissa <hmalissa76@gmail.com>, linux-raid@vger.kernel.org
-References: <CAG6BYRzw4i6mtTfEVnMpwGAVW0r=BwODiN+0o-UggiaEyo4VSw@mail.gmail.com>
- <5E5A2C65.3090006@youngman.org.uk>
- <CAG6BYRzUw=QOegxd8DmNkyUb-oCQgiz-_GHzkJ1-284G6AoB7g@mail.gmail.com>
-From:   antlists <antlists@youngman.org.uk>
-Message-ID: <1e8153f2-29d5-85b6-f79a-0ce516796367@youngman.org.uk>
-Date:   Sun, 1 Mar 2020 00:33:18 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1726188AbgCASHi (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 1 Mar 2020 13:07:38 -0500
+Received: from mail-vs1-f49.google.com ([209.85.217.49]:33273 "EHLO
+        mail-vs1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbgCASHi (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 1 Mar 2020 13:07:38 -0500
+Received: by mail-vs1-f49.google.com with SMTP id n27so5137830vsa.0
+        for <linux-raid@vger.kernel.org>; Sun, 01 Mar 2020 10:07:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=o+81Lq2oNASTdR7Zm+IfR+mvnKtgl+t6Iowabh1lT7U=;
+        b=TE2K1sVzNlNGJCcXpmicOmptBy3hauICAVBriRCF6jwlF9B6xlM5GuDgXjJsBDQPmh
+         qxynjOnisHdlUw3gPLAHW0mvr4SHH3OdQGFjK4A3AjtIEDPDAUVn4C7sjt4+ZBBF0PQE
+         9P2RRPO3OVIBAEpiAj1CCaf7sjzunBZQUr3caehy5coNkh/nYDjBDVpdHFXPHC1WkPuV
+         4BsvdhXhmNfxyoudMY7hNjPtlC42uhEEZNUDj/3zjBKVGNwIecKjnYXDELeh5D2JJJJc
+         avuJ7DLoeYv+/876T6apHOcB8g/NkabfRM9dX+kRn3IE2tdUgC/+BqbqCHbiFuULv3hG
+         Vl0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=o+81Lq2oNASTdR7Zm+IfR+mvnKtgl+t6Iowabh1lT7U=;
+        b=dbl1gcOLW2uPhKAFmC4n8tEJsXo7xSa1mxq/q9NsYCg0ggcW2dgfMNPnNfOrJDoVY/
+         HPR97bTgEel3rSGWyvzaLiDUn8CkeGPX5dLRg7CINdSLbuwzDpo7w9TjKzYZs7Tc6Ebf
+         Q7PLbSHHg7qjHjCXNUZZOdSwShKk8ZFUVHZHcSEp1hTotW24G15/MONZbQBgNiyA3j+T
+         hFJL+RMFYo0zpAlD7p41MGzqThXFhoKknTxOM/oQDIaO/lJGnbO1AUQ6DARqwWmv1S7u
+         LWThDMNWG/p3JHDRQBzW4bHeyhSXzfFjJUnV0RlbWdNThB9HXrp3qF7WdvmLQD3sAq3a
+         cSqw==
+X-Gm-Message-State: ANhLgQ1fzkmm48hZw7tmD4ja7E74ujQLWLko4jkXRCyWUOv7v9DqrvSU
+        nHTnNIzpKgQs+Oi/t6LNBaR6g92ZrmoQkKjmNa2DfA==
+X-Google-Smtp-Source: ADFU+vuaYkElvOTInqTX78oZgUmDe+YXC43+/EzFtLyG+FEK45OZEqm8aGyK3dlXmje96T00ELELkeuYZqQbWzvSrI0=
+X-Received: by 2002:a67:1983:: with SMTP id 125mr7199490vsz.63.1583086057351;
+ Sun, 01 Mar 2020 10:07:37 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAG6BYRzUw=QOegxd8DmNkyUb-oCQgiz-_GHzkJ1-284G6AoB7g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+From:   William Morgan <therealbrewer@gmail.com>
+Date:   Sun, 1 Mar 2020 12:07:26 -0600
+Message-ID: <CALc6PW7C30Z6bccQLXLPf8zYuM=aBVZ_hLgW3i5gqZFVsLRpfA@mail.gmail.com>
+Subject: Grow array and convert from raid 5 to 6
+To:     linux-raid@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 29/02/2020 18:08, Hans Malissa wrote:
-> On Sat, Feb 29, 2020 at 2:18 AM Wols Lists <antlists@youngman.org.uk> wrote:
->> I notice that the WD RE4 drive is listed with almost exactly the same
->> model number you give. It also looks like these drives are known as WD
->> Gold, so it's extremely likely the drives you are looking at are okay.
-> Thanks a lot for this information. WD's product names are confusing;
-> could it be that Gold is a newer version of the RE?
-> Greetings,
->
-Dunno. It wouldn't surprise me if RE was engineering's name, and Gold 
-was marketing's name.
+I have a healthy 4 disk raid 5 array (data only, non booting) that is
+running out of space. I'd like to add 4 more disks for additional
+space, as well as convert to raid 6 for additional fault tolerance.
+I've read through the wiki page on converting an existing system, but
+I'm still not sure how to proceed. Can anyone outline the steps for
+me? Thanks for your help.
 
 Cheers,
-
-Wol
-
+Bill
