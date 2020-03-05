@@ -2,123 +2,139 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 04B9A179C61
-	for <lists+linux-raid@lfdr.de>; Thu,  5 Mar 2020 00:25:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D8A2D179CDC
+	for <lists+linux-raid@lfdr.de>; Thu,  5 Mar 2020 01:31:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388550AbgCDXZU (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 4 Mar 2020 18:25:20 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:45869 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388548AbgCDXZR (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 4 Mar 2020 18:25:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583364316;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=p8juafuY9nBxbQdXTOkQQGLh3mRvbcDsJuPyMUd6LN0=;
-        b=DRLwErAqe8D1fUBfiuE7tvDYJTQtlvPk9Sldr4Ftw1/402+lIxM9AerPWDWnmGU88J87wI
-        +A5EmwwCbcs791gyFsj/jWmzejZG8afUVO7n3sEmBPZZkheCEg/wuTze/bp7N1f73zF2q7
-        UkhZl8Hovr3+bff3H4ogPzVXYnNmrSg=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-412-6vFyphWnNBSAkHlQYGDDwA-1; Wed, 04 Mar 2020 18:25:13 -0500
-X-MC-Unique: 6vFyphWnNBSAkHlQYGDDwA-1
-Received: by mail-ed1-f71.google.com with SMTP id r26so2861069edl.5
-        for <linux-raid@vger.kernel.org>; Wed, 04 Mar 2020 15:25:12 -0800 (PST)
+        id S2388484AbgCEAbf (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 4 Mar 2020 19:31:35 -0500
+Received: from mail-vs1-f48.google.com ([209.85.217.48]:33767 "EHLO
+        mail-vs1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387931AbgCEAbf (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 4 Mar 2020 19:31:35 -0500
+Received: by mail-vs1-f48.google.com with SMTP id n27so2485713vsa.0
+        for <linux-raid@vger.kernel.org>; Wed, 04 Mar 2020 16:31:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=XPBbwGKI+D/rOGGSlTimrXUPHE3Wn9yxorSf218jcGk=;
+        b=XS1HzUaJLkJxP75FO07tW1oalHpPbFfHYGnZma5nREJMS7fALDcTjmJu+WGVL5rsKQ
+         tTaZ8huLHWjL56viT5/DfMG635OcAxMhF4cx/W+2IxFyTHrRC3eVYWQ0awwwUijjT7cA
+         vKZy4p0ZImBsZsiHoPws/lRUiiI/3yyKoUG0tIOQcuXL+0BVoFpXzF/CJ/B0wbpVfEXd
+         rXV4gtsyDqlLxmQsA7dJNHZWkmsWU3BP3UZr2lmHnFu5tFy1l5Pov5YA9fNxAOS595sK
+         jaqiZ+uMNvqs2EREYUN0BnC196IOeWhcxsbaEIxaTDUIm0TVD+p8Gb5s5Y50T28vClWL
+         wlhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p8juafuY9nBxbQdXTOkQQGLh3mRvbcDsJuPyMUd6LN0=;
-        b=DySyeD7wwTrZ01SdSyLK/00C2Otaspy7arVCylB4sL1fBJSTFQN512wbOsTrJ/aYfM
-         VUjv4lFMzOkjGRcjQ/h5aAeJpw0MBSCmS9cbrVGWQQXLni/iHkhMfvsDXTI8RDRpeLwM
-         CC9+ufc+C5J4Ukazwf3/Kqf2hkCxXMJmsZirDIRyIcyW2OvcLsHgJIaom9eGaa5hWXkG
-         v8VcXoyhGc06zLnSaCK6GABnKbp1rsWqgcBDV33RJDjWql8amCxSLcCNBOZroHWDE5Lb
-         mKfkTmbmavVQBS4pZJhL+k7NR7t4qlWXAQn6Lu85zHspjfL0A2ls1s6UiK/nZXCFU45M
-         20Rw==
-X-Gm-Message-State: ANhLgQ2y03Kmo9FLNyCvGgyOz5VT1pjPfIHgurS5etM/SM/gCjYKm7Qq
-        dnvZRwfr13jl0T1sT0gWFk9pypfCKyQVhD2pF3VjlRwiDDI91jA1vlEyUrFV3wsaiq4bQs1AU/M
-        BSE3MyIQ0t+E+pFsd71xPoPKijVaPYwJ/TP61ZQ==
-X-Received: by 2002:aa7:cac4:: with SMTP id l4mr5308675edt.367.1583364311868;
-        Wed, 04 Mar 2020 15:25:11 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vtRn9VC83shY8XHTDzRhsN1U3qcWCfB7uMojQH5bbSmIYgKzcRcKNB9bk5ZyS5m8JegYhUQLyH/6undXUq6ODg=
-X-Received: by 2002:aa7:cac4:: with SMTP id l4mr5308663edt.367.1583364311594;
- Wed, 04 Mar 2020 15:25:11 -0800 (PST)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=XPBbwGKI+D/rOGGSlTimrXUPHE3Wn9yxorSf218jcGk=;
+        b=E/xMxpgFK8Dd0GBVBVCX2Vg8AKaFvyBVrlDnMQw3dePYtoWe7KQ5k5WPrSBz4VMcl8
+         UxB1M/8di/bxDjIFsx8+6aCspoMwACZcbA5khHDl2L0REHuhIevO51ddjXxSo+EUzDs/
+         d3YvNk4Eh1wh2uOcIfyDUOhe81vVcQF1/16QTOuNys2UAvTInDDlYjiBDNnv7uryunF1
+         VAZISBzM/Y25FKS90mmJ99Zcpgwm3Drwfp5rzUqIcunwQK6mAFfKPYOpHV8x2ah+LsY4
+         tv9ML0Qfyb17HxLkKWwYMBUD50hnbCVCUGEmzE1hoc1XgvRPhy9Rb0CxR8YxCz1yTviL
+         qNVA==
+X-Gm-Message-State: ANhLgQ1LsSm2oP6nCaJ+tZ/w4Mqvi8b/axuc5OCv0+WGGrC3EtkBXq3a
+        upEJ4j7U3njRV7s3WT3OGZ+5uz/vjhRMG/2EWefq3LsR
+X-Google-Smtp-Source: ADFU+vvFZzvkhzybgAjZPDy26aVD484YjBolHXz/Qac7kByx90D1vqr/p7cegYcJj6M5m3DLMLvZFNFMsVvBqm8Wt5w=
+X-Received: by 2002:a67:fa43:: with SMTP id j3mr2824270vsq.70.1583368291831;
+ Wed, 04 Mar 2020 16:31:31 -0800 (PST)
 MIME-Version: 1.0
-References: <20200223165724.23816-1-mcroce@redhat.com> <CAPcyv4ijKqVhHixsp42kZL4p7uReJ67p3XoPyw5ojM-ZsOOUOg@mail.gmail.com>
-In-Reply-To: <CAPcyv4ijKqVhHixsp42kZL4p7uReJ67p3XoPyw5ojM-ZsOOUOg@mail.gmail.com>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Thu, 5 Mar 2020 00:24:35 +0100
-Message-ID: <CAGnkfhxAHctB9MHD0LzSk8uh4tEoF-hw+iwYAEdfeY_=g3NT2A@mail.gmail.com>
-Subject: Re: [PATCH] block: refactor duplicated macros
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-block@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-bcache@vger.kernel.org,
-        linux-raid <linux-raid@vger.kernel.org>,
-        linux-mmc@vger.kernel.org,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-nfs@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>
+From:   William Morgan <therealbrewer@gmail.com>
+Date:   Wed, 4 Mar 2020 18:31:21 -0600
+Message-ID: <CALc6PW74+m1tk4BGgyQRCcx1cU5W=DKWL1mq7EpriW6s=JajVg@mail.gmail.com>
+Subject: Need help with degraded raid 5
+To:     linux-raid@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 9:57 PM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Sun, Feb 23, 2020 at 9:04 AM Matteo Croce <mcroce@redhat.com> wrote:
-> >
-> > The macros PAGE_SECTORS, PAGE_SECTORS_SHIFT and SECTOR_MASK are defined
-> > several times in different flavours across the whole tree.
-> > Define them just once in a common header.
-> >
-> > Signed-off-by: Matteo Croce <mcroce@redhat.com>
-> > ---
-> >  block/blk-lib.c                  |  2 +-
-> >  drivers/block/brd.c              |  3 ---
-> >  drivers/block/null_blk_main.c    |  4 ----
-> >  drivers/block/zram/zram_drv.c    |  8 ++++----
-> >  drivers/block/zram/zram_drv.h    |  2 --
-> >  drivers/dax/super.c              |  2 +-
->
-> For the dax change:
->
-> Acked-by: Dan Williams <dan.j.williams@intel.com>
->
-> However...
->
-> [..]
-> >  include/linux/blkdev.h           |  4 ++++
-> [..]
-> > diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-> > index 053ea4b51988..b3c9be6906a0 100644
-> > --- a/include/linux/blkdev.h
-> > +++ b/include/linux/blkdev.h
-> > @@ -910,6 +910,10 @@ static inline struct request_queue *bdev_get_queue(struct block_device *bdev)
-> >  #define SECTOR_SIZE (1 << SECTOR_SHIFT)
-> >  #endif
-> >
-> > +#define PAGE_SECTORS_SHIFT     (PAGE_SHIFT - SECTOR_SHIFT)
-> > +#define PAGE_SECTORS           (1 << PAGE_SECTORS_SHIFT)
-> > +#define SECTOR_MASK            (PAGE_SECTORS - 1)
-> > +
->
-> ...I think SECTOR_MASK is misnamed given it considers pages, and
-> should probably match the polarity of PAGE_MASK, i.e.
->
-> #define PAGE_SECTORS_MASK            (~(PAGE_SECTORS - 1))
->
+Hello,
 
-Makes sense. I just kept the same value as in drivers/block/null_blk_main.c
+I'm working with a 4 disk raid 5. In the past I have experienced a
+problem that resulted in the array being set to "inactive", but with
+some guidance from the list, I was able to rebuild with no loss of
+data. Recently I have a slightly different situation where one disk
+was "removed" and marked as "spare", so the array is still active, but
+degraded.
 
--- 
-Matteo Croce
-per aspera ad upstream
+I've been monitoring the array, and I got a "Fail event" notification
+right after a power blip which showed this mdstat:
 
+Personalities : [linear] [multipath] [raid0] [raid1] [raid6] [raid5]
+[raid4] [raid10]
+md0 : active raid5 sdm1[4](F) sdj1[0] sdk1[1] sdl1[2]
+      23441679360 blocks super 1.2 level 5, 64k chunk, algorithm 2 [4/3] [UUU_]
+      bitmap: 0/59 pages [0KB], 65536KB chunk
+
+unused devices: <none>
+
+A little while later I got a "DegradedArray event" notification with
+the following mdstat:
+
+Personalities : [raid6] [raid5] [raid4] [linear] [multipath] [raid0]
+[raid1] [raid10]
+md0 : active raid5 sdl1[4] sdj1[1] sdk1[2] sdi1[0]
+      23441679360 blocks super 1.2 level 5, 64k chunk, algorithm 2 [4/3] [UUU_]
+      [>....................]  recovery =  0.0% (12600/7813893120)
+finish=113621.8min speed=1145K/sec
+      bitmap: 2/59 pages [8KB], 65536KB chunk
+
+unused devices: <none>
+
+which seemed to imply that sdl was being rebuilt, but then I got
+another "DegradedArray event" notification with this:
+
+Personalities : [raid6] [raid5] [raid4] [linear] [multipath] [raid0]
+[raid1] [raid10]
+md0 : active raid5 sdl1[4](S) sdj1[1] sdk1[2] sdi1[0]
+      23441679360 blocks super 1.2 level 5, 64k chunk, algorithm 2 [4/3] [UUU_]
+      bitmap: 2/59 pages [8KB], 65536KB chunk
+
+unused devices: <none>
+
+
+I don't think anything is really wrong with the removed disk however.
+So assuming I've got backups, what do I need to do to reinsert the
+disk and get the array back to a normal state? Or does that disk's
+data need to be completely rebuilt? And how do I initiate that?
+
+I'm using the latest mdadm and a very recent kernel. Currently I get this:
+
+bill@bill-desk:~$ sudo mdadm --detail /dev/md0
+/dev/md0:
+           Version : 1.2
+     Creation Time : Sat Sep 22 19:10:10 2018
+        Raid Level : raid5
+        Array Size : 23441679360 (22355.73 GiB 24004.28 GB)
+     Used Dev Size : 7813893120 (7451.91 GiB 8001.43 GB)
+      Raid Devices : 4
+     Total Devices : 4
+       Persistence : Superblock is persistent
+
+     Intent Bitmap : Internal
+
+       Update Time : Mon Mar  2 17:41:32 2020
+             State : clean, degraded
+    Active Devices : 3
+   Working Devices : 4
+    Failed Devices : 0
+     Spare Devices : 1
+
+            Layout : left-symmetric
+        Chunk Size : 64K
+
+Consistency Policy : bitmap
+
+              Name : bill-desk:0  (local to host bill-desk)
+              UUID : 06ad8de5:3a7a15ad:88116f44:fcdee150
+            Events : 10407
+
+    Number   Major   Minor   RaidDevice State
+       0       8      129        0      active sync   /dev/sdi1
+       1       8      145        1      active sync   /dev/sdj1
+       2       8      161        2      active sync   /dev/sdk1
+       -       0        0        3      removed
+
+       4       8      177        -      spare   /dev/sdl1
