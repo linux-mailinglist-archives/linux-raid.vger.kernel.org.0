@@ -2,121 +2,86 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 999EC18091C
-	for <lists+linux-raid@lfdr.de>; Tue, 10 Mar 2020 21:27:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 66F4E1809E3
+	for <lists+linux-raid@lfdr.de>; Tue, 10 Mar 2020 22:06:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726273AbgCJU1S (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 10 Mar 2020 16:27:18 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:36006 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgCJU1S (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 10 Mar 2020 16:27:18 -0400
-Received: by mail-ed1-f67.google.com with SMTP id a13so8768edh.3
-        for <linux-raid@vger.kernel.org>; Tue, 10 Mar 2020 13:27:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=p+ul+bEhV3dFl9CTEkYnVitS4LJaQoxtCfO8psH/Ksc=;
-        b=AjyDRgCdotwC4lymYH8lPGFs5ScXi7gMXJcuKyxVEiZyX+g3viMo48gkV/0WmyFia6
-         t/+Zfxh73FpMHYPV+LZT5Qqhqgr15BkeF2Yz4JOSW7S+VdRYXVYpGXASH12iXJ/9JBwj
-         JEG7qI4OaidWd6uZWW6QLr252odPjRMX+nPbR48Y2H4sFVIY+ewx1vgmaMLrsmrUQkoT
-         0AUrzOPJ5vtaHfkloISZtMn8a4LChjL8fCLYtB6zaf0znNZ3nXof3hQXvKlGi7oNQgvV
-         iUVDfTxYvtQc5DsjvkzEQtBCISFfxcUg2oXZo7moRMuZLfMcRAVXkvBSaT6692HV+Bzy
-         g9FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=p+ul+bEhV3dFl9CTEkYnVitS4LJaQoxtCfO8psH/Ksc=;
-        b=OBl1c3bPHyiaHnQbOmkDHLGbaz/FzD2KVwGsyA8zSytUiqiACWqPIQoKOsrwjpsAVh
-         mKDDo2FYtPYGXGixIxcjwE/sKgAnJpTCwMXuvhAg74mZ+/STngobU+j7aY7n16Ealbzm
-         x2LoNnTde7OyZpI8tBHFyK/6texC5CU7lbkkTXrsweR1SngX6eXtJEdGgZ35xboAXEc8
-         lvavDumqCfMNIxHta6rXKHIifuEEfYz840EtPzEiNqjXV1+0kY3MznHPKSmakRBMYi5S
-         dmWyo2MYSyzaEF9ibdRTASyyCMdnI3wifuFtjJgCmcBdYvbJc/1YHQXlwNkhGUKCF05S
-         MXlw==
-X-Gm-Message-State: ANhLgQ17Nsc2RS1jBRH/t/RrS5AxOWkhXZGF0WAvgXH9XjUMels0QArJ
-        bnuaUqEBowMGtHVFOPLCwnFxjlBjqBs=
-X-Google-Smtp-Source: ADFU+vuD5dyxmgjC7MFoLqUkW3ANvhNIbt2Zt3fpwJzjbG/PC092Skx1IFt2C3skc7VZ6Oyq9Ksu6g==
-X-Received: by 2002:aa7:d305:: with SMTP id p5mr23020543edq.222.1583872036630;
-        Tue, 10 Mar 2020 13:27:16 -0700 (PDT)
-Received: from ?IPv6:2001:16b8:4849:2c00:55b0:6e1e:26ab:27a5? ([2001:16b8:4849:2c00:55b0:6e1e:26ab:27a5])
-        by smtp.gmail.com with ESMTPSA id t1sm3525259eju.35.2020.03.10.13.27.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2020 13:27:15 -0700 (PDT)
-Subject: Re: Pausing md check hangs
-To:     Georgi Nikolov <gnikolov@icdsoft.com>, song@kernel.org
-Cc:     linux-raid <linux-raid@vger.kernel.org>
-References: <2ce8813c-fd3e-5e78-39ac-049ddfa79ff6@icdsoft.com>
- <15519216-347d-c355-fa1e-e1ec29f7e996@cloud.ionos.com>
- <58a16d12-4df3-c97c-33cb-b7eed3534a8b@icdsoft.com>
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Message-ID: <185645a9-48fb-e8df-4257-d395b08467f4@cloud.ionos.com>
-Date:   Tue, 10 Mar 2020 21:27:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1727631AbgCJVGR (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 10 Mar 2020 17:06:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40586 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726271AbgCJVGR (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 10 Mar 2020 17:06:17 -0400
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36E4A227BF;
+        Tue, 10 Mar 2020 21:06:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583874376;
+        bh=vhxZrp2Lx5DeATCenHy71j1LATXknii/r2+vE+Yb5m0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=VSxML8CZIv6TujbXRjRw9Ndm8hswQ0Iy4czB2jk6b7uVrcoP7w2FT3QpRGHO/Gfw8
+         1PAC8sWmIxLgfBwLT0IoBg95GgOQJewHjIgNWqAF9o7XsmOF2nFAtuL0aHnkZz6PQW
+         ByM8dtKGpYIidv0mnusE83YjNVcG4UXW3V9qqpcY=
+Received: by mail-lf1-f54.google.com with SMTP id i10so12136173lfg.11;
+        Tue, 10 Mar 2020 14:06:16 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ04zCsRs7UK9XWxVx7wooYAdDNSM9b0I0WQv78AILIpGR7hrwLU
+        Mm1oEeT5RNcvNoUsZ/IhpxOsvFDGqis7tSd4obw=
+X-Google-Smtp-Source: ADFU+vudBQrw1oSvW+1z/bikz1NjhAJyNp9q/S1l7eZSBzV8bqzYmhmQtaOP3eZbtp4E2HGJaK7++RE5+JjVfD/y/h8=
+X-Received: by 2002:ac2:554d:: with SMTP id l13mr39638lfk.82.1583874374294;
+ Tue, 10 Mar 2020 14:06:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <58a16d12-4df3-c97c-33cb-b7eed3534a8b@icdsoft.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200223165724.23816-1-mcroce@redhat.com>
+In-Reply-To: <20200223165724.23816-1-mcroce@redhat.com>
+From:   Song Liu <song@kernel.org>
+Date:   Tue, 10 Mar 2020 14:06:02 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW6DOkyvscJhxXPE+KLsw=WH6CQ=8_5uThzf7_pmD3E8JA@mail.gmail.com>
+Message-ID: <CAPhsuW6DOkyvscJhxXPE+KLsw=WH6CQ=8_5uThzf7_pmD3E8JA@mail.gmail.com>
+Subject: Re: [PATCH] block: refactor duplicated macros
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     linux-block@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-nvdimm@lists.01.org, linux-bcache@vger.kernel.org,
+        linux-raid <linux-raid@vger.kernel.org>,
+        linux-mmc@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-scsi@vger.kernel.org, linux-nfs@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+On Sun, Feb 23, 2020 at 8:58 AM Matteo Croce <mcroce@redhat.com> wrote:
+>
+> The macros PAGE_SECTORS, PAGE_SECTORS_SHIFT and SECTOR_MASK are defined
+> several times in different flavours across the whole tree.
+> Define them just once in a common header.
+>
+> Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> ---
+>  block/blk-lib.c                  |  2 +-
+>  drivers/block/brd.c              |  3 ---
+>  drivers/block/null_blk_main.c    |  4 ----
+>  drivers/block/zram/zram_drv.c    |  8 ++++----
+>  drivers/block/zram/zram_drv.h    |  2 --
+>  drivers/dax/super.c              |  2 +-
+>  drivers/md/bcache/util.h         |  2 --
+>  drivers/md/dm-bufio.c            |  6 +++---
+>  drivers/md/dm-integrity.c        | 10 +++++-----
+>  drivers/md/md.c                  |  4 ++--
+>  drivers/md/raid1.c               |  2 +-
+>  drivers/mmc/core/host.c          |  3 ++-
+>  drivers/scsi/xen-scsifront.c     |  4 ++--
+>  fs/iomap/buffered-io.c           |  2 +-
+>  fs/nfs/blocklayout/blocklayout.h |  2 --
+>  include/linux/blkdev.h           |  4 ++++
+>  include/linux/device-mapper.h    |  1 -
+>  17 files changed, 26 insertions(+), 35 deletions(-)
 
+For md:
 
-On 3/10/20 4:30 PM, Georgi Nikolov wrote:
-> I have tried new 4.19 kernel with proposed patches with no success. Same story with md1_raid6 (last 
-> time it was with 5.4 and md10_raid6).
-
-Did "cat /sys/block/mdX/md/journal_mode" still hang? I thought below change would help ...
-> 
->> diff --git a/drivers/md/raid5-cache.c b/drivers/md/raid5-cache.c
->> index 9b6da759dca2..a961d8eed73e 100644
->> --- a/drivers/md/raid5-cache.c
->> +++ b/drivers/md/raid5-cache.c
->> @@ -2532,13 +2532,10 @@ static ssize_t r5c_journal_mode_show(struct mddev *mddev, char *page)
->>         struct r5conf *conf;
->>         int ret;
->>
->> -       ret = mddev_lock(mddev);
->> -       if (ret)
->> -               return ret;
->> -
->> +       spin_lock(&mddev->lock);
->>         conf = mddev->private;
->>         if (!conf || !conf->log) {
->> -               mddev_unlock(mddev);
->> +               spin_unlock(&mddev->lock);
->>                 return 0;
->>         }
->>
->> @@ -2558,7 +2555,7 @@ static ssize_t r5c_journal_mode_show(struct mddev *mddev, char *page)
->>         default:
->>                 ret = 0;
->>         }
->> -       mddev_unlock(mddev);
->> +       spin_unlock(&mddev->lock);
->>         return ret;
->>  }
-
-
-Could you try with remove flush_workqueue(md_misc_wq) from below change? Or add some debug infos to 
-see whether the hang is caused by flush_workqueue.
-
->> --- a/drivers/md/md.c
->> +++ b/drivers/md/md.c
->> @@ -4779,7 +4779,8 @@ action_store(struct mddev *mddev, const char *page, size_t len)
->>                 if (test_bit(MD_RECOVERY_RUNNING, &mddev->recovery) &&
->>                     mddev_lock(mddev) == 0) {
->>                         flush_workqueue(md_misc_wq);
->> -                       if (mddev->sync_thread) {
->> +                       if (mddev->sync_thread ||
->> + test_bit(MD_RECOVERY_RUNNING,&mddev->recovery)) {
->>
-
-Thanks,
-Guoqing
+Acked-by: Song Liu <song@kernel.org>
