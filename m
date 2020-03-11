@@ -2,87 +2,73 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CF6B91818E6
-	for <lists+linux-raid@lfdr.de>; Wed, 11 Mar 2020 13:58:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 11F97181966
+	for <lists+linux-raid@lfdr.de>; Wed, 11 Mar 2020 14:16:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729457AbgCKM6n (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 11 Mar 2020 08:58:43 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35674 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729320AbgCKM6m (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 11 Mar 2020 08:58:42 -0400
-Received: by mail-io1-f68.google.com with SMTP id h8so1796475iob.2
-        for <linux-raid@vger.kernel.org>; Wed, 11 Mar 2020 05:58:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pXMGtTgQX/vG6YdfwMEutnSxHcYYkuMTZjUufEEkwrs=;
-        b=0RdqNJ64RPB/YwilvK1FgfDcZgni+Z2YUWUBcLwScASQbGBbB9Dz+LE4Mm35IFt6vr
-         4cSxKXzulAxx/FMhBjxo7H6LFUFR8GPqsvxXNjSRUPuzvFkJ4jv1PyVkcJG+rzbCC2Np
-         QluikAk9mzDbEMQsnqi+vhGhm69SUbxzK8wbFD8zbHl+VIITIdrwzXk7cwoU57h6DYTK
-         xP/B6p8lJjmkYSUT2EEde9KDBifsOxQlJzU6xNbSL1nZM0pl98Obd5V+EG9SnWmey6tz
-         SPlj8XfxaXHr4JqefQegQiSZa1hJYMurvTPgBuMJ9xU7xwGx1tFUNwEPiNDvzHAuPBK6
-         0h/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pXMGtTgQX/vG6YdfwMEutnSxHcYYkuMTZjUufEEkwrs=;
-        b=B7hPK/H9A2QnNDoDSPIlDJAQrLq6JBqj1XbQxOge+64idIsY+HHJJVmnJuFvapjy33
-         4KQsKToX3qnjt97rNF7d6B7IY7YzX0aXppkUb1Slk9m2dsyprCg4Hu2CPNrxR+xurBfj
-         DIirD1cxJoMaLVO81xb7LcUWA4iIttLnhcXeVAD9/ttq9GYmwQ+41Cbqb5BU0NoRjIi6
-         pfj84pOV+dJ5J/C47YKVAjYJ2EMt1MdHGe93u1vc0YIVdOe0LFxswKJLs1ZQWlb+k4si
-         tiZPpJqUmZIHLPVRLwsq0Ug0p0nQmZ7YhIajz9dhMXkVKcuFq/DjbSn7ixXsUTIPLOMc
-         6D2A==
-X-Gm-Message-State: ANhLgQ3ILseXa08LZ0NIrAzQoZsCKtY86gKjZxiAMjRc4R/WB+D4YneV
-        FjvvaNX19rgX32IdpJ8Bp/ZAgQ==
-X-Google-Smtp-Source: ADFU+vvQvrqamJpOiZ/PrfYXGY85lIbp+WER5L+9cjMJPMlJO1Ap5yHyqeha4+2wZHF6gubxcVHRhQ==
-X-Received: by 2002:a02:6658:: with SMTP id l24mr1450719jaf.33.1583931522194;
-        Wed, 11 Mar 2020 05:58:42 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id p79sm17821112ill.66.2020.03.11.05.58.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 05:58:41 -0700 (PDT)
-Subject: Re: [PATCH v3] block: refactor duplicated macros
-To:     Matteo Croce <mcroce@redhat.com>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-mmc@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-scsi@vger.kernel.org, linux-nfs@vger.kernel.org
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Song Liu <song@kernel.org>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-References: <20200311002254.121365-1-mcroce@redhat.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <7e03d359-f199-29d8-a75f-20c4b7ff3031@kernel.dk>
-Date:   Wed, 11 Mar 2020 06:58:39 -0600
+        id S1729499AbgCKNQl (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 11 Mar 2020 09:16:41 -0400
+Received: from ns3.fnarfbargle.com ([103.4.19.87]:48256 "EHLO
+        ns3.fnarfbargle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729103AbgCKNQk (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 11 Mar 2020 09:16:40 -0400
+X-Greylist: delayed 1536 seconds by postgrey-1.27 at vger.kernel.org; Wed, 11 Mar 2020 09:16:39 EDT
+Received: from [10.8.0.1] (helo=srv.home ident=heh17268)
+        by ns3.fnarfbargle.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.84_2)
+        (envelope-from <lists2009@fnarfbargle.com>)
+        id 1jC0p5-0005OI-1l; Wed, 11 Mar 2020 20:50:55 +0800
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=fnarfbargle.com; s=mail;
+        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject; bh=TWW0tvg24nn87VOdYas7f1Gc8AGPPPrCv1lqfGukqEU=;
+        b=ap8UMWHhQR+VpUudzn+rCelefUynyka2GS9VHmbSGqu8hY3/kvzjEW9FMNUp6C/H8YgRWCRBZZI6Y4giecXE0GQDHVVO6q5EHpohK4gU1Q83XW0cjqj0hnXcvbGvUI0p/zJbM8uVS0FWi61KPtsSmDZO5gRcmUM1posPI9GeYks=;
+Subject: Re: checkarray not running or emailing
+To:     Leslie Rhorer <lesrhorer@att.net>, linux-raid@vger.kernel.org
+References: <814aad65-fba3-334c-c4df-6b8f4bfc4193.ref@att.net>
+ <814aad65-fba3-334c-c4df-6b8f4bfc4193@att.net>
+ <0ef54c89-b486-eb0b-8d70-a043ef089c9f@att.net>
+From:   Brad Campbell <lists2009@fnarfbargle.com>
+Message-ID: <10e2db3d-13e6-573f-18bd-1443d6a27884@fnarfbargle.com>
+Date:   Wed, 11 Mar 2020 20:50:54 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200311002254.121365-1-mcroce@redhat.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <0ef54c89-b486-eb0b-8d70-a043ef089c9f@att.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 3/10/20 6:22 PM, Matteo Croce wrote:
-> The macros PAGE_SECTORS, PAGE_SECTORS_SHIFT and SECTOR_MASK are defined
-> several times in different flavours across the whole tree.
-> Define them just once in a common header.
+On 11/3/20 09:11, Leslie Rhorer wrote:
+>      Is there seriously no one here who knows how checkarray was launched in previous versions?
 > 
-> While at it, replace replace "PAGE_SHIFT - 9" with "PAGE_SECTORS_SHIFT" too
-> and rename SECTOR_MASK to PAGE_SECTORS_MASK.
+> On 3/1/2020 3:03 PM, Leslie Rhorer wrote:
+>>     I have upgraded 2 of my servers to Debian Buster, and now neither one seems to be running checkarray automatically.  In addition, when I run checkarray manually, it isn't sending update emails on the status of the job.  Actually, I have never been able to figure out how checkarray runs.  One my older servers, there doesn't seem to be anything in /etc/crontab, /etc/cron.monthly, /etc/init.d/, /etc/mdadm/mdadm.conf, or /lib/systemd/system/ that would run checkarray.
+> 
 
-Applied, thanks.
+On mine it's in /etc/cron.d/mdadm
 
+brad@srv:/etc/cron.d$ cat mdadm
+#
+# cron.d/mdadm -- schedules periodic redundancy checks of MD devices
+#
+# Copyright © martin f. krafft <madduck@madduck.net>
+# distributed under the terms of the Artistic Licence 2.0
+#
+
+# By default, run at 00:57 on every Sunday, but do nothing unless the day of
+# the month is less than or equal to 7. Thus, only run on the first Sunday of
+# each month. crontab(5) sucks, unfortunately, in this regard; therefore this
+# hack (see #380425).
+57 0 * * 0 root if [ -x /usr/share/mdadm/checkarray ] && [ $(date +\%d) -le 7 ]; then /usr/share/mdadm/checkarray --cron --all --idle --quiet; fi
+
+dpkg -L mdadm gave me a list of files and I just checked the cron entries.
+
+I don't run anything that recent, but Debian is Debian.
+
+Brad
 -- 
-Jens Axboe
-
+An expert is a person who has found out by his own painful
+experience all the mistakes that one can make in a very
+narrow field. - Niels Bohr
