@@ -2,127 +2,58 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 92D941816AC
-	for <lists+linux-raid@lfdr.de>; Wed, 11 Mar 2020 12:20:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E7210181797
+	for <lists+linux-raid@lfdr.de>; Wed, 11 Mar 2020 13:17:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729103AbgCKLUY (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 11 Mar 2020 07:20:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39412 "EHLO mx2.suse.de"
+        id S1729222AbgCKMRd (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 11 Mar 2020 08:17:33 -0400
+Received: from smtp.hosts.co.uk ([85.233.160.19]:59017 "EHLO smtp.hosts.co.uk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725834AbgCKLUV (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 11 Mar 2020 07:20:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B7121AED2;
-        Wed, 11 Mar 2020 11:20:18 +0000 (UTC)
-Subject: Re: [PATCH v3] block: refactor duplicated macros
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-bcache@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-mmc@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-scsi@vger.kernel.org,
-        linux-nfs@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Song Liu <song@kernel.org>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-References: <20200311002254.121365-1-mcroce@redhat.com>
-From:   Coly Li <colyli@suse.de>
-Organization: SUSE Labs
-Message-ID: <89925759-cbc1-e8f0-b9b3-23fd062ebbcd@suse.de>
-Date:   Wed, 11 Mar 2020 19:20:11 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.5.0
+        id S1729180AbgCKMRc (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 11 Mar 2020 08:17:32 -0400
+Received: from [86.146.112.25] (helo=[192.168.1.118])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1jC0Ik-0002DM-7P; Wed, 11 Mar 2020 12:17:30 +0000
+Subject: Re: checkarray not running or emailing
+To:     Leslie Rhorer <lesrhorer@att.net>, linux-raid@vger.kernel.org
+References: <814aad65-fba3-334c-c4df-6b8f4bfc4193.ref@att.net>
+ <814aad65-fba3-334c-c4df-6b8f4bfc4193@att.net>
+ <0ef54c89-b486-eb0b-8d70-a043ef089c9f@att.net>
+From:   Wols Lists <antlists@youngman.org.uk>
+Message-ID: <5E68D6D9.5040004@youngman.org.uk>
+Date:   Wed, 11 Mar 2020 12:17:29 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200311002254.121365-1-mcroce@redhat.com>
+In-Reply-To: <0ef54c89-b486-eb0b-8d70-a043ef089c9f@att.net>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 2020/3/11 8:22 上午, Matteo Croce wrote:
-> The macros PAGE_SECTORS, PAGE_SECTORS_SHIFT and SECTOR_MASK are defined
-> several times in different flavours across the whole tree.
-> Define them just once in a common header.
+On 11/03/20 01:11, Leslie Rhorer wrote:
+>     Is there seriously no one here who knows how checkarray was launched
+> in previous versions?
+
+You need to ask on a Debian list. I for one don't have a damn clue
+because I actively avoid apt-based systems.
+
+Sorry, I don't mean to be harsh, but each distro "does its own thing" so
+a lot of people (like me) *will* be clueless on that point, even if we
+are raid experts.
+
+Cheers,
+Wol
 > 
-> While at it, replace replace "PAGE_SHIFT - 9" with "PAGE_SECTORS_SHIFT" too
-> and rename SECTOR_MASK to PAGE_SECTORS_MASK.
-> 
-> Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> On 3/1/2020 3:03 PM, Leslie Rhorer wrote:
+>>     I have upgraded 2 of my servers to Debian Buster, and now neither
+>> one seems to be running checkarray automatically.  In addition, when I
+>> run checkarray manually, it isn't sending update emails on the status
+>> of the job.  Actually, I have never been able to figure out how
+>> checkarray runs.  One my older servers, there doesn't seem to be
+>> anything in /etc/crontab, /etc/cron.monthly, /etc/init.d/,
+>> /etc/mdadm/mdadm.conf, or /lib/systemd/system/ that would run checkarray.
 
-Hi Matteo,
-
-For the bcache part, it looks good to me.
-
-Acked-by: Coly Li <colyli@suse.de>
-
-> ---
-> v3:
-> As Guoqing Jiang suggested, replace "PAGE_SHIFT - 9" with "PAGE_SECTORS_SHIFT"
-> 
-> v2:
-> As Dan Williams suggested:
-> 
->  #define PAGE_SECTORS_MASK            (~(PAGE_SECTORS - 1))
-> 
->  block/blk-lib.c                  |  2 +-
->  block/blk-settings.c             |  4 ++--
->  block/partition-generic.c        |  2 +-
->  drivers/block/brd.c              |  3 ---
->  drivers/block/null_blk_main.c    | 14 +++++---------
->  drivers/block/zram/zram_drv.c    |  8 ++++----
->  drivers/block/zram/zram_drv.h    |  2 --
->  drivers/dax/super.c              |  2 +-
->  drivers/md/bcache/util.h         |  2 --
->  drivers/md/dm-bufio.c            |  6 +++---
->  drivers/md/dm-integrity.c        | 10 +++++-----
->  drivers/md/dm-table.c            |  2 +-
->  drivers/md/md.c                  |  4 ++--
->  drivers/md/raid1.c               |  2 +-
->  drivers/md/raid10.c              |  2 +-
->  drivers/md/raid5-cache.c         | 10 +++++-----
->  drivers/md/raid5.h               |  2 +-
->  drivers/mmc/core/host.c          |  3 ++-
->  drivers/nvme/host/fc.c           |  2 +-
->  drivers/nvme/target/loop.c       |  2 +-
->  drivers/scsi/xen-scsifront.c     |  4 ++--
->  fs/erofs/internal.h              |  2 +-
->  fs/ext2/dir.c                    |  2 +-
->  fs/iomap/buffered-io.c           |  2 +-
->  fs/libfs.c                       |  2 +-
->  fs/nfs/blocklayout/blocklayout.h |  2 --
->  fs/nilfs2/dir.c                  |  2 +-
->  include/linux/blkdev.h           |  4 ++++
->  include/linux/device-mapper.h    |  1 -
->  mm/page_io.c                     |  4 ++--
->  mm/swapfile.c                    | 12 ++++++------
->  31 files changed, 56 insertions(+), 65 deletions(-)
-> 
-
-[snipped]
-
-> diff --git a/drivers/md/bcache/util.h b/drivers/md/bcache/util.h
-> index c029f7443190..55196e0f37c3 100644
-> --- a/drivers/md/bcache/util.h
-> +++ b/drivers/md/bcache/util.h
-> @@ -15,8 +15,6 @@
->  
->  #include "closure.h"
->  
-> -#define PAGE_SECTORS		(PAGE_SIZE / 512)
-> -
->  struct closure;
->  
->  #ifdef CONFIG_BCACHE_DEBUG
-
-[snipped]
-
-
--- 
-
-Coly Li
