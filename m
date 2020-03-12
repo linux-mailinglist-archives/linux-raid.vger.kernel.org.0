@@ -2,46 +2,45 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8658C18331E
-	for <lists+linux-raid@lfdr.de>; Thu, 12 Mar 2020 15:31:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1017318345E
+	for <lists+linux-raid@lfdr.de>; Thu, 12 Mar 2020 16:19:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727749AbgCLObE (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 12 Mar 2020 10:31:04 -0400
-Received: from sender11-of-f72.zoho.eu ([31.186.226.244]:17367 "EHLO
-        sender11-of-f72.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727686AbgCLObE (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 12 Mar 2020 10:31:04 -0400
-Received: from [100.109.80.229] (163.114.130.4 [163.114.130.4]) by mx.zoho.eu
-        with SMTPS id 1584023458128352.92232910569646; Thu, 12 Mar 2020 15:30:58 +0100 (CET)
-Subject: Re: [PATCH] imsm: Correct minimal device size.
-To:     Blazej Kucman <blazej.kucman@intel.com>, linux-raid@vger.kernel.org
-References: <20200311144013.24424-1-blazej.kucman@intel.com>
-From:   Jes Sorensen <jes@trained-monkey.org>
-Message-ID: <7a4fdbc6-a3a3-2bda-e3dd-46fb214bc82b@trained-monkey.org>
-Date:   Thu, 12 Mar 2020 10:30:56 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1727860AbgCLPTn (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 12 Mar 2020 11:19:43 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38476 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727455AbgCLPTm (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 12 Mar 2020 11:19:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=b3RXsv2Nj0w6mo5snr4nzMkxAesLBKH5E0NpaP9zKiw=; b=R1rpb4mbwYVS0YcV9SIkvfKlEB
+        /ixd3jBPhHxBkidFliarHs2e+ag+JOZdBakRJ1MnrtGIOO1ih/twSwfNek1+uEy5g49lhNi1l1L3q
+        6KT+Jt7IVTb1IqCHVrYX2Ee5q14/P1opgCesbnkWxyK1hQ9RFgws8cOT5Qsl8t8uK4PtNnr59y/iA
+        rKO/cBNsIlODPpSjvU5A0JB2+QozpJoo0xy62UHTJo6WJsxPSscEJlY8TXzPXHmBH6dvaRJPDuuMe
+        qmEiEKtKJ6LH2b5NJn49+o4VrVU9HyNFhKdk3olY0kvEugeOTqNJEXNho6yxAxPRdavm6rXbpQ4qB
+        Khat2zog==;
+Received: from [2001:4bb8:184:5cad:8026:d98c:a056:3e33] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jCPcb-0006UB-SI; Thu, 12 Mar 2020 15:19:42 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-ext4@vger.kernel.org,
+        reiserfs-devel@vger.kernel.org
+Subject: cleanup the partitioning code
+Date:   Thu, 12 Mar 2020 16:19:18 +0100
+Message-Id: <20200312151939.645254-1-hch@lst.de>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200311144013.24424-1-blazej.kucman@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 3/11/20 10:40 AM, Blazej Kucman wrote:
-> Check if given size of member drive is not less than 1 MibiByte.
-> 
-> Signed-off-by: Blazej Kucman <blazej.kucman@intel.com>
-> ---
->  super-intel.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+Hi Jens,
 
-Applied!
-
-Thanks,
-Jes
-
+this series cleans up the partitioning code.
