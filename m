@@ -2,56 +2,57 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1274A183DCE
-	for <lists+linux-raid@lfdr.de>; Fri, 13 Mar 2020 01:13:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 403D1183DD4
+	for <lists+linux-raid@lfdr.de>; Fri, 13 Mar 2020 01:25:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgCMANe (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 12 Mar 2020 20:13:34 -0400
-Received: from sonic312-25.consmr.mail.bf2.yahoo.com ([74.6.128.87]:45491 "EHLO
+        id S1726913AbgCMAZG (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 12 Mar 2020 20:25:06 -0400
+Received: from sonic312-25.consmr.mail.bf2.yahoo.com ([74.6.128.87]:38010 "EHLO
         sonic312-25.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726788AbgCMANe (ORCPT
+        by vger.kernel.org with ESMTP id S1726830AbgCMAZG (ORCPT
         <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 12 Mar 2020 20:13:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=att.net; s=s1024; t=1584058412; bh=mxGYKHq5VR0J4nApcJPZKDxryCBNznQRuADbTE0HsA4=; h=Subject:To:References:From:Date:In-Reply-To:From:Subject; b=R+nJG4G0PNSt1Gu9OCVrQFUSwqDcWrHVeBjHfJ+Gffbh6/JD7WupN3G+O6l+Yqv5uTzvvf70ePrk1tXZqOLlan1VRgnUCPOvNQOk6GonXlUHTQRLo00E7bkOqsxkSqoEAaVCxjYF06rqLTG5hYSNzfc3n2+JKKjmdIK3LguD2Ok=
-X-YMail-OSG: w.JDe64VM1mYyfgN.zH6ge6_tRYYg0urHeNiN0SLx9ZmUnroppk2.0Fg5Dy_mFA
- 6qec.2ON55wVTCEAQyhbDmk.uEwrWScGwiFyt_jPRmfohuP.dgp7pYtwNxjI8NBsx9G5xRD5a3P7
- Cq7zFZOR1Z8PhaD2TV2yye6b_vl_hXPShxGuHnT5DC5b_9KaCchkmgDWHXrCDGIBMWNCHMN3oBTm
- sxsA7CGsUYzmX9ugBwGkYFf9bQhDxTxlHu6WYAyj93dD1fRGvns66nTbbynbD_c_3LvIWB027ubZ
- wzWKG7xYCh2YsSetIq_1PIFulXd_V..Qmw5ae0G5UglyK7Yd_UdD_Lcu1DCIiy1pP1hgDdRIWGOy
- VyzteWpUCpJpmEQQW_H9m_qyFg728KTy2MKrG0zpMAoUjXxtRKNVgpEkhxImp49wd7oewtzvodyj
- oSj.JhQNR5BkJx5t3hlfWamXqb2N0Kt0oBcMWbleo6DFQKl4aEio3uaCjqqhasL_Moan7I7o65NR
- bm76lbiraOrnULjoVeRngqWrfAFK_kYpKOqY2T8j.smjcd4S3vQlbv9OU5e0dfzL20QiXUOR97EE
- Xhew_bviGRPvL9vwsH9EUJ8VuIy.DcEQbNAOTHr45R7cx_PMUAPaw._1iLwTR9076m2U9Jb_NtsZ
- jsLzDkdOz2t.HhOUNVdoMpSIg872LN6qUlvqKE3iVTZURGDvxyml_05IzST9yH6FNiLljsQ1eOXI
- VbZC6nDRVTRODRHaiPNMp6lh.yukJEaplFR1JOyxUdoUu5HBQCaDW_9S9W4hG6..BSqQ5gsT9jEN
- 3s1HtKwKokZcV5NjAbWDsU6oSu6gyczWR2iJi7dJdsiVVbpKSTet4kvb3HwRiCwQqtRR5eiff8WD
- SgAHk9Gkc1I.quSB.bEJu7lvhedXHOAzaX3.tXj4ITMxlKMYnr0JEzlT1gurmroQDX22nPvVAKg3
- Q4Nd9ga.2c9VlWzJ1VV0rxIcTENJVSGysPactuWs4lrOEEf2Bxof3HPtemUjI3Ta1De70S5tHDad
- opxNfdZndwHO8y799ChIpMg4SPTIOoEknVEFV88.u7jCgSmY3T6Q0x1HR39QzA9BJX.yq2lakmPN
- WAme4nXwoJmpB8Zmam8dKadOp0POuYzaLDze3Uf3yTEgvQpTzPifDIVfkEhtZa2G9pxQshIfuyQM
- hpjci_q9bg.7tBrpth_Uj32jEbZf9ET0bdD57GO1GFKq2zeuz3J_8LFnwgWXMdK5V8PI9.YQJ.FZ
- AbD.snFQtbS_sCf61mX9FFopWQThXafqLUNalORaJXDhkm3j6lhNFxXmW30R2kh_N0FfgCk6p9RI
- KuKahe0VuXIXPtHtjNaGMNa_C2WKwX1r7VRgdEGwU43LuwBzCTR0ifL7qcxz9iRRgYoPvhrVI7.S
- gsOfk
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic312.consmr.mail.bf2.yahoo.com with HTTP; Fri, 13 Mar 2020 00:13:32 +0000
-Received: by smtp409.mail.bf1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 4ab39671e0937f8cd1d7cc725b9e7677;
-          Fri, 13 Mar 2020 00:13:26 +0000 (UTC)
+        Thu, 12 Mar 2020 20:25:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=att.net; s=s1024; t=1584059105; bh=zndZnQK6PHKS62U7jHYxmp+pgpY8swo0Jzl0AXjBc/g=; h=Subject:To:References:From:Date:In-Reply-To:From:Subject; b=sZ4cosqdG1LSkudNi33I3GU8SU6Bt84d0B8hYlatSvJIr891a9bGMT0JyiVSoE5mx8/qweLsBc93EH57GvysTu7KB1HYktrc5hI8Ts4Wh9bXRtkQE+3Pjarr5WwfL/CPkxof5RbHl4WynP0MyJCctkQnb6+SJosTIbxd5yrtGUI=
+X-YMail-OSG: sjGKn.sVM1n4JxIcgXuQi5I5jEQIVmB5NM7JmlDbOvjPBmsqb2pAgRcO3foTPqY
+ mQrXw0.dhLZlfzwoA6W_JuZqvWv6GbYmNa1Iy7GC6_kuh7cFTdmbklvG6rjNvK236epyLiS6MU68
+ M7R3_oAqCblMJSENXkxZMTrC7kXbjN_L8_tlg0GXAbbaUqP7nFam.6pk4wFIra9mLfj6EIMgmbF3
+ GbEF27jteGHLZRjNbckUULgpVlb0Cbyr9uqwrAowV7J97LxwHvIfTnN7nHU2J3.8KERfXo1e2Kfl
+ Vkuvemz.Wmi7_Da9mCCmEsI5YwE13YI3lpia05fzg019S8VhdTLKZAhELHWG.Ys4gPnn_YeFgM0o
+ XLew4yGaANNmiW8hO5xUoq8akIOZTFC6ZAwzY8xYn04HtlH209RA.tqdmO0T6S.H4ZGaCUgldi1L
+ uGgvsc7Ya7KQKR2BABvm.jhn_19vTbCeoPqEt0diu.eRkwdL2iaChPzaELS_0ivd5P8SJJyBiTyy
+ FvSx6qud3ZO7N_bFQwrtto9X4gLykHaZeQYUVib6Yh3Op.Qq2sBAhDxKQF3VR.HruNUqzctSKLhS
+ XGUGfwQ9YWGYDCBJIpxh9lobJurXGBysDbkg8ukM4Bjq228i2h33rqyGtnyaupScLHX9zPNxThSR
+ vhnzBf4T67vTISN8N9rNHZ_H3kVXEfGeE0ZOGpmjiqAcQRMQ6OEmOTSuR2wxBbyc7Uh77UcS_01y
+ 6hG7MGCLjD2Wx3Z.5QhF_kNTb1_dDfHfMYwmXqyKUsv2xLqaomZNQurRR3DIi1ixr796IDzf0sTV
+ jDQ7_eXOU87sD_FpnrvK76Ie.3avkO15XZzuxIEKFi0t3kvBDTQnEemJSW3T38Xonlg_fd0ecfCt
+ XVZC29uETgdY5afTbPycPV3yFY.owZCQjOh4gInrG8K5RG.7g3nNWKkZyhgwo1oHneOuNR_EfAOD
+ M9Hf4XMQMADtEjEkGaDk3sctus8J1.tF8ubBiMkska3z7emaQsQwzA3DfdBRb5RryBg5EtdsVPSJ
+ pIQjU3mg8RRWDoTteTe.ZNZWTNsZlEWnAO3AfoalHNFxS1NJPQnW9sJtkgUpal7u80dQXumihHRD
+ SwuaUsoeztGyJUI9nc8ofd87Umvphv.3FEX810QCBEBWUqo_aXuo3ad4qeLuyz3CUqAT0egk4e9e
+ 5oyDGaLLc_7nsJU8ZSEqbvzZ1YyjlyBXC48nC1uq7sNm8_xui8gD17nVjuHRyw675K82kgZR4uyN
+ HkRo8ZiplOk5N.TrkM975StweCBCC4TdxORrY8HcNHcZWNvUrlnxR0eqVJz9ZVd3_34yyB2DiXwM
+ u6TDZZ.5acJ.WydEWPfj1sNbwoet5s2V6s.rwFkPhGJyAQ75iRZ9trOa9mj2YveJkZnmtQDUg._M
+ .TAxWuGWYabcnGLgVM9IqX.MRMJBlV9DNpzFyKnQfX08zpsQ-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic312.consmr.mail.bf2.yahoo.com with HTTP; Fri, 13 Mar 2020 00:25:05 +0000
+Received: by smtp427.mail.bf1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 0727a12cf23cdde67eb5d328b4d85f7e;
+          Fri, 13 Mar 2020 00:25:03 +0000 (UTC)
 Subject: Re: checkarray not running or emailing
-To:     Brad Campbell <lists2009@fnarfbargle.com>,
+To:     Ram Ramesh <rramesh2400@gmail.com>,
+        Brad Campbell <lists2009@fnarfbargle.com>,
         linux-raid@vger.kernel.org
 References: <814aad65-fba3-334c-c4df-6b8f4bfc4193.ref@att.net>
  <814aad65-fba3-334c-c4df-6b8f4bfc4193@att.net>
  <0ef54c89-b486-eb0b-8d70-a043ef089c9f@att.net>
  <10e2db3d-13e6-573f-18bd-1443d6a27884@fnarfbargle.com>
  <7ba840ec-74fd-96bf-5088-7f8479ddcba5@att.net>
- <61f5fc7b-bd2a-a151-a228-3d2a6f4d3ee6@fnarfbargle.com>
+ <f4d8ab8d-90cb-e9d0-3b15-ceab881dfcc1@gmail.com>
 From:   Leslie Rhorer <lesrhorer@att.net>
-Message-ID: <baa6f582-e3ea-7668-568b-0b7da2b3a618@att.net>
-Date:   Thu, 12 Mar 2020 19:13:19 -0500
+Message-ID: <5caf739c-ecf4-7033-eaf2-bb498ec699f4@att.net>
+Date:   Thu, 12 Mar 2020 19:24:56 -0500
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <61f5fc7b-bd2a-a151-a228-3d2a6f4d3ee6@fnarfbargle.com>
+In-Reply-To: <f4d8ab8d-90cb-e9d0-3b15-ceab881dfcc1@gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Content-Language: en-US
@@ -61,47 +62,87 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-     Yes, that works just fine, as does the daily email alert whenever 
-an array is degraded, but `checkarray --cron --all --idle` doesn't 
-produce an email.  It starts the array verification on all the arrays, 
-but no status on the processes are sent.
+On 3/11/2020 11:53 PM, Ram Ramesh wrote:
+> This may be a silly question, but is email working in your system?
 
-     The normal execution for the script is to submit `echo check >  
-/sys/block/mdx/md/sync_action` and then exit.  Obviously, the rest of 
-the processes are handled by the scheduler and mdadm. I'm not seeing how 
-anything other than mdadm should be generating the status emails.
+     It's not a silly question, but I believe I already answered it.  
+Yes, email is working, and yes, mdadm is able to send messages.  It 
+complains every morning at 07:35 if one f the arrays is degraded, and 
+the test function works.
 
-     So why does `mdadm --monitor --test --oneshot /dev/mdx` produce an 
-email message when `echo check > /sys/block/mdx/md/sync_action` produces 
-none?  The "new" servers are running mdadm v4.1 under Debian Buster.  
-The "old" servers are running mdadm v3.3.2 under Debian Jessie.
+> I run debian, but a different version. Cron only sends me a message 
+> when something is wrong. I mean if checkarray failed, I get a message. 
+> If my array is degraded, I get a message. If everything is fine, no 
+> message. May be that is the standard. I am not the authority, but that 
+> is what is happening in my system.
 
-On 3/12/2020 4:17 AM, Brad Campbell wrote:
+     I don't believe cron sends the messages for the array redundancy 
+check, since they are sent roughly every 20% of the sync task, not on 
+any particular time schedule.  Of course, the status check is run by 
+some timer, and cron could certainly handle such a task on a 
+minute-by-minute basis, but I don't see any cron task related to the 
+array structure other than /etc/cron.d/mdadm, which is the checkarray 
+task itself, run once a month.
+
+> I believe cron emails stdout+stderr of the command run. May be 
+> checkarray does not output anything in a successful run and therefore 
+> no email.
+
+     Checkarray normally doesn't output anything when run fro, the cron 
+task, which employs the --quiet switch, nor does cron if checkarray is 
+successful.  It merely initiates the check action on every specified 
+array and exits.  Something else - presumably mdadm - sends an email as 
+the array check proceeds every 20%.
+
+> It is best to also query debian.user email: debian-user@lists.debian.org
+         I will try querying the Debian list, but while the cron job was 
+a Debian feature, I don't believe this issue is one with Debian, per se.
+> Ramesh
 >
-> On 12/3/20 09:41, Leslie Rhorer wrote:
+> On 3/11/20 8:41 PM, Leslie Rhorer wrote:
 >>     Aha! There it is, on both the old and new systems, so it probably 
 >> is running.  The question remains, "Why isn't it posting to email?"
 >>
-> root@srv:~# mdadm --monitor --test --oneshot /dev/md2
-> mdadm: Monitor using email address "root" from config file
->
-> And in the mail :
->
-> This is an automatically generated mail message from mdadm
-> running on srv
->
-> A TestMessage event had been detected on md device /dev/md2.
->
-> Faithfully yours, etc.
->
-> P.S. The /proc/mdstat file currently contains the following:
->
-> Personalities : [linear] [raid0] [raid1] [raid10] [raid6] [raid5] [raid4]
-> md2 : active raid1 nvme0n1[2] md5[3](W)
->       952696320 blocks super 1.2 [2/2] [UU]
->       bitmap: 6/8 pages [24KB], 65536KB chunk
->
->
->
-> Brad
->
+>> On 3/11/2020 7:50 AM, Brad Campbell wrote:
+>>> On 11/3/20 09:11, Leslie Rhorer wrote:
+>>>>      Is there seriously no one here who knows how checkarray was 
+>>>> launched in previous versions?
+>>>>
+>>>> On 3/1/2020 3:03 PM, Leslie Rhorer wrote:
+>>>>>     I have upgraded 2 of my servers to Debian Buster, and now 
+>>>>> neither one seems to be running checkarray automatically.  In 
+>>>>> addition, when I run checkarray manually, it isn't sending update 
+>>>>> emails on the status of the job.  Actually, I have never been able 
+>>>>> to figure out how checkarray runs.  One my older servers, there 
+>>>>> doesn't seem to be anything in /etc/crontab, /etc/cron.monthly, 
+>>>>> /etc/init.d/, /etc/mdadm/mdadm.conf, or /lib/systemd/system/ that 
+>>>>> would run checkarray.
+>>>>
+>>>
+>>> On mine it's in /etc/cron.d/mdadm
+>>>
+>>> brad@srv:/etc/cron.d$ cat mdadm
+>>> #
+>>> # cron.d/mdadm -- schedules periodic redundancy checks of MD devices
+>>> #
+>>> # Copyright © martin f. krafft <madduck@madduck.net>
+>>> # distributed under the terms of the Artistic Licence 2.0
+>>> #
+>>>
+>>> # By default, run at 00:57 on every Sunday, but do nothing unless 
+>>> the day of
+>>> # the month is less than or equal to 7. Thus, only run on the first 
+>>> Sunday of
+>>> # each month. crontab(5) sucks, unfortunately, in this regard; 
+>>> therefore this
+>>> # hack (see #380425).
+>>> 57 0 * * 0 root if [ -x /usr/share/mdadm/checkarray ] && [ $(date 
+>>> +\%d) -le 7 ]; then /usr/share/mdadm/checkarray --cron --all --idle 
+>>> --quiet; fi
+>>>
+>>> dpkg -L mdadm gave me a list of files and I just checked the cron 
+>>> entries.
+>>>
+>>> I don't run anything that recent, but Debian is Debian.
+>>>
+>>> Brad
