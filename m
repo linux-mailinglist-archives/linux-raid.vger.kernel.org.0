@@ -2,72 +2,62 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B9B74187BF2
-	for <lists+linux-raid@lfdr.de>; Tue, 17 Mar 2020 10:21:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A12B188347
+	for <lists+linux-raid@lfdr.de>; Tue, 17 Mar 2020 13:11:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725928AbgCQJVI (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 17 Mar 2020 05:21:08 -0400
-Received: from mga17.intel.com ([192.55.52.151]:26638 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725862AbgCQJVI (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 17 Mar 2020 05:21:08 -0400
-IronPort-SDR: 8BjBmtLwZ1fuJLZJ8cotvzqMNVMvs8ODtq4BJ5SPOXRwZFToZpylgtIq+DFQa2I3bmLhkuMvUd
- xkOhy5RGWcPQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 02:21:08 -0700
-IronPort-SDR: jgX6lzkHD/R238ykI83ietznq0EqPBXSSmM5gobyi3h8WIrGj0SjFDIWSb2obzMZcRXUHIrPt8
- dVO6/NlKPpuA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
-   d="scan'208";a="267899630"
-Received: from mbabinsk-mobl.ger.corp.intel.com (HELO apaszkie-desk.igk.intel.com) ([10.249.141.143])
-  by fmsmga004.fm.intel.com with ESMTP; 17 Mar 2020 02:21:07 -0700
-From:   Artur Paszkiewicz <artur.paszkiewicz@intel.com>
-To:     jes@trained-monkey.org
-Cc:     linux-raid@vger.kernel.org,
-        Artur Paszkiewicz <artur.paszkiewicz@intel.com>
-Subject: [PATCH] imsm: show Subarray and Volume ID in --examine output
-Date:   Tue, 17 Mar 2020 10:21:03 +0100
-Message-Id: <20200317092103.7200-1-artur.paszkiewicz@intel.com>
-X-Mailer: git-send-email 2.24.0
+        id S1726916AbgCQMLb (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 17 Mar 2020 08:11:31 -0400
+Received: from sonic316-53.consmr.mail.ne1.yahoo.com ([66.163.187.179]:41533
+        "EHLO sonic316-53.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726825AbgCQMLa (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 17 Mar 2020 08:11:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1584447089; bh=kcevCRoll2+Bsa3FDERpIV72LVcB1A4YV1b5N2AWYBk=; h=Date:From:Reply-To:Subject:References:From:Subject; b=KCMlqjzzwS7inRC819loJS79mPsbkcFh304PAb108zZwC6pa8gLSwkQOksaUWCmP+DDcCZXF52527CmULpQ7BdSVkRvhUJMiVtnhmbC6psyu1gxYdCDQpVpfDeKnOh3/XDytGvhawq4PyZIBVX+wEvjRMk/56f1N94IPcKrSBIpS/0DLdnRtxGHw/FNjso/PBdeRhWRS9sQgDrVl5+tEASVIwm8jp8JWC8ugClr7LMOO3LOjAmg2UFQb2Sahl+KPsuJY7O8AhrKSA4JwwX0GH6Gk6PktJfj5KQ3w1pf43N7SjCqaVRWwwnWe8Z7v8Sw0RjsIoITDOH3HO6mtQxOXFw==
+X-YMail-OSG: nwaTrt4VM1lDCPW_4pvlmdHAB4HAd8ObDxV2jblZS5yJaml5hQx8to41jpdTr.o
+ 6JoVPGukrqUvVKYJ6gZYVzuWzDI52hq6Rw5fdAZ_zBaw9aFChlLxFmd4omp.bcI2uxUdM.BDzeeN
+ Y_hvEBIpkCPoCAm66xPD5jIBbZ0cj1xcDHRWJMhmt9MqOg27xEYgrfkdayuDTydo1p_1KfrBOEw3
+ Cs5s1LGFDulJy2mMdarisTNG79jsqOxAN9t.nKTAkBRFiLCEOWQu2ZsECPjSbs9vvbocqSMdfwK8
+ zkGSsD4wlCb8YiptM2I8udid3A4XpHHFbO6bqpfFSvKVY4J_FUMqZdiPniOBuzEGY.p6tuzAEmQR
+ 9whpr9f7kh9EQfFTTD.9l3nbDMjfplK_aik6oYKaNchOx1SygPXhjMKQnKk.AZOH2VlFT5_cMKpH
+ Dr12NC9pKhCSOY0Ly4w.jvNAVjZYC9q1hO1G3Lmbn2.z8DfYfFOop5oZaBOJ7P6M4_dHZEOgoLrb
+ baIsLMPAgID1yYPnNkmAy6SujtaA2q5SGYm3Aoq8Khb4HipsTrzoPuSzUM_Wy4Vk.J5_ecFkZSnx
+ UDV4uwrsNL5hjpS9Dvk9hbcI2BhQ3RQs4HRNwUq24mvpmJL8onC2W2oH5Ib2HPgWr6tPEV18EN96
+ qTLFCoQxRD9cTOmSa9MHPICEbt.yISk4YVtxOgNlrRkViPOTulYpjDRM2JJVxLoTyQi1crZiDmAl
+ ID0CbX4UbJJfxm0_3guinQWPXF_UqJX39mZR5vhgcfW7aTzAFlQmuRx9XC4BFQMK6TBTJY7gH7.J
+ 79IJZ6JEm59ol7a6IDE.BOSkOBqtlvGzjLxCGhM6RTOfPqgcwze140Faq4fLNyXu77Xmnt9VCelv
+ SbKazh3MHBrHO0fxT229tWoiEh2jWvgpBWPbPZL6ghCPspCfA90g63dMDidVXeTzVaON4txUHYI2
+ rkwxE_Txwv0_WBvC.201Tn3rq_6ht1MOCUqhgjg6odqY_9ghnh0j9mggywGBwXwKhqyNzjuK7N2R
+ qL6gBFODLt5qfK0Sc7fN435k_R_bti4D3Jt8bPzQEirIxTOPPx_XYvrR0cCvNDS3BRJ4Mq0r7ZGc
+ qxsq0_qftRTdi6jr4Um_ci22FuoesgE9L_A45Is5kpevTQ1GwtAeGpH.ytMrONuERJ70lGsBPpPg
+ MtW8WIXf.aSrdetjLNQ6a6uOvAFdrPqvaqXXCB46LMU.BUe6QcaF8d7YgtDunEtzlzaG68UP5cS.
+ sVt0O8vZoU.FuxFxrK3VYR4OAARNv9Z9Mf0ggKFFAJY7wvSQKRVsZKWfBpRYK7REKQ5tNpALOFNu
+ iNovnZRT4ecFBHoBIRBLkfKml6oyci_bdmw--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.ne1.yahoo.com with HTTP; Tue, 17 Mar 2020 12:11:29 +0000
+Date:   Tue, 17 Mar 2020 12:09:27 +0000 (UTC)
+From:   Stephen Li <stenn6@gabg.net>
+Reply-To: stephli947701@gmail.com
+Message-ID: <1348826789.1834294.1584446967790@mail.yahoo.com>
+Subject: REF
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <1348826789.1834294.1584446967790.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.15342 YMailNodin Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Show the index of the subarray as 'Subarray' and the value of the
-my_vol_raid_dev_num field as 'Volume ID'.
 
-Signed-off-by: Artur Paszkiewicz <artur.paszkiewicz@intel.com>
----
- super-intel.c | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/super-intel.c b/super-intel.c
-index 533becb2..c6198dce 100644
---- a/super-intel.c
-+++ b/super-intel.c
-@@ -1579,6 +1579,7 @@ static void print_imsm_dev(struct intel_super *super,
- 
- 	printf("\n");
- 	printf("[%.16s]:\n", dev->volume);
-+	printf("       Subarray : %d\n", super->current_vol);
- 	printf("           UUID : %s\n", uuid);
- 	printf("     RAID Level : %d", get_imsm_raid_level(map));
- 	if (map2)
-@@ -1683,6 +1684,8 @@ static void print_imsm_dev(struct intel_super *super,
- 		printf("Multiple PPLs on journaling drive\n");
- 	else
- 		printf("<unknown:%d>\n", dev->rwh_policy);
-+
-+	printf("      Volume ID : %u\n", dev->my_vol_raid_dev_num);
- }
- 
- static void print_imsm_disk(struct imsm_disk *disk,
--- 
-2.24.0
-
+Greetings,
+I was searching through a local business directory when I found your
+profile. I am Soliciting On-Behalf of my private client who is
+interested in having a serious business investment in your country. If
+you have a valid business, investment or project he can invest
+back to me for more details. Your swift response is highly needed.
+Sincerely
+Stephen Li
+Please response back to me with is my private email below for more details
+stephli947701@gmail.com
