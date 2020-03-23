@@ -2,63 +2,64 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0602818FA83
-	for <lists+linux-raid@lfdr.de>; Mon, 23 Mar 2020 17:55:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5655418FA94
+	for <lists+linux-raid@lfdr.de>; Mon, 23 Mar 2020 17:57:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727617AbgCWQze (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 23 Mar 2020 12:55:34 -0400
-Received: from mail-pj1-f50.google.com ([209.85.216.50]:34142 "EHLO
-        mail-pj1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727234AbgCWQze (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 23 Mar 2020 12:55:34 -0400
-Received: by mail-pj1-f50.google.com with SMTP id q16so160263pje.1
-        for <linux-raid@vger.kernel.org>; Mon, 23 Mar 2020 09:55:32 -0700 (PDT)
+        id S1727832AbgCWQ5M (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 23 Mar 2020 12:57:12 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39214 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727826AbgCWQ5M (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 23 Mar 2020 12:57:12 -0400
+Received: by mail-pf1-f194.google.com with SMTP id d25so7749605pfn.6
+        for <linux-raid@vger.kernel.org>; Mon, 23 Mar 2020 09:57:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
+        h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=mFFLdkROuGzrX7CaN7iaKQtgyU9352EW9LOMMGLduh0=;
-        b=xvQuDWUK4rppNtIXMkhgKlBEq7tXEVsdIK0ASlHSgXnCp63TynMj/BSxfgxNatZGE4
-         hqYSR8fD0EMOESlN7IaxTzPFTksKxokG9SR+skwxywHSZSuczsAAnV9ob47XTgd++pDm
-         /JyN115oAoDDmdme+LwUAy8/etuWG2uvIhXxt0qK5D2VurNIC1XZnoQK0+5wSwb3gOP8
-         BIyoMiadjG/BKoMmdzCTbOQdSx7xXyZDkopdjvsZTf6tGlMmaG3meWzY3ERya7eDqkZ2
-         6hpCIcQ+yWWyT/Zh6uGtaxTy5Sgqvt6gbv+s4gHCHIwqwfKkt5O5oucDfb3CwmEvrMJP
-         DPYw==
+        bh=9vQISIidvx2HC6I208asLL9LQG5D5c4JBYTE7WN0yIM=;
+        b=g6ZHAhjo9gbL92ftJyIXUjnrl8Gkjl1lMi6ROa0hw8Rrq9gsvWPKeLL02f6LOMY1ED
+         kn8Y1GhddqicGyeUxNhB1LlLhk9UBEAyT+BHzC3rj4YrlJzi921312R3L6Z1Em1UvsN0
+         NT2nOO2sN2PLDSEA5O8WG83DsbFVTApVNvNh7aStwgtTMkC75URLlnrfievp/4gVTnNj
+         Nx5KU1QmAonSTXu6EV9x/xm6W7MgnG29s2qzwZB41bABAWjY1NkEeGKSDCh6HiaaNrn6
+         K8OQwIOOUkkrBVXKYhrqDfkvdlEcigOhf02mS6bYmeG6U4YP9BrXkmY0wUSpBkJ01UiN
+         5hKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=mFFLdkROuGzrX7CaN7iaKQtgyU9352EW9LOMMGLduh0=;
-        b=IqvirGb0oViThT1YSZXSYDiCQ0cOVv5l/LjTX0Y66h2viEvgAkRc3PUkksvcWt+8Gq
-         +Wu38E/pmF1F8uxq3j4iQm8QWAcwJgeWrO+eFfWrVpIYbos7fEolOBIEHPKuPIALOYzx
-         r/sbsHZuOwfLxwGBbuTP1wQRv/hinxsYI55oY0KBAI35W70pcEsEw3eYpsfFJA0YQHNW
-         XwkIwFgsn24ynWiUySN5Gwg2PGpnjaC+lMQ/1qXMzHs1cHmiMw5iSFUh9Pk63Ch2tx1M
-         uukLEOG795N7DLh3n0YDixRdJezOTY+t7aL83IMntOVhtdkHEBT5Kd6PD04/VX+QcMSG
-         X5dQ==
-X-Gm-Message-State: ANhLgQ3E4VONN/VAylIFfii8On3kGPT9RuU/IWR2cw2oz2IEsloQ75D/
-        LEAUMTOaLMa+IfbfWYltl/vWVQ==
-X-Google-Smtp-Source: ADFU+vuYepzjMGiCUsHvUENLWjzFpios4va2+xolhoUb5eHRh6FDeKvuNbWj1Ly2VgD2e/ww5OX2lQ==
-X-Received: by 2002:a17:902:a603:: with SMTP id u3mr17911749plq.105.1584982532060;
-        Mon, 23 Mar 2020 09:55:32 -0700 (PDT)
+        bh=9vQISIidvx2HC6I208asLL9LQG5D5c4JBYTE7WN0yIM=;
+        b=PabADMQHbUtolhdT8xyx6T7DF4Z6jf1otIdzL8vVgRxBC7bUEh0fZcbPbdLxVupuq6
+         tvcUOwv+QbtX3MG2oSCg2erIuTmEpMwssX0mIMxq4p1+QrMFOIh3LtwrcQjAr2bKjcR2
+         ZvNBWTiPyAQmSpY1U1WszBA9svcMa9Xw7A5Ms0rJWMDEpLpm7RtCFFH7A/7E+yexRvcw
+         M4yaCu3KjRimaUGCkQtVGYBW7UuRnFKRSFBtOI4OysZSqbdAgYCdRer8QOvRBa7Wz4t4
+         ti6LUlH0FdhgHe1vJ7ctcyp/OBjsxnzTa1Mh4XSPf7Fwpsd1SDx3QXkeK+/M+gbls/jD
+         Jpqg==
+X-Gm-Message-State: ANhLgQ3wIJsCzn8KdbWKy18pnc31ei17Qd1giR9ncF7mLfmN2efsuFV/
+        qq0pqO9tg1fHXBb7pbjh1bbxMA==
+X-Google-Smtp-Source: ADFU+vvjqZSyzdI96ENIy59Pb/roNaeHcXNvlD0NqRkBXXt2VcMkP4CIEl0A8IteAbgwmlJuL6lozA==
+X-Received: by 2002:a63:cb:: with SMTP id 194mr23416925pga.37.1584982629945;
+        Mon, 23 Mar 2020 09:57:09 -0700 (PDT)
 Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id nu13sm112828pjb.22.2020.03.23.09.55.30
+        by smtp.gmail.com with ESMTPSA id y142sm14415915pfc.53.2020.03.23.09.57.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Mar 2020 09:55:31 -0700 (PDT)
+        Mon, 23 Mar 2020 09:57:09 -0700 (PDT)
 Subject: Re: cleanup the partitioning code
+From:   Jens Axboe <axboe@kernel.dk>
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
         linux-scsi@vger.kernel.org, linux-ext4@vger.kernel.org,
         reiserfs-devel@vger.kernel.org
 References: <20200312151939.645254-1-hch@lst.de>
  <20200323165234.GA29925@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <7b7eb188-441a-b503-d526-f5bc029891fc@kernel.dk>
-Date:   Mon, 23 Mar 2020 10:55:29 -0600
+ <7b7eb188-441a-b503-d526-f5bc029891fc@kernel.dk>
+Message-ID: <7bb040b9-41c5-9e11-c74d-fec7912e0e3c@kernel.dk>
+Date:   Mon, 23 Mar 2020 10:57:07 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200323165234.GA29925@lst.de>
+In-Reply-To: <7b7eb188-441a-b503-d526-f5bc029891fc@kernel.dk>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -67,17 +68,26 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 3/23/20 10:52 AM, Christoph Hellwig wrote:
-> ping?
-> 
-> On Thu, Mar 12, 2020 at 04:19:18PM +0100, Christoph Hellwig wrote:
->> Hi Jens,
+On 3/23/20 10:55 AM, Jens Axboe wrote:
+> On 3/23/20 10:52 AM, Christoph Hellwig wrote:
+>> ping?
 >>
->> this series cleans up the partitioning code.
-> ---end quoted text---
+>> On Thu, Mar 12, 2020 at 04:19:18PM +0100, Christoph Hellwig wrote:
+>>> Hi Jens,
+>>>
+>>> this series cleans up the partitioning code.
+>> ---end quoted text---
+> 
+> I did take a look, looks fine to me. Doesn't apply to the 5.7/block
+> branch though, I'll take a look in a bit, probably an easy reject.
 
-I did take a look, looks fine to me. Doesn't apply to the 5.7/block
-branch though, I'll take a look in a bit, probably an easy reject.
+Yeah, looks like a trivial conflict with:
+
+commit e598a72faeb543599bdf0d930df3a71906404e6f
+Author: Balbir Singh <sblbir@amazon.com>
+Date:   Fri Mar 13 05:30:05 2020 +0000
+
+    block/genhd: Notify udev about capacity change
 
 -- 
 Jens Axboe
