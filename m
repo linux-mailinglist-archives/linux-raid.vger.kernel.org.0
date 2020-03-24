@@ -2,91 +2,53 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AB0218FDBA
-	for <lists+linux-raid@lfdr.de>; Mon, 23 Mar 2020 20:32:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF97219033D
+	for <lists+linux-raid@lfdr.de>; Tue, 24 Mar 2020 02:18:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbgCWTck (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 23 Mar 2020 15:32:40 -0400
-Received: from mail-pj1-f48.google.com ([209.85.216.48]:55916 "EHLO
-        mail-pj1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727954AbgCWTcj (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 23 Mar 2020 15:32:39 -0400
-Received: by mail-pj1-f48.google.com with SMTP id mj6so310601pjb.5
-        for <linux-raid@vger.kernel.org>; Mon, 23 Mar 2020 12:32:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Hi3EuG/Ev6bXmXxwMF/V1jsHh5EuhVttPWLzFdZA0IQ=;
-        b=vLeGSpfsq1jVhwKe7kGlbB3RuNa6YAmDElpxlsUF/kzrtyDfdHxqgJmZhPcbrjBWan
-         3ke0mbmoeY48ITd+sWsO2NK8NTXadJ9C2p1cRWDCrTJbWuix/ztHPjE0ypAwPWHqei4j
-         bUDV8mfhgCuj/z+owEpyzoSHJ3BTyZw1QIPeJhf4uH6j6z4CH03XVYXZ6Tgc9+oVTnrX
-         Te/k7QqG0OWh1N8xOM73p9dGJAqP1o6IXkqwDd09VrtfkgLUtpn9588R95kvdAwEpmkt
-         KNzPv5G58gPwwTWCsdJxucJ6dyjkCBCs6inICd5eyY6UV6sRPx5QHu+z+fneH0XFQDzj
-         t3ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Hi3EuG/Ev6bXmXxwMF/V1jsHh5EuhVttPWLzFdZA0IQ=;
-        b=Iw5zZ65ZHhlqNNw7EIk/BkAyOXP06t14NyQLXuYtre4skD+utzTbhJ/WzJ/kZjx2cr
-         zMfqbrQhirDoskWvwPdg0pdqa19HMBIoaoCX9kD9CoQVoD6SVsqlUjSWvS008bn7riU1
-         gyk7OxCtg04ytgvLPorv0rxQAQ4IJd+4ZnOYrmmPFheebVO5fXxFrZPMhUMx8fiPuIfR
-         ITHX28IaykjYsHBmfMGqsHIDx+d51woA0uUU6vWAEAERNjLOvArfclcv0aqsEiqm2yd7
-         U1NgmFySeKoyuJhl5/08lVcdqLOIdYVhqm6gl/pXyfoBeNkUB5XiXM/dtoRKP9+jYGEW
-         Za9A==
-X-Gm-Message-State: ANhLgQ0vNpghV4CmqbMVEov/6MRYkQQTltK2o+1y9jHjfG1QTyXKs+Pd
-        cfFCLGH/74cf6QdoHlP34JDKLg==
-X-Google-Smtp-Source: ADFU+vtkqgNro5u5VRLne/XHXMrhbxd9k9mxWS33Rv36JKSAlNgx3sQ2qJJ63NNjZmKfOTLKstadBg==
-X-Received: by 2002:a17:90a:9f96:: with SMTP id o22mr1013390pjp.88.1584991956664;
-        Mon, 23 Mar 2020 12:32:36 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id r17sm2127140pgl.80.2020.03.23.12.32.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Mar 2020 12:32:35 -0700 (PDT)
-Subject: Re: cleanup the partitioning code
-From:   Jens Axboe <axboe@kernel.dk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-ext4@vger.kernel.org,
-        reiserfs-devel@vger.kernel.org
-References: <20200312151939.645254-1-hch@lst.de>
- <20200323165234.GA29925@lst.de>
- <7b7eb188-441a-b503-d526-f5bc029891fc@kernel.dk>
-Message-ID: <5144a76e-1d99-c5a0-3e16-e031e12d93ec@kernel.dk>
-Date:   Mon, 23 Mar 2020 13:32:34 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1727046AbgCXBS5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 23 Mar 2020 21:18:57 -0400
+Received: from smtp.hosts.co.uk ([85.233.160.19]:11722 "EHLO smtp.hosts.co.uk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727022AbgCXBS4 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 23 Mar 2020 21:18:56 -0400
+Received: from [81.153.122.12] (helo=[192.168.1.225])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1jGXqv-0008Sn-Fm; Tue, 24 Mar 2020 00:55:34 +0000
+Subject: Re: Please show descriptive message about degraded raid when booting
+To:     Roger Heflin <rogerheflin@gmail.com>,
+        Patrick Dung <patdung100@gmail.com>
+Cc:     Linux RAID <linux-raid@vger.kernel.org>
+References: <CAJTWkdvU3of87+-zyUPn7uDBen8ZBswujwMn8wYSiwZb=0V3EQ@mail.gmail.com>
+ <CAJTWkdtYbmSapP0cG+nknTQWcn1ut4NaF4v5rEtS0wwvkuMH=A@mail.gmail.com>
+ <CAAMCDeeRD51jy8syBoXD_zy2jWFHfG+v0n5AkEHu5-_X0K3+Lg@mail.gmail.com>
+From:   antlists <antlists@youngman.org.uk>
+Message-ID: <f49f6418-cf92-7dec-77b4-ef099a39bd58@youngman.org.uk>
+Date:   Tue, 24 Mar 2020 00:55:38 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <7b7eb188-441a-b503-d526-f5bc029891fc@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <CAAMCDeeRD51jy8syBoXD_zy2jWFHfG+v0n5AkEHu5-_X0K3+Lg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 3/23/20 10:55 AM, Jens Axboe wrote:
-> On 3/23/20 10:52 AM, Christoph Hellwig wrote:
->> ping?
->>
->> On Thu, Mar 12, 2020 at 04:19:18PM +0100, Christoph Hellwig wrote:
->>> Hi Jens,
->>>
->>> this series cleans up the partitioning code.
->> ---end quoted text---
-> 
-> I did take a look, looks fine to me. Doesn't apply to the 5.7/block
-> branch though, I'll take a look in a bit, probably an easy reject.
+On 23/03/2020 18:13, Roger Heflin wrote:
+> Those default timeouts are usually at least 30 seconds, but in the
+> past the scsi subsystem did some retrying internally.  The timeout
+> needs to be higher than the length of time the disk could take.
+> Non-enterprise, non-raid disks generally have this timeout set 60-120
+> seconds hence MD waiting to see if the failure is a sector read
+> failure (will be a no-response until the disk timeout) or a complete
+> disk failure (no response ever).
 
-OK, so it also assumes that the PAGE_SHIFT -> PAGE_SECTORS_SHIFT patch
-is in, which I dropped.
+https://raid.wiki.kernel.org/index.php/Timeout_Mismatch
 
-Can you resend?
+The whole website is reasonably up-to-date, so it's worth a read.
 
-
--- 
-Jens Axboe
-
+Cheers,
+Wol
