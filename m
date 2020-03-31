@@ -2,83 +2,71 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A833A199610
-	for <lists+linux-raid@lfdr.de>; Tue, 31 Mar 2020 14:14:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E56B19979D
+	for <lists+linux-raid@lfdr.de>; Tue, 31 Mar 2020 15:36:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730693AbgCaMOY (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 31 Mar 2020 08:14:24 -0400
-Received: from atl.turmel.org ([74.117.157.138]:40099 "EHLO atl.turmel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730560AbgCaMOY (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 31 Mar 2020 08:14:24 -0400
-Received: from [108.243.25.188] (helo=[192.168.20.61])
-        by atl.turmel.org with esmtpsa (TLS1.2:DHE_RSA_AES_128_CBC_SHA1:128)
-        (Exim 4.82)
-        (envelope-from <philip@turmel.org>)
-        id 1jJFmh-0003I0-H9; Tue, 31 Mar 2020 08:14:23 -0400
-Subject: Re: mdcheck: slow system issues
-To:     Peter Grandi <pg@mdraid.list.sabi.co.UK>,
-        Linux RAID <linux-raid@vger.kernel.org>
-References: <2933dddc-8728-51ac-1c60-8a47874966e4@molgen.mpg.de>
- <24195.8467.378436.7747@base.ty.sabi.co.uk>
-From:   Phil Turmel <philip@turmel.org>
-Message-ID: <dbbd010e-3648-c72c-ce44-ed570f6eb8be@turmel.org>
-Date:   Tue, 31 Mar 2020 08:14:22 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1730818AbgCaNgz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 31 Mar 2020 09:36:55 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35834 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730216AbgCaNgz (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 31 Mar 2020 09:36:55 -0400
+Received: by mail-io1-f65.google.com with SMTP id o3so16126309ioh.2
+        for <linux-raid@vger.kernel.org>; Tue, 31 Mar 2020 06:36:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=iowni-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aSw57Azi9wSg04NvXfn6I3V1xvzvSNsg+TrrSPQF4BA=;
+        b=EfwtdAj4K5h57gcf90WOw9gVl1O2z4hseJ0iiF5MiyfYXtysk6vGzhbJdIJ4XiHs8E
+         vKrcMvWhGSwzpomdJMI5ivr9XiQTqMZxVC6MCOGivcMOhn1lWCy6X32ZOD34n8g4PSt2
+         Si84ozQx2yhsYEANTlGEgwY5osid3YdSPV1Vtte8vf+W+EbiD7yZw3S05kce3K62xa1I
+         V2Fnwy13EqNp9I5XZ+JUXm8MJsFQtYRy4Lif+GPookS9bbGXwWta0vXUQTnWVJErpc/n
+         peL1yeE1qGyY0BW0Eus2Qr1KgsubHk31yea01dDr1ZOImZog4Jbtv9kVRCxfQjwFKcs3
+         SuYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aSw57Azi9wSg04NvXfn6I3V1xvzvSNsg+TrrSPQF4BA=;
+        b=eZMMLWoH1mSNi3UKzEXhel+wYyI9CBAzTNG2y+ONnApeKe65+vC8nCzypgzY+gn7AH
+         nbgjlorKaDs28i/J5y3eft8YtlQ+gMzuT3uckhopsFdBsnJgRxdNZI7gVsaoVzPEVyJ/
+         GXr5c9mSlsuWaEwB0BcqHV2ftp0iFHLe4SEuCmNusRQPR+LMhtH4eA7XdCUu1RiJ5+Qs
+         o//CkBV9SBkXor1sBRH+sMhciBnWRABLOLmjVMW9K37ZQxY/kkw1Aj0XVgsAREwa7d92
+         vY6lW6Wa2U986Qna7D2zmPD4C7T1h6CM/hc9aoQqnTPtGC9LIDBWKThzflz0hIUF5pLY
+         G1qA==
+X-Gm-Message-State: ANhLgQ3U3pVZZioGGqOeO3zGgMD7d5Bdun1vIuvX/8qVKsH+5wmFWtZF
+        d3ooCDwBzJLw+YL90Yi3XPSIwXVWkjCjIj20EIx9avjr
+X-Google-Smtp-Source: ADFU+vsisjQw6EhNfAQ3L+5jB3eKEoX1ozJQXv64hSybJ1QR4VaEAVT4txus3pWtKI9CVnPgs+u9bGoQVUINxuL9tQQ=
+X-Received: by 2002:a05:6602:199:: with SMTP id m25mr15380496ioo.13.1585661814270;
+ Tue, 31 Mar 2020 06:36:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <24195.8467.378436.7747@base.ty.sabi.co.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAB00BMjPSg2wdq7pjt=AwmcDmr0ep2+Xr0EAy6CNnVhOsWk8pg@mail.gmail.com>
+ <058b3f48-e69d-2783-8e08-693ad27693f6@youngman.org.uk> <CAB00BMgYmi+4XvdmJDWjQ8qGWa9m0mqj7yvrK3QSNH9SzYjypw@mail.gmail.com>
+ <1d6b3e00-e7dd-1b19-1379-afe665169d44@turmel.org> <CAB00BMg50zcerSLHShSjoOcaJ0JQSi2aSqTFfU2eQQrT12-qEg@mail.gmail.com>
+ <e77280ef-a5ac-f2d8-332c-dec032ddc842@turmel.org>
+In-Reply-To: <e77280ef-a5ac-f2d8-332c-dec032ddc842@turmel.org>
+From:   Daniel Jones <dj@iowni.com>
+Date:   Tue, 31 Mar 2020 07:36:42 -0600
+Message-ID: <CAB00BMiaqRcZsGu39ygop7G7yejAooFAkRdojkrrUvs6cyF7zA@mail.gmail.com>
+Subject: Re: Requesting assistance recovering RAID-5 array
+To:     Phil Turmel <philip@turmel.org>
+Cc:     antlists <antlists@youngman.org.uk>, linux-raid@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 3/31/20 6:53 AM, Peter Grandi wrote:
->> Dear Linux folks, When `mdcheck` runs on two 100 TB software
->> RAIDs our users complain about being unable to open files in a
->> reasonable time. [...]
->>        109394518016 blocks super 1.2 level 6, 512k chunk,
->> algorithm 2 [16/16] [UUUUUUUUUUUUUUUU]
-> 
-> Unsurprisingly it is a 16-wide RAID6 of 8TB HDDs.
+Hi Phil,
 
-With a 512k chunk.  Definitely not suitable for anything but large media 
-file streaming.
+Thanks for the guidance.  I'll think this through and come back with
+any questions.
 
->> [...] The article *Software RAID check - slow system issues*
->> [1] recommends to lower `dev.raid.speed_limit_max`, but the
->> RAID should easily be able to do 200 MB/s as our tests show
->> over 600 MB/s during some benchmarks.
-> 
-> Many people have to find out the hard way that on HDDs
-> sequential and random IO rates differ by "up to" two orders of
-> magnitude, and that RAID6 gives an "interesting" tradeoff
-> between read and write speed with random vs. sequential access.
+It turns out that I do have a file in /etc/lvm/backup/ but I believe
+it is a red herring.  The file date is from 2016, well before this
+array was created, and must represent some long-ago configuration
+of this machine.
 
-The random/streaming threshold is proportional to the address stride on 
-one device--the raid sector number gap between one chunk and the next 
-chunk on that (approximately).  Which is basically chunk * (n-2).  With 
-so many member devices, the transition from random-access performance 
-and streaming performance requires that much larger accesses.
-
-I configure any raid6 that might have some random loads with a 16k or 
-32k chunk size.
-
-Finally, the stripe cache size should be optimized on the system in 
-question.  More is generally better, unless it starves the OS of 
-buffers.  Adjust and test, with real loads.
-
->> How do you run `mdcheck` in production without noticeably
->> affecting the system?
-> 
-> Fortunately the only solution that works well is quite simple:
-> replace the storage system with one with much increased
-> IOPS-per-TB (that is SSDs or much smaller HDDs, 1TB or less)
-> *and* switch from RAID6 to RAID10.
-
-These are good choices too, though not cheap.
-
-Phil
+Regards,
+DJ
