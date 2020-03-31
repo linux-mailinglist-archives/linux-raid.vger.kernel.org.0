@@ -2,35 +2,32 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C305E1995E3
-	for <lists+linux-raid@lfdr.de>; Tue, 31 Mar 2020 14:00:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A833A199610
+	for <lists+linux-raid@lfdr.de>; Tue, 31 Mar 2020 14:14:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730366AbgCaMAo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 31 Mar 2020 08:00:44 -0400
-Received: from atl.turmel.org ([74.117.157.138]:59930 "EHLO atl.turmel.org"
+        id S1730693AbgCaMOY (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 31 Mar 2020 08:14:24 -0400
+Received: from atl.turmel.org ([74.117.157.138]:40099 "EHLO atl.turmel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730343AbgCaMAo (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 31 Mar 2020 08:00:44 -0400
+        id S1730560AbgCaMOY (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 31 Mar 2020 08:14:24 -0400
 Received: from [108.243.25.188] (helo=[192.168.20.61])
         by atl.turmel.org with esmtpsa (TLS1.2:DHE_RSA_AES_128_CBC_SHA1:128)
         (Exim 4.82)
         (envelope-from <philip@turmel.org>)
-        id 1jJFZT-0003F3-CY; Tue, 31 Mar 2020 08:00:43 -0400
-Subject: Re: Requesting assistance recovering RAID-5 array
-To:     Daniel Jones <dj@iowni.com>
-Cc:     antlists <antlists@youngman.org.uk>, linux-raid@vger.kernel.org
-References: <CAB00BMjPSg2wdq7pjt=AwmcDmr0ep2+Xr0EAy6CNnVhOsWk8pg@mail.gmail.com>
- <058b3f48-e69d-2783-8e08-693ad27693f6@youngman.org.uk>
- <CAB00BMgYmi+4XvdmJDWjQ8qGWa9m0mqj7yvrK3QSNH9SzYjypw@mail.gmail.com>
- <1d6b3e00-e7dd-1b19-1379-afe665169d44@turmel.org>
- <CAB00BMg50zcerSLHShSjoOcaJ0JQSi2aSqTFfU2eQQrT12-qEg@mail.gmail.com>
+        id 1jJFmh-0003I0-H9; Tue, 31 Mar 2020 08:14:23 -0400
+Subject: Re: mdcheck: slow system issues
+To:     Peter Grandi <pg@mdraid.list.sabi.co.UK>,
+        Linux RAID <linux-raid@vger.kernel.org>
+References: <2933dddc-8728-51ac-1c60-8a47874966e4@molgen.mpg.de>
+ <24195.8467.378436.7747@base.ty.sabi.co.uk>
 From:   Phil Turmel <philip@turmel.org>
-Message-ID: <e77280ef-a5ac-f2d8-332c-dec032ddc842@turmel.org>
-Date:   Tue, 31 Mar 2020 08:00:42 -0400
+Message-ID: <dbbd010e-3648-c72c-ce44-ed570f6eb8be@turmel.org>
+Date:   Tue, 31 Mar 2020 08:14:22 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <CAB00BMg50zcerSLHShSjoOcaJ0JQSi2aSqTFfU2eQQrT12-qEg@mail.gmail.com>
+In-Reply-To: <24195.8467.378436.7747@base.ty.sabi.co.uk>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -39,65 +36,49 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Good morning Daniel,
-
-On 3/30/20 10:09 PM, Daniel Jones wrote:
-> Hello Phil,
->> In particular, knowledge of the filesystem or nested structure (LVM?) present on the array will be needed to identify the real data offsets of the three mangled members.
+On 3/31/20 6:53 AM, Peter Grandi wrote:
+>> Dear Linux folks, When `mdcheck` runs on two 100 TB software
+>> RAIDs our users complain about being unable to open files in a
+>> reasonable time. [...]
+>>        109394518016 blocks super 1.2 level 6, 512k chunk,
+>> algorithm 2 [16/16] [UUUUUUUUUUUUUUUU]
 > 
-> I don't have the history of original creation, but I'm fairly certain
-> it was something straightforward like:
+> Unsurprisingly it is a 16-wide RAID6 of 8TB HDDs.
+
+With a 512k chunk.  Definitely not suitable for anything but large media 
+file streaming.
+
+>> [...] The article *Software RAID check - slow system issues*
+>> [1] recommends to lower `dev.raid.speed_limit_max`, but the
+>> RAID should easily be able to do 200 MB/s as our tests show
+>> over 600 MB/s during some benchmarks.
 > 
->    mdadm --create /dev/md0 {parameters}
->    sudo mkfs.ext4 /dev/md0
->    mount /dev/md0 /mnt/raid5
+> Many people have to find out the hard way that on HDDs
+> sequential and random IO rates differ by "up to" two orders of
+> magnitude, and that RAID6 gives an "interesting" tradeoff
+> between read and write speed with random vs. sequential access.
+
+The random/streaming threshold is proportional to the address stride on 
+one device--the raid sector number gap between one chunk and the next 
+chunk on that (approximately).  Which is basically chunk * (n-2).  With 
+so many member devices, the transition from random-access performance 
+and streaming performance requires that much larger accesses.
+
+I configure any raid6 that might have some random loads with a 16k or 
+32k chunk size.
+
+Finally, the stripe cache size should be optimized on the system in 
+question.  More is generally better, unless it starves the OS of 
+buffers.  Adjust and test, with real loads.
+
+>> How do you run `mdcheck` in production without noticeably
+>> affecting the system?
 > 
-> After the array was corrupted I needed to comment out the mount from
-> my fstab, which was as follows (confirming ext4):
-> 
->      /dev/md0                                      /mnt/raid5
->     ext4    defaults        0       0
+> Fortunately the only solution that works well is quite simple:
+> replace the storage system with one with much increased
+> IOPS-per-TB (that is SSDs or much smaller HDDs, 1TB or less)
+> *and* switch from RAID6 to RAID10.
 
-Ok.  This should be relatively easy, if a bit time consuming.  Things we 
-know:
-
-1) array layout, and chunk size: 512k or 1024 sectors
-2) Active device #1 offset 261124 sectors.
-3) The array had bad block logging turned on.  We won't re-enable this 
-mis-feature.  It is default, so you must turn it off in your --create.
-
-Things we don't know:
-
-1) Data offsets for other drives.  However, the one we know appears to 
-be the typical you'd get from one reshape after a modern default 
-creation (262144).  There are good odds that the others are at this 
-offset, except the newest one that might be at 262144.  You'll have to 
-test four combinations: all at 261124 plus one at a time at 262144.
-
-2) Member order for the other drives.  Three drives taken three at a 
-time is six combinations.
-
-3) Identity of the first drive kicked out. (Or do we know?)  If not 
-known, there's four more combinations: whether to leave out or one of 
-three left out.
-
-That yields either twenty-four or 96 different --create --assume-clean 
-combinations to test to find the one that gives you the cleanest 
-filesystem in a read-only fsck.  (Do NOT mount!  Even a read-only mount 
-will write to the filesystem.  Only test with fsck -n.)
-
-Start by creating partitions on all devices, preferably at 2048 sectors. 
-  (Should be the default offered.)  Use data offsets 259076 and 260100 
-instead of 261124 and 262144.
-
-I recommend writing out all the combinations before you start and 
-keeping the fsck -n output from each until you have the final version 
-you want.
-
-Yeah, I'd write a script to do it all for me, if your best guess 
-combination doesn't yield a good filesystem.
-
-> Cheers,
-> DJ
+These are good choices too, though not cheap.
 
 Phil
