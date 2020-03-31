@@ -2,225 +2,91 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F87E19931C
-	for <lists+linux-raid@lfdr.de>; Tue, 31 Mar 2020 12:08:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40C4C199547
+	for <lists+linux-raid@lfdr.de>; Tue, 31 Mar 2020 13:23:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730216AbgCaKIZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 31 Mar 2020 06:08:25 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45331 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729997AbgCaKIZ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 31 Mar 2020 06:08:25 -0400
-Received: by mail-wr1-f67.google.com with SMTP id t7so25112087wrw.12
-        for <linux-raid@vger.kernel.org>; Tue, 31 Mar 2020 03:08:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shenkin.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Zc1+Tu1yyrfeFQhAk1HBDGXT5aaRmoMloSnyLwx1l3E=;
-        b=R4ZRu5z7gjBkHoonuGVop1RoAzu95XZSby0wAm7NNYZz1duo7/xApHz6PqBtg8H6BA
-         KuRow+7WY9hLaMzNPXBy5hyz7+bBUWolVRW64jfkpvUQcn59Vb8PgMx/nOG0T42zpTV1
-         4LnhbEfFbq5zaNACsvEwZdBwf4YRFqeo6OVtY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Zc1+Tu1yyrfeFQhAk1HBDGXT5aaRmoMloSnyLwx1l3E=;
-        b=EuGKPasEd97lLV+6Ug8HiHAuRYFn9dZS6El+SGRXYlcXrDravPs0AkOhCO/vCzBBGQ
-         79IPmY8aA+Ud9JJM9tpPptbI2ve8R3LjZVw2U+qmRvT2+M+DnOU2x18HW2GS6fMXO15N
-         sZNzk15+Ry7cRBh6y++F857tQIoxxNMMtle6a/0k/cgDXp3Ok4rlqs9WjW4oHYPVfD7w
-         +gU5K01y52RhTa2Iz6wGMvqdPf23r+Ao+ETyysQp49xbH/YtlIBlRWE5Xu2yKlij41VT
-         Gk6aKRGIzE4gs6AYrSLc8k9T4TA4ZEFbdftBUX2pO6/K/eqasHgdwcK7nyRzEoyc+p8g
-         bNcA==
-X-Gm-Message-State: ANhLgQ2QDt+JufggFSQLfTGQOQOBbqXppyipmY6LAn8ZQSMt7tpxrbYY
-        sxd7VvO0f+DlX7/l38q5mwj059RfHro=
-X-Google-Smtp-Source: ADFU+vsz7Uc3U3oeORabU+Q4IIZtPmVbjWglQCwQYsItj0sFXDjqKD1PbOnAwHCIZPyw2dSq7wC8RA==
-X-Received: by 2002:a5d:460e:: with SMTP id t14mr19663953wrq.421.1585649301561;
-        Tue, 31 Mar 2020 03:08:21 -0700 (PDT)
-Received: from [192.168.1.154] (cpc69403-oxfd27-2-0-cust350.4-3.cable.virginm.net. [82.15.57.95])
-        by smtp.googlemail.com with ESMTPSA id m21sm3162833wmc.6.2020.03.31.03.08.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2020 03:08:20 -0700 (PDT)
-Subject: Re: Raid-6 won't boot
-To:     Roger Heflin <rogerheflin@gmail.com>
-Cc:     antlists <antlists@youngman.org.uk>,
-        Linux-RAID <linux-raid@vger.kernel.org>
-References: <7ce3a1b9-7b24-4666-860a-4c4b9325f671@shenkin.org>
- <3868d184-5e65-02e1-618a-2afeb7a80bab@youngman.org.uk>
- <ccab6f84-aab3-f483-e473-64d95cbeb7cc@shenkin.org>
- <CAAMCDee6TcJ_wR6rkQw5V02KyqPQ+xDf+bK+pQPbbfaptO_Tvg@mail.gmail.com>
- <1f393884-dc48-c03e-f734-f9880d9eed96@shenkin.org>
- <CAAMCDedj7TQAAGzSfQgAftKSmrjNmzHgQUs-X2mQZyFPG62_-A@mail.gmail.com>
- <c8185f80-837e-9654-ee19-611a030a0d54@shenkin.org>
- <CAAMCDefr2FakGTz5ok-qvTZiDNTj87vQSWP9ynM_bxtnB=-fkw@mail.gmail.com>
- <fa7e9b6d-28f3-8c9f-0901-eeac761e382f@shenkin.org>
- <CAAMCDefXygV4CZdxadfRFAV+HeEqnY8nWG1hpsVi4tBf1PYYww@mail.gmail.com>
- <740b37a3-83fa-a03f-c253-785bb286cefc@shenkin.org>
- <CAAMCDecv1-rY9Rt1puDn6WPYxGZ1=Qzje1ju=7aEOonBzkekVw@mail.gmail.com>
-From:   Alexander Shenkin <al@shenkin.org>
-Autocrypt: addr=al@shenkin.org; prefer-encrypt=mutual; keydata=
- mQENBE1dbG8BCACgMArnyVGKmnRGsdbTeDHSmAIZnuOitigsD1oEiBaAFE7uKsXTMWn1jKeu
- QocRN5l2eBUCrGB+oyTutebbNOxlGU1Y4eTjOsChuSXkYVS3lxqDwIdj1FpuDQw1jFetYtSz
- KEGBFOfXSvdIs7keTeSRbB4GU+nz612k9I1kjYfVKXMMK39PqaemVx3SDqEKoTx++/h4y9Dw
- Vk0QJcB6r5tARr2HMjUdW7QM9jf4RoU+8j+n8zDMKTgvPJF2xYvf/RwrY8EUgFz5cQ1TcIbl
- 2vOsycpwLkL8QtuLAW2ylgjqp0u/Em8Eu4bBVG/kjx0Cj4rG845TcCxfmu2Ie/gWGdfrABEB
- AAG0IkFsZXhhbmRlciBTaGVua2luIDxhbEBzaGVua2luLm9yZz6JATgEEwECACIFAk1dbG8C
- GwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJENqfFYlMlYrSmy4H+gPMexnwlxFZ/2+G
- zbsJB0EMmlNcMDBqZoelxAMk3wFhhrmu0Z4R+KUJs8AK42RCktk5NLooqMLyOQa8sSI5jq0y
- 71y/Ujle4WqJFnea9C0BwxHI7lQAwXFgsDH5/ZG/JrX/3EZkmLvYV/a63QbjnhrVo0zv1+r1
- 9tuRekvBWwVKi03e+TyZgU4VbQg5GWGS7Iv4VibbPlficuZ5sSmF4Mn9YgduPi3M0vU/I67o
- q4ETVE3PY8e2o1I9zKL3SLQJE5J1wDPHiuJTpPvPAxlxMABmdpMeLyV5n9XZ2mderGGlfPTV
- fAnBRhvUZA5FdjU56WLWkfx4/gBNKwbRrhvfV8K5AQ0ETV1sbwEIAOt0HMNQhG3RprVQ/R36
- sZB0/CrJzPOwt+Rz1UWOaqzB3c7KkjpvgOTh21G9VGEmjCa+Y0RievO7viu65L7/lD8kxjL7
- 3g1t0CyTnXjrlVER/ntV5ZpCAU6t9LEaGJcpunEbtV3RZxqlP6furXl5+AzYR3SgvybbB6Bx
- bUxBrtVbqKbI1UsfB1s5bYR3MCX1IbH+ieovWwtkXYmo2V/1sFgi4ikBQ7TtYnjKSSbl7Bll
- ZbW0ZEmJpCLgqQesLWUiEDLiW7Ce7Bfl1//nwekS/9G7xajS+WFx5XxB2OR7nHcwBWbw70mI
- i+k0DxPFy7+hEngP23UO6iZFzJWVjWFHY9UAEQEAAYkBHwQYAQIACQUCTV1sbwIbDAAKCRDa
- nxWJTJWK0nvJB/wJd6904rR49X9XhLY38FK710w0wMVxSsZIzLZhPFAO3ymv7DUknOUWNVPL
- M3OtVjS1rMIR1VeAjYsp2uxBUOYHHyU4dvC/6Un4jHMU4Y/+WBngG7TvcxczNK3mHzPAXGYM
- PraBN/PyEYt3lbeYdLpPrCOditwD2IFTss+hkUDUTAzzDd5rb1IufGZGUILFnYQI7mHTcbFM
- nYnIbd2xamCtTmAxylCygaBVFAuwMf48N8V9IljdMysvM89+N2aHveDgZUMZPuMBq1N46QsL
- qRYo5UFd8OPrY3xKLMdjaI7jGcjeHG2g83Mu9zT6P8dh0GuZfa51FNdknHpC/5OG5HRr
-Message-ID: <98b9aff4-978c-5d8d-1325-bda26bf7997f@shenkin.org>
-Date:   Tue, 31 Mar 2020 11:08:18 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1730556AbgCaLW7 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 31 Mar 2020 07:22:59 -0400
+Received: from azure.uno.uk.net ([95.172.254.11]:53942 "EHLO azure.uno.uk.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729925AbgCaLW7 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 31 Mar 2020 07:22:59 -0400
+X-Greylist: delayed 1781 seconds by postgrey-1.27 at vger.kernel.org; Tue, 31 Mar 2020 07:22:58 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sabi.unospace.net; s=default; h=From:References:In-Reply-To:Subject:To:Date
+        :Message-ID:Content-Transfer-Encoding:Content-Type:MIME-Version:Sender:
+        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=2GE4G7YlsgUlGprn0AMc42olRkqlOYovK9/HNsH2mHc=; b=NqBEAM0zPL5Ryf0aWl29XqrN5s
+        a0gG3FvdQOBBxmieaYAa3yL4y+5/G823j2EZuXlb7CeJvNZO4aK83IF1lQ/RUQT/87zS2/2FywEEK
+        b9xTiQ2tbAvUqypA5oFw0vmwVQdyaHhQgq5lCyLoysSpsaMz+3Ia9y7BW5DITRVXkrf4Vq2VSmV7J
+        8D/l6k9Wr3AIcHT/ppTHSlyUQeQlmIg6dyG+iatmUwxU32fXIdOoh2igfvkK0x8Psx0mUOBYX4Hwz
+        xdcFiCc6jZeNZqRnyMmy0hp0H/GaFACt/x3UJ60Nn0CEdLN/HYWN9nSv53edOT0Rok0ml0hX4Zri0
+        hp9tX+gA==;
+Received: from w-50.cust-u6066.ip.static.uno.uk.net ([95.172.224.50]:52840 helo=ty.sabi.co.UK)
+        by azure.uno.uk.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <postmaster@mail.for.sabi.co.uk>)
+        id 1jJEWB-0003TA-Qq
+        for linux-raid@vger.kernel.org; Tue, 31 Mar 2020 11:53:15 +0100
+Received: from from [127.0.0.1] (helo=base.ty.sabi.co.uk)
+        by ty.sabi.co.UK with esmtps(Cipher TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)(Exim 4.86_2 2)
+        id 1jJEW3-00011z-T2
+        for <linux-raid@vger.kernel.org>; Tue, 31 Mar 2020 11:53:07 +0100
 MIME-Version: 1.0
-In-Reply-To: <CAAMCDecv1-rY9Rt1puDn6WPYxGZ1=Qzje1ju=7aEOonBzkekVw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+Message-ID: <24195.8467.378436.7747@base.ty.sabi.co.uk>
+Date:   Tue, 31 Mar 2020 11:53:07 +0100
+X-Face: SMJE]JPYVBO-9UR%/8d'mG.F!@.,l@c[f'[%S8'BZIcbQc3/">GrXDwb#;fTRGNmHr^JFb
+ SAptvwWc,0+z+~p~"Gdr4H$(|N(yF(wwCM2bW0~U?HPEE^fkPGx^u[*[yV.gyB!hDOli}EF[\cW*S
+ H<GG"+i\3#fp@@EeWZWBv;]LA5n1pS2VO%Vv[yH?kY'lEWr30WfIU?%>&spRGFL}{`bj1TaD^l/"[
+ msn( /TH#THs{Hpj>)]f><W}Ck9%2?H"AEM)+9<@D;3Kv=^?4$1/+#Qs:-aSsBTUS]iJ$6
+To:     Linux RAID <linux-raid@vger.kernel.org>
+Subject: Re: mdcheck: slow system issues
+In-Reply-To: <2933dddc-8728-51ac-1c60-8a47874966e4@molgen.mpg.de>
+References: <2933dddc-8728-51ac-1c60-8a47874966e4@molgen.mpg.de>
+X-Mailer: VM 8.2.0b under 24.5.1 (x86_64-pc-linux-gnu)
+From:   pg@mdraid.list.sabi.co.UK (Peter Grandi)
+X-Disclaimer: This message contains only personal opinions
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - azure.uno.uk.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - mail.for.sabi.co.uk
+X-Get-Message-Sender-Via: azure.uno.uk.net: authenticated_id: sabity@sabi.unospace.net
+X-Authenticated-Sender: azure.uno.uk.net: sabity@sabi.unospace.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Thanks Roger,
+> Dear Linux folks, When `mdcheck` runs on two 100 TB software
+> RAIDs our users complain about being unable to open files in a
+> reasonable time. [...]
+>       109394518016 blocks super 1.2 level 6, 512k chunk,
+> algorithm 2 [16/16] [UUUUUUUUUUUUUUUU]
 
-It seems only the Raid1 module is loaded.  I didn't find a
-straightforward way to get that module loaded... any suggestions?  Or,
-will I have to find another livecd that contains raid456?
+Unsurprisingly it is a 16-wide RAID6 of 8TB HDDs.
 
-Thanks,
-Allie
+> [...] The article *Software RAID check - slow system issues*
+> [1] recommends to lower `dev.raid.speed_limit_max`, but the
+> RAID should easily be able to do 200 MB/s as our tests show
+> over 600 MB/s during some benchmarks.
 
-On 3/30/2020 9:45 PM, Roger Heflin wrote:
-> They all seem to be there, all seem to report all 7 disks active, so
-> it does not appear to be degraded. All event counters are the same.
-> Something has to be causing them to not be scanned and assembled at
-> all.
-> 
-> Is the rescue disk a similar OS to what you have installed?  If it is
-> you might try a random say fedora livecd and see if it acts any
-> different.
-> 
-> what does fdisk -l /dev/sda look like?
-> 
-> Is the raid456 module loaded (lsmod | grep raid)?
-> 
-> what does cat /proc/cmdline look like?
-> 
-> you might also run this:
-> file -s /dev/sd*3
-> But I think it is going to show us the same thing as what the mdadm
-> --examine is reporting.
-> 
-> On Mon, Mar 30, 2020 at 3:05 PM Alexander Shenkin <al@shenkin.org> wrote:
->>
->> See attached.  I should mention that the last drive i added is on a new
->> controller that is separate from the other drives, but seemed to work
->> fine for a bit, so kinda doubt that's the issue...
->>
->> thanks,
->>
->> allie
->>
->> On 3/30/2020 6:21 PM, Roger Heflin wrote:
->>> do this against each partition that had it:
->>>
->>>  mdadm --examine /dev/sd***
->>>
->>> It seems like it is not seeing it as a md-raid.
->>>
->>> On Mon, Mar 30, 2020 at 11:13 AM Alexander Shenkin <al@shenkin.org> wrote:
->>>> Thanks Roger,
->>>>
->>>> The only line that isn't commented out in /etc/mdadm.conf is "DEVICE
->>>> partitions"...
->>>>
->>>> Thanks,
->>>>
->>>> Allie
->>>>
->>>> On 3/30/2020 4:53 PM, Roger Heflin wrote:
->>>>> That seems really odd.  Is the raid456 module loaded?
->>>>>
->>>>> On mine I see messages like this for each disk it scanned and
->>>>> considered as maybe possibly being an array member.
->>>>>  kernel: [   83.468700] md/raid:md13: device sdi3 operational as raid disk 5
->>>>> and messages like this:
->>>>>  md/raid:md14: not clean -- starting background reconstruction
->>>>>
->>>>> You might look at /etc/mdadm.conf on the rescue cd and see if it has a
->>>>> DEVICE line that limits what is being scanned.
->>>>>
->>>>> On Mon, Mar 30, 2020 at 10:13 AM Alexander Shenkin <al@shenkin.org> wrote:
->>>>>> Thanks Roger,
->>>>>>
->>>>>> that grep just returns the detection of the raid1 (md127).  See dmesg
->>>>>> and mdadm --detail results attached.
->>>>>>
->>>>>> Many thanks,
->>>>>> allie
->>>>>>
->>>>>> On 3/28/2020 1:36 PM, Roger Heflin wrote:
->>>>>>> Try this grep:
->>>>>>> dmesg | grep "md/raid", if that returns nothing if you can just send
->>>>>>> the entire dmesg.
->>>>>>>
->>>>>>> On Sat, Mar 28, 2020 at 2:47 AM Alexander Shenkin <al@shenkin.org> wrote:
->>>>>>>> Thanks Roger.  dmesg has nothing in it referring to md126 or md127....
->>>>>>>> any other thoughts on how to investigate?
->>>>>>>>
->>>>>>>> thanks,
->>>>>>>> allie
->>>>>>>>
->>>>>>>> On 3/27/2020 3:55 PM, Roger Heflin wrote:
->>>>>>>>> A non-assembled array always reports raid1.
->>>>>>>>>
->>>>>>>>> I would run "dmesg | grep md126" to start with and see what it reports it saw.
->>>>>>>>>
->>>>>>>>> On Fri, Mar 27, 2020 at 10:29 AM Alexander Shenkin <al@shenkin.org> wrote:
->>>>>>>>>> Thanks Wol,
->>>>>>>>>>
->>>>>>>>>> Booting in SystemRescueCD and looking in /proc/mdstat, two arrays are
->>>>>>>>>> reported.  The first (md126) in reported as inactive with all 7 disks
->>>>>>>>>> listed as spares.  The second (md127) is reported as active
->>>>>>>>>> auto-read-only with all 7 disks operational.  Also, the only
->>>>>>>>>> "personality" reported is Raid1.  I could go ahead with your suggestion
->>>>>>>>>> of mdadm --stop array and then mdadm --assemble, but I thought the
->>>>>>>>>> reporting of just the Raid1 personality was a bit strange, so wanted to
->>>>>>>>>> check in before doing that...
->>>>>>>>>>
->>>>>>>>>> Thanks,
->>>>>>>>>> Allie
->>>>>>>>>>
->>>>>>>>>> On 3/26/2020 10:00 PM, antlists wrote:
->>>>>>>>>>> On 26/03/2020 17:07, Alexander Shenkin wrote:
->>>>>>>>>>>> I surely need to boot with a rescue disk of some sort, but from there,
->>>>>>>>>>>> I'm not sure exactly when I should do.  Any suggestions are very welcome!
->>>>>>>>>>> Okay. Find a liveCD that supports raid (hopefully something like
->>>>>>>>>>> SystemRescueCD). Make sure it has a very recent kernel and the latest
->>>>>>>>>>> mdadm.
->>>>>>>>>>>
->>>>>>>>>>> All being well, the resync will restart, and when it's finished your
->>>>>>>>>>> system will be fine. If it doesn't restart on its own, do an "mdadm
->>>>>>>>>>> --stop array", followed by an "mdadm --assemble"
->>>>>>>>>>>
->>>>>>>>>>> If that doesn't work, then
->>>>>>>>>>>
->>>>>>>>>>> https://raid.wiki.kernel.org/index.php/Linux_Raid#When_Things_Go_Wrogn
->>>>>>>>>>>
->>>>>>>>>>> Cheers,
->>>>>>>>>>> Wol
+Many people have to find out the hard way that on HDDs
+sequential and random IO rates differ by "up to" two orders of
+magnitude, and that RAID6 gives an "interesting" tradeoff
+between read and write speed with random vs. sequential access.
+
+> How do you run `mdcheck` in production without noticeably
+> affecting the system?
+
+Fortunately the only solution that works well is quite simple:
+replace the storage system with one with much increased
+IOPS-per-TB (that is SSDs or much smaller HDDs, 1TB or less)
+*and* switch from RAID6 to RAID10.
