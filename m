@@ -2,75 +2,87 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 609A319AC21
-	for <lists+linux-raid@lfdr.de>; Wed,  1 Apr 2020 14:55:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68DB719AEA6
+	for <lists+linux-raid@lfdr.de>; Wed,  1 Apr 2020 17:21:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732439AbgDAMzE (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 1 Apr 2020 08:55:04 -0400
-Received: from atl.turmel.org ([74.117.157.138]:60982 "EHLO atl.turmel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732289AbgDAMzE (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 1 Apr 2020 08:55:04 -0400
-Received: from [98.192.104.236] (helo=[192.168.19.61])
-        by atl.turmel.org with esmtpsa (TLS1.2:DHE_RSA_AES_128_CBC_SHA1:128)
-        (Exim 4.82)
-        (envelope-from <philip@turmel.org>)
-        id 1jJctb-0003dg-5c; Wed, 01 Apr 2020 08:55:03 -0400
-Subject: Re: Requesting assistance recovering RAID-5 array
-To:     Wols Lists <antlists@youngman.org.uk>, Daniel Jones <dj@iowni.com>
-Cc:     linux-raid@vger.kernel.org
-References: <CAB00BMjPSg2wdq7pjt=AwmcDmr0ep2+Xr0EAy6CNnVhOsWk8pg@mail.gmail.com>
- <058b3f48-e69d-2783-8e08-693ad27693f6@youngman.org.uk>
- <CAB00BMgYmi+4XvdmJDWjQ8qGWa9m0mqj7yvrK3QSNH9SzYjypw@mail.gmail.com>
- <1d6b3e00-e7dd-1b19-1379-afe665169d44@turmel.org>
- <CAB00BMg50zcerSLHShSjoOcaJ0JQSi2aSqTFfU2eQQrT12-qEg@mail.gmail.com>
- <e77280ef-a5ac-f2d8-332c-dec032ddc842@turmel.org>
- <CAB00BMj5kihqwOY-FOXv-tqG1b2reMnUVkdmB9uyNAeE7ESasw@mail.gmail.com>
- <061b695a-2406-fc00-dd6d-9198b85f3b1b@turmel.org>
- <CAB00BMi3zhfVGpeE_AyyKiu1=MY2icYgfey0J3GeO8z9ZDAQbg@mail.gmail.com>
- <5E8485DA.2050803@youngman.org.uk>
-From:   Phil Turmel <philip@turmel.org>
-Message-ID: <9a303b9b-52b8-f0c6-4288-120338c6572f@turmel.org>
-Date:   Wed, 1 Apr 2020 08:55:02 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1732752AbgDAPVi (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 1 Apr 2020 11:21:38 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:45595 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732707AbgDAPVi (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 1 Apr 2020 11:21:38 -0400
+Received: by mail-vs1-f65.google.com with SMTP id x82so58436vsc.12
+        for <linux-raid@vger.kernel.org>; Wed, 01 Apr 2020 08:21:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=iowni-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qYnqAJxLP5xeXIRytYPZfWDqlK46jI3gXiWpLyXsB+I=;
+        b=SVWwtuk8V/YfgVn0Lv+Jb7YVMB8WPg47HGd7syDT/8P0jAaS0qhnz5gMSh8seH8aEz
+         Rohwkeky/smETIG/7bCqM1G59YNyp6tLeg5Y9XnmzIk5zHzTD+Uq0l1m1QfZb4uu5R/C
+         PABW4+IPVj9/ltGJit+W3cdrzkL81bwoH7moyOeADUqBsrA0sUXHmmaBxE82VPArCnLe
+         dWppEQWlDPfnLfd6RfNejNHnmy3aY51TdbXA9Z1tEjcflEv2ClttI/aL+phUH9omI8Sc
+         Jybke8KV0qD075AsZ/x/q8rHP7uZ2fOOJosa09ZYKydbFk2kVyLEzAhsjhj5hplTHx6v
+         BSzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qYnqAJxLP5xeXIRytYPZfWDqlK46jI3gXiWpLyXsB+I=;
+        b=lXIx+zM2IfOu+BHILQuD8jprio3ybmAuK183JvBtq8Fb1okdcYeACZWKJO84MdFXSJ
+         2tjSasod14Dl8KkEmqzlJx1jT+b0ah8dUImd6ii17Hgwa7HbqCkx5xb6lkPH8g63qzj3
+         Yoeks2OaqrIJUxASKWGG01vF8m1GbfM7TFcNPmfH7Adyq+r+6I0xi9r9qFJKo/WGV2oT
+         KsxtmqfOFRrAktu48FGP3t4DmHZL6rnN18ko/Cnf+saCb08V1qonEM44ZX/g0G2BnRjo
+         Xw42c90IZ9ZJFJLq/OgmifJ3W0sflqyIS+GPl8SUy69+ZW205K00lZlJ9Aw9PTTaA4S0
+         47zg==
+X-Gm-Message-State: AGi0Pua4BFKhsyIKASTCHzGlnJG3tg5hCbvTShXVdgZnfyPlf4GgqKBv
+        4M6UDqUT1epz5BNIV4W342Y5FSRGoR1YF0NdZNlsbbUwnE8=
+X-Google-Smtp-Source: APiQypKnSBu3xUwQOeoCRRG+MZCOJ7qDFU0qP4Qg0E2cq9Y7ZwpHa6b8zQag6pEcKiUGCHlw8zGca2NOn3WY6ySuKAM=
+X-Received: by 2002:a67:b60c:: with SMTP id d12mr15877019vsm.196.1585754497152;
+ Wed, 01 Apr 2020 08:21:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5E8485DA.2050803@youngman.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAB00BMjPSg2wdq7pjt=AwmcDmr0ep2+Xr0EAy6CNnVhOsWk8pg@mail.gmail.com>
+ <058b3f48-e69d-2783-8e08-693ad27693f6@youngman.org.uk> <CAB00BMgYmi+4XvdmJDWjQ8qGWa9m0mqj7yvrK3QSNH9SzYjypw@mail.gmail.com>
+ <1d6b3e00-e7dd-1b19-1379-afe665169d44@turmel.org> <CAB00BMg50zcerSLHShSjoOcaJ0JQSi2aSqTFfU2eQQrT12-qEg@mail.gmail.com>
+ <e77280ef-a5ac-f2d8-332c-dec032ddc842@turmel.org> <CAB00BMj5kihqwOY-FOXv-tqG1b2reMnUVkdmB9uyNAeE7ESasw@mail.gmail.com>
+ <061b695a-2406-fc00-dd6d-9198b85f3b1b@turmel.org> <CAB00BMi3zhfVGpeE_AyyKiu1=MY2icYgfey0J3GeO8z9ZDAQbg@mail.gmail.com>
+ <5E8485DA.2050803@youngman.org.uk> <9a303b9b-52b8-f0c6-4288-120338c6572f@turmel.org>
+In-Reply-To: <9a303b9b-52b8-f0c6-4288-120338c6572f@turmel.org>
+From:   Daniel Jones <dj@iowni.com>
+Date:   Wed, 1 Apr 2020 09:21:25 -0600
+Message-ID: <CAB00BMig177NjEbBQgfjQ5gZE3QPTR-B6FD9i8oczHqf7mMqcg@mail.gmail.com>
+Subject: Re: Requesting assistance recovering RAID-5 array
+To:     Phil Turmel <philip@turmel.org>
+Cc:     Wols Lists <antlists@youngman.org.uk>, linux-raid@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 4/1/20 8:15 AM, Wols Lists wrote:
-> On 01/04/20 07:03, Daniel Jones wrote:
->> Thanks Phil,
->>
->> I'll read this a couple of times and try some commands (likely on an
->> overlay) tomorrow.
-> 
-> If you CAN overlay, then DO. If you can't back up the drives, the more
-> you can do to protect them from being accidentally written to, the better.
+Hi Phil, Wols,
 
-I have to admit that I pretty much never use overlays.  But then I'm 
-entirely confident of what any given mdadm/lvm/fdisk operation will do, 
-in regards to writing to devices.  And since it is burned into my psyche 
-that raid is *not* backup, only an uptime aid, I keep good external 
-backups. (:
+(Sorry for the top-post in my last reply).
 
-Lacking confidence and lacking backups are both good reasons for using 
-overlays.  I'm not entirely sure the mental effort for a novice to learn 
-to use overlays is time better spent than learning enough about MD and 
-mdadm for confident use.
+I'm working through everything Phil recommended.  I am also using
+overlays exactly as documented on the
+"Irreversible_mdadm_failure_recovery" wiki.  Things look very
+favorable so far.
 
-I do think initial recovery efforts with --assemble and --assemble 
---force do not need to be done with overlays.  They are so safe and so 
-likely to quickly yield a working array that I think overlays should be 
-recommended only for invasive tasks needed after these --assemble 
-operations fail.
+A quick question on what I'm doing?
 
---create is a very invasive opertion.
+As per Phil's suggestion to put the array inside partitions, I have
+created partitions inside each of /dev/mapper/sd[bcde].  The gdisk
+operations end with the message:
 
-Phil
+  Warning: The kernel is still using the old partition table.
+  The new table will be used at the next reboot.
+  The operation has completed successfully.
+
+My question is how to get the kernel to recognize the
+/dev/mapper/sd[bcde]1 partitions I have created?  Rebooting doesn't do
+anything as the overlay loop files aren't something that gets
+recognized during boot.
+
+Thanks,
+DJ
