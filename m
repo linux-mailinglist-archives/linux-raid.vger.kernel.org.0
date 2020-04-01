@@ -2,95 +2,136 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 154E719B59C
-	for <lists+linux-raid@lfdr.de>; Wed,  1 Apr 2020 20:32:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FB2C19B693
+	for <lists+linux-raid@lfdr.de>; Wed,  1 Apr 2020 21:50:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732975AbgDAScU (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 1 Apr 2020 14:32:20 -0400
-Received: from atl.turmel.org ([74.117.157.138]:37803 "EHLO atl.turmel.org"
+        id S1732385AbgDATuN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 1 Apr 2020 15:50:13 -0400
+Received: from azure.uno.uk.net ([95.172.254.11]:47614 "EHLO azure.uno.uk.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732979AbgDAScU (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 1 Apr 2020 14:32:20 -0400
-Received: from [98.192.104.236] (helo=[192.168.19.61])
-        by atl.turmel.org with esmtpsa (TLS1.2:DHE_RSA_AES_128_CBC_SHA1:128)
-        (Exim 4.82)
-        (envelope-from <philip@turmel.org>)
-        id 1jJi9z-0005D3-2q; Wed, 01 Apr 2020 14:32:19 -0400
-Subject: Re: Requesting assistance recovering RAID-5 array
-To:     Daniel Jones <dj@iowni.com>
-Cc:     Wols Lists <antlists@youngman.org.uk>, linux-raid@vger.kernel.org
-References: <CAB00BMjPSg2wdq7pjt=AwmcDmr0ep2+Xr0EAy6CNnVhOsWk8pg@mail.gmail.com>
- <058b3f48-e69d-2783-8e08-693ad27693f6@youngman.org.uk>
- <CAB00BMgYmi+4XvdmJDWjQ8qGWa9m0mqj7yvrK3QSNH9SzYjypw@mail.gmail.com>
- <1d6b3e00-e7dd-1b19-1379-afe665169d44@turmel.org>
- <CAB00BMg50zcerSLHShSjoOcaJ0JQSi2aSqTFfU2eQQrT12-qEg@mail.gmail.com>
- <e77280ef-a5ac-f2d8-332c-dec032ddc842@turmel.org>
- <CAB00BMj5kihqwOY-FOXv-tqG1b2reMnUVkdmB9uyNAeE7ESasw@mail.gmail.com>
- <061b695a-2406-fc00-dd6d-9198b85f3b1b@turmel.org>
- <CAB00BMi3zhfVGpeE_AyyKiu1=MY2icYgfey0J3GeO8z9ZDAQbg@mail.gmail.com>
- <5E8485DA.2050803@youngman.org.uk>
- <9a303b9b-52b8-f0c6-4288-120338c6572f@turmel.org>
- <CAB00BMig177NjEbBQgfjQ5gZE3QPTR-B6FD9i8oczHqf7mMqcg@mail.gmail.com>
- <1f4b8c74-4c38-6ea4-6868-b28f9e5c4a10@turmel.org>
- <e75f80f4-70d4-e283-b3bc-c78bd0d55a8a@turmel.org>
- <CAB00BMhU76rjvQv9v-HxM8Harc9ssLBANWfPsW9abbSRNgwoUQ@mail.gmail.com>
-From:   Phil Turmel <philip@turmel.org>
-Message-ID: <bb554b86-3dc0-8cb2-c279-f8841742195c@turmel.org>
-Date:   Wed, 1 Apr 2020 14:32:18 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1732314AbgDATuN (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 1 Apr 2020 15:50:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sabi.unospace.net; s=default; h=From:References:In-Reply-To:Subject:To:Date
+        :Message-ID:Content-Transfer-Encoding:Content-Type:MIME-Version:Sender:
+        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=0bkyOq55kt/2IqGoZN4BtlepKGd4u3frJHANtLEIhMw=; b=uIbZfMMS9LeHaESS+Zj7jelP84
+        i9rE2Wj6XGo3hft7/XFwU0DHW2bqeCUlQjcUNto0o1ogKpRcfTb3UwZMWD98geB8OuXA1EvkPuMf8
+        e4uICnSyYk6vQk5gKDlgSpMCfGOPspmum7Tpoxu0i/uwckyDa4qUDYGlSSD+m/XlpQ1tEKzae9syK
+        VbFI2SB6SWWIqu/eyhiqh10uwnw1nv9RneefCZgmwL/gSZ4mN/eU5OhIO6S2bgr3H3q+qP2TFddZm
+        vItmFKszIRh7EOZxvybmgzWhqqbxSRX3U2P/aIhxdVQNjZNjdxkrG+r1/DZEJCV6Sful7C9NXB50w
+        E+oSjeBw==;
+Received: from w-50.cust-u6066.ip.static.uno.uk.net ([95.172.224.50]:40144 helo=ty.sabi.co.UK)
+        by azure.uno.uk.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <postmaster@mail.for.sabi.co.uk>)
+        id 1jJjNL-00085N-8Q
+        for linux-raid@vger.kernel.org; Wed, 01 Apr 2020 20:50:11 +0100
+Received: from from [127.0.0.1] (helo=base.ty.sabi.co.uk)
+        by ty.sabi.co.UK with esmtps(Cipher TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)(Exim 4.86_2 2)
+        id 1jJjNE-00059m-6B
+        for <linux-raid@vger.kernel.org>; Wed, 01 Apr 2020 20:50:04 +0100
 MIME-Version: 1.0
-In-Reply-To: <CAB00BMhU76rjvQv9v-HxM8Harc9ssLBANWfPsW9abbSRNgwoUQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+Message-ID: <24196.61547.646152.522241@base.ty.sabi.co.uk>
+Date:   Wed, 1 Apr 2020 20:50:03 +0100
+To:     Linux RAID <linux-raid@vger.kernel.org>
+Subject: Re: mdcheck: slow system issues
+In-Reply-To: <dbbd010e-3648-c72c-ce44-ed570f6eb8be@turmel.org>
+References: <2933dddc-8728-51ac-1c60-8a47874966e4@molgen.mpg.de>
+        <24195.8467.378436.7747@base.ty.sabi.co.uk>
+        <dbbd010e-3648-c72c-ce44-ed570f6eb8be@turmel.org>
+X-Mailer: VM 8.2.0b under 24.5.1 (x86_64-pc-linux-gnu)
+From:   pg@mdraid.list.sabi.co.UK (Peter Grandi)
+X-Disclaimer: This message contains only personal opinions
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - azure.uno.uk.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - mail.for.sabi.co.uk
+X-Get-Message-Sender-Via: azure.uno.uk.net: authenticated_id: sabity@sabi.unospace.net
+X-Authenticated-Sender: azure.uno.uk.net: sabity@sabi.unospace.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi Daniel,
+>> Unsurprisingly it is a 16-wide RAID6 of 8TB HDDs.
 
-On 4/1/20 2:07 PM, Daniel Jones wrote:
-> Hi Phil,
-> 
-> So far so good.
+> With a 512k chunk.  Definitely not suitable for anything but
+> large media file streaming. [...] The random/streaming
+> threshold is proportional to the address stride on one
+> device--the raid sector number gap between one chunk and the
+> next chunk on that (approximately). [...] I configure any
+> raid6 that might have some random loads with a 16k or 32k
+> chunk size.
 
-Yes.
+That is actually rather controversial: I have read both
+arguments like this and the opposite argument that sequential
+performance is much better with small chunk sizes because then
+sequential access is striped:
 
-> # mdadm --manage /dev/md0 --add /dev/mapper/sdb1
-> mdadm: added /dev/mapper/sdb1
+* Consider a 512KiB chunk size with 64KiB reads: 8 successive
+  reads will be sequentially from the same disk, so top speed
+  will be that of a single disk.
 
-Don't do this.  Overlays can't really handle the amount of data that 
-would be involved, and you definitely don't want to rebuild yet.
+* Consider a 16KiB chunk size with 4 data disks with 64KiB
+  reads: each read will be spread in parallel over all 4 disks.
 
-> 4: Summary
-> 
-> The drives have had physical partitions written.
-> I think I've found the correct offset and device order to use --create
-> to restore the array to the degraded state it was in before the
-> superblocks were overwritten.
+The rationale for large chunk sizes is that it minimizes time
+wasted on rotational latency: if reading 64KiB from 4 drives
+with a 16KiB chunk size, the 64KiB block will only become
+available when all four chunks have finished reading, and
+because in most RAID types the drives are not synchronized, on
+average each chunk will be at a different rotational position,
+potentially one full rotation apart, but often half a rotation
+apart, that is each read will have an overhead of 8ms of extra
+rotational latency, and that's pretty huge. Some more detailed
+discussion here:
 
-Yes.
+  http://www.sabi.co.uk/blog/12-thr.html?120310#120310
 
-> I'm not sure why the --add doesn't work.
+Multihreading, block device read-ahead, various types of
+alternative RAID layouts etc.  complicate things, and in some
+small experiments I have done over the years results were
+inconclusive, except that really large chunk sizes seemed worse
+than smaller ones.
 
-Don't do the --add operation until you've copied anything critical in 
-the array to external backups (while running with 3 of 4).  The reason 
-is that any not-yet-discovered URE on those three will certainly crash 
-the array during rebuild.  It could still crash copying critical stuff, 
-but you can repeatedly --assemble --force to keep going with the next 
-items to backup.
+> Finally, the stripe cache size should be optimized on the
+> system in question.  More is generally better, unless it
+> starves the OS of buffers.
 
-Only when you've backed up everything possible do you --add the fourth 
-drive back into the array.
+Indeed the stripe cache size matters a great deal to a 16-wide
+RAID6, and that's a good point, but it is secondary to the
+storage system having designed for high latency during mixed
+read-write workloads with even a minimal degree of "random"
+access or multithreading.
 
-> Thanks so much for your help this far.
+As to other secondary palliatives, the "unable to open files in
+a reasonable time" case often can be made less bad in two other
+ways:
 
-You're welcome.
+* Often the (terrible) Linux block layer has default settings
+  that result in enormous amounts of unsynced data in memory,
+  and when that eventually is synced to disk, it can create huge
+  congestion. This can also happen with hw RAID host adapters
+  with onboard caches (in many cases very badly managed by their
+  firmware).
 
-> Regards,
-> DJ
+* The default disk schedulers (in particular 'cfq') tend to
+  prefer reads to writes, and this can result in large delays
+  especially if 'atime' if set impacting 'open's, or 'mtime' on
+  directories when 'creat'ing files. Using 'deadline' with
+  tighter settings for "write_expire" and/or "writes_starved"
+  might help.
 
-Phil
-
+But nothing other than a simple, quick replacement of the
+storage system can work around a storage system designed to
+minimize the IOPS-per-TB rate below the combined requirements of
+the workload of 'mdcheck' (or backup) and the live workloads.
