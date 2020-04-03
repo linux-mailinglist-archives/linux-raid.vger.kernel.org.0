@@ -2,25 +2,26 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AE7E119DE2A
-	for <lists+linux-raid@lfdr.de>; Fri,  3 Apr 2020 20:43:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7C8519DF08
+	for <lists+linux-raid@lfdr.de>; Fri,  3 Apr 2020 22:13:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728436AbgDCSnn (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 3 Apr 2020 14:43:43 -0400
-Received: from atl.turmel.org ([74.117.157.138]:37744 "EHLO atl.turmel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726087AbgDCSnn (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 3 Apr 2020 14:43:43 -0400
-Received: from [98.192.104.236] (helo=[192.168.19.61])
-        by atl.turmel.org with esmtpsa (TLS1.2:DHE_RSA_AES_128_CBC_SHA1:128)
-        (Exim 4.82)
-        (envelope-from <philip@turmel.org>)
-        id 1jKRI6-0005oK-Gv; Fri, 03 Apr 2020 14:43:42 -0400
+        id S1727907AbgDCUN6 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 3 Apr 2020 16:13:58 -0400
+Received: from hammer.websitemanagers.com.au ([59.100.172.130]:57169 "EHLO
+        hammer.websitemanagers.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726368AbgDCUN6 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 3 Apr 2020 16:13:58 -0400
+Received: (qmail 6599 invoked by uid 1011); 3 Apr 2020 20:13:57 -0000
+Received: from 192.168.5.178 by hammer (envelope-from <mailinglists@websitemanagers.com.au>, uid 1008) with qmail-scanner-1.24 
+ (clamdscan: 0.102.1/25738. spamassassin: 3.4.2.  
+ Clear:RC:1(192.168.5.178):. 
+ Processed in 0.045602 secs); 03 Apr 2020 20:13:57 -0000
+Received: from unknown (HELO ADAM-MBP.local) (adamg+websitemanagers.com.au@192.168.5.178)
+  by 0 with ESMTPA; 3 Apr 2020 20:13:57 -0000
 Subject: Re: Requesting assistance recovering RAID-5 array
-To:     Daniel Jones <dj@iowni.com>
+To:     Phil Turmel <philip@turmel.org>, Daniel Jones <dj@iowni.com>
 Cc:     Wols Lists <antlists@youngman.org.uk>, linux-raid@vger.kernel.org
 References: <CAB00BMjPSg2wdq7pjt=AwmcDmr0ep2+Xr0EAy6CNnVhOsWk8pg@mail.gmail.com>
- <1d6b3e00-e7dd-1b19-1379-afe665169d44@turmel.org>
  <CAB00BMg50zcerSLHShSjoOcaJ0JQSi2aSqTFfU2eQQrT12-qEg@mail.gmail.com>
  <e77280ef-a5ac-f2d8-332c-dec032ddc842@turmel.org>
  <CAB00BMj5kihqwOY-FOXv-tqG1b2reMnUVkdmB9uyNAeE7ESasw@mail.gmail.com>
@@ -36,25 +37,43 @@ References: <CAB00BMjPSg2wdq7pjt=AwmcDmr0ep2+Xr0EAy6CNnVhOsWk8pg@mail.gmail.com>
  <CAB00BMgwCbtGYJ_hX3_rZv3uaOd7vrHuEebqsPLHp3S96tJaRw@mail.gmail.com>
  <5985cc5b-a332-eb69-2d84-cb54f8f5b0fc@turmel.org>
  <CAB00BMjxywFn_K_D=Xn7ySHp404nvULTXarA7EwjxtuTJSOqQg@mail.gmail.com>
-From:   Phil Turmel <philip@turmel.org>
-Message-ID: <346301ce-505f-a2df-5cda-536f3ebb9b34@turmel.org>
-Date:   Fri, 3 Apr 2020 14:43:41 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ <346301ce-505f-a2df-5cda-536f3ebb9b34@turmel.org>
+From:   Adam Goryachev <mailinglists@websitemanagers.com.au>
+Organization: Website Managers
+Message-ID: <3f771f84-1c0d-8617-faa7-22657d9de95e@websitemanagers.com.au>
+Date:   Sat, 4 Apr 2020 07:13:56 +1100
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <CAB00BMjxywFn_K_D=Xn7ySHp404nvULTXarA7EwjxtuTJSOqQg@mail.gmail.com>
+In-Reply-To: <346301ce-505f-a2df-5cda-536f3ebb9b34@turmel.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
 
-On 4/3/20 2:42 PM, Daniel Jones wrote:
-> After the "--create missing /dev/sdc1 /dev/sdd1 /dev/sde1"  and the
-> fsck, is "mdadm --manage /dev/md0 --add /dev/sdb" the correct syntax
-> for attempting to add?
+On 4/4/20 05:43, Phil Turmel wrote:
+>
+> On 4/3/20 2:42 PM, Daniel Jones wrote:
+>> After the "--create missing /dev/sdc1 /dev/sdd1 /dev/sde1"  and the
+>> fsck, is "mdadm --manage /dev/md0 --add /dev/sdb" the correct syntax
+>> for attempting to add?
+>
+> You can leave out "--manage".  But yes.
 
-You can leave out "--manage".  But yes.
+I was mostly following this, but might have missed something here so 
+this is just a suggestion to double check....
+
+If you are trying to use partitions instead of whole devices (to prevent 
+this happening again in future), then shouldn't you use:
+
+mdadm --manage /dev/md0 --add /dev/sdb1
+
+ie, sdb1 not sdb....
+
+Regards,
+Adam
+
