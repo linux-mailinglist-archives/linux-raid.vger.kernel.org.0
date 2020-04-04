@@ -2,75 +2,77 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F3E619DF10
-	for <lists+linux-raid@lfdr.de>; Fri,  3 Apr 2020 22:14:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDA3B19E7D7
+	for <lists+linux-raid@lfdr.de>; Sun,  5 Apr 2020 00:01:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbgDCUOt (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 3 Apr 2020 16:14:49 -0400
-Received: from atl.turmel.org ([74.117.157.138]:33868 "EHLO atl.turmel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726368AbgDCUOs (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 3 Apr 2020 16:14:48 -0400
-Received: from [98.192.104.236] (helo=[192.168.19.61])
-        by atl.turmel.org with esmtpsa (TLS1.2:DHE_RSA_AES_128_CBC_SHA1:128)
-        (Exim 4.82)
-        (envelope-from <philip@turmel.org>)
-        id 1jKSiF-0006F5-Jy; Fri, 03 Apr 2020 16:14:47 -0400
-Subject: Re: Requesting assistance recovering RAID-5 array
-To:     Adam Goryachev <mailinglists@websitemanagers.com.au>,
-        Daniel Jones <dj@iowni.com>
-Cc:     Wols Lists <antlists@youngman.org.uk>, linux-raid@vger.kernel.org
-References: <CAB00BMjPSg2wdq7pjt=AwmcDmr0ep2+Xr0EAy6CNnVhOsWk8pg@mail.gmail.com>
- <e77280ef-a5ac-f2d8-332c-dec032ddc842@turmel.org>
- <CAB00BMj5kihqwOY-FOXv-tqG1b2reMnUVkdmB9uyNAeE7ESasw@mail.gmail.com>
- <061b695a-2406-fc00-dd6d-9198b85f3b1b@turmel.org>
- <CAB00BMi3zhfVGpeE_AyyKiu1=MY2icYgfey0J3GeO8z9ZDAQbg@mail.gmail.com>
- <5E8485DA.2050803@youngman.org.uk>
- <9a303b9b-52b8-f0c6-4288-120338c6572f@turmel.org>
- <CAB00BMig177NjEbBQgfjQ5gZE3QPTR-B6FD9i8oczHqf7mMqcg@mail.gmail.com>
- <1f4b8c74-4c38-6ea4-6868-b28f9e5c4a10@turmel.org>
- <e75f80f4-70d4-e283-b3bc-c78bd0d55a8a@turmel.org>
- <CAB00BMhU76rjvQv9v-HxM8Harc9ssLBANWfPsW9abbSRNgwoUQ@mail.gmail.com>
- <bb554b86-3dc0-8cb2-c279-f8841742195c@turmel.org>
- <CAB00BMgwCbtGYJ_hX3_rZv3uaOd7vrHuEebqsPLHp3S96tJaRw@mail.gmail.com>
- <5985cc5b-a332-eb69-2d84-cb54f8f5b0fc@turmel.org>
- <CAB00BMjxywFn_K_D=Xn7ySHp404nvULTXarA7EwjxtuTJSOqQg@mail.gmail.com>
- <346301ce-505f-a2df-5cda-536f3ebb9b34@turmel.org>
- <3f771f84-1c0d-8617-faa7-22657d9de95e@websitemanagers.com.au>
-From:   Phil Turmel <philip@turmel.org>
-Message-ID: <d2db8ad1-9fb3-4d08-3fdd-2eb06a931859@turmel.org>
-Date:   Fri, 3 Apr 2020 16:14:46 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <3f771f84-1c0d-8617-faa7-22657d9de95e@websitemanagers.com.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        id S1726393AbgDDWBE (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 4 Apr 2020 18:01:04 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:34353 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbgDDWBE (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 4 Apr 2020 18:01:04 -0400
+Received: by mail-ed1-f66.google.com with SMTP id o1so14018430edv.1
+        for <linux-raid@vger.kernel.org>; Sat, 04 Apr 2020 15:01:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=5calPyOCtmEDi48URYdwpZAMFU54pQrmb6s4U/VQjHg=;
+        b=Yth0dJRP4p99nmHzbptZu7QvwFfrMkqvs/VUVnJgUwTzheZ4G+qrPprlzcIyXwMLj3
+         eOs4BBsrvMTDVhkbZR6h8HTmOSs1epIWfhJ2sJGM2s70OB/qMi/ryC7Eg1nvKvvPNLUY
+         olTCPewXtf2/3bI0KEwxk7oQTLePiyHQnNUTABcw2+rk0yI7T/Sp3+gDc9i9nRVQBH8r
+         UM6JCUK7DeFFXOqCm3sz1jRAPe+lhTf8xbNnifl/qIurSfUa63WpHaDAFTR97bdJVxlG
+         Pr08F4uGu5muxA+vNba4ABxmAEgnVbh57U/SsPMfoKLMzVtw0M/0s1e6lFI9Avs2eK9k
+         xLJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=5calPyOCtmEDi48URYdwpZAMFU54pQrmb6s4U/VQjHg=;
+        b=H6r4ziUFq4VYgBfniWkVb7A0Hi/Unz+GTm6ArxMu0kWY2zm3kYNguqWKK4BuU/EZMD
+         yyQ5/oDBiFYwOlmfq++u2ZS8ai6az3X1RZQ4LeTw3WQIb6HUXhRbCxovuN/mFX/ngipT
+         gA8Z+0Jzr4MkyS+rpGjc4CjJ5gO1Lk1oAJrQCGBiX8Q3J3m4Vmt4QbwEH5+SKbAKRm59
+         1vSEDM5+OJvLXqWedfwpuywUlsTteZNM+LVO2oeI2Z31QKONv0cfCkiPTtw4eP5EWS8W
+         K4eMmf6ZDthCeUsW35b+VAMfOcC6W/k4shMGTmkyJjSQSxr01rzIoDXnZHeE1wWnQrzE
+         INqA==
+X-Gm-Message-State: AGi0Pub4vnujLi78s9fAs0z2iq7bIGQTE7/dkXOeAlgfgk8vl5VJIJjV
+        WV3nk2oj8fEk2kbjOhiHhTSZkA==
+X-Google-Smtp-Source: APiQypItH2ZGXqkvLASyTcyxiXUwGgYLTu7FPNHf+DGmNsZEDq2Y6QvNF6ZVdss+58kEPxyB2aww6w==
+X-Received: by 2002:a50:f092:: with SMTP id v18mr13399323edl.77.1586037662137;
+        Sat, 04 Apr 2020 15:01:02 -0700 (PDT)
+Received: from ls00508.pb.local ([2001:1438:4010:2540:e120:c0df:e1ea:ba3e])
+        by smtp.gmail.com with ESMTPSA id oe24sm1718549ejb.47.2020.04.04.15.01.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Apr 2020 15:01:01 -0700 (PDT)
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+To:     songliubraving@fb.com
+Cc:     linux-raid@vger.kernel.org,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Subject: [PATCH 0/4] md: fix lockdep warning
+Date:   Sat,  4 Apr 2020 23:57:06 +0200
+Message-Id: <20200404215711.4272-1-guoqing.jiang@cloud.ionos.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 4/3/20 4:13 PM, Adam Goryachev wrote:
-> 
-> On 4/4/20 05:43, Phil Turmel wrote:
->>
->> On 4/3/20 2:42 PM, Daniel Jones wrote:
->>> After the "--create missing /dev/sdc1 /dev/sdd1 /dev/sde1"  and the
->>> fsck, is "mdadm --manage /dev/md0 --add /dev/sdb" the correct syntax
->>> for attempting to add?
->>
->> You can leave out "--manage".  But yes.
-> 
-> I was mostly following this, but might have missed something here so 
-> this is just a suggestion to double check....
-> 
-> If you are trying to use partitions instead of whole devices (to prevent 
-> this happening again in future), then shouldn't you use:
-> 
-> mdadm --manage /dev/md0 --add /dev/sdb1
-> 
-> ie, sdb1 not sdb....
+Hi,
 
-Yes.  Good catch.
+After LOCKDEP is enabled, we can see some deadlock issues, this patchset
+makes workqueue is flushed only necessary, and the last patch is a cleanup.
+
+Thanks,
+Guoqing
+
+Guoqing Jiang (5):
+  md: add checkings before flush md_misc_wq
+  md: add new workqueue for delete rdev
+  md: don't flush workqueue unconditionally in md_open
+  md: flush md_rdev_misc_wq for HOT_ADD_DISK case
+  md: remove the extra line for ->hot_add_disk
+
+ drivers/md/md.c | 54 ++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 38 insertions(+), 16 deletions(-)
+
+-- 
+2.17.1
+
