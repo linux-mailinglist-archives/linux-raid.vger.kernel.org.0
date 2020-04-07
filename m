@@ -2,71 +2,68 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DB821A0FE6
-	for <lists+linux-raid@lfdr.de>; Tue,  7 Apr 2020 17:08:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D49E1A0FE9
+	for <lists+linux-raid@lfdr.de>; Tue,  7 Apr 2020 17:09:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728994AbgDGPIz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 7 Apr 2020 11:08:55 -0400
-Received: from smtp.hosts.co.uk ([85.233.160.19]:20545 "EHLO smtp.hosts.co.uk"
+        id S1729381AbgDGPJ2 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 7 Apr 2020 11:09:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46190 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728917AbgDGPIz (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 7 Apr 2020 11:08:55 -0400
-Received: from [81.153.42.4] (helo=[192.168.1.225])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1jLpqP-0001T9-4I; Tue, 07 Apr 2020 16:08:53 +0100
-Subject: Re: Raid-6 cannot reshape
-To:     Alexander Shenkin <al@shenkin.org>,
-        Phil Turmel <philip@turmel.org>,
-        Roger Heflin <rogerheflin@gmail.com>
-Cc:     Linux-RAID <linux-raid@vger.kernel.org>
-References: <24a0ef04-46a9-13ee-b8cb-d1a0a5b939fb@shenkin.org>
- <6b9b6d37-6325-6515-f693-0ff3b641a67a@shenkin.org>
- <3135fb29-cfaa-d8ac-264d-fd3110217370@shenkin.org>
- <CAAMCDecyr4R_z3-E8HYwYM4CyQtAY_nBmXdvvMkTgZCcCp7MjQ@mail.gmail.com>
- <5E8B5865.9060107@youngman.org.uk>
- <08d66411-5045-56e1-cbad-7edefa94a363@turmel.org>
- <945332b3-6a47-c2b3-7d1e-70a44f6fd370@shenkin.org>
- <b9bb796e-08cd-e10a-d345-992e5f3abea7@turmel.org>
- <618f5171-785f-09b0-8748-d2549d22c0ab@shenkin.org>
- <38852671-9c5a-3807-0284-41f902e5f81b@turmel.org>
- <44069d88-f838-2b8b-1002-a1fff5502d2d@turmel.org>
- <61e30bc4-469f-32ed-06e8-d1b4e1fd6740@shenkin.org>
-From:   antlists <antlists@youngman.org.uk>
-Message-ID: <572ec112-21ff-7da5-81d2-a91b08277a2c@youngman.org.uk>
-Date:   Tue, 7 Apr 2020 16:08:55 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1728917AbgDGPJ1 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 7 Apr 2020 11:09:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id E4B2DAC6C;
+        Tue,  7 Apr 2020 15:09:25 +0000 (UTC)
+Subject: Re: [PATCH] raid5: use memalloc_noio_save()/restore in
+ resize_chunks()
+To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        songliubraving@fb.com
+Cc:     linux-raid@vger.kernel.org,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Michal Hocko <mhocko@suse.com>
+References: <20200402081312.32709-1-colyli@suse.de>
+ <fa7e30b9-7480-6c03-0f43-d561fed912fb@cloud.ionos.com>
+From:   Coly Li <colyli@suse.de>
+Organization: SUSE Labs
+Message-ID: <5f27365b-768f-eb69-36ec-f4ed0c292c60@suse.de>
+Date:   Tue, 7 Apr 2020 23:09:21 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <61e30bc4-469f-32ed-06e8-d1b4e1fd6740@shenkin.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <fa7e30b9-7480-6c03-0f43-d561fed912fb@cloud.ionos.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 07/04/2020 14:19, Alexander Shenkin wrote:
-> Re re-growing, I was hoping that running on a newer mdadm (4.1) might
-> fix the problem, and if i still encountered it, perhaps running the
-> following might unstick it:
+On 2020/4/5 11:53 下午, Guoqing Jiang wrote:
+> On 02.04.20 10:13, Coly Li wrote:
+>> -    scribble = kvmalloc_array(cnt, obj_size, flags);
+>> +    scribble = kvmalloc_array(cnt, obj_size, GFP_KERNEL);
 > 
-> echo frozen > /sys/block/md0/md/sync_action
-> echo reshape > /sys/block/md0/md/sync_action
-> 
-> But, I personally have no idea what happened (really), nor why...:-(
+> Maybe it is simpler to call kvmalloc_array between memalloc_noio_save
+> and memalloc_noio_restore.
+> And seems sched/mm.h need to be included per the report from LKP.
 
-iirc pretty much all these reports come from oldish Ubuntu systems ...
+The falgs can be,
+- GFP_KERNEL: when called from alloc_scratch_buffer()
+- GFP_NOIO: when called from resize_chunks().
 
-What happened *could* be that you have an updated franken-kernel, plus 
-an old mdadm, and the mess needs an Igor to stitch it all together...
+If the scope APIs are used inside scribble_alloc(), the first call path
+is restricted as noio, which is not expected. So I only use the scope
+APIs around the location where GFP_NOIO is used.
 
-If you ARE going to try the grow again, I'd use an up-to-date recovery 
-system to run the grow, and then reboot back in to the old Ubuntu once 
-your system is back.
+Anyway, Michal Hocko suggests to add the scope APIs in
+mddev_suspend()/mddev_resume(). Then in the whole code path where md
+raid array is suspend, we don't need to worry the recursive memory
+reclaim I/Os onto the array. After checking the complicated raid5 code,
+I come to realize this suggestion makes sense.
 
-And seriously think about upgrading your distro to the latest LTS.
+I will try to compose a v2 patch following Michal's suggestion.
+-- 
 
-Cheers,
-Wol
+Coly Li
