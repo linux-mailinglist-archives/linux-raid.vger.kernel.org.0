@@ -2,73 +2,119 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 75D6D1A3BCE
-	for <lists+linux-raid@lfdr.de>; Thu,  9 Apr 2020 23:18:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F1801A3C00
+	for <lists+linux-raid@lfdr.de>; Thu,  9 Apr 2020 23:38:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbgDIVSr (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 9 Apr 2020 17:18:47 -0400
-Received: from mail-qv1-f51.google.com ([209.85.219.51]:34303 "EHLO
-        mail-qv1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbgDIVSr (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 9 Apr 2020 17:18:47 -0400
-Received: by mail-qv1-f51.google.com with SMTP id s18so91604qvn.1
-        for <linux-raid@vger.kernel.org>; Thu, 09 Apr 2020 14:18:48 -0700 (PDT)
+        id S1726722AbgDIViQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 9 Apr 2020 17:38:16 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44775 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbgDIViQ (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 9 Apr 2020 17:38:16 -0400
+Received: by mail-wr1-f68.google.com with SMTP id c15so13724278wro.11
+        for <linux-raid@vger.kernel.org>; Thu, 09 Apr 2020 14:38:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=Qu8w8rHpoFs0XM3bjyGn1OZMe04R+pkFFGzHdnwg0y8=;
-        b=vgYWwmE3RPx2b8RNNx9XBe7bp0zPiB2JQLV11g46Fg5xaWoeDJipbMvpWgJpCtBWUe
-         qOuHaRg8fFlsEDqdSehn4kMfJk4hrGJh3TlwHiCwOt3tAOl+GNbGg8FHyOhdGnvs4U0V
-         ripRY9nCYeL54i+EIsog3MW2eL+njG74Wr+H32WC2DtVtKg4dyOkc+oD1Tgm8kXxjbv0
-         wQlQii67G3H2tov58R3g3KBSFAJWfCkJJXFY3LN1Tn++bAEkDkFYMk2TnvI9wE9AeA+H
-         msR1cmhprDuecWw338sVPeHbI77zkN8AitF7Xk5wQLale9kwJH9i+T8sI+9BQTAT6tBC
-         o56A==
+        d=cloud.ionos.com; s=google;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=/5WkaMmXoLxOhSvTQCqussFf/lc51d/o10CLGlwfCVw=;
+        b=iIrSNWD4LEvygsHJ+8Bd+a7mh0WXVaotpdlK07I2h9bRprAk3GwwrZMxSrG6JaGv5y
+         WgHLEwnZbFOvAb2uPk+65ZbTBjTjr0hN8OAeEIDj5MxZB+ytzy48HBjIeLj5438ksP1C
+         GSKBmpTT7oVkPY+QpkaI9LUhdnNW8IYVBVgncMSi00YQ1aJbu7v+So+y+FTt6S4CDkbD
+         5h3eGSPH9UWMZuY+YXQRE6rsLlbhPDw1MoK2N/0eKW+h44CwC5MEFeD/nBsdIrs/imxZ
+         y8dnq2LkYbbgLr2JtXrtMvBctn7yMLGOF6WvTS/R38J7yodBvfy7vHxSxAcBTBhf2vVj
+         a4Ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=Qu8w8rHpoFs0XM3bjyGn1OZMe04R+pkFFGzHdnwg0y8=;
-        b=lKLLkNcaoqe1k1RYkXOMKpypVCym3wuXqq+30A18mBitvLB0zsY2N/dVgJ4G0p6Gn8
-         2wOJ8WBXisEfnHE2p3Lz88rFGoeglXEQKRBsB6bx9NVpdz7Zvd8dRtaPFuqBmjePC86l
-         6Sczi/68VVHhFTLQTa5iMhfeyb8l4geDEIEF2gtTQGIgpD2Ub1QQNeLLOKRVgTwi7YdQ
-         fr+U06ol2sVGkfxPWlkRIp7Xhn+fHuRRkpdBAx6GltVbR75eon7j6xwaeNpusDIs94NW
-         ZkKiZbgbXvteVMCHj4CaPYbkqLr04V1/vs/q8u+HpskvCxZWg/DSwBhiGM2nk+piKwGk
-         aQrA==
-X-Gm-Message-State: AGi0PubYKTdz6LcE7bjWi9YNOU6bf6S684LEdW1t2anT1GPyaYAPY9t8
-        xWTFXJ9bNKUYroK26xpCGIhv+1Vu6ff3QgEbbqI=
-X-Google-Smtp-Source: APiQypL3pHv57JYQ9Bbez19TJ164KLD5hF+EZSPa8W5KeJAnQItpaCAXkfAYyibvMpcNFaTLcc+CFY9jESRrRXrYvmk=
-X-Received: by 2002:a0c:ba08:: with SMTP id w8mr2112110qvf.77.1586467127570;
- Thu, 09 Apr 2020 14:18:47 -0700 (PDT)
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=/5WkaMmXoLxOhSvTQCqussFf/lc51d/o10CLGlwfCVw=;
+        b=BgCWOzQSKSVwakRgtgX+37wr/9x27siFFmsvTkM69E7jbgsqIOoObaP7SSVMIArlgX
+         9lWw+gOJe3ey5bKZS1+NJcVCOvIdYYDNWk2TBr67IaGHm8u0XsSGLMaopL0AC8LXAJy+
+         s1BMKHMAbc9DSduO5cRf9/VvYAzHCQDTmfBT8WF43/Z+1AWkWLfiEjMXTx3Yn3y28hsi
+         xHaTVd7mwO4Vq9vchhXuVBHX0tz2ieXwxaTX2LQ0azIxKeKG7008h0H2OuR/R02KVEYq
+         s52VjHHtHc0WBau88j1YSc6SjP6hJadbP1SAeEaEeMme5RJD7lAxQiZyzrX/3UI1kmzM
+         vGBg==
+X-Gm-Message-State: AGi0PuZCRuqX/a0sV0eAJe0qmVQfxMvEKA+IN4tbrovXLs0vN/PvYLLv
+        xiMy3szyuh/CTZGS4+g45Gz+aA==
+X-Google-Smtp-Source: APiQypKD7waMg2LarDt3ZBGPQnO9xN1iwVIaGMLh3zJU9tigxpbt0XyU8lMusDjhnyP/b5o3simWfw==
+X-Received: by 2002:adf:d4ce:: with SMTP id w14mr1206038wrk.135.1586468295065;
+        Thu, 09 Apr 2020 14:38:15 -0700 (PDT)
+Received: from ?IPv6:2001:16b8:4805:100:34d4:fc5b:d862:dbd2? ([2001:16b8:4805:100:34d4:fc5b:d862:dbd2])
+        by smtp.gmail.com with ESMTPSA id k133sm26928wma.0.2020.04.09.14.38.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Apr 2020 14:38:14 -0700 (PDT)
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Subject: Re: [PATCH] raid5: use memalloc_noio_save()/restore in
+ resize_chunks()
+To:     Coly Li <colyli@suse.de>, songliubraving@fb.com
+Cc:     linux-raid@vger.kernel.org,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Michal Hocko <mhocko@suse.com>
+References: <20200402081312.32709-1-colyli@suse.de>
+ <fa7e30b9-7480-6c03-0f43-d561fed912fb@cloud.ionos.com>
+ <5f27365b-768f-eb69-36ec-f4ed0c292c60@suse.de>
+Message-ID: <204e9fd0-3712-4864-2bf5-38913511e658@cloud.ionos.com>
+Date:   Thu, 9 Apr 2020 23:38:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <CADSg1Jh1i+OPq0_hWOvHxK0xroUbn_w0_ZjxjwcnrbSsBXGY5A@mail.gmail.com>
- <5E25876A.1030004@youngman.org.uk> <CADSg1Jj3XmD_RmSedn3AT9uCXbHQGa6ATBK1UP33onS8Vi=60g@mail.gmail.com>
- <CADSg1Jh7=6XHXbDqWVWg=fa-+09Vd9E+KBuTy6AWucJesFkBmQ@mail.gmail.com> <20200409071940.GA4072@cthulhu.home.robinhill.me.uk>
-In-Reply-To: <20200409071940.GA4072@cthulhu.home.robinhill.me.uk>
-Reply-To: andrewbass@gmail.com
-From:   "Andrey ``Bass'' Shcheglov" <andrewbass@gmail.com>
-Date:   Fri, 10 Apr 2020 00:18:34 +0300
-Message-ID: <CADSg1JgwR7C6iqTz7gA3tw1WB=NT9_3Wwa1KHbsYLbPh23qrJQ@mail.gmail.com>
-Subject: Re: Repairing a RAID1 with non-zero mismatch_cnt, vol. 2
-To:     robin@robinhill.me.uk
-Cc:     linux-raid@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5f27365b-768f-eb69-36ec-f4ed0c292c60@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Indeed.
-
-The subsequent check resulted in the zero value of mismatch_cnt.
-
-Thank you Robin.
-
-Regards,
-Andrey.
-
-On Thu, 9 Apr 2020 at 10:19, Robin Hill <robin@robinhill.me.uk> wrote:
+On 07.04.20 17:09, Coly Li wrote:
+> On 2020/4/5 11:53 下午, Guoqing Jiang wrote:
+>> On 02.04.20 10:13, Coly Li wrote:
+>>> -    scribble = kvmalloc_array(cnt, obj_size, flags);
+>>> +    scribble = kvmalloc_array(cnt, obj_size, GFP_KERNEL);
+>> Maybe it is simpler to call kvmalloc_array between memalloc_noio_save
+>> and memalloc_noio_restore.
+>> And seems sched/mm.h need to be included per the report from LKP.
+> The falgs can be,
+> - GFP_KERNEL: when called from alloc_scratch_buffer()
+> - GFP_NOIO: when called from resize_chunks().
 >
-> The mismatch_cnt after repair indicates how many repairs were completed.
-> You need to run a new repair/check to see whether there are any
-> remaining mismatches.
+> If the scope APIs are used inside scribble_alloc(), the first call path
+> is restricted as noio, which is not expected. So I only use the scope
+> APIs around the location where GFP_NOIO is used.
+
+Thanks for the explanation. I assume it can be distinguished by check 
+the flag,
+eg, FYI.
+
+if (flag == GFP_NOIO)
+     memalloc_noio_save();
+kvmalloc_array();
+if (flag == GFP_NOIO)
+     memalloc_noio_restore();
+> Anyway, Michal Hocko suggests to add the scope APIs in
+> mddev_suspend()/mddev_resume(). Then in the whole code path where md
+> raid array is suspend, we don't need to worry the recursive memory
+> reclaim I/Os onto the array. After checking the complicated raid5 code,
+> I come to realize this suggestion makes sense.
+
+Hmm, mddev_suspend/resume are called at lots of places, then it's better to
+check if all the places don't allocate memory with GFP_KERNEL.
+
+And seems In level_store(), sysfs_create_group could be called between 
+suspend
+and resume, then the two functions (kstrdup_const(name, GFP_KERNEL) and
+kmem_cache_zalloc(kernfs_node_cache, GFP_KERNEL)) could be triggered by the
+path:
+
+sysfs_create_group ->internal_create_group -> kernfs_create_dir_ns ->
+kernfs_new_node -> __kernfs_new_node
+
+Not know memalloc_noio_{save,restore} well, but I guess it is better to 
+use them
+to mark a small scope, just my two cents.
+
+Thanks,
+Guoqing
