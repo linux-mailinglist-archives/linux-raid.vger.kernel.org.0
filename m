@@ -2,26 +2,26 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E362A1A35B6
-	for <lists+linux-raid@lfdr.de>; Thu,  9 Apr 2020 16:18:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C0C21A35B7
+	for <lists+linux-raid@lfdr.de>; Thu,  9 Apr 2020 16:18:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbgDIOSB (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 9 Apr 2020 10:18:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40172 "EHLO mx2.suse.de"
+        id S1727447AbgDIOSD (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 9 Apr 2020 10:18:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40202 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726977AbgDIOSB (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 9 Apr 2020 10:18:01 -0400
+        id S1726977AbgDIOSD (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 9 Apr 2020 10:18:03 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 42C95ADE8;
-        Thu,  9 Apr 2020 14:17:59 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 5EF5DAD93;
+        Thu,  9 Apr 2020 14:18:01 +0000 (UTC)
 From:   colyli@suse.de
 To:     songliubraving@fb.com, linux-raid@vger.kernel.org
 Cc:     mhocko@suse.com, kent.overstreet@gmail.com,
         guoqing.jiang@cloud.ionos.com, Coly Li <colyli@suse.de>
-Subject: [PATCH v3 1/4] md: use memalloc scope APIs in mddev_suspend()/mddev_resume()
-Date:   Thu,  9 Apr 2020 22:17:20 +0800
-Message-Id: <20200409141723.24447-2-colyli@suse.de>
+Subject: [PATCH v3 2/4] raid5: remove gfp flags from scribble_alloc()
+Date:   Thu,  9 Apr 2020 22:17:21 +0800
+Message-Id: <20200409141723.24447-3-colyli@suse.de>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200409141723.24447-1-colyli@suse.de>
 References: <20200409141723.24447-1-colyli@suse.de>
@@ -34,83 +34,73 @@ X-Mailing-List: linux-raid@vger.kernel.org
 
 From: Coly Li <colyli@suse.de>
 
-In raid5.c:resize_chunk(), scribble_alloc() is called with GFP_NOIO
-flag, then it is sent into kvmalloc_array() inside scribble_alloc().
+Using GFP_NOIO flag to call scribble_alloc() from resize_chunk() does
+not have the expected behavior. kvmalloc_array() inside scribble_alloc()
+which receives the GFP_NOIO flag will eventually call kmalloc_node() to
+allocate physically continuous pages.
 
-The problem is kvmalloc_array() eventually calls kvmalloc_node() which
-does not accept non GFP_KERNEL compatible flag like GFP_NOIO, then
-kmalloc_node() is called indeed to allocate physically continuous
-pages. When system memory is under heavy pressure, and the requesting
-size is large, there is high probability that allocating continueous
-pages will fail.
+Now we have memalloc scope APIs in mddev_suspend()/mddev_resume() to
+prevent memory reclaim I/Os during raid array suspend context, calling
+to kvmalloc_array() with GFP_KERNEL flag may avoid deadlock of recursive
+I/O as expected.
 
-But simply using GFP_KERNEL flag to call kvmalloc_array() is also
-progblematic. In the code path where scribble_alloc() is called, the
-raid array is suspended, if kvmalloc_node() triggers memory reclaim I/Os
-and such I/Os go back to the suspend raid array, deadlock will happen.
-
-What is desired here is to allocate non-physically (a.k.a virtually)
-continuous pages and avoid memory reclaim I/Os. Michal Hocko suggests
-to use the mmealloc sceope APIs to restrict memory reclaim I/O in
-allocating context, specifically to call memalloc_noio_save() when
-suspend the raid array and to call memalloc_noio_restore() when
-resume the raid array.
-
-This patch adds the memalloc scope APIs in mddev_suspend() and
-mddev_resume(), to restrict memory reclaim I/Os during the raid array
-is suspended. The benifit of adding the memalloc scope API in the
-unified entry point mddev_suspend()/mddev_resume() is, no matter which
-md raid array type (personality), we are sure the deadlock by recursive
-memory reclaim I/O won't happen on the suspending context.
-
-Please notice that the memalloc scope APIs only take effect on the raid
-array suspending context, if the memory allocation is from another new
-created kthread after raid array suspended, the recursive memory reclaim
-I/Os won't be restricted. The mddev_suspend()/mddev_resume() entries are
-used for the critical section where the raid metadata is modifying,
-creating a kthread to allocate memory inside the critical section is
-queer and very probably being buggy.
+This patch removes the useless gfp flags from parameters list of
+scribble_alloc(), and call kvmalloc_array() with GFP_KERNEL flag. The
+incorrect GFP_NOIO flag does not exist anymore.
 
 Fixes: b330e6a49dc3 ("md: convert to kvmalloc")
 Suggested-by: Michal Hocko <mhocko@suse.com>
 Signed-off-by: Coly Li <colyli@suse.de>
 ---
- drivers/md/md.c | 4 ++++
- drivers/md/md.h | 1 +
- 2 files changed, 5 insertions(+)
+ drivers/md/raid5.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 271e8a587354..1a8e1bb3a7f4 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -527,11 +527,15 @@ void mddev_suspend(struct mddev *mddev)
- 	wait_event(mddev->sb_wait, !test_bit(MD_UPDATING_SB, &mddev->flags));
- 
- 	del_timer_sync(&mddev->safemode_timer);
-+	/* restrict memory reclaim I/O during raid array is suspend */
-+	mddev->noio_flag = memalloc_noio_save();
- }
- EXPORT_SYMBOL_GPL(mddev_suspend);
- 
- void mddev_resume(struct mddev *mddev)
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index ba00e9877f02..190dd70db514 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -2228,14 +2228,19 @@ static int grow_stripes(struct r5conf *conf, int num)
+  * of the P and Q blocks.
+  */
+ static int scribble_alloc(struct raid5_percpu *percpu,
+-			  int num, int cnt, gfp_t flags)
++			  int num, int cnt)
  {
-+	/* entred the memalloc scope from mddev_suspend() */
-+	memalloc_noio_restore(mddev->noio_flag);
- 	lockdep_assert_held(&mddev->reconfig_mutex);
- 	if (--mddev->suspended)
- 		return;
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index acd681939112..612814d07d35 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -497,6 +497,7 @@ struct mddev {
- 	void (*sync_super)(struct mddev *mddev, struct md_rdev *rdev);
- 	struct md_cluster_info		*cluster_info;
- 	unsigned int			good_device_nr;	/* good device num within cluster raid */
-+	unsigned int			noio_flag; /* for memalloc scope API */
+ 	size_t obj_size =
+ 		sizeof(struct page *) * (num+2) +
+ 		sizeof(addr_conv_t) * (num+2);
+ 	void *scribble;
  
- 	bool	has_superblocks:1;
- 	bool	fail_last_dev:1;
+-	scribble = kvmalloc_array(cnt, obj_size, flags);
++	/*
++	 * If here is in raid array suspend context, it is in memalloc noio
++	 * context as well, there is no potential recursive memory reclaim
++	 * I/Os with the GFP_KERNEL flag.
++	 */
++	scribble = kvmalloc_array(cnt, obj_size, GFP_KERNEL);
+ 	if (!scribble)
+ 		return -ENOMEM;
+ 
+@@ -2267,8 +2272,7 @@ static int resize_chunks(struct r5conf *conf, int new_disks, int new_sectors)
+ 
+ 		percpu = per_cpu_ptr(conf->percpu, cpu);
+ 		err = scribble_alloc(percpu, new_disks,
+-				     new_sectors / STRIPE_SECTORS,
+-				     GFP_NOIO);
++				     new_sectors / STRIPE_SECTORS);
+ 		if (err)
+ 			break;
+ 	}
+@@ -6759,8 +6763,7 @@ static int alloc_scratch_buffer(struct r5conf *conf, struct raid5_percpu *percpu
+ 			       conf->previous_raid_disks),
+ 			   max(conf->chunk_sectors,
+ 			       conf->prev_chunk_sectors)
+-			   / STRIPE_SECTORS,
+-			   GFP_KERNEL)) {
++			   / STRIPE_SECTORS)) {
+ 		free_scratch_buffer(conf, percpu);
+ 		return -ENOMEM;
+ 	}
 -- 
 2.25.0
 
