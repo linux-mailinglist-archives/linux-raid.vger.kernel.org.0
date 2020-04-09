@@ -2,85 +2,81 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3283C1A2FEA
-	for <lists+linux-raid@lfdr.de>; Thu,  9 Apr 2020 09:19:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E05C1A2FF7
+	for <lists+linux-raid@lfdr.de>; Thu,  9 Apr 2020 09:25:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726552AbgDIHTr (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 9 Apr 2020 03:19:47 -0400
-Received: from smtp1.servermx.com ([134.19.178.79]:57796 "EHLO
-        smtp1.servermx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgDIHTr (ORCPT
-        <rfc822;linux-raid@vger.kernel.ORG>); Thu, 9 Apr 2020 03:19:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=servermx.com; s=servermx; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=pJA5S3uMrd/xKxvQk4j4/vG8W0EzVdXiWip1yMc1Jts=; b=DHdjlx2jYPCGmPavRHZk5Yykj
-        tMKiN149/cHtUumy9II4e6daKqabvVwonOx9v2OGTngoDabmZ1Ww1T3Ac8+scpy4sEYtG7UWVhW+l
-        Y+w+yl/kAjUyqh0xb5F/pKFQLxX/2EnJQyi+rl2HOtsW5UOwruDu0fXGYjkh3knWhP8T4=;
-Received: by exim4; Thu, 09 Apr 2020 09:19:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=servermx.com; s=servermx; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=pJA5S3uMrd/xKxvQk4j4/vG8W0EzVdXiWip1yMc1Jts=; b=DHdjlx2jYPCGmPavRHZk5Yykj
-        tMKiN149/cHtUumy9II4e6daKqabvVwonOx9v2OGTngoDabmZ1Ww1T3Ac8+scpy4sEYtG7UWVhW+l
-        Y+w+yl/kAjUyqh0xb5F/pKFQLxX/2EnJQyi+rl2HOtsW5UOwruDu0fXGYjkh3knWhP8T4=;
-Received: by exim4; Thu, 09 Apr 2020 09:19:43 +0200
-Received: by cthulhu.home.robinhill.me.uk (Postfix, from userid 1000)
-        id EA4B66A749B; Thu,  9 Apr 2020 08:19:40 +0100 (BST)
-Date:   Thu, 9 Apr 2020 08:19:40 +0100
-From:   Robin Hill <robin@robinhill.me.uk>
-To:     Andrey ``Bass'' Shcheglov <andrewbass@gmail.com>
-Cc:     linux-raid@vger.kernel.org
-Subject: Re: Repairing a RAID1 with non-zero mismatch_cnt, vol. 2
-Message-ID: <20200409071940.GA4072@cthulhu.home.robinhill.me.uk>
-Mail-Followup-To: Andrey ``Bass'' Shcheglov <andrewbass@gmail.com>,
-        linux-raid@vger.kernel.org
-References: <CADSg1Jh1i+OPq0_hWOvHxK0xroUbn_w0_ZjxjwcnrbSsBXGY5A@mail.gmail.com>
- <5E25876A.1030004@youngman.org.uk>
- <CADSg1Jj3XmD_RmSedn3AT9uCXbHQGa6ATBK1UP33onS8Vi=60g@mail.gmail.com>
- <CADSg1Jh7=6XHXbDqWVWg=fa-+09Vd9E+KBuTy6AWucJesFkBmQ@mail.gmail.com>
+        id S1726502AbgDIHZ1 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 9 Apr 2020 03:25:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45806 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725985AbgDIHZ0 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 9 Apr 2020 03:25:26 -0400
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 426B920753
+        for <linux-raid@vger.kernel.org>; Thu,  9 Apr 2020 07:25:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586417126;
+        bh=gFT31tbOY9MoFI1az4f28ScjEKLhaoP7njY1y8Yo1M8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0J9ppr5M245+XU0DE4LuE0IhGP9P74dd+p3m41SwqPK6eonJZneCc8p7LVW85vk1Z
+         TTD+2nNeIXOEISETqKpramDrmNYfE4qg4y5468XgdgeUYF1FVn/52eAifCDbfx6TWm
+         +fTUYxqn59jr8LC57Cu7ew3sNDS6IxOWTaQbLIuY=
+Received: by mail-lf1-f41.google.com with SMTP id x23so7137051lfq.1
+        for <linux-raid@vger.kernel.org>; Thu, 09 Apr 2020 00:25:26 -0700 (PDT)
+X-Gm-Message-State: AGi0PubJF2Q4+3p63ozygYQXKQOAGQ7YlrOd/QfSkQXxmzMwQABxe6Hu
+        ZZkpUlRP3Q9hTZlrF7zszR/dyl0gVfYdMN8Ay58=
+X-Google-Smtp-Source: APiQypIPm1vD+Kuv6apSZMdbAd7kkWCbrvHOi/LY90e4AUCN4/J6u60ZAcDosZLBAPYxndc3asVykijHEqeIvqpPG+w=
+X-Received: by 2002:a05:6512:1c5:: with SMTP id f5mr6609559lfp.138.1586417124432;
+ Thu, 09 Apr 2020 00:25:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADSg1Jh7=6XHXbDqWVWg=fa-+09Vd9E+KBuTy6AWucJesFkBmQ@mail.gmail.com>
-User-Agent: Mutt/1.13.5 (2020-03-28)
-Feedback-ID: outgoingmessage:robin@robinhill.me.uk:ns02.servermx.com:servermx.com
-X-AuthUser: bimu5pypsh
-X-Mailgun-Native-Send: true
-X-AuthUser: bimu5pypsh
+References: <20200404215711.4272-1-guoqing.jiang@cloud.ionos.com>
+In-Reply-To: <20200404215711.4272-1-guoqing.jiang@cloud.ionos.com>
+From:   Song Liu <song@kernel.org>
+Date:   Thu, 9 Apr 2020 00:25:13 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW4rWa_ZCX=3eW9Xk_jtZdu+uKX4HZtbfEJfS9ms4a+OSg@mail.gmail.com>
+Message-ID: <CAPhsuW4rWa_ZCX=3eW9Xk_jtZdu+uKX4HZtbfEJfS9ms4a+OSg@mail.gmail.com>
+Subject: Re: [PATCH 0/4] md: fix lockdep warning
+To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Cc:     Song Liu <songliubraving@fb.com>,
+        linux-raid <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu Apr 09, 2020 at 01:13:40AM +0300, Andrey ``Bass'' Shcheglov wrote:
+Thanks for the fix!
 
-> Now I have 3 empty ext4 partitions with only lost+found directories.
-> 
-> And the value of mismatch_cnt dropped to 384.
-> 
-> 
-> Okay, so far, so good. I don't have any data, so a repair action can't
-> possibly harm it.
-> 
-> > echo repair >>/sys/block/md4/md/sync_action
-> 
-> And the value of mismatch_cnt is still 384.
-> 
-The mismatch_cnt after repair indicates how many repairs were completed.
-You need to run a new repair/check to see whether there are any
-remaining mismatches.
+On Sat, Apr 4, 2020 at 3:01 PM Guoqing Jiang
+<guoqing.jiang@cloud.ionos.com> wrote:
+>
+> Hi,
+>
+> After LOCKDEP is enabled, we can see some deadlock issues, this patchset
+> makes workqueue is flushed only necessary, and the last patch is a cleanup.
+>
+> Thanks,
+> Guoqing
+>
+> Guoqing Jiang (5):
+>   md: add checkings before flush md_misc_wq
+>   md: add new workqueue for delete rdev
+>   md: don't flush workqueue unconditionally in md_open
+>   md: flush md_rdev_misc_wq for HOT_ADD_DISK case
+>   md: remove the extra line for ->hot_add_disk
 
-Cheers,
-    Robin
--- 
-     ___        
-    ( ' }     |       Robin Hill        <robin@robinhill.me.uk> |
-   / / )      | Little Jim says ....                            |
-  // !!       |      "He fallen in de water !!"                 |
+I think we will need a new workqueue (2/5). But I am not sure about
+whether we should
+do 1/5 and 3/5. It feels like we are hiding errors from lock_dep. With
+some quick grep,
+I didn't find code pattern like
+
+       if (work_pending(XXX))
+               flush_workqueue(XXX);
+
+Is it possible to fix the issue without these workaround?
+
+Thanks,
+Song
