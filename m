@@ -2,38 +2,38 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C5CD1A40D4
-	for <lists+linux-raid@lfdr.de>; Fri, 10 Apr 2020 05:58:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 813F01A4070
+	for <lists+linux-raid@lfdr.de>; Fri, 10 Apr 2020 05:57:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbgDJDs5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 9 Apr 2020 23:48:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60760 "EHLO mail.kernel.org"
+        id S1728711AbgDJDty (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 9 Apr 2020 23:49:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728389AbgDJDs4 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:48:56 -0400
+        id S1728703AbgDJDtx (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:49:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2DBD214D8;
-        Fri, 10 Apr 2020 03:48:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF82520CC7;
+        Fri, 10 Apr 2020 03:49:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490536;
+        s=default; t=1586490593;
         bh=EkOBFVCYfHMSHV79LZ+glFm4WQ53lVX1OwA+34TvyF0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0sDNOYi4CqKWOsmb77gN5OhnWcByioRhsmgAkr5LEoGSJMwsO25loFk61EGdZ16+d
-         Trk2OLA+y2wqNOtVT/Pzwe1NcsiEoKt1yf0LfCb/IR9E0x6ywfm03ZKNs48KU6AIP7
-         rHaGKG3caS17JmvRHgdFg3ZCVHjZn9hf1/S9gO0w=
+        b=kXwOgSLlqNEqU9+/dqrT2ISCk+F7BoFVPLN1VOPJAn5yPFBUIM7l7I0P5JymzOsLB
+         lB+VVo2RC+cKkvKtDSRz2stiAjOV/P7yhaprLB/bTNL9v5S5F360vk005F6gHb17y8
+         ThwEN8X1M5y9Nz+crCKOJiVXA6iaJ0uVugIcuTbk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
         Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 47/56] md: check arrays is suspended in mddev_detach before call quiesce operations
-Date:   Thu,  9 Apr 2020 23:47:51 -0400
-Message-Id: <20200410034800.8381-47-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 37/46] md: check arrays is suspended in mddev_detach before call quiesce operations
+Date:   Thu,  9 Apr 2020 23:49:00 -0400
+Message-Id: <20200410034909.8922-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200410034800.8381-1-sashal@kernel.org>
-References: <20200410034800.8381-1-sashal@kernel.org>
+In-Reply-To: <20200410034909.8922-1-sashal@kernel.org>
+References: <20200410034909.8922-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
