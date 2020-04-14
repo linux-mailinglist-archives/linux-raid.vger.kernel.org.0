@@ -2,167 +2,122 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 747861A6845
-	for <lists+linux-raid@lfdr.de>; Mon, 13 Apr 2020 16:43:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4409E1A748D
+	for <lists+linux-raid@lfdr.de>; Tue, 14 Apr 2020 09:20:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728999AbgDMOnG (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 13 Apr 2020 10:43:06 -0400
-Received: from m4a0072g.houston.softwaregrp.com ([15.124.2.130]:60709 "EHLO
-        m4a0072g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728557AbgDMOnF (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 13 Apr 2020 10:43:05 -0400
-Received: FROM m4a0072g.houston.softwaregrp.com (15.120.17.146) BY m4a0072g.houston.softwaregrp.com WITH ESMTP;
- Mon, 13 Apr 2020 14:41:29 +0000
-Received: from M4W0334.microfocus.com (2002:f78:1192::f78:1192) by
- M4W0334.microfocus.com (2002:f78:1192::f78:1192) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Mon, 13 Apr 2020 14:42:03 +0000
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (15.124.8.13) by
- M4W0334.microfocus.com (15.120.17.146) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10 via Frontend Transport; Mon, 13 Apr 2020 14:42:03 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NVqEjyUpt7ejak2grTbtq311HoALlNQFfS3iTRSZaKvT/fu/H33aKE5AvIiIyadJ+bWzJMbpdyN8qI3BgxudwYH0seo8NqrTag6jvsqctxylPr0mqq4+PLXCWyKqNOC6DL69rLa0CZRpN7YJcFrkyIfQgUG+YD7U6TJwA50ZvuPJN9EGzZGWA0CKF7u2rqa6Jp7iGI94UScIXBW8m/EcmCT/NlHgENcZy2ngcbShdVIpkbCm9lnfB7Nf8+NIOKx9LgYLh6Uy2WiFgv2yRPCsnN13P44zyrlN7oB1xlSh4lA48VvQxeRG9g37QESXLD38gNSnOASG2HW4sxPJGqcHjw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Wl7NDqgJJiftuCt8MeMT/gcnBGMo6BpQkyTjRCpsPmc=;
- b=f2gJ90T7cxUvvz39J3La7tmiwm2HTdp3LMnxgN8Cvj9TEjNrBt81Ce99SA70ANoyBm/uGUBhJNkBTA9Xc5CibunQcBAf39MHG0Fj/zZtAbRiiGRjjpu1b0amcuVJYDFgp4ozI7DRV3HaiY3mxS4HwRD2Yq194/HGNLcEFZZG/e/jzPJMaIFpp00UpfAB0GRZ6s+1od8fys52zRKaU1kR/0A5I8pLedLuA/9M8A4yAeY6AC3vyp3S3KppHS+sJmeDRTvfU15vnj4AMOqVCWO85SwKnOipPVoL2c0RH63MPV/LnMxiaH+ZYrTB1L12Vle9RF/51N+tuEAXZBMXWAaE1g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=lidong.zhong@suse.com; 
-Received: from MW2PR18MB2154.namprd18.prod.outlook.com (2603:10b6:907:2::31)
- by MW2PR18MB2171.namprd18.prod.outlook.com (2603:10b6:907:7::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Mon, 13 Apr
- 2020 14:42:02 +0000
-Received: from MW2PR18MB2154.namprd18.prod.outlook.com
- ([fe80::5136:34cf:5e74:ed13]) by MW2PR18MB2154.namprd18.prod.outlook.com
- ([fe80::5136:34cf:5e74:ed13%3]) with mapi id 15.20.2900.028; Mon, 13 Apr 2020
- 14:42:02 +0000
-From:   Lidong Zhong <lidong.zhong@suse.com>
-To:     <jes@trained-monkey.org>, <linux-raid@vger.kernel.org>
-CC:     <guoqing.jiang@cloud.ionos.com>,
-        Lidong Zhong <lidong.zhong@suse.com>
-Subject: [PATCH] Detail: adding sync status for cluster device
-Date:   Mon, 13 Apr 2020 22:41:28 +0800
-Message-ID: <20200413144128.26177-1-lidong.zhong@suse.com>
-X-Mailer: git-send-email 2.16.4
-Content-Type: text/plain
-X-ClientProxiedBy: HK0PR03CA0099.apcprd03.prod.outlook.com
- (2603:1096:203:b0::15) To MW2PR18MB2154.namprd18.prod.outlook.com
- (2603:10b6:907:2::31)
+        id S2406522AbgDNHUi (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 14 Apr 2020 03:20:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406487AbgDNHUf (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 14 Apr 2020 03:20:35 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13771C0A3BDC
+        for <linux-raid@vger.kernel.org>; Tue, 14 Apr 2020 00:20:35 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id e5so15725224edq.5
+        for <linux-raid@vger.kernel.org>; Tue, 14 Apr 2020 00:20:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=ms6bstZHIq4DoYcHgbbjL32E4X0Twvk1eD9o2rLUILU=;
+        b=QCzuFi/XmqmsZ7fPLjbNKAe0+BGKKL5GHhp/Jr9tuT067NIjoi6Fhc2/ZJxkoM3JMR
+         RlLp+Ot9EBlXBKcgK6wx1giXO9cDgUSxUG04ID1TA+3VDUvoxtF0ooecbXCdi2tMVF14
+         CBLtWD/UQcS1YOX/Syf8rKumUigJL/WvkUfLufnyQrIDbBGFBNDKsc6KBrtZFxJXXPH2
+         WqSjavBja0+1t1rnmr+wpCnoYD656/pTsWbk4gxrvWxSb8ZjLQXqTXOtcP8BTVzpulyo
+         ZUkSLnRzY+MjiUkAtz1/qrvgPTpMDUW60K8DoQDCPfLFBTe5x45ayrvMl9hT6TrhgFjp
+         j0bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=ms6bstZHIq4DoYcHgbbjL32E4X0Twvk1eD9o2rLUILU=;
+        b=J9VpYXqO38XIwD6WkKUeV5FZy9E+Srl0WGouN73ZPK/USPY6wgHyq3AEL5vkFBZ2An
+         Otk0X1wJO4wFgyVFjimaq6ATWvLKtwjljg7y+Hb5I5O4Cx/AY9DzCHpuZfi+BfvWRPA2
+         0ZITtL2SmIuNkGGPkEf0tBqBa6aAsm84ILn6w8eNOI8bR6xl/61YzSn3sIR/xGUvyUXo
+         4JsHDWCmY03lGDUF70r9E17EUobDJcrqDLjBR7EMc5JXezPUNpkyWOEhyJHEKvFWGwd9
+         3oOOo9pxPOYJj1l827Si6ESR5VU22csGpoRcA1o4qJj6On06XjM0LV3E8iarrQCrDAsQ
+         0qDQ==
+X-Gm-Message-State: AGi0PuYCsMgF6cGdNccYabfV5zq3PJ3vsOsi5FAvCDa3FjQhEGmXljxE
+        fwdPII7+jzVvy+PFg7u0JXikI8D2uLo=
+X-Google-Smtp-Source: APiQypK/UsKD1EPFm3sGC4Hz74rLTXuQvkJqILAl7CMD4rSHb6T+amENCURDcpsUu/1oqsspFgLrjQ==
+X-Received: by 2002:aa7:c701:: with SMTP id i1mr12089896edq.184.1586848833606;
+        Tue, 14 Apr 2020 00:20:33 -0700 (PDT)
+Received: from ?IPv6:2001:16b8:4871:9b00:34d4:fc5b:d862:dbd2? ([2001:16b8:4871:9b00:34d4:fc5b:d862:dbd2])
+        by smtp.gmail.com with ESMTPSA id rk25sm1959314ejb.14.2020.04.14.00.20.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Apr 2020 00:20:32 -0700 (PDT)
+Subject: Re: [PATCH 0/4] md: fix lockdep warning
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Song Liu <song@kernel.org>, linux-raid <linux-raid@vger.kernel.org>
+References: <20200404215711.4272-1-guoqing.jiang@cloud.ionos.com>
+ <CAPhsuW4rWa_ZCX=3eW9Xk_jtZdu+uKX4HZtbfEJfS9ms4a+OSg@mail.gmail.com>
+ <76835eb0-d3a7-c5ea-5245-4dcf21a40f7c@cloud.ionos.com>
+ <DA29BDF5-4B14-48AF-8B21-3B6A82857B7C@fb.com>
+ <11131DC5-A7DA-450B-86D9-803EAE8099A2@fb.com>
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Message-ID: <c32c65e2-5803-7543-6ac9-e6f005d8ecb2@cloud.ionos.com>
+Date:   Tue, 14 Apr 2020 09:20:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from linux-rzeb.suse (39.78.17.73) by HK0PR03CA0099.apcprd03.prod.outlook.com (2603:1096:203:b0::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15 via Frontend Transport; Mon, 13 Apr 2020 14:42:00 +0000
-X-Mailer: git-send-email 2.16.4
-X-Originating-IP: [39.78.17.73]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 1547c73a-044b-4896-1223-08d7dfb8d3ef
-X-MS-TrafficTypeDiagnostic: MW2PR18MB2171:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MW2PR18MB2171E533EC347D00BB32ABC5F8DD0@MW2PR18MB2171.namprd18.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:494;
-X-Forefront-PRVS: 037291602B
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR18MB2154.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(346002)(39860400002)(376002)(136003)(366004)(396003)(4326008)(8936002)(6512007)(5660300002)(2906002)(6666004)(6486002)(316002)(107886003)(186003)(66946007)(16526019)(66476007)(66556008)(86362001)(26005)(956004)(478600001)(2616005)(44832011)(8676002)(8886007)(81156014)(1076003)(52116002)(6506007)(36756003);DIR:OUT;SFP:1102;
-Received-SPF: None (protection.outlook.com: suse.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: d+uz+HM8s0/jubi8wsJKUevwrB9kPP8vEJp4llJHpSc2cX+NZX8LhJX3YDuak8sWQyGIRdTam9COcpyD9dWDXMDZ8UPWavNASML5czDPWTMnitrA/7QY0yh6NspheaiQirrUHjtBF3d/6gmPirETa9paoKiC8IPN/zQcv4hho7u69KdC4XEkHpqOHYW18nKs71t0pkrl/JS1RYqCs0Fqg7LYrmUmLSFBu23O91rVgeb1y3bv+IZu/gXneM6f0pMAZ8r86lBzkEZIIq/bC47IvwOw49nvPhvzyNIlQ1ouWp5dbHX+6uZv3zvHTGCtbBNcrEwAtBTXy1ta2W/KzTfNXB+KwsCnWLebZgBXIsDsatlqW536P1Itf+V84+fBu8bAtaaK7XI2tsNlw6+oHUSAKpvsjpVUVUqO0Mwt4wg/Tmfbg140zgV0s4cOnFbzZtbd
-X-MS-Exchange-AntiSpam-MessageData: uAwPAe4N7bhOXxM51GapZOe3qRj4XbAR9WZzo3xZ5Y53LQShm8KFEYP/nnNIpMhTVJfDptMFoXh273I4bSyuCHshOIWDupb7qbljWpDHxi6e8+knTrgxOVHOdshCGbN+F7LyD7I3Km1aHbtFtN5K7g==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1547c73a-044b-4896-1223-08d7dfb8d3ef
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Apr 2020 14:42:02.4418
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 856b813c-16e5-49a5-85ec-6f081e13b527
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vM52rbgsWmkpRHHKqGEa2GKi1IygvfH9CBSv1a2IsbPpKNpB3WpfTrOdkIZ55a92Jj8l79MTMIYMdmLbiksCDg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR18MB2171
-X-OriginatorOrg: suse.com
+In-Reply-To: <11131DC5-A7DA-450B-86D9-803EAE8099A2@fb.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On the node with /proc/mdstat is
+On 11.04.20 00:34, Song Liu wrote:
+>
+>> On Apr 9, 2020, at 5:32 PM, Song Liu <songliubraving@fb.com> wrote:
+>>
+>>
+>>
+>>> On Apr 9, 2020, at 2:47 PM, Guoqing Jiang <guoqing.jiang@cloud.ionos.com> wrote:
+>>>
+>>> On 09.04.20 09:25, Song Liu wrote:
+>>>> Thanks for the fix!
+>>>>
+>>>> On Sat, Apr 4, 2020 at 3:01 PM Guoqing Jiang
+>>>> <guoqing.jiang@cloud.ionos.com> wrote:
+>>>>> Hi,
+>>>>>
+>>>>> After LOCKDEP is enabled, we can see some deadlock issues, this patchset
+>>>>> makes workqueue is flushed only necessary, and the last patch is a cleanup.
+>>>>>
+>>>>> Thanks,
+>>>>> Guoqing
+>>>>>
+>>>>> Guoqing Jiang (5):
+>>>>>   md: add checkings before flush md_misc_wq
+>>>>>   md: add new workqueue for delete rdev
+>>>>>   md: don't flush workqueue unconditionally in md_open
+>>>>>   md: flush md_rdev_misc_wq for HOT_ADD_DISK case
+>>>>>   md: remove the extra line for ->hot_add_disk
+>>>> I think we will need a new workqueue (2/5). But I am not sure about
+>>>> whether we should
+>>>> do 1/5 and 3/5. It feels like we are hiding errors from lock_dep. With
+>>>> some quick grep,
+>>>> I didn't find code pattern like
+>>>>
+>>>>        if (work_pending(XXX))
+>>>>                flush_workqueue(XXX);
+>>> Maybe the way that md uses workqueue is quite different from other subsystems ...
+>>>
+>>> Because, this is the safest way to address the issue. Otherwise I suppose we have to
+>>> rearrange the lock order or introduce new lock, either of them is tricky and could
+>>> cause regression.
+>>>
+>>> Or maybe it is possible to  flush workqueue in md_check_recovery, but I would prefer
+>>> to make less change to avoid any potential risk.
+> After reading it a little more, I guess this might be the best solution for now.
+> I will keep it in a local branch for more tests.
 
-Personalities : [raid1]
-md0 : active raid1 sdb[4] sdc[3] sdd[2]
-      1046528 blocks super 1.2 [3/2] [UU_]
-        recover=REMOTE
-      bitmap: 1/1 pages [4KB], 65536KB chunk
+Thanks for your effort, if there is any issue then just let me know.
 
-the 'State' of 'mdadm -Q -D' is accordingly
-State : clean, degraded
-With this patch, it will be
-State : clean, degraded, recovering (REMOTE)
-
-Signed-off-by: Lidong Zhong <lidong.zhong@suse.com>
----
- Detail.c | 9 ++++++---
- mdadm.h  | 3 ++-
- mdstat.c | 2 ++
- 3 files changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/Detail.c b/Detail.c
-index 832485f..03d5e04 100644
---- a/Detail.c
-+++ b/Detail.c
-@@ -496,17 +496,20 @@ int Detail(char *dev, struct context *c)
- 			} else
- 				arrayst = "active";
- 
--			printf("             State : %s%s%s%s%s%s \n",
-+			printf("             State : %s%s%s%s%s%s%s \n",
- 			       arrayst, st,
- 			       (!e || (e->percent < 0 &&
- 				       e->percent != RESYNC_PENDING &&
--				       e->percent != RESYNC_DELAYED)) ?
-+				       e->percent != RESYNC_DELAYED &&
-+				       e->percent != RESYNC_REMOTE)) ?
- 			       "" : sync_action[e->resync],
- 			       larray_size ? "": ", Not Started",
- 			       (e && e->percent == RESYNC_DELAYED) ?
- 			       " (DELAYED)": "",
- 			       (e && e->percent == RESYNC_PENDING) ?
--			       " (PENDING)": "");
-+			       " (PENDING)": "",
-+			       (e && e->percent == RESYNC_REMOTE) ?
-+			       " (REMOTE)": "");
- 		} else if (inactive && !is_container) {
- 			printf("             State : inactive\n");
- 		}
-diff --git a/mdadm.h b/mdadm.h
-index d94569f..399478b 100644
---- a/mdadm.h
-+++ b/mdadm.h
-@@ -1815,7 +1815,8 @@ enum r0layout {
- #define RESYNC_NONE -1
- #define RESYNC_DELAYED -2
- #define RESYNC_PENDING -3
--#define RESYNC_UNKNOWN -4
-+#define RESYNC_REMOTE  -4
-+#define RESYNC_UNKNOWN -5
- 
- /* When using "GET_DISK_INFO" it isn't certain how high
-  * we need to check.  So we impose an absolute limit of
-diff --git a/mdstat.c b/mdstat.c
-index 7e600d0..20577a3 100644
---- a/mdstat.c
-+++ b/mdstat.c
-@@ -257,6 +257,8 @@ struct mdstat_ent *mdstat_read(int hold, int start)
- 					ent->percent = RESYNC_DELAYED;
- 				if (l > 8 && strcmp(w+l-8, "=PENDING") == 0)
- 					ent->percent = RESYNC_PENDING;
-+				if (l > 7 && strcmp(w+l-7, "=REMOTE") == 0)
-+					ent->percent = RESYNC_REMOTE;
- 			} else if (ent->percent == RESYNC_NONE &&
- 				   w[0] >= '0' &&
- 				   w[0] <= '9' &&
--- 
-2.16.4
-
+Regards,
+Guoqing
