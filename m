@@ -2,163 +2,141 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2920F1ADEE7
-	for <lists+linux-raid@lfdr.de>; Fri, 17 Apr 2020 16:00:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA6B81AE89D
+	for <lists+linux-raid@lfdr.de>; Sat, 18 Apr 2020 01:25:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730807AbgDQN75 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 17 Apr 2020 09:59:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58842 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730563AbgDQN74 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 17 Apr 2020 09:59:56 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 876ADC061A0C
-        for <linux-raid@vger.kernel.org>; Fri, 17 Apr 2020 06:59:56 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id y24so3107709wma.4
-        for <linux-raid@vger.kernel.org>; Fri, 17 Apr 2020 06:59:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-transfer-encoding:content-language;
-        bh=DnY7zkQKTbcK+kojxTIffVLhvzHxRs4JxP1OBhDJ9EU=;
-        b=gl3VkCYO44i6egzypYunu/wSrcZNMs2EYcZzlSBw7nsUqp1VNJO5BMdAYNQ2V++siS
-         rWdyWshibl9vELaw1hM1T3kUqqU0rAQm8PEr39ma7qzA4C+6GhQog+SUvjz6ADz8mpfT
-         tdj8gpSwvEI2uA7tck/bUn9BnjToQQOOssSv3asNJDBsFLt0Cwo/uAuJ7JYfZ8XDyyjZ
-         gTBdmboH9TTCJH8P9y3bozs0Wi34IPaqwNq/OlXmQ8EkeaD4yJOlqpBNawFcZHdddfFh
-         gIM+N6QBwUryK2r3Tu4y+FWcUXrtHOGEh1Fck5dyWRFrRC3SSONnnKAoVhjr0ZkS0ixI
-         WHgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=DnY7zkQKTbcK+kojxTIffVLhvzHxRs4JxP1OBhDJ9EU=;
-        b=O2fNM9oS3rBVTAjrkDu2tzFR+ATc1wSapWZasP+DqtoB1eGs29n70ftXBf7h7GpuKo
-         7tgvHl3DHqS23sN96nJG8zSKc2cfWDoJkQQ5GXkCwzoxT+/tyvj0rtFxaGTgvvfRrtDT
-         OVWGuc74gU1/1tSkDpJmsa+hhAYvYwSCfexCZxTzJV9YcdnN0p3g2R2epQv87MvyJtXc
-         dapDm38TNfiHewYpeCTT/0jgJbhXSHwQ0jcziSiXC9iQjA96IiW3vYQABJ0x9ZNGZXc/
-         TpLJgnN+44UMcPQL1BYFwDJNKPMfMZdJWwNWUCPTAYEt5y3JTob2XnsOpje5zaajK53N
-         dohQ==
-X-Gm-Message-State: AGi0Pub9IEfzoaxtlTWNgn5pIlP0dL/3YwYVSwBlGkg4m9E/RQiFY8QC
-        /98DfkZ8DULE6zrlpAq6aT+NdpVeF9M=
-X-Google-Smtp-Source: APiQypIvBH1vtbA291bfhMjkF17Pnl5uag1FUD0pF7ykBsDJkTS+qvGBpO/PcmZXYnHkiGhSyZoHhA==
-X-Received: by 2002:a1c:6545:: with SMTP id z66mr3416714wmb.81.1587131994994;
-        Fri, 17 Apr 2020 06:59:54 -0700 (PDT)
-Received: from ?IPv6:2001:16b8:48af:7200:34d4:fc5b:d862:dbd2? ([2001:16b8:48af:7200:34d4:fc5b:d862:dbd2])
-        by smtp.gmail.com with ESMTPSA id b4sm27099313wrv.42.2020.04.17.06.59.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Apr 2020 06:59:54 -0700 (PDT)
-Subject: Re: Unable to fail/remove journal device
-To:     Andre Tomt <andre@tomt.net>,
-        linux-raid <linux-raid@vger.kernel.org>
-References: <59985bfe-2786-b4a9-64a4-283f5de98f82@tomt.net>
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Message-ID: <3a352fcd-095e-5cab-ffbd-5394544fbcb8@cloud.ionos.com>
-Date:   Fri, 17 Apr 2020 15:59:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1728300AbgDQXZE (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 17 Apr 2020 19:25:04 -0400
+Received: from icebox.esperi.org.uk ([81.187.191.129]:60310 "EHLO
+        mail.esperi.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbgDQXZE (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 17 Apr 2020 19:25:04 -0400
+Received: from loom (nix@sidle.srvr.nix [192.168.14.8])
+        by mail.esperi.org.uk (8.15.2/8.15.2) with ESMTP id 03HN6G7A003201;
+        Sat, 18 Apr 2020 00:06:16 +0100
+From:   Nix <nix@esperi.org.uk>
+To:     Wols Lists <antlists@youngman.org.uk>
+Cc:     Stefanie Leisestreichler 
+        <stefanie.leisestreichler@peter-speer.de>,
+        linux-raid@vger.kernel.org
+Subject: Re: Setup Recommendation on UEFI/GRUB/RAID1/LVM
+References: <fc12df3c-aac9-4aa8-a596-f13225161e22@peter-speer.de>
+        <5E95C698.1030307@youngman.org.uk>
+        <13a3bc12-67f7-46d5-7e6a-c6880ace4b1c@peter-speer.de>
+        <5E95F461.50209@youngman.org.uk>
+Emacs:  it's all fun and games, until somebody tries to edit a file.
+Date:   Sat, 18 Apr 2020 00:06:16 +0100
+In-Reply-To: <5E95F461.50209@youngman.org.uk> (Wols Lists's message of "Tue,
+        14 Apr 2020 18:35:29 +0100")
+Message-ID: <87lfmtemqf.fsf@esperi.org.uk>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.50 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <59985bfe-2786-b4a9-64a4-283f5de98f82@tomt.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-DCC--Metrics: loom 1480; Body=3 Fuz1=3 Fuz2=3
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 30.03.20 01:35, Andre Tomt wrote:
-> I'm having a issue here where I am unable to get a journal device 
-> removed from a raid6 array. From what I could gather from mailing list 
-> posts and documentation, one should set the journal mode to 
-> write-through, fail the journal and remove it, then restart the array 
-> (perhaps with force).
->
-> But this isnt working. The journal just gets re-added on array 
-> startup. I've done this successfully before, in the same way, I think.
->
-> I also tried a bigger hammer, wipefs the journal device too, to "make 
-> sure", the array will come up but refuse any writes.
->
-> For now, the journal device has been restored and the array is back to 
-> read-write, but I really need to get it removed at some point 
-> (preferably without re-building metadata with --assume-clean)
->
-> Any ideas? Is this way just out of date?
->
-> mdadm: 4.1-5ubuntu1
-> kernel: 5.5.13
->
-> # cat /proc/mdstat
-> md2 : active (auto-read-only) raid6 sdm1[0] sde1[11] sdk1[10] sdt1[9] 
-> sdl1[8] sdc1[7] sdj1[6] sdb1[5] sdu1[4] sds1[3] sdr1[2] sdd1[1] 
-> nvme0n1p1[12](J)
->
->       58603894400 blocks super 1.2 level 6, 64k chunk, algorithm 2 
-> [12/12] [UUUUUUUUUUUU]
->
->
-> # echo write-through > /sys/block/md2/md/journal_mode
-> # mdadm --fail /dev/md2 /dev/nvme0n1p1
-> mdadm: set /dev/nvme0n1p1 faulty in /dev/md2
->
-> # mdadm --remove /dev/md2 /dev/nvme0n1p1
->
-> mdadm: hot removed /dev/nvme0n1p1 from /dev/md2
->
-> # cat /proc/mdstat
-> md2 : active (auto-read-only) raid6 sdm1[0] sde1[11] sdk1[10] sdt1[9] 
-> sdl1[8] sdc1[7] sdj1[6] sdb1[5] sdu1[4] sds1[3] sdr1[2] sdd1[1]
->
->       58603894400 blocks super 1.2 level 6, 64k chunk, algorithm 2 
-> [12/12] [UUUUUUUUUUUU]
->
->
+On 14 Apr 2020, Wols Lists said:
 
-Not know journal well, but I guess it is better to change the 
-consistency_policy before stop array
-by "echo resync > /sys/block/md2/md/consistency_policy" since journal 
-device is not available.
+> On 14/04/20 16:12, Stefanie Leisestreichler wrote:
+>> 
+>> On 14.04.20 16:20, Wols Lists wrote:
+>>> okay. sda1 is vfat for EFI and is your /boot. configure sdb the same,
+>>> and you'll need to manually copy across every time you update (or make
+>>> it a v0.9/v1.0 raid array and only change it from inside linux - tricky)
+>
+>> If I would like to stay with my intial thought and use GRUB, does this
+>> mean, I have to have one native partition for the UEFI System Partition
+>> formated with vfat on each disk? If this works and I will create an raid
+>> array (mdadm --create ... level=1 /dev/sda1 /dev/sda2) from these 2
+>> partitions, will I still have the need to cross copy after a kernel
+>> update or not?
+>> 
+> Everything else is mirrored - you should mirror your boot setup ... you
+> don't want disk 0 to die, and although (almost) everything is there on
+> disk 1 you can't boot the system because grub/efi/whatever isn't there...
 
-Thanks,
-Guoqing
+Yep.
 
-> # mdadm --stop /dev/md2
->
-> mdadm: stopped /dev/md2
->
->
-> # mdadm --assemble /dev/md2 --force
->
-> mdadm: /dev/md2 has been started with 12 drives and 1 journal.
->  <-- !?
-> # cat /proc/mdstat
-> md2 : active (auto-read-only) raid6 sdm1[0] nvme0n1p1[12](J) sde1[11] 
-> sdk1[10] sdt1[9] sdl1[8] sdc1[7] sdj1[6] sdb1[5] sdu1[4] sds1[3] 
-> sdr1[2] sdd1[1]
->
->                                             ^^^
->       58603894400 blocks super 1.2 level 6, 64k chunk, algorithm 2 
-> [12/12] [UUUUUUUUUUUU]
->
->
-> Okay then. Hammer time. Do all that again, wipefs the journal device, 
-> force start the array:
->
-> # mdadm --assemble /dev/md2 --force
->
-> mdadm: Journal is missing or stale, starting array read only.
->
-> mdadm: /dev/md2 has been started with 12 drives.
->
-> # cat /proc/mdstat
-> md2 : active (read-only) raid6 sdm1[0] sde1[11] sdk1[10] sdt1[9] 
-> sdl1[8] sdc1[7] sdj1[6] sdb1[5] sdu1[4] sds1[3] sdr1[2] sdd1[1]
->
->       58603894400 blocks super 1.2 level 6, 64k chunk, algorithm 2 
-> [12/12] [UUUUUUUUUUUU]
->
->
-> Then it is just stuck in read-only.
+> The crucial question is whether your updates to your efi partition
+> happen under the control of linux, or under the control of efi. If they
+> happen at the linux level, then they will happen to both disks together.
+> If they happen at the efi level, then they will only happen to disk 0,
+> and you will need to re-sync the mirror.
 
+Rather than trying to make some sort of clever mirroring setup work with
+the ESP, I just made one partition per disk, added all of them to the
+efibootmgr:
+
+Boot000B* Current kernel	HD(1,GPT,b6697409-a6ec-470d-994c-0d4828d08861,0x800,0x200000)/File(\efi\nix\current.efi)
+Boot000E* Current kernel (secondary disk)	HD(1,GPT,9f5912c7-46e7-45bf-a49d-969250f0a388,0x800,0x200000)/File(\efi\nix\current.efi)
+Boot0011* Current kernel (tertiary disk)	HD(1,GPT,8a5cf352-2e92-43ac-bb23-b0d9f27109e9,0x800,0x200000)/File(\efi\nix\current.efi)
+Boot0012* Current kernel (quaternary disk)	HD(1,GPT,83ec2441-79e9-4f3c-86ec-378545f776c6,0x800,0x200000)/File(\efi\nix\current.efi)
+
+... and used simple rsync at kernel install time to keep them in sync
+(the variables in here are specific to my autobuilder, but the general
+idea should be clear enough):
+
+    # For EFI, we install the kernel by hand.  /boot may be a mountpoint,
+    # kept unmounted in normal operation.
+    mountpoint -q /boot && mount /boot
+    KERNELVER="$(file $BUILDMAKEPATH/.o/arch/x86/boot/bzImage | sed 's,^.*version \([0-9\.]*\).*$,\1,g')"
+    install -o root -g root $BUILDMAKEPATH/.o/System.map /boot/System.map-$KERNELVER
+    install -o root -g root $BUILDMAKEPATH/.o/arch/x86/boot/bzImage /boot/efi/nix/vmlinux-$KERNELVER.efi
+    [[ -f /boot/efi/nix/current.efi ]] && mv /boot/efi/nix/current.efi /boot/efi/nix/old.efi
+    install -o root -g root $BUILDMAKEPATH/.o/arch/x86/boot/bzImage /boot/efi/nix/current.efi
+    for backup in 1 2 3; do
+        test -d /boot/backups/$backup || continue
+        mount /boot/backups/$backup
+        rsync -rtq --modify-window=2 --one-file-system /boot/ /boot/backups/$backup
+        umount /boot/backups/$backup
+    done
+    mountpoint -q /boot && umount /boot
+
+The firmware should automatically handle booting the first kernel that's
+on a disk that works. (I use CONFIG_EFI_STUB, so the kernel is itself
+bootable directly by the firmware and I can avoid all that boot manager
+rubbish and just let the firmware be my boot manager. I have 4 entries
+each in the boot manager menu for the current kernel, the previous one I
+installed, and a manually-copied 'stable kernel' that I update whenever
+I think a kernel was working well enough to do so.)
+
+>>> sda2 - swap. I'd make its size equal to ram - and as I said, same on sdb
+>>> configured in linux as equal priority to give me a raid-0.
+>
+>> Thanks for this tip, I would prefer swap and application safety which
+>> comes with raid1 in this case. Later I will try to optimize swappiness.
+>> 
+> I prefer swap to be at least twice ram. A lot of people think I'm daft
+> for that, but it always used to be the rule things were better that way.
+> It's been pointed out to me that this can be used as a denial of service
+> (a fork bomb, for example, will crucify your system until the OOM killer
+> takes it out, which will take a LOOONNG time with gigs of VM). Horses
+> for courses.
+
+Frankly... I would make this stuff a lot simpler and just not make a
+swap partition at all. Instead, make a swapfile: RAID will just happen
+for you automatically, you can expand the thing (or shrink it!) with
+ease while the system is up, and it's exactly as fast as swap
+partitions: swapfiles have been as fast as raw partitions since the
+Linux 2.0 days.
+
+>> What Partition Type do I have to use for /dev/sd[a|b]3? Will it be LVM
+>> or RAID?
+>> 
+> I'd just use type linux ...
+
+Literally nothing cares :) it's for documentation, mostly, to make sure
+that e.g. Windows won't randomly smash a Linux partition. So whatever
+feels right to you. The only type that really matters is the GUID of the
+EFI system partition, and fdisk gets that right these days so you don't
+have to care.
+
+ -- N., set up a system without RAID recently and felt so... dirty (it
+    has one NVMe device and nothing else). So everything important is
+    NFS-mounted from a RAID array, natch. With 10GbE the NFS mounts are
+    actually faster than the NVMe device until the server's huge write
+    cache fills and it has to actually write it to the array :) but how
+    often do you write a hundred gig to a disk at once, anyway?
