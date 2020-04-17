@@ -2,58 +2,50 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6B261AD33A
-	for <lists+linux-raid@lfdr.de>; Fri, 17 Apr 2020 01:35:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C56D1AD715
+	for <lists+linux-raid@lfdr.de>; Fri, 17 Apr 2020 09:10:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgDPXfF (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 16 Apr 2020 19:35:05 -0400
-Received: from mail.dsns.gov.ua ([194.0.148.99]:37970 "EHLO mail.dsns.gov.ua"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725770AbgDPXfD (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 16 Apr 2020 19:35:03 -0400
-X-Greylist: delayed 9287 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 Apr 2020 19:34:56 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mail.dsns.gov.ua (Postfix) with ESMTP id 6223A1EC85AF;
-        Thu, 16 Apr 2020 23:35:36 +0300 (EEST)
-Received: from mail.dsns.gov.ua ([127.0.0.1])
-        by localhost (mail.dsns.gov.ua [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id ekdCUR6pZ0Aa; Thu, 16 Apr 2020 23:35:36 +0300 (EEST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.dsns.gov.ua (Postfix) with ESMTP id 67C3E1EC85F9;
-        Thu, 16 Apr 2020 23:35:26 +0300 (EEST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.dsns.gov.ua 67C3E1EC85F9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dsns.gov.ua;
-        s=1E60DAC0-2607-11E9-81E6-7A77C2B36653; t=1587069326;
-        bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-        h=Date:From:Message-ID:MIME-Version;
-        b=BFrHb0sdI6ttGZUrYrU3NgniYtd1aDAhnXXb2vKIb2B9styAswbm0NbzZRAHiMp0y
-         hUE3veWMbUD+qTP/VmiRFig+sJh7tgrjRSipmI8jEPDH4mLyVFQtPdyPojLkpu/SlT
-         y/CjSPHdIqozfsh/zyWU9aeO41yKuuO77HTVyT/eVGDUtLYGTijz0IeETvwB1Yur4I
-         5RegLOWC96rliENvAjVU5IoM4JfcadYa95Q959RRtGyCSnevHOMfGycVhDjkxX/p7G
-         0gUYzq9GdO73hW8YI3AV2m5dSWB1tPfsxP4FJUwoBTp88jIZZeY7uAiDenSeAUtBdj
-         PKl/BScyij7GQ==
-X-Virus-Scanned: amavisd-new at dsns.gov.ua
-Received: from mail.dsns.gov.ua ([127.0.0.1])
-        by localhost (mail.dsns.gov.ua [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id U4DcK3mdlYyf; Thu, 16 Apr 2020 23:35:26 +0300 (EEST)
-Received: from mail.dsns.gov.ua (localhost [127.0.0.1])
-        by mail.dsns.gov.ua (Postfix) with ESMTP id 9BAF81EC8118;
-        Thu, 16 Apr 2020 23:35:15 +0300 (EEST)
-Date:   Thu, 16 Apr 2020 23:35:15 +0300 (EEST)
-From:   Saleem Netanyahu <duchenko@dsns.gov.ua>
-Reply-To: Saleem Netanyahu <saleemnetu@gmail.com>
-Message-ID: <1255292802.718114.1587069315574.JavaMail.zimbra@dsns.gov.ua>
-Subject: Hey, how are u, can we talk?
+        id S1728884AbgDQHJv (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 17 Apr 2020 03:09:51 -0400
+Received: from baliza.dreformarra.com ([134.73.232.212]:3034 "HELO
+        elitetorrent1.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with SMTP id S1728414AbgDQHJu (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 17 Apr 2020 03:09:50 -0400
+Received: from [184.69.250.35] by relay-x.misswldrs.com with SMTP; Thu, 16 Apr 2020 19:51:04 -1100
+Received: from mail.webhostings4u.com ([139.120.64.234]) by qnx.mdrost.com with NNFMP; Thu, 16 Apr 2020 19:41:49 -1100
+Received: from mmx09.tilkbans.com ([Thu, 16 Apr 2020 19:27:01 -1100])
+        by smtp.endend.nl with ASMTP; Thu, 16 Apr 2020 19:27:01 -1100
+Message-ID: <C59EC4E8.80BE2406@elitetorrent1.com>
+Date:   Thu, 16 Apr 2020 19:23:19 -1100
+From:   "elitetorrent1.com" <info@elitetorrent1.com>
+User-Agent: Mozilla/5.0 (Macintosh; U; Intel Mac OS X; fr; rv:1.8.1.16) Gecko/20080707 Thunderbird/2.0.0.16
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+To:     <linux-assembly@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-msdos@vger.kernel.org>, <linux-raid@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>
+Subject: Download latest movies from elitetorrent1.com
+Content-Type: text/plain;
+        charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [45.82.223.36, 172.69.54.54]
-X-Mailer: Zimbra 8.8.15_GA_3918 (zclient/8.8.15_GA_3918)
-Thread-Index: oV9MZN6+Sh4gFPdsGziQ2IngcJhATw==
-Thread-Topic: Hey, how are u, can we talk?
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
+
+
+While sitting home during the lock out, why not watch some nice movies. 
+
+All for free, makes sense?
+
+visit us now
+https://elitetorrent1.com/
+
+
+
+
+
+Unsubscribe from our database here
+https://forms.icann.org/en/resources/compliance/complaints/registrars/stand
+ards-complaint-form
+
 
