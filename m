@@ -2,199 +2,163 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D45AC1ADC97
-	for <lists+linux-raid@lfdr.de>; Fri, 17 Apr 2020 13:56:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2920F1ADEE7
+	for <lists+linux-raid@lfdr.de>; Fri, 17 Apr 2020 16:00:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730475AbgDQL4I (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 17 Apr 2020 07:56:08 -0400
-Received: from mga17.intel.com ([192.55.52.151]:20145 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730436AbgDQL4H (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 17 Apr 2020 07:56:07 -0400
-IronPort-SDR: u+2nMB8EysOS0WUxlKMkanD1FCxUky8yUKFOEqlxfzfZUZSHf3B7TiL5z8nwf1TNUj3dw7LL4T
- IsV71LontScA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 04:56:06 -0700
-IronPort-SDR: MjVAbu8QwGF6IRFqzq5ngQiSGMclea2bnJ+7wsuXuyFBlybSjsXtaKe0zLnOTZMy42dOmBC0Z+
- CTNO2DRrL/vQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,394,1580803200"; 
-   d="scan'208";a="278359809"
-Received: from mtkaczyk-devel.igk.intel.com ([10.102.102.23])
-  by fmsmga004.fm.intel.com with ESMTP; 17 Apr 2020 04:56:06 -0700
-From:   Tkaczyk Mariusz <mariusz.tkaczyk@intel.com>
-To:     jes@trained-monkey.org
-Cc:     linux-raid@vger.kernel.org
-Subject: [PATCH v2] Manage, imsm: Write metadata before add
-Date:   Fri, 17 Apr 2020 13:55:55 +0200
-Message-Id: <20200417115555.24080-1-mariusz.tkaczyk@intel.com>
-X-Mailer: git-send-email 2.25.0
+        id S1730807AbgDQN75 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 17 Apr 2020 09:59:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58842 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730563AbgDQN74 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 17 Apr 2020 09:59:56 -0400
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 876ADC061A0C
+        for <linux-raid@vger.kernel.org>; Fri, 17 Apr 2020 06:59:56 -0700 (PDT)
+Received: by mail-wm1-x332.google.com with SMTP id y24so3107709wma.4
+        for <linux-raid@vger.kernel.org>; Fri, 17 Apr 2020 06:59:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-transfer-encoding:content-language;
+        bh=DnY7zkQKTbcK+kojxTIffVLhvzHxRs4JxP1OBhDJ9EU=;
+        b=gl3VkCYO44i6egzypYunu/wSrcZNMs2EYcZzlSBw7nsUqp1VNJO5BMdAYNQ2V++siS
+         rWdyWshibl9vELaw1hM1T3kUqqU0rAQm8PEr39ma7qzA4C+6GhQog+SUvjz6ADz8mpfT
+         tdj8gpSwvEI2uA7tck/bUn9BnjToQQOOssSv3asNJDBsFLt0Cwo/uAuJ7JYfZ8XDyyjZ
+         gTBdmboH9TTCJH8P9y3bozs0Wi34IPaqwNq/OlXmQ8EkeaD4yJOlqpBNawFcZHdddfFh
+         gIM+N6QBwUryK2r3Tu4y+FWcUXrtHOGEh1Fck5dyWRFrRC3SSONnnKAoVhjr0ZkS0ixI
+         WHgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=DnY7zkQKTbcK+kojxTIffVLhvzHxRs4JxP1OBhDJ9EU=;
+        b=O2fNM9oS3rBVTAjrkDu2tzFR+ATc1wSapWZasP+DqtoB1eGs29n70ftXBf7h7GpuKo
+         7tgvHl3DHqS23sN96nJG8zSKc2cfWDoJkQQ5GXkCwzoxT+/tyvj0rtFxaGTgvvfRrtDT
+         OVWGuc74gU1/1tSkDpJmsa+hhAYvYwSCfexCZxTzJV9YcdnN0p3g2R2epQv87MvyJtXc
+         dapDm38TNfiHewYpeCTT/0jgJbhXSHwQ0jcziSiXC9iQjA96IiW3vYQABJ0x9ZNGZXc/
+         TpLJgnN+44UMcPQL1BYFwDJNKPMfMZdJWwNWUCPTAYEt5y3JTob2XnsOpje5zaajK53N
+         dohQ==
+X-Gm-Message-State: AGi0Pub9IEfzoaxtlTWNgn5pIlP0dL/3YwYVSwBlGkg4m9E/RQiFY8QC
+        /98DfkZ8DULE6zrlpAq6aT+NdpVeF9M=
+X-Google-Smtp-Source: APiQypIvBH1vtbA291bfhMjkF17Pnl5uag1FUD0pF7ykBsDJkTS+qvGBpO/PcmZXYnHkiGhSyZoHhA==
+X-Received: by 2002:a1c:6545:: with SMTP id z66mr3416714wmb.81.1587131994994;
+        Fri, 17 Apr 2020 06:59:54 -0700 (PDT)
+Received: from ?IPv6:2001:16b8:48af:7200:34d4:fc5b:d862:dbd2? ([2001:16b8:48af:7200:34d4:fc5b:d862:dbd2])
+        by smtp.gmail.com with ESMTPSA id b4sm27099313wrv.42.2020.04.17.06.59.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Apr 2020 06:59:54 -0700 (PDT)
+Subject: Re: Unable to fail/remove journal device
+To:     Andre Tomt <andre@tomt.net>,
+        linux-raid <linux-raid@vger.kernel.org>
+References: <59985bfe-2786-b4a9-64a4-283f5de98f82@tomt.net>
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Message-ID: <3a352fcd-095e-5cab-ffbd-5394544fbcb8@cloud.ionos.com>
+Date:   Fri, 17 Apr 2020 15:59:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <59985bfe-2786-b4a9-64a4-283f5de98f82@tomt.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-New drive in container always appears as spare. Manager is able to
-handle that, and queues appropriative update to monitor.
-No update from mdadm side has to be processed, just insert the drive and
-ping the mdmon. Metadata has to be written if no mdmon is running (case
-for Raid0 or container without arrays).
+On 30.03.20 01:35, Andre Tomt wrote:
+> I'm having a issue here where I am unable to get a journal device 
+> removed from a raid6 array. From what I could gather from mailing list 
+> posts and documentation, one should set the journal mode to 
+> write-through, fail the journal and remove it, then restart the array 
+> (perhaps with force).
+>
+> But this isnt working. The journal just gets re-added on array 
+> startup. I've done this successfully before, in the same way, I think.
+>
+> I also tried a bigger hammer, wipefs the journal device too, to "make 
+> sure", the array will come up but refuse any writes.
+>
+> For now, the journal device has been restored and the array is back to 
+> read-write, but I really need to get it removed at some point 
+> (preferably without re-building metadata with --assume-clean)
+>
+> Any ideas? Is this way just out of date?
+>
+> mdadm: 4.1-5ubuntu1
+> kernel: 5.5.13
+>
+> # cat /proc/mdstat
+> md2 : active (auto-read-only) raid6 sdm1[0] sde1[11] sdk1[10] sdt1[9] 
+> sdl1[8] sdc1[7] sdj1[6] sdb1[5] sdu1[4] sds1[3] sdr1[2] sdd1[1] 
+> nvme0n1p1[12](J)
+>
+>       58603894400 blocks super 1.2 level 6, 64k chunk, algorithm 2 
+> [12/12] [UUUUUUUUUUUU]
+>
+>
+> # echo write-through > /sys/block/md2/md/journal_mode
+> # mdadm --fail /dev/md2 /dev/nvme0n1p1
+> mdadm: set /dev/nvme0n1p1 faulty in /dev/md2
+>
+> # mdadm --remove /dev/md2 /dev/nvme0n1p1
+>
+> mdadm: hot removed /dev/nvme0n1p1 from /dev/md2
+>
+> # cat /proc/mdstat
+> md2 : active (auto-read-only) raid6 sdm1[0] sde1[11] sdk1[10] sdt1[9] 
+> sdl1[8] sdc1[7] sdj1[6] sdb1[5] sdu1[4] sds1[3] sdr1[2] sdd1[1]
+>
+>       58603894400 blocks super 1.2 level 6, 64k chunk, algorithm 2 
+> [12/12] [UUUUUUUUUUUU]
+>
+>
 
-If bare drive is added very early on startup (by custom bare rule),
-there is possiblity that mdmon was not restarted after switch root. Old
-one is not able to handle new drive. New one fails because there is
-drive without metadata in container and metadata cannot be loaded.
+Not know journal well, but I guess it is better to change the 
+consistency_policy before stop array
+by "echo resync > /sys/block/md2/md/consistency_policy" since journal 
+device is not available.
 
-To prevent this, write spare metadata before adding device
-to container. Mdmon will overwrite it (same case as spare migration,
-if drive appears it writes the most recent metadata).
-Metadata has to be written only on new drive before sysfs_add_disk(),
-don't race with mdmon if running.
+Thanks,
+Guoqing
 
-Signed-off-by: Tkaczyk Mariusz <mariusz.tkaczyk@intel.com>
----
-v2: removed unused variable.
-
- Manage.c      |  6 +----
- super-intel.c | 66 +++++++++++++++++++++++++++++++++------------------
- 2 files changed, 44 insertions(+), 28 deletions(-)
-
-diff --git a/Manage.c b/Manage.c
-index b22c3969..0a5f09b3 100644
---- a/Manage.c
-+++ b/Manage.c
-@@ -994,17 +994,13 @@ int Manage_add(int fd, int tfd, struct mddev_dev *dv,
- 
- 		Kill(dv->devname, NULL, 0, -1, 0);
- 		dfd = dev_open(dv->devname, O_RDWR | O_EXCL|O_DIRECT);
--		if (mdmon_running(tst->container_devnm))
--			tst->update_tail = &tst->updates;
- 		if (tst->ss->add_to_super(tst, &disc, dfd,
- 					  dv->devname, INVALID_SECTORS)) {
- 			close(dfd);
- 			close(container_fd);
- 			return -1;
- 		}
--		if (tst->update_tail)
--			flush_metadata_updates(tst);
--		else
-+		if (!mdmon_running(tst->container_devnm))
- 			tst->ss->sync_metadata(tst);
- 
- 		sra = sysfs_read(container_fd, NULL, 0);
-diff --git a/super-intel.c b/super-intel.c
-index c9a1af5b..06fb5ac2 100644
---- a/super-intel.c
-+++ b/super-intel.c
-@@ -5799,6 +5799,9 @@ int mark_spare(struct dl *disk)
- 	return ret_val;
- }
- 
-+
-+static int write_super_imsm_spare(struct intel_super *super, struct dl *d);
-+
- static int add_to_super_imsm(struct supertype *st, mdu_disk_info_t *dk,
- 			     int fd, char *devname,
- 			     unsigned long long data_offset)
-@@ -5928,9 +5931,13 @@ static int add_to_super_imsm(struct supertype *st, mdu_disk_info_t *dk,
- 		dd->next = super->disk_mgmt_list;
- 		super->disk_mgmt_list = dd;
- 	} else {
-+		/* this is called outside of mdmon
-+		 * write initial spare metadata
-+		 * mdmon will overwrite it.
-+		 */
- 		dd->next = super->disks;
- 		super->disks = dd;
--		super->updates_pending++;
-+		write_super_imsm_spare(super, dd);
- 	}
- 
- 	return 0;
-@@ -5969,15 +5976,15 @@ static union {
- 	struct imsm_super anchor;
- } spare_record __attribute__ ((aligned(MAX_SECTOR_SIZE)));
- 
--/* spare records have their own family number and do not have any defined raid
-- * devices
-- */
--static int write_super_imsm_spares(struct intel_super *super, int doclose)
-+
-+static int write_super_imsm_spare(struct intel_super *super, struct dl *d)
- {
- 	struct imsm_super *mpb = super->anchor;
- 	struct imsm_super *spare = &spare_record.anchor;
- 	__u32 sum;
--	struct dl *d;
-+
-+	if (d->index != -1)
-+		return 1;
- 
- 	spare->mpb_size = __cpu_to_le32(sizeof(struct imsm_super));
- 	spare->generation_num = __cpu_to_le32(1UL);
-@@ -5990,28 +5997,41 @@ static int write_super_imsm_spares(struct intel_super *super, int doclose)
- 	snprintf((char *) spare->sig, MAX_SIGNATURE_LENGTH,
- 		 MPB_SIGNATURE MPB_VERSION_RAID0);
- 
--	for (d = super->disks; d; d = d->next) {
--		if (d->index != -1)
--			continue;
-+	spare->disk[0] = d->disk;
-+	if (__le32_to_cpu(d->disk.total_blocks_hi) > 0)
-+		spare->attributes |= MPB_ATTRIB_2TB_DISK;
- 
--		spare->disk[0] = d->disk;
--		if (__le32_to_cpu(d->disk.total_blocks_hi) > 0)
--			spare->attributes |= MPB_ATTRIB_2TB_DISK;
-+	if (super->sector_size == 4096)
-+		convert_to_4k_imsm_disk(&spare->disk[0]);
- 
--		if (super->sector_size == 4096)
--			convert_to_4k_imsm_disk(&spare->disk[0]);
-+	sum = __gen_imsm_checksum(spare);
-+	spare->family_num = __cpu_to_le32(sum);
-+	spare->orig_family_num = 0;
-+	sum = __gen_imsm_checksum(spare);
-+	spare->check_sum = __cpu_to_le32(sum);
- 
--		sum = __gen_imsm_checksum(spare);
--		spare->family_num = __cpu_to_le32(sum);
--		spare->orig_family_num = 0;
--		sum = __gen_imsm_checksum(spare);
--		spare->check_sum = __cpu_to_le32(sum);
-+	if (store_imsm_mpb(d->fd, spare)) {
-+		pr_err("failed for device %d:%d %s\n",
-+			d->major, d->minor, strerror(errno));
-+		return 1;
-+	}
-+
-+	return 0;
-+}
-+/* spare records have their own family number and do not have any defined raid
-+ * devices
-+ */
-+static int write_super_imsm_spares(struct intel_super *super, int doclose)
-+{
-+	struct dl *d;
-+
-+	for (d = super->disks; d; d = d->next) {
-+		if (d->index != -1)
-+			continue;
- 
--		if (store_imsm_mpb(d->fd, spare)) {
--			pr_err("failed for device %d:%d %s\n",
--				d->major, d->minor, strerror(errno));
-+		if (write_super_imsm_spare(super, d))
- 			return 1;
--		}
-+
- 		if (doclose) {
- 			close(d->fd);
- 			d->fd = -1;
--- 
-2.25.0
+> # mdadm --stop /dev/md2
+>
+> mdadm: stopped /dev/md2
+>
+>
+> # mdadm --assemble /dev/md2 --force
+>
+> mdadm: /dev/md2 has been started with 12 drives and 1 journal.
+>  <-- !?
+> # cat /proc/mdstat
+> md2 : active (auto-read-only) raid6 sdm1[0] nvme0n1p1[12](J) sde1[11] 
+> sdk1[10] sdt1[9] sdl1[8] sdc1[7] sdj1[6] sdb1[5] sdu1[4] sds1[3] 
+> sdr1[2] sdd1[1]
+>
+>                                             ^^^
+>       58603894400 blocks super 1.2 level 6, 64k chunk, algorithm 2 
+> [12/12] [UUUUUUUUUUUU]
+>
+>
+> Okay then. Hammer time. Do all that again, wipefs the journal device, 
+> force start the array:
+>
+> # mdadm --assemble /dev/md2 --force
+>
+> mdadm: Journal is missing or stale, starting array read only.
+>
+> mdadm: /dev/md2 has been started with 12 drives.
+>
+> # cat /proc/mdstat
+> md2 : active (read-only) raid6 sdm1[0] sde1[11] sdk1[10] sdt1[9] 
+> sdl1[8] sdc1[7] sdj1[6] sdb1[5] sdu1[4] sds1[3] sdr1[2] sdd1[1]
+>
+>       58603894400 blocks super 1.2 level 6, 64k chunk, algorithm 2 
+> [12/12] [UUUUUUUUUUUU]
+>
+>
+> Then it is just stuck in read-only.
 
