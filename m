@@ -2,86 +2,99 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C88AE1B26D2
-	for <lists+linux-raid@lfdr.de>; Tue, 21 Apr 2020 14:56:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED8061B2C0F
+	for <lists+linux-raid@lfdr.de>; Tue, 21 Apr 2020 18:13:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbgDUM4K (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 21 Apr 2020 08:56:10 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:38089 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726780AbgDUM4K (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 21 Apr 2020 08:56:10 -0400
-Received: from [192.168.0.4] (ip5f5af6e9.dynamic.kabel-deutschland.de [95.90.246.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id CB4EC206446BE;
-        Tue, 21 Apr 2020 14:56:07 +0200 (CEST)
-Subject: Re: [PATCH RFC v2 0/8] md/raid5: set STRIPE_SIZE as a configurable
- value
-To:     Yufen Yu <yuyufen@huawei.com>, song@kernel.org
-Cc:     linux-raid@vger.kernel.org, neilb@suse.com,
-        guoqing.jiang@cloud.ionos.com, colyli@suse.de, xni@redhat.com,
-        houtao1@huawei.com
-References: <20200421123952.49025-1-yuyufen@huawei.com>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Message-ID: <67039bd4-1b24-a7f5-d82a-fabb3ebfce12@molgen.mpg.de>
-Date:   Tue, 21 Apr 2020 14:56:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726157AbgDUQNt (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 21 Apr 2020 12:13:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36504 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725987AbgDUQNt (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 21 Apr 2020 12:13:49 -0400
+Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87142C061A10
+        for <linux-raid@vger.kernel.org>; Tue, 21 Apr 2020 09:13:47 -0700 (PDT)
+Received: by mail-qk1-x72b.google.com with SMTP id g74so15040797qke.13
+        for <linux-raid@vger.kernel.org>; Tue, 21 Apr 2020 09:13:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=pjubg0S+eBGw3HUfCK0wQszF+b9C0OnmFFgkaANd2j8=;
+        b=e4eLA6AbQxkU9zcOldrOXhlNfBko39N5w/LnK3i+MDrud8pZnlFyRjyvgsM6EsBowc
+         YZyAD8bfFOcIw2WHjBYNP6lBELMAlehW3qisxhdY7ucizQMlVlrJWwXuLh8nUIW53MAd
+         M/9f6uw8wWJ5UFNTGELIhljTUNyTb8VwgI1rMuNEAxzVmFvFpf0aD2nxYpE3MGlfaPRx
+         tJpNVSXecNy79LLniIqufIm0SevzcldYWPeONRo5aTr1qh+rF30rFuI6t+NBslOYt396
+         q1B2kyB8nAu+tw0Qrp1OhJWb6qNxxrvFJGFXP7LD8hPaPScvs8hrm4i9bgLMruLZexl2
+         4yBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=pjubg0S+eBGw3HUfCK0wQszF+b9C0OnmFFgkaANd2j8=;
+        b=m4rouGlj/qwDDZSP23rIM1vPv28DNKR1C76DIPdgp1vjzhrEkNq8cVLyIB9jDKljsS
+         nfUG6/Cqe/I3GRKITpBjNcjRRZtWJ2gem6mWaZoejnG0v/qOTyWBZ57Tm7Wv2E4Tb/Ef
+         T3OxLc7SWKP3NnRIjzdPscCE15c9QSwG7SwSTs717QOqyW94A9y+UxgVXP8v9GERO5nR
+         y7Iscdmr3lt8jU0WKsMHxtCPBWEJ5mS5Yj7tfYEjgj3pZsXVHGMa4UYXq1QCXa+TU7/U
+         BqpUE7kXdSy9YANftmZ7M+5RS3DoTBFBfqhyVABNhCsucQan1q28ZTsm5a3Ktuq60fNX
+         F2hg==
+X-Gm-Message-State: AGi0PuYqpx6cCd+/b+Z21fmHm5oZDU5n/R15kt4/p6I371rcxiIOS+L+
+        1vOAtgLHvsrFf5HhFz9CRUD4I1jrxT/ZrDRh9LD6d6+BNJc=
+X-Google-Smtp-Source: APiQypJzs4C9abtTmZOpP99exFgHzs7ky/FcFplwEtYxpKweCfmfVzXIhKmRRJ66qZp2Xk+AmXr8dJgS9pCh8PQxqAk=
+X-Received: by 2002:a05:620a:1306:: with SMTP id o6mr7220196qkj.443.1587485626495;
+ Tue, 21 Apr 2020 09:13:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200421123952.49025-1-yuyufen@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+From:   Leland Ball <lelandmball@gmail.com>
+Date:   Tue, 21 Apr 2020 12:13:32 -0400
+Message-ID: <CAM++EjGaFBh8ZChnyY0p=du0CKFT1WVikSNYyUUcJhuKwQf4sQ@mail.gmail.com>
+Subject: Recovering From RAID5 Failure
+To:     linux-raid@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Dear Yufen,
+Hello,
 
+I have an old NAS device (Iomega StorCenter ix4-200d  2.1.48.30125)
+which has failed to warn me that things were going awry. The NAS is
+now in a state that appears unrecoverable from its limited GUI, and is
+asking for overwrite confirmation on all 4 drives (1.8TB WD drives).
+This smells of data loss, so I hopped on the box and did some
+investigating:
 
-Thank you for your patch set.
+I can "more" to find data on each of two partitions for each of the 4
+drives /dev/sd[abcd][12] so the drives are functioning in some
+capacity. I believe this is running in a RAID 5 configuration, at
+least that's what the settings state.
 
-Am 21.04.20 um 14:39 schrieb Yufen Yu:
+Here's what I'm working with...
+# mdadm --version
+mdadm - v2.6.7.2 - 14th November 2008
 
->   For now, STRIPE_SIZE is equal to the value of PAGE_SIZE. That means, RAID5 will
->   issus echo bio to disk at least 64KB when PAGE_SIZE is 64KB in arm64. However,
+I believe the array was first created in 2011. Not sure if the disks
+have been replaced since then, as this array was given to me by a
+friend.
 
-issue
+I am unsure of how I should go about fixing this, and which (if any)
+drives truly needs replacing. My next step would be to try:
+# mdadm /dev/md1 --assemble /dev/sda2 /dev/sdb2 /dev/sdc2 /dev/sdd2
+(and if that didn't work, maybe try the --force command?). Would this
+jeopardize data like the --create command can?
 
->   filesystem usually issue bio in the unit of 4KB. Then, RAID5 will waste resource
->   of disk bandwidth.
-> 
->   To solve the problem, this patchset provide a new config CONFIG_MD_RAID456_STRIPE_SIZE
->   to let user config STRIPE_SIZE. The default value is 4096.
-> 
->   Normally, using default STRIPE_SIZE can get better performance. And NeilBrown have
->   suggested just to fix the STRIPE_SIZE as 4096. But, out test result show that
->   big value of STRIPE_SIZE may have better performance when size of issued IOs are
->   mostly bigger than 4096. Thus, in this patchset, we still want to set STRIPE_SIZE
->   as a configureable value.
+I've compiled output from the following commands here:
+https://pastebin.com/EmqX3Tyq
+# fdisk -l
+# cat /etc/fstab
+# cat /proc/mdstat
+# mdadm -D /dev/md0
+# mdadm -D /dev/md1
+# mdadm --examine /dev/sd[abcd]1
+# mdadm --examine /dev/sd[abcd]2
+# cat /etc/lvm/backup/md1_vg
+# dmesg
+# cat /var/log/messages
 
-configurable
-
->   In current implementation, grow_buffers() uses alloc_page() to allocate the buffers
->   for each stripe_head. With the change, it means we allocate 64K buffers but just
->   use 4K of them. To save memory, we try to 'compress' multiple buffers of stripe_head
->   to only one real page. Detail shows in patch #2.
-> 
->   To evaluate the new feature, we create raid5 device '/dev/md5' with 4 SSD disk
->   and test it on arm64 machine with 64KB PAGE_SIZE.
-
-[…]
-
-So, what is affecting the performance? The size of the bio in the used 
-file system? Shouldn’t it then be a run-time option (Linux CLI parameter 
-and /proc) so the Linux kernel doesn’t need to be recompiled for 
-different servers? Should the option be even per RAID, as each RAID5 
-device might be using another filesystem?
-
-
-Kind regards,
-
-Paul
+I don't know if md0 needs to be fixed first (if it's even
+malfunctioning). I have never administered RAID volumes at this level
+before. Would appreciate any help you can provide. Thanks!
