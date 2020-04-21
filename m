@@ -2,56 +2,57 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E1C0D1B2C8A
-	for <lists+linux-raid@lfdr.de>; Tue, 21 Apr 2020 18:22:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E64151B2D4D
+	for <lists+linux-raid@lfdr.de>; Tue, 21 Apr 2020 18:55:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725990AbgDUQWj (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 21 Apr 2020 12:22:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37900 "EHLO
+        id S1729186AbgDUQzR (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 21 Apr 2020 12:55:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725930AbgDUQWj (ORCPT
+        by vger.kernel.org with ESMTP id S1726946AbgDUQzP (ORCPT
         <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 21 Apr 2020 12:22:39 -0400
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 990FCC061A10
-        for <linux-raid@vger.kernel.org>; Tue, 21 Apr 2020 09:22:37 -0700 (PDT)
-Received: by mail-lj1-x22f.google.com with SMTP id j3so14572026ljg.8
-        for <linux-raid@vger.kernel.org>; Tue, 21 Apr 2020 09:22:37 -0700 (PDT)
+        Tue, 21 Apr 2020 12:55:15 -0400
+Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F88AC061A41
+        for <linux-raid@vger.kernel.org>; Tue, 21 Apr 2020 09:55:15 -0700 (PDT)
+Received: by mail-qt1-x82a.google.com with SMTP id 71so12120353qtc.12
+        for <linux-raid@vger.kernel.org>; Tue, 21 Apr 2020 09:55:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=METThiIPjM743qBzJzqyCHKuHmbZIzO064QA4Ujo2cs=;
-        b=r2ONugxKPErNk1al1TRkHBAaAtW1bnFPYX5MZACbAfzwxuBzV95to6NV1qst8Fwwop
-         KSsTbBKHfGSH5LvGQiUN1XaQMYJf9CNho2JjXqY199kBLEog8WqhHqmZyndMSqyANu3I
-         N9r81a1yMTwEcDDm065C+QVC8rS77GenFaRKrn5euki8L34AGcnOnfysXdBaAbRfTyA9
-         F00QYy+WyQ50tK5+2zL2uBi38uK+Ht8GUR0LazITF8iIKErMST7zp+hLSkBuICkqv1sZ
-         IyS5xM80SSrXI0M+Vj0gaPHjF33Z3U8O1NKWJzqAdfOtrgSjOOiqOvQXWrWJNwpX9bOA
-         u2Dw==
+        bh=hr5+ySHYvi2+kC2SXT5W7FdxSFTRDlzEhZn2uumOats=;
+        b=dGgbjUpelmcwsvKBYzZD5JlAjEtptLwOGQ4Dv+KpaYV6rd87NIH5z306s8x9PY3SLZ
+         4xo7te8PWPjN3aCSrQTiqDdL2ez0l+JNPva2IehUmrF/yeWiFKX9P8DJzjt3kb9dWJ/l
+         Ry2IwrZMluusMCoFXjBkp8U6TdZZ268w+c14Xe1pHys6SJFTcbmaQeb+R2CSn9vtlKGu
+         AQJUfNOY65i29Yq/dP/XYsOKjsZFlPyhuraEYSs2nIdaoY3vXYkxFmHMQWyk2+0aX6OW
+         H6p8lkxkt82m2DB6fZXgAAuUp/neCQyy0O2V5H0atxwktxKDDQXnFTQeGWJ+4nQpN4KT
+         vnYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=METThiIPjM743qBzJzqyCHKuHmbZIzO064QA4Ujo2cs=;
-        b=XfMG9m4T4LhDgqXkOLYRA3kyJZYlM1y2KKvhPkdL4xi0kgs5mGUseBUi2tZJxmIKC/
-         QZO1l1JzBDNOQGMVVMTKM3rxob/EIHZf1829xiEubKQ0DX3Y7B4gBTdfm0+xAA59Qkkc
-         eXOwRXmuBHuI7f7wW631WSAexqiQ7EPcgGH1u3wmDk8GHFHXvEMMez7Dx1ru54Lssh2F
-         DshnNoRfIhmLA/n9/Dgszp2b4RVK4n6f2bO2zvTAKgS/mBh7aZTi0qWUyWkewnDRFThW
-         04+a41Kl0dug6rZdjxFHM7wVEap9MJBsKn5YMf5Ts40vkiUrO8wSasTce3/BesIZEmUL
-         OB0Q==
-X-Gm-Message-State: AGi0PuYPoTM1BR1S51PPmrLSDXH2GB9GsTeLSNPp9fcbgJoUljWTXjSt
-        QXxF7cN0SQOupY+4q2WBxSw2T+p7KVv29NFkDDGUN/MEHjQ=
-X-Google-Smtp-Source: APiQypKT0QVoZIteeCTk8AODytxKyV6oYk7LsTW+CLyGS+7k7WiKZebgic5nb9k3fNz/IH8wTNatybcNVkSusKbRMGg=
-X-Received: by 2002:a2e:a58e:: with SMTP id m14mr119645ljp.95.1587486156010;
- Tue, 21 Apr 2020 09:22:36 -0700 (PDT)
+        bh=hr5+ySHYvi2+kC2SXT5W7FdxSFTRDlzEhZn2uumOats=;
+        b=XC5kvnCqD1IW3Ied+4hYt1i4xuRjxoNdThKkb+8YdCOkH8v0W0mHTgHNlk2HNNUYtm
+         30Uwt+arWddC/iOzweCeJ6VpNPbrwIFjhIzkqmB7mbVg/V+Fzp0Ph3oNqNkuQQNo8OSQ
+         4TW6ygtSXxIdUwbdRr6laeM3VZq7EvfgdlNQGqeT6LflZdSWYzW+evC8Vo5nejx0FYzK
+         liobyu6SYtCGGofF8wZVgXipmNm0TzRi1gbs3P7AFGNLSlZ0TprPs4YttivIOyMkUIhP
+         FUKgwpi6RBV72ammyYYQd+p+jsmko+SOb7f2kpTkX4ahFQm9CdP6fNaRuPbFHgWshjIv
+         o0rQ==
+X-Gm-Message-State: AGi0PuZKeva/S9LaLPuKN3cVwAgBqaRIa4nif2kwjS2MRW+tKDZiSwF1
+        /1fk2MGzTDb91hin7CZ6H52cRB0Aariey4HeQfE=
+X-Google-Smtp-Source: APiQypLojelhJ30D67yHO5qvd/m6TlWcxRaEb+YrtOYRX+4ArOE90xCM11SgCERN4LgVSqykN+7cjeG/zi+aCl1UceA=
+X-Received: by 2002:ac8:4e81:: with SMTP id 1mr21828370qtp.58.1587488114772;
+ Tue, 21 Apr 2020 09:55:14 -0700 (PDT)
 MIME-Version: 1.0
 References: <CAM++EjGaFBh8ZChnyY0p=du0CKFT1WVikSNYyUUcJhuKwQf4sQ@mail.gmail.com>
-In-Reply-To: <CAM++EjGaFBh8ZChnyY0p=du0CKFT1WVikSNYyUUcJhuKwQf4sQ@mail.gmail.com>
-From:   Roger Heflin <rogerheflin@gmail.com>
-Date:   Tue, 21 Apr 2020 11:22:24 -0500
-Message-ID: <CAAMCDeegCE4x26L4OYttiABxvxiu4qYykAo-b-53G-qW8Ua1Hw@mail.gmail.com>
+ <CAAMCDeegCE4x26L4OYttiABxvxiu4qYykAo-b-53G-qW8Ua1Hw@mail.gmail.com>
+In-Reply-To: <CAAMCDeegCE4x26L4OYttiABxvxiu4qYykAo-b-53G-qW8Ua1Hw@mail.gmail.com>
+From:   Leland Ball <lelandmball@gmail.com>
+Date:   Tue, 21 Apr 2020 12:55:00 -0400
+Message-ID: <CAM++EjHie1FFZ7y-VveWBSQs2TW=PkD+-QXKxK_pAON-GrcRcQ@mail.gmail.com>
 Subject: Re: Recovering From RAID5 Failure
-To:     Leland Ball <lelandmball@gmail.com>
+To:     Roger Heflin <rogerheflin@gmail.com>
 Cc:     Linux RAID <linux-raid@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
@@ -59,52 +60,14 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Do a smartctl --all /dev/sdX against each disk and post that.
+Thanks Roger, I appreciate your help and quick reply!
 
+Two of the disks (sda, sdb) were able to return
+    # smartctl --all /dev/sdX
+just fine, but sdc and sdd returned very little, so I dug a bit deeper with
+    # smartctl -d ata -T permissive --all /dev/sdX
 
-On Tue, Apr 21, 2020 at 11:16 AM Leland Ball <lelandmball@gmail.com> wrote:
->
-> Hello,
->
-> I have an old NAS device (Iomega StorCenter ix4-200d  2.1.48.30125)
-> which has failed to warn me that things were going awry. The NAS is
-> now in a state that appears unrecoverable from its limited GUI, and is
-> asking for overwrite confirmation on all 4 drives (1.8TB WD drives).
-> This smells of data loss, so I hopped on the box and did some
-> investigating:
->
-> I can "more" to find data on each of two partitions for each of the 4
-> drives /dev/sd[abcd][12] so the drives are functioning in some
-> capacity. I believe this is running in a RAID 5 configuration, at
-> least that's what the settings state.
->
-> Here's what I'm working with...
-> # mdadm --version
-> mdadm - v2.6.7.2 - 14th November 2008
->
-> I believe the array was first created in 2011. Not sure if the disks
-> have been replaced since then, as this array was given to me by a
-> friend.
->
-> I am unsure of how I should go about fixing this, and which (if any)
-> drives truly needs replacing. My next step would be to try:
-> # mdadm /dev/md1 --assemble /dev/sda2 /dev/sdb2 /dev/sdc2 /dev/sdd2
-> (and if that didn't work, maybe try the --force command?). Would this
-> jeopardize data like the --create command can?
->
-> I've compiled output from the following commands here:
-> https://pastebin.com/EmqX3Tyq
-> # fdisk -l
-> # cat /etc/fstab
-> # cat /proc/mdstat
-> # mdadm -D /dev/md0
-> # mdadm -D /dev/md1
-> # mdadm --examine /dev/sd[abcd]1
-> # mdadm --examine /dev/sd[abcd]2
-> # cat /etc/lvm/backup/md1_vg
-> # dmesg
-> # cat /var/log/messages
->
-> I don't know if md0 needs to be fixed first (if it's even
-> malfunctioning). I have never administered RAID volumes at this level
-> before. Would appreciate any help you can provide. Thanks!
+The results are in the pastebin: https://pastebin.com/yWJTPvBa
+It looks like only sdd has an error count. I would love to get this up
+long enough to recover at least a portion of the data, which isn't
+backed up elsewhere.
