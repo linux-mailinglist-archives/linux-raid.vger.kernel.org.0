@@ -2,136 +2,91 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 05C5D1B5B95
-	for <lists+linux-raid@lfdr.de>; Thu, 23 Apr 2020 14:38:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD2881B637B
+	for <lists+linux-raid@lfdr.de>; Thu, 23 Apr 2020 20:27:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbgDWMiN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 23 Apr 2020 08:38:13 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:57241 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728340AbgDWMiM (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 23 Apr 2020 08:38:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587645491;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gbrDbQRcnuT0cobTtqt+DJp5BtXQ5fZbLnGdiiqQk9E=;
-        b=hR/uFIa5KcDCxS1E7mkgzrTfapFibgUTx8rK9ElLe1DPJ/IFpgCfcttyeVNR7OEQnfHMFB
-        xwpdBpm19y5672I+xNJW7TF83AKGhGUISpzqq6h0ulTD15c9hb+dAc4bjCKZm3FtqWh27Y
-        Cy+aBzVs05AtuANN/wh4UE8cLqWqNiI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-369-y-fssP9qMV2zmntehdlozw-1; Thu, 23 Apr 2020 08:38:09 -0400
-X-MC-Unique: y-fssP9qMV2zmntehdlozw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2E03445C;
-        Thu, 23 Apr 2020 12:38:08 +0000 (UTC)
-Received: from [10.10.114.9] (ovpn-114-9.rdu2.redhat.com [10.10.114.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 48BF21C94C;
-        Thu, 23 Apr 2020 12:38:07 +0000 (UTC)
-Subject: Re: [PATCH] md/raid1: release pending accounting for an I/O only
- after write-behind is also finished
-To:     Song Liu <song@kernel.org>, David Jeffery <djeffery@redhat.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>
-References: <20200127152619.GA3596@redhat>
- <CAPhsuW628WHm_Rifm9uMPeH+mwmeH121p85KbgvLt+SQTngW4A@mail.gmail.com>
- <CA+-xHTGJr5M9Ge1MCPPZWueM56Ap5=qcsG0KkddBMJOCAOWWpw@mail.gmail.com>
- <CAPhsuW7XJzdWxkLDbRG9VS3BJB6qaAoEC_sDOtMRaw1ZvMj1dw@mail.gmail.com>
-From:   Nigel Croxon <ncroxon@redhat.com>
-Message-ID: <bcc52c3e-0865-709b-fc4d-7ca59d10bf9d@redhat.com>
-Date:   Thu, 23 Apr 2020 08:38:01 -0400
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        id S1730374AbgDWS1P (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 23 Apr 2020 14:27:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52912 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730375AbgDWS1O (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 23 Apr 2020 14:27:14 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D93ACC09B045
+        for <linux-raid@vger.kernel.org>; Thu, 23 Apr 2020 11:27:13 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id k6so7530164iob.3
+        for <linux-raid@vger.kernel.org>; Thu, 23 Apr 2020 11:27:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=DHzQtr3OkXyFWXbvXEU307GvVJtF7cl8Gt7nfdQPyE8=;
+        b=G0MearUWJO2XoX5WFWCbOSBM0KnomNOcLxBMKb36E56Tk8IIyFbWO7z4INTed1WkRU
+         qeMi1eRR7YsA+BDT6DQvUAii78YnzCjvNMVBKy4slcZy3/gJbFRS56rTYb2i1ZQ8vqn/
+         EOaplCA4N/rSu1DPvHSaWXp+qBo2gCjTbf/vDHta9DawS0nUkV5FYws7CV/zXlK/VYiG
+         COL+ehFclZxGMjmnJCFdgQT7XS8eBs73XeZW6OQ9vAUq0KfaGK/YZHActLVD5NzSJiie
+         gXxsbNT9IQMnd4wAzDKDPSrX8AkY/tvkHFQgBX+60qxPigWKusZrEf/ce5VP7zRF3LJ+
+         eYhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=DHzQtr3OkXyFWXbvXEU307GvVJtF7cl8Gt7nfdQPyE8=;
+        b=lv2sNomhVq5LdgMORlqn31wRInEuZxXj3MCHOGHpxvMNRPobTtSBUmdTwloEz7jP3m
+         BCjhORdJWvcvcJ4WH+Cu4zrlj7uFw7XnmpgcO2MdobtOWzCfNyGShEKgv7kX0eTpuyzb
+         BDFhRAsksjDtwY3EqSaj6vANHGqiioKngoDK/qT4eMqBWjezXoGRYaoIdTuh70ZV/7aj
+         UBOqywSjb/c5/wmu2iwc5q4FmTooK9GSwXGVY3JFWOOGnWtWoRvlxxPeqibqQdshq3BQ
+         ezyYj1Dt06JUs2vfyBbHNGdWRt+jil59M4++J0T0Ew7hIp7fP1rVjhpQ1IwYJBALm2mz
+         RLZA==
+X-Gm-Message-State: AGi0PuYdqOQYikSStt99qFcyfEEcQ2MU4UhpMbGYvQlsH21OHd0Ty/T9
+        QuiO3tLAjoLGIqJ8b3pwArxmAWo97SR8y583lw==
+X-Google-Smtp-Source: APiQypKOhu0Ivyzu1MQANRLgnSM6D7f6PDwmOyOGFsy7UwOOUt5tM1gVxevJ7CcMC29eb2aYcjzRxadXayX+T6slpNc=
+X-Received: by 2002:a05:6602:d:: with SMTP id b13mr5025673ioa.176.1587666433220;
+ Thu, 23 Apr 2020 11:27:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAPhsuW7XJzdWxkLDbRG9VS3BJB6qaAoEC_sDOtMRaw1ZvMj1dw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Received: by 2002:a02:c845:0:0:0:0:0 with HTTP; Thu, 23 Apr 2020 11:27:12
+ -0700 (PDT)
+Reply-To: boa.benin107@yahoo.com
+From:   "Mrs. Angella Michelle" <info.zennitbankplcnigerian@gmail.com>
+Date:   Thu, 23 Apr 2020 20:27:12 +0200
+Message-ID: <CABHzvrnzZLe4Z0E4acOdcsDJTPa3wvp-Oz12f_M4TQ03PAGZkw@mail.gmail.com>
+Subject: Contact Eco bank-Benin to receive your payment funds transfer amount
+ of $12.800.000,00 Million USD,approved this morning by IMF.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-
-On 1/28/20 2:08 PM, Song Liu wrote:
-> On Mon, Jan 27, 2020 at 11:56 AM David Jeffery <djeffery@redhat.com> wrote:
->> On Mon, Jan 27, 2020 at 12:29 PM Song Liu <song@kernel.org> wrote:
->>> On Mon, Jan 27, 2020 at 7:26 AM David Jeffery <djeffery@redhat.com> wrote:
->>>> When using RAID1 and write-behind, md can deadlock when errors occur. With
->>>> write-behind, r1bio structs can be accounted by raid1 as queued but not
->>>> counted as pending. The pending count is dropped when the original bio is
->>>> returned complete but write-behind for the r1bio may still be active.
->>>>
->>>> This breaks the accounting used in some conditions to know when the raid1
->>>> md device has reached an idle state. It can result in calls to
->>>> freeze_array deadlocking. freeze_array will never complete from a negative
->>>> "unqueued" value being calculated due to a queued count larger than the
->>>> pending count.
->>>>
->>>> To properly account for write-behind, move the call to allow_barrier from
->>>> call_bio_endio to raid_end_bio_io. When using write-behind, md can call
->>>> call_bio_endio before all write-behind I/O is complete. Using
->>>> raid_end_bio_io for the point to call allow_barrier will release the
->>>> pending count at a point where all I/O for an r1bio, even write-behind, is
->>>> done.
->>>>
->>>> Signed-off-by: David Jeffery <djeffery@redhat.com>
->>>> ---
->>>>
->>>>   raid1.c |   13 +++++++------
->>>>   1 file changed, 7 insertions(+), 6 deletions(-)
->>>>
->>>>
->>>> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
->>>> index 201fd8aec59a..0196a9d9f7e9 100644
->>>> --- a/drivers/md/raid1.c
->>>> +++ b/drivers/md/raid1.c
->>>> @@ -279,22 +279,17 @@ static void reschedule_retry(struct r1bio *r1_bio)
->>>>   static void call_bio_endio(struct r1bio *r1_bio)
->>>>   {
->>>>          struct bio *bio = r1_bio->master_bio;
->>>> -       struct r1conf *conf = r1_bio->mddev->private;
->>>>
->>>>          if (!test_bit(R1BIO_Uptodate, &r1_bio->state))
->>>>                  bio->bi_status = BLK_STS_IOERR;
->>>>
->>>>          bio_endio(bio);
->>>> -       /*
->>>> -        * Wake up any possible resync thread that waits for the device
->>>> -        * to go idle.
->>>> -        */
->>>> -       allow_barrier(conf, r1_bio->sector);
->>> raid1_end_write_request() also calls call_bio_endio(). Do we need to fix
->>> that?
->> This basically is the problem the patch is fixing.  We don't want
->> allow_barrier() being called when call_bio_endio() is called directly
->> from raid1_end_write_request().  Write-behind can still be active here
->> so it was dropping the pending accounting too early.  We only want it
->> called when all I/O for the r1bio is complete, which shifting the
->> allow_barrier() call to raid_end_bio_io() does.
-> Thanks for the explanation. This looks good to me. I will process it
-> after the merge window.
->
-> I will also re-evaluate whether we need it for stable.
->
-> Thanks again,
-> Song
->
-Hello Song,
-
-Did you pull in this patch after the merge window?
-
-I don't see it in your tree.
-
-Thanks, Nigel
-
-
-
-
-
+Attn Dear.
+Contact Bank of Africa-Benin to receive your payment funds transfer amount =
+of
+$12.800.000,00 Million USD,approved this morning by IMF.
+Happy to inform you, we have finally deposited your payment funds
+$12.8 million us dollars with the Paying Bank of Africa-Benin
+to transfer the payment amount of $12.800,000,00 Million Us Dollars to you
+Contact the bank immediately you receive this email now.
+Director Bank of Africa-Benin: Dr. Festus Obiara
+Email id:  boa.benin107@yahoo.com
+Tel/mobile, (229) 62819378
+BOA-BENIN | GROUPE BANK OF AFRICA, boa-benin
+Avenue Jean-Paul II - 08 BP 0879 - Cotonou - B=C3=A9nin
+Phone:(229) 62819378.
+2020 GROUPE BANK OF AFRICA
+Be advised to re-confirm your bank details to this bank as listed.
+Your account Holder's name----------------
+Bank Name----------------------------------------------------------
+Bank address----------------------------------------------
+Account Numbers---------------------------------------
+Rounting-----------------------------------------------------------------
+Your direct Phone Numbers----------------------------------------------
+Note,I have paid the deposit and insurance fees for you
+But the only money you are to send to this bank is $150.00 us dollars
+Been for the wire transfer fees of your funds
+Contact Him now to receive your transfer deposited this morning
+I wait for your reply upon confirmation
+Mrs. Angella Michelle
+Editor, Zenith Bank- Companies Benin
+mrsa9389@gmail.com
