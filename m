@@ -2,89 +2,116 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D2A81B6FB4
-	for <lists+linux-raid@lfdr.de>; Fri, 24 Apr 2020 10:24:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08D911B6FFC
+	for <lists+linux-raid@lfdr.de>; Fri, 24 Apr 2020 10:47:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbgDXIYl (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 24 Apr 2020 04:24:41 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:56783 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726028AbgDXIYl (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 24 Apr 2020 04:24:41 -0400
-Received: from [192.168.0.4] (ip5f5af075.dynamic.kabel-deutschland.de [95.90.240.117])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id C355F2002EE1A;
-        Fri, 24 Apr 2020 10:24:37 +0200 (CEST)
-Subject: Re: some questions about uploading a Linux kernel driver FusionRAID
-To:     Xiaosong Ma <xma@qf.org.qa>, song@kernel.org,
-        linux-raid@vger.kernel.org
-Cc:     ty-jiang18@mails.tsinghua.edu.cn,
-        Guangyan Zhang <gyzh@tsinghua.edu.cn>,
-        wei-jy19@mails.tsinghua.edu.cn, LKML <linux-kernel@vger.kernel.org>
-References: <6a7c0aba219642de8b3f1cc680d53d85@AM0P193MB0754.EURP193.PROD.OUTLOOK.COM>
- <CAKm37QWKVcPkF0fXKk2499CsYXfU3aMuMWgwa8Nk9HFzVxG7CA@mail.gmail.com>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Message-ID: <eb742f1b-fbc2-a47f-dd1b-eec20463fa21@molgen.mpg.de>
-Date:   Fri, 24 Apr 2020 10:24:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726347AbgDXIrn (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 24 Apr 2020 04:47:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45526 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbgDXIrn (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 24 Apr 2020 04:47:43 -0400
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1FABC09B045
+        for <linux-raid@vger.kernel.org>; Fri, 24 Apr 2020 01:47:42 -0700 (PDT)
+Received: by mail-lj1-x22b.google.com with SMTP id f11so4503369ljp.1
+        for <linux-raid@vger.kernel.org>; Fri, 24 Apr 2020 01:47:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=LsklMg8UWOuEXq1P7JGnJ6shOhqnM+JxdWvBI7kA+aY=;
+        b=lzt1xHMIVKFPoI5c8KWvZjoFel5h3wHhZSFGsF6ShqPCvyNj0HBneUS/lcddoCPBvJ
+         fsvjGSOyQ0VYexlM2OeRFYAFrFGqh+mXtbRsueejrwsQhy6S6napLBt0M5h181Xbzx93
+         qEESxDCwxNwsTlxQP1kIKS6LYfGpNozX3VRbBBAHtBPmNL47JWi/oqJxvYZ6tGiwMc+J
+         ZzvPzoVl8d2mAiWxj6V0XF1OotA0SHskV086JHAB0cwY68QD2ptWECrKrgqcOGK4a+9N
+         t+MXzD4NMJdWj+Ds78gM8TkmXJ6y6IJb6evqsMegv7RfiXXAMf1xtUXnSQbBzgVYuDVX
+         LObQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=LsklMg8UWOuEXq1P7JGnJ6shOhqnM+JxdWvBI7kA+aY=;
+        b=n/4B5TG6+x3p56q07SH+H0kNOWO69d3u1iinZP2KRZFHriGV+wATffGi4a7bWVdRWb
+         dmidiB/xtHI/yAyN4eID/5v7ZErXWOg39U2CcElxkiaAjNeMtAEfiJxoS5fvmxvBPTk0
+         5dzBDCGgZ7D3XH07FJRZ8VlO+EoWb98H4WESB4UkVwTxh4JIpSijFQOHd9JeTmVBkB7I
+         IkvDFiGd2MXY1tuUrv4k+4mjVbdwql3eViDPjyBZKda4ncpf/ur1cOYyNVmJU86KSXnu
+         R3+Jm/iDJysliGxyP4wDXT3AI9T6WfNhHVUyO/qr12MXCOrdqjJIv8vc7YzuCs9sQ4UC
+         KtAw==
+X-Gm-Message-State: AGi0PuZQmzmJg6Ge/L5vw4mMo+rjOhkgbpEkQM0je8WpcJ4TL5tFY9ci
+        sGIllg5Vf6vsEPKmyYWCvsaiS7/5FUPMYH40iIb0SrM/PUI=
+X-Google-Smtp-Source: APiQypLGuqMnCH9PJ8UU1yAVR7TNxA1FdDM0MQlVSRRDc+k5wRg8de7PBv9bndjJFovrrh2txQZZmhzPghtOBXJfYQ8=
+X-Received: by 2002:a2e:96d1:: with SMTP id d17mr5271326ljj.239.1587718060603;
+ Fri, 24 Apr 2020 01:47:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAKm37QWKVcPkF0fXKk2499CsYXfU3aMuMWgwa8Nk9HFzVxG7CA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+From:   =?UTF-8?B?0KHQtdGA0LPQtdC5INCg0YvQttC+0LI=?= 
+        <ryzhovsergey@gmail.com>
+Date:   Fri, 24 Apr 2020 11:47:24 +0300
+Message-ID: <CAMk5DB3QbSaPkPzvwLdZp5HQaca8JYJrTS9ahfvOovFuhusPiw@mail.gmail.com>
+Subject: Linux RAID reshaping hang, can somebody help me with this?
+To:     linux-raid@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Dear Xiaosong, dear Tsinghua,
+Hello,
 
+I've RAID-5 on 4 disks.
+I've added 1 new drive as spare and run a command to grow array to 5-disks.
+In the beginning, everything was fine, but now reshaping very slow -
+speed=77K/sec
 
-Am 22.04.20 um 14:26 schrieb Xiaosong Ma:
+Kernel is 4.18.0-147.3.1.el8_1.x86_64
+mdadm - v4.1 - 2018-10-01
 
-> This is Xiaosong Ma from Qatar Computing Research Institute. I am
-> writing to follow up with the questions posed by a co-author from
-> Tsinghua U, regarding upstreaming our alternative md implementation
-> that is designed to significantly reduce SSD RAID latency (both median
-> and tail) for large SSD pools (such as 20-disk or more).
+Commands what I used:
+mdadm --manage /dev/md3 --add  /dev/sdb
+mdadm --grow /dev/md3 --raid-devices=5
 
-Sorry for the late reply, and thank you for wanting to upstream the driver.
+There is crypted volume on raid: md3 -> cryptvol -> FS
+When I tryed unmount FS, umount command hung, however FS gone from
+'df' output.  Also I can't stop cryptvol,  'cryptsetup close' hung.
 
-> We read the Linux kernel upstreaming instructions, and believe that
-> our implementation has excellent separability from the current code
-> base (as a plug-and-play module with identical interfaces as md).
+What I should do to don't lose my raid data?
 
-Is there a chance to integrate it into the current driver, and then 
-choose it, when creating the RAID?
+#  mdadm --detail /dev/md3
+/dev/md3:
+           Version : 1.2
+     Creation Time : Mon Jan 11 14:32:08 2016
+        Raid Level : raid5
+        Array Size : 5860150272 (5588.67 GiB 6000.79 GB)
+     Used Dev Size : 1953383424 (1862.89 GiB 2000.26 GB)
+      Raid Devices : 5
+     Total Devices : 5
+       Persistence : Superblock is persistent
 
-> Meanwhile, we wonder whether there are standard test cases or
-> preferred applications that we should test our system with, before
-> doing code cleaning up. Your guidance is much appreciated.
+     Intent Bitmap : Internal
 
-[…]
-> I am Tianyang JIANG, a PhD student from Tsinghua U. We finish a study
-> which focuses on achieving consistent low latency for SSD arrays,
-> especially timing tail latency in RAID level. We implement a Linux
-> kernel driver called FusionRAID and we are interested in uploading
-> codes to Linux upstream.
-> I notice that I should separate my changes and style-check my codes
-> before submitting. Are there any other issues I need to be aware of?
-> Thank you for your time.
+       Update Time : Fri Apr 24 08:38:20 2020
+             State : active, reshaping
+    Active Devices : 5
+   Working Devices : 5
+    Failed Devices : 0
+     Spare Devices : 0
 
-Is your code in some public git branch to be looked at already?
+            Layout : left-symmetric
+        Chunk Size : 512K
 
-Otherwise, I believe just posting the patch train with `git send-email` 
-and a cover letter, might be the best first step, so the developers can 
-comment early before you put too much time into refactoring.
+Consistency Policy : bitmap
 
-Some easy to reproduce test scripts to verify the performance benefits 
-would indeed be nice, but I do not know, if that can be integrated into 
-some Linux kernel test infrastructure already.
+    Reshape Status : 56% complete
+     Delta Devices : 1, (4->5)
 
+              Name : farm:3  (local to host farm)
+              UUID : e3537ea8:892da052:bfb9cb85:93156ade
+            Events : 59168
 
-Kind regards,
+    Number   Major   Minor   RaidDevice State
+       0       8        0        0      active sync   /dev/sda
+       4       8       48        1      active sync   /dev/sdd
+       3       8       96        2      active sync   /dev/sdg
+       5       8       32        3      active sync   /dev/sdc
+       6       8       16        4      active sync   /dev/sdb
 
-Paul
+Regards,
+Sergey
