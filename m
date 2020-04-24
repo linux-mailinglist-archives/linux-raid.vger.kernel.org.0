@@ -2,91 +2,144 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD2881B637B
-	for <lists+linux-raid@lfdr.de>; Thu, 23 Apr 2020 20:27:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 061981B6F6E
+	for <lists+linux-raid@lfdr.de>; Fri, 24 Apr 2020 09:52:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730374AbgDWS1P (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 23 Apr 2020 14:27:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52912 "EHLO
+        id S1726051AbgDXHwz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 24 Apr 2020 03:52:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730375AbgDWS1O (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 23 Apr 2020 14:27:14 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D93ACC09B045
-        for <linux-raid@vger.kernel.org>; Thu, 23 Apr 2020 11:27:13 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id k6so7530164iob.3
-        for <linux-raid@vger.kernel.org>; Thu, 23 Apr 2020 11:27:13 -0700 (PDT)
+        with ESMTP id S1726008AbgDXHwz (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 24 Apr 2020 03:52:55 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4C25C09B045
+        for <linux-raid@vger.kernel.org>; Fri, 24 Apr 2020 00:52:54 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id h12so2501566pjz.1
+        for <linux-raid@vger.kernel.org>; Fri, 24 Apr 2020 00:52:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=DHzQtr3OkXyFWXbvXEU307GvVJtF7cl8Gt7nfdQPyE8=;
-        b=G0MearUWJO2XoX5WFWCbOSBM0KnomNOcLxBMKb36E56Tk8IIyFbWO7z4INTed1WkRU
-         qeMi1eRR7YsA+BDT6DQvUAii78YnzCjvNMVBKy4slcZy3/gJbFRS56rTYb2i1ZQ8vqn/
-         EOaplCA4N/rSu1DPvHSaWXp+qBo2gCjTbf/vDHta9DawS0nUkV5FYws7CV/zXlK/VYiG
-         COL+ehFclZxGMjmnJCFdgQT7XS8eBs73XeZW6OQ9vAUq0KfaGK/YZHActLVD5NzSJiie
-         gXxsbNT9IQMnd4wAzDKDPSrX8AkY/tvkHFQgBX+60qxPigWKusZrEf/ce5VP7zRF3LJ+
-         eYhg==
+        d=cloud.ionos.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=1qtda+EBJiJ6hwR6xxcsxO446LLKpz91oT+TT275Klw=;
+        b=c9N7E7iA++d03caQIO1FRUt2fal4Oxbk1duDkSDWLgytR5IpEtkwd4x/NsOf4qoB0y
+         X09VC111+Bu4LApbR2Eg6Nz/CqKijIaAB5PbMRCQJoqIwaS3HHZsaHWRPXEMHkBcH9Z7
+         nKFfkdpdwIxbJcV3RTl0h/OpdG7fdQCxLjYzRPFkIqT5jQd+8DUeSr7TKMm7U8BLV72A
+         nZ7eFr7cXhACoSDbzxlLrqOeivLhVxibaJGCw3lUSNcSf5TTCtGdKue9JsVj9fDNW+le
+         THqOXA+uR5aNE48K6JATl+QmgbY/j5qK7dXJ3POm8ts7eLEKDu2r9U4wB+TO68LN+psN
+         ITYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=DHzQtr3OkXyFWXbvXEU307GvVJtF7cl8Gt7nfdQPyE8=;
-        b=lv2sNomhVq5LdgMORlqn31wRInEuZxXj3MCHOGHpxvMNRPobTtSBUmdTwloEz7jP3m
-         BCjhORdJWvcvcJ4WH+Cu4zrlj7uFw7XnmpgcO2MdobtOWzCfNyGShEKgv7kX0eTpuyzb
-         BDFhRAsksjDtwY3EqSaj6vANHGqiioKngoDK/qT4eMqBWjezXoGRYaoIdTuh70ZV/7aj
-         UBOqywSjb/c5/wmu2iwc5q4FmTooK9GSwXGVY3JFWOOGnWtWoRvlxxPeqibqQdshq3BQ
-         ezyYj1Dt06JUs2vfyBbHNGdWRt+jil59M4++J0T0Ew7hIp7fP1rVjhpQ1IwYJBALm2mz
-         RLZA==
-X-Gm-Message-State: AGi0PuYdqOQYikSStt99qFcyfEEcQ2MU4UhpMbGYvQlsH21OHd0Ty/T9
-        QuiO3tLAjoLGIqJ8b3pwArxmAWo97SR8y583lw==
-X-Google-Smtp-Source: APiQypKOhu0Ivyzu1MQANRLgnSM6D7f6PDwmOyOGFsy7UwOOUt5tM1gVxevJ7CcMC29eb2aYcjzRxadXayX+T6slpNc=
-X-Received: by 2002:a05:6602:d:: with SMTP id b13mr5025673ioa.176.1587666433220;
- Thu, 23 Apr 2020 11:27:13 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=1qtda+EBJiJ6hwR6xxcsxO446LLKpz91oT+TT275Klw=;
+        b=iNFTyxiKOSUeHlNGupeFOhTJHoedh9pJEwOY9uU8JP8fdnWc/tGJVVH1fqdxCY2Bly
+         7GvXers74VlAnUptEhir7y2NJUkCIr2o1mxfgNdx4/HCs42mbFZsQhh2/m079xVGYp/y
+         7SqF+N04OtZ5ZFfnbZApkqUaYFB8IUWRcbACBUJU3RX/ExIh2sdDLStpEAIRJCgX8s5j
+         iHHAOL1OYHWPQEoP4fyHzzCZyl9k1nFLJkaUnfwDJozsIgvB8VEiDSxP6i6Kt9tMQA/V
+         6ZXkr4qm26Jt8PSbPDhRfMQJYugv421PsFQdBx9/qOGfikrLaJKQpDZm9BOIQT1kqnkg
+         04hA==
+X-Gm-Message-State: AGi0PuYzoCZWg1xy0iI7+jN7IH9N5ohKhKhbwquVGeIMM5ByxRwpC5pv
+        TQ/dAoN9fKPXbjpmIG5E4fvE9A==
+X-Google-Smtp-Source: APiQypL+oHmikN6vFdzj9cGMPSBaikyGd5zA1JiIzTfEGZtSI+lY4ReO31qOsV0g+bpxuc5pHMSxmQ==
+X-Received: by 2002:a17:902:242:: with SMTP id 60mr8033638plc.245.1587714774201;
+        Fri, 24 Apr 2020 00:52:54 -0700 (PDT)
+Received: from ?IPv6:2001:16b8:4844:d000:6d4b:554:cd7c:6b19? ([2001:16b8:4844:d000:6d4b:554:cd7c:6b19])
+        by smtp.gmail.com with ESMTPSA id 1sm4295114pjc.32.2020.04.24.00.52.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Apr 2020 00:52:53 -0700 (PDT)
+Subject: Re: [PATCH] md/raid1: release pending accounting for an I/O only
+ after write-behind is also finished
+To:     David Jeffery <djeffery@redhat.com>, linux-raid@vger.kernel.org
+Cc:     Song Liu <song@kernel.org>
+References: <20200127152619.GA3596@redhat>
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Message-ID: <c6da909e-7394-bea4-9efe-48ae6dbb7f0b@cloud.ionos.com>
+Date:   Fri, 24 Apr 2020 09:52:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Received: by 2002:a02:c845:0:0:0:0:0 with HTTP; Thu, 23 Apr 2020 11:27:12
- -0700 (PDT)
-Reply-To: boa.benin107@yahoo.com
-From:   "Mrs. Angella Michelle" <info.zennitbankplcnigerian@gmail.com>
-Date:   Thu, 23 Apr 2020 20:27:12 +0200
-Message-ID: <CABHzvrnzZLe4Z0E4acOdcsDJTPa3wvp-Oz12f_M4TQ03PAGZkw@mail.gmail.com>
-Subject: Contact Eco bank-Benin to receive your payment funds transfer amount
- of $12.800.000,00 Million USD,approved this morning by IMF.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200127152619.GA3596@redhat>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Attn Dear.
-Contact Bank of Africa-Benin to receive your payment funds transfer amount =
-of
-$12.800.000,00 Million USD,approved this morning by IMF.
-Happy to inform you, we have finally deposited your payment funds
-$12.8 million us dollars with the Paying Bank of Africa-Benin
-to transfer the payment amount of $12.800,000,00 Million Us Dollars to you
-Contact the bank immediately you receive this email now.
-Director Bank of Africa-Benin: Dr. Festus Obiara
-Email id:  boa.benin107@yahoo.com
-Tel/mobile, (229) 62819378
-BOA-BENIN | GROUPE BANK OF AFRICA, boa-benin
-Avenue Jean-Paul II - 08 BP 0879 - Cotonou - B=C3=A9nin
-Phone:(229) 62819378.
-2020 GROUPE BANK OF AFRICA
-Be advised to re-confirm your bank details to this bank as listed.
-Your account Holder's name----------------
-Bank Name----------------------------------------------------------
-Bank address----------------------------------------------
-Account Numbers---------------------------------------
-Rounting-----------------------------------------------------------------
-Your direct Phone Numbers----------------------------------------------
-Note,I have paid the deposit and insurance fees for you
-But the only money you are to send to this bank is $150.00 us dollars
-Been for the wire transfer fees of your funds
-Contact Him now to receive your transfer deposited this morning
-I wait for your reply upon confirmation
-Mrs. Angella Michelle
-Editor, Zenith Bank- Companies Benin
-mrsa9389@gmail.com
+On 1/27/20 4:26 PM, David Jeffery wrote:
+> When using RAID1 and write-behind, md can deadlock when errors occur. With
+> write-behind, r1bio structs can be accounted by raid1 as queued but not
+> counted as pending. The pending count is dropped when the original bio is
+> returned complete but write-behind for the r1bio may still be active.
+>
+> This breaks the accounting used in some conditions to know when the raid1
+> md device has reached an idle state. It can result in calls to
+> freeze_array deadlocking. freeze_array will never complete from a negative
+> "unqueued" value being calculated due to a queued count larger than the
+> pending count.
+>
+> To properly account for write-behind, move the call to allow_barrier from
+> call_bio_endio to raid_end_bio_io. When using write-behind, md can call
+> call_bio_endio before all write-behind I/O is complete. Using
+> raid_end_bio_io for the point to call allow_barrier will release the
+> pending count at a point where all I/O for an r1bio, even write-behind, is
+> done.
+>
+> Signed-off-by: David Jeffery <djeffery@redhat.com>
+> ---
+>
+>   raid1.c |   13 +++++++------
+>   1 file changed, 7 insertions(+), 6 deletions(-)
+>
+>
+> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+> index 201fd8aec59a..0196a9d9f7e9 100644
+> --- a/drivers/md/raid1.c
+> +++ b/drivers/md/raid1.c
+> @@ -279,22 +279,17 @@ static void reschedule_retry(struct r1bio *r1_bio)
+>   static void call_bio_endio(struct r1bio *r1_bio)
+>   {
+>   	struct bio *bio = r1_bio->master_bio;
+> -	struct r1conf *conf = r1_bio->mddev->private;
+>   
+>   	if (!test_bit(R1BIO_Uptodate, &r1_bio->state))
+>   		bio->bi_status = BLK_STS_IOERR;
+>   
+>   	bio_endio(bio);
+> -	/*
+> -	 * Wake up any possible resync thread that waits for the device
+> -	 * to go idle.
+> -	 */
+> -	allow_barrier(conf, r1_bio->sector);
+>   }
+>   
+>   static void raid_end_bio_io(struct r1bio *r1_bio)
+>   {
+>   	struct bio *bio = r1_bio->master_bio;
+> +	struct r1conf *conf = r1_bio->mddev->private;
+>   
+>   	/* if nobody has done the final endio yet, do it now */
+>   	if (!test_and_set_bit(R1BIO_Returned, &r1_bio->state)) {
+> @@ -305,6 +300,12 @@ static void raid_end_bio_io(struct r1bio *r1_bio)
+>   
+>   		call_bio_endio(r1_bio);
+>   	}
+> +	/*
+> +	 * Wake up any possible resync thread that waits for the device
+> +	 * to go idle.  All I/Os, even write-behind writes, are done.
+> +	 */
+> +	allow_barrier(conf, r1_bio->sector);
+> +
+>   	free_r1bio(r1_bio);
+>   }
+>
+
+Actually, it reverts part of change in 
+d2eb35acfdccbe2a3622ed6cc441a5482148423b,
+not sure if it is better to move the call of allow_barrier back to 
+free_r1bio, just FYI.
+
+Thanks,
+Guoqing
