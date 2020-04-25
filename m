@@ -2,145 +2,215 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E1E11B8269
-	for <lists+linux-raid@lfdr.de>; Sat, 25 Apr 2020 01:22:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9A001B83BF
+	for <lists+linux-raid@lfdr.de>; Sat, 25 Apr 2020 06:32:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726038AbgDXXWk (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 24 Apr 2020 19:22:40 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:5418 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725946AbgDXXWj (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 24 Apr 2020 19:22:39 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03ONK46u012090;
-        Fri, 24 Apr 2020 16:22:25 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=5kkSRJSPMKpGUtMVYijyXvVEFOk1EI/NpWlE/Gd0/88=;
- b=BiwawVOSv1V6d++DP6ZtxgOgD7iZU9n+JdpvN1jzERe1WstrkxFACyDAdm7HNSoE8mqC
- n+rdylempHFSJUbWx1YoC1GbWeotbhVTzCZvBmgz9Y0B4V3gwz87/ZfdTK5exai5bw0t
- lgv1+Dw+ewZozr8nIt5Naz9cZJSjqPGctjo= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 30kc0rk0rb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 24 Apr 2020 16:22:25 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.199) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Fri, 24 Apr 2020 16:22:24 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bH07vRddBw8KcXmHfhpFXSzBEw9TafnEaTkpqxKsdgYvBlegOCIuG3nHi60LlLCGIWCfKchpE3N7KJeHMmsLrC2YsQe3mBPGuUnbkW412e2ru9X7AND7a9lGl5E7SXKF/6ewUl7092AzN+/Zsw4N5m3/mFCkPECi0+gMAYD77WSXWDETSvj1Kro+ih+gss3+TU/WeEeObn3aaKU9EU9+s6U60FkO705OXOwrKKZV1aAa3CIW0SnNQw1Cznhu+wcZueYPMZjdU1tvxJqWA9YQ1DBnsjzjQ421BG5feyd30rrOJ++Jlu5Q64zOJr8yhWlITrMKr32qbbCK8J1WBPoKhw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5kkSRJSPMKpGUtMVYijyXvVEFOk1EI/NpWlE/Gd0/88=;
- b=FrbRP6vV8Dq+KeXee9BDqjFajnFJ09EZmoyvMRp112UGaxtEYBIVt/exXR1ooYMP/gqMNUgb63d5SZCOizkKtkD6q3KjbXwTAbp1HjTWo6JJvRzadg+B5fNPopceXFGvSH/5VH+hpiofgCz7xecpru1CFQz6UNuV4MaSCY9RjitukRxUrb9EzMmDfjYIj9ZKz0jyWAOj/WarRK3rCCAi0Wy1E/H3te73R1oGYyChz/yWaV8mn9c3Z2sqdxlVTvG+iC3oQQa8IgkRp0iPjuKkMYK0Kjn1l5YRBK5bXQtnjQ7jcxUHaF4P446V4Je4lH4DHFbuUUKc4SnznG/7AFqgBA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5kkSRJSPMKpGUtMVYijyXvVEFOk1EI/NpWlE/Gd0/88=;
- b=AhJ24TfXKLP/yVi2Xlw2nLRbJpDoPtqU2Y4ZNYL4ioMhG1jjb8rIymppRm8Rve9jz23DdOscjpM11GJJV5UHlEu/XY9BYnJVKTOW9QdP5ngfq5Mc/VZm5sjPkrZgyUbOLoiEN4nZ04xUs9iRF/VKZh4ax4X6cdrSyQTCXT8wLx8=
-Received: from BYAPR15MB2999.namprd15.prod.outlook.com (2603:10b6:a03:fa::12)
- by BYAPR15MB2439.namprd15.prod.outlook.com (2603:10b6:a02:8e::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Fri, 24 Apr
- 2020 23:22:23 +0000
-Received: from BYAPR15MB2999.namprd15.prod.outlook.com
- ([fe80::bdf1:da56:867d:f8a2]) by BYAPR15MB2999.namprd15.prod.outlook.com
- ([fe80::bdf1:da56:867d:f8a2%7]) with mapi id 15.20.2937.020; Fri, 24 Apr 2020
- 23:22:23 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Jason Baron <jbaron@akamai.com>
-CC:     "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "neilb@suse.de" <neilb@suse.de>,
-        "guoqing.jiang@cloud.ionos.com" <guoqing.jiang@cloud.ionos.com>,
-        "agk@redhat.com" <agk@redhat.com>,
-        "snitzer@redhat.com" <snitzer@redhat.com>,
-        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] md/raid0: add config parameters to specify zone layout
-Thread-Topic: [PATCH v2] md/raid0: add config parameters to specify zone
- layout
-Thread-Index: AQHWBqzd7F+KEJEx+ke3wR1vMYGq26iJERCA
-Date:   Fri, 24 Apr 2020 23:22:23 +0000
-Message-ID: <81A991E8-B87E-4518-9643-45037A104981@fb.com>
-References: <1585584045-11263-1-git-send-email-jbaron@akamai.com>
-In-Reply-To: <1585584045-11263-1-git-send-email-jbaron@akamai.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3608.60.0.2.5)
-x-originating-ip: [2620:10d:c090:400::5:292a]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3aaa9740-32c6-4887-d44a-08d7e8a657f5
-x-ms-traffictypediagnostic: BYAPR15MB2439:
-x-microsoft-antispam-prvs: <BYAPR15MB2439C945753B65177DDA04EBB3D00@BYAPR15MB2439.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 03838E948C
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB2999.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(39860400002)(396003)(376002)(346002)(136003)(53546011)(8676002)(316002)(86362001)(54906003)(6506007)(36756003)(71200400001)(81156014)(4744005)(2906002)(5660300002)(8936002)(91956017)(2616005)(4326008)(6916009)(33656002)(6512007)(76116006)(6486002)(478600001)(66476007)(186003)(64756008)(66556008)(66946007)(66446008);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: BZuNBeFnu7UL3yJBTIl+UQKWQvOTiEB812wjrN4JxD4xesFf5AK60w8fAeQ1ihB/wcsO1GrWNNd0Y+0jzdOTPWXqx4OAvjo+wF3Oj5naJDHOgEitaRTwRlgV1xPK205MvmdLHxrO4NLsIsJzJjW61x0JlZlpR9rJouARaHjrvJN5gWUEBlKZhXwC8KhglAnlHa0ykHYlYFaiTHvSHYiK+zPOfEQA67iGkoUiSQWy1CWGnBnop2ZRCWYIb2azxqIwY9ZA7Q8U1cdhBop/18r+wmv0Z0CCg6mt3OiYxPCFoe2TiR50xsPEGgAvVRyzOQqzhUDI9U/EIrnHSHcVI0UVF9AKXjF2YCHFhDIywR9V1JaUjY0AWkdbCrIkOty3Sj6/MTOXyJ45BH37oU58tDeTGi8EMLzpW0duZu/CCQJ89m4E9Aj5TmpryuYCORmExmdm
-x-ms-exchange-antispam-messagedata: F1SAtPQ3AiL0nY6gCLC/XUOxmGwgl3a4elXK9P1+24enDFW5Z3YMKtz2YsMScdSdf9iWwXGlZcX4vLNYtyGMjSjfBx24cwTlPbrL/XUpqGTTgWrY575OVxZBSgA7x0h1jZ3KS9LOR8FOLMlF3SjrXX7J/P5wP2F7lEuzWZMziSRZkrmpwdLQYni4aNboVHPnSLT76sfyx3rfrQGtPvehaxh23RsMgK7fqNOsFg12ulBk4cYJ7PqqLGVM+VWuj2kfe0fPbetTnsNQrwg2jpIjG0tOC/ODxhcuUHt1QSVyYWOJW0uc3ExC5oHObOmAaEjlZAoEAwfUT4CgvwB7ik049Otblh2KQGJG8yLOW1lmJqK4tDckycA1V29zvY7ZkjwQnBF3/jy8rLW9S6wqw6VUPBwZ0RIKGztHAU3BYI1Kf8B9NrUZPjQQmyhxAJ8xEPbhakhnv4PY3PcpN1UvaKp/nYhBv8DdX0vyrTqlgMILuS1vRXlNmlhn58UF3ksLB//LA1KDQRVAbfejomLGL26AEKVq+E4hN1qXFcg08Ntm/HH9G4xYrdzAolJ/zcu7III5nm0l1SEPRnCQ0TXllm/fs1nOiiO29vg8eMW89utnp9ktG8pkOYKcvcnbSW8FKlK60XvZ9O8BlP2Be9q9ka2oc4WkvYIvPuIm3PB5hus/P5Sw/RzmQBwH+io495YzkCkfRv5uSBAQBpDg8FqI8G8HfY0KVrABtATrDhT2ggFBC5IgyrujoxXkG3Pu9/KWJzRRzXG9bI5+DFrPluTgf/AKH32xlg601s/BEOKSoI7RAKo2ZxUidgkkiGhRXR1WKIHiLM7cEe3Ga7pctlxLGuVgeA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <14A498177D9406408AB7D323A41B5F7D@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S1726112AbgDYEcE (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 25 Apr 2020 00:32:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36816 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725909AbgDYEcD (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sat, 25 Apr 2020 00:32:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 51B8CAE0F;
+        Sat, 25 Apr 2020 04:31:59 +0000 (UTC)
+To:     Jason Baron <jbaron@akamai.com>, songliubraving@fb.com
+Cc:     agk@redhat.com, snitzer@redhat.com, linux-raid@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        NeilBrown <neilb@suse.de>
+References: <1585236500-12015-1-git-send-email-jbaron@akamai.com>
+From:   Coly Li <colyli@suse.de>
+Autocrypt: addr=colyli@suse.de; keydata=
+ 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
+Subject: Re: [PATCH] md/raid0: add config parameters to specify zone layout
+Message-ID: <0b7aad8b-f0b7-24c6-ad19-99c6202a3036@suse.de>
+Date:   Sat, 25 Apr 2020 12:31:55 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3aaa9740-32c6-4887-d44a-08d7e8a657f5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2020 23:22:23.2999
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HBJHwyunPyqSi1pisTsquPG2W60tl6irSVI8vlkhTQ0voA5rHwUvhsRpOTHL/sUIBu5jSzuN2fuEMV04LZk49A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2439
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-24_13:2020-04-24,2020-04-24 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0
- mlxlogscore=999 spamscore=0 priorityscore=1501 lowpriorityscore=0
- phishscore=0 suspectscore=0 impostorscore=0 adultscore=0 clxscore=1011
- malwarescore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004240177
-X-FB-Internal: deliver
+In-Reply-To: <1585236500-12015-1-git-send-email-jbaron@akamai.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-
-
-> On Mar 30, 2020, at 9:00 AM, Jason Baron <jbaron@akamai.com> wrote:
->=20
+On 2020/3/26 23:28, Jason Baron wrote:
 > Let's add some CONFIG_* options to directly configure the raid0 layout
 > if you know in advance how your raid0 array was created. This can be
 > simpler than having to manage module or kernel command-line parameters.
->=20
+> 
+
+Hi Jason,
+
+If the people who compiling the kernel is not the end users, the
+communication gap has potential risk to make users to use a different
+layout for existing raid0 array after a kernel upgrade.
+
+If this patch goes into upstream, it is very probably such risky
+situation may happen.
+
+The purpose of adding default_layout is to let *end user* to be aware of
+they layout when they use difference sizes component disks to assemble
+the raid0 array, and make decision which layout algorithm should be
+used. Such situation cannot be decided in kernel compiling time.
+
 > If the raid0 array was created by a pre-3.14 kernel, use
 > RAID0_ORIG_LAYOUT. If the raid0 array was created by a 3.14 or newer
 > kernel then select RAID0_ALT_MULTIZONE_LAYOUT. Otherwise, the default
 > setting is RAID0_LAYOUT_NONE, in which case the current behavior of
-> needing to specify a module parameter raid0.default_layout=3D1|2 is
+> needing to specify a module parameter raid0.default_layout=1|2 is
 > preserved.
->=20
+> 
+
+The difficulty is for a given md raid0 array, there is no clue whether
+it is built on pre-3.14 kernel or not. If the kernel is not configured
+and built by end user, we have risk that wrong algorithm will be applied
+to unmatched layout.
+
+Thanks.
+
+Coly Li
+
+
 > Cc: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 > Cc: NeilBrown <neilb@suse.de>
 > Cc: Song Liu <songliubraving@fb.com>
 > Signed-off-by: Jason Baron <jbaron@akamai.com>
+> ---
+>  drivers/md/Kconfig | 55 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/md/raid0.c |  7 +++++++
+>  2 files changed, 62 insertions(+)
+> 
+> diff --git a/drivers/md/Kconfig b/drivers/md/Kconfig
+> index d6d5ab2..c0c6d82 100644
+> --- a/drivers/md/Kconfig
+> +++ b/drivers/md/Kconfig
+> @@ -79,6 +79,61 @@ config MD_RAID0
+>  
+>  	  If unsure, say Y.
+>  
+> +choice
+> +	prompt "RAID0 Layout"
+> +	default RAID0_LAYOUT_NONE
+> +	depends on MD_RAID0
+> +	help
+> +	  A change was made in Linux 3.14 that unintentinally changed the
+> +	  the layout for RAID0. This can result in data corruption if a pre-3.14
+> +	  and a 3.14 or later kernel both wrote to the array. However, if the
+> +	  devices in the array are all of the same size then the layout would
+> +	  have been unaffected by this change, and there is no risk of data
+> +	  corruption from this issue.
+> +
+> +	  Unfortunately, the layout can not be determined by the kernel. If the
+> +	  array has only been written to by a 3.14 or later kernel its safe to
+> +	  set RAID0_ALT_MULTIZONE_LAYOUT. If its only been written to by a
+> +	  pre-3.14 kernel its safe to select RAID0_ORIG_LAYOUT. If its been
+> +	  written by both then select RAID0_LAYOUT_NONE, which will not
+> +	  configure the array. The array can then be examined for corruption.
+> +
+> +	  For new arrays you may choose either layout version. Neither version
+> +	  is inherently better than the other.
+> +
+> +	  Alternatively, these parameters can also be specified via the module
+> +	  parameter raid0.default_layout=<N>. N=2 selects the 'new' or multizone
+> +	  layout, while N=1 selects the 'old' layout or original layout. If
+> +	  unset the array will not be configured.
+> +
+> +	  The layout can also be written directly to the raid0 array via the
+> +	  mdadm command, which can be auto-detected by the kernel. See:
+> +	  <https://www.kernel.org/doc/html/latest/admin-guide/md.html#multi-zone-raid0-layout-migration>
+> +
+> +config RAID0_ORIG_LAYOUT
+> +	bool "raid0 layout for arrays only written to by a pre-3.14 kernel"
+> +	help
+> +	  If the raid0 array was only created and written to by a pre-3.14 kernel.
+> +
+> +config RAID0_ALT_MULTIZONE_LAYOUT
+> +	bool "raid0 layout for arrays only written to be a 3.14 or newer kernel"
+> +	help
+> +	  If the raid0 array was only created and written to by a 3.14 or later
+> +	  kernel.
+> +
+> +config RAID0_LAYOUT_NONE
+> +	bool "raid0 layout must be specified via a module parameter"
+> +	help
+> +	  If a raid0 array was written to by both a pre-3.14 and a 3.14 or
+> +	  later kernel, you may have data corruption. This option will not
+> +	  auto configure the array and thus you can examine the array offline
+> +	  to determine the best way to proceed. With RAID0_LAYOUT_NONE
+> +	  set, the choice for raid0 layout can be set via a module parameter
+> +	  raid0.default_layout=<N>. Or the layout can be written directly
+> +	  to the raid0 array via the mdadm command.
+> +
+> +endchoice
+> +
+>  config MD_RAID1
+>  	tristate "RAID-1 (mirroring) mode"
+>  	depends on BLK_DEV_MD
+> diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
+> index 322386f..576eaa6 100644
+> --- a/drivers/md/raid0.c
+> +++ b/drivers/md/raid0.c
+> @@ -19,7 +19,14 @@
+>  #include "raid0.h"
+>  #include "raid5.h"
+>  
+> +#if defined(CONFIG_RAID0_ORIG_LAYOUT)
+> +static int default_layout = RAID0_ORIG_LAYOUT;
+> +#elif defined(CONFIG_RAID0_ALT_MULTIZONE_LAYOUT)
+> +static int default_layout = RAID0_ALT_MULTIZONE_LAYOUT;
+> +#else
+>  static int default_layout = 0;
+> +#endif
+> +
+>  module_param(default_layout, int, 0644);
+>  
+>  #define UNSUPPORTED_MDDEV_FLAGS		\
+> 
 
-This patch looks good. However, I am not sure whether the user will=20
-recompile the kernel for a different default value. Do you have real
-world use case for this?
-
-Thanks,
-Song
