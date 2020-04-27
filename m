@@ -2,39 +2,40 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 614191BA69C
-	for <lists+linux-raid@lfdr.de>; Mon, 27 Apr 2020 16:39:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC5AC1BA6B5
+	for <lists+linux-raid@lfdr.de>; Mon, 27 Apr 2020 16:42:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbgD0OjC (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 27 Apr 2020 10:39:02 -0400
-Received: from sender11-op-o11.zoho.eu ([31.186.226.225]:17104 "EHLO
+        id S1727794AbgD0Om3 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 27 Apr 2020 10:42:29 -0400
+Received: from sender11-op-o11.zoho.eu ([31.186.226.225]:17111 "EHLO
         sender11-op-o11.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727824AbgD0OjB (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 27 Apr 2020 10:39:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1587997433; cv=none; 
+        with ESMTP id S1727073AbgD0Om3 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 27 Apr 2020 10:42:29 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1587997640; cv=none; 
         d=zohomail.eu; s=zohoarc; 
-        b=gvT/BQV/pgwXelfi1Y3UXzH4XGkkaj3RazUE6sZe4o8wRhtFJnKsR+4fMDMaB9PQekglm3fcvdQ2gVWpSN6jZ3H1D9mEntHbd+BmqDPl0pAfK2uL+9rjAEA7oiSi9gRsESiHsRo/tRfECTkHCHit1exPqf3tdB4NiEhrF6N86Cc=
+        b=eYO0gkjR926uHEi8uW/tDTu40M0kALY+CZyrEj4as0ZO3GtPV9EwzDVBMP5RWoX531u0Eni9U5R3j/AUqySncv/M3aFCzraIFPAqErX4+rjA5mmerSCJZg7QJy37FB4YPNyOgJJX54Z8EJ6/rEIBUuw6g7L350+ZcNNU2zogRQs=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1587997433; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=oldCmFh36fkF/tgrkUaIhxwAa5DiddLZtLibNeskKo4=; 
-        b=iD+Kut979oHf94pxAy9zUhFYZ6Hs1GOsoo2T13ODU558TFOfV/etS+DDbr63XIiLJ+2LbW4h+vMoyoTae03H2sliEsHn56b9HvU+JMhSg+n0ERl7i/VVeBo0WBUvAOp0xg2JWqaxwRUiHK0FPR6CIwEefj5mIutfNhv77eCcobw=
+        t=1587997640; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=Sr41w9Ji6EmZN1xZjYloPWOZ4ZPNUxiK84ED/kDnQfI=; 
+        b=erqmlps5UFRG45h6oaD83Ufn2AyXhJb0zEwCZ5J4nHLpd4oMCXrb8cyv99CTzpcjasJuc77gNxNQj7l4E0nZmOQGOIMFuXw64W6IaR02tVpRDihHwQT9c7e2Hry87M1xHas7p2NejhFou/5ABCWwRlLlToGtOg3ybiBAYb0GR50=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
         dkim=pass  header.i=trained-monkey.org;
         spf=pass  smtp.mailfrom=jes@trained-monkey.org;
         dmarc=pass header.from=<jes@trained-monkey.org> header.from=<jes@trained-monkey.org>
 Received: from [100.109.71.206] (163.114.130.1 [163.114.130.1]) by mx.zoho.eu
-        with SMTPS id 1587997431858298.3853893146098; Mon, 27 Apr 2020 16:23:51 +0200 (CEST)
-Subject: Re: [PATCH] udev: Ignore change event for imsm
-To:     Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
-Cc:     linux-raid@vger.kernel.org
-References: <20200408144452.19275-1-mariusz.tkaczyk@intel.com>
+        with SMTPS id 15879976388820.3458775039784996; Mon, 27 Apr 2020 16:27:18 +0200 (CEST)
+Subject: Re: [PATCH] Monitor: improve check_one_sharer() for checking
+ duplicated process
+To:     Coly Li <colyli@suse.de>, linux-raid@vger.kernel.org
+Cc:     Shinkichi Yamazaki <shinkichi.yamazaki@suse.com>
+References: <20200410162446.6292-1-colyli@suse.de>
 From:   Jes Sorensen <jes@trained-monkey.org>
-Message-ID: <4d9e6fc9-2099-edf7-8982-f4cc4a1068a1@trained-monkey.org>
-Date:   Mon, 27 Apr 2020 10:23:50 -0400
+Message-ID: <4a177b2d-f054-cffc-f970-1ec63e74701a@trained-monkey.org>
+Date:   Mon, 27 Apr 2020 10:27:17 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200408144452.19275-1-mariusz.tkaczyk@intel.com>
+In-Reply-To: <20200410162446.6292-1-colyli@suse.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -44,19 +45,54 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 4/8/20 10:44 AM, Mariusz Tkaczyk wrote:
-> When adding a device to a container mdadm has to close its file
-> descriptor before sysfs_add_disk(). This generates change event.
-> There is race possibility because metadata is already written and other
-> -I process can place drive differently. As a result device can be added
-> to two containers simultaneously.
-> From IMSM perspective there is no need to react for change event. IMSM
-> doesn't support stacked devices.
+On 4/10/20 12:24 PM, Coly Li wrote:
+> When running mdadm monitor with scan mode, only one autorebuild process
+> is allowed. check_one_sharer() checks duplicated process by following
+> steps,
+> 1) Read autorebuild.pid file,
+>    - if file does not exist, no duplicated process, go to 3).
+>    - if file exists, continue to next step.
+> 2) Read pid number from autorebuild.pid file, then check procfs pid
+>    directory /proc/<PID>,
+>    - if the directory does not exist, no duplicated process, go to 3)
+>    - if the directory exists, print error message for duplicated process
+>      and exit this mdadm.
+> 3) Write current pid into autorebuild.pid file, continue to monitor in
+>    scan mode.
 > 
-> Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
+> The problem for the above step 2) is, if after system reboots and
+> another different process happens to have exact same pid number which
+> autorebuild.pid file records, check_one_sharer() will treat it as a
+> duplicated mdadm process and returns error with message "Only one
+> autorebuild process allowed in scan mode, aborting".
+> 
+> This patch tries to fix the above same-pid-but-different-process issue
+> by one more step to check the process command name,
+> 1) Read autorebuild.pid file
+>    - if file does not exist, no duplicated process, go to 4).
+>    - if file exists, continue to next step.
+> 2) Read pid number from autorebuild.pid file, then check procfs file
+>    comm with the specific pid directory /proc/<PID>/comm
+>    - if the file does not exit, it means the directory /proc/<PID> does
+>      not exist, go to 4)
+>    - if the file exits, continue next step
+> 3) Read process command name from /proc/<PIC>/comm, compare the command
+>    name with "mdadm" process name,
+>    - if not equal, no duplicated process, goto 4)
+>    - if strings are equal, print error message for duplicated process
+>      and exit this mdadm.
+> 4) Write current pid into autorebuild.pid file, continue to monitor in
+>    scan mode.
+> 
+> Now check_one_sharer() returns error for duplicated process only when
+> the recorded pid from autorebuild.pid exists, and the process has exact
+> same command name as "mdadm".
+> 
+> Reported-by: Shinkichi Yamazaki <shinkichi.yamazaki@suse.com>
+> Signed-off-by: Coly Li <colyli@suse.de>
 > ---
->  udev-md-raid-assembly.rules | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Monitor.c | 32 ++++++++++++++++++++------------
+>  1 file changed, 20 insertions(+), 12 deletions(-)
 
 Applied!
 
