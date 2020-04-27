@@ -2,68 +2,118 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 43B461BABB9
-	for <lists+linux-raid@lfdr.de>; Mon, 27 Apr 2020 19:54:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 126791BB0AC
+	for <lists+linux-raid@lfdr.de>; Mon, 27 Apr 2020 23:38:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726223AbgD0Rya (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 27 Apr 2020 13:54:30 -0400
-Received: from atl.turmel.org ([74.117.157.138]:54594 "EHLO atl.turmel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725963AbgD0Ry3 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 27 Apr 2020 13:54:29 -0400
-Received: from [98.192.104.236] (helo=[192.168.19.61])
-        by atl.turmel.org with esmtpsa (TLS1.2:DHE_RSA_AES_128_CBC_SHA1:128)
-        (Exim 4.82)
-        (envelope-from <philip@turmel.org>)
-        id 1jT7xc-0007Bs-Du; Mon, 27 Apr 2020 13:54:28 -0400
-Subject: Re: Hard Drive Partition Table shows partition larger than drive
-To:     Robert Steinmetz <rob@steinmetznet.com>,
-        Wols Lists <antlists@youngman.org.uk>,
-        linux-raid@vger.kernel.org
-References: <6ee9392d-8867-f0b5-193e-17a516bb7e0e@steinmetznet.com>
- <5EA5ED5D.8060006@youngman.org.uk>
- <c3b5d1be-3ee6-303e-63f5-51faf2053f63@steinmetznet.com>
-From:   Phil Turmel <philip@turmel.org>
-Message-ID: <991449ea-82e8-8f80-d73c-ad9701cf2d88@turmel.org>
-Date:   Mon, 27 Apr 2020 13:54:27 -0400
+        id S1726257AbgD0Vit (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 27 Apr 2020 17:38:49 -0400
+Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:17764 "EHLO
+        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726194AbgD0Vis (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 27 Apr 2020 17:38:48 -0400
+Received: from pps.filterd (m0050093.ppops.net [127.0.0.1])
+        by m0050093.ppops.net-00190b01. (8.16.0.42/8.16.0.42) with SMTP id 03RKsYBM032383;
+        Mon, 27 Apr 2020 21:59:56 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=jan2016.eng;
+ bh=JhwQodLSD1Ep96VSsaFbBF1OgGARmW6/UR9tHM8q1z4=;
+ b=W5VNkyBeFboJKQDkiCfZRSydf1+WxqhgeJpserbJU9MmoItnp6IzOBVKNea18+eFCGpu
+ Pntuh32+jAJUVCZm5wBuG1NsMpTYXpiwerglBD9MJNNLIK8+/nI/wTV4wop3zfeeq4Zf
+ CL8QA3ZYELQxSnRcENc5bVpG+Vjt80jUMDyPGR+87aGUvUN0aEZer1vhOUxQYtowqubV
+ b14LupCrQylzC/rW6HixZjdAf1zWKuYj00i2TzC264zruBjjtNhxShK1HDxOOYcsFzgO
+ X26qeusBRWuA8NGECvi7yYMHky6e1iFvNxIVFn/yEHBp2+Cxv6BojbiFkX9bhX+bP7DR FQ== 
+Received: from prod-mail-ppoint2 (prod-mail-ppoint2.akamai.com [184.51.33.19] (may be forged))
+        by m0050093.ppops.net-00190b01. with ESMTP id 30mcfqjkhj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Apr 2020 21:59:56 +0100
+Received: from pps.filterd (prod-mail-ppoint2.akamai.com [127.0.0.1])
+        by prod-mail-ppoint2.akamai.com (8.16.0.27/8.16.0.27) with SMTP id 03RKlX9k024953;
+        Mon, 27 Apr 2020 16:59:55 -0400
+Received: from prod-mail-relay10.akamai.com ([172.27.118.251])
+        by prod-mail-ppoint2.akamai.com with ESMTP id 30mghw3v52-1;
+        Mon, 27 Apr 2020 16:59:55 -0400
+Received: from [0.0.0.0] (prod-ssh-gw01.bos01.corp.akamai.com [172.27.119.138])
+        by prod-mail-relay10.akamai.com (Postfix) with ESMTP id 0BAE334728;
+        Mon, 27 Apr 2020 20:59:55 +0000 (GMT)
+Subject: Re: [PATCH v2] md/raid0: add config parameters to specify zone layout
+To:     Song Liu <songliubraving@fb.com>
+Cc:     "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "neilb@suse.de" <neilb@suse.de>,
+        "guoqing.jiang@cloud.ionos.com" <guoqing.jiang@cloud.ionos.com>,
+        "agk@redhat.com" <agk@redhat.com>,
+        "snitzer@redhat.com" <snitzer@redhat.com>,
+        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1585584045-11263-1-git-send-email-jbaron@akamai.com>
+ <81A991E8-B87E-4518-9643-45037A104981@fb.com>
+From:   Jason Baron <jbaron@akamai.com>
+Message-ID: <694314ee-bd47-94a4-4c39-038a792a56fe@akamai.com>
+Date:   Mon, 27 Apr 2020 16:59:54 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <c3b5d1be-3ee6-303e-63f5-51faf2053f63@steinmetznet.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <81A991E8-B87E-4518-9643-45037A104981@fb.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-27_16:2020-04-27,2020-04-27 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-2002250000 definitions=main-2004270170
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-27_16:2020-04-27,2020-04-27 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 clxscore=1011
+ spamscore=0 priorityscore=1501 bulkscore=0 impostorscore=0 phishscore=0
+ mlxscore=0 malwarescore=0 adultscore=0 suspectscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004270171
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 4/27/20 10:40 AM, Robert Steinmetz wrote:
-> On 4/26/20 4:21 PM, Wols Lists wrote:
->> Run lsdrv over the drive and see what that reports.
->> https://raid.wiki.kernel.org/index.php/Asking_for_help
->>
->> If you post that here, hopefully somebody can help you reconstruct
->> whatever was there.
->>
->> Cheers,
->> Wol
+
+
+On 4/24/20 7:22 PM, Song Liu wrote:
 > 
-> here is the output of lsdrv for the drive.
 > 
-> USB [usb-storage] Bus 001 Device 002: ID 152d:2338 JMicron Technology 
-> Corp. / JMicron USA Technology Corp. JM20337 Hi-Speed USB to SATA & PATA 
-> Combo Bridge {000000000005}
-> └scsi 4:0:0:0 TOSHIBA  HDWD110          {585T7P6NS}
->   └sdb 931.51g [8:16] Partitioned (dos)
-                                     ^^^^^
-There's your answer.  This drive is using a dos partition table, not 
-GPT.  But there's some info where the GPT would be that is confusing parted.
+>> On Mar 30, 2020, at 9:00 AM, Jason Baron <jbaron@akamai.com> wrote:
+>>
+>> Let's add some CONFIG_* options to directly configure the raid0 layout
+>> if you know in advance how your raid0 array was created. This can be
+>> simpler than having to manage module or kernel command-line parameters.
+>>
+>> If the raid0 array was created by a pre-3.14 kernel, use
+>> RAID0_ORIG_LAYOUT. If the raid0 array was created by a 3.14 or newer
+>> kernel then select RAID0_ALT_MULTIZONE_LAYOUT. Otherwise, the default
+>> setting is RAID0_LAYOUT_NONE, in which case the current behavior of
+>> needing to specify a module parameter raid0.default_layout=1|2 is
+>> preserved.
+>>
+>> Cc: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+>> Cc: NeilBrown <neilb@suse.de>
+>> Cc: Song Liu <songliubraving@fb.com>
+>> Signed-off-by: Jason Baron <jbaron@akamai.com>
+> 
+> This patch looks good. However, I am not sure whether the user will 
+> recompile the kernel for a different default value. Do you have real
+> world use case for this?
+> 
+> Thanks,
+> Song
+> 
 
->    └sdb1 931.51g [8:17] Empty/Unknown
+Hi Song,
 
-As you can see, this partition entry is rational.
+Yes, we knew that all our raid0 arrays were created with >=3.14
+kernels, and thus we wanted a way to specify the new layout without
+needing to add to the command line or a module parameter. For us,
+maintaining a CONFIG_* option is just simpler.
 
-Try displaying the partition table with fdisk instead of parted.
+Thanks,
 
-Phil
+-Jason
