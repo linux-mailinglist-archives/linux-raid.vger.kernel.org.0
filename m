@@ -2,83 +2,91 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B185F1BF0DB
-	for <lists+linux-raid@lfdr.de>; Thu, 30 Apr 2020 09:10:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9955F1C01C5
+	for <lists+linux-raid@lfdr.de>; Thu, 30 Apr 2020 18:10:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbgD3HKm (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 30 Apr 2020 03:10:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34158 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726412AbgD3HKm (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 30 Apr 2020 03:10:42 -0400
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726576AbgD3QJv (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 30 Apr 2020 12:09:51 -0400
+Received: from li1843-175.members.linode.com ([172.104.24.175]:34512 "EHLO
+        mail.stoffel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726473AbgD3QJv (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 30 Apr 2020 12:09:51 -0400
+Received: from quad.stoffel.org (066-189-075-104.res.spectrum.com [66.189.75.104])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C4D32186A
-        for <linux-raid@vger.kernel.org>; Thu, 30 Apr 2020 07:10:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588230641;
-        bh=WFvfXW6GdSUi1su6OZwdmWtQAhm+wfVf7mw6HPZCZ1M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ShhL16rpFGjRLjCb0y+MVzXrkzn5G7GgKZ9/2+iBERCp0Duol01XifVOsBbEnXq5T
-         ql6g0KyTbBKDEOeDuX9dc4N7AjQFx+QhGfpqnUEBqjD6SptYxTB3JGBFgvwzmm5XjM
-         153jh4X9dzElTgDmV4JCTeinlFeYrmXULp36/oiA=
-Received: by mail-lf1-f41.google.com with SMTP id 188so311569lfa.10
-        for <linux-raid@vger.kernel.org>; Thu, 30 Apr 2020 00:10:41 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZH74QIonIFslOR3kQ6+whNckcZLPJ8kMvgiM1lLzablgjLJwXk
-        sQXEK52k20vWvS4+2+anhKUOPjYaKGy5/ewqwB8=
-X-Google-Smtp-Source: APiQypJ19P0cHmC3AfWbYYEiJd3Ti22aioKB20z3YFRD3Z4jdDUZQ5HKJs7FsS+1J4HdLBGYSjdG9+kK/bW9hXrLp18=
-X-Received: by 2002:ac2:4836:: with SMTP id 22mr1157699lft.52.1588230639308;
- Thu, 30 Apr 2020 00:10:39 -0700 (PDT)
+        by mail.stoffel.org (Postfix) with ESMTPSA id 560F21F03E;
+        Thu, 30 Apr 2020 12:09:50 -0400 (EDT)
+Received: by quad.stoffel.org (Postfix, from userid 1000)
+        id 99CE8A6257; Thu, 30 Apr 2020 12:09:49 -0400 (EDT)
 MIME-Version: 1.0
-References: <6a7c0aba219642de8b3f1cc680d53d85@AM0P193MB0754.EURP193.PROD.OUTLOOK.COM>
- <CAKm37QWKVcPkF0fXKk2499CsYXfU3aMuMWgwa8Nk9HFzVxG7CA@mail.gmail.com>
-In-Reply-To: <CAKm37QWKVcPkF0fXKk2499CsYXfU3aMuMWgwa8Nk9HFzVxG7CA@mail.gmail.com>
-From:   Song Liu <song@kernel.org>
-Date:   Thu, 30 Apr 2020 00:10:27 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW7e-xMNbk5ZJw2XQ3KSnnPiN5gwwR4hdMMhyjjVNRnfkQ@mail.gmail.com>
-Message-ID: <CAPhsuW7e-xMNbk5ZJw2XQ3KSnnPiN5gwwR4hdMMhyjjVNRnfkQ@mail.gmail.com>
-Subject: Re: Fw: some questions about uploading a Linux kernel driver
-To:     Xiaosong Ma <xma@qf.org.qa>
-Cc:     linux-raid <linux-raid@vger.kernel.org>,
-        =?UTF-8?B?5aec5aSp5rSL?= <ty-jiang18@mails.tsinghua.edu.cn>,
-        Guangyan Zhang <gyzh@tsinghua.edu.cn>,
-        wei-jy19@mails.tsinghua.edu.cn
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Message-ID: <24234.63565.561786.818825@quad.stoffel.home>
+Date:   Thu, 30 Apr 2020 12:09:49 -0400
+From:   "John Stoffel" <john@stoffel.org>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Jason Baron <jbaron@akamai.com>, Coly Li <colyli@suse.de>,
+        "agk\@redhat.com" <agk@redhat.com>,
+        "snitzer\@redhat.com" <snitzer@redhat.com>,
+        "linux-raid\@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        NeilBrown <neilb@suse.de>
+Subject: Re: [PATCH] md/raid0: add config parameters to specify zone layout
+In-Reply-To: <E3616A45-C6D0-4B3B-8112-688B03126F00@fb.com>
+References: <1585236500-12015-1-git-send-email-jbaron@akamai.com>
+        <0b7aad8b-f0b7-24c6-ad19-99c6202a3036@suse.de>
+        <8feb2018-7f99-6e02-c704-9d7fed40bba2@akamai.com>
+        <E3616A45-C6D0-4B3B-8112-688B03126F00@fb.com>
+X-Mailer: VM 8.2.0b under 25.1.1 (x86_64-pc-linux-gnu)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi Xiaosong,
+>>>>> "Song" == Song Liu <songliubraving@fb.com> writes:
 
-On Wed, Apr 22, 2020 at 5:26 AM Xiaosong Ma <xma@qf.org.qa> wrote:
->
-> Dear Song,
->
-> This is Xiaosong Ma from Qatar Computing Research Institute. I am
-> writing to follow up with the questions posed by a co-author from
-> Tsinghua U, regarding upstreaming our alternative md implementation
-> that is designed to significantly reduce SSD RAID latency (both median
-> and tail) for large SSD pools (such as 20-disk or more).
->
-> We read the Linux kernel upstreaming instructions, and believe that
-> our implementation has excellent separability from the current code
-> base (as a plug-and-play module with identical interfaces as md).
+Song> Hi Jason,
+>> On Apr 27, 2020, at 2:10 PM, Jason Baron <jbaron@akamai.com> wrote:
+>> 
+>> 
+>> 
+>> On 4/25/20 12:31 AM, Coly Li wrote:
+>>> On 2020/3/26 23:28, Jason Baron wrote:
+>>>> Let's add some CONFIG_* options to directly configure the raid0 layout
+>>>> if you know in advance how your raid0 array was created. This can be
+>>>> simpler than having to manage module or kernel command-line parameters.
+>>>> 
+>>> 
+>>> Hi Jason,
+>>> 
+>>> If the people who compiling the kernel is not the end users, the
+>>> communication gap has potential risk to make users to use a different
+>>> layout for existing raid0 array after a kernel upgrade.
+>>> 
+>>> If this patch goes into upstream, it is very probably such risky
+>>> situation may happen.
+>>> 
+>>> The purpose of adding default_layout is to let *end user* to be aware of
+>>> they layout when they use difference sizes component disks to assemble
+>>> the raid0 array, and make decision which layout algorithm should be
+>>> used. Such situation cannot be decided in kernel compiling time.
+>> 
+>> I agree that in general it may not be known at compile time. Thus,
+>> I've left the default as RAID0_LAYOUT_NONE. However, there are
+>> use-cases where it is known at compile-time which layout is needed.
+>> In our use-case, we knew that we didn't have any pre-3.14 raid0
+>> arrays. Thus, we can safely set RAID0_ALT_MULTIZONE_LAYOUT. So
+>> this is a simpler configuration for us than setting module or command
+>> line parameters.
 
-Plug-and-play is not the key for upstream new code/module. There are
-some other keys to consider:
+Song> I would echo Coly's concern that CONFIG_ option could make it risky. 
+Song> If the overhead of maintaining extra command line parameter, I would
+Song> recommend you carry a private patch for this change. For upstream, it
+Song> is better NOT to carry the default in CONFIG_.
 
-1. Why do we need it? (better performance is a good reason here).
-2. What's the impact on existing users?
-3. Can we improve existing code to achieve the same benefit?
+I agree as well.  Just because you have a known base, doesn't mean
+that others wouldn't be hit with this problem.
 
-> Meanwhile, we wonder whether there are standard test cases or
-> preferred applications that we should test our system with, before
-> doing code cleaning up. Your guidance is much appreciated.
+John
 
-For testing, "mdadm test" is a good starting point (if it works here).
-We also need data integrity tests and stress tests.
-
-Thanks,
-Song
