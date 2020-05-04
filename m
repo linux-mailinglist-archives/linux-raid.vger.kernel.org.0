@@ -2,81 +2,53 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 634C11C38E0
-	for <lists+linux-raid@lfdr.de>; Mon,  4 May 2020 14:07:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF16D1C3E42
+	for <lists+linux-raid@lfdr.de>; Mon,  4 May 2020 17:15:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728636AbgEDMHS (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 4 May 2020 08:07:18 -0400
-Received: from smtp.hosts.co.uk ([85.233.160.19]:58947 "EHLO smtp.hosts.co.uk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726797AbgEDMHS (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 4 May 2020 08:07:18 -0400
-Received: from [81.153.126.158] (helo=[192.168.1.118])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1jVZsS-0003ch-6u; Mon, 04 May 2020 13:07:16 +0100
+        id S1729446AbgEDPPy (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 4 May 2020 11:15:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59352 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728684AbgEDPPy (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 4 May 2020 11:15:54 -0400
+Received: from wp558.webpack.hosteurope.de (wp558.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8250::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA46AC061A0E
+        for <linux-raid@vger.kernel.org>; Mon,  4 May 2020 08:15:53 -0700 (PDT)
+Received: from mail1.i-concept.de ([130.180.70.237] helo=[192.168.122.235]); authenticated
+        by wp558.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1jVcox-0003aT-RD; Mon, 04 May 2020 17:15:51 +0200
 Subject: Re: RAID 1 | Restore based on Image of /dev/sda
-To:     Stefanie Leisestreichler 
-        <stefanie.leisestreichler@peter-speer.de>,
-        linux-raid@vger.kernel.org
+From:   Stefanie Leisestreichler <stefanie.leisestreichler@peter-speer.de>
+To:     Reindl Harald <h.reindl@thelounge.net>, linux-raid@vger.kernel.org
 References: <5e29b897-b2df-c6b9-019a-e037101bfeec@peter-speer.de>
- <5EAFF763.2000906@youngman.org.uk>
- <58659d1e-bcce-553c-fe68-52d075422252@peter-speer.de>
-From:   Wols Lists <antlists@youngman.org.uk>
-X-Enigmail-Draft-Status: N1110
-Message-ID: <5EB00573.9040503@youngman.org.uk>
-Date:   Mon, 4 May 2020 13:07:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.7.0
+ <838c9c29-4256-40e1-8c49-12eba590b749@thelounge.net>
+ <506dd960-0e90-d146-1598-6d3ee8bd5798@peter-speer.de>
+Message-ID: <5e5f75fa-2ace-51e4-21c8-1f0860fc30df@peter-speer.de>
+Date:   Mon, 4 May 2020 17:15:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <58659d1e-bcce-553c-fe68-52d075422252@peter-speer.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <506dd960-0e90-d146-1598-6d3ee8bd5798@peter-speer.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;stefanie.leisestreichler@peter-speer.de;1588605354;e70d136f;
+X-HE-SMSGID: 1jVcox-0003aT-RD
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 04/05/20 12:26, Stefanie Leisestreichler wrote:
+
+
+On 04.05.20 13:13, Stefanie Leisestreichler wrote:
 > 
-
 > 
-> Thanks, Wol, especially for the hint with the GUIDs, will keep this in
-> mind. If ever using it again - maybe in case of a quick temporary
-> replacement in the original computer - I will wipe it with zeros before.
-
-And what Johannes said ... oh and I believe gdisk has an option that
-will change guids for you without affecting anything else.
-
-Wiping it with zeroes will take a long time - it might well be mdadm I
-think it has an option to wipe the raid superblock.
-
-Note that both the partitions and the raid will have guids, so moving
-drives around can be fraught ...
+> On 04.05.20 12:59, Reindl Harald wrote:
+>> mdadm /dev/mdX --add /dev/sdx{1,2}
 > 
-> The partition layout will be cloned using sfdisk.
-> 
-> Thanks for the wiki links. I read the wiki before asking but it was not
-> clear to me how to do it...
-> 
-> Btw, I will stay with mdadm/lvm/ext4 and not switch to btrfs.
-> 
-That's good - my feelings entirely as btrfs may be a decent file system,
-but I gather parity raid is experimental as in it will probably eat your
-data at some point and may be unfixable. I gather it also does NOT
-mirror your data by default (typical computer scientists - they consider
-the filesystem structure valuable and assume the user can retrieve the
-data from backup ... :-(
+> Thanks, Harald.
+> Will do it like you suggested.
 
-lvm gives you snapshotting and stuff ...
-
-And my current (and planned new) systems both have the root filesystem
-on a separate partition from /home, so if I wanted I could have root on
-a 1.0 mirror - not especially recommended but there are good reasons for
-it ...
-
-> Thanks again,
-> Steffi
-
-Cheers,
-Wol
+Array is recoverd and [UU] again.
+Thanks again.
