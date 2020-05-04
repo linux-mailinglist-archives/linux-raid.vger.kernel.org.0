@@ -2,46 +2,40 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AA7D1C3769
-	for <lists+linux-raid@lfdr.de>; Mon,  4 May 2020 12:59:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B29231C37FE
+	for <lists+linux-raid@lfdr.de>; Mon,  4 May 2020 13:23:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgEDK7u (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 4 May 2020 06:59:50 -0400
-Received: from mail.thelounge.net ([91.118.73.15]:59947 "EHLO
-        mail.thelounge.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727786AbgEDK7u (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 4 May 2020 06:59:50 -0400
-Received: from srv-rhsoft.rhsoft.net (rh.vpn.thelounge.net [10.10.10.2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature ECDSA (P-256))
-        (No client certificate requested)
-        (Authenticated sender: h.reindl@thelounge.net)
-        by mail.thelounge.net (THELOUNGE MTA) with ESMTPSA id 49G0HR5NzBzXQ5;
-        Mon,  4 May 2020 12:59:47 +0200 (CEST)
+        id S1728385AbgEDLXz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 4 May 2020 07:23:55 -0400
+Received: from smtp.hosts.co.uk ([85.233.160.19]:27663 "EHLO smtp.hosts.co.uk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726445AbgEDLXz (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 4 May 2020 07:23:55 -0400
+Received: from [81.153.126.158] (helo=[192.168.1.118])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1jVYwO-000BKv-9o; Mon, 04 May 2020 12:07:16 +0100
 Subject: Re: RAID 1 | Restore based on Image of /dev/sda
 To:     Stefanie Leisestreichler 
         <stefanie.leisestreichler@peter-speer.de>,
         linux-raid@vger.kernel.org
 References: <5e29b897-b2df-c6b9-019a-e037101bfeec@peter-speer.de>
-From:   Reindl Harald <h.reindl@thelounge.net>
-Organization: the lounge interactive design
-Message-ID: <838c9c29-4256-40e1-8c49-12eba590b749@thelounge.net>
-Date:   Mon, 4 May 2020 12:59:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+From:   Wols Lists <antlists@youngman.org.uk>
+X-Enigmail-Draft-Status: N1110
+Message-ID: <5EAFF763.2000906@youngman.org.uk>
+Date:   Mon, 4 May 2020 12:07:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.7.0
 MIME-Version: 1.0
 In-Reply-To: <5e29b897-b2df-c6b9-019a-e037101bfeec@peter-speer.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-
-
-Am 04.05.20 um 12:48 schrieb Stefanie Leisestreichler:
+On 04/05/20 11:48, Stefanie Leisestreichler wrote:
 > Hi.
 > I have a running RAID 1 based on /dev/sda1 and /dev/sda2 with
 > metadata=1.2 with mdadm version 3.2.5.
@@ -57,5 +51,19 @@ Am 04.05.20 um 12:48 schrieb Stefanie Leisestreichler:
 > how to add the new disk to the raid array.
 > 
 > Could you please guide me?
+> 
+https://raid.wiki.kernel.org/index.php/Linux_Raid
 
-mdadm /dev/mdX --add /dev/sdx{1,2}
+Is the drive formatted with one big partition? I guess it is. What it
+really cares about is that the new partition you are adding is identical
+in size to the partition the raid is on.
+
+There are tools that will copy a partition table for you - BEWARE - a
+lot of things rely on GUIDs and at least the tools I know of don't reset
+them by default - duplicate unique ids are not a good idea :-) So as you
+copied this drive using dd DO NOT put it back in the original computer ...
+
+https://raid.wiki.kernel.org/index.php/A_guide_to_mdadm#Adding_a_drive_to_a_mirror
+
+Cheers,
+Wol
