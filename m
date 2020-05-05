@@ -2,130 +2,78 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96A7D1C52E3
-	for <lists+linux-raid@lfdr.de>; Tue,  5 May 2020 12:17:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F206A1C54D6
+	for <lists+linux-raid@lfdr.de>; Tue,  5 May 2020 13:56:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728497AbgEEKR3 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 5 May 2020 06:17:29 -0400
-Received: from mga17.intel.com ([192.55.52.151]:55397 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728180AbgEEKR3 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 5 May 2020 06:17:29 -0400
-IronPort-SDR: thcmRBEcwjsoXcV8tBOvjLP0/IS90Fp6WgXO8oVwTiQjiukpummhRQy8W8B6Ar9sB/4AQPhy3h
- ONmM9/sBw9XQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 03:17:26 -0700
-IronPort-SDR: a/69aQ63xJLQMuy2jxQGIg4zE6caXrXC/x8RyYdK5S3oSo3cjYDlMjq9GT5fWLauN48BiPs5LJ
- lQvmeE1fG/cw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,354,1583222400"; 
-   d="scan'208";a="406778121"
-Received: from mtkaczyk-devel.igk.intel.com ([10.102.102.23])
-  by orsmga004.jf.intel.com with ESMTP; 05 May 2020 03:17:27 -0700
-From:   Tkaczyk Mariusz <mariusz.tkaczyk@intel.com>
-To:     jes@trained-monkey.org
-Cc:     linux-raid@vger.kernel.org
-Subject: [PATCH] Assemble.c: respect force flag.
-Date:   Tue,  5 May 2020 12:17:17 +0200
-Message-Id: <20200505101717.29553-1-mariusz.tkaczyk@intel.com>
-X-Mailer: git-send-email 2.25.0
+        id S1728853AbgEEL4J (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 5 May 2020 07:56:09 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3803 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728804AbgEEL4I (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 5 May 2020 07:56:08 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D52B2ECE72F96FF1ABBA;
+        Tue,  5 May 2020 19:56:03 +0800 (CST)
+Received: from DESKTOP-C3MD9UG.china.huawei.com (10.166.215.55) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 5 May 2020 19:55:54 +0800
+From:   Zhen Lei <thunder.leizhen@huawei.com>
+To:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
+        "Sergey Senozhatsky" <sergey.senozhatsky.work@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>, Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        dm-devel <dm-devel@redhat.com>, Song Liu <song@kernel.org>,
+        linux-raid <linux-raid@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH 0/4] eliminate SECTOR related magic numbers and duplicated conversions
+Date:   Tue, 5 May 2020 19:55:39 +0800
+Message-ID: <20200505115543.1660-1-thunder.leizhen@huawei.com>
+X-Mailer: git-send-email 2.26.0.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.166.215.55]
+X-CFilter-Loop: Reflected
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
+When I studied the code of mm/swap, I found "1 << (PAGE_SHIFT - 9)" appears
+many times. So I try to clean up it.
 
-If the array is dirty handler will set resync_start to 0 to inform kernel
-that resync is needed. RWH affects only raid456 module, for other
-levels array will be started even array is degraded and resync cannot be
-performed.
+1. Replace "1 << (PAGE_SHIFT - 9)" or similar with SECTORS_PER_PAGE
+2. Replace "PAGE_SHIFT - 9" with SECTORS_PER_PAGE_SHIFT
+3. Replace "9" with SECTOR_SHIFT
+4. Replace "512" with SECTOR_SIZE
 
-Force is really meaningful for raid456. If array is degraded and resync
-is requested, kernel will reject an attempt to start the array. To
-respect force, it has to be marked as clean (this will be done for each
-array without PPL) and remove the resync request (only for raid 456).
-Data corruption may occur so proper warning is added.
+No functional change.
 
-Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
----
- Assemble.c | 51 ++++++++++++++++++++++++++++++++++++++-------------
- 1 file changed, 38 insertions(+), 13 deletions(-)
+Zhen Lei (4):
+  block: Move SECTORS_PER_PAGE and SECTORS_PER_PAGE_SHIFT definitions
+    into <linux/blkdev.h>
+  mm/swap: use SECTORS_PER_PAGE_SHIFT to clean up code
+  block: use SECTORS_PER_PAGE_SHIFT and SECTORS_PER_PAGE to clean up
+    code
+  mtd: eliminate SECTOR related magic numbers
 
-diff --git a/Assemble.c b/Assemble.c
-index 6b5a7c8e..1206fb06 100644
---- a/Assemble.c
-+++ b/Assemble.c
-@@ -2030,6 +2030,15 @@ int assemble_container_content(struct supertype *st, int mdfd,
- 			free(avail);
- 			return err;
- 		}
-+	} else if (c->force) {
-+		/* Set the array as 'clean' so that we can proceed with starting
-+		 * it even if we don't have all devices. Mdmon doesn't care
-+		 * if the dirty flag is set in metadata, it will start managing
-+		 * it anyway.
-+		 * This is really important for raid456 (RWH case), other levels
-+		 * are started anyway.
-+		 */
-+		content->array.state |= 1;
- 	}
- 
- 	if (enough(content->array.level, content->array.raid_disks,
-@@ -2049,20 +2058,36 @@ int assemble_container_content(struct supertype *st, int mdfd,
- 	}
- 	free(avail);
- 
--	if (c->runstop <= 0 &&
--	    (working + preexist + expansion) <
--	    content->array.working_disks) {
--		if (c->export && result)
--			*result |= INCR_UNSAFE;
--		else if (c->verbose >= 0) {
--			pr_err("%s assembled with %d device%s",
--			       chosen_name, preexist + working,
--			       preexist + working == 1 ? "":"s");
--			if (preexist)
--				fprintf(stderr, " (%d new)", working);
--			fprintf(stderr, " but not safe to start\n");
-+	if ((working + preexist + expansion) < content->array.working_disks) {
-+		if (c->runstop <= 0) {
-+			if (c->export && result)
-+				*result |= INCR_UNSAFE;
-+			else if (c->verbose >= 0) {
-+				pr_err("%s assembled with %d device%s",
-+					chosen_name, preexist + working,
-+					preexist + working == 1 ? "":"s");
-+				if (preexist)
-+					fprintf(stderr, " (%d new)", working);
-+				fprintf(stderr, " but not safe to start\n");
-+				if (c->force)
-+					pr_err("Consider --run to start array as degraded.\n");
-+			}
-+			return 1;
-+		} else if (content->array.level >= 4 &&
-+			   content->array.level <= 6 &&
-+			   content->resync_start != MaxSector &&
-+			   c->force) {
-+			/* Don't inform the kernel that the array is not
-+			 * clean and requires resync.
-+			 */
-+			content->resync_start = MaxSector;
-+			err = sysfs_set_num(content, NULL, "resync_start",
-+					    MaxSector);
-+			if (err)
-+				return 1;
-+			pr_err("%s array state forced to clean. It may cause data corruption.\n",
-+				chosen_name);
- 		}
--		return 1;
- 	}
- 
- 
+ block/blk-settings.c          |  8 ++++----
+ block/partitions/core.c       |  4 ++--
+ drivers/block/zram/zram_drv.h |  2 --
+ drivers/md/dm-table.c         |  2 +-
+ drivers/md/raid1.c            |  4 ++--
+ drivers/md/raid10.c           | 10 +++++-----
+ drivers/md/raid5-cache.c      | 10 +++++-----
+ include/linux/blkdev.h        | 10 ++++++++--
+ mm/page_io.c                  |  4 ++--
+ mm/swapfile.c                 | 12 ++++++------
+ 10 files changed, 35 insertions(+), 31 deletions(-)
+
 -- 
-2.25.0
+2.26.0.106.g9fadedd
+
 
