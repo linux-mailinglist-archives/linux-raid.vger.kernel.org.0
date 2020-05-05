@@ -2,115 +2,74 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7033E1C5F75
-	for <lists+linux-raid@lfdr.de>; Tue,  5 May 2020 19:59:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 433171C5F83
+	for <lists+linux-raid@lfdr.de>; Tue,  5 May 2020 20:01:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730563AbgEER7l (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 5 May 2020 13:59:41 -0400
-Received: from sender11-op-o11.zoho.eu ([31.186.226.225]:17062 "EHLO
-        sender11-op-o11.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729315AbgEER7l (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 5 May 2020 13:59:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1588701575; cv=none; 
-        d=zohomail.eu; s=zohoarc; 
-        b=eqTQ56XXmBVDJiZW29krs7r5LUlR3joWRRNFjudX4UsRGeqvGpOL7Nws7aJSShNKAG9a7OuM0p5f9dF1996pwI6K2eRiGZ5FrouPhsqzroegoRSx+tK5CnOsQIwNNn6CBf4PTBtfu9Im985mRAv7N5o/S1sb3HNO1Ik05QrMhAk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1588701575; h=Content-Type:Content-Transfer-Encoding:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=1UN9RfUstO7/Hf2icNZFZSVdOSHU3q/JMltXuD6iXWE=; 
-        b=aoc0822dJbtrGIcikOvOF+2X6T0bDy6FQMw69obGofOmp6HFRcy+FXkLchHMJm//CdSEEv/j2ChbmB5BVeYzDqVBkxAEXSjT3F0IUkQnqeuGr1nJlIwsH12Cp2SZW3Uo33rZgum5Pma+75AGyNem2iZ0MvHv0vFBQwAxnO+4Qbk=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
-        dmarc=pass header.from=<jes@trained-monkey.org> header.from=<jes@trained-monkey.org>
-Received: from [100.109.124.22] (163.114.130.1 [163.114.130.1]) by mx.zoho.eu
-        with SMTPS id 1588701573224704.3077802555482; Tue, 5 May 2020 19:59:33 +0200 (CEST)
-Subject: Re: [PATCH] allow RAID5 to grow to RAID6 with a backup_file
-To:     Nigel Croxon <ncroxon@redhat.com>, linux-raid@vger.kernel.org
-References: <20200504163138.22787-1-ncroxon@redhat.com>
-From:   Jes Sorensen <jes@trained-monkey.org>
-Message-ID: <01d95357-ce4b-3cd8-2e33-e619c11ea325@trained-monkey.org>
-Date:   Tue, 5 May 2020 13:59:31 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1730431AbgEESBT (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 5 May 2020 14:01:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56354 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730069AbgEESBT (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 5 May 2020 14:01:19 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 563ACC061A0F;
+        Tue,  5 May 2020 11:01:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=DEdjlKML1R2TvFeUyu3TZMfM3z2W1qbybh/kO8XwJa0=; b=iJaqA6hbKDkz2nKamSZxrF5zmm
+        FU7Kvb/wLNIjVOxrESepN4Te0u2LhOfQW2AG0jVLWeiYZAFHJGd/TNgNgEmplaw9g15MBIfN2Vrsh
+        mh4dGkzy3VobdRxXP6YX3xS0+C6I856TKZmIoLGgiQOEkG8yw6r/M7hrk+pcdVurwlowZ6nc+HDru
+        0Trn7IA/vMr8RHcBpbie88BD5fv6xLaAYvT2wP8RkMsYaHuTsenY6f8P7YBE7WRirJxuJNlvPzgly
+        8XX5mxtWEwN6aX5kgLl8yAf6BgUZPNuoSVKBuTmHtPiKQhZUKrV8pwSNqd8qdPmtlqfOw0USqeZi+
+        XR+yIQ0Q==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jW1sX-00012x-Mg; Tue, 05 May 2020 18:01:13 +0000
+Date:   Tue, 5 May 2020 11:01:13 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     antlists <antlists@youngman.org.uk>
+Cc:     Zhen Lei <thunder.leizhen@huawei.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>, Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        dm-devel <dm-devel@redhat.com>, Song Liu <song@kernel.org>,
+        linux-raid <linux-raid@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/4] eliminate SECTOR related magic numbers and
+ duplicated conversions
+Message-ID: <20200505180113.GJ16070@bombadil.infradead.org>
+References: <20200505115543.1660-1-thunder.leizhen@huawei.com>
+ <ea522f15-991d-6f67-ba8b-9cb4954a1064@youngman.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20200504163138.22787-1-ncroxon@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ea522f15-991d-6f67-ba8b-9cb4954a1064@youngman.org.uk>
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 5/4/20 12:31 PM, Nigel Croxon wrote:
-> This problem came in, as the user did not specify a full path with
-> the backup_file option when growing an RAID5 array to RAID6.
-> When the full path is specified, the symbolic link is created
-> properly (/run/mdadm/backup_file-mdX). But the code did not support
-> the symbolic link when looking for the backup_file. Added two
-> checks for symlink.
+On Tue, May 05, 2020 at 06:32:36PM +0100, antlists wrote:
+> On 05/05/2020 12:55, Zhen Lei wrote:
+> > When I studied the code of mm/swap, I found "1 << (PAGE_SHIFT - 9)" appears
+> > many times. So I try to clean up it.
+> > 
+> > 1. Replace "1 << (PAGE_SHIFT - 9)" or similar with SECTORS_PER_PAGE
+> > 2. Replace "PAGE_SHIFT - 9" with SECTORS_PER_PAGE_SHIFT
+> > 3. Replace "9" with SECTOR_SHIFT
+> > 4. Replace "512" with SECTOR_SIZE
 > 
-> This addresses https://www.spinics.net/lists/raid/msg48910.html
-> and numerous customer reported problems.
-> 
-> Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
-> ---
->  Grow.c | 21 ++++++++++++++++++++-
->  1 file changed, 20 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Grow.c b/Grow.c
-> index 764374f..6dce71c 100644
-> --- a/Grow.c
-> +++ b/Grow.c
-> @@ -1135,6 +1135,16 @@ int reshape_open_backup_file(char *backup_file,
->  	unsigned int dev;
->  	int i;
->  
-> +	if (lstat(backup_file, &stb) != -1) {
-> +		switch (stb.st_mode & S_IFMT) {
-> +		case S_IFLNK:
-> +			return 1;
-> +			break;
+> Naive question - what is happening about 4096-byte sectors? Do we need to
+> forward-plan?
 
-It doesn't make sense to have a break after a return here.
+They're fully supported already, but Linux defines a sector to be 512
+bytes.  So we multiply by 8 and divide by 8 a few times unnecessarily,
+but it's not worth making sector size be a per-device property.
 
-> +		default:
-> +			break;
-> +		}
-> +	}
-> +
->  	*fdlist = open(backup_file, O_RDWR|O_CREAT|(restart ? O_TRUNC : O_EXCL),
->  		       S_IRUSR | S_IWUSR);
->  	*offsets = 8 * 512;
-> @@ -5236,8 +5246,17 @@ char *locate_backup(char *name)
->  	char *fl = make_backup(name);
->  	struct stat stb;
->  
-> -	if (stat(fl, &stb) == 0 && S_ISREG(stb.st_mode))> +	lstat(fl, &stb);
-
-You ditched the error check for lstat here. You cannot count on the
-contents of stb being valid in this case.
-
-> +	switch (stb.st_mode & S_IFMT) {
-> +	case S_IFLNK:
->  		return fl;
-> +		break;
-> +	case S_IFREG:
-> +		return fl;
-> +		break;
-
-Same with the break statements here.
-
-Mind fixing this up and submitting a v2.
-
-Thanks,
-Jes
-
-> +	default:
-> +		break;
-> +	}
->  
->  	free(fl);
->  	return NULL;
-> 
-
+Good thought, though.
