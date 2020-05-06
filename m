@@ -2,108 +2,76 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EBF31C602E
-	for <lists+linux-raid@lfdr.de>; Tue,  5 May 2020 20:35:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 071191C658C
+	for <lists+linux-raid@lfdr.de>; Wed,  6 May 2020 03:34:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728584AbgEESfy (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 5 May 2020 14:35:54 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30878 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726618AbgEESfy (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 5 May 2020 14:35:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588703753;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=brsrfvKteFRiX2im/bGla0KOj4eL2cwYVCGqV7eY18E=;
-        b=CAaZJi6Od99DbA+uYep96I244v/LtEER+BRvzo3JP9w0pJu991JdCtH5NzMfIhrJWy2Iz6
-        MyeBcZwfOi5Fda+bOHjQQgZl443+uZemN4S4i5uc/A1B5l0ACLhIZZzocTU+6DVkNra2TI
-        +j0gQ4goVndeHtiEoa2gL32ol/lirsw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-382-us4lxTlvMjmNhzvM-1TIjg-1; Tue, 05 May 2020 14:35:47 -0400
-X-MC-Unique: us4lxTlvMjmNhzvM-1TIjg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D6556100A614;
-        Tue,  5 May 2020 18:35:46 +0000 (UTC)
-Received: from localhost (dhcp-17-171.bos.redhat.com [10.18.17.171])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A4C1A9080;
-        Tue,  5 May 2020 18:35:46 +0000 (UTC)
-From:   Nigel Croxon <ncroxon@redhat.com>
-To:     jes@trained-monkey.org, linux-raid@vger.kernel.org
-Subject: [PATCH V2] allow RAID5 to grow to RAID6 with a backup_file
-Date:   Tue,  5 May 2020 14:35:45 -0400
-Message-Id: <20200505183545.26291-1-ncroxon@redhat.com>
+        id S1729159AbgEFBd6 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 5 May 2020 21:33:58 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3849 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727989AbgEFBd6 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 5 May 2020 21:33:58 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 44882CD09A619D1254D8;
+        Wed,  6 May 2020 09:33:53 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.55) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Wed, 6 May 2020
+ 09:33:52 +0800
+Subject: Re: [PATCH 2/4] mm/swap: use SECTORS_PER_PAGE_SHIFT to clean up code
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
+        "Sergey Senozhatsky" <sergey.senozhatsky.work@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>, Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        dm-devel <dm-devel@redhat.com>, Song Liu <song@kernel.org>,
+        linux-raid <linux-raid@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200505115543.1660-1-thunder.leizhen@huawei.com>
+ <20200505115543.1660-3-thunder.leizhen@huawei.com>
+ <20200505172520.GI16070@bombadil.infradead.org>
+From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Message-ID: <32ba9907-60ad-27c0-c565-e7b5c80ab03c@huawei.com>
+Date:   Wed, 6 May 2020 09:33:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200505172520.GI16070@bombadil.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.166.215.55]
+X-CFilter-Loop: Reflected
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-This problem came in, as the user did not specify a full path with
-the backup_file option when growing an RAID5 array to RAID6.
-When the full path is specified, the symbolic link is created
-properly (/run/mdadm/backup_file-mdX). But the code did not support
-the symbolic link when looking for the backup_file. Added two
-checks for symlink.
 
-This addresses https://www.spinics.net/lists/raid/msg48910.html
-and numerous customer reported problems.
 
-V2:
-- Removed unneeded break; in both case-statements
-- Returned the error checking on call to lstat
+On 2020/5/6 1:25, Matthew Wilcox wrote:
+> On Tue, May 05, 2020 at 07:55:41PM +0800, Zhen Lei wrote:
+>> +++ b/mm/swapfile.c
+>> @@ -177,8 +177,8 @@ static int discard_swap(struct swap_info_struct *si)
+>>  
+>>  	/* Do not discard the swap header page! */
+>>  	se = first_se(si);
+>> -	start_block = (se->start_block + 1) << (PAGE_SHIFT - 9);
+>> -	nr_blocks = ((sector_t)se->nr_pages - 1) << (PAGE_SHIFT - 9);
+>> +	start_block = (se->start_block + 1) << SECTORS_PER_PAGE_SHIFT;
+>> +	nr_blocks = ((sector_t)se->nr_pages - 1) << SECTORS_PER_PAGE_SHIFT;
+> 
+> Thinking about this some more, wouldn't this look better?
+> 
+> 	start_block = page_sectors(se->start_block + 1);
+> 	nr_block = page_sectors(se->nr_pages - 1);
+> 
 
-Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
----
- Grow.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+OK，That's fine, it's clearer. And in this way, there won't be more than 80 columns.
 
-diff --git a/Grow.c b/Grow.c
-index 764374f..53245d7 100644
---- a/Grow.c
-+++ b/Grow.c
-@@ -1135,6 +1135,15 @@ int reshape_open_backup_file(char *backup_file,
- 	unsigned int dev;
- 	int i;
-=20
-+	if (lstat(backup_file, &stb) !=3D -1) {
-+		switch (stb.st_mode & S_IFMT) {
-+		case S_IFLNK:
-+			return 1;
-+		default:
-+			break;
-+		}
-+	}
-+
- 	*fdlist =3D open(backup_file, O_RDWR|O_CREAT|(restart ? O_TRUNC : O_EXC=
-L),
- 		       S_IRUSR | S_IWUSR);
- 	*offsets =3D 8 * 512;
-@@ -5236,8 +5245,16 @@ char *locate_backup(char *name)
- 	char *fl =3D make_backup(name);
- 	struct stat stb;
-=20
--	if (stat(fl, &stb) =3D=3D 0 && S_ISREG(stb.st_mode))
--		return fl;
-+	if (lstat(fl, &stb) =3D=3D 0) {
-+		switch (stb.st_mode & S_IFMT) {
-+		case S_IFLNK:
-+			return fl;
-+		case S_IFREG:
-+			return fl;
-+		default:
-+			break;
-+		}
-+	}
-=20
- 	free(fl);
- 	return NULL;
---=20
-2.20.1
+> 
+> .
+> 
 
