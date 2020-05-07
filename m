@@ -2,162 +2,197 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 02D791C9CE4
-	for <lists+linux-raid@lfdr.de>; Thu,  7 May 2020 23:01:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE16E1C9DB4
+	for <lists+linux-raid@lfdr.de>; Thu,  7 May 2020 23:45:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgEGVB4 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 7 May 2020 17:01:56 -0400
-Received: from li1843-175.members.linode.com ([172.104.24.175]:56142 "EHLO
-        mail.stoffel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbgEGVB4 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 7 May 2020 17:01:56 -0400
-Received: from quad.stoffel.org (066-189-075-104.res.spectrum.com [66.189.75.104])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.stoffel.org (Postfix) with ESMTPSA id E08FF24239;
-        Thu,  7 May 2020 17:01:54 -0400 (EDT)
-Received: by quad.stoffel.org (Postfix, from userid 1000)
-        id 341E5A62A1; Thu,  7 May 2020 17:01:54 -0400 (EDT)
+        id S1726797AbgEGVoU (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 7 May 2020 17:44:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60624 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbgEGVoT (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 7 May 2020 17:44:19 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DC6FC05BD0C
+        for <linux-raid@vger.kernel.org>; Thu,  7 May 2020 14:44:19 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id a8so6755348edv.2
+        for <linux-raid@vger.kernel.org>; Thu, 07 May 2020 14:44:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=mR5KN3Pz1n6bpXv2DNeSraShlVTsxJWNxOu3C85SoMg=;
+        b=NAbAsbcCbcOXGfgGm7ahZi0o5gzd0TsLfygSJrNrVrw5vLmqVRWfCI3isz5iFR5mbA
+         STvZy0Ini+hckNV2WvZupD+LtTplGUSiOCIH9BQ4aOETcgeCdIpI3Mj4WzqQem9CXLDe
+         qYqvI/C+O08KvR+8KRty0U7zvjbl56T9lDhJogFf/OcHKnQJ9/6T7DcnRmFb0xuydSVo
+         OCcwBscdI31qgR35JMlzx4rHo/+NUlCVj0gEvFfy2Ss+woreUw2pfXnuKNU5iEfww/Em
+         QGboLZniwFBp/2tvxFy9cYEauvwdXj+tBAzwiJzCfCEprECi1B8+ab9SEyFXMnVToH+E
+         +Dmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mR5KN3Pz1n6bpXv2DNeSraShlVTsxJWNxOu3C85SoMg=;
+        b=kgYWJhuVdVmiCqpUDooAFe07Y4Eapjh3ckLShJE5tFdkmonXL8ntjdKWdkPD4cOE3d
+         xJhGYR0FOfJqcxIKLrPKtsXS5sTcnrmYHgIJGECaTYlqbqGbAYZHkCUKmh1jpdTO9qWk
+         nLBTefYotKYNFh+m8o4uGtg1L/bibip6vDVK0+ncTgzS0SYC3rttxKxaFQZkaae8ZL2n
+         ylfYi402Knc3Ihn5+vqqOhtGwxHb2UMdwarmRhORWPQTdy6Fhsx/ae+0m/obb8qRP4zA
+         aCnY7IVbEKINsldXKoeREPgznI6LR5Na/JppP2DO/RIUbMnqQrDZvpkgMy8AXb1saktB
+         0ckg==
+X-Gm-Message-State: AGi0PuajLLnz08hssz2gZmMuc5v9AofpC21nCR9qncWSGgrpy9lXmr7j
+        S5XveYs65YLCvo9hiBSVGIOsPQ==
+X-Google-Smtp-Source: APiQypLmX8YHBXb7kua9dEsVAJulVEp2exuqcsxlWLEdtzHF8lGn1ZzGxVKJFdK6oe8J4dems5+T3w==
+X-Received: by 2002:a05:6402:221c:: with SMTP id cq28mr13246566edb.50.1588887857976;
+        Thu, 07 May 2020 14:44:17 -0700 (PDT)
+Received: from ls00508.pb.local ([2001:1438:4010:2540:a1ee:a39a:b93a:c084])
+        by smtp.gmail.com with ESMTPSA id k3sm613530edi.60.2020.05.07.14.44.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 14:44:17 -0700 (PDT)
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     david@fromorbit.com, hch@infradead.org, willy@infradead.org,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Yafang Shao <laoar.shao@gmail.com>, Song Liu <song@kernel.org>,
+        linux-raid@vger.kernel.org, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        Anton Altaparmakov <anton@tuxera.com>,
+        linux-ntfs-dev@lists.sourceforge.net,
+        Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        devel@lists.orangefs.org, Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Roman Gushchin <guro@fb.com>,
+        Andreas Dilger <adilger@dilger.ca>
+Subject: [RFC PATCH V3 01/10] include/linux/pagemap.h: introduce attach/detach_page_private
+Date:   Thu,  7 May 2020 23:43:51 +0200
+Message-Id: <20200507214400.15785-2-guoqing.jiang@cloud.ionos.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200507214400.15785-1-guoqing.jiang@cloud.ionos.com>
+References: <20200507214400.15785-1-guoqing.jiang@cloud.ionos.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Message-ID: <24244.30530.155404.154787@quad.stoffel.home>
-Date:   Thu, 7 May 2020 17:01:54 -0400
-From:   "John Stoffel" <john@stoffel.org>
-To:     Roger Heflin <rogerheflin@gmail.com>
-Cc:     Michal Soltys <msoltyspl@yandex.pl>,
-        Linux RAID <linux-raid@vger.kernel.org>
-Subject: Re: [general question] rare silent data corruption when writing data
-In-Reply-To: <CAAMCDef6hKJsPw3738KJ0vEEwnVKB-QpTMJ6aSeybse-4h+y6Q@mail.gmail.com>
-References: <b0e91faf-3a14-3ac9-3c31-6989154791c1@yandex.pl>
-        <CAAMCDef6hKJsPw3738KJ0vEEwnVKB-QpTMJ6aSeybse-4h+y6Q@mail.gmail.com>
-X-Mailer: VM 8.2.0b under 25.1.1 (x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
->>>>> "Roger" == Roger Heflin <rogerheflin@gmail.com> writes:
+The logic in attach_page_buffers and  __clear_page_buffers are quite
+paired, but
 
-Roger> Have you tried the same file 2x and verified the corruption is in the
-Roger> same places and looks the same?
+1. they are located in different files.
 
-Are these 1tb files VMDK or COW images of VMs?  How are these files
-made.  And does it ever happen with *smaller* files?  What about if
-you just use a sparse 2tb file and write blocks out past 1tb to see if
-there's a problem?
+2. attach_page_buffers is implemented in buffer_head.h, so it could be
+   used by other files. But __clear_page_buffers is static function in
+   buffer.c and other potential users can't call the function, md-bitmap
+   even copied the function.
 
-Are the LVs split across RAID5 PVs by any chance?  
+So, introduce the new attach/detach_page_private to replace them. With
+the new pair of function, we will remove the usage of attach_page_buffers
+and  __clear_page_buffers in next patches. Thanks for suggestions about
+the function name from Alexander Viro, Andreas Grünbacher, Christoph
+Hellwig and Matthew Wilcox.
 
-It's not clear if you can replicate the problem without using
-lvm-thin, but that's what I suspect you might be having problems with.
+Suggested-by: Matthew Wilcox <willy@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org
+Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc: William Kucharski <william.kucharski@oracle.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Andreas Gruenbacher <agruenba@redhat.com>
+Cc: Yang Shi <yang.shi@linux.alibaba.com>
+Cc: Yafang Shao <laoar.shao@gmail.com>
+Cc: Song Liu <song@kernel.org>
+Cc: linux-raid@vger.kernel.org
+Cc: Chris Mason <clm@fb.com>
+Cc: Josef Bacik <josef@toxicpanda.com>
+Cc: David Sterba <dsterba@suse.com>
+Cc: linux-btrfs@vger.kernel.org
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: Chao Yu <chao@kernel.org>
+Cc: linux-f2fs-devel@lists.sourceforge.net
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: linux-xfs@vger.kernel.org
+Cc: Anton Altaparmakov <anton@tuxera.com>
+Cc: linux-ntfs-dev@lists.sourceforge.net
+Cc: Mike Marshall <hubcap@omnibond.com>
+Cc: Martin Brandenburg <martin@omnibond.com>
+Cc: devel@lists.orangefs.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Andreas Dilger <adilger@dilger.ca>
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+---
+RFC V2 -> RFC V3:
+1. rename clear_page_private to detach_page_private.
+2. updated the comments for the two functions.
 
-Can you give us the versions of the your tools, and exactly how you
-setup your test cases?  How long does it take to find the problem?
+RFC -> RFC V2:  Address the comments from Christoph Hellwig
+1. change function names to attach/clear_page_private and add comments.
+2. change the return type of attach_page_private.
 
-Can you compile the newst kernel and newest thin tools and try them
-out?
+ include/linux/pagemap.h | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-How long does it take to replicate the corruption?  
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index a8f7bd8ea1c6..99dd93188a5e 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -205,6 +205,43 @@ static inline int page_cache_add_speculative(struct page *page, int count)
+ 	return __page_cache_add_speculative(page, count);
+ }
+ 
++/**
++ * attach_page_private - Attach private data to a page.
++ * @page: Page to attach data to.
++ * @data: Data to attach to page.
++ *
++ * Attaching private data to a page increments the page's reference count.
++ * The data must be detached before the page will be freed.
++ */
++static inline void attach_page_private(struct page *page, void *data)
++{
++	get_page(page);
++	set_page_private(page, (unsigned long)data);
++	SetPagePrivate(page);
++}
++
++/**
++ * detach_page_private - Detach private data from a page.
++ * @page: Page to detach data from.
++ *
++ * Removes the data that was previously attached to the page and decrements
++ * the refcount on the page.
++ *
++ * Return: Data that was attached to the page.
++ */
++static inline void *detach_page_private(struct page *page)
++{
++	void *data = (void *)page_private(page);
++
++	if (!PagePrivate(page))
++		return NULL;
++	ClearPagePrivate(page);
++	set_page_private(page, 0);
++	put_page(page);
++
++	return data;
++}
++
+ #ifdef CONFIG_NUMA
+ extern struct page *__page_cache_alloc(gfp_t gfp);
+ #else
+-- 
+2.17.1
 
-Sorry for all the questions, but until there's a test case which is
-repeatable, it's going to be hard to chase this down.
-
-I wonder if running 'fio' tests would be something to try?
-
-And also changing your RAID5 setup to use the default stride and
-stripe widths, instead of the large values you're using.
-
-Good luck!
-
-Roger> I have not as of yet seen write corruption (except when a vendors disk
-Roger> was resetting and it was lying about having written the data prior to
-Roger> the crash, these were ssds, if your disk write cache is on and you
-Roger> have a disk reset this can also happen), but have not seen "lost
-Roger> writes" otherwise, but would expect the 2 read corruption I have seen
-Roger> to also be able to cause write issues.  So for that look for scsi
-Roger> notifications for disk resets that should not happen.
-
-Roger> I have had a "bad" controller cause read corruptions, those
-Roger> corruptions would move around, replacing the controller resolved it,
-Roger> so there may be lack of error checking "inside" some paths in the
-Roger> card.  Lucky I had a number of these controllers and had cold spares
-Roger> for them.  The give away here was 2 separate buses with almost
-Roger> identical load with 6 separate disks each and all12 disks on 2 buses
-Roger> had between 47-52 scsi errors, which points to the only component
-Roger> shared (the controller).
-
-Roger> The backplane and cables are unlikely in general cause this, there is
-Roger> too much error checking between the controller and the disk from what
-Roger> I know.
-
-Roger> I have had pre-pcie bus (PCI-X bus, 2 slots shared, both set to 133
-Roger> cause random read corruptions, lowering speed to 100 fixed it), this
-Roger> one was duplicated on multiple identical pieces of hw with all
-Roger> different parts on the duplication machine.
-
-Roger> I have also seen lost writes (from software) because someone did a
-Roger> seek without doing a flush which in some versions of the libs loses
-Roger> the unfilled block when the seek happens (this is noted in the man
-Roger> page, and I saw it 20years ago, it is still noted in the man page, so
-Roger> no idea if it was ever fixed).  So has more than one application been
-Roger> noted to see the corruption?
-
-Roger> So one question, have you seen the corruption in a path that would
-Roger> rely on one controller, or all corruptions you have seen involving
-Roger> more than one controller?  Isolate and test each controller if you
-Roger> can, or if you can afford to replace it and see if it continues.
-
-
-Roger> On Thu, May 7, 2020 at 12:33 PM Michal Soltys <msoltyspl@yandex.pl> wrote:
->> 
->> Note: this is just general question - if anyone experienced something similar or could suggest how to pinpoint / verify the actual cause.
->> 
->> Thanks to btrfs's checksumming we discovered somewhat (even if quite rare) nasty silent corruption going on on one of our hosts. Or perhaps "corruption" is not the correct word - the files simply have precise 4kb (1 page) of incorrect data. The incorrect pieces of data look on their own fine - as something that was previously in the place, or written from wrong source.
->> 
->> The hardware is (can provide more detailed info of course):
->> 
->> - Supermicro X9DR7-LN4F
->> - onboard LSI SAS2308 controller (2 sff-8087 connectors, 1 connected to backplane)
->> - 96 gb ram (ecc)
->> - 24 disk backplane
->> 
->> - 1 array connected directly to lsi controller (4 disks, mdraid5, internal bitmap, 512kb chunk)
->> - 1 array on the backplane (4 disks, mdraid5, journaled)
->> - journal for the above array is: mdraid1, 2 ssd disks (micron 5300 pro disks)
->> - 1 btrfs raid1 boot array on motherboard's sata ports (older but still fine intel ssds from DC 3500 series)
->> 
->> Raid 5 arrays are in lvm volume group, and the logical volumes are used by VMs. Some of the volumes are linear, some are using thin-pools (with metadata on the aforementioned intel ssds, in mirrored config). LVM
->> uses large extent sizes (120m) and the chunk-size of thin-pools is set to 1.5m to match underlying raid stripe. Everything is cleanly aligned as well.
->> 
->> With a doze of testing we managed to roughly rule out the following elements as being the cause:
->> 
->> - qemu/kvm (issue occured directly on host)
->> - backplane (issue occured on disks directly connected via LSI's 2nd connector)
->> - cable (as a above, two different cables)
->> - memory (unlikely - ECC for once, thoroughly tested, no errors ever reported via edac-util or memtest)
->> - mdadm journaling (issue occured on plain mdraid configuration as well)
->> - disks themselves (issue occured on two separate mdadm arrays)
->> - filesystem (issue occured on both btrfs and ext4 (checksumed manually) )
->> 
->> We did not manage to rule out (though somewhat _highly_ unlikely):
->> 
->> - lvm thin (issue always - so far - occured on lvm thin pools)
->> - mdraid (issue always - so far - on mdraid managed arrays)
->> - kernel (tested with - in this case - debian's 5.2 and 5.4 kernels, happened with both - so it would imply rather already longstanding bug somewhere)
->> 
->> And finally - so far - the issue never occured:
->> 
->> - directly on a disk
->> - directly on mdraid
->> - on linear lvm volume on top of mdraid
->> 
->> As far as the issue goes it's:
->> 
->> - always a 4kb chunk that is incorrect - in a ~1 tb file it can be from a few to few dozens of such chunks
->> - we also found (or rather btrfs scrub did) a few small damaged files as well
->> - the chunks look like a correct piece of different or previous data
->> 
->> The 4kb is well, weird ? Doesn't really matter any chunk/stripes sizes anywhere across the stack (lvm - 120m extents, 1.5m chunks on thin pools; mdraid - default 512kb chunks). It does nicely fit a page though ...
->> 
->> Anyway, if anyone has any ideas or suggestions what could be happening (perhaps with this particular motherboard or vendor) or how to pinpoint the cause - I'll be grateful for any.
