@@ -2,222 +2,130 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BD691C9E81
-	for <lists+linux-raid@lfdr.de>; Fri,  8 May 2020 00:34:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E865B1C9FC0
+	for <lists+linux-raid@lfdr.de>; Fri,  8 May 2020 02:43:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgEGWeH (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 7 May 2020 18:34:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726519AbgEGWeH (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 7 May 2020 18:34:07 -0400
-Received: from forward106p.mail.yandex.net (forward106p.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:109])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A5EAC05BD43
-        for <linux-raid@vger.kernel.org>; Thu,  7 May 2020 15:34:06 -0700 (PDT)
-Received: from mxback16g.mail.yandex.net (mxback16g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:316])
-        by forward106p.mail.yandex.net (Yandex) with ESMTP id A62491C80CA8;
-        Fri,  8 May 2020 01:34:04 +0300 (MSK)
-Received: from myt5-aad1beefab42.qloud-c.yandex.net (myt5-aad1beefab42.qloud-c.yandex.net [2a02:6b8:c12:128:0:640:aad1:beef])
-        by mxback16g.mail.yandex.net (mxback/Yandex) with ESMTP id op1COtIJfS-Y41Khat0;
-        Fri, 08 May 2020 01:34:04 +0300
-Received: by myt5-aad1beefab42.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id R7dRAgzDXN-Y32mMPap;
-        Fri, 08 May 2020 01:34:03 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: [general question] rare silent data corruption when writing data
-To:     John Stoffel <john@stoffel.org>,
-        Roger Heflin <rogerheflin@gmail.com>
-Cc:     Linux RAID <linux-raid@vger.kernel.org>
-References: <b0e91faf-3a14-3ac9-3c31-6989154791c1@yandex.pl>
- <CAAMCDef6hKJsPw3738KJ0vEEwnVKB-QpTMJ6aSeybse-4h+y6Q@mail.gmail.com>
- <24244.30530.155404.154787@quad.stoffel.home>
-From:   Michal Soltys <msoltyspl@yandex.pl>
-Message-ID: <adccabc0-529f-e0a9-538f-1e5b784269e4@yandex.pl>
-Date:   Fri, 8 May 2020 00:33:59 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726509AbgEHAnk (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 7 May 2020 20:43:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58258 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726470AbgEHAnk (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 7 May 2020 20:43:40 -0400
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38E8A20663
+        for <linux-raid@vger.kernel.org>; Fri,  8 May 2020 00:43:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588898619;
+        bh=KGWsMbIkCVsXqRst/xqS7uhtr68Vh9pzPo5pCHnvfGY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AglK3Mp1Iklo2cSSPtANAAWm735XU9WboIN2lNOS5VEMtzB3PklmqdQ2IvdgzfLtO
+         AAxkHoa2s95C16pula1Ki5/6u8qerpO3SaDAaJZgVL+5r3V7PUq3ZQNrG+NaMKkFoL
+         lyMcgg1/I1QaAyX8sLYiZ5SqRwXtKscs3DHrJ3UE=
+Received: by mail-lf1-f54.google.com with SMTP id j14so52224lfg.9
+        for <linux-raid@vger.kernel.org>; Thu, 07 May 2020 17:43:39 -0700 (PDT)
+X-Gm-Message-State: AOAM530A5l8GF6Hhm8k5hGtLahiVL1zZRQIayJkHAD7yrWBLutU3qdRv
+        T7LpyGopYRVHGV0mPQ6SkL9NkmazfcxEQByutXM=
+X-Google-Smtp-Source: ABdhPJxkdw19GmfMM+vSwrN2TO/ZS+fc1a6BYKz9/G1+87+It4WbS1vyCSAHUpgyrQDmPgxsIdgestvcGVYlRdiNa9g=
+X-Received: by 2002:ac2:4d91:: with SMTP id g17mr99880lfe.162.1588898617305;
+ Thu, 07 May 2020 17:43:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <24244.30530.155404.154787@quad.stoffel.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200127152619.GA3596@redhat> <CAPhsuW628WHm_Rifm9uMPeH+mwmeH121p85KbgvLt+SQTngW4A@mail.gmail.com>
+ <CA+-xHTGJr5M9Ge1MCPPZWueM56Ap5=qcsG0KkddBMJOCAOWWpw@mail.gmail.com>
+ <CAPhsuW7XJzdWxkLDbRG9VS3BJB6qaAoEC_sDOtMRaw1ZvMj1dw@mail.gmail.com> <bcc52c3e-0865-709b-fc4d-7ca59d10bf9d@redhat.com>
+In-Reply-To: <bcc52c3e-0865-709b-fc4d-7ca59d10bf9d@redhat.com>
+From:   Song Liu <song@kernel.org>
+Date:   Thu, 7 May 2020 17:43:26 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW5SMkstYK5OKm_C_9xE9o1SBT3AAKX9W4JAZG0pDv7OLQ@mail.gmail.com>
+Message-ID: <CAPhsuW5SMkstYK5OKm_C_9xE9o1SBT3AAKX9W4JAZG0pDv7OLQ@mail.gmail.com>
+Subject: Re: [PATCH] md/raid1: release pending accounting for an I/O only
+ after write-behind is also finished
+To:     Nigel Croxon <ncroxon@redhat.com>
+Cc:     David Jeffery <djeffery@redhat.com>,
+        linux-raid <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 20/05/07 23:01, John Stoffel wrote:
->>>>>> "Roger" == Roger Heflin <rogerheflin@gmail.com> writes:
-> 
-> Roger> Have you tried the same file 2x and verified the corruption is in the
-> Roger> same places and looks the same?
-> 
-> Are these 1tb files VMDK or COW images of VMs?  How are these files
-> made.  And does it ever happen with *smaller* files?  What about if
-> you just use a sparse 2tb file and write blocks out past 1tb to see if
-> there's a problem?
+On Thu, Apr 23, 2020 at 5:38 AM Nigel Croxon <ncroxon@redhat.com> wrote:
+>
+>
+> On 1/28/20 2:08 PM, Song Liu wrote:
+> > On Mon, Jan 27, 2020 at 11:56 AM David Jeffery <djeffery@redhat.com> wrote:
+> >> On Mon, Jan 27, 2020 at 12:29 PM Song Liu <song@kernel.org> wrote:
+> >>> On Mon, Jan 27, 2020 at 7:26 AM David Jeffery <djeffery@redhat.com> wrote:
+> >>>> When using RAID1 and write-behind, md can deadlock when errors occur. With
+> >>>> write-behind, r1bio structs can be accounted by raid1 as queued but not
+> >>>> counted as pending. The pending count is dropped when the original bio is
+> >>>> returned complete but write-behind for the r1bio may still be active.
+> >>>>
+> >>>> This breaks the accounting used in some conditions to know when the raid1
+> >>>> md device has reached an idle state. It can result in calls to
+> >>>> freeze_array deadlocking. freeze_array will never complete from a negative
+> >>>> "unqueued" value being calculated due to a queued count larger than the
+> >>>> pending count.
+> >>>>
+> >>>> To properly account for write-behind, move the call to allow_barrier from
+> >>>> call_bio_endio to raid_end_bio_io. When using write-behind, md can call
+> >>>> call_bio_endio before all write-behind I/O is complete. Using
+> >>>> raid_end_bio_io for the point to call allow_barrier will release the
+> >>>> pending count at a point where all I/O for an r1bio, even write-behind, is
+> >>>> done.
+> >>>>
+> >>>> Signed-off-by: David Jeffery <djeffery@redhat.com>
+> >>>> ---
+> >>>>
+> >>>>   raid1.c |   13 +++++++------
+> >>>>   1 file changed, 7 insertions(+), 6 deletions(-)
+> >>>>
+> >>>>
+> >>>> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+> >>>> index 201fd8aec59a..0196a9d9f7e9 100644
+> >>>> --- a/drivers/md/raid1.c
+> >>>> +++ b/drivers/md/raid1.c
+> >>>> @@ -279,22 +279,17 @@ static void reschedule_retry(struct r1bio *r1_bio)
+> >>>>   static void call_bio_endio(struct r1bio *r1_bio)
+> >>>>   {
+> >>>>          struct bio *bio = r1_bio->master_bio;
+> >>>> -       struct r1conf *conf = r1_bio->mddev->private;
+> >>>>
+> >>>>          if (!test_bit(R1BIO_Uptodate, &r1_bio->state))
+> >>>>                  bio->bi_status = BLK_STS_IOERR;
+> >>>>
+> >>>>          bio_endio(bio);
+> >>>> -       /*
+> >>>> -        * Wake up any possible resync thread that waits for the device
+> >>>> -        * to go idle.
+> >>>> -        */
+> >>>> -       allow_barrier(conf, r1_bio->sector);
+> >>> raid1_end_write_request() also calls call_bio_endio(). Do we need to fix
+> >>> that?
+> >> This basically is the problem the patch is fixing.  We don't want
+> >> allow_barrier() being called when call_bio_endio() is called directly
+> >> from raid1_end_write_request().  Write-behind can still be active here
+> >> so it was dropping the pending accounting too early.  We only want it
+> >> called when all I/O for the r1bio is complete, which shifting the
+> >> allow_barrier() call to raid_end_bio_io() does.
+> > Thanks for the explanation. This looks good to me. I will process it
+> > after the merge window.
+> >
+> > I will also re-evaluate whether we need it for stable.
+> >
+> > Thanks again,
+> > Song
+> >
+> Hello Song,
+>
+> Did you pull in this patch after the merge window?
+>
+> I don't see it in your tree.
 
-The VMs are always directly on lvm volumes. (e.g. 
-/dev/mapper/vg0-gitlab). The guest (btrfs inside the guest) detected the 
-errors after we ran scrub on the filesystem.
+I am really sorry I missed this one.
 
-Yes, the errors were also found on small files.
+Just applied it to md-next.
 
-Since then we recreated the issue directly on the host, just by making 
-ext4 filesystem on some LV, then doing write with checksum, sync, 
-drop_caches, read and check checksum. The errors are, as I mentioned - 
-always a full 4KiB chunks (always same content, always same position).
-
-> 
-> Are the LVs split across RAID5 PVs by any chance?
-
-raid5s are used as PVs, but a single logical volume always uses one only 
-one physical volume underneath (if that's what you meant by split across).
-
-> 
-> It's not clear if you can replicate the problem without using
-> lvm-thin, but that's what I suspect you might be having problems with.
-> 
-
-I'll be trying to do that, though the heavier tests will have to wait 
-until I move all VMs to other hosts (as that is/was our production machnie).
-
-> Can you give us the versions of the your tools, and exactly how you
-> setup your test cases?  How long does it take to find the problem?
-
-Will get all the details tommorow (the host is on up to date debian 
-buster, the VMs are mix of archlinuxes and debians (and the issue 
-happened on both)).
-
-As for how long, it's a hit and miss. Sometimes writing and reading back 
-~16gb file fails (the cheksum read back differs from what was written) 
-after 2-3 tries. That's on the host.
-
-On the guest, it's been (so far) a guaranteed thing when we were 
-creating very large tar file (900gb+). As for past two weeks we were 
-unable to create that file without errors even once.
-
-> 
-> Can you compile the newst kernel and newest thin tools and try them
-> out?
-
-I can, but a bit later (once we move VMs out of the host).
-
-> 
-> How long does it take to replicate the corruption?
-> 
-
-When it happens, it's usually few tries tries of writing a 16gb file 
-with random patterns and reading it back (directly on host). The 
-irritating thing is that it can be somewhat hard to reproduce (e.g. 
-after machine's reboot).
-
-> Sorry for all the questions, but until there's a test case which is
-> repeatable, it's going to be hard to chase this down.
-> 
-> I wonder if running 'fio' tests would be something to try?
-> 
-> And also changing your RAID5 setup to use the default stride and
-> stripe widths, instead of the large values you're using.
-
-The raid5 is using mdadm's defaults (which is 512 KiB these days for a 
-chunk). LVM on top is using much longer extents (as we don't really need 
-4mb granularity) and the lvm-thin chunks were set to match (and align) 
-to raid's stripe.
-
-> 
-> Good luck!
-> 
-> Roger> I have not as of yet seen write corruption (except when a vendors disk
-> Roger> was resetting and it was lying about having written the data prior to
-> Roger> the crash, these were ssds, if your disk write cache is on and you
-> Roger> have a disk reset this can also happen), but have not seen "lost
-> Roger> writes" otherwise, but would expect the 2 read corruption I have seen
-> Roger> to also be able to cause write issues.  So for that look for scsi
-> Roger> notifications for disk resets that should not happen.
-> 
-> Roger> I have had a "bad" controller cause read corruptions, those
-> Roger> corruptions would move around, replacing the controller resolved it,
-> Roger> so there may be lack of error checking "inside" some paths in the
-> Roger> card.  Lucky I had a number of these controllers and had cold spares
-> Roger> for them.  The give away here was 2 separate buses with almost
-> Roger> identical load with 6 separate disks each and all12 disks on 2 buses
-> Roger> had between 47-52 scsi errors, which points to the only component
-> Roger> shared (the controller).
-> 
-> Roger> The backplane and cables are unlikely in general cause this, there is
-> Roger> too much error checking between the controller and the disk from what
-> Roger> I know.
-> 
-> Roger> I have had pre-pcie bus (PCI-X bus, 2 slots shared, both set to 133
-> Roger> cause random read corruptions, lowering speed to 100 fixed it), this
-> Roger> one was duplicated on multiple identical pieces of hw with all
-> Roger> different parts on the duplication machine.
-> 
-> Roger> I have also seen lost writes (from software) because someone did a
-> Roger> seek without doing a flush which in some versions of the libs loses
-> Roger> the unfilled block when the seek happens (this is noted in the man
-> Roger> page, and I saw it 20years ago, it is still noted in the man page, so
-> Roger> no idea if it was ever fixed).  So has more than one application been
-> Roger> noted to see the corruption?
-> 
-> Roger> So one question, have you seen the corruption in a path that would
-> Roger> rely on one controller, or all corruptions you have seen involving
-> Roger> more than one controller?  Isolate and test each controller if you
-> Roger> can, or if you can afford to replace it and see if it continues.
-> 
-> 
-> Roger> On Thu, May 7, 2020 at 12:33 PM Michal Soltys <msoltyspl@yandex.pl> wrote:
->>> 
->>> Note: this is just general question - if anyone experienced something similar or could suggest how to pinpoint / verify the actual cause.
->>> 
->>> Thanks to btrfs's checksumming we discovered somewhat (even if quite rare) nasty silent corruption going on on one of our hosts. Or perhaps "corruption" is not the correct word - the files simply have precise 4kb (1 page) of incorrect data. The incorrect pieces of data look on their own fine - as something that was previously in the place, or written from wrong source.
->>> 
->>> The hardware is (can provide more detailed info of course):
->>> 
->>> - Supermicro X9DR7-LN4F
->>> - onboard LSI SAS2308 controller (2 sff-8087 connectors, 1 connected to backplane)
->>> - 96 gb ram (ecc)
->>> - 24 disk backplane
->>> 
->>> - 1 array connected directly to lsi controller (4 disks, mdraid5, internal bitmap, 512kb chunk)
->>> - 1 array on the backplane (4 disks, mdraid5, journaled)
->>> - journal for the above array is: mdraid1, 2 ssd disks (micron 5300 pro disks)
->>> - 1 btrfs raid1 boot array on motherboard's sata ports (older but still fine intel ssds from DC 3500 series)
->>> 
->>> Raid 5 arrays are in lvm volume group, and the logical volumes are used by VMs. Some of the volumes are linear, some are using thin-pools (with metadata on the aforementioned intel ssds, in mirrored config). LVM
->>> uses large extent sizes (120m) and the chunk-size of thin-pools is set to 1.5m to match underlying raid stripe. Everything is cleanly aligned as well.
->>> 
->>> With a doze of testing we managed to roughly rule out the following elements as being the cause:
->>> 
->>> - qemu/kvm (issue occured directly on host)
->>> - backplane (issue occured on disks directly connected via LSI's 2nd connector)
->>> - cable (as a above, two different cables)
->>> - memory (unlikely - ECC for once, thoroughly tested, no errors ever reported via edac-util or memtest)
->>> - mdadm journaling (issue occured on plain mdraid configuration as well)
->>> - disks themselves (issue occured on two separate mdadm arrays)
->>> - filesystem (issue occured on both btrfs and ext4 (checksumed manually) )
->>> 
->>> We did not manage to rule out (though somewhat _highly_ unlikely):
->>> 
->>> - lvm thin (issue always - so far - occured on lvm thin pools)
->>> - mdraid (issue always - so far - on mdraid managed arrays)
->>> - kernel (tested with - in this case - debian's 5.2 and 5.4 kernels, happened with both - so it would imply rather already longstanding bug somewhere)
->>> 
->>> And finally - so far - the issue never occured:
->>> 
->>> - directly on a disk
->>> - directly on mdraid
->>> - on linear lvm volume on top of mdraid
->>> 
->>> As far as the issue goes it's:
->>> 
->>> - always a 4kb chunk that is incorrect - in a ~1 tb file it can be from a few to few dozens of such chunks
->>> - we also found (or rather btrfs scrub did) a few small damaged files as well
->>> - the chunks look like a correct piece of different or previous data
->>> 
->>> The 4kb is well, weird ? Doesn't really matter any chunk/stripes sizes anywhere across the stack (lvm - 120m extents, 1.5m chunks on thin pools; mdraid - default 512kb chunks). It does nicely fit a page though ...
->>> 
->>> Anyway, if anyone has any ideas or suggestions what could be happening (perhaps with this particular motherboard or vendor) or how to pinpoint the cause - I'll be grateful for any.
-> 
-
+Thanks,
+Song
