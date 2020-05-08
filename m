@@ -2,43 +2,42 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DA241C9FDB
-	for <lists+linux-raid@lfdr.de>; Fri,  8 May 2020 02:57:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C43021CA00E
+	for <lists+linux-raid@lfdr.de>; Fri,  8 May 2020 03:26:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbgEHA5M (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 7 May 2020 20:57:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42468 "EHLO mail.kernel.org"
+        id S1726533AbgEHB0E (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 7 May 2020 21:26:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726509AbgEHA5M (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 7 May 2020 20:57:12 -0400
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+        id S1726514AbgEHB0D (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 7 May 2020 21:26:03 -0400
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AC1821473
-        for <linux-raid@vger.kernel.org>; Fri,  8 May 2020 00:57:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B18A20CC7
+        for <linux-raid@vger.kernel.org>; Fri,  8 May 2020 01:26:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588899431;
-        bh=zjkRhnVUGVk3w8Bf1rrtenXf0RkixbJEZRTBUEphX8s=;
+        s=default; t=1588901162;
+        bh=rJwv1n0aTjvAz2Lby7+xcF33VFaJj2+YvQvqnrYfr3A=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=J2Fu1vegdE1PdfH7ICP+mDVQNgZo3v9mAqCMTEE7XoaB/gzkdEsIEe7XIkRBKWdbd
-         F8ObmhvToTdZwq0JFk2pAR5tLTwIQjSckQn/5cLVruftUSxNoB2vvNBzPcmcGIkP/b
-         XR3vNFGJrGPTwsyI+Y/z7WFJ1zyCWMbaHfDVd/hI=
-Received: by mail-lf1-f41.google.com with SMTP id a4so63299lfh.12
-        for <linux-raid@vger.kernel.org>; Thu, 07 May 2020 17:57:11 -0700 (PDT)
-X-Gm-Message-State: AOAM5335gC/FL1SVEYdTQmgc57An0vfEiY6L9rVFWfq6Px84Yog7e3Pk
-        AJGuUXKlrkNjuDPg9YoP+riDFL279ILEOhpiewI=
-X-Google-Smtp-Source: ABdhPJzD0K5wlbMboGnSd8MKnxkVFO2hWSST0cKM0YsF/aZCrrYpKleFFLhUhgbEgUoFI+lWWi+awiPI1LpObourPdU=
-X-Received: by 2002:ac2:4d91:: with SMTP id g17mr126743lfe.162.1588899429317;
- Thu, 07 May 2020 17:57:09 -0700 (PDT)
+        b=ZSB/tGtaBUMTvkzRnWsI41Y3YldExk2TJPbK2rDNMbKTMuUyGBlQza7+6/WB02sQs
+         0wZvTQCwC5Naf6xzlcyI2MDpvsCrMrlqJ61sFnXzNmCd9wwwGtYROZwInd+0WjFwtc
+         mbgXmjXQxEV4XiaBM6ybY/bTkWdMS68qTl85WbQA=
+Received: by mail-lf1-f52.google.com with SMTP id d25so106168lfi.11
+        for <linux-raid@vger.kernel.org>; Thu, 07 May 2020 18:26:02 -0700 (PDT)
+X-Gm-Message-State: AOAM532DZ0SdatBZPb0+lnSNueCNZueFTaSOBfBTG8cm5wMzuGyP5btb
+        ESS80dMcAQppOiYWBgRs3igq6+8E63LxJ9oxm1k=
+X-Google-Smtp-Source: ABdhPJwXyewKnwQ6obmm/GIkfe6sLUAwz9pS82brj6YfO6mqpQr0Mk70Gv/UY25FHN6aUpv4DFymwo1RvgsdC2Mv4QI=
+X-Received: by 2002:a19:644f:: with SMTP id b15mr198595lfj.28.1588901160474;
+ Thu, 07 May 2020 18:26:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200421123952.49025-1-yuyufen@huawei.com> <20200421123952.49025-2-yuyufen@huawei.com>
-In-Reply-To: <20200421123952.49025-2-yuyufen@huawei.com>
+References: <20200421123952.49025-1-yuyufen@huawei.com> <20200421123952.49025-3-yuyufen@huawei.com>
+In-Reply-To: <20200421123952.49025-3-yuyufen@huawei.com>
 From:   Song Liu <song@kernel.org>
-Date:   Thu, 7 May 2020 17:56:58 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW4qoT-nGA4RvGhxvabkNsz=x_gseWN7hzp4SFCHdsEZTw@mail.gmail.com>
-Message-ID: <CAPhsuW4qoT-nGA4RvGhxvabkNsz=x_gseWN7hzp4SFCHdsEZTw@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 1/8] md/raid5: add CONFIG_MD_RAID456_STRIPE_SIZE to
- set STRIPE_SIZE
+Date:   Thu, 7 May 2020 18:25:49 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW6ETatEq_x+4YEvY2XkFjBWDkodEjrXaAyRpmodvdNzzg@mail.gmail.com>
+Message-ID: <CAPhsuW6ETatEq_x+4YEvY2XkFjBWDkodEjrXaAyRpmodvdNzzg@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 2/8] md/raid5: add a member of r5pages for struct stripe_head
 To:     Yufen Yu <yuyufen@huawei.com>
 Cc:     linux-raid <linux-raid@vger.kernel.org>,
         NeilBrown <neilb@suse.com>,
@@ -53,64 +52,145 @@ X-Mailing-List: linux-raid@vger.kernel.org
 
 On Tue, Apr 21, 2020 at 5:40 AM Yufen Yu <yuyufen@huawei.com> wrote:
 >
-[...]
-> Thus, we provide a configure to set STRIPE_SIZE when PAGE_SIZE is bigger
-> than 4096. Normally, default value (4096) can get relatively good
-> performance. But if each issued io is bigger than 4096, setting value more
-> than 4096 may get better performance.
+> Since grow_buffers() uses alloc_page() allocate the buffers for each
+> stripe_head(), means, it will allocate 64K buffers and just use 4K
+> of them, after setting STRIPE_SIZE as 4096.
+>
+> To avoid waste memory, we try to contain multiple 'page' of sh->dev
+> into one real page. That means, multiple sh->dev[i].page will point to
+> the only page with different offset. Example of 64K PAGE_SIZE and
+> 4K STRIPE_SIZE as following:
+>
+>                     64K PAGE_SIZE
+>           +---+---+---+---+------------------------------+
+>           |   |   |   |   |
+>           |   |   |   |   |
+>           +-+-+-+-+-+-+-+-+------------------------------+
+>             ^   ^   ^   ^
+>             |   |   |   +----------------------------+
+>             |   |   |                                |
+>             |   |   +-------------------+            |
+>             |   |                       |            |
+>             |   +----------+            |            |
+>             |              |            |            |
+>             +-+            |            |            |
+>               |            |            |            |
+>         +-----+-----+------+-----+------+-----+------+------+
+> sh      | offset(0) | offset(4K) | offset(8K) | offset(16K) |
+>  +      +-----------+------------+------------+-------------+
+>  +----> dev[0].page  dev[1].page  dev[2].page  dev[3].page
+>
+> After compressing pages, the users of sh->dev[i].page need to be take care:
+>
+>   1) When issue bio of stripe_head, bi_io_vec.bv_page will point to
+>      the page directly. So, we should make sure bv_offset been set with
+>      correct offset.
+>
+>   2) When compute xor, the page will be passed to computer function.
+>      So, we also need to pass offset of that page to computer. Let it
+>      compute correct location of each sh->dev[i].page.
+>
+> This patch will add a new member of r5pages in stripe_head to manage
+> all pages needed by each sh->dev[i]. We also add 'offset' for each r5dev
+> so that users can get related page offset easily. And add helper function
+> to get page and it's index in r5pages array by disk index. This is patch
+> in preparation for fallowing changes.
 >
 > Signed-off-by: Yufen Yu <yuyufen@huawei.com>
-
-I am sorry for the delay response.
-
 > ---
->  drivers/md/Kconfig | 18 ++++++++++++++++++
->  drivers/md/raid5.h |  4 +++-
->  2 files changed, 21 insertions(+), 1 deletion(-)
+>  drivers/md/raid5.h | 56 ++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
 >
-> diff --git a/drivers/md/Kconfig b/drivers/md/Kconfig
-> index d6d5ab23c088..05c5a315358b 100644
-> --- a/drivers/md/Kconfig
-> +++ b/drivers/md/Kconfig
-> @@ -157,6 +157,24 @@ config MD_RAID456
->
->           If unsure, say Y.
->
-> +config MD_RAID456_STRIPE_SIZE
-> +       int "RAID4/RAID5/RAID6 stripe size"
-> +       default "4096"
-> +       depends on MD_RAID456
-> +       help
-> +         The default value is 4096. Just setting a new value when PAGE_SIZE
-> +         is bigger than 4096.  In that case, you can set it as more than
-> +         4096, such as 8KB, 16K, 64K, which requires that be a multiple of
-> +         4K.
-> +
-> +         When you try to set a big value, likely 64KB on arm64, that means,
-> +         you know size of each io that issued to raid device is more than
-> +         4096. Otherwise just use default value.
-> +
-> +         Normally, using default STRIPE_SIZE can get better performance.
-> +         Only change this value if you know what you are doing.
-> +
-> +
->  config MD_MULTIPATH
->         tristate "Multipath I/O support"
->         depends on BLK_DEV_MD
 > diff --git a/drivers/md/raid5.h b/drivers/md/raid5.h
-> index f90e0704bed9..b0010991bdc8 100644
+> index b0010991bdc8..6296578e9585 100644
 > --- a/drivers/md/raid5.h
 > +++ b/drivers/md/raid5.h
-> @@ -472,7 +472,9 @@ struct disk_info {
->   */
->
->  #define NR_STRIPES             256
-> -#define STRIPE_SIZE            PAGE_SIZE
-> +#define STRIPE_SIZE    \
-> +       ((PAGE_SIZE > 4096 && (CONFIG_MD_RAID456_STRIPE_SIZE % 4096 == 0)) ? \
-> +        CONFIG_MD_RAID456_STRIPE_SIZE : PAGE_SIZE)
+> @@ -246,6 +246,13 @@ struct stripe_head {
+>                 int                  target, target2;
+>                 enum sum_check_flags zero_sum_result;
+>         } ops;
+> +
+> +       /* These pages will be used by bios in dev[i] */
+> +       struct r5pages {
+> +               struct page     **page;
+> +               int     size; /* page array size */
 
-How about we make the config multiple of 4kB? So 4096 will be 1, 8192 will be 2.
+Do we really need variable size for each stripe?
 
 Thanks,
 Song
+
+PS: I like the overall idea of 2/8 and 3/8. Will continue reviewing later.
+
+
+> +       } pages;
+> +
+>         struct r5dev {
+>                 /* rreq and rvec are used for the replacement device when
+>                  * writing data to both devices.
+> @@ -253,6 +260,7 @@ struct stripe_head {
+>                 struct bio      req, rreq;
+>                 struct bio_vec  vec, rvec;
+>                 struct page     *page, *orig_page;
+> +               unsigned int    offset;         /* offset of this page */
+>                 struct bio      *toread, *read, *towrite, *written;
+>                 sector_t        sector;                 /* sector of this page */
+>                 unsigned long   flags;
+> @@ -754,6 +762,54 @@ static inline int algorithm_is_DDF(int layout)
+>         return layout >= 8 && layout <= 10;
+>  }
+>
+> +/*
+> + * Return corresponding page index of r5pages array.
+> + */
+> +static inline int raid5_get_page_index(struct stripe_head *sh, int disk_idx)
+> +{
+> +       WARN_ON(!sh->pages.page);
+> +       if (disk_idx >= sh->raid_conf->pool_size)
+> +               return -ENOENT;
+> +
+> +       return (disk_idx * STRIPE_SIZE) / PAGE_SIZE;
+> +}
+> +
+> +/*
+> + * Return offset of the corresponding page for r5dev.
+> + */
+> +static inline int raid5_get_page_offset(struct stripe_head *sh, int disk_idx)
+> +{
+> +       WARN_ON(!sh->pages.page);
+> +       if (disk_idx >= sh->raid_conf->pool_size)
+> +               return -ENOENT;
+> +
+> +       return (disk_idx * STRIPE_SIZE) % PAGE_SIZE;
+> +}
+> +
+> +/*
+> + * Return corresponding page address for r5dev.
+> + */
+> +static inline struct page *
+> +raid5_get_dev_page(struct stripe_head *sh, int disk_idx)
+> +{
+> +       int idx;
+> +
+> +       WARN_ON(!sh->pages.page);
+> +       idx = raid5_get_page_index(sh, disk_idx);
+> +       return sh->pages.page[idx];
+> +}
+> +
+> +/*
+> + * We want to 'compress' multiple buffers to one real page for
+> + * stripe_head when PAGE_SIZE is biggger than STRIPE_SIZE. If their
+> + * values are equal, no need to use this strategy. For now, it just
+> + * support raid level less than 5.
+> + */
+> +static inline int raid5_compress_stripe_pages(struct r5conf *conf)
+> +{
+> +       return (PAGE_SIZE > STRIPE_SIZE) && (conf->level < 6);
+> +}
+> +
+>  extern void md_raid5_kick_device(struct r5conf *conf);
+>  extern int raid5_set_cache_size(struct mddev *mddev, int size);
+>  extern sector_t raid5_compute_blocknr(struct stripe_head *sh, int i, int previous);
+> --
+> 2.21.1
+>
