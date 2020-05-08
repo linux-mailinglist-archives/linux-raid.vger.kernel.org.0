@@ -2,80 +2,86 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 72DA91CBA7A
-	for <lists+linux-raid@lfdr.de>; Sat,  9 May 2020 00:13:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA03D1CBB7E
+	for <lists+linux-raid@lfdr.de>; Sat,  9 May 2020 01:58:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgEHWNs (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 8 May 2020 18:13:48 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:36612 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726811AbgEHWNr (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 8 May 2020 18:13:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588976026;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=7XTZwXR9Z9h3mhkEx2o1bmyDVneFoc2pkGAjVYehhi0=;
-        b=RncL95G1n8XUFTaOJapGjDj95acCt1Ym8G7H4dJNG+Pg/r++EnkX0nzb+ThOgN72Me9yXe
-        WsaRj8D9yI3Ucsci75A3DbsOc8Js8j4XzsO78PM5KE213nqNF+F2VD3K2sda8Jq6P0cAh7
-        ocx771djD+y41WVPdMyFq98Bp9i2vPQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-483-d2xIQt37O8yux2pmv4ZgAg-1; Fri, 08 May 2020 18:13:42 -0400
-X-MC-Unique: d2xIQt37O8yux2pmv4ZgAg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728288AbgEHX6V (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 8 May 2020 19:58:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37072 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727778AbgEHX6U (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 8 May 2020 19:58:20 -0400
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 828A51005510;
-        Fri,  8 May 2020 22:13:39 +0000 (UTC)
-Received: from T590 (ovpn-8-16.pek2.redhat.com [10.72.8.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 74FBC1001B07;
-        Fri,  8 May 2020 22:13:27 +0000 (UTC)
-Date:   Sat, 9 May 2020 06:13:21 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Jim Paris <jim@jtan.com>,
-        Geoff Levand <geoff@infradead.org>,
-        Joshua Morris <josh.h.morris@us.ibm.com>,
-        Philip Kelleher <pjk1939@linux.ibm.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-nvdimm@lists.01.org
-Subject: Re: remove a few uses of ->queuedata
-Message-ID: <20200508221321.GD1389136@T590>
-References: <20200508161517.252308-1-hch@lst.de>
+        by mail.kernel.org (Postfix) with ESMTPSA id 3932E24958
+        for <linux-raid@vger.kernel.org>; Fri,  8 May 2020 23:58:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588982300;
+        bh=57RdWdCLh6MnBZcoeeGAXbSu+DwqCGQU09DLLrGhanE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JI+ZVtxcwQLcyPFGyApD+7tnzVMlk5+oc/WLQGIJ9MFNIKwFViwnIbxCi5EtqAf6z
+         uLSU5jxiZzN+HkbcASTt9XpLYRzHs6vVViMsp6TSBzNBojlTuPcAw/wZ8COj8mZy8c
+         3yZ6gv+zzE/LtXbWBOB3VDB8eF4MYtu87MV1WfW8=
+Received: by mail-lj1-f181.google.com with SMTP id u6so3471257ljl.6
+        for <linux-raid@vger.kernel.org>; Fri, 08 May 2020 16:58:20 -0700 (PDT)
+X-Gm-Message-State: AOAM532qsQENs1RjCw5am+W08AAH2qjDjvDMMzwuNhLGm52btqKRd7/k
+        gOe5uZzJT5P5xur2xGgN3iinuVmtbyZ/2sNnn1c=
+X-Google-Smtp-Source: ABdhPJymokNU+csjdCA9Z5kIJQXD/y5WhFS5BQUJs+IZg+aSi3/eBK6sN0aiU25Byn84P0sxk7rN0cVSDhGFscDn3As=
+X-Received: by 2002:a2e:b0c4:: with SMTP id g4mr3176434ljl.235.1588982298341;
+ Fri, 08 May 2020 16:58:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508161517.252308-1-hch@lst.de>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <20200421123952.49025-1-yuyufen@huawei.com> <20200421123952.49025-3-yuyufen@huawei.com>
+In-Reply-To: <20200421123952.49025-3-yuyufen@huawei.com>
+From:   Song Liu <song@kernel.org>
+Date:   Fri, 8 May 2020 16:58:07 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW4GxrgnToy=7HowOmWKBOqySdY=-n1KO-fYV+Thof7mtw@mail.gmail.com>
+Message-ID: <CAPhsuW4GxrgnToy=7HowOmWKBOqySdY=-n1KO-fYV+Thof7mtw@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 2/8] md/raid5: add a member of r5pages for struct stripe_head
+To:     Yufen Yu <yuyufen@huawei.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>,
+        NeilBrown <neilb@suse.com>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Coly Li <colyli@suse.de>, Xiao Ni <xni@redhat.com>,
+        Hou Tao <houtao1@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Fri, May 08, 2020 at 06:15:02PM +0200, Christoph Hellwig wrote:
-> Hi all,
-> 
-> various bio based drivers use queue->queuedata despite already having
-> set up disk->private_data, which can be used just as easily.  This
-> series cleans them up to only use a single private data pointer.
-> 
-> blk-mq based drivers that have code pathes that can't easily get at
-> the gendisk are unaffected by this series.
+On Tue, Apr 21, 2020 at 5:40 AM Yufen Yu <yuyufen@huawei.com> wrote:
+>
+[...]
+> Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+> ---
+> +
+> +/*
+> + * We want to 'compress' multiple buffers to one real page for
+> + * stripe_head when PAGE_SIZE is biggger than STRIPE_SIZE. If their
+> + * values are equal, no need to use this strategy. For now, it just
+> + * support raid level less than 5.
+> + */
 
-Yeah, before adding disk, there still may be requests queued to LLD
-for blk-mq based drivers.
+I don't think "compress" is the right terminology here. It is more
+like "share" a page.
+Why not support raid6 here?
 
-So are there this similar situation for these bio based drivers?
-
+Overall, the set looks reasonable to me. Please revise and send another version.
 
 Thanks,
-Ming
+Song
 
+
+
+> +static inline int raid5_compress_stripe_pages(struct r5conf *conf)
+> +{
+> +       return (PAGE_SIZE > STRIPE_SIZE) && (conf->level < 6);
+> +}
+> +
+>  extern void md_raid5_kick_device(struct r5conf *conf);
+>  extern int raid5_set_cache_size(struct mddev *mddev, int size);
+>  extern sector_t raid5_compute_blocknr(struct stripe_head *sh, int i, int previous);
+> --
+> 2.21.1
+>
