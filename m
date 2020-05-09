@@ -2,104 +2,90 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 52ACE1CC24E
-	for <lists+linux-raid@lfdr.de>; Sat,  9 May 2020 17:07:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 239DE1CC298
+	for <lists+linux-raid@lfdr.de>; Sat,  9 May 2020 18:28:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbgEIPHa (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 9 May 2020 11:07:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51764 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728005AbgEIPH1 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 9 May 2020 11:07:27 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46250C05BD09
-        for <linux-raid@vger.kernel.org>; Sat,  9 May 2020 08:07:27 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id n17so3882659ejh.7
-        for <linux-raid@vger.kernel.org>; Sat, 09 May 2020 08:07:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yLn1AXHn00bZ+po9Vb7k6qNSHYdWGkkZ6wxI2pwtGRE=;
-        b=bCOSwnBBjfPXdvYGJ+yVECFvPTePDH1ANyISrMhvJ1qWqJvVThnHr98KsSwJqA14nC
-         yCPOxIRhJYUKs+I0Z7zlDnbc2VJgVwWpDdEA4tIPWEVVkzgs6TyhzHr/LnVPIJc5YbZe
-         /Ga31Bb5nRqdr5sF01D+4kD7nuppvALvlvKumT0LdbEKLra5xfeiNf57Wv0ExKnHb7Rg
-         DbJPWuDEL/VR1p8vve4AZ1c4iNgOcgeDoJddMOToTohvJc+NMCp5pllqs5xHvWVFoT1b
-         hZ2eMoVCvm/W3nphozJEpzuE720t10XyAVjkj8Y23QAnpJ3YgiSQvtyoRGLEW8+4DwBB
-         HlzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yLn1AXHn00bZ+po9Vb7k6qNSHYdWGkkZ6wxI2pwtGRE=;
-        b=rU25by7oBAtOT0EQ0cZvHbuWrUZO20oFJdSP/U/UvZqWM4NFJoNNhkZ9CqASQlSL/P
-         Zd2xEBvBrzDJ+7l8AiJmII5sTdSZaZvzvMM4o96Zc6lrq1ZaavJ3gjgh/XaCZ8EhGDGU
-         4v7QS5x4Ab3pUfor7bOXjzv1dBglYVNrpjXZ/0azTAN1epXaZCaeGwAzhtdo+M42AxeB
-         pnxbjMud5gAiQU7KMhr9Jsskm/f0Z+6U9nb/QaaIAIAUVuuTikE+jvncDHyqtpF3KKPY
-         3pi9RI6/TX+C1K4Fs5IqonNemGdMec4o49cT0eSjDiNl7sBd0vA8iNsLaraqddC/WgmT
-         8ZpQ==
-X-Gm-Message-State: AGi0PubBHsuIFHLrD+6IT4fur39EdKNYfqLlXyVM8xM2SnqJMQvsDrfs
-        zcljrDuv4VNaa9Wc7OwCzDdXJ68QGiSLZvxbVEPhaA==
-X-Google-Smtp-Source: APiQypKilW3QgeYL9j+z8BH4y4sSKlWKWi60GEoJhZT78wFbACZI36hD4PovUMVH8UfEyvLbc+3je7NxPGD32jSs39Q=
-X-Received: by 2002:a17:906:855a:: with SMTP id h26mr6685025ejy.56.1589036845508;
- Sat, 09 May 2020 08:07:25 -0700 (PDT)
+        id S1728000AbgEIQ2a convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-raid@lfdr.de>); Sat, 9 May 2020 12:28:30 -0400
+Received: from p3plsmtpa12-05.prod.phx3.secureserver.net ([68.178.252.234]:57747
+        "EHLO p3plsmtpa12-05.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726214AbgEIQ2a (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 9 May 2020 12:28:30 -0400
+X-Greylist: delayed 438 seconds by postgrey-1.27 at vger.kernel.org; Sat, 09 May 2020 12:28:30 EDT
+Received: from localhost ([181.120.129.159])
+        by :SMTPAUTH: with ESMTPA
+        id XSDujLlVvlNbJXSDvjlaz4; Sat, 09 May 2020 09:21:12 -0700
+X-CMAE-Analysis: v=2.3 cv=brYy+3Si c=1 sm=1 tr=0
+ a=sDQzn4cTYThu7dlYCIJj2A==:117 a=sDQzn4cTYThu7dlYCIJj2A==:17
+ a=IkcTkHD0fZMA:10 a=nivXcWBVAAAA:8 a=jeNT614biOa5FUjvAswA:9 a=QEXdDO2ut3YA:10
+ a=AYU4-JbLY8jJQ8sGdisn:22
+X-SECURESERVER-ACCT: renaud@olgiati-in-paraguay.org
+Date:   Sat, 9 May 2020 12:21:09 -0400
+From:   "Renaud (Ron) OLGIATI" <renaud@olgiati-in-paraguay.org>
+To:     linux-raid <linux-raid@vger.kernel.org>
+Subject: Raid1 not assembling correctly after after new MB
+Message-ID: <20200509122109.5f68288b@olgiati-in-paraguay.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-mandriva-linux-gnu)
 MIME-Version: 1.0
-References: <20200508161517.252308-1-hch@lst.de> <CAPcyv4j3gVqrZWCCc2Q-6JizGAQXW0b+R1BcvWCZOvzaukGLQg@mail.gmail.com>
- <20200509082352.GB21834@lst.de>
-In-Reply-To: <20200509082352.GB21834@lst.de>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Sat, 9 May 2020 08:07:14 -0700
-Message-ID: <CAPcyv4ggb7_rwzGbhHNXSHd+jjSpZC=+DMEztY6Cu8Bc=ZNzag@mail.gmail.com>
-Subject: Re: remove a few uses of ->queuedata
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Jim Paris <jim@jtan.com>,
-        Geoff Levand <geoff@infradead.org>,
-        Joshua Morris <josh.h.morris@us.ibm.com>,
-        Philip Kelleher <pjk1939@linux.ibm.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-m68k@lists.linux-m68k.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-bcache@vger.kernel.org,
-        linux-raid <linux-raid@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-CMAE-Envelope: MS4wfN8RyI6u830bNWlLs185vdF9xUf+XdDITDGd7a2zjCyVFa965gmeqVC1DS5Te19VpvGfuOoM22kwWDKkqvTFZiElt8ASa1t9a6z+RUkhnyxBD1K+JdT1
+ PFhTLbkOTXTbJskVnnvxkwzFIInHsud0f+Zg/4SXOJ2FusxrGMrIoq85kf5KHl6Q4admNzko1QE5jw==
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Sat, May 9, 2020 at 1:24 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Fri, May 08, 2020 at 11:04:45AM -0700, Dan Williams wrote:
-> > On Fri, May 8, 2020 at 9:16 AM Christoph Hellwig <hch@lst.de> wrote:
-> > >
-> > > Hi all,
-> > >
-> > > various bio based drivers use queue->queuedata despite already having
-> > > set up disk->private_data, which can be used just as easily.  This
-> > > series cleans them up to only use a single private data pointer.
-> >
-> > ...but isn't the queue pretty much guaranteed to be cache hot and the
-> > gendisk cache cold? I'm not immediately seeing what else needs the
-> > gendisk in the I/O path. Is there another motivation I'm missing?
->
-> ->private_data is right next to the ->queue pointer, pat0 and part_tbl
-> which are all used in the I/O submission path (generic_make_request /
-> generic_make_request_checks).  This is mostly a prep cleanup patch to
-> also remove the pointless queue argument from ->make_request - then
-> ->queue is an extra dereference and extra churn.
+Another try, as I am not sure it went anywhere on the first attempt.
 
-Ah ok. If the changelogs had been filled in with something like "In
-preparation for removing @q from make_request_fn, stop using
-->queuedata", I probably wouldn't have looked twice.
 
-For the nvdimm/ driver updates you can add:
+I have just booted my box after putting in a new MBn old one died peacefully during the night.
 
-    Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+My HDs were configured at the BIOS level as hardware RAID1, and in the PCLinuxOS system with mdadm.
 
-...or just let me know if you want me to pick those up through the nvdimm tree.
+I only learned later (on this list) that it was not necessary to configur HW RAID1 at the BIOS level.
+
+Booting the box, and without configuring the RAID1 at the BIOS level, the box booted normally, but only the priùmary partitions of the two HD pairs work properly:
+
+~ $ cat /proc/mdstat 
+Personalities : [raid1] 
+md7 : active raid1 sdc1[0] sdd1[1]
+      1953382464 blocks super 1.2 [2/2] [UU]
+      bitmap: 1/15 pages [4KB], 65536KB chunk
+
+md6 : active raid1 sda10[0]
+      248640 blocks super 1.2 [2/1] [U_]
+      
+md5 : active raid1 sda9[0]
+      446840832 blocks super 1.2 [2/1] [U_]
+      bitmap: 4/4 pages [16KB], 65536KB chunk
+
+md4 : active raid1 sda8[0]
+      15616000 blocks super 1.2 [2/1] [U_]
+      
+md3 : active raid1 sda7[0]
+      12686336 blocks super 1.2 [2/1] [U_]
+      
+md2 : active raid1 sda6[0]
+      242496 blocks super 1.2 [2/1] [U_]
+      
+md1 : active raid1 sda5[0]
+      8198144 blocks super 1.2 [2/1] [U_]
+      
+md0 : active raid1 sda1[0] sdb1[1]
+      4389888 blocks super 1.2 [2/2] [UU]
+      
+unused devices: <none>
+
+So I went to the BIOS, to activate the hardware RAID1, get a warning that all data will be lost; so did not do it., 
+
+What should I do to restore the RAID volumes md1 to md6 ? Where to look for guidance ?
+ 
+Cheers,
+ 
+Ron.
+-- 
+                 Une illusion perdue est une vérité trouvée .
+                                    
+                   -- http://www.olgiati-in-paraguay.org --
+ 
