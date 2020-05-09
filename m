@@ -2,107 +2,123 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BCB231CC066
-	for <lists+linux-raid@lfdr.de>; Sat,  9 May 2020 12:38:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5781E1CC092
+	for <lists+linux-raid@lfdr.de>; Sat,  9 May 2020 12:55:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgEIKiQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 9 May 2020 06:38:16 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33997 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbgEIKiQ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 9 May 2020 06:38:16 -0400
-Received: by mail-oi1-f193.google.com with SMTP id c12so9819670oic.1;
-        Sat, 09 May 2020 03:38:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nBe+65cgrmufPqKgCO/WJS9rGOrSoS9DaeQpyO6VPQY=;
-        b=HUXFfZqyQiXplVrHeI/ZPD7fgTu/OyQS1uWandQ6GfholZUozpDA92RXqRtP3552+4
-         QU3UraKKkKBepmI4MM8VVIPVwoKSVc58fm+nR18vHiQTUD114S+ZJ7Z1yqclKOvDyfDw
-         /LAg8vYGyAmWIpSXcfPoxA14/QbxzjQIGrNCcLfV+j4vNoubQ5Lw6Kej6XiDjnDtr/Sm
-         mSjL8ioibecpSpdditmliAoTdksLU0kI/e8QDnJL6gNrAGiDVY9bhRs8tKRKoMOM/4yM
-         fBklMHZ/F0j1KhJwDEC/SGcPxpWd4DK81p+RBhisjz5CIqhRrrNXgUi0x5GI2ktEKXzZ
-         IZ3w==
-X-Gm-Message-State: AGi0Pua8mblCFI4UeA4h/Ojs+ZTIWSRPGsnxdFCxXlARacpXuuCfjEAj
-        oYctl3NkzFVkGH2Q6GDOKkrfZ7dULzyemEM0/O0=
-X-Google-Smtp-Source: APiQypJViR7zf1BxfE4fSiEMumUvdAfdspNngdk/6s5fr4R3Q+whgmTLapvbuOPEuAwW4U0ZD7JgMnKsLrBjVv9lPKw=
-X-Received: by 2002:aca:d50f:: with SMTP id m15mr13605566oig.54.1589020691722;
- Sat, 09 May 2020 03:38:11 -0700 (PDT)
+        id S1726946AbgEIKzM (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 9 May 2020 06:55:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40922 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726017AbgEIKzL (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 9 May 2020 06:55:11 -0400
+Received: from forward100p.mail.yandex.net (forward100p.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E20DBC061A0C
+        for <linux-raid@vger.kernel.org>; Sat,  9 May 2020 03:55:09 -0700 (PDT)
+Received: from forward101q.mail.yandex.net (forward101q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb98])
+        by forward100p.mail.yandex.net (Yandex) with ESMTP id 3D7565980FCD
+        for <linux-raid@vger.kernel.org>; Sat,  9 May 2020 13:55:07 +0300 (MSK)
+Received: from mxback4q.mail.yandex.net (mxback4q.mail.yandex.net [IPv6:2a02:6b8:c0e:6d:0:640:ed15:d2bd])
+        by forward101q.mail.yandex.net (Yandex) with ESMTP id 3B25FCF40002
+        for <linux-raid@vger.kernel.org>; Sat,  9 May 2020 13:55:07 +0300 (MSK)
+Received: from vla1-61ce7aa04735.qloud-c.yandex.net (vla1-61ce7aa04735.qloud-c.yandex.net [2a02:6b8:c0d:3e86:0:640:61ce:7aa0])
+        by mxback4q.mail.yandex.net (mxback/Yandex) with ESMTP id xL4m35Xv2g-t7cqxJCQ;
+        Sat, 09 May 2020 13:55:07 +0300
+Received: by vla1-61ce7aa04735.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id ds2natQrnd-t6t4pgVl;
+        Sat, 09 May 2020 13:55:06 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+To:     linux-raid <linux-raid@vger.kernel.org>
+From:   Michal Soltys <msoltyspl@yandex.pl>
+Subject: Assemblin journaled array fails
+Message-ID: <f8c61278-1758-66cd-cf25-8a118cb12f58@yandex.pl>
+Date:   Sat, 9 May 2020 12:54:59 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200508161517.252308-1-hch@lst.de> <20200508161517.252308-2-hch@lst.de>
-In-Reply-To: <20200508161517.252308-2-hch@lst.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sat, 9 May 2020 12:38:00 +0200
-Message-ID: <CAMuHMdUBRsZQ1BOD9jW99NTm_8NZDootGrqzz3nPeeJ+mUAoTw@mail.gmail.com>
-Subject: Re: [PATCH 01/15] nfblock: use gendisk private_data
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Jim Paris <jim@jtan.com>,
-        Geoff Levand <geoff@infradead.org>,
-        Joshua Morris <josh.h.morris@us.ibm.com>,
-        Philip Kelleher <pjk1939@linux.ibm.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:TENSILICA XTENSA PORT (xtensa)" 
-        <linux-xtensa@linux-xtensa.org>,
-        Lars Ellenberg <drbd-dev@lists.linbit.com>,
-        linux-block@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi Christoph,
+Looks like I have now another issue with journaled array that now fails 
+to assemble - with related command used to assembly it (whether it would 
+be mdadm --incremental called by udev, or manually from commandline) 
+hanged and unkillable.
 
-On Fri, May 8, 2020 at 6:16 PM Christoph Hellwig <hch@lst.de> wrote:
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+The array was previously running with different journal that was later 
+replaced with different better disks. The journal device itself is 
+healthy and assembles fine. Assembling (the below dump is when mdadm vis 
+udev was doing it):
 
-Thanks for your patch!
 
-> --- a/arch/m68k/emu/nfblock.c
-> +++ b/arch/m68k/emu/nfblock.c
-> @@ -61,7 +61,7 @@ struct nfhd_device {
->
->  static blk_qc_t nfhd_make_request(struct request_queue *queue, struct bio *bio)
->  {
-> -       struct nfhd_device *dev = queue->queuedata;
-> +       struct nfhd_device *dev = bio->bi_disk->private_data;
->         struct bio_vec bvec;
->         struct bvec_iter iter;
->         int dir, len, shift;
-> @@ -122,7 +122,6 @@ static int __init nfhd_init_one(int id, u32 blocks, u32 bsize)
->         if (dev->queue == NULL)
->                 goto free_dev;
->
-> -       dev->queue->queuedata = dev;
->         blk_queue_logical_block_size(dev->queue, bsize);
->
->         dev->disk = alloc_disk(16);
-> @@ -136,6 +135,7 @@ static int __init nfhd_init_one(int id, u32 blocks, u32 bsize)
->         sprintf(dev->disk->disk_name, "nfhd%u", dev_id);
->         set_capacity(dev->disk, (sector_t)blocks * (bsize / 512));
->         dev->disk->queue = dev->queue;
-> +       dev->disk->private_data = dev;
+mdadm -D /dev/md126
+/dev/md126:
+            Version : 1.1
+      Creation Time : Tue Mar  5 19:28:58 2019
+         Raid Level : raid5
+      Used Dev Size : 18446744073709551615
+       Raid Devices : 4
+      Total Devices : 5
+        Persistence : Superblock is persistent
 
-This is already set above, just before the quoted sprintf() call.
+        Update Time : Sat May  9 09:34:58 2020
+              State : active, FAILED, Not Started
+     Active Devices : 4
+    Working Devices : 5
+     Failed Devices : 0
+      Spare Devices : 0
 
->
->         add_disk(dev->disk);
+             Layout : left-symmetric
+         Chunk Size : 512K
 
-Gr{oetje,eeting}s,
+Consistency Policy : journal
 
-                        Geert
+               Name : xs22:r5_big  (local to host xs22)
+               UUID : d5995d76:67d7fabd:05392f87:25a91a97
+             Events : 56283
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+     Number   Major   Minor   RaidDevice State
+        -       0        0        0      removed
+        -       0        0        1      removed
+        -       0        0        2      removed
+        -       0        0        3      removed
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+        -       8      145        3      sync   /dev/sdj1
+        -       8      129        2      sync   /dev/sdi1
+        -       9      127        -      spare   /dev/md/xs22:r1_journal_big
+        -       8      113        1      sync   /dev/sdh1
+        -       8       97        0      sync   /dev/sdg1
+
+
+
+mdadm -Esv:
+
+ARRAY /dev/md/r1_journal_big  level=raid1 metadata=1.1 num-devices=2 
+UUID=c18b3996:49b21f49:3ee18e92:a8240f7f name=xs22:r1_journal_big
+    devices=/dev/sdv1,/dev/sdu1
+ARRAY /dev/md/r5_big  level=raid5 metadata=1.1 num-devices=4 
+UUID=d5995d76:67d7fabd:05392f87:25a91a97 name=xs22:r5_big
+    spares=1 
+devices=/dev/md/xs22:r1_journal_big,/dev/sdg1,/dev/sdh1,/dev/sdj1,/dev/sdi1
+
+
+When I was changing journal some time ago (successfully, everything was 
+working fine afterwards) this is what I did:
+
+echo [write-through] >/sys/md126/md/journal_mode
+mdadm /dev/md126 --fail /dev/md/r1_journal_big --remove 
+/dev/md/r1_journal_big
+echo resync >/sys/md126/md/consistency_policy
+
+# here i created new journal from new disks, the name was the same
+
+mdadm --readonly /dev/md126
+mdadm /dev/md126 --add-journal /dev/md/r1_journal_big
+echo [write-back] >/sys/md126/md/journal_mode
+# At this point mdadm confirmed everything went fine
+
+After the reboot I'm in the situation as outlined above. Any suggestion 
+how to assemble this array now ?
