@@ -2,73 +2,63 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 130341CBE1C
-	for <lists+linux-raid@lfdr.de>; Sat,  9 May 2020 08:40:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 421FE1CBEE5
+	for <lists+linux-raid@lfdr.de>; Sat,  9 May 2020 10:24:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbgEIGkx (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 9 May 2020 02:40:53 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4369 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725940AbgEIGkx (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sat, 9 May 2020 02:40:53 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B4E7C714F35DDAB737E2;
-        Sat,  9 May 2020 14:40:51 +0800 (CST)
-Received: from [10.166.215.172] (10.166.215.172) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 9 May 2020 14:40:45 +0800
-Subject: Re: [PATCH RFC v2 2/8] md/raid5: add a member of r5pages for struct
- stripe_head
-To:     Song Liu <song@kernel.org>
-CC:     linux-raid <linux-raid@vger.kernel.org>,
-        NeilBrown <neilb@suse.com>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Coly Li <colyli@suse.de>, "Xiao Ni" <xni@redhat.com>,
-        Hou Tao <houtao1@huawei.com>
-References: <20200421123952.49025-1-yuyufen@huawei.com>
- <20200421123952.49025-3-yuyufen@huawei.com>
- <CAPhsuW4GxrgnToy=7HowOmWKBOqySdY=-n1KO-fYV+Thof7mtw@mail.gmail.com>
-From:   Yufen Yu <yuyufen@huawei.com>
-Message-ID: <b7ce5578-61f6-a8a6-68da-7e357a1c44c9@huawei.com>
-Date:   Sat, 9 May 2020 14:40:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        id S1727874AbgEIIX7 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 9 May 2020 04:23:59 -0400
+Received: from verein.lst.de ([213.95.11.211]:56114 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727839AbgEIIX6 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sat, 9 May 2020 04:23:58 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id DB7F368C7B; Sat,  9 May 2020 10:23:52 +0200 (CEST)
+Date:   Sat, 9 May 2020 10:23:52 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Jim Paris <jim@jtan.com>, Geoff Levand <geoff@infradead.org>,
+        Joshua Morris <josh.h.morris@us.ibm.com>,
+        Philip Kelleher <pjk1939@linux.ibm.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-m68k@lists.linux-m68k.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org, drbd-dev@lists.linbit.com,
+        linux-block@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-bcache@vger.kernel.org,
+        linux-raid <linux-raid@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Subject: Re: remove a few uses of ->queuedata
+Message-ID: <20200509082352.GB21834@lst.de>
+References: <20200508161517.252308-1-hch@lst.de> <CAPcyv4j3gVqrZWCCc2Q-6JizGAQXW0b+R1BcvWCZOvzaukGLQg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAPhsuW4GxrgnToy=7HowOmWKBOqySdY=-n1KO-fYV+Thof7mtw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.172]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4j3gVqrZWCCc2Q-6JizGAQXW0b+R1BcvWCZOvzaukGLQg@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-
-
-On 2020/5/9 7:58, Song Liu wrote:
-> On Tue, Apr 21, 2020 at 5:40 AM Yufen Yu <yuyufen@huawei.com> wrote:
->>
-> [...]
->> Signed-off-by: Yufen Yu <yuyufen@huawei.com>
->> ---
->> +
->> +/*
->> + * We want to 'compress' multiple buffers to one real page for
->> + * stripe_head when PAGE_SIZE is biggger than STRIPE_SIZE. If their
->> + * values are equal, no need to use this strategy. For now, it just
->> + * support raid level less than 5.
->> + */
+On Fri, May 08, 2020 at 11:04:45AM -0700, Dan Williams wrote:
+> On Fri, May 8, 2020 at 9:16 AM Christoph Hellwig <hch@lst.de> wrote:
+> >
+> > Hi all,
+> >
+> > various bio based drivers use queue->queuedata despite already having
+> > set up disk->private_data, which can be used just as easily.  This
+> > series cleans them up to only use a single private data pointer.
 > 
-> I don't think "compress" is the right terminology here. It is more
-> like "share" a page.
-> Why not support raid6 here?
-> 
+> ...but isn't the queue pretty much guaranteed to be cache hot and the
+> gendisk cache cold? I'm not immediately seeing what else needs the
+> gendisk in the I/O path. Is there another motivation I'm missing?
 
-Thanks a lot for your reviewing and suggestion.
-Since it need to modify more existing code to support raid6, this series
-have not do it. I will try to support raid6 in next version.
-
-Thanks,
-Yufen
+->private_data is right next to the ->queue pointer, pat0 and part_tbl
+which are all used in the I/O submission path (generic_make_request /
+generic_make_request_checks).  This is mostly a prep cleanup patch to
+also remove the pointless queue argument from ->make_request - then
+->queue is an extra dereference and extra churn.
