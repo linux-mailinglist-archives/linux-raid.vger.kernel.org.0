@@ -2,90 +2,84 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 239DE1CC298
-	for <lists+linux-raid@lfdr.de>; Sat,  9 May 2020 18:28:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31B231CC5AB
+	for <lists+linux-raid@lfdr.de>; Sun, 10 May 2020 02:05:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728000AbgEIQ2a convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-raid@lfdr.de>); Sat, 9 May 2020 12:28:30 -0400
-Received: from p3plsmtpa12-05.prod.phx3.secureserver.net ([68.178.252.234]:57747
-        "EHLO p3plsmtpa12-05.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726214AbgEIQ2a (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 9 May 2020 12:28:30 -0400
-X-Greylist: delayed 438 seconds by postgrey-1.27 at vger.kernel.org; Sat, 09 May 2020 12:28:30 EDT
-Received: from localhost ([181.120.129.159])
-        by :SMTPAUTH: with ESMTPA
-        id XSDujLlVvlNbJXSDvjlaz4; Sat, 09 May 2020 09:21:12 -0700
-X-CMAE-Analysis: v=2.3 cv=brYy+3Si c=1 sm=1 tr=0
- a=sDQzn4cTYThu7dlYCIJj2A==:117 a=sDQzn4cTYThu7dlYCIJj2A==:17
- a=IkcTkHD0fZMA:10 a=nivXcWBVAAAA:8 a=jeNT614biOa5FUjvAswA:9 a=QEXdDO2ut3YA:10
- a=AYU4-JbLY8jJQ8sGdisn:22
-X-SECURESERVER-ACCT: renaud@olgiati-in-paraguay.org
-Date:   Sat, 9 May 2020 12:21:09 -0400
-From:   "Renaud (Ron) OLGIATI" <renaud@olgiati-in-paraguay.org>
+        id S1726410AbgEJAFt (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 9 May 2020 20:05:49 -0400
+Received: from forward105o.mail.yandex.net ([37.140.190.183]:49886 "EHLO
+        forward105o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726026AbgEJAFt (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 9 May 2020 20:05:49 -0400
+X-Greylist: delayed 468 seconds by postgrey-1.27 at vger.kernel.org; Sat, 09 May 2020 20:05:48 EDT
+Received: from mxback23j.mail.yandex.net (mxback23j.mail.yandex.net [IPv6:2a02:6b8:0:1619::223])
+        by forward105o.mail.yandex.net (Yandex) with ESMTP id A126B4200461
+        for <linux-raid@vger.kernel.org>; Sun, 10 May 2020 02:57:54 +0300 (MSK)
+Received: from myt6-efff10c3476a.qloud-c.yandex.net (myt6-efff10c3476a.qloud-c.yandex.net [2a02:6b8:c12:13a3:0:640:efff:10c3])
+        by mxback23j.mail.yandex.net (mxback/Yandex) with ESMTP id 74PDmXI1Db-vsrKaOuP;
+        Sun, 10 May 2020 02:57:54 +0300
+Received: by myt6-efff10c3476a.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id lXKp7CziYz-vr38b7SU;
+        Sun, 10 May 2020 02:57:53 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: Re: Assemblin journaled array fails
+From:   Michal Soltys <msoltyspl@yandex.pl>
 To:     linux-raid <linux-raid@vger.kernel.org>
-Subject: Raid1 not assembling correctly after after new MB
-Message-ID: <20200509122109.5f68288b@olgiati-in-paraguay.org>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-mandriva-linux-gnu)
+References: <f8c61278-1758-66cd-cf25-8a118cb12f58@yandex.pl>
+Message-ID: <70dad446-7d38-fd10-130f-c23797165a21@yandex.pl>
+Date:   Sun, 10 May 2020 01:57:47 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-CMAE-Envelope: MS4wfN8RyI6u830bNWlLs185vdF9xUf+XdDITDGd7a2zjCyVFa965gmeqVC1DS5Te19VpvGfuOoM22kwWDKkqvTFZiElt8ASa1t9a6z+RUkhnyxBD1K+JdT1
- PFhTLbkOTXTbJskVnnvxkwzFIInHsud0f+Zg/4SXOJ2FusxrGMrIoq85kf5KHl6Q4admNzko1QE5jw==
+In-Reply-To: <f8c61278-1758-66cd-cf25-8a118cb12f58@yandex.pl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Another try, as I am not sure it went anywhere on the first attempt.
+Anyway, I did some tests with manually snapshotted component devices 
+(using dm snapshot target to not touch underlying devices).
+
+The raid manages to force assemble in read-only mode with missing 
+journal device, so we probably will be able to recover most data 
+underneath this way (as a last resort).
+
+The situation I'm in now is likely from uncelan shutdown after all (why 
+the machine failed to react to ups properly is another subject).
+
+I'd still want to find out why is - apparently - a journal device giving 
+issues (contrary to what I'd expect it to do ...), with notable mention of:
+
+1) mdadm hangs (unkillable, so I presume in kernel somewhere) and eats 1 
+cpu when trying to assemble the raid with journal device present; once 
+it happens I can't do anything with the array (stop, run, etc.) and can 
+only reboot the server to "fix" that
+
+2) mdadm -D shows nonsensical device size after assembly attempt (Used 
+Dev Size : 18446744073709551615)
+
+3) the journal device (which itself is md raid1 consisting of 2 ssds) 
+assembles, checks (0 mismatch_cnt) fine - and overall looks ok.
 
 
-I have just booted my box after putting in a new MBn old one died peacefully during the night.
+ From other interesting things, I also attempted to assemble the raid 
+with snapshotted journal. From what I can see it does attempt to do 
+something, judging from:
 
-My HDs were configured at the BIOS level as hardware RAID1, and in the PCLinuxOS system with mdadm.
+dmsetup status:
 
-I only learned later (on this list) that it was not necessary to configur HW RAID1 at the BIOS level.
+snap_jo2: 0 536870912 snapshot 40/33554432 16
+snap_sdi1: 0 7812500000 snapshot 25768/83886080 112
+snap_jo1: 0 536870912 snapshot 40/33554432 16
+snap_sdg1: 0 7812500000 snapshot 25456/83886080 112
+snap_sdj1: 0 7812500000 snapshot 25928/83886080 112
+snap_sdh1: 0 7812500000 snapshot 25352/83886080 112
 
-Booting the box, and without configuring the RAID1 at the BIOS level, the box booted normally, but only the priùmary partitions of the two HD pairs work properly:
+But it doesn't move from those values (with mdadm doing nothing eating 
+100% cpu as mentioned earlier).
 
-~ $ cat /proc/mdstat 
-Personalities : [raid1] 
-md7 : active raid1 sdc1[0] sdd1[1]
-      1953382464 blocks super 1.2 [2/2] [UU]
-      bitmap: 1/15 pages [4KB], 65536KB chunk
 
-md6 : active raid1 sda10[0]
-      248640 blocks super 1.2 [2/1] [U_]
-      
-md5 : active raid1 sda9[0]
-      446840832 blocks super 1.2 [2/1] [U_]
-      bitmap: 4/4 pages [16KB], 65536KB chunk
-
-md4 : active raid1 sda8[0]
-      15616000 blocks super 1.2 [2/1] [U_]
-      
-md3 : active raid1 sda7[0]
-      12686336 blocks super 1.2 [2/1] [U_]
-      
-md2 : active raid1 sda6[0]
-      242496 blocks super 1.2 [2/1] [U_]
-      
-md1 : active raid1 sda5[0]
-      8198144 blocks super 1.2 [2/1] [U_]
-      
-md0 : active raid1 sda1[0] sdb1[1]
-      4389888 blocks super 1.2 [2/2] [UU]
-      
-unused devices: <none>
-
-So I went to the BIOS, to activate the hardware RAID1, get a warning that all data will be lost; so did not do it., 
-
-What should I do to restore the RAID volumes md1 to md6 ? Where to look for guidance ?
- 
-Cheers,
- 
-Ron.
--- 
-                 Une illusion perdue est une vérité trouvée .
-                                    
-                   -- http://www.olgiati-in-paraguay.org --
- 
+Any suggestions how to proceed would very be appreciated.
