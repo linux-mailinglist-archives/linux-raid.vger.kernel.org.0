@@ -2,276 +2,104 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 792911CC1CE
-	for <lists+linux-raid@lfdr.de>; Sat,  9 May 2020 15:32:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52ACE1CC24E
+	for <lists+linux-raid@lfdr.de>; Sat,  9 May 2020 17:07:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgEINc0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 9 May 2020 09:32:26 -0400
-Received: from forward100j.mail.yandex.net ([5.45.198.240]:60715 "EHLO
-        forward100j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726904AbgEINc0 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 9 May 2020 09:32:26 -0400
-Received: from mxback7g.mail.yandex.net (mxback7g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:168])
-        by forward100j.mail.yandex.net (Yandex) with ESMTP id CE14950E1125;
-        Sat,  9 May 2020 16:32:21 +0300 (MSK)
-Received: from iva1-bc1861525829.qloud-c.yandex.net (iva1-bc1861525829.qloud-c.yandex.net [2a02:6b8:c0c:a0e:0:640:bc18:6152])
-        by mxback7g.mail.yandex.net (mxback/Yandex) with ESMTP id q89rmK4cMG-WLo0pMIj;
-        Sat, 09 May 2020 16:32:21 +0300
-Received: by iva1-bc1861525829.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id S8350Vw6sQ-WKQGY1SO;
-        Sat, 09 May 2020 16:32:20 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: Assemblin journaled array fails
-From:   Michal Soltys <msoltyspl@yandex.pl>
-To:     antlists <antlists@youngman.org.uk>,
-        linux-raid <linux-raid@vger.kernel.org>
-References: <f8c61278-1758-66cd-cf25-8a118cb12f58@yandex.pl>
- <9591809e-583d-ebd5-ea0f-a342868a7728@youngman.org.uk>
- <1615c45f-8f7c-fae2-ef74-a23a29857316@yandex.pl>
-Message-ID: <e8ac7b5a-3d06-403a-4a92-aabd29266ca9@yandex.pl>
-Date:   Sat, 9 May 2020 15:32:15 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1728150AbgEIPHa (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 9 May 2020 11:07:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51764 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728005AbgEIPH1 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 9 May 2020 11:07:27 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46250C05BD09
+        for <linux-raid@vger.kernel.org>; Sat,  9 May 2020 08:07:27 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id n17so3882659ejh.7
+        for <linux-raid@vger.kernel.org>; Sat, 09 May 2020 08:07:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yLn1AXHn00bZ+po9Vb7k6qNSHYdWGkkZ6wxI2pwtGRE=;
+        b=bCOSwnBBjfPXdvYGJ+yVECFvPTePDH1ANyISrMhvJ1qWqJvVThnHr98KsSwJqA14nC
+         yCPOxIRhJYUKs+I0Z7zlDnbc2VJgVwWpDdEA4tIPWEVVkzgs6TyhzHr/LnVPIJc5YbZe
+         /Ga31Bb5nRqdr5sF01D+4kD7nuppvALvlvKumT0LdbEKLra5xfeiNf57Wv0ExKnHb7Rg
+         DbJPWuDEL/VR1p8vve4AZ1c4iNgOcgeDoJddMOToTohvJc+NMCp5pllqs5xHvWVFoT1b
+         hZ2eMoVCvm/W3nphozJEpzuE720t10XyAVjkj8Y23QAnpJ3YgiSQvtyoRGLEW8+4DwBB
+         HlzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yLn1AXHn00bZ+po9Vb7k6qNSHYdWGkkZ6wxI2pwtGRE=;
+        b=rU25by7oBAtOT0EQ0cZvHbuWrUZO20oFJdSP/U/UvZqWM4NFJoNNhkZ9CqASQlSL/P
+         Zd2xEBvBrzDJ+7l8AiJmII5sTdSZaZvzvMM4o96Zc6lrq1ZaavJ3gjgh/XaCZ8EhGDGU
+         4v7QS5x4Ab3pUfor7bOXjzv1dBglYVNrpjXZ/0azTAN1epXaZCaeGwAzhtdo+M42AxeB
+         pnxbjMud5gAiQU7KMhr9Jsskm/f0Z+6U9nb/QaaIAIAUVuuTikE+jvncDHyqtpF3KKPY
+         3pi9RI6/TX+C1K4Fs5IqonNemGdMec4o49cT0eSjDiNl7sBd0vA8iNsLaraqddC/WgmT
+         8ZpQ==
+X-Gm-Message-State: AGi0PubBHsuIFHLrD+6IT4fur39EdKNYfqLlXyVM8xM2SnqJMQvsDrfs
+        zcljrDuv4VNaa9Wc7OwCzDdXJ68QGiSLZvxbVEPhaA==
+X-Google-Smtp-Source: APiQypKilW3QgeYL9j+z8BH4y4sSKlWKWi60GEoJhZT78wFbACZI36hD4PovUMVH8UfEyvLbc+3je7NxPGD32jSs39Q=
+X-Received: by 2002:a17:906:855a:: with SMTP id h26mr6685025ejy.56.1589036845508;
+ Sat, 09 May 2020 08:07:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1615c45f-8f7c-fae2-ef74-a23a29857316@yandex.pl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200508161517.252308-1-hch@lst.de> <CAPcyv4j3gVqrZWCCc2Q-6JizGAQXW0b+R1BcvWCZOvzaukGLQg@mail.gmail.com>
+ <20200509082352.GB21834@lst.de>
+In-Reply-To: <20200509082352.GB21834@lst.de>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Sat, 9 May 2020 08:07:14 -0700
+Message-ID: <CAPcyv4ggb7_rwzGbhHNXSHd+jjSpZC=+DMEztY6Cu8Bc=ZNzag@mail.gmail.com>
+Subject: Re: remove a few uses of ->queuedata
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Jim Paris <jim@jtan.com>,
+        Geoff Levand <geoff@infradead.org>,
+        Joshua Morris <josh.h.morris@us.ibm.com>,
+        Philip Kelleher <pjk1939@linux.ibm.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-m68k@lists.linux-m68k.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org, drbd-dev@lists.linbit.com,
+        linux-block@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-bcache@vger.kernel.org,
+        linux-raid <linux-raid@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 20/05/09 15:20, Michal Soltys wrote:
-> On 20/05/09 15:15, antlists wrote:
->> On 09/05/2020 11:54, Michal Soltys wrote:
->>> After the reboot I'm in the situation as outlined above. Any 
->>> suggestion how to assemble this array now ?
->>
->> mdadm -v ?
-> 
-> mdadm - v4.1 - 2018-10-01
-> 
->>
->> uname -a ?
-> 
-> Linux xs22 5.4.0-0.bpo.4-amd64 #1 SMP Debian 5.4.19-1~bpo10+1 
-> (2020-03-09) x86_64 GNU/Linux
-> 
->>
->> https://raid.wiki.kernel.org/index.php/Asking_for_help
->>
->> Dunno what the problem is, and I'm hesitant to recommend it, but 
->> re-assembling the array without a journal might work.
-> 
-> I would - if possible - want to avoid this, as the journal is 
-> write-back. So as a last resort only.
-> 
+On Sat, May 9, 2020 at 1:24 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Fri, May 08, 2020 at 11:04:45AM -0700, Dan Williams wrote:
+> > On Fri, May 8, 2020 at 9:16 AM Christoph Hellwig <hch@lst.de> wrote:
+> > >
+> > > Hi all,
+> > >
+> > > various bio based drivers use queue->queuedata despite already having
+> > > set up disk->private_data, which can be used just as easily.  This
+> > > series cleans them up to only use a single private data pointer.
+> >
+> > ...but isn't the queue pretty much guaranteed to be cache hot and the
+> > gendisk cache cold? I'm not immediately seeing what else needs the
+> > gendisk in the I/O path. Is there another motivation I'm missing?
+>
+> ->private_data is right next to the ->queue pointer, pat0 and part_tbl
+> which are all used in the I/O submission path (generic_make_request /
+> generic_make_request_checks).  This is mostly a prep cleanup patch to
+> also remove the pointless queue argument from ->make_request - then
+> ->queue is an extra dereference and extra churn.
 
-Looking at the around-reboot logs, the machine might have eaten hard 
-power loss (despite all ups processes working, but I'll be checking that 
-later)
+Ah ok. If the changelogs had been filled in with something like "In
+preparation for removing @q from make_request_fn, stop using
+->queuedata", I probably wouldn't have looked twice.
 
-The things that so far are really weird:
+For the nvdimm/ driver updates you can add:
 
-1) the size reported via mdadm -D:
+    Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 
-mdadm -D /dev/md126
-/dev/md126:
-            Version : 1.1
-      Creation Time : Tue Mar  5 19:28:58 2019
-         Raid Level : raid5
-      Used Dev Size : 18446744073709551615
-
-This is clearly incorrect.
-
-2) the mdadm --incremental is in R state eating all 1 cpu, but otherwise 
-cannot be terminated or killed (so sitting on some lock ?)
-
-root       403     1  0  2744  3392  33 15:05 ?        S      0:01 
-/lib/systemd/systemd-udevd --daemon --resolve-names=never
-root       571   403 98   740  1976  13 15:05 ?        R     19:07  \_ 
-/sbin/mdadm --incremental --export /dev/md125 --offroot 
-/dev/disk/by-id/md-name-xs22:r1_journal_big 
-/dev/disk/by-id/md-uuid-c18b3996:49b21f49:3ee18e92:a8240f7f 
-/dev/md/r1_journal_big
-
-This is probably the same case as with manual mdadm -A that I tried from 
-initramfs before udevd.
-
-3) The 4 removed lines in mdadm -D output
-
-     Number   Major   Minor   RaidDevice State
-        -       0        0        0      removed
-        -       0        0        1      removed
-        -       0        0        2      removed
-        -       0        0        3      removed
-
-No device was removed from this array besides the old journal what I 
-wrote in the first mail.
-
-4) The journal device is listed as actual spare instead of journal
-
-        -       8      145        3      sync   /dev/sdj1
-        -       8      129        2      sync   /dev/sdi1
-        -       8      113        1      sync   /dev/sdh1
-        -       8       97        0      sync   /dev/sdg1
-        -       9      125        -      spare   /dev/md/r1_journal_big
-
-
-All mdadm -Ev of each component device looks fine though:
-
-/dev/sdj1:
-           Magic : a92b4efc
-         Version : 1.1
-     Feature Map : 0x200
-      Array UUID : d5995d76:67d7fabd:05392f87:25a91a97
-            Name : xs22:r5_big  (local to host xs22)
-   Creation Time : Tue Mar  5 19:28:58 2019
-      Raid Level : raid5
-    Raid Devices : 4
-
-  Avail Dev Size : 7812237856 (3725.17 GiB 3999.87 GB)
-      Array Size : 11718355968 (11175.50 GiB 11999.60 GB)
-   Used Dev Size : 7812237312 (3725.17 GiB 3999.87 GB)
-     Data Offset : 262144 sectors
-    Super Offset : 0 sectors
-    Unused Space : before=262064 sectors, after=544 sectors
-           State : clean
-     Device UUID : 5a73a457:b16dd591:90eceb56:2f8e1cb3
-
-     Update Time : Sat May  9 15:05:22 2020
-   Bad Block Log : 512 entries available at offset 72 sectors
-        Checksum : dfa92cad - correct
-          Events : 56289
-
-          Layout : left-symmetric
-      Chunk Size : 512K
-
-    Device Role : Active device 3
-    Array State : AAAA ('A' == active, '.' == missing, 'R' == replacing)
-
-/dev/sdi1:
-           Magic : a92b4efc
-         Version : 1.1
-     Feature Map : 0x200
-      Array UUID : d5995d76:67d7fabd:05392f87:25a91a97
-            Name : xs22:r5_big  (local to host xs22)
-   Creation Time : Tue Mar  5 19:28:58 2019
-      Raid Level : raid5
-    Raid Devices : 4
-
-  Avail Dev Size : 7812237856 (3725.17 GiB 3999.87 GB)
-      Array Size : 11718355968 (11175.50 GiB 11999.60 GB)
-   Used Dev Size : 7812237312 (3725.17 GiB 3999.87 GB)
-     Data Offset : 262144 sectors
-    Super Offset : 0 sectors
-    Unused Space : before=262064 sectors, after=544 sectors
-           State : clean
-     Device UUID : f933e8b6:5411d560:0467cb10:95971e4b
-
-     Update Time : Sat May  9 15:05:22 2020
-   Bad Block Log : 512 entries available at offset 72 sectors
-        Checksum : 5fce14c7 - correct
-          Events : 56289
-
-          Layout : left-symmetric
-      Chunk Size : 512K
-
-    Device Role : Active device 2
-    Array State : AAAA ('A' == active, '.' == missing, 'R' == replacing)
-
-/dev/sdh1:
-           Magic : a92b4efc
-         Version : 1.1
-     Feature Map : 0x200
-      Array UUID : d5995d76:67d7fabd:05392f87:25a91a97
-            Name : xs22:r5_big  (local to host xs22)
-   Creation Time : Tue Mar  5 19:28:58 2019
-      Raid Level : raid5
-    Raid Devices : 4
-
-  Avail Dev Size : 7812237856 (3725.17 GiB 3999.87 GB)
-      Array Size : 11718355968 (11175.50 GiB 11999.60 GB)
-   Used Dev Size : 7812237312 (3725.17 GiB 3999.87 GB)
-     Data Offset : 262144 sectors
-    Super Offset : 0 sectors
-    Unused Space : before=262064 sectors, after=544 sectors
-           State : clean
-     Device UUID : 8ea58384:43683121:d1017eed:1f565786
-
-     Update Time : Sat May  9 15:05:22 2020
-   Bad Block Log : 512 entries available at offset 72 sectors
-        Checksum : 5b136a2 - correct
-          Events : 56289
-
-          Layout : left-symmetric
-      Chunk Size : 512K
-
-    Device Role : Active device 1
-    Array State : AAAA ('A' == active, '.' == missing, 'R' == replacing)
-
-/dev/sdg1:
-           Magic : a92b4efc
-         Version : 1.1
-     Feature Map : 0x200
-      Array UUID : d5995d76:67d7fabd:05392f87:25a91a97
-            Name : xs22:r5_big  (local to host xs22)
-   Creation Time : Tue Mar  5 19:28:58 2019
-      Raid Level : raid5
-    Raid Devices : 4
-
-  Avail Dev Size : 7812237856 (3725.17 GiB 3999.87 GB)
-      Array Size : 11718355968 (11175.50 GiB 11999.60 GB)
-   Used Dev Size : 7812237312 (3725.17 GiB 3999.87 GB)
-     Data Offset : 262144 sectors
-    Super Offset : 0 sectors
-    Unused Space : before=262064 sectors, after=544 sectors
-           State : clean
-     Device UUID : e38f2cd0:b9716e4e:b7fc0631:0a4e352d
-
-     Update Time : Sat May  9 15:05:22 2020
-   Bad Block Log : 512 entries available at offset 72 sectors
-        Checksum : 68fe1d3c - correct
-          Events : 56289
-
-          Layout : left-symmetric
-      Chunk Size : 512K
-
-    Device Role : Active device 0
-    Array State : AAAA ('A' == active, '.' == missing, 'R' == replacing)
-
-
-And finally journal seems fine as well:
-
-/dev/md/r1_journal_big:
-           Magic : a92b4efc
-         Version : 1.1
-     Feature Map : 0x200
-      Array UUID : d5995d76:67d7fabd:05392f87:25a91a97
-            Name : xs22:r5_big  (local to host xs22)
-   Creation Time : Tue Mar  5 19:28:58 2019
-      Raid Level : raid5
-    Raid Devices : 4
-
-  Avail Dev Size : 536344576 (255.75 GiB 274.61 GB)
-      Array Size : 11718355968 (11175.50 GiB 11999.60 GB)
-   Used Dev Size : 7812237312 (3725.17 GiB 3999.87 GB)
-     Data Offset : 262144 sectors
-    Super Offset : 0 sectors
-    Unused Space : before=261872 sectors, after=0 sectors
-           State : clean
-     Device UUID : c3a6f2f6:7dd26b0c:08a31ad7:cc8ed2a9
-
-     Update Time : Sat May  9 15:05:22 2020
-   Bad Block Log : 512 entries available at offset 264 sectors
-        Checksum : c854904f - correct
-          Events : 56289
-
-          Layout : left-symmetric
-      Chunk Size : 512K
-
-    Device Role : Journal
-    Array State : AAAA ('A' == active, '.' == missing, 'R' == replacing)
-
-
+...or just let me know if you want me to pick those up through the nvdimm tree.
