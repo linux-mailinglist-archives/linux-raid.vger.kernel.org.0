@@ -2,97 +2,87 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A30EB1CD753
-	for <lists+linux-raid@lfdr.de>; Mon, 11 May 2020 13:11:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B22871CDCE8
+	for <lists+linux-raid@lfdr.de>; Mon, 11 May 2020 16:18:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729207AbgEKLLv (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 11 May 2020 07:11:51 -0400
-Received: from forward104o.mail.yandex.net ([37.140.190.179]:56087 "EHLO
-        forward104o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725993AbgEKLLv (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 11 May 2020 07:11:51 -0400
-Received: from mxback16o.mail.yandex.net (mxback16o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::67])
-        by forward104o.mail.yandex.net (Yandex) with ESMTP id 357009409AB;
-        Mon, 11 May 2020 14:11:48 +0300 (MSK)
-Received: from iva8-174eb672ffa9.qloud-c.yandex.net (iva8-174eb672ffa9.qloud-c.yandex.net [2a02:6b8:c0c:b995:0:640:174e:b672])
-        by mxback16o.mail.yandex.net (mxback/Yandex) with ESMTP id ZV1BNcSITM-BmOKB1Dj;
-        Mon, 11 May 2020 14:11:48 +0300
-Received: by iva8-174eb672ffa9.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id 8BWtEuNnZy-Bl2mAKpE;
-        Mon, 11 May 2020 14:11:47 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: Assemblin journaled array fails
-From:   Michal Soltys <msoltyspl@yandex.pl>
-To:     linux-raid <linux-raid@vger.kernel.org>
-References: <f8c61278-1758-66cd-cf25-8a118cb12f58@yandex.pl>
- <70dad446-7d38-fd10-130f-c23797165a21@yandex.pl>
-Cc:     song@kernel.org
-Message-ID: <56b68265-ca54-05d3-95bc-ea8ee0b227f6@yandex.pl>
-Date:   Mon, 11 May 2020 13:11:46 +0200
+        id S1730303AbgEKOSQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 11 May 2020 10:18:16 -0400
+Received: from atl.turmel.org ([74.117.157.138]:46842 "EHLO atl.turmel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730273AbgEKOSQ (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 11 May 2020 10:18:16 -0400
+Received: from [47.44.130.229] (helo=[192.168.156.93])
+        by atl.turmel.org with esmtpsa (TLS1.2:DHE_RSA_AES_128_CBC_SHA1:128)
+        (Exim 4.82)
+        (envelope-from <philip@turmel.org>)
+        id 1jY9G3-0003Rn-CM; Mon, 11 May 2020 10:18:15 -0400
+Subject: Re: RAID wiped superblock recovery
+To:     Sam Hurst <sam@sam-hurst.co.uk>, linux-raid@vger.kernel.org
+References: <922713c5-0cc1-24cb-14a6-9de7db631f98@sam-hurst.co.uk>
+From:   Phil Turmel <philip@turmel.org>
+Message-ID: <0f954924-e7ae-c81e-55f1-afc41e293a18@turmel.org>
+Date:   Mon, 11 May 2020 10:18:07 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <70dad446-7d38-fd10-130f-c23797165a21@yandex.pl>
+In-Reply-To: <922713c5-0cc1-24cb-14a6-9de7db631f98@sam-hurst.co.uk>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US-large
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 5/10/20 1:57 AM, Michal Soltys wrote:
-> Anyway, I did some tests with manually snapshotted component devices 
-> (using dm snapshot target to not touch underlying devices).
-> 
-> The raid manages to force assemble in read-only mode with missing 
-> journal device, so we probably will be able to recover most data 
-> underneath this way (as a last resort).
-> 
-> The situation I'm in now is likely from uncelan shutdown after all (why 
-> the machine failed to react to ups properly is another subject).
-> 
-> I'd still want to find out why is - apparently - a journal device giving 
-> issues (contrary to what I'd expect it to do ...), with notable mention of:
-> 
-> 1) mdadm hangs (unkillable, so I presume in kernel somewhere) and eats 1 
-> cpu when trying to assemble the raid with journal device present; once 
-> it happens I can't do anything with the array (stop, run, etc.) and can 
-> only reboot the server to "fix" that
-> 
-> 2) mdadm -D shows nonsensical device size after assembly attempt (Used 
-> Dev Size : 18446744073709551615)
-> 
-> 3) the journal device (which itself is md raid1 consisting of 2 ssds) 
-> assembles, checks (0 mismatch_cnt) fine - and overall looks ok.
-> 
-> 
->  From other interesting things, I also attempted to assemble the raid 
-> with snapshotted journal. From what I can see it does attempt to do 
-> something, judging from:
-> 
-> dmsetup status:
-> 
-> snap_jo2: 0 536870912 snapshot 40/33554432 16
-> snap_sdi1: 0 7812500000 snapshot 25768/83886080 112
-> snap_jo1: 0 536870912 snapshot 40/33554432 16
-> snap_sdg1: 0 7812500000 snapshot 25456/83886080 112
-> snap_sdj1: 0 7812500000 snapshot 25928/83886080 112
-> snap_sdh1: 0 7812500000 snapshot 25352/83886080 112
-> 
-> But it doesn't move from those values (with mdadm doing nothing eating 
-> 100% cpu as mentioned earlier).
-> 
-> 
-> Any suggestions how to proceed would very be appreciated.
+Hello Sam,
 
+On 5/10/20 6:50 AM, Sam Hurst wrote:
+> Hello,
 
-I've added Song to the CC. If you have any suggestions how to 
-proceed/debug this (mdadm stuck somewhere in kernel as far as I can see 
-- while attempting to assembly it).
+[trim /]
 
-For the record, I can assemble the raid successfully w/o journal (using 
-snapshotted component devices as above), and we did recover some stuff 
-this way from some filesystems - but for some other ones I'd like to 
-keep that option as the very last resort.
+> So, I now have three drives with a wiped superblock. I'm fairly certain 
+> it hasn't wiped anything else, hex dumping the drives looks like the 
+> data all begins at the same place. First we tried recreating the 
+> superblocks by hand, but that didn't work. All the different 
+> combinations of --assemble I've tried haven't been much help, as it 
+> always ends the same way:
+
+No surprise.  Assemble needs near-perfect superblocks, and --force only 
+relaxes a few rules.
+
+> So I've come to the conclusion that the only way forward is to use 
+> `mdadm --create` and hope I get the array back that way, with new 
+> superblocks.
+
+Yes.  Be sure to always include --assume-clean in these trials.
+
+> However, it's my understanding that you need to add these disks in the 
+> correct order - and given I have 7 disks, that's 5040 possible 
+> permutations! The original four disks show their device roles, so I'm 
+> /assuming/ that's the order in which they need adding:
+
+Yes, existing superblocks can be trusted.  You should show the complete 
+"mdadm -E" output for each of these member devices for our reference.
+
+> So I've tried all six permutations of the devices showing as "spare" at 
+> the end and I can never get a sensible filesystem out when I do a --create.
+> 
+> Does anyone have any other ideas, or can offer some wisdom into what to 
+> do next? Otherwise I'm writing a shell script to test all 5040 
+> permutations...
+
+It isn't just order that matters.   You must get the right data offset 
+and chunk size.  Defaults have changed over the years, and offsets 
+typically change (+/- 1 chunk) during reshapes.
+
+You'll probably have to manually specify this stuff.  Be sure to use the 
+latest released version of mdadm, even if you have to compile it yourself.
+
+If your data offsets are at least a couple megabytes, consider 
+partitioning these disks at the same time as you reconstruct--simply 
+adjust the data offset for the start sector of the partition.  This will 
+avoid future issues with stupid mobos.  (You aren't the first to suffer 
+from this.)
+
+Phil
