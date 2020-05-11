@@ -2,35 +2,35 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BEE241CDF37
-	for <lists+linux-raid@lfdr.de>; Mon, 11 May 2020 17:39:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C31941CE02B
+	for <lists+linux-raid@lfdr.de>; Mon, 11 May 2020 18:14:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730128AbgEKPjt (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 11 May 2020 11:39:49 -0400
-Received: from vsmx012.vodafonemail.xion.oxcs.net ([153.92.174.90]:33098 "EHLO
-        vsmx012.vodafonemail.xion.oxcs.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730084AbgEKPjt (ORCPT
+        id S1729853AbgEKQOd (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 11 May 2020 12:14:33 -0400
+Received: from vsmx011.vodafonemail.xion.oxcs.net ([153.92.174.89]:31121 "EHLO
+        vsmx011.vodafonemail.xion.oxcs.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726687AbgEKQOd (ORCPT
         <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 11 May 2020 11:39:49 -0400
-Received: from vsmx004.vodafonemail.xion.oxcs.net (unknown [192.168.75.198])
-        by mta-8-out.mta.xion.oxcs.net (Postfix) with ESMTP id F110BF3501D;
-        Mon, 11 May 2020 15:39:46 +0000 (UTC)
+        Mon, 11 May 2020 12:14:33 -0400
+Received: from vsmx003.vodafonemail.xion.oxcs.net (unknown [192.168.75.197])
+        by mta-5-out.mta.xion.oxcs.net (Postfix) with ESMTP id D9FFF59D1CA;
+        Mon, 11 May 2020 16:14:25 +0000 (UTC)
 Received: from lazy.lzy (unknown [79.214.216.232])
-        by mta-8-out.mta.xion.oxcs.net (Postfix) with ESMTPA id 9017919AEA2;
-        Mon, 11 May 2020 15:39:40 +0000 (UTC)
+        by mta-7-out.mta.xion.oxcs.net (Postfix) with ESMTPA id B3462539A11;
+        Mon, 11 May 2020 16:14:18 +0000 (UTC)
 Received: from lazy.lzy (localhost [127.0.0.1])
-        by lazy.lzy (8.15.2/8.14.5) with ESMTPS id 04BFdbMU003297
+        by lazy.lzy (8.15.2/8.14.5) with ESMTPS id 04BGEFIf008132
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 11 May 2020 17:39:37 +0200
+        Mon, 11 May 2020 18:14:15 +0200
 Received: (from red@localhost)
-        by lazy.lzy (8.15.2/8.15.2/Submit) id 04BFdbIf003296;
-        Mon, 11 May 2020 17:39:37 +0200
-Date:   Mon, 11 May 2020 17:39:37 +0200
+        by lazy.lzy (8.15.2/8.15.2/Submit) id 04BGEFQJ008131;
+        Mon, 11 May 2020 18:14:15 +0200
+Date:   Mon, 11 May 2020 18:14:15 +0200
 From:   Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
 To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 Cc:     Wolfgang Denk <wd@denx.de>, linux-raid@vger.kernel.org
 Subject: Re: raid6check extremely slow ?
-Message-ID: <20200511153937.GA3225@lazy.lzy>
+Message-ID: <20200511161415.GA8049@lazy.lzy>
 References: <20200510120725.20947240E1A@gemini.denx.de>
  <2cf55e5f-bdfb-9fef-6255-151e049ac0a1@cloud.ionos.com>
  <20200511064022.591C5240E1A@gemini.denx.de>
@@ -122,21 +122,23 @@ On Mon, May 11, 2020 at 10:58:07AM +0200, Guoqing Jiang wrote:
 > raid6check works, lock
 > stripe, check the stripe then unlock the stripe, just my guess ...
 
-Yes, that's the way it works.
-raid6check lock the stripe, check it, release it.
-This is required in order to avoid race conditions
-between raid6check and some write to the stripe.
+Hi again!
 
-The alternative is to set the array R/O and do
-the check, avoiding the lock / unlock.
+I made a quick test.
+I disabled the lock / unlock in raid6check.
 
-This could be a way to test if the problem is
-really here.
-That is, remove the lock / unlock (I guess
-there should be only one pair, but better
-check) and check with the array in R/O mode.
+With lock / unlock, I get around 1.2MB/sec
+per device component, with ~13% CPU load.
+Wihtout lock / unlock, I get around 15.5MB/sec
+per device component, with ~30% CPU load.
 
-Hope this helps,
+So, it seems the lock / unlock mechanism is
+quite expensive.
+
+I'm not sure what's the best solution, since
+we still need to avoid race conditions.
+
+Any suggestion is welcome!
 
 bye,
 
