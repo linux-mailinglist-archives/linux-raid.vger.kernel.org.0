@@ -2,46 +2,38 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E3721CD587
-	for <lists+linux-raid@lfdr.de>; Mon, 11 May 2020 11:41:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A30EB1CD753
+	for <lists+linux-raid@lfdr.de>; Mon, 11 May 2020 13:11:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729485AbgEKJld (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 11 May 2020 05:41:33 -0400
-Received: from forward103j.mail.yandex.net ([5.45.198.246]:52128 "EHLO
-        forward103j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725790AbgEKJlc (ORCPT
+        id S1729207AbgEKLLv (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 11 May 2020 07:11:51 -0400
+Received: from forward104o.mail.yandex.net ([37.140.190.179]:56087 "EHLO
+        forward104o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725993AbgEKLLv (ORCPT
         <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 11 May 2020 05:41:32 -0400
-Received: from mxback7o.mail.yandex.net (mxback7o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::21])
-        by forward103j.mail.yandex.net (Yandex) with ESMTP id 0B1B16740F7C;
-        Mon, 11 May 2020 12:41:28 +0300 (MSK)
-Received: from sas1-26681efc71ef.qloud-c.yandex.net (sas1-26681efc71ef.qloud-c.yandex.net [2a02:6b8:c08:37a4:0:640:2668:1efc])
-        by mxback7o.mail.yandex.net (mxback/Yandex) with ESMTP id yKL0WgAc9v-fRSatHhb;
-        Mon, 11 May 2020 12:41:28 +0300
-Received: by sas1-26681efc71ef.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id DORVneTPcb-fQ3umc3B;
-        Mon, 11 May 2020 12:41:26 +0300
+        Mon, 11 May 2020 07:11:51 -0400
+Received: from mxback16o.mail.yandex.net (mxback16o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::67])
+        by forward104o.mail.yandex.net (Yandex) with ESMTP id 357009409AB;
+        Mon, 11 May 2020 14:11:48 +0300 (MSK)
+Received: from iva8-174eb672ffa9.qloud-c.yandex.net (iva8-174eb672ffa9.qloud-c.yandex.net [2a02:6b8:c0c:b995:0:640:174e:b672])
+        by mxback16o.mail.yandex.net (mxback/Yandex) with ESMTP id ZV1BNcSITM-BmOKB1Dj;
+        Mon, 11 May 2020 14:11:48 +0300
+Received: by iva8-174eb672ffa9.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id 8BWtEuNnZy-Bl2mAKpE;
+        Mon, 11 May 2020 14:11:47 +0300
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (Client certificate not present)
-Subject: Re: [general question] rare silent data corruption when writing data
-To:     Sarah Newman <srn@prgmr.com>,
-        Chris Murphy <lists@colorremedies.com>
-Cc:     John Stoffel <john@stoffel.org>,
-        Roger Heflin <rogerheflin@gmail.com>,
-        Linux RAID <linux-raid@vger.kernel.org>
-References: <b0e91faf-3a14-3ac9-3c31-6989154791c1@yandex.pl>
- <CAAMCDef6hKJsPw3738KJ0vEEwnVKB-QpTMJ6aSeybse-4h+y6Q@mail.gmail.com>
- <24244.30530.155404.154787@quad.stoffel.home>
- <adccabc0-529f-e0a9-538f-1e5b784269e4@yandex.pl>
- <CAJCQCtRWvsKwwoZejERq=_OLXEa3JQd5RJ65tCz=X=Sp1xtRMQ@mail.gmail.com>
- <cd93b47a-7d77-5491-9632-0cea1f34bbe4@prgmr.com>
- <532aaee8-7140-fc30-c376-dbea880186c7@prgmr.com>
+Subject: Re: Assemblin journaled array fails
 From:   Michal Soltys <msoltyspl@yandex.pl>
-Message-ID: <397960a1-9757-7de7-cba7-a9778d13254d@yandex.pl>
-Date:   Mon, 11 May 2020 11:41:25 +0200
+To:     linux-raid <linux-raid@vger.kernel.org>
+References: <f8c61278-1758-66cd-cf25-8a118cb12f58@yandex.pl>
+ <70dad446-7d38-fd10-130f-c23797165a21@yandex.pl>
+Cc:     song@kernel.org
+Message-ID: <56b68265-ca54-05d3-95bc-ea8ee0b227f6@yandex.pl>
+Date:   Mon, 11 May 2020 13:11:46 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <532aaee8-7140-fc30-c376-dbea880186c7@prgmr.com>
+In-Reply-To: <70dad446-7d38-fd10-130f-c23797165a21@yandex.pl>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US-large
 Content-Transfer-Encoding: 7bit
@@ -50,47 +42,57 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 5/10/20 9:12 PM, Sarah Newman wrote:
-> On 5/10/20 12:05 PM, Sarah Newman wrote:
->> On 5/7/20 8:44 PM, Chris Murphy wrote:
->>>
->>> I would change very little until you track this down, if the goal is
->>> to track it down and get it fixed.
->>>
->>> I'm not sure if LVM thinp is supported with LVM raid still, which if
->>> it's not supported yet then I can understand using mdadm raid5 instead
->>> of LVM raid5.
->>
->>
->> My apologies if this ideas was considered and discarded already, but 
->> the bug being hard to reproduce right after reboot and the error being 
->> exactly the size of a page sounds like a memory use after free bug or 
->> similar.
->>
->> A debug kernel build with one or more of these options may find the 
->> problem:
->>
->> CONFIG_DEBUG_PAGEALLOC
->> CONFIG_DEBUG_PAGEALLOC_ENABLE_DEFAULT
->> CONFIG_PAGE_POISONING + page_poison=1
->> CONFIG_KASAN
->>
->> --Sarah
+On 5/10/20 1:57 AM, Michal Soltys wrote:
+> Anyway, I did some tests with manually snapshotted component devices 
+> (using dm snapshot target to not touch underlying devices).
 > 
-> And on further reflection you may as well add these:
+> The raid manages to force assemble in read-only mode with missing 
+> journal device, so we probably will be able to recover most data 
+> underneath this way (as a last resort).
 > 
-> CONFIG_DEBUG_OBJECTS
-> CONFIG_DEBUG_OBJECTS_ENABLE_DEFAULT
-> CONFIG_CRASH_DUMP (kdump)
+> The situation I'm in now is likely from uncelan shutdown after all (why 
+> the machine failed to react to ups properly is another subject).
 > 
-> + anything else available. Basically turn debugging on all the way.
+> I'd still want to find out why is - apparently - a journal device giving 
+> issues (contrary to what I'd expect it to do ...), with notable mention of:
 > 
-> If you can reproduce reliably with these, then you can try the latest 
-> kernel with the same options and have some confidence the problem was 
-> legitimately fixed.
+> 1) mdadm hangs (unkillable, so I presume in kernel somewhere) and eats 1 
+> cpu when trying to assemble the raid with journal device present; once 
+> it happens I can't do anything with the array (stop, run, etc.) and can 
+> only reboot the server to "fix" that
 > 
+> 2) mdadm -D shows nonsensical device size after assembly attempt (Used 
+> Dev Size : 18446744073709551615)
+> 
+> 3) the journal device (which itself is md raid1 consisting of 2 ssds) 
+> assembles, checks (0 mismatch_cnt) fine - and overall looks ok.
+> 
+> 
+>  From other interesting things, I also attempted to assemble the raid 
+> with snapshotted journal. From what I can see it does attempt to do 
+> something, judging from:
+> 
+> dmsetup status:
+> 
+> snap_jo2: 0 536870912 snapshot 40/33554432 16
+> snap_sdi1: 0 7812500000 snapshot 25768/83886080 112
+> snap_jo1: 0 536870912 snapshot 40/33554432 16
+> snap_sdg1: 0 7812500000 snapshot 25456/83886080 112
+> snap_sdj1: 0 7812500000 snapshot 25928/83886080 112
+> snap_sdh1: 0 7812500000 snapshot 25352/83886080 112
+> 
+> But it doesn't move from those values (with mdadm doing nothing eating 
+> 100% cpu as mentioned earlier).
+> 
+> 
+> Any suggestions how to proceed would very be appreciated.
 
-After compiling the kernel with above options enabled - and if this is 
-the underlying issue as you suspect - will it just pop in dmesg if I hit 
-this bug, or do I need some extra tools/preparation/etc. ?
 
+I've added Song to the CC. If you have any suggestions how to 
+proceed/debug this (mdadm stuck somewhere in kernel as far as I can see 
+- while attempting to assembly it).
+
+For the record, I can assemble the raid successfully w/o journal (using 
+snapshotted component devices as above), and we did recover some stuff 
+this way from some filesystems - but for some other ones I'd like to 
+keep that option as the very last resort.
