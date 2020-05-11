@@ -2,126 +2,108 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 677CF1CE742
-	for <lists+linux-raid@lfdr.de>; Mon, 11 May 2020 23:16:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DE161CE946
+	for <lists+linux-raid@lfdr.de>; Tue, 12 May 2020 01:39:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726077AbgEKVQj (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 11 May 2020 17:16:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46806 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725810AbgEKVQj (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 11 May 2020 17:16:39 -0400
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5276FC061A0C
-        for <linux-raid@vger.kernel.org>; Mon, 11 May 2020 14:16:38 -0700 (PDT)
-Received: by mail-wm1-x32c.google.com with SMTP id g14so7810134wme.1
-        for <linux-raid@vger.kernel.org>; Mon, 11 May 2020 14:16:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=FAFHgWnww6y7ilNVjM1Wj/7u4l8DrkYIaUTd40fDIW4=;
-        b=FfJ2UZR0hkLqZcTvaqH3lD423kzlKKkytlgBR9XeAqw4JZVOB4aS1It91+25rLXll8
-         9KKLftmDRGy1Gp96RO8kesqXt4Sm13qLnjEh2O18lNb7wLouesvY+zOG9E1lf5sWIL4P
-         q5w0mKvluUt/wStYu8lc5M/4pOwFU3rRAb5gpueD7su7VEDakAjpdPqKXBhfjlHAxYhm
-         eq1uDeXv6dvphdxRtqvp3ZapaZNOID99PtxCRnPTHzC3MPKz69klzqv0v9+3S7kXykiR
-         BeqOG8zDbe09kDW+rBopTr8saAKuJ5KE9Qf7kf415nq460INza/Oajuew6qOitJblYnB
-         59vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=FAFHgWnww6y7ilNVjM1Wj/7u4l8DrkYIaUTd40fDIW4=;
-        b=jiIW9c1cj6kJfk1aFoHp7LFYc2VkyQWng8kRUnIY7xzM96R7h0ESlKwyFPEr5+ojEU
-         LbnLE+9XS9E+yCKU2MmbaRKuzM5NrM6v6VOEMEdta/C6w2z47Z3EGY2AB6YWGgabGluR
-         j8Q2G6mjIjRUmeiDjPfe0FFSloAev2HuCrS9/SeBwSHckX+WVj6/ZYv5HuYiph9fJo3K
-         VYj7LlyZwqiz6Z1uX8nnbeTt5ayauP5jzC/fJpwJ5Mk19qquftd1TGLsuXIv6hm35gWA
-         nKwtYZXHnbimwhVXymNE5kMqFnIAJXswqhBeTvkHoCnqPUsNlHl2jNqYuso4ZY7h2fYK
-         QE2A==
-X-Gm-Message-State: AGi0PuZqButRarp7xVZfXOROxY1Wns07C5BBCzfnzop2QIe7zwyxRsYn
-        09qi4iV5iwCD/b1dmj5U8+hBD58uxQLAqA==
-X-Google-Smtp-Source: APiQypK7NvRZcCOHfHBgY9V0cpx+9vTb+aM4f02mPL2u56ZnErFBzQzOVlLdiNv1hDnQQe6IBrJZqg==
-X-Received: by 2002:a7b:c0cb:: with SMTP id s11mr36204251wmh.180.1589231796796;
-        Mon, 11 May 2020 14:16:36 -0700 (PDT)
-Received: from ?IPv6:2001:16b8:48ab:c500:e80e:f5df:f780:7d57? ([2001:16b8:48ab:c500:e80e:f5df:f780:7d57])
-        by smtp.gmail.com with ESMTPSA id z132sm27223988wmc.29.2020.05.11.14.16.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 May 2020 14:16:36 -0700 (PDT)
-Subject: Re: raid6check extremely slow ?
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-To:     Giuseppe Bilotta <giuseppe.bilotta@gmail.com>,
-        Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
-Cc:     Wolfgang Denk <wd@denx.de>, linux-raid@vger.kernel.org
-References: <20200510120725.20947240E1A@gemini.denx.de>
- <2cf55e5f-bdfb-9fef-6255-151e049ac0a1@cloud.ionos.com>
- <20200511064022.591C5240E1A@gemini.denx.de>
- <f003a8c7-e96d-ddc3-6d1d-42a13b70e0b6@cloud.ionos.com>
- <20200511161415.GA8049@lazy.lzy>
- <CAOxFTcyH8ET=DXsm7RQ3eVbxg+6g+nX-apwahBejniGz1QR2+g@mail.gmail.com>
- <59cd0b9f-b8ac-87c1-bc7e-fd290284a772@cloud.ionos.com>
-Message-ID: <d350c913-0ec6-c1a2-fb41-1fa0dec6632f@cloud.ionos.com>
-Date:   Mon, 11 May 2020 23:16:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1725881AbgEKXjk (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 11 May 2020 19:39:40 -0400
+Received: from azure.uno.uk.net ([95.172.254.11]:56630 "EHLO azure.uno.uk.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725854AbgEKXjk (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 11 May 2020 19:39:40 -0400
+X-Greylist: delayed 3321 seconds by postgrey-1.27 at vger.kernel.org; Mon, 11 May 2020 19:39:39 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sabi.unospace.net; s=default; h=From:References:In-Reply-To:Subject:To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:Date:Message-ID:Sender:
+        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=YsjuqXzbfFXLl+ageWmnR0JDvKr2JT+gF/2z4V8b2vw=; b=OEs4GsPL+nkJ3/2SrwAG35o5yN
+        YSUjHZU6gZzj/JvVaIV8aNfA+VM3D+Nx9rZQ8/fnFZF+9yhyTHwkX0LuOAdMb76oC//I7yQqdFETf
+        GMCWGkAPgPxTMDhtZXzf8+1LUg/JZD9dkek9WhrYDyoxfAKCZ9/KaYHFK+dJ4PgI5drCCMGIeE+5O
+        TjoiuNyZKc2eEM+RGhROBgyTgpriEFNNLpY0OU+YZa23erp6rmpKUmY6EQH8sKjetVviC9PpnIkJ/
+        JBw3m1UKTfWSejoOpq+6H3GCU5ucXM8SFvZR7cmeeQGqICvT6zKOPM7IZGZtAdZsbilx06VLjN8YJ
+        KbHc+Lsw==;
+Received: from [95.172.224.50] (port=44048 helo=ty.sabi.co.UK)
+        by azure.uno.uk.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <postmaster@mail.for.sabi.co.uk>)
+        id 1jYH9l-00A8Wr-8d
+        for linux-raid@vger.kernel.org; Mon, 11 May 2020 23:44:17 +0100
+Received: from from [127.0.0.1] (helo=base.ty.sabi.co.uk)
+        by ty.sabi.co.UK with esmtps(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)(Exim 4.93 5)
+        id 1jYH9f-0080sb-K5
+        for <linux-raid@vger.kernel.org>; Mon, 11 May 2020 23:44:11 +0100
+Message-ID: <24249.54587.74070.71273@base.ty.sabi.co.uk>
+Date:   Mon, 11 May 2020 23:44:11 +0100
 MIME-Version: 1.0
-In-Reply-To: <59cd0b9f-b8ac-87c1-bc7e-fd290284a772@cloud.ionos.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+To:     Linux RAID <linux-raid@vger.kernel.org>
+Subject: Re: raid6check extremely slow ?
+In-Reply-To: <23d84744-9e3c-adc1-3af1-6498b9bcf750@cloud.ionos.com>
+References: <20200510120725.20947240E1A@gemini.denx.de>
+        <2cf55e5f-bdfb-9fef-6255-151e049ac0a1@cloud.ionos.com>
+        <20200511064022.591C5240E1A@gemini.denx.de>
+        <f003a8c7-e96d-ddc3-6d1d-42a13b70e0b6@cloud.ionos.com>
+        <20200511161415.GA8049@lazy.lzy>
+        <23d84744-9e3c-adc1-3af1-6498b9bcf750@cloud.ionos.com>
+X-Mailer: VM 8.2.0b under 26.3 (x86_64-pc-linux-gnu)
+From:   pg@lxraid.list.sabi.co.UK (Peter Grandi)
+X-Disclaimer: This message contains only personal opinions
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - azure.uno.uk.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - mail.for.sabi.co.uk
+X-Get-Message-Sender-Via: azure.uno.uk.net: authenticated_id: sabity@sabi.unospace.net
+X-Authenticated-Sender: azure.uno.uk.net: sabity@sabi.unospace.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 5/11/20 11:12 PM, Guoqing Jiang wrote:
-> On 5/11/20 10:53 PM, Giuseppe Bilotta wrote:
->> Hello Piergiorgio,
->>
->> On Mon, May 11, 2020 at 6:15 PM Piergiorgio Sartor
->> <piergiorgio.sartor@nexgo.de> wrote:
->>> Hi again!
->>>
->>> I made a quick test.
->>> I disabled the lock / unlock in raid6check.
->>>
->>> With lock / unlock, I get around 1.2MB/sec
->>> per device component, with ~13% CPU load.
->>> Wihtout lock / unlock, I get around 15.5MB/sec
->>> per device component, with ~30% CPU load.
->>>
->>> So, it seems the lock / unlock mechanism is
->>> quite expensive.
->>>
->>> I'm not sure what's the best solution, since
->>> we still need to avoid race conditions.
->>>
->>> Any suggestion is welcome!
->> Would it be possible/effective to lock multiple stripes at once? Lock,
->> say, 8 or 16 stripes, process them, unlock. I'm not familiar with the
->> internals, but if locking is O(1) on the number of stripes (at least
->> if they are consecutive), this would help reduce (potentially by a
->> factor of 8 or 16) the costs of the locks/unlocks at the expense of
->> longer locks and their influence on external I/O.
->>
->
-> Hmm, maybe something like.
->
-> check_stripes
->
->     -> mddev_suspend
->
->     while (whole_stripe_num--) {
->         check each stripe
->     }
->
->     -> mddev_resume
->
->
-> Then just need to call suspend/resume once.
+>>> With lock / unlock, I get around 1.2MB/sec per device
+>>> component, with ~13% CPU load.  Wihtout lock / unlock, I get
+>>> around 15.5MB/sec per device component, with ~30% CPU load.
 
-But basically, the array can't process any new requests when checking is 
-in progress ...
+>> [...] we still need to avoid race conditions. [...]
 
-Guoqing
+Not all race conditions are equally bad in this situation.
+
+> 1. Per your previous reply, only call raid6check when array is
+> RO, then we don't need the lock.
+> 2. Investigate if it is possible that acquire stripe_lock in
+> suspend_lo/hi_store [...]
+
+Some other ways could be considered:
+
+* Read a stripe without locking and check it; if it checks good,
+  no problem, else either it was modified during the read, or it
+  was faulty, so acquire a W lock, reread and recheck it (it
+  could have become good in the meantime).
+
+  The assumption here is that there is a modest write load from
+  applications on the RAID set, so the check will almost always
+  succeed, and it is worth rereading the stripe in very rare
+  cases of "collisions" or faults.
+
+* Variants, like acquiring a W lock (if possible) on the stripe
+  solely while reading it ("atomic" read, which may be possible
+  in other ways without locking) and then if check fails we know
+  it was faulty, so optionally acquire a new W lock and reread
+  and recheck it (it could have become good in the meantime).
+
+  The assumption here is that the write load is less modest, but
+  there are a lot more reads than writes, so a W lock only
+  during read will eliminate the rereads and rechecks from
+  relatively rare "collisions".
+
+The case where there is at the same time a large application
+write load on the RAID set and checking at the same time is hard
+to improve and probably eliminating rereads and rechecks by just
+acquiring the stripe W lock for the whole duration of read and
+check.
