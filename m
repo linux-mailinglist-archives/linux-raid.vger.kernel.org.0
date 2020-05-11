@@ -2,216 +2,101 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C31941CE02B
-	for <lists+linux-raid@lfdr.de>; Mon, 11 May 2020 18:14:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D5351CE4B0
+	for <lists+linux-raid@lfdr.de>; Mon, 11 May 2020 21:42:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729853AbgEKQOd (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 11 May 2020 12:14:33 -0400
-Received: from vsmx011.vodafonemail.xion.oxcs.net ([153.92.174.89]:31121 "EHLO
-        vsmx011.vodafonemail.xion.oxcs.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726687AbgEKQOd (ORCPT
+        id S1729453AbgEKTmf (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 11 May 2020 15:42:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60168 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728922AbgEKTme (ORCPT
         <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 11 May 2020 12:14:33 -0400
-Received: from vsmx003.vodafonemail.xion.oxcs.net (unknown [192.168.75.197])
-        by mta-5-out.mta.xion.oxcs.net (Postfix) with ESMTP id D9FFF59D1CA;
-        Mon, 11 May 2020 16:14:25 +0000 (UTC)
-Received: from lazy.lzy (unknown [79.214.216.232])
-        by mta-7-out.mta.xion.oxcs.net (Postfix) with ESMTPA id B3462539A11;
-        Mon, 11 May 2020 16:14:18 +0000 (UTC)
-Received: from lazy.lzy (localhost [127.0.0.1])
-        by lazy.lzy (8.15.2/8.14.5) with ESMTPS id 04BGEFIf008132
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 11 May 2020 18:14:15 +0200
-Received: (from red@localhost)
-        by lazy.lzy (8.15.2/8.15.2/Submit) id 04BGEFQJ008131;
-        Mon, 11 May 2020 18:14:15 +0200
-Date:   Mon, 11 May 2020 18:14:15 +0200
-From:   Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
-To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Cc:     Wolfgang Denk <wd@denx.de>, linux-raid@vger.kernel.org
-Subject: Re: raid6check extremely slow ?
-Message-ID: <20200511161415.GA8049@lazy.lzy>
-References: <20200510120725.20947240E1A@gemini.denx.de>
- <2cf55e5f-bdfb-9fef-6255-151e049ac0a1@cloud.ionos.com>
- <20200511064022.591C5240E1A@gemini.denx.de>
- <f003a8c7-e96d-ddc3-6d1d-42a13b70e0b6@cloud.ionos.com>
+        Mon, 11 May 2020 15:42:34 -0400
+Received: from mail.prgmr.com (mail.prgmr.com [IPv6:2605:2700:0:5::4713:9506])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C371CC061A0C
+        for <linux-raid@vger.kernel.org>; Mon, 11 May 2020 12:42:34 -0700 (PDT)
+Received: from [192.168.2.47] (c-174-62-72-237.hsd1.ca.comcast.net [174.62.72.237])
+        (Authenticated sender: srn)
+        by mail.prgmr.com (Postfix) with ESMTPSA id E9BD472009C;
+        Mon, 11 May 2020 15:42:32 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.prgmr.com E9BD472009C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prgmr.com;
+        s=default; t=1589226153;
+        bh=IWHjpvqTC6P5njo/B1C7v7PHWGNpLO4Yxozo6Mekems=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=EZPc++RNl1FIp8XCbKlOuw/Poo4iVgHGkClKYgRNWq+tIDY/EGBTG910CYYoVuCrp
+         CmzKz6YRA3XJ9IC/bEEHZXwt10lu1mo4fPkRmdCMv/AH8Ay9jVVBtakE1eAhV6g44G
+         /i0Sof6uaGGPoe4SJKpnmq2Gr8/etB7bgFGjeOJI=
+Subject: Re: [general question] rare silent data corruption when writing data
+To:     Michal Soltys <msoltyspl@yandex.pl>,
+        Chris Murphy <lists@colorremedies.com>
+Cc:     John Stoffel <john@stoffel.org>,
+        Roger Heflin <rogerheflin@gmail.com>,
+        Linux RAID <linux-raid@vger.kernel.org>
+References: <b0e91faf-3a14-3ac9-3c31-6989154791c1@yandex.pl>
+ <CAAMCDef6hKJsPw3738KJ0vEEwnVKB-QpTMJ6aSeybse-4h+y6Q@mail.gmail.com>
+ <24244.30530.155404.154787@quad.stoffel.home>
+ <adccabc0-529f-e0a9-538f-1e5b784269e4@yandex.pl>
+ <CAJCQCtRWvsKwwoZejERq=_OLXEa3JQd5RJ65tCz=X=Sp1xtRMQ@mail.gmail.com>
+ <cd93b47a-7d77-5491-9632-0cea1f34bbe4@prgmr.com>
+ <532aaee8-7140-fc30-c376-dbea880186c7@prgmr.com>
+ <397960a1-9757-7de7-cba7-a9778d13254d@yandex.pl>
+From:   Sarah Newman <srn@prgmr.com>
+Message-ID: <de121a93-7a32-31ac-de34-a91817e25cf3@prgmr.com>
+Date:   Mon, 11 May 2020 12:42:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f003a8c7-e96d-ddc3-6d1d-42a13b70e0b6@cloud.ionos.com>
-X-VADE-STATUS: LEGIT
+In-Reply-To: <397960a1-9757-7de7-cba7-a9778d13254d@yandex.pl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Mon, May 11, 2020 at 10:58:07AM +0200, Guoqing Jiang wrote:
-> Hi Wolfgang,
+On 5/11/20 2:41 AM, Michal Soltys wrote:
+> On 5/10/20 9:12 PM, Sarah Newman wrote:
+>> On 5/10/20 12:05 PM, Sarah Newman wrote:
+>>> On 5/7/20 8:44 PM, Chris Murphy wrote:
+>>>>
+>>>> I would change very little until you track this down, if the goal is
+>>>> to track it down and get it fixed.
+>>>>
+>>>> I'm not sure if LVM thinp is supported with LVM raid still, which if
+>>>> it's not supported yet then I can understand using mdadm raid5 instead
+>>>> of LVM raid5.
+>>>
+>>>
+>>> My apologies if this ideas was considered and discarded already, but the bug being hard to reproduce right after reboot and the error being exactly 
+>>> the size of a page sounds like a memory use after free bug or similar.
+>>>
+>>> A debug kernel build with one or more of these options may find the problem:
+>>>
+>>> CONFIG_DEBUG_PAGEALLOC
+>>> CONFIG_DEBUG_PAGEALLOC_ENABLE_DEFAULT
+>>> CONFIG_PAGE_POISONING + page_poison=1
+>>> CONFIG_KASAN
+>>>
+>>> --Sarah
+>>
+>> And on further reflection you may as well add these:
+>>
+>> CONFIG_DEBUG_OBJECTS
+>> CONFIG_DEBUG_OBJECTS_ENABLE_DEFAULT
+>> CONFIG_CRASH_DUMP (kdump)
+>>
+>> + anything else available. Basically turn debugging on all the way.
+>>
+>> If you can reproduce reliably with these, then you can try the latest kernel with the same options and have some confidence the problem was 
+>> legitimately fixed.
+>>
 > 
+> After compiling the kernel with above options enabled - and if this is the underlying issue as you suspect - will it just pop in dmesg if I hit this 
+> bug, or do I need some extra tools/preparation/etc. ?
 > 
-> On 5/11/20 8:40 AM, Wolfgang Denk wrote:
-> > Dear Guoqing Jiang,
-> > 
-> > In message <2cf55e5f-bdfb-9fef-6255-151e049ac0a1@cloud.ionos.com> you wrote:
-> > > Seems raid6check is in 'D' state, what are the output of 'cat
-> > > /proc/19719/stack' and /proc/mdstat?
-> > # for i in 1 2 3 4 ; do  cat /proc/19719/stack; sleep 2; echo ; done
-> > [<0>] __wait_rcu_gp+0x10d/0x110
-> > [<0>] synchronize_rcu+0x47/0x50
-> > [<0>] mddev_suspend+0x4a/0x140
-> > [<0>] suspend_lo_store+0x50/0xa0
-> > [<0>] md_attr_store+0x86/0xe0
-> > [<0>] kernfs_fop_write+0xce/0x1b0
-> > [<0>] vfs_write+0xb6/0x1a0
-> > [<0>] ksys_write+0x4f/0xc0
-> > [<0>] do_syscall_64+0x5b/0xf0
-> > [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > 
-> > [<0>] __wait_rcu_gp+0x10d/0x110
-> > [<0>] synchronize_rcu+0x47/0x50
-> > [<0>] mddev_suspend+0x4a/0x140
-> > [<0>] suspend_lo_store+0x50/0xa0
-> > [<0>] md_attr_store+0x86/0xe0
-> > [<0>] kernfs_fop_write+0xce/0x1b0
-> > [<0>] vfs_write+0xb6/0x1a0
-> > [<0>] ksys_write+0x4f/0xc0
-> > [<0>] do_syscall_64+0x5b/0xf0
-> > [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > 
-> > [<0>] __wait_rcu_gp+0x10d/0x110
-> > [<0>] synchronize_rcu+0x47/0x50
-> > [<0>] mddev_suspend+0x4a/0x140
-> > [<0>] suspend_hi_store+0x44/0x90
-> > [<0>] md_attr_store+0x86/0xe0
-> > [<0>] kernfs_fop_write+0xce/0x1b0
-> > [<0>] vfs_write+0xb6/0x1a0
-> > [<0>] ksys_write+0x4f/0xc0
-> > [<0>] do_syscall_64+0x5b/0xf0
-> > [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > 
-> > [<0>] __wait_rcu_gp+0x10d/0x110
-> > [<0>] synchronize_rcu+0x47/0x50
-> > [<0>] mddev_suspend+0x4a/0x140
-> > [<0>] suspend_hi_store+0x44/0x90
-> > [<0>] md_attr_store+0x86/0xe0
-> > [<0>] kernfs_fop_write+0xce/0x1b0
-> > [<0>] vfs_write+0xb6/0x1a0
-> > [<0>] ksys_write+0x4f/0xc0
-> > [<0>] do_syscall_64+0x5b/0xf0
-> > [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> Looks raid6check keeps writing suspend_lo/hi node which causes mddev_suspend
-> is called,
-> means synchronize_rcu and other synchronize mechanisms are triggered in the
-> path ...
-> 
-> > Interesting, why is it in ksys_write / vfs_write / kernfs_fop_write
-> > all the time?  I thought it was _reading_ the disks only?
-> 
-> I didn't read raid6check before, just find check_stripes has
-> 
-> 
->     while (length > 0) {
->             lock_stripe -> write suspend_lo/hi node
->             ...
->             unlock_all_stripes -> -> write suspend_lo/hi node
->     }
-> 
-> I think it explains the stack of raid6check, and maybe it is way that
-> raid6check works, lock
-> stripe, check the stripe then unlock the stripe, just my guess ...
 
-Hi again!
+I'm pretty sure that you can get everything you need from either dmesg or sysfs/debugfs. Be prepared for an oops or panic.
 
-I made a quick test.
-I disabled the lock / unlock in raid6check.
-
-With lock / unlock, I get around 1.2MB/sec
-per device component, with ~13% CPU load.
-Wihtout lock / unlock, I get around 15.5MB/sec
-per device component, with ~30% CPU load.
-
-So, it seems the lock / unlock mechanism is
-quite expensive.
-
-I'm not sure what's the best solution, since
-we still need to avoid race conditions.
-
-Any suggestion is welcome!
-
-bye,
-
-pg
- 
-> > And iostat does not report any writes either?
-> 
-> Because CPU is busying with mddev_suspend I think.
-> 
-> > # iostat /dev/sd[efhijklm] | cat
-> > Linux 5.6.8-300.fc32.x86_64 (atlas.denx.de)     2020-05-11      _x86_64_        (8 CPU)
-> > 
-> > avg-cpu:  %user   %nice %system %iowait  %steal   %idle
-> >             0.18    0.00    1.07    0.17    0.00   98.58
-> > 
-> > Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
-> > sde              20.30       368.76         0.10         0.00  277022327      75178          0
-> > sdf              20.28       368.77         0.10         0.00  277030081      75170          0
-> > sdh              20.30       368.74         0.10         0.00  277007903      74854          0
-> > sdi              20.30       368.79         0.10         0.00  277049113      75246          0
-> > sdj              20.82       368.76         0.10         0.00  277022363      74986          0
-> > sdk              20.30       368.73         0.10         0.00  277002179      76322          0
-> > sdl              20.29       368.78         0.10         0.00  277039743      74982          0
-> > sdm              20.29       368.75         0.10         0.00  277018163      74958          0
-> > 
-> > 
-> > # cat /proc/mdstat
-> > Personalities : [raid1] [raid10] [raid6] [raid5] [raid4]
-> > md3 : active raid10 sdc1[0] sdd1[1]
-> >        234878976 blocks 512K chunks 2 far-copies [2/2] [UU]
-> >        bitmap: 0/2 pages [0KB], 65536KB chunk
-> > 
-> > md0 : active raid6 sdm[15] sdl[14] sdi[8] sde[12] sdj[9] sdk[10] sdh[13] sdf[11]
-> >        11720301024 blocks super 1.2 level 6, 16k chunk, algorithm 2 [8/8] [UUUUUUUU]
-> > 
-> > md1 : active raid1 sdb3[0] sda3[1]
-> >        484118656 blocks [2/2] [UU]
-> > 
-> > md2 : active raid1 sdb1[0] sda1[1]
-> >        255936 blocks [2/2] [UU]
-> > 
-> > unused devices: <none>
-> > 
-> > > > 3 days later:
-> > > Is raid6check still in 'D' state as before?
-> > Yes, nothing changed, still running:
-> > 
-> > top - 08:39:30 up 8 days, 16:41,  3 users,  load average: 1.00, 1.00, 1.00
-> > Tasks: 243 total,   1 running, 242 sleeping,   0 stopped,   0 zombie
-> > %Cpu0  :  0.0 us,  0.3 sy,  0.0 ni, 99.3 id,  0.0 wa,  0.3 hi,  0.0 si,  0.0 st
-> > %Cpu1  :  1.0 us,  5.4 sy,  0.0 ni, 92.2 id,  0.7 wa,  0.3 hi,  0.3 si,  0.0 st
-> > %Cpu2  :  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
-> > %Cpu3  :  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
-> > %Cpu4  :  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
-> > %Cpu5  :  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
-> > %Cpu6  :  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
-> > %Cpu7  :  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
-> > MiB Mem :  24034.6 total,  10920.6 free,   1883.0 used,  11231.1 buff/cache
-> > MiB Swap:   7828.5 total,   7828.5 free,      0.0 used.  21756.5 avail Mem
-> > 
-> >      PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
-> >    19719 root      20   0    2852   2820   2020 D   7.6   0.0 679:04.39 raid6check
-> 
-> I think the stack of raid6check is pretty much the same as before.
-> 
-> Since the estimated time of 12TB array is about 57 days, if the estimated
-> time is linear to
-> the number of stripes in the same machine, then it is how raid6check works
-> as I guessed.
-> 
-> Thanks,
-> Guoqing
-
--- 
-
-piergiorgio
+--Sarah
