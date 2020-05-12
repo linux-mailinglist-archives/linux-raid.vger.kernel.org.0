@@ -2,124 +2,124 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 75FC51CFA34
-	for <lists+linux-raid@lfdr.de>; Tue, 12 May 2020 18:12:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 613F01CFA5C
+	for <lists+linux-raid@lfdr.de>; Tue, 12 May 2020 18:17:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgELQMI (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 12 May 2020 12:12:08 -0400
-Received: from vsmx012.vodafonemail.xion.oxcs.net ([153.92.174.90]:20975 "EHLO
-        vsmx012.vodafonemail.xion.oxcs.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726668AbgELQMI (ORCPT
+        id S1726173AbgELQRm (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 12 May 2020 12:17:42 -0400
+Received: from vsmx009.vodafonemail.xion.oxcs.net ([153.92.174.87]:18908 "EHLO
+        vsmx009.vodafonemail.xion.oxcs.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725554AbgELQRm (ORCPT
         <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 12 May 2020 12:12:08 -0400
-Received: from vsmx004.vodafonemail.xion.oxcs.net (unknown [192.168.75.198])
-        by mta-8-out.mta.xion.oxcs.net (Postfix) with ESMTP id 66A0EF34DF0;
-        Tue, 12 May 2020 16:12:05 +0000 (UTC)
+        Tue, 12 May 2020 12:17:42 -0400
+Received: from vsmx001.vodafonemail.xion.oxcs.net (unknown [192.168.75.191])
+        by mta-5-out.mta.xion.oxcs.net (Postfix) with ESMTP id 987EC159D8C4;
+        Tue, 12 May 2020 16:17:40 +0000 (UTC)
 Received: from lazy.lzy (unknown [79.214.216.232])
-        by mta-8-out.mta.xion.oxcs.net (Postfix) with ESMTPA id CD1B119AD97;
-        Tue, 12 May 2020 16:11:52 +0000 (UTC)
+        by mta-5-out.mta.xion.oxcs.net (Postfix) with ESMTPA id 55A37159D87F;
+        Tue, 12 May 2020 16:17:32 +0000 (UTC)
 Received: from lazy.lzy (localhost [127.0.0.1])
-        by lazy.lzy (8.15.2/8.14.5) with ESMTPS id 04CGBpiC007844
+        by lazy.lzy (8.15.2/8.14.5) with ESMTPS id 04CGHVmu007960
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 12 May 2020 18:11:51 +0200
+        Tue, 12 May 2020 18:17:31 +0200
 Received: (from red@localhost)
-        by lazy.lzy (8.15.2/8.15.2/Submit) id 04CGBpsn007843;
-        Tue, 12 May 2020 18:11:51 +0200
-Date:   Tue, 12 May 2020 18:11:51 +0200
+        by lazy.lzy (8.15.2/8.15.2/Submit) id 04CGHVEJ007959;
+        Tue, 12 May 2020 18:17:31 +0200
+Date:   Tue, 12 May 2020 18:17:31 +0200
 From:   Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
-To:     Adam Goryachev <mailinglists@websitemanagers.com.au>
-Cc:     Giuseppe Bilotta <giuseppe.bilotta@gmail.com>,
+To:     Wolfgang Denk <wd@denx.de>
+Cc:     Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>,
         Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>,
-        Wolfgang Denk <wd@denx.de>, linux-raid@vger.kernel.org
+        linux-raid@vger.kernel.org
 Subject: Re: raid6check extremely slow ?
-Message-ID: <20200512161151.GD7261@lazy.lzy>
+Message-ID: <20200512161731.GE7261@lazy.lzy>
 References: <20200510120725.20947240E1A@gemini.denx.de>
  <2cf55e5f-bdfb-9fef-6255-151e049ac0a1@cloud.ionos.com>
  <20200511064022.591C5240E1A@gemini.denx.de>
  <f003a8c7-e96d-ddc3-6d1d-42a13b70e0b6@cloud.ionos.com>
- <20200511161415.GA8049@lazy.lzy>
- <CAOxFTcyH8ET=DXsm7RQ3eVbxg+6g+nX-apwahBejniGz1QR2+g@mail.gmail.com>
- <59cd0b9f-b8ac-87c1-bc7e-fd290284a772@cloud.ionos.com>
- <d350c913-0ec6-c1a2-fb41-1fa0dec6632f@cloud.ionos.com>
- <CAOxFTcyj6-8PJwrhfCptZkOPW7iciQOUxuazCcAUnXgnD-d3kg@mail.gmail.com>
- <dbc3f2ee-589e-9347-6918-a1f544721443@websitemanagers.com.au>
+ <20200511153937.GA3225@lazy.lzy>
+ <20200512073747.645CE240E1A@gemini.denx.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dbc3f2ee-589e-9347-6918-a1f544721443@websitemanagers.com.au>
+In-Reply-To: <20200512073747.645CE240E1A@gemini.denx.de>
 X-VADE-STATUS: LEGIT
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Tue, May 12, 2020 at 04:27:59PM +1000, Adam Goryachev wrote:
+On Tue, May 12, 2020 at 09:37:47AM +0200, Wolfgang Denk wrote:
+> Dear Piergiorgio,
 > 
-> On 12/5/20 11:52, Giuseppe Bilotta wrote:
-> > On Mon, May 11, 2020 at 11:16 PM Guoqing Jiang
-> > <guoqing.jiang@cloud.ionos.com> wrote:
-> > > On 5/11/20 11:12 PM, Guoqing Jiang wrote:
-> > > > On 5/11/20 10:53 PM, Giuseppe Bilotta wrote:
-> > > > > Would it be possible/effective to lock multiple stripes at once? Lock,
-> > > > > say, 8 or 16 stripes, process them, unlock. I'm not familiar with the
-> > > > > internals, but if locking is O(1) on the number of stripes (at least
-> > > > > if they are consecutive), this would help reduce (potentially by a
-> > > > > factor of 8 or 16) the costs of the locks/unlocks at the expense of
-> > > > > longer locks and their influence on external I/O.
-> > > > > 
-> > > > Hmm, maybe something like.
-> > > > 
-> > > > check_stripes
-> > > > 
-> > > >      -> mddev_suspend
-> > > > 
-> > > >      while (whole_stripe_num--) {
-> > > >          check each stripe
-> > > >      }
-> > > > 
-> > > >      -> mddev_resume
-> > > > 
-> > > > 
-> > > > Then just need to call suspend/resume once.
-> > > But basically, the array can't process any new requests when checking is
-> > Yeah, locking the entire device might be excessive (especially if it's
-> > a big one). Using a granularity larger than 1 but smaller than the
-> > whole device could be a compromise. Since the “no lock” approach seems
-> > to be about an order of magnitude faster (at least in Piergiorgio's
-> > benchmark), my guess was that something between 8 and 16 could bring
-> > the speed up to be close to the “no lock” case without having dramatic
-> > effects on I/O. Reading all 8/16 stripes before processing (assuming
-> > sufficient memory) might even lead to better disk utilization during
-> > the check.
+> In message <20200511153937.GA3225@lazy.lzy> you wrote:
+> > > ??? while (length > 0) {
+> > > ??? ??? ??? lock_stripe -> write suspend_lo/hi node
+> > > ??? ??? ??? ...
+> > > ??? ??? ??? unlock_all_stripes -> -> write suspend_lo/hi node
+> > > ??? }
+> > > 
+> > > I think it explains the stack of raid6check, and maybe it is way that
+> > > raid6check works, lock
+> > > stripe, check the stripe then unlock the stripe, just my guess ...
+> >
+> > Yes, that's the way it works.
+> > raid6check lock the stripe, check it, release it.
+> > This is required in order to avoid race conditions
+> > between raid6check and some write to the stripe.
 > 
-> I know very little about this, but could you perhaps lock 2 x 16 stripes,
-> and then after you complete the first 16, release the first 16, lock the 3rd
-> 16 stripes, and while waiting for the lock continue to process the 2nd set
-> of 16?
+> This still does not really explain what is so slow here.  I mean,
+> even if the locking was an expenive operation code-wise, I would
+> expect to see at least one of the CPU cores near 100% then - but
+> botch CPU _and_ I/O are basically idle, and disks are _all_ and
+> _always_ really close at a trhoughput of 400 kB/s - this looks like
+> some intentional bandwith limit - I just can't see where this can be
+> configured?
 
-For some reason I don not know, the unlock
-is global.
-If I recall correctly, this was the way
-Neil mentioned is "more" correct.
+The code has 2 functions: lock_stripe() and
+unlock_all_stripes().
+
+These are doing more than just lock / unlock.
+First, the memory pages of the process will
+be locked, then some signal will be set to
+"ignore", then the strip will be locked.
+
+The unlock does the opposite in the reverse
+order (unlock, set the signal back, unlock
+the memory pages).
+The difference is that, whatever the reason,
+the unlock unlocks *all* the stripes, not
+only the one locked.
+
+Not sure why.
  
-> Would that allow you to do more processing and less waiting for
-> lock/release?
+> > This could be a way to test if the problem is
+> > really here.
+> > That is, remove the lock / unlock (I guess
+> > there should be only one pair, but better
+> > check) and check with the array in R/O mode.
+> 
+> I may try this again after this test completed ;-)
 
-I think the general concept of pipelineing
-is good, this would really improve the
-performances of the whole thing.
-If we could just multithread, I suspect
-it could improve.
-
-We need to solve the unlock problem...
+I did it, some performance improvement,
+even if not really the possible max.
 
 bye,
 
+pg
+
+> Best regards,
 > 
-> Regards,
-> Adam
+> Wolfgang Denk
+> 
+> -- 
+> DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+> HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+> Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+> It's certainly  convenient  the  way  the  crime  (or  condition)  of
+> stupidity   carries   with   it  its  own  punishment,  automatically
+> admisistered without remorse, pity, or prejudice. :-)
+>          -- Tom Christiansen in <559seq$ag1$1@csnews.cs.colorado.edu>
 
 -- 
 
