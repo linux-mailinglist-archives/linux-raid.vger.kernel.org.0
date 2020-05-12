@@ -2,217 +2,112 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A7E21CFD55
-	for <lists+linux-raid@lfdr.de>; Tue, 12 May 2020 20:33:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16CDE1CFDC7
+	for <lists+linux-raid@lfdr.de>; Tue, 12 May 2020 20:50:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbgELSdE (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 12 May 2020 14:33:04 -0400
-Received: from vsmx012.vodafonemail.xion.oxcs.net ([153.92.174.90]:45544 "EHLO
-        vsmx012.vodafonemail.xion.oxcs.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725938AbgELSdD (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 12 May 2020 14:33:03 -0400
-Received: from vsmx004.vodafonemail.xion.oxcs.net (unknown [192.168.75.198])
-        by mta-8-out.mta.xion.oxcs.net (Postfix) with ESMTP id 8C770F34BDD;
-        Tue, 12 May 2020 18:33:01 +0000 (UTC)
-Received: from lazy.lzy (unknown [79.214.216.232])
-        by mta-8-out.mta.xion.oxcs.net (Postfix) with ESMTPA id 3071F19ADD4;
-        Tue, 12 May 2020 18:32:53 +0000 (UTC)
-Received: from lazy.lzy (localhost [127.0.0.1])
-        by lazy.lzy (8.15.2/8.14.5) with ESMTPS id 04CIWqhK011637
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 12 May 2020 20:32:52 +0200
-Received: (from red@localhost)
-        by lazy.lzy (8.15.2/8.15.2/Submit) id 04CIWqVe011636;
-        Tue, 12 May 2020 20:32:52 +0200
-Date:   Tue, 12 May 2020 20:32:51 +0200
-From:   Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
-To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Cc:     Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>,
-        Wolfgang Denk <wd@denx.de>, linux-raid@vger.kernel.org
-Subject: Re: raid6check extremely slow ?
-Message-ID: <20200512183251.GA11548@lazy.lzy>
-References: <20200510120725.20947240E1A@gemini.denx.de>
- <2cf55e5f-bdfb-9fef-6255-151e049ac0a1@cloud.ionos.com>
- <20200511064022.591C5240E1A@gemini.denx.de>
- <f003a8c7-e96d-ddc3-6d1d-42a13b70e0b6@cloud.ionos.com>
- <20200511161415.GA8049@lazy.lzy>
- <23d84744-9e3c-adc1-3af1-6498b9bcf750@cloud.ionos.com>
- <20200512160712.GB7261@lazy.lzy>
- <e24b0703-a599-45ef-f6b6-0a713cfa414c@cloud.ionos.com>
+        id S1730210AbgELSuu convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-raid@lfdr.de>); Tue, 12 May 2020 14:50:50 -0400
+Received: from sender11-op-o11.zoho.eu ([31.186.226.225]:17081 "EHLO
+        sender11-op-o11.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726324AbgELSut (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 12 May 2020 14:50:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1589309442; cv=none; 
+        d=zohomail.eu; s=zohoarc; 
+        b=MoINdDSYhls07Mu9t6GUm5Tf+0/cnE8iepQLnaxeBDrl9J11EIGmzK6U7XytmBc1lFSx5fZ953T5aVxGIzf34BraJ7Fz9U2MhcRyqFlZa8ApsbWmiubZO4ZIcMUv4J/WroJn0AT9qmjs96o7bSJcx1ffTJrWnKOb/vbtfBaNtj4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+        t=1589309442; h=Content-Type:Content-Transfer-Encoding:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=0NUqgkrv/tcFw3aVzdhn89tH+lpGsSPhJvM3lg0kmv0=; 
+        b=H63wmTMM0bTeV7EzYHwfmNu5+lzznE7r+i8N8va9m9wIZsn/3sggrr5LDykZtrTrf/ULN2b7OaSM4M9BgBu2YX2KqF0YmA91QQSNQtpoRxFSa9wEyzJru852Nv3ZRyXNkdVDDEi8pdjE8EHqCNqmTKhg2SDU4q7oUEAcotgg7LQ=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
+        dmarc=pass header.from=<jes@trained-monkey.org> header.from=<jes@trained-monkey.org>
+Received: from [100.109.128.78] (163.114.130.1 [163.114.130.1]) by mx.zoho.eu
+        with SMTPS id 1589309440049514.9070274735291; Tue, 12 May 2020 20:50:40 +0200 (CEST)
+Subject: Re: [PATCH V2] allow RAID5 to grow to RAID6 with a backup_file
+To:     Nigel Croxon <ncroxon@redhat.com>, linux-raid@vger.kernel.org
+References: <20200505183545.26291-1-ncroxon@redhat.com>
+ <8a30b584-753c-abff-634a-7dda8a2e3e27@trained-monkey.org>
+ <2b7c4bbd-8bfd-e33b-ca52-0cb3385d46f1@redhat.com>
+ <7a37b29a-4d6c-b371-df26-aa67a32e57e8@redhat.com>
+From:   Jes Sorensen <jes@trained-monkey.org>
+Message-ID: <c0acda80-38a0-59d9-016e-8c59b12d317b@trained-monkey.org>
+Date:   Tue, 12 May 2020 14:50:38 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e24b0703-a599-45ef-f6b6-0a713cfa414c@cloud.ionos.com>
-X-VADE-STATUS: LEGIT
+In-Reply-To: <7a37b29a-4d6c-b371-df26-aa67a32e57e8@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8BIT
+X-ZohoMailClient: External
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Tue, May 12, 2020 at 08:16:27PM +0200, Guoqing Jiang wrote:
-> On 5/12/20 6:07 PM, Piergiorgio Sartor wrote:
-> > On Mon, May 11, 2020 at 11:07:31PM +0200, Guoqing Jiang wrote:
-> > > On 5/11/20 6:14 PM, Piergiorgio Sartor wrote:
-> > > > On Mon, May 11, 2020 at 10:58:07AM +0200, Guoqing Jiang wrote:
-> > > > > Hi Wolfgang,
-> > > > > 
-> > > > > 
-> > > > > On 5/11/20 8:40 AM, Wolfgang Denk wrote:
-> > > > > > Dear Guoqing Jiang,
-> > > > > > 
-> > > > > > In message<2cf55e5f-bdfb-9fef-6255-151e049ac0a1@cloud.ionos.com>  you wrote:
-> > > > > > > Seems raid6check is in 'D' state, what are the output of 'cat
-> > > > > > > /proc/19719/stack' and /proc/mdstat?
-> > > > > > # for i in 1 2 3 4 ; do  cat /proc/19719/stack; sleep 2; echo ; done
-> > > > > > [<0>] __wait_rcu_gp+0x10d/0x110
-> > > > > > [<0>] synchronize_rcu+0x47/0x50
-> > > > > > [<0>] mddev_suspend+0x4a/0x140
-> > > > > > [<0>] suspend_lo_store+0x50/0xa0
-> > > > > > [<0>] md_attr_store+0x86/0xe0
-> > > > > > [<0>] kernfs_fop_write+0xce/0x1b0
-> > > > > > [<0>] vfs_write+0xb6/0x1a0
-> > > > > > [<0>] ksys_write+0x4f/0xc0
-> > > > > > [<0>] do_syscall_64+0x5b/0xf0
-> > > > > > [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > > > > > 
-> > > > > > [<0>] __wait_rcu_gp+0x10d/0x110
-> > > > > > [<0>] synchronize_rcu+0x47/0x50
-> > > > > > [<0>] mddev_suspend+0x4a/0x140
-> > > > > > [<0>] suspend_lo_store+0x50/0xa0
-> > > > > > [<0>] md_attr_store+0x86/0xe0
-> > > > > > [<0>] kernfs_fop_write+0xce/0x1b0
-> > > > > > [<0>] vfs_write+0xb6/0x1a0
-> > > > > > [<0>] ksys_write+0x4f/0xc0
-> > > > > > [<0>] do_syscall_64+0x5b/0xf0
-> > > > > > [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > > > > > 
-> > > > > > [<0>] __wait_rcu_gp+0x10d/0x110
-> > > > > > [<0>] synchronize_rcu+0x47/0x50
-> > > > > > [<0>] mddev_suspend+0x4a/0x140
-> > > > > > [<0>] suspend_hi_store+0x44/0x90
-> > > > > > [<0>] md_attr_store+0x86/0xe0
-> > > > > > [<0>] kernfs_fop_write+0xce/0x1b0
-> > > > > > [<0>] vfs_write+0xb6/0x1a0
-> > > > > > [<0>] ksys_write+0x4f/0xc0
-> > > > > > [<0>] do_syscall_64+0x5b/0xf0
-> > > > > > [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > > > > > 
-> > > > > > [<0>] __wait_rcu_gp+0x10d/0x110
-> > > > > > [<0>] synchronize_rcu+0x47/0x50
-> > > > > > [<0>] mddev_suspend+0x4a/0x140
-> > > > > > [<0>] suspend_hi_store+0x44/0x90
-> > > > > > [<0>] md_attr_store+0x86/0xe0
-> > > > > > [<0>] kernfs_fop_write+0xce/0x1b0
-> > > > > > [<0>] vfs_write+0xb6/0x1a0
-> > > > > > [<0>] ksys_write+0x4f/0xc0
-> > > > > > [<0>] do_syscall_64+0x5b/0xf0
-> > > > > > [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > > > > Looks raid6check keeps writing suspend_lo/hi node which causes mddev_suspend
-> > > > > is called,
-> > > > > means synchronize_rcu and other synchronize mechanisms are triggered in the
-> > > > > path ...
-> > > > > 
-> > > > > > Interesting, why is it in ksys_write / vfs_write / kernfs_fop_write
-> > > > > > all the time?  I thought it was_reading_  the disks only?
-> > > > > I didn't read raid6check before, just find check_stripes has
-> > > > > 
-> > > > > 
-> > > > >   ��� while (length > 0) {
-> > > > >   ��� ��� ��� lock_stripe -> write suspend_lo/hi node
-> > > > >   ��� ��� ��� ...
-> > > > >   ��� ��� ��� unlock_all_stripes -> -> write suspend_lo/hi node
-> > > > >   ��� }
-> > > > > 
-> > > > > I think it explains the stack of raid6check, and maybe it is way that
-> > > > > raid6check works, lock
-> > > > > stripe, check the stripe then unlock the stripe, just my guess ...
-> > > > Hi again!
-> > > > 
-> > > > I made a quick test.
-> > > > I disabled the lock / unlock in raid6check.
-> > > > 
-> > > > With lock / unlock, I get around 1.2MB/sec
-> > > > per device component, with ~13% CPU load.
-> > > > Wihtout lock / unlock, I get around 15.5MB/sec
-> > > > per device component, with ~30% CPU load.
-> > > > 
-> > > > So, it seems the lock / unlock mechanism is
-> > > > quite expensive.
-> > > Yes, since mddev_suspend/resume are triggered by the lock/unlock stripe.
-> > > 
-> > > > I'm not sure what's the best solution, since
-> > > > we still need to avoid race conditions.
-> > > I guess there are two possible ways:
-> > > 
-> > > 1. Per your previous reply, only call raid6check when array is RO, then
-> > > we don't need the lock.
-> > > 
-> > > 2. Investigate if it is possible that acquire stripe_lock in
-> > > suspend_lo/hi_store
-> > > to avoid the race between raid6check and write to the same stripe. IOW,
-> > > try fine grained protection instead of call the expensive suspend/resume
-> > > in suspend_lo/hi_store. But I am not sure it is doable or not right now.
-> > Could you please elaborate on the
-> > "fine grained protection" thing?
+On 5/12/20 12:26 PM, Nigel Croxon wrote:
+> On 5/8/20 10:50 AM, Nigel Croxon wrote:
+>>
+>> On 5/8/20 10:01 AM, Jes Sorensen wrote:
+>>> On 5/5/20 2:35 PM, Nigel Croxon wrote:
+>>>> This problem came in, as the user did not specify a full path with
+>>>> the backup_file option when growing an RAID5 array to RAID6.
+>>>> When the full path is specified, the symbolic link is created
+>>>> properly (/run/mdadm/backup_file-mdX). But the code did not support
+>>>> the symbolic link when looking for the backup_file. Added two
+>>>> checks for symlink.
+>>>>
+>>>> This addresses https://www.spinics.net/lists/raid/msg48910.html
+>>>> and numerous customer reported problems.
+>>>>
+>>>> V2:
+>>>> - Removed unneeded break; in both case-statements
+>>>> - Returned the error checking on call to lstat
+>>>>
+>>>> Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
+>>>> ---
+>>>>   Grow.c | 21 +++++++++++++++++++--
+>>>>   1 file changed, 19 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/Grow.c b/Grow.c
+>>>> index 764374f..53245d7 100644
+>>>> --- a/Grow.c
+>>>> +++ b/Grow.c
+>>>> @@ -1135,6 +1135,15 @@ int reshape_open_backup_file(char *backup_file,
+>>>>       unsigned int dev;
+>>>>       int i;
+>>>>   +    if (lstat(backup_file, &stb) != -1) {
+>>>> +        switch (stb.st_mode & S_IFMT) {
+>>>> +        case S_IFLNK:
+>>>> +            return 1;
+>>>> +        default:
+>>>> +            break;
+>>>> +        }
+>>>> +    }
+>>>> +
+>>> Sorry for being a pita on this, but in this case you do the thing if the
+>>> lstat completes correctly, but what if it fails? In that case we should
+>>> error out rather than just continuing.
+>>>
+>>> Jes
+>>>
+>> There are two processes running in the reshape_array routine, the
+>> original, where the user entered the mdadm grow parameter. And the
+>> second, forked to call systemd mdadm-grow-continue@service.  It's in
+>> the original call we want the code to continue rather than fail. It
+>> needs to create the backup_file in the FS before the systemd thread runs.
+>>
+>> -Nigel
+>>
+> Jes,
 > 
-> Even raid6check checks stripe and locks stripe one by one, but the thing
-> is different in kernel space, locking of one stripe triggers mddev_suspend
-> and mddev_resume which affect all stripes ...
-> 
-> If kernel can expose interface to actually locking one stripe, then
-> raid6check
-> could use it to actually lock only one stripe (this is what I call fine
-> grained)
-> instead of trigger suspend/resume which are time consuming.
+> Do you have more questions?  an alternate solution?
 
-I see, you mean we need a different
-interface to this lock / unlock thing.
+I don't like ignoring error codes like this. As a bare minimum it should
+be documented, or we should call in with an argument to decide whether
+or not to stat the file in the first place.
 
-> > > BTW, seems there are build problems for raid6check ...
-> > > 
-> > > mdadm$ make raid6check
-> > > gcc -Wall -Werror -Wstrict-prototypes -Wextra -Wno-unused-parameter
-> > > -Wimplicit-fallthrough=0 -O2 -DSendmail=\""/usr/sbin/sendmail -t"\"
-> > > -DCONFFILE=\"/etc/mdadm.conf\" -DCONFFILE2=\"/etc/mdadm/mdadm.conf\"
-> > > -DMAP_DIR=\"/run/mdadm\" -DMAP_FILE=\"map\" -DMDMON_DIR=\"/run/mdadm\"
-> > > -DFAILED_SLOTS_DIR=\"/run/mdadm/failed-slots\" -DNO_COROSYNC -DNO_DLM
-> > > -DVERSION=\"4.1-74-g5cfb79d\" -DVERS_DATE="\"2020-04-27\"" -DUSE_PTHREADS
-> > > -DBINDIR=\"/sbin\"� -o sysfs.o -c sysfs.c
-> > > gcc -O2� -o raid6check raid6check.o restripe.o sysfs.o maps.o lib.o
-> > > xmalloc.o dlink.o
-> > > sysfs.o: In function `sysfsline':
-> > > sysfs.c:(.text+0x2adb): undefined reference to `parse_uuid'
-> > > sysfs.c:(.text+0x2aee): undefined reference to `uuid_zero'
-> > > sysfs.c:(.text+0x2af5): undefined reference to `uuid_zero'
-> > > collect2: error: ld returned 1 exit status
-> > > Makefile:220: recipe for target 'raid6check' failed
-> > > make: *** [raid6check] Error 1
-> > I cannot see this problem.
-> > I could compile without issue.
-> > Maybe some library is missing somewhere,
-> > but I'm not sure where.
-> 
-> Do you try with the fastest mdadm tree? But could be environment issue ...
+Cheers,
+Jes
 
-I'm using Fedora, so I downloaded
-the .srpm package, installed, enabled
-raid6check, patched and rebuild...
 
-My background idea was to have the
-mdadm rpm *with* raid6check, but I
-did not go so far...
-
-Sorry...
-
-bye,
-
-pg
- 
-> Thanks,
-> Guoqing
-
--- 
-
-piergiorgio
