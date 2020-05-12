@@ -2,37 +2,28 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9736A1CFFE3
-	for <lists+linux-raid@lfdr.de>; Tue, 12 May 2020 22:54:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D3A11D01A0
+	for <lists+linux-raid@lfdr.de>; Wed, 13 May 2020 00:11:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbgELUyW (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 12 May 2020 16:54:22 -0400
-Received: from smtp.hosts.co.uk ([85.233.160.19]:54111 "EHLO smtp.hosts.co.uk"
+        id S1728286AbgELWLW (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 12 May 2020 18:11:22 -0400
+Received: from smtp.hosts.co.uk ([85.233.160.19]:35618 "EHLO smtp.hosts.co.uk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725938AbgELUyV (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 12 May 2020 16:54:21 -0400
+        id S1725950AbgELWLW (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 12 May 2020 18:11:22 -0400
 Received: from [86.146.232.119] (helo=[192.168.1.225])
         by smtp.hosts.co.uk with esmtpa (Exim)
         (envelope-from <antlists@youngman.org.uk>)
-        id 1jYbut-0003Cd-FG; Tue, 12 May 2020 21:54:20 +0100
-Subject: Re: raid6check extremely slow ?
-To:     Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>,
-        Peter Grandi <pg@lxraid.list.sabi.co.uk>
-Cc:     Linux RAID <linux-raid@vger.kernel.org>
-References: <20200510120725.20947240E1A@gemini.denx.de>
- <2cf55e5f-bdfb-9fef-6255-151e049ac0a1@cloud.ionos.com>
- <20200511064022.591C5240E1A@gemini.denx.de>
- <f003a8c7-e96d-ddc3-6d1d-42a13b70e0b6@cloud.ionos.com>
- <20200511161415.GA8049@lazy.lzy>
- <23d84744-9e3c-adc1-3af1-6498b9bcf750@cloud.ionos.com>
- <24249.54587.74070.71273@base.ty.sabi.co.uk> <20200512160943.GC7261@lazy.lzy>
+        id 1jYd7Q-000623-8J
+        for linux-raid@vger.kernel.org; Tue, 12 May 2020 23:11:20 +0100
+To:     Linux RAID <linux-raid@vger.kernel.org>
 From:   antlists <antlists@youngman.org.uk>
-Message-ID: <34f66548-1fcf-d38b-4c2d-88d43c1b19d0@youngman.org.uk>
-Date:   Tue, 12 May 2020 21:54:21 +0100
+Subject: New wiki page
+Message-ID: <ed2b8085-4ec4-2ad1-9f37-0206f20f4f1e@youngman.org.uk>
+Date:   Tue, 12 May 2020 23:11:22 +0100
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200512160943.GC7261@lazy.lzy>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
@@ -41,26 +32,18 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 12/05/2020 17:09, Piergiorgio Sartor wrote:
-> About the check -> maybe lock -> re-check,
-> it is a possible workaround, but I find it
-> a bit extreme.
+Just in case anyone wants to take a look ...
 
-This seems the best (most obvious?) solution to me.
+https://raid.wiki.kernel.org/index.php/System2020
 
-If the system is under light write pressure, and the disk is healthy, it 
-will scan pretty quickly with almost no locking.
+I'm finally building my new system, and I've got the host SUSE system 
+booting and enabling my dm-integrity protected raid 1s. This page 
+basically documents the story so far of setting it up, so other people 
+can use it as a cookbook for something similar.
 
-If the system is under heavy pressure, chances are there'll be a fair 
-few stripes needing rechecking, but even at it's worst it'll only be as 
-bad as the current setup.
-
-And if the system is somewhere inbetween, you still stand a good chance 
-of a fast scan.
-
-At the end of the day, the rule should always be "lock only if you need 
-to" so looking for problems with an optimistic no-lock scan, then 
-locking only if needed to check and fix the problem, just feels right.
+Okay, I've still got to bootstrap the gentoo system that it's going to 
+be, but if anyone interested can take a look and give me advice for 
+improvements on the story that will be great.
 
 Cheers,
 Wol
