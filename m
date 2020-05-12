@@ -2,125 +2,115 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 613F01CFA5C
-	for <lists+linux-raid@lfdr.de>; Tue, 12 May 2020 18:17:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83BE01CFA93
+	for <lists+linux-raid@lfdr.de>; Tue, 12 May 2020 18:26:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgELQRm (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 12 May 2020 12:17:42 -0400
-Received: from vsmx009.vodafonemail.xion.oxcs.net ([153.92.174.87]:18908 "EHLO
-        vsmx009.vodafonemail.xion.oxcs.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725554AbgELQRm (ORCPT
+        id S1728102AbgELQ0S (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 12 May 2020 12:26:18 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35132 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725950AbgELQ0S (ORCPT
         <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 12 May 2020 12:17:42 -0400
-Received: from vsmx001.vodafonemail.xion.oxcs.net (unknown [192.168.75.191])
-        by mta-5-out.mta.xion.oxcs.net (Postfix) with ESMTP id 987EC159D8C4;
-        Tue, 12 May 2020 16:17:40 +0000 (UTC)
-Received: from lazy.lzy (unknown [79.214.216.232])
-        by mta-5-out.mta.xion.oxcs.net (Postfix) with ESMTPA id 55A37159D87F;
-        Tue, 12 May 2020 16:17:32 +0000 (UTC)
-Received: from lazy.lzy (localhost [127.0.0.1])
-        by lazy.lzy (8.15.2/8.14.5) with ESMTPS id 04CGHVmu007960
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 12 May 2020 18:17:31 +0200
-Received: (from red@localhost)
-        by lazy.lzy (8.15.2/8.15.2/Submit) id 04CGHVEJ007959;
-        Tue, 12 May 2020 18:17:31 +0200
-Date:   Tue, 12 May 2020 18:17:31 +0200
-From:   Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
-To:     Wolfgang Denk <wd@denx.de>
-Cc:     Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        linux-raid@vger.kernel.org
-Subject: Re: raid6check extremely slow ?
-Message-ID: <20200512161731.GE7261@lazy.lzy>
-References: <20200510120725.20947240E1A@gemini.denx.de>
- <2cf55e5f-bdfb-9fef-6255-151e049ac0a1@cloud.ionos.com>
- <20200511064022.591C5240E1A@gemini.denx.de>
- <f003a8c7-e96d-ddc3-6d1d-42a13b70e0b6@cloud.ionos.com>
- <20200511153937.GA3225@lazy.lzy>
- <20200512073747.645CE240E1A@gemini.denx.de>
+        Tue, 12 May 2020 12:26:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589300777;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=NVEWMGcEcKa/hMXujmwdMMzbCj8VOYrRezQAi/UBElc=;
+        b=HzYjq5renYdm8cizgj+MkO/7xWfLrp9On5lb0MQpeRUK+vSLqjku9eRaoKnzOjq5WRSfSM
+        nqaJRvdTS/Y5KIjTiOThHXtCLVRtJUsj7O/5YFzbFus4OCjiYoMva1KeqsERy35uAxDL1g
+        3A4OJzdX9Asd8NZzz5AeaNwJREa4jOs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-385-KDVg477oNaCXyJeaz7-HKg-1; Tue, 12 May 2020 12:26:10 -0400
+X-MC-Unique: KDVg477oNaCXyJeaz7-HKg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A9253835B40;
+        Tue, 12 May 2020 16:26:09 +0000 (UTC)
+Received: from [10.10.119.163] (ovpn-119-163.rdu2.redhat.com [10.10.119.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 280C11002395;
+        Tue, 12 May 2020 16:26:09 +0000 (UTC)
+Subject: Re: [PATCH V2] allow RAID5 to grow to RAID6 with a backup_file
+From:   Nigel Croxon <ncroxon@redhat.com>
+To:     Jes Sorensen <jes@trained-monkey.org>, linux-raid@vger.kernel.org
+References: <20200505183545.26291-1-ncroxon@redhat.com>
+ <8a30b584-753c-abff-634a-7dda8a2e3e27@trained-monkey.org>
+ <2b7c4bbd-8bfd-e33b-ca52-0cb3385d46f1@redhat.com>
+Message-ID: <7a37b29a-4d6c-b371-df26-aa67a32e57e8@redhat.com>
+Date:   Tue, 12 May 2020 12:26:08 -0400
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512073747.645CE240E1A@gemini.denx.de>
-X-VADE-STATUS: LEGIT
+In-Reply-To: <2b7c4bbd-8bfd-e33b-ca52-0cb3385d46f1@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Tue, May 12, 2020 at 09:37:47AM +0200, Wolfgang Denk wrote:
-> Dear Piergiorgio,
-> 
-> In message <20200511153937.GA3225@lazy.lzy> you wrote:
-> > > ??? while (length > 0) {
-> > > ??? ??? ??? lock_stripe -> write suspend_lo/hi node
-> > > ??? ??? ??? ...
-> > > ??? ??? ??? unlock_all_stripes -> -> write suspend_lo/hi node
-> > > ??? }
-> > > 
-> > > I think it explains the stack of raid6check, and maybe it is way that
-> > > raid6check works, lock
-> > > stripe, check the stripe then unlock the stripe, just my guess ...
-> >
-> > Yes, that's the way it works.
-> > raid6check lock the stripe, check it, release it.
-> > This is required in order to avoid race conditions
-> > between raid6check and some write to the stripe.
-> 
-> This still does not really explain what is so slow here.  I mean,
-> even if the locking was an expenive operation code-wise, I would
-> expect to see at least one of the CPU cores near 100% then - but
-> botch CPU _and_ I/O are basically idle, and disks are _all_ and
-> _always_ really close at a trhoughput of 400 kB/s - this looks like
-> some intentional bandwith limit - I just can't see where this can be
-> configured?
+On 5/8/20 10:50 AM, Nigel Croxon wrote:
+>
+> On 5/8/20 10:01 AM, Jes Sorensen wrote:
+>> On 5/5/20 2:35 PM, Nigel Croxon wrote:
+>>> This problem came in, as the user did not specify a full path with
+>>> the backup_file option when growing an RAID5 array to RAID6.
+>>> When the full path is specified, the symbolic link is created
+>>> properly (/run/mdadm/backup_file-mdX). But the code did not support
+>>> the symbolic link when looking for the backup_file. Added two
+>>> checks for symlink.
+>>>
+>>> This addresses https://www.spinics.net/lists/raid/msg48910.html
+>>> and numerous customer reported problems.
+>>>
+>>> V2:
+>>> - Removed unneeded break; in both case-statements
+>>> - Returned the error checking on call to lstat
+>>>
+>>> Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
+>>> ---
+>>>   Grow.c | 21 +++++++++++++++++++--
+>>>   1 file changed, 19 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/Grow.c b/Grow.c
+>>> index 764374f..53245d7 100644
+>>> --- a/Grow.c
+>>> +++ b/Grow.c
+>>> @@ -1135,6 +1135,15 @@ int reshape_open_backup_file(char *backup_file,
+>>>       unsigned int dev;
+>>>       int i;
+>>>   +    if (lstat(backup_file, &stb) != -1) {
+>>> +        switch (stb.st_mode & S_IFMT) {
+>>> +        case S_IFLNK:
+>>> +            return 1;
+>>> +        default:
+>>> +            break;
+>>> +        }
+>>> +    }
+>>> +
+>> Sorry for being a pita on this, but in this case you do the thing if the
+>> lstat completes correctly, but what if it fails? In that case we should
+>> error out rather than just continuing.
+>>
+>> Jes
+>>
+> There are two processes running in the reshape_array routine, the 
+> original, where the user entered the mdadm grow parameter. And the 
+> second, forked to call systemd mdadm-grow-continue@service.  It's in 
+> the original call we want the code to continue rather than fail. It 
+> needs to create the backup_file in the FS before the systemd thread runs.
+>
+> -Nigel
+>
+Jes,
 
-The code has 2 functions: lock_stripe() and
-unlock_all_stripes().
+Do you have more questions?  an alternate solution?
 
-These are doing more than just lock / unlock.
-First, the memory pages of the process will
-be locked, then some signal will be set to
-"ignore", then the strip will be locked.
+-Nigel
 
-The unlock does the opposite in the reverse
-order (unlock, set the signal back, unlock
-the memory pages).
-The difference is that, whatever the reason,
-the unlock unlocks *all* the stripes, not
-only the one locked.
-
-Not sure why.
- 
-> > This could be a way to test if the problem is
-> > really here.
-> > That is, remove the lock / unlock (I guess
-> > there should be only one pair, but better
-> > check) and check with the array in R/O mode.
-> 
-> I may try this again after this test completed ;-)
-
-I did it, some performance improvement,
-even if not really the possible max.
-
-bye,
-
-pg
-
-> Best regards,
-> 
-> Wolfgang Denk
-> 
-> -- 
-> DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-> HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-> Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
-> It's certainly  convenient  the  way  the  crime  (or  condition)  of
-> stupidity   carries   with   it  its  own  punishment,  automatically
-> admisistered without remorse, pity, or prejudice. :-)
->          -- Tom Christiansen in <559seq$ag1$1@csnews.cs.colorado.edu>
-
--- 
-
-piergiorgio
