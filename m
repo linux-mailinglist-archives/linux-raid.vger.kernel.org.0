@@ -2,61 +2,65 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B433A1CFF14
-	for <lists+linux-raid@lfdr.de>; Tue, 12 May 2020 22:13:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9736A1CFFE3
+	for <lists+linux-raid@lfdr.de>; Tue, 12 May 2020 22:54:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730889AbgELUNQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 12 May 2020 16:13:16 -0400
-Received: from sender11-op-o11.zoho.eu ([31.186.226.225]:17140 "EHLO
-        sender11-op-o11.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgELUNQ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 12 May 2020 16:13:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1589314392; cv=none; 
-        d=zohomail.eu; s=zohoarc; 
-        b=UixIjs1B5AXzcLqYxP8WwaWpILXItWgN3Phu/DynYnvFuAKxCeYB20QvNBhYKihWE+Z3T8J3SNWJ2+uTRus1ga2KYvB4VWMXR/feo+wXd0Kx/QftBxRBJS8Yxbec9Wl2GPf/PWSFyQ5ZBQx2laDJFTP9HnMBc7HG+3SgFb9vnss=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1589314392; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=mWWj0sR9Slx//HTr9ZTYYnT6DCmo4IdQdaKp/PqUnXk=; 
-        b=SLl/FWlP2+Q+GcLmBcTKQx+YxfiXFpStL4I4giCInVieJ4VhslQ1k3c6xWn7CRlo3b0QvXF5a3BT2JKViRO6xkLrA56Ba4v/pCFfqTwTvjOQZ6LCT8lsLByWuT6K/yhEN4XIkLS1yyjuOqYlALxysau762BRsIr3G/qFDhthNew=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
-        dmarc=pass header.from=<jes@trained-monkey.org> header.from=<jes@trained-monkey.org>
-Received: from [100.109.128.78] (163.114.130.1 [163.114.130.1]) by mx.zoho.eu
-        with SMTPS id 1589314388160922.0594451304434; Tue, 12 May 2020 22:13:08 +0200 (CEST)
-Subject: Re: Time to think about mdadm-4.2?
-From:   Jes Sorensen <jes@trained-monkey.org>
-To:     "Kernel.org-Linux-RAID" <linux-raid@vger.kernel.org>
-Cc:     kernel-team@fb.com
-References: <4b3d6f4f-2f80-f290-beff-e303075ef5d9@trained-monkey.org>
-Message-ID: <d696b2f2-9182-eaaa-5e07-40fcab2207cf@trained-monkey.org>
-Date:   Tue, 12 May 2020 16:13:07 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726324AbgELUyW (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 12 May 2020 16:54:22 -0400
+Received: from smtp.hosts.co.uk ([85.233.160.19]:54111 "EHLO smtp.hosts.co.uk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725938AbgELUyV (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 12 May 2020 16:54:21 -0400
+Received: from [86.146.232.119] (helo=[192.168.1.225])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1jYbut-0003Cd-FG; Tue, 12 May 2020 21:54:20 +0100
+Subject: Re: raid6check extremely slow ?
+To:     Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>,
+        Peter Grandi <pg@lxraid.list.sabi.co.uk>
+Cc:     Linux RAID <linux-raid@vger.kernel.org>
+References: <20200510120725.20947240E1A@gemini.denx.de>
+ <2cf55e5f-bdfb-9fef-6255-151e049ac0a1@cloud.ionos.com>
+ <20200511064022.591C5240E1A@gemini.denx.de>
+ <f003a8c7-e96d-ddc3-6d1d-42a13b70e0b6@cloud.ionos.com>
+ <20200511161415.GA8049@lazy.lzy>
+ <23d84744-9e3c-adc1-3af1-6498b9bcf750@cloud.ionos.com>
+ <24249.54587.74070.71273@base.ty.sabi.co.uk> <20200512160943.GC7261@lazy.lzy>
+From:   antlists <antlists@youngman.org.uk>
+Message-ID: <34f66548-1fcf-d38b-4c2d-88d43c1b19d0@youngman.org.uk>
+Date:   Tue, 12 May 2020 21:54:21 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <4b3d6f4f-2f80-f290-beff-e303075ef5d9@trained-monkey.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200512160943.GC7261@lazy.lzy>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 3/17/20 5:15 PM, Jes Sorensen wrote:
-> Hi,
-> 
-> We have had a lot of changes since 4.1 and I am thinking it's time to
-> start thinking about a 4.2 release.
-> 
-> No hard date set, but probably in about a month?
-> 
-> If you have anything pending you would like to get in, now would be a
-> good time to start posting those patches.
+On 12/05/2020 17:09, Piergiorgio Sartor wrote:
+> About the check -> maybe lock -> re-check,
+> it is a possible workaround, but I find it
+> a bit extreme.
 
-I received some patches for mdadm, anything else that needs to go in
-before the next release?
+This seems the best (most obvious?) solution to me.
 
-Thanks,
-Jes
+If the system is under light write pressure, and the disk is healthy, it 
+will scan pretty quickly with almost no locking.
 
+If the system is under heavy pressure, chances are there'll be a fair 
+few stripes needing rechecking, but even at it's worst it'll only be as 
+bad as the current setup.
+
+And if the system is somewhere inbetween, you still stand a good chance 
+of a fast scan.
+
+At the end of the day, the rule should always be "lock only if you need 
+to" so looking for problems with an optimistic no-lock scan, then 
+locking only if needed to check and fix the problem, just feels right.
+
+Cheers,
+Wol
