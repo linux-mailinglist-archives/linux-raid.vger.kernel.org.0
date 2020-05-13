@@ -2,116 +2,79 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1089A1D1639
-	for <lists+linux-raid@lfdr.de>; Wed, 13 May 2020 15:45:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7CA21D1ADB
+	for <lists+linux-raid@lfdr.de>; Wed, 13 May 2020 18:17:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387927AbgEMNpB (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 13 May 2020 09:45:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387722AbgEMNpA (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 13 May 2020 09:45:00 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A383C061A0C
-        for <linux-raid@vger.kernel.org>; Wed, 13 May 2020 06:45:00 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id i68so14156874qtb.5
-        for <linux-raid@vger.kernel.org>; Wed, 13 May 2020 06:45:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/ta3ifTaPJ/0rDD07puw7JQDgE0G/6GDnbbcU5lLI8g=;
-        b=qVbaSU53i5h3ZgWW9KZq6JK2F3qLPmKeUxF2g2yNrSWCykQyaOA6NVWPuGCLRIjTyM
-         p/SzYSFa9AmZtnA2PjA4ZUTTYeZXnYT/RWhZGtlk68AXRg6lKW2Iq3+vPY/qtTeSfX2r
-         8y+evPOVGVr2ONNzV7qmdr102wFPeG6+GllebRm/b8SsPQnNJxdhM0wLtH9FCmlAjzN4
-         l2mE6WZJIPIeUlgpsd++DV3H8hlSF/h+2kkiLSpZ5pthRIsY8RuLciYOmjZ2cBO24372
-         wfPoPkrzqvGpWQbL96tVBQ8FKMq8dFKKhRIvG0lVG0kkm/LhHRN4E1vujBa763BYFKy4
-         uryA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/ta3ifTaPJ/0rDD07puw7JQDgE0G/6GDnbbcU5lLI8g=;
-        b=WeZAkrdLYHXRlQIZ8jpWWIUGMStVzyZucF6zyj/pbB7/Wj2jNAyy+J9kL7iVspGDgK
-         OFFDKmJkAdZtl3nV5H0DjCtNbUeemaQ6Few7AyOttE8Na/rWmqaByL2idVAZvdLifPtO
-         60pKIj/FFkQYwKbeIvR+4MC0fTPi7QZ/6y88H+sw4amIMvTudZGwbnCm/TX/5CE35x2A
-         Tl4JwZ4aKL2dcYx95kJDEpMEvtd4SIXsPxazeseGHr185owuM7VZ6Hdy5JN9FC2aeN7G
-         BjM9rrf63UBUK8V3MKH0wS4N4rjQBhgc9oEgu436CzXycf95ROEP7TxELbVUEoSorCv9
-         G1NA==
-X-Gm-Message-State: AGi0PuZaZn+48oukLgt9cIXRrrzLqvj2RTBKVU1nes7wEUCaHTts1pwK
-        Tpy62M0sRS+gzkmeNkDA5GK4PYrMBqA=
-X-Google-Smtp-Source: APiQypKA+eEv9Dy+EnxxUaoMGbJzAZu9m55ttpumcaJf7leBToyFoomUQyO3uZPNn7ysLBF+jPQ/Og==
-X-Received: by 2002:aed:3b75:: with SMTP id q50mr28052370qte.23.1589377499254;
-        Wed, 13 May 2020 06:44:59 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c0a8:11e1::1007? ([2620:10d:c091:480::1:8ed8])
-        by smtp.gmail.com with ESMTPSA id q17sm13905270qkq.111.2020.05.13.06.44.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 May 2020 06:44:58 -0700 (PDT)
-From:   Jes Sorensen <jes.sorensen@gmail.com>
-X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
-Subject: Re: [PATCH] Use more secure HTTPS URLs
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     linux-raid@vger.kernel.org
-References: <20200513132707.16744-1-pmenzel@molgen.mpg.de>
-Message-ID: <f2d4fa4e-697f-033a-1144-d4ff30e48ec3@gmail.com>
-Date:   Wed, 13 May 2020 09:44:57 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S2389444AbgEMQRb (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 13 May 2020 12:17:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35360 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730731AbgEMQRb (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 13 May 2020 12:17:31 -0400
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11E7C2053B
+        for <linux-raid@vger.kernel.org>; Wed, 13 May 2020 16:17:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589386651;
+        bh=iOPBlMkLYoCLZAlRB/W7iDhWz6CKMJ6Su03EaKJYtkQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PpcHJxyI87u4iSP14LhVn9JPvEgphwyUyY20SCkG8caiF7Ytzj5+o99e1fsb6D3+U
+         2od8yFxxYpTvN5xv8bNhIPunWPyWhwJxXpLcMA6q8MFiuvKLO2WNGxsjac/oDnC1hw
+         tvYeQCRVIXPFFSokFvY1vp+hNnRvy1ylKyLQwQ3w=
+Received: by mail-lf1-f48.google.com with SMTP id v5so10043508lfp.13
+        for <linux-raid@vger.kernel.org>; Wed, 13 May 2020 09:17:30 -0700 (PDT)
+X-Gm-Message-State: AOAM532XAzn6xEj+nQNP7EvqzVaAHNrLetW8ALFhKcUppbZQr1m/H6ol
+        AAtAJ1Gf4Kgfxu+KX52kdcM+FLliDdGiQx7C/1U=
+X-Google-Smtp-Source: ABdhPJwqIxrWIx27R0KrmGBJvgAeblPsE7qpj62RmaN8iqu0xcEYxjT4Au6jHHBy1E5FR0gNjH/c0bqCCY0ao8H/lec=
+X-Received: by 2002:a19:d07:: with SMTP id 7mr170106lfn.69.1589386648825; Wed,
+ 13 May 2020 09:17:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200513132707.16744-1-pmenzel@molgen.mpg.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <f8c61278-1758-66cd-cf25-8a118cb12f58@yandex.pl>
+ <70dad446-7d38-fd10-130f-c23797165a21@yandex.pl> <56b68265-ca54-05d3-95bc-ea8ee0b227f6@yandex.pl>
+ <CAPhsuW4WcqkDXOhcuG33bZtSEZ-V-KYPLm87piBH24eYEB0qVw@mail.gmail.com> <b9b6b007-2177-a844-4d80-480393f30476@yandex.pl>
+In-Reply-To: <b9b6b007-2177-a844-4d80-480393f30476@yandex.pl>
+From:   Song Liu <song@kernel.org>
+Date:   Wed, 13 May 2020 09:17:17 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW70NNozBmt1-zsM_Pk-39cLzi8bC3ZZaNwQ0-VgYsmkiA@mail.gmail.com>
+Message-ID: <CAPhsuW70NNozBmt1-zsM_Pk-39cLzi8bC3ZZaNwQ0-VgYsmkiA@mail.gmail.com>
+Subject: Re: Assemblin journaled array fails
+To:     Michal Soltys <msoltyspl@yandex.pl>
+Cc:     linux-raid <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 5/13/20 9:27 AM, Paul Menzel wrote:
-> All URLs in the source are available over HTTPS, so convert all URLs to
-> HTTPS with the command below.
-> 
->     git grep -l 'http://' | xargs sed -i 's,http://,https://,g'
-> 
-> Cc: linux-raid@vger.kernel.org
-> Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> >
+> > Are these captured back to back? I am asking because they showed differ=
+ent
+> > "Events" number.
+>
+> Nah, they were captured between reboots. Back to back all event fields sh=
+ow identical value (at 56291 now).
+>
+> >
+> > Also, when mdadm -A hangs, could you please capture /proc/$(pidof mdadm=
+)/stack ?
+> >
+>
+> The output is empty:
+>
+> xs22:/=E2=98=A0 ps -eF fww | grep mdadm
+> root     10332  9362 97   740  1884  25 12:47 pts/1    R+     6:59  |   \=
+_ mdadm -A /dev/md/r5_big /dev/md/r1_journal_big /dev/sdi1 /dev/sdg1 /dev/s=
+dj1 /dev/sdh1
+> xs22:/=E2=98=A0 cd /proc/10332
+> xs22:/proc/10332=E2=98=A0 cat stack
+> xs22:/proc/10332=E2=98=A0
 
-Some of this looks valid, but we're not going back to update existing
-ANNOUNCE files.
+Hmm... Could you please share the strace output of "mdadm -A" command? Like
 
-Jes
+strace mdadm -A /dev/md/r5_big /dev/md/r1_journal_big /dev/xxx ...
 
-> ---
->  ANNOUNCE-3.0                     | 4 ++--
->  ANNOUNCE-3.0.1                   | 4 ++--
->  ANNOUNCE-3.0.2                   | 4 ++--
->  ANNOUNCE-3.0.3                   | 4 ++--
->  ANNOUNCE-3.1                     | 4 ++--
->  ANNOUNCE-3.1.1                   | 4 ++--
->  ANNOUNCE-3.1.2                   | 4 ++--
->  ANNOUNCE-3.1.3                   | 4 ++--
->  ANNOUNCE-3.1.4                   | 4 ++--
->  ANNOUNCE-3.1.5                   | 4 ++--
->  ANNOUNCE-3.2                     | 4 ++--
->  ANNOUNCE-3.2.1                   | 4 ++--
->  ANNOUNCE-3.2.2                   | 4 ++--
->  ANNOUNCE-3.2.3                   | 4 ++--
->  ANNOUNCE-3.2.4                   | 4 ++--
->  ANNOUNCE-3.2.5                   | 4 ++--
->  ANNOUNCE-3.2.6                   | 4 ++--
->  ANNOUNCE-3.3                     | 4 ++--
->  ANNOUNCE-3.3.1                   | 4 ++--
->  ANNOUNCE-3.3.2                   | 4 ++--
->  ANNOUNCE-3.3.3                   | 4 ++--
->  ANNOUNCE-3.3.4                   | 4 ++--
->  ANNOUNCE-3.4                     | 4 ++--
->  ANNOUNCE-4.0                     | 4 ++--
->  ANNOUNCE-4.1                     | 4 ++--
->  external-reshape-design.txt      | 2 +-
->  mdadm.8.in                       | 6 +++---
->  mdadm.spec                       | 4 ++--
->  raid6check.8                     | 2 +-
->  restripe.c                       | 2 +-
->  udev-md-raid-safe-timeouts.rules | 2 +-
->  31 files changed, 59 insertions(+), 59 deletions(-)
+Thanks,
+Song
