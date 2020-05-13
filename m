@@ -2,99 +2,182 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 091D11D0706
-	for <lists+linux-raid@lfdr.de>; Wed, 13 May 2020 08:18:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42FE81D08C7
+	for <lists+linux-raid@lfdr.de>; Wed, 13 May 2020 08:39:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729460AbgEMGSP (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 13 May 2020 02:18:15 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:39086 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729455AbgEMGSO (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 13 May 2020 02:18:14 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 49MPcP1Dx8z1qs3K
-        for <linux-raid@vger.kernel.org>; Wed, 13 May 2020 08:18:13 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 49MPcP18NNz1qspF
-        for <linux-raid@vger.kernel.org>; Wed, 13 May 2020 08:18:13 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id yrIZqZ8xcwAc for <linux-raid@vger.kernel.org>;
-        Wed, 13 May 2020 08:18:12 +0200 (CEST)
-X-Auth-Info: 0U4EkeIJ7RWAs15wXqhGcE7zU287LBfa7fti4Sl7Us8=
-Received: from janitor.denx.de (unknown [62.91.23.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA
-        for <linux-raid@vger.kernel.org>; Wed, 13 May 2020 08:18:12 +0200 (CEST)
-Received: by janitor.denx.de (Postfix, from userid 108)
-        id 3640AA014A; Wed, 13 May 2020 08:18:12 +0200 (CEST)
-Received: from gemini.denx.de (gemini.denx.de [10.4.0.2])
-        by janitor.denx.de (Postfix) with ESMTPS id 88638A0054;
-        Wed, 13 May 2020 08:18:02 +0200 (CEST)
-Received: from gemini.denx.de (localhost [IPv6:::1])
-        by gemini.denx.de (Postfix) with ESMTP id 3BA97240E1A;
-        Wed, 13 May 2020 08:18:02 +0200 (CEST)
-To:     Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
-cc:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        linux-raid@vger.kernel.org
-From:   Wolfgang Denk <wd@denx.de>
-Subject: Re: raid6check extremely slow ?
+        id S1729477AbgEMGjN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 13 May 2020 02:39:13 -0400
+Received: from smtp1.onthe.net.au ([203.22.196.249]:41923 "EHLO
+        smtp1.onthe.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729410AbgEMGjN (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 13 May 2020 02:39:13 -0400
+X-Greylist: delayed 459 seconds by postgrey-1.27 at vger.kernel.org; Wed, 13 May 2020 02:39:11 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by smtp1.onthe.net.au (Postfix) with ESMTP id B15A5616CA;
+        Wed, 13 May 2020 16:31:28 +1000 (EST)
+Received: from smtp1.onthe.net.au ([127.0.0.1])
+        by localhost (smtp1.onthe.net.au [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id xMGgYCKGR2c3; Wed, 13 May 2020 16:31:28 +1000 (EST)
+Received: from athena.private.onthe.net.au (chris-gw2-vpn.private.onthe.net.au [10.9.3.2])
+        by smtp1.onthe.net.au (Postfix) with ESMTP id 0D24A616B5;
+        Wed, 13 May 2020 16:31:28 +1000 (EST)
+Received: by athena.private.onthe.net.au (Postfix, from userid 1026)
+        id D4F4B6804DE; Wed, 13 May 2020 16:31:27 +1000 (AEST)
+Date:   Wed, 13 May 2020 16:31:27 +1000
+From:   Chris Dunlop <chris@onthe.net.au>
+To:     Michal Soltys <msoltyspl@yandex.pl>
+Cc:     linux-raid@vger.kernel.org
+Subject: Re: [general question] rare silent data corruption when writing data
+Message-ID: <20200513063127.GA2769@onthe.net.au>
+References: <b0e91faf-3a14-3ac9-3c31-6989154791c1@yandex.pl>
 MIME-Version: 1.0
-Content-type: text/plain; charset=UTF-8
-Content-transfer-encoding: 8bit
-In-reply-to: <20200512183251.GA11548@lazy.lzy>
-References: <20200510120725.20947240E1A@gemini.denx.de> <2cf55e5f-bdfb-9fef-6255-151e049ac0a1@cloud.ionos.com> <20200511064022.591C5240E1A@gemini.denx.de> <f003a8c7-e96d-ddc3-6d1d-42a13b70e0b6@cloud.ionos.com> <20200511161415.GA8049@lazy.lzy> <23d84744-9e3c-adc1-3af1-6498b9bcf750@cloud.ionos.com> <20200512160712.GB7261@lazy.lzy> <e24b0703-a599-45ef-f6b6-0a713cfa414c@cloud.ionos.com> <20200512183251.GA11548@lazy.lzy>
-Comments: In-reply-to Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
-   message dated "Tue, 12 May 2020 20:32:51 +0200."
-Date:   Wed, 13 May 2020 08:18:02 +0200
-Message-Id: <20200513061802.3BA97240E1A@gemini.denx.de>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <b0e91faf-3a14-3ac9-3c31-6989154791c1@yandex.pl>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Dear Piergiorgio,
+Hi,
 
-In message <20200512183251.GA11548@lazy.lzy> you wrote:
+On Thu, May 07, 2020 at 07:30:19PM +0200, Michal Soltys wrote:
+> Note: this is just general question - if anyone experienced something 
+> similar or could suggest how to pinpoint / verify the actual cause.
 >
-> > > > xmalloc.o dlink.o
-> > > > sysfs.o: In function `sysfsline':
-> > > > sysfs.c:(.text+0x2adb): undefined reference to `parse_uuid'
-> > > > sysfs.c:(.text+0x2aee): undefined reference to `uuid_zero'
-> > > > sysfs.c:(.text+0x2af5): undefined reference to `uuid_zero'
-> > > > collect2: error: ld returned 1 exit status
-> > > > Makefile:220: recipe for target 'raid6check' failed
-> > > > make: *** [raid6check] Error 1
-> > > I cannot see this problem.
-> > > I could compile without issue.
-> > > Maybe some library is missing somewhere,
-> > > but I'm not sure where.
-> > 
-> > Do you try with the fastest mdadm tree? But could be environment issue ...
+> Thanks to btrfs's checksumming we discovered somewhat (even if quite 
+> rare) nasty silent corruption going on on one of our hosts. Or perhaps 
+> "corruption" is not the correct word - the files simply have precise 4kb 
+> (1 page) of incorrect data. The incorrect pieces of data look on their 
+> own fine - as something that was previously in the place, or written 
+> from wrong source.
+
+"Me too!"
+
+We are seeing 256-byte corruptions which are always the last 256b of a 4K 
+block. The 256b is very often a copy of a "last 256b of 4k block" from 
+earlier on the file. We sometimes see multiple corruptions in the same 
+file, with each of the corruptions being a copy of a different 256b from 
+earlier on the file. The original 256b and the copied 256b aren't 
+identifiably at a regular offset from each other. Where the 256b isn't a 
+copy from earlier in the file
+
+I'd be really interested to hear if your problem is just in the last 256b 
+of the 4k block also!
+
+We haven't been able to track down any the origin of any of the copies 
+where it's not a 256b block earlier in the file. I tried some extensive 
+analysis of some of these occurrences, including looking at files being 
+written around the same time, but wasn't able to identify where the data 
+came from. It could be the "last 256b of 4k block" from some other file 
+being written at the same time, or a non-256b aligned chunk, or indeed not 
+a copy of other file data at all.
+
+See Also: https://lore.kernel.org/linux-xfs/20180322150226.GA31029@onthe.net.au/
+
+We've been able to detect these corruptions via an md5sum calculated as 
+the files are generated, where a later md5sum doesn't match the original.  
+We regularly see the md5sum match soon after the file is written (seconds 
+to minutes), and then go "bad" after doing a "vmtouch -e" to evict the 
+file from memory. I.e. it looks like the problem is occurring somewhere on 
+the write path to disk. We can move the corrupt file out of the way and 
+regenerate the file, then use 'cmp -l' to see where the corruption[s] are, 
+and calculate md5 sums for each 256b block in the file to identify where 
+the 256b was copied from.
+
+The corruptions are far more likely to occur during a scrub, although we 
+have seen a few of them when not scrubbing. We're currently working around 
+the issue by scrubbing infrequently, and trying to schedule scrubs during 
+periods of low write load.
+
+> The hardware is (can provide more detailed info of course):
 >
-> I'm using Fedora, so I downloaded
-> the .srpm package, installed, enabled
-> raid6check, patched and rebuild...
+> - Supermicro X9DR7-LN4F
+> - onboard LSI SAS2308 controller (2 sff-8087 connectors, 1 connected to 
+>   backplane)
+> - 96 gb ram (ecc)
+> - 24 disk backplane
+>
+> - 1 array connected directly to lsi controller (4 disks, mdraid5, 
+>   internal bitmap, 512kb chunk)
+> - 1 array on the backplane (4 disks, mdraid5, journaled)
+> - journal for the above array is: mdraid1, 2 ssd disks (micron 5300 pro 
+>   disks)
+> - 1 btrfs raid1 boot array on motherboard's sata ports (older but still 
+>   fine intel ssds from DC 3500 series)
 
-Fedora 32 is still at mdadm-4.1 (Mon Oct 1 14:27:52 2018), but it
-seems the significant change was introduced bu commit b06815989
-"mdadm: load default sysfs attributes after assemblation" (Wed Jul 10
-13:38:53 2019).
+Ours is on similar hardware:
 
-If you try to build top of tree you should see the problem, too
-[and the -Werror issue I mentioned before, which is also fixed
-in Fedora by local distro patches.]
+- Supermicro X8DTH-IF
+- LSI SAS 9211-8i  (LSI SAS2008, PCI-e 2.0, multiple firmware versions)
+- 192GB ECC RAM
+- A mix of 12 and 24-bay expanders (some daisy chained: lsi-expander-expander)
 
-Best regards,
+We swapped the LSI HBA for another of the same model, the problem 
+persisted. We have a SAS9300 card on the way for testing.
 
-Wolfgang Denk
+> Raid 5 arrays are in lvm volume group, and the logical volumes are used 
+> by VMs. Some of the volumes are linear, some are using thin-pools (with 
+> metadata on the aforementioned intel ssds, in mirrored config). LVM uses 
+> large extent sizes (120m) and the chunk-size of thin-pools is set to 
+> 1.5m to match underlying raid stripe. Everything is cleanly aligned as 
+> well.
 
--- 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
-As far as the laws of mathematics refer to reality, they are not cer-
-tain, and as far as they are certain, they do not refer  to  reality.
-                                                   -- Albert Einstein
+We're not using VMs nor lvm thin on this storage.
+
+Our main filesystem is xfs + lvm + raid6 and this is where we've seen all 
+but one of these corruptions (70-100 since Mar 2018).
+
+The problem has occurred on all md arrays under the lvm, on disks from 
+multiple vendors and models, and on disks attached to all expanders.
+
+We've seen one of these corruptions with xfs directly on a hdd partition.  
+I.e. no mdraid or lvm involved. This fs an order of magnitude or more less 
+utilised than the main fs in terms of data being written.
+
+> We did not manage to rule out (though somewhat _highly_ unlikely):
+>
+> - lvm thin (issue always - so far - occured on lvm thin pools)
+> - mdraid (issue always - so far - on mdraid managed arrays)
+> - kernel (tested with - in this case - debian's 5.2 and 5.4 kernels, 
+>   happened with both - so it would imply rather already longstanding bug 
+>   somewhere)
+
+- we're not using lvm thin
+- problem has occurred once on non-mdraid (xfs directly on a hdd partition)
+- problem NOT seen on kernel 3.18.25
+- problem seen on, so far, kernels 4.4.153 - 5.4.2
+
+> And finally - so far - the issue never occured:
+>
+> - directly on a disk
+> - directly on mdraid
+> - on linear lvm volume on top of mdraid
+
+- seen once directly on disk (partition)
+- we don't use mdraid directly
+- our problem arises on linear lvm on top of mdraid (raid6)
+
+> As far as the issue goes it's:
+>
+> - always a 4kb chunk that is incorrect - in a ~1 tb file it can be from 
+>   a few to few dozens of such chunks
+> - we also found (or rather btrfs scrub did) a few small damaged files as 
+>   well
+> - the chunks look like a correct piece of different or previous data
+>
+> The 4kb is well, weird ? Doesn't really matter any chunk/stripes sizes 
+> anywhere across the stack (lvm - 120m extents, 1.5m chunks on thin 
+> pools; mdraid - default 512kb chunks). It does nicely fit a page though 
+> ...
+>
+> Anyway, if anyone has any ideas or suggestions what could be happening 
+> (perhaps with this particular motherboard or vendor) or how to pinpoint 
+> the cause - I'll be grateful for any.
+
+Likewise!
+
+Cheers,
+
+Chris
