@@ -2,677 +2,93 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8340C1D2DDA
-	for <lists+linux-raid@lfdr.de>; Thu, 14 May 2020 13:08:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E184A1D32AD
+	for <lists+linux-raid@lfdr.de>; Thu, 14 May 2020 16:24:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbgENLH2 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 14 May 2020 07:07:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60294 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbgENLH1 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 14 May 2020 07:07:27 -0400
-Received: from forward103p.mail.yandex.net (forward103p.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:106])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C36BC061A0C
-        for <linux-raid@vger.kernel.org>; Thu, 14 May 2020 04:07:26 -0700 (PDT)
-Received: from forward103q.mail.yandex.net (forward103q.mail.yandex.net [IPv6:2a02:6b8:c0e:50:0:640:b21c:d009])
-        by forward103p.mail.yandex.net (Yandex) with ESMTP id D922218C013B;
-        Thu, 14 May 2020 14:07:20 +0300 (MSK)
-Received: from mxback2q.mail.yandex.net (mxback2q.mail.yandex.net [IPv6:2a02:6b8:c0e:40:0:640:9c8c:4946])
-        by forward103q.mail.yandex.net (Yandex) with ESMTP id D4AFB61E0002;
-        Thu, 14 May 2020 14:07:20 +0300 (MSK)
-Received: from vla1-bdd5685c3f79.qloud-c.yandex.net (vla1-bdd5685c3f79.qloud-c.yandex.net [2a02:6b8:c0d:4201:0:640:bdd5:685c])
-        by mxback2q.mail.yandex.net (mxback/Yandex) with ESMTP id FA5NZg5VRz-7KjuE9Yw;
-        Thu, 14 May 2020 14:07:20 +0300
-Received: by vla1-bdd5685c3f79.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id 1THffATrLm-7JWmU4tR;
-        Thu, 14 May 2020 14:07:20 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: Assemblin journaled array fails
-To:     Song Liu <song@kernel.org>
-Cc:     linux-raid <linux-raid@vger.kernel.org>
-References: <f8c61278-1758-66cd-cf25-8a118cb12f58@yandex.pl>
- <70dad446-7d38-fd10-130f-c23797165a21@yandex.pl>
- <56b68265-ca54-05d3-95bc-ea8ee0b227f6@yandex.pl>
- <CAPhsuW4WcqkDXOhcuG33bZtSEZ-V-KYPLm87piBH24eYEB0qVw@mail.gmail.com>
- <b9b6b007-2177-a844-4d80-480393f30476@yandex.pl>
- <CAPhsuW70NNozBmt1-zsM_Pk-39cLzi8bC3ZZaNwQ0-VgYsmkiA@mail.gmail.com>
-From:   Michal Soltys <msoltyspl@yandex.pl>
-Message-ID: <f9b54d87-5b81-1fa3-04d5-ea86a6c062cb@yandex.pl>
-Date:   Thu, 14 May 2020 13:07:19 +0200
+        id S1726128AbgENOYP (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 14 May 2020 10:24:15 -0400
+Received: from sender11-op-o11.zoho.eu ([31.186.226.225]:17194 "EHLO
+        sender11-op-o11.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbgENOYP (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 14 May 2020 10:24:15 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1589466250; cv=none; 
+        d=zohomail.eu; s=zohoarc; 
+        b=XiCXJOrbZhIQRtxWIjS1OWZztGHKZn9nUB5Qv6FUZlmOKUJqbGQW6i0z5cYk668sXM/EHw6sQNy6yDKOoPButgbf3rGLrP5QMM+cqikjwh8M6LgtDK2Pj/ve0ERHrxwTolwYdNx8b9AdOstrceT6rrUBciCnr2+9RhDEgZ6eCC8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+        t=1589466250; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=Uoq44DGEM42E68ro2hBzS8qtl00gaoawCy1MF46fS00=; 
+        b=ONwc18ZYwcrgB/Hane3ZgYVVPzg10rJGGT9LX9fko2z77VTIaPeJWLwUOoa7zZAnQyHzqqIyYH3MqK+rU5BYaGwC8xKHexL2EeDnrff/jz9apKkmhl+r4wiHPkIcksl2WTDWp/BCpVSUeQqyCnfUmC+tBcEPvO/aRDXS4XMpgQo=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
+        dmarc=pass header.from=<jes@trained-monkey.org> header.from=<jes@trained-monkey.org>
+Received: from [100.109.129.242] (163.114.130.1 [163.114.130.1]) by mx.zoho.eu
+        with SMTPS id 158946624645454.47385201042732; Thu, 14 May 2020 16:24:06 +0200 (CEST)
+Subject: Re: [PATCH] Makefile: add LABEL support
+To:     Tkaczyk Mariusz <mariusz.tkaczyk@intel.com>
+Cc:     linux-raid@vger.kernel.org
+References: <20200513110036.19724-1-mariusz.tkaczyk@intel.com>
+From:   Jes Sorensen <jes@trained-monkey.org>
+Message-ID: <a474fdee-5781-3f92-d996-e34697c92884@trained-monkey.org>
+Date:   Thu, 14 May 2020 10:24:05 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAPhsuW70NNozBmt1-zsM_Pk-39cLzi8bC3ZZaNwQ0-VgYsmkiA@mail.gmail.com>
-Content-Type: multipart/mixed;
- boundary="------------17C2B7CF14F9B535DF170B03"
-Content-Language: en-US-large
+In-Reply-To: <20200513110036.19724-1-mariusz.tkaczyk@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------17C2B7CF14F9B535DF170B03
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-On 5/13/20 6:17 PM, Song Liu wrote:
->>>
->>> Are these captured back to back? I am asking because they showed different
->>> "Events" number.
->>
->> Nah, they were captured between reboots. Back to back all event fields show identical value (at 56291 now).
->>
->>>
->>> Also, when mdadm -A hangs, could you please capture /proc/$(pidof mdadm)/stack ?
->>>
->>
->> The output is empty:
->>
->> xs22:/☠ ps -eF fww | grep mdadm
->> root     10332  9362 97   740  1884  25 12:47 pts/1    R+     6:59  |   \_ mdadm -A /dev/md/r5_big /dev/md/r1_journal_big /dev/sdi1 /dev/sdg1 /dev/sdj1 /dev/sdh1
->> xs22:/☠ cd /proc/10332
->> xs22:/proc/10332☠ cat stack
->> xs22:/proc/10332☠
+On 5/13/20 7:00 AM, Tkaczyk Mariusz wrote:
+> Add optional LABEL parameter to Makefile and allow to mark version
+> by user friendly label. It might be useful when creating custom
+> spins of mdadm, or labeling some instance in between major releases.
 > 
-> Hmm... Could you please share the strace output of "mdadm -A" command? Like
+> Signed-off-by: Tkaczyk Mariusz <mariusz.tkaczyk@intel.com>
+> ---
+>  Makefile | 3 ++-
+>  ReadMe.c | 5 ++++-
+>  2 files changed, 6 insertions(+), 2 deletions(-)
+
+I am not against this, but could we name it EXTRAVERSION to match what
+the kernel does?
+
+Cheers,
+Jes
+
+> diff --git a/Makefile b/Makefile
+> index a33319a8..9c129c54 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -105,7 +105,8 @@ VERSION = $(shell [ -d .git ] && git describe HEAD | sed 's/mdadm-//')
+>  VERS_DATE = $(shell [ -d .git ] && date --iso-8601 --date="`git log -n1 --format=format:%cd --date=iso --date=short`")
+>  DVERS = $(if $(VERSION),-DVERSION=\"$(VERSION)\",)
+>  DDATE = $(if $(VERS_DATE),-DVERS_DATE="\"$(VERS_DATE)\"",)
+> -CFLAGS += $(DVERS) $(DDATE)
+> +DLABEL = $(if $(LABEL),-DLABEL="\" - $(LABEL)\"",)
+> +CFLAGS += $(DVERS) $(DDATE) $(DLABEL)
+>  
+>  # The glibc TLS ABI requires applications that call clone(2) to set up
+>  # TLS data structures, use pthreads until mdmon implements this support
+> diff --git a/ReadMe.c b/ReadMe.c
+> index eaf10423..883136df 100644
+> --- a/ReadMe.c
+> +++ b/ReadMe.c
+> @@ -33,7 +33,10 @@
+>  #ifndef VERS_DATE
+>  #define VERS_DATE "2018-10-01"
+>  #endif
+> -char Version[] = "mdadm - v" VERSION " - " VERS_DATE "\n";
+> +#ifndef LABEL
+> +#define LABEL ""
+> +#endif
+> +char Version[] = "mdadm - v" VERSION " - " VERS_DATE LABEL "\n";
+>  
+>  /*
+>   * File: ReadMe.c
 > 
-> strace mdadm -A /dev/md/r5_big /dev/md/r1_journal_big /dev/xxx ...
-> 
-> Thanks,
-> Song
 
-I did one more thing - ran cat on that stack in another terminal every 
-0.1 seconds, this is what was found:
-
-cat: /proc//stack: No such file or directory
-cat: /proc//stack: No such file or directory
-cat: /proc//stack: No such file or directory
-[<0>] submit_bio_wait+0x5b/0x80
-[<0>] r5l_recovery_read_page+0x1b6/0x200 [raid456]
-[<0>] r5l_recovery_verify_data_checksum+0x19/0x70 [raid456]
-[<0>] r5l_start+0x99e/0xe70 [raid456]
-[<0>] md_start.part.48+0x2e/0x50 [md_mod]
-[<0>] do_md_run+0x64/0x100 [md_mod]
-[<0>] md_ioctl+0xe7d/0x17d0 [md_mod]
-[<0>] blkdev_ioctl+0x4d0/0xa00
-[<0>] block_ioctl+0x39/0x40
-[<0>] do_vfs_ioctl+0xa4/0x630
-[<0>] ksys_ioctl+0x60/0x90
-[<0>] __x64_sys_ioctl+0x16/0x20
-[<0>] do_syscall_64+0x52/0x160
-[<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-cat: /proc//stack: No such file or directory
-[<0>] submit_bio_wait+0x5b/0x80
-[<0>] r5l_recovery_read_page+0x1b6/0x200 [raid456]
-[<0>] r5l_recovery_verify_data_checksum+0x19/0x70 [raid456]
-[<0>] r5l_start+0x99e/0xe70 [raid456]
-[<0>] md_start.part.48+0x2e/0x50 [md_mod]
-[<0>] do_md_run+0x64/0x100 [md_mod]
-[<0>] md_ioctl+0xe7d/0x17d0 [md_mod]
-[<0>] blkdev_ioctl+0x4d0/0xa00
-[<0>] block_ioctl+0x39/0x40
-[<0>] do_vfs_ioctl+0xa4/0x630
-[<0>] ksys_ioctl+0x60/0x90
-[<0>] __x64_sys_ioctl+0x16/0x20
-[<0>] do_syscall_64+0x52/0x160
-[<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-cat: /proc//stack: No such file or directory
-cat: /proc//stack: No such file or directory
-cat: /proc//stack: No such file or directory
-cat: /proc//stack: No such file or directory
-
-
-Strace output attached.
-
-Thanks.
-
---------------17C2B7CF14F9B535DF170B03
-Content-Type: text/x-log; charset=UTF-8;
- name="mdadm.strace.log"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="mdadm.strace.log"
-
-3650  execve("/sbin/mdadm", ["mdadm", "-A", "/dev/md/r5_big", "/dev/md/r1_journal_big", "/dev/sdi1", "/dev/sdg1", "/dev/sdj1", "/dev/sdh1"], 0x7ffea6946570 /* 39 vars */) = 0
-3650  brk(NULL)                         = 0x55885c8e2000
-3650  access("/etc/ld.so.preload", R_OK) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
-3650  fstat(3, {st_mode=S_IFREG|0644, st_size=63242, ...}) = 0
-3650  mmap(NULL, 63242, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7fbb17321000
-3650  close(3)                          = 0
-3650  openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libdl.so.2", O_RDONLY|O_CLOEXEC) = 3
-3650  read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0000\21\0\0\0\0\0\0"..., 832) = 832
-3650  fstat(3, {st_mode=S_IFREG|0644, st_size=14592, ...}) = 0
-3650  mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbb1731f000
-3650  mmap(NULL, 16656, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fbb1731a000
-3650  mmap(0x7fbb1731b000, 4096, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1000) = 0x7fbb1731b000
-3650  mmap(0x7fbb1731c000, 4096, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2000) = 0x7fbb1731c000
-3650  mmap(0x7fbb1731d000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2000) = 0x7fbb1731d000
-3650  close(3)                          = 0
-3650  openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
-3650  read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\260A\2\0\0\0\0\0"..., 832) = 832
-3650  fstat(3, {st_mode=S_IFREG|0755, st_size=1824496, ...}) = 0
-3650  mmap(NULL, 1837056, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fbb17159000
-3650  mprotect(0x7fbb1717b000, 1658880, PROT_NONE) = 0
-3650  mmap(0x7fbb1717b000, 1343488, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x22000) = 0x7fbb1717b000
-3650  mmap(0x7fbb172c3000, 311296, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x16a000) = 0x7fbb172c3000
-3650  mmap(0x7fbb17310000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1b6000) = 0x7fbb17310000
-3650  mmap(0x7fbb17316000, 14336, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7fbb17316000
-3650  close(3)                          = 0
-3650  mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbb17156000
-3650  arch_prctl(ARCH_SET_FS, 0x7fbb17156740) = 0
-3650  mprotect(0x7fbb17310000, 16384, PROT_READ) = 0
-3650  mprotect(0x7fbb1731d000, 4096, PROT_READ) = 0
-3650  mprotect(0x55885b2e6000, 4096, PROT_READ) = 0
-3650  mprotect(0x7fbb17358000, 4096, PROT_READ) = 0
-3650  munmap(0x7fbb17321000, 63242)     = 0
-3650  getpid()                          = 3650
-3650  uname({sysname="Linux", nodename="xs22", ...}) = 0
-3650  brk(NULL)                         = 0x55885c8e2000
-3650  brk(0x55885c903000)               = 0x55885c903000
-3650  openat(AT_FDCWD, "/dev/md/r5_big", O_RDONLY) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/etc/mdadm/mdadm.conf", O_RDONLY) = 3
-3650  fstat(3, {st_mode=S_IFREG|0644, st_size=1729, ...}) = 0
-3650  fstat(3, {st_mode=S_IFREG|0644, st_size=1729, ...}) = 0
-3650  read(3, "# mdadm.conf\n#\n# Please refer to"..., 4096) = 1729
-3650  read(3, "", 4096)                 = 0
-3650  fstat(3, {st_mode=S_IFREG|0644, st_size=1729, ...}) = 0
-3650  close(3)                          = 0
-3650  openat(AT_FDCWD, "/etc/mdadm/mdadm.conf.d", O_RDONLY) = -1 ENOENT (No such file or directory)
-3650  uname({sysname="Linux", nodename="xs22", ...}) = 0
-3650  openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
-3650  fstat(3, {st_mode=S_IFREG|0644, st_size=63242, ...}) = 0
-3650  mmap(NULL, 63242, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7fbb17321000
-3650  close(3)                          = 0
-3650  openat(AT_FDCWD, "/lib/x86_64-linux-gnu/tls/x86_64/x86_64/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/lib/x86_64-linux-gnu/tls/x86_64/x86_64", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/lib/x86_64-linux-gnu/tls/x86_64/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/lib/x86_64-linux-gnu/tls/x86_64", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/lib/x86_64-linux-gnu/tls/x86_64/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/lib/x86_64-linux-gnu/tls/x86_64", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/lib/x86_64-linux-gnu/tls/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/lib/x86_64-linux-gnu/tls", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/lib/x86_64-linux-gnu/x86_64/x86_64/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/lib/x86_64-linux-gnu/x86_64/x86_64", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/lib/x86_64-linux-gnu/x86_64/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/lib/x86_64-linux-gnu/x86_64", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/lib/x86_64-linux-gnu/x86_64/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/lib/x86_64-linux-gnu/x86_64", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/lib/x86_64-linux-gnu", {st_mode=S_IFDIR|0755, st_size=6218, ...}) = 0
-3650  openat(AT_FDCWD, "/usr/lib/x86_64-linux-gnu/tls/x86_64/x86_64/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/usr/lib/x86_64-linux-gnu/tls/x86_64/x86_64", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/usr/lib/x86_64-linux-gnu/tls/x86_64/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/usr/lib/x86_64-linux-gnu/tls/x86_64", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/usr/lib/x86_64-linux-gnu/tls/x86_64/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/usr/lib/x86_64-linux-gnu/tls/x86_64", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/usr/lib/x86_64-linux-gnu/tls/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/usr/lib/x86_64-linux-gnu/tls", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/usr/lib/x86_64-linux-gnu/x86_64/x86_64/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/usr/lib/x86_64-linux-gnu/x86_64/x86_64", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/usr/lib/x86_64-linux-gnu/x86_64/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/usr/lib/x86_64-linux-gnu/x86_64", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/usr/lib/x86_64-linux-gnu/x86_64/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/usr/lib/x86_64-linux-gnu/x86_64", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/usr/lib/x86_64-linux-gnu/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/usr/lib/x86_64-linux-gnu", {st_mode=S_IFDIR|0755, st_size=38826, ...}) = 0
-3650  openat(AT_FDCWD, "/lib/tls/x86_64/x86_64/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/lib/tls/x86_64/x86_64", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/lib/tls/x86_64/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/lib/tls/x86_64", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/lib/tls/x86_64/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/lib/tls/x86_64", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/lib/tls/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/lib/tls", 0x7ffc70457820)  = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/lib/x86_64/x86_64/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/lib/x86_64/x86_64", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/lib/x86_64/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/lib/x86_64", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/lib/x86_64/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/lib/x86_64", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/lib/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/lib", {st_mode=S_IFDIR|0755, st_size=326, ...}) = 0
-3650  openat(AT_FDCWD, "/usr/lib/tls/x86_64/x86_64/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/usr/lib/tls/x86_64/x86_64", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/usr/lib/tls/x86_64/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/usr/lib/tls/x86_64", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/usr/lib/tls/x86_64/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/usr/lib/tls/x86_64", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/usr/lib/tls/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/usr/lib/tls", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/usr/lib/x86_64/x86_64/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/usr/lib/x86_64/x86_64", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/usr/lib/x86_64/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/usr/lib/x86_64", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/usr/lib/x86_64/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/usr/lib/x86_64", 0x7ffc70457820) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/usr/lib/libdlm_lt.so.3", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  stat("/usr/lib", {st_mode=S_IFDIR|0755, st_size=1262, ...}) = 0
-3650  munmap(0x7fbb17321000, 63242)     = 0
-3650  openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
-3650  fstat(3, {st_mode=S_IFREG|0644, st_size=63242, ...}) = 0
-3650  mmap(NULL, 63242, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7fbb17321000
-3650  close(3)                          = 0
-3650  openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libcmap.so.4", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/usr/lib/x86_64-linux-gnu/libcmap.so.4", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/lib/libcmap.so.4", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/usr/lib/libcmap.so.4", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-3650  munmap(0x7fbb17321000, 63242)     = 0
-3650  geteuid()                         = 0
-3650  openat(AT_FDCWD, "/dev/md/r1_journal_big", O_RDONLY|O_DIRECT) = 3
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x9, 0x7d), ...}) = 0
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x9, 0x7d), ...}) = 0
-3650  readlink("/sys/dev/block/9:125", "../../devices/virtual/block/md12"..., 199) = 33
-3650  stat("/sys/block/md125/md", {st_mode=S_IFDIR|0755, st_size=0, ...}) = 0
-3650  openat(AT_FDCWD, "/sys/block/md125/md/metadata_version", O_RDONLY) = 4
-3650  read(4, "1.1\n", 4096)            = 4
-3650  close(4)                          = 0
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x9, 0x7d), ...}) = 0
-3650  ioctl(3, BLKGETSIZE64, [274742640640]) = 0
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x9, 0x7d), ...}) = 0
-3650  ioctl(3, BLKGETSIZE64, [274742640640]) = 0
-3650  lseek(3, 274742575104, SEEK_SET)  = 274742575104
-3650  read(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 4096) = 4096
-3650  ioctl(3, BLKSSZGET, [512])        = 0
-3650  ioctl(3, BLKSSZGET, [512])        = 0
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x9, 0x7d), ...}) = 0
-3650  ioctl(3, BLKGETSIZE64, [274742640640]) = 0
-3650  lseek(3, 274742632448, SEEK_SET)  = 274742632448
-3650  read(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 4096) = 4096
-3650  lseek(3, 0, SEEK_CUR)             = 274742636544
-3650  ioctl(3, BLKSSZGET, [512])        = 0
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x9, 0x7d), ...}) = 0
-3650  ioctl(3, BLKGETSIZE64, [274742640640]) = 0
-3650  lseek(3, 0, SEEK_SET)             = 0
-3650  read(3, "\374N+\251\1\0\0\0\0\2\0\0\0\0\0\0\325\231]vg\327\372\275\59/\207%\251\32\227"..., 4096) = 4096
-3650  lseek(3, 0, SEEK_CUR)             = 4096
-3650  ioctl(3, BLKSSZGET, [512])        = 0
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x9, 0x7d), ...}) = 0
-3650  ioctl(3, BLKGETSIZE64, [274742640640]) = 0
-3650  lseek(3, 4096, SEEK_SET)          = 4096
-3650  read(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 4096) = 4096
-3650  lseek(3, 0, SEEK_CUR)             = 8192
-3650  ioctl(3, BLKSSZGET, [512])        = 0
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x9, 0x7d), ...}) = 0
-3650  ioctl(3, BLKGETSIZE64, [274742640640]) = 0
-3650  lseek(3, 0, SEEK_SET)             = 0
-3650  read(3, "\374N+\251\1\0\0\0\0\2\0\0\0\0\0\0\325\231]vg\327\372\275\59/\207%\251\32\227"..., 4096) = 4096
-3650  lseek(3, 0, SEEK_CUR)             = 4096
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x9, 0x7d), ...}) = 0
-3650  ioctl(3, BLKGETSIZE64, [274742640640]) = 0
-3650  ioctl(3, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=1073741824, devname="", volname=""}}) = -1 ENXIO (No such device or address)
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x9, 0x7d), ...}) = 0
-3650  ioctl(3, BLKGETSIZE64, [274742640640]) = 0
-3650  lseek(3, 274742640128, SEEK_SET)  = 274742640128
-3650  read(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 512) = 512
-3650  ioctl(3, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=1073741824, devname="", volname=""}}) = -1 ENXIO (No such device or address)
-3650  ioctl(3, BLKSSZGET, [512])        = 0
-3650  ioctl(3, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=1073741824, devname="", volname=""}}) = -1 ENXIO (No such device or address)
-3650  openat(AT_FDCWD, "/sys/bus/pci/drivers/isci", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/sys/bus/pci/drivers/ahci", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 4
-3650  fstat(4, {st_mode=S_IFDIR|0755, st_size=0, ...}) = 0
-3650  getdents64(4, /* 9 entries */, 32768) = 264
-3650  readlink("/sys/bus/pci/drivers/ahci/./subsystem", 0x7ffc70456530, 4096) = -1 ENOENT (No such file or directory)
-3650  readlink("/sys/bus/pci/drivers/ahci/../subsystem", 0x7ffc70456530, 4096) = -1 ENOENT (No such file or directory)
-3650  readlink("/sys/bus/pci/drivers/ahci/uevent/subsystem", 0x7ffc70456530, 4096) = -1 ENOTDIR (Not a directory)
-3650  readlink("/sys/bus/pci/drivers/ahci/0000:00:1f.2/subsystem", "../../../bus/pci", 4096) = 16
-3650  openat(AT_FDCWD, "/sys/bus/pci/drivers/ahci/0000:00:1f.2/vendor", O_RDONLY) = 5
-3650  read(5, "0x8086\n", 7)            = 7
-3650  close(5)                          = 0
-3650  openat(AT_FDCWD, "/sys/bus/pci/drivers/ahci/0000:00:1f.2/device", O_RDONLY) = 5
-3650  lseek(5, 0, SEEK_SET)             = 0
-3650  read(5, "0x1d02\n", 50)           = 7
-3650  close(5)                          = 0
-3650  openat(AT_FDCWD, "/sys/bus/pci/drivers/ahci/0000:00:1f.2/class", O_RDONLY) = 5
-3650  lseek(5, 0, SEEK_SET)             = 0
-3650  read(5, "0x010601\n", 50)         = 9
-3650  close(5)                          = 0
-3650  lstat("/sys", {st_mode=S_IFDIR|0555, st_size=0, ...}) = 0
-3650  lstat("/sys/bus", {st_mode=S_IFDIR|0755, st_size=0, ...}) = 0
-3650  lstat("/sys/bus/pci", {st_mode=S_IFDIR|0755, st_size=0, ...}) = 0
-3650  lstat("/sys/bus/pci/drivers", {st_mode=S_IFDIR|0755, st_size=0, ...}) = 0
-3650  lstat("/sys/bus/pci/drivers/ahci", {st_mode=S_IFDIR|0755, st_size=0, ...}) = 0
-3650  lstat("/sys/bus/pci/drivers/ahci/0000:00:1f.2", {st_mode=S_IFLNK|0777, st_size=0, ...}) = 0
-3650  readlink("/sys/bus/pci/drivers/ahci/0000:00:1f.2", "../../../../devices/pci0000:00/0"..., 4095) = 43
-3650  lstat("/sys/devices", {st_mode=S_IFDIR|0755, st_size=0, ...}) = 0
-3650  lstat("/sys/devices/pci0000:00", {st_mode=S_IFDIR|0755, st_size=0, ...}) = 0
-3650  lstat("/sys/devices/pci0000:00/0000:00:1f.2", {st_mode=S_IFDIR|0755, st_size=0, ...}) = 0
-3650  readlink("/sys/bus/pci/drivers/ahci/bind/subsystem", 0x7ffc70456530, 4096) = -1 ENOTDIR (Not a directory)
-3650  readlink("/sys/bus/pci/drivers/ahci/new_id/subsystem", 0x7ffc70456530, 4096) = -1 ENOTDIR (Not a directory)
-3650  readlink("/sys/bus/pci/drivers/ahci/remove_id/subsystem", 0x7ffc70456530, 4096) = -1 ENOTDIR (Not a directory)
-3650  readlink("/sys/bus/pci/drivers/ahci/unbind/subsystem", 0x7ffc70456530, 4096) = -1 ENOTDIR (Not a directory)
-3650  readlink("/sys/bus/pci/drivers/ahci/module/subsystem", 0x7ffc70456530, 4096) = -1 ENOENT (No such file or directory)
-3650  getdents64(4, /* 0 entries */, 32768) = 0
-3650  close(4)                          = 0
-3650  openat(AT_FDCWD, "/sys/bus/pci/drivers/vmd", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/sys/bus/pci/drivers/nvme", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = -1 ENOENT (No such file or directory)
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x9, 0x7d), ...}) = 0
-3650  lstat("/sys", {st_mode=S_IFDIR|0555, st_size=0, ...}) = 0
-3650  lstat("/sys/dev", {st_mode=S_IFDIR|0755, st_size=0, ...}) = 0
-3650  lstat("/sys/dev/block", {st_mode=S_IFDIR|0755, st_size=0, ...}) = 0
-3650  lstat("/sys/dev/block/9:125", {st_mode=S_IFLNK|0777, st_size=0, ...}) = 0
-3650  readlink("/sys/dev/block/9:125", "../../devices/virtual/block/md12"..., 4095) = 33
-3650  lstat("/sys/devices", {st_mode=S_IFDIR|0755, st_size=0, ...}) = 0
-3650  lstat("/sys/devices/virtual", {st_mode=S_IFDIR|0755, st_size=0, ...}) = 0
-3650  lstat("/sys/devices/virtual/block", {st_mode=S_IFDIR|0755, st_size=0, ...}) = 0
-3650  lstat("/sys/devices/virtual/block/md125", {st_mode=S_IFDIR|0755, st_size=0, ...}) = 0
-3650  lstat("/sys/devices/virtual/block/md125/device", 0x7ffc704573c0) = -1 ENOENT (No such file or directory)
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x9, 0x7d), ...}) = 0
-3650  ioctl(3, BLKGETSIZE64, [274742640640]) = 0
-3650  lseek(3, 274742639616, SEEK_SET)  = 274742639616
-3650  read(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 512) = 512
-3650  lseek(3, 0, SEEK_SET)             = 0
-3650  read(3, "\374N+\251\1\0\0\0\0\2\0\0\0\0\0\0\325\231]vg\327\372\275\59/\207%\251\32\227"..., 512) = 512
-3650  ioctl(3, BLKSSZGET, [512])        = 0
-3650  lseek(3, 0, SEEK_SET)             = 0
-3650  read(3, "\374N+\251\1\0\0\0\0\2\0\0\0\0\0\0\325\231]vg\327\372\275\59/\207%\251\32\227"..., 512) = 512
-3650  ioctl(3, BLKSSZGET, [512])        = 0
-3650  ioctl(3, BLKSSZGET, [512])        = 0
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x9, 0x7d), ...}) = 0
-3650  ioctl(3, BLKGETSIZE64, [274742640640]) = 0
-3650  lseek(3, 274742632448, SEEK_SET)  = 274742632448
-3650  read(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 4096) = 4096
-3650  lseek(3, 0, SEEK_CUR)             = 274742636544
-3650  ioctl(3, BLKSSZGET, [512])        = 0
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x9, 0x7d), ...}) = 0
-3650  ioctl(3, BLKGETSIZE64, [274742640640]) = 0
-3650  lseek(3, 0, SEEK_SET)             = 0
-3650  read(3, "\374N+\251\1\0\0\0\0\2\0\0\0\0\0\0\325\231]vg\327\372\275\59/\207%\251\32\227"..., 4096) = 4096
-3650  lseek(3, 0, SEEK_CUR)             = 4096
-3650  ioctl(3, BLKSSZGET, [512])        = 0
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x9, 0x7d), ...}) = 0
-3650  ioctl(3, BLKGETSIZE64, [274742640640]) = 0
-3650  lseek(3, 4096, SEEK_SET)          = 4096
-3650  read(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 4096) = 4096
-3650  lseek(3, 0, SEEK_CUR)             = 8192
-3650  ioctl(3, BLKSSZGET, [512])        = 0
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x9, 0x7d), ...}) = 0
-3650  ioctl(3, BLKGETSIZE64, [274742640640]) = 0
-3650  lseek(3, 0, SEEK_SET)             = 0
-3650  read(3, "\374N+\251\1\0\0\0\0\2\0\0\0\0\0\0\325\231]vg\327\372\275\59/\207%\251\32\227"..., 4096) = 4096
-3650  lseek(3, 0, SEEK_CUR)             = 4096
-3650  ioctl(3, BLKSSZGET, [512])        = 0
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x9, 0x7d), ...}) = 0
-3650  ioctl(3, BLKGETSIZE64, [274742640640]) = 0
-3650  lseek(3, 0, SEEK_SET)             = 0
-3650  read(3, "\374N+\251\1\0\0\0\0\2\0\0\0\0\0\0\325\231]vg\327\372\275\59/\207%\251\32\227"..., 4096) = 4096
-3650  lseek(3, 0, SEEK_CUR)             = 4096
-3650  close(3)                          = 0
-3650  openat(AT_FDCWD, "/dev/md/r1_journal_big", O_RDONLY|O_EXCL|O_DIRECT) = 3
-3650  close(3)                          = 0
-3650  stat("/sys/dev/block/9:125/partition", 0x7ffc704575c0) = -1 ENOENT (No such file or directory)
-3650  openat(AT_FDCWD, "/dev/sdi1", O_RDONLY|O_DIRECT) = 3
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x8, 0x81), ...}) = 0
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x8, 0x81), ...}) = 0
-3650  readlink("/sys/dev/block/8:129", "../../devices/pci0000:00/0000:00"..., 199) = 141
-3650  stat("/sys/block/sdi/md", 0x7ffc704556d0) = -1 ENOENT (No such file or directory)
-3650  ioctl(3, BLKSSZGET, [512])        = 0
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x8, 0x81), ...}) = 0
-3650  ioctl(3, BLKGETSIZE64, [4000000000000]) = 0
-3650  lseek(3, 0, SEEK_SET)             = 0
-3650  read(3, "\374N+\251\1\0\0\0\0\2\0\0\0\0\0\0\325\231]vg\327\372\275\59/\207%\251\32\227"..., 4096) = 4096
-3650  lseek(3, 0, SEEK_CUR)             = 4096
-3650  close(3)                          = 0
-3650  openat(AT_FDCWD, "/dev/sdi1", O_RDONLY|O_EXCL|O_DIRECT) = 3
-3650  close(3)                          = 0
-3650  stat("/sys/dev/block/8:129/partition", {st_mode=S_IFREG|0444, st_size=4096, ...}) = 0
-3650  openat(AT_FDCWD, "/dev/sdg1", O_RDONLY|O_DIRECT) = 3
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x8, 0x61), ...}) = 0
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x8, 0x61), ...}) = 0
-3650  readlink("/sys/dev/block/8:97", "../../devices/pci0000:00/0000:00"..., 199) = 141
-3650  stat("/sys/block/sdg/md", 0x7ffc704556d0) = -1 ENOENT (No such file or directory)
-3650  ioctl(3, BLKSSZGET, [512])        = 0
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x8, 0x61), ...}) = 0
-3650  ioctl(3, BLKGETSIZE64, [4000000000000]) = 0
-3650  lseek(3, 0, SEEK_SET)             = 0
-3650  read(3, "\374N+\251\1\0\0\0\0\2\0\0\0\0\0\0\325\231]vg\327\372\275\59/\207%\251\32\227"..., 4096) = 4096
-3650  lseek(3, 0, SEEK_CUR)             = 4096
-3650  close(3)                          = 0
-3650  openat(AT_FDCWD, "/dev/sdg1", O_RDONLY|O_EXCL|O_DIRECT) = 3
-3650  close(3)                          = 0
-3650  stat("/sys/dev/block/8:97/partition", {st_mode=S_IFREG|0444, st_size=4096, ...}) = 0
-3650  openat(AT_FDCWD, "/dev/sdj1", O_RDONLY|O_DIRECT) = 3
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x8, 0x91), ...}) = 0
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x8, 0x91), ...}) = 0
-3650  readlink("/sys/dev/block/8:145", "../../devices/pci0000:00/0000:00"..., 199) = 141
-3650  stat("/sys/block/sdj/md", 0x7ffc704556d0) = -1 ENOENT (No such file or directory)
-3650  ioctl(3, BLKSSZGET, [512])        = 0
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x8, 0x91), ...}) = 0
-3650  ioctl(3, BLKGETSIZE64, [4000000000000]) = 0
-3650  lseek(3, 0, SEEK_SET)             = 0
-3650  read(3, "\374N+\251\1\0\0\0\0\2\0\0\0\0\0\0\325\231]vg\327\372\275\59/\207%\251\32\227"..., 4096) = 4096
-3650  lseek(3, 0, SEEK_CUR)             = 4096
-3650  close(3)                          = 0
-3650  openat(AT_FDCWD, "/dev/sdj1", O_RDONLY|O_EXCL|O_DIRECT) = 3
-3650  close(3)                          = 0
-3650  stat("/sys/dev/block/8:145/partition", {st_mode=S_IFREG|0444, st_size=4096, ...}) = 0
-3650  openat(AT_FDCWD, "/dev/sdh1", O_RDONLY|O_DIRECT) = 3
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x8, 0x71), ...}) = 0
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x8, 0x71), ...}) = 0
-3650  readlink("/sys/dev/block/8:113", "../../devices/pci0000:00/0000:00"..., 199) = 141
-3650  stat("/sys/block/sdh/md", 0x7ffc704556d0) = -1 ENOENT (No such file or directory)
-3650  ioctl(3, BLKSSZGET, [512])        = 0
-3650  fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x8, 0x71), ...}) = 0
-3650  ioctl(3, BLKGETSIZE64, [4000000000000]) = 0
-3650  lseek(3, 0, SEEK_SET)             = 0
-3650  read(3, "\374N+\251\1\0\0\0\0\2\0\0\0\0\0\0\325\231]vg\327\372\275\59/\207%\251\32\227"..., 4096) = 4096
-3650  lseek(3, 0, SEEK_CUR)             = 4096
-3650  close(3)                          = 0
-3650  openat(AT_FDCWD, "/dev/sdh1", O_RDONLY|O_EXCL|O_DIRECT) = 3
-3650  close(3)                          = 0
-3650  stat("/sys/dev/block/8:113/partition", {st_mode=S_IFREG|0444, st_size=4096, ...}) = 0
-3650  mkdir("/run/mdadm", 0755)         = -1 EEXIST (File exists)
-3650  openat(AT_FDCWD, "/run/mdadm/map.lock", O_RDWR|O_CREAT|O_TRUNC, 0600) = 3
-3650  fcntl(3, F_GETFL)                 = 0x8002 (flags O_RDWR|O_LARGEFILE)
-3650  flock(3, LOCK_EX)                 = 0
-3650  fstat(3, {st_mode=S_IFREG|0600, st_size=0, ...}) = 0
-3650  openat(AT_FDCWD, "/run/mdadm/map", O_RDONLY) = 4
-3650  fcntl(4, F_GETFL)                 = 0x8000 (flags O_RDONLY|O_LARGEFILE)
-3650  fstat(4, {st_mode=S_IFREG|0600, st_size=191, ...}) = 0
-3650  read(4, "md125 1.1 96398bc1:491fb249:928e"..., 4096) = 191
-3650  read(4, "", 4096)                 = 0
-3650  close(4)                          = 0
-3650  stat("/dev/.udev", 0x7ffc704574d0) = -1 ENOENT (No such file or directory)
-3650  stat("/run/udev", {st_mode=S_IFDIR|0755, st_size=160, ...}) = 0
-3650  openat(AT_FDCWD, "/proc/mdstat", O_RDONLY) = 4
-3650  fcntl(4, F_SETFD, FD_CLOEXEC)     = 0
-3650  fstat(4, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-3650  read(4, "Personalities : [linear] [multip"..., 1024) = 654
-3650  read(4, "", 1024)                 = 0
-3650  close(4)                          = 0
-3650  openat(AT_FDCWD, "/proc/mdstat", O_RDONLY) = 4
-3650  fcntl(4, F_SETFD, FD_CLOEXEC)     = 0
-3650  fstat(4, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-3650  read(4, "Personalities : [linear] [multip"..., 1024) = 654
-3650  read(4, "", 1024)                 = 0
-3650  close(4)                          = 0
-3650  openat(AT_FDCWD, "/proc/mdstat", O_RDONLY) = 4
-3650  fcntl(4, F_SETFD, FD_CLOEXEC)     = 0
-3650  fstat(4, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-3650  read(4, "Personalities : [linear] [multip"..., 1024) = 654
-3650  read(4, "", 1024)                 = 0
-3650  close(4)                          = 0
-3650  openat(AT_FDCWD, "/proc/mdstat", O_RDONLY) = 4
-3650  fcntl(4, F_SETFD, FD_CLOEXEC)     = 0
-3650  fstat(4, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-3650  read(4, "Personalities : [linear] [multip"..., 1024) = 654
-3650  read(4, "", 1024)                 = 0
-3650  close(4)                          = 0
-3650  openat(AT_FDCWD, "/sys/block/md124/dev", O_RDONLY) = -1 ENOENT (No such file or directory)
-3650  getpid()                          = 3650
-3650  mknod("/dev/.tmp.md.3650:9:124", S_IFBLK|0600, makedev(0x9, 0x7c)) = 0
-3650  openat(AT_FDCWD, "/dev/.tmp.md.3650:9:124", O_RDWR|O_EXCL|O_DIRECT) = 4
-3650  unlink("/dev/.tmp.md.3650:9:124") = 0
-3650  fstat(4, {st_mode=S_IFBLK|0600, st_rdev=makedev(0x9, 0x7c), ...}) = 0
-3650  readlink("/sys/dev/block/9:124", "../../devices/virtual/block/md12"..., 199) = 33
-3650  openat(AT_FDCWD, "/proc/mdstat", O_RDONLY) = 5
-3650  fcntl(5, F_SETFD, FD_CLOEXEC)     = 0
-3650  fstat(5, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
-3650  read(5, "Personalities : [linear] [multip"..., 1024) = 654
-3650  read(5, "", 1024)                 = 0
-3650  close(5)                          = 0
-3650  ioctl(4, STOP_ARRAY, 0)           = 0
-3650  openat(AT_FDCWD, "/dev/md/r1_journal_big", O_RDWR|O_EXCL|O_DIRECT) = 5
-3650  ioctl(5, BLKSSZGET, [512])        = 0
-3650  fstat(5, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x9, 0x7d), ...}) = 0
-3650  ioctl(5, BLKGETSIZE64, [274742640640]) = 0
-3650  lseek(5, 0, SEEK_SET)             = 0
-3650  read(5, "\374N+\251\1\0\0\0\0\2\0\0\0\0\0\0\325\231]vg\327\372\275\59/\207%\251\32\227"..., 4096) = 4096
-3650  lseek(5, 0, SEEK_CUR)             = 4096
-3650  fstat(5, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x9, 0x7d), ...}) = 0
-3650  close(5)                          = 0
-3650  openat(AT_FDCWD, "/dev/sdi1", O_RDWR|O_EXCL|O_DIRECT) = 5
-3650  ioctl(5, BLKSSZGET, [512])        = 0
-3650  fstat(5, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x8, 0x81), ...}) = 0
-3650  ioctl(5, BLKGETSIZE64, [4000000000000]) = 0
-3650  lseek(5, 0, SEEK_SET)             = 0
-3650  read(5, "\374N+\251\1\0\0\0\0\2\0\0\0\0\0\0\325\231]vg\327\372\275\59/\207%\251\32\227"..., 4096) = 4096
-3650  lseek(5, 0, SEEK_CUR)             = 4096
-3650  fstat(5, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x8, 0x81), ...}) = 0
-3650  close(5)                          = 0
-3650  openat(AT_FDCWD, "/dev/sdg1", O_RDWR|O_EXCL|O_DIRECT) = 5
-3650  ioctl(5, BLKSSZGET, [512])        = 0
-3650  fstat(5, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x8, 0x61), ...}) = 0
-3650  ioctl(5, BLKGETSIZE64, [4000000000000]) = 0
-3650  lseek(5, 0, SEEK_SET)             = 0
-3650  read(5, "\374N+\251\1\0\0\0\0\2\0\0\0\0\0\0\325\231]vg\327\372\275\59/\207%\251\32\227"..., 4096) = 4096
-3650  lseek(5, 0, SEEK_CUR)             = 4096
-3650  fstat(5, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x8, 0x61), ...}) = 0
-3650  close(5)                          = 0
-3650  openat(AT_FDCWD, "/dev/sdj1", O_RDWR|O_EXCL|O_DIRECT) = 5
-3650  ioctl(5, BLKSSZGET, [512])        = 0
-3650  fstat(5, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x8, 0x91), ...}) = 0
-3650  ioctl(5, BLKGETSIZE64, [4000000000000]) = 0
-3650  lseek(5, 0, SEEK_SET)             = 0
-3650  read(5, "\374N+\251\1\0\0\0\0\2\0\0\0\0\0\0\325\231]vg\327\372\275\59/\207%\251\32\227"..., 4096) = 4096
-3650  lseek(5, 0, SEEK_CUR)             = 4096
-3650  fstat(5, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x8, 0x91), ...}) = 0
-3650  close(5)                          = 0
-3650  openat(AT_FDCWD, "/dev/sdh1", O_RDWR|O_EXCL|O_DIRECT) = 5
-3650  ioctl(5, BLKSSZGET, [512])        = 0
-3650  fstat(5, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x8, 0x71), ...}) = 0
-3650  ioctl(5, BLKGETSIZE64, [4000000000000]) = 0
-3650  lseek(5, 0, SEEK_SET)             = 0
-3650  read(5, "\374N+\251\1\0\0\0\0\2\0\0\0\0\0\0\325\231]vg\327\372\275\59/\207%\251\32\227"..., 4096) = 4096
-3650  lseek(5, 0, SEEK_CUR)             = 4096
-3650  fstat(5, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x8, 0x71), ...}) = 0
-3650  close(5)                          = 0
-3650  openat(AT_FDCWD, "/dev/sdg1", O_RDONLY|O_EXCL|O_DIRECT) = 5
-3650  ioctl(5, BLKSSZGET, [512])        = 0
-3650  fstat(5, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x8, 0x61), ...}) = 0
-3650  ioctl(5, BLKGETSIZE64, [4000000000000]) = 0
-3650  lseek(5, 0, SEEK_SET)             = 0
-3650  read(5, "\374N+\251\1\0\0\0\0\2\0\0\0\0\0\0\325\231]vg\327\372\275\59/\207%\251\32\227"..., 4096) = 4096
-3650  lseek(5, 0, SEEK_CUR)             = 4096
-3650  close(5)                          = 0
-3650  fstat(4, {st_mode=S_IFBLK|0600, st_rdev=makedev(0x9, 0x7c), ...}) = 0
-3650  readlink("/sys/dev/block/9:124", "../../devices/virtual/block/md12"..., 199) = 33
-3650  stat("/sys/block/md124/md", {st_mode=S_IFDIR|0755, st_size=0, ...}) = 0
-3650  fstat(4, {st_mode=S_IFBLK|0600, st_rdev=makedev(0x9, 0x7c), ...}) = 0
-3650  readlink("/sys/dev/block/9:124", "../../devices/virtual/block/md12"..., 199) = 33
-3650  mkdir("/run/mdadm", 0755)         = -1 EEXIST (File exists)
-3650  openat(AT_FDCWD, "/run/mdadm/map.new", O_RDWR|O_CREAT, 0600) = 5
-3650  fcntl(5, F_GETFL)                 = 0x8002 (flags O_RDWR|O_LARGEFILE)
-3650  fstat(5, {st_mode=S_IFREG|0600, st_size=0, ...}) = 0
-3650  write(5, "md124 1.1 765d99d5:bdfad767:872f"..., 252) = 252
-3650  close(5)                          = 0
-3650  rename("/run/mdadm/map.new", "/run/mdadm/map") = 0
-3650  ioctl(4, SET_ARRAY_INFO, 0x7ffc70457950) = 0
-3650  openat(AT_FDCWD, "/dev/sdh1", O_RDWR|O_EXCL|O_DIRECT) = 5
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=0, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=1, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=2, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=3, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=4, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=5, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=6, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=7, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=8, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=9, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=10, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=11, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=12, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=13, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=14, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=15, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  close(5)                          = 0
-3650  ioctl(4, ADD_NEW_DISK, 0x55885c8e7cc8) = 0
-3650  openat(AT_FDCWD, "/dev/sdi1", O_RDWR|O_EXCL|O_DIRECT) = 5
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=0, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=1, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=2, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=3, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=4, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=5, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=6, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=7, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=8, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=9, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=10, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=11, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=12, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=13, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=14, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=15, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  close(5)                          = 0
-3650  ioctl(4, ADD_NEW_DISK, 0x55885c8e7710) = 0
-3650  openat(AT_FDCWD, "/dev/sdj1", O_RDWR|O_EXCL|O_DIRECT) = 5
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=0, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=1, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=2, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=3, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=4, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=5, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=6, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=7, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=8, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=9, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=10, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=11, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=12, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=13, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=14, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=15, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  close(5)                          = 0
-3650  ioctl(4, ADD_NEW_DISK, 0x55885c8e7ae0) = 0
-3650  openat(AT_FDCWD, "/dev/md/r1_journal_big", O_RDWR|O_EXCL|O_DIRECT) = 5
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=0, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=1, devname="", volname=""}}) = -1 ENXIO (No such device or address)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=2, devname="", volname=""}}) = -1 ENXIO (No such device or address)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=3, devname="", volname=""}}) = -1 ENXIO (No such device or address)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=4, devname="", volname=""}}) = -1 ENXIO (No such device or address)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=5, devname="", volname=""}}) = -1 ENXIO (No such device or address)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=6, devname="", volname=""}}) = -1 ENXIO (No such device or address)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=7, devname="", volname=""}}) = -1 ENXIO (No such device or address)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=8, devname="", volname=""}}) = -1 ENXIO (No such device or address)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=9, devname="", volname=""}}) = -1 ENXIO (No such device or address)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=10, devname="", volname=""}}) = -1 ENXIO (No such device or address)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=11, devname="", volname=""}}) = -1 ENXIO (No such device or address)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=12, devname="", volname=""}}) = -1 ENXIO (No such device or address)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=13, devname="", volname=""}}) = -1 ENXIO (No such device or address)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=14, devname="", volname=""}}) = -1 ENXIO (No such device or address)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=15, devname="", volname=""}}) = -1 ENXIO (No such device or address)
-3650  close(5)                          = 0
-3650  ioctl(4, ADD_NEW_DISK, 0x55885c8e7528) = 0
-3650  openat(AT_FDCWD, "/dev/sdg1", O_RDWR|O_EXCL|O_DIRECT) = 5
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=0, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=1, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=2, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=3, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=4, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=5, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=6, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=7, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=8, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=9, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=10, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=11, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=12, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=13, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=14, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  ioctl(5, BLKPG, {op=BLKPG_DEL_PARTITION, flags=0, datalen=152, data={start=0, length=0, pno=15, devname="", volname=""}}) = -1 EINVAL (Invalid argument)
-3650  close(5)                          = 0
-3650  ioctl(4, ADD_NEW_DISK, 0x55885c8e78f8) = 0
-3650  ioctl(4, RUN_ARRAY
---------------17C2B7CF14F9B535DF170B03--
