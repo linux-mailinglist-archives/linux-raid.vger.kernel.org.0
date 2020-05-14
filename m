@@ -2,68 +2,90 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 06DBE1D348E
-	for <lists+linux-raid@lfdr.de>; Thu, 14 May 2020 17:09:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A260A1D3831
+	for <lists+linux-raid@lfdr.de>; Thu, 14 May 2020 19:29:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbgENPJe (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 14 May 2020 11:09:34 -0400
-Received: from sender11-op-o11.zoho.eu ([31.186.226.225]:17103 "EHLO
-        sender11-op-o11.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbgENPJe (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 14 May 2020 11:09:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1589468960; cv=none; 
-        d=zohomail.eu; s=zohoarc; 
-        b=BIEks24YA9ni4tKLpQV7DQ2VQZZzHEDDQwkDUI9V1eNSoOYZ5rY+ENmkcN6R/P7JWjsBP9iQSRAPcfBxkUdWC42zr2vMmqSjv21cPN56EoP4eQnB/zRR9th9iyQn0e9hUwVchO7G/SsVQDUV7uPks10oDaB5A8EKSTCPkr4K+O0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1589468960; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=Wo8QJBJwO9woS99UZv+KhC0h6/Bb5fM4v2eohmFyGGw=; 
-        b=VH+L4panexoqdRZO6Tyzx1R5doW8DoJp2E29B7AEp2DiYPOK+gD5/aim4f1mVGXGHDEt+Q0M1U33mqC2EveAzV4xHIKmvWUE9ynD0jr4MLeP0n+Vs7KMBJvjcSaxi6YjOYQ60nbe34AJB0iGkTg30IVeUyGeOCPkybVPBWu1RyA=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
-        dmarc=pass header.from=<jes@trained-monkey.org> header.from=<jes@trained-monkey.org>
-Received: from [100.109.129.242] (163.114.130.1 [163.114.130.1]) by mx.zoho.eu
-        with SMTPS id 1589468958519718.69341397183; Thu, 14 May 2020 17:09:18 +0200 (CEST)
-Subject: Re: [PATCH] mdcheck: Log when done
-To:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        Jes Sorensen <Jes.Sorensen@gmail.com>
-Cc:     Donald Buczek <buczek@molgen.mpg.de>, linux-raid@vger.kernel.org
-References: <20200513131646.16357-1-pmenzel@molgen.mpg.de>
-From:   Jes Sorensen <jes@trained-monkey.org>
-Message-ID: <bbb4c492-4fa3-ae68-d045-976c102ab2b3@trained-monkey.org>
-Date:   Thu, 14 May 2020 11:09:16 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726059AbgENR3i (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 14 May 2020 13:29:38 -0400
+Received: from zimbra.karlsbakk.net ([193.29.58.196]:49786 "EHLO
+        zimbra.karlsbakk.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726027AbgENR3h (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 14 May 2020 13:29:37 -0400
+X-Greylist: delayed 548 seconds by postgrey-1.27 at vger.kernel.org; Thu, 14 May 2020 13:29:37 EDT
+Received: from localhost (localhost.localdomain [IPv6:::1])
+        by zimbra.karlsbakk.net (Postfix) with ESMTP id BE9F13C251B;
+        Thu, 14 May 2020 19:20:27 +0200 (CEST)
+Received: from zimbra.karlsbakk.net ([IPv6:::1])
+        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id r7Ao8_aiTmF4; Thu, 14 May 2020 19:20:25 +0200 (CEST)
+Received: from localhost (localhost.localdomain [IPv6:::1])
+        by zimbra.karlsbakk.net (Postfix) with ESMTP id 9291B3C2750;
+        Thu, 14 May 2020 19:20:25 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra.karlsbakk.net 9291B3C2750
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=karlsbakk.net;
+        s=1DC131FE-D37A-11E7-BD32-3AD4DFE620DF; t=1589476825;
+        bh=ikz1/fHOvopxM7ByaZ9RL80eCjXKy0j6DZVC7NujUMY=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=xSprWziyC0OIqXZsHnWIg4z26WN5FBGPUo5YNYuXvDI+5hy1kCuh2b8WWO9g7OCCN
+         MmiV5quNz67gL1SOd8S8/xsrPNUzWYANRWuI9nWlUPU6UVR6Xh+rWUU5RmKO1EKISg
+         KCS0M1gp7jzTHd9or0YdAXbTRcUK5AstKzES5pMT+oDF+W3eTDNcZ0P51easrICPCt
+         r0GH4M9U06tH7rhzhJHkiB94NYKEDxjZ53KqidFTOFHerQ2pVjUqMWYMEyEpY+fQA8
+         r5bO4lWYSpvpD/RQgpFSDsaz6KVKCEktkJRS7flZX6ods2QxXkWcg1hIi/PG7aBTDJ
+         5LW2UMyF00Ltg==
+X-Virus-Scanned: amavisd-new at zimbra.karlsbakk.net
+Received: from zimbra.karlsbakk.net ([IPv6:::1])
+        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id rN_HTE2jKJI9; Thu, 14 May 2020 19:20:25 +0200 (CEST)
+Received: from zimbra.karlsbakk.net (localhost.localdomain [127.0.0.1])
+        by zimbra.karlsbakk.net (Postfix) with ESMTP id 6DFA93C251B;
+        Thu, 14 May 2020 19:20:25 +0200 (CEST)
+Date:   Thu, 14 May 2020 19:20:24 +0200 (CEST)
+From:   Roy Sigurd Karlsbakk <roy@karlsbakk.net>
+To:     Wolfgang Denk <wd@denx.de>
+Cc:     Linux Raid <linux-raid@vger.kernel.org>
+Message-ID: <1999694976.3317399.1589476824607.JavaMail.zimbra@karlsbakk.net>
+In-Reply-To: <20200510120725.20947240E1A@gemini.denx.de>
+References: <20200510120725.20947240E1A@gemini.denx.de>
+Subject: Re: raid6check extremely slow ?
 MIME-Version: 1.0
-In-Reply-To: <20200513131646.16357-1-pmenzel@molgen.mpg.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [::ffff:31.45.45.239]
+X-Mailer: Zimbra 8.8.10_GA_3801 (ZimbraWebClient - FF75 (Mac)/8.8.10_GA_3786)
+Thread-Topic: raid6check extremely slow ?
+Thread-Index: 4APnrFQ7P+ITKw6iZQvC4acBGQv6cQ==
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 5/13/20 9:16 AM, Paul Menzel wrote:
-> From: Donald Buczek <buczek@molgen.mpg.de>
-> 
-> Currently mdcheck (when called with `--duration`) logs only the
-> beginning of the check, the pausing and the continuation but not the
-> completion.
-> 
-> So, log the completion, too, so that it can be determined how long the
-> raid check took.
-> 
->     2020-05-08T18:00:02+02:00 deadpool root: mdcheck start checking /dev/md0
->     2020-05-08T18:00:02+02:00 deadpool root: mdcheck start checking /dev/md1
->     2020-05-09T15:32:04+02:00 deadpool root: mdcheck finished checking /dev/md1
->     2020-05-09T17:38:04+02:00 deadpool root: mdcheck finished checking /dev/md0
-> 
-> Cc: linux-raid@vger.kernel.org
-> Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> I'm running raid6check on a 12 TB (8 x 2 TB harddisks)
+> RAID6 array and wonder why it is so extremely slow...
+> It seems to be reading the disks only a about 400 kB/s,
+> which results in an estimated time of some 57 days!!!
+> to complete checking the array.  The system is basically idle, there
+> is neither any significant CPU load nor any other I/o (no to the
+> tested array, nor to any other storage on this system).
+>=20
+> Am I doing something wrong?
 
-Applied!
+Try checking with iostat -x to see if one disk is performing worse than the=
+ other ones. This sometimes happens and can indicate a failure that the nor=
+mal SMART/smartctl stuff can't identify. If you see a utilisation of one of=
+ the disks at 100%, that's the bastard. Under normal circumstances, you pro=
+bably won't be able to return that, since it "works". There's a quick fix f=
+or that, though. Just unplug the disk, plug it into a power cable, let it s=
+pin up and then sharpy twist it 90 degees a few times, and it's all sorted =
+out and you can return it ;)
 
-Thanks,
-Jes
+Vennlig hilsen
 
+roy
+--
+Roy Sigurd Karlsbakk
+(+47) 98013356
+http://blogg.karlsbakk.net/
+GPG Public key: http://karlsbakk.net/roysigurdkarlsbakk.pubkey.txt
+--
+Hi=C3=B0 g=C3=B3=C3=B0a skaltu =C3=AD stein h=C3=B6ggva, hi=C3=B0 illa =C3=
+=AD snj=C3=B3 rita.
