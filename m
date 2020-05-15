@@ -2,76 +2,85 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 53D1F1D47C6
-	for <lists+linux-raid@lfdr.de>; Fri, 15 May 2020 10:08:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D8AD1D4964
+	for <lists+linux-raid@lfdr.de>; Fri, 15 May 2020 11:23:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgEOIIT (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 15 May 2020 04:08:19 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:55708 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726894AbgEOIIT (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 15 May 2020 04:08:19 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 49NgyT0151z1r6R8
-        for <linux-raid@vger.kernel.org>; Fri, 15 May 2020 10:08:17 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 49NgyS71zHz1r7B8
-        for <linux-raid@vger.kernel.org>; Fri, 15 May 2020 10:08:16 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id Ovy65rTWMUs8 for <linux-raid@vger.kernel.org>;
-        Fri, 15 May 2020 10:08:16 +0200 (CEST)
-X-Auth-Info: StBlw7KImPAGunaZcfSUpWwhLGTwq9zpkEn9KZdeX0M=
-Received: from janitor.denx.de (unknown [62.91.23.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA
-        for <linux-raid@vger.kernel.org>; Fri, 15 May 2020 10:08:16 +0200 (CEST)
-Received: by janitor.denx.de (Postfix, from userid 108)
-        id 08397A024D; Fri, 15 May 2020 10:08:16 +0200 (CEST)
-Received: from gemini.denx.de (gemini.denx.de [10.4.0.2])
-        by janitor.denx.de (Postfix) with ESMTPS id 4ADA3A00AA;
-        Fri, 15 May 2020 10:08:09 +0200 (CEST)
-Received: from gemini.denx.de (localhost [IPv6:::1])
-        by gemini.denx.de (Postfix) with ESMTP id E637B240E1A;
-        Fri, 15 May 2020 10:08:08 +0200 (CEST)
-To:     Roy Sigurd Karlsbakk <roy@karlsbakk.net>
-cc:     Linux Raid <linux-raid@vger.kernel.org>
-From:   Wolfgang Denk <wd@denx.de>
-Subject: Re: raid6check extremely slow ?
+        id S1727905AbgEOJXY (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 15 May 2020 05:23:24 -0400
+Received: from mga17.intel.com ([192.55.52.151]:12108 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727825AbgEOJXX (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 15 May 2020 05:23:23 -0400
+IronPort-SDR: cDxWvGnZpLHjVIkTDshgGOHCrFhflZQOKf91BPjYtVAJXPMrUfu3/o6w3lwawS0CQhmMu/Bm+u
+ cjKdTX5TTC0w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 02:23:23 -0700
+IronPort-SDR: JH25hyCZ0qyBG7V+Ph3jC7aDR6LBkT8XMESvOMU2kIBwShHnI0e4E8Rl9MqQjbQmPHCz421yN9
+ pYXNPnY6DWBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,394,1583222400"; 
+   d="scan'208";a="298992356"
+Received: from mtkaczyk-devel.igk.intel.com ([10.102.102.23])
+  by orsmga008.jf.intel.com with ESMTP; 15 May 2020 02:23:22 -0700
+From:   Tkaczyk Mariusz <mariusz.tkaczyk@intel.com>
+To:     jes@trained-monkey.org
+Cc:     linux-raid@vger.kernel.org
+Subject: [PATCH, v2] Makefile: add EXTRAVERSION support
+Date:   Fri, 15 May 2020 11:23:14 +0200
+Message-Id: <20200515092314.2711-1-mariusz.tkaczyk@intel.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-type: text/plain; charset=UTF-8
-Content-transfer-encoding: 8bit
-In-reply-to: <1430936688.3381175.1589485881380.JavaMail.zimbra@karlsbakk.net>
-References: <20200510120725.20947240E1A@gemini.denx.de> <1999694976.3317399.1589476824607.JavaMail.zimbra@karlsbakk.net> <20200514182041.CDF1F240E1A@gemini.denx.de> <1430936688.3381175.1589485881380.JavaMail.zimbra@karlsbakk.net>
-Comments: In-reply-to Roy Sigurd Karlsbakk <roy@karlsbakk.net>
-   message dated "Thu, 14 May 2020 21:51:21 +0200."
-Date:   Fri, 15 May 2020 10:08:08 +0200
-Message-Id: <20200515080808.E637B240E1A@gemini.denx.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Dear Roy Sigurd Karlsbakk,
+Add optional EXTRAVERSION parameter to Makefile and allow to mark version
+by user friendly label. It might be useful when creating custom
+spins of mdadm, or labeling some instance in between major releases.
 
-In message <1430936688.3381175.1589485881380.JavaMail.zimbra@karlsbakk.net> you wrote:
-> what?
+Signed-off-by: Tkaczyk Mariusz <mariusz.tkaczyk@intel.com>
+---
 
-You asked: "Try checking with iostat -x to see if one disk is
-performing worse than the other ones."
+V2: rename LABEL to EXTRAVERSION.
 
-The output of "iostat -x" which I posted shows clearly that all disk
-behave very much the same - there are just minimal statistic
-fluctuations, but agail equally distributed over all 8 disks.
+ Makefile | 3 ++-
+ ReadMe.c | 5 ++++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-Best regards,
-
-Wolfgang Denk
-
+diff --git a/Makefile b/Makefile
+index a33319a8..0a20b758 100644
+--- a/Makefile
++++ b/Makefile
+@@ -105,7 +105,8 @@ VERSION = $(shell [ -d .git ] && git describe HEAD | sed 's/mdadm-//')
+ VERS_DATE = $(shell [ -d .git ] && date --iso-8601 --date="`git log -n1 --format=format:%cd --date=iso --date=short`")
+ DVERS = $(if $(VERSION),-DVERSION=\"$(VERSION)\",)
+ DDATE = $(if $(VERS_DATE),-DVERS_DATE="\"$(VERS_DATE)\"",)
+-CFLAGS += $(DVERS) $(DDATE)
++DEXTRAVERSION = $(if $(EXTRAVERSION),-DEXTRAVERSION="\" - $(EXTRAVERSION)\"",)
++CFLAGS += $(DVERS) $(DDATE) $(DEXTRAVERSION)
+ 
+ # The glibc TLS ABI requires applications that call clone(2) to set up
+ # TLS data structures, use pthreads until mdmon implements this support
+diff --git a/ReadMe.c b/ReadMe.c
+index eaf10423..06b8f7ee 100644
+--- a/ReadMe.c
++++ b/ReadMe.c
+@@ -33,7 +33,10 @@
+ #ifndef VERS_DATE
+ #define VERS_DATE "2018-10-01"
+ #endif
+-char Version[] = "mdadm - v" VERSION " - " VERS_DATE "\n";
++#ifndef EXTRAVERSION
++#define EXTRAVERSION ""
++#endif
++char Version[] = "mdadm - v" VERSION " - " VERS_DATE EXTRAVERSION "\n";
+ 
+ /*
+  * File: ReadMe.c
 -- 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
-I used to be indecisive, now I'm not sure.
+2.25.0
+
