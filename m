@@ -2,29 +2,39 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA4011D435C
-	for <lists+linux-raid@lfdr.de>; Fri, 15 May 2020 04:05:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC9D21D4440
+	for <lists+linux-raid@lfdr.de>; Fri, 15 May 2020 06:07:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgEOCFK (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 14 May 2020 22:05:10 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4843 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726100AbgEOCFK (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 14 May 2020 22:05:10 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 88013B5C8678E9F93395;
-        Fri, 15 May 2020 10:05:05 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.55) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Fri, 15 May 2020
- 10:05:04 +0800
-Subject: Re: [PATCH v2 00/10] clean up SECTOR related macros and sectors/pages
- conversions
-To:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
-        "Sergey Senozhatsky" <sergey.senozhatsky.work@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
+        id S1725998AbgEOEHG (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 15 May 2020 00:07:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50360 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725616AbgEOEHG (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 15 May 2020 00:07:06 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C267C061A0C;
+        Thu, 14 May 2020 21:07:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=5PwB/9JSdMfY5nBxzWW07ajXI/9xxScbdH3I41S0bUQ=; b=uP0kdW5N0sgVFf0t9LYyPg7+md
+        SebAjT9iphzheJMd77jFgS5a6+kfWSVXR0scfu2ahFIsIDrf8ysSznN/jH6WpEvk21W2p2kNEzkY1
+        D1fvCfaB8yehGnBKN9c46Y96JKkxI8F0KQGtGnit3fYaaeXAuN2PvTr+WUd5Tk/He+gqAr4ypsrV5
+        Oh8GFCWYk6Hfl831KzJU3VBKjavRxxbCEWsfW2pMkN8wAoiI1plB/WYtyVtDinwDJT8T6U78d9cz9
+        aLAyOSxU9vlMhqWOAwnfSz1Hzw36/gUEbutRc11m99ZvOeuQOiKLJ+yc4JAqR0hA/X1Xs2MDVML+/
+        If4Hvqjg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jZRcV-0008AQ-A6; Fri, 15 May 2020 04:06:47 +0000
+Date:   Thu, 14 May 2020 21:06:47 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Zhen Lei <thunder.leizhen@huawei.com>
+Cc:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
         Jens Axboe <axboe@kernel.dk>, Coly Li <colyli@suse.de>,
         Kent Overstreet <kent.overstreet@gmail.com>,
-        "Alasdair Kergon" <agk@redhat.com>,
+        Alasdair Kergon <agk@redhat.com>,
         Mike Snitzer <snitzer@redhat.com>,
         linux-block <linux-block@vger.kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
@@ -32,87 +42,33 @@ To:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
         Song Liu <song@kernel.org>,
         linux-raid <linux-raid@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 06/10] mm/swap: use npage_to_sectors() and
+ PAGE_SECTORS to clean up code
+Message-ID: <20200515040647.GC16070@bombadil.infradead.org>
 References: <20200507075100.1779-1-thunder.leizhen@huawei.com>
-From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <34fa4c00-9860-ca09-da4d-c5b20aad81b7@huawei.com>
-Date:   Fri, 15 May 2020 10:05:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ <20200507075100.1779-7-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200507075100.1779-1-thunder.leizhen@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.55]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507075100.1779-7-thunder.leizhen@huawei.com>
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi, all:
-   It seems no one take care about these patches. But I think patch 1 is need. And
-the main discussion points of others is whether we should add
-sectors_to_npage()/npage_to_sectors() or keep PAGE_SECTORS_SHIFT. And which marco
-name do we prefer: PAGE_SECTORS vs SECTORS_PER_PAGE, PAGE_SECTORS_SHIFT vs
-SECTORS_PER_PAGE_SHIFT.
+On Thu, May 07, 2020 at 03:50:56PM +0800, Zhen Lei wrote:
+> @@ -266,7 +266,7 @@ int swap_writepage(struct page *page, struct writeback_control *wbc)
+>  
+>  static sector_t swap_page_sector(struct page *page)
+>  {
+> -	return (sector_t)__page_file_index(page) << (PAGE_SHIFT - 9);
+> +	return npage_to_sectors((sector_t)__page_file_index(page));
 
-Hi, Jens Axboe, Coly Li, Kent Overstreet,Alasdair Kergon. Mike Snitzer:
-   Can you take a look at patch 1?
+If you make npage_to_sectors() a proper function instead of a macro,
+you can do the casting inside the function instead of in the callers
+(which is prone to bugs).
 
-On 2020/5/7 15:50, Zhen Lei wrote:
-> v1 --> v2:
-> As Matthew Wilcox's suggestion, add sectors_to_npage()/npage_to_sectors()
-> helpers to eliminate SECTORS_PER_PAGE_SHIFT, because it's quite hard to read.
-> In further, I also eliminated PAGE_SECTORS_SHIFT.
-> 
-> I tried to eliminate all magic number "9" and "512", but it's too many, maybe
-> no one want to review it, so I gave up. In the process of searching, I found
-> the existing macro PAGE_SECTORS, it's equivalent to SECTORS_PER_PAGE. Because
-> PAGE_SECTORS was defined in include/linux/device-mapper.h, and SECTORS_PER_PAGE
-> was defined in drivers/block/zram/zram_drv.h, so I discarded SECTORS_PER_PAGE,
-> althrough I prefer it so much.
-> 
-> v1:
-> When I studied the code of mm/swap, I found "1 << (PAGE_SHIFT - 9)" appears
-> many times. So I try to clean up it.
-> 
-> 1. Replace "1 << (PAGE_SHIFT - 9)" or similar with SECTORS_PER_PAGE
-> 2. Replace "PAGE_SHIFT - 9" with SECTORS_PER_PAGE_SHIFT
-> 3. Replace "9" with SECTOR_SHIFT
-> 4. Replace "512" with SECTOR_SIZE
-> 
-> Zhen Lei (10):
->   block: move PAGE_SECTORS definition into <linux/blkdev.h>
->   zram: abolish macro SECTORS_PER_PAGE
->   block: add sectors_to_npage()/npage_to_sectors() helpers
->   zram: abolish macro SECTORS_PER_PAGE_SHIFT
->   block: abolish macro PAGE_SECTORS_SHIFT
->   mm/swap: use npage_to_sectors() and PAGE_SECTORS to clean up code
->   block: use sectors_to_npage() and PAGE_SECTORS to clean up code
->   md: use sectors_to_npage() and npage_to_sectors() to clean up code
->   md: use existing definition RESYNC_SECTORS
->   md: use PAGE_SECTORS to clean up code
-> 
->  block/blk-settings.c          |  6 +++---
->  block/partitions/core.c       |  5 ++---
->  drivers/block/brd.c           |  7 ++-----
->  drivers/block/null_blk_main.c | 10 ++++------
->  drivers/block/zram/zram_drv.c |  8 ++++----
->  drivers/block/zram/zram_drv.h |  2 --
->  drivers/md/bcache/util.h      |  2 --
->  drivers/md/dm-kcopyd.c        |  2 +-
->  drivers/md/dm-table.c         |  2 +-
->  drivers/md/md-bitmap.c        | 16 ++++++++--------
->  drivers/md/md.c               |  6 +++---
->  drivers/md/raid1.c            | 10 +++++-----
->  drivers/md/raid10.c           | 28 ++++++++++++++--------------
->  drivers/md/raid5-cache.c      | 11 +++++------
->  drivers/md/raid5.c            |  4 ++--
->  include/linux/blkdev.h        |  7 +++++--
->  include/linux/device-mapper.h |  1 -
->  mm/page_io.c                  |  4 ++--
->  mm/swapfile.c                 | 12 ++++++------
->  19 files changed, 67 insertions(+), 76 deletions(-)
-> 
+Also, this is a great example of why page_to_sector() was a better name
+than npage_to_sectors().  This function doesn't return a count of sectors,
+it returns a sector number within the swap device.
 
