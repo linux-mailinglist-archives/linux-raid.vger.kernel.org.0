@@ -2,85 +2,50 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D8AD1D4964
-	for <lists+linux-raid@lfdr.de>; Fri, 15 May 2020 11:23:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3C071D4C31
+	for <lists+linux-raid@lfdr.de>; Fri, 15 May 2020 13:12:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgEOJXY (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 15 May 2020 05:23:24 -0400
-Received: from mga17.intel.com ([192.55.52.151]:12108 "EHLO mga17.intel.com"
+        id S1726030AbgEOLM2 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 15 May 2020 07:12:28 -0400
+Received: from ciao.gmane.io ([159.69.161.202]:59252 "EHLO ciao.gmane.io"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727825AbgEOJXX (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 15 May 2020 05:23:23 -0400
-IronPort-SDR: cDxWvGnZpLHjVIkTDshgGOHCrFhflZQOKf91BPjYtVAJXPMrUfu3/o6w3lwawS0CQhmMu/Bm+u
- cjKdTX5TTC0w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 02:23:23 -0700
-IronPort-SDR: JH25hyCZ0qyBG7V+Ph3jC7aDR6LBkT8XMESvOMU2kIBwShHnI0e4E8Rl9MqQjbQmPHCz421yN9
- pYXNPnY6DWBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,394,1583222400"; 
-   d="scan'208";a="298992356"
-Received: from mtkaczyk-devel.igk.intel.com ([10.102.102.23])
-  by orsmga008.jf.intel.com with ESMTP; 15 May 2020 02:23:22 -0700
-From:   Tkaczyk Mariusz <mariusz.tkaczyk@intel.com>
-To:     jes@trained-monkey.org
-Cc:     linux-raid@vger.kernel.org
-Subject: [PATCH, v2] Makefile: add EXTRAVERSION support
-Date:   Fri, 15 May 2020 11:23:14 +0200
-Message-Id: <20200515092314.2711-1-mariusz.tkaczyk@intel.com>
-X-Mailer: git-send-email 2.25.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1726016AbgEOLM2 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 15 May 2020 07:12:28 -0400
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+        (envelope-from <linux-raid@m.gmane-mx.org>)
+        id 1jZYGQ-000T23-25
+        for linux-raid@vger.kernel.org; Fri, 15 May 2020 13:12:26 +0200
+X-Injected-Via-Gmane: http://gmane.org/
+To:     linux-raid@vger.kernel.org
+From:   "Andrey Jr. Melnikov" <temnota.am@gmail.com>
+Subject: Re: raid6check extremely slow ?
+Date:   Fri, 15 May 2020 13:34:38 +0300
+Message-ID: <sq72pg-98v.ln1@banana.localnet>
+References: <20200510120725.20947240E1A@gemini.denx.de> <2cf55e5f-bdfb-9fef-6255-151e049ac0a1@cloud.ionos.com> <20200511064022.591C5240E1A@gemini.denx.de> <f003a8c7-e96d-ddc3-6d1d-42a13b70e0b6@cloud.ionos.com> <20200511161415.GA8049@lazy.lzy> <23d84744-9e3c-adc1-3af1-6498b9bcf750@cloud.ionos.com> <20200512160712.GB7261@lazy.lzy> <20200513060753.81496240E1A@gemini.denx.de>
+User-Agent: tin/2.2.1-20140504 ("Tober an Righ") (UNIX) (Linux/4.4.66-bananian (armv7l))
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Add optional EXTRAVERSION parameter to Makefile and allow to mark version
-by user friendly label. It might be useful when creating custom
-spins of mdadm, or labeling some instance in between major releases.
+Wolfgang Denk <wd@denx.de> wrote:
+> Dear Piergiorgio,
 
-Signed-off-by: Tkaczyk Mariusz <mariusz.tkaczyk@intel.com>
----
+> In message <20200512160712.GB7261@lazy.lzy> you wrote:
+> >
+> > > BTW, seems there are build problems for raid6check ...
+> ...
+> > I cannot see this problem.
+> > I could compile without issue.
+> > Maybe some library is missing somewhere,
+> > but I'm not sure where.
 
-V2: rename LABEL to EXTRAVERSION.
+> ...
+> gcc -O2  -o raid6check raid6check.o restripe.o sysfs.o maps.o lib.o xmalloc.o dlink.o
+> /usr/bin/ld: sysfs.o: in function `sysfsline':
+> sysfs.c:(.text+0x2707): undefined reference to `parse_uuid'
+> /usr/bin/ld: sysfs.c:(.text+0x271a): undefined reference to `uuid_zero'
+> /usr/bin/ld: sysfs.c:(.text+0x2721): undefined reference to `uuid_zero'
 
- Makefile | 3 ++-
- ReadMe.c | 5 ++++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/Makefile b/Makefile
-index a33319a8..0a20b758 100644
---- a/Makefile
-+++ b/Makefile
-@@ -105,7 +105,8 @@ VERSION = $(shell [ -d .git ] && git describe HEAD | sed 's/mdadm-//')
- VERS_DATE = $(shell [ -d .git ] && date --iso-8601 --date="`git log -n1 --format=format:%cd --date=iso --date=short`")
- DVERS = $(if $(VERSION),-DVERSION=\"$(VERSION)\",)
- DDATE = $(if $(VERS_DATE),-DVERS_DATE="\"$(VERS_DATE)\"",)
--CFLAGS += $(DVERS) $(DDATE)
-+DEXTRAVERSION = $(if $(EXTRAVERSION),-DEXTRAVERSION="\" - $(EXTRAVERSION)\"",)
-+CFLAGS += $(DVERS) $(DDATE) $(DEXTRAVERSION)
- 
- # The glibc TLS ABI requires applications that call clone(2) to set up
- # TLS data structures, use pthreads until mdmon implements this support
-diff --git a/ReadMe.c b/ReadMe.c
-index eaf10423..06b8f7ee 100644
---- a/ReadMe.c
-+++ b/ReadMe.c
-@@ -33,7 +33,10 @@
- #ifndef VERS_DATE
- #define VERS_DATE "2018-10-01"
- #endif
--char Version[] = "mdadm - v" VERSION " - " VERS_DATE "\n";
-+#ifndef EXTRAVERSION
-+#define EXTRAVERSION ""
-+#endif
-+char Version[] = "mdadm - v" VERSION " - " VERS_DATE EXTRAVERSION "\n";
- 
- /*
-  * File: ReadMe.c
--- 
-2.25.0
+raid6check miss util.o object. Add it to CHECK_OBJS
 
