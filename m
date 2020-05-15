@@ -2,79 +2,83 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A3301D4458
-	for <lists+linux-raid@lfdr.de>; Fri, 15 May 2020 06:19:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 710801D45E1
+	for <lists+linux-raid@lfdr.de>; Fri, 15 May 2020 08:29:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726178AbgEOET2 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 15 May 2020 00:19:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725616AbgEOET1 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 15 May 2020 00:19:27 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89797C061A0C;
-        Thu, 14 May 2020 21:19:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=sEV2Dcb/vxjuVh6b2+vt3K/ZxF+r4H+loOY/Rcz7Jfs=; b=B+hdZiy3fTXn2Mq/d0DoC+/mOU
-        O7aStKnfUbQOLviXcQAC1xrirMK/uwB39WFmDo6picuEgYmTQnVmUuZ0qd+ATNk8Ub9VtzaevKA8S
-        AlqLvhorITqZJxUgDvRru+uRCk2j/rq3sFKAt3lJYCiM6Mtzleodx+LGlLL9FYrEh7yTFzAk/USVu
-        oKizsjcZPJmBV6EEqOODHagdmMRMMc+pX7Q9xMcRpg9puDRmNx6DJAQ57vRz41Q6bXAawywEeqx0U
-        ORQwc7NJ+AHpY5tIt0VCfmpRxpMRzYYA6L9uxji4uekEAN5RXxZwP2+7psdx2ejVJ1Yy/NufRZqQ/
-        dSkO3VcA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZRoa-0006Is-Ic; Fri, 15 May 2020 04:19:16 +0000
-Date:   Thu, 14 May 2020 21:19:16 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Zhen Lei <thunder.leizhen@huawei.com>
-Cc:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        id S1726262AbgEOG27 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 15 May 2020 02:28:59 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:38334 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726205AbgEOG26 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 15 May 2020 02:28:58 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id D74529857C06E2477F6F;
+        Fri, 15 May 2020 14:28:56 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.55) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Fri, 15 May 2020
+ 14:28:54 +0800
+Subject: Re: [PATCH v2 06/10] mm/swap: use npage_to_sectors() and PAGE_SECTORS
+ to clean up code
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
+        "Sergey Senozhatsky" <sergey.senozhatsky.work@gmail.com>,
         Jens Axboe <axboe@kernel.dk>, Coly Li <colyli@suse.de>,
         Kent Overstreet <kent.overstreet@gmail.com>,
         Alasdair Kergon <agk@redhat.com>,
         Mike Snitzer <snitzer@redhat.com>,
         linux-block <linux-block@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
         linux-mm <linux-mm@kvack.org>, dm-devel <dm-devel@redhat.com>,
         Song Liu <song@kernel.org>,
         linux-raid <linux-raid@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 07/10] block: use sectors_to_npage() and PAGE_SECTORS
- to clean up code
-Message-ID: <20200515041916.GE16070@bombadil.infradead.org>
 References: <20200507075100.1779-1-thunder.leizhen@huawei.com>
- <20200507075100.1779-8-thunder.leizhen@huawei.com>
+ <20200507075100.1779-7-thunder.leizhen@huawei.com>
+ <20200515040647.GC16070@bombadil.infradead.org>
+From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Message-ID: <766da107-bc67-ff99-a8c8-87f8f98c7cf6@huawei.com>
+Date:   Fri, 15 May 2020 14:28:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507075100.1779-8-thunder.leizhen@huawei.com>
+In-Reply-To: <20200515040647.GC16070@bombadil.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.215.55]
+X-CFilter-Loop: Reflected
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu, May 07, 2020 at 03:50:57PM +0800, Zhen Lei wrote:
-> +++ b/block/blk-settings.c
-> @@ -150,7 +150,7 @@ void blk_queue_max_hw_sectors(struct request_queue *q, unsigned int max_hw_secto
->  	unsigned int max_sectors;
->  
->  	if ((max_hw_sectors << 9) < PAGE_SIZE) {
-> -		max_hw_sectors = 1 << (PAGE_SHIFT - 9);
-> +		max_hw_sectors = PAGE_SECTORS;
 
-Surely this should be:
 
-	if (max_hw_sectors < PAGE_SECTORS) {
-		max_hw_sectors = PAGE_SECTORS;
+On 2020/5/15 12:06, Matthew Wilcox wrote:
+> On Thu, May 07, 2020 at 03:50:56PM +0800, Zhen Lei wrote:
+>> @@ -266,7 +266,7 @@ int swap_writepage(struct page *page, struct writeback_control *wbc)
+>>  
+>>  static sector_t swap_page_sector(struct page *page)
+>>  {
+>> -	return (sector_t)__page_file_index(page) << (PAGE_SHIFT - 9);
+>> +	return npage_to_sectors((sector_t)__page_file_index(page));
+> 
+> If you make npage_to_sectors() a proper function instead of a macro,
+> you can do the casting inside the function instead of in the callers
+> (which is prone to bugs).
 
-... no?
+Oh, yes. __page_file_index(page) maybe called many times in marco, althouth currently
+it is not. So that, not all are suitable for page_to_sector(). And for this example,
+still need to use "<< PAGE_SECTORS_SHIFT".
 
-> -	page = read_mapping_page(mapping,
-> -			(pgoff_t)(n >> (PAGE_SHIFT - 9)), NULL);
-> +	page = read_mapping_page(mapping, (pgoff_t)sectors_to_npage(n), NULL);
+> 
+> Also, this is a great example of why page_to_sector() was a better name
+> than npage_to_sectors().  This function doesn't return a count of sectors,
+> it returns a sector number within the swap device.
+OK, so I will change to page_to_sector()/sector_to_page().
 
-... again, get the type right, and you won't need the cast.
+> 
+> 
+> .
+> 
 
