@@ -2,340 +2,109 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A90CC1D8A42
-	for <lists+linux-raid@lfdr.de>; Mon, 18 May 2020 23:54:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C2D51D8A43
+	for <lists+linux-raid@lfdr.de>; Mon, 18 May 2020 23:54:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbgERVxo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 18 May 2020 17:53:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42788 "EHLO
+        id S1728039AbgERVxp (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 18 May 2020 17:53:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbgERVxo (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 18 May 2020 17:53:44 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DD0BC061A0C
+        with ESMTP id S1726250AbgERVxp (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 18 May 2020 17:53:45 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9374C061A0C
         for <linux-raid@vger.kernel.org>; Mon, 18 May 2020 14:53:44 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id n18so1147166wmj.5
-        for <linux-raid@vger.kernel.org>; Mon, 18 May 2020 14:53:43 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id w64so1149302wmg.4
+        for <linux-raid@vger.kernel.org>; Mon, 18 May 2020 14:53:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloud.ionos.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/3ZtGlD6oHxeDIolgKaawGsXHPHr8Aj/aiezI1KHIIc=;
-        b=Rs52ZW3465hlOn2pi+ZNEjM48YsOxNiarQBqvEnYAiaPizV94iB8qhkGxVCabmnIbe
-         hawsRWqiaEp49hV04T+cl7PHPDeOmeRYLK2xT2Uoh97zKCfkRSK/M5U2ERJcCOOufq6H
-         EYSagqCYmI5Ok9R63TeATDB1j4yatunLxki+BcUGgD+ydsrcHmLh7rumqydKrCurJBTY
-         jAGVcpBaXQ5LENVFHcqA5ZsYD9AcOFSV1/qGZ3iEVR2UlWkr8iPeIrv9uRKyD8wXXIsz
-         E1OWf189hOmo3Rv7qgqpf4Xzccyvb6LXF5r0bQArRWTl3Xd0Vd88jPc3TT3jNNk0CR9K
-         USkQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=t4uzxdsMKf201XF1dMLHDsPqS9Q9fPt0B1LbSautJCs=;
+        b=UvPB+9O8S+vg+WmxeixdNGyKOb00s1THIqJAlEZPchopgI6enUObj4XNmxkIRzJGln
+         Rib9iO5qiP5ygWYEXySW9oftFJNlv5rTSltR8uJzpTZGDsss4XMtXMN33YHiwdC2eIH9
+         7qR8r0ExycJCzssUMbIO2mpmsuwnv73VyEm2jjSxE22PIIvCB/I6oG5oohN9YQmwwTbT
+         osA6HOc/57vc1R5DphWUNFMhsmSh/aR2jnZQkhKTIuYCe6AauRsvk5HR1J0SyHhdTdC/
+         5yrLyM34e4cvmiv0CC44Crb9BWqjql+EgsFvbKtIWLbpk0quzgEeZOl7ftW44RlvM4cj
+         Em/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=/3ZtGlD6oHxeDIolgKaawGsXHPHr8Aj/aiezI1KHIIc=;
-        b=I1WA1FtW9aDqyjzpQw7A6iwhsTejTmj4x34bF1eADVVnM8dHi2VS2o7if2WKrrLaKS
-         WRqSsL+QOgaOWdCPYPV1NmOa/U2NvFKT9a0sSMt+FKBXyU9Opfibe51ybBRhKXEgKguq
-         VALIRKrNVlp6kl9ki+DylxQDbhAnis2x4dro7nTZwrI/lq/N6wBO2gOFqU5NZarf4Kyq
-         xykrjdHhdGjQsHiY7YEjIyM4HxM3A9+T2aC2/v7pvoRnQY2M3buHkHFs9SJWBHGK4res
-         EmzBv5QQeB6qFolE/yN7mrSrmvnip776EJWl/kwqzcTnGGLHmI4i154Iryo1hCkVwc8u
-         5icg==
-X-Gm-Message-State: AOAM533VGb5L4eSTNVeISR+yy5TjwR+8tLdqbgPE+O0n5YAK7XBdlkEj
-        71M+3hLPkYI/fUFyXPyZoiF+jQ==
-X-Google-Smtp-Source: ABdhPJwdUV2NqV9Ankp+rMzW7MXYNxlNg/pmRJw6vrJ/vdiL6f19ymru3kOE4QX9foeZ0NOx/rT1gQ==
-X-Received: by 2002:a1c:4806:: with SMTP id v6mr1551988wma.20.1589838822523;
-        Mon, 18 May 2020 14:53:42 -0700 (PDT)
+         :references:mime-version:content-transfer-encoding;
+        bh=t4uzxdsMKf201XF1dMLHDsPqS9Q9fPt0B1LbSautJCs=;
+        b=f2IK4gDnHsfO51Xl9wpXpqhetJfaeHzJYHdCLPAEfmQ3hWD33n90HIcrD4PTQ/IU8N
+         Kg9bMFwJV9eMRM/iosMDEvJM0tP5D1s4yLxk/u9V26X1rBnNNHgK9Z+rWr2Tknl3kbXT
+         7kYp3cGjzdN7k3XTaInGhODdiV+ccQsBVXaD37c7u6Ad4rYeLg4Eo0/+evgqIEVz6046
+         My3TCu8LsResLFdIyp5+pvJhwNTqd6m8hfcDbIsyWvdAHCWAay8VYBCiD2t++I0rfuer
+         ieyZcdKD6sgSskEkt1jHmo0WxX+YOSi0vynOxJv1611X4BH5O0MhkNmw4Fv1rEekkq4f
+         LZNA==
+X-Gm-Message-State: AOAM530jKxS27Jn5hn/wixgxAzgLa3vZ08nChhpjxAQKgL7ftYM5cjp5
+        KmIRJIzv0/wWp/3B/kfR1SXU4g==
+X-Google-Smtp-Source: ABdhPJycpwt5qO7WpX2tEb1dJujuhkW9/h+DcFDv3HkzkqgjFewtG2LHxHNN78Y8gM6p5lmRuaP3BA==
+X-Received: by 2002:a1c:3b87:: with SMTP id i129mr1619721wma.38.1589838823492;
+        Mon, 18 May 2020 14:53:43 -0700 (PDT)
 Received: from gjiang-5491.profitbricks.net ([2001:16b8:483d:6b00:e80e:f5df:f780:7d57])
-        by smtp.gmail.com with ESMTPSA id k5sm17485030wrx.16.2020.05.18.14.53.41
+        by smtp.gmail.com with ESMTPSA id k5sm17485030wrx.16.2020.05.18.14.53.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 18 May 2020 14:53:42 -0700 (PDT)
 From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 To:     jes@trained-monkey.org
 Cc:     linux-raid@vger.kernel.org,
         Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Subject: [PATCH V3 1/2] uuid.c: split uuid stuffs from util.c
-Date:   Mon, 18 May 2020 23:53:35 +0200
-Message-Id: <20200518215336.29000-2-guoqing.jiang@cloud.ionos.com>
+Subject: =?UTF-8?q?=5BPATCH=20V3=202/2=5D=20restripe=3A=20fix=20ignoring=20return=20value=20of=20=E2=80=98read=E2=80=99=20and=20lseek?=
+Date:   Mon, 18 May 2020 23:53:36 +0200
+Message-Id: <20200518215336.29000-3-guoqing.jiang@cloud.ionos.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200518215336.29000-1-guoqing.jiang@cloud.ionos.com>
 References: <20200518215336.29000-1-guoqing.jiang@cloud.ionos.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Currently, 'make raid6check' is build broken since commit b06815989
-("mdadm: load default sysfs attributes after assemblation").
+Got below error when run "make everything".
 
-/usr/bin/ld: sysfs.o: in function `sysfsline':
-sysfs.c:(.text+0x2707): undefined reference to `parse_uuid'
-/usr/bin/ld: sysfs.c:(.text+0x271a): undefined reference to `uuid_zero'
-/usr/bin/ld: sysfs.c:(.text+0x2721): undefined reference to `uuid_zero'
+restripe.c: In function ‘test_stripes’:
+restripe.c:870:4: error: ignoring return value of ‘read’, declared with attribute warn_unused_result [-Werror=unused-result]
+    read(source[i], stripes[i], chunk_size);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Apparently, the compile of mdadm or raid6check are coupled with uuid
-functions inside util.c. However, we can't just add util.o to CHECK_OBJS
-which raid6check is needed, because it caused other worse problems.
+Fix it by check the return value of ‘read’, and free memory
+in the failure case.
 
-So, let's introduce a uuid.c file which is indenpended file to fix the
-problem, all the contents are splitted from util.c.
+And check the return value of lseek as well per Jes's comment.
 
 Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 ---
- Makefile |   6 +--
- util.c   |  87 ------------------------------------------
- uuid.c   | 112 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 115 insertions(+), 90 deletions(-)
- create mode 100644 uuid.c
+ restripe.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index a33319a..d13030c 100644
---- a/Makefile
-+++ b/Makefile
-@@ -139,7 +139,7 @@ else
- 	ECHO=:
- endif
+diff --git a/restripe.c b/restripe.c
+index 31b07e8..86e1d00 100644
+--- a/restripe.c
++++ b/restripe.c
+@@ -866,8 +866,16 @@ int test_stripes(int *source, unsigned long long *offsets,
+ 		int disk;
  
--OBJS =  mdadm.o config.o policy.o mdstat.o  ReadMe.o util.o maps.o lib.o \
-+OBJS =  mdadm.o config.o policy.o mdstat.o  ReadMe.o uuid.o util.o maps.o lib.o \
- 	Manage.o Assemble.o Build.o \
- 	Create.o Detail.o Examine.o Grow.o Monitor.o dlink.o Kill.o Query.o \
- 	Incremental.o Dump.o \
-@@ -148,13 +148,13 @@ OBJS =  mdadm.o config.o policy.o mdstat.o  ReadMe.o util.o maps.o lib.o \
- 	restripe.o sysfs.o sha1.o mapfile.o crc32.o sg_io.o msg.o xmalloc.o \
- 	platform-intel.o probe_roms.o crc32c.o
- 
--CHECK_OBJS = restripe.o sysfs.o maps.o lib.o xmalloc.o dlink.o
-+CHECK_OBJS = restripe.o uuid.o sysfs.o maps.o lib.o xmalloc.o dlink.o
- 
- SRCS =  $(patsubst %.o,%.c,$(OBJS))
- 
- INCL = mdadm.h part.h bitmap.h
- 
--MON_OBJS = mdmon.o monitor.o managemon.o util.o maps.o mdstat.o sysfs.o \
-+MON_OBJS = mdmon.o monitor.o managemon.o uuid.o util.o maps.o mdstat.o sysfs.o \
- 	policy.o lib.o \
- 	Kill.o sg_io.o dlink.o ReadMe.o super-intel.o \
- 	super-mbr.o super-gpt.o \
-diff --git a/util.c b/util.c
-index 07f9dc3..579dd42 100644
---- a/util.c
-+++ b/util.c
-@@ -306,43 +306,6 @@ int md_get_disk_info(int fd, struct mdu_disk_info_s *disk)
- 	return ioctl(fd, GET_DISK_INFO, disk);
- }
- 
--/*
-- * Parse a 128 bit uuid in 4 integers
-- * format is 32 hexx nibbles with options :.<space> separator
-- * If not exactly 32 hex digits are found, return 0
-- * else return 1
-- */
--int parse_uuid(char *str, int uuid[4])
--{
--	int hit = 0; /* number of Hex digIT */
--	int i;
--	char c;
--	for (i = 0; i < 4; i++)
--		uuid[i] = 0;
--
--	while ((c = *str++) != 0) {
--		int n;
--		if (c >= '0' && c <= '9')
--			n = c-'0';
--		else if (c >= 'a' && c <= 'f')
--			n = 10 + c - 'a';
--		else if (c >= 'A' && c <= 'F')
--			n = 10 + c - 'A';
--		else if (strchr(":. -", c))
--			continue;
--		else return 0;
--
--		if (hit<32) {
--			uuid[hit/8] <<= 4;
--			uuid[hit/8] += n;
--		}
--		hit++;
--	}
--	if (hit == 32)
--		return 1;
--	return 0;
--}
--
- int get_linux_version()
- {
- 	struct utsname name;
-@@ -611,56 +574,6 @@ int enough(int level, int raid_disks, int layout, int clean, char *avail)
- 	}
- }
- 
--const int uuid_zero[4] = { 0, 0, 0, 0 };
--
--int same_uuid(int a[4], int b[4], int swapuuid)
--{
--	if (swapuuid) {
--		/* parse uuids are hostendian.
--		 * uuid's from some superblocks are big-ending
--		 * if there is a difference, we need to swap..
--		 */
--		unsigned char *ac = (unsigned char *)a;
--		unsigned char *bc = (unsigned char *)b;
--		int i;
--		for (i = 0; i < 16; i += 4) {
--			if (ac[i+0] != bc[i+3] ||
--			    ac[i+1] != bc[i+2] ||
--			    ac[i+2] != bc[i+1] ||
--			    ac[i+3] != bc[i+0])
--				return 0;
--		}
--		return 1;
--	} else {
--		if (a[0]==b[0] &&
--		    a[1]==b[1] &&
--		    a[2]==b[2] &&
--		    a[3]==b[3])
--			return 1;
--		return 0;
--	}
--}
--
--void copy_uuid(void *a, int b[4], int swapuuid)
--{
--	if (swapuuid) {
--		/* parse uuids are hostendian.
--		 * uuid's from some superblocks are big-ending
--		 * if there is a difference, we need to swap..
--		 */
--		unsigned char *ac = (unsigned char *)a;
--		unsigned char *bc = (unsigned char *)b;
--		int i;
--		for (i = 0; i < 16; i += 4) {
--			ac[i+0] = bc[i+3];
--			ac[i+1] = bc[i+2];
--			ac[i+2] = bc[i+1];
--			ac[i+3] = bc[i+0];
--		}
--	} else
--		memcpy(a, b, 16);
--}
--
- char *__fname_from_uuid(int id[4], int swap, char *buf, char sep)
- {
- 	int i, j;
-diff --git a/uuid.c b/uuid.c
-new file mode 100644
-index 0000000..94b5abd
---- /dev/null
-+++ b/uuid.c
-@@ -0,0 +1,112 @@
-+/*
-+ * mdadm - manage Linux "md" devices aka RAID arrays.
-+ *
-+ * Copyright (C) 2001-2013 Neil Brown <neilb@suse.de>
-+ *
-+ *
-+ *    This program is free software; you can redistribute it and/or modify
-+ *    it under the terms of the GNU General Public License as published by
-+ *    the Free Software Foundation; either version 2 of the License, or
-+ *    (at your option) any later version.
-+ *
-+ *    This program is distributed in the hope that it will be useful,
-+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *    GNU General Public License for more details.
-+ *
-+ *    You should have received a copy of the GNU General Public License
-+ *    along with this program; if not, write to the Free Software
-+ *    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-+ *
-+ *    Author: Neil Brown
-+ *    Email: <neilb@suse.de>
-+ */
-+
-+#include	<string.h>
-+
-+const int uuid_zero[4] = { 0, 0, 0, 0 };
-+
-+int same_uuid(int a[4], int b[4], int swapuuid)
-+{
-+	if (swapuuid) {
-+		/* parse uuids are hostendian.
-+		 * uuid's from some superblocks are big-ending
-+		 * if there is a difference, we need to swap..
-+		 */
-+		unsigned char *ac = (unsigned char *)a;
-+		unsigned char *bc = (unsigned char *)b;
-+		int i;
-+		for (i = 0; i < 16; i += 4) {
-+			if (ac[i+0] != bc[i+3] ||
-+			    ac[i+1] != bc[i+2] ||
-+			    ac[i+2] != bc[i+1] ||
-+			    ac[i+3] != bc[i+0])
-+				return 0;
-+		}
-+		return 1;
-+	} else {
-+		if (a[0]==b[0] &&
-+		    a[1]==b[1] &&
-+		    a[2]==b[2] &&
-+		    a[3]==b[3])
-+			return 1;
-+		return 0;
-+	}
-+}
-+
-+void copy_uuid(void *a, int b[4], int swapuuid)
-+{
-+	if (swapuuid) {
-+		/* parse uuids are hostendian.
-+		 * uuid's from some superblocks are big-ending
-+		 * if there is a difference, we need to swap..
-+		 */
-+		unsigned char *ac = (unsigned char *)a;
-+		unsigned char *bc = (unsigned char *)b;
-+		int i;
-+		for (i = 0; i < 16; i += 4) {
-+			ac[i+0] = bc[i+3];
-+			ac[i+1] = bc[i+2];
-+			ac[i+2] = bc[i+1];
-+			ac[i+3] = bc[i+0];
-+		}
-+	} else
-+		memcpy(a, b, 16);
-+}
-+
-+/*
-+ * Parse a 128 bit uuid in 4 integers
-+ * format is 32 hexx nibbles with options :.<space> separator
-+ * If not exactly 32 hex digits are found, return 0
-+ * else return 1
-+ */
-+int parse_uuid(char *str, int uuid[4])
-+{
-+	int hit = 0; /* number of Hex digIT */
-+	int i;
-+	char c;
-+	for (i = 0; i < 4; i++)
-+		uuid[i] = 0;
-+
-+	while ((c = *str++) != 0) {
-+		int n;
-+		if (c >= '0' && c <= '9')
-+			n = c-'0';
-+		else if (c >= 'a' && c <= 'f')
-+			n = 10 + c - 'a';
-+		else if (c >= 'A' && c <= 'F')
-+			n = 10 + c - 'A';
-+		else if (strchr(":. -", c))
-+			continue;
-+		else return 0;
-+
-+		if (hit<32) {
-+			uuid[hit/8] <<= 4;
-+			uuid[hit/8] += n;
-+		}
-+		hit++;
-+	}
-+	if (hit == 32)
-+		return 1;
-+	return 0;
-+}
+ 		for (i = 0 ; i < raid_disks ; i++) {
+-			lseek64(source[i], offsets[i]+start, 0);
+-			read(source[i], stripes[i], chunk_size);
++			if ((lseek64(source[i], offsets[i]+start, 0) < 0) ||
++			    (read(source[i], stripes[i], chunk_size) !=
++			     chunk_size)) {
++				free(q);
++				free(p);
++				free(blocks);
++				free(stripes);
++				free(stripe_buf);
++				return -1;
++			}
+ 		}
+ 		for (i = 0 ; i < data_disks ; i++) {
+ 			int disk = geo_map(i, start/chunk_size, raid_disks,
 -- 
 2.17.1
 
