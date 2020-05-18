@@ -2,147 +2,114 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F58C1D83DB
-	for <lists+linux-raid@lfdr.de>; Mon, 18 May 2020 20:08:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EE8A1D8797
+	for <lists+linux-raid@lfdr.de>; Mon, 18 May 2020 20:52:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732835AbgERSIH (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 18 May 2020 14:08:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35680 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387475AbgERSIF (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 18 May 2020 14:08:05 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D965C061A0C
-        for <linux-raid@vger.kernel.org>; Mon, 18 May 2020 11:08:05 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id w7so12896640wre.13
-        for <linux-raid@vger.kernel.org>; Mon, 18 May 2020 11:08:05 -0700 (PDT)
+        id S1729359AbgERSww (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 18 May 2020 14:52:52 -0400
+Received: from mailrelay2-3.pub.mailoutpod1-cph3.one.com ([46.30.212.11]:59642
+        "EHLO mailrelay2-3.pub.mailoutpod1-cph3.one.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728402AbgERSww (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 18 May 2020 14:52:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=z/8qu0+fVdCOUF1G6MLc53d1E1fDvJ2y1mxIHzBXXuk=;
-        b=Qm1bTBPgOHuQGDO4jY9CoCe+4QErW7ugBJGJtLofCS/Nm78nTkGqu77GQgBGkK0KI5
-         /x4DBp7fnl0O3LQ+++doAnwNVWJW5F561PUsjqJgm/7nvk3NudEariZpS4yOyKPmFZre
-         Aqcocu6x1Ol1l9pT1y8Iko1uO2BImd+GdEiRFZb6EfIKhrKwNsZryf1MEJZNpQz5EJQZ
-         a9UVvSmvajwY5MRGfSu1tuxUe3UJIqTgFslYm64Sderm4fIPzAPO/5N7jZOtjiLLWiIM
-         ok+nQeTBIZBlMsi6Q3jsC/3LekoOajshANqRIJN4MtoPzSEyD9dgmYZbkrEtmIhGyJBs
-         3UoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=z/8qu0+fVdCOUF1G6MLc53d1E1fDvJ2y1mxIHzBXXuk=;
-        b=pkPSnOXMDEKi3MKKqVTu/JUwtmztwc5PVgu72vLvVsQXi5ilrT2wHJpA41FKMG8gTO
-         7nZSgEhewuKXUmNDw4LRuUrnLLhM3ALqL4cXtP8VU9ReE7my4Ca92ytS1MHcXCApJs5+
-         ZsDie/m2hO4CirxSepK2ZWoFrRko3bgdwbcwCxrz3lbHr0ulXuyz61BS8FrfHPJG7+cM
-         eEsCtrnFUbKqjkER7FQh8yVY9egJlLu7rmfjen7Em242pJbi+k1L14ds/OvH7mgNxgHk
-         f+2mNAgiR1UenfgxkWehc1udb3xZERwGiy1+sJeeSy4ZLkhCwHawakTMOLb+gKXYDKhv
-         pefQ==
-X-Gm-Message-State: AOAM531Ch8CDLhrNKhxHxBQ/XErsQKJCEvBZPgal83NTVYGydGJGVEoS
-        1CmWkSxBoiOl7/DWmGEJmuN1TmcE/Igegw==
-X-Google-Smtp-Source: ABdhPJydajKejXqVXmZchUQAeshbfO49Wr1eB5AWCyeCL/fgYgNmaohlO2vyASpK27PXrQdQU4hBTA==
-X-Received: by 2002:adf:cd83:: with SMTP id q3mr21932079wrj.187.1589825283724;
-        Mon, 18 May 2020 11:08:03 -0700 (PDT)
-Received: from ?IPv6:2001:16b8:483d:6b00:e80e:f5df:f780:7d57? ([2001:16b8:483d:6b00:e80e:f5df:f780:7d57])
-        by smtp.gmail.com with ESMTPSA id t14sm13510076wrs.1.2020.05.18.11.08.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 May 2020 11:08:03 -0700 (PDT)
-Subject: =?UTF-8?Q?Re=3a_=5bPATCH_2/2=5d_restripe=3a_fix_ignoring_return_val?=
- =?UTF-8?B?dWUgb2Yg4oCYcmVhZOKAmQ==?=
-To:     Jes Sorensen <jes@trained-monkey.org>
-Cc:     linux-raid@vger.kernel.org
-References: <20200515134026.8084-1-guoqing.jiang@cloud.ionos.com>
- <20200515134026.8084-3-guoqing.jiang@cloud.ionos.com>
- <4a888cbe-636b-b3a7-f669-8897753430d0@trained-monkey.org>
- <607932ff-0e76-9eca-1fdb-ca26428d8717@cloud.ionos.com>
- <01676778-bfc2-46d4-112b-ee16ef4cbcc1@trained-monkey.org>
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Message-ID: <6bd3cb34-1339-9e1b-1f57-07ef62a70818@cloud.ionos.com>
-Date:   Mon, 18 May 2020 20:08:02 +0200
+        d=sam-hurst.co.uk; s=20191106;
+        h=content-type:in-reply-to:mime-version:date:message-id:from:references:to:
+         subject:from;
+        bh=um5CFTGd5SpCdohjzlCtnKpO/Wn7/UqW3ldu4uJfjEA=;
+        b=HbAHd9D+rYUjdnlZMy38nvyoALOTlpphr3q57KGY3nMWjzNPpZ+KFMYvNlTDXnzBpxEyfn/SpZLdN
+         Ztkb39GWZtuZO1AFqlxQQKW2jXE0LCyhEf6vJaEkyikF3dmB9bDNVlUVlbe6QYCujQsw0eNyGrEPfO
+         QHgRqc/qGufxYtS9FUvazNENRKRiLIXrrT8XzhbhfjgYB/2FKroU5FZiN+HsWU7qjTxvu96aFJl390
+         2oUnpl3gs/tfdmPJq0jSS/7lF+k28YM/KOSbIxwhheK//zoaTl5yWMx4vAa+rbqi2RHGJL5MOqXuaO
+         oz0QXJJV80QmvqMCRhI7UGAE+avjmew==
+X-HalOne-Cookie: 2fc2f08a2ee0e8c990af8156012077967d8ad487
+X-HalOne-ID: c455e0b1-9938-11ea-873b-d0431ea8a290
+Received: from [10.0.0.13] (82-69-64-9.dsl.in-addr.zen.co.uk [82.69.64.9])
+        by mailrelay2.pub.mailoutpod1-cph3.one.com (Halon) with ESMTPSA
+        id c455e0b1-9938-11ea-873b-d0431ea8a290;
+        Mon, 18 May 2020 18:52:48 +0000 (UTC)
+Subject: Re: RAID wiped superblock recovery
+To:     Phil Turmel <philip@turmel.org>, linux-raid@vger.kernel.org
+References: <922713c5-0cc1-24cb-14a6-9de7db631f98@sam-hurst.co.uk>
+ <0f954924-e7ae-c81e-55f1-afc41e293a18@turmel.org>
+ <05011140-3625-5326-96c9-e995f93260f4@sam-hurst.co.uk>
+ <e7644f86-5342-b7bb-b6de-b37afd74f6cc@turmel.org>
+From:   Sam Hurst <sam@sam-hurst.co.uk>
+Message-ID: <f88bfa57-8a17-eaa1-a926-33e2eb6ddb34@sam-hurst.co.uk>
+Date:   Mon, 18 May 2020 19:52:47 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <01676778-bfc2-46d4-112b-ee16ef4cbcc1@trained-monkey.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <e7644f86-5342-b7bb-b6de-b37afd74f6cc@turmel.org>
+Content-Type: multipart/mixed;
+ boundary="------------4FBEEC9466DC51A2C8C4793E"
 Content-Language: en-US
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 5/18/20 7:50 PM, Jes Sorensen wrote:
-> On 5/18/20 1:32 PM, Guoqing Jiang wrote:
->> On 5/18/20 7:22 PM, Jes Sorensen wrote:
->>> On 5/15/20 9:40 AM, Guoqing Jiang wrote:
->>>> Got below error when run "make everything".
->>>>
->>>> restripe.c: In function ‘test_stripes’:
->>>> restripe.c:870:4: error: ignoring return value of ‘read’, declared
->>>> with attribute warn_unused_result [-Werror=unused-result]
->>>>       read(source[i], stripes[i], chunk_size);
->>>>       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>>>
->>>> Fix it by set the return value of ‘read’ to diskP, which should be
->>>> harmless since diskP will be set again before it is used.
->>>>
->>>> Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
->>>> ---
->>>>    restripe.c | 6 +++++-
->>>>    1 file changed, 5 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/restripe.c b/restripe.c
->>>> index 31b07e8..21c90f5 100644
->>>> --- a/restripe.c
->>>> +++ b/restripe.c
->>>> @@ -867,7 +867,11 @@ int test_stripes(int *source, unsigned long long
->>>> *offsets,
->>>>              for (i = 0 ; i < raid_disks ; i++) {
->>>>                lseek64(source[i], offsets[i]+start, 0);
->>>> -            read(source[i], stripes[i], chunk_size);
->>>> +            /*
->>>> +             * To resolve "ignoring return value of ‘read’", it
->>>> +             * should be harmless since diskP will be again later.
->>>> +             */
->>>> +            diskP = read(source[i], stripes[i], chunk_size);
->>> It doesn't complain on Fedora 32, however checking the return value of
->>> lseek64 and read is a good thing.
->>>
->>> However what you have done is to just masking the return value and
->>> throwing it away, is not OK. Please do it properly.
->> Yes, it is used to suppress the warning. And set the return value to a
->> new variable
->> could cause unused-but-set-variable, not sure if there is better way now.
-> The correct way is to check the return values and take appropriate
-> action if an error is returned.
+This is a multi-part message in MIME format.
+--------------4FBEEC9466DC51A2C8C4793E
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Thanks, just find other places in restripe.c has check like this.
+Hi Phil,
 
-"read(source[dnum], buf+disk * chunk_size, chunk_size) != chunk_size)
+On 17/05/2020 22:56, Phil Turmel wrote:
+> Your math is wrong.  Or rather, you are using the bogus power-of-ten 
+> definition of "MB" that disk manufacturers use to deliver less space.
+> 
+> Use 128MB.  Or better, specify "262144s".
 
-Will send below changes if it is ok.
+Thanks very much, that was the final thing, and now I have a working 
+array again and don't have to worry about pulling 6TB of data down from S3.
 
-diff --git a/restripe.c b/restripe.c
-index 31b07e8..48c6506 100644
---- a/restripe.c
-+++ b/restripe.c
-@@ -867,7 +867,15 @@ int test_stripes(int *source, unsigned long long 
-*offsets,
+I had no idea that you could use sectors as a suffix to data-offset as 
+it's not in the manpage. So you should find attached a patch file which 
+adds that suffix to the manpage. If this isn't the correct place to 
+provide patches, or if there's an issue with the formatting of my patch, 
+please let me know and I'll happily update it and send it to the correct 
+place.
 
-                 for (i = 0 ; i < raid_disks ; i++) {
-                         lseek64(source[i], offsets[i]+start, 0);
--                       read(source[i], stripes[i], chunk_size);
-+                       if (read(source[i], stripes[i], chunk_size) !=
-+                           chunk_size) {
-+                               free(q);
-+                               free(p);
-+                               free(blocks);
-+                               free(stripes);
-+                               free(stripe_buf);
-+                               return -1;
-+                       }
-                 }
+Best Regards,
+Sam
 
-Thanks,
-Guoqing
+--------------4FBEEC9466DC51A2C8C4793E
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0001-PATCH-Add-sector-suffix-to-mdadm-data-offset-manpage.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename*0="0001-PATCH-Add-sector-suffix-to-mdadm-data-offset-manpage.pa";
+ filename*1="tch"
+
+From 116bc0ddeb29e848077480853a41c509518eb8ff Mon Sep 17 00:00:00 2001
+From: Sam Hurst <sam@sam-hurst.co.uk>
+Date: Mon, 18 May 2020 19:48:13 +0100
+Subject: [PATCH] Add sector suffix to mdadm --data-offset manpage
+
+---
+ mdadm.8.in | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/mdadm.8.in b/mdadm.8.in
+index 9e7cb96..c997be4 100644
+--- a/mdadm.8.in
++++ b/mdadm.8.in
+@@ -857,8 +857,9 @@ an array which was originally created using a different version of
+ which computed a different offset.
+ 
+ Setting the offset explicitly over-rides the default.  The value given
+-is in Kilobytes unless a suffix of 'K', 'M', 'G' or 'T' is used to explicitly
+-indicate Kilobytes, Megabytes, Gigabytes or Terabytes respectively.
++is in Kilobytes unless a suffix of 'K', 'M', 'G', 'T' or 's' is used to
++explicitly indicate Kilobytes, Megabytes, Gigabytes, Terabytes or sectors
++respectively.
+ 
+ Since Linux 3.4,
+ .B \-\-data\-offset
+-- 
+2.17.1
+
+
+--------------4FBEEC9466DC51A2C8C4793E--
