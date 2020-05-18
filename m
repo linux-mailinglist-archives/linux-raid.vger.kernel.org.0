@@ -2,112 +2,98 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 360B81D8033
-	for <lists+linux-raid@lfdr.de>; Mon, 18 May 2020 19:33:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E32671D81C1
+	for <lists+linux-raid@lfdr.de>; Mon, 18 May 2020 19:50:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgERRd6 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 18 May 2020 13:33:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58566 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727777AbgERRd5 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 18 May 2020 13:33:57 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BEA2C061A0C
-        for <linux-raid@vger.kernel.org>; Mon, 18 May 2020 10:33:56 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id h4so323009wmb.4
-        for <linux-raid@vger.kernel.org>; Mon, 18 May 2020 10:33:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=mbBiDnvi1QHic7u2XHdXs3X/8TvkN588xU69B+27Y38=;
-        b=dAUIlDps4Wb6tgBP5WYEIcGnPDemSfjqH9j1MuvR5CmFomzoMFeIIF20uUB+2O1ieT
-         uiZHnMwvRHmApCgs11nIC3ZCNoccstunCZkj2h+BMAyztxlK+XR+6M0iqA94lRJ5iStq
-         stOgpT7ME3yZ5Cq/BmROmw/SEyHIeE49cUq+hHRfMJKAxuoLpoigrbbmZBwhYKHuphLw
-         WP/PIBUvr49AR8xDtJ0i8+GJEBzy2mInRz7LpA7wtdqyujSI7Y9NGrnD9j58oHWCxj28
-         p/N+MkxwJCmeoejKD6pU/KaPF7vKpWrUL03WSVWD+jiMVu0fmdkISRui1Cxep0qLb+q7
-         mABw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=mbBiDnvi1QHic7u2XHdXs3X/8TvkN588xU69B+27Y38=;
-        b=nVUYzLct+WcDl/nLmW1kMzap46rvQboGvJVARHrYI0qbibPAtjKlZykJdtpC7E4xNJ
-         dIW3Y8p1E7EZ6eVSY2/MjV/Xh6epOtCH1qS2Ip5K6j98LhOmYudS6EqExlx18mTsFIj8
-         2jCCmz4/Q1gR6kpuW4p2ub9ngGz2Zu9RHdUiH2MEoF/oLDYuQhHI2++8Mmo1QhQWW1pg
-         P7D8cyZa/qmuGOLcnyDd2Wwte+4jejZhRLxmXD/2u9NfP6B68JrL2U7QB2EvRrMArGoC
-         fholKYK5KaRVm1vBHSoE+VPTkt9U+UU3d5P9UjJY27UgAzQY2/nskh+oyUaJQ8KO/CJ5
-         cGuw==
-X-Gm-Message-State: AOAM533po5oYZ3TRNKa5Fus/vA7wdG2PSN2UzU9rEcUV0YKdVvb+LXeR
-        LQANEKEt2cUr7feahe2dJhnwOQ==
-X-Google-Smtp-Source: ABdhPJwtCLALrtiMiSl+lnVdarxpRDmvY+A0XhZsRqSWKWOlZpx+g21kj+CT03bP+6WwaPY73naYHA==
-X-Received: by 2002:a1c:dd8b:: with SMTP id u133mr454019wmg.108.1589823235223;
-        Mon, 18 May 2020 10:33:55 -0700 (PDT)
-Received: from ?IPv6:2001:16b8:483d:6b00:e80e:f5df:f780:7d57? ([2001:16b8:483d:6b00:e80e:f5df:f780:7d57])
-        by smtp.gmail.com with ESMTPSA id i4sm12894730wrv.23.2020.05.18.10.33.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 May 2020 10:33:54 -0700 (PDT)
-Subject: Re: [PATCH 1/2] uuid.c: split uuid stuffs from util.c
-To:     Jes Sorensen <jes@trained-monkey.org>
-Cc:     linux-raid@vger.kernel.org,
-        Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>,
-        Wolfgang Denk <wd@denx.de>
+        id S1730693AbgERRub convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-raid@lfdr.de>); Mon, 18 May 2020 13:50:31 -0400
+Received: from sender11-op-o11.zoho.eu ([31.186.226.225]:17167 "EHLO
+        sender11-op-o11.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728821AbgERRub (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 18 May 2020 13:50:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1589824226; cv=none; 
+        d=zohomail.eu; s=zohoarc; 
+        b=Ui3zyWt53t15DGt3jugn7ogfqJnyDjFjmALJ2pjccN9+H5wCSZpGR8a0QOk6sWXS5oX1N7xGdn1CLbK+GpLLN+fwh5MG5hKFeMPtgjZ8RFsQO/FqYnPoE4gTxZ8JnU9n+qyYewAMhFkCm3pEzuWBY9o2Vaamf1+blPGdoBSgWBY=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+        t=1589824226; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=Cb4EBrn1CGPC62DDZtZn0FiG0v1hwk6shsL54onDP2g=; 
+        b=Qg3hcRFJR9YyVoaDnW9I9HjNigRkHxJE5TIERqbJAy10ITUSAlxb1ryBa7plniYTNDawIJuu3vFNFHoTmZGy727/ZFuvFMxVMTotevwqXLyta8FSJyyGQYuh1e6C5Fof/l0TMeiAex4+3une2jVGkFKzq8kdaZ1d2uhz0QnxWL0=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
+        dmarc=pass header.from=<jes@trained-monkey.org> header.from=<jes@trained-monkey.org>
+Received: from [100.109.105.145] (163.114.130.4 [163.114.130.4]) by mx.zoho.eu
+        with SMTPS id 1589824224289236.23598885047272; Mon, 18 May 2020 19:50:24 +0200 (CEST)
+Subject: =?UTF-8?Q?Re=3a_=5bPATCH_2/2=5d_restripe=3a_fix_ignoring_return_val?=
+ =?UTF-8?B?dWUgb2Yg4oCYcmVhZOKAmQ==?=
+To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Cc:     linux-raid@vger.kernel.org
 References: <20200515134026.8084-1-guoqing.jiang@cloud.ionos.com>
- <20200515134026.8084-2-guoqing.jiang@cloud.ionos.com>
- <c06c34ec-c3f7-7abb-c1eb-642c52b04d63@trained-monkey.org>
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Message-ID: <73b11fab-8d8a-443a-27fd-ea698e576558@cloud.ionos.com>
-Date:   Mon, 18 May 2020 19:33:54 +0200
+ <20200515134026.8084-3-guoqing.jiang@cloud.ionos.com>
+ <4a888cbe-636b-b3a7-f669-8897753430d0@trained-monkey.org>
+ <607932ff-0e76-9eca-1fdb-ca26428d8717@cloud.ionos.com>
+From:   Jes Sorensen <jes@trained-monkey.org>
+Message-ID: <01676778-bfc2-46d4-112b-ee16ef4cbcc1@trained-monkey.org>
+Date:   Mon, 18 May 2020 13:50:23 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <c06c34ec-c3f7-7abb-c1eb-642c52b04d63@trained-monkey.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <607932ff-0e76-9eca-1fdb-ca26428d8717@cloud.ionos.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 8BIT
+X-ZohoMailClient: External
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 5/18/20 7:18 PM, Jes Sorensen wrote:
-> On 5/15/20 9:40 AM, Guoqing Jiang wrote:
->> Currently, 'make raid6check' is build broken since commit b06815989
->> ("mdadm: load default sysfs attributes after assemblation").
+On 5/18/20 1:32 PM, Guoqing Jiang wrote:
+> On 5/18/20 7:22 PM, Jes Sorensen wrote:
+>> On 5/15/20 9:40 AM, Guoqing Jiang wrote:
+>>> Got below error when run "make everything".
+>>>
+>>> restripe.c: In function ‘test_stripes’:
+>>> restripe.c:870:4: error: ignoring return value of ‘read’, declared
+>>> with attribute warn_unused_result [-Werror=unused-result]
+>>>      read(source[i], stripes[i], chunk_size);
+>>>      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>
+>>> Fix it by set the return value of ‘read’ to diskP, which should be
+>>> harmless since diskP will be set again before it is used.
+>>>
+>>> Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+>>> ---
+>>>   restripe.c | 6 +++++-
+>>>   1 file changed, 5 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/restripe.c b/restripe.c
+>>> index 31b07e8..21c90f5 100644
+>>> --- a/restripe.c
+>>> +++ b/restripe.c
+>>> @@ -867,7 +867,11 @@ int test_stripes(int *source, unsigned long long
+>>> *offsets,
+>>>             for (i = 0 ; i < raid_disks ; i++) {
+>>>               lseek64(source[i], offsets[i]+start, 0);
+>>> -            read(source[i], stripes[i], chunk_size);
+>>> +            /*
+>>> +             * To resolve "ignoring return value of ‘read’", it
+>>> +             * should be harmless since diskP will be again later.
+>>> +             */
+>>> +            diskP = read(source[i], stripes[i], chunk_size);
+>> It doesn't complain on Fedora 32, however checking the return value of
+>> lseek64 and read is a good thing.
 >>
->> /usr/bin/ld: sysfs.o: in function `sysfsline':
->> sysfs.c:(.text+0x2707): undefined reference to `parse_uuid'
->> /usr/bin/ld: sysfs.c:(.text+0x271a): undefined reference to `uuid_zero'
->> /usr/bin/ld: sysfs.c:(.text+0x2721): undefined reference to `uuid_zero'
->>
->> Apparently, the compile of mdadm or raid6check are coupled with uuid
->> functions inside util.c. However, we can't just add util.o to CHECK_OBJS
->> which raid6check is needed, because it caused other worse problems.
->>
->> So, let's introduce a uuid.c file which is indenpended file to fix the
->> problem, all the contents are splitted from util.c.
->>
->> Cc: Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
->> Cc: Wolfgang Denk <wd@denx.de>
->> Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
->> ---
->>   Makefile |  6 ++--
->>   util.c   | 87 -----------------------------------------------------
->>   uuid.c   | 92 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 95 insertions(+), 90 deletions(-)
->>   create mode 100644 uuid.c
-> I am fine with this change, but uuid.c needs to respect the license
-> header that was in util.c
+>> However what you have done is to just masking the return value and
+>> throwing it away, is not OK. Please do it properly.
+> 
+> Yes, it is used to suppress the warning. And set the return value to a
+> new variable
+> could cause unused-but-set-variable, not sure if there is better way now.
 
-Ok, will copy it from util.c instead of just the below comment.
+The correct way is to check the return values and take appropriate
+action if an error is returned.
 
-+/*
-+ * Splited from util.c, so uuid.c shares the same copyright of it,
-+ */
-+
+Jes
 
 
-Thanks,
-Guoqing
 
