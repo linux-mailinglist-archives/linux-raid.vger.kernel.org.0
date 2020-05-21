@@ -2,25 +2,27 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F24151DCBA0
-	for <lists+linux-raid@lfdr.de>; Thu, 21 May 2020 13:06:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A3A41DCB94
+	for <lists+linux-raid@lfdr.de>; Thu, 21 May 2020 13:01:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728968AbgEULGz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 21 May 2020 07:06:55 -0400
-Received: from u17383850.onlinehome-server.com ([74.208.250.170]:53567 "EHLO
-        u17383850.onlinehome-server.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728348AbgEULGy (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 21 May 2020 07:06:54 -0400
-X-Greylist: delayed 350 seconds by postgrey-1.27 at vger.kernel.org; Thu, 21 May 2020 07:06:54 EDT
+        id S1729002AbgEULBo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 21 May 2020 07:01:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50756 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727864AbgEULBk (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 21 May 2020 07:01:40 -0400
+X-Greylist: delayed 53785 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 21 May 2020 04:01:40 PDT
+Received: from u17383850.onlinehome-server.com (u17383850.onlinehome-server.com [IPv6:2607:f1c0:83f:ac00::a6:f62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3CE7AC061A0E
+        for <linux-raid@vger.kernel.org>; Thu, 21 May 2020 04:01:40 -0700 (PDT)
 Received: by u17383850.onlinehome-server.com (Postfix, from userid 5001)
-        id F0EE9767; Thu, 21 May 2020 07:01:03 -0400 (EDT)
-Date:   Thu, 21 May 2020 07:01:03 -0400
-From:   David T-G <davidtg@justpickone.org>
+        id AEB1A769; Thu, 21 May 2020 07:01:39 -0400 (EDT)
+Date:   Thu, 21 May 2020 07:01:39 -0400
+From:   David T-G <davidtg-robot@justpickone.org>
 To:     Linux RAID list <linux-raid@vger.kernel.org>
 Cc:     Phil Turmel <philip@turmel.org>
 Subject: Re: failed disks, mapper, and "Invalid argument"
-Message-ID: <20200521110103.GG1415@justpickone.org>
+Message-ID: <20200521110139.GW1711@justpickone.org>
 References: <20200520200514.GE1415@justpickone.org>
  <5EC5BBEF.7070002@youngman.org.uk>
  <20200520235347.GF1415@justpickone.org>
@@ -35,7 +37,7 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Wols, et al --
+Wol, et al --
 
 ...and then Wols Lists said...
 % 
