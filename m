@@ -2,65 +2,129 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC4271DFA0A
-	for <lists+linux-raid@lfdr.de>; Sat, 23 May 2020 20:00:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EABF61E128F
+	for <lists+linux-raid@lfdr.de>; Mon, 25 May 2020 18:23:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388252AbgEWSAy (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 23 May 2020 14:00:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55842 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388260AbgEWSAl (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 23 May 2020 14:00:41 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46492C02A19B
-        for <linux-raid@vger.kernel.org>; Sat, 23 May 2020 11:00:39 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id p12so10917926qtn.13
-        for <linux-raid@vger.kernel.org>; Sat, 23 May 2020 11:00:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=F3NMDrR9dummcUXdRfruEEfbIS6yB2vx68nB8Asq/5Q=;
-        b=vhvRG4iP0p/cCM0/gHqK0xx0MaMNF3/azTtn5P0fCT1b4XLjGRAoR85FXgvwYtowP6
-         J1ev3dPiedOMtPyOzUYmKFEqsj6BkIi2lR8s0YRNLylOZ8MbeWQpwNTWDXPX57LUrKeO
-         FLL54WToKnc9WyFCTQNZdn8yjuqVF61dsdwJrbIWn1f8+mXNgwQXd1Xox425XdFJLCTr
-         UNYtD5Mkr7J8HytQpl125rrGiBWdOVTtdeDic18s2v1Ex5H4EMrCDseWe8z8QJUA2DPl
-         pMcmWf9nM5lni1dYRbVMyTKtLHSFCzrJM5oRvB7Hp9K31CMWsqtaG47ZQbJG6ZEre6uU
-         kwNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=F3NMDrR9dummcUXdRfruEEfbIS6yB2vx68nB8Asq/5Q=;
-        b=a5++igKXleukg+NHQtmSDT8mhAJj7KWQdsyyL9gxvjFpVNCl6JZVuRU9zrY4a7unT0
-         9CVlYl/v2b/u/vYwhkmMGehv+AnMcKjM9fi3PFdb/0XfMbbeupOPeFXYKkJwW6XxFQQZ
-         D8N09YC15kUUbs4/TptIQC32QKg2z0y64YET/DkLSmdoRxAoBqAJiES3X4Eg66ECC1uk
-         29+113n8bTcqD6cAItHZkWLrB1GWk5+D+a54n7+y0zk9DsTVAj7DqBiL+qr9J8Y8oTvB
-         fhb9SXWh9UcSvUiqGSktLnSIHDPrwC5V0gm9ICJkuaH6UWbai/sZA7GB0eSMseiSJUCV
-         amZA==
-X-Gm-Message-State: AOAM530wixt7c+ZJ+eL0N3XchuvPYNXJgVivCyBVfTgkfTcSy2oK1Y1E
-        eFDt7N14ziblD+cxF/z2tUXTZ5MiWlzfQq5ufwk=
-X-Google-Smtp-Source: ABdhPJw4JSLl4s8hKmdikxPHOZTjp7LuShJQWo5DKJXfhdyHNpRWrWLXX1iWw/azZwGF2Nz0kU5bTrWvyq5YmK6naS0=
-X-Received: by 2002:ac8:1e16:: with SMTP id n22mr21502226qtl.78.1590256838401;
- Sat, 23 May 2020 11:00:38 -0700 (PDT)
+        id S1731435AbgEYQXW (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 25 May 2020 12:23:22 -0400
+Received: from forward101o.mail.yandex.net ([37.140.190.181]:53119 "EHLO
+        forward101o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730015AbgEYQXW (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 25 May 2020 12:23:22 -0400
+Received: from mxback5g.mail.yandex.net (mxback5g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:166])
+        by forward101o.mail.yandex.net (Yandex) with ESMTP id 1F25C3C0012C;
+        Mon, 25 May 2020 19:23:19 +0300 (MSK)
+Received: from sas2-ee0cb368bd51.qloud-c.yandex.net (sas2-ee0cb368bd51.qloud-c.yandex.net [2a02:6b8:c08:b7a3:0:640:ee0c:b368])
+        by mxback5g.mail.yandex.net (mxback/Yandex) with ESMTP id jp3r0g4Do0-NJiOx1fk;
+        Mon, 25 May 2020 19:23:19 +0300
+Received: by sas2-ee0cb368bd51.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id JC4wAoF9o6-NIW0weVP;
+        Mon, 25 May 2020 19:23:18 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: Re: Assemblin journaled array fails
+To:     Song Liu <song@kernel.org>
+Cc:     linux-raid <linux-raid@vger.kernel.org>
+References: <f8c61278-1758-66cd-cf25-8a118cb12f58@yandex.pl>
+ <70dad446-7d38-fd10-130f-c23797165a21@yandex.pl>
+ <56b68265-ca54-05d3-95bc-ea8ee0b227f6@yandex.pl>
+ <CAPhsuW4WcqkDXOhcuG33bZtSEZ-V-KYPLm87piBH24eYEB0qVw@mail.gmail.com>
+ <b9b6b007-2177-a844-4d80-480393f30476@yandex.pl>
+ <CAPhsuW70NNozBmt1-zsM_Pk-39cLzi8bC3ZZaNwQ0-VgYsmkiA@mail.gmail.com>
+ <f9b54d87-5b81-1fa3-04d5-ea86a6c062cb@yandex.pl>
+ <CAPhsuW5ZfmCowTHNum5CSeadHqqPa5049weK6bq=m+JmnDE9Vg@mail.gmail.com>
+ <d0340d7b-6b3a-4fd3-e446-5f0967132ef6@yandex.pl>
+ <CAPhsuW4byXUvseqoj3Pw4r5nRGu=fHekdDec8FG6vj3of1wCyg@mail.gmail.com>
+From:   Michal Soltys <msoltyspl@yandex.pl>
+Message-ID: <1cb6c63f-a74c-a6f4-6875-455780f53fa1@yandex.pl>
+Date:   Mon, 25 May 2020 18:23:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Received: by 2002:a37:9fd3:0:0:0:0:0 with HTTP; Sat, 23 May 2020 11:00:37
- -0700 (PDT)
-Reply-To: mrs.chantala2055@gmail.com
-From:   mrs chantal <mrs.chantalas1@gmail.com>
-Date:   Sat, 23 May 2020 18:00:37 +0000
-Message-ID: <CAMdkyyDY_0O7YgysHCjgRTJ=8-B7XurK7o1razRHDVOjgr2V2g@mail.gmail.com>
-Subject: jjCompliment
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAPhsuW4byXUvseqoj3Pw4r5nRGu=fHekdDec8FG6vj3of1wCyg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US-large
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-     Compliment of the day to you. I am Mrs.CHANTAL I am sending this brief
-    letter to solicit your partnership to transfer $13.5 Million US
-    Dollars.I shall send you more information and procedures when I receive
-    positive response From you. Please send me a message in My private
-    email address is ( mrschantal066@gmail.com  )
-    Best Regards
-    MrS.Chantal
+On 5/19/20 1:55 AM, Song Liu wrote:
+> 
+> 2. try use bcc/bpftrace to trace r5l_recovery_read_page(),
+> specifically, the 4th argument.
+> With bcc, it is something like:
+> 
+>      trace.py -M 100 'r5l_recovery_read_page() "%llx", arg4'
+> 
+> -M above limits the number of outputs to 100 lines. We may need to
+> increase the limit or
+> remove the constraint. If the system doesn't have bcc/bpftrace. You
+> can also try with
+> kprobe.
+> 
+
+
+Trace keeps outputting the following data (with steadily growing 4th 
+argument):
+
+PID     TID     COMM            FUNC             -
+3456    3456    mdadm           r5l_recovery_read_page 98f65b8
+3456    3456    mdadm           r5l_recovery_read_page 98f65c0
+3456    3456    mdadm           r5l_recovery_read_page 98f65c8
+3456    3456    mdadm           r5l_recovery_read_page 98f65d0
+3456    3456    mdadm           r5l_recovery_read_page 98f65d8
+3456    3456    mdadm           r5l_recovery_read_page 98f65e0
+3456    3456    mdadm           r5l_recovery_read_page 98f65e8
+3456    3456    mdadm           r5l_recovery_read_page 98f65f0
+3456    3456    mdadm           r5l_recovery_read_page 98f65f8
+3456    3456    mdadm           r5l_recovery_read_page 98f6600
+3456    3456    mdadm           r5l_recovery_read_page 98f65c0
+3456    3456    mdadm           r5l_recovery_read_page 98f65c8
+3456    3456    mdadm           r5l_recovery_read_page 98f65d0
+3456    3456    mdadm           r5l_recovery_read_page 98f65d8
+3456    3456    mdadm           r5l_recovery_read_page 98f65e0
+3456    3456    mdadm           r5l_recovery_read_page 98f65e8
+3456    3456    mdadm           r5l_recovery_read_page 98f65f0
+3456    3456    mdadm           r5l_recovery_read_page 98f65f8
+3456    3456    mdadm           r5l_recovery_read_page 98f6600
+3456    3456    mdadm           r5l_recovery_read_page 98f6608
+3456    3456    mdadm           r5l_recovery_read_page 98f6610
+
+... a few minutes later ...
+
+PID     TID     COMM            FUNC             -
+3456    3456    mdadm           r5l_recovery_read_page 9b69b60
+3456    3456    mdadm           r5l_recovery_read_page 9b69b68 
+
+3456    3456    mdadm           r5l_recovery_read_page 9b69b70
+3456    3456    mdadm           r5l_recovery_read_page 9b69b78 
+
+3456    3456    mdadm           r5l_recovery_read_page 9b69b80
+3456    3456    mdadm           r5l_recovery_read_page 9b69b88
+3456    3456    mdadm           r5l_recovery_read_page 9b69b90 
+ 
+
+3456    3456    mdadm           r5l_recovery_read_page 9b69b98
+3456    3456    mdadm           r5l_recovery_read_page 9b69ba0
+3456    3456    mdadm           r5l_recovery_read_page 9b69ba8 
+ 
+
+3456    3456    mdadm           r5l_recovery_read_page 9b69bb0 
+ 
+
+3456    3456    mdadm           r5l_recovery_read_page 9b69bb8
+3456    3456    mdadm           r5l_recovery_read_page 9b69bc0 
+
+3456    3456    mdadm           r5l_recovery_read_page 9b69bc8
+3456    3456    mdadm           r5l_recovery_read_page 9b69b90 
+ 
+
+3456    3456    mdadm           r5l_recovery_read_page 9b69b98
+3456    3456    mdadm           r5l_recovery_read_page 9b69ba0
+3456    3456    mdadm           r5l_recovery_read_page 9b69ba8
+3456    3456    mdadm           r5l_recovery_read_page 9b69bb0
+3456    3456    mdadm           r5l_recovery_read_page 9b69bb8
+
+... and so on
