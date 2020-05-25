@@ -2,129 +2,129 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EABF61E128F
-	for <lists+linux-raid@lfdr.de>; Mon, 25 May 2020 18:23:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 883A71E135E
+	for <lists+linux-raid@lfdr.de>; Mon, 25 May 2020 19:25:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731435AbgEYQXW (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 25 May 2020 12:23:22 -0400
-Received: from forward101o.mail.yandex.net ([37.140.190.181]:53119 "EHLO
-        forward101o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730015AbgEYQXW (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 25 May 2020 12:23:22 -0400
-Received: from mxback5g.mail.yandex.net (mxback5g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:166])
-        by forward101o.mail.yandex.net (Yandex) with ESMTP id 1F25C3C0012C;
-        Mon, 25 May 2020 19:23:19 +0300 (MSK)
-Received: from sas2-ee0cb368bd51.qloud-c.yandex.net (sas2-ee0cb368bd51.qloud-c.yandex.net [2a02:6b8:c08:b7a3:0:640:ee0c:b368])
-        by mxback5g.mail.yandex.net (mxback/Yandex) with ESMTP id jp3r0g4Do0-NJiOx1fk;
-        Mon, 25 May 2020 19:23:19 +0300
-Received: by sas2-ee0cb368bd51.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id JC4wAoF9o6-NIW0weVP;
-        Mon, 25 May 2020 19:23:18 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: Assemblin journaled array fails
-To:     Song Liu <song@kernel.org>
-Cc:     linux-raid <linux-raid@vger.kernel.org>
-References: <f8c61278-1758-66cd-cf25-8a118cb12f58@yandex.pl>
- <70dad446-7d38-fd10-130f-c23797165a21@yandex.pl>
- <56b68265-ca54-05d3-95bc-ea8ee0b227f6@yandex.pl>
- <CAPhsuW4WcqkDXOhcuG33bZtSEZ-V-KYPLm87piBH24eYEB0qVw@mail.gmail.com>
- <b9b6b007-2177-a844-4d80-480393f30476@yandex.pl>
- <CAPhsuW70NNozBmt1-zsM_Pk-39cLzi8bC3ZZaNwQ0-VgYsmkiA@mail.gmail.com>
- <f9b54d87-5b81-1fa3-04d5-ea86a6c062cb@yandex.pl>
- <CAPhsuW5ZfmCowTHNum5CSeadHqqPa5049weK6bq=m+JmnDE9Vg@mail.gmail.com>
- <d0340d7b-6b3a-4fd3-e446-5f0967132ef6@yandex.pl>
- <CAPhsuW4byXUvseqoj3Pw4r5nRGu=fHekdDec8FG6vj3of1wCyg@mail.gmail.com>
-From:   Michal Soltys <msoltyspl@yandex.pl>
-Message-ID: <1cb6c63f-a74c-a6f4-6875-455780f53fa1@yandex.pl>
-Date:   Mon, 25 May 2020 18:23:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        id S2389605AbgEYRZ6 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 25 May 2020 13:25:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389251AbgEYRZ5 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 25 May 2020 13:25:57 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99E5DC061A0E
+        for <linux-raid@vger.kernel.org>; Mon, 25 May 2020 10:25:57 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id c3so13466286wru.12
+        for <linux-raid@vger.kernel.org>; Mon, 25 May 2020 10:25:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:from:subject:message-id:date:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=zPhJgnn6wDgU62I2NgtytcEWHUfOhC1lV0Uq7n4z1wE=;
+        b=qCV5B5acseRsii3a6DQApZHturySlGlgcD3iJYqSFbruaZi80ilfoEW10qYYP/oboc
+         AN3PeK6Ata4kGTsQ5OLIMvSF4ZH9rpbpCFgOo/VEvgP7T1FSrSDJ5qZfinfQf1vxyOYl
+         nLZSRYHcx291toDF9sFh0s6cYvA57ZgPlUJNJ2+JNx6OctDIVGsNWT4r9GE8DdhdcyQy
+         jVKzHIvLvsG4twkGJQjOkUieOJnD7WIDLSrxmAfGbnHdA+GAGx9EVfRjyyEiyLu+dvku
+         KyXd+4Gz72ri0Wi2KFcX1fMCou5xfO/esRnf3ruFCjM1Kvn+hfQzW93h7cUOPSluHITq
+         0cQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=zPhJgnn6wDgU62I2NgtytcEWHUfOhC1lV0Uq7n4z1wE=;
+        b=cwsEyAaLc6Hg8FL+6cUvpFQlk+zL7yXDnx51d7s1QUjfNAWz1QSr89xxp9UIWFh6Pz
+         tc3NSwAbIeLIpGRuA3eu5JD4+x82m63jCaG+/QSOP1KPEad1cxz5m+c40hms28IcvkD/
+         jip3udgmatI/awOykPoWtLy7LvTPj3LC1nOvawOqS6PB21NwcltnbmxSAiIbsmdqtTC1
+         KGmdeawPgKurOjf7ticxLHJ4JcIAb8SfTAAMxjit8HRDESyoVgZp4XXhkDydUbMzJmA5
+         +IAkLcwDu6R3qPs+vVQr6A36tNtdYpos9trDD4w2LH0IlmmqaNDBAztDpDhcwVKkC8Ir
+         LzVg==
+X-Gm-Message-State: AOAM531zHrOvN70rQYyjqkhyUHNWGRo1Kda0uZsrut+YSEM632e7937m
+        /h+oQnL+8pn2/om+gC35d8FKJUR/GmA=
+X-Google-Smtp-Source: ABdhPJww2uQFzJGJXAXSCWT2vQ62+zL58KTi18s4pHsqOkH2z2D3KLFIK9nVUl0yBNQ8Vq9W3dbO2A==
+X-Received: by 2002:a5d:5006:: with SMTP id e6mr15514058wrt.170.1590427555214;
+        Mon, 25 May 2020 10:25:55 -0700 (PDT)
+Received: from [192.168.188.88] ([46.28.163.233])
+        by smtp.gmail.com with ESMTPSA id g82sm2373883wmf.1.2020.05.25.10.25.54
+        for <linux-raid@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 May 2020 10:25:54 -0700 (PDT)
+To:     linux-raid@vger.kernel.org
+From:   Thomas Grawert <thomasgrawert0282@gmail.com>
+Subject: help requested for mdadm grow error
+Message-ID: <7d95da49-33d8-cd4d-fa3f-0f3d3074cb30@gmail.com>
+Date:   Mon, 25 May 2020 19:25:53 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAPhsuW4byXUvseqoj3Pw4r5nRGu=fHekdDec8FG6vj3of1wCyg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US-large
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 5/19/20 1:55 AM, Song Liu wrote:
-> 
-> 2. try use bcc/bpftrace to trace r5l_recovery_read_page(),
-> specifically, the 4th argument.
-> With bcc, it is something like:
-> 
->      trace.py -M 100 'r5l_recovery_read_page() "%llx", arg4'
-> 
-> -M above limits the number of outputs to 100 lines. We may need to
-> increase the limit or
-> remove the constraint. If the system doesn't have bcc/bpftrace. You
-> can also try with
-> kprobe.
-> 
+Hi there,
+
+I´m pretty new here and already tried finding a solution with aunt 
+google - without luck. So hopefully someone of you can help me:
+
+I´m running a NAS with 4x 12TB WD120EFAX using mdadm Raid5 on the basis 
+of Debian 10.
+
+Because of capacity and speed I tried adding another WD120EFAX by simply
+"mdadm --grow --raid-devices=5 /dev/md0 /dev/sd[a-e]1 
+--backup-file=/tmp/bu.bak"
+
+Everything worked... but during reshape, I had a power interruption. 
+When power was back, I tried to restart NAS but the md disappeared.
+
+Long story short... after asking aunt Google I managed to get the raid5 
+up "active, not started":
+
+root@nas:~# mdadm -D /dev/md0
+/dev/md0:
+         Version : 1.2
+   Creation Time : Sun May 17 00:23:42 2020
+      Raid Level : raid5
+   Used Dev Size : 18446744073709551615
+    Raid Devices : 5
+   Total Devices : 5
+     Persistence : Superblock is persistent
+
+     Update Time : Mon May 25 16:05:38 2020
+           State : active, Not Started
+  Active Devices : 5
+Working Devices : 5
+  Failed Devices : 0
+   Spare Devices : 0
+
+          Layout : left-symmetric
+      Chunk Size : 512K
+
+   Delta Devices : 1, (4->5)
+
+            Name : nas:0  (local to host nas)
+            UUID : d7d800b3:d203ff93:9cc2149a:804a1b97
+          Events : 38602
+
+     Number   Major   Minor   RaidDevice State
+        0       8        1        0      active sync   /dev/sda1
+        1       8       17        1      active sync   /dev/sdb1
+        2       8       33        2      active sync   /dev/sdc1
+        4       8       49        3      active sync   /dev/sdd1
+        5       8       65        4      active sync   /dev/sde1
 
 
-Trace keeps outputting the following data (with steadily growing 4th 
-argument):
+I already tried to repair the md0 using the mentioned way from 
+https://serverfault.com/questions/776170/mdadm-grow-power-failure-dev-md2-no-longer-detected-raid5 
+... however, the raid didn´t start.
 
-PID     TID     COMM            FUNC             -
-3456    3456    mdadm           r5l_recovery_read_page 98f65b8
-3456    3456    mdadm           r5l_recovery_read_page 98f65c0
-3456    3456    mdadm           r5l_recovery_read_page 98f65c8
-3456    3456    mdadm           r5l_recovery_read_page 98f65d0
-3456    3456    mdadm           r5l_recovery_read_page 98f65d8
-3456    3456    mdadm           r5l_recovery_read_page 98f65e0
-3456    3456    mdadm           r5l_recovery_read_page 98f65e8
-3456    3456    mdadm           r5l_recovery_read_page 98f65f0
-3456    3456    mdadm           r5l_recovery_read_page 98f65f8
-3456    3456    mdadm           r5l_recovery_read_page 98f6600
-3456    3456    mdadm           r5l_recovery_read_page 98f65c0
-3456    3456    mdadm           r5l_recovery_read_page 98f65c8
-3456    3456    mdadm           r5l_recovery_read_page 98f65d0
-3456    3456    mdadm           r5l_recovery_read_page 98f65d8
-3456    3456    mdadm           r5l_recovery_read_page 98f65e0
-3456    3456    mdadm           r5l_recovery_read_page 98f65e8
-3456    3456    mdadm           r5l_recovery_read_page 98f65f0
-3456    3456    mdadm           r5l_recovery_read_page 98f65f8
-3456    3456    mdadm           r5l_recovery_read_page 98f6600
-3456    3456    mdadm           r5l_recovery_read_page 98f6608
-3456    3456    mdadm           r5l_recovery_read_page 98f6610
+Unfortunately the raid is not mountable (cannot read superblock), even 
+readonly. So it´s impossible to run a backup of stored data, for now.
 
-... a few minutes later ...
+Any help is highly appreciated.
 
-PID     TID     COMM            FUNC             -
-3456    3456    mdadm           r5l_recovery_read_page 9b69b60
-3456    3456    mdadm           r5l_recovery_read_page 9b69b68 
+Greetings
 
-3456    3456    mdadm           r5l_recovery_read_page 9b69b70
-3456    3456    mdadm           r5l_recovery_read_page 9b69b78 
+Thomas
 
-3456    3456    mdadm           r5l_recovery_read_page 9b69b80
-3456    3456    mdadm           r5l_recovery_read_page 9b69b88
-3456    3456    mdadm           r5l_recovery_read_page 9b69b90 
- 
-
-3456    3456    mdadm           r5l_recovery_read_page 9b69b98
-3456    3456    mdadm           r5l_recovery_read_page 9b69ba0
-3456    3456    mdadm           r5l_recovery_read_page 9b69ba8 
- 
-
-3456    3456    mdadm           r5l_recovery_read_page 9b69bb0 
- 
-
-3456    3456    mdadm           r5l_recovery_read_page 9b69bb8
-3456    3456    mdadm           r5l_recovery_read_page 9b69bc0 
-
-3456    3456    mdadm           r5l_recovery_read_page 9b69bc8
-3456    3456    mdadm           r5l_recovery_read_page 9b69b90 
- 
-
-3456    3456    mdadm           r5l_recovery_read_page 9b69b98
-3456    3456    mdadm           r5l_recovery_read_page 9b69ba0
-3456    3456    mdadm           r5l_recovery_read_page 9b69ba8
-3456    3456    mdadm           r5l_recovery_read_page 9b69bb0
-3456    3456    mdadm           r5l_recovery_read_page 9b69bb8
-
-... and so on
