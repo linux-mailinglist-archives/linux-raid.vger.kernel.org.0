@@ -2,52 +2,52 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE6E71E1808
-	for <lists+linux-raid@lfdr.de>; Tue, 26 May 2020 01:01:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A06601E182B
+	for <lists+linux-raid@lfdr.de>; Tue, 26 May 2020 01:15:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729769AbgEYXBV (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 25 May 2020 19:01:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42938 "EHLO
+        id S2388473AbgEYXPp (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 25 May 2020 19:15:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725969AbgEYXBU (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 25 May 2020 19:01:20 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B096C061A0E
-        for <linux-raid@vger.kernel.org>; Mon, 25 May 2020 16:01:20 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id x14so13193179wrp.2
-        for <linux-raid@vger.kernel.org>; Mon, 25 May 2020 16:01:20 -0700 (PDT)
+        with ESMTP id S2387992AbgEYXPp (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 25 May 2020 19:15:45 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF221C061A0E
+        for <linux-raid@vger.kernel.org>; Mon, 25 May 2020 16:15:44 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id i15so18545382wrx.10
+        for <linux-raid@vger.kernel.org>; Mon, 25 May 2020 16:15:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:cc:references:from:message-id:date:user-agent:mime-version
          :in-reply-to:content-transfer-encoding;
-        bh=Yupb9jfltJbphQamrb0a8WRXLktYtE41SXYqi+JTpjk=;
-        b=Vr3hO/ZSlJ8Pfu8/mrspwkm4LFQaBvTwijzbs7DKi4miFqMmJs9u2EB/AiH5XW+yyW
-         ja7jI0UkmPj2wwHfY+x3wHDWVKxRmOvgLh1oPtTa6TC9T9+YFXCCVb9dcbQUmXEpu2I1
-         Onh6G/RwRObKCSsRPA0+OraMmWzXbg2fPNdfH5zbzEL8v3dUmgvwE4sClSUrIsPI5Smd
-         0voZ0KL5RZKh6kkhD/7DFLBOrH1WwjhXD2sL8amDlPrnkJ9svLahFzsikLjTYTDDXNT1
-         DHRvwOu06hpQ8siJRCeU0vyJUgWRTDIcNgfUNQBmZt1+FuaGomqsLnBjjHddHsARU5oq
-         qIyQ==
+        bh=l9NzFo6HlU0+lGNvN3zyEwEBVc88s37qBZ0sgzLN9Hw=;
+        b=D0tVULUGzecTD2JvdheZbxn8KPC1JFLDeTQdhIu0eqOxeTkDMd/ja0shsc2Ze3DG6w
+         ohqKhEOwolqpALdV79UwjPPeT3MwSv7mar+WJNIukgwLrxxJsXkdkW7GDIIWCBS6Rkdw
+         YyLIrXib1kbkJniP8vkS7gf2QjtDcPryTHEbGHpW7BQ0KKZbVVgszeWCP6bruf9X+Hv2
+         w/lL2IqvQQIVqErcFhu0EvPx7lAfkWmSVFISrOGhPsBY5ScSyCtKTGLHkpGFlxlKZLH1
+         2ZZyi47ViR4Z7M0tQMYttgRDl/NPvAZB8RHTxqZTwrcEoCh986iXsfD32P+i8jELUPby
+         CKKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=Yupb9jfltJbphQamrb0a8WRXLktYtE41SXYqi+JTpjk=;
-        b=gqyx+Kf0GEaUZHUihVNYKMjFyUx+BeAAWg6hrboA26jPHu+BKYhiGSTekMfFOmvSpx
-         VTRkHECmcAoNbRqUsm/Zht49jKkBLDXO2XtO4h7pq9n16oHy07pBONS22uDZUzVnQ8Gv
-         ReR+xa/RcqTSkATxqDTrVDKXBl80l+h4x/dsmKwW6AKfnhzti0IqZnUSR1vWFt3jst3j
-         05i7+LIMETzAOroAh5Mwa+IU3c2LKH8FakkGlnUTvaLpmshg37y6y/heUVmr6TvbGIE3
-         RjppYL/pV0ms9skB93oZeEgamYtzgTNqhQVTqR4q/lim9o9dou0Kx2Hg2QXnCfMJhWuD
-         R2Vw==
-X-Gm-Message-State: AOAM5335nHPDYjqtKEW9ehoh6a46fYfB1YHA2rVoHZs6LgTGhQrKc5Ny
-        bXZS0aDObUSRgg1qlFoFgJ0AD3gQxe0=
-X-Google-Smtp-Source: ABdhPJyz9aKZhh/k8TDRqUBdjLoL2TEbhAl4arv0rglpq+pwlJCAqNycNMK5i5OulHPMSE6+y7+r6A==
-X-Received: by 2002:adf:ab4e:: with SMTP id r14mr6678906wrc.147.1590447678760;
-        Mon, 25 May 2020 16:01:18 -0700 (PDT)
+        bh=l9NzFo6HlU0+lGNvN3zyEwEBVc88s37qBZ0sgzLN9Hw=;
+        b=lkiK0snhOGy1xAHnFt8dKHO10hE039RK6iA0vKnMXtkiLHqUP/5omFkWqWNxqKoT4c
+         PeM/JQGD0hw2RsFXuIIYZ6axc7bftYtq887LsX5EXBOuHxZygQ/wuoKC00XAo0XZ/ytx
+         YUfUKc62RnVEHoYXJ2lxN8qFr/HP+aigCkE/v9PhnCCXUBhLejm0U6Dpl32o9oUpg1PW
+         D0LQ0mjoJnneir9up2ZvmDCsDdZ9QFb7LaCqDTYL3fbRgiFqWlocXIxO7/EqJMdG1tkq
+         TRcexuC21VrLi04VzsxTo5aQ0sPHWypBeqyUBd3cSdGBmhNKG26B/WaoPZLsW7Cx+6I+
+         sJYg==
+X-Gm-Message-State: AOAM530UQQf7oqPE55HiPomFjBqP+0H9+th21EZZtW2Eo5iBjnsTbi8+
+        XOuJVsTt9OAsKxNfZzEBtLd8IiROs0Y=
+X-Google-Smtp-Source: ABdhPJytksKPEHlvfQTjil7G5ax7jZGqKqM42FX+5Ff1KK4/3pkDwVJ/L8L7hBwG8lh8rVVPlKGtwA==
+X-Received: by 2002:adf:f207:: with SMTP id p7mr17256738wro.206.1590448543499;
+        Mon, 25 May 2020 16:15:43 -0700 (PDT)
 Received: from [192.168.188.88] ([46.28.163.233])
-        by smtp.gmail.com with ESMTPSA id i74sm19605561wri.49.2020.05.25.16.01.17
+        by smtp.gmail.com with ESMTPSA id y185sm20026853wmy.11.2020.05.25.16.15.42
         for <linux-raid@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 May 2020 16:01:18 -0700 (PDT)
+        Mon, 25 May 2020 16:15:42 -0700 (PDT)
 Subject: Re: help requested for mdadm grow error
 Cc:     linux-raid@vger.kernel.org
 References: <7d95da49-33d8-cd4d-fa3f-0f3d3074cb30@gmail.com>
@@ -63,8 +63,8 @@ References: <7d95da49-33d8-cd4d-fa3f-0f3d3074cb30@gmail.com>
  <b5e5c7af-9d1b-3eca-f3a1-f03f8d308015@gmail.com>
  <37636c91-9baf-4565-9849-f8aca54e392e@youngman.org.uk>
 From:   Thomas Grawert <thomasgrawert0282@gmail.com>
-Message-ID: <abbe29b4-0837-f8a0-93d3-aecbe7b19655@gmail.com>
-Date:   Tue, 26 May 2020 01:01:16 +0200
+Message-ID: <333a650e-2345-0e09-b53e-57b6f2e6cc68@gmail.com>
+Date:   Tue, 26 May 2020 01:15:41 +0200
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
@@ -81,30 +81,7 @@ X-Mailing-List: linux-raid@vger.kernel.org
 > So step 1, revert the reshape. Step 2, get the array back running. 
 > Step 3, start the reshape again.
 
-root@nas:~# mdadm --assemble /dev/md0 --force --verbose 
---update=revert-reshape --invalid-backup /dev/sda1 /dev/sdc1 /dev/sdd1 
-/dev/sde1 /dev/sdf1
-mdadm: looking for devices for /dev/md0
-mdadm: /dev/sda1 is identified as a member of /dev/md0, slot 0.
-mdadm: /dev/sdc1 is identified as a member of /dev/md0, slot 1.
-mdadm: /dev/sdd1 is identified as a member of /dev/md0, slot 2.
-mdadm: /dev/sde1 is identified as a member of /dev/md0, slot 3.
-mdadm: /dev/sdf1 is identified as a member of /dev/md0, slot 4.
-mdadm: clearing FAULTY flag for device 4 in /dev/md0 for /dev/sdf1
-mdadm: Marking array /dev/md0 as 'clean'
-mdadm: added /dev/sdc1 to /dev/md0 as 1
-mdadm: added /dev/sdd1 to /dev/md0 as 2
-mdadm: added /dev/sde1 to /dev/md0 as 3
-mdadm: added /dev/sdf1 to /dev/md0 as 4
-mdadm: added /dev/sda1 to /dev/md0 as 0
-mdadm: /dev/md0 has been started with 4 drives and 1 spare.
-
-=======================
-
-WOW!
-
-ok, let´s check the status again:
-
+root@nas:~# mdadm --readwrite /dev/md0
 root@nas:~# mdadm -D /dev/md0
 /dev/md0:
             Version : 1.2
@@ -118,8 +95,8 @@ root@nas:~# mdadm -D /dev/md0
 
       Intent Bitmap : Internal
 
-        Update Time : Mon May 25 16:05:38 2020
-              State : clean, resyncing (PENDING)
+        Update Time : Tue May 26 01:13:08 2020
+              State : clean
      Active Devices : 4
     Working Devices : 5
      Failed Devices : 0
@@ -132,7 +109,7 @@ Consistency Policy : bitmap
 
                Name : nas:0  (local to host nas)
                UUID : d7d800b3:d203ff93:9cc2149a:804a1b97
-             Events : 38602
+             Events : 38605
 
      Number   Major   Minor   RaidDevice State
         0       8        1        0      active sync   /dev/sda1
@@ -141,28 +118,22 @@ Consistency Policy : bitmap
         4       8       65        3      active sync   /dev/sde1
 
         5       8       81        -      spare   /dev/sdf1
-
-===================================================
-
 root@nas:~# cat /proc/mdstat
 Personalities : [linear] [multipath] [raid0] [raid1] [raid6] [raid5] 
 [raid4] [raid10]
-md0 : active (auto-read-only) raid5 sda1[0] sdf1[5](S) sde1[4] sdd1[2] 
-sdc1[1]
+md0 : active raid5 sda1[0] sdf1[5](S) sde1[4] sdd1[2] sdc1[1]
        35156256768 blocks super 1.2 level 5, 512k chunk, algorithm 2 
 [4/4] [UUUU]
-         resync=PENDING
        bitmap: 0/88 pages [0KB], 65536KB chunk
 
 unused devices: <none>
 
-==================================================
+=================================
 
-root@nas:~# mount /dev/md0 /mnt
-mount: /mnt: wrong fs type, bad option, bad superblock on /dev/md0, 
-missing codepage or helper program, or other error.
-root@nas:~#
+ok, got a bit too scared :)
 
+it´s now working again. so I can plugin a UPS and restart grow.
 
-seems the filesystem got a hit. how to proceed now?
+guys, thank you all very much for your help.
+
 
