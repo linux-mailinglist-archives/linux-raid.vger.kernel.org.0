@@ -2,21 +2,53 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3637A1E1791
-	for <lists+linux-raid@lfdr.de>; Tue, 26 May 2020 00:02:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0352A1E17CE
+	for <lists+linux-raid@lfdr.de>; Tue, 26 May 2020 00:18:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729294AbgEYWCl (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 25 May 2020 18:02:41 -0400
-Received: from smtp.hosts.co.uk ([85.233.160.19]:15979 "EHLO smtp.hosts.co.uk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726729AbgEYWCl (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 25 May 2020 18:02:41 -0400
-Received: from [81.154.111.47] (helo=[192.168.1.225])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1jdLBA-0000tf-DS; Mon, 25 May 2020 23:02:40 +0100
+        id S2387629AbgEYWSq (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 25 May 2020 18:18:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36344 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725834AbgEYWSq (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 25 May 2020 18:18:46 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35A7DC061A0E
+        for <linux-raid@vger.kernel.org>; Mon, 25 May 2020 15:18:46 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id t18so4416446wru.6
+        for <linux-raid@vger.kernel.org>; Mon, 25 May 2020 15:18:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:cc:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-transfer-encoding;
+        bh=yujsI0jQtQYVe7lEyXeJSd3TDyo6PEB8I99oPBcEGe0=;
+        b=J3u9CUBJBiNcADhk3X0wJdsv33jGQDN093XoesoY1qRowy35qv8vTn3YD6BBgwDn/B
+         grGv6IqVcpFPNytAQH3+B13EPDUXRTGClzHw7fYhgi9ZzK7ksVTgGUCU3/bbugFvJafy
+         3HO2sb0A1AsUvpb2PHVCw7Tp1GKfPQRefFtnuwm/R/VUbYvjNFSHaLCT6a/gtrKVt85g
+         5cPtSe7+98/TID0tx2ay7lVaSoheayEBMPrHbHpKszpM4wLo0F5UJGHM1q+sZGXRwaZ+
+         EHNxrGOeiwyH8b7qzpqAOvc0fdvqZ2zAXhLT4xwirwGEX1JJbSez+las3367avXTgFwm
+         UjCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=yujsI0jQtQYVe7lEyXeJSd3TDyo6PEB8I99oPBcEGe0=;
+        b=Unglsk/vXi5hW2NWWMuKp1xp9pNKx1R2M8xcFo2v5bQQV70jTfo6uqBh/nztDhNc6W
+         B4Azc2hI+I++7lknoaxZWHaRP4ZU7M4WQ5y6xee/216F+SZRxPt9ggkdwPH24B8QyMoy
+         OTDDvbgk0U1Jgguge+jz0brRkAI8jzLpR9IxSQX13AOgeRbp13463uVk34MS1pk4lu9J
+         bAacut+GFXWQgkL8mobM1NI72f4zXVShsBxtWDGO0CLPKe36RFbAFHjyO7Ls1wP4uRVM
+         12vkI+IsdBXzi+pva6EpK/pO5MZciFj94q/n5K9mW6ZG/h6KhtLTIdaQ8EVU7RGdc35Y
+         qHzQ==
+X-Gm-Message-State: AOAM530EILa9AUFJQW2bL2uTUleJkafuShlnKsntjJaoBPSSiAOyTeE8
+        JKt2HCCF6Ahvv8yP4OmU92QsLjxmBrg=
+X-Google-Smtp-Source: ABdhPJz9lYsPpG/BuJ6sDPKhGFgivoYu5zc3ku4Kko/NY9STnv133SpTiADc+gQrTW8UPBAx4BNDSA==
+X-Received: by 2002:adf:dc0a:: with SMTP id t10mr18271045wri.342.1590445124807;
+        Mon, 25 May 2020 15:18:44 -0700 (PDT)
+Received: from [192.168.188.88] ([46.28.163.233])
+        by smtp.gmail.com with ESMTPSA id o15sm6054670wmm.31.2020.05.25.15.18.43
+        for <linux-raid@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 May 2020 15:18:44 -0700 (PDT)
 Subject: Re: help requested for mdadm grow error
-To:     Thomas Grawert <thomasgrawert0282@gmail.com>
 Cc:     linux-raid@vger.kernel.org
 References: <7d95da49-33d8-cd4d-fa3f-0f3d3074cb30@gmail.com>
  <5ECC09D6.1010300@youngman.org.uk>
@@ -27,64 +59,34 @@ References: <7d95da49-33d8-cd4d-fa3f-0f3d3074cb30@gmail.com>
  <103b80fa-029f-ecdc-d470-5cc591dc8dd0@gmail.com>
  <e1a4a609-2068-b084-59a6-214c88798966@youngman.org.uk>
  <e1ad56b2-df70-bc6a-9a81-333230d558c2@gmail.com>
-From:   antlists <antlists@youngman.org.uk>
-Message-ID: <358e9f6b-a989-0e4a-04c4-6efe2666159f@youngman.org.uk>
-Date:   Mon, 25 May 2020 23:02:42 +0100
+ <358e9f6b-a989-0e4a-04c4-6efe2666159f@youngman.org.uk>
+From:   Thomas Grawert <thomasgrawert0282@gmail.com>
+Message-ID: <b5e5c7af-9d1b-3eca-f3a1-f03f8d308015@gmail.com>
+Date:   Tue, 26 May 2020 00:18:42 +0200
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <e1ad56b2-df70-bc6a-9a81-333230d558c2@gmail.com>
+In-Reply-To: <358e9f6b-a989-0e4a-04c4-6efe2666159f@youngman.org.uk>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 25/05/2020 22:22, Thomas Grawert wrote:
-> I don't think I've got an mdadm.conf ... and everything to me looks okay 
-> but just not working.
->>
->> Next step - how far has the reshape got? I *think* you might get that 
->> from "cat /proc/mdstat". Can we have that please ... I'm *hoping* it 
->> says the reshape is at 0%.
->>
->> Cheers,
->> Wol
-> 
-> 
-> root@nas:~# cat /proc/mdstat
-> Personalities : [linear] [multipath] [raid0] [raid1] [raid6] [raid5] 
-> [raid4] [raid10]
-> md0 : inactive sda1[0] sdf1[5] sde1[4] sdd1[2] sdc1[1]
->        58593761280 blocks super 1.2
-> 
-> unused devices: <none>
-> root@nas:~#
-> 
-> nothing... the reshaping run about 5min. before power loss.
-> 
 
-Just done a search, and I've found this in a previous thread ...
+> Okay, so we need to grep dmesg looking for a message like that above 
+> about reshaping.
+>
+> So let's grep for "md/raid" and see what we get ...
 
-! # mdadm --assemble /dev/md0 --force --verbose --invalid-backup
-! /dev/sda1 /dev/sdd1 /dev/sde1 /dev/sdb1 /dev/sdc1
-! This command resulted in the following message:
+root@nas:~# dmesg | grep md/raid
+[  321.819562] md/raid:md0: not clean -- starting background reconstruction
+[  321.819564] md/raid:md0: reshape_position too early for auto-recovery 
+- aborting.
 
-! mdadm: failed to RUN_ARRAY /dev/md0: Invalid argument
 
-! The syslog contained the following line:
-! md/raid:md0: reshape_position too early for auto-recovery - aborting.
+(again: thanks a lot for your help. I never expected that! :-) )
 
-! That led me to the solution to revert the grow command:
-! # mdadm --assemble /dev/md0 --force --verbose --update=revert-reshape 
-! --invalid-backup /dev/sda1 /dev/sdd1 /dev/sde1 /dev/sdb1 /dev/sdc1
 
-Okay, so we need to grep dmesg looking for a message like that above 
-about reshaping.
-
-So let's grep for "md/raid" and see what we get ...
-
-Cheers,
-Wol
