@@ -2,17 +2,17 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E65D91E4370
+	by mail.lfdr.de (Postfix) with ESMTP id 0125C1E436E
 	for <lists+linux-raid@lfdr.de>; Wed, 27 May 2020 15:20:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730297AbgE0NUo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 27 May 2020 09:20:44 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5355 "EHLO huawei.com"
+        id S1730289AbgE0NUl (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 27 May 2020 09:20:41 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5356 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730258AbgE0NUm (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 27 May 2020 09:20:42 -0400
+        id S1730285AbgE0NUl (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 27 May 2020 09:20:41 -0400
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 49062A1135285968B66F;
+        by Forcepoint Email with ESMTP id 43D7B2C7E19B1B7F6862;
         Wed, 27 May 2020 21:20:37 +0800 (CST)
 Received: from huawei.com (10.175.124.28) by DGGEMS413-HUB.china.huawei.com
  (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Wed, 27 May 2020
@@ -22,9 +22,9 @@ To:     <song@kernel.org>
 CC:     <linux-raid@vger.kernel.org>, <neilb@suse.com>,
         <guoqing.jiang@cloud.ionos.com>, <colyli@suse.de>,
         <xni@redhat.com>, <houtao1@huawei.com>, <yuyufen@huawei.com>
-Subject: [PATCH v3 03/11] md/raid5: allocate and free pages of r5pages
-Date:   Wed, 27 May 2020 21:19:25 +0800
-Message-ID: <20200527131933.34400-4-yuyufen@huawei.com>
+Subject: [PATCH v3 04/11] md/raid5: set correct page offset for bi_io_vec in ops_run_io()
+Date:   Wed, 27 May 2020 21:19:26 +0800
+Message-ID: <20200527131933.34400-5-yuyufen@huawei.com>
 X-Mailer: git-send-email 2.21.3
 In-Reply-To: <20200527131933.34400-1-yuyufen@huawei.com>
 References: <20200527131933.34400-1-yuyufen@huawei.com>
@@ -38,239 +38,37 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-When PAGE_SIZE is bigger than STRIPE_SIZE, try to allocate pages of
-r5pages in grow_buffres() and free these pages in shrink_buffers().
-Then, setting sh->dev[i].page and sh->dev[i].offset as the page in
-array. Without enable shared page, we just set offset as value of '0'.
-
-When reshape raid array, the new allocated stripes can reuse old stripe's
-pages. By the way, we called resize_stripes() only when grow raid array
-disks, so that don't worry about memleak for old r5pages.
+After using r5pages for each sh->dev[i], we need to set correct offset
+of that page for bi_io_vec when issue bio. The value of offset is zero
+without using r5pages.
 
 Signed-off-by: Yufen Yu <yuyufen@huawei.com>
 ---
- drivers/md/raid5.c | 142 ++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 128 insertions(+), 14 deletions(-)
+ drivers/md/raid5.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 3f96b4406902..57d140c930bd 100644
+index 57d140c930bd..9890f21e4f47 100644
 --- a/drivers/md/raid5.c
 +++ b/drivers/md/raid5.c
-@@ -448,20 +448,72 @@ static struct stripe_head *get_free_stripe(struct r5conf *conf, int hash)
- 	return sh;
- }
- 
-+/*
-+ * Try to free all pages in r5pages array.
-+ */
-+static void free_stripe_pages(struct stripe_head *sh)
-+{
-+	int i;
-+	struct page *p;
-+
-+	/* Have not allocate page pool */
-+	if (!sh->pages.page)
-+		return;
-+
-+	for (i = 0; i < sh->pages.size; i++) {
-+		p = sh->pages.page[i];
-+		if (p)
-+			put_page(p);
-+		sh->pages.page[i] = NULL;
-+	}
-+}
-+
-+/*
-+ * Allocate pages for r5pages.
-+ */
-+static int alloc_stripe_pages(struct stripe_head *sh, gfp_t gfp)
-+{
-+	int i;
-+	struct page *p;
-+
-+	for (i = 0; i < sh->pages.size; i++) {
-+		/* The page have allocated. */
-+		if (sh->pages.page[i])
-+			continue;
-+
-+		p = alloc_page(gfp);
-+		if (!p) {
-+			free_stripe_pages(sh);
-+			return -ENOMEM;
-+		}
-+		sh->pages.page[i] = p;
-+	}
-+	return 0;
-+}
-+
- static void shrink_buffers(struct stripe_head *sh)
- {
- 	struct page *p;
- 	int i;
- 	int num = sh->raid_conf->pool_size;
- 
--	for (i = 0; i < num ; i++) {
-+	if (raid5_stripe_pages_shared(sh->raid_conf))
-+		free_stripe_pages(sh); /* Free pages in r5pages */
-+
-+	for (i = 0; i < num; i++) {
- 		WARN_ON(sh->dev[i].page != sh->dev[i].orig_page);
- 		p = sh->dev[i].page;
--		if (!p)
-+
-+		/*
-+		 * If we use pages in r5pages, these pages have been
-+		 * freed in free_stripe_pages().
-+		 */
-+		if (raid5_stripe_pages_shared(sh->raid_conf) || !p)
- 			continue;
- 		sh->dev[i].page = NULL;
- 		put_page(p);
- 	}
-+
- }
- 
- static int grow_buffers(struct stripe_head *sh, gfp_t gfp)
-@@ -469,14 +521,26 @@ static int grow_buffers(struct stripe_head *sh, gfp_t gfp)
- 	int i;
- 	int num = sh->raid_conf->pool_size;
- 
-+	if (raid5_stripe_pages_shared(sh->raid_conf) &&
-+			alloc_stripe_pages(sh, gfp))
-+		return -ENOMEM;
-+
- 	for (i = 0; i < num; i++) {
- 		struct page *page;
-+		unsigned int offset;
- 
--		if (!(page = alloc_page(gfp))) {
--			return 1;
-+		if (raid5_stripe_pages_shared(sh->raid_conf)) {
-+			page = raid5_get_dev_page(sh, i);
-+			offset = raid5_get_page_offset(sh, i);
-+		} else {
-+			page = alloc_page(gfp);
-+			if (!page)
-+				return -ENOMEM;
-+			offset = 0;
- 		}
- 		sh->dev[i].page = page;
- 		sh->dev[i].orig_page = page;
-+		sh->dev[i].offset = offset;
- 	}
- 
- 	return 0;
-@@ -2123,6 +2187,9 @@ static void raid_run_ops(struct stripe_head *sh, unsigned long ops_request)
- 
- static void free_stripe(struct kmem_cache *sc, struct stripe_head *sh)
- {
-+	if (sh->pages.page)
-+		kfree(sh->pages.page);
-+
- 	if (sh->ppl_page)
- 		__free_page(sh->ppl_page);
- 	kmem_cache_free(sc, sh);
-@@ -2154,14 +2221,28 @@ static struct stripe_head *alloc_stripe(struct kmem_cache *sc, gfp_t gfp,
- 
- 		if (raid5_has_ppl(conf)) {
- 			sh->ppl_page = alloc_page(gfp);
--			if (!sh->ppl_page) {
--				free_stripe(sc, sh);
--				sh = NULL;
--			}
-+			if (!sh->ppl_page)
-+				goto fail;
-+		}
-+
-+		if (raid5_stripe_pages_shared(conf)) {
-+			int nr_page;
-+
-+			/* Each of the sh->dev[i] need one STRIPE_SIZE */
-+			nr_page = (disks * STRIPE_SIZE + PAGE_SIZE - 1) / PAGE_SIZE;
-+			sh->pages.page = kzalloc(sizeof(struct page *) * nr_page, gfp);
-+			if (!sh->pages.page)
-+				goto fail;
-+			sh->pages.size = nr_page;
- 		}
- 	}
- 	return sh;
-+
-+fail:
-+	free_stripe(sc, sh);
-+	return NULL;
- }
-+
- static int grow_one_stripe(struct r5conf *conf, gfp_t gfp)
- {
- 	struct stripe_head *sh;
-@@ -2360,10 +2441,18 @@ static int resize_stripes(struct r5conf *conf, int newsize)
- 		osh = get_free_stripe(conf, hash);
- 		unlock_device_hash_lock(conf, hash);
- 
--		for(i=0; i<conf->pool_size; i++) {
-+		if (raid5_stripe_pages_shared(conf)) {
-+			/* We reuse pages in r5pages of old stripe head */
-+			for (i = 0; i < osh->pages.size; i++)
-+				nsh->pages.page[i] = osh->pages.page[i];
-+		}
-+
-+		for (i = 0; i < conf->pool_size; i++) {
- 			nsh->dev[i].page = osh->dev[i].page;
- 			nsh->dev[i].orig_page = osh->dev[i].page;
-+			nsh->dev[i].offset = osh->dev[i].offset;
- 		}
-+
- 		nsh->hash_lock_index = hash;
- 		free_stripe(conf->slab_cache, osh);
- 		cnt++;
-@@ -2410,17 +2499,42 @@ static int resize_stripes(struct r5conf *conf, int newsize)
- 
- 	/* Step 4, return new stripes to service */
- 	while(!list_empty(&newstripes)) {
-+		struct page *p;
-+		unsigned int offset;
- 		nsh = list_entry(newstripes.next, struct stripe_head, lru);
- 		list_del_init(&nsh->lru);
- 
--		for (i=conf->raid_disks; i < newsize; i++)
--			if (nsh->dev[i].page == NULL) {
--				struct page *p = alloc_page(GFP_NOIO);
--				nsh->dev[i].page = p;
--				nsh->dev[i].orig_page = p;
-+		/*
-+		 * If we use r5pages, means, pages.size is not zero,
-+		 * allocate pages it needed for new stripe_head.
-+		 */
-+		for (i = 0; i < nsh->pages.size; i++) {
-+			if (nsh->pages.page[i] == NULL) {
-+				p = alloc_page(GFP_NOIO);
- 				if (!p)
- 					err = -ENOMEM;
-+				nsh->pages.page[i] = p;
- 			}
-+		}
-+
-+		for (i = conf->raid_disks; i < newsize; i++) {
-+			if (nsh->dev[i].page)
-+				continue;
-+
-+			if (raid5_stripe_pages_shared(conf)) {
-+				p = raid5_get_dev_page(nsh, i);
-+				offset = raid5_get_page_offset(nsh, i);
-+			} else {
-+				p = alloc_page(GFP_NOIO);
-+				if (!p)
-+					err = -ENOMEM;
-+				offset = 0;
-+			}
-+
-+			nsh->dev[i].page = p;
-+			nsh->dev[i].orig_page = p;
-+			nsh->dev[i].offset = offset;
-+		}
- 		raid5_release_stripe(nsh);
- 	}
- 	/* critical section pass, GFP_NOIO no longer needed */
+@@ -1194,7 +1194,7 @@ static void ops_run_io(struct stripe_head *sh, struct stripe_head_state *s)
+ 				sh->dev[i].vec.bv_page = sh->dev[i].page;
+ 			bi->bi_vcnt = 1;
+ 			bi->bi_io_vec[0].bv_len = STRIPE_SIZE;
+-			bi->bi_io_vec[0].bv_offset = 0;
++			bi->bi_io_vec[0].bv_offset = sh->dev[i].offset;
+ 			bi->bi_iter.bi_size = STRIPE_SIZE;
+ 			bi->bi_write_hint = sh->dev[i].write_hint;
+ 			if (!rrdev)
+@@ -1248,7 +1248,7 @@ static void ops_run_io(struct stripe_head *sh, struct stripe_head_state *s)
+ 			sh->dev[i].rvec.bv_page = sh->dev[i].page;
+ 			rbi->bi_vcnt = 1;
+ 			rbi->bi_io_vec[0].bv_len = STRIPE_SIZE;
+-			rbi->bi_io_vec[0].bv_offset = 0;
++			rbi->bi_io_vec[0].bv_offset = sh->dev[i].offset;
+ 			rbi->bi_iter.bi_size = STRIPE_SIZE;
+ 			rbi->bi_write_hint = sh->dev[i].write_hint;
+ 			sh->dev[i].write_hint = RWH_WRITE_LIFE_NOT_SET;
 -- 
 2.21.3
 
