@@ -2,140 +2,96 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E7881E4371
-	for <lists+linux-raid@lfdr.de>; Wed, 27 May 2020 15:20:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1795D1E43D8
+	for <lists+linux-raid@lfdr.de>; Wed, 27 May 2020 15:36:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730298AbgE0NUt (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 27 May 2020 09:20:49 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:45148 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730294AbgE0NUo (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 27 May 2020 09:20:44 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6F54B64494AFDE044EDF;
-        Wed, 27 May 2020 21:20:42 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Wed, 27 May 2020
- 21:20:33 +0800
-From:   Yufen Yu <yuyufen@huawei.com>
-To:     <song@kernel.org>
-CC:     <linux-raid@vger.kernel.org>, <neilb@suse.com>,
-        <guoqing.jiang@cloud.ionos.com>, <colyli@suse.de>,
-        <xni@redhat.com>, <houtao1@huawei.com>, <yuyufen@huawei.com>
-Subject: [PATCH v3 11/11] raid6test: adaptation with syndrome function
-Date:   Wed, 27 May 2020 21:19:33 +0800
-Message-ID: <20200527131933.34400-12-yuyufen@huawei.com>
-X-Mailer: git-send-email 2.21.3
-In-Reply-To: <20200527131933.34400-1-yuyufen@huawei.com>
-References: <20200527131933.34400-1-yuyufen@huawei.com>
+        id S2388243AbgE0NgL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 27 May 2020 09:36:11 -0400
+Received: from forward104p.mail.yandex.net ([77.88.28.107]:59644 "EHLO
+        forward104p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387581AbgE0NgL (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 27 May 2020 09:36:11 -0400
+Received: from forward101q.mail.yandex.net (forward101q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb98])
+        by forward104p.mail.yandex.net (Yandex) with ESMTP id 71CFC4B0288E;
+        Wed, 27 May 2020 16:36:08 +0300 (MSK)
+Received: from mxback9q.mail.yandex.net (mxback9q.mail.yandex.net [IPv6:2a02:6b8:c0e:6b:0:640:b813:52e4])
+        by forward101q.mail.yandex.net (Yandex) with ESMTP id 6FA73CF40015;
+        Wed, 27 May 2020 16:36:08 +0300 (MSK)
+Received: from vla3-4c649d03f525.qloud-c.yandex.net (vla3-4c649d03f525.qloud-c.yandex.net [2a02:6b8:c15:2584:0:640:4c64:9d03])
+        by mxback9q.mail.yandex.net (mxback/Yandex) with ESMTP id 2GGgoJog6W-a8L0L5w2;
+        Wed, 27 May 2020 16:36:08 +0300
+Received: by vla3-4c649d03f525.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id Qfpnmd02mW-a7WioInt;
+        Wed, 27 May 2020 16:36:07 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: Re: Assemblin journaled array fails
+To:     Song Liu <song@kernel.org>
+Cc:     linux-raid <linux-raid@vger.kernel.org>
+References: <f8c61278-1758-66cd-cf25-8a118cb12f58@yandex.pl>
+ <70dad446-7d38-fd10-130f-c23797165a21@yandex.pl>
+ <56b68265-ca54-05d3-95bc-ea8ee0b227f6@yandex.pl>
+ <CAPhsuW4WcqkDXOhcuG33bZtSEZ-V-KYPLm87piBH24eYEB0qVw@mail.gmail.com>
+ <b9b6b007-2177-a844-4d80-480393f30476@yandex.pl>
+ <CAPhsuW70NNozBmt1-zsM_Pk-39cLzi8bC3ZZaNwQ0-VgYsmkiA@mail.gmail.com>
+ <f9b54d87-5b81-1fa3-04d5-ea86a6c062cb@yandex.pl>
+ <CAPhsuW5ZfmCowTHNum5CSeadHqqPa5049weK6bq=m+JmnDE9Vg@mail.gmail.com>
+ <d0340d7b-6b3a-4fd3-e446-5f0967132ef6@yandex.pl>
+ <CAPhsuW4byXUvseqoj3Pw4r5nRGu=fHekdDec8FG6vj3of1wCyg@mail.gmail.com>
+ <1cb6c63f-a74c-a6f4-6875-455780f53fa1@yandex.pl>
+ <CAPhsuW6HdatOPJykqYCQs_7onWL1-AQRo05TygkXdRVSwAy_gQ@mail.gmail.com>
+From:   Michal Soltys <msoltyspl@yandex.pl>
+Message-ID: <7b2b2bca-c1b7-06c5-10c5-2b1cdda21607@yandex.pl>
+Date:   Wed, 27 May 2020 15:36:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+In-Reply-To: <CAPhsuW6HdatOPJykqYCQs_7onWL1-AQRo05TygkXdRVSwAy_gQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US-large
+Content-Transfer-Encoding: 8bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-After changing some syndrome functions to support different page offsets,
-we also need to adapt raid6test module. In this module, pages are allocated
-by the itself and their offset are '0'.
+On 5/27/20 1:37 AM, Song Liu wrote:
+> On Mon, May 25, 2020 at 9:23 AM Michal Soltys <msoltyspl@yandex.pl> wrote:
+>>
+>> On 5/19/20 1:55 AM, Song Liu wrote:
+>>>
+>>> 2. try use bcc/bpftrace to trace r5l_recovery_read_page(),
+>>> specifically, the 4th argument.
+>>> With bcc, it is something like:
+>>>
+>>>       trace.py -M 100 'r5l_recovery_read_page() "%llx", arg4'
+>>>
+>>> -M above limits the number of outputs to 100 lines. We may need to
+>>> increase the limit or
+>>> remove the constraint. If the system doesn't have bcc/bpftrace. You
+>>> can also try with
+>>> kprobe.
+>>>
+>>
+>>
+> 
+> Looks like the kernel has processed about 1.2GB of journal (9b69bb8 -
+> 98f65b8 sectors).
+> And the limit is min(1/4 disk size, 10GB).
+> 
+> I just checked the code, it should stop once it hits checksum
+> mismatch. Does it keep going
+> after half hour or so?
 
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
----
- crypto/async_tx/raid6test.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+It keeps going so far (mdadm started few hours ago):
 
-diff --git a/crypto/async_tx/raid6test.c b/crypto/async_tx/raid6test.c
-index 14e73dcd7475..66db82e5a3b1 100644
---- a/crypto/async_tx/raid6test.c
-+++ b/crypto/async_tx/raid6test.c
-@@ -18,6 +18,7 @@
- #define NDISKS 64 /* Including P and Q */
- 
- static struct page *dataptrs[NDISKS];
-+unsigned int dataoffs[NDISKS];
- static addr_conv_t addr_conv[NDISKS];
- static struct page *data[NDISKS+3];
- static struct page *spare;
-@@ -38,6 +39,7 @@ static void makedata(int disks)
- 	for (i = 0; i < disks; i++) {
- 		prandom_bytes(page_address(data[i]), PAGE_SIZE);
- 		dataptrs[i] = data[i];
-+		dataoffs[i] = 0;
- 	}
- }
- 
-@@ -52,7 +54,8 @@ static char disk_type(int d, int disks)
- }
- 
- /* Recover two failed blocks. */
--static void raid6_dual_recov(int disks, size_t bytes, int faila, int failb, struct page **ptrs)
-+static void raid6_dual_recov(int disks, size_t bytes, int faila, int failb,
-+		struct page **ptrs, unsigned int *offs)
- {
- 	struct async_submit_ctl submit;
- 	struct completion cmp;
-@@ -66,7 +69,8 @@ static void raid6_dual_recov(int disks, size_t bytes, int faila, int failb, stru
- 		if (faila == disks-2) {
- 			/* P+Q failure.  Just rebuild the syndrome. */
- 			init_async_submit(&submit, 0, NULL, NULL, NULL, addr_conv);
--			tx = async_gen_syndrome(ptrs, 0, disks, bytes, &submit);
-+			tx = async_gen_syndrome(ptrs, offs,
-+					disks, bytes, &submit);
- 		} else {
- 			struct page *blocks[NDISKS];
- 			struct page *dest;
-@@ -89,22 +93,26 @@ static void raid6_dual_recov(int disks, size_t bytes, int faila, int failb, stru
- 			tx = async_xor(dest, blocks, 0, count, bytes, &submit);
- 
- 			init_async_submit(&submit, 0, tx, NULL, NULL, addr_conv);
--			tx = async_gen_syndrome(ptrs, 0, disks, bytes, &submit);
-+			tx = async_gen_syndrome(ptrs, offs,
-+					disks, bytes, &submit);
- 		}
- 	} else {
- 		if (failb == disks-2) {
- 			/* data+P failure. */
- 			init_async_submit(&submit, 0, NULL, NULL, NULL, addr_conv);
--			tx = async_raid6_datap_recov(disks, bytes, faila, ptrs, &submit);
-+			tx = async_raid6_datap_recov(disks, bytes,
-+					faila, ptrs, offs, &submit);
- 		} else {
- 			/* data+data failure. */
- 			init_async_submit(&submit, 0, NULL, NULL, NULL, addr_conv);
--			tx = async_raid6_2data_recov(disks, bytes, faila, failb, ptrs, &submit);
-+			tx = async_raid6_2data_recov(disks, bytes,
-+					faila, failb, ptrs, offs, &submit);
- 		}
- 	}
- 	init_completion(&cmp);
- 	init_async_submit(&submit, ASYNC_TX_ACK, tx, callback, &cmp, addr_conv);
--	tx = async_syndrome_val(ptrs, 0, disks, bytes, &result, spare, &submit);
-+	tx = async_syndrome_val(ptrs, offs,
-+			disks, bytes, &result, spare, 0, &submit);
- 	async_tx_issue_pending(tx);
- 
- 	if (wait_for_completion_timeout(&cmp, msecs_to_jiffies(3000)) == 0)
-@@ -126,7 +134,7 @@ static int test_disks(int i, int j, int disks)
- 	dataptrs[i] = recovi;
- 	dataptrs[j] = recovj;
- 
--	raid6_dual_recov(disks, PAGE_SIZE, i, j, dataptrs);
-+	raid6_dual_recov(disks, PAGE_SIZE, i, j, dataptrs, dataoffs);
- 
- 	erra = memcmp(page_address(data[i]), page_address(recovi), PAGE_SIZE);
- 	errb = memcmp(page_address(data[j]), page_address(recovj), PAGE_SIZE);
-@@ -162,7 +170,7 @@ static int test(int disks, int *tests)
- 	/* Generate assumed good syndrome */
- 	init_completion(&cmp);
- 	init_async_submit(&submit, ASYNC_TX_ACK, NULL, callback, &cmp, addr_conv);
--	tx = async_gen_syndrome(dataptrs, 0, disks, PAGE_SIZE, &submit);
-+	tx = async_gen_syndrome(dataptrs, dataoffs, disks, PAGE_SIZE, &submit);
- 	async_tx_issue_pending(tx);
- 
- 	if (wait_for_completion_timeout(&cmp, msecs_to_jiffies(3000)) == 0) {
--- 
-2.21.3
+xs22:/home/msl☠ head -n 4 trace.out
+TIME     PID     TID     COMM            FUNC             -
+12:58:21 40739   40739   mdadm           r5l_recovery_read_page 98f65b8
+12:58:21 40739   40739   mdadm           r5l_recovery_read_page 98f65c0
+12:58:21 40739   40739   mdadm           r5l_recovery_read_page 98f65c8
+xs22:/home/msl☠ tail -n 4 trace.out
+15:34:50 40739   40739   mdadm           r5l_recovery_read_page bc04e88
+15:34:50 40739   40739   mdadm           r5l_recovery_read_page bc04e90
+15:34:50 40739   40739   mdadm           r5l_recovery_read_page bc04e98
 
