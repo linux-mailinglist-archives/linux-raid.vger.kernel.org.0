@@ -2,96 +2,123 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1795D1E43D8
-	for <lists+linux-raid@lfdr.de>; Wed, 27 May 2020 15:36:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E73301E44AA
+	for <lists+linux-raid@lfdr.de>; Wed, 27 May 2020 15:55:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388243AbgE0NgL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 27 May 2020 09:36:11 -0400
-Received: from forward104p.mail.yandex.net ([77.88.28.107]:59644 "EHLO
-        forward104p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387581AbgE0NgL (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 27 May 2020 09:36:11 -0400
-Received: from forward101q.mail.yandex.net (forward101q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb98])
-        by forward104p.mail.yandex.net (Yandex) with ESMTP id 71CFC4B0288E;
-        Wed, 27 May 2020 16:36:08 +0300 (MSK)
-Received: from mxback9q.mail.yandex.net (mxback9q.mail.yandex.net [IPv6:2a02:6b8:c0e:6b:0:640:b813:52e4])
-        by forward101q.mail.yandex.net (Yandex) with ESMTP id 6FA73CF40015;
-        Wed, 27 May 2020 16:36:08 +0300 (MSK)
-Received: from vla3-4c649d03f525.qloud-c.yandex.net (vla3-4c649d03f525.qloud-c.yandex.net [2a02:6b8:c15:2584:0:640:4c64:9d03])
-        by mxback9q.mail.yandex.net (mxback/Yandex) with ESMTP id 2GGgoJog6W-a8L0L5w2;
-        Wed, 27 May 2020 16:36:08 +0300
-Received: by vla3-4c649d03f525.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id Qfpnmd02mW-a7WioInt;
-        Wed, 27 May 2020 16:36:07 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: Assemblin journaled array fails
-To:     Song Liu <song@kernel.org>
-Cc:     linux-raid <linux-raid@vger.kernel.org>
-References: <f8c61278-1758-66cd-cf25-8a118cb12f58@yandex.pl>
- <70dad446-7d38-fd10-130f-c23797165a21@yandex.pl>
- <56b68265-ca54-05d3-95bc-ea8ee0b227f6@yandex.pl>
- <CAPhsuW4WcqkDXOhcuG33bZtSEZ-V-KYPLm87piBH24eYEB0qVw@mail.gmail.com>
- <b9b6b007-2177-a844-4d80-480393f30476@yandex.pl>
- <CAPhsuW70NNozBmt1-zsM_Pk-39cLzi8bC3ZZaNwQ0-VgYsmkiA@mail.gmail.com>
- <f9b54d87-5b81-1fa3-04d5-ea86a6c062cb@yandex.pl>
- <CAPhsuW5ZfmCowTHNum5CSeadHqqPa5049weK6bq=m+JmnDE9Vg@mail.gmail.com>
- <d0340d7b-6b3a-4fd3-e446-5f0967132ef6@yandex.pl>
- <CAPhsuW4byXUvseqoj3Pw4r5nRGu=fHekdDec8FG6vj3of1wCyg@mail.gmail.com>
- <1cb6c63f-a74c-a6f4-6875-455780f53fa1@yandex.pl>
- <CAPhsuW6HdatOPJykqYCQs_7onWL1-AQRo05TygkXdRVSwAy_gQ@mail.gmail.com>
-From:   Michal Soltys <msoltyspl@yandex.pl>
-Message-ID: <7b2b2bca-c1b7-06c5-10c5-2b1cdda21607@yandex.pl>
-Date:   Wed, 27 May 2020 15:36:06 +0200
+        id S2388986AbgE0NzB (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 27 May 2020 09:55:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39004 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388875AbgE0NzA (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 27 May 2020 09:55:00 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 941AFC08C5C1
+        for <linux-raid@vger.kernel.org>; Wed, 27 May 2020 06:55:00 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id x20so28168776ejb.11
+        for <linux-raid@vger.kernel.org>; Wed, 27 May 2020 06:55:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=mWKxd06OdtRhVL4MZgKeM2W9PRhu4phdDdKOFwiSqGk=;
+        b=f0BObvMvX6LmASK7Asr8vsVbjV2iq+jqOnbEhdIVhsBXASv6JWgoZJL4h3LL4j8o5R
+         +NeNa2ngwRd07Ln8LaeqpWTI79N/iaxFgaqxyFE5FrGJtPMuiIqtcjJ96NFCJokFYt9f
+         1sFWXHhnpBrxlAWzMtpahczmSr4hMwfKUqlIriNCEeuKq5XjORGzGlh5afeMhfPKQG1L
+         6ouZVzx5nDeq9ZRD27ejEo12Gz6PDGKknifO6fKEVQqsxj0cwO95n4nKsX5C9T8Hnh8+
+         mXbCMFLylRcdMujXZctpZFllagwxxNWB9u0EZALMWDdYp0iBlGKhZBlWxtUIuqxcpi2x
+         GD5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=mWKxd06OdtRhVL4MZgKeM2W9PRhu4phdDdKOFwiSqGk=;
+        b=bs37tyrTlmo2vAEEIcaXDWb3QzQAmYsaCaRiXMzYSGyF6sH+G7SyALO2rRBKsU5Y76
+         XjJVt+BxRMmm3yjkCs2Mue8BnMeDTbzxaA0AWTsFLjoZZ2uSu5i7dznhAKh/sAfB5Eze
+         a0p4OLcrHv0g6J/YGrTR07OO1S5k5gin/YVSlAfftlVc0Otp4tAfhTvhq8EYU6aWV2Ca
+         sAaYOCBP3lfzHpmvfkiis1chE+bfmGp2O5EQDrXm+Lx2ilQYr5W95ojDo62BABg9MSzu
+         IqjYDtCbkm10M8JKeJBXoLvZR1tbaKzGK+8i7ISOZE6I7EE/JOfqSsKBWgRkosozdGHK
+         QLhQ==
+X-Gm-Message-State: AOAM530G4tBhZu+c6t9xa3ih0oxTDkzQQJ+oCmarFhRZg2gAToNZBAfB
+        CxEe8dywwkRkM/KedC8X18Bsew==
+X-Google-Smtp-Source: ABdhPJwYYLG3iki+HKopAHvVTusfiVFSFyeE72JcNo17jvFlf7wfI2YFUA+B/SxKjS2bPn+AcaY1Tw==
+X-Received: by 2002:a17:906:b859:: with SMTP id ga25mr6578064ejb.523.1590587699196;
+        Wed, 27 May 2020 06:54:59 -0700 (PDT)
+Received: from ?IPv6:2001:16b8:48fc:5800:e80e:f5df:f780:7d57? ([2001:16b8:48fc:5800:e80e:f5df:f780:7d57])
+        by smtp.gmail.com with ESMTPSA id rs25sm2819719ejb.29.2020.05.27.06.54.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 May 2020 06:54:58 -0700 (PDT)
+Subject: Re: [PATCH v3 01/11] md/raid5: add CONFIG_MD_RAID456_STRIPE_SHIFT to
+ set STRIPE_SIZE
+To:     Yufen Yu <yuyufen@huawei.com>, song@kernel.org
+Cc:     linux-raid@vger.kernel.org, neilb@suse.com, colyli@suse.de,
+        xni@redhat.com, houtao1@huawei.com
+References: <20200527131933.34400-1-yuyufen@huawei.com>
+ <20200527131933.34400-2-yuyufen@huawei.com>
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Message-ID: <5fe381f9-e3ce-c2f7-dfac-9f852316b38f@cloud.ionos.com>
+Date:   Wed, 27 May 2020 15:54:57 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAPhsuW6HdatOPJykqYCQs_7onWL1-AQRo05TygkXdRVSwAy_gQ@mail.gmail.com>
+In-Reply-To: <20200527131933.34400-2-yuyufen@huawei.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US-large
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 5/27/20 1:37 AM, Song Liu wrote:
-> On Mon, May 25, 2020 at 9:23 AM Michal Soltys <msoltyspl@yandex.pl> wrote:
->>
->> On 5/19/20 1:55 AM, Song Liu wrote:
->>>
->>> 2. try use bcc/bpftrace to trace r5l_recovery_read_page(),
->>> specifically, the 4th argument.
->>> With bcc, it is something like:
->>>
->>>       trace.py -M 100 'r5l_recovery_read_page() "%llx", arg4'
->>>
->>> -M above limits the number of outputs to 100 lines. We may need to
->>> increase the limit or
->>> remove the constraint. If the system doesn't have bcc/bpftrace. You
->>> can also try with
->>> kprobe.
->>>
->>
->>
-> 
-> Looks like the kernel has processed about 1.2GB of journal (9b69bb8 -
-> 98f65b8 sectors).
-> And the limit is min(1/4 disk size, 10GB).
-> 
-> I just checked the code, it should stop once it hits checksum
-> mismatch. Does it keep going
-> after half hour or so?
+Hi,
 
-It keeps going so far (mdadm started few hours ago):
+On 5/27/20 3:19 PM, Yufen Yu wrote:
+>   +config MD_RAID456_STRIPE_SHIFT
+> +	int "RAID4/RAID5/RAID6 stripe size shift"
+> +	default "1"
+> +	depends on MD_RAID456
+> +	help
+> +	  When set the value as 'N', stripe size will be set as 'N << 9',
+> +	  which is a multiple of 4KB.
 
-xs22:/home/msl☠ head -n 4 trace.out
-TIME     PID     TID     COMM            FUNC             -
-12:58:21 40739   40739   mdadm           r5l_recovery_read_page 98f65b8
-12:58:21 40739   40739   mdadm           r5l_recovery_read_page 98f65c0
-12:58:21 40739   40739   mdadm           r5l_recovery_read_page 98f65c8
-xs22:/home/msl☠ tail -n 4 trace.out
-15:34:50 40739   40739   mdadm           r5l_recovery_read_page bc04e88
-15:34:50 40739   40739   mdadm           r5l_recovery_read_page bc04e90
-15:34:50 40739   40739   mdadm           r5l_recovery_read_page bc04e98
+If 'N  << 9', then seems you are convert it to sector, do you actually 
+mean 'N << 12'?
 
+> +
+> +	  The default value is 1, that means the default stripe size is
+> +	  4096(1 << 9). Just setting as a bigger value when PAGE_SIZE is
+> +	  bigger than 4096. In that case, you can set it as 2(8KB),
+> +	  4(16K), 16(64K).
+
+So with the above description, the algorithm should be 2 << 12 = 8KB and 
+so on.
+
+> +
+> +	  When you try to set a big value, likely 16 on arm64 with 64KB
+> +	  PAGE_SIZE, that means, you know size of each io that issued to
+> +	  raid device is more than 4096. Otherwise just use default value.
+> +
+> +	  Normally, using default value can get better performance.
+> +	  Only change this value if you know what you are doing.
+> +
+> +
+>   config MD_MULTIPATH
+>   	tristate "Multipath I/O support"
+>   	depends on BLK_DEV_MD
+> diff --git a/drivers/md/raid5.h b/drivers/md/raid5.h
+> index f90e0704bed9..b25f107dafc7 100644
+> --- a/drivers/md/raid5.h
+> +++ b/drivers/md/raid5.h
+> @@ -472,7 +472,9 @@ struct disk_info {
+>    */
+>   
+>   #define NR_STRIPES		256
+> -#define STRIPE_SIZE		PAGE_SIZE
+> +#define CONFIG_STRIPE_SIZE	(CONFIG_MD_RAID456_STRIPE_SHIFT << 9)
+> +#define STRIPE_SIZE		\
+> +	(CONFIG_STRIPE_SIZE > PAGE_SIZE ? PAGE_SIZE : CONFIG_STRIPE_SIZE)
+
+If I am not misunderstand, you need to s/9/12/ above.
+
+Thanks,
+Guoqing
