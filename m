@@ -2,76 +2,146 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A6DA1E63F6
-	for <lists+linux-raid@lfdr.de>; Thu, 28 May 2020 16:29:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A5E51E64A3
+	for <lists+linux-raid@lfdr.de>; Thu, 28 May 2020 16:52:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391201AbgE1O26 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 28 May 2020 10:28:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37040 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391089AbgE1O24 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 28 May 2020 10:28:56 -0400
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD577208DB
-        for <linux-raid@vger.kernel.org>; Thu, 28 May 2020 14:28:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590676136;
-        bh=h/H97WbfRYlMB2gO6hhzDqDpdzn2XQaAjUBta/g3Mg0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=lcmqESSzhpaSlgTCsPbySEk7OA47B5Woikm8SB/n/NXN2n9WGrzOd19OLv5ijQ/2q
-         r1tXp62wL14kCwN0jVBCQi7+27vgiDlnEW6q0GWmpPWj6UR/IwKp3cwrE8S3zyDB1j
-         g2pJEvn5zliGjReTl29ze7aMQV4h/jQGnG2j6msY=
-Received: by mail-lj1-f176.google.com with SMTP id m18so33613957ljo.5
-        for <linux-raid@vger.kernel.org>; Thu, 28 May 2020 07:28:55 -0700 (PDT)
-X-Gm-Message-State: AOAM531k3sYUuANeI2PtJPyLdpcxt9LrccwLwXqx9f+/EaarUVaqrRWM
-        ZJXzjbFWvdqWzKDyIyaqoiHwlilJV0sc8RBpJnE=
-X-Google-Smtp-Source: ABdhPJyAWg9/ewUzuKNsME5FZ0f3wxtfcwXZUyGR/7JWwcWuammYcLLylEgxdXYMjiXKePLD74KGeR0KMULhwqaFi6I=
-X-Received: by 2002:a05:651c:1130:: with SMTP id e16mr1720974ljo.10.1590676133970;
- Thu, 28 May 2020 07:28:53 -0700 (PDT)
+        id S2403797AbgE1Owd (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 28 May 2020 10:52:33 -0400
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:60127 "EHLO mx1.molgen.mpg.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2391329AbgE1Owc (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 28 May 2020 10:52:32 -0400
+Received: from hopp.molgen.mpg.de (hopp.molgen.mpg.de [141.14.25.186])
+        by mx.molgen.mpg.de (Postfix) with ESMTP id 12FD32002EE32;
+        Thu, 28 May 2020 16:52:29 +0200 (CEST)
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+To:     Jes Sorensen <jes.sorensen@gmail.com>
+Cc:     Paul Menzel <pmenzel@molgen.mpg.de>, linux-raid@vger.kernel.org
+Subject: [PATCH v2] Use more secure HTTPS URLs
+Date:   Thu, 28 May 2020 16:52:24 +0200
+Message-Id: <20200528145224.19062-1-pmenzel@molgen.mpg.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200527131933.34400-1-yuyufen@huawei.com> <CAPhsuW7hVgM7yiaBg0Pkaci4NStEdyduCp1+yMf9aguKfm4jKQ@mail.gmail.com>
-In-Reply-To: <CAPhsuW7hVgM7yiaBg0Pkaci4NStEdyduCp1+yMf9aguKfm4jKQ@mail.gmail.com>
-From:   Song Liu <song@kernel.org>
-Date:   Thu, 28 May 2020 07:28:43 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW7DOdPTWX5MNRJULvojFrCQF9_zNH+_ZwkQs4Qug9CpdQ@mail.gmail.com>
-Message-ID: <CAPhsuW7DOdPTWX5MNRJULvojFrCQF9_zNH+_ZwkQs4Qug9CpdQ@mail.gmail.com>
-Subject: Re: [PATCH v3 00/11] md/raid5: set STRIPE_SIZE as a configurable value
-To:     Yufen Yu <yuyufen@huawei.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>,
-        NeilBrown <neilb@suse.com>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Coly Li <colyli@suse.de>, Xiao Ni <xni@redhat.com>,
-        Hou Tao <houtao1@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu, May 28, 2020 at 7:10 AM Song Liu <song@kernel.org> wrote:
->
-> On Wed, May 27, 2020 at 6:20 AM Yufen Yu <yuyufen@huawei.com> wrote:
-> >
-> > Hi, all
-> >
-> >  For now, STRIPE_SIZE is equal to the value of PAGE_SIZE. That means, RAID5 will
-> >  issus echo bio to disk at least 64KB when PAGE_SIZE is 64KB in arm64. However,
-> >  filesystem usually issue bio in the unit of 4KB. Then, RAID5 will waste resource
-> >  of disk bandwidth.
-> >
->
-> Thanks for the patch set.
->
-> Since this is a big change, I am planning to process this set after
-> upcoming merge window.
-> Please let me know if you need it urgently.
+All URLs in the source are available over HTTPS, so convert all URLs to
+HTTPS with the command below.
 
-I haven't thought about this in detail yet: how about compatibility?
-Say we create an
-array with STRIPE_SIZE of 4kB, does it work well after we upgrade kernel to have
-STRIPE_SIZE of 8kB?
+    git grep -l 'http://' | xargs sed -i 's,http://,https://,g'
 
-Thanks,
-Song
+Revert the changes to announcement files `ANNOUNCE-*` as requested by
+the maintainer.
+
+Cc: linux-raid@vger.kernel.org
+Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+---
+ external-reshape-design.txt      | 2 +-
+ mdadm.8.in                       | 6 +++---
+ mdadm.spec                       | 4 ++--
+ raid6check.8                     | 2 +-
+ restripe.c                       | 2 +-
+ udev-md-raid-safe-timeouts.rules | 2 +-
+ 6 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/external-reshape-design.txt b/external-reshape-design.txt
+index 10c57cc..e4cf4e1 100644
+--- a/external-reshape-design.txt
++++ b/external-reshape-design.txt
+@@ -277,4 +277,4 @@ sync_action
+ 
+ ...
+ 
+-[1]: Linux kernel design patterns - part 3, Neil Brown http://lwn.net/Articles/336262/
++[1]: Linux kernel design patterns - part 3, Neil Brown https://lwn.net/Articles/336262/
+diff --git a/mdadm.8.in b/mdadm.8.in
+index 9e7cb96..7f32762 100644
+--- a/mdadm.8.in
++++ b/mdadm.8.in
+@@ -367,7 +367,7 @@ Use the Intel(R) Matrix Storage Manager metadata format.  This creates a
+ which is managed in a similar manner to DDF, and is supported by an
+ option-rom on some platforms:
+ .IP
+-.B http://www.intel.com/design/chipsets/matrixstorage_sb.htm
++.B https://www.intel.com/design/chipsets/matrixstorage_sb.htm
+ .PP
+ .RE
+ 
+@@ -3407,7 +3407,7 @@ was previously known as
+ For further information on mdadm usage, MD and the various levels of
+ RAID, see:
+ .IP
+-.B http://raid.wiki.kernel.org/
++.B https://raid.wiki.kernel.org/
+ .PP
+ (based upon Jakob \(/Ostergaard's Software\-RAID.HOWTO)
+ .PP
+@@ -3415,7 +3415,7 @@ The latest version of
+ .I mdadm
+ should always be available from
+ .IP
+-.B http://www.kernel.org/pub/linux/utils/raid/mdadm/
++.B https://www.kernel.org/pub/linux/utils/raid/mdadm/
+ .PP
+ Related man pages:
+ .PP
+diff --git a/mdadm.spec b/mdadm.spec
+index 1c66894..506ea33 100644
+--- a/mdadm.spec
++++ b/mdadm.spec
+@@ -2,8 +2,8 @@ Summary:     mdadm is used for controlling Linux md devices (aka RAID arrays)
+ Name:        mdadm
+ Version:     4.1
+ Release:     1
+-Source:      http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version}.tar.gz
+-URL:         http://neil.brown.name/blog/mdadm
++Source:      https://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version}.tar.gz
++URL:         https://neil.brown.name/blog/mdadm
+ License:     GPL
+ Group:       Utilities/System
+ BuildRoot:   %{_tmppath}/%{name}-root
+diff --git a/raid6check.8 b/raid6check.8
+index 5003343..8999ca8 100644
+--- a/raid6check.8
++++ b/raid6check.8
+@@ -86,7 +86,7 @@ The latest version of
+ .I raid6check
+ should always be available from
+ .IP
+-.B http://www.kernel.org/pub/linux/utils/raid/mdadm/
++.B https://www.kernel.org/pub/linux/utils/raid/mdadm/
+ .PP
+ Related man pages:
+ .PP
+diff --git a/restripe.c b/restripe.c
+index 31b07e8..2aecdb8 100644
+--- a/restripe.c
++++ b/restripe.c
+@@ -333,7 +333,7 @@ void make_tables(void)
+ 
+ 	/* Compute log and inverse log */
+ 	/* Modified code from:
+-	 *    http://web.eecs.utk.edu/~plank/plank/papers/CS-96-332.html
++	 *    https://web.eecs.utk.edu/~plank/plank/papers/CS-96-332.html
+ 	 */
+ 	b = 1;
+ 	raid6_gflog[0] = 0;
+diff --git a/udev-md-raid-safe-timeouts.rules b/udev-md-raid-safe-timeouts.rules
+index 13c23d8..12bdcaa 100644
+--- a/udev-md-raid-safe-timeouts.rules
++++ b/udev-md-raid-safe-timeouts.rules
+@@ -13,7 +13,7 @@
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with mdraid-safe-timeouts.  If not, see
+-# <http://www.gnu.org/licenses/>.
++# <https://www.gnu.org/licenses/>.
+ 
+ # This file causes block devices with Linux RAID (mdadm) signatures to
+ # attempt to set safe timeouts for the drives involved
+-- 
+2.26.2
+
