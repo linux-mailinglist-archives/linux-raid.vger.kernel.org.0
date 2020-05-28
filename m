@@ -2,43 +2,42 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C98A61E63D2
-	for <lists+linux-raid@lfdr.de>; Thu, 28 May 2020 16:24:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A6DA1E63F6
+	for <lists+linux-raid@lfdr.de>; Thu, 28 May 2020 16:29:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391161AbgE1OXv (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 28 May 2020 10:23:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33944 "EHLO mail.kernel.org"
+        id S2391201AbgE1O26 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 28 May 2020 10:28:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391160AbgE1OXs (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 28 May 2020 10:23:48 -0400
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+        id S2391089AbgE1O24 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 28 May 2020 10:28:56 -0400
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAA92208DB
-        for <linux-raid@vger.kernel.org>; Thu, 28 May 2020 14:23:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD577208DB
+        for <linux-raid@vger.kernel.org>; Thu, 28 May 2020 14:28:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590675828;
-        bh=PgPvUQb1lPZjMZACA88M6QKDNE9lAAgHoIkur1p6qL0=;
+        s=default; t=1590676136;
+        bh=h/H97WbfRYlMB2gO6hhzDqDpdzn2XQaAjUBta/g3Mg0=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=E/+DPXOQ2+ECmU0DojyX7gTz7mROTHjdo6a9+Rqtz7pl+Gomr3pUCc2RDAIDdCdZl
-         E6DansdHw1thFqxOngF9v+0eWL7yf/qLqYVHHZRzfHrh9w/xmDiKxJNSTX6FjCoUdL
-         F3BmzjZeHLMAqgi6ptLZEYf6wtQPVV2bwbte3wvc=
-Received: by mail-lj1-f169.google.com with SMTP id v16so33650737ljc.8
-        for <linux-raid@vger.kernel.org>; Thu, 28 May 2020 07:23:47 -0700 (PDT)
-X-Gm-Message-State: AOAM532vSHBvjizUPBWQkp5BtIzWOOnfLC6HzQWjkUqVEJcw5SLmnDh/
-        FjWp+ej/VM6qHKIWoF5pB5JNSx+xHqdFjeRnOPA=
-X-Google-Smtp-Source: ABdhPJwI6B1x6ynYJgWg/EnMJn9/jx85bweMPbUmWgMyGxc/1cK4+ld98FuoTo4G8v4bqLO/pZcytLqt3g0Ohz+hX18=
-X-Received: by 2002:a2e:9093:: with SMTP id l19mr1691552ljg.27.1590675826113;
- Thu, 28 May 2020 07:23:46 -0700 (PDT)
+        b=lcmqESSzhpaSlgTCsPbySEk7OA47B5Woikm8SB/n/NXN2n9WGrzOd19OLv5ijQ/2q
+         r1tXp62wL14kCwN0jVBCQi7+27vgiDlnEW6q0GWmpPWj6UR/IwKp3cwrE8S3zyDB1j
+         g2pJEvn5zliGjReTl29ze7aMQV4h/jQGnG2j6msY=
+Received: by mail-lj1-f176.google.com with SMTP id m18so33613957ljo.5
+        for <linux-raid@vger.kernel.org>; Thu, 28 May 2020 07:28:55 -0700 (PDT)
+X-Gm-Message-State: AOAM531k3sYUuANeI2PtJPyLdpcxt9LrccwLwXqx9f+/EaarUVaqrRWM
+        ZJXzjbFWvdqWzKDyIyaqoiHwlilJV0sc8RBpJnE=
+X-Google-Smtp-Source: ABdhPJyAWg9/ewUzuKNsME5FZ0f3wxtfcwXZUyGR/7JWwcWuammYcLLylEgxdXYMjiXKePLD74KGeR0KMULhwqaFi6I=
+X-Received: by 2002:a05:651c:1130:: with SMTP id e16mr1720974ljo.10.1590676133970;
+ Thu, 28 May 2020 07:28:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200527131933.34400-1-yuyufen@huawei.com> <20200527131933.34400-2-yuyufen@huawei.com>
-In-Reply-To: <20200527131933.34400-2-yuyufen@huawei.com>
+References: <20200527131933.34400-1-yuyufen@huawei.com> <CAPhsuW7hVgM7yiaBg0Pkaci4NStEdyduCp1+yMf9aguKfm4jKQ@mail.gmail.com>
+In-Reply-To: <CAPhsuW7hVgM7yiaBg0Pkaci4NStEdyduCp1+yMf9aguKfm4jKQ@mail.gmail.com>
 From:   Song Liu <song@kernel.org>
-Date:   Thu, 28 May 2020 07:23:35 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW7JLcWDEwEcN-6c+NHhMD1qrPtPNPa-k8y9SX3bVX_FzA@mail.gmail.com>
-Message-ID: <CAPhsuW7JLcWDEwEcN-6c+NHhMD1qrPtPNPa-k8y9SX3bVX_FzA@mail.gmail.com>
-Subject: Re: [PATCH v3 01/11] md/raid5: add CONFIG_MD_RAID456_STRIPE_SHIFT to
- set STRIPE_SIZE
+Date:   Thu, 28 May 2020 07:28:43 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW7DOdPTWX5MNRJULvojFrCQF9_zNH+_ZwkQs4Qug9CpdQ@mail.gmail.com>
+Message-ID: <CAPhsuW7DOdPTWX5MNRJULvojFrCQF9_zNH+_ZwkQs4Qug9CpdQ@mail.gmail.com>
+Subject: Re: [PATCH v3 00/11] md/raid5: set STRIPE_SIZE as a configurable value
 To:     Yufen Yu <yuyufen@huawei.com>
 Cc:     linux-raid <linux-raid@vger.kernel.org>,
         NeilBrown <neilb@suse.com>,
@@ -51,24 +50,28 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Wed, May 27, 2020 at 6:20 AM Yufen Yu <yuyufen@huawei.com> wrote:
+On Thu, May 28, 2020 at 7:10 AM Song Liu <song@kernel.org> wrote:
 >
-[...]
-> diff --git a/drivers/md/raid5.h b/drivers/md/raid5.h
-> index f90e0704bed9..b25f107dafc7 100644
-> --- a/drivers/md/raid5.h
-> +++ b/drivers/md/raid5.h
-> @@ -472,7 +472,9 @@ struct disk_info {
->   */
+> On Wed, May 27, 2020 at 6:20 AM Yufen Yu <yuyufen@huawei.com> wrote:
+> >
+> > Hi, all
+> >
+> >  For now, STRIPE_SIZE is equal to the value of PAGE_SIZE. That means, RAID5 will
+> >  issus echo bio to disk at least 64KB when PAGE_SIZE is 64KB in arm64. However,
+> >  filesystem usually issue bio in the unit of 4KB. Then, RAID5 will waste resource
+> >  of disk bandwidth.
+> >
 >
->  #define NR_STRIPES             256
-> -#define STRIPE_SIZE            PAGE_SIZE
-> +#define CONFIG_STRIPE_SIZE     (CONFIG_MD_RAID456_STRIPE_SHIFT << 9)
-> +#define STRIPE_SIZE            \
-> +       (CONFIG_STRIPE_SIZE > PAGE_SIZE ? PAGE_SIZE : CONFIG_STRIPE_SIZE)
->  #define STRIPE_SHIFT           (PAGE_SHIFT - 9)
+> Thanks for the patch set.
+>
+> Since this is a big change, I am planning to process this set after
+> upcoming merge window.
+> Please let me know if you need it urgently.
 
-I think we also need to update STRIPE_SHIFT.
+I haven't thought about this in detail yet: how about compatibility?
+Say we create an
+array with STRIPE_SIZE of 4kB, does it work well after we upgrade kernel to have
+STRIPE_SIZE of 8kB?
 
 Thanks,
 Song
