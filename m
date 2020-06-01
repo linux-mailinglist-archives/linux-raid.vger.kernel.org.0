@@ -2,82 +2,74 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6922A1E9BED
-	for <lists+linux-raid@lfdr.de>; Mon,  1 Jun 2020 05:04:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16EB51EA40C
+	for <lists+linux-raid@lfdr.de>; Mon,  1 Jun 2020 14:37:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgFADEM (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 31 May 2020 23:04:12 -0400
-Received: from hs-162.6.buanalintas.co.id ([223.165.6.162]:38560 "EHLO
-        mx.bestprofit-futures.co.id" rhost-flags-OK-FAIL-OK-OK)
-        by vger.kernel.org with ESMTP id S1726901AbgFADEM (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Sun, 31 May 2020 23:04:12 -0400
-X-Greylist: delayed 7668 seconds by postgrey-1.27 at vger.kernel.org; Sun, 31 May 2020 23:04:11 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mx.bestprofit-futures.co.id (Postfix) with ESMTP id 6DF7F524C23;
-        Mon,  1 Jun 2020 07:30:21 +0700 (WIB)
-Received: from mx.bestprofit-futures.co.id ([127.0.0.1])
-        by localhost (mx.bestprofit-futures.co.id [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id p1pwSrM3eSLq; Mon,  1 Jun 2020 07:30:21 +0700 (WIB)
-Received: from localhost (localhost [127.0.0.1])
-        by mx.bestprofit-futures.co.id (Postfix) with ESMTP id E39E75239BD;
-        Mon,  1 Jun 2020 07:30:20 +0700 (WIB)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mx.bestprofit-futures.co.id E39E75239BD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bestprofit-futures.co.id; s=4D3D1390-5211-11EA-8C0C-8C41A122B001;
-        t=1590971421; bh=zLTonXbKn6LYrnOZVETw9C2bepTvRzI70GQOlIiRCC0=;
-        h=MIME-Version:To:From:Date:Message-Id;
-        b=xNm97gQwaKfDB/9S2XvlpVuVDXjnI+xoGBW5VhFpzk1TSaSPT6tvgyLHDGPCy34Pw
-         0eJcxYqkQdhoiOs2ZUw3ZD2+kcxztYKdkvc/cUkX3fYQsjkwboVtMjSjCogSs4+8rK
-         WeBohp1tm8PwABGdLE67KI2j+ZFgLWumIjmUJnrkdWa15jqn75n4JpDKgtrDD286zD
-         2KofNTFIvMgPRu64LHowGdYEF1KGXq6zsYMNX74OtQ4bRBjYiBs02cm2Qbm34/9rlR
-         Gi9L3k/IvGw2V4SdyQX9hridcOtU+LahL2ytskmuTP2wuwtr2H20w1tTR0qxi1wipD
-         zMUcZyxUOuoxA==
-X-Virus-Scanned: amavisd-new at mx.bestprofit-futures.co.id
-Received: from mx.bestprofit-futures.co.id ([127.0.0.1])
-        by localhost (mx.bestprofit-futures.co.id [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id Hvp-dzBHjfjI; Mon,  1 Jun 2020 07:30:20 +0700 (WIB)
-Received: from [10.81.249.6] (unknown [105.8.6.41])
-        by mx.bestprofit-futures.co.id (Postfix) with ESMTPSA id 54A32524C01;
-        Mon,  1 Jun 2020 07:30:12 +0700 (WIB)
-Content-Type: text/plain; charset="utf-8"
+        id S1728153AbgFAMhp (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 1 Jun 2020 08:37:45 -0400
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:34210 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727808AbgFAMhQ (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 1 Jun 2020 08:37:16 -0400
+Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 8F31B2E1545;
+        Mon,  1 Jun 2020 15:37:08 +0300 (MSK)
+Received: from myt4-18a966dbd9be.qloud-c.yandex.net (myt4-18a966dbd9be.qloud-c.yandex.net [2a02:6b8:c00:12ad:0:640:18a9:66db])
+        by mxbackcorp1j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id Arbn6tmlSd-b7e8sZjq;
+        Mon, 01 Jun 2020 15:37:08 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1591015028; bh=G1tdKoEj5u0IeOvuwPmSyZ1Bkd4kxnX5aPNmkUwjLXg=;
+        h=Message-ID:Date:To:From:Subject:Cc;
+        b=GNme8U1iVUNzLFv3VQ/8pUjwIRyMDa68Y4N5sYHj0hsv80d2qzR3ZNhZEXmve/PZV
+         Tdb8d84s142zV2R1Vt4L7wNqWrkbgoTkN0EGF5j2D55QHKWFLfh48UXnxszQt38UIf
+         39NVnFdD9itz94WfJwLcNaGNaOlANazfMCXL1ZtY=
+Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b080:6420::1:8])
+        by myt4-18a966dbd9be.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id Ol7mDqdGP7-b1WG8Prs;
+        Mon, 01 Jun 2020 15:37:01 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: [PATCH RFC 0/3] block: allow REQ_NOWAIT to some bio-based/stacked
+ devices
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        dm-devel@redhat.com, linux-raid@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     Christoph Hellwig <hch@infradead.org>
+Date:   Mon, 01 Jun 2020 15:37:01 +0300
+Message-ID: <159101473169.180989.12175693728191972447.stgit@buzz>
+User-Agent: StGit/0.22-39-gd257
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: =?utf-8?q?Wohlt=C3=A4tigkeitsspende_von_2=2E000=2E000_Millionen_Euro?=
-To:     Recipients <yoshi@bestprofit-futures.co.id>
-From:   ''Tayeb Souami'' <yoshi@bestprofit-futures.co.id>
-Date:   Mon, 01 Jun 2020 02:30:05 +0200
-Reply-To: Tayebsouam.spende@gmail.com
-Message-Id: <20200601003013.54A32524C01@mx.bestprofit-futures.co.id>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Lieber Freund,
+Here is pretty straight forward attempt of handling REQ_NOWAIT for
+bio-based and stacked devices.
 
-Ich bin Herr Tayeb Souami, New Jersey, Vereinigte Staaten von Amerika, der =
-Mega-Gewinner von $ 315million In Mega Millions Jackpot, spende ich an 5 zu=
-f=C3=A4llige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Ma=
-il nach einem Spinball ausgew=C3=A4hlt.Ich habe den gr=C3=B6=C3=9Ften Teil =
-meines Verm=C3=B6gens auf eine Reihe von Wohlt=C3=A4tigkeitsorganisationen =
-und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die =
-Summe von =E2=82=AC 2.000.000,00 an Sie als eine der ausgew=C3=A4hlten 5 zu=
- spenden, um meine Gewinne zu =C3=BCberpr=C3=BCfen, sehen Sie bitte meine Y=
-ou Tube Seite unten.
+They are marked with flag queue->limits.nowait_requests which tells that
+queue method make_request() handles REQ_NOWAIT or doesn't delay requests,
+and all backend devices do the same.
 
-UHR MICH HIER: https://www.youtube.com/watch?v=3DZ6ui8ZDQ6Ks
+As a example second/third patches add support into md-raid0 and dm-linear.
 
+---
 
-Das ist dein Spendencode: [TS530342018]
+Konstantin Khlebnikov (3):
+      block: add flag 'nowait_requests' into queue limits
+      md/raid0: enable REQ_NOWAIT
+      dm: add support for REQ_NOWAIT and enable for target dm-linear
 
 
-Antworten Sie mit dem SPENDE-CODE an diese
+ drivers/md/dm-linear.c        | 5 +++--
+ drivers/md/dm-table.c         | 3 +++
+ drivers/md/dm.c               | 4 +++-
+ drivers/md/raid0.c            | 3 +++
+ include/linux/device-mapper.h | 6 ++++++
+ 5 files changed, 18 insertions(+), 3 deletions(-)
 
- E-Mail:Tayebsouam.spende@gmail.com
-
-Ich hoffe, Sie und Ihre Familie gl=C3=BCcklich zu machen.
-
-Gr=C3=BC=C3=9Fe
-Herr Tayeb Souami
+--
+Signature
