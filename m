@@ -2,95 +2,59 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F21E1F10EF
-	for <lists+linux-raid@lfdr.de>; Mon,  8 Jun 2020 02:59:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE97D1F1357
+	for <lists+linux-raid@lfdr.de>; Mon,  8 Jun 2020 09:13:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbgFHA72 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 7 Jun 2020 20:59:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58426 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728966AbgFHA6k (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 7 Jun 2020 20:58:40 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E260C08C5C3;
-        Sun,  7 Jun 2020 17:58:40 -0700 (PDT)
-Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de.)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <a.darwish@linutronix.de>)
-        id 1ji67W-0000w0-Gy; Mon, 08 Jun 2020 02:58:34 +0200
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Song Liu <song@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH v2 13/18] raid5: Use sequence counter with associated spinlock
-Date:   Mon,  8 Jun 2020 02:57:24 +0200
-Message-Id: <20200608005729.1874024-14-a.darwish@linutronix.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200608005729.1874024-1-a.darwish@linutronix.de>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200608005729.1874024-1-a.darwish@linutronix.de>
+        id S1728875AbgFHHNF (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 8 Jun 2020 03:13:05 -0400
+Received: from mga01.intel.com ([192.55.52.88]:64441 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728032AbgFHHNF (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 8 Jun 2020 03:13:05 -0400
+IronPort-SDR: V/84/H52MF124TaFB3Hx7CLY79STuxCKwsPubpC9LVLZbBkLSh0ryVtMAC6JR5q5TvW1SD/TeW
+ igPYhpNa96UQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 00:13:05 -0700
+IronPort-SDR: jBS8TMy4xANJqfTd3IVeWYSzhvAC2u/3AkhdR7aPUrxo6HqC7xk6CjpH639A03koatC8L7BX6g
+ 8L1SWb8T2Ehg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
+   d="scan'208";a="288379804"
+Received: from dprugar-mobl1.ger.corp.intel.com (HELO apaszkie-desk.igk.intel.com) ([10.213.0.238])
+  by orsmga002.jf.intel.com with ESMTP; 08 Jun 2020 00:13:03 -0700
+Subject: Re: [PATCH] mdraid: fix read/write bytes accounting
+To:     jeffm@suse.com, linux-raid@vger.kernel.org, song@kernel.org
+Cc:     nfbrown@suse.com, colyli@suse.com
+References: <20200605201953.11098-1-jeffm@suse.com>
+From:   Artur Paszkiewicz <artur.paszkiewicz@intel.com>
+Message-ID: <ed552b4b-b19a-cc85-05f4-0a0dc0d6fac2@intel.com>
+Date:   Mon, 8 Jun 2020 09:13:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20200605201953.11098-1-jeffm@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-A sequence counter write side critical section must be protected by some
-form of locking to serialize writers. A plain seqcount_t does not
-contain the information of which lock must be held when entering a write
-side critical section.
+On 6/5/20 10:19 PM, jeffm@suse.com wrote:
+> The i/o accounting published in /proc/diskstats for mdraid is currently
+> broken.  md_make_request does the accounting for every bio passed but
+> when a bio needs to be split, all the split bios are also submitted
+> through md_make_request, resulting in multiple accounting.
 
-Use the new seqcount_spinlock_t data type, which allows to associate a
-spinlock with the sequence counter. This enables lockdep to verify that
-the spinlock used for writer serialization is held when the write side
-critical section is entered.
+Hi Jeff,
 
-If lockdep is disabled this lock association is compiled out and has
-neither storage size nor runtime overhead.
+I sent a patch a few days ago which should fix this issue. Can you check
+it out?
 
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
----
- drivers/md/raid5.c | 2 +-
- drivers/md/raid5.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+https://marc.info/?l=linux-raid&m=159102814820539
 
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index ba00e9877f02..69f31c675b58 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -6929,7 +6929,7 @@ static struct r5conf *setup_conf(struct mddev *mddev)
- 	} else
- 		goto abort;
- 	spin_lock_init(&conf->device_lock);
--	seqcount_init(&conf->gen_lock);
-+	seqcount_spinlock_init(&conf->gen_lock, &conf->device_lock);
- 	mutex_init(&conf->cache_size_mutex);
- 	init_waitqueue_head(&conf->wait_for_quiescent);
- 	init_waitqueue_head(&conf->wait_for_stripe);
-diff --git a/drivers/md/raid5.h b/drivers/md/raid5.h
-index f90e0704bed9..a2c9e9e9f5ac 100644
---- a/drivers/md/raid5.h
-+++ b/drivers/md/raid5.h
-@@ -589,7 +589,7 @@ struct r5conf {
- 	int			prev_chunk_sectors;
- 	int			prev_algo;
- 	short			generation; /* increments with every reshape */
--	seqcount_t		gen_lock;	/* lock against generation changes */
-+	seqcount_spinlock_t	gen_lock;	/* lock against generation changes */
- 	unsigned long		reshape_checkpoint; /* Time we last updated
- 						     * metadata */
- 	long long		min_offset_diff; /* minimum difference between
--- 
-2.20.1
-
+Thanks,
+Artur
