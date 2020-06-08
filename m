@@ -2,38 +2,38 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 04B4F1F2567
-	for <lists+linux-raid@lfdr.de>; Tue,  9 Jun 2020 01:29:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 229EA1F25A2
+	for <lists+linux-raid@lfdr.de>; Tue,  9 Jun 2020 01:30:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731956AbgFHX0O (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 8 Jun 2020 19:26:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53256 "EHLO mail.kernel.org"
+        id S2387742AbgFHX21 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 8 Jun 2020 19:28:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731939AbgFHX0L (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:26:11 -0400
+        id S1731949AbgFHX2Z (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:28:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BE7E20897;
-        Mon,  8 Jun 2020 23:26:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1892620853;
+        Mon,  8 Jun 2020 23:28:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658769;
-        bh=E9wfJR4Pgh/h4zc235iJA4CuQbscE8cA+itCTT9cl9s=;
+        s=default; t=1591658904;
+        bh=0Vp2LJtlSoEL3sF9zwbuRjicAB8CUEe7ntKtbbih9qc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=refin45BS7RjW7s1HB2cMBYJE0I/NFGweEASvU+k3Yh5PNFxVMZ1219Cvl2RFptl9
-         mGkDDpBpld1WlVNDwjQRYIp+hRtCq2RrdnoEWkgXpm/vrTvqn5vS04E/xCvM6pm3t2
-         PkuCi5db9t00JCleSAOc2n0ELwH9PR+bRuf42yRA=
+        b=Wq2JR/iR6/LE1IZDBd6TmLUxHTsK1XxmWLZI6HG0QLQstv7JvNpABQunWz91QTBK1
+         xBgHo3RWA6CdBqQXzLQPq2+Qze1Dt7E5GU2Gf+qVPAHnDjCq+PPuX/gk2X0RjuqlLW
+         ifCu4sURsAdMfWgeV/fAmXMrPBWGFggRlhLcqkTU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
         Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 51/72] md: don't flush workqueue unconditionally in md_open
-Date:   Mon,  8 Jun 2020 19:24:39 -0400
-Message-Id: <20200608232500.3369581-51-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 25/37] md: don't flush workqueue unconditionally in md_open
+Date:   Mon,  8 Jun 2020 19:27:37 -0400
+Message-Id: <20200608232750.3370747-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608232500.3369581-1-sashal@kernel.org>
-References: <20200608232500.3369581-1-sashal@kernel.org>
+In-Reply-To: <20200608232750.3370747-1-sashal@kernel.org>
+References: <20200608232750.3370747-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -185,10 +185,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/md/md.c b/drivers/md/md.c
-index b942c74f1ce8..948344531baf 100644
+index d59d79b77fd6..60161690e226 100644
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -7411,7 +7411,8 @@ static int md_open(struct block_device *bdev, fmode_t mode)
+@@ -7038,7 +7038,8 @@ static int md_open(struct block_device *bdev, fmode_t mode)
  		 */
  		mddev_put(mddev);
  		/* Wait until bdev->bd_disk is definitely gone */
