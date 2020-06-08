@@ -2,135 +2,202 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 958791F1B23
-	for <lists+linux-raid@lfdr.de>; Mon,  8 Jun 2020 16:37:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04B4F1F2567
+	for <lists+linux-raid@lfdr.de>; Tue,  9 Jun 2020 01:29:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729977AbgFHOhc (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 8 Jun 2020 10:37:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43556 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbgFHOhb (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 8 Jun 2020 10:37:31 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AD28C08C5C2
-        for <linux-raid@vger.kernel.org>; Mon,  8 Jun 2020 07:37:31 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id y13so18591540eju.2
-        for <linux-raid@vger.kernel.org>; Mon, 08 Jun 2020 07:37:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=MdwwIRMIbQELUj+o7jOVd+0Jb/6eTzJI3fJ3Dq8vMLA=;
-        b=cjzI/JUI5aFpuui/XLJVI/NViLbhFFmsBCvm/q09wUzVFZRtG6AIA8/v29pCF/+EuN
-         49fS8lEsQoR3EtQ0VEz4T0Rm2p3XX7Z0hEPjtEULZSFF8xYkawom6T0R8rOX8kQ5ovT/
-         AVSnG6P0FGw9YIjg5kjykAQWdBArEsNBvhWOJRMoEdAVcv/rmV5AP5mXcjVGwhCwcNxE
-         5ArqW7NlDIrdQcbm6QE11NjVc5FmBw7tA0vst5QvSfpN29qwN8JQ81Ogj4yH2RCqxx3C
-         B9Kekjh0ORQnRFgaTMAAtJ8GbPmqnLrZqwSuhE/mG0gEfFLFwaMxu6dMyhr0MpH6KzDB
-         6Fag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=MdwwIRMIbQELUj+o7jOVd+0Jb/6eTzJI3fJ3Dq8vMLA=;
-        b=e7u6rdfLQdThCUZISFKNOyUaPpCteDn7Q44RQGLocBuwOVhKLsVbRuDhXwpHdPTuck
-         iU0I9VnFOhvm68rnEB+g9/8tAHGU6TLPREwuC87aR8Efk+v0DeamVM7rxn0iwjLLfXvc
-         jh1oTvf5wzKiNEq6nakTAuDx0A4ZbbqdcS4nNZegLakzY0oFWHxdmh7IKQR/QgmLZDEx
-         tE9GPzdLzKSNR7+7eAxc6Xj4W337N02/YYOOceYMWhN2uOy5p9AhZy4vR+jwuq+1uN9L
-         HRr0WUXr7uIHd8GMnto3TDmUp/ODnkA3NXIkiF2QxpkGp1brpTf7Nhpy1x8Qw/irpgOC
-         aH0Q==
-X-Gm-Message-State: AOAM532j9Ra06/MJYhHtANIRS3QURNy+3+V11R4c3tdRsJKdAbiLfmYv
-        3fqcvIzjelloOgwuFhiAf6jkzohtrfs=
-X-Google-Smtp-Source: ABdhPJxBtE2H4kPxGERaqrXI2th/ZcNwq1oVwfU47vy9TFCs6kVtnazZgcra/N3E1zHeBOJRRsVt6Q==
-X-Received: by 2002:a17:907:2052:: with SMTP id pg18mr20323259ejb.513.1591627049494;
-        Mon, 08 Jun 2020 07:37:29 -0700 (PDT)
-Received: from ?IPv6:2001:16b8:48fc:4c00:f967:9014:5748:3cac? ([2001:16b8:48fc:4c00:f967:9014:5748:3cac])
-        by smtp.gmail.com with ESMTPSA id 63sm2320008edy.8.2020.06.08.07.37.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jun 2020 07:37:28 -0700 (PDT)
-Subject: Re: [PATCH] md: improve io stats accounting
-To:     Artur Paszkiewicz <artur.paszkiewicz@intel.com>, song@kernel.org
-Cc:     linux-raid@vger.kernel.org
-References: <20200601161256.27718-1-artur.paszkiewicz@intel.com>
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Message-ID: <d09aefa9-00ed-ef94-f5c4-50be91828170@cloud.ionos.com>
-Date:   Mon, 8 Jun 2020 16:37:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1731956AbgFHX0O (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 8 Jun 2020 19:26:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53256 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731939AbgFHX0L (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:26:11 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BE7E20897;
+        Mon,  8 Jun 2020 23:26:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591658769;
+        bh=E9wfJR4Pgh/h4zc235iJA4CuQbscE8cA+itCTT9cl9s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=refin45BS7RjW7s1HB2cMBYJE0I/NFGweEASvU+k3Yh5PNFxVMZ1219Cvl2RFptl9
+         mGkDDpBpld1WlVNDwjQRYIp+hRtCq2RrdnoEWkgXpm/vrTvqn5vS04E/xCvM6pm3t2
+         PkuCi5db9t00JCleSAOc2n0ELwH9PR+bRuf42yRA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 51/72] md: don't flush workqueue unconditionally in md_open
+Date:   Mon,  8 Jun 2020 19:24:39 -0400
+Message-Id: <20200608232500.3369581-51-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200608232500.3369581-1-sashal@kernel.org>
+References: <20200608232500.3369581-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200601161256.27718-1-artur.paszkiewicz@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 6/1/20 6:12 PM, Artur Paszkiewicz wrote:
-> Use generic io accounting functions to manage io stats. There was an
-> attempt to do this earlier in commit 18c0b223cf990172 ("md: use generic
-> io stats accounting functions to simplify io stat accounting"), but it
-> did not include a call to generic_end_io_acct() and caused issues with
-> tracking in-flight IOs, so it was later removed in commit
-> 74672d069b298b03 ("md: fix md io stats accounting broken").
->
-> This patch attempts to fix this by using both generic_start_io_acct()
-> and generic_end_io_acct(). To make it possible, in md_make_request() a
-> bio is cloned with additional data - struct md_io, which includes the io
-> start_time. A new bioset is introduced for this purpose. We call
-> generic_start_io_acct() and pass the clone instead of the original to
-> md_handle_request(). When it completes, we call generic_end_io_acct()
-> and complete the original bio.
->
-> This adds correct statistics about in-flight IOs and IO processing time,
-> interpreted e.g. in iostat as await, svctm, aqu-sz and %util.
->
-> It also fixes a situation where too many IOs where reported if a bio was
-> re-submitted to the mddev, because io accounting is now performed only
-> on newly arriving bios.
->
-> Signed-off-by: Artur Paszkiewicz <artur.paszkiewicz@intel.com>
-> ---
->   drivers/md/md.c | 65 +++++++++++++++++++++++++++++++++++++++----------
->   drivers/md/md.h |  1 +
->   2 files changed, 53 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index f567f536b529..5a9f167ef5b9 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -463,12 +463,32 @@ void md_handle_request(struct mddev *mddev, struct bio *bio)
->   }
->   EXPORT_SYMBOL(md_handle_request);
->   
-> +struct md_io {
-> +	struct mddev *mddev;
-> +	struct bio *orig_bio;
-> +	unsigned long start_time;
-> +	struct bio orig_bio_clone;
-> +};
-> +
-> +static void md_end_request(struct bio *bio)
-> +{
-> +	struct md_io *md_io = bio->bi_private;
-> +	struct mddev *mddev = md_io->mddev;
-> +	struct bio *orig_bio = md_io->orig_bio;
-> +
-> +	orig_bio->bi_status = bio->bi_status;
-> +
-> +	generic_end_io_acct(mddev->queue, bio_op(orig_bio),
-> +			    &mddev->gendisk->part0, md_io->start_time);
+From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 
-[...]
+[ Upstream commit f6766ff6afff70e2aaf39e1511e16d471de7c3ae ]
 
-> +		generic_start_io_acct(mddev->queue, bio_op(bio),
-> +				      bio_sectors(bio), &mddev->gendisk->part0);
-> +	}
-> +
+We need to check mddev->del_work before flush workqueu since the purpose
+of flush is to ensure the previous md is disappeared. Otherwise the similar
+deadlock appeared if LOCKDEP is enabled, it is due to md_open holds the
+bdev->bd_mutex before flush workqueue.
 
-Now, you need to switch to call bio_{start,end}_io_acct instead of
-generic_{start,end}_io_acct after the changes from Christoph.
+kernel: [  154.522645] ======================================================
+kernel: [  154.522647] WARNING: possible circular locking dependency detected
+kernel: [  154.522650] 5.6.0-rc7-lp151.27-default #25 Tainted: G           O
+kernel: [  154.522651] ------------------------------------------------------
+kernel: [  154.522653] mdadm/2482 is trying to acquire lock:
+kernel: [  154.522655] ffff888078529128 ((wq_completion)md_misc){+.+.}, at: flush_workqueue+0x84/0x4b0
+kernel: [  154.522673]
+kernel: [  154.522673] but task is already holding lock:
+kernel: [  154.522675] ffff88804efa9338 (&bdev->bd_mutex){+.+.}, at: __blkdev_get+0x79/0x590
+kernel: [  154.522691]
+kernel: [  154.522691] which lock already depends on the new lock.
+kernel: [  154.522691]
+kernel: [  154.522694]
+kernel: [  154.522694] the existing dependency chain (in reverse order) is:
+kernel: [  154.522696]
+kernel: [  154.522696] -> #4 (&bdev->bd_mutex){+.+.}:
+kernel: [  154.522704]        __mutex_lock+0x87/0x950
+kernel: [  154.522706]        __blkdev_get+0x79/0x590
+kernel: [  154.522708]        blkdev_get+0x65/0x140
+kernel: [  154.522709]        blkdev_get_by_dev+0x2f/0x40
+kernel: [  154.522716]        lock_rdev+0x3d/0x90 [md_mod]
+kernel: [  154.522719]        md_import_device+0xd6/0x1b0 [md_mod]
+kernel: [  154.522723]        new_dev_store+0x15e/0x210 [md_mod]
+kernel: [  154.522728]        md_attr_store+0x7a/0xc0 [md_mod]
+kernel: [  154.522732]        kernfs_fop_write+0x117/0x1b0
+kernel: [  154.522735]        vfs_write+0xad/0x1a0
+kernel: [  154.522737]        ksys_write+0xa4/0xe0
+kernel: [  154.522745]        do_syscall_64+0x64/0x2b0
+kernel: [  154.522748]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+kernel: [  154.522749]
+kernel: [  154.522749] -> #3 (&mddev->reconfig_mutex){+.+.}:
+kernel: [  154.522752]        __mutex_lock+0x87/0x950
+kernel: [  154.522756]        new_dev_store+0xc9/0x210 [md_mod]
+kernel: [  154.522759]        md_attr_store+0x7a/0xc0 [md_mod]
+kernel: [  154.522761]        kernfs_fop_write+0x117/0x1b0
+kernel: [  154.522763]        vfs_write+0xad/0x1a0
+kernel: [  154.522765]        ksys_write+0xa4/0xe0
+kernel: [  154.522767]        do_syscall_64+0x64/0x2b0
+kernel: [  154.522769]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+kernel: [  154.522770]
+kernel: [  154.522770] -> #2 (kn->count#253){++++}:
+kernel: [  154.522775]        __kernfs_remove+0x253/0x2c0
+kernel: [  154.522778]        kernfs_remove+0x1f/0x30
+kernel: [  154.522780]        kobject_del+0x28/0x60
+kernel: [  154.522783]        mddev_delayed_delete+0x24/0x30 [md_mod]
+kernel: [  154.522786]        process_one_work+0x2a7/0x5f0
+kernel: [  154.522788]        worker_thread+0x2d/0x3d0
+kernel: [  154.522793]        kthread+0x117/0x130
+kernel: [  154.522795]        ret_from_fork+0x3a/0x50
+kernel: [  154.522796]
+kernel: [  154.522796] -> #1 ((work_completion)(&mddev->del_work)){+.+.}:
+kernel: [  154.522800]        process_one_work+0x27e/0x5f0
+kernel: [  154.522802]        worker_thread+0x2d/0x3d0
+kernel: [  154.522804]        kthread+0x117/0x130
+kernel: [  154.522806]        ret_from_fork+0x3a/0x50
+kernel: [  154.522807]
+kernel: [  154.522807] -> #0 ((wq_completion)md_misc){+.+.}:
+kernel: [  154.522813]        __lock_acquire+0x1392/0x1690
+kernel: [  154.522816]        lock_acquire+0xb4/0x1a0
+kernel: [  154.522818]        flush_workqueue+0xab/0x4b0
+kernel: [  154.522821]        md_open+0xb6/0xc0 [md_mod]
+kernel: [  154.522823]        __blkdev_get+0xea/0x590
+kernel: [  154.522825]        blkdev_get+0x65/0x140
+kernel: [  154.522828]        do_dentry_open+0x1d1/0x380
+kernel: [  154.522831]        path_openat+0x567/0xcc0
+kernel: [  154.522834]        do_filp_open+0x9b/0x110
+kernel: [  154.522836]        do_sys_openat2+0x201/0x2a0
+kernel: [  154.522838]        do_sys_open+0x57/0x80
+kernel: [  154.522840]        do_syscall_64+0x64/0x2b0
+kernel: [  154.522842]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+kernel: [  154.522844]
+kernel: [  154.522844] other info that might help us debug this:
+kernel: [  154.522844]
+kernel: [  154.522846] Chain exists of:
+kernel: [  154.522846]   (wq_completion)md_misc --> &mddev->reconfig_mutex --> &bdev->bd_mutex
+kernel: [  154.522846]
+kernel: [  154.522850]  Possible unsafe locking scenario:
+kernel: [  154.522850]
+kernel: [  154.522852]        CPU0                    CPU1
+kernel: [  154.522853]        ----                    ----
+kernel: [  154.522854]   lock(&bdev->bd_mutex);
+kernel: [  154.522856]                                lock(&mddev->reconfig_mutex);
+kernel: [  154.522858]                                lock(&bdev->bd_mutex);
+kernel: [  154.522860]   lock((wq_completion)md_misc);
+kernel: [  154.522861]
+kernel: [  154.522861]  *** DEADLOCK ***
+kernel: [  154.522861]
+kernel: [  154.522864] 1 lock held by mdadm/2482:
+kernel: [  154.522865]  #0: ffff88804efa9338 (&bdev->bd_mutex){+.+.}, at: __blkdev_get+0x79/0x590
+kernel: [  154.522868]
+kernel: [  154.522868] stack backtrace:
+kernel: [  154.522873] CPU: 1 PID: 2482 Comm: mdadm Tainted: G           O      5.6.0-rc7-lp151.27-default #25
+kernel: [  154.522875] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+kernel: [  154.522878] Call Trace:
+kernel: [  154.522881]  dump_stack+0x8f/0xcb
+kernel: [  154.522884]  check_noncircular+0x194/0x1b0
+kernel: [  154.522888]  ? __lock_acquire+0x1392/0x1690
+kernel: [  154.522890]  __lock_acquire+0x1392/0x1690
+kernel: [  154.522893]  lock_acquire+0xb4/0x1a0
+kernel: [  154.522895]  ? flush_workqueue+0x84/0x4b0
+kernel: [  154.522898]  flush_workqueue+0xab/0x4b0
+kernel: [  154.522900]  ? flush_workqueue+0x84/0x4b0
+kernel: [  154.522905]  ? md_open+0xb6/0xc0 [md_mod]
+kernel: [  154.522908]  md_open+0xb6/0xc0 [md_mod]
+kernel: [  154.522910]  __blkdev_get+0xea/0x590
+kernel: [  154.522912]  ? bd_acquire+0xc0/0xc0
+kernel: [  154.522914]  blkdev_get+0x65/0x140
+kernel: [  154.522916]  ? bd_acquire+0xc0/0xc0
+kernel: [  154.522918]  do_dentry_open+0x1d1/0x380
+kernel: [  154.522921]  path_openat+0x567/0xcc0
+kernel: [  154.522923]  ? __lock_acquire+0x380/0x1690
+kernel: [  154.522926]  do_filp_open+0x9b/0x110
+kernel: [  154.522929]  ? __alloc_fd+0xe5/0x1f0
+kernel: [  154.522935]  ? kmem_cache_alloc+0x28c/0x630
+kernel: [  154.522939]  ? do_sys_openat2+0x201/0x2a0
+kernel: [  154.522941]  do_sys_openat2+0x201/0x2a0
+kernel: [  154.522944]  do_sys_open+0x57/0x80
+kernel: [  154.522946]  do_syscall_64+0x64/0x2b0
+kernel: [  154.522948]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+kernel: [  154.522951] RIP: 0033:0x7f98d279d9ae
 
-Thanks,
-Guoqing
+And md_alloc also flushed the same workqueue, but the thing is different
+here. Because all the paths call md_alloc don't hold bdev->bd_mutex, and
+the flush is necessary to avoid race condition, so leave it as it is.
+
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/md/md.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index b942c74f1ce8..948344531baf 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -7411,7 +7411,8 @@ static int md_open(struct block_device *bdev, fmode_t mode)
+ 		 */
+ 		mddev_put(mddev);
+ 		/* Wait until bdev->bd_disk is definitely gone */
+-		flush_workqueue(md_misc_wq);
++		if (work_pending(&mddev->del_work))
++			flush_workqueue(md_misc_wq);
+ 		/* Then retry the open from the top */
+ 		return -ERESTARTSYS;
+ 	}
+-- 
+2.25.1
+
