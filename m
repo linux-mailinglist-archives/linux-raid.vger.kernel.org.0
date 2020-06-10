@@ -2,308 +2,182 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 26AE01F52BA
-	for <lists+linux-raid@lfdr.de>; Wed, 10 Jun 2020 13:00:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59DEC1F5D62
+	for <lists+linux-raid@lfdr.de>; Wed, 10 Jun 2020 22:50:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbgFJLA2 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 10 Jun 2020 07:00:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59620 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728267AbgFJLA1 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 10 Jun 2020 07:00:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E5709AAC7;
-        Wed, 10 Jun 2020 11:00:28 +0000 (UTC)
-Subject: Re: Lockdep warning after `mdadm -S`
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-btrfs@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-References: <20200610071916.GA2668@qmqm.qmqm.pl>
-From:   Nikolay Borisov <nborisov@suse.com>
-Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <5e70658f-d071-bcec-74ce-214f12da396e@suse.com>
-Date:   Wed, 10 Jun 2020 14:00:22 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1726207AbgFJUuk (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 10 Jun 2020 16:50:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726134AbgFJUuk (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 10 Jun 2020 16:50:40 -0400
+Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63402C03E96B
+        for <linux-raid@vger.kernel.org>; Wed, 10 Jun 2020 13:50:40 -0700 (PDT)
+Received: by mail-ua1-x92e.google.com with SMTP id r9so1367992ual.1
+        for <linux-raid@vger.kernel.org>; Wed, 10 Jun 2020 13:50:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8EaiG3NsuD5JvpXEhY1J4wSvi9QR4BFPP6lshTzXI+A=;
+        b=T7eY78VBZcHO1q12aJKdW+AimReNdKp07eUhL7Q9QaM1/ifpOBQBH6/E+vl6OnM+4l
+         qVoVwGNKaxZ49yLde9G+a+qW0fwsti0xpmYGtnd+m2KVE0S2PBGBfn6HXmKYuwh/NQG4
+         G5SHnxj0uEhmP0J2jQ6HUiCliLSl0nld//JFbBbuiMbYTrbWHpRo7iO+YpVcAMTOa50c
+         +DPLXusjpJKrGOzj3FyzCLHcvO82CxmUOgowEMY3x8PV6f5l4ub0Qo3AoOVnZsvvO/SP
+         nepbygfk3S3sAWxarCo44DsZyx0THEtdPrWU3L5pPUT2XfbTbg06GF0WWhWX6mul08SA
+         GgKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8EaiG3NsuD5JvpXEhY1J4wSvi9QR4BFPP6lshTzXI+A=;
+        b=IC/KDbEVM9eeOWXLA9+XlK1Tz9Nk12EChRx2Z3su0mbJD/4GEfg7JmeXqTMmi/SP2F
+         CCcm7LHIQYp5vQW+3PUaVsjM3JHPB3VFUGt+I+x7ULg2lIDBSp+ajubL6ceJXZjqVd2X
+         lGDObz/hdzZY1V1UCymLHesEOtLzsFZHBxX7V/E1mIb+uqnh75BeEDzivZ86uAG7zI+d
+         SUk8PdWRNyXrnsjeEStr14MO1YHmraGcPEWg6dmUSVosDj0DJoxKZvZe7U8v7Wrhnbb0
+         rNBDNSrWgiFq2f+wMNssYbpfqwo/DrLLkE1QbocqzGGZx7xcTe3aOi2PuNYJOJA+CkoX
+         h2Pg==
+X-Gm-Message-State: AOAM531Za7ZWzu493WWl6pWfhwIX4v+W5ByxgBDm+4yevpkT2HF07wV5
+        VOZuXMpjY71Qb3u8lOuHMmVbmWuV3yAdzBLbg+WGKVSS+B8=
+X-Google-Smtp-Source: ABdhPJwmPLLe428KNJCH/HvwXP4HwtQrinPJSFyOk2bWDqn5WRd/X0uOQUGS+PQsPpKOf0z3pJOFwRs1anrC31rLV+M=
+X-Received: by 2002:ab0:72ca:: with SMTP id g10mr4106886uap.16.1591822239483;
+ Wed, 10 Jun 2020 13:50:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200610071916.GA2668@qmqm.qmqm.pl>
-Content-Type: text/plain; charset=UTF-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <CAH6h+heYBA5RvBH7GPJ6JkPUYvjxT2A4f_gBVs=Pr-ps6rPRQw@mail.gmail.com>
+ <CAPhsuW4UTJZHSQRHt3V2oPAkz8KD1YpG2YNBBg20cBujTCnzug@mail.gmail.com> <CAH6h+he2=_1hgBm3hJ4KAnqxHkPgFj3+q-pPTRHrro1vzxgg3w@mail.gmail.com>
+In-Reply-To: <CAH6h+he2=_1hgBm3hJ4KAnqxHkPgFj3+q-pPTRHrro1vzxgg3w@mail.gmail.com>
+From:   Marc Smith <msmith626@gmail.com>
+Date:   Wed, 10 Jun 2020 16:50:28 -0400
+Message-ID: <CAH6h+hfV-JeoRvbEFVpyLTnGhtFLJbDuw_+V=fBU2FFdYFuMYA@mail.gmail.com>
+Subject: Re: MD Array 'stat' File - Sectors Read
+To:     Song Liu <song@kernel.org>
+Cc:     linux-raid <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+On Sat, Apr 11, 2020 at 12:59 AM Marc Smith <msmith626@gmail.com> wrote:
+>
+> On Thu, Apr 9, 2020 at 3:11 AM Song Liu <song@kernel.org> wrote:
+> >
+> > On Mon, Mar 30, 2020 at 1:55 PM Marc Smith <msmith626@gmail.com> wrote:
+> > >
+> > > Hi,
+> > >
+> > > Apologies in advance, as I'm sure this question has been asked many
+> > > times and there is a standard answer, but I can't seem to find it on
+> > > forums or this mailing list.
+> > >
+> > > I've always observed this behavior using 'iostat', when looking at
+> > > READ throughput numbers, the value is about 4 times more than the real
+> > > throughput number. Knowing this, I typically look at the member
+> > > devices to determine what throughput is actually being achieved (or
+> > > from the application driving the I/O).
+> > >
+> > > Looking at the sectors read field in the 'stat' file for an MD array
+> > > block device:
+> > > # cat /sys/block/md127/stat && sleep 1 && cat /sys/block/md127/stat
+> > > 93591416        0 55082801792        0       93        0        0
+> > >   0        0        0        0        0        0        0        0
+> > > 93608938        0 55092996456        0       93        0        0
+> > >   0        0        0        0        0        0        0        0
+> > >
+> > > 55092996456 - 55082801792 = 10194664
+> > > 10194664 * 512 = 5219667968
+> > > 5219667968 / 1024 / 1024 = 4977
+> > >
+> > > This device definitely isn't doing 4,977 MiB/s. So now my curiosity is
+> > > getting to me: Is this just known/expected behavior for the MD array
+> > > block devices? The numbers for WRITE sectors is always accurate as far
+> > > as I can tell. Or something configured strangely on my systems?
+> > >
+> > > I'm using vanilla Linux 5.4.12.
+> >
+> > Thanks for the report. Could you please share output of
+> >
+> >    mdadm --detial /dev/md127
+> >
+>
+> # mdadm --detail /dev/md127
+> /dev/md127:
+>            Version : 1.2
+>      Creation Time : Tue Mar 17 17:23:00 2020
+>         Raid Level : raid6
+>         Array Size : 17580320640 (16765.90 GiB 18002.25 GB)
+>      Used Dev Size : 1758032064 (1676.59 GiB 1800.22 GB)
+>       Raid Devices : 12
+>      Total Devices : 12
+>        Persistence : Superblock is persistent
+>
+>        Update Time : Thu Apr  9 13:07:12 2020
+>              State : clean
+>     Active Devices : 12
+>    Working Devices : 12
+>     Failed Devices : 0
+>      Spare Devices : 0
+>
+>             Layout : left-symmetric
+>         Chunk Size : 64K
+>
+> Consistency Policy : resync
+>
+>               Name : node-126c4f-1:P2024_126c4f_01  (local to host
+> node-126c4f-1)
+>               UUID : ceccb91b:1e975007:3efb5a9d:eda08d04
+>             Events : 79
+>
+>     Number   Major   Minor   RaidDevice State
+>        0       8        0        0      active sync   /dev/sda
+>        1       8       16        1      active sync   /dev/sdb
+>        2       8       32        2      active sync   /dev/sdc
+>        3       8       48        3      active sync   /dev/sdd
+>        4       8       64        4      active sync   /dev/sde
+>        5       8       80        5      active sync
+>        6       8       96        6      active sync   /dev/sdg
+>        7       8      112        7      active sync   /dev/sdh
+>        8       8      128        8      active sync   /dev/sdi
+>        9       8      144        9      active sync   /dev/sdj
+>       10       8      160       10      active sync   /dev/sdk
+>       11       8      176       11      active sync   /dev/sdl
+>
+>
+> > and
+> >
+> >    cat /proc/mdstat
+>
+> # cat /proc/mdstat
+> Personalities : [linear] [raid0] [raid1] [raid10] [raid6] [raid5] [raid4]
+> md127 : active raid6 sda[0] sdl[11] sdk[10] sdj[9] sdi[8] sdh[7]
+> sdg[6] sdf[5] sde[4] sdd[3] sdc[2] sdb[1]
+>       17580320640 blocks super 1.2 level 6, 64k chunk, algorithm 2
+> [12/12] [UUUUUUUUUUUU]
+>
+> unused devices: <none>
+>
+>
+> Thanks; please let me know if there is any more detail I can provide.
+
+I was about to follow-up on this issue, but then I noticed a couple
+recent patches are being discussed and it sounds like these will
+resolve what I reported above:
+https://marc.info/?l=linux-raid&m=159102814820539
+https://marc.info/?l=linux-raid&m=159149103212326
+
+I'll see how these play out and report back if needed.
 
 
-On 10.06.20 г. 10:19 ч., Michał Mirosław wrote:
-> Dear Developers,
-> 
-> I found a lockdep warning in dmesg some after doing 'mdadm -S' while
-> also having btrfs mounted (light to none I/O load).  Disks under MD and
-> btrfs are unrelated.
+Thanks,
 
-Huhz, I think that's genuine, because btrfs and md shared at least the bd_mutex 
-and the workqueue. So the scenario could go something along the lines of: 
+Marc
 
-					   
- 					   						 
-T1: 						T2:					T3:							T4:					T5:
- initiates process of stopping md,													transaction commit blocked on   		User tries to (erroneously) mount mddev 
- holds bd_mutex, open_mutex, 								wants to begin a new transaction but 		device_list_mutex, callstack #3,		but blocks on callstack at #4 since T1 
- blocks on flushing md_misc_wq,		Should begin  mmdev_delayed_delete		blocks on callstack #0 due to a 		holding sb_internal				holds bd_open  and is holding device_list_mutex
- Callstack #6				but never does because workqueue is  		running transaction commit in T4
-					blocked due to T3 being blocked	                NB: This happens from writeback		   
-					 					       	context, ie. same as T2 workqueue				  
-              				  					        bd_mutex held by T1 	
 
-So T5 blocks T4, which blocks T3, which blocks the shared writeback workqueue, 
-this prevents T2 from running which when done would cause T1 to unlock bd_mutex, 
-which would unblock T5. I think this is generally possible but highly unlikely.
 
-Also looking at the code in T5 (callstack #4 below) it seems that the same could happen if 
-scan ioctl is sent for the mddev. Discussing this with peterz he proposed the following half-baked 
-patch: https://paste.debian.net/1151314/
-
-The idea is to remove the md_open mutex which would break the dependency chain between 
-#4->#6. What do mdraid people think?
-											
-> 
-> Best Regards,
-> Michał Mirosław
-> 
-> ======================================================
-> WARNING: possible circular locking dependency detected
-> 5.7.1mq+ #383 Tainted: G           O     
-> ------------------------------------------------------
-> kworker/u16:3/8175 is trying to acquire lock:
-> ffff8882f19556a0 (sb_internal#3){.+.+}-{0:0}, at: start_transaction+0x37e/0x550 [btrfs]
-> 
-> but task is already holding lock:
-> ffffc900087c7e68 ((work_completion)(&(&wb->dwork)->work)){+.+.}-{0:0}, at: process_one_work+0x235/0x620
-> 
-> which lock already depends on the new lock.
-> 
-> 
-> the existing dependency chain (in reverse order) is:
-> 
-> -> #8 ((work_completion)(&(&wb->dwork)->work)){+.+.}-{0:0}:
->        __flush_work+0x331/0x490
->        wb_shutdown+0x8f/0xb0
->        bdi_unregister+0x72/0x1f0
->        del_gendisk+0x2b0/0x2c0
->        md_free+0x28/0x90
->        kobject_put+0xa6/0x1b0
->        process_one_work+0x2b6/0x620
->        worker_thread+0x35/0x3e0
->        kthread+0x143/0x160
->        ret_from_fork+0x3a/0x50
-> 
-> -> #7 ((work_completion)(&mddev->del_work)){+.+.}-{0:0}:
->        process_one_work+0x28d/0x620
->        worker_thread+0x35/0x3e0
->        kthread+0x143/0x160
->        ret_from_fork+0x3a/0x50
-> 
-> -> #6 ((wq_completion)md_misc){+.+.}-{0:0}:
->        flush_workqueue+0xa9/0x4e0
->        __md_stop_writes+0x18/0x100
->        do_md_stop+0x165/0x2d0
->        md_ioctl+0xa52/0x1d60
->        blkdev_ioctl+0x1cc/0x2a0
->        block_ioctl+0x3a/0x40
->        ksys_ioctl+0x81/0xc0
->        __x64_sys_ioctl+0x11/0x20
->        do_syscall_64+0x4f/0x210
->        entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> 
-> -> #5 (&mddev->open_mutex){+.+.}-{3:3}:
->        __mutex_lock+0x93/0x9c0
->        md_open+0x43/0xc0
->        __blkdev_get+0xea/0x560
->        blkdev_get+0x60/0x130
->        do_dentry_open+0x147/0x3e0
->        path_openat+0x84f/0xa80
->        do_filp_open+0x8e/0x100
->        do_sys_openat2+0x225/0x2e0
->        do_sys_open+0x46/0x80
->        do_syscall_64+0x4f/0x210
->        entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> 
-> -> #4 (&bdev->bd_mutex){+.+.}-{3:3}:
->        __mutex_lock+0x93/0x9c0
->        __blkdev_get+0x77/0x560
->        blkdev_get+0x60/0x130
->        blkdev_get_by_path+0x41/0x80
->        btrfs_get_bdev_and_sb+0x16/0xb0 [btrfs]
->        open_fs_devices+0x9d/0x240 [btrfs]
->        btrfs_open_devices+0x89/0x90 [btrfs]
->        btrfs_mount_root+0x26a/0x4b0 [btrfs]
->        legacy_get_tree+0x2b/0x50
->        vfs_get_tree+0x23/0xc0
->        fc_mount+0x9/0x40
->        vfs_kern_mount.part.40+0x57/0x80
->        btrfs_mount+0x148/0x3f0 [btrfs]
->        legacy_get_tree+0x2b/0x50
->        vfs_get_tree+0x23/0xc0
->        do_mount+0x712/0xa40
->        __x64_sys_mount+0xbf/0xe0
->        do_syscall_64+0x4f/0x210
->        entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> 
-> -> #3 (&fs_devs->device_list_mutex){+.+.}-{3:3}:
->        __mutex_lock+0x93/0x9c0
->        btrfs_run_dev_stats+0x44/0x470 [btrfs]
->        commit_cowonly_roots+0xac/0x2a0 [btrfs]
->        btrfs_commit_transaction+0x511/0xa70 [btrfs]
->        transaction_kthread+0x13c/0x160 [btrfs]
->        kthread+0x143/0x160
->        ret_from_fork+0x3a/0x50
-> 
-> -> #2 (&fs_info->tree_log_mutex){+.+.}-{3:3}:
->        __mutex_lock+0x93/0x9c0
->        btrfs_commit_transaction+0x4b6/0xa70 [btrfs]
->        transaction_kthread+0x13c/0x160 [btrfs]
->        kthread+0x143/0x160
->        ret_from_fork+0x3a/0x50
-> 
-> -> #1 (&fs_info->reloc_mutex){+.+.}-{3:3}:
->        __mutex_lock+0x93/0x9c0
->        btrfs_record_root_in_trans+0x3e/0x60 [btrfs]
->        start_transaction+0xcb/0x550 [btrfs]
->        btrfs_mkdir+0x5c/0x1e0 [btrfs]
->        vfs_mkdir+0x107/0x1d0
->        do_mkdirat+0xe7/0x110
->        do_syscall_64+0x4f/0x210
->        entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> 
-> -> #0 (sb_internal#3){.+.+}-{0:0}:
->        __lock_acquire+0x11f9/0x1aa0
->        lock_acquire+0x9e/0x380
->        __sb_start_write+0x13a/0x270
->        start_transaction+0x37e/0x550 [btrfs]
->        cow_file_range_inline.constprop.74+0xe4/0x640 [btrfs]
->        cow_file_range+0xe5/0x3f0 [btrfs]
->        btrfs_run_delalloc_range+0x128/0x620 [btrfs]
->        writepage_delalloc+0xe2/0x140 [btrfs]
->        __extent_writepage+0x1a3/0x370 [btrfs]
->        extent_write_cache_pages+0x2b8/0x470 [btrfs]
->        extent_writepages+0x3f/0x90 [btrfs]
->        do_writepages+0x3c/0xe0
->        __writeback_single_inode+0x4f/0x650
->        writeback_sb_inodes+0x1f7/0x560
->        __writeback_inodes_wb+0x58/0xa0
->        wb_writeback+0x33b/0x4b0
->        wb_workfn+0x428/0x5b0
->        process_one_work+0x2b6/0x620
->        worker_thread+0x35/0x3e0
->        kthread+0x143/0x160
->        ret_from_fork+0x3a/0x50
-> 
-> other info that might help us debug this:
-> 
-> Chain exists of:
->   sb_internal#3 --> (work_completion)(&mddev->del_work) --> (work_completion)(&(&wb->dwork)->work)
-> 
->  Possible unsafe locking scenario:
-> 
->        CPU0                    CPU1
->        ----                    ----
->   lock((work_completion)(&(&wb->dwork)->work));
->                                lock((work_completion)(&mddev->del_work));
->                                lock((work_completion)(&(&wb->dwork)->work));
->   lock(sb_internal#3);
-> 
->  *** DEADLOCK ***
-> 
-> 3 locks held by kworker/u16:3/8175:
->  #0: ffff88840baa6948 ((wq_completion)writeback){+.+.}-{0:0}, at: process_one_work+0x235/0x620
->  #1: ffffc900087c7e68 ((work_completion)(&(&wb->dwork)->work)){+.+.}-{0:0}, at: process_one_work+0x235/0x620
->  #2: ffff8882f19550e8 (&type->s_umount_key#52){++++}-{3:3}, at: trylock_super+0x11/0x50
-> 
-> stack backtrace:
-> CPU: 1 PID: 8175 Comm: kworker/u16:3 Tainted: G           O      5.7.1mq+ #383
-> Hardware name: System manufacturer System Product Name/P8Z68-V PRO, BIOS 3603 11/09/2012
-> Workqueue: writeback wb_workfn (flush-btrfs-1)
-> Call Trace:
->  dump_stack+0x71/0xa0
->  check_noncircular+0x165/0x180
->  ? stack_trace_save+0x46/0x70
->  __lock_acquire+0x11f9/0x1aa0
->  lock_acquire+0x9e/0x380
->  ? start_transaction+0x37e/0x550 [btrfs]
->  __sb_start_write+0x13a/0x270
->  ? start_transaction+0x37e/0x550 [btrfs]
->  start_transaction+0x37e/0x550 [btrfs]
->  ? kmem_cache_alloc+0x1b0/0x2c0
->  cow_file_range_inline.constprop.74+0xe4/0x640 [btrfs]
->  ? lock_acquire+0x9e/0x380
->  ? test_range_bit+0x3d/0x130 [btrfs]
->  cow_file_range+0xe5/0x3f0 [btrfs]
->  btrfs_run_delalloc_range+0x128/0x620 [btrfs]
->  ? find_lock_delalloc_range+0x1f3/0x220 [btrfs]
->  writepage_delalloc+0xe2/0x140 [btrfs]
->  __extent_writepage+0x1a3/0x370 [btrfs]
->  extent_write_cache_pages+0x2b8/0x470 [btrfs]
->  ? __lock_acquire+0x3fc/0x1aa0
->  extent_writepages+0x3f/0x90 [btrfs]
->  do_writepages+0x3c/0xe0
->  ? find_held_lock+0x2d/0x90
->  __writeback_single_inode+0x4f/0x650
->  writeback_sb_inodes+0x1f7/0x560
->  __writeback_inodes_wb+0x58/0xa0
->  wb_writeback+0x33b/0x4b0
->  wb_workfn+0x428/0x5b0
->  ? sched_clock_cpu+0xe/0xd0
->  process_one_work+0x2b6/0x620
->  ? worker_thread+0xc7/0x3e0
->  worker_thread+0x35/0x3e0
->  ? process_one_work+0x620/0x620
->  kthread+0x143/0x160
->  ? kthread_park+0x80/0x80
->  ret_from_fork+0x3a/0x50
-> 
+>
+> --Marc
+>
+>
+> >
+> > Song
