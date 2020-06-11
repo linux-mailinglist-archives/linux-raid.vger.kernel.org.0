@@ -2,88 +2,156 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 360BC1F602F
-	for <lists+linux-raid@lfdr.de>; Thu, 11 Jun 2020 04:56:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C5C71F60CA
+	for <lists+linux-raid@lfdr.de>; Thu, 11 Jun 2020 06:16:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbgFKCz7 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 10 Jun 2020 22:55:59 -0400
-Received: from mx0b-0019cd01.pphosted.com ([67.231.157.222]:33468 "EHLO
-        mx0b-0019cd01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726326AbgFKCz7 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 10 Jun 2020 22:55:59 -0400
-Received: from pps.filterd (m0073870.ppops.net [127.0.0.1])
-        by mx0b-0019cd01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05B2sFbi026647
-        for <linux-raid@vger.kernel.org>; Wed, 10 Jun 2020 22:55:58 -0400
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-        by mx0b-0019cd01.pphosted.com with ESMTP id 31g80qv0pv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-raid@vger.kernel.org>; Wed, 10 Jun 2020 22:55:58 -0400
-Received: by mail-qk1-f200.google.com with SMTP id 140so3855051qko.23
-        for <linux-raid@vger.kernel.org>; Wed, 10 Jun 2020 19:55:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fordham-edu.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=9gr5TLgHc+p1JdTYNAGQhgqTDAutiHR09Y8WFXrJeUg=;
-        b=JhryJ+i7UC8HIvhcmvzYc3ZXhFeIb5LE7ZcsYdqX7kJv7I/2ULairvnKdYeL5s9DPp
-         EhLn3zfrJf/rnjK8i88PKW+RgsBQQD9NcN9kavI27fu7SSOdyhsnOiAgJBVNj8ukjYZJ
-         sCN7jdsQRt792A4bpFu/mswbVarHGkeuLByqBC/XK9irtBvwUiWcBMppYehJZNICNleH
-         K4+/qxfyXuviUMMXydjrCqYt/zqv3/QWiVwGpca/+vYhzQYdVtduNQJgJ1p01LwO/kw9
-         kRo3EN2dNbL1Jm7oLU6wNtGkrcJae9W4+m8DLqe8nDZ2d63n5jcu/pFsOMERinzn/uxk
-         ykrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=9gr5TLgHc+p1JdTYNAGQhgqTDAutiHR09Y8WFXrJeUg=;
-        b=jwCRnc+7QBDRgVepFBWvEwxnOdNOmMYh5iOHJ5jjC7nMCDQ+K7ovwBSo6tdcHnrvPA
-         0CIwxJgB8Efdb+i33laqeq9siLZPSPfGg7EwlRz4yWE6MTb1xdpAtPsZve0Kjo7gsozY
-         1Wz5xTAX6UCl2d9lEx63JnEY9xrNy5id2rabiuS5JljwV2BxXyskCXMH3BAtzrFaxMgn
-         QjahnkyosPzsCTK1nD5LsABPTW/919yyz/KL5DYeSXvzJloPmJdKeC+loOOpGuTBcez4
-         aD/e8uqSh/i34TS/IT3q/bvmjyiINPY0qK/gyx2vcJBg2vnenlmIqsldLnjlKm4PIbl1
-         oWlA==
-X-Gm-Message-State: AOAM531JjoXgXUgk1wFoK2vNhXF8loqb+apvhY/JykHEDByRuKmvZZ/D
-        6Y6BnyuaOKHK4koW1jrNSnlriHZo9JTC8Mtr1BHDQklrB5uno+yKkpb4R0cOjhnuZDlR0WbBpw9
-        Q/ZJ5fq1zE7ehBkWkYV/kUaSkO/LkLt3HiIg=
-X-Received: by 2002:ac8:7303:: with SMTP id x3mr6282509qto.44.1591844157158;
-        Wed, 10 Jun 2020 19:55:57 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzEpcNiyUZG6u+KA75Yo4E84/6xRYjjWl2fWTNeY/nVu8dBO094wPPTITz1/gfcXJSLvHbE/SIYtABmCiKG7rQ=
-X-Received: by 2002:ac8:7303:: with SMTP id x3mr6282484qto.44.1591844156452;
- Wed, 10 Jun 2020 19:55:56 -0700 (PDT)
+        id S1725856AbgFKEQw (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 11 Jun 2020 00:16:52 -0400
+Received: from mail-40132.protonmail.ch ([185.70.40.132]:37311 "EHLO
+        mail-40132.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbgFKEQv (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 11 Jun 2020 00:16:51 -0400
+Date:   Thu, 11 Jun 2020 04:16:46 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail; t=1591849008;
+        bh=UwN8BdRxBItcGE2g1Iy/Y6VFQtG+wSQ2C7OPKwkdBb8=;
+        h=Date:To:From:Reply-To:Subject:In-Reply-To:References:From;
+        b=rYEgxkGPir4L0sZV7vak6SfjfoQ+7PWFZmwua+ab/r/eXKMDL3Lobj4Qo299d+Twa
+         Vrt+T+2aRiXg06ab6GxjOOxcfSVAfyZ+w3u75P44tXypzMTzV5vXdM2BHd2yA/QNhQ
+         LA02ZpscWUKGp0Mo6WUJyRJNxzmeyImrHtKLunBU=
+To:     "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>
+From:   Jonas Fisher <fisherthepooh@protonmail.com>
+Reply-To: Jonas Fisher <fisherthepooh@protonmail.com>
+Subject: Re: mdadm failed to create internal bitmap
+Message-ID: <R7U_r63MZfQnsq_dXezKz6IGonEFCrlHxliAyWVn_FgeR1KZ0JilClvwO7V2h9BQ1od9j9--edK1f-3ntp1TChJNdzEvMJFrDfKVTFBNqg0=@protonmail.com>
+In-Reply-To: <46XMI93tZHsxcOEfRj7cEIl272c4YrZUfsGBCr904ogr3xj8zPNdBaJdDWZBnahFIVVpLhDKWE0zc4_6JsBXWMu2mkiK63MUzuM6_ND7CpE=@protonmail.com>
+References: <46XMI93tZHsxcOEfRj7cEIl272c4YrZUfsGBCr904ogr3xj8zPNdBaJdDWZBnahFIVVpLhDKWE0zc4_6JsBXWMu2mkiK63MUzuM6_ND7CpE=@protonmail.com>
 MIME-Version: 1.0
-From:   Robert Kudyba <rkudyba@fordham.edu>
-Date:   Wed, 10 Jun 2020 22:55:45 -0400
-Message-ID: <CAFHi+KQCDok8bRTWTZcDGpOkdBvbH+szC5=qK0PZz2okdULsNQ@mail.gmail.com>
-Subject: Recovering a failed software RAI, where does parallel -j0 dd to?
-To:     linux-raid@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-10_13:2020-06-10,2020-06-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=484 phishscore=0
- malwarescore=0 spamscore=0 suspectscore=0 lowpriorityscore=0 adultscore=0
- mlxscore=0 impostorscore=0 bulkscore=0 clxscore=1015 priorityscore=1501
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006110021
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.2 required=7.0 tests=ALL_TRUSTED,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM shortcircuit=no
+        autolearn=disabled version=3.4.4
+X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on mail.protonmail.ch
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-I'm trying to go through
-https://raid.wiki.kernel.org/index.php/Recovering_a_failed_software_RAID
-echo $DEVICES
-/dev/sda1 /dev/sdb1 /dev/sdc1 /dev/sdd1
-parallel -j0 dd if={} of=/dev/null bs=1M ::: $DEVICES
+Hi,
 
-dd: error reading '/dev/sdd1': Input/output error
-23510+1 records in
-23510+1 records out
-24652464128 bytes (25 GB, 23 GiB) copied, 173.685 s, 142 MB/s
+About this issue, it is because of setting rdev size that
 
-Or is that just doing a scan and just checking which drive are bad? I
-sure would like to get that 25GB back. Is that possible?
+leads to integer overflow while adding internal bitmap.
 
-I also see this:
-ddrescue -r 3 /dev/old /dev/new my_log
-ddrescue -R -r 3 /dev/old /dev/new my_log
+Besides fixing integer overflow, I was wondering are there
 
-Can I just use a mount point for /dev/new?
+any concerns if we always set the rdev size to the max while doing expansio=
+n?
+
+Thanks,
+
+
+=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90 Original Me=
+ssage =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90
+
+> Hi all,
+>
+> I got a raid1 composed with 2 disks
+> /dev/sda -- 2T
+> /dev/sdb -- 4T
+>
+> mdadm version is 3.3 and md metadata version is 1.0
+>
+> At first, I was only using 1T of the each disk,
+>
+> then I grew the array recently with the command
+>
+> mdadm --grow /dev/md1 --size=3D1951944704K
+>
+> I also tried to add the internal bitmap after expansion finished
+>
+> mdadm --grow /dev/md1 --bitmap=3Dinternal
+>
+> But I got the following message
+>
+> mdadm: failed to create internal bitmap - chunksize problem.
+>
+> I found that Avail Dev Size in superblock examine of two disks
+>
+> are the same, same as the value I set when I expanded the array (19519447=
+04K).
+>
+> Then I found that in mdadm bitmap chunksize calculation,
+>
+> in function add_internal_bitmap1 (super1.c)
+>
+> variable "room" and and "max_bits" seems to be overflowed under this situ=
+ation
+>
+> /dev/sdb3:
+> Magic : a92b4efc
+> Version : 1.0
+> Feature Map : 0x0
+> Array UUID : 8d7b8858:e0e93d83:7c87e6e0:bd1628b8
+> Name : 1
+> Creation Time : Sun Apr 8 09:54:47 2018
+> Raid Level : raid1
+> Raid Devices : 2
+>
+> Avail Dev Size : 3903889408 (1861.52 GiB 1998.79 GB)
+> Array Size : 1951944704 (1861.52 GiB 1998.79 GB)
+> Super Offset : 7810899368 sectors
+> Unused Space : before=3D0 sectors, after=3D3907009952 sectors
+> State : clean
+> Device UUID : 3546fab2:3bfd9a17:39d78059:3d1eb830
+>
+> Update Time : Sun May 17 10:24:33 2020
+> Bad Block Log : 512 entries available at offset -8 sectors
+> Checksum : cf552c50 - correct
+> Events : 93088
+>
+> Device Role : Active device 0
+> Array State : AA ('A' =3D=3D active, '.' =3D=3D missing, 'R' =3D=3D repla=
+cing)
+>
+> /dev/sda3:
+> Magic : a92b4efc
+> Version : 1.0
+> Feature Map : 0x0
+> Array UUID : 8d7b8858:e0e93d83:7c87e6e0:bd1628b8
+> Name : 1
+> Creation Time : Sun Apr 8 09:54:47 2018
+> Raid Level : raid1
+> Raid Devices : 2
+>
+> Avail Dev Size : 3903889408 (1861.52 GiB 1998.79 GB)
+> Array Size : 1951944704 (1861.52 GiB 1998.79 GB)
+> Super Offset : 3903891368 sectors
+> Unused Space : before=3D0 sectors, after=3D1952 sectors
+> State : clean
+> Device UUID : 980038ac:99f4e8c6:39d91851:bdf6ed6d
+>
+> Update Time : Sun May 17 10:24:33 2020
+> Bad Block Log : 512 entries available at offset -8 sectors
+> Checksum : c3ce8290 - correct
+> Events : 93088
+>
+> Device Role : Active device 1
+> Array State : AA ('A' =3D=3D active, '.' =3D=3D missing, 'R' =3D=3D repla=
+cing)
+>
+> I was wondering is this because mdadm set the size of the rdevs in the ar=
+ray
+>
+> before doing expansion (in function Grow_reshape)
+>
+> that caused the sb->data_size not equals to actual raw device size
+>
+> and consequently led to bitmap chunksize calculation error
+>
+> or it is simply a data type issue.
+>
+> Thanks,
+
+
