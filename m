@@ -2,70 +2,52 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 453EB1F8F44
-	for <lists+linux-raid@lfdr.de>; Mon, 15 Jun 2020 09:18:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA64A1F971D
+	for <lists+linux-raid@lfdr.de>; Mon, 15 Jun 2020 14:53:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728538AbgFOHR4 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 15 Jun 2020 03:17:56 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5889 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728284AbgFOHRz (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:17:55 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6E851330869BD0E311BB;
-        Mon, 15 Jun 2020 15:17:50 +0800 (CST)
-Received: from [10.166.215.172] (10.166.215.172) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 15 Jun 2020 15:17:41 +0800
-Subject: Re: [PATCH v4 01/15] md/raid456: covert macro define of STRIPE_* as
- members of struct r5conf
-To:     Xiao Ni <xni@redhat.com>, <song@kernel.org>
-CC:     <linux-raid@vger.kernel.org>, <neilb@suse.com>,
-        <guoqing.jiang@cloud.ionos.com>, <houtao1@huawei.com>
-References: <20200612114220.13126-1-yuyufen@huawei.com>
- <20200612114220.13126-2-yuyufen@huawei.com>
- <00ffbcfe-1cc1-470b-d1a7-718e09f4f922@redhat.com>
-From:   Yufen Yu <yuyufen@huawei.com>
-Message-ID: <277990d4-f4b9-ab5e-1707-b0c529b86674@huawei.com>
-Date:   Mon, 15 Jun 2020 15:17:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        id S1730092AbgFOMxh (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 15 Jun 2020 08:53:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51202 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729643AbgFOMxb (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 15 Jun 2020 08:53:31 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6F2BC05BD43;
+        Mon, 15 Jun 2020 05:53:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=BbLzIVFa4A6zUaNf1L0nDn8DbczZnfgkEyA73ztXvCw=; b=eHfpexpJTLJHg1CM2SZriyfffr
+        qH+XQnvHEPvo2L2p3Nn+0V0EaaIwExHSpbbphZW3JHBWMFhCv5EUgC7DnMn2qRvVrRoKyIOmAgbGe
+        t6M6WhcCqMRYYCyUrfRRC3RUYTatpj1SKtOszQLRmzMy+FPk/laJymS71GfYVKBDWI1wz4vr2xJID
+        MwI58dESnvKWx9BvhFlBTZT4ncZl4GSfTDWWmLNbQKJ+gvpRy50tlp5cBrVL6g3u3mtt9loUkRE2l
+        Y0rHbnO0vZxxQso6tuxh1Ym7McZADkKv+ALZsbv9f3rFYCyzTEaTgJ1IqhDqHhIghLeHjbHPwjsjW
+        WnL7oGMg==;
+Received: from 195-192-102-148.dyn.cablelink.at ([195.192.102.148] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jkoc9-0000hi-OW; Mon, 15 Jun 2020 12:53:26 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: decruft the early init / initrd / initramfs code
+Date:   Mon, 15 Jun 2020 14:53:07 +0200
+Message-Id: <20200615125323.930983-1-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <00ffbcfe-1cc1-470b-d1a7-718e09f4f922@redhat.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.166.215.172]
-X-CFilter-Loop: Reflected
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+Hi all,
 
-
-On 2020/6/14 10:28, Xiao Ni wrote:
-> Hi Yufen
-> 
-> It looks like there is something wrong. I try to apply these patches based on latest upstream, but it fails.
-> 
-> [xni@xiao md]$ git am big-page/\[PATCH\ v4\ 01_15\]\ md_raid456\:\ covert\ macro\ define\ of\ STRIPE_\*\ as\ members\ of\ struct\ r5conf\ -\ Yufen\ Yu\ \<yuyufen@huawei.com\>\ -\ 2020-06-12\ 1942.eml
-> Applying: md/raid456: covert macro define of STRIPE_* as members of struct r5conf
-> error: patch failed: drivers/md/raid5.c:2267
-> error: drivers/md/raid5.c: patch does not apply
-> Patch failed at 0001 md/raid456: covert macro define of STRIPE_* as members of struct r5conf
-> The copy of the patch that failed is found in: .git/rebase-apply/patch
-> [xni@xiao md]$ cat .git/config
-> snip..
-> [remote "origin"]
->      url = https://git.kernel.org/pub/scm/linux/kernel/git/song/md.git
-> [xni@xiao md]$ git branch
->    master
-> * md-next
-> 
-
-Sorry for this. I have forgotten to rebase my own development branch
-with latest upstream. I will solve it in next version.
-
-Thanks,
-Yufen
+this series starts to move the early init code away from requiring
+KERNEL_DS to be implicitly set during early startup.  It does so by
+first removing legacy unused cruft, and the switches away the code
+from struct file based APIs to our more usual in-kernel APIs.
