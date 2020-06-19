@@ -2,85 +2,95 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 04F432007F2
-	for <lists+linux-raid@lfdr.de>; Fri, 19 Jun 2020 13:36:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FDE3200B23
+	for <lists+linux-raid@lfdr.de>; Fri, 19 Jun 2020 16:16:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731188AbgFSLgc (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 19 Jun 2020 07:36:32 -0400
-Received: from forward104j.mail.yandex.net ([5.45.198.247]:51018 "EHLO
-        forward104j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728624AbgFSLfv (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 19 Jun 2020 07:35:51 -0400
-Received: from mxback7j.mail.yandex.net (mxback7j.mail.yandex.net [IPv6:2a02:6b8:0:1619::110])
-        by forward104j.mail.yandex.net (Yandex) with ESMTP id 0FB9A4A1D21;
-        Fri, 19 Jun 2020 14:35:20 +0300 (MSK)
-Received: from sas8-b61c542d7279.qloud-c.yandex.net (sas8-b61c542d7279.qloud-c.yandex.net [2a02:6b8:c1b:2912:0:640:b61c:542d])
-        by mxback7j.mail.yandex.net (mxback/Yandex) with ESMTP id 4YCYSyIb8M-ZJFqcS95;
-        Fri, 19 Jun 2020 14:35:20 +0300
-Received: by sas8-b61c542d7279.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id MVzNfsOBDs-ZJPiUBvH;
-        Fri, 19 Jun 2020 14:35:19 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: Assemblin journaled array fails
-To:     Song Liu <song@kernel.org>
-Cc:     linux-raid <linux-raid@vger.kernel.org>
-References: <f8c61278-1758-66cd-cf25-8a118cb12f58@yandex.pl>
- <7b2b2bca-c1b7-06c5-10c5-2b1cdda21607@yandex.pl>
- <48e4fa28-4d20-ba80-cd69-b17da719531a@yandex.pl>
- <CAPhsuW69VYgLBZboxvQ6-Fmm-Oa0fGOVBg3SOVkzP_UopH+_wg@mail.gmail.com>
- <1767d7aa-6c60-7efb-bf37-6506f9aaa8a2@yandex.pl>
- <CAPhsuW4oMKuCrHUU1ucsMKQbSfBQdsNEQWHA1SSbGR5nbvy21w@mail.gmail.com>
- <CAPhsuW4WBDGGLYc=f4xoThxtxuF5K74m3odJ-uA98DuPLJR4nw@mail.gmail.com>
- <0cf6454d-a8b5-4bee-5389-94b23c077050@yandex.pl>
- <CAPhsuW51u6KWLvUntMXPU7stu7oSA+d-yT6zf7G0zCETzLWwiA@mail.gmail.com>
- <49efa0d2-b44c-ec85-5e44-fb93a15001e7@yandex.pl>
- <4df42e3d-ad2b-dfc2-3961-49ada4ea7eaf@yandex.pl>
- <CAPhsuW5kk0G9PSfEADc8+rn=QT2z4ogjuV98qWsH_s_WBic-5w@mail.gmail.com>
- <71f58507-314e-4a1d-dd50-41a60d76521b@yandex.pl>
- <CAPhsuW59Q7mU9WH36RHs9kb-TMk7FmrQL+JCApupf_TZtpWynA@mail.gmail.com>
- <4a03e900-61a8-f150-9be8-739e88ba8ce6@yandex.pl>
- <CAPhsuW4BZE-DeESsq-coNx5_KZrfHjP=d9YOjOPqPji5kQBXjg@mail.gmail.com>
-From:   Michal Soltys <msoltyspl@yandex.pl>
-Message-ID: <a772ede5-1d6f-e7cd-e949-a5d81d0fdbd1@yandex.pl>
-Date:   Fri, 19 Jun 2020 13:35:18 +0200
+        id S1729080AbgFSOQL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 19 Jun 2020 10:16:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbgFSOQJ (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 19 Jun 2020 10:16:09 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAE9AC06174E
+        for <linux-raid@vger.kernel.org>; Fri, 19 Jun 2020 07:16:08 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id t21so7693951edr.12
+        for <linux-raid@vger.kernel.org>; Fri, 19 Jun 2020 07:16:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=wnRv7ZO/+hIEBpVm8uHuNDLIQJ+F0xbx5hryFxt8Ub0=;
+        b=XzI2Q5LEu7qnT5fAl5Iv/vOlXfKOcZFEu8O9wwlHyRjCh+IUy9c5e9aHZC/4GfSxJg
+         77glo23LkIYXmsg00OULOOT2jQLnCFTQ3xJrLD0gbP+5HaY19LWne4xkHQC7y59BIroo
+         jS57cuVVaYB4+zMJ56Fb3xRiPmpkSol7irZIrcN08edWNmYWieTyWV7b/LLcDjWsQ/nv
+         cFMLtjP7SVhf2nY8LMjeegDjgzE+2I1jcZq/NaS9er5LIMhZhfJmBaM6ANB1ZmHsrTt3
+         nPQ06Tq/W+WzPRrejscjGtVoJXS/c7dr+LYzegKh78L7G/09/TtZVPwzoAoiFLacYHXE
+         0NzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=wnRv7ZO/+hIEBpVm8uHuNDLIQJ+F0xbx5hryFxt8Ub0=;
+        b=HPwUievx/pEpcX9NXGd2CS1/gYQmJZVSwzIN3IPF9Vi2hEhTalGFb3/pFG4mCWnlF9
+         hIYxCSYCJNlS+HV1JmJwWsFab6Nza+f+a1X52Se0UjLIHS9nt3sONE38K9qUJMfqMfHo
+         qypELXOy/FGvtMYfrXfF9clsa+OHWAjgqg+ldWrU3FE+gy1Kb4s+HctCr/8cjkmBc1rU
+         WVBlmzTYn5SCiQzeRDyhTqExmUm7fH6CpF5nUJj8mERuh3SCBON+rl86CwtTK9I9/LwJ
+         cHg9/z/o24fnq0r4Iwje2U3f9buZulECHZae2AsU8PeD73BRDO0JaPNMhK71KKjcCbyO
+         WBZA==
+X-Gm-Message-State: AOAM5300R+1CqoGVyrGmWajZ/98ycSJmlPv0VptZ4LtUmi/ieFW3J7EE
+        H81XmJLjUPTPTSUi+nqMmlALz35lwnC+Yw==
+X-Google-Smtp-Source: ABdhPJxW7blQ/YmOnyvwOERHtPHi04gV5Uyj9eG3AhUcSuJRSKVm3cB2WyMTLqfm6ZBdZYzXSOdu9Q==
+X-Received: by 2002:aa7:c157:: with SMTP id r23mr3616240edp.139.1592576167415;
+        Fri, 19 Jun 2020 07:16:07 -0700 (PDT)
+Received: from ?IPv6:2001:16b8:48f6:5100:b0c1:1cd:44ba:a39f? ([2001:16b8:48f6:5100:b0c1:1cd:44ba:a39f])
+        by smtp.gmail.com with ESMTPSA id be19sm4738373edb.5.2020.06.19.07.16.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Jun 2020 07:16:06 -0700 (PDT)
+Subject: Re: [PATCH 1/3] raid5: call clear_batch_ready before set
+ STRIPE_ACTIVE
+To:     linux-raid@vger.kernel.org
+Cc:     song@kernel.org
+References: <20200616092552.1754-1-guoqing.jiang@cloud.ionos.com>
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Message-ID: <acdb9e17-acf4-1e0e-f3cc-b90a1bf9748c@cloud.ionos.com>
+Date:   Fri, 19 Jun 2020 16:16:06 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAPhsuW4BZE-DeESsq-coNx5_KZrfHjP=d9YOjOPqPji5kQBXjg@mail.gmail.com>
+In-Reply-To: <20200616092552.1754-1-guoqing.jiang@cloud.ionos.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US-large
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 6/17/20 7:11 PM, Song Liu wrote:
->>
->>> 1. There are two pr_debug() calls in handle_stripe():
->>>          pr_debug("handling stripe %llu, state=%#lx cnt=%d, "
->>>          pr_debug("locked=%d uptodate=%d to_read=%d"
->>>
->>>       Did you enable all of them? Or only the first one?
->>
->> I enabled all of them (I think), to be precise:
->>
->> echo -n 'func handle_stripe +p' >/sys/kernel/debug/dynamic_debug/control
->>
->> Haven't seen any `locked` lines though.
-> 
-> That's a little weird, and probably explains why we stuck. Could you
-> please try the attached patch?
-> 
-> Thanks,
-> Song
-> 
+On 6/16/20 11:25 AM, Guoqing Jiang wrote:
+> [593764.644269] stripe state: 2003
+> kernel: [593764.644299] ------------[ cut here ]------------
+> kernel: [593764.644308] WARNING: CPU: 12 PID: 856 at drivers/md/raid5.c:4625 break_stripe_batch_list+0x203/0x240 [raid456]
 
-I've started assembly with the above patch, the output can be inspected 
-from this file:
+This happens with our own kernel, so the line number can't match with 
+upstream kernel.
 
-https://ufile.io/yx4bbcb4
+static void break_stripe_batch_list(struct stripe_head *head_sh,
+                                     unsigned long handle_flags)
+{
+         struct stripe_head *sh, *next;
+         int i;
+         int do_wakeup = 0;
 
-This is ~5mb packed dmesg from start of the boot to the relevant parts, 
-unpacks to ~150mb file.
+         list_for_each_entry_safe(sh, next, &head_sh->batch_list, 
+batch_list) {
+
+                 list_del_init(&sh->batch_list);
+
+*WARN_ONCE(sh->state & ((1 << STRIPE_ACTIVE) |*
+
+The warning was happened at above line.
+
+Thanks,
+Guoqing
