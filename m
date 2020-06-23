@@ -2,43 +2,43 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D873020689C
-	for <lists+linux-raid@lfdr.de>; Wed, 24 Jun 2020 01:46:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED20B2068BB
+	for <lists+linux-raid@lfdr.de>; Wed, 24 Jun 2020 01:59:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387523AbgFWXqt (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 23 Jun 2020 19:46:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55856 "EHLO mail.kernel.org"
+        id S2387649AbgFWX7L (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 23 Jun 2020 19:59:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731990AbgFWXqt (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 23 Jun 2020 19:46:49 -0400
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+        id S2387518AbgFWX7K (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 23 Jun 2020 19:59:10 -0400
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 134E420780
-        for <linux-raid@vger.kernel.org>; Tue, 23 Jun 2020 23:46:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B6C62098B
+        for <linux-raid@vger.kernel.org>; Tue, 23 Jun 2020 23:59:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592956008;
-        bh=Xwz2ynetQHNJLGAIbCaSUZ46SKG1QwAy0ymLpMH6y6s=;
+        s=default; t=1592956749;
+        bh=ZqZGU87wE57WFVzdPoidgvgT78LIFkGKPSLQs9zhrok=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qFsi5NthflNMZS35QyuQNvWw5ocucFMi4CArsHPXzXAyeOAb6YZpoHf4IXJejCGfq
-         rJrUCh0J8mHJqVBO35lJ5HHX6pSY9UikhiLtbY/FT3lJqiJn76f/MDx37ijjlQvBgB
-         oWPKyTQnWMkOrEqFQAJkS4998j+QFsznBbAd76eg=
-Received: by mail-lf1-f51.google.com with SMTP id y18so262835lfh.11
-        for <linux-raid@vger.kernel.org>; Tue, 23 Jun 2020 16:46:47 -0700 (PDT)
-X-Gm-Message-State: AOAM533vog94cIJBCebNLUxFneOe1c/J1+MPHK64puNJxNPHCuGegtbU
-        T61TIGswHbBrLqlJtYIDlM4+8Rh8q6qRZ42ZBqs=
-X-Google-Smtp-Source: ABdhPJwHmu6tRwYiEWqJBWAuvHCC45EZasospRWoFpYIWKRR1Hv+McnB1Zm6DNpotyWtGtYw4h2E0ngumTgGjHBgaoc=
-X-Received: by 2002:a05:6512:10c3:: with SMTP id k3mr14087938lfg.33.1592956006377;
- Tue, 23 Jun 2020 16:46:46 -0700 (PDT)
+        b=Zmix5afMLJLn1yu56NYMbaGoZlafO8hrkzAtTx23x+v5b345ttmrGr14t+43BeNvC
+         JQPjDuFu0w8jbK5dHBAnxlj6gV2/f7k6ogPfSi0z+YLb5AbromdXjQEqcm7HPX/nt3
+         iLhZHJgMw7XtyarmqqRmACMw+lgqT62zNdqGaBfs=
+Received: by mail-lj1-f174.google.com with SMTP id s1so549727ljo.0
+        for <linux-raid@vger.kernel.org>; Tue, 23 Jun 2020 16:59:09 -0700 (PDT)
+X-Gm-Message-State: AOAM531mwTbcN7i9wnOvMdzx6qh8rTBUMc25x4IOpzW7rLRAcdt07/vR
+        +iSEGyEFcBFFnwKb5MGLWEZTfiNiGZi4NfnpvQY=
+X-Google-Smtp-Source: ABdhPJy635zmqlkIIpnqs8chg7cHSc6+bhaz7IrYrFhoXMySodi8Uncb4oVfh7b0f994npCmmksfaKxbaGBawgwSjeo=
+X-Received: by 2002:a2e:9eca:: with SMTP id h10mr12713372ljk.273.1592956747808;
+ Tue, 23 Jun 2020 16:59:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <CH2PR22MB1768B9C137438BD5F512A73BD5940@CH2PR22MB1768.namprd22.prod.outlook.com>
-In-Reply-To: <CH2PR22MB1768B9C137438BD5F512A73BD5940@CH2PR22MB1768.namprd22.prod.outlook.com>
+References: <20200616092552.1754-1-guoqing.jiang@cloud.ionos.com>
+In-Reply-To: <20200616092552.1754-1-guoqing.jiang@cloud.ionos.com>
 From:   Song Liu <song@kernel.org>
-Date:   Tue, 23 Jun 2020 16:46:34 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW7o214am7p+jG1xkONqgPmzKWq+=MpFWn2RZhNSU3Odow@mail.gmail.com>
-Message-ID: <CAPhsuW7o214am7p+jG1xkONqgPmzKWq+=MpFWn2RZhNSU3Odow@mail.gmail.com>
-Subject: Re: stripe_cache_size and journal (cache) in write-back mode
-To:     Alexander Murashkin <AlexanderMurashkin@msn.com>
+Date:   Tue, 23 Jun 2020 16:58:56 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW70kML70Xi3MhubCGBWnLDg0L7sPKwKe9HZHsQHwtzEEQ@mail.gmail.com>
+Message-ID: <CAPhsuW70kML70Xi3MhubCGBWnLDg0L7sPKwKe9HZHsQHwtzEEQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] raid5: call clear_batch_ready before set STRIPE_ACTIVE
+To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 Cc:     linux-raid <linux-raid@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
@@ -46,115 +46,50 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi,
+On Tue, Jun 16, 2020 at 2:25 AM Guoqing Jiang
+<guoqing.jiang@cloud.ionos.com> wrote:
+>
+> We tried to only put the head sh of batch list to handle_list, then the
+> handle_stripe doesn't handle other members in the batch list. However,
+> we still got the calltrace in break_stripe_batch_list.
+>
+> [593764.644269] stripe state: 2003
+> kernel: [593764.644299] ------------[ cut here ]------------
+> kernel: [593764.644308] WARNING: CPU: 12 PID: 856 at drivers/md/raid5.c:4625 break_stripe_batch_list+0x203/0x240 [raid456]
+> [...]
+> kernel: [593764.644363] Call Trace:
+> kernel: [593764.644370]  handle_stripe+0x907/0x20c0 [raid456]
+> kernel: [593764.644376]  ? __wake_up_common_lock+0x89/0xc0
+> kernel: [593764.644379]  handle_active_stripes.isra.57+0x35f/0x570 [raid456]
+> kernel: [593764.644382]  ? raid5_wakeup_stripe_thread+0x96/0x1f0 [raid456]
+> kernel: [593764.644385]  raid5d+0x480/0x6a0 [raid456]
+> kernel: [593764.644390]  ? md_thread+0x11f/0x160
+> kernel: [593764.644392]  md_thread+0x11f/0x160
+> kernel: [593764.644394]  ? wait_woken+0x80/0x80
+> kernel: [593764.644396]  kthread+0xfc/0x130
+> kernel: [593764.644398]  ? find_pers+0x70/0x70
+> kernel: [593764.644399]  ? kthread_create_on_node+0x70/0x70
+> kernel: [593764.644401]  ret_from_fork+0x1f/0x30
+>
+> As we can see, the stripe was set with STRIPE_ACTIVE and STRIPE_HANDLE,
+> and only handle_stripe could set those flags then return. And since the
+> stipe was already in the batch list, we need to return earlier before
+> set the two flags.
+>
+> And after dig a little about git history especially commit 3664847d95e6
+> ("md/raid5: fix a race condition in stripe batch"), it seems the batched
+> stipe still could be handled by handle_stipe, then handle_stipe needs to
+> return earlier if clear_batch_ready to return true.
+>
+> Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+> ---
+> Another alternative would be just not warn if STRIPE_ACTIVE is valid for
+> the batched list.
+>
+> What do you think?
+>
 
-Please find answers below.
+This patch looks good to me (haven't tested yet). Let's try with this one.
 
-On Tue, Jun 23, 2020 at 2:06 PM Alexander Murashkin
-<AlexanderMurashkin@msn.com> wrote:
->
-> Dear MD,
->
-> After reading md documentation describing stripe_cache_size and journal
-> (cache) in write-back mode, I found some inconsistencies
->
-> - sometimes the documentation states that the cache is for RAID 4/5/6,
-> sometimes just for RAID 5
-
-In most of the cases, RAID 4/5/6 is the same as RAID 5.
-
-> - it is nothing explicitly said about the cache block device size and
-> how one is related to the memory cache size
-
-These two caches are independent. In-memory stripe cache is needed for
-parity calculation.It also serves as read cache. The block write cache is used
-to protect data during power loss. We never read the write cache during
-normal read/write.
-
-> - it is stated that the memory cache <includes> the same data stored on
-> cache disk - that is somewhat ambiguous
-
-Since we don't read the block write cache during normal read/write, we will
-not drop and data from in-memory stripe cache until we don't need it in the
-near future.
-
-> - stripe_cache_size is the number of pages per device, but it is also
-> called the number of entries
->
-> Here are some statements about the journal. Could somebody confirm that
-> they are true (or not)?
->
-> - the journal and all its features can be used with md RAID 4/5/6
-True.
-
-> - references to RAID 5 only are wrong (in regards to the journal)
-True.
-
-> - cache block device size in bytes shall be the same as memory cache
-> size in bytes
-False, they are not related.
-
-> - any extra block device or memory space (larger than the minimum of
-> cache block device and memory cache sizes) is not used
-Only a fraction of the journal device contains useful data. Once the data
-is fully committed to the raid disks, the copy in the journal device is not
-considered useful.
-
-> - the cache block device and the memory cache contain the same data
-They don't contain identical sets of data. But they may contain two copies
-of the same data.
-
-> - the cache entry is exactly one page (so the number of pages and the
-> number of entries are the same)
-
-Each entry is one page per raid disks. For a RAID 5 with 4 disks on x86_64
-system, each stripe cache entry is 4 pages (4kB x4).
-
->
-> Below are few extracts from the related documentation, for your convenience.
->
-> md(4)
-> ====
->
->      md/stripe_cache_size
->          This is only available on RAID5 and RAID6. It records the size
-> (in pages per device) of the stripe cache which
->          is used for synchronising all write operations to the array and
-> all read operations if the array is degraded.
->          memory_consumed = system_page_size * nr_disks * stripe_cache_size
->
-> https://www.kernel.org/doc/Documentation/md/raid5-cache.txt
-> =======================================
->
-> RAID5 cache
-> ------------------
->
-> Raid 4/5/6 could include an extra disk for data cache...
->
-> write-back mode:
-> ------------------------
->
-> Write-back cache will aggregate the data and flush the data to RAID
-> disks only after the data becomes a full stripe write...
-> In write-back mode, MD also caches data in memory. The memory cache
-> includes the same data stored on cache disk, ...
-> A user can configure the size by: echo "2048" >
-> /sys/block/md0/md/stripe_cache_size
->
-> The implementation:
-> -----------------------------
->
-> In write-back mode, MD writes IO data to the log and reports IO
-> completion. The data is also fully cached in memory at that
-> time, which means read must query memory cache. If some conditions are
-> met, MD will flush the data to RAID disks
-> ... MD will write both data and parity into RAID disks, then MD can
-> release the memory cache. The flush conditions could be
-> stripe becomes a full stripe write, free cache disk space is low or free
-> in-kernel memory cache space is low.
->
-> https://www.kernel.org/doc/html/latest/admin-guide/md.html
-> ======================================
->
-> stripe_cache_size (currently raid5 only)
->      number of entries in the stripe cache...
+Thanks,
+Song
