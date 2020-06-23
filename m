@@ -2,65 +2,52 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA9D920521C
-	for <lists+linux-raid@lfdr.de>; Tue, 23 Jun 2020 14:12:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9801205358
+	for <lists+linux-raid@lfdr.de>; Tue, 23 Jun 2020 15:25:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732625AbgFWMMs (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 23 Jun 2020 08:12:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33354 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732648AbgFWMMq (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 23 Jun 2020 08:12:46 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEE1BC061755
-        for <linux-raid@vger.kernel.org>; Tue, 23 Jun 2020 05:12:46 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id 80so6667440qko.7
-        for <linux-raid@vger.kernel.org>; Tue, 23 Jun 2020 05:12:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=7fNnQnFssZCc2Jtw2cUlJB4v7zrpRiQS682aXMZO9+Q=;
-        b=JqjmXWIWQqzQlgR/NQeb3ZlixiLNxSu7Ru1WD4gokIukysfF/R72WJYY0tCg2A2bdg
-         qhUZf2VEKvyEbGqyRW3Q0DHwywzTEWCrn4Kq11pev5ERlf1Lu8/a3G2/OBhKoNpLvFMY
-         5iYAwsr5ixGr9Pc03Djlm1mKT6rn5t+khMKdlUO6nLQ8HTUQH5GOLUvS14hsqFMUkxYj
-         wXR6YJ0UWqK+phuljWtxwJUYdPPv1UE8aIdOer/XgBhvU65TRd8UCJh2uGUkY4xSOxHx
-         ybgX5NkvapfafbNOvUx9z4YvL0Ulj269f5y9jGGnObWKSSz6AuR+OF1hU/lrgnJHGUX/
-         aE2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=7fNnQnFssZCc2Jtw2cUlJB4v7zrpRiQS682aXMZO9+Q=;
-        b=EgGxUTN2IUq4xpg41olozydP+gclmbNhIs37NcbUjewq4D/EHJ2nr+FpNrNrvsskkg
-         i1o3rxuz3KSXhJc5jXUqtLYcMmuT9tOsH+Hvvn70EWQrfBmgnXXuFntkeLN52Wz0xRmm
-         1lDq5qk323Zqx94gCqm0po45lLkr2Ty+y3QTewuGVK26ltz7KV36U4JAqx5j9Ee4bdSu
-         5IiWkkrfGhkVAAndtxfzHDfU5JNEZbNqYgoT86fTUlyITnVIwf3VdA2O2DUo1bEqVuQ0
-         RkOBMtLzkFunG6MugcMSe8kOKFlGlfzYG3sSjo2qmCxLgyFJHRl+3PK8XtwKdqHT+ti2
-         ZHqw==
-X-Gm-Message-State: AOAM531z4SrVHmWWWGkH36ilA85uFQjQfIk1Ej/0FRxfcSD+hZeOcBl5
-        9pCs8YBMHfVHpM7yjWPp1EeOwpdO4v+8AMQBRw0=
-X-Google-Smtp-Source: ABdhPJzmzbzdcrOrPpM+EBJ1RYlJDEoNpn+w4zcJDcfP0yb638DYolUtmBsoBctoUwGvJDm4HQCJug1CcfXMrZRohr8=
-X-Received: by 2002:a05:620a:1518:: with SMTP id i24mr1643106qkk.30.1592914366047;
- Tue, 23 Jun 2020 05:12:46 -0700 (PDT)
+        id S1732677AbgFWNZE (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 23 Jun 2020 09:25:04 -0400
+Received: from icebox.esperi.org.uk ([81.187.191.129]:60076 "EHLO
+        mail.esperi.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732594AbgFWNZD (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 23 Jun 2020 09:25:03 -0400
+X-Greylist: delayed 3499 seconds by postgrey-1.27 at vger.kernel.org; Tue, 23 Jun 2020 09:25:03 EDT
+Received: from loom (nix@sidle.srvr.nix [192.168.14.8])
+        by mail.esperi.org.uk (8.15.2/8.15.2) with ESMTP id 05NCQXrs000905;
+        Tue, 23 Jun 2020 13:26:33 +0100
+From:   Nix <nix@esperi.org.uk>
+To:     "John Stoffel" <john@stoffel.org>
+Cc:     Ian Pilcher <arequipeno@gmail.com>, linux-raid@vger.kernel.org
+Subject: Re: RAID types & chunks sizes for new NAS drives
+References: <rco1i8$1l34$1@ciao.gmane.io>
+        <24305.24232.459249.386799@quad.stoffel.home>
+Emacs:  an inspiring example of form following function... to Hell.
+Date:   Tue, 23 Jun 2020 13:26:33 +0100
+In-Reply-To: <24305.24232.459249.386799@quad.stoffel.home> (John Stoffel's
+        message of "Mon, 22 Jun 2020 21:45:12 -0400")
+Message-ID: <875zbi3r46.fsf@esperi.org.uk>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.50 (gnu/linux)
 MIME-Version: 1.0
-Received: by 2002:ac8:47c2:0:0:0:0:0 with HTTP; Tue, 23 Jun 2020 05:12:45
- -0700 (PDT)
-Reply-To: bektery@outlook.com
-From:   YAVUZ BEKTER <bakert.jg@gmail.com>
-Date:   Tue, 23 Jun 2020 05:12:45 -0700
-Message-ID: <CAAUSuTU+Gbz3ze=1z9crYwVoqAEwo3eqSv7cBpN_yw0XuVmDMA@mail.gmail.com>
-Subject: Hello.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-DCC-wuwien-Metrics: loom 1290; Body=3 Fuz1=3 Fuz2=3
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-I am the foreign operations director of Bank of Turkey.
-My name is Mr, Yavuz. I have a sensitive investment project to discuss
-with you, please reply now.
-________________________
-Ik ben de directeur buitenlandse activiteiten van de Bank of Turkey.
-Mijn naam is meneer Yavuz. Ik moet een gevoelig investeringsproject bespreken
-met u, antwoord dan nu.
+On 23 Jun 2020, John Stoffel told this:
+
+> You also don't say how *big* your disks will be, and if your 5 bay NAS
+> box can even split like that, and if it has the CPU to handle that.
+> Is it an NFS connection to the rest of your systems?
+
+Side note: NFSv4 really is much much better at this stuff than v3 ever
+was. With a fast enough network connection, I find NFSv4 as fast for
+more or less all workloads as NFSv3 was, mostly because of the lease
+support in v4 allowing client-side caching of the vast majority of files
+and directories that are either not written to or only written to by one
+client in a given short time window. (Obviously it also helps if your
+network is fast enough: 1GbE is going to be saturated many times over by
+a RAID array of any but the slowest modern HDDs. 10GbE and small
+10GbE-capable switches are not very costly these days and is definitely
+worth investing in on the NFS server and any clients you care about.)
