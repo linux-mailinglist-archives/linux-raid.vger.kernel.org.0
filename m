@@ -2,144 +2,159 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E6E78206824
-	for <lists+linux-raid@lfdr.de>; Wed, 24 Jun 2020 01:16:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D873020689C
+	for <lists+linux-raid@lfdr.de>; Wed, 24 Jun 2020 01:46:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387558AbgFWXQz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 23 Jun 2020 19:16:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51354 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731930AbgFWXQy (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 23 Jun 2020 19:16:54 -0400
-Received: from mail-ot1-x335.google.com (mail-ot1-x335.google.com [IPv6:2607:f8b0:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 795EEC061573
-        for <linux-raid@vger.kernel.org>; Tue, 23 Jun 2020 16:16:54 -0700 (PDT)
-Received: by mail-ot1-x335.google.com with SMTP id 64so153894oti.5
-        for <linux-raid@vger.kernel.org>; Tue, 23 Jun 2020 16:16:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UFD6lKIxMW1L6uFOJA+XY/n0qW/Y4XpRV1I9TRxi8kM=;
-        b=MBxB+aAufdlvgtvp6LJ/eKno6mTiu1pcM5YCJgO0LBOWphyvxFlHyoSeJz5WyaObI/
-         uE22thX4NGPbLM24+bixe+2vwR7HFmwUbtl7EY1uRcFk2oaL1ifVB13IKfW//su6CDNP
-         wIx0CR/WWqNjDK/cxMJKEnrZUOm35LUVqP5WixBK774SGmKZoTl/J/2FOrEbcnERuGy/
-         jR/FdA52z5BurU9mrwMO2z8R2UVvM9VtYr/yiytlndXhwO06xAZsQ5AoNGxn99Bt2/sr
-         6XTxSPskTq3NCwQoad/rjJv5FvbHekIIzqdwLY6qM28BlQpo+Js5ty88abKVxRAP1ItJ
-         lNUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UFD6lKIxMW1L6uFOJA+XY/n0qW/Y4XpRV1I9TRxi8kM=;
-        b=Bc0MkujElmvpscT572+ilrxxOm/LIaR1Q3wM8fBqsRUXt1Aay2+6ISTzYiKyDyi5w0
-         PNJpvNb/UmIDL03PqvQ71qRzEP1WJw5odQgwqk2llS0vQz2J/s978QsYiyxWOANTezj/
-         BPJ+h6+EsJjPYysL8olE+rcl+bV17uTxi/T1AbGK+Yx4MLH9xGiNTotI0JZ2G4FJ08EG
-         yxuNooXIRV6ZuclJjgd24/yHd2DWOSGhTEc7OJdlh1QbYU7pXEerB4cIyd5u6vI0YeRa
-         R/MQms9wLzm8lytB8JPhkKu8gukG0pWOysJTXQmgeVtsOqGLi2aqtOFnwop0gURm3wWQ
-         1XDg==
-X-Gm-Message-State: AOAM530zjBgngJrt0Qa52yS81Kz6MeAH/tb13pc2NWiBYlBf8RPCqZqC
-        AZtoJ2/slw8koRIDwY+bmE5cJ/rg
-X-Google-Smtp-Source: ABdhPJwCAGsp87EI/aPJVM1Ok7USZ5r23WMZd78H4B7Rzmaqz7NUDJmwEFIMXeoE7Mr7PLNlKNZ9dw==
-X-Received: by 2002:a9d:f07:: with SMTP id 7mr19844786ott.46.1592954213225;
-        Tue, 23 Jun 2020 16:16:53 -0700 (PDT)
-Received: from ian.penurio.us ([2605:6000:8c8b:a4fa:222:4dff:fe4f:c7ed])
-        by smtp.gmail.com with ESMTPSA id i16sm4413132otc.33.2020.06.23.16.16.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2020 16:16:52 -0700 (PDT)
-Subject: Re: RAID types & chunks sizes for new NAS drives
-To:     John Stoffel <john@stoffel.org>
-Cc:     linux-raid@vger.kernel.org
-References: <rco1i8$1l34$1@ciao.gmane.io>
- <24305.24232.459249.386799@quad.stoffel.home>
- <1ba7c1be-4cb1-29a5-d49c-bb26380ceb90@gmail.com>
- <24306.29793.40893.422618@quad.stoffel.home>
-From:   Ian Pilcher <arequipeno@gmail.com>
-Message-ID: <40bf8a08-61a6-2b50-b9c6-240e384de80d@gmail.com>
-Date:   Tue, 23 Jun 2020 18:16:51 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S2387523AbgFWXqt (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 23 Jun 2020 19:46:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55856 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731990AbgFWXqt (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 23 Jun 2020 19:46:49 -0400
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 134E420780
+        for <linux-raid@vger.kernel.org>; Tue, 23 Jun 2020 23:46:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592956008;
+        bh=Xwz2ynetQHNJLGAIbCaSUZ46SKG1QwAy0ymLpMH6y6s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qFsi5NthflNMZS35QyuQNvWw5ocucFMi4CArsHPXzXAyeOAb6YZpoHf4IXJejCGfq
+         rJrUCh0J8mHJqVBO35lJ5HHX6pSY9UikhiLtbY/FT3lJqiJn76f/MDx37ijjlQvBgB
+         oWPKyTQnWMkOrEqFQAJkS4998j+QFsznBbAd76eg=
+Received: by mail-lf1-f51.google.com with SMTP id y18so262835lfh.11
+        for <linux-raid@vger.kernel.org>; Tue, 23 Jun 2020 16:46:47 -0700 (PDT)
+X-Gm-Message-State: AOAM533vog94cIJBCebNLUxFneOe1c/J1+MPHK64puNJxNPHCuGegtbU
+        T61TIGswHbBrLqlJtYIDlM4+8Rh8q6qRZ42ZBqs=
+X-Google-Smtp-Source: ABdhPJwHmu6tRwYiEWqJBWAuvHCC45EZasospRWoFpYIWKRR1Hv+McnB1Zm6DNpotyWtGtYw4h2E0ngumTgGjHBgaoc=
+X-Received: by 2002:a05:6512:10c3:: with SMTP id k3mr14087938lfg.33.1592956006377;
+ Tue, 23 Jun 2020 16:46:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <24306.29793.40893.422618@quad.stoffel.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CH2PR22MB1768B9C137438BD5F512A73BD5940@CH2PR22MB1768.namprd22.prod.outlook.com>
+In-Reply-To: <CH2PR22MB1768B9C137438BD5F512A73BD5940@CH2PR22MB1768.namprd22.prod.outlook.com>
+From:   Song Liu <song@kernel.org>
+Date:   Tue, 23 Jun 2020 16:46:34 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW7o214am7p+jG1xkONqgPmzKWq+=MpFWn2RZhNSU3Odow@mail.gmail.com>
+Message-ID: <CAPhsuW7o214am7p+jG1xkONqgPmzKWq+=MpFWn2RZhNSU3Odow@mail.gmail.com>
+Subject: Re: stripe_cache_size and journal (cache) in write-back mode
+To:     Alexander Murashkin <AlexanderMurashkin@msn.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 6/23/20 4:30 PM, John Stoffel wrote:
-> Well, as you add LVM volumes to a VG, I don't honestly know offhand if
-> the areas are pre-allocated, or not, I think they are pre-allocated,
-> but if you add/remove/resize LVs, you can start to get fragmentation,
-> which will hurt performance.
+Hi,
 
-LVs are pre-allocated, and they definitely can become fragmented.
-That's orthogonal to whether the VG is on a single RAID device or a
-set of smaller adjacent RAID devices.
+Please find answers below.
 
-> No, you still do not want the partitioned setup, becuase if you lose a
-> disk, you want to rebuild it entirely, all at once.  Personally, 5 x
-> 8Tb disks setup in RAID10 with a hot spare sounds just fine to me.
-> You can survive a two disk failure if it doesn't hit both halves of
-> the mirror.  But the hot spare should help protect you.
+On Tue, Jun 23, 2020 at 2:06 PM Alexander Murashkin
+<AlexanderMurashkin@msn.com> wrote:
+>
+> Dear MD,
+>
+> After reading md documentation describing stripe_cache_size and journal
+> (cache) in write-back mode, I found some inconsistencies
+>
+> - sometimes the documentation states that the cache is for RAID 4/5/6,
+> sometimes just for RAID 5
 
-It depends on what sort of failure you're trying to protect against.  If
-you lose the entire disk (because of an electronic/mechanical failure,
-for example) your doing either an 8TB rebuild/resync or (for example)
-16x 512GB rebuild/resyncs, which is effectively the same thing.
+In most of the cases, RAID 4/5/6 is the same as RAID 5.
 
-OTOH, if you have a patch of sectors go bad in the partitioned case,
-the RAID layer is only going to automatically rebuild/resync one of the
-partition-based RAID devices.  To my thinking, this will reduce the
-chance of a double-failure.
+> - it is nothing explicitly said about the cache block device size and
+> how one is related to the memory cache size
 
-I think it's important to state that this NAS is pretty actively
-monitored/managed.  So if such a failure were to occur, I would
-absolutely be taking steps to retire the drive with the failed sectors.
-But that's something that I'd rather do manually, rather than kicking
-off (for example) and 8TB rebuild with a hot-spare.
+These two caches are independent. In-memory stripe cache is needed for
+parity calculation.It also serves as read cache. The block write cache is used
+to protect data during power loss. We never read the write cache during
+normal read/write.
 
-> One thing I really like to do is mix vendors in my array, just so I
-> dont' get caught by a bad batch.  And the RAID10 performance advantage
-> over RAID6 is big.  You'd only get 8Tb (only! :-) more space, but much
-> worse interactive response.
+> - it is stated that the memory cache <includes> the same data stored on
+> cache disk - that is somewhat ambiguous
 
-Mixing vendors (or at least channels) is one of those things that I
-know that I should do, but I always get impatient.
+Since we don't read the block write cache during normal read/write, we will
+not drop and data from in-memory stripe cache until we don't need it in the
+near future.
 
-But do I need the better performance.  Choices, choices ...  :-)
+> - stripe_cache_size is the number of pages per device, but it is also
+> called the number of entries
+>
+> Here are some statements about the journal. Could somebody confirm that
+> they are true (or not)?
+>
+> - the journal and all its features can be used with md RAID 4/5/6
+True.
 
-> Physics sucks, don't it?  :-)
+> - references to RAID 5 only are wrong (in regards to the journal)
+True.
 
-LOL!  Indeed it does!
-> 
-> What I do is have a pair of mirrored SSDs setup to cache my RAID1
-> arrays, to give me more performance.  Not really sure if it's helping
-> or hurting really.  dm-cache isn't really great at reporting stats,
-> and I never bothered to test it hard.
+> - cache block device size in bytes shall be the same as memory cache
+> size in bytes
+False, they are not related.
 
-I've played with both bcache and dm-cache, although it's been a few
-years.  Neither one really did much for me, but that's probably because
-I was using write-through caching, as I didn't trust "newfangled" SSDs
-at the time.
+> - any extra block device or memory space (larger than the minimum of
+> cache block device and memory cache sizes) is not used
+Only a fraction of the journal device contains useful data. Once the data
+is fully committed to the raid disks, the copy in the journal device is not
+considered useful.
 
-> My main box is an old AMD Phenom(tm) II X4 945 Processor, which is now
-> something like 10 years old.  It's fast enough for what I do.  I'm
-> more concerned with data loss than I am performance.
+> - the cache block device and the memory cache contain the same data
+They don't contain identical sets of data. But they may contain two copies
+of the same data.
 
-Same here.  I mainly want to feel comfortable that I haven't crippled my
-performance by doing something stupid, but as long as the NAS can stream
-a movie to media room it's good enough.
+> - the cache entry is exactly one page (so the number of pages and the
+> number of entries are the same)
 
-My NAS has an Atom D2550, so it's almost certainly slower than your
-Phenom.
+Each entry is one page per raid disks. For a RAID 5 with 4 disks on x86_64
+system, each stripe cache entry is 4 pages (4kB x4).
 
-> Get a bigger case then.  :-)
-
--- 
-========================================================================
-                  In Soviet Russia, Google searches you!
-========================================================================
+>
+> Below are few extracts from the related documentation, for your convenience.
+>
+> md(4)
+> ====
+>
+>      md/stripe_cache_size
+>          This is only available on RAID5 and RAID6. It records the size
+> (in pages per device) of the stripe cache which
+>          is used for synchronising all write operations to the array and
+> all read operations if the array is degraded.
+>          memory_consumed = system_page_size * nr_disks * stripe_cache_size
+>
+> https://www.kernel.org/doc/Documentation/md/raid5-cache.txt
+> =======================================
+>
+> RAID5 cache
+> ------------------
+>
+> Raid 4/5/6 could include an extra disk for data cache...
+>
+> write-back mode:
+> ------------------------
+>
+> Write-back cache will aggregate the data and flush the data to RAID
+> disks only after the data becomes a full stripe write...
+> In write-back mode, MD also caches data in memory. The memory cache
+> includes the same data stored on cache disk, ...
+> A user can configure the size by: echo "2048" >
+> /sys/block/md0/md/stripe_cache_size
+>
+> The implementation:
+> -----------------------------
+>
+> In write-back mode, MD writes IO data to the log and reports IO
+> completion. The data is also fully cached in memory at that
+> time, which means read must query memory cache. If some conditions are
+> met, MD will flush the data to RAID disks
+> ... MD will write both data and parity into RAID disks, then MD can
+> release the memory cache. The flush conditions could be
+> stripe becomes a full stripe write, free cache disk space is low or free
+> in-kernel memory cache space is low.
+>
+> https://www.kernel.org/doc/html/latest/admin-guide/md.html
+> ======================================
+>
+> stripe_cache_size (currently raid5 only)
+>      number of entries in the stripe cache...
