@@ -2,170 +2,109 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E6F2D2064FC
-	for <lists+linux-raid@lfdr.de>; Tue, 23 Jun 2020 23:32:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF6B520681E
+	for <lists+linux-raid@lfdr.de>; Wed, 24 Jun 2020 01:13:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390339AbgFWVaL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 23 Jun 2020 17:30:11 -0400
-Received: from li1843-175.members.linode.com ([172.104.24.175]:40730 "EHLO
-        mail.stoffel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389183AbgFWVaK (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 23 Jun 2020 17:30:10 -0400
-Received: from quad.stoffel.org (066-189-075-104.res.spectrum.com [66.189.75.104])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S2387682AbgFWXNO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 23 Jun 2020 19:13:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35338 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387596AbgFWXNO (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 23 Jun 2020 19:13:14 -0400
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.stoffel.org (Postfix) with ESMTPSA id A609220AA6;
-        Tue, 23 Jun 2020 17:30:09 -0400 (EDT)
-Received: by quad.stoffel.org (Postfix, from userid 1000)
-        id 19842A64B2; Tue, 23 Jun 2020 17:30:09 -0400 (EDT)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1743C20874
+        for <linux-raid@vger.kernel.org>; Tue, 23 Jun 2020 23:13:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592953993;
+        bh=/2Gi9jIvWAgctDCmoy5Lby/Rt6d3cGLlJzDna22aOsU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=koRVsmKOsCOMM720tzQC97taF0lsMJW0pj4m8KXpPEJK1QHhilHDJ9B+vPRn/a6AJ
+         1hvq0hMIsdKkA9SftS5wmIF7M1f/hpoDb9KRSSVBwS8EoXhfs0UDnGoIgZSzwq9kUG
+         VlM2BLlzOIvDtGkfSEcEa2f53kL8zWI/gDEtwac4=
+Received: by mail-lf1-f45.google.com with SMTP id t9so250195lfl.5
+        for <linux-raid@vger.kernel.org>; Tue, 23 Jun 2020 16:13:13 -0700 (PDT)
+X-Gm-Message-State: AOAM532Q69cb/7tVLY8VxQSNW34042AcJnC223KZ5GNeFfp+gYsIBAz5
+        Q4mhHsg35CuxPH5azF6RxQWhHUOaJnmpJ8WWIQc=
+X-Google-Smtp-Source: ABdhPJywtV1aHpxWpXDWWDSXGbiwOwJUxk1PSuyxu4dcCqbLTrsJDrrYPZTiZQ6Q0K4TgNovI1uPvU3F501xIFntp1Q=
+X-Received: by 2002:a19:c8c2:: with SMTP id y185mr13899329lff.52.1592953991436;
+ Tue, 23 Jun 2020 16:13:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Message-ID: <24306.29793.40893.422618@quad.stoffel.home>
-Date:   Tue, 23 Jun 2020 17:30:09 -0400
-From:   "John Stoffel" <john@stoffel.org>
-To:     Ian Pilcher <arequipeno@gmail.com>
-Cc:     John Stoffel <john@stoffel.org>, linux-raid@vger.kernel.org
-Subject: Re: RAID types & chunks sizes for new NAS drives
-In-Reply-To: <1ba7c1be-4cb1-29a5-d49c-bb26380ceb90@gmail.com>
-References: <rco1i8$1l34$1@ciao.gmane.io>
-        <24305.24232.459249.386799@quad.stoffel.home>
-        <1ba7c1be-4cb1-29a5-d49c-bb26380ceb90@gmail.com>
-X-Mailer: VM 8.2.0b under 26.1 (x86_64-pc-linux-gnu)
+References: <f8c61278-1758-66cd-cf25-8a118cb12f58@yandex.pl>
+ <CAPhsuW4oMKuCrHUU1ucsMKQbSfBQdsNEQWHA1SSbGR5nbvy21w@mail.gmail.com>
+ <CAPhsuW4WBDGGLYc=f4xoThxtxuF5K74m3odJ-uA98DuPLJR4nw@mail.gmail.com>
+ <0cf6454d-a8b5-4bee-5389-94b23c077050@yandex.pl> <CAPhsuW51u6KWLvUntMXPU7stu7oSA+d-yT6zf7G0zCETzLWwiA@mail.gmail.com>
+ <49efa0d2-b44c-ec85-5e44-fb93a15001e7@yandex.pl> <4df42e3d-ad2b-dfc2-3961-49ada4ea7eaf@yandex.pl>
+ <CAPhsuW5kk0G9PSfEADc8+rn=QT2z4ogjuV98qWsH_s_WBic-5w@mail.gmail.com>
+ <71f58507-314e-4a1d-dd50-41a60d76521b@yandex.pl> <CAPhsuW59Q7mU9WH36RHs9kb-TMk7FmrQL+JCApupf_TZtpWynA@mail.gmail.com>
+ <4a03e900-61a8-f150-9be8-739e88ba8ce6@yandex.pl> <CAPhsuW4BZE-DeESsq-coNx5_KZrfHjP=d9YOjOPqPji5kQBXjg@mail.gmail.com>
+ <a772ede5-1d6f-e7cd-e949-a5d81d0fdbd1@yandex.pl> <CAPhsuW5hwAMTy8ozpsT+n5F3M7NzKqBdheFZvnouZEv8hEqAxQ@mail.gmail.com>
+ <4b426e56-f971-67cf-81c0-63e035bf492a@yandex.pl> <CAPhsuW6fvgRCz7X7nnCEof4+yy2fTsxShNCuqTkMC0JQpj6gKw@mail.gmail.com>
+ <57247f5e-ec38-fb8c-9684-abbe699945fb@yandex.pl>
+In-Reply-To: <57247f5e-ec38-fb8c-9684-abbe699945fb@yandex.pl>
+From:   Song Liu <song@kernel.org>
+Date:   Tue, 23 Jun 2020 16:13:00 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW4hnpsbhQWWNKqgnw4nhp4Ho+gFbPU2fGjoMOcM8y7L+Q@mail.gmail.com>
+Message-ID: <CAPhsuW4hnpsbhQWWNKqgnw4nhp4Ho+gFbPU2fGjoMOcM8y7L+Q@mail.gmail.com>
+Subject: Re: Assemblin journaled array fails
+To:     Michal Soltys <msoltyspl@yandex.pl>
+Cc:     linux-raid <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
->>>>> "Ian" == Ian Pilcher <arequipeno@gmail.com> writes:
+On Tue, Jun 23, 2020 at 6:17 AM Michal Soltys <msoltyspl@yandex.pl> wrote:
+>
+> On 6/22/20 6:37 PM, Song Liu wrote:
+> >>>
+> >>> Thanks for the trace. Looks like we may have some issues with
+> >>> MD_SB_CHANGE_PENDING.
+> >>> Could you please try the attached patch?
+> >>
+> >> Should I run this along with pr_debugs from the previous patch enabled ?
+> >
+> > We don't need those pr_debug() here.
+> >
+> > Thanks,
+> > Song
+> >
+>
+> So with this patch attached, there is no extra output whatsoever - once it finished getting past this point:
+>
+> [  +0.371752] r5c_recovery_rewrite_data_only_stripes rewritten 20001 stripes to the journal, current ctx->pos 408461384 ctx->seq 866603361
+> [  +0.395000] r5c_recovery_rewrite_data_only_stripes rewritten 21001 stripes to the journal, current ctx->pos 408479568 ctx->seq 866604361
+> [  +0.371255] r5c_recovery_rewrite_data_only_stripes rewritten 22001 stripes to the journal, current ctx->pos 408496600 ctx->seq 866605361
+> [  +0.401013] r5c_recovery_rewrite_data_only_stripes rewritten 23001 stripes to the journal, current ctx->pos 408515472 ctx->seq 866606361
+> [  +0.370543] r5c_recovery_rewrite_data_only_stripes rewritten 24001 stripes to the journal, current ctx->pos 408532112 ctx->seq 866607361
+> [  +0.319253] r5c_recovery_rewrite_data_only_stripes done
+> [  +0.061560] r5c_recovery_flush_data_only_stripes enter
+> [  +0.075697] r5c_recovery_flush_data_only_stripes before wait_event
+>
+> That is, besides 'task <....> blocked for' traces or unless pr_debug()s were enabled.
+>
+> There were a few 'md_write_start set MD_SB_CHANGE_PENDING' *before* that (all of them likely related to another raid that is active at the moment, as these were happening during that lengthy r5c_recovery_flush_log() process).
 
-Ian> On 6/22/20 8:45 PM, John Stoffel wrote:
->> This is a terrible idea.  Just think about how there is just one head
->> per disk, and it takes a signifigant amount of time to seek from track
->> to track, and then add in rotational latecy.  This all adds up.
->> 
->> So now create multiple seperate RAIDS across all these disks, with
->> competing seek patterns, and you're just going to thrash you disks.
+Hmm.. this is weird, as I think I marked every instance of set_bit
+MD_SB_CHANGE_PENDING.
+Would you mind confirm those are to the other array with something like:
 
-Ian> Hmm.  Does that answer change if those partition-based RAID
-Ian> devices (of the same RAID level/settings) are combined into LVM
-Ian> volume groups?
+diff --git i/drivers/md/md.c w/drivers/md/md.c
+index dbbc8a50e2ed2..e91acfdcec032 100644
+--- i/drivers/md/md.c
++++ w/drivers/md/md.c
+@@ -8480,7 +8480,7 @@ bool md_write_start(struct mddev *mddev, struct bio *bi)
+                        mddev->in_sync = 0;
+                        set_bit(MD_SB_CHANGE_CLEAN, &mddev->sb_flags);
+                        set_bit(MD_SB_CHANGE_PENDING, &mddev->sb_flags);
+-                       pr_info("%s set MD_SB_CHANGE_PENDING\n", __func__);
++                       pr_info("%s: md: %s set
+MD_SB_CHANGE_PENDING\n", __func__, mdname(mddev));
+                        md_wakeup_thread(mddev->thread);
+                        did_change = 1;
+                }
 
-Yeah, it does change, as you add LVM groups, you can still lead to
-thrashing of the heads.  As you add layers, its harder and harder for
-different filesystems to coordinate disk access.
-
-But to me another big reason is KISS, Keep It Simple Stupid, so that
-when things go wrong, it's not as hard to fix.  
-
-Ian> I think it does, as the physical layout of the data on the disks
-Ian> will end up pretty much identical, so the drive heads won't go
-Ian> unnecessarily skittering between partitions.
-
-Well, as you add LVM volumes to a VG, I don't honestly know offhand if
-the areas are pre-allocated, or not, I think they are pre-allocated,
-but if you add/remove/resize LVs, you can start to get fragmentation,
-which will hurt performance.
-
-And note, I'm talking about harddisks here, with one read/write head.
-SSDs are a different beast.  
-
->> Sorta kinda maybe... In either case, you only get 1 drive more space
->> with RAID 6 vs RAID10.  You can suffer any two disk failure, while
->> RAID10 is limited to one half of each pair.  It's a tradeoff.
-
-Ian> Yeah.  For some reason I had it in my head that RAID 10 could
-Ian> survive a double failure.  Not sure how I got that idea.  As you
-Ian> mention, the only way to get close to that would be to do a
-Ian> 4-drive/partition RAID 10 with a hot-spare.  Which would actually
-Ian> give me a reason for the partitioned setup, as I would want to
-Ian> try to avoid a 4TB or 8TB rebuild.  (My new drives are 8TB
-Ian> Seagate Ironwolfs.)
-
-No, you still do not want the partitioned setup, becuase if you lose a
-disk, you want to rebuild it entirely, all at once.  Personally, 5 x
-8Tb disks setup in RAID10 with a hot spare sounds just fine to me.
-You can survive a two disk failure if it doesn't hit both halves of
-the mirror.  But the hot spare should help protect you.
-
-One thing I really like to do is mix vendors in my array, just so I
-dont' get caught by a bad batch.  And the RAID10 performance advantage
-over RAID6 is big.  You'd only get 8Tb (only! :-) more space, but much
-worse interactive response.  
-
->> Look at the recent Arstechnica article on RAID levels and
->> performance.  It's an eye opener.
-
-Ian> I assume that you're referring to this?
-
- 
-Ian> https://arstechnica.com/information-technology/2020/04/understanding-raid-how-performance-scales-from-one-disk-to-eight/
-
-Yup.  
-
-Ian> There's nothing really new in there.  Parity RAID sucks.  If you can't
-Ian> afford 3-legged mirrors, just go home, etc., etc.
-
-Physics sucks, don't it?  :-)
-
->> I don't think larger chunk sizes really make all that much difference,
->> especially with your plan to use multiple partitions.
-
-Ian>  From what I understand about "parity RAID" (RAID-5, RAID-6, and exotic
-Ian> variants thereof), one wants a smaller stripe size if one is doing
-Ian> smaller writes (to minimize RMW cycles), but larger chunks increase the
-Ian> speed of multiple concurrent sequential readers.
-
-It's all about tradeoffs.  
-
->> You also don't say how *big* your disks will be, and if your 5 bay NAS
->> box can even split like that, and if it has the CPU to handle that.
->> Is it an NFS connection to the rest of your systems?
-
-Ian> The disks are 8TB Seagate Ironwolf drives.  This is my home NAS, so it
-Ian> need to handle all sorts of different workloads - everything from media
-Ian> serving acting as an iSCSI target for test VMs.
-
-So that to me would tend to make me want to go with RAID10 to get the
-best performance.  You could even go three disk RAID5 and a single
-RAID10 to mix up the workloads, but then you lose the hot spare.  
-
-Ian> It runs NFS, Samba, iSCSI, various media servers, Apache, etc.  The
-Ian> good news is that there isn't really any performance requirement (other
-Ian> than my own level of patience).  I basically just want to avoid
-Ian> handicapping the performance of the NAS with a pathological setting
-Ian> (such as putting VM root disks on a RAID-6 device with a large chunk
-Ian> size perhaps?).
-
-What I do is have a pair of mirrored SSDs setup to cache my RAID1
-arrays, to give me more performance.  Not really sure if it's helping
-or hurting really.  dm-cache isn't really great at reporting stats,
-and I never bothered to test it hard.
-
-My main box is an old AMD Phenom(tm) II X4 945 Processor, which is now
-something like 10 years old.  It's fast enough for what I do.  I'm
-more concerned with data loss than I am performance.  
-
->> Honestly, I'd just setup two RAID1 mirrors with a single hot spare,
->> then use LVM on top to build the volumes you need.  With 8tb disks,
->> this only gives you 16Tb of space, but you get performance, quicker
->> rebuild speed if there's a problem with a disk, and simpler
->> management.
-
-Ian> I'm not willing to give up that much space *and* give up tolerance
-Ian> against double-failures.  Having come to my senses on what RAID-10
-Ian> can and can't do, I'll probably be doing RAID-6 everywhere, possibly
-Ian> with a couple of different chunk sizes.
-
-Sure, go for it.
-
->> With only five drives, you are limited in what you can do.  Now if you
->> could add a pair of mirror SSDs for caching, then I'd be more into
->> building a single large RAID6 backing device for media content, then
->> use the mirrored SSDs as a cache for a smaller block of day to day
->> storage.
-
-Ian> No space for any SSDs unfortunately.
-
-Get a bigger case then.  :-)  
+Thanks,
+Song
