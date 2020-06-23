@@ -2,79 +2,104 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2287E20474C
-	for <lists+linux-raid@lfdr.de>; Tue, 23 Jun 2020 04:32:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C128820505C
+	for <lists+linux-raid@lfdr.de>; Tue, 23 Jun 2020 13:16:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731434AbgFWCcT (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 22 Jun 2020 22:32:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56560 "EHLO
+        id S1732489AbgFWLQC (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 23 Jun 2020 07:16:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730456AbgFWCcT (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 22 Jun 2020 22:32:19 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80715C061573
-        for <linux-raid@vger.kernel.org>; Mon, 22 Jun 2020 19:32:17 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id y6so15200363edi.3
-        for <linux-raid@vger.kernel.org>; Mon, 22 Jun 2020 19:32:17 -0700 (PDT)
+        with ESMTP id S1732398AbgFWLQA (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 23 Jun 2020 07:16:00 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 777D1C061798
+        for <linux-raid@vger.kernel.org>; Tue, 23 Jun 2020 04:15:59 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id k6so7628841wrn.3
+        for <linux-raid@vger.kernel.org>; Tue, 23 Jun 2020 04:15:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wfIsUtsVfwZhsBIX4/Zg6mFSFdzW+dbrwLq9/GBV5ao=;
-        b=GA0+6wKju6HUK41NWRU9Y9pWO3zPWg9mEK1vgXDG9AXKx/Vg/DsWaeb/jWQegudzSi
-         QZXD5Yf9rQ2HZkOEdTWTo8MwUmvwuIbbddSNq897FCayH7e7pTZNSi/TSlgVfRBKut0/
-         mYcWIG6Egt7JYCObzBaM31VDo/jwmoRR6tyXvirQfe3yUukKbmbOqfowxKzcz3Sl7QEi
-         9n8p6BzlPPVL3XMDRgSZB7C7E0w1wXYV438zcODkVbq/duHnXdxbYMr0+XkTsY9GImnn
-         iRAbe8YKAdTgeerRKOaGIjuUXS4pBLZiKU6JjNUCkxV1tpyZ0U6t8SpQnjbQdOEcWvaz
-         v50Q==
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=D7l/Y2nU4ivOXB3kYNarWKNDy1SUWuawPt7q4q/Bhv4=;
+        b=tvu08zys9WtGSgfW7UnA8rorFZbCmUU2K+f4c6pZbV7J7d5WNheK1wkLxQoeLU7XXr
+         pr244SpNO7gpY3LBa+9WTj9i2EebBonq6CBPs3DNBpt2C7OM+JdX9UcUdXwD3q/LsdkT
+         cg9DavYSwAGILqROniDTaXoyc6vdbbxKPRoZ+bF+EBOXxILQDEb/jGo5xQKs1bikdDqO
+         gOiILbow/Gh18trEw4nxUdKepkXVYDmK11ExYQ3eeN/bDhJqeTBuQ0CPSiads72PD5R6
+         0pSKfNkU2aAn7VraPkwAGq2T4b6sKKZFl6aqT+xcgMTr2soZfA0ujvM2WBREef2VnQ1l
+         IMLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wfIsUtsVfwZhsBIX4/Zg6mFSFdzW+dbrwLq9/GBV5ao=;
-        b=joo+Df7nUSdD/UP7HrhGJoB7zmY0OGUaLAQLqZsVDE3DsuCaJCcFrK83cQbDUQ71hu
-         9ly8SKLzaSSXzKFEywttXLY/Xa7QtHLtnkTh8f5vK1rjNX6GzzpYEm228iSIAEeGH3sn
-         X/Vy8WZHuF0KKM/GPkGSff7UiUOYN4A0XYXj1CIKoxgn2UzHQnd5GT7CBARmI/r46ivK
-         wMtsjdalz52P9paCgwODlj/OU3ZIr7HuvCQoqqUxq0TqzgiHW51zmAk2MWcsJQgG6bt5
-         fKWZv6okSGEV76LWEJUnbGymBcsGSoSKOzn4YNa/IyHJb9tX56sRrYRTdm8s73kEuLPF
-         sviQ==
-X-Gm-Message-State: AOAM530VeAwhViHpf4b+Wf6IX0LhC9lvOCBeI2NX/qFGnlEyGWCkABbI
-        Q/YDp4nJYvrME8TeFJTxlqr+iudVEb4wK9jE5Bc=
-X-Google-Smtp-Source: ABdhPJysP1V7ExwpgzB0UzOrd9gmWtH+QsE+ld2rVwpRa7Rai8viTFjQb8BfWU7hXqEb6s6Lsvu/RNSPYLFAN2xPquM=
-X-Received: by 2002:aa7:c15a:: with SMTP id r26mr19126722edp.21.1592879536154;
- Mon, 22 Jun 2020 19:32:16 -0700 (PDT)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=D7l/Y2nU4ivOXB3kYNarWKNDy1SUWuawPt7q4q/Bhv4=;
+        b=I50DeTFwlU05X7k54TDE0kPyfOzB4sKXN1tGLW87SYqGge7hDyz4ygYB1IKpRahx6E
+         GYBFAqgfkEytJ1tq965dklvaYIZgymKbZfN32jyDx6TM95qoNwp9M6oMpw8SkB+odE41
+         j0yiEP35F5vnuRjWwmVxwnZWVB529hL5iv0+Ln3OxJeehplxn9/v/bu1KQef0O0VUZJQ
+         xFWSYJC5L7rS31w8IDV0kI5ADlhCEx+bqYxazuYugDExZXWiYKRNzC63etSHupZR8/1C
+         ndh7PI8jeVUVWjTCO/DjpgwAzf3t38VwknVPy7NjoMNNrICt5ViLEJhLZ6Eg2+y5qBcN
+         5DFw==
+X-Gm-Message-State: AOAM5324uK2zMpOZ2YtsH42pEO9ot82v9WOesrjXsaJCAW3bnT6QqbBy
+        TDsdqlmewYziZ0Dik1qhD3OKQx6TyyqingRJuBw=
+X-Google-Smtp-Source: ABdhPJw5K9JU0ojOrQKOzV63fIOlVfxvjwOsGTJRjkxpSt7U8db/vz3UoXgpEld7Xt1g7x/JM2uH6i/0jDjP2npO7+k=
+X-Received: by 2002:a5d:62d1:: with SMTP id o17mr24067125wrv.162.1592910958213;
+ Tue, 23 Jun 2020 04:15:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <rco1i8$1l34$1@ciao.gmane.io> <24305.24232.459249.386799@quad.stoffel.home>
-In-Reply-To: <24305.24232.459249.386799@quad.stoffel.home>
-From:   o1bigtenor <o1bigtenor@gmail.com>
-Date:   Mon, 22 Jun 2020 21:31:40 -0500
-Message-ID: <CAPpdf5-RWyGX4Q9qaZBDfxUXedf+MnV3wnXh6R3XSF7-LomKzQ@mail.gmail.com>
-Subject: Re: RAID types & chunks sizes for new NAS drives
-To:     John Stoffel <john@stoffel.org>
-Cc:     Ian Pilcher <arequipeno@gmail.com>,
-        Linux-RAID <linux-raid@vger.kernel.org>
+Received: by 2002:a1c:f002:0:0:0:0:0 with HTTP; Tue, 23 Jun 2020 04:15:57
+ -0700 (PDT)
+Reply-To: sarahkoffi389@yahoo.co.jp
+From:   Sarah Koffi <paulwiliam782@gmail.com>
+Date:   Tue, 23 Jun 2020 12:15:57 +0100
+Message-ID: <CAHqcnY1sQc2pQ+0Uyz5Y25va64Mmiq7PVAFb=gqiSCPOaqkzpA@mail.gmail.com>
+Subject: Greetings From Mrs. Sarah Koffi
+To:     sarahkoffi389@yahoo.co.jp
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 9:06 PM John Stoffel <john@stoffel.org> wrote:
->
-snip
+Greetings From Mrs. Sarah Koffi
 
-> In any case, make sure you get NAS rated disks, either the newest WD
-> RED+ (or is it Blue?)  In any case, make sure to NOT get the SMR
-> (Shingled Magnetic Recording) format drives.  See previous threads in
-> this group, as well as the arstechnica.com discussion about it all
-> that they disk last month.  Very informative.
->
-> Personally, with regular hard disks, I still kinda think 4gb is the
-> sweet spot, since you can just mirror pairs of the disks and then
-> stripe across on top as needed.  I like my storage simple, because
-> when (not if!) it all hits the fan, simple is easier to recover from.
->
-Did you mean 4 TB or 4 GB as you wrote?
-(Somewhat of a difference I do believe.)
+I'm contacting you based on your good profiles I read and for a good
+reasons, I am in search of a property to buy in your country as I
+intended to come over to your
+country for investment, Though I have not meet with you before but I
+believe that one has to risk confiding in someone to succeed sometimes
+in life.
 
-Regards
+My name is Mrs. Sarah Koffi. My late husband deals on Crude Oil with
+Federal Government of Sudan and he has a personal Oil firm in Bentiu
+Oil zone town and Upper
+Nile city. What I have experience physically, I don't wish to
+experience it again in my life due to the recent civil Ethnic war
+cause by our President Mr. Salva Kiir
+and the rebel leader Mr Riek Machar, I have been Under United Nation
+refuge camp in chad to save my life and that of my little daughter.
+
+Though, I do not know how you will feel to my proposal, but the truth
+is that I sneaked into Chad our neighboring country where I am living
+now as a refugee.
+I escaped with my little daughter when the rebels bust into our house
+and killed my husband as one of the big oil dealers in the country,
+ever since then, I have being on the run.
+
+I left my country and move to Chad our neighboring country with the
+little ceasefire we had, due to the face to face peace meeting accord
+coordinated by the US Secretary of State, Mr John Kerry and United
+Nations in Ethiopia (Addis Ababa) between our President Mr Salva Kiir
+and the rebel leader Mr Riek Machar to stop this war.
+
+I want to solicit for your partnership with trust to invest the $8
+million dollars deposited by my late husband in Bank because my life
+is no longer safe in our country, since the rebels are looking for the
+families of all the oil business men in the country to kill, saying
+that they are they one that is milking the country dry.
+
+I will offer you 20% of the total fund for your help while I will
+partner with you for the investment in your country.
+If I get your reply.
+
+I will wait to hear from you so as to give you details.With love from
+
+ i need you to contact me here sarahkoffi389@yahoo.co.jp
+
+Mrs. Sarah Koffi
