@@ -2,154 +2,170 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7662120641D
-	for <lists+linux-raid@lfdr.de>; Tue, 23 Jun 2020 23:30:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6F2D2064FC
+	for <lists+linux-raid@lfdr.de>; Tue, 23 Jun 2020 23:32:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390587AbgFWVQZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 23 Jun 2020 17:16:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53358 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390781AbgFWU1i (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 23 Jun 2020 16:27:38 -0400
-Received: from mail-oi1-x22e.google.com (mail-oi1-x22e.google.com [IPv6:2607:f8b0:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2B24C061573
-        for <linux-raid@vger.kernel.org>; Tue, 23 Jun 2020 13:27:37 -0700 (PDT)
-Received: by mail-oi1-x22e.google.com with SMTP id i74so19983698oib.0
-        for <linux-raid@vger.kernel.org>; Tue, 23 Jun 2020 13:27:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OqYG6ZouDCf7QGv56qoShOStLRNeFFY6nOKOBeMJ3wo=;
-        b=eOQMtFy+jbV85tVtJmH1nnVoz+PqoLcJEtglnmkILWvlGl9vroyXnTHYbBsHaI2FYL
-         y/N+fWGqWfnGVZ2u8NJl8EJhKMJcm5qq7rSRGk2f5T5nDY4zuD/rqYlbmi3y1Il2GMBp
-         JQDnmBO9ogapeVgtNkt2jZplahyiL1rj3Hze+b2cHmQJB/xo8myvltFnhxAjHB/p1kHd
-         9ZSF0srRvJvw61wYeb4hJbt96NptdWD52WQ6AGQGMBkXESPMELtri1XyyN7NKK/uHAVj
-         h3NptT0CSFSIIPYBhfLp1lOFMOmquxuNw72g5ChFOF4PjIBCOXlIKzUK00BfylaqvAxz
-         /Ftg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OqYG6ZouDCf7QGv56qoShOStLRNeFFY6nOKOBeMJ3wo=;
-        b=hKZ+uALzYu7PvaKnXT5lh4tMaVQPA1rC5Pc+2dCm86hPL41M3gZV5YkcbOrS2lOfDt
-         EgqGFRxbGrEH+BtOut9d24HpfQ2w6naniUnqWCPLmit03dfF5DydFhw4rufRO52QI4wg
-         +/Po8GyOoabfV5YRlCkAtLH9fvXq3YNJC0o+5UOoV9Ttdh83IxnSBlO1jbaUw3m3xh+g
-         Z+/b1b7dewr+1b4jquabEkCrHiqwvfoScqSMb3mVZV5CdV3vFg446B6swO/jYRNOiOLE
-         ih+BR8THMz01EyUfnRcCDO/8XnSDR+A5FKyT/pamh5NYJAULEcYpneEKrTnc41PIfCoP
-         Kb9A==
-X-Gm-Message-State: AOAM5320vOyfKQo10ZO6pZwaq8ZfFVh42ihUg9MA4Y/c0exFVmEvSqGI
-        JSgMPsECEJRBofTrrcoMSTB/Oex3
-X-Google-Smtp-Source: ABdhPJz7eekRVWCv4FacW6fG+F0KMiFTfNEtcv278/DZAWdWWyBX0KfwBDEzEE95koDTbgY69bhcpA==
-X-Received: by 2002:aca:aa8d:: with SMTP id t135mr3517245oie.75.1592944056918;
-        Tue, 23 Jun 2020 13:27:36 -0700 (PDT)
-Received: from ian.penurio.us ([2605:6000:8c8b:a4fa:222:4dff:fe4f:c7ed])
-        by smtp.gmail.com with ESMTPSA id h10sm1490074ooe.44.2020.06.23.13.27.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2020 13:27:36 -0700 (PDT)
-Subject: Re: RAID types & chunks sizes for new NAS drives
-To:     John Stoffel <john@stoffel.org>
-Cc:     linux-raid@vger.kernel.org
-References: <rco1i8$1l34$1@ciao.gmane.io>
- <24305.24232.459249.386799@quad.stoffel.home>
-From:   Ian Pilcher <arequipeno@gmail.com>
-Message-ID: <1ba7c1be-4cb1-29a5-d49c-bb26380ceb90@gmail.com>
-Date:   Tue, 23 Jun 2020 15:27:35 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S2390339AbgFWVaL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 23 Jun 2020 17:30:11 -0400
+Received: from li1843-175.members.linode.com ([172.104.24.175]:40730 "EHLO
+        mail.stoffel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389183AbgFWVaK (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 23 Jun 2020 17:30:10 -0400
+Received: from quad.stoffel.org (066-189-075-104.res.spectrum.com [66.189.75.104])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.stoffel.org (Postfix) with ESMTPSA id A609220AA6;
+        Tue, 23 Jun 2020 17:30:09 -0400 (EDT)
+Received: by quad.stoffel.org (Postfix, from userid 1000)
+        id 19842A64B2; Tue, 23 Jun 2020 17:30:09 -0400 (EDT)
 MIME-Version: 1.0
-In-Reply-To: <24305.24232.459249.386799@quad.stoffel.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+Message-ID: <24306.29793.40893.422618@quad.stoffel.home>
+Date:   Tue, 23 Jun 2020 17:30:09 -0400
+From:   "John Stoffel" <john@stoffel.org>
+To:     Ian Pilcher <arequipeno@gmail.com>
+Cc:     John Stoffel <john@stoffel.org>, linux-raid@vger.kernel.org
+Subject: Re: RAID types & chunks sizes for new NAS drives
+In-Reply-To: <1ba7c1be-4cb1-29a5-d49c-bb26380ceb90@gmail.com>
+References: <rco1i8$1l34$1@ciao.gmane.io>
+        <24305.24232.459249.386799@quad.stoffel.home>
+        <1ba7c1be-4cb1-29a5-d49c-bb26380ceb90@gmail.com>
+X-Mailer: VM 8.2.0b under 26.1 (x86_64-pc-linux-gnu)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 6/22/20 8:45 PM, John Stoffel wrote:
-> This is a terrible idea.  Just think about how there is just one head
-> per disk, and it takes a signifigant amount of time to seek from track
-> to track, and then add in rotational latecy.  This all adds up.
-> 
-> So now create multiple seperate RAIDS across all these disks, with
-> competing seek patterns, and you're just going to thrash you disks.
+>>>>> "Ian" == Ian Pilcher <arequipeno@gmail.com> writes:
 
-Hmm.  Does that answer change if those partition-based RAID devices
-(of the same RAID level/settings) are combined into LVM volume groups?
+Ian> On 6/22/20 8:45 PM, John Stoffel wrote:
+>> This is a terrible idea.  Just think about how there is just one head
+>> per disk, and it takes a signifigant amount of time to seek from track
+>> to track, and then add in rotational latecy.  This all adds up.
+>> 
+>> So now create multiple seperate RAIDS across all these disks, with
+>> competing seek patterns, and you're just going to thrash you disks.
 
-I think it does, as the physical layout of the data on the disks will
-end up pretty much identical, so the drive heads won't go unnecessarily
-skittering between partitions.
+Ian> Hmm.  Does that answer change if those partition-based RAID
+Ian> devices (of the same RAID level/settings) are combined into LVM
+Ian> volume groups?
 
-> Sorta kinda maybe... In either case, you only get 1 drive more space
-> with RAID 6 vs RAID10.  You can suffer any two disk failure, while
-> RAID10 is limited to one half of each pair.  It's a tradeoff.
+Yeah, it does change, as you add LVM groups, you can still lead to
+thrashing of the heads.  As you add layers, its harder and harder for
+different filesystems to coordinate disk access.
 
-Yeah.  For some reason I had it in my head that RAID 10 could survive a
-double failure.  Not sure how I got that idea.  As you mention, the only
-way to get close to that would be to do a 4-drive/partition RAID 10 with
-a hot-spare.  Which would actually give me a reason for the partitioned
-setup, as I would want to try to avoid a 4TB or 8TB rebuild.  (My new
-drives are 8TB Seagate Ironwolfs.)
+But to me another big reason is KISS, Keep It Simple Stupid, so that
+when things go wrong, it's not as hard to fix.  
 
-> Look at the recent Arstechnica article on RAID levels and
-> performance.  It's an eye opener.
+Ian> I think it does, as the physical layout of the data on the disks
+Ian> will end up pretty much identical, so the drive heads won't go
+Ian> unnecessarily skittering between partitions.
 
-I assume that you're referring to this?
+Well, as you add LVM volumes to a VG, I don't honestly know offhand if
+the areas are pre-allocated, or not, I think they are pre-allocated,
+but if you add/remove/resize LVs, you can start to get fragmentation,
+which will hurt performance.
+
+And note, I'm talking about harddisks here, with one read/write head.
+SSDs are a different beast.  
+
+>> Sorta kinda maybe... In either case, you only get 1 drive more space
+>> with RAID 6 vs RAID10.  You can suffer any two disk failure, while
+>> RAID10 is limited to one half of each pair.  It's a tradeoff.
+
+Ian> Yeah.  For some reason I had it in my head that RAID 10 could
+Ian> survive a double failure.  Not sure how I got that idea.  As you
+Ian> mention, the only way to get close to that would be to do a
+Ian> 4-drive/partition RAID 10 with a hot-spare.  Which would actually
+Ian> give me a reason for the partitioned setup, as I would want to
+Ian> try to avoid a 4TB or 8TB rebuild.  (My new drives are 8TB
+Ian> Seagate Ironwolfs.)
+
+No, you still do not want the partitioned setup, becuase if you lose a
+disk, you want to rebuild it entirely, all at once.  Personally, 5 x
+8Tb disks setup in RAID10 with a hot spare sounds just fine to me.
+You can survive a two disk failure if it doesn't hit both halves of
+the mirror.  But the hot spare should help protect you.
+
+One thing I really like to do is mix vendors in my array, just so I
+dont' get caught by a bad batch.  And the RAID10 performance advantage
+over RAID6 is big.  You'd only get 8Tb (only! :-) more space, but much
+worse interactive response.  
+
+>> Look at the recent Arstechnica article on RAID levels and
+>> performance.  It's an eye opener.
+
+Ian> I assume that you're referring to this?
 
  
-https://arstechnica.com/information-technology/2020/04/understanding-raid-how-performance-scales-from-one-disk-to-eight/
+Ian> https://arstechnica.com/information-technology/2020/04/understanding-raid-how-performance-scales-from-one-disk-to-eight/
 
-There's nothing really new in there.  Parity RAID sucks.  If you can't
-afford 3-legged mirrors, just go home, etc., etc.
+Yup.  
 
-> I don't think larger chunk sizes really make all that much difference,
-> especially with your plan to use multiple partitions.
+Ian> There's nothing really new in there.  Parity RAID sucks.  If you can't
+Ian> afford 3-legged mirrors, just go home, etc., etc.
 
- From what I understand about "parity RAID" (RAID-5, RAID-6, and exotic
-variants thereof), one wants a smaller stripe size if one is doing
-smaller writes (to minimize RMW cycles), but larger chunks increase the
-speed of multiple concurrent sequential readers.
+Physics sucks, don't it?  :-)
 
-> You also don't say how *big* your disks will be, and if your 5 bay NAS
-> box can even split like that, and if it has the CPU to handle that.
-> Is it an NFS connection to the rest of your systems?
+>> I don't think larger chunk sizes really make all that much difference,
+>> especially with your plan to use multiple partitions.
 
-The disks are 8TB Seagate Ironwolf drives.  This is my home NAS, so it
-need to handle all sorts of different workloads - everything from media
-serving acting as an iSCSI target for test VMs.
+Ian>  From what I understand about "parity RAID" (RAID-5, RAID-6, and exotic
+Ian> variants thereof), one wants a smaller stripe size if one is doing
+Ian> smaller writes (to minimize RMW cycles), but larger chunks increase the
+Ian> speed of multiple concurrent sequential readers.
 
-It runs NFS, Samba, iSCSI, various media servers, Apache, etc.  The
-good news is that there isn't really any performance requirement (other
-than my own level of patience).  I basically just want to avoid
-handicapping the performance of the NAS with a pathological setting
-(such as putting VM root disks on a RAID-6 device with a large chunk
-size perhaps?).
+It's all about tradeoffs.  
 
-> Honestly, I'd just setup two RAID1 mirrors with a single hot spare,
-> then use LVM on top to build the volumes you need.  With 8tb disks,
-> this only gives you 16Tb of space, but you get performance, quicker
-> rebuild speed if there's a problem with a disk, and simpler
-> management.
+>> You also don't say how *big* your disks will be, and if your 5 bay NAS
+>> box can even split like that, and if it has the CPU to handle that.
+>> Is it an NFS connection to the rest of your systems?
 
-I'm not willing to give up that much space *and* give up tolerance
-against double-failures.  Having come to my senses on what RAID-10
-can and can't do, I'll probably be doing RAID-6 everywhere, possibly
-with a couple of different chunk sizes.
+Ian> The disks are 8TB Seagate Ironwolf drives.  This is my home NAS, so it
+Ian> need to handle all sorts of different workloads - everything from media
+Ian> serving acting as an iSCSI target for test VMs.
 
-> With only five drives, you are limited in what you can do.  Now if you
-> could add a pair of mirror SSDs for caching, then I'd be more into
-> building a single large RAID6 backing device for media content, then
-> use the mirrored SSDs as a cache for a smaller block of day to day
-> storage.
+So that to me would tend to make me want to go with RAID10 to get the
+best performance.  You could even go three disk RAID5 and a single
+RAID10 to mix up the workloads, but then you lose the hot spare.  
 
-No space for any SSDs unfortunately.
+Ian> It runs NFS, Samba, iSCSI, various media servers, Apache, etc.  The
+Ian> good news is that there isn't really any performance requirement (other
+Ian> than my own level of patience).  I basically just want to avoid
+Ian> handicapping the performance of the NAS with a pathological setting
+Ian> (such as putting VM root disks on a RAID-6 device with a large chunk
+Ian> size perhaps?).
 
-Thanks for the feedback!
+What I do is have a pair of mirrored SSDs setup to cache my RAID1
+arrays, to give me more performance.  Not really sure if it's helping
+or hurting really.  dm-cache isn't really great at reporting stats,
+and I never bothered to test it hard.
 
--- 
-========================================================================
-                  In Soviet Russia, Google searches you!
-========================================================================
+My main box is an old AMD Phenom(tm) II X4 945 Processor, which is now
+something like 10 years old.  It's fast enough for what I do.  I'm
+more concerned with data loss than I am performance.  
+
+>> Honestly, I'd just setup two RAID1 mirrors with a single hot spare,
+>> then use LVM on top to build the volumes you need.  With 8tb disks,
+>> this only gives you 16Tb of space, but you get performance, quicker
+>> rebuild speed if there's a problem with a disk, and simpler
+>> management.
+
+Ian> I'm not willing to give up that much space *and* give up tolerance
+Ian> against double-failures.  Having come to my senses on what RAID-10
+Ian> can and can't do, I'll probably be doing RAID-6 everywhere, possibly
+Ian> with a couple of different chunk sizes.
+
+Sure, go for it.
+
+>> With only five drives, you are limited in what you can do.  Now if you
+>> could add a pair of mirror SSDs for caching, then I'd be more into
+>> building a single large RAID6 backing device for media content, then
+>> use the mirrored SSDs as a cache for a smaller block of day to day
+>> storage.
+
+Ian> No space for any SSDs unfortunately.
+
+Get a bigger case then.  :-)  
