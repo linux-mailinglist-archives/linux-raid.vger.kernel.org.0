@@ -2,50 +2,54 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E3B82073B4
-	for <lists+linux-raid@lfdr.de>; Wed, 24 Jun 2020 14:50:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD83F20751A
+	for <lists+linux-raid@lfdr.de>; Wed, 24 Jun 2020 16:00:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390144AbgFXMuC (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 24 Jun 2020 08:50:02 -0400
-Received: from atl.turmel.org ([74.117.157.138]:46719 "EHLO atl.turmel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388942AbgFXMuC (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 24 Jun 2020 08:50:02 -0400
-X-Greylist: delayed 1073 seconds by postgrey-1.27 at vger.kernel.org; Wed, 24 Jun 2020 08:50:02 EDT
-Received: from [12.204.148.194] (helo=[192.168.154.78])
-        by atl.turmel.org with esmtpsa (TLS1.2:DHE_RSA_AES_128_CBC_SHA1:128)
-        (Exim 4.82)
-        (envelope-from <philip@turmel.org>)
-        id 1jo4ZR-0000zA-UT; Wed, 24 Jun 2020 08:32:06 -0400
-Subject: Re: RAID types & chunks sizes for new NAS drives
-To:     antlists <antlists@youngman.org.uk>,
-        John Stoffel <john@stoffel.org>,
-        Ian Pilcher <arequipeno@gmail.com>
-Cc:     linux-raid@vger.kernel.org
-References: <rco1i8$1l34$1@ciao.gmane.io>
- <24305.24232.459249.386799@quad.stoffel.home>
- <290bc100-6fb4-84bc-83ac-eed1be3d8cb6@youngman.org.uk>
-From:   Phil Turmel <philip@turmel.org>
-Message-ID: <9f96baa2-a275-022f-a0d1-acf2257f7c15@turmel.org>
-Date:   Wed, 24 Jun 2020 08:32:03 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S2404027AbgFXOAe convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-raid@lfdr.de>); Wed, 24 Jun 2020 10:00:34 -0400
+Received: from mailpd.shecc.com ([180.168.117.213]:39773 "EHLO srvq7.shecc.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389484AbgFXOAe (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 24 Jun 2020 10:00:34 -0400
+X-Greylist: delayed 359 seconds by postgrey-1.27 at vger.kernel.org; Wed, 24 Jun 2020 10:00:32 EDT
+Received: from SRVQ1.shecc.com (10.1.1.21) by srvq7.shecc.com (10.1.1.27) with
+ Microsoft SMTP Server (TLS) id 14.3.123.3; Wed, 24 Jun 2020 21:54:31 +0800
+Received: from [192.168.0.13] (10.1.2.21) by srvq1.shecc.com (10.1.1.21) with
+ Microsoft SMTP Server (TLS) id 15.0.1076.9; Wed, 24 Jun 2020 21:54:25 +0800
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-In-Reply-To: <290bc100-6fb4-84bc-83ac-eed1be3d8cb6@youngman.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: Re;
+To:     Recipients <test02@shecc.com>
+From:   <test02@shecc.com>
+Date:   Wed, 24 Jun 2020 06:54:16 -0700
+Reply-To: <charles_jackson001@yahoo.com>
+X-Antivirus: Avast (VPS 200624-2, 06/24/2020), Outbound message
+X-Antivirus-Status: Clean
+Message-ID: <6ea53e68d76c42dab31c3e44e0fa36d0@SRVQ1.shecc.com>
+X-Originating-IP: [10.1.2.21]
+X-ClientProxiedBy: SRVQ3.shecc.com (10.1.1.23) To srvq1.shecc.com (10.1.1.21)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 6/23/20 11:36 AM, antlists wrote:
+Congratulations!!!
 
-> And nobody seems to buy Toshiba but - I think it's the N300 - they do a 
-> raid range as well.
 
-I do.  I have a couple N300s and they are holding up well.  One has 22k 
-hours.
+As part of my humanitarian individual support during this hard times of fighting the Corona Virus (Convid-19); your email account was selected for a Donation of $1,000,000.00 USD for charity and community medical support in your area. 
+Please contact us for more information on charles_jackson001@yahoo.com.com
 
-Phil
+
+Send Your Response To: charles_jackson001@yahoo.com
+
+
+Best Regards,
+
+Charles .W. Jackson Jr
+
+-- 
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
+
