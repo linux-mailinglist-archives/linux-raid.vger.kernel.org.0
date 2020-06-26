@@ -2,106 +2,139 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA15D20A9C9
-	for <lists+linux-raid@lfdr.de>; Fri, 26 Jun 2020 02:16:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60ED120AE6A
+	for <lists+linux-raid@lfdr.de>; Fri, 26 Jun 2020 10:28:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725833AbgFZAQl (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 25 Jun 2020 20:16:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49284 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725800AbgFZAQl (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 25 Jun 2020 20:16:41 -0400
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24107207D8
-        for <linux-raid@vger.kernel.org>; Fri, 26 Jun 2020 00:16:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593130600;
-        bh=rjYMIhmVj21D/C7J5xF6fjfaqDS6S++Dh15GFgfr4mI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=R6t8oN4yaMtY+wn2l6GHLE2rVhgyVvvx+nq4JyRoe9Xy7toIfnYdXudyqNwaLU2R9
-         vqh873aHefiDpEl7CG0O2IDjtfPqmGfo49NOtjdb4aW/c2CIDNxeIpaNbNZDWcwO2T
-         bBO5pSYOJgVDzf1LLIx8YF08F/DKx1oVYUADD3+A=
-Received: by mail-lf1-f41.google.com with SMTP id y18so4181815lfh.11
-        for <linux-raid@vger.kernel.org>; Thu, 25 Jun 2020 17:16:40 -0700 (PDT)
-X-Gm-Message-State: AOAM533F9twEqQV8I5O9x0pmHYRMCLWLH+iIbGuucDUhOVURf6Jh/K+a
-        DBSpzdrEl3DctaozjryEVtO2i8FyfcHCoV9o9LE=
-X-Google-Smtp-Source: ABdhPJz/DL8H9VSrsyGU05hQk4+fzhfykDBc046/2hrBetns81tftHZM2CYOxYpD3T2EY9HWdlTkP0oEjv/JZ0buhwQ=
-X-Received: by 2002:a19:c8c2:: with SMTP id y185mr323616lff.52.1593130598398;
- Thu, 25 Jun 2020 17:16:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200616092552.1754-1-guoqing.jiang@cloud.ionos.com>
- <CAPhsuW70kML70Xi3MhubCGBWnLDg0L7sPKwKe9HZHsQHwtzEEQ@mail.gmail.com> <407fa617-c86e-d63d-65ad-3f3058c5e40f@cloud.ionos.com>
-In-Reply-To: <407fa617-c86e-d63d-65ad-3f3058c5e40f@cloud.ionos.com>
-From:   Song Liu <song@kernel.org>
-Date:   Thu, 25 Jun 2020 17:16:27 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW4J84iZWZkCCk8_8uJpPwmvrd2vvHEk-fLQF_HKGioECg@mail.gmail.com>
-Message-ID: <CAPhsuW4J84iZWZkCCk8_8uJpPwmvrd2vvHEk-fLQF_HKGioECg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] raid5: call clear_batch_ready before set STRIPE_ACTIVE
-To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+        id S1725793AbgFZI2h (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 26 Jun 2020 04:28:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44234 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725275AbgFZI2h (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 26 Jun 2020 04:28:37 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 061B3C08C5C1
+        for <linux-raid@vger.kernel.org>; Fri, 26 Jun 2020 01:28:37 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id mb16so8549166ejb.4
+        for <linux-raid@vger.kernel.org>; Fri, 26 Jun 2020 01:28:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=P/0aOHBoDfj+7LhWBQveCRZn8to5Jyh8HdemG9DGO5M=;
+        b=fD6ipPfUnelhdTxkptIh9nr/I2a1aZmsV8A8qdTxbDL76I9TtqW+4CG5h5CZKB2Ay8
+         NdJ9WOWnVVLGSa+85KnaKTILmL4sWD3LqIfGBs7MMsLJT5oyuNkytwHSQnaUFKZJD3mb
+         EEpq88Knov5yS8tHcn9qGdm5sGRwX/6aw1IY3nRNt1AZjrDAAgiJ8v80oiWtWVBUO/4j
+         2q7Iqxa2Q9MQSqYDhMeW+zu8/DLrlNAbUwaUi4wCSqziy2GOrnNsPc/dWvxA9Gj5nDZE
+         jVQkZgcSlsg6zwNyemnPdH+N2an//VOC8hAajuUU20/S5lzyoARzJJkWmNcyNnpceqxt
+         AYjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=P/0aOHBoDfj+7LhWBQveCRZn8to5Jyh8HdemG9DGO5M=;
+        b=sx2ELOlCGliL2id+7D4Aq2xSOchacRjQjqqSVYROUYdV2LA1KQjXs9MMqlCEyNoCgL
+         nDLnnF39wk8tqMizt0uaOBkXka4ASdSMv0irw7EtMvfzuvrXix0H/V7omS7Tw+RGErF4
+         Zq8/vSu4a0ANLQlBKzFwgpKec043ccsNNRZhALDs6Uh8gU3IqGd9UqSLwxgLvce2KqiU
+         Lavq0iTz/JROO4iT4kIHVXJBNi22MCc5tPFQ2uVxepd0TaHJl/zwJy08I1Vay1WtSsuV
+         vR6qUbxYMESWgPDoG3/eAPUvyKSkntORSDX9Gre3AtLB3Fyz5fTyKPqKVMeErBfltMLH
+         Jp4g==
+X-Gm-Message-State: AOAM530/uvAV98C06K5EO20HX82yxLSyBzTW8IUomtaxQD4anLtMynjk
+        r3L9bCDHYAnpE9J5jeHFzlngojA0fIoMKQ==
+X-Google-Smtp-Source: ABdhPJzak2xQBjNIE6pJDstgdT/NywfTkB67lLrIdrWFUBB2gNH1EtzZ60lnVtdLPpNbv1qrY8yLeQ==
+X-Received: by 2002:a17:906:140e:: with SMTP id p14mr718887ejc.430.1593160115428;
+        Fri, 26 Jun 2020 01:28:35 -0700 (PDT)
+Received: from ?IPv6:2a02:247f:ffff:2540:2c7e:3133:c079:e098? ([2001:1438:4010:2540:2c7e:3133:c079:e098])
+        by smtp.gmail.com with ESMTPSA id f17sm6382463ejr.71.2020.06.26.01.28.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Jun 2020 01:28:34 -0700 (PDT)
+Subject: Re: Assemblin journaled array fails
+To:     Michal Soltys <msoltyspl@yandex.pl>, Song Liu <song@kernel.org>
 Cc:     linux-raid <linux-raid@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <f8c61278-1758-66cd-cf25-8a118cb12f58@yandex.pl>
+ <70dad446-7d38-fd10-130f-c23797165a21@yandex.pl>
+ <56b68265-ca54-05d3-95bc-ea8ee0b227f6@yandex.pl>
+ <CAPhsuW4WcqkDXOhcuG33bZtSEZ-V-KYPLm87piBH24eYEB0qVw@mail.gmail.com>
+ <b9b6b007-2177-a844-4d80-480393f30476@yandex.pl>
+ <CAPhsuW70NNozBmt1-zsM_Pk-39cLzi8bC3ZZaNwQ0-VgYsmkiA@mail.gmail.com>
+ <f9b54d87-5b81-1fa3-04d5-ea86a6c062cb@yandex.pl>
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Message-ID: <b9f00119-3abf-7130-5f9c-23fa0a1cf2bc@cloud.ionos.com>
+Date:   Fri, 26 Jun 2020 10:28:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <f9b54d87-5b81-1fa3-04d5-ea86a6c062cb@yandex.pl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 2:22 AM Guoqing Jiang
-<guoqing.jiang@cloud.ionos.com> wrote:
->
->
->
-> On 6/24/20 1:58 AM, Song Liu wrote:
-> > On Tue, Jun 16, 2020 at 2:25 AM Guoqing Jiang
-> > <guoqing.jiang@cloud.ionos.com> wrote:
-> >> We tried to only put the head sh of batch list to handle_list, then the
-> >> handle_stripe doesn't handle other members in the batch list. However,
-> >> we still got the calltrace in break_stripe_batch_list.
-> >>
-> >> [593764.644269] stripe state: 2003
-> >> kernel: [593764.644299] ------------[ cut here ]------------
-> >> kernel: [593764.644308] WARNING: CPU: 12 PID: 856 at drivers/md/raid5.c:4625 break_stripe_batch_list+0x203/0x240 [raid456]
-> >> [...]
-> >> kernel: [593764.644363] Call Trace:
-> >> kernel: [593764.644370]  handle_stripe+0x907/0x20c0 [raid456]
-> >> kernel: [593764.644376]  ? __wake_up_common_lock+0x89/0xc0
-> >> kernel: [593764.644379]  handle_active_stripes.isra.57+0x35f/0x570 [raid456]
-> >> kernel: [593764.644382]  ? raid5_wakeup_stripe_thread+0x96/0x1f0 [raid456]
-> >> kernel: [593764.644385]  raid5d+0x480/0x6a0 [raid456]
-> >> kernel: [593764.644390]  ? md_thread+0x11f/0x160
-> >> kernel: [593764.644392]  md_thread+0x11f/0x160
-> >> kernel: [593764.644394]  ? wait_woken+0x80/0x80
-> >> kernel: [593764.644396]  kthread+0xfc/0x130
-> >> kernel: [593764.644398]  ? find_pers+0x70/0x70
-> >> kernel: [593764.644399]  ? kthread_create_on_node+0x70/0x70
-> >> kernel: [593764.644401]  ret_from_fork+0x1f/0x30
-> >>
-> >> As we can see, the stripe was set with STRIPE_ACTIVE and STRIPE_HANDLE,
-> >> and only handle_stripe could set those flags then return. And since the
-> >> stipe was already in the batch list, we need to return earlier before
-> >> set the two flags.
-> >>
-> >> And after dig a little about git history especially commit 3664847d95e6
-> >> ("md/raid5: fix a race condition in stripe batch"), it seems the batched
-> >> stipe still could be handled by handle_stipe, then handle_stipe needs to
-> >> return earlier if clear_batch_ready to return true.
-> >>
-> >> Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-> >> ---
-> >> Another alternative would be just not warn if STRIPE_ACTIVE is valid for
-> >> the batched list.
-> >>
-> >> What do you think?
-> >>
-> > This patch looks good to me (haven't tested yet). Let's try with this one.
->
-> Ok, pls let me know if there is issue during test.
->
-> And do you want a new patch to reflect which I clarified for the line
-> number and kernel version?
 
-That's not necessary. If needed, I will make some change when I apply the patch.
+
+On 5/14/20 1:07 PM, Michal Soltys wrote:
+> On 5/13/20 6:17 PM, Song Liu wrote:
+>>>>
+>>>> Are these captured back to back? I am asking because they showed 
+>>>> different
+>>>> "Events" number.
+>>>
+>>> Nah, they were captured between reboots. Back to back all event 
+>>> fields show identical value (at 56291 now).
+>>>
+>>>>
+>>>> Also, when mdadm -A hangs, could you please capture /proc/$(pidof 
+>>>> mdadm)/stack ?
+>>>>
+>>>
+>>> The output is empty:
+>>>
+>>> xs22:/☠ ps -eF fww | grep mdadm
+>>> root     10332  9362 97   740  1884  25 12:47 pts/1    R+ 6:59  |   
+>>> \_ mdadm -A /dev/md/r5_big /dev/md/r1_journal_big /dev/sdi1 
+>>> /dev/sdg1 /dev/sdj1 /dev/sdh1
+>>> xs22:/☠ cd /proc/10332
+>>> xs22:/proc/10332☠ cat stack
+>>> xs22:/proc/10332☠
+>>
+>> Hmm... Could you please share the strace output of "mdadm -A" 
+>> command? Like
+>>
+>> strace mdadm -A /dev/md/r5_big /dev/md/r1_journal_big /dev/xxx ...
+>>
+>> Thanks,
+>> Song
+>
+> I did one more thing - ran cat on that stack in another terminal every 
+> 0.1 seconds, this is what was found:
+>
+> cat: /proc//stack: No such file or directory
+> cat: /proc//stack: No such file or directory
+> cat: /proc//stack: No such file or directory
+> [<0>] submit_bio_wait+0x5b/0x80
+> [<0>] r5l_recovery_read_page+0x1b6/0x200 [raid456]
+> [<0>] r5l_recovery_verify_data_checksum+0x19/0x70 [raid456]
+> [<0>] r5l_start+0x99e/0xe70 [raid456]
+> [<0>] md_start.part.48+0x2e/0x50 [md_mod]
+> [<0>] do_md_run+0x64/0x100 [md_mod]
+> [<0>] md_ioctl+0xe7d/0x17d0 [md_mod]
+> [<0>] blkdev_ioctl+0x4d0/0xa00
+> [<0>] block_ioctl+0x39/0x40
+> [<0>] do_vfs_ioctl+0xa4/0x630
+> [<0>] ksys_ioctl+0x60/0x90
+> [<0>] __x64_sys_ioctl+0x16/0x20
+> [<0>] do_syscall_64+0x52/0x160
+> [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> cat: /proc//stack: No such file or directory
+> [<0>] submit_bio_wait+0x5b/0x80
+
+Just FYI. I recalled that long sync IO could fire the warning in 
+submit_bio_wait.
+Have you applied the commit de6a78b601c5 ("block: Prevent hung_check
+firing during long sync IO")?
 
 Thanks,
-Song
+Guoqing
