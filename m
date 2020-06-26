@@ -2,88 +2,38 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EA6220C48A
-	for <lists+linux-raid@lfdr.de>; Sun, 28 Jun 2020 00:04:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E300820C4D0
+	for <lists+linux-raid@lfdr.de>; Sun, 28 Jun 2020 01:17:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbgF0WEN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 27 Jun 2020 18:04:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50904 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbgF0WEM (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 27 Jun 2020 18:04:12 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94615C061794
-        for <linux-raid@vger.kernel.org>; Sat, 27 Jun 2020 15:04:12 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id h4so13402222ior.5
-        for <linux-raid@vger.kernel.org>; Sat, 27 Jun 2020 15:04:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=hDm0J70xfMLbVvceQHwxPddZCp69UMTk2d0jtKg2a8s=;
-        b=N6kPulua2YSlM8imcShAj91mdG3FVs3SsXSz87fb1+u3nd7u7PFa6MKJ279dIRDWxh
-         0Ldfj86Lh7w+Xrc1R5Ac12lp/bi6BKorqLlDMWYld1qOBhdJB4N7Na0XiYaHB8nKtBEn
-         57C/Tzw6MUWAOIXcOnRxxN4MeNm7iQhU/hvtXzHXK0vqQBasxFJE8WhTf5ke+LZ6XEZm
-         /oWHd42QW3NLQJh3kf1TRlauenW2jL1Poq5HUYmLYngCGGUW3fX0WLGx3ldU3AhEukyR
-         HJCMoV5irc6uSRF+aDmFQnYTlSn+N9B5n6b9ltoSvd3dHTYHCaXSwIr77k6vqrwMxy85
-         lwfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=hDm0J70xfMLbVvceQHwxPddZCp69UMTk2d0jtKg2a8s=;
-        b=W8GM1qd+oHSaKrkquUTSM8AWXRd+3tCi3U7XXqdNldZZtkm1favSdhNuzf08o0lBUR
-         +9ijNDQaCe/94/aWqz6OWWbQpqeB3SWcYDXihUlbjthgqWBMDwqIQNpDQygmhFLhB6a7
-         NnE4pR3O+EqJ4QVKkXDw1IS7fXcTj7VjgKhzymi39HPwrd0G67zIUdDHfZQlrPoxPHt8
-         rhZP761CNW9JYc0tPwNfwN8G7CEN6rRBT4Bc8qK8wh/w+0e0/nC7g8kW3SulmUdJeeeV
-         6/C2b0PXKe+1vn4aA7EyQ3ps9H4tNl5gE7noSuSVzyT8rl1cDU0Xa9sY5WPDM1ggrLTf
-         JOQA==
-X-Gm-Message-State: AOAM531Eab4pjICFccomk4sakvZmdDwxCucWG36bnxBi264x49UVDlHY
-        2oMY+TTcd19ph9X74Ct21shfrkcI98Y5vFJDsX3rII1MkM8=
-X-Google-Smtp-Source: ABdhPJwHv45zwmNuK/YSX2uBVAIqQ2zLOwtA+ngiZqoTP9Rs9Xn2gCCD3OWXiVcvkiJ+PU31Rp2ZvkRVy2hsrxlhX9g=
-X-Received: by 2002:a92:7749:: with SMTP id s70mr10069248ilc.259.1593295098567;
- Sat, 27 Jun 2020 14:58:18 -0700 (PDT)
+        id S1726607AbgF0XRP (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 27 Jun 2020 19:17:15 -0400
+Received: from smtp.cnam.nat.tn ([41.224.9.130]:3361 "EHLO smtp.cnam.nat.tn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726101AbgF0XRP (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sat, 27 Jun 2020 19:17:15 -0400
+Received: from User ([185.36.81.174])
+        by smtp.cnam.nat.tn  with SMTP id 05QJPEwG018388-05QJPEwI018388;
+        Fri, 26 Jun 2020 21:25:15 +0200
+Message-Id: <202006261925.05QJPEwG018388-05QJPEwI018388@smtp.cnam.nat.tn>
+Reply-To: <makatiemeka101@yahoo.com>
+From:   "Mr Peter Owen" <achref.ghorbel@cnam.nat.tn>
+Subject: <<<<Mr Peter Owen Writes To You>>>
+Date:   Fri, 26 Jun 2020 21:29:13 +0200
 MIME-Version: 1.0
-Received: by 2002:a4f:4e46:0:0:0:0:0 with HTTP; Sat, 27 Jun 2020 14:58:17
- -0700 (PDT)
-From:   lookman joe <mrlookmanjoe@gmail.com>
-Date:   Sat, 27 Jun 2020 22:58:17 +0100
-Message-ID: <CAG9X5Hfvk-fmbqs9+RtHRqyUu35f9-A5+EbwjPrw9eVNH09ftg@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+        charset="Windows-1251"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-MONEY-GRAM TRANSFERRED PAYMENT INFO:
-
-Below is the sender=E2=80=99s information
-
-
-
-1. MG. REFERENCE NO#: 36360857
-
-2. SENDER'S NAME: Johnson Williams
-
-3. AMOUNT TO PICKUP: US$10,000
-
-
-
-Go to any Money Gram office near you and pick up the payment Track the
-
-Reference Number by visiting and click the link below
-
-(https://secure.moneygram.com/embed/track) and enter the Reference
-
-Number: 36360857 and the Last Name: Williams, you will find the payment
-
-available for pickup instantly.
-
-Yours Sincerely,
-
-Mrs. Helen Marvis
-United Nations Liaison Office
-Directorate for International Payments
+Good Day,
+Hope you are doing great Today.I have a proposed business deal that will benefit both parties. This is legitimate,legal and your REPUTATION will not be compromised.I am confident that both of us can work out this transaction perfectly well to the benefit of both parties. Reach to me for further details.
+Sincerely,
+Peter OWEN
