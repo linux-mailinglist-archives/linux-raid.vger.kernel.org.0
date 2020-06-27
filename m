@@ -2,139 +2,148 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 60ED120AE6A
-	for <lists+linux-raid@lfdr.de>; Fri, 26 Jun 2020 10:28:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A703120C0C7
+	for <lists+linux-raid@lfdr.de>; Sat, 27 Jun 2020 12:32:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725793AbgFZI2h (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 26 Jun 2020 04:28:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44234 "EHLO
+        id S1726601AbgF0Kb4 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 27 Jun 2020 06:31:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725275AbgFZI2h (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 26 Jun 2020 04:28:37 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 061B3C08C5C1
-        for <linux-raid@vger.kernel.org>; Fri, 26 Jun 2020 01:28:37 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id mb16so8549166ejb.4
-        for <linux-raid@vger.kernel.org>; Fri, 26 Jun 2020 01:28:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=P/0aOHBoDfj+7LhWBQveCRZn8to5Jyh8HdemG9DGO5M=;
-        b=fD6ipPfUnelhdTxkptIh9nr/I2a1aZmsV8A8qdTxbDL76I9TtqW+4CG5h5CZKB2Ay8
-         NdJ9WOWnVVLGSa+85KnaKTILmL4sWD3LqIfGBs7MMsLJT5oyuNkytwHSQnaUFKZJD3mb
-         EEpq88Knov5yS8tHcn9qGdm5sGRwX/6aw1IY3nRNt1AZjrDAAgiJ8v80oiWtWVBUO/4j
-         2q7Iqxa2Q9MQSqYDhMeW+zu8/DLrlNAbUwaUi4wCSqziy2GOrnNsPc/dWvxA9Gj5nDZE
-         jVQkZgcSlsg6zwNyemnPdH+N2an//VOC8hAajuUU20/S5lzyoARzJJkWmNcyNnpceqxt
-         AYjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=P/0aOHBoDfj+7LhWBQveCRZn8to5Jyh8HdemG9DGO5M=;
-        b=sx2ELOlCGliL2id+7D4Aq2xSOchacRjQjqqSVYROUYdV2LA1KQjXs9MMqlCEyNoCgL
-         nDLnnF39wk8tqMizt0uaOBkXka4ASdSMv0irw7EtMvfzuvrXix0H/V7omS7Tw+RGErF4
-         Zq8/vSu4a0ANLQlBKzFwgpKec043ccsNNRZhALDs6Uh8gU3IqGd9UqSLwxgLvce2KqiU
-         Lavq0iTz/JROO4iT4kIHVXJBNi22MCc5tPFQ2uVxepd0TaHJl/zwJy08I1Vay1WtSsuV
-         vR6qUbxYMESWgPDoG3/eAPUvyKSkntORSDX9Gre3AtLB3Fyz5fTyKPqKVMeErBfltMLH
-         Jp4g==
-X-Gm-Message-State: AOAM530/uvAV98C06K5EO20HX82yxLSyBzTW8IUomtaxQD4anLtMynjk
-        r3L9bCDHYAnpE9J5jeHFzlngojA0fIoMKQ==
-X-Google-Smtp-Source: ABdhPJzak2xQBjNIE6pJDstgdT/NywfTkB67lLrIdrWFUBB2gNH1EtzZ60lnVtdLPpNbv1qrY8yLeQ==
-X-Received: by 2002:a17:906:140e:: with SMTP id p14mr718887ejc.430.1593160115428;
-        Fri, 26 Jun 2020 01:28:35 -0700 (PDT)
-Received: from ?IPv6:2a02:247f:ffff:2540:2c7e:3133:c079:e098? ([2001:1438:4010:2540:2c7e:3133:c079:e098])
-        by smtp.gmail.com with ESMTPSA id f17sm6382463ejr.71.2020.06.26.01.28.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jun 2020 01:28:34 -0700 (PDT)
-Subject: Re: Assemblin journaled array fails
-To:     Michal Soltys <msoltyspl@yandex.pl>, Song Liu <song@kernel.org>
-Cc:     linux-raid <linux-raid@vger.kernel.org>
-References: <f8c61278-1758-66cd-cf25-8a118cb12f58@yandex.pl>
- <70dad446-7d38-fd10-130f-c23797165a21@yandex.pl>
- <56b68265-ca54-05d3-95bc-ea8ee0b227f6@yandex.pl>
- <CAPhsuW4WcqkDXOhcuG33bZtSEZ-V-KYPLm87piBH24eYEB0qVw@mail.gmail.com>
- <b9b6b007-2177-a844-4d80-480393f30476@yandex.pl>
- <CAPhsuW70NNozBmt1-zsM_Pk-39cLzi8bC3ZZaNwQ0-VgYsmkiA@mail.gmail.com>
- <f9b54d87-5b81-1fa3-04d5-ea86a6c062cb@yandex.pl>
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Message-ID: <b9f00119-3abf-7130-5f9c-23fa0a1cf2bc@cloud.ionos.com>
-Date:   Fri, 26 Jun 2020 10:28:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        with ESMTP id S1725994AbgF0Kbz (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 27 Jun 2020 06:31:55 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07938C03E979
+        for <linux-raid@vger.kernel.org>; Sat, 27 Jun 2020 03:31:55 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 2C328BC193;
+        Sat, 27 Jun 2020 10:31:48 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
+        corbet@lwn.net, song@kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] Replace HTTP links with HTTPS ones: LVM
+Date:   Sat, 27 Jun 2020 12:31:38 +0200
+Message-Id: <20200627103138.71885-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-In-Reply-To: <f9b54d87-5b81-1fa3-04d5-ea86a6c062cb@yandex.pl>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-Spamd-Bar: +++++
+X-Spam-Level: *****
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+          If both the HTTP and HTTPS versions
+          return 200 OK and serve the same content:
+            Replace HTTP with HTTPS.
 
-On 5/14/20 1:07 PM, Michal Soltys wrote:
-> On 5/13/20 6:17 PM, Song Liu wrote:
->>>>
->>>> Are these captured back to back? I am asking because they showed 
->>>> different
->>>> "Events" number.
->>>
->>> Nah, they were captured between reboots. Back to back all event 
->>> fields show identical value (at 56291 now).
->>>
->>>>
->>>> Also, when mdadm -A hangs, could you please capture /proc/$(pidof 
->>>> mdadm)/stack ?
->>>>
->>>
->>> The output is empty:
->>>
->>> xs22:/☠ ps -eF fww | grep mdadm
->>> root     10332  9362 97   740  1884  25 12:47 pts/1    R+ 6:59  |   
->>> \_ mdadm -A /dev/md/r5_big /dev/md/r1_journal_big /dev/sdi1 
->>> /dev/sdg1 /dev/sdj1 /dev/sdh1
->>> xs22:/☠ cd /proc/10332
->>> xs22:/proc/10332☠ cat stack
->>> xs22:/proc/10332☠
->>
->> Hmm... Could you please share the strace output of "mdadm -A" 
->> command? Like
->>
->> strace mdadm -A /dev/md/r5_big /dev/md/r1_journal_big /dev/xxx ...
->>
->> Thanks,
->> Song
->
-> I did one more thing - ran cat on that stack in another terminal every 
-> 0.1 seconds, this is what was found:
->
-> cat: /proc//stack: No such file or directory
-> cat: /proc//stack: No such file or directory
-> cat: /proc//stack: No such file or directory
-> [<0>] submit_bio_wait+0x5b/0x80
-> [<0>] r5l_recovery_read_page+0x1b6/0x200 [raid456]
-> [<0>] r5l_recovery_verify_data_checksum+0x19/0x70 [raid456]
-> [<0>] r5l_start+0x99e/0xe70 [raid456]
-> [<0>] md_start.part.48+0x2e/0x50 [md_mod]
-> [<0>] do_md_run+0x64/0x100 [md_mod]
-> [<0>] md_ioctl+0xe7d/0x17d0 [md_mod]
-> [<0>] blkdev_ioctl+0x4d0/0xa00
-> [<0>] block_ioctl+0x39/0x40
-> [<0>] do_vfs_ioctl+0xa4/0x630
-> [<0>] ksys_ioctl+0x60/0x90
-> [<0>] __x64_sys_ioctl+0x16/0x20
-> [<0>] do_syscall_64+0x52/0x160
-> [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> cat: /proc//stack: No such file or directory
-> [<0>] submit_bio_wait+0x5b/0x80
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ If there are any URLs to be removed completely or at least not HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also https://lkml.org/lkml/2020/6/27/64
 
-Just FYI. I recalled that long sync IO could fire the warning in 
-submit_bio_wait.
-Have you applied the commit de6a78b601c5 ("block: Prevent hung_check
-firing during long sync IO")?
+ If there are any valid, but yet not changed URLs:
+ See https://lkml.org/lkml/2020/6/26/837
 
-Thanks,
-Guoqing
+ Documentation/admin-guide/device-mapper/dm-raid.rst  | 2 +-
+ Documentation/admin-guide/device-mapper/dm-zoned.rst | 2 +-
+ drivers/md/Kconfig                                   | 8 ++++----
+ drivers/md/dm-crypt.c                                | 2 +-
+ 4 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/Documentation/admin-guide/device-mapper/dm-raid.rst b/Documentation/admin-guide/device-mapper/dm-raid.rst
+index 695a2ea1d1ae..7ef9fe63b3d4 100644
+--- a/Documentation/admin-guide/device-mapper/dm-raid.rst
++++ b/Documentation/admin-guide/device-mapper/dm-raid.rst
+@@ -71,7 +71,7 @@ The target is named "raid" and it accepts the following parameters::
+   ============= ===============================================================
+ 
+   Reference: Chapter 4 of
+-  http://www.snia.org/sites/default/files/SNIA_DDF_Technical_Position_v2.0.pdf
++  https://www.snia.org/sites/default/files/SNIA_DDF_Technical_Position_v2.0.pdf
+ 
+ <#raid_params>: The number of parameters that follow.
+ 
+diff --git a/Documentation/admin-guide/device-mapper/dm-zoned.rst b/Documentation/admin-guide/device-mapper/dm-zoned.rst
+index 553752ea2521..e635041351bc 100644
+--- a/Documentation/admin-guide/device-mapper/dm-zoned.rst
++++ b/Documentation/admin-guide/device-mapper/dm-zoned.rst
+@@ -14,7 +14,7 @@ host-aware zoned block devices.
+ For a more detailed description of the zoned block device models and
+ their constraints see (for SCSI devices):
+ 
+-http://www.t10.org/drafts.htm#ZBC_Family
++https://www.t10.org/drafts.htm#ZBC_Family
+ 
+ and (for ATA devices):
+ 
+diff --git a/drivers/md/Kconfig b/drivers/md/Kconfig
+index 921888df6764..30ba3573626c 100644
+--- a/drivers/md/Kconfig
++++ b/drivers/md/Kconfig
+@@ -27,7 +27,7 @@ config BLK_DEV_MD
+ 
+ 	  More information about Software RAID on Linux is contained in the
+ 	  Software RAID mini-HOWTO, available from
+-	  <http://www.tldp.org/docs.html#howto>. There you will also learn
++	  <https://www.tldp.org/docs.html#howto>. There you will also learn
+ 	  where to get the supporting user space utilities raidtools.
+ 
+ 	  If unsure, say N.
+@@ -71,7 +71,7 @@ config MD_RAID0
+ 
+ 	  Information about Software RAID on Linux is contained in the
+ 	  Software-RAID mini-HOWTO, available from
+-	  <http://www.tldp.org/docs.html#howto>. There you will also
++	  <https://www.tldp.org/docs.html#howto>. There you will also
+ 	  learn where to get the supporting user space utilities raidtools.
+ 
+ 	  To compile this as a module, choose M here: the module
+@@ -93,7 +93,7 @@ config MD_RAID1
+ 
+ 	  Information about Software RAID on Linux is contained in the
+ 	  Software-RAID mini-HOWTO, available from
+-	  <http://www.tldp.org/docs.html#howto>.  There you will also
++	  <https://www.tldp.org/docs.html#howto>.  There you will also
+ 	  learn where to get the supporting user space utilities raidtools.
+ 
+ 	  If you want to use such a RAID-1 set, say Y.  To compile this code
+@@ -148,7 +148,7 @@ config MD_RAID456
+ 
+ 	  Information about Software RAID on Linux is contained in the
+ 	  Software-RAID mini-HOWTO, available from
+-	  <http://www.tldp.org/docs.html#howto>. There you will also
++	  <https://www.tldp.org/docs.html#howto>. There you will also
+ 	  learn where to get the supporting user space utilities raidtools.
+ 
+ 	  If you want to use such a RAID-4/RAID-5/RAID-6 set, say Y.  To
+diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
+index 000ddfab5ba0..4704a16e637c 100644
+--- a/drivers/md/dm-crypt.c
++++ b/drivers/md/dm-crypt.c
+@@ -300,7 +300,7 @@ static struct crypto_aead *any_tfm_aead(struct crypt_config *cc)
+  * elephant: The extended version of eboiv with additional Elephant diffuser
+  *           used with Bitlocker CBC mode.
+  *           This mode was used in older Windows systems
+- *           http://download.microsoft.com/download/0/2/3/0238acaf-d3bf-4a6d-b3d6-0a0be4bbb36e/bitlockercipher200608.pdf
++ *           https://download.microsoft.com/download/0/2/3/0238acaf-d3bf-4a6d-b3d6-0a0be4bbb36e/bitlockercipher200608.pdf
+  */
+ 
+ static int crypt_iv_plain_gen(struct crypt_config *cc, u8 *iv,
+-- 
+2.27.0
+
