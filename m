@@ -2,107 +2,84 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2243120EDC5
-	for <lists+linux-raid@lfdr.de>; Tue, 30 Jun 2020 07:46:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5045320EFF7
+	for <lists+linux-raid@lfdr.de>; Tue, 30 Jun 2020 09:55:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729974AbgF3FqN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 30 Jun 2020 01:46:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57582 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729811AbgF3FqL (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 30 Jun 2020 01:46:11 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 545A4C061755;
-        Mon, 29 Jun 2020 22:46:11 -0700 (PDT)
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1593495970;
+        id S1730222AbgF3Hzr (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 30 Jun 2020 03:55:47 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24136 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730150AbgF3Hzq (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 30 Jun 2020 03:55:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593503745;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xAbB9oKLEGHYN+w+z0ndpRUVlVFavwl3/3bbk6nkTI4=;
-        b=rvJu64eY7bS9Ir5/N1LjQAVQ+/Gc9LNl7dorDdUgfJ6rNE76pkrh8yBaGyMhMHUJxHxQS3
-        PuFvFbljhuqZ6545iZTwIpoYPqMS6cDFZonmj8Y5Ksndbnx9FYokvglbh8tCN5jb9Mf5Rh
-        r0wHtUcZChUAcCLk+McJrQa8F1RhsIzyn4Tkulo1KFDtfIXd2ZlBgnjiAGf4bUbgIxuT3p
-        6IYvDV/ifvRjjVimphEALE6OpqHwqcIXo+j3aLJ+RwsDgi8VYCxNIuOP9WEttxOczzyOzI
-        9o8hhieha3cFaC+eJE7fcFddc9wvGhITO01/I0oG5QN51Ziwv5pNrCdzJqHKBw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1593495970;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xAbB9oKLEGHYN+w+z0ndpRUVlVFavwl3/3bbk6nkTI4=;
-        b=3GnXUT0NYEOA76vJPT7kAU6dbj67yPQUf13YdD2IP3Zlpm1MaZJHQahoCp1iP6wKoJGsW8
-        /pAHwcMnUFN2EVBA==
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Song Liu <song@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH v3 15/20] raid5: Use sequence counter with associated spinlock
-Date:   Tue, 30 Jun 2020 07:44:47 +0200
-Message-Id: <20200630054452.3675847-16-a.darwish@linutronix.de>
-In-Reply-To: <20200630054452.3675847-1-a.darwish@linutronix.de>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200630054452.3675847-1-a.darwish@linutronix.de>
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=cy3YNy8GN+jupeiQ0NtM50sSsUBnRaEMIvULEFSqjX8=;
+        b=Fb4DWcdNEc1XMNDAJczOIYzyHT98W3xuMlm2YEBCLxC2qtVfUUVjgIQKIN715hpmQZTtgf
+        nK3l9vt/P9QV2rqjYQ5g/xywJwtsQ+f5Qfl6VA027BNs2xQzlnlJECUoLr+1vSYAwb0jGK
+        lSYPLcZjrDia4qMcvBGzV/I9myC0NZg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-302-fvkSaNwVMq2LTmR36f19bA-1; Tue, 30 Jun 2020 03:55:42 -0400
+X-MC-Unique: fvkSaNwVMq2LTmR36f19bA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9D55B193F560;
+        Tue, 30 Jun 2020 07:55:41 +0000 (UTC)
+Received: from localhost.localdomain.com (ovpn-8-38.pek2.redhat.com [10.72.8.38])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AEDA774183;
+        Tue, 30 Jun 2020 07:55:39 +0000 (UTC)
+From:   Xiao Ni <xni@redhat.com>
+To:     linux-raid@vger.kernel.org
+Cc:     song@kernel.org, ncroxon@redhat.com
+Subject: [PATCH 0/2] Can't grow size twice for a super1.0 array
+Date:   Tue, 30 Jun 2020 15:55:35 +0800
+Message-Id: <1593503737-5067-1-git-send-email-xni@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-A sequence counter write side critical section must be protected by some
-form of locking to serialize writers. A plain seqcount_t does not
-contain the information of which lock must be held when entering a write
-side critical section.
+Hi all
 
-Use the new seqcount_spinlock_t data type, which allows to associate a
-spinlock with the sequence counter. This enables lockdep to verify that
-the spinlock used for writer serialization is held when the write side
-critical section is entered.
+This are the test steps:
+[root@storageqe-54 ~]# mdadm -CR /dev/md0 -l1 -n2 /dev/loop0 /dev/loop1 -e 1.0 --size=1G
+[root@storageqe-54 ~]# mdadm --wait /dev/md0
+[root@storageqe-54 ~]# mdadm -G /dev/md0 --size=5G
+mdadm: component size of /dev/md0 has been set to 5242880K
+[root@storageqe-54 ~]# mdadm --wait /dev/md0
+[root@storageqe-54 ~]# mdadm -G /dev/md0 --size=6G
+mdadm: Cannot set device size for /dev/md0: No space left on device
 
-If lockdep is disabled this lock association is compiled out and has
-neither storage size nor runtime overhead.
+loop0                                    7:0    0   7.8G  0 loop  
+└─md0                                    9:0    0     5G  0 raid1 
+loop1                                    7:1    0   7.8G  0 loop  
+└─md0                                    9:0    0     5G  0 raid1 
 
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
----
- drivers/md/raid5.c | 2 +-
- drivers/md/raid5.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+The reason is that it calcluates the max usable space in a wrong way for super1.0 array.
+It uses rdev->sectors to calcuate the max usable space rather than the whole disk size.
+At first it grow size and it's successful. Because rdev->sectors is set to the whole disk
+size when creating raid device. super_1_load sets rdev->sectors to sb->data_size. In mdadm
+it sets sb->data_size to the whole disk size rathan than the raid device size. I think it's
+a wrong place too. Because of this error, it can grow size successfully at the first time.
 
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index ab8067f9ce8c..892aefe88fa7 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -6935,7 +6935,7 @@ static struct r5conf *setup_conf(struct mddev *mddev)
- 	} else
- 		goto abort;
- 	spin_lock_init(&conf->device_lock);
--	seqcount_init(&conf->gen_lock);
-+	seqcount_spinlock_init(&conf->gen_lock, &conf->device_lock);
- 	mutex_init(&conf->cache_size_mutex);
- 	init_waitqueue_head(&conf->wait_for_quiescent);
- 	init_waitqueue_head(&conf->wait_for_stripe);
-diff --git a/drivers/md/raid5.h b/drivers/md/raid5.h
-index f90e0704bed9..a2c9e9e9f5ac 100644
---- a/drivers/md/raid5.h
-+++ b/drivers/md/raid5.h
-@@ -589,7 +589,7 @@ struct r5conf {
- 	int			prev_chunk_sectors;
- 	int			prev_algo;
- 	short			generation; /* increments with every reshape */
--	seqcount_t		gen_lock;	/* lock against generation changes */
-+	seqcount_spinlock_t	gen_lock;	/* lock against generation changes */
- 	unsigned long		reshape_checkpoint; /* Time we last updated
- 						     * metadata */
- 	long long		min_offset_diff; /* minimum difference between
+It re-sets rdev->sectors to real raid device after reshaping to the new size. So it can't
+grow size anymore.
+
+Xiao Ni (2):
+  super1.0 calculates max sectors in a wrong way
+  Don't need to reset superblock start address for super1.0
+
+ drivers/md/md.c | 27 +++++++++++++++++++++++----
+ 1 file changed, 23 insertions(+), 4 deletions(-)
+
 -- 
-2.20.1
+2.7.5
 
