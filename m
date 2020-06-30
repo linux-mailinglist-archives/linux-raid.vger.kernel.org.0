@@ -2,74 +2,107 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6ECD520E67A
-	for <lists+linux-raid@lfdr.de>; Tue, 30 Jun 2020 00:09:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2243120EDC5
+	for <lists+linux-raid@lfdr.de>; Tue, 30 Jun 2020 07:46:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391480AbgF2Vrw (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 29 Jun 2020 17:47:52 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46365 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391466AbgF2Vrq (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 29 Jun 2020 17:47:46 -0400
-Received: by mail-ot1-f65.google.com with SMTP id n24so14590650otr.13;
-        Mon, 29 Jun 2020 14:47:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Bg/8+MNYJDDCvPfevV5MmVW6eomjiYjuKJdPS9BuKRc=;
-        b=KrtLIKkstEXzLph+hH/92CRzqSHeAWo3KOzjjTkWcrVtsSr2KKh0OzcDqgOcxe8+Qp
-         b7NFKuu1zn/ZMMrPwkNhH1EkonUY88m3Bgy0luv4wlSSDt0luFg1XBcl5Ny2QHr/jFHI
-         lN25QpT2n9O4tkMAVDRIXDKcT0J9wikh9hfdxRy7euptOkW+8yJSS7TxlcfdcUpyb3oP
-         D8sdZa59FDQWJmhr3b702CrXoGaAO45EXdvR4Qa2UgBeDAmt/EKbhubG8XG0gVF33K4T
-         0Qapyhd9knt8a7LX37eArLbgVFfSJVK3nVD9mONOy09RxERJt4EAN0eL4za2Q+Won56r
-         whPg==
-X-Gm-Message-State: AOAM5335T8ZfZvTnFiUis89joIQO6t/GWXerNU4YC2r7DRXcnCkctsEl
-        wlRaSM29d/kdq6uE1xrxf62PHRBncRWszVucSjW9XjSBAFI=
-X-Google-Smtp-Source: ABdhPJyLaroA0htJgp6XAeP34onG9mo2tlAy+lOvoV/8lvJ36fwjwGDczPcQeW26SHMu76Ngn9P5yzkiLg9cpAETRvQ=
-X-Received: by 2002:a9d:2646:: with SMTP id a64mr14223999otb.107.1593467266175;
- Mon, 29 Jun 2020 14:47:46 -0700 (PDT)
+        id S1729974AbgF3FqN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 30 Jun 2020 01:46:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729811AbgF3FqL (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 30 Jun 2020 01:46:11 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 545A4C061755;
+        Mon, 29 Jun 2020 22:46:11 -0700 (PDT)
+From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1593495970;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xAbB9oKLEGHYN+w+z0ndpRUVlVFavwl3/3bbk6nkTI4=;
+        b=rvJu64eY7bS9Ir5/N1LjQAVQ+/Gc9LNl7dorDdUgfJ6rNE76pkrh8yBaGyMhMHUJxHxQS3
+        PuFvFbljhuqZ6545iZTwIpoYPqMS6cDFZonmj8Y5Ksndbnx9FYokvglbh8tCN5jb9Mf5Rh
+        r0wHtUcZChUAcCLk+McJrQa8F1RhsIzyn4Tkulo1KFDtfIXd2ZlBgnjiAGf4bUbgIxuT3p
+        6IYvDV/ifvRjjVimphEALE6OpqHwqcIXo+j3aLJ+RwsDgi8VYCxNIuOP9WEttxOczzyOzI
+        9o8hhieha3cFaC+eJE7fcFddc9wvGhITO01/I0oG5QN51Ziwv5pNrCdzJqHKBw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1593495970;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xAbB9oKLEGHYN+w+z0ndpRUVlVFavwl3/3bbk6nkTI4=;
+        b=3GnXUT0NYEOA76vJPT7kAU6dbj67yPQUf13YdD2IP3Zlpm1MaZJHQahoCp1iP6wKoJGsW8
+        /pAHwcMnUFN2EVBA==
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Song Liu <song@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH v3 15/20] raid5: Use sequence counter with associated spinlock
+Date:   Tue, 30 Jun 2020 07:44:47 +0200
+Message-Id: <20200630054452.3675847-16-a.darwish@linutronix.de>
+In-Reply-To: <20200630054452.3675847-1-a.darwish@linutronix.de>
+References: <20200519214547.352050-1-a.darwish@linutronix.de>
+ <20200630054452.3675847-1-a.darwish@linutronix.de>
 MIME-Version: 1.0
-References: <20200629193947.2705954-1-hch@lst.de> <20200629193947.2705954-2-hch@lst.de>
-In-Reply-To: <20200629193947.2705954-2-hch@lst.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 29 Jun 2020 23:47:35 +0200
-Message-ID: <CAMuHMdXXORM_yD4bqk+MQ1yEA1jmOjO9eyfnsjxY1a5E5isEcg@mail.gmail.com>
-Subject: Re: [PATCH 01/20] nfblock: stop using ->queuedata
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, dm-devel@redhat.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        "open list:TENSILICA XTENSA PORT (xtensa)" 
-        <linux-xtensa@linux-xtensa.org>,
-        Lars Ellenberg <drbd-dev@lists.linbit.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        linux-nvme@lists.infradead.org,
-        linux-s390 <linux-s390@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 9:40 PM Christoph Hellwig <hch@lst.de> wrote:
-> Instead of setting up the queuedata as well just use one private data
-> field.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+A sequence counter write side critical section must be protected by some
+form of locking to serialize writers. A plain seqcount_t does not
+contain the information of which lock must be held when entering a write
+side critical section.
 
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Use the new seqcount_spinlock_t data type, which allows to associate a
+spinlock with the sequence counter. This enables lockdep to verify that
+the spinlock used for writer serialization is held when the write side
+critical section is entered.
 
-Gr{oetje,eeting}s,
+If lockdep is disabled this lock association is compiled out and has
+neither storage size nor runtime overhead.
 
-                        Geert
+Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+---
+ drivers/md/raid5.c | 2 +-
+ drivers/md/raid5.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index ab8067f9ce8c..892aefe88fa7 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -6935,7 +6935,7 @@ static struct r5conf *setup_conf(struct mddev *mddev)
+ 	} else
+ 		goto abort;
+ 	spin_lock_init(&conf->device_lock);
+-	seqcount_init(&conf->gen_lock);
++	seqcount_spinlock_init(&conf->gen_lock, &conf->device_lock);
+ 	mutex_init(&conf->cache_size_mutex);
+ 	init_waitqueue_head(&conf->wait_for_quiescent);
+ 	init_waitqueue_head(&conf->wait_for_stripe);
+diff --git a/drivers/md/raid5.h b/drivers/md/raid5.h
+index f90e0704bed9..a2c9e9e9f5ac 100644
+--- a/drivers/md/raid5.h
++++ b/drivers/md/raid5.h
+@@ -589,7 +589,7 @@ struct r5conf {
+ 	int			prev_chunk_sectors;
+ 	int			prev_algo;
+ 	short			generation; /* increments with every reshape */
+-	seqcount_t		gen_lock;	/* lock against generation changes */
++	seqcount_spinlock_t	gen_lock;	/* lock against generation changes */
+ 	unsigned long		reshape_checkpoint; /* Time we last updated
+ 						     * metadata */
+ 	long long		min_offset_diff; /* minimum difference between
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.20.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
