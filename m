@@ -2,187 +2,78 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 340CF212198
-	for <lists+linux-raid@lfdr.de>; Thu,  2 Jul 2020 12:54:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E42C7212265
+	for <lists+linux-raid@lfdr.de>; Thu,  2 Jul 2020 13:35:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbgGBKyy (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 2 Jul 2020 06:54:54 -0400
-Received: from mga11.intel.com ([192.55.52.93]:28920 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728320AbgGBKyx (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 2 Jul 2020 06:54:53 -0400
-IronPort-SDR: U6YoxGLQx7uBtrO8twxOt/T+Q+81MX50/MQqkcozo8FmnE1OpAWcq4OpHVzrsSpfuqplF0axGY
- oa7ppOAYz+5g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="145010495"
-X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="145010495"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 03:54:51 -0700
-IronPort-SDR: sWKSYUnJZrUwhnQf+K9uhHD/drq8lGVT1CC+Zbq1t3p6U5I9SU4eJ+GMYtU7UjPlKFv0h2fAjn
- GChUA6PSnW0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="425915027"
-Received: from apaszkie-desk.igk.intel.com ([10.102.102.225])
-  by orsmga004.jf.intel.com with ESMTP; 02 Jul 2020 03:54:49 -0700
-From:   Artur Paszkiewicz <artur.paszkiewicz@intel.com>
-To:     song@kernel.org
-Cc:     linux-raid@vger.kernel.org, guoqing.jiang@cloud.ionos.com,
-        Artur Paszkiewicz <artur.paszkiewicz@intel.com>
-Subject: [PATCH v2] md: improve io stats accounting
-Date:   Thu,  2 Jul 2020 12:54:40 +0200
-Message-Id: <20200702105440.17097-1-artur.paszkiewicz@intel.com>
-X-Mailer: git-send-email 2.26.0
+        id S1728638AbgGBLfF (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 2 Jul 2020 07:35:05 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41054 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbgGBLfF (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 2 Jul 2020 07:35:05 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jqxUc-00059m-Fw; Thu, 02 Jul 2020 11:35:02 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Song Liu <song@kernel.org>, NeilBrown <neilb@suse.de>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        linux-raid@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] md: raid0/linear: fix dereference before null check on pointer mddev
+Date:   Thu,  2 Jul 2020 12:35:02 +0100
+Message-Id: <20200702113502.37408-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Use generic io accounting functions to manage io stats. There was an
-attempt to do this earlier in commit 18c0b223cf99 ("md: use generic io
-stats accounting functions to simplify io stat accounting"), but it did
-not include a call to generic_end_io_acct() and caused issues with
-tracking in-flight IOs, so it was later removed in commit 74672d069b29
-("md: fix md io stats accounting broken").
+From: Colin Ian King <colin.king@canonical.com>
 
-This patch attempts to fix this by using both bio_start_io_acct() and
-bio_end_io_acct(). To make it possible, a struct md_io is allocated for
-every new md bio, which includes the io start_time. A new mempool is
-introduced for this purpose. We override bio->bi_end_io with our own
-callback and call bio_start_io_acct() before passing the bio to
-md_handle_request(). When it completes, we call bio_end_io_acct() and
-the original bi_end_io callback.
+Pointer mddev is being dereferenced with a test_bit call before mddev
+is being null checked, this may cause a null pointer dereference. Fix
+this by moving the null pointer checks to sanity check mddev before
+it is dereferenced.
 
-This adds correct statistics about in-flight IOs and IO processing time,
-interpreted e.g. in iostat as await, svctm, aqu-sz and %util.
-
-It also fixes a situation where too many IOs where reported if a bio was
-re-submitted to the mddev, because io accounting is now performed only
-on newly arriving bios.
-
-Signed-off-by: Artur Paszkiewicz <artur.paszkiewicz@intel.com>
+Addresses-Coverity: ("Dereference before null check")
+Fixes: 62f7b1989c02 ("md raid0/linear: Mark array as 'broken' and fail BIOs if a member is gone")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
-v2:
-- Just override the bi_end_io without having to clone the original bio.
-- Rebased onto latest md-next.
-
- drivers/md/md.c | 56 ++++++++++++++++++++++++++++++++++++++-----------
- drivers/md/md.h |  1 +
- 2 files changed, 45 insertions(+), 12 deletions(-)
+ drivers/md/md.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 8bb69c61afe0..25dd3f4116c3 100644
+index 8bb69c61afe0..49452149ac72 100644
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -463,12 +463,33 @@ void md_handle_request(struct mddev *mddev, struct bio *bio)
- }
- EXPORT_SYMBOL(md_handle_request);
- 
-+struct md_io {
-+	struct mddev *mddev;
-+	bio_end_io_t *orig_bi_end_io;
-+	void *orig_bi_private;
-+	unsigned long start_time;
-+};
-+
-+static void md_end_io(struct bio *bio)
-+{
-+	struct md_io *md_io = bio->bi_private;
-+	struct mddev *mddev = md_io->mddev;
-+
-+	bio_end_io_acct(bio, md_io->start_time);
-+
-+	bio->bi_end_io = md_io->orig_bi_end_io;
-+	bio->bi_private = md_io->orig_bi_private;
-+
-+	mempool_free(md_io, &mddev->md_io_pool);
-+
-+	if (bio->bi_end_io)
-+		bio->bi_end_io(bio);
-+}
-+
- static blk_qc_t md_submit_bio(struct bio *bio)
- {
- 	const int rw = bio_data_dir(bio);
--	const int sgrp = op_stat_group(bio_op(bio));
+@@ -470,17 +470,18 @@ static blk_qc_t md_submit_bio(struct bio *bio)
  	struct mddev *mddev = bio->bi_disk->private_data;
--	unsigned int sectors;
+ 	unsigned int sectors;
  
- 	if (unlikely(test_bit(MD_BROKEN, &mddev->flags)) && (rw == WRITE)) {
+-	if (unlikely(test_bit(MD_BROKEN, &mddev->flags)) && (rw == WRITE)) {
++	if (mddev == NULL || mddev->pers == NULL) {
  		bio_io_error(bio);
-@@ -488,21 +509,26 @@ static blk_qc_t md_submit_bio(struct bio *bio)
  		return BLK_QC_T_NONE;
  	}
  
--	/*
--	 * save the sectors now since our bio can
--	 * go away inside make_request
--	 */
--	sectors = bio_sectors(bio);
-+	if (bio->bi_end_io != md_end_io) {
-+		struct md_io *md_io;
-+
-+		md_io = mempool_alloc(&mddev->md_io_pool, GFP_NOIO);
-+		md_io->mddev = mddev;
-+		md_io->start_time = jiffies;
-+		md_io->orig_bi_end_io = bio->bi_end_io;
-+		md_io->orig_bi_private = bio->bi_private;
-+
-+		bio->bi_end_io = md_end_io;
-+		bio->bi_private = md_io;
-+
-+		bio_start_io_acct(bio);
-+	}
-+
- 	/* bio could be mergeable after passing to underlayer */
- 	bio->bi_opf &= ~REQ_NOMERGE;
- 
- 	md_handle_request(mddev, bio);
- 
--	part_stat_lock();
--	part_stat_inc(&mddev->gendisk->part0, ios[sgrp]);
--	part_stat_add(&mddev->gendisk->part0, sectors[sgrp], sectors);
--	part_stat_unlock();
+-	blk_queue_split(&bio);
 -
- 	return BLK_QC_T_NONE;
- }
- 
-@@ -5545,6 +5571,7 @@ static void md_free(struct kobject *ko)
- 
- 	bioset_exit(&mddev->bio_set);
- 	bioset_exit(&mddev->sync_set);
-+	mempool_exit(&mddev->md_io_pool);
- 	kfree(mddev);
- }
- 
-@@ -5640,6 +5667,11 @@ static int md_alloc(dev_t dev, char *name)
- 		 */
- 		mddev->hold_active = UNTIL_STOP;
- 
-+	error = mempool_init_kmalloc_pool(&mddev->md_io_pool, BIO_POOL_SIZE,
-+					  sizeof(struct md_io));
-+	if (error)
-+		goto abort;
+-	if (mddev == NULL || mddev->pers == NULL) {
++	if (unlikely(test_bit(MD_BROKEN, &mddev->flags)) && (rw == WRITE)) {
+ 		bio_io_error(bio);
+ 		return BLK_QC_T_NONE;
+ 	}
 +
- 	error = -ENOMEM;
- 	mddev->queue = blk_alloc_queue(NUMA_NO_NODE);
- 	if (!mddev->queue)
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index 612814d07d35..c26fa8bd41e7 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -481,6 +481,7 @@ struct mddev {
- 	struct bio_set			sync_set; /* for sync operations like
- 						   * metadata and bitmap writes
- 						   */
-+	mempool_t			md_io_pool;
- 
- 	/* Generic flush handling.
- 	 * The last to finish preflush schedules a worker to submit
++	blk_queue_split(&bio);
++
+ 	if (mddev->ro == 1 && unlikely(rw == WRITE)) {
+ 		if (bio_sectors(bio) != 0)
+ 			bio->bi_status = BLK_STS_IOERR;
 -- 
-2.26.0
+2.27.0
 
