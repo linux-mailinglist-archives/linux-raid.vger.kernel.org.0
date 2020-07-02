@@ -2,84 +2,88 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CFC29212ECB
-	for <lists+linux-raid@lfdr.de>; Thu,  2 Jul 2020 23:25:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3993E212F58
+	for <lists+linux-raid@lfdr.de>; Fri,  3 Jul 2020 00:14:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726098AbgGBVZj (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 2 Jul 2020 17:25:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37562 "EHLO mail.kernel.org"
+        id S1726072AbgGBWOr (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 2 Jul 2020 18:14:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726072AbgGBVZj (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 2 Jul 2020 17:25:39 -0400
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+        id S1726032AbgGBWOq (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 2 Jul 2020 18:14:46 -0400
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA9B520885
-        for <linux-raid@vger.kernel.org>; Thu,  2 Jul 2020 21:25:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA2D1208B8
+        for <linux-raid@vger.kernel.org>; Thu,  2 Jul 2020 22:14:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593725139;
-        bh=Zzm4Gg40LuYSdejYBlczS0MveO6I7wze+tZWAoZM3ZU=;
+        s=default; t=1593728086;
+        bh=teal2bqh1joC5O7M6tnN3zYSHGbA0zmB87TuDGslmAg=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BjNJnARmvxPw4UuF/JsR7EWFNtO3meObwekWnrLw9kIlIRv6FxYLQYFoEJsVCtN4w
-         EAB8ous9VB51uX+aHH9gba36YuYZAN3gU+7A0J+PRjunDcMplkWOz+1MHtnsuaDXsy
-         b/wrRbzc95U1Z+dcKbp5jdkHn0pZJpCQK8eImwo0=
-Received: by mail-lj1-f175.google.com with SMTP id n23so34129976ljh.7
-        for <linux-raid@vger.kernel.org>; Thu, 02 Jul 2020 14:25:38 -0700 (PDT)
-X-Gm-Message-State: AOAM531ArdyuMp6+scoF0RMDKbY3belWrYG5rIYZiRdX3jdo5zN7Pwpk
-        Aot0+jsB3fVaT5ENlsq9YZpyWmq2j33A1Gmfiyg=
-X-Google-Smtp-Source: ABdhPJwcKnvVm4IAxh6nUsn97QY39sVAgggAJ1N4bU4q9WJrBxoUedxh0quZKkfyd+Qfb51l+0ljz4hfBRe3EPF7F3A=
-X-Received: by 2002:a2e:9eca:: with SMTP id h10mr18013001ljk.273.1593725137305;
- Thu, 02 Jul 2020 14:25:37 -0700 (PDT)
+        b=uNshThmCHI288KKMJXyPbfV/+Pu19FbuT+fIon/aPNr+ePFuPVvTWTzvBINw//hPU
+         fPV9Aj2N5wM1CWJzhU5DuSJnNxag3jlzwEHRhcciuLLIE47UcDn8cZ2f/wzeR/Z9Tf
+         5caoUCay/30c9OVb4gsaRE0s1hN5p7ENg8+9C6J0=
+Received: by mail-lf1-f42.google.com with SMTP id t9so17152331lfl.5
+        for <linux-raid@vger.kernel.org>; Thu, 02 Jul 2020 15:14:45 -0700 (PDT)
+X-Gm-Message-State: AOAM532gXTis+pZ7rBRywZs/g55IbX5x+S8Tbrniqhf78Q74AuKq6B3Y
+        1vAjkGHcLj3RNgNaGhiSf1cFKLD/XMktJM6+P58=
+X-Google-Smtp-Source: ABdhPJxvpdnUE5DHvSwd6UeqcpCHCZatSBzqU3aJ2WueLaTmHWemWZVo5sRoB9ui0rbgAprYvXpXKpzFpoAkMj0q3Ms=
+X-Received: by 2002:a19:701:: with SMTP id 1mr19471835lfh.138.1593728084219;
+ Thu, 02 Jul 2020 15:14:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200702142926.4419-1-artur.paszkiewicz@intel.com>
-In-Reply-To: <20200702142926.4419-1-artur.paszkiewicz@intel.com>
+References: <20200702120628.777303-1-yuyufen@huawei.com> <20200702120628.777303-3-yuyufen@huawei.com>
+In-Reply-To: <20200702120628.777303-3-yuyufen@huawei.com>
 From:   Song Liu <song@kernel.org>
-Date:   Thu, 2 Jul 2020 14:25:26 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW5eMPMH1HcMXi67Ci0rbWhVyiuLodVZB_oaGbrR7abTJQ@mail.gmail.com>
-Message-ID: <CAPhsuW5eMPMH1HcMXi67Ci0rbWhVyiuLodVZB_oaGbrR7abTJQ@mail.gmail.com>
-Subject: Re: [PATCH v3] md: improve io stats accounting
-To:     Artur Paszkiewicz <artur.paszkiewicz@intel.com>
+Date:   Thu, 2 Jul 2020 15:14:33 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW7oDE_hD8=s1zZucn3khXWgrFh-CUewtSguM1KG6628mg@mail.gmail.com>
+Message-ID: <CAPhsuW7oDE_hD8=s1zZucn3khXWgrFh-CUewtSguM1KG6628mg@mail.gmail.com>
+Subject: Re: [PATCH v5 02/16] md/raid5: add sysfs entry to set and show stripe_size
+To:     Yufen Yu <yuyufen@huawei.com>
 Cc:     linux-raid <linux-raid@vger.kernel.org>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+        NeilBrown <neilb@suse.com>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Hou Tao <houtao1@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu, Jul 2, 2020 at 7:29 AM Artur Paszkiewicz
-<artur.paszkiewicz@intel.com> wrote:
+On Thu, Jul 2, 2020 at 5:05 AM Yufen Yu <yuyufen@huawei.com> wrote:
 >
-> Use generic io accounting functions to manage io stats. There was an
-> attempt to do this earlier in commit 18c0b223cf99 ("md: use generic io
-> stats accounting functions to simplify io stat accounting"), but it did
-> not include a call to generic_end_io_acct() and caused issues with
-> tracking in-flight IOs, so it was later removed in commit 74672d069b29
-> ("md: fix md io stats accounting broken").
+> Here, we don't support setting stripe_size by sysfs.
+> Following patches will do that.
 >
-> This patch attempts to fix this by using both bio_start_io_acct() and
-> bio_end_io_acct(). To make it possible, a struct md_io is allocated for
-> every new md bio, which includes the io start_time. A new mempool is
-> introduced for this purpose. We override bio->bi_end_io with our own
-> callback and call bio_start_io_acct() before passing the bio to
-> md_handle_request(). When it completes, we call bio_end_io_acct() and
-> the original bi_end_io callback.
+> Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+> ---
+>  drivers/md/raid5.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
 >
-> This adds correct statistics about in-flight IOs and IO processing time,
-> interpreted e.g. in iostat as await, svctm, aqu-sz and %util.
+> diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+> index 2981b853c388..51bc39dab57b 100644
+> --- a/drivers/md/raid5.c
+> +++ b/drivers/md/raid5.c
+> @@ -6518,6 +6518,27 @@ raid5_rmw_level = __ATTR(rmw_level, S_IRUGO | S_IWUSR,
+>                          raid5_show_rmw_level,
+>                          raid5_store_rmw_level);
 >
-> It also fixes a situation where too many IOs where reported if a bio was
-> re-submitted to the mddev, because io accounting is now performed only
-> on newly arriving bios.
->
-> Signed-off-by: Artur Paszkiewicz <artur.paszkiewicz@intel.com>
+> +static ssize_t
+> +raid5_show_stripe_size(struct mddev  *mddev, char *page)
+> +{
+> +       struct r5conf *conf = mddev->private;
+> +
+> +       if (conf)
+> +               return sprintf(page, "%d\n", conf->stripe_size);
+> +       else
+> +               return 0;
+> +}
+> +
+> +static ssize_t
+> +raid5_store_stripe_size(struct mddev  *mddev, const char *page, size_t len)
+> +{
+> +       return -EINVAL;
+> +}
 
-Thanks Artur and Guoqing!
-
-I run quick test with this. Seems it only adds proper statistics to
-raid5 array, but
-not to raid0 array. Is this expected?
+How about we make the file read only for now?
 
 Song
-
-[...]
