@@ -2,97 +2,197 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D1F792136D6
-	for <lists+linux-raid@lfdr.de>; Fri,  3 Jul 2020 10:58:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D32A21375D
+	for <lists+linux-raid@lfdr.de>; Fri,  3 Jul 2020 11:13:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgGCI6z (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 3 Jul 2020 04:58:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48822 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbgGCI6y (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 3 Jul 2020 04:58:54 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8847C08C5C1
-        for <linux-raid@vger.kernel.org>; Fri,  3 Jul 2020 01:58:54 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id e22so27018906edq.8
-        for <linux-raid@vger.kernel.org>; Fri, 03 Jul 2020 01:58:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=7uq7M2M6BhC16IMxN3X9JhLLDjigCU4Wg1H6NGI2JGw=;
-        b=gUCvfQF22DcJ3RtZ2lR6+eiXsaztjg2CXcRLW1IbVf9qHSZkj5BLScEwa2NTk3dmHS
-         OEgDEC49te3BuiJNk1o7i27V7I3vKLAXeA05XXReWTTHG3U5ZZCMNM2lowfCL8Wf7gax
-         q4RTli67/kgzdXCJ5ARKw8iTriSyzhR0hT14bXi6BeH0WmO6KLf/uezKNB2ttgmqt7E0
-         13VvQjl+141b9rYVkZeoWNPjBNzkrwXg69Pin9wcEwghAC9Xa2/nLITQI0i7LHg8WS6Y
-         neLdguNnnYiLi6iDJ3vMfW6kN7/uH2mQ3T8YGX8EeH9CDJKjwbVUwuA8NQAbbXu1zCQd
-         nDRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=7uq7M2M6BhC16IMxN3X9JhLLDjigCU4Wg1H6NGI2JGw=;
-        b=N/+Wij6B1eWub1OCcSCnKrb5RBVaMeXE5pvB7ED8WsbZRrSdmA4NRnlTrchIkodDlF
-         DkYCo5O/cywDWGhHuGUtaueFLIETnzPSZVPYJe4BY7I8bU0HRUbB1NfdvETwp9dpDhHJ
-         FaZ6sYyNpawTmRPbonAGibsYJqvRTI+tMJ6xvgUcv66wxbIKU0lEVpT0v8TFS3UTCeTZ
-         75ucr78E6bw4sKzwMmfcJ6FiuxHK7ighO26CgEkrl4VofiJHzbNdEGMDk/4J7iNeM6VM
-         Hua/G8PK9gwWeGmqAFk5QF+W4Dd8YTYFLYMjAgHBR8SzSnMKjZJY4dW6dql/NatmG9B2
-         +TRA==
-X-Gm-Message-State: AOAM5327QyXAoyhA6cBXTfPn70RXxie2ct1x0U9m0UnqjNobltQpbazd
-        OgtkLqS4mG1/TaWn44eOgEFhSmUwxInqu9LQ
-X-Google-Smtp-Source: ABdhPJxKFmGEO5fsobzbis18IJrR1/2UMhIeS3ZXdf1u4zyenarYmNQ6uk7K4uvUD5XZDlwqHPHTFg==
-X-Received: by 2002:a50:bb48:: with SMTP id y66mr35519566ede.147.1593766733243;
-        Fri, 03 Jul 2020 01:58:53 -0700 (PDT)
-Received: from ?IPv6:2a02:247f:ffff:2540:60ce:5ee7:9c1b:dbd8? ([2001:1438:4010:2540:60ce:5ee7:9c1b:dbd8])
-        by smtp.gmail.com with ESMTPSA id ce15sm8785548ejc.86.2020.07.03.01.58.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jul 2020 01:58:52 -0700 (PDT)
-Subject: Re: [PATCH v3] md: improve io stats accounting
-To:     Artur Paszkiewicz <artur.paszkiewicz@intel.com>,
-        Song Liu <song@kernel.org>
-Cc:     linux-raid <linux-raid@vger.kernel.org>
-References: <20200702142926.4419-1-artur.paszkiewicz@intel.com>
- <CAPhsuW5eMPMH1HcMXi67Ci0rbWhVyiuLodVZB_oaGbrR7abTJQ@mail.gmail.com>
- <aea49756-c6f6-a4a3-3e23-9928e0878c80@cloud.ionos.com>
- <cf1b6354-3c97-a2e3-2f7b-d5c15205bb6a@intel.com>
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Message-ID: <6e99d7a2-9048-1265-533f-cb9493181b22@cloud.ionos.com>
-Date:   Fri, 3 Jul 2020 10:58:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1726053AbgGCJNN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 3 Jul 2020 05:13:13 -0400
+Received: from mga04.intel.com ([192.55.52.120]:58660 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725648AbgGCJNN (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 3 Jul 2020 05:13:13 -0400
+IronPort-SDR: f5LQcPGtbJM2QuKZiBSULnIDJqXDpfA4M9n1c4Xp4Bo7zmXwk/Er8wLrBuHpXLmEUF9iGcH7Mr
+ Bc6GhnMy63ig==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="144643077"
+X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
+   d="scan'208";a="144643077"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 02:13:12 -0700
+IronPort-SDR: vkjYZm5cT6gDHfq8s4cjm06CeY/ipR4m5ZbltJhDFEN+Ol8mxw/9+b4qXo4SUq9KSzgmt0ITFM
+ t03eAhn5bi0g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
+   d="scan'208";a="322368047"
+Received: from apaszkie-desk.igk.intel.com ([10.102.102.225])
+  by orsmga007.jf.intel.com with ESMTP; 03 Jul 2020 02:13:11 -0700
+From:   Artur Paszkiewicz <artur.paszkiewicz@intel.com>
+To:     song@kernel.org
+Cc:     linux-raid@vger.kernel.org, guoqing.jiang@cloud.ionos.com,
+        Artur Paszkiewicz <artur.paszkiewicz@intel.com>
+Subject: [PATCH v4] md: improve io stats accounting
+Date:   Fri,  3 Jul 2020 11:13:09 +0200
+Message-Id: <20200703091309.19955-1-artur.paszkiewicz@intel.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-In-Reply-To: <cf1b6354-3c97-a2e3-2f7b-d5c15205bb6a@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+Use generic io accounting functions to manage io stats. There was an
+attempt to do this earlier in commit 18c0b223cf99 ("md: use generic io
+stats accounting functions to simplify io stat accounting"), but it did
+not include a call to generic_end_io_acct() and caused issues with
+tracking in-flight IOs, so it was later removed in commit 74672d069b29
+("md: fix md io stats accounting broken").
 
+This patch attempts to fix this by using both disk_start_io_acct() and
+disk_end_io_acct(). To make it possible, a struct md_io is allocated for
+every new md bio, which includes the io start_time. A new mempool is
+introduced for this purpose. We override bio->bi_end_io with our own
+callback and call disk_start_io_acct() before passing the bio to
+md_handle_request(). When it completes, we call disk_end_io_acct() and
+the original bi_end_io callback.
 
-On 7/3/20 10:50 AM, Artur Paszkiewicz wrote:
-> On 7/3/20 10:33 AM, Guoqing Jiang wrote:
->> On 7/2/20 11:25 PM, Song Liu wrote:
->>> I run quick test with this. Seems it only adds proper statistics to
->>> raid5 array, but
->>> not to raid0 array. Is this expected?
-> Oh, sorry about that. Of course it should work.
->
->> Because bio_endio is not called, and it is same for linear and faulty.
->> I think we have to  clone bio for them ..., then it is better to do the
->> job in the personality layer.
-> It's not that bad actually. The issue is simply because those
-> personalities change the original bio's bi_disk and then
-> bio_end_io_acct() uses a different gendisk. So I think we can either use
-> disk_{start,end}_io_acct() instead of bio_{start,end}_io_acct(), or
-> change bio->bi_disk back to mddev->gendisk before calling
-> bio_end_io_acct(). I prefer the first option. What do you think?
+This adds correct statistics about in-flight IOs and IO processing time,
+interpreted e.g. in iostat as await, svctm, aqu-sz and %util.
 
-I am fine with either of them, though currently the only caller of
-disk_start_io_acct is bio_start_io_acct :-)
+It also fixes a situation where too many IOs where reported if a bio was
+re-submitted to the mddev, because io accounting is now performed only
+on newly arriving bios.
 
-Thanks,
-Guoqing
+Signed-off-by: Artur Paszkiewicz <artur.paszkiewicz@intel.com>
+---
+v4:
+- Use disk_{start,end}_io_acct() instead of bio_{start,end}_io_acct() to
+  pass mddev->gendisk directly, not bio->bi_disk which gets modified by
+  some personalities.
+
+v3:
+- Use bio_start_io_acct() return value for md_io->start_time (thanks
+  Guoqing!)
+
+v2:
+- Just override the bi_end_io without having to clone the original bio.
+- Rebased onto latest md-next.
+
+ drivers/md/md.c | 57 ++++++++++++++++++++++++++++++++++++++-----------
+ drivers/md/md.h |  1 +
+ 2 files changed, 46 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 8bb69c61afe0..63aeebd9266b 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -463,12 +463,33 @@ void md_handle_request(struct mddev *mddev, struct bio *bio)
+ }
+ EXPORT_SYMBOL(md_handle_request);
+ 
++struct md_io {
++	struct mddev *mddev;
++	bio_end_io_t *orig_bi_end_io;
++	void *orig_bi_private;
++	unsigned long start_time;
++};
++
++static void md_end_io(struct bio *bio)
++{
++	struct md_io *md_io = bio->bi_private;
++	struct mddev *mddev = md_io->mddev;
++
++	disk_end_io_acct(mddev->gendisk, bio_op(bio), md_io->start_time);
++
++	bio->bi_end_io = md_io->orig_bi_end_io;
++	bio->bi_private = md_io->orig_bi_private;
++
++	mempool_free(md_io, &mddev->md_io_pool);
++
++	if (bio->bi_end_io)
++		bio->bi_end_io(bio);
++}
++
+ static blk_qc_t md_submit_bio(struct bio *bio)
+ {
+ 	const int rw = bio_data_dir(bio);
+-	const int sgrp = op_stat_group(bio_op(bio));
+ 	struct mddev *mddev = bio->bi_disk->private_data;
+-	unsigned int sectors;
+ 
+ 	if (unlikely(test_bit(MD_BROKEN, &mddev->flags)) && (rw == WRITE)) {
+ 		bio_io_error(bio);
+@@ -488,21 +509,27 @@ static blk_qc_t md_submit_bio(struct bio *bio)
+ 		return BLK_QC_T_NONE;
+ 	}
+ 
+-	/*
+-	 * save the sectors now since our bio can
+-	 * go away inside make_request
+-	 */
+-	sectors = bio_sectors(bio);
++	if (bio->bi_end_io != md_end_io) {
++		struct md_io *md_io;
++
++		md_io = mempool_alloc(&mddev->md_io_pool, GFP_NOIO);
++		md_io->mddev = mddev;
++		md_io->orig_bi_end_io = bio->bi_end_io;
++		md_io->orig_bi_private = bio->bi_private;
++
++		bio->bi_end_io = md_end_io;
++		bio->bi_private = md_io;
++
++		md_io->start_time = disk_start_io_acct(mddev->gendisk,
++						       bio_sectors(bio),
++						       bio_op(bio));
++	}
++
+ 	/* bio could be mergeable after passing to underlayer */
+ 	bio->bi_opf &= ~REQ_NOMERGE;
+ 
+ 	md_handle_request(mddev, bio);
+ 
+-	part_stat_lock();
+-	part_stat_inc(&mddev->gendisk->part0, ios[sgrp]);
+-	part_stat_add(&mddev->gendisk->part0, sectors[sgrp], sectors);
+-	part_stat_unlock();
+-
+ 	return BLK_QC_T_NONE;
+ }
+ 
+@@ -5545,6 +5572,7 @@ static void md_free(struct kobject *ko)
+ 
+ 	bioset_exit(&mddev->bio_set);
+ 	bioset_exit(&mddev->sync_set);
++	mempool_exit(&mddev->md_io_pool);
+ 	kfree(mddev);
+ }
+ 
+@@ -5640,6 +5668,11 @@ static int md_alloc(dev_t dev, char *name)
+ 		 */
+ 		mddev->hold_active = UNTIL_STOP;
+ 
++	error = mempool_init_kmalloc_pool(&mddev->md_io_pool, BIO_POOL_SIZE,
++					  sizeof(struct md_io));
++	if (error)
++		goto abort;
++
+ 	error = -ENOMEM;
+ 	mddev->queue = blk_alloc_queue(NUMA_NO_NODE);
+ 	if (!mddev->queue)
+diff --git a/drivers/md/md.h b/drivers/md/md.h
+index 612814d07d35..c26fa8bd41e7 100644
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -481,6 +481,7 @@ struct mddev {
+ 	struct bio_set			sync_set; /* for sync operations like
+ 						   * metadata and bitmap writes
+ 						   */
++	mempool_t			md_io_pool;
+ 
+ 	/* Generic flush handling.
+ 	 * The last to finish preflush schedules a worker to submit
+-- 
+2.26.0
+
