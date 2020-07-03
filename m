@@ -2,226 +2,128 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 021CB2137A3
-	for <lists+linux-raid@lfdr.de>; Fri,  3 Jul 2020 11:27:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 875B12139E4
+	for <lists+linux-raid@lfdr.de>; Fri,  3 Jul 2020 14:18:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgGCJ1C (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 3 Jul 2020 05:27:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53152 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgGCJ1C (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 3 Jul 2020 05:27:02 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66E8CC08C5C1
-        for <linux-raid@vger.kernel.org>; Fri,  3 Jul 2020 02:27:02 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id n2so18073261edr.5
-        for <linux-raid@vger.kernel.org>; Fri, 03 Jul 2020 02:27:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=Q60cfba4oVNnwNwZTKYfbg9c36gDR0qHU+Swmx1gUTg=;
-        b=jOe/t4Z9DV7eI8E9K/1vouwY4l4DC75yVnxnW9tcXZWjgMVmlZSz/pyDL5v1xACBjw
-         EQ1pdF2BKnXPY0WR/gyuKH0fTNfLnMG/ifQOSCNJY+hzjOObZrBCvRRED/Xb4yHWzXQz
-         sOcRBZRtW8GghEQqKzWLJ0zlyScaD6BRsCroJcL64n6vLj6l57OfB1Wbjz2zZR58bPuG
-         n1GPOsUBWBXY5Vc6bIMLikA646FtspRfAh5Qsya+a95jOSleEbr/xGF77rHcEXYMp13C
-         HtiQJS0OfVKtATpon95yXY03Dv9vVpZpITLrA6jaK5vTPw4lsC0mgIHHRxLxJjElVWpz
-         OHpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Q60cfba4oVNnwNwZTKYfbg9c36gDR0qHU+Swmx1gUTg=;
-        b=rSRPBEXDOEZAmmkH+z8NZKQoMxaOG20FhcRLxwbQ4PWPZspZd6pWyUZwCcSKbNXu3V
-         bI5OhHD8HrzbRnWij3kgU3B0/YHn+1jYZ2TfEBRH+1ackNCOcguvvGQOi1g8Src07YR0
-         A3BCu8THNLFE57A3fejykh+f5L/FzmqvrWJ89NcFztv5q1hAEQ/9+lG0RskqvrI1zJ2O
-         68d4Sb3YUDZfFAP4DitDJgQZONLkTkKXC/bxLu4P4eCP+03QL61Xh0F/d97rs1LZkDCo
-         8AtZcQJzhriAS1lTIARCuCp6PHLMRyg8my5TkoSKxvlV2E76cGhbZk4PNWZFuAYlC1t9
-         Witw==
-X-Gm-Message-State: AOAM530Zwy5FDmadn3kUQhkJYBxLPKehj3m+0ygAe1n9aVr3Lq2BerPX
-        KMJDtOuDveMDffIe2Gv+h2aXBzbHkW8bnBL2
-X-Google-Smtp-Source: ABdhPJzh+E/2bHKNDIYKhFOwjzXlRWEsAHU2q1ScRMCcuslrBkLUgtmTcxvZia/d5nL+HnQvskfNsg==
-X-Received: by 2002:aa7:c450:: with SMTP id n16mr35240538edr.53.1593768420791;
-        Fri, 03 Jul 2020 02:27:00 -0700 (PDT)
-Received: from ?IPv6:2a02:247f:ffff:2540:60ce:5ee7:9c1b:dbd8? ([2001:1438:4010:2540:60ce:5ee7:9c1b:dbd8])
-        by smtp.gmail.com with ESMTPSA id a37sm12864903edf.86.2020.07.03.02.27.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jul 2020 02:27:00 -0700 (PDT)
-Subject: Re: [PATCH v4] md: improve io stats accounting
-To:     Artur Paszkiewicz <artur.paszkiewicz@intel.com>, song@kernel.org
-Cc:     linux-raid@vger.kernel.org
-References: <20200703091309.19955-1-artur.paszkiewicz@intel.com>
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Message-ID: <82ac5fe5-e61d-e031-6a64-60b6e1dd408d@cloud.ionos.com>
-Date:   Fri, 3 Jul 2020 11:26:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1726245AbgGCMSh (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 3 Jul 2020 08:18:37 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:39793 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726035AbgGCMSg (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 3 Jul 2020 08:18:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593778714;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=6ANGhUELu5InAezAZYQE3eVLhi+GSTcoFktlFJqXEv0=;
+        b=JIozuwFbWHbUECHz9Wz39uQy2bdGKIKfsWF24Pri0aMQNjTL3uGys8p0p5ltM/4210onbr
+        zEGIghlZZj+9WxkIJqh9dM3HW6gimq+y4YlvHN6A0HTQtaZTpl2WFqNeSXibPR9CsSXzIv
+        LO4VlPdcGMYIVgWX/PmrB+z8Jl+sA7A=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-501-1lWJXBfpM0yKn2If7n6Wpw-1; Fri, 03 Jul 2020 08:18:33 -0400
+X-MC-Unique: 1lWJXBfpM0yKn2If7n6Wpw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 41E3F7BAC;
+        Fri,  3 Jul 2020 12:18:32 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5611D10013D4;
+        Fri,  3 Jul 2020 12:18:29 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 063CISbW014177;
+        Fri, 3 Jul 2020 08:18:28 -0400
+Received: from localhost (mpatocka@localhost)
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 063CISKb014173;
+        Fri, 3 Jul 2020 08:18:28 -0400
+X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
+Date:   Fri, 3 Jul 2020 08:18:28 -0400 (EDT)
+From:   Mikulas Patocka <mpatocka@redhat.com>
+X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
+To:     linux-raid@vger.kernel.org, Song Liu <song@kernel.org>
+cc:     dm-devel@redhat.com, Mike Snitzer <msnitzer@redhat.com>
+Subject: a crash in md-raid
+Message-ID: <alpine.LRH.2.02.2007030812320.13686@file01.intranet.prod.int.rdu2.redhat.com>
+User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
 MIME-Version: 1.0
-In-Reply-To: <20200703091309.19955-1-artur.paszkiewicz@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Looks good, Acked-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Hi
 
-Thanks,
-Guoqing
+I report a crash in md-raid. I have 5.8-rc3 kernel with debugging enabled. 
+The crash happened when running the "shell/integrity-blocksize.sh" lvm 
+test.
 
-On 7/3/20 11:13 AM, Artur Paszkiewicz wrote:
-> Use generic io accounting functions to manage io stats. There was an
-> attempt to do this earlier in commit 18c0b223cf99 ("md: use generic io
-> stats accounting functions to simplify io stat accounting"), but it did
-> not include a call to generic_end_io_acct() and caused issues with
-> tracking in-flight IOs, so it was later removed in commit 74672d069b29
-> ("md: fix md io stats accounting broken").
->
-> This patch attempts to fix this by using both disk_start_io_acct() and
-> disk_end_io_acct(). To make it possible, a struct md_io is allocated for
-> every new md bio, which includes the io start_time. A new mempool is
-> introduced for this purpose. We override bio->bi_end_io with our own
-> callback and call disk_start_io_acct() before passing the bio to
-> md_handle_request(). When it completes, we call disk_end_io_acct() and
-> the original bi_end_io callback.
->
-> This adds correct statistics about in-flight IOs and IO processing time,
-> interpreted e.g. in iostat as await, svctm, aqu-sz and %util.
->
-> It also fixes a situation where too many IOs where reported if a bio was
-> re-submitted to the mddev, because io accounting is now performed only
-> on newly arriving bios.
->
-> Signed-off-by: Artur Paszkiewicz <artur.paszkiewicz@intel.com>
-> ---
-> v4:
-> - Use disk_{start,end}_io_acct() instead of bio_{start,end}_io_acct() to
->    pass mddev->gendisk directly, not bio->bi_disk which gets modified by
->    some personalities.
->
-> v3:
-> - Use bio_start_io_acct() return value for md_io->start_time (thanks
->    Guoqing!)
->
-> v2:
-> - Just override the bi_end_io without having to clone the original bio.
-> - Rebased onto latest md-next.
->
->   drivers/md/md.c | 57 ++++++++++++++++++++++++++++++++++++++-----------
->   drivers/md/md.h |  1 +
->   2 files changed, 46 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index 8bb69c61afe0..63aeebd9266b 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -463,12 +463,33 @@ void md_handle_request(struct mddev *mddev, struct bio *bio)
->   }
->   EXPORT_SYMBOL(md_handle_request);
->   
-> +struct md_io {
-> +	struct mddev *mddev;
-> +	bio_end_io_t *orig_bi_end_io;
-> +	void *orig_bi_private;
-> +	unsigned long start_time;
-> +};
-> +
-> +static void md_end_io(struct bio *bio)
-> +{
-> +	struct md_io *md_io = bio->bi_private;
-> +	struct mddev *mddev = md_io->mddev;
-> +
-> +	disk_end_io_acct(mddev->gendisk, bio_op(bio), md_io->start_time);
-> +
-> +	bio->bi_end_io = md_io->orig_bi_end_io;
-> +	bio->bi_private = md_io->orig_bi_private;
-> +
-> +	mempool_free(md_io, &mddev->md_io_pool);
-> +
-> +	if (bio->bi_end_io)
-> +		bio->bi_end_io(bio);
-> +}
-> +
->   static blk_qc_t md_submit_bio(struct bio *bio)
->   {
->   	const int rw = bio_data_dir(bio);
-> -	const int sgrp = op_stat_group(bio_op(bio));
->   	struct mddev *mddev = bio->bi_disk->private_data;
-> -	unsigned int sectors;
->   
->   	if (unlikely(test_bit(MD_BROKEN, &mddev->flags)) && (rw == WRITE)) {
->   		bio_io_error(bio);
-> @@ -488,21 +509,27 @@ static blk_qc_t md_submit_bio(struct bio *bio)
->   		return BLK_QC_T_NONE;
->   	}
->   
-> -	/*
-> -	 * save the sectors now since our bio can
-> -	 * go away inside make_request
-> -	 */
-> -	sectors = bio_sectors(bio);
-> +	if (bio->bi_end_io != md_end_io) {
-> +		struct md_io *md_io;
-> +
-> +		md_io = mempool_alloc(&mddev->md_io_pool, GFP_NOIO);
-> +		md_io->mddev = mddev;
-> +		md_io->orig_bi_end_io = bio->bi_end_io;
-> +		md_io->orig_bi_private = bio->bi_private;
-> +
-> +		bio->bi_end_io = md_end_io;
-> +		bio->bi_private = md_io;
-> +
-> +		md_io->start_time = disk_start_io_acct(mddev->gendisk,
-> +						       bio_sectors(bio),
-> +						       bio_op(bio));
-> +	}
-> +
->   	/* bio could be mergeable after passing to underlayer */
->   	bio->bi_opf &= ~REQ_NOMERGE;
->   
->   	md_handle_request(mddev, bio);
->   
-> -	part_stat_lock();
-> -	part_stat_inc(&mddev->gendisk->part0, ios[sgrp]);
-> -	part_stat_add(&mddev->gendisk->part0, sectors[sgrp], sectors);
-> -	part_stat_unlock();
-> -
->   	return BLK_QC_T_NONE;
->   }
->   
-> @@ -5545,6 +5572,7 @@ static void md_free(struct kobject *ko)
->   
->   	bioset_exit(&mddev->bio_set);
->   	bioset_exit(&mddev->sync_set);
-> +	mempool_exit(&mddev->md_io_pool);
->   	kfree(mddev);
->   }
->   
-> @@ -5640,6 +5668,11 @@ static int md_alloc(dev_t dev, char *name)
->   		 */
->   		mddev->hold_active = UNTIL_STOP;
->   
-> +	error = mempool_init_kmalloc_pool(&mddev->md_io_pool, BIO_POOL_SIZE,
-> +					  sizeof(struct md_io));
-> +	if (error)
-> +		goto abort;
-> +
->   	error = -ENOMEM;
->   	mddev->queue = blk_alloc_queue(NUMA_NO_NODE);
->   	if (!mddev->queue)
-> diff --git a/drivers/md/md.h b/drivers/md/md.h
-> index 612814d07d35..c26fa8bd41e7 100644
-> --- a/drivers/md/md.h
-> +++ b/drivers/md/md.h
-> @@ -481,6 +481,7 @@ struct mddev {
->   	struct bio_set			sync_set; /* for sync operations like
->   						   * metadata and bitmap writes
->   						   */
-> +	mempool_t			md_io_pool;
->   
->   	/* Generic flush handling.
->   	 * The last to finish preflush schedules a worker to submit
+The crash is not reproducible.
+
+Mikulas
+
+
+[ 1188.640677] device-mapper: raid: Superblocks created for new raid set
+[ 1188.679378] md/raid1:mdX: not clean -- starting background reconstruction
+[ 1188.681072] md/raid1:mdX: active with 2 out of 2 mirrors
+[ 1189.093707] mdX: bitmap file is out of date, doing full recovery
+[ 1189.108688] md: resync of RAID array mdX
+[ 1189.341925] Unable to handle kernel paging request at virtual address 006b6b6b6b6b6b73
+[ 1189.343183] Mem abort info:
+[ 1189.343632]   ESR = 0x96000004
+[ 1189.344219]   EC = 0x25: DABT (current EL), IL = 32 bits
+[ 1189.345012]   SET = 0, FnV = 0
+[ 1189.345483]   EA = 0, S1PTW = 0
+[ 1189.345998] Data abort info:
+[ 1189.346483]   ISV = 0, ISS = 0x00000004
+[ 1189.347109]   CM = 0, WnR = 0
+[ 1189.347589] [006b6b6b6b6b6b73] address between user and kernel address ranges
+[ 1189.348761] Internal error: Oops: 96000004 [#1] PREEMPT SMP
+[ 1189.349802] Modules linked in: brd reiserfs hmac crc32_generic dm_zero dm_integrity dm_crypt dm_writecache dm_raid xfs dm_thin_pool dm_cache_smq dm_cache dm_persistent_data dm_bio_prison dm_mirror dm_region_hash dm_log dm_snapshot dm_bufio loop ipv6 autofs4 binfmt_misc nls_utf8 nls_cp852 vfat fat dm_mod af_packet aes_ce_blk crypto_simd cryptd aes_ce_cipher crct10dif_ce ghash_ce gf128mul sha2_ce sha256_arm64 sha1_ce sha1_generic efivars sg virtio_rng virtio_net rng_core net_failover failover virtio_console ext4 crc16 mbcache jbd2 raid10 raid456 libcrc32c crc32c_generic async_raid6_recov async_memcpy async_pq raid6_pq async_xor xor xor_neon async_tx raid1 raid0 linear md_mod sd_mod t10_pi virtio_scsi scsi_mod virtio_blk virtio_mmio virtio_pci virtio_ring virtio [last unloaded: scsi_debug]
+[ 1189.370709] CPU: 2 PID: 20 Comm: ksoftirqd/2 Not tainted 5.8.0-rc3-debug #1
+[ 1189.372088] Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
+[ 1189.373400] pstate: 60000005 (nZCv daif -PAN -UAO BTYPE=--)
+[ 1189.374492] pc : end_sync_write+0x38/0xf8 [raid1]
+[ 1189.375408] lr : bio_endio+0x234/0x238
+[ 1189.376134] sp : ffffff80fee87af0
+[ 1189.376788] x29: ffffff80fee87af0 x28: 0000000000000004
+[ 1189.377817] x27: 0000000000000100 x26: ffffffc010532916
+[ 1189.378832] x25: 0000000100015b61 x24: 0000000100015b61
+[ 1189.379860] x23: 0000000000000001 x22: ffffffc01062f8e8
+[ 1189.380921] x21: 6b6b6b6b6b6b6b6b x20: ffffff80eaaa2058
+[ 1189.381967] x19: ffffff80d2e01c00 x18: 0000000000000000
+[ 1189.382970] x17: 0000000000000000 x16: 0000000000000000
+[ 1189.383994] x15: 0000000000000000 x14: 0000000000000000
+[ 1189.385003] x13: 0000000000000000 x12: 0000000000000001
+[ 1189.386010] x11: 0000000000000000 x10: 00000000000010f0
+[ 1189.387032] x9 : ffffff80f932cf98 x8 : 0000000000000000
+[ 1189.388044] x7 : 0000000000000000 x6 : 0000000000000000
+[ 1189.389050] x5 : 0000000000000001 x4 : ffffff80fee87aa0
+[ 1189.390062] x3 : ffffff8000000000 x2 : 0000000000000001
+[ 1189.391088] x1 : ffffff80fa22ca00 x0 : ffffff80d2e01c00
+[ 1189.392230] Call trace:
+[ 1189.392719]  end_sync_write+0x38/0xf8 [raid1]
+[ 1189.393553]  bio_endio+0x234/0x238
+[ 1189.394440]  dec_pending+0x1b8/0x1bc [dm_mod]
+[ 1189.395307]  clone_endio+0x14c/0x160 [dm_mod]
+[ 1189.396155]  bio_endio+0x234/0x238
+[ 1189.397602]  blk_update_request+0x2f8/0x418
+[ 1189.398473]  blk_mq_end_request+0x20/0x44
+[ 1189.400709]  lo_complete_rq+0x5c/0xbc [loop]
+[ 1189.401771]  blk_done_softirq+0xbc/0xc0
+[ 1189.402564]  efi_header_end+0x368/0x4b8
+[ 1189.403559]  run_ksoftirqd+0x34/0x64
+[ 1189.404303]  smpboot_thread_fn+0x228/0x22c
+[ 1189.405132]  kthread+0x114/0x124
+[ 1189.405807]  ret_from_fork+0x10/0x18
+[ 1189.406537] Code: f9400013 aa1303e0 f9401274 f9400295 (f94006a8)
+[ 1189.414734] ---[ end trace 4538a7676b244523 ]---
+[ 1189.415635] Kernel panic - not syncing: Fatal exception in interrupt
+[ 1189.416874] SMP: stopping secondary CPUs
+[ 1189.417691] Kernel Offset: disabled
+[ 1189.418380] CPU features: 0x000022,00002000
+[ 1189.419185] Memory Limit: none
+[ 1189.419743] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
 
