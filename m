@@ -2,84 +2,88 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D0A32142B0
-	for <lists+linux-raid@lfdr.de>; Sat,  4 Jul 2020 04:50:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD39C2145CA
+	for <lists+linux-raid@lfdr.de>; Sat,  4 Jul 2020 14:25:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgGDCtt (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 3 Jul 2020 22:49:49 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:41689 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726469AbgGDCtt (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 3 Jul 2020 22:49:49 -0400
-Received: from [IPv6:2601:646:8600:3281:5dc2:80d2:54f0:602b] ([IPv6:2601:646:8600:3281:5dc2:80d2:54f0:602b])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 0642h1es2638706
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Fri, 3 Jul 2020 19:49:43 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 0642h1es2638706
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020062301; t=1593830983;
-        bh=xdajIi3z5FFfZAyVanzcSQpfogwjK/4I+USQ7ObbpEE=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=XPQlFxT8T06YRZ7opcjjm3+cLdvEHMd3X/Y5XZfafJ86BFb/9mWelxuZgGpPptQ8r
-         MFsQo1b0KftT0FQ6S4zL/qWR4O+nELOqUeEeAkezS5qhMof4C+BpxVSpRUFgfZcwmj
-         T5nb4MhSYmURzPinEyLgq6+wt93fQwnrYVx10gDGxLfYcdDDlu3Vtixu0bmRNozbgJ
-         0T0iNqTSObyaLXV7mWNssuQT+088t5Cs6XHxkRN5rOj7YJtdx371FTWc+gPSk+o/US
-         VkXDpTeE9WK6Ua/l1zeC2GZ3nGCrpQFeXSbGMQ+qRB2NlIPQVxDuOKC8SAlymcqKlI
-         ilo7IK3ldLKEA==
-Date:   Fri, 03 Jul 2020 19:19:22 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <e60b1977-2e1d-75ee-e934-207658145098@youngman.org.uk>
-References: <20200615125323.930983-1-hch@lst.de> <20200615125323.930983-10-hch@lst.de> <514b0176-d235-f640-b278-9a7d49af356f@zytor.com> <e60b1977-2e1d-75ee-e934-207658145098@youngman.org.uk>
+        id S1726934AbgGDMZO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 4 Jul 2020 08:25:14 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7371 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726738AbgGDMZO (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sat, 4 Jul 2020 08:25:14 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 9E38D1550E1107886075;
+        Sat,  4 Jul 2020 20:25:09 +0800 (CST)
+Received: from [10.174.179.185] (10.174.179.185) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.487.0; Sat, 4 Jul 2020 20:25:03 +0800
+Subject: Re: [PATCH v5 12/16] md/raid5: support config stripe_size by sysfs
+ entry
+To:     Song Liu <song@kernel.org>
+CC:     linux-raid <linux-raid@vger.kernel.org>,
+        NeilBrown <neilb@suse.com>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Hou Tao <houtao1@huawei.com>
+References: <20200702120628.777303-1-yuyufen@huawei.com>
+ <20200702120628.777303-13-yuyufen@huawei.com>
+ <CAPhsuW5rTOwd+hPsBobFWD4TWGO4pWMgwt5BVAt=Fnab71MC=w@mail.gmail.com>
+From:   Yufen Yu <yuyufen@huawei.com>
+Message-ID: <e5096dc3-1a6e-e021-c114-1186607e438c@huawei.com>
+Date:   Sat, 4 Jul 2020 20:25:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 09/16] initrd: remove the BLKFLSBUF call in handle_initrd
-To:     antlists <antlists@youngman.org.uk>,
-        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org
-CC:     Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
-From:   hpa@zytor.com
-Message-ID: <54AE9966-852F-4F42-A720-8D6053F0EF52@zytor.com>
+In-Reply-To: <CAPhsuW5rTOwd+hPsBobFWD4TWGO4pWMgwt5BVAt=Fnab71MC=w@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.179.185]
+X-CFilter-Loop: Reflected
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On July 3, 2020 5:18:48 PM PDT, antlists <antlists@youngman=2Eorg=2Euk> wro=
-te:
->On 03/07/2020 04:40, H=2E Peter Anvin wrote:
->> On 2020-06-15 05:53, Christoph Hellwig wrote:
->>> BLKFLSBUF used to be overloaded for the ramdisk driver to free the
->whole
->>> ramdisk, which was completely different behavior compared to all
->other
->>> drivers=2E  But this magic overload got removed in commit ff26956875c2
->>> ("brd: remove support for BLKFLSBUF"), so this call is entirely
->>> pointless now=2E
->>>
->>> Signed-off-by: Christoph Hellwig <hch@lst=2Ede>
->>=20
->> Does *anyone* use initrd as opposed to initramfs anymore? It would
->seem
->> like a good candidate for deprecation/removal=2E
->>=20
->Reading the gentoo mailing list, it seems there's a fair few people who
->
->don't use initramfs=2E I get the impression they don't use initrd either,
->
->though=2E
->
->I don't know too much about booting without an initramfs - I switched=20
->ages ago - so what is possible and what they're actually doing, I don't
->
->know=2E
->
->Cheers,
->Wol
 
-Not using any init userspace at all is an entirely different issue=2E
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+
+On 2020/7/3 6:38, Song Liu wrote:
+> On Thu, Jul 2, 2020 at 5:05 AM Yufen Yu <yuyufen@huawei.com> wrote:
+>>
+>> After this patch, we can adjust stripe_size by writing value into sysfs
+>> entry, likely, set stripe_size as 16KB:
+>>
+>>            echo 16384 > /sys/block/md1/md/stripe_size
+>>
+>> Show current stripe_size value:
+>>
+>>            cat /sys/block/md1/md/stripe_size
+>>
+>> stripe_size should not be bigger than PAGE_SIZE, and it requires to be
+>> multiple of 4096.
+> 
+> I think we can just merge 02/16 into this one.
+> 
+>>
+>> Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+>> ---
+>>   drivers/md/raid5.c | 69 +++++++++++++++++++++++++++++++++++++++++++++-
+>>   1 file changed, 68 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+>> index f0fd01d9122e..a3376a4e4e5c 100644
+>> --- a/drivers/md/raid5.c
+>> +++ b/drivers/md/raid5.c
+>> @@ -6715,7 +6715,74 @@ raid5_show_stripe_size(struct mddev  *mddev, char *page)
+>>   static ssize_t
+>>   raid5_store_stripe_size(struct mddev  *mddev, const char *page, size_t len)
+>>   {
+>> -       return -EINVAL;
+>> +       struct r5conf *conf = mddev->private;
+> 
+> We need mddev_lock(mddev) before accessing mddev->private.
+>
+
+Thanks to point this bug. I will fix it.
+
+Thanks,
+Yufen
