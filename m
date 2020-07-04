@@ -2,82 +2,84 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D72B3214260
-	for <lists+linux-raid@lfdr.de>; Sat,  4 Jul 2020 02:32:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D0A32142B0
+	for <lists+linux-raid@lfdr.de>; Sat,  4 Jul 2020 04:50:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbgGDAcz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 3 Jul 2020 20:32:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34342 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726455AbgGDAcy (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 3 Jul 2020 20:32:54 -0400
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8E8720782
-        for <linux-raid@vger.kernel.org>; Sat,  4 Jul 2020 00:32:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593822774;
-        bh=qIHwPCY1qQO1vaprEp6D+fffHpq0G/JX7kz/YWiTq3U=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PL7N/bL77cjpJ508g0QXDv2gU8W18VyECvhR6KQAMcU85aT3a3vqhisIl9JUJJQMW
-         4ECvdPRpLBo6GquONVx2sd/gVnjy8eTz3ztm+1hhRN8cEidG3rT5HDFWsZ3BDBqS4K
-         15hvlbmaYlbg192CQzjkKZNEwqf9tV4Dx1d67vtQ=
-Received: by mail-lf1-f49.google.com with SMTP id m26so19442148lfo.13
-        for <linux-raid@vger.kernel.org>; Fri, 03 Jul 2020 17:32:53 -0700 (PDT)
-X-Gm-Message-State: AOAM530o38VeD3FgB0LC0ZHvmV1U1k1DsWTIHfbjH+VMN0ykvPWVbxVT
-        rggJ1HTwi0ds+aEQNer2A4wLh3UPWOZS7ixxPSs=
-X-Google-Smtp-Source: ABdhPJz0e0fqF+q92xHMGL6JICS6Q7lXSp8AosNe9idMtOOiAAoo5V3RtQC+i8lgW9fu/leK+irpzH7ypsaOPh202w8=
-X-Received: by 2002:a19:7e09:: with SMTP id z9mr23466521lfc.69.1593822772002;
- Fri, 03 Jul 2020 17:32:52 -0700 (PDT)
+        id S1726621AbgGDCtt (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 3 Jul 2020 22:49:49 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:41689 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726469AbgGDCtt (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 3 Jul 2020 22:49:49 -0400
+Received: from [IPv6:2601:646:8600:3281:5dc2:80d2:54f0:602b] ([IPv6:2601:646:8600:3281:5dc2:80d2:54f0:602b])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 0642h1es2638706
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Fri, 3 Jul 2020 19:49:43 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 0642h1es2638706
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2020062301; t=1593830983;
+        bh=xdajIi3z5FFfZAyVanzcSQpfogwjK/4I+USQ7ObbpEE=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=XPQlFxT8T06YRZ7opcjjm3+cLdvEHMd3X/Y5XZfafJ86BFb/9mWelxuZgGpPptQ8r
+         MFsQo1b0KftT0FQ6S4zL/qWR4O+nELOqUeEeAkezS5qhMof4C+BpxVSpRUFgfZcwmj
+         T5nb4MhSYmURzPinEyLgq6+wt93fQwnrYVx10gDGxLfYcdDDlu3Vtixu0bmRNozbgJ
+         0T0iNqTSObyaLXV7mWNssuQT+088t5Cs6XHxkRN5rOj7YJtdx371FTWc+gPSk+o/US
+         VkXDpTeE9WK6Ua/l1zeC2GZ3nGCrpQFeXSbGMQ+qRB2NlIPQVxDuOKC8SAlymcqKlI
+         ilo7IK3ldLKEA==
+Date:   Fri, 03 Jul 2020 19:19:22 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <e60b1977-2e1d-75ee-e934-207658145098@youngman.org.uk>
+References: <20200615125323.930983-1-hch@lst.de> <20200615125323.930983-10-hch@lst.de> <514b0176-d235-f640-b278-9a7d49af356f@zytor.com> <e60b1977-2e1d-75ee-e934-207658145098@youngman.org.uk>
 MIME-Version: 1.0
-References: <20200703091309.19955-1-artur.paszkiewicz@intel.com> <82ac5fe5-e61d-e031-6a64-60b6e1dd408d@cloud.ionos.com>
-In-Reply-To: <82ac5fe5-e61d-e031-6a64-60b6e1dd408d@cloud.ionos.com>
-From:   Song Liu <song@kernel.org>
-Date:   Fri, 3 Jul 2020 17:32:40 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW4Xc19jJyxzOUcfoE+HrKH=bogC55=-dt04z6phn0Wu5Q@mail.gmail.com>
-Message-ID: <CAPhsuW4Xc19jJyxzOUcfoE+HrKH=bogC55=-dt04z6phn0Wu5Q@mail.gmail.com>
-Subject: Re: [PATCH v4] md: improve io stats accounting
-To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Cc:     Artur Paszkiewicz <artur.paszkiewicz@intel.com>,
-        linux-raid <linux-raid@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 09/16] initrd: remove the BLKFLSBUF call in handle_initrd
+To:     antlists <antlists@youngman.org.uk>,
+        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org
+CC:     Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
+From:   hpa@zytor.com
+Message-ID: <54AE9966-852F-4F42-A720-8D6053F0EF52@zytor.com>
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Fri, Jul 3, 2020 at 2:27 AM Guoqing Jiang
-<guoqing.jiang@cloud.ionos.com> wrote:
+On July 3, 2020 5:18:48 PM PDT, antlists <antlists@youngman=2Eorg=2Euk> wro=
+te:
+>On 03/07/2020 04:40, H=2E Peter Anvin wrote:
+>> On 2020-06-15 05:53, Christoph Hellwig wrote:
+>>> BLKFLSBUF used to be overloaded for the ramdisk driver to free the
+>whole
+>>> ramdisk, which was completely different behavior compared to all
+>other
+>>> drivers=2E  But this magic overload got removed in commit ff26956875c2
+>>> ("brd: remove support for BLKFLSBUF"), so this call is entirely
+>>> pointless now=2E
+>>>
+>>> Signed-off-by: Christoph Hellwig <hch@lst=2Ede>
+>>=20
+>> Does *anyone* use initrd as opposed to initramfs anymore? It would
+>seem
+>> like a good candidate for deprecation/removal=2E
+>>=20
+>Reading the gentoo mailing list, it seems there's a fair few people who
 >
-> Looks good, Acked-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+>don't use initramfs=2E I get the impression they don't use initrd either,
 >
-> Thanks,
-> Guoqing
+>though=2E
 >
-> On 7/3/20 11:13 AM, Artur Paszkiewicz wrote:
-> > Use generic io accounting functions to manage io stats. There was an
-> > attempt to do this earlier in commit 18c0b223cf99 ("md: use generic io
-> > stats accounting functions to simplify io stat accounting"), but it did
-> > not include a call to generic_end_io_acct() and caused issues with
-> > tracking in-flight IOs, so it was later removed in commit 74672d069b29
-> > ("md: fix md io stats accounting broken").
-> >
-> > This patch attempts to fix this by using both disk_start_io_acct() and
-> > disk_end_io_acct(). To make it possible, a struct md_io is allocated for
-> > every new md bio, which includes the io start_time. A new mempool is
-> > introduced for this purpose. We override bio->bi_end_io with our own
-> > callback and call disk_start_io_acct() before passing the bio to
-> > md_handle_request(). When it completes, we call disk_end_io_acct() and
-> > the original bi_end_io callback.
-> >
-> > This adds correct statistics about in-flight IOs and IO processing time,
-> > interpreted e.g. in iostat as await, svctm, aqu-sz and %util.
-> >
-> > It also fixes a situation where too many IOs where reported if a bio was
-> > re-submitted to the mddev, because io accounting is now performed only
-> > on newly arriving bios.
-> >
-> > Signed-off-by: Artur Paszkiewicz <artur.paszkiewicz@intel.com>
+>I don't know too much about booting without an initramfs - I switched=20
+>ages ago - so what is possible and what they're actually doing, I don't
+>
+>know=2E
+>
+>Cheers,
+>Wol
 
-Applied to md-next. Thanks!
+Not using any init userspace at all is an entirely different issue=2E
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
