@@ -2,96 +2,92 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94F87219421
-	for <lists+linux-raid@lfdr.de>; Thu,  9 Jul 2020 01:14:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 096132194A1
+	for <lists+linux-raid@lfdr.de>; Thu,  9 Jul 2020 01:52:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbgGHXOe (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 8 Jul 2020 19:14:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbgGHXOc (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 8 Jul 2020 19:14:32 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E026C08C5DC
-        for <linux-raid@vger.kernel.org>; Wed,  8 Jul 2020 16:14:31 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id g67so75392pgc.8
-        for <linux-raid@vger.kernel.org>; Wed, 08 Jul 2020 16:14:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qXlCDNHI0ZK15y0LOuAYzGPtynusnw7LtwDb5Yj2OtE=;
-        b=cMbzoT4XhkOdRuftJN/OiPsYT9RozDw+GuQh01xrUOP3mEW5tEUjydfcb4W+DKVzne
-         TFfUTMUinXgvBqCBfHGgOVgQJzkXgqOGy28APv540LEKujTVtjrvU97kbdrHqETQKtaw
-         RxfU1Mj6GTpbQeKCFE4jR13nkdUzsgeldvzxXoT9HJ1fzXpuM/Ep2USaPDxgdcyvZAzd
-         /jZjEoDC//LUR2Vf0Zhf0IGE23c90oPClyOfNFgWvDrq1zo1M5Bgvo6f9IqIwZwMBEpc
-         Bs9RuI54YBgJOxg3wIrkIpXX8DSkg4acxak06jwvZXv2M3RmK5zy1eWHCosB7prsXkuL
-         YrQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qXlCDNHI0ZK15y0LOuAYzGPtynusnw7LtwDb5Yj2OtE=;
-        b=GN7cWA5R/mGsXahP+KfFD4T4z3CXm4kGaSSO27RGlHjcetSwrwjatzl0ofsTqV3nb4
-         KaS8QkCZTqx+1jYfjt6iMFW23Gfl9lAiyBtTqIP9gUQIw7MSBpZ5MG8Hs7MpnF0eCTPI
-         TMyHDfzoc+aowQAZOI/vcD8PHGMKhXaByb6btMYI0Nwg/TtmSm+PvCxjbbSY6OkqhUmU
-         TqDgG22pEu6xHgFo5NGcfxzGjE9IZzryssP2lpp44OEIIF4EVe/26x+XmkXsEzk4jCk/
-         wpgWbxUToqUT+YeTVXEv17YV7Jluq9br5PpLkwOd7rI3zeswe9ygm+1Z4HKDHGErAmk0
-         bG4A==
-X-Gm-Message-State: AOAM533aNiUxo3lFWXsQwtt8BTsN+IkynUvFE9f5A3Q8YfQuW+mbgCwE
-        DYOoaGc1C8jOr0i/HDSNl6vjSuOPvxW9uw==
-X-Google-Smtp-Source: ABdhPJwxXRU58dnJ8SaVTE59SieM0UMi6WQspGfeG513juta/gCc2a5inFjMHD1HHOikaeJsZTW/MA==
-X-Received: by 2002:a63:7741:: with SMTP id s62mr50514486pgc.332.1594250070946;
-        Wed, 08 Jul 2020 16:14:30 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id n137sm721427pfd.194.2020.07.08.16.14.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 16:14:30 -0700 (PDT)
-Subject: Re: remove dead bdi congestion leftovers
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Tejun Heo <tj@kernel.org>, dm-devel@redhat.com,
-        cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-        drbd-dev@lists.linbit.com, linux-bcache@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20200701090622.3354860-1-hch@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <b5d6df17-68af-d535-79e4-f95e16dd5632@kernel.dk>
-Date:   Wed, 8 Jul 2020 17:14:29 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1725978AbgGHXwL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 8 Jul 2020 19:52:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43130 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725972AbgGHXwL (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 8 Jul 2020 19:52:11 -0400
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE0B8206DF
+        for <linux-raid@vger.kernel.org>; Wed,  8 Jul 2020 23:52:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594252331;
+        bh=TlXXYv1Ez9GJYqV36kSuIjhR5kM1wkaq+r6Gybdc964=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gwEqKMkHv3jh1DpSkb3/HkmYx275LTpy4Qi1EhtOQukxq3N4UTRxkEvvImA4OpVWX
+         WQL+2nVevtWPc+hqW3aoPlRJ2GG98krkMmwGqSYZhip0FCXY6hxCq+uVuU0mRkHHgx
+         +syNxFLhtsXE86hFAfz1nCLIdN1ig8Mkv/MSR5R8=
+Received: by mail-lj1-f177.google.com with SMTP id s9so253051ljm.11
+        for <linux-raid@vger.kernel.org>; Wed, 08 Jul 2020 16:52:10 -0700 (PDT)
+X-Gm-Message-State: AOAM532PN8CUG6yogko/p4GVnZ3IwczzweExdpPsFr2AKR1go0AenoRU
+        bhvrp+RHzRAdd2JgMx8oX4e+YvH07fAlXFKLO7A=
+X-Google-Smtp-Source: ABdhPJwLaPyqIo3TModQqaQTzbry+MpBoEZINV0Tf9awcBVMm45/RVuKv7ukc5884Kr2Bn6vZYWJn6S862jwIVYkdQ4=
+X-Received: by 2002:a2e:8707:: with SMTP id m7mr24050201lji.350.1594252329252;
+ Wed, 08 Jul 2020 16:52:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200701090622.3354860-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <f8c61278-1758-66cd-cf25-8a118cb12f58@yandex.pl>
+ <49efa0d2-b44c-ec85-5e44-fb93a15001e7@yandex.pl> <4df42e3d-ad2b-dfc2-3961-49ada4ea7eaf@yandex.pl>
+ <CAPhsuW5kk0G9PSfEADc8+rn=QT2z4ogjuV98qWsH_s_WBic-5w@mail.gmail.com>
+ <71f58507-314e-4a1d-dd50-41a60d76521b@yandex.pl> <CAPhsuW59Q7mU9WH36RHs9kb-TMk7FmrQL+JCApupf_TZtpWynA@mail.gmail.com>
+ <4a03e900-61a8-f150-9be8-739e88ba8ce6@yandex.pl> <CAPhsuW4BZE-DeESsq-coNx5_KZrfHjP=d9YOjOPqPji5kQBXjg@mail.gmail.com>
+ <a772ede5-1d6f-e7cd-e949-a5d81d0fdbd1@yandex.pl> <CAPhsuW5hwAMTy8ozpsT+n5F3M7NzKqBdheFZvnouZEv8hEqAxQ@mail.gmail.com>
+ <4b426e56-f971-67cf-81c0-63e035bf492a@yandex.pl> <CAPhsuW6fvgRCz7X7nnCEof4+yy2fTsxShNCuqTkMC0JQpj6gKw@mail.gmail.com>
+ <57247f5e-ec38-fb8c-9684-abbe699945fb@yandex.pl> <CAPhsuW4hnpsbhQWWNKqgnw4nhp4Ho+gFbPU2fGjoMOcM8y7L+Q@mail.gmail.com>
+ <15a3dd66-39a9-894d-3e72-d231cf36758e@yandex.pl> <4577498e-4124-ac6f-9d76-1f039fa1ba80@yandex.pl>
+ <CAPhsuW4Y-23m7JexbnUCO3pq6+yTNrMrN6v-od+FFzZU8PgCdA@mail.gmail.com> <40054126-5009-3633-b7f9-198c2cc53ce7@yandex.pl>
+In-Reply-To: <40054126-5009-3633-b7f9-198c2cc53ce7@yandex.pl>
+From:   Song Liu <song@kernel.org>
+Date:   Wed, 8 Jul 2020 16:51:56 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW6tzdneY9C7kiZTC-qhK-se_JhY2e683PQo09QvAqyP6Q@mail.gmail.com>
+Message-ID: <CAPhsuW6tzdneY9C7kiZTC-qhK-se_JhY2e683PQo09QvAqyP6Q@mail.gmail.com>
+Subject: Re: Assemblin journaled array fails
+To:     Michal Soltys <msoltyspl@yandex.pl>
+Cc:     linux-raid <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 7/1/20 3:06 AM, Christoph Hellwig wrote:
-> Hi Jens,
-> 
-> we have a lot of bdi congestion related code that is left around without
-> any use.  This series removes it in preparation of sorting out the bdi
-> lifetime rules properly.
+On Wed, Jul 8, 2020 at 4:29 AM Michal Soltys <msoltyspl@yandex.pl> wrote:
+>
+> On 7/7/20 12:08 AM, Song Liu wrote:
+> >>
+> >> So, what kind of next step after this ?
+> >
+> > Sorry for the delay. I read the log again, and found the following
+> > line caused this issue:
+> >
+> > [ +16.088243] r5l_write_super_and_discard_space set MD_SB_CHANGE_PENDING
+> >
+> > The attached patch should workaround this issue. Could you please give it a try?
+>
+> Yea, this solved the issue - the raid assembled correctly (so the patch
+> is probably a good candidate for lts kernels).
 
-Please run series like this through a full compilation, for both this one
-and the previous series I had to fix up issues like this:
+Thanks for testing the patch. I will work on applying it to upstream.
 
-drivers/md/bcache/request.c: In function ‘bch_cached_dev_request_init’:
-drivers/md/bcache/request.c:1233:18: warning: unused variable ‘g’ [-Wunused-variable]
- 1233 |  struct gendisk *g = dc->disk.disk;
-      |                  ^
-drivers/md/bcache/request.c: In function ‘bch_flash_dev_request_init’:
-drivers/md/bcache/request.c:1320:18: warning: unused variable ‘g’ [-Wunused-variable]
- 1320 |  struct gendisk *g = d->disk;
-      |                  ^
+>
+> Thanks for helping with this bug.
+>
+> Underlying filesystems are mountable/usable as well - albeit read-only
+> fsck (ext4) or btrfs check do find some minor issues; tough to say at
+> this point what was the exact culprit.
+>
+> In this particular case - imho - one issue remains: the assembly is
+> slower than full resync (without bitmap), which outside of some
+> performance gains (writeback journal) and write-hole fixing - kind of
+> completely defeats the point of having such resync policy in the first
+> place.
 
-Did the same here, applied it.
+Totally agreed that we need to improve the recovery speed. I will also look
+into that.
 
--- 
-Jens Axboe
-
+Thanks again!
+Song
