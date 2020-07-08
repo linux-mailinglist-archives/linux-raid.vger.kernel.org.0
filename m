@@ -2,45 +2,84 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CF94217FB4
-	for <lists+linux-raid@lfdr.de>; Wed,  8 Jul 2020 08:39:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E62C52182BE
+	for <lists+linux-raid@lfdr.de>; Wed,  8 Jul 2020 10:42:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729788AbgGHGis (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 8 Jul 2020 02:38:48 -0400
-Received: from verein.lst.de ([213.95.11.211]:33796 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726206AbgGHGis (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 8 Jul 2020 02:38:48 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 8B7BE68AFE; Wed,  8 Jul 2020 08:38:45 +0200 (CEST)
-Date:   Wed, 8 Jul 2020 08:38:45 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Song Liu <song@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        open list <linux-kernel@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 01/16] init: remove the bstat helper
-Message-ID: <20200708063845.GA5468@lst.de>
-References: <20200615125323.930983-1-hch@lst.de> <20200615125323.930983-2-hch@lst.de> <CAPhsuW6chy6uMpow3L1WvBW8xCsUYw4SbLHQQXcANqBVcqoULg@mail.gmail.com> <20200707103439.GA2812@lst.de> <CAPhsuW6CvKMPEuUEFfZhxyyU2ke9oiYOuCwkM+NM2=bo_o_MFw@mail.gmail.com>
+        id S1726958AbgGHImD (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 8 Jul 2020 04:42:03 -0400
+Received: from mail.elsol.com.pe ([170.231.82.35]:57417 "EHLO
+        mail.elsol.com.pe" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbgGHImD (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 8 Jul 2020 04:42:03 -0400
+X-Greylist: delayed 4989 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Jul 2020 04:42:02 EDT
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by mail.elsol.com.pe (Postfix) with ESMTP id D9F18606F1A;
+        Wed,  8 Jul 2020 02:07:44 -0500 (-05)
+Received: from mail.elsol.com.pe ([127.0.0.1])
+        by localhost (mail.elsol.com.pe [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id QXyMKLUX3ZJ3; Wed,  8 Jul 2020 02:07:44 -0500 (-05)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by mail.elsol.com.pe (Postfix) with ESMTP id 840D5606AF4;
+        Wed,  8 Jul 2020 02:07:44 -0500 (-05)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.elsol.com.pe 840D5606AF4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=elsol.com.pe;
+        s=17F39D2A-FFD0-11E7-BCBF-081969246B0E; t=1594192064;
+        bh=7Y6RtNhSVAIVHdJEU2gHHWYvaP8LRgEAhMNj0EoKaAA=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=EYjVLEJt7mQ32G+y8i2eSW85ZAdkLBeuXTS2qlPwrsFhq+oZGO9w5/H/Irtv8gsZ0
+         2OM5C/dYTp2NAXwVFkaUYRNfreEabl/64It5uTtKffSRFproTiX12V3kqzkcWj2wlT
+         z8iJGK+oNfaOe0gWvNaGafjPR13RTzlVshvNBkS8FvxRtuQndStOmucw+fA73p/0Fx
+         TGWVKMpmlQWDW4LssTfB8+5fW9Cmmy26ytNfpsQBxixkgrOX7pWnTWEBbrNsDvYYn6
+         Wha10+h5BZBmak50YIqxTgqp41/EJL1H7K89cHO4I+tXcDsqgeg6gMA9KOen/UUDHp
+         N0pwobwOO3nAg==
+X-Virus-Scanned: amavisd-new at elsol.com.pe
+Received: from mail.elsol.com.pe ([127.0.0.1])
+        by localhost (mail.elsol.com.pe [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 66Hj2Hgtdp1a; Wed,  8 Jul 2020 02:07:44 -0500 (-05)
+Received: from [10.86.65.172] (unknown [105.8.7.225])
+        by mail.elsol.com.pe (Postfix) with ESMTPSA id 00688606B21;
+        Wed,  8 Jul 2020 02:07:32 -0500 (-05)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPhsuW6CvKMPEuUEFfZhxyyU2ke9oiYOuCwkM+NM2=bo_o_MFw@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: =?utf-8?q?Covid_19_Wohlt=C3=A4tigkeitsfonds?=
+To:     Recipients <dreyes@elsol.com.pe>
+From:   ''Tayeb Souami'' <dreyes@elsol.com.pe>
+Date:   Wed, 08 Jul 2020 09:03:45 +0200
+Reply-To: Tayebsouam.spende@gmail.com
+Message-Id: <20200708070733.00688606B21@mail.elsol.com.pe>
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 09:54:30AM -0700, Song Liu wrote:
-> Would this official mm tree work?
-> 
-> T:      git git://github.com/hnaz/linux-mm.git
-> 
-> If not, I am OK with either vfs tree or a dedicated tree.
+Lieber Freund,
 
-That is a constantly rebased tree, so I don't think it helps.
+Ich bin Herr Tayeb Souami, New Jersey, Vereinigte Staaten von Amerika, der =
+Mega-Gewinner von $ 315million In Mega Millions Jackpot, spende ich an 5 zu=
+f=C3=A4llige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Ma=
+il nach einem Spinball ausgew=C3=A4hlt.Ich habe den gr=C3=B6=C3=9Ften Teil =
+meines Verm=C3=B6gens auf eine Reihe von Wohlt=C3=A4tigkeitsorganisationen =
+und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die =
+Summe von =E2=82=AC 2.000.000,00 an Sie als eine der ausgew=C3=A4hlten 5 zu=
+ spenden, um meine Gewinne zu =C3=BCberpr=C3=BCfen, sehen Sie bitte meine Y=
+ou Tube Seite unten.
+
+UHR MICH HIER: https://www.youtube.com/watch?v=3DZ6ui8ZDQ6Ks
+
+
+
+Das ist dein Spendencode: [TS530342018]
+
+
+
+Antworten Sie mit dem SPENDE-CODE an diese
+
+E-Mail:Tayebsouam.spende@gmail.com
+
+
+Ich hoffe, Sie und Ihre Familie gl=C3=BCcklich zu machen.
+
+Gr=C3=BC=C3=9Fe
+Herr Tayeb Souami
