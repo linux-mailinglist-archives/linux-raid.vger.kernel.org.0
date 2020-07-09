@@ -2,111 +2,93 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A54F521A33F
-	for <lists+linux-raid@lfdr.de>; Thu,  9 Jul 2020 17:19:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56A8F21A698
+	for <lists+linux-raid@lfdr.de>; Thu,  9 Jul 2020 20:07:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728234AbgGIPSs (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 9 Jul 2020 11:18:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54464 "EHLO
+        id S1726773AbgGISH3 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 9 Jul 2020 14:07:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728150AbgGIPSq (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 9 Jul 2020 11:18:46 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7895DC08C5CE;
-        Thu,  9 Jul 2020 08:18:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=4Q7oU7KSFv868hQYqAShdiN8TCW220JDegTgqB1k4fw=; b=QY/BbB98LE4pY80pN791XLF+RN
-        hH5jVErzdhj6itDy95ltl1BO8lZl5RfE8tV2avcehalV3AcuDjbaS9xqk3eGfxO/xVpMLqqfVZvQS
-        S4r6vn5DpVX9GuNC/tnmnrmk6nrKtHb0rKIYjvs5Mh/9w6GzYy7ZnybXTjMSbrm1f2Ilj2sOLa1GP
-        mfU5p5+cvs1nJDGRKZ7h2tZpsG5w9aoeRE2rnLN05HHJGL47eD/TOL8Ljjc7Xxmjj1f8RFxkVzRN7
-        jEAUyiybJOaY9Sg7n4NrA3sejGm3rBz+Wa5QLxixtG6YTJedZul9dHo3pEcCN8XZ8B0PEyxC52I1y
-        0HxyQT1w==;
-Received: from [2001:4bb8:188:5f50:7053:304b:bf82:82cf] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jtYJw-0005Ot-Ig; Thu, 09 Jul 2020 15:18:45 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 17/17] fs: remove ksys_open
-Date:   Thu,  9 Jul 2020 17:18:14 +0200
-Message-Id: <20200709151814.110422-18-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200709151814.110422-1-hch@lst.de>
-References: <20200709151814.110422-1-hch@lst.de>
+        with ESMTP id S1726339AbgGISH3 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 9 Jul 2020 14:07:29 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAB59C08C5CE
+        for <linux-raid@vger.kernel.org>; Thu,  9 Jul 2020 11:07:28 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id d17so3457474ljl.3
+        for <linux-raid@vger.kernel.org>; Thu, 09 Jul 2020 11:07:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tGB1Ppz9iVx4FA/xnoM13tjpRPi/F5lN29F79qSyClI=;
+        b=XlUxRvTGYZccRYMrKRoB6EWa71eHhhv7TO7Vq+BYwEosgfG77FRVMUrnAizkb/+sIJ
+         rFcH3zyCOVKPaTjKMFymNQmA2ANoiIU33O3g7HgDp0mdHKMUF/14/BxYkEd+THUBakSJ
+         LuCHx3jBsBS0QnYep3fFl0iBrz4LUkE9/SE2I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tGB1Ppz9iVx4FA/xnoM13tjpRPi/F5lN29F79qSyClI=;
+        b=dPHGwREy+Dnzfj/EKxh/8rRfnoQd8TfrFgHUKqRJYCgZ6dGybiOwIqZUVNCPeVkiVN
+         W32hPC1cAoUeRq+glWUiP4HazFGfnUso/UBQGWzMLgkvsM1juGBXh9XZldATbh1Nmd1M
+         xGl2G75htnZ70spJCH1OaoJjT1oLM+itj4pkPzK8Yl/qPlW6aZPDSzbaScyF0rtCC6Qz
+         Gctz8I3Bv8xjkhs3SkCWLMO1PeY66T8V/5VHJOc78RkWcnhQnyUYAz0vriUhjG+Yx/Tw
+         goMz/trKNZHhchrkCRf3HD+fWeCQ/3LmfE6J2pgKEBuGxIdAzrEi9StcGaIDpDaWXpBV
+         RjsA==
+X-Gm-Message-State: AOAM532I4BXS6bTuBQR6lojQlk7rIF3TgRSHsTTCq2EUpZ0WSBDD5arh
+        g2CXk8mruAQGVaA7UDgAKKf9j5QL3YM=
+X-Google-Smtp-Source: ABdhPJw6Lxiu3yqP/QK2ZiSl+R8xTSwYrCh1gVcmlPEuGWhRRzgLIS5nF09Pt98QjKDCgNdtIDRmjA==
+X-Received: by 2002:a2e:3010:: with SMTP id w16mr36811187ljw.449.1594318046956;
+        Thu, 09 Jul 2020 11:07:26 -0700 (PDT)
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
+        by smtp.gmail.com with ESMTPSA id f129sm1190089lfd.6.2020.07.09.11.07.26
+        for <linux-raid@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 11:07:26 -0700 (PDT)
+Received: by mail-lj1-f175.google.com with SMTP id r19so3419888ljn.12
+        for <linux-raid@vger.kernel.org>; Thu, 09 Jul 2020 11:07:26 -0700 (PDT)
+X-Received: by 2002:a2e:9b42:: with SMTP id o2mr36559372ljj.102.1594318044230;
+ Thu, 09 Jul 2020 11:07:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+References: <20200709151814.110422-1-hch@lst.de> <20200709151814.110422-16-hch@lst.de>
+In-Reply-To: <20200709151814.110422-16-hch@lst.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 9 Jul 2020 11:07:08 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whXq_149rcDv9ENkKeKpcEQ93MAvcmAOAbU8=bWG55X2A@mail.gmail.com>
+Message-ID: <CAHk-=whXq_149rcDv9ENkKeKpcEQ93MAvcmAOAbU8=bWG55X2A@mail.gmail.com>
+Subject: Re: [PATCH 15/17] initramfs: switch initramfs unpacking to struct
+ file based APIs
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, linux-raid@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Just open code it in the two callers.
+On Thu, Jul 9, 2020 at 8:18 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> There is no good reason to mess with file descriptors from in-kernel
+> code, switch the initramfs unpacking to struct file based write
+> instead.  As we don't have nice helper for chmod or chown on a struct
+> file or struct path use the pathname based ones instead there.  This
+> causes additional (cached) lookups, but keeps the code much simpler.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/open.c                | 11 ++++++++---
- include/linux/syscalls.h | 11 -----------
- 2 files changed, 8 insertions(+), 14 deletions(-)
+This is the only one I'm not a huge fan of.
 
-diff --git a/fs/open.c b/fs/open.c
-index 6348173532e663..4375a5a8e726ea 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -1193,7 +1193,9 @@ long do_sys_open(int dfd, const char __user *filename, int flags, umode_t mode)
- 
- SYSCALL_DEFINE3(open, const char __user *, filename, int, flags, umode_t, mode)
- {
--	return ksys_open(filename, flags, mode);
-+	if (force_o_largefile())
-+		flags |= O_LARGEFILE;
-+	return do_sys_open(AT_FDCWD, filename, flags, mode);
- }
- 
- SYSCALL_DEFINE4(openat, int, dfd, const char __user *, filename, int, flags,
-@@ -1255,9 +1257,12 @@ COMPAT_SYSCALL_DEFINE4(openat, int, dfd, const char __user *, filename, int, fla
-  */
- SYSCALL_DEFINE2(creat, const char __user *, pathname, umode_t, mode)
- {
--	return ksys_open(pathname, O_CREAT | O_WRONLY | O_TRUNC, mode);
--}
-+	int flags = O_CREAT | O_WRONLY | O_TRUNC;
- 
-+	if (force_o_largefile())
-+		flags |= O_LARGEFILE;
-+	return do_sys_open(AT_FDCWD, pathname, flags, mode);
-+}
- #endif
- 
- /*
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index 59af62090ac400..39ff738997a172 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -1372,17 +1372,6 @@ static inline int ksys_close(unsigned int fd)
- 	return __close_fd(current->files, fd);
- }
- 
--extern long do_sys_open(int dfd, const char __user *filename, int flags,
--			umode_t mode);
--
--static inline long ksys_open(const char __user *filename, int flags,
--			     umode_t mode)
--{
--	if (force_o_largefile())
--		flags |= O_LARGEFILE;
--	return do_sys_open(AT_FDCWD, filename, flags, mode);
--}
--
- extern long do_sys_truncate(const char __user *pathname, loff_t length);
- 
- static inline long ksys_truncate(const char __user *pathname, loff_t length)
--- 
-2.26.2
+I agree about moving to 'struct file'. But then you could just do the
+chown/chmod using chown/chmod_common() on file->f_path.
 
+That would keep the same semantics, and it feels like a more
+straightforward patch.
+
+It would still remove the nasty ksys_fchmod/fchmod, it would just
+require our - already existing - *_common() functions to be non-static
+(and maybe renamed to "vfs_chown/chmod()" instead, that "*_common()"
+naming looks a bit odd compared to all our other "vfs_operation()"
+helpers).
+
+               Linus
