@@ -2,105 +2,104 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CE8B21A71B
-	for <lists+linux-raid@lfdr.de>; Thu,  9 Jul 2020 20:33:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA35721ABAB
+	for <lists+linux-raid@lfdr.de>; Fri, 10 Jul 2020 01:32:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726342AbgGISdG (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 9 Jul 2020 14:33:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgGISdF (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 9 Jul 2020 14:33:05 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A49DDC08C5CE;
-        Thu,  9 Jul 2020 11:33:05 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id q3so2868941ilt.8;
-        Thu, 09 Jul 2020 11:33:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yHEZyWE7VwCf1x1tRPrzetVIBWLuaxeFrzy7zZmV6S8=;
-        b=Tw67hNk3iBv5nsp289saAKj/zOMf/f+lZo4rJRRTKWAdZ/r3kS/f7TRKJsYEW28qB0
-         CmP3w1HmT/D0HlvNvb/eVhV4qv5ApP1Wr7IaGAdKl+FV8iEsVbWUCcEI3ccDkfeZ+6+b
-         kKTaa19ygjl4jrr00ykok0kr/EuJaH8QMYT0clKWFVJroWKqvFI4rl1bl+t591Xv74SK
-         j4LB18BimLvZYbjU27eIun4MA2aZbrK775qwdBVsqfCb7iJw3iSoyTBxesirN28AwNkc
-         TUQaONLA+viqUNdz4WWLgWAu3UrUVWxO7LOuudPe2V+8UBBlfaR96OagOUBrMnd9LIGr
-         rMdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yHEZyWE7VwCf1x1tRPrzetVIBWLuaxeFrzy7zZmV6S8=;
-        b=C8VyRalvL1iOFctQz+/3e6ZiCgQhaYRnPvvtNouvxX0cefo3xcvanLFTHaTMg3HAtz
-         gGLPr2xBoQ/VR6Nos4YJbOEKytmLs4R3Vc+AK2+iR7Cgkv5l39Ht9+T0Bd6YFFQ2m3hc
-         zOXkv+BOXVriMk9LerUOB0NHhQ2AYiWwpkPMkXcZC+SDbleR7N0uKO1JINQhaiebgXMn
-         k5trex2QPWEXgQgOrmdb4OfgazVjqdwU6sWZsuWWNJoUExAW7278grG9//Pc/bdHkrkM
-         zAEJ0UG56jsQHz8EaS/XySbb3yh26/fi0zxhH9U0UbazcWsOIRaKW/jOjABMvkbIveLI
-         qSkg==
-X-Gm-Message-State: AOAM531yAMZ3okeNgkPYdF2rbN8ppmwKDbvQyiC+UmUcD6jFWMXEnfB3
-        Pax6b6IJm09Ie864VrZXae/i/pjSzblgiN0PYA==
-X-Google-Smtp-Source: ABdhPJz0aJ74OONV+o7uR3BAYqZ/VDd+XCOZ1VG8WQXzTnqCgDGW85ajQHSRfhairvaNgqj/qDjD+8Rap11ir1+SImg=
-X-Received: by 2002:a92:10a:: with SMTP id 10mr46282742ilb.172.1594319584958;
- Thu, 09 Jul 2020 11:33:04 -0700 (PDT)
+        id S1726794AbgGIXc0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 9 Jul 2020 19:32:26 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:46673 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726222AbgGIXcZ (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 9 Jul 2020 19:32:25 -0400
+Received: from [IPv6:2601:646:8600:3281:15d7:78bf:601:72ae] ([IPv6:2601:646:8600:3281:15d7:78bf:601:72ae])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 069NWG9N3221493
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Thu, 9 Jul 2020 16:32:16 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 069NWG9N3221493
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2020062301; t=1594337537;
+        bh=oXsYICFMXhGENZtZmdlMkqG6Rn4Z2UvAaWI5+fym16E=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=CBFBcQTX5k1YefW41Mb36KEg44CtFwDnMESw0KBv9wZQXmlAUidQXe7yk3SM9sk7v
+         IXa9ysD9QxYCRgVkGoqjpVTyVuTmpMCroUMScfvyTS18F6tEt8VO+hFpCchZoiAi5d
+         pEr6t3Kw9LRe+syoFEOiYNKC1zpIIuYZH2Oc0rUyAtEQqBz90GyK8BskPSoFsoN+HX
+         4NZ6dPIDCY+hzWkQz4mm3VxU5W+h3zyk5HjbJg1j7AY3xNWiBCenb56IHH/fY0SSf5
+         lfX2z2+qj9gd++0z32ehwfRX2ajclngioN8FPp2N5rvn/rwu9kzvDHitDdjlPCdIOL
+         xhnVwn8RNifIw==
+Date:   Thu, 09 Jul 2020 16:32:07 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20200709151814.110422-1-hch@lst.de>
+References: <20200709151814.110422-1-hch@lst.de>
 MIME-Version: 1.0
-References: <20200709151814.110422-1-hch@lst.de> <20200709151814.110422-17-hch@lst.de>
-In-Reply-To: <20200709151814.110422-17-hch@lst.de>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Thu, 9 Jul 2020 14:32:54 -0400
-Message-ID: <CAMzpN2gn_5bXt3RNOwvCSAo+79FevWgMYROxbdFAd1mzo9EOhQ@mail.gmail.com>
-Subject: Re: [PATCH 16/17] init: open code setting up stdin/stdout/stderr
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: decruft the early init / initrd / initramfs code v2
+To:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org
+CC:     Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-raid@vger.kernel.org,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
+From:   hpa@zytor.com
+Message-ID: <31944685-7627-43BA-B9A2-A4743AFF0AB7@zytor.com>
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu, Jul 9, 2020 at 11:19 AM Christoph Hellwig <hch@lst.de> wrote:
+On July 9, 2020 8:17:57 AM PDT, Christoph Hellwig <hch@lst=2Ede> wrote:
+>Hi all,
 >
-> Don't rely on the implicit set_fs(KERNEL_DS) for ksys_open to work, but
-> instead open a struct file for /dev/console and then install it as FD
-> 0/1/2 manually.
+>this series starts to move the early init code away from requiring
+>KERNEL_DS to be implicitly set during early startup=2E  It does so by
+>first removing legacy unused cruft, and the switches away the code
+>from struct file based APIs to our more usual in-kernel APIs=2E
 >
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  fs/file.c                |  7 +------
->  include/linux/syscalls.h |  1 -
->  init/main.c              | 16 ++++++++++------
->  3 files changed, 11 insertions(+), 13 deletions(-)
+>There is no really good tree for this, so if there are no objections
+>I'd like to set up a new one for linux-next=2E
 >
-> diff --git a/fs/file.c b/fs/file.c
-> index abb8b7081d7a44..85b7993165dd2f 100644
-> --- a/fs/file.c
-> +++ b/fs/file.c
-> @@ -985,7 +985,7 @@ SYSCALL_DEFINE2(dup2, unsigned int, oldfd, unsigned int, newfd)
->         return ksys_dup3(oldfd, newfd, 0);
->  }
 >
-> -int ksys_dup(unsigned int fildes)
-> +SYSCALL_DEFINE1(dup, unsigned int, fildes)
->  {
->         int ret = -EBADF;
->         struct file *file = fget_raw(fildes);
-> @@ -1000,11 +1000,6 @@ int ksys_dup(unsigned int fildes)
->         return ret;
->  }
+>Git tree:
 >
-> -SYSCALL_DEFINE1(dup, unsigned int, fildes)
-> -{
-> -       return ksys_dup(fildes);
-> -}
-> -
+>    git://git=2Einfradead=2Eorg/users/hch/misc=2Egit init-user-pointers
+>
+>Gitweb:
+>
+>http://git=2Einfradead=2Eorg/users/hch/misc=2Egit/shortlog/refs/heads/ini=
+t-user-pointers
+>
+>
+>Changes since v1:
+> - add a patch to deprecated "classic" initrd support
+>
+>Diffstat:
+> b/arch/arm/kernel/atags_parse=2Ec |    2=20
+> b/arch/sh/kernel/setup=2Ec        |    2=20
+> b/arch/sparc/kernel/setup_32=2Ec  |    2=20
+> b/arch/sparc/kernel/setup_64=2Ec  |    2=20
+> b/arch/x86/kernel/setup=2Ec       |    2=20
+> b/drivers/md/Makefile           |    3=20
+>b/drivers/md/md-autodetect=2Ec    |  239
+>++++++++++++++++++----------------------
+> b/drivers/md/md=2Ec               |   34 +----
+> b/drivers/md/md=2Eh               |   10 +
+> b/fs/file=2Ec                     |    7 -
+> b/fs/open=2Ec                     |   18 +--
+> b/fs/read_write=2Ec               |    2=20
+> b/fs/readdir=2Ec                  |   11 -
+> b/include/linux/initrd=2Eh        |    6 -
+> b/include/linux/raid/detect=2Eh   |    8 +
+> b/include/linux/syscalls=2Eh      |   16 --
+> b/init/Makefile                 |    1=20
+> b/init/do_mounts=2Ec              |   70 +----------
+> b/init/do_mounts=2Eh              |   21 ---
+> b/init/do_mounts_initrd=2Ec       |   13 --
+> b/init/do_mounts_rd=2Ec           |  102 +++++++----------
+> b/init/initramfs=2Ec              |  103 +++++------------
+> b/init/main=2Ec                   |   16 +-
+> include/linux/raid/md_u=2Eh       |   13 --
+> 24 files changed, 251 insertions(+), 452 deletions(-)
 
-Please split the removal of the now unused ksys_*() functions into a
-separate patch.
-
---
-Brian Gerst
+I guess I could say something here=2E=2E=2E ;)
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
