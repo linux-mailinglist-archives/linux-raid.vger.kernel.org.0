@@ -2,101 +2,164 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B3AC021B028
-	for <lists+linux-raid@lfdr.de>; Fri, 10 Jul 2020 09:29:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C94E21BA5F
+	for <lists+linux-raid@lfdr.de>; Fri, 10 Jul 2020 18:10:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgGJH30 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 10 Jul 2020 03:29:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35314 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbgGJH3Z (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 10 Jul 2020 03:29:25 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8377C08C5CE
-        for <linux-raid@vger.kernel.org>; Fri, 10 Jul 2020 00:29:24 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id b24so1539405uak.2
-        for <linux-raid@vger.kernel.org>; Fri, 10 Jul 2020 00:29:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MTkYNwGzgj0pnyOd6/mQEfIDNv2BJD5cxzVN7vZlhGA=;
-        b=y0p4lCNYaKfzGKjhuYKHtmPHT4iXqEDmIgWN26ISyxSxBt81oHuLSHNxKPhgM3L/nj
-         cgLPf7XjGdPg1QTdRrEN1F1mm2xssHUcybsGXU4wkzDoKlHK8Ad8IQ1iKHPyEJSiAR5w
-         GSxgKc54e4fGLzDhC0xe/dZTQApa03txbWo0ZpFRlW4LCc73VeVAaB2QY/87tdBJSjzO
-         uvgQ9qau4PFqv/MGUE+C/Eh7jd/56qMSpqMBtwhQXgUEImjRD1RswdC5dV2LZdHVlpVJ
-         F4sZRiuB915rWbtTKX/KoId0n77xzcEYdmc75oWqbZ8SoIo9cBsEDPZ9DVnmV9PV7+eU
-         btAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MTkYNwGzgj0pnyOd6/mQEfIDNv2BJD5cxzVN7vZlhGA=;
-        b=nNVUMKH+wo264JxX09y1pty21rD+jCkJ0RLY2/zSrJ+f8e7DpT8YYLqBtNNJ1RpK/8
-         12nkOVTWr6egD6v82X4ulwOP4BfbmBpUJVMKECbaTFjCtnGdW8OqKV/DBWUs2mHp5X69
-         erSCeUelntGBLIfOgNZ1c4CvSyLnUWpHp0dobkKykgzah4L6GeZHGc9vXv5XedQ+KTpv
-         d/uKDHO0iQKBoAft7BCi3PNC/rvQk3sw0KuDHGe3dpUDh75pz4wfk7GlVy3lzQM1Qvsb
-         0j4YBLGKtXjSdfst3PmHbtBf2R4CgPZHBS3zYXTTEHZXIzzEiqkiT1AyihPJaUWyhV0s
-         cjow==
-X-Gm-Message-State: AOAM533K/4wAZxtmjgsC2ScgNlOn1zmE6fP9yNENTtT/8v+fkVraMk64
-        7OYdZ/3MFp2VyoMZ0w+mL8Gq5T/SjM+4gdAl65RdyA==
-X-Google-Smtp-Source: ABdhPJxHNlCLh9CShjrDdywo7NsnP0aoWUv878oapDo31qCG/k1VUc7yJ0S59pkOnASjsky1KC/KK1QIO9xbZzpbFaw=
-X-Received: by 2002:ab0:6f0a:: with SMTP id r10mr57659956uah.100.1594366164126;
- Fri, 10 Jul 2020 00:29:24 -0700 (PDT)
+        id S1726950AbgGJQKH (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 10 Jul 2020 12:10:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38838 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726496AbgGJQKH (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 10 Jul 2020 12:10:07 -0400
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9774206C3
+        for <linux-raid@vger.kernel.org>; Fri, 10 Jul 2020 16:10:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594397406;
+        bh=hTrfBXoS+BsfhgLYxECEeqTGpyQOJkkxYg85yAgtAHg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cs+cj80nyDAFFEQ0aXTppkJPpST7Zrzj0Cb3FPspSzezA69rM1O9/Br7wdePzmuqK
+         rcft83gOQ5zSz11faxjvUfk2qT6n7+wRCQpnkTDKCtuP8XGwhrIjXTH1FRQAAc9gYT
+         Q9pPewNFw3pAHT1DQtFbe6h49Bg74E1EWBXT+BKE=
+Received: by mail-lf1-f41.google.com with SMTP id m26so3492667lfo.13
+        for <linux-raid@vger.kernel.org>; Fri, 10 Jul 2020 09:10:05 -0700 (PDT)
+X-Gm-Message-State: AOAM532P2dSj440M4//tCE22xgKQ8XrrkX+V3V1H15vE8T+Rm6P7xdvo
+        NuuJofe3oFREe+3+5wG01pqH1zfu2xVUTUSY15g=
+X-Google-Smtp-Source: ABdhPJxa/dFdVGvJU+PeADki4tWipkKeecCSPGlU2P+2FNVNRqNnxLmgogl4tJRkbSBxx1pmi/qGZfVa/D5VKYCAp0g=
+X-Received: by 2002:a19:7e09:: with SMTP id z9mr43832164lfc.69.1594397404270;
+ Fri, 10 Jul 2020 09:10:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200708122546.214579-1-hch@lst.de> <20200708122546.214579-7-hch@lst.de>
-In-Reply-To: <20200708122546.214579-7-hch@lst.de>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 10 Jul 2020 09:28:47 +0200
-Message-ID: <CAPDyKFqgHXAmc1k3BTpfUOW_iDWtyqWEcy3vRfZ3Lv3WaJwnBQ@mail.gmail.com>
-Subject: Re: [PATCH 6/6] mmc: remove the call to check_disk_change
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Song Liu <song@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-raid@vger.kernel.org,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org
+References: <20200702120628.777303-1-yuyufen@huawei.com> <CAPhsuW7PgJV-bjaa8v=Zrhd0MqPmjew1dF-Qi0FP6i-809YAQg@mail.gmail.com>
+ <0dd1ebed-2802-2bef-48f0-87bbdd2ee8e5@huawei.com> <CAPhsuW7m7qYGe3g2XyZNWZch4Wy0y2URNeUprKAm4si+nyBB8g@mail.gmail.com>
+ <21aaf87f-157b-c37a-f16b-4e981268eeda@huawei.com>
+In-Reply-To: <21aaf87f-157b-c37a-f16b-4e981268eeda@huawei.com>
+From:   Song Liu <song@kernel.org>
+Date:   Fri, 10 Jul 2020 09:09:53 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW6XsoxqKZhMR1W8L1K3nVd0gWbT-WqHuzFYqqmpC9+BmA@mail.gmail.com>
+Message-ID: <CAPhsuW6XsoxqKZhMR1W8L1K3nVd0gWbT-WqHuzFYqqmpC9+BmA@mail.gmail.com>
+Subject: Re: [PATCH v5 00/16] md/raid5: set STRIPE_SIZE as a configurable value
+To:     Yufen Yu <yuyufen@huawei.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>,
+        NeilBrown <neilb@suse.com>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Hou Tao <houtao1@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Wed, 8 Jul 2020 at 14:41, Christoph Hellwig <hch@lst.de> wrote:
+On Thu, Jul 9, 2020 at 6:27 AM Yufen Yu <yuyufen@huawei.com> wrote:
 >
-> The mmc driver doesn't support event notifications, which means
-> that check_disk_change is a no-op.
 >
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>
+> On 2020/7/9 7:55, Song Liu wrote:
+> > On Wed, Jul 8, 2020 at 6:15 AM Yufen Yu <yuyufen@huawei.com> wrote:
+> >>
+> >>
+> >>
+> >> On 2020/7/3 7:00, Song Liu wrote:
+> >>> On Thu, Jul 2, 2020 at 5:05 AM Yufen Yu <yuyufen@huawei.com> wrote:
+> >>>>
+> >>>> Hi, all
+> >>>>
+> >>>>    For now, STRIPE_SIZE is equal to the value of PAGE_SIZE. That means, RAID5
+> >>>>    will issue each bio to disk at least 64KB when PAGE_SIZE is 64KB in arm64.
+> >>>>    However, filesystem usually issue bio in the unit of 4KB. Then, RAID5 may
+> >>>>    waste resource of disk bandwidth.
+> >>>>
+> >>>>    To solve the problem, this patchset try to set stripe_size as a configuare
+> >>>>    value. The default value is 4096. We will add a new sysfs entry and set it
+> >>>>    by writing a new value, likely:
+> >>>>
+> >>>>           echo 16384 > /sys/block/md1/md/stripe_size
+> >>>
+> >>> Higher level question: do we need to support page size that is NOT 4kB
+> >>> times power
+> >>> of 2? Meaning, do we need to support 12kB, 20kB, 24kB, etc. If we only
+> >>> supports, 4kB,
+> >>> 8kB, 16kB, 32kB, etc. some of the logic can be simpler.
+> >>
+> >> Yeah, I think we just support 4kb, 8kb, 16kb, 32kb... is enough.
+> >> But Sorry that I don't know what logic can be simpler in current implementation.
+> >> I mean it also need to allocate page, and record page offset.
+> >
+> > I was thinking about replacing multiplication/division with bit
+> > operations (shift left/right).
+> > But I am not very sure how much that matters in modern ARM CPUs. Would you mind
+> > running some benchmarks with this?
+>
+> To test multiplication/division and bit operation, I write a simple test case:
+>
+> $ cat normal.c
+>
+> int page_size = 65536;
+> int stripe_size = 32768; //32KB
+>
+> int main(int argc, char *argv[])
+> {
+>          int i, j, count;
+>          int page, offset;
+>
+>          if (argc != 2)
+>                  return -1;
+>
+>          count = atol(argv[1]);
+>
+>          for (i = 0; i < count; i++) {
+>                  for (j = 0; j < 4; j++) {
+>                          page = page_size / stripe_size;
+>                          offset = j * stripe_size;
+>                  }
+>          }
+> }
+>
+> $ cat shift.c
+>
+> int page_shift = 16; //64KB
+> int stripe_shift = 15; //32KB
+>
+> int main(int argc, char *argv[])
+> {
+>          int i, j, count;
+>          int page, offset;
+>
+>          if (argc != 2)
+>                  return -1;
+>
+>          count = atol(argv[1]);
+>
+>          for (i = 0; i < count; i++) {
+>                  for (j = 0; j < 4; j++) {
+>                          page = 1 << (page_shift - stripe_shift);
+>                          offset = j << stripe_shift;
+>                  }
+>          }
+> }
+>
+> Test them on a arm64 server, the result show there is a minor
+> performance gap between multiplication/division and shift operation.
+>
+> [root@localhost shift]# time ./normal 104857600
+>
+> real    0m1.199s
+> user    0m1.198s
+> sys     0m0.000s
+>
+> [root@localhost shift]# time ./shift 104857600
+>
+> real    0m1.166s
+> user    0m1.166s
+> sys     0m0.000s
+>
+> For our implementation, page address and page offset are just computed
+> when allocate stripe_size. After that, we just use the recorded value
+> in sh->dev[i].page and sh->dev[i].offset. So, I think current implementation
+> may not cause much overhead.
 
-Feel free to add:
+Sounds good. Let's keep this part as-is.
 
-Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
-
-Kind regards
-Uffe
-
-> ---
->  drivers/mmc/core/block.c | 3 ---
->  1 file changed, 3 deletions(-)
->
-> diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
-> index 4791c82f8f7c78..fa313b63413547 100644
-> --- a/drivers/mmc/core/block.c
-> +++ b/drivers/mmc/core/block.c
-> @@ -312,10 +312,7 @@ static int mmc_blk_open(struct block_device *bdev, fmode_t mode)
->
->         mutex_lock(&block_mutex);
->         if (md) {
-> -               if (md->usage == 2)
-> -                       check_disk_change(bdev);
->                 ret = 0;
-> -
->                 if ((mode & FMODE_WRITE) && md->read_only) {
->                         mmc_blk_put(md);
->                         ret = -EROFS;
-> --
-> 2.26.2
->
+Thanks,
+Song
