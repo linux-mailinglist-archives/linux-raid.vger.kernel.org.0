@@ -2,76 +2,64 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 41B5D21CBF0
-	for <lists+linux-raid@lfdr.de>; Mon, 13 Jul 2020 00:55:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBB1F21CCA3
+	for <lists+linux-raid@lfdr.de>; Mon, 13 Jul 2020 02:57:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbgGLWzT (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 12 Jul 2020 18:55:19 -0400
-Received: from smtp.hosts.co.uk ([85.233.160.19]:40041 "EHLO smtp.hosts.co.uk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727785AbgGLWzS (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sun, 12 Jul 2020 18:55:18 -0400
-Received: from host86-157-102-29.range86-157.btcentralplus.com ([86.157.102.29] helo=[192.168.1.65])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1juksO-0003VC-4e; Sun, 12 Jul 2020 23:55:16 +0100
-Subject: Re: [PATCH v5 01/16] md/raid456: covert macro define of STRIPE_* as
- members of struct r5conf
-To:     Paul Menzel <pmenzel@molgen.mpg.de>, Song Liu <song@kernel.org>,
-        Yufen Yu <yuyufen@huawei.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>,
-        NeilBrown <neilb@suse.com>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Hou Tao <houtao1@huawei.com>
-References: <20200702120628.777303-1-yuyufen@huawei.com>
- <20200702120628.777303-2-yuyufen@huawei.com>
- <CAPhsuW7cSue8BtWhmWMgOTjw42ChTm4cM+gApj_s02rq=YGRkQ@mail.gmail.com>
- <3bf71b7a-b457-c5e4-34df-bdea5cf2abc3@molgen.mpg.de>
-From:   antlists <antlists@youngman.org.uk>
-Message-ID: <61fe17a6-1c2c-7f95-eba7-167d8d0d30c2@youngman.org.uk>
-Date:   Sun, 12 Jul 2020 23:55:14 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726725AbgGMA5I (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 12 Jul 2020 20:57:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44138 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbgGMA5I (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 12 Jul 2020 20:57:08 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF317C061794
+        for <linux-raid@vger.kernel.org>; Sun, 12 Jul 2020 17:57:07 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id z24so14034963ljn.8
+        for <linux-raid@vger.kernel.org>; Sun, 12 Jul 2020 17:57:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=NVo7kEy4QyMWvi+/5oE6a3XnAgdrmxS4UGsaui5qF64=;
+        b=UzVu8XcwVHVPLRzVZM0oPexT1ALYJuDVEZVyboOXB3vciLVf1GbE/f72TcT5cLrNdM
+         G6Orp7Rxo/unABD47VRe7awtEEQ4t454PtW/hETnPYoGgYk67iCs+qvA+PwcgS5FP97P
+         JqFbap3UKG4xqI+aRXFRk/Gtk5pJfelBkO+wLDkPH2y4ASUmrwEHi8ekM41s039LXrrr
+         Y70Ol3jBZyNMoYTtqUe85y74UqMl7jQZ9i5AHPMAPdqMmmH96vILxoYh1+G/4Y6PayF2
+         gh6amc/KzQBgHnlypsqw8MASABE/xJ4MxFefKQn1iL81QZLMKMxzKaekQxqmPEfgYm2U
+         oQ+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=NVo7kEy4QyMWvi+/5oE6a3XnAgdrmxS4UGsaui5qF64=;
+        b=gGpBgr27eXUhg74LA/SA87PqKdMr3J6XaPzTkdEIsm5BiSjD9T3D5Ui/6ZUdxiVJgO
+         nXBTlFjDSiARX1ww1WJdhgyRH3GDphac8dzV9Ceh5ZUOj76ZaYALqFtaNEYsBND9sPXr
+         CjyM4hHtBFH8BihDVLXLzs+7qoYxXwyAGSpV/Xdcb92DpJH8c1oYB6X2m+URq+jmWiGF
+         z30NAFXBHtSHtjas4k8fmyu51byOpFsUcgERMmJ+BSwkIo07U/j2ieVbb7zIqppCCTM2
+         O08mHI/23qtkORzdhTNQZb6LTcYbZLQMfDE+suuB0l0fd/GbTXVk43MMUhKtTLx4lstk
+         vsDA==
+X-Gm-Message-State: AOAM532IjgixL3GN6hMUGbt6HYHSNFlJdJqXKjR6En21s0Ie+AtAYmZd
+        Qpx9GTWndVelFQpauin8+XN2Nr3jgehABGu3Ctc=
+X-Google-Smtp-Source: ABdhPJzIm6CAGHAOo59QtdaP7r8Iq5Vv1NWGMimoNpUvBVp/RIyFq7UK2rC68CN8W2dh8efhZaRwO1LheN1k8BYIQic=
+X-Received: by 2002:a2e:3202:: with SMTP id y2mr47369433ljy.465.1594601826242;
+ Sun, 12 Jul 2020 17:57:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <3bf71b7a-b457-c5e4-34df-bdea5cf2abc3@molgen.mpg.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Received: by 2002:ab3:600e:0:0:0:0:0 with HTTP; Sun, 12 Jul 2020 17:57:05
+ -0700 (PDT)
+Reply-To: liuzhang814@gmail.com
+From:   Liu Zhang <marcuslucas817ilovegamedie@gmail.com>
+Date:   Mon, 13 Jul 2020 02:57:05 +0200
+Message-ID: <CAGeUPJod8rf_M9Au_fHdYSFJeJKgVUqyhmmMiSRbLrN+ZWiiSA@mail.gmail.com>
+Subject: Deal Vorschlag
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 02/07/2020 19:23, Paul Menzel wrote:
-> Dear Yufen,
-> 
-> 
-> Am 02.07.20 um 20:15 schrieb Song Liu:
->> On Thu, Jul 2, 2020 at 5:05 AM Yufen Yu <yuyufen@huawei.com> wrote:
->>>
->>> We covert STRIPE_SIZE, STRIPE_SHIFT and STRIPE_SECTORS to stripe_size,
->>> stripe_shift and stripe_sectors as members of struct r5conf. Then each
->>> raid456 array can config different stripe_size. This patch is prepared
->>> for following configurable stripe_size.
->>>
->>> Simply replace word STRIPE_ with conf->stripe_ and add 'conf' argument
->>> for function stripe_hash_locks_hash() and r5_next_bio() to get 
->>> stripe_size.
->>> After that, we initialize stripe_size into setup_conf().
->>>
->>> Signed-off-by: Yufen Yu <yuyufen@huawei.com>
->>
->> This patch looks good. Please fix the warning found by the kernel test 
->> bot.
->> Also a nitpick below.
-> 
-> Please also fix the typo *covert* to *Convert* in the commit message 
-> summary, and maybe use *to* instead of *as*.
-
-Actually, if I understand the Pidgin correctly, "as" is correct grammar. 
-"to" just doesn't work for me ...
-> 
->  > Convert macro define of STRIPE_* to members of struct r5conf
-> 
-Cheers,
-Wol
+--=20
+Hallo, Ich bin Liu Zhang ein Mitarbeiter von Wing Hang Bank. K=C3=B6nnen
+ich anvertrauen Sie mit ein Deal wert $13,991,674 USD?
+Antwort =C3=BCber meine pers=C3=B6nliche E-Mail: liuzhang814@gmail.com
