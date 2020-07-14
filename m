@@ -2,76 +2,116 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A98721F719
-	for <lists+linux-raid@lfdr.de>; Tue, 14 Jul 2020 18:20:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64FD221F723
+	for <lists+linux-raid@lfdr.de>; Tue, 14 Jul 2020 18:21:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728478AbgGNQSx (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 14 Jul 2020 12:18:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47182 "EHLO mail.kernel.org"
+        id S1728526AbgGNQVC (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 14 Jul 2020 12:21:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726478AbgGNQSx (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:18:53 -0400
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+        id S1725876AbgGNQVB (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 14 Jul 2020 12:21:01 -0400
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 605622251F;
-        Tue, 14 Jul 2020 16:18:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4080E22464;
+        Tue, 14 Jul 2020 16:21:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594743532;
-        bh=Arizj3kFgzEcL3Koyf1IoHEpYlDKy+RYAsYt5BODwnc=;
+        s=default; t=1594743660;
+        bh=E38vMsAxFSlFIo4drOGuYd3sCAjrfVUhzMuB2wxIj68=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=T+my6tgyXE9IQIVevvThSfjhdhNcDPwiHAF99JP8td1Zbp4KR5sqD9/YD2xWrm7NE
-         8CTBTmZU52RSRd4L/WoM9hOaWIQaquWQ7Xo9JjUzbLP0jQXfn4sKo5bl5eHw4Pz4OY
-         D8r6aXgKdnsXBHBMV/bu2MrBr4sRiqkkzN/8IFQA=
-Received: by mail-lj1-f180.google.com with SMTP id e8so23595707ljb.0;
-        Tue, 14 Jul 2020 09:18:52 -0700 (PDT)
-X-Gm-Message-State: AOAM530l7QIKT++9ZK2mt90lFDekE1KO0T7XPm9vHNO/9tyUHEKiorkM
-        6kIGlKwhxEy921haOFjTEiA4++KQDPoXbEcu8tQ=
-X-Google-Smtp-Source: ABdhPJyZyZCLfuoyTSGGY8RWN0T4zhEj7y1fQH0Eoe71BRYQetrHSV3OxgPcdQvc0QB7QrW9affifMlT3VJPWRtxWxo=
-X-Received: by 2002:a2e:88c6:: with SMTP id a6mr2700501ljk.27.1594743530708;
- Tue, 14 Jul 2020 09:18:50 -0700 (PDT)
+        b=nlKMLOTOIWpAiZl2ssQXoOhdwG9xzjVorrZSyzIdyNiik4/KKe5K3SQeDp4mSdDXS
+         y4mCyyBus0LI1oJv5TfEGfar1NvLcJ5169esYN2OMAHmcHny9osmBuQerzM1XD37nS
+         /b9IkrdeFDkv3wdvF2xYhqImg1GR1ErevzBAh6eA=
+Received: by mail-lf1-f47.google.com with SMTP id k15so12157141lfc.4;
+        Tue, 14 Jul 2020 09:21:00 -0700 (PDT)
+X-Gm-Message-State: AOAM533/dHooVDLl1hChadUmPgOLsViVcyfDI/lv35whYS0VMlewzTbt
+        Lk5IMMwnlf6ClgocuDEZ/toVQW+jQxSUl2MbVgw=
+X-Google-Smtp-Source: ABdhPJxZLAV4S9WCT3ZxkF8ZklvWBJDIbNjfx6VOSVHC8MJht7x0CSXrUU77WMEWA8atRs+0j7CJIuAcKapTxJQ0gqU=
+X-Received: by 2002:a19:701:: with SMTP id 1mr2529140lfh.138.1594743658597;
+ Tue, 14 Jul 2020 09:20:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200709233545.67954-1-junxiao.bi@oracle.com> <CAPhsuW7seCUnt3zt6A_fjTS2diB7qiTE+SZkM6Vh=G26hdwGtg@mail.gmail.com>
- <de97a2c1-fba0-5276-7748-f0155088ad0d@oracle.com>
-In-Reply-To: <de97a2c1-fba0-5276-7748-f0155088ad0d@oracle.com>
+References: <20200709151814.110422-1-hch@lst.de> <31944685-7627-43BA-B9A2-A4743AFF0AB7@zytor.com>
+ <20200714064111.GB32655@lst.de>
+In-Reply-To: <20200714064111.GB32655@lst.de>
 From:   Song Liu <song@kernel.org>
-Date:   Tue, 14 Jul 2020 09:18:39 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW4GQK7hS4AOpJJ1mEE8gbFgo+n+XCQ2fvW94QnZhA6ivQ@mail.gmail.com>
-Message-ID: <CAPhsuW4GQK7hS4AOpJJ1mEE8gbFgo+n+XCQ2fvW94QnZhA6ivQ@mail.gmail.com>
-Subject: Re: [PATCH] md: fix deadlock causing by sysfs_notify
-To:     Junxiao Bi <junxiao.bi@oracle.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+Date:   Tue, 14 Jul 2020 09:20:47 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW4bNTXE3CTLthUNtnnwf2f9K57gcBxPAjyvgziLrUvyDw@mail.gmail.com>
+Message-ID: <CAPhsuW4bNTXE3CTLthUNtnnwf2f9K57gcBxPAjyvgziLrUvyDw@mail.gmail.com>
+Subject: Re: decruft the early init / initrd / initramfs code v2
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-raid <linux-raid@vger.kernel.org>,
+        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 11:41 PM Junxiao Bi <junxiao.bi@oracle.com> wrote:
+On Mon, Jul 13, 2020 at 11:41 PM Christoph Hellwig <hch@lst.de> wrote:
 >
-> On 7/13/20 11:17 PM, Song Liu wrote:
->
-> > On Thu, Jul 9, 2020 at 4:36 PM Junxiao Bi <junxiao.bi@oracle.com> wrote:
-> >> The following deadlock was captured. The first process is holding 'kernfs_mutex'
-> >> and hung by io. The io was staging in 'r1conf.pending_bio_list' of raid1 device,
-> >> this pending bio list would be flushed by second process 'md127_raid1', but
-> >> it was hung by 'kernfs_mutex'. Using sysfs_notify_dirent_safe() to replace
-> >> sysfs_notify() can fix it. There were other sysfs_notify() invoked from io
-> >> path, removed all of them.
-> >>
-> > [...]
-> >> Cc: stable@vger.kernel.org
-> >> Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
-> > Thanks for the patch. It looks good in general. One question though, do we
-> > need the same change the following line in md.c:level_store()?
+> On Thu, Jul 09, 2020 at 04:32:07PM -0700, hpa@zytor.com wrote:
+> > On July 9, 2020 8:17:57 AM PDT, Christoph Hellwig <hch@lst.de> wrote:
+> > >Hi all,
+> > >
+> > >this series starts to move the early init code away from requiring
+> > >KERNEL_DS to be implicitly set during early startup.  It does so by
+> > >first removing legacy unused cruft, and the switches away the code
+> > >from struct file based APIs to our more usual in-kernel APIs.
+> > >
+> > >There is no really good tree for this, so if there are no objections
+> > >I'd like to set up a new one for linux-next.
+> > >
+> > >
+> > >Git tree:
+> > >
+> > >    git://git.infradead.org/users/hch/misc.git init-user-pointers
+> > >
+> > >Gitweb:
+> > >
+> > >http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/init-user-pointers
+> > >
+> > >
+> > >Changes since v1:
+> > > - add a patch to deprecated "classic" initrd support
+> > >
+> > >Diffstat:
+> > > b/arch/arm/kernel/atags_parse.c |    2
+> > > b/arch/sh/kernel/setup.c        |    2
+> > > b/arch/sparc/kernel/setup_32.c  |    2
+> > > b/arch/sparc/kernel/setup_64.c  |    2
+> > > b/arch/x86/kernel/setup.c       |    2
+> > > b/drivers/md/Makefile           |    3
+> > >b/drivers/md/md-autodetect.c    |  239
+> > >++++++++++++++++++----------------------
+> > > b/drivers/md/md.c               |   34 +----
+> > > b/drivers/md/md.h               |   10 +
+> > > b/fs/file.c                     |    7 -
+> > > b/fs/open.c                     |   18 +--
+> > > b/fs/read_write.c               |    2
+> > > b/fs/readdir.c                  |   11 -
+> > > b/include/linux/initrd.h        |    6 -
+> > > b/include/linux/raid/detect.h   |    8 +
+> > > b/include/linux/syscalls.h      |   16 --
+> > > b/init/Makefile                 |    1
+> > > b/init/do_mounts.c              |   70 +----------
+> > > b/init/do_mounts.h              |   21 ---
+> > > b/init/do_mounts_initrd.c       |   13 --
+> > > b/init/do_mounts_rd.c           |  102 +++++++----------
+> > > b/init/initramfs.c              |  103 +++++------------
+> > > b/init/main.c                   |   16 +-
+> > > include/linux/raid/md_u.h       |   13 --
+> > > 24 files changed, 251 insertions(+), 452 deletions(-)
 > >
-> >      sysfs_notify(&mddev->kobj, NULL, "level");
+> > I guess I could say something here... ;)
 >
-> Thanks for the review. This one is not in io path, looks it's safe. I
-> can change it if you want to align it with others.
+> Like adding an ACK? :)
 
-This one is the only leftover. Let's also change it.
+For the md bits:
+Acked-by: Song Liu <song@kernel.org>
 
-Thanks,
-Song
+Thanks!
