@@ -2,108 +2,101 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC84221F759
-	for <lists+linux-raid@lfdr.de>; Tue, 14 Jul 2020 18:30:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 302FB21FC1C
+	for <lists+linux-raid@lfdr.de>; Tue, 14 Jul 2020 21:06:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbgGNQaE (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 14 Jul 2020 12:30:04 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:55296 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbgGNQaE (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 14 Jul 2020 12:30:04 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EGGwk0131212;
-        Tue, 14 Jul 2020 16:30:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=4zHQ+qbqhXQr0oeHM5WRqgkfmxqCrBYvMylcuFCv2s8=;
- b=eU49U8Qv6hRHePqo9ugiHPg5XtBHsq1FFXXc/aWFAreRwSc7EHDfPKyqTpKNQG7Ns/Sg
- 1SsvyqdxJNc9CAuoDUFRxqhzXRDqfX4AUhy4gOSdfBeW4wiGB++0aETihp2FIA2jr5v2
- /WNS4wr8tol3aWEt2syUVMT4dBGAcbPBrhRShlygxJHkdxc06SxaQfh3IalT2TZpqkOU
- gU6xUt1EVYdU6uj8Yv4p4aHCT2BHN/2OY3ewqFABDbLn1PCIwMRPDu0THAiZNXtuzoPW
- XVX+W/nTABjAj+2BKIJulHfRn/nHH2TiPmHn5psWrZyCWRuS+z6t/H+jk06sHzcWXQbX 6A== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 3275cm6ee6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 14 Jul 2020 16:30:01 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EGHbOY095955;
-        Tue, 14 Jul 2020 16:30:01 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 327q0pj5dt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jul 2020 16:30:01 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06EGU09I020069;
-        Tue, 14 Jul 2020 16:30:00 GMT
-Received: from dhcp-10-159-135-64.vpn.oracle.com (/10.159.135.64)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Jul 2020 09:30:00 -0700
-Subject: Re: [PATCH] md: fix deadlock causing by sysfs_notify
-To:     Song Liu <song@kernel.org>
-Cc:     linux-raid <linux-raid@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200709233545.67954-1-junxiao.bi@oracle.com>
- <CAPhsuW7seCUnt3zt6A_fjTS2diB7qiTE+SZkM6Vh=G26hdwGtg@mail.gmail.com>
- <de97a2c1-fba0-5276-7748-f0155088ad0d@oracle.com>
- <CAPhsuW4GQK7hS4AOpJJ1mEE8gbFgo+n+XCQ2fvW94QnZhA6ivQ@mail.gmail.com>
-From:   Junxiao Bi <junxiao.bi@oracle.com>
-Message-ID: <23a115e4-0d48-9186-c606-89d526649372@oracle.com>
-Date:   Tue, 14 Jul 2020 09:29:41 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        id S1730932AbgGNTGn (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 14 Jul 2020 15:06:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729917AbgGNTGl (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 14 Jul 2020 15:06:41 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 558B2C061755;
+        Tue, 14 Jul 2020 12:06:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=3mOaoD/B/fJiX289qQjOUZtXOEZ2+n+0JbvjRMjxJao=; b=IDR/vZd4vo7XbrQ3tTdWn6EOsA
+        fGgy5xPMuRkYm1IvorwX2tRu+QVFD9THWEEz/F7SKv0ODpJrJMTqvujD8fMBgR+96UDHuQwN1+ukr
+        3qVqC2NlQi310NumxiqTfX1xt6lAECmhhBdKCE3mcgN/+qR+ms56Vesqe3YU2AGA/LA3p2p0nnLrd
+        sYTfvUSptdqcle1kCtdQ/Lf/QWY9HbbtZN3C0tcqN9qKYaffJlbVIRy3pkXa2OiVMbc0MfMitchUT
+        fQdG5vK6q4WfYqnrTWI7pCNgpRqBwnjERK3xS8X1sDu1AC3nRIsCBnvsPI5n3q4cJPCekNSVi6O7z
+        h7IBwuxA==;
+Received: from 089144201169.atnat0010.highway.a1.net ([89.144.201.169] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jvQGE-0005cy-Vv; Tue, 14 Jul 2020 19:06:39 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: decruft the early init / initrd / initramfs code v2
+Date:   Tue, 14 Jul 2020 21:04:04 +0200
+Message-Id: <20200714190427.4332-1-hch@lst.de>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <CAPhsuW4GQK7hS4AOpJJ1mEE8gbFgo+n+XCQ2fvW94QnZhA6ivQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9681 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
- mlxlogscore=999 bulkscore=0 adultscore=0 phishscore=0 suspectscore=3
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007140120
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9681 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 priorityscore=1501
- bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007140120
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 7/14/20 9:18 AM, Song Liu wrote:
+Hi all,
 
-> On Mon, Jul 13, 2020 at 11:41 PM Junxiao Bi <junxiao.bi@oracle.com> wrote:
->> On 7/13/20 11:17 PM, Song Liu wrote:
->>
->>> On Thu, Jul 9, 2020 at 4:36 PM Junxiao Bi <junxiao.bi@oracle.com> wrote:
->>>> The following deadlock was captured. The first process is holding 'kernfs_mutex'
->>>> and hung by io. The io was staging in 'r1conf.pending_bio_list' of raid1 device,
->>>> this pending bio list would be flushed by second process 'md127_raid1', but
->>>> it was hung by 'kernfs_mutex'. Using sysfs_notify_dirent_safe() to replace
->>>> sysfs_notify() can fix it. There were other sysfs_notify() invoked from io
->>>> path, removed all of them.
->>>>
->>> [...]
->>>> Cc: stable@vger.kernel.org
->>>> Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
->>> Thanks for the patch. It looks good in general. One question though, do we
->>> need the same change the following line in md.c:level_store()?
->>>
->>>       sysfs_notify(&mddev->kobj, NULL, "level");
->> Thanks for the review. This one is not in io path, looks it's safe. I
->> can change it if you want to align it with others.
-> This one is the only leftover. Let's also change it.
+this series starts to move the early init code away from requiring
+KERNEL_DS to be implicitly set during early startup.  It does so by
+first removing legacy unused cruft, and the switches away the code
+from struct file based APIs to our more usual in-kernel APIs.
 
-Sure, i will send a v2.
+There is no really good tree for this, so if there are no objections
+I'd like to set up a new one for linux-next.
 
-Thanks,
 
-Junxiao.
+Git tree:
 
->
-> Thanks,
-> Song
+    git://git.infradead.org/users/hch/misc.git init-user-pointers
+
+Gitweb:
+
+    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/init-user-pointers
+
+Changes since v2:
+ - add vfs_fchown and vfs_fchmod helpers and use them for initramfs
+   unpacking
+ - split patches up a little more
+ - fix a commit log typo
+Changes since v1:
+ - add a patch to deprecated "classic" initrd support
+
+Diffstat:
+ b/arch/arm/kernel/atags_parse.c |    2 
+ b/arch/sh/kernel/setup.c        |    2 
+ b/arch/sparc/kernel/setup_32.c  |    2 
+ b/arch/sparc/kernel/setup_64.c  |    2 
+ b/arch/x86/kernel/setup.c       |    2 
+ b/drivers/md/Makefile           |    3 
+ b/drivers/md/md-autodetect.c    |  239 ++++++++++++++++++----------------------
+ b/drivers/md/md.c               |   34 +----
+ b/drivers/md/md.h               |   10 +
+ b/fs/file.c                     |    7 -
+ b/fs/ioctl.c                    |    7 -
+ b/fs/open.c                     |   56 +++++----
+ b/fs/read_write.c               |    2 
+ b/fs/readdir.c                  |   11 -
+ b/include/linux/fs.h            |    3 
+ b/include/linux/initrd.h        |    6 -
+ b/include/linux/raid/detect.h   |    8 +
+ b/include/linux/syscalls.h      |   17 --
+ b/init/Makefile                 |    1 
+ b/init/do_mounts.c              |   70 +----------
+ b/init/do_mounts.h              |   21 ---
+ b/init/do_mounts_initrd.c       |   13 --
+ b/init/do_mounts_rd.c           |  102 +++++++----------
+ b/init/initramfs.c              |  103 +++++------------
+ b/init/main.c                   |   16 +-
+ include/linux/raid/md_u.h       |   13 --
+ 26 files changed, 279 insertions(+), 473 deletions(-)
