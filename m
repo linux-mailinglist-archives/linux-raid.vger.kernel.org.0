@@ -2,71 +2,90 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C41EC21E7F2
-	for <lists+linux-raid@lfdr.de>; Tue, 14 Jul 2020 08:17:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBBF421E871
+	for <lists+linux-raid@lfdr.de>; Tue, 14 Jul 2020 08:41:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgGNGRm (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 14 Jul 2020 02:17:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57612 "EHLO mail.kernel.org"
+        id S1726534AbgGNGlO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 14 Jul 2020 02:41:14 -0400
+Received: from verein.lst.de ([213.95.11.211]:52891 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725931AbgGNGRm (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 14 Jul 2020 02:17:42 -0400
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D298221E8;
-        Tue, 14 Jul 2020 06:17:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594707462;
-        bh=tVvKmkDwjOWKtYnQwCdwRPJ1H7o5sE4gOhRBkFToH/s=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WfVe7njjv/NJVNeTtgJF6Chu9iGzDgGhqNUuWquFDX04G+wo3URpGw9idKUe2iOFk
-         dAVoRPjub6IUhayrU7OKVvdPGnAbJtiSnWnDZu8txQ/L7cYg5IczBpigZ/fD0yQ+Lo
-         Y9G+iEVpcHlUr0hp7OgqhLgiFfM0vL/hx/Kem6Ok=
-Received: by mail-lj1-f173.google.com with SMTP id s9so21048428ljm.11;
-        Mon, 13 Jul 2020 23:17:41 -0700 (PDT)
-X-Gm-Message-State: AOAM5330kN63P33JNNGohXr4FOIAe4FEvSgdCUsqH+9aXSKbx7K2fpBS
-        VPSNhLr45C3L9Z9nNQm2yWHTyN7Da08Nj7EQqs0=
-X-Google-Smtp-Source: ABdhPJyISwHb0fKgxvB/jlGkf85k8l8fFNQJWx/3voQzIJIOPbXVRcr5u3p9BejqhSR0xuHCwr93duRGf6IOlFiQ7j4=
-X-Received: by 2002:a2e:9996:: with SMTP id w22mr1661469lji.446.1594707460008;
- Mon, 13 Jul 2020 23:17:40 -0700 (PDT)
+        id S1725306AbgGNGlO (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 14 Jul 2020 02:41:14 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 6CA0668CF0; Tue, 14 Jul 2020 08:41:11 +0200 (CEST)
+Date:   Tue, 14 Jul 2020 08:41:11 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     hpa@zytor.com
+Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: decruft the early init / initrd / initramfs code v2
+Message-ID: <20200714064111.GB32655@lst.de>
+References: <20200709151814.110422-1-hch@lst.de> <31944685-7627-43BA-B9A2-A4743AFF0AB7@zytor.com>
 MIME-Version: 1.0
-References: <20200709233545.67954-1-junxiao.bi@oracle.com>
-In-Reply-To: <20200709233545.67954-1-junxiao.bi@oracle.com>
-From:   Song Liu <song@kernel.org>
-Date:   Mon, 13 Jul 2020 23:17:28 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW7seCUnt3zt6A_fjTS2diB7qiTE+SZkM6Vh=G26hdwGtg@mail.gmail.com>
-Message-ID: <CAPhsuW7seCUnt3zt6A_fjTS2diB7qiTE+SZkM6Vh=G26hdwGtg@mail.gmail.com>
-Subject: Re: [PATCH] md: fix deadlock causing by sysfs_notify
-To:     Junxiao Bi <junxiao.bi@oracle.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <31944685-7627-43BA-B9A2-A4743AFF0AB7@zytor.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu, Jul 9, 2020 at 4:36 PM Junxiao Bi <junxiao.bi@oracle.com> wrote:
->
-> The following deadlock was captured. The first process is holding 'kernfs_mutex'
-> and hung by io. The io was staging in 'r1conf.pending_bio_list' of raid1 device,
-> this pending bio list would be flushed by second process 'md127_raid1', but
-> it was hung by 'kernfs_mutex'. Using sysfs_notify_dirent_safe() to replace
-> sysfs_notify() can fix it. There were other sysfs_notify() invoked from io
-> path, removed all of them.
->
-[...]
->
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+On Thu, Jul 09, 2020 at 04:32:07PM -0700, hpa@zytor.com wrote:
+> On July 9, 2020 8:17:57 AM PDT, Christoph Hellwig <hch@lst.de> wrote:
+> >Hi all,
+> >
+> >this series starts to move the early init code away from requiring
+> >KERNEL_DS to be implicitly set during early startup.  It does so by
+> >first removing legacy unused cruft, and the switches away the code
+> >from struct file based APIs to our more usual in-kernel APIs.
+> >
+> >There is no really good tree for this, so if there are no objections
+> >I'd like to set up a new one for linux-next.
+> >
+> >
+> >Git tree:
+> >
+> >    git://git.infradead.org/users/hch/misc.git init-user-pointers
+> >
+> >Gitweb:
+> >
+> >http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/init-user-pointers
+> >
+> >
+> >Changes since v1:
+> > - add a patch to deprecated "classic" initrd support
+> >
+> >Diffstat:
+> > b/arch/arm/kernel/atags_parse.c |    2 
+> > b/arch/sh/kernel/setup.c        |    2 
+> > b/arch/sparc/kernel/setup_32.c  |    2 
+> > b/arch/sparc/kernel/setup_64.c  |    2 
+> > b/arch/x86/kernel/setup.c       |    2 
+> > b/drivers/md/Makefile           |    3 
+> >b/drivers/md/md-autodetect.c    |  239
+> >++++++++++++++++++----------------------
+> > b/drivers/md/md.c               |   34 +----
+> > b/drivers/md/md.h               |   10 +
+> > b/fs/file.c                     |    7 -
+> > b/fs/open.c                     |   18 +--
+> > b/fs/read_write.c               |    2 
+> > b/fs/readdir.c                  |   11 -
+> > b/include/linux/initrd.h        |    6 -
+> > b/include/linux/raid/detect.h   |    8 +
+> > b/include/linux/syscalls.h      |   16 --
+> > b/init/Makefile                 |    1 
+> > b/init/do_mounts.c              |   70 +----------
+> > b/init/do_mounts.h              |   21 ---
+> > b/init/do_mounts_initrd.c       |   13 --
+> > b/init/do_mounts_rd.c           |  102 +++++++----------
+> > b/init/initramfs.c              |  103 +++++------------
+> > b/init/main.c                   |   16 +-
+> > include/linux/raid/md_u.h       |   13 --
+> > 24 files changed, 251 insertions(+), 452 deletions(-)
+> 
+> I guess I could say something here... ;)
 
-Thanks for the patch. It looks good in general. One question though, do we
-need the same change the following line in md.c:level_store()?
-
-    sysfs_notify(&mddev->kobj, NULL, "level");
-
-Thanks,
-Song
-
-[...]
+Like adding an ACK? :)
