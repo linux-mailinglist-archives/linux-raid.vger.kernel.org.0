@@ -2,161 +2,130 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A9A6E221728
-	for <lists+linux-raid@lfdr.de>; Wed, 15 Jul 2020 23:42:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C71E22184C
+	for <lists+linux-raid@lfdr.de>; Thu, 16 Jul 2020 01:16:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgGOVlB (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 15 Jul 2020 17:41:01 -0400
-Received: from mga18.intel.com ([134.134.136.126]:12063 "EHLO mga18.intel.com"
+        id S1727042AbgGOXOg (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 15 Jul 2020 19:14:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45596 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726356AbgGOVlB (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 15 Jul 2020 17:41:01 -0400
-IronPort-SDR: JTpRd5KIYl8cxOFuzxFaAQ7bk1el3sLWPf83AdONxR49DwEpQnxGosnu1lnTqm2DlEkW1TJn1J
- y0vEhBJI/Fdg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="136726102"
-X-IronPort-AV: E=Sophos;i="5.75,356,1589266800"; 
-   d="scan'208";a="136726102"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 14:41:00 -0700
-IronPort-SDR: sHn1jDRa20CnWmBZIyfd8HlW9emOcJn4avjPMecZPUIfAaz9meSRLT7p/S6XIuc3v+uvFLFGHw
- klSgGNmYBIIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,356,1589266800"; 
-   d="scan'208";a="282235840"
-Received: from lkp-server01.sh.intel.com (HELO e5b4d2dd85a6) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 15 Jul 2020 14:40:59 -0700
-Received: from kbuild by e5b4d2dd85a6 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jvp98-00008g-UB; Wed, 15 Jul 2020 21:40:58 +0000
-Date:   Thu, 16 Jul 2020 05:40:48 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Song Liu <song@kernel.org>
-Cc:     linux-raid@vger.kernel.org
-Subject: [song-md:md-next] BUILD SUCCESS
- 60f80d6f2d07a6d8aee485a1d1252327eeee0c81
-Message-ID: <5f0f77e0.h7ynUsUdIDekmd4u%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726776AbgGOXOg (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 15 Jul 2020 19:14:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 910D0AB76;
+        Wed, 15 Jul 2020 23:14:38 +0000 (UTC)
+From:   NeilBrown <neil@brown.name>
+To:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org
+Date:   Thu, 16 Jul 2020 09:14:28 +1000
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 03/23] init: remove the bstat helper
+In-Reply-To: <20200714190427.4332-4-hch@lst.de>
+References: <20200714190427.4332-1-hch@lst.de> <20200714190427.4332-4-hch@lst.de>
+Message-ID: <87h7u8xtez.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-tree/branch: git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git  md-next
-branch HEAD: 60f80d6f2d07a6d8aee485a1d1252327eeee0c81  md-cluster: fix wild pointer of unlock_all_bitmaps()
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-elapsed time: 726m
+On Tue, Jul 14 2020, Christoph Hellwig wrote:
 
-configs tested: 99
-configs skipped: 5
+> The only caller of the bstat function becomes cleaner and simpler when
+> open coding the function.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Acked-by: Song Liu <song@kernel.org>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Reviewed-by: NeilBrown <neilb@suse.de>
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arc                          axs101_defconfig
-c6x                        evmc6457_defconfig
-sh                 kfr2r09-romimage_defconfig
-powerpc                    gamecube_defconfig
-arm                          lpd270_defconfig
-arm                        spear6xx_defconfig
-mips                       rbtx49xx_defconfig
-arm                      integrator_defconfig
-mips                           ci20_defconfig
-sh                          lboxre2_defconfig
-i386                             allyesconfig
-mips                          malta_defconfig
-riscv                               defconfig
-c6x                        evmc6474_defconfig
-sparc                            alldefconfig
-mips                       capcella_defconfig
-mips                        nlm_xlr_defconfig
-powerpc                      pmac32_defconfig
-arm                        clps711x_defconfig
-arm                           corgi_defconfig
-riscv                            allyesconfig
-arm                         orion5x_defconfig
-i386                              allnoconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a016-20200715
-i386                 randconfig-a011-20200715
-i386                 randconfig-a015-20200715
-i386                 randconfig-a012-20200715
-i386                 randconfig-a013-20200715
-i386                 randconfig-a014-20200715
-riscv                             allnoconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                                   rhel
-x86_64                                    lkp
-x86_64                              fedora-25
+Nice!
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+NeilBrown
+
+> ---
+>  init/do_mounts.h    | 10 ----------
+>  init/do_mounts_md.c |  8 ++++----
+>  2 files changed, 4 insertions(+), 14 deletions(-)
+>
+> diff --git a/init/do_mounts.h b/init/do_mounts.h
+> index 0bb0806de4ce2c..7513d1c14d13fe 100644
+> --- a/init/do_mounts.h
+> +++ b/init/do_mounts.h
+> @@ -20,16 +20,6 @@ static inline int create_dev(char *name, dev_t dev)
+>  	return ksys_mknod(name, S_IFBLK|0600, new_encode_dev(dev));
+>  }
+>=20=20
+> -static inline u32 bstat(char *name)
+> -{
+> -	struct kstat stat;
+> -	if (vfs_stat(name, &stat) !=3D 0)
+> -		return 0;
+> -	if (!S_ISBLK(stat.mode))
+> -		return 0;
+> -	return stat.rdev;
+> -}
+> -
+>  #ifdef CONFIG_BLK_DEV_RAM
+>=20=20
+>  int __init rd_load_disk(int n);
+> diff --git a/init/do_mounts_md.c b/init/do_mounts_md.c
+> index b84031528dd446..359363e85ccd0b 100644
+> --- a/init/do_mounts_md.c
+> +++ b/init/do_mounts_md.c
+> @@ -138,9 +138,9 @@ static void __init md_setup_drive(void)
+>  			dev =3D MKDEV(MD_MAJOR, minor);
+>  		create_dev(name, dev);
+>  		for (i =3D 0; i < MD_SB_DISKS && devname !=3D NULL; i++) {
+> +			struct kstat stat;
+>  			char *p;
+>  			char comp_name[64];
+> -			u32 rdev;
+>=20=20
+>  			p =3D strchr(devname, ',');
+>  			if (p)
+> @@ -150,9 +150,9 @@ static void __init md_setup_drive(void)
+>  			if (strncmp(devname, "/dev/", 5) =3D=3D 0)
+>  				devname +=3D 5;
+>  			snprintf(comp_name, 63, "/dev/%s", devname);
+> -			rdev =3D bstat(comp_name);
+> -			if (rdev)
+> -				dev =3D new_decode_dev(rdev);
+> +			if (vfs_stat(comp_name, &stat) =3D=3D 0 &&
+> +			    S_ISBLK(stat.mode))
+> +				dev =3D new_decode_dev(stat.rdev);
+>  			if (!dev) {
+>  				printk(KERN_WARNING "md: Unknown device name: %s\n", devname);
+>  				break;
+> --=20
+> 2.27.0
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl8PjdQACgkQOeye3VZi
+gbnOgBAAg5tYGuw1TVkG+Rso30FARvah0yhwFOfZKWKl4XLVRV9xmx+b6bklDYL9
+WqtyGlYlvwkyoIhMw+SPMwaswAXHj+g/IB657EdpcZrWsHJ2M0pPwpLgFLmScPL5
+XCx93C0ZEVbbL+TvBh/SVssGpvbo6XCH2YdYNqP46AwSf8iEBDK/6zKW8yXVynzO
+F7C2DmXOchXEhitgHtx15XZPJ1M1rgAasTBgbZGIz0HmFRDjR3M8Q/uMELNBpQlp
+nl/rcoaZPUmubi1n9yDHyyNE5RaV9v1o/u0JuIt6gU6N64Nd1LyVJWMQVueItRDN
+t9zjq2UNqC7vvclHvmTAZPzIXZnqANV2Dniiz5d+iEhFnlnlMI8Oy+3y2vJiMRzL
+y1AHv53G3UgA1SLLQtGZYNynCRtg3QAG3z6ljNFiNgq/VcJou4dJFjyO8TB6RqWo
+FGvGU1UxmR5N5S92vj/ZPq09iC97OAQoarS6/zbwW2PY+xDYc9OyWSS8C2Twoaqa
+vjnUZS9Qk9mTARyX/69Qhn8QGiGyHd04BYSsLZNJ71ayAgIocC7vJNMR0NrKtYFf
+JgCRbAvOzDGOFkdcRhJXaJv0PTvJBW278LS4E4Ithim9aFrXh1Az4zxN/S4OP+Ch
+zXqUPaG3yN2pHC+5hnFB3bxWYqRkkolTXIPwHe7W9JpHrpcR4ik=
+=EyQS
+-----END PGP SIGNATURE-----
+--=-=-=--
