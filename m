@@ -2,87 +2,102 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AEC022214E7
-	for <lists+linux-raid@lfdr.de>; Wed, 15 Jul 2020 21:13:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC4C82216A8
+	for <lists+linux-raid@lfdr.de>; Wed, 15 Jul 2020 22:56:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgGOTNq (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 15 Jul 2020 15:13:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38826 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbgGOTNJ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 15 Jul 2020 15:13:09 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80DCFC061755
-        for <linux-raid@vger.kernel.org>; Wed, 15 Jul 2020 12:13:01 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id n22so389991ejy.3
-        for <linux-raid@vger.kernel.org>; Wed, 15 Jul 2020 12:13:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=8vvTO88e5N0KKnPYZQ+VIh9I/hNH1j0oOLC/5lUcoLI=;
-        b=Je0Hw30gPfabICZKc5HlrWanaO9ppa1ddYhGikEMm12Otv1uQ5VQzjApg2+4b6ymCG
-         0FmJ6yCFhKkyyqeKAGBLdr3fg12r/XFb4Gz1tGOFErF22MIEKsUJ/y+bFtNX8aUZ8Qk/
-         lOr7lc2bW7j3H6aTguMOnL5eVy6j5pqxvLl2si93c3sgQYjQ0RpAnl+vEz8Q6gWzTUsE
-         Jw2viVz73FUjMO4jxfB/AZiqJIz6FbLWhXtOcjGo2gHSYHmbh7e/DdknRELcSvMurU+w
-         06nTF6JNXYk271eQBWQ+YwIy7T1lAR4IB+br7Jsav3FbFhrCC5O9fPO0R/7tf8uGWm5e
-         /r7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=8vvTO88e5N0KKnPYZQ+VIh9I/hNH1j0oOLC/5lUcoLI=;
-        b=hJB8zo8Ig9ZpSkzWMesDFuPDNUDhrPWtIajqnBDaOah/clcIk1fFNMqGgO5jzGjtHo
-         egcJdcVkIm2sMzfweUqjH14Qs0qU/uFhvpljDonF2X3g5Y4EJu5kTxgXwS3yCbPXN5/W
-         ePhZ4YgnEyQCjgKxPRmXnq3Fkj1ADfm1eri1/KnlV1KFBZqh1RGZWmyOnNLYITP7mMu2
-         K5Aq+H1cNf+XrJ9Ub6mKZgvNNTfHo9B5nZpI3D8JheTna/wvX35BrsBtkBm1ynSpPTR/
-         AB9un6WCcRgzcy2yqZ5UOrLbipF9kKJLp/oGQKObFCdZcxxVUmlP5pTx9wAHMzX1JMHT
-         NzRg==
-X-Gm-Message-State: AOAM531xQnO/3dbz4b+DrT+J1APPOrVl33OxoQgjMX85mX+5TvPi3FTw
-        NshOpEm30U3UwQ41tTQ65qG4SyZKJ4a4hu3Y
-X-Google-Smtp-Source: ABdhPJzaiIo2THLOMjEgeywAAbxcE3WL50CGmQgrGMn/6DCaXHzD1OKBjiPE3TMk4N1dbWflkSqNSQ==
-X-Received: by 2002:a17:906:c459:: with SMTP id ck25mr427765ejb.177.1594840379162;
-        Wed, 15 Jul 2020 12:12:59 -0700 (PDT)
-Received: from [192.168.178.33] (i5C746824.versanet.de. [92.116.104.36])
-        by smtp.gmail.com with ESMTPSA id s24sm2821111ejv.110.2020.07.15.12.12.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jul 2020 12:12:58 -0700 (PDT)
-Subject: Re: cluster-md mddev->in_sync & mddev->safemode_delay may have bug
-To:     "heming.zhao@suse.com" <heming.zhao@suse.com>,
-        linux-raid@vger.kernel.org
-Cc:     neilb@suse.com
-References: <a29f8374-cc64-cc87-71cb-507c43aff503@suse.com>
- <91c60c65-11c4-35e7-41d2-77a1febc3249@cloud.ionos.com>
- <57e70970-814b-3a55-35cc-b1415a301895@suse.com>
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Message-ID: <c5b3d5c0-bfc5-37b7-b00e-f6f10b5edc3f@cloud.ionos.com>
-Date:   Wed, 15 Jul 2020 21:12:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        id S1726424AbgGOU40 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 15 Jul 2020 16:56:26 -0400
+Received: from smtp-out-so.shaw.ca ([64.59.136.139]:38546 "EHLO
+        smtp-out-so.shaw.ca" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbgGOU40 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 15 Jul 2020 16:56:26 -0400
+X-Greylist: delayed 487 seconds by postgrey-1.27 at vger.kernel.org; Wed, 15 Jul 2020 16:56:25 EDT
+Received: from [192.168.50.137] ([24.64.114.53])
+        by shaw.ca with ESMTPA
+        id voJzjgNzqFXePvoK9jkvIG; Wed, 15 Jul 2020 14:48:17 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shaw.ca;
+        s=s20180605; t=1594846097;
+        bh=c/3EQ6KxJDyG+5gdkDv1y77xKpwUOvwNdt2HluCq2tY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=JkPKwCKZiqqOR0dJmvIcFgxhxi07gZiL92MZoH9hMVCgOSEUiCLkLl2nAd5/SD+jb
+         h55k39yMBLTplXgbLe/Z8/rCAiSeDZTRTymAdCFE6IX6703PJgvZryTHEpJa0UpceE
+         bDQZ9FDyinp9qZxCJp3WPk87H/OfnTvKZ+UMOaKmBLaM4eIT/AemAGu/To/evzFcB2
+         vlggvOSMrxRPzjsyjuq44I6M1usk9Cjn9hTiGU/F5elIyI+mFxqW4qjjHZ3OqP8EFW
+         NF7nrn3FNRP61LolAxwizJ9qBCmVubTkvKaToSGVjZtOZ88fowJJFp4mLz03bVWLFd
+         VHqtHOK5i9wXg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shaw.ca;
+        s=s20180605; t=1594846097;
+        bh=c/3EQ6KxJDyG+5gdkDv1y77xKpwUOvwNdt2HluCq2tY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=JkPKwCKZiqqOR0dJmvIcFgxhxi07gZiL92MZoH9hMVCgOSEUiCLkLl2nAd5/SD+jb
+         h55k39yMBLTplXgbLe/Z8/rCAiSeDZTRTymAdCFE6IX6703PJgvZryTHEpJa0UpceE
+         bDQZ9FDyinp9qZxCJp3WPk87H/OfnTvKZ+UMOaKmBLaM4eIT/AemAGu/To/evzFcB2
+         vlggvOSMrxRPzjsyjuq44I6M1usk9Cjn9hTiGU/F5elIyI+mFxqW4qjjHZ3OqP8EFW
+         NF7nrn3FNRP61LolAxwizJ9qBCmVubTkvKaToSGVjZtOZ88fowJJFp4mLz03bVWLFd
+         VHqtHOK5i9wXg==
+X-Authority-Analysis: v=2.3 cv=ePaIcEh1 c=1 sm=1 tr=0
+ a=aoFTOZhfXO3lFit9ECvAag==:117 a=aoFTOZhfXO3lFit9ECvAag==:17
+ a=IkcTkHD0fZMA:10 a=emMDOMd8YtTwtsb0pTUA:9 a=QEXdDO2ut3YA:10
+Subject: Re: Reshape using drives not partitions, RAID gone after reboot
+To:     antlists <antlists@youngman.org.uk>,
+        Roger Heflin <rogerheflin@gmail.com>
+Cc:     Adam Barnett <adamtravisbarnett@gmail.com>,
+        Linux RAID <linux-raid@vger.kernel.org>
+References: <b551920e-ddad-c627-d75a-e99d32247b6d@gmail.com>
+ <0b857b5f-20aa-871d-a22d-43d26ad64764@youngman.org.uk>
+ <CAAMCDec22wshoG8eb9aM4su-EBdJRbh_LyVtaskR9FbYc4f=gw@mail.gmail.com>
+ <730bb16a-235d-9186-a486-7ed0018121ab@youngman.org.uk>
+From:   AdsGroup <AdsGroup@shaw.ca>
+Message-ID: <6e3ea2d1-9bfe-f388-9b6d-b6ca801391af@shaw.ca>
+Date:   Wed, 15 Jul 2020 14:48:07 -0600
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <57e70970-814b-3a55-35cc-b1415a301895@suse.com>
+In-Reply-To: <730bb16a-235d-9186-a486-7ed0018121ab@youngman.org.uk>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
+X-CMAE-Envelope: MS4wfMH0j5COvh/3cCIF+Cp48ZrIeWJNwuPLoRkzUBrbC3B5zsuZDmIbZWzXtUOBSaSrf+0MvDFLUXuN/LeJWmJOOhOo6VQMfZ5+sxtyrrFDZ0iTZAZ56mdH
+ YSfQcr3QiBaKngiYMqEJmgSXhAbQnLMeax0LtW/7hg2iM79TAg3fefyHuY+Dock2pdvdwSwQD+o8P5A80x0lX2DPAhlZc0A+NfMdYT+EOXyyq7qHTna+DcNS
+ LUyhto666LGDotmTXEei9rzD+4Uwfk6ftuS91qhiDgJIBdG6cjrodiRKpLPZ52fA
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 7/15/20 8:40 PM, heming.zhao@suse.com wrote:
-> Hello Guoqing,
+On 2020-07-14 6:24 p.m., antlists wrote:
+> On 15/07/2020 00:27, Roger Heflin wrote:
+>> Did you create the partition before you added the disk to mdadm or
+>> after?  If after was it a dos or a gpt?  Dos should have only cleared
+>> the first 512byte block.  If gpt it will have written to the first
+>> block and to at least 1 more location on the disk, possibly causing
+>> data loss.
+>>
+>> If before then you at least need to get rid of the partition table
+>> completely.   Having a partition on a device will often cause a number
+>> of things to ignore the whole disk.  I have debugged "lost" pv's where
+>> the partition effectively "blocked" lvm from even looking at the
+>> entire device that the pv was one.
 >
-> Thank you for your kindly reply and review comments. I will resend 
-> that patch later.
+> If an explicit assemble works, then if you can get hold of a temporary 
+> spare/loan disk, I'd slowly move the new disks across to partitions by 
+> doing a --replace, not a --remove / --add. A replace will both keep 
+> the array protected against failure, and also not stress the array 
+> because it will just copy the old disk to the new, rather than 
+> rebuilding the new disk from all the others.
 >
-> Do you know who take care of cluster-md field in this mail list?
-> I want he/she to shed a little light on me.
+> I'm not sure about the commands, but iirc mdadm has a 
+> --wipe-superblock command or something, as does fdisk have something 
+> to wipe a gpt, so make sure you clear that stuff out before 
+> re-initialising a disk.
+>
+> Cheers,
+> Wol
 
-I think no one is dedicated to it, and Song covers all the md stuffs. I 
-can comment it
-once I am not busy.
+The mdadm command is --zero-superblock.
 
-Thanks,
-Guoqing
+Gdisk has an expert command (option x) called zap (z) that wipes both 
+the gpt and mbr.
+
+I also in addition use dd when 're-using/re-purposing' a disk.
 
