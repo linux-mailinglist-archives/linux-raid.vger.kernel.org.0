@@ -2,141 +2,83 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CC51220D2A
-	for <lists+linux-raid@lfdr.de>; Wed, 15 Jul 2020 14:42:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AEB5D220FD4
+	for <lists+linux-raid@lfdr.de>; Wed, 15 Jul 2020 16:50:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731113AbgGOMmK (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 15 Jul 2020 08:42:10 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:49104 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731075AbgGOMmF (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 15 Jul 2020 08:42:05 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B7B14B58566BE55E0E41;
-        Wed, 15 Jul 2020 20:42:01 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Wed, 15 Jul 2020
- 20:41:55 +0800
-From:   Yufen Yu <yuyufen@huawei.com>
-To:     <song@kernel.org>
-CC:     <linux-raid@vger.kernel.org>, <neilb@suse.com>,
-        <guoqing.jiang@cloud.ionos.com>, <houtao1@huawei.com>,
-        <yuyufen@huawei.com>
-Subject: [PATCH v6 15/15] raid6test: adaptation with syndrome function
-Date:   Wed, 15 Jul 2020 08:42:57 -0400
-Message-ID: <20200715124257.3175816-16-yuyufen@huawei.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200715124257.3175816-1-yuyufen@huawei.com>
-References: <20200715124257.3175816-1-yuyufen@huawei.com>
+        id S1728752AbgGOOsq (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 15 Jul 2020 10:48:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54326 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728284AbgGOOsp (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 15 Jul 2020 10:48:45 -0400
+Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75CBBC061755
+        for <linux-raid@vger.kernel.org>; Wed, 15 Jul 2020 07:48:45 -0700 (PDT)
+Received: by mail-il1-x134.google.com with SMTP id e18so2188836ilr.7
+        for <linux-raid@vger.kernel.org>; Wed, 15 Jul 2020 07:48:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Tb/FJHhrvLGFb5mzl3RRQ0CDOJDEBqHmAEvT9hhYACs=;
+        b=PyZInZGKeMvobYsrFamWU2iYZuTvEAUkXiHdRNgzepfRHWI6o+ixNebz+WRKJGeyhF
+         UKBw+g7L8NPKCX5yyYkOfmT19nd53vvMD4sPZ4TgktnBBTFTh1zrvbhX3LeA0i8mFaX3
+         ndZPDQuzBxYsnEtTqqveXQa+Xy7jvopzAPtqGcZOgyPLAGdPL21W4YUdVt7uwl7f49PC
+         sfISgo45MXE1Hy4lPWwXrE7icC16+WEY72d7FQ1Yi7g93NrPGbiOGOpuib0VJoIG/LcD
+         gFPDjuCitgvRTXCgpr1A22Y4l6V4eGulBzNRl2kwKo6EOtLk+1x/SPMvd+IGqHoyv3wC
+         247Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Tb/FJHhrvLGFb5mzl3RRQ0CDOJDEBqHmAEvT9hhYACs=;
+        b=NV88WqsKrPT6b9zRnwduooXj3p24GUtXN5FIvuXszh7kd41pGJVMmU6cFUgD7RaFvV
+         zNkBqPBjve0SYZfsRLu5XBiTebQfzPpijmYmb5NRYJxcnBMACridmRPd8z5hEb5OsCci
+         mZcKwIh8/sVUIyqunkwFMO02/iTuK2LMbjcZciZDHl8g/AqjkFTRUFiUvHeKMF8gOpNJ
+         3+nxn0T8iVOivO08L82TE2UpraQ7ZTHc+nHPdLq6RTS3sxI7tDFTUzlOt5IXIAFDrF2I
+         XiiJEBNUkRDrD6WN+07ddiX5NNGkCe9b7LIXHEJ4WstJn5UqJ7C02I/ftvLx3Lw1Uhhk
+         FLCg==
+X-Gm-Message-State: AOAM531/2qXih7VAvRzFL7H3AIP33i0b1tXe/EgXqzXMnVpivzLvbjs5
+        LJE0N8tXb3qaSBcQo2Lm/UJCGw==
+X-Google-Smtp-Source: ABdhPJwf6MWoyhXrt5eWnCNpOQhvt187w80oQ7ZM2/rdGjk33wIBIH0gc5+/kNF0HW/PHqdtIoE9/w==
+X-Received: by 2002:a92:48d5:: with SMTP id j82mr10801941ilg.167.1594824524675;
+        Wed, 15 Jul 2020 07:48:44 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id l10sm1159372ilc.52.2020.07.15.07.48.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jul 2020 07:48:44 -0700 (PDT)
+Subject: Re: [GIT PULL] md-next 20200714
+To:     Song Liu <songliubraving@fb.com>,
+        linux-raid <linux-raid@vger.kernel.org>
+Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
+        Zhao Heming <heming.zhao@suse.com>,
+        Artur Paszkiewicz <artur.paszkiewicz@intel.com>,
+        Colin Ian King <colin.king@canonical.com>
+References: <FBE6B82B-E360-4EAF-999D-AFBC6BC5F058@fb.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <fd6be000-262e-f215-f514-1f567394ac9d@kernel.dk>
+Date:   Wed, 15 Jul 2020 08:48:43 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.101.6]
-X-CFilter-Loop: Reflected
+In-Reply-To: <FBE6B82B-E360-4EAF-999D-AFBC6BC5F058@fb.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-After changing some syndrome and recovery functions to support
-different page offsets, we also need to adapt raid6test module.
-In this module, pages are allocated by the itself and their offset
-are '0'.
+On 7/15/20 12:53 AM, Song Liu wrote:
+> Hi Jens, 
+> 
+> Please consider pulling the following changes for md-next on top of your for-5.9/drivers 
+> branch. 
 
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
----
- crypto/async_tx/raid6test.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+Pulled, thanks.
 
-diff --git a/crypto/async_tx/raid6test.c b/crypto/async_tx/raid6test.c
-index 14e73dcd7475..66db82e5a3b1 100644
---- a/crypto/async_tx/raid6test.c
-+++ b/crypto/async_tx/raid6test.c
-@@ -18,6 +18,7 @@
- #define NDISKS 64 /* Including P and Q */
- 
- static struct page *dataptrs[NDISKS];
-+unsigned int dataoffs[NDISKS];
- static addr_conv_t addr_conv[NDISKS];
- static struct page *data[NDISKS+3];
- static struct page *spare;
-@@ -38,6 +39,7 @@ static void makedata(int disks)
- 	for (i = 0; i < disks; i++) {
- 		prandom_bytes(page_address(data[i]), PAGE_SIZE);
- 		dataptrs[i] = data[i];
-+		dataoffs[i] = 0;
- 	}
- }
- 
-@@ -52,7 +54,8 @@ static char disk_type(int d, int disks)
- }
- 
- /* Recover two failed blocks. */
--static void raid6_dual_recov(int disks, size_t bytes, int faila, int failb, struct page **ptrs)
-+static void raid6_dual_recov(int disks, size_t bytes, int faila, int failb,
-+		struct page **ptrs, unsigned int *offs)
- {
- 	struct async_submit_ctl submit;
- 	struct completion cmp;
-@@ -66,7 +69,8 @@ static void raid6_dual_recov(int disks, size_t bytes, int faila, int failb, stru
- 		if (faila == disks-2) {
- 			/* P+Q failure.  Just rebuild the syndrome. */
- 			init_async_submit(&submit, 0, NULL, NULL, NULL, addr_conv);
--			tx = async_gen_syndrome(ptrs, 0, disks, bytes, &submit);
-+			tx = async_gen_syndrome(ptrs, offs,
-+					disks, bytes, &submit);
- 		} else {
- 			struct page *blocks[NDISKS];
- 			struct page *dest;
-@@ -89,22 +93,26 @@ static void raid6_dual_recov(int disks, size_t bytes, int faila, int failb, stru
- 			tx = async_xor(dest, blocks, 0, count, bytes, &submit);
- 
- 			init_async_submit(&submit, 0, tx, NULL, NULL, addr_conv);
--			tx = async_gen_syndrome(ptrs, 0, disks, bytes, &submit);
-+			tx = async_gen_syndrome(ptrs, offs,
-+					disks, bytes, &submit);
- 		}
- 	} else {
- 		if (failb == disks-2) {
- 			/* data+P failure. */
- 			init_async_submit(&submit, 0, NULL, NULL, NULL, addr_conv);
--			tx = async_raid6_datap_recov(disks, bytes, faila, ptrs, &submit);
-+			tx = async_raid6_datap_recov(disks, bytes,
-+					faila, ptrs, offs, &submit);
- 		} else {
- 			/* data+data failure. */
- 			init_async_submit(&submit, 0, NULL, NULL, NULL, addr_conv);
--			tx = async_raid6_2data_recov(disks, bytes, faila, failb, ptrs, &submit);
-+			tx = async_raid6_2data_recov(disks, bytes,
-+					faila, failb, ptrs, offs, &submit);
- 		}
- 	}
- 	init_completion(&cmp);
- 	init_async_submit(&submit, ASYNC_TX_ACK, tx, callback, &cmp, addr_conv);
--	tx = async_syndrome_val(ptrs, 0, disks, bytes, &result, spare, &submit);
-+	tx = async_syndrome_val(ptrs, offs,
-+			disks, bytes, &result, spare, 0, &submit);
- 	async_tx_issue_pending(tx);
- 
- 	if (wait_for_completion_timeout(&cmp, msecs_to_jiffies(3000)) == 0)
-@@ -126,7 +134,7 @@ static int test_disks(int i, int j, int disks)
- 	dataptrs[i] = recovi;
- 	dataptrs[j] = recovj;
- 
--	raid6_dual_recov(disks, PAGE_SIZE, i, j, dataptrs);
-+	raid6_dual_recov(disks, PAGE_SIZE, i, j, dataptrs, dataoffs);
- 
- 	erra = memcmp(page_address(data[i]), page_address(recovi), PAGE_SIZE);
- 	errb = memcmp(page_address(data[j]), page_address(recovj), PAGE_SIZE);
-@@ -162,7 +170,7 @@ static int test(int disks, int *tests)
- 	/* Generate assumed good syndrome */
- 	init_completion(&cmp);
- 	init_async_submit(&submit, ASYNC_TX_ACK, NULL, callback, &cmp, addr_conv);
--	tx = async_gen_syndrome(dataptrs, 0, disks, PAGE_SIZE, &submit);
-+	tx = async_gen_syndrome(dataptrs, dataoffs, disks, PAGE_SIZE, &submit);
- 	async_tx_issue_pending(tx);
- 
- 	if (wait_for_completion_timeout(&cmp, msecs_to_jiffies(3000)) == 0) {
 -- 
-2.25.4
+Jens Axboe
 
