@@ -2,150 +2,122 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 72BA1221204
-	for <lists+linux-raid@lfdr.de>; Wed, 15 Jul 2020 18:10:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 085F522132D
+	for <lists+linux-raid@lfdr.de>; Wed, 15 Jul 2020 19:07:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725909AbgGOQKu (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 15 Jul 2020 12:10:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38914 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbgGOQKt (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 15 Jul 2020 12:10:49 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34DC9C061755
-        for <linux-raid@vger.kernel.org>; Wed, 15 Jul 2020 09:10:49 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id t9so1363332lfl.5
-        for <linux-raid@vger.kernel.org>; Wed, 15 Jul 2020 09:10:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=910h0TUbeWEjKnKzX9Hn28PjWTYV3BNdtYTuGYgWCi4=;
-        b=KCoxf+bpY+sPgnPzxiiKxQfO6+ELJmgTNe+H166eQQsHNhxHLfBonc2D0tpbjZUOKo
-         64hnNgZ3t8VHRYGDvdo9XmBcIc99ksb8vFnGUKuQUfVk0MwwCEE6770Z13Dmp0TAcwaV
-         AdslxYMtxkLCJs1c/iXPmXQk46HE25z9KsZzeIxn/yROfPDv2BbRUIv43A5Sr8J/miW/
-         HJO9h1nV5puRWTuFOQuMLUKlu+mzjlAx73RisEBZJGS89BJ5MK0QCwM+9D0rw2EF8nIt
-         igaUx41294A8Lf5hRsUNpGVZIIGLRiBUSfdHj1unklRcQc+BjM4yjwsy7bLlskGrEIcN
-         O2vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=910h0TUbeWEjKnKzX9Hn28PjWTYV3BNdtYTuGYgWCi4=;
-        b=Sn50lXv3KDyhjaTa2w1lF5DpZPpYUID6D+C4oj/vDaBRw0ROuagkVaoOx7qpd1Wt5u
-         nO2wM3xjA0uLTIC8fa6J3vFqaLHiVzYnlZgeAyRA6qb5QnU5zH/MglOsmjs0riUKsvzA
-         BGKz8y7SqpaotiM7C4dCNNPM9EWSvoslkLeRPC+rhiffQnrSGC0njosBSQn6gnHaQ6XE
-         V079Z1L0cCHrhsceERLV9wnfPR8703KGddHN62vcUhqnxa2VqQKLTtouGwjeikOqYc59
-         3EXI8yRKNbq2ZNwJnGlLPIQScdDPN8SN7JUXGGGi7Cy50IyuVc/CT9MoL9GtKMIBmvvb
-         FTvg==
-X-Gm-Message-State: AOAM532vt9d7+6+1cJgDAZhy8Y4DDoobsecD3QrbRUSXoBEbtGtPBUc2
-        tXLKMSXIyTlVXnd/AuF2IBmpX2+CfjEZY5VhmxQ=
-X-Google-Smtp-Source: ABdhPJyZqVoomCpOWNRQ10SirXDzOUMD+n3AyDzJHVgacVY59fFdMgLs2cMVe0XI45rf7gcK5htYDHQAbbwiAQPZUdE=
-X-Received: by 2002:a19:8c47:: with SMTP id i7mr5242192lfj.32.1594829447414;
- Wed, 15 Jul 2020 09:10:47 -0700 (PDT)
+        id S1726479AbgGORE3 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 15 Jul 2020 13:04:29 -0400
+Received: from de-smtp-delivery-102.mimecast.com ([62.140.7.102]:42952 "EHLO
+        de-smtp-delivery-102.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725900AbgGORE1 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 15 Jul 2020 13:04:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+        t=1594832665;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=sdtpTPcyz4GogCsHpdIqGs5orRczrGM0H6mIgG1cBm8=;
+        b=DAkVWhUHfRIH4IIFfdtDJ0KNFVMfwCZJyY5zAG+wdf3JrEmoFT92PV1tz4aQYO9fr6ufhN
+        gRIi2Uc6PSIxv2XOMxZcWx3iFkTZhu1QgSwpa83I+QsePYpuRsZgEp8KX2ow4UPj8eiyut
+        piE9tWUZBttHgOUguoBhED9j4VZTrCw=
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com
+ (mail-vi1eur04lp2053.outbound.protection.outlook.com [104.47.14.53]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ de-mta-28-SG5PMAsaPFC5qVjdMdxPJg-1; Wed, 15 Jul 2020 19:04:24 +0200
+X-MC-Unique: SG5PMAsaPFC5qVjdMdxPJg-1
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bYo3V/tp8mE78ebA6RyienE8QF2jK4k8ZeQwB9lRY9nkDzMBpLYJwu4UNZ0Avk9IpDho7NupzYt4bEKGGw/wBD3r5yJBrMisfRT4WTZp3KuL++DU6qWILgndwBHTSxooQHKiWjHxR4QjQNeTL6GyvEfr3OpP4CEtwciD9jTuCWaJgGWIqjC+7+OB9eosM6/hP2ff/rjd6e514pedHEGw6nMAWwLF6/Y3HwxKtzo/IGJnpvO8IcnAFAOvY+WlVF2u0fDkSXQy5jFl2n1Bv0Ck1zzEEIJX8VUsjKBSo0GKVRAlugS9+Sz22DeVzLWz/XZQ9o6QpwVIyOrla3cX7lsjHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sdtpTPcyz4GogCsHpdIqGs5orRczrGM0H6mIgG1cBm8=;
+ b=AcfbkhDsE+p1TI6KmY5i494cLIEf83i6RJUjRBbqDqZDX0hltmhQN2o++sBpT3mnaD1CPLBGuSPEploh/oiUXbEXjacEUVnDjILkXLgQEvB7JEUShyBq05/nYJVgCpbZPzy+I9CBC64ay/HNQ91arWSuyk2crssQgdPowIV2QqOlDBYYpQnD5u+dsiQqEML8IjvIATUVIWffS0AC0IRT7KlUAn8knlM4MlitGK6b95ky0r2HbuXj8BQJhrfsNhgOrul6fpx6vBOKzuibpR+sNfyplzkM18WkhlcgqCst0RJPwWaRaAUnOw5ORsZvb8xOHUTR3MhJritR9HKf0TAhpw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=suse.com;
+Received: from DB7PR04MB4666.eurprd04.prod.outlook.com (2603:10a6:5:2b::14) by
+ DB7PR04MB5452.eurprd04.prod.outlook.com (2603:10a6:10:84::21) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3174.20; Wed, 15 Jul 2020 17:04:23 +0000
+Received: from DB7PR04MB4666.eurprd04.prod.outlook.com
+ ([fe80::b01a:d99f:8b27:a5aa]) by DB7PR04MB4666.eurprd04.prod.outlook.com
+ ([fe80::b01a:d99f:8b27:a5aa%4]) with mapi id 15.20.3195.018; Wed, 15 Jul 2020
+ 17:04:23 +0000
+From:   Zhao Heming <heming.zhao@suse.com>
+To:     linux-raid@vger.kernel.org
+Cc:     Zhao Heming <heming.zhao@suse.com>
+Subject: [PATCH] md-cluster: fix safemode_delay non-zero when bitmap switch to clustered
+Date:   Thu, 16 Jul 2020 01:04:04 +0800
+Message-Id: <1594832644-8837-1-git-send-email-heming.zhao@suse.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-ClientProxiedBy: HK2PR04CA0045.apcprd04.prod.outlook.com
+ (2603:1096:202:14::13) To DB7PR04MB4666.eurprd04.prod.outlook.com
+ (2603:10a6:5:2b::14)
 MIME-Version: 1.0
-References: <b551920e-ddad-c627-d75a-e99d32247b6d@gmail.com>
- <0b857b5f-20aa-871d-a22d-43d26ad64764@youngman.org.uk> <CAAMCDec22wshoG8eb9aM4su-EBdJRbh_LyVtaskR9FbYc4f=gw@mail.gmail.com>
- <8373f6a8-f0d9-02de-268d-64bddc4b9aa2@gmail.com>
-In-Reply-To: <8373f6a8-f0d9-02de-268d-64bddc4b9aa2@gmail.com>
-From:   Roger Heflin <rogerheflin@gmail.com>
-Date:   Wed, 15 Jul 2020 11:10:35 -0500
-Message-ID: <CAAMCDecPanRSN70UL7fuMNSdPUwqui8+nDj4Fm=3XohbicBsQA@mail.gmail.com>
-Subject: Re: Reshape using drives not partitions, RAID gone after reboot
-To:     Adam Barnett <adamtravisbarnett@gmail.com>
-Cc:     antlists <antlists@youngman.org.uk>,
-        Linux RAID <linux-raid@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from c73.home (123.123.128.9) by HK2PR04CA0045.apcprd04.prod.outlook.com (2603:1096:202:14::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18 via Frontend Transport; Wed, 15 Jul 2020 17:04:22 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [123.123.128.9]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6d51a1e8-18af-4162-62a8-08d828e11f6c
+X-MS-TrafficTypeDiagnostic: DB7PR04MB5452:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB7PR04MB5452BC58A662567917B4A641977E0@DB7PR04MB5452.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:949;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 9ZdzhVNrMvjUU3we+fBo/h6rDSMABOC+9Dpv0OaEa2SLamXpLNsOGCloZkU0aV/IqskYFtdeAIFHP2nSv32mF3/SNI9s/YrV0B5sNhkp4rsnR/qB/EcPjaHnGb/p0ZiyJ5WUCmzWKAIvfbSIxzx/GJeXvnCKSFoJYDusb1aKVTuFafUQWJih3oZmBC5mEVpvxwxiSDOhLQsRmCztkp54nzRHzyli6pXoky/RLVCdDOCyaGAzcR3uClGLRWm4paBHtjDVadXcoEvNXccMMTXOiReKnYorwhpgx5/UWwtntwduDr44PbuWx99mhfg5q1WZ6iwKsGV4GmyvmC+A9s/Sbr80p0ys46puRr71k2kM0prtL8z+UZvX8bImBjjKwm9F
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB4666.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(396003)(346002)(136003)(376002)(366004)(478600001)(16526019)(316002)(8886007)(6916009)(6666004)(66946007)(83380400001)(86362001)(956004)(2616005)(66476007)(5660300002)(66556008)(4744005)(107886003)(6486002)(6506007)(36756003)(186003)(2906002)(26005)(4326008)(8936002)(52116002)(6512007)(8676002)(9126004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: gIaVXddSaXxtE7gh1rJFxthzjAJKgt7yN/1cGzbBb7qame5i+ZlNQ0gCuJZS9o5QYzSncDu93ZQXmrjp/6VUWKuMatWpZ9Z8rRVJ4a0yGnybzyz+FCoMDmJD+6Pm6QdNHImLH3uSzmk/Wn467CG1I+/1oDiXE4n7vh6D+W7oZO3X6/ok/MZ5Oa9jsO46/uTqni7Moz5v29SfThzSmVeboWk2GVuKR7SZBBS2GGjjN4shllGka5Ega64eLIXXYMtTxoY89RKw/qrscerlT3t3ZjlxMFRlVx2xBDUeYEbrQqaisTqev6sXP/dGjZJZNVxamMdP437KscrbFZcrnQds4bin+Icy/R8XKrqG+acuMPYxmGY/QrHtjDnYgROTRgNYKW9W4yAi3yulQtSUVezxGciB4LHP21PkadY4ikcwJ0tZl1Tda0G8jep/acQjuBAYAmnCXFDoLB5w1KieJH6cp4gJ2GZBQddPKRPzyavPqTY=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6d51a1e8-18af-4162-62a8-08d828e11f6c
+X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB4666.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2020 17:04:23.6692
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 04DDOdDOaqOUYOZrLRmZZwNXTpuLj2l5iZulB08WAlY34TpjeTY1rWHW39qsajZFpJ2mC7P7xrBTV7TcKuuiNg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5452
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-there is a chance that removing the partition tables that should not
-be there will just fix it and are what is blocking the devices.
+reproduction steps:
+```
+node1 # mdadm --zero-superblock /dev/sd{b,c,d}
+node1 # mdadm -C /dev/md0 -b internal -e 1.2 -n 2 -l mirror /dev/sdb /dev/sdc
+node1 # cat /sys/block/md0/md/safe_mode_delay
+0.204
+node1 # mdadm -G /dev/md0 -b none
+node1 # mdadm --grow /dev/md0 --bitmap=clustered
+node1 # cat /sys/block/md0/md/safe_mode_delay
+0.204  <== doesn't change, should ZERO for cluster-md
+```
 
-So once you have a copy of the disks, remove the partition table
-completely from the 3 and reboot, and it may just start since it will
-be able to find the devices.   Or it may now be startable with the
-command you attempted to start it with before.
+Signed-off-by: Zhao Heming <heming.zhao@suse.com>
+---
+ drivers/md/md-bitmap.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-I have had partitioned devices (say /dev/sda1 have a partition table
-put on it, and that "block" lvm from looking at /dev/sda1, removing it
-and removing the mappings immediately makes the missing pv's show up,
-and I am pretty sure mdadm has the same rules.
+diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
+index 95a5f3757fa3..547adea1d1e6 100644
+--- a/drivers/md/md-bitmap.c
++++ b/drivers/md/md-bitmap.c
+@@ -2344,6 +2344,8 @@ location_store(struct mddev *mddev, const char *buf, size_t len)
+ 					mddev_resume(mddev);
+ 					goto out;
+ 				}
++				if (mddev_is_clustered(mddev))
++					mddev->safemode_delay = 0;
+ 				mddev_resume(mddev);
+ 			}
+ 		}
+-- 
+2.16.4
 
-
-You must have the exactly right order for assume-clean to work, and
-mistake and there will be data issues.
-
-On Tue, Jul 14, 2020 at 9:28 PM Adam Barnett
-<adamtravisbarnett@gmail.com> wrote:
->
-> Thanks for all the the replies. The drives had single gpt partitions
-> that were created before adding the drives to the arrays. So I'll give
-> removing the partition tables a try and forcing reassembly.
->
-> I also tried stopping the array before forcing reassembly but this issue
-> is that the newly added drives appear to have no superblocks, so mdadm
-> aborts the assembly.
->
-> My current plan is to try to --create --assume-clean the array, but I
-> have been reading about using overlay files to preserve the drives. If
-> anyone could help me understand exactly how that is done I would be very
-> appreciative.
->
-> I don't think the list allows links(?) but I'm following the steps on
-> the kernel wiki under "Recovering_a_failed_software_RAID" but the bash
-> commands are a bit confusing due to the use of the parallel command.
->
-> Thanks again all!
->
-> -Adam
->
-> On 7/14/20 5:27 PM, Roger Heflin wrote:
-> > Did you create the partition before you added the disk to mdadm or
-> > after?  If after was it a dos or a gpt?  Dos should have only cleared
-> > the first 512byte block.  If gpt it will have written to the first
-> > block and to at least 1 more location on the disk, possibly causing
-> > data loss.
-> >
-> > If before then you at least need to get rid of the partition table
-> > completely.   Having a partition on a device will often cause a number
-> > of things to ignore the whole disk.  I have debugged "lost" pv's where
-> > the partition effectively "blocked" lvm from even looking at the
-> > entire device that the pv was one.
-> >
-> > If it is a dos partition table then:
-> > save a backup of each disk first (always a good idea, you can dd it
-> > back if you screwed up so long as you carefully create the backups and
-> > name them properly).
-> > dd if=/dev/sdx of=/root/sdxbackup.img bs=512 count=1
-> > then clear the partition table space, rebooting is probably the
-> > easiest way to clear out the mappings, it can be done without
-> > rebooting but I have to do it trial and error to figure out the exact
-> > order and commands.
-> > dd if=/dev/zero of=/dev/sdX bs=512 count=1
-> >
-> > On Tue, Jul 14, 2020 at 6:11 PM antlists <antlists@youngman.org.uk> wrote:
-> >> On 14/07/2020 20:50, Adam Barnett wrote:
-> >>> Forcing the assembly does not work:
-> >>>
-> >>> $ sudo mdadm /dev/md1 --assemble --force /dev/sd[ijmop]1 /dev/sd[kln]
-> >>> mdadm: /dev/sdi1 is busy - skipping
-> >>> mdadm: /dev/sdj1 is busy - skipping
-> >>> mdadm: /dev/sdm1 is busy - skipping
-> >>> mdadm: /dev/sdo1 is busy - skipping
-> >>> mdadm: /dev/sdp1 is busy - skipping
-> >>> mdadm: Cannot assemble mbr metadata on /dev/sdk
-> >>> mdadm: /dev/sdk has no superblock - assembly aborted
-> >> Did you do an "mdadm --stop /dev/md1" before trying that? That's a
-> >> classic error from an array that's previously been partially assembled
-> >> and failed ...
-> >>
-> >> The other thing I'd do is make sure there aren't any other unepected
-> >> partially assembled arrays. I doubt it applies here, but I have come
-> >> across mirrors that get broken in half and you get two failed arrays
-> >> instead of one working one ...
-> >>
-> >> Cheers,
-> >> Wol
