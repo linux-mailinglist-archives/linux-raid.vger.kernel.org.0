@@ -2,17 +2,17 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1320C220D2C
-	for <lists+linux-raid@lfdr.de>; Wed, 15 Jul 2020 14:42:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1852D220D25
+	for <lists+linux-raid@lfdr.de>; Wed, 15 Jul 2020 14:42:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731120AbgGOMmN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 15 Jul 2020 08:42:13 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:49062 "EHLO huawei.com"
+        id S1731099AbgGOMmH (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 15 Jul 2020 08:42:07 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:49070 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731072AbgGOMmF (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 15 Jul 2020 08:42:05 -0400
+        id S1731076AbgGOMmD (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 15 Jul 2020 08:42:03 -0400
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A6EC6B926147EC2F1984;
+        by Forcepoint Email with ESMTP id AD119E2A6BEE0E4976EA;
         Wed, 15 Jul 2020 20:42:01 +0800 (CST)
 Received: from huawei.com (10.175.101.6) by DGGEMS413-HUB.china.huawei.com
  (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Wed, 15 Jul 2020
@@ -22,9 +22,9 @@ To:     <song@kernel.org>
 CC:     <linux-raid@vger.kernel.org>, <neilb@suse.com>,
         <guoqing.jiang@cloud.ionos.com>, <houtao1@huawei.com>,
         <yuyufen@huawei.com>
-Subject: [PATCH v6 10/15] md/raid5: compute xor with correct page offset
-Date:   Wed, 15 Jul 2020 08:42:52 -0400
-Message-ID: <20200715124257.3175816-11-yuyufen@huawei.com>
+Subject: [PATCH v6 11/15] md/raid5: support config stripe_size by sysfs entry
+Date:   Wed, 15 Jul 2020 08:42:53 -0400
+Message-ID: <20200715124257.3175816-12-yuyufen@huawei.com>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200715124257.3175816-1-yuyufen@huawei.com>
 References: <20200715124257.3175816-1-yuyufen@huawei.com>
@@ -38,218 +38,136 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-When compute xor, the pages address will be passed to computer function.
-After trying to use pages in r5pages, we also need to pass page offset
-to let it know correct location of each page.
+Adding a new 'stripe_size' sysfs entry to set and show stripe_size.
+After that, we can adjust stripe_size by writing value into sysfs
+entry, likely, set stripe_size as 16KB:
 
-For now raid5-cache and raid5-ppl are supported only when PAGE_SIZE is
-equal to 4096. In that case, shared pages will not be supported and
-dev->offset is '0'. So, we can use that value directly.
+          echo 16384 > /sys/block/md1/md/stripe_size
+
+Show current stripe_size value:
+
+          cat /sys/block/md1/md/stripe_size
+
+stripe_size should not be bigger than PAGE_SIZE, and it requires to be
+multiple of 4096.
 
 Signed-off-by: Yufen Yu <yuyufen@huawei.com>
 ---
- drivers/md/raid5.c | 67 ++++++++++++++++++++++++++++++++++------------
- 1 file changed, 50 insertions(+), 17 deletions(-)
+ drivers/md/raid5.c | 94 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 94 insertions(+)
 
 diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index b5a00f64db5c..84c35eb225b4 100644
+index 84c35eb225b4..338a0732c202 100644
 --- a/drivers/md/raid5.c
 +++ b/drivers/md/raid5.c
-@@ -1491,6 +1491,7 @@ ops_run_compute5(struct stripe_head *sh, struct raid5_percpu *percpu)
- {
- 	int disks = sh->disks;
- 	struct page **xor_srcs = to_addr_page(percpu, 0);
-+	unsigned int *offs = to_addr_offs(sh, percpu);
- 	int target = sh->ops.target;
- 	struct r5dev *tgt = &sh->dev[target];
- 	struct page *xor_dest = tgt->page;
-@@ -1499,6 +1500,7 @@ ops_run_compute5(struct stripe_head *sh, struct raid5_percpu *percpu)
- 	struct async_submit_ctl submit;
- 	int i;
- 	struct r5conf *conf = sh->raid_conf;
-+	unsigned int des_offset = tgt->offset;
+@@ -6699,6 +6699,99 @@ raid5_rmw_level = __ATTR(rmw_level, S_IRUGO | S_IWUSR,
+ 			 raid5_show_rmw_level,
+ 			 raid5_store_rmw_level);
  
- 	BUG_ON(sh->batch_head);
- 
-@@ -1506,20 +1508,23 @@ ops_run_compute5(struct stripe_head *sh, struct raid5_percpu *percpu)
- 		__func__, (unsigned long long)sh->sector, target);
- 	BUG_ON(!test_bit(R5_Wantcompute, &tgt->flags));
- 
--	for (i = disks; i--; )
--		if (i != target)
-+	for (i = disks; i--; ) {
-+		if (i != target) {
-+			offs[count] = sh->dev[i].offset;
- 			xor_srcs[count++] = sh->dev[i].page;
-+		}
++static ssize_t
++raid5_show_stripe_size(struct mddev  *mddev, char *page)
++{
++	struct r5conf *conf;
++	int ret = 0;
++
++	spin_lock(&mddev->lock);
++	conf = mddev->private;
++	if (conf)
++		ret = sprintf(page, "%lu\n", conf->stripe_size);
++	spin_unlock(&mddev->lock);
++	return ret;
++}
++
++static ssize_t
++raid5_store_stripe_size(struct mddev  *mddev, const char *page, size_t len)
++{
++	struct r5conf *conf;
++	unsigned long new;
++	int err;
++	int nr;
++
++	if (len >= PAGE_SIZE)
++		return -EINVAL;
++	if (kstrtoul(page, 10, &new))
++		return -EINVAL;
++	/*
++	 * When PAGE_SZIE is 4096, we don't need to modify stripe_size.
++	 * And the value should not be bigger than PAGE_SIZE.
++	 * It requires to be multiple of 4096.
++	 */
++	if (PAGE_SIZE == 4096 || new % 4096 != 0 ||
++			new > PAGE_SIZE || new == 0)
++		return -EINVAL;
++
++	err = mddev_lock(mddev);
++	if (err)
++		return err;
++
++	conf = mddev->private;
++	if (!conf) {
++		err = -ENODEV;
++		goto out_unlock;
 +	}
- 
- 	atomic_inc(&sh->count);
- 
- 	init_async_submit(&submit, ASYNC_TX_FENCE|ASYNC_TX_XOR_ZERO_DST, NULL,
- 			  ops_complete_compute, sh, to_addr_conv(sh, percpu, 0));
- 	if (unlikely(count == 1))
--		tx = async_memcpy(xor_dest, xor_srcs[0], 0, 0,
-+		tx = async_memcpy(xor_dest, xor_srcs[0], des_offset, offs[0],
- 				conf->stripe_size, &submit);
- 	else
--		tx = async_xor(xor_dest, xor_srcs, 0, count,
--				conf->stripe_size, &submit);
-+		tx = async_xor_offsets(xor_dest, des_offset, xor_srcs, offs,
-+				count, conf->stripe_size, &submit);
- 
- 	return tx;
- }
-@@ -1763,11 +1768,13 @@ ops_run_prexor5(struct stripe_head *sh, struct raid5_percpu *percpu,
- {
- 	int disks = sh->disks;
- 	struct page **xor_srcs = to_addr_page(percpu, 0);
-+	unsigned int *offs = to_addr_offs(sh, percpu);
- 	int count = 0, pd_idx = sh->pd_idx, i;
- 	struct async_submit_ctl submit;
- 	struct r5conf *conf = sh->raid_conf;
- 
- 	/* existing parity data subtracted */
-+	unsigned int des_offset = offs[count] = sh->dev[pd_idx].offset;
- 	struct page *xor_dest = xor_srcs[count++] = sh->dev[pd_idx].page;
- 
- 	BUG_ON(sh->batch_head);
-@@ -1777,16 +1784,23 @@ ops_run_prexor5(struct stripe_head *sh, struct raid5_percpu *percpu,
- 	for (i = disks; i--; ) {
- 		struct r5dev *dev = &sh->dev[i];
- 		/* Only process blocks that are known to be uptodate */
--		if (test_bit(R5_InJournal, &dev->flags))
-+		if (test_bit(R5_InJournal, &dev->flags)) {
-+			/*
-+			 * For this case, PAGE_SIZE must be 4KB and will not
-+			 * use r5pages. So dev->offset is zero.
-+			 */
-+			offs[count] = dev->offset;
- 			xor_srcs[count++] = dev->orig_page;
--		else if (test_bit(R5_Wantdrain, &dev->flags))
-+		} else if (test_bit(R5_Wantdrain, &dev->flags)) {
-+			offs[count] = dev->offset;
- 			xor_srcs[count++] = dev->page;
-+		}
- 	}
- 
- 	init_async_submit(&submit, ASYNC_TX_FENCE|ASYNC_TX_XOR_DROP_DST, tx,
- 			  ops_complete_prexor, sh, to_addr_conv(sh, percpu, 0));
--	tx = async_xor(xor_dest, xor_srcs, 0, count,
--				conf->stripe_size, &submit);
-+	tx = async_xor_offsets(xor_dest, des_offset, xor_srcs, offs,
-+			count, conf->stripe_size, &submit);
- 
- 	return tx;
- }
-@@ -1938,6 +1952,7 @@ ops_run_reconstruct5(struct stripe_head *sh, struct raid5_percpu *percpu,
- {
- 	int disks = sh->disks;
- 	struct page **xor_srcs;
-+	unsigned int *offs;
- 	struct async_submit_ctl submit;
- 	int count, pd_idx = sh->pd_idx, i;
- 	struct page *xor_dest;
-@@ -1947,6 +1962,7 @@ ops_run_reconstruct5(struct stripe_head *sh, struct raid5_percpu *percpu,
- 	struct stripe_head *head_sh = sh;
- 	int last_stripe;
- 	struct r5conf *conf = sh->raid_conf;
-+	unsigned int des_offset;
- 
- 	pr_debug("%s: stripe %llu\n", __func__,
- 		(unsigned long long)sh->sector);
-@@ -1966,24 +1982,33 @@ ops_run_reconstruct5(struct stripe_head *sh, struct raid5_percpu *percpu,
- again:
- 	count = 0;
- 	xor_srcs = to_addr_page(percpu, j);
-+	offs = to_addr_offs(sh, percpu);
- 	/* check if prexor is active which means only process blocks
- 	 * that are part of a read-modify-write (written)
- 	 */
- 	if (head_sh->reconstruct_state == reconstruct_state_prexor_drain_run) {
- 		prexor = 1;
-+		des_offset = offs[count] = sh->dev[pd_idx].offset;
- 		xor_dest = xor_srcs[count++] = sh->dev[pd_idx].page;
 +
- 		for (i = disks; i--; ) {
- 			struct r5dev *dev = &sh->dev[i];
- 			if (head_sh->dev[i].written ||
--			    test_bit(R5_InJournal, &head_sh->dev[i].flags))
-+			    test_bit(R5_InJournal, &head_sh->dev[i].flags)) {
-+				offs[count] = dev->offset;
- 				xor_srcs[count++] = dev->page;
-+			}
- 		}
- 	} else {
- 		xor_dest = sh->dev[pd_idx].page;
-+		des_offset = sh->dev[pd_idx].offset;
++	if (new == conf->stripe_size)
++		goto out_unlock;
 +
- 		for (i = disks; i--; ) {
- 			struct r5dev *dev = &sh->dev[i];
--			if (i != pd_idx)
-+			if (i != pd_idx) {
-+				offs[count] = dev->offset;
- 				xor_srcs[count++] = dev->page;
-+			}
- 		}
- 	}
- 
-@@ -2009,11 +2034,12 @@ ops_run_reconstruct5(struct stripe_head *sh, struct raid5_percpu *percpu,
- 	}
- 
- 	if (unlikely(count == 1))
--		tx = async_memcpy(xor_dest, xor_srcs[0], 0, 0,
--					conf->stripe_size, &submit);
-+		tx = async_memcpy(xor_dest, xor_srcs[0], des_offset,
-+				offs[0], conf->stripe_size, &submit);
- 	else
--		tx = async_xor(xor_dest, xor_srcs, 0, count,
--					conf->stripe_size, &submit);
-+		tx = async_xor_offsets(xor_dest, des_offset, xor_srcs,
-+				offs, count, conf->stripe_size, &submit);
++	pr_debug("md/raid: change stripe_size from %lu to %lu\n",
++			conf->stripe_size, new);
 +
- 	if (!last_stripe) {
- 		j++;
- 		sh = list_first_entry(&sh->batch_list, struct stripe_head,
-@@ -2103,11 +2129,13 @@ static void ops_run_check_p(struct stripe_head *sh, struct raid5_percpu *percpu)
- 	int qd_idx = sh->qd_idx;
- 	struct page *xor_dest;
- 	struct page **xor_srcs = to_addr_page(percpu, 0);
-+	unsigned int *offs = to_addr_offs(sh, percpu);
- 	struct dma_async_tx_descriptor *tx;
- 	struct async_submit_ctl submit;
- 	int count;
- 	int i;
- 	struct r5conf *conf = sh->raid_conf;
-+	unsigned int dest_offset;
- 
- 	pr_debug("%s: stripe %llu\n", __func__,
- 		(unsigned long long)sh->sector);
-@@ -2115,17 +2143,22 @@ static void ops_run_check_p(struct stripe_head *sh, struct raid5_percpu *percpu)
- 	BUG_ON(sh->batch_head);
- 	count = 0;
- 	xor_dest = sh->dev[pd_idx].page;
-+	dest_offset = sh->dev[pd_idx].offset;
-+	offs[count] = dest_offset;
- 	xor_srcs[count++] = xor_dest;
++	if (mddev->sync_thread ||
++	    test_bit(MD_RECOVERY_RUNNING, &mddev->recovery) ||
++	    mddev->reshape_position != MaxSector ||
++	    mddev->sysfs_active) {
++		err = -EBUSY;
++		goto out_unlock;
++	}
 +
- 	for (i = disks; i--; ) {
- 		if (i == pd_idx || i == qd_idx)
- 			continue;
-+		offs[count] = sh->dev[i].offset;
- 		xor_srcs[count++] = sh->dev[i].page;
- 	}
++	nr = conf->max_nr_stripes;
++
++	/* 1. suspend raid array */
++	mddev_suspend(mddev);
++
++	/* 2. free all old stripe_head */
++	mutex_lock(&conf->cache_size_mutex);
++	shrink_stripes(conf);
++
++	/* 3. set new stripe_size */
++	conf->stripe_size = new;
++	conf->stripe_shift = ilog2(new) - 9;
++	conf->stripe_sectors = new >> 9;
++
++	/* 4. allocate new stripe_head */
++	if (grow_stripes(conf, nr)) {
++		pr_warn("md/raid:%s: couldn't allocate buffers\n",
++				mdname(mddev));
++		err = -ENOMEM;
++	}
++	mutex_unlock(&conf->cache_size_mutex);
++
++	/* 5. resume raid array */
++	mddev_resume(mddev);
++
++out_unlock:
++	mddev_unlock(mddev);
++	return err ?: len;
++}
++
++static struct md_sysfs_entry
++raid5_stripe_size = __ATTR(stripe_size, 0644,
++			 raid5_show_stripe_size,
++			 raid5_store_stripe_size);
  
- 	init_async_submit(&submit, 0, NULL, NULL, NULL,
- 			  to_addr_conv(sh, percpu, 0));
--	tx = async_xor_val(xor_dest, xor_srcs, 0, count, conf->stripe_size,
--			   &sh->ops.zero_sum_result, &submit);
-+	tx = async_xor_val_offsets(xor_dest, dest_offset, xor_srcs, offs,
-+			count, conf->stripe_size,
-+			&sh->ops.zero_sum_result, &submit);
- 
- 	atomic_inc(&sh->count);
- 	init_async_submit(&submit, ASYNC_TX_ACK, tx, ops_complete_check, sh, NULL);
+ static ssize_t
+ raid5_show_preread_threshold(struct mddev *mddev, char *page)
+@@ -6887,6 +6980,7 @@ static struct attribute *raid5_attrs[] =  {
+ 	&raid5_group_thread_cnt.attr,
+ 	&raid5_skip_copy.attr,
+ 	&raid5_rmw_level.attr,
++	&raid5_stripe_size.attr,
+ 	&r5c_journal_mode.attr,
+ 	&ppl_write_hint.attr,
+ 	NULL,
 -- 
 2.25.4
 
