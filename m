@@ -2,165 +2,222 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55A9222057A
-	for <lists+linux-raid@lfdr.de>; Wed, 15 Jul 2020 08:55:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE3E9220D2E
+	for <lists+linux-raid@lfdr.de>; Wed, 15 Jul 2020 14:42:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728649AbgGOGx1 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 15 Jul 2020 02:53:27 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:61798 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727913AbgGOGx1 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 15 Jul 2020 02:53:27 -0400
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06F6n7TS000407;
-        Tue, 14 Jul 2020 23:53:17 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : content-type : content-id :
- content-transfer-encoding : mime-version; s=facebook;
- bh=VW5R6P+b5A0+hCKISwAmaSkyGU4WiZDABNMg6Yx/LGc=;
- b=Hmzr75yhvbRB4ya8l7HUFn2xZ5yBdFFyGLn2diGY9Ja03C9c5HFD4mSPxvTkV1owhHn4
- wl9ttdiXRhIu6eRnW1I3/Ed1/RYH97Ab27/UDvdemkg6A0N+f+/um9Vy1fCq1u4iRQrs
- bWUblG2S81KVD8iR4oOMnErCHhOGwGEo/vs= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 329nqv9fmv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 14 Jul 2020 23:53:17 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 14 Jul 2020 23:53:17 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GhT3Kd11xN3Poo+KIQHZgKCJAoO8tIF+gtQFffog5LvEXljBsPmgJ7Ifgg02viDwuzfOv5c5UwX9FFiA9hah+qwsbFXMngv1csEjSVfIW+BML2VAUjpFm3buzSxc61/GFGdwigKZKJPQJPqQhFnRfnQAv+xK2Qe+WFBrLOoWuzQfhNq0/RIuExvCtQGVMCu1Y1rDgluXkFsudGOlQTbdxvJBwAdhcjsAL2+HLcDA8OdyKi9Y2ul1Bc6dmjOKoDMYs8USVQ9nwmWLcJ8QmspXu/P3vMeYa2u07oIqZjfgpWqK2F9xYIIlgUXPx3801CXAGwxK/kKUQoe+cHbA/MbJpw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VW5R6P+b5A0+hCKISwAmaSkyGU4WiZDABNMg6Yx/LGc=;
- b=gi9TG/RGap7hcSVX/2fcJozwZcRafB1RAx9ugsPYk+eIxuP/IO+RvqaFJ4miRFLH/X3wAUa8jayivoJ/zYoMIRTH08Ucbknq+jsG/vQabDXt/AIHcfygeWBLnp3IGstbQTPRkudi+O737evSc+Npm0eqjRJ9cBjWsHbbHgKYPF4VN+ufqeXVpnrchKBC27H1d9m+CykJylCfWJV0J7FrlBoQrmhsXSMpmdgUvSxEoXg8edRW/bXgAatiye1vjYUGnl7dmCF7E4P82/WRJCndBvzTXZQSco5O1SyXl7vy/rCj2sZF83CZdB7OLt8GevLhdIazaxzxhEV65Wj3FOZZ4w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VW5R6P+b5A0+hCKISwAmaSkyGU4WiZDABNMg6Yx/LGc=;
- b=BmdfcpsEb3/MC2JTUdvKN04TKX7g1wIArrnc9Cw92aqZsNoyym8Ib9dGyEpPw5XJDLbl0bG445uKni72P3visjKT2FANVVEoLOhtp619WftWmbnrri+u42eAgoXR1Y2kSeY+tPHL4kDoKH+ptaTVmwPM51lk2EXLWIktpZloye8=
-Received: from BYAPR15MB2999.namprd15.prod.outlook.com (2603:10b6:a03:fa::12)
- by BYAPR15MB2950.namprd15.prod.outlook.com (2603:10b6:a03:f6::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Wed, 15 Jul
- 2020 06:53:15 +0000
-Received: from BYAPR15MB2999.namprd15.prod.outlook.com
- ([fe80::543:b185:ef4a:7e8]) by BYAPR15MB2999.namprd15.prod.outlook.com
- ([fe80::543:b185:ef4a:7e8%5]) with mapi id 15.20.3174.026; Wed, 15 Jul 2020
- 06:53:15 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Jens Axboe <axboe@kernel.dk>,
-        linux-raid <linux-raid@vger.kernel.org>
-CC:     Junxiao Bi <junxiao.bi@oracle.com>,
-        Zhao Heming <heming.zhao@suse.com>,
-        Artur Paszkiewicz <artur.paszkiewicz@intel.com>,
-        Colin Ian King <colin.king@canonical.com>
-Subject: [GIT PULL] md-next 20200714
-Thread-Topic: [GIT PULL] md-next 20200714
-Thread-Index: AQHWWnSdDyZ8RP+A3kOxt8UI4wEIww==
-Date:   Wed, 15 Jul 2020 06:53:15 +0000
-Message-ID: <FBE6B82B-E360-4EAF-999D-AFBC6BC5F058@fb.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3608.80.23.2.2)
-authentication-results: kernel.dk; dkim=none (message not signed)
- header.d=none;kernel.dk; dmarc=none action=none header.from=fb.com;
-x-originating-ip: [2620:10d:c090:400::5:f0b7]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6aca052b-90e1-4a48-1e2e-08d8288bbfe3
-x-ms-traffictypediagnostic: BYAPR15MB2950:
-x-microsoft-antispam-prvs: <BYAPR15MB295051BE0A04D4ACFA125265B37E0@BYAPR15MB2950.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:2399;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: duwtY7viKzHqA45SFz3aaZRZdP83/mc/SMUuxZTRjIJfgx7FMTVOV4WPeCTL1689LhdAqE+DizCNA9qRJyqx7BX7CaklkAS05EcTO93smrdpp3O13l8SMfynFopCqlkeiok6lP3kjmsCs8s9plQOnrsbWjgdwPD4XvU9XPE8ACbJCuvT5KdcbyU+AfzgLoOA13iPwKRWdRyRsloIZIA28wJkJ/Bro9BJiQT00C7QkWgM+kkfKrtCMLSZJlUwJi546HIfMVFotr4wnrY6ISjerAOu2cz2kOCszAVHD9oK9GVOEQz98Chc5EWXO218Rm7VGw27uXiaDUVhUmTBwY5SOK0wijrHlQvMzPe4EjqoSWig4wkBBwyDFC+ck66vvoQIUFO+pWOHONZcCayT6r3NZQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB2999.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(396003)(366004)(136003)(39860400002)(316002)(6512007)(66556008)(478600001)(66446008)(64756008)(83380400001)(966005)(76116006)(36756003)(66946007)(5660300002)(66476007)(33656002)(186003)(71200400001)(2616005)(110136005)(4326008)(6486002)(6506007)(86362001)(54906003)(8936002)(2906002)(8676002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: DfkdrGLQQthx7qS0EyGO9cox8pm7J1yhpHfLBHobIr3dRgwp+BYRGn12gL6QH1ZakJpoJQYMY3UNJ0tr3Q3tY3BxOVemcteyX4TbdKhf6moflUyJKmVuETJAKf5yYEzufmj9alXe47I6dqaqQNFhjCE0JSr0LJVl2ja2/R6d5x1KXL9buS6tOuyA+gEhYLi0zAgz7oqTGi7jv6A1Qd7P6ikglKHmWQ7M+fZ4GODmC13jg07Z5daDO4mlw+lfZIJpTQtn2TVp7GwaI/OoJS5c1hPg4MOlC9jktkZNzUNpELgPXqnl74/2LLbKOq+FNuSsEju+s1zqsCRwY0xuSjZhStIiUEdk3jtNy0DEBv4pjzcgrLyZ/NPBoJ24qk0FvaouePGF8JnP4IEhhguUAUkl+2ahOXkFqolGxm87rooL8dDfdVM/l8aODqFA+UEhx6mhGDb/PQctfNWUrTs40+R2U78iQoIR/i+hjFKzdB353guoJTSjeFRy29GuQZj4d40AbvLTvkp2RbT61wI7a/ql7w==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <F3C4813CA6067943BC1E18B5F8D96A5F@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S1731126AbgGOMmQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 15 Jul 2020 08:42:16 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:48842 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729198AbgGOMmN (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 15 Jul 2020 08:42:13 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id A33AD549EAA6EF391CB6;
+        Wed, 15 Jul 2020 20:41:56 +0800 (CST)
+Received: from huawei.com (10.175.101.6) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Wed, 15 Jul 2020
+ 20:41:47 +0800
+From:   Yufen Yu <yuyufen@huawei.com>
+To:     <song@kernel.org>
+CC:     <linux-raid@vger.kernel.org>, <neilb@suse.com>,
+        <guoqing.jiang@cloud.ionos.com>, <houtao1@huawei.com>,
+        <yuyufen@huawei.com>
+Subject: [PATCH v6 00/15] md/raid5: set STRIPE_SIZE as a configurable value
+Date:   Wed, 15 Jul 2020 08:42:42 -0400
+Message-ID: <20200715124257.3175816-1-yuyufen@huawei.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB2999.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6aca052b-90e1-4a48-1e2e-08d8288bbfe3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jul 2020 06:53:15.5514
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pDu3T0sxGu/XwVmzktJZ/w90BlT6RicKkDuUeEwia3K92SAQG8kjNm5Xc3fK+t70V/FifAJW8I6cH4Fxg0bc/g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2950
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-15_05:2020-07-15,2020-07-15 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0 adultscore=0
- spamscore=0 impostorscore=0 lowpriorityscore=0 clxscore=1011
- malwarescore=0 suspectscore=0 phishscore=0 priorityscore=1501 bulkscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007150057
-X-FB-Internal: deliver
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.101.6]
+X-CFilter-Loop: Reflected
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi Jens,=20
+Hi, all
 
-Please consider pulling the following changes for md-next on top of your fo=
-r-5.9/drivers=20
-branch.=20
+ For now, STRIPE_SIZE is equal to the value of PAGE_SIZE. That means, RAID5
+ will issue each bio to disk at least 64KB when PAGE_SIZE is 64KB in arm64.
+ However, filesystem usually issue bio in the unit of 4KB. Then, RAID5 may
+ waste resource of disk bandwidth.
 
-Thanks,
-Song
+ To solve the problem, this patchset try to set stripe_size as a configuare
+ value. The default value is 4096. We will add a new sysfs entry and set it
+ by writing a new value, likely:
+
+ 	echo 16384 > /sys/block/md1/md/stripe_size
+
+ Normally, using default stripe_size can get better performance. So, NeilBrown
+ have suggested just to fix the it as 4096. But, out test result shows that
+ a big value of stripe_size may have better performance when size of issued
+ IOs are mostly bigger than 4096. Thus, in this patchset, we still want to
+ set stripe_size as a configurable value.
+
+ In current implementation, grow_buffers() uses alloc_page() to allocate the
+ buffers for each stripe_head. With the change, it means we allocate 64K buffers
+ but just use 4K of them. To save memory, we try to let multiple buffers of
+ stripe_head to share only one real page. Detail shows in following patch.
+
+ To evaluate the new feature, we create raid5 device '/dev/md5' with 4 SSD disk
+ and test it on arm64 machine with 64KB PAGE_SIZE.
+ 
+ 1) We format /dev/md5 with mkfs.ext4 and mount ext4 with default configure on
+    /mnt directory. Then, trying to test it by dbench with command:
+    dbench -D /mnt -t 1000 10. Result show as:
+ 
+    'stripe_size = 64KB'
+   
+      Operation      Count    AvgLat    MaxLat
+      ----------------------------------------
+      NTCreateX    9805011     0.021    64.728
+      Close        7202525     0.001     0.120
+      Rename        415213     0.051    44.681
+      Unlink       1980066     0.079    93.147
+      Deltree          240     1.793     6.516
+      Mkdir            120     0.004     0.007
+      Qpathinfo    8887512     0.007    37.114
+      Qfileinfo    1557262     0.001     0.030
+      Qfsinfo      1629582     0.012     0.152
+      Sfileinfo     798756     0.040    57.641
+      Find         3436004     0.019    57.782
+      WriteX       4887239     0.021    57.638
+      ReadX        15370483     0.005    37.818
+      LockX          31934     0.003     0.022
+      UnlockX        31933     0.001     0.021
+      Flush         687205    13.302   530.088
+     
+     Throughput 307.799 MB/sec  10 clients  10 procs  max_latency=530.091 ms
+     -------------------------------------------------------
+     
+    'stripe_size = 4KB'
+     
+      Operation      Count    AvgLat    MaxLat
+      ----------------------------------------
+      NTCreateX    11999166     0.021    36.380
+      Close        8814128     0.001     0.122
+      Rename        508113     0.051    29.169
+      Unlink       2423242     0.070    38.141
+      Deltree          300     1.885     7.155
+      Mkdir            150     0.004     0.006
+      Qpathinfo    10875921     0.007    35.485
+      Qfileinfo    1905837     0.001     0.032
+      Qfsinfo      1994304     0.012     0.125
+      Sfileinfo     977450     0.029    26.489
+      Find         4204952     0.019     9.361
+      WriteX       5981890     0.019    27.804
+      ReadX        18809742     0.004    33.491
+      LockX          39074     0.003     0.025
+      UnlockX        39074     0.001     0.014
+      Flush         841022    10.712   458.848
+     
+     Throughput 376.777 MB/sec  10 clients  10 procs  max_latency=458.852 ms
+     -------------------------------------------------------
+ 
+    It shows that setting stripe_size as 4KB has higher thoughput, i.e.
+    (376.777 vs 307.799) and has smaller latency (530.091 vs 458.852)
+    than that setting as 64KB.
+ 
+ 2) We try to evaluate IO throughput for /dev/md5 by fio with config:
+ 
+     [4KB randwrite]
+     direct=1
+     numjob=2
+     iodepth=64
+     ioengine=libaio
+     filename=/dev/md5
+     bs=4KB
+     rw=randwrite
+     
+     [64KB write]
+     direct=1
+     numjob=2
+     iodepth=64
+     ioengine=libaio
+     filename=/dev/md5
+     bs=1MB
+     rw=write
+     
+    The fio test result as follow:
+     
+                   +                   +
+                   | STRIPE_SIZE(64KB) | STRIPE_SIZE(4KB)
+     +----------------------------------------------------+
+     4KB randwrite |     15MB/s        |      100MB/s
+     +----------------------------------------------------+
+     1MB write     |   1000MB/s        |      700MB/s
+ 
+    The result shows that when size of io is bigger than 4KB (64KB),
+    64KB stripe_size has much higher IOPS. But for 4KB randwrite, that
+    means, size of io issued to device are smaller, 4KB stripe_size
+    have better performance.
+
+V6:
+ * Convert stripe_size and stripe_sectors from 'unsigned int' to
+   'unsigned long' avoiding compiler warning.
+ * Add a new member of stripes_per_page into r5conf, avoiding to
+   compute each time.
+ * Cover mddev->private with mddev_lock(mddev) for raid5_store/show_stripe_size().
+ * Get rid of too many WARN_ON() and BUG_ON().
+ * Unfold raid5_get_page_index() into raid5_get_dev_page() directly.
+
+V5:
+ * Rebase code with lastest md-next branch.
+ * Move 'if (new == conf->stripe_size)' down for raid5_store_stripe_size().
+ * Return error when grow_stripes() fail in raid5_store_stripe_size().
+ * Split compute syndrome patch into two patch.
+
+V4:
+ * Add sysfs entry for setting stripe_size.
+ * Fix wrong page index and offset computation for function
+   raid5_get_dev_page(), raid5_get_page_offset().
+ * Fix error page offset in handle_stripe_expansion().
+
+V3: 
+ * RAID6 can support shared pages.
+ * Rename function raid5_compress_stripe_pages() as 
+   raid5_stripe_pages_shared() and update commit message.
+ * Rename CONFIG_MD_RAID456_STRIPE_SIZE as CONFIG_MD_RAID456_STRIPE_SHIFT,
+   and make the STRIPE_SIZE as multiple of 4KB.
+
+V2:
+ https://www.spinics.net/lists/raid/msg64254.html
+ Introduce share pages strategy to save memory, just support RAID4 and RAID5.
+
+V1:
+ https://www.spinics.net/lists/raid/msg63111.html
+ Just add CONFIG_MD_RAID456_STRIPE_SIZE to set STRIPE_SIZE
 
 
-The following changes since commit 2eaac320db515b2ec681f6a4bad4f67a7be84ce8=
-:
+Yufen Yu (15):
+  md/raid456: convert macro STRIPE_* to members of struct r5conf
+  md/raid5: set default stripe_size as 4096
+  md/raid5: add a member of r5pages for struct stripe_head
+  md/raid5: allocate and free shared pages of r5pages
+  md/raid5: set correct page offset for bi_io_vec in ops_run_io()
+  md/raid5: set correct page offset for async_copy_data()
+  md/raid5: resize stripes and set correct offset when reshape array
+  md/raid5: add new xor function to support different page offset
+  md/raid5: add offset array in scribble buffer
+  md/raid5: compute xor with correct page offset
+  md/raid5: support config stripe_size by sysfs entry
+  md/raid6: let syndrome computor support different page offset
+  md/raid6: let async recovery function support different page offset
+  md/raid6: compute syndrome with correct page offset
+  raid6test: adaptation with syndrome function
 
-  rsxx: switch from 'pci_free_consistent()' to 'dma_free_coherent()' (2020-=
-07-11 09:27:09 -0600)
+ crypto/async_tx/async_pq.c          |  72 ++--
+ crypto/async_tx/async_raid6_recov.c | 163 +++++--
+ crypto/async_tx/async_xor.c         | 120 +++++-
+ crypto/async_tx/raid6test.c         |  24 +-
+ drivers/md/raid5-cache.c            |   8 +-
+ drivers/md/raid5-ppl.c              |  12 +-
+ drivers/md/raid5.c                  | 630 +++++++++++++++++++++-------
+ drivers/md/raid5.h                  |  80 +++-
+ include/linux/async_tx.h            |  23 +-
+ 9 files changed, 864 insertions(+), 268 deletions(-)
 
-are available in the Git repository at:
+-- 
+2.25.4
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/song/md.git md-next
-
-for you to fetch changes up to 60f80d6f2d07a6d8aee485a1d1252327eeee0c81:
-
-  md-cluster: fix wild pointer of unlock_all_bitmaps() (2020-07-14 23:38:32=
- -0700)
-
-----------------------------------------------------------------
-Artur Paszkiewicz (1):
-      md: improve io stats accounting
-
-Colin Ian King (1):
-      md: raid0/linear: fix dereference before null check on pointer mddev
-
-Junxiao Bi (1):
-      md: fix deadlock causing by sysfs_notify
-
-Song Liu (1):
-      md/raid5-cache: clear MD_SB_CHANGE_PENDING before flushing stripes
-
-Zhao Heming (1):
-      md-cluster: fix wild pointer of unlock_all_bitmaps()
-
- drivers/md/md-bitmap.c   |   2 +-
- drivers/md/md-cluster.c  |   1 +
- drivers/md/md.c          | 110 +++++++++++++++++++++++++++++++++++++++++++=
-+++++++++++++++++++++++++++++++++++++------------------------------
- drivers/md/md.h          |   9 ++++++++-
- drivers/md/raid10.c      |   2 +-
- drivers/md/raid5-cache.c |   7 +++++++
- drivers/md/raid5.c       |   6 +++---
- 7 files changed, 101 insertions(+), 36 deletions(-)=
