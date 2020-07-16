@@ -2,111 +2,117 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A03EB2229F2
-	for <lists+linux-raid@lfdr.de>; Thu, 16 Jul 2020 19:30:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 235CF222A01
+	for <lists+linux-raid@lfdr.de>; Thu, 16 Jul 2020 19:33:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbgGPRaO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 16 Jul 2020 13:30:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39160 "EHLO mail.kernel.org"
+        id S1729284AbgGPRct (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 16 Jul 2020 13:32:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728182AbgGPRaO (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 16 Jul 2020 13:30:14 -0400
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+        id S1728837AbgGPRcs (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 16 Jul 2020 13:32:48 -0400
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F37152071B
-        for <linux-raid@vger.kernel.org>; Thu, 16 Jul 2020 17:30:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34E9C2070E
+        for <linux-raid@vger.kernel.org>; Thu, 16 Jul 2020 17:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594920613;
-        bh=8wvesQVPSRZYfYW6PRos6ZhTe0nDhiYWmscVCDvRbl4=;
+        s=default; t=1594920767;
+        bh=t0CEAPXH8cRZo2y56CRRaxjGtjmyh5IfA6fktfGE2o8=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qAM9M0blzbh8GPHdsigvRx0/kFgLTmKv8X+SU+NXwTSbdFOTiGmIHgJf/z5SznN48
-         isK1fBKT5CEz2w+kecB7hjpvKxcjOKGJQva0FQeAmpriB9Gbpa49l7U1L8dr6RUwjN
-         KliA5hPAYV31o6IX1WRu/HqKVPzODhak55opLi40=
-Received: by mail-lj1-f170.google.com with SMTP id j11so8882247ljo.7
-        for <linux-raid@vger.kernel.org>; Thu, 16 Jul 2020 10:30:12 -0700 (PDT)
-X-Gm-Message-State: AOAM533NiL6KRaIpIQRm0k84ZT943qK0LypecaFBAYaqX7g72XLHY/Tv
-        g/LxBKQ4MPNbLtfS5dz60OGowxu98SFmC2CKfng=
-X-Google-Smtp-Source: ABdhPJxKeDxMxBM4AmlB8jNtCrio5gKqQfLxcBu+wxhSLicwOADrlWQu4BoiO1qPjFiFj2T4xSBnsITRktoD8lrivVo=
-X-Received: by 2002:a2e:88c6:: with SMTP id a6mr2594838ljk.27.1594920611310;
- Thu, 16 Jul 2020 10:30:11 -0700 (PDT)
+        b=fzma1xaXOLznOjeqMPwSn9PkEDXvoDFuuPGbL5wd09TUgdOpMlHjQ228xhPQZXhj3
+         jbGZdfw8uUxsuUM4N69vAUt6BMfQtX4s2IwWMzUt4vok6frSZyx3fgIhDHYVlHk8zX
+         yCtv6lQ8WL3atv+jV58y8mPn7XY11fCfWmcVncMo=
+Received: by mail-lj1-f175.google.com with SMTP id e4so8931552ljn.4
+        for <linux-raid@vger.kernel.org>; Thu, 16 Jul 2020 10:32:47 -0700 (PDT)
+X-Gm-Message-State: AOAM531+mJXLthv9B6fgC3uKHQuDzqxWaVMQFdZ8zhH27LUN0i8XwsyN
+        OKPb1FizaK5Wq3V/h1KBJdGbevpoi6vqukXw+cM=
+X-Google-Smtp-Source: ABdhPJwC/LkRKSXyM6xaR317LZm9acGLZfWZmdlhuMJ+x1Np9NDa/T1WW+3ui83MYlRv7tmQdIsvZCXupt30ICPEU74=
+X-Received: by 2002:a2e:6a12:: with SMTP id f18mr2517737ljc.392.1594920765447;
+ Thu, 16 Jul 2020 10:32:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200703091309.19955-1-artur.paszkiewicz@intel.com>
- <82ac5fe5-e61d-e031-6a64-60b6e1dd408d@cloud.ionos.com> <CAPhsuW4Xc19jJyxzOUcfoE+HrKH=bogC55=-dt04z6phn0Wu5Q@mail.gmail.com>
-In-Reply-To: <CAPhsuW4Xc19jJyxzOUcfoE+HrKH=bogC55=-dt04z6phn0Wu5Q@mail.gmail.com>
+References: <20200616092552.1754-1-guoqing.jiang@cloud.ionos.com>
+ <CAPhsuW70kML70Xi3MhubCGBWnLDg0L7sPKwKe9HZHsQHwtzEEQ@mail.gmail.com>
+ <407fa617-c86e-d63d-65ad-3f3058c5e40f@cloud.ionos.com> <CAPhsuW4J84iZWZkCCk8_8uJpPwmvrd2vvHEk-fLQF_HKGioECg@mail.gmail.com>
+ <c4541de5-9eac-dc19-2681-4672d5a820e7@cloud.ionos.com>
+In-Reply-To: <c4541de5-9eac-dc19-2681-4672d5a820e7@cloud.ionos.com>
 From:   Song Liu <song@kernel.org>
-Date:   Thu, 16 Jul 2020 10:29:59 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW6HjN0hZ8E998XBpg+WxP5uhZO0on-M-tQ45kpFO5XHqg@mail.gmail.com>
-Message-ID: <CAPhsuW6HjN0hZ8E998XBpg+WxP5uhZO0on-M-tQ45kpFO5XHqg@mail.gmail.com>
-Subject: Re: [PATCH v4] md: improve io stats accounting
+Date:   Thu, 16 Jul 2020 10:32:34 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW6M8URxeZuBxk2PAWzJ8r3emsrOxH=PKW6YVWY4NiqR9g@mail.gmail.com>
+Message-ID: <CAPhsuW6M8URxeZuBxk2PAWzJ8r3emsrOxH=PKW6YVWY4NiqR9g@mail.gmail.com>
+Subject: Re: [PATCH 1/3] raid5: call clear_batch_ready before set STRIPE_ACTIVE
 To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Cc:     Artur Paszkiewicz <artur.paszkiewicz@intel.com>,
-        linux-raid <linux-raid@vger.kernel.org>
+Cc:     linux-raid <linux-raid@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Fri, Jul 3, 2020 at 5:32 PM Song Liu <song@kernel.org> wrote:
+On Thu, Jul 16, 2020 at 12:45 AM Guoqing Jiang
+<guoqing.jiang@cloud.ionos.com> wrote:
 >
-> On Fri, Jul 3, 2020 at 2:27 AM Guoqing Jiang
-> <guoqing.jiang@cloud.ionos.com> wrote:
-> >
-> > Looks good, Acked-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-> >
-> > Thanks,
-> > Guoqing
-> >
-> > On 7/3/20 11:13 AM, Artur Paszkiewicz wrote:
-> > > Use generic io accounting functions to manage io stats. There was an
-> > > attempt to do this earlier in commit 18c0b223cf99 ("md: use generic io
-> > > stats accounting functions to simplify io stat accounting"), but it did
-> > > not include a call to generic_end_io_acct() and caused issues with
-> > > tracking in-flight IOs, so it was later removed in commit 74672d069b29
-> > > ("md: fix md io stats accounting broken").
-> > >
-> > > This patch attempts to fix this by using both disk_start_io_acct() and
-> > > disk_end_io_acct(). To make it possible, a struct md_io is allocated for
-> > > every new md bio, which includes the io start_time. A new mempool is
-> > > introduced for this purpose. We override bio->bi_end_io with our own
-> > > callback and call disk_start_io_acct() before passing the bio to
-> > > md_handle_request(). When it completes, we call disk_end_io_acct() and
-> > > the original bi_end_io callback.
-> > >
-> > > This adds correct statistics about in-flight IOs and IO processing time,
-> > > interpreted e.g. in iostat as await, svctm, aqu-sz and %util.
-> > >
-> > > It also fixes a situation where too many IOs where reported if a bio was
-> > > re-submitted to the mddev, because io accounting is now performed only
-> > > on newly arriving bios.
-> > >
-> > > Signed-off-by: Artur Paszkiewicz <artur.paszkiewicz@intel.com>
+> On 6/26/20 2:16 AM, Song Liu wrote:
+> > On Thu, Jun 25, 2020 at 2:22 AM Guoqing Jiang
+> > <guoqing.jiang@cloud.ionos.com> wrote:
+> >>
+> >>
+> >> On 6/24/20 1:58 AM, Song Liu wrote:
+> >>> On Tue, Jun 16, 2020 at 2:25 AM Guoqing Jiang
+> >>> <guoqing.jiang@cloud.ionos.com> wrote:
+> >>>> We tried to only put the head sh of batch list to handle_list, then the
+> >>>> handle_stripe doesn't handle other members in the batch list. However,
+> >>>> we still got the calltrace in break_stripe_batch_list.
+> >>>>
+> >>>> [593764.644269] stripe state: 2003
+> >>>> kernel: [593764.644299] ------------[ cut here ]------------
+> >>>> kernel: [593764.644308] WARNING: CPU: 12 PID: 856 at drivers/md/raid5.c:4625 break_stripe_batch_list+0x203/0x240 [raid456]
+> >>>> [...]
+> >>>> kernel: [593764.644363] Call Trace:
+> >>>> kernel: [593764.644370]  handle_stripe+0x907/0x20c0 [raid456]
+> >>>> kernel: [593764.644376]  ? __wake_up_common_lock+0x89/0xc0
+> >>>> kernel: [593764.644379]  handle_active_stripes.isra.57+0x35f/0x570 [raid456]
+> >>>> kernel: [593764.644382]  ? raid5_wakeup_stripe_thread+0x96/0x1f0 [raid456]
+> >>>> kernel: [593764.644385]  raid5d+0x480/0x6a0 [raid456]
+> >>>> kernel: [593764.644390]  ? md_thread+0x11f/0x160
+> >>>> kernel: [593764.644392]  md_thread+0x11f/0x160
+> >>>> kernel: [593764.644394]  ? wait_woken+0x80/0x80
+> >>>> kernel: [593764.644396]  kthread+0xfc/0x130
+> >>>> kernel: [593764.644398]  ? find_pers+0x70/0x70
+> >>>> kernel: [593764.644399]  ? kthread_create_on_node+0x70/0x70
+> >>>> kernel: [593764.644401]  ret_from_fork+0x1f/0x30
+> >>>>
+> >>>> As we can see, the stripe was set with STRIPE_ACTIVE and STRIPE_HANDLE,
+> >>>> and only handle_stripe could set those flags then return. And since the
+> >>>> stipe was already in the batch list, we need to return earlier before
+> >>>> set the two flags.
+> >>>>
+> >>>> And after dig a little about git history especially commit 3664847d95e6
+> >>>> ("md/raid5: fix a race condition in stripe batch"), it seems the batched
+> >>>> stipe still could be handled by handle_stipe, then handle_stipe needs to
+> >>>> return earlier if clear_batch_ready to return true.
+> >>>>
+> >>>> Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+> >>>> ---
+> >>>> Another alternative would be just not warn if STRIPE_ACTIVE is valid for
+> >>>> the batched list.
+> >>>>
+> >>>> What do you think?
+> >>>>
+> >>> This patch looks good to me (haven't tested yet). Let's try with this one.
+> >> Ok, pls let me know if there is issue during test.
+> >>
+> >> And do you want a new patch to reflect which I clarified for the line
+> >> number and kernel version?
+> > That's not necessary. If needed, I will make some change when I apply the patch.
 >
-> Applied to md-next. Thanks!
+> May I know your decision about this?
+>
 
-I just noticed another issue with this work on raid456, as iostat
-shows something
-like:
-
-Device:         rrqm/s   wrqm/s     r/s     w/s    rMB/s    wMB/s
-avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
-nvme0n1        6306.50 18248.00  636.00 1280.00    45.11    76.19
-129.65     3.03    1.23    0.67    1.51   0.76 145.50
-nvme1n1       11441.50 13234.00 1069.50  961.00    71.87    55.39
-128.35     3.32    1.30    0.90    1.75   0.72 146.50
-nvme2n1        8280.50 16352.50  971.50 1231.00    65.53    68.65
-124.77     3.20    1.17    0.69    1.54   0.64 142.00
-nvme3n1        6158.50 18199.50  567.00 1453.50    39.81    76.74
-118.13     3.50    1.40    0.88    1.60   0.73 146.50
-md0               0.00     0.00 1436.00 1411.00    89.75    88.19
-128.00    22.98    8.07    0.16   16.12   0.52 147.00
-
-md0 here is a RAID-6 array with 4 devices. %util of > 100% is clearly
-wrong here.
-This only doesn't happen to RAID-0 or RAID-1 in my tests.
-
-Artur, could you please take a look at this?
+I am sorry that I missed this one. Applied to md-next.
 
 Thanks,
 Song
+
+> Thanks,
+> Guoqing
