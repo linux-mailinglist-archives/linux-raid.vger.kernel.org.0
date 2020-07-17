@@ -2,163 +2,66 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DEF9222F22
-	for <lists+linux-raid@lfdr.de>; Fri, 17 Jul 2020 01:37:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC058223152
+	for <lists+linux-raid@lfdr.de>; Fri, 17 Jul 2020 04:52:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725971AbgGPXg0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 16 Jul 2020 19:36:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47616 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbgGPXgZ (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 16 Jul 2020 19:36:25 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id EFB50AC53;
-        Thu, 16 Jul 2020 23:36:27 +0000 (UTC)
-From:   NeilBrown <neil@brown.name>
-To:     Zhao Heming <heming.zhao@suse.com>, linux-raid@vger.kernel.org
-Date:   Fri, 17 Jul 2020 09:36:15 +1000
-Cc:     Zhao Heming <heming.zhao@suse.com>, neilb@suse.com, song@kernel.org
-Subject: Re: [PATCH v2] md-cluster: fix safemode_delay value when converting to clustered bitmap
-In-Reply-To: <1594911043-16956-1-git-send-email-heming.zhao@suse.com>
-References: <1594911043-16956-1-git-send-email-heming.zhao@suse.com>
-Message-ID: <87wo33vxqo.fsf@notabene.neil.brown.name>
+        id S1726759AbgGQCw4 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 16 Jul 2020 22:52:56 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34524 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726141AbgGQCwz (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 16 Jul 2020 22:52:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594954375;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=qPPbUFuKiihIIUlUWM1GvhQIzJ5DC7EozuMP9R60PwI=;
+        b=P260eWkV/8LLOlq5YT4t73a5Ow+5LUSUNeLFzte5a8plF0dXOWAhxUs5XpjxplYi+n1GMY
+        jlmwL1p1Huc2YlVqYDMfuwSc/DacDgUUYdml0oEi1RrnVwyogpNE2VbQk50FKMIP+AlBsS
+        BnBSMKPXnYvLZxRReYuQL01cE1bxA6U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-108-7ijuxxW-MHq-s8SB3UVU2w-1; Thu, 16 Jul 2020 22:52:53 -0400
+X-MC-Unique: 7ijuxxW-MHq-s8SB3UVU2w-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3A3E28014D4;
+        Fri, 17 Jul 2020 02:52:52 +0000 (UTC)
+Received: from localhost.localdomain.com (ovpn-8-18.pek2.redhat.com [10.72.8.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9E173724A9;
+        Fri, 17 Jul 2020 02:52:50 +0000 (UTC)
+From:   Xiao Ni <xni@redhat.com>
+To:     song@kernel.org, linux-raid@vger.kernel.org
+Subject: [PATCH RFC 0/3] Improve handling raid10 discard request
+Date:   Fri, 17 Jul 2020 10:52:45 +0800
+Message-Id: <1594954368-5646-1-git-send-email-xni@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi all
 
-On Thu, Jul 16 2020, Zhao Heming wrote:
+Now mkfs on raid10 which is combined with ssd/nvme disks takes a long time.
+This patch set tries to resolve this problem.
 
-> When array convert to clustered bitmap, the safe_mode_delay doesn't clean=
- and vice versa.
-> the /sys/block/mdX/md/safe_mode_delay keep original value after changing =
-bitmap type.
-> in safe_delay_store(), the code forbids setting mddev->safemode_delay whe=
-n array is clustered.
-> So in cluster-md env, the expected safemode_delay value should be 0.
->
-> reproduction steps:
-> ```
-> node1 # mdadm --zero-superblock /dev/sd{b,c,d}
-> node1 # mdadm -C /dev/md0 -b internal -e 1.2 -n 2 -l mirror /dev/sdb /dev=
-/sdc
-> node1 # cat /sys/block/md0/md/safe_mode_delay
-> 0.204
-> node1 # mdadm -G /dev/md0 -b none
-> node1 # mdadm --grow /dev/md0 --bitmap=3Dclustered
-> node1 # cat /sys/block/md0/md/safe_mode_delay
-> 0.204  <=3D=3D doesn't change, should ZERO for cluster-md
->
-> node1 # mdadm --zero-superblock /dev/sd{b,c,d}
-> node1 # mdadm -C /dev/md0 -b clustered -e 1.2 -n 2 -l mirror /dev/sdb /de=
-v/sdc
-> node1 # cat /sys/block/md0/md/safe_mode_delay
-> 0.000
-> node1 # mdadm -G /dev/md0 -b none
-> node1 # cat /sys/block/md0/md/safe_mode_delay
-> 0.000  <=3D=3D doesn't change, should default value
-> ```
->
-> Neil said md_setup_cluster/md_cluster_stop are good places to fix.
-> After investigation, md_setup_cluster() is a good place for setting,
-> but md_cluster_stop are not pair for restoring.
-> see below flow:
-> (user space)
-> mdadm -C /dev/md0 -b clustered -e 1.2 -n 2 -l mirror /dev/sda /dev/sdb
-> mdadm --grow /dev/md0 -b none
-> (kernel space)
-> SET_ARRAY_INFO
->  update_array_info
->   + mddev->bitmap_info.nodes =3D 0;
->   + md_cluster_ops->leave(mddev)
->   + md_bitmap_destroy
->      md_bitmap_free //won't trigger md_cluster_stop() because above set 0.
->
-> Signed-off-by: Zhao Heming <heming.zhao@suse.com>
-> ---
-> v2:
-> - change setting path from location_store to md_setup_cluster
-> - add restoring path
->
-> ---
->  drivers/md/md.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index f567f53..f082f5c 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -101,6 +101,8 @@ static int remove_and_add_spares(struct mddev *mddev,
->   * count by 2 for every hour elapsed between read errors.
->   */
->  #define MD_DEFAULT_MAX_CORRECTED_READ_ERRORS 20
-> +/* Default safemode delay: 200 msec */
-> +#define DEFAULT_SAFEMODE_DELAY ((200 * HZ)/1000 +1)=20
->  /*
->   * Current RAID-1,4,5 parallel reconstruction 'guaranteed speed limit'
->   * is 1000 KB/sec, so the extra system load does not show up that much.
-> @@ -5982,7 +5984,7 @@ int md_run(struct mddev *mddev)
->  	if (mddev_is_clustered(mddev))
->  		mddev->safemode_delay =3D 0;
->  	else
-> -		mddev->safemode_delay =3D (200 * HZ)/1000 +1; /* 200 msec delay */
-> +		mddev->safemode_delay =3D DEFAULT_SAFEMODE_DELAY;
->  	mddev->in_sync =3D 1;
->  	smp_wmb();
->  	spin_lock(&mddev->lock);
-> @@ -7361,6 +7363,7 @@ static int update_array_info(struct mddev *mddev, m=
-du_array_info_t *info)
->=20=20
->  				mddev->bitmap_info.nodes =3D 0;
->  				md_cluster_ops->leave(mddev);
-> +				mddev->safemode_delay =3D DEFAULT_SAFEMODE_DELAY;
->  			}
->  			mddev_suspend(mddev);
->  			md_bitmap_destroy(mddev);
-> @@ -8366,6 +8369,7 @@ int md_setup_cluster(struct mddev *mddev, int nodes)
->  	}
->  	spin_unlock(&pers_lock);
->=20=20
-> +	mddev->safemode_delay =3D 0;
->  	return md_cluster_ops->join(mddev, nodes);
+Xiao Ni (3):
+  Move codes related with submitting discard bio into one function
+  extend r10bio devs to raid disks
+  improve raid10 discard request
 
-=2D>join can fail.
-I'd rather you checked the error there, and only clear safemode_delay if
-the return value is zero.
+ drivers/md/md.c     |  22 +++++
+ drivers/md/md.h     |   3 +
+ drivers/md/raid0.c  |  15 +--
+ drivers/md/raid10.c | 276 ++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 4 files changed, 297 insertions(+), 19 deletions(-)
 
-NeilBrown
+-- 
+2.7.5
 
-
->  }
->=20=20
-> --=20
-> 1.8.3.1
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl8Q5G8ACgkQOeye3VZi
-gbmLgRAAmIGiZZ4jNjyexvEdVR3zz4oIguDjNUTJoh9OwqgY7BLN4hL0brooWJ/D
-LkKI79E0m2CSrUOPLRUX0Nsf5ZRLspzXcOEGA7n/mZlctiqv8r5+jQx6a4Ll1+bR
-U8hIjurc/3rwco/k1eDtgkWNVNyZZoadJEQnP88RPPZDBFP1J2TKSx553Kz2q4IW
-iCR7ir/Y0mtREFkVrxZnc5XsVn5Nw/8s87iiN5nbNpWmhZbfLCkLkvG/Pa1hAniU
-+qI4WxyyTT0lHP0vC/bsBuflheRYuqZ3kNZQazGfLAUN8sHqpV0M+peiOOKMzivX
-swYe+23cPi/Z83ftzL0icgCUkKFXTE0jnV+lOLQjX5uzc/r33jInyVHVvNU/gSKu
-22yJ9Md8POYGKlgJzCb9P+pOWSoAFgDm8xfV0bDKHvtp57ZPccNlJs2FQeHXOsL9
-dHROycew6sf+IERc1BIDvnOxyjutr4oCEADY8XdXm4m9R1H80NIYhBL4yRwCCjnD
-KxDf2M2qTh/dLBjJuTZq+Jyz0ghRLAj8GVwrwJUxIAowI5b+ZeFkMyR7pZArdZNn
-RmH03nqOxJY/kn471Fy/iYRkRm+ieiQT9fbRUhoTcHaySIyUCYDJBpPnVScwXeFD
-3QCfbql8OuoE1pY6rNL7NSJfbI7cvmfuaBGk8rPkRWR3a2rLKGg=
-=Y9yk
------END PGP SIGNATURE-----
---=-=-=--
