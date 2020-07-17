@@ -2,192 +2,238 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FB8E2242ED
-	for <lists+linux-raid@lfdr.de>; Fri, 17 Jul 2020 20:11:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C3E3A224570
+	for <lists+linux-raid@lfdr.de>; Fri, 17 Jul 2020 22:55:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgGQSKR (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 17 Jul 2020 14:10:17 -0400
-Received: from de-smtp-delivery-102.mimecast.com ([62.140.7.102]:32767 "EHLO
-        de-smtp-delivery-102.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726205AbgGQSKQ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:10:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-        t=1595009413;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=GYee9gF1nWefC9S3BLtphQ17bbzINBPDBs32rhvNU8M=;
-        b=LBiVX+qw4tMkVBGm5p1//strmxCtz0/6bVRw2aJEN13M533A3FXFrEtuhK9VXqUNDHgLo3
-        gy/uy7Gm7pj6ZZLOBM71wCHzS67yKmSOC6N5JXeVsI8xc1uDC5/wdqBAXgZwV1fXRTEEDq
-        aWb3ger/GQedD4ktaMPZ5L3K5+O9ZRU=
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com
- (mail-am6eur05lp2108.outbound.protection.outlook.com [104.47.18.108])
- (Using TLS) by relay.mimecast.com with ESMTP id
- de-mta-12-_-X7wWw9PgmSel-I8E40CA-1; Fri, 17 Jul 2020 20:10:12 +0200
-X-MC-Unique: _-X7wWw9PgmSel-I8E40CA-1
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Cuxi7Pv2NcJnt9/SAlPW4Oy5MW6wnVSLMHcnKyXnEdHcZVXoXzRjfMoatSxOwobLTZ+RU/y+ej/jjWkdkwqov69R4xer40+20fGr2/W6IacQhaZ+sf32o2s+tprOHqWLa9kEXYw00KvaiTbz0q2lkHB7xn0gKHUK5yb87sNMv+1ggWxQ6f86eNnVBMHEW6gX/wDESB1gNL6m9/kuGKJoYI9M3KUZKP9VQTkPl8uYJGueGU7rtFL1FzTJa8KCr1Bdc0ca1Yw+zp9OMhc3iy04fAc8nqnjT0GzM/WcGrBK57k7fCQgsB9q+n7A0qtuXAQFbsVNwsTRjRByONBjY4D/aw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GYee9gF1nWefC9S3BLtphQ17bbzINBPDBs32rhvNU8M=;
- b=AwXrhp8UtAnTsc8c+B+kUlbOc06STPCotOxjoElAjw0qUg0ADJj3ZqbsDXD5aQ6EP3qusy1aS1eQ3V56+vXtKPei1eaSJUtyjhvyOm0tgwKo2CjhdaX1bWZgQMdHZ22DD+TicR1SoaOdu/Gu3ONj7rMNX7CpR7iwQvRZlO+mNzdf+GBg9P1tMvrsShyE1LKcqm8ZC7EJnvJtjbk3XBfh0imRpPzBYwlxfFYh0BbtRLYhsRflbiHba6LdfCUYIFRwLLm8sm/VSNIDrUj9MCnWujDKvGnT09aoTE3UnoZ7Io1CsTPbVDEYM8lmdI6WaaQRkpFxlh2WnQv6Xk1E7jC/RA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=suse.com;
-Received: from DB7PR04MB4666.eurprd04.prod.outlook.com (2603:10a6:5:2b::14) by
- DB6PR0401MB2437.eurprd04.prod.outlook.com (2603:10a6:4:35::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3174.22; Fri, 17 Jul 2020 18:10:11 +0000
-Received: from DB7PR04MB4666.eurprd04.prod.outlook.com
- ([fe80::b01a:d99f:8b27:a5aa]) by DB7PR04MB4666.eurprd04.prod.outlook.com
- ([fe80::b01a:d99f:8b27:a5aa%4]) with mapi id 15.20.3195.022; Fri, 17 Jul 2020
- 18:10:11 +0000
-From:   Zhao Heming <heming.zhao@suse.com>
-To:     linux-raid@vger.kernel.org
-Cc:     Zhao Heming <heming.zhao@suse.com>, neilb@suse.com,
-        jes@trained-monkey.org
-Subject: [PATCH] mdadm/Detail: show correct state for cluster-md array
-Date:   Sat, 18 Jul 2020 02:09:58 +0800
-Message-Id: <1595009398-5069-1-git-send-email-heming.zhao@suse.com>
-X-Mailer: git-send-email 1.8.3.1
-Content-Type: text/plain
-X-ClientProxiedBy: HK2PR04CA0081.apcprd04.prod.outlook.com
- (2603:1096:202:15::25) To DB7PR04MB4666.eurprd04.prod.outlook.com
- (2603:10a6:5:2b::14)
+        id S1726550AbgGQUzx (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 17 Jul 2020 16:55:53 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:51830 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726512AbgGQUzw (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 17 Jul 2020 16:55:52 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200717205550euoutp01920c569513458b9fbbd42d45ca7367b3~ipaYSDoX-0365103651euoutp01O
+        for <linux-raid@vger.kernel.org>; Fri, 17 Jul 2020 20:55:50 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200717205550euoutp01920c569513458b9fbbd42d45ca7367b3~ipaYSDoX-0365103651euoutp01O
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1595019350;
+        bh=sHAVE2zPECZIasZiWwPeXAOwzMaCE1Ho5cU+IWJzsZY=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=tzyg3tvJRvNDeOND4B74Z2UBTy7hZQ5hgpUgocE2wMERvydf5KrYGkBRnTQQmxLzV
+         LPFl1w7lRbNqPyiZba8gXDsXuh3iYasfGJ2SqpawT/5FPLCqbyBKeeA7L4MKkF1Foi
+         6RyTOP3nTU08Pe9aQrC5SwNyjKT4NtzAvoOzRa0I=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200717205550eucas1p29b57f9d0e46609c0981d85431ed9862f~ipaXxx_qf1814218142eucas1p2m;
+        Fri, 17 Jul 2020 20:55:50 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id A3.14.06318.650121F5; Fri, 17
+        Jul 2020 21:55:50 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200717205549eucas1p13fca9a8496836faa71df515524743648~ipaXFkjcm0401804018eucas1p1s;
+        Fri, 17 Jul 2020 20:55:49 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200717205549eusmtrp10da805baf7c3bb309dafbfc5b3a047fd~ipaXE4J4m1408614086eusmtrp1K;
+        Fri, 17 Jul 2020 20:55:49 +0000 (GMT)
+X-AuditID: cbfec7f5-38bff700000018ae-28-5f12105678ed
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 48.A8.06017.550121F5; Fri, 17
+        Jul 2020 21:55:49 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200717205548eusmtip1f8dd32bba10f075e5e345c583879d52f~ipaWl6oCm2455324553eusmtip1L;
+        Fri, 17 Jul 2020 20:55:48 +0000 (GMT)
+Subject: Re: [PATCH 16/23] initramfs: simplify clean_rootfs
+To:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <7f37802c-d8d9-18cd-7394-df51fa785988@samsung.com>
+Date:   Fri, 17 Jul 2020 22:55:48 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.10.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from c73.home (123.123.133.50) by HK2PR04CA0081.apcprd04.prod.outlook.com (2603:1096:202:15::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18 via Frontend Transport; Fri, 17 Jul 2020 18:10:09 +0000
-X-Mailer: git-send-email 1.8.3.1
-X-Originating-IP: [123.123.133.50]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 185d8420-90f2-4cc3-6361-08d82a7ca503
-X-MS-TrafficTypeDiagnostic: DB6PR0401MB2437:
-X-LD-Processed: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba,ExtFwd
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB6PR0401MB24371A8CD0EEFA33A03E454B977C0@DB6PR0401MB2437.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:47;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: AifvO3s9ETqnsQF5+Ie8Y3lhoTeIHNPIq2bXGV4KTAZBEXRncmROy6qWySgjKB9g8umUZ0XhcCqPjcE7W5B5R0V0m6CiY5eBFxgq4p9gbi7bufRLQyfMcJiOlDYret9ar4nEVM1lIljckLwmYwZk0ah60X6SQ0VvtzuEmDPHHxarLCnULlFllgdrCtIACuqCOJtzIwR3DlnBVjWHv6wPPczT+weXboumSA9axS2ghZNOJLGVlwdoskYPP+vtndNUZTH87Y2EG7KUjWy6fBM/Ndtd003ZbLWsM3tYTlo14nZ75vIeZYA9CON6rbwhHeZMhWAgZgXs/Qg5Pc88sshgQoMIP+OuHg+6sFT3/vN1ieke4baQWKb/AcmFgQ19xKNO
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB4666.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(346002)(396003)(136003)(39860400002)(366004)(6506007)(8936002)(186003)(6512007)(26005)(478600001)(316002)(66556008)(66476007)(66946007)(36756003)(4326008)(2616005)(52116002)(2906002)(6916009)(83380400001)(86362001)(5660300002)(6666004)(956004)(6486002)(8676002)(16526019)(8886007)(9126004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: DeSKEAFO0rCz3lilawk6iUM9JVi3Dnutq8LIXKLO4SdsmfieSq8PSTBB14MBFpMCuByG+H50g+SKe75IzFTSuM/VtaFep93woI7uXXl1ag/gLvAiKDegyvir0Hu5BvQz/rlWCO6UzrHYWNUrWyPN87OYKYZ3BcPM4r72OJn5Hk4QmGKipaOnGd45LHR4tQXuj6U8t7dltd1UF4+J3H8kgKK7NMs9FNZNo9Z2NaNXCu8Qb+qsWuphO1gZE+5CPrylyZGlJXcTVm/A9tD20CFMjKPM5d5w0ClvPsU+XHzXwDyLeRxBjiwgQpYpBEJVKn5vcNH1WgwmvWnj40TIzuoY4PNpGIEdTzzQTgZL4kTVzuW28gfEA9eCisSfpzL2iBm35rW7L5zNufCff5l/WgAWKpuadQKcHGLhH1mZLalJCqB8VeTlcR6DlINlYBwjensWrAYcBPWfJZMux8D0ibVBVOv8z/mkYnGEC2kYx7+lehI=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 185d8420-90f2-4cc3-6361-08d82a7ca503
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB4666.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jul 2020 18:10:10.9986
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LRuVoQmIjJtTBTvZxF9+OzPtS9XGr/24EEmdWwEkaGhEKCglZk+vCEF5R8mv5VivyzbxK6fod2iIQowPhBcxUQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0401MB2437
+In-Reply-To: <20200714190427.4332-17-hch@lst.de>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrHKsWRmVeSWpSXmKPExsWy7djP87phAkLxBuefM1tsnLGe1WLl6qNM
+        FtM2ilvs2XuSxeLyrjlsFu3zdzFaHF/+l83iUd9bdovzf4+zOnB6bFrVyeZxYsZvFo/dNxvY
+        PPq2rGL0+LxJzmPTk7dMHidavrAGsEdx2aSk5mSWpRbp2yVwZTw+9pKpoEWr4sSJ1ewNjJNU
+        uhg5OSQETCS2PDvF1sXIxSEksIJRYsXRj4wgCSGBL4wSrb/SIBKfGSUetm8HSnCAdXxbaQoR
+        X84o0XdvHzOE855R4mzTZyaQbmEBa4nv8z6yg9giAg4S019cYAUpYhboYpL4/n4CWIJNwFCi
+        620XG4jNK2An8b95DZjNIqAq0d70FewMUYE4ifUvtzNB1AhKnJz5hAXE5hQwkFh1u4MZxGYW
+        kJdo3jobyhaXuPVkPhPIMgmBS+wSf7d+YoR41EVi7b2v7BC2sMSr41ugbBmJ05N7WCAamoH+
+        PLeWHcLpYZS43DQDqtta4s65X2ygAGAW0JRYv0sfIuwose3fGWi48EnceCsIcQSfxKRt05kh
+        wrwSHW1CENVqErOOr4Nbe/DCJeYJjEqzkLw2C8k7s5C8Mwth7wJGllWM4qmlxbnpqcXGeanl
+        esWJucWleel6yfm5mxiBqer0v+NfdzDu+5N0iFGAg1GJh9dglWC8EGtiWXFl7iFGCQ5mJRFe
+        p7On44R4UxIrq1KL8uOLSnNSiw8xSnOwKInzGi96GSskkJ5YkpqdmlqQWgSTZeLglGpg3LLl
+        YUfU/IcN95YVzL56gtV67aum9jMnZvVtCk6smqgQrHTM6oN2V4Ne9DWmc2quv7KF75m0tVpt
+        2XhzpsmWH3927rhf0Nx+gt3gtMuRtJvVS6ZtE3ML3fX6jFd48CpnZ7dQk4dbuXbKcnXY/J+S
+        F5Eq3Wyj0Hp/cdbSmooD1zSeH3zMk3WnUomlOCPRUIu5qDgRAN1GaItRAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAIsWRmVeSWpSXmKPExsVy+t/xu7qhAkLxBouPSlhsnLGe1WLl6qNM
+        FtM2ilvs2XuSxeLyrjlsFu3zdzFaHF/+l83iUd9bdovzf4+zOnB6bFrVyeZxYsZvFo/dNxvY
+        PPq2rGL0+LxJzmPTk7dMHidavrAGsEfp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvH
+        WhmZKunb2aSk5mSWpRbp2yXoZTw+9pKpoEWr4sSJ1ewNjJNUuhg5OCQETCS+rTTtYuTiEBJY
+        yijR+fk+SxcjJ1BcRuLktAZWCFtY4s+1LjaIoreMEkvufgQrEhawlvg+7yM7iC0i4CAx/cUF
+        VpAiZoEeJokpc28wgSSEBEIkzry9AFbEJmAo0fUWZBInB6+AncT/5jVgNouAqkR701dGEFtU
+        IE5i+Zb57BA1ghInZz4BW8YpYCCx6nYHM4jNLGAmMW/zQyhbXqJ562woW1zi1pP5TBMYhWYh
+        aZ+FpGUWkpZZSFoWMLKsYhRJLS3OTc8tNtIrTswtLs1L10vOz93ECIzNbcd+btnB2PUu+BCj
+        AAejEg+vwSrBeCHWxLLiytxDjBIczEoivE5nT8cJ8aYkVlalFuXHF5XmpBYfYjQFem4is5Ro
+        cj4wbeSVxBuaGppbWBqaG5sbm1koifN2CByMERJITyxJzU5NLUgtgulj4uCUamCs3eq94gVH
+        1V9f5R/6X2Id5p8vnnpy5jvJhrAty19YnzdcsC3xxbXEKU8/9d3naWMISVPXWNxZ7La/Rk1S
+        riHb7PKxJ+/WCvVZ/l31dkOvPqtiyeX++Y+alT5oSGb+nf3+93vXK1wmz32O11lpHHcvLv6+
+        U2Qux+MMMzuFqVkun/sWtVj5H3ytxFKckWioxVxUnAgAv5iTl+MCAAA=
+X-CMS-MailID: 20200717205549eucas1p13fca9a8496836faa71df515524743648
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200717205549eucas1p13fca9a8496836faa71df515524743648
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200717205549eucas1p13fca9a8496836faa71df515524743648
+References: <20200714190427.4332-1-hch@lst.de>
+        <20200714190427.4332-17-hch@lst.de>
+        <CGME20200717205549eucas1p13fca9a8496836faa71df515524743648@eucas1p1.samsung.com>
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-After kernel md module commit 480523feae581, in md-cluster env,
-mddev->in_sync always zero, it will make array.state never set
-up MD_SB_CLEAN. it causes "mdadm -D /dev/mdX" show state 'active'
-all the time.
+Hi Christoph,
 
-bitmap.c: add a new API IsBitmapDirty() to support inquiry bitmap
-dirty or clean.
+On 14.07.2020 21:04, Christoph Hellwig wrote:
+> Just use d_genocide instead of iterating through the root directory with
+> cumbersome userspace-like APIs.  This also ensures we actually remove files
+> that are not direct children of the root entry, which the old code failed
+> to do.
+>
+> Fixes: df52092f3c97 ("fastboot: remove duplicate unpack_to_rootfs()")
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Signed-off-by: Zhao Heming <heming.zhao@suse.com>
----
- Detail.c | 21 ++++++++++++++++++++-
- bitmap.c | 27 +++++++++++++++++++++++++++
- mdadm.h  |  1 +
- 3 files changed, 48 insertions(+), 1 deletion(-)
+This patch breaks initrd support ;-(
 
-diff --git a/Detail.c b/Detail.c
-index 24eeba0..fd580a3 100644
---- a/Detail.c
-+++ b/Detail.c
-@@ -495,8 +495,27 @@ int Detail(char *dev, struct context *c)
- 							  sra->array_state);
- 				else
- 					arrayst = "clean";
--			} else
-+			} else {
- 				arrayst = "active";
-+				if (array.state & (1<<MD_SB_CLUSTERED)) {
-+					int dirty = 0;
-+					for (d = 0; d < max_disks * 2; d++) {
-+						char *dv;
-+						mdu_disk_info_t disk = disks[d];
-+
-+						if (d >= array.raid_disks * 2 &&
-+								disk.major == 0 && disk.minor == 0)
-+							continue;
-+						if ((d & 1) && disk.major == 0 && disk.minor == 0)
-+							continue;
-+						dv = map_dev_preferred(disk.major, disk.minor, 0, c->prefer);
-+						if (dv != NULL)
-+							if ((dirty = IsBitmapDirty(dv))) break;
-+					}
-+					if (dirty == 0)
-+						arrayst = "clean";
-+				}
-+			}
- 
- 			printf("             State : %s%s%s%s%s%s%s \n",
- 			       arrayst, st,
-diff --git a/bitmap.c b/bitmap.c
-index e38cb96..90ad932 100644
---- a/bitmap.c
-+++ b/bitmap.c
-@@ -368,6 +368,33 @@ free_info:
- 	return rv;
- }
- 
-+int IsBitmapDirty(char *filename)
-+{
-+	/*
-+	 * Read the bitmap file
-+	 * return: 1(dirty), 0 (clean), -1(error)
-+	 */
-+
-+	struct supertype *st = NULL;
-+	bitmap_info_t *info;
-+	int fd = -1, rv = -1;
-+
-+	fd = bitmap_file_open(filename, &st, 0);
-+	if (fd < 0)
-+		return rv;
-+
-+	info = bitmap_fd_read(fd, 0);
-+	if (!info) {
-+		goto out;
-+	}
-+	rv = info->dirty_bits ? 1 : 0;
-+	free(info);
-+out:
-+	close(fd);
-+	free(st);
-+	return rv;
-+}
-+
- int CreateBitmap(char *filename, int force, char uuid[16],
- 		 unsigned long chunksize, unsigned long daemon_sleep,
- 		 unsigned long write_behind,
-diff --git a/mdadm.h b/mdadm.h
-index 399478b..ba8ba91 100644
---- a/mdadm.h
-+++ b/mdadm.h
-@@ -1447,6 +1447,7 @@ extern int CreateBitmap(char *filename, int force, char uuid[16],
- 			unsigned long long array_size,
- 			int major);
- extern int ExamineBitmap(char *filename, int brief, struct supertype *st);
-+extern int IsBitmapDirty(char *filename);
- extern int Write_rules(char *rule_name);
- extern int bitmap_update_uuid(int fd, int *uuid, int swap);
- 
+I use initrd to deploy kernel modules on my test machines. It was 
+automatically mounted on /initrd. /lib/modules is just a symlink to 
+/initrd. I know that initrd support is marked as deprecated, but it 
+would be really nice to give people some time to update their machines 
+before breaking the stuff.
+
+Here is the log:
+
+Kernel image @ 0x40007fc0 [ 0x000000 - 0x6dd9c8 ]
+## Flattened Device Tree blob at 41000000
+    Booting using the fdt blob at 0x41000000
+    Loading Ramdisk to 4de3c000, end 50000000 ... OK
+    Loading Device Tree to 4de2d000, end 4de3b206 ... OK
+
+Starting kernel ...
+
+[    0.000000] Booting Linux on physical CPU 0x900
+...
+
+[    0.000000] Kernel command line: root=PARTLABEL=rootfs rootwait 
+console=tty1 console=ttySAC2,115200n8 earlycon rootdelay=2
+...
+
+[    1.853631] Trying to unpack rootfs image as initramfs...
+[    1.858661] rootfs image is not initramfs (invalid magic at start of 
+compressed archive); looks like an initrd
+...
+[    2.204776] Freeing initrd memory: 34576K
+
+...
+
+[    4.635360] Warning: unable to open an initial console.
+[    4.640706] Waiting 2 sec before mounting root device...
+...
+[    6.776007] Failed to create /dev/root: -2
+[    6.778989] VFS: Cannot open root device "PARTLABEL=rootfs" or 
+unknown-block(179,6): error -2
+[    6.787200] Please append a correct "root=" boot option; here are the 
+available partitions:
+[    6.795693] 0100           65536 ram0
+[    6.795697]  (driver?)
+[    6.801459] 0101           65536 ram1
+[    6.801462]  (driver?)
+[    6.807532] 0102           65536 ram2
+[    6.807535]  (driver?)
+[    6.813674] 0103           65536 ram3
+[    6.813677]  (driver?)
+[    6.819760] 0104           65536 ram4
+[    6.819763]  (driver?)
+[    6.832610] 0105           65536 ram5
+[    6.832613]  (driver?)
+[    6.848685] 0106           65536 ram6
+[    6.848688]  (driver?)
+[    6.864590] 0107           65536 ram7
+[    6.864593]  (driver?)
+[    6.880504] 0108           65536 ram8
+[    6.880507]  (driver?)
+[    6.896248] 0109           65536 ram9
+[    6.896251]  (driver?)
+[    6.911828] 010a           65536 ram10
+[    6.911831]  (driver?)
+[    6.927447] 010b           65536 ram11
+[    6.927450]  (driver?)
+[    6.942976] 010c           65536 ram12
+[    6.942979]  (driver?)
+[    6.958190] 010d           65536 ram13
+[    6.958193]  (driver?)
+[    6.973205] 010e           65536 ram14
+[    6.973208]  (driver?)
+[    6.988105] 010f           65536 ram15
+[    6.988108]  (driver?)
+[    7.002897] b300        15388672 mmcblk0
+[    7.002901]  driver: mmcblk
+[    7.018061]   b301            8192 mmcblk0p1 
+654b73ea-7c04-c24d-9642-2a186649605c
+[    7.018064]
+[    7.035359]   b302           61440 mmcblk0p2 
+7ef6fb83-0d6c-8c44-826b-ad11df290e0c
+[    7.035362]
+[    7.052589]   b303          102400 mmcblk0p3 
+34883856-7d52-d548-a196-718efbd06876
+[    7.052592]
+[    7.069744]   b304          153600 mmcblk0p4 
+8d4410d0-a4ff-c447-abb9-73350dcdd2d6
+[    7.069747]
+[    7.086888]   b305         1572864 mmcblk0p5 
+485c2c17-a9e8-9c45-bb68-e0748a2bb1f1
+[    7.086890]
+[    7.103991]   b306         3072000 mmcblk0p6 
+7fb2bbf3-e064-2343-b169-e69c18dbb43e
+[    7.103993]
+[    7.121290]   b307        10413039 mmcblk0p7 
+b0ee9150-6b6a-274b-9ec3-703d29072555
+[    7.121292]
+[    7.138722] Kernel panic - not syncing: VFS: Unable to mount root fs 
+on unknown-block(179,6)
+[    7.151482] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 
+5.8.0-rc5-00064-g38d014f6d446 #8823
+[    7.164026] Hardware name: Samsung Exynos (Flattened Device Tree)
+[    7.174556] [<c011188c>] (unwind_backtrace) from [<c010d27c>] 
+(show_stack+0x10/0x14)
+[    7.186799] [<c010d27c>] (show_stack) from [<c05182e4>] 
+(dump_stack+0xbc/0xe8)
+[    7.198533] [<c05182e4>] (dump_stack) from [<c01272e0>] 
+(panic+0x128/0x354)
+[    7.210002] [<c01272e0>] (panic) from [<c1001580>] 
+(mount_block_root+0x1a8/0x240)
+[    7.221961] [<c1001580>] (mount_block_root) from [<c1001738>] 
+(mount_root+0x120/0x13c)
+[    7.234325] [<c1001738>] (mount_root) from [<c10018ac>] 
+(prepare_namespace+0x158/0x194)
+[    7.246751] [<c10018ac>] (prepare_namespace) from [<c0ab7684>] 
+(kernel_init+0x8/0x118)
+[    7.259086] [<c0ab7684>] (kernel_init) from [<c0100114>] 
+(ret_from_fork+0x14/0x20)tatic void __init populate_initrd_image(char *err)
+
+Best regards
 -- 
-2.25.0
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
