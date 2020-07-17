@@ -2,118 +2,188 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D5F9C223B8F
-	for <lists+linux-raid@lfdr.de>; Fri, 17 Jul 2020 14:47:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD53C224297
+	for <lists+linux-raid@lfdr.de>; Fri, 17 Jul 2020 19:51:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbgGQMpy (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 17 Jul 2020 08:45:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56210 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgGQMpy (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 17 Jul 2020 08:45:54 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8AA6C061755
-        for <linux-raid@vger.kernel.org>; Fri, 17 Jul 2020 05:45:51 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id p20so10550831ejd.13
-        for <linux-raid@vger.kernel.org>; Fri, 17 Jul 2020 05:45:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=9xvPSMBem/pR7YMRXNCAZo01WGfYyqBh72zcLuQhLOE=;
-        b=T2xCKPHzt11i0abBH1Myc7f+p2KaRN4b8q3zD+nXuArIq8pPXg2vUb/STQ8KyasGLn
-         yflECKzF6rh1l5DuR8Dhn1NLGROJyln+XlV7oVDDBzwU8Rj677pAZbba65TPz4SAYhP5
-         waq0MN7KnYkokAM1wIfmWrqQu6CwRW11MDRxtNU1BiUbCU7Etk5LIJQXWenAz88RMyAu
-         3+QJLaTHVahAB/WoJOzxbb/HoJN0Y6K7i9D7Iztk8UOIDMm50uhoZkSrGnOZOQUnkyw6
-         zvfKL7Wpcw3L0jOUNU1aUWeiAof0tbvxVVaqjIyg76wCMInD95zf6NSRrm9A8mYMHCSy
-         f0SA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=9xvPSMBem/pR7YMRXNCAZo01WGfYyqBh72zcLuQhLOE=;
-        b=Im+/cSBpb8XQH+xtp7lBOgLPYhOaYpWsALQCPr7jkbmiJC/fq9wHwdivBMN3N70JgU
-         apG5lYLo53Tjxfp8CPPqmI9d3wkmOvvGn+S6852txCeKqWUeDUOlrJiZxIdxQfrgaz2K
-         nmWCNYR/Ia+y0wbTuAyeSEdcWr3gAWdR3ngKFH/9fROAfQY2e81BwroORZ6ZDgBcotHa
-         Qe+qGFX116d7+ugR1f8jho6RfSX5QaDCnCIlgwwPa334n1zlADDdcDFf1agp2PUyPBrP
-         ba15M0aR7A9oAdOjqqKfmZGIxDeArZQZRJjLwHBcFIRlx5PRRKRTdxZkW5ldVUyeLqZ2
-         or5A==
-X-Gm-Message-State: AOAM532JqJFsvUz8xMgBW3dGnVJcg/M0Sl/kDXij8Ul/S5Dl7mxL+vAe
-        UPquncF7qDGH9TuPSnVlpGtwdLMvNbW3cg==
-X-Google-Smtp-Source: ABdhPJwNXXPYG6k6Yjxts3HSKu3HSeL+tiaWMGCGX5fO8TePCqftZiaEVVWEwPmn783UY9oSeWBizQ==
-X-Received: by 2002:a17:907:72c7:: with SMTP id du7mr7937900ejc.248.1594989950268;
-        Fri, 17 Jul 2020 05:45:50 -0700 (PDT)
-Received: from [192.168.178.33] (i5C747D06.versanet.de. [92.116.125.6])
-        by smtp.gmail.com with ESMTPSA id s14sm8004658edq.36.2020.07.17.05.45.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jul 2020 05:45:49 -0700 (PDT)
-Subject: Re: [PATCH v4] md: improve io stats accounting
-To:     Artur Paszkiewicz <artur.paszkiewicz@intel.com>,
-        Song Liu <song@kernel.org>
-Cc:     linux-raid <linux-raid@vger.kernel.org>
-References: <20200703091309.19955-1-artur.paszkiewicz@intel.com>
- <82ac5fe5-e61d-e031-6a64-60b6e1dd408d@cloud.ionos.com>
- <CAPhsuW4Xc19jJyxzOUcfoE+HrKH=bogC55=-dt04z6phn0Wu5Q@mail.gmail.com>
- <CAPhsuW6HjN0hZ8E998XBpg+WxP5uhZO0on-M-tQ45kpFO5XHqg@mail.gmail.com>
- <db93b8ae-25a1-5b50-7360-1f9c8e0661c3@intel.com>
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Message-ID: <677e39d3-ec87-7e93-09c6-c40aabd303f1@cloud.ionos.com>
-Date:   Fri, 17 Jul 2020 14:45:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726439AbgGQRvb (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 17 Jul 2020 13:51:31 -0400
+Received: from de-smtp-delivery-102.mimecast.com ([51.163.158.102]:22297 "EHLO
+        de-smtp-delivery-102.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726359AbgGQRvb (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 17 Jul 2020 13:51:31 -0400
+X-Greylist: delayed 33409 seconds by postgrey-1.27 at vger.kernel.org; Fri, 17 Jul 2020 13:51:28 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+        t=1595008286;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=/b/CInnOoZtVac5XXh/9NtbxC0mIATWwwdk89OF9H6w=;
+        b=foaNiKR3m/S1EqhPRIy4nDJA4pj9q5b02aBiHfAiFhcz82K4/9wqXlsUTghCfVEDLTlcxD
+        SzRAxRZLpdX5zLHZuyliO4qmGqv1q9Nsv4rjV+Q1dCeWs2RuNtzsUNP4BQJQarfuCArc30
+        zhTelSkDNXs3Vm80l4xwif67l88CxmE=
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com
+ (mail-db5eur01lp2053.outbound.protection.outlook.com [104.47.2.53]) (Using
+ TLS) by relay.mimecast.com with ESMTP id de-mta-9-Sf5oRB-nPZSNFfW0m3MadA-1;
+ Fri, 17 Jul 2020 19:51:25 +0200
+X-MC-Unique: Sf5oRB-nPZSNFfW0m3MadA-1
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eVK9yv9e6Eu4KS9FL7Gl6z/5aJx2SnD3tQ4ysfAOoS4M5S555uIidCZCr9ACSZeiiaiKeal0qxGbIIw1zwCbkuKrGGxlrgHxrcKy0NlSqcHgvJDtWbWK2ho6Xq6SxM5LcNeAax2ngQYfH+aIWKZRjlKlpdxA1eSx47YYQLdXe6T8YTFgCwQgnGqBlYGmdTnFlF2X7RIK948DOS5e7LRyWC3I/FxuDZQvpbNClD7mcvtcFE3g89xE+qFE/wDhg9S1la3LMsQioi7X5kRlsqX1hIxDbGJr3F8eAD/HMK8ADTXP4zQbyrkJoxrnNhBWZvhouGits9oGJj52UrEJebGsug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/b/CInnOoZtVac5XXh/9NtbxC0mIATWwwdk89OF9H6w=;
+ b=oVZDrVyKpK3MLQOA9Eux+RLHTNMhh3i0F3kG9fGx+DyKzwmxRe2KDz4dgGIMVcFDl7uqy3fRa2GNnX68xXwDCaMy2QL6hO8u1dnan/7S/RiiwHH/owV5sHQE60dZrMwj1z5eGGNFQ36nUCDB3wz9yqskhpL22WORPDNw3RLhdPbrX4bygTgobbLzq6YWXeNLE/twuxMYPUji5upMZN/T6g1HrC4Es5z0jfKJt5+nrrCGfBhuPo88ZRZsWAUVsXNEK1akdcMYNSiGrT6PlPf767kajcbmbFv7TkGh/mjOWCfyAGuvlv4WwR9mT2OhV6ciIoLabCS3XKvlcTdWBLLPfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=suse.com;
+Received: from DB7PR04MB4666.eurprd04.prod.outlook.com (2603:10a6:5:2b::14) by
+ DB7PR04MB4265.eurprd04.prod.outlook.com (2603:10a6:5:1c::12) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3174.20; Fri, 17 Jul 2020 17:51:24 +0000
+Received: from DB7PR04MB4666.eurprd04.prod.outlook.com
+ ([fe80::b01a:d99f:8b27:a5aa]) by DB7PR04MB4666.eurprd04.prod.outlook.com
+ ([fe80::b01a:d99f:8b27:a5aa%4]) with mapi id 15.20.3195.022; Fri, 17 Jul 2020
+ 17:51:24 +0000
+From:   Zhao Heming <heming.zhao@suse.com>
+To:     linux-raid@vger.kernel.org
+Cc:     Zhao Heming <heming.zhao@suse.com>, neilb@suse.com,
+        jes@trained-monkey.org
+Subject: [PATCH] mdadm/Detail: show correct state for cluster-md array
+Date:   Sat, 18 Jul 2020 01:51:11 +0800
+Message-Id: <1595008271-3234-1-git-send-email-heming.zhao@suse.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-ClientProxiedBy: HKAPR03CA0015.apcprd03.prod.outlook.com
+ (2603:1096:203:c8::20) To DB7PR04MB4666.eurprd04.prod.outlook.com
+ (2603:10a6:5:2b::14)
 MIME-Version: 1.0
-In-Reply-To: <db93b8ae-25a1-5b50-7360-1f9c8e0661c3@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from c73.home (123.123.133.50) by HKAPR03CA0015.apcprd03.prod.outlook.com (2603:1096:203:c8::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.9 via Frontend Transport; Fri, 17 Jul 2020 17:51:22 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [123.123.133.50]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 9b3f69d1-c550-4b81-d0e8-08d82a7a0568
+X-MS-TrafficTypeDiagnostic: DB7PR04MB4265:
+X-LD-Processed: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba,ExtFwd
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB7PR04MB4265F040D4C31C07B92A73A4977C0@DB7PR04MB4265.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:47;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 50aOQrzRa+bCHc9Chuv6Gs7c0jaVmdg2CfufcP7fIhlfVGS4gkWT1/NFIa9+MGa6l2+Vu3ToAN8fgQajZzKGxCmnM1RSCbfgRMXAst/WtKdGtQ/gLCgX8j9cs1ve5tChCQfOXhUzl0KoqXTbRX9XIVAG8pdWxZUVoREIrgX739o29/h+Glr4/ekcqmFxi57OsO+Rknoqr0G9ArvFvk0REvY80ACjAcejHo/sBrEVk6HpKoNJrybcWbhGjCtIJoX7lzDptF9KulxJgclH3xV0wo9gdKXECh2XBTXwiW1mgnD92BTAUPj7wUCzPHjFvyZQyuVzP8QbLT/q1lIrdSWotK11rAljbLDYeIs8tdrwEcYNZP3bTiFMv/kv2fQ/ySQE
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB4666.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(376002)(346002)(39860400002)(396003)(136003)(2906002)(86362001)(8886007)(16526019)(52116002)(6506007)(186003)(6916009)(26005)(316002)(2616005)(6666004)(5660300002)(956004)(8676002)(8936002)(66946007)(83380400001)(36756003)(4326008)(66556008)(6486002)(478600001)(66476007)(6512007)(9126004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: Il7JnWQCGTXIo3BKQsjgDcuuaAgiQG9Ki5tb6WxpdWpw5O+8d5q52RGVty1hNxCzXqXC3UWdbfWNsKZLsiiSOYrLbOqBF0uqmqlHgpE44I3NqbyOj5bcYIUro5TUE3hlkQw3p0UUCxHPO1NYsvq9bs9dE2NATvXgQpAJIEFSmXxXFCKnOKHmOxQzatNwlmo9GroozeWEkgIhfGKW2ttn3gWAwCCk9TpVTyn5gSPIl09nvQGT74VZ5Cy83Ca31VA4h1pGwt1LnrbyqGjouQ3uo5enmrCbY1ZC3p/W7K/N2Ib2FiTOkTct97zTs6RC0/BBqKRyA2ac1dXCR+122MNY3qrcIIRsS3wmmTQDzu/HeQoP8cMz155+2JfjnIkh7PqPqCN1jLmeGcmZuBS7KhMCsjHVFRqUc+bEpLm+oLgrb7pV9oaBmcBpVCr0C5i+5xnV9KPjzjmvul8ZPD+taaVucec0smd0vd0IynaRDG0fVpc=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9b3f69d1-c550-4b81-d0e8-08d82a7a0568
+X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB4666.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jul 2020 17:51:24.2664
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3KvnxYWcFbrZ4dRnhsq9wWrg649Y0uEin2XL61qwZEpCIwgdtxzmBvEaIho5/br2maJ/Ybahsl0v3AruyW9+ww==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4265
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 7/17/20 12:44 PM, Artur Paszkiewicz wrote:
-> On 7/16/20 7:29 PM, Song Liu wrote:
->> I just noticed another issue with this work on raid456, as iostat
->> shows something
->> like:
->>
->> Device:         rrqm/s   wrqm/s     r/s     w/s    rMB/s    wMB/s
->> avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
->> nvme0n1        6306.50 18248.00  636.00 1280.00    45.11    76.19
->> 129.65     3.03    1.23    0.67    1.51   0.76 145.50
->> nvme1n1       11441.50 13234.00 1069.50  961.00    71.87    55.39
->> 128.35     3.32    1.30    0.90    1.75   0.72 146.50
->> nvme2n1        8280.50 16352.50  971.50 1231.00    65.53    68.65
->> 124.77     3.20    1.17    0.69    1.54   0.64 142.00
->> nvme3n1        6158.50 18199.50  567.00 1453.50    39.81    76.74
->> 118.13     3.50    1.40    0.88    1.60   0.73 146.50
->> md0               0.00     0.00 1436.00 1411.00    89.75    88.19
->> 128.00    22.98    8.07    0.16   16.12   0.52 147.00
->>
->> md0 here is a RAID-6 array with 4 devices. %util of > 100% is clearly
->> wrong here.
->> This only doesn't happen to RAID-0 or RAID-1 in my tests.
->>
->> Artur, could you please take a look at this?
-> Hi Song,
->
-> I think it's not caused by this patch, because %util of the member
-> drives is affected as well. I reverted the patch and it's still
-> happening:
->
-> Device            r/s     rMB/s   rrqm/s  %rrqm r_await rareq-sz     w/s     wMB/s   wrqm/s  %wrqm w_await wareq-sz     d/s     dMB/s   drqm/s  %drqm d_await dareq-sz     f/s f_await  aqu-sz  %util
-> md0             20.00      2.50     0.00   0.00    0.00   128.00   21.00      2.62     0.00   0.00    0.00   128.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.00
-> nvme0n1         13.00      1.62   279.00  95.55    0.77   128.00    4.00      0.50   372.00  98.94 1289.00   128.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    5.17 146.70
-> nvme1n1         15.00      1.88   310.00  95.38    0.53   128.00   21.00      2.62   341.00  94.20 1180.29   128.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00   24.80 146.90
-> nvme2n1         16.00      2.00   310.00  95.09    0.69   128.00   19.00      2.38   341.00  94.72  832.89   128.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00   15.84 146.80
-> nvme3n1         18.00      2.25   403.00  95.72    0.72   128.00   16.00      2.00   248.00  93.94  765.69   128.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00   12.26 114.30
->
-> I was only able to reproduce it on a VM, it doesn't occur on real
-> hardware (for me). What was your test configuration?
+After kernel md module commit 480523feae581, in md-cluster env,
+mddev->in_sync always zero, it will make array.state never set
+up MD_SB_CLEAN. it causes "mdadm -D /dev/mdX" show state 'active'
+all the time.
 
-Just FYI,  I suspect it could be related to the commit 2b8bd423614c595
-("block/diskstats: more accurate approximation of io_ticks for slow disks").
+bitmap.c: add a new API IsBitmapDirty() to support inquiry bitmap
+dirty or clean.
 
-Thanks,
-Guoqing
+Signed-off-by: Zhao Heming <heming.zhao@suse.com>
+---
+ Detail.c | 21 ++++++++++++++++++++-
+ bitmap.c | 22 ++++++++++++++++++++++
+ mdadm.h  |  1 +
+ 3 files changed, 43 insertions(+), 1 deletion(-)
+
+diff --git a/Detail.c b/Detail.c
+index 24eeba0..fd580a3 100644
+--- a/Detail.c
++++ b/Detail.c
+@@ -495,8 +495,27 @@ int Detail(char *dev, struct context *c)
+ 							  sra->array_state);
+ 				else
+ 					arrayst = "clean";
+-			} else
++			} else {
+ 				arrayst = "active";
++				if (array.state & (1<<MD_SB_CLUSTERED)) {
++					int dirty = 0;
++					for (d = 0; d < max_disks * 2; d++) {
++						char *dv;
++						mdu_disk_info_t disk = disks[d];
++
++						if (d >= array.raid_disks * 2 &&
++								disk.major == 0 && disk.minor == 0)
++							continue;
++						if ((d & 1) && disk.major == 0 && disk.minor == 0)
++							continue;
++						dv = map_dev_preferred(disk.major, disk.minor, 0, c->prefer);
++						if (dv != NULL)
++							if ((dirty = IsBitmapDirty(dv))) break;
++					}
++					if (dirty == 0)
++						arrayst = "clean";
++				}
++			}
+ 
+ 			printf("             State : %s%s%s%s%s%s%s \n",
+ 			       arrayst, st,
+diff --git a/bitmap.c b/bitmap.c
+index e38cb96..10c2045 100644
+--- a/bitmap.c
++++ b/bitmap.c
+@@ -368,6 +368,28 @@ free_info:
+ 	return rv;
+ }
+ 
++int IsBitmapDirty(char *filename)
++{
++	/*
++	 * Read the bitmap file
++	 * return: 1(dirty), 0 (clean), -1(error)
++	 */
++
++	struct supertype *st = NULL;
++	bitmap_info_t *info;
++	int fd = -1, rv = -1;
++
++	fd = bitmap_file_open(filename, &st, 0);
++	if (fd < 0)
++		return rv;
++
++	info = bitmap_fd_read(fd, 0);
++	if (!info)
++		return rv;
++	close(fd);
++	return info->dirty_bits ? 1 : 0;
++}
++
+ int CreateBitmap(char *filename, int force, char uuid[16],
+ 		 unsigned long chunksize, unsigned long daemon_sleep,
+ 		 unsigned long write_behind,
+diff --git a/mdadm.h b/mdadm.h
+index 399478b..ba8ba91 100644
+--- a/mdadm.h
++++ b/mdadm.h
+@@ -1447,6 +1447,7 @@ extern int CreateBitmap(char *filename, int force, char uuid[16],
+ 			unsigned long long array_size,
+ 			int major);
+ extern int ExamineBitmap(char *filename, int brief, struct supertype *st);
++extern int IsBitmapDirty(char *filename);
+ extern int Write_rules(char *rule_name);
+ extern int bitmap_update_uuid(int fd, int *uuid, int swap);
+ 
+-- 
+2.25.0
+
