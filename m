@@ -2,26 +2,25 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B7DEE2256F7
-	for <lists+linux-raid@lfdr.de>; Mon, 20 Jul 2020 07:14:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F0352256F8
+	for <lists+linux-raid@lfdr.de>; Mon, 20 Jul 2020 07:15:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726089AbgGTFOl (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 20 Jul 2020 01:14:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52972 "EHLO mx2.suse.de"
+        id S1726241AbgGTFPY (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 20 Jul 2020 01:15:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53072 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725287AbgGTFOl (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 20 Jul 2020 01:14:41 -0400
+        id S1725287AbgGTFPY (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 20 Jul 2020 01:15:24 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 89002B7EF;
-        Mon, 20 Jul 2020 05:14:45 +0000 (UTC)
-Subject: Re: [PATCH V1 1/3] Move codes related with submitting discard bio
- into one function
+        by mx2.suse.de (Postfix) with ESMTP id 3F87CB7F1;
+        Mon, 20 Jul 2020 05:15:28 +0000 (UTC)
+Subject: Re: [PATCH V1 2/3] extend r10bio devs to raid disks
 To:     Xiao Ni <xni@redhat.com>, song@kernel.org,
         linux-raid@vger.kernel.org
 Cc:     ncroxon@redhat.com, heinzm@redhat.com
 References: <1595221108-10137-1-git-send-email-xni@redhat.com>
- <1595221108-10137-2-git-send-email-xni@redhat.com>
+ <1595221108-10137-3-git-send-email-xni@redhat.com>
 From:   Coly Li <colyli@suse.de>
 Autocrypt: addr=colyli@suse.de; keydata=
  mQINBFYX6S8BEAC9VSamb2aiMTQREFXK4K/W7nGnAinca7MRuFUD4JqWMJ9FakNRd/E0v30F
@@ -66,12 +65,12 @@ Autocrypt: addr=colyli@suse.de; keydata=
  K0Jx4CEZubakJe+894sX6pvNFiI7qUUdB882i5GR3v9ijVPhaMr8oGuJ3kvwBIA8lvRBGVGn
  9xvzkQ8Prpbqh30I4NMp8MjFdkwCN6znBKPHdjNTwE5PRZH0S9J0o67IEIvHfH0eAWAsgpTz
  +jwc7VKH7vkvgscUhq/v1/PEWCAqh9UHy7R/jiUxwzw/288OpgO+i+2l11Y=
-Message-ID: <409c3135-c831-6afb-5d58-075d0d5a6fc4@suse.de>
-Date:   Mon, 20 Jul 2020 13:14:13 +0800
+Message-ID: <eeb6faad-cb05-b831-0108-6222f122d7d3@suse.de>
+Date:   Mon, 20 Jul 2020 13:15:15 +0800
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
  Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <1595221108-10137-2-git-send-email-xni@redhat.com>
+In-Reply-To: <1595221108-10137-3-git-send-email-xni@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -81,103 +80,70 @@ List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
 On 2020/7/20 12:58, Xiao Ni wrote:
-> These codes can be used in raid10. So we can move these codes into md.c. raid0 and raid10
-> can share these codes.
+> Now it allocs r10bio->devs[conf->copies]. Discard bio needs to submit to all member disks
+> and it needs to use r10bio. So extend to r10bio->devs[geo.raid_disks].
 > 
 > Signed-off-by: Xiao Ni <xni@redhat.com>
-
-It looks good to me.
 
 Reviewed-by: Coly Li <colyli@suse.de>
 
 
 
+Coly Li
+
 
 > ---
->  drivers/md/md.c    | 22 ++++++++++++++++++++++
->  drivers/md/md.h    |  3 +++
->  drivers/md/raid0.c | 15 ++-------------
->  3 files changed, 27 insertions(+), 13 deletions(-)
+>  drivers/md/raid10.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index 07e5b67..2b8f654 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -8559,6 +8559,28 @@ void md_write_end(struct mddev *mddev)
+> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+> index e45fd56..2a7423e 100644
+> --- a/drivers/md/raid10.c
+> +++ b/drivers/md/raid10.c
+> @@ -91,7 +91,7 @@ static inline struct r10bio *get_resync_r10bio(struct bio *bio)
+>  static void * r10bio_pool_alloc(gfp_t gfp_flags, void *data)
+>  {
+>  	struct r10conf *conf = data;
+> -	int size = offsetof(struct r10bio, devs[conf->copies]);
+> +	int size = offsetof(struct r10bio, devs[conf->geo.raid_disks]);
 >  
->  EXPORT_SYMBOL(md_write_end);
+>  	/* allocate a r10bio with room for raid_disks entries in the
+>  	 * bios array */
+> @@ -238,7 +238,7 @@ static void put_all_bios(struct r10conf *conf, struct r10bio *r10_bio)
+>  {
+>  	int i;
 >  
-> +void md_submit_discard_bio(struct mddev *mddev, struct md_rdev *rdev,
-> +				struct bio *bio,
-> +				sector_t dev_start, sector_t dev_end)
-> +{
-> +	struct bio *discard_bio = NULL;
-> +
-> +	if (__blkdev_issue_discard(rdev->bdev,
-> +	    dev_start + rdev->data_offset,
-> +	    dev_end - dev_start, GFP_NOIO, 0, &discard_bio) ||
-> +	    !discard_bio)
-> +		return;
-> +
-> +	bio_chain(discard_bio, bio);
-> +	bio_clone_blkg_association(discard_bio, bio);
-> +	if (mddev->gendisk)
-> +		trace_block_bio_remap(bdev_get_queue(rdev->bdev),
-> +			discard_bio, disk_devt(mddev->gendisk),
-> +			bio->bi_iter.bi_sector);
-> +	submit_bio_noacct(discard_bio);
-> +}
-> +EXPORT_SYMBOL(md_submit_discard_bio);
-> +
->  /* md_allow_write(mddev)
->   * Calling this ensures that the array is marked 'active' so that writes
->   * may proceed without blocking.  It is important to call this before
-> diff --git a/drivers/md/md.h b/drivers/md/md.h
-> index c26fa8b..83ae77e 100644
-> --- a/drivers/md/md.h
-> +++ b/drivers/md/md.h
-> @@ -710,6 +710,9 @@ extern void md_write_end(struct mddev *mddev);
->  extern void md_done_sync(struct mddev *mddev, int blocks, int ok);
->  extern void md_error(struct mddev *mddev, struct md_rdev *rdev);
->  extern void md_finish_reshape(struct mddev *mddev);
-> +extern void md_submit_discard_bio(struct mddev *mddev, struct md_rdev *rdev,
-> +				struct bio *bio,
-> +				sector_t dev_start, sector_t dev_end);
+> -	for (i = 0; i < conf->copies; i++) {
+> +	for (i = 0; i < conf->geo.raid_disks; i++) {
+>  		struct bio **bio = & r10_bio->devs[i].bio;
+>  		if (!BIO_SPECIAL(*bio))
+>  			bio_put(*bio);
+> @@ -327,7 +327,7 @@ static int find_bio_disk(struct r10conf *conf, struct r10bio *r10_bio,
+>  	int slot;
+>  	int repl = 0;
 >  
->  extern int mddev_congested(struct mddev *mddev, int bits);
->  extern bool __must_check md_flush_request(struct mddev *mddev, struct bio *bio);
-> diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
-> index e9e91c8..e37fe8a 100644
-> --- a/drivers/md/raid0.c
-> +++ b/drivers/md/raid0.c
-> @@ -525,7 +525,6 @@ static void raid0_handle_discard(struct mddev *mddev, struct bio *bio)
->  
->  	for (disk = 0; disk < zone->nb_dev; disk++) {
->  		sector_t dev_start, dev_end;
-> -		struct bio *discard_bio = NULL;
->  		struct md_rdev *rdev;
->  
->  		if (disk < start_disk_index)
-> @@ -548,18 +547,8 @@ static void raid0_handle_discard(struct mddev *mddev, struct bio *bio)
->  
->  		rdev = conf->devlist[(zone - conf->strip_zone) *
->  			conf->strip_zone[0].nb_dev + disk];
-> -		if (__blkdev_issue_discard(rdev->bdev,
-> -			dev_start + zone->dev_start + rdev->data_offset,
-> -			dev_end - dev_start, GFP_NOIO, 0, &discard_bio) ||
-> -		    !discard_bio)
-> -			continue;
-> -		bio_chain(discard_bio, bio);
-> -		bio_clone_blkg_association(discard_bio, bio);
-> -		if (mddev->gendisk)
-> -			trace_block_bio_remap(bdev_get_queue(rdev->bdev),
-> -				discard_bio, disk_devt(mddev->gendisk),
-> -				bio->bi_iter.bi_sector);
-> -		submit_bio_noacct(discard_bio);
-> +		dev_start += zone->dev_start;
-> +		md_submit_discard_bio(mddev, rdev, bio, dev_start, dev_end);
+> -	for (slot = 0; slot < conf->copies; slot++) {
+> +	for (slot = 0; slot < conf->geo.raid_disks; slot++) {
+>  		if (r10_bio->devs[slot].bio == bio)
+>  			break;
+>  		if (r10_bio->devs[slot].repl_bio == bio) {
+> @@ -336,7 +336,7 @@ static int find_bio_disk(struct r10conf *conf, struct r10bio *r10_bio,
+>  		}
 >  	}
->  	bio_endio(bio);
->  }
+>  
+> -	BUG_ON(slot == conf->copies);
+> +	BUG_ON(slot == conf->geo.raid_disks);
+>  	update_head_pos(slot, r10_bio);
+>  
+>  	if (slotp)
+> @@ -1510,7 +1510,7 @@ static void __make_request(struct mddev *mddev, struct bio *bio, int sectors)
+>  	r10_bio->mddev = mddev;
+>  	r10_bio->sector = bio->bi_iter.bi_sector;
+>  	r10_bio->state = 0;
+> -	memset(r10_bio->devs, 0, sizeof(r10_bio->devs[0]) * conf->copies);
+> +	memset(r10_bio->devs, 0, sizeof(r10_bio->devs[0]) * conf->geo.raid_disks);
+>  
+>  	if (bio_data_dir(bio) == READ)
+>  		raid10_read_request(mddev, bio, r10_bio);
 > 
 
