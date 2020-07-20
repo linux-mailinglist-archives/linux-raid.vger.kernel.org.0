@@ -2,31 +2,31 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E783C22692E
-	for <lists+linux-raid@lfdr.de>; Mon, 20 Jul 2020 18:29:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3F1D226934
+	for <lists+linux-raid@lfdr.de>; Mon, 20 Jul 2020 18:29:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732189AbgGTP7T (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 20 Jul 2020 11:59:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42002 "EHLO
+        id S1732204AbgGTP7V (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 20 Jul 2020 11:59:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730641AbgGTP7R (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 20 Jul 2020 11:59:17 -0400
+        with ESMTP id S1731124AbgGTP7U (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 20 Jul 2020 11:59:20 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0038C0619D2;
-        Mon, 20 Jul 2020 08:59:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6456FC0619D2;
+        Mon, 20 Jul 2020 08:59:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=wapfVARVdu2rPD3BwjJEB1KyGijoqrlGPwEotE0t0IY=; b=rS5LCpJj7ZaZb8gf7tdqf0ITny
-        HIUK9sLiT6OVcFKzRaclbtvxUcg5v0Ve7yva7ffZOU0vt618YY0/E3bERcBB5Wp0cOh6mUvoGJEC6
-        UON0B6Cph6M/kd4i/jgP5wD8hKh2xKruQOFpXCh0/d88+xguXsMnnV8Vcnsubu8ZQhj4L5dK7SRCp
-        djGwMhvpqxq/Sx1DkrJ/Wh+ZbQPkLdZKQZPgsi7GUvyUmKFU/y2IFYz5iNVXMUpopdu5Gjxp+rjpk
-        R3A6d6qH2w1S9A3pimN/eEwxfsPzbGV38Aj86OtBF8/v48CFmJ20dpoqko65UGpqdeNg8UjetLEIK
-        vcd8umiQ==;
+        bh=21w+ZovXtzUYFHjW7zAcq/SvhfaPcQNA2bBLjzfA85I=; b=u/gfBau8lfBl8lCv/Gjz5NsubZ
+        w76/+yxGcjwLvwMSvoOVhBh357tz0mSTy69IR9y8hDVWFW/VNrIddpJx7RF/2fl0YDli5vygc3D3I
+        6Uv7PzkrJvlSKg1P928YG718uNYPTBiJ4rGfGxgd+ZgIypimlndFBFETTjU8VD9QLoB2aIq8cpQJe
+        jfSFW4o73TyyRghGylTJKHYNUQwqkQfWAV/NdI4TOEIIYgoSzib0yCH2mOc6FsyfHl2Cn6DlS7st7
+        EKqLf7SWQx4XotdhdHsIFPk9kpmozwvQPuymN7USpIXdOEGw8DXMecs6eD9FKIGiJso2ObI/JZhOG
+        q7Pda19g==;
 Received: from [2001:4bb8:105:4a81:db56:edb1:dbf2:5cc3] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxYCA-0007nt-0H; Mon, 20 Jul 2020 15:59:14 +0000
+        id 1jxYCB-0007oM-UG; Mon, 20 Jul 2020 15:59:16 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>
@@ -34,9 +34,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: [PATCH 07/24] fs: add a kern_chroot helper
-Date:   Mon, 20 Jul 2020 17:58:45 +0200
-Message-Id: <20200720155902.181712-8-hch@lst.de>
+Subject: [PATCH 08/24] fs: add a kern_access helper
+Date:   Mon, 20 Jul 2020 17:58:46 +0200
+Message-Id: <20200720155902.181712-9-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200720155902.181712-1-hch@lst.de>
 References: <20200720155902.181712-1-hch@lst.de>
@@ -48,135 +48,154 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Add a simple helper for a chroot with a kernelspace name and use it in
+Add a simple helper for a access with a kernelspace name and use it in
 the early init code instead of relying on the implicit set_fs(KERNEL_DS)
-there.  Remove the now unused ksys_chroot.
+there.  Remove the now unused ksys_access.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/base/devtmpfs.c  |  2 +-
- fs/open.c                | 15 ++++++++++-----
+ fs/open.c                | 37 +++++++++++++++++++++++++------------
  include/linux/fs.h       |  1 +
- include/linux/syscalls.h |  1 -
- init/do_mounts.c         |  2 +-
- init/do_mounts_initrd.c  |  4 ++--
- 6 files changed, 15 insertions(+), 10 deletions(-)
+ include/linux/syscalls.h |  7 -------
+ init/main.c              |  3 +--
+ 4 files changed, 27 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/base/devtmpfs.c b/drivers/base/devtmpfs.c
-index 2cedeb62706f18..a5126e7be34c8a 100644
---- a/drivers/base/devtmpfs.c
-+++ b/drivers/base/devtmpfs.c
-@@ -389,7 +389,7 @@ static int devtmpfs_setup(void *p)
- 	if (err)
- 		goto out;
- 	kern_chdir("/.."); /* will traverse into overmounted root */
--	ksys_chroot(".");
-+	kern_chroot(".");
- out:
- 	*(int *)p = err;
- 	complete(&setup_done);
 diff --git a/fs/open.c b/fs/open.c
-index 3d62f4d2604739..424db905da5f18 100644
+index 424db905da5f18..2a9457a16b2be2 100644
 --- a/fs/open.c
 +++ b/fs/open.c
-@@ -540,15 +540,15 @@ SYSCALL_DEFINE1(fchdir, unsigned int, fd)
- 	return error;
+@@ -394,19 +394,19 @@ static const struct cred *access_override_creds(void)
+ 	return old_cred;
  }
  
--int ksys_chroot(const char __user *filename)
-+static int do_chroot(struct filename *name)
+-long do_faccessat(int dfd, const char __user *filename, int mode, int flags)
++static int do_faccessat(int dfd, struct filename *name, int mode, int flags)
  {
  	struct path path;
- 	int error;
- 	unsigned int lookup_flags = LOOKUP_FOLLOW | LOOKUP_DIRECTORY;
- retry:
--	error = user_path_at(AT_FDCWD, filename, lookup_flags, &path);
-+	error = filename_lookup(AT_FDCWD, name, lookup_flags, &path, NULL);
- 	if (error)
--		goto out;
-+		return error;
+ 	struct inode *inode;
+-	int res;
++	int res = -EINVAL;
+ 	unsigned int lookup_flags = LOOKUP_FOLLOW;
+ 	const struct cred *old_cred = NULL;
  
- 	error = inode_permission(path.dentry->d_inode, MAY_EXEC | MAY_CHDIR);
- 	if (error)
-@@ -569,13 +569,18 @@ int ksys_chroot(const char __user *filename)
+ 	if (mode & ~S_IRWXO)	/* where's F_OK, X_OK, W_OK, R_OK? */
+-		return -EINVAL;
++		goto out_putname;
+ 
+ 	if (flags & ~(AT_EACCESS | AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH))
+-		return -EINVAL;
++		goto out_putname;
+ 
+ 	if (flags & AT_SYMLINK_NOFOLLOW)
+ 		lookup_flags &= ~LOOKUP_FOLLOW;
+@@ -414,15 +414,16 @@ long do_faccessat(int dfd, const char __user *filename, int mode, int flags)
+ 		lookup_flags |= LOOKUP_EMPTY;
+ 
+ 	if (!(flags & AT_EACCESS)) {
++		res = -ENOMEM;
+ 		old_cred = access_override_creds();
+ 		if (!old_cred)
+-			return -ENOMEM;
++			goto out_putname;
+ 	}
+ 
+ retry:
+-	res = user_path_at(dfd, filename, lookup_flags, &path);
++	res = filename_lookup(dfd, name, lookup_flags, &path, NULL);
+ 	if (res)
+-		goto out;
++		goto out_revert_creds;
+ 
+ 	inode = d_backing_inode(path.dentry);
+ 
+@@ -459,27 +460,39 @@ long do_faccessat(int dfd, const char __user *filename, int mode, int flags)
  		lookup_flags |= LOOKUP_REVAL;
  		goto retry;
  	}
 -out:
 +	putname(name);
- 	return error;
- }
- 
-+int kern_chroot(const char *filename)
-+{
-+	return do_chroot(getname_kernel(filename));
++out_revert_creds:
+ 	if (old_cred)
+ 		revert_creds(old_cred);
+-
+ 	return res;
++out_putname:
++	if (!IS_ERR(name))
++		putname(name);
++	return res;
 +}
 +
- SYSCALL_DEFINE1(chroot, const char __user *, filename)
- {
--	return ksys_chroot(filename);
-+	return do_chroot(getname(filename));
++int __init kern_access(const char __user *filename, int mode)
++{
++	return do_faccessat(AT_FDCWD, getname_kernel(filename), mode, 0);
  }
  
- static int chmod_common(const struct path *path, umode_t mode)
+ SYSCALL_DEFINE3(faccessat, int, dfd, const char __user *, filename, int, mode)
+ {
+-	return do_faccessat(dfd, filename, mode, 0);
++	return do_faccessat(dfd, getname(filename), mode, 0);
+ }
+ 
+ SYSCALL_DEFINE4(faccessat2, int, dfd, const char __user *, filename, int, mode,
+ 		int, flags)
+ {
+-	return do_faccessat(dfd, filename, mode, flags);
++	unsigned int lookup_flags = (flags & AT_EMPTY_PATH) ? LOOKUP_EMPTY : 0;
++	struct filename *name = getname_flags(filename, lookup_flags, NULL);
++
++	return do_faccessat(dfd, name, mode, flags);
+ }
+ 
+ SYSCALL_DEFINE2(access, const char __user *, filename, int, mode)
+ {
+-	return do_faccessat(AT_FDCWD, filename, mode, 0);
++	return do_faccessat(AT_FDCWD, getname(filename), mode, 0);
+ }
+ 
+ static int do_chdir(struct filename *name)
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index dccb37407e9bad..0205355bffb1bc 100644
+index 0205355bffb1bc..0c7672d3f1172f 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -3672,5 +3672,6 @@ static inline int inode_drain_writes(struct inode *inode)
- }
+@@ -3673,5 +3673,6 @@ static inline int inode_drain_writes(struct inode *inode)
  
  int kern_chdir(const char *filename);
-+int kern_chroot(const char *filename);
+ int kern_chroot(const char *filename);
++int __init kern_access(const char *filename, int mode);
  
  #endif /* _LINUX_FS_H */
 diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index f2a181776b0409..a3176d1a521467 100644
+index a3176d1a521467..b387e3700c68c5 100644
 --- a/include/linux/syscalls.h
 +++ b/include/linux/syscalls.h
-@@ -1236,7 +1236,6 @@ asmlinkage long sys_ni_syscall(void);
-  * the ksys_xyzyyz() functions prototyped below.
-  */
- 
--int ksys_chroot(const char __user *filename);
- ssize_t ksys_write(unsigned int fd, const char __user *buf, size_t count);
- int ksys_fchown(unsigned int fd, uid_t user, gid_t group);
- ssize_t ksys_read(unsigned int fd, char __user *buf, size_t count);
-diff --git a/init/do_mounts.c b/init/do_mounts.c
-index 8c3fca8e2d3c6e..31b8dedb189b57 100644
---- a/init/do_mounts.c
-+++ b/init/do_mounts.c
-@@ -629,7 +629,7 @@ void __init prepare_namespace(void)
- out:
- 	devtmpfs_mount();
- 	do_kern_mount(".", "/", NULL, MS_MOVE, NULL);
--	ksys_chroot(".");
-+	kern_chroot(".");
+@@ -1326,13 +1326,6 @@ static inline int ksys_chmod(const char __user *filename, umode_t mode)
+ 	return do_fchmodat(AT_FDCWD, filename, mode);
  }
  
- static bool is_tmpfs;
-diff --git a/init/do_mounts_initrd.c b/init/do_mounts_initrd.c
-index 522554d703b785..1cbc9988d2e0ad 100644
---- a/init/do_mounts_initrd.c
-+++ b/init/do_mounts_initrd.c
-@@ -63,7 +63,7 @@ static int __init init_linuxrc(struct subprocess_info *info, struct cred *new)
- 	/* move initrd over / and chdir/chroot in initrd root */
- 	kern_chdir("/root");
- 	do_kern_mount(".", "/", NULL, MS_MOVE, NULL);
--	ksys_chroot(".");
-+	kern_chroot(".");
- 	ksys_setsid();
- 	return 0;
- }
-@@ -101,7 +101,7 @@ static void __init handle_initrd(void)
- 	/* move initrd to rootfs' /old */
- 	do_kern_mount("..", ".", NULL, MS_MOVE, NULL);
- 	/* switch root and cwd back to / of rootfs */
--	ksys_chroot("..");
-+	kern_chroot("..");
+-long do_faccessat(int dfd, const char __user *filename, int mode, int flags);
+-
+-static inline long ksys_access(const char __user *filename, int mode)
+-{
+-	return do_faccessat(AT_FDCWD, filename, mode, 0);
+-}
+-
+ extern int do_fchownat(int dfd, const char __user *filename, uid_t user,
+ 		       gid_t group, int flag);
  
- 	if (new_decode_dev(real_root_dev) == Root_RAM0) {
- 		kern_chdir("/old");
+diff --git a/init/main.c b/init/main.c
+index c2c9143db96795..880f195b61abe1 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -1514,8 +1514,7 @@ static noinline void __init kernel_init_freeable(void)
+ 	 * check if there is an early userspace init.  If yes, let it do all
+ 	 * the work
+ 	 */
+-	if (ksys_access((const char __user *)
+-			ramdisk_execute_command, 0) != 0) {
++	if (kern_access(ramdisk_execute_command, 0) != 0) {
+ 		ramdisk_execute_command = NULL;
+ 		prepare_namespace();
+ 	}
 -- 
 2.27.0
 
