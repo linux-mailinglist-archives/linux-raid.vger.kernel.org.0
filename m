@@ -2,193 +2,206 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B45E226948
-	for <lists+linux-raid@lfdr.de>; Mon, 20 Jul 2020 18:30:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 022DC226918
+	for <lists+linux-raid@lfdr.de>; Mon, 20 Jul 2020 18:24:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732317AbgGTP7x (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 20 Jul 2020 11:59:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42128 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732237AbgGTP7v (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 20 Jul 2020 11:59:51 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94334C0619D2;
-        Mon, 20 Jul 2020 08:59:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=10VRYCf+X0T5z2Mm4tKRRm7BN7GX5B7QP0oqeGQ3VHk=; b=N32TaqnPGTYyL3tptrjXUcK4Bw
-        u/x5h3vZxh5F/yaK3rJqefBmJZFOuuge05j+epNumOLaZ5Y4C8jvnzqD7JU5Mr2mJwWrfHJzkaSuf
-        Kw75ktWVqKaEm39YW60rAlh3DFTh6jNnxzCmU29TPejKqZ3wWXuZ/Irr7BMEJ2mc+n4A4wMHyfndn
-        8BmIARbKLdvpSSHv+yyo8VyXga2KAjo7VcAsQMLuoMni3ZpTseyGg4VZVKXy9Cz5qYZUNRbG/u9Va
-        zehOBMnUsGipesKDsl8DW/vdCHizUr483W3eHI6wOQN1mhGXt+go0gUW0HuDyqpXXFttPUKRwBgPE
-        KawhYODg==;
-Received: from [2001:4bb8:105:4a81:db56:edb1:dbf2:5cc3] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxYCf-0007sO-3P; Mon, 20 Jul 2020 15:59:46 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: [PATCH 24/24] fs: add a kern_stat helper
-Date:   Mon, 20 Jul 2020 17:59:02 +0200
-Message-Id: <20200720155902.181712-25-hch@lst.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720155902.181712-1-hch@lst.de>
-References: <20200720155902.181712-1-hch@lst.de>
+        id S1732446AbgGTQDZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 20 Jul 2020 12:03:25 -0400
+Received: from de-smtp-delivery-102.mimecast.com ([51.163.158.102]:23581 "EHLO
+        de-smtp-delivery-102.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732440AbgGTQDX (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:03:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+        t=1595261000;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zPCSK5esa++CReslbbbJl9TJU4EB+wgkbrl9hjesA/A=;
+        b=j7SS2jw5Di1UNNWrjo5YMA4ULXue1Elc6i2U/LAX5GyFdVqGQxDPpnDwvK8S4tPXnPrnHD
+        /CSpqZooN9/EPfkfBr46VaJ4s2DEiJBAItyFyqKd5sjSwsBQOzdCDpafdblHkAg0rEtFvm
+        Fyux49v31/2INA3GX/z9GfQoifkWhtM=
+Received: from EUR01-HE1-obe.outbound.protection.outlook.com
+ (mail-he1eur01lp2052.outbound.protection.outlook.com [104.47.0.52]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ de-mta-13-SSiqNvY1MKmSfnCtkau_TQ-1; Mon, 20 Jul 2020 18:03:19 +0200
+X-MC-Unique: SSiqNvY1MKmSfnCtkau_TQ-1
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Y82bLE/VVO+F6/dCtMoRtllN6bMMEW1TBCfxA64OonVbFmnr89Fh8hq5lljNkpyeHsgYZTMaDMrWdQtXQXwA9XtUJTUBMD5DxMXFClZLuFZUkNty8yHDNTiOAC/TMj6t3UN8nG0RTFziS0ShREMaUF25/07+NR+6Jlco5SSNMJhBzQxLxB5H8eb8vsULS0zl4N+jDGBwVEnjg+ZNJXh/X9WxzZbKmI78BSx5gFORtfXm1qTa90DTjxfAYUUTFtdLbGuWBap2Libmf1x7sJPWQfJF5iVMGf5AAByYzbnnRsMcJOO39bpWjWYxnosjkfyEOIbmd6FJtjjwK8Eu7qJDJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zPCSK5esa++CReslbbbJl9TJU4EB+wgkbrl9hjesA/A=;
+ b=J2W6YwL5Fxd7T/oE9iB1HfUlZYzcObDOekpcC4TXFp9z/zZo4pM78vzNfLiPilkMFGXdh0v4+yMAZHEqU4d+dyjqDkM4shaal1MrfuLdrEUUnC2ST1eVo2MvCjHdC/p+hbVPR7KFnPzRHg7+6pMkdu3tPVoTp1Zw8pZMWh2xydeJzjnTAbRoansrjdhDg5H9huIcp6ply3MJ8btPmDR17wWW8QpqnbwaWJAQwssnBXAUDU/W5i78Twrt4pAWse3W3WqMh5rmoiPU5ykY4BssIarNz5WbqTVYd6LGHgyvQNB/58vglYaRlWn35YYSyUyxo3Y50Y/ZzIwL4G9YqqqMJA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: suse.com; dkim=none (message not signed)
+ header.d=none;suse.com; dmarc=none action=none header.from=suse.com;
+Received: from DB7PR04MB4666.eurprd04.prod.outlook.com (2603:10a6:5:2b::14) by
+ DB7PR04MB4442.eurprd04.prod.outlook.com (2603:10a6:5:35::17) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3195.25; Mon, 20 Jul 2020 16:03:17 +0000
+Received: from DB7PR04MB4666.eurprd04.prod.outlook.com
+ ([fe80::b01a:d99f:8b27:a5aa]) by DB7PR04MB4666.eurprd04.prod.outlook.com
+ ([fe80::b01a:d99f:8b27:a5aa%4]) with mapi id 15.20.3195.025; Mon, 20 Jul 2020
+ 16:03:17 +0000
+Subject: Re: [PATCH v4 1/2] md-cluster: fix safemode_delay value when
+ converting to clustered bitmap
+To:     NeilBrown <neil@brown.name>, linux-raid@vger.kernel.org
+Cc:     neilb@suse.com
+References: <1595156920-31427-1-git-send-email-heming.zhao@suse.com>
+ <1595156920-31427-2-git-send-email-heming.zhao@suse.com>
+ <87k0yzw0km.fsf@notabene.neil.brown.name>
+From:   "heming.zhao@suse.com" <heming.zhao@suse.com>
+Message-ID: <dac17854-04e6-de79-f0a1-e6a200a13771@suse.com>
+Date:   Tue, 21 Jul 2020 00:03:06 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <87k0yzw0km.fsf@notabene.neil.brown.name>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: HK2PR02CA0147.apcprd02.prod.outlook.com
+ (2603:1096:202:16::31) To DB7PR04MB4666.eurprd04.prod.outlook.com
+ (2603:10a6:5:2b::14)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from c73.home (123.123.133.50) by HK2PR02CA0147.apcprd02.prod.outlook.com (2603:1096:202:16::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17 via Frontend Transport; Mon, 20 Jul 2020 16:03:15 +0000
+X-Originating-IP: [123.123.133.50]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d860a086-98c4-477d-c352-08d82cc66a15
+X-MS-TrafficTypeDiagnostic: DB7PR04MB4442:
+X-LD-Processed: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba,ExtFwd
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB7PR04MB44421B31AA5C5EF43CEF1E15977B0@DB7PR04MB4442.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: lnNjjZoX98+Fbzy9Fdb4HpfxdZgKGuzvyvsRfWiCJBCoBxVW2oSpEj0feXA9QAoDr4keaMkOGf0v+3h5leJrmP5odn3+aK8tqZ5GxOzO0Zg7mqweAwGksRBvy3fuF4b+HXQIvMAOfC8BQ3qdsrd0GJebMYt/qiJUbgcVPov9K/QgsCCPpiDwJbHSd0QuwoS48Q6Z8X5HHtC67rbvV7WYsCaoYYYeaaZHgYErJ1M73QgTzJpGFaSo1Ndzbjuzlrk0Vo76Lgz+wGcmzWqScNkD3xgpdWXBFfegap+GG+HNGP+N7+4Ml/gUYzsy3MN49WfQR7py7s2zSDJbPadEBFyfBCpHv9KN9izbe+Wv/pDX2RX/HefFV90EUOzgKUJW72GfqUw8TmFFnC0v7sWNmyfKSQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB4666.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(39860400002)(376002)(366004)(346002)(136003)(8676002)(36756003)(16526019)(86362001)(8936002)(2906002)(66946007)(26005)(6486002)(186003)(8886007)(5660300002)(83380400001)(316002)(4326008)(2616005)(956004)(478600001)(53546011)(6512007)(6506007)(66556008)(66476007)(31696002)(31686004)(52116002)(107886003)(6666004)(9126004)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 7XedcrVwlnEbXf+uv9L+tUn/L/a0sQdRebQr695JC9KL9WZpm9PQ4r2i3Kp7iMUiz5opwXOk3Pzhl1oHMbxlp1hu8VZ5hfThx914+a5YpjRMKKRQvZOfgzrSxtIL24TK7/E6KIwh507V1ux0OvwYmSrYSRl5mAbb8FWlx1UHQQfEPEdSBg8UU2qkm9OcoQNIok7ugge2IG6mSdyhDDTY6+Jnu+ZXgSa1geKpcSq5JIE9UVaqEn28Y2DebtQRD+xTxUSheJ0pNALNXYn6BBgrEfaH4poXCMiKlhakTLK/TiCsltiBd/ztEkvXSJMitN1qHITA5WkQfh4HlxCuSPSQ8uq11H7DqhFd1imCUSxhTBQbLSn01QhzFi+99ofP67dBW17LeE14Evytg+SUacV/UJRjhBpuCv2D/VPpN2XgyOLsEotOx/Q4Fo1ic1kU91OPTu8taJz3DTh6rzyeGzECtJaIZpGZR/2XY7D68BgUSHg=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d860a086-98c4-477d-c352-08d82cc66a15
+X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB4666.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2020 16:03:16.9532
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BwBuT+e0HPhCwkDnSNjH25OwTa/URCKX75/zL0HmSWr3seHhFCDN1MVygv8D/YU7jZjnkU6I4nTuYr932Qr0ew==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4442
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Add a simple helper to stat/lstat with a kernel space file name and
-switch the early init code over to it.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/md/md-autodetect.c |  2 +-
- fs/stat.c                  | 32 ++++++++++++++++++++++----------
- include/linux/fs.h         |  1 +
- init/initramfs.c           |  3 ++-
- 4 files changed, 26 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/md/md-autodetect.c b/drivers/md/md-autodetect.c
-index 14b6e86814c061..5bd52ec05ed821 100644
---- a/drivers/md/md-autodetect.c
-+++ b/drivers/md/md-autodetect.c
-@@ -151,7 +151,7 @@ static void __init md_setup_drive(struct md_setup_args *args)
- 		if (strncmp(devname, "/dev/", 5) == 0)
- 			devname += 5;
- 		snprintf(comp_name, 63, "/dev/%s", devname);
--		if (vfs_stat(comp_name, &stat) == 0 && S_ISBLK(stat.mode))
-+		if (kern_stat(comp_name, &stat, 0) == 0 && S_ISBLK(stat.mode))
- 			dev = new_decode_dev(stat.rdev);
- 		if (!dev) {
- 			pr_warn("md: Unknown device name: %s\n", devname);
-diff --git a/fs/stat.c b/fs/stat.c
-index dacecdda2e7967..3c976b92db00ca 100644
---- a/fs/stat.c
-+++ b/fs/stat.c
-@@ -151,7 +151,7 @@ int vfs_fstat(int fd, struct kstat *stat)
- /**
-  * vfs_statx - Get basic and extra attributes by filename
-  * @dfd: A file descriptor representing the base dir for a relative filename
-- * @filename: The name of the file of interest
-+ * @name: The name of the file of interest
-  * @flags: Flags to control the query
-  * @stat: The result structure to fill in.
-  * @request_mask: STATX_xxx flags indicating what the caller wants
-@@ -163,16 +163,16 @@ int vfs_fstat(int fd, struct kstat *stat)
-  *
-  * 0 will be returned on success, and a -ve error code if unsuccessful.
-  */
--static int vfs_statx(int dfd, const char __user *filename, int flags,
-+static int vfs_statx(int dfd, struct filename *name, int flags,
- 	      struct kstat *stat, u32 request_mask)
- {
- 	struct path path;
- 	unsigned lookup_flags = 0;
--	int error;
-+	int error = -EINVAL;
- 
- 	if (flags & ~(AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT | AT_EMPTY_PATH |
- 		      AT_STATX_SYNC_TYPE))
--		return -EINVAL;
-+		goto out_putname;
- 
- 	if (!(flags & AT_SYMLINK_NOFOLLOW))
- 		lookup_flags |= LOOKUP_FOLLOW;
-@@ -182,9 +182,9 @@ static int vfs_statx(int dfd, const char __user *filename, int flags,
- 		lookup_flags |= LOOKUP_EMPTY;
- 
- retry:
--	error = user_path_at(dfd, filename, lookup_flags, &path);
-+	error = filename_lookup(dfd, name, lookup_flags, &path, NULL);
- 	if (error)
--		goto out;
-+		return error;
- 
- 	error = vfs_getattr(&path, stat, request_mask, flags);
- 	stat->mnt_id = real_mount(path.mnt)->mnt_id;
-@@ -197,15 +197,25 @@ static int vfs_statx(int dfd, const char __user *filename, int flags,
- 		lookup_flags |= LOOKUP_REVAL;
- 		goto retry;
- 	}
--out:
-+out_putname:
-+	if (!IS_ERR(name))
-+		putname(name);
- 	return error;
- }
- 
-+int __init kern_stat(const char *filename, struct kstat *stat, int flags)
-+{
-+	return vfs_statx(AT_FDCWD, getname_kernel(filename),
-+			 flags | AT_NO_AUTOMOUNT, stat, STATX_BASIC_STATS);
-+}
-+
- int vfs_fstatat(int dfd, const char __user *filename,
- 			      struct kstat *stat, int flags)
- {
--	return vfs_statx(dfd, filename, flags | AT_NO_AUTOMOUNT,
--			 stat, STATX_BASIC_STATS);
-+	int lookup_flags = (flags & AT_EMPTY_PATH) ? LOOKUP_EMPTY : 0;
-+
-+	return vfs_statx(dfd, getname_flags(filename, lookup_flags, NULL),
-+			 flags | AT_NO_AUTOMOUNT, stat, STATX_BASIC_STATS);
- }
- 
- #ifdef __ARCH_WANT_OLD_STAT
-@@ -569,6 +579,7 @@ cp_statx(const struct kstat *stat, struct statx __user *buffer)
- int do_statx(int dfd, const char __user *filename, unsigned flags,
- 	     unsigned int mask, struct statx __user *buffer)
- {
-+	int lookup_flags = (flags & AT_EMPTY_PATH) ? LOOKUP_EMPTY : 0;
- 	struct kstat stat;
- 	int error;
- 
-@@ -577,7 +588,8 @@ int do_statx(int dfd, const char __user *filename, unsigned flags,
- 	if ((flags & AT_STATX_SYNC_TYPE) == AT_STATX_SYNC_TYPE)
- 		return -EINVAL;
- 
--	error = vfs_statx(dfd, filename, flags, &stat, mask);
-+	error = vfs_statx(dfd, getname_flags(filename, lookup_flags, NULL),
-+			  flags, &stat, mask);
- 	if (error)
- 		return error;
- 
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 0e0cd6a988bb38..d1f8edb39cf969 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3671,5 +3671,6 @@ int __init kern_link(const char *oldname, const char *newname);
- int __init kern_symlink(const char *oldname, const char *newname);
- int kern_unlink(const char *pathname);
- int __init kern_rmdir(const char *pathname);
-+int __init kern_stat(const char *filename, struct kstat *stat, int flags);
- 
- #endif /* _LINUX_FS_H */
-diff --git a/init/initramfs.c b/init/initramfs.c
-index d72594298133a7..6c605f23900fa1 100644
---- a/init/initramfs.c
-+++ b/init/initramfs.c
-@@ -296,7 +296,8 @@ static void __init clean_path(char *path, umode_t fmode)
- {
- 	struct kstat st;
- 
--	if (!vfs_lstat(path, &st) && (st.mode ^ fmode) & S_IFMT) {
-+	if (kern_stat(path, &st, AT_SYMLINK_NOFOLLOW) &&
-+	    (st.mode ^ fmode) & S_IFMT) {
- 		if (S_ISDIR(st.mode))
- 			kern_rmdir(path);
- 		else
--- 
-2.27.0
+On 7/20/20 7:24 AM, NeilBrown wrote:
+> On Sun, Jul 19 2020, Zhao Heming wrote:
+> 
+>> When array convert to clustered bitmap, the safe_mode_delay doesn't clean and vice versa.
+>> the /sys/block/mdX/md/safe_mode_delay keep original value after changing bitmap type.
+>> in safe_delay_store(), the code forbids setting mddev->safemode_delay when array is clustered.
+>> So in cluster-md env, the expected safemode_delay value should be 0.
+>>
+>> reproduction steps:
+>> ```
+>> node1 # mdadm --zero-superblock /dev/sd{b,c,d}
+>> node1 # mdadm -C /dev/md0 -b internal -e 1.2 -n 2 -l mirror /dev/sdb /dev/sdc
+>> node1 # cat /sys/block/md0/md/safe_mode_delay
+>> 0.204
+>> node1 # mdadm -G /dev/md0 -b none
+>> node1 # mdadm --grow /dev/md0 --bitmap=clustered
+>> node1 # cat /sys/block/md0/md/safe_mode_delay
+>> 0.204  <== doesn't change, should ZERO for cluster-md
+>>
+>> node1 # mdadm --zero-superblock /dev/sd{b,c,d}
+>> node1 # mdadm -C /dev/md0 -b clustered -e 1.2 -n 2 -l mirror /dev/sdb /dev/sdc
+>> node1 # cat /sys/block/md0/md/safe_mode_delay
+>> 0.000
+>> node1 # mdadm -G /dev/md0 -b none
+>> node1 # cat /sys/block/md0/md/safe_mode_delay
+>> 0.000  <== doesn't change, should default value
+>> ```
+>>
+>> md_setup_cluster() is a good place for setting, but md_cluster_stop is
+>> good for clean job when md_setup_cluster return err.
+>>
+>> see below flow:
+>> (user space)
+>> mdadm -C /dev/md0 -b clustered -e 1.2 -n 2 -l mirror /dev/sda /dev/sdb
+>> mdadm --grow /dev/md0 -b none
+>> (kernel space)
+>> SET_ARRAY_INFO
+>>   update_array_info
+>>    + mddev->bitmap_info.nodes = 0;
+>>    + md_cluster_ops->leave(mddev)
+>>    + md_bitmap_destroy
+>>       md_bitmap_free //won't trigger md_cluster_stop() because above set 0.
+>>
+>> Signed-off-by: Zhao Heming <heming.zhao@suse.com>
+>> ---
+>>   drivers/md/md.c | 7 ++++++-
+>>   1 file changed, 6 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/md/md.c b/drivers/md/md.c
+>> index f567f536b529..e20f1d5a5261 100644
+>> --- a/drivers/md/md.c
+>> +++ b/drivers/md/md.c
+>> @@ -101,6 +101,8 @@ static void mddev_detach(struct mddev *mddev);
+>>    * count by 2 for every hour elapsed between read errors.
+>>    */
+>>   #define MD_DEFAULT_MAX_CORRECTED_READ_ERRORS 20
+>> +/* Default safemode delay: 200 msec */
+>> +#define DEFAULT_SAFEMODE_DELAY ((200 * HZ)/1000 +1)
+>>   /*
+>>    * Current RAID-1,4,5 parallel reconstruction 'guaranteed speed limit'
+>>    * is 1000 KB/sec, so the extra system load does not show up that much.
+>> @@ -5982,7 +5984,7 @@ int md_run(struct mddev *mddev)
+>>   	if (mddev_is_clustered(mddev))
+>>   		mddev->safemode_delay = 0;
+>>   	else
+>> -		mddev->safemode_delay = (200 * HZ)/1000 +1; /* 200 msec delay */
+>> +		mddev->safemode_delay = DEFAULT_SAFEMODE_DELAY;
+>>   	mddev->in_sync = 1;
+>>   	smp_wmb();
+>>   	spin_lock(&mddev->lock);
+>> @@ -7361,6 +7363,7 @@ static int update_array_info(struct mddev *mddev, mdu_array_info_t *info)
+>>   
+>>   				mddev->bitmap_info.nodes = 0;
+>>   				md_cluster_ops->leave(mddev);
+>> +				mddev->safemode_delay = DEFAULT_SAFEMODE_DELAY;
+>>   			}
+>>   			mddev_suspend(mddev);
+>>   			md_bitmap_destroy(mddev);
+>> @@ -8366,6 +8369,7 @@ int md_setup_cluster(struct mddev *mddev, int nodes)
+>>   	}
+>>   	spin_unlock(&pers_lock);
+>>   
+>> +	mddev->safemode_delay = 0;
+>>   	return md_cluster_ops->join(mddev, nodes);
+> 
+> I still don't think you should change safemode_delay here until after
+> ->join succeeds.
+> 
+> NeilBrown
+you are right, it makes a gap to set delay to zero before join().
+I will following your comments.
+> 
+>>   }
+>>   
+>> @@ -8375,6 +8379,7 @@ void md_cluster_stop(struct mddev *mddev)
+>>   		return;
+>>   	md_cluster_ops->leave(mddev);
+>>   	module_put(md_cluster_mod);
+>> +	mddev->safemode_delay = DEFAULT_SAFEMODE_DELAY;
+>>   }
+>>   
+>>   static int is_mddev_idle(struct mddev *mddev, int init)
+>> -- 
+>> 2.25.0
 
