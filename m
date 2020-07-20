@@ -2,31 +2,31 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0740B2265FA
-	for <lists+linux-raid@lfdr.de>; Mon, 20 Jul 2020 17:59:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E2942265F9
+	for <lists+linux-raid@lfdr.de>; Mon, 20 Jul 2020 17:59:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732150AbgGTP7M (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 20 Jul 2020 11:59:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41980 "EHLO
+        id S1731873AbgGTP7K (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 20 Jul 2020 11:59:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732140AbgGTP7L (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 20 Jul 2020 11:59:11 -0400
+        with ESMTP id S1732127AbgGTP7I (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 20 Jul 2020 11:59:08 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0A30C0619D2;
-        Mon, 20 Jul 2020 08:59:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EF1BC061794;
+        Mon, 20 Jul 2020 08:59:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=ATjmBzjI/n6oxkwr3gKzLrXKn2KIaLRJvHCblp/KGMo=; b=ieVgzSIF0/MnWX86vE7znh0SaZ
-        +w0UOnDHJfs6ucW7fJdERo7h+KGK27CyD70XmHEWC5JSJFGpreOWoAdQ+gBBUDX5ugIIaBassftAg
-        N4zRCBYNIJeD+uIp9cTApbCgkSAXCgWaRElPc4HL3jDQsMz4xPYlgFhCkw677jPNvSOserBfWSPoT
-        geQZ1Ai/Vye5Knk6VdPjP9WUOXPPFVA3I6JJ/bR9I/IPO64MPHvk++2Dse1hZyED9cCs5WKLPtcnN
-        O4x+psI9RMnV4uaIkuNb3I0w3kYNz1djswFGsVGs2bI6UYEII16DHee6rPnQOqShAk6C2h9TotZm7
-        7gK2+Zdw==;
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=wH1km2ojPC19iQ5ljU6mKThZqRhQ0p6SNiSca9bvcb4=; b=ragr2qUYABEngfygXGZqb8ZnM0
+        yhbkiW5TKV6WWYluat9zuI7JpscuFj/2xPIGQwaG8Jh4rC83L4qD+4+oMlrMW9JmuO1zcizt0hj6e
+        gd+DivP8iaenwZv8HQWe0pj16vPSvXR1+gdlLUOb2DqSfSfSPwLKsDRq8cpgzMbB+WUfFA55E7Gl5
+        SKdWXmekWSmLXqxqViJgJUc/7jm4ljuBjLE1zZNyB2pTEVWqr8O8TDCaORM4dJgLmRvwRYtv272AH
+        Z+bfZCn2SeApfZCWhObEM4woQUwlQMuxhKAQIazTU5FiUVX1M7rfvxaqRfN31Hf/a0wVoxtsndG75
+        OewVjeAA==;
 Received: from [2001:4bb8:105:4a81:db56:edb1:dbf2:5cc3] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxYBz-0007mY-7z; Mon, 20 Jul 2020 15:59:03 +0000
+        id 1jxYC0-0007md-NU; Mon, 20 Jul 2020 15:59:05 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>
@@ -34,10 +34,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: add file system helpers that take kernel pointers for the init code
-Date:   Mon, 20 Jul 2020 17:58:38 +0200
-Message-Id: <20200720155902.181712-1-hch@lst.de>
+Subject: [PATCH 01/24] init: initialize ramdisk_execute_command at compile time
+Date:   Mon, 20 Jul 2020 17:58:39 +0200
+Message-Id: <20200720155902.181712-2-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720155902.181712-1-hch@lst.de>
+References: <20200720155902.181712-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
@@ -46,51 +48,39 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi Al,
+Set ramdisk_execute_command to "/init" at compile time.  The command
+line can still override it, but this saves a few instructions and
+removes a NULL check.
 
-currently a lot of the file system calls in the early in code (and the
-devtmpfs kthread) rely on the implicit set_fs(KERNEL_DS) during boot.
-This is one of the few last remaining places we need to deal with to kill
-off set_fs entirely, so this series adds new helpers that take kernel
-pointers.  That is mostly done by pushing the getname() call further up
-the stack so that we can add variants using getname_kernel() without
-duplicating code.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ init/main.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-The series sits on top of my previous
+diff --git a/init/main.c b/init/main.c
+index db0621dfbb0468..c2c9143db96795 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -154,7 +154,7 @@ static bool initargs_found;
+ #endif
+ 
+ static char *execute_command;
+-static char *ramdisk_execute_command;
++static char *ramdisk_execute_command = "/init";
+ 
+ /*
+  * Used to generate warnings if static_key manipulation functions are used
+@@ -1514,10 +1514,6 @@ static noinline void __init kernel_init_freeable(void)
+ 	 * check if there is an early userspace init.  If yes, let it do all
+ 	 * the work
+ 	 */
+-
+-	if (!ramdisk_execute_command)
+-		ramdisk_execute_command = "/init";
+-
+ 	if (ksys_access((const char __user *)
+ 			ramdisk_execute_command, 0) != 0) {
+ 		ramdisk_execute_command = NULL;
+-- 
+2.27.0
 
-  "decruft the early init / initrd / initramfs code v2"
-
-series.
-
-
-Git tree:
-
-    git://git.infradead.org/users/hch/misc.git kern_path
-
-Gitweb:
-
-    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/kern_path
-
-
-Diffstat:
- drivers/base/devtmpfs.c    |    8 +-
- drivers/md/md-autodetect.c |    2 
- fs/coredump.c              |    2 
- fs/fs_parser.c             |    1 
- fs/internal.h              |   12 ---
- fs/namei.c                 |  166 +++++++++++++++++++++++++++++++--------------
- fs/namespace.c             |  134 +++++++++++++++++++++---------------
- fs/open.c                  |  149 ++++++++++++++++++++++++++++------------
- fs/stat.c                  |   92 ++++++++++++------------
- fs/utimes.c                |   19 +++--
- include/linux/fs.h         |   39 +++++-----
- include/linux/syscalls.h   |   82 ----------------------
- init/do_mounts.c           |   12 +--
- init/do_mounts.h           |    4 -
- init/do_mounts_initrd.c    |   26 +++----
- init/do_mounts_rd.c        |    2 
- init/initramfs.c           |   27 +++----
- init/main.c                |    9 --
- init/noinitramfs.c         |    9 +-
- kernel/uid16.c             |   15 ----
- 20 files changed, 434 insertions(+), 376 deletions(-)
