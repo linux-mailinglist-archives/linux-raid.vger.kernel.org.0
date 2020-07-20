@@ -2,104 +2,95 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 93BCE2265C6
-	for <lists+linux-raid@lfdr.de>; Mon, 20 Jul 2020 17:58:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0740B2265FA
+	for <lists+linux-raid@lfdr.de>; Mon, 20 Jul 2020 17:59:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731385AbgGTP5G (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 20 Jul 2020 11:57:06 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58948 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731865AbgGTP5F (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 20 Jul 2020 11:57:05 -0400
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595260623;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xAbB9oKLEGHYN+w+z0ndpRUVlVFavwl3/3bbk6nkTI4=;
-        b=aE6HVWQ7elJ3Wu43Nx5S0EQ9uUnwoWtplV7pqe9NN1rsZuauKrP9qAmb6mHlhJ7U1sFSgw
-        AxExVzSlqPCo7f2hJBEUQ9fxPD9kfIMD9fn/jzMWs+qYfqBdFwIBDMFtaR+nroor6T2IO7
-        B/lq1xpYO7qfSDgiEwK/u5bUU4jAo1f4liQajoKBqfgyKSWxKOhglHIcUJDJ/uovzhkW3t
-        /r/U3lkl0ScjCT828osOd2wnToGbfvCzbQjnfJFcm9G20jbVFIei/qonANgpXdfibLORrG
-        LXIwwdJ69ykwevM0BHecoxt3L9lD15kOCm2dUBPivw0BpPHrBTBCvQOtdWMd2Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595260623;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xAbB9oKLEGHYN+w+z0ndpRUVlVFavwl3/3bbk6nkTI4=;
-        b=8sQVdjG9J9NWk5nP1uFu8LkSAunXaXDWeXbROR0vV/v1xYMoVS1qTisuyD7tE97Y+Dlut3
-        5SAPGx+i1aRtshCQ==
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Song Liu <song@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH v4 19/24] raid5: Use sequence counter with associated spinlock
-Date:   Mon, 20 Jul 2020 17:55:25 +0200
-Message-Id: <20200720155530.1173732-20-a.darwish@linutronix.de>
-In-Reply-To: <20200720155530.1173732-1-a.darwish@linutronix.de>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200720155530.1173732-1-a.darwish@linutronix.de>
+        id S1732150AbgGTP7M (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 20 Jul 2020 11:59:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41980 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732140AbgGTP7L (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 20 Jul 2020 11:59:11 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0A30C0619D2;
+        Mon, 20 Jul 2020 08:59:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=ATjmBzjI/n6oxkwr3gKzLrXKn2KIaLRJvHCblp/KGMo=; b=ieVgzSIF0/MnWX86vE7znh0SaZ
+        +w0UOnDHJfs6ucW7fJdERo7h+KGK27CyD70XmHEWC5JSJFGpreOWoAdQ+gBBUDX5ugIIaBassftAg
+        N4zRCBYNIJeD+uIp9cTApbCgkSAXCgWaRElPc4HL3jDQsMz4xPYlgFhCkw677jPNvSOserBfWSPoT
+        geQZ1Ai/Vye5Knk6VdPjP9WUOXPPFVA3I6JJ/bR9I/IPO64MPHvk++2Dse1hZyED9cCs5WKLPtcnN
+        O4x+psI9RMnV4uaIkuNb3I0w3kYNz1djswFGsVGs2bI6UYEII16DHee6rPnQOqShAk6C2h9TotZm7
+        7gK2+Zdw==;
+Received: from [2001:4bb8:105:4a81:db56:edb1:dbf2:5cc3] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxYBz-0007mY-7z; Mon, 20 Jul 2020 15:59:03 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: add file system helpers that take kernel pointers for the init code
+Date:   Mon, 20 Jul 2020 17:58:38 +0200
+Message-Id: <20200720155902.181712-1-hch@lst.de>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-A sequence counter write side critical section must be protected by some
-form of locking to serialize writers. A plain seqcount_t does not
-contain the information of which lock must be held when entering a write
-side critical section.
+Hi Al,
 
-Use the new seqcount_spinlock_t data type, which allows to associate a
-spinlock with the sequence counter. This enables lockdep to verify that
-the spinlock used for writer serialization is held when the write side
-critical section is entered.
+currently a lot of the file system calls in the early in code (and the
+devtmpfs kthread) rely on the implicit set_fs(KERNEL_DS) during boot.
+This is one of the few last remaining places we need to deal with to kill
+off set_fs entirely, so this series adds new helpers that take kernel
+pointers.  That is mostly done by pushing the getname() call further up
+the stack so that we can add variants using getname_kernel() without
+duplicating code.
 
-If lockdep is disabled this lock association is compiled out and has
-neither storage size nor runtime overhead.
+The series sits on top of my previous
 
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
----
- drivers/md/raid5.c | 2 +-
- drivers/md/raid5.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+  "decruft the early init / initrd / initramfs code v2"
 
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index ab8067f9ce8c..892aefe88fa7 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -6935,7 +6935,7 @@ static struct r5conf *setup_conf(struct mddev *mddev)
- 	} else
- 		goto abort;
- 	spin_lock_init(&conf->device_lock);
--	seqcount_init(&conf->gen_lock);
-+	seqcount_spinlock_init(&conf->gen_lock, &conf->device_lock);
- 	mutex_init(&conf->cache_size_mutex);
- 	init_waitqueue_head(&conf->wait_for_quiescent);
- 	init_waitqueue_head(&conf->wait_for_stripe);
-diff --git a/drivers/md/raid5.h b/drivers/md/raid5.h
-index f90e0704bed9..a2c9e9e9f5ac 100644
---- a/drivers/md/raid5.h
-+++ b/drivers/md/raid5.h
-@@ -589,7 +589,7 @@ struct r5conf {
- 	int			prev_chunk_sectors;
- 	int			prev_algo;
- 	short			generation; /* increments with every reshape */
--	seqcount_t		gen_lock;	/* lock against generation changes */
-+	seqcount_spinlock_t	gen_lock;	/* lock against generation changes */
- 	unsigned long		reshape_checkpoint; /* Time we last updated
- 						     * metadata */
- 	long long		min_offset_diff; /* minimum difference between
--- 
-2.20.1
+series.
 
+
+Git tree:
+
+    git://git.infradead.org/users/hch/misc.git kern_path
+
+Gitweb:
+
+    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/kern_path
+
+
+Diffstat:
+ drivers/base/devtmpfs.c    |    8 +-
+ drivers/md/md-autodetect.c |    2 
+ fs/coredump.c              |    2 
+ fs/fs_parser.c             |    1 
+ fs/internal.h              |   12 ---
+ fs/namei.c                 |  166 +++++++++++++++++++++++++++++++--------------
+ fs/namespace.c             |  134 +++++++++++++++++++++---------------
+ fs/open.c                  |  149 ++++++++++++++++++++++++++++------------
+ fs/stat.c                  |   92 ++++++++++++------------
+ fs/utimes.c                |   19 +++--
+ include/linux/fs.h         |   39 +++++-----
+ include/linux/syscalls.h   |   82 ----------------------
+ init/do_mounts.c           |   12 +--
+ init/do_mounts.h           |    4 -
+ init/do_mounts_initrd.c    |   26 +++----
+ init/do_mounts_rd.c        |    2 
+ init/initramfs.c           |   27 +++----
+ init/main.c                |    9 --
+ init/noinitramfs.c         |    9 +-
+ kernel/uid16.c             |   15 ----
+ 20 files changed, 434 insertions(+), 376 deletions(-)
