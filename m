@@ -2,114 +2,103 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C5B8228215
-	for <lists+linux-raid@lfdr.de>; Tue, 21 Jul 2020 16:26:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 375D822859D
+	for <lists+linux-raid@lfdr.de>; Tue, 21 Jul 2020 18:30:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728153AbgGUO0m (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 21 Jul 2020 10:26:42 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52996 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726412AbgGUO0l (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 21 Jul 2020 10:26:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595341600;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6TTbJDXw9juqx7GHf25fmdcVFUqbBz8s28P0Ijl2LM8=;
-        b=Dn2NHLiz7Zn4NScnzcXW7S4XOCJ9hEehsGrZ7TilHkwtbQNEX+Err035+z73GW1tCrM7DF
-        DRFlwO+FBO4cQDrjkl7gAT5VXMwoIHgjfCv9UuYYrUDevKG/l64he5gomB5YaevqMnKoS5
-        sii+yp5QviC+nXXI8CRi5gcGjKsMNOE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-446-pP2qZbnxOtiUKw1dr6EIcQ-1; Tue, 21 Jul 2020 10:26:38 -0400
-X-MC-Unique: pP2qZbnxOtiUKw1dr6EIcQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8608E800471;
-        Tue, 21 Jul 2020 14:26:37 +0000 (UTC)
-Received: from ovpn-114-9.rdu2.redhat.com (ovpn-114-9.rdu2.redhat.com [10.10.114.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1D2E0100EBA7;
-        Tue, 21 Jul 2020 14:26:37 +0000 (UTC)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
-Subject: Re: [PATCH 1/1] md/raid10: avoid deadlock on recovery.
-From:   Nigel Croxon <ncroxon@redhat.com>
-In-Reply-To: <1583259280-124995-2-git-send-email-vmayatskikh@digitalocean.com>
-Date:   Tue, 21 Jul 2020 10:26:35 -0400
-Cc:     linux-raid@vger.kernel.org, Song Liu <liu.song.a23@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D5A36675-8344-4D67-9836-64F9BA78D78E@redhat.com>
-References: <1583259280-124995-1-git-send-email-vmayatskikh@digitalocean.com>
- <1583259280-124995-2-git-send-email-vmayatskikh@digitalocean.com>
-To:     Vitaly Mayatskikh <vmayatskikh@digitalocean.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        id S1730346AbgGUQ2b (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 21 Jul 2020 12:28:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730281AbgGUQ23 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 21 Jul 2020 12:28:29 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8140C061794;
+        Tue, 21 Jul 2020 09:28:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=OcSSjx97fwoZC4nhn07d+eqA+7PeJMhHbLVmJrKte/4=; b=RCKVwb23G5tMsdVaSYXYEn8cRi
+        gapiaPvQDrM0STAn+lc5PvvrmQfo/UKf+CMmkO37ePt8WB+q6btgK3J4pyOBBWXS1KQbJFWu6ddFh
+        RoEQm1SRh1ul6mOB7vW4KESKzhKb+GqoGcCXTDBPIxrEC3Kq9qFSuJjlBXAmP+xGPbhGdCuLdVUvB
+        R8FKGYYLzL1+pFy2VXA0UOSSHN65PkM52yhfOzuL+U8uhIDYoHGyRnkM87hJcfI4nglMlHN4kd432
+        VUOf1TbMNf8zz87QyOYcBcZe3v0d7RHqB4hNJFr9zOtluBuLHp19FyTAlHcQPm/Gq53oZw/xECTAa
+        3GTIrdbw==;
+Received: from [2001:4bb8:18c:2acc:5b1c:6483:bd6d:e406] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxv7y-0007S1-0t; Tue, 21 Jul 2020 16:28:26 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: [PATCH 05/24] devtmpfs: open code ksys_chdir and ksys_chroot
+Date:   Tue, 21 Jul 2020 18:27:59 +0200
+Message-Id: <20200721162818.197315-6-hch@lst.de>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200721162818.197315-1-hch@lst.de>
+References: <20200721162818.197315-1-hch@lst.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+devtmpfs is the only non-early init caller of ksys_chdir and ksys_chroot
+with kernel pointers.  Just open code the two operations which only
+really need a single path lookup anyway in devtmpfs_setup instead.
+The open coded verson doesn't need any of the stale dentry revalidation
+logic from the full blown version as those can't happen on tmpfs and
+ramfs.
 
-> On Mar 3, 2020, at 1:14 PM, Vitaly Mayatskikh =
-<vmayatskikh@digitalocean.com> wrote:
->=20
-> When disk failure happens and the array has a spare drive, resync =
-thread
-> kicks in and starts to refill the spare. However it may get blocked by
-> a retry thread that resubmits failed IO to a mirror and itself can get
-> blocked on a barrier raised by the resync thread.
->=20
-> Signed-off-by: Vitaly Mayatskikh <vmayatskikh@digitalocean.com>
-> ---
-> drivers/md/raid10.c | 14 +++++++++++---
-> 1 file changed, 11 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-> index ec136e4..f1a8e26 100644
-> --- a/drivers/md/raid10.c
-> +++ b/drivers/md/raid10.c
-> @@ -980,6 +980,7 @@ static void wait_barrier(struct r10conf *conf)
-> {
-> 	spin_lock_irq(&conf->resync_lock);
-> 	if (conf->barrier) {
-> +		struct bio_list *bio_list =3D current->bio_list;
-> 		conf->nr_waiting++;
-> 		/* Wait for the barrier to drop.
-> 		 * However if there are already pending
-> @@ -994,9 +995,16 @@ static void wait_barrier(struct r10conf *conf)
-> 		wait_event_lock_irq(conf->wait_barrier,
-> 				    !conf->barrier ||
-> 				    (atomic_read(&conf->nr_pending) &&
-> -				     current->bio_list &&
-> -				     =
-(!bio_list_empty(&current->bio_list[0]) ||
-> -				      =
-!bio_list_empty(&current->bio_list[1]))),
-> +				     bio_list &&
-> +				     (!bio_list_empty(&bio_list[0]) ||
-> +				      !bio_list_empty(&bio_list[1]))) ||
-> +				     /* move on if recovery thread is
-> +				      * blocked by us
-> +				      */
-> +				     (conf->mddev->thread->tsk =3D=3D =
-current &&
-> +				      test_bit(MD_RECOVERY_RUNNING,
-> +					       &conf->mddev->recovery) =
-&&
-> +				      conf->nr_queued > 0),
-> 				    conf->resync_lock);
-> 		conf->nr_waiting--;
-> 		if (!conf->nr_waiting)
-> =E2=80=94=20
-> 1.8.3.1
->=20
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/base/devtmpfs.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-Song, Have you had a chance to look at this patch?
-We would like to have it pulled in to the kernel.
-
--Nigel
-
+diff --git a/drivers/base/devtmpfs.c b/drivers/base/devtmpfs.c
+index 5e8d677ee783bc..f798d3976b4052 100644
+--- a/drivers/base/devtmpfs.c
++++ b/drivers/base/devtmpfs.c
+@@ -25,6 +25,7 @@
+ #include <linux/sched.h>
+ #include <linux/slab.h>
+ #include <linux/kthread.h>
++#include <linux/fs_struct.h>
+ #include <uapi/linux/mount.h>
+ #include "base.h"
+ 
+@@ -393,6 +394,7 @@ static int handle(const char *name, umode_t mode, kuid_t uid, kgid_t gid,
+ 
+ static int devtmpfs_setup(void *p)
+ {
++	struct path path;
+ 	int err;
+ 
+ 	err = ksys_unshare(CLONE_NEWNS);
+@@ -401,8 +403,16 @@ static int devtmpfs_setup(void *p)
+ 	err = devtmpfs_do_mount("/");
+ 	if (err)
+ 		goto out;
+-	ksys_chdir("/.."); /* will traverse into overmounted root */
+-	ksys_chroot(".");
++
++	/* traverse into overmounted root and then chroot to it */
++	if (!kern_path("/..", LOOKUP_FOLLOW | LOOKUP_DIRECTORY, &path) &&
++	    !inode_permission(path.dentry->d_inode, MAY_EXEC | MAY_CHDIR) &&
++	    ns_capable(current_user_ns(), CAP_SYS_CHROOT) &&
++	    !security_path_chroot(&path)) {
++		set_fs_pwd(current->fs, &path);
++		set_fs_root(current->fs, &path);
++	}
++	path_put(&path);
+ out:
+ 	*(int *)p = err;
+ 	complete(&setup_done);
+-- 
+2.27.0
 
