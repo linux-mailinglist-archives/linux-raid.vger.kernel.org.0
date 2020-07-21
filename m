@@ -2,213 +2,166 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C80F227B4C
-	for <lists+linux-raid@lfdr.de>; Tue, 21 Jul 2020 10:58:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA08B228011
+	for <lists+linux-raid@lfdr.de>; Tue, 21 Jul 2020 14:38:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbgGUI64 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 21 Jul 2020 04:58:56 -0400
-Received: from de-smtp-delivery-102.mimecast.com ([62.140.7.102]:58724 "EHLO
-        de-smtp-delivery-102.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726089AbgGUI64 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 21 Jul 2020 04:58:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-        t=1595321932;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UPMK5y6rVqcV62qf/1IGQYayDi1aMJO+c+dEMc/5G/Y=;
-        b=dqKYioFnx6yaL5UFNpJrbMXHfN3gr5ZL+YDgOXJL534UCaAKvsCfGaDepcSgxdvEfjqYSU
-        Fu4ILJFi53D64grzK7WGZ/xl4ut7v8KhEzt3w4fI3WDQCX8HuCHfQjrhcBzrKjNGGHSPLl
-        h8oxj+mQRlmt6hQKuQFHbpUxUlWGrDQ=
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com
- (mail-he1eur04lp2053.outbound.protection.outlook.com [104.47.13.53]) (Using
- TLS) by relay.mimecast.com with ESMTP id de-mta-2-NH-_GMCTMbe0jg_hCixbGg-1;
- Tue, 21 Jul 2020 10:58:48 +0200
-X-MC-Unique: NH-_GMCTMbe0jg_hCixbGg-1
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bKadk13C1X/0Y0CNFZCTAhoXP/Lu9WHBsuEelwI6FhFlIIJYOxOEpme2hxBCdj7YG9WY876BlXaUgqpz8CqLUxVCgVwwVszAc/FfFYNENYDd3O6AKUC4+ctWZjTvA3G1eg0MsMox9Jp9KnJh63xS3cBrDsfBCCetMQqkiR5fBpnYV2Z/yXMuDHtCno/ffEo6wfsGzxUw4vY4tf4RN2yq7qlP+itkTWaIU6uqZ9h64O6BussQG3zJNe7Y+zjODT9uS6zeQ5Jf8KFro06y6YfvXFbbL4GuvodhRlpJyIYOULOBtqzYlkaRb5C7V/JIOU6IZqLahrXsSDpS/tMiImn6xA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qCK7cszd0BShPirCZL/4P3AZWriezKrt0qMYDNzHmJo=;
- b=SXtFrCbbMqHdTvesb3K7de6SkMFBYuTDNlvI/sOuwDvOa7TL7N06ukeMy/51i1RAjEfyg8iJ293i8U5DoaoK4F71ldiU/qy+cqWlnVnnJMHCkQybNfm/qbao3U9+zBEVPtc1HrQfj8xcBVNacOhzfPMPJ1+PXDcDhdoHWdYmFu3TmrgtCtLvKyul/ydMXReqtHWvIlqLLbKbyEC1Ptjkgq7PaCNSz53wM+BeeL4BDMY8g4IB/MNf7p9F1lj9CdojxLxBwtEwlfM+Lq2sN6eD0dksAi4gQwTLk4/v+2E28NI1YlMVuwE7abuyJ2FlLxC4pXVMCG4PAPUEf1G4JRcZCw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=suse.com;
-Received: from DB7PR04MB4666.eurprd04.prod.outlook.com (2603:10a6:5:2b::14) by
- DB7PR04MB4731.eurprd04.prod.outlook.com (2603:10a6:10:15::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3195.23; Tue, 21 Jul 2020 08:58:46 +0000
-Received: from DB7PR04MB4666.eurprd04.prod.outlook.com
- ([fe80::b01a:d99f:8b27:a5aa]) by DB7PR04MB4666.eurprd04.prod.outlook.com
- ([fe80::b01a:d99f:8b27:a5aa%4]) with mapi id 15.20.3195.026; Tue, 21 Jul 2020
- 08:58:46 +0000
-Subject: Re: [PATCH v5 1/2] md-cluster: fix safemode_delay value when
- converting to clustered bitmap
-To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        linux-raid@vger.kernel.org
-CC:     neilb@suse.com, song@kernel.org
-References: <1595268533-7040-1-git-send-email-heming.zhao@suse.com>
- <1595268533-7040-2-git-send-email-heming.zhao@suse.com>
- <8f122dea-2a4a-4523-653f-fe6fc2842653@cloud.ionos.com>
-From:   "heming.zhao@suse.com" <heming.zhao@suse.com>
-Message-ID: <f1b63409-5837-cfcd-2a6e-05d9cb753d3f@suse.com>
-Date:   Tue, 21 Jul 2020 16:58:35 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <8f122dea-2a4a-4523-653f-fe6fc2842653@cloud.ionos.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: HKAPR03CA0013.apcprd03.prod.outlook.com
- (2603:1096:203:c8::18) To DB7PR04MB4666.eurprd04.prod.outlook.com
- (2603:10a6:5:2b::14)
+        id S1727025AbgGUMgy (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 21 Jul 2020 08:36:54 -0400
+Received: from mga17.intel.com ([192.55.52.151]:54081 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726636AbgGUMgx (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 21 Jul 2020 08:36:53 -0400
+IronPort-SDR: opuNZ7bfr0bcVNew1gTA98gW1nGiTlWY3Qy3pGVCjvabeSk/HLW7XGDpVCNr3uhuHFkI7pi7Fq
+ 0vrOCjfJ+1TA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="130187333"
+X-IronPort-AV: E=Sophos;i="5.75,378,1589266800"; 
+   d="scan'208";a="130187333"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 05:36:51 -0700
+IronPort-SDR: iHLArFkIHlQaefqDdV3DwvQ6spZKNvq8/Y5x8p7Qeu75Q63n8D95+3ZWJsoMGbmXXFM5QE/MEk
+ Bcf/6SF8yndA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,378,1589266800"; 
+   d="scan'208";a="362349228"
+Received: from lkp-server02.sh.intel.com (HELO 7dd7ac9fbea4) ([10.239.97.151])
+  by orsmga001.jf.intel.com with ESMTP; 21 Jul 2020 05:36:50 -0700
+Received: from kbuild by 7dd7ac9fbea4 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jxrVp-000061-Ix; Tue, 21 Jul 2020 12:36:49 +0000
+Date:   Tue, 21 Jul 2020 20:35:46 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Song Liu <song@kernel.org>
+Cc:     linux-raid@vger.kernel.org
+Subject: [song-md:md-next] BUILD SUCCESS
+ 1684e97538b9484c72bcaff2961569c3b0021473
+Message-ID: <5f16e122.9DKLcRHs8GuVPwi0%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from c73.home (123.123.133.50) by HKAPR03CA0013.apcprd03.prod.outlook.com (2603:1096:203:c8::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.15 via Frontend Transport; Tue, 21 Jul 2020 08:58:44 +0000
-X-Originating-IP: [123.123.133.50]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a3bb2bb4-7487-48e9-df13-08d82d5446ba
-X-MS-TrafficTypeDiagnostic: DB7PR04MB4731:
-X-LD-Processed: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba,ExtFwd
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB7PR04MB47314EBF848728D62FCB7F3F97780@DB7PR04MB4731.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: SAMFFgTa25ApCGmBrQKjuW2stSUXzHEmFkazh94P4oKQFQnvZOJH+PnhgkItNQOgZt8z4lo0g2ZyCnrqlVvaCwKTB/EVWDMUwq3K42aY5UyglNYcntQHjA51sX4p70F0irC1JxPEa6rYJhrFAd2HpK2UZ7iDT+a+lhUxEs0qZfsQ2oP/9BR6YJiHCcOEV/PJZfp4ryOvOIgC8qzZIhdPYNsm/0mGuLRJfJavrXutnSmk5japFqEnjbXrNN+zy5UedR9SDrTqCFWlQ8kaTnhQpNR2jqB4+NTzdmXA2NA4OQTo+dg7uR41mY9vL0O51RT//eLsY6aahZTP8P6FMRr/0grXjELmJvdcYRTIBAYAXO3jnRkdKlcfh397h+TtcaPTzxBPA0gy6nMLlEC+jf+VQg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB4666.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(39860400002)(366004)(396003)(346002)(136003)(2906002)(6486002)(6512007)(66556008)(66476007)(31696002)(86362001)(316002)(66946007)(53546011)(52116002)(31686004)(26005)(4326008)(6506007)(83380400001)(8936002)(956004)(8676002)(2616005)(5660300002)(36756003)(478600001)(6666004)(8886007)(16526019)(186003)(9126004)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: Nif8Dt3eQy3jMi1kPfH7Ry5fVqQZrB5oqhvwvfZzPolvXv5afaPLKLZq5TtZ/+q7coqotTgqohkGd7mbdeau8sYbsWD/vXT52AA7OUh/NIkzhCeWZ4s2hA8TGUePLJbTUxLiQEzkOdqfbNWnWKoM1yVbcYMeWU/lNajNxZPFWAUgIwPdcnkaI/pPVuB/tYNt1SDqkrVsfXrhXlcGCUKjHn1cgtsettrVFA/0+WwTYj4E9jjOWI7kvohIeR+FFZUkFfCQBQMrJhdv19tXX8qTBhgN7Qg5yArmdai++V4zxJZeAtw+JsNHLESN7oXd3iuEq0Xk2qRgm+WVdiJM8k/kRzm8lmc6gHzii4dpBgm3VeukvMVj//2g8JHl6mVtyR4WiRnCDagLjChvfWAp1DbTPT0NcTgzmnAZ29gjNcmgGzP9X1UW971KrX3BqQ1MHecnNxxDHW2GWyhCmgJI1D2DkTW5ruGCdanjjtPKmMdo9hg=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a3bb2bb4-7487-48e9-df13-08d82d5446ba
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB4666.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jul 2020 08:58:46.1459
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6GPdcOiouv/pyuC491Oo0sn+O2syEAe/FKfROj3jn4oHAkaqye2uNXv7eEk73LpDcrwg343Dyt6pLyU2z8D4eQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4731
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+tree/branch: git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git  md-next
+branch HEAD: 1684e97538b9484c72bcaff2961569c3b0021473  raid5: remove the meaningless check in raid5_make_request
 
+elapsed time: 6862m
 
-On 7/21/20 4:35 PM, Guoqing Jiang wrote:
->=20
->=20
-> On 7/20/20 8:08 PM, Zhao Heming wrote:
->> When array convert to clustered bitmap, the safe_mode_delay doesn't
->> clean and vice versa. the /sys/block/mdX/md/safe_mode_delay keep origina=
-l
->> value after changing bitmap type. In safe_delay_store(), the code forbid=
-s
->> setting mddev->safemode_delay when array is clustered. So in cluster-md
->> env, the expected safemode_delay value should be 0.
->>
->> Reproducible steps:
->> ```
->> node1 # mdadm --zero-superblock /dev/sd{b,c,d}
->> node1 # mdadm -C /dev/md0 -b internal -e 1.2 -n 2 -l mirror /dev/sdb /de=
-v/sdc
->> node1 # cat /sys/block/md0/md/safe_mode_delay
->> 0.204
->> node1 # mdadm -G /dev/md0 -b none
->> node1 # mdadm --grow /dev/md0 --bitmap=3Dclustered
->> node1 # cat /sys/block/md0/md/safe_mode_delay
->> 0.204=C2=A0 <=3D=3D doesn't change, should ZERO for cluster-md
->>
->> node1 # mdadm --zero-superblock /dev/sd{b,c,d}
->> node1 # mdadm -C /dev/md0 -b clustered -e 1.2 -n 2 -l mirror /dev/sdb /d=
-ev/sdc
->> node1 # cat /sys/block/md0/md/safe_mode_delay
->> 0.000
->> node1 # mdadm -G /dev/md0 -b none
->> node1 # cat /sys/block/md0/md/safe_mode_delay
->> 0.000=C2=A0 <=3D=3D doesn't change, should default value
->> ```
->>
->> Signed-off-by: Zhao Heming <heming.zhao@suse.com>
->> ---
->> =C2=A0 drivers/md/md.c | 11 +++++++++--
->> =C2=A0 1 file changed, 9 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/md/md.c b/drivers/md/md.c
->> index f567f536b529..1bde3df3fa18 100644
->> --- a/drivers/md/md.c
->> +++ b/drivers/md/md.c
->> @@ -101,6 +101,8 @@ static void mddev_detach(struct mddev *mddev);
->> =C2=A0=C2=A0 * count by 2 for every hour elapsed between read errors.
->> =C2=A0=C2=A0 */
->> =C2=A0 #define MD_DEFAULT_MAX_CORRECTED_READ_ERRORS 20
->> +/* Default safemode delay: 200 msec */
->> +#define DEFAULT_SAFEMODE_DELAY ((200 * HZ)/1000 +1)
->> =C2=A0 /*
->> =C2=A0=C2=A0 * Current RAID-1,4,5 parallel reconstruction 'guaranteed sp=
-eed limit'
->> =C2=A0=C2=A0 * is 1000 KB/sec, so the extra system load does not show up=
- that much.
->> @@ -5982,7 +5984,7 @@ int md_run(struct mddev *mddev)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (mddev_is_clustered(mddev))
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mddev->safemode_d=
-elay =3D 0;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mddev->safemode_delay =3D (2=
-00 * HZ)/1000 +1; /* 200 msec delay */
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mddev->safemode_delay =3D DE=
-FAULT_SAFEMODE_DELAY;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mddev->in_sync =3D 1;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 smp_wmb();
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spin_lock(&mddev->lock);
->> @@ -7361,6 +7363,7 @@ static int update_array_info(struct mddev *mddev, =
-mdu_array_info_t *info)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mddev->bitmap_info.nodes =3D 0;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 md_cluster_ops->leave(mddev);
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 mddev->safemode_delay =3D DEFAULT_SAFEMODE_DELAY;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 }
->=20
-> Not about the patch itself, just confuse about the meaning of safemode_de=
-lay.
-> As safemode_delay represents 200 ms delay, but md_write_end has this.
->=20
->  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 /* The roundup() ensures this only performs locking once
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 * every ->safemode_delay *jiffies*
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 */
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 mod_timer(&mddev->safemode_timer,
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 roundup(jiffies, mddev->safemode_delay) +
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 mddev->safemode_delay);
->=20
-> And the second argument in mod_timer() means "new timeout in jiffies",
-> does the above need to convert from ms to jiffies? Am I miss something?
->=20
-> Thanks,
-> Guoqing
->=20
+configs tested: 104
+configs skipped: 1
 
-The safemode_delay stores jiffies not msec. it converts to ms only in safe_=
-delay_{store|show}.
-please see default value:
-#define DEFAULT_SAFEMODE_DELAY ((200 * HZ)/1000 +1)
-in safe_delay_store, user space input will multiple 10^3, which will conver=
-t from second to msec.
-then  (*HZ/1000) to jiffies.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+x86_64               randconfig-a005-20200717
+x86_64               randconfig-a006-20200717
+x86_64               randconfig-a002-20200717
+x86_64               randconfig-a001-20200717
+x86_64               randconfig-a003-20200717
+x86_64               randconfig-a004-20200717
+i386                 randconfig-a001-20200716
+i386                 randconfig-a005-20200716
+i386                 randconfig-a002-20200716
+i386                 randconfig-a006-20200716
+i386                 randconfig-a003-20200716
+i386                 randconfig-a004-20200716
+x86_64               randconfig-a012-20200716
+x86_64               randconfig-a011-20200716
+x86_64               randconfig-a016-20200716
+x86_64               randconfig-a014-20200716
+x86_64               randconfig-a013-20200716
+x86_64               randconfig-a015-20200716
+i386                 randconfig-a016-20200716
+i386                 randconfig-a011-20200716
+i386                 randconfig-a015-20200716
+i386                 randconfig-a012-20200716
+i386                 randconfig-a013-20200716
+i386                 randconfig-a014-20200716
+i386                 randconfig-a015-20200719
+i386                 randconfig-a011-20200719
+i386                 randconfig-a016-20200719
+i386                 randconfig-a012-20200719
+i386                 randconfig-a013-20200719
+i386                 randconfig-a014-20200719
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+x86_64                                   rhel
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
