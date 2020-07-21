@@ -2,143 +2,149 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EE599227851
-	for <lists+linux-raid@lfdr.de>; Tue, 21 Jul 2020 07:46:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BF67227AC2
+	for <lists+linux-raid@lfdr.de>; Tue, 21 Jul 2020 10:35:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbgGUFqW (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 21 Jul 2020 01:46:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58162 "EHLO
+        id S1726214AbgGUIfP (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 21 Jul 2020 04:35:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgGUFqV (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 21 Jul 2020 01:46:21 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EE6DC061794;
-        Mon, 20 Jul 2020 22:46:21 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id b92so1094980pjc.4;
-        Mon, 20 Jul 2020 22:46:21 -0700 (PDT)
+        with ESMTP id S1725984AbgGUIfP (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 21 Jul 2020 04:35:15 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AF5DC061794
+        for <linux-raid@vger.kernel.org>; Tue, 21 Jul 2020 01:35:15 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id rk21so20836525ejb.2
+        for <linux-raid@vger.kernel.org>; Tue, 21 Jul 2020 01:35:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3veC3pi53wl7dFDGpjkOo+uS1itnPbzCOm4x4ko6JVY=;
-        b=D/IxIwyEq3hF3iTuaIk+KFCFZyGC8VqcCGJnFT12TDv/8eGagJrHkXCGkF3Muc266t
-         OGT7OoG2HtHbaXMhlknQISHa5De5A/xFpxWKJLCbc/SAIqTngBdVmIG3+rFG2+Y1Wb46
-         YATZPWszcpNmKSDpEHErZUkhido9bvZlai2206IHzthib3Y0UiQ6fX8Re2N3orWnF12s
-         XZ6RPqQNT9T2QKcABfS3hJr1GCzgJFm/rDpCofJQA16hsZZMLUHK0fkaVJHJKDnTcvEP
-         YayBMF/DStbLmLjOPFjbig16IweaRvLj4UCWCSitHEj/N0DuM+39Lm+dho9165oRwpKe
-         XDKQ==
+        d=cloud.ionos.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=pBL0XsLjfXLY4KE6P3j+A7rK6D5P3aiBYZ8YBpbLaJA=;
+        b=PvyP643QJaMj8mTwrqcXSBZAxB+7htuyz4Qe9iwbdrCKV5FZgs/Hzd6u8uLI3BRATl
+         JH+VkH8TK6QGNVDtwxOZvet1NCAKSo4qA/epHMGQz8x70yFBKUsOmWvk+4WhNJ/XWZQP
+         NCYdXFf2xvG7AXJj0Njf8pptcPStRGZHDbrU+BPSfIn2v5s26t9nAzkZdeyWn5Fjwf5U
+         LKp4OaB6RaBWdDAtHL22HrCv/zYJg9Pb6sNeizEFP9Nb+mlIIDQBKIl6rca6lJi+FaPj
+         jmGsp5L4KN4FkwsUnOhQuLzYzur2ruhHjRSpSR3hOyHAZvzb9MOBBUJYe6V90WfC5fti
+         FtMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=3veC3pi53wl7dFDGpjkOo+uS1itnPbzCOm4x4ko6JVY=;
-        b=kKDf9hYPNfFx+vlamvo53EVnijLvDnh2gDSOEgTN7NK8ieDWPEkAvH09bq9L8KZT8A
-         NqhxhuAxU5Eoo1HglQpQCoUzAwwRsNPbN3Cqc8dogQzsQmPHywFP0N8CyKGvQP4E8jUD
-         HtDs2nnIVl4vn98n9Q+nNfsx0VS5u52SXHhf1X1tVz8+c8nwscKuYShEIKvp4oSGgk8B
-         jb0alZHqijPGTuO5lWGKDeoL9Er0qxLP05vJOq0/34lQdXnxY8mevxGj/ZLJHhKRd+zP
-         7CyzC6V0wYZ/jw19o0Jm9E+Omx6Jr6IHKngv6bRBE8VSXJDewgpPEVf3Czz743yCr9/t
-         mS1w==
-X-Gm-Message-State: AOAM532LNpJqlyiIILMOP8g32Cr4HkRAeFZ/WApONLKFeA79jZOkw/o5
-        8imwm3wvnM6fjJ2Lf/1IGM4=
-X-Google-Smtp-Source: ABdhPJylrFyWY9zOcJ3tuosterYe/etVkRG4BboKrT7kWFS6Sy9YPaV4NbuHkPEn95UZ4BSYHonUbw==
-X-Received: by 2002:a17:90a:dd44:: with SMTP id u4mr2794038pjv.203.1595310380927;
-        Mon, 20 Jul 2020 22:46:20 -0700 (PDT)
-Received: from google.com ([2620:15c:211:1:7220:84ff:fe09:5e58])
-        by smtp.gmail.com with ESMTPSA id nh14sm1541134pjb.4.2020.07.20.22.46.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 22:46:19 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 22:46:17 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Song Liu <song@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        linux-mtd@lists.infradead.org, dm-devel@redhat.com,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, drbd-dev@lists.linbit.com,
-        linux-raid@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>
-Subject: Re: [PATCH 11/14] mm: use SWP_SYNCHRONOUS_IO more intelligently
-Message-ID: <20200721054617.GA1879427@google.com>
-References: <20200720075148.172156-1-hch@lst.de>
- <20200720075148.172156-12-hch@lst.de>
- <CALvZod7ACBnNX5W-gtTzheh8R-rxv1nB-5q7UcDUZ7BvtpakpA@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=pBL0XsLjfXLY4KE6P3j+A7rK6D5P3aiBYZ8YBpbLaJA=;
+        b=AYR8ab0GE6dp3Cj32sNeR2eOvYNppiTdCZwGvWww+prNlPdbEhkRZXbioCVUyu893k
+         wHO924+n9CvegcQzi8031GZJ8CbL/3+C0BHk94noai3K1XDClC3pFKdhb0cLlXrk/IXO
+         P3nQKzGTnYBtvg8w94enLPzvlbPRNGn8ab43X1qSdW9kgE9EZslxO79L8Uk3NmIxNFPa
+         OjA4De1rdObK41yoR9V3psR/mSYEEIhD4VftGDhYfjyTxvXvYVwpKyaFHT02e8ts7piv
+         UKkzdh2uZaEIH4LiGB9sHN03hW6MkheiVtXomMRjd4sk67oEPLbRCna5nOmlru8byNSl
+         cbJw==
+X-Gm-Message-State: AOAM532LiuMzMwHt/aRIxQiffISNLnPxrdUk43wLgRCJSttk+4aFLV81
+        2yY3tAPyYHhdbpoI0jkTtTdIWHH+pewrqA==
+X-Google-Smtp-Source: ABdhPJwZMgZCvLdohdr1ytb8dGmPsdcsuBiO7DERFj96+Vyrj0LjHOcN5rjci48zEmN6DZp47d8CWQ==
+X-Received: by 2002:a17:906:57c5:: with SMTP id u5mr23455999ejr.311.1595320513716;
+        Tue, 21 Jul 2020 01:35:13 -0700 (PDT)
+Received: from ?IPv6:2a02:247f:ffff:2540:95e4:6f22:52e4:7012? ([2001:1438:4010:2540:95e4:6f22:52e4:7012])
+        by smtp.gmail.com with ESMTPSA id v24sm16691100eds.71.2020.07.21.01.35.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jul 2020 01:35:13 -0700 (PDT)
+Subject: Re: [PATCH v5 1/2] md-cluster: fix safemode_delay value when
+ converting to clustered bitmap
+To:     Zhao Heming <heming.zhao@suse.com>, linux-raid@vger.kernel.org
+Cc:     neilb@suse.com, song@kernel.org
+References: <1595268533-7040-1-git-send-email-heming.zhao@suse.com>
+ <1595268533-7040-2-git-send-email-heming.zhao@suse.com>
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Message-ID: <8f122dea-2a4a-4523-653f-fe6fc2842653@cloud.ionos.com>
+Date:   Tue, 21 Jul 2020 10:35:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALvZod7ACBnNX5W-gtTzheh8R-rxv1nB-5q7UcDUZ7BvtpakpA@mail.gmail.com>
+In-Reply-To: <1595268533-7040-2-git-send-email-heming.zhao@suse.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Thanks for Ccing me, Shakeel.
 
-On Mon, Jul 20, 2020 at 10:52:55AM -0700, Shakeel Butt wrote:
-> +Minchan Kim
-> 
-> On Mon, Jul 20, 2020 at 12:52 AM Christoph Hellwig <hch@lst.de> wrote:
-> >
-> > There is no point in trying to call bdev_read_page if SWP_SYNCHRONOUS_IO
-> > is not set, as the device won't support it.  Also there is no point in
-> > trying a bio submission if bdev_read_page failed.
-> 
-> This will at least break the failure path of zram_rw_page().
 
-Yes, it needs post processing for error propagaion like *page* handling
-part in end_swap_bio_read(mostly, PG_error and PG_uptodate with pr_alert).
-bdev_read_page's sematic doesn't need to be synchronous so it could just
-submit the IO request and complete the IO afterward. In that case, we
-need right error handling, too if the IO encoutered error. BIO fallback
-makes it simple.
+On 7/20/20 8:08 PM, Zhao Heming wrote:
+> When array convert to clustered bitmap, the safe_mode_delay doesn't
+> clean and vice versa. the /sys/block/mdX/md/safe_mode_delay keep original
+> value after changing bitmap type. In safe_delay_store(), the code forbids
+> setting mddev->safemode_delay when array is clustered. So in cluster-md
+> env, the expected safemode_delay value should be 0.
+>
+> Reproducible steps:
+> ```
+> node1 # mdadm --zero-superblock /dev/sd{b,c,d}
+> node1 # mdadm -C /dev/md0 -b internal -e 1.2 -n 2 -l mirror /dev/sdb /dev/sdc
+> node1 # cat /sys/block/md0/md/safe_mode_delay
+> 0.204
+> node1 # mdadm -G /dev/md0 -b none
+> node1 # mdadm --grow /dev/md0 --bitmap=clustered
+> node1 # cat /sys/block/md0/md/safe_mode_delay
+> 0.204  <== doesn't change, should ZERO for cluster-md
+>
+> node1 # mdadm --zero-superblock /dev/sd{b,c,d}
+> node1 # mdadm -C /dev/md0 -b clustered -e 1.2 -n 2 -l mirror /dev/sdb /dev/sdc
+> node1 # cat /sys/block/md0/md/safe_mode_delay
+> 0.000
+> node1 # mdadm -G /dev/md0 -b none
+> node1 # cat /sys/block/md0/md/safe_mode_delay
+> 0.000  <== doesn't change, should default value
+> ```
+>
+> Signed-off-by: Zhao Heming <heming.zhao@suse.com>
+> ---
+>   drivers/md/md.c | 11 +++++++++--
+>   1 file changed, 9 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index f567f536b529..1bde3df3fa18 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -101,6 +101,8 @@ static void mddev_detach(struct mddev *mddev);
+>    * count by 2 for every hour elapsed between read errors.
+>    */
+>   #define MD_DEFAULT_MAX_CORRECTED_READ_ERRORS 20
+> +/* Default safemode delay: 200 msec */
+> +#define DEFAULT_SAFEMODE_DELAY ((200 * HZ)/1000 +1)
+>   /*
+>    * Current RAID-1,4,5 parallel reconstruction 'guaranteed speed limit'
+>    * is 1000 KB/sec, so the extra system load does not show up that much.
+> @@ -5982,7 +5984,7 @@ int md_run(struct mddev *mddev)
+>   	if (mddev_is_clustered(mddev))
+>   		mddev->safemode_delay = 0;
+>   	else
+> -		mddev->safemode_delay = (200 * HZ)/1000 +1; /* 200 msec delay */
+> +		mddev->safemode_delay = DEFAULT_SAFEMODE_DELAY;
+>   	mddev->in_sync = 1;
+>   	smp_wmb();
+>   	spin_lock(&mddev->lock);
+> @@ -7361,6 +7363,7 @@ static int update_array_info(struct mddev *mddev, mdu_array_info_t *info)
+>   
+>   				mddev->bitmap_info.nodes = 0;
+>   				md_cluster_ops->leave(mddev);
+> +				mddev->safemode_delay = DEFAULT_SAFEMODE_DELAY;
+>   			}
 
- * bdev_read_page() - Start reading a page from a block device
- * @bdev: The device to read the page from
- * @sector: The offset on the device to read the page to (need not be aligned)
- * @page: The page to read
- *
- * On entry, the page should be locked.  It will be unlocked when the page
- * has been read.  If the block driver implements rw_page synchronously,
- * that will be true on exit from this function, but it need not be.
- *
- * Errors returned by this function are usually "soft", eg out of memory, or
- * queue full; callers should try a different route to read this page rather
- * than propagate an error back up the stack.
+Not about the patch itself, just confuse about the meaning of 
+safemode_delay.
+As safemode_delay represents 200 ms delay, but md_write_end has this.
 
-The other concern about this patch is zram have used rw_page for a long
-time even though sometime it doesn't declare BDI_CAP_SYNCHRONOUS_IO by itself
-because rw_page shows 4~5% bandwidth improvement compared to bio-based.
-The performance gain becomes more important these day because compressor
-becomes more fast day by day.
+                 /* The roundup() ensures this only performs locking once
+                  * every ->safemode_delay *jiffies*
+                  */
+                 mod_timer(&mddev->safemode_timer,
+                           roundup(jiffies, mddev->safemode_delay) +
+                           mddev->safemode_delay);
 
-> 
-> >
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > ---
-> >  mm/page_io.c | 7 +++++--
-> >  1 file changed, 5 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/mm/page_io.c b/mm/page_io.c
-> > index ccda7679008851..63b44b8221af0f 100644
-> > --- a/mm/page_io.c
-> > +++ b/mm/page_io.c
-> > @@ -403,8 +403,11 @@ int swap_readpage(struct page *page, bool synchronous)
-> >                 goto out;
-> >         }
-> >
-> > -       ret = bdev_read_page(sis->bdev, swap_page_sector(page), page);
-> > -       if (!ret) {
-> > +       if (sis->flags & SWP_SYNCHRONOUS_IO) {
-> > +               ret = bdev_read_page(sis->bdev, swap_page_sector(page), page);
-> > +               if (ret)
-> > +                       goto out;
-> > +
-> >                 if (trylock_page(page)) {
-> >                         swap_slot_free_notify(page);
-> >                         unlock_page(page);
-> > --
-> > 2.27.0
-> >
+And the second argument in mod_timer() means "new timeout in jiffies",
+does the above need to convert from ms to jiffies? Am I miss something?
+
+Thanks,
+Guoqing
