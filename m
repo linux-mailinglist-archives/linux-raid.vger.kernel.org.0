@@ -2,66 +2,174 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F08E7229465
-	for <lists+linux-raid@lfdr.de>; Wed, 22 Jul 2020 11:04:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12D762295D5
+	for <lists+linux-raid@lfdr.de>; Wed, 22 Jul 2020 12:17:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731108AbgGVJEy (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 22 Jul 2020 05:04:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57230 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729894AbgGVJEy (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 22 Jul 2020 05:04:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id BA40FABD2;
-        Wed, 22 Jul 2020 09:04:59 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 8AA96DA70B; Wed, 22 Jul 2020 11:04:26 +0200 (CEST)
-Date:   Wed, 22 Jul 2020 11:04:26 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Song Liu <song@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        Minchan Kim <minchan@kernel.org>,
-        linux-mtd@lists.infradead.org, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        drbd-dev@tron.linbit.com, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        cgroups@vger.kernel.org
-Subject: Re: [PATCH 04/14] bdi: initialize ->ra_pages in bdi_init
-Message-ID: <20200722090426.GQ3703@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Christoph Hellwig <hch@lst.de>,
-        Jens Axboe <axboe@kernel.dk>, Song Liu <song@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        Minchan Kim <minchan@kernel.org>, linux-mtd@lists.infradead.org,
-        dm-devel@redhat.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, drbd-dev@tron.linbit.com,
-        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, cgroups@vger.kernel.org
-References: <20200722062552.212200-1-hch@lst.de>
- <20200722062552.212200-5-hch@lst.de>
+        id S1731984AbgGVKRM (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 22 Jul 2020 06:17:12 -0400
+Received: from mail-out-auth1.hosts.co.uk ([195.7.255.1]:18846 "EHLO
+        mail-out-auth1.hosts.co.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726821AbgGVKRM (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 22 Jul 2020 06:17:12 -0400
+Received: from host86-157-100-178.range86-157.btcentralplus.com ([86.157.100.178] helo=[192.168.1.64])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1jyApt-000A1v-5q; Wed, 22 Jul 2020 10:14:50 +0100
+Subject: Re: Software RAID6 broke after power outage
+To:     Cory Derenburger <cory.derenburger@gmail.com>,
+        linux-raid@vger.kernel.org
+References: <CA+CBf3QZP4Yss0U=6Aa_5a+3D2Yy-WT545VazHiFWCZsreNOEg@mail.gmail.com>
+ <CA+CBf3Q8sKv9k83dp38ekkBY1qgvOe2seQOYvxukg-X4__7JkA@mail.gmail.com>
+From:   Wols Lists <antlists@youngman.org.uk>
+X-Enigmail-Draft-Status: N1110
+Message-ID: <5F180388.6020402@youngman.org.uk>
+Date:   Wed, 22 Jul 2020 10:14:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722062552.212200-5-hch@lst.de>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <CA+CBf3Q8sKv9k83dp38ekkBY1qgvOe2seQOYvxukg-X4__7JkA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 08:25:42AM +0200, Christoph Hellwig wrote:
-> Set up a readahead size by default, as very few users have a good
-> reason to change it.
+On 22/07/20 08:41, Cory Derenburger wrote:
+> My server lost power this morning. The server is running Linux Mint
+> (14?) on a battery backup and I believe it shutdown before losing
+> power. Upon restarting the server the computer hung for a while, and
+> after resetting and booting up in recovery mode my RAID is now
+> nonfunctional.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
+> The server was set up years ago with a RAID 6 array built with mdadm.
+> To be honest I don't really know what is wrong with the array, it
+> seems to be an issue with disk sdc. I wanted to reach out for help to
+> confirm the issue and get some guidance before proceeding (or making
+> things worse).
+> 
+> Any assistance that can help me determine what steps to take to get
+> this server back up and running would be greatly appreciated. It's
+> been 4+ since I have touched RAID, and only attempted a recovery once.
+> If anyone can help I would be super appreciative.
 
-For the btrfs bits
+https://raid.wiki.kernel.org/index.php/Linux_Raid#When_Things_Go_Wrogn
+https://raid.wiki.kernel.org/index.php/Asking_for_help
 
->  fs/btrfs/disk-io.c    | 1 -
+I see you've included some stuff which is helpful, but can you do
+everything that last page asks for. In particular, lsdrv.
+> 
+> Below I'm including outputs from various commands for the 3rd disk
+> which seems to be the culprit
+> 
+> dmesg - boot section section where first errors begin occurring
+> [    2.637856] md: bind<sdd1>
+> [    2.646987] random: nonblocking pool is initialized
+> [    2.647432] md: bind<sde1>
+> [    2.651429] md: bind<sdb1>
+> [    2.863538] ata3.00: exception Emask 0x0 SAct 0x10 SErr 0x0 action 0x0
+> [    2.863594] ata3.00: irq_stat 0x40000008
+> [    2.863643] ata3.00: failed command: READ FPDMA QUEUED
+> [    2.863695] ata3.00: cmd 60/08:20:08:08:00/00:00:00:00:00/40 tag 4
+> ncq 4096 in
+> [    2.863695]          res 41/40:00:09:08:00/00:00:00:00:00/40 Emask
+> 0x409 (media error) <F>
+> [    2.863775] ata3.00: status: { DRDY ERR }
+> [    2.863822] ata3.00: error: { UNC }
+> [    2.873407] ata3.00: configured for UDMA/133
+> [    2.873476] sd 2:0:0:0: [sdc] Unhandled sense code
+> [    2.873525] sd 2:0:0:0: [sdc]
+> [    2.873571] Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE
+> [    2.873619] sd 2:0:0:0: [sdc]
+> [    2.873665] Sense Key : Medium Error [current] [descriptor]
+> [    2.873819] Descriptor sense data with sense descriptors (in hex):
+> [    2.873901]         72 03 11 04 00 00 00 0c 00 0a 80 00 00 00 00 00
+> [    2.874544]         00 00 08 09
+> [    2.874764] sd 2:0:0:0: [sdc]
+> [    2.874811] Add. Sense: Unrecovered read error - auto reallocate failed
+> [    2.874895] sd 2:0:0:0: [sdc] CDB:
+> [    2.874941] Read(10): 28 00 00 00 08 08 00 00 08 00
+> [    2.875428] end_request: I/O error, dev sdc, sector 2057
+> [    2.875478] Buffer I/O error on device sdc1, logical block 1
+> 
+> cat /proc/mdstat
+> Personalities : [linear] [multipath] [raid0] [raid1] [raid6] [raid5]
+> [raid4] [raid10]
+> md0 : inactive sdb1[0](S) sde1[3](S) sdd1[2](S)
+>       5860147464 blocks super 1.2
+> 
+> {not sure why these drives are now showing as spares}
 
-Acked-by: David Sterba <dsterba@suse.com>
+This is very common when an array fails to assemble properly.
+Unfortunately, when there's one error, it often triggers a cascade of
+fake errors, and this is probably the case here.
+> 
+> Below running mdstat for sdc.  Checking sdb, sdd, sde appear fine.
+> 
+> mdadm --examine /dev/sdc
+> /dev/sdc:   MBR Magic : aa55
+> Partition[0] :   3907027120 sectors at         2048 (type fd)
+> 
+> mdadm --examine /dev/sdc1
+> mdadm: No md superblock detected on /dev/sdc1.
+> 
+> fdisk -l
+> Disk /dev/sdb: 2000.4 GB, 2000398934016 bytes
+> 81 heads, 63 sectors/track, 765633 cylinders, total 3907029168 sectors
+> Units = sectors of 1 * 512 = 512 bytes
+> Sector size (logical/physical): 512 bytes / 512 bytes
+> I/O size (minimum/optimal): 512 bytes / 512 bytes
+> Disk identifier: 0x38389fdc
+> 
+>    Device Boot      Start         End      Blocks   Id  System
+> /dev/sdb1            2048  3907029167  1953513560   fd  Linux raid autodetect
+> 
+> Disk /dev/sdc: 2000.4 GB, 2000398934016 bytes
+> 81 heads, 63 sectors/track, 765633 cylinders, total 3907029168 sectors
+> Units = sectors of 1 * 512 = 512 bytes
+> Sector size (logical/physical): 512 bytes / 512 bytes
+> I/O size (minimum/optimal): 512 bytes / 512 bytes
+> Disk identifier: 0xd108824d
+> 
+>    Device Boot      Start         End      Blocks   Id  System
+> /dev/sdc1            2048  3907029167  1953513560   fd  Linux raid autodetect
+> 
+> Disk /dev/sdd: 2000.4 GB, 2000398934016 bytes
+> 81 heads, 63 sectors/track, 765633 cylinders, total 3907029168 sectors
+> Units = sectors of 1 * 512 = 512 bytes
+> Sector size (logical/physical): 512 bytes / 512 bytes
+> I/O size (minimum/optimal): 512 bytes / 512 bytes
+> Disk identifier: 0x6207659a
+> 
+>    Device Boot      Start         End      Blocks   Id  System
+> /dev/sdd1            2048  3907029167  1953513560   fd  Linux raid autodetect
+> 
+> Disk /dev/sde: 2000.4 GB, 2000398934016 bytes
+> 81 heads, 63 sectors/track, 765633 cylinders, total 3907029168 sectors
+> Units = sectors of 1 * 512 = 512 bytes
+> Sector size (logical/physical): 512 bytes / 512 bytes
+> I/O size (minimum/optimal): 512 bytes / 512 bytes
+> Disk identifier: 0xd9a4afcf
+> 
+>    Device Boot      Start         End      Blocks   Id  System
+> /dev/sde1            2048  3907029167  1953513560   fd  Linux raid autodetect
+> 
+> 
+> Is there other information needed to determine the issue?  Where do I
+> go from here?
+> 
+How old is linux mint? Have you kept it up-to-date? Unfortunately, it
+seems a lot of older systems suffer issues when the kernel is heavily
+patched and mdadm is not updated, and this regularly surfaces on this
+list where Ubuntu is concerned ...
+
+mdadm --version
+uname -a
+
+Make sure you have a "latest and greatest" rescue disk to hand, and
+we'll see what the others say.
+
+Cheers,
+Wol
+
