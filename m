@@ -2,74 +2,49 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F3A722A163
-	for <lists+linux-raid@lfdr.de>; Wed, 22 Jul 2020 23:31:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDF1422A1AB
+	for <lists+linux-raid@lfdr.de>; Thu, 23 Jul 2020 00:00:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728497AbgGVVbO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 22 Jul 2020 17:31:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35722 "EHLO mail.kernel.org"
+        id S1726907AbgGVWA2 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 22 Jul 2020 18:00:28 -0400
+Received: from smtp.hosts.co.uk ([85.233.160.19]:54243 "EHLO smtp.hosts.co.uk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726907AbgGVVbN (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 22 Jul 2020 17:31:13 -0400
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17E9F22B43
-        for <linux-raid@vger.kernel.org>; Wed, 22 Jul 2020 21:31:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595453473;
-        bh=8qq8fRG+TsoqjZ26FdO9zsWY5bLktCmrzt2TvqHSs8s=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0hikaNwGu/9x5I51i1CjR5c7331flyAvLB51Wd5RsjoP4yU9yQWXiemXrcwNeKdVW
-         KAbTQmMLuPG4M64raXN3sMvA6aROP68tZ2wfq9CBIOli6//htdqBjWGxDd3TCQ7jPk
-         85YKu3iXDyTPW/4sah6CwCidY/xSXlZwzgzgZaGg=
-Received: by mail-lj1-f169.google.com with SMTP id j11so4096063ljo.7
-        for <linux-raid@vger.kernel.org>; Wed, 22 Jul 2020 14:31:13 -0700 (PDT)
-X-Gm-Message-State: AOAM531MbCXhQvV957X5TWgzHElWzb/kbGWRzKRmQi7ywHXESyfRHeTX
-        BV4sV2g8ArKln3Tpb27BAor1kdSeXvRfKDs2C94=
-X-Google-Smtp-Source: ABdhPJzze99u071fR+h2uvjRiAygDx8/5ewgRy9iovPtfhMO8mo7RLjkBHgVV2If4upvwg1vzAbgIVWCUjGfh53oGjM=
-X-Received: by 2002:a2e:6a12:: with SMTP id f18mr481548ljc.392.1595453471388;
- Wed, 22 Jul 2020 14:31:11 -0700 (PDT)
+        id S1726452AbgGVWA2 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 22 Jul 2020 18:00:28 -0400
+Received: from host86-157-100-178.range86-157.btcentralplus.com ([86.157.100.178] helo=[192.168.1.65])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1jyMmo-0005ti-4V; Wed, 22 Jul 2020 23:00:26 +0100
+Subject: Re: Linux RAID with btrfs stuck and consume 100 % CPU
+To:     Vojtech Myslivec <vojtech@xmyslivec.cz>,
+        linux-btrfs@vger.kernel.org, linux-raid@vger.kernel.org
+Cc:     Michal Moravec <michal.moravec@logicworks.cz>
+References: <d3fced3f-6c2b-5ffa-fd24-b24ec6e7d4be@xmyslivec.cz>
+From:   antlists <antlists@youngman.org.uk>
+Message-ID: <0f935586-7d2f-02b9-9955-ab160dd4017f@youngman.org.uk>
+Date:   Wed, 22 Jul 2020 23:00:25 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <202007230512.Ql0lYtJc%lkp@intel.com>
-In-Reply-To: <202007230512.Ql0lYtJc%lkp@intel.com>
-From:   Song Liu <song@kernel.org>
-Date:   Wed, 22 Jul 2020 14:31:00 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW66LPe0feQtgns=Tp2JYvUNT6vDnqg6j1inq+WT8uQrsQ@mail.gmail.com>
-Message-ID: <CAPhsuW66LPe0feQtgns=Tp2JYvUNT6vDnqg6j1inq+WT8uQrsQ@mail.gmail.com>
-Subject: Re: [song-md:md-next 9/14] ERROR: modpost: "__udivdi3" undefined!
-To:     kernel test robot <lkp@intel.com>
-Cc:     Yufen Yu <yuyufen@huawei.com>, kbuild-all@lists.01.org,
-        linux-raid <linux-raid@vger.kernel.org>,
-        Song Liu <songliubraving@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d3fced3f-6c2b-5ffa-fd24-b24ec6e7d4be@xmyslivec.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 2:21 PM kernel test robot <lkp@intel.com> wrote:
->
-> tree:   git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git md-next
-> head:   fe630de009d0729584d79c78f43121e07c745fdc
-> commit: e236858243d7a8e0ac60972d2f9522146088a736 [9/14] md/raid5: set default stripe_size as 4096
-> config: m68k-sun3_defconfig (attached as .config)
-> compiler: m68k-linux-gcc (GCC) 9.3.0
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         git checkout e236858243d7a8e0ac60972d2f9522146088a736
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=m68k
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
->
-> All errors (new ones prefixed by >>, old ones prefixed by <<):
->
-> >> ERROR: modpost: "__udivdi3" [drivers/md/raid456.ko] undefined!
+On 22/07/2020 21:47, Vojtech Myslivec wrote:
+> - RAID6 over 6 HDD and 1 LV as write journal (md1)
+>      - This is the affected device
 
-Yufen, could you please look into this one? I guess it is caused by ilog2().
+What hard drives do you have?
 
-Thanks,
-Song
+https://raid.wiki.kernel.org/index.php/Timeout_Mismatch
+
+Dunno whether that is your problem, but it's one of the first things to 
+check.
+
+Cheers,
+Wol
