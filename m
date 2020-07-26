@@ -2,52 +2,49 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A482622DD2A
-	for <lists+linux-raid@lfdr.de>; Sun, 26 Jul 2020 10:14:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6985222DD30
+	for <lists+linux-raid@lfdr.de>; Sun, 26 Jul 2020 10:21:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbgGZIOL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 26 Jul 2020 04:14:11 -0400
-Received: from smtp.hosts.co.uk ([85.233.160.19]:60471 "EHLO smtp.hosts.co.uk"
+        id S1726717AbgGZIVW (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 26 Jul 2020 04:21:22 -0400
+Received: from verein.lst.de ([213.95.11.211]:39929 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbgGZIOL (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sun, 26 Jul 2020 04:14:11 -0400
-Received: from host86-157-100-178.range86-157.btcentralplus.com ([86.157.100.178] helo=[192.168.1.64])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1jzbnM-000BNG-9c; Sun, 26 Jul 2020 09:14:09 +0100
-Subject: Re: [PATCH v2] mdadm/Detail: show correct state for cluster-md array
-To:     "heming.zhao@suse.com" <heming.zhao@suse.com>,
-        linux-raid@vger.kernel.org
-References: <1595401905-3459-1-git-send-email-heming.zhao@suse.com>
- <7697b7eb-76f9-8102-a490-1684e5f18acf@suse.com>
-Cc:     neilb@suse.com, jes@trained-monkey.org
-From:   Wols Lists <antlists@youngman.org.uk>
-Message-ID: <5F1D3B50.8080006@youngman.org.uk>
-Date:   Sun, 26 Jul 2020 09:14:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.7.0
+        id S1725810AbgGZIVW (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sun, 26 Jul 2020 04:21:22 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id DD91168B05; Sun, 26 Jul 2020 10:21:18 +0200 (CEST)
+Date:   Sun, 26 Jul 2020 10:21:18 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: Re: [PATCH 04/21] devtmpfs: refactor devtmpfsd()
+Message-ID: <20200726082118.GA17726@lst.de>
+References: <20200726071356.287160-1-hch@lst.de> <20200726071356.287160-5-hch@lst.de> <20200726074306.GA444745@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <7697b7eb-76f9-8102-a490-1684e5f18acf@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200726074306.GA444745@kroah.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 22/07/20 08:20, heming.zhao@suse.com wrote:
-> During I was creating patch, I found the ExamineBitmap() has memory leak issue.
-> I am not sure whether the leak issue should be fixed.
-> (Because when mdadm cmd finish, all leaked memory will be released).
-> The IsBitmapDirty() used some of ExamineBitmap() code, and I only fixed leaked issue in IsBitmapDirty().
+On Sun, Jul 26, 2020 at 09:43:06AM +0200, Greg Kroah-Hartman wrote:
+> On Sun, Jul 26, 2020 at 09:13:39AM +0200, Christoph Hellwig wrote:
+> > Split the main worker loop into a separate function.  This allows
+> > devtmpfsd itself and devtmpfsd_setup to be marked __init, which will
+> > allows us to call __init routines for the setup work.
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> >  drivers/base/devtmpfs.c | 47 +++++++++++++++++++++++------------------
+> >  1 file changed, 26 insertions(+), 21 deletions(-)
 > 
-My gut feel?
+> Nice cleanup, thanks for doing this:
 
-Firstly, "do things right" - it should be fixed.
-Second - are you sure this code is not run while mdadm is running as a
-daemon? It's all very well saying it will be released, but but mdadm
-could be running for a looonnngg time.
-
-Cheers,
-Wol
-
+This was actualy Als idea, I should have probably mentioned that.
