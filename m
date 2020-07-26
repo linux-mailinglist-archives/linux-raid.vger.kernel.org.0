@@ -2,58 +2,52 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4606422DCF6
-	for <lists+linux-raid@lfdr.de>; Sun, 26 Jul 2020 09:43:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A482622DD2A
+	for <lists+linux-raid@lfdr.de>; Sun, 26 Jul 2020 10:14:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbgGZHnK (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 26 Jul 2020 03:43:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37660 "EHLO mail.kernel.org"
+        id S1726072AbgGZIOL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 26 Jul 2020 04:14:11 -0400
+Received: from smtp.hosts.co.uk ([85.233.160.19]:60471 "EHLO smtp.hosts.co.uk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbgGZHnK (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sun, 26 Jul 2020 03:43:10 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76B1E2065F;
-        Sun, 26 Jul 2020 07:43:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595749389;
-        bh=4rKZH64Zbiy83+h01nqKrcL6n0VVrtwg4ZMe+QZwIRo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HY0hQztRqLg6G8Q0yBnmMqG005o1z+P1Yc2ak3vJ4d51ZZboJIrkjsNc3e3yjGEC/
-         QpD3EzKSp8Ok5LWLMxylIjGQaYkKLB0NVOxQfBkipq4ujre5F/pUD7W7BYzy4lkHcd
-         uJlYa8c52/5k4hjHAGC4y16hYKzoM7k+OXYG2YEY=
-Date:   Sun, 26 Jul 2020 09:43:06 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: [PATCH 04/21] devtmpfs: refactor devtmpfsd()
-Message-ID: <20200726074306.GA444745@kroah.com>
-References: <20200726071356.287160-1-hch@lst.de>
- <20200726071356.287160-5-hch@lst.de>
+        id S1725810AbgGZIOL (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sun, 26 Jul 2020 04:14:11 -0400
+Received: from host86-157-100-178.range86-157.btcentralplus.com ([86.157.100.178] helo=[192.168.1.64])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1jzbnM-000BNG-9c; Sun, 26 Jul 2020 09:14:09 +0100
+Subject: Re: [PATCH v2] mdadm/Detail: show correct state for cluster-md array
+To:     "heming.zhao@suse.com" <heming.zhao@suse.com>,
+        linux-raid@vger.kernel.org
+References: <1595401905-3459-1-git-send-email-heming.zhao@suse.com>
+ <7697b7eb-76f9-8102-a490-1684e5f18acf@suse.com>
+Cc:     neilb@suse.com, jes@trained-monkey.org
+From:   Wols Lists <antlists@youngman.org.uk>
+Message-ID: <5F1D3B50.8080006@youngman.org.uk>
+Date:   Sun, 26 Jul 2020 09:14:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200726071356.287160-5-hch@lst.de>
+In-Reply-To: <7697b7eb-76f9-8102-a490-1684e5f18acf@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 09:13:39AM +0200, Christoph Hellwig wrote:
-> Split the main worker loop into a separate function.  This allows
-> devtmpfsd itself and devtmpfsd_setup to be marked __init, which will
-> allows us to call __init routines for the setup work.
+On 22/07/20 08:20, heming.zhao@suse.com wrote:
+> During I was creating patch, I found the ExamineBitmap() has memory leak issue.
+> I am not sure whether the leak issue should be fixed.
+> (Because when mdadm cmd finish, all leaked memory will be released).
+> The IsBitmapDirty() used some of ExamineBitmap() code, and I only fixed leaked issue in IsBitmapDirty().
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/base/devtmpfs.c | 47 +++++++++++++++++++++++------------------
->  1 file changed, 26 insertions(+), 21 deletions(-)
+My gut feel?
 
-Nice cleanup, thanks for doing this:
+Firstly, "do things right" - it should be fixed.
+Second - are you sure this code is not run while mdadm is running as a
+daemon? It's all very well saying it will be released, but but mdadm
+could be running for a looonnngg time.
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cheers,
+Wol
+
