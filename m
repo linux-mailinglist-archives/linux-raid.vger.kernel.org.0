@@ -2,46 +2,62 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 496BF22E60E
-	for <lists+linux-raid@lfdr.de>; Mon, 27 Jul 2020 08:50:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF6C322E719
+	for <lists+linux-raid@lfdr.de>; Mon, 27 Jul 2020 09:58:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgG0GuA (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 27 Jul 2020 02:50:00 -0400
-Received: from verein.lst.de ([213.95.11.211]:42221 "EHLO verein.lst.de"
+        id S1726979AbgG0H60 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 27 Jul 2020 03:58:26 -0400
+Received: from verein.lst.de ([213.95.11.211]:42430 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726116AbgG0GuA (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 27 Jul 2020 02:50:00 -0400
+        id S1726183AbgG0H60 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 27 Jul 2020 03:58:26 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 2774168B05; Mon, 27 Jul 2020 08:49:58 +0200 (CEST)
-Date:   Mon, 27 Jul 2020 08:49:57 +0200
+        id 630C468B05; Mon, 27 Jul 2020 09:58:22 +0200 (CEST)
+Date:   Mon, 27 Jul 2020 09:58:22 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     hpa@zytor.com
-Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel@vger.kernel.org, Song Liu <song@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 18/23] init: open code setting up stdin/stdout/stderr
-Message-ID: <20200727064957.GB2317@lst.de>
-References: <20200714190427.4332-1-hch@lst.de> <20200714190427.4332-19-hch@lst.de> <20200727030534.GD795125@ZenIV.linux.org.uk> <F3DAF5DA-82C2-4833-805D-4F54F7C4326E@zytor.com> <20200727062425.GA2005@lst.de> <366377E2-6F19-45E1-9285-CFA5E660C6B5@zytor.com>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Song Liu <song@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        drbd-dev@lists.linbit.com, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        cgroups@vger.kernel.org
+Subject: Re: [PATCH 10/14] bdi: remove BDI_CAP_SYNCHRONOUS_IO
+Message-ID: <20200727075822.GA5355@lst.de>
+References: <20200726150333.305527-1-hch@lst.de> <20200726150333.305527-11-hch@lst.de> <20200726190639.GA560221@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <366377E2-6F19-45E1-9285-CFA5E660C6B5@zytor.com>
+In-Reply-To: <20200726190639.GA560221@google.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 11:36:15PM -0700, hpa@zytor.com wrote:
-> >Err, why?  The changes have been pretty simple, and I'd rather not come
-> >up with new crazy ways just to make things complicated.
+On Sun, Jul 26, 2020 at 12:06:39PM -0700, Minchan Kim wrote:
+> > @@ -528,8 +530,7 @@ static ssize_t backing_dev_store(struct device *dev,
+> >  	 * freely but in fact, IO is going on so finally could cause
+> >  	 * use-after-free when the IO is really done.
+> >  	 */
+> > -	zram->disk->queue->backing_dev_info->capabilities &=
+> > -			~BDI_CAP_SYNCHRONOUS_IO;
+> > +	zram->disk->fops = &zram_wb_devops;
+> >  	up_write(&zram->init_lock);
 > 
-> Why? To avoid this neverending avalanche of special interfaces and layering violations. Neatly deals with non-contiguous contents and initramfs in device memory, etc. etc. etc.
+> For zram, regardless of BDI_CAP_SYNCHRONOUS_IO, it have used rw_page
+> every time on read/write path. This one with next patch will make zram
+> use bio instead of rw_page when it's declared !BDI_CAP_SYNCHRONOUS_IO,
+> which introduce regression for performance.
 
-I don't think it will be all that simple.  But given that linux-next
-is just missing one series Al was already ok with to kill off set_fs
-entirely for about half of our architectures I'd rather go ahead with
-this series.  If you can send a series mapping user memory that actually
-cleans things up on top of it I'm not going to complain, but I'm not
-sure it really is going to be all that much cleaner.
+It really should not matter, as the overhead of setting up a bio
+is minimal.  It also is only used in the legacy mpage buffered I/O
+code outside of the swap code, which has so many performance issues on
+its own that even if this made a difference it wouldn't matter.
+
+If you want magic treatment for your zram swap code you really need
+to integrate it with the swap code instead of burding the block layer
+with all this mess.
