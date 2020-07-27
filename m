@@ -2,73 +2,76 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0989322E39C
-	for <lists+linux-raid@lfdr.de>; Mon, 27 Jul 2020 03:14:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08CB422E3B8
+	for <lists+linux-raid@lfdr.de>; Mon, 27 Jul 2020 03:50:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgG0BO3 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 26 Jul 2020 21:14:29 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22228 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726636AbgG0BO3 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 26 Jul 2020 21:14:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595812468;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=ITHH0El0cqLgwzhHT1r13fFxwNQwyY+LhSaSyQymD78=;
-        b=cwMpA0trRNYO3ckNllocXW3K9bES/izzn2iLt3eUo32Z69Yi+sQc+H3D7co2/Q7EhEuuX8
-        CSuJM5iUO2KVvfp9Rb1Ql35EhoD8pu/YJeTOKXtMzLKA5rE6M8aig/GAXJRuB4ks1Yt918
-        E+QYwpFPhiIWqGtgwVZ9jtZEOw/pKN8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-466-4Z2uzM7UNJmSxmcKqjbRnA-1; Sun, 26 Jul 2020 21:14:26 -0400
-X-MC-Unique: 4Z2uzM7UNJmSxmcKqjbRnA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2BD3091270;
-        Mon, 27 Jul 2020 01:14:25 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-8-31.pek2.redhat.com [10.72.8.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 535B310013C0;
-        Mon, 27 Jul 2020 01:14:21 +0000 (UTC)
-From:   Xiao Ni <xni@redhat.com>
-To:     linux-raid@vger.kernel.org, jes@trained-monkey.org
-Cc:     antlists@youngman.org.uk, ncroxon@redhat.com, heinzm@redhat.com
-Subject: [PATCH v3 mdadm 1/1] Specify nodes number when updating cluster nodes
-Date:   Mon, 27 Jul 2020 09:14:20 +0800
-Message-Id: <1595812460-3929-1-git-send-email-xni@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        id S1726982AbgG0Buo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 26 Jul 2020 21:50:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726797AbgG0Buo (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 26 Jul 2020 21:50:44 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30E9DC0619D2;
+        Sun, 26 Jul 2020 18:50:44 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jzsHm-003LpT-3z; Mon, 27 Jul 2020 01:50:38 +0000
+Date:   Mon, 27 Jul 2020 02:50:38 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Song Liu <song@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 12/23] initrd: switch initrd loading to struct file based
+ APIs
+Message-ID: <20200727015038.GA795125@ZenIV.linux.org.uk>
+References: <20200714190427.4332-1-hch@lst.de>
+ <20200714190427.4332-13-hch@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200714190427.4332-13-hch@lst.de>
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Now it allows updating cluster nodes without specify --nodes. It can write superblock
-with zero nodes. It can break the current cluster. Add this check to avoid this problem.
+On Tue, Jul 14, 2020 at 09:04:16PM +0200, Christoph Hellwig wrote:
 
-v2: It needs check c.update first to avoid NULL pointer reference
-v3: Wol points the typo error
+>  static int __init
+> -identify_ramdisk_image(int fd, int start_block, decompress_fn *decompressor)
+> +identify_ramdisk_image(struct file *file, int start_block,
+> +		decompress_fn *decompressor)
+>  {
+....
+> -	ksys_lseek(fd, start_block * BLOCK_SIZE, 0);
+>  	kfree(buf);
+>  	return nblocks;
+>  }
 
-Signed-off-by: Xiao Ni <xni@redhat.com>
----
- mdadm.c | 5 +++++
- 1 file changed, 5 insertions(+)
+You do realize that you've changed behaviour of that thing if start_block != 0?
+Old one used to leave the things for subsequent reads to start at start_block * 512;
+new one will ignore that.  So after
 
-diff --git a/mdadm.c b/mdadm.c
-index 13dc24e..1b3467f 100644
---- a/mdadm.c
-+++ b/mdadm.c
-@@ -1433,6 +1433,11 @@ int main(int argc, char *argv[])
- 		}
- 	}
- 
-+	if (c.update && strcmp(c.update, "nodes") == 0 && c.nodes == 0) {
-+		pr_err("Please specify nodes number with --nodes\n");
-+		exit(1);
-+	}
-+
- 	if (c.backup_file && data_offset != INVALID_SECTORS) {
- 		pr_err("--backup-file and --data-offset are incompatible\n");
- 		exit(2);
--- 
-2.7.5
+> -	nblocks = identify_ramdisk_image(in_fd, rd_image_start, &decompressor);
+> +	nblocks = identify_ramdisk_image(in_file, rd_image_start, &decompressor);
 
+you'll have in_file->f_pos left at 0 instead of rd_image_start * 512.
+
+... affecting this
+
+> -		if (crd_load(in_fd, out_fd, decompressor) == 0)
+> +		if (crd_load(in_file, out_file, decompressor) == 0)
+
+
+... and this
+
+> -		ksys_read(in_fd, buf, BLOCK_SIZE);
+> -		ksys_write(out_fd, buf, BLOCK_SIZE);
+> +		kernel_read(in_file, buf, BLOCK_SIZE, &in_file->f_pos);
+> +		kernel_write(out_file, buf, BLOCK_SIZE, &out_file->f_pos);
+
+FWIW, I would suggest *not* bothering with ->f_pos and using two global
+(well, file-static, obviously) variables instead.  And kill 'pos' in
+identify_ramdisk_image() as well - use the in_pos instead.
