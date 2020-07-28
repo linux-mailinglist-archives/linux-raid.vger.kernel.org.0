@@ -2,223 +2,121 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E8AB7230A9F
-	for <lists+linux-raid@lfdr.de>; Tue, 28 Jul 2020 14:49:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09040230AB0
+	for <lists+linux-raid@lfdr.de>; Tue, 28 Jul 2020 14:54:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729898AbgG1Mtt (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 28 Jul 2020 08:49:49 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59890 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729868AbgG1Mtt (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 28 Jul 2020 08:49:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595940587;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=m2DUdbZlwgWcyhhEIaPp3ptqIoL5LXsbMiRoGm86++A=;
-        b=aApVQHokcfHfERfVwoXCc3RDM8MghZo4cW4UI+/STNWsqrA/XHpq2DSVlfdxT497vOB5VZ
-        tEECvEsMl1GYWbZlVSGvSAzSK7sEETwUFcv7OLqL4UbiV82jtzJfIdEp1BJ8eI30BWtL9Y
-        juLtiztbYLcPT6rPjO0Ojmd29dShLd0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-11-L8eDYic2NSK7pyVDyHsjHA-1; Tue, 28 Jul 2020 08:49:43 -0400
-X-MC-Unique: L8eDYic2NSK7pyVDyHsjHA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C01E3800479;
-        Tue, 28 Jul 2020 12:49:42 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-8-34.pek2.redhat.com [10.72.8.34])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 583BA76216;
-        Tue, 28 Jul 2020 12:49:38 +0000 (UTC)
-Subject: Re: [PATCH V2 3/3] improve raid10 discard request
-To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>, song@kernel.org,
-        linux-raid@vger.kernel.org
-Cc:     colyli@suse.de, ncroxon@redhat.com, heinzm@redhat.com
-References: <1595920703-6125-1-git-send-email-xni@redhat.com>
- <1595920703-6125-4-git-send-email-xni@redhat.com>
- <81fdb14b-e292-8dfc-5228-c6bfaa800dfe@cloud.ionos.com>
-From:   Xiao Ni <xni@redhat.com>
-Message-ID: <e4f1e2ca-c378-0890-8d3f-65fe35f263bf@redhat.com>
-Date:   Tue, 28 Jul 2020 20:49:36 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
-MIME-Version: 1.0
-In-Reply-To: <81fdb14b-e292-8dfc-5228-c6bfaa800dfe@cloud.ionos.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        id S1729480AbgG1Myo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 28 Jul 2020 08:54:44 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:25515 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728604AbgG1Myn (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 28 Jul 2020 08:54:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1595940883; x=1627476883;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=i73cQScyOXtQNhKCgBM0j0yco6YrKjuowVHgFUDbKic=;
+  b=KDHZem/fs0oWN6xNLGu8x57unl7jYSTLsjFyhe8uj+us84zFR8FjPXO8
+   4gvVvRnWtrw2lBBCHedt4IKaH5bbIOESvFpmWEcqwQc1ESjDNhxu4tihW
+   dlODcQxAY0ehMzLeuQzA3xHqxruIMshojvHGXmnJpb80LaPB+WqOwKP3c
+   xc3yhnoettSq5xLdKjLSCoM/BcZozMWWAze4SxYeaTR+VGmbm7yNNrcTO
+   YhWmfvXAxqT85ahFD8SiRuuex+MNOrGgsJ5BtJIkq5r6RPMWUxP4neso/
+   mfsYmg6+5fYS3b5c3mS9JfC8mJB7IZt9rCDcBjHsLTRCKqKefKLftR0o2
+   g==;
+IronPort-SDR: ZFjmBZNE+HTETK1BTJfuK9E5kELLB9K3qIMYsBmSaucJluK0rxKtkojYstYRoSkpXY8WiWG2la
+ UvfEp5GNLboONN/wSoycnzeVcxZAR/ltMpaTLLPKCOrVnkIYZnIXWxIfSMas5iuiNNgYFLhDZA
+ CwDx/fbvhBYYrzKqoSu/hhLb2BD3Wbo92HO0KFQ8Sbg5vnMFw47qj01umN0suxSQPnmKd0sd0Z
+ arNbRsQp5TKIPPsGHsJXu5OdKVFUy3b7ZGoOnNsHDCDQBw12Hm+bi25DMM5xhrgNxfmSCW5oDy
+ 800=
+X-IronPort-AV: E=Sophos;i="5.75,406,1589212800"; 
+   d="scan'208";a="252888668"
+Received: from mail-dm6nam11lp2175.outbound.protection.outlook.com (HELO NAM11-DM6-obe.outbound.protection.outlook.com) ([104.47.57.175])
+  by ob1.hgst.iphmx.com with ESMTP; 28 Jul 2020 20:54:42 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ftw5FfjvDA6RiLM5wmPGnArTun/1FxPjUlh9FghplwcHO+jRMognSMRrNWdr9knODMPvkQVU8p2DqfuI9klJu/n5r3uXDKHW/303DwAoqWh5SA39QER+mtiMwHYcHkUvbLeA9oJ1iTRzxJLsWbrLUhiJOJaraV1r3QYrA/PfKYHss8zJNiWFgKdLC+/9vDKytTUiu89F9aUYNzC1GIblWE/Pl54y1Z0/ciF1y9QItuer/yLyAsrID3NvkM4HbcM6SQz2b7AJl11O5zA0owIhTszd+8SuleY8J6Bl11JOYrLpL0K8J9OMOZeQaQp0qyVzV5m0KEsHwm70O/VzIYyfaQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i73cQScyOXtQNhKCgBM0j0yco6YrKjuowVHgFUDbKic=;
+ b=WDqmh3qry9I9w5Sd/aI1KG3uEBzlX0uGy3lic/bjV81TZWaU5dy28v1YA5Mgd5kSF1Cw5k3KsmBR9EV4Np6kr6U/QhdGFm+qOJYSEQWNvFiJcMcqsU160UDsPoXl0HUPl8C2nPhUa3C2tZVzERthzGHgpHs76gGufPFSh4Y5X+w8p04eQ6hBl6jfmOJDCz0ASEgIxYG9pBh1Up3CmFsK5w66nwcXMQeAUWya9nx15yrYF5mnQw1vmZa8IHMQfmGzvZlDlXv9e9jTo4ct11M8yKBAMtUmuJW8nrJOichf4IAz8DwdyuAtSPY0DPH2QhfJFLXnVl9iB/bdB3yvO12VhQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i73cQScyOXtQNhKCgBM0j0yco6YrKjuowVHgFUDbKic=;
+ b=SUZQTNu9cUdP+Vnavdl52Et44KxjvwANxWJVvXmxxtSYAdo/8v+KLFKJA60/7IVtPeOv7evuYz5BLO3U6ZPU3NvN731SIjA71VcbqQ67J8QDluqaLAWkcJ+b4tr8kPYzFeP2oj0w5q1ueU5LqDVFdQn2V3jE/SrxRHMBsf/fWOs=
+Received: from DM5PR0401MB3591.namprd04.prod.outlook.com (2603:10b6:4:7e::15)
+ by DM6PR04MB5322.namprd04.prod.outlook.com (2603:10b6:5:106::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.26; Tue, 28 Jul
+ 2020 12:54:40 +0000
+Received: from DM5PR0401MB3591.namprd04.prod.outlook.com
+ ([fe80::c862:9cd5:689a:8573]) by DM5PR0401MB3591.namprd04.prod.outlook.com
+ ([fe80::c862:9cd5:689a:8573%5]) with mapi id 15.20.3216.033; Tue, 28 Jul 2020
+ 12:54:40 +0000
+From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+CC:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        Minchan Kim <minchan@kernel.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "dm-devel@redhat.com" <dm-devel@redhat.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
+        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>
+Subject: Re: [PATCH 12/14] bdi: replace BDI_CAP_STABLE_WRITES with a queue and
+ a sb flag
+Thread-Topic: [PATCH 12/14] bdi: replace BDI_CAP_STABLE_WRITES with a queue
+ and a sb flag
+Thread-Index: AQHWYYzciyAO2mhny0WEWIk3W3JOpQ==
+Date:   Tue, 28 Jul 2020 12:54:40 +0000
+Message-ID: <DM5PR0401MB35918B36977C0B2EBB7F262F9B730@DM5PR0401MB3591.namprd04.prod.outlook.com>
+References: <20200724073313.138789-1-hch@lst.de>
+ <20200724073313.138789-13-hch@lst.de>
+Accept-Language: en-US
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: lst.de; dkim=none (message not signed)
+ header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [129.253.240.72]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 31e0b3d0-c47a-48ca-363a-08d832f56489
+x-ms-traffictypediagnostic: DM6PR04MB5322:
+x-microsoft-antispam-prvs: <DM6PR04MB53220BC8FC684C251C6EBF5A9B730@DM6PR04MB5322.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:1728;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: T/yPeA8qh/rQgzQmjI8BQDmycI+yvDKNgThgiXWHNjjuusLVniiHii7Xs5llqxBhzac32Ut9f0viphdg31/ZsThTIyPqI5410dgXg03CTDavZ56Jb4tZ/soLeUBLtny8yY6GWx3630tBjArX6WgZH+9SOYv8vZZKWgNEMttX9pXEV1XFj1df7m6yFLJBLVAWYBbGjrY5v3iVtenDV0MR7r/L5Bo87zjS5MLbGJLN2jhgQkZKo1VeWXVkQ9UhJkWM9YiAN/iuhoRDeNDNE/shz2Yq3xZHNfYcF0TCV+47fUxZsNU2+XFquWXJoxb2hnWs32mbyGM2TgpG1XyMVZwpzQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR0401MB3591.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(346002)(136003)(376002)(366004)(39860400002)(5660300002)(8676002)(66556008)(66476007)(66946007)(66446008)(19618925003)(9686003)(7696005)(186003)(26005)(64756008)(86362001)(478600001)(55016002)(6506007)(8936002)(52536014)(7416002)(71200400001)(110136005)(558084003)(4270600006)(33656002)(4326008)(76116006)(91956017)(316002)(2906002)(54906003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 89maTvJPspOuacsDUS3LL+WKq2F7jyIjTk8KzJ2Po3vc17ENqkU1PZWitO7B5q9juIQetGeGZKXbM8bzrWPVhbbgWcjUHUOMknY6kXKP8GAbTbvVnsoY9eEp1N1W1OlIagv1h2hmqg4dghSfyuAlTOE7crGQ/Amikns3b2F3ob4sz2TN9Q/1VhtI/mo5mZv6qed+N0X0woUA9O3jRMoD8m3+EOD5x+6HhhRe2NfxczaPaf4lkVMgQ9n9ynt4h4yXiKVZEwuZtFol8C3hQEuPcYaE4O6DaoDwsUhF9OtW2pC9zUwA5Srerm/9ahGHmCz3xGCnMIj9gV4X5PJppHXN6Cd2w8bblTWF5YfLAwMHQ0nQEtFoOZnVXH4kFmbrYiCYxiGzlRlM8MQif1zxN8vg9wlaeYVVabFiGMIdoW1Lvdsvo+t5eysmJMIBtaSpZgMBtfy8/CqBQpGTFGh5zr2+ZJ/WDZprkP9gqOi3+E2Kr33BTDWPGVwrvXfIsFGqgNUL
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR0401MB3591.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 31e0b3d0-c47a-48ca-363a-08d832f56489
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jul 2020 12:54:40.7335
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QBI2uUsV/Gk1eL8gdBglcrLdbO2lk0xAj739ocxmoqy8Nk+RjXyhOxkQVQKoyZDOUS5VeCs6KZsHMf6P74GQXM7paCXcP6VgrWIwoAnDBoc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB5322
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-
-
-On 07/28/2020 04:38 PM, Guoqing Jiang wrote:
->
->
-> On 7/28/20 9:18 AM, Xiao Ni wrote:
->> Now the discard request is split by chunk size. So it takes a long time
->> to finish mkfs on disks which support discard function. This patch 
->> improve
->> handling raid10 discard request. It uses the similar way with patch
->> 29efc390b (md/md0: optimize raid0 discard handling).
->>
->> But it's a little complex than raid0. Because raid10 has different 
->> layout.
->> If raid10 is offset layout and the discard request is smaller than 
->> stripe
->> size. There are some holes when we submit discard bio to underlayer 
->> disks.
->>
->> For example: five disks (disk1 - disk5)
->> D01 D02 D03 D04 D05
->> D05 D01 D02 D03 D04
->> D06 D07 D08 D09 D10
->> D10 D06 D07 D08 D09
->> The discard bio just wants to discard from D03 to D10. For disk3, 
->> there is
->> a hole between D03 and D08. For disk4, there is a hole between D04 
->> and D09.
->> D03 is a chunk, raid10_write_request can handle one chunk perfectly. So
->> the part that is not aligned with stripe size is still handled by
->> raid10_write_request.
->
-> One question, is far layout handled by raid10_write_request or the
-> discard request?
->
->>
->> If reshape is running when discard bio comes and the discard bio 
->> spans the
->> reshape position, raid10_write_request is responsible to handle this
->> discard bio.
->>
->> I did a test with this patch set.
->> Without patch:
->> time mkfs.xfs /dev/md0
->> real4m39.775s
->> user0m0.000s
->> sys0m0.298s
->>
->> With patch:
->> time mkfs.xfs /dev/md0
->> real0m0.105s
->> user0m0.000s
->> sys0m0.007s
->>
->> nvme3n1           259:1    0   477G  0 disk
->> └─nvme3n1p1       259:10   0    50G  0 part
->> nvme4n1           259:2    0   477G  0 disk
->> └─nvme4n1p1       259:11   0    50G  0 part
->> nvme5n1           259:6    0   477G  0 disk
->> └─nvme5n1p1       259:12   0    50G  0 part
->> nvme2n1           259:9    0   477G  0 disk
->> └─nvme2n1p1       259:15   0    50G  0 part
->> nvme0n1           259:13   0   477G  0 disk
->> └─nvme0n1p1       259:14   0    50G  0 part
->>
->> v1:
->> Coly helps to review these patches and give some suggestions:
->> One bug is found. If discard bio is across one stripe but bio size is 
->> bigger
->> than one stripe size. After spliting, the bio will be NULL. In this 
->> version,
->> it checks whether discard bio size is bigger than 2*stripe_size.
->> In raid10_end_discard_request, it's better to check R10BIO_Uptodate 
->> is set
->> or not. It can avoid write memory to improve performance.
->> Add more comments for calculating addresses.
->>
->> v2:
->> Fix error by checkpatch.pl
->> Fix one bug for offset layout. v1 calculates wrongly split size
->> Add more comments to explain how the discard range of each component 
->> disk
->> is decided.
->
-> The above change log are usually put under "---".
-
-Thanks for reminding me about this.
->
->> Reviewed-by: Coly Li <colyli@suse.de>
->> Signed-off-by: Xiao Ni <xni@redhat.com>
->> ---
->
-> [...]
->
->> +
->> +/* There are some limitations to handle discard bio
->> + * 1st, the discard size is bigger than stripe_size*2.
->> + * 2st, if the discard bio spans reshape progress, we use the old 
->> way to
->> + * handle discard bio
->> + */
->> +static bool raid10_handle_discard(struct mddev *mddev, struct bio *bio)
->> +{
->
-> [...]
->
->> +    /* For far offset layout, if bio is not aligned with stripe 
->> size, it splits
->> +     * the part that is not aligned with strip size.
->> +     */
->> +    if (geo.far_offset && (bio_start & stripe_mask)) {
->> +        sector_t split_size;
->> +        split_size = round_up(bio_start, stripe_size) - bio_start;
->> +        bio = raid10_split_bio(conf, bio, split_size, false);
->> +    }
->> +    if (geo.far_offset && (bio_end & stripe_mask)) {
->> +        sector_t split_size;
->> +        split_size = bio_sectors(bio) - (bio_end & stripe_mask);
->> +        bio = raid10_split_bio(conf, bio, split_size, true);
->> +    }
->
-> So far layout is handled here. I think the hole issue is existed for 
-> far layout,
-> Just FYI.
-
-It looks like I missed the far layout. Far layout is different with far 
-offset layout.
-It doesn't need to consider the write hole problem. This patch only 
-consider the
-write hole in one copy. For far layout, the discard region is 
-sequential. So we just
-need to find the start/end address of next copy. I'll fix this in next 
-version.
-
-Regards
-Xiao
-
->
->> +
->> +    r10_bio = mempool_alloc(&conf->r10bio_pool, GFP_NOIO);
->> +    r10_bio->mddev = mddev;
->> +    r10_bio->state = 0;
->> +    memset(r10_bio->devs, 0, sizeof(r10_bio->devs[0]) * 
->> conf->geo.raid_disks);
->> +
->> +    wait_blocked_dev(mddev, geo.raid_disks);
->> +
->> +    r10_bio->master_bio = bio;
->> +
->> +    bio_start = bio->bi_iter.bi_sector;
->> +    bio_end = bio_end_sector(bio);
->> +
->> +    /* raid10 uses chunk as the unit to store data. It's similar 
->> like raid0.
->> +     * One stripe contains the chunks from all member disk (one 
->> chunk from
->> +     * one disk at the same HAB address). For layout detail, see 
->> 'man md 4'
->> +     */
->
-> s/HAB/HBA/
->
-> Thanks,
-> Guoqing
->
-
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
