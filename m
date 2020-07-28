@@ -2,57 +2,57 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F045230726
-	for <lists+linux-raid@lfdr.de>; Tue, 28 Jul 2020 12:02:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 521C7230728
+	for <lists+linux-raid@lfdr.de>; Tue, 28 Jul 2020 12:02:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbgG1KCO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        id S1728516AbgG1KCO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
         Tue, 28 Jul 2020 06:02:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50802 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728345AbgG1KCN (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 28 Jul 2020 06:02:13 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 393C0C061794
+        with ESMTP id S1728511AbgG1KCO (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 28 Jul 2020 06:02:14 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E83E0C061794
         for <linux-raid@vger.kernel.org>; Tue, 28 Jul 2020 03:02:13 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id a8so14351861edy.1
+Received: by mail-ed1-x542.google.com with SMTP id n2so14348261edr.5
         for <linux-raid@vger.kernel.org>; Tue, 28 Jul 2020 03:02:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloud.ionos.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=V60/6IDK9L2iyzMfMFaYWNV4LWpAqCVaHIEXV4H7h9I=;
-        b=DvUX887nLly+M7a/tB8NvU/R80bxy3nG68hSXgjmjLhtvYjgeXH/1VYxtOdIgdzFwj
-         y1jHJ/4Vs5mi/RNYryEknHT6A+gFqeScNizSopMAn0YFJNce8x+u5iYtpmtjZvrmaDJE
-         BcNADsJa0xHPz3Cbmbi7yklXkKHjREKbBhbCIbyWStQWwuGdvqTvP2LP31aQRSEDOPmK
-         6i+/UGuJFnUEWH9bw0k349j8QK62w0ZMthH9B9Q+IowTnLzH3KncwlqcGCsyvVL7Mmrs
-         EfI0JlpyfX/v5jcMJ2dE6xiQdZRmjQQZvPfOE3fHtONAlq1IHNfM5MF9gg4j3Z6ElEZr
-         qPqg==
+        bh=tFZLAisceZUJmnPwIqJ0HNmC00HRURzPKwfSsnL6ZYY=;
+        b=G35ubIzTsRUOvYDwD+LIpTCOXt9bJow9gEBl1JKWZuJdXCdIdV6K+VrmS0p0q8SPAi
+         jBwf0qPp8EUpRoxqLQsPohMWxLzFqSbZ5z1ezs96/VlUx8nDOCwM4BeWml79zNSwbJDW
+         3CMAqDJ4SqHJ9ytzWSGZh22WXwI0Mo8bfzkbIe1nsZNoGWWtwh1hYaAmUtt9q3TkXTBe
+         970r1Kezd2ctwreazThWxCsbnjt8USSOUI8ixMGTO/nqAoIwhyRJj8F400MYmUlGmLUr
+         o47Wz1yxdp82TM17pQhGo4s2MheSDbwjT4bSBXUuH6qw5izstEB1v8Sq8Co8a8c5Tg43
+         +g0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=V60/6IDK9L2iyzMfMFaYWNV4LWpAqCVaHIEXV4H7h9I=;
-        b=gGprMSmhAM4yZ5IWR6ImlVDW5lV+iOuGM9VvIdpYcdfoSUOBG+L08TdlaZNPmaPiXr
-         NHH5tbzfvYc8UIeM66cppMhu2mP4PrH38kXNikhxzptqX/4HrENOEU9+3fauo8OHgYXS
-         SCznw+dmRtfZ6Yu25Aoj/vnN3j1fxxaLVOqkJJ8GDSTiJrS3MJaGCVze5k0dpoh0iHP1
-         bvTZEmABOD3nHA0DcUatLgFbJp6PA0NkgWH1bVtfY4tTkOOhZV1ct1EM7fUDW1jsxQ0m
-         nVFI8OhF+YMVJLS1YdUIW4R2ySTEwjUQJD+V2wXk6iFBl3i6vFwI3GTFzx80ZpRbZxKi
-         GQQg==
-X-Gm-Message-State: AOAM531RGmvxTgLk981zzzlXCJGSgaeN34N9WSyceGTVo9cmoHJLOIQh
-        S3Il2G05TCT5MAd2pTG9+/q+PA==
-X-Google-Smtp-Source: ABdhPJy4f5H/4LynmJyJnz2+spOwCNgTmTHME+AVB9bEmAZtlA7FL6Z4yUUexk+cxcER36uO1x4VIg==
-X-Received: by 2002:a50:bece:: with SMTP id e14mr24796903edk.190.1595930531975;
-        Tue, 28 Jul 2020 03:02:11 -0700 (PDT)
+        bh=tFZLAisceZUJmnPwIqJ0HNmC00HRURzPKwfSsnL6ZYY=;
+        b=cqIe4QbfdNw3Vlx+FU9YfmYkUOQXliBQFQUfVCMwsG+9rDBRT6Kj7K6xfG5mgFzlsE
+         shy2b+H43B3vj39F6oswYUvItm+A7P/9WhUGaZBgPh8YC1ofDe2lhIXouoc+fTYOrWFF
+         vnC/brCkoCzh1nsj28atzS7ru8O2r9bJONlBSX5Wn3t4LmhYl+k25FJWrcdkHef2t47e
+         RcN1o3TgZJMKEeKtXSf8rp2KpuAqoT3TsLY8wCl3x5p8WZqIe5xWJnbqMjsu8/a1/KCq
+         MBBhhuz7Qp8RBix8uZxVyo3xlsW3INlT35ZdzlbzHOV1oN69TRBaJgnUdGCg+Izr1LnR
+         wDHQ==
+X-Gm-Message-State: AOAM531u+2nZULMmPGXjCmmJ1a1HehUV/R/xqxsv88HHFyL0fv/31w5r
+        jArBWQzbz/iQ093Kc6B8KNkT+A==
+X-Google-Smtp-Source: ABdhPJzoI9uMsqTd+qH5mmXevbBWcDVjwp8o2Hd43LWr0jSH4KAuhVjl+7DtuIqN7czAaSQ4RKGILg==
+X-Received: by 2002:aa7:d6cf:: with SMTP id x15mr24657801edr.164.1595930532734;
+        Tue, 28 Jul 2020 03:02:12 -0700 (PDT)
 Received: from ls00508.pb.local ([2001:1438:4010:2540:34cb:1cd0:d3a5:9c35])
-        by smtp.gmail.com with ESMTPSA id b24sm9929530edn.33.2020.07.28.03.02.11
+        by smtp.gmail.com with ESMTPSA id b24sm9929530edn.33.2020.07.28.03.02.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 03:02:11 -0700 (PDT)
+        Tue, 28 Jul 2020 03:02:12 -0700 (PDT)
 From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 To:     song@kernel.org
 Cc:     linux-raid@vger.kernel.org,
         Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Subject: [PATCH 3/5] md: print errno in super_written
-Date:   Tue, 28 Jul 2020 12:01:41 +0200
-Message-Id: <20200728100143.17813-4-guoqing.jiang@cloud.ionos.com>
+Subject: [PATCH 4/5] raid5-cache: hold spinlock instead of mutex in r5c_journal_mode_show
+Date:   Tue, 28 Jul 2020 12:01:42 +0200
+Message-Id: <20200728100143.17813-5-guoqing.jiang@cloud.ionos.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200728100143.17813-1-guoqing.jiang@cloud.ionos.com>
 References: <20200728100143.17813-1-guoqing.jiang@cloud.ionos.com>
@@ -61,27 +61,43 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-It is better to print errno instead of bi_status.
+Replace mddev_lock with spin_lock to align with other show methods in
+raid5_attrs.
 
 Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 ---
- drivers/md/md.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/md/raid5-cache.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 0c2a0e65b4f1..8f9a89b4c7ba 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -978,7 +978,8 @@ static void super_written(struct bio *bio)
- 	struct mddev *mddev = rdev->mddev;
+diff --git a/drivers/md/raid5-cache.c b/drivers/md/raid5-cache.c
+index 82eb4a906e31..4337ae0e6af2 100644
+--- a/drivers/md/raid5-cache.c
++++ b/drivers/md/raid5-cache.c
+@@ -2537,13 +2537,10 @@ static ssize_t r5c_journal_mode_show(struct mddev *mddev, char *page)
+ 	struct r5conf *conf;
+ 	int ret;
  
- 	if (bio->bi_status) {
--		pr_err("md: super_written gets error=%d\n", bio->bi_status);
-+		pr_err("md: %s gets error=%d\n", __func__,
-+		       blk_status_to_errno(bio->bi_status));
- 		md_error(mddev, rdev);
- 		if (!test_bit(Faulty, &rdev->flags)
- 		    && (bio->bi_opf & MD_FAILFAST)) {
+-	ret = mddev_lock(mddev);
+-	if (ret)
+-		return ret;
+-
++	spin_lock(&mddev->lock);
+ 	conf = mddev->private;
+ 	if (!conf || !conf->log) {
+-		mddev_unlock(mddev);
++		spin_unlock(&mddev->lock);
+ 		return 0;
+ 	}
+ 
+@@ -2563,7 +2560,7 @@ static ssize_t r5c_journal_mode_show(struct mddev *mddev, char *page)
+ 	default:
+ 		ret = 0;
+ 	}
+-	mddev_unlock(mddev);
++	spin_unlock(&mddev->lock);
+ 	return ret;
+ }
+ 
 -- 
 2.17.1
 
