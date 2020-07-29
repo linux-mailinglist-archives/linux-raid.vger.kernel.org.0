@@ -2,56 +2,103 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 106652325AA
-	for <lists+linux-raid@lfdr.de>; Wed, 29 Jul 2020 21:51:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2ED0D232699
+	for <lists+linux-raid@lfdr.de>; Wed, 29 Jul 2020 23:06:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbgG2TvY (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 29 Jul 2020 15:51:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53102 "EHLO
+        id S1727054AbgG2VGk (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 29 Jul 2020 17:06:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbgG2TvY (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 29 Jul 2020 15:51:24 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3E0EC061794;
-        Wed, 29 Jul 2020 12:51:23 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k0s6f-005Aqt-3F; Wed, 29 Jul 2020 19:51:17 +0000
-Date:   Wed, 29 Jul 2020 20:51:17 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: add file system helpers that take kernel pointers for the init
- code v4
-Message-ID: <20200729195117.GE951209@ZenIV.linux.org.uk>
-References: <20200728163416.556521-1-hch@lst.de>
+        with ESMTP id S1726476AbgG2VGk (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 29 Jul 2020 17:06:40 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5FBDC061794
+        for <linux-raid@vger.kernel.org>; Wed, 29 Jul 2020 14:06:39 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id q4so15212535edv.13
+        for <linux-raid@vger.kernel.org>; Wed, 29 Jul 2020 14:06:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=I87fUIB3jW1Ap9Jvzk/GcIhatEkQtaMOon/TETB9VtA=;
+        b=Lb5y+h6HgMBCZmzEra1RFNQdb2cMSGgnTDXvDM1xALQmuk/B1Wg1JZ5spC3oJhNplz
+         rm/UnnI4A0Usrnb9AWNhKJaHhyb8IMHRZXLi397BtsyWR4ystxAcnYzNTNgUUIR3LlDV
+         IOSvbkjdcqafmiFcZy4EMCphUKRS7FxdR+zIaiE43h0b33D+TAryoKp++FOcZ088FRsq
+         /k6ReZqg4kfG771bOuz1Eg6YbDi4Cp18iHd8vV+H+tY8v5vNxSuYO8j9RkiQY0d/IWpS
+         2qrgsozrutNMH5o4tSf6IJkpuMOQ990JSuHvTACIcHmnVfOVPloSR5XexPU2Y6NPVohN
+         i98A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=I87fUIB3jW1Ap9Jvzk/GcIhatEkQtaMOon/TETB9VtA=;
+        b=brc99cNYmSENSaG4KbLwgoFu72Gjw9Y15P/286GX6aXTnTDmeKRKHkAXlwLUGU/oZp
+         bsF6B3Db/7E+EJrlzCPnjXU1B/xRmhgUopO58iSBVLm4dj1UJhJy/B40wKg7hKq0Ztq+
+         9XSUNU4/ml7fschcBcp53VjW+zTmEnTn0korPfo6GTZk2FVetAth+2R3spXBbzvcQg4y
+         axxOekDeicrNUBQXOifvcnLeTjD/fdgWXsDiIAwrDeyCM35Z6rS1efm6caeRcYTl3PL0
+         ub8VlPe0rL6LpvdNv0IptGVLY1kYSfLJkShavdjW7uL/ScKpbrTdXDabn4V6hy3kdB1f
+         SlYw==
+X-Gm-Message-State: AOAM533JBLOK3Hz75yVkg3rmZ4QYDTIi87ZeyGHw5mDEBhEAw+vduQjT
+        0+U/NpRgvzfZlYCXvnBprkKzqQ==
+X-Google-Smtp-Source: ABdhPJx3wVG6rl455uP0QYriZY/DjVBLtOtjangIpyuXtnHHwbsuV5Fmiy1lhPJQYvjUUx1k+vfTqQ==
+X-Received: by 2002:a05:6402:b4c:: with SMTP id bx12mr139710edb.157.1596056798451;
+        Wed, 29 Jul 2020 14:06:38 -0700 (PDT)
+Received: from ?IPv6:2001:16b8:4867:e700:c8e8:c32e:dd0d:709? ([2001:16b8:4867:e700:c8e8:c32e:dd0d:709])
+        by smtp.gmail.com with ESMTPSA id d20sm3041248edy.9.2020.07.29.14.06.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jul 2020 14:06:37 -0700 (PDT)
+Subject: Re: Linux RAID with btrfs stuck and consume 100 % CPU
+To:     Vojtech Myslivec <vojtech@xmyslivec.cz>,
+        linux-btrfs@vger.kernel.org, linux-raid@vger.kernel.org
+Cc:     Michal Moravec <michal.moravec@logicworks.cz>,
+        Song Liu <songliubraving@fb.com>
+References: <d3fced3f-6c2b-5ffa-fd24-b24ec6e7d4be@xmyslivec.cz>
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Message-ID: <a070c45a-0509-e900-e3f3-98d20267c8c9@cloud.ionos.com>
+Date:   Wed, 29 Jul 2020 23:06:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728163416.556521-1-hch@lst.de>
+In-Reply-To: <d3fced3f-6c2b-5ffa-fd24-b24ec6e7d4be@xmyslivec.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 06:33:53PM +0200, Christoph Hellwig wrote:
-> Hi Al and Linus,
-> 
-> currently a lot of the file system calls in the early in code (and the
-> devtmpfs kthread) rely on the implicit set_fs(KERNEL_DS) during boot.
-> This is one of the few last remaining places we need to deal with to kill
-> off set_fs entirely, so this series adds new helpers that take kernel
-> pointers.  These helpers are in init/ and marked __init and thus will
-> be discarded after bootup.  A few also need to be duplicated in devtmpfs,
-> though unfortunately.
->
-> The series sits on top of my previous
-> 
->   "decruft the early init / initrd / initramfs code v2"
+Hi,
 
-Could you fold the fixes in the parent branch to avoid the bisect hazards?
-As it is, you have e.g. "initd: pass a non-f_pos offset to kernel_read/kernel_write"
-that ought to go into "initrd: switch initrd loading to struct file based APIs"...
+On 7/22/20 10:47 PM, Vojtech Myslivec wrote:
+> 1. What should be the cause of this problem?
+
+Just a quick glance based on the stacks which you attached, I guess it 
+could be
+a deadlock issue of raid5 cache super write.
+
+Maybe the commit 8e018c21da3f ("raid5-cache: fix a deadlock in superblock
+write") didn't fix the problem completely.  Cc Song.
+
+And I am curious why md thread is not waked if mddev_trylock fails, you can
+give it a try but I can't promise it helps ...
+
+--- a/drivers/md/raid5-cache.c
++++ b/drivers/md/raid5-cache.c
+@@ -1337,8 +1337,10 @@ static void 
+r5l_write_super_and_discard_space(struct r5l_log *log,
+          */
+         set_mask_bits(&mddev->sb_flags, 0,
+                 BIT(MD_SB_CHANGE_DEVS) | BIT(MD_SB_CHANGE_PENDING));
+-       if (!mddev_trylock(mddev))
++       if (!mddev_trylock(mddev)) {
++               md_wakeup_thread(mddev->thread);
+                 return;
++       }
+         md_update_sb(mddev, 1);
+         mddev_unlock(mddev);
+
+
+Thanks,
+Guoqing
