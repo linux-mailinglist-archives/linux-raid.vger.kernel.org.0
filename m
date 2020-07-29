@@ -2,103 +2,100 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2ED0D232699
-	for <lists+linux-raid@lfdr.de>; Wed, 29 Jul 2020 23:06:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 81CE7232725
+	for <lists+linux-raid@lfdr.de>; Wed, 29 Jul 2020 23:49:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbgG2VGk (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 29 Jul 2020 17:06:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36462 "EHLO
+        id S1726365AbgG2VtA (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 29 Jul 2020 17:49:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbgG2VGk (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 29 Jul 2020 17:06:40 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5FBDC061794
-        for <linux-raid@vger.kernel.org>; Wed, 29 Jul 2020 14:06:39 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id q4so15212535edv.13
-        for <linux-raid@vger.kernel.org>; Wed, 29 Jul 2020 14:06:39 -0700 (PDT)
+        with ESMTP id S1726476AbgG2Vs7 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 29 Jul 2020 17:48:59 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95087C0619D2
+        for <linux-raid@vger.kernel.org>; Wed, 29 Jul 2020 14:48:59 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id a14so23012899wra.5
+        for <linux-raid@vger.kernel.org>; Wed, 29 Jul 2020 14:48:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=I87fUIB3jW1Ap9Jvzk/GcIhatEkQtaMOon/TETB9VtA=;
-        b=Lb5y+h6HgMBCZmzEra1RFNQdb2cMSGgnTDXvDM1xALQmuk/B1Wg1JZ5spC3oJhNplz
-         rm/UnnI4A0Usrnb9AWNhKJaHhyb8IMHRZXLi397BtsyWR4ystxAcnYzNTNgUUIR3LlDV
-         IOSvbkjdcqafmiFcZy4EMCphUKRS7FxdR+zIaiE43h0b33D+TAryoKp++FOcZ088FRsq
-         /k6ReZqg4kfG771bOuz1Eg6YbDi4Cp18iHd8vV+H+tY8v5vNxSuYO8j9RkiQY0d/IWpS
-         2qrgsozrutNMH5o4tSf6IJkpuMOQ990JSuHvTACIcHmnVfOVPloSR5XexPU2Y6NPVohN
-         i98A==
+        d=colorremedies-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TUGcdYT7jELeBh5hFTATFO2S/q2U4Y1N3LaONePlylU=;
+        b=jAHvluvPasMAv3yEAcO/ag6pDhwmANJTp0Vj3rApJzVQc9FW0dZk18QAPWJAd5JjyY
+         mwLCFbDNf4vgOTarO7j0wfGMvJFp9mntxrnfANRGNYixB+JHuVUzY8TnOGSH2D4Lv+Pm
+         UNXLlmVt/UEppIERN0gLksa/PJe6n6q71dDNIlROW+nuLevnn0roRnXzNUXA2z14QQ+K
+         UD5h0O7wHAHQpQao3Bi/nM17hPBTteHJENuvQLWRb/TOHWaVBltd0ZLNs0IO2IXWAIdh
+         zcLRsQQnpY3WjAjlyfEUrisUIoTzvm1Fr+yjInb0WfSpu/v+RVWc9nQ6bkYYGAXz7ZKg
+         leUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=I87fUIB3jW1Ap9Jvzk/GcIhatEkQtaMOon/TETB9VtA=;
-        b=brc99cNYmSENSaG4KbLwgoFu72Gjw9Y15P/286GX6aXTnTDmeKRKHkAXlwLUGU/oZp
-         bsF6B3Db/7E+EJrlzCPnjXU1B/xRmhgUopO58iSBVLm4dj1UJhJy/B40wKg7hKq0Ztq+
-         9XSUNU4/ml7fschcBcp53VjW+zTmEnTn0korPfo6GTZk2FVetAth+2R3spXBbzvcQg4y
-         axxOekDeicrNUBQXOifvcnLeTjD/fdgWXsDiIAwrDeyCM35Z6rS1efm6caeRcYTl3PL0
-         ub8VlPe0rL6LpvdNv0IptGVLY1kYSfLJkShavdjW7uL/ScKpbrTdXDabn4V6hy3kdB1f
-         SlYw==
-X-Gm-Message-State: AOAM533JBLOK3Hz75yVkg3rmZ4QYDTIi87ZeyGHw5mDEBhEAw+vduQjT
-        0+U/NpRgvzfZlYCXvnBprkKzqQ==
-X-Google-Smtp-Source: ABdhPJx3wVG6rl455uP0QYriZY/DjVBLtOtjangIpyuXtnHHwbsuV5Fmiy1lhPJQYvjUUx1k+vfTqQ==
-X-Received: by 2002:a05:6402:b4c:: with SMTP id bx12mr139710edb.157.1596056798451;
-        Wed, 29 Jul 2020 14:06:38 -0700 (PDT)
-Received: from ?IPv6:2001:16b8:4867:e700:c8e8:c32e:dd0d:709? ([2001:16b8:4867:e700:c8e8:c32e:dd0d:709])
-        by smtp.gmail.com with ESMTPSA id d20sm3041248edy.9.2020.07.29.14.06.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2020 14:06:37 -0700 (PDT)
-Subject: Re: Linux RAID with btrfs stuck and consume 100 % CPU
-To:     Vojtech Myslivec <vojtech@xmyslivec.cz>,
-        linux-btrfs@vger.kernel.org, linux-raid@vger.kernel.org
-Cc:     Michal Moravec <michal.moravec@logicworks.cz>,
-        Song Liu <songliubraving@fb.com>
-References: <d3fced3f-6c2b-5ffa-fd24-b24ec6e7d4be@xmyslivec.cz>
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Message-ID: <a070c45a-0509-e900-e3f3-98d20267c8c9@cloud.ionos.com>
-Date:   Wed, 29 Jul 2020 23:06:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TUGcdYT7jELeBh5hFTATFO2S/q2U4Y1N3LaONePlylU=;
+        b=dTic2DAt5XcDgYQ3gBFfH11SJZC0anZcBjEuCRIvUo0cpLOqoMVMq/f5iOGBcpM91I
+         XECQk9aTo/2kdIJrqPnkDYuDg182qJG3tJD0BdA3MHkgnm05sjr4RNxt/JV8B3lOTQkR
+         lgWVF2y9zDsOQLE1PVj4n5qSSYYIA37Qa7z+gpP4EMATgDsWhDe+V0Hd5LtSKUX/KcM6
+         4lDoBWzRCios5WZK6vb+3QU7IttaOLyngqc1tNAPi9uGtZim1Pjg4xJx6bimxVylL1Ws
+         JVg2YsIbadSdcg1V5SBu76D1Gnky5xo98OSAJowFKnFqisF/TcERiCW0gOQeCqdGqfSQ
+         cv9A==
+X-Gm-Message-State: AOAM531GwKTkJkUfAG5tbFYH9G3F5h4A3sKa6krMEfvdr/TgFG8wxRvn
+        h00XUbnLKr+kd3Z9eLig/xNqZltgaddTAuzH8YUsCA==
+X-Google-Smtp-Source: ABdhPJyD5eHjIC07UQ3vncKTUKnlJa9bv3fNZhyLLtJa+e1BEh6f0IPK2xVWOgiTL3VfEc+AQHPQK8rv7dDnpvYo7WM=
+X-Received: by 2002:adf:eb89:: with SMTP id t9mr406375wrn.65.1596059338069;
+ Wed, 29 Jul 2020 14:48:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <d3fced3f-6c2b-5ffa-fd24-b24ec6e7d4be@xmyslivec.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <d3fced3f-6c2b-5ffa-fd24-b24ec6e7d4be@xmyslivec.cz> <a070c45a-0509-e900-e3f3-98d20267c8c9@cloud.ionos.com>
+In-Reply-To: <a070c45a-0509-e900-e3f3-98d20267c8c9@cloud.ionos.com>
+From:   Chris Murphy <lists@colorremedies.com>
+Date:   Wed, 29 Jul 2020 15:48:41 -0600
+Message-ID: <CAJCQCtQAHr91wEwvFmh_-UB3Cd3UecSjjy6w7nOeqUktrn4UzQ@mail.gmail.com>
+Subject: Re: Linux RAID with btrfs stuck and consume 100 % CPU
+To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Cc:     Vojtech Myslivec <vojtech@xmyslivec.cz>,
+        Btrfs BTRFS <linux-btrfs@vger.kernel.org>,
+        Linux-RAID <linux-raid@vger.kernel.org>,
+        Michal Moravec <michal.moravec@logicworks.cz>,
+        Song Liu <songliubraving@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi,
+On Wed, Jul 29, 2020 at 3:06 PM Guoqing Jiang
+<guoqing.jiang@cloud.ionos.com> wrote:
+>
+> Hi,
+>
+> On 7/22/20 10:47 PM, Vojtech Myslivec wrote:
+> > 1. What should be the cause of this problem?
+>
+> Just a quick glance based on the stacks which you attached, I guess it
+> could be
+> a deadlock issue of raid5 cache super write.
+>
+> Maybe the commit 8e018c21da3f ("raid5-cache: fix a deadlock in superblock
+> write") didn't fix the problem completely.  Cc Song.
 
-On 7/22/20 10:47 PM, Vojtech Myslivec wrote:
-> 1. What should be the cause of this problem?
+That references discards, and it make me relook at mdadm -D which
+shows a journal device:
 
-Just a quick glance based on the stacks which you attached, I guess it 
-could be
-a deadlock issue of raid5 cache super write.
+       0     253        2        -      journal   /dev/dm-2
 
-Maybe the commit 8e018c21da3f ("raid5-cache: fix a deadlock in superblock
-write") didn't fix the problem completely.  Cc Song.
+Vojtech, can you confirm this device is an SSD? There are a couple
+SSDs that show up in the dmesg if I recall correctly.
 
-And I am curious why md thread is not waked if mddev_trylock fails, you can
-give it a try but I can't promise it helps ...
-
---- a/drivers/md/raid5-cache.c
-+++ b/drivers/md/raid5-cache.c
-@@ -1337,8 +1337,10 @@ static void 
-r5l_write_super_and_discard_space(struct r5l_log *log,
-          */
-         set_mask_bits(&mddev->sb_flags, 0,
-                 BIT(MD_SB_CHANGE_DEVS) | BIT(MD_SB_CHANGE_PENDING));
--       if (!mddev_trylock(mddev))
-+       if (!mddev_trylock(mddev)) {
-+               md_wakeup_thread(mddev->thread);
-                 return;
-+       }
-         md_update_sb(mddev, 1);
-         mddev_unlock(mddev);
+What is the default discard hinting for this SSD when it's used as a
+journal device for mdadm? And what is the write behavior of the
+journal? I'm not familiar with this feature at all, whether it's
+treated as a raw block device for the journal or if the journal
+resides on a file system. So I get kinda curious what might happen
+long term if this is a very busy file system, very busy raid5/6
+journal on this SSD, without any discard hints? Is it possible the SSD
+runs out of ready-to-write erase blocks, and the firmware has become
+super slow doing erasure/garbage collection on demand? And the journal
+is now having a hard time flushing?
 
 
-Thanks,
-Guoqing
+-- 
+Chris Murphy
