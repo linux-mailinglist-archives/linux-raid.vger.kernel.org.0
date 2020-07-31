@@ -2,60 +2,55 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 43ECF233F23
-	for <lists+linux-raid@lfdr.de>; Fri, 31 Jul 2020 08:33:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CEB962343C3
+	for <lists+linux-raid@lfdr.de>; Fri, 31 Jul 2020 11:56:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731417AbgGaGdU (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 31 Jul 2020 02:33:20 -0400
-Received: from verein.lst.de ([213.95.11.211]:58188 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731224AbgGaGdT (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 31 Jul 2020 02:33:19 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 881D668BEB; Fri, 31 Jul 2020 08:33:16 +0200 (CEST)
-Date:   Fri, 31 Jul 2020 08:33:16 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: add file system helpers that take kernel pointers for the init
- code v4
-Message-ID: <20200731063316.GA5145@lst.de>
-References: <20200728163416.556521-1-hch@lst.de> <20200729195117.GE951209@ZenIV.linux.org.uk> <20200730062524.GA17980@lst.de> <20200731021424.GG1236603@ZenIV.linux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200731021424.GG1236603@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        id S1732368AbgGaJ4E (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 31 Jul 2020 05:56:04 -0400
+Received: from mail.synology.com ([211.23.38.101]:59390 "EHLO synology.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732196AbgGaJ4E (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 31 Jul 2020 05:56:04 -0400
+X-Greylist: delayed 351 seconds by postgrey-1.27 at vger.kernel.org; Fri, 31 Jul 2020 05:56:03 EDT
+Received: from localhost.localdomain (unknown [10.17.208.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by synology.com (Postfix) with ESMTPSA id 18847CE782BF;
+        Fri, 31 Jul 2020 17:50:11 +0800 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synology.com; s=123;
+        t=1596189011; bh=PA5QdutyYc2ZH4SXSufhrGUjGcYxBnUZ1CsTlJ3UvA0=;
+        h=From:To:Cc:Subject:Date;
+        b=lId1YLu8wjOxSVoLYVbnmrv6h1eC+lMQWMHxzgDJTPwGSVaOCdjLYOuTbn6FoK2mM
+         q69hr9sB4ZYE6VSJI4JBis/ngCno3A+O7QNJiUqgp/HrcC3Tq/bLeeTe0MpSl6n6vu
+         PIkyqn3J3qnkRvbC5QGDfzSy5nQDqNhsQdRuSUuk=
+From:   allenpeng <allenpeng@synology.com>
+To:     linux-raid@vger.kernel.org
+Cc:     song@kernel.org, ChangSyun Peng <allenpeng@synology.com>
+Subject: [PATCH 0/2] Fix RCW bug and allow degraded raid6 do rmw
+Date:   Fri, 31 Jul 2020 17:49:58 +0800
+Message-Id: <1596188998-2994-1-git-send-email-allenpeng@synology.com>
+X-Mailer: git-send-email 2.7.4
+X-Synology-MCP-Status: no
+X-Synology-Spam-Flag: no
+X-Synology-Spam-Status: score=0, required 6, WHITELIST_FROM_ADDRESS 0
+X-Synology-Virus-Status: no
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 03:14:24AM +0100, Al Viro wrote:
-> Christoph Hellwig (28):
-> [snip]
->       initramfs: switch initramfs unpacking to struct file based APIs
->       initramfs: switch initramfs unpacking to struct file based APIs
-> [snip]
-> 
-> It's not a bisect hazard, of course, but if you don't fold those
-> together, you might at least want to give the second one a different
-> commit summary...  I hadn't been able to find an analogue of #init_path on
-> top of that either.
-> 
-> As it is, #init-user-pointers is fine (aside of that SNAFU with unfolded
-> pair of commits), and so's the contents of #init_path part following what
-> used to be #init-user-pointers, but it'll be an awful mess on merge in
-> the current shape.
-> 
-> I can sort it out myself, if you don't mind that; again, I'm OK with
-> the contents and I've no problem with doing reordering/folding.
+From: ChangSyun Peng <allenpeng@synology.com>
 
-I've fixed the folding issues in init-user-pointers and rebased init_path
-on top of that.  Feel free to pull it.  I don't think it is worth
-reposting.
+This patch fix io stuck in force reconstruct-write degraded raid5
+problem and allow degraded raid6 do rmw.
+
+ChangSyun Peng (2):
+  md/raid5: Fix Force reconstruct-write io stuck in degraded raid5
+  md/raid5: Allow degraded raid6 to do rmw
+
+ drivers/md/raid5.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
+
+-- 
+2.7.4
+
