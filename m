@@ -2,83 +2,143 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6901C23A74A
-	for <lists+linux-raid@lfdr.de>; Mon,  3 Aug 2020 15:09:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D9B923A900
+	for <lists+linux-raid@lfdr.de>; Mon,  3 Aug 2020 16:57:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbgHCNJl convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-raid@lfdr.de>); Mon, 3 Aug 2020 09:09:41 -0400
-Received: from sender11-op-o12.zoho.eu ([31.186.226.226]:17474 "EHLO
-        sender11-op-o12.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgHCNJl (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 3 Aug 2020 09:09:41 -0400
-X-Greylist: delayed 904 seconds by postgrey-1.27 at vger.kernel.org; Mon, 03 Aug 2020 09:09:40 EDT
-ARC-Seal: i=1; a=rsa-sha256; t=1596459268; cv=none; 
-        d=zohomail.eu; s=zohoarc; 
-        b=GIwV57QShfd9tqYV/pFf+/VElr/qJHlz14BN/R3hVtL2pYUfgtInHOGZh8iYLv2aRnJmKTjaiRiLgPif1HLRcRzica3Oc+DHEK3iBKqZ3a3pmwNdD3RVBk/kp0AVJsGzZXb7nUUitkzTbYRVx4sq6ksM2GmICcqVQtGpd7QQAFs=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1596459268; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=t6bjMPbqXrmuKxIeEDYFHN5dpf0UcDF5BuVIV12qSAQ=; 
-        b=F3dmn9BVS9EK9iHdqp7bvY8Ara2PPVZIqI0qaIiHenSGG+dmVm7s8n2TKXflYQGV1DA0mDgO/upox9GaMZsUbsDbppVo7ns3gZ1zJzwNoRqyHvM2fr9iLeNFw4+Te/6lhwHnXogXvHOjv8U357SSASYKC9WUikS2SS0LkIs/DVo=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
-        dmarc=pass header.from=<jes@trained-monkey.org> header.from=<jes@trained-monkey.org>
-Received: from [192.168.99.29] (pool-108-46-250-244.nycmny.fios.verizon.net [108.46.250.244]) by mx.zoho.eu
-        with SMTPS id 1596459266482572.774771307599; Mon, 3 Aug 2020 14:54:26 +0200 (CEST)
-Subject: Re: mdadm-4.2 release
-To:     "Tkaczyk, Mariusz" <mariusz.tkaczyk@intel.com>
-Cc:     "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "Baldysiak, Pawel" <pawel.baldysiak@intel.com>
-References: <SA0PR11MB454290C854066D0AFD7EEC75FF6C0@SA0PR11MB4542.namprd11.prod.outlook.com>
- <SA0PR11MB4542AD5A1AEF00B96404D5A4FF6C0@SA0PR11MB4542.namprd11.prod.outlook.com>
- <SA0PR11MB4542B9DC53D2B8013450A767FF4D0@SA0PR11MB4542.namprd11.prod.outlook.com>
-From:   Jes Sorensen <jes@trained-monkey.org>
-Message-ID: <cfed90ab-69ec-c90e-f120-f8e8453e40c8@trained-monkey.org>
-Date:   Mon, 3 Aug 2020 08:54:25 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1727030AbgHCO4a (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 3 Aug 2020 10:56:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37190 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726773AbgHCO43 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 3 Aug 2020 10:56:29 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D57F7C0617A0
+        for <linux-raid@vger.kernel.org>; Mon,  3 Aug 2020 07:56:27 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id g26so35394494qka.3
+        for <linux-raid@vger.kernel.org>; Mon, 03 Aug 2020 07:56:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uoxUh7w9S9WoHetqVWaE7PcRU88z96URBWxyZ+DAwkc=;
+        b=gJfhM6esZzSfXkUvP5yQrCmFvH8pvz4rJ+mEBVt7IlRuA6L3Y8qq1USaYHHgw5mOQ5
+         l1z+gyKki5iyIqvlp4BgRrKd7gdcnw7HGeYtxpcbn/z1xWf3k1IBd3kjKGBKgFG08Tqt
+         x3q0RiWPelTZDyOz5bVJSh4JZ927D/eswkAe8OXZ9bXVuWzWY0FauBGvH+w+EkW9L/g5
+         qDNxk1OifG1rBTL73R8+tRFWskO4NTDBQzhRPb8QA3WtJWfTL65MvhSausBX+rymJ6Yo
+         cJo5oNM9Hmw+g5rPAjw5TrCks1EV6nddKOL7VQG4u7dSbYwP7oqt19nuMN+mSOMa9NSF
+         wjhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uoxUh7w9S9WoHetqVWaE7PcRU88z96URBWxyZ+DAwkc=;
+        b=rmTcS0e23Ny2PKigBeFaukHqbZj+FtSLXxZw8tlVWjqAT1iV/rephIrNkXE1UCl7dl
+         sv4XIUL3Aqa05KQoOrWTgzlxXJ1j6FHbNrF1Fz0Iy2NwCLEUry+XDdjTRtpfHUEBxDmT
+         FHlOs6EcHBNiW0DXG+2fhs3X7Swxp01ek9orwE2SBLf2oiQvb9+WIfLEpl3kHsxkO1Vn
+         puTx1EAm+ns/2/FzgNMMxVvBPBwvBcrQzwkXJA+HSOJBOljC1WVhXP/boaHLApO2PEBT
+         YukQhd2H+hB59/JL9EkgIh3k2r95MFrgfsEIHvi2h8D4Nodm0c2JmQwTlnar7NqUASz+
+         v1zg==
+X-Gm-Message-State: AOAM531XOlEznug8xsOdt2FY4qP6yFF9DhN/YdvUrC/3RdRopXwlgfR0
+        q3yR5Z3YZzfhOHN8KpS3PFRPLw==
+X-Google-Smtp-Source: ABdhPJybT0NeMC+s5f4yB6V+6S6WlOdq+mDZaFmpgmNNrtR1kY4sdRYJIO1H091jYtQK+uaIOX0MRQ==
+X-Received: by 2002:a37:910:: with SMTP id 16mr15814433qkj.466.1596466586662;
+        Mon, 03 Aug 2020 07:56:26 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id i65sm20542228qkf.126.2020.08.03.07.56.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 07:56:25 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 10:56:23 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        sfr@canb.auug.org.au, linux-next@vger.kernel.org
+Subject: Re: add file system helpers that take kernel pointers for the init
+ code v4
+Message-ID: <20200803145622.GB4631@lca.pw>
+References: <20200728163416.556521-1-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <SA0PR11MB4542B9DC53D2B8013450A767FF4D0@SA0PR11MB4542.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8BIT
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728163416.556521-1-hch@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 8/3/20 8:48 AM, Tkaczyk, Mariusz wrote:
-> Hi Jes,
-> Is there any chance to release mdadm soon?
-
-Hi Mariusz,
-
-Sorry I dropped the ball on this one. I am pretty swamped at work right
-now, but I'll try to catch up on the pending patches and do the first rc
-soon. Sorry for the delay.
-
-Cheers,
-Jes
-
-
-> Thanks,
-> Mariusz
+On Tue, Jul 28, 2020 at 06:33:53PM +0200, Christoph Hellwig wrote:
+> Hi Al and Linus,
 > 
-> -----Original Message-----
-> From: linux-raid-owner@vger.kernel.org <linux-raid-owner@vger.kernel.org> On Behalf Of Tkaczyk, Mariusz
-> Sent: Wednesday, July 1, 2020 11:18 AM
-> To: Jes Sorensen <jes@trained-monkey.org>
-> Cc: linux-raid@vger.kernel.org; Baldysiak, Pawel <pawel.baldysiak@intel.com>
-> Subject: mdadm-4.2 release
-> 
-> Hi Jes,
-> It will be nice to release mdadm-4.2 soon.  If I remember correctly, release has been planned for May- now is July.
-> Do you still working on it?
-> We are ok with releasing it on current HEAD.
-> Sorry for spam, resending as plain text.
-> 
-> Thanks,
-> Mariusz
-> 
+> currently a lot of the file system calls in the early in code (and the
+> devtmpfs kthread) rely on the implicit set_fs(KERNEL_DS) during boot.
+> This is one of the few last remaining places we need to deal with to kill
+> off set_fs entirely, so this series adds new helpers that take kernel
+> pointers.  These helpers are in init/ and marked __init and thus will
+> be discarded after bootup.  A few also need to be duplicated in devtmpfs,
+> though unfortunately.
 
+Reverting this series from next-20200803 fixed the crash below on shutdown.
 
+[ 7303.287890][    T1] systemd-shutdown[1]: All loop devices detached.
+[ 7303.287930][    T1] systemd-shutdown[1]: Detaching DM devices.
+[ 7303.441674][    T1] printk: shutdown: 9 output lines suppressed due to ratelimiting
+[ 7303.443999][    T1] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000100
+[ 7303.444027][    T1] CPU: 120 PID: 1 Comm: shutdown Not tainted 5.8.0-next-20200803 #2
+[ 7303.444053][    T1] Call Trace:
+[ 7303.444069][    T1] [c000000015d27b70] [c0000000006f3778] dump_stack+0xfc/0x174 (unreliable)
+[ 7303.444103][    T1] [c000000015d27bc0] [c0000000000c9328] panic+0x214/0x4ac
+[ 7303.444140][    T1] [c000000015d27c60] [c0000000000d4d28] do_exit+0xda8/0xee0
+[ 7303.444178][    T1] [c000000015d27d60] [c0000000000d4f1c] do_group_exit+0x5c/0xd0
+list_empty at include/linux/list.h:282
+(inlined by) thread_group_empty at include/linux/sched/signal.h:671
+(inlined by) do_group_exit at kernel/exit.c:888
+[ 7303.444205][    T1] [c000000015d27da0] [c0000000000d4fac] sys_exit_group+0x1c/0x20
+sys_exit_group at kernel/exit.c:914
+[ 7303.444234][    T1] [c000000015d27dc0] [c00000000002c628] system_call_exception+0xf8/0x1d0
+[ 7303.444262][    T1] [c000000015d27e20] [c00000000000d0a8] system_call_common+0xe8/0x218
+[ 7304.936912][    T1] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000100 ]---
+
+> 
+> The series sits on top of my previous
+> 
+>   "decruft the early init / initrd / initramfs code v2"
+> 
+> series.
+> 
+> 
+> Git tree:
+> 
+>     git://git.infradead.org/users/hch/misc.git init_path
+> 
+> Gitweb:
+> 
+>     http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/init_path
+> 
+> 
+> Changes since v3:
+>  - rename fs/for_init.c to fs/init.c
+>  - document the purpose of the routines in fs/init.c with a comment
+>  - don't mark devtmpfs __init as that will cause it to get overwritten
+>    by initmem poisoning
+>  - add an init_dup helper to make Al more happy than with the version
+>    commit to the "decruft the early init / initrd / initramfs code v2"
+>    series
+> 
+> Changes since v2:
+>  - move to fs/for_init.c
+>  - reuse the init routines in devtmpfs after refactoring devtmpfsd
+>    (and thus the broken error handling in the previous version)
+>  - actually use kern_path in a place where user_path_at sneaked back in
+> 
+> Changes since v1:
+>  - avoid most core VFS changes
+>  - renamed the functions and move them to init/ and devtmpfs
+>  - drop a bunch of cleanups that can be submitted independently now
+> 
+> 
+> Diffstat:
