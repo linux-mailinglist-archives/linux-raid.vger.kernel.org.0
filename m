@@ -2,39 +2,38 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A757C23B9C8
-	for <lists+linux-raid@lfdr.de>; Tue,  4 Aug 2020 13:43:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD91623B9C9
+	for <lists+linux-raid@lfdr.de>; Tue,  4 Aug 2020 13:43:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730163AbgHDLnL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 4 Aug 2020 07:43:11 -0400
-Received: from mailhost.hospedajeydominios.com ([46.29.49.5]:39942 "EHLO
+        id S1730160AbgHDLnS (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 4 Aug 2020 07:43:18 -0400
+Received: from mailhost.hospedajeydominios.com ([46.29.49.5]:35998 "EHLO
         mailhost.hospedajeydominios.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728028AbgHDLnL (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 4 Aug 2020 07:43:11 -0400
-X-Greylist: delayed 1450 seconds by postgrey-1.27 at vger.kernel.org; Tue, 04 Aug 2020 07:43:10 EDT
+        by vger.kernel.org with ESMTP id S1728028AbgHDLnS (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 4 Aug 2020 07:43:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=hospedajeydominios.com; s=x; h=To:Date:Message-Id:Subject:Mime-Version:
         Content-Transfer-Encoding:Content-Type:From:Sender:Reply-To:Cc:Content-ID:
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=et/dUt6KtK1W5iCCYb3rgbfk1a7FbiGWd6tHXyVGNQ8=; b=U4d2Zp/xiWxd3n77DJmMogjG3j
-        35RzorQN3QsfLbi2FcIOSLqoLFr3PGLLUB+asMzX0uqkuZxrq2gNtFlI+cNI4EQ50/YPgRgC91uVn
-        dpW1AYEerpBzezgLuu9cS8BMm5IldzBQu0DuVK0v4alpo7y2YFN5pA5b9X6HLJ/t/JGk=;
+        bh=et/dUt6KtK1W5iCCYb3rgbfk1a7FbiGWd6tHXyVGNQ8=; b=YRm6Q190TjcGapabE7QDwI5+S+
+        4FWsz7TeiCJWz79zDj6OD6CI5dXiLYXuT3hSE4WzIZGW5RZ9XZG+PUXK4LgqGqYE9VaN9eksXrLVt
+        L/akg37hTSw9HxCDB2CsKOUN3r/PWx+9DHFSs/bA/XcpHI31lklV2grGO0r8Bmlxt8Ak=;
 Received: from [46.29.48.84] (helo=[192.168.255.14])
         by mailhost.hospedajeydominios.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.93.0.4)
         (envelope-from <h.morala@hospedajeydominios.com>)
-        id 1k2uy9-0004iP-5a
-        for linux-raid@vger.kernel.org; Tue, 04 Aug 2020 13:18:57 +0200
+        id 1k2v2O-0005Xc-3y
+        for linux-raid@vger.kernel.org; Tue, 04 Aug 2020 13:23:20 +0200
 From:   "H. Morala (HyD)" <h.morala@hospedajeydominios.com>
 Content-Type: text/plain;
         charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
 Subject: mdadm: Insufficient head-space for reshape on /dev/sda2
-Message-Id: <22661ED5-CF01-4414-B1DF-6A73D5EC5B63@hospedajeydominios.com>
-Date:   Tue, 4 Aug 2020 13:18:56 +0200
+Message-Id: <063F3DFD-D736-4FE6-A5DB-6E1D56CC5673@hospedajeydominios.com>
+Date:   Tue, 4 Aug 2020 13:23:19 +0200
 To:     linux-raid@vger.kernel.org
 X-Mailer: Apple Mail (2.3608.80.23.2.2)
 X-Authenticated-Id: h.morala@hospedajeydominios.com
@@ -58,37 +57,37 @@ This is the present  configuration:
 
 # mdadm --misc --detail /dev/md126
 /dev/md126:
-          Version : 1.0
-    Creation Time : Fri May 27 12:40:54 2016
-       Raid Level : raid10
-       Array Size : 512960 (500.94 MiB 525.27 MB)
-    Used Dev Size : 512960 (500.94 MiB 525.27 MB)
-     Raid Devices : 2
-    Total Devices : 4
-      Persistence : Superblock is persistent
+         Version : 1.0
+   Creation Time : Fri May 27 12:40:54 2016
+      Raid Level : raid10
+      Array Size : 512960 (500.94 MiB 525.27 MB)
+   Used Dev Size : 512960 (500.94 MiB 525.27 MB)
+    Raid Devices : 2
+   Total Devices : 4
+     Persistence : Superblock is persistent
 
-      Update Time : Mon Aug  3 17:33:04 2020
-            State : clean=20
-   Active Devices : 2
-  Working Devices : 4
-   Failed Devices : 0
-    Spare Devices : 2
+     Update Time : Mon Aug  3 17:33:04 2020
+           State : clean=20
+  Active Devices : 2
+ Working Devices : 4
+  Failed Devices : 0
+   Spare Devices : 2
 
-           Layout : near=3D2
-       Chunk Size : 64K
+          Layout : near=3D2
+      Chunk Size : 64K
 
 Consistency Policy : resync
 
-             Name : boot
-             UUID : 5fc23b3c:93ecd502:0fbf3b82:adc7ad2d
-           Events : 746
+            Name : boot
+            UUID : 5fc23b3c:93ecd502:0fbf3b82:adc7ad2d
+          Events : 746
 
-   Number   Major   Minor   RaidDevice State
-      0       8        2        0      active sync set-A   /dev/sda2
-      4       8       50        1      active sync set-B   /dev/sdd2
+  Number   Major   Minor   RaidDevice State
+     0       8        2        0      active sync set-A   /dev/sda2
+     4       8       50        1      active sync set-B   /dev/sdd2
 
-      2       8       18        -      spare   /dev/sdb2
-      3       8       34        -      spare   /dev/sdc2
+     2       8       18        -      spare   /dev/sdb2
+     3       8       34        -      spare   /dev/sdc2
 
 
 
@@ -99,7 +98,7 @@ UUID=3D5fc23b3c:93ecd502:0fbf3b82:adc7ad2d
 # cat /proc/mdstat=20
 Personalities : [raid1] [raid10] [raid0]=20
 md126 : active raid10 sdd2[4] sdc2[3](S) sdb2[2](S) sda2[0]
-     512960 blocks super 1.0 2 near-copies [2/2] [UU]
+    512960 blocks super 1.0 2 near-copies [2/2] [UU]
 
 # fdisk /dev/sda
 
@@ -142,9 +141,9 @@ Disk Flags:=20
 
 Numero  Inicio  Fin     Tama=C3=B1o  Typo     Sistema de ficheros  =
 Banderas
-       32,3kB  1049kB  1016kB           Free Space
+      32,3kB  1049kB  1016kB           Free Space
 1      1049kB  4232MB  4231MB  primary                       lvm
 2      4232MB  4757MB  525MB   primary  xfs                  arranque, =
 raid
 3      4757MB  499GB   494GB   primary                       raid
-       499GB   500GB   1295MB           Free Space=
+      499GB   500GB   1295MB           Free Space=
