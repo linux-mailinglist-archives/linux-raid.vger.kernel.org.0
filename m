@@ -2,145 +2,140 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9834223B137
-	for <lists+linux-raid@lfdr.de>; Tue,  4 Aug 2020 01:49:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 124DF23B1E7
+	for <lists+linux-raid@lfdr.de>; Tue,  4 Aug 2020 02:51:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbgHCXsE (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 3 Aug 2020 19:48:04 -0400
-Received: from mga18.intel.com ([134.134.136.126]:36476 "EHLO mga18.intel.com"
+        id S1727780AbgHDAvj (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 3 Aug 2020 20:51:39 -0400
+Received: from mout.gmx.net ([212.227.17.20]:53367 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726350AbgHCXsD (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 3 Aug 2020 19:48:03 -0400
-IronPort-SDR: eQWeNo9oNrvQQ61JWoS/6S8gBlMKNe0ZW2D0zmP/pEFYkGvVdrIBD7Au36/9ZzcWtzYchkpvQ5
- yBnJvh/vBSTA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="139810128"
-X-IronPort-AV: E=Sophos;i="5.75,431,1589266800"; 
-   d="scan'208";a="139810128"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 16:48:03 -0700
-IronPort-SDR: Pd5WoUr7rGExgjMUUto7EJ31OT3da/GN9CfTCTHAJVQ7/aQtDtr5niB3LoBrnjuKreqnSG6TG4
- fhCn1gkAqlrg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,431,1589266800"; 
-   d="scan'208";a="315049712"
-Received: from lkp-server02.sh.intel.com (HELO 84ccfe698a63) ([10.239.97.151])
-  by fmsmga004.fm.intel.com with ESMTP; 03 Aug 2020 16:48:01 -0700
-Received: from kbuild by 84ccfe698a63 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k2kBV-0000Im-An; Mon, 03 Aug 2020 23:48:01 +0000
-Date:   Tue, 04 Aug 2020 07:47:54 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Song Liu <song@kernel.org>
-Cc:     linux-raid@vger.kernel.org
-Subject: [song-md:md-next] BUILD SUCCESS
- 45a4d8fd6c7926e7991a1b29233d725fe12935da
-Message-ID: <5f28a22a.5PlgrVBwvzy+OHTi%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726766AbgHDAvj (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 3 Aug 2020 20:51:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1596502291;
+        bh=wXNxlpRQEzYBd3gMN+L0SSu803X9BRLZK0hUKEwT0w8=;
+        h=X-UI-Sender-Class:Subject:To:References:From:Date:In-Reply-To;
+        b=XNOrio/O0xovVwG/1ieVz3iRomKkX7c6rTVU8L+PE5SbKYpwoqs+OCmHH/9oSICwa
+         /+mxVDvVr4eMk8BALUzwO5sE9cAgIcJkzjJi+HjTJIb3g2+YBYrKAdMA0g6nWeXvxW
+         wCEBXFyPw5k28MoaXPtMo4EbObn5xUR+mdvI0S5M=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.8.10] ([46.127.167.108]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N5mGB-1knfjd424R-017C1k; Tue, 04
+ Aug 2020 02:51:31 +0200
+Subject: Re: Restoring a raid0 for data rescue
+To:     NeilBrown <neil@brown.name>, antlists <antlists@youngman.org.uk>,
+        linux-raid@vger.kernel.org
+References: <S1726630AbgHBR6v/20200802175851Z+2001@vger.kernel.org>
+ <68c39e83-1155-0c8d-96a9-0418bdaf850d@gmx.de>
+ <7437ab4d-9cd1-fe53-a17a-fc9e966ccd92@youngman.org.uk>
+ <d8f9d16d-b6a2-77ba-bff2-a56c62dac5df@gmx.de>
+ <057b0c58-3876-0f03-af33-86f3b266a18a@gmx.de>
+ <873654tkdy.fsf@notabene.neil.brown.name>
+From:   tyranastrasz@gmx.de
+Message-ID: <1f362a36-3aa3-4183-597d-ea2b3a624789@gmx.de>
+Date:   Tue, 4 Aug 2020 02:51:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <873654tkdy.fsf@notabene.neil.brown.name>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:ub90/BKApN1J+dUpuFF4pWpbmKotx+KtxoMmH1/ydZJRD39AwnO
+ zX2aaUNrGwxgiSw/sW6mkOtxKimGhdZfAOHicHHRFxKzN5wiUddInHksuFuIPNTC+2JxMVz
+ iuJNUCzK/U+KjzuMyVNGK7LvtJDH33EtlFS7srcob2Zha13xTa+s+Ip2dcdbKrVZQnytQtG
+ 3bCWHYgf+YdMvUKhRhlGQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:j+KzURu0O6A=:+11phRY7qZ+xoOtd1m/DYg
+ t3VYYQkZs2/Hjl33RqSLQa/3ROzB+1ZLrj/Ji7g33QjXLzZmv2YXbk+h6Ow3H9niqvJAprpOp
+ UFUVoJvkTraIkC0cUourYJeMftm6h9oRSMt80/c/vzEWLKvxsojxSpbnq5ZxKJ6ApF6ojV8nK
+ 8Clalc3gH/Jr4nI9GrjFxSpDV38Uly7X+3DAkr9TtVlU5p+qjRF7ygcQmDQtceNvjns1f6Gga
+ oaz6Rzk3tEAWYyGkBdIYH3o24siANMe9bECaNqcaD+w/aO564e3RocuUOImJIquBOqMQ4ediv
+ JX9x8HGMtxYXnWLYiOxYD8V3SSZcPyvHxuEeS1Aa7CACYH5L4T1mwnt+Kl5X6TpEAs/PfkaOD
+ ZOlKZ3AEQruUA3SH560dHUUqK1CU6JRphbePKB0APWuAjbScUBJBckJ5tepIlCRTtCJ1fAYPZ
+ 9w+uDHjhgECEXooLXHjPol9FEH9zUKzP7YlryieUMSal/ntf+erJtopL24ejSL5wcSMdyEdY8
+ tjgZ2fCE/8d8aXk4bwU9VuSxnR8ky0lUYhQ0VGZa2WrgUflFIdcmhJAjpByPZK8V5MlDEN4XP
+ 7OUDW53yRlhdDyxRUYggMn+/eTLWjB1aqhXcXXrzOHTlGveJMD0A+bFtGAJCHDSWIJmA3TN+y
+ dh4bnKGr4KsaZqDtdDjzHyPmZmRLYBhEzTEdgbNqLNmcAET7YhSmTGP8GtOYcQ3A/BrczIChL
+ CViCyIJAqb78WdTqPRl1HQFtAVy0DhKV2lTaDjdxNAcT7EdVk5guHheqAx+LSFVX5PlY4kfhv
+ ZNNv8XwO+nkqLFWxkA1HlodyyG9mLmoGN0Hp0q/qq53lGxLFc2vWC7t9dsWtE9vcdXzAml/Ul
+ BdIvntZR38oA93phDZpv482McN2YAKmepR5fQAK6iCuw9XpthkR+g9AROm0c0Tw2/ysohPlGH
+ qFhvIY23se3Rh64KH0gQfaotFwnySMJEcmOwJylEcEyYiFJdZkeOk0dX69SAeqGbabrCh3lek
+ FXuztDO8ZuS46UAy8oMyQelw0OyUYRgwO/MwTne6k7Q3OBaW2Jyjnd/LhiOQZ+iRHS/+O01N8
+ y76NO61Cutw8O5lS/wO+1vDeybksTSqBaBRcK3zhnNCJG1BXmQjkjxGf6Rh18Atr6ngX7NF6B
+ 1F/7vNj/oczWJOQWoDvA9RL/TEjaU2t90OCKS/4AncnMre79KeMqnpsYMsliULj5k9B/B1MyJ
+ ymAC+2i7cbdlD/S/q0B7LtRvee+kBy6HejJy3Ww==
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-tree/branch: git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git  md-next
-branch HEAD: 45a4d8fd6c7926e7991a1b29233d725fe12935da  md/raid5: Allow degraded raid6 to do rmw
+Your numbers were correct, everything is perfect from you.
+Yes it is everything on the 1800GB partition, ext4. It's consistency is
+by 100%.
+It worked perfectly!
 
-elapsed time: 725m
+You saved over 6 month of hard work!
+Thank you so much!
 
-configs tested: 83
-configs skipped: 2
+The heatwave killed my braincells :/
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+All who helped get included of my godnight prayer, thank you :)
 
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-ia64                        generic_defconfig
-m68k                       bvme6000_defconfig
-arm                          pxa168_defconfig
-arm                       aspeed_g4_defconfig
-arc                          axs101_defconfig
-powerpc                    amigaone_defconfig
-sh                   sh7770_generic_defconfig
-mips                        bcm47xx_defconfig
-h8300                    h8300h-sim_defconfig
-powerpc                          alldefconfig
-mips                      bmips_stb_defconfig
-arm                        magician_defconfig
-h8300                       h8s-sim_defconfig
-arm                        spear6xx_defconfig
-mips                          rb532_defconfig
-powerpc                     mpc83xx_defconfig
-arm                      jornada720_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-i386                 randconfig-a004-20200803
-i386                 randconfig-a005-20200803
-i386                 randconfig-a001-20200803
-i386                 randconfig-a002-20200803
-i386                 randconfig-a003-20200803
-i386                 randconfig-a006-20200803
-x86_64               randconfig-a013-20200803
-x86_64               randconfig-a011-20200803
-x86_64               randconfig-a012-20200803
-x86_64               randconfig-a016-20200803
-x86_64               randconfig-a015-20200803
-x86_64               randconfig-a014-20200803
-i386                 randconfig-a011-20200803
-i386                 randconfig-a012-20200803
-i386                 randconfig-a015-20200803
-i386                 randconfig-a014-20200803
-i386                 randconfig-a013-20200803
-i386                 randconfig-a016-20200803
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
+Nara
+- Can now sleep well
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+On 03.08.20 06:37, NeilBrown wrote:
+> On Sun, Aug 02 2020, tyranastrasz@gmx.de wrote:
+>>
+>> I tried something what was told here
+>> https://askubuntu.com/questions/69086/mdadm-superblock-recovery
+>>
+>> root@Nibler:~# mdadm --create /dev/md0 -v -f -l 0 -c 128 -n 2 /dev/sdd
+>> /dev/sdb
+>
+> That was a mistake.  I probably could have saved you before you did
+> that.  Maybe I still can...
+>
+> You have an Intel IMSM RAID0 array over sdb and sdd.
+> This was 3711741952 sectors in size using the first 1855871240 sectors
+> of each device - data arranged in 7249496 256KiB stripes (128KiB on each
+> device).
+>
+> This 1900GB array was partitioned into 3 partitions: 3MB, 1800MB,
+> and 18MB.
+>
+> Presumably the data you want is on the 2nd partition: the 1800MB one?
+>
+> When you ran the "mdadm --create" command it wrote some meta data at the
+> start of the device - probably only a 4K block at 8K from the start.
+> This is before the first partition, so it might not have affected any
+> data at all.  It may have corrupted the partition table.
+>
+> You need to put the array together again without writing anything to
+> it.  Fortunately that is fairly easy with RAID0.
+>
+> 1/ If /dev/md0 still exists, stop it "mdadm --stop /dev/md0"
+> 2/ put the two devices into a RAID0 with no metadata.
+>      mdadm --build /dev/md0 -n 2 -z 927935620 -c 128 -l 0 /dev/sdb /dev/=
+sdd
+>
+> 3/ create a read-only loop device over the second partition
+>      losetup -r -o 4096K --sizelimit 7176980M /dev/loop0 /dev/md0
+>
+> 4/ Examine the filesystem at /dev/loop0 READ-ONLY.
+>    You didn't say what sort of filesystem you used.  If ext4, then
+>       fsck -n /dev/loop0
+>
+> 5/ If it looks good, try mounting /dev/loop0 READ-ONLY.
+>
+> I recommend that you FIRST read the relevant parts of the mdadm and
+> losetup man pages, and check my arithmetic to make sure the numbers that
+> I have given are correct.  If unsure, ask.
+>
+> If it doesn't work, I recommend reporting results, asking, and waiting
+> before doing anything that might change anything on the drives.
+>
+> NeilBrown
+>
+
