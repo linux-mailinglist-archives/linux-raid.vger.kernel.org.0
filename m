@@ -2,122 +2,133 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 17EE023B8EC
-	for <lists+linux-raid@lfdr.de>; Tue,  4 Aug 2020 12:40:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5FF223B953
+	for <lists+linux-raid@lfdr.de>; Tue,  4 Aug 2020 13:16:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729570AbgHDKkX (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 4 Aug 2020 06:40:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726212AbgHDKkW (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 4 Aug 2020 06:40:22 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C63AC06174A
-        for <linux-raid@vger.kernel.org>; Tue,  4 Aug 2020 03:40:22 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id o18so15063008eds.10
-        for <linux-raid@vger.kernel.org>; Tue, 04 Aug 2020 03:40:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=FM8JJYK+qBxJnc8/UmF8NvAbr5BBXYkB5tYvw/juSbs=;
-        b=QBGjDTy7dXfN7Y439bXKTZEi5rOF5e4oqqAIxe0BMubn03iOjAh6my0WURinxnSLkr
-         u2APXR//XBXrs0dqtWM9hIcE2Fqppd9OsiQw4qlULWR1BLS9mP0Zrm52YNbybkrpWLAF
-         SNudNVvz3tnRB1Q/lkf0sf5lCwjhZVPiA5g25gnbGuhr36uRuhzQ3DJcOUVSyVLSioMx
-         n0gHHmYoUrCPGX4wjxS3vu3+sMPcdgZ4gBsUkAMapGkQlkfFcW+Vnrs+aWd/F7aNv+TM
-         9/QMINlyTS/ZM+KYGCDEtzoTtI4jtvWSgj32tlV7/iz10ptNMFy1BiotYZ4k7WHlbb+o
-         bngQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=FM8JJYK+qBxJnc8/UmF8NvAbr5BBXYkB5tYvw/juSbs=;
-        b=L1xm20Rvu81uOjmSIlYJE9hxalHLesVU3oX8w/HVjnl+1MuSNBoFu15GOMaEUfI2cw
-         dmtpYmz1lLOu7dxxP87tyGDc6urMF4WA20vtFE5q7u9UmGUbxPZS7UtYj5CwJ6KxWTLc
-         pZXAjURc7Gz4pvtbWwDXiw1rD/afRuUG/iKabm8Yql4tv3ri4wFGf5FLHZzVqVj9Z9yr
-         blafQmwNue3Wgxtww71KTsYpQ/OP4BC6DUjiXvkdUc1AoJy7QA48s5mGgbyCxHYu/lxz
-         t7WzDv15nRB9hy8zM0dd3smlRXr308jocAA7BoJcU5IyJrVnoPg/H3cMn6fG3AHCiDlK
-         2c+A==
-X-Gm-Message-State: AOAM532GlzHWPd/VTqnYCLBcKlaBvtcVNG+sH6LWsrgNwMajjneXPFj/
-        zlpPxhe6MZHybm7RSRcIUidVzw==
-X-Google-Smtp-Source: ABdhPJxfOV2eduhzOiDg6vGAY77Q2gtIYl/znxoFXkKJ/qA/Ptm1RyuR7tZDjWI1v9d3r7jVUhZZQg==
-X-Received: by 2002:aa7:c64e:: with SMTP id z14mr1032325edr.368.1596537621083;
-        Tue, 04 Aug 2020 03:40:21 -0700 (PDT)
-Received: from ?IPv6:2a02:247f:ffff:2540:118f:4f8c:3890:68c8? ([2001:1438:4010:2540:118f:4f8c:3890:68c8])
-        by smtp.gmail.com with ESMTPSA id o16sm18458350ejj.106.2020.08.04.03.40.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Aug 2020 03:40:20 -0700 (PDT)
+        id S1730230AbgHDLQV (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 4 Aug 2020 07:16:21 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:60070 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730221AbgHDLQK (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 4 Aug 2020 07:16:10 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 074BDAtO113189;
+        Tue, 4 Aug 2020 11:16:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
+ bh=yhVa+sGWPiCrSxzTLW7WJK6Btb/mhOSlf4PA+TeSbTo=;
+ b=U1V4ekWOIV/mohp5085VfaTTzGZtw0WwasDhgSK91c9ksRRgAJzHutEa6KvntgceD/MO
+ MFn/SKBTCNTjVwhG+zDivR4bB4PNp/eE4ruOCdpS/Y9titrJWwDcV1FLC9IwIPb5orW4
+ rZh+89AfiI0uwqQRVYzPaQoq4mXkEGm5rEonZtc6jOwDlRulLOXSH+IwTws5BcvvbZ6u
+ 5eDHGi4OeHViQG3FHlhApQZ5e1ruuEDZ0IM/J7GXoMjEjhnyiuC4lEFpQ0Hu/mhqz+UP
+ OmN+3Vq7ReOwh9xqbRMu+8/ghB54A0BGA8771R2M1GwRTHCzDcMOpFCYJG2RaEZgDBMm Ow== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 32pdnq6xsr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 04 Aug 2020 11:16:02 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 074B7iFO079768;
+        Tue, 4 Aug 2020 11:16:01 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 32njawcjet-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 04 Aug 2020 11:16:01 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 074BFxZC020752;
+        Tue, 4 Aug 2020 11:15:59 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 04 Aug 2020 04:15:58 -0700
+Date:   Tue, 4 Aug 2020 14:15:49 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Cc:     Song Liu <song@kernel.org>, Shaohua Li <shli@fb.com>,
+        NeilBrown <neilb@suse.com>, linux-raid@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
 Subject: Re: [PATCH] md-cluster: Fix potential error pointer dereference in
  resize_bitmaps()
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Song Liu <song@kernel.org>
-Cc:     Shaohua Li <shli@fb.com>, NeilBrown <neilb@suse.com>,
-        linux-raid@vger.kernel.org, kernel-janitors@vger.kernel.org
+Message-ID: <20200804111549.GN5493@kadam>
 References: <20200804101645.GB392148@mwanda>
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Message-ID: <824849e0-c98d-1f22-817c-7a76d3ee22b1@cloud.ionos.com>
-Date:   Tue, 4 Aug 2020 12:40:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ <824849e0-c98d-1f22-817c-7a76d3ee22b1@cloud.ionos.com>
 MIME-Version: 1.0
-In-Reply-To: <20200804101645.GB392148@mwanda>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+In-Reply-To: <824849e0-c98d-1f22-817c-7a76d3ee22b1@cloud.ionos.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9702 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 mlxscore=0 spamscore=0 malwarescore=0 adultscore=0
+ suspectscore=2 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008040084
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9702 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxscore=0
+ suspectscore=2 clxscore=1011 priorityscore=1501 bulkscore=0 adultscore=0
+ malwarescore=0 phishscore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008040084
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-
-
-On 8/4/20 12:16 PM, Dan Carpenter wrote:
-> The error handling calls md_bitmap_free(bitmap) which checks for NULL
-> but will Oops if we pass an error pointer.  Let's set "bitmap" to NULL
-> on this error path.
->
-> Fixes: afd756286083 ("md-cluster/raid10: resize all the bitmaps before start reshape")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
->   drivers/md/md-cluster.c | 1 +
->   1 file changed, 1 insertion(+)
->
+On Tue, Aug 04, 2020 at 12:40:18PM +0200, Guoqing Jiang wrote:
+> 
+> 
+> On 8/4/20 12:16 PM, Dan Carpenter wrote:
+> > The error handling calls md_bitmap_free(bitmap) which checks for NULL
+> > but will Oops if we pass an error pointer.  Let's set "bitmap" to NULL
+> > on this error path.
+> > 
+> > Fixes: afd756286083 ("md-cluster/raid10: resize all the bitmaps before start reshape")
+> > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > ---
+> >   drivers/md/md-cluster.c | 1 +
+> >   1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/md/md-cluster.c b/drivers/md/md-cluster.c
+> > index 73fd50e77975..d50737ec4039 100644
+> > --- a/drivers/md/md-cluster.c
+> > +++ b/drivers/md/md-cluster.c
+> > @@ -1139,6 +1139,7 @@ static int resize_bitmaps(struct mddev *mddev, sector_t newsize, sector_t oldsiz
+> >   		bitmap = get_bitmap_from_slot(mddev, i);
+> >   		if (IS_ERR(bitmap)) {
+> >   			pr_err("can't get bitmap from slot %d\n", i);
+> > +			bitmap = NULL;
+> >   			goto out;
+> >   		}
+> >   		counts = &bitmap->counts;
+> 
+> Thanks for the catch, Reviewed-by: Guoqing Jiang
+> <guoqing.jiang@cloud.ionos.com>
+> 
+> BTW, seems there could be memory leak in the function since it keeps
+> allocate bitmap
+> in the loop ..., will send a format patch.
+> 
+> 
 > diff --git a/drivers/md/md-cluster.c b/drivers/md/md-cluster.c
-> index 73fd50e77975..d50737ec4039 100644
+> index 73fd50e77975..89d7b32489d8 100644
 > --- a/drivers/md/md-cluster.c
 > +++ b/drivers/md/md-cluster.c
-> @@ -1139,6 +1139,7 @@ static int resize_bitmaps(struct mddev *mddev, sector_t newsize, sector_t oldsiz
->   		bitmap = get_bitmap_from_slot(mddev, i);
->   		if (IS_ERR(bitmap)) {
->   			pr_err("can't get bitmap from slot %d\n", i);
-> +			bitmap = NULL;
->   			goto out;
->   		}
->   		counts = &bitmap->counts;
+> @@ -1165,6 +1165,8 @@ static int resize_bitmaps(struct mddev *mddev,
+> sector_t newsize, sector_t oldsiz
+>                          * can't resize bitmap
+>                          */
+>                         goto out;
+> +
+> +               md_bitmap_free(bitmap);
 
-Thanks for the catch, Reviewed-by: Guoqing Jiang 
-<guoqing.jiang@cloud.ionos.com>
+Hm...  I'm now not at all certain my patch is correct.  Although it's
+obviously harmless and fixes an Oops.  I had thought that that the call
+to update_bitmap_size(mddev, oldsize) would free the rest of the loop.
 
-BTW, seems there could be memory leak in the function since it keeps 
-allocate bitmap
-in the loop ..., will send a format patch.
+I really suspect adding a free like you're suggesting will break the
+success path.
 
+I'm not familiar with this code at all.
 
-diff --git a/drivers/md/md-cluster.c b/drivers/md/md-cluster.c
-index 73fd50e77975..89d7b32489d8 100644
---- a/drivers/md/md-cluster.c
-+++ b/drivers/md/md-cluster.c
-@@ -1165,6 +1165,8 @@ static int resize_bitmaps(struct mddev *mddev, 
-sector_t newsize, sector_t oldsiz
- Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â  * can't resize bitmap
- Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â  */
- Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â  goto out;
-+
-+Â Â Â Â Â Â Â Â Â Â Â Â Â Â  md_bitmap_free(bitmap);
- Â Â Â Â Â Â Â  }
+regards,
+dan carpenter
 
- Â Â Â Â Â Â Â  return 0;
-
-Thanks,
-Guoqing
