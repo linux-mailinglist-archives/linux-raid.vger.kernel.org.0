@@ -2,148 +2,138 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AD91623B9C9
-	for <lists+linux-raid@lfdr.de>; Tue,  4 Aug 2020 13:43:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 189D723C299
+	for <lists+linux-raid@lfdr.de>; Wed,  5 Aug 2020 02:29:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730160AbgHDLnS (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 4 Aug 2020 07:43:18 -0400
-Received: from mailhost.hospedajeydominios.com ([46.29.49.5]:35998 "EHLO
-        mailhost.hospedajeydominios.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728028AbgHDLnS (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 4 Aug 2020 07:43:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=hospedajeydominios.com; s=x; h=To:Date:Message-Id:Subject:Mime-Version:
-        Content-Transfer-Encoding:Content-Type:From:Sender:Reply-To:Cc:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=et/dUt6KtK1W5iCCYb3rgbfk1a7FbiGWd6tHXyVGNQ8=; b=YRm6Q190TjcGapabE7QDwI5+S+
-        4FWsz7TeiCJWz79zDj6OD6CI5dXiLYXuT3hSE4WzIZGW5RZ9XZG+PUXK4LgqGqYE9VaN9eksXrLVt
-        L/akg37hTSw9HxCDB2CsKOUN3r/PWx+9DHFSs/bA/XcpHI31lklV2grGO0r8Bmlxt8Ak=;
-Received: from [46.29.48.84] (helo=[192.168.255.14])
-        by mailhost.hospedajeydominios.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93.0.4)
-        (envelope-from <h.morala@hospedajeydominios.com>)
-        id 1k2v2O-0005Xc-3y
-        for linux-raid@vger.kernel.org; Tue, 04 Aug 2020 13:23:20 +0200
-From:   "H. Morala (HyD)" <h.morala@hospedajeydominios.com>
-Content-Type: text/plain;
-        charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: mdadm: Insufficient head-space for reshape on /dev/sda2
-Message-Id: <063F3DFD-D736-4FE6-A5DB-6E1D56CC5673@hospedajeydominios.com>
-Date:   Tue, 4 Aug 2020 13:23:19 +0200
+        id S1726041AbgHEA2g (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 4 Aug 2020 20:28:36 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:52564 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725864AbgHEA2f (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 4 Aug 2020 20:28:35 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0750M2GO066371;
+        Wed, 5 Aug 2020 00:28:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2020-01-29; bh=QsgWMFelLsddVnAZaR0j7Bo4BN8h108wBgEFRMsApPs=;
+ b=ZvvPs2Oa5TnhcAxZNw+cKDbWNq7LbnP3GxWmHnhWmOS2wDjC1YaNCcQNMRJ8n70L7xYv
+ qF/LWEtrqKKlOXTtb7n63+mZopwQbEJBbLcLnvdrsqukxzpY+RRPq46OCECgiLRNAYfk
+ TNf4a3piT6ZO1ySz+dDRWLcekfMRr0/3tH9zOghNpN0UURneLxA83COfR6CiBF80A1IW
+ /F1JB5uGtjRpe+mxeDHqkbRKUFmgukWV7yFpRuMVR325YCNYbk6upAzKulhEVREwCPRV
+ h+swfiXNeSdntzEwVlaUVelM0bphBqRTWy0Q9ERI56lFvXO63Q+ntl7c8y916+Js2P17 ng== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 32n11n77fr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 05 Aug 2020 00:28:33 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0750MxMS019155;
+        Wed, 5 Aug 2020 00:28:33 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 32pdhd4j48-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 05 Aug 2020 00:28:33 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0750SWI7015711;
+        Wed, 5 Aug 2020 00:28:32 GMT
+Received: from dhcp-10-159-241-148.vpn.oracle.com (/10.159.241.148)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 04 Aug 2020 17:28:32 -0700
+From:   Junxiao Bi <junxiao.bi@oracle.com>
 To:     linux-raid@vger.kernel.org
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
-X-Authenticated-Id: h.morala@hospedajeydominios.com
+Cc:     songliubraving@fb.com, linux-kernel@vger.kernel.org
+Subject: [PATCH] md: get sysfs entry after redundancy attr group create
+Date:   Tue,  4 Aug 2020 17:27:18 -0700
+Message-Id: <20200805002718.50839-1-junxiao.bi@oracle.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9703 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
+ bulkscore=0 malwarescore=0 mlxscore=0 mlxlogscore=999 suspectscore=21
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008050001
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9703 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
+ impostorscore=0 lowpriorityscore=0 malwarescore=0 spamscore=0 mlxscore=0
+ suspectscore=21 mlxlogscore=999 phishscore=0 adultscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008050001
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hello,
+"sync_completed" and "degraded" belongs to redundancy attr group,
+it was not exist yet when md device was created.
 
-We tried to do:
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Fixes: e1a86dbbbd6a ("md: fix deadlock causing by sysfs_notify")
+Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+---
+ drivers/md/md.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
-	mdadm --grow /dev/md126 --raid-devices=3D4=20
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index fee8943ead7b..60d2142c4693 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -846,7 +846,13 @@ void mddev_unlock(struct mddev *mddev)
+ 				sysfs_remove_group(&mddev->kobj, &md_redundancy_group);
+ 				if (mddev->sysfs_action)
+ 					sysfs_put(mddev->sysfs_action);
++				if (mddev->sysfs_completed)
++					sysfs_put(mddev->sysfs_completed);
++				if (mddev->sysfs_degraded)
++					sysfs_put(mddev->sysfs_degraded);
+ 				mddev->sysfs_action = NULL;
++				mddev->sysfs_completed = NULL;
++				mddev->sysfs_degraded = NULL;
+ 			}
+ 		}
+ 		mddev->sysfs_active = 0;
+@@ -4036,6 +4042,8 @@ level_store(struct mddev *mddev, const char *buf, size_t len)
+ 			pr_warn("md: cannot register extra attributes for %s\n",
+ 				mdname(mddev));
+ 		mddev->sysfs_action = sysfs_get_dirent(mddev->kobj.sd, "sync_action");
++		mddev->sysfs_completed = sysfs_get_dirent_safe(mddev->kobj.sd, "sync_completed");
++		mddev->sysfs_degraded = sysfs_get_dirent_safe(mddev->kobj.sd, "degraded");
+ 	}
+ 	if (oldpers->sync_request != NULL &&
+ 	    pers->sync_request == NULL) {
+@@ -5542,14 +5550,9 @@ static void md_free(struct kobject *ko)
+ 
+ 	if (mddev->sysfs_state)
+ 		sysfs_put(mddev->sysfs_state);
+-	if (mddev->sysfs_completed)
+-		sysfs_put(mddev->sysfs_completed);
+-	if (mddev->sysfs_degraded)
+-		sysfs_put(mddev->sysfs_degraded);
+ 	if (mddev->sysfs_level)
+ 		sysfs_put(mddev->sysfs_level);
+ 
+-
+ 	if (mddev->gendisk)
+ 		del_gendisk(mddev->gendisk);
+ 	if (mddev->queue)
+@@ -5710,8 +5713,6 @@ static int md_alloc(dev_t dev, char *name)
+ 	if (!error && mddev->kobj.sd) {
+ 		kobject_uevent(&mddev->kobj, KOBJ_ADD);
+ 		mddev->sysfs_state = sysfs_get_dirent_safe(mddev->kobj.sd, "array_state");
+-		mddev->sysfs_completed = sysfs_get_dirent_safe(mddev->kobj.sd, "sync_completed");
+-		mddev->sysfs_degraded = sysfs_get_dirent_safe(mddev->kobj.sd, "degraded");
+ 		mddev->sysfs_level = sysfs_get_dirent_safe(mddev->kobj.sd, "level");
+ 	}
+ 	mddev_put(mddev);
+@@ -5991,6 +5992,8 @@ int md_run(struct mddev *mddev)
+ 			pr_warn("md: cannot register extra attributes for %s\n",
+ 				mdname(mddev));
+ 		mddev->sysfs_action = sysfs_get_dirent_safe(mddev->kobj.sd, "sync_action");
++		mddev->sysfs_completed = sysfs_get_dirent_safe(mddev->kobj.sd, "sync_completed");
++		mddev->sysfs_degraded = sysfs_get_dirent_safe(mddev->kobj.sd, "degraded");
+ 	} else if (mddev->ro == 2) /* auto-readonly not meaningful */
+ 		mddev->ro = 0;
+ 
+-- 
+2.20.1 (Apple Git-117)
 
-and we get:
-
-	mdadm: Insufficient head-space for reshape on /dev/sda2
-
-
-This is the present  configuration:
-
-# mdadm --misc --detail /dev/md126
-/dev/md126:
-         Version : 1.0
-   Creation Time : Fri May 27 12:40:54 2016
-      Raid Level : raid10
-      Array Size : 512960 (500.94 MiB 525.27 MB)
-   Used Dev Size : 512960 (500.94 MiB 525.27 MB)
-    Raid Devices : 2
-   Total Devices : 4
-     Persistence : Superblock is persistent
-
-     Update Time : Mon Aug  3 17:33:04 2020
-           State : clean=20
-  Active Devices : 2
- Working Devices : 4
-  Failed Devices : 0
-   Spare Devices : 2
-
-          Layout : near=3D2
-      Chunk Size : 64K
-
-Consistency Policy : resync
-
-            Name : boot
-            UUID : 5fc23b3c:93ecd502:0fbf3b82:adc7ad2d
-          Events : 746
-
-  Number   Major   Minor   RaidDevice State
-     0       8        2        0      active sync set-A   /dev/sda2
-     4       8       50        1      active sync set-B   /dev/sdd2
-
-     2       8       18        -      spare   /dev/sdb2
-     3       8       34        -      spare   /dev/sdc2
-
-
-
-# cat /etc/mdadm.conf=20
-ARRAY /dev/md/boot_0 metadata=3D1.0 spares=3D2 name=3Dboot =
-UUID=3D5fc23b3c:93ecd502:0fbf3b82:adc7ad2d
-
-# cat /proc/mdstat=20
-Personalities : [raid1] [raid10] [raid0]=20
-md126 : active raid10 sdd2[4] sdc2[3](S) sdb2[2](S) sda2[0]
-    512960 blocks super 1.0 2 near-copies [2/2] [UU]
-
-# fdisk /dev/sda
-
-The device presents a logical sector size that is smaller than
-the physical sector size. Aligning to a physical sector (or optimal
-I/O) size boundary is recommended, or performance may be impacted.
-Welcome to fdisk (util-linux 2.23.2).
-
-Changes will remain in memory only, until you decide to write them.
-Be careful before using the write command.
-
-
-Orden (m para obtener ayuda): p
-
-Disk /dev/sda: 500.1 GB, 500107862016 bytes, 976773168 sectors
-Units =3D sectors of 1 * 512 =3D 512 bytes
-Sector size (logical/physical): 512 bytes / 4096 bytes
-I/O size (minimum/optimal): 4096 bytes / 4096 bytes
-Disk label type: dos
-Identificador del disco: 0x0005ff1f
-
-Disposit. Inicio    Comienzo      Fin      Bloques  Id  Sistema
-/dev/sda1            2048     8265727     4131840   8e  Linux LVM
-/dev/sda2   *     8265728     9291775      513024   fd  Linux raid =
-autodetect
-/dev/sda3         9291776   974243839   482476032   fd  Linux raid =
-autodetect
-
-
-# parted /dev/sda
-GNU Parted 3.1
-Usando /dev/sda
-Welcome to GNU Parted! Type 'help' to view a list of commands.
-(parted) print free
-Model: ATA Crucial_CT500MX2 (scsi)
-Disk /dev/sda: 500GB
-Sector size (logical/physical): 512B/4096B
-Partition Table: msdos
-Disk Flags:=20
-
-Numero  Inicio  Fin     Tama=C3=B1o  Typo     Sistema de ficheros  =
-Banderas
-      32,3kB  1049kB  1016kB           Free Space
-1      1049kB  4232MB  4231MB  primary                       lvm
-2      4232MB  4757MB  525MB   primary  xfs                  arranque, =
-raid
-3      4757MB  499GB   494GB   primary                       raid
-      499GB   500GB   1295MB           Free Space=
