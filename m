@@ -2,157 +2,59 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 650AF23CC7C
-	for <lists+linux-raid@lfdr.de>; Wed,  5 Aug 2020 18:48:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86EE723D458
+	for <lists+linux-raid@lfdr.de>; Thu,  6 Aug 2020 02:06:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbgHEQsK (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 5 Aug 2020 12:48:10 -0400
-Received: from smtp.hosts.co.uk ([85.233.160.19]:52715 "EHLO smtp.hosts.co.uk"
+        id S1726150AbgHFAF4 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 5 Aug 2020 20:05:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727785AbgHEQpW (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:45:22 -0400
-Received: from host86-157-100-178.range86-157.btcentralplus.com ([86.157.100.178] helo=[192.168.1.64])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1k3IM6-0003Wm-5o; Wed, 05 Aug 2020 13:17:15 +0100
-Subject: Re: mdadm: Insufficient head-space for reshape on /dev/sda2
-To:     "H. Morala (HyD)" <h.morala@hospedajeydominios.com>,
-        linux-raid@vger.kernel.org
-References: <22661ED5-CF01-4414-B1DF-6A73D5EC5B63@hospedajeydominios.com>
-From:   Wols Lists <antlists@youngman.org.uk>
-X-Enigmail-Draft-Status: N1110
-Message-ID: <5F2AA34A.9050005@youngman.org.uk>
-Date:   Wed, 5 Aug 2020 13:17:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.7.0
+        id S1725969AbgHFAFz (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 5 Aug 2020 20:05:55 -0400
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7E9A22CA1;
+        Thu,  6 Aug 2020 00:05:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596672355;
+        bh=oIfxdQYMGGRcf4FFk5rarC4BVcqtGzF4ioTvjVmScwQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Wea4rl2EcIB1d8t+3viei6oImNHZUA77Fcop0ISmSmAc8xC/Ex7thzO01CG8JXH1x
+         urdHUaZ6L5eyQEQzuXN5vy7goY1Qy5i7x1JI3fjXJ/kIq6cFZHmb7Xdk+rS+2hiJD/
+         UNJLcLo8bSBllHoFYkTJnLWhfPHnd5pqQhLOJc4k=
+Received: by mail-lf1-f45.google.com with SMTP id s9so25225379lfs.4;
+        Wed, 05 Aug 2020 17:05:54 -0700 (PDT)
+X-Gm-Message-State: AOAM532hiZGhDFI8hN5GLgkWTU59UndoCv7Rx1V3sGRznRhBRqGFC15t
+        Jx+nlkvaZutx7GWMBAZ1sVrTCF/TgMq/SrMHuZw=
+X-Google-Smtp-Source: ABdhPJwSimaBo0c3bd2yLxKN8annl6N/CE59QJ0FE4AQhd0fnZufJmwgEE7WpiF3ShrD3KC4KL7ydVnWLAXJ4O/KBW4=
+X-Received: by 2002:a19:7710:: with SMTP id s16mr2678194lfc.162.1596672353031;
+ Wed, 05 Aug 2020 17:05:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <22661ED5-CF01-4414-B1DF-6A73D5EC5B63@hospedajeydominios.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+References: <20200805002718.50839-1-junxiao.bi@oracle.com>
+In-Reply-To: <20200805002718.50839-1-junxiao.bi@oracle.com>
+From:   Song Liu <song@kernel.org>
+Date:   Wed, 5 Aug 2020 17:05:41 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW6m3B509L58Adrzw6k+34SMYbXKrk8vxARhcnNJfz8k1Q@mail.gmail.com>
+Message-ID: <CAPhsuW6m3B509L58Adrzw6k+34SMYbXKrk8vxARhcnNJfz8k1Q@mail.gmail.com>
+Subject: Re: [PATCH] md: get sysfs entry after redundancy attr group create
+To:     Junxiao Bi <junxiao.bi@oracle.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Given that no-one else has chimed in ...
+On Tue, Aug 4, 2020 at 5:29 PM Junxiao Bi <junxiao.bi@oracle.com> wrote:
+>
+> "sync_completed" and "degraded" belongs to redundancy attr group,
+> it was not exist yet when md device was created.
+>
+> Reported-by: kernel test robot <rong.a.chen@intel.com>
+> Fixes: e1a86dbbbd6a ("md: fix deadlock causing by sysfs_notify")
+> Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
 
-Am I right in guessing that this particular array is quite old? 500MB is
-very small nowadays ...
-
-It also seems weird that you have a raid-10 with 2 drives and 2 spares ...
-
-I would guess that, because the amount of space required by mdadm has
-grown over the years, when you created the array years ago you used all
-available space and now there's not enough for the metadata that mdadm
-requires nowadays.
-
-What are you trying to achieve, because the current setup does not make
-sense without some explanation, and I guess you're better off migrating
-to larger hard disks ...
-
-Cheers,
-Wol
-
-On 04/08/20 12:18, H. Morala (HyD) wrote:
-> Hello,
-> 
-> We tried to do:
-> 
-> 	mdadm --grow /dev/md126 --raid-devices=4 
-> 
-> and we get:
-> 
-> 	mdadm: Insufficient head-space for reshape on /dev/sda2
-> 
-> 
-> This is the present  configuration:
-> 
-> # mdadm --misc --detail /dev/md126
-> /dev/md126:
->           Version : 1.0
->     Creation Time : Fri May 27 12:40:54 2016
->        Raid Level : raid10
->        Array Size : 512960 (500.94 MiB 525.27 MB)
->     Used Dev Size : 512960 (500.94 MiB 525.27 MB)
->      Raid Devices : 2
->     Total Devices : 4
->       Persistence : Superblock is persistent
-> 
->       Update Time : Mon Aug  3 17:33:04 2020
->             State : clean 
->    Active Devices : 2
->   Working Devices : 4
->    Failed Devices : 0
->     Spare Devices : 2
-> 
->            Layout : near=2
->        Chunk Size : 64K
-> 
-> Consistency Policy : resync
-> 
->              Name : boot
->              UUID : 5fc23b3c:93ecd502:0fbf3b82:adc7ad2d
->            Events : 746
-> 
->    Number   Major   Minor   RaidDevice State
->       0       8        2        0      active sync set-A   /dev/sda2
->       4       8       50        1      active sync set-B   /dev/sdd2
-> 
->       2       8       18        -      spare   /dev/sdb2
->       3       8       34        -      spare   /dev/sdc2
-> 
-> 
-> 
-> # cat /etc/mdadm.conf 
-> ARRAY /dev/md/boot_0 metadata=1.0 spares=2 name=boot UUID=5fc23b3c:93ecd502:0fbf3b82:adc7ad2d
-> 
-> # cat /proc/mdstat 
-> Personalities : [raid1] [raid10] [raid0] 
-> md126 : active raid10 sdd2[4] sdc2[3](S) sdb2[2](S) sda2[0]
->      512960 blocks super 1.0 2 near-copies [2/2] [UU]
-> 
-> # fdisk /dev/sda
-> 
-> The device presents a logical sector size that is smaller than
-> the physical sector size. Aligning to a physical sector (or optimal
-> I/O) size boundary is recommended, or performance may be impacted.
-> Welcome to fdisk (util-linux 2.23.2).
-> 
-> Changes will remain in memory only, until you decide to write them.
-> Be careful before using the write command.
-> 
-> 
-> Orden (m para obtener ayuda): p
-> 
-> Disk /dev/sda: 500.1 GB, 500107862016 bytes, 976773168 sectors
-> Units = sectors of 1 * 512 = 512 bytes
-> Sector size (logical/physical): 512 bytes / 4096 bytes
-> I/O size (minimum/optimal): 4096 bytes / 4096 bytes
-> Disk label type: dos
-> Identificador del disco: 0x0005ff1f
-> 
-> Disposit. Inicio    Comienzo      Fin      Bloques  Id  Sistema
-> /dev/sda1            2048     8265727     4131840   8e  Linux LVM
-> /dev/sda2   *     8265728     9291775      513024   fd  Linux raid autodetect
-> /dev/sda3         9291776   974243839   482476032   fd  Linux raid autodetect
-> 
-> 
-> # parted /dev/sda
-> GNU Parted 3.1
-> Usando /dev/sda
-> Welcome to GNU Parted! Type 'help' to view a list of commands.
-> (parted) print free
-> Model: ATA Crucial_CT500MX2 (scsi)
-> Disk /dev/sda: 500GB
-> Sector size (logical/physical): 512B/4096B
-> Partition Table: msdos
-> Disk Flags: 
-> 
-> Numero  Inicio  Fin     Tamaño  Typo     Sistema de ficheros  Banderas
->        32,3kB  1049kB  1016kB           Free Space
-> 1      1049kB  4232MB  4231MB  primary                       lvm
-> 2      4232MB  4757MB  525MB   primary  xfs                  arranque, raid
-> 3      4757MB  499GB   494GB   primary                       raid
->        499GB   500GB   1295MB           Free Space
-> 
-
+Applied to md-next. Thanks!
