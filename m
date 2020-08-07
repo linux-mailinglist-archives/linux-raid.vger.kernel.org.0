@@ -2,81 +2,97 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8414A23E455
-	for <lists+linux-raid@lfdr.de>; Fri,  7 Aug 2020 01:23:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CAD4623EE5E
+	for <lists+linux-raid@lfdr.de>; Fri,  7 Aug 2020 15:39:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725999AbgHFXXp (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 6 Aug 2020 19:23:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47648 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725272AbgHFXXo (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 6 Aug 2020 19:23:44 -0400
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F29FC061574
-        for <linux-raid@vger.kernel.org>; Thu,  6 Aug 2020 16:23:43 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id u185so928pfu.1
-        for <linux-raid@vger.kernel.org>; Thu, 06 Aug 2020 16:23:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HifY62CWXdZ2L+TS2HqHxDQIYXR0g1EkuCYk8qv3pfQ=;
-        b=styde1gsBxJYDeVghDpuOSbxJiVnUp5eXflb1Hd4Ph/ZqPAZ/Trz/7X1Xu1yecJaE1
-         FvA446jZM1qJpJGRRKisIy0pKPisKm5bglkvFApx30CH/bUV14cJgAtCM3F9nzZ3l8TD
-         r89riWOVNqFgIQR9h09peVj6S4oMH3KTbb8/2Kxxw2tYgtPC0VtP9Y3M/kSXy8QJqsMX
-         sLw5DAbhHgBnNFf55xytW3xi6DbyxTM6G8fLaQoJYw1kabaZd/MaV7HjqmdwOgf+n3qV
-         rQXHw7uY0MC58OcJ56lbn2s2bfAW4SdG/A6x/2oQl4bpoU8tKim9vJPiFx/4yIy0PFqN
-         HXiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HifY62CWXdZ2L+TS2HqHxDQIYXR0g1EkuCYk8qv3pfQ=;
-        b=uGRQiXUNVMtdSCpoE4R5Bgsm0ziqzN3kbV1mrybDwd3Yww9/sViCqSW6x6wXJ/royF
-         1o84o6LKkWyqjHTLKyHsWG8FwpJ5tS13RAiCUHpcPhjnr7f+PA084W0YvOXm0w6eXs74
-         Oiavn9zeE83Xw7+QaQXtvsL3HZd0iuv1nBpC6S9DMDx1RWuOvWEO4QULAgMDj7aAfzNQ
-         APTAGCPPqwRvz2nrDLMb5AP5jPJhfS8d6ug5pPhkWmYK06fKUOiqxI2vaxxLh3pATmgl
-         6Dfbnjngh7P9QSZYnTiZF9o8ubPyDMMW9+8Zz0zDRIPd7Lviz7nrD5JFNAuhwAA1nayE
-         drmw==
-X-Gm-Message-State: AOAM531Gt4kcYMRJiJ0ljXzA+pS7vA28TzVUyOyNAHLUf/PPcChmWQjM
-        8oOTbWQFy235yb83nZZo7CZdLw==
-X-Google-Smtp-Source: ABdhPJxgcQJaAMN7rtRt6XMy+L4jt0wn6BClI6SMyTM1vzsv/nnskI7QGd3yxCAMxjTTuPzyoXieqQ==
-X-Received: by 2002:aa7:8e0c:: with SMTP id c12mr10390140pfr.38.1596756219806;
-        Thu, 06 Aug 2020 16:23:39 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id d2sm8299790pgp.17.2020.08.06.16.23.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 16:23:39 -0700 (PDT)
-Subject: Re: [GIT PULL] md-next 20200806
-To:     Song Liu <songliubraving@fb.com>,
-        linux-raid <linux-raid@vger.kernel.org>
-Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-References: <DC5BBD6B-C93C-4376-8120-DF48249190F7@fb.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <8f461cfa-fc3a-cc96-9471-ec914b77405a@kernel.dk>
-Date:   Thu, 6 Aug 2020 17:23:38 -0600
+        id S1726276AbgHGNjy (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 7 Aug 2020 09:39:54 -0400
+Received: from sender11-op-o12.zoho.eu ([31.186.226.226]:17437 "EHLO
+        sender11-op-o12.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726217AbgHGNjv (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 7 Aug 2020 09:39:51 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1596807587; cv=none; 
+        d=zohomail.eu; s=zohoarc; 
+        b=Rn65sRV+/viqggayoHL1s6AZwhMOKSNHzdNrphm5mTZ9LVrFAPAk/vTmyhf0vYK75fcyZz8s7dK88R6pIfmIXcCW3rbv006kgYBNioK5uHTeogwch6or6/MVS7ygnN3lunbUOcb4l9HM/cRDBrFQRmmGzK9KefrlyhG3vGzULbQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+        t=1596807587; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=Udrliz21iLgFPuMZ9GovKdijg9DLE1tOj6TdajLwp0o=; 
+        b=b7rIrG3KhXtUl5/vxB13oR+7Ic1GkUfNG5lLTi9Y4uW0i9c4yaZtaKZUJcrImb8Q595ZDcnRbEAw63UWokMRU7JA7i37KlgoYs5pIx7OsDKDhrIoJUTI2/rZrrwzrUsouRKwRZ6GEjBzP2EH5lcIAqwgzuNOn9oxcSuRIhxc5l0=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
+        dmarc=pass header.from=<jes@trained-monkey.org> header.from=<jes@trained-monkey.org>
+Received: from [192.168.99.29] (pool-108-46-250-244.nycmny.fios.verizon.net [108.46.250.244]) by mx.zoho.eu
+        with SMTPS id 1596807586677119.39776050894875; Fri, 7 Aug 2020 15:39:46 +0200 (CEST)
+Subject: Re: [PATCH v3] mdadm/Detail: show correct state for cluster-md array
+To:     Zhao Heming <heming.zhao@suse.com>, linux-raid@vger.kernel.org
+Cc:     neilb@suse.com
+References: <1595994510-16161-1-git-send-email-heming.zhao@suse.com>
+From:   Jes Sorensen <jes@trained-monkey.org>
+Message-ID: <36a9bd05-fa7c-0fa8-feae-3c681bdc4db7@trained-monkey.org>
+Date:   Fri, 7 Aug 2020 09:39:44 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <DC5BBD6B-C93C-4376-8120-DF48249190F7@fb.com>
+In-Reply-To: <1595994510-16161-1-git-send-email-heming.zhao@suse.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 8/6/20 2:31 PM, Song Liu wrote:
-> Hi Jens, 
+On 7/28/20 11:48 PM, Zhao Heming wrote:
+> After kernel md module commit 480523feae581, in md-cluster env,
+> mddev->in_sync always zero, it will make array.state never set
+> up MD_SB_CLEAN. it causes "mdadm -D /dev/mdX" show state 'active'
+> all the time.
 > 
-> Please consider pulling the following fixes for md-next on top of your for-5.9/drivers
-> branch. 
+> bitmap.c: add a new API IsBitmapDirty() to support inquiry bitmap
+> dirty or clean.
+> 
+> Signed-off-by: Zhao Heming <heming.zhao@suse.com>
+> ---
+> v3:
+> - Detail.c: fix error logic: v2 code didn't check bitmap when dv is null.
+> v2:
+> - Detail.c: change to read only one device.
+> - bitmap.c: modify IsBitmapDirty() to check all bitmap on the selected device.
+> 
+> ---
+>  Detail.c | 20 +++++++++++++++++++-
+>  bitmap.c | 55 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  mdadm.h  |  1 +
+>  3 files changed, 75 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Detail.c b/Detail.c
+> index 24eeba0..a69e5ac 100644
+> --- a/Detail.c
+> +++ b/Detail.c
+> @@ -495,8 +495,26 @@ int Detail(char *dev, struct context *c)
+>  							  sra->array_state);
+>  				else
+>  					arrayst = "clean";
+> -			} else
+> +			} else {
+>  				arrayst = "active";
+> +				if (array.state & (1<<MD_SB_CLUSTERED)) {
+> +					for (d = 0; d < max_disks * 2; d++) {
+> +						char *dv;
+> +						mdu_disk_info_t disk = disks[d];
+> +
+> +						if (d >= array.raid_disks * 2 &&
+> +							disk.major == 0 && disk.minor == 0)
+> +							continue;
+> +						if ((d & 1) && disk.major == 0 && disk.minor == 0)
+> +							continue;
+> +						dv = map_dev_preferred(disk.major, disk.minor, 0,
+> +												c->prefer);
+> +						if (!dv) continue;
 
-Pulled, thanks.
+Minor nit here, never ever put if() < bleh on the same line.
 
--- 
-Jens Axboe
+Thanks,
+Jes
 
