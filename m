@@ -2,61 +2,57 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F29223EE70
-	for <lists+linux-raid@lfdr.de>; Fri,  7 Aug 2020 15:44:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 593F423EF66
+	for <lists+linux-raid@lfdr.de>; Fri,  7 Aug 2020 16:51:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbgHGNoU (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 7 Aug 2020 09:44:20 -0400
-Received: from sender11-op-o12.zoho.eu ([31.186.226.226]:17481 "EHLO
-        sender11-op-o12.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbgHGNoR (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 7 Aug 2020 09:44:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1596807847; cv=none; 
-        d=zohomail.eu; s=zohoarc; 
-        b=O/C417ggubo2IvHrRMDFXvGB5Zi7skgZBWUb7fy6KD4sQFJb999A9Q1z7xMtGGSPhYUoXPdvzrl7cWvK53Ek3J1RImkdl3itJYx/gMK2FfQ8ooTjGJ4tOiZyg13nPwp5A6t+55bFIJGbyXUGOvTx1rz1v5hEUE80/v2WV87C1fY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1596807847; h=Content-Type:Content-Transfer-Encoding:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=LpwnvngxRbV6lX8QdG4FGOTfqPzMY9j+luVuNIFlSRI=; 
-        b=VSXzCDUCzMNw2K/oTGq4+KJ14F7BUEX7WecGfK3tP8frT7ngJmM32QkU8GG5Q7fT6wmPWpTXsSZ3SsRWA+j+xlwb6WCvu1DlVWCVrTIfigAUV2d3JujKIWm5uFz05eHM3e9QqaYhX4p8wMj8FJ0IDvCdgvq/Ue4UgnZZsiUtDBE=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
-        dmarc=pass header.from=<jes@trained-monkey.org> header.from=<jes@trained-monkey.org>
-Received: from [192.168.99.29] (pool-108-46-250-244.nycmny.fios.verizon.net [108.46.250.244]) by mx.zoho.eu
-        with SMTPS id 1596807846600180.900077331288; Fri, 7 Aug 2020 15:44:06 +0200 (CEST)
-Subject: Re: [PATCH v2] mdadm/md.4: update path to in-kernel-tree
- documentation
-To:     Winston Weinert <winston@ml1.net>, linux-raid@vger.kernel.org
-References: <20200718103314.14549-1-winstonml1.net>
- <20200722133321.8512-1-winston@ml1.net>
-From:   Jes Sorensen <jes@trained-monkey.org>
-Message-ID: <567445a4-49b1-003c-61c9-9a9e113ee184@trained-monkey.org>
-Date:   Fri, 7 Aug 2020 09:44:05 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1726890AbgHGOvF convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-raid@lfdr.de>); Fri, 7 Aug 2020 10:51:05 -0400
+Received: from mail.furshetcrimea.ru ([193.27.243.220]:51882 "EHLO
+        furshetcrimea.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbgHGOvE (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 7 Aug 2020 10:51:04 -0400
+X-Greylist: delayed 4999 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 Aug 2020 10:51:03 EDT
+Received: from [154.118.61.214] (account info@furshetcrimea.ru HELO [192.168.8.100])
+  by furshetcrimea.ru (CommuniGate Pro SMTP 6.1.10)
+  with ESMTPA id 11097452; Fri, 07 Aug 2020 16:34:44 +0300
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-In-Reply-To: <20200722133321.8512-1-winston@ml1.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: Bei Interesse antworten.
+To:     Recipients <info@furshetcrimea.ru>
+From:   info@furshetcrimea.ru
+Date:   Fri, 07 Aug 2020 14:22:08 +0100
+Reply-To: mattiassjoborg751@gmail.com
+X-Antivirus: Avast (VPS 200807-0, 08/07/2020), Outbound message
+X-Antivirus-Status: Clean
+Message-ID: <auto-000011097452@furshetcrimea.ru>
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 7/22/20 9:33 AM, Winston Weinert wrote:
-> Documentation/md.txt was renamed to Documentation/admin-guide/md.rst
-> in linux commit 9d85025b0418163fae079c9ba8f8445212de8568 (Oct 26,
-> 2016).
-> 
-> Signed-off-by: Winston Weinert <winston@ml1.net>
-> ---
-> I am sending this updated patch which includes a sign-off, fixes a
-> commit message typo, and CC's Jes Sorensen. I hope it is up to
-> standards.
+Schöne Grüße,
 
-Applied!
+Mein Name ist MATTIAS SJOBORG, ich bin Schweizer Staatsbürger und (Vorsitzender des Vergütungs- und Nominierungsausschusses) von Tethys Petroleum, einem multinationalen Ölkonzern mit Sitz in London-England, Großbritannien. Ich bitte Sie um Ihre Hilfe, um die Summe von vierzig Millionen Dollar abzurufen, die aus zwei Sendungsboxen besteht.
 
-Thanks,
-Jes
+Dieses Geld wurde von der Firma erworben und von einem Diplomaten begleitet und korrekt in einer Sicherheitsfirma in Amerika hinterlegt. Mein Grund dafür ist, dass ich von der Firma zu lange um meine Ansprüche betrogen wurde, nur weil ich kein bin Britisch. Die Kontaktdaten des Diplomaten erhalten Sie, wenn Sie Ihr Interesse bekunden, mir zu helfen.
+
+Jede der Schachteln enthält 20 Mio. USD. Für Ihre Hilfe bin ich bereit, 40% an Sie freizugeben. Aus Sicherheitsgründen wurde die Sendung als VERTRAULICHE DIPLOMATISCHE DOKUMENTE registriert, und ich kann erklären, warum dies so erklärt wurde. Denken Sie daran, dass der Diplomat den Inhalt der Sendung nicht kennt. Er ist seit einem Monat dort, während ich nach einem zuverlässigen Partner suchen möchte. Ich werde das Land verlassen, sobald die Sendung für Sie an Sie geliefert wird Private Investitionen und ich haben geschworen, niemals nach London zurückzukehren. Bitte, ich brauche Ihre dringende Antwort, bevor meine Pläne, das Unternehmen zu verlassen, entdeckt werden.
+
+www.tethyspetroleum.com/tethys/static/EN_US/au_seniormanagement.html
+
+Im Moment ist die sicherste Form der Korrespondenz meine eigene E-Mail-Adresse. Bitte antworten Sie im Interesse der Vertraulichkeit nur über meine direkte E-Mail-Adresse. Antworten Sie zusammen mit Ihrer direkten Telefon- und Faxnummer, unter der ich Sie alternativ erreichen kann.
+
+Bitte, wenn Sie nicht bereit und interessiert sind, mir zu helfen, löschen Sie bitte diese E-Mail aus Ihrer E-Mail und tun Sie so, als hätten Sie sie nie erhalten.
+
+Freundliche Grüße,
+Mr.Mattias Sjoborg
+(Vorsitzender des Vergütungs- und Nominierungsausschusses)
+Tethys Petroleum.
+London, England
+
+-- 
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
 
