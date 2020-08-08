@@ -2,39 +2,39 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8210223FB74
-	for <lists+linux-raid@lfdr.de>; Sun,  9 Aug 2020 01:50:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C62DB23FAE8
+	for <lists+linux-raid@lfdr.de>; Sun,  9 Aug 2020 01:46:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgHHXtS (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 8 Aug 2020 19:49:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49974 "EHLO mail.kernel.org"
+        id S1728803AbgHHXpz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 8 Aug 2020 19:45:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727823AbgHHXhG (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:37:06 -0400
+        id S1728274AbgHHXie (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:38:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E96EE206E9;
-        Sat,  8 Aug 2020 23:37:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D2712073E;
+        Sat,  8 Aug 2020 23:38:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929825;
-        bh=AiOlWcS4Nc4rzG2Flyr2zCMjKAcNKrD8KD3GG6vV3I8=;
+        s=default; t=1596929913;
+        bh=bpCArGqYhu7XR0T4plFq2F98eNWRFqKGrxCDzFsaknQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j3WQ4MPQ8x2mNgB65qSOE7LG44d1llo0Uj1t0a3S5T7tPnXhgTE9fGKVDrlRfgZy6
-         5C65AHYz448IiBNg/bvUUd1U9c8lmKrEzskitvQqT5KY20EEAWsbltpeq/8I499qSS
-         qu5cfk9E0YxMG8VoNlHPyceLHgO3Knn80mRANoDQ=
+        b=DCvCjWkCXNMFho5CSDxtKBaxqeIoLr9Lu+MPg957KIuStaQnKXP2bfP4jE5Ssr3Ug
+         JqwZQUO/sHAo7qPjEcqMvSN66jZJSQI8fshTWhS7He888PelER5v7blZ9JLo9OKc7k
+         hTlPGaLhVyScxkxvz9ZUjnxd4gyuz2mtS1nBHnDA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Colin Ian King <colin.king@canonical.com>,
         "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
         Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 58/72] md: raid0/linear: fix dereference before null check on pointer mddev
-Date:   Sat,  8 Aug 2020 19:35:27 -0400
-Message-Id: <20200808233542.3617339-58-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 50/58] md: raid0/linear: fix dereference before null check on pointer mddev
+Date:   Sat,  8 Aug 2020 19:37:16 -0400
+Message-Id: <20200808233724.3618168-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
-References: <20200808233542.3617339-1-sashal@kernel.org>
+In-Reply-To: <20200808233724.3618168-1-sashal@kernel.org>
+References: <20200808233724.3618168-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -64,11 +64,11 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/md/md.c b/drivers/md/md.c
-index f567f536b529b..90756450b9588 100644
+index 41eead9cbee98..d5a5c18813985 100644
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -470,17 +470,18 @@ static blk_qc_t md_make_request(struct request_queue *q, struct bio *bio)
- 	struct mddev *mddev = bio->bi_disk->private_data;
+@@ -469,17 +469,18 @@ static blk_qc_t md_make_request(struct request_queue *q, struct bio *bio)
+ 	struct mddev *mddev = q->queuedata;
  	unsigned int sectors;
  
 -	if (unlikely(test_bit(MD_BROKEN, &mddev->flags)) && (rw == WRITE)) {
