@@ -2,39 +2,39 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C62DB23FAE8
-	for <lists+linux-raid@lfdr.de>; Sun,  9 Aug 2020 01:46:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F3EDE23FA92
+	for <lists+linux-raid@lfdr.de>; Sun,  9 Aug 2020 01:43:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbgHHXpz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 8 Aug 2020 19:45:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52594 "EHLO mail.kernel.org"
+        id S1728746AbgHHXnu (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 8 Aug 2020 19:43:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728274AbgHHXie (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:38:34 -0400
+        id S1728585AbgHHXjg (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:39:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D2712073E;
-        Sat,  8 Aug 2020 23:38:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE45520855;
+        Sat,  8 Aug 2020 23:39:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929913;
-        bh=bpCArGqYhu7XR0T4plFq2F98eNWRFqKGrxCDzFsaknQ=;
+        s=default; t=1596929975;
+        bh=aYbZFZAHTLy3UcV8xwsyYILmR4yEHjaWIROYwmwIX6I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DCvCjWkCXNMFho5CSDxtKBaxqeIoLr9Lu+MPg957KIuStaQnKXP2bfP4jE5Ssr3Ug
-         JqwZQUO/sHAo7qPjEcqMvSN66jZJSQI8fshTWhS7He888PelER5v7blZ9JLo9OKc7k
-         hTlPGaLhVyScxkxvz9ZUjnxd4gyuz2mtS1nBHnDA=
+        b=rjyv/JLNT3L7TRfPYgtBfLn1DIp2bKMTKjyxKrWCToAFm0oE/KK+EBRzA5/jjt9BL
+         gzg7PO/T7BOkFw6BAzbO1UoDPaGAYkOxwh2J8PPcWA0gzfHSsmvo/Zt5zE5ayaoGyl
+         vXMtSQQupqDgzK7Nz5sy3OgVVwKodsnCkH0sdZbs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Colin Ian King <colin.king@canonical.com>,
         "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
         Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 50/58] md: raid0/linear: fix dereference before null check on pointer mddev
-Date:   Sat,  8 Aug 2020 19:37:16 -0400
-Message-Id: <20200808233724.3618168-50-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 36/40] md: raid0/linear: fix dereference before null check on pointer mddev
+Date:   Sat,  8 Aug 2020 19:38:40 -0400
+Message-Id: <20200808233844.3618823-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200808233724.3618168-1-sashal@kernel.org>
-References: <20200808233724.3618168-1-sashal@kernel.org>
+In-Reply-To: <20200808233844.3618823-1-sashal@kernel.org>
+References: <20200808233844.3618823-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -64,10 +64,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 41eead9cbee98..d5a5c18813985 100644
+index 5a378a453a2d4..acef01e519d06 100644
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -469,17 +469,18 @@ static blk_qc_t md_make_request(struct request_queue *q, struct bio *bio)
+@@ -376,17 +376,18 @@ static blk_qc_t md_make_request(struct request_queue *q, struct bio *bio)
  	struct mddev *mddev = q->queuedata;
  	unsigned int sectors;
  
