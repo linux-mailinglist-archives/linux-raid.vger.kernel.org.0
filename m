@@ -2,38 +2,38 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 109AD240E65
-	for <lists+linux-raid@lfdr.de>; Mon, 10 Aug 2020 21:13:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF48C240F2A
+	for <lists+linux-raid@lfdr.de>; Mon, 10 Aug 2020 21:20:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729731AbgHJTNR (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 10 Aug 2020 15:13:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43936 "EHLO mail.kernel.org"
+        id S1729788AbgHJTUV (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 10 Aug 2020 15:20:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729717AbgHJTNP (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:13:15 -0400
+        id S1729887AbgHJTNy (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:13:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E74E22B49;
-        Mon, 10 Aug 2020 19:13:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47FBE207FF;
+        Mon, 10 Aug 2020 19:13:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086794;
-        bh=9nw175VTUt9xRYhz+9RVJtICSl5yjiAvvwarFbRrSug=;
+        s=default; t=1597086834;
+        bh=ViljuQSUBMMS87DdQO2cmP6a8sHOqnJUa5dXv1gAFO4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HHSy8ABB5cBpf6n5Lvc0U+VR+XYj10+GF4ZQdmUEIhfJW2D8JuGQ53+et8hQXiS7K
-         ydmTbKmZ+WpMJI+aV3vU++5YXvhMHkfNp4iON+EX0M497iMWI54ENvhLzgYgeOpi/D
-         DOSB9l49/xxoLysDER0Mu1RTZ85eClSnaYyJQja0=
+        b=RSmaxlwhkFOGAPb59ayY/RJ2KS9nlfxhLFCfU4yPSouDymXZBJVO/OFFRXcmSGaKV
+         wgmkBiVChT6bQyYklWZktuxKci1Lo0a7rO96NvhRkAJw1EmjzH0gDuXzV2CHYqrQVE
+         f6fTAGxJqoCEHgiK8yeNAoTH2MFKtQA13dfKkMlM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Zhao Heming <heming.zhao@suse.com>,
         Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 10/31] md-cluster: fix wild pointer of unlock_all_bitmaps()
-Date:   Mon, 10 Aug 2020 15:12:38 -0400
-Message-Id: <20200810191259.3794858-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 06/22] md-cluster: fix wild pointer of unlock_all_bitmaps()
+Date:   Mon, 10 Aug 2020 15:13:28 -0400
+Message-Id: <20200810191345.3795166-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200810191259.3794858-1-sashal@kernel.org>
-References: <20200810191259.3794858-1-sashal@kernel.org>
+In-Reply-To: <20200810191345.3795166-1-sashal@kernel.org>
+References: <20200810191345.3795166-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -96,10 +96,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/md/md-cluster.c b/drivers/md/md-cluster.c
-index 0b2af6e74fc37..4522e87d9d68d 100644
+index 10057ac85476e..035d5ec8e677f 100644
 --- a/drivers/md/md-cluster.c
 +++ b/drivers/md/md-cluster.c
-@@ -1443,6 +1443,7 @@ static void unlock_all_bitmaps(struct mddev *mddev)
+@@ -1423,6 +1423,7 @@ static void unlock_all_bitmaps(struct mddev *mddev)
  			}
  		}
  		kfree(cinfo->other_bitmap_lockres);
