@@ -2,58 +2,61 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DB96242B59
-	for <lists+linux-raid@lfdr.de>; Wed, 12 Aug 2020 16:25:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AEA3242B23
+	for <lists+linux-raid@lfdr.de>; Wed, 12 Aug 2020 16:16:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgHLOZD (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 12 Aug 2020 10:25:03 -0400
-Received: from icebox.esperi.org.uk ([81.187.191.129]:41598 "EHLO
+        id S1726552AbgHLOQl (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 12 Aug 2020 10:16:41 -0400
+Received: from icebox.esperi.org.uk ([81.187.191.129]:41486 "EHLO
         mail.esperi.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbgHLOZD (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 12 Aug 2020 10:25:03 -0400
+        with ESMTP id S1726488AbgHLOQk (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 12 Aug 2020 10:16:40 -0400
+X-Greylist: delayed 544 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Aug 2020 10:16:39 EDT
 Received: from loom (nix@sidle.srvr.nix [192.168.14.8])
-        by mail.esperi.org.uk (8.15.2/8.15.2) with ESMTP id 07CE7Y63021849;
-        Wed, 12 Aug 2020 15:07:34 +0100
+        by mail.esperi.org.uk (8.15.2/8.15.2) with ESMTP id 07CEGbF3022027;
+        Wed, 12 Aug 2020 15:16:37 +0100
 From:   Nix <nix@esperi.org.uk>
-To:     Michael Fritscher <michael@fritscher.net>
-Cc:     linux-raid@vger.kernel.org
+To:     Roman Mamedov <rm@romanrm.net>
+Cc:     George Rapp <george.rapp@gmail.com>,
+        Linux-RAID <linux-raid@vger.kernel.org>
 Subject: Re: Recommended filesystem for RAID 6
 References: <CAF-KpgYcEF5juR9nFPifZunPPGW73kWVG9fjR3=WpufxXJcewg@mail.gmail.com>
-        <1381759926.21710099.1597158389614.JavaMail.zimbra@karlsbakk.net>
-        <4a7bfca8-af6e-cbd1-0dc4-feaf1a0288be@fritscher.net>
-Emacs:  if SIGINT doesn't work, try a tranquilizer.
-Date:   Wed, 12 Aug 2020 15:07:33 +0100
-In-Reply-To: <4a7bfca8-af6e-cbd1-0dc4-feaf1a0288be@fritscher.net> (Michael
-        Fritscher's message of "Tue, 11 Aug 2020 21:19:07 +0200")
-Message-ID: <87wo24arfe.fsf@esperi.org.uk>
+        <20200811212305.02fec65a@natsu>
+Emacs:  no job too big... no job.
+Date:   Wed, 12 Aug 2020 15:16:37 +0100
+In-Reply-To: <20200811212305.02fec65a@natsu> (Roman Mamedov's message of "Tue,
+        11 Aug 2020 21:23:05 +0500")
+Message-ID: <87sgcsar0a.fsf@esperi.org.uk>
 User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3.50 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
-X-DCC--Metrics: loom 1102; Body=2 Fuz1=2 Fuz2=2
+X-DCC--Metrics: loom 1102; Body=3 Fuz1=3 Fuz2=3
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 11 Aug 2020, Michael Fritscher told this:
-> ext4 is fine. In my experience, it is rock-solid, and also fsck.ext4 is
-> fairly qick (don't know what Roy is doing that it is so slow - do you
-> really made a full-fledged ext4 with journal or a old ext2 file system?^^)
+On 11 Aug 2020, Roman Mamedov stated:
+> For the FS considerations, the dealbreaker of XFS for me is its inability to
+> be shrunk. The ivory tower people do not think that is important enough, but
+> for me that limits the FS applicability severely. Also it loved truncating
+> currently-open files to zero bytes on power loss (dunno if that's been
+> improved).
 
-I note that modern mkext2fs leaves whole block groups uninitialized if
-it can, and any block groups that end up with no files in again get
-marked uninitalized once more (as of e2fsprogs 1.43). If an older
-e2fsprogs than that is in use, or if this is an fs too old to support
-unintialized block groups, or if the fs simply doesn't have uninit_bg
-enabled (which requires explicit action at creation time, these days),
-e2fsprogs will be massively slower than if it can exploit the
-uninitialized bgs to (basically) skip huge chunks of the fsck work on
-most of the fs that is known to be empty.
+I've been using XFS for more than ten years now and have never seen this
+allegedly frequent behaviour at all. It certainly seems to be less
+common than, say, fs damage due to the (unjournalled) RAID write hole.
 
-Without this optimization, one component of fsck time is linear in the
-total size of the fs: with it, it's linear in the *allocated* space used
-on the fs. (There are other passes that scale as number of allocated
-inodes, number of directories, etc.)
+I suspect you're talking about this:
+<https://xfs.org/index.php/XFS_FAQ#Q:_Why_do_I_see_binary_NULLS_in_some_files_after_recovery_when_I_unplugged_the_power.3F>,
+whicih was fixed in *2007*. So... ignore it, it's *long* dead. (Equally,
+ignore complaints about xfs being really slow under heavy metadata
+updates: this was true before delayed logging was implemented, but
+delaylog has been non-experimental since 2.6.39 (2011) and the
+non-delaylog option was removed in 2015. xfs is often now faster than
+ext4 at metadata operations, and is generally on par with it.
 
--- 
-NULL && (void)
+Shrinking xfs is relatively irrelevant these days: if you want to be
+able to shrink, use thin provisioning and run fstrim periodically. The
+space used by the fs will then shrink whenever fstrim is run, with no
+need to mess about with filesystem resizing.
