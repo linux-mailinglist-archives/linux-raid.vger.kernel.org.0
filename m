@@ -2,29 +2,29 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 21A192429B8
-	for <lists+linux-raid@lfdr.de>; Wed, 12 Aug 2020 14:49:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B91F2429B2
+	for <lists+linux-raid@lfdr.de>; Wed, 12 Aug 2020 14:49:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbgHLMtJ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 12 Aug 2020 08:49:09 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9274 "EHLO huawei.com"
+        id S1727997AbgHLMtD (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 12 Aug 2020 08:49:03 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9273 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728001AbgHLMtE (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 12 Aug 2020 08:49:04 -0400
+        id S1727998AbgHLMtC (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 12 Aug 2020 08:49:02 -0400
 Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 1EEB0B0AF6356956F48B;
+        by Forcepoint Email with ESMTP id 34030D82B1758E06136E;
         Wed, 12 Aug 2020 20:48:59 +0800 (CST)
 Received: from huawei.com (10.175.101.6) by DGGEMS403-HUB.china.huawei.com
  (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Wed, 12 Aug 2020
- 20:48:49 +0800
+ 20:48:50 +0800
 From:   Yufen Yu <yuyufen@huawei.com>
 To:     <song@kernel.org>
 CC:     <linux-raid@vger.kernel.org>, <neilb@suse.com>,
         <guoqing.jiang@cloud.ionos.com>, <houtao1@huawei.com>,
         <yuyufen@huawei.com>
-Subject: [PATCH 08/12] md/raid6: convert to new syndrome and recovery interface
-Date:   Wed, 12 Aug 2020 08:49:27 -0400
-Message-ID: <20200812124931.2584743-9-yuyufen@huawei.com>
+Subject: [PATCH 09/12] raid6test: adaptation with new syndrome function
+Date:   Wed, 12 Aug 2020 08:49:28 -0400
+Message-ID: <20200812124931.2584743-10-yuyufen@huawei.com>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200812124931.2584743-1-yuyufen@huawei.com>
 References: <20200812124931.2584743-1-yuyufen@huawei.com>
@@ -38,255 +38,105 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-We try to adpate raid6 with the new compution interface.
+After changing some syndrome and recovery functions to support
+different page offsets, we also need to adapt raid6test module.
+In this module, pages are allocated by the itself and their offset
+are '0'.
 
 Signed-off-by: Yufen Yu <yuyufen@huawei.com>
 ---
- drivers/md/raid5.c | 53 ++++++++++++++++++++++++++++++++--------------
- 1 file changed, 37 insertions(+), 16 deletions(-)
+ crypto/async_tx/raid6test.c | 24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 0d3475427965..dfe29d5fc9ad 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -1459,6 +1459,7 @@ ops_run_compute5(struct stripe_head *sh, struct raid5_percpu *percpu)
+diff --git a/crypto/async_tx/raid6test.c b/crypto/async_tx/raid6test.c
+index 14e73dcd7475..66db82e5a3b1 100644
+--- a/crypto/async_tx/raid6test.c
++++ b/crypto/async_tx/raid6test.c
+@@ -18,6 +18,7 @@
+ #define NDISKS 64 /* Including P and Q */
  
- /* set_syndrome_sources - populate source buffers for gen_syndrome
-  * @srcs - (struct page *) array of size sh->disks
-+ * @offs - (unsigned int) array of offset for each page
-  * @sh - stripe_head to parse
-  *
-  * Populates srcs in proper layout order for the stripe and returns the
-@@ -1467,6 +1468,7 @@ ops_run_compute5(struct stripe_head *sh, struct raid5_percpu *percpu)
-  * is recorded in srcs[count+1]].
-  */
- static int set_syndrome_sources(struct page **srcs,
-+				unsigned int *offs,
- 				struct stripe_head *sh,
- 				int srctype)
- {
-@@ -1497,6 +1499,12 @@ static int set_syndrome_sources(struct page **srcs,
- 				srcs[slot] = sh->dev[i].orig_page;
- 			else
- 				srcs[slot] = sh->dev[i].page;
-+			/*
-+			 * For R5_InJournal, PAGE_SIZE must be 4KB and will
-+			 * not shared page. In that case, dev[i].offset
-+			 * is 0.
-+			 */
-+			offs[slot] = sh->dev[i].offset;
- 		}
- 		i = raid6_next_disk(i, disks);
- 	} while (i != d0_idx);
-@@ -1509,12 +1517,14 @@ ops_run_compute6_1(struct stripe_head *sh, struct raid5_percpu *percpu)
- {
- 	int disks = sh->disks;
- 	struct page **blocks = to_addr_page(percpu, 0);
-+	unsigned int *offs = to_addr_offs(sh, percpu);
- 	int target;
- 	int qd_idx = sh->qd_idx;
- 	struct dma_async_tx_descriptor *tx;
- 	struct async_submit_ctl submit;
- 	struct r5dev *tgt;
- 	struct page *dest;
-+	unsigned int dest_off;
- 	int i;
- 	int count;
- 
-@@ -1533,17 +1543,18 @@ ops_run_compute6_1(struct stripe_head *sh, struct raid5_percpu *percpu)
- 	tgt = &sh->dev[target];
- 	BUG_ON(!test_bit(R5_Wantcompute, &tgt->flags));
- 	dest = tgt->page;
-+	dest_off = tgt->offset;
- 
- 	atomic_inc(&sh->count);
- 
- 	if (target == qd_idx) {
--		count = set_syndrome_sources(blocks, sh, SYNDROME_SRC_ALL);
-+		count = set_syndrome_sources(blocks, offs, sh, SYNDROME_SRC_ALL);
- 		blocks[count] = NULL; /* regenerating p is not necessary */
- 		BUG_ON(blocks[count+1] != dest); /* q should already be set */
- 		init_async_submit(&submit, ASYNC_TX_FENCE, NULL,
- 				  ops_complete_compute, sh,
- 				  to_addr_conv(sh, percpu, 0));
--		tx = async_gen_syndrome(blocks, 0, count+2,
-+		tx = async_gen_syndrome(blocks, offs, count+2,
- 				RAID5_STRIPE_SIZE(sh->raid_conf), &submit);
- 	} else {
- 		/* Compute any data- or p-drive using XOR */
-@@ -1551,13 +1562,14 @@ ops_run_compute6_1(struct stripe_head *sh, struct raid5_percpu *percpu)
- 		for (i = disks; i-- ; ) {
- 			if (i == target || i == qd_idx)
- 				continue;
-+			offs[count] = sh->dev[i].offset;
- 			blocks[count++] = sh->dev[i].page;
- 		}
- 
- 		init_async_submit(&submit, ASYNC_TX_FENCE|ASYNC_TX_XOR_ZERO_DST,
- 				  NULL, ops_complete_compute, sh,
- 				  to_addr_conv(sh, percpu, 0));
--		tx = async_xor(dest, blocks, 0, count,
-+		tx = async_xor_offs(dest, dest_off, blocks, offs, count,
- 				RAID5_STRIPE_SIZE(sh->raid_conf), &submit);
+ static struct page *dataptrs[NDISKS];
++unsigned int dataoffs[NDISKS];
+ static addr_conv_t addr_conv[NDISKS];
+ static struct page *data[NDISKS+3];
+ static struct page *spare;
+@@ -38,6 +39,7 @@ static void makedata(int disks)
+ 	for (i = 0; i < disks; i++) {
+ 		prandom_bytes(page_address(data[i]), PAGE_SIZE);
+ 		dataptrs[i] = data[i];
++		dataoffs[i] = 0;
  	}
+ }
  
-@@ -1577,6 +1589,7 @@ ops_run_compute6_2(struct stripe_head *sh, struct raid5_percpu *percpu)
- 	struct r5dev *tgt2 = &sh->dev[target2];
- 	struct dma_async_tx_descriptor *tx;
- 	struct page **blocks = to_addr_page(percpu, 0);
-+	unsigned int *offs = to_addr_offs(sh, percpu);
+@@ -52,7 +54,8 @@ static char disk_type(int d, int disks)
+ }
+ 
+ /* Recover two failed blocks. */
+-static void raid6_dual_recov(int disks, size_t bytes, int faila, int failb, struct page **ptrs)
++static void raid6_dual_recov(int disks, size_t bytes, int faila, int failb,
++		struct page **ptrs, unsigned int *offs)
+ {
  	struct async_submit_ctl submit;
- 
- 	BUG_ON(sh->batch_head);
-@@ -1596,6 +1609,7 @@ ops_run_compute6_2(struct stripe_head *sh, struct raid5_percpu *percpu)
- 	do {
- 		int slot = raid6_idx_to_slot(i, sh, &count, syndrome_disks);
- 
-+		offs[slot] = sh->dev[i].offset;
- 		blocks[slot] = sh->dev[i].page;
- 
- 		if (i == target)
-@@ -1620,11 +1634,12 @@ ops_run_compute6_2(struct stripe_head *sh, struct raid5_percpu *percpu)
- 			init_async_submit(&submit, ASYNC_TX_FENCE, NULL,
- 					  ops_complete_compute, sh,
- 					  to_addr_conv(sh, percpu, 0));
--			return async_gen_syndrome(blocks, 0, syndrome_disks+2,
-+			return async_gen_syndrome(blocks, offs, syndrome_disks+2,
- 						  RAID5_STRIPE_SIZE(sh->raid_conf),
- 						  &submit);
+ 	struct completion cmp;
+@@ -66,7 +69,8 @@ static void raid6_dual_recov(int disks, size_t bytes, int faila, int failb, stru
+ 		if (faila == disks-2) {
+ 			/* P+Q failure.  Just rebuild the syndrome. */
+ 			init_async_submit(&submit, 0, NULL, NULL, NULL, addr_conv);
+-			tx = async_gen_syndrome(ptrs, 0, disks, bytes, &submit);
++			tx = async_gen_syndrome(ptrs, offs,
++					disks, bytes, &submit);
  		} else {
+ 			struct page *blocks[NDISKS];
  			struct page *dest;
-+			unsigned int dest_off;
- 			int data_target;
- 			int qd_idx = sh->qd_idx;
+@@ -89,22 +93,26 @@ static void raid6_dual_recov(int disks, size_t bytes, int faila, int failb, stru
+ 			tx = async_xor(dest, blocks, 0, count, bytes, &submit);
  
-@@ -1638,22 +1653,24 @@ ops_run_compute6_2(struct stripe_head *sh, struct raid5_percpu *percpu)
- 			for (i = disks; i-- ; ) {
- 				if (i == data_target || i == qd_idx)
- 					continue;
-+				offs[count] = sh->dev[i].offset;
- 				blocks[count++] = sh->dev[i].page;
- 			}
- 			dest = sh->dev[data_target].page;
-+			dest_off = sh->dev[data_target].offset;
- 			init_async_submit(&submit,
- 					  ASYNC_TX_FENCE|ASYNC_TX_XOR_ZERO_DST,
- 					  NULL, NULL, NULL,
- 					  to_addr_conv(sh, percpu, 0));
--			tx = async_xor(dest, blocks, 0, count,
-+			tx = async_xor_offs(dest, dest_off, blocks, offs, count,
- 				       RAID5_STRIPE_SIZE(sh->raid_conf),
- 				       &submit);
- 
--			count = set_syndrome_sources(blocks, sh, SYNDROME_SRC_ALL);
-+			count = set_syndrome_sources(blocks, offs, sh, SYNDROME_SRC_ALL);
- 			init_async_submit(&submit, ASYNC_TX_FENCE, tx,
- 					  ops_complete_compute, sh,
- 					  to_addr_conv(sh, percpu, 0));
--			return async_gen_syndrome(blocks, 0, count+2,
-+			return async_gen_syndrome(blocks, offs, count+2,
- 						  RAID5_STRIPE_SIZE(sh->raid_conf),
- 						  &submit);
+ 			init_async_submit(&submit, 0, tx, NULL, NULL, addr_conv);
+-			tx = async_gen_syndrome(ptrs, 0, disks, bytes, &submit);
++			tx = async_gen_syndrome(ptrs, offs,
++					disks, bytes, &submit);
  		}
-@@ -1666,13 +1683,13 @@ ops_run_compute6_2(struct stripe_head *sh, struct raid5_percpu *percpu)
- 			return async_raid6_datap_recov(syndrome_disks+2,
- 						RAID5_STRIPE_SIZE(sh->raid_conf),
- 						faila,
--						blocks, &submit);
-+						blocks, offs, &submit);
+ 	} else {
+ 		if (failb == disks-2) {
+ 			/* data+P failure. */
+ 			init_async_submit(&submit, 0, NULL, NULL, NULL, addr_conv);
+-			tx = async_raid6_datap_recov(disks, bytes, faila, ptrs, &submit);
++			tx = async_raid6_datap_recov(disks, bytes,
++					faila, ptrs, offs, &submit);
  		} else {
- 			/* We're missing D+D. */
- 			return async_raid6_2data_recov(syndrome_disks+2,
- 						RAID5_STRIPE_SIZE(sh->raid_conf),
- 						faila, failb,
--						blocks, &submit);
-+						blocks, offs, &submit);
+ 			/* data+data failure. */
+ 			init_async_submit(&submit, 0, NULL, NULL, NULL, addr_conv);
+-			tx = async_raid6_2data_recov(disks, bytes, faila, failb, ptrs, &submit);
++			tx = async_raid6_2data_recov(disks, bytes,
++					faila, failb, ptrs, offs, &submit);
  		}
  	}
- }
-@@ -1739,17 +1756,18 @@ ops_run_prexor6(struct stripe_head *sh, struct raid5_percpu *percpu,
- 		struct dma_async_tx_descriptor *tx)
- {
- 	struct page **blocks = to_addr_page(percpu, 0);
-+	unsigned int *offs = to_addr_offs(sh, percpu);
- 	int count;
- 	struct async_submit_ctl submit;
+ 	init_completion(&cmp);
+ 	init_async_submit(&submit, ASYNC_TX_ACK, tx, callback, &cmp, addr_conv);
+-	tx = async_syndrome_val(ptrs, 0, disks, bytes, &result, spare, &submit);
++	tx = async_syndrome_val(ptrs, offs,
++			disks, bytes, &result, spare, 0, &submit);
+ 	async_tx_issue_pending(tx);
  
- 	pr_debug("%s: stripe %llu\n", __func__,
- 		(unsigned long long)sh->sector);
+ 	if (wait_for_completion_timeout(&cmp, msecs_to_jiffies(3000)) == 0)
+@@ -126,7 +134,7 @@ static int test_disks(int i, int j, int disks)
+ 	dataptrs[i] = recovi;
+ 	dataptrs[j] = recovj;
  
--	count = set_syndrome_sources(blocks, sh, SYNDROME_SRC_WANT_DRAIN);
-+	count = set_syndrome_sources(blocks, offs, sh, SYNDROME_SRC_WANT_DRAIN);
+-	raid6_dual_recov(disks, PAGE_SIZE, i, j, dataptrs);
++	raid6_dual_recov(disks, PAGE_SIZE, i, j, dataptrs, dataoffs);
  
- 	init_async_submit(&submit, ASYNC_TX_FENCE|ASYNC_TX_PQ_XOR_DST, tx,
- 			  ops_complete_prexor, sh, to_addr_conv(sh, percpu, 0));
--	tx = async_gen_syndrome(blocks, 0, count+2,
-+	tx = async_gen_syndrome(blocks, offs, count+2,
- 			RAID5_STRIPE_SIZE(sh->raid_conf), &submit);
+ 	erra = memcmp(page_address(data[i]), page_address(recovi), PAGE_SIZE);
+ 	errb = memcmp(page_address(data[j]), page_address(recovj), PAGE_SIZE);
+@@ -162,7 +170,7 @@ static int test(int disks, int *tests)
+ 	/* Generate assumed good syndrome */
+ 	init_completion(&cmp);
+ 	init_async_submit(&submit, ASYNC_TX_ACK, NULL, callback, &cmp, addr_conv);
+-	tx = async_gen_syndrome(dataptrs, 0, disks, PAGE_SIZE, &submit);
++	tx = async_gen_syndrome(dataptrs, dataoffs, disks, PAGE_SIZE, &submit);
+ 	async_tx_issue_pending(tx);
  
- 	return tx;
-@@ -1978,6 +1996,7 @@ ops_run_reconstruct6(struct stripe_head *sh, struct raid5_percpu *percpu,
- {
- 	struct async_submit_ctl submit;
- 	struct page **blocks;
-+	unsigned int *offs;
- 	int count, i, j = 0;
- 	struct stripe_head *head_sh = sh;
- 	int last_stripe;
-@@ -2002,6 +2021,7 @@ ops_run_reconstruct6(struct stripe_head *sh, struct raid5_percpu *percpu,
- 
- again:
- 	blocks = to_addr_page(percpu, j);
-+	offs = to_addr_offs(sh, percpu);
- 
- 	if (sh->reconstruct_state == reconstruct_state_prexor_drain_run) {
- 		synflags = SYNDROME_SRC_WRITTEN;
-@@ -2011,7 +2031,7 @@ ops_run_reconstruct6(struct stripe_head *sh, struct raid5_percpu *percpu,
- 		txflags = ASYNC_TX_ACK;
- 	}
- 
--	count = set_syndrome_sources(blocks, sh, synflags);
-+	count = set_syndrome_sources(blocks, offs, sh, synflags);
- 	last_stripe = !head_sh->batch_head ||
- 		list_first_entry(&sh->batch_list,
- 				 struct stripe_head, batch_list) == head_sh;
-@@ -2023,7 +2043,7 @@ ops_run_reconstruct6(struct stripe_head *sh, struct raid5_percpu *percpu,
- 	} else
- 		init_async_submit(&submit, 0, tx, NULL, NULL,
- 				  to_addr_conv(sh, percpu, j));
--	tx = async_gen_syndrome(blocks, 0, count+2,
-+	tx = async_gen_syndrome(blocks, offs, count+2,
- 			RAID5_STRIPE_SIZE(sh->raid_conf),  &submit);
- 	if (!last_stripe) {
- 		j++;
-@@ -2089,6 +2109,7 @@ static void ops_run_check_p(struct stripe_head *sh, struct raid5_percpu *percpu)
- static void ops_run_check_pq(struct stripe_head *sh, struct raid5_percpu *percpu, int checkp)
- {
- 	struct page **srcs = to_addr_page(percpu, 0);
-+	unsigned int *offs = to_addr_offs(sh, percpu);
- 	struct async_submit_ctl submit;
- 	int count;
- 
-@@ -2096,16 +2117,16 @@ static void ops_run_check_pq(struct stripe_head *sh, struct raid5_percpu *percpu
- 		(unsigned long long)sh->sector, checkp);
- 
- 	BUG_ON(sh->batch_head);
--	count = set_syndrome_sources(srcs, sh, SYNDROME_SRC_ALL);
-+	count = set_syndrome_sources(srcs, offs, sh, SYNDROME_SRC_ALL);
- 	if (!checkp)
- 		srcs[count] = NULL;
- 
- 	atomic_inc(&sh->count);
- 	init_async_submit(&submit, ASYNC_TX_ACK, NULL, ops_complete_check,
- 			  sh, to_addr_conv(sh, percpu, 0));
--	async_syndrome_val(srcs, 0, count+2,
-+	async_syndrome_val(srcs, offs, count+2,
- 			   RAID5_STRIPE_SIZE(sh->raid_conf),
--			   &sh->ops.zero_sum_result, percpu->spare_page, &submit);
-+			   &sh->ops.zero_sum_result, percpu->spare_page, 0, &submit);
- }
- 
- static void raid_run_ops(struct stripe_head *sh, unsigned long ops_request)
+ 	if (wait_for_completion_timeout(&cmp, msecs_to_jiffies(3000)) == 0) {
 -- 
 2.25.4
 
