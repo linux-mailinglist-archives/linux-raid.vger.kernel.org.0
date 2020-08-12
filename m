@@ -2,17 +2,17 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B91F2429B2
-	for <lists+linux-raid@lfdr.de>; Wed, 12 Aug 2020 14:49:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07ABE2429BA
+	for <lists+linux-raid@lfdr.de>; Wed, 12 Aug 2020 14:49:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbgHLMtD (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 12 Aug 2020 08:49:03 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9273 "EHLO huawei.com"
+        id S1727788AbgHLMtS (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 12 Aug 2020 08:49:18 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9269 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727998AbgHLMtC (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 12 Aug 2020 08:49:02 -0400
+        id S1728002AbgHLMtS (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 12 Aug 2020 08:49:18 -0400
 Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 34030D82B1758E06136E;
+        by Forcepoint Email with ESMTP id 042A1BEB7C3CAF55ACB2;
         Wed, 12 Aug 2020 20:48:59 +0800 (CST)
 Received: from huawei.com (10.175.101.6) by DGGEMS403-HUB.china.huawei.com
  (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Wed, 12 Aug 2020
@@ -22,9 +22,9 @@ To:     <song@kernel.org>
 CC:     <linux-raid@vger.kernel.org>, <neilb@suse.com>,
         <guoqing.jiang@cloud.ionos.com>, <houtao1@huawei.com>,
         <yuyufen@huawei.com>
-Subject: [PATCH 09/12] raid6test: adaptation with new syndrome function
-Date:   Wed, 12 Aug 2020 08:49:28 -0400
-Message-ID: <20200812124931.2584743-10-yuyufen@huawei.com>
+Subject: [PATCH 10/12] md/raid5: let multiple devices of stripe_head share page
+Date:   Wed, 12 Aug 2020 08:49:29 -0400
+Message-ID: <20200812124931.2584743-11-yuyufen@huawei.com>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200812124931.2584743-1-yuyufen@huawei.com>
 References: <20200812124931.2584743-1-yuyufen@huawei.com>
@@ -38,105 +38,257 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-After changing some syndrome and recovery functions to support
-different page offsets, we also need to adapt raid6test module.
-In this module, pages are allocated by the itself and their offset
-are '0'.
+In current implementation, grow_buffers() uses alloc_page() to
+allocate the buffers for each stripe_head, i.e. allocate a page
+for each dev[i] in stripe_head.
+
+After setting stripe_size as a configurable value by writing
+sysfs entry, it means that we always allocate 64K buffers, but
+just use 4K of them when stripe_size is 4K in 64KB arm64.
+
+To avoid wasting memory, we try to let multiple sh->dev share
+one real page. That means, multiple sh->dev[i].page will point
+to the only page with different offset. Example of 64K PAGE_SIZE
+and 4K stripe_size as following:
+
+                    64K PAGE_SIZE
+          +---+---+---+---+------------------------------+
+          |   |   |   |   |
+          |   |   |   |   |
+          +-+-+-+-+-+-+-+-+------------------------------+
+            ^   ^   ^   ^
+            |   |   |   +----------------------------+
+            |   |   |                                |
+            |   |   +-------------------+            |
+            |   |                       |            |
+            |   +----------+            |            |
+            |              |            |            |
+            +-+            |            |            |
+              |            |            |            |
+        +-----+-----+------+-----+------+-----+------+------+
+sh      | offset(0) | offset(4K) | offset(8K) | offset(12K) |
+ +      +-----------+------------+------------+-------------+
+ +----> dev[0].page  dev[1].page  dev[2].page  dev[3].page
+
+A new 'pages' array will be added into stripe_head to record shared
+page used by this stripe_head. Allocate them when grow_buffers()
+and free them when shrink_buffers().
+
+After trying to share page, the users of sh->dev[i].page need to take
+care of the related page offset: page into issued bio and page passed
+to xor compution functions. But thanks for previous different page offset
+supported. Here, we just need to set corrent dev[i].offset.
 
 Signed-off-by: Yufen Yu <yuyufen@huawei.com>
 ---
- crypto/async_tx/raid6test.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ drivers/md/raid5.c | 89 ++++++++++++++++++++++++++++++++++++++++++++--
+ drivers/md/raid5.h | 28 ++++++++++++++-
+ 2 files changed, 114 insertions(+), 3 deletions(-)
 
-diff --git a/crypto/async_tx/raid6test.c b/crypto/async_tx/raid6test.c
-index 14e73dcd7475..66db82e5a3b1 100644
---- a/crypto/async_tx/raid6test.c
-+++ b/crypto/async_tx/raid6test.c
-@@ -18,6 +18,7 @@
- #define NDISKS 64 /* Including P and Q */
- 
- static struct page *dataptrs[NDISKS];
-+unsigned int dataoffs[NDISKS];
- static addr_conv_t addr_conv[NDISKS];
- static struct page *data[NDISKS+3];
- static struct page *spare;
-@@ -38,6 +39,7 @@ static void makedata(int disks)
- 	for (i = 0; i < disks; i++) {
- 		prandom_bytes(page_address(data[i]), PAGE_SIZE);
- 		dataptrs[i] = data[i];
-+		dataoffs[i] = 0;
- 	}
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index dfe29d5fc9ad..189ef51e853a 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -448,13 +448,74 @@ static struct stripe_head *get_free_stripe(struct r5conf *conf, int hash)
+ 	return sh;
  }
  
-@@ -52,7 +54,8 @@ static char disk_type(int d, int disks)
- }
- 
- /* Recover two failed blocks. */
--static void raid6_dual_recov(int disks, size_t bytes, int faila, int failb, struct page **ptrs)
-+static void raid6_dual_recov(int disks, size_t bytes, int faila, int failb,
-+		struct page **ptrs, unsigned int *offs)
+-static void shrink_buffers(struct stripe_head *sh)
++#if PAGE_SIZE != DEFAULT_STRIPE_SIZE
++static void free_stripe_pages(struct stripe_head *sh)
++{
++	int i;
++	struct page *p;
++
++	/* Have not allocate page pool */
++	if (!sh->pages)
++		return;
++
++	for (i = 0; i < sh->nr_pages; i++) {
++		p = sh->pages[i];
++		if (p)
++			put_page(p);
++		sh->pages[i] = NULL;
++	}
++}
++
++static int alloc_stripe_pages(struct stripe_head *sh, gfp_t gfp)
  {
- 	struct async_submit_ctl submit;
- 	struct completion cmp;
-@@ -66,7 +69,8 @@ static void raid6_dual_recov(int disks, size_t bytes, int faila, int failb, stru
- 		if (faila == disks-2) {
- 			/* P+Q failure.  Just rebuild the syndrome. */
- 			init_async_submit(&submit, 0, NULL, NULL, NULL, addr_conv);
--			tx = async_gen_syndrome(ptrs, 0, disks, bytes, &submit);
-+			tx = async_gen_syndrome(ptrs, offs,
-+					disks, bytes, &submit);
- 		} else {
- 			struct page *blocks[NDISKS];
- 			struct page *dest;
-@@ -89,22 +93,26 @@ static void raid6_dual_recov(int disks, size_t bytes, int faila, int failb, stru
- 			tx = async_xor(dest, blocks, 0, count, bytes, &submit);
++	int i;
+ 	struct page *p;
++
++	for (i = 0; i < sh->nr_pages; i++) {
++		/* The page have allocated. */
++		if (sh->pages[i])
++			continue;
++
++		p = alloc_page(gfp);
++		if (!p) {
++			free_stripe_pages(sh);
++			return -ENOMEM;
++		}
++		sh->pages[i] = p;
++	}
++	return 0;
++}
++
++static int
++init_stripe_shared_pages(struct stripe_head *sh, struct r5conf *conf)
++{
++	int nr_pages, cnt;
++
++	if (sh->pages)
++		return 0;
++
++	/* Each of the sh->dev[i] need one conf->stripe_size */
++	cnt = PAGE_SIZE / conf->stripe_size;
++	nr_pages = (conf->raid_disks + cnt - 1) / cnt;
++
++	sh->pages = kcalloc(nr_pages, sizeof(struct page *), GFP_KERNEL);
++	if (!sh->pages)
++		return -ENOMEM;
++	sh->nr_pages = nr_pages;
++	sh->stripes_per_page = cnt;
++	return 0;
++}
++#endif
++
++static void shrink_buffers(struct stripe_head *sh)
++{
+ 	int i;
+ 	int num = sh->raid_conf->pool_size;
  
- 			init_async_submit(&submit, 0, tx, NULL, NULL, addr_conv);
--			tx = async_gen_syndrome(ptrs, 0, disks, bytes, &submit);
-+			tx = async_gen_syndrome(ptrs, offs,
-+					disks, bytes, &submit);
- 		}
- 	} else {
- 		if (failb == disks-2) {
- 			/* data+P failure. */
- 			init_async_submit(&submit, 0, NULL, NULL, NULL, addr_conv);
--			tx = async_raid6_datap_recov(disks, bytes, faila, ptrs, &submit);
-+			tx = async_raid6_datap_recov(disks, bytes,
-+					faila, ptrs, offs, &submit);
- 		} else {
- 			/* data+data failure. */
- 			init_async_submit(&submit, 0, NULL, NULL, NULL, addr_conv);
--			tx = async_raid6_2data_recov(disks, bytes, faila, failb, ptrs, &submit);
-+			tx = async_raid6_2data_recov(disks, bytes,
-+					faila, failb, ptrs, offs, &submit);
- 		}
++#if PAGE_SIZE == DEFAULT_STRIPE_SIZE
+ 	for (i = 0; i < num ; i++) {
++		struct page *p;
++
+ 		WARN_ON(sh->dev[i].page != sh->dev[i].orig_page);
+ 		p = sh->dev[i].page;
+ 		if (!p)
+@@ -462,6 +523,11 @@ static void shrink_buffers(struct stripe_head *sh)
+ 		sh->dev[i].page = NULL;
+ 		put_page(p);
  	}
- 	init_completion(&cmp);
- 	init_async_submit(&submit, ASYNC_TX_ACK, tx, callback, &cmp, addr_conv);
--	tx = async_syndrome_val(ptrs, 0, disks, bytes, &result, spare, &submit);
-+	tx = async_syndrome_val(ptrs, offs,
-+			disks, bytes, &result, spare, 0, &submit);
- 	async_tx_issue_pending(tx);
++#else
++	for (i = 0; i < num; i++)
++		sh->dev[i].page = NULL;
++	free_stripe_pages(sh); /* Free pages */
++#endif
+ }
  
- 	if (wait_for_completion_timeout(&cmp, msecs_to_jiffies(3000)) == 0)
-@@ -126,7 +134,7 @@ static int test_disks(int i, int j, int disks)
- 	dataptrs[i] = recovi;
- 	dataptrs[j] = recovj;
+ static int grow_buffers(struct stripe_head *sh, gfp_t gfp)
+@@ -469,6 +535,7 @@ static int grow_buffers(struct stripe_head *sh, gfp_t gfp)
+ 	int i;
+ 	int num = sh->raid_conf->pool_size;
  
--	raid6_dual_recov(disks, PAGE_SIZE, i, j, dataptrs);
-+	raid6_dual_recov(disks, PAGE_SIZE, i, j, dataptrs, dataoffs);
++#if PAGE_SIZE == DEFAULT_STRIPE_SIZE
+ 	for (i = 0; i < num; i++) {
+ 		struct page *page;
  
- 	erra = memcmp(page_address(data[i]), page_address(recovi), PAGE_SIZE);
- 	errb = memcmp(page_address(data[j]), page_address(recovj), PAGE_SIZE);
-@@ -162,7 +170,7 @@ static int test(int disks, int *tests)
- 	/* Generate assumed good syndrome */
- 	init_completion(&cmp);
- 	init_async_submit(&submit, ASYNC_TX_ACK, NULL, callback, &cmp, addr_conv);
--	tx = async_gen_syndrome(dataptrs, 0, disks, PAGE_SIZE, &submit);
-+	tx = async_gen_syndrome(dataptrs, dataoffs, disks, PAGE_SIZE, &submit);
- 	async_tx_issue_pending(tx);
+@@ -479,7 +546,16 @@ static int grow_buffers(struct stripe_head *sh, gfp_t gfp)
+ 		sh->dev[i].orig_page = page;
+ 		sh->dev[i].offset = 0;
+ 	}
++#else
++	if (alloc_stripe_pages(sh, gfp))
++		return -ENOMEM;
  
- 	if (wait_for_completion_timeout(&cmp, msecs_to_jiffies(3000)) == 0) {
++	for (i = 0; i < num; i++) {
++		sh->dev[i].page = raid5_get_dev_page(sh, i);
++		sh->dev[i].orig_page = sh->dev[i].page;
++		sh->dev[i].offset = raid5_get_page_offset(sh, i);
++	}
++#endif
+ 	return 0;
+ }
+ 
+@@ -2203,6 +2279,9 @@ static void raid_run_ops(struct stripe_head *sh, unsigned long ops_request)
+ 
+ static void free_stripe(struct kmem_cache *sc, struct stripe_head *sh)
+ {
++#if PAGE_SIZE != DEFAULT_STRIPE_SIZE
++	kfree(sh->pages);
++#endif
+ 	if (sh->ppl_page)
+ 		__free_page(sh->ppl_page);
+ 	kmem_cache_free(sc, sh);
+@@ -2236,9 +2315,15 @@ static struct stripe_head *alloc_stripe(struct kmem_cache *sc, gfp_t gfp,
+ 			sh->ppl_page = alloc_page(gfp);
+ 			if (!sh->ppl_page) {
+ 				free_stripe(sc, sh);
+-				sh = NULL;
++				return NULL;
+ 			}
+ 		}
++#if PAGE_SIZE != DEFAULT_STRIPE_SIZE
++		if (init_stripe_shared_pages(sh, conf)) {
++			free_stripe(sc, sh);
++			return NULL;
++		}
++#endif
+ 	}
+ 	return sh;
+ }
+diff --git a/drivers/md/raid5.h b/drivers/md/raid5.h
+index 6b019cbe0fba..5244b7627296 100644
+--- a/drivers/md/raid5.h
++++ b/drivers/md/raid5.h
+@@ -195,6 +195,7 @@ enum reconstruct_states {
+ 	reconstruct_state_result,
+ };
+ 
++#define DEFAULT_STRIPE_SIZE	4096
+ struct stripe_head {
+ 	struct hlist_node	hash;
+ 	struct list_head	lru;	      /* inactive_list or handle_list */
+@@ -246,6 +247,13 @@ struct stripe_head {
+ 		int 		     target, target2;
+ 		enum sum_check_flags zero_sum_result;
+ 	} ops;
++
++#if PAGE_SIZE != DEFAULT_STRIPE_SIZE
++	/* These pages will be used by bios in dev[i] */
++	struct page	**pages;
++	int	nr_pages;	/* page array size */
++	int	stripes_per_page;
++#endif
+ 	struct r5dev {
+ 		/* rreq and rvec are used for the replacement device when
+ 		 * writing data to both devices.
+@@ -473,7 +481,6 @@ struct disk_info {
+  */
+ 
+ #define NR_STRIPES		256
+-#define DEFAULT_STRIPE_SIZE	4096
+ 
+ #if PAGE_SIZE == DEFAULT_STRIPE_SIZE
+ #define STRIPE_SIZE		PAGE_SIZE
+@@ -772,6 +779,25 @@ static inline int algorithm_is_DDF(int layout)
+ 	return layout >= 8 && layout <= 10;
+ }
+ 
++#if PAGE_SIZE != DEFAULT_STRIPE_SIZE
++/*
++ * Return offset of the corresponding page for r5dev.
++ */
++static inline int raid5_get_page_offset(struct stripe_head *sh, int disk_idx)
++{
++	return (disk_idx % sh->stripes_per_page) * RAID5_STRIPE_SIZE(sh->raid_conf);
++}
++
++/*
++ * Return corresponding page address for r5dev.
++ */
++static inline struct page *
++raid5_get_dev_page(struct stripe_head *sh, int disk_idx)
++{
++	return sh->pages[disk_idx / sh->stripes_per_page];
++}
++#endif
++
+ extern void md_raid5_kick_device(struct r5conf *conf);
+ extern int raid5_set_cache_size(struct mddev *mddev, int size);
+ extern sector_t raid5_compute_blocknr(struct stripe_head *sh, int i, int previous);
 -- 
 2.25.4
 
