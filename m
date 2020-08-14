@@ -2,65 +2,95 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DEC60244AFC
-	for <lists+linux-raid@lfdr.de>; Fri, 14 Aug 2020 15:58:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 157AD244E55
+	for <lists+linux-raid@lfdr.de>; Fri, 14 Aug 2020 20:07:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbgHNN6c (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 14 Aug 2020 09:58:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32928 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728137AbgHNN62 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 14 Aug 2020 09:58:28 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 569CFC06138B
-        for <linux-raid@vger.kernel.org>; Fri, 14 Aug 2020 06:58:27 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id y134so5253432yby.2
-        for <linux-raid@vger.kernel.org>; Fri, 14 Aug 2020 06:58:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=ADSxHTiClFeEpnekIgxMm+4vNveMDrQOPCHPEgxRQmY=;
-        b=OuCR0lVGqzd5H5FQmJLbFMNQ+eyV0gzEwr4HY3cd3GF6Lnsu1xJVt3zglMz7Jw3m6g
-         6tlQS1f9t9BYgSgXfDaRlV7w8WD3il1PEMBvmswjf0OZgEHzc1jHtX67zkOtBSyBoxLc
-         xSp/eQJ4+Ex7HAoy43U5Nx1I2rFcFsarYX4GCS2LVaBXZjUMWYC5HD7BH4nlOsnKw5vX
-         zu9ygJ4Ak8kbLaUIR+Wg4wOkXpQbQFuB6AS3nSIngBGrfhH2iurIYvgHPK9vFRdVn4tn
-         No2wYXX7H+1SF39WsLEjuvUdeAfdZx1+eqojEu1sK7RLckN57Cb59z1zh3/DfitQjmxg
-         khiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=ADSxHTiClFeEpnekIgxMm+4vNveMDrQOPCHPEgxRQmY=;
-        b=FeeBXxqb+kNYYukUZKi13pq+M8Gwm/ZCDoDxFWaAcwi02eiKLAP/vf5vLvpjeldjQv
-         fi9Ib3IeU8uuhoMOk9ToeipvU0g8JUKaSwcJWW9wKq6KsnEAiE/GQ9EpZws7OyOgwgLz
-         +vAnyFF8/5Xd/w7fzwytapvT/w09lghVlfzFnit6p+wtxw2gVS2RaY1JUVDhZPiOxHmW
-         0NI45Kym0ecQC3HhtZ81Y7QV+pmvdBv/6HG0VFC3yJ5xyM2Mk61kXmrXHSTgv2QoSvUe
-         Ifdm3Mywf2p08QIxZL5jgQKoYPfvt8Qw7glml/+cCbRBE3GaOxnguPcjJ9eAeBrj5Yn9
-         UJZw==
-X-Gm-Message-State: AOAM531qh7pfOKpgD8dpPbdAMCC+aspLzL58TGETyOI4SHv+DEr7owzx
-        ri6k8sDCIag8GJDpECptAYguaDk599buolQgWLI=
-X-Google-Smtp-Source: ABdhPJxSW2CH4l3gAV3UQbiDhKcbIln2aHe6a5DgwtK9XXMnm22hlYpRVpHOZ1RfSDgnZMpqgrmaN7TH4tMfw5Vx2lE=
-X-Received: by 2002:a25:7c01:: with SMTP id x1mr782217ybc.357.1597413505967;
- Fri, 14 Aug 2020 06:58:25 -0700 (PDT)
+        id S1728568AbgHNSHZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 14 Aug 2020 14:07:25 -0400
+Received: from zimbra.karlsbakk.net ([193.29.58.196]:55912 "EHLO
+        zimbra.karlsbakk.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728394AbgHNSHY (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 14 Aug 2020 14:07:24 -0400
+Received: from localhost (localhost.localdomain [IPv6:::1])
+        by zimbra.karlsbakk.net (Postfix) with ESMTP id 5C6123C2767
+        for <linux-raid@vger.kernel.org>; Fri, 14 Aug 2020 20:07:22 +0200 (CEST)
+Received: from zimbra.karlsbakk.net ([IPv6:::1])
+        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id dNCDM1A2Nqr7 for <linux-raid@vger.kernel.org>;
+        Fri, 14 Aug 2020 20:07:21 +0200 (CEST)
+Received: from localhost (localhost.localdomain [IPv6:::1])
+        by zimbra.karlsbakk.net (Postfix) with ESMTP id 06E853C2778
+        for <linux-raid@vger.kernel.org>; Fri, 14 Aug 2020 20:07:21 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra.karlsbakk.net 06E853C2778
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=karlsbakk.net;
+        s=1DC131FE-D37A-11E7-BD32-3AD4DFE620DF; t=1597428441;
+        bh=QkXkNIvGzuA1d7bMOsXl8MxbhN0SfkTzwb/1wWZapL8=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=eYOSuQ6VWh8SKIIjfqCH/2kWSxNtybmyfp1APVjYStvhZttO/foCUWu4ypnTXWUfr
+         PiUc4tL9Fw9JUwfClmfhaOnTv87hHA/izWay5xCW8+82sgY4L6FqGNunhtMeGLQXST
+         sJh6TDDy748lFNi29b6YXxLr2PQ4mReTbsDFlerQClWdb+pQ5c6WEw7x1Z/oBIKAyE
+         sJNQ6Xu8yAXo4WGcSEG1RZP55M3vQfYFehP+3v18gEuihYs6dTUp4m/hWxffjsWMsu
+         nyLDzscxe8Gfw0Q73ir+tuCFqkYRgXdF3ROqkpdi0BaILRh80gmBPZBbldp56QeMdT
+         b2AxQLz7tkxHw==
+X-Virus-Scanned: amavisd-new at zimbra.karlsbakk.net
+Received: from zimbra.karlsbakk.net ([IPv6:::1])
+        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id 8I1rppVd86kB for <linux-raid@vger.kernel.org>;
+        Fri, 14 Aug 2020 20:07:20 +0200 (CEST)
+Received: from zimbra.karlsbakk.net (localhost.localdomain [127.0.0.1])
+        by zimbra.karlsbakk.net (Postfix) with ESMTP id E269D3C2767
+        for <linux-raid@vger.kernel.org>; Fri, 14 Aug 2020 20:07:20 +0200 (CEST)
+Date:   Fri, 14 Aug 2020 20:07:19 +0200 (CEST)
+From:   Roy Sigurd Karlsbakk <roy@karlsbakk.net>
+To:     Linux Raid <linux-raid@vger.kernel.org>
+Message-ID: <573421659.22903312.1597428439621.JavaMail.zimbra@karlsbakk.net>
+In-Reply-To: <303847410.22535373.1597344622629.JavaMail.zimbra@karlsbakk.net>
+References: <511683715.22423223.1597320866233.JavaMail.zimbra@karlsbakk.net> <2053545579.22464117.1597329096623.JavaMail.zimbra@karlsbakk.net> <303847410.22535373.1597344622629.JavaMail.zimbra@karlsbakk.net>
+Subject: Re: Confusing output of --examine-badblocks1 message
 MIME-Version: 1.0
-Received: by 2002:a25:ce42:0:0:0:0:0 with HTTP; Fri, 14 Aug 2020 06:58:25
- -0700 (PDT)
-Reply-To: alexanadi111@gmail.com
-From:   Alex Anadi <debtpaymentsettlementcenter201@gmail.com>
-Date:   Fri, 14 Aug 2020 14:58:25 +0100
-Message-ID: <CANm_i2ZZaffMNzbC+-T=vYbsmQZ-2aL-nGfz+G8fS=qjR86-6w@mail.gmail.com>
-Subject: OK.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [::ffff:51.175.216.121]
+X-Mailer: Zimbra 8.8.10_GA_3801 (ZimbraWebClient - FF79 (Mac)/8.8.10_GA_3786)
+Thread-Topic: Confusing output of --examine-badblocks1 message
+Thread-Index: 6fFysasCZBtSZ6hKL7EEKs2k82fW09O0JgJtymPdY0TtHOP6xA==
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Dear Sir/Madam,
+> I just tried another approach, mdadm --remove on the spares, mdadm --exam=
+ine on
+> the removed spares, no superblock. Then madm --fail for one of the drives=
+ and
+> mdadm --add for another, now spare for a few milliseconds until recovery
+> started. This runs as it should, slower than --replace, but I don't care.=
+ After
+> 12% or so, I checked with --examine-badblocks, and the same sectors are p=
+opping
+> up again. This was just a small test to see i --replace was the "bad guy"=
+ here
+> or if a full recovery would do the same. It does.
 
-I want to know if you authorized Ms Diane Webb to put claims for your
-funds valued at $10.6M
+For the record, I just tested mdadm --replace again on a disk in the raid. =
+The source disk had no badblocks. The destination disk is new-ish (that is,=
+ a few years old, but hardly written to and without an md superblock). It s=
+eems the badblocks present on other drives in the raid6 are also replicated=
+ to the "new" disk. This is not really how it should be IMO.
 
-Regards,
-Alex Anadi.
+There must be a major bug in here somewhere. If there's a bad sector somewh=
+ere, well, ok, I can handle some corruption. The filesystem will probably b=
+e able to handle it as well. But if this is all blocked because of flakey "=
+bad" sectors not really being bad, then something is bad indeed.
+
+Vennlig hilsen
+
+roy
+--=20
+Roy Sigurd Karlsbakk
+(+47) 98013356
+http://blogg.karlsbakk.net/
+GPG Public key: http://karlsbakk.net/roysigurdkarlsbakk.pubkey.txt
+--
+Hi=C3=B0 g=C3=B3=C3=B0a skaltu =C3=AD stein h=C3=B6ggva, hi=C3=B0 illa =C3=
+=AD snj=C3=B3 rita.
