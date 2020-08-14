@@ -2,61 +2,76 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 87EEC244601
-	for <lists+linux-raid@lfdr.de>; Fri, 14 Aug 2020 09:57:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79D272449F0
+	for <lists+linux-raid@lfdr.de>; Fri, 14 Aug 2020 14:46:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgHNH5g convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-raid@lfdr.de>); Fri, 14 Aug 2020 03:57:36 -0400
-Received: from mail.munisurquillo.gob.pe ([190.187.155.157]:34726 "EHLO
-        mail.munisurquillo.gob.pe" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726122AbgHNH5g (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 14 Aug 2020 03:57:36 -0400
-X-Greylist: delayed 3280 seconds by postgrey-1.27 at vger.kernel.org; Fri, 14 Aug 2020 03:57:35 EDT
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.munisurquillo.gob.pe (Postfix) with ESMTP id 001E04022F734;
-        Fri, 14 Aug 2020 01:52:09 -0500 (-05)
-Received: from mail.munisurquillo.gob.pe ([127.0.0.1])
-        by localhost (mail.munisurquillo.gob.pe [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id wAphW9V3RVBV; Fri, 14 Aug 2020 01:52:09 -0500 (-05)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.munisurquillo.gob.pe (Postfix) with ESMTP id A731640230D24;
-        Fri, 14 Aug 2020 01:52:09 -0500 (-05)
-X-Virus-Scanned: amavisd-new at munisurquillo.gob.pe
-Received: from mail.munisurquillo.gob.pe ([127.0.0.1])
-        by localhost (mail.munisurquillo.gob.pe [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id BExD7VUR75HT; Fri, 14 Aug 2020 01:52:09 -0500 (-05)
-Received: from [10.54.17.114] (unknown [105.4.7.153])
-        by mail.munisurquillo.gob.pe (Postfix) with ESMTPSA id 1510F4022F14F;
-        Fri, 14 Aug 2020 01:51:59 -0500 (-05)
-Content-Type: text/plain; charset="iso-8859-1"
+        id S1726690AbgHNMqu (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 14 Aug 2020 08:46:50 -0400
+Received: from azure.uno.uk.net ([95.172.254.11]:39920 "EHLO azure.uno.uk.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726209AbgHNMqu (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 14 Aug 2020 08:46:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sabi.unospace.net; s=default; h=From:References:In-Reply-To:Subject:To:Date
+        :Message-ID:Content-Transfer-Encoding:Content-Type:MIME-Version:Sender:
+        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=bfZgibklnAcMKf7c5AHMtW/5FCcTJkShUCLuBKPBe9I=; b=vpFrg1n9gxdBY2XF7jFYSw8EzY
+        9UJe09wu+CzpIizULP1YAYM6Yp2gzFKeqGkB29YpKSo6U/iPKsHD0mIbePXHyrBpZS//DjPOTNr1F
+        mUv5vqsM6HpiehOm0QgfzmhVe87W6aWDNNtG/KuiIp5N5FkgSFn8qrlzh8fqGlvLoHN0z4agUTly9
+        fmIgyxAA1o5DXvhgEl6H/nrttHtXKRm5ie65nsYiitn2J4AV8wQnTR3jCJcMzizpSdJHkAJ/wWhWE
+        XKijrTJmKeIAKvmXVY8Hwbr0cKvTKnvb9bw43cH/2dL9WPT4i/i29T4xDEsmHAsqsKBTvYLK4DFI6
+        lOYDD/EQ==;
+Received: from [95.172.224.50] (port=33602 helo=ty.sabi.co.UK)
+        by azure.uno.uk.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <postmaster@root.t00.sabi.co.uk>)
+        id 1k6Z6d-0003Wc-Kw
+        for linux-raid@vger.kernel.org; Fri, 14 Aug 2020 13:46:47 +0100
+Received: from from [127.0.0.1] (helo=cyme.ty.sabi.co.uk)
+        by ty.sabi.co.UK with esmtps(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)(Exim 4.93 5)
+        id 1k6Z28-00AXst-0D
+        for <linux-raid@vger.kernel.org>; Fri, 14 Aug 2020 13:42:08 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: =?utf-8?q?Covid_19_Wohlt=C3=A4tigkeitsfonds?=
-To:     Recipients <lu.marin@munisurquillo.gob.pe>
-From:   ''charles jackson'' <lu.marin@munisurquillo.gob.pe>
-Date:   Fri, 14 Aug 2020 08:51:50 +0200
-Reply-To: charlesjacksonjr001@gmail.com
-Message-Id: <20200814065200.1510F4022F14F@mail.munisurquillo.gob.pe>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Message-ID: <24374.34461.701046.450149@cyme.ty.sabi.co.uk>
+Date:   Fri, 14 Aug 2020 13:42:05 +0100
+To:     Linux RAID Mailing List <linux-raid@vger.kernel.org>
+Subject: Re: mdadm development?
+In-Reply-To: <1637821313.22423838.1597320925127.JavaMail.zimbra@karlsbakk.net>
+References: <1637821313.22423838.1597320925127.JavaMail.zimbra@karlsbakk.net>
+X-Mailer: VM 8.2.0b under 26.3 (x86_64-pc-linux-gnu)
+From:   pg@mdadm.list.sabi.co.UK (Peter Grandi)
+X-Disclaimer: This message contains only personal opinions
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - azure.uno.uk.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - root.t00.sabi.co.uk
+X-Get-Message-Sender-Via: azure.uno.uk.net: authenticated_id: sabity@sabi.unospace.net
+X-Authenticated-Sender: azure.uno.uk.net: sabity@sabi.unospace.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hallo
+> [...] the latest version of mdadm. It seems it's 4.1 from
+> october 2018. I can't find anything newer. Has development of
+> mdadm halted or is it declared "perfect" or something?
 
-Ich bin Charles W. Jackson aus North Carolina, Vereinigte Staaten von Amerika, und ich bin der Gewinner des Mega-Millionen-Jackpots von 344 Millionen US-Dollar. Ich spende die Summe von 2.000.000 Millionen Euro als Teil der Hilfsgelder für das Corona-Virus.
+On a general note I think that "stability" when it comes to
+widely used critical bits of sw is a good idea.
 
-Dies ist Ihr Spendencode: [CJ530342019]
+For example the JFS has got very few updates over the past (in
+part because IBM stopped sponsoring its development many years
+ago) and it is still very reliable and well behaved.
 
-www.youtube.com/watch?v=BSr8myiLPMQ
-
-Bitte antworten Sie auf diese E-Mail mit dem SPENDERCODE:
-
-charlesjacksonjr001@gmail.com
-
-Ich hoffe, dass Sie und Ihre Familie dies durchkommen
-
-
-Herr Charles Jackson
+In some other projects instead there are many updates that may
+not always be necessary, perhaps because if someone's job title
+is "maintainer of X" it is difficult to hold back from doing
+updates.
