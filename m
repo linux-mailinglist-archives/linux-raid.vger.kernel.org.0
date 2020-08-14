@@ -2,76 +2,65 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 79D272449F0
-	for <lists+linux-raid@lfdr.de>; Fri, 14 Aug 2020 14:46:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DEC60244AFC
+	for <lists+linux-raid@lfdr.de>; Fri, 14 Aug 2020 15:58:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbgHNMqu (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 14 Aug 2020 08:46:50 -0400
-Received: from azure.uno.uk.net ([95.172.254.11]:39920 "EHLO azure.uno.uk.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726209AbgHNMqu (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 14 Aug 2020 08:46:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sabi.unospace.net; s=default; h=From:References:In-Reply-To:Subject:To:Date
-        :Message-ID:Content-Transfer-Encoding:Content-Type:MIME-Version:Sender:
-        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=bfZgibklnAcMKf7c5AHMtW/5FCcTJkShUCLuBKPBe9I=; b=vpFrg1n9gxdBY2XF7jFYSw8EzY
-        9UJe09wu+CzpIizULP1YAYM6Yp2gzFKeqGkB29YpKSo6U/iPKsHD0mIbePXHyrBpZS//DjPOTNr1F
-        mUv5vqsM6HpiehOm0QgfzmhVe87W6aWDNNtG/KuiIp5N5FkgSFn8qrlzh8fqGlvLoHN0z4agUTly9
-        fmIgyxAA1o5DXvhgEl6H/nrttHtXKRm5ie65nsYiitn2J4AV8wQnTR3jCJcMzizpSdJHkAJ/wWhWE
-        XKijrTJmKeIAKvmXVY8Hwbr0cKvTKnvb9bw43cH/2dL9WPT4i/i29T4xDEsmHAsqsKBTvYLK4DFI6
-        lOYDD/EQ==;
-Received: from [95.172.224.50] (port=33602 helo=ty.sabi.co.UK)
-        by azure.uno.uk.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <postmaster@root.t00.sabi.co.uk>)
-        id 1k6Z6d-0003Wc-Kw
-        for linux-raid@vger.kernel.org; Fri, 14 Aug 2020 13:46:47 +0100
-Received: from from [127.0.0.1] (helo=cyme.ty.sabi.co.uk)
-        by ty.sabi.co.UK with esmtps(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)(Exim 4.93 5)
-        id 1k6Z28-00AXst-0D
-        for <linux-raid@vger.kernel.org>; Fri, 14 Aug 2020 13:42:08 +0100
+        id S1728284AbgHNN6c (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 14 Aug 2020 09:58:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728137AbgHNN62 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 14 Aug 2020 09:58:28 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 569CFC06138B
+        for <linux-raid@vger.kernel.org>; Fri, 14 Aug 2020 06:58:27 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id y134so5253432yby.2
+        for <linux-raid@vger.kernel.org>; Fri, 14 Aug 2020 06:58:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=ADSxHTiClFeEpnekIgxMm+4vNveMDrQOPCHPEgxRQmY=;
+        b=OuCR0lVGqzd5H5FQmJLbFMNQ+eyV0gzEwr4HY3cd3GF6Lnsu1xJVt3zglMz7Jw3m6g
+         6tlQS1f9t9BYgSgXfDaRlV7w8WD3il1PEMBvmswjf0OZgEHzc1jHtX67zkOtBSyBoxLc
+         xSp/eQJ4+Ex7HAoy43U5Nx1I2rFcFsarYX4GCS2LVaBXZjUMWYC5HD7BH4nlOsnKw5vX
+         zu9ygJ4Ak8kbLaUIR+Wg4wOkXpQbQFuB6AS3nSIngBGrfhH2iurIYvgHPK9vFRdVn4tn
+         No2wYXX7H+1SF39WsLEjuvUdeAfdZx1+eqojEu1sK7RLckN57Cb59z1zh3/DfitQjmxg
+         khiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=ADSxHTiClFeEpnekIgxMm+4vNveMDrQOPCHPEgxRQmY=;
+        b=FeeBXxqb+kNYYukUZKi13pq+M8Gwm/ZCDoDxFWaAcwi02eiKLAP/vf5vLvpjeldjQv
+         fi9Ib3IeU8uuhoMOk9ToeipvU0g8JUKaSwcJWW9wKq6KsnEAiE/GQ9EpZws7OyOgwgLz
+         +vAnyFF8/5Xd/w7fzwytapvT/w09lghVlfzFnit6p+wtxw2gVS2RaY1JUVDhZPiOxHmW
+         0NI45Kym0ecQC3HhtZ81Y7QV+pmvdBv/6HG0VFC3yJ5xyM2Mk61kXmrXHSTgv2QoSvUe
+         Ifdm3Mywf2p08QIxZL5jgQKoYPfvt8Qw7glml/+cCbRBE3GaOxnguPcjJ9eAeBrj5Yn9
+         UJZw==
+X-Gm-Message-State: AOAM531qh7pfOKpgD8dpPbdAMCC+aspLzL58TGETyOI4SHv+DEr7owzx
+        ri6k8sDCIag8GJDpECptAYguaDk599buolQgWLI=
+X-Google-Smtp-Source: ABdhPJxSW2CH4l3gAV3UQbiDhKcbIln2aHe6a5DgwtK9XXMnm22hlYpRVpHOZ1RfSDgnZMpqgrmaN7TH4tMfw5Vx2lE=
+X-Received: by 2002:a25:7c01:: with SMTP id x1mr782217ybc.357.1597413505967;
+ Fri, 14 Aug 2020 06:58:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Message-ID: <24374.34461.701046.450149@cyme.ty.sabi.co.uk>
-Date:   Fri, 14 Aug 2020 13:42:05 +0100
-To:     Linux RAID Mailing List <linux-raid@vger.kernel.org>
-Subject: Re: mdadm development?
-In-Reply-To: <1637821313.22423838.1597320925127.JavaMail.zimbra@karlsbakk.net>
-References: <1637821313.22423838.1597320925127.JavaMail.zimbra@karlsbakk.net>
-X-Mailer: VM 8.2.0b under 26.3 (x86_64-pc-linux-gnu)
-From:   pg@mdadm.list.sabi.co.UK (Peter Grandi)
-X-Disclaimer: This message contains only personal opinions
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - azure.uno.uk.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - root.t00.sabi.co.uk
-X-Get-Message-Sender-Via: azure.uno.uk.net: authenticated_id: sabity@sabi.unospace.net
-X-Authenticated-Sender: azure.uno.uk.net: sabity@sabi.unospace.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Received: by 2002:a25:ce42:0:0:0:0:0 with HTTP; Fri, 14 Aug 2020 06:58:25
+ -0700 (PDT)
+Reply-To: alexanadi111@gmail.com
+From:   Alex Anadi <debtpaymentsettlementcenter201@gmail.com>
+Date:   Fri, 14 Aug 2020 14:58:25 +0100
+Message-ID: <CANm_i2ZZaffMNzbC+-T=vYbsmQZ-2aL-nGfz+G8fS=qjR86-6w@mail.gmail.com>
+Subject: OK.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-> [...] the latest version of mdadm. It seems it's 4.1 from
-> october 2018. I can't find anything newer. Has development of
-> mdadm halted or is it declared "perfect" or something?
+Dear Sir/Madam,
 
-On a general note I think that "stability" when it comes to
-widely used critical bits of sw is a good idea.
+I want to know if you authorized Ms Diane Webb to put claims for your
+funds valued at $10.6M
 
-For example the JFS has got very few updates over the past (in
-part because IBM stopped sponsoring its development many years
-ago) and it is still very reliable and well behaved.
-
-In some other projects instead there are many updates that may
-not always be necessary, perhaps because if someone's job title
-is "maintainer of X" it is difficult to hold back from doing
-updates.
+Regards,
+Alex Anadi.
