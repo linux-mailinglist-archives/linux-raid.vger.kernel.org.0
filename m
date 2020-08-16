@@ -2,63 +2,96 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E4EA2453F2
-	for <lists+linux-raid@lfdr.de>; Sun, 16 Aug 2020 00:07:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 164F224580A
+	for <lists+linux-raid@lfdr.de>; Sun, 16 Aug 2020 16:31:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728552AbgHOWHk (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 15 Aug 2020 18:07:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45594 "EHLO
+        id S1729553AbgHPObj (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 16 Aug 2020 10:31:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728120AbgHOVun (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 15 Aug 2020 17:50:43 -0400
-Received: from hermes.turmel.org (hermes.turmel.org [IPv6:2604:180:f1::1e9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1413C09B040
-        for <linux-raid@vger.kernel.org>; Sat, 15 Aug 2020 08:03:50 -0700 (PDT)
-Received: from [172.58.171.202] (helo=[192.168.42.102])
-        by hermes.turmel.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <philip@turmel.org>)
-        id 1k6xif-0008Ij-9s; Sat, 15 Aug 2020 15:03:41 +0000
-Subject: Re: Confusing output of --examine-badblocks1 message
-To:     Roy Sigurd Karlsbakk <roy@karlsbakk.net>,
-        Linux Raid <linux-raid@vger.kernel.org>
-References: <511683715.22423223.1597320866233.JavaMail.zimbra@karlsbakk.net>
- <2053545579.22464117.1597329096623.JavaMail.zimbra@karlsbakk.net>
- <303847410.22535373.1597344622629.JavaMail.zimbra@karlsbakk.net>
- <573421659.22903312.1597428439621.JavaMail.zimbra@karlsbakk.net>
-From:   Phil Turmel <philip@turmel.org>
-Message-ID: <de6e9dd1-7447-54ab-1818-ceabf422c8a0@turmel.org>
-Date:   Sat, 15 Aug 2020 11:03:35 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        with ESMTP id S1728116AbgHPOai (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 16 Aug 2020 10:30:38 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95EDFC061378
+        for <linux-raid@vger.kernel.org>; Sun, 16 Aug 2020 07:28:37 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id c80so11268459wme.0
+        for <linux-raid@vger.kernel.org>; Sun, 16 Aug 2020 07:28:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=Duxa+mmNF3T3C2WDKsmzowR2OzvdY892XFjTPp0RWRI=;
+        b=NAKDDu3zYGlp6/1rTFA3zLXzfLNUWElMFpld1DGXTqZ3f2C1G5vMMGgQBtzYdv61gR
+         j0gW2VjYzcAEQEK9JcrA+yGSHFEXNhE9RNkaz3uxkanP37gacJrIVytgT7/c7zGkA2Dy
+         XJB3L8ToVDoWAD9Rvm7U849RIrxncLk9xI9S/Uu5ZGT/cXsim2IUQmYeZsKFSBsv6kJT
+         3kDR9KLYjND6JPpx0YTAndrQaTelzP3558OkivI4ykhj79/nak1F6z80uX1/EQIXmTKV
+         I+kUa6Zt2XAbNuMItIuLndMdaWWyo32PYvWKoOywYCMLUV2UDlYdbpJ66arhF+MiPCa0
+         yMKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=Duxa+mmNF3T3C2WDKsmzowR2OzvdY892XFjTPp0RWRI=;
+        b=B0HgRO+6mxuqlPhFDkB4RpG5VV4ND1He34ZGmxzssniPaaXod4eHgmIgjWdBy+JO/6
+         zrCfVDAvTVS2AdV9jCqBvOUvdvl55q4lpdQZfvbmkfilqBR0n65daspNX5LVtpEJiHZn
+         zqqvi7zL6Fqh2MYr7/2B3eGn4cZzbS6n9mj6G+WiCIw4XRYBZ0LyeTirTydrAz+JAXQh
+         WjZhk+ZJ3RXDOLaQxzsivgfTEe3NKjZXNcF/+bDq2EFTreyexWAvMWGRK1e71IKhG6hk
+         3Fi4raS7FsPpcxaIMdoYU8QAyiL+aIRWKAOq2f3+pX3n8DVzba+Zpp8p0SmP70HLKrPY
+         bxlA==
+X-Gm-Message-State: AOAM532h0m6De+ESTYaU/yXoqIhaJ1Ru/z1l+q70PnOr+ZfuT0j5ZM6N
+        MailxRwPAhNjhI0qh0vdJ0o/E6rPMfVaYw+yiyTOYrx9ipM=
+X-Google-Smtp-Source: ABdhPJydZZ8FQlFGmrB/EDLy0Z8gH5X03F6EFXypW4K1vf8iv94WhLhI3iwPKgeJEaRZZocHWED4lUmYPOBkTFPeX+4=
+X-Received: by 2002:a1c:a1c7:: with SMTP id k190mr10461870wme.1.1597588111746;
+ Sun, 16 Aug 2020 07:28:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <573421659.22903312.1597428439621.JavaMail.zimbra@karlsbakk.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a5d:6cd3:0:0:0:0:0 with HTTP; Sun, 16 Aug 2020 07:28:30
+ -0700 (PDT)
+Reply-To: sctnld11170@tlen.pl
+From:   "Mr. Scott Donald" <confianzayrentabilidad@gmail.com>
+Date:   Sun, 16 Aug 2020 07:28:30 -0700
+Message-ID: <CANrrfX7wwL97G=jb--8nb9jH8oRO8T90L6NGSfg1HfnzMyyHcw@mail.gmail.com>
+Subject: Hello, Please
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 8/14/20 2:07 PM, Roy Sigurd Karlsbakk wrote:
->> I just tried another approach, mdadm --remove on the spares, mdadm --examine on
->> the removed spares, no superblock. Then madm --fail for one of the drives and
->> mdadm --add for another, now spare for a few milliseconds until recovery
->> started. This runs as it should, slower than --replace, but I don't care. After
->> 12% or so, I checked with --examine-badblocks, and the same sectors are popping
->> up again. This was just a small test to see i --replace was the "bad guy" here
->> or if a full recovery would do the same. It does.
-> 
-> For the record, I just tested mdadm --replace again on a disk in the raid. The source disk had no badblocks. The destination disk is new-ish (that is, a few years old, but hardly written to and without an md superblock). It seems the badblocks present on other drives in the raid6 are also replicated to the "new" disk. This is not really how it should be IMO.
-> 
-> There must be a major bug in here somewhere. If there's a bad sector somewhere, well, ok, I can handle some corruption. The filesystem will probably be able to handle it as well. But if this is all blocked because of flakey "bad" sectors not really being bad, then something is bad indeed.
+--=20
+Dear Friend,
 
-In my not-so-humble opinion, the bug is the existence of the BadBlocks 
-feature.  Once a badblock is recorded for a sector, redundancy is 
-permanently lost at that location.  There is no tool to undo this.
+I'm Mr. Scott Donald a Successful businessMan dealing with
+Exportation, I got your mail contact through search to let you know my
+intension and my Ugly Situation Am a dying Man here in Los Angeles
+California Hospital Bed in (USA), I Lost my Wife and my only Daughter
+for Covid-19 and I also have a problem in my Health and I can die
+anytime I Know,
 
-I strongly recommend that you remove badblock logs on all arrays before 
-the "feature" screws you.
+I have a project that I am about to hand over to you. and I already
+instructed the Bankia S.A. Madrid, Spain(BSA) to transfer my fund sum
+of =C2=A33,7M GBP. Equivalent to =E2=82=AC4,077,033.91 EUR, to you as to en=
+able you
+to give 50% of this fund to Charitable Home in your State and take 50%
+don't think otherwise and why would anybody send someone you barely
+know to help you deliver a message, help me do this for the happiness
+of my soul and for God to mercy me and my Family and give Us a good
+place.
 
-Phil
+please, do as I said there was someone from your State that I deeply
+love so very very much and I miss her so badly I have no means to
+reach any Charitable Home there. that is why I go for a personal
+search of the Country and State and I got your mail contact through
+search to let you know my Bitterness and please, help me is getting
+Dark I ask my Doctor to help me keep you notice failure for me to
+reach you in person Your urgent Response, here is my Doctor Whats-app
+Number for urgent notice +13019692737
+
+Hope To Hear From You. I'm sending this email to you for the second
+time yet no response from you.
+
+My Regards.
+
+Mr. Scott Donald
+CEO
