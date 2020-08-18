@@ -2,123 +2,51 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3536B248D9D
-	for <lists+linux-raid@lfdr.de>; Tue, 18 Aug 2020 20:00:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16BF9248EA0
+	for <lists+linux-raid@lfdr.de>; Tue, 18 Aug 2020 21:26:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgHRSA2 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 18 Aug 2020 14:00:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57404 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726651AbgHRSAV (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 18 Aug 2020 14:00:21 -0400
-Received: from zimbra.karlsbakk.net (zimbra.karlsbakk.net [IPv6:2a0a:51c0:0:1f:4ca5::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 231C8C061389
-        for <linux-raid@vger.kernel.org>; Tue, 18 Aug 2020 11:00:20 -0700 (PDT)
-Received: from localhost (localhost.localdomain [IPv6:::1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id B280A3C2751;
-        Tue, 18 Aug 2020 20:00:10 +0200 (CEST)
-Received: from zimbra.karlsbakk.net ([IPv6:::1])
-        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id 7WbRju8HTguZ; Tue, 18 Aug 2020 20:00:09 +0200 (CEST)
-Received: from localhost (localhost.localdomain [IPv6:::1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id 4CB883C27C7;
-        Tue, 18 Aug 2020 20:00:09 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra.karlsbakk.net 4CB883C27C7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=karlsbakk.net;
-        s=1DC131FE-D37A-11E7-BD32-3AD4DFE620DF; t=1597773609;
-        bh=vijal7nb8T9huIXoXhtas5wcr7JgWO+20AkSxOe9mwc=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=oSixRLLFFscKdQ+9UavZ7vEI3riyKdPXNdjk3uevT68BDzCK9Oi8CJgevZYlvuaE6
-         YLbkxhxY4VrarR+igxbB6hhs5THoVGv1ZKotb+o+l5kvWLUuC0i35aXO2sr08FogrS
-         k0CtlIsfvOQlS+xIH/u/8XTeShisNmMa2EWxFYJW3ysSnfNryMA0OL6dS1iG3/XanP
-         E2OkWMuvaMpQLEkQJ6NSMovxKJczTwYJh0pm9FS6yDgK7opMQfFJrSVMHHWuUSDfor
-         wG9eAKWR6beg4NIPsp1DUTvRYrx7gCx8JgSGJOp2/H+gIf7YSREdonRC/NnMWteqaq
-         tgCiueiHqHEUg==
-X-Virus-Scanned: amavisd-new at zimbra.karlsbakk.net
-Received: from zimbra.karlsbakk.net ([IPv6:::1])
-        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id 932RfGVFiKzU; Tue, 18 Aug 2020 20:00:09 +0200 (CEST)
-Received: from zimbra.karlsbakk.net (localhost.localdomain [127.0.0.1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id 1E8443C2751;
-        Tue, 18 Aug 2020 20:00:09 +0200 (CEST)
-Date:   Tue, 18 Aug 2020 20:00:08 +0200 (CEST)
-From:   Roy Sigurd Karlsbakk <roy@karlsbakk.net>
-To:     Linux RAID Mailing List <linux-raid@vger.kernel.org>
-Cc:     =?utf-8?Q?H=C3=A5kon?= <hawken@thehawken.org>
-Message-ID: <75076966.1748398.1597773608869.JavaMail.zimbra@karlsbakk.net>
-Subject: Feature request: Remove the badblocks list
+        id S1726694AbgHRT0M (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 18 Aug 2020 15:26:12 -0400
+Received: from smtp.hosts.co.uk ([85.233.160.19]:21436 "EHLO smtp.hosts.co.uk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726652AbgHRT0L (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 18 Aug 2020 15:26:11 -0400
+Received: from host86-157-102-164.range86-157.btcentralplus.com ([86.157.102.164] helo=[192.168.1.64])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1k87FI-000CZI-EY; Tue, 18 Aug 2020 20:26:08 +0100
+Subject: Re: Feature request: Remove the badblocks list
+To:     Roy Sigurd Karlsbakk <roy@karlsbakk.net>,
+        Linux RAID Mailing List <linux-raid@vger.kernel.org>
+References: <75076966.1748398.1597773608869.JavaMail.zimbra@karlsbakk.net>
+Cc:     =?UTF-8?B?SMOla29u?= <hawken@thehawken.org>
+From:   Wols Lists <antlists@youngman.org.uk>
+Message-ID: <5F3C2B4F.1050708@youngman.org.uk>
+Date:   Tue, 18 Aug 2020 20:26:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.7.0
 MIME-Version: 1.0
+In-Reply-To: <75076966.1748398.1597773608869.JavaMail.zimbra@karlsbakk.net>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [::ffff:51.175.216.121]
-X-Mailer: Zimbra 8.8.10_GA_3801 (ZimbraWebClient - FF79 (Mac)/8.8.10_GA_3786)
-Thread-Index: sqiaJlTWHLo05Q49ZO2a/oc1lMBbhg==
-Thread-Topic: Feature request: Remove the badblocks list
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi all
+On 18/08/20 19:00, Roy Sigurd Karlsbakk wrote:
+> As far as I can understand, this list doesn't have any reason to exist, except to annoy sysadmins.
 
-It seems the badblocks list was added around 10 years ago[1]. The reason wa=
-s to keep a track on sectors not readable, which may have made sensee 20 ye=
-ars earlier, but not even in 2010. The first IDE drives came out in the end=
- of the 1980s and were named thus of their 'Integrated Drive Electronics' w=
-hich was a new thing at the time. Opposed to earlier MFM drives and such, t=
-hese were "smart" and could handle errors a bit better, even reallocate bad=
- sectors to somewhere else when needed. A lot happened beween 1987 and 2010=
-, but for some reason, this feature slipped through anyway, perhaps becauas=
-e Linus was drunk, I don't know. As far as I can understand, this feature w=
-orks a bit like this
+Actually, there's at least one good reason for it to exist that I can
+think of - it *could* make recovering a broken array much easier. Think
+about it, I think it's documented in the wiki.
 
- - If a bad (that is, unreadable) block is found, it is flagged as bad, not=
- to be used ever again, in the md member's superblock
- - If a new disk is added to the array, the block number of the initial bad=
- block is flagged on the new drive, since the whole stripe is rendered usel=
-ess (erm, didn't we have redundency here?)
- - If replacing the original drive with a new drive, md happily replaces al=
-l the data to the new drive and updates the superblock with the same badblo=
-ck list.
+That said, I'm hoping to do some work soon that will make it redundant.
 
-So no attempt is ever done to check or repair that sector. Disks reallocate=
- sectors if they are bad and it's not necessarily a big issue unless there'=
-s a lot of such errors. We just say 'this sector or block said *ouch* and i=
-s thus dead, and so will his siblings be for ever and ever'. There's a nice=
- article about it here[2].
+One little tip though - you've done a load of research to tell us what
+we already know - as documented on the wiki - and now you're asking us
+to do a load of work. If you want it done, well nobody else has bothered
+so far so what makes you think they'll bother now?
 
-In practice, if you have data in stripes with badblocks, they may be lost f=
-orever and for no reason at all, since drives tend to fix their problems if=
- you issue a write to that sector. ZFS does this nicely - when it finds a b=
-ad read, it reconstructs from parity or mirror and writes it again. If it e=
-ncounters a write error, it tries over. Eventually the drive may fail, but =
-hell, that's why we have redundancy.
-
-As far as I can see, the only solution to remove the badblocks list, is "md=
-adm ... --assemble --update=3Dno-bbl", from [2], and have md return garbage=
- for those lost sectors, which is fine, since fsck/xfs_repair should fix wh=
-at's fixable (and still won't be readable anyway). An alternate version wri=
-tten by a friend of mine (H=C3=A5kon on cc) is present on [3] to remove the=
- list from an offlined array.
-
-As far as I can understand, this list doesn't have any reason to exist, exc=
-ept to annoy sysadmins.
-
-So please remove this useless thing or at least don't enable it by default
-
-[1] https://linux-raid.vger.kernel.narkive.com/R1rvkUiQ/using-the-new-bad-b=
-lock-log-in-md-for-linux-3-1
-[2] https://raid.wiki.kernel.org/index.php/The_Badblocks_controversy
-[3] https://git.thehawken.org/hawken/md-badblocktool.git
-
-Vennlig hilsen
-
-roy
---=20
-Roy Sigurd Karlsbakk
-(+47) 98013356
-http://blogg.karlsbakk.net/
-GPG Public key: http://karlsbakk.net/roysigurdkarlsbakk.pubkey.txt
---
-Hi=C3=B0 g=C3=B3=C3=B0a skaltu =C3=AD stein h=C3=B6ggva, hi=C3=B0 illa =C3=
-=AD snj=C3=B3 rita.
+Cheers,
+Wol
