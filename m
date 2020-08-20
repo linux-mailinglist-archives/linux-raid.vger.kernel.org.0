@@ -2,27 +2,27 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7460A24BE42
-	for <lists+linux-raid@lfdr.de>; Thu, 20 Aug 2020 15:24:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D55E824BE90
+	for <lists+linux-raid@lfdr.de>; Thu, 20 Aug 2020 15:28:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729514AbgHTNWb (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 20 Aug 2020 09:22:31 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10236 "EHLO huawei.com"
+        id S1728417AbgHTNW7 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 20 Aug 2020 09:22:59 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10238 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728489AbgHTNWE (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 20 Aug 2020 09:22:04 -0400
+        id S1728472AbgHTNVz (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 20 Aug 2020 09:21:55 -0400
 Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 6D44095DDC11C23BFA24;
+        by Forcepoint Email with ESMTP id 7A87B78F3DD0B4D4AA3E;
         Thu, 20 Aug 2020 21:21:51 +0800 (CST)
 Received: from huawei.com (10.175.101.6) by DGGEMS406-HUB.china.huawei.com
  (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Thu, 20 Aug 2020
- 21:21:44 +0800
+ 21:21:45 +0800
 From:   Yufen Yu <yuyufen@huawei.com>
 To:     <song@kernel.org>
 CC:     <linux-raid@vger.kernel.org>, <houtao1@huawei.com>
-Subject: [PATCH v2 07/10] md/raid6: let async recovery function support different page offset
-Date:   Thu, 20 Aug 2020 09:22:11 -0400
-Message-ID: <20200820132214.3749139-8-yuyufen@huawei.com>
+Subject: [PATCH v2 08/10] md/raid5: let multiple devices of stripe_head share page
+Date:   Thu, 20 Aug 2020 09:22:12 -0400
+Message-ID: <20200820132214.3749139-9-yuyufen@huawei.com>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200820132214.3749139-1-yuyufen@huawei.com>
 References: <20200820132214.3749139-1-yuyufen@huawei.com>
@@ -36,554 +36,257 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-For now, asynchronous raid6 recovery calculate functions are require
-common offset for pages. But, we expect them to support different page
-offset after introducing stripe shared page. Do that by simplily adding
-page offset where each page address are referred. Then, replace the
-old interface with the new ones in raid6 and raid6test.
+In current implementation, grow_buffers() uses alloc_page() to
+allocate the buffers for each stripe_head, i.e. allocate a page
+for each dev[i] in stripe_head.
+
+After setting stripe_size as a configurable value by writing
+sysfs entry, it means that we always allocate 64K buffers, but
+just use 4K of them when stripe_size is 4K in 64KB arm64.
+
+To avoid wasting memory, we try to let multiple sh->dev share
+one real page. That means, multiple sh->dev[i].page will point
+to the only page with different offset. Example of 64K PAGE_SIZE
+and 4K stripe_size as following:
+
+                    64K PAGE_SIZE
+          +---+---+---+---+------------------------------+
+          |   |   |   |   |
+          |   |   |   |   |
+          +-+-+-+-+-+-+-+-+------------------------------+
+            ^   ^   ^   ^
+            |   |   |   +----------------------------+
+            |   |   |                                |
+            |   |   +-------------------+            |
+            |   |                       |            |
+            |   +----------+            |            |
+            |              |            |            |
+            +-+            |            |            |
+              |            |            |            |
+        +-----+-----+------+-----+------+-----+------+------+
+sh      | offset(0) | offset(4K) | offset(8K) | offset(12K) |
+ +      +-----------+------------+------------+-------------+
+ +----> dev[0].page  dev[1].page  dev[2].page  dev[3].page
+
+A new 'pages' array will be added into stripe_head to record shared
+page used by this stripe_head. Allocate them when grow_buffers()
+and free them when shrink_buffers().
+
+After trying to share page, the users of sh->dev[i].page need to take
+care of the related page offset: page of issued bio and page passed
+to xor compution functions. But thanks for previous different page offset
+supported. Here, we just need to set correct dev[i].offset.
 
 Signed-off-by: Yufen Yu <yuyufen@huawei.com>
 ---
- crypto/async_tx/async_raid6_recov.c | 163 ++++++++++++++++++++--------
- crypto/async_tx/raid6test.c         |   4 +-
- drivers/md/raid5.c                  |   4 +-
- include/linux/async_tx.h            |   6 +-
- 4 files changed, 128 insertions(+), 49 deletions(-)
+ drivers/md/raid5.c | 89 ++++++++++++++++++++++++++++++++++++++++++++--
+ drivers/md/raid5.h | 28 ++++++++++++++-
+ 2 files changed, 114 insertions(+), 3 deletions(-)
 
-diff --git a/crypto/async_tx/async_raid6_recov.c b/crypto/async_tx/async_raid6_recov.c
-index f249142ceac4..354b8cd5537f 100644
---- a/crypto/async_tx/async_raid6_recov.c
-+++ b/crypto/async_tx/async_raid6_recov.c
-@@ -15,8 +15,9 @@
- #include <linux/dmaengine.h>
- 
- static struct dma_async_tx_descriptor *
--async_sum_product(struct page *dest, struct page **srcs, unsigned char *coef,
--		  size_t len, struct async_submit_ctl *submit)
-+async_sum_product(struct page *dest, unsigned int d_off,
-+		struct page **srcs, unsigned int *src_offs, unsigned char *coef,
-+		size_t len, struct async_submit_ctl *submit)
- {
- 	struct dma_chan *chan = async_tx_find_channel(submit, DMA_PQ,
- 						      &dest, 1, srcs, 2, len);
-@@ -37,11 +38,14 @@ async_sum_product(struct page *dest, struct page **srcs, unsigned char *coef,
- 
- 		if (submit->flags & ASYNC_TX_FENCE)
- 			dma_flags |= DMA_PREP_FENCE;
--		unmap->addr[0] = dma_map_page(dev, srcs[0], 0, len, DMA_TO_DEVICE);
--		unmap->addr[1] = dma_map_page(dev, srcs[1], 0, len, DMA_TO_DEVICE);
-+		unmap->addr[0] = dma_map_page(dev, srcs[0], src_offs[0],
-+						len, DMA_TO_DEVICE);
-+		unmap->addr[1] = dma_map_page(dev, srcs[1], src_offs[1],
-+						len, DMA_TO_DEVICE);
- 		unmap->to_cnt = 2;
- 
--		unmap->addr[2] = dma_map_page(dev, dest, 0, len, DMA_BIDIRECTIONAL);
-+		unmap->addr[2] = dma_map_page(dev, dest, d_off,
-+						len, DMA_BIDIRECTIONAL);
- 		unmap->bidi_cnt = 1;
- 		/* engine only looks at Q, but expects it to follow P */
- 		pq[1] = unmap->addr[2];
-@@ -66,9 +70,9 @@ async_sum_product(struct page *dest, struct page **srcs, unsigned char *coef,
- 	async_tx_quiesce(&submit->depend_tx);
- 	amul = raid6_gfmul[coef[0]];
- 	bmul = raid6_gfmul[coef[1]];
--	a = page_address(srcs[0]);
--	b = page_address(srcs[1]);
--	c = page_address(dest);
-+	a = page_address(srcs[0]) + src_offs[0];
-+	b = page_address(srcs[1]) + src_offs[1];
-+	c = page_address(dest) + d_off;
- 
- 	while (len--) {
- 		ax    = amul[*a++];
-@@ -80,8 +84,9 @@ async_sum_product(struct page *dest, struct page **srcs, unsigned char *coef,
- }
- 
- static struct dma_async_tx_descriptor *
--async_mult(struct page *dest, struct page *src, u8 coef, size_t len,
--	   struct async_submit_ctl *submit)
-+async_mult(struct page *dest, unsigned int d_off, struct page *src,
-+		unsigned int s_off, u8 coef, size_t len,
-+		struct async_submit_ctl *submit)
- {
- 	struct dma_chan *chan = async_tx_find_channel(submit, DMA_PQ,
- 						      &dest, 1, &src, 1, len);
-@@ -101,9 +106,11 @@ async_mult(struct page *dest, struct page *src, u8 coef, size_t len,
- 
- 		if (submit->flags & ASYNC_TX_FENCE)
- 			dma_flags |= DMA_PREP_FENCE;
--		unmap->addr[0] = dma_map_page(dev, src, 0, len, DMA_TO_DEVICE);
-+		unmap->addr[0] = dma_map_page(dev, src, s_off,
-+						len, DMA_TO_DEVICE);
- 		unmap->to_cnt++;
--		unmap->addr[1] = dma_map_page(dev, dest, 0, len, DMA_BIDIRECTIONAL);
-+		unmap->addr[1] = dma_map_page(dev, dest, d_off,
-+						len, DMA_BIDIRECTIONAL);
- 		dma_dest[1] = unmap->addr[1];
- 		unmap->bidi_cnt++;
- 		unmap->len = len;
-@@ -133,8 +140,8 @@ async_mult(struct page *dest, struct page *src, u8 coef, size_t len,
- 	 */
- 	async_tx_quiesce(&submit->depend_tx);
- 	qmul  = raid6_gfmul[coef];
--	d = page_address(dest);
--	s = page_address(src);
-+	d = page_address(dest) + d_off;
-+	s = page_address(src) + s_off;
- 
- 	while (len--)
- 		*d++ = qmul[*s++];
-@@ -144,11 +151,14 @@ async_mult(struct page *dest, struct page *src, u8 coef, size_t len,
- 
- static struct dma_async_tx_descriptor *
- __2data_recov_4(int disks, size_t bytes, int faila, int failb,
--		struct page **blocks, struct async_submit_ctl *submit)
-+		struct page **blocks, unsigned int *offs,
-+		struct async_submit_ctl *submit)
- {
- 	struct dma_async_tx_descriptor *tx = NULL;
- 	struct page *p, *q, *a, *b;
-+	unsigned int p_off, q_off, a_off, b_off;
- 	struct page *srcs[2];
-+	unsigned int src_offs[2];
- 	unsigned char coef[2];
- 	enum async_tx_flags flags = submit->flags;
- 	dma_async_tx_callback cb_fn = submit->cb_fn;
-@@ -156,26 +166,34 @@ __2data_recov_4(int disks, size_t bytes, int faila, int failb,
- 	void *scribble = submit->scribble;
- 
- 	p = blocks[disks-2];
-+	p_off = offs[disks-2];
- 	q = blocks[disks-1];
-+	q_off = offs[disks-1];
- 
- 	a = blocks[faila];
-+	a_off = offs[faila];
- 	b = blocks[failb];
-+	b_off = offs[failb];
- 
- 	/* in the 4 disk case P + Pxy == P and Q + Qxy == Q */
- 	/* Dx = A*(P+Pxy) + B*(Q+Qxy) */
- 	srcs[0] = p;
-+	src_offs[0] = p_off;
- 	srcs[1] = q;
-+	src_offs[1] = q_off;
- 	coef[0] = raid6_gfexi[failb-faila];
- 	coef[1] = raid6_gfinv[raid6_gfexp[faila]^raid6_gfexp[failb]];
- 	init_async_submit(submit, ASYNC_TX_FENCE, tx, NULL, NULL, scribble);
--	tx = async_sum_product(b, srcs, coef, bytes, submit);
-+	tx = async_sum_product(b, b_off, srcs, src_offs, coef, bytes, submit);
- 
- 	/* Dy = P+Pxy+Dx */
- 	srcs[0] = p;
-+	src_offs[0] = p_off;
- 	srcs[1] = b;
-+	src_offs[1] = b_off;
- 	init_async_submit(submit, flags | ASYNC_TX_XOR_ZERO_DST, tx, cb_fn,
- 			  cb_param, scribble);
--	tx = async_xor(a, srcs, 0, 2, bytes, submit);
-+	tx = async_xor_offs(a, a_off, srcs, src_offs, 2, bytes, submit);
- 
- 	return tx;
- 
-@@ -183,11 +201,14 @@ __2data_recov_4(int disks, size_t bytes, int faila, int failb,
- 
- static struct dma_async_tx_descriptor *
- __2data_recov_5(int disks, size_t bytes, int faila, int failb,
--		struct page **blocks, struct async_submit_ctl *submit)
-+		struct page **blocks, unsigned int *offs,
-+		struct async_submit_ctl *submit)
- {
- 	struct dma_async_tx_descriptor *tx = NULL;
- 	struct page *p, *q, *g, *dp, *dq;
-+	unsigned int p_off, q_off, g_off, dp_off, dq_off;
- 	struct page *srcs[2];
-+	unsigned int src_offs[2];
- 	unsigned char coef[2];
- 	enum async_tx_flags flags = submit->flags;
- 	dma_async_tx_callback cb_fn = submit->cb_fn;
-@@ -208,60 +229,77 @@ __2data_recov_5(int disks, size_t bytes, int faila, int failb,
- 	BUG_ON(good_srcs > 1);
- 
- 	p = blocks[disks-2];
-+	p_off = offs[disks-2];
- 	q = blocks[disks-1];
-+	q_off = offs[disks-1];
- 	g = blocks[good];
-+	g_off = offs[good];
- 
- 	/* Compute syndrome with zero for the missing data pages
- 	 * Use the dead data pages as temporary storage for delta p and
- 	 * delta q
- 	 */
- 	dp = blocks[faila];
-+	dp_off = offs[faila];
- 	dq = blocks[failb];
-+	dq_off = offs[failb];
- 
- 	init_async_submit(submit, ASYNC_TX_FENCE, tx, NULL, NULL, scribble);
--	tx = async_memcpy(dp, g, 0, 0, bytes, submit);
-+	tx = async_memcpy(dp, g, dp_off, g_off, bytes, submit);
- 	init_async_submit(submit, ASYNC_TX_FENCE, tx, NULL, NULL, scribble);
--	tx = async_mult(dq, g, raid6_gfexp[good], bytes, submit);
-+	tx = async_mult(dq, dq_off, g, g_off,
-+			raid6_gfexp[good], bytes, submit);
- 
- 	/* compute P + Pxy */
- 	srcs[0] = dp;
-+	src_offs[0] = dp_off;
- 	srcs[1] = p;
-+	src_offs[1] = p_off;
- 	init_async_submit(submit, ASYNC_TX_FENCE|ASYNC_TX_XOR_DROP_DST, tx,
- 			  NULL, NULL, scribble);
--	tx = async_xor(dp, srcs, 0, 2, bytes, submit);
-+	tx = async_xor_offs(dp, dp_off, srcs, src_offs, 2, bytes, submit);
- 
- 	/* compute Q + Qxy */
- 	srcs[0] = dq;
-+	src_offs[0] = dq_off;
- 	srcs[1] = q;
-+	src_offs[1] = q_off;
- 	init_async_submit(submit, ASYNC_TX_FENCE|ASYNC_TX_XOR_DROP_DST, tx,
- 			  NULL, NULL, scribble);
--	tx = async_xor(dq, srcs, 0, 2, bytes, submit);
-+	tx = async_xor_offs(dq, dq_off, srcs, src_offs, 2, bytes, submit);
- 
- 	/* Dx = A*(P+Pxy) + B*(Q+Qxy) */
- 	srcs[0] = dp;
-+	src_offs[0] = dp_off;
- 	srcs[1] = dq;
-+	src_offs[1] = dq_off;
- 	coef[0] = raid6_gfexi[failb-faila];
- 	coef[1] = raid6_gfinv[raid6_gfexp[faila]^raid6_gfexp[failb]];
- 	init_async_submit(submit, ASYNC_TX_FENCE, tx, NULL, NULL, scribble);
--	tx = async_sum_product(dq, srcs, coef, bytes, submit);
-+	tx = async_sum_product(dq, dq_off, srcs, src_offs, coef, bytes, submit);
- 
- 	/* Dy = P+Pxy+Dx */
- 	srcs[0] = dp;
-+	src_offs[0] = dp_off;
- 	srcs[1] = dq;
-+	src_offs[1] = dq_off;
- 	init_async_submit(submit, flags | ASYNC_TX_XOR_DROP_DST, tx, cb_fn,
- 			  cb_param, scribble);
--	tx = async_xor(dp, srcs, 0, 2, bytes, submit);
-+	tx = async_xor_offs(dp, dp_off, srcs, src_offs, 2, bytes, submit);
- 
- 	return tx;
- }
- 
- static struct dma_async_tx_descriptor *
- __2data_recov_n(int disks, size_t bytes, int faila, int failb,
--	      struct page **blocks, struct async_submit_ctl *submit)
-+	      struct page **blocks, unsigned int *offs,
-+		  struct async_submit_ctl *submit)
- {
- 	struct dma_async_tx_descriptor *tx = NULL;
- 	struct page *p, *q, *dp, *dq;
-+	unsigned int p_off, q_off, dp_off, dq_off;
- 	struct page *srcs[2];
-+	unsigned int src_offs[2];
- 	unsigned char coef[2];
- 	enum async_tx_flags flags = submit->flags;
- 	dma_async_tx_callback cb_fn = submit->cb_fn;
-@@ -269,56 +307,74 @@ __2data_recov_n(int disks, size_t bytes, int faila, int failb,
- 	void *scribble = submit->scribble;
- 
- 	p = blocks[disks-2];
-+	p_off = offs[disks-2];
- 	q = blocks[disks-1];
-+	q_off = offs[disks-1];
- 
- 	/* Compute syndrome with zero for the missing data pages
- 	 * Use the dead data pages as temporary storage for
- 	 * delta p and delta q
- 	 */
- 	dp = blocks[faila];
-+	dp_off = offs[faila];
- 	blocks[faila] = NULL;
- 	blocks[disks-2] = dp;
-+	offs[disks-2] = dp_off;
- 	dq = blocks[failb];
-+	dq_off = offs[failb];
- 	blocks[failb] = NULL;
- 	blocks[disks-1] = dq;
-+	offs[disks-1] = dq_off;
- 
- 	init_async_submit(submit, ASYNC_TX_FENCE, tx, NULL, NULL, scribble);
--	tx = async_gen_syndrome(blocks, 0, disks, bytes, submit);
-+	tx = async_gen_syndrome(blocks, offs, disks, bytes, submit);
- 
- 	/* Restore pointer table */
- 	blocks[faila]   = dp;
-+	offs[faila] = dp_off;
- 	blocks[failb]   = dq;
-+	offs[failb] = dq_off;
- 	blocks[disks-2] = p;
-+	offs[disks-2] = p_off;
- 	blocks[disks-1] = q;
-+	offs[disks-1] = q_off;
- 
- 	/* compute P + Pxy */
- 	srcs[0] = dp;
-+	src_offs[0] = dp_off;
- 	srcs[1] = p;
-+	src_offs[1] = p_off;
- 	init_async_submit(submit, ASYNC_TX_FENCE|ASYNC_TX_XOR_DROP_DST, tx,
- 			  NULL, NULL, scribble);
--	tx = async_xor(dp, srcs, 0, 2, bytes, submit);
-+	tx = async_xor_offs(dp, dp_off, srcs, src_offs, 2, bytes, submit);
- 
- 	/* compute Q + Qxy */
- 	srcs[0] = dq;
-+	src_offs[0] = dq_off;
- 	srcs[1] = q;
-+	src_offs[1] = q_off;
- 	init_async_submit(submit, ASYNC_TX_FENCE|ASYNC_TX_XOR_DROP_DST, tx,
- 			  NULL, NULL, scribble);
--	tx = async_xor(dq, srcs, 0, 2, bytes, submit);
-+	tx = async_xor_offs(dq, dq_off, srcs, src_offs, 2, bytes, submit);
- 
- 	/* Dx = A*(P+Pxy) + B*(Q+Qxy) */
- 	srcs[0] = dp;
-+	src_offs[0] = dp_off;
- 	srcs[1] = dq;
-+	src_offs[1] = dq_off;
- 	coef[0] = raid6_gfexi[failb-faila];
- 	coef[1] = raid6_gfinv[raid6_gfexp[faila]^raid6_gfexp[failb]];
- 	init_async_submit(submit, ASYNC_TX_FENCE, tx, NULL, NULL, scribble);
--	tx = async_sum_product(dq, srcs, coef, bytes, submit);
-+	tx = async_sum_product(dq, dq_off, srcs, src_offs, coef, bytes, submit);
- 
- 	/* Dy = P+Pxy+Dx */
- 	srcs[0] = dp;
-+	src_offs[0] = dp_off;
- 	srcs[1] = dq;
-+	src_offs[1] = dq_off;
- 	init_async_submit(submit, flags | ASYNC_TX_XOR_DROP_DST, tx, cb_fn,
- 			  cb_param, scribble);
--	tx = async_xor(dp, srcs, 0, 2, bytes, submit);
-+	tx = async_xor_offs(dp, dp_off, srcs, src_offs, 2, bytes, submit);
- 
- 	return tx;
- }
-@@ -330,11 +386,13 @@ __2data_recov_n(int disks, size_t bytes, int faila, int failb,
-  * @faila: first failed drive index
-  * @failb: second failed drive index
-  * @blocks: array of source pointers where the last two entries are p and q
-+ * @offs: array of offset for pages in blocks
-  * @submit: submission/completion modifiers
-  */
- struct dma_async_tx_descriptor *
- async_raid6_2data_recov(int disks, size_t bytes, int faila, int failb,
--			struct page **blocks, struct async_submit_ctl *submit)
-+			struct page **blocks, unsigned int *offs,
-+			struct async_submit_ctl *submit)
- {
- 	void *scribble = submit->scribble;
- 	int non_zero_srcs, i;
-@@ -358,7 +416,7 @@ async_raid6_2data_recov(int disks, size_t bytes, int faila, int failb,
- 			if (blocks[i] == NULL)
- 				ptrs[i] = (void *) raid6_empty_zero_page;
- 			else
--				ptrs[i] = page_address(blocks[i]);
-+				ptrs[i] = page_address(blocks[i]) + offs[i];
- 
- 		raid6_2data_recov(disks, bytes, faila, failb, ptrs);
- 
-@@ -383,16 +441,19 @@ async_raid6_2data_recov(int disks, size_t bytes, int faila, int failb,
- 		 * explicitly handle the special case of a 4 disk array with
- 		 * both data disks missing.
- 		 */
--		return __2data_recov_4(disks, bytes, faila, failb, blocks, submit);
-+		return __2data_recov_4(disks, bytes, faila, failb,
-+				blocks, offs, submit);
- 	case 3:
- 		/* dma devices do not uniformly understand a single
- 		 * source pq operation (in contrast to the synchronous
- 		 * case), so explicitly handle the special case of a 5 disk
- 		 * array with 2 of 3 data disks missing.
- 		 */
--		return __2data_recov_5(disks, bytes, faila, failb, blocks, submit);
-+		return __2data_recov_5(disks, bytes, faila, failb,
-+				blocks, offs, submit);
- 	default:
--		return __2data_recov_n(disks, bytes, faila, failb, blocks, submit);
-+		return __2data_recov_n(disks, bytes, faila, failb,
-+				blocks, offs, submit);
- 	}
- }
- EXPORT_SYMBOL_GPL(async_raid6_2data_recov);
-@@ -403,14 +464,17 @@ EXPORT_SYMBOL_GPL(async_raid6_2data_recov);
-  * @bytes: block size
-  * @faila: failed drive index
-  * @blocks: array of source pointers where the last two entries are p and q
-+ * @offs: array of offset for pages in blocks
-  * @submit: submission/completion modifiers
-  */
- struct dma_async_tx_descriptor *
- async_raid6_datap_recov(int disks, size_t bytes, int faila,
--			struct page **blocks, struct async_submit_ctl *submit)
-+			struct page **blocks, unsigned int *offs,
-+			struct async_submit_ctl *submit)
- {
- 	struct dma_async_tx_descriptor *tx = NULL;
- 	struct page *p, *q, *dq;
-+	unsigned int p_off, q_off, dq_off;
- 	u8 coef;
- 	enum async_tx_flags flags = submit->flags;
- 	dma_async_tx_callback cb_fn = submit->cb_fn;
-@@ -418,6 +482,7 @@ async_raid6_datap_recov(int disks, size_t bytes, int faila,
- 	void *scribble = submit->scribble;
- 	int good_srcs, good, i;
- 	struct page *srcs[2];
-+	unsigned int src_offs[2];
- 
- 	pr_debug("%s: disks: %d len: %zu\n", __func__, disks, bytes);
- 
-@@ -434,7 +499,7 @@ async_raid6_datap_recov(int disks, size_t bytes, int faila,
- 			if (blocks[i] == NULL)
- 				ptrs[i] = (void*)raid6_empty_zero_page;
- 			else
--				ptrs[i] = page_address(blocks[i]);
-+				ptrs[i] = page_address(blocks[i]) + offs[i];
- 
- 		raid6_datap_recov(disks, bytes, faila, ptrs);
- 
-@@ -458,55 +523,67 @@ async_raid6_datap_recov(int disks, size_t bytes, int faila,
- 	BUG_ON(good_srcs == 0);
- 
- 	p = blocks[disks-2];
-+	p_off = offs[disks-2];
- 	q = blocks[disks-1];
-+	q_off = offs[disks-1];
- 
- 	/* Compute syndrome with zero for the missing data page
- 	 * Use the dead data page as temporary storage for delta q
- 	 */
- 	dq = blocks[faila];
-+	dq_off = offs[faila];
- 	blocks[faila] = NULL;
- 	blocks[disks-1] = dq;
-+	offs[disks-1] = dq_off;
- 
- 	/* in the 4-disk case we only need to perform a single source
- 	 * multiplication with the one good data block.
- 	 */
- 	if (good_srcs == 1) {
- 		struct page *g = blocks[good];
-+		unsigned int g_off = offs[good];
- 
- 		init_async_submit(submit, ASYNC_TX_FENCE, tx, NULL, NULL,
- 				  scribble);
--		tx = async_memcpy(p, g, 0, 0, bytes, submit);
-+		tx = async_memcpy(p, g, p_off, g_off, bytes, submit);
- 
- 		init_async_submit(submit, ASYNC_TX_FENCE, tx, NULL, NULL,
- 				  scribble);
--		tx = async_mult(dq, g, raid6_gfexp[good], bytes, submit);
-+		tx = async_mult(dq, dq_off, g, g_off,
-+				raid6_gfexp[good], bytes, submit);
- 	} else {
- 		init_async_submit(submit, ASYNC_TX_FENCE, tx, NULL, NULL,
- 				  scribble);
--		tx = async_gen_syndrome(blocks, 0, disks, bytes, submit);
-+		tx = async_gen_syndrome(blocks, offs, disks, bytes, submit);
- 	}
- 
- 	/* Restore pointer table */
- 	blocks[faila]   = dq;
-+	offs[faila] = dq_off;
- 	blocks[disks-1] = q;
-+	offs[disks-1] = q_off;
- 
- 	/* calculate g^{-faila} */
- 	coef = raid6_gfinv[raid6_gfexp[faila]];
- 
- 	srcs[0] = dq;
-+	src_offs[0] = dq_off;
- 	srcs[1] = q;
-+	src_offs[1] = q_off;
- 	init_async_submit(submit, ASYNC_TX_FENCE|ASYNC_TX_XOR_DROP_DST, tx,
- 			  NULL, NULL, scribble);
--	tx = async_xor(dq, srcs, 0, 2, bytes, submit);
-+	tx = async_xor_offs(dq, dq_off, srcs, src_offs, 2, bytes, submit);
- 
- 	init_async_submit(submit, ASYNC_TX_FENCE, tx, NULL, NULL, scribble);
--	tx = async_mult(dq, dq, coef, bytes, submit);
-+	tx = async_mult(dq, dq_off, dq, dq_off, coef, bytes, submit);
- 
- 	srcs[0] = p;
-+	src_offs[0] = p_off;
- 	srcs[1] = dq;
-+	src_offs[1] = dq_off;
- 	init_async_submit(submit, flags | ASYNC_TX_XOR_DROP_DST, tx, cb_fn,
- 			  cb_param, scribble);
--	tx = async_xor(p, srcs, 0, 2, bytes, submit);
-+	tx = async_xor_offs(p, p_off, srcs, src_offs, 2, bytes, submit);
- 
- 	return tx;
- }
-diff --git a/crypto/async_tx/raid6test.c b/crypto/async_tx/raid6test.c
-index ef4e6e68f759..66db82e5a3b1 100644
---- a/crypto/async_tx/raid6test.c
-+++ b/crypto/async_tx/raid6test.c
-@@ -101,12 +101,12 @@ static void raid6_dual_recov(int disks, size_t bytes, int faila, int failb,
- 			/* data+P failure. */
- 			init_async_submit(&submit, 0, NULL, NULL, NULL, addr_conv);
- 			tx = async_raid6_datap_recov(disks, bytes,
--					faila, ptrs, &submit);
-+					faila, ptrs, offs, &submit);
- 		} else {
- 			/* data+data failure. */
- 			init_async_submit(&submit, 0, NULL, NULL, NULL, addr_conv);
- 			tx = async_raid6_2data_recov(disks, bytes,
--					faila, failb, ptrs, &submit);
-+					faila, failb, ptrs, offs, &submit);
- 		}
- 	}
- 	init_completion(&cmp);
 diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index c0f9394891fe..8ed4610deeb2 100644
+index 8ed4610deeb2..c038be864257 100644
 --- a/drivers/md/raid5.c
 +++ b/drivers/md/raid5.c
-@@ -1685,13 +1685,13 @@ ops_run_compute6_2(struct stripe_head *sh, struct raid5_percpu *percpu)
- 			return async_raid6_datap_recov(syndrome_disks+2,
- 						RAID5_STRIPE_SIZE(sh->raid_conf),
- 						faila,
--						blocks, &submit);
-+						blocks, offs, &submit);
- 		} else {
- 			/* We're missing D+D. */
- 			return async_raid6_2data_recov(syndrome_disks+2,
- 						RAID5_STRIPE_SIZE(sh->raid_conf),
- 						faila, failb,
--						blocks, &submit);
-+						blocks, offs, &submit);
- 		}
- 	}
+@@ -448,13 +448,74 @@ static struct stripe_head *get_free_stripe(struct r5conf *conf, int hash)
+ 	return sh;
  }
-diff --git a/include/linux/async_tx.h b/include/linux/async_tx.h
-index efc5510f7d11..5cc73d7e5b52 100644
---- a/include/linux/async_tx.h
-+++ b/include/linux/async_tx.h
-@@ -196,11 +196,13 @@ async_syndrome_val(struct page **blocks, unsigned int *offsets, int src_cnt,
  
- struct dma_async_tx_descriptor *
- async_raid6_2data_recov(int src_num, size_t bytes, int faila, int failb,
--			struct page **ptrs, struct async_submit_ctl *submit);
-+			struct page **ptrs, unsigned int *offs,
-+			struct async_submit_ctl *submit);
+-static void shrink_buffers(struct stripe_head *sh)
++#if PAGE_SIZE != DEFAULT_STRIPE_SIZE
++static void free_stripe_pages(struct stripe_head *sh)
++{
++	int i;
++	struct page *p;
++
++	/* Have not allocate page pool */
++	if (!sh->pages)
++		return;
++
++	for (i = 0; i < sh->nr_pages; i++) {
++		p = sh->pages[i];
++		if (p)
++			put_page(p);
++		sh->pages[i] = NULL;
++	}
++}
++
++static int alloc_stripe_pages(struct stripe_head *sh, gfp_t gfp)
+ {
++	int i;
+ 	struct page *p;
++
++	for (i = 0; i < sh->nr_pages; i++) {
++		/* The page have allocated. */
++		if (sh->pages[i])
++			continue;
++
++		p = alloc_page(gfp);
++		if (!p) {
++			free_stripe_pages(sh);
++			return -ENOMEM;
++		}
++		sh->pages[i] = p;
++	}
++	return 0;
++}
++
++static int
++init_stripe_shared_pages(struct stripe_head *sh, struct r5conf *conf, int disks)
++{
++	int nr_pages, cnt;
++
++	if (sh->pages)
++		return 0;
++
++	/* Each of the sh->dev[i] need one conf->stripe_size */
++	cnt = PAGE_SIZE / conf->stripe_size;
++	nr_pages = (disks + cnt - 1) / cnt;
++
++	sh->pages = kcalloc(nr_pages, sizeof(struct page *), GFP_KERNEL);
++	if (!sh->pages)
++		return -ENOMEM;
++	sh->nr_pages = nr_pages;
++	sh->stripes_per_page = cnt;
++	return 0;
++}
++#endif
++
++static void shrink_buffers(struct stripe_head *sh)
++{
+ 	int i;
+ 	int num = sh->raid_conf->pool_size;
  
- struct dma_async_tx_descriptor *
- async_raid6_datap_recov(int src_num, size_t bytes, int faila,
--			struct page **ptrs, struct async_submit_ctl *submit);
-+			struct page **ptrs, unsigned int *offs,
-+			struct async_submit_ctl *submit);
++#if PAGE_SIZE == DEFAULT_STRIPE_SIZE
+ 	for (i = 0; i < num ; i++) {
++		struct page *p;
++
+ 		WARN_ON(sh->dev[i].page != sh->dev[i].orig_page);
+ 		p = sh->dev[i].page;
+ 		if (!p)
+@@ -462,6 +523,11 @@ static void shrink_buffers(struct stripe_head *sh)
+ 		sh->dev[i].page = NULL;
+ 		put_page(p);
+ 	}
++#else
++	for (i = 0; i < num; i++)
++		sh->dev[i].page = NULL;
++	free_stripe_pages(sh); /* Free pages */
++#endif
+ }
  
- void async_tx_quiesce(struct dma_async_tx_descriptor **tx);
- #endif /* _ASYNC_TX_H_ */
+ static int grow_buffers(struct stripe_head *sh, gfp_t gfp)
+@@ -469,6 +535,7 @@ static int grow_buffers(struct stripe_head *sh, gfp_t gfp)
+ 	int i;
+ 	int num = sh->raid_conf->pool_size;
+ 
++#if PAGE_SIZE == DEFAULT_STRIPE_SIZE
+ 	for (i = 0; i < num; i++) {
+ 		struct page *page;
+ 
+@@ -479,7 +546,16 @@ static int grow_buffers(struct stripe_head *sh, gfp_t gfp)
+ 		sh->dev[i].orig_page = page;
+ 		sh->dev[i].offset = 0;
+ 	}
++#else
++	if (alloc_stripe_pages(sh, gfp))
++		return -ENOMEM;
+ 
++	for (i = 0; i < num; i++) {
++		sh->dev[i].page = raid5_get_dev_page(sh, i);
++		sh->dev[i].orig_page = sh->dev[i].page;
++		sh->dev[i].offset = raid5_get_page_offset(sh, i);
++	}
++#endif
+ 	return 0;
+ }
+ 
+@@ -2205,6 +2281,9 @@ static void raid_run_ops(struct stripe_head *sh, unsigned long ops_request)
+ 
+ static void free_stripe(struct kmem_cache *sc, struct stripe_head *sh)
+ {
++#if PAGE_SIZE != DEFAULT_STRIPE_SIZE
++	kfree(sh->pages);
++#endif
+ 	if (sh->ppl_page)
+ 		__free_page(sh->ppl_page);
+ 	kmem_cache_free(sc, sh);
+@@ -2238,9 +2317,15 @@ static struct stripe_head *alloc_stripe(struct kmem_cache *sc, gfp_t gfp,
+ 			sh->ppl_page = alloc_page(gfp);
+ 			if (!sh->ppl_page) {
+ 				free_stripe(sc, sh);
+-				sh = NULL;
++				return NULL;
+ 			}
+ 		}
++#if PAGE_SIZE != DEFAULT_STRIPE_SIZE
++		if (init_stripe_shared_pages(sh, conf, disks)) {
++			free_stripe(sc, sh);
++			return NULL;
++		}
++#endif
+ 	}
+ 	return sh;
+ }
+diff --git a/drivers/md/raid5.h b/drivers/md/raid5.h
+index 6afdd3a78580..5c05acf20e1f 100644
+--- a/drivers/md/raid5.h
++++ b/drivers/md/raid5.h
+@@ -195,6 +195,7 @@ enum reconstruct_states {
+ 	reconstruct_state_result,
+ };
+ 
++#define DEFAULT_STRIPE_SIZE	4096
+ struct stripe_head {
+ 	struct hlist_node	hash;
+ 	struct list_head	lru;	      /* inactive_list or handle_list */
+@@ -246,6 +247,13 @@ struct stripe_head {
+ 		int 		     target, target2;
+ 		enum sum_check_flags zero_sum_result;
+ 	} ops;
++
++#if PAGE_SIZE != DEFAULT_STRIPE_SIZE
++	/* These pages will be used by bios in dev[i] */
++	struct page	**pages;
++	int	nr_pages;	/* page array size */
++	int	stripes_per_page;
++#endif
+ 	struct r5dev {
+ 		/* rreq and rvec are used for the replacement device when
+ 		 * writing data to both devices.
+@@ -473,7 +481,6 @@ struct disk_info {
+  */
+ 
+ #define NR_STRIPES		256
+-#define DEFAULT_STRIPE_SIZE	4096
+ 
+ #if PAGE_SIZE == DEFAULT_STRIPE_SIZE
+ #define STRIPE_SIZE		PAGE_SIZE
+@@ -772,6 +779,25 @@ static inline int algorithm_is_DDF(int layout)
+ 	return layout >= 8 && layout <= 10;
+ }
+ 
++#if PAGE_SIZE != DEFAULT_STRIPE_SIZE
++/*
++ * Return offset of the corresponding page for r5dev.
++ */
++static inline int raid5_get_page_offset(struct stripe_head *sh, int disk_idx)
++{
++	return (disk_idx % sh->stripes_per_page) * RAID5_STRIPE_SIZE(sh->raid_conf);
++}
++
++/*
++ * Return corresponding page address for r5dev.
++ */
++static inline struct page *
++raid5_get_dev_page(struct stripe_head *sh, int disk_idx)
++{
++	return sh->pages[disk_idx / sh->stripes_per_page];
++}
++#endif
++
+ extern void md_raid5_kick_device(struct r5conf *conf);
+ extern int raid5_set_cache_size(struct mddev *mddev, int size);
+ extern sector_t raid5_compute_blocknr(struct stripe_head *sh, int i, int previous);
 -- 
 2.25.4
 
