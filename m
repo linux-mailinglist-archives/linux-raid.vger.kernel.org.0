@@ -2,90 +2,152 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DFC624BE56
-	for <lists+linux-raid@lfdr.de>; Thu, 20 Aug 2020 15:25:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9424524BEEE
+	for <lists+linux-raid@lfdr.de>; Thu, 20 Aug 2020 15:36:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730804AbgHTNXa (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 20 Aug 2020 09:23:30 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10234 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728335AbgHTNVw (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 20 Aug 2020 09:21:52 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 733FA9DAAE9D016A39A6;
-        Thu, 20 Aug 2020 21:21:51 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Thu, 20 Aug 2020
- 21:21:45 +0800
-From:   Yufen Yu <yuyufen@huawei.com>
-To:     <song@kernel.org>
-CC:     <linux-raid@vger.kernel.org>, <houtao1@huawei.com>
-Subject: [PATCH v2 10/10] md/raid5: reallocate page array after setting new stripe_size
-Date:   Thu, 20 Aug 2020 09:22:14 -0400
-Message-ID: <20200820132214.3749139-11-yuyufen@huawei.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200820132214.3749139-1-yuyufen@huawei.com>
-References: <20200820132214.3749139-1-yuyufen@huawei.com>
+        id S1728394AbgHTNgT (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 20 Aug 2020 09:36:19 -0400
+Received: from mga17.intel.com ([192.55.52.151]:10581 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728846AbgHTNgQ (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 20 Aug 2020 09:36:16 -0400
+IronPort-SDR: mwQMJT/0nkD/B4zxmK3dY/R9ivoqEf6VawNqt007p1j8C7eiMqbnXITnlvJEphiFU30hr8vJU3
+ RAqwZ1N5enkQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="135360451"
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="135360451"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 06:36:16 -0700
+IronPort-SDR: 7/y3hlgAMFKtbKk0iGcMaIxpQWC/MN3qjaO4DDkGsGSPWqoeehDRZyYfnWKEsmDHZTwgtKJLZz
+ PnnXoXe8T7zQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="337305535"
+Received: from lkp-server01.sh.intel.com (HELO 91ed66e1ca04) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 20 Aug 2020 06:36:14 -0700
+Received: from kbuild by 91ed66e1ca04 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k8kjl-00006G-Tn; Thu, 20 Aug 2020 13:36:13 +0000
+Date:   Thu, 20 Aug 2020 21:35:46 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Song Liu <song@kernel.org>
+Cc:     linux-raid@vger.kernel.org
+Subject: [song-md:md-next] BUILD SUCCESS
+ 19948a006a1629739376166df423e69c506da02f
+Message-ID: <5f3e7c32.iKxGW6nWwIaE2X/X%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.101.6]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-When try to resize stripe_size, we also need to free old
-shared page array and allocate new.
+tree/branch: git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git  md-next
+branch HEAD: 19948a006a1629739376166df423e69c506da02f  md: only calculate blocksize once and use i_blocksize()
 
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+elapsed time: 722m
+
+configs tested: 90
+configs skipped: 1
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+powerpc                     powernv_defconfig
+arm                          pcm027_defconfig
+arm                        mvebu_v7_defconfig
+arm                          pxa168_defconfig
+powerpc                     skiroot_defconfig
+arm                       omap2plus_defconfig
+powerpc                 mpc8272_ads_defconfig
+parisc                              defconfig
+m68k                        mvme16x_defconfig
+sh                        apsh4ad0a_defconfig
+m68k                             allyesconfig
+arm                         vf610m4_defconfig
+arm                           h5000_defconfig
+mips                        nlm_xlp_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+i386                 randconfig-a005-20200818
+i386                 randconfig-a002-20200818
+i386                 randconfig-a001-20200818
+i386                 randconfig-a006-20200818
+i386                 randconfig-a003-20200818
+i386                 randconfig-a004-20200818
+i386                 randconfig-a005-20200819
+i386                 randconfig-a002-20200819
+i386                 randconfig-a001-20200819
+i386                 randconfig-a006-20200819
+i386                 randconfig-a003-20200819
+i386                 randconfig-a004-20200819
+i386                 randconfig-a002-20200820
+i386                 randconfig-a004-20200820
+i386                 randconfig-a005-20200820
+i386                 randconfig-a003-20200820
+i386                 randconfig-a006-20200820
+i386                 randconfig-a001-20200820
+x86_64               randconfig-a013-20200818
+x86_64               randconfig-a016-20200818
+x86_64               randconfig-a012-20200818
+x86_64               randconfig-a011-20200818
+x86_64               randconfig-a014-20200818
+x86_64               randconfig-a015-20200818
+i386                 randconfig-a016-20200818
+i386                 randconfig-a011-20200818
+i386                 randconfig-a015-20200818
+i386                 randconfig-a013-20200818
+i386                 randconfig-a012-20200818
+i386                 randconfig-a014-20200818
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
 ---
- drivers/md/raid5.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index c52c414ca954..c31a72225def 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -6682,6 +6682,7 @@ raid5_store_stripe_size(struct mddev  *mddev, const char *page, size_t len)
- 	struct r5conf *conf;
- 	unsigned long new;
- 	int err;
-+	int size;
- 
- 	if (len >= PAGE_SIZE)
- 		return -EINVAL;
-@@ -6714,10 +6715,29 @@ raid5_store_stripe_size(struct mddev  *mddev, const char *page, size_t len)
- 	pr_debug("md/raid: change stripe_size from %lu to %lu\n",
- 			conf->stripe_size, new);
- 
-+	if (mddev->sync_thread ||
-+		test_bit(MD_RECOVERY_RUNNING, &mddev->recovery) ||
-+		mddev->reshape_position != MaxSector ||
-+		mddev->sysfs_active) {
-+		err = -EBUSY;
-+		goto out_unlock;
-+	}
-+
- 	mddev_suspend(mddev);
-+	mutex_lock(&conf->cache_size_mutex);
-+	size = conf->max_nr_stripes;
-+
-+	shrink_stripes(conf);
-+
- 	conf->stripe_size = new;
- 	conf->stripe_shift = ilog2(new) - 9;
- 	conf->stripe_sectors = new >> 9;
-+	if (grow_stripes(conf, size)) {
-+		pr_warn("md/raid:%s: couldn't allocate buffers\n",
-+				mdname(mddev));
-+		err = -ENOMEM;
-+	}
-+	mutex_unlock(&conf->cache_size_mutex);
- 	mddev_resume(mddev);
- 
- out_unlock:
--- 
-2.25.4
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
