@@ -2,17 +2,17 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A75724BE44
-	for <lists+linux-raid@lfdr.de>; Thu, 20 Aug 2020 15:24:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DFC624BE56
+	for <lists+linux-raid@lfdr.de>; Thu, 20 Aug 2020 15:25:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728489AbgHTNW6 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 20 Aug 2020 09:22:58 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10235 "EHLO huawei.com"
+        id S1730804AbgHTNXa (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 20 Aug 2020 09:23:30 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10234 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728350AbgHTNVy (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 20 Aug 2020 09:21:54 -0400
+        id S1728335AbgHTNVw (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 20 Aug 2020 09:21:52 -0400
 Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 76E594B8D402E77A5A70;
+        by Forcepoint Email with ESMTP id 733FA9DAAE9D016A39A6;
         Thu, 20 Aug 2020 21:21:51 +0800 (CST)
 Received: from huawei.com (10.175.101.6) by DGGEMS406-HUB.china.huawei.com
  (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Thu, 20 Aug 2020
@@ -20,9 +20,9 @@ Received: from huawei.com (10.175.101.6) by DGGEMS406-HUB.china.huawei.com
 From:   Yufen Yu <yuyufen@huawei.com>
 To:     <song@kernel.org>
 CC:     <linux-raid@vger.kernel.org>, <houtao1@huawei.com>
-Subject: [PATCH v2 09/10] md/raid5: resize stripe_head when reshape array
-Date:   Thu, 20 Aug 2020 09:22:13 -0400
-Message-ID: <20200820132214.3749139-10-yuyufen@huawei.com>
+Subject: [PATCH v2 10/10] md/raid5: reallocate page array after setting new stripe_size
+Date:   Thu, 20 Aug 2020 09:22:14 -0400
+Message-ID: <20200820132214.3749139-11-yuyufen@huawei.com>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200820132214.3749139-1-yuyufen@huawei.com>
 References: <20200820132214.3749139-1-yuyufen@huawei.com>
@@ -36,63 +36,56 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-When reshape array, we try to reuse shared pages of old stripe_head,
-and allocate more for the new one if needed.
+When try to resize stripe_size, we also need to free old
+shared page array and allocate new.
 
 Signed-off-by: Yufen Yu <yuyufen@huawei.com>
 ---
- drivers/md/raid5.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/md/raid5.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
 diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index c038be864257..c52c414ca954 100644
+index c52c414ca954..c31a72225def 100644
 --- a/drivers/md/raid5.c
 +++ b/drivers/md/raid5.c
-@@ -2535,6 +2535,12 @@ static int resize_stripes(struct r5conf *conf, int newsize)
- 		osh = get_free_stripe(conf, hash);
- 		unlock_device_hash_lock(conf, hash);
+@@ -6682,6 +6682,7 @@ raid5_store_stripe_size(struct mddev  *mddev, const char *page, size_t len)
+ 	struct r5conf *conf;
+ 	unsigned long new;
+ 	int err;
++	int size;
  
-+#if PAGE_SIZE != DEFAULT_STRIPE_SIZE
-+	for (i = 0; i < osh->nr_pages; i++) {
-+		nsh->pages[i] = osh->pages[i];
-+		osh->pages[i] = NULL;
+ 	if (len >= PAGE_SIZE)
+ 		return -EINVAL;
+@@ -6714,10 +6715,29 @@ raid5_store_stripe_size(struct mddev  *mddev, const char *page, size_t len)
+ 	pr_debug("md/raid: change stripe_size from %lu to %lu\n",
+ 			conf->stripe_size, new);
+ 
++	if (mddev->sync_thread ||
++		test_bit(MD_RECOVERY_RUNNING, &mddev->recovery) ||
++		mddev->reshape_position != MaxSector ||
++		mddev->sysfs_active) {
++		err = -EBUSY;
++		goto out_unlock;
 +	}
-+#endif
- 		for(i=0; i<conf->pool_size; i++) {
- 			nsh->dev[i].page = osh->dev[i].page;
- 			nsh->dev[i].orig_page = osh->dev[i].page;
-@@ -2589,6 +2595,23 @@ static int resize_stripes(struct r5conf *conf, int newsize)
- 		nsh = list_entry(newstripes.next, struct stripe_head, lru);
- 		list_del_init(&nsh->lru);
- 
-+#if PAGE_SIZE != DEFAULT_STRIPE_SIZE
-+		for (i = 0; i < nsh->nr_pages; i++) {
-+			if (nsh->pages[i])
-+				continue;
-+			nsh->pages[i] = alloc_page(GFP_NOIO);
-+			if (!nsh->pages[i])
-+				err = -ENOMEM;
-+		}
 +
-+		for (i = conf->raid_disks; i < newsize; i++) {
-+			if (nsh->dev[i].page)
-+				continue;
-+			nsh->dev[i].page = raid5_get_dev_page(nsh, i);
-+			nsh->dev[i].orig_page = nsh->dev[i].page;
-+			nsh->dev[i].offset = raid5_get_page_offset(nsh, i);
-+		}
-+#else
- 		for (i=conf->raid_disks; i < newsize; i++)
- 			if (nsh->dev[i].page == NULL) {
- 				struct page *p = alloc_page(GFP_NOIO);
-@@ -2598,6 +2621,7 @@ static int resize_stripes(struct r5conf *conf, int newsize)
- 				if (!p)
- 					err = -ENOMEM;
- 			}
-+#endif
- 		raid5_release_stripe(nsh);
- 	}
- 	/* critical section pass, GFP_NOIO no longer needed */
+ 	mddev_suspend(mddev);
++	mutex_lock(&conf->cache_size_mutex);
++	size = conf->max_nr_stripes;
++
++	shrink_stripes(conf);
++
+ 	conf->stripe_size = new;
+ 	conf->stripe_shift = ilog2(new) - 9;
+ 	conf->stripe_sectors = new >> 9;
++	if (grow_stripes(conf, size)) {
++		pr_warn("md/raid:%s: couldn't allocate buffers\n",
++				mdname(mddev));
++		err = -ENOMEM;
++	}
++	mutex_unlock(&conf->cache_size_mutex);
+ 	mddev_resume(mddev);
+ 
+ out_unlock:
 -- 
 2.25.4
 
