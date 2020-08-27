@@ -2,21 +2,24 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A674425429C
-	for <lists+linux-raid@lfdr.de>; Thu, 27 Aug 2020 11:39:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DFA5255189
+	for <lists+linux-raid@lfdr.de>; Fri, 28 Aug 2020 01:21:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbgH0Jjx (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 27 Aug 2020 05:39:53 -0400
-Received: from verein.lst.de ([213.95.11.211]:37505 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbgH0Jjw (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:39:52 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 386C568B02; Thu, 27 Aug 2020 11:39:48 +0200 (CEST)
-Date:   Thu, 27 Aug 2020 11:39:48 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        id S1727944AbgH0XVO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 27 Aug 2020 19:21:14 -0400
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:52844 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727909AbgH0XVO (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 27 Aug 2020 19:21:14 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 18C9129D96;
+        Thu, 27 Aug 2020 19:21:10 -0400 (EDT)
+Date:   Fri, 28 Aug 2020 09:21:22 +1000 (AEST)
+From:   Finn Thain <fthain@telegraphics.com.au>
+To:     Joe Perches <joe@perches.com>
+cc:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Denis Efremov <efremov@linux.com>,
         "David S. Miller" <davem@davemloft.net>,
@@ -24,34 +27,40 @@ Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
         linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
-Subject: Re: [PATCH 01/19] char_dev: replace cdev_map with an xarray
-Message-ID: <20200827093947.GA15976@lst.de>
-References: <20200826062446.31860-1-hch@lst.de> <20200826062446.31860-2-hch@lst.de> <20200826081905.GB1796103@kroah.com> <20200827085353.GA12111@lst.de> <20200827091859.GA393660@kroah.com>
+Subject: Re: [PATCH 17/19] z2ram: reindent
+In-Reply-To: <b88538f92386f41b938c502ae2daec5800a85dcf.camel@perches.com>
+Message-ID: <alpine.LNX.2.23.453.2008280859300.10@nippy.intranet>
+References: <8570915f668159f93ba2eb845a3bbc05f8ee3a99.camel@perches.com>         <EF673A30-F88D-4E4E-8A2B-E942153830AC@physik.fu-berlin.de> <b88538f92386f41b938c502ae2daec5800a85dcf.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827091859.GA393660@kroah.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 11:18:59AM +0200, Greg Kroah-Hartman wrote:
-> > I looked at it, but it does get registered and shows up in sysfs.
-> 
-> It does?  Where does that happen?  I see a bunch of kobject_init()
-> calls, but nothing that registers it in sysfs that I can see.
 
-Hmm, true.
+> @@ -109,34 +111,28 @@ static void get_z2ram(void)
+...
+>  	}
+> -
+> -	return;
+>  }
+>  
 
-> 
-> Note, this is not the kobject that shows up in /sys/dev/char/ as a
-> symlink, that comes from the driver core logic and is independent of the
-> cdev code.
-> 
-> The kobject does handle the structure lifetime rules, but that should be
-> able to be replaced with a simple kref instead.
+It would be good to have a semantic patch for that change.
 
-Yeah.  I'll let you handle this stuff, as you obviously know the area
-better than I do.
+>  
+> -		if (z2ram_map[z2ram_size] == 0) {
+> +		if (z2ram_map[z2ram_size] == 0)
+>  			break;
+> -		}
+>  
+
+And that one.
+
+Reason being, a semantic patch only has to be debugged once, whereas 
+manual churn has to be done correctly over and over again.
+
+TBH, this kind of transformation can happen when code is displayed.
+It doesn't have to involve git at all. Otherwise, why have 5 billion 
+transistors? You'd be better off with an Amiga.
