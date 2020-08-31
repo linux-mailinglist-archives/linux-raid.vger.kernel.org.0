@@ -2,110 +2,61 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 53FB8257B5D
-	for <lists+linux-raid@lfdr.de>; Mon, 31 Aug 2020 16:36:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AABF3258179
+	for <lists+linux-raid@lfdr.de>; Mon, 31 Aug 2020 21:00:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgHaOgZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 31 Aug 2020 10:36:25 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:24818 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726292AbgHaOgV (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 31 Aug 2020 10:36:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598884580;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Rwd1pOiF6xwFRw0Sf/A8DlUJEcwsmCUmoBISYkRhmho=;
-        b=DuMa16526Y5ZaoFlwtP2G9wZ8VAjq21c9/K1sEoXGBxX09UYsYHp9UEMhIvxW8W7jK4iIY
-        aP7hjBZCLl/2OYrZxiLX+sDxqUZfs3C9W1Tz6Yw/bD04Nwt1W9Y7pp5CifrjQpYTBYYhV8
-        4P0QsgQeUvhRzu3wSk8kLkliScDuobc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-455-7rqSI46YP6STnEJNWAua4w-1; Mon, 31 Aug 2020 10:36:16 -0400
-X-MC-Unique: 7rqSI46YP6STnEJNWAua4w-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 75617195D560;
-        Mon, 31 Aug 2020 14:36:15 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-8-21.pek2.redhat.com [10.72.8.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7D53B78B2A;
-        Mon, 31 Aug 2020 14:36:12 +0000 (UTC)
-Subject: Re: [PATCH V5 4/5] md/raid10: improve raid10 discard request
-From:   Xiao Ni <xni@redhat.com>
-To:     Song Liu <song@kernel.org>
-Cc:     linux-raid <linux-raid@vger.kernel.org>,
-        Heinz Mauelshagen <heinzm@redhat.com>,
-        Nigel Croxon <ncroxon@redhat.com>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Coly Li <colyli@suse.de>
-References: <1598334183-25301-1-git-send-email-xni@redhat.com>
- <1598334183-25301-5-git-send-email-xni@redhat.com>
- <CAPhsuW55WD0iNSEtu9xwV4zEDWxAu_ycMM6ecpoz_DXcooeMLw@mail.gmail.com>
- <4ae2de9d-86ad-cb41-243f-bc9859e0165f@redhat.com>
-Message-ID: <7a352087-c84b-b263-5138-32ce50ecb0ac@redhat.com>
-Date:   Mon, 31 Aug 2020 22:36:10 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        id S1728117AbgHaTAk (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 31 Aug 2020 15:00:40 -0400
+Received: from icebox.esperi.org.uk ([81.187.191.129]:52144 "EHLO
+        mail.esperi.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727993AbgHaTAk (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 31 Aug 2020 15:00:40 -0400
+Received: from loom (nix@sidle.srvr.nix [192.168.14.8])
+        by mail.esperi.org.uk (8.15.2/8.15.2) with ESMTP id 07VJ0ZS3006896;
+        Mon, 31 Aug 2020 20:00:35 +0100
+From:   Nix <nix@esperi.org.uk>
+To:     Zhong Lidong <lidong.zhong@suse.com>
+Cc:     Ian Pilcher <arequipeno@gmail.com>, linux-raid@vger.kernel.org
+Subject: Re: [RFC PATCH] Detail: don't display the raid level when it's inactive
+References: <20200826151658.3493-1-lidong.zhong@suse.com>
+        <ribbtt$t51$1@ciao.gmane.io>
+        <0468dc70-7309-44b1-f094-67b617bf4c98@suse.com>
+Emacs:  well, why *shouldn't* you pay property taxes on your editor?
+Date:   Mon, 31 Aug 2020 20:00:35 +0100
+In-Reply-To: <0468dc70-7309-44b1-f094-67b617bf4c98@suse.com> (Zhong Lidong's
+        message of "Mon, 31 Aug 2020 09:28:09 +0800")
+Message-ID: <87wo1emyi4.fsf@esperi.org.uk>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3.50 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <4ae2de9d-86ad-cb41-243f-bc9859e0165f@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain
+X-DCC--Metrics: loom 1481; Body=3 Fuz1=3 Fuz2=3
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+On 31 Aug 2020, Zhong Lidong told this:
 
+> On 8/29/20 12:38 AM, Ian Pilcher wrote:
+>> On 8/26/20 10:16 AM, Lidong Zhong wrote:
+>>> ...
+>>> So the misleading "raid0" is shown in this testcase. I think maybe
+>>> the "Raid Level" item shouldn't be displayed any more for the inactive
+>>> array.
+>> 
+>> As a system administrator, I'd much rather see "unknown" (or something
+>> similar), rather than simply omitting the information.
+>> 
+> Thanks for the suggestion.
+> Yeah, just removing the Raid Level info is not the best option. I also
+> considered to show it as "inactive Raid1" in such case.
 
-On 08/31/2020 04:37 PM, Xiao Ni wrote:
->
->
-> On 08/29/2020 06:16 AM, Song Liu wrote:
->> On Mon, Aug 24, 2020 at 10:43 PM Xiao Ni <xni@redhat.com> wrote:
->> [...]
->>> ---
->>>   drivers/md/raid10.c | 254 
->>> +++++++++++++++++++++++++++++++++++++++++++++++++++-
->>>   1 file changed, 253 insertions(+), 1 deletion(-)
->>>
->> [...]
->>> +
->>> +static void raid10_end_discard_request(struct bio *bio)
->>> +{
->>> +       struct r10bio *r10_bio = bio->bi_private;
->>> +       struct r10conf *conf = r10_bio->mddev->private;
->>> +       struct md_rdev *rdev = NULL;
->>> +       int dev;
->>> +       int slot, repl;
->>> +
->>> +       /*
->>> +        * We don't care the return value of discard bio
->>> +        */
->>> +       if (!test_bit(R10BIO_Uptodate, &r10_bio->state))
->>> +               set_bit(R10BIO_Uptodate, &r10_bio->state);
->> We don't need the test_bit(), just do set_bit().
-> Coly suggested to do test_bit first to avoid write memory. If there 
-> are so many requests and the
-> requests fail, this way can improve performance very much.
->
-> But it doesn't care the return value of discard bio. So it should be 
-> ok that doesn't set R10BIO_Uptodate here.
-> I'll remove these codes. What do you think?
+If it would be a raid1 when activated, it is still a raid1 when
+inactive: the data on disk doesn't suddenly become not a raid array
+simply because the kernel isn't able to access it right now. This is
+valuable information to expose to the sysadmin and should not be
+concealed (and *certainly* not described as a raid level it actually
+isn't).
 
-Hi Song
-
-Sorry, for this problem, it still needs to set R10BIO_Uptodate. Because 
-in function raid_end_bio_io it needs to use this
-flag to justify whether set BLK_STS_IOERR or not. So is it ok to test 
-this bit first before setting this bit here?
-
-Regards
-Xiao
-
-
+I think it should say as much (if the system knows at this stage, which
+if there is a device node, it presumably does).
