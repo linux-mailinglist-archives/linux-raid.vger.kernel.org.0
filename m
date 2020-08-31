@@ -2,94 +2,76 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F851257A7A
-	for <lists+linux-raid@lfdr.de>; Mon, 31 Aug 2020 15:33:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AF40257A97
+	for <lists+linux-raid@lfdr.de>; Mon, 31 Aug 2020 15:38:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgHaNdL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 31 Aug 2020 09:33:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727937AbgHaN3b (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 31 Aug 2020 09:29:31 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 571F2C06123D
-        for <linux-raid@vger.kernel.org>; Mon, 31 Aug 2020 06:28:54 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id 60so4638811qtc.9
-        for <linux-raid@vger.kernel.org>; Mon, 31 Aug 2020 06:28:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=o69Nac3LLMj5CDhyPqLcnP7WGq46U4gQb9HzFdG/MvE=;
-        b=dGZjKog7uhJ10Hx92Szn03pULWVYkpf7Z+o3dPcWDqibEAAbm/EhMhGGBk+DTtloAO
-         GGrHZL9faVzFqSj/O+hw/8kkHffHNQsUWoUQHOtVKlmc0Ni8Y2AsCpVccCg+McWXvrPy
-         ZKphzuz9Qpq2A3E9dFBzCdM3pFV5joTtnx7+WXKEBEe17vqVfaKaGALuXZSOqW2yxlYS
-         lxs8LWvsFh2bQj4cBokKU9vDcnI7yyjU+nj6hNBObgdebgq0AYqvih29CAa8V7jOUo5l
-         2inIqNimMTNQHPZc8e0v2Wtb6MtTPSUWoEvWwQs/1+/hdUntFIZCt0zvq606Ekk0+xf+
-         twCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=o69Nac3LLMj5CDhyPqLcnP7WGq46U4gQb9HzFdG/MvE=;
-        b=j9gpCef/1dckaIwc61TrM3omV3P+XoEqo+sO20RPIXUkMPyOmrkeSJxPQwSoPwDaps
-         RazX6YJEOSG7gDSDEYAz1nWtLm8s0pNGL6DP88ZY06FinDIDl1nECVIPRK4BJM/PbzwA
-         u/6bXX0XY0zwXM2e2hMQ2vr8BT2em+PMW693TRI4/4HZvJC5veGW0RMuJyCyA5EsXW2y
-         XVQy8y8XHuD1ziIdHfL/uC3SOqA7T/gALDCixhEB7c37EPRxSdhHotANFvMYTwtNwJ15
-         ZiOqqzYM9DKhvAX0H4L4X43anIzS/ZFvEPJgZ6sKeSUfV5Yr90Vq7w7xPt4qC5YQf4Wg
-         pE/g==
-X-Gm-Message-State: AOAM530wW9zOyv2Ys4bi+SqeH7kODCznQkbz7fPzIVBPlrMR+80yQNTA
-        4cGgB4QBH5Gm5V/qymzAHK33iX/9fbhMzmgHt2M=
-X-Google-Smtp-Source: ABdhPJwTFSiHahm3o5ErCNVDLMAHAbqY/gcm/j2QvEhnXbOIzGlMlfhm7c3nSP/0THni2bBQrZlMWoVhtj11v7fjHYw=
-X-Received: by 2002:aed:2be2:: with SMTP id e89mr1267817qtd.298.1598880533509;
- Mon, 31 Aug 2020 06:28:53 -0700 (PDT)
+        id S1726326AbgHaNiC (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 31 Aug 2020 09:38:02 -0400
+Received: from sonic302-36.consmr.mail.bf2.yahoo.com ([74.6.135.235]:36451
+        "EHLO sonic302-36.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726359AbgHaNh7 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 31 Aug 2020 09:37:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1598881078; bh=rEaUwHKYndtlTGQd1sVG1k+Ery/k+jQaHg2LkuM/QbA=; h=Date:From:Reply-To:Subject:References:From:Subject; b=uFX3A+WoaHWSZAVySYRqcxiLYK0O3UeemkTwhQQcVUTdLMpZzexFPBkPJRaR1o8VONnjL3s+51LOIQvWVpgB/Xzt788HUEbskvDXr3ekF8xOlw4t897V6b9MfiE2CA+hwhyKKGrgPh8hviImulEottWNUzmDcf64kEeE9UrBpGuS6y2mCD19jU5G0v8bmWcm1iIOlSOBcmUOjZvloXH83Av88I/Uv6UlnaBIr6r9jLvEUTTtLCXNYnHW0f/GME8SbgQglwk5RKsudtNoYHeGLLVks18I3eMUmHTH/CSOP7Kf9sDR7NwNNn7dEqNphRG/mythjCrk1P8x/1/vPKvtAA==
+X-YMail-OSG: FBT9heUVM1m64Uq_LnJFUoRiuEzhy9A.mvS_jXRlLHUHWb9d8ZC62eofuNcFSue
+ 1LfUkgI63XnGVipkFRiEuR_sa96i2rSBxcETOzUitGdl4n4SKnAzwKoatqauprnAz0C6wjpENvl1
+ Dh_5gQ21cRgV.c8txbKrpNlws6Mz58VE7n5oykTRLWri2cJeKMUfjxg_f0TzkeC05ZiAUZ7hotYP
+ RbSLXOAcVCDAeSP.awpvyBDw4mgkF9fuaOu4Zsdatiy5HsrJ.7SAGi3QMOkK5r._UXIM_Sjz6rF0
+ HbKY1cUpjOA_blzc7_PVkMkHeCb9IkKu4N3fhmWp1nTAJQyHVc0ZYLlbVx.a7zOA82yheolKpqRr
+ Wp8dqZv2SP9YgMLMOZSKn5jsxO7W6rNLleLbwVRhpm4PyMSs3hFdt7ldXQ3gc3wCAzE9JqJ.5q2h
+ XXcq8orKjikhd9sRe7O3oV67EzcFiMv9eV48jtm_PEwoQNifJbenufd.9YF1y_ziFRnNmwPMW8.e
+ T9GPtellBrl53VNbniCo9IR7IHLI4QbnvskekwqtroKZkHDEHmsH9VSOlp0KwI_HOJxavG3Yb8ia
+ PUa0drb9xBFG23KqD.L0oDGZvJ3zBquDtIwsFY0cK9S8GQ_Z1JVFYa0Qun7OhbcXf4XhO_NeGhTg
+ p5rVASdF8MGYKbi5COoaJnMHNUMm.8TGXv8pARmJNAEAbRfuDkC77bheRlmNK8OCizKDfKYLeUFO
+ WwDs8Fs9YiiMF53ac7kddkZbPc9I3QpWG.DvbYPEZzPi5BxXoZz.01VvPFH8WDei2Ymn5YGsVI1Y
+ gf6cPS6Ctv00Elvq_dbHnGXQZoBWWOeL0yXclkHjX7VFhmdsiROw_dhkrlKnJ35.t2OXPGLshgou
+ TRttEPLar8pCsH.jp4ySZK9PlJJoZwfifTXWcla2WzjCwi7BXRFZ0NQcD7av4JrGt9ezq19co2_T
+ K.wcCBV3HFwVRzZUG8D8jCMpxohRt.V_8ggYDQYWjU6v.XWL65yo.KJ0RS9COGDbtnpGJgxnCrcj
+ meTxiEy_8f_Y1_R2aSAl3Jp2gIvf45aAPVW5K3qhMiOgQgpJkhA45TJe9hmQIVaXeobleJ9zrfKd
+ StTqWbYhlTgAG7B_9eparvEmMp8yR5joL9YjUT6rYxoow9NesBDpxvQ_HTi.Jtp8_HlX5fiZUz_i
+ Rry1TAuZ4bzA5BUlRxNrnBOO9gmKmQ5rp4dGXBVZaSXth6.WkOyZsCWSdAsBVq71cokNpxgRHmUm
+ LnS4NZz.zC6UrVXVzN2u_jWzDZ9H7bN68HHuhYwdQJ06r__g5Xm.6zCiD9tzRp4Q8qMahsDQm5SX
+ 5hwlbKH2PCmpVQydCZ6RDmsouIIDGNKe3.LU2M0czkF9.9Mok7qw5bxqMNnIqDVITcFSgaJPFcAX
+ 8TWtx2DPLjj.rvdSfKxR.rh13Jwb7lEPy1Mr_VN1SH7OaNPHPCCbFnMPQS1kxZI8bYRtJ_mw9iEN
+ RNxWNo7llOnNHJjjk
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic302.consmr.mail.bf2.yahoo.com with HTTP; Mon, 31 Aug 2020 13:37:58 +0000
+Date:   Mon, 31 Aug 2020 13:35:57 +0000 (UTC)
+From:   "Relief Funding." <crf5@vcdsz.net.in>
+Reply-To: rosesmith@live.co.uk
+Message-ID: <1893651551.616686.1598880957876@mail.yahoo.com>
+Subject: Relief Funding.
 MIME-Version: 1.0
-Reply-To: marie_avis12@yahoo.com
-Received: by 2002:a0c:9088:0:0:0:0:0 with HTTP; Mon, 31 Aug 2020 06:28:52
- -0700 (PDT)
-From:   Miss Maris Avis <marie.avis11@gmail.com>
-Date:   Mon, 31 Aug 2020 13:28:52 +0000
-X-Google-Sender-Auth: Lp5dY6VBzSh9_uvXRrOdBmPrOnY
-Message-ID: <CAHeMND74gvswhr8n6PM-B6m0+kki=hqUKViD-A3Y_g7VjTw13g@mail.gmail.com>
-Subject: Hello
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+References: <1893651551.616686.1598880957876.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.16565 YMailNodin Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-My Dear,
 
-My name is Miss Marie Avis the only daughter of Mr. Gabriel Avis, my
-Father was dealing in Cocoa and Timber in this country before his
-death,  It is my pleasure to contact you for a business venture which
-I intend to establish in your country. Though I have not met with you
-before but I believe one has to risk confiding before you can succeed
-sometimes in life.
 
-I can confide in you for my brighter future since you are a human
-being like me. There is this huge amount of Ten Million five hundred
-thousand United States dollars. ($10.500.000.00) which my late Father
-kept for me in a suspense account with one of the bank here in Abidjan
-Cote d'Ivoire before he was assassinated by unknown persons, Now I
-have decided to invest these money in your country or anywhere safe
-enough for me.
+Dear: Beneficiary,
 
-I want you to help me claim this fund from the bank and have it
-transfer into your personal account in your country for investment
-purposes in your country in these areas:
+An irrevocable payment guarantee of =C2=A3250,000,00 GBP has been issued by=
+ the UN/ World Bank Group and the International Monetary Fund (IMF) on Covi=
+d- 19 relief .
 
-1). Telecommunication
-2). The transport Industry
-3). Five Star Hotel
-4). Tourism
-5). Real Estate
+Kindly forward the below details correctly to enable us proceed on your fil=
+e as instructed by IMF AND UN Monetary Unit.
 
-If you can be of assistance to me I will be pleased to offer you 20%
-of the total fund.
+1. Your Full Name:
+2. Address Where You Want the Courier Company to Send Your ATM Card
+To or (P.O Box) :
+3. Your Age:
+4. Occupation:
+5. Telephone Numbers:
+6. Country:
 
-I await your soonest response.
+Regards.
 
-Respectfully yours,
-Miss Marie Evis
-Tel: +225597438528
+Mr. Harry Burns.
+Director ATM Payment Department
+(Barclays Bank Of London Plc)
