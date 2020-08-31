@@ -2,138 +2,94 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A9D62257590
-	for <lists+linux-raid@lfdr.de>; Mon, 31 Aug 2020 10:38:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F851257A7A
+	for <lists+linux-raid@lfdr.de>; Mon, 31 Aug 2020 15:33:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbgHaIiI (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 31 Aug 2020 04:38:08 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57872 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726102AbgHaIiH (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 31 Aug 2020 04:38:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598863085;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1E2Fd49s7pCCNnTc5xsnll0fP+UNiu8a9XeWlx/dATI=;
-        b=AkrsBspMYiA43XYBeP2SeB94Qz9WRhr8/ezHYVfcX/MvH7VyuSgB7vXYJX8CzIrE4xQhmu
-        fEO64PITznjYtKiZwxNtR9j9ihZd3j6575IJf732NNS+hr/K5QJre/SZwly+4F/fsuJznE
-        Yhhgvwgtor0ocY86+SmloybE0jb3ZbE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-167-EORgqwUzO2m2epTS3l8a9g-1; Mon, 31 Aug 2020 04:38:03 -0400
-X-MC-Unique: EORgqwUzO2m2epTS3l8a9g-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EF62018A2244;
-        Mon, 31 Aug 2020 08:38:01 +0000 (UTC)
-Received: from [10.72.8.24] (ovpn-8-24.pek2.redhat.com [10.72.8.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E5C192616B;
-        Mon, 31 Aug 2020 08:37:58 +0000 (UTC)
-Subject: Re: [PATCH V5 4/5] md/raid10: improve raid10 discard request
-To:     Song Liu <song@kernel.org>
-Cc:     linux-raid <linux-raid@vger.kernel.org>,
-        Heinz Mauelshagen <heinzm@redhat.com>,
-        Nigel Croxon <ncroxon@redhat.com>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Coly Li <colyli@suse.de>
-References: <1598334183-25301-1-git-send-email-xni@redhat.com>
- <1598334183-25301-5-git-send-email-xni@redhat.com>
- <CAPhsuW55WD0iNSEtu9xwV4zEDWxAu_ycMM6ecpoz_DXcooeMLw@mail.gmail.com>
-From:   Xiao Ni <xni@redhat.com>
-Message-ID: <4ae2de9d-86ad-cb41-243f-bc9859e0165f@redhat.com>
-Date:   Mon, 31 Aug 2020 16:37:56 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        id S1727799AbgHaNdL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 31 Aug 2020 09:33:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36334 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727937AbgHaN3b (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 31 Aug 2020 09:29:31 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 571F2C06123D
+        for <linux-raid@vger.kernel.org>; Mon, 31 Aug 2020 06:28:54 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id 60so4638811qtc.9
+        for <linux-raid@vger.kernel.org>; Mon, 31 Aug 2020 06:28:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
+        bh=o69Nac3LLMj5CDhyPqLcnP7WGq46U4gQb9HzFdG/MvE=;
+        b=dGZjKog7uhJ10Hx92Szn03pULWVYkpf7Z+o3dPcWDqibEAAbm/EhMhGGBk+DTtloAO
+         GGrHZL9faVzFqSj/O+hw/8kkHffHNQsUWoUQHOtVKlmc0Ni8Y2AsCpVccCg+McWXvrPy
+         ZKphzuz9Qpq2A3E9dFBzCdM3pFV5joTtnx7+WXKEBEe17vqVfaKaGALuXZSOqW2yxlYS
+         lxs8LWvsFh2bQj4cBokKU9vDcnI7yyjU+nj6hNBObgdebgq0AYqvih29CAa8V7jOUo5l
+         2inIqNimMTNQHPZc8e0v2Wtb6MtTPSUWoEvWwQs/1+/hdUntFIZCt0zvq606Ekk0+xf+
+         twCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to;
+        bh=o69Nac3LLMj5CDhyPqLcnP7WGq46U4gQb9HzFdG/MvE=;
+        b=j9gpCef/1dckaIwc61TrM3omV3P+XoEqo+sO20RPIXUkMPyOmrkeSJxPQwSoPwDaps
+         RazX6YJEOSG7gDSDEYAz1nWtLm8s0pNGL6DP88ZY06FinDIDl1nECVIPRK4BJM/PbzwA
+         u/6bXX0XY0zwXM2e2hMQ2vr8BT2em+PMW693TRI4/4HZvJC5veGW0RMuJyCyA5EsXW2y
+         XVQy8y8XHuD1ziIdHfL/uC3SOqA7T/gALDCixhEB7c37EPRxSdhHotANFvMYTwtNwJ15
+         ZiOqqzYM9DKhvAX0H4L4X43anIzS/ZFvEPJgZ6sKeSUfV5Yr90Vq7w7xPt4qC5YQf4Wg
+         pE/g==
+X-Gm-Message-State: AOAM530wW9zOyv2Ys4bi+SqeH7kODCznQkbz7fPzIVBPlrMR+80yQNTA
+        4cGgB4QBH5Gm5V/qymzAHK33iX/9fbhMzmgHt2M=
+X-Google-Smtp-Source: ABdhPJwTFSiHahm3o5ErCNVDLMAHAbqY/gcm/j2QvEhnXbOIzGlMlfhm7c3nSP/0THni2bBQrZlMWoVhtj11v7fjHYw=
+X-Received: by 2002:aed:2be2:: with SMTP id e89mr1267817qtd.298.1598880533509;
+ Mon, 31 Aug 2020 06:28:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAPhsuW55WD0iNSEtu9xwV4zEDWxAu_ycMM6ecpoz_DXcooeMLw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Reply-To: marie_avis12@yahoo.com
+Received: by 2002:a0c:9088:0:0:0:0:0 with HTTP; Mon, 31 Aug 2020 06:28:52
+ -0700 (PDT)
+From:   Miss Maris Avis <marie.avis11@gmail.com>
+Date:   Mon, 31 Aug 2020 13:28:52 +0000
+X-Google-Sender-Auth: Lp5dY6VBzSh9_uvXRrOdBmPrOnY
+Message-ID: <CAHeMND74gvswhr8n6PM-B6m0+kki=hqUKViD-A3Y_g7VjTw13g@mail.gmail.com>
+Subject: Hello
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+My Dear,
 
+My name is Miss Marie Avis the only daughter of Mr. Gabriel Avis, my
+Father was dealing in Cocoa and Timber in this country before his
+death,  It is my pleasure to contact you for a business venture which
+I intend to establish in your country. Though I have not met with you
+before but I believe one has to risk confiding before you can succeed
+sometimes in life.
 
-On 08/29/2020 06:16 AM, Song Liu wrote:
-> On Mon, Aug 24, 2020 at 10:43 PM Xiao Ni <xni@redhat.com> wrote:
-> [...]
->> ---
->>   drivers/md/raid10.c | 254 +++++++++++++++++++++++++++++++++++++++++++++++++++-
->>   1 file changed, 253 insertions(+), 1 deletion(-)
->>
-> [...]
->> +
->> +static void raid10_end_discard_request(struct bio *bio)
->> +{
->> +       struct r10bio *r10_bio = bio->bi_private;
->> +       struct r10conf *conf = r10_bio->mddev->private;
->> +       struct md_rdev *rdev = NULL;
->> +       int dev;
->> +       int slot, repl;
->> +
->> +       /*
->> +        * We don't care the return value of discard bio
->> +        */
->> +       if (!test_bit(R10BIO_Uptodate, &r10_bio->state))
->> +               set_bit(R10BIO_Uptodate, &r10_bio->state);
-> We don't need the test_bit(), just do set_bit().
-Coly suggested to do test_bit first to avoid write memory. If there are 
-so many requests and the
-requests fail, this way can improve performance very much.
+I can confide in you for my brighter future since you are a human
+being like me. There is this huge amount of Ten Million five hundred
+thousand United States dollars. ($10.500.000.00) which my late Father
+kept for me in a suspense account with one of the bank here in Abidjan
+Cote d'Ivoire before he was assassinated by unknown persons, Now I
+have decided to invest these money in your country or anywhere safe
+enough for me.
 
-But it doesn't care the return value of discard bio. So it should be ok 
-that doesn't set R10BIO_Uptodate here.
-I'll remove these codes. What do you think?
->
->> +
->> +       dev = find_bio_disk(conf, r10_bio, bio, &slot, &repl);
->> +       if (repl)
->> +               rdev = conf->mirrors[dev].replacement;
->> +       if (!rdev) {
->> +               /* raid10_remove_disk uses smp_mb to make sure rdev is set to
->> +                * replacement before setting replacement to NULL. It can read
->> +                * rdev first without barrier protect even replacment is NULL
->> +                */
->> +               smp_rmb();
->> +               repl = 0;
-> repl is no longer used, right?
+I want you to help me claim this fund from the bank and have it
+transfer into your personal account in your country for investment
+purposes in your country in these areas:
 
-Right, I'll remove this line
->
->> +               rdev = conf->mirrors[dev].rdev;
-> [...]
->
->> +
->> +       if (conf->reshape_progress != MaxSector &&
->> +           ((bio->bi_iter.bi_sector >= conf->reshape_progress) !=
->> +            conf->mddev->reshape_backwards))
->> +               geo = &conf->prev;
-> Do we need to set R10BIO_Previous here? Also, please run some tests with
-> reshape in progress.
->
-> Thanks,
-> Song
->
-Thanks for pointing about this. Yes, it needs to set R10BIO_Previous 
-here. Because it needs to
-choose_data_offset when submitting bio to member disks. But it lets me 
-think about patch 1/5
-has a problem too. It uses rdev->data_offset directly in function 
-md_submit_discard_bio. It's ok
-for raid0, because it changes other levels during reshape. For raid10, 
-it's a bug. Now it's in md-next
-branch. Do you want me to resend all patches or a new patch to fix 1/5 
-problem?  Sorry for making
-this trouble.
+1). Telecommunication
+2). The transport Industry
+3). Five Star Hotel
+4). Tourism
+5). Real Estate
 
-Regards
-Xiao
+If you can be of assistance to me I will be pleased to offer you 20%
+of the total fund.
 
+I await your soonest response.
+
+Respectfully yours,
+Miss Marie Evis
+Tel: +225597438528
