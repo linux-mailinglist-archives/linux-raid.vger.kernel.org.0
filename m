@@ -2,123 +2,80 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D0FA25AC47
-	for <lists+linux-raid@lfdr.de>; Wed,  2 Sep 2020 15:47:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C79BB25ACDD
+	for <lists+linux-raid@lfdr.de>; Wed,  2 Sep 2020 16:22:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbgIBNrj (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 2 Sep 2020 09:47:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34078 "EHLO
+        id S1728014AbgIBOUy (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 2 Sep 2020 10:20:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727803AbgIBNrQ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 2 Sep 2020 09:47:16 -0400
-Received: from zimbra.karlsbakk.net (zimbra.karlsbakk.net [IPv6:2a0a:51c0:0:1f:4ca5::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01CADC061251
-        for <linux-raid@vger.kernel.org>; Wed,  2 Sep 2020 06:37:19 -0700 (PDT)
-Received: from localhost (localhost.localdomain [IPv6:::1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id 20C4E3C273F;
-        Wed,  2 Sep 2020 15:36:12 +0200 (CEST)
-Received: from zimbra.karlsbakk.net ([IPv6:::1])
-        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id uiLPRCmyfT59; Wed,  2 Sep 2020 15:36:10 +0200 (CEST)
-Received: from localhost (localhost.localdomain [IPv6:::1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id B07333C27C6;
-        Wed,  2 Sep 2020 15:36:10 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra.karlsbakk.net B07333C27C6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=karlsbakk.net;
-        s=1DC131FE-D37A-11E7-BD32-3AD4DFE620DF; t=1599053770;
-        bh=Jm098Z94iMl7J1Lui1HzOS+is138pFHIUfugQs6rOuQ=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=zM/qIeg6YwVPs/Hs07L7WzhpmZ0wFqOAEFPOlNiWpFU1BkjyRCyuMp7Wur6BbPNjb
-         JhdcnwfosRm0eSc5u1OeZVckRf7CNbEK4YUShYbn5X9gM5aF1k+bbKO30l5szDV7An
-         vl5VBzNrUWAQKaONfKoZ52UNJls12mUlKs7kW7wEV12e6JZllTIj75iOtdBo8Zm9Hd
-         oZSJ+eWGTuNFjXD7n6eqcawG5OqM/peXi/CNE1Cxbkw6c3rd9TrTyU0aJ9gYZ+Tr+E
-         r9FO33hvC4UgEPCGWjuotYbkxLmIOab7oa7ywfuknXueck0rAb99OukYJB0tj5GuGT
-         lvXDxbzjaN+Xg==
-X-Virus-Scanned: amavisd-new at zimbra.karlsbakk.net
-Received: from zimbra.karlsbakk.net ([IPv6:::1])
-        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id sYFSLyar8nSZ; Wed,  2 Sep 2020 15:36:10 +0200 (CEST)
-Received: from zimbra.karlsbakk.net (localhost.localdomain [127.0.0.1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id 8E1693C273F;
-        Wed,  2 Sep 2020 15:36:10 +0200 (CEST)
-Date:   Wed, 2 Sep 2020 15:36:09 +0200 (CEST)
-From:   Roy Sigurd Karlsbakk <roy@karlsbakk.net>
-To:     "David C. Rankin" <drankinatty@suddenlinkmail.com>
-Cc:     Linux Raid <linux-raid@vger.kernel.org>
-Message-ID: <51057261.933837.1599053769942.JavaMail.zimbra@karlsbakk.net>
-In-Reply-To: <37b43194-f372-dd04-a319-34406f63c5a2@suddenlinkmail.com>
-References: <75076966.1748398.1597773608869.JavaMail.zimbra@karlsbakk.net> <001c5a42-93fd-eddb-ba86-aa3e2695f2a8@thehawken.org> <37b43194-f372-dd04-a319-34406f63c5a2@suddenlinkmail.com>
-Subject: Re: Feature request: Remove the badblocks list
+        with ESMTP id S1727931AbgIBONl (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 2 Sep 2020 10:13:41 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C458AC061265;
+        Wed,  2 Sep 2020 07:12:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=loS36YfO2qDSFRDtfhX92YEoXynWvQPkbrbjbgtkbWo=; b=JOtqTM13brS3TXvp4xmcyXjbtd
+        0Gvxs46T8Bu7SM1BPnihOz9Lfpc4SEkd0bFm5HDi10YnpCkjUeXPuKqZqjtGa6fHLVGYcmsEQjZTx
+        Ta6w+ZxKAVl1i/jgi0wT2G++CyqJYVDXzJ3ulvMXb2g8jR6zG4S93T357xfeyghWEl8g14sw3rfjc
+        YFQ0IUNNGATUs+w9n2Nozg4I5runwPGbVNLdNp20Jq45b4JPlMF0AbsUgRFSVpuJaqIOOSZrUU8Cu
+        tEe59NU1h7cux0ruAq3Lq+828QQl8CYSEhFdRct2e6DaOaOh29sH1y3uk2D7veh7GEjq2s5Mubh1P
+        1bDcmCbw==;
+Received: from [2001:4bb8:184:af1:6a63:7fdb:a80e:3b0b] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDTUs-0005co-QD; Wed, 02 Sep 2020 14:12:23 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH 02/19] amiflop: use bdev_check_media_change
+Date:   Wed,  2 Sep 2020 16:12:01 +0200
+Message-Id: <20200902141218.212614-3-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200902141218.212614-1-hch@lst.de>
+References: <20200902141218.212614-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [2a01:79c:cebf:61e4:95bb:fcf8:43db:53b]
-X-Mailer: Zimbra 8.8.10_GA_3801 (ZimbraWebClient - FF80 (Mac)/8.8.10_GA_3786)
-Thread-Topic: Feature request: Remove the badblocks list
-Thread-Index: DLg5POTzmtwo9eVn75aBYJuqGQ4wvg==
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
------ Original Message -----
-> From: "David C. Rankin" <drankinatty@suddenlinkmail.com>
-> To: "Linux Raid" <linux-raid@vger.kernel.org>
-> Sent: Saturday, 22 August, 2020 03:42:40
-> Subject: Re: Feature request: Remove the badblocks list
+The Amiga floppy driver does not have a ->revalidate_disk method, so it
+can just use bdev_check_media_change without any additional changes.
 
-> On 8/18/20 4:03 PM, H=C3=A5kon Struijk Holmen wrote:
->> Hi,
->>=20
->> Thanks for the CC, I just managed to get myself subscribed to the list :=
-)
->>=20
->> I have gathered some thoughts on the subject as well after reading up on=
- it,
->> figuring out the actual header format is, and writing a tool [3] to fix =
-my
->> array...
->>=20
-> <snip>
->> But I have some complaints about the thing..
->=20
-> Well,
->=20
->  There is code in all things that can be fixed, but I for one will chime =
-in
-> and say I don't care if a lose a strip or two so long as on a failed disk=
- I
-> pop the new one in and it rebuilds without issue (which it does, even whe=
-n the
-> disk was replaced due to bad blocks)
->=20
->  So whatever is done, don't fix what isn't broken and introduce more bugs
-> along the way. If this is such an immediate problem, then why are patches
-> being attached to the complaints?
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/block/amiflop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The problem is that it's already broken. Take a single mirror. One drive ex=
-periences a bad sector, fine, you have redundancy, so you read the data fro=
-m the other drive and md flags the sector as bad. The drive two is replaced=
-, you lose the data. The new drive will get flagged with the same sector nu=
-mber as faulty, since the first drive has it flagged. So you replace the fi=
-rst drive and during resync, it also gets flagged as having a bad sector. A=
-nd so on.
-
-Modern (that is, disks since 20 years ago or so) reallocate sectors as they=
- wear out. We have redundancy to handle errors, not to pinpoint them on dis=
-ks and fill up not-so-smart lists with broken sectors that work. If md sees=
- a drive with excessive errors, that drive should be kicked out, marked as =
-dead, but not interfere with the rest of the raid.
-
-Vennlig hilsen
-
-roy
---=20
-Roy Sigurd Karlsbakk
-(+47) 98013356
-http://blogg.karlsbakk.net/
-GPG Public key: http://karlsbakk.net/roysigurdkarlsbakk.pubkey.txt
---
-Hi=C3=B0 g=C3=B3=C3=B0a skaltu =C3=AD stein h=C3=B6ggva, hi=C3=B0 illa =C3=
-=AD snj=C3=B3 rita.
+diff --git a/drivers/block/amiflop.c b/drivers/block/amiflop.c
+index 226219da3da6a7..71c2b156455860 100644
+--- a/drivers/block/amiflop.c
++++ b/drivers/block/amiflop.c
+@@ -1670,7 +1670,7 @@ static int floppy_open(struct block_device *bdev, fmode_t mode)
+ 	}
+ 
+ 	if (mode & (FMODE_READ|FMODE_WRITE)) {
+-		check_disk_change(bdev);
++		bdev_check_media_change(bdev);
+ 		if (mode & FMODE_WRITE) {
+ 			int wrprot;
+ 
+-- 
+2.28.0
 
