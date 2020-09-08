@@ -2,53 +2,82 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 93477261E82
-	for <lists+linux-raid@lfdr.de>; Tue,  8 Sep 2020 21:52:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C70F9261D51
+	for <lists+linux-raid@lfdr.de>; Tue,  8 Sep 2020 21:35:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730839AbgIHTwd (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 8 Sep 2020 15:52:33 -0400
-Received: from smtp.hosts.co.uk ([85.233.160.19]:23280 "EHLO smtp.hosts.co.uk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730700AbgIHPtc (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:49:32 -0400
-Received: from host86-136-163-47.range86-136.btcentralplus.com ([86.136.163.47] helo=[192.168.1.64])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1kFekR-0001Z9-Et; Tue, 08 Sep 2020 15:37:27 +0100
-Subject: Re: [PATCH 11/19] gdrom: use bdev_check_media_change
-To:     Christoph Hellwig <hch@lst.de>
-References: <20200902141218.212614-1-hch@lst.de>
- <20200902141218.212614-12-hch@lst.de>
- <0b8fa1fe-f2d5-bf18-2e8a-ad13e343629d@youngman.org.uk>
- <20200908142334.GA7344@lst.de>
-Cc:     linux-raid <linux-raid@vger.kernel.org>
-From:   Wols Lists <antlists@youngman.org.uk>
-Message-ID: <5F579727.3080706@youngman.org.uk>
-Date:   Tue, 8 Sep 2020 15:37:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.7.0
+        id S1731607AbgIHTe5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 8 Sep 2020 15:34:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54318 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730858AbgIHP6E (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 8 Sep 2020 11:58:04 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F0D0C0A3BEC;
+        Tue,  8 Sep 2020 07:55:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=lWxnm+FRJQ1gaOww4j+aWjmf7zJgAshxl0Y6TkF88gw=; b=PU5DnvnOhI/jzDLWv5bPiEmht7
+        DtGs0BC1+AbVGld+So7H0Kjyd79UEuZVbXLfm0vR9ggpH2LqKH9c6uMsb71etCW18xv1sXC/cDouV
+        FITlturAfZ0DcY1HdGLff+XauXrxep31o5JIlZ0Yr0I7gXkAc4va2lCOYjM54+wGYsQVQou9Hygrf
+        TkADJMAxq3vrJ1PTpsRMUdaHqIUcrbdhFiRPwYnf1RAiJS0mzZdAXHrBM5fk89BGE6XI7DRZzeI62
+        U/0kC2czTeIIQeyl8lVxt3v9+WsZ7egpPnITFSIFabYizej5kff/sKSbz9SFjzA8s27gdoQRo2o1A
+        7RQyPrGg==;
+Received: from [2001:4bb8:184:af1:3dc3:9c83:fc6c:e0f] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kFf0O-0002vr-1B; Tue, 08 Sep 2020 14:54:01 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Subject: [PATCH 02/19] amiflop: use bdev_check_media_change
+Date:   Tue,  8 Sep 2020 16:53:30 +0200
+Message-Id: <20200908145347.2992670-3-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908145347.2992670-1-hch@lst.de>
+References: <20200908145347.2992670-1-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20200908142334.GA7344@lst.de>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 08/09/20 15:23, Christoph Hellwig wrote:
-> On Wed, Sep 02, 2020 at 11:00:05PM +0100, antlists wrote:
->> On 02/09/2020 15:12, Christoph Hellwig wrote:
->>> The GD-ROM driver does not have a ->revalidate_disk method, so it can
->>       ^^ (sic)
-> 
-> No, this really is the GD-ROM and not the CD-ROM driver!
-> 
-Wow. I had to Google to find out what it was.
+The Amiga floppy driver does not have a ->revalidate_disk method, so it
+can just use bdev_check_media_change without any additional changes.
 
-That says it's proprietary Sega/Nintendo, so dare I suggest you change
-that to "Sega GD-ROM" or similar to avoid other clueless people like me
-jumping on it?
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+---
+ drivers/block/amiflop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Cheers,
-Wol
+diff --git a/drivers/block/amiflop.c b/drivers/block/amiflop.c
+index 226219da3da6a7..71c2b156455860 100644
+--- a/drivers/block/amiflop.c
++++ b/drivers/block/amiflop.c
+@@ -1670,7 +1670,7 @@ static int floppy_open(struct block_device *bdev, fmode_t mode)
+ 	}
+ 
+ 	if (mode & (FMODE_READ|FMODE_WRITE)) {
+-		check_disk_change(bdev);
++		bdev_check_media_change(bdev);
+ 		if (mode & FMODE_WRITE) {
+ 			int wrprot;
+ 
+-- 
+2.28.0
+
