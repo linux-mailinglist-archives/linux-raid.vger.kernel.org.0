@@ -2,144 +2,54 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A209E262A50
-	for <lists+linux-raid@lfdr.de>; Wed,  9 Sep 2020 10:32:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E1DC263783
+	for <lists+linux-raid@lfdr.de>; Wed,  9 Sep 2020 22:34:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgIIIb5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 9 Sep 2020 04:31:57 -0400
-Received: from mga04.intel.com ([192.55.52.120]:56811 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726535AbgIIIbx (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:31:53 -0400
-IronPort-SDR: IXjaqj+OM11VBz9RNu5Y/8Fh0wbjYq0/MiyfXs3qXxrdWsRTuOQ+Jvob0jxo31Ct6N6lQiwI8O
- fPFpO78a4wEw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="155692161"
-X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
-   d="scan'208";a="155692161"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 01:31:51 -0700
-IronPort-SDR: Yd5uyrPGWgYHyr43rkIHdsFy38KyU3ka94mW62VQCY9CkmLwOSv5zzgwqHN2rjiqbbwcvBxYPX
- m6ca2TFMJoAQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
-   d="scan'208";a="449119056"
-Received: from mtkaczyk-devel.igk.intel.com ([10.102.102.23])
-  by orsmga004.jf.intel.com with ESMTP; 09 Sep 2020 01:31:50 -0700
-From:   Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
-To:     jes@trained-monkey.org
-Cc:     linux-raid@vger.kernel.org
-Subject: [PATCH 4/4] Check if other Monitor instance running before fork.
-Date:   Wed,  9 Sep 2020 10:31:20 +0200
-Message-Id: <20200909083120.10396-5-mariusz.tkaczyk@intel.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200909083120.10396-1-mariusz.tkaczyk@intel.com>
-References: <20200909083120.10396-1-mariusz.tkaczyk@intel.com>
+        id S1729161AbgIIUeF convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-raid@lfdr.de>); Wed, 9 Sep 2020 16:34:05 -0400
+Received: from mx-host.varioprint.ch ([217.173.235.106]:30286 "EHLO
+        mx-host.varioprint.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728626AbgIIUeE (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 9 Sep 2020 16:34:04 -0400
+X-Greylist: delayed 926 seconds by postgrey-1.27 at vger.kernel.org; Wed, 09 Sep 2020 16:34:03 EDT
+Received: from mx-host.varioprint.ch (127.0.0.1) id hb4u320171sq for <linux-raid@vger.kernel.org>; Wed, 9 Sep 2020 22:18:00 +0200 (envelope-from <office@varioprint.ch>)
+Received: from mail.varioprint.ch ([10.1.65.68])
+        by mx-host.varioprint.ch ([10.1.1.2]) (Spambox)
+        with SMTP id o202009092017490003751-2; Wed, 09 Sep 2020 22:17:51 +0200
+Received: from info.rq1qw2wnpehe3goiu4jkwrclxg.mx.internal.cloudapp.net (Unknown [23.100.104.46])
+        by mail.varioprint.ch
+        ; Wed, 9 Sep 2020 20:27:03 +0200
+Message-ID: <8BF9F826-3419-451D-B8F6-0AF8FEFAFAF0@mail.varioprint.ch>
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: Partner request
+To:     Recipients <office@varioprint.ch>
+From:   "Ms. Reem al-Hashimi" <office@varioprint.ch>
+Date:   Wed, 09 Sep 2020 18:27:03 +0000
+Reply-To: reemalhashimi@daum.net
+X-Mlf-DSE-Version: 6185
+X-Mlf-Rules-Version: s20200506163642; ds20200715013501;
+        di20200514170312; ri20160318003319; fs20200615142104
+X-Mlf-Smartnet-Details: 202009092017490003751
+X-Mlf-Smartnet-Version: 20180828000001
+X-Mlf-Version: 10.0.2.1711
+X-Mlf-License: BSV_C_AP_T_R
+X-Mlf-UniqueId: o202009092017490003751
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Blazej Kucman <blazej.kucman@intel.com>
+My name is Reem E. Al-Hashimi, the Emirates Minister of State and Managing Director of the United Arab Emirates (Dubai) World Expo 2020 Committee. I am writing to you to stand as my partner to receive my share of gratification from foreign companies whom I helped during the bidding exercise towards the Dubai World Expo 2020 Committee and also i want to use this funds to assist Coronavirus Symptoms and Causes.
 
-Make error message visible to the user.
+Am a single Arab women and serving as a minister, there is a limit to my personal income and investment level and  For this reason, I cannot receive such a huge sum back to my country or my personal account, so an agreement was reached with the foreign companies to direct the gratifications to an open beneficiary account with a financial institution where it will be possible for me to instruct further transfer of the fund to a third party account for investment purpose which is the reason i contacted you to receive the fund as my partner for investment in your country.
 
-Signed-off-by: Blazej Kucman <blazej.kucman@intel.com>
-Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
----
- Monitor.c | 44 ++++++++++++++++++++++++++++----------------
- 1 file changed, 28 insertions(+), 16 deletions(-)
+The amount is valued at Euro 47,745,533.00 with a financial institution waiting my instruction for further transfer to a destination account as soon as I have your information indicating interest to receive and invest the fund, I will compensate you with 30% of the total amount and you will also get benefit from the investment.
 
-diff --git a/Monitor.c b/Monitor.c
-index 0fb4f77d..7fd48084 100644
---- a/Monitor.c
-+++ b/Monitor.c
-@@ -63,6 +63,7 @@ struct alert_info {
- };
- static int make_daemon(char *pidfile);
- static int check_one_sharer(int scan);
-+static void write_autorebuild_pid(void);
- static void alert(char *event, char *dev, char *disc, struct alert_info *info);
- static int check_array(struct state *st, struct mdstat_ent *mdstat,
- 		       int test, struct alert_info *info,
-@@ -153,6 +154,11 @@ int Monitor(struct mddev_dev *devlist,
- 	info.mailfrom = mailfrom;
- 	info.dosyslog = dosyslog;
- 
-+	if (share){
-+		if (check_one_sharer(c->scan))
-+			return 1;
-+	}
-+
- 	if (daemonise) {
- 		int rv = make_daemon(pidfile);
- 		if (rv >= 0)
-@@ -160,8 +166,7 @@ int Monitor(struct mddev_dev *devlist,
- 	}
- 
- 	if (share)
--		if (check_one_sharer(c->scan))
--			return 1;
-+		write_autorebuild_pid();
- 
- 	if (devlist == NULL) {
- 		mdlist = conf_get_ident(NULL);
-@@ -328,8 +333,8 @@ static int check_one_sharer(int scan)
- 	int pid;
- 	FILE *comm_fp;
- 	FILE *fp;
--	char comm_path[100];
--	char path[100];
-+	char comm_path[PATH_MAX];
-+	char path[PATH_MAX];
- 	char comm[20];
- 
- 	sprintf(path, "%s/autorebuild.pid", MDMON_DIR);
-@@ -356,21 +361,28 @@ static int check_one_sharer(int scan)
- 		}
- 		fclose(fp);
- 	}
--	if (scan) {
--		if (mkdir(MDMON_DIR, S_IRWXU) < 0 && errno != EEXIST) {
-+	return 0;
-+}
-+
-+static void write_autorebuild_pid()
-+{
-+	char path[PATH_MAX];
-+	int pid;
-+	FILE *fp;
-+	sprintf(path, "%s/autorebuild.pid", MDMON_DIR);
-+
-+	if (mkdir(MDMON_DIR, S_IRWXU) < 0 && errno != EEXIST) {
-+		pr_err("Can't create autorebuild.pid file\n");
-+	} else {
-+		fp = fopen(path, "w");
-+		if (!fp)
- 			pr_err("Can't create autorebuild.pid file\n");
--		} else {
--			fp = fopen(path, "w");
--			if (!fp)
--				pr_err("Cannot create autorebuild.pidfile\n");
--			else {
--				pid = getpid();
--				fprintf(fp, "%d\n", pid);
--				fclose(fp);
--			}
-+		else {
-+			pid = getpid();
-+			fprintf(fp, "%d\n", pid);
-+			fclose(fp);
- 		}
- 	}
--	return 0;
- }
- 
- static void alert(char *event, char *dev, char *disc, struct alert_info *info)
--- 
-2.25.0
+If you can handle the fund in a good investment. reply on this email only: alreemhas109@daum.net     
+
+Regards,
+Ms. Reem
 
