@@ -2,54 +2,99 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E1DC263783
-	for <lists+linux-raid@lfdr.de>; Wed,  9 Sep 2020 22:34:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 30EDF2641D0
+	for <lists+linux-raid@lfdr.de>; Thu, 10 Sep 2020 11:29:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbgIIUeF convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-raid@lfdr.de>); Wed, 9 Sep 2020 16:34:05 -0400
-Received: from mx-host.varioprint.ch ([217.173.235.106]:30286 "EHLO
-        mx-host.varioprint.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728626AbgIIUeE (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 9 Sep 2020 16:34:04 -0400
-X-Greylist: delayed 926 seconds by postgrey-1.27 at vger.kernel.org; Wed, 09 Sep 2020 16:34:03 EDT
-Received: from mx-host.varioprint.ch (127.0.0.1) id hb4u320171sq for <linux-raid@vger.kernel.org>; Wed, 9 Sep 2020 22:18:00 +0200 (envelope-from <office@varioprint.ch>)
-Received: from mail.varioprint.ch ([10.1.65.68])
-        by mx-host.varioprint.ch ([10.1.1.2]) (Spambox)
-        with SMTP id o202009092017490003751-2; Wed, 09 Sep 2020 22:17:51 +0200
-Received: from info.rq1qw2wnpehe3goiu4jkwrclxg.mx.internal.cloudapp.net (Unknown [23.100.104.46])
-        by mail.varioprint.ch
-        ; Wed, 9 Sep 2020 20:27:03 +0200
-Message-ID: <8BF9F826-3419-451D-B8F6-0AF8FEFAFAF0@mail.varioprint.ch>
-Content-Type: text/plain; charset="iso-8859-1"
+        id S1730461AbgIJJ2Y (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 10 Sep 2020 05:28:24 -0400
+Received: from verein.lst.de ([213.95.11.211]:60174 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728936AbgIJJ2R (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 10 Sep 2020 05:28:17 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id C27726736F; Thu, 10 Sep 2020 11:28:13 +0200 (CEST)
+Date:   Thu, 10 Sep 2020 11:28:13 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org, martin.petersen@oracle.com,
+        Hans de Goede <hdegoede@redhat.com>,
+        Song Liu <song@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-raid@vger.kernel.org, Minchan Kim <minchan@kernel.org>,
+        dm-devel@redhat.com, linux-mtd@lists.infradead.org,
+        linux-mm@kvack.org, drbd-dev@tron.linbit.com,
+        cgroups@vger.kernel.org
+Subject: Re: [PATCH 06/14] block: lift setting the readahead size into the
+ block layer
+Message-ID: <20200910092813.GA27229@lst.de>
+References: <20200726150333.305527-1-hch@lst.de> <20200726150333.305527-7-hch@lst.de> <20200826220737.GA25613@redhat.com> <20200902151144.GA1738@lst.de> <20200902162007.GB5513@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: Partner request
-To:     Recipients <office@varioprint.ch>
-From:   "Ms. Reem al-Hashimi" <office@varioprint.ch>
-Date:   Wed, 09 Sep 2020 18:27:03 +0000
-Reply-To: reemalhashimi@daum.net
-X-Mlf-DSE-Version: 6185
-X-Mlf-Rules-Version: s20200506163642; ds20200715013501;
-        di20200514170312; ri20160318003319; fs20200615142104
-X-Mlf-Smartnet-Details: 202009092017490003751
-X-Mlf-Smartnet-Version: 20180828000001
-X-Mlf-Version: 10.0.2.1711
-X-Mlf-License: BSV_C_AP_T_R
-X-Mlf-UniqueId: o202009092017490003751
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200902162007.GB5513@redhat.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-My name is Reem E. Al-Hashimi, the Emirates Minister of State and Managing Director of the United Arab Emirates (Dubai) World Expo 2020 Committee. I am writing to you to stand as my partner to receive my share of gratification from foreign companies whom I helped during the bidding exercise towards the Dubai World Expo 2020 Committee and also i want to use this funds to assist Coronavirus Symptoms and Causes.
+On Wed, Sep 02, 2020 at 12:20:07PM -0400, Mike Snitzer wrote:
+> On Wed, Sep 02 2020 at 11:11am -0400,
+> Christoph Hellwig <hch@lst.de> wrote:
+> 
+> > On Wed, Aug 26, 2020 at 06:07:38PM -0400, Mike Snitzer wrote:
+> > > On Sun, Jul 26 2020 at 11:03am -0400,
+> > > Christoph Hellwig <hch@lst.de> wrote:
+> > > 
+> > > > Drivers shouldn't really mess with the readahead size, as that is a VM
+> > > > concept.  Instead set it based on the optimal I/O size by lifting the
+> > > > algorithm from the md driver when registering the disk.  Also set
+> > > > bdi->io_pages there as well by applying the same scheme based on
+> > > > max_sectors.
+> > > > 
+> > > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > > ---
+> > > >  block/blk-settings.c         |  5 ++---
+> > > >  block/blk-sysfs.c            |  1 -
+> > > >  block/genhd.c                | 13 +++++++++++--
+> > > >  drivers/block/aoe/aoeblk.c   |  2 --
+> > > >  drivers/block/drbd/drbd_nl.c | 12 +-----------
+> > > >  drivers/md/bcache/super.c    |  4 ----
+> > > >  drivers/md/dm-table.c        |  3 ---
+> > > >  drivers/md/raid0.c           | 16 ----------------
+> > > >  drivers/md/raid10.c          | 24 +-----------------------
+> > > >  drivers/md/raid5.c           | 13 +------------
+> > > >  10 files changed, 16 insertions(+), 77 deletions(-)
+> > > 
+> > > 
+> > > In general these changes need a solid audit relative to stacking
+> > > drivers.  That is, the limits stacking methods (blk_stack_limits)
+> > > vs lower level allocation methods (__device_add_disk).
+> > > 
+> > > You optimized for lowlevel __device_add_disk establishing the bdi's
+> > > ra_pages and io_pages.  That is at the beginning of disk allocation,
+> > > well before any build up of stacking driver's queue_io_opt() -- which
+> > > was previously done in disk_stack_limits or driver specific methods
+> > > (e.g. dm_table_set_restrictions) that are called _after_ all the limits
+> > > stacking occurs.
+> > > 
+> > > By inverting the setting of the bdi's ra_pages and io_pages to be done
+> > > so early in __device_add_disk it'll break properly setting these values
+> > > for at least DM afaict.
+> > 
+> > ra_pages never got inherited by stacking drivers, check it by modifying
+> > it on an underlying device and then creating a trivial dm or md one.
+> 
+> Sure, not saying that it did.  But if the goal is to set ra_pages based
+> on io_opt then to do that correctly on stacking drivers it must be done
+> in terms of limits stacking right?  Or at least done at a location that
+> is after the limits stacking has occurred?  So should DM just open-code
+> setting ra_pages like it did for io_pages?
+> 
+> Because setting ra_pages in __device_add_disk() is way too early for DM
+> -- given it uses device_add_disk_no_queue_reg via add_disk_no_queue_reg
+> at DM device creation (before stacking all underlying devices' limits).
 
-Am a single Arab women and serving as a minister, there is a limit to my personal income and investment level and  For this reason, I cannot receive such a huge sum back to my country or my personal account, so an agreement was reached with the foreign companies to direct the gratifications to an open beneficiary account with a financial institution where it will be possible for me to instruct further transfer of the fund to a third party account for investment purpose which is the reason i contacted you to receive the fund as my partner for investment in your country.
-
-The amount is valued at Euro 47,745,533.00 with a financial institution waiting my instruction for further transfer to a destination account as soon as I have your information indicating interest to receive and invest the fund, I will compensate you with 30% of the total amount and you will also get benefit from the investment.
-
-If you can handle the fund in a good investment. reply on this email only: alreemhas109@daum.net     
-
-Regards,
-Ms. Reem
-
+I'll move it to blk_register_queue, which should work just fine.
