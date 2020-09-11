@@ -2,17 +2,17 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2343F266218
-	for <lists+linux-raid@lfdr.de>; Fri, 11 Sep 2020 17:27:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C57A26645C
+	for <lists+linux-raid@lfdr.de>; Fri, 11 Sep 2020 18:37:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbgIKP1G (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 11 Sep 2020 11:27:06 -0400
-Received: from sonic308-9.consmr.mail.ne1.yahoo.com ([66.163.187.32]:39180
-        "EHLO sonic308-9.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726184AbgIKP04 (ORCPT
+        id S1726480AbgIKQgo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 11 Sep 2020 12:36:44 -0400
+Received: from sonic304-21.consmr.mail.ne1.yahoo.com ([66.163.191.147]:46325
+        "EHLO sonic304-21.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726289AbgIKPOz (ORCPT
         <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:26:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aim.com; s=a2048; t=1599838015; bh=FQTnClQxsAHDJn8ile6DQu4OWWG05NkRJN777BhOBi4=; h=Subject:To:References:From:Date:In-Reply-To:From:Subject; b=lpfXrM5eFB030YFeVGakhVqyTnjcyrcWfdBnhwJPomKA5H7VF2HuhqOhCEpTYsU3gbcxUE23xUOHgKyldnBx2iYVDwwBL4KOYB12S7hRe8oJ7hAD39sdCrFuKU3yFLaKaeDOTwYINvpwIoOWbW73tna4pRjAuHQcezPB+e7sud5Trt45ovMaJgYDdjBxtRCICWc8rFFVuHpf7fmXbGtM1M1b2N6CnZdTZ9Fk4qD3Sw3AWLfjQAStM1GZ3UvQGaFXqIrMNr1FNw5EQg43yfwnSp4RHL13m8/7fg/pPqKIeanST52pkqYdQuyJC9kA6pyDSPcyzutMUKZ03Cuy/KQHqA==
+        Fri, 11 Sep 2020 11:14:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aim.com; s=a2048; t=1599837282; bh=FQTnClQxsAHDJn8ile6DQu4OWWG05NkRJN777BhOBi4=; h=Subject:To:References:From:Date:In-Reply-To:From:Subject; b=dZ4ND4BF/KCCOCFgM9QW4zyUECnrsu61xi6+t7DcJE/OnwAD5oKyr2Ub2fzWB8yjCU/Fc/fQvaV3gz4eWjqHSbyfjmVb74+FEANHuNI6bS0dtxNIXUHjdJdwGD4Q3q1fQKNahw+6QfbTEcwSY1eeEPk/zQneUe+8DJlZFas43/3JKDVuo/npFCZZ65ssr+6uBKczhc1+/8cFusoT95oX7QrQfnnzWD5X+FcvjhhAhZ8gcMdEUHDltKb6X9PxwGQM7kIIdcpvT6ASYX2ke045uzRjQ30AdNLyiIkPCIY2Ow0HQ2vbIaCUZb36mM5smJFeL/kt+s6LgEW0yAUg6vAcKQ==
 X-YMail-OSG: iJv5bt0VM1kpVq5yWoOUmQon5VZMjEVA_1U3QzVg6zkbUaT_rYtcqvFCEpFgJoo
  U8zJQwNsYV0xB7kM.XC98YTzVh0Nr.u4NygjrCN_PUAHXHR1qF3BGe0vQkjTpLRnEaPAtSruSEqb
  JUBBikZOniT5aoOsQseqPaQMk.9MbJMl_WfVuKqVv4rgSm1ICdhrFNyZjJ_01_4c8OCbZl24BqYy
@@ -34,7 +34,7 @@ X-YMail-OSG: iJv5bt0VM1kpVq5yWoOUmQon5VZMjEVA_1U3QzVg6zkbUaT_rYtcqvFCEpFgJoo
  axe6470bedLZcRQWToS7AnH03R_xTyV_rNN_PCsTf9Z00FCnZoKLdHLRRwiBBvNQNflw1rHW6VPN
  6oDEBBEIoDbLdMk1xd2TodPzv67AWL0ElGa2ox3GvBdNFAO7WVdKb6RMDqf5R93oKeMvjMnGoUca
  gQQixJwyruZI4k_LMxsSmbag-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.ne1.yahoo.com with HTTP; Fri, 11 Sep 2020 15:26:55 +0000
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic304.consmr.mail.ne1.yahoo.com with HTTP; Fri, 11 Sep 2020 15:14:42 +0000
 Received: by smtp406.mail.bf1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID cfd1189744fecf835cb701f572df204d;
           Fri, 11 Sep 2020 15:14:38 +0000 (UTC)
 Subject: Re: Linux raid-like idea
