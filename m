@@ -2,100 +2,58 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B098267B5F
-	for <lists+linux-raid@lfdr.de>; Sat, 12 Sep 2020 18:19:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC4F8267BA7
+	for <lists+linux-raid@lfdr.de>; Sat, 12 Sep 2020 19:42:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725846AbgILQTV (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 12 Sep 2020 12:19:21 -0400
-Received: from smtp.hosts.co.uk ([85.233.160.19]:29172 "EHLO smtp.hosts.co.uk"
+        id S1725869AbgILRmD (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 12 Sep 2020 13:42:03 -0400
+Received: from mail.fadu.edu.uy ([164.73.217.21]:41531 "EHLO mail.fadu.edu.uy"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725385AbgILQTT (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sat, 12 Sep 2020 12:19:19 -0400
-Received: from host86-136-163-47.range86-136.btcentralplus.com ([86.136.163.47] helo=[192.168.1.65])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1kH8FA-0007dM-AV; Sat, 12 Sep 2020 17:19:16 +0100
-Subject: Re: Linux raid-like idea
-To:     Brian Allen Vanderburg II <brianvanderburg2@aim.com>,
-        linux-raid@vger.kernel.org
-References: <1cf0d18c-2f63-6bca-9884-9544b0e7c54e.ref@aim.com>
- <1cf0d18c-2f63-6bca-9884-9544b0e7c54e@aim.com>
- <e3cb1bbe-65eb-5b75-8e99-afba72156b6e@youngman.org.uk>
- <ef3719a9-ae53-516e-29ee-36d1cdf91ef1@aim.com>
- <5F54146F.40808@youngman.org.uk>
- <274cb804-9cf1-f56c-9ee4-56463f052c09@aim.com>
- <ddd9b5b9-88e6-e730-29f4-30dfafd3a736@youngman.org.uk>
- <38f9595b-963e-b1f5-3c29-ad8981e677a7@aim.com>
-From:   antlists <antlists@youngman.org.uk>
-Message-ID: <9220ea81-3a81-bb98-22e3-be1a123113a1@youngman.org.uk>
-Date:   Sat, 12 Sep 2020 17:19:18 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1725838AbgILRmC (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sat, 12 Sep 2020 13:42:02 -0400
+X-Greylist: delayed 949 seconds by postgrey-1.27 at vger.kernel.org; Sat, 12 Sep 2020 13:42:01 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mail.fadu.edu.uy (Postfix) with ESMTP id C675912D5793;
+        Sat, 12 Sep 2020 14:21:15 -0300 (-03)
+Received: from mail.fadu.edu.uy ([127.0.0.1])
+        by localhost (mail.fadu.edu.uy [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id JLiIXv2ClhNG; Sat, 12 Sep 2020 14:21:15 -0300 (-03)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.fadu.edu.uy (Postfix) with ESMTP id 354B812D57D5;
+        Sat, 12 Sep 2020 14:21:15 -0300 (-03)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.fadu.edu.uy 354B812D57D5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fadu.edu.uy;
+        s=08C1D22E-0AE4-11EA-9527-FE35185E3364; t=1599931275;
+        bh=NPk5mtg97T14g7wZ5QhfLKTRZf72H4kOUG++a0YNPhQ=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=KgjIePpW6BetymETomcGrdaut6elY8BXglOyEFUZjsnc80KJkRhFBb+g0tv36Wqf/
+         YPKUkPwpUV3HL68NHDRTq/lLsvclnTDs1e+cz2A/qYDHGttNWRLTVVKq23WQhu9JKB
+         w7IfA6vXR3JlcSLGT26IR3o5xdztvshR2WfwrDf2Qjf5oSn5Tt5rUslrDAVNweqyNr
+         AnLOKRZi0Hpxun4J1Mj5Vva62Git1/561g7H1Sb4Y+bmtMDtgd2i2+/+T2NfCYo/IV
+         iSxF3G74zA3rvCkiiCC3x76JpR4aeU6eRAep6tazuaBZTNIfmfKSBw4l+dExM0V68t
+         d3YXyL+/pMcyw==
+X-Virus-Scanned: amavisd-new at fadu.edu.uy
+Received: from mail.fadu.edu.uy ([127.0.0.1])
+        by localhost (mail.fadu.edu.uy [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id JV_USCZpi3Jf; Sat, 12 Sep 2020 14:21:15 -0300 (-03)
+Received: from [192.168.8.143] (unknown [129.205.124.68])
+        by mail.fadu.edu.uy (Postfix) with ESMTPSA id DD92512D5079;
+        Sat, 12 Sep 2020 14:20:43 -0300 (-03)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-In-Reply-To: <38f9595b-963e-b1f5-3c29-ad8981e677a7@aim.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: DETAILS
+To:     Recipients <info@fadu.edu.uy>
+From:   "DONNA AND DAVID STICKLEY" <info@fadu.edu.uy>
+Date:   Sat, 12 Sep 2020 10:20:08 -0700
+Reply-To: donna.anddavid_stickley2020@outlook.com
+Message-Id: <20200912172044.DD92512D5079@mail.fadu.edu.uy>
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 11/09/2020 21:14, Brian Allen Vanderburg II wrote:
-> That's right, I get the various combinations confused.  So does raid61
-> allow for losing 4 disks in any order and still recovering? or would
-> some order of disks make it where just 3 disks lost and be bad?
-> Iinteresting non-the-less and I'll have to look into it.  Obviously it's
-> not intended to as a replacement for backing up important data, but, for
-> me any way, just away to minimize loss of any trivial bulk data/files.
+FAMILY DONATION. GET BACK TO US FOR MORE DETAILS... =
 
-Yup. Raid 6 has two parity disks, and that's mirrored to give four 
-parity disks. So as an *absolute* *minimum*, raid-61 could lose four 
-disks with no data loss.
-
-Throw in the guarantee that, with a mirror, you can lose an entire 
-mirror with no data-loss, that means - with luck and a following wind - 
-you could lose half your disks, PLUS the two parities in the remaining 
-disks, and still recover your data. So with a raid-6+1, if I had twelve 
-disks, I could lose EIGHT disks and still have a *chance* of recovering 
-my array. I'm not quite sure what difference raid-61 would make.
-
-(That says to me, if I have a raid-61, I need as a minimum a complete 
-set of data disks. That also says to me, if I've splatted an 8+2 raid-61 
-across 11 disks, I only need 7 for a full recovery despite needing a 
-minimum of 8, so something isn't quite right here... I suspect the 7 
-would be enough but I did say my mind goes Whooaaa!!!!)
-> 
-> It would be nice if the raid modules had support for methods that could
-> support a total of more disks in any order lost without loosing data.
-> Snapraid source states that it uses some Cauchy Matrix algorithm which
-> in theory could loose up to 6 disks if using 6 parity disks, in any
-> order, and still be able to restore the data.  I'm not familiar with the
-> math behind it so can't speak to the accuracy of that claim.
-
-That's easy, it's just whether it's worth it. Look at the maths behind 
-raid-6. The "one parity disk" methods, 4 or 5, just use XOR. But that 
-only works once, a second XOR parity disk adds no new redundancy and is 
-worthless. I'm guessing raid-6 uses that Cauchy method you talk about - 
-certainly it can generate as many parity disks as you like ... so that 
-claim is good, even if raid-6 doesn't use that particular technique.
-
-If someone wants to, mod'ing raid-6 to use 3 parity disks shouldn't be 
-that hard ...
-
-
-But going back to your original idea, I've been thinking about it. And 
-it struck me - you NEED to regenerate parity EVERY TIME you write data 
-to disk! Otherwise, writing one file on one disk instantly trashes your 
-ability to recover all the other files in the same position on the other 
-disks. WHOOPS! But if you think it's a good idea, by all means try and 
-do it.
-
-The other thing I'd suggest here, is try and make it more like raid-5 
-than raid-4. You have X disks, let's say 5. So one disk each is numbered 
-0, 1, 2, 3, 4. As part of formatting the disk ready for raid, you create 
-a file containing every block where LBA mod 5 equals disk number. So as 
-you recalculate your parities, that's where they go.
-
-Cheers,
-Wol
+donna.anddavid_stickley@outlook.com
