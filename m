@@ -2,65 +2,65 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6B4D269F20
-	for <lists+linux-raid@lfdr.de>; Tue, 15 Sep 2020 09:07:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 437D626A015
+	for <lists+linux-raid@lfdr.de>; Tue, 15 Sep 2020 09:47:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbgIOHHP (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 15 Sep 2020 03:07:15 -0400
-Received: from verein.lst.de ([213.95.11.211]:46699 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726073AbgIOHGO (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 15 Sep 2020 03:06:14 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 9B14E68AFE; Tue, 15 Sep 2020 09:05:22 +0200 (CEST)
-Date:   Tue, 15 Sep 2020 09:05:22 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Mike Snitzer <snitzer@redhat.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org, martin.petersen@oracle.com,
-        Hans de Goede <hdegoede@redhat.com>,
-        Song Liu <song@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-raid@vger.kernel.org, Minchan Kim <minchan@kernel.org>,
-        dm-devel@redhat.com, linux-mtd@lists.infradead.org,
-        linux-mm@kvack.org, drbd-dev@tron.linbit.com,
-        cgroups@vger.kernel.org
-Subject: Re: [PATCH 06/14] block: lift setting the readahead size into the
- block layer
-Message-ID: <20200915070522.GA19974@lst.de>
-References: <20200726150333.305527-1-hch@lst.de> <20200726150333.305527-7-hch@lst.de> <20200826220737.GA25613@redhat.com> <20200902151144.GA1738@lst.de> <20200902162007.GB5513@redhat.com> <20200910092813.GA27229@lst.de> <20200910171541.GB21919@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200910171541.GB21919@redhat.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        id S1726192AbgIOHq4 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 15 Sep 2020 03:46:56 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:50870 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726146AbgIOHov (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 15 Sep 2020 03:44:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1600155891;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=MFaD1AKk5ATyDN93ja7oJAXP+9SuiJh4ctESObS1DtE=;
+        b=eA1pHfJJnSxAeMRnxVBE5mmqbR1cwN042Ca3ZLxKG7YhGaQgWwNwmrTo8290NmxhRNaT+V
+        IO/xWrfvPze+jZELpveACGoMrU5wE4/oDBbrFzWXKaT7RXqTln14xMi8wb0a0EN9LexlnK
+        VG9lSyrIpu/WQYmpmKJThN5JDAQZw+k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-541-gvIsLjuFNfan7E_dWCGnwA-1; Tue, 15 Sep 2020 03:44:49 -0400
+X-MC-Unique: gvIsLjuFNfan7E_dWCGnwA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C3CCE10BBEC2;
+        Tue, 15 Sep 2020 07:44:47 +0000 (UTC)
+Received: from localhost.localdomain.com (ovpn-8-36.pek2.redhat.com [10.72.8.36])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A74C927BBC;
+        Tue, 15 Sep 2020 07:44:44 +0000 (UTC)
+From:   Xiao Ni <xni@redhat.com>
+To:     jes@trained-monkey.org, linux-raid@vger.kernel.org
+Cc:     colyli@suse.de, ncroxon@redhat.com, antmbox@youngman.org.uk
+Subject: [PATCH V2 0/2] Some fixes for mdadm
+Date:   Tue, 15 Sep 2020 15:44:40 +0800
+Message-Id: <1600155882-4488-1-git-send-email-xni@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 01:15:41PM -0400, Mike Snitzer wrote:
-> > I'll move it to blk_register_queue, which should work just fine.
-> 
-> That'll work for initial DM table load as part of DM device creation
-> (dm_setup_md_queue).  But it won't account for DM table reloads that
-> might change underlying devices on a live DM device (done using
-> __bind).
-> 
-> Both dm_setup_md_queue() and __bind() call dm_table_set_restrictions()
-> to set/update queue_limits.  It feels like __bind() will need to call a
-> new block helper to set/update parts of queue_limits (e.g. ra_pages and
-> io_pages).
-> 
-> Any chance you're open to factoring out that block function as an
-> exported symbol for use by blk_register_queue() and code like DM's
-> __bind()?
+Hi all
 
-I agree with the problem statement.  OTOH adding an exported helper
-for two trivial assignments seems a little silly..
+These two patches fix some mdadm problems. The first is to avoid one raid being
+not active after boot. The second patch is to check journal device when creating
+bitmap.
 
-For now I'll just keep the open coded ->io_pages assignment in
-dm.  Note that dm doesn't currently update the ->ra_pages value
-based on the underlying devices, so an incremental patch to do that
-might be useful as well.
+v2:Change patch1's comments to make it more clear
+
+Xiao Ni (2):
+  Check hostname file empty or not when creating raid device
+  Don't create bitmap for raid5 with journal disk
+
+ Create.c |  1 +
+ mdadm.c  |  3 +++
+ mdadm.h  |  1 +
+ util.c   | 19 +++++++++++++++++++
+ 4 files changed, 24 insertions(+)
+
+-- 
+2.7.5
+
