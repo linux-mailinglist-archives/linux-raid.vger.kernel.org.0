@@ -2,94 +2,96 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B16F26B122
-	for <lists+linux-raid@lfdr.de>; Wed, 16 Sep 2020 00:25:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6CEB26B2DD
+	for <lists+linux-raid@lfdr.de>; Wed, 16 Sep 2020 00:54:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgIOWZA (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 15 Sep 2020 18:25:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52026 "EHLO
+        id S1727556AbgIOWyf (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 15 Sep 2020 18:54:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727661AbgIOQWw (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 15 Sep 2020 12:22:52 -0400
-Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F0B8C06178A
-        for <linux-raid@vger.kernel.org>; Tue, 15 Sep 2020 08:58:42 -0700 (PDT)
-Received: by mail-oi1-x233.google.com with SMTP id i17so4402787oig.10
-        for <linux-raid@vger.kernel.org>; Tue, 15 Sep 2020 08:58:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=W2XWjyZ9hGgTd4tIXpXCYZpUPEQmWjaxYl74brc24Zk=;
-        b=rF6FLxhFmTGQVTKCu+gR4Zw6XH0FOAmrO5NjPwbeYvHcxzgZzmeJyP4ukKNm39Ok/y
-         OyNV1kmBbw/oesdmA8DwlQ3YT0aFRQnr9fErlFOH2FRhMfuxVXreXV2I1R40BF1soNXs
-         ZDW2QRLkYk6ytUl3mTpStwpZJQJvQAkvOTQoWbT0g+wwUx+rhRBtLxwPPo0tFvHYO5KZ
-         2lQhDyzu69LkHhES8Ahjry2CwBvpc237H50IrhRhwa+P80lL0q3DnyIB/MJtuatb2owO
-         jrXbjEAW474tvEQW3cEQCbTfY+u0066qTF2bAd9bDUro3ogu2IwYt9H8WQKzMBPEsDln
-         Zt9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=W2XWjyZ9hGgTd4tIXpXCYZpUPEQmWjaxYl74brc24Zk=;
-        b=ECEiLs9RBIyBzlFhd7KrLmjNMlxQPOv2rdbYPQE6LXTcy/t2J3aI3LQteY3jzBvMtn
-         JZ1Q31ffYkSGeH782xQzOyBce9++o6qLN/xJktym7tpUbgfrHukzr4AdaonpGM/O2+5P
-         iIXV9pUiouF3plzCYzNay/HTdndkVDxnTbg/AqFKjhYEwAVhEETvA/D/RqLpg8/HEs1P
-         zrQ5CiEWx6IvBKHESGgxDU6wNBxMrwEBZNctCjEwQONJHvl7sni6iQUln5CHIAwV/Ook
-         s55CetI0KFIffXEpkdOhnL3E4686v92j9zpJm/t9EPJW388EjcYCuez4nx7AIyfsQ3Db
-         j3BA==
-X-Gm-Message-State: AOAM530810/9Z0D+LQ3YnsyAmZigORJo65FmMCa7ReGQpdehZYLngLc+
-        SRkYAGhVu+qXRh7oj9V9mVSXVXRzJcI=
-X-Google-Smtp-Source: ABdhPJxHoJaoiFZ0GIeESuQCjzuikyn0w6Z1n9iYR6htM+G+q3xnLolFNHyqE1IGHw9bmdZPyxM8eQ==
-X-Received: by 2002:aca:3056:: with SMTP id w83mr75833oiw.86.1600185520878;
-        Tue, 15 Sep 2020 08:58:40 -0700 (PDT)
-Received: from ian.penurio.us ([47.184.24.231])
-        by smtp.gmail.com with ESMTPSA id j18sm5685756otr.12.2020.09.15.08.58.40
-        for <linux-raid@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Sep 2020 08:58:40 -0700 (PDT)
-To:     linux-raid@vger.kernel.org
-From:   Ian Pilcher <arequipeno@gmail.com>
-Subject: IMSM RAID not recognized after kernel update
-Message-ID: <2369f081-d9e1-ffa3-d633-d73388ac0017@gmail.com>
-Date:   Tue, 15 Sep 2020 10:58:39 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        with ESMTP id S1727407AbgIOP10 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 15 Sep 2020 11:27:26 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25649C061788;
+        Tue, 15 Sep 2020 08:27:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=Y4tkWtiLArM5ZtpwjGyv2ND3RgxFSGIzR5QDPUf60TY=; b=vkcvNvrAlfkpjgC6PLHdCcE+Rt
+        rVJhEc5LvegHmwyCNl+Jp1ZvzkxadlEJeRvmlI+paiq2Xw90Vk1EKkFLuOLon9UBw7bf5O+d1APq9
+        lUfd4Ij5H9rc6mwCtjWSocnPHXmDvPMY1jXFvzyo/ohoQjxH3pNyLhn93bHHi4S8FJYokwjh7afBg
+        VdnV6ovjwCi6bz7tc9Dsp5emWgQsT/+RvvI2EIEN7ME6GaruCkOpQBu3l2bgNoLkB273IebNiu4L1
+        Eiq/0XQ/xTWB36/gDGzmAL3gAHWN+XRKtB5xAzCQGf2SajsuwNGzkL5FmdrT+wuay5vKexMNetnWk
+        l0MLo90Q==;
+Received: from 089144214092.atnat0023.highway.a1.net ([89.144.214.92] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kICrS-0001S0-U3; Tue, 15 Sep 2020 15:27:17 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        Minchan Kim <minchan@kernel.org>,
+        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        linux-mtd@lists.infradead.org, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        drbd-dev@lists.linbit.com, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        cgroups@vger.kernel.org,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Subject: [PATCH 03/12] drbd: remove RB_CONGESTED_REMOTE
+Date:   Tue, 15 Sep 2020 17:18:20 +0200
+Message-Id: <20200915151829.1767176-4-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200915151829.1767176-1-hch@lst.de>
+References: <20200915151829.1767176-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-https://bugzilla.redhat.com/show_bug.cgi?id=1878970
+This case isn't ever used.
 
-After updating my Fedora kernel package this morning, my IMSM RAID is
-no longer recognized:
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+---
+ drivers/block/drbd/drbd_req.c | 4 ----
+ include/linux/drbd.h          | 1 -
+ 2 files changed, 5 deletions(-)
 
-[pilcher@ian system]$ sudo mdadm --examine --verbose /dev/sdc
-/dev/sdc:
-    MBR Magic : aa55
-Partition[0] :       204800 sectors at         2048 (type 07)
-Partition[1] :      2048000 sectors at       206848 (type 83)
-Partition[2] :     61440000 sectors at      2254848 (type 07)
-Partition[3] :   1889824768 sectors at     63694848 (type 05)
-
-If I boot the older kernel, it says:
-
-[pilcher@ian ~]$ sudo mdadm --examine --verbose /dev/sdc
-/dev/sdc:
-           Magic : Intel Raid ISM Cfg Sig.
-             ⋮
-
-Any tips on what might cause this or how to debug further would be
-appreciated.
-
-Thanks!
-
+diff --git a/drivers/block/drbd/drbd_req.c b/drivers/block/drbd/drbd_req.c
+index 5c975af9c15fb8..481bc34fcf386a 100644
+--- a/drivers/block/drbd/drbd_req.c
++++ b/drivers/block/drbd/drbd_req.c
+@@ -901,13 +901,9 @@ static bool drbd_may_do_local_read(struct drbd_device *device, sector_t sector,
+ static bool remote_due_to_read_balancing(struct drbd_device *device, sector_t sector,
+ 		enum drbd_read_balancing rbm)
+ {
+-	struct backing_dev_info *bdi;
+ 	int stripe_shift;
+ 
+ 	switch (rbm) {
+-	case RB_CONGESTED_REMOTE:
+-		bdi = device->ldev->backing_bdev->bd_disk->queue->backing_dev_info;
+-		return bdi_read_congested(bdi);
+ 	case RB_LEAST_PENDING:
+ 		return atomic_read(&device->local_cnt) >
+ 			atomic_read(&device->ap_pending_cnt) + atomic_read(&device->rs_pending_cnt);
+diff --git a/include/linux/drbd.h b/include/linux/drbd.h
+index 5755537b51b114..6a8286132751df 100644
+--- a/include/linux/drbd.h
++++ b/include/linux/drbd.h
+@@ -94,7 +94,6 @@ enum drbd_read_balancing {
+ 	RB_PREFER_REMOTE,
+ 	RB_ROUND_ROBIN,
+ 	RB_LEAST_PENDING,
+-	RB_CONGESTED_REMOTE,
+ 	RB_32K_STRIPING,
+ 	RB_64K_STRIPING,
+ 	RB_128K_STRIPING,
 -- 
-========================================================================
-                  In Soviet Russia, Google searches you!
-========================================================================
+2.28.0
+
