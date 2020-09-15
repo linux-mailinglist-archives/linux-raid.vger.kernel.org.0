@@ -2,70 +2,89 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DD6826A012
-	for <lists+linux-raid@lfdr.de>; Tue, 15 Sep 2020 09:46:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B69A26A31C
+	for <lists+linux-raid@lfdr.de>; Tue, 15 Sep 2020 12:27:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726119AbgIOHqY (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 15 Sep 2020 03:46:24 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:51360 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726171AbgIOHpJ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 15 Sep 2020 03:45:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600155899;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=9wjHp1jMiYI8TOhmbjxXJIuS85T3wAliI4DXXuRLxEU=;
-        b=NcKimivBv1iVIERw8Ej0KgVmbdSgZaiM/LwUfoRipJ1IsxgMksdmW0wsmzmtWcTCj7rLIw
-        cG4ggs3Bzsg14uro3tnnuZQfS0Ank+ugfbyzQ0gywcBJ9wiEAPWY/ZjpFT1N0KWhjonEP5
-        fxhhJFJsV+s2DEc0AnOyx3qFf4QgIgU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-286-VtYSMEL9O_KN1LiQRqf1rA-1; Tue, 15 Sep 2020 03:44:55 -0400
-X-MC-Unique: VtYSMEL9O_KN1LiQRqf1rA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2ACBF425CF;
-        Tue, 15 Sep 2020 07:44:54 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-8-36.pek2.redhat.com [10.72.8.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BBDBD19C4F;
-        Tue, 15 Sep 2020 07:44:51 +0000 (UTC)
-From:   Xiao Ni <xni@redhat.com>
-To:     jes@trained-monkey.org, linux-raid@vger.kernel.org
-Cc:     colyli@suse.de, ncroxon@redhat.com, antmbox@youngman.org.uk
-Subject: [PATCH V2 2/2] Don't create bitmap for raid5 with journal disk
-Date:   Tue, 15 Sep 2020 15:44:42 +0800
-Message-Id: <1600155882-4488-3-git-send-email-xni@redhat.com>
-In-Reply-To: <1600155882-4488-1-git-send-email-xni@redhat.com>
-References: <1600155882-4488-1-git-send-email-xni@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        id S1726338AbgIOK1r (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 15 Sep 2020 06:27:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53164 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726198AbgIOK1p (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 15 Sep 2020 06:27:45 -0400
+Received: from mail.bitfolk.com (mail.bitfolk.com [IPv6:2001:ba8:1f1:f019::25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12692C06174A
+        for <linux-raid@vger.kernel.org>; Tue, 15 Sep 2020 03:27:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bitfolk.com; s=alpha;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Subject:To:From:Date; bh=Y/47fhppgkA/rSF5f2dlag9rnUslU/p7ofSGhMJjQDs=;
+        b=KTuq6/KRFzPir7nD+CDWOWj8nsVcSUA9kpMqLLc6hN9ZraXIIfHedT8e545a9AK2yOpexAvRQpAL02ZQEARDIZiRxWYNKO7NDK49e/8aL1S9Ggx2MQWwVtjLCAFhOlkl5lbgNsj4SgvIzmUxu+bpPVPmQfsJVAiJrwbuaiC/ll8FGsPE7SHgKu+BaI/0gN91bGoDnRBKuRYMjq3sxRNTwuYU68vRy77yH73SueDpB7EU0shOp1X0axivlYLdSq8yAGCKTshglqjcWkQ5pnnFh4R/Y8KobRpROzl6F1er37qgf9zoTWh/w4Wfz3bEQ6ZHDihC1XJku6ff2l30S9xHqg==;
+Received: from andy by mail.bitfolk.com with local (Exim 4.84_2)
+        (envelope-from <andy@strugglers.net>)
+        id 1kI8BU-0005NL-50
+        for linux-raid@vger.kernel.org; Tue, 15 Sep 2020 10:27:36 +0000
+Date:   Tue, 15 Sep 2020 10:27:36 +0000
+From:   Andy Smith <andy@strugglers.net>
+To:     linux-raid@vger.kernel.org
+Subject: "--re-add for /dev/sdb1 to /dev/md0 is not possible"
+Message-ID: <20200915102736.GE13298@bitfolk.com>
+Mail-Followup-To: linux-raid@vger.kernel.org
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+OpenPGP: id=BF15490B; url=http://strugglers.net/~andy/pubkey.asc
+X-URL:  http://strugglers.net/wiki/User:Andy
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: andy@strugglers.net
+X-SA-Exim-Scanned: No (on mail.bitfolk.com); SAEximRunCond expanded to false
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Journal disk and bitmap can't exist at the same time. It needs to check if the raid
-has a journal disk when creating bitmap.
+Hi,
 
-Signed-off-by: Xiao Ni <xni@redhat.com>
----
- Create.c | 1 +
- 1 file changed, 1 insertion(+)
+In my continuing goal to remove the bad blocks log from any of my
+arrays and not have one on any new arrays I create, I wrote this
+article:
 
-diff --git a/Create.c b/Create.c
-index 6f84e5b..0efa19c 100644
---- a/Create.c
-+++ b/Create.c
-@@ -542,6 +542,7 @@ int Create(struct supertype *st, char *mddev,
- 	if (!s->bitmap_file &&
- 	    s->level >= 1 &&
- 	    st->ss->add_internal_bitmap &&
-+	    s->journaldisks == 0 &&
- 	    (s->consistency_policy != CONSISTENCY_POLICY_RESYNC &&
- 	     s->consistency_policy != CONSISTENCY_POLICY_PPL) &&
- 	    (s->write_behind || s->size > 100*1024*1024ULL)) {
--- 
-2.7.5
+    https://strugglers.net/~andy/blog/2020/09/13/debian-installer-mdadm-configuration-and-the-bad-blocks-controversy
 
+Shortly afterwards someone on Hacker News¹ said that it is possible
+to remove the BBL by failing and re-adding devices, like so:
+
+# mdadm /dev/md127 --fail /dev/sda --remove /dev/sda --re-add /dev/sda --update=no-bbl
+
+I tried that on Ubuntu 18.04:
+
+$ mdadm --version
+mdadm - v4.1-rc1 - 2018-03-22
+$ sudo mdadm --fail /dev/md0 /dev/sdb1 --remove /dev/sdb1 --re-add /dev/sdb1 --update=no-bbl
+mdadm: set /dev/sdb1 faulty in /dev/md0
+mdadm: hot removed /dev/sdb1 from /dev/md0
+mdadm: --re-add for /dev/sdb1 to /dev/md0 is not possible
+$ sudo mdadm --add /dev/md0 /dev/sdb1 --update=no-bbl
+mdadm: --update in Manage mode only allowed with --re-add.
+$ sudo mdadm --add /dev/md0 /dev/sdb1
+mdadm: added /dev/sdb1
+$ sudo mdadm --examine-badblocks /dev/sdb1
+Bad-blocks list is empty in /dev/sdb1
+
+I tried it on Debian buster:
+
+$ mdadm --version
+mdadm - v4.1 - 2018-10-01
+$ sudo mdadm --fail /dev/md6 /dev/sdb1 --remove /dev/sdb1 --re-add /dev/sdb1 --update=no-bbl
+mdadm: set /dev/sdb1 faulty in /dev/md6
+mdadm: hot removed /dev/sdb1 from /dev/md6
+mdadm: --re-add for /dev/sdb1 to /dev/md6 is not possible
+
+So, is that supposed to work and if so, why doesn't it work for me?
+
+In both cases these are simple two device RAID-1 metadata version
+1.2 arrays. Neither has bitmaps.
+
+Thanks,
+Andy
+
+¹ https://news.ycombinator.com/item?id=24479235
