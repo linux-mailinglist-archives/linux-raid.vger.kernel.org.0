@@ -2,129 +2,64 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A229626B285
-	for <lists+linux-raid@lfdr.de>; Wed, 16 Sep 2020 00:49:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07BDB26B714
+	for <lists+linux-raid@lfdr.de>; Wed, 16 Sep 2020 02:17:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbgIOWtM (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 15 Sep 2020 18:49:12 -0400
-Received: from smtpout1.mo804.mail-out.ovh.net ([79.137.123.220]:34409 "EHLO
-        smtpout1.mo804.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727480AbgIOPoe (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 15 Sep 2020 11:44:34 -0400
-Received: from mxplan6.mail.ovh.net (unknown [10.109.143.174])
-        by mo804.mail-out.ovh.net (Postfix) with ESMTPS id B5C8661EBD16;
-        Tue, 15 Sep 2020 17:44:06 +0200 (CEST)
-Received: from jwilk.net (37.59.142.96) by DAG4EX2.mxp6.local (172.16.2.32)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2044.4; Tue, 15 Sep
- 2020 17:44:05 +0200
-Authentication-Results: garm.ovh; auth=pass (GARM-96R001accd007c-636f-4194-ae28-e687c48258b8,
-                    4A00AE00CA0BE945D8E1708F3591CFE595923006) smtp.auth=jwilk@jwilk.net
-From:   Jakub Wilk <jwilk@jwilk.net>
-To:     Jes Sorensen <jsorensen@fb.com>
-CC:     <linux-raid@vger.kernel.org>
-Subject: [PATCH] mdadm.8: fix typos
-Date:   Tue, 15 Sep 2020 17:44:03 +0200
-Message-ID: <20200915154403.6457-1-jwilk@jwilk.net>
-X-Mailer: git-send-email 2.28.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [37.59.142.96]
-X-ClientProxiedBy: DAG7EX1.mxp6.local (172.16.2.61) To DAG4EX2.mxp6.local
- (172.16.2.32)
-X-Ovh-Tracer-GUID: 53695a90-83d1-4f35-8535-22eb2906c440
-X-Ovh-Tracer-Id: 16232380433404188637
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedujedrtddtgdeiudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgggfgtihesthekredtredttdenucfhrhhomheplfgrkhhusgcuhghilhhkuceojhifihhlkhesjhifihhlkhdrnhgvtheqnecuggftrfgrthhtvghrnhepvdehjeejffejjedvkeehheejieelhffftdduteefheeukeeuiedvudehveehfefhnecukfhppedtrddtrddtrddtpdefjedrheelrddugedvrdelieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehmgihplhgrnheirdhmrghilhdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepjhifihhlkhesjhifihhlkhdrnhgvthdprhgtphhtthhopehlihhnuhigqdhrrghiugesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+        id S1727272AbgIPAQe (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 15 Sep 2020 20:16:34 -0400
+Received: from static.214.254.202.116.clients.your-server.de ([116.202.254.214]:34042
+        "EHLO ciao.gmane.io" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbgIOOW7 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 15 Sep 2020 10:22:59 -0400
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+        (envelope-from <linux-raid@m.gmane-mx.org>)
+        id 1kIBqz-0003GA-GU
+        for linux-raid@vger.kernel.org; Tue, 15 Sep 2020 16:22:41 +0200
+X-Injected-Via-Gmane: http://gmane.org/
+To:     linux-raid@vger.kernel.org
+From:   Ian Pilcher <arequipeno@gmail.com>
+Subject: IMSM RAID not recognized after kernel update
+Date:   Tue, 15 Sep 2020 09:22:37 -0500
+Message-ID: <rjqind$2k0$1@ciao.gmane.io>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+X-Mozilla-News-Host: news://news.gmane.org:119
+Content-Language: en-US
 Sender: linux-raid-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Signed-off-by: Jakub Wilk <jwilk@jwilk.net>
----
- mdadm.8.in | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+https://bugzilla.redhat.com/show_bug.cgi?id=1878970
 
-diff --git a/mdadm.8.in b/mdadm.8.in
-index ab832e85..3a2c92f0 100644
---- a/mdadm.8.in
-+++ b/mdadm.8.in
-@@ -682,7 +682,7 @@ A bug introduced in Linux 3.14 means that RAID0 arrays
- started using a different layout.  This could lead to
- data corruption.  Since Linux 5.4 (and various stable releases that received
- backports), the kernel will not accept such an array unless
--a layout is explictly set.  It can be set to
-+a layout is explicitly set.  It can be set to
- .RB ' original '
- or
- .RB ' alternate '.
-@@ -877,7 +877,7 @@ When creating an array,
- .B \-\-data\-offset
- can be specified as
- .BR variable .
--In the case each member device is expected to have a offset appended
-+In the case each member device is expected to have an offset appended
- to the name, separated by a colon.  This makes it possible to recreate
- exactly an array which has varying data offsets (as can happen when
- different versions of
-@@ -1002,7 +1002,7 @@ number added, e.g.
- If the md device name is in a 'standard' format as described in DEVICE
- NAMES, then it will be created, if necessary, with the appropriate
- device number based on that name.  If the device name is not in one of these
--formats, then a unused device number will be allocated.  The device
-+formats, then an unused device number will be allocated.  The device
- number will be considered unused if there is no active array for that
- number, and there is no entry in /dev for that number and with a
- non-standard name.  Names that are not in 'standard' format are only
-@@ -1448,7 +1448,7 @@ can be accompanied by
- .BR \-\-update=devicesize ,
- .BR \-\-update=bbl ", or"
- .BR \-\-update=no\-bbl .
--See the description of these option when used in Assemble mode for an
-+See the description of these options when used in Assemble mode for an
- explanation of their use.
- 
- If the device name given is
-@@ -1475,7 +1475,7 @@ Add a device as a spare.  This is similar to
- except that it does not attempt
- .B \-\-re\-add
- first.  The device will be added as a spare even if it looks like it
--could be an recent member of the array.
-+could be a recent member of the array.
- 
- .TP
- .BR \-r ", " \-\-remove
-@@ -1493,7 +1493,7 @@ and names like
- can be given to
- .BR \-\-remove .
- The first causes all failed device to be removed.  The second causes
--any device which is no longer connected to the system (i.e an 'open'
-+any device which is no longer connected to the system (i.e. an 'open'
- returns
- .BR ENXIO )
- to be removed.
-@@ -1570,7 +1570,7 @@ the device is found or <slot>:missing in case the device is not found.
- .TP
- .BR \-\-add-journal
- Add journal to an existing array, or recreate journal for RAID-4/5/6 array
--that lost a journal device. To avoid interrupting on-going write opertions,
-+that lost a journal device. To avoid interrupting on-going write operations,
- .B \-\-add-journal
- only works for array in Read-Only state.
- 
-@@ -2875,7 +2875,7 @@ long time.  A
- is required.  If the array is not simultaneously being grown or
- shrunk, so that the array size will remain the same - for example,
- reshaping a 3-drive RAID5 into a 4-drive RAID6 - the backup file will
--be used not just for a "cricital section" but throughout the reshape
-+be used not just for a "critical section" but throughout the reshape
- operation, as described below under LAYOUT CHANGES.
- 
- .SS CHUNK-SIZE AND LAYOUT CHANGES
+After updating my Fedora kernel package this morning, my IMSM RAID is
+no longer recognized:
+
+[pilcher@ian system]$ sudo mdadm --examine --verbose /dev/sdc
+/dev/sdc:
+    MBR Magic : aa55
+Partition[0] :       204800 sectors at         2048 (type 07)
+Partition[1] :      2048000 sectors at       206848 (type 83)
+Partition[2] :     61440000 sectors at      2254848 (type 07)
+Partition[3] :   1889824768 sectors at     63694848 (type 05)
+
+If I boot the older kernel, it says:
+
+[pilcher@ian ~]$ sudo mdadm --examine --verbose /dev/sdc
+/dev/sdc:
+           Magic : Intel Raid ISM Cfg Sig.
+             ⋮
+
+Any tips on what might cause this or how to debug further would be
+appreciated.
+
+Thanks!
+
 -- 
-2.28.0
+========================================================================
+                  In Soviet Russia, Google searches you!
+========================================================================
 
