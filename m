@@ -2,128 +2,50 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55D3926CC55
-	for <lists+linux-raid@lfdr.de>; Wed, 16 Sep 2020 22:42:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE3CD26D1D8
+	for <lists+linux-raid@lfdr.de>; Thu, 17 Sep 2020 05:41:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbgIPUmx (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 16 Sep 2020 16:42:53 -0400
-Received: from smtp.hosts.co.uk ([85.233.160.19]:42962 "EHLO smtp.hosts.co.uk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728456AbgIPUmp (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 16 Sep 2020 16:42:45 -0400
-Received: from host86-136-163-47.range86-136.btcentralplus.com ([86.136.163.47] helo=[192.168.1.65])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1kIeGE-0005AZ-9g; Wed, 16 Sep 2020 21:42:38 +0100
-Subject: Re: [PATCH] mdadm.8: fix typos
-To:     Jakub Wilk <jwilk@jwilk.net>, Jes Sorensen <jsorensen@fb.com>
-Cc:     linux-raid@vger.kernel.org
-References: <20200915154403.6457-1-jwilk@jwilk.net>
-From:   antlists <antlists@youngman.org.uk>
-Message-ID: <bc9a4b50-a684-8c82-4cac-3be0a0e6e4de@youngman.org.uk>
-Date:   Wed, 16 Sep 2020 21:42:37 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1726112AbgIQDlT (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 16 Sep 2020 23:41:19 -0400
+Received: from hairstylesfeed.com ([138.197.30.88]:42062 "EHLO ubuntu"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725858AbgIQDlS (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 16 Sep 2020 23:41:18 -0400
+X-Greylist: delayed 12476 seconds by postgrey-1.27 at vger.kernel.org; Wed, 16 Sep 2020 23:41:15 EDT
+Received: from 127.0.0.1 (localhost [127.0.0.1])
+        by ubuntu (Postfix) with SMTP id 285B750CE9;
+        Wed, 16 Sep 2020 11:39:32 +0000 (UTC)
+Received: from [175.225.24.25] by 127.0.0.1 id c34GzSLUgF1T for <linus81@de.publicvm.com>; Wed, 16 Sep 2020 15:33:38 +0300
+Message-ID: <uy----$-42zhto-$arv762mc@85pmx>
+From:   "Nicola W. Samir" <nicola@brighenti.net>
+Reply-To: "Nicola W. Samir" <nicola@brighenti.net>
+To:     linus81@de.publicvm.com
+Subject: LUCRATIVE PROJECT VENTURE
+Date:   Wed, 16 Sep 20 15:33:38 GMT
+X-Mailer: QUALCOMM Windows Eudora Version 5.1
 MIME-Version: 1.0
-In-Reply-To: <20200915154403.6457-1-jwilk@jwilk.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-Sender: linux-raid-owner@vger.kernel.org
+Content-Type: multipart/alternative;
+        boundary="9F.02FB..F5..681264.7B46"
+X-Priority: 3
+X-MSMail-Priority: Normal
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
 
+--9F.02FB..F5..681264.7B46
+Content-Type: text/plain;
+Content-Transfer-Encoding: quoted-printable
 
-On 15/09/2020 16:44, Jakub Wilk wrote:
-> Signed-off-by: Jakub Wilk <jwilk@jwilk.net>
-> ---
->   mdadm.8.in | 16 ++++++++--------
->   1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/mdadm.8.in b/mdadm.8.in
-> index ab832e85..3a2c92f0 100644
-> --- a/mdadm.8.in
-> +++ b/mdadm.8.in
-> @@ -682,7 +682,7 @@ A bug introduced in Linux 3.14 means that RAID0 arrays
->   started using a different layout.  This could lead to
->   data corruption.  Since Linux 5.4 (and various stable releases that received
->   backports), the kernel will not accept such an array unless
-> -a layout is explictly set.  It can be set to
-> +a layout is explicitly set.  It can be set to
->   .RB ' original '
->   or
->   .RB ' alternate '.
-> @@ -877,7 +877,7 @@ When creating an array,
->   .B \-\-data\-offset
->   can be specified as
->   .BR variable .
-> -In the case each member device is expected to have a offset appended
-> +In the case each member device is expected to have an offset appended
+I am an Independent Financial Consultant, I have a reputable client who is=
+ seeking for an experienced individual or company that can profitably inve=
+st $51,000.000 United State Dollars privately for TPI. 
 
-s/the/this/ ???
+Your swift response is highly needed.
+The modalities is 100% risk free
 
->   to the name, separated by a colon.  This makes it possible to recreate
->   exactly an array which has varying data offsets (as can happen when
->   different versions of
-> @@ -1002,7 +1002,7 @@ number added, e.g.
->   If the md device name is in a 'standard' format as described in DEVICE
->   NAMES, then it will be created, if necessary, with the appropriate
->   device number based on that name.  If the device name is not in one of these
-> -formats, then a unused device number will be allocated.  The device
-> +formats, then an unused device number will be allocated.  The device
->   number will be considered unused if there is no active array for that
->   number, and there is no entry in /dev for that number and with a
->   non-standard name.  Names that are not in 'standard' format are only
-> @@ -1448,7 +1448,7 @@ can be accompanied by
->   .BR \-\-update=devicesize ,
->   .BR \-\-update=bbl ", or"
->   .BR \-\-update=no\-bbl .
-> -See the description of these option when used in Assemble mode for an
-> +See the description of these options when used in Assemble mode for an
->   explanation of their use.
->   
->   If the device name given is
-> @@ -1475,7 +1475,7 @@ Add a device as a spare.  This is similar to
->   except that it does not attempt
->   .B \-\-re\-add
->   first.  The device will be added as a spare even if it looks like it
-> -could be an recent member of the array.
-> +could be a recent member of the array.
->   
->   .TP
->   .BR \-r ", " \-\-remove
-> @@ -1493,7 +1493,7 @@ and names like
->   can be given to
->   .BR \-\-remove .
->   The first causes all failed device to be removed.  The second causes
+Best Regard
+Nicola Samir Wahiba
 
-s/device/devices/
+--9F.02FB..F5..681264.7B46--
 
-> -any device which is no longer connected to the system (i.e an 'open'
-> +any device which is no longer connected to the system (i.e. an 'open'
->   returns
->   .BR ENXIO )
->   to be removed.
-> @@ -1570,7 +1570,7 @@ the device is found or <slot>:missing in case the device is not found.
->   .TP
->   .BR \-\-add-journal
->   Add journal to an existing array, or recreate journal for RAID-4/5/6 array
-> -that lost a journal device. To avoid interrupting on-going write opertions,
-> +that lost a journal device. To avoid interrupting on-going write operations,
->   .B \-\-add-journal
->   only works for array in Read-Only state.
-
-                for an array
->   
-> @@ -2875,7 +2875,7 @@ long time.  A
->   is required.  If the array is not simultaneously being grown or
->   shrunk, so that the array size will remain the same - for example,
->   reshaping a 3-drive RAID5 into a 4-drive RAID6 - the backup file will
-> -be used not just for a "cricital section" but throughout the reshape
-> +be used not just for a "critical section" but throughout the reshape
->   operation, as described below under LAYOUT CHANGES.
->   
->   .SS CHUNK-SIZE AND LAYOUT CHANGES
-> 
