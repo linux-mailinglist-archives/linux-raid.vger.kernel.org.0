@@ -2,50 +2,78 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AE3CD26D1D8
-	for <lists+linux-raid@lfdr.de>; Thu, 17 Sep 2020 05:41:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED22026D41F
+	for <lists+linux-raid@lfdr.de>; Thu, 17 Sep 2020 09:04:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgIQDlT (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 16 Sep 2020 23:41:19 -0400
-Received: from hairstylesfeed.com ([138.197.30.88]:42062 "EHLO ubuntu"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725858AbgIQDlS (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 16 Sep 2020 23:41:18 -0400
-X-Greylist: delayed 12476 seconds by postgrey-1.27 at vger.kernel.org; Wed, 16 Sep 2020 23:41:15 EDT
-Received: from 127.0.0.1 (localhost [127.0.0.1])
-        by ubuntu (Postfix) with SMTP id 285B750CE9;
-        Wed, 16 Sep 2020 11:39:32 +0000 (UTC)
-Received: from [175.225.24.25] by 127.0.0.1 id c34GzSLUgF1T for <linus81@de.publicvm.com>; Wed, 16 Sep 2020 15:33:38 +0300
-Message-ID: <uy----$-42zhto-$arv762mc@85pmx>
-From:   "Nicola W. Samir" <nicola@brighenti.net>
-Reply-To: "Nicola W. Samir" <nicola@brighenti.net>
-To:     linus81@de.publicvm.com
-Subject: LUCRATIVE PROJECT VENTURE
-Date:   Wed, 16 Sep 20 15:33:38 GMT
-X-Mailer: QUALCOMM Windows Eudora Version 5.1
+        id S1726109AbgIQHEI (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 17 Sep 2020 03:04:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54816 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726245AbgIQHDl (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 17 Sep 2020 03:03:41 -0400
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7F5C21D43
+        for <linux-raid@vger.kernel.org>; Thu, 17 Sep 2020 07:03:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1600326216;
+        bh=0+hT+GYcvJSeqK98OPsXXzedHRgK8e06mreG6di3eT4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Sbe/8QIPrR57cyqQOeSjZeMk5oFHWArb+osMh2JRiqxHbWA7XTe0UQ3cXqfuzeh5Q
+         gv0yurt4BXy/fz5HxX+vAUOV2uBcULX/uwKbn02FTMZd4+GRChpBq978G46BDRP/1Z
+         9fsqlEzaBEEXjlJeHf2w3nubpNfGpgqyQc9VnZLI=
+Received: by mail-lj1-f180.google.com with SMTP id v23so1089102ljd.1
+        for <linux-raid@vger.kernel.org>; Thu, 17 Sep 2020 00:03:35 -0700 (PDT)
+X-Gm-Message-State: AOAM530Ua+aOEjVi9CHh9INK96kDuFekovDKJb6tuoFbhykhGxLgpG9Y
+        QiA3YWsH2O1nBMveTWHptiMIUynn/0cSk9Ll+FA=
+X-Google-Smtp-Source: ABdhPJxyZ0cEyWIU4Sf+VFDSQnXN92gtRxQ6S20DiUznhvR57MgwTy6GSdtp3N3z9t3LYGvvBsD30PnlNc66/VeLJII=
+X-Received: by 2002:a2e:7602:: with SMTP id r2mr9888799ljc.10.1600326213891;
+ Thu, 17 Sep 2020 00:03:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-        boundary="9F.02FB..F5..681264.7B46"
-X-Priority: 3
-X-MSMail-Priority: Normal
+References: <6F1A48DB-CA95-433B-91F3-D0051453A8E1@amazon.com>
+In-Reply-To: <6F1A48DB-CA95-433B-91F3-D0051453A8E1@amazon.com>
+From:   Song Liu <song@kernel.org>
+Date:   Thu, 17 Sep 2020 00:03:22 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW6q5bLgOUyuTH8MFTo6GSnGqRxne6sV+dsFHRy_qHtxRA@mail.gmail.com>
+Message-ID: <CAPhsuW6q5bLgOUyuTH8MFTo6GSnGqRxne6sV+dsFHRy_qHtxRA@mail.gmail.com>
+Subject: Re: RAID5 issue with UBUNTU 20.04.1 on my desktop
+To:     "Sung, KoWei" <winders@amazon.com>
+Cc:     "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        "Bshara, Saeed" <saeedb@amazon.com>,
+        "Duan, HanShen" <hansduan@amazon.com>,
+        "Tokoyo, Hiroshi" <htokoyo@amazon.co.jp>,
+        "Fortin, Mike" <mfortin@amazon.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+Hi Winder,
 
---9F.02FB..F5..681264.7B46
-Content-Type: text/plain;
-Content-Transfer-Encoding: quoted-printable
+On Wed, Sep 16, 2020 at 2:53 AM Sung, KoWei <winders@amazon.com> wrote:
+>
+> Hi,
+>
+> I found RAID5 stability issue while doing disk expansion.
+> I attached 4 disks (/dev/sda, /dev/sdb, /dev/sdc and /dev/sdd) and create=
+ partition by =E2=80=9Ccreate_partition.sh=E2=80=9D scripts on my PC and ru=
+n my test scripts =E2=80=9Craid_reshape_12.sh=E2=80=9D (as attached).
+> Basically, the test will add partitions to RAID5 (/dev/md3) and write fil=
+es to /dev/md3 (ext4) at the same time.
+> Within 1 or 2 hours, kernel will get crashed (Oops) and reshape/resync ca=
+nnot be finished forever (log as attached).
+>
+> The issue happens randomly, but it most likely happens at beginning of re=
+shape process. When kernel crash happens, the reshape stops at about 3-10% =
+complete only.
+> Moreover, it is not related to any partition size, because I=E2=80=99ve t=
+ried different size, but issue still exists.
+> I've also tried different kernel (4.1/4.2/4.9/4.19/5.4/5.8), and all kern=
+el version can see this issue.
 
-I am an Independent Financial Consultant, I have a reputable client who is=
- seeking for an experienced individual or company that can profitably inve=
-st $51,000.000 United State Dollars privately for TPI. 
+Thanks for the report. I just started some tests with the script. I
+will update whether it repros the issue.
 
-Your swift response is highly needed.
-The modalities is 100% risk free
-
-Best Regard
-Nicola Samir Wahiba
-
---9F.02FB..F5..681264.7B46--
-
+Song
