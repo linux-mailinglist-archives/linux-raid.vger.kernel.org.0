@@ -2,81 +2,110 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1856927377F
-	for <lists+linux-raid@lfdr.de>; Tue, 22 Sep 2020 02:31:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BFDA273786
+	for <lists+linux-raid@lfdr.de>; Tue, 22 Sep 2020 02:34:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbgIVAbn (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 21 Sep 2020 20:31:43 -0400
-Received: from mga03.intel.com ([134.134.136.65]:20039 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729137AbgIVAbi (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 21 Sep 2020 20:31:38 -0400
-IronPort-SDR: Xg560xZFimyQ1IKJyBKWQfpKMlcl3/DcmQnhtU892nLTPgIvLXKt4I74v2BCXr5bC2nxh2JPYi
- +J9AoJSBiVFA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9751"; a="160571755"
-X-IronPort-AV: E=Sophos;i="5.77,288,1596524400"; 
-   d="scan'208";a="160571755"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2020 17:31:36 -0700
-IronPort-SDR: i9v0unEJtKp9O5a488GCSfQm0VF7Qqey8YZ0JOcC8REWGyE9bIBAii71MG3ZuJzRftLAbQiYa6
- 5FUhhxr0mE1w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,288,1596524400"; 
-   d="scan'208";a="348287884"
-Received: from lkp-server01.sh.intel.com (HELO 928d8e596b58) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 21 Sep 2020 17:31:35 -0700
-Received: from kbuild by 928d8e596b58 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kKWDW-0000Fq-Cz; Tue, 22 Sep 2020 00:31:34 +0000
-Date:   Tue, 22 Sep 2020 08:30:44 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Xiao Ni <xni@redhat.com>
-Cc:     kbuild-all@lists.01.org, linux-raid@vger.kernel.org,
-        Song Liu <songliubraving@fb.com>, Coly Li <colyli@suse.de>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Subject: [PATCH] md/raid10: fix boolreturn.cocci warnings
-Message-ID: <20200922003044.GA8898@8d4990752b6e>
-References: <202009220853.dnMV3qcl%lkp@intel.com>
+        id S1728712AbgIVAeo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 21 Sep 2020 20:34:44 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:50248 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726702AbgIVAeo (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 21 Sep 2020 20:34:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1600734883; x=1632270883;
+  h=from:to:cc:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version:subject;
+  bh=F1Sw3GymdOxB10A63dDb1N8UNgQYVoDfro5SgaO533c=;
+  b=tgbeOecfxsbRnt7OI1Qz86JWX92JhaIXU3ktbvnJp4UmH71MjoDfWeQH
+   +tq3Jrzhd57/4tiu7dAngvIP/ZvYaj8/gRBNO2wkbIPgjSZvsr0mnZPpO
+   uPJaYkvOosF3W4OqqVEQriOUwuxSD2ZY2JM2DRudDt5kiKh+4Zdc5fRGT
+   4=;
+X-IronPort-AV: E=Sophos;i="5.77,288,1596499200"; 
+   d="scan'208";a="55235721"
+Subject: Re: RAID5 issue with UBUNTU 20.04.1 on my desktop
+Thread-Topic: RAID5 issue with UBUNTU 20.04.1 on my desktop
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1e-27fb8269.us-east-1.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 22 Sep 2020 00:34:42 +0000
+Received: from EX13D06EUA001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan2.iad.amazon.com [10.40.163.34])
+        by email-inbound-relay-1e-27fb8269.us-east-1.amazon.com (Postfix) with ESMTPS id 58824A1CE9;
+        Tue, 22 Sep 2020 00:34:40 +0000 (UTC)
+Received: from EX13D09EUA002.ant.amazon.com (10.43.165.251) by
+ EX13D06EUA001.ant.amazon.com (10.43.165.229) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 22 Sep 2020 00:34:39 +0000
+Received: from EX13D09EUA002.ant.amazon.com ([10.43.165.251]) by
+ EX13D09EUA002.ant.amazon.com ([10.43.165.251]) with mapi id 15.00.1497.006;
+ Tue, 22 Sep 2020 00:34:39 +0000
+From:   "Sung, KoWei" <winders@amazon.com>
+To:     Song Liu <song@kernel.org>
+CC:     "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        "Bshara, Saeed" <saeedb@amazon.com>,
+        "Duan, HanShen" <hansduan@amazon.com>,
+        "Tokoyo, Hiroshi" <htokoyo@amazon.co.jp>,
+        "Fortin, Mike" <mfortin@amazon.com>
+Thread-Index: AQHWjMDKl/zP+mpALE6dFQ9y/EZenqlz1bx9
+Date:   Tue, 22 Sep 2020 00:34:39 +0000
+Message-ID: <1600734878242.50073@amazon.com>
+References: <6F1A48DB-CA95-433B-91F3-D0051453A8E1@amazon.com>,<CAPhsuW6q5bLgOUyuTH8MFTo6GSnGqRxne6sV+dsFHRy_qHtxRA@mail.gmail.com>
+In-Reply-To: <CAPhsuW6q5bLgOUyuTH8MFTo6GSnGqRxne6sV+dsFHRy_qHtxRA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.156.129]
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202009220853.dnMV3qcl%lkp@intel.com>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: kernel test robot <lkp@intel.com>
-
-drivers/md/raid10.c:1763:8-9: WARNING: return of 0/1 in function 'raid10_handle_discard' with return type bool
-
- Return statements in functions returning bool should use
- true/false instead of 1/0.
-Generated by: scripts/coccinelle/misc/boolreturn.cocci
-
-Fixes: 8f694215ae4c ("md/raid10: improve raid10 discard request")
-CC: Xiao Ni <xni@redhat.com>
-Signed-off-by: kernel test robot <lkp@intel.com>
----
-
-tree:   git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git md-next
-head:   5b2374a6c221f28c74913d208bb5376a7ee3bf70
-commit: 8f694215ae4c7abf1e6c985803a1aad0db748d07 [15/16] md/raid10: improve raid10 discard request
-
- raid10.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -1760,7 +1760,7 @@ static bool raid10_handle_discard(struct
- 		raid_end_bio_io(r10_bio);
- 	}
- 
--	return 0;
-+	return false;
- out:
- 	allow_barrier(conf);
- 	return -EAGAIN;
+Hi, Song Liu:=0A=
+=0A=
+May I know if you're able to reproduce this issue? Thanks a lot for your he=
+lp.=0A=
+=0A=
+Best Regards,=0A=
+Winder=0A=
+________________________________________=0A=
+From: Song Liu <song@kernel.org>=0A=
+Sent: Thursday, September 17, 2020 3:03 PM=0A=
+To: Sung, KoWei=0A=
+Cc: linux-raid@vger.kernel.org; Bshara, Saeed; Duan, HanShen; Tokoyo, Hiros=
+hi; Fortin, Mike=0A=
+Subject: RE: [EXTERNAL] RAID5 issue with UBUNTU 20.04.1 on my desktop=0A=
+=0A=
+CAUTION: This email originated from outside of the organization. Do not cli=
+ck links or open attachments unless you can confirm the sender and know the=
+ content is safe.=0A=
+=0A=
+=0A=
+=0A=
+Hi Winder,=0A=
+=0A=
+On Wed, Sep 16, 2020 at 2:53 AM Sung, KoWei <winders@amazon.com> wrote:=0A=
+>=0A=
+> Hi,=0A=
+>=0A=
+> I found RAID5 stability issue while doing disk expansion.=0A=
+> I attached 4 disks (/dev/sda, /dev/sdb, /dev/sdc and /dev/sdd) and create=
+ partition by =93create_partition.sh=94 scripts on my PC and run my test sc=
+ripts =93raid_reshape_12.sh=94 (as attached).=0A=
+> Basically, the test will add partitions to RAID5 (/dev/md3) and write fil=
+es to /dev/md3 (ext4) at the same time.=0A=
+> Within 1 or 2 hours, kernel will get crashed (Oops) and reshape/resync ca=
+nnot be finished forever (log as attached).=0A=
+>=0A=
+> The issue happens randomly, but it most likely happens at beginning of re=
+shape process. When kernel crash happens, the reshape stops at about 3-10% =
+complete only.=0A=
+> Moreover, it is not related to any partition size, because I=92ve tried d=
+ifferent size, but issue still exists.=0A=
+> I've also tried different kernel (4.1/4.2/4.9/4.19/5.4/5.8), and all kern=
+el version can see this issue.=0A=
+=0A=
+Thanks for the report. I just started some tests with the script. I=0A=
+will update whether it repros the issue.=0A=
+=0A=
+Song=0A=
