@@ -2,355 +2,145 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 76B1927699B
-	for <lists+linux-raid@lfdr.de>; Thu, 24 Sep 2020 08:54:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E7A1276D64
+	for <lists+linux-raid@lfdr.de>; Thu, 24 Sep 2020 11:28:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbgIXGwn (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 24 Sep 2020 02:52:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727255AbgIXGwK (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 24 Sep 2020 02:52:10 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B9D6C0613DC;
-        Wed, 23 Sep 2020 23:52:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=MY4XScv0SUe+8z8haC+/G063lSniL07sW1RR2khIdts=; b=bFWX5KW1+dmQG/JunZeGU8Et2A
-        pzex90SSQYMWEuC3tqMSjNa31gCsympmamtumAZ18hUZC9v7YTDYDh6KBYa85B0Abx+5KjwuXh9SP
-        n1omaYjMYLVna7FpV6ybuPLXe7EhKb5mB+k9NCgLob/hVTjnclgCnXmNAM4VoIqCdVZFLvOQ/GzuP
-        UQTRjz5tvyhIJj1JmVvnnFHxZKCJlp28/6/xnnjX37A48+cAbw/anB+B3mK/WRnO0Qt6L9uGX/KVv
-        6o15Y8Xw7m7SCCM3nGv2gAnRzkqio1zuXWxDoaVRdEWn2dxwLfGrRdmxoOSHLLlEViNv11v+/15Xf
-        gXeQiZfw==;
-Received: from p4fdb0c34.dip0.t-ipconnect.de ([79.219.12.52] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kLL6k-0001Bw-79; Thu, 24 Sep 2020 06:51:58 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
-        Coly Li <colyli@suse.de>, Richard Weinberger <richard@nod.at>,
-        Minchan Kim <minchan@kernel.org>,
-        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
-        Justin Sanders <justin@coraid.com>,
-        linux-mtd@lists.infradead.org, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, linux-bcache@vger.kernel.org,
-        linux-kernel@vger.kernel.org, drbd-dev@lists.linbit.com,
-        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, cgroups@vger.kernel.org,
-        Jan Kara <jack@suse.cz>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: [PATCH 13/13] bdi: replace BDI_CAP_NO_{WRITEBACK,ACCT_DIRTY} with a single flag
-Date:   Thu, 24 Sep 2020 08:51:40 +0200
-Message-Id: <20200924065140.726436-14-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200924065140.726436-1-hch@lst.de>
-References: <20200924065140.726436-1-hch@lst.de>
+        id S1726567AbgIXJ1v (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 24 Sep 2020 05:27:51 -0400
+Received: from mail-il1-f208.google.com ([209.85.166.208]:38730 "EHLO
+        mail-il1-f208.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727487AbgIXJ01 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 24 Sep 2020 05:26:27 -0400
+Received: by mail-il1-f208.google.com with SMTP id n71so2099774ild.5
+        for <linux-raid@vger.kernel.org>; Thu, 24 Sep 2020 02:26:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=1vZBoUfllgQW1HoxmcWnFRiHdvFknjpt5KNWNGuStuA=;
+        b=gQA6nh0kkB8uHdTY4sBTJlE0k1k2eshZ3uOVmGLSX364UnB7IIfM51va6CfaIguuW+
+         Kd3ucaqDxBBg43D8AvBsOQSUMnjh9+LSuwPQ/8KxsE3L1wMOfL5fdj7dPXhIRUajhBcy
+         ogFypGR+RFutgTDB1vb+kiIhk+nMA2gBAvi+TEX5FJRDLSp39tF6KPMbSM7l0AA5R6tr
+         u/frj7iar+sQfv4q5718dsM4sbhMy7SNd/uBJRD+0EdA/mMhbBGH+V3ZW3ahhqjHCBvr
+         DVvtciJXXbGWA9KoZHRzXnGzhCZ83ulCGrlrwwXl/qPqNw0rnQ8lW4HbHFV1AjdtUuPU
+         Uz7g==
+X-Gm-Message-State: AOAM532nFnwOJSL65lmhkHSdVeC9NWO04InYViPMiBAh7ovvtAVrJNtV
+        HoMQa/I1YckUYacvKZdbx6lJCzFgf81NPHZDAbupvIxQ1859
+X-Google-Smtp-Source: ABdhPJwOx8rANuVrAsei7C1g+CVbAzLOuF18+sdMCU8TSORbUwU6ZvDr5+K0pkfk5oYluj6k2Rofx9x79zsvdMNZFPGsktwVak2E
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+X-Received: by 2002:a02:c789:: with SMTP id n9mr2750231jao.36.1600939586191;
+ Thu, 24 Sep 2020 02:26:26 -0700 (PDT)
+Date:   Thu, 24 Sep 2020 02:26:26 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000578a4f05b00bcb4b@google.com>
+Subject: KASAN: vmalloc-out-of-bounds Read in bpf_trace_run5
+From:   syzbot <syzbot+856297c51366950e115e@syzkaller.appspotmail.com>
+To:     a@unstable.cc, andriin@fb.com, ast@kernel.org,
+        b.a.t.m.a.n@lists.open-mesh.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, hawk@kernel.org,
+        john.fastabend@gmail.com, kafai@fb.com, kpsingh@chromium.org,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-raid@vger.kernel.org, mareklindner@neomailbox.ch,
+        mingo@redhat.com, netdev@vger.kernel.org, rostedt@goodmis.org,
+        shli@fb.com, shli@kernel.org, songliubraving@fb.com,
+        sw@simonwunderlich.de, syzkaller-bugs@googlegroups.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Replace the two negative flags that are always used together with a
-single positive flag that indicates the writeback capability instead
-of two related non-capabilities.  Also remove the pointless wrappers
-to just check the flag.
+Hello,
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+syzbot found the following issue on:
+
+HEAD commit:    b10b8ad8 Add linux-next specific files for 20200921
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1371eb1d900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3cf0782933432b43
+dashboard link: https://syzkaller.appspot.com/bug?extid=856297c51366950e115e
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1510d3d9900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1328ecbb900000
+
+The issue was bisected to:
+
+commit 1e6d690b9334b7e1b31d25fd8d93e980e449a5f9
+Author: Song Liu <songliubraving@fb.com>
+Date:   Thu Nov 17 23:24:39 2016 +0000
+
+    md/r5cache: caching phase of r5cache
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=109283d9900000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=129283d9900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=149283d9900000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+856297c51366950e115e@syzkaller.appspotmail.com
+Fixes: 1e6d690b9334 ("md/r5cache: caching phase of r5cache")
+
+==================================================================
+BUG: KASAN: vmalloc-out-of-bounds in __bpf_trace_run kernel/trace/bpf_trace.c:1937 [inline]
+BUG: KASAN: vmalloc-out-of-bounds in bpf_trace_run5+0x401/0x410 kernel/trace/bpf_trace.c:1977
+Read of size 8 at addr ffffc90000e80030 by task rs:main Q:Reg/6567
+
+CPU: 1 PID: 6567 Comm: rs:main Q:Reg Not tainted 5.9.0-rc5-next-20200921-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x198/0x1fb lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0x5/0x497 mm/kasan/report.c:385
+ __kasan_report mm/kasan/report.c:545 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:562
+ __bpf_trace_run kernel/trace/bpf_trace.c:1937 [inline]
+ bpf_trace_run5+0x401/0x410 kernel/trace/bpf_trace.c:1977
+ __bpf_trace_ext4_journal_start+0x142/0x180 include/trace/events/ext4.h:1788
+ __traceiter_ext4_journal_start+0x83/0xd0 include/trace/events/ext4.h:1788
+ trace_ext4_journal_start include/trace/events/ext4.h:1788 [inline]
+ __ext4_journal_start_sb+0x228/0x440 fs/ext4/ext4_jbd2.c:96
+ __ext4_journal_start fs/ext4/ext4_jbd2.h:328 [inline]
+ ext4_dirty_inode+0xbc/0x130 fs/ext4/inode.c:5850
+ __mark_inode_dirty+0x888/0x1190 fs/fs-writeback.c:2260
+ generic_update_time+0x21c/0x370 fs/inode.c:1764
+ update_time fs/inode.c:1777 [inline]
+ file_update_time+0x434/0x520 fs/inode.c:1992
+ file_modified fs/inode.c:2015 [inline]
+ file_modified+0x7d/0xa0 fs/inode.c:2000
+ ext4_write_checks fs/ext4/file.c:248 [inline]
+ ext4_buffered_write_iter+0xf9/0x4a0 fs/ext4/file.c:264
+ ext4_file_write_iter+0x1f3/0x13e0 fs/ext4/file.c:660
+ call_write_iter include/linux/fs.h:1895 [inline]
+ new_sync_write+0x426/0x650 fs/read_write.c:517
+ vfs_write+0x57d/0x700 fs/read_write.c:595
+ ksys_write+0x12d/0x250 fs/read_write.c:648
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7fed08e3a1cd
+Code: c2 20 00 00 75 10 b8 01 00 00 00 0f 05 48 3d 01 f0 ff ff 73 31 c3 48 83 ec 08 e8 ae fc ff ff 48 89 04 24 b8 01 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 f7 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:00007fed063f5590 EFLAGS: 00000293 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007fecfc0238a0 RCX: 00007fed08e3a1cd
+RDX: 0000000000000dd6 RSI: 00007fecfc0238a0 RDI: 0000000000000006
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000293 R12: 00007fecfc023620
+R13: 00007fed063f55b0 R14: 0000560a2b025360 R15: 0000000000000dd6
+
+
+Memory state around the buggy address:
+ ffffc90000e7ff00: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+ ffffc90000e7ff80: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+>ffffc90000e80000: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+                                     ^
+ ffffc90000e80080: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+ ffffc90000e80100: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+==================================================================
+
+
 ---
- fs/9p/vfs_file.c            |  2 +-
- fs/fs-writeback.c           |  7 +++---
- include/linux/backing-dev.h | 48 ++++++++-----------------------------
- mm/backing-dev.c            |  6 ++---
- mm/filemap.c                |  4 ++--
- mm/memcontrol.c             |  2 +-
- mm/memory-failure.c         |  2 +-
- mm/migrate.c                |  2 +-
- mm/mmap.c                   |  2 +-
- mm/page-writeback.c         | 12 +++++-----
- 10 files changed, 29 insertions(+), 58 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/fs/9p/vfs_file.c b/fs/9p/vfs_file.c
-index 3576123d82990e..6ecf863bfa2f4b 100644
---- a/fs/9p/vfs_file.c
-+++ b/fs/9p/vfs_file.c
-@@ -625,7 +625,7 @@ static void v9fs_mmap_vm_close(struct vm_area_struct *vma)
- 
- 	inode = file_inode(vma->vm_file);
- 
--	if (!mapping_cap_writeback_dirty(inode->i_mapping))
-+	if (!mapping_can_writeback(inode->i_mapping))
- 		wbc.nr_to_write = 0;
- 
- 	might_sleep();
-diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-index 149227160ff0b0..d4f84a2fe0878e 100644
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -2321,7 +2321,7 @@ void __mark_inode_dirty(struct inode *inode, int flags)
- 
- 			wb = locked_inode_to_wb_and_lock_list(inode);
- 
--			WARN(bdi_cap_writeback_dirty(wb->bdi) &&
-+			WARN((wb->bdi->capabilities & BDI_CAP_WRITEBACK) &&
- 			     !test_bit(WB_registered, &wb->state),
- 			     "bdi-%s not registered\n", bdi_dev_name(wb->bdi));
- 
-@@ -2346,7 +2346,8 @@ void __mark_inode_dirty(struct inode *inode, int flags)
- 			 * to make sure background write-back happens
- 			 * later.
- 			 */
--			if (bdi_cap_writeback_dirty(wb->bdi) && wakeup_bdi)
-+			if (wakeup_bdi &&
-+			    (wb->bdi->capabilities & BDI_CAP_WRITEBACK))
- 				wb_wakeup_delayed(wb);
- 			return;
- 		}
-@@ -2581,7 +2582,7 @@ int write_inode_now(struct inode *inode, int sync)
- 		.range_end = LLONG_MAX,
- 	};
- 
--	if (!mapping_cap_writeback_dirty(inode->i_mapping))
-+	if (!mapping_can_writeback(inode->i_mapping))
- 		wbc.nr_to_write = 0;
- 
- 	might_sleep();
-diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
-index b217344a2c63be..44df4fcef65c1e 100644
---- a/include/linux/backing-dev.h
-+++ b/include/linux/backing-dev.h
-@@ -110,27 +110,14 @@ int bdi_set_max_ratio(struct backing_dev_info *bdi, unsigned int max_ratio);
- /*
-  * Flags in backing_dev_info::capability
-  *
-- * The first three flags control whether dirty pages will contribute to the
-- * VM's accounting and whether writepages() should be called for dirty pages
-- * (something that would not, for example, be appropriate for ramfs)
-- *
-- * WARNING: these flags are closely related and should not normally be
-- * used separately.  The BDI_CAP_NO_ACCT_AND_WRITEBACK combines these
-- * three flags into a single convenience macro.
-- *
-- * BDI_CAP_NO_ACCT_DIRTY:  Dirty pages shouldn't contribute to accounting
-- * BDI_CAP_NO_WRITEBACK:   Don't write pages back
-- * BDI_CAP_WRITEBACK_ACCT: Automatically account writeback pages
-- * BDI_CAP_STRICTLIMIT:    Keep number of dirty pages below bdi threshold.
-+ * BDI_CAP_WRITEBACK:		Supports dirty page writeback, and dirty pages
-+ *				should contribute to accounting
-+ * BDI_CAP_WRITEBACK_ACCT:	Automatically account writeback pages
-+ * BDI_CAP_STRICTLIMIT:		Keep number of dirty pages below bdi threshold
-  */
--#define BDI_CAP_NO_ACCT_DIRTY	0x00000001
--#define BDI_CAP_NO_WRITEBACK	0x00000002
--#define BDI_CAP_WRITEBACK_ACCT	0x00000004
--#define BDI_CAP_STRICTLIMIT	0x00000010
--#define BDI_CAP_CGROUP_WRITEBACK 0x00000020
--
--#define BDI_CAP_NO_ACCT_AND_WRITEBACK \
--	(BDI_CAP_NO_WRITEBACK | BDI_CAP_NO_ACCT_DIRTY)
-+#define BDI_CAP_WRITEBACK		(1 << 0)
-+#define BDI_CAP_WRITEBACK_ACCT		(1 << 1)
-+#define BDI_CAP_STRICTLIMIT		(1 << 2)
- 
- extern struct backing_dev_info noop_backing_dev_info;
- 
-@@ -169,24 +156,9 @@ static inline int wb_congested(struct bdi_writeback *wb, int cong_bits)
- long congestion_wait(int sync, long timeout);
- long wait_iff_congested(int sync, long timeout);
- 
--static inline bool bdi_cap_writeback_dirty(struct backing_dev_info *bdi)
--{
--	return !(bdi->capabilities & BDI_CAP_NO_WRITEBACK);
--}
--
--static inline bool bdi_cap_account_dirty(struct backing_dev_info *bdi)
--{
--	return !(bdi->capabilities & BDI_CAP_NO_ACCT_DIRTY);
--}
--
--static inline bool mapping_cap_writeback_dirty(struct address_space *mapping)
--{
--	return bdi_cap_writeback_dirty(inode_to_bdi(mapping->host));
--}
--
--static inline bool mapping_cap_account_dirty(struct address_space *mapping)
-+static inline bool mapping_can_writeback(struct address_space *mapping)
- {
--	return bdi_cap_account_dirty(inode_to_bdi(mapping->host));
-+	return inode_to_bdi(mapping->host)->capabilities & BDI_CAP_WRITEBACK;
- }
- 
- static inline int bdi_sched_wait(void *word)
-@@ -223,7 +195,7 @@ static inline bool inode_cgwb_enabled(struct inode *inode)
- 
- 	return cgroup_subsys_on_dfl(memory_cgrp_subsys) &&
- 		cgroup_subsys_on_dfl(io_cgrp_subsys) &&
--		bdi_cap_account_dirty(bdi) &&
-+		(bdi->capabilities & BDI_CAP_WRITEBACK) &&
- 		(inode->i_sb->s_iflags & SB_I_CGROUPWB);
- }
- 
-diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-index df18f0088dd3f5..408d5051d05b3d 100644
---- a/mm/backing-dev.c
-+++ b/mm/backing-dev.c
-@@ -14,9 +14,7 @@
- #include <linux/device.h>
- #include <trace/events/writeback.h>
- 
--struct backing_dev_info noop_backing_dev_info = {
--	.capabilities	= BDI_CAP_NO_ACCT_AND_WRITEBACK,
--};
-+struct backing_dev_info noop_backing_dev_info;
- EXPORT_SYMBOL_GPL(noop_backing_dev_info);
- 
- static struct class *bdi_class;
-@@ -745,7 +743,7 @@ struct backing_dev_info *bdi_alloc(int node_id)
- 		kfree(bdi);
- 		return NULL;
- 	}
--	bdi->capabilities = BDI_CAP_WRITEBACK_ACCT;
-+	bdi->capabilities = BDI_CAP_WRITEBACK | BDI_CAP_WRITEBACK_ACCT;
- 	bdi->ra_pages = VM_READAHEAD_PAGES;
- 	bdi->io_pages = VM_READAHEAD_PAGES;
- 	return bdi;
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 1aaea26556cc7e..6c2a0139e22fa3 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -414,7 +414,7 @@ int __filemap_fdatawrite_range(struct address_space *mapping, loff_t start,
- 		.range_end = end,
- 	};
- 
--	if (!mapping_cap_writeback_dirty(mapping) ||
-+	if (!mapping_can_writeback(mapping) ||
- 	    !mapping_tagged(mapping, PAGECACHE_TAG_DIRTY))
- 		return 0;
- 
-@@ -1702,7 +1702,7 @@ struct page *pagecache_get_page(struct address_space *mapping, pgoff_t index,
- no_page:
- 	if (!page && (fgp_flags & FGP_CREAT)) {
- 		int err;
--		if ((fgp_flags & FGP_WRITE) && mapping_cap_account_dirty(mapping))
-+		if ((fgp_flags & FGP_WRITE) && mapping_can_writeback(mapping))
- 			gfp_mask |= __GFP_WRITE;
- 		if (fgp_flags & FGP_NOFS)
- 			gfp_mask &= ~__GFP_FS;
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index b807952b4d431b..d2352f76d6519f 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -5643,7 +5643,7 @@ static int mem_cgroup_move_account(struct page *page,
- 		if (PageDirty(page)) {
- 			struct address_space *mapping = page_mapping(page);
- 
--			if (mapping_cap_account_dirty(mapping)) {
-+			if (mapping_can_writeback(mapping)) {
- 				__mod_lruvec_state(from_vec, NR_FILE_DIRTY,
- 						   -nr_pages);
- 				__mod_lruvec_state(to_vec, NR_FILE_DIRTY,
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index f1aa6433f40416..a1e73943445e77 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -1006,7 +1006,7 @@ static bool hwpoison_user_mappings(struct page *p, unsigned long pfn,
- 	 */
- 	mapping = page_mapping(hpage);
- 	if (!(flags & MF_MUST_KILL) && !PageDirty(hpage) && mapping &&
--	    mapping_cap_writeback_dirty(mapping)) {
-+	    mapping_can_writeback(mapping)) {
- 		if (page_mkclean(hpage)) {
- 			SetPageDirty(hpage);
- 		} else {
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 34a842a8eb6a7b..9d2f42a3a16294 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -503,7 +503,7 @@ int migrate_page_move_mapping(struct address_space *mapping,
- 			__dec_lruvec_state(old_lruvec, NR_SHMEM);
- 			__inc_lruvec_state(new_lruvec, NR_SHMEM);
- 		}
--		if (dirty && mapping_cap_account_dirty(mapping)) {
-+		if (dirty && mapping_can_writeback(mapping)) {
- 			__dec_node_state(oldzone->zone_pgdat, NR_FILE_DIRTY);
- 			__dec_zone_state(oldzone, NR_ZONE_WRITE_PENDING);
- 			__inc_node_state(newzone->zone_pgdat, NR_FILE_DIRTY);
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 40248d84ad5fbd..1fc0e92be4ba9b 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -1666,7 +1666,7 @@ int vma_wants_writenotify(struct vm_area_struct *vma, pgprot_t vm_page_prot)
- 
- 	/* Can the mapping track the dirty pages? */
- 	return vma->vm_file && vma->vm_file->f_mapping &&
--		mapping_cap_account_dirty(vma->vm_file->f_mapping);
-+		mapping_can_writeback(vma->vm_file->f_mapping);
- }
- 
- /*
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index 0139f9622a92da..358d6f28c627b7 100644
---- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -1882,7 +1882,7 @@ void balance_dirty_pages_ratelimited(struct address_space *mapping)
- 	int ratelimit;
- 	int *p;
- 
--	if (!bdi_cap_account_dirty(bdi))
-+	if (!(bdi->capabilities & BDI_CAP_WRITEBACK))
- 		return;
- 
- 	if (inode_cgwb_enabled(inode))
-@@ -2423,7 +2423,7 @@ void account_page_dirtied(struct page *page, struct address_space *mapping)
- 
- 	trace_writeback_dirty_page(page, mapping);
- 
--	if (mapping_cap_account_dirty(mapping)) {
-+	if (mapping_can_writeback(mapping)) {
- 		struct bdi_writeback *wb;
- 
- 		inode_attach_wb(inode, page);
-@@ -2450,7 +2450,7 @@ void account_page_dirtied(struct page *page, struct address_space *mapping)
- void account_page_cleaned(struct page *page, struct address_space *mapping,
- 			  struct bdi_writeback *wb)
- {
--	if (mapping_cap_account_dirty(mapping)) {
-+	if (mapping_can_writeback(mapping)) {
- 		dec_lruvec_page_state(page, NR_FILE_DIRTY);
- 		dec_zone_page_state(page, NR_ZONE_WRITE_PENDING);
- 		dec_wb_stat(wb, WB_RECLAIMABLE);
-@@ -2513,7 +2513,7 @@ void account_page_redirty(struct page *page)
- {
- 	struct address_space *mapping = page->mapping;
- 
--	if (mapping && mapping_cap_account_dirty(mapping)) {
-+	if (mapping && mapping_can_writeback(mapping)) {
- 		struct inode *inode = mapping->host;
- 		struct bdi_writeback *wb;
- 		struct wb_lock_cookie cookie = {};
-@@ -2625,7 +2625,7 @@ void __cancel_dirty_page(struct page *page)
- {
- 	struct address_space *mapping = page_mapping(page);
- 
--	if (mapping_cap_account_dirty(mapping)) {
-+	if (mapping_can_writeback(mapping)) {
- 		struct inode *inode = mapping->host;
- 		struct bdi_writeback *wb;
- 		struct wb_lock_cookie cookie = {};
-@@ -2665,7 +2665,7 @@ int clear_page_dirty_for_io(struct page *page)
- 
- 	VM_BUG_ON_PAGE(!PageLocked(page), page);
- 
--	if (mapping && mapping_cap_account_dirty(mapping)) {
-+	if (mapping && mapping_can_writeback(mapping)) {
- 		struct inode *inode = mapping->host;
- 		struct bdi_writeback *wb;
- 		struct wb_lock_cookie cookie = {};
--- 
-2.28.0
-
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
