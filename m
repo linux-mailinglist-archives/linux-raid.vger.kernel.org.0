@@ -2,88 +2,63 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1545B277A51
-	for <lists+linux-raid@lfdr.de>; Thu, 24 Sep 2020 22:30:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AED35277BB3
+	for <lists+linux-raid@lfdr.de>; Fri, 25 Sep 2020 00:42:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgIXUaI (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 24 Sep 2020 16:30:08 -0400
-Received: from [125.140.134.231] ([125.140.134.231]:59260 "EHLO
-        WIN-DAONO245HJF" rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726640AbgIXUaH (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 24 Sep 2020 16:30:07 -0400
-Received: from User ([185.191.231.247]) by WIN-DAONO245HJF with Microsoft SMTPSVC(8.5.9600.16384);
-         Fri, 25 Sep 2020 05:26:42 +0900
-Reply-To: <samthong5555@yahoo.com>
-From:   "SAM THONG" <samthong5555@gmail.com>
-Subject: Business Acquisition 1
-Date:   Thu, 24 Sep 2020 13:26:43 -0700
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="Windows-1251"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-Message-ID: <WIN-DAONO245HJF0ktt00e70a07@WIN-DAONO245HJF>
-X-OriginalArrivalTime: 24 Sep 2020 20:26:42.0882 (UTC) FILETIME=[040CC220:01D692B1]
-To:     unlisted-recipients:; (no To-header on input)
+        id S1726650AbgIXWmb (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 24 Sep 2020 18:42:31 -0400
+Received: from smtp1.wiktel.com ([69.89.207.151]:33536 "EHLO smtp1.wiktel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726205AbgIXWmb (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 24 Sep 2020 18:42:31 -0400
+X-Greylist: delayed 342 seconds by postgrey-1.27 at vger.kernel.org; Thu, 24 Sep 2020 18:42:30 EDT
+Received: from watermelon.coderich.net (thief-pool-117-74.mncable.net [24.225.117.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp1.wiktel.com (Postfix) with ESMTPSA id 4By8zg30xKzxhv;
+        Thu, 24 Sep 2020 17:36:47 -0500 (CDT)
+From:   rlaager@wiktel.com
+To:     linux-raid@vger.kernel.org
+Cc:     rlaager@wiktel.com
+Subject: [PATCH 1/2] mdcheck: Prefix pause message with mdcheck
+Date:   Thu, 24 Sep 2020 17:36:38 -0500
+Message-Id: <20200924223639.23087-1-rlaager@wiktel.com>
+X-Mailer: git-send-email 2.17.1
+X-bounce-key: wiktel.com-1;rlaager@wiktel.com;1600987007;uV5pzyiOhEAsRpsMZJAb2l7Hd88;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=wiktel.com; h=from:to:cc
+        :subject:date:message-id; s=wiktel1; bh=nEla7JMixCG4zy6aBWTRoJI/
+        SSlRWRu6xZL4jXR1XcI=; b=jD5veVEa2MW04JKH5WrlzjpIqJ/b0plUBELbaGbH
+        LaxBM3CcWU70JQS8Ip6TGdbNPDbJBsNuxDt36c8rc2bf2pYPtJVJAhOgQbEAQpE+
+        lBDKuZdZa2+PWNbfJWD03lhaNWnLgqpuictm7CXTi7ofbw3TsovUVFQOe/iunQrB
+        z8Fko1qwLSjnO/tiSbjgxnPDaeQ8Aw6//hL5mrutHqrr+gcPYkP2yTfAPM7K14ub
+        XkpHWRcebIrah/GjFI9DY/aO2H22N4fJTM48r/eUiX7teEOglT1PgY3AIwkAZ4Xz
+        COyr47Ti+cehxX/6w0ni38AAJLV61QyOsec7NHbItTie2w==
+X-Spam-Level: 
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+From: Richard Laager <rlaager@wiktel.com>
 
+This makes it consistent with the other messages.
 
-Dear sir
+Signed-off-by: Richard Laager <rlaager@wiktel.com>
+---
+ misc/mdcheck | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Our underwriter company is seeking the attention of genuine and reliable persons, companies
-
-who are indeed in need of funds as investment capital or business expansion in form of a
-
-direct loan to partner with us and benefit in our new Loan and Project funding programs.
-
-
-
-We offer flexible loans and funding for various projects at very affordable low interest
-
-rate of 3% annually for a period of 1-15 years on Non collateral loan/funding . We offer
-
-loan/funding from a minimum of Euro ? / USD$ 1 Million to Euro ? / USD$ 1 Billion. Max,
-
-depending on the nature of business/project.
-
-We are currently funding for:-
-
-
-
-* Starting up a Franchise
-
-* Business Acquisition
-
-* Business Expansion
-
-* Commercial Real Estate purchase
-
-* Consultancy and Contract Execution, Marine , ETC.
-
-
-
-Kindly get in touch for further details and procedure. samthong5555@yahoo.com 
-
-
-
-Respectfully,
-
-
-SAM THONG
-
-
-
-
-
-
-
-	
-
-
+diff --git a/misc/mdcheck b/misc/mdcheck
+index 700c3e2..299cf10 100644
+--- a/misc/mdcheck
++++ b/misc/mdcheck
+@@ -162,5 +162,5 @@ do
+ 	fi
+ 	echo idle > $sys/md/sync_action
+ 	cat $sys/md/sync_min > $fl
+-	logger -p daemon.info pause checking $dev at `cat $fl`
++	logger -p daemon.info mdcheck pause checking $dev at `cat $fl`
+ done
+-- 
+2.17.1
 
