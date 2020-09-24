@@ -2,82 +2,88 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C5D6E2779AD
-	for <lists+linux-raid@lfdr.de>; Thu, 24 Sep 2020 21:48:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1545B277A51
+	for <lists+linux-raid@lfdr.de>; Thu, 24 Sep 2020 22:30:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbgIXTsC (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 24 Sep 2020 15:48:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50694 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbgIXTsB (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 24 Sep 2020 15:48:01 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE8BFC0613CE
-        for <linux-raid@vger.kernel.org>; Thu, 24 Sep 2020 12:48:01 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id b17so342161pji.1
-        for <linux-raid@vger.kernel.org>; Thu, 24 Sep 2020 12:48:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2OYG9mygTeIwd3eXCqdDkc2EJID9VW1FmMPEh3/Wf1k=;
-        b=FexggIT1JeZknPy3pFy/61i8kvMFqbwVxaZ6RfvNqDhI881+H9OuafRAZNw9G2uVXM
-         DVKwTt26oyHU5ic/QmDs96kNDXa66TixT/3IfrOurCscqWA/xMbfxp6NJBp8ATs+VCLL
-         ucbs399nhzGOnzxOytvo97SZQ6Om4j4Gs+hkCj1b7Oi9SsFnTKw4Z8ka/rW1ATJmqGzE
-         sTlteynM87H05Z9ZiDHyo0iTT1NJ9HgB/fZYZLTVrnS+A+R4jeMhpG2LzTX2ILB2moqo
-         Z/Lh3fdiFZGw8TMfEtVek6GQePCVwhLfEZ+0JsmsRlTepJ3oFsLmpQG5cE7vgYEqVg/W
-         qctw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2OYG9mygTeIwd3eXCqdDkc2EJID9VW1FmMPEh3/Wf1k=;
-        b=dgb6RpE0LgnTpSO2oe9WxN1GMP8Snwf5tG3+KWjbPyfWVVMGArl/3B17W+p8T+Euzx
-         RbvLZeW4CxQ2VuRXKHtlN/Ex0RvGeS9ePiBYTU6r3SQeIlIfMbY9YhSAV1u61acYLP38
-         BcwNss0BZy0yEJTLHIaz2lFSnCwnROC7RbNsw9I8mazL/xANKJRoT8O5XHk9vGz5Ty6m
-         TIJOnvUL19fwLyKfDukmnRjEyGq5jRAv55UlvAm9s8TWVsUv2VGH8cm7C89BjxfQXgrX
-         YRS7EHid5dHTM2wlIxCco175Jg4nPwSZFVDqZtpkgUUYd+4HSM/CPakIXSUmvT5T1KZ/
-         vhww==
-X-Gm-Message-State: AOAM532lCLqtDQAL0N9LZ48akGBv/2w48t/1wDjWeUJ8azCkplLlaKIL
-        MDCizlFNY/iduRWglfW+D22fzw==
-X-Google-Smtp-Source: ABdhPJxhFmFszaCsxMfmB5ZEkvdnPuJUFSosIpkxGW0L8EN0AXYSjGLvXRjEShv7eK+rFvz3VEgucg==
-X-Received: by 2002:a17:90a:8c8a:: with SMTP id b10mr517941pjo.216.1600976881416;
-        Thu, 24 Sep 2020 12:48:01 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c085:21d6::1911? ([2620:10d:c090:400::5:d63d])
-        by smtp.gmail.com with ESMTPSA id n9sm184766pgi.2.2020.09.24.12.47.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Sep 2020 12:48:00 -0700 (PDT)
-Subject: Re: [GIT PULL] md-next 20200923
-To:     Song Liu <songliubraving@fb.com>,
-        linux-raid <linux-raid@vger.kernel.org>
-Cc:     Xiao Ni <xni@redhat.com>, Zhen Lei <thunder.leizhen@huawei.com>,
-        Yufen Yu <yuyufen@huawei.com>,
-        Xianting Tian <tian.xianting@h3c.com>
-References: <8960F87F-602B-40B0-863F-E3DE75ACCD45@fb.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <40dbf27a-1c5e-6d32-1bb8-6f8f8d1ac46a@kernel.dk>
-Date:   Thu, 24 Sep 2020 13:47:59 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726697AbgIXUaI (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 24 Sep 2020 16:30:08 -0400
+Received: from [125.140.134.231] ([125.140.134.231]:59260 "EHLO
+        WIN-DAONO245HJF" rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726640AbgIXUaH (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 24 Sep 2020 16:30:07 -0400
+Received: from User ([185.191.231.247]) by WIN-DAONO245HJF with Microsoft SMTPSVC(8.5.9600.16384);
+         Fri, 25 Sep 2020 05:26:42 +0900
+Reply-To: <samthong5555@yahoo.com>
+From:   "SAM THONG" <samthong5555@gmail.com>
+Subject: Business Acquisition 1
+Date:   Thu, 24 Sep 2020 13:26:43 -0700
 MIME-Version: 1.0
-In-Reply-To: <8960F87F-602B-40B0-863F-E3DE75ACCD45@fb.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain;
+        charset="Windows-1251"
 Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+Message-ID: <WIN-DAONO245HJF0ktt00e70a07@WIN-DAONO245HJF>
+X-OriginalArrivalTime: 24 Sep 2020 20:26:42.0882 (UTC) FILETIME=[040CC220:01D692B1]
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 9/23/20 4:56 PM, Song Liu wrote:
-> 
-> Hi Jens, 
-> 
-> Please consider pulling the following changes for md-next on top of your 
-> for-5.10/block branch. 
 
-Pulled, thanks.
 
--- 
-Jens Axboe
+Dear sir
+
+Our underwriter company is seeking the attention of genuine and reliable persons, companies
+
+who are indeed in need of funds as investment capital or business expansion in form of a
+
+direct loan to partner with us and benefit in our new Loan and Project funding programs.
+
+
+
+We offer flexible loans and funding for various projects at very affordable low interest
+
+rate of 3% annually for a period of 1-15 years on Non collateral loan/funding . We offer
+
+loan/funding from a minimum of Euro ? / USD$ 1 Million to Euro ? / USD$ 1 Billion. Max,
+
+depending on the nature of business/project.
+
+We are currently funding for:-
+
+
+
+* Starting up a Franchise
+
+* Business Acquisition
+
+* Business Expansion
+
+* Commercial Real Estate purchase
+
+* Consultancy and Contract Execution, Marine , ETC.
+
+
+
+Kindly get in touch for further details and procedure. samthong5555@yahoo.com 
+
+
+
+Respectfully,
+
+
+SAM THONG
+
+
+
+
+
+
+
+	
+
+
 
