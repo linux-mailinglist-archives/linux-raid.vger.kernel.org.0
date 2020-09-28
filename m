@@ -2,73 +2,43 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7343827A8A6
-	for <lists+linux-raid@lfdr.de>; Mon, 28 Sep 2020 09:30:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 999AD27A9F8
+	for <lists+linux-raid@lfdr.de>; Mon, 28 Sep 2020 10:52:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbgI1Had (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 28 Sep 2020 03:30:33 -0400
-Received: from verein.lst.de ([213.95.11.211]:34518 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726688AbgI1Hac (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 28 Sep 2020 03:30:32 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id BCC2268AFE; Mon, 28 Sep 2020 09:30:28 +0200 (CEST)
-Date:   Mon, 28 Sep 2020 09:30:28 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        Song Liu <song@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Veronika Kabatova <vkabatov@redhat.com>,
-        linux-raid@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
-        Tejun Heo <tj@kernel.org>, Christoph Hellwig <hch@lst.de>,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: Re: [PATCH V5 1/3] percpu_ref: add percpu_ref_is_initialized for MD
-Message-ID: <20200928073028.GA16536@lst.de>
-References: <20200927062654.2750277-1-ming.lei@redhat.com> <20200927062654.2750277-2-ming.lei@redhat.com>
+        id S1726605AbgI1IwE convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-raid@lfdr.de>); Mon, 28 Sep 2020 04:52:04 -0400
+Received: from mx.tsjbaires.gov.ar ([200.73.158.130]:25278 "EHLO
+        webmail.tsjbaires.gov.ar" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726380AbgI1IwE (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 28 Sep 2020 04:52:04 -0400
+X-Greylist: delayed 712 seconds by postgrey-1.27 at vger.kernel.org; Mon, 28 Sep 2020 04:52:02 EDT
+Received: from svrborges.tsjbaires.gov.ar ([10.10.10.12]) by
+ svrborges.tsjbaires.gov.ar ([10.10.10.12]) with mapi; Mon, 28 Sep 2020
+ 05:40:04 -0300
+From:   Claudio Cohen <ccohen@tsjbaires.gov.ar>
+Date:   Mon, 28 Sep 2020 05:40:02 -0300
+Subject: 
+Thread-Index: AQHWlXL1GYjqcri5mUeE/MMAm0rWeQ==
+Message-ID: <4B1437038E76064F98C3AAF27796110DF40B6632B0@svrborges.tsjbaires.gov.ar>
+Accept-Language: en-US, es-AR
+Content-Language: en-AU
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+acceptlanguage: en-US, es-AR
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200927062654.2750277-2-ming.lei@redhat.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Sun, Sep 27, 2020 at 02:26:52PM +0800, Ming Lei wrote:
-> MD code uses perpcu-refcount internal to check if this percpu-refcount
-> variable is initialized, this way is a hack.
-> 
-> Add percpu_ref_is_initialized for MD so that the hack can be avoided.
-> 
-> Acked-by: Song Liu <song@kernel.org>
-> Suggested-by: Jens Axboe <axboe@kernel.dk>
-> Tested-by: Veronika Kabatova <vkabatov@redhat.com>
-> Cc: Song Liu <song@kernel.org>
-> Cc: linux-raid@vger.kernel.org
-> Cc: Sagi Grimberg <sagi@grimberg.me>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: Bart Van Assche <bvanassche@acm.org>
-> Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> ---
->  drivers/md/md.c                 | 2 +-
->  include/linux/percpu-refcount.h | 1 +
->  lib/percpu-refcount.c           | 6 ++++++
->  3 files changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index de8419b7ae98..241ff618d84e 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -5631,7 +5631,7 @@ static void no_op(struct percpu_ref *r) {}
->  
->  int mddev_init_writes_pending(struct mddev *mddev)
->  {
-> -	if (mddev->writes_pending.percpu_count_ptr)
-> +	if (percpu_ref_is_initialized(&mddev->writes_pending))
->  		return 0;
 
-I'd much rather use a flag in the containing mddev structure then
-exposing this new "API".  That mddev code is pretty gross to be honest,
-we should just initialize the percpu_ref once instea of such a hack.
+
+
+Wir bieten Privat- und Geschäftskredite an. Ich bin ein zugelassener und zertifizierter Kreditgeber mit langjähriger Erfahrung in der Kreditvergabe. Wir vergeben Sicherheiten und nicht besicherte Kredite in Höhe von 10.000,00 € bis maximal 500.000.000,00 € mit einem festen Zinssatz von 3% eine jährliche Basis. Brauchen Sie einen Kredit? Mailen Sie uns an:  tinahook.loans@gmail.com
+
+Mailen Sie uns an:   tinahook.loans@gmail.com
+
+"Piense antes de imprimir. Ahorrar papel es cuidar nuestro ambiente" Ley 2.736
