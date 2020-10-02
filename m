@@ -2,72 +2,63 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 238FC281127
-	for <lists+linux-raid@lfdr.de>; Fri,  2 Oct 2020 13:25:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E8996281BF6
+	for <lists+linux-raid@lfdr.de>; Fri,  2 Oct 2020 21:27:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387728AbgJBLZD (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 2 Oct 2020 07:25:03 -0400
-Received: from icebox.esperi.org.uk ([81.187.191.129]:53694 "EHLO
-        mail.esperi.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725953AbgJBLZD (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 2 Oct 2020 07:25:03 -0400
-X-Greylist: delayed 1942 seconds by postgrey-1.27 at vger.kernel.org; Fri, 02 Oct 2020 07:25:02 EDT
-Received: from loom (nix@sidle.srvr.nix [192.168.14.8])
-        by mail.esperi.org.uk (8.16.1/8.16.1) with ESMTP id 092AqbTn028016;
-        Fri, 2 Oct 2020 11:52:37 +0100
-From:   Nix <nix@esperi.org.uk>
-To:     David Madore <david+ml@madore.org>
-Cc:     antlists <antlists@youngman.org.uk>,
-        Linux RAID mailing-list <linux-raid@vger.kernel.org>
-Subject: Re: RAID5->RAID6 reshape remains stuck at 0% (does nothing, not even start)
-References: <20200930014032.pd4csjwu3m7uihin@achernar.gro-tsen.net>
-        <5F740390.7050005@youngman.org.uk>
-        <20200930090031.6lzrs336fr4inpz4@achernar.gro-tsen.net>
-        <90338e5b-9ed4-c86e-fa35-8acdd6768ca7@youngman.org.uk>
-        <20200930185824.q6dphu2axpfcjjly@achernar.gro-tsen.net>
-        <5F74D684.8020005@youngman.org.uk>
-        <20200930194510.vki7zixjca6sxvin@achernar.gro-tsen.net>
-        <bfe9949c-1b46-baa3-1a89-0d994175dc95@youngman.org.uk>
-        <20200930222637.mmlphc4patipalng@achernar.gro-tsen.net>
-Emacs:  anything free is worth what you paid for it.
-Date:   Fri, 02 Oct 2020 11:52:37 +0100
-In-Reply-To: <20200930222637.mmlphc4patipalng@achernar.gro-tsen.net> (David
-        Madore's message of "Thu, 1 Oct 2020 00:26:37 +0200")
-Message-ID: <871righpca.fsf@esperi.org.uk>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3.50 (gnu/linux)
+        id S2388439AbgJBT1F convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-raid@lfdr.de>); Fri, 2 Oct 2020 15:27:05 -0400
+Received: from mx.metalurgs.lv ([81.198.125.103]:61207 "EHLO mx.metalurgs.lv"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388434AbgJBT1F (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 2 Oct 2020 15:27:05 -0400
+Received: from mx.metalurgs.lv (localhost [127.0.0.1])
+        by mx.metalurgs.lv (Postfix) with ESMTP id DC45E61B66
+        for <linux-raid@vger.kernel.org>; Fri,  2 Oct 2020 22:17:15 +0300 (EEST)
+Received: from kas30pipe.localhost (localhost [127.0.0.1])
+        by mx.metalurgs.lv (Postfix) with ESMTP id B6A80619D8
+        for <linux-raid@vger.kernel.org>; Fri,  2 Oct 2020 22:17:15 +0300 (EEST)
+Received: by mx.metalurgs.lv (Postfix, from userid 1005)
+        id 9B9FF61C4D; Fri,  2 Oct 2020 22:17:14 +0300 (EEST)
+Received: from [100.64.1.74] (unknown [190.15.125.50])
+        (Authenticated sender: admin)
+        by mx.metalurgs.lv (Postfix) with ESMTPA id 53D5F6117B;
+        Fri,  2 Oct 2020 22:17:08 +0300 (EEST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-DCC-wuwien-Metrics: loom 1290; Body=3 Fuz1=3 Fuz2=3
+Content-Description: Mail message body
+To:     Recipients <financialcapability6@gmail.com>
+From:   "Mr. Hashim Bin" <financialcapability6@gmail.com>
+Date:   Fri, 02 Oct 2020 16:16:58 -0300
+Reply-To: binmurrah@gmail.com
+X-SpamTest-Envelope-From: financialcapability6@gmail.com
+X-SpamTest-Group-ID: 00000000
+X-SpamTest-Info: Profiles 71303 [Jan 01 2015]
+X-SpamTest-Info: {TO: forged address, i.e. recipient, investors, public, etc.}
+X-SpamTest-Info: {DATE: unreal year}
+X-SpamTest-Method: none
+X-SpamTest-Rate: 55
+X-SpamTest-Status: Not detected
+X-SpamTest-Status-Extended: not_detected
+X-SpamTest-Version: SMTP-Filter Version 3.0.0 [0284], KAS30/Release
+Message-ID: <20201002191714.9B9FF61C4D@mx.metalurgs.lv>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Subject: Low Rate Loan.
+X-Anti-Virus: Kaspersky Anti-Virus for Linux Mail Server 5.6.39/RELEASE,
+         bases: 20140401 #7726142, check: 20201002 notchecked
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 30 Sep 2020, David Madore verbalised:
+Hello Dear,
 
-> On Wed, Sep 30, 2020 at 09:16:10PM +0100, antlists wrote:
->> The problem is that if you use mdadm 3.4 with kernel 4.9.237, the 237 means
->> that your kernel has been heavily updated and is far too new. But if you use
->> mdadm 4.1 with kernel 4.9.237, the 4.9 means that the kernel is basically a
->> very old one - too old for mdadm 4.1
->
-> But the point of the longterm kernel lines like 4.9.237 is to keep
-> strict compatibility with the original branch point (that's the point
-> of a "stable" line) and perform only bugfixes, isn't it?  Do you mean
+We are Investment Company offering Corporate and Personal
+Loan at 3% Interest Rate for a duration of 10Years.
 
-Yes... but the older a kernel release is, the less testing it gets for
-edge cases, and reshaping is an edge case that doesn't happen very
-often. I'm not terribly surprised that nobody turns out to have been
-testing it in this kernel line and that it's rusted as a consqueence.
+We also pay 1% commission to brokers, who introduce project
+owners for finance or other opportunities.
 
-(Reshaping in conjunction with systemd is probably even rarer, because
-reshaping tends to happen when you run out of disk space and need more,
-or when disks age out and need replacement, which means it happens on
-fairly old, stable machines -- and probably, even now, most such old
-machines aren't running systemd and aren't exercising the buggy code
-triggered by that systemd unit file.)
+Please get back to me if you are interested for more
+details.
 
-> to say that there is NO stable kernel line with full mdadm support?
-
-The question isn't "full support", the question is "what gets a lot of
-testing"? Recent, supported stable kernels get a lot of testing, so they
-are likely to have exercised relatively obscure paths like this one.
+Yours faithfully,
+Hashim Bin 
