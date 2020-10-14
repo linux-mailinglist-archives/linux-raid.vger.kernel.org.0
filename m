@@ -2,191 +2,90 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EFDB28D85A
-	for <lists+linux-raid@lfdr.de>; Wed, 14 Oct 2020 04:13:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EE8D28E35C
+	for <lists+linux-raid@lfdr.de>; Wed, 14 Oct 2020 17:35:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgJNCM5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 13 Oct 2020 22:12:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56962 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726120AbgJNCM5 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 13 Oct 2020 22:12:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 144ECAFD5;
-        Wed, 14 Oct 2020 02:12:56 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Jes Sorensen <jes@trained-monkey.org>
-Date:   Wed, 14 Oct 2020 13:12:48 +1100
-Subject: [PATCH mdadm] Super1: allow RAID0 layout setting to be removed.
-cc:     Linux RAID Mailing List <linux-raid@vger.kernel.org>
-Message-ID: <871ri1h7xb.fsf@notabene.neil.brown.name>
+        id S1730119AbgJNPfM (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 14 Oct 2020 11:35:12 -0400
+Received: from sender11-op-o12.zoho.eu ([31.186.226.226]:17311 "EHLO
+        sender11-op-o12.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729318AbgJNPfM (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 14 Oct 2020 11:35:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1602688802; cv=none; 
+        d=zohomail.eu; s=zohoarc; 
+        b=PKYGPYemajCFz4l+6oSN0zLch35HKmLFwi9ovhSKBbb7aLpGRrTsLzeCSRhQSwUaHiHxiE6mBDWJaYhO440c+Jd17IRdlCxzCC2cnx1QitLTNrwqrmF6kbSH1ccIFUIako63tvCY/onJln591jr4nj2hMlvrVRLs6Smhp+08w30=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+        t=1602688802; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=/YXwRl5BPdPhzIUiJTIQ86CeZtJSPUbl+Ggyn/u9kBA=; 
+        b=AvCljuxCKTXsa0/RCD/TjhUfcMWo1jRTJQqpvP779PDXmnTuOmlIex4IgIBLUcNBLyEmixvINKmOgg1Thq+NbTrmhTqURNk4vKecodKOko2iIUbvG7w9xKjNegGV5O/YCHRL6D0do93rQb4XzElnvEMqks6YbwldKjSHbMcO7/0=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
+        dmarc=pass header.from=<jes@trained-monkey.org> header.from=<jes@trained-monkey.org>
+Received: from [IPv6:2620:10d:c0a8:1102::1844] (163.114.130.3 [163.114.130.3]) by mx.zoho.eu
+        with SMTPS id 1602688800965861.1750237922348; Wed, 14 Oct 2020 17:20:00 +0200 (CEST)
+Subject: Re: [PATCH v2] Detail: show correct raid level when the array is
+ inactive
+To:     Lidong Zhong <lidong.zhong@suse.com>
+Cc:     linux-raid@vger.kernel.org
+References: <20200914025218.7197-1-lidong.zhong@suse.com>
+From:   Jes Sorensen <jes@trained-monkey.org>
+Message-ID: <48f8cd25-d872-e306-a544-e31c59d91c9b@trained-monkey.org>
+Date:   Wed, 14 Oct 2020 11:19:58 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+In-Reply-To: <20200914025218.7197-1-lidong.zhong@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On 9/13/20 10:52 PM, Lidong Zhong wrote:
+> Sometimes the raid level in the output of `mdadm -D /dev/mdX` is
+> misleading when the array is in inactive state. Here is a testcase for
+> introduction.
+> 1\ creating a raid1 device with two disks. Specify a different hostname
+> rather than the real one for later verfication.
+> 
+> node1:~ # mdadm --create /dev/md0 --homehost TESTARRAY -o -l 1 -n 2 /dev/sdb
+> /dev/sdc
+> 2\ remove one of the devices and reboot
+> 3\ show the detail of raid1 device
+> 
+> node1:~ # mdadm -D /dev/md127
+> /dev/md127:
+>         Version : 1.2
+>      Raid Level : raid0
+>   Total Devices : 1
+>     Persistence : Superblock is persistent
+>           State : inactive
+> Working Devices : 1
+> 
+> You can see that the "Raid Level" in /dev/md127 is raid0 now.
+> After step 2\ is done, the degraded raid1 device is recognized
+> as a "foreign" array in 64-md-raid-assembly.rules. And thus the
+> timer to activate the raid1 device is not triggered. The array
+> level returned from GET_ARRAY_INFO ioctl is 0. And the string
+> shown for "Raid Level" is
+> str = map_num(pers, array.level);
+> And the definition of pers is
+> mapping_t pers[] = {
+> { "linear", LEVEL_LINEAR},
+> { "raid0", 0},
+> { "0", 0}
+> ...
+> So the misleading "raid0" is shown in this testcase.
+> 
+> Changelog:
+> v1: don't show "Raid Level" when array is inactive
+> Signed-off-by: Lidong Zhong <lidong.zhong@suse.com>
+>
 
+Applied!
 
-Once the RAID0 layout has been set, the RAID0 array cannot be assembled
-on an older kernel which doesn't understand layouts.
-This is an intentional safety feature, but sometimes people need the
-ability to roll-back to a previously working configuration.
+Thanks,
+Jes
 
-So add "--update=3Dlayout-unspecified" to remove RAID0 layout information
-from the superblock.
-Running "--assemble --update=3Dlayout-unspecified" will cause the assembly
-the fail when run on a newer kernel, but will allow it to work on
-an older kernel.
-
-Signed-off-by: NeilBrown <neilb@suse.de>
-=2D--
- md.4       | 13 +++++++++++++
- mdadm.8.in | 15 +++++++++++++--
- mdadm.c    |  5 +++--
- super1.c   |  6 +++++-
- 4 files changed, 34 insertions(+), 5 deletions(-)
-
-diff --git a/md.4 b/md.4
-index aecff38a1d02..60fdd274cc50 100644
-=2D-- a/md.4
-+++ b/md.4
-@@ -215,6 +215,19 @@ option or the
- .B "--update=3Dlayout-alternate"
- option.
-=20
-+Once you have updated the layout you will not be able to mount the array
-+on an older kernel.  If you need to revert to an older kernel, the
-+layout information can be erased with the
-+.B "--update=3Dlayout-unspecificed"
-+option.  If you use this option to=20
-+.B --assemble
-+while running a newer kernel, the array will NOT assemble, but the
-+metadata will be update so that it can be assembled on an older kernel.
-+
-+No that setting the layout to "unspecified" removes protections against
-+this bug, and you must be sure that the kernel you use matches the
-+layout of the array.
-+
- .SS RAID1
-=20
- A RAID1 array is also known as a mirrored set (though mirrors tend to
-diff --git a/mdadm.8.in b/mdadm.8.in
-index ab832e858bca..34a93a8fb3cf 100644
-=2D-- a/mdadm.8.in
-+++ b/mdadm.8.in
-@@ -1213,6 +1213,7 @@ argument given to this flag can be one of
- .BR no\-ppl ,
- .BR layout\-original ,
- .BR layout\-alternate ,
-+.BR layout\-unspecified ,
- .BR metadata ,
- or
- .BR super\-minor .
-@@ -1368,8 +1369,9 @@ The
- .B layout\-original
- and
- .B layout\-alternate
-=2Doptions are for RAID0 arrays in use before Linux 5.4.  If the array was =
-being
-=2Dused with Linux 3.13 or earlier, then to assemble the array on a new ker=
-nel,
-+options are for RAID0 arrays with non-uniform devices size that were in
-+use before Linux 5.4.  If the array was being used with Linux 3.13 or
-+earlier, then to assemble the array on a new kernel,=20
- .B \-\-update=3Dlayout\-original
- must be given.  If the array was created and used with a kernel from Linux=
- 3.14 to
- Linux 5.3, then
-@@ -1379,6 +1381,15 @@ will happen normally.
- For more information, see
- .IR md (4).
-=20
-+The
-+.B layout\-unspecified
-+option reverts the effect of
-+.B layout\-orignal
-+or
-+.B layout\-alternate
-+and allows the array to be again used on a kernel prior to Linux 5.3.
-+This option should be used with great caution.
-+
- .TP
- .BR \-\-freeze\-reshape
- Option is intended to be used in start-up scripts during initrd boot phase.
-diff --git a/mdadm.c b/mdadm.c
-index 1b3467fd4779..493d70e4d4ac 100644
-=2D-- a/mdadm.c
-+++ b/mdadm.c
-@@ -796,7 +796,8 @@ int main(int argc, char *argv[])
- 			if (strcmp(c.update, "revert-reshape") =3D=3D 0)
- 				continue;
- 			if (strcmp(c.update, "layout-original") =3D=3D 0 ||
-=2D			    strcmp(c.update, "layout-alternate") =3D=3D 0)
-+			    strcmp(c.update, "layout-alternate") =3D=3D 0 ||
-+			    strcmp(c.update, "layout-unspecified") =3D=3D 0)
- 				continue;
- 			if (strcmp(c.update, "byteorder") =3D=3D 0) {
- 				if (ss) {
-@@ -828,7 +829,7 @@ int main(int argc, char *argv[])
- 		"     'summaries', 'homehost', 'home-cluster', 'byteorder', 'devicesize'=
-,\n"
- 		"     'no-bitmap', 'metadata', 'revert-reshape'\n"
- 		"     'bbl', 'no-bbl', 'force-no-bbl', 'ppl', 'no-ppl'\n"
-=2D		"     'layout-original', 'layout-alternate'\n"
-+		"     'layout-original', 'layout-alternate', 'layout-unspecified'\n"
- 				);
- 			exit(outf =3D=3D stdout ? 0 : 2);
-=20
-diff --git a/super1.c b/super1.c
-index 76648835bf8f..8b0d6ff3d8bc 100644
-=2D-- a/super1.c
-+++ b/super1.c
-@@ -1551,11 +1551,15 @@ static int update_super1(struct supertype *st, stru=
-ct mdinfo *info,
- 	else if (strcmp(update, "nofailfast") =3D=3D 0)
- 		sb->devflags &=3D ~FailFast1;
- 	else if (strcmp(update, "layout-original") =3D=3D 0 ||
-=2D		 strcmp(update, "layout-alternate") =3D=3D 0) {
-+		 strcmp(update, "layout-alternate") =3D=3D 0 ||
-+		 strcmp(update, "layout-unspecified") =3D=3D 0) {
- 		if (__le32_to_cpu(sb->level) !=3D 0) {
- 			pr_err("%s: %s only supported for RAID0\n",
- 			       devname?:"", update);
- 			rv =3D -1;
-+		} else if (strcmp(update, "layout-unspecified") =3D=3D 0) {
-+			sb->feature_map &=3D ~__cpu_to_le32(MD_FEATURE_RAID0_LAYOUT);
-+			sb->layout =3D 0;
- 		} else {
- 			sb->feature_map |=3D __cpu_to_le32(MD_FEATURE_RAID0_LAYOUT);
- 			sb->layout =3D __cpu_to_le32(update[7] =3D=3D 'o' ? 1 : 2);
-=2D-=20
-2.28.0
-
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJCBAEBCAAsFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl+GXqEOHG5laWxiQHN1
-c2UuZGUACgkQOeye3VZigbkBKQ/9G668cAv+Gf0IqRs/X0HORWLFxv6xKhuRRxH3
-JX41ztcONwUm0nLQARdz1BJ5g7UoxmrVUHcIyk9bXVwjtWkr4Em5g5tzBWeJjsbf
-wtINv1yAhK2Fd8HpFqHqQ6aybsFfBOfdJFYpe3XNi6bwD42vDq8x3z0ftPVFf1GN
-NXO4txy/UySbn99Bif+QZv+viwlB/t3cswl69HnMiedeujCra3uX9QbJiIW/teN1
-ZvXedSo485NqPDQH9UVn/i1r0qlibhjs4t7j21qWIlFyuOKwTGw+9fistyTwfPvl
-BbByczITsU4nQfehY6AMYneWZgIeH+SbYTrauZSLIm4rrP7R1jOsEbDBaI+wL9DF
-wpGwDTACtFQGe5ZgKV7hHBBo9WtRGB2U4RZCz4XRfY0/tHCWJ5fFopzIs0Tw3opS
-VMImcaZGJATQDked4T+p3HbWbCFprSJiptr2NzgNNteFg5WfbsdfhLNJ6kK5j3DX
-xK7dl1+NxwFeds7rs3xlMDLGCod+mirXcZ9nlmlc+Sj0SAVa4bLmEks6TrKUlf2w
-IHnidQXD/5zAt53GakcXKwAtjcxOyGmLtlqd9agLr5m4alpNubEzFrP5qKadJQD3
-D3s8hTNhD1m8KjJo+4F6X4w1S3U8v4U/wVlk2IqCMTO7Cel1CCmaz2kP9O/sh+11
-PbJZx9w=
-=o2kk
------END PGP SIGNATURE-----
---=-=-=--
