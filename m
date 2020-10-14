@@ -2,41 +2,39 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D12428E35E
-	for <lists+linux-raid@lfdr.de>; Wed, 14 Oct 2020 17:35:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 538D128E365
+	for <lists+linux-raid@lfdr.de>; Wed, 14 Oct 2020 17:38:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731448AbgJNPf0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 14 Oct 2020 11:35:26 -0400
-Received: from sender11-op-o12.zoho.eu ([31.186.226.226]:17350 "EHLO
+        id S1729007AbgJNPi0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 14 Oct 2020 11:38:26 -0400
+Received: from sender11-op-o12.zoho.eu ([31.186.226.226]:17369 "EHLO
         sender11-op-o12.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730326AbgJNPf0 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 14 Oct 2020 11:35:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1602689721; cv=none; 
+        with ESMTP id S1726819AbgJNPi0 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 14 Oct 2020 11:38:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1602689903; cv=none; 
         d=zohomail.eu; s=zohoarc; 
-        b=VmJivxU/JiAZMN75tGAm0WjP/ICEzGVrzbmL8YkgZ/yh2tPhUMDpDpiX8rFUTSrghFbizBGasQzwzrtxuFFVOSexN+uiyA6Gvv3ep4INe1XmhZmky+1YpmWSYXqI9wpCKA30+ZQkXtMgTB6n2TN8LqLe0dkj+UhCTYIVmqTZYN8=
+        b=Zw0blJF1tTYjc7DptB+UA417tsuszgNXbSlIBOD4MtLYG8BY22O0BzO6FdNzp4RRLiC/xobfhWiceiu3K8mAUri3uGatTzw9mt9NEC59RDHJKgtGI7GVnNT/KjU5PUqIJyam2DhTWzzO5/E2YpGQpt24opCKfjY1z7Sm7HeO3+Q=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1602689721; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=6YhBMzFEPg1PqSNy/+3yvFue/ZaOht3PAxmqA6U5WUI=; 
-        b=WiwLEb/5iJuv71BoRzJ4KGp4SaPyJwGHOMelB5fa2rzmhv8TN7SnzO1H+hzKXkLDKfHmJvXZnX9G1GH3C77VO/GfF73eF+PBCm8jT0it9yFsLeshLAsyl88sXVpm1KsSp+KeqnMtqBCPzYUe5bQ/9v86EgsEcF8B++6mVT0xt6o=
+        t=1602689903; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=nkbiD1HYeSv0cJp9UDDG/EuPQeplBZCcM8R6iWQcjRw=; 
+        b=QxLoY2z4/O4TxhYZmL7jqLngsVsG3igT/ahC27J0BkMMrgIdrojPZx3+lTzi9W/R70ofCg1XfWsB3CSfzC3N6dixkiQS6TPP2po4rqsazeCd7mVNpj0bX5v5ORt473PlyKaHf+kxweiXoxHueR8YcUlr8CMRdNyvEbt9eCV2Lsk=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
         spf=pass  smtp.mailfrom=jes@trained-monkey.org;
         dmarc=pass header.from=<jes@trained-monkey.org> header.from=<jes@trained-monkey.org>
 Received: from [IPv6:2620:10d:c0a8:1102::1844] (163.114.130.3 [163.114.130.3]) by mx.zoho.eu
-        with SMTPS id 1602689718688584.0998078531869; Wed, 14 Oct 2020 17:35:18 +0200 (CEST)
-Subject: Re: [PATCH 3/4] mdmonitor: set small delay once
-To:     Nix <nix@esperi.org.uk>,
-        Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
+        with SMTPS id 1602689900923122.07298676244625; Wed, 14 Oct 2020 17:38:20 +0200 (CEST)
+Subject: Re: [PATCH 4/4] Check if other Monitor instance running before fork.
+To:     Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
 Cc:     linux-raid@vger.kernel.org
 References: <20200909083120.10396-1-mariusz.tkaczyk@intel.com>
- <20200909083120.10396-4-mariusz.tkaczyk@intel.com>
- <87lfhbz33e.fsf@esperi.org.uk>
+ <20200909083120.10396-5-mariusz.tkaczyk@intel.com>
 From:   Jes Sorensen <jes@trained-monkey.org>
-Message-ID: <7b4a43b2-a922-e145-104d-00b930362bf4@trained-monkey.org>
-Date:   Wed, 14 Oct 2020 11:35:16 -0400
+Message-ID: <35186b77-bb79-aff7-07c8-77d3586310db@trained-monkey.org>
+Date:   Wed, 14 Oct 2020 11:38:18 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <87lfhbz33e.fsf@esperi.org.uk>
+In-Reply-To: <20200909083120.10396-5-mariusz.tkaczyk@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -45,32 +43,20 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 9/15/20 7:33 AM, Nix wrote:
-> On 9 Sep 2020, Mariusz Tkaczyk uttered the following:
+On 9/9/20 4:31 AM, Mariusz Tkaczyk wrote:
+> From: Blazej Kucman <blazej.kucman@intel.com>
 > 
->> +				/*
->> +				 * If mdmonitor is awaken by event, set small delay once
->> +				 * to deal with udev and mdadm.
->> +				 */
->> +				if (wait_result != 0) {
->> +					if (c->delay > 5)
->> +						delay_for_event = 5;
->> +				} else
->> +					delay_for_event = c->delay;
+> Make error message visible to the user.
 > 
-> This is racy: if any delay is needed, any finite delay value will
-> now and then be too short.
-> 
-> I think this should be fixed by arranging for mdmonitor to be signalled
-> when udev or whatever has finished whatever it's doing. (udev has lots
-> of ways it could be asked to do that.)
-> 
+> Signed-off-by: Blazej Kucman <blazej.kucman@intel.com>
+> Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
+> ---
+>  Monitor.c | 44 ++++++++++++++++++++++++++++----------------
+>  1 file changed, 28 insertions(+), 16 deletions(-)
 
-Hi
+Applied!
 
-I have applied this patch for now, since it is better than what we had.
-However, I agree it would be better to do this using udev or other
-signalling, so please have a look at that.
-
-Cheers,
+Thanks,
 Jes
+
+
