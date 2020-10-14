@@ -2,39 +2,41 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF42C28E35B
-	for <lists+linux-raid@lfdr.de>; Wed, 14 Oct 2020 17:34:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D12428E35E
+	for <lists+linux-raid@lfdr.de>; Wed, 14 Oct 2020 17:35:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730160AbgJNPe0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 14 Oct 2020 11:34:26 -0400
-Received: from sender11-op-o12.zoho.eu ([31.186.226.226]:17337 "EHLO
+        id S1731448AbgJNPf0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 14 Oct 2020 11:35:26 -0400
+Received: from sender11-op-o12.zoho.eu ([31.186.226.226]:17350 "EHLO
         sender11-op-o12.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729906AbgJNPeZ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 14 Oct 2020 11:34:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1602689662; cv=none; 
+        with ESMTP id S1730326AbgJNPf0 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 14 Oct 2020 11:35:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1602689721; cv=none; 
         d=zohomail.eu; s=zohoarc; 
-        b=fnxYKxTcmnNLY27bTfnLpy2XZJP1fLZms5h6hI+OkAU4DDzoLPyXyU4DJtY5KxYuSWVi4X26ZJPKKflKA+uY5LxdqwtNDk58VouYkss+yxd7o37rOm/XLtrIFW2mORs90+MFnb80NHvlCybV0WAKSEZLcy278/ED8UBlSG0Jib4=
+        b=VmJivxU/JiAZMN75tGAm0WjP/ICEzGVrzbmL8YkgZ/yh2tPhUMDpDpiX8rFUTSrghFbizBGasQzwzrtxuFFVOSexN+uiyA6Gvv3ep4INe1XmhZmky+1YpmWSYXqI9wpCKA30+ZQkXtMgTB6n2TN8LqLe0dkj+UhCTYIVmqTZYN8=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1602689662; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=hIxAxk9TbwPvgkQtPJGuJzc00HtsKHsrDjXaqlOBoZA=; 
-        b=JIwW62KZk+0dEBcYBAwgrC1kKqJzU/fCz2ZxKRjnbmJXr4lgBMw6pJ5Rsl2neW4JxzWQlQLamk1Yr8mjePG8K18XlDQHfyJnzTFz+PAJTcQjIxPG4kszaU537EknCyj8cfi2wZJ7B5cmzIzs6Mx6ZLuetIC6bWWGR8DFMiIIIMk=
+        t=1602689721; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=6YhBMzFEPg1PqSNy/+3yvFue/ZaOht3PAxmqA6U5WUI=; 
+        b=WiwLEb/5iJuv71BoRzJ4KGp4SaPyJwGHOMelB5fa2rzmhv8TN7SnzO1H+hzKXkLDKfHmJvXZnX9G1GH3C77VO/GfF73eF+PBCm8jT0it9yFsLeshLAsyl88sXVpm1KsSp+KeqnMtqBCPzYUe5bQ/9v86EgsEcF8B++6mVT0xt6o=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
         spf=pass  smtp.mailfrom=jes@trained-monkey.org;
         dmarc=pass header.from=<jes@trained-monkey.org> header.from=<jes@trained-monkey.org>
 Received: from [IPv6:2620:10d:c0a8:1102::1844] (163.114.130.3 [163.114.130.3]) by mx.zoho.eu
-        with SMTPS id 1602689661203374.5634732661397; Wed, 14 Oct 2020 17:34:21 +0200 (CEST)
-Subject: Re: [PATCH 2/4] Monitor: stop notifing about containers.
-To:     Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
+        with SMTPS id 1602689718688584.0998078531869; Wed, 14 Oct 2020 17:35:18 +0200 (CEST)
+Subject: Re: [PATCH 3/4] mdmonitor: set small delay once
+To:     Nix <nix@esperi.org.uk>,
+        Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
 Cc:     linux-raid@vger.kernel.org
 References: <20200909083120.10396-1-mariusz.tkaczyk@intel.com>
- <20200909083120.10396-3-mariusz.tkaczyk@intel.com>
+ <20200909083120.10396-4-mariusz.tkaczyk@intel.com>
+ <87lfhbz33e.fsf@esperi.org.uk>
 From:   Jes Sorensen <jes@trained-monkey.org>
-Message-ID: <ef52f9d6-0619-4984-5370-70a7c00ab288@trained-monkey.org>
-Date:   Wed, 14 Oct 2020 11:34:19 -0400
+Message-ID: <7b4a43b2-a922-e145-104d-00b930362bf4@trained-monkey.org>
+Date:   Wed, 14 Oct 2020 11:35:16 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200909083120.10396-3-mariusz.tkaczyk@intel.com>
+In-Reply-To: <87lfhbz33e.fsf@esperi.org.uk>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -43,19 +45,32 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 9/9/20 4:31 AM, Mariusz Tkaczyk wrote:
-> Stop reporting any events from container but still track them,
-> it is important for spare migration.
-> Stop mdmonitor if no redundant array is presented in mdstat.
-> There is nothing to follow.
+On 9/15/20 7:33 AM, Nix wrote:
+> On 9 Sep 2020, Mariusz Tkaczyk uttered the following:
 > 
-> Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
-> ---
->  Monitor.c | 19 ++++++++++++++++---
->  1 file changed, 16 insertions(+), 3 deletions(-)
+>> +				/*
+>> +				 * If mdmonitor is awaken by event, set small delay once
+>> +				 * to deal with udev and mdadm.
+>> +				 */
+>> +				if (wait_result != 0) {
+>> +					if (c->delay > 5)
+>> +						delay_for_event = 5;
+>> +				} else
+>> +					delay_for_event = c->delay;
+> 
+> This is racy: if any delay is needed, any finite delay value will
+> now and then be too short.
+> 
+> I think this should be fixed by arranging for mdmonitor to be signalled
+> when udev or whatever has finished whatever it's doing. (udev has lots
+> of ways it could be asked to do that.)
+> 
 
-Applied!
+Hi
 
-Thanks,
+I have applied this patch for now, since it is better than what we had.
+However, I agree it would be better to do this using udev or other
+signalling, so please have a look at that.
+
+Cheers,
 Jes
-
