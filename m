@@ -2,74 +2,52 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 893AD28EEB6
-	for <lists+linux-raid@lfdr.de>; Thu, 15 Oct 2020 10:45:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 879B128F3DE
+	for <lists+linux-raid@lfdr.de>; Thu, 15 Oct 2020 15:54:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388288AbgJOIpn (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 15 Oct 2020 04:45:43 -0400
-Received: from mga14.intel.com ([192.55.52.115]:47809 "EHLO mga14.intel.com"
+        id S2387592AbgJONx7 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 15 Oct 2020 09:53:59 -0400
+Received: from edge.kilargo.pl ([77.252.52.110]:24065 "EHLO edge.kilargo.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388233AbgJOIpn (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 15 Oct 2020 04:45:43 -0400
-IronPort-SDR: dnZx1NJ0gIBiZ0Dq8tLrtRHmht3GpzBgpXRGDK/mAkawL7gfyaOrlQUr12Ep4rCoGFD2eYbI8y
- y2QiONsCzQNA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9774"; a="165516818"
-X-IronPort-AV: E=Sophos;i="5.77,378,1596524400"; 
-   d="scan'208";a="165516818"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2020 01:45:42 -0700
-IronPort-SDR: aXEhnAiB8M45EJsMTdsyKiZZ2AknOR1hfYEbqsmlOfEN7+wCjR0cKhen9nrlQW3FkcuQYZ1yeE
- TJ9lIKPBA0Sw==
-X-IronPort-AV: E=Sophos;i="5.77,378,1596524400"; 
-   d="scan'208";a="531169499"
-Received: from mtkaczyk-devel.igk.intel.com ([10.102.102.23])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2020 01:45:41 -0700
-From:   Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
-To:     jes@trained-monkey.org
-Cc:     linux-raid@vger.kernel.org
-Subject: [PATCH] udev: start grow service automatically
-Date:   Thu, 15 Oct 2020 10:45:29 +0200
-Message-Id: <20201015084529.5306-1-mariusz.tkaczyk@intel.com>
-X-Mailer: git-send-email 2.25.0
+        id S1729735AbgJONx6 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 15 Oct 2020 09:53:58 -0400
+X-Greylist: delayed 601 seconds by postgrey-1.27 at vger.kernel.org; Thu, 15 Oct 2020 09:53:22 EDT
+Received: from mail.kilargo.pl (77.252.52.107) by edge.kilargo.pl
+ (77.252.52.109) with Microsoft SMTP Server (TLS) id 8.3.485.1; Thu, 15 Oct
+ 2020 15:41:40 +0200
+Received: from User (185.248.12.71) by MAIL.kilargo.pl (172.22.0.36) with
+ Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 15 Oct 2020 14:54:55 +0200
+Reply-To: <kim.leang2011@yahoo.com>
+From:   Kim Leang <mechanik@kilargo.pl>
+Subject: Greeting! !!
+Date:   Thu, 15 Oct 2020 15:54:58 +0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="Windows-1251"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+Message-ID: <b8fd632900dc4ad4a113512e7781e06f@mail.kilargo.pl>
+To:     Undisclosed recipients:;
+X-Originating-IP: [185.248.12.71]
+X-ClientProxiedBy: mail.kilargo.pl (172.22.0.36) To MAIL.kilargo.pl
+ (172.22.0.36)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A295AAB9B6B647163
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Tkaczyk Mariusz <mariusz.tkaczyk@intel.com>
+Greeting!
 
-Grow continue via service or fork is started during raid assembly.
-If raid was assembled in initrd it will be newer restarted after
-switch root.
-Add udev support for starting mdadm-grow-continue service.
+I am contacting you to receive and share with me an abandoned fund ( $21,537.000.00 ) left in our bank by a deceased customer. I was going through the Internet search when I found your email address. My name is Mr. Kim Leang.
 
-Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
----
- udev-md-raid-arrays.rules | 2 ++
- 1 file changed, 2 insertions(+)
+I want to utilize this opportunity and make use of this fund if I should present your name to the bank to stand as his business associate/ trustee for the fund to be released to you via Visa card for easy withdrawals in any VISA ATM machine anywhere in the World.
 
-diff --git a/udev-md-raid-arrays.rules b/udev-md-raid-arrays.rules
-index c8fa8e89..13c9076e 100644
---- a/udev-md-raid-arrays.rules
-+++ b/udev-md-raid-arrays.rules
-@@ -15,6 +15,7 @@ ENV{DEVTYPE}=="partition", GOTO="md_ignore_state"
- ATTR{md/metadata_version}=="external:[A-Za-z]*", ATTR{md/array_state}=="inactive", GOTO="md_ignore_state"
- TEST!="md/array_state", ENV{SYSTEMD_READY}="0", GOTO="md_end"
- ATTR{md/array_state}=="clear*|inactive", ENV{SYSTEMD_READY}="0", GOTO="md_end"
-+ATTR{md/sync_action}=="reshape", ENV{RESHAPE_ACTIVE}="yes"
- LABEL="md_ignore_state"
- 
- IMPORT{program}="BINDIR/mdadm --detail --no-devices --export $devnode"
-@@ -38,5 +39,6 @@ ENV{MD_LEVEL}=="raid[1-9]*", ENV{SYSTEMD_WANTS}+="mdmonitor.service"
- # Tell systemd to run mdmon for our container, if we need it.
- ENV{MD_LEVEL}=="raid[1-9]*", ENV{MD_CONTAINER}=="?*", PROGRAM="/usr/bin/readlink $env{MD_CONTAINER}", ENV{MD_MON_THIS}="%c"
- ENV{MD_MON_THIS}=="?*", PROGRAM="/usr/bin/basename $env{MD_MON_THIS}", ENV{SYSTEMD_WANTS}+="mdmon@%c.service"
-+ENV{RESHAPE_ACTIVE}=="yes", PROGRAM="/usr/bin/basename $env{MD_MON_THIS}", ENV{SYSTEMD_WANTS}+="mdadm-grow-continue@%c.service"
- 
- LABEL="md_end"
--- 
-2.25.0
+The bank will also give you international online transfer options. With these you can transfer the funds without any risk.
 
+Should you be interested in working with me in this project? Please reply back and let's benefit from this golden opportunity.You are my first contact. I shall wait a few days and if I do not hear from you, I shall look for another person.
+
+Thanks and have a nice day,
+Mr. Kim Leang.
