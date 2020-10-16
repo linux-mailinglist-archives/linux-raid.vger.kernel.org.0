@@ -2,64 +2,77 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C7E86290539
-	for <lists+linux-raid@lfdr.de>; Fri, 16 Oct 2020 14:37:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 599C2290025
+	for <lists+linux-raid@lfdr.de>; Fri, 16 Oct 2020 10:49:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407632AbgJPMhb (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 16 Oct 2020 08:37:31 -0400
-Received: from cpanel.giganet.cl ([190.96.78.139]:39766 "EHLO
-        cpanel.giganet.cl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407562AbgJPMhY (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 16 Oct 2020 08:37:24 -0400
-X-Greylist: delayed 20782 seconds by postgrey-1.27 at vger.kernel.org; Fri, 16 Oct 2020 08:37:10 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=dplgrout.cl
-        ; s=default; h=Content-Transfer-Encoding:Content-Type:Message-ID:Reply-To:
-        Subject:To:From:Date:MIME-Version:Sender:Cc:Content-ID:Content-Description:
-        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=TrgUs68YRs3neP+PfrvGhLoeMXh3YzKv5z9oCWPJ0m4=; b=m/ABHCVvyLYD2QkkwOjuWUgGFG
-        i9BJXsIic9wHOFEzjhXFPbcsR2XTWptcrmKLSqDrJOV7hGJM6za5nSEFhd4CC/+eaHHsgS48/E2jM
-        qvMpEeazlOlIrwSs4xM+Zdf/REorOK5GVU6ZAJUjCzQuCMv9dTVBPKuexZxj1Qoi2hPLiQ576Ik0L
-        XzwzerIXphINfmlVQ0r0UMIuChB1Vcn201QVmD2skB/Nh9D/yp0E95Av9ZMQq7ln6H0uEUnu/2/5Y
-        /CHuMEs39xrrgaYDtG7jTh3PfukIIcCJEs3b52/mZokA1w+tDL1dp0MaV2Z+qYj+Bzs13o0ru0vv/
-        Mq733mMw==;
-Received: from [::1] (port=55048 helo=cpanel.giganet.cl)
-        by cpanel.giganet.cl with esmtpa (Exim 4.93)
-        (envelope-from <info@controlypotencia.com>)
-        id 1kTJ7f-0009vt-N3; Fri, 16 Oct 2020 03:21:51 -0300
-MIME-Version: 1.0
-Date:   Fri, 16 Oct 2020 03:21:50 -0300
-From:   Ying Chongan <info@controlypotencia.com>
-To:     undisclosed-recipients:;
-Subject: Investment opportunity
-Reply-To: yingchongan@zohomail.com
-User-Agent: Roundcube Webmail/1.4.8
-Message-ID: <e70e5a6e462f92c7f06eea146a612430@controlypotencia.com>
-X-Sender: info@controlypotencia.com
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cpanel.giganet.cl
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - controlypotencia.com
-X-Get-Message-Sender-Via: cpanel.giganet.cl: authenticated_id: mariapaz.lopez@dplgrout.cl
-X-Authenticated-Sender: cpanel.giganet.cl: mariapaz.lopez@dplgrout.cl
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+        id S2404603AbgJPItC (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 16 Oct 2020 04:49:02 -0400
+Received: from mga03.intel.com ([134.134.136.65]:41746 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404595AbgJPItB (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 16 Oct 2020 04:49:01 -0400
+IronPort-SDR: 7PwnEuyiUkUR4vT+xWPj1tqi7iYSrXPyRm+XEczuEGkaEfqHYYFhD7sWLpjbxGJ6rhqcN+rluA
+ yv8y5J5xHw6A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9775"; a="166630736"
+X-IronPort-AV: E=Sophos;i="5.77,382,1596524400"; 
+   d="scan'208";a="166630736"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2020 01:49:01 -0700
+IronPort-SDR: 1TSCzVHJxoIWFUqTvXvXG5ipVygsmd/6wCC8lXRXvFeab58ojoYv0HeA1x2yXt70X3BxRuMegu
+ 5fq1be0+r+ow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,382,1596524400"; 
+   d="scan'208";a="346469791"
+Received: from linux-3rn9.igk.intel.com ([10.102.102.97])
+  by fmsmga004.fm.intel.com with ESMTP; 16 Oct 2020 01:48:59 -0700
+From:   Kinga Tanska <kinga.tanska@intel.com>
+To:     linux-raid@vger.kernel.org
+Cc:     jes.sorensen@gmail.com
+Subject: [PATCH] Make target to install binaries only
+Date:   Fri, 16 Oct 2020 10:49:32 +0200
+Message-Id: <20201016084932.7541-1-kinga.tanska@intel.com>
+X-Mailer: git-send-email 2.16.4
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Greetings,
+Make install causes installation of binaries, udev and man.
+This commit contains new target make install-bin, which
+results in installation of binaries only.
 
-This email is for an opportunity to invest in any lucrative business in 
-your country.
+Signed-off-by: Kinga Tanska <kinga.tanska@intel.com>
+---
+ Makefile | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-We offer a quick loan at low interest rate, if you are interested, 
-please reply to yingchongan@gmail.com for more details.
+diff --git a/Makefile b/Makefile
+index 15d05d14..92150dbf 100644
+--- a/Makefile
++++ b/Makefile
+@@ -245,9 +245,7 @@ $(MON_OBJS) : $(INCL) mdmon.h
+ sha1.o : sha1.c sha1.h md5.h
+ 	$(CC) $(CFLAGS) -DHAVE_STDINT_H -o sha1.o -c sha1.c
+ 
+-install : mdadm mdmon install-man install-udev
+-	$(INSTALL) -D $(STRIP) -m 755 mdadm $(DESTDIR)$(BINDIR)/mdadm
+-	$(INSTALL) -D $(STRIP) -m 755 mdmon $(DESTDIR)$(BINDIR)/mdmon
++install : install-binaries install-man install-udev
+ 
+ install-static : mdadm.static install-man
+ 	$(INSTALL) -D $(STRIP) -m 755 mdadm.static $(DESTDIR)$(BINDIR)/mdadm
+@@ -297,6 +295,10 @@ install-systemd: systemd/mdmon@.service
+ 	done
+ 	if [ -f /etc/SuSE-release -o -n "$(SUSE)" ] ;then $(INSTALL) -D -m 755 systemd/SUSE-mdadm_env.sh $(DESTDIR)$(LIB_DIR)/mdadm_env.sh ;fi
+ 
++install-binaries: mdadm mdmon
++	$(INSTALL) -D $(STRIP) -m 755 mdadm $(DESTDIR)$(BINDIR)/mdadm
++	$(INSTALL) -D $(STRIP) -m 755 mdmon $(DESTDIR)$(BINDIR)/mdmon
++
+ uninstall:
+ 	rm -f $(DESTDIR)$(MAN8DIR)/mdadm.8 $(DESTDIR)$(MAN8DIR)/mdmon.8 $(DESTDIR)$(MAN4DIR)/md.4 $(DESTDIR)$(MAN5DIR)/mdadm.conf.5 $(DESTDIR)$(BINDIR)/mdadm
+ 
+-- 
+2.16.4
 
-Sincerely: Ying Chongan
