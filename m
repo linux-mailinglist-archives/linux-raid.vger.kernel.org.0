@@ -2,36 +2,36 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F1E96291EA5
-	for <lists+linux-raid@lfdr.de>; Sun, 18 Oct 2020 21:54:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97278291A36
+	for <lists+linux-raid@lfdr.de>; Sun, 18 Oct 2020 21:23:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728884AbgJRTU3 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 18 Oct 2020 15:20:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60160 "EHLO mail.kernel.org"
+        id S1727072AbgJRTWh (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 18 Oct 2020 15:22:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728874AbgJRTU3 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sun, 18 Oct 2020 15:20:29 -0400
+        id S1729885AbgJRTWe (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sun, 18 Oct 2020 15:22:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D190A222B9;
-        Sun, 18 Oct 2020 19:20:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AB6E207DE;
+        Sun, 18 Oct 2020 19:22:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603048828;
-        bh=s0/RFL6KuD/rXT5ExrOUu6B75yi54Z7D0EtZWLZhuRQ=;
+        s=default; t=1603048953;
+        bh=+kDMFYPNlsQUHUHKdFrxk0ckCdUURXek0l2hYWeThDI=;
         h=From:To:Cc:Subject:Date:From;
-        b=ZuA/fpWwkuWQaNlCIR2zcmfV33rbs/qU7joBz1NzPPnYaqkHkdIMVxqiPiKZV9OlF
-         BT8ZDm2mRLFswAzJ3BQG96gVViLDU4hNf32QdCJLJk0o8v0Lr+K4kC/xoKspBkuWeY
-         YO1vLd3M3niHwyXcA5rxlMR5rs17+x2DMxH7vE1A=
+        b=ocjM+73pjhffQwbUau+t9z99ur58//xEpXT/gIqwD/pgc84aE4SxfDZGR8ukjTwlj
+         zkxBQlSqUPmulAtu/dkf39RU75ZL2snX1F3ad/zIgBGlfx4O9yfVJwKk1bagCy2ucX
+         lRA2vBokWQIT12DsdwNEVB/HdabHFjKXMBzYT6ZM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Zhao Heming <heming.zhao@suse.com>,
         Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
         Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 001/101] md/bitmap: fix memory leak of temporary bitmap
-Date:   Sun, 18 Oct 2020 15:18:46 -0400
-Message-Id: <20201018192026.4053674-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 01/80] md/bitmap: fix memory leak of temporary bitmap
+Date:   Sun, 18 Oct 2020 15:21:12 -0400
+Message-Id: <20201018192231.4054535-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 X-stable: review
@@ -57,10 +57,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-index 95a5f3757fa30..19b2601be3c5e 100644
+index 3ad18246fcb3c..7227d03dbbea7 100644
 --- a/drivers/md/md-bitmap.c
 +++ b/drivers/md/md-bitmap.c
-@@ -1949,6 +1949,7 @@ int md_bitmap_load(struct mddev *mddev)
+@@ -1954,6 +1954,7 @@ int md_bitmap_load(struct mddev *mddev)
  }
  EXPORT_SYMBOL_GPL(md_bitmap_load);
  
@@ -68,7 +68,7 @@ index 95a5f3757fa30..19b2601be3c5e 100644
  struct bitmap *get_bitmap_from_slot(struct mddev *mddev, int slot)
  {
  	int rv = 0;
-@@ -2012,6 +2013,7 @@ int md_bitmap_copy_from_slot(struct mddev *mddev, int slot,
+@@ -2017,6 +2018,7 @@ int md_bitmap_copy_from_slot(struct mddev *mddev, int slot,
  	md_bitmap_unplug(mddev->bitmap);
  	*low = lo;
  	*high = hi;
@@ -76,7 +76,7 @@ index 95a5f3757fa30..19b2601be3c5e 100644
  
  	return rv;
  }
-@@ -2615,4 +2617,3 @@ struct attribute_group md_bitmap_group = {
+@@ -2620,4 +2622,3 @@ struct attribute_group md_bitmap_group = {
  	.name = "bitmap",
  	.attrs = md_bitmap_attrs,
  };
