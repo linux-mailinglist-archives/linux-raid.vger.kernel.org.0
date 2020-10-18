@@ -2,36 +2,36 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EBD31291F8A
-	for <lists+linux-raid@lfdr.de>; Sun, 18 Oct 2020 22:01:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1E96291EA5
+	for <lists+linux-raid@lfdr.de>; Sun, 18 Oct 2020 21:54:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbgJRTSL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 18 Oct 2020 15:18:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55992 "EHLO mail.kernel.org"
+        id S1728884AbgJRTU3 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 18 Oct 2020 15:20:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726770AbgJRTSJ (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sun, 18 Oct 2020 15:18:09 -0400
+        id S1728874AbgJRTU3 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sun, 18 Oct 2020 15:20:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A554C2227F;
-        Sun, 18 Oct 2020 19:18:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D190A222B9;
+        Sun, 18 Oct 2020 19:20:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603048689;
-        bh=PaBaMle6cptMNlqbiY8LHyjI6EMdhE8w8qJDJ/Ffg0M=;
+        s=default; t=1603048828;
+        bh=s0/RFL6KuD/rXT5ExrOUu6B75yi54Z7D0EtZWLZhuRQ=;
         h=From:To:Cc:Subject:Date:From;
-        b=KBSC43zw848rkE/dNYfikaVWYHl4eWsyz4/66zJAjLkJH9T4x5BxqWCN85zknW21U
-         q/bCjIt18G/BIoprt76MEOy3B4BIs8LZL5rdEcHlyvaUyl/gUOWMa2IJyaBUeZ4Uwk
-         aAnZqK1pVV8QoAZxP2tnSGAQxhTnDsSBp8wsuvZY=
+        b=ZuA/fpWwkuWQaNlCIR2zcmfV33rbs/qU7joBz1NzPPnYaqkHkdIMVxqiPiKZV9OlF
+         BT8ZDm2mRLFswAzJ3BQG96gVViLDU4hNf32QdCJLJk0o8v0Lr+K4kC/xoKspBkuWeY
+         YO1vLd3M3niHwyXcA5rxlMR5rs17+x2DMxH7vE1A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Zhao Heming <heming.zhao@suse.com>,
         Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
         Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.9 001/111] md/bitmap: fix memory leak of temporary bitmap
-Date:   Sun, 18 Oct 2020 15:16:17 -0400
-Message-Id: <20201018191807.4052726-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 001/101] md/bitmap: fix memory leak of temporary bitmap
+Date:   Sun, 18 Oct 2020 15:18:46 -0400
+Message-Id: <20201018192026.4053674-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 X-stable: review
@@ -57,7 +57,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-index b10c51988c8ee..c61ab86a28b52 100644
+index 95a5f3757fa30..19b2601be3c5e 100644
 --- a/drivers/md/md-bitmap.c
 +++ b/drivers/md/md-bitmap.c
 @@ -1949,6 +1949,7 @@ int md_bitmap_load(struct mddev *mddev)
