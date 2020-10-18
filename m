@@ -2,59 +2,97 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 323E6291195
-	for <lists+linux-raid@lfdr.de>; Sat, 17 Oct 2020 13:13:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBD31291F8A
+	for <lists+linux-raid@lfdr.de>; Sun, 18 Oct 2020 22:01:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437359AbgJQLNj (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 17 Oct 2020 07:13:39 -0400
-Received: from smtp2.kaist.ac.kr ([143.248.5.229]:59387 "EHLO
-        smtp2.kaist.ac.kr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437248AbgJQLNe (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 17 Oct 2020 07:13:34 -0400
-X-Greylist: delayed 395 seconds by postgrey-1.27 at vger.kernel.org; Sat, 17 Oct 2020 07:13:34 EDT
-Received: from unknown (HELO mail1.kaist.ac.kr) (143.248.5.247)
-        by 143.248.5.229 with ESMTP; 17 Oct 2020 20:06:51 +0900
-X-Original-SENDERIP: 143.248.5.247
-X-Original-MAILFROM: dae.r.jeong@kaist.ac.kr
-X-Original-RCPTTO: linux-raid@vger.kernel.org
-Received: from kaist.ac.kr (143.248.133.220)
-        by kaist.ac.kr with ESMTP imoxion SensMail SmtpServer 7.0
-        id <595760cb0b67440a9c04038fe1fdce40> from <dae.r.jeong@kaist.ac.kr>;
-        Sat, 17 Oct 2020 20:06:51 +0900
-Date:   Sat, 17 Oct 2020 20:06:51 +0900
-From:   "Dae R. Jeong" <dae.r.jeong@kaist.ac.kr>
-To:     song@kernel.org
-Cc:     yjkwon@kaist.ac.kr, linux-raid@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: WARNING in md_ioctl
-Message-ID: <20201017110651.GA1602260@dragonet>
+        id S1727317AbgJRTSL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 18 Oct 2020 15:18:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55992 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726770AbgJRTSJ (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sun, 18 Oct 2020 15:18:09 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A554C2227F;
+        Sun, 18 Oct 2020 19:18:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1603048689;
+        bh=PaBaMle6cptMNlqbiY8LHyjI6EMdhE8w8qJDJ/Ffg0M=;
+        h=From:To:Cc:Subject:Date:From;
+        b=KBSC43zw848rkE/dNYfikaVWYHl4eWsyz4/66zJAjLkJH9T4x5BxqWCN85zknW21U
+         q/bCjIt18G/BIoprt76MEOy3B4BIs8LZL5rdEcHlyvaUyl/gUOWMa2IJyaBUeZ4Uwk
+         aAnZqK1pVV8QoAZxP2tnSGAQxhTnDsSBp8wsuvZY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Zhao Heming <heming.zhao@suse.com>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.9 001/111] md/bitmap: fix memory leak of temporary bitmap
+Date:   Sun, 18 Oct 2020 15:16:17 -0400
+Message-Id: <20201018191807.4052726-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi,
+From: Zhao Heming <heming.zhao@suse.com>
 
-I looked into the warning "WARNING in md_ioctl" found by Syzkaller.
-(https://syzkaller.appspot.com/bug?id=fbf9eaea2e65bfcabb4e2750c3ab0892867edea1)
-I suspect that it is caused by a race between two concurrenct ioctl()s as belows.
+[ Upstream commit 1383b347a8ae4a69c04ae3746e6cb5c8d38e2585 ]
 
-CPU1 (md_ioctl())                          CPU2 (md_ioctl())
-------                                     ------
-set_bit(MD_CLOSING, &mddev->flags);
-did_set_md_closing = true;
-                                           WARN_ON_ONCE(test_bit(MD_CLOSING, &mddev->flags));
+Callers of get_bitmap_from_slot() are responsible to free the bitmap.
 
-if(did_set_md_closing)
-    clear_bit(MD_CLOSING, &mddev->flags);
+Suggested-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Signed-off-by: Zhao Heming <heming.zhao@suse.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/md/md-bitmap.c  | 3 ++-
+ drivers/md/md-cluster.c | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-If the above is correct, this warning is introduced
-in the commit 065e519e("md: MD_CLOSING needs to be cleared after called md_set_readonly or do_md_stop").
-Could you please take a look into this?
-
-Best regards,
-Dae R. Jeong
-
+diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
+index b10c51988c8ee..c61ab86a28b52 100644
+--- a/drivers/md/md-bitmap.c
++++ b/drivers/md/md-bitmap.c
+@@ -1949,6 +1949,7 @@ int md_bitmap_load(struct mddev *mddev)
+ }
+ EXPORT_SYMBOL_GPL(md_bitmap_load);
+ 
++/* caller need to free returned bitmap with md_bitmap_free() */
+ struct bitmap *get_bitmap_from_slot(struct mddev *mddev, int slot)
+ {
+ 	int rv = 0;
+@@ -2012,6 +2013,7 @@ int md_bitmap_copy_from_slot(struct mddev *mddev, int slot,
+ 	md_bitmap_unplug(mddev->bitmap);
+ 	*low = lo;
+ 	*high = hi;
++	md_bitmap_free(bitmap);
+ 
+ 	return rv;
+ }
+@@ -2615,4 +2617,3 @@ struct attribute_group md_bitmap_group = {
+ 	.name = "bitmap",
+ 	.attrs = md_bitmap_attrs,
+ };
+-
+diff --git a/drivers/md/md-cluster.c b/drivers/md/md-cluster.c
+index d50737ec40394..afbbc552c3275 100644
+--- a/drivers/md/md-cluster.c
++++ b/drivers/md/md-cluster.c
+@@ -1166,6 +1166,7 @@ static int resize_bitmaps(struct mddev *mddev, sector_t newsize, sector_t oldsiz
+ 			 * can't resize bitmap
+ 			 */
+ 			goto out;
++		md_bitmap_free(bitmap);
+ 	}
+ 
+ 	return 0;
+-- 
+2.25.1
 
