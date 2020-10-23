@@ -2,107 +2,142 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D0E6B2968C5
-	for <lists+linux-raid@lfdr.de>; Fri, 23 Oct 2020 05:31:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE812296974
+	for <lists+linux-raid@lfdr.de>; Fri, 23 Oct 2020 07:42:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S374885AbgJWDbq (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 22 Oct 2020 23:31:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40962 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S374855AbgJWDbo (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 22 Oct 2020 23:31:44 -0400
-Received: from mail-oi1-x262.google.com (mail-oi1-x262.google.com [IPv6:2607:f8b0:4864:20::262])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C86EC0613D6
-        for <linux-raid@vger.kernel.org>; Thu, 22 Oct 2020 20:31:44 -0700 (PDT)
-Received: by mail-oi1-x262.google.com with SMTP id n3so412901oie.1
-        for <linux-raid@vger.kernel.org>; Thu, 22 Oct 2020 20:31:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=drivescale-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=RhHK93So0VcKlYFbgYUYXeSYVQkNms0+nxyySSnXb+k=;
-        b=IPFfdKZ7mj4Gn6Yl/tH8/Q+MuI0fe9tTCLLeMhotRbKJyhaUuHrUntFTcPozjRq4jQ
-         0/zjMXzmcPtSrP3uAwhkudtzUYH0ttPOb9Ba0727AiOdYNvgmaY9tMfNGca9wiVfntjW
-         Wyvx4HSZE3cAieHlJGxR4qlBiEgJi3IkljP78r0IwYLSC5TiNsCI1nrpqxkcPJzxqOLK
-         OD2vUXAJIO3CLAPZqACLpIIdR8kYlcJ/caEiRuCBuR70c+VCNl2ufzTPnhl+C2p7vTUR
-         b0smkrP7YD2kMNbs8wP/wqBgD4xZKQyHJcetRsR6c5BB51PY4W+mPYnQ90F1uD9O0UIc
-         OhWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=RhHK93So0VcKlYFbgYUYXeSYVQkNms0+nxyySSnXb+k=;
-        b=V3UmEYp3gcHBc3+hLUaRMhulO57EekpBSTS+V4XzuA6R4J3zXTPF11pMIV8TL1FsGd
-         eVlWvwE5sBkTIULixxgAXWu1yCd39dnLxYzsG9sKhOCIPkjTXRG3gFx+reiYIjW2Z4In
-         Cg1SSvGjUGYz08+ZVBnmGJw0uRM0+fCArKagpQUVIgx5OS8bnHhcZTEujlGo3ksnBvmu
-         YpfVs3IaQufnFKL0Xdve1cTvtvX6k5XV0XToCdRJQBw7yOGUXtLy6mNUdsLbXIjuZVRv
-         Kj5kwQ/LgBLQrbYr1+0RiP5iMyHQkvIsxuAYHVuZ6lfMxfkE8iDEHuZ9zCgJ1DkDeYE0
-         B4Ug==
-X-Gm-Message-State: AOAM532qN8ZB6UKOdPHC/eJq3MFQoxE8rVgysDyEXDTHG6CzPTCVMDn6
-        Wa1laY5lUxqVyRTe60P5dK10RQ81HW2bGJvn6DTlljXwDqyyAA==
-X-Google-Smtp-Source: ABdhPJybn2Qbcm4XVtdDVaJj0llIw0aTm6KmR3ZYalQvBvvjokAJn1bdXPkcektjFZ84uYebkJI2ytz6owL6
-X-Received: by 2002:a05:6808:28c:: with SMTP id z12mr246573oic.70.1603423903944;
-        Thu, 22 Oct 2020 20:31:43 -0700 (PDT)
-Received: from dcs.hq.drivescale.com ([68.74.115.3])
-        by smtp-relay.gmail.com with ESMTP id w2sm42526ooc.20.2020.10.22.20.31.43;
-        Thu, 22 Oct 2020 20:31:43 -0700 (PDT)
-X-Relaying-Domain: drivescale.com
-Received: from localhost.localdomain (gw1-dc.hq.drivescale.com [192.168.33.175])
-        by dcs.hq.drivescale.com (Postfix) with ESMTP id 51BBA420D3;
-        Fri, 23 Oct 2020 03:31:43 +0000 (UTC)
-From:   Christopher Unkel <cunkel@drivescale.com>
-To:     linux-raid@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Song Liu <song@kernel.org>,
-        cunkel@drivescale.com
-Subject: [PATCH 3/3] md: pad writes to end of bitmap to physical blocks
-Date:   Thu, 22 Oct 2020 20:31:30 -0700
-Message-Id: <20201023033130.11354-4-cunkel@drivescale.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20201023033130.11354-1-cunkel@drivescale.com>
+        id S371628AbgJWFmF (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 23 Oct 2020 01:42:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S371624AbgJWFmF (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 23 Oct 2020 01:42:05 -0400
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DFD020BED;
+        Fri, 23 Oct 2020 05:42:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1603431724;
+        bh=YMvvRcZYimxB0yoov1roU28wevk7Men9gENsSxF7cvM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Mqh+sCvPQC67UG5bWtV3Eh+J6Oih83DZhxYLFMLw7x9+m7mjooq4w3UF9xWhlBvMi
+         nBpU1mK1Mh9mWCN3pk3kquDYvePW9KAAxYngKYRpAx77pcQJQ3Mvyb8q6fmPvkzJ/I
+         M3HRoj4Qmwdg/s8TgrxMdjmg0o5wAlY0wcl2MR8k=
+Received: by mail-lf1-f49.google.com with SMTP id v6so569010lfa.13;
+        Thu, 22 Oct 2020 22:42:04 -0700 (PDT)
+X-Gm-Message-State: AOAM533Do49Cnjuz4iXar/LNsW5M/dFYtyn2LVwaTtMD6pRi/EeNGG7j
+        5FkBsXIDxh93GfLXxMwWAHljJniyCs+npDqPFEo=
+X-Google-Smtp-Source: ABdhPJyncsib2GwIWRRiR8SwItNwZY/PJ+Ldnl3AS3u/s1TC4WTbs3uVuMJzrKw0S1q+unNfwRdPNRGwofjYQC1ByEA=
+X-Received: by 2002:a05:6512:3710:: with SMTP id z16mr194904lfr.504.1603431722387;
+ Thu, 22 Oct 2020 22:42:02 -0700 (PDT)
+MIME-Version: 1.0
 References: <20201023033130.11354-1-cunkel@drivescale.com>
+In-Reply-To: <20201023033130.11354-1-cunkel@drivescale.com>
+From:   Song Liu <song@kernel.org>
+Date:   Thu, 22 Oct 2020 22:41:51 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW7vn9trTBy0vxd7D=x3Jj=Wo2cTbQNZa6dw2BS5dnfLLg@mail.gmail.com>
+Message-ID: <CAPhsuW7vn9trTBy0vxd7D=x3Jj=Wo2cTbQNZa6dw2BS5dnfLLg@mail.gmail.com>
+Subject: Re: [PATCH 0/3] mdraid sb and bitmap write alignment on 512e drives
+To:     Christopher Unkel <cunkel@drivescale.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Writes of the last page of the bitmap are padded out to the next logical
-block boundary.  However, they are not padded out to the next physical
-block boundary, so the writes may be less than a physical block.  On a
-"512e" disk (logical block 512 bytes, physical block 4k) and if the last
-page of the bitmap is less than 3584 bytes, this means that writes of
-the last bitmap page hit the 512-byte emulation.
+On Thu, Oct 22, 2020 at 8:31 PM Christopher Unkel <cunkel@drivescale.com> wrote:
+>
+> Hello all,
+>
+> While investigating some performance issues on mdraid 10 volumes
+> formed with "512e" disks (4k native/physical sector size but with 512
+> byte sector emulation), I've found two cases where mdraid will
+> needlessly issue writes that start on 4k byte boundary, but are are
+> shorter than 4k:
+>
+> 1. writes of the raid superblock; and
+> 2. writes of the last page of the write-intent bitmap.
+>
+> The following is an excerpt of a blocktrace of one of the component
+> members of a mdraid 10 volume during a 4k write near the end of the
+> array:
+>
+>   8,32  11        2     0.000001687   711  D  WS 2064 + 8 [kworker/11:1H]
+> * 8,32  11        5     0.001454119   711  D  WS 2056 + 1 [kworker/11:1H]
+> * 8,32  11        8     0.002847204   711  D  WS 2080 + 7 [kworker/11:1H]
+>   8,32  11       11     0.003700545  3094  D  WS 11721043920 + 8 [md127_raid1]
+>   8,32  11       14     0.308785692   711  D  WS 2064 + 8 [kworker/11:1H]
+> * 8,32  11       17     0.310201697   711  D  WS 2056 + 1 [kworker/11:1H]
+>   8,32  11       20     5.500799245   711  D  WS 2064 + 8 [kworker/11:1H]
+> * 8,32  11       23    15.740923558   711  D  WS 2080 + 7 [kworker/11:1H]
+>
+> Note the starred transactions, which each start on a 4k boundary, but
+> are less than 4k in length, and so will use the 512-byte emulation.
+> Sector 2056 holds the superblock, and is written as a single 512-byte
+> write.  Sector 2086 holds the bitmap bit relevant to the written
+> sector.  When it is written the active bits of the last page of the
+> bitmap are written, starting at sector 2080, padded out to the end of
+> the 512-byte logical sector as required.  This results in a 3.5kb
+> write, again using the 512-byte emulation.
+>
+> Note that in some arrays the last page of the bitmap may be
+> sufficiently full that they are not affected by the issue with the
+> bitmap write.
+>
+> As there can be a substantial penalty to using the 512-byte sector
+> emulation (turning writes into read-modify writes if the relevant
+> sector is not in the drive's cache) I believe it makes sense to pad
+> these writes out to a 4k boundary.  The writes are already padded out
+> for "4k native" drives, where the short access is illegal.
+>
+> The following patch set changes the superblock and bitmap writes to
+> respect the physical block size (e.g. 4k for today's 512e drives) when
+> possible.  In each case there is already logic for padding out to the
+> underlying logical sector size.  I reuse or repeat the logic for
+> padding out to the physical sector size, but treat the padding out as
+> optional rather than mandatory.
+>
+> The corresponding block trace with these patches is:
+>
+>    8,32   1        2     0.000003410   694  D  WS 2064 + 8 [kworker/1:1H]
+>    8,32   1        5     0.001368788   694  D  WS 2056 + 8 [kworker/1:1H]
+>    8,32   1        8     0.002727981   694  D  WS 2080 + 8 [kworker/1:1H]
+>    8,32   1       11     0.003533831  3063  D  WS 11721043920 + 8 [md127_raid1]
+>    8,32   1       14     0.253952321   694  D  WS 2064 + 8 [kworker/1:1H]
+>    8,32   1       17     0.255354215   694  D  WS 2056 + 8 [kworker/1:1H]
+>    8,32   1       20     5.337938486   694  D  WS 2064 + 8 [kworker/1:1H]
+>    8,32   1       23    15.577963062   694  D  WS 2080 + 8 [kworker/1:1H]
+>
+> I do notice that the code for bitmap writes has a more sophisticated
+> and thorough check for overlap than the code for superblock writes.
+> (Compare write_sb_page in md-bitmap.c vs. super_1_load in md.c.) From
+> what I know since the various structures starts have always been 4k
+> aligned anyway, it is always safe to pad the superblock write out to
+> 4k (as occurs on 4k native drives) but not necessarily futher.
+>
+> Feedback appreciated.
+>
+>   --Chris
 
-Respect the physical block boundary as long as the resulting write
-doesn't run into other data, and is no longer than a page.  (If the
-physical block size is larger than a page no bitmap write will respect
-the physical block boundaries.)
+Thanks for the patches. Do you have performance numbers before/after these
+changes? Some micro benchmarks results would be great motivation.
 
-Signed-off-by: Christopher Unkel <cunkel@drivescale.com>
----
- drivers/md/md-bitmap.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Thanks,
+Song
 
-diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-index 600b89d5a3ad..21af5f94d495 100644
---- a/drivers/md/md-bitmap.c
-+++ b/drivers/md/md-bitmap.c
-@@ -264,10 +264,18 @@ static int write_sb_page(struct bitmap *bitmap, struct page *page, int wait)
- 
- 		if (page->index == store->file_pages-1) {
- 			int last_page_size = store->bytes & (PAGE_SIZE-1);
-+			int pb_aligned_size;
- 			if (last_page_size == 0)
- 				last_page_size = PAGE_SIZE;
- 			size = roundup(last_page_size,
- 				       bdev_logical_block_size(bdev));
-+			pb_aligned_size = roundup(last_page_size,
-+						  bdev_physical_block_size(bdev));
-+			if (pb_aligned_size > size
-+			    && pb_aligned_size <= PAGE_SIZE
-+			    && sb_write_alignment_ok(mddev, rdev, page, offset,
-+						     pb_aligned_size))
-+				size = pb_aligned_size;
- 		}
- 		/* Just make sure we aren't corrupting data or
- 		 * metadata
--- 
-2.17.1
 
+>
+>
+> Christopher Unkel (3):
+>   md: align superblock writes to physical blocks
+>   md: factor sb write alignment check into function
+>   md: pad writes to end of bitmap to physical blocks
+>
+>  drivers/md/md-bitmap.c | 80 +++++++++++++++++++++++++-----------------
+>  drivers/md/md.c        | 15 ++++++++
+>  2 files changed, 63 insertions(+), 32 deletions(-)
+>
+> --
+> 2.17.1
+>
