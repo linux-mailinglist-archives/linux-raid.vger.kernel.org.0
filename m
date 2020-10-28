@@ -2,123 +2,173 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C24E29ACBC
-	for <lists+linux-raid@lfdr.de>; Tue, 27 Oct 2020 14:05:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AAEA29D4DD
+	for <lists+linux-raid@lfdr.de>; Wed, 28 Oct 2020 22:55:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1751794AbgJ0NFQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 27 Oct 2020 09:05:16 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50995 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751781AbgJ0NFQ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 27 Oct 2020 09:05:16 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 13so1315158wmf.0;
-        Tue, 27 Oct 2020 06:05:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=myy/l02Rm8F+X0fdWIlyuf1JwB3VU/GU2tmaR4vsSCk=;
-        b=L0tzrZHmCG5QHwZNJaYIFcqmN0Bh3prvAa8X7BcRmDT8OjcUU7g/d2Rmu8z2Lff+JW
-         VmCufz/BrOr9plfiItsFEzzCySrBaYylFjqjHfODbtIBIndtvnFvyl65j6AHwppGGscm
-         NHYFXfURWElG2ZdBVn5WKT99TrtWvrdbfFiDMvoTepQRGiQocDMDNAv7tuvH7Qcs0QfG
-         bzsnP3XqnkmX3oGsHF/xG7pco8j/mfwCIBoNrfbWLh5QBA9XAeDB7aI3MydveTV5rxD3
-         7AvxG+r5eX2fHtaxKdzTH/4dU7MhOGNb5trmpdX1gEIxojpRqs87LHa2o+CkT/m56nSd
-         uuYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=myy/l02Rm8F+X0fdWIlyuf1JwB3VU/GU2tmaR4vsSCk=;
-        b=fCIgtL4n5aEbekgqaZ19H1tkJ3poOCDnQgZY4IXbHOQDO2oZeDTrN4+P/3G2uU+OqY
-         qJ/BGPZGjUQE9HCuxfHBqZOqaJ9u0m8ECJJAVjnNpdizovYKiL+a1kgZ36/1LsD/Kvxh
-         ksTNekgskzh38mBPiLXD2iygiPrwU54FhZqGQo0fEHsv3tDf1qHCJEVpUyS6N0EkeQCH
-         TVcA8S/fxgNd+osw/jyX2WToK0DC6ArkQ3fweHDPlMlFU/bX2tq5GmJo5eYoTZxjbMTT
-         K7ry3kmgSSzHYu3R/emZKSMZWAIoq/Yb8jsFcbrW5b26Uo7O1KueVIXi0Z6X1KAbXys9
-         e3Qg==
-X-Gm-Message-State: AOAM532uMky4DOtQ++RDpn341z2ncFcvvNR+MzVrNK4t1YzbNBpC1PZZ
-        6rteqKS7vxrTJzY4fqKLDEZnYYnqwdQcTA==
-X-Google-Smtp-Source: ABdhPJw2WkckDLSI9JGvq3GUMLI8ZV6nTEuB/GOGNsDV91M7d1D0A1mFL4txXw9pl279LalTttu+tQ==
-X-Received: by 2002:a1c:6643:: with SMTP id a64mr2744990wmc.142.1603803911919;
-        Tue, 27 Oct 2020 06:05:11 -0700 (PDT)
-Received: from [192.168.2.27] (39.35.broadband4.iol.cz. [85.71.35.39])
-        by smtp.gmail.com with ESMTPSA id o3sm1971923wru.15.2020.10.27.06.05.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Oct 2020 06:05:11 -0700 (PDT)
-Subject: Re: [PATCH 3/4] dm crypt: switch to EBOIV crypto API template
-To:     Gilad Ben-Yossef <gilad@benyossef.com>
-Cc:     Eric Biggers <ebiggers@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        device-mapper development <dm-devel@redhat.com>,
-        Song Liu <song@kernel.org>, Ofir Drang <ofir.drang@arm.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        linux-raid@vger.kernel.org
-References: <20201026130450.6947-1-gilad@benyossef.com>
- <20201026130450.6947-4-gilad@benyossef.com>
- <20201026175231.GG858@sol.localdomain>
- <d07b062c-1405-4d72-b907-1c4dfa97aecb@gmail.com>
- <20201026183936.GJ858@sol.localdomain>
- <fd5e46ce-a4bf-8025-05ea-e20d35485446@gmail.com>
- <CAOtvUMdatUOnffg90aEGanD0y1LtKc7EeKQ=E+N+W-wpo8Zo3A@mail.gmail.com>
-From:   Milan Broz <gmazyland@gmail.com>
-Message-ID: <7c8c1453-94b2-23ec-1c93-7674fc8a413b@gmail.com>
-Date:   Tue, 27 Oct 2020 14:05:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        id S1728811AbgJ1Vys (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 28 Oct 2020 17:54:48 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:44351 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728459AbgJ1Vws (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 28 Oct 2020 17:52:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1603921966;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=oRjt8xEMQETiNqKTjcinQYYKvVpvEfWiIO6F0Tdaw5Y=;
+        b=QenwlBY2xMVRyii5j6lmcXUMduzX/+BXGh18sI1dZghop2kA2EpB3ADs3dwF+YI9b9RjS5
+        ojtguqN1vQ/eD5cesQK9Bot58fxip6Z5EMFnL/kASD0UvXZdo9YEVv0JQxw9Uk/W5L3qz/
+        JDO7kbtw2CRuZl4LnssUwil7U3Sz5cA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-513-b-jyC6Q6NN6s9o0GBlZuGw-1; Wed, 28 Oct 2020 01:51:21 -0400
+X-MC-Unique: b-jyC6Q6NN6s9o0GBlZuGw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C674D809DE0;
+        Wed, 28 Oct 2020 05:51:19 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-8-21.pek2.redhat.com [10.72.8.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 39B545D9EF;
+        Wed, 28 Oct 2020 05:51:16 +0000 (UTC)
+Subject: Re: [PATCH] mdadm/bitmap: fix wrong bitmap nodes num when adding new
+ disk
+To:     Zhao Heming <heming.zhao@suse.com>, linux-raid@vger.kernel.org,
+        jes@trained-monkey.org, guoqing.jiang@cloud.ionos.com
+References: <1603552027-10655-1-git-send-email-heming.zhao@suse.com>
+From:   Xiao Ni <xni@redhat.com>
+Message-ID: <75940d7d-3933-a026-d878-d75aa0050905@redhat.com>
+Date:   Wed, 28 Oct 2020 13:51:14 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-In-Reply-To: <CAOtvUMdatUOnffg90aEGanD0y1LtKc7EeKQ=E+N+W-wpo8Zo3A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <1603552027-10655-1-git-send-email-heming.zhao@suse.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 27/10/2020 07:59, Gilad Ben-Yossef wrote:
-> On Mon, Oct 26, 2020 at 9:04 PM Milan Broz <gmazyland@gmail.com> wrote:
-...
->> We had all of disk-IV inside dmcrypt before - but once it is partially moved into crypto API
->> (ESSIV, EBOIV for now), it becomes much more complicated for user to select what he needs.
->>
->> I think we have no way to check that IV is available from userspace - it
->> will report the same error as if block cipher is not available, not helping user much
->> with the error.
->>
->> But then I also think we should add abstract dm-crypt options here (Legacy TrueCrypt modes,
->> Bitlocker modes) that will select these crypto API configuration switches.
->> Otherwise it will be only a complicated matrix of crypto API options...
-> 
-> hm... just thinking out loud, but maybe the right say to go is to not
-> have a build dependency,
-> but add some user assistance code in cryptosetup that parses
-> /proc/crypto after failures to
-> try and suggest the user with a way forward?
-> 
-> e.g. if eboiv mapping initiation fails, scan /proc/crypto and either
-> warn of a lack of AES
-> or, assuming some instance of AES is found, warn of lack of EBOIV.
-> It's a little messy
-> and heuristic code for sure, but it lives in a user space utility.
-> 
-> Does that sound sane?
+Hi Heming
 
-Such an idea (try to parse /proc/crypto) is on my TODO list since 2009 :)
-I expected userspace kernel crypto API could help here, but it seems it is not the case.
+In fact it's not a wrong cluster nodes. This patch only avoids to do the 
+job that doesn't
+need to do, right? The cluster nodes don't change when adding a new 
+disk. Even NodeNumUpdate
+is specified, it'll not change the cluster nodes. If so, the subject is 
+a little confusing.
 
-So yes, I think we need to add something like this in userspace. In combination with
-the kernel and dmcrypt target version, we could have a pretty good hint matrix for the user,
-instead of (literally) cryptic errors.
+Regards
+Xiao
 
-(There is also a problem that device-mapper targets are losing detailed error state.
-We often end just with -EINVAL during table create ... and no descriptive log entry.
-And leaking info about encrypted devices activation failures to syslog is not a good idea either.)
+On 10/24/2020 11:07 PM, Zhao Heming wrote:
+> The bug introduced from commit 81306e021ebdcc4baef866da82d25c3f0a415d2d
+> In this patch, it modified two place to support NodeNumUpdate:
+>   Grow_addbitmap, write_init_super1
+>
+> The path write_init_super1 is wrong.
+>
+> reproducible steps:
+> ```
+> node1 # mdadm -S --scan
+> node1 # for i in {a,b,c};do dd if=/dev/zero of=/dev/sd$i bs=1M count=10;
+> done
+> ... ...
+> node1 # mdadm -C /dev/md0 -b clustered -e 1.2 -n 2 -l mirror /dev/sda
+> /dev/sdb
+> mdadm: array /dev/md0 started.
+> node1 # mdadm --manage --add /dev/md0 /dev/sdc
+> mdadm: added /dev/sdc
+> node1 # mdadm --grow --raid-devices=3 /dev/md0
+> raid_disks for /dev/md0 set to 3
+> node1 # mdadm -X /dev/sdc
+>          Filename : /dev/sdc
+>             Magic : 6d746962
+>           Version : 5
+>              UUID : 9b0ff8c8:2a274a64:088ade6e:a88286a3
+>         Chunksize : 64 MB
+>            Daemon : 5s flush period
+>        Write Mode : Normal
+>         Sync Size : 306176 (299.00 MiB 313.52 MB)
+>     Cluster nodes : 4
+>      Cluster name : tb-ha-tst
+>         Node Slot : 0
+>            Events : 44
+>    Events Cleared : 0
+>             State : OK
+>            Bitmap : 5 bits (chunks), 0 dirty (0.0%)
+> mdadm: invalid bitmap magic 0x0, the bitmap file appears to be corrupted
+>         Node Slot : 1
+>            Events : 0
+>    Events Cleared : 0
+>             State : OK
+>            Bitmap : 0 bits (chunks), 0 dirty (0.0%)
+> ```
+>
+> There are three paths to call write_bitmap:
+>   Assemble, Grow, write_init_super.
+>
+> 1. Assemble & Grow should concern NodeNumUpdate
+>
+> Grow: Grow_addbitmap => write_bitmap
+> trigger steps:
+> ```
+> node1 # mdadm -C /dev/md0 -b clustered -e 1.2 -n 2 -l mirror /dev/sda
+> /dev/sdb
+> node1 # mdadm -G /dev/md0 -b none
+> node1 # mdadm -G /dev/md0 -b clustered
+> ```
+>
+> Assemble: Assemble => load_devices => write_bitmap1
+> trigger steps:
+> ```
+> node1 # mdadm -C /dev/md0 -b clustered -e 1.2 -n 2 -l mirror /dev/sda
+> /dev/sdb
+> node2 # mdadm -A /dev/md0 /dev/sda /dev/sdb --update=nodes --nodes=5
+> ```
+>
+> 2. write_init_super should use NoUpdate.
+>
+> write_init_super is called by Create & Manage path.
+>
+> Create: Create => write_init_super => write_bitmap
+> This is initialization, it doesn't need to care node changing.
+> trigger step:
+> ```
+> node1 # mdadm -C /dev/md0 -b clustered -e 1.2 -n 2 -l mirror /dev/sda
+> /dev/sdb
+> ```
+>
+> Manage: Manage_subdevs => Manage_add => write_init_super => write_bitmap
+> This is disk add, not node add. So it doesn't need to care node
+> changing.
+> trigger steps:
+> ```
+> mdadm -C /dev/md0 -b clustered -e 1.2 -n 2 -l mirror /dev/sda /dev/sdb
+> mdadm --manage --add /dev/md0 /dev/sdc
+> ```
+>
+> Signed-off-by: Zhao Heming <heming.zhao@suse.com>
+> ---
+>   super1.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/super1.c b/super1.c
+> index 8b0d6ff..06fa3ad 100644
+> --- a/super1.c
+> +++ b/super1.c
+> @@ -2093,7 +2093,7 @@ static int write_init_super1(struct supertype *st)
+>   		if (rv == 0 &&
+>   		    (__le32_to_cpu(sb->feature_map) &
+>   		     MD_FEATURE_BITMAP_OFFSET)) {
+> -			rv = st->ss->write_bitmap(st, di->fd, NodeNumUpdate);
+> +			rv = st->ss->write_bitmap(st, di->fd, NoUpdate);
+>   		} else if (rv == 0 &&
+>   		    md_feature_any_ppl_on(sb->feature_map)) {
+>   			struct mdinfo info;
 
-Anyway, this will not fix existing userspace that is not prepared for this kind
-of EBOIV missing fail, so Herbert's solution seems like the solution for this particular
-problem for now. (But I agree we should perhaps remove these build dependences in future completely...)
-
-Milan
