@@ -2,65 +2,86 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D45D29E69B
-	for <lists+linux-raid@lfdr.de>; Thu, 29 Oct 2020 09:44:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9077529EF4C
+	for <lists+linux-raid@lfdr.de>; Thu, 29 Oct 2020 16:11:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725984AbgJ2Iow (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 29 Oct 2020 04:44:52 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:58728 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbgJ2Iow (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 29 Oct 2020 04:44:52 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1kXz12-0007pU-3R; Thu, 29 Oct 2020 14:54:21 +1100
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 29 Oct 2020 14:54:20 +1100
-Date:   Thu, 29 Oct 2020 14:54:20 +1100
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Gilad Ben-Yossef <gilad@benyossef.com>
-Cc:     Eric Biggers <ebiggers@kernel.org>,
-        Milan Broz <gmazyland@gmail.com>,
+        id S1728055AbgJ2PK7 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 29 Oct 2020 11:10:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43406 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727842AbgJ2PK7 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 29 Oct 2020 11:10:59 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFFBBC0613CF;
+        Thu, 29 Oct 2020 08:01:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=5UpmUUK4HkD04BYNwcucPUw7TY2FGi/Q9CTm0VHziQI=; b=tWqW+P040RkCrD1rrAjfY9sgJz
+        KO8cA88SpwWBoN64XQ280vwozNesIh3dcpQJpE35kJ2w27SzFJsAB+oKGDucHwW1mlIL/KXQN4E8t
+        Wf4aEjeT7KdmYarQE0o9bu7BXPVKL8zVZWtaPVcQ7G6uxaw20SPZ7ih8McI6uCnkTg0n6Yx6BMd04
+        3UFRG/Fvp0JKgNdAOIPMhF6wJNoX+XzLM46OYLJTx8S1oOIJnNepiGSXqfNUdJgXcOPFylGAlXQnH
+        TLDhpV+f/EiqEYkmK6i4VQ/atrEf0ndvU7ptSXv1mJXKZQQGHFflGrHFzE6vO2drxVUStwdqcWpRQ
+        FJKpifxA==;
+Received: from 089144193201.atnat0002.highway.a1.net ([89.144.193.201] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kY9Q6-0005M0-BQ; Thu, 29 Oct 2020 15:00:55 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Denis Efremov <efremov@linux.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        device-mapper development <dm-devel@redhat.com>,
-        Song Liu <song@kernel.org>, Ofir Drang <ofir.drang@arm.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        linux-raid@vger.kernel.org
-Subject: Re: [PATCH 3/4] dm crypt: switch to EBOIV crypto API template
-Message-ID: <20201029035419.GA19506@gondor.apana.org.au>
-References: <20201026130450.6947-1-gilad@benyossef.com>
- <20201026130450.6947-4-gilad@benyossef.com>
- <20201026175231.GG858@sol.localdomain>
- <d07b062c-1405-4d72-b907-1c4dfa97aecb@gmail.com>
- <20201026183936.GJ858@sol.localdomain>
- <20201026184155.GA6863@gondor.apana.org.au>
- <20201026184402.GA6908@gondor.apana.org.au>
- <CAOtvUMf-xv5cHTjExW2Ffx6soLavFztow6DwE6Qo5pffF0N5uw@mail.gmail.com>
+        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
+Subject: simplify gendisk lookup and remove struct block_device aliases v4
+Date:   Thu, 29 Oct 2020 15:58:23 +0100
+Message-Id: <20201029145841.144173-1-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOtvUMf-xv5cHTjExW2Ffx6soLavFztow6DwE6Qo5pffF0N5uw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Wed, Oct 28, 2020 at 01:41:28PM +0200, Gilad Ben-Yossef wrote:
->
-> Sorry if I'm being daft, but what did you refer to be "an existing
-> option"? there was no CONFIG_EBOIV before my patchset, it was simply
-> built as part of dm-crypt so it seems that setting CONFIG_EBOIV
-> default to dm-crypto Kconfig option value does solves the problem, or
-> have I missed something?
+Hi all,
 
-Oh I'm mistaken then.  I thought it was an existing option.  If
-it's a new option then a default depending on dm-crypt should be
-sufficient.
+this series removes the annoying struct block_device aliases, which can
+happen for a bunch of old floppy drivers (and z2ram).  In that case
+multiple struct block device instances for different dev_t's can point
+to the same gendisk, without being partitions.  The cause for that
+is the probe/get callback registered through blk_register_regions.
 
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+This series removes blk_register_region entirely, splitting it it into
+a simple xarray lookup of registered gendisks, and a probe callback
+stored in the major_names array that can be used for modprobe overrides
+or creating devices on demands when no gendisk is found.  The old
+remapping is gone entirely, and instead the 4 remaining drivers just
+register a gendisk for each operating mode.  In case of the two drivers
+that have lots of aliases that is done on-demand using the new probe
+callback, while for the other two I simply register all at probe time
+to keep things simple.
+
+Note that the m68k drivers are compile tested only.
+
+Changes since v3:
+ - keep kobj_map for char dev lookup for now, as the testbot found
+   some very strange and unexplained regressions, so I'll get back to
+   this later separately
+ - fix a commit message typo
+
+Changes since v2:
+ - fix a wrong variable passed to ERR_PTR in the floppy driver
+ - slightly adjust the del_gendisk cleanups to prepare for the next
+   series touching this area
+
+Changes since v1:
+ - add back a missing kobject_put in the cdev code
+ - improve the xarray delete loops
+
