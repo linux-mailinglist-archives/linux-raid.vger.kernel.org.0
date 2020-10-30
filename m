@@ -2,152 +2,82 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF7F92A058B
-	for <lists+linux-raid@lfdr.de>; Fri, 30 Oct 2020 13:38:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E19D2A08ED
+	for <lists+linux-raid@lfdr.de>; Fri, 30 Oct 2020 16:01:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726096AbgJ3Mia (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 30 Oct 2020 08:38:30 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:20215 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725863AbgJ3Mi3 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 30 Oct 2020 08:38:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1604061508;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=+f/QP4CQnBh6pt6eSEIvYodWw2EULr/hAnCTVNGrUSc=;
-        b=ST5QfiGn5eoAqwfwrLYoVVK1c8M4dAdaeFiZ0Gt1t8pGXRlcoHP5uABPI7hzytUDhbC6Rp
-        DUTxbFZ7DrDo47PW46cUtvMONExv2+VW6oCyd9RHTYF0fHK4MocIfIQz7zYSmueD/MbZwp
-        R701rNgU+lvpnnlEk2GOIunw2J7UC+k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-425-jZof45cMNHKXtCyD509XkQ-1; Fri, 30 Oct 2020 08:38:24 -0400
-X-MC-Unique: jZof45cMNHKXtCyD509XkQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EAF14922A80
-        for <linux-raid@vger.kernel.org>; Fri, 30 Oct 2020 12:38:23 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-8-36.pek2.redhat.com [10.72.8.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2CACD5C1C4;
-        Fri, 30 Oct 2020 12:38:18 +0000 (UTC)
-To:     linux-raid <linux-raid@vger.kernel.org>
-Cc:     Heinz Mauelshagen <heinzm@redhat.com>,
-        Nigel Croxon <ncroxon@redhat.com>
-From:   Xiao Ni <xni@redhat.com>
-Subject: The raid device can't be unmount when it can't work
-Message-ID: <9b6db7d5-4a34-a1f9-2314-5e3522555052@redhat.com>
-Date:   Fri, 30 Oct 2020 20:38:16 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        id S1726713AbgJ3PBO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 30 Oct 2020 11:01:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39480 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbgJ3PAa (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 30 Oct 2020 11:00:30 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06304C0613EE
+        for <linux-raid@vger.kernel.org>; Fri, 30 Oct 2020 07:59:35 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id m13so6795448wrj.7
+        for <linux-raid@vger.kernel.org>; Fri, 30 Oct 2020 07:59:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=9fkQXWnoPSypfyxvIrXWSyd1r4Ua0eeDJczOBpIf/BU=;
+        b=TjZDjTDUyG5IOPAjtKhDz6bJNm6DqwPh3GYjQnJOtk58Qe+VS+LrjG9D+UJTL89L5a
+         hPszd6YttBU2gVDN4Hgd0nVvKmUsgBGa0RfR9y4dU1VG6wqrOSeXXlqa/jT4b2a91QjD
+         sT+ma7QKBtdbME0ZKxl0kc6DEI2BSZsRxuMkNkQsvOWxO6URWAKkh65L3Tk879AJ4LqG
+         Bj9eXYFDUcjXqha9S32esb82rsLCjf9rEdFYrDoZfWxC18Um3HNxqbzetSufrWkdrmWB
+         Hgfuw2XlX0g8ZkLr3paRT5DvZbKL3ccSJq24BaLzNsiQWn1tArC4uUyPSHMQ3hVqPZo6
+         Sb9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=9fkQXWnoPSypfyxvIrXWSyd1r4Ua0eeDJczOBpIf/BU=;
+        b=nbcWIUfwaKkh9MtX3kNE+ArdH4ipl0D49ErcO7a8h1uXp/dGJnlbB+ghBniaKJ1ezI
+         qTZSH+p1opWnkbzvBbDoFeyNHpTODU0EMDxZAN0i1fx6u8SKF36lcNi2sWqgIjA7nR9r
+         IYwVG5cZoKEGNHJkTftp+wcJkJFTo9A2+lfIyX5fbDlbFLgNBqXTQzcbHGCkcUuGeyWa
+         meRjkFlV9dOabjhGoV/BLC56p1OlaBSQixdS4F8Jo5+CFrxy+FvzHvwdYUtmztxZXBaY
+         q+Cq7JOcPQ+YwqJ5E0YNVR6HL5GtUNn9fw3XWk51kNcIYaH7+h0xK5YjEsIg93RKPXXD
+         qY1g==
+X-Gm-Message-State: AOAM531Aeo8DbzR/hNv6pkZV1dwE8Fb+414Ny895G7IaI4W7Bs+efoly
+        dPuVQf3PWvvRywovEuVE++Cf0ibuoCV3/AbUWer5UrBruA==
+X-Google-Smtp-Source: ABdhPJz0XXuJnPS5g3+lbBiW+XXmkDUqYoNBDu76t3os6QvlPQSI6Onyl30CWs+Md1o+E0r28qs03HXLpOQosKz8YWo=
+X-Received: by 2002:a50:f307:: with SMTP id p7mr2761574edm.235.1604069974505;
+ Fri, 30 Oct 2020 07:59:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------3D45F46B3C8CC3A18B6E15EC"
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Received: by 2002:a50:f14c:0:0:0:0:0 with HTTP; Fri, 30 Oct 2020 07:59:34
+ -0700 (PDT)
+Reply-To: li.anable85@gmail.com
+From:   Liliane Abel <k.griest04@gmail.com>
+Date:   Fri, 30 Oct 2020 15:59:34 +0100
+Message-ID: <CABAZL7=b-NWks3DKb=fdDjnu_xt_-CcJCqf-F5s0yQCFVH73-A@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------3D45F46B3C8CC3A18B6E15EC
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Dearest
 
-Hi all
+Greeting my dear, I am Liliane Abel by name, The only daughter of late
+Mr.Benson Abel. My father is one of the top Politician in our country
+and my mother is a farmers and cocoa merchant when they were both
+alive. After the death of my mother, long ago, my father was
+controlling their business until he was poisoned by his business
+associates which he suffered and died.
 
-When one raid loses disks that are bigger than the max degraded number, 
-the udev rule[1] tries to stop
-the raid device. If the raid device is mount, it tries to unmount it 
-first[2]. It uses udisks command to do this.
-It's a little old. Now the package version is udisks2 which uses 
-udisksctl to do this. I write a patch[3] and do
-test. It's failed because of "udisksctl error Permission denied".
-
-The first test:
-[root@localhost ~]# mdadm -CR /dev/md0 -l5 -n3 /dev/sdg /dev/sdi 
-/dev/sdj --assume-clean
-[root@localhost ~]# mkfs.xfs /dev/md0
-[root@localhost ~]# mount /dev/md0 /mnt/test/
-[root@localhost ~]# mdadm -If sdg
-mdadm: set sdg faulty in md0
-mdadm: hot removed sdg from md0
-[root@localhost ~]# mdadm -If sdi
-mdadm: set device faulty failed for sdi:  Device or resource busy
-Unmounted /dev/md0.
-
-The patch works as expected.
-
-The second test:
-[root@localhost ~]# mdadm -CR /dev/md0 -l5 -n3 /dev/sdg /dev/sdi 
-/dev/sdj --assume-clean
-[root@localhost ~]# mkfs.xfs /dev/md0
-[root@localhost ~]# mount /dev/md0 /mnt/test/
-[root@localhost ~]# echo "scsi remove-single-device 6 0 0 0" > 
-/proc/scsi/scsi
-[root@localhost ~]# echo "scsi remove-single-device 7 0 0 0" > 
-/proc/scsi/scsi
-The /dev/md0 is still mount. The patch doesn't work as expected. Logs 
-are added during the test. It reports
-error "udisksctl error Permission denied"
-
-I searched in google to find the reason. It says it needs to config 
-polkit[4]. I did but it didn't work.
-
-The patch is in the attachment
-[1]: udev-md-raid-assembly.rules
-[2]: IncrementalRemove->force_remove
-[3]: The patch is in the attachment
-[4]: https://github.com/coldfix/udiskie/wiki/Permissions
-
-Best Regards
-Xiao
-
---------------3D45F46B3C8CC3A18B6E15EC
-Content-Type: text/x-patch;
- name="0001-change-udisks-to-udisksctl.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="0001-change-udisks-to-udisksctl.patch"
-
-From 0e5b3833da9ba3b663224daf91eb67e8b55a31c4 Mon Sep 17 00:00:00 2001
-From: Xiao Ni <xni@redhat.com>
-Date: Mon, 26 Oct 2020 23:21:10 +0800
-Subject: [PATCH 1/1] mdadm/Incremental: change udisks to udisksctl
-
-Signed-off-by: Xiao Ni <xni@redhat.com>
----
- Incremental.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/Incremental.c b/Incremental.c
-index 98dbcd9..64c9b48 100644
---- a/Incremental.c
-+++ b/Incremental.c
-@@ -1679,8 +1679,8 @@ static void run_udisks(char *arg1, char *arg2)
- 	int pid = fork();
- 	int status;
- 	if (pid == 0) {
--		execl("/usr/bin/udisks", "udisks", arg1, arg2, NULL);
--		execl("/bin/udisks", "udisks", arg1, arg2, NULL);
-+		execl("/usr/bin/udisksctl", "udisksctl", arg1, "-b", arg2, NULL);
-+		execl("/bin/udisksctl", "udisksctl", arg1, "-b", arg2, NULL);
- 		exit(1);
- 	}
- 	while (pid > 0 && wait(&status) != pid)
-@@ -1692,7 +1692,7 @@ static int force_remove(char *devnm, int fd, struct mdinfo *mdi, int verbose)
- 	int rv;
- 	int devid = devnm2devid(devnm);
- 
--	run_udisks("--unmount", map_dev(major(devid), minor(devid), 0));
-+	run_udisks("unmount", map_dev(major(devid), minor(devid), 0));
- 	rv = Manage_stop(devnm, fd, verbose, 1);
- 	if (rv) {
- 		/* At least we can try to trigger a 'remove' */
--- 
-2.7.5
-
-
---------------3D45F46B3C8CC3A18B6E15EC--
-
+Before the death of my father, He told me about (two million five
+hundred thousand united states dollars) which he deposited in the bank
+in Lome-Togo, It was the money he intended to transfer overseas for
+investment before he was poisoned. He also instructed me that I should
+seek for foreign partners in any country of my choice who will assist
+me transfer this money in overseas account where the money will be
+wisely invested.
+I am seeking for your kind assistance in the following ways:  (1) to
+provide a safe bank account into where the money will be transferred
+for investment. (2) To serve as a guardian of this fund since I am a
+girl of 19 years old. (3) To make arrangement for me to come over to
+your country to further my education. This is my reason for writing to
+you. Please if you are willing to assist me I will offer you 25% of
+the total money. Reply if  you are interested
+Best regards.
+Liliane Abel.
