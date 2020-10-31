@@ -2,86 +2,143 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B448A2A1160
-	for <lists+linux-raid@lfdr.de>; Sat, 31 Oct 2020 00:02:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 217782A121F
+	for <lists+linux-raid@lfdr.de>; Sat, 31 Oct 2020 01:49:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725982AbgJ3XCW (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 30 Oct 2020 19:02:22 -0400
-Received: from server.msgroupspa.com ([185.149.113.111]:55162 "EHLO
-        server.msgroupspa.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725780AbgJ3XCU (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 30 Oct 2020 19:02:20 -0400
-X-Greylist: delayed 53432 seconds by postgrey-1.27 at vger.kernel.org; Fri, 30 Oct 2020 19:02:11 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=msgroupspa.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        Message-ID:Reply-To:Subject:To:From:Date:MIME-Version:Sender:Cc:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=gOeEglh1DIJatPKqyvOsPs4e0Zw8Lzg9wwjnNfQdiM8=; b=f0J1AWuajA3oZ1Dpfc1x8K8xEJ
-        AUip3Gv2UXILC1QLa9azjb3AcsLQqGjiyvcdNpmgT4E3ckADFb84tXlqXdyZsQiNBG2DujmkXqT6T
-        d2mjFNqNRzqSvTZ5qo3MQnCtCov24Wb4wcnpMjift4pdGB4JPDnKAHB+AICh1brF5U0xFQPetWE6H
-        BdPwBb7MNTVWN2mlAPb66Psghg7IoDbQVF1Tmf3H0jaTjlEaWeH4lQoLQpQIzRJYm5NbY0Di4+n63
-        5jJQ9+O4mZNL1aiyS8rwPAgEOxxbLBRAAH3FJTu26AO783jjZImRhbqNmO2ZZgHvlSfFh6vWgR2oo
-        WibXGz9w==;
-Received: from [::1] (port=55834 helo=server.msgroupspa.com)
-        by server.msgroupspa.com with esmtpa (Exim 4.93)
-        (envelope-from <no-reply@msgroupspa.com>)
-        id 1kYPS7-0006MI-86; Fri, 30 Oct 2020 16:08:03 +0800
+        id S1725616AbgJaAtX (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 30 Oct 2020 20:49:23 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:55916 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725536AbgJaAtW (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 30 Oct 2020 20:49:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1604105361;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=N03x8iuhKonf8WAAXwmSPomGjWl/OxJIYkM4iwb8pGo=;
+        b=F3PosETCuesfZt7Goa1i1FNkgwh1l5vKJRpzyERYMubgc/Nr0Kjnenz9dx8YZb3wc2z0g1
+        U/AmgDm/O79B4ECApBMxa5lD1oG2BMjMB/n0EZ58L5Z0GtQ+18/lkbjcRVEvN2G68mIYyJ
+        QsGEIaaEvt9nQaf7d6VUBZdznK0d0x0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-480-HfkICe5ZNoeFzQrshiAMjw-1; Fri, 30 Oct 2020 20:49:18 -0400
+X-MC-Unique: HfkICe5ZNoeFzQrshiAMjw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6A4928015DB
+        for <linux-raid@vger.kernel.org>; Sat, 31 Oct 2020 00:49:17 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 63E1B6EF6F
+        for <linux-raid@vger.kernel.org>; Sat, 31 Oct 2020 00:49:17 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 57687180954D;
+        Sat, 31 Oct 2020 00:49:17 +0000 (UTC)
+Date:   Fri, 30 Oct 2020 20:49:16 -0400 (EDT)
+From:   Xiao Ni <xni@redhat.com>
+To:     linux-raid <linux-raid@vger.kernel.org>
+Cc:     Heinz Mauelshagen <heinzm@redhat.com>,
+        Nigel Croxon <ncroxon@redhat.com>
+Message-ID: <505084787.23972105.1604105356558.JavaMail.zimbra@redhat.com>
+In-Reply-To: <9b6db7d5-4a34-a1f9-2314-5e3522555052@redhat.com>
+References: <9b6db7d5-4a34-a1f9-2314-5e3522555052@redhat.com>
+Subject: Re: The raid device can't be unmount when it can't work
 MIME-Version: 1.0
-Date:   Fri, 30 Oct 2020 16:08:03 +0800
-From:   "Mr. John Galvan" <no-reply@msgroupspa.com>
-To:     undisclosed-recipients:;
-Subject: Hello/Hallo
-Reply-To: galvan.johnny@outlook.com
-User-Agent: Roundcube Webmail/1.4.8
-Message-ID: <0d2cf4301ff4649fbf993b8f3f7e83c8@msgroupspa.com>
-X-Sender: no-reply@msgroupspa.com
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server.msgroupspa.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - msgroupspa.com
-X-Get-Message-Sender-Via: server.msgroupspa.com: authenticated_id: no-reply@msgroupspa.com
-X-Authenticated-Sender: server.msgroupspa.com: no-reply@msgroupspa.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.68.5.41, 10.4.195.4]
+Thread-Topic: The raid device can't be unmount when it can't work
+Thread-Index: xXHVDFYjT4qlsy4teszgcN+2GzzF7A==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+For convenient, paste the patch here:
+
+diff --git a/Incremental.c b/Incremental.c
+index 98dbcd9..64c9b48 100644
+--- a/Incremental.c
++++ b/Incremental.c
+@@ -1679,8 +1679,8 @@ static void run_udisks(char *arg1, char *arg2)
+ 	int pid = fork();
+ 	int status;
+ 	if (pid == 0) {
+-		execl("/usr/bin/udisks", "udisks", arg1, arg2, NULL);
+-		execl("/bin/udisks", "udisks", arg1, arg2, NULL);
++		execl("/usr/bin/udisksctl", "udisksctl", arg1, "-b", arg2, NULL);
++		execl("/bin/udisksctl", "udisksctl", arg1, "-b", arg2, NULL);
+ 		exit(1);
+ 	}
+ 	while (pid > 0 && wait(&status) != pid)
+@@ -1692,7 +1692,7 @@ static int force_remove(char *devnm, int fd, struct mdinfo *mdi, int verbose)
+ 	int rv;
+ 	int devid = devnm2devid(devnm);
+ 
+-	run_udisks("--unmount", map_dev(major(devid), minor(devid), 0));
++	run_udisks("unmount", map_dev(major(devid), minor(devid), 0));
+ 	rv = Manage_stop(devnm, fd, verbose, 1);
+ 	if (rv) {
+ 		/* At least we can try to trigger a 'remove' */
 
 
--- 
-Sir/Madam,
+----- Original Message -----
+> From: "Xiao Ni" <xni@redhat.com>
+> To: "linux-raid" <linux-raid@vger.kernel.org>
+> Cc: "Heinz Mauelshagen" <heinzm@redhat.com>, "Nigel Croxon" <ncroxon@redhat.com>
+> Sent: Friday, October 30, 2020 8:38:16 PM
+> Subject: The raid device can't be unmount when it can't work
+> 
+> Hi all
+> 
+> When one raid loses disks that are bigger than the max degraded number,
+> the udev rule[1] tries to stop
+> the raid device. If the raid device is mount, it tries to unmount it
+> first[2]. It uses udisks command to do this.
+> It's a little old. Now the package version is udisks2 which uses
+> udisksctl to do this. I write a patch[3] and do
+> test. It's failed because of "udisksctl error Permission denied".
+> 
+> The first test:
+> [root@localhost ~]# mdadm -CR /dev/md0 -l5 -n3 /dev/sdg /dev/sdi
+> /dev/sdj --assume-clean
+> [root@localhost ~]# mkfs.xfs /dev/md0
+> [root@localhost ~]# mount /dev/md0 /mnt/test/
+> [root@localhost ~]# mdadm -If sdg
+> mdadm: set sdg faulty in md0
+> mdadm: hot removed sdg from md0
+> [root@localhost ~]# mdadm -If sdi
+> mdadm: set device faulty failed for sdi:  Device or resource busy
+> Unmounted /dev/md0.
+> 
+> The patch works as expected.
+> 
+> The second test:
+> [root@localhost ~]# mdadm -CR /dev/md0 -l5 -n3 /dev/sdg /dev/sdi
+> /dev/sdj --assume-clean
+> [root@localhost ~]# mkfs.xfs /dev/md0
+> [root@localhost ~]# mount /dev/md0 /mnt/test/
+> [root@localhost ~]# echo "scsi remove-single-device 6 0 0 0" >
+> /proc/scsi/scsi
+> [root@localhost ~]# echo "scsi remove-single-device 7 0 0 0" >
+> /proc/scsi/scsi
+> The /dev/md0 is still mount. The patch doesn't work as expected. Logs
+> are added during the test. It reports
+> error "udisksctl error Permission denied"
+> 
+> I searched in google to find the reason. It says it needs to config
+> polkit[4]. I did but it didn't work.
+> 
+> The patch is in the attachment
+> [1]: udev-md-raid-assembly.rules
+> [2]: IncrementalRemove->force_remove
+> [3]: The patch is in the attachment
+> [4]: https://github.com/coldfix/udiskie/wiki/Permissions
+> 
+> Best Regards
+> Xiao
+> 
 
-I have access to very vital information that can be used to move a huge 
-amount of money. I have done my homework very well and I have the 
-machineries in place to get it done since I am still in active service. 
-If it was possible for me to do it alone I would not have bothered 
-contacting you. Ultimately I need an honest foreigner to play an 
-important role in the completion of this business transaction. Send 
-responds to this email: galvan.johnny@outlook.com
-
-Regards,
-John Galvan
-
----------------------------------------------------------------
-
-Sir / Madam,
-
-Ich habe Zugang zu sehr wichtigen Informationen, mit denen ich eine 
-große Menge Geld bewegen kann. Ich habe meine Hausaufgaben sehr gut 
-gemacht und ich habe die Maschinen, um sie zu erledigen, da ich immer 
-noch im aktiven Dienst bin. Wenn es mir möglich gewesen wäre, es alleine 
-zu tun, hätte ich mich nicht darum gekümmert, Sie zu kontaktieren. 
-Letztendlich brauche ich einen ehrlichen Ausländer, der eine wichtige 
-Rolle beim Abschluss dieses Geschäftsvorgangs spielt. Senden Sie 
-Antworten auf diese E-Mail: galvan.johnny@outlook.com
-
-Grüße,
-John Galvan
