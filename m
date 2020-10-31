@@ -2,143 +2,48 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 217782A121F
-	for <lists+linux-raid@lfdr.de>; Sat, 31 Oct 2020 01:49:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 25E582A127E
+	for <lists+linux-raid@lfdr.de>; Sat, 31 Oct 2020 02:27:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725616AbgJaAtX (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 30 Oct 2020 20:49:23 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:55916 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725536AbgJaAtW (ORCPT
+        id S1726228AbgJaB07 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 30 Oct 2020 21:26:59 -0400
+Received: from 93804.cloudwaysapps.com ([178.62.255.238]:56412 "EHLO
+        93804.cloudwaysapps.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726209AbgJaB07 (ORCPT
         <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 30 Oct 2020 20:49:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1604105361;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=N03x8iuhKonf8WAAXwmSPomGjWl/OxJIYkM4iwb8pGo=;
-        b=F3PosETCuesfZt7Goa1i1FNkgwh1l5vKJRpzyERYMubgc/Nr0Kjnenz9dx8YZb3wc2z0g1
-        U/AmgDm/O79B4ECApBMxa5lD1oG2BMjMB/n0EZ58L5Z0GtQ+18/lkbjcRVEvN2G68mIYyJ
-        QsGEIaaEvt9nQaf7d6VUBZdznK0d0x0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-480-HfkICe5ZNoeFzQrshiAMjw-1; Fri, 30 Oct 2020 20:49:18 -0400
-X-MC-Unique: HfkICe5ZNoeFzQrshiAMjw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6A4928015DB
-        for <linux-raid@vger.kernel.org>; Sat, 31 Oct 2020 00:49:17 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 63E1B6EF6F
-        for <linux-raid@vger.kernel.org>; Sat, 31 Oct 2020 00:49:17 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 57687180954D;
-        Sat, 31 Oct 2020 00:49:17 +0000 (UTC)
-Date:   Fri, 30 Oct 2020 20:49:16 -0400 (EDT)
-From:   Xiao Ni <xni@redhat.com>
-To:     linux-raid <linux-raid@vger.kernel.org>
-Cc:     Heinz Mauelshagen <heinzm@redhat.com>,
-        Nigel Croxon <ncroxon@redhat.com>
-Message-ID: <505084787.23972105.1604105356558.JavaMail.zimbra@redhat.com>
-In-Reply-To: <9b6db7d5-4a34-a1f9-2314-5e3522555052@redhat.com>
-References: <9b6db7d5-4a34-a1f9-2314-5e3522555052@redhat.com>
-Subject: Re: The raid device can't be unmount when it can't work
+        Fri, 30 Oct 2020 21:26:59 -0400
+X-Greylist: delayed 12135 seconds by postgrey-1.27 at vger.kernel.org; Fri, 30 Oct 2020 21:26:55 EDT
+Received: from 127.0.0.1 (93804.cloudwaysapps.com [127.0.0.1])
+        by 93804.cloudwaysapps.com (Postfix) with SMTP id B7E2222075;
+        Fri, 30 Oct 2020 19:28:42 +0000 (UTC)
+Received: from [205.230.2.174] by 127.0.0.1 id <5950496-65746>; Sat, 31 Oct 2020 00:24:59 +0400
+Message-ID: <ur-dehw$u-v8-$q8xj2j$n5t4uc@bcyg0.39fe.ck7>
+From:   "JOHN PHIL" <gerradfinancialplanning@gmail.com>
+Reply-To: "JOHN PHIL" <gerradfinancialplanning@gmail.com>
+To:     linux-raid@vger.kernel.org
+Subject: November Equity Investment 20-20 
+Date:   Sat, 31 Oct 20 00:24:59 GMT
+X-Mailer: AOL 7.0 for Windows US sub 118
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.68.5.41, 10.4.195.4]
-Thread-Topic: The raid device can't be unmount when it can't work
-Thread-Index: xXHVDFYjT4qlsy4teszgcN+2GzzF7A==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: multipart/alternative;
+        boundary="07B_9ED_4_"
+X-Priority: 1
+X-MSMail-Priority: High
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-For convenient, paste the patch here:
 
-diff --git a/Incremental.c b/Incremental.c
-index 98dbcd9..64c9b48 100644
---- a/Incremental.c
-+++ b/Incremental.c
-@@ -1679,8 +1679,8 @@ static void run_udisks(char *arg1, char *arg2)
- 	int pid = fork();
- 	int status;
- 	if (pid == 0) {
--		execl("/usr/bin/udisks", "udisks", arg1, arg2, NULL);
--		execl("/bin/udisks", "udisks", arg1, arg2, NULL);
-+		execl("/usr/bin/udisksctl", "udisksctl", arg1, "-b", arg2, NULL);
-+		execl("/bin/udisksctl", "udisksctl", arg1, "-b", arg2, NULL);
- 		exit(1);
- 	}
- 	while (pid > 0 && wait(&status) != pid)
-@@ -1692,7 +1692,7 @@ static int force_remove(char *devnm, int fd, struct mdinfo *mdi, int verbose)
- 	int rv;
- 	int devid = devnm2devid(devnm);
- 
--	run_udisks("--unmount", map_dev(major(devid), minor(devid), 0));
-+	run_udisks("unmount", map_dev(major(devid), minor(devid), 0));
- 	rv = Manage_stop(devnm, fd, verbose, 1);
- 	if (rv) {
- 		/* At least we can try to trigger a 'remove' */
+--07B_9ED_4_
+Content-Type: text/plain;
+Content-Transfer-Encoding: quoted-printable
 
+How are you doing today I have a proposal which i think may interest you a=
+nd benefit you.I will like to give you full details of this via email:  ge=
+rradfinancialplanning@gmail.com
+Thanks.
 
------ Original Message -----
-> From: "Xiao Ni" <xni@redhat.com>
-> To: "linux-raid" <linux-raid@vger.kernel.org>
-> Cc: "Heinz Mauelshagen" <heinzm@redhat.com>, "Nigel Croxon" <ncroxon@redhat.com>
-> Sent: Friday, October 30, 2020 8:38:16 PM
-> Subject: The raid device can't be unmount when it can't work
-> 
-> Hi all
-> 
-> When one raid loses disks that are bigger than the max degraded number,
-> the udev rule[1] tries to stop
-> the raid device. If the raid device is mount, it tries to unmount it
-> first[2]. It uses udisks command to do this.
-> It's a little old. Now the package version is udisks2 which uses
-> udisksctl to do this. I write a patch[3] and do
-> test. It's failed because of "udisksctl error Permission denied".
-> 
-> The first test:
-> [root@localhost ~]# mdadm -CR /dev/md0 -l5 -n3 /dev/sdg /dev/sdi
-> /dev/sdj --assume-clean
-> [root@localhost ~]# mkfs.xfs /dev/md0
-> [root@localhost ~]# mount /dev/md0 /mnt/test/
-> [root@localhost ~]# mdadm -If sdg
-> mdadm: set sdg faulty in md0
-> mdadm: hot removed sdg from md0
-> [root@localhost ~]# mdadm -If sdi
-> mdadm: set device faulty failed for sdi:  Device or resource busy
-> Unmounted /dev/md0.
-> 
-> The patch works as expected.
-> 
-> The second test:
-> [root@localhost ~]# mdadm -CR /dev/md0 -l5 -n3 /dev/sdg /dev/sdi
-> /dev/sdj --assume-clean
-> [root@localhost ~]# mkfs.xfs /dev/md0
-> [root@localhost ~]# mount /dev/md0 /mnt/test/
-> [root@localhost ~]# echo "scsi remove-single-device 6 0 0 0" >
-> /proc/scsi/scsi
-> [root@localhost ~]# echo "scsi remove-single-device 7 0 0 0" >
-> /proc/scsi/scsi
-> The /dev/md0 is still mount. The patch doesn't work as expected. Logs
-> are added during the test. It reports
-> error "udisksctl error Permission denied"
-> 
-> I searched in google to find the reason. It says it needs to config
-> polkit[4]. I did but it didn't work.
-> 
-> The patch is in the attachment
-> [1]: udev-md-raid-assembly.rules
-> [2]: IncrementalRemove->force_remove
-> [3]: The patch is in the attachment
-> [4]: https://github.com/coldfix/udiskie/wiki/Permissions
-> 
-> Best Regards
-> Xiao
-> 
+John PHIL
+
+--07B_9ED_4_--
 
