@@ -2,86 +2,56 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CA4E2B8A0B
-	for <lists+linux-raid@lfdr.de>; Thu, 19 Nov 2020 03:23:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A42DF2B8FB7
+	for <lists+linux-raid@lfdr.de>; Thu, 19 Nov 2020 11:05:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727316AbgKSCVe (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 18 Nov 2020 21:21:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36476 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbgKSCVe (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 18 Nov 2020 21:21:34 -0500
-Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A54CC0613D4
-        for <linux-raid@vger.kernel.org>; Wed, 18 Nov 2020 18:21:34 -0800 (PST)
-Received: by mail-qk1-x733.google.com with SMTP id d9so4021590qke.8
-        for <linux-raid@vger.kernel.org>; Wed, 18 Nov 2020 18:21:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:references:to:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=LxQ+X5Rd4UnM8jTryEQTNi2vQxSVH2Ujj1G220ZoICY=;
-        b=M++0K9N+PimKBeZtOil6PXglVoQ5MOCTdwrdAGR2G8y1xClHbP722kWmsiQLVDdI4m
-         1V+N8m4P7NBvddsRhn9Lb537Uihkmse4UseIDuPacRYDLkOH8NaDTbNmnWmVjgFZxSaA
-         61dvhnRbz/4qzpPvxTAACCC6QauvKLzKk9Kemk517aAc+dE7l3JQcTlDKRhinAn4s6Me
-         MrcdN+hRV9riZCjTqpR6849+lQeIMb2yzUgHL5DWWm/J6xePo5vYw2KWVNgN/m1puuY9
-         rw6vDxsna+oYCrr/ST9BNIQoT97/GwgBZ3NC7maU97QLRwck0GrfEWyxBmjcWEcVCd4F
-         z67A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:references:to:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LxQ+X5Rd4UnM8jTryEQTNi2vQxSVH2Ujj1G220ZoICY=;
-        b=iJGwom7S47ULheh/l0gITaj9a8ztBzTtVfoPam5ynU0antQpIzwrQSzze5mzyLLP5H
-         hJwkFY0JOXvoy9nVVNIGx08oWKCqPuts0AKAnuUeOJ11x7jTqXOXiJuOdaQoqsjD7EoI
-         RisDA/xAPiFA09kdma3G0YYoE8VrkuYVHMpDy3T7lZlQpxg+9C38+2beQ33OSxfJsEa3
-         Kq/Cy1VDa9wMfPPQ6Xi1nBQNOe7SuY0ZJbg3PGcoNpL3wGAkX5fWciIQOW8rVDXHnWaB
-         cGHaSc1QCaGaVs/DZHWnHDwpl7vASNiY/iO3pvdxDkk2pUUxqDcL0lsYGYZW5mIINfIg
-         4ZIA==
-X-Gm-Message-State: AOAM530tt+Hyecv/v25JbHKepGWToygAzJwpPot2PmkguUgP4zi9vtMu
-        DxGkhlldruQMftXq4navi5K3O8u4QYIN1g==
-X-Google-Smtp-Source: ABdhPJzOGsuGVS3PiExoVhxtHFJmSejN6DiImRCFcJRL3Is/FFviGtu4u72CTcCDw4fMLAQ2e4O+lQ==
-X-Received: by 2002:a05:620a:228f:: with SMTP id o15mr8931160qkh.206.1605752493232;
-        Wed, 18 Nov 2020 18:21:33 -0800 (PST)
-Received: from biodora.local ([104.238.233.190])
-        by smtp.gmail.com with ESMTPSA id s16sm18282581qkg.5.2020.11.18.18.21.32
-        for <linux-raid@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Nov 2020 18:21:32 -0800 (PST)
-Subject: Re: Events Counter - How it increments
-References: <819ff80e-10d0-8cc6-b34c-418fdea7b57a@gmail.com>
- <567bc78b-cf37-c40b-2e99-b86a80bdfb3e@suse.com>
-To:     linux-raid@vger.kernel.org
-From:   =?UTF-8?Q?Jorge_F=c3=a1bregas?= <jorge.fabregas@gmail.com>
-Message-ID: <f2d69b9a-9e2d-a104-0600-612f5d39084c@gmail.com>
-Date:   Wed, 18 Nov 2020 22:21:31 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.1
+        id S1726640AbgKSKBV convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-raid@lfdr.de>); Thu, 19 Nov 2020 05:01:21 -0500
+Received: from tigeramira.ro ([88.158.78.30]:40952 "EHLO mail.tigeramira.ro"
+        rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1726562AbgKSKBV (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 19 Nov 2020 05:01:21 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.tigeramira.ro (Postfix) with ESMTP id 22609CB370B
+        for <linux-raid@vger.kernel.org>; Tue, 17 Nov 2020 07:45:09 +0200 (EET)
+Received: from mail.tigeramira.ro ([127.0.0.1])
+        by localhost (mail.tigeramira.ro [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id Z-4nQy_ShXWl for <linux-raid@vger.kernel.org>;
+        Tue, 17 Nov 2020 07:44:53 +0200 (EET)
+Received: from mail.tigeramira.ro (localhost [127.0.0.1])
+        by mail.tigeramira.ro (Postfix) with ESMTP id E5052C7A16F
+        for <linux-raid@vger.kernel.org>; Mon, 16 Nov 2020 08:30:48 +0200 (EET)
+Received: from [156.96.44.214] (unknown [192.168.12.254])
+        by mail.tigeramira.ro (Postfix) with ESMTP id 2FADF914670
+        for <linux-raid@vger.kernel.org>; Fri, 13 Nov 2020 13:32:03 +0200 (EET)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-In-Reply-To: <567bc78b-cf37-c40b-2e99-b86a80bdfb3e@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: Corporate and Personal Loan::,
+To:     linux-raid@vger.kernel.org
+From:   "Investment  Corporate" <financialcapability6@gmail.com>
+Date:   Fri, 13 Nov 2020 02:32:17 -0800
+Reply-To: hmurrah39@gmail.com
+Message-Id: <20201113113204.2FADF914670@mail.tigeramira.ro>
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 11/18/20 12:45 PM, heming.zhao@suse.com wrote:
-> The events is related with (struct mddev) mddev->events. 
-> you can search it in kernel source code.
+Hello linux-raid@vger.kernel.org
 
-Thank you Heming.  I was expecting more of a general view since I'm a
-new user.  Sorry I wasn't clear.
 
-What sort of events cause the Event counter to increase?  If it's mainly
-whenever the superblock is updated then my question is: What sort of
-events cause the superblock to be updated? I can imagine detection of
-failed disk, read errors, array checks, commands by user/admin,
-assembly-reassembly etc? If an array operates fine for months - without
-user intervention,  will the Event counter increase at all?
+We are Base Investment Company offering Corporate and Personal Loan at 3% Interest Rate for a duration of 10Years.
 
-Thanks.
 
--- 
-Jorge
+We also pay 1% commission to brokers, who introduce project owners for finance or other opportunities.
+
+
+Please get back to me if you are interested for more
+
+details.
+
+
+Yours faithfully,
+
+Hashim Murrah
