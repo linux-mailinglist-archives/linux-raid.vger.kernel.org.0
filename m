@@ -2,56 +2,66 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CAF262B7B39
-	for <lists+linux-raid@lfdr.de>; Wed, 18 Nov 2020 11:25:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C40772B7D9E
+	for <lists+linux-raid@lfdr.de>; Wed, 18 Nov 2020 13:30:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbgKRKZj convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-raid@lfdr.de>); Wed, 18 Nov 2020 05:25:39 -0500
-Received: from tigeramira.ro ([88.158.78.30]:47155 "EHLO mail.tigeramira.ro"
-        rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1726077AbgKRKZi (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 18 Nov 2020 05:25:38 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.tigeramira.ro (Postfix) with ESMTP id 35CE8CBDE05
-        for <linux-raid@vger.kernel.org>; Tue, 17 Nov 2020 11:52:05 +0200 (EET)
-Received: from mail.tigeramira.ro ([127.0.0.1])
-        by localhost (mail.tigeramira.ro [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 5hJfkmEd8rkY for <linux-raid@vger.kernel.org>;
-        Tue, 17 Nov 2020 11:52:01 +0200 (EET)
-Received: from mail.tigeramira.ro (localhost [127.0.0.1])
-        by mail.tigeramira.ro (Postfix) with ESMTP id 06E6DC0AE2C
-        for <linux-raid@vger.kernel.org>; Sat, 14 Nov 2020 18:24:18 +0200 (EET)
-Received: from [156.96.44.214] (unknown [192.168.12.254])
-        by mail.tigeramira.ro (Postfix) with ESMTP id D21A4999155
-        for <linux-raid@vger.kernel.org>; Fri, 13 Nov 2020 19:09:06 +0200 (EET)
-Content-Type: text/plain; charset="iso-8859-1"
+        id S1726954AbgKRM2c (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 18 Nov 2020 07:28:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48568 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726731AbgKRM2c (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 18 Nov 2020 07:28:32 -0500
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CE44C0613D4
+        for <linux-raid@vger.kernel.org>; Wed, 18 Nov 2020 04:28:32 -0800 (PST)
+Received: by mail-lf1-x136.google.com with SMTP id u18so2655404lfd.9
+        for <linux-raid@vger.kernel.org>; Wed, 18 Nov 2020 04:28:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=A55yOkcvhaOXORHvitpEr5uSLE3xy7lbaLldp0+pTPg=;
+        b=nqCVW652Ddz+B9K7ZuO63Rs5nx6mJ2ubv9veqF3nFPOQ6surqORC+svHIRd8+rGHaF
+         vvV4ZW4q68Z71GxsNSPdxwXxBSYZcTm0nf4UsKKJxg2ayWkKoXwb1zIgnb5nd9hpPeex
+         7iVz+/Kgx/yG6nDRhf85eJmclFFL/Lc4VckLv0SC2j71P4P+SIEX5B1v238FY6k5iRZ5
+         eWZHLKffHI5sGghB+FlDB7NTIWmEA9R0DG0peWFp8yPFa4Yfv7JDoq7XSaXXIWxuQSCT
+         YYCdMZAY5FKLtIVScPwx98gIIcBD77FiFMCL9IW9PEIP2fIbPJfHRKxdd940qM/kw+qZ
+         I4VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=A55yOkcvhaOXORHvitpEr5uSLE3xy7lbaLldp0+pTPg=;
+        b=L23wqP1Zx8Txb1uVquoZaM9e+iQNIeWiGx2ZDh2Eydcgq94hc0/rMivrBAabBlacHA
+         zmojGCscFTgmBHmfC+BnePhpVNUvHRmdDH0W+0K4C6mXkDyvirYexny1/PAOgvMGFeXJ
+         1If3rNFAXqJHAkJt3a2fA77dKNSUfvn2KIJLl3r8QYSZ0r+9mUmNk+TIZPe+RW64TeBk
+         8T2Xwwam/kClBmImUkt8FsdA/NlTnqgN4JGIjxgspWTE/+SzKYPteWUP2gZG3NTxXVty
+         idN3vjPk/y9WUKsv4+fjuwivmYK8HMDd7wbYi1uSUUEDUyMpnI2lkUEpxnMDE/MKTwWE
+         ZjEQ==
+X-Gm-Message-State: AOAM531puZSpHBdKqvupAzm+GH4+ND1nAqoitZfxbpcIq3ZA+3sI5Chl
+        jF8TO5J6lX/JWAYZHo5X6SaSQR2GY1Ylp3D15gy+L1bbPJE=
+X-Google-Smtp-Source: ABdhPJxaECj4wbYaUJqChtSliVZU2CSI668dxBjZ6F/cR6xZDr38MXJWoJf6j4VZ13EyJ96v0DU71x0JJGYQGDenwgA=
+X-Received: by 2002:a05:6512:3287:: with SMTP id p7mr4006915lfe.346.1605702510398;
+ Wed, 18 Nov 2020 04:28:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: Corporate and Personal Loan::,
-To:     linux-raid@vger.kernel.org
-From:   "Investment  Corporate" <financialcapability6@gmail.com>
-Date:   Fri, 13 Nov 2020 08:09:20 -0800
-Reply-To: hmurrah39@gmail.com
-Message-Id: <20201113170907.D21A4999155@mail.tigeramira.ro>
+From:   o1bigtenor <o1bigtenor@gmail.com>
+Date:   Wed, 18 Nov 2020 06:27:54 -0600
+Message-ID: <CAPpdf5-9J6S+Etg8viXoPxrur9pTDiz5DQNHBaY1HLAq388Ufw@mail.gmail.com>
+Subject: procedure for unmounting and remounting an array
+To:     Linux-RAID <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hello linux-raid@vger.kernel.org
+Greetings
 
+I find myself needing to unmount my raid array (Debian bullseye
+(testing) using mdadm version 4.1) to complete an action. I then would
+like to remount it.
 
-We are Base Investment Company offering Corporate and Personal Loan at 3% Interest Rate for a duration of 10Years.
+AIUI I would just use the commands umount /dev/md0p1  then do my
+action (hopefully with a successful outcome) and then use mount
+/dev/md0p1 to remount the array (raid-10).
 
+Is this a good way of doing things or is there a better way?
 
-We also pay 1% commission to brokers, who introduce project owners for finance or other opportunities.
-
-
-Please get back to me if you are interested for more
-
-details.
-
-
-Yours faithfully,
-
-Hashim Murrah
+TIA
