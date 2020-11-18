@@ -2,77 +2,47 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A02FF2B6913
-	for <lists+linux-raid@lfdr.de>; Tue, 17 Nov 2020 16:52:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8099C2B779D
+	for <lists+linux-raid@lfdr.de>; Wed, 18 Nov 2020 08:59:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgKQPvB (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 17 Nov 2020 10:51:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54346 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbgKQPvA (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 17 Nov 2020 10:51:00 -0500
-Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97E2AC0613CF
-        for <linux-raid@vger.kernel.org>; Tue, 17 Nov 2020 07:51:00 -0800 (PST)
-Received: by mail-qk1-x735.google.com with SMTP id v143so20816627qkb.2
-        for <linux-raid@vger.kernel.org>; Tue, 17 Nov 2020 07:51:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:references:to:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=GKpWKO/8UsSBTsjnb+7x1CGzDYkMw06XSrcG+nh3gZk=;
-        b=R8eCqNz3guNsldym3FVkPJuJtZ5deZ3PtgC0u7fXCMkAwMuA0hxspWGQ6aNrQCT8Gv
-         YtQSBfdnLJfHWtsQ8iNWjvcTmuwrzhC4JIosb4kp+seqeiYdgXUt9C9NDPvAD+YadvBL
-         WBn02WXsMKJZjs3v7wjDxz+GeDFjNLse92ShTEXoC2KTMy9IlfBSjeEKaFvbDQrpwZMB
-         2Jwvh7Ewx2yR/PRu+rOM1JNGyy1ILTv/bzjNsVAuUnnwni/gxCL7XZNkFsU2XRqn6GVo
-         fvceK2Vj08jOJ8OaeQwdnMTX/4sE5v0f+T+/Hea0IMpgNiZ9arUlABeRBPeiixtv8pxF
-         4e9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:references:to:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GKpWKO/8UsSBTsjnb+7x1CGzDYkMw06XSrcG+nh3gZk=;
-        b=oVEZ92AF1f+BAkHS4Cn92jZg/vs38nk0KA0PppGfgDCTsUFDrXikRA4Gsggvz30MU/
-         JMu2a0/ZPbfEw4BO5bJHcIJAB4E7kgLmP1Nd+Z2yNRzGXWQVBxDegZWH45O6utJdauP2
-         GFn2xL6/MZvdrzpufTzBtuX5PBZ3teFyrsSm1nhOszYhkVf+8KzwvQ9ciaDcaOvywOSN
-         d9AWHwYflyJs2LlNvt03RjA+CI9Mk/rP8Kvz8r45cB9gHdG2HnIdAglnWzd39uxET3fQ
-         baK2jcCkCIJObUTCbs8I8PZ+g6Pqs/ZcG5vQRLIStaRRH1yK+nuBLBR8mxyfkHaoXfVR
-         A35A==
-X-Gm-Message-State: AOAM530+P3ChnM+W6KPMj2PNfN6u4Gw4FxLYTns8ZyPi3gHFrvo5bDls
-        /7qjMfdsnX0KXsWCBvprc9WDK8X/01P+0w==
-X-Google-Smtp-Source: ABdhPJw+Varu8ROW48SEftCcd76Kok61jqcC02f7npnATAhBeXVbFfiGz3YTVktWwaQLC4yFyaJ7yg==
-X-Received: by 2002:a37:ba82:: with SMTP id k124mr156621qkf.25.1605628259455;
-        Tue, 17 Nov 2020 07:50:59 -0800 (PST)
-Received: from biodora.local ([104.238.233.190])
-        by smtp.gmail.com with ESMTPSA id a85sm14611440qkg.3.2020.11.17.07.50.58
-        for <linux-raid@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Nov 2020 07:50:59 -0800 (PST)
-Subject: Re: Events Counter - How it increments
-References: <819ff80e-10d0-8cc6-b34c-418fdea7b57a@gmail.com>
-To:     linux-raid@vger.kernel.org
-From:   =?UTF-8?Q?Jorge_F=c3=a1bregas?= <jorge.fabregas@gmail.com>
-Message-ID: <7b06b78f-c0de-94cc-54de-bf66cfe80b8e@gmail.com>
-Date:   Tue, 17 Nov 2020 11:50:58 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.1
+        id S1726361AbgKRHxm convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-raid@lfdr.de>); Wed, 18 Nov 2020 02:53:42 -0500
+Received: from sw73-70-41.adsl.seed.net.tw ([203.73.70.41]:45541 "EHLO
+        oa.trendtek.com.tw" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgKRHxm (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 18 Nov 2020 02:53:42 -0500
+Received: from [156.96.44.214] ([156.96.44.214])
+        (authenticated bits=0)
+        by oa.trendtek.com.tw (8.13.8/8.13.1) with ESMTP id 0AI7rPNF023768
+        for <linux-raid@vger.kernel.org>; Wed, 18 Nov 2020 15:53:31 +0800
+Message-Id: <202011180753.0AI7rPNF023768@oa.trendtek.com.tw>
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-In-Reply-To: <819ff80e-10d0-8cc6-b34c-418fdea7b57a@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: Corporate and Personal Loan *
+To:     linux-raid@vger.kernel.org
+From:   "Investment  Corporate" <financialcapability6@gmail.com>
+Date:   Tue, 17 Nov 2020 23:53:18 -0800
+Reply-To: hmurrah39@gmail.com
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 11/10/20 10:24 AM, Jorge Fábregas wrote:
-> How does the "Events" counter (as shown with mdadm --examine) gets
-> incremented? On what sort of events?
+Hello linux-raid@vger.kernel.org
 
-Anyone?  :)
 
-Thank you.
+We are Base Investment Company offering Corporate and Personal Loan at 3% Interest Rate for a duration of 10Years.
 
--- 
-Jorge
+
+We also pay 1% commission to brokers, who introduce project owners for finance or other opportunities.
+
+
+Please get back to me if you are interested for more
+
+details.
+
+
+Yours faithfully,
+
+Hashim Murrah
