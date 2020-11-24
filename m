@@ -2,36 +2,36 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C5962C2A8E
-	for <lists+linux-raid@lfdr.de>; Tue, 24 Nov 2020 15:59:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 463E32C2B9A
+	for <lists+linux-raid@lfdr.de>; Tue, 24 Nov 2020 16:41:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388513AbgKXO7D (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 24 Nov 2020 09:59:03 -0500
-Received: from mga04.intel.com ([192.55.52.120]:60773 "EHLO mga04.intel.com"
+        id S2389277AbgKXPlM (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 24 Nov 2020 10:41:12 -0500
+Received: from mga11.intel.com ([192.55.52.93]:5938 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388165AbgKXO7D (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 24 Nov 2020 09:59:03 -0500
-IronPort-SDR: 8A47/15Sfyz50udPDg/vqJ0tVhIyUVEKHTedKXi4/gsLyxW0GEroInHLXX/vj/mBvl13LA0LCh
- gFmV3ExgI1xA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9815"; a="169393342"
+        id S1730909AbgKXPlL (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 24 Nov 2020 10:41:11 -0500
+IronPort-SDR: WdO2p7/qknhzXMSPrK04evBBevG/1nE8DqOecOP1aDZZvrepdzXMsP67Yopebfz0rLRUfpuWqk
+ 7nozJVLxAxOg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9815"; a="168455751"
 X-IronPort-AV: E=Sophos;i="5.78,366,1599548400"; 
-   d="scan'208";a="169393342"
+   d="scan'208";a="168455751"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2020 06:59:03 -0800
-IronPort-SDR: CNYHSh6Uq431uYBG8IRogEKY2HWwJ7Bud+v0GCDwWmOXwJgS3iLoVun3/n/CYnEHFL5GGsjhfV
- qE5Fxyk+RF+g==
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2020 07:41:11 -0800
+IronPort-SDR: PRLOk/LB9jSPorT4GGX7HZBkFcLCiyeXG5jcZ6EDi53yFt3SgLT4D6Fe6w+lQPtBAziLfK3zy5
+ 2kRkIdjJ8VKQ==
 X-IronPort-AV: E=Sophos;i="5.78,366,1599548400"; 
-   d="scan'208";a="536496442"
+   d="scan'208";a="327619267"
 Received: from mtkaczyk-devel.igk.intel.com ([10.102.102.23])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2020 06:59:02 -0800
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2020 07:41:10 -0800
 From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
 To:     jes@trained-monkey.org
 Cc:     linux-raid@vger.kernel.org
-Subject: [PATCH] imsm: remove redundant calls to imsm_get_map
-Date:   Tue, 24 Nov 2020 15:58:53 +0100
-Message-Id: <20201124145853.1482-1-mariusz.tkaczyk@linux.intel.com>
+Subject: [PATCH] Monitor: don't use default modes when creating a file
+Date:   Tue, 24 Nov 2020 16:41:01 +0100
+Message-Id: <20201124154101.1836-1-mariusz.tkaczyk@linux.intel.com>
 X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -39,33 +39,53 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-MAP_0 is gotten and the beginning, there is no need to get it again.
+Replace fopen() calls by open() with creation mode directly specified.
+This fixes the potential security issue. Use octal values instead masks.
 
 Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
 ---
- super-intel.c | 2 --
- 1 file changed, 2 deletions(-)
+ Monitor.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/super-intel.c b/super-intel.c
-index 9562064..95f4eaf 100644
---- a/super-intel.c
-+++ b/super-intel.c
-@@ -8598,7 +8598,6 @@ static void imsm_set_disk(struct active_array *a, int n, int state)
- 				break;
- 			}
- 			end_migration(dev, super, map_state);
--			map = get_imsm_map(dev, MAP_0);
- 			map->failed_disk_num = ~0;
- 			super->updates_pending++;
- 			a->last_checkpoint = 0;
-@@ -8610,7 +8609,6 @@ static void imsm_set_disk(struct active_array *a, int n, int state)
- 				end_migration(dev, super, map_state);
- 			else
- 				map->map_state = map_state;
--			map = get_imsm_map(dev, MAP_0);
- 			map->failed_disk_num = ~0;
- 			super->updates_pending++;
- 			break;
+diff --git a/Monitor.c b/Monitor.c
+index 7fd4808..a82e99d 100644
+--- a/Monitor.c
++++ b/Monitor.c
+@@ -305,8 +305,11 @@ static int make_daemon(char *pidfile)
+ 		if (!pidfile)
+ 			printf("%d\n", pid);
+ 		else {
+-			FILE *pid_file;
+-			pid_file=fopen(pidfile, "w");
++			FILE *pid_file = NULL;
++			int fd = open(pidfile, O_WRONLY | O_CREAT | O_TRUNC,
++				      0644);
++			if (fd >= 0)
++				pid_file = fdopen(fd, "w");
+ 			if (!pid_file)
+ 				perror("cannot create pid file");
+ 			else {
+@@ -368,13 +371,17 @@ static void write_autorebuild_pid()
+ {
+ 	char path[PATH_MAX];
+ 	int pid;
+-	FILE *fp;
++	FILE *fp = NULL;
+ 	sprintf(path, "%s/autorebuild.pid", MDMON_DIR);
+ 
+-	if (mkdir(MDMON_DIR, S_IRWXU) < 0 && errno != EEXIST) {
++	if (mkdir(MDMON_DIR, 0700) < 0 && errno != EEXIST) {
+ 		pr_err("Can't create autorebuild.pid file\n");
+ 	} else {
+-		fp = fopen(path, "w");
++		int fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0700);
++
++		if (fd >= 0)
++			fp = fdopen(fd, "w");
++
+ 		if (!fp)
+ 			pr_err("Can't create autorebuild.pid file\n");
+ 		else {
 -- 
 2.25.0
 
