@@ -2,88 +2,86 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 742F62C36E8
-	for <lists+linux-raid@lfdr.de>; Wed, 25 Nov 2020 03:53:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EBE82C3795
+	for <lists+linux-raid@lfdr.de>; Wed, 25 Nov 2020 04:41:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbgKYCrQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 24 Nov 2020 21:47:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44540 "EHLO
+        id S1727238AbgKYDOX (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 24 Nov 2020 22:14:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbgKYCrQ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 24 Nov 2020 21:47:16 -0500
-Received: from mail-oo1-xc2d.google.com (mail-oo1-xc2d.google.com [IPv6:2607:f8b0:4864:20::c2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 430CEC0613D4
-        for <linux-raid@vger.kernel.org>; Tue, 24 Nov 2020 18:47:16 -0800 (PST)
-Received: by mail-oo1-xc2d.google.com with SMTP id s11so143010oov.13
-        for <linux-raid@vger.kernel.org>; Tue, 24 Nov 2020 18:47:16 -0800 (PST)
+        with ESMTP id S1726165AbgKYDOX (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 24 Nov 2020 22:14:23 -0500
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5074DC0613D4
+        for <linux-raid@vger.kernel.org>; Tue, 24 Nov 2020 19:14:23 -0800 (PST)
+Received: by mail-pg1-x534.google.com with SMTP id l17so1110292pgk.1
+        for <linux-raid@vger.kernel.org>; Tue, 24 Nov 2020 19:14:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-transfer-encoding:content-language;
-        bh=4uOPWLD8TXR9VQ7lg7VQCrqNr95+yZjOL6Tk3ZgZ6f8=;
-        b=rTNHklQrRBqiAHzMdlf/G5PA26eolES8BfxSerdeCJFNq9QpPzTWjYA0Dw+1F4oWvG
-         TuAwj+eH7DQ8ZXmcE0+uNVygLB/F6kKlEsEDsvjMO2U3Ol96yib8vVPwd+Ur4VZV6MPO
-         PJuGzcN59eWB1spbwlXHlUMybLgyuC3JfW91KbXCHF3M52kyE8aC4Dbgw6JI3+78ejNJ
-         Mf/KVh10uUHC6V4PuunBlyhOiKRJWr38QDFsqDj9pHhBWV/8/woONLvLErDjBPJes6yX
-         MHI0G/fomqpASK0pYRA7tVaUeTfFlpjZBETw9ZecCr1QirPpLiYSX5NYXEY9gY1jkt79
-         N7+Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=7erBERhph6Rq9KJCqBRhs3SN2hoKC/ELoNLKwZLVThM=;
+        b=jLrccrH72s8A9k5Kwn9HTw3grbOcVenwRnyMIPQW5e2L03MxFB2PT1pLfcOQCWeehF
+         7TVafHMCCuMgim3Pl+erv/m/X/vsWEenJfTMQzh978rvpw8aePejEIApdAcZiSE2SO/9
+         elqB9LQ+ULp46MqjC3vkKD7UnuDeuHFxLRXG4lLdrXEpReLemHtoC+bZz0tMovqhPFQR
+         vHjb3GCFU4Z3Jm5tKFZpbyy6AN83m+l87pJpDnEh4eFyIQ/Y13Zd+tnkkr68z852hpGj
+         gmQtlSMOREjzDVjNroeJj1UdULAP5hesesXv2NsoXPEyBSg809dNiYgihe6dhfX7NyKK
+         QDVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=4uOPWLD8TXR9VQ7lg7VQCrqNr95+yZjOL6Tk3ZgZ6f8=;
-        b=BaKhJ0LWPSErq7p3ACpYNzbEUGm+VtZsb40PLO/qbZGFekK/c/iwbZVtv+0Xf9KXD/
-         net+xagk/OC1nJo6IFrJw11ncd1xpVE25nEkw03cKH8KTc+KjJV7iABEBSbRx+/WYdjF
-         9xYNn6FCqQ1P1/NLqPC8QgNeDdKOa0kO61fd3Qh0LrY5401hYgQCGDvYB76kvriW23dF
-         nyHpW0CuLUBYScjgvtXdnKVuELASvsoKx7Pcrvegd3+J+sD/hOBaYjrfS5n86lBdoeyN
-         Z46zBW/ugAxFbSjv1DFQYq0pflWJq6S789Ezyfy8APvabDv2XAaXHO6KlNAlWwUqYgLs
-         K0pA==
-X-Gm-Message-State: AOAM533Qi1ETbYp4mQ6W6TjVBScKoLCD3eiVSVO3riD1Pe2HZIZJkQiG
-        l/kRj7U/JGtfU/we2wjfoDN/RKZibOY=
-X-Google-Smtp-Source: ABdhPJwpfaGGC1709ICNB2rCAy4Ogtxw7TPQb1PjkR+9idzmIilX7VK3+JOoQbknDi1bo6GzqDx3Ug==
-X-Received: by 2002:a4a:e5ce:: with SMTP id r14mr1202439oov.11.1606272435386;
-        Tue, 24 Nov 2020 18:47:15 -0800 (PST)
-Received: from [192.168.3.75] ([47.187.193.82])
-        by smtp.googlemail.com with ESMTPSA id m109sm514867otc.30.2020.11.24.18.47.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Nov 2020 18:47:14 -0800 (PST)
-Subject: Re: Considering new SATA PCIe card
-To:     Alex <mysqlstudent@gmail.com>,
-        Linux RAID <linux-raid@vger.kernel.org>
-References: <CAB1R3sgQm2_-Bhbzned4y056XP5hM9oz1OnTZSfHH9+L5sdpFQ@mail.gmail.com>
-From:   Ram Ramesh <rramesh2400@gmail.com>
-Message-ID: <c629eb5c-ee37-a7fc-6ffb-8035945e5f16@gmail.com>
-Date:   Tue, 24 Nov 2020 20:47:14 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=7erBERhph6Rq9KJCqBRhs3SN2hoKC/ELoNLKwZLVThM=;
+        b=kqssTOQaD5KZWaH8todnP1QnBqKwrpCtLuz96T5cUBif+gV6IOJcYAkQ34dReq9qyZ
+         heF/2Z89RV4cgoSOj+ID9wWAlkY/AqwWYfgEog22FrqD9Ra6xE2es8Ude1+sIK0N//45
+         qASXEO1KTIXLpbHyI3K/Sgviecbc63/qKS5rgcOSQXOpsdB3asQ0+0kg/xKOGF9D9zQc
+         /mV2fIsgRiV6TbqiIWr+Yu0mYM6rTsTNmqFCImuK9tyq7KneNdMd/5hE28GGKUkdDZbg
+         X6nb+lEezxmPmF3nI8QkNiwgmJjpqRFHhlFe/ZE0tE/rGVhxGp6AZ7NtCWVWGgCtjFp1
+         GpBg==
+X-Gm-Message-State: AOAM531ugQRpvT9TN8+GLIpSeXzt/v5JGOtX0YNZ6xxYFS095Cw8SYDI
+        DyoOL/8D4aQiDSxj0ODN0HzF7VT/1FZqsJiPVA==
+X-Google-Smtp-Source: ABdhPJxqZG64f8LWGbeAsKngBK8sUsi9Abo+q8XLAMxtHyFvfPttBkp1qI2/xQrI9GlNW35FObZJQDSGfOJkDaffBK4=
+X-Received: by 2002:a17:90a:fd0d:: with SMTP id cv13mr1654145pjb.124.1606274062907;
+ Tue, 24 Nov 2020 19:14:22 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAB1R3sgQm2_-Bhbzned4y056XP5hM9oz1OnTZSfHH9+L5sdpFQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <CAB1R3sgQm2_-Bhbzned4y056XP5hM9oz1OnTZSfHH9+L5sdpFQ@mail.gmail.com>
+ <c629eb5c-ee37-a7fc-6ffb-8035945e5f16@gmail.com>
+In-Reply-To: <c629eb5c-ee37-a7fc-6ffb-8035945e5f16@gmail.com>
+From:   Alex <mysqlstudent@gmail.com>
+Date:   Tue, 24 Nov 2020 22:14:11 -0500
+Message-ID: <CAB1R3sgK3cmqhNM-PcMP88yhFV6mgQwdVYOkUbf4N1aM-BB9sw@mail.gmail.com>
+Subject: Re: Considering new SATA PCIe card
+To:     Ram Ramesh <rramesh2400@gmail.com>,
+        Linux RAID <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 11/24/20 8:20 PM, Alex wrote:
-> Hi, I have a fedora33 server with an E31240 @ 3.30GHz processor with
-> 32GB that I'm using as a backup server with 4x4TB 7200 SATA disks in
-> RAID5 and 2x480GB SSDs in RAID1 for root. The motherboard has two
-> SATA-6 ports on it and the others are SATA3.
->
-> Would there really be any benefit to purchasing a new controller such
-> as this for it instead of the onboard for the 4x4TB disks?
-> https://www.amazon.com/gp/product/B07ST9CPND/
->
-> The server is relatively responsive, but I was just wondering if I
-> could keep it running for a few more years with a faster SATA
-> controller.
->
-> I'm also curious if the SATA cables have improved over time, or are
-> the same cables I purchased five years ago just as good today?
-If plan to use addon cards, please consider LSI SAS9211-8i cards. Well 
-supported and reliable.
+Hi,
 
-Ramesh
+On Tue, Nov 24, 2020 at 9:47 PM Ram Ramesh <rramesh2400@gmail.com> wrote:
+>
+> On 11/24/20 8:20 PM, Alex wrote:
+> > Hi, I have a fedora33 server with an E31240 @ 3.30GHz processor with
+> > 32GB that I'm using as a backup server with 4x4TB 7200 SATA disks in
+> > RAID5 and 2x480GB SSDs in RAID1 for root. The motherboard has two
+> > SATA-6 ports on it and the others are SATA3.
+> >
+> > Would there really be any benefit to purchasing a new controller such
+> > as this for it instead of the onboard for the 4x4TB disks?
+> > https://www.amazon.com/gp/product/B07ST9CPND/
+> >
+> > The server is relatively responsive, but I was just wondering if I
+> > could keep it running for a few more years with a faster SATA
+> > controller.
+> >
+> > I'm also curious if the SATA cables have improved over time, or are
+> > the same cables I purchased five years ago just as good today?
+> If plan to use addon cards, please consider LSI SAS9211-8i cards. Well
+> supported and reliable.
 
+Oh yes, how quickly I forgot. I actually have one of these in another
+server, but I think it's too long to physically fit in the case. Just
+to be sure, this is the card you're referencing, right?
+
+https://www.ebay.com/itm/LSI-SAS-9211-8i-8-port-6G-IT-Raid-Card-ZFS-JBOD-HBA-SAS-SATA6-0-2008-8I/143735992677
