@@ -2,68 +2,61 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6DBB2C48A0
-	for <lists+linux-raid@lfdr.de>; Wed, 25 Nov 2020 20:42:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C4D5F2C4B67
+	for <lists+linux-raid@lfdr.de>; Thu, 26 Nov 2020 00:21:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbgKYTmR (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 25 Nov 2020 14:42:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60756 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727251AbgKYTmR (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 25 Nov 2020 14:42:17 -0500
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2056C0613D4;
-        Wed, 25 Nov 2020 11:42:16 -0800 (PST)
-Received: by mail-wr1-x434.google.com with SMTP id m6so3061649wrg.7;
-        Wed, 25 Nov 2020 11:42:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:from:mime-version:content-transfer-encoding
-         :content-description:subject:to:date:reply-to;
-        bh=MT4M9SX2NqdNuOObXhIV8Gtkw+yoDX+gRyJnh+feBwM=;
-        b=s+uQLYUaIEZUUWJjEL+QjpGIWjAti+9drZg7GxHx1eklts/uLfTDnCO2dRfs/GOxlq
-         IZnMS39OZ6SQIu0hvhe+XLxVOpeurLAvg5/9K2TzaUMzQMB8ZtF8yOxb5nmJRfkCeSmO
-         WXdeDTzBMsnXg1oEGl0GgN5DEcFJg8muJqzpoUypexNSUIu4MALr0A2z0L8beecyvxYC
-         Klb417xXFOO1pEOuh61VAxZXvCXHSqXWphdvz5JRIPu9uABVMGAh9wwg8uiQI+9bY123
-         f6cQ60jfhMOCpheTMCs6OWNPODMnaoPMXhmKoJBPSAUKwCtkGQWa4ITYDotZMQGwUfTz
-         yR2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:from:mime-version
-         :content-transfer-encoding:content-description:subject:to:date
-         :reply-to;
-        bh=MT4M9SX2NqdNuOObXhIV8Gtkw+yoDX+gRyJnh+feBwM=;
-        b=FYdVN1DwEqoLLC/GJYSzbSOP5E3W+7kadNxqfAJKFSUorgvdRsxtheQgcjRlM2Jmy8
-         DPNqlUu7yeViiAXHyZAeJbyO7rxcMUt3WpPsD9l3b8ZVSaP2O8i78bhT5nrRT8DgrCPM
-         Gird+N/+/O2FH9SnE5LT2t3yPRl+PdwMCxau5rKrpOHP37FJbgzbOt2u6FmUbmKPNO8U
-         qqXny1lZV7Faa5cv9dfKYq5wJFFTl+/2xFfTX9JQK4m5Zw7diBng4TaE1CaRzTGFF38N
-         wbsf5KpuIJvSZbM0ZdS4MQ1/jrYA3p0kWWD0SXgmzB8Ppnc5nqv1VrZcF0m8llVvWtsr
-         OhPA==
-X-Gm-Message-State: AOAM533W5vS3IOf17EIvpOr/J3BX7sJWKP6YCOjDR5LW4ALrJ5lFFkbf
-        E/EilkLaR3I16Uf970be1SI=
-X-Google-Smtp-Source: ABdhPJxAR7RAKBEBoPQWTJsu5gcOAm8J0fk7kA/p63H8J0lWv+SHteaswDgaORNVGIm4kQvnUds+YQ==
-X-Received: by 2002:a05:6000:347:: with SMTP id e7mr5843971wre.35.1606333335628;
-        Wed, 25 Nov 2020 11:42:15 -0800 (PST)
-Received: from [192.168.1.152] ([102.64.149.89])
-        by smtp.gmail.com with ESMTPSA id u129sm5090970wme.9.2020.11.25.11.42.08
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Wed, 25 Nov 2020 11:42:14 -0800 (PST)
-Message-ID: <5fbeb396.1c69fb81.a9b8d.bcc7@mx.google.com>
-From:   "Dailborh R." <ritundailb333@gmail.com>
-X-Google-Original-From: Dailborh R.
-Content-Type: text/plain; charset="iso-8859-1"
+        id S1729953AbgKYXUi (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 25 Nov 2020 18:20:38 -0500
+Received: from sender11-op-o12.zoho.eu ([31.186.226.226]:17379 "EHLO
+        sender11-op-o12.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728529AbgKYXUi (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 25 Nov 2020 18:20:38 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1606345527; cv=none; 
+        d=zohomail.eu; s=zohoarc; 
+        b=Lmh0AvZTYoaGLSTj/YDlgWEzYxeEMph5lF0hs8dVDuEJ0WIfcfJs/uXhC1m3RMSdjTLnzYraf713V+t3dJPzKkO0pe/UNHoU96KCFpFd6DEYn7LZJFAQpzgnOAZND14V6QnTDBxJOjJr7EakY976jbzrt6/1zqEV7X7rnRhaHZY=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+        t=1606345527; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=XnJKU73+xGZIVVnFWAF8S3xRYjXBPaWipzm+eTew/hg=; 
+        b=FTgWiMqJaDV5Tm5gR28QrzUS3XdL4AWl6gxIwpSnpTxFyvpRdsNQGkJlXUpXqGDDAij+OCn227Vtr7IEnRuo6fzltETrkK7kagE1MJxm48McvR+9BJbyGsO8sMHMt8RRC4J+7JkQzy0lRGGxKtH50S0qch50RgOVVAbfWbrIeMg=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
+        dmarc=pass header.from=<jes@trained-monkey.org> header.from=<jes@trained-monkey.org>
+Received: from [IPv6:2620:10d:c0a8:1102::1844] (163.114.130.3 [163.114.130.3]) by mx.zoho.eu
+        with SMTPS id 1606345525870497.4524260274993; Thu, 26 Nov 2020 00:05:25 +0100 (CET)
+Subject: Re: [PATCH] Detail: fix segfault during IMSM raid creation
+To:     Lidong Zhong <lidong.zhong@suse.com>, linux-raid@vger.kernel.org
+Cc:     Tkaczyk Mariusz <mariusz.tkaczyk@intel.com>
+References: <20201122151229.16365-1-lidong.zhong@suse.com>
+From:   Jes Sorensen <jes@trained-monkey.org>
+Message-ID: <f1e7b627-d6f1-8cf5-c5c2-e68700d1e304@trained-monkey.org>
+Date:   Wed, 25 Nov 2020 18:05:24 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: Please reply to me
-To:     Recipients <Dailborh@vger.kernel.org>
-Date:   Wed, 25 Nov 2020 19:41:59 +0000
-Reply-To: dailrrob.83@gmail.com
+In-Reply-To: <20201122151229.16365-1-lidong.zhong@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-I'm Dailborh R. from US. I picked interest in you and I would like to know
-more about you and establish relationship with you. i will wait for
-your response. thank you.
+On 11/22/20 10:12 AM, Lidong Zhong wrote:
+> It can be reproduced with non IMSM hardware and IMSM_NO_PLATFORM
+> environmental variable set. The array state is inactive when creating
+> an IMSM container. And the structure info is NULL because load_super()
+> always fails since no intel HBA information could be obtained.
+> 
+> Signed-off-by: Lidong Zhong <lidong.zhong@suse.com>
+> Reported-by: Tkaczyk Mariusz <mariusz.tkaczyk@intel.com>
+> Fixes: 64bf4dff3430 (Detail: show correct raid level when the array is inactive)
+> ---
+>  Detail.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+
+Applied!
+
+Thanks,
+Jes
 
