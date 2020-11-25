@@ -2,38 +2,38 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2DCC2C4B66
-	for <lists+linux-raid@lfdr.de>; Thu, 26 Nov 2020 00:20:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 460202C4B68
+	for <lists+linux-raid@lfdr.de>; Thu, 26 Nov 2020 00:21:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729926AbgKYXUN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 25 Nov 2020 18:20:13 -0500
-Received: from sender11-op-o12.zoho.eu ([31.186.226.226]:17331 "EHLO
+        id S1730041AbgKYXVN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 25 Nov 2020 18:21:13 -0500
+Received: from sender11-op-o12.zoho.eu ([31.186.226.226]:17392 "EHLO
         sender11-op-o12.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728529AbgKYXUM (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 25 Nov 2020 18:20:12 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1606346407; cv=none; 
+        with ESMTP id S1729779AbgKYXVN (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 25 Nov 2020 18:21:13 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1606346468; cv=none; 
         d=zohomail.eu; s=zohoarc; 
-        b=BqlyS93qEz1Xng2REJAfUxluW+byp4mD/V9f0sti3Uosrx2UPjo1dQlY8H/kcjQvsS2M2mnA4NOhT17KIaT60PGAhxyuBpl+D9lFPWpKtrmFmF4RS7ztD5SRtzQYiNP3mxc3AIqfqGtwpkzOJ1JbCFUhIJCOeTrLXpc1Ke37Xmg=
+        b=IBLfsThHMHa5XqxOheCaSKbf4rnWgsdEmtF9Orb66ownXFPqtO0+cJXE3U66ZDGHrARmAqJrY5tzsJpQXEGP13+X82Ek5RPYFyAY+g6mPKQSdqp5ousIGE5qgsF12LVdxMDvz0SUvKwppIn/Xkc5p4lU9Wva9qLa5yeh6wTkyc4=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1606346407; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=oY+DrYQuWCK1JTE6VEoEZbVqEWqj9evppNOd7r941hU=; 
-        b=Mt1krSZDaGZ5mtkkd1zynFmlrLBFFO3TAfe9XVGMniZPCdSEIO8rRrtZ2taq3B/wkGC+QBMiH+a4TUQRe1QD+QwwHO3582+cLB3S9OtzqwZIzICqW7e8Oqy4Zr6VLyz2QMqt3WUIuMyag9ede1vA9YBhWmda6ihj7BDE4utiJ38=
+        t=1606346468; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=gOi5XnX1Nfb3xcsg9KPUzQgU1UEywH3q53e5aHynCkI=; 
+        b=G7b4rSp0254DH3qaTLGwxQZbl1syxHTiTogCwUQdib8jgojhiZ27PZaUPxp6bUv6Cel8dR9aSLW4T00+EcXc9aQVPbhOtvesQ6FXCHhHjI+RyFfj/TtNuHsJiMsFj1aHr6hJZ7gQa1zDCyEqrALo8vdwKNUU1jg6iZ7764gmcrM=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
         spf=pass  smtp.mailfrom=jes@trained-monkey.org;
         dmarc=pass header.from=<jes@trained-monkey.org> header.from=<jes@trained-monkey.org>
 Received: from [IPv6:2620:10d:c0a8:1102::1844] (163.114.130.3 [163.114.130.3]) by mx.zoho.eu
-        with SMTPS id 1606346405426603.2552125737786; Thu, 26 Nov 2020 00:20:05 +0100 (CET)
-Subject: Re: [PATCH v5] mdadm/Detail: show correct state for clustered array
-To:     Zhao Heming <heming.zhao@suse.com>, linux-raid@vger.kernel.org
-Cc:     neilb@suse.de
-References: <1603532592-11802-1-git-send-email-heming.zhao@suse.com>
+        with SMTPS id 1606346467864561.4078768885906; Thu, 26 Nov 2020 00:21:07 +0100 (CET)
+Subject: Re: [PATCH,v2] Make target to install binaries only
+To:     Kinga Tanska <kinga.tanska@intel.com>, linux-raid@vger.kernel.org
+Cc:     jes.sorensen@gmail.com
+References: <20201022122229.31443-1-kinga.tanska@intel.com>
 From:   Jes Sorensen <jes@trained-monkey.org>
-Message-ID: <8e6bcd91-522d-9263-0472-6d9a77c33a97@trained-monkey.org>
-Date:   Wed, 25 Nov 2020 18:20:04 -0500
+Message-ID: <47d81209-6c04-8633-2aca-47b7976cbeb3@trained-monkey.org>
+Date:   Wed, 25 Nov 2020 18:21:06 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <1603532592-11802-1-git-send-email-heming.zhao@suse.com>
+In-Reply-To: <20201022122229.31443-1-kinga.tanska@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -42,40 +42,19 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 10/24/20 5:43 AM, Zhao Heming wrote:
-> After kernel md module commit 480523feae581, in clustered env,
-> mddev->in_sync always zero, it will make array.state never set
-> up MD_SB_CLEAN. it causes "mdadm -D /dev/mdX" show state 'active'
-> all the time.
+On 10/22/20 8:22 AM, Kinga Tanska wrote:
+> Make install causes installation of binaries, udev and man.
+> This commit contains new target make install-bin, which
+> results in installation of binaries only.
 > 
-> bitmap.c: add a new API IsBitmapDirty() to support inquiry bitmap
-> dirty or clean.
-> 
-> Signed-off-by: Zhao Heming <heming.zhao@suse.com>
+> Signed-off-by: Kinga Tanska <kinga.tanska@intel.com>
 > ---
-> v5: (polish code)
-> - Detail.c: change code logic to only examine valid dev.
-> - bitmap.c: redesign bitmap_file_open() to support fd reuse. It won't
->             make dev multi-opened in clusterd env.
-> v4:
-> - Detail.c: follow Jes comment, split if into 2 lines.
-> v3:
-> - Detail.c: fix error logic: v2 code didn't check bitmap when dv is
->             null.
-> v2:
-> - Detail.c: follow Neil comments, change to read only one device.
-> - bitmap.c: follow Neil comments, modify IsBitmapDirty() to check all
->             bitmap on the selected device.
+>  Makefile | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
 > 
-> ---
->  Detail.c | 20 ++++++++++++++-
->  bitmap.c | 75 +++++++++++++++++++++++++++++++++++++++++++++++++-------
->  mdadm.h  |  1 +
->  3 files changed, 86 insertions(+), 10 deletions(-)
 
 Applied!
 
 Thanks,
 Jes
-
 
