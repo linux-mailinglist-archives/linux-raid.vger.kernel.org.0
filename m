@@ -2,109 +2,60 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F9B62C72BF
-	for <lists+linux-raid@lfdr.de>; Sat, 28 Nov 2020 23:09:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 400832C7264
+	for <lists+linux-raid@lfdr.de>; Sat, 28 Nov 2020 23:06:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731664AbgK1VuR (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 28 Nov 2020 16:50:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55088 "EHLO
+        id S2389936AbgK1VuS (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 28 Nov 2020 16:50:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387662AbgK1UPo (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 28 Nov 2020 15:15:44 -0500
-Received: from zimbra.karlsbakk.net (zimbra.karlsbakk.net [IPv6:2a0a:51c0:0:1f:4ca5::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C303AC0613D2
-        for <linux-raid@vger.kernel.org>; Sat, 28 Nov 2020 12:15:03 -0800 (PST)
-Received: from localhost (localhost.localdomain [IPv6:::1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id 65FBB3C1B36;
-        Sat, 28 Nov 2020 21:15:02 +0100 (CET)
-Received: from zimbra.karlsbakk.net ([IPv6:::1])
-        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id ZX3mdWdBL8Kh; Sat, 28 Nov 2020 21:15:01 +0100 (CET)
-Received: from localhost (localhost.localdomain [IPv6:::1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id 0FB993C1B8A;
-        Sat, 28 Nov 2020 21:15:01 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra.karlsbakk.net 0FB993C1B8A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=karlsbakk.net;
-        s=1DC131FE-D37A-11E7-BD32-3AD4DFE620DF; t=1606594501;
-        bh=dqnZj7+wGtNUt+fPRzuZH844YoTwZN4GExFbRiaNXck=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=Iio8aMdqwGpJ2mcH0/OdJdjmH+hCzwIOwbt3F2wcmF/1gZX8ucS11cdzT6Ksy9fnA
-         KG5ZS1MfP0rpfpF3dmJIctHkOxoJ29M2VEofId/XqlfpECRUC9PiQubRWYFA6zDdOh
-         twBwEwWYEqak8AVvSQu9sQ79BkHh1fLREJnDFube8gKNFYlcnGmRRtX/WksJnZxVq+
-         Vwj83yc/kmEPeHoEnH23fAk5YnNi0UIiGaBSN5Tj5BlKCK2CCunlN2AZuFMlRTQgYp
-         jP9BLWTCuGVj9oAdR2zm3YamuYz/xHVKyQGXVZQqB+s8TpW8pIt5GNHi9x9XWcPHkq
-         NF5uR258PtfCQ==
-X-Virus-Scanned: amavisd-new at zimbra.karlsbakk.net
-Received: from zimbra.karlsbakk.net ([IPv6:::1])
-        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id 7eFDxxiebwcO; Sat, 28 Nov 2020 21:15:00 +0100 (CET)
-Received: from zimbra.karlsbakk.net (localhost.localdomain [127.0.0.1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id DD6F23C1B36;
-        Sat, 28 Nov 2020 21:15:00 +0100 (CET)
-Date:   Sat, 28 Nov 2020 21:15:00 +0100 (CET)
-From:   Roy Sigurd Karlsbakk <roy@karlsbakk.net>
-To:     Andy Smith <andy@strugglers.net>
+        with ESMTP id S2387757AbgK1VAY (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 28 Nov 2020 16:00:24 -0500
+Received: from mail.bitfolk.com (mail.bitfolk.com [IPv6:2001:ba8:1f1:f019::25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C2BFC0613D1
+        for <linux-raid@vger.kernel.org>; Sat, 28 Nov 2020 12:59:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bitfolk.com; s=alpha;
+        h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date; bh=dGsEDecFNZWjrMYn5uHYdjUr9zcCvzf51LUyvBujP/g=;
+        b=UDXeWgY84dqJDHi6hP7t8Mtr8xNdtWyX8AenS5u5dJVQXTguZ/OFYbriM/EYm7dMzKLIXk8CPRAM7gVTnSoSzpQF0zF4nAyhuby+6m7+xLEABg3KFQq2Go1ICZ73+/EriOk5xgFWjrmu66Dc3mdAjkNHTx3hLjPAXAa3G5rr9QIO8tnuqtA2rbPxEAyqUQVAAuHlXMrfiFGgCtPqofubJQ2FCjRIKPLFl3/o2qb8Nh/T1W25ZOaaw9gzmE/5xLcvtyGiFgdHXWSZWX9M05i893mnwnIfBfOVTGCv/KYDyjExsg9RO+f5SWHo7MYSHBiKQKX9LVs8BJev3LkBlNqspg==;
+Received: from andy by mail.bitfolk.com with local (Exim 4.84_2)
+        (envelope-from <andy@strugglers.net>)
+        id 1kj7Jx-0001q0-2g; Sat, 28 Nov 2020 20:59:53 +0000
+Date:   Sat, 28 Nov 2020 20:59:53 +0000
+From:   Andy Smith <andy@strugglers.net>
+To:     Roy Sigurd Karlsbakk <roy@karlsbakk.net>
 Cc:     Linux Raid <linux-raid@vger.kernel.org>
-Message-ID: <1375483028.8430464.1606594500693.JavaMail.zimbra@karlsbakk.net>
-In-Reply-To: <20200904074557.GT13298@bitfolk.com>
-References: <20200904074557.GT13298@bitfolk.com>
 Subject: Re: Config option for removing bbl on assembly?
+Message-ID: <20201128205953.GJ16071@bitfolk.com>
+Mail-Followup-To: Roy Sigurd Karlsbakk <roy@karlsbakk.net>,
+        Linux Raid <linux-raid@vger.kernel.org>
+References: <20200904074557.GT13298@bitfolk.com>
+ <1375483028.8430464.1606594500693.JavaMail.zimbra@karlsbakk.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [2a01:79c:cebf:61e4:99f3:dbb4:8682:2601]
-X-Mailer: Zimbra 8.8.10_GA_3801 (ZimbraWebClient - FF83 (Mac)/8.8.10_GA_3786)
-Thread-Topic: Config option for removing bbl on assembly?
-Thread-Index: pEYn8me4GVFZ8jUdsnyAFXhuccTo3Q==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1375483028.8430464.1606594500693.JavaMail.zimbra@karlsbakk.net>
+OpenPGP: id=BF15490B; url=http://strugglers.net/~andy/pubkey.asc
+X-URL:  http://strugglers.net/wiki/User:Andy
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: andy@strugglers.net
+X-SA-Exim-Scanned: No (on mail.bitfolk.com); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Will anyone look into this issue, please? It really is a problem.
+Hi Roy,
 
-Vennlig hilsen
+On Sat, Nov 28, 2020 at 09:15:00PM +0100, Roy Sigurd Karlsbakk wrote:
+> Will anyone look into this issue, please? It really is a problem.
 
-roy
---=20
-Roy Sigurd Karlsbakk
-(+47) 98013356
-http://blogg.karlsbakk.net/
-GPG Public key: http://karlsbakk.net/roysigurdkarlsbakk.pubkey.txt
---
-Hi=C3=B0 g=C3=B3=C3=B0a skaltu =C3=AD stein h=C3=B6ggva, hi=C3=B0 illa =C3=
-=AD snj=C3=B3 rita.
+Since it seems you can remove the BBL by removing and re-adding a
+device I no longer see a need for a new option that removes it on
+assembly.
 
------ Original Message -----
-> From: "Andy Smith" <andy@strugglers.net>
-> To: "Linux Raid" <linux-raid@vger.kernel.org>
-> Sent: Friday, 4 September, 2020 09:45:57
-> Subject: Config option for removing bbl on assembly?
+Ideally I remember to do the remove and re-add before the machine is
+put into service, but failing that just doing a remove and re-add
+one time seems reasonable enough.
 
-> Hi,
->=20
-> Could we have a config setting for removing the bad blocks list on
-> assembly?
->=20
-> I'm aware that one could put:
->=20
-> CREATE bbl=3Dno
->=20
-> in mdadm.conf and then newly created arrays won't have a bad blocks
-> list. But in many cases, system arrays are created before an
-> mdadm.conf exists, so they get a bbl.
->=20
-> So, to remove a bbl I know that you have to stop the array and
-> assemble it like:
->=20
-> # mdadm /dev/mdX --assemble --update=3Dno-bbl
->=20
-> Again, for arrays with the actual system on it this is rather
-> inconvenient. Even having to have some downtime of the service to do
-> this is not great.
->=20
-> So how about a config option telling mdadm to remove empty bbl the
-> next time arrays are assembled? If there is a bbl with entries in it
-> then it could warn and not remove it (so no force).
->=20
-> Cheers,
-> Andy
+Cheers,
+Andy
