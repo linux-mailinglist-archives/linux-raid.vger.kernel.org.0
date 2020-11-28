@@ -2,108 +2,76 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B41A2C72C1
-	for <lists+linux-raid@lfdr.de>; Sat, 28 Nov 2020 23:09:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E76742C72B4
+	for <lists+linux-raid@lfdr.de>; Sat, 28 Nov 2020 23:09:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731402AbgK1VuR (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 28 Nov 2020 16:50:17 -0500
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:34577 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727974AbgK1SXd (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sat, 28 Nov 2020 13:23:33 -0500
-Received: from [192.168.0.2] (ip5f5ae89d.dynamic.kabel-deutschland.de [95.90.232.157])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: buczek)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 485CB20643C62;
-        Sat, 28 Nov 2020 13:25:23 +0100 (CET)
-To:     Song Liu <song@kernel.org>, linux-raid@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        it+raid@molgen.mpg.de
-From:   Donald Buczek <buczek@molgen.mpg.de>
-Subject: md_raid: mdX_raid6 looping after sync_action "check" to "idle"
- transition
-Message-ID: <aa9567fd-38e1-7b9c-b3e1-dc2fdc055da5@molgen.mpg.de>
-Date:   Sat, 28 Nov 2020 13:25:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1730894AbgK1VuQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 28 Nov 2020 16:50:16 -0500
+Received: from smtp.hosts.co.uk ([85.233.160.19]:28275 "EHLO smtp.hosts.co.uk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732385AbgK1SHo (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sat, 28 Nov 2020 13:07:44 -0500
+Received: from host86-149-69-253.range86-149.btcentralplus.com ([86.149.69.253] helo=[192.168.1.65])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1kj4KC-0002UW-FB
+        for linux-raid@vger.kernel.org; Sat, 28 Nov 2020 17:47:56 +0000
+Subject: Re: Assemble RAID on new machine but with missing devices
+To:     linux-raid@vger.kernel.org
+References: <4CjVhl4nSbz6tm9@submission01.posteo.de>
+From:   antlists <antlists@youngman.org.uk>
+Message-ID: <b5d9ee39-3be6-381b-78ac-93b500255945@youngman.org.uk>
+Date:   Sat, 28 Nov 2020 17:47:58 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.0
 MIME-Version: 1.0
+In-Reply-To: <4CjVhl4nSbz6tm9@submission01.posteo.de>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Dear Linux mdraid people,
+On 27/11/2020 23:10, c.buhtz@posteo.jp wrote:
+> Hello,
+> 
+> I red some stuff about assembling mode for mdadm. But two points are
+> unclear for me.
+> 
+> 1. Missing devices
+> I have two HDDs in a RAID1 - only data, no OS, on them. I want to
+> physical remove one HDD and plug it into a new server machine. Then I
+> want to bring the RAID1 online again on the new machine but with one
+> existing and one missing drive.
+> Background: When finished I will plug in a new fresh HDD as the second
+> one to the new server.
 
-we are using raid6 on several servers. Occasionally we had failures, where a mdX_raid6 process seems to go into a busy loop and all I/O to the md device blocks. We've seen this on various kernel versions.
+It's fairly certain that the array will - initially - refuse to run. 
+That's a safety feature - if an array is damaged while shut down, it 
+won't come back without intervention.
 
-The last time this happened (in this case with Linux 5.10.0-rc4), I took some data.
+Put the single disk in your new system. As I say, it's unlikely it'll 
+start straight away. "cat /proc/mdstat" and if the array is there in a 
+failed state, stop it. Then you can re-assemble it and it should come up 
+degraded. All you have to do after that is replace the non-existent 
+drive with your new replacement, and you'll have a functioning array.
+> 
+> 2. mdadm.conf
+> On the web I read sometimes about modifying mdadm.conf on the new
+> machine. But I do not understand why. If so. Why and what do I have to
+> modify in the mdadm.conf?
+> 
+If you've even got one ...
 
-The triggering event seems to be the md_check cron job trying to pause the ongoing check operation in the morning with
+I don't know the history of it, but the early arrays did not have 
+superblocks, so mdadm.conf - an ACCURATE - mdadm.conf was essential. Now 
+they've got superblocks, it's optional and - to the best of my knowledge 
+- none of my systems have mdadm.conf's.
 
-     echo idle > /sys/devices/virtual/block/md1/md/sync_action
+Do you have a superblock? Preferably v1 (1.0, 1.1 or 1.2). If you do, 
+don't worry about it, it's old advice, and while it's good to have an 
+up-to-date mdadm.conf to tell *you* what's what, the system doesn't need it.
 
-This doesn't complete. Here's /proc/stack of this process:
-
-     root@done:~/linux_problems/mdX_raid6_looping/2020-11-27# ps -fp 23333
-     UID        PID  PPID  C STIME TTY          TIME CMD
-     root     23333 23331  0 02:00 ?        00:00:00 /bin/bash /usr/bin/mdcheck --continue --duration 06:00
-     root@done:~/linux_problems/mdX_raid6_looping/2020-11-27# cat /proc/23333/stack
-     [<0>] kthread_stop+0x6e/0x150
-     [<0>] md_unregister_thread+0x3e/0x70
-     [<0>] md_reap_sync_thread+0x1f/0x1e0
-     [<0>] action_store+0x141/0x2b0
-     [<0>] md_attr_store+0x71/0xb0
-     [<0>] kernfs_fop_write+0x113/0x1a0
-     [<0>] vfs_write+0xbc/0x250
-     [<0>] ksys_write+0xa1/0xe0
-     [<0>] do_syscall_64+0x33/0x40
-     [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Note, that md0 has been paused successfully just before.
-
-     2020-11-27T02:00:01+01:00 done CROND[23333]: (root) CMD (/usr/bin/mdcheck --continue --duration "06:00")
-     2020-11-27T02:00:01+01:00 done root: mdcheck continue checking /dev/md0 from 10623180920
-     2020-11-27T02:00:01.382994+01:00 done kernel: [378596.606381] md: data-check of RAID array md0
-     2020-11-27T02:00:01+01:00 done root: mdcheck continue checking /dev/md1 from 11582849320
-     2020-11-27T02:00:01.437999+01:00 done kernel: [378596.661559] md: data-check of RAID array md1
-     
-     2020-11-27T06:00:01.842003+01:00 done kernel: [392996.625147] md: md0: data-check interrupted.
-     2020-11-27T06:00:02+01:00 done root: pause checking /dev/md0 at 13351127680
-     2020-11-27T06:00:02.338989+01:00 done kernel: [392997.122520] md: md1: data-check interrupted.
-     [ nothing related following.... ]
-
-After that, we see md1_raid6 in a busy loop:
-
-     PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
-     2376 root     20   0       0      0      0 R 100.0  0.0   1387:38 md1_raid6
-
-Also, all processes doing I/O do the md device block.
-
-This is /proc/mdstat:
-
-     Personalities : [linear] [raid0] [raid1] [raid6] [raid5] [raid4] [multipath]
-     md1 : active raid6 sdk[0] sdj[15] sdi[14] sdh[13] sdg[12] sdf[11] sde[10] sdd[9] sdc[8] sdr[7] sdq[6] sdp[5] sdo[4] sdn[3] sdm[2] sdl[1]
-           109394518016 blocks super 1.2 level 6, 512k chunk, algorithm 2 [16/16] [UUUUUUUUUUUUUUUU]
-           [==================>..]  check = 94.0% (7350290348/7813894144) finish=57189.3min speed=135K/sec
-           bitmap: 0/59 pages [0KB], 65536KB chunk
-     
-     md0 : active raid6 sds[0] sdah[15] sdag[16] sdaf[13] sdae[12] sdad[11] sdac[10] sdab[9] sdaa[8] sdz[7] sdy[6] sdx[17] sdw[4] sdv[3] sdu[2] sdt[1]
-           109394518016 blocks super 1.2 level 6, 512k chunk, algorithm 2 [16/16] [UUUUUUUUUUUUUUUU]
-           bitmap: 0/59 pages [0KB], 65536KB chunk
-
-There doesn't seem to be any further progress.
-
-I've taken a function_graph trace of the looping md1_raid6 process: https://owww.molgen.mpg.de/~buczek/2020-11-27_trace.txt (30 MB)
-
-Maybe this helps to get an idea what might be going on?
-
-Best
-   Donald
-
--- 
-Donald Buczek
-buczek@molgen.mpg.de
-Tel: +49 30 8413 1433
+Cheers,
+Wol
