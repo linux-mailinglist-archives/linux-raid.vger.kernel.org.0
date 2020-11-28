@@ -2,103 +2,66 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 956322C72B7
-	for <lists+linux-raid@lfdr.de>; Sat, 28 Nov 2020 23:09:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7573D2C72BD
+	for <lists+linux-raid@lfdr.de>; Sat, 28 Nov 2020 23:09:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730070AbgK1VuQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 28 Nov 2020 16:50:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35068 "EHLO
+        id S1731438AbgK1VuR (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 28 Nov 2020 16:50:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730817AbgK1SGL (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 28 Nov 2020 13:06:11 -0500
-X-Greylist: delayed 358 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 28 Nov 2020 10:05:30 PST
-Received: from zimbra.karlsbakk.net (zimbra.karlsbakk.net [IPv6:2a0a:51c0:0:1f:4ca5::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C86E0C09B050
-        for <linux-raid@vger.kernel.org>; Sat, 28 Nov 2020 10:05:30 -0800 (PST)
-Received: from localhost (localhost.localdomain [IPv6:::1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id 5EED93C1B36;
-        Sat, 28 Nov 2020 18:59:30 +0100 (CET)
-Received: from zimbra.karlsbakk.net ([IPv6:::1])
-        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id nKmw9zY_pA_h; Sat, 28 Nov 2020 18:59:27 +0100 (CET)
-Received: from localhost (localhost.localdomain [IPv6:::1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id 2CB603C1B8A;
-        Sat, 28 Nov 2020 18:59:27 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra.karlsbakk.net 2CB603C1B8A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=karlsbakk.net;
-        s=1DC131FE-D37A-11E7-BD32-3AD4DFE620DF; t=1606586367;
-        bh=WSsjUty/kQyZMhxq53UG3hBZ4PK6mmF0ipM2YlYKFhc=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=yxAw56ezJMJXxHWrL2auOaDH8tDj5Mg59mEuqDQOgn5hrSe95YHmRhjPKTEBA8ASt
-         IZwv+IJCiJV01vZd6U7W40H+42Mr6P13up9sbaTCkh1NpOH1EEGrjEZ2tX8Eg8GC3s
-         Y6ABF4EeyZkToRwW7mtc2jDSKkFdSWIPW02BL4UJXKNDH/Tu6gQrsO5uiKzXVCqoAu
-         BPUjNnCiiZ1IY3t/Koecq0SGFfOUwUBw022a+gExgfSbVNPXiuyDR9+SKEYDE9Iyrl
-         Y3zvZQiVOz2L+kjuV4E8yf0HVNWdSzf+Ezq/33tg+pBfLhNbUt6sPvg1DdJK60v2r6
-         KhbJ5g9P1b+Tg==
-X-Virus-Scanned: amavisd-new at zimbra.karlsbakk.net
-Received: from zimbra.karlsbakk.net ([IPv6:::1])
-        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id Oyu8GoZwG1Mf; Sat, 28 Nov 2020 18:59:26 +0100 (CET)
-Received: from zimbra.karlsbakk.net (localhost.localdomain [127.0.0.1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id AD2843C1B36;
-        Sat, 28 Nov 2020 18:59:26 +0100 (CET)
-Date:   Sat, 28 Nov 2020 18:59:25 +0100 (CET)
-From:   Roy Sigurd Karlsbakk <roy@karlsbakk.net>
-To:     Wols Lists <antlists@youngman.org.uk>
-Cc:     Andy Smith <andy@strugglers.net>,
-        Linux Raid <linux-raid@vger.kernel.org>
-Message-ID: <52711994.8373999.1606586365403.JavaMail.zimbra@karlsbakk.net>
-In-Reply-To: <13ffabf0-b848-c29a-eee6-d017e569f098@youngman.org.uk>
-References: <20200915102736.GE13298@bitfolk.com> <913919976.4679345.1600770460519.JavaMail.zimbra@karlsbakk.net> <13ffabf0-b848-c29a-eee6-d017e569f098@youngman.org.uk>
+        with ESMTP id S2387609AbgK1TwP (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 28 Nov 2020 14:52:15 -0500
+Received: from mail.bitfolk.com (mail.bitfolk.com [IPv6:2001:ba8:1f1:f019::25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67DE9C0613D1
+        for <linux-raid@vger.kernel.org>; Sat, 28 Nov 2020 11:51:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bitfolk.com; s=alpha;
+        h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date; bh=QGBdELbSlrhrWgrOpNdibMEfeOCFNWXxl1d9YEPZGZ0=;
+        b=nKgi1Zo8vNWIXECJ4/2mrcROfy3LX7wUwoDxqRy3rxkQkVYak379TuyrZhqQmnoenmFTnzU8EO9YQ8+n90SbzYQuSQt9O7oiJT5i+KWYI/K5FGhENu5ZVdNaMI6GYYdI5OFoVl3y5T6prn9LE2s7Bcju6vL/Tzszabe2vprdf29hRUXVvdcpiAGy+mDSbayQgmglA4P24yndPrNr4GStcZslDc3qUWWbruKCH6it1HpXC7qBgQZq+V6PDca8pMmqjzEyHNgtBvkwqnMGvDTnYYPZHL/JH9r9YuMuVBK0+nh9Utc7wGlSZTSt47sKcYwR7PyZBWmzVl+PydC8INi7cQ==;
+Received: from andy by mail.bitfolk.com with local (Exim 4.84_2)
+        (envelope-from <andy@strugglers.net>)
+        id 1kj6Fo-0007vS-70; Sat, 28 Nov 2020 19:51:32 +0000
+Date:   Sat, 28 Nov 2020 19:51:32 +0000
+From:   Andy Smith <andy@strugglers.net>
+To:     Roy Sigurd Karlsbakk <roy@karlsbakk.net>
+Cc:     Linux Raid <linux-raid@vger.kernel.org>
 Subject: Re: "--re-add for /dev/sdb1 to /dev/md0 is not possible"
+Message-ID: <20201128195132.GI16071@bitfolk.com>
+Mail-Followup-To: Roy Sigurd Karlsbakk <roy@karlsbakk.net>,
+        Linux Raid <linux-raid@vger.kernel.org>
+References: <20200915102736.GE13298@bitfolk.com>
+ <913919976.4679345.1600770460519.JavaMail.zimbra@karlsbakk.net>
+ <13ffabf0-b848-c29a-eee6-d017e569f098@youngman.org.uk>
+ <52711994.8373999.1606586365403.JavaMail.zimbra@karlsbakk.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [2a01:79c:cebf:61e4:99f3:dbb4:8682:2601]
-X-Mailer: Zimbra 8.8.10_GA_3801 (ZimbraWebClient - FF83 (Mac)/8.8.10_GA_3786)
-Thread-Topic: "--re-add for /dev/sdb1 to /dev/md0 is not possible"
-Thread-Index: PxQ2M+5cRYUe4EiBf9LMZaB3N6X87Q==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <52711994.8373999.1606586365403.JavaMail.zimbra@karlsbakk.net>
+OpenPGP: id=BF15490B; url=http://strugglers.net/~andy/pubkey.asc
+X-URL:  http://strugglers.net/wiki/User:Andy
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: andy@strugglers.net
+X-SA-Exim-Scanned: No (on mail.bitfolk.com); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Will anyone look into this issue, please? It really is a problem.
+Hi Roy,
 
-Vennlig hilsen
+On Sat, Nov 28, 2020 at 06:59:25PM +0100, Roy Sigurd Karlsbakk wrote:
+> Will anyone look into this issue, please? It really is a problem.
 
-roy
---=20
-Roy Sigurd Karlsbakk
-(+47) 98013356
-http://blogg.karlsbakk.net/
-GPG Public key: http://karlsbakk.net/roysigurdkarlsbakk.pubkey.txt
---
-Hi=C3=B0 g=C3=B3=C3=B0a skaltu =C3=AD stein h=C3=B6ggva, hi=C3=B0 illa =C3=
-=AD snj=C3=B3 rita.
+You already did ask once and got the response to get on with it and
+let everyone else know; asking further times isn't going to get
+anywhere so I suggest you do what is within your power to do.
 
------ Original Message -----
-> From: "Wols Lists" <antlists@youngman.org.uk>
-> To: "Roy Sigurd Karlsbakk" <roy@karlsbakk.net>, "Andy Smith" <andy@strugg=
-lers.net>
-> Cc: "Linux Raid" <linux-raid@vger.kernel.org>
-> Sent: Wednesday, 23 September, 2020 01:18:26
-> Subject: Re: "--re-add for /dev/sdb1 to /dev/md0 is not possible"
+If the option of coding the fix yourself is not available and you
+can't convince (or pay?) someone else to do it, I guess that just
+leaves you with the option of disabling BBL.
 
-> On 22/09/2020 11:27, Roy Sigurd Karlsbakk wrote:
->> It would be very nice if someone at linux-raid could prioritise this rat=
-her
->> obvious bug in the bbl code, where the bbl keeps replicating itself over=
- and
->> over, regardless of any actual failures on the disks. IMHO the whole BBL=
- should
->> be scrapped, as mentioned earlier, since it really has no function. Mapp=
-ing out
->> bad sectors is for the drive to decide and if it can't handle it, it sho=
-uld be
->> kicked out of the array.
->=20
-> Well, I guess if you want a volunteer, you're it! Thanks for steping up
-> to the plate!
->=20
-> Cheers,
-> Wol
+At least we did go through this before and established that it's
+possible to do without downtime, though with short period of loss of
+redundancy.
+
+Cheers,
+Andy
