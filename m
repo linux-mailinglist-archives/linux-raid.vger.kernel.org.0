@@ -2,61 +2,62 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 548CC2C6E71
-	for <lists+linux-raid@lfdr.de>; Sat, 28 Nov 2020 03:28:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C21C62C72C4
+	for <lists+linux-raid@lfdr.de>; Sat, 28 Nov 2020 23:10:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729459AbgK1C0a (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 27 Nov 2020 21:26:30 -0500
-Received: from icebox.esperi.org.uk ([81.187.191.129]:48806 "EHLO
-        mail.esperi.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729695AbgK1CZQ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 27 Nov 2020 21:25:16 -0500
-Received: from loom (nix@sidle.srvr.nix [192.168.14.8])
-        by mail.esperi.org.uk (8.16.1/8.16.1) with ESMTP id 0AS1pHn2016401;
-        Sat, 28 Nov 2020 01:51:17 GMT
-From:   Nix <nix@esperi.org.uk>
-To:     Wols Lists <antlists@youngman.org.uk>
-Cc:     Mukund Sivaraman <muks@mukund.org>, linux-raid@vger.kernel.org
-Subject: Re: RAID-6 and write hole with write-intent bitmap
-References: <20201124072039.GA381531@jurassic.vpn.mukund.org>
-        <5FBCDC18.9050809@youngman.org.uk>
-Emacs:  don't try this at home, kids!
-Date:   Sat, 28 Nov 2020 01:51:17 +0000
-In-Reply-To: <5FBCDC18.9050809@youngman.org.uk> (Wols Lists's message of "Tue,
-        24 Nov 2020 10:10:32 +0000")
-Message-ID: <87ft4uckq2.fsf@esperi.org.uk>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3.50 (gnu/linux)
+        id S1731381AbgK1VuR (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 28 Nov 2020 16:50:17 -0500
+Received: from mout01.posteo.de ([185.67.36.65]:54019 "EHLO mout01.posteo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732401AbgK1SHu (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sat, 28 Nov 2020 13:07:50 -0500
+Received: from submission (posteo.de [89.146.220.130]) 
+        by mout01.posteo.de (Postfix) with ESMTPS id 109B316005C
+        for <linux-raid@vger.kernel.org>; Sat, 28 Nov 2020 13:11:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.jp; s=2017;
+        t=1606565474; bh=Iyf6Xc8yMBELkpYBcxZObM7Lit1STYNqeSddGo09j+8=;
+        h=Date:From:To:Subject:From;
+        b=EtmfGNyRLVhzjMbq5xzbv3E3Q7wFINaal0rt2O9nlAoMpED1RJtyw6r1WqYkQdAg3
+         Wg6ETyUoL7Q0UvHQdrNAdQVrIFqHmQjr7QF9BqGBdOFpK9J4wFefoDhM0b2FZvgE09
+         hjvSsy8gXQy8Axt10PsBDAOuIheTiUKCTIqK8bubdkBzbHe6w/bX8sqp0PF/VW4yVr
+         uv+joD+dk5a7A9k2SqqCaraJkuCIfcySWHlZohaelr0Vx5dhZDMkMDj29CiDzg1KLY
+         GVSJtsHPzAGCWmf7L+9fCWLRmy2H7fBy+xeBb3gBfo9jJXLmJvz0Pu/CNFKLs1Ip7n
+         QL3PsQBriF3TA==
+Received: from customer (localhost [127.0.0.1])
+        by submission (posteo.de) with ESMTPSA id 4Cjr1s57ZLz9rxL
+        for <linux-raid@vger.kernel.org>; Sat, 28 Nov 2020 13:11:13 +0100 (CET)
+Date:   Sat, 28 Nov 2020 13:11:08 +0100
+From:   <c.buhtz@posteo.jp>
+To:     linux-raid@vger.kernel.org
+Subject: Assemble RAID on new machine but with missing devices
+Followup-To: linux-raid@vger.kernel.org
+Reply-To: linux-raid@vger.kernel.org
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-DCC-wuwien-Metrics: loom 1290; Body=3 Fuz1=3 Fuz2=3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Message-Id: <4Cjr1s6fhJz9rxP@submission02.posteo.de>
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 24 Nov 2020, Wols Lists told this:
+Hello,
 
-> On 24/11/20 07:20, Mukund Sivaraman wrote:
->> * With RAID-6 with write-intent bitmap in use, ext4 in ordered mode, no
->>   disk failures, and abrupt power loss, is there any chance of data loss
->>   in files other than those being written to just before the power loss?
->
-> Probably. Sod's law, you will have other files on the same stripe and
-> things could go wrong ... Plus I believe some file systems (including
-> ext4?) store small files in the directory, not as their own i-node, so
+I red some stuff about assembling mode for mdadm. But two points are
+unclear for me.
 
-ext4 can store small files in the *inode*, not in the containing
-directory: that's impossible, since an inode can appear in many
-directories at the same time.
+1. Missing devices
+I have two HDDs in a RAID1 - only data, no OS, on them. I want to
+physical remove one HDD and plug it into a new server machine. Then I
+want to bring the RAID1 online again on the new machine but with one
+existing and one missing drive.
+Background: When finished I will plug in a new fresh HDD as the second
+one to the new server.
 
-... but, of course, inodes on many filesystems are packed into big
-tables of inodes, and if you have a write hole hitting an inode write,
-you've probably buggered up a bunch of other inodes too. And inodes are
-more or less unordered, so that's just smashed a random spray of things
-on the disk... it is quite posible that a lot of them are in directories
-close in space or in time-of-write to the one you were updating, but not
-necessarily. Reach for backups time.
+2. mdadm.conf
+On the web I read sometimes about modifying mdadm.conf on the new
+machine. But I do not understand why. If so. Why and what do I have to
+modify in the mdadm.conf?
 
-> RULE 0: RAID IS NO SUBSTITUTE FOR BACKUPS.
-
-But backups are a substitute for lack of sleep (for me anyway, because
-if I don't have good backups, I can't sodding sleep).
+Kind
+Christian
