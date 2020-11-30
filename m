@@ -2,59 +2,66 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2534F2C8EAD
-	for <lists+linux-raid@lfdr.de>; Mon, 30 Nov 2020 21:08:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 089BF2C8F73
+	for <lists+linux-raid@lfdr.de>; Mon, 30 Nov 2020 21:53:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728963AbgK3UHm (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 30 Nov 2020 15:07:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44030 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbgK3UHl (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 30 Nov 2020 15:07:41 -0500
-X-Greylist: delayed 76 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 30 Nov 2020 12:07:01 PST
-Received: from u17383850.onlinehome-server.com (u17383850.onlinehome-server.com [IPv6:2607:f1c0:83f:ac00::a6:f62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A53CFC0613CF
-        for <linux-raid@vger.kernel.org>; Mon, 30 Nov 2020 12:07:01 -0800 (PST)
-Received: by u17383850.onlinehome-server.com (Postfix, from userid 5001)
-        id B87F87A0; Mon, 30 Nov 2020 15:06:20 -0500 (EST)
-Date:   Mon, 30 Nov 2020 15:06:20 -0500
-From:   David T-G <davidtg-robot@justpickone.org>
-To:     linux-raid@vger.kernel.org
-Subject: Re: ???root account locked??? after removing one RAID1 hard disc
-Message-ID: <20201130200620.GW1415@justpickone.org>
+        id S1728215AbgK3UwU (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 30 Nov 2020 15:52:20 -0500
+Received: from smtp.hosts.co.uk ([85.233.160.19]:42646 "EHLO smtp.hosts.co.uk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726716AbgK3UwU (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 30 Nov 2020 15:52:20 -0500
+Received: from host86-149-69-253.range86-149.btcentralplus.com ([86.149.69.253] helo=[192.168.1.65])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1kjq94-0002Qx-7y; Mon, 30 Nov 2020 20:51:38 +0000
+Subject: Re: partitions & filesystems (was "Re: ???root account locked???
+ after removing one RAID1 hard disc")
+To:     David T-G <davidtg-robot@justpickone.org>,
+        linux-raid@vger.kernel.org
 References: <e6b7a61d16a25c433438c670fa4c0b4f@posteo.de>
- <bc15926a-8bf4-14ae-bd67-ae14d915d4c0@youngman.org.uk>
- <0fd4f7e5-b71d-0c53-baca-d483d7872981@thelounge.net>
- <ef7d7b4c-d7d2-1bff-8b13-2187889162af@grumpydevil.homelinux.org>
- <ed411d06-c343-43dc-04e1-0a17658cb989@thelounge.net>
+ <20201130200503.GV1415@justpickone.org>
+From:   antlists <antlists@youngman.org.uk>
+Message-ID: <01a571de-8ae8-3d9e-6f3d-16555ad93ea3@youngman.org.uk>
+Date:   Mon, 30 Nov 2020 20:51:38 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ed411d06-c343-43dc-04e1-0a17658cb989@thelounge.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20201130200503.GV1415@justpickone.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Reindl, et al --
+On 30/11/2020 20:05, David T-G wrote:
+> You don't see any "filesystem" or, more correctly, partition in your
+> 
+>    fdisk -l
+> 
+> output because you have apparently created your filesystem on the entire
+> device (hey, I didn't know one could do that!). 
 
-...and then Reindl Harald said...
-% 
-...
-% 
-% typically fire up my "raid-repair.sh" telling the script source and
-% target disk for cloning partition table, mbr and finally add the new
-% partitions to start the rebuild
-[snip]
+That, actually, is the norm. It is NOT normal to partition a raid array.
 
-Oooh!  How handy :-)  Share, please!
+It's also not usual (which the OP has done) to create a raid array on 
+top of raw devices rather than partitions - although this is down to the 
+fact that various *other* utilities seem to assume that an unpartitioned 
+device is free space that can be trampled on. Every now and then people 
+seem to lose their arrays because an MBR or GPT has mysteriously 
+appeared on the disk.
 
+> That conclusion is
+> supported by your mount point (/dev/md127 rather than /dev/md127p1 or
+> similar) and your fstab entry (same).
+> 
+> So the display isn't interesting, although the logic behind that approach
+> certainly is to me.
 
-HAND
+Your approach seems to be at odds with *normal* practice, although there 
+is nothing wrong with it. At the end of the day, as far as linux is 
+concerned, one block device is much the same as any other.
 
-:-D
--- 
-David T-G
-See http://justpickone.org/davidtg/email/
-See http://justpickone.org/davidtg/tofu.txt
-
+Cheers,
+Wol
