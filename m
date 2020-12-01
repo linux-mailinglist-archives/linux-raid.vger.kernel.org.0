@@ -2,107 +2,126 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 723972CA361
-	for <lists+linux-raid@lfdr.de>; Tue,  1 Dec 2020 14:02:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 465B32CA8DF
+	for <lists+linux-raid@lfdr.de>; Tue,  1 Dec 2020 17:56:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389958AbgLANCR (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 1 Dec 2020 08:02:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60714 "EHLO
+        id S2387511AbgLAQzN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 1 Dec 2020 11:55:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbgLANCR (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 1 Dec 2020 08:02:17 -0500
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16DF4C0613CF
-        for <linux-raid@vger.kernel.org>; Tue,  1 Dec 2020 05:01:37 -0800 (PST)
-Received: by mail-lf1-x130.google.com with SMTP id j205so3952576lfj.6
-        for <linux-raid@vger.kernel.org>; Tue, 01 Dec 2020 05:01:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EDNiKqYcGRWQjGa/WLyfsDHmk+zBidEvXqZsXCRD2aM=;
-        b=hnTws+4A1ACtxPH1uQMqhNLwfw+u57uoD8CQCCVZTBvcDiSmF+UfhxFNguL9qpOksr
-         uKt7n5JqD/vFtqRPt2lLqFekbHBpio+x3xdxI6gzLrUu8y4tRwLXUlP+lFHUgnQOBDwB
-         PsEuXPd92m1aN8m5xs7++zOJNYYnDAN11MKW7nIBC6cQCmoJbVdMFwXlep6NrrZ8t4cw
-         sXFAp1SIxx9po44Z7XgGQgf/ZmLQaprcyBQFxmI9/IRQu8V+0+uqVkQ6NVLHy1p1Pm/5
-         Qhptfib0LEL/idch8hu6ayeIfEPQEVTPOh+JKbEZzFMRTbzW2NPwvdvk/9OEIg0FyWr2
-         AutQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EDNiKqYcGRWQjGa/WLyfsDHmk+zBidEvXqZsXCRD2aM=;
-        b=s/mZtoKSYbPYb0w5mTWAhFKc1Tf5IfjsCljFOG8enYyeKzoPKg/+x0cH8lixSi7rnL
-         YFTApw2WgUzSH3G2gTuoZSZXoBqyhd02lr5/2N1qt2Ph/O0532lWH8J3Q5StbOSMFqVN
-         9fkExBCliyRM0R3CX8afzf6erOORnUZWLFhFyf8QsOX4y5pqQN1b2wKx2R8Q/s+sklVk
-         MAYOyDDWbhN4efAUvsn6taMWL4nkFf8OdQSiQgvLM76ORL02vRa0HaKjLwoL6LSGqwKQ
-         HJQOc/Zp5QSre9Lzxr96PqnBc+vYyP1QGx3GOVRJN39s87kDXK5+/vz4KD9tgEJrPFir
-         ON5A==
-X-Gm-Message-State: AOAM533vqLiDa+XLFlx1XuETpW+u01GvISBW7Dksajhf6GfJbrftTjXU
-        ppHF/AWiLSicP2BLpfExev0wSXjGyEFWJotJduY=
-X-Google-Smtp-Source: ABdhPJwHyLj2B8/NLAn4ReJDbZ0uhXy6tjCPP0l6Wvv7sqs77vI9NTlN4iTs3Z9sQmYuq/TyKfAZgjR6N47odXyD0QE=
-X-Received: by 2002:a19:c705:: with SMTP id x5mr1206793lff.16.1606827694573;
- Tue, 01 Dec 2020 05:01:34 -0800 (PST)
+        with ESMTP id S1728674AbgLAQzM (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 1 Dec 2020 11:55:12 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBD1EC0613D4;
+        Tue,  1 Dec 2020 08:54:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=I+ifGuG/HQilGLAEqzH+daR+z1lv7T7G70yP4O/K0Aw=; b=vLBHi88QMCRODAgHO+f6T+9uLv
+        SKqsUWzzgNcLj7Qi7TcTtnO2igYK/hpBjExIUhv/buk3/9wrMiF8SXJoD9Qx14CHc7ZG7mGmHpEpT
+        BrCm6KnAq9olHMb1AX17OtXEl4UApnehOtAax6e0j2dlBZAs5li2wGx/ddaQJ1ONCO+I9guV//Ml+
+        2D1Iv3Pu1e5ZlBbme+6zYtljYDRPA4i5mzr7N+eGEZMHBs3D0o68HlJH3QLXqHK+BE5EplEKVNBR6
+        jH8CuPlGr1qk1R5rcNsWzGgX7VclZp57xXsHCHHN/Lq3bBzJDoae2lOaugHvfY7vXYXNLQfKfM+to
+        +Ux0ziNQ==;
+Received: from [2001:4bb8:184:6389:bbd8:a1c2:99e0:f58a] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kk8v3-0005Yk-J4; Tue, 01 Dec 2020 16:54:25 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Tejun Heo <tj@kernel.org>, Coly Li <colyli@suse.de>,
+        Song Liu <song@kernel.org>, dm-devel@redhat.com,
+        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-block@vger.kernel.org
+Subject: store a pointer to the block_device in struct bio (again)
+Date:   Tue,  1 Dec 2020 17:54:15 +0100
+Message-Id: <20201201165424.2030647-1-hch@lst.de>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-References: <CAJH6TXjsg+OE5rUpK+RqeFJRxBiZJ94ToOdUD5ajjwXzYft9Vw@mail.gmail.com>
- <CAJH6TXgED_UGRcLNVU+-1p8BVMapJkRmvZMndLYAKjX_j6f7iw@mail.gmail.com> <5FC62A4F.9000100@youngman.org.uk>
-In-Reply-To: <5FC62A4F.9000100@youngman.org.uk>
-From:   Roger Heflin <rogerheflin@gmail.com>
-Date:   Tue, 1 Dec 2020 07:01:23 -0600
-Message-ID: <CAAMCDefErBEP22cVqLNO3P1fGpXkih=9nFW1OMVQZEAorgB88Q@mail.gmail.com>
-Subject: Re: Fwd: [OT][X-POST] RAID-6 hw rebuild speed
-To:     Wols Lists <antlists@youngman.org.uk>
-Cc:     Gandalf Corvotempesta <gandalf.corvotempesta@gmail.com>,
-        "General discussion - ask questions, receive answers and advice from
-        other ZFS users" <zfs-discuss@list.zfsonlinux.org>,
-        Linux RAID Mailing List <linux-raid@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-You would need to look at the rate that data passes under the head on
-the 2 disks, if the disks are several generations apart then rate
-could be significantly different.
+Hi Jens,
 
-If the new disk has higher density platters than the old disk then the
-data rate will be higher just because of the higher density and when
-you add in the rpm changes that adds even more.   On most disks data
-sheet it will list the rate that bits pass under the head, so compare
-that between the 2 disks.
+this series switches back from storing the gendisk + partno to storing
+a block_device pointer in struct bio.  The reason is two fold:  for one
+the new struct block_device actually is always available, removing the
+need to avoid originally.  Second the merge struct block_device is much
+more useful than the old one, as storing it avoids the need for looking
+up what used to be hd_struct during partition remapping and I/O
+accounting.
 
-So what is the model of each disk and how big is the partition used
-for the array on each of the 8 disks?
+Note that this series depends on the posted but not merged
+"block tracepoint cleanups" series.
 
-On Tue, Dec 1, 2020 at 5:37 AM Wols Lists <antlists@youngman.org.uk> wrote:
->
-> On 01/12/20 09:57, Gandalf Corvotempesta wrote:
-> > Sorry for the OT and X-POST but these 2 lists are full of skilled
-> > storage engineer.
-> > For a very,very,very,very long time I used 15k SAS 3.5'' disks. A
-> > RAID-6 hardware (8 disks) took about 20 hours to rebuild.
-> >
-> > Now I've replaced a 3.5 disks with a 15k SAS 2.5'' disk. raid is
-> > rebuilding properly, but the ETA is less then 1 hours.
-> >
-> > I've moved from a 20 hours rebuild to about 50 minutes rebuild, by
-> > just changing one 3.5' disks with a 2.5'
-> >
-> > Is this normal ? I'm thinking something strange is happening
-> >
-> Your rebuild time is effectively the time it takes to write to the new
-> disk. So I'm guessing if you had to wipe and rebuild one of the old
-> disks it would again be 20 hours. So what's different about the new disk?
->
-> Yes I know it's a 2.5". But could it be it's SATA-3 as opposed to the
-> old ones being SATA-2? There's a whole bunch of things it could be.
->
-> But my money's on it having a bigger cache. The ETA is based on how fast
-> it can read from the existing array and the rebuild hasn't yet filled
-> the cache. Once that fills up and the disk write speed kicks in, the ETA
-> will start climbing fast as the write speed starts dominating the ETA.
-> That said, it'll probably be faster than the old 20hrs, but I don't know
-> by how much.
->
-> Cheers,
-> Wol
+A git tree is also available:
+
+    git://git.infradead.org/users/hch/block.git bi_bdev
+
+Gitweb:
+
+    http://git.infradead.org/users/hch/block.git/shortlog/refs/heads/bi_bdev
+
+Diffstat:
+ arch/m68k/emu/nfblock.c             |    2 
+ arch/xtensa/platforms/iss/simdisk.c |    2 
+ block/bio-integrity.c               |   18 +-
+ block/bio.c                         |   31 +---
+ block/blk-cgroup.c                  |    7 
+ block/blk-core.c                    |   99 ++++++-------
+ block/blk-crypto-fallback.c         |    2 
+ block/blk-crypto.c                  |    2 
+ block/blk-merge.c                   |   17 +-
+ block/blk-mq.c                      |    2 
+ block/blk-settings.c                |    2 
+ block/blk-throttle.c                |    2 
+ block/blk.h                         |    9 -
+ block/bounce.c                      |    2 
+ block/genhd.c                       |  261 +++---------------------------------
+ block/partitions/core.c             |   31 ----
+ drivers/block/brd.c                 |    8 -
+ drivers/block/drbd/drbd_int.h       |    4 
+ drivers/block/drbd/drbd_req.c       |    2 
+ drivers/block/null_blk_main.c       |    2 
+ drivers/block/pktcdvd.c             |    4 
+ drivers/block/ps3vram.c             |    2 
+ drivers/block/rsxx/dev.c            |    2 
+ drivers/block/umem.c                |    2 
+ drivers/block/zram/zram_drv.c       |    2 
+ drivers/lightnvm/pblk-init.c        |    2 
+ drivers/md/bcache/debug.c           |    2 
+ drivers/md/bcache/request.c         |   39 +++--
+ drivers/md/dm-bio-record.h          |    9 -
+ drivers/md/dm-raid1.c               |   10 -
+ drivers/md/dm.c                     |   14 -
+ drivers/md/md-linear.c              |    2 
+ drivers/md/md.c                     |   10 -
+ drivers/md/md.h                     |    6 
+ drivers/md/raid1.c                  |    6 
+ drivers/md/raid10.c                 |   12 -
+ drivers/md/raid5.c                  |    2 
+ drivers/nvdimm/blk.c                |    4 
+ drivers/nvdimm/btt.c                |    4 
+ drivers/nvdimm/pmem.c               |    4 
+ drivers/nvme/host/core.c            |    6 
+ drivers/nvme/host/lightnvm.c        |    3 
+ drivers/nvme/host/multipath.c       |    6 
+ drivers/nvme/host/rdma.c            |    2 
+ drivers/s390/block/dasd.c           |   26 ---
+ drivers/s390/block/dcssblk.c        |    6 
+ drivers/s390/block/xpram.c          |    2 
+ fs/btrfs/check-integrity.c          |   10 -
+ fs/btrfs/raid56.c                   |    7 
+ fs/btrfs/scrub.c                    |    2 
+ fs/direct-io.c                      |    2 
+ fs/f2fs/data.c                      |   12 -
+ include/linux/bio.h                 |   18 +-
+ include/linux/blk_types.h           |    3 
+ include/linux/blkdev.h              |   20 --
+ include/linux/genhd.h               |   21 --
+ kernel/trace/blktrace.c             |   16 +-
+ mm/page_io.c                        |    2 
+ 58 files changed, 251 insertions(+), 556 deletions(-)
