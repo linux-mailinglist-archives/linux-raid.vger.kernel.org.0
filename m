@@ -2,422 +2,1291 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C0692CDB1C
-	for <lists+linux-raid@lfdr.de>; Thu,  3 Dec 2020 17:24:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 799D52CDC34
+	for <lists+linux-raid@lfdr.de>; Thu,  3 Dec 2020 18:16:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436763AbgLCQWm (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 3 Dec 2020 11:22:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57724 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436756AbgLCQWm (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 3 Dec 2020 11:22:42 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80F9EC061A53;
-        Thu,  3 Dec 2020 08:22:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=cxlIYKEWgcuDbJkJgX8alcBwnh75Vh/a6qKxJox+pEU=; b=LP2mynUhIcvfWKyC38ksIssjoR
-        EVE7iGfMU5REQD1Y1971U/xIO76PAYwSQxHD18YXij+uqLP2NypaEc6JsJrpCzgIc1uPz43DZ/kFi
-        fDK4Y5P9P+JfM5iqVnSpWDMUgpb7IwRgJfnL+c6ojyVgse6dWBeFEep9O82+45OcQ6/UxVeYK8jAi
-        uhkL2237EEjwiTztFOHeh5gd8wU3dGGweU63A0yR5jG9sLzgoxdNbmRfbxebx4edrUIZc57FfIRAj
-        ZVGw7+k67gRDKTy7dykzizOuW5O5JkVPg6ECAk+qc/RJdEKqjXlWJwysoww6PcV7kwLsUtWBMIivQ
-        KCE9e4+A==;
-Received: from 213-225-0-143.nat.highway.a1.net ([213.225.0.143] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kkrMj-0005dp-F5; Thu, 03 Dec 2020 16:21:57 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Tejun Heo <tj@kernel.org>, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-s390@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
-        Hannes Reinecke <hare@suse.de>
-Subject: [PATCH 5/5] block: remove the request_queue to argument request based tracepoints
-Date:   Thu,  3 Dec 2020 17:21:39 +0100
-Message-Id: <20201203162139.2110977-6-hch@lst.de>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20201203162139.2110977-1-hch@lst.de>
-References: <20201203162139.2110977-1-hch@lst.de>
+        id S2502013AbgLCRQ2 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 3 Dec 2020 12:16:28 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39520 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2501954AbgLCRQ1 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 3 Dec 2020 12:16:27 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 892AAAEF8;
+        Thu,  3 Dec 2020 17:15:45 +0000 (UTC)
+From:   Coly Li <colyli@suse.de>
+To:     axboe@kernel.dk, dan.j.williams@intel.com, vishal.l.verma@intel.com
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-nvdimm@lists.01.org,
+        Coly Li <colyli@suse.de>
+Subject: [RFC PATCH] badblocks: Improvement badblocks_set() for handling multiple ranges
+Date:   Fri,  4 Dec 2020 01:15:35 +0800
+Message-Id: <20201203171535.67715-1-colyli@suse.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-The request_queue can trivially be derived from the request.
+Recently I received a bug report that current badblocks code does not
+properly handle multiple ranges. For example,
+	badblocks_set(bb, 32, 1, true);
+	badblocks_set(bb, 34, 1, true);
+	badblocks_set(bb, 36, 1, true);
+	badblocks_set(bb, 32, 12, true);
+Then indeed badblocks_show() reports,
+	32 3
+	36 1
+But the expected bad blocks table should be,
+	32 12
+Obviously only the first 2 ranges are merged and badblocks_set() returns
+and ignores the rest setting range.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+This behavior is improper, if the caller of badblocks_set() wants to set
+a range of blocks into bad blocks table, all of the blocks in the range
+should be handled even the previous part encountering failure.
+
+The desired way to set bad blocks range by badblocks_set() is,
+- Set as many as blocks in the setting range into bad blocks table.
+- Merge the bad blocks ranges and occupy as less as slots in the bad
+  blocks table.
+- Fast.
+
+Indeed the above proposal is complicated, especially with the following
+restrictions,
+- The setting bad blocks range can be ackknowledged or not acknowledged.
+- The bad blocks table size is limited.
+- Memory allocation should be avoided.
+
+This patch is an initial effort to improve badblocks_set() for setting
+bad blocks range when it covers multiple already set bad ranges in the
+bad blocks table, and to do it as fast as possible.
+
+The basic idea of the patch is to categorize all possible bad blocks
+range setting combinationsinto to much less simplified and more less
+special conditions. Inside badblocks_set() there is an implicit loop
+composed by jumping between labels 're_insert' and 'update_sectors'. No
+matter how large the setting bad blocks range is, in every loop just a
+minimized range from the head is handled by a pre-defined behavior from
+one of the categorized conditions. The logic is simple and code flow is
+manageable.
+
+This patch is unfinished yet, it only improves badblocks_set() and not
+touch badblocks_clear() and badblocks_show() yet. I post it earlier
+because this patch will be large (more then 1000 lines of change), I
+want more people to give me comments earlier before I go too far away.
+
+The code logic is tested as user space programmer, this patch passes
+compiling but not tested in kernel mode yet. Right now it is only for
+RFC purpose. I will post tested patch in further versions.
+
+Thank you in advance for any review or comments on this patch.
+
+Signed-off-by: Coly Li <colyli@suse.de>
 ---
- block/blk-merge.c            |  2 +-
- block/blk-mq-sched.c         |  2 +-
- block/blk-mq.c               |  8 +++----
- drivers/md/dm-rq.c           |  2 +-
- drivers/s390/scsi/zfcp_fsf.c |  3 +--
- include/linux/blktrace_api.h |  5 ++--
- include/trace/events/block.h | 30 ++++++++++--------------
- kernel/trace/blktrace.c      | 44 ++++++++++++++----------------------
- 8 files changed, 39 insertions(+), 57 deletions(-)
+ block/badblocks.c         | 1041 ++++++++++++++++++++++++++++++-------
+ include/linux/badblocks.h |   33 ++
+ 2 files changed, 881 insertions(+), 193 deletions(-)
 
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index 4071daa88a5eaf..7497d86fff3834 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -799,7 +799,7 @@ static struct request *attempt_merge(struct request_queue *q,
- 	 */
- 	blk_account_io_merge_request(next);
+diff --git a/block/badblocks.c b/block/badblocks.c
+index d39056630d9c..04ccae95777d 100644
+--- a/block/badblocks.c
++++ b/block/badblocks.c
+@@ -5,6 +5,8 @@
+  * - Heavily based on MD badblocks code from Neil Brown
+  *
+  * Copyright (c) 2015, Intel Corporation.
++ *
++ * Improvement for handling multiple ranges by Coly Li <colyli@suse.de>
+  */
  
--	trace_block_rq_merge(q, next);
-+	trace_block_rq_merge(next);
+ #include <linux/badblocks.h>
+@@ -16,114 +18,612 @@
+ #include <linux/types.h>
+ #include <linux/slab.h>
  
- 	/*
- 	 * ownership of bio passed from next to req, return 'next' for
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index d1eafe2c045caa..deff4e826e234d 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -386,7 +386,7 @@ EXPORT_SYMBOL_GPL(blk_mq_sched_try_insert_merge);
- 
- void blk_mq_sched_request_inserted(struct request *rq)
+-/**
+- * badblocks_check() - check a given range for bad sectors
+- * @bb:		the badblocks structure that holds all badblock information
+- * @s:		sector (start) at which to check for badblocks
+- * @sectors:	number of sectors to check for badblocks
+- * @first_bad:	pointer to store location of the first badblock
+- * @bad_sectors: pointer to store number of badblocks after @first_bad
++/*
++ * The purpose of badblocks set/clear is to manage bad blocks ranges which are
++ * identified by LBA addresses.
+  *
+- * We can record which blocks on each device are 'bad' and so just
+- * fail those blocks, or that stripe, rather than the whole device.
+- * Entries in the bad-block table are 64bits wide.  This comprises:
+- * Length of bad-range, in sectors: 0-511 for lengths 1-512
+- * Start of bad-range, sector offset, 54 bits (allows 8 exbibytes)
+- *  A 'shift' can be set so that larger blocks are tracked and
+- *  consequently larger devices can be covered.
+- * 'Acknowledged' flag - 1 bit. - the most significant bit.
++ * When the caller of badblocks_set() wants to set a range of bad blocks, the
++ * setting range can be acked or unacked. And the setting range may merge,
++ * overwrite, skip the overlaypped already set range, depends on who they are
++ * overlapped or adjacent, and the acknowledgment type of the ranges. It can be
++ * more complicated when the setting range covers multiple already set bad block
++ * ranges, with restritctions of maximum length of each bad range and the bad
++ * table space limitation.
+  *
+- * Locking of the bad-block table uses a seqlock so badblocks_check
+- * might need to retry if it is very unlucky.
+- * We will sometimes want to check for bad blocks in a bi_end_io function,
+- * so we use the write_seqlock_irq variant.
++ * It is difficut and unnecessary to take care of all the possible situations,
++ * for setting a large range of bad blocks, we can handle it by dividing the
++ * large range into smaller ones when encounter overlap, max range length or
++ * bad table full conditions. Every time only a smaller piece of the bad range
++ * is handled with a limited number of conditions how it is interacted with
++ * possible overlapped or adjacent already set bad block ranges. Then the hard
++ * complicated problem can be much simpler to habndle in proper way.
+  *
+- * When looking for a bad block we specify a range and want to
+- * know if any block in the range is bad.  So we binary-search
+- * to the last range that starts at-or-before the given endpoint,
+- * (or "before the sector after the target range")
+- * then see if it ends after the given start.
++ * When setting a range of bad blocks to the bad table, the simplified situations
++ * to be considered are, (The already set bad blocks ranges are naming with
++ *  prefix E, and the setting bad blocks range is naming with prefix S)
++ *
++ * 1) A setting range is not overlapped or adjacent to any other already set bad
++ *    block range.
++ *                         +--------+
++ *                         |    S   |
++ *                         +--------+
++ *        +-------------+               +-------------+
++ *        |      E1     |               |      E2     |
++ *        +-------------+               +-------------+
++ *    For this situation if the bad blocks table is not full, just allocate a
++ *    free slot from the bad blocks table to mark the setting range S. The
++ *    result is,
++ *        +-------------+  +--------+   +-------------+
++ *        |      E1     |  |    S   |   |      E2     |
++ *        +-------------+  +--------+   +-------------+
++ * 2) A setting range starts exactly at a start LBA of an already set bad blocks
++ *    range.
++ * 2.1) The setting range size < already set range size
++ *        +--------+
++ *        |    S   |
++ *        +--------+
++ *        +-------------+
++ *        |      E      |
++ *        +-------------+
++ * 2.1.1) If S and E are both acked or unacked range, the setting range S can
++ *    be merged into existing bad range E. The result is,
++ *        +-------------+
++ *        |      S      |
++ *        +-------------+
++ * 2.1.2) If S is uncked setting and E is acked, the setting will be dinied, and
++ *    the result is,
++ *        +-------------+
++ *        |      E      |
++ *        +-------------+
++ * 2.1.3) If S is acked setting and E is unacked, range S can overwirte on E.
++ *    An extra slot from the bad blocks table will be allocated for S, and head
++ *    of E will move to end of the inserted range E. The result is,
++ *        +--------+----+
++ *        |    S   | E  |
++ *        +--------+----+
++ * 2.2) The setting range size == already set range size
++ * 2.2.1) If S and E are both acked or unacked range, the setting range S can
++ *    be merged into existing bad range E. The result is,
++ *        +-------------+
++ *        |      S      |
++ *        +-------------+
++ * 2.2.2) If S is uncked setting and E is acked, the setting will be dinied, and
++ *    the result is,
++ *        +-------------+
++ *        |      E      |
++ *        +-------------+
++ * 2.2.3) If S is acked setting and E is unacked, range S can overwirte all of
++      bad blocks range E. The result is,
++ *        +-------------+
++ *        |      S      |
++ *        +-------------+
++ * 2.3) The setting range size > already set range size
++ *        +-------------------+
++ *        |          S        |
++ *        +-------------------+
++ *        +-------------+
++ *        |      E      |
++ *        +-------------+
++ *    For such situation, the setting range S can be treated as two parts, the
++ *    first part (S1) is as same size as the already set range E, the second
++ *    part (S2) is thre rest of setting range.
++ *        +-------------+-----+        +-------------+       +-----+
++ *        |    S1       | S2  |        |     S1      |       | S2  |
++ *        +-------------+-----+  ===>  +-------------+       +-----+
++ *        +-------------+              +-------------+
++ *        |      E      |              |      E      |
++ *        +-------------+              +-------------+
++ *    Now we only focus on how to handle the setting range S1 and already set
++ *    range E, which are already explained in 1.2), for the rest S2 it will be
++ *    handled later in next loop.
++ * 3) A setting range starts before the start LBA of an already set bad blocks
++ *    range.
++ *        +-------------+
++ *        |      S      |
++ *        +-------------+
++ *             +-------------+
++ *             |      E      |
++ *             +-------------+
++ *    For this situation, the setting range S can be divided into two parts, the
++ *    first (S1) ends at the start LBA of already set range E, the second part
++ *    (S2) starts exactly at a start LBA of the already set range E.
++ *        +----+---------+             +----+      +---------+
++ *        | S1 |    S2   |             | S1 |      |    S2   |
++ *        +----+---------+      ===>   +----+      +---------+
++ *             +-------------+                     +-------------+
++ *             |      E      |                     |      E      |
++ *             +-------------+                     +-------------+
++ *    Now only the first part S1 should be handled in this loop, which is in
++ *    similar condition as 1). The rest part S2 has exact same start LBA address
++ *    of the already set range E, they will be handled in next loop in one of
++ *    situations in 2).
++ * 4) A setting range starts after the start LBA of an already set bad blocks
++ *    range.
++ * 4.1) If the setting range S exactly matches the tail part of already set bad
++ *    blocks range E, like the folowing chart shows,
++ *            +---------+
++ *            |   S     |
++ *            +---------+
++ *        +-------------+
++ *        |      E      |
++ *        +-------------+
++ * 4.1.1) If range S and E have same ackknowledg value (both acked or unacked),
++ *    they will be merged into one, the result is,
++ *        +-------------+
++ *        |      S      |
++ *        +-------------+
++ * 4.1.2) If range E is acked and the setting range S is unacked, the setting
++ *    request of S will be rejected, the result is,
++ *        +-------------+
++ *        |      E      |
++ *        +-------------+
++ * 4.1.3) If range E is unacked, and the setting range S is acked, then S may
++ *    overwrite the overlapped range of E, the result is,
++ *        +---+---------+
++ *        | E |    S    |
++ *        +---+---------+
++ * 4.2) If the setting range S stays in middle of an already set range E, like
++ *    the following chart shows,
++ *             +----+
++ *             | S  |
++ *             +----+
++ *        +--------------+
++ *        |       E      |
++ *        +--------------+
++ * 4.2.1) If range S and E have same ackknowledg value (both acked or unacked),
++ *    they will be merged into one, the result is,
++ *        +--------------+
++ *        |       S      |
++ *        +--------------+
++ * 4.2.2) If range E is acked and the setting range S is unacked, the setting
++ *    request of S will be rejected, the result is also,
++ *        +--------------+
++ *        |       E      |
++ *        +--------------+
++ * 4.2.3) If range E is unacked, and the setting range S is acked, then S will
++ *    inserted into middle of E and split previous range E into twp parts (E1
++ *    and E2), the result is,
++ *        +----+----+----+
++ *        | E1 |  S | E2 |
++ *        +----+----+----+
++ * 4.3) If the setting bad blocks range S is overlapped with an already set bad
++ *    blocks range E. The range S starts after the start LBA of range E, and
++ *    ends after the end LBA of range E, as the following chart shows,
++ *            +-------------------+
++ *            |          S        |
++ *            +-------------------+
++ *        +-------------+
++ *        |      E      |
++ *        +-------------+
++ *    For this situation the range S can be divided into two parts, the first
++ *    part (S1) ends at end range E, and the second part (S2) has rest range of
++ *    origin S.
++ *            +---------+---------+            +---------+      +---------+
++ *            |    S1   |    S2   |            |    S1   |      |    S2   |
++ *            +---------+---------+  ===>      +---------+      +---------+
++ *        +-------------+                  +-------------+
++ *        |      E      |                  |      E      |
++ *        +-------------+                  +-------------+
++ *     Now in this loop the setting range S1 and already set range E can be
++ *     handled as the situations 4), the rest range S2 will be handled in next
++ *     loop and ignored in this loop.
++ * 5) A setting bad blocks range S is adjacent to one or more already set bad
++ *    blocks range(s), and they are all acked or unacked range.
++ * 5.1) Front merge: If the already set bad blocks range E is before setting
++ *    range S and they are adjacent,
++ *                +------+
++ *                |  S   |
++ *                +------+
++ *        +-------+
++ *        |   E   |
++ *        +-------+
++ * 5.1.1) When total size of range S and E <= BB_MAX_LEN, and their acknowledge
++ *    values are same, the setting range S can front merges into range E. The
++ *    result is,
++ *        +--------------+
++ *        |       S      |
++ *        +--------------+
++ * 5.1.2) Otherwise these two ranges cannot merge, just insert the setting
++ *    range S right after already set range E into the bad blocks table. The
++ *    result is,
++ *        +--------+------+
++ *        |   E    |   S  |
++ *        +--------+------+
++ * 6) Special cases which above conditions cannot handle
++ * 6.1) Multiple already set ranges may merge into less ones in a full bad table
++ *        +-------------------------------------------------------+
++ *        |                           S                           |
++ *        +-------------------------------------------------------+
++ *        |<----- BB_MAX_LEN ----->|
++ *                                 +-----+     +-----+   +-----+
++ *                                 | E1  |     | E2  |   | E3  |
++ *                                 +-----+     +-----+   +-----+
++ *     In the above example, when the bad blocks table is full, inserting the
++ *     first part of setting range S will fail because no more available slot
++ *     can be allocated from bad blocks table. In this situation a proper
++ *     setting method should be go though all the setting bad blocks range and
++ *     look for chance to merge already set ranges into less ones. When there
++ *     is available slot from bad blocks table, re-try again to handle more
++ *     setting bad blocks ranges as many as possible.
++ *        +------------------------+
++ *        |          S3            |
++ *        +------------------------+
++ *        |<----- BB_MAX_LEN ----->|
++ *                                 +-----+-----+-----+---+-----+--+
++ *                                 |       S1        |     S2     |
++ *                                 +-----+-----+-----+---+-----+--+
++ *     The above chart shows although the first part (S3) cannot be inserted due
++ *     to no-space in bad blocks table, but the following E1, E2 and E3 ranges
++ *     can be merged with rest part of S into less range S1 and S2. Now there is
++ *     1 free slot in bad blocks table.
++ *        +------------------------+-----+-----+-----+---+-----+--+
++ *        |           S3           |       S1        |     S2     |
++ *        +------------------------+-----+-----+-----+---+-----+--+
++ *     Since the bad blocks table is not full anymore, re-try again for the
++ *     origin setting range S. Now the setting range S3 can be inserted into the
++ *     bad blocks table with previous freed slot from multiple ranges merge.
++ * 6.2) Front merge after overwrite
++ *    In the following example, in bad blocks table, E1 is an acked bad blocks
++ *    range and E2 is an unacked bad blocks range, therefore they are not able
++ *    to merge into a larger range. The setting bad blocks range S is acked,
++ *    therefore part of E2 can be overwritten by S.
++ *                      +--------+
++ *                      |    S   |                             acknowledged
++ *                      +--------+                         S:       1
++ *              +-------+-------------+                   E1:       1
++ *              |   E1  |    E2       |                   E2:       0
++ *              +-------+-------------+
++ *     With previosu simplified routines, after overwiting part of E2 with S,
++ *     the bad blocks table should be (E3 is remaining part of E2 which is not
++ *     overwritten by S),
++ *                                                             acknowledged
++ *              +-------+--------+----+                    S:       1
++ *              |   E1  |    S   | E3 |                   E1:       1
++ *              +-------+--------+----+                   E3:       0
++ *     The above result is correct but not perfect. Range E1 and S in the bad
++ *     blocks table are all acked, merging them into a larger one range may
++ *     occupy less bad blocks table space and make badblocks_check() faster.
++ *     Therefore in such situation, after overwiting range S, the previous range
++ *     E1 should be checked for possible front combination. Then the ideal
++ *     result can be,
++ *              +----------------+----+                        acknowledged
++ *              |       E1       | E3 |                   E1:       1
++ *              +----------------+----+                   E3:       0
++ * 6.3) Behind merge: If the already set bad blocks range E is behind the setting
++ *    range S and they are adjacent. Normally we don't need to care about this
++ *    because front merge handles this while going though range S from head to
++ *    tail, except for the tail part of range S. When the setting range S are
++ *    fully handled, all the above simplified routine doesn't check whether the
++ *    tail LBA of range S is adjacent to the next already set range and not able
++ *    to them if they are mergeable.
++ *        +------+
++ *        |  S   |
++ *        +------+
++ *               +-------+
++ *               |   E   |
++ *               +-------+
++ *    For the above special stiuation, when the setting range S are all handled
++ *    and the loop ends, an extra check is necessary for whether next already
++ *    set range E is right after S and mergeable.
++ * 6.2.1) When total size of range E and S <= BB_MAX_LEN, and their acknowledge
++ *    values are same, the setting range S can behind merges into range E. The
++ *    result is,
++ *        +--------------+
++ *        |       S      |
++ *        +--------------+
++ * 6.2.2) Otherwise these two ranges cannot merge, just insert the setting range
++ *     S infront of the already set range E in the bad blocks table. The result
++ *     is,
++ *        +------+-------+
++ *        |  S   |   E   |
++ *        +------+-------+
++ *
++ * All the above 5 simplified situations and 3 special cases may cover 99%+ of
++ * the bad block range setting conditions. Maybe there is some rare corner case
++ * is not considered and optimized, it won't hurt if badblocks_set() fails due
++ * to no space, or some ranges are not merged to save bad blocks table space.
++ *
++ * Inside badblocks_set() each loop starts by jumping to re_insert label, every
++ * time for the new loop prev_badblocks() is called to find an already set range
++ * which starts before or at current setting range. Since the setting bad blocks
++ * range is handled from head to tail, most of the cases it is unnecessary to do
++ * the binary search inside prev_badblocks(), it is possible to provide a hint
++ * to prev_badblocks() for a fast path, then the expensive binary search can be
++ * avoided. In my test with the hint to prev_badblocks(), except for the first
++ * loop, all rested calls to prev_badblocks() can go into the fast path and
++ * return correct bad blocks table index immediately.
+  *
+- * Return:
+- *  0: there are no known bad blocks in the range
+- *  1: there are known bad block which are all acknowledged
+- * -1: there are bad blocks which have not yet been acknowledged in metadata.
+- * plus the start/length of the first bad section we overlap.
+  */
+-int badblocks_check(struct badblocks *bb, sector_t s, int sectors,
+-			sector_t *first_bad, int *bad_sectors)
++
++static int prev_by_hint(struct badblocks *bb, sector_t s, int hint)
  {
--	trace_block_rq_insert(rq->q, rq);
-+	trace_block_rq_insert(rq);
- }
- EXPORT_SYMBOL_GPL(blk_mq_sched_request_inserted);
+-	int hi;
+-	int lo;
+ 	u64 *p = bb->page;
+-	int rv;
+-	sector_t target = s + sectors;
+-	unsigned seq;
++	int ret = -1;
++	int hint_end = hint + 2;
  
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 26eaf476f1e12b..ed21218188da65 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -733,7 +733,7 @@ void blk_mq_start_request(struct request *rq)
- {
- 	struct request_queue *q = rq->q;
+-	if (bb->shift > 0) {
+-		/* round the start down, and the end up */
+-		s >>= bb->shift;
+-		target += (1<<bb->shift) - 1;
+-		target >>= bb->shift;
+-		sectors = target - s;
++	while ((hint < hint_end) && ((hint + 1) <= bb->count) &&
++	       (BB_OFFSET(p[hint]) <= s)) {
++		if ((hint + 1) == bb->count || BB_OFFSET(p[hint + 1]) > s) {
++			ret = hint;
++			break;
++		}
++		hint++;
++	}
++
++	return ret;
++}
++
++/* find the range starts at-or-before bad->start */
++static int prev_badblocks(struct badblocks *bb, struct bad_context *bad,
++			  int hint)
++{
++	u64 *p;
++	int lo, hi;
++	sector_t s = bad->start;
++	int ret = -1;
++
++	if (!bb->count)
++		goto out;
++
++	if (hint >= 0) {
++		ret = prev_by_hint(bb, s, hint);
++		if (ret >= 0)
++			goto out;
+ 	}
+-	/* 'target' is now the first block after the bad range */
  
--	trace_block_rq_issue(q, rq);
-+	trace_block_rq_issue(rq);
+-retry:
+-	seq = read_seqbegin(&bb->lock);
+ 	lo = 0;
+-	rv = 0;
+ 	hi = bb->count;
++	p = bb->page;
  
- 	if (test_bit(QUEUE_FLAG_STATS, &q->queue_flags)) {
- 		rq->io_start_time_ns = ktime_get_ns();
-@@ -760,7 +760,7 @@ static void __blk_mq_requeue_request(struct request *rq)
+-	/* Binary search between lo and hi for 'target'
+-	 * i.e. for the last range that starts before 'target'
+-	 */
+-	/* INVARIANT: ranges before 'lo' and at-or-after 'hi'
+-	 * are known not to be the last range before target.
+-	 * VARIANT: hi-lo is the number of possible
+-	 * ranges, and decreases until it reaches 1
+-	 */
+ 	while (hi - lo > 1) {
+-		int mid = (lo + hi) / 2;
++		int mid = (lo + hi)/2;
+ 		sector_t a = BB_OFFSET(p[mid]);
  
- 	blk_mq_put_driver_tag(rq);
- 
--	trace_block_rq_requeue(q, rq);
-+	trace_block_rq_requeue(rq);
- 	rq_qos_requeue(q, rq);
- 
- 	if (blk_mq_request_started(rq)) {
-@@ -1821,7 +1821,7 @@ static inline void __blk_mq_insert_req_list(struct blk_mq_hw_ctx *hctx,
- 
- 	lockdep_assert_held(&ctx->lock);
- 
--	trace_block_rq_insert(hctx->queue, rq);
-+	trace_block_rq_insert(rq);
- 
- 	if (at_head)
- 		list_add(&rq->queuelist, &ctx->rq_lists[type]);
-@@ -1878,7 +1878,7 @@ void blk_mq_insert_requests(struct blk_mq_hw_ctx *hctx, struct blk_mq_ctx *ctx,
- 	 */
- 	list_for_each_entry(rq, list, queuelist) {
- 		BUG_ON(rq->mq_ctx != ctx);
--		trace_block_rq_insert(hctx->queue, rq);
-+		trace_block_rq_insert(rq);
+-		if (a < target)
+-			/* This could still be the one, earlier ranges
+-			 * could not.
+-			 */
++		if (a <= s)
+ 			lo = mid;
+ 		else
+-			/* This and later ranges are definitely out. */
+ 			hi = mid;
+ 	}
+-	/* 'lo' might be the last that started before target, but 'hi' isn't */
+-	if (hi > lo) {
+-		/* need to check all range that end after 's' to see if
+-		 * any are unacknowledged.
++
++	if (BB_OFFSET(p[lo]) <= s)
++		ret = lo;
++out:
++	return ret;
++}
++
++static int can_merge_behind(struct badblocks *bb, struct bad_context *bad,
++			    int behind)
++{
++	u64 *p = bb->page;
++	sector_t s = bad->start;
++	sector_t sectors = bad->len;
++	int ack = bad->ack;
++
++	if ((s <= BB_OFFSET(p[behind])) &&
++	    ((s + sectors) >= BB_OFFSET(p[behind])) &&
++	    ((BB_END(p[behind]) - s) <= BB_MAX_LEN) &&
++	    BB_ACK(p[behind]) == ack)
++		return true;
++	return false;
++}
++
++static int behind_merge(struct badblocks *bb, struct bad_context *bad,
++			int behind)
++{
++	u64 *p = bb->page;
++	sector_t s = bad->start;
++	sector_t sectors = bad->len;
++	int ack = bad->ack;
++	int merged = 0;
++
++	WARN_ON(s > BB_OFFSET(p[behind]));
++	WARN_ON((s + sectors) < BB_OFFSET(p[behind]));
++
++	if (s < BB_OFFSET(p[behind])) {
++		WARN_ON((BB_LEN(p[behind]) + merged) >= BB_MAX_LEN);
++
++		merged = min_t(sector_t, sectors, BB_OFFSET(p[behind]) - s);
++		p[behind] =  BB_MAKE(s, BB_LEN(p[behind]) + merged, ack);
++	} else {
++		merged = min_t(sector_t, sectors, BB_LEN(p[behind]));
++	}
++
++	WARN_ON(merged == 0);
++
++	return merged;
++}
++
++static int can_merge_front(struct badblocks *bb, int prev,
++			   struct bad_context *bad)
++{
++	u64 *p = bb->page;
++	sector_t s = bad->start;
++	int ack = bad->ack;
++
++	if (BB_ACK(p[prev]) == ack &&
++	    (s < BB_END(p[prev]) ||
++	     (s == BB_END(p[prev]) && (BB_LEN(p[prev]) < BB_MAX_LEN))))
++		return true;
++	return false;
++}
++
++static int front_merge(struct badblocks *bb, int prev, struct bad_context *bad)
++{
++	int sectors = bad->len;
++	int s = bad->start;
++	int ack = bad->ack;
++	u64 *p = bb->page;
++	int merged = 0;
++
++	WARN_ON(s > BB_END(p[prev]));
++
++	if (s < BB_END(p[prev])) {
++		merged = min_t(sector_t, sectors, BB_END(p[prev]) - s);
++	} else {
++		merged = min_t(sector_t, sectors, BB_MAX_LEN - BB_LEN(p[prev]));
++		if ((prev + 1) < bb->count &&
++		    merged > (BB_OFFSET(p[prev + 1]) - BB_END(p[prev]))) {
++			merged = BB_OFFSET(p[prev + 1]) - BB_END(p[prev]);
++		}
++
++		p[prev] = BB_MAKE(BB_OFFSET(p[prev]), BB_LEN(p[prev]) + merged, ack);
++	}
++
++	return merged;
++}
++
++static int can_combine_front(struct badblocks *bb, int prev,
++			     struct bad_context *bad)
++{
++	u64 *p = bb->page;
++
++	if ((BB_OFFSET(p[prev]) == bad->start) && (prev > 0) &&
++	    (BB_LEN(p[prev - 1]) + BB_LEN(p[prev]) <= BB_MAX_LEN) &&
++	    (BB_ACK(p[prev - 1]) == BB_ACK(p[prev])))
++		return true;
++	return false;
++}
++
++static void front_combine(struct badblocks *bb, int prev)
++{
++	u64 *p = bb->page;
++
++	p[prev - 1] = BB_MAKE(BB_OFFSET(p[prev - 1]),
++			      BB_LEN(p[prev - 1]) + BB_LEN(p[prev]),
++			      BB_ACK(p[prev]));
++	if ((prev + 1) < bb->count)
++		memmove(p + prev, p + prev + 1, (bb->count - prev - 1) * 8);
++}
++
++static int overlap_front(struct badblocks *bb, int front,
++			  struct bad_context *bad)
++{
++	u64 *p = bb->page;
++
++	if (bad->start >= BB_OFFSET(p[front]) &&
++	    bad->start < BB_END(p[front]))
++		return true;
++	return false;
++}
++
++static int can_front_overwrite(struct badblocks *bb, int prev,
++			       struct bad_context *bad, int *extra)
++{
++	u64 *p = bb->page;
++	int len;
++
++	WARN_ON(!overlap_front(bb, prev, bad));
++
++	if (BB_ACK(p[prev]) >= bad->ack)
++		return false;
++
++	if (BB_END(p[prev]) <= (bad->start + bad->len)) {
++		len = BB_END(p[prev]) - bad->start;
++		if (BB_OFFSET(p[prev]) == bad->start)
++			*extra = 0;
++		else
++			*extra = 1;
++
++		bad->len = len;
++	} else {
++		if (BB_OFFSET(p[prev]) == bad->start)
++			*extra = 1;
++		else
++		/*
++		 * prev range will be split into two, beside the overwritten
++		 * one, an extra slot needed from bad table.
+ 		 */
+-		while (lo >= 0 &&
+-		       BB_OFFSET(p[lo]) + BB_LEN(p[lo]) > s) {
+-			if (BB_OFFSET(p[lo]) < target) {
+-				/* starts before the end, and finishes after
+-				 * the start, so they must overlap
+-				 */
+-				if (rv != -1 && BB_ACK(p[lo]))
+-					rv = 1;
+-				else
+-					rv = -1;
+-				*first_bad = BB_OFFSET(p[lo]);
+-				*bad_sectors = BB_LEN(p[lo]);
+-			}
+-			lo--;
++			*extra = 2;
++	}
++
++	if ((bb->count + (*extra)) >= MAX_BADBLOCKS)
++		return false;
++
++	return true;
++}
++
++static int front_overwrite(struct badblocks *bb, int prev,
++			   struct bad_context *bad, int extra)
++{
++	u64 *p = bb->page;
++	int n = extra;
++	sector_t orig_end = BB_END(p[prev]);
++	int orig_ack = BB_ACK(p[prev]);
++
++	switch (extra) {
++	case 0:
++		p[prev] = BB_MAKE(BB_OFFSET(p[prev]), BB_LEN(p[prev]),
++				  bad->ack);
++		break;
++	case 1:
++		if (BB_OFFSET(p[prev]) == bad->start) {
++			p[prev] = BB_MAKE(BB_OFFSET(p[prev]),
++					  bad->len, bad->ack);
++			memmove(p + prev + 2, p + prev + 1,
++				(bb->count - prev - 1) * 8);
++			p[prev + 1] = BB_MAKE(bad->start + bad->len,
++					      orig_end - BB_END(p[prev]),
++					      orig_ack);
++		} else {
++			p[prev] = BB_MAKE(BB_OFFSET(p[prev]),
++					  BB_END(p[prev]) - bad->start,
++					  BB_ACK(p[prev]));
++			memmove(p + prev + 1 + n, p + prev + 1,
++				(bb->count - prev - 1) * 8);
++			p[prev + 1] = BB_MAKE(bad->start, bad->len, bad->ack);
+ 		}
++		break;
++	case 2:
++		p[prev] = BB_MAKE(BB_OFFSET(p[prev]),
++				  BB_END(p[prev]) - bad->start,
++				  BB_ACK(p[prev]));
++		memmove(p + prev + 1 + n, p + prev + 1,
++			(bb->count - prev - 1) * 8);
++		p[prev + 1] = BB_MAKE(bad->start, bad->len, bad->ack);
++		p[prev + 2] = BB_MAKE(BB_END(p[prev + 1]),
++				      orig_end - BB_END(p[prev + 1]),
++				      BB_ACK(p[prev]));
++		break;
++	default:
++		break;
  	}
  
- 	spin_lock(&ctx->lock);
-diff --git a/drivers/md/dm-rq.c b/drivers/md/dm-rq.c
-index 729a72ec30ccae..13b4385f4d5a92 100644
---- a/drivers/md/dm-rq.c
-+++ b/drivers/md/dm-rq.c
-@@ -397,7 +397,7 @@ static int map_request(struct dm_rq_target_io *tio)
- 		}
+-	if (read_seqretry(&bb->lock, seq))
+-		goto retry;
++	return bad->len;
++}
  
- 		/* The target has remapped the I/O so dispatch it */
--		trace_block_rq_remap(clone->q, clone, disk_devt(dm_disk(md)),
-+		trace_block_rq_remap(clone, disk_devt(dm_disk(md)),
- 				     blk_rq_pos(rq));
- 		ret = dm_dispatch_clone_request(clone, rq);
- 		if (ret == BLK_STS_RESOURCE || ret == BLK_STS_DEV_RESOURCE) {
-diff --git a/drivers/s390/scsi/zfcp_fsf.c b/drivers/s390/scsi/zfcp_fsf.c
-index 6cb963a0677714..37d450f4695281 100644
---- a/drivers/s390/scsi/zfcp_fsf.c
-+++ b/drivers/s390/scsi/zfcp_fsf.c
-@@ -2359,8 +2359,7 @@ static void zfcp_fsf_req_trace(struct zfcp_fsf_req *req, struct scsi_cmnd *scsi)
- 		}
+-	return rv;
++static int overlap_behind(struct badblocks *bb, struct bad_context *bad,
++			  int behind)
++{
++	u64 *p = bb->page;
++
++	if (bad->start < BB_OFFSET(p[behind]) &&
++	    (bad->start + bad->len) > BB_OFFSET(p[behind]))
++		return true;
++
++	if (bad->start >= BB_OFFSET(p[behind]) &&
++	    bad->start < BB_END(p[behind]))
++		return true;
++
++	return false;
++}
++
++static int insert_at(struct badblocks *bb, int at, struct bad_context *bad)
++{
++	u64 *p = bb->page;
++	int sectors = bad->len;
++	int s = bad->start;
++	int ack = bad->ack;
++	int len;
++
++	WARN_ON(badblocks_full(bb));
++
++	len = min_t(sector_t, sectors, BB_MAX_LEN);
++	if (at < bb->count)
++		memmove(p + at + 1, p + at, (bb->count - at) * 8);
++	p[at] = BB_MAKE(s, len, ack);
++
++	return len;
+ }
+-EXPORT_SYMBOL_GPL(badblocks_check);
+ 
+ static void badblocks_update_acked(struct badblocks *bb)
+ {
+@@ -164,7 +664,10 @@ int badblocks_set(struct badblocks *bb, sector_t s, int sectors,
+ 			int acknowledged)
+ {
+ 	u64 *p;
+-	int lo, hi;
++	struct bad_context bad;
++	int prev = -1, hint = -1;
++	int len = 0, added = 0;
++	int retried = 0, space_desired = 0;
+ 	int rv = 0;
+ 	unsigned long flags;
+ 
+@@ -172,144 +675,187 @@ int badblocks_set(struct badblocks *bb, sector_t s, int sectors,
+ 		/* badblocks are disabled */
+ 		return 1;
+ 
++	if (sectors <= 0)
++		/* Invalid sectors number */
++		return 1;
++
+ 	if (bb->shift) {
+ 		/* round the start down, and the end up */
+ 		sector_t next = s + sectors;
+ 
+-		s >>= bb->shift;
+-		next += (1<<bb->shift) - 1;
+-		next >>= bb->shift;
++		rounddown(s, bb->shift);
++		roundup(next, bb->shift);
+ 		sectors = next - s;
  	}
  
--	blk_add_driver_data(scsi->request->q, scsi->request, &blktrc,
--			    sizeof(blktrc));
-+	blk_add_driver_data(scsi->request, &blktrc, sizeof(blktrc));
+ 	write_seqlock_irqsave(&bb->lock, flags);
+ 
++	bad.orig_start = s;
++	bad.orig_len = sectors;
++	bad.ack = acknowledged;
+ 	p = bb->page;
+-	lo = 0;
+-	hi = bb->count;
+-	/* Find the last range that starts at-or-before 's' */
+-	while (hi - lo > 1) {
+-		int mid = (lo + hi) / 2;
+-		sector_t a = BB_OFFSET(p[mid]);
+ 
+-		if (a <= s)
+-			lo = mid;
+-		else
+-			hi = mid;
++re_insert:
++	bad.start = s;
++	bad.len = sectors;
++	len = 0;
++
++	if (badblocks_empty(bb)) {
++		len = insert_at(bb, 0, &bad);
++		bb->count++;
++		added++;
++		goto update_sectors;
+ 	}
+-	if (hi > lo && BB_OFFSET(p[lo]) > s)
+-		hi = lo;
+ 
+-	if (hi > lo) {
+-		/* we found a range that might merge with the start
+-		 * of our new range
+-		 */
+-		sector_t a = BB_OFFSET(p[lo]);
+-		sector_t e = a + BB_LEN(p[lo]);
+-		int ack = BB_ACK(p[lo]);
+-
+-		if (e >= s) {
+-			/* Yes, we can merge with a previous range */
+-			if (s == a && s + sectors >= e)
+-				/* new range covers old */
+-				ack = acknowledged;
+-			else
+-				ack = ack && acknowledged;
+-
+-			if (e < s + sectors)
+-				e = s + sectors;
+-			if (e - a <= BB_MAX_LEN) {
+-				p[lo] = BB_MAKE(a, e-a, ack);
+-				s = e;
++	prev = prev_badblocks(bb, &bad, hint);
++
++	/* start before all badblocks */
++	if (prev < 0) {
++		if (!badblocks_full(bb)) {
++			/* insert on the first */
++			if (bad.len > (BB_OFFSET(p[0]) - bad.start))
++				bad.len = BB_OFFSET(p[0]) - bad.start;
++			len = insert_at(bb, 0, &bad);
++			bb->count++;
++			added++;
++			hint = 0;
++			goto update_sectors;
++		}
++
++		/* No sapce, try to merge */
++		if (overlap_behind(bb, &bad, 0)) {
++			if (can_merge_behind(bb, &bad, 0)) {
++				len = behind_merge(bb, &bad, 0);
++				added++;
+ 			} else {
+-				/* does not all fit in one range,
+-				 * make p[lo] maximal
+-				 */
+-				if (BB_LEN(p[lo]) != BB_MAX_LEN)
+-					p[lo] = BB_MAKE(a, BB_MAX_LEN, ack);
+-				s = a + BB_MAX_LEN;
++				len = min_t(sector_t, BB_OFFSET(p[0]) - s, sectors);
++				space_desired = 1;
+ 			}
+-			sectors = e - s;
++			hint = 0;
++			goto update_sectors;
+ 		}
++
++		/* no table space and give up */
++		goto out;
+ 	}
+-	if (sectors && hi < bb->count) {
+-		/* 'hi' points to the first range that starts after 's'.
+-		 * Maybe we can merge with the start of that range
+-		 */
+-		sector_t a = BB_OFFSET(p[hi]);
+-		sector_t e = a + BB_LEN(p[hi]);
+-		int ack = BB_ACK(p[hi]);
+-
+-		if (a <= s + sectors) {
+-			/* merging is possible */
+-			if (e <= s + sectors) {
+-				/* full overlap */
+-				e = s + sectors;
+-				ack = acknowledged;
+-			} else
+-				ack = ack && acknowledged;
+-
+-			a = s;
+-			if (e - a <= BB_MAX_LEN) {
+-				p[hi] = BB_MAKE(a, e-a, ack);
+-				s = e;
+-			} else {
+-				p[hi] = BB_MAKE(a, BB_MAX_LEN, ack);
+-				s = a + BB_MAX_LEN;
++
++	/* in case p[prev-1] can be merged with p[prev] */
++	if (can_combine_front(bb, prev, &bad)) {
++		front_combine(bb, prev);
++		bb->count--;
++		added++;
++		hint = prev - 1;
++		goto update_sectors;
++	}
++
++	if (overlap_front(bb, prev, &bad)) {
++		if (can_merge_front(bb, prev, &bad)) {
++			len = front_merge(bb, prev, &bad);
++			added++;
++			hint = prev - 1;
++		} else {
++			int extra = 0;
++
++			if (!can_front_overwrite(bb, prev, &bad, &extra)) {
++				len = min_t(sector_t, BB_END(p[prev]) - s, sectors);
++				hint = prev;
++				goto update_sectors;
++			}
++
++			len = front_overwrite(bb, prev, &bad, extra);
++			added++;
++			bb->count += extra;
++			hint = prev;
++
++			if (prev > 0 && can_combine_front(bb, prev, &bad)) {
++				front_combine(bb, prev);
++				bb->count--;
++				hint = prev - 1;
+ 			}
+-			sectors = e - s;
+-			lo = hi;
+-			hi++;
+ 		}
++		goto update_sectors;
++	}
++
++	if (can_merge_front(bb, prev, &bad)) {
++		len = front_merge(bb, prev, &bad);
++		added++;
++		hint = prev;
++		goto update_sectors;
+ 	}
+-	if (sectors == 0 && hi < bb->count) {
+-		/* we might be able to combine lo and hi */
+-		/* Note: 's' is at the end of 'lo' */
+-		sector_t a = BB_OFFSET(p[hi]);
+-		int lolen = BB_LEN(p[lo]);
+-		int hilen = BB_LEN(p[hi]);
+-		int newlen = lolen + hilen - (s - a);
+-
+-		if (s >= a && newlen < BB_MAX_LEN) {
+-			/* yes, we can combine them */
+-			int ack = BB_ACK(p[lo]) && BB_ACK(p[hi]);
+-
+-			p[lo] = BB_MAKE(BB_OFFSET(p[lo]), newlen, ack);
+-			memmove(p + hi, p + hi + 1,
+-				(bb->count - hi - 1) * 8);
+-			bb->count--;
++
++	/* if no space in table, still try to merge in the covered range */
++	if (badblocks_full(bb)) {
++		/* skip the cannot-merge range */
++		if (((prev + 1) < bb->count) &&
++		    overlap_behind(bb, &bad, prev + 1) &&
++		    ((s + sectors) >= BB_END(p[prev + 1]))) {
++			len = BB_END(p[prev + 1]) - s;
++			hint = prev + 1;
++			goto update_sectors;
+ 		}
++
++		/* no retry any more */
++		len = sectors;
++		space_desired = 1;
++		hint = -1;
++		goto update_sectors;
+ 	}
+-	while (sectors) {
+-		/* didn't merge (it all).
+-		 * Need to add a range just before 'hi'
+-		 */
+-		if (bb->count >= MAX_BADBLOCKS) {
+-			/* No room for more */
+-			rv = 1;
+-			break;
+-		} else {
+-			int this_sectors = sectors;
+ 
+-			memmove(p + hi + 1, p + hi,
+-				(bb->count - hi) * 8);
+-			bb->count++;
++	/* cannot merge and there is space in bad table */
++	if (overlap_behind(bb, &bad, prev + 1))
++		bad.len = min_t(sector_t, bad.len, BB_OFFSET(p[prev + 1]) - bad.start);
+ 
+-			if (this_sectors > BB_MAX_LEN)
+-				this_sectors = BB_MAX_LEN;
+-			p[hi] = BB_MAKE(s, this_sectors, acknowledged);
+-			sectors -= this_sectors;
+-			s += this_sectors;
+-		}
++	len = insert_at(bb, prev + 1, &bad);
++	bb->count++;
++	added++;
++	hint = prev + 1;
++
++update_sectors:
++	s += len;
++	sectors -= len;
++
++	if (sectors > 0)
++		goto re_insert;
++
++	WARN_ON(sectors < 0);
++
++	/* Check whether the following already set range can be merged */
++	if ((prev + 1) < bb->count &&
++	    BB_END(p[prev]) == BB_OFFSET(p[prev + 1]) &&
++	    (BB_LEN(p[prev]) + BB_LEN(p[prev + 1])) <= BB_MAX_LEN &&
++	    BB_ACK(p[prev]) == BB_ACK(p[prev + 1])) {
++		p[prev] = BB_MAKE(BB_OFFSET(p[prev]),
++				  BB_LEN(p[prev]) + BB_LEN(p[prev + 1]),
++				  BB_ACK(p[prev]));
++
++		if ((prev + 2) < bb->count)
++			memmove(p + prev + 1, p + prev + 2,
++				(bb->count -  (prev + 2)) * 8);
++		bb->count--;
++	}
++
++	if (space_desired && !badblocks_full(bb)) {
++		s = bad.orig_start;
++		sectors = bad.orig_len;
++		if (retried++ < 3)
++			goto re_insert;
++	}
++
++out:
++	if (added) {
++		set_changed(bb);
++
++		if (!acknowledged)
++			bb->unacked_exist = 1;
++		else
++			badblocks_update_acked(bb);
+ 	}
+ 
+-	bb->changed = 1;
+-	if (!acknowledged)
+-		bb->unacked_exist = 1;
+-	else
+-		badblocks_update_acked(bb);
+ 	write_sequnlock_irqrestore(&bb->lock, flags);
+ 
++	if (!added)
++		rv = 1;
++
+ 	return rv;
  }
- 
- /**
-diff --git a/include/linux/blktrace_api.h b/include/linux/blktrace_api.h
-index 3b6ff5902edce6..05556573b896a2 100644
---- a/include/linux/blktrace_api.h
-+++ b/include/linux/blktrace_api.h
-@@ -75,8 +75,7 @@ static inline bool blk_trace_note_message_enabled(struct request_queue *q)
- 	return ret;
+ EXPORT_SYMBOL_GPL(badblocks_set);
+@@ -423,6 +969,115 @@ int badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
  }
+ EXPORT_SYMBOL_GPL(badblocks_clear);
  
--extern void blk_add_driver_data(struct request_queue *q, struct request *rq,
--				void *data, size_t len);
-+extern void blk_add_driver_data(struct request *rq, void *data, size_t len);
- extern int blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
- 			   struct block_device *bdev,
- 			   char __user *arg);
-@@ -90,7 +89,7 @@ extern struct attribute_group blk_trace_attr_group;
- #else /* !CONFIG_BLK_DEV_IO_TRACE */
- # define blk_trace_ioctl(bdev, cmd, arg)		(-ENOTTY)
- # define blk_trace_shutdown(q)				do { } while (0)
--# define blk_add_driver_data(q, rq, data, len)		do {} while (0)
-+# define blk_add_driver_data(rq, data, len)		do {} while (0)
- # define blk_trace_setup(q, name, dev, bdev, arg)	(-ENOTTY)
- # define blk_trace_startstop(q, start)			(-ENOTTY)
- # define blk_trace_remove(q)				(-ENOTTY)
-diff --git a/include/trace/events/block.h b/include/trace/events/block.h
-index 8fb89574d8677f..0d782663a005dc 100644
---- a/include/trace/events/block.h
-+++ b/include/trace/events/block.h
-@@ -64,7 +64,6 @@ DEFINE_EVENT(block_buffer, block_dirty_buffer,
- 
++/**
++ * badblocks_check() - check a given range for bad sectors
++ * @bb:		the badblocks structure that holds all badblock information
++ * @s:		sector (start) at which to check for badblocks
++ * @sectors:	number of sectors to check for badblocks
++ * @first_bad:	pointer to store location of the first badblock
++ * @bad_sectors: pointer to store number of badblocks after @first_bad
++ *
++ * We can record which blocks on each device are 'bad' and so just
++ * fail those blocks, or that stripe, rather than the whole device.
++ * Entries in the bad-block table are 64bits wide.  This comprises:
++ * Length of bad-range, in sectors: 0-511 for lengths 1-512
++ * Start of bad-range, sector offset, 54 bits (allows 8 exbibytes)
++ *  A 'shift' can be set so that larger blocks are tracked and
++ *  consequently larger devices can be covered.
++ * 'Acknowledged' flag - 1 bit. - the most significant bit.
++ *
++ * Locking of the bad-block table uses a seqlock so badblocks_check
++ * might need to retry if it is very unlucky.
++ * We will sometimes want to check for bad blocks in a bi_end_io function,
++ * so we use the write_seqlock_irq variant.
++ *
++ * When looking for a bad block we specify a range and want to
++ * know if any block in the range is bad.  So we binary-search
++ * to the last range that starts at-or-before the given endpoint,
++ * (or "before the sector after the target range")
++ * then see if it ends after the given start.
++ *
++ * Return:
++ *  0: there are no known bad blocks in the range
++ *  1: there are known bad block which are all acknowledged
++ * -1: there are bad blocks which have not yet been acknowledged in metadata.
++ * plus the start/length of the first bad section we overlap.
++ */
++int badblocks_check(struct badblocks *bb, sector_t s, int sectors,
++			sector_t *first_bad, int *bad_sectors)
++{
++	int hi;
++	int lo;
++	u64 *p = bb->page;
++	int rv;
++	sector_t target = s + sectors;
++	unsigned seq;
++
++	if (bb->shift > 0) {
++		/* round the start down, and the end up */
++		s >>= bb->shift;
++		target += (1<<bb->shift) - 1;
++		target >>= bb->shift;
++		sectors = target - s;
++	}
++	/* 'target' is now the first block after the bad range */
++
++retry:
++	seq = read_seqbegin(&bb->lock);
++	lo = 0;
++	rv = 0;
++	hi = bb->count;
++
++	/* Binary search between lo and hi for 'target'
++	 * i.e. for the last range that starts before 'target'
++	 */
++	/* INVARIANT: ranges before 'lo' and at-or-after 'hi'
++	 * are known not to be the last range before target.
++	 * VARIANT: hi-lo is the number of possible
++	 * ranges, and decreases until it reaches 1
++	 */
++	while (hi - lo > 1) {
++		int mid = (lo + hi) / 2;
++		sector_t a = BB_OFFSET(p[mid]);
++
++		if (a < target)
++			/* This could still be the one, earlier ranges
++			 * could not.
++			 */
++			lo = mid;
++		else
++			/* This and later ranges are definitely out. */
++			hi = mid;
++	}
++	/* 'lo' might be the last that started before target, but 'hi' isn't */
++	if (hi > lo) {
++		/* need to check all range that end after 's' to see if
++		 * any are unacknowledged.
++		 */
++		while (lo >= 0 &&
++		       BB_OFFSET(p[lo]) + BB_LEN(p[lo]) > s) {
++			if (BB_OFFSET(p[lo]) < target) {
++				/* starts before the end, and finishes after
++				 * the start, so they must overlap
++				 */
++				if (rv != -1 && BB_ACK(p[lo]))
++					rv = 1;
++				else
++					rv = -1;
++				*first_bad = BB_OFFSET(p[lo]);
++				*bad_sectors = BB_LEN(p[lo]);
++			}
++			lo--;
++		}
++	}
++
++	if (read_seqretry(&bb->lock, seq))
++		goto retry;
++
++	return rv;
++}
++EXPORT_SYMBOL_GPL(badblocks_check);
++
  /**
-  * block_rq_requeue - place block IO request back on a queue
-- * @q: queue holding operation
-  * @rq: block IO operation request
-  *
-  * The block operation request @rq is being placed back into queue
-@@ -73,9 +72,9 @@ DEFINE_EVENT(block_buffer, block_dirty_buffer,
-  */
- TRACE_EVENT(block_rq_requeue,
+  * ack_all_badblocks() - Acknowledge all bad blocks in a list.
+  * @bb:		the badblocks structure that holds all badblock information
+diff --git a/include/linux/badblocks.h b/include/linux/badblocks.h
+index 2426276b9bd3..b4bd997a53a4 100644
+--- a/include/linux/badblocks.h
++++ b/include/linux/badblocks.h
+@@ -15,6 +15,7 @@
+ #define BB_OFFSET(x)	(((x) & BB_OFFSET_MASK) >> 9)
+ #define BB_LEN(x)	(((x) & BB_LEN_MASK) + 1)
+ #define BB_ACK(x)	(!!((x) & BB_ACK_MASK))
++#define BB_END(x)	(BB_OFFSET(x) + BB_LEN(x))
+ #define BB_MAKE(a, l, ack) (((a)<<9) | ((l)-1) | ((u64)(!!(ack)) << 63))
  
--	TP_PROTO(struct request_queue *q, struct request *rq),
-+	TP_PROTO(struct request *rq),
+ /* Bad block numbers are stored sorted in a single page.
+@@ -41,6 +42,14 @@ struct badblocks {
+ 	sector_t size;		/* in sectors */
+ };
  
--	TP_ARGS(q, rq),
-+	TP_ARGS(rq),
- 
- 	TP_STRUCT__entry(
- 		__field(  dev_t,	dev			)
-@@ -147,9 +146,9 @@ TRACE_EVENT(block_rq_complete,
- 
- DECLARE_EVENT_CLASS(block_rq,
- 
--	TP_PROTO(struct request_queue *q, struct request *rq),
-+	TP_PROTO(struct request *rq),
- 
--	TP_ARGS(q, rq),
-+	TP_ARGS(rq),
- 
- 	TP_STRUCT__entry(
- 		__field(  dev_t,	dev			)
-@@ -181,7 +180,6 @@ DECLARE_EVENT_CLASS(block_rq,
- 
- /**
-  * block_rq_insert - insert block operation request into queue
-- * @q: target queue
-  * @rq: block IO operation request
-  *
-  * Called immediately before block operation request @rq is inserted
-@@ -191,14 +189,13 @@ DECLARE_EVENT_CLASS(block_rq,
-  */
- DEFINE_EVENT(block_rq, block_rq_insert,
- 
--	TP_PROTO(struct request_queue *q, struct request *rq),
-+	TP_PROTO(struct request *rq),
- 
--	TP_ARGS(q, rq)
-+	TP_ARGS(rq)
- );
- 
- /**
-  * block_rq_issue - issue pending block IO request operation to device driver
-- * @q: queue holding operation
-  * @rq: block IO operation operation request
-  *
-  * Called when block operation request @rq from queue @q is sent to a
-@@ -206,14 +203,13 @@ DEFINE_EVENT(block_rq, block_rq_insert,
-  */
- DEFINE_EVENT(block_rq, block_rq_issue,
- 
--	TP_PROTO(struct request_queue *q, struct request *rq),
-+	TP_PROTO(struct request *rq),
- 
--	TP_ARGS(q, rq)
-+	TP_ARGS(rq)
- );
- 
- /**
-  * block_rq_merge - merge request with another one in the elevator
-- * @q: queue holding operation
-  * @rq: block IO operation operation request
-  *
-  * Called when block operation request @rq from queue @q is merged to another
-@@ -221,9 +217,9 @@ DEFINE_EVENT(block_rq, block_rq_issue,
-  */
- DEFINE_EVENT(block_rq, block_rq_merge,
- 
--	TP_PROTO(struct request_queue *q, struct request *rq),
-+	TP_PROTO(struct request *rq),
- 
--	TP_ARGS(q, rq)
-+	TP_ARGS(rq)
- );
- 
- /**
-@@ -491,7 +487,6 @@ TRACE_EVENT(block_bio_remap,
- 
- /**
-  * block_rq_remap - map request for a block operation request
-- * @q: queue holding the operation
-  * @rq: block IO operation request
-  * @dev: device for the operation
-  * @from: original sector for the operation
-@@ -502,10 +497,9 @@ TRACE_EVENT(block_bio_remap,
-  */
- TRACE_EVENT(block_rq_remap,
- 
--	TP_PROTO(struct request_queue *q, struct request *rq, dev_t dev,
--		 sector_t from),
-+	TP_PROTO(struct request *rq, dev_t dev, sector_t from),
- 
--	TP_ARGS(q, rq, dev, from),
-+	TP_ARGS(rq, dev, from),
- 
- 	TP_STRUCT__entry(
- 		__field( dev_t,		dev		)
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 405637144a0389..7839a78205c243 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -795,12 +795,12 @@ static u64 blk_trace_bio_get_cgid(struct request_queue *q, struct bio *bio)
++struct bad_context {
++	sector_t	start;
++	sector_t	len;
++	int		ack;
++	sector_t	orig_start;
++	sector_t	orig_len;
++};
++
+ int badblocks_check(struct badblocks *bb, sector_t s, int sectors,
+ 		   sector_t *first_bad, int *bad_sectors);
+ int badblocks_set(struct badblocks *bb, sector_t s, int sectors,
+@@ -54,6 +63,7 @@ int badblocks_init(struct badblocks *bb, int enable);
+ void badblocks_exit(struct badblocks *bb);
+ struct device;
+ int devm_init_badblocks(struct device *dev, struct badblocks *bb);
++
+ static inline void devm_exit_badblocks(struct device *dev, struct badblocks *bb)
+ {
+ 	if (bb->dev != dev) {
+@@ -63,4 +73,27 @@ static inline void devm_exit_badblocks(struct device *dev, struct badblocks *bb)
+ 	}
+ 	badblocks_exit(bb);
+ }
++
++static inline int badblocks_full(struct badblocks *bb)
++{
++	return (bb->count >= MAX_BADBLOCKS);
++}
++
++static inline int badblocks_empty(struct badblocks *bb)
++{
++	return (bb->count == 0);
++}
++
++static inline void set_changed(struct badblocks *bb)
++{
++	if (bb->changed != 1)
++		bb->changed = 1;
++}
++
++static inline void clear_changed(struct badblocks *bb)
++{
++	if (bb->changed != 0)
++		bb->changed = 0;
++}
++
  #endif
- 
- static u64
--blk_trace_request_get_cgid(struct request_queue *q, struct request *rq)
-+blk_trace_request_get_cgid(struct request *rq)
- {
- 	if (!rq->bio)
- 		return 0;
- 	/* Use the first bio */
--	return blk_trace_bio_get_cgid(q, rq->bio);
-+	return blk_trace_bio_get_cgid(rq->q, rq->bio);
- }
- 
- /*
-@@ -841,40 +841,35 @@ static void blk_add_trace_rq(struct request *rq, int error,
- 	rcu_read_unlock();
- }
- 
--static void blk_add_trace_rq_insert(void *ignore,
--				    struct request_queue *q, struct request *rq)
-+static void blk_add_trace_rq_insert(void *ignore, struct request *rq)
- {
- 	blk_add_trace_rq(rq, 0, blk_rq_bytes(rq), BLK_TA_INSERT,
--			 blk_trace_request_get_cgid(q, rq));
-+			 blk_trace_request_get_cgid(rq));
- }
- 
--static void blk_add_trace_rq_issue(void *ignore,
--				   struct request_queue *q, struct request *rq)
-+static void blk_add_trace_rq_issue(void *ignore, struct request *rq)
- {
- 	blk_add_trace_rq(rq, 0, blk_rq_bytes(rq), BLK_TA_ISSUE,
--			 blk_trace_request_get_cgid(q, rq));
-+			 blk_trace_request_get_cgid(rq));
- }
- 
--static void blk_add_trace_rq_merge(void *ignore,
--				   struct request_queue *q, struct request *rq)
-+static void blk_add_trace_rq_merge(void *ignore, struct request *rq)
- {
- 	blk_add_trace_rq(rq, 0, blk_rq_bytes(rq), BLK_TA_BACKMERGE,
--			 blk_trace_request_get_cgid(q, rq));
-+			 blk_trace_request_get_cgid(rq));
- }
- 
--static void blk_add_trace_rq_requeue(void *ignore,
--				     struct request_queue *q,
--				     struct request *rq)
-+static void blk_add_trace_rq_requeue(void *ignore, struct request *rq)
- {
- 	blk_add_trace_rq(rq, 0, blk_rq_bytes(rq), BLK_TA_REQUEUE,
--			 blk_trace_request_get_cgid(q, rq));
-+			 blk_trace_request_get_cgid(rq));
- }
- 
- static void blk_add_trace_rq_complete(void *ignore, struct request *rq,
- 			int error, unsigned int nr_bytes)
- {
- 	blk_add_trace_rq(rq, error, nr_bytes, BLK_TA_COMPLETE,
--			 blk_trace_request_get_cgid(rq->q, rq));
-+			 blk_trace_request_get_cgid(rq));
- }
- 
- /**
-@@ -1037,16 +1032,14 @@ static void blk_add_trace_bio_remap(void *ignore, struct bio *bio, dev_t dev,
-  *     Add a trace for that action.
-  *
-  **/
--static void blk_add_trace_rq_remap(void *ignore,
--				   struct request_queue *q,
--				   struct request *rq, dev_t dev,
-+static void blk_add_trace_rq_remap(void *ignore, struct request *rq, dev_t dev,
- 				   sector_t from)
- {
- 	struct blk_trace *bt;
- 	struct blk_io_trace_remap r;
- 
- 	rcu_read_lock();
--	bt = rcu_dereference(q->blk_trace);
-+	bt = rcu_dereference(rq->q->blk_trace);
- 	if (likely(!bt)) {
- 		rcu_read_unlock();
- 		return;
-@@ -1058,13 +1051,12 @@ static void blk_add_trace_rq_remap(void *ignore,
- 
- 	__blk_add_trace(bt, blk_rq_pos(rq), blk_rq_bytes(rq),
- 			rq_data_dir(rq), 0, BLK_TA_REMAP, 0,
--			sizeof(r), &r, blk_trace_request_get_cgid(q, rq));
-+			sizeof(r), &r, blk_trace_request_get_cgid(rq));
- 	rcu_read_unlock();
- }
- 
- /**
-  * blk_add_driver_data - Add binary message with driver-specific data
-- * @q:		queue the io is for
-  * @rq:		io request
-  * @data:	driver-specific data
-  * @len:	length of driver-specific data
-@@ -1073,14 +1065,12 @@ static void blk_add_trace_rq_remap(void *ignore,
-  *     Some drivers might want to write driver-specific data per request.
-  *
-  **/
--void blk_add_driver_data(struct request_queue *q,
--			 struct request *rq,
--			 void *data, size_t len)
-+void blk_add_driver_data(struct request *rq, void *data, size_t len)
- {
- 	struct blk_trace *bt;
- 
- 	rcu_read_lock();
--	bt = rcu_dereference(q->blk_trace);
-+	bt = rcu_dereference(rq->q->blk_trace);
- 	if (likely(!bt)) {
- 		rcu_read_unlock();
- 		return;
-@@ -1088,7 +1078,7 @@ void blk_add_driver_data(struct request_queue *q,
- 
- 	__blk_add_trace(bt, blk_rq_trace_sector(rq), blk_rq_bytes(rq), 0, 0,
- 				BLK_TA_DRV_DATA, 0, len, data,
--				blk_trace_request_get_cgid(q, rq));
-+				blk_trace_request_get_cgid(rq));
- 	rcu_read_unlock();
- }
- EXPORT_SYMBOL_GPL(blk_add_driver_data);
 -- 
-2.29.2
+2.26.2
 
