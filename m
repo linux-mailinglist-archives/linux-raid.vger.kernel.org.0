@@ -2,89 +2,97 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D2BD42CF224
-	for <lists+linux-raid@lfdr.de>; Fri,  4 Dec 2020 17:46:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 60EDA2CF3F7
+	for <lists+linux-raid@lfdr.de>; Fri,  4 Dec 2020 19:23:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730896AbgLDQnn (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 4 Dec 2020 11:43:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58250 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728382AbgLDQnm (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 4 Dec 2020 11:43:42 -0500
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 761AEC061A54
-        for <linux-raid@vger.kernel.org>; Fri,  4 Dec 2020 08:43:02 -0800 (PST)
-Received: by mail-il1-x142.google.com with SMTP id k8so5764581ilr.4
-        for <linux-raid@vger.kernel.org>; Fri, 04 Dec 2020 08:43:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eMCK196yGD9HEmztT5X4HDwb0AlO+qvFoU6onkVpAVY=;
-        b=m3sqnXWJeTAd3qQUF1d9wJyXwHu7JxXcC6uKIzKnlo7TpnJ0vYQXk+eWhirNC1qNc6
-         aWtFXzQOh0tidKwXqU80pwMzIT8ZRZt5PRaxJSJc8E29JFtApk6BEQdYW7hsB24li7Wz
-         GaHvnlkDkAXaS5vCx5OsdA8Gdjg2fKCwfxWclRwxoS6t079ff5UktFuwRsCmmeiSXiuT
-         xW/GuQxNIV2YBOU7ho2AFYAEGF1BA6L5NjXH97l1WWxaDgleOwbf8TG5h9LgnhjdG/OI
-         JRD43kLpWzFWbCzhBfc/Q4Pv6ykA/JlxFPWiKSwSGdMJVYAl1gBtHvq4FoMJiyhXaw3Z
-         plEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eMCK196yGD9HEmztT5X4HDwb0AlO+qvFoU6onkVpAVY=;
-        b=LqphFTIR4vBYF2hoiv4VfOON8MiXfLlP0MGMuktx4D93h9zEuS6RCqV7orJ2ywOcpd
-         EOasZjtLVxvIQQc16vgGtIW/CixojV985pE3baCWU5SMFc0DMwI1Sxwlov2b6S6g45Qr
-         7X/7RwfR7VbqJIdm9bTjKwrzTtGOF0UvvDPfOPr1WOxtUk4dcbu2dc4HqNEBWulf0qVf
-         oXm1MThLB2m6LuMtv327lIX6by7PhaycDTn3W2m+YVsJFvqy+q4HCzGgaFYeNHpk34P1
-         w8Zy/466FaIltZHnTpLu7hNExIh5JDIdoWP+leC8K+kXAEedI8oH3+lQk0OzD4buQsmL
-         xviw==
-X-Gm-Message-State: AOAM532lY3lb0IMxvJyzGdZu4t1AaytR5DU0tuOKq3bOko4R5KnsPw4S
-        MhYx1w21Wd500R9hIGKjOfG2pA==
-X-Google-Smtp-Source: ABdhPJzAzVGKZD0+jfQBEzVp6xMbQWg671BzhxHKVihCK0qVzrk8H6Zb94kitBpSOVrN+CsFf10McA==
-X-Received: by 2002:a92:58cb:: with SMTP id z72mr7331084ilf.104.1607100181830;
-        Fri, 04 Dec 2020 08:43:01 -0800 (PST)
-Received: from [192.168.1.30] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id h1sm1874781ilj.8.2020.12.04.08.43.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Dec 2020 08:43:01 -0800 (PST)
-Subject: Re: store a pointer to the block_device in struct bio (again)
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Tejun Heo <tj@kernel.org>, Coly Li <colyli@suse.de>,
-        Song Liu <song@kernel.org>, dm-devel@redhat.com,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-block@vger.kernel.org
-References: <20201201165424.2030647-1-hch@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <285e5e82-2e9c-a1db-b9b6-b82ec95aea6d@kernel.dk>
-Date:   Fri, 4 Dec 2020 09:43:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1730112AbgLDSXo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 4 Dec 2020 13:23:44 -0500
+Received: from mail.oakviewlaw.com ([184.105.149.4]:36436 "EHLO
+        mail.oakviewlaw.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbgLDSXn (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 4 Dec 2020 13:23:43 -0500
+X-Greylist: delayed 560 seconds by postgrey-1.27 at vger.kernel.org; Fri, 04 Dec 2020 13:23:43 EST
+Received: from localhost (localhost [127.0.0.1])
+        by mail.oakviewlaw.com (Postfix) with ESMTP id 22B1B4FB77A;
+        Fri,  4 Dec 2020 18:13:23 +0000 (UTC)
+Received: from mail.oakviewlaw.com ([127.0.0.1])
+        by localhost (mail.oakviewlaw.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id QThKpeWE_2As; Fri,  4 Dec 2020 18:13:22 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.oakviewlaw.com (Postfix) with ESMTP id AEF0E4FB6DC;
+        Fri,  4 Dec 2020 18:13:22 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.oakviewlaw.com AEF0E4FB6DC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oakviewlaw.com;
+        s=selector; t=1607105602;
+        bh=O4faEs1u5TKKd2DgIzfqFIrp/N/6fhS+j4xcsYavjXw=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=fl5pvVBOGiOTXsRtBDjf9EbaLoiqA+o07pK6FWJrrdq6a07Ude4kbyj/xK3qLgnxM
+         BKlYLQ+DD8PQnEJAzruhA/EXFNWgQUrFIf+9UibZ7fFdVywBT1q8eLCY8ohCwKsNWC
+         ChRfpRWbZmc0hW2l1zR3TH0+H3wfCIaAo4F2mKDnX5WPrTJ447zi1aYwZvVNwcPFeJ
+         B3uw9BtQwFgT/OBs3zFb1AOt/0mbSQjTxW73QJywE6UG1/laR/INUatKeqbvDlfSNm
+         IE15N2z0zPkDEEnAZO/WuJumYA+j+aUK7RajUgUFLOTtk7Na545vxYECNdroJbx18l
+         Jklr+oFmHuBTg==
+X-Virus-Scanned: amavisd-new at oakviewlaw.com
+Received: from mail.oakviewlaw.com ([127.0.0.1])
+        by localhost (mail.oakviewlaw.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id DkJWENCuXQT4; Fri,  4 Dec 2020 18:13:22 +0000 (UTC)
+Received: from [192.168.1.195] (unknown [91.187.51.3])
+        by mail.oakviewlaw.com (Postfix) with ESMTPSA id E6E4D4FB8AE;
+        Fri,  4 Dec 2020 18:13:11 +0000 (UTC)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-In-Reply-To: <20201201165424.2030647-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: NEDBANK
+To:     Recipients <zimbra@oakviewlaw.com>
+From:   "Mr. Casmir Nkulu" <zimbra@oakviewlaw.com>
+Date:   Fri, 04 Dec 2020 10:13:03 -0800
+Reply-To: serty@webmail.co.za
+Message-Id: <20201204181311.E6E4D4FB8AE@mail.oakviewlaw.com>
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 12/1/20 9:54 AM, Christoph Hellwig wrote:
-> Hi Jens,
-> 
-> this series switches back from storing the gendisk + partno to storing
-> a block_device pointer in struct bio.  The reason is two fold:  for one
-> the new struct block_device actually is always available, removing the
-> need to avoid originally.  Second the merge struct block_device is much
-> more useful than the old one, as storing it avoids the need for looking
-> up what used to be hd_struct during partition remapping and I/O
-> accounting.
-> 
-> Note that this series depends on the posted but not merged
-> "block tracepoint cleanups" series.
+Attention: Esteemed Customer
 
-Applied, thanks.
+Note that the NED-BANK of RSA  have received the authority by United State =
+of  America Federal Reserve  Bank  in conjunction with the International Mo=
+netary Fund (IMF) and the  World Bank to finally release all pending Lotter=
+y winning payments, Contracts payments, Inheritance/ATM funds and Loan paym=
+ents.
 
--- 
-Jens Axboe
+Most importantly, we have received banking antennary as stated below for th=
+e transfer of your funds, as such we urgently request that you reconfirm wi=
+th us if you have given such mandate or not, failure to receive immediate r=
+esponse from you within the next seven workings days we shall believe that =
+such mandate was issued by you, to that effect we shall then commence with =
+the transfer of the fund into the bank details below.
 
+
+Bank Name: HSBC SINGAPORE
+Bank
+Address: Blk 131 Jurong East Street 13,
+
+Account N=B0: 486 4761 10
+
+Account name: Mr. Jurong Koui
+
+Swift Code: HSBCSGS2XXX
+
+Beneficiary: Mr. Jurong Koui
+
+Address: 131 Jurong Gateway Road
+
+Singapore 600131
+
+
+
+Regards,
+
+Mr Casmir Nkulu
+
+Head Foreign payment Department
+
+NED- Bank RSA
+
+#135 Rivonia roads, Sandown, Johannesburg South Africa
