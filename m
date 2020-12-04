@@ -2,97 +2,54 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 60EDA2CF3F7
-	for <lists+linux-raid@lfdr.de>; Fri,  4 Dec 2020 19:23:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 65EC02CF849
+	for <lists+linux-raid@lfdr.de>; Sat,  5 Dec 2020 01:48:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730112AbgLDSXo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 4 Dec 2020 13:23:44 -0500
-Received: from mail.oakviewlaw.com ([184.105.149.4]:36436 "EHLO
-        mail.oakviewlaw.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbgLDSXn (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 4 Dec 2020 13:23:43 -0500
-X-Greylist: delayed 560 seconds by postgrey-1.27 at vger.kernel.org; Fri, 04 Dec 2020 13:23:43 EST
-Received: from localhost (localhost [127.0.0.1])
-        by mail.oakviewlaw.com (Postfix) with ESMTP id 22B1B4FB77A;
-        Fri,  4 Dec 2020 18:13:23 +0000 (UTC)
-Received: from mail.oakviewlaw.com ([127.0.0.1])
-        by localhost (mail.oakviewlaw.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id QThKpeWE_2As; Fri,  4 Dec 2020 18:13:22 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.oakviewlaw.com (Postfix) with ESMTP id AEF0E4FB6DC;
-        Fri,  4 Dec 2020 18:13:22 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.oakviewlaw.com AEF0E4FB6DC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oakviewlaw.com;
-        s=selector; t=1607105602;
-        bh=O4faEs1u5TKKd2DgIzfqFIrp/N/6fhS+j4xcsYavjXw=;
-        h=MIME-Version:To:From:Date:Message-Id;
-        b=fl5pvVBOGiOTXsRtBDjf9EbaLoiqA+o07pK6FWJrrdq6a07Ude4kbyj/xK3qLgnxM
-         BKlYLQ+DD8PQnEJAzruhA/EXFNWgQUrFIf+9UibZ7fFdVywBT1q8eLCY8ohCwKsNWC
-         ChRfpRWbZmc0hW2l1zR3TH0+H3wfCIaAo4F2mKDnX5WPrTJ447zi1aYwZvVNwcPFeJ
-         B3uw9BtQwFgT/OBs3zFb1AOt/0mbSQjTxW73QJywE6UG1/laR/INUatKeqbvDlfSNm
-         IE15N2z0zPkDEEnAZO/WuJumYA+j+aUK7RajUgUFLOTtk7Na545vxYECNdroJbx18l
-         Jklr+oFmHuBTg==
-X-Virus-Scanned: amavisd-new at oakviewlaw.com
-Received: from mail.oakviewlaw.com ([127.0.0.1])
-        by localhost (mail.oakviewlaw.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id DkJWENCuXQT4; Fri,  4 Dec 2020 18:13:22 +0000 (UTC)
-Received: from [192.168.1.195] (unknown [91.187.51.3])
-        by mail.oakviewlaw.com (Postfix) with ESMTPSA id E6E4D4FB8AE;
-        Fri,  4 Dec 2020 18:13:11 +0000 (UTC)
-Content-Type: text/plain; charset="iso-8859-1"
+        id S1731102AbgLEArE (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 4 Dec 2020 19:47:04 -0500
+Received: from vsm-gw.hyogo-dai.ac.jp ([202.244.76.12]:49526 "EHLO
+        vsm-gw.hyogo-dai.ac.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726485AbgLEAq5 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 4 Dec 2020 19:46:57 -0500
+X-Greylist: delayed 14573 seconds by postgrey-1.27 at vger.kernel.org; Fri, 04 Dec 2020 19:46:41 EST
+Received: from humans-kc.hyogo-dai.ac.jp (humans-kc.hyogo-dai.ac.jp [202.244.77.11])
+        by vsm-gw.hyogo-dai.ac.jp (Postfix) with ESMTP id 274A31A5589;
+        Sat,  5 Dec 2020 04:44:55 +0900 (JST)
+Received: from humans-kc.hyogo-dai.ac.jp (humans-kc.hyogo-dai.ac.jp [127.0.0.1])
+        by postfix.imss71 (Postfix) with ESMTP id E5C39838858;
+        Sat,  5 Dec 2020 04:44:54 +0900 (JST)
+Received: from hyogo-dai.ac.jp (unknown [202.244.77.11])
+        by humans-kc.hyogo-dai.ac.jp (Postfix) with SMTP id B84F6838260;
+        Sat,  5 Dec 2020 04:44:54 +0900 (JST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: NEDBANK
-To:     Recipients <zimbra@oakviewlaw.com>
-From:   "Mr. Casmir Nkulu" <zimbra@oakviewlaw.com>
-Date:   Fri, 04 Dec 2020 10:13:03 -0800
-Reply-To: serty@webmail.co.za
-Message-Id: <20201204181311.E6E4D4FB8AE@mail.oakviewlaw.com>
+Message-ID: <20201204194454.00002B21.0147@hyogo-dai.ac.jp>
+Date:   Sat, 05 Dec 2020 04:44:54 +0900
+From:   "Dr.Raymond" <tabata@hyogo-dai.ac.jp>
+To:     <infocarferr1@aim.com>
+Reply-To: <infocarfer@aim.com>
+Subject: I am Vice Chairman of Hang Seng Bank, Dr. Raymond Chien
+         Kuo Fung I have Important Matter to Discuss with you concerning
+         my late client. Died without a NEXT OF KIN. Send me your private
+         email for full details information. 
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MAILER: Active! mail
+X-TM-AS-MML: disable
+X-TM-AS-Product-Ver: IMSS-7.1.0.1808-8.2.0.1013-25446.007
+X-TM-AS-Result: No--4.326-5.0-31-10
+X-imss-scan-details: No--4.326-5.0-31-10
+X-TM-AS-User-Approved-Sender: No
+X-TMASE-MatchedRID: +T4Z3mpR0x5ITndh1lLRASsOycAMAhSTkCM77ifYafsBLhz6t76Ce/bj
+        Enpjm61/Gf23dqZJjE4Erxo5p8V1/E1+zyfzlN7y/sToY2qzpx7w5nZ/qYg41XEWw1TkKAjcYff
+        qdBtG2ocgOkCKsW/kbuunGEBqPil++coAzulIP8gMTyJMXCOBhj9BWL7GG0LsKrauXd3MZDUZaR
+        NzIP3XI5u3uLPgwbAMH5RdHnhWfwyq9gpuf+A6coDeeVSgzszVDx5n520Z3eZyT7DDRtYlKaWBy
+        ZE9nSaC/rhfyjvqkZu/pNa4BidtZEMMprcbiest
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Attention: Esteemed Customer
-
-Note that the NED-BANK of RSA  have received the authority by United State =
-of  America Federal Reserve  Bank  in conjunction with the International Mo=
-netary Fund (IMF) and the  World Bank to finally release all pending Lotter=
-y winning payments, Contracts payments, Inheritance/ATM funds and Loan paym=
-ents.
-
-Most importantly, we have received banking antennary as stated below for th=
-e transfer of your funds, as such we urgently request that you reconfirm wi=
-th us if you have given such mandate or not, failure to receive immediate r=
-esponse from you within the next seven workings days we shall believe that =
-such mandate was issued by you, to that effect we shall then commence with =
-the transfer of the fund into the bank details below.
-
-
-Bank Name: HSBC SINGAPORE
-Bank
-Address: Blk 131 Jurong East Street 13,
-
-Account N=B0: 486 4761 10
-
-Account name: Mr. Jurong Koui
-
-Swift Code: HSBCSGS2XXX
-
-Beneficiary: Mr. Jurong Koui
-
-Address: 131 Jurong Gateway Road
-
-Singapore 600131
+infocarfer@aim.com
 
 
 
-Regards,
-
-Mr Casmir Nkulu
-
-Head Foreign payment Department
-
-NED- Bank RSA
-
-#135 Rivonia roads, Sandown, Johannesburg South Africa
