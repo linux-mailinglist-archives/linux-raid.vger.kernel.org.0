@@ -2,100 +2,141 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 087E62CE1CB
-	for <lists+linux-raid@lfdr.de>; Thu,  3 Dec 2020 23:35:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 64BAE2CE678
+	for <lists+linux-raid@lfdr.de>; Fri,  4 Dec 2020 04:26:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731888AbgLCWeJ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 3 Dec 2020 17:34:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58916 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729869AbgLCWeJ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 3 Dec 2020 17:34:09 -0500
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FA20C09424E
-        for <linux-raid@vger.kernel.org>; Thu,  3 Dec 2020 14:32:33 -0800 (PST)
-Received: by mail-pl1-x644.google.com with SMTP id y10so518215plr.10
-        for <linux-raid@vger.kernel.org>; Thu, 03 Dec 2020 14:32:33 -0800 (PST)
+        id S1727557AbgLDD0W (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 3 Dec 2020 22:26:22 -0500
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:5679 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbgLDD0W (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 3 Dec 2020 22:26:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1607052381; x=1638588381;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=rQsvjltla/RzjugCImDnv2IKAWbQBv/Y1blShSNFhz8=;
+  b=Ue66IsITa7rADjxiXAqAb6LpdDR62B37fVuYHM2UcaZStgjf23gGhVKn
+   E0hhXatnE4J1kiFXxrHO9bYQO63lc5wFYiXMdW/p2VT3PRfqf2UEG+CE8
+   cgfRRblJlD+stXRpNAkpK0xhyAuD/x/R9y2JRSXLlcC9Z3LJl0aq8VBGK
+   yCXzev7QioBO/4nr0U8ZZ3/1+wKTBpC98Dnzg4jdRm0BK94AXVvHrRIJo
+   QJhUjjVD6T5pJ7PiXFPVWBAwughlSZ1fFNPS06A+8L323TVlvsYJbUkpA
+   KFRi8ynL4qVoRbyXc8IC/mKHDime0SypzSN4xzxpzgVZFEkn02MaZv50e
+   Q==;
+IronPort-SDR: 6TGqd9cAtoI0X0rqu4rpcy2W49ELch59T+vmvjtopV+C/V0Slpm+T3P4KQrfcqaDoPWnVBV1UX
+ 8+9xOmuAevHhXQBtAMs19alemOboOvwW/4MVfYNZgNRSL/dc+7avcOOUc3/GAdwkQWg1a4kQBW
+ ulcz9ZIB1YEPtudBaSNWWP0510bnfS2DnbmAm7AfiLwlFtJNEJ+yIJ+Iht7g6790BgagE2KOdo
+ dEMbPI7UbxdiguL8+OB+zCcl93s/DrqRLSGJWTW/eYuj3MxxuM5LmGmSMtB/Otxf/cSMNr4wYQ
+ DV0=
+X-IronPort-AV: E=Sophos;i="5.78,391,1599494400"; 
+   d="scan'208";a="158871639"
+Received: from mail-cys01nam02lp2052.outbound.protection.outlook.com (HELO NAM02-CY1-obe.outbound.protection.outlook.com) ([104.47.37.52])
+  by ob1.hgst.iphmx.com with ESMTP; 04 Dec 2020 11:25:16 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PKYeCt+/jZ1OVT2+7acLVdR+8nDprdwL19dnmSm1/JtQIuHH87hqS+LCigSqntOik1vscNOYgo8c2kclkTOkJxW2jGyWyyNdv4YAiEkRgwhC2BMkHS4iSwXGfCnUejgKA0gLPva3qA7LorSjlwQXCNwJpE2O074o3R+8+2PO9iMkN7NmmKa27ao68ByYoQ6zLvmAwtvVBTB6Dbx1v1EIr+4ymlTA919Tv4IVlDajiS3QDQVi5z66wycs6rUJuxArNXgydis1UrgcRLg+5G7RY7GCXT9N4hwPbtV/Mi3OCn2pQLU9sDlKBcGts+o/2qwL6LM5eG7x38qD2g/2ZJ3hgg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rQsvjltla/RzjugCImDnv2IKAWbQBv/Y1blShSNFhz8=;
+ b=KSxwY0plDrofAcFAidCkjbaioxIPHHlyXEpRfEldzr4XdutchwZdhinDy7173D2Umz9FOiJ7HiSCSAieO9n7zX8GfgQ7GlK2Jv41bDdcjBT8hX+mCPFD734ItyqoXROJ7frmzHSzO0jg7fLUUkn8D3NlblDJDKRoMUPWEDjzigx+9xJGlKtD43B9b2K91AbH+5lloPg4HH/3yu9fXJtQBgbClS3YXmi7psH6ZfNeLZBJ7OqFgVSpZRO9jWU7pZ3iv7gO3zthsPPFbZ+zOoY+JlRVpHOs+C2bCFx+c634ml9Vijfi9oURFLpU/Iyg6R9bD+8n7RtoYI12gdybRykSTw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding:cc:from:to;
-        bh=kWu6dOTpWM5OEhpvvxAmGbYOm4nAgVI2rftl3/PRnJw=;
-        b=bb3TCC2gTuwqOzen2Ppu96SWrslPoHVYn9ghrkgyDWdZa8ILSfqc1wrojX1K3U73Vm
-         /r50dYf+je7pw5TDPJsRRIofKlxMtnczpH8DEEMxc6f6su/Fyvrp7310ABwpwthtbxgE
-         dh4dAzwHX13qe8zGtbSnnHi6cpCoUgASyqy3geEYFliW8AwCp60EvA42stwrZe0OTchB
-         rezZqwJ7yndm/Mp1sQBTLVS9ar/3tS182u7HiIA9p8vP+QbSBWyQU6kQHLD0gAFo6uvX
-         9eeQitIK+S2t+aMW9Zj+hkdgmLuAEnshhl1Xud18G3YOS6yU07NUYpNnGGRtmo3zQ5cZ
-         GsGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding:cc:from:to;
-        bh=kWu6dOTpWM5OEhpvvxAmGbYOm4nAgVI2rftl3/PRnJw=;
-        b=HTk1x5EbPRCHz1lTcQiCYC6jeCme+6fqjCUt5mO+5aLEV9Cgn2cfvEjQYAwA1o4B2n
-         phxhq6oXNo53pgWsTaJBkeO8B1d/yQ/BYnVhA8fQqT1IH4c1YKbed1wckDcB8UfsDLEd
-         J4Ip0KQ1zDvnP8FkepV57oDk6LPhPKdMvUU+zOHDTOUllL+DDvoDo02v3uU+LOhb5Cna
-         t02iL4lCy8U6IDq6R8A4ne4oH6OREPoWkbIvVyTrdRnWrDcGsqUduSt+evqcw4Cl8Cgb
-         VbItd7FwAAQakf4YHobF7wrH6+wXnYaRz7Sf4ewLNDmqktgEtialiAVdQScWNPxaNNpc
-         L6hA==
-X-Gm-Message-State: AOAM530hnmh9LTfU1hnR3JAtPFKtnKo6R7nQOx7oeehKNw5ivCy4aV1R
-        DLuwnltvafrB21HMnANm6xF3CA==
-X-Google-Smtp-Source: ABdhPJyss4HB0tRKuTdlmynwH8EalWY5UH5526iClcnKVeSXxYoDVLrUWDJ1cBtKdu4wdMbvN0OThQ==
-X-Received: by 2002:a17:902:758c:b029:da:a6e1:e06 with SMTP id j12-20020a170902758cb02900daa6e10e06mr1222353pll.67.1607034752937;
-        Thu, 03 Dec 2020 14:32:32 -0800 (PST)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id g6sm305006pjd.3.2020.12.03.14.32.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Dec 2020 14:32:32 -0800 (PST)
-Subject: [PATCH v1 5/5] MAINTAINERS: Add myself as a dm-user maintainer
-Date:   Thu,  3 Dec 2020 13:58:59 -0800
-Message-Id: <20201203215859.2719888-6-palmer@dabbelt.com>
-X-Mailer: git-send-email 2.29.2.454.gaff20da3a2-goog
-In-Reply-To: <20201203215859.2719888-1-palmer@dabbelt.com>
-References: <20201203215859.2719888-1-palmer@dabbelt.com>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rQsvjltla/RzjugCImDnv2IKAWbQBv/Y1blShSNFhz8=;
+ b=UZ5T5Ddlx5GKlRzvZiEoXl7JDZf/eNijUwpZeN7Ww7x0SEDQAlKJn7X52ku1ekxxvxKw+v+GNYVyZ0cJgLveN4vyJXSSlC8D8MxQQzIHPfL+0G78P5zooDE/V086SeOp4GplL5ZL9Y0f+uzy2EEelK6lXkZUcMeCNA7CUh1MFyg=
+Received: from BYAPR04MB4965.namprd04.prod.outlook.com (2603:10b6:a03:4d::25)
+ by BY5PR04MB7123.namprd04.prod.outlook.com (2603:10b6:a03:227::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3632.17; Fri, 4 Dec
+ 2020 03:25:15 +0000
+Received: from BYAPR04MB4965.namprd04.prod.outlook.com
+ ([fe80::99ae:ab95:7c27:99e4]) by BYAPR04MB4965.namprd04.prod.outlook.com
+ ([fe80::99ae:ab95:7c27:99e4%7]) with mapi id 15.20.3611.031; Fri, 4 Dec 2020
+ 03:25:15 +0000
+From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+CC:     Tejun Heo <tj@kernel.org>,
+        "dm-devel@redhat.com" <dm-devel@redhat.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Hannes Reinecke <hare@suse.de>
+Subject: Re: [PATCH 1/5] block: remove the unused block_sleeprq tracepoint
+Thread-Topic: [PATCH 1/5] block: remove the unused block_sleeprq tracepoint
+Thread-Index: AQHWyZDC35x3z2bn6UGINOM1pHH38A==
+Date:   Fri, 4 Dec 2020 03:25:15 +0000
+Message-ID: <BYAPR04MB4965C0AF4B7461309062FD6186F10@BYAPR04MB4965.namprd04.prod.outlook.com>
+References: <20201203162139.2110977-1-hch@lst.de>
+ <20201203162139.2110977-2-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: lst.de; dkim=none (message not signed)
+ header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [199.255.45.62]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: cb39fcb0-b1eb-492b-9beb-08d8980437a4
+x-ms-traffictypediagnostic: BY5PR04MB7123:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR04MB7123671F1214CC854F1B554586F10@BY5PR04MB7123.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:901;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Yb4iqdoIqWnojrHlcMuIADml8F6IiLKFSLGoIihyLkEFFg08Jpo5JzUgqgukjXh7HNuMmyNaxYCJZF/agR424dUdG9FSQdh8KiLak0gwhPoG3Qh/pABLsCoZjp1Fi/+9ZHTYjLN/TnY/Lvp78+rxZnVXBMb/F3d21/wbbDyhaexHWuyTSnuLVdZvPJSvJKhGyDqTy9T5KxRRyPasx+VoFXSr5RXhDqdrOcGrC+4k2RU8X9F16cGnM0qBF1HJ7t0BVVRgBsS9H/Mq4Upi/kc/3C1PEFhwQdOicaTnQ4mAUJ0Nq8+tBAyeWihV7OfDK/d9hFWYCcaHoFZ+JOnnt0+2MA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB4965.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(396003)(136003)(366004)(39860400002)(346002)(478600001)(66476007)(66446008)(66946007)(64756008)(186003)(66556008)(4744005)(4326008)(54906003)(316002)(110136005)(26005)(2906002)(7696005)(33656002)(6506007)(86362001)(71200400001)(53546011)(5660300002)(76116006)(52536014)(8676002)(8936002)(55016002)(9686003)(83380400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?PG+wyrnBE/vHz/CUfpCUYs+lj1LPsqrBMOMkT2EK7wkl5UwykT7+aiG/Addm?=
+ =?us-ascii?Q?U5bVBanNe5hK65DCWrVVCDfEYlwbHwrmCTsyD5d00TZGmy305kZhEJLnuiwa?=
+ =?us-ascii?Q?DnaTuq3PhGRY27wGgPt55POvu0PUa2kc+rxTFa/FMqI/7Ty5lt416ZP3x51i?=
+ =?us-ascii?Q?EbQIshE6HnKhnAbYeJwucAav7nnJLwA2cwovgLDuGMXMGUq1T4AdgsO6s2MM?=
+ =?us-ascii?Q?E6ejjosqMb4V0rdKRjeu7ffoeyKE00m84rJ7xKkD0qgwVL0gnFezSgmJIafJ?=
+ =?us-ascii?Q?a3g0mxj/KcDGvLjOEOvzkviiAHBiun5msx7HvxiPKqrv3E/q8GhS/5CtmcwI?=
+ =?us-ascii?Q?RRI7E4nTlUw4qPnrBju/YdNv/L2+devfBWV3mCi8l0DuWW0V/eZWbH2vt3Zy?=
+ =?us-ascii?Q?z5WeLAHxU4daSkEloI81eVn/zHDONrkZA44PQCWJ/BB7A/+Y0oo6HKEBawG+?=
+ =?us-ascii?Q?Vyomulbbo4FzQl64UmS0+JWoBlfILF87GrEqOUH5uy+2aFKYMN1zRtsxQNZp?=
+ =?us-ascii?Q?2FlSuUeiM8KN3cVXDj3/ff58HrW1x2GkI/zre4YhBwuuc0yaNYnxlEn+3q3E?=
+ =?us-ascii?Q?W0joT88bzAmBkp6LpO3XDUPCmRnCB7f9ySzYEI9/yJI+DZ5xh6wsLhNnIFZ5?=
+ =?us-ascii?Q?CkppSSSQTVL/Oi1lB/wBOgvUeUytaVDKREZnJQgWeaziHQx23k71Gsf76uH7?=
+ =?us-ascii?Q?VkzsBmtwVxb9G4abaiS8IXtxxsWJy/+ieCcHrQiszz5gXOoRriVx3GHystXU?=
+ =?us-ascii?Q?arKkRDexY5eNnCdIAKoiwjA6GSjKZMle7BER0uwUMO+OZeeGMbcYxEBaxqCa?=
+ =?us-ascii?Q?jHNhH4SITe8pFLTi5kWNbfMQ/3WvoGc/kq9KxnyhCqvPh6ceyRxOrdXCVtIx?=
+ =?us-ascii?Q?OxwVGonbEKPhJKXdI5bGU2tRMEbB2vwcvqiNSCwKFuemM/mdneHb1262Nqrc?=
+ =?us-ascii?Q?TLh1q0ypEEMuM/1I+SN+2Z2aj0tCA9FEMeVlHv9y9ANxxWTK0nrCfYGmJptl?=
+ =?us-ascii?Q?sIwn?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Cc:     corbet@lwn.net, song@kernel.org,
-        Palmer Dabbelt <palmerdabbelt@google.com>, shuah@kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        kernel-team@android.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     dm-devel@redhat.com, agk@redhat.com, snitzer@redhat.com
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR04MB4965.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cb39fcb0-b1eb-492b-9beb-08d8980437a4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2020 03:25:15.3031
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fjwqt6qsefY0V+LSrT+gbch7JJEWoXDsqdVq041pnYaj2vsWGuGRR3cbJ7/HrbCGyl+cmedvCIkg4P7NDLT0Q40VhFUfnofxNBrEAY05pvY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB7123
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Palmer Dabbelt <palmerdabbelt@google.com>
-
-I'm not sure this is big enough to warrant an entry in the MAINTAINERS file,
-but I know it can be quite a bit of work to maintain something like this so I'm
-happy to sign up if that helps.
-
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2daa6ee673f7..ab9d7746cfb4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5198,6 +5198,13 @@ W:	http://sources.redhat.com/cluster/
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/teigland/linux-dlm.git
- F:	fs/dlm/
- 
-+DM USER (Block Device in Userspace)
-+M:	Palmer Dabbelt <palmerdabbelt@google.com>
-+S:	Maintained
-+F:	include/linux/dm-user.h
-+F:	drivers/md/dm-user.c
-+F:	tools/testing/selftests/dm-user/
-+
- DMA BUFFER SHARING FRAMEWORK
- M:	Sumit Semwal <sumit.semwal@linaro.org>
- M:	Christian König <christian.koenig@amd.com>
--- 
-2.29.2.454.gaff20da3a2-goog
-
+On 12/3/20 08:24, Christoph Hellwig wrote:=0A=
+> The block_sleeprq tracepoint was only used by the legacy request code.=0A=
+> Remove it now that the legacy request code is gone.=0A=
+>=0A=
+> Signed-off-by: Christoph Hellwig <hch@lst.de>=0A=
+> Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>=0A=
+> Reviewed-by: Hannes Reinecke <hare@suse.de>=0A=
+=0A=
+Looks good.=0A=
+=0A=
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
+=0A=
