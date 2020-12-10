@@ -2,143 +2,51 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C8D4E2D74B5
-	for <lists+linux-raid@lfdr.de>; Fri, 11 Dec 2020 12:31:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7CDB2D80CF
+	for <lists+linux-raid@lfdr.de>; Fri, 11 Dec 2020 22:17:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394431AbgLKLam (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 11 Dec 2020 06:30:42 -0500
-Received: from mga07.intel.com ([134.134.136.100]:45302 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391610AbgLKLag (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 11 Dec 2020 06:30:36 -0500
-IronPort-SDR: PW+bPJ9dMRdEJvRfl4fLiPv0PeskEaxgcNxL+ZFQGX7ISBaGMG8GvwvkqY3wBbC32ORFfQfJAV
- 92w3Q3n6Zztw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9831"; a="238521794"
-X-IronPort-AV: E=Sophos;i="5.78,411,1599548400"; 
-   d="scan'208";a="238521794"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2020 03:28:49 -0800
-IronPort-SDR: vtRckCet6sYnIWuu/UzKUogB82qnB44fXu+lTJG8ToFM8WiBG2yDiPqhhQT1OlWWLXaLkSfhPK
- PIyhFBR6a3Og==
-X-IronPort-AV: E=Sophos;i="5.78,411,1599548400"; 
-   d="scan'208";a="321877382"
-Received: from mtkaczyk-devel.igk.intel.com ([10.102.102.23])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2020 03:28:48 -0800
-From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-To:     jes@trained-monkey.org
-Cc:     linux-raid@vger.kernel.org
-Subject: [PATCH] Incremental: Remove redundant spare movement logic
-Date:   Fri, 11 Dec 2020 12:28:38 +0100
-Message-Id: <20201211112838.10900-1-mariusz.tkaczyk@linux.intel.com>
-X-Mailer: git-send-email 2.25.0
+        id S2404193AbgLKVNP (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 11 Dec 2020 16:13:15 -0500
+Received: from server.kenspensetc.com ([185.148.128.76]:60744 "EHLO
+        server.kenspensetc.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2395162AbgLKVMY (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 11 Dec 2020 16:12:24 -0500
+Received: from localhost ([127.0.0.1]:48514 helo=server.kenspensetc.com)
+        by server.kenspensetc.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <sender@ridecals.com>)
+        id 1knLnA-0002CX-4B; Thu, 10 Dec 2020 08:15:32 -0500
+Received: from [70.32.0.46] ([70.32.0.46]) by ridecals.com (Horde Framework)
+ with HTTPS; Thu, 10 Dec 2020 08:15:32 -0500
+Date:   Thu, 10 Dec 2020 08:15:32 -0500
+Message-ID: <20201210081532.Horde.8qYOU3VVNsL5wjy1lylWpdy@ridecals.com>
+From:   Russell Branting <sender@ridecals.com>
+Subject: Vital
+Reply-to: Goodagent01@gmail.com
+User-Agent: Horde Application Framework 5
+Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server.kenspensetc.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - ridecals.com
+X-Get-Message-Sender-Via: server.kenspensetc.com: authenticated_id: sender9@ridecals.com
+X-Authenticated-Sender: server.kenspensetc.com: sender9@ridecals.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-If policy is set then mdmonitor is responsible for moving spares.
-This logic is reduntant and potentialy dangerus, spare could be moved at
-initrd stage depending on drives appearance order.
 
-Remove it.
+I am instructed to inform you of your appointment as the next of kin  
+to your deceased relative estate. Kindly indicate your acceptance by  
+reconfirming your Full Name, Address & Phone Number for immediate  
+processing of the funds release to your control OR the deceased  
+deposited funds will be declared unclaimed.
 
-Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
----
- Incremental.c | 62 ---------------------------------------------------
- 1 file changed, 62 deletions(-)
-
-diff --git a/Incremental.c b/Incremental.c
-index ad9ec1c..e849bdd 100644
---- a/Incremental.c
-+++ b/Incremental.c
-@@ -1460,12 +1460,6 @@ static int Incremental_container(struct supertype *st, char *devname,
- 	int trustworthy;
- 	struct mddev_ident *match;
- 	int rv = 0;
--	struct domainlist *domains;
--	struct map_ent *smp;
--	int suuid[4];
--	int sfd;
--	int ra_blocked = 0;
--	int ra_all = 0;
- 	int result = 0;
- 
- 	st->ss->getinfo_super(st, &info, NULL);
-@@ -1509,12 +1503,10 @@ static int Incremental_container(struct supertype *st, char *devname,
- 		struct map_ent *mp;
- 		struct mddev_ident *match = NULL;
- 
--		ra_all++;
- 		/* do not activate arrays blocked by metadata handler */
- 		if (ra->array.state & (1 << MD_SB_BLOCK_VOLUME)) {
- 			pr_err("Cannot activate array %s in %s.\n",
- 				ra->text_version, devname);
--			ra_blocked++;
- 			continue;
- 		}
- 		mp = map_by_uuid(&map, ra->uuid);
-@@ -1617,60 +1609,6 @@ static int Incremental_container(struct supertype *st, char *devname,
- 		}
- 		printf("\n");
- 	}
--
--	/* don't move spares to container with volume being activated
--	   when all volumes are blocked */
--	if (ra_all == ra_blocked)
--		return 0;
--
--	/* Now move all suitable spares from spare container */
--	domains = domain_from_array(list, st->ss->name);
--	memcpy(suuid, uuid_zero, sizeof(int[4]));
--	if (domains &&
--	    (smp = map_by_uuid(&map, suuid)) != NULL &&
--	    (sfd = open(smp->path, O_RDONLY)) >= 0) {
--		/* spare container found */
--		struct supertype *sst =
--			super_imsm.match_metadata_desc("imsm");
--		struct mdinfo *sinfo;
--
--		if (!sst->ss->load_container(sst, sfd, NULL)) {
--			struct spare_criteria sc = {0, 0};
--
--			if (st->ss->get_spare_criteria)
--				st->ss->get_spare_criteria(st, &sc);
--
--			close(sfd);
--			sinfo = container_choose_spares(sst, &sc,
--							domains, NULL,
--							st->ss->name, 0);
--			sst->ss->free_super(sst);
--			if (sinfo){
--				int count = 0;
--				struct mdinfo *disks = sinfo->devs;
--				while (disks) {
--					/* move spare from spare
--					 * container to currently
--					 * assembled one
--					 */
--					if (move_spare(
--						    smp->path,
--						    devname,
--						    makedev(disks->disk.major,
--							    disks->disk.minor)))
--						count++;
--					disks = disks->next;
--				}
--				if (count)
--					pr_err("Added %d spare%s to %s\n",
--					       count, count>1?"s":"", devname);
--			}
--			sysfs_free(sinfo);
--		} else
--			close(sfd);
--	}
--	domain_free(domains);
--	map_free(map);
- 	return 0;
- }
- 
--- 
-2.25.0
 
