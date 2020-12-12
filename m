@@ -2,15 +2,15 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 73E992D8848
-	for <lists+linux-raid@lfdr.de>; Sat, 12 Dec 2020 17:45:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC8B52D8840
+	for <lists+linux-raid@lfdr.de>; Sat, 12 Dec 2020 17:45:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406716AbgLLQd7 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 12 Dec 2020 11:33:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57724 "EHLO mail.kernel.org"
+        id S2390313AbgLLQdE (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 12 Dec 2020 11:33:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439404AbgLLQJ4 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sat, 12 Dec 2020 11:09:56 -0500
+        id S2439426AbgLLQKN (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sat, 12 Dec 2020 11:10:13 -0500
 From:   Sasha Levin <sashal@kernel.org>
 Authentication-Results: mail.kernel.org; dkim=permerror (bad message/signature format)
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
@@ -19,12 +19,12 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Mike Snitzer <snitzer@redhat.com>,
         Sasha Levin <sashal@kernel.org>, dm-devel@redhat.com,
         linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.9 17/23] dm table: Remove BUG_ON(in_interrupt())
-Date:   Sat, 12 Dec 2020 11:07:58 -0500
-Message-Id: <20201212160804.2334982-17-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 10/14] dm table: Remove BUG_ON(in_interrupt())
+Date:   Sat, 12 Dec 2020 11:08:27 -0500
+Message-Id: <20201212160831.2335172-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20201212160804.2334982-1-sashal@kernel.org>
-References: <20201212160804.2334982-1-sashal@kernel.org>
+In-Reply-To: <20201212160831.2335172-1-sashal@kernel.org>
+References: <20201212160831.2335172-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -54,10 +54,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 6 deletions(-)
 
 diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
-index 229f461e7def3..36f2556c1d4f1 100644
+index 13ad791126618..6dd56afa048c2 100644
 --- a/drivers/md/dm-table.c
 +++ b/drivers/md/dm-table.c
-@@ -1298,12 +1298,6 @@ void dm_table_event_callback(struct dm_table *t,
+@@ -1320,12 +1320,6 @@ void dm_table_event_callback(struct dm_table *t,
  
  void dm_table_event(struct dm_table *t)
  {
