@@ -2,182 +2,86 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 73A3D2DB75F
-	for <lists+linux-raid@lfdr.de>; Wed, 16 Dec 2020 01:05:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B20B2DB86C
+	for <lists+linux-raid@lfdr.de>; Wed, 16 Dec 2020 02:28:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbgLPABc (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 15 Dec 2020 19:01:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37566 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725943AbgLOXy2 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 15 Dec 2020 18:54:28 -0500
-X-Gm-Message-State: AOAM530T7b14xnLTAASn4VShEpu4arF9Z2O8N3VJFSXBKXhZuPaSdbyV
-        jEQGRG0xiW3rnsn7dTNscQy3b/YIiLmpIVAxCOE=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1608076427;
-        bh=YoNtWJowPHhZupPuvAQvqlAC1/1S5jRkK9eujKywPjo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Zx0oiLHx7OADcSjJaH+hzPVAhCTJJIlDoHBqnhRJ/u10W4C3cW21Yp54jCB5zctxq
-         7rj7barPfBWu4PjcGzv7AIHnGFuwfJPGvt/WRpkemSXe7L9jiH0o2NUeNdWuMM41ZV
-         QdPPBqqTO6scrwpb6rO5hl5qv0Uy9z3ONamK2d0PmKGlNIFl3jW0kgQpU30vIqauyf
-         E+zelnYmPtpII/aXfGFZquH9DZFdA5CDXBUMiC7SeLdF/RONwvfUpRcQwTJyjcb0FA
-         /UrS2tzusOnfNKhNo9ss0lbjkKeI2ZWtXeUNAd2D/LHSx6IX+prujeRoEBGbWZc5tx
-         VGsX7nrqcPQVQ==
-X-Google-Smtp-Source: ABdhPJzdyKniD9T2gom/0rGW18BenAVBJDOqdZVbkNM34ESCfYtlnEx9BJ6g7CbTVTZRaIFs4eVz6+DVmqvO/j8MGzE=
-X-Received: by 2002:ac2:456e:: with SMTP id k14mr2553088lfm.176.1608076425154;
- Tue, 15 Dec 2020 15:53:45 -0800 (PST)
-MIME-Version: 1.0
-References: <89d2eb88e6a300631862718024e687fc3102a4e1.camel@seblu.net>
-In-Reply-To: <89d2eb88e6a300631862718024e687fc3102a4e1.camel@seblu.net>
-From:   Song Liu <song@kernel.org>
-Date:   Tue, 15 Dec 2020 15:53:34 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW4upOOUq13argQ_0VK0Xwrof7K9vzKO8NjKxL7qPMKtDg@mail.gmail.com>
-Message-ID: <CAPhsuW4upOOUq13argQ_0VK0Xwrof7K9vzKO8NjKxL7qPMKtDg@mail.gmail.com>
-Subject: Re: Array size dropped from 40TB to 7TB when upgrading to 5.10
-To:     =?UTF-8?Q?S=C3=A9bastien_Luttringer?= <seblu@seblu.net>
-Cc:     linux-raid <linux-raid@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        id S1725287AbgLPB1h (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 15 Dec 2020 20:27:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60904 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725320AbgLPB1c (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 15 Dec 2020 20:27:32 -0500
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45FE9C0613D6
+        for <linux-raid@vger.kernel.org>; Tue, 15 Dec 2020 17:26:52 -0800 (PST)
+Received: by mail-ej1-x642.google.com with SMTP id x16so30421982ejj.7
+        for <linux-raid@vger.kernel.org>; Tue, 15 Dec 2020 17:26:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=0YeQol4UUnc2r7M4Orydwby2O2PPAZtNd+0yMn15aPo=;
+        b=fuFyS+HwIc8oAZ4P+X1VH1d/KZ+OzSRgIiRdGi4PpptIRxPQ/yzpP4Av2x8ISh6f/S
+         LiXg7oaYiFXqcGDH+2TYyZ6BNJnqKCLH/jMp/0C32HCgIYETMjg5SQNCsHRA1ouYrCoY
+         jMLxA4+M2A2vQE4NgTnBCjF5ds+F1HXM1pGz+QqCg24Vw8ZotTJSP07+PK2VdVWM7xkq
+         HZNmWlWdNyOkY7utGAjPD06z/Pi5gJB48f/D9PDh6ZESN+H4LL6zv92D4uN90HyhCm/k
+         i+ZNjrwK46xFd9HsgmeZYqedE/MkHmjUgbWKuN4FlFzMAQkCBfpMgZKc6KYBxA4LNw0y
+         H0RQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=0YeQol4UUnc2r7M4Orydwby2O2PPAZtNd+0yMn15aPo=;
+        b=V1ujBkFZYM6AFl8exUpJ9bdj5tn8v4oubr759uvX886quehUTihg20h6zUCr2GwWv3
+         Kx8pxcfjg42dZCvwdhJOZwU1f8QatKbMUq09KJI8DT7dcbWR1MeLNWJ3rb1P2ogkB6RJ
+         03ZlvKVbgnDz98c0w0xIS37lkVHf0OWDGQ1IIZEbJoPv/L9VY7dApMKuvlJCWJvdhiIj
+         1qiJf1GKC3ZRFf/qMrkNSgWYfdq8iNmjnqRFK3coD3EeE0vzrqaUMLbCOEibA+0xT5WN
+         Xcel7FWP7dEvSj7p1l8maN9tsXBU78RMsEb6JsSdK+bS34mEfuIX9EA2eh9VJMgKnBKr
+         3Y7A==
+X-Gm-Message-State: AOAM531IfQrhkxBAKB9Xz4tYSS00+dLfhRmBhA5wom7jOkRbGxxaS8vj
+        avW7xYV9GKxXeB1HMCeYlegCp65sedG94Dfmwdc=
+X-Google-Smtp-Source: ABdhPJzgGDUdWAbxjoRCeYpd/Quvy77q/RJ92BB3ppRb+RnxmOeE6BjgT+RnT+oWDgqVCPCzURwRGA==
+X-Received: by 2002:a17:906:6d0b:: with SMTP id m11mr28364300ejr.230.1608082010790;
+        Tue, 15 Dec 2020 17:26:50 -0800 (PST)
+Received: from gqjiang-home.profitbricks.net ([240e:304:2c80:539:f508:1adf:4d34:f89c])
+        by smtp.gmail.com with ESMTPSA id m24sm195379ejo.52.2020.12.15.17.26.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 15 Dec 2020 17:26:50 -0800 (PST)
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+To:     linux-raid@vger.kernel.org
+Cc:     song@kernel.org, Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Subject: [PATCH] md/raid5: cast chunk_sectors to sector_t value
+Date:   Wed, 16 Dec 2020 02:26:22 +0100
+Message-Id: <1608081982-10839-1-git-send-email-guoqing.jiang@cloud.ionos.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Tue, Dec 15, 2020 at 10:40 AM S=C3=A9bastien Luttringer <seblu@seblu.net=
-> wrote:
->
-> Hello,
->
-> After a clean reboot to the new kernel 5.10.0 my 40TB md raid5 array size
-> droped to 7TB.
-> The previous kernel was 5.9.5. Rebooting back to the 5.9.5 didn't fix the
-> issue.
->
-> # cat /proc/mdstat
-> Personalities : [raid6] [raid5] [raid4]
-> md0 : active raid5 sdf[9] sdd[10] sda[7] sdb[6] sdc[11] sde[8]
->       6857871360 blocks super 1.2 level 5, 512k chunk, algorithm 2 [6/6]
-> [UUUUUU]
->
-> unused devices: <none>
->
->
-> journalctl -oshort-iso --no-hostname -b -6|grep md0
-> 2020-12-04T02:30:47+0100 kernel: md/raid:md0: device sdf operational as r=
-aid
-> disk 0
-> 2020-12-04T02:30:47+0100 kernel: md/raid:md0: device sda operational as r=
-aid
-> disk 5
-> 2020-12-04T02:30:47+0100 kernel: md/raid:md0: device sdd operational as r=
-aid
-> disk 4
-> 2020-12-04T02:30:47+0100 kernel: md/raid:md0: device sde operational as r=
-aid
-> disk 2
-> 2020-12-04T02:30:47+0100 kernel: md/raid:md0: device sdc operational as r=
-aid
-> disk 1
-> 2020-12-04T02:30:47+0100 kernel: md/raid:md0: device sdb operational as r=
-aid
-> disk 3
-> 2020-12-04T02:30:47+0100 kernel: md/raid:md0: raid level 5 active with 6 =
-out of
-> 6 devices, algorithm 2
-> 2020-12-04T02:30:47+0100 kernel: md0: detected capacity change from 0 to
-> 40007809105920
-> 2020-12-04T02:31:47+0100 kernel: EXT4-fs (md0): mounted filesystem with o=
-rdered
-> data mode. Opts: (null)
->
-> # journalctl -oshort-iso --no-hostname -b -5|grep md0
-> 2020-12-15T03:53:00+0100 kernel: md/raid:md0: device sdf operational as r=
-aid
-> disk 0
-> 2020-12-15T03:53:00+0100 kernel: md/raid:md0: device sda operational as r=
-aid
-> disk 5
-> 2020-12-15T03:53:00+0100 kernel: md/raid:md0: device sde operational as r=
-aid
-> disk 2
-> 2020-12-15T03:53:00+0100 kernel: md/raid:md0: device sdd operational as r=
-aid
-> disk 4
-> 2020-12-15T03:53:00+0100 kernel: md/raid:md0: device sdc operational as r=
-aid
-> disk 1
-> 2020-12-15T03:53:00+0100 kernel: md/raid:md0: device sdb operational as r=
-aid
-> disk 3
-> 2020-12-15T03:53:00+0100 kernel: md/raid:md0: raid level 5 active with 6 =
-out of
-> 6 devices, algorithm 2
-> 2020-12-15T03:53:00+0100 kernel: md0: detected capacity change from 0 to
-> 7022460272640
-> 2020-12-15T03:54:20+0100 systemd-fsck[1009]: fsck.ext4: Invalid argument =
-while
-> trying to open /dev/md0
->
-> There is no log of hardware errors or unclean unmounting.
->
-> # mdadm -D /dev/md0
-> /dev/md0:
->            Version : 1.2
->      Creation Time : Mon Jan 24 02:53:21 2011
->         Raid Level : raid5
->         Array Size : 6857871360 (6540.18 GiB 7022.46 GB)
->      Used Dev Size : 1371574272 (1308.04 GiB 1404.49 GB)
->       Raid Devices : 6
->      Total Devices : 6
->        Persistence : Superblock is persistent
->
->        Update Time : Tue Dec 15 17:53:13 2020
->              State : clean
->     Active Devices : 6
->    Working Devices : 6
->     Failed Devices : 0
->      Spare Devices : 0
->
->             Layout : left-symmetric
->         Chunk Size : 512K
->
-> Consistency Policy : resync
->
->               Name : white:0  (local to host white)
->               UUID : affd87df:da503e3b:52a8b97f:77b80c0c
->             Events : 1791763
->
->     Number   Major   Minor   RaidDevice State
->        9       8       80        0      active sync   /dev/sdf
->       11       8       32        1      active sync   /dev/sdc
->        8       8       64        2      active sync   /dev/sde
->        6       8       16        3      active sync   /dev/sdb
->       10       8       48        4      active sync   /dev/sdd
->        7       8        0        5      active sync   /dev/sda
->
-> The mdadm userspace as not been updated.
-> # mdadm -V
-> mdadm - v4.1 - 2018-10-01
->
-> An `mdadm --action check /dev/md0` was run without errors.
->
-> 1) What's the best option to restore the size without loosing the data?
-> 2) Is this issue can be related to the kernel upgrade or it's fortuitous?
+Currently, raid5 calculates dev_sectors from chunk_sectors without
+proper cast, which is problematic.
 
-Hi,
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+---
+I think the recently report about raid5 issue could be related with
+the setting of dev_sectors.
 
-I am very sorry for this problem. This is a bug in 5.10 which is fixed
-in 5.10.1.
-To fix it, please upgrade your kernel to 5.10.1 (or downgrade to previous
-version). In many cases, the array should be back normal. If not, please tr=
-y
+Could someone test it with a large raid5 array? Thanks.
 
-       mdadm --grow --size <size> /dev/mdXXX.
+ drivers/md/raid5.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-If the original array uses the full disk/partition, you can use "max" for <=
-size>
-to safe some calculation.
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index 3934347..ca0b29a 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -7662,7 +7662,7 @@ static int raid5_run(struct mddev *mddev)
+ 	}
+ 
+ 	/* device size must be a multiple of chunk size */
+-	mddev->dev_sectors &= ~(mddev->chunk_sectors - 1);
++	mddev->dev_sectors &= ~((sector_t)mddev->chunk_sectors - 1);
+ 	mddev->resync_max_sectors = mddev->dev_sectors;
+ 
+ 	if (mddev->degraded > dirty_parity_disks &&
+-- 
+2.7.4
 
-Please let me know if you have future problem with it.
-
-Thanks,
-Song
