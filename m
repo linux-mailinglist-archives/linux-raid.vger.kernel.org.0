@@ -2,94 +2,116 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E78102E330A
-	for <lists+linux-raid@lfdr.de>; Sun, 27 Dec 2020 22:59:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AC742E6F5E
+	for <lists+linux-raid@lfdr.de>; Tue, 29 Dec 2020 10:29:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726203AbgL0V6G (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 27 Dec 2020 16:58:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41318 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726172AbgL0V6F (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sun, 27 Dec 2020 16:58:05 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CC7CC22AAB;
-        Sun, 27 Dec 2020 21:57:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1609106245;
-        bh=4MFzvoyxvWRh9e/3p4uTIb7qp4diLUFpLw6324rdMdI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=FrRdiI4VtCP2Jh+pvScqUsl0+NLr/hDFsYNIMcdHqiKmtAKU0ErVUy/KAmaHidnu5
-         dHgdZPyhmGZ/dntmnfYbrSnW4NO77NIV1ZSSdj9PasXEoenFrLfnU9G+Iy3L++rwNA
-         tvKuPRsPi3oWt15Rxq0jCA+yucOtWeBnSHGUTtDTrf27ZaGWmJxxxgKSGP4sPtOwbc
-         ZtuuVpPVAQfU8lkpx/UFH7YfTHG0fZ/6bRYgtKp2oC3aiiYXzPKUZ0bP7PngqJoiK6
-         GZmL8F1XJP5Z+wThMmQep72m9+fVeZIeck8Hl20+R4fzlymThaagM9oCnIYmqP+5Ie
-         nXcymR/0WNW1Q==
-Received: by mail-lf1-f47.google.com with SMTP id h205so20154848lfd.5;
-        Sun, 27 Dec 2020 13:57:24 -0800 (PST)
-X-Gm-Message-State: AOAM5310DrFXDFYKy6Aaf+OtfO1y5Kqfm7W/o/187eSMRPv4ge0Trl3k
-        6stDNqtpqY6b6I69hVCK6LZqsvigmhfwS0s3hpM=
-X-Google-Smtp-Source: ABdhPJzukkONqv2e5bnGIEXtJcKYZ332DEHUE7bGwmBOEZDK+ob7v7nMB60W3loyn6lRBtDdmzT+2joI5asFOrYXATI=
-X-Received: by 2002:a2e:8910:: with SMTP id d16mr20131771lji.357.1609106243184;
- Sun, 27 Dec 2020 13:57:23 -0800 (PST)
-MIME-Version: 1.0
-References: <dbd2761e-cd7d-d60a-f769-ecc8c6335814@canonical.com>
- <EA47EF7A-06D8-4B37-BED7-F04753D70DF5@fb.com> <a85943ed-60d4-05ad-9f6d-d76324fa5538@redhat.com>
-In-Reply-To: <a85943ed-60d4-05ad-9f6d-d76324fa5538@redhat.com>
-From:   Song Liu <song@kernel.org>
-Date:   Sun, 27 Dec 2020 13:57:12 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW5Fs9Zz+-2ZEZQe3g5jen4SiHNf7sRtYCN0w4TBGZ1Vsw@mail.gmail.com>
-Message-ID: <CAPhsuW5Fs9Zz+-2ZEZQe3g5jen4SiHNf7sRtYCN0w4TBGZ1Vsw@mail.gmail.com>
-Subject: Re: PROBLEM: Recent raid10 block discard patchset causes filesystem
- corruption on fstrim
-To:     Xiao Ni <xni@redhat.com>
-Cc:     Song Liu <songliubraving@fb.com>,
-        Matthew Ruffell <matthew.ruffell@canonical.com>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, Coly Li <colyli@suse.de>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        "khalid.elmously@canonical.com" <khalid.elmously@canonical.com>,
-        Jay Vosburgh <jay.vosburgh@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S1726285AbgL2J3O (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 29 Dec 2020 04:29:14 -0500
+Received: from mail.synology.com ([211.23.38.101]:43864 "EHLO synology.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726166AbgL2J3K (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 29 Dec 2020 04:29:10 -0500
+Received: from localhost.localdomain (unknown [10.17.198.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by synology.com (Postfix) with ESMTPSA id 07179CE781A0;
+        Tue, 29 Dec 2020 17:21:11 +0800 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synology.com; s=123;
+        t=1609233671; bh=32wEpt+o16XR2yhAXOPLZ3KuX9QlbNXlE2s9KIpvWw0=;
+        h=From:To:Cc:Subject:Date;
+        b=aOOBj8S8ahSnLersQy/26iOI8ZK9ENJzkcAMrTMfZgqH5vaVMbxkLXpXM4e7WwR9s
+         RSRMeVP8CjKwYktRrOiS0IuXBdjfuQiUxq/8BDn6NUp+rrcqbVvCkT+43sbxef36x2
+         cbBH174IR9/bloHwqZEE9d/Rp71+N7MKy0jFtcg0=
+From:   dannyshih <dannyshih@synology.com>
+To:     axboe@kernel.dk
+Cc:     agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
+        song@kernel.org, linux-block@vger.kernel.org,
+        linux-raid@vger.kernel.org, Danny Shih <dannyshih@synology.com>
+Subject: [PATCH 0/4] Fix order when split bio and send remaining back to itself
+Date:   Tue, 29 Dec 2020 17:18:38 +0800
+Message-Id: <1609233522-25837-1-git-send-email-dannyshih@synology.com>
+X-Mailer: git-send-email 2.7.4
+X-Synology-MCP-Status: no
+X-Synology-Spam-Flag: no
+X-Synology-Spam-Status: score=0, required 6, WHITELIST_FROM_ADDRESS 0
+X-Synology-Virus-Status: no
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi Xiao,
+From: Danny Shih <dannyshih@synology.com>
 
-On Thu, Dec 24, 2020 at 2:18 AM Xiao Ni <xni@redhat.com> wrote:
->
->
->
-[...]
->
-> [  789.709501] discard bio start : 70968, size : 191176
-> [  789.709507] first stripe index 69, start disk index 0, start disk
-> offset 70968
-> [  789.709509] last stripe index 256, end disk index 0, end disk offset
-> 262144
-> [  789.709511] disk 0, dev start : 70968, dev end : 262144
-> [  789.709515] disk 1, dev start : 70656, dev end : 262144
->
-> For example, in this test case, it has 2 near copies. The
-> start_disk_offset for the first disk is 70968.
-> It should use the same offset address for second disk. But it uses the
-> start address of this chunk.
-> It discard more region. The patch in the attachment can fix this
-> problem. It split the region that
-> doesn't align with chunk size.
->
-> There is another problem. The stripe size should be calculated
-> differently for near layout and far layout.
->
-> @Song, do you want me to use a separate patch for this fix, or fix this
-> in the original patch?
+We found out that split bios might handle not in order when a big bio
+had split by blk_queue_split() and also split in stacking block device,
+such as md device because chunk size boundary limit.
 
-Please fold in the changes in the original patches and resend the whole
-set.
+Stacking block device normally use submit_bio_noacct() add the remaining
+bio to current->bio_list's tail after they split original bio. Therefore,
+when bio split first time, the last part of bio was add to bio_list.
+After then, when bio split second time, the middle part of bio was add to
+bio_list. Results that the middle part is now behind the last part of bio.
 
-Thanks,
-Song
+For example:
+	There is a RAID0 md device, with max_sectors_kb = 2 KB,
+	and chunk_size = 1 KB
 
->
-> Merry Christmas
-> Xiao
->
+	1. a read bio come to md device wants to read 0-7 KB
+	2. In blk_queue_split(), bio split into (0-1), (2-7),
+	   and send (2-7) back to md device
+
+	   current->bio_list = bio_list_on_stack[0]: (md 2-7)
+	3. RAID0 split bio (0-1) into (0) and (1), since chunk size is 1 KB
+	   and send (1) back to md device
+
+	   bio_list_on_stack[0]: (md 2-7) -> (md 1)
+	4. remap and send (0) to lower layer device
+
+	   bio_list_on_stack[0]: (md 2-7) -> (md 1) -> (lower 0)
+	5. __submit_bio_noacct() sorting bio let lower bio handle firstly
+	   bio_list_on_stack[0]: (lower 0) -> (md 2-7) -> (md 1)
+	   pop (lower 0)
+	   move bio_list_on_stack[0] to bio_list_on_stack[1]
+
+	   bio_list_on_stack[1]: (md 2-7) -> (md 1)
+	6. after handle lower bio, it handle (md 2-7) firstly, and split
+	   in blk_queue_split() into (2-3), (4-7), send (4-7) back
+
+	   bio_list_on_stack[0]: (md 4-7)
+	   bio_list_on_stack[1]: (md 1)
+	7. RAID0 split bio (2-3) into (2) and (3) and send (3) back
+
+	   bio_list_on_stack[0]: (md 4-7) -> (md 3)
+	   bio_list_on_stack[1]: (md 1)
+	...
+	In the end, the split bio handle's order will become
+	0 -> 2 -> 4 -> 6 -> 7 -> 5 -> 3 -> 1
+
+Reverse the order of same queue bio when sorting bio in
+__submit_bio_noacct() can solve this issue, but it might influence
+too much. So we provide alternative version of submit_bio_noacct(),
+named submit_bio_noacct_add_head(), for the case which need to add bio
+to the head of current->bio_list. And replace submit_bio_noacct() with
+submit_bio_noacct_add_head() in block device layer when we want to
+split bio and send remaining back to itself.
+
+Danny Shih (4):
+  block: introduce submit_bio_noacct_add_head
+  block: use submit_bio_noacct_add_head for split bio sending back
+  dm: use submit_bio_noacct_add_head for split bio sending back
+  md: use submit_bio_noacct_add_head for split bio sending back
+
+ block/blk-core.c       | 44 +++++++++++++++++++++++++++++++++-----------
+ block/blk-merge.c      |  2 +-
+ block/bounce.c         |  2 +-
+ drivers/md/dm.c        |  2 +-
+ drivers/md/md-linear.c |  2 +-
+ drivers/md/raid0.c     |  4 ++--
+ drivers/md/raid1.c     |  4 ++--
+ drivers/md/raid10.c    |  4 ++--
+ drivers/md/raid5.c     |  2 +-
+ include/linux/blkdev.h |  1 +
+ 10 files changed, 45 insertions(+), 22 deletions(-)
+
+-- 
+2.7.4
+
