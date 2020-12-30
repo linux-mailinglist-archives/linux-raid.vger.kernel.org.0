@@ -2,227 +2,235 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B0C32E7B69
-	for <lists+linux-raid@lfdr.de>; Wed, 30 Dec 2020 18:01:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F8B02E7B77
+	for <lists+linux-raid@lfdr.de>; Wed, 30 Dec 2020 18:07:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgL3RBJ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 30 Dec 2020 12:01:09 -0500
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:10914 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726469AbgL3RBJ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 30 Dec 2020 12:01:09 -0500
-X-IronPort-AV: E=Sophos;i="5.78,461,1599494400"; 
-   d="scan'208";a="103085840"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 31 Dec 2020 00:58:45 +0800
-Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
-        by cn.fujitsu.com (Postfix) with ESMTP id 896D04CE6027;
-        Thu, 31 Dec 2020 00:58:44 +0800 (CST)
-Received: from G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.200) by
- G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Thu, 31 Dec 2020 00:58:44 +0800
-Received: from irides.mr (10.167.225.141) by G08CNEXCHPEKD04.g08.fujitsu.local
- (10.167.33.209) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 31 Dec 2020 00:58:43 +0800
-From:   Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
-        <linux-nvdimm@lists.01.org>, <linux-mm@kvack.org>
-CC:     <linux-fsdevel@vger.kernel.org>, <linux-raid@vger.kernel.org>,
-        <darrick.wong@oracle.com>, <dan.j.williams@intel.com>,
-        <david@fromorbit.com>, <hch@lst.de>, <song@kernel.org>,
-        <rgoldwyn@suse.de>, <qi.fuli@fujitsu.com>, <y-goto@fujitsu.com>
-Subject: [PATCH 10/10] fs/dax: remove useless functions
-Date:   Thu, 31 Dec 2020 00:56:01 +0800
-Message-ID: <20201230165601.845024-11-ruansy.fnst@cn.fujitsu.com>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20201230165601.845024-1-ruansy.fnst@cn.fujitsu.com>
-References: <20201230165601.845024-1-ruansy.fnst@cn.fujitsu.com>
+        id S1726276AbgL3RHN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 30 Dec 2020 12:07:13 -0500
+Received: from li1843-175.members.linode.com ([172.104.24.175]:34210 "EHLO
+        mail.stoffel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbgL3RHH (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 30 Dec 2020 12:07:07 -0500
+Received: from quad.stoffel.org (068-116-170-226.res.spectrum.com [68.116.170.226])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by mail.stoffel.org (Postfix) with ESMTPSA id DAE0325CE0;
+        Wed, 30 Dec 2020 12:06:25 -0500 (EST)
+Received: by quad.stoffel.org (Postfix, from userid 1000)
+        id 57317A6ACF; Wed, 30 Dec 2020 12:06:25 -0500 (EST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-yoursite-MailScanner-ID: 896D04CE6027.ABF58
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
-X-Spam-Status: No
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Message-ID: <24556.45969.276771.345181@quad.stoffel.home>
+Date:   Wed, 30 Dec 2020 12:06:25 -0500
+From:   "John Stoffel" <john@stoffel.org>
+To:     Danny Shih <dannyshih@synology.com>
+Cc:     John Stoffel <john@stoffel.org>, axboe@kernel.dk, agk@redhat.com,
+        snitzer@redhat.com, dm-devel@redhat.com, song@kernel.org,
+        linux-block@vger.kernel.org, linux-raid@vger.kernel.org
+Subject: Re: [PATCH 1/4] block: introduce submit_bio_noacct_add_head
+In-Reply-To: <abac671f-91f2-ca4e-7f77-8bb5da85a4cc@synology.com>
+References: <1609233522-25837-1-git-send-email-dannyshih@synology.com>
+        <1609233522-25837-2-git-send-email-dannyshih@synology.com>
+        <24555.49943.411197.147225@quad.stoffel.home>
+        <abac671f-91f2-ca4e-7f77-8bb5da85a4cc@synology.com>
+X-Mailer: VM 8.2.0b under 26.1 (x86_64-pc-linux-gnu)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Since owner tarcking is triggerred by pmem device, these functions are
-useless.  So remove it.
+>>>>> "Danny" == Danny Shih <dannyshih@synology.com> writes:
 
-Signed-off-by: Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
----
- fs/dax.c            | 112 --------------------------------------------
- include/linux/dax.h |   2 -
- 2 files changed, 114 deletions(-)
+Danny> Hi, John,
+Danny> Thank you for taking the time to write a review.
 
-diff --git a/fs/dax.c b/fs/dax.c
-index 799210cfa687..4267de360d79 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -323,48 +323,6 @@ static unsigned long dax_end_pfn(void *entry)
- 	for (pfn = dax_to_pfn(entry); \
- 			pfn < dax_end_pfn(entry); pfn++)
- 
--/*
-- * TODO: for reflink+dax we need a way to associate a single page with
-- * multiple address_space instances at different linear_page_index()
-- * offsets.
-- */
--static void dax_associate_entry(void *entry, struct address_space *mapping,
--		struct vm_area_struct *vma, unsigned long address)
--{
--	unsigned long size = dax_entry_size(entry), pfn, index;
--	int i = 0;
--
--	if (IS_ENABLED(CONFIG_FS_DAX_LIMITED))
--		return;
--
--	index = linear_page_index(vma, address & ~(size - 1));
--	for_each_mapped_pfn(entry, pfn) {
--		struct page *page = pfn_to_page(pfn);
--
--		WARN_ON_ONCE(page->mapping);
--		page->mapping = mapping;
--		page->index = index + i++;
--	}
--}
--
--static void dax_disassociate_entry(void *entry, struct address_space *mapping,
--		bool trunc)
--{
--	unsigned long pfn;
--
--	if (IS_ENABLED(CONFIG_FS_DAX_LIMITED))
--		return;
--
--	for_each_mapped_pfn(entry, pfn) {
--		struct page *page = pfn_to_page(pfn);
--
--		WARN_ON_ONCE(trunc && page_ref_count(page) > 1);
--		WARN_ON_ONCE(page->mapping && page->mapping != mapping);
--		page->mapping = NULL;
--		page->index = 0;
--	}
--}
--
- static struct page *dax_busy_page(void *entry)
- {
- 	unsigned long pfn;
-@@ -399,72 +357,6 @@ unsigned long dax_load_pfn(struct address_space *mapping, unsigned long index)
- 	return pfn;
- }
- 
--/*
-- * dax_lock_mapping_entry - Lock the DAX entry corresponding to a page
-- * @page: The page whose entry we want to lock
-- *
-- * Context: Process context.
-- * Return: A cookie to pass to dax_unlock_page() or 0 if the entry could
-- * not be locked.
-- */
--dax_entry_t dax_lock_page(struct page *page)
--{
--	XA_STATE(xas, NULL, 0);
--	void *entry;
--
--	/* Ensure page->mapping isn't freed while we look at it */
--	rcu_read_lock();
--	for (;;) {
--		struct address_space *mapping = READ_ONCE(page->mapping);
--
--		entry = NULL;
--		if (!mapping || !dax_mapping(mapping))
--			break;
--
--		/*
--		 * In the device-dax case there's no need to lock, a
--		 * struct dev_pagemap pin is sufficient to keep the
--		 * inode alive, and we assume we have dev_pagemap pin
--		 * otherwise we would not have a valid pfn_to_page()
--		 * translation.
--		 */
--		entry = (void *)~0UL;
--		if (S_ISCHR(mapping->host->i_mode))
--			break;
--
--		xas.xa = &mapping->i_pages;
--		xas_lock_irq(&xas);
--		if (mapping != page->mapping) {
--			xas_unlock_irq(&xas);
--			continue;
--		}
--		xas_set(&xas, page->index);
--		entry = xas_load(&xas);
--		if (dax_is_locked(entry)) {
--			rcu_read_unlock();
--			wait_entry_unlocked(&xas, entry);
--			rcu_read_lock();
--			continue;
--		}
--		dax_lock_entry(&xas, entry);
--		xas_unlock_irq(&xas);
--		break;
--	}
--	rcu_read_unlock();
--	return (dax_entry_t)entry;
--}
--
--void dax_unlock_page(struct page *page, dax_entry_t cookie)
--{
--	struct address_space *mapping = page->mapping;
--	XA_STATE(xas, &mapping->i_pages, page->index);
--
--	if (S_ISCHR(mapping->host->i_mode))
--		return;
--
--	dax_unlock_entry(&xas, (void *)cookie);
--}
--
- /*
-  * Find page cache entry at given index. If it is a DAX entry, return it
-  * with the entry locked. If the page cache doesn't contain an entry at
-@@ -543,7 +435,6 @@ static void *grab_mapping_entry(struct xa_state *xas,
- 			xas_lock_irq(xas);
- 		}
- 
--		dax_disassociate_entry(entry, mapping, false);
- 		xas_store(xas, NULL);	/* undo the PMD join */
- 		dax_wake_entry(xas, entry, true);
- 		mapping->nrexceptional--;
-@@ -680,7 +571,6 @@ static int __dax_invalidate_entry(struct address_space *mapping,
- 	    (xas_get_mark(&xas, PAGECACHE_TAG_DIRTY) ||
- 	     xas_get_mark(&xas, PAGECACHE_TAG_TOWRITE)))
- 		goto out;
--	dax_disassociate_entry(entry, mapping, trunc);
- 	xas_store(&xas, NULL);
- 	mapping->nrexceptional--;
- 	ret = 1;
-@@ -774,8 +664,6 @@ static void *dax_insert_entry(struct xa_state *xas,
- 	if (dax_is_zero_entry(entry) || dax_is_empty_entry(entry)) {
- 		void *old;
- 
--		dax_disassociate_entry(entry, mapping, false);
--		dax_associate_entry(new_entry, mapping, vmf->vma, vmf->address);
- 		/*
- 		 * Only swap our new entry into the page cache if the current
- 		 * entry is a zero page or an empty entry.  If a normal PTE or
-diff --git a/include/linux/dax.h b/include/linux/dax.h
-index 89e56ceeffc7..c6b8dc094b26 100644
---- a/include/linux/dax.h
-+++ b/include/linux/dax.h
-@@ -151,8 +151,6 @@ int dax_writeback_mapping_range(struct address_space *mapping,
- struct page *dax_layout_busy_page(struct address_space *mapping);
- struct page *dax_layout_busy_page_range(struct address_space *mapping, loff_t start, loff_t end);
- unsigned long dax_load_pfn(struct address_space *mapping, unsigned long index);
--dax_entry_t dax_lock_page(struct page *page);
--void dax_unlock_page(struct page *page, dax_entry_t cookie);
- #else
- static inline bool bdev_dax_supported(struct block_device *bdev,
- 		int blocksize)
--- 
-2.29.2
 
+Danny> John Stoffel <john@stoffel.org> writes:
+>>>>>>> "dannyshih" == dannyshih  <dannyshih@synology.com> writes:
+dannyshih> From: Danny Shih <dannyshih@synology.com>
+dannyshih> Porvide a way for stacking block device to re-submit the bio
+dannyshih> which sholud be handled firstly.
+>> 
+>> You're spelling needs to be fixed in these messages.
+
+
+Danny> Sorry for so many spelling errors.
+
+Danny> The message should be
+
+Danny> "Provide a way for stacking block device to re-submit
+
+Danny> the bio which should be handled first."
+
+Danny> I will fix it.
+
+Great, though my second question is *why* it needs to be handled
+first?  What is the difference between stacked and un-stacked devices
+and how could it be done in a way that doesn't require a seperate
+function like this?
+
+
+
+
+dannyshih> Signed-off-by: Danny Shih <dannyshih@synology.com>
+dannyshih> Reviewed-by: Allen Peng <allenpeng@synology.com>
+dannyshih> Reviewed-by: Alex Wu <alexwu@synology.com>
+dannyshih> ---
+dannyshih> block/blk-core.c       | 44 +++++++++++++++++++++++++++++++++-----------
+dannyshih> include/linux/blkdev.h |  1 +
+dannyshih> 2 files changed, 34 insertions(+), 11 deletions(-)
+>> 
+dannyshih> diff --git a/block/blk-core.c b/block/blk-core.c
+dannyshih> index 96e5fcd..693dc83 100644
+dannyshih> --- a/block/blk-core.c
+dannyshih> +++ b/block/blk-core.c
+dannyshih> @@ -1031,16 +1031,7 @@ static blk_qc_t __submit_bio_noacct_mq(struct bio *bio)
+dannyshih> return ret;
+dannyshih> }
+>> 
+dannyshih> -/**
+dannyshih> - * submit_bio_noacct - re-submit a bio to the block device layer for I/O
+dannyshih> - * @bio:  The bio describing the location in memory and on the device.
+dannyshih> - *
+dannyshih> - * This is a version of submit_bio() that shall only be used for I/O that is
+dannyshih> - * resubmitted to lower level drivers by stacking block drivers.  All file
+dannyshih> - * systems and other upper level users of the block layer should use
+dannyshih> - * submit_bio() instead.
+dannyshih> - */
+dannyshih> -blk_qc_t submit_bio_noacct(struct bio *bio)
+dannyshih> +static blk_qc_t do_submit_bio_noacct(struct bio *bio, bool add_head)
+dannyshih> {
+dannyshih> if (!submit_bio_checks(bio))
+dannyshih> return BLK_QC_T_NONE;
+dannyshih> @@ -1052,7 +1043,10 @@ blk_qc_t submit_bio_noacct(struct bio *bio)
+dannyshih> * it is active, and then process them after it returned.
+dannyshih> */
+dannyshih> if (current->bio_list) {
+dannyshih> -		bio_list_add(&current->bio_list[0], bio);
+dannyshih> +		if (add_head)
+dannyshih> +			bio_list_add_head(&current->bio_list[0], bio);
+dannyshih> +		else
+dannyshih> +			bio_list_add(&current->bio_list[0], bio);
+dannyshih> return BLK_QC_T_NONE;
+dannyshih> }
+>> 
+dannyshih> @@ -1060,9 +1054,37 @@ blk_qc_t submit_bio_noacct(struct bio *bio)
+dannyshih> return __submit_bio_noacct_mq(bio);
+dannyshih> return __submit_bio_noacct(bio);
+dannyshih> }
+dannyshih> +
+dannyshih> +/**
+dannyshih> + * submit_bio_noacct - re-submit a bio to the block device layer for I/O
+dannyshih> + * @bio:  The bio describing the location in memory and on the device.
+dannyshih> + *
+dannyshih> + * This is a version of submit_bio() that shall only be used for I/O that is
+dannyshih> + * resubmitted to lower level drivers by stacking block drivers.  All file
+dannyshih> + * systems and other upper level users of the block layer should use
+dannyshih> + * submit_bio() instead.
+dannyshih> + */
+dannyshih> +blk_qc_t submit_bio_noacct(struct bio *bio)
+dannyshih> +{
+dannyshih> +	return do_submit_bio_noacct(bio, false);
+dannyshih> +}
+dannyshih> EXPORT_SYMBOL(submit_bio_noacct);
+>> 
+>> So why is it named "submit_bio_noacct" when it's supposed to be only
+>> used by layers submitting to lower level drivers.  How can this be
+>> figured out by drivers automatically, so the writed doesn't have to
+>> know about this?
+
+
+Danny> There is no logical change while using submit_bio_noacct() after my 
+Danny> patch. So I didn't change
+
+Danny> the name and the documentation of submit_bio_noacct().
+
+
+>> 
+dannyshih> /**
+dannyshih> + * submit_bio_noacct - re-submit a bio, which needs to be handle firstly,
+dannyshih> + *                     to the block device layer for I/O
+dannyshih> + * @bio:  The bio describing the location in memory and on the device.
+dannyshih> + *
+dannyshih> + * alternative submit_bio_noacct() which add bio to the head of
+dannyshih> + * current->bio_list.
+dannyshih> + */
+>> 
+>> Firstly isn't proper english.  Maybe something like:
+>> 
+>> submit_bio_noacct - re-submit a bio which needs to be handled first
+>> because <reasons> to the block device layer for I/O
+>> 
+>> But the name still sucks, and the *reason* the bio needs to be handled
+>> differently isn't well explained.
+
+
+Danny> Sorry for the grammar mistake. And I wrote the wrong function name here.
+
+Danny> It should be replaced by submit_bio_noacct_add_head.
+
+
+Danny> About the function name, the name of submit_bio_noacct_add_head()
+
+Danny> is trying to let drivers know that this is just an alternative version of
+
+Danny> submit_bio_noacct(). The only difference is that this function adds bio to
+
+Danny> the head of current->bio_list, and submit_bio_noacct() adds it to the tail.
+
+
+Danny> About the documentation, what if I change it like:
+
+
+Danny> "submit_bio_noacct_add_head - re-submit a bio which needs to
+
+Danny> be handled first to the block device layer for I/O, because it has
+
+Danny> sequential relevance with the bio handling in current ->submit_bio.
+
+
+Danny> Alternative submit_bio_noacct() adds bio to the head of
+
+current-> bio_list. To keep bio sequence, this function is used
+
+Danny> when a block device splits bio and re-submits the remainder back
+
+Danny> to itself. This makes sure that the re-submitted bio will be handle
+
+Danny> just after the split part of the original bio."
+
+
+Danny> Thanks for your suggestion.
+
+
+dannyshih> +blk_qc_t submit_bio_noacct_add_head(struct bio *bio)
+dannyshih> +{
+dannyshih> +	return do_submit_bio_noacct(bio, true);
+dannyshih> +}
+dannyshih> +EXPORT_SYMBOL(submit_bio_noacct_add_head);
+dannyshih> +
+dannyshih> +/**
+dannyshih> * submit_bio - submit a bio to the block device layer for I/O
+dannyshih> * @bio: The &struct bio which describes the I/O
+dannyshih> *
+dannyshih> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+dannyshih> index 070de09..b0080d0 100644
+dannyshih> --- a/include/linux/blkdev.h
+dannyshih> +++ b/include/linux/blkdev.h
+dannyshih> @@ -905,6 +905,7 @@ static inline void rq_flush_dcache_pages(struct request *rq)
+dannyshih> extern int blk_register_queue(struct gendisk *disk);
+dannyshih> extern void blk_unregister_queue(struct gendisk *disk);
+dannyshih> blk_qc_t submit_bio_noacct(struct bio *bio);
+dannyshih> +blk_qc_t submit_bio_noacct_add_head(struct bio *bio);
+dannyshih> extern void blk_rq_init(struct request_queue *q, struct request *rq);
+dannyshih> extern void blk_put_request(struct request *);
+dannyshih> extern struct request *blk_get_request(struct request_queue *, unsigned int op,
+dannyshih> --
+dannyshih> 2.7.4
+
+Danny> Best Regards,
+
+Danny> Danny Shih
 
 
