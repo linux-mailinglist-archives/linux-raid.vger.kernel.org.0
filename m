@@ -2,153 +2,157 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B7152E6F5C
-	for <lists+linux-raid@lfdr.de>; Tue, 29 Dec 2020 10:29:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 512082E7547
+	for <lists+linux-raid@lfdr.de>; Wed, 30 Dec 2020 01:10:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726274AbgL2J3L (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 29 Dec 2020 04:29:11 -0500
-Received: from mail.synology.com ([211.23.38.101]:43852 "EHLO synology.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726156AbgL2J3K (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 29 Dec 2020 04:29:10 -0500
-Received: from localhost.localdomain (unknown [10.17.198.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id S1726197AbgL3AJv (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 29 Dec 2020 19:09:51 -0500
+Received: from li1843-175.members.linode.com ([172.104.24.175]:60170 "EHLO
+        mail.stoffel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726161AbgL3AJv (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 29 Dec 2020 19:09:51 -0500
+X-Greylist: delayed 526 seconds by postgrey-1.27 at vger.kernel.org; Tue, 29 Dec 2020 19:09:50 EST
+Received: from quad.stoffel.org (068-116-170-226.res.spectrum.com [68.116.170.226])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by synology.com (Postfix) with ESMTPSA id 553B1CE781AC;
-        Tue, 29 Dec 2020 17:21:11 +0800 (CST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synology.com; s=123;
-        t=1609233671; bh=uW8Adw4OvUpDdOcXBQ8eWpTQ3vZt8hQfYkYX0sMcN9I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=WjyLSyv1x3fJJQzV+FWwVvw6GU3jkWibYBBjm9PjUJ0OKVWNx+VF+yZXED5FK3bRm
-         flgaGcBzEAi257bS/0CdUKgSWkLEfM8iOocZ48B46j8C5Ddekam2JcxhRDeAi857wK
-         aJ0IapZ+0OR25ER98oHAfPjYEaDZhlVesWFPlEsA=
-From:   dannyshih <dannyshih@synology.com>
-To:     axboe@kernel.dk
-Cc:     agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
-        song@kernel.org, linux-block@vger.kernel.org,
-        linux-raid@vger.kernel.org, Danny Shih <dannyshih@synology.com>
-Subject: [PATCH 4/4] md: use submit_bio_noacct_add_head for split bio sending back
-Date:   Tue, 29 Dec 2020 17:18:42 +0800
-Message-Id: <1609233522-25837-5-git-send-email-dannyshih@synology.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1609233522-25837-1-git-send-email-dannyshih@synology.com>
+        by mail.stoffel.org (Postfix) with ESMTPSA id 441621E135;
+        Tue, 29 Dec 2020 19:00:24 -0500 (EST)
+Received: by quad.stoffel.org (Postfix, from userid 1000)
+        id 78668A6AC5; Tue, 29 Dec 2020 19:00:23 -0500 (EST)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Message-ID: <24555.49943.411197.147225@quad.stoffel.home>
+Date:   Tue, 29 Dec 2020 19:00:23 -0500
+From:   "John Stoffel" <john@stoffel.org>
+To:     dannyshih <dannyshih@synology.com>
+Cc:     axboe@kernel.dk, agk@redhat.com, snitzer@redhat.com,
+        dm-devel@redhat.com, song@kernel.org, linux-block@vger.kernel.org,
+        linux-raid@vger.kernel.org
+Subject: Re: [PATCH 1/4] block: introduce submit_bio_noacct_add_head
+In-Reply-To: <1609233522-25837-2-git-send-email-dannyshih@synology.com>
 References: <1609233522-25837-1-git-send-email-dannyshih@synology.com>
-X-Synology-MCP-Status: no
-X-Synology-Spam-Flag: no
-X-Synology-Spam-Status: score=0, required 6, WHITELIST_FROM_ADDRESS 0
-X-Synology-Virus-Status: no
+        <1609233522-25837-2-git-send-email-dannyshih@synology.com>
+X-Mailer: VM 8.2.0b under 26.1 (x86_64-pc-linux-gnu)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Danny Shih <dannyshih@synology.com>
+>>>>> "dannyshih" == dannyshih  <dannyshih@synology.com> writes:
 
-Use submit_bio_noacct_add_head when sending split bio back to md device.
-Otherwise, it might be handled after the lately split bio.
+dannyshih> From: Danny Shih <dannyshih@synology.com>
+dannyshih> Porvide a way for stacking block device to re-submit the bio
+dannyshih> which sholud be handled firstly.
 
-Signed-off-by: Danny Shih <dannyshih@synology.com>
-Reviewed-by: Allen Peng <allenpeng@synology.com>
-Reviewed-by: Alex Wu <alexwu@synology.com>
----
- drivers/md/md-linear.c | 2 +-
- drivers/md/raid0.c     | 4 ++--
- drivers/md/raid1.c     | 4 ++--
- drivers/md/raid10.c    | 4 ++--
- drivers/md/raid5.c     | 2 +-
- 5 files changed, 8 insertions(+), 8 deletions(-)
+You're spelling needs to be fixed in these messages.  
 
-diff --git a/drivers/md/md-linear.c b/drivers/md/md-linear.c
-index 68cac7d..24418ee 100644
---- a/drivers/md/md-linear.c
-+++ b/drivers/md/md-linear.c
-@@ -243,7 +243,7 @@ static bool linear_make_request(struct mddev *mddev, struct bio *bio)
- 		struct bio *split = bio_split(bio, end_sector - bio_sector,
- 					      GFP_NOIO, &mddev->bio_set);
- 		bio_chain(split, bio);
--		submit_bio_noacct(bio);
-+		submit_bio_noacct_add_head(bio);
- 		bio = split;
- 	}
+dannyshih> Signed-off-by: Danny Shih <dannyshih@synology.com>
+dannyshih> Reviewed-by: Allen Peng <allenpeng@synology.com>
+dannyshih> Reviewed-by: Alex Wu <alexwu@synology.com>
+dannyshih> ---
+dannyshih>  block/blk-core.c       | 44 +++++++++++++++++++++++++++++++++-----------
+dannyshih>  include/linux/blkdev.h |  1 +
+dannyshih>  2 files changed, 34 insertions(+), 11 deletions(-)
+
+dannyshih> diff --git a/block/blk-core.c b/block/blk-core.c
+dannyshih> index 96e5fcd..693dc83 100644
+dannyshih> --- a/block/blk-core.c
+dannyshih> +++ b/block/blk-core.c
+dannyshih> @@ -1031,16 +1031,7 @@ static blk_qc_t __submit_bio_noacct_mq(struct bio *bio)
+dannyshih>  	return ret;
+dannyshih>  }
  
-diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
-index 67f157f..92e82d5 100644
---- a/drivers/md/raid0.c
-+++ b/drivers/md/raid0.c
-@@ -447,7 +447,7 @@ static void raid0_handle_discard(struct mddev *mddev, struct bio *bio)
- 			zone->zone_end - bio->bi_iter.bi_sector, GFP_NOIO,
- 			&mddev->bio_set);
- 		bio_chain(split, bio);
--		submit_bio_noacct(bio);
-+		submit_bio_noacct_add_head(bio);
- 		bio = split;
- 		end = zone->zone_end;
- 	} else
-@@ -552,7 +552,7 @@ static bool raid0_make_request(struct mddev *mddev, struct bio *bio)
- 		struct bio *split = bio_split(bio, sectors, GFP_NOIO,
- 					      &mddev->bio_set);
- 		bio_chain(split, bio);
--		submit_bio_noacct(bio);
-+		submit_bio_noacct_add_head(bio);
- 		bio = split;
- 	}
+dannyshih> -/**
+dannyshih> - * submit_bio_noacct - re-submit a bio to the block device layer for I/O
+dannyshih> - * @bio:  The bio describing the location in memory and on the device.
+dannyshih> - *
+dannyshih> - * This is a version of submit_bio() that shall only be used for I/O that is
+dannyshih> - * resubmitted to lower level drivers by stacking block drivers.  All file
+dannyshih> - * systems and other upper level users of the block layer should use
+dannyshih> - * submit_bio() instead.
+dannyshih> - */
+dannyshih> -blk_qc_t submit_bio_noacct(struct bio *bio)
+dannyshih> +static blk_qc_t do_submit_bio_noacct(struct bio *bio, bool add_head)
+dannyshih>  {
+dannyshih>  	if (!submit_bio_checks(bio))
+dannyshih>  		return BLK_QC_T_NONE;
+dannyshih> @@ -1052,7 +1043,10 @@ blk_qc_t submit_bio_noacct(struct bio *bio)
+dannyshih>  	 * it is active, and then process them after it returned.
+dannyshih>  	 */
+dannyshih>  	if (current->bio_list) {
+dannyshih> -		bio_list_add(&current->bio_list[0], bio);
+dannyshih> +		if (add_head)
+dannyshih> +			bio_list_add_head(&current->bio_list[0], bio);
+dannyshih> +		else
+dannyshih> +			bio_list_add(&current->bio_list[0], bio);
+dannyshih>  		return BLK_QC_T_NONE;
+dannyshih>  	}
  
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index c034799..31cec76 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -1282,7 +1282,7 @@ static void raid1_read_request(struct mddev *mddev, struct bio *bio,
- 		struct bio *split = bio_split(bio, max_sectors,
- 					      gfp, &conf->bio_split);
- 		bio_chain(split, bio);
--		submit_bio_noacct(bio);
-+		submit_bio_noacct_add_head(bio);
- 		bio = split;
- 		r1_bio->master_bio = bio;
- 		r1_bio->sectors = max_sectors;
-@@ -1453,7 +1453,7 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
- 		struct bio *split = bio_split(bio, max_sectors,
- 					      GFP_NOIO, &conf->bio_split);
- 		bio_chain(split, bio);
--		submit_bio_noacct(bio);
-+		submit_bio_noacct_add_head(bio);
- 		bio = split;
- 		r1_bio->master_bio = bio;
- 		r1_bio->sectors = max_sectors;
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index c5d88ef..c4dc970 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -1177,7 +1177,7 @@ static void raid10_read_request(struct mddev *mddev, struct bio *bio,
- 					      gfp, &conf->bio_split);
- 		bio_chain(split, bio);
- 		allow_barrier(conf);
--		submit_bio_noacct(bio);
-+		submit_bio_noacct_add_head(bio);
- 		wait_barrier(conf);
- 		bio = split;
- 		r10_bio->master_bio = bio;
-@@ -1460,7 +1460,7 @@ static void raid10_write_request(struct mddev *mddev, struct bio *bio,
- 					      GFP_NOIO, &conf->bio_split);
- 		bio_chain(split, bio);
- 		allow_barrier(conf);
--		submit_bio_noacct(bio);
-+		submit_bio_noacct_add_head(bio);
- 		wait_barrier(conf);
- 		bio = split;
- 		r10_bio->master_bio = bio;
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 3a90cc0..17458ac 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -5490,7 +5490,7 @@ static struct bio *chunk_aligned_read(struct mddev *mddev, struct bio *raid_bio)
- 		struct r5conf *conf = mddev->private;
- 		split = bio_split(raid_bio, sectors, GFP_NOIO, &conf->bio_split);
- 		bio_chain(split, raid_bio);
--		submit_bio_noacct(raid_bio);
-+		submit_bio_noacct_add_head(raid_bio);
- 		raid_bio = split;
- 	}
+dannyshih> @@ -1060,9 +1054,37 @@ blk_qc_t submit_bio_noacct(struct bio *bio)
+dannyshih>  		return __submit_bio_noacct_mq(bio);
+dannyshih>  	return __submit_bio_noacct(bio);
+dannyshih>  }
+dannyshih> +
+dannyshih> +/**
+dannyshih> + * submit_bio_noacct - re-submit a bio to the block device layer for I/O
+dannyshih> + * @bio:  The bio describing the location in memory and on the device.
+dannyshih> + *
+dannyshih> + * This is a version of submit_bio() that shall only be used for I/O that is
+dannyshih> + * resubmitted to lower level drivers by stacking block drivers.  All file
+dannyshih> + * systems and other upper level users of the block layer should use
+dannyshih> + * submit_bio() instead.
+dannyshih> + */
+dannyshih> +blk_qc_t submit_bio_noacct(struct bio *bio)
+dannyshih> +{
+dannyshih> +	return do_submit_bio_noacct(bio, false);
+dannyshih> +}
+dannyshih>  EXPORT_SYMBOL(submit_bio_noacct);
+
+So why is it named "submit_bio_noacct" when it's supposed to be only
+used by layers submitting to lower level drivers.  How can this be
+figured out by drivers automatically, so the writed doesn't have to
+know about this?  
  
--- 
-2.7.4
+dannyshih>  /**
+dannyshih> + * submit_bio_noacct - re-submit a bio, which needs to be handle firstly,
+dannyshih> + *                     to the block device layer for I/O
+dannyshih> + * @bio:  The bio describing the location in memory and on the device.
+dannyshih> + *
+dannyshih> + * alternative submit_bio_noacct() which add bio to the head of
+dannyshih> + * current->bio_list.
+dannyshih> + */
+
+Firstly isn't proper english.  Maybe something like:
+
+submit_bio_noacct - re-submit a bio which needs to be handled first
+because <reasons> to the block device layer for I/O
+
+But the name still sucks, and the *reason* the bio needs to be handled
+differently isn't well explained. 
+
+dannyshih> +blk_qc_t submit_bio_noacct_add_head(struct bio *bio)
+dannyshih> +{
+dannyshih> +	return do_submit_bio_noacct(bio, true);
+dannyshih> +}
+dannyshih> +EXPORT_SYMBOL(submit_bio_noacct_add_head);
+dannyshih> +
+dannyshih> +/**
+dannyshih>   * submit_bio - submit a bio to the block device layer for I/O
+dannyshih>   * @bio: The &struct bio which describes the I/O
+dannyshih>   *
+dannyshih> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+dannyshih> index 070de09..b0080d0 100644
+dannyshih> --- a/include/linux/blkdev.h
+dannyshih> +++ b/include/linux/blkdev.h
+dannyshih> @@ -905,6 +905,7 @@ static inline void rq_flush_dcache_pages(struct request *rq)
+dannyshih>  extern int blk_register_queue(struct gendisk *disk);
+dannyshih>  extern void blk_unregister_queue(struct gendisk *disk);
+dannyshih>  blk_qc_t submit_bio_noacct(struct bio *bio);
+dannyshih> +blk_qc_t submit_bio_noacct_add_head(struct bio *bio);
+dannyshih>  extern void blk_rq_init(struct request_queue *q, struct request *rq);
+dannyshih>  extern void blk_put_request(struct request *);
+dannyshih>  extern struct request *blk_get_request(struct request_queue *, unsigned int op,
+dannyshih> -- 
+dannyshih> 2.7.4
 
