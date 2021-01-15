@@ -2,34 +2,34 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 11A2E2F7CA1
-	for <lists+linux-raid@lfdr.de>; Fri, 15 Jan 2021 14:30:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D71E2F7CA7
+	for <lists+linux-raid@lfdr.de>; Fri, 15 Jan 2021 14:30:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732745AbhAON1z (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 15 Jan 2021 08:27:55 -0500
-Received: from mga18.intel.com ([134.134.136.126]:10827 "EHLO mga18.intel.com"
+        id S1729700AbhAON3Q (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 15 Jan 2021 08:29:16 -0500
+Received: from mga18.intel.com ([134.134.136.126]:10822 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732738AbhAON1z (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 15 Jan 2021 08:27:55 -0500
-IronPort-SDR: Aoo3IGqXRORwJRDXNWuqfqn1pEg+yp70G79YnKqx/Qdyj5T8ObYsZA4rbv8XOsgUDQpQ1Zw/2Q
- Gq3NZFP55gQg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9864"; a="166216187"
+        id S1731576AbhAON3O (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 15 Jan 2021 08:29:14 -0500
+IronPort-SDR: GPYUGOh8xf0114uxzZ0Kuwh9VGzXXAa6mQurmlBNtpGdbDXZSdy/ClxLCelGLn9StSsrce/UnO
+ L9Y9krd/GmDA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9864"; a="166216195"
 X-IronPort-AV: E=Sophos;i="5.79,349,1602572400"; 
-   d="scan'208";a="166216187"
+   d="scan'208";a="166216195"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2021 05:25:32 -0800
-IronPort-SDR: Qywmzk3OJNoraLLSB9+/WYCrfoFU/42J0v8w5ONUC5JhREQ7ODLSD5ewYDFUggrCpr48M0EvwS
- 4vNLsWur0RbQ==
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2021 05:25:34 -0800
+IronPort-SDR: NesPcqyp97HrgASufzedxgKKxcOdzhPrBxRd1F6L6uycXnMQ9IFd16voBR8JkWcPrqGDMJzZjx
+ zu2GbwjGLdtg==
 X-IronPort-AV: E=Sophos;i="5.79,349,1602572400"; 
-   d="scan'208";a="425312422"
+   d="scan'208";a="425312432"
 Received: from unknown (HELO localhost.igk.intel.com) ([10.237.126.111])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2021 05:25:31 -0800
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2021 05:25:33 -0800
 From:   Jakub Radtke <jakub.radtke@linux.intel.com>
 To:     jes@trained-monkey.org
 Cc:     linux-raid@vger.kernel.org
-Subject: [PATCH 5/8] Add "bitmap" to allowed command-line values
-Date:   Fri, 15 Jan 2021 00:46:58 -0500
-Message-Id: <20210115054701.92064-6-jakub.radtke@linux.intel.com>
+Subject: [PATCH 6/8] imsm: Update-subarray for write-intent bitmap
+Date:   Fri, 15 Jan 2021 00:46:59 -0500
+Message-Id: <20210115054701.92064-7-jakub.radtke@linux.intel.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20210115054701.92064-1-jakub.radtke@linux.intel.com>
 References: <20210115054701.92064-1-jakub.radtke@linux.intel.com>
@@ -41,73 +41,70 @@ X-Mailing-List: linux-raid@vger.kernel.org
 
 From: Jakub Radtke <jakub.radtke@intel.com>
 
-Currently, the sysfs interface allows bitmap setup only when volume
-is in an inactive state.
-For external metadata to add bitmap to existing volume instead of
-GROW, the UPDATE operation can be done.
-The patch adds a "bitmap" argument to the allowed values for UPDATE.
+The patch updates the current bitmap functionality to handle adding
+the bitmap on existing volumes.
 
+Change-Id: I75c4a2a450858204457f45b4daeecfd807c83834
 Signed-off-by: Jakub Radtke <jakub.radtke@intel.com>
-Change-Id: Ic46fdc6cc39eba2097a7e4956c44f4a9970e7b05
 ---
- mdadm.8.in | 13 +++++++++++--
- mdadm.c    |  4 +++-
- 2 files changed, 14 insertions(+), 3 deletions(-)
+ super-intel.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
-diff --git a/mdadm.8.in b/mdadm.8.in
-index 34a93a8f..c89d901e 100644
---- a/mdadm.8.in
-+++ b/mdadm.8.in
-@@ -2408,9 +2408,11 @@ or
- .B \-\-update=
- option. The supported options are
- .BR name ,
--.B ppl
-+.BR ppl ,
-+.BR no\-ppl ,
-+.BR bitmap
- and
--.BR no\-ppl .
-+.BR no\-bitmap .
+diff --git a/super-intel.c b/super-intel.c
+index eb5d39b9..0f3bbdf2 100644
+--- a/super-intel.c
++++ b/super-intel.c
+@@ -7783,6 +7783,19 @@ static int kill_subarray_imsm(struct supertype *st, char *subarray_id)
+ 	return 0;
+ }
  
- The
- .B name
-@@ -2428,6 +2430,13 @@ and
- options enable and disable PPL in the metadata. Currently supported only for
- IMSM subarrays.
- 
-+The
-+.B bitmap
-+and
-+.B no\-bitmap
-+options enable and disable write-intent bitmap in the metadata. Currently supported only for
-+IMSM subarrays.
++static int get_rwh_policy_from_update(char *update)
++{
++	if (strcmp(update, "ppl") == 0)
++		return RWH_MULTIPLE_DISTRIBUTED;
++	else if (strcmp(update, "no-ppl") == 0)
++		return RWH_MULTIPLE_OFF;
++	else if (strcmp(update, "bitmap") == 0)
++		return RWH_BITMAP;
++	else if (strcmp(update, "no-bitmap") == 0)
++		return RWH_OFF;
++	return -1;
++}
 +
- .TP
- .B \-\-examine
- The device should be a component of an md array.
-diff --git a/mdadm.c b/mdadm.c
-index 493d70e4..9a4317d5 100644
---- a/mdadm.c
-+++ b/mdadm.c
-@@ -779,6 +779,8 @@ int main(int argc, char *argv[])
- 				continue;
- 			if (strcmp(c.update, "devicesize") == 0)
- 				continue;
-+			if (strcmp(c.update, "bitmap") == 0)
-+				continue;
- 			if (strcmp(c.update, "no-bitmap") == 0)
- 				continue;
- 			if (strcmp(c.update, "bbl") == 0)
-@@ -827,7 +829,7 @@ int main(int argc, char *argv[])
- 			fprintf(outf, "Valid --update options are:\n"
- 		"     'sparc2.2', 'super-minor', 'uuid', 'name', 'nodes', 'resync',\n"
- 		"     'summaries', 'homehost', 'home-cluster', 'byteorder', 'devicesize',\n"
--		"     'no-bitmap', 'metadata', 'revert-reshape'\n"
-+		"     'bitmap', 'no-bitmap', 'metadata', 'revert-reshape'\n"
- 		"     'bbl', 'no-bbl', 'force-no-bbl', 'ppl', 'no-ppl'\n"
- 		"     'layout-original', 'layout-alternate', 'layout-unspecified'\n"
- 				);
+ static int update_subarray_imsm(struct supertype *st, char *subarray,
+ 				char *update, struct mddev_ident *ident)
+ {
+@@ -7829,8 +7842,7 @@ static int update_subarray_imsm(struct supertype *st, char *subarray,
+ 			}
+ 			super->updates_pending++;
+ 		}
+-	} else if (strcmp(update, "ppl") == 0 ||
+-		   strcmp(update, "no-ppl") == 0) {
++	} else if (get_rwh_policy_from_update(update) != -1) {
+ 		int new_policy;
+ 		char *ep;
+ 		int vol = strtoul(subarray, &ep, 10);
+@@ -7838,10 +7850,7 @@ static int update_subarray_imsm(struct supertype *st, char *subarray,
+ 		if (*ep != '\0' || vol >= super->anchor->num_raid_devs)
+ 			return 2;
+ 
+-		if (strcmp(update, "ppl") == 0)
+-			new_policy = RWH_MULTIPLE_DISTRIBUTED;
+-		else
+-			new_policy = RWH_MULTIPLE_OFF;
++		new_policy = get_rwh_policy_from_update(update);
+ 
+ 		if (st->update_tail) {
+ 			struct imsm_update_rwh_policy *u = xmalloc(sizeof(*u));
+@@ -7857,6 +7866,8 @@ static int update_subarray_imsm(struct supertype *st, char *subarray,
+ 			dev->rwh_policy = new_policy;
+ 			super->updates_pending++;
+ 		}
++		if (new_policy == RWH_BITMAP)
++			return write_init_bitmap_imsm_vol(st, vol);
+ 	} else
+ 		return 2;
+ 
 -- 
 2.26.2
 
