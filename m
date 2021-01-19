@@ -2,52 +2,52 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 059F12FB22B
-	for <lists+linux-raid@lfdr.de>; Tue, 19 Jan 2021 07:57:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F9122FB2B0
+	for <lists+linux-raid@lfdr.de>; Tue, 19 Jan 2021 08:19:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731375AbhASFaG (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 19 Jan 2021 00:30:06 -0500
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:33838 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388302AbhASFKo (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 19 Jan 2021 00:10:44 -0500
+        id S2387737AbhASF0X (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 19 Jan 2021 00:26:23 -0500
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:34502 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389640AbhASFHk (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 19 Jan 2021 00:07:40 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1611033755; x=1642569755;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=kJ/YPi2iVTGzPyZ1PMFgAIrmJoIDh2BG4oTkefPeBOY=;
-  b=T+Q0XAKlrW6E3DMQkBkucDoObvqX08cDZpuDtZeySEC7ToGvEApY7Ev1
-   Yueo/z/Ws5844y8uQ1ZoO22u+dmOWQPlk8x63FktAEs+AWasXE8XadDRg
-   zb7KR1tH5eJlT+LjKc+HWsxHB0tISYmUc/xASHez6UTmlo6HRcTiURJA8
-   PuZa+4Xr0VfMwULEwjsZauwkPOmSF2MP+RKYC8kRaeoJcu1aR3yKSxTv+
-   w1bE7tn2GoDrmFCHnlSelLnODokQpLww9jOFtEgfbljVegckIqqrhg9S0
-   wNrUwxeZ9y5Utsdqb969Z9v81sqnlzX1D6IKoPOZPKP53spJqNGfOPerM
-   Q==;
-IronPort-SDR: hE6dv+TONUjJrZ/OU6lATn924bydxu0c3mJtRbz0khTwEPau7P5VmEXr7963HPN7qGH8aJfn68
- kZQ14X4AWJ0qzHoifzrSjb1LC8BsRJ0hCM3S86/LCot9M+hV5oou8lwSxk6YsLs8v3VJzhprkE
- PJm5f9ZevTC88KKc50pux+QrXL0BKI9oAgBpneRP0D1aICW9vw978a0x6f1qfn8Qka8fXoUIlY
- zHoVKccVUjQuemq91Fr86L2MLyEOQ5F4QCRjTO8V2aCG89DoW3zyBhOeOJHp3zg1qmckiqd7LL
- HTc=
+  t=1611032860; x=1642568860;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2EwAg85Rl2+jMe62nRnS8RL98bOCXmnfO5riJrV6i0c=;
+  b=GjcXuKIfE7oPUJJM/Wi2vVnUpYud2gKvIpltIXHVNrAg3RsXPu43SSpM
+   wIW3+AVU6/Swl0XW8ZahSdWTuFz45x0PRFdfyO6jSRBESB3FGqMrqsV51
+   LqkiqQ6Mgcp5WA0fCSeOO9AkjTdUCbrZXnNCSfz2UwQChlBG1Ttqr5VHX
+   GXRzXfm92QORv96J/4QuRWF+9tkr+pcO4FELeyKPoafSsntR2wTSd/PaH
+   Iw7sQzoXv+E9E2JN2DSUUWOHaWKDpdqLHfZz17GiunoEXJigP+2IH4ZKA
+   x4hjKdDD2Xj6pDfIKfk4mM4S2sDepgL7SmTMUx4dUWt2yBgJNl9B9ln3F
+   w==;
+IronPort-SDR: 7F9V8E2gCFx1ENrckraC/aOPabyshxzdGR1mhufNzVCSB1ZQqnbgSiAulHQ+fQrQf0VUfZp2RQ
+ lD9qauiuxEBB9PMtkyVUCtlbRRvbja4mqWOP92mvguWXYPFPRt0ywXlzt4nwaxSEuykNRTLHwY
+ 46Oyg2LmyN3IKgagwVvK4ScZzXbnceF3nrKIl0BsSg9m7EerKdRxhTPeeLR437E7+7EOo/WM3N
+ rxvlmtGFm6UcYsU0Qk1//34mDVQN7IyG+xRcn7TqkyNt+L1lv3J+Us9C6/ANlf4U03PgJBiMf4
+ 7rY=
 X-IronPort-AV: E=Sophos;i="5.79,357,1602518400"; 
-   d="scan'208";a="261722387"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 19 Jan 2021 13:20:52 +0800
-IronPort-SDR: SLTYcsUI5EUyExv0w0a3FqUvk1wVJiBPtQ6k17TInrm1aQgwzpA5EBzp2Lame0JEyQS6khpDeC
- CmhUuRtc9fs1nUTFOTOrNXa9JSLZMlhxzyvVTJUeiB9ASl8GEQsRWLM3zkgnelllodw/Xvjrcd
- Gl78RF2ScQEyhhZdSLqMCYlCAx3IdnFDh52KP4JNIjkQIifavctZcn2F36wn2sT7jflBpVTiCB
- YBrlrPUCmd4o8kpvTGxtYOLf5HL5ctSnmJhCp5qkxpK0N3ipXnnHdjJ7z1Tf1OqoyL/vIGyiWP
- H0Lvrvy9Yb6BMwhJPBBj58yJ
+   d="scan'208";a="268080837"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 19 Jan 2021 13:06:34 +0800
+IronPort-SDR: nICJNTCp5DZTCdEW+BDS8Z2snIrYrlMGiOG+8k41nZ+toTeWOlVhexX9dHTlwiqlcEC7mJSKUG
+ Iy/fc+BGI7Gq8Tc8eNWRNodotuWudKLMuHWvPgvyglmYCy3CVY5v6y+KCctMt1KQr1t/A5vu6G
+ EU8YQ12jfB7JSDNqLnc6qhTKltQXkH+QIkeCJgH1ExuBNJ/LLJLVkSZoi6pcXoZsChyTgxhzzc
+ M/7G2USRTjBZjdX6m3rZ7UDS60bVW6YpGRy6Hay6Zi1n8mTtRVmKMccQ45eAk1w07M3Ya+tZ9I
+ WeterqNf9O4H/xA4G74z3xOk
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2021 20:52:11 -0800
-IronPort-SDR: 82udVg0tcJR2e9Ov1+A4/XxfwUpr6AnnaaUrqXRQiZStYiKcrlpKU0DkZ5iMbm8iZTvQAtMZG/
- I8wyRE90NxZichs84bJgmmJzLP0cByQHps51BWtoql+dpr7gkHTtxNhSfv63hHFg3HLCAOwaZD
- +dt9xs8jlS8ttjdqGabgZ5alJdiHqr1V7WKaF95Pd/LIfmh9EooiqLrIPLv7qKKLiQaaSOFfaR
- 3ilv2AB4rQ3+1E1OdOv6+VBj6UNe20rcRhCRm3hgKs7Kn1zftFTr7vNmUA+PXjeDeKmQalWZYt
- Kyc=
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2021 20:49:09 -0800
+IronPort-SDR: w8TQaHPmOf4afpFLhHFiHm4s9YBVvwz1nCheCJ4OBOH8yQ2UY0NC3Tt/JdFHF9KkeR+DlxZGUH
+ e7bQB+02ddXqKaR8b/7v1Y7wXKviC9dKqJTPF9aSTC9cHooTn06sxWBBnh6ybRkpJPiq1eaXml
+ Li9XSEIsEl1dTBAvxWyxQKBso9dBp+WZiRKxmJUsbAqs+G/qtiWTWXlVZWjYoZKV0OKSYwZfdM
+ WxDGvor0MhqHOPvWCUI9b0h4sFeSeNraJk/cdT+mEYZtqS1ubVV2lyl7ZqDz6u2Z/jCzzw/RkG
+ Jdo=
 WDCIronportException: Internal
 Received: from vm.labspan.wdc.com (HELO vm.sc.wdc.com) ([10.6.137.102])
-  by uls-op-cesaip02.wdc.com with ESMTP; 18 Jan 2021 21:09:36 -0800
+  by uls-op-cesaip02.wdc.com with ESMTP; 18 Jan 2021 21:06:34 -0800
 From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 To:     linux-block@vger.kernel.org, linux-xfs@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -69,41 +69,112 @@ Cc:     jfs-discussion@lists.sourceforge.net, dm-devel@redhat.com,
         osandov@fb.com, bvanassche@acm.org, gustavo@embeddedor.com,
         asml.silence@gmail.com, jefflexu@linux.alibaba.com,
         Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Subject: [RFC PATCH 25/37] dm-zoned: use bio_init_fields
-Date:   Mon, 18 Jan 2021 21:06:19 -0800
-Message-Id: <20210119050631.57073-26-chaitanya.kulkarni@wdc.com>
+Subject: [RFC PATCH 00/37] block: introduce bio_init_fields()
+Date:   Mon, 18 Jan 2021 21:05:54 -0800
+Message-Id: <20210119050631.57073-1-chaitanya.kulkarni@wdc.com>
 X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20210119050631.57073-1-chaitanya.kulkarni@wdc.com>
-References: <20210119050631.57073-1-chaitanya.kulkarni@wdc.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=y
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
----
- drivers/md/md.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Hi,
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index ca409428b4fc..b331c81f3a12 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -1001,11 +1001,9 @@ void md_super_write(struct mddev *mddev, struct md_rdev *rdev,
- 
- 	atomic_inc(&rdev->nr_pending);
- 
--	bio_set_dev(bio, rdev->meta_bdev ? rdev->meta_bdev : rdev->bdev);
--	bio->bi_iter.bi_sector = sector;
- 	bio_add_page(bio, page, size, 0);
--	bio->bi_private = rdev;
--	bio->bi_end_io = super_written;
-+	bio_init_fields(bio, rdev->meta_bdev ? rdev->meta_bdev : rdev->bdev,
-+			sector, rdev, super_written, 0, 0);
- 
- 	if (test_bit(MD_FAILFAST_SUPPORTED, &mddev->flags) &&
- 	    test_bit(FailFast, &rdev->flags) &&
+This is a *compile only RFC* which adds a generic helper to initialize
+the various fields of the bio that is repeated all the places in
+file-systems, block layer, and drivers.
+
+The new helper allows callers to initialize various members such as
+bdev, sector, private, end io callback, io priority, and write hints.
+
+The objective of this RFC is to only start a discussion, this it not 
+completely tested at all.                                                                                                            
+Following diff shows code level benefits of this helper :-
+ 38 files changed, 124 insertions(+), 236 deletions(-)
+
+-ck
+
+Chaitanya Kulkarni (37):
+  block: introduce bio_init_fields() helper
+  fs: use bio_init_fields in block_dev
+  btrfs: use bio_init_fields in disk-io
+  btrfs: use bio_init_fields in volumes
+  ext4: use bio_init_fields in page_io
+  gfs2: use bio_init_fields in lops
+  gfs2: use bio_init_fields in meta_io
+  gfs2: use bio_init_fields in ops_fstype
+  iomap: use bio_init_fields in buffered-io
+  iomap: use bio_init_fields in direct-io
+  jfs: use bio_init_fields in logmgr
+  zonefs: use bio_init_fields in append
+  drdb: use bio_init_fields in actlog
+  drdb: use bio_init_fields in bitmap
+  drdb: use bio_init_fields in receiver
+  floppy: use bio_init_fields
+  pktcdvd: use bio_init_fields
+  bcache: use bio_init_fields in journal
+  bcache: use bio_init_fields in super
+  bcache: use bio_init_fields in writeback
+  dm-bufio: use bio_init_fields
+  dm-crypt: use bio_init_fields
+  dm-zoned: use bio_init_fields metadata
+  dm-zoned: use bio_init_fields target
+  dm-zoned: use bio_init_fields
+  dm log writes: use bio_init_fields
+  nvmet: use bio_init_fields in bdev-ns
+  target: use bio_init_fields in iblock
+  btrfs: use bio_init_fields in scrub
+  fs: use bio_init_fields in buffer
+  eros: use bio_init_fields in data
+  eros: use bio_init_fields in zdata
+  jfs: use bio_init_fields in metadata
+  nfs: use bio_init_fields in blocklayout
+  ocfs: use bio_init_fields in heartbeat
+  xfs: use bio_init_fields in xfs_buf
+  xfs: use bio_init_fields in xfs_log
+
+ block/blk-lib.c                     | 13 +++++--------
+ drivers/block/drbd/drbd_actlog.c    |  5 +----
+ drivers/block/drbd/drbd_bitmap.c    |  5 +----
+ drivers/block/drbd/drbd_receiver.c  | 11 +++--------
+ drivers/block/floppy.c              |  5 +----
+ drivers/block/pktcdvd.c             | 12 ++++--------
+ drivers/md/bcache/journal.c         | 21 ++++++++-------------
+ drivers/md/bcache/super.c           | 19 +++++--------------
+ drivers/md/bcache/writeback.c       | 14 ++++++--------
+ drivers/md/dm-bufio.c               |  5 +----
+ drivers/md/dm-crypt.c               |  4 +---
+ drivers/md/dm-log-writes.c          | 21 ++++++---------------
+ drivers/md/dm-zoned-metadata.c      | 15 +++++----------
+ drivers/md/dm-zoned-target.c        |  9 +++------
+ drivers/md/md.c                     |  6 ++----
+ drivers/nvme/target/io-cmd-bdev.c   |  4 +---
+ drivers/target/target_core_iblock.c | 11 +++--------
+ fs/block_dev.c                      | 17 +++++------------
+ fs/btrfs/disk-io.c                  | 11 ++++-------
+ fs/btrfs/scrub.c                    |  6 ++----
+ fs/btrfs/volumes.c                  |  4 +---
+ fs/buffer.c                         |  7 ++-----
+ fs/erofs/data.c                     |  6 ++----
+ fs/erofs/zdata.c                    |  9 +++------
+ fs/ext4/page-io.c                   |  6 ++----
+ fs/gfs2/lops.c                      |  6 ++----
+ fs/gfs2/meta_io.c                   |  5 ++---
+ fs/gfs2/ops_fstype.c                |  7 ++-----
+ fs/iomap/buffered-io.c              |  5 ++---
+ fs/iomap/direct-io.c                | 15 +++++----------
+ fs/jfs/jfs_logmgr.c                 | 16 ++++------------
+ fs/jfs/jfs_metapage.c               | 16 +++++++---------
+ fs/nfs/blocklayout/blocklayout.c    |  8 ++------
+ fs/ocfs2/cluster/heartbeat.c        |  4 +---
+ fs/xfs/xfs_buf.c                    |  6 ++----
+ fs/xfs/xfs_log.c                    |  6 ++----
+ fs/zonefs/super.c                   |  7 +++----
+ include/linux/bio.h                 | 13 +++++++++++++
+ 38 files changed, 124 insertions(+), 236 deletions(-)
+
 -- 
 2.22.1
 
