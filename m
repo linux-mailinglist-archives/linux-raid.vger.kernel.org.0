@@ -2,39 +2,39 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C568D2FC7DF
-	for <lists+linux-raid@lfdr.de>; Wed, 20 Jan 2021 03:29:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B8E4C2FC7AE
+	for <lists+linux-raid@lfdr.de>; Wed, 20 Jan 2021 03:23:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731131AbhATC2w (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 19 Jan 2021 21:28:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48240 "EHLO mail.kernel.org"
+        id S1731018AbhATCUT (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 19 Jan 2021 21:20:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730733AbhATB3T (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 19 Jan 2021 20:29:19 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3F32D235E4;
-        Wed, 20 Jan 2021 01:27:43 +0000 (UTC)
+        id S1730857AbhATB3o (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 19 Jan 2021 20:29:44 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id EDC8623715;
+        Wed, 20 Jan 2021 01:28:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611106064;
-        bh=5rQcYV71KV3JmQ4KsDwVdvTYld0jKiuvXxDFcSAvbW8=;
+        s=k20201202; t=1611106085;
+        bh=jcd+HH/G7EYQLV0kHgGg4IVObzS7LgAWPr49vD7pUh4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lVzP6w4Z44+dO8GFT71fLuUZJk0A5ABKx/89a/Dw7dbGBl2EfVccZAxYOpdgQ44tA
-         nxPpTXhBliNk4B5/X0J4EcBmCC0v//WajF5X9t2KNDgLxFc4bQ6RuDJIcepkB62VIV
-         T+XqecZrEU5ulSkXGXsfw37xulO2o5tyGYSmLesg0jXxDYZr6Eo6vhHjJ5vCxmovUq
-         oQwrgycvmpdPrSeakmRj+dtStSnBxRsaomySaSw7UwsNGF6BcT5PYMKwA3xN/cFEqN
-         jLw4veScXP9s6AIg5AccuDBfbUtl6TQ1LSUY2WILUw3e65KA9y2VSr9Ng/NT4X0Bcr
-         UNGThlFmgdvAw==
+        b=aDB1viuI5Sqi4sYsm6U8lwGjqIcA0Qw2OtvVgd1d2wFT7IXghQMOHtctWAlKkePWP
+         L7Kgo8jQ4gNSUnheYp2B2ns34Po9qz2fGXTM5sIFGAyi1So2JUbnnRbqRAjTJQPm75
+         WTbAk0ghfAX5SCRsu2j09ZvDd1YeAeFq7kh3ANP2Zs39BxtqldsxELA1+PAx6BYPAx
+         pfMg2rAtyru3jAAhqWWhQv9Et3J+N4EvlTnWzm9UEVU5YqTHPuV9Krx5EojVgOO27+
+         xL9b4ZXOjot3F50c7hb6DVVNIEwcXoi41jDr0B3PMn345tDSP2elKw12wfVz3vBv/D
+         ff69MpfzZII8w==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Anthony Iliopoulos <ailiop@suse.com>,
         Mike Snitzer <snitzer@redhat.com>,
         Sasha Levin <sashal@kernel.org>, dm-devel@redhat.com,
         linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 02/15] dm integrity: select CRYPTO_SKCIPHER
-Date:   Tue, 19 Jan 2021 20:27:27 -0500
-Message-Id: <20210120012740.770354-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 2/9] dm integrity: select CRYPTO_SKCIPHER
+Date:   Tue, 19 Jan 2021 20:27:55 -0500
+Message-Id: <20210120012802.770525-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20210120012740.770354-1-sashal@kernel.org>
-References: <20210120012740.770354-1-sashal@kernel.org>
+In-Reply-To: <20210120012802.770525-1-sashal@kernel.org>
+References: <20210120012802.770525-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,10 +61,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/md/Kconfig b/drivers/md/Kconfig
-index 8b8c123cae66f..7d61ef03cb187 100644
+index 4a249ee86364c..231b6a18ca272 100644
 --- a/drivers/md/Kconfig
 +++ b/drivers/md/Kconfig
-@@ -527,6 +527,7 @@ config DM_INTEGRITY
+@@ -508,6 +508,7 @@ config DM_INTEGRITY
  	select BLK_DEV_INTEGRITY
  	select DM_BUFIO
  	select CRYPTO
