@@ -2,255 +2,179 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1483F302F98
-	for <lists+linux-raid@lfdr.de>; Mon, 25 Jan 2021 23:59:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4245B302FCF
+	for <lists+linux-raid@lfdr.de>; Tue, 26 Jan 2021 00:08:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732530AbhAYW57 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 25 Jan 2021 17:57:59 -0500
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:41443 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732118AbhAYW5b (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 25 Jan 2021 17:57:31 -0500
-X-IronPort-AV: E=Sophos;i="5.79,374,1602518400"; 
-   d="scan'208";a="103820574"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 26 Jan 2021 06:55:38 +0800
-Received: from G08CNEXMBPEKD05.g08.fujitsu.local (unknown [10.167.33.204])
-        by cn.fujitsu.com (Postfix) with ESMTP id 5E4BE4CE6781;
-        Tue, 26 Jan 2021 06:55:36 +0800 (CST)
-Received: from G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.200) by
- G08CNEXMBPEKD05.g08.fujitsu.local (10.167.33.204) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Tue, 26 Jan 2021 06:55:37 +0800
-Received: from irides.mr.mr.mr (10.167.225.141) by
- G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
- id 15.0.1497.2 via Frontend Transport; Tue, 26 Jan 2021 06:55:34 +0800
-From:   Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
-        <linux-nvdimm@lists.01.org>, <linux-mm@kvack.org>
-CC:     <linux-fsdevel@vger.kernel.org>, <linux-raid@vger.kernel.org>,
-        <darrick.wong@oracle.com>, <dan.j.williams@intel.com>,
-        <david@fromorbit.com>, <hch@lst.de>, <song@kernel.org>,
-        <rgoldwyn@suse.de>, <qi.fuli@fujitsu.com>, <y-goto@fujitsu.com>
-Subject: [PATCH v2 05/10] mm, pmem: Implement ->memory_failure() in pmem driver
-Date:   Tue, 26 Jan 2021 06:55:21 +0800
-Message-ID: <20210125225526.1048877-6-ruansy.fnst@cn.fujitsu.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20210125225526.1048877-1-ruansy.fnst@cn.fujitsu.com>
-References: <20210125225526.1048877-1-ruansy.fnst@cn.fujitsu.com>
+        id S1732557AbhAYXH2 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 25 Jan 2021 18:07:28 -0500
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:46823 "EHLO mx1.molgen.mpg.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732772AbhAYVdU (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 25 Jan 2021 16:33:20 -0500
+Received: from [192.168.0.5] (ip5f5aed2c.dynamic.kabel-deutschland.de [95.90.237.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: buczek)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id F165920647907;
+        Mon, 25 Jan 2021 22:32:30 +0100 (CET)
+Subject: Re: md_raid: mdX_raid6 looping after sync_action "check" to "idle"
+ transition
+From:   Donald Buczek <buczek@molgen.mpg.de>
+To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Song Liu <song@kernel.org>, linux-raid@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        it+raid@molgen.mpg.de
+References: <aa9567fd-38e1-7b9c-b3e1-dc2fdc055da5@molgen.mpg.de>
+ <95fbd558-5e46-7a6a-43ac-bcc5ae8581db@cloud.ionos.com>
+ <77244d60-1c2d-330e-71e6-4907d4dd65fc@molgen.mpg.de>
+ <7c5438c7-2324-cc50-db4d-512587cb0ec9@molgen.mpg.de>
+ <b289ae15-ff82-b36e-4be4-a1c8bbdbacd7@cloud.ionos.com>
+ <37c158cb-f527-34f5-2482-cae138bc8b07@molgen.mpg.de>
+ <efb8d47b-ab9b-bdb9-ee2f-fb1be66343b1@molgen.mpg.de>
+ <55e30408-ac63-965f-769f-18be5fd5885c@molgen.mpg.de>
+ <d95aa962-9750-c27c-639a-2362bdb32f41@cloud.ionos.com>
+ <30576384-682c-c021-ff16-bebed8251365@molgen.mpg.de>
+ <cdc0b03c-db53-35bc-2f75-93bbca0363b5@molgen.mpg.de>
+Message-ID: <bc342de0-98d2-1733-39cd-cc1999777ff3@molgen.mpg.de>
+Date:   Mon, 25 Jan 2021 22:32:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-yoursite-MailScanner-ID: 5E4BE4CE6781.AB943
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
-X-Spam-Status: No
+In-Reply-To: <cdc0b03c-db53-35bc-2f75-93bbca0363b5@molgen.mpg.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Call the ->memory_failure() which is implemented by pmem driver, in
-order to finally notify filesystem to handle the corrupted data.  The
-handler which collects and kills processes are moved into
-mf_dax_mapping_kill_procs(), which will be called by filesystem.
 
-Keep the old handler in order to roll back if driver/device/filesystem
-does not support ->memory_failure()/->corrupted_range().
 
-Signed-off-by: Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
----
- drivers/nvdimm/pmem.c |  25 +++++++++++
- mm/memory-failure.c   | 102 +++++++++++++++++++++++++-----------------
- 2 files changed, 86 insertions(+), 41 deletions(-)
+On 25.01.21 09:54, Donald Buczek wrote:
+> Dear Guoqing,
+> 
+> a colleague of mine was able to produce the issue inside a vm and were able to find a procedure to run the vm into the issue within minutes (not unreliably after hours on a physical system as before). This of course helped to pinpoint the problem.
+> 
+> My current theory of what is happening is:
+> 
+> - MD_SB_CHANGE_CLEAN + MD_SB_CHANGE_PENDING are set by md_write_start() when file-system I/O wants to do a write and the array transitions from "clean" to "active". (https://elixir.bootlin.com/linux/v5.4.57/source/drivers/md/md.c#L8308)
+> 
+> - Before raid5d gets to write the superblock (its busy processing active stripes because of the sync activity) , userspace wants to pause the check by `echo idle > /sys/block/mdX/md/sync_action`
+> 
+> - action_store() takes the reconfig_mutex before trying to stop the sync thread. (https://elixir.bootlin.com/linux/v5.4.57/source/drivers/md/md.c#L4689) Dump of struct mddev of email 1/19/21 confirms reconf_mutex non-zero.
+> 
+> - raid5d is running in its main loop. raid5d()->handle_active_stripes() returns a positive batch size ( https://elixir.bootlin.com/linux/v5.4.57/source/drivers/md/raid5.c#L6329 ) although raid5d()->handle_active_stripes()->handle_stripe() doesn't process any stripe because of MD_SB_CHANGE_PENDING. (https://elixir.bootlin.com/linux/v5.4.57/source/drivers/md/raid5.c#L4729 ). This is the reason, raid5d is busy looping.
+> 
+> - raid5d()->md_check_recovery() is called by the raid5d main loop. One of its duties is to write the superblock, if a change is pending. However to do so, it needs either MD_ALLOW_SB_UPDATE or must be able to take the reconfig_mutex. (https://elixir.bootlin.com/linux/v5.4.57/source/drivers/md/md.c#L8967 , https://elixir.bootlin.com/linux/v5.4.57/source/drivers/md/md.c#L9006) Both is not true, so the superblock is not written and MD_SB_CHANGE_PENDING is not cleared.
+> 
+> - (as discussed previously) the sync thread is waiting for the number of active stripes to go down and doesn't terminate. The userspace thread is waiting for the sync thread to terminate.
+> 
+> Does this make sense?
+> 
+> Just for reference, I add the procedure which triggers the issue on the vm (with /dev/md3 mounted on /mnt/raid_md3) and some debug output:
+> 
+> ```
+> #! /bin/bash
+> 
+> (
+>          while true; do
+>                  echo "start check"
+>                  echo check > /sys/block/md3/md/sync_action
+>                  sleep 10
+>                  echo "stop check"
+>                  echo idle > /sys/block/md3/md/sync_action
+>                  sleep 2
+>          done
+> ) &
+> 
+> (
+>          while true; do
+>                  dd bs=1k count=$((5*1024*1024)) if=/dev/zero of=/mnt/raid_md3/bigfile status=none
+>                  sync /mnt/raid_md3/bigfile
+>                  rm /mnt/raid_md3/bigfile
+>                  sleep .1
+>          done
+> ) &
+> 
+> start="$(date +%s)"
+> cd /sys/block/md3/md
+> wp_count=0
+> while true; do
+>          array_state=$(cat array_state)
+>          if [ "$array_state" = write-pending ]; then
+>                  wp_count=$(($wp_count+1))
+>          else
+>                  wp_count=0
+>          fi
+>          echo $(($(date +%s)-$start)) $(cat sync_action) $(cat sync_completed) $array_state $(cat stripe_cache_active)
+>          if [ $wp_count -ge 3 ]; then
+>                  kill -- -$$
+>                  exit
+>          fi
+>          sleep 1
+> done
+> ```
+> 
+> The time, this needs to trigger the issue, varies from under a minute to one hour with 5 minute being typical. The output ends like this:
+> 
+>      309 check 6283872 / 8378368 active-idle 4144
+>      310 check 6283872 / 8378368 active 1702
+>      311 check 6807528 / 8378368 active 4152
+>      312 check 7331184 / 8378368 clean 3021
+>      stop check
+>      313 check 7331184 / 8378368 write-pending 3905
+>      314 check 7331184 / 8378368 write-pending 3905
+>      315 check 7331184 / 8378368 write-pending 3905
+>      Terminated
+> 
+> If I add
+> 
+>      pr_debug("XXX batch_size %d release %d mdddev->sb_flags %lx\n", batch_size, released, mddev->sb_flags);
+> 
+> in raid5d after the call to handle_active_stripes and enable the debug location after the deadlock occurred, I get
+> 
+>      [ 3123.939143] [1223] raid5d:6332: XXX batch_size 8 release 0 mdddev->sb_flags 6
+>      [ 3123.939156] [1223] raid5d:6332: XXX batch_size 8 release 0 mdddev->sb_flags 6
+>      [ 3123.939170] [1223] raid5d:6332: XXX batch_size 8 release 0 mdddev->sb_flags 6
+>      [ 3123.939184] [1223] raid5d:6332: XXX batch_size 8 release 0 mdddev->sb_flags 6
+> 
+> If I add
+> 
+>      pr_debug("XXX 1 %s:%d mddev->flags %08lx mddev->sb_flags %08lx\n", __FILE__, __LINE__, mddev->flags, mddev->sb_flags);
+> 
+> at the head of md_check_recovery, I get:
+> 
+>      [  789.555462] [1191] md_check_recovery:8970: XXX 1 drivers/md/md.c:8970 mddev->flags 00000000 mddev->sb_flags 00000006
+>      [  789.555477] [1191] md_check_recovery:8970: XXX 1 drivers/md/md.c:8970 mddev->flags 00000000 mddev->sb_flags 00000006
+>      [  789.555491] [1191] md_check_recovery:8970: XXX 1 drivers/md/md.c:8970 mddev->flags 00000000 mddev->sb_flags 00000006
+>      [  789.555505] [1191] md_check_recovery:8970: XXX 1 drivers/md/md.c:8970 mddev->flags 00000000 mddev->sb_flags 00000006
+>      [  789.555520] [1191] md_check_recovery:8970: XXX 1 drivers/md/md.c:8970 mddev->flags 00000000 mddev->sb_flags 00000006
+> 
+> More debug lines in md_check_recovery confirm the control flow ( `if (mddev_trylock(mddev))` block not taken )
+> 
+> What approach would you suggest to fix this?
 
-diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
-index 875076b0ea6c..c9e4fb38f94a 100644
---- a/drivers/nvdimm/pmem.c
-+++ b/drivers/nvdimm/pmem.c
-@@ -363,9 +363,34 @@ static void pmem_release_disk(void *__pmem)
- 	put_disk(pmem->disk);
- }
- 
-+static int pmem_pagemap_memory_failure(struct dev_pagemap *pgmap,
-+		unsigned long pfn, int flags)
-+{
-+	struct pmem_device *pdev;
-+	struct gendisk *disk;
-+	loff_t disk_offset;
-+	int rc = 0;
-+	unsigned long size = page_size(pfn_to_page(pfn));
-+
-+	pdev = container_of(pgmap, struct pmem_device, pgmap);
-+	disk = pdev->disk;
-+	if (!disk)
-+		return -ENXIO;
-+
-+	disk_offset = PFN_PHYS(pfn) - pdev->phys_addr - pdev->data_offset;
-+	if (disk->fops->corrupted_range) {
-+		rc = disk->fops->corrupted_range(disk, NULL, disk_offset, size, &flags);
-+		if (rc == -ENODEV)
-+			rc = -ENXIO;
-+	} else
-+		rc = -EOPNOTSUPP;
-+	return rc;
-+}
-+
- static const struct dev_pagemap_ops fsdax_pagemap_ops = {
- 	.kill			= pmem_pagemap_kill,
- 	.cleanup		= pmem_pagemap_cleanup,
-+	.memory_failure		= pmem_pagemap_memory_failure,
- };
- 
- static int pmem_attach_disk(struct device *dev,
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 158fe0c8e602..670e29cd263e 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -1219,6 +1219,54 @@ static int try_to_split_thp_page(struct page *page, const char *msg)
- 	return 0;
- }
- 
-+int mf_generic_kill_procs(unsigned long long pfn, int flags)
-+{
-+	struct page *page = pfn_to_page(pfn);
-+	const bool unmap_success = true;
-+	unsigned long size = 0;
-+	struct to_kill *tk;
-+	LIST_HEAD(to_kill);
-+	loff_t start;
-+	dax_entry_t cookie;
-+
-+	/*
-+	 * Prevent the inode from being freed while we are interrogating
-+	 * the address_space, typically this would be handled by
-+	 * lock_page(), but dax pages do not use the page lock. This
-+	 * also prevents changes to the mapping of this pfn until
-+	 * poison signaling is complete.
-+	 */
-+	cookie = dax_lock_page(page);
-+	if (!cookie)
-+		return -EBUSY;
-+	/*
-+	 * Unlike System-RAM there is no possibility to swap in a
-+	 * different physical page at a given virtual address, so all
-+	 * userspace consumption of ZONE_DEVICE memory necessitates
-+	 * SIGBUS (i.e. MF_MUST_KILL)
-+	 */
-+	flags |= MF_ACTION_REQUIRED | MF_MUST_KILL;
-+	collect_procs(page, &to_kill, flags & MF_ACTION_REQUIRED);
-+
-+	list_for_each_entry(tk, &to_kill, nd)
-+		if (tk->size_shift)
-+			size = max(size, 1UL << tk->size_shift);
-+	if (size) {
-+		/*
-+		 * Unmap the largest mapping to avoid breaking up
-+		 * device-dax mappings which are constant size. The
-+		 * actual size of the mapping being torn down is
-+		 * communicated in siginfo, see kill_proc()
-+		 */
-+		start = (page->index << PAGE_SHIFT) & ~(size - 1);
-+		unmap_mapping_range(page->mapping, start, start + size, 0);
-+	}
-+	kill_procs(&to_kill, flags & MF_MUST_KILL, !unmap_success, pfn, flags);
-+
-+	dax_unlock_page(page, cookie);
-+	return 0;
-+}
-+
- int mf_dax_mapping_kill_procs(struct address_space *mapping, pgoff_t index, int flags)
- {
- 	const bool unmap_success = true;
-@@ -1343,13 +1391,7 @@ static int memory_failure_dev_pagemap(unsigned long pfn, int flags,
- 		struct dev_pagemap *pgmap)
- {
- 	struct page *page = pfn_to_page(pfn);
--	const bool unmap_success = true;
--	unsigned long size = 0;
--	struct to_kill *tk;
--	LIST_HEAD(to_kill);
- 	int rc = -EBUSY;
--	loff_t start;
--	dax_entry_t cookie;
- 
- 	if (flags & MF_COUNT_INCREASED)
- 		/*
-@@ -1357,20 +1399,9 @@ static int memory_failure_dev_pagemap(unsigned long pfn, int flags,
- 		 */
- 		put_page(page);
- 
--	/*
--	 * Prevent the inode from being freed while we are interrogating
--	 * the address_space, typically this would be handled by
--	 * lock_page(), but dax pages do not use the page lock. This
--	 * also prevents changes to the mapping of this pfn until
--	 * poison signaling is complete.
--	 */
--	cookie = dax_lock_page(page);
--	if (!cookie)
--		goto out;
--
- 	if (hwpoison_filter(page)) {
- 		rc = 0;
--		goto unlock;
-+		goto out;
- 	}
- 
- 	if (pgmap->type == MEMORY_DEVICE_PRIVATE) {
-@@ -1378,7 +1409,7 @@ static int memory_failure_dev_pagemap(unsigned long pfn, int flags,
- 		 * TODO: Handle HMM pages which may need coordination
- 		 * with device-side memory.
- 		 */
--		goto unlock;
-+		goto out;
- 	}
- 
- 	/*
-@@ -1388,32 +1419,21 @@ static int memory_failure_dev_pagemap(unsigned long pfn, int flags,
- 	SetPageHWPoison(page);
- 
- 	/*
--	 * Unlike System-RAM there is no possibility to swap in a
--	 * different physical page at a given virtual address, so all
--	 * userspace consumption of ZONE_DEVICE memory necessitates
--	 * SIGBUS (i.e. MF_MUST_KILL)
-+	 * Call driver's implementation to handle the memory failure,
-+	 * otherwise roll back to generic handler.
- 	 */
--	flags |= MF_ACTION_REQUIRED | MF_MUST_KILL;
--	collect_procs_file(page, page->mapping, page->index, &to_kill,
--			   flags & MF_ACTION_REQUIRED);
--
--	list_for_each_entry(tk, &to_kill, nd)
--		if (tk->size_shift)
--			size = max(size, 1UL << tk->size_shift);
--	if (size) {
-+	if (pgmap->ops->memory_failure) {
-+		rc = pgmap->ops->memory_failure(pgmap, pfn, flags);
- 		/*
--		 * Unmap the largest mapping to avoid breaking up
--		 * device-dax mappings which are constant size. The
--		 * actual size of the mapping being torn down is
--		 * communicated in siginfo, see kill_proc()
-+		 * Roll back to generic handler too if operation is not
-+		 * supported inside the driver/device/filesystem.
- 		 */
--		start = (page->index << PAGE_SHIFT) & ~(size - 1);
--		unmap_mapping_range(page->mapping, start, start + size, 0);
-+		if (rc != EOPNOTSUPP)
-+			goto out;
- 	}
--	kill_procs(&to_kill, flags & MF_MUST_KILL, !unmap_success, pfn, flags);
--	rc = 0;
--unlock:
--	dax_unlock_page(page, cookie);
-+
-+	rc = mf_generic_kill_procs(pfn, flags);
-+
- out:
- 	/* drop pgmap ref acquired in caller */
- 	put_dev_pagemap(pgmap);
+I naively tried the following patch and it seems to fix the problem. The test procedure didn't trigger the deadlock in 10 hours.
+
+D.
+
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 2d21c298ffa7..f40429843906 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -4687,11 +4687,13 @@ action_store(struct mddev *mddev, const char *page, size_t len)
+  			clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+  		if (test_bit(MD_RECOVERY_RUNNING, &mddev->recovery) &&
+  		    mddev_lock(mddev) == 0) {
++			set_bit(MD_ALLOW_SB_UPDATE, &mddev->flags);
+  			flush_workqueue(md_misc_wq);
+  			if (mddev->sync_thread) {
+  				set_bit(MD_RECOVERY_INTR, &mddev->recovery);
+  				md_reap_sync_thread(mddev);
+  			}
++			clear_bit(MD_ALLOW_SB_UPDATE, &mddev->flags);
+  			mddev_unlock(mddev);
+  		}
+  	} else if (test_bit(MD_RECOVERY_RUNNING, &mddev->recovery))
 -- 
 2.30.0
-
-
-
