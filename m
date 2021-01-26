@@ -2,183 +2,165 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 223BA304292
-	for <lists+linux-raid@lfdr.de>; Tue, 26 Jan 2021 16:30:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16887304200
+	for <lists+linux-raid@lfdr.de>; Tue, 26 Jan 2021 16:15:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405892AbhAZP2l (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 26 Jan 2021 10:28:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57902 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405889AbhAZP03 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 26 Jan 2021 10:26:29 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 201BEC061D73;
-        Tue, 26 Jan 2021 07:25:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=imDKE4404TVupECTT3CTRw+cqCPUxNPppd2/iiQCXMs=; b=aQgfKd6q628v0njktwMXtO+tpa
-        VQ6AN2ML+AjC9smASiy0wrdfS4sFFCnIEmcIXu/uC9Ta7v/gFWb+6z6PpQmY8jMFGWtYqV8VJSHA0
-        dXAF/4pi0+HC8kVchlMaU5GmAZa714wa2/luSOmABw0GZfAT6AU7MbJuMKkGL5tnR0JtqQacKoy8n
-        WCCfmaNoO8QrPSmsSJPHsjQGoOnH268uw3Hhya2Ewhml5arq/gCxUDMs/smtqApFBFC+qBFUve6kd
-        hWTlztN9lb5yJebq1pTZJuSmAUl3qDJDAbW4e+pnBNWS1tiUosnRkCm/5hJV/Kb0mS6xYMUviraAV
-        ixL6cw1Q==;
-Received: from [2001:4bb8:191:e347:5918:ac86:61cb:8801] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1l4QAZ-005opo-7d; Tue, 26 Jan 2021 15:22:55 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>, Song Liu <song@kernel.org>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Coly Li <colyli@suse.de>, Mike Snitzer <snitzer@redhat.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-        linux-nilfs@vger.kernel.org, dm-devel@redhat.com,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-block@vger.kernel.org, drbd-dev@lists.linbit.com,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-mm@kvack.org
-Subject: [PATCH 17/17] mm: remove get_swap_bio
-Date:   Tue, 26 Jan 2021 15:52:47 +0100
-Message-Id: <20210126145247.1964410-18-hch@lst.de>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210126145247.1964410-1-hch@lst.de>
-References: <20210126145247.1964410-1-hch@lst.de>
+        id S2406073AbhAZPPO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 26 Jan 2021 10:15:14 -0500
+Received: from mga06.intel.com ([134.134.136.31]:55876 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391664AbhAZPBN (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 26 Jan 2021 10:01:13 -0500
+IronPort-SDR: D3IcOXaZ81zxTk87gOs5WofPbbg0iNjKWOgTA/dYH+Vf16dcphV3pnAuVOhi/2QajM7bgmU6DN
+ I7M1wPXX7Q0Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9876"; a="241441356"
+X-IronPort-AV: E=Sophos;i="5.79,375,1602572400"; 
+   d="scan'208";a="241441356"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2021 06:59:17 -0800
+IronPort-SDR: er0ofxajgvawSOeV9f9vcIUU2mypWvlnHtdTZP9nvSakQrOfTsCtiOV4YaR0zyLAqKBqNOJLdB
+ MNo6cyoL6ULA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.79,375,1602572400"; 
+   d="scan'208";a="356744488"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 26 Jan 2021 06:59:17 -0800
+Received: from [10.213.22.225] (mtkaczyk-MOBL1.ger.corp.intel.com [10.213.22.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 97ED95807C8;
+        Tue, 26 Jan 2021 06:59:16 -0800 (PST)
+From:   "Tkaczyk, Mariusz" <mariusz.tkaczyk@linux.intel.com>
+To:     linux-raid@vger.kernel.org
+Cc:     "Shchirskyi, Oleksandr" <oleksandr.shchirskyi@intel.com>
+Subject: Kernel bug during chunk size migration
+Message-ID: <6bef1a9b-4fd0-633d-8589-8e486cac60ab@linux.intel.com>
+Date:   Tue, 26 Jan 2021 15:59:13 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Just reuse the block_device and sector from the swap_info structure,
-just as used by the SWP_SYNCHRONOUS path.  Also remove the checks for
-NULL returns from bio_alloc as that can't happen for sleeping
-allocations.
+Hi all,
+We recently discovered a problem with the md driver on the upstream
+kernel. During chunk size migration (tested with different combinations
+of the chunk size, e.g. 4->128, 128->4), a kernel bug appears.
+We were able to reproduce this issue on imsm only metadata, as with native, 
+mdadm create doesn't take into account size param, and on the whole drives
+size test lasts too long.
+Retesting on previous kernel versions showed that the problem is present
+in older versions of the kernel, including 5.0 (4.x versions were not
+checked yet)
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- include/linux/swap.h |  1 -
- mm/page_io.c         | 45 +++++++++++++-------------------------------
- mm/swapfile.c        | 10 ----------
- 3 files changed, 13 insertions(+), 43 deletions(-)
+Steps to reproduce (run in the loop with different chunk size
+combinations):
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 596bc2f4d9b03e..3f1f7ae0fbe9e1 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -468,7 +468,6 @@ extern int free_swap_and_cache(swp_entry_t);
- int swap_type_of(dev_t device, sector_t offset);
- int find_first_swap(dev_t *device);
- extern unsigned int count_swap_pages(int, int);
--extern sector_t map_swap_page(struct page *, struct block_device **);
- extern sector_t swapdev_block(int, pgoff_t);
- extern int page_swapcount(struct page *);
- extern int __swap_count(swp_entry_t entry);
-diff --git a/mm/page_io.c b/mm/page_io.c
-index a75f35464a4e73..92f7941c6d018b 100644
---- a/mm/page_io.c
-+++ b/mm/page_io.c
-@@ -26,25 +26,6 @@
- #include <linux/uio.h>
- #include <linux/sched/task.h>
- 
--static struct bio *get_swap_bio(gfp_t gfp_flags,
--				struct page *page, bio_end_io_t end_io)
--{
--	struct bio *bio;
--
--	bio = bio_alloc(gfp_flags, 1);
--	if (bio) {
--		struct block_device *bdev;
--
--		bio->bi_iter.bi_sector = map_swap_page(page, &bdev);
--		bio_set_dev(bio, bdev);
--		bio->bi_iter.bi_sector <<= PAGE_SHIFT - 9;
--		bio->bi_end_io = end_io;
--
--		bio_add_page(bio, page, thp_size(page), 0);
--	}
--	return bio;
--}
--
- void end_swap_bio_write(struct bio *bio)
- {
- 	struct page *page = bio_first_page_all(bio);
-@@ -361,13 +342,13 @@ int __swap_writepage(struct page *page, struct writeback_control *wbc,
- 		return 0;
- 	}
- 
--	bio = get_swap_bio(GFP_NOIO, page, end_write_func);
--	if (bio == NULL) {
--		set_page_dirty(page);
--		unlock_page(page);
--		return -ENOMEM;
--	}
-+	bio = bio_alloc(GFP_NOIO, 1);
-+	bio_set_dev(bio, sis->bdev);
-+	bio->bi_iter.bi_sector = swap_page_sector(page);
- 	bio->bi_opf = REQ_OP_WRITE | REQ_SWAP | wbc_to_write_flags(wbc);
-+	bio->bi_end_io = end_write_func;
-+	bio_add_page(bio, page, thp_size(page), 0);
-+
- 	bio_associate_blkg_from_page(bio, page);
- 	count_swpout_vm_event(page);
- 	set_page_writeback(page);
-@@ -427,18 +408,18 @@ int swap_readpage(struct page *page, bool synchronous)
- 	}
- 
- 	ret = 0;
--	bio = get_swap_bio(GFP_KERNEL, page, end_swap_bio_read);
--	if (bio == NULL) {
--		unlock_page(page);
--		ret = -ENOMEM;
--		goto out;
--	}
-+	bio = bio_alloc(GFP_KERNEL, 1);
-+	bio_set_dev(bio, sis->bdev);
-+	bio->bi_opf = REQ_OP_READ;
-+	bio->bi_iter.bi_sector = swap_page_sector(page);
-+	bio->bi_end_io = end_swap_bio_read;
-+	bio_add_page(bio, page, thp_size(page), 0);
-+
- 	disk = bio->bi_bdev->bd_disk;
- 	/*
- 	 * Keep this task valid during swap readpage because the oom killer may
- 	 * attempt to access it in the page fault retry time check.
- 	 */
--	bio_set_op_attrs(bio, REQ_OP_READ, 0);
- 	if (synchronous) {
- 		bio->bi_opf |= REQ_HIPRI;
- 		get_task_struct(current);
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 9fffc5af29d1b9..bfa9e8b0c2ef61 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -2301,16 +2301,6 @@ static sector_t map_swap_entry(swp_entry_t entry, struct block_device **bdev)
- 	return se->start_block + (offset - se->start_page);
- }
- 
--/*
-- * Returns the page offset into bdev for the specified page's swap entry.
-- */
--sector_t map_swap_page(struct page *page, struct block_device **bdev)
--{
--	swp_entry_t entry;
--	entry.val = page_private(page);
--	return map_swap_entry(entry, bdev);
--}
--
- /*
-  * Free all of a swapdev's extent information
-  */
--- 
-2.29.2
+mdadm --create /dev/md/imsm0 --metadata=imsm --raid-devices=3 /dev/nvme1n1 
+/dev/nvme0n1 /dev/nvme2n1 --run
+mdadm --create /dev/md/raidVolume --level=0 --chunk ${chunk_size_1} 
+--size=524288 --raid-devices=2 /dev/nvme0n1 /dev/nvme2n1 --run
+parted -s /dev/md/raidVolume mklabel msdos
+parted -s /dev/md/raidVolume mkpart primary ext4 0% 30%
+partprobe /dev/md/raidVolume
+udevadm settle
+mkfs.ext4 /dev/md/raidVolume1 -F
+mount /dev/md/raidVolume1 /mnt/raidVolume1
+openssl rand -base64 216583372 > /mnt/raidVolume1/testfile.bin
+mdadm --grow /dev/md/raidVolume --chunk=${chunk_size_2}
+grep -m 1 "reshape done" <(dmesg -w)
+umount  /mnt/raidVolume1
+mdadm --stop --scan
+wipefs -a /dev/nvme{0,2}n1
+sleep 60
 
+Reproducibility rate:
+Sporadic, we have to run the script from above usually 10-15 times in a
+loop to hit the issue.
+
+End of test log:
+
++ mount /dev/md/raidVolume1 /mnt/raidVolume1
++ openssl rand -base64 216583372
++ mdadm --grow /dev/md/raidVolume --chunk=128
+mdadm: level of /dev/md/raidVolume changed to raid4
+[mdadm command hangs here]
+
+Kernel log:
+
+[34497.995168] md/raid:md126: device nvme2n1 operational as raid disk 1
+[34498.002910] md/raid:md126: device nvme0n1 operational as raid disk 0
+[34498.020207] md/raid:md126: raid level 4 active with 2 out of 3 devices, 
+algorithm 5
+[34498.029537] BUG: kernel NULL pointer dereference, address: 000000000000000c
+[34498.038049] #PF: supervisor read access in kernel mode
+[34498.044799] #PF: error_code(0x0000) - not-present page
+[34498.051588] PGD 0 P4D 0
+[34498.055790] Oops: 0000 [#1] SMP PTI
+[34498.060989] CPU: 4 PID: 2185199 Comm: md126_raid4 Tainted: G S 
+5.11.0-rc1 #1
+[34498.071200] Hardware name: Intel Corporation S2600WFT/S2600WFT, BIOS 
+SE5C620.86B.02.01.0008.031920191559 03/19/2019
+[34498.083661] RIP: 0010:async_copy_data+0x168/0x290 [raid456]
+[34498.091323] Code: e1 fb 00 00 00 83 f9 03 75 73 45 89 f8 85 ed 0f 84 cb 00 00 
+00 44 8b 64 24 04 49 8b 72 58 b9 00 10 00 00 49 c1 e4 04 4c 01 e6 <8b> 7e 0c 8b 
+5e 08 44 01 ef 44 29 eb 89 fa 81 e2 ff 0f 00 00 39 eb
+[34498.115178] RSP: 0018:ffffc90023cd7ad0 EFLAGS: 00010246
+[34498.122859] RAX: 0000000000000000 RBX: ffff88810daf0210 RCX: 0000000000001000
+[34498.132559] RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000000000000001
+[34498.142286] RBP: 0000000000001000 R08: 00000000fffffc00 R09: 0000000000000000
+[34498.152034] R10: ffff88810a819240 R11: ffff88810daf0000 R12: 0000000000000000
+[34498.161827] R13: 0000000000000000 R14: ffff88810daf0213 R15: ffff88810a819240
+[34498.171673] FS:  0000000000000000(0000) GS:ffff888c10900000(0000) 
+knlGS:0000000000000000
+[34498.182561] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[34498.191159] CR2: 000000000000000c CR3: 000000000260a004 CR4: 00000000007706e0
+[34498.201235] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[34498.211340] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[34498.221466] PKRU: 55555554
+[34498.227185] Call Trace:
+[34498.232670]  raid_run_ops+0x50a/0x1620 [raid456]
+[34498.240396]  ? handle_stripe_dirtying+0x6f6/0x800 [raid456]
+[34498.249139]  handle_stripe+0xcfa/0x23c0 [raid456]
+[34498.257066]  ? load_balance+0x121/0xc00
+[34498.264159]  handle_active_stripes.isra.51+0x384/0x550 [raid456]
+[34498.273527]  raid5d+0x346/0x520 [raid456]
+[34498.280925]  ? schedule+0x3c/0xa0
+[34498.287656]  ? schedule_timeout+0x20b/0x2a0
+[34498.295285]  ? md_start_sync+0x60/0x60 [md_mod]
+[34498.303313]  md_thread+0x131/0x160 [md_mod]
+[34498.311027]  ? do_wait_intr_irq+0x90/0x90
+[34498.319216]  kthread+0x114/0x130
+[34498.326039]  ? kthread_unpark+0x60/0x60
+[34498.333473]  ret_from_fork+0x1f/0x30
+[34498.340622] Modules linked in: raid0 raid1 raid456 async_raid6_recov 
+async_memcpy async_pq async_xor xor async_tx raid6_pq raid10 md_mod nvme 
+nvme_core vmd
+[34498.362066] CR2: 000000000000000c
+[34498.369214] ---[ end trace 58332a66527ae7b9 ]---
+
+GDB trace:
+
+(gdb) li *async_copy_data+0x168
+0x11f8 is in async_copy_data (drivers/md/raid5.c:1326).
+1321
+1322            if (frombio)
+1323                    flags |= ASYNC_TX_FENCE;
+1324            init_async_submit(&submit, flags, tx, NULL, NULL, NULL);
+1325
+1326            bio_for_each_segment(bvl, bio, iter) {
+1327                    int len = bvl.bv_len;
+1328                    int clen;
+1329                    int b_offset = 0;
+1330
+(gdb)
+
+Any advice will be helpful.
+Currently we are working to find the root cause.
+
+Regards,
+Mariusz
