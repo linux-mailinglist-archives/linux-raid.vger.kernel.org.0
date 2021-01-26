@@ -2,140 +2,97 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A141302FA5
-	for <lists+linux-raid@lfdr.de>; Tue, 26 Jan 2021 00:00:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EC1330314D
+	for <lists+linux-raid@lfdr.de>; Tue, 26 Jan 2021 02:32:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732809AbhAYW77 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 25 Jan 2021 17:59:59 -0500
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:41443 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732103AbhAYW5x (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 25 Jan 2021 17:57:53 -0500
-X-IronPort-AV: E=Sophos;i="5.79,374,1602518400"; 
-   d="scan'208";a="103820587"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 26 Jan 2021 06:55:45 +0800
-Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
-        by cn.fujitsu.com (Postfix) with ESMTP id 143E24CE6014;
-        Tue, 26 Jan 2021 06:55:42 +0800 (CST)
-Received: from G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.200) by
- G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Tue, 26 Jan 2021 06:55:41 +0800
-Received: from irides.mr.mr.mr (10.167.225.141) by
- G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
- id 15.0.1497.2 via Frontend Transport; Tue, 26 Jan 2021 06:55:40 +0800
-From:   Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
-        <linux-nvdimm@lists.01.org>, <linux-mm@kvack.org>
-CC:     <linux-fsdevel@vger.kernel.org>, <linux-raid@vger.kernel.org>,
-        <darrick.wong@oracle.com>, <dan.j.williams@intel.com>,
-        <david@fromorbit.com>, <hch@lst.de>, <song@kernel.org>,
-        <rgoldwyn@suse.de>, <qi.fuli@fujitsu.com>, <y-goto@fujitsu.com>
-Subject: [PATCH v2 10/10] fs/dax: Remove useless functions
-Date:   Tue, 26 Jan 2021 06:55:26 +0800
-Message-ID: <20210125225526.1048877-11-ruansy.fnst@cn.fujitsu.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20210125225526.1048877-1-ruansy.fnst@cn.fujitsu.com>
+        id S1727933AbhAZBcP (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 25 Jan 2021 20:32:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46766 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730214AbhAZBaI (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 25 Jan 2021 20:30:08 -0500
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0BEFC061224
+        for <linux-raid@vger.kernel.org>; Mon, 25 Jan 2021 16:51:07 -0800 (PST)
+Received: by mail-pj1-x102f.google.com with SMTP id md11so680260pjb.0
+        for <linux-raid@vger.kernel.org>; Mon, 25 Jan 2021 16:51:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uPJlUchjV+OaTIftOWbXEjVwG0d/bApny8LKz3OH9do=;
+        b=Fn4EVg48BXJQ0XVCGo4P1/CcZQYyaUjR593N0Mrt0Pa+QokgKItCP+8Jqv/2LG0i6e
+         ZOE+o7Kp6TSk5kE5z/p+B9iYW/TEKeeUZ38hHU2REBudTZapniqQIgruui5UYR2CX3jM
+         XMAbvuY6JHqMBPOAxvGF/pd+dD2JXyjuQuYgOdpBoKEe5OkwN21A1Oz9evbFfBDmAQvY
+         7WFdRbpEZ2liR9Ig+qsbIiWSj+GDDvognZEVlwuSJJV6ndniZaVtaxhiGOys5MNoWytQ
+         gQ7Z3yycyJCcMckSCcJGV82qUswKaz/f7sRYaD0P22YuS9ZNrnmyYgBqU8O8EcKu5dJk
+         dg7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uPJlUchjV+OaTIftOWbXEjVwG0d/bApny8LKz3OH9do=;
+        b=C+eQuACaq/Vlxhm2GxQOYWeWLKlezguNLtlLkMHdTa/ky3LXaklnagJBIrV///Pfxl
+         gBCpQrLVRVgGVWo14XLHTVB44HZzO8zyAyur3AHj9qBwD9JA6Andrc0RciMZQle3CsN3
+         3XtcOTSHvIyNMYNSCrNv81hnkiLnyPDNTTz6lsgDugXnkJqOMrUA+ZUItQ7TsbFoHWLJ
+         Lr9Is1kMxxMm94N87DnaSIWxm/HJ4f9Mfs+/Aml1OwL9ue3Wp6E6T9gEjdSZWY1eXE8G
+         hJs3sBw73+urzY6t5NYdGNo9MM3y0K21SynQ301zZg9trk9KGPFqkgJfpg4xlTIjOHc0
+         6C6g==
+X-Gm-Message-State: AOAM532elC9OSQF4gs3Iij5OTO1xs6x2D3u0T54oaZ0wNcb/IhTXbhzC
+        Fmkk9eJTnsEA2gZLnjdDiExLaw==
+X-Google-Smtp-Source: ABdhPJzzs4C/lNGU5gJfjXLgueQ6h//2HOCs2JEgJn8fHs+SjPK/bp53wfdpI/yc0gqOKDwXYe/jwg==
+X-Received: by 2002:a17:902:c284:b029:df:c0d8:6b7 with SMTP id i4-20020a170902c284b02900dfc0d806b7mr3120918pld.34.1611622266246;
+        Mon, 25 Jan 2021 16:51:06 -0800 (PST)
+Received: from [10.8.1.5] ([185.125.207.232])
+        by smtp.gmail.com with ESMTPSA id r7sm3940119pfc.26.2021.01.25.16.50.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Jan 2021 16:51:05 -0800 (PST)
+Subject: Re: [PATCH v2 08/10] md: Implement ->corrupted_range()
+To:     Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-raid@vger.kernel.org,
+        darrick.wong@oracle.com, dan.j.williams@intel.com,
+        david@fromorbit.com, hch@lst.de, song@kernel.org, rgoldwyn@suse.de,
+        qi.fuli@fujitsu.com, y-goto@fujitsu.com
 References: <20210125225526.1048877-1-ruansy.fnst@cn.fujitsu.com>
+ <20210125225526.1048877-9-ruansy.fnst@cn.fujitsu.com>
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Message-ID: <6100b7ca-7968-e1ea-84b8-074dc216a453@cloud.ionos.com>
+Date:   Tue, 26 Jan 2021 01:50:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-yoursite-MailScanner-ID: 143E24CE6014.ACA70
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
-X-Spam-Status: No
+In-Reply-To: <20210125225526.1048877-9-ruansy.fnst@cn.fujitsu.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Since owner tarcking is triggerred by pmem device, these functions are
-useless.  So remove it.
-
-Signed-off-by: Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
----
- fs/dax.c | 46 ----------------------------------------------
- 1 file changed, 46 deletions(-)
-
-diff --git a/fs/dax.c b/fs/dax.c
-index c64c3a0e76a6..e20a5df03eec 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -323,48 +323,6 @@ static unsigned long dax_end_pfn(void *entry)
- 	for (pfn = dax_to_pfn(entry); \
- 			pfn < dax_end_pfn(entry); pfn++)
- 
--/*
-- * TODO: for reflink+dax we need a way to associate a single page with
-- * multiple address_space instances at different linear_page_index()
-- * offsets.
-- */
--static void dax_associate_entry(void *entry, struct address_space *mapping,
--		struct vm_area_struct *vma, unsigned long address)
--{
--	unsigned long size = dax_entry_size(entry), pfn, index;
--	int i = 0;
--
--	if (IS_ENABLED(CONFIG_FS_DAX_LIMITED))
--		return;
--
--	index = linear_page_index(vma, address & ~(size - 1));
--	for_each_mapped_pfn(entry, pfn) {
--		struct page *page = pfn_to_page(pfn);
--
--		WARN_ON_ONCE(page->mapping);
--		page->mapping = mapping;
--		page->index = index + i++;
--	}
--}
--
--static void dax_disassociate_entry(void *entry, struct address_space *mapping,
--		bool trunc)
--{
--	unsigned long pfn;
--
--	if (IS_ENABLED(CONFIG_FS_DAX_LIMITED))
--		return;
--
--	for_each_mapped_pfn(entry, pfn) {
--		struct page *page = pfn_to_page(pfn);
--
--		WARN_ON_ONCE(trunc && page_ref_count(page) > 1);
--		WARN_ON_ONCE(page->mapping && page->mapping != mapping);
--		page->mapping = NULL;
--		page->index = 0;
--	}
--}
--
- static struct page *dax_busy_page(void *entry)
- {
- 	unsigned long pfn;
-@@ -543,7 +501,6 @@ static void *grab_mapping_entry(struct xa_state *xas,
- 			xas_lock_irq(xas);
- 		}
- 
--		dax_disassociate_entry(entry, mapping, false);
- 		xas_store(xas, NULL);	/* undo the PMD join */
- 		dax_wake_entry(xas, entry, true);
- 		mapping->nrexceptional--;
-@@ -680,7 +637,6 @@ static int __dax_invalidate_entry(struct address_space *mapping,
- 	    (xas_get_mark(&xas, PAGECACHE_TAG_DIRTY) ||
- 	     xas_get_mark(&xas, PAGECACHE_TAG_TOWRITE)))
- 		goto out;
--	dax_disassociate_entry(entry, mapping, trunc);
- 	xas_store(&xas, NULL);
- 	mapping->nrexceptional--;
- 	ret = 1;
-@@ -774,8 +730,6 @@ static void *dax_insert_entry(struct xa_state *xas,
- 	if (dax_is_zero_entry(entry) || dax_is_empty_entry(entry)) {
- 		void *old;
- 
--		dax_disassociate_entry(entry, mapping, false);
--		dax_associate_entry(new_entry, mapping, vmf->vma, vmf->address);
- 		/*
- 		 * Only swap our new entry into the page cache if the current
- 		 * entry is a zero page or an empty entry.  If a normal PTE or
--- 
-2.30.0
 
 
+On 1/25/21 23:55, Shiyang Ruan wrote:
+> With the support of ->rmap(), it is possible to obtain the superblock on
+> a mapped device.
+> 
+> If a pmem device is used as one target of mapped device, we cannot
+> obtain its superblock directly.  With the help of SYSFS, the mapped
+> device can be found on the target devices.  So, we iterate the
+> bdev->bd_holder_disks to obtain its mapped device.
+> 
+> Signed-off-by: Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
+> ---
+>   drivers/md/dm.c       | 61 +++++++++++++++++++++++++++++++++++++++++++
+>   drivers/nvdimm/pmem.c | 11 +++-----
+>   fs/block_dev.c        | 42 ++++++++++++++++++++++++++++-
+>   include/linux/genhd.h |  2 ++
+>   4 files changed, 107 insertions(+), 9 deletions(-)
 
+I can't see md raid is involved here, perhaps dm-devel need to be cced 
+instead of raid list. And the subject need to be changed as well.
+
+Thanks,
+Guoqing
