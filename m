@@ -2,165 +2,99 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14713307A6B
-	for <lists+linux-raid@lfdr.de>; Thu, 28 Jan 2021 17:13:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BBA43080D5
+	for <lists+linux-raid@lfdr.de>; Thu, 28 Jan 2021 22:54:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232216AbhA1QN3 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 28 Jan 2021 11:13:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37336 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232439AbhA1QML (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 28 Jan 2021 11:12:11 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 15C7D64DE5;
-        Thu, 28 Jan 2021 16:11:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611850291;
-        bh=l1fZVj6lNKrtqOWXBXFlHL9KLwU2deosKLGUjGIPhaQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ae6xo2EqTNtPiMkPuwUBcZnLyMNEeIUX+7ThLWDfngvLkjuzBSsT7Pp5WbxiOPQho
-         O6jLUshdETUx1nN4PLVPFnCLafOw9dc+CXzttS8jN/C7hNRWXbzwJxsWaoyVHO2Zak
-         boAYycf/k6EsmAbrDlF+KkgSnuk0aRy1li4Y1jQCu0cqT5tL3yDWnu6TkthAWMZ7Dx
-         DC7+JL5QB88HCrDHygJRXveBJosYNKqjW8sNNn4SLZ0p6m6F4YaeXBueIVrn/8gnEY
-         BRgUeUzaBoReyjCxZvUdOjJysQUQlUOO/PKLFRuM9Cf/ybkQZOvsk0t6nN8lV4QP9L
-         vk5bWmlQu//Pg==
-Date:   Thu, 28 Jan 2021 08:11:28 -0800
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Song Liu <song@kernel.org>,
-        Chao Yu <chao@kernel.org>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Coly Li <colyli@suse.de>, Mike Snitzer <snitzer@redhat.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-        linux-nilfs@vger.kernel.org, dm-devel@redhat.com,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-block@vger.kernel.org, drbd-dev@lists.linbit.com,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 08/17] f2fs: remove FAULT_ALLOC_BIO
-Message-ID: <YBLiMN7zm44VWaBI@google.com>
-References: <20210126145247.1964410-1-hch@lst.de>
- <20210126145247.1964410-9-hch@lst.de>
+        id S231564AbhA1Vx5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 28 Jan 2021 16:53:57 -0500
+Received: from spe8-2.ucebox.co.za ([197.242.156.207]:39142 "EHLO
+        spe8-2.ucebox.co.za" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231403AbhA1Vxw (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 28 Jan 2021 16:53:52 -0500
+X-Greylist: delayed 6124 seconds by postgrey-1.27 at vger.kernel.org; Thu, 28 Jan 2021 16:53:45 EST
+Received: from cornucopia.aserv.co.za ([154.0.175.203])
+        by spe2.ucebox.co.za with esmtps (TLSv1.2:AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <manornutgrovemanor@gmail.com>)
+        id 1l5Bno-0001H8-2W; Thu, 28 Jan 2021 20:14:25 +0200
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by cornucopia.aserv.co.za (Postfix) with ESMTPA id 2C01EC1250;
+        Thu, 28 Jan 2021 20:12:38 +0200 (SAST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210126145247.1964410-9-hch@lst.de>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 28 Jan 2021 20:12:38 +0200
+From:   Nut Grove Manor <manornutgrovemanor@gmail.com>
+To:     undisclosed-recipients:;
+Subject: Invitation To Quote
+User-Agent: Roundcube Webmail/1.4.1
+Message-ID: <bc9a5f43f3caae762f95ca676f59aca0@gmail.com>
+X-Sender: manornutgrovemanor@gmail.com
+X-Originating-IP: 154.0.175.203
+X-Afrihost-Domain: pesci.aserv.co.za
+X-Afrihost-Username: 154.0.175.203
+Authentication-Results: ucebox.co.za; auth=pass smtp.auth=154.0.175.203@pesci.aserv.co.za
+X-Afrihost-Outgoing-Class: unsure
+X-Afrihost-Outgoing-Evidence: Combined (0.71)
+X-Recommended-Action: accept
+X-Filter-ID: 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
+X-Report-Abuse-To: spam@spe1.ucebox.co.za
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 01/26, Christoph Hellwig wrote:
-> Sleeping bio allocations do not fail, which means that injecting an error
-> into sleeping bio allocations is a little silly.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Good Day Sir
 
-Already merged tho.
+We are please to invite you/your company to quote the following item
+listed
+below:
 
-Acked-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Product/Model No: TM9653 PRESSURE REGULATOR
+Product Name:MEKO
+Qty. 30 units
 
-> ---
->  Documentation/filesystems/f2fs.rst |  1 -
->  fs/f2fs/data.c                     | 29 ++++-------------------------
->  fs/f2fs/f2fs.h                     |  1 -
->  fs/f2fs/super.c                    |  1 -
->  4 files changed, 4 insertions(+), 28 deletions(-)
-> 
-> diff --git a/Documentation/filesystems/f2fs.rst b/Documentation/filesystems/f2fs.rst
-> index dae15c96e659e2..624f5f3ed93e86 100644
-> --- a/Documentation/filesystems/f2fs.rst
-> +++ b/Documentation/filesystems/f2fs.rst
-> @@ -179,7 +179,6 @@ fault_type=%d		 Support configuring fault injection type, should be
->  			 FAULT_KVMALLOC		  0x000000002
->  			 FAULT_PAGE_ALLOC	  0x000000004
->  			 FAULT_PAGE_GET		  0x000000008
-> -			 FAULT_ALLOC_BIO	  0x000000010
->  			 FAULT_ALLOC_NID	  0x000000020
->  			 FAULT_ORPHAN		  0x000000040
->  			 FAULT_BLOCK		  0x000000080
-> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> index 0cf0c605992431..9fb6be65592b1f 100644
-> --- a/fs/f2fs/data.c
-> +++ b/fs/f2fs/data.c
-> @@ -50,28 +50,6 @@ void f2fs_destroy_bioset(void)
->  	bioset_exit(&f2fs_bioset);
->  }
->  
-> -static inline struct bio *__f2fs_bio_alloc(gfp_t gfp_mask,
-> -						unsigned int nr_iovecs)
-> -{
-> -	return bio_alloc_bioset(gfp_mask, nr_iovecs, &f2fs_bioset);
-> -}
-> -
-> -static struct bio *f2fs_bio_alloc(struct f2fs_sb_info *sbi, int npages,
-> -		bool noio)
-> -{
-> -	if (noio) {
-> -		/* No failure on bio allocation */
-> -		return __f2fs_bio_alloc(GFP_NOIO, npages);
-> -	}
-> -
-> -	if (time_to_inject(sbi, FAULT_ALLOC_BIO)) {
-> -		f2fs_show_injection_info(sbi, FAULT_ALLOC_BIO);
-> -		return NULL;
-> -	}
-> -
-> -	return __f2fs_bio_alloc(GFP_KERNEL, npages);
-> -}
-> -
->  static bool __is_cp_guaranteed(struct page *page)
->  {
->  	struct address_space *mapping = page->mapping;
-> @@ -433,7 +411,7 @@ static struct bio *__bio_alloc(struct f2fs_io_info *fio, int npages)
->  	struct f2fs_sb_info *sbi = fio->sbi;
->  	struct bio *bio;
->  
-> -	bio = f2fs_bio_alloc(sbi, npages, true);
-> +	bio = bio_alloc_bioset(GFP_NOIO, npages, &f2fs_bioset);
->  
->  	f2fs_target_device(sbi, fio->new_blkaddr, bio);
->  	if (is_read_io(fio->op)) {
-> @@ -1029,8 +1007,9 @@ static struct bio *f2fs_grab_read_bio(struct inode *inode, block_t blkaddr,
->  	struct bio_post_read_ctx *ctx;
->  	unsigned int post_read_steps = 0;
->  
-> -	bio = f2fs_bio_alloc(sbi, min_t(int, nr_pages, BIO_MAX_PAGES),
-> -								for_write);
-> +	bio = bio_alloc_bioset(for_write ? GFP_NOIO : GFP_KERNEL,
-> +			       min_t(int, nr_pages, BIO_MAX_PAGES),
-> +			       &f2fs_bioset);
->  	if (!bio)
->  		return ERR_PTR(-ENOMEM);
->  
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index 902bd3267c03e1..6c78365d80ceb5 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -43,7 +43,6 @@ enum {
->  	FAULT_KVMALLOC,
->  	FAULT_PAGE_ALLOC,
->  	FAULT_PAGE_GET,
-> -	FAULT_ALLOC_BIO,
->  	FAULT_ALLOC_NID,
->  	FAULT_ORPHAN,
->  	FAULT_BLOCK,
-> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-> index b4a07fe62d1a58..3a312642907e86 100644
-> --- a/fs/f2fs/super.c
-> +++ b/fs/f2fs/super.c
-> @@ -45,7 +45,6 @@ const char *f2fs_fault_name[FAULT_MAX] = {
->  	[FAULT_KVMALLOC]	= "kvmalloc",
->  	[FAULT_PAGE_ALLOC]	= "page alloc",
->  	[FAULT_PAGE_GET]	= "page get",
-> -	[FAULT_ALLOC_BIO]	= "alloc bio",
->  	[FAULT_ALLOC_NID]	= "alloc nid",
->  	[FAULT_ORPHAN]		= "orphan",
->  	[FAULT_BLOCK]		= "no more block",
-> -- 
-> 2.29.2
+Compulsory,Kindly send your quotation
+for immediate approval.
+
+Kind Regards,
+Albert Bourla
+PFIZER B.V Supply Chain Manager
+Tel: +31(0)208080 880
+ADDRESS: Rivium Westlaan 142, 2909 LD
+Capelle aan den IJssel, Netherlands
