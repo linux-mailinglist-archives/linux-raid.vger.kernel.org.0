@@ -2,114 +2,64 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C6F93107AF
-	for <lists+linux-raid@lfdr.de>; Fri,  5 Feb 2021 10:23:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E5A633111B5
+	for <lists+linux-raid@lfdr.de>; Fri,  5 Feb 2021 21:01:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229734AbhBEJWB (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 5 Feb 2021 04:22:01 -0500
-Received: from mga12.intel.com ([192.55.52.136]:44959 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229669AbhBEJT5 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 5 Feb 2021 04:19:57 -0500
-IronPort-SDR: 5lh1QE8wo/XqCntkse+4a5jffxsxCmte6KrMk6l1Nsav4Swcg295oY9RTrrSDMPIBDefX7fpx8
- XHkzi81t74Tg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9885"; a="160565323"
-X-IronPort-AV: E=Sophos;i="5.81,154,1610438400"; 
-   d="scan'208";a="160565323"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2021 01:17:42 -0800
-IronPort-SDR: YOkIOaivRj4eMtR71uZZzxncQZ4mGnPifuxQLHPz1ioFLWN5OMWOj8sFrO1gwmKhFveu5N+2vj
- u9s2G3bgdyKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,154,1610438400"; 
-   d="scan'208";a="373286857"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 05 Feb 2021 01:17:42 -0800
-Received: from [10.213.26.7] (mtkaczyk-MOBL1.ger.corp.intel.com [10.213.26.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 4979B5808B9;
-        Fri,  5 Feb 2021 01:17:40 -0800 (PST)
-Subject: Re: [RFC PATCH] super-intel: correctly recognize NVMe device during
- assemble
-To:     Lidong Zhong <lidong.zhong@suse.com>, jes@trained-monkey.org
-Cc:     linux-raid@vger.kernel.org, david.chang@hpe.com,
-        "Shchirskyi, Oleksandr" <oleksandr.shchirskyi@intel.com>
-References: <20210205071133.11139-1-lidong.zhong@suse.com>
-From:   "Tkaczyk, Mariusz" <mariusz.tkaczyk@linux.intel.com>
-Message-ID: <f07a286d-e56e-7b47-86a3-5677893876d6@linux.intel.com>
-Date:   Fri, 5 Feb 2021 10:17:37 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        id S233496AbhBESRo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 5 Feb 2021 13:17:44 -0500
+Received: from [20.39.40.203] ([20.39.40.203]:55697 "EHLO optinix.in"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S233183AbhBEPTk (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 5 Feb 2021 10:19:40 -0500
+dkim-signature: v=1; a=rsa-sha256; d=digitalsol.in; s=dkim;
+        c=relaxed/relaxed; q=dns/txt; h=From:Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=wK2neTcOXNiSQ+RBxrnFed+mRrGUU/ndLGEgvo8IMCc=;
+        b=JFt3cjfr2gf0oZFNAIkKMxcz4dJD/YGkc0fGvOoSd3DydZ6om7JzTU837vBFVq1NIPU0D2QA5BLHZXE1+7cBmkJlbZjYCUFmJkkaBVbP88e4KHnDVRcctmBLIZ1pL5VerRqjcciKkL4DSuyXFJlGk3Z0CRoskvUoLBM7ZhpxLeqIU2BKsbHQXJZ1h2qHQhaHiD+VrGx+bGKjZzbhmRvwLDQIByq6jRcjht5MzYCcxpzOzp/k+Dev9dQj7B
+        WId68CyP4XonlI4wIMRo1xiGfUtKZ+P3cZo2ejPWBjr+ynq3dK3OxibTTEKfmOc5W1zmJFMAPQ+ZKxsa3M4d1PiYxHmg==
+Received: from User (Unknown [52.231.31.5])
+        by optinix.in with ESMTP
+        ; Mon, 1 Feb 2021 08:50:14 +0000
+Message-ID: <D474448D-A325-42CC-A881-8334C6C84BA7@optinix.in>
+Reply-To: <ms.reem@yandex.com>
+From:   "Ms. Reem" <support@digitalsol.in>
+Subject: Re:read
+Date:   Mon, 1 Feb 2021 08:50:13 -0000
 MIME-Version: 1.0
-In-Reply-To: <20210205071133.11139-1-lidong.zhong@suse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain;
+        charset="Windows-1251"
 Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
 Hello,
-Thanks for the patch but we sent similar solution recently, see:
-https://lore.kernel.org/linux-raid/20210115152824.51793-1-
-oleksandr.shchirskyi@intel.com/
-For namespaces exposed via nvme-subsystem, autorebuild scenarios won't
-work because /dev/disk/by-path link doesn't exist.
 
-Our patch fixes mdadm --detail-platform output additionally, this part is
-missed here.
+My name is Ms. Reem Ebrahim Al-Hashimi, I am the "Minister of state
+and Petroleum" also "Minister of State for International Cooperation"
+in UAE. I write to you on behalf of my other "three (3) colleagues"
+who has approved me to solicit for your "partnership in claiming of
+{us$47=Million}" from a Financial Home in Cambodia on their behalf and
+for our "Mutual Benefits".
 
-Mariusz
+The Fund {us$47=Million} is our share from the (over-invoiced) Oil/Gas
+deal with Cambodian/Vietnam Government within 2013/2014, however, we
+don't want our government to know about the fund. If this proposal
+interests you, let me know, by sending me an email and I will send to
+you detailed information on how this business would be successfully
+transacted. Be informed that nobody knows about the secret of this
+fund except us, and we know how to carry out the entire transaction.
+So I am compelled to ask, that you will stand on our behalf and
+receive this fund into any account that is solely controlled by you.
 
-On 05.02.2021 08:11, Lidong Zhong wrote:
-> We had a customer report the following error while assembling the raid
-> device, which is created from Intel VMD configuration of RBSU(bios).
->> sudo /sbin/mdadm -v --incremental --export /dev/nvme0n1 --offroot
-> /dev/disk/by-id/nvme-eui.355634304e2000530025384500000001
-> /dev/disk/by-id/nvme-MZXL5800HBHQ-000H3_S5V4NE0N200053
-> [sudo] password for root:
-> mdadm: /dev/nvme0n1 is not attached to Intel(R) RAID controller.
-> mdadm: No OROM/EFI properties for /dev/nvme0n1
-> mdadm: no RAID superblock on /dev/nvme0n1
-> 
-> It's because in function path_attached_to_hba(), the string of disk
-> doesn't match hba and thus it fails to be recognized as a valid device.
-> The following is the debug output with this patch applied.
-> mdadm: hba: /sys/devices/pci0000:c0/0000:c0:00.5/pci10002:00 - disk:
-> /sys/devices/virtual/nvme-subsystem/nvme-subsys0
-> mdadm: NVME:tmp_path:
-> /sys/devices/virtual/nvme-subsystem/nvme-subsys0/nvme0
-> mdadm: NVME:tmp_path:
-> /sys/devices/virtual/nvme-subsystem/nvme-subsys0/nvme0 - real_disk_path:
-> /sys/devices/pci0000:c0/0000:c0:00.5/pci10002:00/10002:00:04.0/10002:03:00.0/nvme/nvme0
-> 
-> Signed-off-by: Lidong Zhong <lidong.zhong@suse.com>
-> Reported-by: David Chang <david.chang@hpe.com>
-> ---
->   platform-intel.c | 11 +++++++++++
->   1 file changed, 11 insertions(+)
-> 
-> diff --git a/platform-intel.c b/platform-intel.c
-> index f1f6d4c..e3c12a3 100644
-> --- a/platform-intel.c
-> +++ b/platform-intel.c
-> @@ -707,6 +707,17 @@ int path_attached_to_hba(const char *disk_path, const char *hba_path)
->   		rc = 1;
->   	else
->   		rc = 0;
-> +	if (0 == rc && strstr(disk_path, "nvme-subsys")) {
-> +		char tmp_path[PATH_MAX], *real_disk_path;
-> +		int len = strlen(disk_path);
-> +		snprintf(tmp_path,"%s/nvme%c",disk_path, disk_path[len-1]);
-> +		real_disk_path = realpath(tmp_path, NULL);
-> +		if (real_disk_path) {
-> +			if (strncmp(real_disk_path, hba_path, strlen(hba_path)) == 0)
-> +				rc = 1;
-> +			free(real_disk_path);
-> +		}
-> +    }
->   
->   	return rc;
->   }
->
+We will compensate you with 15% of the total amount involved as
+gratification for being our partner in this transaction. Reply to:
+ms.reem@yandex.com
+
+Regards,
+Ms. Reem.
+
