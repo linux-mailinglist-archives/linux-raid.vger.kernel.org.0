@@ -2,64 +2,173 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 47FB530CF05
-	for <lists+linux-raid@lfdr.de>; Tue,  2 Feb 2021 23:36:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1A30309FE7
+	for <lists+linux-raid@lfdr.de>; Mon,  1 Feb 2021 02:18:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235870AbhBBWeb (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 2 Feb 2021 17:34:31 -0500
-Received: from [20.39.40.203] ([20.39.40.203]:61037 "EHLO optinix.in"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S230091AbhBBWeU (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 2 Feb 2021 17:34:20 -0500
-dkim-signature: v=1; a=rsa-sha256; d=digitalsol.in; s=dkim;
-        c=relaxed/relaxed; q=dns/txt; h=From:Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=wK2neTcOXNiSQ+RBxrnFed+mRrGUU/ndLGEgvo8IMCc=;
-        b=Z/qoYR5e93G/1E5Uh8tLreepyziGYShILI7fcXozE97A3DqZKBadv9kcBZBcmHZnqAUcLkt0g+COxgI6WqJ5gdfKqksQSW540KJaAE4DNiZ+EZYtErJhsiZnZCgjfp9yI8W2dpgN2EsH5zUvgVY6Bl2MWU8ziaGqy1DCXSk4DXXi+2CTtkJX9uQrf2ohPvP7bhav6zr4dJxTQjQYoopWjV3h9j7RqQq/UIXqX3VBjVDZARoXQTZUB0KN0A
-        F7X8DeijiSCFEdYkkdQwasjHi3K0B6KloKBXegK0TgQ39PHt5t2MVnmtmeZadY0DbdImfujjk25mqjLTG700JJRoTl9A==
-Received: from User (Unknown [52.231.31.5])
-        by optinix.in with ESMTP
-        ; Sat, 30 Jan 2021 02:14:15 +0000
-Message-ID: <B0CC978E-0149-4652-A2D0-17DE1F49BCC1@optinix.in>
-Reply-To: <ms.reem@yandex.com>
-From:   "Ms. Reem" <support@digitalsol.in>
-Subject: Re:read
-Date:   Sat, 30 Jan 2021 02:14:13 -0000
+        id S231136AbhBABRj (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 31 Jan 2021 20:17:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56372 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230134AbhBABRU (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 31 Jan 2021 20:17:20 -0500
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C6DEC06174A
+        for <linux-raid@vger.kernel.org>; Sun, 31 Jan 2021 17:16:40 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id g15so9974734pjd.2
+        for <linux-raid@vger.kernel.org>; Sun, 31 Jan 2021 17:16:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RLU8sNVXRSwQvcQ9Qv8D6rwZxuEAO9er5VHUrLUQ6lo=;
+        b=L2BSNt7JuuX3qwrFkNZjtFXfNANw5QJ85Zzv/tI14dXMoLSgBfFXpzNkCEQk/s7y+n
+         c9pr4KSWgfja57hPagkEj3aixUcSalBsGKYezPNuM5yfObu8/dbV04WdroKRi/Rd0a4w
+         O7Op0qUxgDVAKuovjloSRmC6zp8ufwg0s/wfHy8/sbP+huWE2bBFaNK0SHu7Z66ebzwf
+         r4vJ8bEssS00XyFQhuv1gG82ev6Tu8DEyCSdg7CFvkSrHv19xK7s2AvSa8t8Cq2ux+g+
+         DWjitlTOE0tXzXdee8aSLYl8CyS9NTAnBlNZXO4d2SLYFiJ/RLu6oOcYTz2Iw+p3kOZx
+         L3SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RLU8sNVXRSwQvcQ9Qv8D6rwZxuEAO9er5VHUrLUQ6lo=;
+        b=LzdGn2+ikGoeGlXEs0t63jTWEcqOCEB+yXKsPn7YVsrgedLUhk+CobFKhJ6YHKfvfh
+         35A8DMSc16xunhVv2Uwd4uCdoDgiUfxKeJOWFnYo3ONkZPsIvF8H43qdoOEiEohsB44d
+         aSIQhiRA7EkZOgTDKyTHTiLPzbikei4gRM0fNdnsOLlWOAIS2RJ9oqQvcPqrJ8a8htP/
+         nYrA3L1uM2vSKV5hsKf38Jehp3YLxuqTgIfyK6/CKLLIvd+fOXrfaRLH0p9FqB9F/JN0
+         AkkdQMVK4CSffjz78o7XpZxiG/c1L+03/ZV3HtGYgpig17NtE2RNFxqpuKds5e4tLS58
+         UQ9w==
+X-Gm-Message-State: AOAM531Qyg15psC+LFkZxd+YmFnUDnS10RYLbUlYQ83XrQjK+cqLM8Tf
+        SR6Mky3n3g7kQtvF/mSJz551chRuZRtr8w==
+X-Google-Smtp-Source: ABdhPJy+7Y+iue1isMhdjoV1Xc/lHilNv71BbVLNluwnVBC9ltGuPGGKpSfDIeSgGZuBP/PW2ylyQQ==
+X-Received: by 2002:a17:90a:7c08:: with SMTP id v8mr14272367pjf.135.1612142198128;
+        Sun, 31 Jan 2021 17:16:38 -0800 (PST)
+Received: from [10.8.1.62] ([89.187.162.118])
+        by smtp.gmail.com with ESMTPSA id a37sm15527889pgm.79.2021.01.31.17.16.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 31 Jan 2021 17:16:37 -0800 (PST)
+Subject: Re: misc bio allocation cleanups
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Song Liu <song@kernel.org>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Coly Li <colyli@suse.de>, Mike Snitzer <snitzer@redhat.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+        linux-nilfs@vger.kernel.org, dm-devel@redhat.com,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-block@vger.kernel.org, drbd-dev@lists.linbit.com,
+        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-mm@kvack.org
+References: <20210126145247.1964410-1-hch@lst.de>
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Message-ID: <9d376309-5d67-d859-1ad0-a669bdb75cdd@cloud.ionos.com>
+Date:   Mon, 1 Feb 2021 02:16:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="Windows-1251"
+In-Reply-To: <20210126145247.1964410-1-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hello,
+Hi Christoph,
 
-My name is Ms. Reem Ebrahim Al-Hashimi, I am the "Minister of state
-and Petroleum" also "Minister of State for International Cooperation"
-in UAE. I write to you on behalf of my other "three (3) colleagues"
-who has approved me to solicit for your "partnership in claiming of
-{us$47=Million}" from a Financial Home in Cambodia on their behalf and
-for our "Mutual Benefits".
+I tried with latest for-5.12/block branch, and got below issue when 
+trying to create raid1 array.
 
-The Fund {us$47=Million} is our share from the (over-invoiced) Oil/Gas
-deal with Cambodian/Vietnam Government within 2013/2014, however, we
-don't want our government to know about the fund. If this proposal
-interests you, let me know, by sending me an email and I will send to
-you detailed information on how this business would be successfully
-transacted. Be informed that nobody knows about the secret of this
-fund except us, and we know how to carry out the entire transaction.
-So I am compelled to ask, that you will stand on our behalf and
-receive this fund into any account that is solely controlled by you.
+[   80.605832] BUG: kernel NULL pointer dereference, address: 
+0000000000000018
+[   80.606159] #PF: supervisor read access in kernel mode
+[   80.606159] #PF: error_code(0x0000) - not-present page
+[   80.606159] PGD 0 P4D 0
+[   80.606159] Oops: 0000 [#1] SMP NOPTI
+[   80.606159] CPU: 1 PID: 207 Comm: mdadm Not tainted 5.11.0-rc5+ #37
+[   80.606159] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), 
+BIOS 1.10.2-1ubuntu1 04/01/2014
+[   80.606159] RIP: 0010:bdev_read_only+0x0/0x30
+[   80.606159] Code: 89 df 5b 5d e9 71 21 e7 ff 81 e6 ff ff 0f 00 48 c7 
+c7 40 99 d9 9e e8 0f e5 04 00 eb a0 0f 1f 00 66 2e 0f 1f 84 00 00 00 00 
+00 <80> 7f 18 00 b8 01 00 00 00 75 11 48 8b 97 60 03 00 00 48 8b 4a 40
+[   80.606159] RSP: 0018:ffffb14f405dfd38 EFLAGS: 00000246
+[   80.606159] RAX: 0000000000000000 RBX: ffff9b0e0863b018 RCX: 
+ffff9b0e01edc000
+[   80.606159] RDX: ffff9b0e01b54c00 RSI: ffff9b0e0863b000 RDI: 
+0000000000000000
+[   80.606159] RBP: ffff9b0e01272200 R08: 0000000000000000 R09: 
+0000000000000000
+[   80.606159] R10: ffffee978004da40 R11: 0000000000000cc0 R12: 
+ffff9b0e0863b000
+[   80.606159] R13: ffff9b0e01f2cc00 R14: ffff9b0e0863b000 R15: 
+0000000000000000
+[   80.606159] FS:  00007f522ec65740(0000) GS:ffff9b0e7bc80000(0000) 
+knlGS:0000000000000000
+[   80.606159] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   80.606159] CR2: 0000000000000018 CR3: 0000000001364000 CR4: 
+00000000000006e0
+[   80.606159] Call Trace:
+[   80.606159]  bind_rdev_to_array+0x2f7/0x380
+[   80.606159]  ? cred_has_capability+0x80/0x120
+[   80.606159]  md_add_new_disk+0x204/0x630
+[   80.606159]  ? security_capable+0x33/0x50
+[   80.606159]  md_ioctl+0xee7/0x1690
+[   80.606159]  ? selinux_file_ioctl+0x143/0x200
+[   80.606159]  blkdev_ioctl+0x1ff/0x240
+[   80.606159]  block_ioctl+0x34/0x40
+[   80.606159]  __x64_sys_ioctl+0x89/0xc0
+[   80.606159]  do_syscall_64+0x33/0x40
+[   80.606159]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[   80.606159] RIP: 0033:0x7f522e564317
+[   80.606159] Code: b3 66 90 48 8b 05 71 4b 2d 00 64 c7 00 26 00 00 00 
+48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 b8 10 00 00 00 0f 
+05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 41 4b 2d 00 f7 d8 64 89 01 48
+[   80.606159] RSP: 002b:00007ffc3abd96f8 EFLAGS: 00000246 ORIG_RAX: 
+0000000000000010
+[   80.606159] RAX: ffffffffffffffda RBX: 00005653ee690350 RCX: 
+00007f522e564317
+[   80.606159] RDX: 00005653ee694058 RSI: 0000000040140921 RDI: 
+0000000000000004
+[   80.606159] RBP: 00005653ee690410 R08: 00007f522e839db0 R09: 
+0000000000000000
+[   80.606159] R10: 00005653ee690010 R11: 0000000000000246 R12: 
+0000000000000000
+[   80.606159] R13: 0000000000000000 R14: 0000000000000000 R15: 
+00005653ee694010
+[   80.606159] Modules linked in:
+[   80.606159] CR2: 0000000000000018
+[   80.622996] ---[ end trace 22144b856a3c1001 ]---
+[   80.623285] RIP: 0010:bdev_read_only+0x0/0x30
+[   80.623501] Code: 89 df 5b 5d e9 71 21 e7 ff 81 e6 ff ff 0f 00 48 c7 
+c7 40 99 d9 9e e8 0f e5 04 00 eb a0 0f 1f 00 66 2e 0f 1f 84 00 00 00 00 
+00 <80> 7f 18 00 b8 01 00 00 00 75 11 48 8b 97 60 03 00 00 48 8b 4a 40
+[   80.624544] RSP: 0018:ffffb14f405dfd38 EFLAGS: 00000246
+[   80.624788] RAX: 0000000000000000 RBX: ffff9b0e0863b018 RCX: 
+ffff9b0e01edc000
+[   80.625136] RDX: ffff9b0e01b54c00 RSI: ffff9b0e0863b000 RDI: 
+0000000000000000
+[   80.625449] RBP: ffff9b0e01272200 R08: 0000000000000000 R09: 
+0000000000000000
+[   80.625761] R10: ffffee978004da40 R11: 0000000000000cc0 R12: 
+ffff9b0e0863b000
+[   80.626112] R13: ffff9b0e01f2cc00 R14: ffff9b0e0863b000 R15: 
+0000000000000000
+[   80.626429] FS:  00007f522ec65740(0000) GS:ffff9b0e7bc80000(0000) 
+knlGS:0000000000000000
+[   80.626784] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   80.627035] CR2: 0000000000000018 CR3: 0000000001364000 CR4: 
+00000000000006e0
+Killed
 
-We will compensate you with 15% of the total amount involved as
-gratification for being our partner in this transaction. Reply to:
-ms.reem@yandex.com
 
-Regards,
-Ms. Reem.
-
+Thanks,
+Guoqing
