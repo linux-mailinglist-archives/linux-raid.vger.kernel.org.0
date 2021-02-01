@@ -2,69 +2,100 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E35930A88A
-	for <lists+linux-raid@lfdr.de>; Mon,  1 Feb 2021 14:21:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 382C730A9F2
+	for <lists+linux-raid@lfdr.de>; Mon,  1 Feb 2021 15:37:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231575AbhBANVW (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 1 Feb 2021 08:21:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41446 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231922AbhBANSL (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 1 Feb 2021 08:18:11 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8E5BC0613ED;
-        Mon,  1 Feb 2021 05:17:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=p+BicYwTAcraxDXyWx/iGATSbv1DFzd9yO27m/Udqe4=; b=OQhFfKVF9k/N+UMn0OtjhU8wUA
-        +ixZv3ehxdM/ofg9/UwHyO7kO9/2d9mNvwFVML3Z1azild2trAY9Pwk+Psm0eDJ1xHmGQ5vOmq1C2
-        sYnYtqokYu3YUO+ZYjx5doNbU+4D/GY6xXrp/w/3kmqSy6zn38IuexaHVJVLr2mJqEIXP8jcDMqHC
-        /kAFy8d0muyu/574J41MFGmKC90aRc6NIaU2BIN98md0D9nwd2jVZav3apze2SiD+6aWsidCEjVph
-        QG5joBGilHXEXew5LJ3All5LUNr6vyjVa5JJgtkdso56J17A/mu8YDeh4sjyGf5xhatrSw6Vr2JHH
-        tR4YvybQ==;
-Received: from [2001:4bb8:198:6bf4:18db:1a43:4422:423f] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1l6Z5D-00Do3B-7n; Mon, 01 Feb 2021 13:17:35 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     axboe@kernel.dk, song@kernel.org
-Cc:     guoqing.jiang@cloud.ionos.com, linux-block@vger.kernel.org,
-        linux-raid@vger.kernel.org
-Subject: [PATCH 2/2] md: use rdev_read_only in restart_array
-Date:   Mon,  1 Feb 2021 14:17:21 +0100
-Message-Id: <20210201131721.750412-3-hch@lst.de>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210201131721.750412-1-hch@lst.de>
-References: <20210201131721.750412-1-hch@lst.de>
+        id S230193AbhBAOhN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 1 Feb 2021 09:37:13 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:36089 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231274AbhBAOhH (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 1 Feb 2021 09:37:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1612190141;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uKWaKyx1UNRYaf8dQvoiKkFjvmulgjMG5r15GBHTufM=;
+        b=aikDn2jmPz23hGBFk2J9ww2rnae26ygtH5lBxqVj2wM/F4hGwAkrw/aoayHx5CocLV6xh4
+        MOgagB4P/hzmLacPUwfFfKnhg4IFJE41Nz55qKwiDUUndNj3fuA05lqpxA1CMaK6xvi9EU
+        K/8xNkijY44zFKnYx1eF0NgO6oHjM68=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-552-7XVtLCpmOfiGKysF0Qo4cg-1; Mon, 01 Feb 2021 09:35:39 -0500
+X-MC-Unique: 7XVtLCpmOfiGKysF0Qo4cg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E51141800D50;
+        Mon,  1 Feb 2021 14:35:37 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-8-24.pek2.redhat.com [10.72.8.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3726E5D9DC;
+        Mon,  1 Feb 2021 14:35:34 +0000 (UTC)
+Subject: Re: One failed raid device can't umount automatically
+From:   Xiao Ni <xni@redhat.com>
+To:     linux-raid <linux-raid@vger.kernel.org>,
+        artur.paszkiewicz@intel.com, Jes Sorensen <jes.sorensen@gmail.com>,
+        NeilBrown <neilb@suse.com>, Nigel Croxon <ncroxon@redhat.com>
+References: <1b0aaa70-a7bf-c35f-12c0-425e76200f0c@redhat.com>
+Message-ID: <b4cc93d4-4923-4959-3258-f03eca58f18e@redhat.com>
+Date:   Mon, 1 Feb 2021 22:35:33 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <1b0aaa70-a7bf-c35f-12c0-425e76200f0c@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Make the read-only check in restart_array identical to the other two
-read-only checks.
+Hi all
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/md/md.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Any good suggestion for this problem?
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 7c0f6107865383..21da0c48f6c21e 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -6143,7 +6143,7 @@ static int restart_array(struct mddev *mddev)
- 		if (test_bit(Journal, &rdev->flags) &&
- 		    !test_bit(Faulty, &rdev->flags))
- 			has_journal = true;
--		if (bdev_read_only(rdev->bdev))
-+		if (rdev_read_only(rdev))
- 			has_readonly = true;
- 	}
- 	rcu_read_unlock();
--- 
-2.29.2
+Regards
+Xiao
+
+On 01/12/2021 04:42 PM, Xiao Ni wrote:
+> Hi all
+>
+> We support to umount one failed raid device automatically. But it 
+> can't work now.
+> For example, one 3 disks raid5 device /dev/md0. I unplug two disks one 
+> by one.
+> The udev rule udev-md-raid-assembly.rules is triggered when unplug disk.
+>
+> In this udev rule, it calls `mdadm -If $disk` when unplug one disk. 
+> Function IncrementalRemove
+> is called. When the raid doesn't have enough disks to be active, it 
+> tries to stop the array.
+> Before stopping the array, it tries to umount the raid device first.
+>
+> Now it uses udisks to umount raid device. I printed logs during test. 
+> It gives error message
+> "Permission denied". Then I tried with umount directly, it failed with 
+> the same error message.
+>
+> diff --git a/Incremental.c b/Incremental.c
+> index e849bdd..96ba234 100644
+> --- a/Incremental.c
+> +++ b/Incremental.c
+> @@ -1620,6 +1620,7 @@ static void run_udisks(char *arg1, char *arg2)
+>                 manage_fork_fds(1);
+>                 execl("/usr/bin/udisks", "udisks", arg1, arg2, NULL);
+>                 execl("/bin/udisks", "udisks", arg1, arg2, NULL);
+> +               execl("/usr/bin/umount", "umount", arg2, NULL);
+>                 exit(1);
+>         }
+>         while (pid > 0 && wait(&status) != pid)
+>
+> Does anyone know how to fix this problem?
+>
+> Regards
+> Xiao
+>
 
