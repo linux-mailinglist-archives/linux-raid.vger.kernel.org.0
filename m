@@ -2,375 +2,158 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 00DA930C794
-	for <lists+linux-raid@lfdr.de>; Tue,  2 Feb 2021 18:25:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 69E5C30D03E
+	for <lists+linux-raid@lfdr.de>; Wed,  3 Feb 2021 01:25:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237508AbhBBRYj (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 2 Feb 2021 12:24:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237396AbhBBRWS (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 2 Feb 2021 12:22:18 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6308FC0617AB;
-        Tue,  2 Feb 2021 09:20:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=cglO6BMsvHI1YUCpMMymW5TemFbeCypKyIhLh9bNVCU=; b=C3uAZJ3UtUozcPglde692Btty4
-        0JHmu8sZ1bpN0jzGYnzjTocCjZ3EAUjfrBfQ+rUOkQXSFJdLWei06jp0tIV/Du0CmA8YGISwo9k7F
-        F3My0jwHqYFpF6Q9F5jYACEZNIbPBm8PCzfy9Y+x45DfYLH7ZLY874UQ3DVNhtjH5RTO1icw3rATK
-        h6GA9loCKXm7YC2ihP+iRvrPVyDEdcsxXmhSTlNJF+U7EBS77FFCjZDvuvQvJ8UCTxEJjC8mbPk0A
-        dckyBxbCgUoy+G2tjNRY2CwgSyMSkzQ4WlyVyjYMbTLGjuOlxlZKwdY8kHDo9XkZehgvT01oJrI0l
-        kWVisUGQ==;
-Received: from [2001:4bb8:198:6bf4:c70:4a89:bc61:2] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1l6zLG-00FW14-NS; Tue, 02 Feb 2021 17:19:55 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-block@vger.kernel.org, linux-raid@vger.kernel.org
-Subject: [PATCH 11/11] block: use bi_max_vecs to find the bvec pool
-Date:   Tue,  2 Feb 2021 18:19:29 +0100
-Message-Id: <20210202171929.1504939-12-hch@lst.de>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210202171929.1504939-1-hch@lst.de>
-References: <20210202171929.1504939-1-hch@lst.de>
+        id S231983AbhBCAYT (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 2 Feb 2021 19:24:19 -0500
+Received: from de-smtp-delivery-102.mimecast.com ([62.140.7.102]:42201 "EHLO
+        de-smtp-delivery-102.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231918AbhBCAYR (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 2 Feb 2021 19:24:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+        t=1612311790;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=9B30GlzX0j1WSN7DQD+J6k4bYyAaGV1chg6Lqxz3Wfg=;
+        b=UPWRGf0EzyjeW4SaXQZCZt8CoRUicpAwPQEU+YxNYIFmfkOaA3e8VZpfTBJaO79qv5weM5
+        T4UMmTyN/97hsqcC2NJXVFOtZLWR+ySoAtd575SGwH8WvvqUwRo0GTxSjFsyBFvZCNIo1p
+        MvzB6oPZVoRIPUBMFRmTk7UM8N/j4DU=
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com
+ (mail-vi1eur04lp2054.outbound.protection.outlook.com [104.47.14.54]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ de-mta-14-NK6tB5doOiuFFBCAvRxV9Q-1; Wed, 03 Feb 2021 01:23:08 +0100
+X-MC-Unique: NK6tB5doOiuFFBCAvRxV9Q-1
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HLIHnb9HZq9XimY2zgELmPftsL7nFTQwnYc9TuajTCrkbHdw3jGNoPDVY5uf+enwKZ84LUh4qqiz+9MmUrvd0Ur2YfNtsPbq1qb+8EBPvLaLeu5z8B3SFedLQ/OWcyh8801cT+BfN1tCLGq+d+pZQNfOUCjRzBI0wWOWrdb8p1fixqLjT3XFqkc44qcfvVE8p3uaeoGdXqxOIL7VTBlVf/14rglRUwH6nVBNIvN7NSOE7S9Sgm0gXj68pokrRV7JgIUyhUKBS6u08JW7/m/AZTdmcAgPg2PCXJIr0hbZDpJB9qySj9GmcYMYzLq5g2hIQt4PW1rmphNTQ7bVNeZsvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9B30GlzX0j1WSN7DQD+J6k4bYyAaGV1chg6Lqxz3Wfg=;
+ b=kiqn4YVM2c0tdMK2C/e+npTHwuaBwkfwI7gVmggWYK2sICbevNtgWmhMV8XxZWV3m16diQ9sYrPSTFkP8fOWr50+QpDSjk8VB0AdPBjnEA/Qc2e4q4Dsv6uX/a/FqX0GzajPX3IrLApCZcm1q39Rj7NjEajfVKZvcY7W6xuiMJnz8S/cBmlXLqkkb4ZYZrAv+0x9BU7DpNQqVnzC63mfyr8iPLLWNVauBkl3g8ErldHWQrYO5hA5Hc+2Cx4mZSNhTDnDHgvrLU0BHlMmHGMnEFzKLb1viORN9Rrag1wjh0u4XZXodb2gDwAGYZYncupUeZnOqg19OfYN/4nDjAqq6A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=suse.com;
+Received: from DB7PR04MB4666.eurprd04.prod.outlook.com (2603:10a6:5:2b::14) by
+ DB8PR04MB7002.eurprd04.prod.outlook.com (2603:10a6:10:119::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3805.19; Wed, 3 Feb 2021 00:23:07 +0000
+Received: from DB7PR04MB4666.eurprd04.prod.outlook.com
+ ([fe80::dd78:1e78:3ad2:9d7e]) by DB7PR04MB4666.eurprd04.prod.outlook.com
+ ([fe80::dd78:1e78:3ad2:9d7e%6]) with mapi id 15.20.3805.024; Wed, 3 Feb 2021
+ 00:23:07 +0000
+From:   Zhao Heming <heming.zhao@suse.com>
+To:     linux-raid@vger.kernel.org, jes@trained-monkey.org
+Cc:     Zhao Heming <heming.zhao@suse.com>, xni@redhat.com,
+        lidong.zhong@suse.com
+Subject: [PATCH v2] super1.c: avoid useless sync when bitmap switches from clustered to none
+Date:   Wed,  3 Feb 2021 08:22:51 +0800
+Message-Id: <1612311771-17411-1-git-send-email-heming.zhao@suse.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-Originating-IP: [123.123.133.229]
+X-ClientProxiedBy: HK2PR04CA0077.apcprd04.prod.outlook.com
+ (2603:1096:202:15::21) To DB7PR04MB4666.eurprd04.prod.outlook.com
+ (2603:10a6:5:2b::14)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from c73.home (123.123.133.229) by HK2PR04CA0077.apcprd04.prod.outlook.com (2603:1096:202:15::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3825.19 via Frontend Transport; Wed, 3 Feb 2021 00:23:05 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f4acde7d-51cb-4a6b-327a-08d8c7d9e130
+X-MS-TrafficTypeDiagnostic: DB8PR04MB7002:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB8PR04MB7002AE7BA5D5ABDA86039A3997B49@DB8PR04MB7002.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:238;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: LlyJ/NyxSFtGZiiyc75ONKqNB6pKQxRHX5EhdMG+r/DioEGp8CITnNL0sTA7TAdorD+9Q6dqjZVJNr8fYP1XEVJ3skeHhur66exMJEGEdwMRa+roXli8y7cxZ/T1NejrSeU3I/KyMwdJL62aqkiNWAHsK+OSOZIgWAfjAdkNkCYMw+a+rPUmKUC8ptw6M2gdGXL63qSg4pv2MmbEP6u79w1OzRtlwMz4tU/uXHldBFg9MZGbTkpfE+3EMGop8zlswIU/ffKmLXuvPiP/WtZdzOifPFwuWEgrvmVPAy8g/UKcCFgCMLyhNucOBo1lSgHFTJ1fOaDfL6MP+1dU8DdGHkmeMXeANwum8Mox2CP0avchZb0+AmTa2wphWjED3jT8ViNkxp2SUWos/q9913830I+6rBJeqjp5JliVGUFxp76+Rpge9wDk3w6Qw16jwqm6rRklBIeggpguf9wQVrg4TL5Ub1iAOrWnvIDD+TnOWi3/vIEINLtxCIhRFm3sRCqGVIbHH1Tsr3UTvH186KEIhbvHbftKNUxFwKt7vnLrXe0JtTZ0yTDbus2CaWiiNXv8
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB4666.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(376002)(346002)(396003)(136003)(39860400002)(478600001)(6512007)(8936002)(36756003)(2906002)(26005)(8676002)(83380400001)(6486002)(6666004)(66476007)(52116002)(4326008)(107886003)(956004)(16526019)(86362001)(6506007)(5660300002)(66556008)(66946007)(316002)(2616005)(186003)(8886007)(9126006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?/3cRQNNRIVxaTej6ZDn5TCl1Rum2fDvIR65YvQ+drri+56McOw0fu1wDS8tT?=
+ =?us-ascii?Q?XhVsiUKVO5toENeROBlTha3TmjZZxJZsMIC8j+TGTI0DVIQ80/x1touYs/jz?=
+ =?us-ascii?Q?MszRCDCyR/lr6R5F11DclnZYQVNvHN5Sg028Wqr1ECCaPwkMvabR+TOnrEWk?=
+ =?us-ascii?Q?MIjZ8mCJhY9BmZPjEvVKiUld3OgIZEDxMCIPLvNCfJh7XPQBWCmb4c8wxq/f?=
+ =?us-ascii?Q?tSUblT96O5KRFURsjv4l48Vh+46TpAe7EImP7WJ1J8Q7Rjfj5ZRhLdtkkp0c?=
+ =?us-ascii?Q?St9vwo+Wq7YU1yEngJ4HpsMUrB6l0BydEsbD3uqJBekGnxuc3Z9eens++AtK?=
+ =?us-ascii?Q?sNuRCHFwOZa2Jt+Ee9GItbpGxGV9norh4hg97S3VsdA3e9JOQEz/bNW7wv2A?=
+ =?us-ascii?Q?qLyoAxzSwITLFp9z6WPeyrfehCPxiw5aFytno4XbUlJBbpX2CSLHios9Zlyn?=
+ =?us-ascii?Q?hHfItUSlRCt4XIC8/HKzzKMZUk8gzxpP6yflJRneQl/wfOiP8aKjYUfK3wkm?=
+ =?us-ascii?Q?LPPdu+RDSrD/s6T8UBbv2R7nsBYaADStd66LeNyrPz7usKUW7IEac7f0Y42+?=
+ =?us-ascii?Q?ogMEpJkhmYx9xaMSofGxE5jW9BJoOsrYV0MuIrfASiV5x2+q0VBd/wBtIm29?=
+ =?us-ascii?Q?8mroX1qv3LkNI+tiv2f+PLblOWgR2Qm0hdmxZ8i1R8QvtSnYaPt7mxfeMeK2?=
+ =?us-ascii?Q?93Vn7hwi9iCXBoe0aTK1btF4ZWtRmkplpJyE3VAJguJOmpN7+0YEOtXsy2Q1?=
+ =?us-ascii?Q?Dq84u+OvZMAyX/72oxFVaOgaj4OJPc5ljLPnnTf/7gZ1Wde2Pdj66bcAXmAF?=
+ =?us-ascii?Q?btSrtqoRSnu1vN/Dkkjpukvft2fnv9UMbmPeaBdtbYKbBo/pfLfBFAXr5JBM?=
+ =?us-ascii?Q?eIAZgYC58vjwrY/SXnFtFxM3d7IgZBJtvNp5k0qMEwblUljnJvftAEmZgoxh?=
+ =?us-ascii?Q?H6XPtDlFulv/g0C8PTQ0hp7ylMc1fcZQQFbsx8gINAf7WvRn6ougzJddnnlO?=
+ =?us-ascii?Q?3QPFppqLUdum1se03VU8HXfudI61X3+skHkrgLBVMBB39y0mIQhGAZ+cllfX?=
+ =?us-ascii?Q?QbvLRHtm?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f4acde7d-51cb-4a6b-327a-08d8c7d9e130
+X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB4666.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2021 00:23:07.7205
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lrCRusIPrPbjSzqdmz2CBpijWQzIcr6MRxHxT0+KZGXxhkT/U/Ei7I9s8xK7SpDHk0se2VWQ7u4l4dxhd9rLzg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7002
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Instead of encoding of the bvec pool using magic bio flags, just use
-a helper to find the pool based on the max_vecs value.
+With kernel commit 480523feae58 ("md: only call set_in_sync() when it
+is expected to succeed."), mddev->in_sync in clustered array is always
+zero. It makes metadata resync_offset to always zero.
+When assembling a clusterd array with "-U no-bitmap" option, kernel
+md layer "mddev->resync_offset == 0" and "mddev->bitmap == NULL" will
+trigger raid1 do sync on every bitmap chunk. the sync action is useless,
+we should avoid it.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Related kernel flow:
+```
+md_do_sync
+ mddev->pers->sync_request
+  raid1_sync_request
+   md_bitmap_start_sync(mddev->bitmap, sector_nr, &sync_blocks, 1)
+    __bitmap_start_sync(bitmap, offset,&blocks1, degraded)
+      if (bitmap == NULL) {/* FIXME or bitmap set as 'failed' */
+        *blocks = 1024;
+        return 1; /* always resync if no bitmap */
+      }
+```
+
+Reprodusible steps:
+```
+node1 # mdadm -C /dev/md0 -b clustered -e 1.2 -n 2 -l mirror /dev/sd{a,b}
+node1 # mdadm -Ss
+(in another shell, executing & watching: watch -n 1 'cat /proc/mdstat')
+node1 # mdadm -A -U no-bitmap /dev/md0 /dev/sd{a,b}
+```
+
+Signed-off-by: Zhao Heming <heming.zhao@suse.com>
 ---
- block/bio-integrity.c     |  11 ++--
- block/bio.c               | 104 ++++++++++++++++----------------------
- block/blk.h               |   6 +--
- include/linux/bio.h       |   1 -
- include/linux/blk_types.h |  29 +----------
- 5 files changed, 51 insertions(+), 100 deletions(-)
+v2: only set MaxSector on bitmap clean device
+ 
+---
+ super1.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/block/bio-integrity.c b/block/bio-integrity.c
-index 19617fa326c35f..dfa652122a2dc8 100644
---- a/block/bio-integrity.c
-+++ b/block/bio-integrity.c
-@@ -28,7 +28,7 @@ static void __bio_integrity_free(struct bio_set *bs,
- 	if (bs && mempool_initialized(&bs->bio_integrity_pool)) {
- 		if (bip->bip_vec)
- 			bvec_free(&bs->bvec_integrity_pool, bip->bip_vec,
--				  bip->bip_slab);
-+				  bip->bip_max_vcnt);
- 		mempool_free(bip, &bs->bio_integrity_pool);
- 	} else {
- 		kfree(bip);
-@@ -70,14 +70,11 @@ struct bio_integrity_payload *bio_integrity_alloc(struct bio *bio,
- 	memset(bip, 0, sizeof(*bip));
- 
- 	if (nr_vecs > inline_vecs) {
--		unsigned long idx = 0;
--
--		bip->bip_vec = bvec_alloc(gfp_mask, nr_vecs, &idx,
--					  &bs->bvec_integrity_pool);
-+		bip->bip_max_vcnt = nr_vecs;
-+		bip->bip_vec = bvec_alloc(&bs->bvec_integrity_pool,
-+					  &bip->bip_max_vcnt, gfp_mask);
- 		if (!bip->bip_vec)
- 			goto err;
--		bip->bip_max_vcnt = bvec_nr_vecs(idx);
--		bip->bip_slab = idx;
- 	} else {
- 		bip->bip_vec = bip->bip_inline_vecs;
- 		bip->bip_max_vcnt = inline_vecs;
-diff --git a/block/bio.c b/block/bio.c
-index a36f955cd120b0..a0eabe2f8b07a5 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -36,6 +36,24 @@ static struct biovec_slab {
- 	{ .nr_vecs = BIO_MAX_PAGES, .name = "biovec-max" },
- };
- 
-+static struct biovec_slab *biovec_slab(unsigned short nr_vecs)
-+{
-+	switch (nr_vecs) {
-+	/* smaller bios use inline vecs */
-+	case 5 ... 16:
-+		return &bvec_slabs[0];
-+	case 17 ... 64:
-+		return &bvec_slabs[1];
-+	case 65 ... 128:
-+		return &bvec_slabs[2];
-+	case 129 ... BIO_MAX_PAGES:
-+		return &bvec_slabs[3];
-+	default:
-+		BUG();
-+		return NULL;
-+	}
-+}
-+
- /*
-  * fs_bio_set is the bio_set containing bio and iovec memory pools used by
-  * IO code that does not need private memory pools.
-@@ -131,26 +149,14 @@ static void bio_put_slab(struct bio_set *bs)
- 	mutex_unlock(&bio_slab_lock);
- }
- 
--unsigned int bvec_nr_vecs(unsigned short idx)
-+void bvec_free(mempool_t *pool, struct bio_vec *bv, unsigned short nr_vecs)
- {
--	return bvec_slabs[--idx].nr_vecs;
--}
-+	BIO_BUG_ON(nr_vecs > BIO_MAX_PAGES);
- 
--void bvec_free(mempool_t *pool, struct bio_vec *bv, unsigned int idx)
--{
--	if (!idx)
--		return;
--	idx--;
--
--	BIO_BUG_ON(idx >= BVEC_POOL_NR);
--
--	if (idx == BVEC_POOL_MAX) {
-+	if (nr_vecs == BIO_MAX_PAGES)
- 		mempool_free(bv, pool);
--	} else {
--		struct biovec_slab *bvs = bvec_slabs + idx;
--
--		kmem_cache_free(bvs->slab, bv);
--	}
-+	else if (nr_vecs > BIO_INLINE_VECS)
-+		kmem_cache_free(biovec_slab(nr_vecs)->slab, bv);
- }
- 
- /*
-@@ -163,48 +169,34 @@ static inline gfp_t bvec_alloc_gfp(gfp_t gfp)
- 		__GFP_NOMEMALLOC | __GFP_NORETRY | __GFP_NOWARN;
- }
- 
--struct bio_vec *bvec_alloc(gfp_t gfp_mask, int nr, unsigned long *idx,
--			   mempool_t *pool)
-+struct bio_vec *bvec_alloc(mempool_t *pool, unsigned short *nr_vecs,
-+		gfp_t gfp_mask)
- {
-+	struct biovec_slab *bvs = biovec_slab(*nr_vecs);
-+
-+	if (WARN_ON_ONCE(!bvs))
-+		return NULL;
-+
- 	/*
--	 * see comment near bvec_array define!
-+	 * Upgrade the nr_vecs request to take full advantage of the allocation.
-+	 * We also rely on this in the bvec_free path.
- 	 */
--	switch (nr) {
--	/* smaller bios use inline vecs */
--	case 5 ... 16:
--		*idx = 2;
--		break;
--	case 17 ... 64:
--		*idx = 3;
--		break;
--	case 65 ... 128:
--		*idx = 4;
--		break;
--	case 129 ... BIO_MAX_PAGES:
--		*idx = 5;
--		break;
--	default:
--		return NULL;
--	}
-+	*nr_vecs = bvs->nr_vecs;
- 
- 	/*
- 	 * Try a slab allocation first for all smaller allocations.  If that
- 	 * fails and __GFP_DIRECT_RECLAIM is set retry with the mempool.
- 	 * The mempool is sized to handle up to BIO_MAX_PAGES entries.
- 	 */
--	if (*idx < BVEC_POOL_MAX) {
--		struct biovec_slab *bvs = bvec_slabs + *idx;
-+	if (*nr_vecs < BIO_MAX_PAGES) {
- 		struct bio_vec *bvl;
- 
- 		bvl = kmem_cache_alloc(bvs->slab, bvec_alloc_gfp(gfp_mask));
--		if (likely(bvl) || !(gfp_mask & __GFP_DIRECT_RECLAIM)) {
--			(*idx)++;
-+		if (likely(bvl) || !(gfp_mask & __GFP_DIRECT_RECLAIM))
- 			return bvl;
--		}
--		*idx = BVEC_POOL_MAX;
-+		*nr_vecs = BIO_MAX_PAGES;
- 	}
- 
--	(*idx)++;
- 	return mempool_alloc(pool, gfp_mask);
- }
- 
-@@ -231,7 +223,7 @@ static void bio_free(struct bio *bio)
- 	bio_uninit(bio);
- 
- 	if (bs) {
--		bvec_free(&bs->bvec_pool, bio->bi_io_vec, BVEC_POOL_IDX(bio));
-+		bvec_free(&bs->bvec_pool, bio->bi_io_vec, bio->bi_max_vecs);
- 
- 		/*
- 		 * If we have front padding, adjust the bio pointer before freeing
-@@ -275,12 +267,8 @@ EXPORT_SYMBOL(bio_init);
-  */
- void bio_reset(struct bio *bio)
- {
--	unsigned long flags = bio->bi_flags & (~0UL << BIO_RESET_BITS);
--
- 	bio_uninit(bio);
--
- 	memset(bio, 0, BIO_RESET_BYTES);
--	bio->bi_flags = flags;
- 	atomic_set(&bio->__bi_remaining, 1);
- }
- EXPORT_SYMBOL(bio_reset);
-@@ -453,22 +441,18 @@ struct bio *bio_alloc_bioset(gfp_t gfp_mask, unsigned short nr_iovecs,
- 
- 	bio = p + bs->front_pad;
- 	if (nr_iovecs > BIO_INLINE_VECS) {
--		unsigned long idx = 0;
- 		struct bio_vec *bvl = NULL;
- 
--		bvl = bvec_alloc(gfp_mask, nr_iovecs, &idx, &bs->bvec_pool);
-+		bvl = bvec_alloc(&bs->bvec_pool, &nr_iovecs, gfp_mask);
- 		if (!bvl && gfp_mask != saved_gfp) {
- 			punt_bios_to_rescuer(bs);
- 			gfp_mask = saved_gfp;
--			bvl = bvec_alloc(gfp_mask, nr_iovecs, &idx,
--					 &bs->bvec_pool);
-+			bvl = bvec_alloc(&bs->bvec_pool, &nr_iovecs, gfp_mask);
- 		}
--
- 		if (unlikely(!bvl))
- 			goto err_free;
- 
--		bio_init(bio, bvl, bvec_nr_vecs(idx));
--		bio->bi_flags |= idx << BVEC_POOL_OFFSET;
-+		bio_init(bio, bvl, nr_iovecs);
- 	} else if (nr_iovecs) {
- 		bio_init(bio, bio->bi_inline_vecs, BIO_INLINE_VECS);
- 	} else {
-@@ -644,7 +628,7 @@ EXPORT_SYMBOL(bio_put);
-  */
- void __bio_clone_fast(struct bio *bio, struct bio *bio_src)
- {
--	BUG_ON(bio->bi_pool && BVEC_POOL_IDX(bio));
-+	WARN_ON_ONCE(bio->bi_pool && bio->bi_max_vecs);
- 
- 	/*
- 	 * most users will be overriding ->bi_bdev with a new target,
-@@ -934,7 +918,7 @@ EXPORT_SYMBOL_GPL(bio_release_pages);
- 
- static int bio_iov_bvec_set(struct bio *bio, struct iov_iter *iter)
- {
--	WARN_ON_ONCE(BVEC_POOL_IDX(bio) != 0);
-+	WARN_ON_ONCE(bio->bi_max_vecs);
- 
- 	bio->bi_vcnt = iter->nr_segs;
- 	bio->bi_io_vec = (struct bio_vec *)iter->bvec;
-@@ -1495,7 +1479,7 @@ EXPORT_SYMBOL_GPL(bio_trim);
-  */
- int biovec_init_pool(mempool_t *pool, int pool_entries)
- {
--	struct biovec_slab *bp = bvec_slabs + BVEC_POOL_MAX;
-+	struct biovec_slab *bp = bvec_slabs + ARRAY_SIZE(bvec_slabs) - 1;
- 
- 	return mempool_init_slab_pool(pool, pool_entries, bp->slab);
- }
-@@ -1605,8 +1589,6 @@ static int __init init_bio(void)
- {
- 	int i;
- 
--	BUILD_BUG_ON(BIO_FLAG_LAST > BVEC_POOL_OFFSET);
--
- 	bio_integrity_init();
- 
- 	for (i = 0; i < ARRAY_SIZE(bvec_slabs); i++) {
-diff --git a/block/blk.h b/block/blk.h
-index e022a0d0f2ce45..bfc4d526f6261c 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -56,9 +56,9 @@ void blk_free_flush_queue(struct blk_flush_queue *q);
- void blk_freeze_queue(struct request_queue *q);
- 
- #define BIO_INLINE_VECS 4
--struct bio_vec *bvec_alloc(gfp_t, int, unsigned long *, mempool_t *);
--void bvec_free(mempool_t *, struct bio_vec *, unsigned int);
--unsigned int bvec_nr_vecs(unsigned short idx);
-+struct bio_vec *bvec_alloc(mempool_t *pool, unsigned short *nr_vecs,
-+		gfp_t gfp_mask);
-+void bvec_free(mempool_t *pool, struct bio_vec *bv, unsigned short nr_vecs);
- 
- static inline bool biovec_phys_mergeable(struct request_queue *q,
- 		struct bio_vec *vec1, struct bio_vec *vec2)
-diff --git a/include/linux/bio.h b/include/linux/bio.h
-index 9ceeb8ecdb7f23..3cbbaf76906edb 100644
---- a/include/linux/bio.h
-+++ b/include/linux/bio.h
-@@ -329,7 +329,6 @@ struct bio_integrity_payload {
- 
- 	struct bvec_iter	bip_iter;
- 
--	unsigned short		bip_slab;	/* slab the bip came from */
- 	unsigned short		bip_vcnt;	/* # of integrity bio_vecs */
- 	unsigned short		bip_max_vcnt;	/* integrity bio_vec slots */
- 	unsigned short		bip_flags;	/* control flags */
-diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index 1bc6f6a01070fc..db026b6ec15ab7 100644
---- a/include/linux/blk_types.h
-+++ b/include/linux/blk_types.h
-@@ -227,7 +227,7 @@ struct bio {
- 						 * top bits REQ_OP. Use
- 						 * accessors.
- 						 */
--	unsigned short		bi_flags;	/* status, etc and bvec pool number */
-+	unsigned short		bi_flags;	/* BIO_* below */
- 	unsigned short		bi_ioprio;
- 	unsigned short		bi_write_hint;
- 	blk_status_t		bi_status;
-@@ -307,33 +307,6 @@ enum {
- 	BIO_FLAG_LAST
- };
- 
--/* See BVEC_POOL_OFFSET below before adding new flags */
--
--/*
-- * We support 6 different bvec pools, the last one is magic in that it
-- * is backed by a mempool.
-- */
--#define BVEC_POOL_NR		6
--#define BVEC_POOL_MAX		(BVEC_POOL_NR - 1)
--
--/*
-- * Top 3 bits of bio flags indicate the pool the bvecs came from.  We add
-- * 1 to the actual index so that 0 indicates that there are no bvecs to be
-- * freed.
-- */
--#define BVEC_POOL_BITS		(3)
--#define BVEC_POOL_OFFSET	(16 - BVEC_POOL_BITS)
--#define BVEC_POOL_IDX(bio)	((bio)->bi_flags >> BVEC_POOL_OFFSET)
--#if (1<< BVEC_POOL_BITS) < (BVEC_POOL_NR+1)
--# error "BVEC_POOL_BITS is too small"
--#endif
--
--/*
-- * Flags starting here get preserved by bio_reset() - this includes
-- * only BVEC_POOL_IDX()
-- */
--#define BIO_RESET_BITS	BVEC_POOL_OFFSET
--
- typedef __u32 __bitwise blk_mq_req_flags_t;
- 
- /*
+diff --git a/super1.c b/super1.c
+index 19fe6f5..9470025 100644
+--- a/super1.c
++++ b/super1.c
+@@ -1318,6 +1318,8 @@ static int update_super1(struct supertype *st, struct mdinfo *info,
+ 			memcpy(bms->uuid, sb->set_uuid, 16);
+ 	} else if (strcmp(update, "no-bitmap") == 0) {
+ 		sb->feature_map &= ~__cpu_to_le32(MD_FEATURE_BITMAP_OFFSET);
++		if (bms->version == BITMAP_MAJOR_CLUSTERED && !IsBitmapDirty(devname))
++			sb->resync_offset = MaxSector;
+ 	} else if (strcmp(update, "bbl") == 0) {
+ 		/* only possible if there is room after the bitmap, or if
+ 		 * there is no bitmap
 -- 
-2.29.2
+2.30.0
 
