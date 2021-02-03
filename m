@@ -2,68 +2,95 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C524030DE54
-	for <lists+linux-raid@lfdr.de>; Wed,  3 Feb 2021 16:37:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 392A930DBA6
+	for <lists+linux-raid@lfdr.de>; Wed,  3 Feb 2021 14:47:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234584AbhBCPhl (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 3 Feb 2021 10:37:41 -0500
-Received: from 198-20-226-115.unifiedlayer.com ([198.20.226.115]:56722 "EHLO
-        198-20-226-115.unifiedlayer.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S234512AbhBCPgR (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 3 Feb 2021 10:36:17 -0500
-X-Greylist: delayed 29383 seconds by postgrey-1.27 at vger.kernel.org; Wed, 03 Feb 2021 10:35:24 EST
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=carnivalassure.com.bd; s=default; h=Content-Transfer-Encoding:Content-Type:
-        Message-ID:Reply-To:Subject:To:From:Date:MIME-Version:Sender:Cc:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=miRpAdBSO5eDo01VDX+EK9bqGCmqMjXHS3kO16T6iWw=; b=BeRp52iTZNZnIj6Yk4q4qmVg1o
-        TGW3OyQQDqdIygbFzrOvnb1VFlTwDZeYzPg7x0gcAhNqpY+RPOU8XZPJCHVzHp7N6NMkd40+DlrAZ
-        BxMd0S46HbScvjeaenOH3+S94exP2AbS+FzziGjhE87mUv7G1Yf3DGvnuFRQOMF8rB7m0VxjRMPDd
-        55/dxUiSnVbBa0JImuQYYXUpRt83SOvMPmEy3tm7HhC6eVNF+f6Wxow3WBSbpKE+vZC1jXRKKl9C1
-        bK6OQxLWFq7P4uMl6BygkP9QC4QklVZQU7qWYFjfzBfV8UP2ROnwJjNJGJIyClrEEjRpgcDNFfVIx
-        4EKHpC7g==;
-Received: from [127.0.0.1] (port=46990 helo=dot.dotlines.com.sg)
-        by dot.dotlines.com.sg with esmtpa (Exim 4.93)
-        (envelope-from <noreply@carnivalassure.com.bd>)
-        id 1l7CVy-0005dS-7D; Wed, 03 Feb 2021 01:23:50 -0600
+        id S230380AbhBCNrS (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 3 Feb 2021 08:47:18 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:54493 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232197AbhBCNrM (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 3 Feb 2021 08:47:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1612359939;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=nUvGO2NkQziepEvhNOxAS2l8uNJvQVfBz9wc3WZKREQ=;
+        b=A/FAWL2/g7vA99uLopsuMspRxifG9p/0EjbDZEs5XFxonefJY3D1aYQ2F+hImKGRJ8ghuC
+        ukk3r7OB6bKcHvLxHQj469YvYybeS1recARa1Pj73MZGpJU4Fxux6AHvr9koGFJ8cOGs7a
+        mn0xZKiSYruiOSMw35JIjNo0leKoO10=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-267-LIJwFXDWNG6zsm2QlVZzQw-1; Wed, 03 Feb 2021 08:45:37 -0500
+X-MC-Unique: LIJwFXDWNG6zsm2QlVZzQw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4793A85B660;
+        Wed,  3 Feb 2021 13:45:36 +0000 (UTC)
+Received: from localhost.localdomain.com (ovpn-8-24.pek2.redhat.com [10.72.8.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2254A6F125;
+        Wed,  3 Feb 2021 13:45:32 +0000 (UTC)
+From:   Xiao Ni <xni@redhat.com>
+To:     songliubraving@fb.com
+Cc:     linux-raid@vger.kernel.org, matthew.ruffell@canonical.com,
+        colyli@suse.de, guoqing.jiang@cloud.ionos.com, ncroxon@redhat.com
+Subject: [PATCH 0/5] md/raid10: Improve handling raid10 discard request
+Date:   Wed,  3 Feb 2021 21:45:26 +0800
+Message-Id: <1612359931-24209-1-git-send-email-xni@redhat.com>
 MIME-Version: 1.0
-Date:   Wed, 03 Feb 2021 01:23:49 -0600
-From:   Francois Pinault <noreply@carnivalassure.com.bd>
-To:     undisclosed-recipients:;
-Subject: Hello/Hallo
-Organization: Donation
-Reply-To: francoispinault1936@outlook.com
-Mail-Reply-To: francoispinault1936@outlook.com
-Message-ID: <6b70d71c493b5c027dd3ef878f38d028@carnivalassure.com.bd>
-X-Sender: noreply@carnivalassure.com.bd
-User-Agent: Roundcube Webmail/1.3.15
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - dot.dotlines.com.sg
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - carnivalassure.com.bd
-X-Get-Message-Sender-Via: dot.dotlines.com.sg: authenticated_id: noreply@carnivalassure.com.bd
-X-Authenticated-Sender: dot.dotlines.com.sg: noreply@carnivalassure.com.bd
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+Hi all
 
+Now mkfs on raid10 which is combined with ssd/nvme disks takes a long time.
+This patch set tries to resolve this problem.
+
+This patch set had been reverted because of a data corruption problem. This
+version fix this problem. The root cause which causes the data corruption is
+the wrong calculation of start address of near copies disks.
+
+Now we use a similar way with raid0 to handle discard request for raid10.
+Because the discard region is very big, we can calculate the start/end
+address for each disk. Then we can submit the discard request to each disk.
+But for raid10, it has copies. For near layout, if the discard request
+doesn't align with chunk size, we calculate a start_disk_offset. Now we only
+use start_disk_offset for the first disk, but it should be used for the
+near copies disks too.
+
+[  789.709501] discard bio start : 70968, size : 191176
+[  789.709507] first stripe index 69, start disk index 0, start disk offset 70968
+[  789.709509] last stripe index 256, end disk index 0, end disk offset 262144
+[  789.709511] disk 0, dev start : 70968, dev end : 262144
+[  789.709515] disk 1, dev start : 70656, dev end : 262144
+
+For example, in this test case, it has 2 near copies. The start_disk_offset
+for the first disk is 70968. It should use the same offset address for second disk.
+But it uses the start address of this chunk. It discard more region. This version
+simply spilt the un-aligned part with strip size.
+
+And it fixes another problem. The calculation of stripe_size is wrong in reverted version.
+
+Xiao Ni (5):
+  md: add md_submit_discard_bio() for submitting discard bio
+  md/raid10: extend r10bio devs to raid disks
+  md/raid10: pull codes that wait for blocked dev into one function
+  md/raid10: improve raid10 discard request
+  md/raid10: improve discard request for far layout
+
+ drivers/md/md.c     |  20 +++
+ drivers/md/md.h     |   2 +
+ drivers/md/raid0.c  |  14 +-
+ drivers/md/raid10.c | 429 +++++++++++++++++++++++++++++++++++++++++++++-------
+ drivers/md/raid10.h |   1 +
+ 5 files changed, 397 insertions(+), 69 deletions(-)
 
 -- 
-Hallo, ich bin Herr Francois Pinault, ich habe Ihnen gespendet. Sie 
-können mein Profil auf Wikipedia, Google oder Forbes überprüfen.
+2.7.5
 
-Für Ihren Spendenanspruch und weitere Informationen kontaktieren Sie 
-mich umgehend unter francoispinault1936@outlook.com
-
-Mit freundlichen Grüßen,
-Herr Francois Pinault
