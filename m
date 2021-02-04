@@ -2,150 +2,57 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 851CD30FA07
-	for <lists+linux-raid@lfdr.de>; Thu,  4 Feb 2021 18:45:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 814DD30FA7A
+	for <lists+linux-raid@lfdr.de>; Thu,  4 Feb 2021 19:01:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238575AbhBDRo0 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-raid@lfdr.de>); Thu, 4 Feb 2021 12:44:26 -0500
-Received: from mail.eclipso.de ([217.69.254.104]:39386 "EHLO mail.eclipso.de"
+        id S236992AbhBDR6d (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 4 Feb 2021 12:58:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238582AbhBDRoR (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 4 Feb 2021 12:44:17 -0500
-Received: from mail.eclipso.de (www1.eclipso.de [217.69.254.102])
-        by mail.eclipso.de with ESMTP id 6F4CC1F7
-        for <linux-raid@vger.kernel.org>; Thu, 04 Feb 2021 18:43:23 +0100 (CET)
-Date:   Thu, 04 Feb 2021 18:43:23 +0100
+        id S238774AbhBDR6C (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 4 Feb 2021 12:58:02 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 96FB764E24;
+        Thu,  4 Feb 2021 17:57:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1612461441;
+        bh=lYS1vJl4RC6iy4FmbkN/ZpWp9JXC5gFA3lH1E7aeReU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CphCsDhRRlvN9uBmsKGwndXATPsiE6JdDgKPtsb2Ms75587Io1WuytZ3h4wRtPg4x
+         6pAAGSML9sXWEwtUisTXcHHKl/HnjBx51vziqzib2/gUujjBVFMTwaaPfCCRetTz7P
+         S+kE9SiV170gcPJupJwQU5VWZkrrluJK4zH09Zac8nfBe01vlCs2OaXUZ05wUDTWEJ
+         HkhYjzycjJousmyALUrV3b8XHqEOw4UsnvWw3EtTStzJv2SsfW8euGAaGcI9gFAdjo
+         hRdkpHk3D2m/Cjb8TmIrxK8czY8BuHM4m55uRS3hL+fKVUrcmOhh0B3dSur/Bm+Tlt
+         UMVpBYW8a0q6Q==
+Received: by mail-lf1-f45.google.com with SMTP id v24so5859598lfr.7;
+        Thu, 04 Feb 2021 09:57:21 -0800 (PST)
+X-Gm-Message-State: AOAM5312Co1tRFOdCoAwWt8i8OESNKWGdKBx3Za28dykA3oEx2/y3tw7
+        tOZ8pgjGUE22KA4tY+ksOuyhZ7+iwfXn+Wwdavc=
+X-Google-Smtp-Source: ABdhPJw0ZAO8XEiTsOVi1WgoqhUpu/mWh2wUUo4BO+lm9mDrH2kpAV3zqlc/ukcpxoCuf9fVMigX04IWJWBTHWgLZik=
+X-Received: by 2002:ac2:5ded:: with SMTP id z13mr319001lfq.160.1612461439848;
+ Thu, 04 Feb 2021 09:57:19 -0800 (PST)
 MIME-Version: 1.0
-Message-ID: <24e578627d205151df16b5aebe4a551e@mail.eclipso.de>
-X-Mailer: eclipso / 7.4.0
-From:   " " <Cedric.dewijs@eclipso.eu>
-Subject: Re: Re: put 2 hard drives in mdadm raid 1 and detect bitrot like btrfs
-        does, what's that called?
-Reply-To: " " <Cedric.dewijs@eclipso.eu>
-To:     "Andy Smith" <andy@strugglers.net>
-Cc:     <linux-btrfs@vger.kernel.org>, <linux-raid@vger.kernel.org>
-In-Reply-To: <20210204105457.GI3712@bitfolk.com>
-References: <f5d8af48e8d5543267089286c01c476f@mail.eclipso.de>
-        <a2cd87208a74fb36224539fa10727066@mail.eclipso.de>
-        <20210204105457.GI3712@bitfolk.com>
+References: <20210202171929.1504939-1-hch@lst.de> <20210202171929.1504939-11-hch@lst.de>
+In-Reply-To: <20210202171929.1504939-11-hch@lst.de>
+From:   Song Liu <song@kernel.org>
+Date:   Thu, 4 Feb 2021 09:57:08 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW4_h7KzAjHpgoWQWM7RMQqvQd8XurNV8JjW9w79uPYJGQ@mail.gmail.com>
+Message-ID: <CAPhsuW4_h7KzAjHpgoWQWM7RMQqvQd8XurNV8JjW9w79uPYJGQ@mail.gmail.com>
+Subject: Re: [PATCH 10/11] md/raid10: remove dead code in reshape_request
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-block@vger.kernel.org,
+        linux-raid <linux-raid@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+On Tue, Feb 2, 2021 at 9:19 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> A bio allocated by bio_alloc_bioset comes pre-zeroed, no need to
+> clear random fields.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
---- Ursprüngliche Nachricht ---
-Von: Andy Smith <andy@strugglers.net>
-Datum: 04.02.2021 11:54:57
-An: linux-btrfs@vger.kernel.org
-Betreff: Re: put 2 hard drives in mdadm raid 1 and detect bitrot like btrfs  does, what's that called?
-
-Hi Cedric,
-
-On Wed, Feb 03, 2021 at 08:33:18PM +0100,   wrote:
-> it's called "dm-integrity", as mentioned in this e-mail:
-> https://www.mail-archive.com/linux-btrfs@vger.kernel.org/msg93037.html
-
-
-If you do this it would be very interesting to see performance
-figures for the following setups:
-
-- btrfs with raid1 meta and data allocation
-- mdadm raid1 on raw devices
-- mdadm raid1 on dm-integrity (no encryption) on raw devices
-- mdadm raid1 on dm-integrity (encryption) on raw devices
-
-just to see what kind of performance loss dm-integrity and
-encryption is going to impose.
-
-After doing it, it would find a nice home on the Linux RAID wiki:
-
-    https://raid.wiki.kernel.org/index.php/Dm-integrity
-
-Cheers,
-Andy
-
-Hey Andy,
-
-I would rather see performance figures for these setups:
-A) btrfs with 2 (or more) hard drives and one SSD in writeback bcache configuration (unsafe against failure of the ssd):
-+-----------------------------+
-|      btrfs raid 1 /mnt      |
-+--------------+--------------+
-| /dev/Bcache0 | /dev/Bcache1 |
-+--------------+--------------+
-|   bcache writeback Cache    |
-|           /dev/sdk1         |
-+--------------+--------------+
-| Data         | Data         |
-| /dev/sdv1    | /dev/sdw1    |
-+--------------+--------------+
-
-B) btrfs with 2 (or more) hard drives and two SSD's in dm-raid 1 writeback bcache configuration (unsafe against corruption of any of the ssd's): 
-+-----------------------------+
-|      btrfs raid 1 /mnt      |
-+--------------+--------------+
-| /dev/Bcache0 | /dev/Bcache1 |
-+--------------+--------------+
-|   bcache writeback Cache    |
-|           /dev/dm0          |
-+--------------+--------------+
-| 2x SSD in mdadm raid 1      |
-| /dev/sdk1       /dev/sdl1   |
-+--------------+--------------+
-| Data         | Data         |
-| /dev/sdv1    | /dev/sdw1    |
-+--------------+--------------+
-
-C) Full stack: btrfs with 2 (or more) hard drives and two identical SSD's in dm-raid 1 with dm-integrity writeback bcache configuration (safe against any failed drive):
-+-----------------------------+
-|      btrfs raid 1 /mnt      |
-+--------------+--------------+
-| /dev/Bcache0 | /dev/Bcache1 |
-+--------------+--------------+
-|   bcache writeback Cache    |
-|           /dev/dm0          |
-+--------------+--------------+
-| 2 x dm-integrity devices    |
-| in mdadm raid 1             |
-+--------------+--------------+
-| SSD hosting  | SSD hosting  |
-| dm-integrity | dm-integrity |
-| /dev/sdk1    | /dev/sdl1    |
-+--------------+--------------+
-| Data         | Data         |
-| /dev/sdv1    | /dev/sdw1    |
-+--------------+--------------+
-
-D) Full stack: btrfs with 2 (or more) hard drives and two SSD's (one slow, and one very fast) in dm-raid 1 with dm-integrity writeback bcache configuration (safe against any failed drive):
-+-----------------------------+
-|      btrfs raid 1 /mnt      |
-+--------------+--------------+
-| /dev/Bcache0 | /dev/Bcache1 |
-+--------------+--------------+
-|   bcache writeback Cache    |
-|           /dev/dm0          |
-+--------------+--------------+
-| 2 x dm-integrity devices    |
-| in mdadm raid 1             |
-+--------------+--------------+
-| SSD hosting  | SSD hosting  |
-| dm-integrity | dm-integrity |
-| /dev/sdk1    | /dev/sdl1    |
-+--------------+--------------+
-| Data         | Data         |
-| /dev/sdv1    | /dev/sdw1    |
-+--------------+--------------+
-
-In all these setups, the performance of the hard drives is irrelevant, because the speed of the setups comes from the bcache SSD.
-
-Cheers,
-Cedric
-
----
-
-Take your mailboxes with you. Free, fast and secure Mail &amp; Cloud: https://www.eclipso.eu - Time to change!
-
-
+Acked-by: Song Liu <song@kernel.org>
