@@ -2,68 +2,79 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7087B30F14E
-	for <lists+linux-raid@lfdr.de>; Thu,  4 Feb 2021 11:56:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F23BB30F533
+	for <lists+linux-raid@lfdr.de>; Thu,  4 Feb 2021 15:42:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235447AbhBDKzk (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 4 Feb 2021 05:55:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36474 "EHLO
+        id S236861AbhBDOkn (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 4 Feb 2021 09:40:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234873AbhBDKzj (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 4 Feb 2021 05:55:39 -0500
-Received: from mail.bitfolk.com (mail.bitfolk.com [IPv6:2001:ba8:1f1:f019::25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C474C061573
-        for <linux-raid@vger.kernel.org>; Thu,  4 Feb 2021 02:54:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bitfolk.com; s=alpha;
-        h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date; bh=kF8waiFxbtyf+atYBuynw6nkJM0tRtbwVLDSrHUZxCM=;
-        b=cFQdW24iuK0g3jNNU8yKYOzSIBwK4zq3iLJRbRe7JPIULQwuQYJGfUxfC7EQDfS9dG1FAnBclG1mia/8EeY4TFGdS7/jeukKY0AFRnEtak7Q/TGc5nz9PBRMaIYmraFnhPmKt5suK4SYA72nE7mr0IYGw6CPkN9WzaK8Q9I43fX0+NdnYQ3Vr7F5MaSC8rnEBTuZOzPTiIWzU+XwY/zcydcjrbI3omS6J5q+diYl+rKdddB5rnVDpI3t3cYnZi4Svl87/JxJI1RrgEl2wEio9ssuLPmma+UpDe4hbL4a5jVDOw2GDv5xtcTQMCJ4G0QsGkNAR2L+qw9Oe4454t7yAQ==;
-Received: from andy by mail.bitfolk.com with local (Exim 4.84_2)
-        (envelope-from <andy@strugglers.net>)
-        id 1l7cHp-0005Na-MJ; Thu, 04 Feb 2021 10:54:57 +0000
-Date:   Thu, 4 Feb 2021 10:54:57 +0000
-From:   Andy Smith <andy@strugglers.net>
-To:     linux-btrfs@vger.kernel.org
-Cc:     linux-raid@vger.kernel.org
-Subject: Re: put 2 hard drives in mdadm raid 1 and detect bitrot like btrfs
- does, what's that called?
-Message-ID: <20210204105457.GI3712@bitfolk.com>
-Mail-Followup-To: linux-btrfs@vger.kernel.org, linux-raid@vger.kernel.org
-References: <f5d8af48e8d5543267089286c01c476f@mail.eclipso.de>
- <a2cd87208a74fb36224539fa10727066@mail.eclipso.de>
+        with ESMTP id S236728AbhBDOih (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 4 Feb 2021 09:38:37 -0500
+Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB4EAC0613ED
+        for <linux-raid@vger.kernel.org>; Thu,  4 Feb 2021 06:37:56 -0800 (PST)
+Received: by mail-io1-xd2d.google.com with SMTP id s24so3414700iob.6
+        for <linux-raid@vger.kernel.org>; Thu, 04 Feb 2021 06:37:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=z5Er49h0nki+mpmF33NkLblvneRJ6VCZjhJ+NjZ3ilo=;
+        b=aPwg/fSUxWlYIhU6XQpE5dxsKWPORbfIvmpp406hfnwVSzPZ+n+iTodP1qlCqdtiVb
+         Rg4HQt2xYJaOhkifn4jNr3DiObxD/5K5pFZqTKA1Kxi+WicMtnYJJFRqMShcyJL4qQ2g
+         P2Qou4gr3K9YQ2RCAWFUqNbaCY3YdYWkAP0nJZ9yXuozde74OC3+RdfNqLWQujWFO8kE
+         sOh229QXblUCXBZXKFBApg4NQgnWoGIsOuvvr/WX6BD26YiboeRZlgoz01pbi2+W77fe
+         Ql5wfqVoEq36wqKWZCDLR+adqbbXDc/5D5P2qZ2zqt2LrpEJ4yKyNnSWQcdNYNCQxHx9
+         ulcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=z5Er49h0nki+mpmF33NkLblvneRJ6VCZjhJ+NjZ3ilo=;
+        b=T9rUTv8Ef0JzY5/nGG7aj8gNLlRoaowZIC04wI7ql5LYcjqqOdUW0xgsXu7JkOjZwN
+         S3pLJxjEe0pirJCLGRSjEp3Y900M5cqJ4pDq2zj/+BOf9PuZjRrh+2y+3R9aIDZmvhGW
+         0wurEipm/Jg6MjaMmASBGQfvu1rs7xAngpJbIyoGGLLBB7b+sAiXcqadjaG9gtxXYlh+
+         EfXsrWD3hBGUinHo2m7zSz4q30fR001PsrYcqmudHfxEeOdW5Yh29W/+52WZM1XHVyIA
+         eatDM8/YJHu0YV+9MMXO6Qbb4/O4ALAeX4QCliyahoEqYFOCK3XXsSxonsYClwrRB0ni
+         TXjQ==
+X-Gm-Message-State: AOAM530juDpPr9WyRbjVxzbVqhR0qYHrooOvlrUbvRAbbi1a8ydRyfuo
+        MOSaVjiLZMyvv2bwTG4kROmw8A==
+X-Google-Smtp-Source: ABdhPJzQH1BNlkNjwkrgyzFcfjR9SY6y7uYPMPUTkb89Sy7GL+RhJQOzL+IzFVRptoWXiiBpFqf3eg==
+X-Received: by 2002:a6b:7e49:: with SMTP id k9mr7059390ioq.181.1612449476207;
+        Thu, 04 Feb 2021 06:37:56 -0800 (PST)
+Received: from [192.168.1.30] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id 11sm2595863ilq.88.2021.02.04.06.37.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Feb 2021 06:37:55 -0800 (PST)
+Subject: Re: [GIT PULL] md-next 20210203
+To:     Song Liu <songliubraving@fb.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+References: <E3580228-B816-42CC-9E36-B72FF6347452@fb.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <19df70dc-fca2-e4eb-924a-6bbb9fd24c72@kernel.dk>
+Date:   Thu, 4 Feb 2021 07:37:56 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a2cd87208a74fb36224539fa10727066@mail.eclipso.de>
-OpenPGP: id=BF15490B; url=http://strugglers.net/~andy/pubkey.asc
-X-URL:  http://strugglers.net/wiki/User:Andy
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: andy@strugglers.net
-X-SA-Exim-Scanned: No (on mail.bitfolk.com); SAEximRunCond expanded to false
+In-Reply-To: <E3580228-B816-42CC-9E36-B72FF6347452@fb.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi Cedric,
+On 2/3/21 11:55 PM, Song Liu wrote:
+> Hi Jens, 
+> 
+> Please consider pulling the following change for md-next on top of your 
+> for-5.12/drivers branch. 
 
-On Wed, Feb 03, 2021 at 08:33:18PM +0100,   wrote:
-> it's called "dm-integrity", as mentioned in this e-mail:
-> https://www.mail-archive.com/linux-btrfs@vger.kernel.org/msg93037.html
+Pulled, thanks.
 
-If you do this it would be very interesting to see performance
-figures for the following setups:
+-- 
+Jens Axboe
 
-- btrfs with raid1 meta and data allocation
-- mdadm raid1 on raw devices
-- mdadm raid1 on dm-integrity (no encryption) on raw devices
-- mdadm raid1 on dm-integrity (encryption) on raw devices
-
-just to see what kind of performance loss dm-integrity and
-encryption is going to impose.
-
-After doing it, it would find a nice home on the Linux RAID wiki:
-
-    https://raid.wiki.kernel.org/index.php/Dm-integrity
-
-Cheers,
-Andy
