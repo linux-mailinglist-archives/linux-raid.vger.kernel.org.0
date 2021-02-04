@@ -2,201 +2,162 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EB6F30EC43
-	for <lists+linux-raid@lfdr.de>; Thu,  4 Feb 2021 06:59:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E7D5430ECCF
+	for <lists+linux-raid@lfdr.de>; Thu,  4 Feb 2021 07:59:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231217AbhBDF7R (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 4 Feb 2021 00:59:17 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:53043 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229609AbhBDF7R (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 4 Feb 2021 00:59:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1612418271;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=SnfJ5bTL+AOXIpG4BIE64j8FVpkzKMfveJCUnuyt/kI=;
-        b=Wv61KBuVT3Z8THm8ZksQ2Eq4izN6wrtgZT/hUHKslWpFS+nNQ9V7LzhvtrweM0X1hEkz2u
-        idE7r3KEwlzAT30aLFluGirUfXLRb1bxMXccSoUn0koEITOntderXtTZmG/bb8u4LvoFYe
-        6Pk4QUNDflaWfJbR6JB7lk5IXg36doU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-149-MJ4MrC1YPtC_PD2IutcuOw-1; Thu, 04 Feb 2021 00:57:49 -0500
-X-MC-Unique: MJ4MrC1YPtC_PD2IutcuOw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1AA47107ACF6;
-        Thu,  4 Feb 2021 05:57:48 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-8-21.pek2.redhat.com [10.72.8.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CB13060C13;
-        Thu,  4 Feb 2021 05:57:44 +0000 (UTC)
-From:   Xiao Ni <xni@redhat.com>
-To:     songliubraving@fb.com
-Cc:     linux-raid@vger.kernel.org, matthew.ruffell@canonical.com,
-        colyli@suse.de, guoqing.jiang@cloud.ionos.com, ncroxon@redhat.com,
-        hch@infradead.org
-Subject: [PATCH V2 5/5] md/raid10: improve discard request for far layout
-Date:   Thu,  4 Feb 2021 13:57:18 +0800
-Message-Id: <1612418238-9976-6-git-send-email-xni@redhat.com>
-In-Reply-To: <1612418238-9976-1-git-send-email-xni@redhat.com>
-References: <1612418238-9976-1-git-send-email-xni@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        id S233113AbhBDG5r (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 4 Feb 2021 01:57:47 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:41452 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231872AbhBDG5m (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 4 Feb 2021 01:57:42 -0500
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 1146nNRB014663;
+        Wed, 3 Feb 2021 22:56:58 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : content-type : content-id :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=LG97oh28pa2hSyMQG//OS4Ho8eGQQzKlP/y6/WBPTN4=;
+ b=RaE536wB86aXa5bGLo0D6lqwOYrCKqHt399IP75Fbv7J8rPACN07L0peZaxhvRruroDb
+ KQox6nsnFePNIiMFnGw7z/YzCeXbAx95xl6A9wcdET9d1KUTJi1LdJ3Mq8/QYZFrOVKr
+ 1qHN3bN0efOBb+4mtKPgLq/RsPefVb33O9s= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 36fh1uqv8b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 03 Feb 2021 22:56:58 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 3 Feb 2021 22:56:57 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Bz0fd4+Gp9bJfuo/dq/KABolLr5NRYd/zekRPPiL8pOHrMH0tsiAIT1G3VCzlXZX7SUBsSmBsgUgiOS1Hhr3+i+IYoYwwoIcFNzSHKGBCyUzklxFXtddD9g61OUb5lGgGTLt+3LZjP7CjlglL2kaNGdhgYNqPbMZuOXO68hui9DxS+KjkXs14bmM+/Thks/QDNfHX0xTqUnPXGkSQ6SXPLimZIDXUAWWEE/yQlIic94Nv2CsE9pus0cFr9iYaNDgK349laAwPEj+jt0zpGa2Z5Cwy6IcVWdR7JYM34OyopVFTfcqDvzxBA3+0k2kWZSgssv/3qHp0W617eA5p5AtYw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=siEkvC0WBicY33MCFHtIWBDVAHM3cVilEBSfmnnttgU=;
+ b=m04MD1MV95iNfEc7Uz/f00FW//uEUw2LxEzUHgzkhYs0eQtYmUaZ06DmIMPL1YofdMBV1+ziDO7zVV4JJ62zU50ZEazA9kuabZmL4lwI/y6iEirTWEH1sE+eTtNWW8zXlBKCbbRDThb2aNWv67oLeEC6K/ZjF/bLFUCrsR+tM0JMLQPzu9W6Etem75cHoJpsBT/Ga7jjZDZINlrgNZaz0e+Nlp7EKloLgojkm0FOPy674kJF5fWHi7/zvL+euO6Q0013FLv9R66llgItqqlMiXivh1rvYuhBQznFg/VhQddNWnFbQTSqBADBpRyeqEupkIyoo0YsLBiGS1t6cpuLAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=siEkvC0WBicY33MCFHtIWBDVAHM3cVilEBSfmnnttgU=;
+ b=gW3qAqvd9w3Od/EJMofeSLiuxZQ9UKZJwck5+nXoQUYD6cpgHMyNNseMWnQAlh/Ss8e+5Qqu82GydYKgcy1ARQvxE7mO6gHB7ObRQNVgUCFAvifhO6f1MAq5XYmzpjyQAF3W9JsZx6nWc03vKENjn7g8YB4W0kL7dWjY2DcjcPc=
+Received: from BYAPR15MB2999.namprd15.prod.outlook.com (2603:10b6:a03:fa::12)
+ by BYAPR15MB3046.namprd15.prod.outlook.com (2603:10b6:a03:fa::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3825.20; Thu, 4 Feb
+ 2021 06:55:54 +0000
+Received: from BYAPR15MB2999.namprd15.prod.outlook.com
+ ([fe80::c97:58e4:ee9:1dc0]) by BYAPR15MB2999.namprd15.prod.outlook.com
+ ([fe80::c97:58e4:ee9:1dc0%7]) with mapi id 15.20.3763.019; Thu, 4 Feb 2021
+ 06:55:54 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Jens Axboe <axboe@kernel.dk>
+CC:     linux-raid <linux-raid@vger.kernel.org>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Subject: [GIT PULL] md-next 20210203
+Thread-Topic: [GIT PULL] md-next 20210203
+Thread-Index: AQHW+sLI141TaXt0yku7lYchBUU78A==
+Date:   Thu, 4 Feb 2021 06:55:54 +0000
+Message-ID: <E3580228-B816-42CC-9E36-B72FF6347452@fb.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3654.40.0.2.32)
+authentication-results: kernel.dk; dkim=none (message not signed)
+ header.d=none;kernel.dk; dmarc=none action=none header.from=fb.com;
+x-originating-ip: [2620:10d:c091:480::1:aa49]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: de3fc342-b9ce-4af4-2815-08d8c8d9eaf5
+x-ms-traffictypediagnostic: BYAPR15MB3046:
+x-microsoft-antispam-prvs: <BYAPR15MB3046BB50CB9D15DBD4A180BAB3B39@BYAPR15MB3046.namprd15.prod.outlook.com>
+x-fb-source: Internal
+x-ms-oob-tlc-oobclassifiers: OLM:2000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: YBSPus7I1G1VazoMNBZbKpCC/VmaR7RfpbWop/A8B0OfG7TXdCYgiHXLj4LdYOcnnZNDCHqFl5LAyMXwCtLm4UdJokYhrt0qkaz7AZ2omJxnSRlIGZ64E4s5AcTHIoum/g9NITCmKfN0FpyxyIxz+MfERF8IJjzD9W1xQNPufqiLU8v/B/yMSqq/x+FBbwrC8uIIwKpgE2/n9o9Ne8WPWEz36SOyyfCmd7e5YvjiAPyzTKQ3HkPSqqe9xdrDmRnTjRUx/12JrtM04+nZM27zixlBPn87n5GEXeRavQiwVzMgTA//hQ8bqc/6i4mxV4Q/0K8DFdZ3YrmskfQ9jI1tTZfzhOwGLt28r62mJXfu6v5gxwBsDiBAYjJU43V7gJXixN9I7LPuhosvtCqjnYl9/S+lpkPtUPotHikCjkzp/oEAi1NfYFGMaHWKd/JQcMxA6J4ue2a0KBAfIfReIig/jleR+KMvxyX/eXuXanQztcmTS9lxXiENxn6TuUXC7zrEW9nISq+HfMeyZ3YrTHDb02ghcARdlXLrmXasV4FArkCL591/ZoUNId9x7TKW5WabLugIdWCyks2XwRZpk0t/lqAt+TMRfB3DAHD3++x759G/3Z6uzb6mDZU978t+0VfFjX288GbcKndjxv85gylU2oe1eOXU5qIY/xensEWb4m8=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB2999.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(39860400002)(366004)(136003)(346002)(376002)(8676002)(6916009)(66946007)(71200400001)(2616005)(316002)(966005)(478600001)(4744005)(4326008)(76116006)(6506007)(2906002)(83380400001)(5660300002)(8936002)(66556008)(86362001)(54906003)(36756003)(6512007)(186003)(33656002)(6486002)(91956017)(64756008)(66476007)(66446008)(45980500001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?RKcMDIiFmG+hAueR3WYB/DtRBOYHz8qSoowVgQPak+MV15FsgPTUVX75gBoc?=
+ =?us-ascii?Q?YPQQfx/djsoU0zfPw6i3vyyPuQ4kbTBjL7Q2NxoExSuUKgCTZmDbA1XxhYHf?=
+ =?us-ascii?Q?4LLuE2rVex/9QSvJVwO4lYs/t3e8aoCAr4yJdSCseFb34CUFvlisNPUekdRr?=
+ =?us-ascii?Q?OR8jB2CsLD2SBKMeKWUjqcwaeN0BdLd/sJYUgpOqq9/Cjy1jsetTBdZqmc3V?=
+ =?us-ascii?Q?1y/Up4ads4dQM8K0RhR1TKicntoRkjc3eZL6XARB5lLEA37xl0dmsHtVcWxl?=
+ =?us-ascii?Q?ObK/46mWM1/KTe7V+uSox62WgB1esu7NQTixwu3yemg4lJ7uIdzEcAZNQ+4o?=
+ =?us-ascii?Q?vJ+NYnn+SUBX2XgG8bwP3nyo/BCE7V4sVgaZ+tWN9LMWzwomhzcuDg/V7LIT?=
+ =?us-ascii?Q?t5iIFhaB/rmz7xVyEjKjOo3VSlhS3RZUKMkfZ84Za670h4RqCMvsBD/vwMmT?=
+ =?us-ascii?Q?xVEcUpYRh/4w5HrJzGnRDTFU6DUiUFt7ycF+j7iep8VHPYG/42Eosngp5sUu?=
+ =?us-ascii?Q?IRXUivZ7KicO5N7wMAiqxaMLHUi7gfZrIaH+J85mmSK/S5Ix0KTwHKX456I8?=
+ =?us-ascii?Q?q1d2XiTtHEDsQmtffvrHPchFFuM7BYtYr30+XMcC9NRuXvaVqpJo/GJNB2u6?=
+ =?us-ascii?Q?6ygYEkXocAdyc/q4Intdu8bEUz1QXscsmGNAtPgY0Xju24uZrJvbd5U7Voto?=
+ =?us-ascii?Q?p1zopy0uLKkkcZ+L/DbVuKLHuFo0UmmGTAOYrVeDGVX2SVrV+TNAlaUzCXX4?=
+ =?us-ascii?Q?NjKMhiSRJku9g2M41YUC+TZd8qRGyU4rWWu4Ix8cnX8Xa86XG0Gy0ZiLI5Xi?=
+ =?us-ascii?Q?NI3eCiQx/ZIQD1PU37wUXZI2oSUbu4AVWdk8x8nYxv0Sa0kBESUkF2A6PD57?=
+ =?us-ascii?Q?ZRuYTdLtE3o1gwPAp2fycBof215US9F5AgWdF1pMmGJjIBhq1yVF6aHep8uh?=
+ =?us-ascii?Q?NnRUKp8YJXBw9DXHojz8snTQ6vF5X1FC7CJJbfE2jNMs0kqb5hqi1o5AxJfj?=
+ =?us-ascii?Q?APibpvaY8kknsEkxVP3p9gjQ2jamv0dBKkrQXKUC1+8SffgTHvP70P1jlL5Q?=
+ =?us-ascii?Q?/qr8EHPNfCC43JiHs3amEe+CuVlpFE0xAZItfqRS/P/K+P9tBa1tCSVMmsfh?=
+ =?us-ascii?Q?YNs2WDAlYy7swPgGyECwRvhoNevEZan3lXs11zKS0vMFk2XtrKUerpSlZaS5?=
+ =?us-ascii?Q?WoyO+qHAVRDfRjAmcHZJt3kIVR8XffbrP0x7JQDISygQZyCHh2Va3yh1I1oc?=
+ =?us-ascii?Q?ISvbeR43p5EGWQzD2wmv1LV0ItqPRFjectZCt7qiZULqjMglokxsdSLo+Aos?=
+ =?us-ascii?Q?u+23E5udkdRLrx3M4I22SPDX7izY6jgKj8YVIRp9Yjfgx7drrK++wlsQ+oCw?=
+ =?us-ascii?Q?24JvY8Y=3D?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <644F599A8CF692479C2349F9BF12D164@namprd15.prod.outlook.com>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB2999.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: de3fc342-b9ce-4af4-2815-08d8c8d9eaf5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Feb 2021 06:55:54.5790
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: RdPlhV+NDl1ylwgv8hj3wO5KUat7zedxFDqqODYuBMu1BbfvVCi6MrOAMC6ZcdoA0YOq/QSmjeS6fRNNkHq0sA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3046
+X-OriginatorOrg: fb.com
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.737
+ definitions=2021-02-04_03:2021-02-03,2021-02-04 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
+ clxscore=1011 phishscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0
+ lowpriorityscore=0 adultscore=0 priorityscore=1501 mlxscore=0
+ impostorscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2009150000 definitions=main-2102040040
+X-FB-Internal: deliver
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-For far layout, the discard region is not continuous on disks. So it needs
-far copies r10bio to cover all regions. It needs a way to know all r10bios
-have finish or not. Similar with raid10_sync_request, only the first r10bio
-master_bio records the discard bio. Other r10bios master_bio record the
-first r10bio. The first r10bio can finish after other r10bios finish and
-then return the discard bio.
+Hi Jens,=20
 
-Signed-off-by: Xiao Ni <xni@redhat.com>
----
- drivers/md/raid10.c | 79 ++++++++++++++++++++++++++++++++++++++++-------------
- drivers/md/raid10.h |  1 +
- 2 files changed, 61 insertions(+), 19 deletions(-)
+Please consider pulling the following change for md-next on top of your=20
+for-5.12/drivers branch.=20
 
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index 73d1b250..f78212d 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -1518,6 +1518,28 @@ static void __make_request(struct mddev *mddev, struct bio *bio, int sectors)
- 		raid10_write_request(mddev, bio, r10_bio);
- }
- 
-+static void raid_end_discard_bio(struct r10bio *r10bio)
-+{
-+	struct r10conf *conf = r10bio->mddev->private;
-+	struct r10bio *first_r10bio;
-+
-+	while (atomic_dec_and_test(&r10bio->remaining)) {
-+
-+		allow_barrier(conf);
-+
-+		if (!test_bit(R10BIO_Discard, &r10bio->state)) {
-+			first_r10bio = (struct r10bio *)r10bio->master_bio;
-+			free_r10bio(r10bio);
-+			r10bio = first_r10bio;
-+		} else {
-+			md_write_end(r10bio->mddev);
-+			bio_endio(r10bio->master_bio);
-+			free_r10bio(r10bio);
-+			break;
-+		}
-+	}
-+}
-+
- static void raid10_end_discard_request(struct bio *bio)
- {
- 	struct r10bio *r10_bio = bio->bi_private;
-@@ -1545,11 +1567,7 @@ static void raid10_end_discard_request(struct bio *bio)
- 		rdev = conf->mirrors[dev].rdev;
- 	}
- 
--	if (atomic_dec_and_test(&r10_bio->remaining)) {
--		md_write_end(r10_bio->mddev);
--		raid_end_bio_io(r10_bio);
--	}
--
-+	raid_end_discard_bio(r10_bio);
- 	rdev_dec_pending(rdev, conf->mddev);
- }
- 
-@@ -1563,7 +1581,9 @@ static int raid10_handle_discard(struct mddev *mddev, struct bio *bio)
- {
- 	struct r10conf *conf = mddev->private;
- 	struct geom *geo = &conf->geo;
--	struct r10bio *r10_bio;
-+	int far_copies = geo->far_copies;
-+	bool first_copy = true;
-+	struct r10bio *r10_bio, *first_r10bio;
- 	struct bio *split;
- 	int disk;
- 	sector_t chunk;
-@@ -1637,16 +1657,6 @@ static int raid10_handle_discard(struct mddev *mddev, struct bio *bio)
- 		wait_barrier(conf);
- 	}
- 
--	r10_bio = mempool_alloc(&conf->r10bio_pool, GFP_NOIO);
--	r10_bio->mddev = mddev;
--	r10_bio->state = 0;
--	r10_bio->sectors = 0;
--	memset(r10_bio->devs, 0, sizeof(r10_bio->devs[0]) * geo->raid_disks);
--
--	wait_blocked_dev(mddev, r10_bio);
--
--	r10_bio->master_bio = bio;
--
- 	bio_start = bio->bi_iter.bi_sector;
- 	bio_end = bio_end_sector(bio);
- 
-@@ -1673,6 +1683,29 @@ static int raid10_handle_discard(struct mddev *mddev, struct bio *bio)
- 	end_disk_offset = (bio_end & geo->chunk_mask) +
- 				(last_stripe_index << geo->chunk_shift);
- 
-+retry_discard:
-+	r10_bio = mempool_alloc(&conf->r10bio_pool, GFP_NOIO);
-+	r10_bio->mddev = mddev;
-+	r10_bio->state = 0;
-+	r10_bio->sectors = 0;
-+	memset(r10_bio->devs, 0, sizeof(r10_bio->devs[0]) * geo->raid_disks);
-+	wait_blocked_dev(mddev, r10_bio);
-+
-+	/*
-+	 * For far layout it needs more than one r10bio to cover all regions.
-+	 * Inspired by raid10_sync_request, we can use the first r10bio->master_bio
-+	 * to record the discard bio. Other r10bio->master_bio record the first
-+	 * r10bio. The first r10bio only release after all other r10bios finish.
-+	 * The discard bio returns only first r10bio finishes
-+	 */
-+	if (first_copy) {
-+		r10_bio->master_bio = bio;
-+		set_bit(R10BIO_Discard, &r10_bio->state);
-+		first_copy = false;
-+		first_r10bio = r10_bio;
-+	} else
-+		r10_bio->master_bio = (struct bio *)first_r10bio;
-+
- 	rcu_read_lock();
- 	for (disk = 0; disk < geo->raid_disks; disk++) {
- 		struct md_rdev *rdev = rcu_dereference(conf->mirrors[disk].rdev);
-@@ -1764,11 +1797,19 @@ static int raid10_handle_discard(struct mddev *mddev, struct bio *bio)
- 		}
- 	}
- 
--	if (atomic_dec_and_test(&r10_bio->remaining)) {
--		md_write_end(r10_bio->mddev);
--		raid_end_bio_io(r10_bio);
-+	if (!geo->far_offset && --far_copies) {
-+		first_stripe_index += geo->stride >> geo->chunk_shift;
-+		start_disk_offset += geo->stride;
-+		last_stripe_index += geo->stride >> geo->chunk_shift;
-+		end_disk_offset += geo->stride;
-+		atomic_inc(&first_r10bio->remaining);
-+		raid_end_discard_bio(r10_bio);
-+		wait_barrier(conf);
-+		goto retry_discard;
- 	}
- 
-+	raid_end_discard_bio(r10_bio);
-+
- 	return 0;
- out:
- 	allow_barrier(conf);
-diff --git a/drivers/md/raid10.h b/drivers/md/raid10.h
-index 79cd2b7..1461fd5 100644
---- a/drivers/md/raid10.h
-+++ b/drivers/md/raid10.h
-@@ -179,5 +179,6 @@ enum r10bio_state {
- 	R10BIO_Previous,
- /* failfast devices did receive failfast requests. */
- 	R10BIO_FailFast,
-+	R10BIO_Discard,
- };
- #endif
--- 
-2.7.5
+Thanks,
+Song
 
+
+The following changes since commit 0d7389718c32ad6bb8bee7895c91e2418b6b26aa:
+
+  Merge tag 'nvme-5.21-2020-02-02' of git://git.infradead.org/nvme into for=
+-5.12/drivers (2021-02-02 07:11:47 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/song/md.git md-next
+
+for you to fetch changes up to c5eec74f252dfba25269cd68f9a3407aedefd330:
+
+  md/raid5: cast chunk_sectors to sector_t value (2021-02-03 22:48:16 -0800)
+
+----------------------------------------------------------------
+Guoqing Jiang (1):
+      md/raid5: cast chunk_sectors to sector_t value
+
+ drivers/md/raid5.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)=
