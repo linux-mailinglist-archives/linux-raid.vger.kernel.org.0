@@ -2,64 +2,205 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E5A633111B5
-	for <lists+linux-raid@lfdr.de>; Fri,  5 Feb 2021 21:01:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B7A25311600
+	for <lists+linux-raid@lfdr.de>; Fri,  5 Feb 2021 23:55:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233496AbhBESRo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 5 Feb 2021 13:17:44 -0500
-Received: from [20.39.40.203] ([20.39.40.203]:55697 "EHLO optinix.in"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S233183AbhBEPTk (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 5 Feb 2021 10:19:40 -0500
-dkim-signature: v=1; a=rsa-sha256; d=digitalsol.in; s=dkim;
-        c=relaxed/relaxed; q=dns/txt; h=From:Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=wK2neTcOXNiSQ+RBxrnFed+mRrGUU/ndLGEgvo8IMCc=;
-        b=JFt3cjfr2gf0oZFNAIkKMxcz4dJD/YGkc0fGvOoSd3DydZ6om7JzTU837vBFVq1NIPU0D2QA5BLHZXE1+7cBmkJlbZjYCUFmJkkaBVbP88e4KHnDVRcctmBLIZ1pL5VerRqjcciKkL4DSuyXFJlGk3Z0CRoskvUoLBM7ZhpxLeqIU2BKsbHQXJZ1h2qHQhaHiD+VrGx+bGKjZzbhmRvwLDQIByq6jRcjht5MzYCcxpzOzp/k+Dev9dQj7B
-        WId68CyP4XonlI4wIMRo1xiGfUtKZ+P3cZo2ejPWBjr+ynq3dK3OxibTTEKfmOc5W1zmJFMAPQ+ZKxsa3M4d1PiYxHmg==
-Received: from User (Unknown [52.231.31.5])
-        by optinix.in with ESMTP
-        ; Mon, 1 Feb 2021 08:50:14 +0000
-Message-ID: <D474448D-A325-42CC-A881-8334C6C84BA7@optinix.in>
-Reply-To: <ms.reem@yandex.com>
-From:   "Ms. Reem" <support@digitalsol.in>
-Subject: Re:read
-Date:   Mon, 1 Feb 2021 08:50:13 -0000
+        id S233286AbhBEWru (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 5 Feb 2021 17:47:50 -0500
+Received: from mga03.intel.com ([134.134.136.65]:3674 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229972AbhBENcA (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 5 Feb 2021 08:32:00 -0500
+IronPort-SDR: VDk/Zk4fIAVsRbgsBK5yQcAeDp4zsqlGw5pVIMgmAy/UfSKFpCDEmJ1Ru6oThw4XXV8uhq4ZgL
+ TISBWLsJ1tDw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9885"; a="181496343"
+X-IronPort-AV: E=Sophos;i="5.81,154,1610438400"; 
+   d="scan'208";a="181496343"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2021 05:30:13 -0800
+IronPort-SDR: rvp5FPKnQ6SWTrMlKkHA4i6A8FbA5ZjHIulSPIrpdKA7WfEZ3ShmWuqt+31tfqt3zS4QDxX1fh
+ 1InYoIIfgjaQ==
+X-IronPort-AV: E=Sophos;i="5.81,154,1610438400"; 
+   d="scan'208";a="373393755"
+Received: from mtkaczyk-devel.igk.intel.com ([10.102.102.23])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2021 05:30:13 -0800
+From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+To:     jes@trained-monkey.org
+Cc:     linux-raid@vger.kernel.org
+Subject: [PATCH] imsm: add verbose flag to compare_super
+Date:   Fri,  5 Feb 2021 14:29:58 +0100
+Message-Id: <20210205132958.32364-1-mariusz.tkaczyk@linux.intel.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="Windows-1251"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hello,
+IMSM does more than comparing metadata and errors reported directly
+from compare_super_imsm can be useful.
 
-My name is Ms. Reem Ebrahim Al-Hashimi, I am the "Minister of state
-and Petroleum" also "Minister of State for International Cooperation"
-in UAE. I write to you on behalf of my other "three (3) colleagues"
-who has approved me to solicit for your "partnership in claiming of
-{us$47=Million}" from a Financial Home in Cambodia on their behalf and
-for our "Mutual Benefits".
+Add verbose flag to compare_super method and make all not critical
+error printing configurable.
 
-The Fund {us$47=Million} is our share from the (over-invoiced) Oil/Gas
-deal with Cambodian/Vietnam Government within 2013/2014, however, we
-don't want our government to know about the fund. If this proposal
-interests you, let me know, by sending me an email and I will send to
-you detailed information on how this business would be successfully
-transacted. Be informed that nobody knows about the secret of this
-fund except us, and we know how to carry out the entire transaction.
-So I am compelled to ask, that you will stand on our behalf and
-receive this fund into any account that is solely controlled by you.
+Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+---
+ Assemble.c    |  2 +-
+ Examine.c     |  2 +-
+ Incremental.c |  2 +-
+ mdadm.h       |  3 ++-
+ super-ddf.c   |  3 ++-
+ super-intel.c | 21 ++++++++++++---------
+ super0.c      |  3 ++-
+ super1.c      |  3 ++-
+ 8 files changed, 23 insertions(+), 16 deletions(-)
 
-We will compensate you with 15% of the total amount involved as
-gratification for being our partner in this transaction. Reply to:
-ms.reem@yandex.com
-
-Regards,
-Ms. Reem.
+diff --git a/Assemble.c b/Assemble.c
+index ed0ddfb1..48556d8c 100644
+--- a/Assemble.c
++++ b/Assemble.c
+@@ -435,7 +435,7 @@ static int select_devices(struct mddev_dev *devlist,
+ 
+ 			if (st->ss != tst->ss ||
+ 			    st->minor_version != tst->minor_version ||
+-			    st->ss->compare_super(st, tst) != 0) {
++			    st->ss->compare_super(st, tst, 1) != 0) {
+ 				/* Some mismatch. If exactly one array matches this host,
+ 				 * we can resolve on that one.
+ 				 * Or, if we are auto assembling, we just ignore the second
+diff --git a/Examine.c b/Examine.c
+index 7013480d..4381cd56 100644
+--- a/Examine.c
++++ b/Examine.c
+@@ -130,7 +130,7 @@ int Examine(struct mddev_dev *devlist,
+ 			char *d;
+ 			for (ap = arrays; ap; ap = ap->next) {
+ 				if (st->ss == ap->st->ss &&
+-				    st->ss->compare_super(ap->st, st) == 0)
++				    st->ss->compare_super(ap->st, st, 0) == 0)
+ 					break;
+ 			}
+ 			if (!ap) {
+diff --git a/Incremental.c b/Incremental.c
+index e849bdda..cd9cc0fc 100644
+--- a/Incremental.c
++++ b/Incremental.c
+@@ -400,7 +400,7 @@ int Incremental(struct mddev_dev *devlist, struct context *c,
+ 			}
+ 			st2 = dup_super(st);
+ 			if (st2->ss->load_super(st2, dfd2, NULL) ||
+-			    st->ss->compare_super(st, st2) != 0) {
++			    st->ss->compare_super(st, st2, 1) != 0) {
+ 				pr_err("metadata mismatch between %s and chosen array %s\n",
+ 				       devname, chosen_name);
+ 				close(dfd2);
+diff --git a/mdadm.h b/mdadm.h
+index 1ee6c92e..60575af0 100644
+--- a/mdadm.h
++++ b/mdadm.h
+@@ -966,7 +966,8 @@ extern struct superswitch {
+ 	 * moved in, otherwise the superblock in 'st' is compared with
+ 	 * 'tst'.
+ 	 */
+-	int (*compare_super)(struct supertype *st, struct supertype *tst);
++	int (*compare_super)(struct supertype *st, struct supertype *tst,
++			     int verbose);
+ 	/* Load metadata from a single device.  If 'devname' is not NULL
+ 	 * print error messages as appropriate */
+ 	int (*load_super)(struct supertype *st, int fd, char *devname);
+diff --git a/super-ddf.c b/super-ddf.c
+index 7cd5702d..23147620 100644
+--- a/super-ddf.c
++++ b/super-ddf.c
+@@ -3914,7 +3914,8 @@ static int store_super_ddf(struct supertype *st, int fd)
+ 	return 0;
+ }
+ 
+-static int compare_super_ddf(struct supertype *st, struct supertype *tst)
++static int compare_super_ddf(struct supertype *st, struct supertype *tst,
++			     int verbose)
+ {
+ 	/*
+ 	 * return:
+diff --git a/super-intel.c b/super-intel.c
+index 715febf7..fe385eb6 100644
+--- a/super-intel.c
++++ b/super-intel.c
+@@ -3829,7 +3829,8 @@ static void imsm_copy_dev(struct imsm_dev *dest, struct imsm_dev *src)
+ 	memcpy(dest, src, sizeof_imsm_dev(src, 0));
+ }
+ 
+-static int compare_super_imsm(struct supertype *st, struct supertype *tst)
++static int compare_super_imsm(struct supertype *st, struct supertype *tst,
++			      int verbose)
+ {
+ 	/*
+ 	 * return:
+@@ -3852,18 +3853,20 @@ static int compare_super_imsm(struct supertype *st, struct supertype *tst)
+ 	 */
+ 	if (!check_env("IMSM_NO_PLATFORM") && first->hba && sec->hba) {
+ 		if (first->hba->type != sec->hba->type) {
+-			fprintf(stderr,
+-				"HBAs of devices do not match %s != %s\n",
+-				get_sys_dev_type(first->hba->type),
+-				get_sys_dev_type(sec->hba->type));
++			if (verbose)
++				pr_err("HBAs of devices do not match %s != %s\n",
++				       get_sys_dev_type(first->hba->type),
++				       get_sys_dev_type(sec->hba->type));
+ 			return 3;
+ 		}
++
+ 		if (first->orom != sec->orom) {
+-			fprintf(stderr,
+-				"HBAs of devices do not match %s != %s\n",
+-				first->hba->pci_id, sec->hba->pci_id);
++			if (verbose)
++				pr_err("HBAs of devices do not match %s != %s\n",
++				       first->hba->pci_id, sec->hba->pci_id);
+ 			return 3;
+ 		}
++
+ 	}
+ 
+ 	/* if an anchor does not have num_raid_devs set then it is a free
+@@ -6962,7 +6965,7 @@ count_volumes_list(struct md_list *devlist, char *homehost,
+ 
+ 			if (st->ss != tst->ss ||
+ 			    st->minor_version != tst->minor_version ||
+-			    st->ss->compare_super(st, tst) != 0) {
++			    st->ss->compare_super(st, tst, 1) != 0) {
+ 				/* Some mismatch. If exactly one array matches this host,
+ 				 * we can resolve on that one.
+ 				 * Or, if we are auto assembling, we just ignore the second
+diff --git a/super0.c b/super0.c
+index 6af140bb..b79b97a9 100644
+--- a/super0.c
++++ b/super0.c
+@@ -926,7 +926,8 @@ static int write_init_super0(struct supertype *st)
+ 	return rv;
+ }
+ 
+-static int compare_super0(struct supertype *st, struct supertype *tst)
++static int compare_super0(struct supertype *st, struct supertype *tst,
++			  int verbose)
+ {
+ 	/*
+ 	 * return:
+diff --git a/super1.c b/super1.c
+index 8b0d6ff3..62dac9e7 100644
+--- a/super1.c
++++ b/super1.c
+@@ -2114,7 +2114,8 @@ out:
+ 	return rv;
+ }
+ 
+-static int compare_super1(struct supertype *st, struct supertype *tst)
++static int compare_super1(struct supertype *st, struct supertype *tst,
++			  int verbose)
+ {
+ 	/*
+ 	 * return:
+-- 
+2.25.0
 
