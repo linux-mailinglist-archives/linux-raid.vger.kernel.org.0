@@ -2,185 +2,78 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A0FC2315E06
-	for <lists+linux-raid@lfdr.de>; Wed, 10 Feb 2021 05:05:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 58F5131670A
+	for <lists+linux-raid@lfdr.de>; Wed, 10 Feb 2021 13:46:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230109AbhBJEFi (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 9 Feb 2021 23:05:38 -0500
-Received: from mga07.intel.com ([134.134.136.100]:4840 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230087AbhBJEFg (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 9 Feb 2021 23:05:36 -0500
-IronPort-SDR: wz57psgndFtmmrkMxK5DR4GG4eVKzCV84OC8t+f85snbqvIV9a07/Gt/R4XqR3vLzyFmzZPJWu
- TUM2oDDNS3cw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9890"; a="246076431"
-X-IronPort-AV: E=Sophos;i="5.81,167,1610438400"; 
-   d="scan'208";a="246076431"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2021 20:04:53 -0800
-IronPort-SDR: HWhPcXVkvTmdrKCiNNW3lhya3RrnTbYTS50R1LJEnWXhhQV62PxewH42PTeth7EAeQLqRRHlhA
- bpv8SJInUd1w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,167,1610438400"; 
-   d="scan'208";a="419918317"
-Received: from lkp-server02.sh.intel.com (HELO cd560a204411) ([10.239.97.151])
-  by FMSMGA003.fm.intel.com with ESMTP; 09 Feb 2021 20:04:52 -0800
-Received: from kbuild by cd560a204411 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1l9gkF-0002dH-Az; Wed, 10 Feb 2021 04:04:51 +0000
-Date:   Wed, 10 Feb 2021 12:04:34 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Song Liu <song@kernel.org>
-Cc:     linux-raid@vger.kernel.org
-Subject: [song-md:md-next] BUILD SUCCESS
- c5eec74f252dfba25269cd68f9a3407aedefd330
-Message-ID: <60235b52.3Jla9/oD/DlIi4p8%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S231640AbhBJMpt convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-raid@lfdr.de>); Wed, 10 Feb 2021 07:45:49 -0500
+Received: from spam.auroraoh.com ([24.56.89.101]:39952 "EHLO
+        barracuda.auroraoh.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S232026AbhBJMnp (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 10 Feb 2021 07:43:45 -0500
+X-ASG-Debug-ID: 1612960939-112c0d6a799d4e0001-LoH05x
+Received: from COASRV-MAIL2.auroraoh.loc (coasrv-mail2.auroraoh.loc [10.3.1.15]) by barracuda.auroraoh.com with ESMTP id FAETB7tiKTzvBmxR; Wed, 10 Feb 2021 07:42:19 -0500 (EST)
+X-Barracuda-Envelope-From: JanuskaD@auroraoh.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.3.1.15
+Received: from [172.20.10.5] (197.210.29.8) by COASRV-MAIL2.auroraoh.loc
+ (10.3.1.15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 9 Feb 2021
+ 02:48:36 -0500
+Content-Type: text/plain; charset="iso-8859-1"
+X-Barracuda-RBL-Trusted-Forwarder: 172.20.10.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: We are a registered Private Loan Investment Company in the United Kingdom,
+ we also registered with the Turkish British Chamber of Commerce and Industry
+ (TBCCI) we have operations in Europe and Asia.
+To:     Recipients <januskad@auroraoh.com>
+X-ASG-Orig-Subj: We are a registered Private Loan Investment Company in the United Kingdom,
+ we also registered with the Turkish British Chamber of Commerce and Industry
+ (TBCCI) we have operations in Europe and Asia.
+From:   <januskad@auroraoh.com>
+Date:   Tue, 9 Feb 2021 15:47:50 +0800
+Reply-To: <cfolimiited@gmail.com>
+X-Priority: 1 (High)
+X-Antivirus: Avast (VPS 210207-2, 02/07/2021), Outbound message
+X-Antivirus-Status: Clean
+Message-ID: <7366e102-3fd6-407f-8b25-4f84cc21ff2e@COASRV-MAIL2.auroraoh.loc>
+X-Originating-IP: [197.210.29.8]
+X-ClientProxiedBy: COASRV-MAIL3.auroraoh.loc (10.3.1.13) To
+ COASRV-MAIL2.auroraoh.loc (10.3.1.15)
+X-Barracuda-Connect: coasrv-mail2.auroraoh.loc[10.3.1.15]
+X-Barracuda-Start-Time: 1612960939
+X-Barracuda-URL: https://10.3.1.12:443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at auroraoh.com
+X-Barracuda-Scan-Msg-Size: 755
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Spam-Score: 1.61
+X-Barracuda-Spam-Status: No, SCORE=1.61 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=5.0 tests=BSF_SC0_SA609_NRN, BSF_SC0_SA912_RP_FR, BSF_SC0_SA_TO_FROM_ADDR_MATCH, NO_REAL_NAME
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.87885
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
+        0.00 NO_REAL_NAME           From: does not include a real name
+        0.01 BSF_SC0_SA912_RP_FR    Custom Rule BSF_SC0_SA912_RP_FR
+        0.50 BSF_SC0_SA_TO_FROM_ADDR_MATCH Sender Address Matches Recipient
+                                   Address
+        1.10 BSF_SC0_SA609_NRN      Custom Rule SA609_NRN
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-tree/branch: git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git md-next
-branch HEAD: c5eec74f252dfba25269cd68f9a3407aedefd330  md/raid5: cast chunk_sectors to sector_t value
+We are seeking for beneficiaries who source for fund to expand/relocating their business interest abroad. We are ready to fund projects outside Turkey and United Kingdom in the form of Soft Loan. We grant loans to both corporate and private entities at a low interest rate of 2% R.O.I per annul.
 
-elapsed time: 731m
+We like to grant loan in the following sectors: oil/Gas, banking, real estate, stock speculation and mining, transportation, health sector and tobacco, Communication Services, Agriculture Forestry & Fishing, thus any sector. The terms are very flexible and interesting.
 
-configs tested: 123
-configs skipped: 2
+Please contact us for more details;
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-m68k                       m5249evb_defconfig
-sh                   sh7770_generic_defconfig
-c6x                        evmc6472_defconfig
-mips                         cobalt_defconfig
-arc                        nsimosci_defconfig
-powerpc                     pseries_defconfig
-arm                       spear13xx_defconfig
-powerpc                     kmeter1_defconfig
-mips                       lemote2f_defconfig
-s390                          debug_defconfig
-openrisc                  or1klitex_defconfig
-powerpc                 linkstation_defconfig
-arm                            xcep_defconfig
-powerpc                mpc7448_hpc2_defconfig
-ia64                             alldefconfig
-powerpc                      pasemi_defconfig
-arm                             mxs_defconfig
-arc                              alldefconfig
-mips                          ath79_defconfig
-c6x                        evmc6474_defconfig
-arm                          pxa3xx_defconfig
-powerpc                    socrates_defconfig
-xtensa                    smp_lx200_defconfig
-mips                        jmr3927_defconfig
-powerpc                       ppc64_defconfig
-c6x                              allyesconfig
-xtensa                  audio_kc705_defconfig
-arc                        vdk_hs38_defconfig
-mips                           rs90_defconfig
-powerpc                     sequoia_defconfig
-powerpc                     taishan_defconfig
-mips                      maltaaprp_defconfig
-arm                       cns3420vb_defconfig
-alpha                            allyesconfig
-sh                             shx3_defconfig
-arm                          ixp4xx_defconfig
-xtensa                  nommu_kc705_defconfig
-arm                        mvebu_v7_defconfig
-arm                         s3c2410_defconfig
-powerpc                        cell_defconfig
-sh                   rts7751r2dplus_defconfig
-arm                       imx_v4_v5_defconfig
-arm                     am200epdkit_defconfig
-microblaze                      mmu_defconfig
-sh                  sh7785lcr_32bit_defconfig
-arm                           sama5_defconfig
-arm                         orion5x_defconfig
-m68k                        stmark2_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                            allyesconfig
-arc                                 defconfig
-xtensa                           allyesconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                               defconfig
-i386                               tinyconfig
-i386                                defconfig
-sparc                            allyesconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a006-20210209
-x86_64               randconfig-a001-20210209
-x86_64               randconfig-a005-20210209
-x86_64               randconfig-a004-20210209
-x86_64               randconfig-a002-20210209
-x86_64               randconfig-a003-20210209
-i386                 randconfig-a001-20210209
-i386                 randconfig-a005-20210209
-i386                 randconfig-a003-20210209
-i386                 randconfig-a002-20210209
-i386                 randconfig-a006-20210209
-i386                 randconfig-a004-20210209
-i386                 randconfig-a016-20210209
-i386                 randconfig-a013-20210209
-i386                 randconfig-a012-20210209
-i386                 randconfig-a014-20210209
-i386                 randconfig-a011-20210209
-i386                 randconfig-a015-20210209
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
+Kind regards,
 
-clang tested configs:
-x86_64               randconfig-a013-20210209
-x86_64               randconfig-a014-20210209
-x86_64               randconfig-a015-20210209
-x86_64               randconfig-a012-20210209
-x86_64               randconfig-a016-20210209
-x86_64               randconfig-a011-20210209
+Paul McCann
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+-- 
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
+
