@@ -2,113 +2,64 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A9B6320462
-	for <lists+linux-raid@lfdr.de>; Sat, 20 Feb 2021 09:14:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E6BF3226E8
+	for <lists+linux-raid@lfdr.de>; Tue, 23 Feb 2021 09:10:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229802AbhBTIOI (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 20 Feb 2021 03:14:08 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:29651 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229667AbhBTIOG (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Sat, 20 Feb 2021 03:14:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1613808759;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dNulLozu70boJlRZGryS2JuyuZzhM40X9hZstF5MHAM=;
-        b=e8gh3opSopRnYZsNIcIZunHbtjA+8/DqS7TSCi00Xt5SsvgfqUdawd9jNBe3jqm603QnaC
-        ySR+0YBp5KOt1iVXnmFhHXqQhb+QhuPZnIf2MdZm+EsYCIOI5LPmaFueLBYAHeT6cgmA3g
-        4Ykp1onijmP7BckFJYOwlMsrizMMUuU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-407-0lNROqlQOpq3f6hGMMgIkQ-1; Sat, 20 Feb 2021 03:12:36 -0500
-X-MC-Unique: 0lNROqlQOpq3f6hGMMgIkQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BC151801965;
-        Sat, 20 Feb 2021 08:12:34 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-8-39.pek2.redhat.com [10.72.8.39])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B12EE5C8B3;
-        Sat, 20 Feb 2021 08:12:31 +0000 (UTC)
-Subject: Re: [PATCH V2 0/5] md/raid10: Improve handling raid10 discard request
-To:     Matthew Ruffell <matthew.ruffell@canonical.com>,
-        songliubraving@fb.com
-Cc:     linux-raid@vger.kernel.org, colyli@suse.de,
-        guoqing.jiang@cloud.ionos.com, ncroxon@redhat.com
-References: <1612425047-10953-1-git-send-email-xni@redhat.com>
- <d86c7211-787f-ee34-d2c1-cf780ecd9322@canonical.com>
-From:   Xiao Ni <xni@redhat.com>
-Message-ID: <75ba722d-f11e-ebe5-5507-b0c380c203e9@redhat.com>
-Date:   Sat, 20 Feb 2021 16:12:29 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        id S232085AbhBWIJ2 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 23 Feb 2021 03:09:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232106AbhBWIIf (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 23 Feb 2021 03:08:35 -0500
+Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51FC1C06178B
+        for <linux-raid@vger.kernel.org>; Tue, 23 Feb 2021 00:07:55 -0800 (PST)
+Received: by mail-oi1-x22d.google.com with SMTP id j1so4873211oiw.3
+        for <linux-raid@vger.kernel.org>; Tue, 23 Feb 2021 00:07:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=rjFLgW1OULBXQlh3JS0FsFrrUu6RfNW+e5SQFjA5Djs=;
+        b=cnMzLOzlCX6Yu3oYaIoaUq/My0DkiYJemZiUss5TQR/CkqdC2j+aKrgGHWMpvZfq0C
+         ClaCvJ80JFHAajqZ6tPBsUHKlqNXBPN6qRb7p91JgX0u582g+6KvXdLzW1QAcuo+cY/B
+         leAoTozYV1pgjmQPdrYAbtCjFdMnFF1ACYyh2iMCS7BR4IaV9etMmH7HAbzS9+xiI8Ud
+         YIF/7NqzCu3nVUdligU2l7jUl9Ko2FoxfHxCFlcnY/RdN6iszX0MggN/5Qyof9HdpXra
+         pFG6Aon3lmjRG+k6eyMlWQtb2i30sEqlRX60Au8IsvCB979iG3o8ggznDuXDRwc8kU4w
+         ch0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=rjFLgW1OULBXQlh3JS0FsFrrUu6RfNW+e5SQFjA5Djs=;
+        b=Mw6iwsm9vo+z0ZbYg4NaFzBQNrD/TxWeohdgW+jWYlxVhTSkwZvnv9BzFMu9LOBfam
+         i0ZyoaDnbQco08lmv27Iwc6BAxZ9hnPpkVX/Q9DT8bi8TFjr++vP5HjAoAIJPeqVcHV9
+         gqa+xfMuRo30eDM4kXNZvFE/fFtW5PHlN9EdTd/KlRI2x+G0iiwGjcGLTNE7DTxQMgg6
+         M9ZKZL+XJzjzuBRqvaOgd1U1EVQcVAnuV/QILeCSDvR9q8V1PF/mKqs57qyXj2woXPbJ
+         y7tkvk8DA8n43vCcWk8A1S9jNMe4SSJeM2XnmmSZPDdZLwQumTf1kbANpL6wVWlY6cE0
+         98WA==
+X-Gm-Message-State: AOAM530oYV3jLTHMwilyo4NeShYr4vAuHJN1DsRQlT2mjX4keHCFrlK8
+        vQCbEiH/2wWGpRovET3LrkW5o91HheVh6hQBDik=
+X-Google-Smtp-Source: ABdhPJz+L66HNE0yopJUYBJPARGW18PP9wd8fFlwD81AWzLXZlfKCIcVk49lDZ1YH/obTpcLLElYtdU/XYjlshTyETw=
+X-Received: by 2002:aca:5356:: with SMTP id h83mr4644027oib.40.1614067674735;
+ Tue, 23 Feb 2021 00:07:54 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <d86c7211-787f-ee34-d2c1-cf780ecd9322@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Received: by 2002:ac9:4898:0:0:0:0:0 with HTTP; Tue, 23 Feb 2021 00:07:53
+ -0800 (PST)
+Reply-To: abdwabbomaddahm@gmail.com
+From:   AbdWabbo Maddah <cocacolapromooafoundationsa@gmail.com>
+Date:   Tue, 23 Feb 2021 09:07:53 +0100
+Message-ID: <CABbRguQm+hQ_ihdv_Uu=h2n8WtC5CjeOHQDapOrZMUDi4uwsYw@mail.gmail.com>
+Subject: DID YOU RECEIVE MY MAIL?
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi Matthew
+-- 
+Dear,
+I had sent you a mail but i don't think you received it that's why am
+writing you again.It is important you get back to me as soon as you
+can.
 
-Thanks very much for those test. And as you said, it's better to wait 
-more test results.
-By the way, do you know the date of 5.13 merge window?
-
-Regards
-Xiao
-
-On 02/15/2021 12:05 PM, Matthew Ruffell wrote:
-> Hi Xiao,
->
-> Thanks for posting the patchset. I have been testing them over the past week,
-> and they are looking good.
->
-> I backported [0] the patchset to the Ubuntu 4.15, 5.4 and 5.8 kernels, and I have
-> been testing them on public clouds.
->
-> [0] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1896578/comments/13
->
-> For performance, formatting a Raid10 array on NVMe disks drops from 8.5 minutes
-> to about 6 seconds [1], on AWS i3.8xlarge with 4x 1.7TB disks, due to the
-> speedup in block discard.
->
-> [1] https://paste.ubuntu.com/p/NNGqP3xdsc/
->
-> I have also tested the data corruption reproducer from my original problem
-> report [2], and I have found that throughout each of the steps of formatting the
-> array, doing a consistency check, writing data, doing a consistency check,
-> issuing a fstrim, doing a consistency check, the /sys/block/md0/md/mismatch_cnt
-> was always 0, and all deep fsck checks came back clean for individual disks [3].
->
-> [2] https://www.spinics.net/lists/kernel/msg3765302.html
-> [3] https://paste.ubuntu.com/p/5DK57TzdFH/
->
-> So I think your patches do solve the data corruption problem. Great job.
->
-> To try and get some more eyes on the patches, I have provided my test kernels to
-> 5 other users who are hitting the Raid10 block discard performance problem, and
-> I have asked them to test on spare test servers, and to provide feedback on
-> performance and data safety.
->
-> I will let you know their feedback as it comes in.
->
-> As for getting this merged, I actually agree with Song, the 5.12 merge window
-> is happening right now, and it is a bit too soon for large changes like this.
-> I think we should wait for the 5.13 merge window. That way we can do some more
-> testing, get feedback from some users, and make sure we don't cause any more
-> data corruption regressions.
->
-> I will write back soon with some user feedback and more test results.
->
-> Thanks,
-> Matthew
->
-
+AbdWabbo Maddah
