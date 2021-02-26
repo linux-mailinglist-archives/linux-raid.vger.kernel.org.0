@@ -2,39 +2,38 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68B883269CE
-	for <lists+linux-raid@lfdr.de>; Fri, 26 Feb 2021 23:07:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 364813269E4
+	for <lists+linux-raid@lfdr.de>; Fri, 26 Feb 2021 23:22:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229912AbhBZWHc (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 26 Feb 2021 17:07:32 -0500
-Received: from sender11-op-o11.zoho.eu ([31.186.226.225]:17270 "EHLO
+        id S230049AbhBZWV5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 26 Feb 2021 17:21:57 -0500
+Received: from sender11-op-o11.zoho.eu ([31.186.226.225]:17252 "EHLO
         sender11-op-o11.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229550AbhBZWHb (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 26 Feb 2021 17:07:31 -0500
-X-Greylist: delayed 349 seconds by postgrey-1.27 at vger.kernel.org; Fri, 26 Feb 2021 17:07:30 EST
-ARC-Seal: i=1; a=rsa-sha256; t=1614377200; cv=none; 
+        with ESMTP id S230081AbhBZWVs (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 26 Feb 2021 17:21:48 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1614378060; cv=none; 
         d=zohomail.eu; s=zohoarc; 
-        b=e3eWGLGB0clGmJTW3ciQtXmJYCohEJ6J6csLlEwTJ2z27GidzmZplMXWJ4kDMywm225lIDEjcXVFxiv74wdnfZZUPMyRExM35UFRwTWO9IPIz6bGfa+WcgNRcmZLW4H30crVQUJsZ1hOTSsDyRbzDTbHhcco6UPDMgg4tNJCYw8=
+        b=KqsYWZNatlOUMG66tSaCGrVLNImjClh6KYNBFRuOXYU/QL+bgTSPUvDIb659bypVdZl5u9gzVjH9hGM8XAR7DQfbOpD7teI/UqZJ0jF9C4++UC0/oMW8u12sgp3IP5004ABgr8xWgtIoxXJO3MnPYvOsaGwNa0NPzk971SAwLRU=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1614377200; h=Content-Type:Content-Transfer-Encoding:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=oXayfNXKbvBCcTk4MI6qulfBzDCFNfi7Bx98oHAQF3s=; 
-        b=bhGwMh8qwgM2Chld4XlBLUalJdNGb+lZhXRZH6yKPF4SY3pea78eNstVfFpEQujrEW+v/cFbgTc9T6JyHTiWLQY7vrLPD2vEE2248oy1+thM5HouImdl+vzBfDauMOX4JdZsXF5gvNyjg2UMGCZL4GpW2Y6IQm+8HZzxU70eFDg=
+        t=1614378060; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=LinEOCQp23kjuGVOxh1KlkmSSGYXm78vh4q6eYE0IZA=; 
+        b=lXeAT0O4Spjm8baxeTHjBOFimqRShsrwg6R6CSA8YQ9GeM1pWOvPwRj4WIn+4WfSFHe58JNQQrzeH6gG4nHJd6q2jxmX3j+vU6Bu7FfAkfzz7Suz3M6Muv+A4WSwVQE0ReOt7joMf1yztLhFPyaKxka8Qd6ebUNoHI3Wlr1qMTI=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
         spf=pass  smtp.mailfrom=jes@trained-monkey.org;
         dmarc=pass header.from=<jes@trained-monkey.org> header.from=<jes@trained-monkey.org>
 Received: from [192.168.99.29] (pool-72-69-75-15.nycmny.fios.verizon.net [72.69.75.15]) by mx.zoho.eu
-        with SMTPS id 1614377197991635.2130189466387; Fri, 26 Feb 2021 23:06:37 +0100 (CET)
-Subject: Re: [PATCH] mdadm: fix reshape from RAID5 to RAID6 with backup file
-To:     Nigel Croxon <ncroxon@redhat.com>, linux-raid@vger.kernel.org,
-        xni@redhat.com
-References: <20210120200542.19139-1-ncroxon@redhat.com>
+        with SMTPS id 1614378058339396.1163673796394; Fri, 26 Feb 2021 23:20:58 +0100 (CET)
+Subject: Re: [PATCH mdadm] Grow: be careful of corrupt dev_roles list
+To:     NeilBrown <neilb@suse.de>
+Cc:     linux-raid@vger.kernel.org
+References: <87pn0niqtv.fsf@notabene.neil.brown.name>
 From:   Jes Sorensen <jes@trained-monkey.org>
-Message-ID: <84ed6e32-3b69-f13d-b1b8-33166c92e5ab@trained-monkey.org>
-Date:   Fri, 26 Feb 2021 17:06:37 -0500
+Message-ID: <efcd7aba-0d7b-7707-00fb-682b31a10ad4@trained-monkey.org>
+Date:   Fri, 26 Feb 2021 17:20:57 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.6.0
 MIME-Version: 1.0
-In-Reply-To: <20210120200542.19139-1-ncroxon@redhat.com>
+In-Reply-To: <87pn0niqtv.fsf@notabene.neil.brown.name>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -43,22 +42,33 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 1/20/21 3:05 PM, Nigel Croxon wrote:
-> Reshaping a 3-disk RAID5 to 4-disk RAID6 will cause a hang of
-> the resync after the grow.
+On 2/25/21 8:02 PM, NeilBrown wrote:
 > 
-> Adding a spare disk to avoid degrading the array when growing
-> is successful, but not successful when supplying a backup file
-> on the command line. If the reshape job is not already running,
-> set the sync_max value to max.
+> I've seen a case where the dev_roles list of a linear array
+> was corrupt.  ->max_dev was > 128 and > raid_disks, and the
+> extra slots were '0', not 0xFFFE or 0xFFFF.
 > 
-> Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
+> This caused problems when a 128th device was added.
+> 
+> So:
+>  1/ make Grow_Add_device more robust so that if numbers
+>    look wrong, it fails-safe.
+> 
+>  2/ make examine_super1() report details if the dev_roles
+>    array is corrupt.
+> 
+> Signed-off-by: NeilBrown <neilb@suse.de>
 > ---
->  Grow.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+>  Grow.c   | 15 ++++++++++++---
+>  super1.c | 48 ++++++++++++++++++++++++++++++++++++++----------
+>  2 files changed, 50 insertions(+), 13 deletions(-)
+> 
+
+Ohhh error handling!
 
 Applied!
 
 Thanks,
 Jes
+
 
