@@ -2,163 +2,60 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FC5B326C36
-	for <lists+linux-raid@lfdr.de>; Sat, 27 Feb 2021 09:14:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD35F326F5B
+	for <lists+linux-raid@lfdr.de>; Sat, 27 Feb 2021 23:36:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229912AbhB0IOQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 27 Feb 2021 03:14:16 -0500
-Received: from 197.237.153.5.wananchi.com ([197.237.153.5]:49957 "EHLO
-        mail.detahost.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S229751AbhB0IOO (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 27 Feb 2021 03:14:14 -0500
-Message-ID: <06e5c6c034e1d7aa8977e1b2b96d55391ae23f24a9@documents.co.ke>
-Reply-To: "Kenya Business Plans" <info@documents.co.ke>
-From:   "Kenya Business Plans" <newsletter@documents.co.ke>
-To:     <linux-raid@vger.kernel.org>
-Subject: Kenya Cutomized Business Plans for only Kes 499/=
-Date:   Sat, 27 Feb 2021 11:13:09 +0300
-Organization: Kenya Business Plans
+        id S230230AbhB0WfK (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 27 Feb 2021 17:35:10 -0500
+Received: from mail.jvpinto.com ([65.49.11.60]:42077 "EHLO mail.JVPinto.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230001AbhB0We7 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sat, 27 Feb 2021 17:34:59 -0500
+Received: from RW-EXC1.JVPinto.com (2002:ac20:10d::ac20:10d) by
+ RW-EXC1.JVPinto.com (2002:ac20:10d::ac20:10d) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Sat, 27 Feb 2021 14:33:46 -0800
+Received: from User (52.231.198.195) by RW-EXC1.JVPinto.com (172.32.1.13) with
+ Microsoft SMTP Server id 15.0.1497.2 via Frontend Transport; Sat, 27 Feb 2021
+ 14:33:32 -0800
+Reply-To: <ms.reem@yandex.com>
+From:   "Ms. Reem" <johnpinto@jvpinto.com>
+Subject: Hello okay
+Date:   Sat, 27 Feb 2021 22:33:46 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8";
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; d=documents.co.ke; s=default;
-        c=relaxed/relaxed; t=1614413589;
-        h=message-id:from:to:subject:date:mime-version;
-        bh=8BwyX4f9rAOXp44Y3cUBvaUTSdqFDEf96x4lvcYxHAk=;
-        b=ZbHiI+AM5+vqGjeo8u/jVkRvxAb7n53HLszXE5VaalS+Hk+MeOTa6UfsTJ0grJ
-        yegTWjPQK24WwTcQnE4ksTT6hLBEAfvD6ioeueqZ5oBwEQfIPFhBZwfXHwYrFW9+
-        SCfKv3hj827/s2d3X3Ry072reVHFJPVdndW0GhTi2wa72P1assLM6LMDKpktKm+9
-        6KKY34FJux5b0VftDxli+ESQbk9d40ctR5mkaFotgf99EalfRPoBqi8Y32NmlDh0
-        IQaMtcgRA60q+R6bY4AxhWE/7Z1IMQQQ+7JQVa8FrFyIPirWXcYJ/69NenzVBmZK
-        bR2zsdKXa7mhwNcj3Batqhqw==
+Content-Type: text/plain; charset="Windows-1251"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+Message-ID: <837a988e66554c5d95b18ae85648d3d7@RW-EXC1.JVPinto.com>
+To:     Undisclosed recipients:;
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
- =20
-Customized Kenya Business Plans
-Invest wisely by getting street smart market surveys, guides and info pac=
-ks with the sweet or harsh reality of the market.
-Actual Facts & Figures on Revenue, Mark Up, Wholesale, Retail prices, Com=
-petition, Survival rate, Differentiation, Capital, Process, Equipment, Su=
-ppliers, Opportunities, Licenses, Consumer Behaviour, Manpower Tips, Tric=
-ks & so so much more.
+Hello,
 
-We have comprehensive business plans in these categories:
+My name is Ms. Reem Ebrahim Al-Hashimi, I am the "Minister of state
+and Petroleum" also "Minister of State for International Cooperation"
+in UAE. I write to you on behalf of my other "three (3) colleagues"
+who has approved me to solicit for your "partnership in claiming of
+{us$47=Million}" from a Financial Home in Cambodia on their behalf and
+for our "Mutual Benefits".
 
-Agrovet
-Auto Glass Retail -17 Pages
-Bank Agency Fact-sheet
-Beef Butchery - 31 pages
-Boda Boda
-Bottled Water - 53 Pages
-Building Materials Yard - Dynamics & Case Study
-Car Wash Quick Guide
-Chapati Wholesale (Case Study)
-Chemist -Retail - 31 Pages
-Chicken Butchery
-Chips & Chicken Cafe - 31 Pages
-Concreting ( Koroga) Equipment Leasing - 29 Pages
-Corn Chips Snacks Making - 37 Pages
-Cosmetics Retail - 30 Pages
-Cosmetics Retail -30 Pages
-Courier - 35 Pages
-Cyber Cafe
-Day-care
-Electrical Parts Retail - 27 Pages
-Executive Barber Shop - 42 Pages
-Fish Supply - Nairobi Hotels Quick Overview
-Fish Supply - Nairobi Hotels Quick Survey
-Flowers - Nairobi (Retail/ Wholesale )
-Free Advertiser Magazine ( Quick Guide & Case Study )
-Fruit / Juice Parlour
-Gas (LPG) Retail
-Gift Service
-Gym - 38 pages
-Hair Salon
-Ice Lollies Making
-Ice Lollies Making ( Quick Guide )
-Imaging Clinic (Ultrasound and X-ray) - 46 Pages
-Inner-wear Retail - 27 Pages
-Laundry - 31 pages
-Leather: Skins Trade -26 Pages
-'Local' Bar - 48 Pages
-Maize Milling (Unga wa Ugali)
-Milk Distributorship
-Mitumba Clothes
-Money Lending - Informal Overview
-Motorcycle Spare Parts Retail -33 Pages
-Movie Shop
-M-pesa Sub Agent
-Nails (Misumari) Making - 60 Pages
-Non-Woven Bags Making -39 Pages
-Petrol Station (Independent) - 47 Pages
-Plumbing Hardware Retail - 35 Pages *New
-Primary School Business - 38 Pages
-Printing Business - 55 Pages
-Real Estate Agency - 42 Pages
-Second Hand Novels (R)
-Selling Cake Boxes
-Selling Cookies
-Senator Keg Bar
-Slot Machines Quick Guide
-Small Scale FMCG Distribution - New
-Smokies & Egg Vending
-Supermarket - 75 Pages
-Supermarket Shelf Space Guide
-Tents & Chairs Leasing
-Tiles Retail Business Fact-sheet
-Timber Yard - 32 Pages
-Tomato ( Greenhouse ) - Quick Market & Production Guide
-Tyres Retail Business - 29 Pages
+The Fund {us$47=Million} is our share from the (over-invoiced) Oil/Gas
+deal with Cambodian/Vietnam Government within 2013/2014, however, we
+don't want our government to know about the fund. If this proposal
+interests you, let me know, by sending me an email and I will send to
+you detailed information on how this business would be successfully
+transacted. Be informed that nobody knows about the secret of this
+fund except us, and we know how to carry out the entire transaction.
+So I am compelled to ask, that you will stand on our behalf and
+receive this fund into any account that is solely controlled by you.
 
-Invest wisely in 2020 by getting street smart market surveys with:
-- Market Analysis
-- Step by step establishing Process
-- Licenses - Issuing authority, cost, requirements
-- Equipment - Suppliers, Considerations, Cost
-- Other requirements
-- Suppliers & Prices
-- Raw Materials
-- Buying Selling Prices
-- Production Costs
-- Operational Costs
-- Day to day Operations
-- Revenue & Margins
-- Sample wholesale retail prices
-- Case Studies
-- Manpower
-- Capital breakdown
-- Opportunities
-- Competition
-- Surviving & Thriving
-- Analysis, figures, observations, dos & don'ts
-- Trends ,Tips, Tricks and so much more.
+We will compensate you with 15% of the total amount involved as
+gratification for being our partner in this transaction. Reply to:
+ms.reem@yandex.com
 
-To Download a Sample Business Plan Copy and paste the link below to your =
-browser
-
-https://drive.google.com/open?id=3D1gO2UiWble5J9oEvd8qH3oJ0XsrwvVdtQ
-
-The whole package of 65 Business Plans above is available Offer Price @ K=
-shs. 499. We are only selling the guides as a package.
-
-To Order Kindly use Lipa Na M-Pesa Buy Goods and Services Till No. 234931=
-.
-
-On payment kindly forward the Mpesa payment confirmation text and your em=
-ail address to +254 721 351 269.
-
-We deliver via email within 15 minutes of payment.
-
-TRIED, TESTED AND TRUSTED. Helping You Start a Business in Kenya With Les=
-s Risk!
-
-Kind Regards;
-
-
-Hashna A. Noor
-Manager - Sales & Marketing
-Kenya Business Plans Limited
-+254721351269 | +254707559080
-78 Brookside Drive | Nairobi | Kenya
+Regards,
+Ms. Reem.
