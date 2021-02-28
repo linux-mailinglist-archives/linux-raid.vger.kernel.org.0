@@ -2,60 +2,94 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CD35F326F5B
-	for <lists+linux-raid@lfdr.de>; Sat, 27 Feb 2021 23:36:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 65FB332719B
+	for <lists+linux-raid@lfdr.de>; Sun, 28 Feb 2021 09:36:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230230AbhB0WfK (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 27 Feb 2021 17:35:10 -0500
-Received: from mail.jvpinto.com ([65.49.11.60]:42077 "EHLO mail.JVPinto.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230001AbhB0We7 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sat, 27 Feb 2021 17:34:59 -0500
-Received: from RW-EXC1.JVPinto.com (2002:ac20:10d::ac20:10d) by
- RW-EXC1.JVPinto.com (2002:ac20:10d::ac20:10d) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Sat, 27 Feb 2021 14:33:46 -0800
-Received: from User (52.231.198.195) by RW-EXC1.JVPinto.com (172.32.1.13) with
- Microsoft SMTP Server id 15.0.1497.2 via Frontend Transport; Sat, 27 Feb 2021
- 14:33:32 -0800
-Reply-To: <ms.reem@yandex.com>
-From:   "Ms. Reem" <johnpinto@jvpinto.com>
-Subject: Hello okay
-Date:   Sat, 27 Feb 2021 22:33:46 +0000
-MIME-Version: 1.0
-Content-Type: text/plain; charset="Windows-1251"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-Message-ID: <837a988e66554c5d95b18ae85648d3d7@RW-EXC1.JVPinto.com>
-To:     Undisclosed recipients:;
+        id S230213AbhB1Ifq (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 28 Feb 2021 03:35:46 -0500
+Received: from mail.snapdragon.cc ([103.26.41.109]:33416 "EHLO
+        mail.snapdragon.cc" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230075AbhB1Ifo (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 28 Feb 2021 03:35:44 -0500
+Received: by mail.snapdragon.cc (Postfix, from userid 65534)
+        id ADC0119E0896; Sun, 28 Feb 2021 08:35:00 +0000 (UTC)
+Content-Type: text/plain;
+        charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=snapdragon.cc;
+        s=default; t=1614501299;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FI0twzUp7slCmsCjWggMpgF/6378H/ti6/HquLGijQY=;
+        b=K6VndYHWgDoCSQfUKIqjga50Ql8Ieq+SB/ltMsf/tlK8Btx/FGs8ctaHdww0L3bvWMb1V8
+        woPq3d3DY9lgUHwho+9W2JnEN90OuiF45rsgEd5VZLYwZaVN8FqEx2swm/VpOuIZ2nnBG0
+        qibEF4TbsGfI36MkytVnCwtbRrsgj6c=
+Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.60.0.2.21\))
+Subject: Re: Linux RAID with btrfs stuck and consume 100 % CPU
+From:   Manuel Riel <manu@snapdragon.cc>
+In-Reply-To: <DBB07C8C-0D83-47DC-9B91-78AD385775E3@snapdragon.cc>
+Date:   Sun, 28 Feb 2021 16:34:57 +0800
+Cc:     Chris Murphy <lists@colorremedies.com>,
+        Michal Moravec <michal.moravec@logicworks.cz>,
+        Linux-RAID <linux-raid@vger.kernel.org>, songliubraving@fb.com,
+        guoqing.jiang@cloud.ionos.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D3026A55-A7F2-4432-87A8-3E9B2CACE4C2@snapdragon.cc>
+References: <d3fced3f-6c2b-5ffa-fd24-b24ec6e7d4be@xmyslivec.cz>
+ <CAJCQCtSfz+b38fW3zdcHwMMtO1LfXSq+0xgg_DaKShmAumuCWQ@mail.gmail.com>
+ <29509e08-e373-b352-d696-fcb9f507a545@xmyslivec.cz>
+ <CAJCQCtRx7NJP=-rX5g_n5ZL7ypX-5z_L6d6sk120+4Avs6rJUw@mail.gmail.com>
+ <695936b4-67a2-c862-9cb6-5545b4ab3c42@xmyslivec.cz>
+ <CAJCQCtQWNSd123OJ_Rp8NO0=upY2Mn+SE7pdMqmyizJP028Yow@mail.gmail.com>
+ <2f2f1c21-c81b-55aa-6f77-e2d3f32d32cb@xmyslivec.cz>
+ <CAJCQCtTQN60V=DEkNvDedq+usfmFB+SQP2SBezUaSeUjjY46nA@mail.gmail.com>
+ <4b0dd0aa-f77b-16c8-107b-0182378f34e6@xmyslivec.cz>
+ <CAJCQCtQWh2JBAL_SDRG-gMd9Z1TXad7aKjZVUGdY1Akj7fn5Qg@mail.gmail.com>
+ <5e79d1f8-7632-48ef-de56-9e79cba87434@xmyslivec.cz>
+ <CAJCQCtTR1JZTLr+xTEZxrwh8xSfb+zpKjc+_S2tJGFofVMUdSQ@mail.gmail.com>
+ <0c792470-6ee9-8254-dd57-a7a90ac95bcd@xmyslivec.cz>
+ <DBB07C8C-0D83-47DC-9B91-78AD385775E3@snapdragon.cc>
+To:     Vojtech Myslivec <vojtech@xmyslivec.cz>
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hello,
+Hit another mdadm "hanger" today. No more reading possible and md4_raid6 =
+stuck at 100% CPU.
 
-My name is Ms. Reem Ebrahim Al-Hashimi, I am the "Minister of state
-and Petroleum" also "Minister of State for International Cooperation"
-in UAE. I write to you on behalf of my other "three (3) colleagues"
-who has approved me to solicit for your "partnership in claiming of
-{us$47=Million}" from a Financial Home in Cambodia on their behalf and
-for our "Mutual Benefits".
+I've now moved the write journal off the RAID1 device. So it's not a =
+"nested" RAID any more. Hope this will help.
 
-The Fund {us$47=Million} is our share from the (over-invoiced) Oil/Gas
-deal with Cambodian/Vietnam Government within 2013/2014, however, we
-don't want our government to know about the fund. If this proposal
-interests you, let me know, by sending me an email and I will send to
-you detailed information on how this business would be successfully
-transacted. Be informed that nobody knows about the secret of this
-fund except us, and we know how to carry out the entire transaction.
-So I am compelled to ask, that you will stand on our behalf and
-receive this fund into any account that is solely controlled by you.
+With only one hardware device used as write cache, I suppose only =
+write-through mode[1] is suggested now.
 
-We will compensate you with 15% of the total amount involved as
-gratification for being our partner in this transaction. Reply to:
-ms.reem@yandex.com
 
-Regards,
-Ms. Reem.
+1: https://www.kernel.org/doc/Documentation/md/raid5-cache.txt
+
+> On Feb 11, 2021, at 11:14, Manuel Riel <manu@snapdragon.cc> wrote:
+>=20
+> I'm also hitting the exact same problem with XFS on RAID6 using a =
+RAID1=20
+> write journal on two NVMes. CentOS 8, 4.18.0-240.10.1.el8_3.x86_64.
+>=20
+> Symptoms:
+>=20
+> - high CPU usage of md4_raid6 process
+> - IO wait goes up
+> - IO on that file system locks up for tens of minutes and the kernel =
+reports:
+>=20
+> [Wed Feb 10 23:23:05 2021] INFO: task md4_reclaim:1070 blocked for =
+more than 20 seconds.
+> [Wed Feb 10 23:23:05 2021]       Not tainted =
+4.18.0-240.10.1.el8_3.x86_64 #1
+> [Wed Feb 10 23:23:05 2021] "echo 0 > =
+/proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> [Wed Feb 10 23:23:05 2021] md4_reclaim     D    0  1070      2 =
+0x80004000
+>=20
+> Already confirmed it's not a timeout mismatch. No drive errors =
+reported. SCT Error Recovery
+> Control is set to 7 seconds
+
