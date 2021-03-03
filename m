@@ -2,65 +2,71 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 819FE32C383
-	for <lists+linux-raid@lfdr.de>; Thu,  4 Mar 2021 01:08:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 62E8932C337
+	for <lists+linux-raid@lfdr.de>; Thu,  4 Mar 2021 01:07:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236836AbhCDAAA (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 3 Mar 2021 19:00:00 -0500
-Received: from sender11-op-o11.zoho.eu ([31.186.226.225]:17238 "EHLO
-        sender11-op-o11.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1383458AbhCCObe (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 3 Mar 2021 09:31:34 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1614781848; cv=none; 
-        d=zohomail.eu; s=zohoarc; 
-        b=jyOwMbcKQhT8jhTrWagygS8rqQBPQNnp4uPy9nS1KXUscLOJ5CEVBGWv3/Q35td1no+oXBQ8sbm8B5WIyJMCdm29EYMxuAxMhKCNB2/EhqGqfbgCuRFtYdUeBZQSjk83L+5ql2idJKS/sBAXuM6UaXK2LvRaUpSFAZwEwQN5iNI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1614781848; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=WEglday9F+Cu/nMW2wdWWetKLScSqnn4UuUu/oCEAME=; 
-        b=ZpbxxYK9MJPgmgioXiWX71tjUNdAoLaqFt9RMPPRDR2dYKsnNHv5W4LPkPaiQ/Ox80LurcVm/hDqRF7Q3mr0DEsejrenxs84pqLacPh611S99a4rO2aPPI0rj1NSNVOYidUo8LrZslGHBl+HkxEwoVXVlharfzM8Wso9qxdWMlQ=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
-        dmarc=pass header.from=<jes@trained-monkey.org> header.from=<jes@trained-monkey.org>
-Received: from [192.168.99.29] (pool-72-69-75-15.nycmny.fios.verizon.net [72.69.75.15]) by mx.zoho.eu
-        with SMTPS id 1614781846511738.6210972608803; Wed, 3 Mar 2021 15:30:46 +0100 (CET)
-Subject: Re: [PATCH] super1: fix Floating point exception
-To:     Zhao Heming <heming.zhao@suse.com>, linux-raid@vger.kernel.org
-Cc:     lidong.zhong@suse.com, xni@redhat.com
-References: <1612000194-6015-1-git-send-email-heming.zhao@suse.com>
-From:   Jes Sorensen <jes@trained-monkey.org>
-Message-ID: <16ff61e7-b59c-639a-62ac-c6cacb1b4781@trained-monkey.org>
-Date:   Wed, 3 Mar 2021 09:30:45 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+        id S241091AbhCDAAC (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 3 Mar 2021 19:00:02 -0500
+Received: from smtpout2.vodafonemail.de ([145.253.239.133]:36208 "EHLO
+        smtpout2.vodafonemail.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242414AbhCCRGP (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 3 Mar 2021 12:06:15 -0500
+X-Greylist: delayed 717 seconds by postgrey-1.27 at vger.kernel.org; Wed, 03 Mar 2021 12:06:14 EST
+Received: from smtp.vodafone.de (smtpa06.fra-mediabeam.com [10.2.0.36])
+        by smtpout2.vodafonemail.de (Postfix) with ESMTP id 767D712297C;
+        Wed,  3 Mar 2021 17:53:08 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nexgo.de;
+        s=vfde-smtpout-mb-15sep; t=1614790388;
+        bh=hkyqJCac/TGNi0wtta2vOiHTn9pUzQjP09Dhv+4mscs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=li3KJ2BK/wGwWP+N2Jm1S+rKqkZeyz9Z7lvLd0KtsBH229gGRTwdr/XVVjrsbKLtM
+         ES9BZhw8fVn32tPDbzIvV4P14rTpbRUooPQVsLIna0oFcyt2YWrILl+QvnEpwRHAUs
+         +sD17aQsDtagvq0a8N3yttHWlDhwooDiddKDv29c=
+Received: from lazy.lzy (p579d7ebd.dip0.t-ipconnect.de [87.157.126.189])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp.vodafone.de (Postfix) with ESMTPSA id 1AEB814130A;
+        Wed,  3 Mar 2021 16:53:07 +0000 (UTC)
+Received: from lazy.lzy (localhost [127.0.0.1])
+        by lazy.lzy (8.16.1/8.14.5) with ESMTPS id 123GqwOT002785
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 3 Mar 2021 17:52:58 +0100
+Received: (from red@localhost)
+        by lazy.lzy (8.16.1/8.15.2/Submit) id 123Gqwl4002784;
+        Wed, 3 Mar 2021 17:52:58 +0100
+Date:   Wed, 3 Mar 2021 17:52:58 +0100
+From:   Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
+To:     Jes Sorensen <jes@trained-monkey.org>
+Cc:     "Tkaczyk, Mariusz" <mariusz.tkaczyk@linux.intel.com>,
+        linux-raid@vger.kernel.org
+Subject: Re: release plan for mdadm
+Message-ID: <YD++6ivr0zrUTO3B@lazy.lzy>
+References: <de867ab3-9942-77a0-c14d-dbfc67465888@linux.intel.com>
+ <2cb77cb7-468d-88ed-a938-63b35e574177@trained-monkey.org>
 MIME-Version: 1.0
-In-Reply-To: <1612000194-6015-1-git-send-email-heming.zhao@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2cb77cb7-468d-88ed-a938-63b35e574177@trained-monkey.org>
+X-purgate-type: clean
+X-purgate-Ad: Categorized by eleven eXpurgate (R) http://www.eleven.de
+X-purgate: This mail is considered clean (visit http://www.eleven.de for further information)
+X-purgate: clean
+X-purgate-size: 235
+X-purgate-ID: 155817::1614790388-00000891-9D4065A6/0/0
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 1/30/21 4:49 AM, Zhao Heming wrote:
-> write_bitmap1 didn't check return value of locate_bitmap1, which will
-> operate bitmap area under invalid bitmap info.
-> 
-> mdadm core dumped when doing below steps:
-> ```
-> node1 # mdadm -C /dev/md0 -b none -e 1.2 -n 2 -l mirror /dev/sda /dev/sdb
-> node1 # mdadm -Ss
-> node1 # mdadm -A -U home-cluster --home-cluster=abc /dev/md0 /dev/sda /dev/sdb
-> Floating point exception (core dumped)
-> ```
-> 
-> Signed-off-by: Zhao Heming <heming.zhao@suse.com>
-> ---
->  super1.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+On Tue, Mar 02, 2021 at 05:50:10PM -0500, Jes Sorensen wrote:
+> Sorry for the slow response. Our daughter was born in late December and
 
-Applied!
+Well! Congratulations!
 
-Thanks,
-Jes
+I know, a bit OT, but still deserved!
 
+bye,
+
+-- 
+
+piergiorgio
