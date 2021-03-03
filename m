@@ -2,39 +2,38 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A07B32C2C4
-	for <lists+linux-raid@lfdr.de>; Thu,  4 Mar 2021 01:06:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 26AD732C33E
+	for <lists+linux-raid@lfdr.de>; Thu,  4 Mar 2021 01:07:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236821AbhCCX77 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 3 Mar 2021 18:59:59 -0500
-Received: from sender11-op-o11.zoho.eu ([31.186.226.225]:17292 "EHLO
+        id S237096AbhCDAAB (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 3 Mar 2021 19:00:01 -0500
+Received: from sender11-op-o11.zoho.eu ([31.186.226.225]:17271 "EHLO
         sender11-op-o11.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1383366AbhCCObZ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 3 Mar 2021 09:31:25 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1614781838; cv=none; 
+        with ESMTP id S1448129AbhCCPXy (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 3 Mar 2021 10:23:54 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1614781848; cv=none; 
         d=zohomail.eu; s=zohoarc; 
-        b=N7gH4RruEQj1zBe7IxepIVA2pzTw3HuX+p291V6HOx4iS1kc5EYalnmK3rfHmmF6ror8wq5qnEtjmqhkNJl54A0Yrb0PVGXv57TTddzBT2cAujnyEiwdH/m+HGRZn2PLlNApm9ExEJwHpk5H6bW3Q8iGqkjOdYQP3coHWgSKYCA=
+        b=jyOwMbcKQhT8jhTrWagygS8rqQBPQNnp4uPy9nS1KXUscLOJ5CEVBGWv3/Q35td1no+oXBQ8sbm8B5WIyJMCdm29EYMxuAxMhKCNB2/EhqGqfbgCuRFtYdUeBZQSjk83L+5ql2idJKS/sBAXuM6UaXK2LvRaUpSFAZwEwQN5iNI=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1614781838; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=gSE+RlqDwwiqetN0fU22f6c7vkmzm9X89Vtf5Fc/jg0=; 
-        b=YLqHG5TskkYuGKgnUCkZKtfe47T5kXi4yvlrG6usN3fHn36CLDjLZnltsRnZcT41+6w5y3L4Bcio1+BEW113SqkZIOvOheCNgU5DdSd3O8DgSoSsyYqXKBcN76WfunilUwFMejGitdLEafKWBpXDqv6ttP+gGnGG1hrq07Ij8z8=
+        t=1614781848; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=WEglday9F+Cu/nMW2wdWWetKLScSqnn4UuUu/oCEAME=; 
+        b=ZpbxxYK9MJPgmgioXiWX71tjUNdAoLaqFt9RMPPRDR2dYKsnNHv5W4LPkPaiQ/Ox80LurcVm/hDqRF7Q3mr0DEsejrenxs84pqLacPh611S99a4rO2aPPI0rj1NSNVOYidUo8LrZslGHBl+HkxEwoVXVlharfzM8Wso9qxdWMlQ=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
         spf=pass  smtp.mailfrom=jes@trained-monkey.org;
         dmarc=pass header.from=<jes@trained-monkey.org> header.from=<jes@trained-monkey.org>
 Received: from [192.168.99.29] (pool-72-69-75-15.nycmny.fios.verizon.net [72.69.75.15]) by mx.zoho.eu
-        with SMTPS id 1614781835456893.4019857629609; Wed, 3 Mar 2021 15:30:35 +0100 (CET)
-Subject: Re: [PATCH v2] super1.c: avoid useless sync when bitmap switches from
- clustered to none
+        with SMTPS id 1614781846511738.6210972608803; Wed, 3 Mar 2021 15:30:46 +0100 (CET)
+Subject: Re: [PATCH] super1: fix Floating point exception
 To:     Zhao Heming <heming.zhao@suse.com>, linux-raid@vger.kernel.org
-Cc:     xni@redhat.com, lidong.zhong@suse.com
-References: <1612311771-17411-1-git-send-email-heming.zhao@suse.com>
+Cc:     lidong.zhong@suse.com, xni@redhat.com
+References: <1612000194-6015-1-git-send-email-heming.zhao@suse.com>
 From:   Jes Sorensen <jes@trained-monkey.org>
-Message-ID: <89c46715-bc0d-d4de-9da5-1da44d4d3428@trained-monkey.org>
-Date:   Wed, 3 Mar 2021 09:30:33 -0500
+Message-ID: <16ff61e7-b59c-639a-62ac-c6cacb1b4781@trained-monkey.org>
+Date:   Wed, 3 Mar 2021 09:30:45 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.6.0
 MIME-Version: 1.0
-In-Reply-To: <1612311771-17411-1-git-send-email-heming.zhao@suse.com>
+In-Reply-To: <1612000194-6015-1-git-send-email-heming.zhao@suse.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -43,39 +42,22 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 2/2/21 7:22 PM, Zhao Heming wrote:
-> With kernel commit 480523feae58 ("md: only call set_in_sync() when it
-> is expected to succeed."), mddev->in_sync in clustered array is always
-> zero. It makes metadata resync_offset to always zero.
-> When assembling a clusterd array with "-U no-bitmap" option, kernel
-> md layer "mddev->resync_offset == 0" and "mddev->bitmap == NULL" will
-> trigger raid1 do sync on every bitmap chunk. the sync action is useless,
-> we should avoid it.
+On 1/30/21 4:49 AM, Zhao Heming wrote:
+> write_bitmap1 didn't check return value of locate_bitmap1, which will
+> operate bitmap area under invalid bitmap info.
 > 
-> Related kernel flow:
+> mdadm core dumped when doing below steps:
 > ```
-> md_do_sync
->  mddev->pers->sync_request
->   raid1_sync_request
->    md_bitmap_start_sync(mddev->bitmap, sector_nr, &sync_blocks, 1)
->     __bitmap_start_sync(bitmap, offset,&blocks1, degraded)
->       if (bitmap == NULL) {/* FIXME or bitmap set as 'failed' */
->         *blocks = 1024;
->         return 1; /* always resync if no bitmap */
->       }
-> ```
-> 
-> Reprodusible steps:
-> ```
-> node1 # mdadm -C /dev/md0 -b clustered -e 1.2 -n 2 -l mirror /dev/sd{a,b}
+> node1 # mdadm -C /dev/md0 -b none -e 1.2 -n 2 -l mirror /dev/sda /dev/sdb
 > node1 # mdadm -Ss
-> (in another shell, executing & watching: watch -n 1 'cat /proc/mdstat')
-> node1 # mdadm -A -U no-bitmap /dev/md0 /dev/sd{a,b}
+> node1 # mdadm -A -U home-cluster --home-cluster=abc /dev/md0 /dev/sda /dev/sdb
+> Floating point exception (core dumped)
 > ```
 > 
 > Signed-off-by: Zhao Heming <heming.zhao@suse.com>
 > ---
-> v2: only set MaxSector on bitmap clean device
+>  super1.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 
 Applied!
 
