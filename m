@@ -2,97 +2,119 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DD1932E794
-	for <lists+linux-raid@lfdr.de>; Fri,  5 Mar 2021 13:03:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C6DE832E79C
+	for <lists+linux-raid@lfdr.de>; Fri,  5 Mar 2021 13:05:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229805AbhCEMCa (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 5 Mar 2021 07:02:30 -0500
-Received: from mga04.intel.com ([192.55.52.120]:35709 "EHLO mga04.intel.com"
+        id S229815AbhCEMEc (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 5 Mar 2021 07:04:32 -0500
+Received: from mga03.intel.com ([134.134.136.65]:59383 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229719AbhCEMCJ (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 5 Mar 2021 07:02:09 -0500
-IronPort-SDR: HtaV3MfbyhKjBH034vkEL2mvkNoXzYhU/DBnJMIJEBQQA+SieLutVITNL3yg96H4XjTXdJYsHm
- 6BuVdqcblCAQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9913"; a="185230321"
+        id S229591AbhCEME3 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 5 Mar 2021 07:04:29 -0500
+IronPort-SDR: pIjJ8zGWwHK45Ru8NOSBzBK3MuDF8qPD8nN52SF2VrgflUtuZTxs0RO01nROMvQt2u/pmSc5+t
+ cE/xlTKM0rCA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9913"; a="187690769"
 X-IronPort-AV: E=Sophos;i="5.81,224,1610438400"; 
-   d="scan'208";a="185230321"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2021 04:02:08 -0800
-IronPort-SDR: NvtmijTguQ9YUufmUXyqMFD6D69W6cAPRsJrlAG01xw2dThb6vMdFfITRXrwX7r5CeFXQfFHEL
- thnA9TarHDQQ==
+   d="scan'208";a="187690769"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2021 04:04:28 -0800
+IronPort-SDR: VL88Zl3xQ8LW4f7h5SQjo7FHx6tm3cJ1e91u4BRn3N5itCUTP85lS/g0U3eLi1pSE+awOp0GJ4
+ yrlHJlQcRLPg==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.81,224,1610438400"; 
-   d="scan'208";a="401656641"
-Received: from unknown (HELO localhost.igk.intel.com) ([10.237.126.111])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2021 04:02:08 -0800
-From:   Jakub Radtke <jakub.radtke@linux.intel.com>
-To:     jes@trained-monkey.org
+   d="scan'208";a="370169598"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 05 Mar 2021 04:04:28 -0800
+Received: from [10.213.1.144] (jradtke-MOBL1.ger.corp.intel.com [10.213.1.144])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 4AF6B580224;
+        Fri,  5 Mar 2021 04:04:27 -0800 (PST)
+Subject: Re: release plan for mdadm
+To:     Jes Sorensen <jes@trained-monkey.org>
 Cc:     linux-raid@vger.kernel.org
-Subject: [PATCH 8/8] Grow: Block reshape when external metadata and write-intent bitmap
-Date:   Thu, 24 Sep 2020 20:03:04 -0400
-Message-Id: <20200925000304.169728-9-jakub.radtke@linux.intel.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200925000304.169728-1-jakub.radtke@linux.intel.com>
-References: <20200925000304.169728-1-jakub.radtke@linux.intel.com>
+References: <de867ab3-9942-77a0-c14d-dbfc67465888@linux.intel.com>
+ <2cb77cb7-468d-88ed-a938-63b35e574177@trained-monkey.org>
+ <ec3f3d78-5a63-0541-6f87-3836c6026e5a@linux.intel.com>
+From:   "Radtke, Jakub" <jakub.radtke@linux.intel.com>
+Message-ID: <31736f90-9dd4-6174-3476-5ade8beb68d0@linux.intel.com>
+Date:   Fri, 5 Mar 2021 13:04:24 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
+In-Reply-To: <ec3f3d78-5a63-0541-6f87-3836c6026e5a@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: pl
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Jakub Radtke <jakub.radtke@intel.com>
+Hi Jes,
+     I have also resent the patches related to the bitmap support in 
+IMSM posted some time ago.
+Regards, Jakub
 
-Current kernel sysfs interface for the bitmap is limited. It allows
-the applying of the bitmap on non-active volumes only.
-The reshape operation for a volume with a bitmap should be blocked.
+> On 02.03.2021 23:50, Jes Sorensen wrote:
+>> On 1/27/21 6:39 AM, Tkaczyk, Mariusz wrote:
+>>> Hi Jes,
+>>>
+>>> It's been a while since last mdadm release. Mdadm-4.2 release that was
+>>> mentioned back in July does not happened yet. It's getting messy to
+>>> manage mdadm across multiple distributions.
+>>>
+>>> Also, not all OSVs are willing to cherry-pick the patches, especially
+>>> for stable project - like mdadm, so only critical bugfixes are landing
+>>> in the distros.
+>>> As a result - new OSes has various forks of mdadm-4.1 and the 
+>>> difference
+>>> is growing with every backported patch. It leads us to situation where
+>>> those forks may have own bugs, caused by many missing bugfixes or 
+>>> wrongly
+>>> resolved merge conflicts.
+>>> To be honest - it becomes more and more problematic for us to track all
+>>> fixes in different supported distros.
+>>>
+>>> We are searching for solutions for those problems and we are 
+>>> counting on
+>>> your support:
+>>> Short term - is there any way that we can help you to release next 
+>>> version
+>>> of mdadm soon?
+>>>
+>>> Long term - what do you think about smaller, more frequent releases of
+>>> mdadm? Maybe twice a year is an option (similar to RedHat/Ubuntu
+>>> schedule)? That would be better for us and for vendors. They will need
+>>> to follow upstream instead resolving bugs reported by us or community.
+>>>
+>>> The benefits will be gained by everyone. User will get up-to-date
+>>> software much faster, with minimal vendor input and modifications.
+>>> Mdadm bugs will be predictable across distros. We could help with
+>>> testing IMSM and basic functionality of native metadata.
+>>
+>> Hi Mariusz,
+>>
+>> Sorry for the slow response. Our daughter was born in late December and
+>> I was on paternity leave through Feb 5, so still catching up. I also
+>> switched teams at work back in July so my focus was shifted.
+> Hi Jes,
+> Congratulations:)
+>>
+>> I'd very much like to see a release, and we should do one quick. Doing
+>> more regular releases will also make it easier to ship them, so I am not
+>> against that at all.
+>>
+>> I am not aware of anything major pending right now, so if we can get
+>> focus on any pending patches and get them in over the next week or two,
+>> then I can cut an -rc and we can do a release soon. Especially if you
+>> can help out regression testing the -rc candidate(s).
+>>
+>> Cheers,
+>> Jes
+>>
+> Thanks for answer. Please review all patches in queue, and mark -rc.
+> Then I will schedule regression.
+>
+> Mariusz
 
-Signed-off-by: Jakub Radtke <jakub.radtke@intel.com>
-Change-Id: I2b4f57d6934815cd63a9cf506328b89fa4aa3930
----
- Grow.c | 24 +++++++++++++++---------
- 1 file changed, 15 insertions(+), 9 deletions(-)
-
-diff --git a/Grow.c b/Grow.c
-index 6b8321c5..a48789ce 100644
---- a/Grow.c
-+++ b/Grow.c
-@@ -1838,15 +1838,14 @@ int Grow_reshape(char *devname, int fd,
- 		pr_err("Cannot increase raid-disks on this array beyond %d\n", st->max_devs);
- 		return 1;
- 	}
--	if (s->level == 0 &&
--	    (array.state & (1<<MD_SB_BITMAP_PRESENT)) &&
--	    !(array.state & (1<<MD_SB_CLUSTERED))) {
--                array.state &= ~(1<<MD_SB_BITMAP_PRESENT);
--                if (md_set_array_info(fd, &array)!= 0) {
--                        pr_err("failed to remove internal bitmap.\n");
--                        return 1;
--                }
--        }
-+	if (s->level == 0 && (array.state & (1 << MD_SB_BITMAP_PRESENT)) &&
-+		!(array.state & (1 << MD_SB_CLUSTERED)) && !st->ss->external) {
-+		array.state &= ~(1 << MD_SB_BITMAP_PRESENT);
-+		if (md_set_array_info(fd, &array) != 0) {
-+			pr_err("failed to remove internal bitmap.\n");
-+			return 1;
-+		}
-+	}
- 
- 	/* in the external case we need to check that the requested reshape is
- 	 * supported, and perform an initial check that the container holds the
-@@ -1910,6 +1909,13 @@ int Grow_reshape(char *devname, int fd,
- 					free(subarray);
- 					return 1;
- 				}
-+				if (content->consistency_policy ==
-+				    CONSISTENCY_POLICY_BITMAP) {
-+					pr_err("Operation not supported when write-intent bitmap is enabled\n");
-+					sysfs_free(cc);
-+					free(subarray);
-+					return 1;
-+				}
- 			}
- 			sysfs_free(cc);
- 		}
--- 
-2.26.2
 
