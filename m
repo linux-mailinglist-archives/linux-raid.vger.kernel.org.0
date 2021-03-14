@@ -2,112 +2,80 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E1AC339FF8
-	for <lists+linux-raid@lfdr.de>; Sat, 13 Mar 2021 19:36:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 796FF33A7A8
+	for <lists+linux-raid@lfdr.de>; Sun, 14 Mar 2021 20:42:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234332AbhCMSgS convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-raid@lfdr.de>); Sat, 13 Mar 2021 13:36:18 -0500
-Received: from smtp.econet.co.zw ([77.246.51.158]:65277 "EHLO
-        ironportDMZ.econet.co.zw" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S234286AbhCMSf6 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Sat, 13 Mar 2021 13:35:58 -0500
-X-Greylist: delayed 472 seconds by postgrey-1.27 at vger.kernel.org; Sat, 13 Mar 2021 13:35:46 EST
-IronPort-SDR: 2VH7uDjPUxuRF84kGIuoHHaISSCuqZi+ufUVCFmh+/0u/DCFCtj5VFDT1b4h9dNnVvA6flspH+
- 3h9rw6M4gXRTOO/x00E/RP0IaZ5bJ/VFJjak29BaaBMRsZ8SomhBLF6NshxP1CgwykLJQtbFhT
- f57yb5yFlreJnhCu99okX5fHlhFOs37BIGqeR55agFxRF7WOiDsNKvGtFuzjle44yqE/60PUcB
- eSRuIQK9gCbtZaBXI6W4OKIxrnCmM+n1gcMJCNZUjbl9kcbsSMLo+94gqXFyBTYwkpasFfSfmL
- xM0=
-IronPort-HdrOrdr: A9a23:z3onBKxoaNoCa6u/wVCbKrPwgr1zdoIgy1knxilNYDZSddGVkN
- 3roe8S0gX6hC1UdHYrn92BP6foewK+ybde544NMbC+GDT3oWfAFuFfxKbr3jGIIUPD38FH06
- MIScRDIfnRKXQ/ssrg+gm/FL8boeWv1Kyzn+/RwzNMYGhRGsddxjx0AAqaDUF6LTMubfFSKL
- Om6tNDt36cfx0sA/iTPXUZQ/PF4+TCiZOOW29/Ozcc9AKMgTm0gYSULzGk2H4lIkpy6IZn1V
- Lgmwz9opy5s/ehygLNvlWjiqh+qZ/EwttHCNfksLlwFhzcziKpYIhGfpHqhkFTnMifrG8wkN
- /WowoxVv4DiU/sQg==
-X-IronPort-AV: E=Sophos;i="5.81,245,1610402400"; 
-   d="scan'208";a="3444522"
-Received: from unknown (HELO WVALE-MB-SVR-05.econetzw.local) ([192.168.101.173])
-  by ironportLAN.econet.co.zw with ESMTP; 13 Mar 2021 20:27:52 +0200
-Received: from WVALE-CAS-SVR-9.econetzw.local (192.168.101.184) by
- WVALE-MB-SVR-05.econetzw.local (192.168.101.173) with Microsoft SMTP Server
- (TLS) id 15.0.1473.3; Sat, 13 Mar 2021 20:27:48 +0200
-Received: from User (165.231.148.189) by WVALE-CAS-SVR-9.econetzw.local
- (10.10.11.230) with Microsoft SMTP Server id 15.0.1473.3 via Frontend
- Transport; Sat, 13 Mar 2021 20:27:59 +0200
-Reply-To: <r19772744@daum.net>
-From:   "Reem E. A" <chawora@econet.co.zw>
-Subject: Re:
-Date:   Sat, 13 Mar 2021 18:27:46 -0800
+        id S233143AbhCNTig (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 14 Mar 2021 15:38:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34546 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229870AbhCNTiF (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 14 Mar 2021 15:38:05 -0400
+X-Greylist: delayed 1851 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 14 Mar 2021 12:38:04 PDT
+Received: from letbox-vps.us-core.com (letbox-vps.us-core.com [IPv6:2a0b:ae40:2:4a0b::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05CFBC061574
+        for <linux-raid@vger.kernel.org>; Sun, 14 Mar 2021 12:38:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+        s=2017.lechner.user; h=Content-Type:Cc:To:Subject:Message-ID:Date:From:
+        In-Reply-To:References:MIME-Version:Sender:Reply-To:Content-Transfer-Encoding
+        :Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=BO7eCsfyFEY4SCWdH/daXphrt+XT8qT6CXHoDHjFxEQ=; b=KcmVrVlrKrGj2+y8ba67g6HAmU
+        y9DiSM2/dVjpoA0yyUW2OlhtEsAA9xMuyyZE1FSMFZ+W4KmVD7zoUPQQ/hcoZlxSdHMV3ZnI/ftez
+        gGSo4k98Vor2FmaU/YXAEja/MGvZm9cCaL3uJObBCjXrI/vbKUJGsAoQpbPT9GqGsFb8=;
+DKIM-Signature: v=1; a=ed25519-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=debian.org; s=2020.lechner.user; h=Content-Type:Cc:To:Subject:Message-ID:
+        Date:From:In-Reply-To:References:MIME-Version:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=BO7eCsfyFEY4SCWdH/daXphrt+XT8qT6CXHoDHjFxEQ=; b=4trFCuP+dUvweJNNZ073ZeuvZl
+        MEo245vvORdgp+G3huqmassSW48M+Z+54n+m50dLcHIU3LPlj8L6MqeWqkDQ==;
+Received: from mail-oi1-f173.google.com ([209.85.167.173])
+        by letbox-vps.us-core.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94)
+        (envelope-from <lechner@debian.org>)
+        id 1lLW50-008n74-My
+        for linux-raid@vger.kernel.org; Sun, 14 Mar 2021 12:07:10 -0700
+Received: by mail-oi1-f173.google.com with SMTP id d20so32401366oiw.10
+        for <linux-raid@vger.kernel.org>; Sun, 14 Mar 2021 12:07:10 -0700 (PDT)
+X-Gm-Message-State: AOAM533QM34yX35HNlWMcuz5oP7/FLB0GmABch5L84zzRLW9alkcXYUy
+        W3KY9ULcRETmgUjRK70UBsJy5cf4i+OXG+tCVHY=
+X-Google-Smtp-Source: ABdhPJznVYc6aqgMBq3VfO6dTptXsJxmi92u6lOKogpv0m5ZIcPNKVnMlFQji9H5IoAXs9Cia8nXYaO5HelVO1XJb5E=
+X-Received: by 2002:aca:31d7:: with SMTP id x206mr15535054oix.178.1615748830189;
+ Sun, 14 Mar 2021 12:07:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="Windows-1251"
-Content-Transfer-Encoding: 8BIT
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-Message-ID: <96f8ff6fe77b4507830ab5cf78a93340@WVALE-CAS-SVR-9.econetzw.local>
-To:     Undisclosed recipients:;
+References: <de867ab3-9942-77a0-c14d-dbfc67465888@linux.intel.com> <2cb77cb7-468d-88ed-a938-63b35e574177@trained-monkey.org>
+In-Reply-To: <2cb77cb7-468d-88ed-a938-63b35e574177@trained-monkey.org>
+From:   Felix Lechner <lechner@debian.org>
+Date:   Sun, 14 Mar 2021 12:06:34 -0700
+X-Gmail-Original-Message-ID: <CAFHYt55AVTz2U1kZOw0wb0xUp7Gr1W=XOjzrn2Kg+sU2h9YDKQ@mail.gmail.com>
+Message-ID: <CAFHYt55AVTz2U1kZOw0wb0xUp7Gr1W=XOjzrn2Kg+sU2h9YDKQ@mail.gmail.com>
+Subject: Re: release plan for mdadm
+To:     Jes Sorensen <jes@trained-monkey.org>
+Cc:     linux-raid@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hello,
+Hi Jes,
 
-My name is Ms. Reem Ebrahim Al-Hashimi, I am the "Minister of state
-and Petroleum" also "Minister of State for International Cooperation"
-in UAE. I write to you on behalf of my other "three (2) colleagues"
-who has approved me to solicit for your "partnership in claiming of
-{us$47=Million}" from a Financial Home on their behalf and
-for our "Mutual Benefits".
+Congratulations to the birth of your daughter!
 
-The Fund {us$47=Million} is our share from the (over-invoiced) Oil/Gas
-deal with Turkish Government within 2013/2014, however, we
-don't want our government to know about the fund. If this proposal
-interests you, let me know, by sending me an email and I will send to
-you detailed information on how this business would be successfully
-transacted. Be informed that nobody knows about the secret of this
-fund except us, and we know how to carry out the entire transaction.
-So I am compelled to ask, that you will stand on our behalf and
-receive this fund into any account that is solely controlled by you.
+On Tue, Mar 2, 2021 at 7:38 PM Jes Sorensen <jes@trained-monkey.org> wrote:
+>
+> I am not aware of anything major pending
 
-We will compensate you with 15% of the total amount involved as
-gratification for being our partner in this transaction. Reply to:
-reem.alhashimi@yandex.com
+Please allow me to mention a fresh, critical Debian bug [1] with data
+loss when /proc, /sys and /dev are not mounted.
 
-Regards,
-Ms. Reem.
-This mail was sent through Econet Wireless, a Global telecoms leader.
+I assumed maintenance recently, and the Debian package lags behind
+your development status. Perhaps this issue was already addressed.
+Thanks!
 
-DISCLAIMER
+Kind regards
+Felix Lechner
 
-The information in this message is confidential and is legally privileged. It is intended solely for the addressee. Access to this message by anyone else is unauthorized. If received in error please accept our apologies and notify the sender immediately. You must also delete the original message from your machine. If you are not the intended recipient, any use, disclosure, copying, distribution or action taken in reliance of it, is prohibited and may be unlawful. The information, attachments, opinions or advice contained in this email are not the views or opinions of Econet Wireless, its subsidiaries or affiliates. Econet Wireless therefore accepts no liability for claims, losses, or damages arising from the inaccuracy, incorrectness, or lack of integrity of such information.
-[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/AgileBanner.png]
-WORK ISN'T A PLACE
-IT'S WHAT WE DO
-________________________________
-
-
-
-
-
-[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/telephone.png]
-
-
-
-
-[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/email.png]
-
-<mailto:>
-
-
-[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/location.png]
-
-
-
-
-[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/website.png]
-
-www.econet.co.zw<https://www.econet.co.zw>
-
-
-[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/inspired.jpg]
+[1] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=982459
