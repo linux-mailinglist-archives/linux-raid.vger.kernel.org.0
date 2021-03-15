@@ -2,521 +2,88 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 48D5C33BDD8
-	for <lists+linux-raid@lfdr.de>; Mon, 15 Mar 2021 15:50:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 334E433C2E0
+	for <lists+linux-raid@lfdr.de>; Mon, 15 Mar 2021 17:59:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231985AbhCOOjK (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 15 Mar 2021 10:39:10 -0400
-Received: from mga18.intel.com ([134.134.136.126]:30184 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240723AbhCOOiT (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 15 Mar 2021 10:38:19 -0400
-IronPort-SDR: 3io8bVVlMKNRIA92ugazsJ1LHQVK9FaO5GnKvNNpV4JLeT8Wm6QHNSmp/PmBHBMCj7HxBHycr/
- oDrYZSuMTAhw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9923"; a="176692302"
-X-IronPort-AV: E=Sophos;i="5.81,249,1610438400"; 
-   d="scan'208";a="176692302"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2021 07:38:18 -0700
-IronPort-SDR: xV+VA7JAy+HFnGS0PLYgxk2MouYfY5Uigyq8yYFEoYb2Ss61qpmmztc1b2RHIe0VavTidWe1ju
- EtgKB5sSXiJA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,249,1610438400"; 
-   d="scan'208";a="604870827"
-Received: from apaszkie-desk.igk.intel.com ([10.102.102.225])
-  by fmsmga005.fm.intel.com with ESMTP; 15 Mar 2021 07:38:17 -0700
-Subject: Re: Cannot add replacement hard drive to mdadm RAID5 array
-To:     Devon Beets <devon@sigmalabsinc.com>,
-        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>
-Cc:     Glenn Wikle <gwikle@sigmalabsinc.com>
-References: <CY4PR1301MB215210F6808E6C0BA5D751ABCA6F9@CY4PR1301MB2152.namprd13.prod.outlook.com>
-From:   Artur Paszkiewicz <artur.paszkiewicz@intel.com>
-Message-ID: <027a7faa-8858-2488-2771-0d412ef73866@intel.com>
-Date:   Mon, 15 Mar 2021 15:38:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        id S234656AbhCOQ6r (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 15 Mar 2021 12:58:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55584 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234608AbhCOQ6V (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 15 Mar 2021 12:58:21 -0400
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A18CBC061764
+        for <linux-raid@vger.kernel.org>; Mon, 15 Mar 2021 09:58:20 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id v2so44943941lft.9
+        for <linux-raid@vger.kernel.org>; Mon, 15 Mar 2021 09:58:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=nn1W9Wc+k1CJYE8WxkSJGXK0N+qf/mcCb4Whw81sCBc=;
+        b=CHsPG3vHkSC3vl8QgXZG/ufCXBC1KFkEZTtaL2T9HdtCh0yIg86M/OpjZGB8JOT8yr
+         GyH3v+4Pfzk0OCe41pghis+Lj9AUz8DnWmZCJtl3IIbBQjRO949mAS+Ftkay2rsSHyUC
+         JJAv/MpMUpbnmV34SLSOQZHqQrwAKe+eay7RMhU/kX3jQ8U9xrHb1ndjI+A6d0vPRjzz
+         vcB4Z5SFVVHJHzntsmNSPvDUWuaVrTnmkxh5Qn3dQvwKRWhh9vivIpX3kIooocpiFHEz
+         DxtUINMkkUo3DV5yIXHNAZ6r1L7ORQcCE6GulW7nL7mC+VUV/NIWwKCbZYP82ejI/qPd
+         RASg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=nn1W9Wc+k1CJYE8WxkSJGXK0N+qf/mcCb4Whw81sCBc=;
+        b=KlqVuRX55lkriYu2zoKsn6RP8uHNhOjBQyvzzwX0+iZah0QMlSFq04yAQNyllFmzHX
+         p5LWFKPc8yjCEuetAHO8GX6DbRXgRAEGvjfhM2PIE+zHERwvjUoPlimFFCK3fughyV2m
+         dZJFh+MG/c99wkIq17KsuEMIUirxPAbFNETxwEEDjBOejIC17q0IgZBZ51rd37l5FbqQ
+         NLGkB77JO+W4NF+Ev81C7yHndmNOepi3PcobXoWYzWnZm/0wOmgRKD8yhSw24aRGCec/
+         FLcpOl2Zs/Kl00o41Fkyl2G6rO9cGMTHldkQRLlinhD0LOjDAJtuyBYpC9j91NONBnIH
+         ROkg==
+X-Gm-Message-State: AOAM531W5yx1FGVOiuwrbtne2KgEBDgMuQRsrRydwWukzlg2Oi6iykCP
+        0hSa/IM1JIopLoe7BFnilNVuVNhSZtghGqrE8QQ=
+X-Google-Smtp-Source: ABdhPJwE0Z10bFRMtNHuauGcJbyhyMwDCoUPAOlHbYKQEUgP6Iu7Z89UkvVd9jEshBZJicweNqTewmzxdOvQzEXdkPQ=
+X-Received: by 2002:a19:9105:: with SMTP id t5mr8200918lfd.89.1615827499159;
+ Mon, 15 Mar 2021 09:58:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CY4PR1301MB215210F6808E6C0BA5D751ABCA6F9@CY4PR1301MB2152.namprd13.prod.outlook.com>
-Content-Type: text/plain; charset=koi8-r
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a05:651c:1382:0:0:0:0 with HTTP; Mon, 15 Mar 2021 09:58:18
+ -0700 (PDT)
+Reply-To: ezbtg22@gmail.com
+From:   "Mrs.Glenn" <mrganuserge@gmail.com>
+Date:   Mon, 15 Mar 2021 09:58:18 -0700
+Message-ID: <CA+Wfa7aq5nxBbR+ob52-zeH5WALGmWaEM0YnDNYkEeVdUb_UMQ@mail.gmail.com>
+Subject: From Mrs.Glenn
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 3/12/21 11:55 PM, Devon Beets wrote:
-> Hello,
-> 
-> My colleague and I have been trying to replace a failed hard drive in a four-drive RAID5 array (/dev/sda to /dev/sdd). The failed drive is sdb. We have physically removed the hard drive and replaced it with a new drive that has identical specifications. We did not first use mdadm to set the failed hard drive with --fail.
-> 
-> Upon booting the system with the new /dev/sdb drive installed, we see that instead of the usual two md entries (/dev/md127 which is an IMSM container and /dev/md126 which is the actual array) there are now three entries: md125 to md127. md127 is the IMSM container for sda, sdc, and sdd. md125 is a new container for sdb that we do not want. md126 is the actual array and only contains sda, sdc, and sdd. We tried to use --stop and --remove to get rid of md125, then add sdb to md127, and assemble to see if it adds to md126. It does not.
-> 
-> Below is the output of some commands for additional diagnostic information. Please let me know if you need more. 
-> 
-> Note: The output of these commands is after a fresh reboot, without/before all the other commands we tried to fix it. It gets reset to this state after every reboot we tried so far.
-> 
-> uname -a
-> Linux aerospace-pr3d-app 4.4.0-194-generic #226-Ubuntu SMP Wed Oct 21 10:19:36 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
-> 
-> sudo mdadm --version
-> mdadm - v4.1-126-gbdbe7f8 - 2021-03-09
-> 
-> sudo smartctl -H -i -l scterc /dev/sda
-> smartctl 6.5 2016-01-24 r4214 [x86_64-linux-4.4.0-194-generic] (local build)
-> Copyright (C) 2002-16, Bruce Allen, Christian Franke, www.smartmontools.org
-> 
-> === START OF INFORMATION SECTION ===
-> Device Model:     ST2000NX0253
-> Serial Number:    W461SCHM
-> LU WWN Device Id: 5 000c50 0b426d2d0
-> Firmware Version: SN05
-> User Capacity:    2,000,398,934,016 bytes [2.00 TB]
-> Sector Sizes:     512 bytes logical, 4096 bytes physical
-> Rotation Rate:    7200 rpm
-> Form Factor:      2.5 inches
-> Device is:        Not in smartctl database [for details use: -P showall]
-> ATA Version is:   ACS-3 (minor revision not indicated)
-> SATA Version is:  SATA 3.1, 6.0 Gb/s (current: 6.0 Gb/s)
-> Local Time is:    Thu Mar 11 15:07:30 2021 MST
-> SMART support is: Available - device has SMART capability.
-> SMART support is: Enabled
-> 
-> === START OF READ SMART DATA SECTION ===
-> SMART overall-health self-assessment test result: PASSED
-> 
-> SCT Error Recovery Control:
->            Read:    100 (10.0 seconds)
->           Write:    100 (10.0 seconds)
->  
-> 
-> sudo smartctl -H -i -l scterc /dev/sdb
-> smartctl 6.5 2016-01-24 r4214 [x86_64-linux-4.4.0-194-generic] (local build)
-> Copyright (C) 2002-16, Bruce Allen, Christian Franke, www.smartmontools.org
-> 
-> === START OF INFORMATION SECTION ===
-> Device Model:     ST2000NX0253
-> Serial Number:    W462MZ0R
-> LU WWN Device Id: 5 000c50 0c569b51c
-> Firmware Version: SN05
-> User Capacity:    2,000,398,934,016 bytes [2.00 TB]
-> Sector Sizes:     512 bytes logical, 4096 bytes physical
-> Rotation Rate:    7200 rpm
-> Form Factor:      2.5 inches
-> Device is:        Not in smartctl database [for details use: -P showall]
-> ATA Version is:   ACS-3 (minor revision not indicated)
-> SATA Version is:  SATA 3.1, 6.0 Gb/s (current: 6.0 Gb/s)
-> Local Time is:    Thu Mar 11 15:09:34 2021 MST
-> SMART support is: Available - device has SMART capability.
-> SMART support is: Enabled
-> 
-> === START OF READ SMART DATA SECTION ===
-> SMART overall-health self-assessment test result: PASSED
-> 
-> SCT Error Recovery Control:
->            Read:    100 (10.0 seconds)
->           Write:    100 (10.0 seconds)
->  
-> sudo smartctl -H -i -l scterc /dev/sdc
-> smartctl 6.5 2016-01-24 r4214 [x86_64-linux-4.4.0-194-generic] (local build)
-> Copyright (C) 2002-16, Bruce Allen, Christian Franke, www.smartmontools.org
-> 
-> === START OF INFORMATION SECTION ===
-> Device Model:     ST2000NX0253
-> Serial Number:    W461NLPM
-> LU WWN Device Id: 5 000c50 0b426f335
-> Firmware Version: SN05
-> User Capacity:    2,000,398,934,016 bytes [2.00 TB]
-> Sector Sizes:     512 bytes logical, 4096 bytes physical
-> Rotation Rate:    7200 rpm
-> Form Factor:      2.5 inches
-> Device is:        Not in smartctl database [for details use: -P showall]
-> ATA Version is:   ACS-3 (minor revision not indicated)
-> SATA Version is:  SATA 3.1, 6.0 Gb/s (current: 6.0 Gb/s)
-> Local Time is:    Thu Mar 11 15:14:38 2021 MST
-> SMART support is: Available - device has SMART capability.
-> SMART support is: Enabled
-> 
-> === START OF READ SMART DATA SECTION ===
-> SMART overall-health self-assessment test result: PASSED
-> 
-> SCT Error Recovery Control:
->            Read:    100 (10.0 seconds)
->           Write:    100 (10.0 seconds)
-> 
-> sudo smartctl -H -i -l scterc /dev/sdd
-> smartctl 6.5 2016-01-24 r4214 [x86_64-linux-4.4.0-194-generic] (local build)
-> Copyright (C) 2002-16, Bruce Allen, Christian Franke, www.smartmontools.org
-> 
-> === START OF INFORMATION SECTION ===
-> Device Model:     ST2000NX0253
-> Serial Number:    W461NHAB
-> LU WWN Device Id: 5 000c50 0b426f8a4
-> Firmware Version: SN05
-> User Capacity:    2,000,398,934,016 bytes [2.00 TB]
-> Sector Sizes:     512 bytes logical, 4096 bytes physical
-> Rotation Rate:    7200 rpm
-> Form Factor:      2.5 inches
-> Device is:        Not in smartctl database [for details use: -P showall]
-> ATA Version is:   ACS-3 (minor revision not indicated)
-> SATA Version is:  SATA 3.1, 6.0 Gb/s (current: 6.0 Gb/s)
-> Local Time is:    Thu Mar 11 15:16:24 2021 MST
-> SMART support is: Available - device has SMART capability.
-> SMART support is: Enabled
-> 
-> === START OF READ SMART DATA SECTION ===
-> SMART overall-health self-assessment test result: PASSED
-> 
-> SCT Error Recovery Control:
->            Read:    100 (10.0 seconds)
->           Write:    100 (10.0 seconds)
->  
-> sudo mdadm --examine /dev/sda
-> /dev/sda:
->           Magic : Intel Raid ISM Cfg Sig.
->         Version : 1.3.00
->     Orig Family : 154b243e
->          Family : 154b243e
->      Generation : 000003aa
->   Creation Time : Unknown
->      Attributes : All supported
->            UUID : 72360627:bb745f4c:aedafaab:e25d3123
->        Checksum : 21ae5a2a correct
->     MPB Sectors : 2
->           Disks : 4
->    RAID Devices : 1
-> 
->   Disk00 Serial : W461SCHM
->           State : active
->              Id : 00000000
->     Usable Size : 3907018766 (1863.01 GiB 2000.39 GB)
-> 
-> [Data]:
->        Subarray : 0
->            UUID : 764aa814:831953a1:06cf2a07:1ca42b2e
->      RAID Level : 5 <-- 5
->         Members : 4 <-- 4
->           Slots : [U_UU] <-- [U_UU]
->     Failed disk : 1
->       This Slot : 0
->     Sector Size : 512
->      Array Size : 11135008768 (5.19 TiB 5.70 TB)
->    Per Dev Size : 3711671808 (1769.86 GiB 1900.38 GB)
->   Sector Offset : 0
->     Num Stripes : 28997420
->      Chunk Size : 64 KiB <-- 64 KiB
->        Reserved : 0
->   Migrate State : repair
->       Map State : degraded <-- degraded
->      Checkpoint : 462393 (512)
->     Dirty State : dirty
->      RWH Policy : off
->       Volume ID : 1
-> 
->   Disk01 Serial : W461S13X:0
->           State : active
->              Id : ffffffff
->     Usable Size : 3907018766 (1863.01 GiB 2000.39 GB)
-> 
->   Disk02 Serial : W461NLPM
->           State : active
->              Id : 00000002
->     Usable Size : 3907018766 (1863.01 GiB 2000.39 GB)
-> 
->   Disk03 Serial : W461NHAB
->           State : active
->              Id : 00000003
->     Usable Size : 3907018766 (1863.01 GiB 2000.39 GB)
-> 
-> sudo mdadm --examine /dev/sdb
-> /dev/sdb:
->           Magic : Intel Raid ISM Cfg Sig.
->         Version : 1.0.00
->     Orig Family : 00000000
->          Family : e5cd8601
->      Generation : 00000001
->   Creation Time : Unknown
->      Attributes : All supported
->            UUID : 00000000:00000000:00000000:00000000
->        Checksum : cb9b0c02 correct
->     MPB Sectors : 1
->           Disks : 1
->    RAID Devices : 0
-> 
->   Disk00 Serial : W462MZ0R
->           State : spare
->              Id : 04000000
->     Usable Size : 3907026958 (1863.02 GiB 2000.40 GB)
-> 
->     Disk Serial : W462MZ0R
->           State : spare
->              Id : 04000000
->     Usable Size : 3907026958 (1863.02 GiB 2000.40 GB)
-> 
-> sudo mdadm --examine /dev/sdc
-> /dev/sdc:
->           Magic : Intel Raid ISM Cfg Sig.
->         Version : 1.3.00
->     Orig Family : 154b243e
->          Family : 154b243e
->      Generation : 000003aa
->   Creation Time : Unknown
->      Attributes : All supported
->            UUID : 72360627:bb745f4c:aedafaab:e25d3123
->        Checksum : 21ae5a2a correct
->     MPB Sectors : 2
->           Disks : 4
->    RAID Devices : 1
-> 
->   Disk02 Serial : W461NLPM
->           State : active
->              Id : 00000002
->     Usable Size : 3907018766 (1863.01 GiB 2000.39 GB)
-> 
-> [Data]:
->        Subarray : 0
->            UUID : 764aa814:831953a1:06cf2a07:1ca42b2e
->      RAID Level : 5 <-- 5
->         Members : 4 <-- 4
->           Slots : [U_UU] <-- [U_UU]
->     Failed disk : 1
->       This Slot : 2
->     Sector Size : 512
->      Array Size : 11135008768 (5.19 TiB 5.70 TB)
->    Per Dev Size : 3711671808 (1769.86 GiB 1900.38 GB)
->   Sector Offset : 0
->     Num Stripes : 28997420
->      Chunk Size : 64 KiB <-- 64 KiB
->        Reserved : 0
->   Migrate State : repair
->       Map State : degraded <-- degraded
->      Checkpoint : 462393 (512)
->     Dirty State : dirty
->      RWH Policy : off
->       Volume ID : 1
-> 
->   Disk00 Serial : W461SCHM
->           State : active
->              Id : 00000000
->     Usable Size : 3907018766 (1863.01 GiB 2000.39 GB)
-> 
->   Disk01 Serial : W461S13X:0
->           State : active
->              Id : ffffffff
->     Usable Size : 3907018766 (1863.01 GiB 2000.39 GB)
-> 
->   Disk03 Serial : W461NHAB
->           State : active
->              Id : 00000003
->     Usable Size : 3907018766 (1863.01 GiB 2000.39 GB)
-> 
-> sudo mdadm --examine /dev/sdd
-> /dev/sdd:
->           Magic : Intel Raid ISM Cfg Sig.
->         Version : 1.3.00
->     Orig Family : 154b243e
->          Family : 154b243e
->      Generation : 000003aa
->   Creation Time : Unknown
->      Attributes : All supported
->            UUID : 72360627:bb745f4c:aedafaab:e25d3123
->        Checksum : 21ae5a2a correct
->     MPB Sectors : 2
->           Disks : 4
->    RAID Devices : 1
-> 
->   Disk03 Serial : W461NHAB
->           State : active
->              Id : 00000003
->     Usable Size : 3907018766 (1863.01 GiB 2000.39 GB)
-> 
-> [Data]:
->        Subarray : 0
->            UUID : 764aa814:831953a1:06cf2a07:1ca42b2e
->      RAID Level : 5 <-- 5
->         Members : 4 <-- 4
->           Slots : [U_UU] <-- [U_UU]
->     Failed disk : 1
->       This Slot : 3
->     Sector Size : 512
->      Array Size : 11135008768 (5.19 TiB 5.70 TB)
->    Per Dev Size : 3711671808 (1769.86 GiB 1900.38 GB)
->   Sector Offset : 0
->     Num Stripes : 28997420
->      Chunk Size : 64 KiB <-- 64 KiB
->        Reserved : 0
->   Migrate State : repair
->       Map State : degraded <-- degraded
->      Checkpoint : 462393 (512)
->     Dirty State : dirty
->      RWH Policy : off
->       Volume ID : 1
-> 
->   Disk00 Serial : W461SCHM
->           State : active
->              Id : 00000000
->     Usable Size : 3907018766 (1863.01 GiB 2000.39 GB)
-> 
->   Disk01 Serial : W461S13X:0
->           State : active
->              Id : ffffffff
->     Usable Size : 3907018766 (1863.01 GiB 2000.39 GB)
-> 
->   Disk02 Serial : W461NLPM
->           State : active
->              Id : 00000002
->     Usable Size : 3907018766 (1863.01 GiB 2000.39 GB)
-> sudo mdadm --detail /dev/md125
-> /dev/md125:
->            Version : imsm
->         Raid Level : container
->      Total Devices : 1
-> 
->    Working Devices : 1
-> 
->      Member Arrays :
-> 
->     Number   Major   Minor   RaidDevice
-> 
->        -       8       16        -        /dev/sdb
-> 
-> sudo mdadm --detail /dev/md126
-> /dev/md126:
->          Container : /dev/md/imsm0, member 0
->         Raid Level : raid5
->      Used Dev Size : 1855835904 (1769.86 GiB 1900.38 GB)
->       Raid Devices : 4
->      Total Devices : 3
-> 
->              State : active, FAILED, Not Started
->     Active Devices : 3
->    Working Devices : 3
->     Failed Devices : 0
->      Spare Devices : 0
-> 
->             Layout : left-asymmetric
->         Chunk Size : 64K
-> 
-> Consistency Policy : unknown
-> 
-> 
->               UUID : 764aa814:831953a1:06cf2a07:1ca42b2e
->     Number   Major   Minor   RaidDevice State
->        -       0        0        0      removed
->        -       0        0        1      removed
->        -       0        0        2      removed
->        -       0        0        3      removed
-> 
->        -       8        0        0      sync   /dev/sda
->        -       8       32        2      sync   /dev/sdc
->        -       8       48        3      sync   /dev/sdd
-> 
-> sudo mdadm --detail /dev/md127
-> /dev/md127:
->            Version : imsm
->         Raid Level : container
->      Total Devices : 3
-> 
->    Working Devices : 3
-> 
-> 
->               UUID : 72360627:bb745f4c:aedafaab:e25d3123
->      Member Arrays : /dev/md126
-> 
->     Number   Major   Minor   RaidDevice
-> 
->        -       8        0        -        /dev/sda
->        -       8       32        -        /dev/sdc
->        -       8       48        -        /dev/sdd
->  
-> lsdrv
-> **Warning** The following utility(ies) failed to execute:
->   sginfo
-> Some information may be missing.
-> 
-> PCI [nvme] 04:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd NVMe SSD Controller SM981/PM981
-> „nvme nvme0 Samsung SSD 970 EVO Plus 500GB           {S4P2NF0M501223D}
->  „nvme0n1 465.76g [259:0] Empty/Unknown
->   †nvme0n1p1 512.00m [259:1] Empty/Unknown
->   „Mounted as /dev/nvme0n1p1 @ /boot/efi
->   †nvme0n1p2 732.00m [259:2] Empty/Unknown
->   „Mounted as /dev/nvme0n1p2 @ /boot
->   „nvme0n1p3 464.54g [259:3] Empty/Unknown
->    †dm-0 463.59g [252:0] Empty/Unknown
->    „Mounted as /dev/mapper/customer--pr3d--app--vg-root @ /
->    „dm-1 980.00m [252:1] Empty/Unknown
-> PCI [ahci] 00:11.5 SATA controller: Intel Corporation C620 Series Chipset Family SSATA Controller [AHCI mode] (rev 09)
-> „scsi 0:x:x:x [Empty]
-> PCI [ahci] 00:17.0 RAID bus controller: Intel Corporation C600/X79 series chipset SATA RAID Controller (rev 09)
-> †scsi 2:0:0:0 ATA      ST2000NX0253
-> „sda 1.82t [8:0] Empty/Unknown
->  †md126 0.00k [9:126] MD vexternal:/md127/0 raid5 (4) inactive, 64k Chunk, None (None) None {None}
->                      Empty/Unknown
->  „md127 0.00k [9:127] MD vexternal:imsm  () inactive, None (None) None {None}
->                       Empty/Unknown
-> †scsi 3:0:0:0 ATA      ST2000NX0253
-> „sdb 1.82t [8:16] Empty/Unknown
->  „md125 0.00k [9:125] MD vexternal:imsm  () inactive, None (None) None {None}
->                       Empty/Unknown
-> †scsi 4:0:0:0 ATA      ST2000NX0253
-> „sdc 1.82t [8:32] Empty/Unknown
->  †md126 0.00k [9:126] MD vexternal:/md127/0 raid5 (4) inactive, 64k Chunk, None (None) None {None}
->                      Empty/Unknown
-> †scsi 5:0:0:0 ATA      ST2000NX0253
-> „sdd 1.82t [8:48] Empty/Unknown
->  †md126 0.00k [9:126] MD vexternal:/md127/0 raid5 (4) inactive, 64k Chunk, None (None) None {None}
->                      Empty/Unknown
-> „scsi 6:0:0:0 Slimtype DVD A  DS8ACSH
->  „sr0 1.00g [11:0] Empty/Unknown
-> Other Block Devices
-> †loop0 0.00k [7:0] Empty/Unknown
-> †loop1 0.00k [7:1] Empty/Unknown
-> †loop2 0.00k [7:2] Empty/Unknown
-> †loop3 0.00k [7:3] Empty/Unknown
-> †loop4 0.00k [7:4] Empty/Unknown
-> †loop5 0.00k [7:5] Empty/Unknown
-> †loop6 0.00k [7:6] Empty/Unknown
-> „loop7 0.00k [7:7] Empty/Unknown
-> 
-> cat /proc/mdstat
-> Personalities : [raid6] [raid5] [raid4] [linear] [multipath] [raid0] [raid1] [raid10]
-> md125 : inactive sdb[0](S)
->       1105 blocks super external:imsm
-> 
-> md126 : inactive sda[2] sdc[1] sdd[0]
->       5567507712 blocks super external:/md127/0
-> 
-> md127 : inactive sdc[2](S) sdd[1](S) sda[0](S)
->       9459 blocks super external:imsm
-> 
-> unused devices: <none>
-> 
-> 
-> Thanks for the help!
-> Devon Beets
+-- 
+Dear Beloved,
 
-Hi Devon,
+I am Mrs Elizabet Glenn from Israel. I am a missionary but right now
+in a hospital bed in Israel. I am 59 years and childless; my husband
+is dead. I was diagnosed with terminal cancer. And my doctor just
+predicted that I have but very limited time to live due to damages in
+my system and as a result of that I decided to dispose my 10.5 million
+US dollars to a God-fearing one for the continuation of charitable
+work. This is why I located you.My guess about you may not be accurate
+because I came across your contact at the humanitarian calendar event
+of the year but I believe in God who  divinely directed me to you for
+this solemn proposal of charitable work. I wholeheartedly wish to
+bequeath my fortune to you as a God-fearing person for the
+continuation of charitable work anywhere around the world.
 
-The array is in dirty degraded state. It does not start automatically because
-there is a risk of silent data corruption, i.e. RAID write hole. You can force
-it to start with:
+I shall be going in for a surgery operations soonest and desire this
+money to be transferred to you as I do not wish to leave this money in
+the bank because bankers might misuse it for their own interest after
+my death. As soon as I receive your quick reply assuring me that you
+will utilize the money as I instructed you for the benefit of the less
+privilege, I shall give you more details and also instruct my bank to
+release the money to you for the charity project. I hope you receive
+this mail in good health.
 
-# mdadm -R --force /dev/md126
+Because I don t know what will be my situation in next minute,
 
-You will need mdadm built with this commit for it to work:
+I am waiting for your reply.
 
-https://git.kernel.org/pub/scm/utils/mdadm/mdadm.git/commit/?id=7b99edab2834d5d08ef774b4cff784caaa1a186f
-
-It may be a good idea to copy the array contents with dd before you fsck or
-mount the filesystem in case the recovery goes wrong.
-
-Then stop the second container and add the new drive to the array:
-
-# mdadm -S /dev/md125
-# mdadm -a /dev/md127 /dev/sdb
-
-Rebuild should begin at this point.
-
-Regards,
-Artur
-
-
+Yours sincerely,
+Mrs Elizabet Glenn.
