@@ -2,223 +2,126 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 813AC34A6AE
-	for <lists+linux-raid@lfdr.de>; Fri, 26 Mar 2021 13:00:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5874A34BA7A
+	for <lists+linux-raid@lfdr.de>; Sun, 28 Mar 2021 04:19:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229832AbhCZL7i (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 26 Mar 2021 07:59:38 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:29086 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229738AbhCZL71 (ORCPT
+        id S231339AbhC1CSk (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 27 Mar 2021 22:18:40 -0400
+Received: from u17383850.onlinehome-server.com ([74.208.250.170]:54975 "EHLO
+        u17383850.onlinehome-server.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231167AbhC1CSO (ORCPT
         <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 26 Mar 2021 07:59:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1616759966;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UmQWEQBreoFUlDa+zWQhW0IAjXbh2xuiOPsBrcHXiPM=;
-        b=JWZmVtaD9zIEr4GGKVdpuaStsk3EBkCmowmD7pYiifimHWUIA7YC9FU9dHgPBEYUMlnN56
-        d4GarCO1ICVOvPf71e0xV8dJn3z1A+JnuMP8ftwdQhBo97OomIOpghZdrfFFVkj00G24xC
-        5hZSZFxpm00U38CNgokwE/HSmX+K+F8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-286-xg6d_QJ3N4CWF6sVhQ4P2A-1; Fri, 26 Mar 2021 07:59:24 -0400
-X-MC-Unique: xg6d_QJ3N4CWF6sVhQ4P2A-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 155031018F70;
-        Fri, 26 Mar 2021 11:59:23 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E3222608BA;
-        Fri, 26 Mar 2021 11:59:22 +0000 (UTC)
-Received: from zmail24.collab.prod.int.phx2.redhat.com (zmail24.collab.prod.int.phx2.redhat.com [10.5.83.30])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 97BD04BB7B;
-        Fri, 26 Mar 2021 11:59:22 +0000 (UTC)
-Date:   Fri, 26 Mar 2021 07:59:22 -0400 (EDT)
-From:   Nigel Croxon <ncroxon@redhat.com>
-To:     Oleksandr Shchirskyi <oleksandr.shchirskyi@linux.intel.com>
-Cc:     linux-raid@vger.kernel.org,
-        Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
-        Jes Sorensen <jes@trained-monkey.org>
-Message-ID: <1876594627.1682680.1616759962103.JavaMail.zimbra@redhat.com>
-In-Reply-To: <b77b55d3-d9b2-fac9-c756-fabced0546a0@linux.intel.com>
-References: <764426808.38181143.1615910368475.JavaMail.zimbraredhat!com> <08b71ea7-bdd3-722d-d18f-aa065b8756c0@linux.intel.com> <207580597.39647667.1616433400775.JavaMail.zimbra@redhat.com> <5339fdf7-0d8a-e099-1fc4-be42a08c8ad3@linux.intel.com> <1361244809.39731072.1616517370775.JavaMail.zimbra@redhat.com> <b77b55d3-d9b2-fac9-c756-fabced0546a0@linux.intel.com>
-Subject: Re: [PATCH] mdadm: fix reshape from RAID5 to RAID6 with backup file
+        Sat, 27 Mar 2021 22:18:14 -0400
+X-Greylist: delayed 359 seconds by postgrey-1.27 at vger.kernel.org; Sat, 27 Mar 2021 22:18:14 EDT
+Received: by u17383850.onlinehome-server.com (Postfix, from userid 5001)
+        id 4B823794; Sat, 27 Mar 2021 22:12:10 -0400 (EDT)
+Date:   Sat, 27 Mar 2021 22:12:10 -0400
+From:   David T-G <davidtg-robot@justpickone.org>
+To:     Linux RAID list <linux-raid@vger.kernel.org>
+Subject: how do i bring this disk back into the fold?
+Message-ID: <20210328021210.GA1415@justpickone.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.10.113.141, 10.4.195.27]
-Thread-Topic: mdadm: fix reshape from RAID5 to RAID6 with backup file
-Thread-Index: WA1w+jswwFzB7LPNLopPODGH/uTkag==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+Hi, all --
+
+I recently migrated our disk farm to a new server (see the next email),
+and I see that one of the partitions in a RAID5 set it inactive:
+
+  diskfarm:~ # cat /proc/mdstat 
+  Personalities : [raid6] [raid5] [raid4] 
+  md127 : inactive sdf2[1](S) sdl2[0](S) sdj2[3](S)
+        2196934199 blocks super 1.2
+         
+  md0 : active raid5 sdc1[3] sdd1[4] sdb1[0]
+        11720265216 blocks super 1.2 level 5, 512k chunk, algorithm 2 [4/3] [U_UU]
+
+  diskfarm:~ # mdadm --examine /dev/sd[bcde]1 | egrep '/dev|Name|Role|State|Checksum|Events|UUID'
+  /dev/sdb1:
+       Array UUID : ca7008ef:90693dae:6c231ad7:08b3f92d
+             Name : diskfarm:0  (local to host diskfarm)
+            State : clean
+      Device UUID : bbcf5aff:e4a928b8:4fd788c2:c3f298da
+         Checksum : 4aa669d5 - correct
+           Events : 77944
+     Device Role : Active device 0
+     Array State : A.AA ('A' == active, '.' == missing, 'R' == replacing)
+  /dev/sdc1:
+       Array UUID : ca7008ef:90693dae:6c231ad7:08b3f92d
+             Name : diskfarm:0  (local to host diskfarm)
+            State : clean
+      Device UUID : c0a32425:2d206e98:78f9c264:d39e9720
+         Checksum : 38ee846d - correct
+           Events : 77944
+     Device Role : Active device 2
+     Array State : A.AA ('A' == active, '.' == missing, 'R' == replacing)
+  /dev/sdd1:
+       Array UUID : ca7008ef:90693dae:6c231ad7:08b3f92d
+             Name : diskfarm:0  (local to host diskfarm)
+            State : clean
+      Device UUID : f05a143b:50c9b024:36714b9a:44b6a159
+         Checksum : 49b381d8 - correct
+           Events : 77944
+     Device Role : Active device 3
+     Array State : A.AA ('A' == active, '.' == missing, 'R' == replacing)
+  /dev/sde1:
+       Array UUID : ca7008ef:90693dae:6c231ad7:08b3f92d
+             Name : diskfarm:0  (local to host diskfarm)
+            State : active
+      Device UUID : 835389bd:c065c575:0b9f2357:9070a400
+         Checksum : 80e1b8c4 - correct
+           Events : 60360
+     Device Role : Active device 1
+     Array State : AAAA ('A' == active, '.' == missing, 'R' == replacing)
+
+  diskfarm:~ # mdadm --detail /dev/md0
+  /dev/md0:
+             Version : 1.2
+       Creation Time : Mon Feb  6 05:56:35 2017
+          Raid Level : raid5
+          Array Size : 11720265216 (10.92 TiB 12.00 TB)
+       Used Dev Size : 3906755072 (3.64 TiB 4.00 TB)
+        Raid Devices : 4
+       Total Devices : 3
+         Persistence : Superblock is persistent
+
+         Update Time : Sun Mar 28 01:44:43 2021
+               State : clean, degraded 
+      Active Devices : 3
+     Working Devices : 3
+      Failed Devices : 0
+       Spare Devices : 0
+
+              Layout : left-symmetric
+          Chunk Size : 512K
+
+  Consistency Policy : resync
+
+                Name : diskfarm:0  (local to host diskfarm)
+                UUID : ca7008ef:90693dae:6c231ad7:08b3f92d
+              Events : 77944
+
+      Number   Major   Minor   RaidDevice State
+         0       8       17        0      active sync   /dev/sdb1
+         -       0        0        1      removed
+         3       8       33        2      active sync   /dev/sdc1
+         4       8       49        3      active sync   /dev/sdd1
+
+Before I go too crazy ...  What do I need to do to bring sde1 back into
+the RAID volume, either to catch up the missing 17k events (probably
+preferred) or just to rebuild it?
 
 
------ Original Message -----
-From: "Oleksandr Shchirskyi" <oleksandr.shchirskyi@linux.intel.com>
-To: "Nigel Croxon" <ncroxon@redhat.com>
-Cc: linux-raid@vger.kernel.org, "Mariusz Tkaczyk" <mariusz.tkaczyk@linux.intel.com>, "Jes Sorensen" <jes@trained-monkey.org>
-Sent: Tuesday, March 23, 2021 4:58:27 PM
-Subject: Re: [PATCH] mdadm: fix reshape from RAID5 to RAID6 with backup file
+TIA & HANN
 
-On 3/23/2021 5:36 PM, Nigel Croxon wrote:
-> Oleksandr,
-> Can you post your dmesg output when running the commands?
-> 
-> I've back down from 5.11 to 5.8 and I still see:
-> [  +0.042694] md/raid0:md126: raid5 must have missing parity disk!
-> [  +0.000001] md: md126: raid0 would not accept array
-> 
-> Thanks, Nigel
-
-Hello Nigel,
-
-I've switched to 4.18.0-240.el8.x86_64 kernel (I have RHEL8.3) and I still 
-have the same results, issue is still easily reproducible when patch 
-4ae96c8 is applied.
-
-Cropped test logs with and w/o your patch:
-
-# git log -n1 --oneline
-f94df5c (HEAD -> master, origin/master, origin/HEAD) imsm: support for 
-third Sata controller
-# make clean; make; make install-systemd; make install
-# mdadm -CR imsm0 -e imsm -n4 /dev/nvme[0-3]n1 && mdadm -CR volume -l0 
---chunk 64 --size=10G --raid-devices=1 /dev/nvme0n1 --force
-# mdadm -G /dev/md/imsm0 -n2
-# dmesg -c
-[  393.530389] md126: detected capacity change from 0 to 10737418240
-[  407.139318] md/raid:md126: device nvme0n1 operational as raid disk 0
-[  407.153920] md/raid:md126: raid level 4 active with 1 out of 2 devices, 
-algorithm 5
-[  407.246037] md: reshape of RAID array md126
-[  407.357940] md: md126: reshape interrupted.
-[  407.388144] md: reshape of RAID array md126
-[  407.398737] md: md126: reshape interrupted.
-[  407.403486] md: reshape of RAID array md126
-[  459.414250] md: md126: reshape done.
-# cat /proc/mdstat
-Personalities : [raid0] [raid6] [raid5] [raid4]
-md126 : active raid4 nvme3n1[2] nvme0n1[0]
-       10485760 blocks super external:/md127/0 level 4, 64k chunk, 
-algorithm 0 [3/2] [UU_]
-
-md127 : inactive nvme3n1[3](S) nvme2n1[2](S) nvme1n1[1](S) nvme0n1[0](S)
-       4420 blocks super external:imsm
-
-unused devices: <none>
-
-# mdadm -Ss; wipefs -a /dev/nvme[0-3]n1
-# dmesg -C
-# git revert 4ae96c802203ec3cfbb089240c56d61f7f4661b3
-# make clean; make; make install-systemd; make install
-# mdadm -CR imsm0 -e imsm -n4 /dev/nvme[0-3]n1 && mdadm -CR volume -l0 
---chunk 64 --size=10G --raid-devices=1 /dev/nvme0n1 --force
-# mdadm -G /dev/md/imsm0 -n2
-# dmesg -c
-[  623.772039] md126: detected capacity change from 0 to 10737418240
-[  644.823245] md/raid:md126: device nvme0n1 operational as raid disk 0
-[  644.838542] md/raid:md126: raid level 4 active with 1 out of 2 devices, 
-algorithm 5
-[  644.928672] md: reshape of RAID array md126
-[  697.405351] md: md126: reshape done.
-[  697.409659] md126: detected capacity change from 10737418240 to 21474836480
-# cat /proc/mdstat
-Personalities : [raid0] [raid6] [raid5] [raid4]
-md126 : active raid0 nvme3n1[2] nvme0n1[0]
-       20971520 blocks super external:/md127/0 64k chunks
-
-md127 : inactive nvme3n1[3](S) nvme2n1[2](S) nvme1n1[1](S) nvme0n1[0](S)
-       4420 blocks super external:imsm
-
-
-Do you need more detailed logs? My system/drives configuration details?
-
-Regards,
-Oleksandr Shchirskyi
-
-
-
-
-From f0c80c8e90b2ce113b6e22f919659430d3d20efa Mon Sep 17 00:00:00 2001
-From: Nigel Croxon <ncroxon@redhat.com>
-Date: Fri, 26 Mar 2021 07:56:10 -0400
-Subject: [PATCH] mdadm: fix growing containers
-
-This fixes growing containers which was broken with
-commit 4ae96c802203ec3c (mdadm: fix reshape from RAID5 to RAID6 with
-backup file)
-
-The issue being that containers use the function
-wait_for_reshape_isms and expect a number value and not a
-string value of "max".  The change is to test for external
-before setting the correct value.
-
-Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
----
- Grow.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
-
-diff --git a/Grow.c b/Grow.c
-index 1120929..de28540 100644
---- a/Grow.c
-+++ b/Grow.c
-@@ -921,7 +921,7 @@ static int subarray_set_num(char *container, struct mdinfo *sra, char *name, int
- }
- 
- int start_reshape(struct mdinfo *sra, int already_running,
--		  int before_data_disks, int data_disks)
-+		  int before_data_disks, int data_disks, struct supertype *st)
- {
- 	int err;
- 	unsigned long long sync_max_to_set;
-@@ -935,20 +935,23 @@ int start_reshape(struct mdinfo *sra, int already_running,
- 	else
- 		sync_max_to_set = (sra->component_size * data_disks
- 				   - sra->reshape_progress) / data_disks;
-+
- 	if (!already_running)
- 		sysfs_set_num(sra, NULL, "sync_min", sync_max_to_set);
--	err = err ?: sysfs_set_num(sra, NULL, "sync_max", sync_max_to_set);
-+
-+        if (st->ss->external) 
-+		err = err ?: sysfs_set_num(sra, NULL, "sync_max", sync_max_to_set);
-+	else
-+		err = err ?: sysfs_set_str(sra, NULL, "sync_max", "max");
-+
- 	if (!already_running && err == 0) {
- 		int cnt = 5;
--		int err2;
- 		do {
- 			err = sysfs_set_str(sra, NULL, "sync_action",
- 					    "reshape");
--			err2 = sysfs_set_str(sra, NULL, "sync_max",
--					    "max");
--			if (err || err2)
-+			if (err)
- 				sleep(1);
--		} while (err && err2 && errno == EBUSY && cnt-- > 0);
-+		} while (err && errno == EBUSY && cnt-- > 0);
- 	}
- 	return err;
- }
-@@ -3470,7 +3473,7 @@ started:
- 		goto release;
- 
- 	err = start_reshape(sra, restart, reshape.before.data_disks,
--			    reshape.after.data_disks);
-+			    reshape.after.data_disks, st);
- 	if (err) {
- 		pr_err("Cannot %s reshape for %s\n",
- 		       restart ? "continue" : "start", devname);
+:-D
 -- 
-2.27.0
-
-
+David T-G
+See http://justpickone.org/davidtg/email/
+See http://justpickone.org/davidtg/tofu.txt
 
