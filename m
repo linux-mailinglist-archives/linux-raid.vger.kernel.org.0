@@ -2,55 +2,74 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 640E4353364
-	for <lists+linux-raid@lfdr.de>; Sat,  3 Apr 2021 12:20:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 752E835340E
+	for <lists+linux-raid@lfdr.de>; Sat,  3 Apr 2021 14:49:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236506AbhDCKUE (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 3 Apr 2021 06:20:04 -0400
-Received: from 93804.cloudwaysapps.com ([178.62.255.238]:19318 "EHLO
-        93804.cloudwaysapps.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S235256AbhDCKUA (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 3 Apr 2021 06:20:00 -0400
-Received: from 127.0.0.1 (93804.cloudwaysapps.com [127.0.0.1])
-        by 93804.cloudwaysapps.com (Postfix) with SMTP id 1E47527B72;
-        Thu,  1 Apr 2021 22:32:59 +0000 (UTC)
-Received: from [169.200.169.180] by 127.0.0.1 with ESMTP id 07269287 for <linux-cluster@redhat.com>; Thu, 01 Apr 2021 17:26:04 -0600
-Message-ID: <ok46pq$gxb3$wa$6$-6$48uy42b@k1ka6cg>
-From:   "FM CONSULTING LTD" <fkinneyofd@tampabay.rr.com>
-Reply-To: "FM CONSULTING LTD" <fkinneyofd@tampabay.rr.com>
-To:     linux-cluster@redhat.com
-Subject: WE OFFER  INVESTMENT FUNDING
-Date:   Thu, 01 Apr 21 17:26:04 GMT
-X-Mailer: QUALCOMM Windows Eudora Version 5.1
+        id S236484AbhDCMtq (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 3 Apr 2021 08:49:46 -0400
+Received: from mail-40136.protonmail.ch ([185.70.40.136]:38226 "EHLO
+        mail-40136.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230409AbhDCMtp (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 3 Apr 2021 08:49:45 -0400
+Date:   Sat, 03 Apr 2021 12:49:32 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tmb.nu;
+        s=protonmail; t=1617454181;
+        bh=vC7F9V5oBVfcyC+4DWBvHlYWHWiza4PMNs3qzFeK+HM=;
+        h=Date:To:From:Cc:Reply-To:Subject:From;
+        b=Z98SL6Q01od3loeMGHMLfK/FZLzPPhbk0zXvWRCgprI7XjlmOnHoLUEhb/uiiyGKo
+         kD2eZvvffHwsqQcUVxsbMbWndg4gCPzh79jJ/IcrIFYpLapWflUa7owSBUATDBLOch
+         WhTXV1/Cbs2CcxkYw8a94bd9/R53ytjJQnJwrG2g=
+To:     Borislav Petkov <bp@alien8.de>, Paul Menzel <pmenzel@molgen.mpg.de>
+From:   Thomas Backlund <tmb@tmb.nu>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, Song Liu <song@kernel.org>,
+        linux-raid@vger.kernel.org, it+linux-x86@molgen.mpg.de
+Reply-To: Thomas Backlund <tmb@tmb.nu>
+Subject: =?utf-8?Q?Re:_[regression_5.4.97_=E2=86=92_5.10.24]:_raid6_avx2x4_speed_drops_from_18429_MB/s_to_6155_MB/s?=
+Message-ID: <42011184-de0b-25d1-534f-a0d412d287a2@tmb.nu>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-        boundary="F9C_16BD7D_06DC0"
-X-Priority: 3
-X-MSMail-Priority: Normal
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.2 required=10.0 tests=ALL_TRUSTED,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF shortcircuit=no
+        autolearn=disabled version=3.4.4
+X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
+        mailout.protonmail.ch
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+Den 2021-04-02 kl. 17:05, skrev Borislav Petkov:
+> On Fri, Apr 02, 2021 at 10:33:51AM +0200, Paul Menzel wrote:
+>> Dear Linux folks,
+>>
+>>
+>> On an two socket AMD EPYC 7601, we noticed a decrease in raid6 avx2x4 sp=
+eed
+>> shown at the beginning of the boot.
+>>
+>>                         5.4.95        5.10.24
+>> ----------------------------------------------
+>> raid6: avx2x4 gen()   18429 MB/s     6155 MB/s
+>> raid6: avx2x4 xor()    6644 MB/s     4274 MB/s
+>> raid6: avx2x2 gen()   17894 MB/s    18744 MB/s
+>> raid6: avx2x2 xor()   11642 MB/s    11950 MB/s
+>> raid6: avx2x1 gen()   13992 MB/s    17112 MB/s
+>> raid6: avx2x1 xor()   10855 MB/s    11143 MB/s
+>
+> Looks like those two might help:
+>
 
---F9C_16BD7D_06DC0
-Content-Type: text/plain;
-Content-Transfer-Encoding: quoted-printable
+That would mean only this is missing:
+> 49200d17d27d x86/fpu/64: Don't FNINIT in kernel_fpu_begin()
 
-We introduce ourselves as mandated capital providers. 
-We are interested in having your company represents us exclusively in your=
- jurisdiction for the placement of loan and investment financing.
-Being direct financiers we offer financing for businesses for expansion, w=
-orking capital, construction projects, factoring, energy, manufacturing, t=
-elecommunications and the real estate sector to name a few.
-Our pool of funds is provided by high net worth individuals, trust funds, =
-family office funds as well as corporate and institutional funds. We act a=
-s the direct custodian of these funds provided by our clients who request =
-that we operate with the utmost of privacy and discretion. As a result we =
-normally fund individual projects starting from USD3 million well into the=
- 100 to 200 million dollar range.
-Sincerely 
-Rix Anthony
-FM Consultant New Zealand
 
---F9C_16BD7D_06DC0--
+as this one landed in 5.10.11:
+> e45122893a98 x86/fpu: Add kernel_fpu_begin_mask() to selectively initiali=
+ze state
+>
+
+--
+Thomas
 
