@@ -2,184 +2,79 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EFC9361A87
-	for <lists+linux-raid@lfdr.de>; Fri, 16 Apr 2021 09:27:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDCA23638B7
+	for <lists+linux-raid@lfdr.de>; Mon, 19 Apr 2021 02:05:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239299AbhDPH0g (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 16 Apr 2021 03:26:36 -0400
-Received: from mga14.intel.com ([192.55.52.115]:57817 "EHLO mga14.intel.com"
+        id S232742AbhDSAET (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 18 Apr 2021 20:04:19 -0400
+Received: from mbox.abcom.al ([217.73.143.249]:46160 "EHLO mbox.abcom.al"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231666AbhDPH0f (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 16 Apr 2021 03:26:35 -0400
-IronPort-SDR: Mwsaf5CpmyJ901Vg8hmfOiXVKQRgJq1WAnSU2RFdIHdm/hnph5sLiNQQIzcmnry9EhRDaBm5S8
- tEH5oqxzplww==
-X-IronPort-AV: E=McAfee;i="6200,9189,9955"; a="194561443"
-X-IronPort-AV: E=Sophos;i="5.82,226,1613462400"; 
-   d="scan'208";a="194561443"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2021 00:26:11 -0700
-IronPort-SDR: iDZggWRBfkN+C7tDagZZAYlE8Al8BjbhqA3qTjVNbIPHZEWElTZ0R+e/kq8O6rfEyfRSyuCQVi
- 5IL0rwxvjvRw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.82,226,1613462400"; 
-   d="scan'208";a="419032123"
-Received: from lkp-server01.sh.intel.com (HELO e2aa577b5d78) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 16 Apr 2021 00:26:10 -0700
-Received: from kbuild by e2aa577b5d78 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1lXIrh-00001Y-ON; Fri, 16 Apr 2021 07:26:09 +0000
-Date:   Fri, 16 Apr 2021 15:25:34 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Song Liu <song@kernel.org>
-Cc:     linux-raid@vger.kernel.org
-Subject: [song-md:md-next] BUILD SUCCESS
- 404a8ef512587b2460107d3272c17a89aef75edf
-Message-ID: <60793bee.uPQVUc/Nh5EC57Zu%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S232437AbhDSAES (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sun, 18 Apr 2021 20:04:18 -0400
+X-Greylist: delayed 615 seconds by postgrey-1.27 at vger.kernel.org; Sun, 18 Apr 2021 20:04:18 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mbox.abcom.al (Postfix) with ESMTP id 59FBF1146E3FB;
+        Mon, 19 Apr 2021 01:49:44 +0200 (CEST)
+Received: from mbox.abcom.al ([127.0.0.1])
+        by localhost (mbox.abcom.al [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id SGWF2C98hCLs; Mon, 19 Apr 2021 01:49:44 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by mbox.abcom.al (Postfix) with ESMTP id E1C72120F5EF3;
+        Mon, 19 Apr 2021 01:49:43 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mbox.abcom.al E1C72120F5EF3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=abcom.al;
+        s=0F3BA0EE-D5D4-11E8-9596-F9115129F2F4; t=1618789784;
+        bh=p2Sn/5BeV1TeOpE0g2OnXyVNOPHFXRN2kak+hb1GY3o=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=psUGWqR6IMiPndBbCdcR2JyXaDc+JNyJb0M1ZXoFn1T7RYNZ7mvLPuXsPzfZnp24T
+         j6AU2JuMMpaijyfgfRqInuRinmFASpxJ+ZIlojBLTNAMpoWg3NsBjgGGNd+GIts+hQ
+         Cgh6CscxX6Ku/BNZGKKOAdCPjccHYr6kVjT9oOIxqQ5MVymKlYByzINL/G3mC4kBaR
+         2xI3jtpUvVXIqPHwt9eT56QKk6KoxCODDVJnz7jiYGtOzI/qm04AtHYprNIAEkh/tf
+         K84g13zTnuyzonUoR1gEOBnNWk0uQJi0eH8TnxKZAHQQ4d8PaRYHDRsh9v3Lb1ZUFD
+         1otCf2+HkOchA==
+X-Virus-Scanned: amavisd-new at mbox.abcom.al
+Received: from mbox.abcom.al ([127.0.0.1])
+        by localhost (mbox.abcom.al [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 76O5UJtIVKzM; Mon, 19 Apr 2021 01:49:43 +0200 (CEST)
+Received: from [192.168.43.60] (unknown [105.4.4.115])
+        by mbox.abcom.al (Postfix) with ESMTPSA id EB55512006167;
+        Mon, 19 Apr 2021 01:49:36 +0200 (CEST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: =?utf-8?q?Hallo=2C_Sie_haben_eine_Spende_von_=E2=82=AC_2=2E000=2E000=2C00?=
+To:     Recipients <abashi@abcom.al>
+From:   <abashi@abcom.al>
+Date:   Mon, 19 Apr 2021 01:49:02 +0200
+Reply-To: billlawrencedonationorg@yahoo.com
+Message-Id: <20210418234936.EB55512006167@mbox.abcom.al>
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-tree/branch: git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git md-next
-branch HEAD: 404a8ef512587b2460107d3272c17a89aef75edf  md/bitmap: wait for external bitmap writes to complete during tear down
+Sehr geehrter Herr / Frau
+Ich gr=C3=BC=C3=9Fe Sie im Namen des Herrn. Diese Nachricht wird Ihnen als =
+Benachrichtigung gesendet, dass Sie ausgew=C3=A4hlt wurden, um von meinem W=
+ohlt=C3=A4tigkeitsprojekt zu profitieren, das darauf abzielt, Leben zu ber=
+=C3=BChren und denen zu helfen, die ich auf der ganzen Welt kann, wie Gott =
+mich gesegnet hat.
+Ich habe die Powerball-Lotterie in H=C3=B6he von 150 Millionen USD am 16. D=
+ezember 2019 gewonnen und ich habe mich freiwillig entschlossen, Ihnen eine=
+n Betrag von (2.000.000,00 =E2=82=AC) als Wohlt=C3=A4tigkeitsorganisation z=
+u spenden. Ich versuche, zuf=C3=A4llige Menschen aus verschiedenen Quellen =
+und Moden zu erreichen, um das Leben aus verschiedenen Quellen zu ber=C3=BC=
+hren Winkel. Deshalb erhalten Sie hier die Nachricht.
+Sie wurden als einer der gl=C3=BCcklichen Empf=C3=A4nger registriert, die 2=
+ Millionen Euro erhalten haben. Diese Spende wird Ihnen gegeben, damit Sie =
+Ihre pers=C3=B6nlichen Probleme versch=C3=A4rfen und uns zum gro=C3=9Fen Te=
+il gro=C3=9Fz=C3=BCgig dabei helfen k=C3=B6nnen, die weniger gl=C3=BCcklich=
+en Waisen und gemeinn=C3=BCtzigen Organisationen in Ihrem Land zu unterst=
+=C3=BCtzen Nachbarschaftslokalit=C3=A4t
+Zur =C3=9Cberpr=C3=BCfung: //www.powerball.com/winner-story/150-million-pow=
+erball-ticket-claimed
 
-elapsed time: 727m
+Kontaktieren Sie mich erneut, um Spenden zu erhalten. E-Mail: billlawrenced=
+onationorg@yahoo.com
 
-configs tested: 122
-configs skipped: 2
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-x86_64                           allyesconfig
-riscv                            allmodconfig
-riscv                            allyesconfig
-i386                             alldefconfig
-m68k                        m5307c3_defconfig
-arm                         lpc32xx_defconfig
-sh                     sh7710voipgw_defconfig
-arm                         orion5x_defconfig
-arm                    vt8500_v6_v7_defconfig
-powerpc                     mpc5200_defconfig
-sh                         apsh4a3a_defconfig
-powerpc                     taishan_defconfig
-s390                             alldefconfig
-arm                          pxa168_defconfig
-h8300                     edosk2674_defconfig
-powerpc                     tqm5200_defconfig
-powerpc                    klondike_defconfig
-mips                     cu1000-neo_defconfig
-powerpc                 mpc832x_mds_defconfig
-sparc64                          alldefconfig
-powerpc                 mpc832x_rdb_defconfig
-powerpc                       ebony_defconfig
-arm                           sama5_defconfig
-mips                            ar7_defconfig
-m68k                        m5272c3_defconfig
-powerpc                     tqm8560_defconfig
-nios2                            allyesconfig
-sh                ecovec24-romimage_defconfig
-arm                          simpad_defconfig
-powerpc                      ppc44x_defconfig
-arm                         cm_x300_defconfig
-sh                          rsk7203_defconfig
-arm                          pxa910_defconfig
-arm                           sunxi_defconfig
-mips                           ip32_defconfig
-mips                  decstation_64_defconfig
-powerpc                        cell_defconfig
-arm                      tct_hammer_defconfig
-sh                        apsh4ad0a_defconfig
-arm                        mvebu_v7_defconfig
-alpha                               defconfig
-mips                            e55_defconfig
-ia64                             alldefconfig
-powerpc                     kilauea_defconfig
-arm                        trizeps4_defconfig
-m68k                          multi_defconfig
-powerpc                    sam440ep_defconfig
-mips                        workpad_defconfig
-arm                         s3c6400_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                               defconfig
-csky                                defconfig
-alpha                            allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a003-20210415
-x86_64               randconfig-a002-20210415
-x86_64               randconfig-a005-20210415
-x86_64               randconfig-a001-20210415
-x86_64               randconfig-a006-20210415
-x86_64               randconfig-a004-20210415
-i386                 randconfig-a003-20210415
-i386                 randconfig-a006-20210415
-i386                 randconfig-a001-20210415
-i386                 randconfig-a005-20210415
-i386                 randconfig-a004-20210415
-i386                 randconfig-a002-20210415
-i386                 randconfig-a015-20210415
-i386                 randconfig-a014-20210415
-i386                 randconfig-a013-20210415
-i386                 randconfig-a012-20210415
-i386                 randconfig-a016-20210415
-i386                 randconfig-a011-20210415
-riscv                    nommu_k210_defconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-a014-20210415
-x86_64               randconfig-a015-20210415
-x86_64               randconfig-a011-20210415
-x86_64               randconfig-a013-20210415
-x86_64               randconfig-a012-20210415
-x86_64               randconfig-a016-20210415
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Vielen Dank, Bill Lawrence
