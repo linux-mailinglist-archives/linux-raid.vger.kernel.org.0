@@ -2,80 +2,40 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BAE1379B65
-	for <lists+linux-raid@lfdr.de>; Tue, 11 May 2021 02:26:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34505379B5D
+	for <lists+linux-raid@lfdr.de>; Tue, 11 May 2021 02:20:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230256AbhEKA1z (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 10 May 2021 20:27:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57084 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230165AbhEKA1z (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 10 May 2021 20:27:55 -0400
-X-Greylist: delayed 1331 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 10 May 2021 17:26:50 PDT
-Received: from hermes.turmel.org (hermes.turmel.org [IPv6:2604:180:f1::1e9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3012DC061574
-        for <linux-raid@vger.kernel.org>; Mon, 10 May 2021 17:26:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=turmel.org;
-         s=a; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:
-        Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=QA8w6Mrh5qox/4Uq6o1gRBRVCHyrqeSvNeS/Za5qrPA=; b=ih+BCfRs+8/G2F2Hamc8WbTfRJ
-        eL5VcHLdNyUAMtr3kseozxMQdvnqiLMx4aF22flMMZX4JPCjW5/vFiajNAcXDoDbb3CXX7IRVy7sb
-        aqfAUjhqSZ7OJNcOMJqtkGYimz7kXcHc2CpSI4cZEXtikElMizJvvhn0WmiNsj35xRLEHkk05fFY3
-        rNO3BQNNLagrtEhfQKbPHC2VdYVWNmU7oSf1OrzBJKpDFA0WUQJfxobi2sTZ4NGzR2m10gFIjLkXd
-        NkEUUG1QDckD2iaJjROAF6d67flwcbsZB65QQ3mEHNOrFxEwTHuwUOzxNe6q7HqB7P1WVp8Rv1r04
-        UWHKT2nA==;
-Received: from c-73-43-58-214.hsd1.ga.comcast.net ([73.43.58.214] helo=[192.168.20.123])
-        by hermes.turmel.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <philip@turmel.org>)
-        id 1lgFt6-0005JM-S0; Tue, 11 May 2021 00:04:36 +0000
-Subject: Re: raid10 redundancy
-To:     Wols Lists <antlists@youngman.org.uk>, d tbsky <tbskyd@gmail.com>,
-        Adam Goryachev <mailinglists@websitemanagers.com.au>
-Cc:     list Linux RAID <linux-raid@vger.kernel.org>
-References: <CAC6SzHJLG=0_URJUsgQshpk-QLh6b8SBJDrfxiNg4wikQw4uyw@mail.gmail.com>
- <AD8C004B-FE83-4ABD-B58A-1F7F8683CD1F@websitemanagers.com.au>
- <CAC6SzHKH62XwudewxtOUyNQYi9QSFar=dZ64fz9HiEW1eZh47g@mail.gmail.com>
- <60950C7B.5040706@youngman.org.uk>
-From:   Phil Turmel <philip@turmel.org>
-Message-ID: <8333ded7-8805-18df-13d8-166ba021ac02@turmel.org>
-Date:   Mon, 10 May 2021 20:04:36 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        id S231162AbhEKAVk (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 10 May 2021 20:21:40 -0400
+Received: from [125.7.54.12] ([125.7.54.12]:49326 "EHLO
+        snhve01-ext-001.mktdns.com" rhost-flags-FAIL-FAIL-OK-OK)
+        by vger.kernel.org with ESMTP id S231213AbhEKAVc (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 10 May 2021 20:21:32 -0400
+X-MSFBL: sFGknVAJDMXYTyGwCIe6m8HAh+guBDrSHSi6fBxLSDw=|eyJiIjoic25odmUwMS1
+        tdGEwMS0xMjUtNy01NC0xMiIsInUiOiIldmN0eF9tZXNze21rdG9NYWlsaW5nSUR
+        9IiwiZyI6ImJnLXNuaHZlMDFkLTAxIiwiciI6ImxpbnV4LXJhaWRAdmdlci5rZXJ
+        uZWwub3JnIn0=
+Reply-To: <avislmarie@yahoo.com>
+Message-ID: <67.9B.20919.8ADC9906@snhve01-mta01.marketo.org>
+From:   "COMPANY" <marieaviss@gmail.com>
+Subject: Re: Business inquiries 05:11:2021
+Date:   Mon, 10 May 2021 17:19:37 -0700
 MIME-Version: 1.0
-In-Reply-To: <60950C7B.5040706@youngman.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain;
+        charset="Windows-1251"
 Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 5/7/21 5:46 AM, Wols Lists wrote:
-> On 07/05/21 02:12, d tbsky wrote:
->> Adam Goryachev <mailinglists@websitemanagers.com.au>
->>>
->>> I guess it depends on your definition of raid 10... In my experience it means one or more raid 1 arrays combine with raid 0, so if each raid 1 arrays had 2 members, then it is either 2, 4, 6, etc for the total number of drives.
->>
->> indeed. What I want to use is linux raid10 which can be used on
->> 2,3,4,5, etc of disk drives. so it is unlike hardware raid 10.
->>
-> If you're worried about losing two drives, okay it's more disk space,
-> but add the third drive and go for three copies. Then adding the fourth
-> drive will give you extra space. Not the best but heigh ho.
-> 
-> Or make sure you've got a spare drive configured, so if one drive fails
-> the array will rebuild immediately, and your window of danger is minimised.
-> 
-> Cheers,
-> Wol
-> 
-
-I do this for my medium-speed read-mostly tasks.  Raid10,n3 across 4 or 
-5 disks gives me redundancy comparable to raid6 (lose any two) without 
-the CPU load of parity and syndrome calculations.
-
-Phil
+Hello
+How are you doing today?
+I am willing to initiate a business relationship with you.
+Yours sincerely
+MA/PM
