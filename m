@@ -2,95 +2,69 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E5E337CFFA
-	for <lists+linux-raid@lfdr.de>; Wed, 12 May 2021 19:39:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B94B837D581
+	for <lists+linux-raid@lfdr.de>; Wed, 12 May 2021 23:53:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236974AbhELRX0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 12 May 2021 13:23:26 -0400
-Received: from zimbra.karlsbakk.net ([193.29.58.196]:58070 "EHLO
-        zimbra.karlsbakk.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236423AbhELQho (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 12 May 2021 12:37:44 -0400
-X-Greylist: delayed 315 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 May 2021 12:37:44 EDT
-Received: from localhost (localhost.localdomain [IPv6:::1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id 2718F3C032F;
-        Wed, 12 May 2021 18:31:10 +0200 (CEST)
-Received: from zimbra.karlsbakk.net ([IPv6:::1])
-        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id 8fTpghDpSggu; Wed, 12 May 2021 18:31:08 +0200 (CEST)
-Received: from localhost (localhost.localdomain [IPv6:::1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id 089733C28E3;
-        Wed, 12 May 2021 18:31:08 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra.karlsbakk.net 089733C28E3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=karlsbakk.net;
-        s=1DC131FE-D37A-11E7-BD32-3AD4DFE620DF; t=1620837068;
-        bh=CnrHI5eD/Pa1c1BDg5NFIs4z+PJPMjLDfck46aUGJFs=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=VBg88EkeXWBitfKPf2w0ihShBjez8FGjL1kmJm3rsw4QUR5Ed4O4fEgmWDIG8HMku
-         ZKH4kma1zxIeyVW2uam8JR+thuJAl9bRwWYZqi0mosJxAJsfvdancJrpwzOoaTEF9g
-         K80wFMJgiz2jDr+QuyjZOLDmb3sWhf1K9J9rWjPgek4AuN0FcbKEFD6BkVafGvkYa4
-         7VLHtwZR80gB644F8Yp4iVYbnSA7sft6TkKkGYBzt6quROE44aVa7ni1I89N8NR+Xc
-         uRwqjFz6NLmqDCHPrT7D4zRhN5JGyAT+Vy2odds8nv0/kYDM3uBmpPQgsFYyL0+uUf
-         YdaDQJhCu7VwQ==
-X-Virus-Scanned: amavisd-new at zimbra.karlsbakk.net
-Received: from zimbra.karlsbakk.net ([IPv6:::1])
-        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id RKvK-CXBYtM3; Wed, 12 May 2021 18:31:07 +0200 (CEST)
-Received: from zimbra.karlsbakk.net (localhost.localdomain [127.0.0.1])
-        by zimbra.karlsbakk.net (Postfix) with ESMTP id D9AEE3C032F;
-        Wed, 12 May 2021 18:31:07 +0200 (CEST)
-Date:   Wed, 12 May 2021 18:31:07 +0200 (CEST)
-From:   Roy Sigurd Karlsbakk <roy@karlsbakk.net>
-To:     d tbsky <tbskyd@gmail.com>
-Cc:     Linux Raid <linux-raid@vger.kernel.org>
-Message-ID: <2140221131.2872520.1620837067395.JavaMail.zimbra@karlsbakk.net>
-In-Reply-To: <CAC6SzHJLG=0_URJUsgQshpk-QLh6b8SBJDrfxiNg4wikQw4uyw@mail.gmail.com>
-References: <CAC6SzHJLG=0_URJUsgQshpk-QLh6b8SBJDrfxiNg4wikQw4uyw@mail.gmail.com>
+        id S237683AbhELSsD (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 12 May 2021 14:48:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45086 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1347761AbhELR3j (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 12 May 2021 13:29:39 -0400
+Received: from u17383850.onlinehome-server.com (u17383850.onlinehome-server.com [IPv6:2607:f1c0:83f:ac00::a6:f62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6ED5EC061760
+        for <linux-raid@vger.kernel.org>; Wed, 12 May 2021 10:28:31 -0700 (PDT)
+Received: by u17383850.onlinehome-server.com (Postfix, from userid 5001)
+        id D13C376B; Wed, 12 May 2021 13:22:42 -0400 (EDT)
+Date:   Wed, 12 May 2021 13:22:42 -0400
+From:   David T-G <davidtg-robot@justpickone.org>
+To:     list Linux RAID <linux-raid@vger.kernel.org>
 Subject: Re: raid10 redundancy
+Message-ID: <20210512172242.GX1415@justpickone.org>
+References: <CAC6SzHJLG=0_URJUsgQshpk-QLh6b8SBJDrfxiNg4wikQw4uyw@mail.gmail.com>
+ <8626adeb-696c-7778-2d5e-0718ed6aefdb@redhat.com>
+ <CAC6SzHK1A=4wsbLRaYy9RTFZhda6EZs+2FjuKxahoos_zAd0iw@mail.gmail.com>
+ <6db10ef4-e087-3940-4870-e5d9717b853f@thelounge.net>
+ <CAC6SzH+gZ_WYRdx-vHM6zZxH=kx0YBvV-x2VT9h7EugwdmGcxA@mail.gmail.com>
+ <20210508134726.GA11665@www5.open-std.org>
+ <87y2co1zun.fsf@vps.thesusis.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [::ffff:158.39.192.235]
-X-Mailer: Zimbra 8.8.10_GA_3801 (ZimbraWebClient - FF88 (Mac)/8.8.10_GA_3786)
-Thread-Topic: raid10 redundancy
-Thread-Index: Ya+/7rstP7P9Tagh/Q4bp+MHzeicIg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87y2co1zun.fsf@vps.thesusis.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-> Hi:
->   I am curious about raid10 redundancy when created with disk numbers bel=
-ow:
->=20
-> 2 disks =3D> 1 disk tolerance
-> 3 disks =3D > 1 disk  tolerance
-> 4 disks =3D>  possible 2 disks?  or still only 1 disk ?
->=20
-> how about 5/6 disks with raid10?
-> thanks a lot for confirmation!!
+Phillip, et al --
 
-Basically, the reason to use raid10 over raid6 is to increase performance. =
-This is particularly important regarding rebuild times. If you have a huge =
-raid-6 array with large drives, it'll take a long time to rebuild it after =
-a disk fails. With raid10, this is far lower, since you don't need to rewri=
-te and compute so much. Personally, I'd choose raid6 over raid10 in most se=
-tups unless I need I lot of IOPS, where RAID6 isn't that good. RAID5 is als=
-o ok, if you don't have too much drives, but if you get a double disk failu=
-re, well, you're fucked.
+...and then Phillip Susi said...
+% 
+% keld@keldix.com writes:
+% 
+% > My understanding is that raid10 - all layouts - are really raid0 and
+% > then raid 1 on top.
+% 
+% Naieve implementations work that way, and this is also why they require
+% a an even number of disks with 4 being the minimum.  Linux raid10 is not
+% naieve and can operate with any number of disks >= 2.
+[snip]
 
-PS: Always make sure to have a good backup. RAID isn't backup, it's just re=
-dundancy and won't help you if your house burns down or a filesystem messes=
- up after a PSU problem or similar.=20
+I've been chewing on this for a few days and I am STILL confused.  Please
+help! :-)
 
-Vennlig hilsen
+RAID10 is striping AND mirroring (leaving out for the moment the distinction
+of striping mirrors vs mirroring stripes).  How can one have both with only
+two disks??  You either stripe the two disks together for more storage or
+mirror them for redundant storage, but I just don't see how one could do both.
 
-roy
---=20
-Roy Sigurd Karlsbakk
-(+47) 98013356
-http://blogg.karlsbakk.net/
-GPG Public key: http://karlsbakk.net/roysigurdkarlsbakk.pubkey.txt
---
-Hi=C3=B0 g=C3=B3=C3=B0a skaltu =C3=AD stein h=C3=B6ggva, hi=C3=B0 illa =C3=
-=AD snj=C3=B3 rita.
+
+Thanks in advance :-)
+
+:-D
+-- 
+David T-G
+See http://justpickone.org/davidtg/email/
+See http://justpickone.org/davidtg/tofu.txt
 
