@@ -2,66 +2,61 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA8C438285D
-	for <lists+linux-raid@lfdr.de>; Mon, 17 May 2021 11:32:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33DFF382D3B
+	for <lists+linux-raid@lfdr.de>; Mon, 17 May 2021 15:19:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236032AbhEQJdU (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 17 May 2021 05:33:20 -0400
-Received: from smtp.hosts.co.uk ([85.233.160.19]:15572 "EHLO smtp.hosts.co.uk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235863AbhEQJdT (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 17 May 2021 05:33:19 -0400
-Received: from host109-154-217-227.range109-154.btcentralplus.com ([109.154.217.227] helo=[192.168.1.64])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1liZbW-0009fy-7k; Mon, 17 May 2021 10:32:02 +0100
+        id S235777AbhEQNUZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 17 May 2021 09:20:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53262 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235733AbhEQNUZ (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 17 May 2021 09:20:25 -0400
+Received: from rin.romanrm.net (rin.romanrm.net [IPv6:2001:bc8:2dd2:1000::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C4B8C061573
+        for <linux-raid@vger.kernel.org>; Mon, 17 May 2021 06:19:09 -0700 (PDT)
+Received: from natsu (natsu2.home.romanrm.net [IPv6:fd39::e99e:8f1b:cfc9:ccb8])
+        by rin.romanrm.net (Postfix) with SMTP id 48D316D9;
+        Mon, 17 May 2021 13:19:06 +0000 (UTC)
+Date:   Mon, 17 May 2021 18:19:05 +0500
+From:   Roman Mamedov <rm@romanrm.net>
+To:     Roger Heflin <rogerheflin@gmail.com>
+Cc:     Christopher Thomas <youkai@earthlink.net>,
+        Linux RAID <linux-raid@vger.kernel.org>
 Subject: Re: My superblocks have gone missing, can't reassemble raid5
-To:     Roman Mamedov <rm@romanrm.net>,
-        Christopher Thomas <youkai@earthlink.net>
+Message-ID: <20210517181905.6f976f1a@natsu>
+In-Reply-To: <CAAMCDec=H=6ceP9bKjSnsQyvmZ0LqTAYzJTDmDQoBOHSJV+hDw@mail.gmail.com>
 References: <CA+o1gzBcQF_JeiC7Nv_zEBmJU2ypwQ_+RkbcZOOt0qOK1MkQww@mail.gmail.com>
- <20210517112844.388d2270@natsu>
-Cc:     linux-raid@vger.kernel.org
-From:   Wols Lists <antlists@youngman.org.uk>
-X-Enigmail-Draft-Status: N1110
-Message-ID: <60A237A5.9020602@youngman.org.uk>
-Date:   Mon, 17 May 2021 10:30:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.7.0
+        <20210517112844.388d2270@natsu>
+        <CAAMCDec=H=6ceP9bKjSnsQyvmZ0LqTAYzJTDmDQoBOHSJV+hDw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20210517112844.388d2270@natsu>
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 17/05/21 07:28, Roman Mamedov wrote:
-> As for recovery, you really might need to play with --create; to prevent the
-> chance of data loss, there's a way to experiment using "overlays", keeping the
-> original drives untouched; see [2] for more background on that, and [3]
-> provides steps for your actual situation. Don't forget to use "--assume-clean"
-> and "--readonly".
+On Mon, 17 May 2021 05:36:42 -0500
+Roger Heflin <rogerheflin@gmail.com> wrote:
 
-Firstly, what I'd do is a hexdump of the fifth kb of each disk (ie
-hopefully where the superblock is/was). Post that here and see if anyone
-can decode it. It does look like something has created a gpt, so mdadm
-is no longer looking at the raw disk for the array.
+> When I look at my 1.2 block, the mdraid header appears to start at 4k, and
+> the gpt partition table starts at 0x0000 and ends before 4k.
+> 
+> He may be able to simply delete the partition and have it work.
 
-There MIGHT be enough information lying around for someone to tell you
-what --create command to use. Another thing - are those the original
-disks used to create the array? Have you modified the array in any way?
-If you haven't modified the array, then a plain create using the same
-version of mdadm that created the array should just put things back the
-way they were. The reason you mustn't just use --create willy nilly is
-that any modification of the array might move the data offset, and
-different versions of mdadm may have different default settings.
+Christopher wrote that he tried:
 
-The other option is BACK UP YOUR HARD DRIVES, delete the new gpt, and
-then see if it will assemble.
+chris@ursula:~$ sudo /sbin/mdadm --verbose --assemble /dev/md0
+/dev/sdb /dev/sdc /dev/sdd
+mdadm: looking for devices for /dev/md0
+mdadm: Cannot assemble mbr metadata on /dev/sdb
+mdadm: /dev/sdb has no superblock - assembly aborted
 
-I know I've seen this before, but I've a nasty feeling the previous time
-the user had used partitions and the GPT had been trashed so it's not
-quite the same. Still, you might well be lucky ...
+I would have expected mdadm when passed entire devices (not partitions) to not
+even look if there are any partitions, and directly proceed to checking if
+there's a superblock at its supposed location. But maybe indeed, from the
+messages it looks like it bails before that, on seeing "mbr metadata", i.e.
+the enclosing MBR partition table of GPT.
 
-Cheers,
-Wol
+-- 
+With respect,
+Roman
