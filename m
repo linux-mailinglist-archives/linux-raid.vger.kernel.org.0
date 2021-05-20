@@ -2,65 +2,61 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3109938B29A
-	for <lists+linux-raid@lfdr.de>; Thu, 20 May 2021 17:08:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6192038B859
+	for <lists+linux-raid@lfdr.de>; Thu, 20 May 2021 22:25:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232438AbhETPJo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 20 May 2021 11:09:44 -0400
-Received: from smtp.hosts.co.uk ([85.233.160.19]:11815 "EHLO smtp.hosts.co.uk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231751AbhETPJl (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 20 May 2021 11:09:41 -0400
-Received: from host109-154-217-227.range109-154.btcentralplus.com ([109.154.217.227] helo=[192.168.1.65])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1ljkHZ-0003qK-5o; Thu, 20 May 2021 16:08:17 +0100
-Subject: Re: raid10 redundancy
-To:     Roger Heflin <rogerheflin@gmail.com>,
-        Adam Goryachev <mailinglists@websitemanagers.com.au>
-Cc:     Phillip Susi <phill@thesusis.net>,
-        Roy Sigurd Karlsbakk <roy@karlsbakk.net>,
-        Linux Raid <linux-raid@vger.kernel.org>
-References: <CAC6SzHJLG=0_URJUsgQshpk-QLh6b8SBJDrfxiNg4wikQw4uyw@mail.gmail.com>
- <2140221131.2872520.1620837067395.JavaMail.zimbra@karlsbakk.net>
- <87a6oyr64b.fsf@vps.thesusis.net>
- <3f3fd663-77e4-8c23-eb22-1b8223eaf277@turmel.org>
- <87y2ch4c3w.fsf@vps.thesusis.net>
- <947223877.4161967.1621003717636.JavaMail.zimbra@karlsbakk.net>
- <87cztpm68z.fsf@vps.thesusis.net> <60A2EC87.9080701@youngman.org.uk>
- <874kf0yq31.fsf@vps.thesusis.net>
- <d7c8b22d-f74a-409e-4e08-46240bb815e4@youngman.org.uk>
- <35a2f34e-178c-dcd2-b498-cf3fc029ae11@websitemanagers.com.au>
- <87im3e50sz.fsf@vps.thesusis.net>
- <d4e9070c-e80f-3f1b-4d26-21caf1318eb6@websitemanagers.com.au>
- <CAAMCDeeOnraMDNCF6ZZqPAxUrih2gSse1wDYgOfd1LqY-Ffqxw@mail.gmail.com>
-From:   antlists <antlists@youngman.org.uk>
-Message-ID: <9a92219d-1671-4e9b-3c5c-e01d8eb27aa8@youngman.org.uk>
-Date:   Thu, 20 May 2021 16:08:17 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        id S236963AbhETU0Z (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 20 May 2021 16:26:25 -0400
+Received: from icebox.esperi.org.uk ([81.187.191.129]:35836 "EHLO
+        mail.esperi.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235410AbhETU0Z (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 20 May 2021 16:26:25 -0400
+X-Greylist: delayed 2835 seconds by postgrey-1.27 at vger.kernel.org; Thu, 20 May 2021 16:26:24 EDT
+Received: from loom (nix@sidle.srvr.nix [192.168.14.8])
+        by mail.esperi.org.uk (8.16.1/8.16.1) with ESMTPS id 14KJbjaK024577
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 20 May 2021 20:37:46 +0100
+From:   Nix <nix@esperi.org.uk>
+To:     Phil Turmel <philip@turmel.org>
+Cc:     Leslie Rhorer <lesrhorer@att.net>, Roman Mamedov <rm@romanrm.net>,
+        Roger Heflin <rogerheflin@gmail.com>,
+        Christopher Thomas <youkai@earthlink.net>,
+        Linux RAID <linux-raid@vger.kernel.org>
+Subject: Re: My superblocks have gone missing, can't reassemble raid5
+References: <CA+o1gzBcQF_JeiC7Nv_zEBmJU2ypwQ_+RkbcZOOt0qOK1MkQww@mail.gmail.com>
+        <20210517112844.388d2270@natsu>
+        <CAAMCDec=H=6ceP9bKjSnsQyvmZ0LqTAYzJTDmDQoBOHSJV+hDw@mail.gmail.com>
+        <20210517181905.6f976f1a@natsu>
+        <2e37cf64-1696-a5ca-f7db-83a1d098133d@turmel.org>
+        <d21d0214-32e6-1213-b5a5-5b630223e346@thelounge.net>
+        <09d03968-28e3-8c67-38c1-e3a8c577bd93@att.net>
+        <e4258686-7673-9f5f-d333-fbbb95c066b1@turmel.org>
+Emacs:  it's all fun and games, until somebody tries to edit a file.
+Date:   Thu, 20 May 2021 20:37:45 +0100
+In-Reply-To: <e4258686-7673-9f5f-d333-fbbb95c066b1@turmel.org> (Phil Turmel's
+        message of "Wed, 19 May 2021 09:41:04 -0400")
+Message-ID: <87lf89nqly.fsf@esperi.org.uk>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3.50 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <CAAMCDeeOnraMDNCF6ZZqPAxUrih2gSse1wDYgOfd1LqY-Ffqxw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-DCC-INFN-TO-Metrics: loom 1233; Body=6 Fuz1=6 Fuz2=6
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 20/05/2021 12:12, Roger Heflin wrote:
-> The read failures exist on the platter for the most part. Reading the 
-> platters or not does not change the fact that sectors are already bad. 
-> raid6 reading more sectors just means you have a higher risk of finding 
-> the already corrupted sector.
+On 19 May 2021, Phil Turmel spake thusly:
 
-I think you're wrong there ... glitches in the electronics also seem to 
-be not uncommon. But here, the read normally fails, and if the OS 
-retries, it succeeds without trouble.
+> weekly scrubs
 
-But as I look at it, if the manufacturers specify "less than 1 error per 
-X bytes read", even if X in practice is much larger than X in the spec, 
-you should plan to handle what the spec says.
+*Weekly*? Scrubbing my arrays takes three or four days. If I ran them
+weekly the machine would never have time to do anything else!
 
-Cheers,
-Wol
+(I run them every couple of months. Doing them more often than that
+feels too much like the machine's only job is to scrub itself :)
+obviously I have good backups too. The scrubs have never spotted
+anything at fault in ten years or so of scrubbing at more or less this
+frequency -- more often in the past, when disks were smaller and scrubs
+took less time.)
+
+If the storage machinery on this system is so badly off that it's
+misreading bits more often than that I think I have bigger problems.
