@@ -2,82 +2,76 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E088938FCBA
-	for <lists+linux-raid@lfdr.de>; Tue, 25 May 2021 10:26:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 177B338FD03
+	for <lists+linux-raid@lfdr.de>; Tue, 25 May 2021 10:37:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232381AbhEYI1i (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 25 May 2021 04:27:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40296 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232408AbhEYI1c (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 25 May 2021 04:27:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1621931162; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bNbAlHo1EQ2ZaT1LVZUFuygvqAEUgqU7/d3OqPfby8s=;
-        b=kNInzt7o92mXwj5mm/tTB3mvp67b2SyAQFwHzwsyiBAknMavEnoBNjJP18tMcVLl0Gt7RG
-        D5ZyM3Da2GmNIuB1EYzTmm6vvqoxRUZJndN2RI9lH7q3tsaVou9Z2xgQNsxc/L3Qgfwxrj
-        qrhtZvNkAdplphtLAO+kullzgQwP1jo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1621931162;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bNbAlHo1EQ2ZaT1LVZUFuygvqAEUgqU7/d3OqPfby8s=;
-        b=IbsF7be7IP90OP075dLi1k2Qff7v3ZnjUc8Bk5cR9UH2gwM5flg6iWijH5Hr+QIZDBXb12
-        hrn5ZP2I3ROHxqBw==
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 4AE88AE1F;
-        Tue, 25 May 2021 08:26:02 +0000 (UTC)
-Subject: Re: [PATCH 8/8] block: remove bdget_disk
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Song Liu <song@kernel.org>
-Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org
-References: <20210525061301.2242282-1-hch@lst.de>
- <20210525061301.2242282-9-hch@lst.de>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <46da28bf-a531-7640-0b0b-d0645d850827@suse.de>
-Date:   Tue, 25 May 2021 10:26:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.0
+        id S231851AbhEYIii (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 25 May 2021 04:38:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51596 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231849AbhEYIif (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 25 May 2021 04:38:35 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BEFBC061574
+        for <linux-raid@vger.kernel.org>; Tue, 25 May 2021 01:37:04 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id k14so42568169eji.2
+        for <linux-raid@vger.kernel.org>; Tue, 25 May 2021 01:37:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
+        bh=LVxfv86r9yGhNVNXSRBVnQSwHDBugwqmVQg0oS3k1CY=;
+        b=ga/Q5vAfSJKr7HbH7i0KxLd8R9v16SB1PUy98N7CtoR6Rr6HvPiZkr2OgjdugC+B0l
+         Q0tcOjbhh3tgpA1p7BEmUq+cFYharZPUc1evYDM9kBwefikXj6gX7Q7z6LapT1VHsi7x
+         BceMzd2zL4Vs6JgotXEH30chzD6FTj9F1n+0QfBdqSlLoRsnMMjenxNG+T1WZMWpcvjm
+         2uJurqBpi/3XDrYRfJHFzKJy5ZHdbIBpC8c3wfphnbsR6riL0bFVlC1HJLrLUFcnobVV
+         MoLvXiagNj21a+bmBzqACiE4PSMF9V9Ju1DRqR0otfKHbsUkOf4pDf5ZScO6rpP8bTF9
+         Mptw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to;
+        bh=LVxfv86r9yGhNVNXSRBVnQSwHDBugwqmVQg0oS3k1CY=;
+        b=fd9Zwm0aRfgLAQIDD7c2vZerGHIT12cit/XtbEfBzFm+UhKliAWd3RQ1kVtDuD0xPQ
+         +zmkfXYMLHeTm+Wmy/qSfOeKvsiBGNmZtcL67RVvmYwoVYSxYIWsc7e8I/t+t+VAJYFG
+         qLjjtqKONzuYLzeAly7Z5riUimi2yqk/3YqHEYmGsMzyvl1eAquJxSY0EAeBP8L+acMv
+         qH6ki/AmOvrWjTzm/qh2WhGzKk4lqxlrL8IW9HY7x78TasxuEcPJ0mCRz/c9zWf09HGX
+         8k3KpXzijKEY+sm+/rfIJCQHFu11E+MMZzV/5qc0P1Ez5YFGAigHu35NJvpv9GSf7Dae
+         lRaQ==
+X-Gm-Message-State: AOAM531EkbuD1VfMkyXDC9V5yaUIuzbbdmiG5MwjqU+tp41XMEBloEog
+        VvbuvhVfjFnXwghC6nUwtzwzLJHE66UcLCBYUkA=
+X-Google-Smtp-Source: ABdhPJz8Gg7GHH3D+laaybFKfLoVAkOQJWW10G1pN7f+hOCWOOoA5w3LQY9R/g4qCDztae1N3pTwT2vgwjUyCH4HlpM=
+X-Received: by 2002:a17:906:5914:: with SMTP id h20mr28210545ejq.252.1621931822968;
+ Tue, 25 May 2021 01:37:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210525061301.2242282-9-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Reply-To: mrmohammedmashab@gmail.com
+Sender: suzanqaseemzz@gmail.com
+Received: by 2002:a17:906:a218:0:0:0:0 with HTTP; Tue, 25 May 2021 01:37:02
+ -0700 (PDT)
+From:   Mr Mohammed Mashab <mrmohammedmasha@gmail.com>
+Date:   Tue, 25 May 2021 10:37:02 +0200
+X-Google-Sender-Auth: 0g-VMknunoPRXoB0SGzw8T4Stg0
+Message-ID: <CAJCaUWuzFrMYOY=44=MZAi9c=D8VNaitsig4vtPhoeOc90G4Gg@mail.gmail.com>
+Subject: From: Mr.Mohammed,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 5/25/21 8:13 AM, Christoph Hellwig wrote:
-> Just opencode the xa_load in the callers, as none of them actually
-> needs a reference to the bdev.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->   block/genhd.c           | 35 +++++------------------------------
->   block/partitions/core.c | 25 ++++++++++++-------------
->   include/linux/genhd.h   |  1 -
->   3 files changed, 17 insertions(+), 44 deletions(-)
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+Good day,
 
-Cheers,
+I am Mr.Mohammed Mashab, Account Manager of an investment bank here in
+Burkina Faso. There is a project of account opened in my company by a
+client of our bank for a long time. I have the opportunity to transfer
+the remaining fund (US $ 15.8 million) Fiftheen Million Eight hundred
+thousand US dollars.
 
-Hannes
--- 
-Dr. Hannes Reinecke                Kernel Storage Architect
-hare@suse.de                              +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
+I want to invest these funds and submit to our bank for this agreement
+and this will be executed under a legitimate agreement that will
+protect us from any breach of the law. We will share the fund 40% for
+you, 50% for me while 10% is to establish a base for poor children in
+your country. If you are really interested in my proposal, more
+details about the transfer of funds will be sent to you.
+
+Yours sincerely,
+Mr.Mohammed Mashab.
