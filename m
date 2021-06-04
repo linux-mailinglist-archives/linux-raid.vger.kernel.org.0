@@ -2,56 +2,275 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0873239B81A
-	for <lists+linux-raid@lfdr.de>; Fri,  4 Jun 2021 13:38:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 375C839BB0C
+	for <lists+linux-raid@lfdr.de>; Fri,  4 Jun 2021 16:42:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230080AbhFDLkf convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-raid@lfdr.de>); Fri, 4 Jun 2021 07:40:35 -0400
-Received: from linode.pasteur.edu.uy ([50.116.35.230]:51486 "EHLO
-        linode.pasteur.edu.uy" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229980AbhFDLkf (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 4 Jun 2021 07:40:35 -0400
-Received: from smtp.pasteur.edu.uy (coltrane.pasteur.edu.uy [164.73.118.254])
-        by linode.pasteur.edu.uy (Postfix) with ESMTP id 26A221DCF4;
-        Fri,  4 Jun 2021 08:38:34 -0300 (UYT)
-Received: from cris-PC.wifi (unknown [105.9.153.138])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by smtp.pasteur.edu.uy (Postfix) with ESMTP id 6FC0DD57F;
-        Fri,  4 Jun 2021 08:38:25 -0300 (UYT)
-Content-Type: text/plain; charset="utf-8"
+        id S230034AbhFDOoN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 4 Jun 2021 10:44:13 -0400
+Received: from mga06.intel.com ([134.134.136.31]:24985 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229778AbhFDOoM (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 4 Jun 2021 10:44:12 -0400
+IronPort-SDR: 18u5q0OEWbJln8PD9S491v9/2+WT8ksGMTIaDuTuk2AiIp2yZgqHs8l8U1u6wiQYotiq7U25SL
+ iYRuLZm4INHw==
+X-IronPort-AV: E=McAfee;i="6200,9189,10005"; a="265463402"
+X-IronPort-AV: E=Sophos;i="5.83,248,1616482800"; 
+   d="scan'208";a="265463402"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2021 07:42:25 -0700
+IronPort-SDR: CuLISeeW1dWk1L5dwgQjmZ3a1YrBXDb1uAYvIsd/p2h+RkXG3CT6Thy/rA3Cjn5SYB9mpKhTJ+
+ A8OkDFZaacQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.83,248,1616482800"; 
+   d="scan'208";a="448276336"
+Received: from lkp-server02.sh.intel.com (HELO 1ec8406c5392) ([10.239.97.151])
+  by fmsmga008.fm.intel.com with ESMTP; 04 Jun 2021 07:42:23 -0700
+Received: from kbuild by 1ec8406c5392 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1lpB1i-0006zA-Uk; Fri, 04 Jun 2021 14:42:22 +0000
+Date:   Fri, 04 Jun 2021 22:42:10 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Song Liu <song@kernel.org>
+Cc:     linux-raid@vger.kernel.org
+Subject: [song-md:md-next] BUILD SUCCESS
+ eaf634fc2966114742315d169b3cf99fcbd752a2
+Message-ID: <60ba3bc2.tzH09zfKN364eGTJ%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: spende von 2,000,000 euro
-To:     Recipients <apittini@pasteur.edu.uy>
-From:   ''Tayeb souami'' <apittini@pasteur.edu.uy>
-Date:   Fri, 04 Jun 2021 13:38:12 +0200
-Reply-To: Tayebsouam.spende@gmail.com
-Message-Id: <20210604113825.6FC0DD57F@smtp.pasteur.edu.uy>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+tree/branch: git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git md-next
+branch HEAD: eaf634fc2966114742315d169b3cf99fcbd752a2  md: add comments in md_integrity_register
 
-Lieber Freund,
+elapsed time: 721m
 
-Ich bin Herr Tayeb Souami, New Jersey, Vereinigte Staaten von Amerika, der Mega-Gewinner von $ 315million In Mega Millions Jackpot, spende ich an 5 zufällige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Mail nach einem Spinball ausgewählt.Ich habe den größten Teil meines Vermögens auf eine Reihe von Wohltätigkeitsorganisationen und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die Summe von € 2.000.000,00 an Sie als eine der ausgewählten 5 zu spenden, um meine Gewinne zu überprüfen, sehen Sie bitte meine You Tube Seite unten.
+configs tested: 213
+configs skipped: 3
 
-UHR MICH HIER: https://www.youtube.com/watch?v=Z6ui8ZDQ6Ks
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+nios2                         3c120_defconfig
+mips                         tb0219_defconfig
+arm                          moxart_defconfig
+mips                           xway_defconfig
+powerpc                       holly_defconfig
+sh                   rts7751r2dplus_defconfig
+mips                         rt305x_defconfig
+mips                           mtx1_defconfig
+arm                          ep93xx_defconfig
+h8300                    h8300h-sim_defconfig
+powerpc                     kilauea_defconfig
+sh                           se7780_defconfig
+sh                         ap325rxa_defconfig
+sh                         apsh4a3a_defconfig
+arc                         haps_hs_defconfig
+arm                         mv78xx0_defconfig
+sh                         ecovec24_defconfig
+powerpc                 xes_mpc85xx_defconfig
+powerpc                         ps3_defconfig
+mips                         tb0287_defconfig
+sh                          landisk_defconfig
+mips                        maltaup_defconfig
+mips                     cu1830-neo_defconfig
+arm                             mxs_defconfig
+m68k                       m5275evb_defconfig
+arm                     am200epdkit_defconfig
+mips                        bcm47xx_defconfig
+powerpc                 mpc836x_rdk_defconfig
+powerpc                    sam440ep_defconfig
+sh                            titan_defconfig
+riscv             nommu_k210_sdcard_defconfig
+powerpc                      ep88xc_defconfig
+sh                               alldefconfig
+powerpc64                           defconfig
+powerpc                 mpc8313_rdb_defconfig
+openrisc                            defconfig
+mips                  decstation_64_defconfig
+powerpc                     mpc5200_defconfig
+arm                     davinci_all_defconfig
+powerpc                      makalu_defconfig
+mips                   sb1250_swarm_defconfig
+powerpc                      pcm030_defconfig
+powerpc                   lite5200b_defconfig
+arm                           u8500_defconfig
+um                                  defconfig
+nds32                             allnoconfig
+m68k                          hp300_defconfig
+m68k                          amiga_defconfig
+powerpc                    gamecube_defconfig
+ia64                             allyesconfig
+sh                        sh7785lcr_defconfig
+powerpc                     tqm8541_defconfig
+m68k                       m5208evb_defconfig
+arm                           stm32_defconfig
+nds32                            alldefconfig
+sh                          rsk7264_defconfig
+powerpc                    klondike_defconfig
+sh                         microdev_defconfig
+arm                         s5pv210_defconfig
+arm                         cm_x300_defconfig
+powerpc                    adder875_defconfig
+powerpc                mpc7448_hpc2_defconfig
+xtensa                              defconfig
+microblaze                          defconfig
+powerpc                 mpc837x_rdb_defconfig
+powerpc                      ppc40x_defconfig
+powerpc                 canyonlands_defconfig
+arm                          pxa168_defconfig
+sh                           se7712_defconfig
+powerpc                     rainier_defconfig
+arm                         orion5x_defconfig
+xtensa                    xip_kc705_defconfig
+nios2                         10m50_defconfig
+mips                         db1xxx_defconfig
+openrisc                 simple_smp_defconfig
+arm                              alldefconfig
+arm                         nhk8815_defconfig
+mips                      pic32mzda_defconfig
+arm                            mmp2_defconfig
+sh                            hp6xx_defconfig
+sh                      rts7751r2d1_defconfig
+sh                             sh03_defconfig
+ia64                             alldefconfig
+arc                     nsimosci_hs_defconfig
+mips                      maltaaprp_defconfig
+arm                       omap2plus_defconfig
+sh                 kfr2r09-romimage_defconfig
+powerpc                     sequoia_defconfig
+sparc64                          alldefconfig
+m68k                        mvme147_defconfig
+arm                       spear13xx_defconfig
+powerpc                 mpc834x_itx_defconfig
+ia64                          tiger_defconfig
+powerpc                     mpc512x_defconfig
+mips                       lemote2f_defconfig
+mips                           ip28_defconfig
+sh                          sdk7786_defconfig
+arm                       cns3420vb_defconfig
+arm                        trizeps4_defconfig
+sh                          lboxre2_defconfig
+powerpc                     sbc8548_defconfig
+arm                         lubbock_defconfig
+powerpc                     mpc83xx_defconfig
+arc                    vdk_hs38_smp_defconfig
+mips                        jmr3927_defconfig
+sh                   sh7770_generic_defconfig
+mips                         mpc30x_defconfig
+mips                  maltasmvp_eva_defconfig
+arm                        realview_defconfig
+s390                                defconfig
+sh                           se7206_defconfig
+powerpc                     tqm8555_defconfig
+microblaze                      mmu_defconfig
+x86_64                            allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a002-20210604
+x86_64               randconfig-a004-20210604
+x86_64               randconfig-a003-20210604
+x86_64               randconfig-a006-20210604
+x86_64               randconfig-a005-20210604
+x86_64               randconfig-a001-20210604
+i386                 randconfig-a003-20210604
+i386                 randconfig-a006-20210604
+i386                 randconfig-a004-20210604
+i386                 randconfig-a001-20210604
+i386                 randconfig-a005-20210604
+i386                 randconfig-a002-20210604
+i386                 randconfig-a003-20210603
+i386                 randconfig-a006-20210603
+i386                 randconfig-a004-20210603
+i386                 randconfig-a001-20210603
+i386                 randconfig-a002-20210603
+i386                 randconfig-a005-20210603
+x86_64               randconfig-a015-20210603
+x86_64               randconfig-a011-20210603
+x86_64               randconfig-a012-20210603
+x86_64               randconfig-a014-20210603
+x86_64               randconfig-a016-20210603
+x86_64               randconfig-a013-20210603
+i386                 randconfig-a015-20210603
+i386                 randconfig-a013-20210603
+i386                 randconfig-a011-20210603
+i386                 randconfig-a016-20210603
+i386                 randconfig-a014-20210603
+i386                 randconfig-a012-20210603
+i386                 randconfig-a015-20210604
+i386                 randconfig-a013-20210604
+i386                 randconfig-a016-20210604
+i386                 randconfig-a011-20210604
+i386                 randconfig-a014-20210604
+i386                 randconfig-a012-20210604
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                            kunit_defconfig
+x86_64                           allyesconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                      rhel-8.3-kbuiltin
+x86_64                                  kexec
 
+clang tested configs:
+x86_64               randconfig-b001-20210604
+x86_64               randconfig-a002-20210603
+x86_64               randconfig-a004-20210603
+x86_64               randconfig-a003-20210603
+x86_64               randconfig-a006-20210603
+x86_64               randconfig-a005-20210603
+x86_64               randconfig-a001-20210603
+x86_64               randconfig-a015-20210604
+x86_64               randconfig-a011-20210604
+x86_64               randconfig-a014-20210604
+x86_64               randconfig-a012-20210604
+x86_64               randconfig-a016-20210604
+x86_64               randconfig-a013-20210604
 
-Das ist dein Spendencode: [TS530342018]
-
-
-
-Antworten Sie mit dem SPENDE-CODE an diese
-
-E-Mail:Tayebsouam.spende@gmail.com
-
-
-Ich hoffe, Sie und Ihre Familie glücklich zu machen.
-
-Grüße
-Herr Tayeb Souami
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
