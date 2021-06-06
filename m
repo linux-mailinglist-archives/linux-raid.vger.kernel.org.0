@@ -2,114 +2,206 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97DBD39CC91
-	for <lists+linux-raid@lfdr.de>; Sun,  6 Jun 2021 05:44:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6955C39CFB4
+	for <lists+linux-raid@lfdr.de>; Sun,  6 Jun 2021 17:10:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230150AbhFFDqj (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 5 Jun 2021 23:46:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52498 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230025AbhFFDqi (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 5 Jun 2021 23:46:38 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E97CC061766;
-        Sat,  5 Jun 2021 20:44:39 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id h12so7696082pfe.2;
-        Sat, 05 Jun 2021 20:44:39 -0700 (PDT)
+        id S230205AbhFFPMF (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 6 Jun 2021 11:12:05 -0400
+Received: from mail-eopbgr60108.outbound.protection.outlook.com ([40.107.6.108]:20431
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S230201AbhFFPMD (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sun, 6 Jun 2021 11:12:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HyO+2VtnIFcMm96UYU4qLsSTmXfPJZ84GVRTm7n9YtRYU8ruXHPonSl5+aRiQYbcnbOSsI/b3UeAeQ5EmrLiD+BfY5+ZpfWkM0YwUVd5YaHFYNZZVvBL9onOLqsOQ2/zfgbAB3J1xu7lbFZ+JhX14sO7lr5dSRQ8xOxwDAnt4AluURkxyRaz7im4fj7A7QSupzTMUWPqWf8+Z+y9NIvxLx/iavHUyZUwEpg4O+Umni155QD49z8SYwMYAxaizwG2ppJ0GStv90iMoH7583AgU6l5o2k4CyhKEiP2ubvnuOGSp3L3ggdVQYDhpviyWlWfgHvs7tvR1EicRn3oJO6Hkg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5cSWs+qvsjXFSOq2b5xhvipPckONLIT/V4IWXBJeRig=;
+ b=e2PKE9RoBwKYb3L4pHNkmzXm9hZr+LfO0QSRBljj9xpdoKVfF6UgHPjY/KNhCzBFxfmxHHo+N9Vtp2SQps1sejm/pw9jxLRX/1mzbrJ7qFCijNvkl0muCEav4VuaTHTUr1UsJ+j80MzUy1YBwJR4uuoUydOBdAgiCy6KaG74ib9NSiXE5OE42/3azN+TLaJb0TVTiLgpDChns1fcJfhzPUFdsqVLq2VX+W5K8YccRJSNN3TenwnAIwrC/Jb7ea/ml6NBZDJD2Vk28kwK4wYk7OlM/5yNLg5YHCl9LSft2r+V9bjU43vCi6oQBDcwWlgnNejgdnFcnvc6Q1rItyznUQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=storing.io; dmarc=pass action=none header.from=storing.io;
+ dkim=pass header.d=storing.io; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=ZxKW6Kso2SfakvBiwIckrr9b6qm3D0xOhDoptqxb6Gw=;
-        b=EjSbUMNztiptdx1vkVGsYUF6C6lr71zuWoX4foiLJWs2On1ISCeiousZEwz3CQ2GJe
-         hgr4IvsV/KudVMkeu76Mm7r3M+50O31YVYjkS0FDqwZx63VZPzsMDhq2IfLETvSEwl15
-         HbMEgw+0t415+PJfKZlBEMA6mHq1ZDxRBffMOZyAbab72GH9aUUAmZPzhiZvN5DgHJ3W
-         zyAlo66OtW1T7rdRXbWD1sZLcgjPC2RZPjURploFk7NI2JdCg3InGocEPtceCBjBjkKA
-         UEPTNtreUEjFqW3Cz2kHp17+dDSMBMIBMGkLT3IAHeGMqtYnbY7+RnZ2BDJhILeVkLsO
-         0UaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=ZxKW6Kso2SfakvBiwIckrr9b6qm3D0xOhDoptqxb6Gw=;
-        b=oCVEXINUvIM6XNl06XonCk1Wurx7BqY9ztPObtvU6HAoTSwPHFnzxlxaWrDQ6n6pPu
-         Ji8vyHMAp2bICsG4SSs+SjDbNQQQhDUWjsR9dUyStU4ArBTFc7D8C0zhPP98vqkGoLO2
-         TgwavreP5tNbnwMamD2Jot2gH/hZxSRF4DZiCO+pm224X5KXw+3nXsfTubBjAGkkwF8g
-         zXktI9zf9EgXtd36gUGmj4fzPg8HZoaXJlnz1PkjN2YCAGyKVt0LUcAUBZg4i1YYUJCg
-         8Bc6RMXCeCmd1oxyosdF5Gw2mu7uQdNJToBgiJ6IyXXF+t2z5Xz4ZEGt84w/SJMjf602
-         5Ocw==
-X-Gm-Message-State: AOAM531decHKmfcJ0+MQo2uNKm5z9f2EMppKLB25Qvybsb2zPPYyrm2H
-        OF1B53VK7EKT3ygEvyx2pUCeGk+oPlk=
-X-Google-Smtp-Source: ABdhPJwHEVgYhUCoGT+9QqPNLR4/iWnj5lpDryLsqRAuWdjfrM8pVkyVb3U+wlwsZ/tiHKLXTozW9A==
-X-Received: by 2002:a63:b243:: with SMTP id t3mr12147216pgo.253.1622951076325;
-        Sat, 05 Jun 2021 20:44:36 -0700 (PDT)
-Received: from [10.7.1.1] ([133.130.111.179])
-        by smtp.gmail.com with ESMTPSA id d3sm8300882pjk.16.2021.06.05.20.44.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 05 Jun 2021 20:44:35 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.6\))
-Subject: Re: [Bug Report] Discard bios cannot be correctly merged in blk-mq
-From:   Wang Shanker <shankerwangmiao@gmail.com>
-In-Reply-To: <6c407281-ee90-f577-d6db-d36211b1fdc0@youngman.org.uk>
-Date:   Sun, 6 Jun 2021 11:44:30 +0800
-Cc:     linux-block@vger.kernel.org, linux-raid@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <4456B47B-5E33-4F56-B0F9-9A95400539AB@gmail.com>
-References: <85F98DA6-FB28-4C1F-A47D-C410A7C22A3D@gmail.com>
- <6c407281-ee90-f577-d6db-d36211b1fdc0@youngman.org.uk>
-To:     antlists <antlists@youngman.org.uk>
-X-Mailer: Apple Mail (2.3608.120.23.2.6)
+ d=storingio.onmicrosoft.com; s=selector1-storingio-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5cSWs+qvsjXFSOq2b5xhvipPckONLIT/V4IWXBJeRig=;
+ b=CDZeZx0jMlYg93ykWTRNbPwo76KAEOqXJmX4kyljRpsCHvybTJsGYUT+ZJYfvqLsGdWfjDwybeM8mWXDvDj2qyhNq8RqenuGtWY4IvbyAJ1x8nQwttCzXMBnB7ib1WtBdzHYPjhXtKJGans5icZ91oQfxuc8Rsyb9V/51VL29R969Ve3CxsF37VX82P8zpwGy8p0IHpi4aTw5vsY6M1TGoX3qvDODO7VFpS8AL8i2BLnu7tlWCW8wLODpO3ZYGJApDAmI6ScU5WIjyNmz9+vWzFsjcsg5D2Xv9eRS5zAU8Vdd3SMLKbYVJkwnor5f/SaYanKUcOKsnYKEA+W2hpuNQ==
+Authentication-Results: suse.de; dkim=none (message not signed)
+ header.d=none;suse.de; dmarc=none action=none header.from=storing.io;
+Received: from AS8PR04MB7992.eurprd04.prod.outlook.com (2603:10a6:20b:2a4::6)
+ by AM6PR04MB6584.eurprd04.prod.outlook.com (2603:10a6:20b:f5::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4195.24; Sun, 6 Jun
+ 2021 15:10:12 +0000
+Received: from AS8PR04MB7992.eurprd04.prod.outlook.com
+ ([fe80::297f:63fe:225b:3d16]) by AS8PR04MB7992.eurprd04.prod.outlook.com
+ ([fe80::297f:63fe:225b:3d16%6]) with mapi id 15.20.4195.030; Sun, 6 Jun 2021
+ 15:10:12 +0000
+Date:   Sun, 6 Jun 2021 18:10:08 +0300
+From:   Gal Ofri <gal.ofri@storing.io>
+To:     "NeilBrown" <neilb@suse.de>
+Cc:     "Song Liu" <song@kernel.org>
+Subject: Re: [PATCH] md/raid5: reduce lock contention in read_one_chunk()
+Message-ID: <20210606181008.47de3aa4@gofri-dell>
+In-Reply-To: <162285301456.16225.18270741645959810726@noble.neil.brown.name>
+References: <20210603135425.152570-1-gal.ofri@storing.io>
+        <162276306409.16225.1432054245490518080@noble.neil.brown.name>
+        <20210604114205.3daf3e68@gofri-dell>
+        <20210604121950.372672c9@gofri-dell>
+        <162285301456.16225.18270741645959810726@noble.neil.brown.name>
+Organization: Storing.IO
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [199.203.113.198]
+X-ClientProxiedBy: MR2P264CA0018.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:500:1::30) To AS8PR04MB7992.eurprd04.prod.outlook.com
+ (2603:10a6:20b:2a4::6)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from gofri-dell (199.203.113.198) by MR2P264CA0018.FRAP264.PROD.OUTLOOK.COM (2603:10a6:500:1::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4195.21 via Frontend Transport; Sun, 6 Jun 2021 15:10:11 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8937cdb3-fee1-4fef-8299-08d928fd2e61
+X-MS-TrafficTypeDiagnostic: AM6PR04MB6584:
+X-Microsoft-Antispam-PRVS: <AM6PR04MB6584FD88C2E5BD331FDABF73FE399@AM6PR04MB6584.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ONXBT7186A8TSuJr2cKeARzP2bBAVFGxFJR4yp5i0GUXd0+2NhkCKSOej+jSFZ3EwU7XWDf0hx8ZangQ1D5qvaQ8Q81eH1kZBJ5k/t1ju8uWX4LfXlcxfdfun/WLnsGXW3AoG6c5YLUwzqScn343TCLPQXcABuehEtQMmVooj+PFDF875TKlHgZ0gLAR/IITfXVV4gqS47nGgYdd7AKnaSDIcxAmu+yPKUZ1K2FE9G6bcaxIN7SV9fpThEzuHRXQ246fJanVn4jf2eYyWshEcf8mtRczgXqyG3Ca39Pj8k9hNbxIYjNSAeDgQHD2tLx0RvSnne+OjZAGbV2hRS1OnZa9lPztSW+z2D6O9kez7upF6ju9pUob+8wmWOxzUZwkYclbJn+Yanwi9QkxTpKIfyfVUCrsp90UeaKirqwjJzY3x/QkIYtpI21glHcRF//y/PwztUeqKmIpborQLZ/NHvZ7lAWQvoiNhlYZvdP2WRGYBqqlZ1tzELtsJHHfyBYxm9JsStBQPBv2bWV8xuRqWxOjRRLvbfPTQX2/Y/NDn+cboio4cXod4qNDuhGeLi1hc46rdara8rSIYtwmGRMfcb35EPBzRXuXO9zo2Dk1WdjaEbqNot/z1DfvFdtawtJz2cLV21+plQPMoKVnuzXMzg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB7992.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(376002)(346002)(39830400003)(396003)(366004)(316002)(36916002)(6496006)(33716001)(52116002)(86362001)(16526019)(478600001)(44832011)(26005)(956004)(4326008)(186003)(9686003)(55016002)(6916009)(83380400001)(38100700002)(38350700002)(2906002)(8936002)(8676002)(1076003)(66476007)(66946007)(5660300002)(66556008)(6666004);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?cqQzkcrfkGgLtjqObuu8kINnPSjBHoF/SBZIWb0aj9dOsBKAbd0WtOvdDeix?=
+ =?us-ascii?Q?FKgv63xdYgdZxhxFJDD+E0P6WtunwvAZ99E4/FOnYJiwsai7iwmva+8hYZ6O?=
+ =?us-ascii?Q?AQ/tDhA5kvEM/oXvHD6YQBTMlvaVCs8T01DItY0BYsPE/wAR+4ghSRtWmMxz?=
+ =?us-ascii?Q?2W4vTAFlkEkGbsExqjbRKxr3IwUQFwQVJ1dpdLKzfhkun/B5qc5bctLvxY3p?=
+ =?us-ascii?Q?38DmMEOyh4wSjFIu4Of5y3Mly+wfOz0XRHrrF0wXYsQwTcAERyaEl6Ft6Vr1?=
+ =?us-ascii?Q?1hzH5RHJTUjl+PLNY+nU3bx2xLJnKs5A00PUtJ4c9uuwiKoCgpllydtQJYTu?=
+ =?us-ascii?Q?6saYa8GrX37jRtWIEWgDnCP4VAavP5KeQK1P54VXLTJuFaVLKO5NJ8h8NlGa?=
+ =?us-ascii?Q?BNlWp+CigBveZGBsdwghPwTeIjcoPSCdMbccVjj7WelTxE0gG6OnsLl+Xi4Y?=
+ =?us-ascii?Q?TZh9bwGJKKUerkjsh2xv+j/tfdPnPmeL2ukHjeHk1q9LaKRwvv/sgPixZGVi?=
+ =?us-ascii?Q?YCpaBNW5sr7fLMgO8HJwZuH8Ryc1ASLO4Lm6a9WEDIcbRDn6GlLK1jPDLUBU?=
+ =?us-ascii?Q?yOyKq4L+RRy2vfDlPeGoBaKnx2ecOtVwVze4mLyJDnSSF9ZATVol3ocsWTwt?=
+ =?us-ascii?Q?YluwDXPGpWealJulLHvBfSfEq8F2IEyQVh8YzChUVtCc86JKoVPECJFTzyeo?=
+ =?us-ascii?Q?PO3X4i+3zHTZivnwjrB2qKqlYs4qXoOIrhx71UeNl6JLwyn2Mp6aEMF9D5uA?=
+ =?us-ascii?Q?KL5TNOxmuPeybSJ0s/Sqh8sQW5lfFHksN9HpuSGxmW9/WNSdKUTL8IOirWrD?=
+ =?us-ascii?Q?+QUFWWIw9AJ3N8mpBz6Hr4rymhJlA2rjkvSML5t36sufYZqYCL8AYQaKyIDP?=
+ =?us-ascii?Q?7c4WErTq9cRUi8KLv0ZcOI/RH8iyZleInNPAHJfFxfYfkalHgUroJkZi5CLy?=
+ =?us-ascii?Q?5UhOMpBCu4uplkcXo6bEGANKHGaFZ/dM7FWFan1aZ2jT7B8YHRic0aR5ddi9?=
+ =?us-ascii?Q?t/VxsqBnJeG16qkKHhbQk8jKqU6yHybCm4yzsapaDHu12A1xNbd5GZ8FhfUK?=
+ =?us-ascii?Q?pXFzhEorwyWDM0HNqx9fZu6oGkMlAsA6a+kqhLiVYGPMCnOZ/I2r4DUkOxns?=
+ =?us-ascii?Q?C0AtScQG1ujLuSuKaqAgDh99OmSJBSV1zCOCrINNC7vgedCmf9JayMK2Lz4x?=
+ =?us-ascii?Q?ArxXOWeRMOsqPdyV0fIZ3F4VcKkDpAc7XLSg85BPy+KC34fugMY33xIWAeus?=
+ =?us-ascii?Q?XspEdE+vY61Brhkf3NzHAFP1lenAIM/h3uLdO0Fm9RBBmWByXL4fJa5BABc2?=
+ =?us-ascii?Q?raISu0m0+pUN1y3We6lp5Bl2?=
+X-OriginatorOrg: storing.io
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8937cdb3-fee1-4fef-8299-08d928fd2e61
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB7992.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2021 15:10:12.1238
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b1841924-914b-4377-bb23-9f1fac784a1d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zDPahJ3V/U8jU8SU5ybzrBuP1xCr1goUTjeGu8kjWLTy5Uto6pP0hnaIY7YC5yVVitygyYyNobJ87ZSuspHzrw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB6584
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+First, there's this race condition, caused by the following code:
+if (conf->quiesce == 0)
+{
+	...
+}
+if (smp_load_acquire(&conf->quiesce) != 0)
+{
+	...
+}
 
-> 2021=E5=B9=B406=E6=9C=8806=E6=97=A5 06:38=EF=BC=8Cantlists =
-<antlists@youngman.org.uk> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> On 05/06/2021 21:54, Wang Shanker wrote:
->> You may wonder the importance of merging discard operations. In the
->> implementation of RAID456, bios are committed in 4k trunks (they call
->> them as stripes in the code and the size is determined by =
-DEFAULT_STRIPE_SIZE).
->> The proper merging of the bios is of vital importance for a =
-reasonable
->> operating performance of RAID456 devices.
->=20
-> Note that I have seen reports (I'm not sure where or how true they =
-are), that even when requests are sent as 512k or whatever, certain =
-upper layers break them into 4k's, presumably expecting lower layers to =
-merge them again.
+cpu-0 [raid5_quiesce()]	| cpu-1 [read_one_chunk()]
+----------------------------------------------------------
+conf->quiesce = 2 		| 
+----------------------------------------------------------
+				| if (conf->quiesce == 0)
+				| /* false */		
+----------------------------------------------------------
+conf->quiesce = 1		|
+----------------------------------------------------------
+conf->quiesce = 0 		|
+/* resuming from quiesce. */ 	|
+----------------------------------------------------------
+				| if (smp_load_acquire(&conf->quiesce) != 0)
+				| /* false */
+----------------------------------------------------------
 
-Yes, that's true for RAID456. RAID456 is issuing 4k size requests to =
-lower backing
-device, no matter how large the request received is. That's won't be a =
-problem
-because for normal read and write operations, those 4k size requests can =
-be
-nicely merged into larger ones. Otherwise, we would be flooded with =
-reports=20
-complaining about unacceptable performance of raid456.
+So we skipped both conditions and did not increment active_aligned_reads, which
+would result in an error down the road (endio/retry/next-quiesce/etc.).
+It's really unlikely, but it is possible.
 
-> You might have better luck looking for and suppressing the breaking up =
-of large chunks.
+So I fixed it by changing:
+-	if (smp_load_acquire(&conf->quiesce) != 0) {
++	if (!did_inc || smp_load_acquire(&conf->quiesce) != 0) {
 
-I'm quite aware that it is raid456 that is breaking the requests. It =
-might be
-better if we can avoid this in raid456. I believe it can be very =
-difficult due to the
-design of raid456 code. However, the question now is the merging is =
-successful for
-normal read/write operations, but failed for discard operations. Where =
-lies the=20
-difference? I did some testing in a qemu vm and added some debug =
-printing in the
-control flow. By what I have discovered, I'm quite confident that the =
-discard
-requests are not processed the right way when merging them.
+Now with this fix in place, there's still the possibility that
+active_aligned_reads would be >0 while quiesce==1 (before read_one_chunk()
+reaches the second condition).  I can't find a bug caused by that, but IMO it's
+quite counter-intuitive given wait_event(active_aligned_reads==0) in
+raid5_quiesce(). Should I add a comment for that point ?
 
-Cheers,
+I'm adding the new code below for reference, please let me know what you think
+about that point before I re-submit the patch.
 
-Miao Wang=
+thanks,
+Gal Ofri
+--
+
+@@ -5396,6 +5396,7 @@ static int raid5_read_one_chunk(struct mddev *mddev, struct bio *raid_bio)
+ 	struct md_rdev *rdev;
+ 	sector_t sector, end_sector, first_bad;
+ 	int bad_sectors, dd_idx;
++	bool did_inc;
+ 
+ 	if (!in_chunk_boundary(mddev, raid_bio)) {
+ 		pr_debug("%s: non aligned\n", __func__);
+@@ -5443,11 +5444,23 @@ static int raid5_read_one_chunk(struct mddev *mddev, struct bio *raid_bio)
+ 	/* No reshape active, so we can trust rdev->data_offset */
+ 	align_bio->bi_iter.bi_sector += rdev->data_offset;
+ 
+-	spin_lock_irq(&conf->device_lock);
+-	wait_event_lock_irq(conf->wait_for_quiescent, conf->quiesce == 0,
+-			    conf->device_lock);
+-	atomic_inc(&conf->active_aligned_reads);
+-	spin_unlock_irq(&conf->device_lock);
++	did_inc = false;
++	if (conf->quiesce == 0) {
++		atomic_inc(&conf->active_aligned_reads);
++		did_inc = true;
++	}
++	/* need a memory barrier to detect the race with raid5_quiesce() */
++	if (!did_inc || smp_load_acquire(&conf->quiesce) != 0) {
++		/* quiesce is in progress, so we need to undo io activation and wait
++		 * for it to finish */
++		if (did_inc && atomic_dec_and_test(&conf->active_aligned_reads))
++			wake_up(&conf->wait_for_quiescent);
++		spin_lock_irq(&conf->device_lock);
++		wait_event_lock_irq(conf->wait_for_quiescent, conf->quiesce == 0,
++				    conf->device_lock);
++		atomic_inc(&conf->active_aligned_reads);
++		spin_unlock_irq(&conf->device_lock);
++	}
+ 
+ 	if (mddev->gendisk)
+ 		trace_block_bio_remap(align_bio, disk_devt(mddev->gendisk),
+@@ -8334,7 +8347,9 @@ static void raid5_quiesce(struct mddev *mddev, int quiesce)
+ 		 * active stripes can drain
+ 		 */
+ 		r5c_flush_cache(conf, INT_MAX);
+-		conf->quiesce = 2;
++		/* need a memory barrier to make sure read_one_chunk() sees
++		 * quiesce started and reverts to slow (locked) path. */
++		smp_store_release(&conf->quiesce, 2);
+ 		wait_event_cmd(conf->wait_for_quiescent,
+ 				    atomic_read(&conf->active_stripes) == 0 &&
+ 				    atomic_read(&conf->active_aligned_reads) == 0,
+
+
