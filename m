@@ -2,121 +2,42 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E8793AC3DB
-	for <lists+linux-raid@lfdr.de>; Fri, 18 Jun 2021 08:28:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51F1B3ACA4D
+	for <lists+linux-raid@lfdr.de>; Fri, 18 Jun 2021 13:44:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231127AbhFRGa2 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 18 Jun 2021 02:30:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49784 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230136AbhFRGa2 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 18 Jun 2021 02:30:28 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DECFFC061574;
-        Thu, 17 Jun 2021 23:28:18 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id o88-20020a17090a0a61b029016eeb2adf66so7304169pjo.4;
-        Thu, 17 Jun 2021 23:28:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=M6beGftZ6HzB/2zLejc0x0KUVBzu5WNGnCTq45AAQ6M=;
-        b=k3u3gvyOEfxusX0cqTRVlj+dZW17lVZZ+oUc/l6cg8oBfzo2w6+R3Yvhjt6ID/rGIh
-         y3q8GTo0F5NQA6dsH2wr9ABXxbdpgyVySIV1CBCsxgeknlZbg0SseW+RjAobEXNc3QRO
-         sEq+Alr+WdH3GLFjAw3SqCzlaSNj8IwGdRS48x+8gY43clkBWOO5hS2EdmWr6mYYGyiQ
-         KArBQbGRPyyHxWJ4sY3kudnBjPFlIfdkPqoFw6Z62MMXtrnCAKEEu0KfQCSYDE9zIapF
-         Az1vSyfHyrsp6AeCUCNQM2VNbeMTocTF+5p7A5BunvBD9okIL7vKP2/rWX41mNw6nYfm
-         nPeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=M6beGftZ6HzB/2zLejc0x0KUVBzu5WNGnCTq45AAQ6M=;
-        b=mm8xiqvlJrZmHfklEz51kY52nSgVEfKZEhWkrHSZ4X5r7zQdQlr3IW9mBcgphQc8iz
-         sZHcnfRqPlndWJfEhXmn8PS3KVyGzlcnwk4zChi5XKw2q4Dq5rcWntK3Gr9ii9QHUB7E
-         jXHXek0c/cmftAxu+j1QUep8WZwd6bi9jtcOBo8Gs3yEB1e1bQ2v7rNmtHl2+xh9yrAi
-         49mqI2RgwZn8gzHH4WYKoKmz5mlW/rJAXbBuHqRU7fMlJRq8dgyH71Poce/Museeo6JG
-         vywqCJ/BJqaAV801Wk6xrrrRtY+kUzlBx4s+DwuylN6Fp8BSQmcrKXdxESCJVz5b0b70
-         ORzA==
-X-Gm-Message-State: AOAM5305BGmRr+w2CLRgE58RwXhBUeBFJLX9kwu4Vw9HL8YQwUeHKkve
-        aE0MkxOU493c75/ucORseQw=
-X-Google-Smtp-Source: ABdhPJzRtGJ6PRu7uu7Kf4LjKkm4vJl9S6XnSR5bFbXW6D+W6qR0LCXk/B7RnhJ+F4SSHnD6DMMKxg==
-X-Received: by 2002:a17:90a:7345:: with SMTP id j5mr20249127pjs.64.1623997698426;
-        Thu, 17 Jun 2021 23:28:18 -0700 (PDT)
-Received: from [10.7.3.1] ([133.130.111.179])
-        by smtp.gmail.com with ESMTPSA id t62sm7052643pfc.189.2021.06.17.23.28.15
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 17 Jun 2021 23:28:17 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.6\))
-Subject: Re: [Bug Report] Discard bios cannot be correctly merged in blk-mq
-From:   Wang Shanker <shankerwangmiao@gmail.com>
-In-Reply-To: <ED5B1993-9D44-4B9C-A7DF-72BD2375A216@gmail.com>
-Date:   Fri, 18 Jun 2021 14:28:11 +0800
-Cc:     Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
-        linux-raid@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <13C1B2E3-B177-4B05-9FF3-AEE57E964605@gmail.com>
-References: <85F98DA6-FB28-4C1F-A47D-C410A7C22A3D@gmail.com>
- <YL4Z/QJCKc0NCV5L@T590> <C866C380-7A71-4722-957F-2CE65BDACF26@gmail.com>
- <YMAOO3XjOUl2IG+4@T590> <1C6DB607-B7BE-4257-8384-427BB490C9C0@gmail.com>
- <CALTww28L7afRdVdBf-KsyF6Hvf-8-CORSCpZJAvnVbDRo6chDQ@mail.gmail.com>
- <ED5B1993-9D44-4B9C-A7DF-72BD2375A216@gmail.com>
-To:     Xiao Ni <xni@redhat.com>
-X-Mailer: Apple Mail (2.3608.120.23.2.6)
+        id S234193AbhFRLqg convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-raid@lfdr.de>); Fri, 18 Jun 2021 07:46:36 -0400
+Received: from [210.180.118.67] ([210.180.118.67]:35982 "EHLO blank.cafe24.com"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S234207AbhFRLqe (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 18 Jun 2021 07:46:34 -0400
+X-Greylist: delayed 108572 seconds by postgrey-1.27 at vger.kernel.org; Fri, 18 Jun 2021 07:46:33 EDT
+Received: from IP-130-143.dataclub.eu (ip-130-143.dataclub.info [84.38.130.143] (may be forged))
+        (authenticated bits=0)
+        by blank.cafe24.com (8.14.7/8.14.7) with ESMTP id 15IBh5Vu010800
+        for <linux-raid@vger.kernel.org>; Fri, 18 Jun 2021 20:44:23 +0900
+Message-Id: <202106181144.15IBh5Vu010800@blank.cafe24.com>
+Content-Type: text/plain; charset="iso-8859-1"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: BUSINESS LOAN/PROJECT FUNDING...67
+To:     linux-raid@vger.kernel.org
+From:   "Smith Green" <ssbinvestmentsllc@citromail.hu>
+Date:   Fri, 18 Jun 2021 14:45:00 +0300
+Reply-To: ssbinvestmentsllc@citromail.hu
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi, Xiao
+Dear Sir/Madam,
 
-Any ideas on this issue?
+Our Investors are based in the middle east with a profound track record. We invite you to take advantage of our investment loan program to fund your existing or intending projects. We offer a straight or convertible loan investment program for projects with high-returns and payback prospects without the usual rigid procedures of conventional lenders.
+ 
+Kindly forward a copy of your Executive business summary for our review: info@ssbinvestmentsllc.us
 
-Cheers,
-
-Miao Wang
-
-> 2021=E5=B9=B406=E6=9C=8809=E6=97=A5 17:03=EF=BC=8CWang Shanker =
-<shankerwangmiao@gmail.com> =E5=86=99=E9=81=93=EF=BC=9A
->=20
->>=20
->> 2021=E5=B9=B406=E6=9C=8809=E6=97=A5 16:44=EF=BC=8CXiao Ni =
-<xni@redhat.com> =E5=86=99=E9=81=93=EF=BC=9A
->>=20
->> Hi all
->>=20
->> Thanks for reporting about this. I did a test in my environment.
->> time blkdiscard /dev/nvme5n1  (477GB)
->> real    0m0.398s
->> time blkdiscard /dev/md0
->> real    9m16.569s
->>=20
->> I'm not familiar with the block layer codes. I'll try to understand
->> the codes related with discard request and
->> try to fix this problem.
->>=20
->> I have a question for raid5 discard, it needs to consider more than
->> raid0 and raid10. For example, there is a raid5 with 3 disks.
->> D11 D21 P1 (stripe size is 4KB)
->> D12 D22 P2
->> D13 D23 P3
->> D14 D24 P4
->> ...  (chunk size is 512KB)
->> If there is a discard request on D13 and D14, and there is no discard
->> request on D23 D24. It can't send
->> discard request to D13 and D14, right? P3 =3D D23 xor D13. If we =
-discard
->> D13 and disk2 is broken, it can't
->> get the right data from D13 and P3. The discard request on D13 can
->> write 0 to the discard region, right?
->=20
-> Yes. It can be seen at the beginning of make_discard_request(), where
-> the requested range being discarded is aligned to ``stripe_sectors",=20=
-
-> which should be chunk_sectors * nr_data_disks.
->=20
-> Cheers,
->=20
-> Miao Wang
-
+ 
+Best Regards.
+Smith Green
+E:info@ssbinvestmentsllc.us
+International investment broker
