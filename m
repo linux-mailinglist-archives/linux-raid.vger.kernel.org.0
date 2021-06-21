@@ -2,103 +2,95 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BCFF63ADEAD
-	for <lists+linux-raid@lfdr.de>; Sun, 20 Jun 2021 15:35:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D4F73AE13B
+	for <lists+linux-raid@lfdr.de>; Mon, 21 Jun 2021 03:10:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229632AbhFTNiF (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 20 Jun 2021 09:38:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229644AbhFTNiC (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 20 Jun 2021 09:38:02 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08A3DC0617AD
-        for <linux-raid@vger.kernel.org>; Sun, 20 Jun 2021 06:35:46 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id a6so4010771ioe.0
-        for <linux-raid@vger.kernel.org>; Sun, 20 Jun 2021 06:35:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=D7l/Y2nU4ivOXB3kYNarWKNDy1SUWuawPt7q4q/Bhv4=;
-        b=sec9fLKaTeyUvI3U/9cH5uXh5khwaRmiJ3Slq1YZSCexwKlBLvi58L8DBu55CdJDji
-         U+HuEZd9onOgJ+OTF2rj1+rkaNRkmc9mUKozs32zG54utaQ749Tn8dwDfGRCa86Y13h3
-         aTPzQqGcbZM/EAbe2+YYkP8IzEtm7OFmKWqXTdVfNhb2VSah4cfQXUGVQ0X59BkXxqUT
-         4pZGErCa13JdLdCIRor4r89BUHwblkmYb4cwi8/7Nzr0zyCOHjauEmAl4PRZ8S1C6dv6
-         acCJLW1ZaLruky9plyyHKip4E8d31xV8uUpmSHsk2ZsjBfcQBVTL2OilqasULeboqC8n
-         0h/w==
+        id S229905AbhFUBMe (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 20 Jun 2021 21:12:34 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:23590 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229872AbhFUBMd (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Sun, 20 Jun 2021 21:12:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1624237820;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oH8Gsw4T/Zm7KIiVoTSdYH7xuahw16N8b2Z9381U6u8=;
+        b=QH+FSiw/X0pdiycwEvHDtFGNV7V5/UG9qKh1h6jDgtxS1kGSM4PrpPtNFFpSEkUXCUFqbg
+        /mob2jfJEzX672R70mKb+xCf2NSESx9hAHamDYLMzb6lBooXdesuDJBZb8WmZQE4vZmVuV
+        b9pB8Jrn5AyrX86vho0cJL5fK6QerNM=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-448-Tq6BFFXWNkOncqV51eG4Xg-1; Sun, 20 Jun 2021 21:10:18 -0400
+X-MC-Unique: Tq6BFFXWNkOncqV51eG4Xg-1
+Received: by mail-ed1-f72.google.com with SMTP id v12-20020aa7dbcc0000b029038fc8e57037so7125537edt.0
+        for <linux-raid@vger.kernel.org>; Sun, 20 Jun 2021 18:10:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=D7l/Y2nU4ivOXB3kYNarWKNDy1SUWuawPt7q4q/Bhv4=;
-        b=iwYfml6d49ECK19R4iLmNBwbdYlqBOskLWUWCM6c5vRkqhddOF7AbWB3QwZ9Zb5bwM
-         Uvr3HkiNzUWlY0pMrtuIpeLtR0PRidNlwWxc3tkKJSB2NJYwbScy/rSo5N/4VCXxyes5
-         qLvobK860wlvGLW1RQD0Kb82xlfbAuZlsVo/JWx+WvnvYZ9NXol13q1OxN65pIDHX8Qx
-         /pPe3SWH6tLaCgUIPBVcosgdJn7idYN3X+lV2IQCkX338BYeDJ2j/tmx5eALvf/1OOH3
-         3WdsuK/FvWfpKXBfwZ2HJZkKUdouWgfzDFL11k/xK/Jh7Rb/6olHtp/BhfSNkXJByJmK
-         FqTA==
-X-Gm-Message-State: AOAM533J9ZwnA4NckZrNcHjurzjwAQo0Lfv8wYdmfdvGqWJm1zhDUsxG
-        IhDeWsrZ1jGXsLCnDyUau6b/PmGNQeD67O9yq0I=
-X-Google-Smtp-Source: ABdhPJwO76FoleXtHusTIesxM2cuIvE9VdIlMyNt5WPTfvQkSUUR8O1MTtP/waIv/m9vsUoacT9Q2gT5SJ41poXCB/Q=
-X-Received: by 2002:a05:6602:1810:: with SMTP id t16mr15654363ioh.48.1624196145888;
- Sun, 20 Jun 2021 06:35:45 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oH8Gsw4T/Zm7KIiVoTSdYH7xuahw16N8b2Z9381U6u8=;
+        b=IJ1o8NlN/WbsKGO3CIn0RYabREjJNWKoBKcc/oZ2d4k4m+DziszZeGbY5q2dtuxMVB
+         H31JZLH50zzNf7XzbL8b8Eu+TJqLal9+Ih372L9n5jp6x7yBozFRuqqUvlq3ElaDYAky
+         anglF+T8raGaRoPqrS0nc5Yer3EDXrcDanx/TvK59Qx2DjgNE+QBq70kJSaQ/VJoj0gM
+         NZG+FcUPur7yCwE7AmSJ9Nr11dhEBkVULjlXcBt+CHdZgoao5WsE3kkgU8lKnlnNijKI
+         LlzuaIu0sU8jj0LW/cY1bTcNeCb3PKyP5fUOzyz+Y1+LJWaCQSTZnGHruGnI/AFCvj7k
+         4gpw==
+X-Gm-Message-State: AOAM530jrqKSpKdIdfp+Oc8SShOspiPNC5sGbfuB94W1IKxT5yh3oTOe
+        +I48oFV2YNpZmav41Q7DLTFIPN8MEhTSoyBHyrtuCkDzpVP2wS6QiSMmLsDA6AEjxOeolLZ24r7
+        bGLB2GLVfy2wuXQnMd8praBV923PTEuuXOiH0+g==
+X-Received: by 2002:a05:6402:34c6:: with SMTP id w6mr18563983edc.174.1624237817171;
+        Sun, 20 Jun 2021 18:10:17 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxDN82L7q2621OEXK0BSGb4kYUgshMgah8UwY+6u0at63mGUuqWz9mq8CtQgAHzKKKczGuYyNGO76CKojQFfEk=
+X-Received: by 2002:a05:6402:34c6:: with SMTP id w6mr18563971edc.174.1624237816980;
+ Sun, 20 Jun 2021 18:10:16 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a05:6e02:1baf:0:0:0:0 with HTTP; Sun, 20 Jun 2021 06:35:45
- -0700 (PDT)
-Reply-To: sarahkoffi389@yahoo.co.jp
-From:   Sarah Koffi <sarah.koffi101@gmail.com>
-Date:   Sun, 20 Jun 2021 15:35:45 +0200
-Message-ID: <CA+ifgLGSH5KW9J+Z85axgUznJEQcab5mED6rZZnS3OBzXTnaxw@mail.gmail.com>
-Subject: Greetings From Mrs. Sarah Koffi
-To:     sarahkoffi389@yahoo.co.jp
+References: <1622596639-3767-1-git-send-email-xni@redhat.com>
+In-Reply-To: <1622596639-3767-1-git-send-email-xni@redhat.com>
+From:   Xiao Ni <xni@redhat.com>
+Date:   Mon, 21 Jun 2021 09:10:04 +0800
+Message-ID: <CALTww2_0cf2ubWq+H3hB0G57cCJ+QONdob7DcYHcZytuBTwX1A@mail.gmail.com>
+Subject: Re: [PATCH 1/1] mdadm/super1: It needs to specify int32 for bitmap_offset
+To:     jes@trained-monkey.org
+Cc:     Nigel Croxon <ncroxon@redhat.com>, linux-raid@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Greetings From Mrs. Sarah Koffi
+Hi Jes
 
-I'm contacting you based on your good profiles I read and for a good
-reasons, I am in search of a property to buy in your country as I
-intended to come over to your
-country for investment, Though I have not meet with you before but I
-believe that one has to risk confiding in someone to succeed sometimes
-in life.
+Ping, is the patch ok for you to merge it
 
-My name is Mrs. Sarah Koffi. My late husband deals on Crude Oil with
-Federal Government of Sudan and he has a personal Oil firm in Bentiu
-Oil zone town and Upper
-Nile city. What I have experience physically, I don't wish to
-experience it again in my life due to the recent civil Ethnic war
-cause by our President Mr. Salva Kiir
-and the rebel leader Mr Riek Machar, I have been Under United Nation
-refuge camp in chad to save my life and that of my little daughter.
+Regards
+Xiao
 
-Though, I do not know how you will feel to my proposal, but the truth
-is that I sneaked into Chad our neighboring country where I am living
-now as a refugee.
-I escaped with my little daughter when the rebels bust into our house
-and killed my husband as one of the big oil dealers in the country,
-ever since then, I have being on the run.
+On Wed, Jun 2, 2021 at 9:17 AM Xiao Ni <xni@redhat.com> wrote:
+>
+> For super1.0 bitmap offset is -16. So it needs to use int type for bitmap offset.
+>
+> Fixes: 1fe2e1007310 (mdadm/bitmap: locate bitmap calcuate bitmap position wrongly)
+> Signed-off-by: Xiao Ni <xni@redhat.com>
+> ---
+>  super1.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/super1.c b/super1.c
+> index c05e623..a12a5bc 100644
+> --- a/super1.c
+> +++ b/super1.c
+> @@ -2631,7 +2631,7 @@ static int locate_bitmap1(struct supertype *st, int fd, int node_num)
+>         else
+>                 ret = -1;
+>
+> -       offset = __le64_to_cpu(sb->super_offset) + __le32_to_cpu(sb->bitmap_offset);
+> +       offset = __le64_to_cpu(sb->super_offset) + (int32_t)__le32_to_cpu(sb->bitmap_offset);
+>         if (node_num) {
+>                 bms = (bitmap_super_t*)(((char*)sb)+MAX_SB_SIZE);
+>                 bm_sectors_per_node = calc_bitmap_size(bms, 4096) >> 9;
+> --
+> 2.7.5
+>
 
-I left my country and move to Chad our neighboring country with the
-little ceasefire we had, due to the face to face peace meeting accord
-coordinated by the US Secretary of State, Mr John Kerry and United
-Nations in Ethiopia (Addis Ababa) between our President Mr Salva Kiir
-and the rebel leader Mr Riek Machar to stop this war.
-
-I want to solicit for your partnership with trust to invest the $8
-million dollars deposited by my late husband in Bank because my life
-is no longer safe in our country, since the rebels are looking for the
-families of all the oil business men in the country to kill, saying
-that they are they one that is milking the country dry.
-
-I will offer you 20% of the total fund for your help while I will
-partner with you for the investment in your country.
-If I get your reply.
-
-I will wait to hear from you so as to give you details.With love from
-
- i need you to contact me here sarahkoffi389@yahoo.co.jp
-
-Mrs. Sarah Koffi
