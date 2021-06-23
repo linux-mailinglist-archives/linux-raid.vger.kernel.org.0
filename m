@@ -2,66 +2,95 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 22F973B1E10
-	for <lists+linux-raid@lfdr.de>; Wed, 23 Jun 2021 17:54:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BB303B1F73
+	for <lists+linux-raid@lfdr.de>; Wed, 23 Jun 2021 19:29:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231526AbhFWP44 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-raid@lfdr.de>); Wed, 23 Jun 2021 11:56:56 -0400
-Received: from [183.90.58.236] ([183.90.58.236]:51766 "EHLO ns1.zackeruz.tk"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231501AbhFWP4y (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 23 Jun 2021 11:56:54 -0400
-Received: from johnlewis.com (unknown [192.168.20.1])
-        by ns1.zackeruz.tk (Postfix) with ESMTPSA id BBC80846330
-        for <linux-raid@vger.kernel.org>; Wed, 23 Jun 2021 23:54:34 +0800 (+08)
-Reply-To: robert_turner@johnlewis-trading.com,
-          pippawicks.sales@johnlewis-trading.com
-From:   John Lewis & Partnersip <robert.turner107@johnlewis.com>
-To:     linux-raid@vger.kernel.org
-Subject: 6/23/2021 Product Inquiry 
-Date:   23 Jun 2021 15:54:34 +0000
-Message-ID: <20210623094114.8F7432B85F384A81@johnlewis.com>
+        id S229688AbhFWRb3 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 23 Jun 2021 13:31:29 -0400
+Received: from li1843-175.members.linode.com ([172.104.24.175]:56650 "EHLO
+        mail.stoffel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229523AbhFWRb3 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 23 Jun 2021 13:31:29 -0400
+X-Greylist: delayed 400 seconds by postgrey-1.27 at vger.kernel.org; Wed, 23 Jun 2021 13:31:29 EDT
+Received: from quad.stoffel.org (068-116-170-226.res.spectrum.com [68.116.170.226])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.stoffel.org (Postfix) with ESMTPSA id C4D402468D;
+        Wed, 23 Jun 2021 13:22:30 -0400 (EDT)
+Received: by quad.stoffel.org (Postfix, from userid 1000)
+        id B60DCA71B9; Wed, 23 Jun 2021 13:22:29 -0400 (EDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Message-ID: <24787.28117.662584.586506@quad.stoffel.home>
+Date:   Wed, 23 Jun 2021 13:22:29 -0400
+From:   "John Stoffel" <john@stoffel.org>
+To:     Bill Hudacek <bill.hudacek@gmail.com>
+Cc:     mdraid <linux-raid@vger.kernel.org>
+Subject: Re: Question: RAID cabinet for home use
+In-Reply-To: <03ca5974-60ed-d596-7eff-cac44f4a6d62@gmail.com>
+References: <03ca5974-60ed-d596-7eff-cac44f4a6d62@gmail.com>
+X-Mailer: VM 8.2.0b under 26.1 (x86_64-pc-linux-gnu)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Dear linux-raid
+>>>>> "Bill" == Bill Hudacek <bill.hudacek@gmail.com> writes:
 
-The famous brand John Lewis Partnership, is UK's largest multi-
-channel retailer with over 126 shops and multiple expansion in 
-Africa furnished by European/Asian/American products. We are 
-sourcing new products to attract new customers and also retain 
-our existing ones, create new partnerships with companies dealing 
-with different kinds of goods globally.
+Bill> My 2021 Sans Digital TR5UT+B held 5 SATA disks. I had an eSATA 
+Bill> connection to the host box. It went belly-up a few weeks ago.
 
-Your company's products are of interest to our market as we have 
-an amazing market for your products.
+Bill> After some careful searching, a good replacement seemed to be the Oyen 
+Bill> Digital Mobius 3R5-EB3-M. Found it for about $300USD.
 
-Provide us your current catalog through email to review more. We 
-hope to be able to order with you and start a long-term friendly,
-respectable and solid business partnership. Please we would 
-appreciate it if you could send us your stock availability via 
-email if any.
+Bill> It was plug-and-play replace. Drives were being addressed by
+Bill> UUID in Fedora so no issues at all. It came right up.
 
-Our payment terms are 15 days net in Europe, 30 days Net in UK 
-and 30 days net in Asia/USA as we operate with over 5297 
-suppliers around the globe for the past 50 years now. For 
-immediate response Send your reply to robert_turner@johnlewis-
-trading.com for us to be able to 
-treat with care and urgency.
+Excellent!
 
+Bill> However, smart reporting looks horrible even compared to the
+Bill> TR5UT+B (which had its own issues).
 
-Best Regards
+I think this all comes down to the eSATA bridge chip used in the
+expansion bay.  Not much you can do about it. 
 
-Rob Turner
-Head Of Procurement Operations
-John Lewis & Partners.
-robert_turner@johnlewis-trading.com
-Tel: +44-7451-274090
-WhatsApp: +447497483925
-www.johnlewis.com
-REGISTERED OFFICE: 171 VICTORIA STREET, LONDON SW1E 5NN 
+Bill> What RAID cabinets would be a better alternative? I have 5
+Bill> drives but an 8-bay cabinet would work too.
+
+I think what you're looking for isn't really a "RAID Cabinet" but an
+"Expansion Bay", which has full SATA passthrough.
+
+If you have space inside your main computer, then I would look into an
+LSI Logic MTP Fusion SATA/SAS controller with 8 ports.  Then you can
+use some of the "IcyDock" expansion bays inside which turns two or
+three 5.25" bays into 4-5 3.5" bays.
+
+Each bay has it's own direct connection to the controller, which is a
+good thing, since you'll have full access to the drives.
+
+The controllers are cheap on ebay, and you can even use multiple ones
+(if you have the room) to give even more redunacy and performance.
+
+Personally, I've been looking into getting a 4U server case with 12
+3.5" hot swap bays, but they're all either A) out of stock or B) don't
+have USB3 ports on them.  Life is all about tradeoffs.
+
+The problem with IcyDock and other bays like this is A) heat, B) poor
+fans, C) price, D) cheap handles, E) reliability.
+
+If you don't hot-swap often, then I think you'll be ok (as will I when
+I finally pull the trigger for my own setup) if you are careful when
+using them.
+
+I have a USB3/eSATA external case which holds five drives, but it
+flakes out if I put in more than two drives.  Ugh!  Doing this well
+can require spending some serious money.  I personally just like
+getting a big huge case with lots of drive bays and plugging stuff in
+directly.  It's my home system, so it can go down when needed.
+
+I'm not at the system, so getting you model number isn't easy.  But
+look in the archives of this list, there have been good discussions in
+the past year or so on controllers and such.
+
+John
