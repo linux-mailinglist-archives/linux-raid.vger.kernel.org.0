@@ -2,127 +2,53 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC20A3B70CC
-	for <lists+linux-raid@lfdr.de>; Tue, 29 Jun 2021 12:37:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7251C3B731B
+	for <lists+linux-raid@lfdr.de>; Tue, 29 Jun 2021 15:19:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232518AbhF2Kj1 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 29 Jun 2021 06:39:27 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:52096 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231956AbhF2Kj1 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 29 Jun 2021 06:39:27 -0400
-Received: from imap.suse.de (imap-alt.suse-dmz.suse.de [192.168.254.47])
-        (using TLSv1.2 with cipher ECDHE-ECDSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 7255622688;
-        Tue, 29 Jun 2021 10:36:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1624963019; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3NKcfE4f5MKzjSvOGqMTCrNYUQRegyzyK+vyXo0CWv4=;
-        b=gVuc6ldqcxeOJd+bvhvnOGvODKhOVNDE3X5mWfWnFIN838+FPjIN/MuD0n7+TqodLWfZwB
-        PICmhsk0CNRR+qbgK9z2mn3PmVWUZsIh3wS/bA6mp39mvheDF0dFGPs9qJly/Q98+UwrQJ
-        N8177B+Xr2PY1FUV71XsxV66+XaR1Us=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1624963019;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3NKcfE4f5MKzjSvOGqMTCrNYUQRegyzyK+vyXo0CWv4=;
-        b=+AUcaJa8Mru/cyWN3hPa/0BKPFl7YO1NuwxNNKDH0KMFyuW31hevdIf2gQ+TXwLEaOBa2n
-        9OIXzG+WHyNkoJCw==
-Received: from imap3-int (imap-alt.suse-dmz.suse.de [192.168.254.47])
-        by imap.suse.de (Postfix) with ESMTP id 6D00C11906;
-        Tue, 29 Jun 2021 10:36:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1624963019; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3NKcfE4f5MKzjSvOGqMTCrNYUQRegyzyK+vyXo0CWv4=;
-        b=gVuc6ldqcxeOJd+bvhvnOGvODKhOVNDE3X5mWfWnFIN838+FPjIN/MuD0n7+TqodLWfZwB
-        PICmhsk0CNRR+qbgK9z2mn3PmVWUZsIh3wS/bA6mp39mvheDF0dFGPs9qJly/Q98+UwrQJ
-        N8177B+Xr2PY1FUV71XsxV66+XaR1Us=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1624963019;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3NKcfE4f5MKzjSvOGqMTCrNYUQRegyzyK+vyXo0CWv4=;
-        b=+AUcaJa8Mru/cyWN3hPa/0BKPFl7YO1NuwxNNKDH0KMFyuW31hevdIf2gQ+TXwLEaOBa2n
-        9OIXzG+WHyNkoJCw==
-Received: from director2.suse.de ([192.168.254.72])
-        by imap3-int with ESMTPSA
-        id A2zbB8r32mBgCgAALh3uQQ
-        (envelope-from <neilb@suse.de>); Tue, 29 Jun 2021 10:36:58 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        id S233180AbhF2NWI convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-raid@lfdr.de>); Tue, 29 Jun 2021 09:22:08 -0400
+Received: from [218.75.92.58] ([218.75.92.58]:50437 "EHLO WIN-VTPUBHNS72V"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232487AbhF2NWI (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 29 Jun 2021 09:22:08 -0400
+Received: from [192.168.43.47] (Unknown [197.210.84.10])
+        by WIN-VTPUBHNS72V with ESMTPA
+        ; Thu, 24 Jun 2021 20:47:09 +0800
+Message-ID: <113B0318-4D76-4AFE-8303-457213528886@WIN-VTPUBHNS72V>
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Tkaczyk, Mariusz" <mariusz.tkaczyk@linux.intel.com>
-Cc:     "linux-raid" <linux-raid@vger.kernel.org>
-Subject: Re: max_queued_requests for raid1 and raid10 - questions
-In-reply-to: <db85fb94-41e4-4729-fc23-cbbcf6b88372@linux.intel.com>
-References: <6f3265d4-6750-ff8d-27ec-a19d0ce54319@linux.intel.com>,
- <db85fb94-41e4-4729-fc23-cbbcf6b88372@linux.intel.com>
-Date:   Tue, 29 Jun 2021 20:36:54 +1000
-Message-id: <162496301481.7211.18031090130574610495@noble.neil.brown.name>
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: URGENT ATTENTION
+To:     Recipients <wjjt@wjjt.cn>
+From:   "Andres Auchincloss" <wjjt@wjjt.cn>
+Date:   Thu, 24 Jun 2021 14:46:40 +0200
+Reply-To: andresauchincloss926@gmail.com
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Tue, 29 Jun 2021, Tkaczyk, Mariusz wrote:
-> 
-> Hello Neil,
-> I have some questions related to max_queued_requests implemented by you
-> for raid1 and raid10. See code below:
-> 
-> /* When there are this many requests queue to be written by
->   * the raid thread, we become 'congested' to provide back-pressure
->   * for writeback.
->   */
-> static int max_queued_requests = 1024;
-> 
-> 
-> It was added years ago:
-> https://git.kernel.org/pub/scm/linux/kernel/git/song/md.git/commit
-> /?id=34db0cd60f8a1f4ab73d118a8be3797c20388223
-> 
-> I've reached out scenario with cache in write-only mode where
-> this limiter degrades performance significantly (around 4 times).
-> I used Open-CAS:
-> https://github.com/Open-CAS/open-cas-linux
-> 
-> So, at this point I have some basic questions:
-> Is "back-pressure" still a case? Do you know any scenario where it
-> brings benefits?
+Hi,
 
-As you say, it was years ago.  Things have probably changed.
+I will like to use this opportunity to wish you a productive time in 2021 and also confide in you to finalize this transaction of mutual benefits. It may seem strange to you, but it is real. This is a transaction that has no risk at all, due process shall be followed and it shall be carried out under the ambit of the financial laws. Being the Chief Financial Officer, BP Plc. I want to trust and put in your care Eighteen Million British Pounds Sterling, The funds were acquired from an over-invoiced payment from a past contract executed in one of my departments.
 
-At the time, the mm system would write to a device until it got marked
-"congested".  If there wasn't some sort of limit on the device queue
-size, you would end up with an enormous queue that would take a long
-time to flush and so high-priority reads would get stuck behind
-low-priority writes and weird things like that.
+I can't successfully achieve this transaction without presenting you as foreign contractor who will provide a bank account to receive the funds.
 
-The writeback now has a much more sophisticated approach, measuring the
-actually throughput of each device and adjusting writes accordingly.
+Documentation for the claim of the funds will be legally processed and documented, so I will need your full cooperation on this matter for our mutual benefits. We will discuss details if you are interested to work with me to secure this funds. I will appreciate your prompt response in every bit of our communication. Stay Blessed and Stay Safe.
 
-> If yes, I'll move this parameter to sysfs, to make it configurable
-> via mdadm config file (using SYSFS line) per array.
-> What do you think?
-> 
->  From other hand, shall be consider to bump this value up? It seems to
-> be small today.
 
-I suspect that the best thing to do would be to remove the limit
-completely.
-Certainly that is the first thing I would try.  Try removing the limit,
-but monitor the count of queued requests and see if something else stops
-it from consuming all memory.
 
-NeilBrown
+Best Regards
+
+
+
+
+Tel: +1 (587) 770-0485
+Andres .B. Auchincloss
+Chief financial officerBP Petroleum p.l.c.
+
+
+
+
+                                  Copyright ©? 1996-2021
+
