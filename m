@@ -2,53 +2,56 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7251C3B731B
-	for <lists+linux-raid@lfdr.de>; Tue, 29 Jun 2021 15:19:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA7643B9FFB
+	for <lists+linux-raid@lfdr.de>; Fri,  2 Jul 2021 13:43:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233180AbhF2NWI convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-raid@lfdr.de>); Tue, 29 Jun 2021 09:22:08 -0400
-Received: from [218.75.92.58] ([218.75.92.58]:50437 "EHLO WIN-VTPUBHNS72V"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S232487AbhF2NWI (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 29 Jun 2021 09:22:08 -0400
-Received: from [192.168.43.47] (Unknown [197.210.84.10])
-        by WIN-VTPUBHNS72V with ESMTPA
-        ; Thu, 24 Jun 2021 20:47:09 +0800
-Message-ID: <113B0318-4D76-4AFE-8303-457213528886@WIN-VTPUBHNS72V>
-Content-Type: text/plain; charset="iso-8859-1"
+        id S231987AbhGBLqS convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-raid@lfdr.de>); Fri, 2 Jul 2021 07:46:18 -0400
+Received: from 151-0-195-85.ip282.fastwebnet.it ([151.0.195.85]:44178 "EHLO
+        S510.gigasys" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231935AbhGBLqR (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 2 Jul 2021 07:46:17 -0400
+X-Greylist: delayed 3881 seconds by postgrey-1.27 at vger.kernel.org; Fri, 02 Jul 2021 07:46:17 EDT
+Received: from [192.168.1.105] ([156.0.214.24])
+        (authenticated bits=0)
+        by S510.gigasys (9.0.0) with ESMTP id 162AZxCN005527
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 sabrina@S510.gigasys verify=NOT);
+        Fri, 2 Jul 2021 12:38:11 +0200
+Message-Id: <202107021038.162AZxCN005527@S510.gigasys>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8BIT
 Content-Description: Mail message body
-Subject: URGENT ATTENTION
-To:     Recipients <wjjt@wjjt.cn>
-From:   "Andres Auchincloss" <wjjt@wjjt.cn>
-Date:   Thu, 24 Jun 2021 14:46:40 +0200
-Reply-To: andresauchincloss926@gmail.com
+Subject: Your Attention Is Needed.
+To:     Recipients <marialpaton@online.ee>
+From:   "David Dossou" <marialpaton@online.ee>
+Date:   Fri, 02 Jul 2021 11:38:04 +0100
+Reply-To: revdaviddossou@gmail.com
+X-Antivirus: verificato in 0.009sec su S510.gigasys ([192.168.1.2])
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi,
+Your Attention Is Needed
 
-I will like to use this opportunity to wish you a productive time in 2021 and also confide in you to finalize this transaction of mutual benefits. It may seem strange to you, but it is real. This is a transaction that has no risk at all, due process shall be followed and it shall be carried out under the ambit of the financial laws. Being the Chief Financial Officer, BP Plc. I want to trust and put in your care Eighteen Million British Pounds Sterling, The funds were acquired from an over-invoiced payment from a past contract executed in one of my departments.
+I write to inform you that we have already sent you $5,200.00 dollars through Western Union as we have been given the mandate to transfer your full compensation payment total sum of USD950,000.00 via western Union by this government.
 
-I can't successfully achieve this transaction without presenting you as foreign contractor who will provide a bank account to receive the funds.
+I was calling your telephone number to give you the information through the phone but you did not pick up my calls throughout yesterday, even this morning. Now, I decided to email you the MTCN and sender name so that you will pick up this $5,200.00 to enable us to send another $5,200.00 today as you know we will be sending you only $5,200.00 per day.
 
-Documentation for the claim of the funds will be legally processed and documented, so I will need your full cooperation on this matter for our mutual benefits. We will discuss details if you are interested to work with me to secure this funds. I will appreciate your prompt response in every bit of our communication. Stay Blessed and Stay Safe.
+Please pick up this information and run to western union to pick up the $5,200.00 and call me back to send you another payment today, My direct phone line is +229-61380-625 once you picked up this $5,200.00 today. 
 
+Here is the western union information to pick up the $5,200.00,
 
+Senderâ€™s First Name____David 
+Senders Second Name____Dossou
+Senders Country Benin Republic
+Text question___When
+Answer__45Minutes
+Amount$5,200.00
+MTCN Number___ 4420429799
 
-Best Regards
+I am waiting for your call once you pick up this $5,200.00. Please email me your direct telephone number because I need to be calling you once we send any payment for the information
 
+Thanks
 
-
-
-Tel: +1 (587) 770-0485
-Andres .B. Auchincloss
-Chief financial officerBP Petroleum p.l.c.
-
-
-
-
-                                  Copyright ©? 1996-2021
-
+Rev. David Dossou.
