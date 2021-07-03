@@ -2,69 +2,64 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A6C23BA8BD
-	for <lists+linux-raid@lfdr.de>; Sat,  3 Jul 2021 14:42:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC75F3BB3C9
+	for <lists+linux-raid@lfdr.de>; Mon,  5 Jul 2021 01:17:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230235AbhGCMot (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 3 Jul 2021 08:44:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50046 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230196AbhGCMot (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 3 Jul 2021 08:44:49 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73B65C061762
-        for <linux-raid@vger.kernel.org>; Sat,  3 Jul 2021 05:42:15 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id df12so17056705edb.2
-        for <linux-raid@vger.kernel.org>; Sat, 03 Jul 2021 05:42:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=K535DrghAjwb853CNZK5uVMnOJ365R+n+0RMNrXbSI8=;
-        b=fEUJiNk3jmgvuwt7Iu1BAYuda9NFRgK4EksRi3JXokmqxH+ALCroBUzLtxMOQpiWmG
-         d2/mhC/Vuamx4PbZ8bwOsG+3DyclkN3rf0vP6vqd8WbxY7F/Y9CEIlTbA8IBxfc/LaT9
-         wUnBRbx/UJzxJDTwIS334OEq3LicTiolHfJVqhpM6V3WXo8f8cjVngQCCfZCfOTMs1G6
-         Up73Y4U5r2jDe2U/X8MY/03hJyMA0+AbeGdbf9ww8qJKjdhc8KUUR8iRwnQHGi7cvAfi
-         gtTgRsZrwABy78zMAtSb1rteXi4h47YlF+I956Q6HUHZm0v9fiDQGhsJppnqK7ec+kH0
-         4GPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=K535DrghAjwb853CNZK5uVMnOJ365R+n+0RMNrXbSI8=;
-        b=osE17s5P315D5w/jxyLSY6FnJA3APKgITh/ZklUkLujIhwUJ0TPBD6eRB/7IcOjP1E
-         0zCRAyjUnODhp+qlvskDf3PYZfm7vil4Ng6V8X3jpLmahWuRFUjWomKuWtz4QRtcMJKI
-         Gh6jbfe96DOe2JBqpacYCqdwilsfZMAjZ/tmoN0/Qw9Gnwg2mv5SN9vY2gbrLicsHXiN
-         VfzXRzqSzPdOtKfKatc5r8JgO99bPXwDLrXgBBDsbQ4v3ODvLG5x+mvWpR8fIV4vlci0
-         nl06p/GRDmRaxnT05S+6oqijmlyoCgIST+/7mM0aRS8yJtSelNHzFW5/idxjRdTVg8HN
-         jQog==
-X-Gm-Message-State: AOAM533Bh4GKTEk4rx2+TNjpTr1I10EYaMmvHJtRoiGg3z4ZhaMdW7cU
-        dOSBuP8u5rPiBs+i2IJj5yOgPvrOZsKfUVAPbrw=
-X-Google-Smtp-Source: ABdhPJxpO4Ld2uBtDLGAWw+ca4WOFgWIPD04B0gU/bHzNY/BCYz5KdKgjxJy4+TG+uxYntquvULY/Nm34hdp07nUdYE=
-X-Received: by 2002:a05:6402:3581:: with SMTP id y1mr5042605edc.31.1625316133932;
- Sat, 03 Jul 2021 05:42:13 -0700 (PDT)
+        id S231365AbhGDXTD (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 4 Jul 2021 19:19:03 -0400
+Received: from static-190-25-223-138.static.etb.net.co ([190.25.223.138]:34952
+        "EHLO correo.hdv.gov.co" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S233257AbhGDXOS (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 4 Jul 2021 19:14:18 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by correo.hdv.gov.co (Postfix) with ESMTP id 811E31EE26B7;
+        Sat,  3 Jul 2021 15:32:01 -0500 (-05)
+Received: from correo.hdv.gov.co ([127.0.0.1])
+        by localhost (correo.hdv.gov.co [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 1-1GoIKjNWbP; Sat,  3 Jul 2021 15:32:01 -0500 (-05)
+Received: from localhost (localhost [127.0.0.1])
+        by correo.hdv.gov.co (Postfix) with ESMTP id 111371EC626B;
+        Sat,  3 Jul 2021 14:51:03 -0500 (-05)
+DKIM-Filter: OpenDKIM Filter v2.10.3 correo.hdv.gov.co 111371EC626B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hdv.gov.co;
+        s=11DF984A-9D1F-11E6-B193-F2669FC4C452; t=1625341863;
+        bh=SKFadKgM92kiwue8eMLvzaTB0eiP/neKAp89ygsk9fM=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=FepetqF58iwAACfM0G4fGLhZeR9WmN+IHEd9i53CA645XYrzJqDp+HSKLe/nOb0NC
+         G5FqcZdY4qhKCsx91O/jzUTsg+zIUD4murVIQA0wJMYxw0zlYfBWr7lBEvQjrozCwq
+         vqwrwbeOKsjz/m09bg+CiJe/KoqfC//FDENwdknA=
+X-Virus-Scanned: amavisd-new at correo.hdv.gov.co
+Received: from correo.hdv.gov.co ([127.0.0.1])
+        by localhost (correo.hdv.gov.co [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id OMADQNkglG40; Sat,  3 Jul 2021 14:51:02 -0500 (-05)
+Received: from [172.20.10.6] (unknown [41.147.1.129])
+        by correo.hdv.gov.co (Postfix) with ESMTPSA id 7666D1E4066B;
+        Sat,  3 Jul 2021 10:10:47 -0500 (-05)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Received: by 2002:aa7:c848:0:0:0:0:0 with HTTP; Sat, 3 Jul 2021 05:42:13 -0700 (PDT)
-Reply-To: bensmithparker@gmail.com
-From:   "Mr. Parker Ben Smith" <hasaaalialwan01@gmail.com>
-Date:   Sat, 3 Jul 2021 13:42:13 +0100
-Message-ID: <CAFx6YeGWiYQQ4i0YiSNbX2+8HgJEQD0r4x_ccuGsOEgja3r6iQ@mail.gmail.com>
-Subject: Dear Fiend.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: my subject
+To:     Recipients <planeacion.arquitecto@hdv.gov.co>
+From:   planeacion.arquitecto@hdv.gov.co
+Date:   Sat, 03 Jul 2021 08:10:36 -0700
+Reply-To: callumfoundation05@outlook.com
+Message-Id: <20210703151048.7666D1E4066B@correo.hdv.gov.co>
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
--- 
-Dear Fiend,
+Hallo,
 
-I'm glad to have you here as good business partner. I have a good
-capital and am looking for any lucrative project around you which i
-can invest on that can yield us a good profit in returns.Could you
-please suggest any for me and you will benefit from it too.
+ Sie haben eine Spende von 2.800.000,00 USD. Ich gewann die amerikanische L=
+otterie im Wert von 343 Millionen US-Dollar in Amerika und spendete einen T=
+eil davon an f=FCnf gl=FCckliche Menschen und Wohlt=E4tigkeitsorganisatione=
+n, die sich an meinen verstorbenen Enkel erinnern, der Anfang April vorzeit=
+ig geboren wurde und nur einen Tag lebte. F=FCr weitere Informationen wende=
+n Sie sich bitte an: callumfoundation05@outlook.com
 
-Am waiting for your reply for us to have a better discussion there.
+ =
 
-Regards!
 
-Mr. Parker Ben Smith.
+Mit freundlichen Gr=FC=DFen
+Frau Lerynne West
