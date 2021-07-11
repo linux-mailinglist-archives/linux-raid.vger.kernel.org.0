@@ -2,180 +2,56 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 056B73C3A12
-	for <lists+linux-raid@lfdr.de>; Sun, 11 Jul 2021 06:09:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 096603C3C22
+	for <lists+linux-raid@lfdr.de>; Sun, 11 Jul 2021 14:12:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229726AbhGKEL5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 11 Jul 2021 00:11:57 -0400
-Received: from smtp.hosts.co.uk ([85.233.160.19]:53063 "EHLO smtp.hosts.co.uk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229485AbhGKEL5 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sun, 11 Jul 2021 00:11:57 -0400
-Received: from host86-159-54-55.range86-159.btcentralplus.com ([86.159.54.55] helo=[192.168.1.64])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1m2QmD-0002tN-8F; Sun, 11 Jul 2021 05:09:10 +0100
-Subject: Re: 1T and 500+500 mirror, but different speeds
-To:     David T-G <davidtg-robot@justpickone.org>,
-        Linux RAID list <linux-raid@vger.kernel.org>
-References: <20210709122732.GB27083@justpickone.org>
- <60E87BAF.9020706@youngman.org.uk> <20210711031208.GP1415@justpickone.org>
-From:   Wols Lists <antlists@youngman.org.uk>
-X-Enigmail-Draft-Status: N1110
-Message-ID: <60EA6EE4.8070107@youngman.org.uk>
-Date:   Sun, 11 Jul 2021 05:09:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.7.0
+        id S232640AbhGKMO7 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-raid@lfdr.de>); Sun, 11 Jul 2021 08:14:59 -0400
+Received: from mail.07d05.mspz7.gob.ec ([186.46.59.139]:36574 "EHLO
+        mail.07d05.mspz7.gob.ec" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232365AbhGKMO7 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 11 Jul 2021 08:14:59 -0400
+X-Greylist: delayed 843 seconds by postgrey-1.27 at vger.kernel.org; Sun, 11 Jul 2021 08:14:58 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mail.07d05.mspz7.gob.ec (Postfix) with ESMTP id 7494D1821AC7;
+        Sun, 11 Jul 2021 06:54:55 -0500 (-05)
+Received: from mail.07d05.mspz7.gob.ec ([127.0.0.1])
+        by localhost (mail.07d05.mspz7.gob.ec [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id FDZv7cRmCDbO; Sun, 11 Jul 2021 06:54:55 -0500 (-05)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.07d05.mspz7.gob.ec (Postfix) with ESMTP id 17DE21821AC1;
+        Sun, 11 Jul 2021 06:54:55 -0500 (-05)
+X-Virus-Scanned: amavisd-new at 07d05.mspz7.gob.ec
+Received: from mail.07d05.mspz7.gob.ec ([127.0.0.1])
+        by localhost (mail.07d05.mspz7.gob.ec [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 8fWjZvJsLb3k; Sun, 11 Jul 2021 06:54:54 -0500 (-05)
+Received: from cris-PC.wifi (unknown [105.9.79.139])
+        by mail.07d05.mspz7.gob.ec (Postfix) with ESMTPSA id 7D46C182193E;
+        Sun, 11 Jul 2021 06:54:46 -0500 (-05)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-In-Reply-To: <20210711031208.GP1415@justpickone.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: spende von 2,000,000 euro
+To:     Recipients <maria.coronel@07d05.mspz7.gob.ec>
+From:   ''Tayeb souami'' <maria.coronel@07d05.mspz7.gob.ec>
+Date:   Sun, 11 Jul 2021 13:54:31 +0200
+Reply-To: Tayebsouam.spende@gmail.com
+Message-Id: <20210711115446.7D46C182193E@mail.07d05.mspz7.gob.ec>
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 11/07/21 04:12, David T-G wrote:
-> Wol, et al --
-> 
-> ...and then Wols Lists said...
-> % 
+Hallo mein lieber Freund
+Mein Name ist Tayeb Souami aus New Jersey in Amerika und ich habe den America Lottery Jackpot von 315 Millionen Euro gewonnen. Ich habe mich entschlossen, die Summe von 2.000.000 Euro an fünf glückliche Personen zu spenden, und Sie wurden als einer der Begünstigten ausgewählt. Bitte klicken Sie auf diesen Link, um mehr über meinen Gewinn zu erfahren.
 
 
-> 
-> 
-> % 
-> % Mirroring as you plan here is okay.
-> 
-> That's good.  Of course, that then makes me scratch my head a bit since
-> it's still paired with other and needs to not blow up ...  I'll have to
-> back and read more to see why mirror is safe.
-> 
-Mirroring is safe because, whatever happens to the mirror, you only need
-one disk to recover. So if the raid falls apart your data is not in danger.
-> 
-> % 
-> ...
-> % > and also two 500G drives
-> % > 
-> % >   jpo:~ # parted /dev/sdc print
-> % >   Model: ATA WDC WD5000AAVS-0 (scsi)
-> ...
-> % >   jpo:~ # smartctl -i /dev/sdc
-> ...
-> % >   Model Family:     Western Digital Caviar Green
-> ...
-> % > that I plan to stripe together to use to protect the first.  The Caviars
-> % > are listed as variable speed, but in practice they apparently are just
-> % > 5400 rpm, so I'd like to take advantage of striping to make them as fast
-> % > as possible. 
-> % 
-> % Caviar Green ??? Caviars should be okay, but the "green" moniker makes
-> 
-> Yeah, I'm not too happy about that ...  Supposedly they will vary speed
-> based on demand, so they can deliver 7200rpm performance, but apparently
-> they always stay at 5400rpm and so they're just basic drives.  Meh.
-> 
-> 
-> % me nervous. Check SCT/ERC, but striping/mirroring will be fine.
-> 
-> More of that confusion stuff :-) but happy.
-> 
-> 
-> % 
-> % > This isn't the black magic ;-) of RAID10-on-two-drives,
-> % > so I don't have to think of one as "front" and one as "back", but do I
-> % > want more than one partition on each to stripe 4 or 6 slices to avoid
-> % > hammering on one, or do I just go with each device as a whole and let
-> % > mdadm handle the magic for me?
-> % > 
-> ...
-> % Okay, the simple approach.
-> % 
-> % Create a single-device mirror using the 1TB and the special device
-> % "missing". Copy everything across and make sure it's all okay. (I'm
-> % assuming you can safely wipe this drive as it has nothing on it you wish
-> % to keep.)
-> 
-> Correct.
-> 
-> 
-> % 
-> % Create a striped device using the two 500GB drives.
-> 
-> That's the fun part ...  I'm thinkin' I'm just going to have to do sector
-> math to predict how large the new dev can be so that I can back into a
-> proper partition size on the 1T so that both halves can match.
+UHR MICH HIER: https://www.youtube.com/watch?v=Z6ui8ZDQ6Ks
 
-Do you need the entire space? Can you create a 900GB mirror on the 1TB?
-You can always grow the mirror and the filesystem later.
-> 
+Bitte kontaktieren Sie mich über diese E-Mail:Tayebsouam.spende@gmail.com
 
 
-> 
-> % 
-> % Plan to replace all the disks with something like Seagate Ironwolves or
-> % Toshiba N300s in the near future :-)
-> 
-> Actually, I have four Seagate 4T drives
-> 
->   diskfarm:~ # parted /dev/sdd print
->   Model: ATA ST4000DM000-1F21 (scsi)
->   Disk /dev/sdd: 4001GB
->   Sector size (logical/physical): 512B/4096B
->   Partition Table: gpt
->   Disk Flags: 
-> 
->   Number  Start   End     Size    File system  Name                             Flags
->    1      1049kB  4001GB  4001GB  xfs          ata-ST4000DM000-1F2168_W300EYNA  raid
->    2      4001GB  4001GB  134MB   reiserfs     wwn-0x5000c50069a8d76f
-> 
->   diskfarm:~ # smartctl -i /dev/sdd
->   smartctl 7.0 2019-05-21 r4917 [x86_64-linux-5.3.18-lp152.63-default] (SUSE RPM)
->   Copyright (C) 2002-18, Bruce Allen, Christian Franke, www.smartmontools.org
-> 
->   === START OF INFORMATION SECTION ===
->   Model Family:     Seagate Desktop HDD.15
->   Device Model:     ST4000DM000-1F2168
->   Serial Number:    W300EYNA
->   LU WWN Device Id: 5 000c50 069a8d76f
->   Firmware Version: CC52
->   User Capacity:    4,000,787,030,016 bytes [4.00 TB]
->   Sector Sizes:     512 bytes logical, 4096 bytes physical
->   Rotation Rate:    5900 rpm
->   Form Factor:      3.5 inches
->   Device is:        In smartctl database [for details use: -P show]
->   ATA Version is:   ATA8-ACS T13/1699-D revision 4
->   SATA Version is:  SATA 3.1, 6.0 Gb/s (current: 6.0 Gb/s)
->   Local Time is:    Sat Jul 10 21:38:12 2021 UTC
->   SMART support is: Available - device has SMART capability.
->   SMART support is: Enabled
-> 
-> in another machine that I plan to upgrade to larger disks and hand down
-> to this one.  They're older, and they don't
-> 
->   diskfarm:~ # smartctl -l scterc /dev/sdd
->   smartctl 7.0 2019-05-21 r4917 [x86_64-linux-5.3.18-lp152.63-default] (SUSE RPM)
->   Copyright (C) 2002-18, Bruce Allen, Christian Franke, www.smartmontools.org
-> 
->   SCT Error Recovery Control command not supported
-> 
-> have SMART error handling, but at least they aren't SMR :-)
-> 
-They're no better! "SCT Error Recovery Control command not supported".
-This is the red flag. This is the same problem as with the Barracudas.
-> 
-> % 
-> % https://raid.wiki.kernel.org/index.php/Linux_Raid
-> % 
-> % Read especially the page on timeout mismatch as this DOES apply to your
-> % Barracuda !!!
-> 
-> I'll go back again :-)
-> 
-And it applies to your 4TBs as well. I wouldn't worry too much - I'm
-running a mirror on two 3TB Barracudas (I wouldn't have bought them if
-I'd realised, but I was a raid newbie back then ...)
+Ich hoffe, Sie und Ihre Familie glücklich zu machen.
 
-Cheers,
-Wol
-
+Grüße
+Herr Tayeb Souami
