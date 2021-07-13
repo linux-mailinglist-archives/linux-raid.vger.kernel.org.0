@@ -2,42 +2,34 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AD6E93C541E
-	for <lists+linux-raid@lfdr.de>; Mon, 12 Jul 2021 12:53:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE3023C8860
+	for <lists+linux-raid@lfdr.de>; Wed, 14 Jul 2021 18:10:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345864AbhGLH5F (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 12 Jul 2021 03:57:05 -0400
-Received: from mail-out-auth1.hosts.co.uk ([195.7.255.1]:12686 "EHLO
-        mail-out-auth1.hosts.co.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1348006AbhGLHzJ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 12 Jul 2021 03:55:09 -0400
-X-Greylist: delayed 52977 seconds by postgrey-1.27 at vger.kernel.org; Mon, 12 Jul 2021 03:55:09 EDT
-Received: from host86-159-54-55.range86-159.btcentralplus.com ([86.159.54.55] helo=[192.168.1.64])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1m2qjf-0008I6-E0; Mon, 12 Jul 2021 08:52:16 +0100
-Subject: Re: RAID5 now recognized as RAID1
-To:     Nicolas Martin <nicolas.martin.3d@gmail.com>,
-        linux-raid@vger.kernel.org
-References: <C3C9F935-DD1C-409C-8C9D-56F97B13B676@gmail.com>
-From:   Wols Lists <antlists@youngman.org.uk>
-Message-ID: <60EBF4AE.7080205@youngman.org.uk>
-Date:   Mon, 12 Jul 2021 08:52:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.7.0
+        id S231499AbhGNQMx convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-raid@lfdr.de>); Wed, 14 Jul 2021 12:12:53 -0400
+Received: from 82-166-176-2.barak-online.net ([82.166.176.2]:59160 "EHLO
+        s03.amilov.co.il" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S230427AbhGNQMx (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 14 Jul 2021 12:12:53 -0400
+X-Greylist: delayed 92762 seconds by postgrey-1.27 at vger.kernel.org; Wed, 14 Jul 2021 12:12:52 EDT
+Received: from host-80-182-202-15.pool80182.interbusiness.it ([80.182.202.15] helo=User-PC.homenet.telecomitalia.it)
+        by s03.amilov.co.il with esmtpa (Exim 4.94)
+        (envelope-from <info@buffett.org>)
+        id 1m3JK7-0002aa-UQ; Tue, 13 Jul 2021 17:23:48 +0300
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-In-Reply-To: <C3C9F935-DD1C-409C-8C9D-56F97B13B676@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: WARREN BUFFETT GRANT
+To:     Recipients <info@buffett.org>
+From:   WARREN B FOUNDATION <info@buffett.org>
+Date:   Tue, 13 Jul 2021 22:23:01 +0800
+Reply-To: buffookj@gmail.com
+Message-ID: <GENERATED-WASMISSING-1m3JK7-0002aa-UQ@s03.amilov.co.il>
+X-ACL-Warn: Adding Message-ID header because it is missing!
+X-Authenticated-Id: spd@amilov.co.il
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 08/07/21 11:07, Nicolas Martin wrote:
-> So, I don’t know how this could happen ? I looked up on the FAQ, but I can’t seem to see what could explain this, nor how I can recover from this ?
-
-https://raid.wiki.kernel.org/index.php/Asking_for_help
-
-Cheers,
-Wol
+Warren Buffett picked you for a $1,500,000 donation.For more details reply
