@@ -2,61 +2,76 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4D6F3C9CCD
-	for <lists+linux-raid@lfdr.de>; Thu, 15 Jul 2021 12:35:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF5943CA424
+	for <lists+linux-raid@lfdr.de>; Thu, 15 Jul 2021 19:25:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241424AbhGOKi3 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 15 Jul 2021 06:38:29 -0400
-Received: from mga11.intel.com ([192.55.52.93]:12824 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238409AbhGOKi3 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 15 Jul 2021 06:38:29 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10045"; a="207499041"
-X-IronPort-AV: E=Sophos;i="5.84,240,1620716400"; 
-   d="scan'208";a="207499041"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2021 03:35:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,240,1620716400"; 
-   d="scan'208";a="430786166"
-Received: from unknown (HELO localhost.igk.intel.com) ([10.102.102.57])
-  by orsmga002.jf.intel.com with ESMTP; 15 Jul 2021 03:35:32 -0700
-From:   Mateusz Grzonka <mateusz.grzonka@intel.com>
-To:     linux-raid@vger.kernel.org
-Cc:     jes@trained-monkey.org
-Subject: [PATCH] Add error handling for chunk size in RAID1
-Date:   Thu, 15 Jul 2021 12:25:23 +0200
-Message-Id: <20210715102523.28298-1-mateusz.grzonka@intel.com>
-X-Mailer: git-send-email 2.26.2
+        id S235062AbhGOR2T (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 15 Jul 2021 13:28:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235191AbhGOR2Q (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 15 Jul 2021 13:28:16 -0400
+Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19D26C0613E3
+        for <linux-raid@vger.kernel.org>; Thu, 15 Jul 2021 10:25:22 -0700 (PDT)
+Received: by mail-qk1-x72e.google.com with SMTP id m68so5921048qke.7
+        for <linux-raid@vger.kernel.org>; Thu, 15 Jul 2021 10:25:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=Ibb5KNEw1DKqJEg9n4gJy5KnzVasBofn6QaWYsu9UCQ=;
+        b=VEbievBeLXzXz2IFTCJlfsSW3SGnPx5BRLHAunZVXukgfJX3HSSAUxCtdiKf61hv/8
+         dEjk1vTJjxHihT0WA1OL/uEOLbisu+eOZ9QBM+pSgOr0g3iviST/L7UaXer3M8NeFmjI
+         cUcDXANijM5RzePSgHNEUg4tiAZJvw7xY2717+o5bCXGYbN3j0in5RSdJSiv5QmZpfXV
+         xJwXiiE0C1Gs4ldNfG+SItE+RoyPJtAgR4hB34JMXRrPZxzy82ifiVVChBVQnRUKYafC
+         pLvyRURLCMNCEs5zTTafGrQe1zI12ARsnWy7gNJNMcFCKTa1+89JJPFI0mohmLMeae0x
+         ASdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=Ibb5KNEw1DKqJEg9n4gJy5KnzVasBofn6QaWYsu9UCQ=;
+        b=ETWgYY4wy55/ZKfAGO4gUeNja/5XmjXOVBFBKY4DIT8rNUmNTg5e+HeFjLD3G/OLuY
+         MdPU0a68yjfhh84kmx3sYSjX7AuLXHPaj+ihHoZNMnGCp+C78LJqpEWJhAUsmiIY23aF
+         2vXTh+ZbnP/+wC1YkpJtUSH4sIhNXw+2lCtBroU9E+hf3bcB9iUXJVxzcANqrkZ4S1bt
+         D6Nz0uzUqurFElsUvhyd9WvoW2Q5CAgaw2Jli8uTwIZ0T8mTlr6mgiFiBWHLEDGopBow
+         TCR42izi10kugyt4KU0xzwdtXaWzMc5aS886wzjPyD4y0Okltbd886MpHDHtnK+Te8te
+         dbaQ==
+X-Gm-Message-State: AOAM533zyzaLfPcrsNpyzMmpEi7F8+ppPOhiKAJN+dck+EOSeztA7pz+
+        X0Rr2SuwmbgtOQrgaaA70ZqpuLUyUkLvg+GjgN0=
+X-Google-Smtp-Source: ABdhPJyVA6gR/njuabWs2C2fW8gelCsYJFEl6/1qckwAKb5sFvak5SWUy5PHC6/Yk0GlmffBpcH6FQwcd62hdQoqBbA=
+X-Received: by 2002:a37:9947:: with SMTP id b68mr5263725qke.56.1626369920992;
+ Thu, 15 Jul 2021 10:25:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a0c:e502:0:0:0:0:0 with HTTP; Thu, 15 Jul 2021 10:25:20
+ -0700 (PDT)
+Reply-To: faty.muhamad@gmail.com
+From:   Ms Fatima Muhammad <steveokoh.fedexdeliveryagent@gmail.com>
+Date:   Thu, 15 Jul 2021 17:25:20 +0000
+Message-ID: <CAFKwDuBfMzCdHqoenSL2rqjnW5tE27dPjiWKbgxM_hjsa-G7pg@mail.gmail.com>
+Subject: Hello Dear
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Print error if chunk size is set as it is not supported.
+Hello Dear,
 
-Signed-off-by: Mateusz Grzonka <mateusz.grzonka@intel.com>
----
- Create.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+My name is Ms.Fatima Muhammad., Please forgive me for stressing you
+with my predicaments and I sorry to approach you through this media
+because is serves the fastest means of  my communication right now,
 
-diff --git a/Create.c b/Create.c
-index 18b5e646..f5d57f8c 100644
---- a/Create.c
-+++ b/Create.c
-@@ -254,9 +254,8 @@ int Create(struct supertype *st, char *mddev,
- 	case LEVEL_MULTIPATH:
- 	case LEVEL_CONTAINER:
- 		if (s->chunk) {
--			s->chunk = 0;
--			if (c->verbose > 0)
--				pr_err("chunk size ignored for this level\n");
-+			pr_err("specifying chunk size is forbidden for this level\n");
-+			return 1;
- 		}
- 		break;
- 	default:
--- 
-2.26.2
+I came across your Email from my personal search and I decided to
+contact you believing you will be honest to fulfill my business
+proposal which I believe that will be a very good opportunity for both
+of us. Please it is my pleasure to contact you today for a business
+partnership investments projects worth $4.6 million USD which I intend
+to establish in your country..
 
+Pls If this business proposal offends your moral and ethic values do
+accept my apology. therefore kindly contact me immediately if you are
+interested for more details.
+
+Thank you for your wiliness to help me
+Yours Sincerely Fatima Muhammad
