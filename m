@@ -2,61 +2,83 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D8AF13CB8C1
-	for <lists+linux-raid@lfdr.de>; Fri, 16 Jul 2021 16:34:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C9703D080C
+	for <lists+linux-raid@lfdr.de>; Wed, 21 Jul 2021 07:04:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240345AbhGPOg4 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 16 Jul 2021 10:36:56 -0400
-Received: from sender11-op-o11.zoho.eu ([31.186.226.225]:17086 "EHLO
-        sender11-op-o11.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233212AbhGPOgz (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 16 Jul 2021 10:36:55 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1626446034; cv=none; 
-        d=zohomail.eu; s=zohoarc; 
-        b=DhWnZPijQGrZnWp11RVgtS25kLvpAfiK7Q9m1/rUN2z2FBPZn1mwh5eU5eWHZJsZ/mRnL0Jx8SbUGZzugaaYktpIvvW5pHn5sXZmvkDWPj798uG2cUB45tHLU4kchwF1Q6ut1OPWHvRuckgItVW7jMdZQBTWg0eKWHQXudSra3o=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1626446034; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=PMA4gd1yqKP1cv+a7diB/sAlaVSKQeYWUw9+SR94ZWc=; 
-        b=JnTlaRIsfuBXUX/AXuVvHUw4jBOYC85eFVSGFhFBWixpWMRZd/HgOEJIjE8wYtUhSwZG1AUvgaIeNVj4OElCHfipADAQKTYcXPUZgSOagU1B1yf6EeJzNq04XKlxBF8Tfv4GNok+/x4y43Q4WvEQj8mciMxXNIWOmkM2TWo31Vw=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
-        dmarc=pass header.from=<jes@trained-monkey.org>
-Received: from [192.168.99.29] (pool-72-69-75-15.nycmny.fios.verizon.net [72.69.75.15]) by mx.zoho.eu
-        with SMTPS id 1626446033300595.7905171979668; Fri, 16 Jul 2021 16:33:53 +0200 (CEST)
-Subject: Re: mdadm 4.2-rc2
-To:     "Tkaczyk, Mariusz" <mariusz.tkaczyk@linux.intel.com>
-Cc:     Xiao Ni <xni@redhat.com>,
-        Oleksandr Shchirskyi <oleksandr.shchirskyi@linux.intel.com>,
-        blazej.kucman@intel.com, linux-raid <linux-raid@vger.kernel.org>
-References: <614b0f39-0a1d-5c86-be88-42f65a72911b@linux.intel.com>
-From:   Jes Sorensen <jes@trained-monkey.org>
-Message-ID: <1efd204f-917f-d812-2089-c651f492f8f9@trained-monkey.org>
-Date:   Fri, 16 Jul 2021 10:33:52 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        id S232635AbhGUEXx (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 21 Jul 2021 00:23:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40584 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232321AbhGUEX2 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 21 Jul 2021 00:23:28 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32BF2C061574;
+        Tue, 20 Jul 2021 22:04:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=D20QS6MxrqZjpfJr3udotoWchnhZQTjbmypQCoId5Uw=; b=dlPo+cYBzFsFFxIcS4cYqT1y4v
+        5Og9QnPdR7+tgNY/mC4DDWWwn9IG6Y1NxBmegim+rvlhrYTIO4sYBBTzCbgKQiyUExae41YdthWOB
+        +iHlTPjl2Yy3lzJAT0lCtOu1qpNEg16QRSjSjY3YH+GP7i3Mm7cfgujPX0kGu7li12Q0DCLsBcAEP
+        TD2DV6pCn3bPuvPvCmnlEz816HpGzL1dZeBTuDMPz5LlqdpTfhcmgrwpWHbPA3glsfRek93dlTGpd
+        KJHjPzOvYVx96bDHgqkpcl3KG5OU2lopmvHN0bke/Z8M1V/Ash+m7zLezzViDDeoE9o1tXCTfwmri
+        KHGshupw==;
+Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1m64OY-008oIM-3C; Wed, 21 Jul 2021 05:03:47 +0000
+Date:   Wed, 21 Jul 2021 06:03:46 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     axboe@kernel.dk, hare@suse.de, bvanassche@acm.org,
+        ming.lei@redhat.com, hch@infradead.org, jack@suse.cz,
+        osandov@fb.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
+        Song Liu <songliubraving@fb.com>, linux-raid@vger.kernel.org
+Subject: Re: [PATCH 2/5] md: replace GENHD_FL_UP with GENHD_FL_DISK_ADDED on
+ is_mddev_broken()
+Message-ID: <YPeqspNQrE7PvbXR@infradead.org>
+References: <20210720182048.1906526-1-mcgrof@kernel.org>
+ <20210720182048.1906526-3-mcgrof@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <614b0f39-0a1d-5c86-be88-42f65a72911b@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210720182048.1906526-3-mcgrof@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 6/28/21 9:48 AM, Tkaczyk, Mariusz wrote:
-> Hello Jes,
-> A lot of mdadm patches are waiting, could you look into them?
+On Tue, Jul 20, 2021 at 11:20:45AM -0700, Luis Chamberlain wrote:
+> The GENHD_FL_DISK_ADDED flag is what we really want, as the
+> flag GENHD_FL_UP could be set on a semi-initialized device.
 > 
-> IMO it is good time to mark rc2. Do you agree?
+> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 
-Hi Mariusz,
+Based on the commit log for the patch adding this check I think this
+is wrong  It actually wants to detected underlying devices for which
+del_gendisk has been called.
 
-I finally had time to go through the pending changes, I think I got
-everything. Sorry it's been chaotic as usual here.
-
-Unless I missed something urgent, then I think rc2 is appropriate.
-Please speak up loudly if I missed anything.
-
-Thanks,
-Jes
+> ---
+>  drivers/md/md.h | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/md/md.h b/drivers/md/md.h
+> index 832547cf038f..cf70e0cfa856 100644
+> --- a/drivers/md/md.h
+> +++ b/drivers/md/md.h
+> @@ -764,9 +764,7 @@ struct md_rdev *md_find_rdev_rcu(struct mddev *mddev, dev_t dev);
+>  
+>  static inline bool is_mddev_broken(struct md_rdev *rdev, const char *md_type)
+>  {
+> -	int flags = rdev->bdev->bd_disk->flags;
+> -
+> -	if (!(flags & GENHD_FL_UP)) {
+> +	if (!blk_disk_added(rdev->bdev->bd_disk)) {
+>  		if (!test_and_set_bit(MD_BROKEN, &rdev->mddev->flags))
+>  			pr_warn("md: %s: %s array has a missing/failed member\n",
+>  				mdname(rdev->mddev), md_type);
+> -- 
+> 2.27.0
+> 
+---end quoted text---
