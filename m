@@ -2,166 +2,177 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 173173D20A6
-	for <lists+linux-raid@lfdr.de>; Thu, 22 Jul 2021 11:18:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C1313D2BEA
+	for <lists+linux-raid@lfdr.de>; Thu, 22 Jul 2021 20:27:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231396AbhGVIiA (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 22 Jul 2021 04:38:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58842 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231367AbhGVIh4 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 22 Jul 2021 04:37:56 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC036C061798
-        for <linux-raid@vger.kernel.org>; Thu, 22 Jul 2021 02:18:31 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <afa@pengutronix.de>)
-        id 1m6UqF-0001NO-DL; Thu, 22 Jul 2021 11:18:07 +0200
-Received: from afa by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <afa@pengutronix.de>)
-        id 1m6UqC-0001D1-HE; Thu, 22 Jul 2021 11:18:04 +0200
-From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
-To:     David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
-        Song Liu <song@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     kernel@pengutronix.de, Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-raid@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-mtd@lists.infradead.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-Subject: [RFC PATCH v1 4/4] ubifs: auth: consult encrypted and trusted keys if no logon key was found
-Date:   Thu, 22 Jul 2021 11:18:02 +0200
-Message-Id: <f5891611f329583baef32089c8b322850d81166a.1626945419.git-series.a.fatoum@pengutronix.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <cover.b2fdd70b830d12853b12a12e32ceb0c8162c1346.1626945419.git-series.a.fatoum@pengutronix.de>
-References: <cover.b2fdd70b830d12853b12a12e32ceb0c8162c1346.1626945419.git-series.a.fatoum@pengutronix.de>
+        id S229911AbhGVRqd (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 22 Jul 2021 13:46:33 -0400
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:11080 "EHLO
+        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229763AbhGVRqc (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 22 Jul 2021 13:46:32 -0400
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 16MIH2VF002740;
+        Thu, 22 Jul 2021 18:27:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : content-type : mime-version; s=corp-2021-07-09;
+ bh=7kfnaaYR8plc7y3G5THIeDbBJGH9Z1UD3dk4u40bQqA=;
+ b=qDKlvt5d614Vp6Jce/cmThNTltPgqLThPhwAjGSTPSMPcg1GQb8VenKoFHfcJNqxtTg9
+ nnNZes3lx/tt9dvrce1ie1dn5hsiXEab4qSU00/1l/6iswCjDh8J9atETTeJOwenBTeG
+ 8uWDMgwTgO6JDlAE3yqb0RtY5r/iN6pbTwk9hHoFqDg2cFOkoML2jdfcU3JhTiFjwgdK
+ el10Md8+93sTM/SyM6ipB5EX7Qe9F77BhGD0Uja99cG6Rb09d3X5BahKhA4cCD0PeB5Q
+ u+yRwtEigBy411KOi4iAH6tCczmneFmMkNhq1pwmwHz6C1R1IYKd/TdCoxo7sWYOtISR qw== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : content-type : mime-version; s=corp-2020-01-29;
+ bh=7kfnaaYR8plc7y3G5THIeDbBJGH9Z1UD3dk4u40bQqA=;
+ b=DRqljSLU9GSDjUktZVlgApaWVfG3txC88nbSibAVF92CFLBTsfGfITmzk7x14g3XXXSJ
+ dkC6k3ltGvoYPgS08cFL9esBZfXOyyE/E8luNp/PHQYl6D/NcVx9ALBLMT3BY4WyQ9hD
+ idhnaJc9pZ2mMgnKL/IkY5zWABfcOh4L65nPGtcqQdZBw5lozcnY1kuzjAGFyQkO0lq2
+ xbcAKWHZ1CU2xTmHwa4uJMXuDYBuclsLq+KUr8rBNp2an34ZEwH8lvn4QJ5yzFfvVkqt
+ nPGET+37iQfvP31PASUE0UJwviSH/ETIinRwWOn4JoaINQif8UPRH9O6GLPIfgIuIqDM Zw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by mx0b-00069f02.pphosted.com with ESMTP id 39y37t9myx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Jul 2021 18:27:05 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 16MIFEBD167702;
+        Thu, 22 Jul 2021 18:27:04 GMT
+Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam07lp2043.outbound.protection.outlook.com [104.47.56.43])
+        by aserp3020.oracle.com with ESMTP id 39uq1bpugm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Jul 2021 18:27:04 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EtHFGS90hzxlkDWtO8BGjmr7JYK7HpY56BDvSHaDxrpyB7MteM4Sr+QArxNqQzOyTobNUEBLXL5N1BgETbM4W3DGy/PlaKkK/NtoEJ0yYwifcB+lO6Ve/JJ9s8PXI9uyrchGMHi3kRXtqI7QdxokcBHwNZHxOGPocpA4rGMobtQr1mdAikknrV++LxtODgy/YktGrdAXXNkOLHbMipx/uVXvS+5rai97W85PVAmPnIzjIEuK0b0ydkUXwIHH3LhKiTAZRT2aCnDN63GaBluUZfdgoQT5AX7nlDUVv+weLcLtK5RGO0/PevJwZE6GInkg63IBGcfziPsZi0a5r0jNDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7kfnaaYR8plc7y3G5THIeDbBJGH9Z1UD3dk4u40bQqA=;
+ b=Vo6v9ocPecgOfWxRvtFSW+V/ewW/F9v2VijXKt3bWcs0uZpTYxyHTnkgFCG75/dX01GVJMQLes6Reu9V8YGegbDEvmwJvLdAohFqvWigC/Lic3Ii8M1mTlUWl2Xddte7gYR9LjSZ9NAZ+6cIgpasOCq6d2tWCV/zuiDQJ7zl3r8JZQPFAKZZgDT/6J6PGU7jL1f/AiIXbfjhiGp7/u7hj7uF923ltL3NKcG8beNNXjZvnU6j4gntTyb5aDo/tybqCdVkV4QLR0jjVlgg8g10aayBdECleXpMqOtTqrN1WStlXw0N7tafAvWdW0BtJgNQ8ydUilYLLPGGak+s4IXVqQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7kfnaaYR8plc7y3G5THIeDbBJGH9Z1UD3dk4u40bQqA=;
+ b=NI5Tmd1IkQXXZAeD/LgRaRHeJ3hqYikX4bWPbCGQeWQSgf6NEZaqqUclzfoBVi4iE2tQvNAiaHcr0XrvT7E+Wn0XAb1YBbMACTrekpUbYlPmyLjDY5Joem5x9prWT3lHMHVpI+gAyPSkLhSO+TSbHKXpj25+vD41dGKwtz+9mik=
+Authentication-Results: trained-monkey.org; dkim=none (message not signed)
+ header.d=none;trained-monkey.org; dmarc=none action=none
+ header.from=oracle.com;
+Received: from CY4PR10MB2007.namprd10.prod.outlook.com (2603:10b6:903:123::20)
+ by CY4PR10MB1494.namprd10.prod.outlook.com (2603:10b6:903:26::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.26; Thu, 22 Jul
+ 2021 18:27:01 +0000
+Received: from CY4PR10MB2007.namprd10.prod.outlook.com
+ ([fe80::9d86:c5af:e982:11f2]) by CY4PR10MB2007.namprd10.prod.outlook.com
+ ([fe80::9d86:c5af:e982:11f2%7]) with mapi id 15.20.4331.034; Thu, 22 Jul 2021
+ 18:27:01 +0000
+Date:   Thu, 22 Jul 2021 18:26:58 +0000
+From:   Sudhakar Panneerselvam <sudhakar.panneerselvam@oracle.com>
+To:     jes@trained-monkey.org
+Cc:     linux-raid@vger.kernel.org
+Subject: [PATCH 0/5] Resurrect mdadm test cases - Series 1
+Message-ID: <20210722182658.GA24774@oracle.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-ClientProxiedBy: BY5PR20CA0008.namprd20.prod.outlook.com
+ (2603:10b6:a03:1f4::21) To CY4PR10MB2007.namprd10.prod.outlook.com
+ (2603:10b6:903:123::20)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: afa@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-raid@vger.kernel.org
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from oracle.com (209.17.40.41) by BY5PR20CA0008.namprd20.prod.outlook.com (2603:10b6:a03:1f4::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.25 via Frontend Transport; Thu, 22 Jul 2021 18:27:01 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 00e1e5ff-ff0a-4e37-4376-08d94d3e4c74
+X-MS-TrafficTypeDiagnostic: CY4PR10MB1494:
+X-Microsoft-Antispam-PRVS: <CY4PR10MB1494AEE8B2671DE4896E7739FDE49@CY4PR10MB1494.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: OCthp8gWM9VO38IKft0vxW2MelIvW0ZI64pTpdG6YPzhbg/NJH2m1Lxk1/gSKjXqgeQCGWhQevCv1hW+S4c8u6XyHx/jJE2ag3tBcAdlJMQ4HLoGG7OBmwYPC6pwpt8I/jRNoXsXOH4v/xW/IKfnR4Pwrddb63m+2BB0XuwHz5o75Lgbf6VUdgiWrozeYhb1wMIitiVJTePP2nkgExjQunM1paK+M6a5xmSgI0NuGlM2ySElTMjH5J1dJcTK5NQIDYVuWl8StCWxNvb5CpTDKgrJdBRIKTgrGtDCW8nbmj2foonxD4e1y5V1/SK4Civ8xxN0Gv8DIM8YnqlMMOvdeQrbbeDRTQdeAQXA9CUkaE5rXyBIxuMrCw1Odit1CRR+zwEqECTYeQMxVxfKViYNj0ME83OMs8hiRmaLQTO0OcNVg7av0MtpFBPzgrp/JeaCXuALCoYNT9GTjL4fDf69fItb9YInrkqd+Cwltc147+R/5SL+zo6ln91UKyGT9rWh91AJGLKrlcViGHsnWHrIaawcCgPkjkGd17/tcHW5OEl/rwh4YnewnAc2+Ct8grgU7deIphBB6I9JMcYPjgM98xpB5m9hlFbeKSaKChSBFxn9uw4dKvidXebXANnvcCKASF+Eqx38YZhlwRPzJZ1Ey/UhB6g7wc11kZV6Sx6KsO0lYyAg3n/5shwxYSzCoODJEKjFdjDOy9uUowH0bb2HOw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR10MB2007.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(39860400002)(376002)(366004)(136003)(346002)(4326008)(7696005)(83380400001)(6916009)(52116002)(8676002)(66476007)(8886007)(66946007)(66556008)(26005)(5660300002)(478600001)(36756003)(33656002)(1076003)(55016002)(8936002)(2616005)(38350700002)(6666004)(44832011)(316002)(186003)(2906002)(956004)(86362001)(38100700002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?KImLQzYPgCI2YzxNoJwaw+SnX9UlxGTBh6bQ+bJWEiJJvtNd7HhlbFARDVA4?=
+ =?us-ascii?Q?695OLL6gJVonuGp7AS/B8uVcySqzEz+GBxDPJnvqvS97NVkv93MNgxi4Q9Bp?=
+ =?us-ascii?Q?mXiAnIbmNRt+pMl8JlM/ehyuGkkTdkFPH//muilu14g3lzANsc35LPV3Wm/K?=
+ =?us-ascii?Q?sPK0+iOvGJ6ocOJAI+xDi+s6o0gbCgq4GbfRtkpXkgaohVDbciia5BLTPc/R?=
+ =?us-ascii?Q?sytL0ghSyTX7pvKva69WdaEm9muJezJhEa0l9fk+i/CPTY/gc0fh9I7Yd6yj?=
+ =?us-ascii?Q?4jAT75GPBKE1tfjkpwk/GdZPmZpjyFk7hI9uiOorvw+QOLwjCoD/EJIP9xOp?=
+ =?us-ascii?Q?y7mxovYSdxXXr3XOD77VSeWF9KfNsyq0E4l6xqMBnt6w9dL2dz2yXJm5JoVh?=
+ =?us-ascii?Q?MWn4NaKB4guLLYL79TY7aU84uPgVYNbjeu0B3+Qb0IuuDn0InTih/9H3Ne6x?=
+ =?us-ascii?Q?XsnrQ7QXVRMSyhadpTbGxYnGVyyTpP2ZnP99i5LxPtfPPfB33uz5Ymp7DVpv?=
+ =?us-ascii?Q?G9+A2bn487a7VoJ3Bpacsuui4kfWoPVwWfU3AtSB0RdOZrH2MF6QsgpwGE4z?=
+ =?us-ascii?Q?0cu2uvMrr10jc7XuKWc7TpMUYbqjGvzgpa+hxTQxWICu7hjjB8k0+ITBb27F?=
+ =?us-ascii?Q?hXuHid9rkh1r7+SuddgTlm18MHaSvh3qv3/StCYSNqRYXEM6ac4AUiKQueFF?=
+ =?us-ascii?Q?0PCIN190HsrXavOzCWgRCWwLJ/5S97jKkV0qgXA+cI8Q9ReYLxs3zmwTN+b8?=
+ =?us-ascii?Q?+cYeKv0PnzmcqPGT9VqoCXMiJyi1gCaqtLYHqWRVYFVNII67alx3cvY5I9ge?=
+ =?us-ascii?Q?+YVhhWZnULViOMlwxq41JYDnVVSgLlzowBGCUUCi836TEBne4+nUeCZCjjeO?=
+ =?us-ascii?Q?ckugp+eR6murvNzVgVQfyz4KH9JfeWrhm0VJRIB+C95RiO7dmTe57Okx17LI?=
+ =?us-ascii?Q?mXnn5HHwvRLL1ND0LW1DYb6WIc/Mc5BODHyed26sI+AgoA2qWdqgFxUmTy7Y?=
+ =?us-ascii?Q?cACWL8sOecW7qd64UK6S8lShEiFTbkqQvZ5oYuEfy+9rFh0lV9RmUlxjx7kW?=
+ =?us-ascii?Q?+bIjHD6V33sPCkuaRmScB0k9+U5i6WcblyipBonwTwDlbLXc4ZUWyRTQhWMp?=
+ =?us-ascii?Q?mdRTWkdzx/AvUDXig/lQfCfxsxiAK53mBfTSQi2z+LMvsDllYE6tHfoUAgeZ?=
+ =?us-ascii?Q?dngptVmkbZLuYN48VSj6/G7FYobhsfzT6MdwjAA4jxZnS1CV2pcrB/Pj7QiY?=
+ =?us-ascii?Q?yoAfL+dMebsDq7t0sPXqdMuoIcBj7v0DQhk1ESmJ3j7zwyDLz4PgzvtRcMGZ?=
+ =?us-ascii?Q?9EHua7KjHf47W+2pQEBhJnxK?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00e1e5ff-ff0a-4e37-4376-08d94d3e4c74
+X-MS-Exchange-CrossTenant-AuthSource: CY4PR10MB2007.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2021 18:27:01.6934
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: R6qc+Ky9opi0si2FhzPwwHmJtI0mUGWeOjVExJIj83kSQXfhnuTJdgq/Dn1EgjhSNsm0phzv3uqRJcj/sjBUomfIK/PCw1kBPYcgxioCyx/Wi3XyHtfNYkDEF1zA6Vu2
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR10MB1494
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=10053 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
+ mlxlogscore=953 suspectscore=0 bulkscore=0 spamscore=0 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104190000 definitions=main-2107220120
+X-Proofpoint-ORIG-GUID: tJSxp8lZusfiCKSemjScjIKMzUlCqhVR
+X-Proofpoint-GUID: tJSxp8lZusfiCKSemjScjIKMzUlCqhVR
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Currently, UBIFS auth_key can only be a logon key: This is a user key
-that's provided to the kernel in plaintext and that then remains within
-the kernel. Linux also supports trusted and encrypted keys, which have
-stronger guarantees: They are only exposed to userspace in encrypted
-form and, in the case of trusted keys, can be directly rooted to a trust
-source like a TPM chip.
+Hello,
 
-Add support for auth_key to be either a logon, encrypted or trusted key.
-At mount time, the keyring will be searched for a key with the supplied
-name in that order.
+I noticed that mdadm has a vast amount of test cases in place that covers
+various features offered by it. But, many of the test cases fail to run
+either because the test case is not valid anymore or they need some tweaking
+to make it to work. I have attempted to fix some of the test cases in this
+patch set while there are many other test cases that are still failing. I will
+submit some more patch sets in the future to eventually make all the test
+cases to run successfully and possibly add more test cases that are missing
+currently.
 
-Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
----
-To: David Howells <dhowells@redhat.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-To: James Morris <jmorris@namei.org>
-To: "Serge E. Hallyn" <serge@hallyn.com>
-To: Alasdair Kergon <agk@redhat.com>
-To: Mike Snitzer <snitzer@redhat.com>
-To: dm-devel@redhat.com
-To: Song Liu <song@kernel.org>
-To: Richard Weinberger <richard@nod.at>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-raid@vger.kernel.org
-Cc: keyrings@vger.kernel.org
-Cc: linux-mtd@lists.infradead.org
-Cc: linux-security-module@vger.kernel.org
-Cc: linux-integrity@vger.kernel.org
----
- Documentation/filesystems/ubifs.rst |  2 +-
- fs/ubifs/auth.c                     | 19 ++++++++++++-------
- 2 files changed, 13 insertions(+), 8 deletions(-)
+Thanks
+Sudhakar
 
-diff --git a/Documentation/filesystems/ubifs.rst b/Documentation/filesystems/ubifs.rst
-index e6ee99762534..12d08458b3d7 100644
---- a/Documentation/filesystems/ubifs.rst
-+++ b/Documentation/filesystems/ubifs.rst
-@@ -101,7 +101,7 @@ compr=zlib              override default compressor and set it to "zlib"
- auth_key=		specify the key used for authenticating the filesystem.
- 			Passing this option makes authentication mandatory.
- 			The passed key must be present in the kernel keyring
--			and must be of type 'logon'
-+			and must be of type 'logon', 'encrypted' or 'trusted'.
- auth_hash_name=		The hash algorithm used for authentication. Used for
- 			both hashing and for creating HMACs. Typical values
- 			include "sha256" or "sha512"
-diff --git a/fs/ubifs/auth.c b/fs/ubifs/auth.c
-index 6a0b8d858d81..af8e9eb58a60 100644
---- a/fs/ubifs/auth.c
-+++ b/fs/ubifs/auth.c
-@@ -14,6 +14,8 @@
- #include <crypto/hash.h>
- #include <crypto/algapi.h>
- #include <keys/user-type.h>
-+#include <keys/trusted-type.h>
-+#include <keys/encrypted-type.h>
- #include <keys/asymmetric-type.h>
- 
- #include "ubifs.h"
-@@ -256,9 +258,10 @@ out_destroy:
- int ubifs_init_authentication(struct ubifs_info *c)
- {
- 	struct key *keyring_key;
--	const struct user_key_payload *ukp;
- 	int err;
-+	unsigned int len;
- 	char hmac_name[CRYPTO_MAX_ALG_NAME];
-+	const void *key_material;
- 
- 	if (!c->auth_hash_name) {
- 		ubifs_err(c, "authentication hash name needed with authentication");
-@@ -277,6 +280,10 @@ int ubifs_init_authentication(struct ubifs_info *c)
- 		 c->auth_hash_name);
- 
- 	keyring_key = request_key(&key_type_logon, c->auth_key_name, NULL);
-+	if (IS_ERR(keyring_key) && IS_REACHABLE(CONFIG_ENCRYPTED_KEYS))
-+		keyring_key = request_key(&key_type_encrypted, c->auth_key_name, NULL);
-+	if (IS_ERR(keyring_key) && IS_REACHABLE(CONFIG_TRUSTED_KEYS))
-+		keyring_key = request_key(&key_type_trusted, c->auth_key_name, NULL);
- 
- 	if (IS_ERR(keyring_key)) {
- 		ubifs_err(c, "Failed to request key: %ld",
-@@ -286,12 +293,10 @@ int ubifs_init_authentication(struct ubifs_info *c)
- 
- 	down_read(&keyring_key->sem);
- 
--	ukp = user_key_payload_locked(keyring_key);
--	if (!ukp) {
--		/* key was revoked before we acquired its semaphore */
--		err = -EKEYREVOKED;
-+	key_material = key_extract_material(keyring_key, &len);
-+	err = PTR_ERR_OR_ZERO(key_material);
-+	if (err < 0)
- 		goto out;
--	}
- 
- 	c->hash_tfm = crypto_alloc_shash(c->auth_hash_name, 0, 0);
- 	if (IS_ERR(c->hash_tfm)) {
-@@ -324,7 +329,7 @@ int ubifs_init_authentication(struct ubifs_info *c)
- 		goto out_free_hmac;
- 	}
- 
--	err = crypto_shash_setkey(c->hmac_tfm, ukp->data, ukp->datalen);
-+	err = crypto_shash_setkey(c->hmac_tfm, key_material, len);
- 	if (err)
- 		goto out_free_hmac;
- 
+Sudhakar Panneerselvam (5):
+  tests: remove raid0 tests for 0.90 metadata version
+  tests: clear the superblock before adding a device to the array.
+  Assemble: skip devices that don't match uuid instead of aborting the
+    assembly.
+  tests: fix swap_super path
+  tests: avoid passing chunk size to raid1.
+
+ Assemble.c              |  5 ++++
+ test                    |  9 +++++--
+ tests/00raid0           | 11 --------
+ tests/00readonly        |  4 +++
+ tests/03r0assem         | 72 -------------------------------------------------
+ tests/04r0update        | 20 --------------
+ tests/04r5swap          |  2 +-
+ tests/04update-metadata |  9 +++++--
+ 8 files changed, 24 insertions(+), 108 deletions(-)
+ delete mode 100644 tests/04r0update
+
 -- 
-git-series 0.9.1
+1.8.3.1
+
