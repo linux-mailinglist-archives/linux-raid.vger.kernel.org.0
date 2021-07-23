@@ -2,44 +2,63 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 451883D2D54
-	for <lists+linux-raid@lfdr.de>; Thu, 22 Jul 2021 22:09:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49DFB3D3A0E
+	for <lists+linux-raid@lfdr.de>; Fri, 23 Jul 2021 14:22:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230527AbhGVT3Q (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 22 Jul 2021 15:29:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40482 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230429AbhGVT3P (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 22 Jul 2021 15:29:15 -0400
-Received: from 68-252-206-104.staticrdns.eonix.net (unknown [IPv6:2607:ff28:b005:2a:ec52:75ff:fe50:d321])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 677C0C061575;
-        Thu, 22 Jul 2021 13:09:50 -0700 (PDT)
-Received: from User (localhost [IPv6:::1])
-        by 68-252-206-104.staticrdns.eonix.net (Postfix) with SMTP id DC7298F1F52;
-        Mon, 19 Jul 2021 22:13:42 -0400 (EDT)
-Reply-To: <mrs_hannah@rediffmail.com>
-From:   "Mrs. Hajia Hannah Ahmed" <info@247vidz.com>
-Subject: Re: I WANT TO INVESTMENT IN YOUR COUNTRY?
-Date:   Tue, 20 Jul 2021 05:13:14 -0700
+        id S234810AbhGWLle (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 23 Jul 2021 07:41:34 -0400
+Received: from smtp03.smtpout.orange.fr ([80.12.242.125]:48615 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234774AbhGWLld (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 23 Jul 2021 07:41:33 -0400
+Received: from ubuntu-CJ.home ([80.15.159.30])
+        by mwinf5d50 with ME
+        id YcN32500M0feRjk03cN3ls; Fri, 23 Jul 2021 14:22:04 +0200
+X-ME-Helo: ubuntu-CJ.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 23 Jul 2021 14:22:04 +0200
+X-ME-IP: 80.15.159.30
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     song@kernel.org, linux-raid@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] md/bitmap: Use 'atomic_inc_return' instead of hand-writing it
+Date:   Fri, 23 Jul 2021 14:21:57 +0200
+Message-Id: <bb63b5d4e985be4bafa7a1922e6992fa81b399c4.1627042861.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="Windows-1251"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-Message-Id: <20210720021342.DC7298F1F52@68-252-206-104.staticrdns.eonix.net>
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Attn:
+'atomic_inc/atomic_read' is equivalent to 'atomic_inc_return' which is
+less verbose.
+So use the later.
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+First time a play with atomic functions, so apologies if I misunderstood
+something
+---
+ drivers/md/md-bitmap.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
+index e29c6298ef5c..9d47a2ca1cf3 100644
+--- a/drivers/md/md-bitmap.c
++++ b/drivers/md/md-bitmap.c
+@@ -1396,8 +1396,8 @@ int md_bitmap_startwrite(struct bitmap *bitmap, sector_t offset, unsigned long s
  
-I am Mrs. Hajia Hannah Ahmed I am a Widow and member of the contract award committee and 14 project allocation manager, of the Department of Minerals and Natural Resources in Syria;
+ 	if (behind) {
+ 		int bw;
+-		atomic_inc(&bitmap->behind_writes);
+-		bw = atomic_read(&bitmap->behind_writes);
++
++		bw = atomic_inc_return(&bitmap->behind_writes);
+ 		if (bw > bitmap->behind_writes_used)
+ 			bitmap->behind_writes_used = bw;
  
-Due to the war in Syria, I am in search of an agent or company to assist me to invest my fund  (USD$35Million) and subsequent investment in properties in your country. You will be required to. If you decide to render your service to me in this regard, 30% of the total sum of USD$35M will be given to you for your service. 
- 
-Yours Faithfully,
-Mrs. Hajia Hannah Ahmed
+-- 
+2.30.2
+
