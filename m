@@ -2,71 +2,119 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CFC9D3D87C2
-	for <lists+linux-raid@lfdr.de>; Wed, 28 Jul 2021 08:17:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C5883D8C07
+	for <lists+linux-raid@lfdr.de>; Wed, 28 Jul 2021 12:39:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233260AbhG1GRa (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 28 Jul 2021 02:17:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38060 "EHLO
+        id S233125AbhG1Kje (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 28 Jul 2021 06:39:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231199AbhG1GRa (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 28 Jul 2021 02:17:30 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2D40C061757
-        for <linux-raid@vger.kernel.org>; Tue, 27 Jul 2021 23:17:27 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id n12so1092062wrr.2
-        for <linux-raid@vger.kernel.org>; Tue, 27 Jul 2021 23:17:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=Aauu7gYvMaBruI9Zt1CgTlkxSZ8evQwPBhKOMH6jf8s=;
-        b=NmghFtWdB4ZFCITHf4IU4ipTtdUW0a+K+hRSz5Ru2smsXFaeUgSAwdN1Vo/iX1FWMW
-         jG223HZ7xkurMb7TN/FDjh9RwbOerwfz7aqLTuALs9cAEIRzJmk70W9t/okouV8fgKr9
-         gFglKfaSE1tjT2U1xsh4I5Y6Q7GexkUKGlymMiJJVCcqqq2RD4No+p5VbfC/QI8S3UM6
-         3LiCklZHPRhdOUb1HCXo5KpiS1/QfqK69f9jH4uYMrmhrjnohQwUFybRZOzrcqrDVcp/
-         D96wcumrFls+oD2yYhy1/Y+LFxBmeRtZufmfDqL6MveABQnCzNRSA5tZZNhp1Q1xS+vT
-         BZ3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=Aauu7gYvMaBruI9Zt1CgTlkxSZ8evQwPBhKOMH6jf8s=;
-        b=DipP46jWBhBUEPPIsJaZZO1nlGrAjIwbaNCI9zi3tMYeYFOd213P8/YtjqWgAM0nq4
-         QOJs6wFcRZxETj+a1YUiXuSpqq2jrEOnnE3ojoGPPnEXQqSz+zjjag4VLifp5AUPwXDi
-         eIJzma36uC0f8yIN2cGaXkhoLlIK0wLu/+CkLw0lVTkhUMBHG17HguzPqfM1DjLOqDOl
-         lvxSzgdDa4f+8Wb4ZhTgdjqfjB2brKdhIuEqh5XTjpc0f487ErYoRXPKcTl0eRhCwEwk
-         vMeCwySfv6Sw3H+j+OuqKJFgP+9UBeRhMP3cTu9tQV6wPOkLkm6jVLhpfF64SYjiIZ0K
-         YWnw==
-X-Gm-Message-State: AOAM530IiG3ALQztbo4GFZKL0yjJVHvhf61j61e8ffx76488uZYBtKwI
-        SgDHFVQWt4HiDDvnDTT4/3gZGoRq0gyNkNDgbxY=
-X-Google-Smtp-Source: ABdhPJwM7qvBj3dVTnL5YxWCfI+EsoB3FPyJO0yBa7rrAiUYUrdh1iVEF4Y+ElHUZqCTrsC7hCBKZ5r1NZW231NI3VU=
-X-Received: by 2002:a5d:6482:: with SMTP id o2mr27431979wri.367.1627453046315;
- Tue, 27 Jul 2021 23:17:26 -0700 (PDT)
-MIME-Version: 1.0
-Reply-To: godwinppter@gmail.com
-Sender: mamadouneymar01@gmail.com
-Received: by 2002:a5d:6a43:0:0:0:0:0 with HTTP; Tue, 27 Jul 2021 23:17:25
- -0700 (PDT)
-From:   Godwin Pete <godwinnpeter@gmail.com>
-Date:   Wed, 28 Jul 2021 08:17:25 +0200
-X-Google-Sender-Auth: 3e0t7AjaFfltrB06f1ZO_s-6o3M
-Message-ID: <CANhNTmANPkd3dWuV+BeunVfCcBLHufj-PQVysdCLPmVJ9MnfEw@mail.gmail.com>
-Subject: Reply immediately
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+        with ESMTP id S232671AbhG1Kjb (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 28 Jul 2021 06:39:31 -0400
+X-Greylist: delayed 480 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 28 Jul 2021 03:39:30 PDT
+Received: from poetics.madmonks.org (unknown [IPv6:2404:9400:3:0:216:3eff:fee0:d9b5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3CD4FC061757
+        for <linux-raid@vger.kernel.org>; Wed, 28 Jul 2021 03:39:30 -0700 (PDT)
+Received: from poetics.madmonks.org (localhost [127.0.0.1])
+        by poetics.madmonks.org (Postfix) with ESMTP id F3D878000D2;
+        Wed, 28 Jul 2021 20:31:18 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=madmonks.org;
+        s=default; t=1627468279;
+        bh=t/u7e0XVWUPv/xzQdp+WMIDSn/z0vyugx/7WgEV1u5o=;
+        h=Subject:From:In-Reply-To:Date:Cc:References:To:From;
+        b=fRDOTXhq/lTFiM9XnavSqdnk759kLjE/00V1aA769p4DmLkHT4QNBLbDRxXITOyFP
+         YkvWoM+Wp4eCcrWftjsawH4odQkN4r+frxmAVWTDlIaHe7TAlhGtMKir2rBnaMyKs3
+         tjJJlB71wsd+muM3fnrWz+/bBWxc5TEeIK7jC8dzU6WFHDG6eBRoUYDhdU83wFobQi
+         eFzKlxSdwBTxwSVidiKSGt3iZswATCskbW/qb4u5XxoZgVBStS+3beepbxIu+0jX6X
+         K1pJViOvgiiot5IlNpP2hF/J29XexBgDS0KAA20PYhflh4G1kJFh91ryV8wT4bBpBX
+         fYINLrntrKUOA==
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on poetics.madmonks.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=5.0 tests=ALL_TRUSTED,T_DKIM_INVALID
+        autolearn=ham autolearn_force=no version=3.4.2
+Received: from smtpclient.apple (121-200-4-56.79c804.syd.nbn.aussiebb.net [121.200.4.56])
+        by poetics.madmonks.org (Postfix) with ESMTPSA id DDABF8000AE;
+        Wed, 28 Jul 2021 20:31:18 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=madmonks.org;
+        s=default; t=1627468278;
+        bh=t/u7e0XVWUPv/xzQdp+WMIDSn/z0vyugx/7WgEV1u5o=;
+        h=Subject:From:In-Reply-To:Date:Cc:References:To:From;
+        b=ntgKFQYARfqeRA9J9FxcvViNRx6KlBJ1RWK7xRjHYbHJjnmpbiskK0R5Gy+UQJ1uX
+         bREAe9JhaFMrK9W+wR50NUGGlOa3THmDDbTC1adbOjD3pY9Jlh2pUHGcWPQvyDjohs
+         myXQvZcPRZF8Tj5ShAXDW5OO2bbxXw5kYbSFJx6XdpUG5DpRJA743thAkPPa7bZ3eX
+         gLJNJrIhOsjznkm2x+PmaDWpypgM64EJoTIxX7chhiq2ZTkLhurDX5XYAkwQ0X27MA
+         rridrR1iObwg5QR7Wxo1/ODV/JiTzKkJE3mJoYjeKK+4DgFNhA8WwVa/cxHrNCRvhL
+         alhv3zIFyxhHA==
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 15.0 \(3686.0.1.2.1\))
+Subject: Re: Can't get RAID5/RAID6  NVMe randomread  IOPS - AMD ROME what am I
+ missing?????
+From:   Matt Wallis <mattw@madmonks.org>
+In-Reply-To: <5EAED86C53DED2479E3E145969315A2385841062@UMECHPA7B.easf.csd.disa.mil>
+Date:   Wed, 28 Jul 2021 20:31:44 +1000
+Cc:     "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <07195088-7E4B-4586-BB45-04890265BD62@madmonks.org>
+References: <5EAED86C53DED2479E3E145969315A2385841062@UMECHPA7B.easf.csd.disa.mil>
+To:     "Finlayson, James M CIV (USA)" <james.m.finlayson4.civ@mail.mil>
+X-Mailer: Apple Mail (2.3686.0.1.2.1)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-My good friend,
+Hi Jim,
 
-I just want to know if you, can help me to transfer the amount of
-($6Million). After the transfer we have to share it, 50% for me, and
-50% for you. Please let me know if you can help me for more
-information in regards with the transfer. I hope you can work with me
-honestly?
+> On 28 Jul 2021, at 06:32, Finlayson, James M CIV (USA) =
+<james.m.finlayson4.civ@mail.mil> wrote:
+>=20
+> Sorry, this will be a long email with everything I find to be =
+relevant, but I can get over 110GB/s of 4kB random reads from individual =
+NVMe SSDs, but I'm at a loss why mdraid can only do a very small  =
+fraction of it.   I'm at my "organizational world record" for sustained =
+IOPS, but I need protected IOPS to do something useful.     This is =
+everything I do to a server to make the I/O crank.....My role is that of =
+a lab researcher/resident expert/consultant.   I'm just stumped why I =
+can't do better.   If there is a fine manual that somebody can point me =
+to, I'm happy to read it=E2=80=A6
 
+I am probably going to get corrected on some if not all of this, but =
+from what I understand, and from my own little experiments on a similar =
+Intel based system=E2=80=A6
+1. NVMe is stupid fast, you need a good chunk of CPU performance to max =
+it out.
+2. Most block IO in the kernel is limited in terms of threading, it may =
+even be essentially single threaded. (This is where I will get =
+corrected)
+3. AFAICT, this includes mdraid, there=E2=80=99s a single thread per =
+RAID device handling all the RAID calculations. (mdX_raid6)
 
-Thanks.
+What I did to get IOPs up in a system with 24 NVMe, split up into 12 per =
+NUMA domain.
+1. Create 8 partitions on each drive (this may be overkill, I just =
+started here for some reason)
+2. Create 8 RAID6 arrays with 1 partition per drive.
+3. Use LVM to create a single striped logical volume over all 8 RAID =
+volumes. RAID 0+6 as it were.
 
-Godwin Peter,
+You now have an LVM thread that is basically doing nothing more than =
+chunking the data as it comes in, then, sending the chunks to 8 separate =
+RAID devices, each with their own threads, buffers, queues etc, all of =
+which can be spread over more cores.
+
+I saw a significant (for me, significant is >20%) increase in IOPs doing =
+this.=20
+
+You still have RAID6 protection, but you might want to write a couple of =
+scripts to help you manage the arrays, because a single failed drive now =
+needs to be removed from 8 RAID volumes.=20
+
+There=E2=80=99s not a lot of capacity lost doing this, pretty sure I =
+lost less than 100MB to the partitions and the RAID overhead.
+
+You would never consider this on spinning disk of course, way to slow =
+and you=E2=80=99re just going to make it slower, NVMe as you noticed has =
+the IOPs to spare, so I=E2=80=99m pretty sure it=E2=80=99s just that =
+we=E2=80=99re not able to get the data to it fast enough.
+
+Matt
