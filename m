@@ -2,71 +2,71 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 698EF3D8339
-	for <lists+linux-raid@lfdr.de>; Wed, 28 Jul 2021 00:43:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFC9D3D87C2
+	for <lists+linux-raid@lfdr.de>; Wed, 28 Jul 2021 08:17:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233023AbhG0WnC (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 27 Jul 2021 18:43:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49852 "EHLO
+        id S233260AbhG1GRa (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 28 Jul 2021 02:17:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232986AbhG0WnC (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 27 Jul 2021 18:43:02 -0400
-Received: from sabi.co.uk (unknown [IPv6:2002:b911:ff1d::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B9EDC061757
-        for <linux-raid@vger.kernel.org>; Tue, 27 Jul 2021 15:43:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sabi.co.uk;
-         s=dkim-00; h=From:References:In-Reply-To:Subject:To:Date:Message-ID:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:Sender:Reply-To:Cc:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=7OLfCm19TqvEoIDIfaZv1BDRd8H0cGdgusRLH7dkTlY=; b=u+7Ie0tO5OHkmmdpGEgxiTeePO
-        pPrJMPyxYnHzO3lz2c8M+2DWeNilxne3LG2SdG89t/0KbpHfalO9hSVlH+ovXdD7I+EJAdVEK5Py2
-        zmRC971BZnj90Kgge8Kde/Xi84U+SQ518sBKdt1T5wRLf4eRDFlZz+g+x+uCfFE8GfzWtaCUWgYV5
-        oE7XfcjV6IUYJyG/sl2FeS5L9fAIUS+1kXxuhCh7Jnan2TgcFvIiRbF4tKhNgpUZLx8WdRTnQ+Uvn
-        8nlyhEx0O7FkvGvFhAsVbciYB9giKg38CzLaSTo2irYwtjGnyC6hx1x4g+8cJACvtsDK0wvu/RZxj
-        RB7wRQ6Q==;
-Received: from b2b-37-24-228-251.unitymedia.biz ([37.24.228.251] helo=sabi.co.uk)
-        by sabi.co.uk with esmtpsa(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)(Exim 4.93 id 1m8Vms-004tJD-VB   id 1m8Vms-004tJD-VBby authid <sabity>with cram
-        for <linux-raid@vger.kernel.org>; Tue, 27 Jul 2021 22:42:58 +0000
-Received: from [127.0.0.1] (helo=cyme.ty.sabi.co.uk)
-        by sabi.co.uk with esmtp(Exim 4.93 5)
-        id 1m8Vmh-0040Aj-UW
-        for <linux-raid@vger.kernel.org>; Wed, 28 Jul 2021 00:42:47 +0200
+        with ESMTP id S231199AbhG1GRa (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 28 Jul 2021 02:17:30 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2D40C061757
+        for <linux-raid@vger.kernel.org>; Tue, 27 Jul 2021 23:17:27 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id n12so1092062wrr.2
+        for <linux-raid@vger.kernel.org>; Tue, 27 Jul 2021 23:17:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
+        bh=Aauu7gYvMaBruI9Zt1CgTlkxSZ8evQwPBhKOMH6jf8s=;
+        b=NmghFtWdB4ZFCITHf4IU4ipTtdUW0a+K+hRSz5Ru2smsXFaeUgSAwdN1Vo/iX1FWMW
+         jG223HZ7xkurMb7TN/FDjh9RwbOerwfz7aqLTuALs9cAEIRzJmk70W9t/okouV8fgKr9
+         gFglKfaSE1tjT2U1xsh4I5Y6Q7GexkUKGlymMiJJVCcqqq2RD4No+p5VbfC/QI8S3UM6
+         3LiCklZHPRhdOUb1HCXo5KpiS1/QfqK69f9jH4uYMrmhrjnohQwUFybRZOzrcqrDVcp/
+         D96wcumrFls+oD2yYhy1/Y+LFxBmeRtZufmfDqL6MveABQnCzNRSA5tZZNhp1Q1xS+vT
+         BZ3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to;
+        bh=Aauu7gYvMaBruI9Zt1CgTlkxSZ8evQwPBhKOMH6jf8s=;
+        b=DipP46jWBhBUEPPIsJaZZO1nlGrAjIwbaNCI9zi3tMYeYFOd213P8/YtjqWgAM0nq4
+         QOJs6wFcRZxETj+a1YUiXuSpqq2jrEOnnE3ojoGPPnEXQqSz+zjjag4VLifp5AUPwXDi
+         eIJzma36uC0f8yIN2cGaXkhoLlIK0wLu/+CkLw0lVTkhUMBHG17HguzPqfM1DjLOqDOl
+         lvxSzgdDa4f+8Wb4ZhTgdjqfjB2brKdhIuEqh5XTjpc0f487ErYoRXPKcTl0eRhCwEwk
+         vMeCwySfv6Sw3H+j+OuqKJFgP+9UBeRhMP3cTu9tQV6wPOkLkm6jVLhpfF64SYjiIZ0K
+         YWnw==
+X-Gm-Message-State: AOAM530IiG3ALQztbo4GFZKL0yjJVHvhf61j61e8ffx76488uZYBtKwI
+        SgDHFVQWt4HiDDvnDTT4/3gZGoRq0gyNkNDgbxY=
+X-Google-Smtp-Source: ABdhPJwM7qvBj3dVTnL5YxWCfI+EsoB3FPyJO0yBa7rrAiUYUrdh1iVEF4Y+ElHUZqCTrsC7hCBKZ5r1NZW231NI3VU=
+X-Received: by 2002:a5d:6482:: with SMTP id o2mr27431979wri.367.1627453046315;
+ Tue, 27 Jul 2021 23:17:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Message-ID: <24832.35815.296927.900965@cyme.ty.sabi.co.uk>
-Date:   Wed, 28 Jul 2021 00:42:47 +0200
-X-Face: SMJE]JPYVBO-9UR%/8d'mG.F!@.,l@c[f'[%S8'BZIcbQc3/">GrXDwb#;fTRGNmHr^JFb
- SAptvwWc,0+z+~p~"Gdr4H$(|N(yF(wwCM2bW0~U?HPEE^fkPGx^u[*[yV.gyB!hDOli}EF[\cW*S
- H<GG"+i\3#fp@@EeWZWBv;]LA5n1pS2VO%Vv[yH?kY'lEWr30WfIU?%>&spRGFL}{`bj1TaD^l/"[
- msn( /TH#THs{Hpj>)]f><W}Ck9%2?H"AEM)+9<@D;3Kv=^?4$1/+#Qs:-aSsBTUS]iJ$6
-To:     list Linux RAID <linux-raid@vger.kernel.org>
-Subject: Re: Can't get RAID5/RAID6  NVMe randomread  IOPS - AMD ROME what am I missing?????
-In-Reply-To: <5EAED86C53DED2479E3E145969315A2385841062@UMECHPA7B.easf.csd.disa.mil>
-References: <5EAED86C53DED2479E3E145969315A2385841062@UMECHPA7B.easf.csd.disa.mil>
-X-Mailer: VM 8.2.0b under 26.3 (x86_64-pc-linux-gnu)
-From:   pg@mdraid.list.sabi.co.UK (Peter Grandi)
-X-Disclaimer: This message contains only personal opinions
-X-Blacklisted-At: 
+Reply-To: godwinppter@gmail.com
+Sender: mamadouneymar01@gmail.com
+Received: by 2002:a5d:6a43:0:0:0:0:0 with HTTP; Tue, 27 Jul 2021 23:17:25
+ -0700 (PDT)
+From:   Godwin Pete <godwinnpeter@gmail.com>
+Date:   Wed, 28 Jul 2021 08:17:25 +0200
+X-Google-Sender-Auth: 3e0t7AjaFfltrB06f1ZO_s-6o3M
+Message-ID: <CANhNTmANPkd3dWuV+BeunVfCcBLHufj-PQVysdCLPmVJ9MnfEw@mail.gmail.com>
+Subject: Reply immediately
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-[...]
-> Device            r/s     w/s     rkB/s     wkB/s   rrqm/s   wrqm/s  %rrqm  %wrqm r_await w_await aqu-sz rareq-sz wareq-sz  svctm  %util
-> nvme0n1       1317510.00    0.00 5270044.00      0.00     0.00     0.00   0.00   0.00    0.31    0.00 411.95     4.00     0.00   0.00 100.40
-[...]
-> Device            r/s     w/s     rkB/s     wkB/s   rrqm/s   wrqm/s  %rrqm  %wrqm r_await w_await aqu-sz rareq-sz wareq-sz  svctm  %util
-> nvme0n1       114589.00    0.00 458356.00      0.00     0.00     0.00   0.00   0.00    0.29    0.00  33.54     4.00     0.00   0.01 100.00
+My good friend,
 
-The obvious difference is the factor of 10 in "aqu-sz" and that
-correspond to the factor of 10 in "r/s" and "rkB/s".
+I just want to know if you, can help me to transfer the amount of
+($6Million). After the transfer we have to share it, 50% for me, and
+50% for you. Please let me know if you can help me for more
+information in regards with the transfer. I hope you can work with me
+honestly?
 
-I have noticed that the MD RAID is does some weird things to the
-queueing, it is not a "normal" block device, and this often
-creates bizarrities (happens also with DM/LVM2).
 
-Try to create a filesystem on top of 'md0' and 'md1' and test
-that, things may be quite different.
+Thanks.
+
+Godwin Peter,
