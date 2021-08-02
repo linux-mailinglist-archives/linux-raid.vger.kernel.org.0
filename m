@@ -2,39 +2,39 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96F303DDB6C
-	for <lists+linux-raid@lfdr.de>; Mon,  2 Aug 2021 16:46:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31BBA3DDB99
+	for <lists+linux-raid@lfdr.de>; Mon,  2 Aug 2021 16:53:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234648AbhHBOqc (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 2 Aug 2021 10:46:32 -0400
-Received: from sender11-op-o11.zoho.eu ([31.186.226.225]:17036 "EHLO
+        id S234366AbhHBOyC (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 2 Aug 2021 10:54:02 -0400
+Received: from sender11-op-o11.zoho.eu ([31.186.226.225]:17087 "EHLO
         sender11-op-o11.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234652AbhHBOqT (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 2 Aug 2021 10:46:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1627915562; cv=none; 
+        with ESMTP id S234077AbhHBOyC (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 2 Aug 2021 10:54:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1627916028; cv=none; 
         d=zohomail.eu; s=zohoarc; 
-        b=Zhie40wRbHP/Umbfbq615yGeoRV+ltuGL5EHcOd69V8LdvSDTVkFOUnsmtk3Y/pMLWmRtNx+zPUNCTkvfbx7Ez5fGBBf7GrVY7ee8HO8LRsX0NWbbxOgFIjDOvlYchNGYMEkPr8CB0Gcxr4uk+J59+7dUIrMv1zkZaEOIS/NpgE=
+        b=dsw7ji3DRoYs1ZqsAebmV25glQN3Fhn+8Foo36WA7vR9nuolSmAybcwMzN7VKN03TrItXbPwGu8bjRoM9tj3D92VpU796Y8Jx20TKZD0LmwTA/3mBCTZsgA/Nf7DOnUke9LiC/0Da7NnxZX0kIzqHMvWs2phl+b+sCMza2bMtsg=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1627915562; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=FMPBBp3ZliPmOT0LwGM+F/SjQeSLiL+5n8fzqIBgUf4=; 
-        b=Rmo0QC7JAEdsi3fg3rLqcP8I9OOKlqihKIzSCBE78VMuzyh5ww/3cqbQaZQGzpGqQPy2CJK1j6ENGR2W7SyLUo88EsGYatcpRqqsaRS4XjzdS937rmQ7VirzCw9j4nc2qb5B1YmCm4BT+JEBPciaVDSQcpd8q84Hp4xCVqHAGuE=
+        t=1627916028; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=mH1KEX0tt8TgX6MIOMN/h2hxLZCzADSd9OqKhZJ75Qc=; 
+        b=bmmEZCP5hrTjK8FYCOXlZLDnN3g5eyPpjlAsBqaBwqd3k0cVMrGMXDCXlvrN0imemLWJsCMFPkrNEXmu3hmJAxF8QOtHEzS/tBcxFCSXkn2ak5HhPl9fZK5YyjEe3YXjM2K7Ex4UFZB7Ld7/q3QLZ+DEo8All0P6wAnPkvYj5VQ=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
         spf=pass  smtp.mailfrom=jes@trained-monkey.org;
         dmarc=pass header.from=<jes@trained-monkey.org>
 Received: from [192.168.99.29] (pool-72-69-75-15.nycmny.fios.verizon.net [72.69.75.15]) by mx.zoho.eu
-        with SMTPS id 1627915560170844.4754173667683; Mon, 2 Aug 2021 16:46:00 +0200 (CEST)
-Subject: Re: [PATCH 2/5] tests: clear the superblock before adding a device to
- the array.
+        with SMTPS id 1627916026682110.27765069391364; Mon, 2 Aug 2021 16:53:46 +0200 (CEST)
+Subject: Re: [PATCH 3/5] Assemble: skip devices that don't match uuid instead
+ of aborting the assembly.
 To:     Sudhakar Panneerselvam <sudhakar.panneerselvam@oracle.com>
 Cc:     linux-raid@vger.kernel.org
-References: <20210722182803.GA25122@oracle.com>
+References: <20210722182834.GA25244@oracle.com>
 From:   Jes Sorensen <jes@trained-monkey.org>
-Message-ID: <e4fd4358-650f-f259-ca76-78a8342627d1@trained-monkey.org>
-Date:   Mon, 2 Aug 2021 10:45:59 -0400
+Message-ID: <1f1a4095-e9cc-cf2e-20e0-f300eb0a8826@trained-monkey.org>
+Date:   Mon, 2 Aug 2021 10:53:45 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.7.0
 MIME-Version: 1.0
-In-Reply-To: <20210722182803.GA25122@oracle.com>
+In-Reply-To: <20210722182834.GA25244@oracle.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -44,47 +44,15 @@ List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
 On 7/22/21 2:28 PM, Sudhakar Panneerselvam wrote:
-> This fixes '02lineargrow' test as prior metadata causes --add operation
-> to fail.
+> This fixes '03r0assem' test as assembly fails when looking for specific
+> uuid among the device list.
 > 
 > Signed-off-by: Sudhakar Panneerselvam <sudhakar.panneerselvam@oracle.com>
 > ---
->  test | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/test b/test
-> index 711a3c7a2076..39a85d77fa25 100755
-> --- a/test
-> +++ b/test
-> @@ -48,7 +48,7 @@ mdadm() {
->  		;;
->  	esac
->  	case $* in
-> -	*-C* | *--create* | *-B* | *--build* )
-> +	*-C* | *--create* | *-B* | *--build* | *--add* )
->  		# clear superblock every time once creating or
->  		# building arrays, because it's always creating
->  		# and building array many times in a test case.
-> @@ -59,7 +59,12 @@ mdadm() {
->  					$mdadm --zero $args > /dev/null
->  			}
->  		done
-> -		$mdadm 2> $targetdir/stderr --quiet "$@" --auto=yes
-> +		if [[ $* == *--add* ]]
-> +		then
-> +			$mdadm 2> $targetdir/stderr --quiet "$@"
-> +		else
-> +			$mdadm 2> $targetdir/stderr --quiet "$@" --auto=yes
-> +		fi
->  		;;
->  	* )
->  		$mdadm 2> $targetdir/stderr --quiet "$@"
-> 
-
-I am not sure this is the right approach to fix this. --add has two
-meanings and we would potentially want test cases where we make sure not
-to add arrays with pre-existing meta-data on them. I think it's better
-to fix this in 02lineargrow
+>  Assemble.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+Applied!
 
 Thanks,
 Jes
+
