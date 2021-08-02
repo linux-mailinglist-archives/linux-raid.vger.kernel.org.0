@@ -2,71 +2,292 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DF5B3DDB24
-	for <lists+linux-raid@lfdr.de>; Mon,  2 Aug 2021 16:34:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BFB13DDB8D
+	for <lists+linux-raid@lfdr.de>; Mon,  2 Aug 2021 16:52:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234220AbhHBOe5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 2 Aug 2021 10:34:57 -0400
-Received: from sender11-op-o11.zoho.eu ([31.186.226.225]:17057 "EHLO
-        sender11-op-o11.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234190AbhHBOey (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 2 Aug 2021 10:34:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1627914880; cv=none; 
-        d=zohomail.eu; s=zohoarc; 
-        b=PmllIUVl0Q9zu1pGiz+TxCIXitcElujysWIXUvJITXy1W30ogMChcS9NJCEouKg1dFa5a0Qab6MKZoIoaszjm8stVFt0cREjVbBAEm5E72v+LTDVIdFxVS4KZo9ztuBIcGPV22VzEf8F1AUGXo/LnZUJA1R4Pw+Rn4nmsFuRA7A=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1627914880; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=8OdkwZ/IPA8/7RO7vkAIwa7dd5AQ/3FADKRyEdy0ZB0=; 
-        b=YP5cedoCm5zPdmWIgp6mE/aYXpTXO1wsE0aY+U4Vw0JI/a5QO+v6rDU4wrvAbbCBxPb5p4dun/BlDKnIEh8mQtlTByScJFzRA4EigIvlIEjjYoaHOHI0L56mTUslCwEe6CMa3vYwPFGObJ3PhYLZnqMmpCWPjTnOYG4qtBaBTl8=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
-        dmarc=pass header.from=<jes@trained-monkey.org>
-Received: from [192.168.99.29] (pool-72-69-75-15.nycmny.fios.verizon.net [72.69.75.15]) by mx.zoho.eu
-        with SMTPS id 1627914880021569.0995172989291; Mon, 2 Aug 2021 16:34:40 +0200 (CEST)
-Subject: Re: [PATCH 1/5] tests: remove raid0 tests for 0.90 metadata version
-To:     Sudhakar Panneerselvam <sudhakar.panneerselvam@oracle.com>
-Cc:     linux-raid@vger.kernel.org
-References: <20210722182733.GA24996@oracle.com>
-From:   Jes Sorensen <jes@trained-monkey.org>
-Message-ID: <eecd7f0b-2d6c-44ac-92f8-33c600e13c3d@trained-monkey.org>
-Date:   Mon, 2 Aug 2021 10:34:39 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        id S234165AbhHBOw4 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 2 Aug 2021 10:52:56 -0400
+Received: from l2ms.rz.uni-kiel.de ([134.245.11.210]:52386 "EHLO
+        l2ms.rz.uni-kiel.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233925AbhHBOw4 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 2 Aug 2021 10:52:56 -0400
+X-Greylist: delayed 845 seconds by postgrey-1.27 at vger.kernel.org; Mon, 02 Aug 2021 10:52:55 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=uni-kiel.de
+        ; s=20180612; h=Content-Type:MIME-Version:Message-ID:Date:Subject:To:From:
+        Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=j+sM0ZbXJ66BmdFk+GSYPVqFo5lBSB63zKJcPkyTnyE=; i=@physik.uni-kiel.de; b=Oa4
+        5/Fjdf87X8VE6uPczHLbTY6l8sjWbwaNL7efwS63KDKODqodvGBFjMWn1edBNk3AjPGclY/GEiQft
+        LFbhb07x1E3cHMdGrBxhK3cBgQxRpQB/ujADd2J586n+8w0u26P/CutLwLsamPBb8mH2JXuKKtb9P
+        5k/BW+cQb0hQfM=;
+Received: from localhost ([127.0.0.1])
+        by l2ms.rz.uni-kiel.de with esmtp (Exim 4.94.2)
+        (envelope-from <boettcher@physik.uni-kiel.de>)
+        id 1mAZ5T-000ByY-Jz
+        for linux-raid@vger.kernel.org; Mon, 02 Aug 2021 16:38:39 +0200
+X-Virus-Scanned: by amavisd-new (Uni-Kiel/l2ms-sc)
+Received: from l2ms.rz.uni-kiel.de ([IPv6:::1])
+        by localhost (l2ms.rz.uni-kiel.de [IPv6:::1]) (amavisd-new, port 10024)
+        with ESMTP id sC01BzJZHEfp for <linux-raid@vger.kernel.org>;
+        Mon,  2 Aug 2021 16:38:39 +0200 (CEST)
+Received: from frontend2.mail.uni-kiel.de ([134.245.12.49])
+        by l2ms.rz.uni-kiel.de with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <boettcher@physik.uni-kiel.de>)
+        id 1mAZ5T-000ByI-G3; Mon, 02 Aug 2021 16:38:39 +0200
+Received: from falbala.ieap.uni-kiel.de ([134.245.71.168]:40172)
+        by frontend2.mail.uni-kiel.de with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <boettcher@physik.uni-kiel.de>)
+        id 1mAZ5S-000Axa-Ui; Mon, 02 Aug 2021 16:38:39 +0200
+Received: from localhost ([127.0.0.1] helo=falbala)
+        by falbala.ieap.uni-kiel.de with esmtp (Exim 4.94.2)
+        (envelope-from <boettcher@physik.uni-kiel.de>)
+        id 1mAZ5S-0000hC-HJ; Mon, 02 Aug 2021 16:38:38 +0200
+From:   =?utf-8?Q?Stephan_B=C3=B6ttcher?= <boettcher@physik.uni-kiel.de>
+To:     linux-raid@vger.kernel.org
+Subject: help channel for md raid?
+Date:   Mon, 02 Aug 2021 16:38:38 +0200
+Message-ID: <s6n8s1j6he9.fsf@falbala.ieap.uni-kiel.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20210722182733.GA24996@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 7/22/21 2:27 PM, Sudhakar Panneerselvam wrote:
-> Some of the test cases fail because raid0 creation fails with the error,
-> "0.90 metadata does not support layouts for RAID0" added by commit,
-> 329dfc28debb. Removing the 0.90 test to make these test cases to work.
-> 
-> removed 04r0update test completely as it is specific to raid0 for 0.9
-> version.
-> 
-> '04update-metadata' and '03r0assem' still fails at a different place after
-> this change which will be fixed in an upcoming commit.
-> 
-> Signed-off-by: Sudhakar Panneerselvam <sudhakar.panneerselvam@oracle.com>
-> ---
->  tests/00raid0           | 11 --------
->  tests/00readonly        |  4 +++
->  tests/03r0assem         | 72 -------------------------------------------------
->  tests/04r0update        | 20 --------------
->  tests/04update-metadata |  2 +-
->  5 files changed, 5 insertions(+), 104 deletions(-)
->  delete mode 100644 tests/04r0update
 
-I'm really happy to see effort put into updating the test suite. However
-rather than removing tests, it would be nice to turn it around and make
-a test that make sure we do not allow creating a 0.9 raid0 array with
-layouts.
+Moin!
 
-Cheers,
-Jes
+May I ask a question on this list, or is this strictly for development?
+
+Thanks,
+Stephan
+
+
+My qustion is how to translate sector numbers from a RAID6 as in
+
+> Aug  2 01:32:28 falbala kernel: md8: mismatch sector in range 1460408-1460416
+
+to ext4 inode numbers, as in
+
+> debugfs: icheck 730227 730355 730483 730611
+> Block   Inode number
+> 730227  30474245
+> 730355  30474245
+> 730483  30474245
+> 730611  30474245
+
+Is there a list, channel, matrix room for this kind of questions?
+Are there tools to do what I need?
+Is the approach below sensible?
+
+It is a RAID6 with six drives, one of them failed.
+A check yielded 378 such mismatches.
+
+I assume the sectors count from the start of the `Data Offset`.
+`ext4 block numbers` count from the start of the partition?
+Is that correct?
+
+The failed drive has >3000 unreadble sectors and became very slow.
+
+#! /usr/bin/gawk -f
+
+BEGIN {
+	SS = 512
+	CS = 0x80000/SS
+	BS = 4096/SS
+	N  = 4
+}
+/mismatch sector in range/ {
+	split($11,A,/-/); 
+	S = A[1]; 
+	M = S%CS; 
+	C = S/CS;
+	B = (C*N*CS + M)/BS
+	printf "icheck"
+	for (i=0; i<N; i++) printf " %u", B + i*CS/BS 
+	printf "\n"
+}
+
+
+/dev/sda3:
+          Magic : a92b4efc
+        Version : 1.2
+    Feature Map : 0x1
+     Array UUID : d58e68a2:7d9e9218:1bb61653:c295ae02
+           Name : falbala:8  (local to host falbala)
+  Creation Time : Wed Aug 20 12:23:51 2014
+     Raid Level : raid6
+   Raid Devices : 6
+
+ Avail Dev Size : 5440837632 (2594.39 GiB 2785.71 GB)
+     Array Size : 10881675264 (10377.57 GiB 11142.84 GB)
+    Data Offset : 262144 sectors
+   Super Offset : 8 sectors
+   Unused Space : before=262064 sectors, after=0 sectors
+          State : clean
+    Device UUID : 16ee808f:9cf5420e:270cc442:db7768b6
+
+Internal Bitmap : 8 sectors from superblock
+    Update Time : Mon Aug  2 09:27:57 2021
+  Bad Block Log : 512 entries available at offset 24 sectors
+       Checksum : 2b557999 - correct
+         Events : 405815
+
+         Layout : left-symmetric
+     Chunk Size : 512K
+
+   Device Role : Active device 0
+   Array State : AAA.AA ('A' == active, '.' == missing, 'R' == replacing)
+/dev/sdb3:
+          Magic : a92b4efc
+        Version : 1.2
+    Feature Map : 0x1
+     Array UUID : d58e68a2:7d9e9218:1bb61653:c295ae02
+           Name : falbala:8  (local to host falbala)
+  Creation Time : Wed Aug 20 12:23:51 2014
+     Raid Level : raid6
+   Raid Devices : 6
+
+ Avail Dev Size : 5440837632 (2594.39 GiB 2785.71 GB)
+     Array Size : 10881675264 (10377.57 GiB 11142.84 GB)
+    Data Offset : 262144 sectors
+   Super Offset : 8 sectors
+   Unused Space : before=262056 sectors, after=0 sectors
+          State : clean
+    Device UUID : 28c5ded0:c005aaf2:167d3af3:8714b48c
+
+Internal Bitmap : 8 sectors from superblock
+    Update Time : Mon Aug  2 09:27:57 2021
+  Bad Block Log : 512 entries available at offset 72 sectors
+       Checksum : d7dc6e93 - correct
+         Events : 405815
+
+         Layout : left-symmetric
+     Chunk Size : 512K
+
+   Device Role : Active device 1
+   Array State : AAA.AA ('A' == active, '.' == missing, 'R' == replacing)
+/dev/sdc3:
+          Magic : a92b4efc
+        Version : 1.2
+    Feature Map : 0x1
+     Array UUID : d58e68a2:7d9e9218:1bb61653:c295ae02
+           Name : falbala:8  (local to host falbala)
+  Creation Time : Wed Aug 20 12:23:51 2014
+     Raid Level : raid6
+   Raid Devices : 6
+
+ Avail Dev Size : 5440837632 (2594.39 GiB 2785.71 GB)
+     Array Size : 10881675264 (10377.57 GiB 11142.84 GB)
+    Data Offset : 262144 sectors
+   Super Offset : 8 sectors
+   Unused Space : before=262056 sectors, after=0 sectors
+          State : clean
+    Device UUID : 1e9be3ef:f6f44ef4:cd4c39d4:002b515c
+
+Internal Bitmap : 8 sectors from superblock
+    Update Time : Mon Aug  2 09:27:57 2021
+  Bad Block Log : 512 entries available at offset 72 sectors
+       Checksum : a92219f4 - correct
+         Events : 405815
+
+         Layout : left-symmetric
+     Chunk Size : 512K
+
+   Device Role : Active device 5
+   Array State : AAA.AA ('A' == active, '.' == missing, 'R' == replacing)
+/dev/sdd3:
+          Magic : a92b4efc
+        Version : 1.2
+    Feature Map : 0x1
+     Array UUID : d58e68a2:7d9e9218:1bb61653:c295ae02
+           Name : falbala:8  (local to host falbala)
+  Creation Time : Wed Aug 20 12:23:51 2014
+     Raid Level : raid6
+   Raid Devices : 6
+
+ Avail Dev Size : 5440837632 (2594.39 GiB 2785.71 GB)
+     Array Size : 10881675264 (10377.57 GiB 11142.84 GB)
+    Data Offset : 262144 sectors
+   Super Offset : 8 sectors
+   Unused Space : before=262056 sectors, after=0 sectors
+          State : active
+    Device UUID : e85da470:24a385b8:ae66eacd:d822539d
+
+Internal Bitmap : 8 sectors from superblock
+    Update Time : Mon Aug  2 01:24:06 2021
+  Bad Block Log : 512 entries available at offset 72 sectors
+       Checksum : 28d023be - correct
+         Events : 400427
+
+         Layout : left-symmetric
+     Chunk Size : 512K
+
+   Device Role : Active device 3
+   Array State : AAAAAA ('A' == active, '.' == missing, 'R' == replacing)
+/dev/sde3:
+          Magic : a92b4efc
+        Version : 1.2
+    Feature Map : 0x1
+     Array UUID : d58e68a2:7d9e9218:1bb61653:c295ae02
+           Name : falbala:8  (local to host falbala)
+  Creation Time : Wed Aug 20 12:23:51 2014
+     Raid Level : raid6
+   Raid Devices : 6
+
+ Avail Dev Size : 5440837632 (2594.39 GiB 2785.71 GB)
+     Array Size : 10881675264 (10377.57 GiB 11142.84 GB)
+    Data Offset : 262144 sectors
+   Super Offset : 8 sectors
+   Unused Space : before=262056 sectors, after=0 sectors
+          State : clean
+    Device UUID : 48223f81:5c9a0ddd:ff0d1782:57941c27
+
+Internal Bitmap : 8 sectors from superblock
+    Update Time : Mon Aug  2 09:27:57 2021
+  Bad Block Log : 512 entries available at offset 72 sectors
+       Checksum : 9be57126 - correct
+         Events : 405815
+
+         Layout : left-symmetric
+     Chunk Size : 512K
+
+   Device Role : Active device 4
+   Array State : AAA.AA ('A' == active, '.' == missing, 'R' == replacing)
+/dev/sdf3:
+          Magic : a92b4efc
+        Version : 1.2
+    Feature Map : 0x1
+     Array UUID : d58e68a2:7d9e9218:1bb61653:c295ae02
+           Name : falbala:8  (local to host falbala)
+  Creation Time : Wed Aug 20 12:23:51 2014
+     Raid Level : raid6
+   Raid Devices : 6
+
+ Avail Dev Size : 5440837632 (2594.39 GiB 2785.71 GB)
+     Array Size : 10881675264 (10377.57 GiB 11142.84 GB)
+    Data Offset : 262144 sectors
+   Super Offset : 8 sectors
+   Unused Space : before=262056 sectors, after=0 sectors
+          State : clean
+    Device UUID : 881ee37d:810e582a:bc0d4841:27916f6b
+
+Internal Bitmap : 8 sectors from superblock
+    Update Time : Mon Aug  2 09:27:57 2021
+  Bad Block Log : 512 entries available at offset 72 sectors
+       Checksum : e957ddfe - correct
+         Events : 405815
+
+         Layout : left-symmetric
+     Chunk Size : 512K
+
+   Device Role : Active device 2
+   Array State : AAA.AA ('A' == active, '.' == missing, 'R' == replacing)
+
+
+-- 
+Stephan
