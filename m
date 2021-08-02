@@ -2,15 +2,15 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ABFC93DDA33
-	for <lists+linux-raid@lfdr.de>; Mon,  2 Aug 2021 16:07:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2A093DDA49
+	for <lists+linux-raid@lfdr.de>; Mon,  2 Aug 2021 16:12:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235266AbhHBOHe (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 2 Aug 2021 10:07:34 -0400
-Received: from sender11-op-o11.zoho.eu ([31.186.226.225]:17026 "EHLO
+        id S236052AbhHBOND (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 2 Aug 2021 10:13:03 -0400
+Received: from sender11-op-o11.zoho.eu ([31.186.226.225]:17027 "EHLO
         sender11-op-o11.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235911AbhHBOF2 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 2 Aug 2021 10:05:28 -0400
+        with ESMTP id S234685AbhHBOHi (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 2 Aug 2021 10:07:38 -0400
 ARC-Seal: i=1; a=rsa-sha256; t=1627913117; cv=none; 
         d=zohomail.eu; s=zohoarc; 
         b=G5UfGQE0hIGrAsfQWgTXKss08Z17fUXcJZhqSsbU+WcnaZtXLUiS5NvRWD1W6BaV63180vh0A5fzycQsCCuag4eedr0++AeD98XuQxqNEuSwfcgB2gV9xlXbZJZg+CqsqUI/e7dNpgB8WSnUoPSeCnwsxQTneRIVVO6y6gV2v/4=
