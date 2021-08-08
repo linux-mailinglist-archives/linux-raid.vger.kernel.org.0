@@ -2,65 +2,151 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D6303E3491
-	for <lists+linux-raid@lfdr.de>; Sat,  7 Aug 2021 12:09:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B713F3E3AE1
+	for <lists+linux-raid@lfdr.de>; Sun,  8 Aug 2021 16:43:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231816AbhHGKJM (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 7 Aug 2021 06:09:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35922 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230090AbhHGKI6 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 7 Aug 2021 06:08:58 -0400
-Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD81DC0613CF
-        for <linux-raid@vger.kernel.org>; Sat,  7 Aug 2021 03:08:32 -0700 (PDT)
-Received: by mail-qt1-x831.google.com with SMTP id c6so4189423qtv.5
-        for <linux-raid@vger.kernel.org>; Sat, 07 Aug 2021 03:08:32 -0700 (PDT)
+        id S231860AbhHHOn6 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 8 Aug 2021 10:43:58 -0400
+Received: from mail-am6eur05on2092.outbound.protection.outlook.com ([40.107.22.92]:15329
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231855AbhHHOn6 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sun, 8 Aug 2021 10:43:58 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ifnY3rcdJP+quuL9QQy6gJqRBgdCsBA2gQx4YYXKwJ3uE2UpBs8HKU6jtMw9wSCIqYT3ATKts17R4vsP9grOAwVWp+fLEcS04ZDjzUjcgfONGpOFwZj9Y/hiScsKAqQdOZoxbYTFdYJILDh5dcZQV4BH8ZuPJQ9ipNUvwsv2ZC9PUMMmOkHAKRm1V01Azcnmhjue/Ad0+WH7UAvbpTJXN+UfPtPTKouo6rKxwj+MTUX9jKrmwzocnl3ST7wt2VnmfQlAV0c1NyHz09/Hm1jrhKIs2UViZ6dWWwhHt8lpeTNkPzWiX4JIBEPZ5AmGnHS+EM+Mr9faA2NSh4ZwDHRPIA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HC18P8DDHeRLcFslA7x+mkMt2Yz53RDcV7iN2VYEmOI=;
+ b=cIOm0bDWIyImn2FvrBj10T3ls4x4nUo8ZhFollPPvY19AEjveNS4yQbir+nPmMzjM2CNeNao+KC5tw5hR4PI/MRMrl+TRd/EAdtEmgmW92/aTtnrLEs/RwEnKy/dfAMg721H2PPSldh4mp1bbtg2dB4hJlTMLdf+ir2MCT7mvL30jUz2ckuN5AdFzxDd/wKZm/toSbOjrsfRyn4tMc9hkOxAhGCuZ5ddqYcusu0wlWfwcssFQmY1LsIrtZWgIFmwKes4OnhQcixqeQxtX/YmCrGQrTS/W7xsMEk3e4cD8cP+S6TbP2lR30LXOR+kC8CG9uagvNzWwuB5sMSuaMtQbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=volumez.com; dmarc=pass action=none header.from=volumez.com;
+ dkim=pass header.d=volumez.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=aiYv+ghkj1wcr5KlnL1ML71lfnXzfmxAeT1E5sMi1Qw=;
-        b=S3l4T9e2tP5pVS7ZuYdu+1Y0qbKkJYnejhs8S6oYuW6LYwueyDMIGlxr2QviX908pZ
-         9SPZJLnYHgJvYg3PLTI5fWJK5TkMxVO2qBa2FrvvgMmkTyowY9FDC29BPjsdhbPhxQLa
-         tYnwYex5seRxFiLy8EoSSBUznJBTlHeb/Bz5niZL/Il13kvDN2O2xOxWpnGH2uLwHscT
-         DoTFOxHdTymP4E3acGtQxboa5XPRRUPIM6mlAfcr7/ekHDJNJv4uG6dy2JtyqWn88ow0
-         hsiNGB55/AYboSktIHGsl5ebXsVnqzSR6R9ebR+QIoCvocI54gGy0g8VDA3p78wJouiN
-         BLYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=aiYv+ghkj1wcr5KlnL1ML71lfnXzfmxAeT1E5sMi1Qw=;
-        b=jOKeqKrpFpg1VfMcKYh2dd+ITItdPlKeU9Id6PyEzzG3kqyjThm6HwESnVLzoLC/fI
-         B2Zau86YGvPE1Ve18xBkOcfRJ1TuTMohlDXQBXbclFJgyyokmFOvjc0vfYLi+97udz7Y
-         sEF5uw8Ndxz9m9cR+dj6/HVzkEyfg/XnQJJurDiJu2lPsfJJy2WA1p69Hlk92pfU0uc5
-         WpbjD6BZ3jua15ukdzebl2xuhHwyz1wHzZlbOJpxq++B40lXYNCwL/P1DwYJ2LSgQGQj
-         evvzTTuN5PPCOY0b+NX9py50Zj1t6h5tqdAFi4FkW/I+u6wajo5G5urVFCVs3bf1hI6v
-         Vf+g==
-X-Gm-Message-State: AOAM5301h475NXtNa5dp8qWbr86+YYnReGQyXcj93E/rA27dJtYY7U62
-        loDCCZxWgu0KdPl2gykOWtlP/f7VMjCYWeedg8o=
-X-Google-Smtp-Source: ABdhPJxgyuRRXsSMd0R6a3b0A3hI9pouiu6GtIO5W43J3txGTJtR81T+4t2OwT3S4z6DuFUIj52qGnoLd2PfTJY5Mrs=
-X-Received: by 2002:ac8:6611:: with SMTP id c17mr12282490qtp.392.1628330911954;
- Sat, 07 Aug 2021 03:08:31 -0700 (PDT)
+ d=storingio.onmicrosoft.com; s=selector1-storingio-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HC18P8DDHeRLcFslA7x+mkMt2Yz53RDcV7iN2VYEmOI=;
+ b=J7FZrJWlQ3EVaFADPVqYN0mECoNGbzjFlYNReGpmzAMYwcxf97nC3NuzBt+n9Hd583FGo2vsF9EUkPsLwjBLyoDsM6WVC4SK9ugAgsO0Eju7F1gBKXgoI4Sbitf5VFQkV2vbB7wSO1b8Mjeyoie0NN6jiu6cEht94LYT6K8fBuLul5hpHQ5b8G+jKlViwH49wwvM9ly5vF8f/ODEFYZJtjHyn23RFW34YLTWjpZbQFIBcTBA98T5+eAjkGKrNFz8YgSRwN6fR5SkXMsw4JGIvF/JrAc77CaoHAoHu1LOJ47O2DvPEIYgYl8+g74cfN5o4a78qn0jdPWElVxL9RWcjg==
+Authentication-Results: mail.mil; dkim=none (message not signed)
+ header.d=none;mail.mil; dmarc=none action=none header.from=volumez.com;
+Received: from AS8PR04MB7992.eurprd04.prod.outlook.com (2603:10a6:20b:2a4::6)
+ by AM6PR04MB5125.eurprd04.prod.outlook.com (2603:10a6:20b:a::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4394.15; Sun, 8 Aug
+ 2021 14:43:36 +0000
+Received: from AS8PR04MB7992.eurprd04.prod.outlook.com
+ ([fe80::e4b0:f154:1315:885e]) by AS8PR04MB7992.eurprd04.prod.outlook.com
+ ([fe80::e4b0:f154:1315:885e%5]) with mapi id 15.20.4394.022; Sun, 8 Aug 2021
+ 14:43:36 +0000
+Date:   Sun, 8 Aug 2021 17:43:31 +0300
+From:   Gal Ofri <gal.ofri@volumez.com>
+To:     "Finlayson, James M CIV (USA)" <james.m.finlayson4.civ@mail.mil>
+Cc:     "'linux-raid@vger.kernel.org'" <linux-raid@vger.kernel.org>
+Subject: Re: [Non-DoD Source] Re: Can't get RAID5/RAID6 NVMe randomread IOPS
+ - AMD ROME what am I missing?????
+Message-ID: <20210808174331.1e444db9@gofri-dell>
+In-Reply-To: <5EAED86C53DED2479E3E145969315A2385856B85@UMECHPA7B.easf.csd.disa.mil>
+References: <5EAED86C53DED2479E3E145969315A2385841062@UMECHPA7B.easf.csd.disa.mil>
+        <AS8PR04MB799205817C4647DAC740DE9A91EA9@AS8PR04MB7992.eurprd04.prod.outlook.com>
+        <5EAED86C53DED2479E3E145969315A2385856AD0@UMECHPA7B.easf.csd.disa.mil>
+        <5EAED86C53DED2479E3E145969315A2385856AF7@UMECHPA7B.easf.csd.disa.mil>
+        <5EAED86C53DED2479E3E145969315A2385856B25@UMECHPA7B.easf.csd.disa.mil>
+        <5EAED86C53DED2479E3E145969315A2385856B62@UMECHPA7B.easf.csd.disa.mil>
+        <5EAED86C53DED2479E3E145969315A2385856B85@UMECHPA7B.easf.csd.disa.mil>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: MR1P264CA0025.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:501:2f::12) To AS8PR04MB7992.eurprd04.prod.outlook.com
+ (2603:10a6:20b:2a4::6)
 MIME-Version: 1.0
-Received: by 2002:a05:622a:112:0:0:0:0 with HTTP; Sat, 7 Aug 2021 03:08:31
- -0700 (PDT)
-Reply-To: ssaar0101@gmail.com
-From:   Medinat Sherrif <do348911@gmail.com>
-Date:   Sat, 7 Aug 2021 10:08:31 +0000
-Message-ID: <CA+WgU6p7R+UtP_5FzWNKmG6hkPWxb7Kfk5rN4WNbAMA9+mot=Q@mail.gmail.com>
-Subject: Good morning,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from gofri-dell (199.203.113.198) by MR1P264CA0025.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:2f::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4394.15 via Frontend Transport; Sun, 8 Aug 2021 14:43:35 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: be8528bc-4871-404f-2e97-08d95a7ae715
+X-MS-TrafficTypeDiagnostic: AM6PR04MB5125:
+X-Microsoft-Antispam-PRVS: <AM6PR04MB5125D55C706376F0EF2E30A191F59@AM6PR04MB5125.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: y1DM1Ibv2b+s6rLMx6R1ZVhn4ZbPrFH5aMtLf0NaqlVEMYRZReaargUlg28kmFBeDT+N0S0ioXJqMCAmVsTT/99ciFNMzDyD2ZhrOTIfK+j64PpE9zWBJo2E6ya0GFmNizTI7/fBpztWNg7yPDNlb+qi/yKyhrXBN/PC+EKFggo+Sk+VOY9gurmje1IEBdXZwlNMKekv0WpJAatTklW3VtDDIoyRE6OkLRxCMw5kH2G9Xk6bRiSH8bEwUnOtsME7ucpWdKAa0VHwFhu+xO9vSokrGhX48+kg1zlajXG3gSz+BT2jIlSEuL90VY+Z5pNT4Jo/XggP5HrT5m2lxehLehZqsb5UFt/QxT4UaA8gscjXaspgol2iIVOtBDAROkwwnnbAymjN/KapIq9rXY2NESkEbaO2vecJf9GyXtH6PSVv97zSBFyfZxbpX8ST1ecvZ3h+sYDPXMaJUlFVpvGBEOPCvk+4l7op7IFoiwgpZBZwENx8Wd1cCputM3lEleQDl917MgV9VvIe+71EHIRGb7UYQ+kwy/Pdzhaw6/dmKx/Putg7KcLNfPKULxhEKFdjJatw3e7wEeEv9y1loGIZNHnI5sRD/QBLNuMY8azS7PejQtcxkSswA9IMHbzF5WY2jSq/W/NiTMBd74yoNcmOrn9edENLaBzOWkMSwgkFtgyFYf0PQaruzLy1MaG7HCnPvQB733uHk67CEm+QOJgAOg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB7992.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(346002)(136003)(366004)(376002)(39830400003)(33716001)(6666004)(6916009)(5660300002)(26005)(66476007)(86362001)(66946007)(186003)(66556008)(8676002)(1076003)(2906002)(9686003)(55016002)(38100700002)(8936002)(4326008)(956004)(44832011)(38350700002)(52116002)(316002)(478600001)(6496006);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SlM0UXIyMEp3em10M2c1M2ZyZ0QrQmxlNXVZY3dxTEdhNms1WXVOUEc5eFBO?=
+ =?utf-8?B?R0Iwa3F4OFNlaGNlRUY2Q2VEWjd0b2VuT0xDemkvNFNRUEZCM0FUQk5wYm5o?=
+ =?utf-8?B?dFJzQWJWZmwrcXpjSVhyeTViS3JsMTF5N3NFMVNHWHdiUXhlL1RvWUdjcmNY?=
+ =?utf-8?B?ZHpLeUtKelZUa2E4T1NOZGxZb1NGL3RVdmhRaGVYTXlkL1RSeXJWMlU5WGY0?=
+ =?utf-8?B?dUdRQW1Ua2I4cFE4MWc5dlZyb2R1WlloWmNzRUVyUTBmTjdjQTcwMm83R2Jp?=
+ =?utf-8?B?S1M4RVBjWVNUY250Wmp6Ylo1QmNPUitQdWJxL1lyaC8rYnhiUk1UODluQ2Ru?=
+ =?utf-8?B?RzB5dFlJRTVkSlVNcFdTZHVMRjZiWVA1UW9NMm5oVkQ3N2hDSXpUaVBCUWt2?=
+ =?utf-8?B?Zm1wamNtMWpXMCtncEZpdHBTdkduYWtiNEo4blhybXNKNU56UWNhaDltdCt6?=
+ =?utf-8?B?OEZXZGgxOEFJM3BGeHlWNHVSV0pHVVhPQVA2VzFGK0NjRk9mU2JFMFNaMDkv?=
+ =?utf-8?B?VlFDWXZrejJYblJXbzJWOThsL1FUdklXd1MwNmJpTGMwQTR2SDdwR2ZlTTlX?=
+ =?utf-8?B?RU1xZDJVWkF0MzZSNGthbFFpbVhabVpXcUdIeWpFc2FTZWpBTmtGRWRVOGo1?=
+ =?utf-8?B?VzVzWnEyR0hNSFZqL01iU3hQMkpUTWx3WExtRlNDUi9KdzJ0UnJDMFg0bks0?=
+ =?utf-8?B?dWErK1hOc2V6NW5iNU1oZzNqQjYwVjAyTWZhT3FIRTZaTkE2Tm8xRTdoK3JH?=
+ =?utf-8?B?ZFhBOWMrSzNIemd6SHdIZ0VLcVdqUFdwVTY2NVRZZXRFZWR0VkYzK3ptMVJs?=
+ =?utf-8?B?QXBrWnl6Mi9VUDBJL1d1dGV4V2RIcjlGb0d0RnRvZTY5VytKOXF4RW0wWmUx?=
+ =?utf-8?B?NGE1SHdGa0FyMDdLdGtqeGcxVFNMQjZSL1FUbWhFQlk4N0pNUmkwQXo5a2pS?=
+ =?utf-8?B?OXh4ZkNoT3A2K3pOVzF1WWhnd3c4TklMODlTbTU0YlhlVnZmcmt4OUFGa3lx?=
+ =?utf-8?B?ak9aNTZsTDkzTHhhQ3AzOVd1V3ZEVHNuNWtxUVdMcThWNFNta2h2RTZNZ0N0?=
+ =?utf-8?B?RGY5UHZRR3JTNzBGUXE3WWIwTk1McG11ZTAyOTZ4OGZSU3RnbHR3bmY5OEtW?=
+ =?utf-8?B?OHBNeGszQnBkZGNjY2JuWXBpTEVrOXZUckJQVzluZW16M2hnN0xDeFlmWWt3?=
+ =?utf-8?B?dDlpRXVLMDVFVVFRS2J0Vk56dTAzdlRoYXpqWUN3SUw1dGRoVW4rbG9qVkxO?=
+ =?utf-8?B?ZEt4UGFhTXhsY3NFY3lVUXRuMGZGOEovVDBWZWROSG9lNEo2SGVLdU9Cc2NZ?=
+ =?utf-8?B?ZDVLSjlZQmdlazVWT1huQXFjNzd6bTZpdi9vWjdJS2tIMUlkd0I3K0RUU256?=
+ =?utf-8?B?bUZJVENQUWRWRTZTUnJQOW5kTkJoWjFnR3RVTlVoOVBYQVZ4RjhmV0ZJYWJ3?=
+ =?utf-8?B?YmpYL1R3bzJyVVh5dUVQV04xZWN0aDNneVVySzZPQXVubXluczhueEIxM0tD?=
+ =?utf-8?B?ZmhoUm1XdEVrTzNoMlg4c09XNEFEYUZ3QVlMOHcwbnR2aDg4OVVBV29RRVl0?=
+ =?utf-8?B?aVNjOHZzdk1zMzd5dFdkZDRZSVdSWjdQTzFzLzNYUU1OVFlpUTlUR1Rtcmgv?=
+ =?utf-8?B?MXY4SExoNFhNM3dLNDFkdXpjMVlKTUdNZXFqVGowQ1dNUDZWUkJ0ZEZEUTdk?=
+ =?utf-8?B?VmlEZTV5YzFOTW0vUlcwM3pGUlUzb3lEaUx1NW9JY01ocmRFeWRob0dUMkNi?=
+ =?utf-8?Q?QDrfw/QvZfhWkA1QaYlKekaxk5P6q1Rp42Lp5z6?=
+X-OriginatorOrg: volumez.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: be8528bc-4871-404f-2e97-08d95a7ae715
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB7992.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Aug 2021 14:43:36.0554
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b1841924-914b-4377-bb23-9f1fac784a1d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XA6aBr2zOZBRKJSt+9JWFSeLnO/uaqOYIb3SbgnQQ4oONOnUyGW4I4Xp3yqwe0araeDZFDJvIXmY3h4J7/5rrw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5125
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Greetings from here.
+On Thu, 5 Aug 2021 21:10:40 +0000
+"Finlayson, James M CIV (USA)" <james.m.finlayson4.civ@mail.mil> wrote:
 
-My name is Medinat. M  Sherrif, I have something very confidential to
-discuss with you in my next mail. Reply to me with your private email
-address for confidential discussion.
+> BLUF upfront with 5.14rc3 kernel that our SA built - md0 a 10+1+1 RAID5 -=
+ 5.332 M IOPS 20.3GiB/s, md1 a 10+1+1 RAID5, 5.892M IOPS 22.5GiB/s=C2=A0 - =
+best hero numbers I've ever seen on mdraid =C2=A0RAID5 IOPS.=C2=A0=C2=A0 I =
+think the kernel patch is good.=C2=A0 Prior was =C2=A0socket0 1.263M IOPS 4=
+934MiB/s, socket1 1.071M IOSP, 4183MiB/s....=C2=A0=C2=A0 I'm willing to hel=
+p push this as hard as we can until we hit a bottleneck outside of our cont=
+rol.=C2=A0=C2=A0=20
+That's great !
+Thanks for sharing your results.
+I'd appreciate if you could run a sequential-reads workload (128k/256k) so
+that we get a better sense of the throughput potential here.
 
-Best Regards.
-Medinat. M  Sherrif,
+> In my strict numa adherence with mdraid, I see lots of variability betwee=
+n reboots/assembles.    Sometimes md0 wins, sometimes md1 wins, and in my e=
+arlier runs md0 and md1 are notionally balanced.   I change nothing but see=
+ this variance.   I just cranked up a week long extended run of these 10+1+=
+1s under the 5.14rc3 kernel and right now   md0 is doing 5M IOPS and md1 6.=
+3M=20
+Given my humble experience with the code in question, I suspect that it is
+not really optimized for numa awareness, so I find your findings quite
+reasonable. I don't really have a good tip for that.
+
+I'm focusing now on thin-provisioned logical volumes (lvm - it has a much
+worse reads bottleneck actually), but we have plans for researching
+md/raid5 again soon to improve write workloads.
+I'll ping you when I have a patch that might be relevant.
+
+Cheers,
+Gal
