@@ -2,315 +2,69 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 286603E7BE7
-	for <lists+linux-raid@lfdr.de>; Tue, 10 Aug 2021 17:15:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED5E53E821C
+	for <lists+linux-raid@lfdr.de>; Tue, 10 Aug 2021 20:06:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242738AbhHJPPj (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 10 Aug 2021 11:15:39 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:52851 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S242657AbhHJPPc (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 10 Aug 2021 11:15:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1628608510;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=qyNpGiRmPjOd3wcsZFQOeNPTy4tnwO/mG1J5g+gqVD8=;
-        b=ePS7RkzWGceq6nxfa7SOCu/45tBH4GYZDeDjFO+vEXmuBS5kczQUCet3ylfrhi7IcVR/xT
-        8JIAB7OgXcaVysJKDdDmmjEcieYl1Q2surBfjyd8pcTxmN8p+vkaqWPaTH4xY1u5sQBcnZ
-        KAWw0iuZVHFfPyev/edo58MY0uryen0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-429-It_yHEVmMtKEgcn4E35tLQ-1; Tue, 10 Aug 2021 11:15:09 -0400
-X-MC-Unique: It_yHEVmMtKEgcn4E35tLQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1D155802923;
-        Tue, 10 Aug 2021 15:15:08 +0000 (UTC)
-Received: from localhost (dhcp-17-75.bos.redhat.com [10.18.17.75])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DDACD5C3DF;
-        Tue, 10 Aug 2021 15:15:07 +0000 (UTC)
-From:   Nigel Croxon <ncroxon@redhat.com>
-To:     jes@trained-monkey.org, linux-raid@vger.kernel.org, xni@redhat.com
-Subject: [PATCH] Fix return value from fstat calls
-Date:   Tue, 10 Aug 2021 11:15:07 -0400
-Message-Id: <20210810151507.1667518-1-ncroxon@redhat.com>
+        id S236152AbhHJSFw (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 10 Aug 2021 14:05:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57048 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233918AbhHJSDz (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 10 Aug 2021 14:03:55 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3277AC09B13A
+        for <linux-raid@vger.kernel.org>; Tue, 10 Aug 2021 10:36:54 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id c24so16381823lfi.11
+        for <linux-raid@vger.kernel.org>; Tue, 10 Aug 2021 10:36:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=y3BZ+wT7TMDVjM2/WQcyPOhYkG/NWjvDbJIsMqFI2RA=;
+        b=rZyDO+pQmFAMTqMMwbflMM4ql7GCGPeivQF49luaUKDh68BdWveTpXnyTbx8OavZh5
+         bGP7zLKVlUZwhT2f48vcZmIt1snZCfta1+RSsuWy7jL1bN3yiCeI7kSgY9GO+Mr9hMq3
+         QkduLfUrIvN/HhmkJo3bkzdVVz9B3L1xqaqjjeWbgQaiVHo19p8Fs6QUjc1RLTijFsZ1
+         J9z0vnpLd+WWbyIkFWEiiEi8HRNeEnyGx9q1dMSNuv5GsXDJ6u1Pt8dggrrGxNlZZA6H
+         nx910xE9Y9oc9IQRBXvrtvv831ie/oFdSTFPcOo+Z7/z7WR4icLIqTKALRAXVA68hURN
+         avgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=y3BZ+wT7TMDVjM2/WQcyPOhYkG/NWjvDbJIsMqFI2RA=;
+        b=PuDIL+1mEIS+MhHQf2q8/2q7c6RXXuDPKyg2MSfwsUvhuUxHF4TKH+87p1D1WyWDQB
+         PPOfxzibHhBcOs/kYyVDzD7BayKQJV9C/5pTcJnrpuP134/SWyIMIHNaVBCYWMmAdkam
+         757iupUTTMsWDvjuKL7sf+lhClLmsDTUy56UFCaiLvvY2dwlM5/nIxjfExXS9Erx9j7T
+         Jb3VCC8DOLoXSRJUG8zRmovLaYyFTfvOoe8HtQ6QjNxvN854brEClIz5RodxUVfl/oRK
+         edeeNPmiF6VPKx5YfSOA1EvqGsh0kSoBMdkXa0yoQzJeVwprJHz1Blrltf8bx7peFNL/
+         UgHA==
+X-Gm-Message-State: AOAM531+MDZVT1dVS9YIyk7K1pbsAq0HG6/lwI58YR0cka8yLt6/VJCe
+        K9W/mari2Ntbjf9Z0j4p++mn/BmYiGiBUVdAd94=
+X-Google-Smtp-Source: ABdhPJzIebxwo90Zyr4sj9ScmYCof4VCk1w95dCMQpZ4/cQfOuUDCqwTC1pz0BbxoizG48Nn6kSbzrBfyOpB9YVAvEQ=
+X-Received: by 2002:a05:6512:11c3:: with SMTP id h3mr22104381lfr.413.1628617013026;
+ Tue, 10 Aug 2021 10:36:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Received: by 2002:ac2:4eca:0:0:0:0:0 with HTTP; Tue, 10 Aug 2021 10:36:52
+ -0700 (PDT)
+Reply-To: majidmuzaffar8@gmail.com
+From:   Majid Muzaffar <ngl.binabdul.rashiid333.me@gmail.com>
+Date:   Tue, 10 Aug 2021 20:36:52 +0300
+Message-ID: <CAG1gDZWXEFoLwsRk8a_qSWzn3-vwvvxE2XX3d--LKh2r2t4e1w@mail.gmail.com>
+Subject: Proposal
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-To meet requirements of Common Criteria certification vulnerablility
-assessment. Static code analysis has been run and found the following
-errors:
-check_return: Calling "fstat(fd, &dstb)" without checking return value.
-This library function may fail and return an error code.
+Salam alaikum,
 
-Changes are to add a test to the return value from fstat calls.
+I am the investment officer of UAE based investment company who are
+ready to fund projects outside UAE, in the form of debt finance. We
+grant loan to both Corporate and private entities at a low interest
+rate of 3% ROI per annum. The terms are very flexible and interesting.
+Kindly revert back if you have projects that needs funding for further
+discussion and negotiation.
 
-Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
----
- Assemble.c    | 21 +++++++++++++++++++--
- Dump.c        | 15 +++++++++++++--
- Grow.c        | 12 ++++++++++--
- config.c      |  5 ++++-
- managemon.c   |  9 ++++++---
- mdadm.h       |  2 +-
- mdstat.c      | 10 ++++++++--
- super-ddf.c   | 11 +++++++++--
- super-intel.c | 11 +++++++++--
- 9 files changed, 79 insertions(+), 17 deletions(-)
+Thanks
 
-diff --git a/Assemble.c b/Assemble.c
-index 0df46244..cae3224b 100644
---- a/Assemble.c
-+++ b/Assemble.c
-@@ -649,7 +649,14 @@ static int load_devices(struct devs *devices, char *devmap,
- 			/* prepare useful information in info structures */
- 			struct stat stb2;
- 			int err;
--			fstat(mdfd, &stb2);
-+
-+			if (fstat(mdfd, &stb2) != 0) {
-+				pr_err("fstat failed for %s: %s\n",devname, strerror(errno));
-+				close(mdfd);
-+				free(devices);
-+				free(devmap);
-+				return -1;
-+			}
- 
- 			if (strcmp(c->update, "uuid") == 0 && !ident->uuid_set)
- 				random_uuid((__u8 *)ident->uuid);
-@@ -760,7 +767,17 @@ static int load_devices(struct devs *devices, char *devmap,
- 			tst->ss->getinfo_super(tst, content, devmap + devcnt * content->array.raid_disks);
- 		}
- 
--		fstat(dfd, &stb);
-+		if (fstat(dfd, &stb) != 0) {
-+			pr_err("fstat failed for %s: %s - aborting\n",devname, strerror(errno));
-+			close(dfd);
-+			close(mdfd);
-+			free(devices);
-+			free(devmap);
-+			tst->ss->free_super(tst);
-+			free(tst);
-+			*stp = st;
-+			return -1;
-+		}
- 		close(dfd);
- 
- 		if (c->verbose > 0)
-diff --git a/Dump.c b/Dump.c
-index 736bcb60..d1a8bb86 100644
---- a/Dump.c
-+++ b/Dump.c
-@@ -112,7 +112,14 @@ int Dump_metadata(char *dev, char *dir, struct context *c,
- 	}
- 	if (c->verbose >= 0)
- 		printf("%s saved as %s.\n", dev, fname);
--	fstat(fd, &dstb);
-+
-+	if (fstat(fd, &dstb) != 0) {
-+		pr_err("fstat failed from %s: %s\n",fname, strerror(errno));
-+		close(fd);
-+		close(fl);
-+		free(fname);
-+		return 1;
-+	}
- 	close(fd);
- 	close(fl);
- 	if ((dstb.st_mode & S_IFMT) != S_IFBLK) {
-@@ -200,7 +207,11 @@ int Restore_metadata(char *dev, char *dir, struct context *c,
- 		char *chosen = NULL;
- 		unsigned int chosen_inode = 0;
- 
--		fstat(fd, &dstb);
-+		if (fstat(fd, &dstb) != 0) {
-+			pr_err("fstat failed for %s: %s\n",dev, strerror(errno));
-+			close(fd);
-+			return 1;
-+		}
- 
- 		while (d && (de = readdir(d)) != NULL) {
- 			if (de->d_name[0] == '.')
-diff --git a/Grow.c b/Grow.c
-index 7506ab46..4c3ec9c1 100644
---- a/Grow.c
-+++ b/Grow.c
-@@ -1163,9 +1163,17 @@ int reshape_open_backup_file(char *backup_file,
- 	 * way this will not notice, but it is better than
- 	 * nothing.
- 	 */
--	fstat(*fdlist, &stb);
-+	if (fstat(*fdlist, &stb) != 0) {
-+		pr_err("fstat failed for %s: %s\n",devname, strerror(errno));
-+		close(*fdlist);
-+		return 0;
-+	}
- 	dev = stb.st_dev;
--	fstat(fd, &stb);
-+	if (fstat(fd, &stb) != 0) {
-+		pr_err("fstat failed for %s: %s\n",devname, strerror(errno));
-+		close(*fdlist);
-+		return 0;
-+	}
- 	if (stb.st_rdev == dev) {
- 		pr_err("backup file must NOT be on the array being reshaped.\n");
- 		close(*fdlist);
-diff --git a/config.c b/config.c
-index 9c725457..ad0e02fe 100644
---- a/config.c
-+++ b/config.c
-@@ -803,7 +803,10 @@ void conf_file_or_dir(FILE *f)
- 	struct dirent *dp;
- 	struct fname *list = NULL;
- 
--	fstat(fileno(f), &st);
-+	if (fstat(fileno(f), &st) != 0) {
-+		pr_err("fstat failed: %s\n", strerror(errno));
-+		return;
-+	}
- 	if (S_ISREG(st.st_mode))
- 		conf_file(f);
- 	else if (!S_ISDIR(st.st_mode))
-diff --git a/managemon.c b/managemon.c
-index 200cf83e..d943f2cc 100644
---- a/managemon.c
-+++ b/managemon.c
-@@ -894,6 +894,7 @@ void do_manager(struct supertype *container)
- {
- 	struct mdstat_ent *mdstat;
- 	sigset_t set;
-+	int rtn;
- 
- 	sigprocmask(SIG_UNBLOCK, NULL, &set);
- 	sigdelset(&set, SIGUSR1);
-@@ -926,9 +927,11 @@ void do_manager(struct supertype *container)
- 		if (sigterm)
- 			wakeup_monitor();
- 
--		if (update_queue == NULL)
--			mdstat_wait_fd(container->sock, &set);
--		else
-+		if (update_queue == NULL) {
-+			rtn = mdstat_wait_fd(container->sock, &set);
-+			if (rtn)
-+				exit(0);
-+		} else
- 			/* If an update is happening, just wait for signal */
- 			pselect(0, NULL, NULL, NULL, NULL, &set);
- 	} while(1);
-diff --git a/mdadm.h b/mdadm.h
-index 8f8841d8..1273029a 100644
---- a/mdadm.h
-+++ b/mdadm.h
-@@ -637,7 +637,7 @@ extern struct mdstat_ent *mdstat_read(int hold, int start);
- extern void mdstat_close(void);
- extern void free_mdstat(struct mdstat_ent *ms);
- extern int mdstat_wait(int seconds);
--extern void mdstat_wait_fd(int fd, const sigset_t *sigmask);
-+extern int mdstat_wait_fd(int fd, const sigset_t *sigmask);
- extern int mddev_busy(char *devnm);
- extern struct mdstat_ent *mdstat_by_component(char *name);
- extern struct mdstat_ent *mdstat_by_subdev(char *subdev, char *container);
-diff --git a/mdstat.c b/mdstat.c
-index 2fd792c5..8664c0ec 100644
---- a/mdstat.c
-+++ b/mdstat.c
-@@ -336,7 +336,7 @@ int mdstat_wait(int seconds)
- 	return select(maxfd + 1, NULL, NULL, &fds, &tm);
- }
- 
--void mdstat_wait_fd(int fd, const sigset_t *sigmask)
-+int mdstat_wait_fd(int fd, const sigset_t *sigmask)
- {
- 	fd_set fds, rfds;
- 	int maxfd = 0;
-@@ -348,7 +348,11 @@ void mdstat_wait_fd(int fd, const sigset_t *sigmask)
- 
- 	if (fd >= 0) {
- 		struct stat stb;
--		fstat(fd, &stb);
-+
-+		if (fstat(fd, &stb) != 0) {
-+			pr_err("fstat failed: %s\n", strerror(errno));
-+			return 1;
-+		}
- 		if ((stb.st_mode & S_IFMT) == S_IFREG)
- 			/* Must be a /proc or /sys fd, so expect
- 			 * POLLPRI
-@@ -367,6 +371,8 @@ void mdstat_wait_fd(int fd, const sigset_t *sigmask)
- 
- 	pselect(maxfd + 1, &rfds, NULL, &fds,
- 		NULL, sigmask);
-+
-+	return 0;
- }
- 
- int mddev_busy(char *devnm)
-diff --git a/super-ddf.c b/super-ddf.c
-index dc8e512f..3c9eadf7 100644
---- a/super-ddf.c
-+++ b/super-ddf.c
-@@ -1060,7 +1060,11 @@ static int load_ddf_local(int fd, struct ddf_super *super,
- 		     0);
- 	dl->devname = devname ? xstrdup(devname) : NULL;
- 
--	fstat(fd, &stb);
-+	if (fstat(fd, &stb) != 0) {
-+		pr_err("fstat failed for %s: %s\n",devname, strerror(errno));
-+		free(dl);
-+		return 1;
-+	}
- 	dl->major = major(stb.st_rdev);
- 	dl->minor = minor(stb.st_rdev);
- 	dl->next = super->dlist;
-@@ -2854,7 +2858,10 @@ static int add_to_super_ddf(struct supertype *st,
- 	/* This is device numbered dk->number.  We need to create
- 	 * a phys_disk entry and a more detailed disk_data entry.
- 	 */
--	fstat(fd, &stb);
-+	if (fstat(fd, &stb) != 0) {
-+		pr_err("fstat failed for %s: %s\n",devname, strerror(errno));
-+		return 1;
-+	}
- 	n = find_unused_pde(ddf);
- 	if (n == DDF_NOTFOUND) {
- 		pr_err("No free slot in array, cannot add disk\n");
-diff --git a/super-intel.c b/super-intel.c
-index 83ddc000..1836be76 100644
---- a/super-intel.c
-+++ b/super-intel.c
-@@ -4164,7 +4164,11 @@ load_imsm_disk(int fd, struct intel_super *super, char *devname, int keep_fd)
- 
- 	dl = xcalloc(1, sizeof(*dl));
- 
--	fstat(fd, &stb);
-+	if (fstat(fd, &stb) != 0) {
-+		pr_err("fstat failed for %s: %s\n",devname, strerror(errno));
-+		free(dl);
-+		return 2;
-+	}
- 	dl->major = major(stb.st_rdev);
- 	dl->minor = minor(stb.st_rdev);
- 	dl->next = super->disks;
-@@ -5910,7 +5914,10 @@ static int add_to_super_imsm(struct supertype *st, mdu_disk_info_t *dk,
- 	if (super->current_vol >= 0)
- 		return add_to_super_imsm_volume(st, dk, fd, devname);
- 
--	fstat(fd, &stb);
-+	if (fstat(fd, &stb) != 0) {
-+		pr_err("fstat failed for %s: %s\n",devname, strerror(errno));
-+		return 1;
-+	}
- 	dd = xcalloc(sizeof(*dd), 1);
- 	dd->major = major(stb.st_rdev);
- 	dd->minor = minor(stb.st_rdev);
--- 
-2.29.2
-
+investment officer
