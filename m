@@ -2,62 +2,63 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A59BA3E5757
-	for <lists+linux-raid@lfdr.de>; Tue, 10 Aug 2021 11:47:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4F2D3E5B2E
+	for <lists+linux-raid@lfdr.de>; Tue, 10 Aug 2021 15:22:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238980AbhHJJrZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 10 Aug 2021 05:47:25 -0400
-Received: from mga04.intel.com ([192.55.52.120]:25925 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238174AbhHJJrY (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 10 Aug 2021 05:47:24 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10070"; a="213012239"
-X-IronPort-AV: E=Sophos;i="5.84,310,1620716400"; 
-   d="scan'208";a="213012239"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2021 02:47:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,310,1620716400"; 
-   d="scan'208";a="421773603"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 10 Aug 2021 02:47:02 -0700
-Received: from [10.213.2.85] (mtkaczyk-MOBL1.ger.corp.intel.com [10.213.2.85])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 8B623580922;
-        Tue, 10 Aug 2021 02:47:01 -0700 (PDT)
-Subject: Re: [GIT PULL] md-fixes 20210804
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>
-References: <2D64F5A2-3D1B-4D27-BEA7-81B03B30D212@fb.com>
- <145aaf29-535b-a0b5-3c6d-25b036df6dbb@kernel.dk>
- <66c72f4f-7fa0-7491-e4ea-8d8a82483aaa@linux.intel.com>
- <54C9427A-ADEA-4627-B435-FFF5841E6296@fb.com>
-From:   "Tkaczyk, Mariusz" <mariusz.tkaczyk@linux.intel.com>
-Message-ID: <860cbfb2-8e9b-2965-d7ad-ca7f66c12239@linux.intel.com>
-Date:   Tue, 10 Aug 2021 11:46:59 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+        id S237538AbhHJNWl (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 10 Aug 2021 09:22:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241278AbhHJNWh (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 10 Aug 2021 09:22:37 -0400
+Received: from mail-vs1-xe2b.google.com (mail-vs1-xe2b.google.com [IPv6:2607:f8b0:4864:20::e2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02EC9C06179B
+        for <linux-raid@vger.kernel.org>; Tue, 10 Aug 2021 06:22:16 -0700 (PDT)
+Received: by mail-vs1-xe2b.google.com with SMTP id d20so9659761vso.8
+        for <linux-raid@vger.kernel.org>; Tue, 10 Aug 2021 06:22:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:sender:from:date:message-id:subject:to;
+        bh=2tvLhkad0w+Mh63WhnFJkmRFgYsLXsJmUqGVjzUAFIo=;
+        b=J1UO03eOEZuQCAH1bWcfKEKq5BN5SPyduATu9zAtdU/RakoeJVptJM+gLsUtrEuonC
+         xdjUZ63bJi/qNQ5UDZHBQT/hmwjW1bdv9sPByvTJ8h/5L5XxMdVqy6Qo9WXsVmoqdiWQ
+         4Ftz7pewxY/KYf9xszWiqCYtsQFvCnK5UETJpndtJH0Uqw27XFp3UJ+uTNcza4QpjvGx
+         x9u8HXRO0yidD1GmT0+S3NKgMH35MGdW5mAtqxwerKT/2ehSyaHoRMhCCPfrjvO5Ca1w
+         yhKMTiwWuTIukqtW1PayeUqLVfPV0p+VQjbaWXU7mGfqRM/jI9IqwEdUk8GZdTJjxA8j
+         rWXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to;
+        bh=2tvLhkad0w+Mh63WhnFJkmRFgYsLXsJmUqGVjzUAFIo=;
+        b=Nhcv5InVYxm9o2v8TqYMXNCCxWqmP9/lRvXzTtSBa7/1zCWh3qlBOKJy6vMiXIrLh1
+         2b4nkJ9MKt3p/CjY2H3rvnXqqC/DZ4Fojo35/eDuVbkxVZI1l/gOSws+yY+Ty2zeey8B
+         vikJq8+bgTkYHqPgAPX3P7efkRw2Z1rGODGZZLkLk87dv3i32yntqhGcxTHRqKhn8Nwa
+         JDxfglp1uNwmuyOygiYHqfpJ2iYi5Esz0L9UKg83L9aqLy444SfTquP9qZfQW+BcMf9R
+         aRVyrNioKf76dFOxSE5bzoW7/AtlabPexAbvcz88v7EayuBImCp03G0qbnL75knG3SN3
+         5l7w==
+X-Gm-Message-State: AOAM5321FVy9m7jrnCxFZ3tglzHPCVT5IAS+3kNNrcnxBA6OVzcma78I
+        Yvt8ft8W/Ik+MQWrNTgHIQQuJEqyrCZWPOgX3Kw=
+X-Google-Smtp-Source: ABdhPJxGFR8diwPvQYpV37YYI8amPIHeE68wjx+g6TcpnlsWOg6QapJtOtZAzr+9JjnHmTmmodl/YrIjx7ZBaPCYCSM=
+X-Received: by 2002:a67:1c05:: with SMTP id c5mr21501896vsc.25.1628601735186;
+ Tue, 10 Aug 2021 06:22:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <54C9427A-ADEA-4627-B435-FFF5841E6296@fb.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Sender: immeublesourou@gmail.com
+Received: by 2002:ab0:3903:0:0:0:0:0 with HTTP; Tue, 10 Aug 2021 06:22:14
+ -0700 (PDT)
+From:   John Kumor <owo219901@gmail.com>
+Date:   Wed, 11 Aug 2021 01:22:14 +1200
+X-Google-Sender-Auth: GdaTxGfrES1uUqmP8dMlmdkbdyM
+Message-ID: <CAHdg_cQcGoZmM_yLB4+7UNSD_Lwo4ySucYJOuadLSmn4W2hi7g@mail.gmail.com>
+Subject: Urgent
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi Song,
-On 10.08.2021 07:10, Song Liu wrote:
-> Sure. md-next branch is for feature development. Patches applied to
-> md-next will go through linux-next before merging into upstream.
-> md-fixes branch is for bug fixes. Patches applied to md-fixes will
-> not go through linux-next.
-> 
-> Does this answer your question?
-
-Yes, It is clear now.
-
-Thanks,
-Mariusz
-
+My dear,
+Greetings! I trust that all is well with you and your family. Did you
+receive my previous email?
+Regards
+John Kumor.
