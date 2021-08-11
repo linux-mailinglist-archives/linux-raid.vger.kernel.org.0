@@ -2,60 +2,166 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CFBD3E9157
-	for <lists+linux-raid@lfdr.de>; Wed, 11 Aug 2021 14:32:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D7033E9234
+	for <lists+linux-raid@lfdr.de>; Wed, 11 Aug 2021 15:06:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231142AbhHKMcp (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 11 Aug 2021 08:32:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229693AbhHKMcd (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 11 Aug 2021 08:32:33 -0400
-Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21C3FC08E998
-        for <linux-raid@vger.kernel.org>; Wed, 11 Aug 2021 05:30:34 -0700 (PDT)
-Received: by mail-oi1-x231.google.com with SMTP id bi32so4342413oib.2
-        for <linux-raid@vger.kernel.org>; Wed, 11 Aug 2021 05:30:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=77BwqRII9XCweQU8IJul6unijI/BEL+vUJmVmCRLxH4=;
-        b=nFX2iyV8Qzv5VsUpkp+XCZa2rMildRgp4rmfs3/i85r3diZKl8jKG090hSg6ULd5u0
-         wIUSHLA1AmXndyReLtv1chzdu754A+Ph1wh/vfIxRjmTWJBsEDXYNbyV2L9uurl7rygw
-         3BEum9dkaxKey+Q+UMRctjDwuKQ1YXcRTKc1UUkneSCjfxqWrboBTOfNkJIzK5BsdQWa
-         4ApOxxKRhIhdaQEWowgLF5+CTQczgHFusP4oeusQUd6ved7FHPiMHEi1ZA8iFV2rLfKi
-         fjv9vsAR1EzF12CgxEwzjmHIzUqCG96Sjm8KNwWILsHtKg9/nTHJHDOvwQ9NbYqFW4uy
-         uTIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=77BwqRII9XCweQU8IJul6unijI/BEL+vUJmVmCRLxH4=;
-        b=Y2hScrhLRUnYVgnEootGkE5A8eu2Wsfturriq3UGKIUDEhXFd24u2Et4k66n2KiajM
-         KYgJyifk5v/kEVZa//05SgtUANVDlVMfQeUSBNarz89fqZ3gkkteazfOd7OUqc3pf6W+
-         XLDE6UUZD2XsFpAbm4ou0/18Da+bbT0Mw/9k2WvfAMN40Md7DlNcCCE5aFDyDiKXSyEc
-         OpPSuE9eChUeatzOidFnOU8C+gNVaeqcILz57CoddLH5SeQkgmutUmizxnp7Ih3oZiCE
-         KAHgyfkH7Uu2hQ9N/ZgRDDaSoJrxamavFDkTm1QnLS8yBY3YOV6gVkXvOBF2EpUyQK4C
-         PZxw==
-X-Gm-Message-State: AOAM530pVVBXJGC7vCW9zkp2ACTzoFW0ShxcDi49IFh9URJVOgBy+/j3
-        3AXjH/j/j68yYQlYt9eKWTlEGdQHIzydSZMIzCI=
-X-Google-Smtp-Source: ABdhPJxSi33xoEoIXQryMK7AlPvsXum9+Uhn2FA5SmsaT4s7SDGDeViE6wxc5zRdGly1PhBzYc0n/cZJtjhPnV2BKH4=
-X-Received: by 2002:aca:f306:: with SMTP id r6mr23008947oih.165.1628685033420;
- Wed, 11 Aug 2021 05:30:33 -0700 (PDT)
+        id S230170AbhHKNG4 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 11 Aug 2021 09:06:56 -0400
+Received: from mga12.intel.com ([192.55.52.136]:56378 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229941AbhHKNG4 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 11 Aug 2021 09:06:56 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10072"; a="194705077"
+X-IronPort-AV: E=Sophos;i="5.84,313,1620716400"; 
+   d="scan'208";a="194705077"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2021 06:06:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,313,1620716400"; 
+   d="scan'208";a="526929423"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 11 Aug 2021 06:06:30 -0700
+Received: from [10.213.3.231] (mtkaczyk-MOBL1.ger.corp.intel.com [10.213.3.231])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id E9449580815;
+        Wed, 11 Aug 2021 06:06:29 -0700 (PDT)
+Subject: Re: [PATCH] Fix return value from fstat calls
+From:   "Tkaczyk, Mariusz" <mariusz.tkaczyk@linux.intel.com>
+To:     Nigel Croxon <ncroxon@redhat.com>,
+        linux-raid <linux-raid@vger.kernel.org>
+References: <20210810151507.1667518-1-ncroxon@redhat.com>
+ <ed1b0603-e523-6ca6-12ce-d30a85afe885@linux.intel.com>
+Message-ID: <4d5a4bb0-e044-c225-f507-59d4167a8807@linux.intel.com>
+Date:   Wed, 11 Aug 2021 15:06:27 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-Received: by 2002:a05:6830:23a5:0:0:0:0 with HTTP; Wed, 11 Aug 2021 05:30:32
- -0700 (PDT)
-Reply-To: rihabmanyang07@yahoo.com
-From:   Rihab Manyang <ndourandiogou1@gmail.com>
-Date:   Wed, 11 Aug 2021 13:30:32 +0100
-Message-ID: <CAP5_mB4O7JPQr86GPAep=Ynd-Yb8pks_-mRAKZxGu6O8ZzfAKA@mail.gmail.com>
-Subject: hi
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <ed1b0603-e523-6ca6-12ce-d30a85afe885@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
--- 
-How are you?I am miss.Rihab Manyang i will like to be your friend
-please write me back on my email for more details, Thanks.
++ linux raid
+
+Mariusz
+
+On 11.08.2021 15:03, Tkaczyk, Mariusz wrote:
+> On 10.08.2021 17:15, Nigel Croxon wrote:
+>> To meet requirements of Common Criteria certification vulnerablility
+>> assessment. Static code analysis has been run and found the following
+>> errors:
+>> check_return: Calling "fstat(fd, &dstb)" without checking return value.
+>> This library function may fail and return an error code.
+>>
+>> Changes are to add a test to the return value from fstat calls.
+>>
+> 
+> Hi Nigel,
+> You introduce three different errors, repeated many times across code.
+> Could you make it generic using function or macro?
+> 
+>> diff --git a/Assemble.c b/Assemble.c
+>> index 0df46244..cae3224b 100644
+>> --- a/Assemble.c
+>> +++ b/Assemble.c
+>> @@ -649,7 +649,14 @@ static int load_devices(struct devs *devices, char *devmap,
+>>               /* prepare useful information in info structures */
+>>               struct stat stb2;
+>>               int err;
+>> -            fstat(mdfd, &stb2);
+>> +
+>> +            if (fstat(mdfd, &stb2) != 0) {
+>> +                pr_err("fstat failed for %s: %s\n",devname, strerror(errno));
+>> +                close(mdfd);
+>> +                free(devices);
+>> +                free(devmap);
+>> +                return -1;
+>> +            }
+> another new case with direct error handling, could you use goto statement?
+> 
+> 
+>> @@ -760,7 +767,17 @@ static int load_devices(struct devs *devices, char *devmap,
+>>               tst->ss->getinfo_super(tst, content, devmap + devcnt * 
+>> content->array.raid_disks);
+>>           }
+>> -        fstat(dfd, &stb);
+>> +        if (fstat(dfd, &stb) != 0) {
+>> +            pr_err("fstat failed for %s: %s - aborting\n",devname, 
+>> strerror(errno));
+>> +            close(dfd);
+>> +            close(mdfd);
+>> +            free(devices);
+>> +            free(devmap);
+>> +            tst->ss->free_super(tst);
+>> +            free(tst);
+>> +            *stp = st;
+>> +            return -1;
+>> +        }
+> Same here, I know that it is implemented this way, but we should take care about
+> code quality, this is our common interest.
+> 
+>> diff --git a/Dump.c b/Dump.c
+>> index 736bcb60..d1a8bb86 100644
+>> --- a/Dump.c
+>> +++ b/Dump.c
+>> @@ -112,7 +112,14 @@ int Dump_metadata(char *dev, char *dir, struct context *c,
+>>       }
+>>       if (c->verbose >= 0)
+>>           printf("%s saved as %s.\n", dev, fname);
+>> -    fstat(fd, &dstb);
+>> +
+>> +    if (fstat(fd, &dstb) != 0) {
+>> +        pr_err("fstat failed from %s: %s\n",fname, strerror(errno));
+>> +        close(fd);
+>> +        close(fl);
+>> +        free(fname);
+>> +        return 1;
+>> +    }
+> Same here.
+> 
+>> @@ -200,7 +207,11 @@ int Restore_metadata(char *dev, char *dir, struct context 
+>> *c,
+>>           char *chosen = NULL;
+>>           unsigned int chosen_inode = 0;
+>> -        fstat(fd, &dstb);
+>> +        if (fstat(fd, &dstb) != 0) {
+>> +            pr_err("fstat failed for %s: %s\n",dev, strerror(errno));
+>> +            close(fd);
+>> +            return 1;
+>> +        }
+>>           while (d && (de = readdir(d)) != NULL) {
+>>               if (de->d_name[0] == '.')
+>> diff --git a/Grow.c b/Grow.c
+>> index 7506ab46..4c3ec9c1 100644
+>> --- a/Grow.c
+>> +++ b/Grow.c
+>> @@ -1163,9 +1163,17 @@ int reshape_open_backup_file(char *backup_file,
+>>        * way this will not notice, but it is better than
+>>        * nothing.
+>>        */
+>> -    fstat(*fdlist, &stb);
+>> +    if (fstat(*fdlist, &stb) != 0) {
+>> +        pr_err("fstat failed for %s: %s\n",devname, strerror(errno));
+>> +        close(*fdlist);
+>> +        return 0;
+>> +    }
+>>       dev = stb.st_dev;
+>> -    fstat(fd, &stb);
+>> +    if (fstat(fd, &stb) != 0) {
+>> +        pr_err("fstat failed for %s: %s\n",devname, strerror(errno));
+>> +        close(*fdlist);
+>> +        return 0;
+>> +    }
+>>       if (stb.st_rdev == dev) {
+>>           pr_err("backup file must NOT be on the array being reshaped.\n");
+>>           close(*fdlist);
+> Same error handling duplicated.
+> 
+> Thanks,
+> Mariusz
+> 
+
