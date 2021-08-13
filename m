@@ -2,113 +2,84 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F9BD3EB100
-	for <lists+linux-raid@lfdr.de>; Fri, 13 Aug 2021 09:00:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6358F3EB146
+	for <lists+linux-raid@lfdr.de>; Fri, 13 Aug 2021 09:19:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239058AbhHMHAz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 13 Aug 2021 03:00:55 -0400
-Received: from mga01.intel.com ([192.55.52.88]:65334 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238988AbhHMHAz (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 13 Aug 2021 03:00:55 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10074"; a="237556535"
-X-IronPort-AV: E=Sophos;i="5.84,318,1620716400"; 
-   d="scan'208";a="237556535"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2021 00:00:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,318,1620716400"; 
-   d="scan'208";a="422783078"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 13 Aug 2021 00:00:27 -0700
-Received: from [10.213.30.238] (mtkaczyk-MOBL1.ger.corp.intel.com [10.213.30.238])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S239269AbhHMHTl (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 13 Aug 2021 03:19:41 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:40038 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239248AbhHMHTl (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 13 Aug 2021 03:19:41 -0400
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 84A29580C55;
-        Fri, 13 Aug 2021 00:00:26 -0700 (PDT)
-Subject: Re: [PATCH V2] Fix return value from fstat calls
-To:     NeilBrown <neilb@suse.de>, Nigel Croxon <ncroxon@redhat.com>
-Cc:     jes@trained-monkey.org, xni@redhat.com, linux-raid@vger.kernel.org
-References: <20210810151507.1667518-1-ncroxon@redhat.com>
- <20210811190930.1822317-1-ncroxon@redhat.com>
- <162872237888.31578.18083659195262526588@noble.neil.brown.name>
- <346e8651-d861-45c7-9058-68008e691b93@Canary>
- <162881060124.15074.6150940509008984778@noble.neil.brown.name>
-From:   "Tkaczyk, Mariusz" <mariusz.tkaczyk@linux.intel.com>
-Message-ID: <5b71689a-6d07-0dfd-a4b6-26322ee3136e@linux.intel.com>
-Date:   Fri, 13 Aug 2021 09:00:24 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
-MIME-Version: 1.0
-In-Reply-To: <162881060124.15074.6150940509008984778@noble.neil.brown.name>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 7BFEB222A9;
+        Fri, 13 Aug 2021 07:19:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1628839154; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rPBVGwqjXL7VFX/bv8R5A0Lwbv6GE8yTlpKK+xm6Si8=;
+        b=0Toc8Yzu1183ap67oZsH8gItazcmLVIaaZfZrvuhIdZil90fUAJakcCHUv/GRxrX7yETWl
+        JKQV+x2FPg6SspQsyq9qRuSJVG7tJ8gS5ggaooumNlRSoc1kmPF7XJKczwVZLvPE2elYEJ
+        tPWzDV0R4Y45U12xYRNZt4mn9F/P/N0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1628839154;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rPBVGwqjXL7VFX/bv8R5A0Lwbv6GE8yTlpKK+xm6Si8=;
+        b=mP2Ce4ZEb67OMALZ6SnTPuWX0cSJZ+whyFa5SlnbkbLkijjufp+GhRJtwvTFKZfMnViGnY
+        cZ5NvYXWt0t/Q7Bg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id E2F4D13A00;
+        Fri, 13 Aug 2021 07:19:12 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 3nsWKPAcFmHvYgAAMHmgww
+        (envelope-from <neilb@suse.de>); Fri, 13 Aug 2021 07:19:12 +0000
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Tkaczyk, Mariusz" <mariusz.tkaczyk@linux.intel.com>
+Cc:     "Nigel Croxon" <ncroxon@redhat.com>, jes@trained-monkey.org,
+        xni@redhat.com, linux-raid@vger.kernel.org
+Subject: Re: [PATCH V2] Fix return value from fstat calls
+In-reply-to: <5b71689a-6d07-0dfd-a4b6-26322ee3136e@linux.intel.com>
+References: <20210810151507.1667518-1-ncroxon@redhat.com>,
+ <20210811190930.1822317-1-ncroxon@redhat.com>,
+ <162872237888.31578.18083659195262526588@noble.neil.brown.name>,
+ <346e8651-d861-45c7-9058-68008e691b93@Canary>,
+ <162881060124.15074.6150940509008984778@noble.neil.brown.name>,
+ <5b71689a-6d07-0dfd-a4b6-26322ee3136e@linux.intel.com>
+Date:   Fri, 13 Aug 2021 17:19:10 +1000
+Message-id: <162883915010.1695.14187049458830945568@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 13.08.2021 01:23, NeilBrown wrote:
->>
->> The fstat() function will fail if:
->> [EBADF] - The fildes argument is not a valid file descriptor.
+On Fri, 13 Aug 2021, Tkaczyk, Mariusz wrote:
 > 
-> But we never pass an invalid file descriptor
-> 
-We can't guarantee that. There is always a minimal chance to pass
-wrong/invalid argument caused by bug somewhere else in mdadm logic.
-I think that handling such case is reasonable from security point
-of view but agree that it could be a dead check (if everything is
-well implemented).
+> Maybe It won't be useful for users but it may help developers to avoid
+> trivial mistakes. As you told, if everything is fine then check is dead.
+> In my opinion any error handling is better than nothing.
 
-> And you didn't list "EFAULT", but of course we never pass an invalid
-> memory address either.
+Error handling that is buggy, or that is hard to maintain is not better
+than nothing.  If I can't guarantee that we never pass a bad file
+descriptor, then you cannot guarantee that the error handling has no
+bugs.   Less code generally means less bugs.
 
-As before, we can't guarantee it, too. For now it seems to be well handled
-but implementation may change and vulnerability might be missed during
-review. Is safer to handle that some way.
+Any attempt to try to handle an error that should not be able to happen
+other than crashing is fairly pointless - you cannot guess the real
+cause, so you cannot know how to repair.  Just printing a message and
+continuing could be as bad as not checking the error.
 
->> [EIO] - An I/O error occurred while reading from the file system.
-> 
-> fstat() doesn't do IO, it just reports data from the cache.
-> 
->> [EOVERFLOW] - The file size in bytes or the number of blocks allocated to the file or the file serial number cannot be represented correctly in the structure pointed to by buf.
->>
->> The fstat() function may fail if:
->>
->> [EOVERFLOW] - One of the values is too large to store into the structure pointed to by the buf argument.
->>
-> 
-> Those don't happen in practice for the fstat() calls that mdadm makes
-> either.
-> 
-Agree, but it could be changed.
-
-> I think this patch is adding noise to the source code without actually
-> providing any real value.  I would much prefer that if you really feel
-> there is value, then just add a wrapper:
-> 
-> int  safe_fstat(....)
-> {
->      int ret = fstat(.....);
->      char message[]="mdadm: fstat failed, so aborting\n"
->      if (ret == 0)
->           return 0;
->      write(2, message, sizeof(message)-1);
->      exit(1);
-> }
-> 
-> Then just change every "fstat" in the code that bothers you to
-> "safe_fstat()".
-> 
-> This approach of adding pointless checks because some static analysis
-> tool thinks you should is not an approach that I approve of.
-
-Maybe It won't be useful for users but it may help developers to avoid
-trivial mistakes. As you told, if everything is fine then check is dead.
-In my opinion any error handling is better than nothing.
-
-Anyway, I think that there is a lot of more dangerous lines.
-
-Regards,
-Mariusz
+NeilBrown
