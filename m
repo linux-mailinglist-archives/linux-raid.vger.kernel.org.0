@@ -2,116 +2,123 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE3183EF793
-	for <lists+linux-raid@lfdr.de>; Wed, 18 Aug 2021 03:36:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE77B3EF7A4
+	for <lists+linux-raid@lfdr.de>; Wed, 18 Aug 2021 03:44:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235898AbhHRBhc (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 17 Aug 2021 21:37:32 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:60086 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234723AbhHRBhb (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Tue, 17 Aug 2021 21:37:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1629250617;
+        id S235399AbhHRBog (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 17 Aug 2021 21:44:36 -0400
+Received: from out2.migadu.com ([188.165.223.204]:51280 "EHLO out2.migadu.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234723AbhHRBof (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Tue, 17 Aug 2021 21:44:35 -0400
+Subject: Re: [PATCH 1/1] md/raid10: Remove rcu_dereference when it doesn't
+ need rcu lock to protect
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1629251040;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=Isk1UOBFWhNWVWQuMnO7giTpMReSPt5pZispRSdjFhU=;
-        b=efrheALfaI014efhzO60yUBHxo0C/0fl8jVHuu9h7QqsUE+MBQbcjxfY2QQhM/bBB8YgF6
-        MDLW38BXiC2lwZtmMfQCMXWlP4i16rbgyt4BLLOfBeaHPIeGIHw0EmDcAMOkZPHwV4/bhb
-        /Jzi348RaVbWmMob3M2sLjIPMmntnFg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-332-rsh3ypQhOhmr2kVV-Ku7Hg-1; Tue, 17 Aug 2021 21:36:56 -0400
-X-MC-Unique: rsh3ypQhOhmr2kVV-Ku7Hg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DD2231853027;
-        Wed, 18 Aug 2021 01:36:55 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-8-29.pek2.redhat.com [10.72.8.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3459910016FB;
-        Wed, 18 Aug 2021 01:36:53 +0000 (UTC)
-From:   Xiao Ni <xni@redhat.com>
-To:     song@kernel.org
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=B2EEZAS6T0jJ8T1DcVmk1C6+c1Whilac9DRLoQUe9u4=;
+        b=ufD30sO0uRYfNQTjpoCrL0fNYfgwYHFts3r971WPinu0i0Zactw0uHmypGFTc1jkIcaRj0
+        UHfxjsidkUhlN3DZ/6hXui7oqCRx6zqvCZnOnI3odJJw5HpoYjFlTKBUuW1wDuPgS72MP3
+        CDZGyL+Y8HI/HJrf9of2dd2Vtb8PDvU=
+To:     Xiao Ni <xni@redhat.com>, song@kernel.org
 Cc:     ncroxon@redhat.com, linux-raid@vger.kernel.org
-Subject: [PATCH 1/1] md/raid10: Remove rcu_dereference when it doesn't need rcu lock to protect
-Date:   Wed, 18 Aug 2021 09:36:52 +0800
-Message-Id: <1629250612-4952-1-git-send-email-xni@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <1629250612-4952-1-git-send-email-xni@redhat.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Guoqing Jiang <guoqing.jiang@linux.dev>
+Message-ID: <b185fb47-eac1-9ae8-3d48-c0def28f85de@linux.dev>
+Date:   Wed, 18 Aug 2021 09:43:53 +0800
+MIME-Version: 1.0
+In-Reply-To: <1629250612-4952-1-git-send-email-xni@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Migadu-Flow: FLOW_OUT
+X-Migadu-Auth-User: guoqing.jiang@linux.dev
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-One warning message is triggered like this:
-[  695.110751] =============================
-[  695.131439] WARNING: suspicious RCU usage
-[  695.151389] 4.18.0-319.el8.x86_64+debug #1 Not tainted
-[  695.174413] -----------------------------
-[  695.192603] drivers/md/raid10.c:1776 suspicious
-rcu_dereference_check() usage!
-[  695.225107] other info that might help us debug this:
-[  695.260940] rcu_scheduler_active = 2, debug_locks = 1
-[  695.290157] no locks held by mkfs.xfs/10186.
 
-In the first loop of function raid10_handle_discard. It already
-determines which disk need to handle discard request and add the
-rdev reference count rdev->nr_pending. So the conf->mirrors will
-not change until all bios come back from underlayer disks. It
-doesn't need to use rcu_dereference to get rdev.
 
-Fixes: d30588b2731f ('md/raid10: improve raid10 discard request')
-Signed-off-by: Xiao Ni <xni@redhat.com>
----
- drivers/md/raid10.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+On 8/18/21 9:36 AM, Xiao Ni wrote:
+> One warning message is triggered like this:
+> [  695.110751] =============================
+> [  695.131439] WARNING: suspicious RCU usage
+> [  695.151389] 4.18.0-319.el8.x86_64+debug #1 Not tainted
+> [  695.174413] -----------------------------
+> [  695.192603] drivers/md/raid10.c:1776 suspicious
+> rcu_dereference_check() usage!
+> [  695.225107] other info that might help us debug this:
+> [  695.260940] rcu_scheduler_active = 2, debug_locks = 1
+> [  695.290157] no locks held by mkfs.xfs/10186.
+>
+> In the first loop of function raid10_handle_discard. It already
+> determines which disk need to handle discard request and add the
+> rdev reference count rdev->nr_pending. So the conf->mirrors will
+> not change until all bios come back from underlayer disks. It
+> doesn't need to use rcu_dereference to get rdev.
+>
+> Fixes: d30588b2731f ('md/raid10: improve raid10 discard request')
+> Signed-off-by: Xiao Ni <xni@redhat.com>
+> ---
+>   drivers/md/raid10.c | 13 +++++++++----
+>   1 file changed, 9 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+> index 16977e8..1d3ac76 100644
+> --- a/drivers/md/raid10.c
+> +++ b/drivers/md/raid10.c
+> @@ -1712,6 +1712,10 @@ static int raid10_handle_discard(struct mddev *mddev, struct bio *bio)
+>   	} else
+>   		r10_bio->master_bio = (struct bio *)first_r10bio;
+>   
+> +	/* first select target devices under rcu_lock and
+> +	 * inc refcount on their rdev.  Record them by setting
+> +	 * bios[x] to bio
+> +	 */
 
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index 16977e8..1d3ac76 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -1712,6 +1712,10 @@ static int raid10_handle_discard(struct mddev *mddev, struct bio *bio)
- 	} else
- 		r10_bio->master_bio = (struct bio *)first_r10bio;
- 
-+	/* first select target devices under rcu_lock and
-+	 * inc refcount on their rdev.  Record them by setting
-+	 * bios[x] to bio
-+	 */
- 	rcu_read_lock();
- 	for (disk = 0; disk < geo->raid_disks; disk++) {
- 		struct md_rdev *rdev = rcu_dereference(conf->mirrors[disk].rdev);
-@@ -1743,9 +1747,6 @@ static int raid10_handle_discard(struct mddev *mddev, struct bio *bio)
- 	for (disk = 0; disk < geo->raid_disks; disk++) {
- 		sector_t dev_start, dev_end;
- 		struct bio *mbio, *rbio = NULL;
--		struct md_rdev *rdev = rcu_dereference(conf->mirrors[disk].rdev);
--		struct md_rdev *rrdev = rcu_dereference(
--			conf->mirrors[disk].replacement);
- 
- 		/*
- 		 * Now start to calculate the start and end address for each disk.
-@@ -1775,9 +1776,12 @@ static int raid10_handle_discard(struct mddev *mddev, struct bio *bio)
- 
- 		/*
- 		 * It only handles discard bio which size is >= stripe size, so
--		 * dev_end > dev_start all the time
-+		 * dev_end > dev_start all the time.
-+		 * It doesn't need to use rcu lock to get rdev here. We already
-+		 * add rdev->nr_pending in the first loop.
- 		 */
- 		if (r10_bio->devs[disk].bio) {
-+			struct md_rdev *rdev = conf->mirrors[disk].rdev;
- 			mbio = bio_clone_fast(bio, GFP_NOIO, &mddev->bio_set);
- 			mbio->bi_end_io = raid10_end_discard_request;
- 			mbio->bi_private = r10_bio;
-@@ -1790,6 +1794,7 @@ static int raid10_handle_discard(struct mddev *mddev, struct bio *bio)
- 			bio_endio(mbio);
- 		}
- 		if (r10_bio->devs[disk].repl_bio) {
-+			struct md_rdev *rrdev = conf->mirrors[disk].replacement;
- 			rbio = bio_clone_fast(bio, GFP_NOIO, &mddev->bio_set);
- 			rbio->bi_end_io = raid10_end_discard_request;
- 			rbio->bi_private = r10_bio;
--- 
-2.7.5
+Nit: the comment style is not correct.
 
+>   	rcu_read_lock();
+>   	for (disk = 0; disk < geo->raid_disks; disk++) {
+>   		struct md_rdev *rdev = rcu_dereference(conf->mirrors[disk].rdev);
+> @@ -1743,9 +1747,6 @@ static int raid10_handle_discard(struct mddev *mddev, struct bio *bio)
+>   	for (disk = 0; disk < geo->raid_disks; disk++) {
+>   		sector_t dev_start, dev_end;
+>   		struct bio *mbio, *rbio = NULL;
+> -		struct md_rdev *rdev = rcu_dereference(conf->mirrors[disk].rdev);
+> -		struct md_rdev *rrdev = rcu_dereference(
+> -			conf->mirrors[disk].replacement);
+>   
+>   		/*
+>   		 * Now start to calculate the start and end address for each disk.
+> @@ -1775,9 +1776,12 @@ static int raid10_handle_discard(struct mddev *mddev, struct bio *bio)
+>   
+>   		/*
+>   		 * It only handles discard bio which size is >= stripe size, so
+> -		 * dev_end > dev_start all the time
+> +		 * dev_end > dev_start all the time.
+> +		 * It doesn't need to use rcu lock to get rdev here. We already
+> +		 * add rdev->nr_pending in the first loop.
+>   		 */
+>   		if (r10_bio->devs[disk].bio) {
+> +			struct md_rdev *rdev = conf->mirrors[disk].rdev;
+>   			mbio = bio_clone_fast(bio, GFP_NOIO, &mddev->bio_set);
+>   			mbio->bi_end_io = raid10_end_discard_request;
+>   			mbio->bi_private = r10_bio;
+> @@ -1790,6 +1794,7 @@ static int raid10_handle_discard(struct mddev *mddev, struct bio *bio)
+>   			bio_endio(mbio);
+>   		}
+>   		if (r10_bio->devs[disk].repl_bio) {
+> +			struct md_rdev *rrdev = conf->mirrors[disk].replacement;
+>   			rbio = bio_clone_fast(bio, GFP_NOIO, &mddev->bio_set);
+>   			rbio->bi_end_io = raid10_end_discard_request;
+>   			rbio->bi_private = r10_bio;
+
+Acked-by: Guoqing Jiang <guoqing.jiang@linux.dev>
+
+Thanks,
+Guoqing
