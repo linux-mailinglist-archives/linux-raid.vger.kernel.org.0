@@ -2,299 +2,87 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 506F93FB63B
-	for <lists+linux-raid@lfdr.de>; Mon, 30 Aug 2021 14:41:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C08C3FC2C1
+	for <lists+linux-raid@lfdr.de>; Tue, 31 Aug 2021 08:37:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236721AbhH3Mjs (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 30 Aug 2021 08:39:48 -0400
-Received: from mga09.intel.com ([134.134.136.24]:1811 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236402AbhH3Mjr (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 30 Aug 2021 08:39:47 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10091"; a="218271648"
-X-IronPort-AV: E=Sophos;i="5.84,363,1620716400"; 
-   d="scan'208";a="218271648"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2021 05:38:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,363,1620716400"; 
-   d="scan'208";a="497664304"
-Received: from unknown (HELO localhost.igk.intel.com) ([10.102.92.52])
-  by fmsmga008.fm.intel.com with ESMTP; 30 Aug 2021 05:38:52 -0700
-From:   Mateusz Kusiak <mateusz.kusiak@intel.com>
-To:     linux-raid@vger.kernel.org
-Cc:     jes@trained-monkey.org
-Subject: [PATCH] Grow: Close cfd file descriptor
-Date:   Mon, 30 Aug 2021 16:49:39 +0200
-Message-Id: <20210830144939.29240-1-mateusz.kusiak@intel.com>
-X-Mailer: git-send-email 2.26.2
+        id S233720AbhHaG1Q (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 31 Aug 2021 02:27:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40612 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233251AbhHaG1P (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 31 Aug 2021 02:27:15 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D815CC061575
+        for <linux-raid@vger.kernel.org>; Mon, 30 Aug 2021 23:26:20 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id y34so36214248lfa.8
+        for <linux-raid@vger.kernel.org>; Mon, 30 Aug 2021 23:26:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
+        bh=RzIkdEm5aJl66a3p0t6hmEQ+Qv+8MFJLxj5JlLxnEbs=;
+        b=sJr3pzb2WSwqfJLLxRuh4WbCc+DdWsbS6gTQW3eSQ4pDu/LCHxN9THFlxrm9CgYG3h
+         1kUdFH+kWobBv0eFJeU0Rew65bugGY6N9H+mXRimBZZXotmIHEkrnxEnBZTNbASnXmhI
+         oVnynOXwW2l9edAaYKiW+BIl2tNOpWLwH+/vnRqWozh/014ulgrohguXcnceyBRMveW2
+         VsWQg1VXTEC5/H9kb41IPo9Abyelat08DhwAHZdkr5mbD7FYjH/b37pjX5R4Du3F4PoI
+         bu24trUoMdVGpOIVYl8NmxZnAoj0u7OBnkWe5mIWuJcd+JKseSkSErU1x8BlfrSpSdgn
+         VD0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to;
+        bh=RzIkdEm5aJl66a3p0t6hmEQ+Qv+8MFJLxj5JlLxnEbs=;
+        b=UcqIb6wdOh7rwXhebM1lIIPToTSGs1q7QzICSpFFGOBfXtFgMhfu4re50ouYc9CVnj
+         kl77qFHxSAErk4mb6Nvjt5/jivotinXkuCmwY2ZS4JmDNwvJwQlyqZl3Wcs5BYX87kzj
+         Wrf5rICEf1hzTxV9UtgvkE5skWd7g6YLp/VoLVbTl279brgv3nRUOIsgfrAuP9PnlJB3
+         cMmtY6aWdsnJ/032z41WXYDZBbWeJzmtYz9XEAYCawVay8oeq5irblZFz4cYr1QH5uTK
+         pueiCAkmoxgwXvZuTL6k5iMNk9+qPhjjOUdU7Y3AYT6XOmo7n7g/+xuRO82h98/f5fbt
+         BWhg==
+X-Gm-Message-State: AOAM530HT54cI4FHsRuSeE22hZy/D7A1Q8H1Nj2a0SRxmdGwW0lRGOQL
+        9ezEH9Ce5NGxtZ313/+yUD/prUOsTOge5JVjIH8=
+X-Google-Smtp-Source: ABdhPJyFFO3tdRTtNjST+8OVGuZbTa8d4B/JtOHq2yxDf/eZlqEof1JXonU9kc6dl07GHDNsE8AeG28QHXyo5LwLTFM=
+X-Received: by 2002:a05:6512:10d3:: with SMTP id k19mr20120782lfg.481.1630391179092;
+ Mon, 30 Aug 2021 23:26:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Reply-To: godwinppter@gmail.com
+Sender: anitaholdings1860@gmail.com
+Received: by 2002:a9a:7407:0:b029:c8:dbb9:6b13 with HTTP; Mon, 30 Aug 2021
+ 23:26:17 -0700 (PDT)
+From:   Godwin Pete <godwinnpeter@gmail.com>
+Date:   Tue, 31 Aug 2021 08:26:17 +0200
+X-Google-Sender-Auth: KRytuj2eRNWTYWpXH1cvj8gASiM
+Message-ID: <CAJ9gDndMaiXijaO9vtPJ6Uhc=+PP3RO2y+o+C4A=V6BpBKH76A@mail.gmail.com>
+Subject: I just want to furnish you with this good news
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Unclosed file descriptor causes resource leak if error occurs.
+Hi,
 
-Signed-off-by: Mateusz Kusiak <mateusz.kusiak@intel.com>
----
- Grow.c | 82 +++++++++++++++++++++++++---------------------------------
- 1 file changed, 35 insertions(+), 47 deletions(-)
+I just want to use this little opportunity to inform you about my
+success towards the transfer. I'm currently out of the country for an
+investment with part of my share, after completing the transfer with
+an Indian business man. But i will visit your country, next year.
+After the completion of my project. Please, contact my secretary to
+send you the (ATM) card which I've already credited with the sum of
+($500,000.00). Just contact her to help you in receiving the (ATM)
+card. I've explained everything to her before my trip. This is what I
+can do for you because, you couldn't help in the transfer, but for the
+fact that you're the person whom I've contacted initially, for the
+transfer. I decided to give this ($500,000.00) as a compensation for
+being contacted initially for the transfer. I always try to make the
+difference, in dealing with people any time I come in contact with
+them. I'm also trying to show that I'm quite a different person from
+others whose may have a different purpose within them. I believe that
+you will render some help to me when I, will visit your country, for
+another investment there. So contact my secretary for the card, Her
+contact are as follows,
 
-diff --git a/Grow.c b/Grow.c
-index 7506ab46..dec6b742 100644
---- a/Grow.c
-+++ b/Grow.c
-@@ -1796,7 +1796,7 @@ int Grow_reshape(char *devname, int fd,
- 	struct supertype *st;
- 	char *subarray = NULL;
- 
--	int frozen;
-+	int frozen = 0;
- 	int changed = 0;
- 	char *container = NULL;
- 	int cfd = -1;
-@@ -1805,7 +1805,7 @@ int Grow_reshape(char *devname, int fd,
- 	int added_disks;
- 
- 	struct mdinfo info;
--	struct mdinfo *sra;
-+	struct mdinfo *sra = NULL;
- 
- 	if (md_get_array_info(fd, &array) < 0) {
- 		pr_err("%s is not an active md array - aborting\n",
-@@ -1851,14 +1851,14 @@ int Grow_reshape(char *devname, int fd,
- 	}
- 	if (s->raiddisks > st->max_devs) {
- 		pr_err("Cannot increase raid-disks on this array beyond %d\n", st->max_devs);
--		return 1;
-+		goto error;
- 	}
- 	if (s->level == 0 && (array.state & (1 << MD_SB_BITMAP_PRESENT)) &&
- 		!(array.state & (1 << MD_SB_CLUSTERED)) && !st->ss->external) {
- 		array.state &= ~(1 << MD_SB_BITMAP_PRESENT);
- 		if (md_set_array_info(fd, &array) != 0) {
- 			pr_err("failed to remove internal bitmap.\n");
--			return 1;
-+			goto error;
- 		}
- 	}
- 
-@@ -1880,16 +1880,14 @@ int Grow_reshape(char *devname, int fd,
- 		}
- 		if (cfd < 0) {
- 			pr_err("Unable to open container for %s\n", devname);
--			free(subarray);
--			return 1;
-+			goto error;
- 		}
- 
- 		retval = st->ss->load_container(st, cfd, NULL);
- 
- 		if (retval) {
- 			pr_err("Cannot read superblock for %s\n", devname);
--			free(subarray);
--			return 1;
-+			goto error;
- 		}
- 
- 		/* check if operation is supported for metadata handler */
-@@ -1900,6 +1898,7 @@ int Grow_reshape(char *devname, int fd,
- 			cc = st->ss->container_content(st, subarray);
- 			for (content = cc; content ; content = content->next) {
- 				int allow_reshape = 1;
-+				rv = 1;
- 
- 				/* check if reshape is allowed based on metadata
- 				 * indications stored in content.array.status
-@@ -1913,26 +1912,23 @@ int Grow_reshape(char *devname, int fd,
- 				if (!allow_reshape) {
- 					pr_err("cannot reshape arrays in container with unsupported metadata: %s(%s)\n",
- 					       devname, container);
--					sysfs_free(cc);
--					free(subarray);
--					return 1;
-+					break;
- 				}
- 				if (content->consistency_policy ==
- 				    CONSISTENCY_POLICY_PPL) {
- 					pr_err("Operation not supported when ppl consistency policy is enabled\n");
--					sysfs_free(cc);
--					free(subarray);
--					return 1;
-+					break;
- 				}
- 				if (content->consistency_policy ==
- 				    CONSISTENCY_POLICY_BITMAP) {
- 					pr_err("Operation not supported when write-intent bitmap is enabled\n");
--					sysfs_free(cc);
--					free(subarray);
--					return 1;
-+					break;
- 				}
-+				rv = 0;
- 			}
- 			sysfs_free(cc);
-+			if (rv == 1)
-+				goto release;
- 		}
- 		if (mdmon_running(container))
- 			st->update_tail = &st->updates;
-@@ -1950,7 +1946,7 @@ int Grow_reshape(char *devname, int fd,
- 		       s->raiddisks - array.raid_disks,
- 		       s->raiddisks - array.raid_disks == 1 ? "" : "s",
- 		       array.spare_disks + added_disks);
--		return 1;
-+		goto error;
- 	}
- 
- 	sra = sysfs_read(fd, NULL, GET_LEVEL | GET_DISKS | GET_DEVS |
-@@ -1963,17 +1959,15 @@ int Grow_reshape(char *devname, int fd,
- 	} else {
- 		pr_err("failed to read sysfs parameters for %s\n",
- 			devname);
--		return 1;
-+		goto error;
- 	}
- 	frozen = freeze(st);
- 	if (frozen < -1) {
- 		/* freeze() already spewed the reason */
--		sysfs_free(sra);
--		return 1;
-+		goto error;
- 	} else if (frozen < 0) {
- 		pr_err("%s is performing resync/recovery and cannot be reshaped\n", devname);
--		sysfs_free(sra);
--		return 1;
-+		goto error;
- 	}
- 
- 	/* ========= set size =============== */
-@@ -1989,15 +1983,13 @@ int Grow_reshape(char *devname, int fd,
- 
- 		if (orig_size == 0) {
- 			pr_err("Cannot set device size in this type of array.\n");
--			rv = 1;
--			goto release;
-+			goto error;
- 		}
- 
- 		if (reshape_super(st, s->size, UnSet, UnSet, 0, 0, UnSet, NULL,
- 				  devname, APPLY_METADATA_CHANGES,
- 				  c->verbose > 0)) {
--			rv = 1;
--			goto release;
-+			goto error;
- 		}
- 		sync_metadata(st);
- 		if (st->ss->external) {
-@@ -2126,8 +2118,7 @@ size_change_error:
- 			if (err == EBUSY &&
- 			    (array.state & (1<<MD_SB_BITMAP_PRESENT)))
- 				cont_err("Bitmap must be removed before size can be changed\n");
--			rv = 1;
--			goto release;
-+			goto error;
- 		}
- 		if (s->assume_clean) {
- 			/* This will fail on kernels older than 3.0 unless
-@@ -2183,10 +2174,7 @@ size_change_error:
- 		err = remove_disks_for_takeover(st, sra, array.layout);
- 		if (err) {
- 			dprintf("Array cannot be reshaped\n");
--			if (cfd > -1)
--				close(cfd);
--			rv = 1;
--			goto release;
-+			goto error;
- 		}
- 		/* Make sure mdmon has seen the device removal
- 		 * and updated metadata before we continue with
-@@ -2200,8 +2188,7 @@ size_change_error:
- 	info.array = array;
- 	if (sysfs_init(&info, fd, NULL)) {
- 		pr_err("failed to initialize sysfs.\n");
--		rv = 1;
--		goto release;
-+		goto error;
- 	}
- 	strcpy(info.text_version, sra->text_version);
- 	info.component_size = s->size*2;
-@@ -2222,8 +2209,7 @@ size_change_error:
- 			pr_err("%s has a non-standard layout.  If you wish to preserve this\n", devname);
- 			cont_err("during the reshape, please specify --layout=preserve\n");
- 			cont_err("If you want to change it, specify a layout or use --layout=normalise\n");
--			rv = 1;
--			goto release;
-+			goto error;
- 		}
- 	} else if (strcmp(s->layout_str, "normalise") == 0 ||
- 		   strcmp(s->layout_str, "normalize") == 0) {
-@@ -2239,8 +2225,7 @@ size_change_error:
- 			}
- 		} else {
- 			pr_err("%s is only meaningful when reshaping a RAID6 array.\n", s->layout_str);
--			rv = 1;
--			goto release;
-+			goto error;
- 		}
- 	} else if (strcmp(s->layout_str, "preserve") == 0) {
- 		/* This means that a non-standard RAID6 layout
-@@ -2261,8 +2246,7 @@ size_change_error:
- 			info.new_layout = map_name(r6layout, l);
- 		} else {
- 			pr_err("%s in only meaningful when reshaping to RAID6\n", s->layout_str);
--			rv = 1;
--			goto release;
-+			goto error;
- 		}
- 	} else {
- 		int l = info.new_level;
-@@ -2283,14 +2267,12 @@ size_change_error:
- 			break;
- 		default:
- 			pr_err("layout not meaningful with this level\n");
--			rv = 1;
--			goto release;
-+			goto error;
- 		}
- 		if (info.new_layout == UnSet) {
- 			pr_err("layout %s not understood for this level\n",
- 				s->layout_str);
--			rv = 1;
--			goto release;
-+			goto error;
- 		}
- 	}
- 
-@@ -2359,8 +2341,7 @@ size_change_error:
- 				  info.array.raid_disks, info.delta_disks,
- 				  c->backup_file, devname,
- 				  APPLY_METADATA_CHANGES, c->verbose)) {
--			rv = 1;
--			goto release;
-+			goto error;
- 		}
- 		sync_metadata(st);
- 		rv = reshape_array(container, fd, devname, st, &info, c->force,
-@@ -2369,10 +2350,17 @@ size_change_error:
- 		frozen = 0;
- 	}
- release:
-+	if (cfd > -1)
-+		close(cfd);
-+	free(subarray);
- 	sysfs_free(sra);
- 	if (frozen > 0)
- 		unfreeze(st);
-+	free(st);
- 	return rv;
-+error:
-+	rv = 1;
-+	goto release;
- }
- 
- /* verify_reshape_position()
--- 
-2.26.2
+Full name: Mrs, Jovita Dumuije,
+Country: Burkina Faso
+Email: jovitadumuije@gmail.com
 
+Thanks, and hope for a good corporation with you in future.
+
+Godwin Peter,
