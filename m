@@ -2,119 +2,74 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 409D33FD8F3
-	for <lists+linux-raid@lfdr.de>; Wed,  1 Sep 2021 13:44:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F5EE3FE30B
+	for <lists+linux-raid@lfdr.de>; Wed,  1 Sep 2021 21:31:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243356AbhIALpY (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 1 Sep 2021 07:45:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47294 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241703AbhIALpX (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 1 Sep 2021 07:45:23 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24CB7C061575
-        for <linux-raid@vger.kernel.org>; Wed,  1 Sep 2021 04:44:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=f0wKQ4Hfkr+1nzBiJhSprtOMQAuWfI6dwDBdIKoqMC4=; b=IEZaGqwoDqIIo0pwmmQzZ3O2EU
-        YliFuRTKFAJI1GFxK01xWbxDr04gAstHsYmkz3Jv6Rgc+RFwhIdMSijV4Ho4S2ZaJawuGQ6QE9VUA
-        EQaqnLsrG8yZLVQgW0Oqs5cxMQgUxsGC8qzF9Ij50y26b06L8dYXfLaA76VZ+zlc2cExr2aTGQbpX
-        Cn6lSlrkA2JG0tm8BKk9LVoHWX1O77JSuvEcjRfJTatwx5iPmuF6hHnww37whSziLkP7kydXUCcCT
-        ShsE3tTZw+gGQWkmtYrycKPhtFMXxTcZQ6FFqOhVCSDg48MgLhgqASjgmBDwYBgm5Zy2wicZqTtZA
-        KFaus3hA==;
-Received: from [2001:4bb8:180:a30:2deb:705a:5588:bf7d] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mLOeM-002FoU-W0; Wed, 01 Sep 2021 11:43:50 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Song Liu <song@kernel.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH 5/5] md: properly unwind when failing to add the kobject in md_alloc
-Date:   Wed,  1 Sep 2021 13:38:33 +0200
-Message-Id: <20210901113833.1334886-6-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210901113833.1334886-1-hch@lst.de>
-References: <20210901113833.1334886-1-hch@lst.de>
+        id S243929AbhIATc2 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 1 Sep 2021 15:32:28 -0400
+Received: from mail.repatriados.gov.py ([168.90.176.63]:22405 "EHLO
+        mail.repatriados.gov.py" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232298AbhIATc1 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 1 Sep 2021 15:32:27 -0400
+X-Greylist: delayed 10252 seconds by postgrey-1.27 at vger.kernel.org; Wed, 01 Sep 2021 15:32:27 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mail.repatriados.gov.py (Postfix) with ESMTP id B907B7EAEE;
+        Wed,  1 Sep 2021 07:20:37 -0400 (-04)
+Received: from mail.repatriados.gov.py ([127.0.0.1])
+        by localhost (mail.repatriados.gov.py [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id J-xjxYEWVS_s; Wed,  1 Sep 2021 07:20:35 -0400 (-04)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.repatriados.gov.py (Postfix) with ESMTP id C5BAD6CC7B;
+        Tue, 31 Aug 2021 23:46:28 -0400 (-04)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.repatriados.gov.py C5BAD6CC7B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=repatriados.gov.py;
+        s=66AB3A4C-4957-11E8-AF15-073A956E488A; t=1630467990;
+        bh=re+Bi7IjhFEavKutGVOnSLzHkgr9hnVuewhYSbG4AUw=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=kth+bEJ9LXnzoWEi+hi+3LlrMtw007VDTY82X+8fJsySJcU9ezzkVotgw2M40Qj6m
+         r4IsvWQaTeAMHd9BiA3+yOEvd1aahYBuvWlebcYSMO0tyrKajRWoWcqLcUuLi0lYhV
+         hG+G7sx12KmigpXFFg1TCB9mFsqAWPm0CA5JZZifcr6PJdartN19g3h7G5nY6wayvs
+         PytTNAUf353UU2FD9gjjQj8OH4w3/jQRQJlbqLC4fdH05MASDmJV+FDbOcZgL9N203
+         CtJ3l19nOE1wC074ZMfWFSK4TvcPfDe/KVjZtI5eNWNSM1e9vQ6zkPBqwVz4sAokOS
+         ila90vPlfrthg==
+X-Virus-Scanned: amavisd-new at repatriados.gov.py
+Received: from mail.repatriados.gov.py ([127.0.0.1])
+        by localhost (mail.repatriados.gov.py [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id J4vmlM1y2dgU; Tue, 31 Aug 2021 23:46:28 -0400 (-04)
+Received: from cris-PC.www.huaweimobilewifi.com (unknown [105.4.4.195])
+        by mail.repatriados.gov.py (Postfix) with ESMTPSA id 1E4676341E;
+        Tue, 31 Aug 2021 21:42:30 -0400 (-04)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: =?utf-8?q?Wohlt=C3=A4tigkeitsspende_von_2=2E000=2E000_Euro?=
+To:     Recipients <mdominguez@repatriados.gov.py>
+From:   ''Charles jackon'' <mdominguez@repatriados.gov.py>
+Date:   Wed, 01 Sep 2021 03:43:04 +0200
+Reply-To: charlesjacksonjr001@gmail.com
+Message-Id: <20210901014231.1E4676341E@mail.repatriados.gov.py>
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Add proper error handling to delete the gendisk when failing to add
-the md kobject and clean up the error unwinding in general.
+Hallo
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/md/md.c | 37 +++++++++++++++++--------------------
- 1 file changed, 17 insertions(+), 20 deletions(-)
+Ich bin Charles W. Jackson aus North Carolina, Vereinigte Staaten von Ameri=
+ka, und ich bin der Gewinner des Mega-Millionen-Jackpots von 344 Millionen =
+US-Dollar. Ich spende die Summe von 2.000.000 Millionen Euro als Teil der H=
+ilfsgelder f=FCr das Corona-Virus.
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index b90dbf7cc2455..c322841d4edc3 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -5672,7 +5672,7 @@ static int md_alloc(dev_t dev, char *name)
- 			    strcmp(mddev2->gendisk->disk_name, name) == 0) {
- 				spin_unlock(&all_mddevs_lock);
- 				error = -EEXIST;
--				goto abort;
-+				goto out_unlock_disks_mutex;
- 			}
- 		spin_unlock(&all_mddevs_lock);
- 	}
-@@ -5685,7 +5685,7 @@ static int md_alloc(dev_t dev, char *name)
- 	error = -ENOMEM;
- 	disk = blk_alloc_disk(NUMA_NO_NODE);
- 	if (!disk)
--		goto abort;
-+		goto out_unlock_disks_mutex;
- 
- 	disk->major = MAJOR(mddev->unit);
- 	disk->first_minor = unit << shift;
-@@ -5710,26 +5710,23 @@ static int md_alloc(dev_t dev, char *name)
- 	disk->events |= DISK_EVENT_MEDIA_CHANGE;
- 	mddev->gendisk = disk;
- 	error = add_disk(disk);
--	if (error) {
--		blk_cleanup_disk(disk);
--		goto abort;
--	}
-+	if (error)
-+		goto out_cleanup_disk;
- 
- 	error = kobject_add(&mddev->kobj, &disk_to_dev(disk)->kobj, "%s", "md");
--	if (error) {
--		/* This isn't possible, but as kobject_init_and_add is marked
--		 * __must_check, we must do something with the result
--		 */
--		pr_debug("md: cannot register %s/md - name in use\n",
--			 disk->disk_name);
--		error = 0;
--	}
-- abort:
--	if (!error && mddev->kobj.sd) {
--		kobject_uevent(&mddev->kobj, KOBJ_ADD);
--		mddev->sysfs_state = sysfs_get_dirent_safe(mddev->kobj.sd, "array_state");
--		mddev->sysfs_level = sysfs_get_dirent_safe(mddev->kobj.sd, "level");
--	}
-+	if (error)
-+		goto out_del_gendisk;
-+
-+	kobject_uevent(&mddev->kobj, KOBJ_ADD);
-+	mddev->sysfs_state = sysfs_get_dirent_safe(mddev->kobj.sd, "array_state");
-+	mddev->sysfs_level = sysfs_get_dirent_safe(mddev->kobj.sd, "level");
-+	goto out_unlock_disks_mutex;
-+
-+out_del_gendisk:
-+	del_gendisk(disk);
-+out_cleanup_disk:
-+	blk_cleanup_disk(disk);
-+out_unlock_disks_mutex:
- 	mutex_unlock(&disks_mutex);
- 	mddev_put(mddev);
- 	return error;
--- 
-2.30.2
+Dies ist Ihr Spendencode: [CJ530342019]
 
+www.youtube.com/watch?v=3DBSr8myiLPMQ
+
+
+Bitte antworten Sie auf diese E-Mail mit dem SPENDERCODE:
+
+charlesjacksonjr001@gmail.com
+
+Ich hoffe, dass Sie und Ihre Familie dies durchkommen
+
+
+Herr Charles Jackson
