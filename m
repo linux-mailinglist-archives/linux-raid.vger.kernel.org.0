@@ -2,91 +2,87 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 002B53FE1E3
-	for <lists+linux-raid@lfdr.de>; Wed,  1 Sep 2021 20:11:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15F603FE7AF
+	for <lists+linux-raid@lfdr.de>; Thu,  2 Sep 2021 04:32:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346830AbhIASMW (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 1 Sep 2021 14:12:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53704 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346754AbhIASMT (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 1 Sep 2021 14:12:19 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1C2DC061292
-        for <linux-raid@vger.kernel.org>; Wed,  1 Sep 2021 11:11:21 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id ot2-20020a17090b3b4200b0019127f8ed87so220934pjb.1
-        for <linux-raid@vger.kernel.org>; Wed, 01 Sep 2021 11:11:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=2joGkq8i8C5vglZO1FYNTlWqLyr4vSiCXKQYXBVnv4Q=;
-        b=LD3mpzy1s09M3e/Eheelu/QMtbN6lrYJQ+S1BsYhmG4zP9OQuKOeD1zHV2lZaK7Hdt
-         vXoBMumPRACuZhnwd8TYAFIvdImPe0Zn4DA41GnzHGsnpDZPE0wUFWVFNzgpxF6bh6D8
-         CVxTiiIN7w8BVpPirFLytZKK2cFqqV6q9qR8cw4XmdYYgGZs+MdnDeP+neEr/SbnLI2h
-         mwT6gqJ8+HvNCQei5Zu6b3U+/YcUOepEDfVn6t0IkNG5YzxTV8mH8IqZ4zEsqBchdgxI
-         E/zGH3KCiuS7UdfEMBVKPbpzhhPyh4quLRALvE4iCHtswqSZDgWUuzksodIw8OWwGR1Z
-         0RlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=2joGkq8i8C5vglZO1FYNTlWqLyr4vSiCXKQYXBVnv4Q=;
-        b=UO2dVwJAmsc4m8L+f4tKlwiJ3mAj1FuxwgXbEWPs1yFvC8cCUARwNvnDxIy/cN898S
-         Bw7AWzvT8sX1C7Pl4/eTOSdg/OM8YsrfUa0y1yPMXxIcFiXogUZZz0zzu9Ox8JJ9uAgl
-         2crLR6cmjRtE3SJEMLySQSw2SCtaTafXk9WIFXZlwB14dQqYoAwBYQhPAHZk42wRA1xe
-         leZMRbBlK/xU6YMh8YbaIb9BfO1M7lseYfLFiapwggLKooUut6UwCp/GcAqrYfdY97PH
-         DtesyQnRuIGpSVMuxB6akcNPNUM4XNtazwRculK/tjkNiqoqzwPMIIeBnrM/mAh+rXYW
-         vNZQ==
-X-Gm-Message-State: AOAM533y2JMq6OJEdXcKj9t5kTF9hSPhqCWDJgEV/vapufnhcc922GiL
-        yIB/pWtq8hPAw2MvCxfccvOZZwV2B+H+zimpjulr+/XOZWsB0g==
-X-Google-Smtp-Source: ABdhPJwbbBYGjUEQSS3Bb7EfYk34O3AVuG22pVIF78fkATQG8c+PQmeHgcc35+YrriS74Wl5STB8JbzOasp+8kCVBlk=
-X-Received: by 2002:a67:8c5:: with SMTP id 188mr1017695vsi.4.1630519870726;
- Wed, 01 Sep 2021 11:11:10 -0700 (PDT)
+        id S243154AbhIBCdR (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 1 Sep 2021 22:33:17 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:39374 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243187AbhIBCdP (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 1 Sep 2021 22:33:15 -0400
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id AFCBC22555;
+        Thu,  2 Sep 2021 02:32:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1630549936; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=bCU/Pj5OFaMnvHcI0AUc0ZOteruxeaT956fWe7O85n4=;
+        b=RINZyzzMEHATq/7cx7M8dP8y/vzrD7zmLTjcQ5uBmL/BuTivJsHD1zVxwDbVvAxDpNUX06
+        Vb/7hrsXeKbMXbl5EjYTF6z1WMO2tQvGuwL3Pkc54girM4vLhLbKuGNIgG8xDhBqM/mvil
+        IGybKr01U5qwMbDzvcIqz1L2BbA3oxQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1630549936;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=bCU/Pj5OFaMnvHcI0AUc0ZOteruxeaT956fWe7O85n4=;
+        b=lY8yp8vlzUSEFw0lXm8FoeWVKlbJJnZcx5Hm+7lzSai4R6qDlrrG8X6+KmKrX/Gq56UscX
+        mZ387hPU8sjwHdAw==
+Received: from localhost.localdomain (unknown [10.163.16.22])
+        by relay2.suse.de (Postfix) with ESMTP id 160D3A3B8E;
+        Thu,  2 Sep 2021 02:32:14 +0000 (UTC)
+From:   Coly Li <colyli@suse.de>
+To:     linux-raid@vger.kernel.org
+Cc:     Coly Li <colyli@suse.de>, George Gkioulis <ggkioulis@suse.com>
+Subject: [PATCH] Monitor: print message before quit for no array to monitor
+Date:   Thu,  2 Sep 2021 10:32:09 +0800
+Message-Id: <20210902023209.130858-1-colyli@suse.de>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Received: by 2002:ab0:740d:0:0:0:0:0 with HTTP; Wed, 1 Sep 2021 11:11:10 -0700 (PDT)
-From:   CorisBank International <corisbankintlbf@gmail.com>
-Date:   Wed, 1 Sep 2021 11:11:10 -0700
-Message-ID: <CA+25hwzjLgVdtDXYWeuqFBTvAbpc4oxK0dW54s7tjGNyU_m0ow@mail.gmail.com>
-Subject: CORISBANK INTERNATIONAL OFFICIAL NOTIFICATION
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Att: Client
+If there is no array device to monitor, Monitor() will stop monitoring
+at line 261 from the following code block,
+ 257                 if (!new_found) {
+ 258                         if (oneshot)
+ 259                                 break;
+ 260                         else if (!anyredundant) {
+ 261                                 break;
+ 262                         }
 
+This change was introduced by commit 007087d0898a ("Monitor: stop
+notifing about containers"). Before this commit, Monitor() will continue
+and won't quit even there is no array to monitor.
 
-CORISBANK INTERNATIONAL URGENT NOTIFICATION
+It is fine to quit without any array device to monitor, but users may
+wonder whether there is something wrong with mdadm program or their
+configuration to make mdadm quit monitoring.
 
-Notification / Notification/ Notification
+This patch adds a simple error message to indicate Monitor() quits for
+array device to monitor, which makes users have hint to understand why
+mdadm stops monitoring.
 
-Note, We are writing to inform you officially that Finally the Central
-Bank Financial Authority have approved to transfer your $8.2Million
-which was signed by late Mrs Rose Banneth the COVID.19 victim to
-transfer to you, Late Mrs Rose Banneth the France Lady contacted us to
-transfer her fund in our bank to you for Orphanage work before she
-died by the COVID.19
-and as it is now, you will receive your fund through our corresponding
-bank in Dubai [Emirate Investment Bank ] for security reason. Please
-you should reconfirm your details to receive the $8.2Million.
+Reported-by: George Gkioulis <ggkioulis@suse.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+---
+ Monitor.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Name, Country, Address, occupations, Age, Telephone number, account
-Details so that we can immediately forward to the World Bank to
-transfer the fund.
-You are advised to comply on timely manner to permit this esteem bank
-transfer your fund as scheduled.
+diff --git a/Monitor.c b/Monitor.c
+index f541229..88b2c3c 100644
+--- a/Monitor.c
++++ b/Monitor.c
+@@ -258,6 +258,7 @@ int Monitor(struct mddev_dev *devlist,
+ 			if (oneshot)
+ 				break;
+ 			else if (!anyredundant) {
++				pr_info("Stop for no array to monitor\n");
+ 				break;
+ 			}
+ 			else {
+-- 
+2.31.1
 
-We look forward to serving you better
-Your Financial Comfort Is A Priority
-Thank you for choosing Corisbank International.
-
-Sincerely,
-
-----
-
-Mr Diakarya Ouattara
-Managing Director
-Bank Coris
-Burkina Faso
-+226 556 163 37
-financial_bf_info@accountant.com
