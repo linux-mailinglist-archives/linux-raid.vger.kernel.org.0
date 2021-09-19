@@ -2,117 +2,67 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E9E640FC8E
-	for <lists+linux-raid@lfdr.de>; Fri, 17 Sep 2021 17:35:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12677410D85
+	for <lists+linux-raid@lfdr.de>; Sun, 19 Sep 2021 23:47:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242786AbhIQPgm (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 17 Sep 2021 11:36:42 -0400
-Received: from mga05.intel.com ([192.55.52.43]:53519 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242335AbhIQPgj (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 17 Sep 2021 11:36:39 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10110"; a="308364480"
-X-IronPort-AV: E=Sophos;i="5.85,301,1624345200"; 
-   d="scan'208";a="308364480"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2021 08:35:17 -0700
-X-IronPort-AV: E=Sophos;i="5.85,301,1624345200"; 
-   d="scan'208";a="546463868"
-Received: from mtkaczyk-devel.igk.intel.com ([10.102.102.23])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2021 08:35:17 -0700
-From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-To:     song@kernel.org
-Cc:     linux-raid@vger.kernel.org
-Subject: [PATCH 2/2] raid5: introduce MD_BROKEN
-Date:   Fri, 17 Sep 2021 17:34:52 +0200
-Message-Id: <20210917153452.5593-3-mariusz.tkaczyk@linux.intel.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20210917153452.5593-1-mariusz.tkaczyk@linux.intel.com>
-References: <20210917153452.5593-1-mariusz.tkaczyk@linux.intel.com>
+        id S232938AbhISVtS (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 19 Sep 2021 17:49:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54980 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233079AbhISVtP (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 19 Sep 2021 17:49:15 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D65D0C061574
+        for <linux-raid@vger.kernel.org>; Sun, 19 Sep 2021 14:47:49 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id o124so14707683vsc.6
+        for <linux-raid@vger.kernel.org>; Sun, 19 Sep 2021 14:47:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=1Br/N6WhyVMlujnGsxiPG2oa5QW+rtf7KlXAbdHBbwA=;
+        b=XkQJsWKQtbeaFZRaPIZ3PFCSofgTKrdj7A8LErhGYph52uMo+/EQgxeB+CzHyjmgoQ
+         GpckTgQK8fvDYSiAQlG5mf1T/UtrAtSoMDMrW3uYqKXPTnGz8/1WBwsGtyzfdH/sIphN
+         pQ8RKvB4pX63g1gMtn1NhKU7HzQ1xIVZDZY7Hab/fHicVFQPNsXcojv4U8S9JqdnGMXw
+         258GWbccF9Thh1Bf0u57XDdEKZPZ36WPyWH9UqIBKaSFLV1ffuH8O1QHCMzC2V0m0Mo0
+         fjd1IaajQ4vMPT/YEc3UvOpYXrj3NSGsTMLczPbkFPGNN27HIUyAnHzorz8coepL8rzL
+         taMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=1Br/N6WhyVMlujnGsxiPG2oa5QW+rtf7KlXAbdHBbwA=;
+        b=FBgjmrkUVW31YRGr9CqF0rijRaNYJcnSq16hkPJBSvDNT0fLp8OUygOgrOa6wdFYDg
+         IDY8z8ijYDZQV6tQpER/fgJn/MxavcfQgz/6vFZcnPupO1pzNHHUImsBxoZrPX8eNGpU
+         buO7sxDuBEtp6Ru0B9bmyC5SQlvNOWteHkdQnCWX/sjMOvpukra43uQolxY1xlTuk0qe
+         7KY+Iypsh3/hLFirNo96PCbrtpYpOQhEkhJtThTryjso7BvKyEiTT2gnNvOeoejVx3z7
+         sxV1b+tRQhv3vqodUtp/42FNEy8yyEQfJ3u76dbUkeFkRSFBVLOJaifvZ8HyKASFQG4z
+         2UDA==
+X-Gm-Message-State: AOAM533t01Zjffj2W1102PXt4Gk/pUieV/04pkoZJMJiWch+9WzVGp2K
+        MJ349qgDGFLb5R9v4PY5jjp7UpQS6M8emPe1B48=
+X-Google-Smtp-Source: ABdhPJx2UlDrav4nvxSkz1qIrZfYXr+DKBX09FKU46N3G+kJfPMOwwU4HWD34ZvjZalLuHWVQY5AGAckE9YdYy95hqs=
+X-Received: by 2002:a67:2645:: with SMTP id m66mr14521300vsm.49.1632088068838;
+ Sun, 19 Sep 2021 14:47:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: by 2002:ab0:2bd8:0:0:0:0:0 with HTTP; Sun, 19 Sep 2021 14:47:48
+ -0700 (PDT)
+Reply-To: mrsbillchantallawrence58@gmail.com
+From:   mrsbillchantal <mr.komadenfaramusa@gmail.com>
+Date:   Sun, 19 Sep 2021 22:47:48 +0100
+Message-ID: <CABk=LACM-tM1HdWwsKmKNd_jc9T+Wv9TkK8GuTy0bs5OfgWPWQ@mail.gmail.com>
+Subject: Dear Friend, My present internet connection is very slow in case you
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Raid456 module had allowed to achieve failed state, distinct from other
-redundant levels. It was fixed by fb73b357fb9 ("raid5: block failing
-device if raid will be failed").
-This fix introduces a bug, now if raid5 fails during IO, it may result
-with a hung task without completion. Faulty flag on the device is
-necessary to process all requests and is checked many times, mainly in
-anaylze_stripe().
-Allow to set faulty flag on drive again and set MD_BROKEN if raid is
-failed.
+hello....
 
-Fixes: fb73b357fb9 ("raid5: block failing device if raid will be failed")
-Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
----
- drivers/md/raid5.c | 34 ++++++++++++++++------------------
- 1 file changed, 16 insertions(+), 18 deletions(-)
+You have been compensated with the sum of 5.5 million dollars in this
+united nation the payment will be issue into atm visa card and send to
+you from the santander bank we need your address and your  Whatsapp
+this my email.ID (  mrsbillchantallawrence58@gmail.com)  contact  me
 
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 02ed53b20654..43e1ff43a222 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -690,6 +690,9 @@ static int has_failed(struct r5conf *conf)
- {
- 	int degraded;
- 
-+	if (test_bit(MD_BROKEN, &conf->mddev->flags))
-+		return 1;
-+
- 	if (conf->mddev->reshape_position == MaxSector)
- 		return conf->mddev->degraded > conf->max_degraded;
- 
-@@ -2877,34 +2880,29 @@ static void raid5_error(struct mddev *mddev, struct md_rdev *rdev)
- 	unsigned long flags;
- 	pr_debug("raid456: error called\n");
- 
--	spin_lock_irqsave(&conf->device_lock, flags);
--
--	if (test_bit(In_sync, &rdev->flags) &&
--	    mddev->degraded == conf->max_degraded) {
--		/*
--		 * Don't allow to achieve failed state
--		 * Don't try to recover this device
--		 */
--		conf->recovery_disabled = mddev->recovery_disabled;
--		spin_unlock_irqrestore(&conf->device_lock, flags);
--		return;
--	}
-+	pr_crit("md/raid:%s: Disk failure on %s, disabling device.\n",
-+		mdname(mddev), bdevname(rdev->bdev, b));
- 
-+	spin_lock_irqsave(&conf->device_lock, flags);
- 	set_bit(Faulty, &rdev->flags);
- 	clear_bit(In_sync, &rdev->flags);
- 	mddev->degraded = raid5_calc_degraded(conf);
-+
-+	if (has_failed(conf)) {
-+		set_bit(MD_BROKEN, &mddev->flags);
-+		conf->recovery_disabled = mddev->recovery_disabled;
-+		pr_crit("md/raid:%s: Cannot continue on %d devices.\n",
-+			mdname(mddev), conf->raid_disks - mddev->degraded);
-+	} else
-+		pr_crit("md/raid:%s: Operation continuing on %d devices.\n",
-+			mdname(mddev), conf->raid_disks - mddev->degraded);
-+
- 	spin_unlock_irqrestore(&conf->device_lock, flags);
- 	set_bit(MD_RECOVERY_INTR, &mddev->recovery);
- 
- 	set_bit(Blocked, &rdev->flags);
- 	set_mask_bits(&mddev->sb_flags, 0,
- 		      BIT(MD_SB_CHANGE_DEVS) | BIT(MD_SB_CHANGE_PENDING));
--	pr_crit("md/raid:%s: Disk failure on %s, disabling device.\n"
--		"md/raid:%s: Operation continuing on %d devices.\n",
--		mdname(mddev),
--		bdevname(rdev->bdev, b),
--		mdname(mddev),
--		conf->raid_disks - mddev->degraded);
- 	r5c_update_on_rdev_error(mddev, rdev);
- }
- 
--- 
-2.26.2
+Thanks my
 
+mrs chantal
