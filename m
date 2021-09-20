@@ -2,67 +2,290 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 12677410D85
-	for <lists+linux-raid@lfdr.de>; Sun, 19 Sep 2021 23:47:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C70FA411371
+	for <lists+linux-raid@lfdr.de>; Mon, 20 Sep 2021 13:22:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232938AbhISVtS (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 19 Sep 2021 17:49:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54980 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233079AbhISVtP (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 19 Sep 2021 17:49:15 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D65D0C061574
-        for <linux-raid@vger.kernel.org>; Sun, 19 Sep 2021 14:47:49 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id o124so14707683vsc.6
-        for <linux-raid@vger.kernel.org>; Sun, 19 Sep 2021 14:47:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=1Br/N6WhyVMlujnGsxiPG2oa5QW+rtf7KlXAbdHBbwA=;
-        b=XkQJsWKQtbeaFZRaPIZ3PFCSofgTKrdj7A8LErhGYph52uMo+/EQgxeB+CzHyjmgoQ
-         GpckTgQK8fvDYSiAQlG5mf1T/UtrAtSoMDMrW3uYqKXPTnGz8/1WBwsGtyzfdH/sIphN
-         pQ8RKvB4pX63g1gMtn1NhKU7HzQ1xIVZDZY7Hab/fHicVFQPNsXcojv4U8S9JqdnGMXw
-         258GWbccF9Thh1Bf0u57XDdEKZPZ36WPyWH9UqIBKaSFLV1ffuH8O1QHCMzC2V0m0Mo0
-         fjd1IaajQ4vMPT/YEc3UvOpYXrj3NSGsTMLczPbkFPGNN27HIUyAnHzorz8coepL8rzL
-         taMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=1Br/N6WhyVMlujnGsxiPG2oa5QW+rtf7KlXAbdHBbwA=;
-        b=FBgjmrkUVW31YRGr9CqF0rijRaNYJcnSq16hkPJBSvDNT0fLp8OUygOgrOa6wdFYDg
-         IDY8z8ijYDZQV6tQpER/fgJn/MxavcfQgz/6vFZcnPupO1pzNHHUImsBxoZrPX8eNGpU
-         buO7sxDuBEtp6Ru0B9bmyC5SQlvNOWteHkdQnCWX/sjMOvpukra43uQolxY1xlTuk0qe
-         7KY+Iypsh3/hLFirNo96PCbrtpYpOQhEkhJtThTryjso7BvKyEiTT2gnNvOeoejVx3z7
-         sxV1b+tRQhv3vqodUtp/42FNEy8yyEQfJ3u76dbUkeFkRSFBVLOJaifvZ8HyKASFQG4z
-         2UDA==
-X-Gm-Message-State: AOAM533t01Zjffj2W1102PXt4Gk/pUieV/04pkoZJMJiWch+9WzVGp2K
-        MJ349qgDGFLb5R9v4PY5jjp7UpQS6M8emPe1B48=
-X-Google-Smtp-Source: ABdhPJx2UlDrav4nvxSkz1qIrZfYXr+DKBX09FKU46N3G+kJfPMOwwU4HWD34ZvjZalLuHWVQY5AGAckE9YdYy95hqs=
-X-Received: by 2002:a67:2645:: with SMTP id m66mr14521300vsm.49.1632088068838;
- Sun, 19 Sep 2021 14:47:48 -0700 (PDT)
+        id S234985AbhITLX0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 20 Sep 2021 07:23:26 -0400
+Received: from mga12.intel.com ([192.55.52.136]:54142 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230160AbhITLXZ (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 20 Sep 2021 07:23:25 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10112"; a="202608662"
+X-IronPort-AV: E=Sophos;i="5.85,308,1624345200"; 
+   d="scan'208";a="202608662"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2021 04:21:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,308,1624345200"; 
+   d="scan'208";a="548672444"
+Received: from unknown (HELO localhost.igk.intel.com) ([10.102.102.57])
+  by FMSMGA003.fm.intel.com with ESMTP; 20 Sep 2021 04:21:56 -0700
+From:   Mateusz Grzonka <mateusz.grzonka@intel.com>
+To:     linux-raid@vger.kernel.org
+Cc:     jes@trained-monkey.org
+Subject: [PATCH] imsm: Remove possibility for get_imsm_dev to return NULL
+Date:   Mon, 20 Sep 2021 13:10:32 +0200
+Message-Id: <20210920111032.19195-1-mateusz.grzonka@intel.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Received: by 2002:ab0:2bd8:0:0:0:0:0 with HTTP; Sun, 19 Sep 2021 14:47:48
- -0700 (PDT)
-Reply-To: mrsbillchantallawrence58@gmail.com
-From:   mrsbillchantal <mr.komadenfaramusa@gmail.com>
-Date:   Sun, 19 Sep 2021 22:47:48 +0100
-Message-ID: <CABk=LACM-tM1HdWwsKmKNd_jc9T+Wv9TkK8GuTy0bs5OfgWPWQ@mail.gmail.com>
-Subject: Dear Friend, My present internet connection is very slow in case you
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-hello....
+Returning NULL from get_imsm_dev or __get_imsm_dev will cause segfault.
+Guarantee that it never happens.
 
-You have been compensated with the sum of 5.5 million dollars in this
-united nation the payment will be issue into atm visa card and send to
-you from the santander bank we need your address and your  Whatsapp
-this my email.ID (  mrsbillchantallawrence58@gmail.com)  contact  me
+Signed-off-by: Mateusz Grzonka <mateusz.grzonka@intel.com>
+---
+ super-intel.c | 122 +++++++++++++++++++-------------------------------
+ 1 file changed, 46 insertions(+), 76 deletions(-)
 
-Thanks my
+diff --git a/super-intel.c b/super-intel.c
+index 83ddc000..2c3df58a 100644
+--- a/super-intel.c
++++ b/super-intel.c
+@@ -858,30 +858,29 @@ static struct imsm_dev *__get_imsm_dev(struct imsm_super *mpb, __u8 index)
+ 	void *_mpb = mpb;
+ 
+ 	if (index >= mpb->num_raid_devs)
+-		return NULL;
++		goto error;
+ 
+ 	/* devices start after all disks */
+ 	offset = ((void *) &mpb->disk[mpb->num_disks]) - _mpb;
+ 
+-	for (i = 0; i <= index; i++)
++	for (i = 0; i <= index; i++, offset += sizeof_imsm_dev(_mpb + offset, 0))
+ 		if (i == index)
+ 			return _mpb + offset;
+-		else
+-			offset += sizeof_imsm_dev(_mpb + offset, 0);
+-
+-	return NULL;
++error:
++	pr_err("matching failed, index: %u\n", index);
++	abort();
+ }
+ 
+ static struct imsm_dev *get_imsm_dev(struct intel_super *super, __u8 index)
+ {
+ 	struct intel_dev *dv;
+ 
+-	if (index >= super->anchor->num_raid_devs)
+-		return NULL;
++	assert(index < super->anchor->num_raid_devs);
+ 	for (dv = super->devlist; dv; dv = dv->next)
+ 		if (dv->index == index)
+ 			return dv->dev;
+-	return NULL;
++	pr_err("matching failed, index: %u\n", index);
++	abort();
+ }
+ 
+ static inline unsigned long long __le48_to_cpu(const struct bbm_log_block_addr
+@@ -4358,8 +4357,7 @@ int check_mpb_migr_compatibility(struct intel_super *super)
+ 	for (i = 0; i < super->anchor->num_raid_devs; i++) {
+ 		struct imsm_dev *dev_iter = __get_imsm_dev(super->anchor, i);
+ 
+-		if (dev_iter &&
+-		    dev_iter->vol.migr_state == 1 &&
++		if (dev_iter->vol.migr_state == 1 &&
+ 		    dev_iter->vol.migr_type == MIGR_GEN_MIGR) {
+ 			/* This device is migrating */
+ 			map0 = get_imsm_map(dev_iter, MAP_0);
+@@ -4508,8 +4506,6 @@ static void clear_hi(struct intel_super *super)
+ 	}
+ 	for (i = 0; i < mpb->num_raid_devs; ++i) {
+ 		struct imsm_dev *dev = get_imsm_dev(super, i);
+-		if (!dev)
+-			return;
+ 		for (n = 0; n < 2; ++n) {
+ 			struct imsm_map *map = get_imsm_map(dev, n);
+ 			if (!map)
+@@ -5831,7 +5827,7 @@ static int add_to_super_imsm_volume(struct supertype *st, mdu_disk_info_t *dk,
+ 		struct imsm_dev *_dev = __get_imsm_dev(mpb, 0);
+ 
+ 		_disk = __get_imsm_disk(mpb, dl->index);
+-		if (!_dev || !_disk) {
++		if (!_disk) {
+ 			pr_err("BUG mpb setup error\n");
+ 			return 1;
+ 		}
+@@ -6168,10 +6164,10 @@ static int write_super_imsm(struct supertype *st, int doclose)
+ 	for (i = 0; i < mpb->num_raid_devs; i++) {
+ 		struct imsm_dev *dev = __get_imsm_dev(mpb, i);
+ 		struct imsm_dev *dev2 = get_imsm_dev(super, i);
+-		if (dev && dev2) {
+-			imsm_copy_dev(dev, dev2);
+-			mpb_size += sizeof_imsm_dev(dev, 0);
+-		}
++
++		imsm_copy_dev(dev, dev2);
++		mpb_size += sizeof_imsm_dev(dev, 0);
++
+ 		if (is_gen_migration(dev2))
+ 			clear_migration_record = 0;
+ 	}
+@@ -9040,29 +9036,26 @@ static int imsm_rebuild_allowed(struct supertype *cont, int dev_idx, int failed)
+ 	__u8 state;
+ 
+ 	dev2 = get_imsm_dev(cont->sb, dev_idx);
+-	if (dev2) {
+-		state = imsm_check_degraded(cont->sb, dev2, failed, MAP_0);
+-		if (state == IMSM_T_STATE_FAILED) {
+-			map = get_imsm_map(dev2, MAP_0);
+-			if (!map)
+-				return 1;
+-			for (slot = 0; slot < map->num_members; slot++) {
+-				/*
+-				 * Check if failed disks are deleted from intel
+-				 * disk list or are marked to be deleted
+-				 */
+-				idx = get_imsm_disk_idx(dev2, slot, MAP_X);
+-				idisk = get_imsm_dl_disk(cont->sb, idx);
+-				/*
+-				 * Do not rebuild the array if failed disks
+-				 * from failed sub-array are not removed from
+-				 * container.
+-				 */
+-				if (idisk &&
+-				    is_failed(&idisk->disk) &&
+-				    (idisk->action != DISK_REMOVE))
+-					return 0;
+-			}
++
++	state = imsm_check_degraded(cont->sb, dev2, failed, MAP_0);
++	if (state == IMSM_T_STATE_FAILED) {
++		map = get_imsm_map(dev2, MAP_0);
++		for (slot = 0; slot < map->num_members; slot++) {
++			/*
++			 * Check if failed disks are deleted from intel
++			 * disk list or are marked to be deleted
++			 */
++			idx = get_imsm_disk_idx(dev2, slot, MAP_X);
++			idisk = get_imsm_dl_disk(cont->sb, idx);
++			/*
++			 * Do not rebuild the array if failed disks
++			 * from failed sub-array are not removed from
++			 * container.
++			 */
++			if (idisk &&
++			    is_failed(&idisk->disk) &&
++			    (idisk->action != DISK_REMOVE))
++				return 0;
+ 		}
+ 	}
+ 	return 1;
+@@ -10094,7 +10087,6 @@ static void imsm_process_update(struct supertype *st,
+ 		int victim = u->dev_idx;
+ 		struct active_array *a;
+ 		struct intel_dev **dp;
+-		struct imsm_dev *dev;
+ 
+ 		/* sanity check that we are not affecting the uuid of
+ 		 * active arrays, or deleting an active array
+@@ -10110,8 +10102,7 @@ static void imsm_process_update(struct supertype *st,
+ 		 * is active in the container, so checking
+ 		 * mpb->num_raid_devs is just extra paranoia
+ 		 */
+-		dev = get_imsm_dev(super, victim);
+-		if (a || !dev || mpb->num_raid_devs == 1) {
++		if (a || mpb->num_raid_devs == 1 || victim >= super->anchor->num_raid_devs) {
+ 			dprintf("failed to delete subarray-%d\n", victim);
+ 			break;
+ 		}
+@@ -10145,7 +10136,7 @@ static void imsm_process_update(struct supertype *st,
+ 			if (a->info.container_member == target)
+ 				break;
+ 		dev = get_imsm_dev(super, u->dev_idx);
+-		if (a || !dev || !check_name(super, name, 1)) {
++		if (a || !check_name(super, name, 1)) {
+ 			dprintf("failed to rename subarray-%d\n", target);
+ 			break;
+ 		}
+@@ -10174,10 +10165,6 @@ static void imsm_process_update(struct supertype *st,
+ 		struct imsm_update_rwh_policy *u = (void *)update->buf;
+ 		int target = u->dev_idx;
+ 		struct imsm_dev *dev = get_imsm_dev(super, target);
+-		if (!dev) {
+-			dprintf("could not find subarray-%d\n", target);
+-			break;
+-		}
+ 
+ 		if (dev->rwh_policy != u->new_policy) {
+ 			dev->rwh_policy = u->new_policy;
+@@ -11411,8 +11398,10 @@ static int imsm_create_metadata_update_for_migration(
+ {
+ 	struct intel_super *super = st->sb;
+ 	int update_memory_size;
++	int current_chunk_size;
+ 	struct imsm_update_reshape_migration *u;
+-	struct imsm_dev *dev;
++	struct imsm_dev *dev = get_imsm_dev(super, super->current_vol);
++	struct imsm_map *map = get_imsm_map(dev, MAP_0);
+ 	int previous_level = -1;
+ 
+ 	dprintf("(enter) New Level = %i\n", geo->level);
+@@ -11429,23 +11418,15 @@ static int imsm_create_metadata_update_for_migration(
+ 	u->new_disks[0] = -1;
+ 	u->new_chunksize = -1;
+ 
+-	dev = get_imsm_dev(super, u->subdev);
+-	if (dev) {
+-		struct imsm_map *map;
++	current_chunk_size = __le16_to_cpu(map->blocks_per_strip) / 2;
+ 
+-		map = get_imsm_map(dev, MAP_0);
+-		if (map) {
+-			int current_chunk_size =
+-				__le16_to_cpu(map->blocks_per_strip) / 2;
+-
+-			if (geo->chunksize != current_chunk_size) {
+-				u->new_chunksize = geo->chunksize / 1024;
+-				dprintf("imsm: chunk size change from %i to %i\n",
+-					current_chunk_size, u->new_chunksize);
+-			}
+-			previous_level = map->raid_level;
+-		}
++	if (geo->chunksize != current_chunk_size) {
++		u->new_chunksize = geo->chunksize / 1024;
++		dprintf("imsm: chunk size change from %i to %i\n",
++			current_chunk_size, u->new_chunksize);
+ 	}
++	previous_level = map->raid_level;
++
+ 	if (geo->level == 5 && previous_level == 0) {
+ 		struct mdinfo *spares = NULL;
+ 
+@@ -12534,9 +12515,6 @@ static int validate_internal_bitmap_imsm(struct supertype *st)
+ 	unsigned long long offset;
+ 	struct dl *d;
+ 
+-	if (!dev)
+-		return -1;
+-
+ 	if (dev->rwh_policy != RWH_BITMAP)
+ 		return 0;
+ 
+@@ -12582,16 +12560,8 @@ static int add_internal_bitmap_imsm(struct supertype *st, int *chunkp,
+ 		return -1;
+ 
+ 	dev = get_imsm_dev(super, vol_idx);
+-
+-	if (!dev) {
+-		dprintf("cannot find the device for volume index %d\n",
+-			vol_idx);
+-		return -1;
+-	}
+ 	dev->rwh_policy = RWH_BITMAP;
+-
+ 	*chunkp = calculate_bitmap_chunksize(st, dev);
+-
+ 	return 0;
+ }
+ 
+-- 
+2.26.2
 
-mrs chantal
