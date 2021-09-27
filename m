@@ -2,99 +2,120 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5320241963B
-	for <lists+linux-raid@lfdr.de>; Mon, 27 Sep 2021 16:23:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F0274196C4
+	for <lists+linux-raid@lfdr.de>; Mon, 27 Sep 2021 16:54:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234811AbhI0OZA (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 27 Sep 2021 10:25:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234812AbhI0OYn (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 27 Sep 2021 10:24:43 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92C60C061770
-        for <linux-raid@vger.kernel.org>; Mon, 27 Sep 2021 07:23:04 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id t4so11954575plo.0
-        for <linux-raid@vger.kernel.org>; Mon, 27 Sep 2021 07:23:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=qUh54W0B1/celFz/Sm7fg0RIIFoq+17jwQ/Vr2Rkb20=;
-        b=OPI7iVicwj+Z1bNsM1YvUZi+QGt2yNylkxWdF/+ajsoI2xmNR5fcD5Dbs41N0P7HHI
-         oemkww2s8T8+t3QBzhEzHSlC0rRogoWWPWnc1O+fkwMO8uToHXiv/tXQ2faxQh3BftDE
-         kEMA0XQAKBWM582qJWbcAL7Sb3Krl/xZ/mf0CKiNpNtvBj0cl3U6b4kS/Pp8KgrW64uO
-         4WeKDIEU/mvlbu5iyEAUik+VMfcsJQaqgNu6J0QdERXaFv8veB0MQZbILJ83UEwKlXVo
-         pJ7kG7ILHIEpBzymEYGN90h+yH9HfglTWoN1xbh95pF8t1t1TEY+sCRlM0pl2Dt/rD7W
-         zrUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=qUh54W0B1/celFz/Sm7fg0RIIFoq+17jwQ/Vr2Rkb20=;
-        b=6/ATc9oXvUmONm0ZMESNow5GETiVxQTiIu7K+id90gOdeA3Q4bhflx+MgaiWfuKMdj
-         +oJMlV4c6uGL16oTgqkM2ZK76XABAguGBiBBgB9rTFzydmem+RZo4NxvMN4mNdbq6VhX
-         3B6tRCImZg1w5PNq3NVtzjhoH6UBKYsP61vwgyY2T7Xik1A1KBw697uHcZ3KBGfdaUrL
-         PUs5Cx6kEmM8QAEWy0cM+XIzEruNuQfFTDChZOrpFuh7HWF6wqXe2x8mgVBKI0saYAot
-         O0SfgZv83PY8PW6G0RZ9+6meBtisIdoWuborK8uUW+juQZch2vUJ5IA9zKYomzCZSnUa
-         DZ1A==
-X-Gm-Message-State: AOAM533iQQXkNwOYUQpXtQPAd13Nx6P6YrOKiFjGZQw/MxJDnobYcU0i
-        hSgc2LxsVj5qtex6fzgXOv4YfS8RiKQ1/A6ZbEw=
-X-Google-Smtp-Source: ABdhPJzkuMqNQT1NW6nw/HQQwrrmuHE+tts4atEt0koUeFvMlou/2tj45EwQSaUIK/j1QbFJ9zlp0GzADUb/XL0OzAs=
-X-Received: by 2002:a17:90b:33c8:: with SMTP id lk8mr20193335pjb.241.1632752583655;
- Mon, 27 Sep 2021 07:23:03 -0700 (PDT)
+        id S234819AbhI0O4J (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 27 Sep 2021 10:56:09 -0400
+Received: from mga09.intel.com ([134.134.136.24]:46184 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234782AbhI0O4I (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 27 Sep 2021 10:56:08 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10120"; a="224522286"
+X-IronPort-AV: E=Sophos;i="5.85,326,1624345200"; 
+   d="scan'208";a="224522286"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2021 07:54:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,326,1624345200"; 
+   d="scan'208";a="486172493"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 27 Sep 2021 07:54:30 -0700
+Received: from [10.213.2.76] (mtkaczyk-MOBL1.ger.corp.intel.com [10.213.2.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id D9F8F580677;
+        Mon, 27 Sep 2021 07:54:29 -0700 (PDT)
+Subject: Re: [PATCH 1/2] md, raid1, raid10: Set MD_BROKEN for RAID1 and RAID10
+To:     Song Liu <song@kernel.org>
+Cc:     linux-raid <linux-raid@vger.kernel.org>
+References: <20210917153452.5593-1-mariusz.tkaczyk@linux.intel.com>
+ <20210917153452.5593-2-mariusz.tkaczyk@linux.intel.com>
+ <CAPhsuW5bV+Bz=Od9jomNHoedaEMFAXymN11J80G62GVPwSp41g@mail.gmail.com>
+ <CAPhsuW4HZFaPgKx68mDeWE0F7SAjpnXmHL0TzN1SuZD6_Kds-w@mail.gmail.com>
+From:   "Tkaczyk, Mariusz" <mariusz.tkaczyk@linux.intel.com>
+Message-ID: <83f06776-891f-dffa-7449-4128c419ada9@linux.intel.com>
+Date:   Mon, 27 Sep 2021 16:54:27 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Received: by 2002:a05:6a10:5d17:0:0:0:0 with HTTP; Mon, 27 Sep 2021 07:23:02
- -0700 (PDT)
-Reply-To: wvictor@gmx.at
-From:   willson victor <willsonvic3@gmail.com>
-Date:   Mon, 27 Sep 2021 15:23:02 +0100
-Message-ID: <CAPvEOSjzzWXYVum61SMjri_UAVcVnDbf708SFE0zJZuMmwpU=A@mail.gmail.com>
-Subject: Greeting from Abidjan
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAPhsuW4HZFaPgKx68mDeWE0F7SAjpnXmHL0TzN1SuZD6_Kds-w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
--- 
+Hi Song,
+Thank for review.
 
+On 24.09.2021 23:15, Song Liu wrote:
+>>> diff --git a/drivers/md/md.c b/drivers/md/md.c
+>>> index c322841d4edc..ac20eb2ddff7 100644
+>>> --- a/drivers/md/md.c
+>>> +++ b/drivers/md/md.c
+>>> @@ -926,8 +926,9 @@ static void super_written(struct bio *bio)
+>>>                  pr_err("md: %s gets error=%d\n", __func__,
+>>>                         blk_status_to_errno(bio->bi_status));
+>>>                  md_error(mddev, rdev);
+>>> -               if (!test_bit(Faulty, &rdev->flags)
+>>> -                   && (bio->bi_opf & MD_FAILFAST)) {
+>>> +               if (!test_bit(Faulty, &rdev->flags) &&
+>>> +                    !test_bit(MD_BROKEN, &mddev->flags) &&
+>>> +                    (bio->bi_opf & MD_FAILFAST)) {
+>>
+>> So with MD_BROKEN, we will not try to update the SB?
+Array is dead, is there added value in writing failed state?
 
--- 
+For external arrays failed state is not written, because drive is
+not removed from MD device and metadata manager cannot detect array
+failure. This is how it was originally implemented (expect raid5 but I
+aligned it around two years ago[1]). I tried to make it consistent for
+everyone but I failed. Second patch restores possibility to remove
+drive by kernel for raid5 so failed state will be detected (for external)
+again.
+So, maybe I should drop this change for native. What do you think?
 
-I am a bank AUDITIOR GENERAL by profession,I am interested in
-transferring the funds to your country through the help of our bank
-insider whom is to make it happen, so we can invest the money in a
-good business of your choice in your country under your technical and
-managerial partnership, should you be inclined to be involved in this
-project, I will appreciate a prompt response from you through  my
-Private Email, so that you can provide your banking details even
-without any money in the account so we can quickly realize this
-transaction together.
+>>
+>>>                          set_bit(MD_SB_NEED_REWRITE, &mddev->sb_flags);
+>>>                          set_bit(LastDev, &rdev->flags);
+>>>                  }
+>>> @@ -2979,7 +2980,8 @@ state_store(struct md_rdev *rdev, const char *buf, size_t len)
+>>>          int err = -EINVAL;
+>>>          if (cmd_match(buf, "faulty") && rdev->mddev->pers) {
+>>>                  md_error(rdev->mddev, rdev);
+>>> -               if (test_bit(Faulty, &rdev->flags))
+>>> +
+>>> +               if (!test_bit(MD_BROKEN, &rdev->mddev->flags))
+>>
+>> I don't think this makes much sense. EBUSY for already failed array
+>> sounds weird.
+>> Also, shall we also set MD_BROKEN here?
+>>
+> Actually, we just called md_error above, so we don't need to set MD_BROKEN here.
+> But we shouldn't return EBUSY in such cases, right?
+>
+About EBUSY:
+This is how it is implemented in mdadm, we are expecting it in
+case of failure. See my fix[2].
+I agree that it can be confusing, but this is how it is working.
+Do you want to change it across mdadm and md?
+This will break compatibility.
 
-The total amount involved is One hundred and sixty million US DOLLARS
-only [160,000.000.00 DOLLARS ] and we wish to transfer this money into
-a safe foreigners account abroad. But I don't know any foreigner; I am
-only contacting you as a foreigner because this money cannot be
-approved to a local person here, but to a foreigner who has
-information about the account, which I shall give to you upon your
-positive response. I am revealing this to you with believe in God that
-you will never let me down in this business.
+About MD_BROKEN:
+As you see we are determining failure by checking rdev state, if "Faulty"
+in flags after md_error() is not set, then it assumes that array is
+failed and EBUSY is returned to userspace.
 
-I guarantee you that this transaction will be executed under a
-legitimate arrangement that will protect you from any breach of the
-law. The bank official will destroy all documents of the transaction
-immediately you receive this money leaving no trace to any place. I
-will use my position and influence to obtain all legal approvals for
-onward transfer of this money to your account with appropriate
-clearance from the relevant ministries and foreign exchange
-departments, At the conclusion of this business, you will be given 30%
-of the total amount, 70% will be for us.
+I changed verification to checking MD_BROKEN flag instead. It is
+potentially harmful for raid1 and raid10 as old way is working well but
+main target was to unify it across levels. Current verification method
+is not flexible enough for raid5 (second patch).
+Small benefit is that new IO will be failed faster, in md_submit_io().
 
-PLEASE, TREAT THIS PROPOSAL AS TOP SECRET.
+Thanks,
+Mariusz
 
-I look forward to hear from you. contact me through my email address
-( wvictor@gmx.at ).
-
-
-Yours sincerely,
-Willson victor .
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/song/md.git/commit/?id=fb73b3
+[2] https://git.kernel.org/pub/scm/utils/mdadm/mdadm.git/commit/?id=cb8f5371
