@@ -2,102 +2,126 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5192641A2AF
-	for <lists+linux-raid@lfdr.de>; Tue, 28 Sep 2021 00:08:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F12541A379
+	for <lists+linux-raid@lfdr.de>; Tue, 28 Sep 2021 00:59:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237580AbhI0WKB (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 27 Sep 2021 18:10:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51984 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237739AbhI0WJ4 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 27 Sep 2021 18:09:56 -0400
-Received: from bombadil.infradead.org (unknown [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C1DCC08E870;
-        Mon, 27 Sep 2021 15:05:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=NSa3Hc3QelnUxQ+cXABVnHVUgnn9TSfKMH79tpEpz9k=; b=olC0Eh+a79EwdFLpg94sReES7g
-        zIIWqlDYfSX+JEAD7km/lvvUItHvyCJKk3lCoeSUW/FTenHdat9NwotAFsMRFOYGpmnhgBpAWkH0S
-        xk+Tb/3sJw2mxnq1PPZNxGNhvdZ9+l0UwndhCCDTCj2i6YjLqdgmJSoJq0/nnX2F4yhvy4VEC9oWT
-        H6pCoRve7NNVs2t9Ao8PPlgwMTXqCeYPmhaoXuKX+/iV3Btc2+GDu8+RW56yNcM8CyZVxSIAfnqCl
-        Z4DfzsGRc87G7D+k+foRo2hrwIaHX4MbDg0ACVzgFwvFqMqf8cOhYkpkR2HerDu4ol/xdiBshE8q6
-        DEsXnGrA==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mUyij-004Vab-84; Mon, 27 Sep 2021 22:03:33 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     axboe@kernel.dk, hch@lst.de, efremov@linux.com, song@kernel.org,
-        jejb@linux.ibm.com, martin.petersen@oracle.com,
-        viro@zeniv.linux.org.uk, hare@suse.de, jack@suse.cz,
-        ming.lei@redhat.com, tj@kernel.org
-Cc:     linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH v2 2/2] block: add __must_check for *add_disk*() callers
-Date:   Mon, 27 Sep 2021 15:03:32 -0700
-Message-Id: <20210927220332.1074647-3-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210927220332.1074647-1-mcgrof@kernel.org>
-References: <20210927220332.1074647-1-mcgrof@kernel.org>
+        id S237887AbhI0XBC (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 27 Sep 2021 19:01:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41102 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237780AbhI0XBB (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 27 Sep 2021 19:01:01 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 653D561058
+        for <linux-raid@vger.kernel.org>; Mon, 27 Sep 2021 22:59:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632783563;
+        bh=nUwijAHpe0XlHUkWm21FXPsO14Qh0oKSosMNS14zQFU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EtGgiZkbOaQN7cZAVgPSnNhvUyYVCNyp/53Jq6m65qMgtsyWcjZhp95ev5G73iGXy
+         DQFReF8hc2XyXccztSXhbXFhXB3WMw9k8IXhLMsEzfSS+V5aUr+fqmdSeoL5Rv18Cl
+         wM1Rzr6i/1IUwhXZ26MDs8xBznFSk+Ip5K4zKrbZz9d5vwavPfojYv99kUeKq7+TpU
+         av5HSaQiPP00Vpv8RG1XDSei6q2i/A3ZCHo0S2yme0tsSEWMdafVJDLSYkqCEVD8o8
+         QXnY3w8lGBNpYV8J72i6pUBQ5UYKpyteDPXfhZSu27tXyxk8R31KX/oqxpOrvQ/j0+
+         OWNjx3Oy9XZvg==
+Received: by mail-lf1-f52.google.com with SMTP id g41so84031592lfv.1
+        for <linux-raid@vger.kernel.org>; Mon, 27 Sep 2021 15:59:23 -0700 (PDT)
+X-Gm-Message-State: AOAM532iRiZ8sAZLE4dwVbs8PcnHvHN4u4aVE32Q8GcsAN5qOGr4Plcq
+        2Y9CXyggEFSoVTxSkuhulfpEmJuqphIrbiYJpmA=
+X-Google-Smtp-Source: ABdhPJyI9SQwLImbMMIeBM4aRc8PIxOuSADLClLZMgZvqdniEtusxlDQmfxfn29IFHjiUsheNst/d6yN3C5IL0u3xRQ=
+X-Received: by 2002:a2e:5442:: with SMTP id y2mr2563140ljd.436.1632783561741;
+ Mon, 27 Sep 2021 15:59:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+References: <20210917153452.5593-1-mariusz.tkaczyk@linux.intel.com>
+ <20210917153452.5593-2-mariusz.tkaczyk@linux.intel.com> <CAPhsuW5bV+Bz=Od9jomNHoedaEMFAXymN11J80G62GVPwSp41g@mail.gmail.com>
+ <CAPhsuW4HZFaPgKx68mDeWE0F7SAjpnXmHL0TzN1SuZD6_Kds-w@mail.gmail.com> <83f06776-891f-dffa-7449-4128c419ada9@linux.intel.com>
+In-Reply-To: <83f06776-891f-dffa-7449-4128c419ada9@linux.intel.com>
+From:   Song Liu <song@kernel.org>
+Date:   Mon, 27 Sep 2021 15:59:10 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW7mi9KZBVH8YuUvvbCv8k-82tb=jJnkxU0RJXhj+OxXjg@mail.gmail.com>
+Message-ID: <CAPhsuW7mi9KZBVH8YuUvvbCv8k-82tb=jJnkxU0RJXhj+OxXjg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] md, raid1, raid10: Set MD_BROKEN for RAID1 and RAID10
+To:     "Tkaczyk, Mariusz" <mariusz.tkaczyk@linux.intel.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Now that we have done a spring cleaning on all drivers and added
-error checking / handling, let's keep it that way and ensure
-no new drivers fail to stick with it.
+On Mon, Sep 27, 2021 at 7:54 AM Tkaczyk, Mariusz
+<mariusz.tkaczyk@linux.intel.com> wrote:
+>
+> Hi Song,
+> Thank for review.
+>
+> On 24.09.2021 23:15, Song Liu wrote:
+> >>> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> >>> index c322841d4edc..ac20eb2ddff7 100644
+> >>> --- a/drivers/md/md.c
+> >>> +++ b/drivers/md/md.c
+> >>> @@ -926,8 +926,9 @@ static void super_written(struct bio *bio)
+> >>>                  pr_err("md: %s gets error=%d\n", __func__,
+> >>>                         blk_status_to_errno(bio->bi_status));
+> >>>                  md_error(mddev, rdev);
+> >>> -               if (!test_bit(Faulty, &rdev->flags)
+> >>> -                   && (bio->bi_opf & MD_FAILFAST)) {
+> >>> +               if (!test_bit(Faulty, &rdev->flags) &&
+> >>> +                    !test_bit(MD_BROKEN, &mddev->flags) &&
+> >>> +                    (bio->bi_opf & MD_FAILFAST)) {
+> >>
+> >> So with MD_BROKEN, we will not try to update the SB?
+> Array is dead, is there added value in writing failed state?
 
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- block/genhd.c         | 6 +++---
- include/linux/genhd.h | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+I think there is still value to remember this. Say a raid1 with 2 drives,
+A and B. If B is unpluged from the system, we would like to update SB
+on A to remember that. Otherwise, if B is pluged back later (maybe after
+system reset), we won't tell which one has the latest data.
 
-diff --git a/block/genhd.c b/block/genhd.c
-index a5a41628aa59..44c630e3377a 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -394,8 +394,8 @@ static void disk_scan_partitions(struct gendisk *disk)
-  * This function registers the partitioning information in @disk
-  * with the kernel.
-  */
--int device_add_disk(struct device *parent, struct gendisk *disk,
--		     const struct attribute_group **groups)
-+int __must_check device_add_disk(struct device *parent, struct gendisk *disk,
-+				 const struct attribute_group **groups)
- 
- {
- 	struct device *ddev = disk_to_dev(disk);
-@@ -540,7 +540,7 @@ int device_add_disk(struct device *parent, struct gendisk *disk,
- out_free_ext_minor:
- 	if (disk->major == BLOCK_EXT_MAJOR)
- 		blk_free_ext_minor(disk->first_minor);
--	return WARN_ON_ONCE(ret); /* keep until all callers handle errors */
-+	return ret;
- }
- EXPORT_SYMBOL(device_add_disk);
- 
-diff --git a/include/linux/genhd.h b/include/linux/genhd.h
-index 5828ecda5c49..8d78d36c424e 100644
---- a/include/linux/genhd.h
-+++ b/include/linux/genhd.h
-@@ -214,9 +214,9 @@ static inline dev_t disk_devt(struct gendisk *disk)
- void disk_uevent(struct gendisk *disk, enum kobject_action action);
- 
- /* block/genhd.c */
--int device_add_disk(struct device *parent, struct gendisk *disk,
--		const struct attribute_group **groups);
--static inline int add_disk(struct gendisk *disk)
-+int __must_check device_add_disk(struct device *parent, struct gendisk *disk,
-+				 const struct attribute_group **groups);
-+static inline int __must_check add_disk(struct gendisk *disk)
- {
- 	return device_add_disk(NULL, disk, NULL);
- }
--- 
-2.30.2
+Does this make sense?
 
+>
+> For external arrays failed state is not written, because drive is
+> not removed from MD device and metadata manager cannot detect array
+> failure. This is how it was originally implemented (expect raid5 but I
+> aligned it around two years ago[1]). I tried to make it consistent for
+> everyone but I failed. Second patch restores possibility to remove
+> drive by kernel for raid5 so failed state will be detected (for external)
+> again.
+> So, maybe I should drop this change for native. What do you think?
+>
+> >>
+> >>>                          set_bit(MD_SB_NEED_REWRITE, &mddev->sb_flags);
+> >>>                          set_bit(LastDev, &rdev->flags);
+> >>>                  }
+> >>> @@ -2979,7 +2980,8 @@ state_store(struct md_rdev *rdev, const char *buf, size_t len)
+> >>>          int err = -EINVAL;
+> >>>          if (cmd_match(buf, "faulty") && rdev->mddev->pers) {
+> >>>                  md_error(rdev->mddev, rdev);
+> >>> -               if (test_bit(Faulty, &rdev->flags))
+> >>> +
+> >>> +               if (!test_bit(MD_BROKEN, &rdev->mddev->flags))
+> >>
+> >> I don't think this makes much sense. EBUSY for already failed array
+> >> sounds weird.
+> >> Also, shall we also set MD_BROKEN here?
+> >>
+> > Actually, we just called md_error above, so we don't need to set MD_BROKEN here.
+> > But we shouldn't return EBUSY in such cases, right?
+> >
+> About EBUSY:
+> This is how it is implemented in mdadm, we are expecting it in
+> case of failure. See my fix[2].
+> I agree that it can be confusing, but this is how it is working.
+> Do you want to change it across mdadm and md?
+> This will break compatibility.
+>
+> About MD_BROKEN:
+> As you see we are determining failure by checking rdev state, if "Faulty"
+> in flags after md_error() is not set, then it assumes that array is
+> failed and EBUSY is returned to userspace.
+
+This changed the behavior for raid0, no?
+
+W/o the change mdadm --fail on raid0 will get EBUSY. W/ this change,
+it will get 0, and the device is NOT marked as faulty, right?
+
+Song
