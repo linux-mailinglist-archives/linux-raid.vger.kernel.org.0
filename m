@@ -2,68 +2,93 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B1CA41C045
-	for <lists+linux-raid@lfdr.de>; Wed, 29 Sep 2021 10:07:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0959841C7CB
+	for <lists+linux-raid@lfdr.de>; Wed, 29 Sep 2021 17:03:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244564AbhI2IJP (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 29 Sep 2021 04:09:15 -0400
-Received: from mga02.intel.com ([134.134.136.20]:7261 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244540AbhI2IJM (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 29 Sep 2021 04:09:12 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10121"; a="212141363"
-X-IronPort-AV: E=Sophos;i="5.85,331,1624345200"; 
-   d="scan'208";a="212141363"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2021 01:07:32 -0700
-X-IronPort-AV: E=Sophos;i="5.85,331,1624345200"; 
-   d="scan'208";a="554535631"
-Received: from mkusiak-mobl.ger.corp.intel.com (HELO [10.213.24.195]) ([10.213.24.195])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2021 01:07:30 -0700
-Message-ID: <a5db5b41-82bd-af57-6360-8434df02ba9b@linux.intel.com>
-Date:   Wed, 29 Sep 2021 10:07:27 +0200
+        id S1344994AbhI2PEj (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 29 Sep 2021 11:04:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51456 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1344996AbhI2PEi (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 29 Sep 2021 11:04:38 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28E83C061768
+        for <linux-raid@vger.kernel.org>; Wed, 29 Sep 2021 08:02:57 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id l6so1715077plh.9
+        for <linux-raid@vger.kernel.org>; Wed, 29 Sep 2021 08:02:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=dsdxzT5iGWx+lIyIOgmQsDnKiuxVvfsgCi38fv6uSAE=;
+        b=YvCyOdT0nFOWQEZc3bXo46W2q2Gkyvd7d2VuY2HOad6sW0pqggdHeowsqLdSduMw5z
+         rSRuZzLiXtWt2cJsUfyqnB9keKJss3s2hae75JSZb/+B7gsl6oIsnUyjkNFV31lSeRTG
+         jwmBmYp2I6Y+I3xH75M3bB5FOae6b3Vn25Sa+Jumuw43XKxCFSDB8ivLymV7PBNgoWIp
+         Rf+PQZ1wfQbMEYWdpk/SMmcJv+8NoO0kpI77ICXuVsKm+5DNGOk7ecQLmEv+yw7cRVQ9
+         zsB8ktR9/e0mAjRBiXdSjr3gKRo+XU1GPvWO/XdnGoY3sg0HOJZjSMk68V3eaW6BYg73
+         fmeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=dsdxzT5iGWx+lIyIOgmQsDnKiuxVvfsgCi38fv6uSAE=;
+        b=c7Qeq3sPHHpd0NPlM/rkaQoPhYpL59MbRTQXEqIZT9xbsE7GHKmla7+kQw1xetkTdc
+         u0lUpQcJJDgC7Adda9v7sbjgJXYIHX6iGYaaHB0akAwMeXtXpU//8Shbyk0yfNOEu2fK
+         3pVvCOICVBIoH4mdNnk6q3+SCsQiYUXscnM6G67VeNq9BIoGO8q1jlicLX4ZDIvFLIJs
+         84hEKInKULvgwEdvcuXJ6/YptC+BPbUczzHC4+8C2ddTlEXS9/pKn/8JgFwrZiMgNo17
+         IU++pNv3fl4FYa4aWQcqC4VclaJMBZJhvxknkVkpdAZ7guplZUQQfgNIM5d7xJkNDkKB
+         csGg==
+X-Gm-Message-State: AOAM530QpkyWHAjUnoOFr2ASvwprvn4p+Z4M1iUcb5nKk3kwBPfF8MH7
+        SAKeBgpZnFG10e1lDVCvW6y18zHSBvbMZ+Eji1k=
+X-Google-Smtp-Source: ABdhPJzjIAO2SATSdA34rZ7/S+8M0Exs5BIGQ5/Z9eiB4DbQMuDFxNnSCUnMq5ekx7s13Bo/9xMPDVy1K8EH3zkd+ks=
+X-Received: by 2002:a17:90a:4594:: with SMTP id v20mr433272pjg.156.1632927775249;
+ Wed, 29 Sep 2021 08:02:55 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.1.1
-Subject: Re: Mdadm opinion request
-Content-Language: pl
-To:     Jes Sorensen <jes@trained-monkey.org>, colyli@suse.de,
-        linux-raid@vger.kernel.org
-References: <d70f2c8f-eafd-f3c6-39d0-e52a94507cdf@linux.intel.com>
- <c487ed96-b7da-0fea-5020-1cbf7207a8b7@trained-monkey.org>
-From:   "Kusiak, Mateusz" <mateusz.kusiak@linux.intel.com>
-In-Reply-To: <c487ed96-b7da-0fea-5020-1cbf7207a8b7@trained-monkey.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a05:6a10:3203:0:0:0:0 with HTTP; Wed, 29 Sep 2021 08:02:54
+ -0700 (PDT)
+Reply-To: gaboritlaurent423@yahoo.com
+From:   Laurent Gaborit <regionalacsazoneafriqdirecteur@gmail.com>
+Date:   Wed, 29 Sep 2021 17:02:54 +0200
+Message-ID: <CANZzqXxUMBZkxY9a4SBVVD-j3H6mqhWKWvnXQmx+dUK=MdjjEg@mail.gmail.com>
+Subject: =?UTF-8?Q?Offre_de_cr=C3=A9dit?=
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Added linux-raid to recipients, as it should be in original message,
-sorry for inconvenience.
-
-On 28/09/2021 23:08, Jes Sorensen wrote:
-> On 9/28/21 5:28 AM, Kusiak, Mateusz wrote:
->> Hello all,
->> We've discovered an issue with mdadm monitor not checking if sendmail is
->> installed on the system. Software displays error:
->>      "/usr/sbin/sendmail: No such file or directory"
->> and continues to work.
->>
->> We have two ways to use mdmonitor:
->> - system wide mode (--scan option); this require --mail or --syslog,
->> notifications are mandatory.
->> - container/array tracking mode; notifications are optional.
->>
->> Providing wrong email does not stop mdmonitor, neither removing postfix.
->> There is a way to avoid mails in each mode, so why not make it
->> configurable globally? Any thoughts?
->>
->> Mateusz Kusiak
->>
-> 
-> Seems reasonable to me to make it configurable rather than implicit
-> enforce it in one mode and not the other.
-> 
-> Jes
-> 
+Salut,
+Vous avez besoin de pr=C3=AAts de tr=C3=A9sorerie entre particuliers pour v=
+ous
+aider =C3=A0 faire face =C3=A0 des difficult=C3=A9s financi=C3=A8res et sor=
+tir enfin de
+l'impasse bancaire provoqu=C3=A9e par le rejet de votre dossier de demande
+de pr=C3=AAt ?
+Je suis de nationalit=C3=A9 fran=C3=A7aise et je peux vous accorder un pr=
+=C3=AAt de 5
+000 euros =C3=A0 2 000 000 euros avec un taux d'int=C3=A9r=C3=AAt de 2% et =
+des
+conditions qui vous faciliteront la vie. Voici les domaines dans
+lesquels je peux vous aider
+Aider:
+* Financi=C3=A8rement
+* Pr=C3=AAts immobiliers
+* Pr=C3=AAt investissement
+* Pr=C3=AAt de voiture
+* Dette de consolidation
+* Ligne de credit
+* Deuxi=C3=A8me hypoth=C3=A8que
+* Rachat de cr=C3=A9dits
+* Pr=C3=AAts personnels
+Vous =C3=AAtes pi=C3=A9g=C3=A9, banni et non pr=C3=A9f=C3=A9r=C3=A9 des ban=
+ques, ou mieux encore,
+vous avez un projet et avez besoin de financement, de mauvais rapports
+de cr=C3=A9dit, d'argent pour payer des factures, d'argent pour investir
+dans des affaires.
+Donc, si vous avez besoin d'avances de fonds, n'h=C3=A9sitez pas =C3=A0 me
+contacter par e-mail : laurentgaborit747@yahoo.com pour plus
+d'informations sur mes bonnes conditions.
+NB : Ce n'est pas une personne s=C3=A9rieuse =C3=A0 s'abstenir
+Meilleurs v=C5=93ux ...
+Laurent GABORIT.
