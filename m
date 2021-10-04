@@ -2,31 +2,37 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 976C44212DB
-	for <lists+linux-raid@lfdr.de>; Mon,  4 Oct 2021 17:40:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CEB1F4212DE
+	for <lists+linux-raid@lfdr.de>; Mon,  4 Oct 2021 17:40:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235778AbhJDPmU (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 4 Oct 2021 11:42:20 -0400
-Received: from out10.migadu.com ([46.105.121.227]:56757 "EHLO out10.migadu.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235763AbhJDPmP (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 4 Oct 2021 11:42:15 -0400
+        id S235787AbhJDPmX (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 4 Oct 2021 11:42:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38286 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234314AbhJDPmR (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 4 Oct 2021 11:42:17 -0400
+Received: from out10.migadu.com (out10.migadu.com [IPv6:2001:41d0:2:e8e3::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2B53C061745
+        for <linux-raid@vger.kernel.org>; Mon,  4 Oct 2021 08:40:27 -0700 (PDT)
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1633361700;
+        t=1633361701;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=NpQ4WIx80G4vytKQ2YqQk9VHOc0qh2s6K8RIHmjWaOE=;
-        b=oF/hfWK0mKBzjcT1r8XGq163LhpfN4Nwsp0wrveqma10GBAxSyBuyt4BsFxkku/FMcEeBG
-        njfIxSp/l7u3t/vgWi0OxdckaUMw+McUlP7gv19U7LyBtBKYXkP1B5+TBnmaH6Kn5Rpacz
-        /4CL27duDj5AhD7g4glCMiNiVYZE0ko=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=02GsDaUizqhIdo+9MJ3mTLvp9xZApfjnFql4qVo46y0=;
+        b=TiH7ouRF2PdjCQ13NnP1R0Up7zqS8vuSPXD9u76zHboxq0sHJ5n68JnxhrGutIA1RftEvG
+        oCIZ/I2OjUP7OvPyBqdUMlT884XvzLIX5I7aIKVmFb7bvev1rymnG60z7f30iNBVyEqEZ1
+        CqcUo4RegVMI+ZGj0RMYE0mH8yWmFVs=
 From:   Guoqing Jiang <guoqing.jiang@linux.dev>
 To:     song@kernel.org
 Cc:     linux-raid@vger.kernel.org
-Subject: [PATCH 0/6] Misc changes for md
-Date:   Mon,  4 Oct 2021 23:34:47 +0800
-Message-Id: <20211004153453.14051-1-guoqing.jiang@linux.dev>
+Subject: [PATCH 1/6] md/raid1: only allocate write behind bio for WriteMostly device
+Date:   Mon,  4 Oct 2021 23:34:48 +0800
+Message-Id: <20211004153453.14051-2-guoqing.jiang@linux.dev>
+In-Reply-To: <20211004153453.14051-1-guoqing.jiang@linux.dev>
+References: <20211004153453.14051-1-guoqing.jiang@linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
@@ -35,37 +41,40 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hello,
+Commit 6607cd319b6b91bff94e90f798a61c031650b514 ("raid1: ensure write
+behind bio has less than BIO_MAX_VECS sectors") tried to guarantee the
+size of behind bio is not bigger than BIO_MAX_VECS sectors.
 
-The first patch fixes the same calltrace as commit 6607cd319b6b ("raid1:
-ensure write behind bio has less than BIO_MAX_VECS sectors") tried 
-before, but unfortunately the calltrace still could happen if array
-without write mostly device is configured with write-behind enabled.
-So the first patch is suitable for fix branch which others are materials
-for next branch.
+Unfortunately the same calltrace still could happen since an array could
+enable write-behind without write mostly device.
 
-Pls review.
+To match the manpage of mdadm (which says "write-behind is only attempted
+on drives marked as write-mostly"), we need to check WriteMostly flag to
+avoid such unexpected behavior.
 
-Thanks,
-Guoqing
+[1]. https://bugzilla.kernel.org/show_bug.cgi?id=213181#c25
 
-Guoqing Jiang (6):
-  md/raid1: only allocate write behind bio for WriteMostly device
-  md/bitmap: don't set max_write_behind if there is no write mostly
-    device
-  md/raid1: use rdev in raid1_write_request directly
-  md/raid10: add 'read_err' to raid10_read_request
-  md/raid5: call roundup_pow_of_two in raid5_run
-  md: remove unused argument from md_new_event
+Cc: stable@vger.kernel.org # v5.12+
+Cc: Jens Stutte <jens@chianterastutte.eu>
+Reported-by: Jens Stutte <jens@chianterastutte.eu>
+Signed-off-by: Guoqing Jiang <guoqing.jiang@linux.dev>
+---
+ drivers/md/raid1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/md/md-bitmap.c | 17 +++++++++++++++++
- drivers/md/md.c        | 30 +++++++++++++++---------------
- drivers/md/md.h        |  2 +-
- drivers/md/raid1.c     | 13 ++++++-------
- drivers/md/raid10.c    | 10 +++++-----
- drivers/md/raid5.c     |  7 ++-----
- 6 files changed, 46 insertions(+), 33 deletions(-)
-
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 19598bd38939..6ba12f0f0f03 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -1496,7 +1496,7 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
+ 		if (!r1_bio->bios[i])
+ 			continue;
+ 
+-		if (first_clone) {
++		if (first_clone && test_bit(WriteMostly, &rdev->flags)) {
+ 			/* do behind I/O ?
+ 			 * Not if there are too many, or cannot
+ 			 * allocate memory, or a reader on WriteMostly
 -- 
 2.31.1
 
