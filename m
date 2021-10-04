@@ -2,83 +2,70 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF59441FB5E
-	for <lists+linux-raid@lfdr.de>; Sat,  2 Oct 2021 14:00:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 976C44212DB
+	for <lists+linux-raid@lfdr.de>; Mon,  4 Oct 2021 17:40:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232889AbhJBMCJ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 2 Oct 2021 08:02:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60126 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232926AbhJBMCI (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 2 Oct 2021 08:02:08 -0400
-Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2CFDC0613EF
-        for <linux-raid@vger.kernel.org>; Sat,  2 Oct 2021 05:00:22 -0700 (PDT)
-Received: by mail-io1-xd2e.google.com with SMTP id i62so14720108ioa.6
-        for <linux-raid@vger.kernel.org>; Sat, 02 Oct 2021 05:00:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=nsZbpm1YBoHMpWTnzHLuE/zYZ0yg4jBiKD5Q7oCTPBE=;
-        b=DAO1bC92JOsdQ/NNexsSuEPMQkilehd80HK72Rw533l3nqgRLvVKlZ4YV3yD/WCheY
-         4oM2fGsJKCvHisgrawN73IUYlsBA00mFtxuEijoEieucGMttbEK51A9+6y1h1vfNYsSL
-         V+iO0/gGIhsADgxIDt87cycZICu4jv29F/5ETG1bQzrpIq8psSXZSsFuHD+2cbtRtNV/
-         5BovcK9ZTGyMKsheQu3wwH62Vg551soQeKVTlj9RzfHqVL5suo4MlDJx6GvxHWnDzFlb
-         x3+Zd8VPNJghIanrTHnG53Yxpt0043BQ7R/6Lfzl5vQ4F5mulm/cNLyIIEzRMo1ZftRF
-         8VCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=nsZbpm1YBoHMpWTnzHLuE/zYZ0yg4jBiKD5Q7oCTPBE=;
-        b=nDJA0tCVG93euvG6+yDh91fkDOF0D/dCnkEl5dPTFToQOCYkQP913MFMPbkLao6jbB
-         CDQQlTpT3qYDldYEJ3vSLqwNeH4hcNPdrgwuKrJfXLW6yYSzuXyHsH6g3kQl7rAmQ48x
-         R0174Ny26kY9hMJ1tRnCK/h1ksMOp8lP6vUYUeaTufEjagm8M7jvEJDm+cIXvxwW5zU/
-         p3QNKcijAXphpf+4nljzvQgMIWExbhT9KD02z4DL66tMnOyUR1CgDhEzgvyA5k1oGbM2
-         yHZcFW4SovRZdEf96Kn4w9NQeI8nCAHebkti8qqK+oOlioJO7HcF2AZ/9J5omM9SXAsP
-         dPvg==
-X-Gm-Message-State: AOAM530mTZhN0QCLu/IEv5MoDtN9CnJa98ZihQr6LtglNV9k8PGZdJFK
-        KvxkozPkWkw3VYBcVwmEdmPTQ45TNVksRP8UWss=
-X-Google-Smtp-Source: ABdhPJzaNlegqSNGaU2rEjcw7R82KLsQUybV5SJRnD84iDcFQAkNifcNUeBKLnoeSIPUqunFsYney56+JL5zHQvZr/g=
-X-Received: by 2002:a02:a18d:: with SMTP id n13mr2632357jah.132.1633176022067;
- Sat, 02 Oct 2021 05:00:22 -0700 (PDT)
+        id S235778AbhJDPmU (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 4 Oct 2021 11:42:20 -0400
+Received: from out10.migadu.com ([46.105.121.227]:56757 "EHLO out10.migadu.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235763AbhJDPmP (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 4 Oct 2021 11:42:15 -0400
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1633361700;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=NpQ4WIx80G4vytKQ2YqQk9VHOc0qh2s6K8RIHmjWaOE=;
+        b=oF/hfWK0mKBzjcT1r8XGq163LhpfN4Nwsp0wrveqma10GBAxSyBuyt4BsFxkku/FMcEeBG
+        njfIxSp/l7u3t/vgWi0OxdckaUMw+McUlP7gv19U7LyBtBKYXkP1B5+TBnmaH6Kn5Rpacz
+        /4CL27duDj5AhD7g4glCMiNiVYZE0ko=
+From:   Guoqing Jiang <guoqing.jiang@linux.dev>
+To:     song@kernel.org
+Cc:     linux-raid@vger.kernel.org
+Subject: [PATCH 0/6] Misc changes for md
+Date:   Mon,  4 Oct 2021 23:34:47 +0800
+Message-Id: <20211004153453.14051-1-guoqing.jiang@linux.dev>
 MIME-Version: 1.0
-Received: by 2002:a4f:f90d:0:0:0:0:0 with HTTP; Sat, 2 Oct 2021 05:00:21 -0700 (PDT)
-Reply-To: unitednnation0@gmail.com
-From:   "U.n" <wadebaye33@gmail.com>
-Date:   Sat, 2 Oct 2021 00:00:21 -1200
-Message-ID: <CACE0T5XpHfLe2aaSywgKNWk-y8sFt0sp3qnGdVPEMJnR3OjNpg@mail.gmail.com>
-Subject: Attention
-To:     unitednnation0@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+X-Migadu-Auth-User: guoqing.jiang@linux.dev
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
---=20
+Hello,
 
+The first patch fixes the same calltrace as commit 6607cd319b6b ("raid1:
+ensure write behind bio has less than BIO_MAX_VECS sectors") tried 
+before, but unfortunately the calltrace still could happen if array
+without write mostly device is configured with write-behind enabled.
+So the first patch is suitable for fix branch which others are materials
+for next branch.
 
-Attention Sir/Madam
-This is the United Nation (UN). We the United Nations (UN) Globally
-has approved (US$2.500,000)( two Million Five hundred thousand
-dollars) compensation as part of our responsibilities for humanitarian
-Aid for fighting against CoronaVirus and you are among the lucky ones.
+Pls review.
 
+Thanks,
+Guoqing
 
-This compensation is for the most affected countries, communities and
-families across the global. Your funds were deposited with Bank in USA
-to transfer your funds to you via Internet Banking. You have to send
-your full details as state below:with this email Address
-  ( unitednnation0@gmail.com )
-Your full names:
-Address:
-Telephone:
-Occupation:
+Guoqing Jiang (6):
+  md/raid1: only allocate write behind bio for WriteMostly device
+  md/bitmap: don't set max_write_behind if there is no write mostly
+    device
+  md/raid1: use rdev in raid1_write_request directly
+  md/raid10: add 'read_err' to raid10_read_request
+  md/raid5: call roundup_pow_of_two in raid5_run
+  md: remove unused argument from md_new_event
 
+ drivers/md/md-bitmap.c | 17 +++++++++++++++++
+ drivers/md/md.c        | 30 +++++++++++++++---------------
+ drivers/md/md.h        |  2 +-
+ drivers/md/raid1.c     | 13 ++++++-------
+ drivers/md/raid10.c    | 10 +++++-----
+ drivers/md/raid5.c     |  7 ++-----
+ 6 files changed, 46 insertions(+), 33 deletions(-)
 
+-- 
+2.31.1
 
-Yours Sincerely
-Mr. Ant=C3=B3nio Guterres
-United Nations (UN).
