@@ -2,31 +2,37 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14764430976
-	for <lists+linux-raid@lfdr.de>; Sun, 17 Oct 2021 15:50:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB54D430978
+	for <lists+linux-raid@lfdr.de>; Sun, 17 Oct 2021 15:50:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343772AbhJQNw7 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 17 Oct 2021 09:52:59 -0400
-Received: from out2.migadu.com ([188.165.223.204]:45928 "EHLO out2.migadu.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230400AbhJQNw6 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sun, 17 Oct 2021 09:52:58 -0400
+        id S1343777AbhJQNxD (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 17 Oct 2021 09:53:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58218 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1343773AbhJQNxA (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 17 Oct 2021 09:53:00 -0400
+Received: from out2.migadu.com (out2.migadu.com [IPv6:2001:41d0:2:aacc::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85857C061765
+        for <linux-raid@vger.kernel.org>; Sun, 17 Oct 2021 06:50:50 -0700 (PDT)
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1634478647;
+        t=1634478648;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=6nGv7NctthI/NWFYstPCCtcHKnQSXPvjCQCKjE74sdE=;
-        b=VJ/frogUQvM/uDtd1IiS+obzprAb/qlWzIoVNvbDS8oZJ0gySIoZFpzosrlZ12GY8phUho
-        e9aR0U+/D01Jyj7RpILkUZ9tGeToylXF2DQGr8avCbPY0N4dAr0TGWW2A3cUOEsIa2fJ/h
-        qEf9TNoaz44A/QqL3nvfDxwAF8iEPLg=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EMe8bzhIpvwhGFkd+ZZkUSesVIhIoX8hFMsII5ZI6Qc=;
+        b=Sf+3Gj9S0LOg0NqSEtew7f6JCwC/8wst6+W0lqITRwVr6BKqPxsQ4Ojt1z94+ZcsJC3XFn
+        UZchBMNSlQMaJNNZIjNYjAMsyGWPr56i7B97uq4AtMA4U6em89n9oZJvfEEyeewnB22VEU
+        4CYPA8Oh1wCU++R0SiciS/VpSuXi+94=
 From:   Guoqing Jiang <guoqing.jiang@linux.dev>
 To:     song@kernel.org
 Cc:     linux-raid@vger.kernel.org
-Subject: [PATCH 0/3] Misc changes for md again
-Date:   Sun, 17 Oct 2021 21:50:16 +0800
-Message-Id: <20211017135019.27346-1-guoqing.jiang@linux.dev>
+Subject: [PATCH 1/3] md/bitmap: don't set max_write_behind if there is no write mostly device
+Date:   Sun, 17 Oct 2021 21:50:17 +0800
+Message-Id: <20211017135019.27346-2-guoqing.jiang@linux.dev>
+In-Reply-To: <20211017135019.27346-1-guoqing.jiang@linux.dev>
+References: <20211017135019.27346-1-guoqing.jiang@linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
@@ -35,23 +41,48 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hello,
+We shouldn't set it since write behind IO should only happen to write
+mostly device.
 
-This patchset addresses previous comment, please review.
+Signed-off-by: Guoqing Jiang <guoqing.jiang@linux.dev>
+---
+ drivers/md/md-bitmap.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-Thanks,
-Guoqing
-
-Guoqing Jiang (3):
-  md/bitmap: don't set max_write_behind if there is no write mostly
-    device
-  md/raid10: add 'read_err' to raid10_read_request
-  md/raid10: factor out a get_error_dev helper
-
- drivers/md/md-bitmap.c | 18 +++++++++++++++
- drivers/md/raid10.c    | 52 ++++++++++++++++++++++--------------------
- 2 files changed, 45 insertions(+), 25 deletions(-)
-
+diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
+index e29c6298ef5c..9424879d8d7e 100644
+--- a/drivers/md/md-bitmap.c
++++ b/drivers/md/md-bitmap.c
+@@ -2469,11 +2469,29 @@ backlog_store(struct mddev *mddev, const char *buf, size_t len)
+ {
+ 	unsigned long backlog;
+ 	unsigned long old_mwb = mddev->bitmap_info.max_write_behind;
++	struct md_rdev *rdev;
++	bool has_write_mostly = false;
+ 	int rv = kstrtoul(buf, 10, &backlog);
+ 	if (rv)
+ 		return rv;
+ 	if (backlog > COUNTER_MAX)
+ 		return -EINVAL;
++
++	/*
++	 * Without write mostly device, it doesn't make sense to set
++	 * backlog for max_write_behind.
++	 */
++	rdev_for_each(rdev, mddev)
++		if (test_bit(WriteMostly, &rdev->flags)) {
++			has_write_mostly = true;
++			break;
++		}
++	if (!has_write_mostly) {
++		pr_warn_ratelimited("%s: can't set backlog, no write mostly"
++				    " device available\n", mdname(mddev));
++		return -EINVAL;
++	}
++
+ 	mddev->bitmap_info.max_write_behind = backlog;
+ 	if (!backlog && mddev->serial_info_pool) {
+ 		/* serial_info_pool is not needed if backlog is zero */
 -- 
 2.31.1
 
