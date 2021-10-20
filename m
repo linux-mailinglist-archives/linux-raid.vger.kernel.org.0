@@ -2,116 +2,107 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E15F0434E0C
-	for <lists+linux-raid@lfdr.de>; Wed, 20 Oct 2021 16:39:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5CFC4350FC
+	for <lists+linux-raid@lfdr.de>; Wed, 20 Oct 2021 19:08:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230072AbhJTOlN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 20 Oct 2021 10:41:13 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:41262 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229952AbhJTOlM (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 20 Oct 2021 10:41:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634740737;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=6FC09ZllvgS7lnsqRbcyggmk930GXbur/nz7jEPWHs0=;
-        b=ILqJ9Z1q0IL7qHAIDBbpxHHMNbZ4iBMVE1oGwzyg+yoEvdPNhPTWihQBis1LasSH4F7LVM
-        imrLkndYgPrL+6qV+l1uuZz4m02fuc2A60D+VRu0HTKdO27cbyeeRIEbwOi3uHO8IfV9Sq
-        lC0pw2nPLBlcAsWuS67BGsEDS39z9M0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-536-3d3wZUW_MxuR_hcH6zc_og-1; Wed, 20 Oct 2021 10:38:52 -0400
-X-MC-Unique: 3d3wZUW_MxuR_hcH6zc_og-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 88AF18066EF;
-        Wed, 20 Oct 2021 14:38:51 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-8-30.pek2.redhat.com [10.72.8.30])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 06418708E2;
-        Wed, 20 Oct 2021 14:38:48 +0000 (UTC)
-From:   Xiao Ni <xni@redhat.com>
-To:     jes@trained-monkey.org
-Cc:     ncroxon@redhat.com, ffan@redhat.com,
-        mariusz.tkaczyk@linux.intel.com, linux-raid@vger.kernel.org
-Subject: [PATCH 1/1] mdadm/Detail: Can't show container name correctly when unpluging disks
-Date:   Wed, 20 Oct 2021 22:38:43 +0800
-Message-Id: <1634740723-5298-1-git-send-email-xni@redhat.com>
+        id S230219AbhJTRKv (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 20 Oct 2021 13:10:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229941AbhJTRKv (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 20 Oct 2021 13:10:51 -0400
+Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F37CC06161C
+        for <linux-raid@vger.kernel.org>; Wed, 20 Oct 2021 10:08:36 -0700 (PDT)
+Received: by mail-ua1-x92e.google.com with SMTP id r22so7898935uat.11
+        for <linux-raid@vger.kernel.org>; Wed, 20 Oct 2021 10:08:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=xV+lLzyHVxIjvZzd/hg4IldWQ3x8L8qi3sbsTagkSSs=;
+        b=co3PBCM42j5E+jj8XE+UA+9ESbJ+ElkRyt/yxifxR5/Q1Xgw/iexB7LnFXZTvWWfqN
+         hIrl+px8q4VN/T0vAbkwkGU4/kvZOsZpvDVRT/2iSgB8J4JibVVL7I6IkRSbQ7Lw3Uei
+         7MykZqmVivurH6Dg87qKSpqD1j24CSVjX8w+wl6Jj0hhRMZkKW05HsWcMGXhUXroBBy4
+         Kx8BBgFf9cwRBHgiIb6EoVylnhbMlm3k1ioKQkZykgOcYKpB4YWR72k2aaGaYIB+kzUN
+         9bBxTkP4tOwX3NJ/W8Mne22TPZFqGIFZgP4I3Cf6CnEn6rNIDd38h6qKC7HxhIP/fywA
+         0QHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=xV+lLzyHVxIjvZzd/hg4IldWQ3x8L8qi3sbsTagkSSs=;
+        b=xx8xyUUDICeQF3ZDFkkTQwwEpTQEN/xqcGjk9mAJBntAnPCI4szxLBmRWCm287l597
+         PEerqXD3H9siDANUYf+IaNWWJ9WDcoovMRI2qbmiggqiqcx/r99aYlxh5tYwAR2k1iDb
+         GSL/DiG7PQFtX3OsA9Z71ibzd3M6BQMNBWPuR0AwGdSSWfivGuIu2AcJUwWl82KTc/oA
+         RWCJUDdEOCW3B1lZYd09g2TeuTlszD6V2wLeQuwHT1TyeQ9XuIPX2lk8Zzl/zArw/EDG
+         T5wSUvitG8EC3fwy41D1+NMR80ZiQRKT9xmF1crQSDaY8KIwvFC1BqxywDcCyAyxwwmT
+         HG5Q==
+X-Gm-Message-State: AOAM5304t7tT3URDeVx1aXuc3t2QLL0Xa0lelTrSbEGyixQws9ejbHKw
+        nBnD1RStKEpyGJhHAjOCHgUm2kUnOxOQ0QLo2AU=
+X-Google-Smtp-Source: ABdhPJzFJfvL186yssUufQrIQyBPsP7gQp+0ORHhFWvalaMusQlhTO4QuN8NvQ9xlfHmCENrpFcQl3EfhKi/D2STCRA=
+X-Received: by 2002:ab0:36b8:: with SMTP id v24mr527465uat.112.1634749715325;
+ Wed, 20 Oct 2021 10:08:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Received: by 2002:a59:4743:0:b0:236:1f66:b6de with HTTP; Wed, 20 Oct 2021
+ 10:08:34 -0700 (PDT)
+Reply-To: uchennailobi@gmail.com
+From:   uchenna <ohehehe3055@gmail.com>
+Date:   Wed, 20 Oct 2021 10:08:34 -0700
+Message-ID: <CADYWKHxsmQDt-LeHPYgDD6tTZnY120vvTyNs+zLDQPU4joc+4g@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-The test case is:
-1. create one imsm container
-2. create a raid5 device from the container
-3. unplug two disks
-4. mdadm --detail /dev/md126
-[root@rhel85 ~]# mdadm -D /dev/md126
-/dev/md126:
-         Container : ��, member 0
-
-The Detail function first gets container name by function
-map_dev_preferred. Then it tries to find which disks are
-available. In patch db5377883fef(It should be FAILED..)
-uses map_dev_preferred to find which disks are under /dev.
-
-But now, the major/minor information comes from kernel space.
-map_dev_preferred malloc memory and init a device list when
-first be called by Detail. It can't find the device in the
-list by the major/minor. It free the memory and reinit the
-list.
-
-The container name now points to an area tha has been freed.
-So the containt is a mess.
-
-This patch replaces map_dev_preferred with access.
-
-Fixes: db5377883fef (It should be FAILED when raid has)
-Signed-off-by: Xiao Ni <xni@redhat.com>
-Reported-by: Fine Fan <ffan@redhat.com>
----
-v2: use access rather than devid2kname
----
- Detail.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
-
-diff --git a/Detail.c b/Detail.c
-index d3af0ab..df59378 100644
---- a/Detail.c
-+++ b/Detail.c
-@@ -351,14 +351,17 @@ int Detail(char *dev, struct context *c)
- 	avail = xcalloc(array.raid_disks, 1);
- 
- 	for (d = 0; d < array.raid_disks; d++) {
--		char *dv, *dv_rep;
--		dv = map_dev_preferred(disks[d*2].major,
--				disks[d*2].minor, 0, c->prefer);
--		dv_rep = map_dev_preferred(disks[d*2+1].major,
--				disks[d*2+1].minor, 0, c->prefer);
--
--		if ((dv && (disks[d*2].state & (1<<MD_DISK_SYNC))) ||
--		    (dv_rep && (disks[d*2+1].state & (1<<MD_DISK_SYNC)))) {
-+		char dv[32], dv_rep[32];
-+
-+		sprintf(dv, "/sys/dev/block/%d:%d",
-+				disks[d*2].major, disks[d*2].minor);
-+		sprintf(dv_rep, "/sys/dev/block/%d:%d",
-+				disks[d*2+1].major, disks[d*2+1].minor);
-+
-+		if ((!access(dv, R_OK) &&
-+		    (disks[d*2].state & (1<<MD_DISK_SYNC))) ||
-+		    (!access(dv_rep, R_OK) &&
-+		    (disks[d*2+1].state & (1<<MD_DISK_SYNC)))) {
- 			avail_disks ++;
- 			avail[d] = 1;
- 		} else
--- 
-2.7.5
-
+0JTQvtGA0L7Qs9C+0Lkg0LTRgNGD0LMsDQoNCtCa0LDQuiDQv9C+0LbQuNCy0LDQtdGI0Yw/INCv
+INC00YPQvNCw0Y4sINGH0YLQviDQstGLINCyINC/0L7RgNGP0LTQutC1INC4INC30LTQvtGA0L7Q
+stGLLiDQrdGC0L4g0YHQvtC+0LHRidC40YLRjA0K0YfRgtC+INGPINGD0YHQv9C10YjQvdC+INC3
+0LDQutC70Y7Rh9C40Lsg0YHQtNC10LvQutGDLiDQrdGC0L4g0LHRi9C70L4g0LTQsNCy0L3Qvg0K
+0LLRgNC10LzRjyDRgSDQvNC+0LzQtdC90YLQsCDQvdCw0YjQtdCz0L4g0L/QvtGB0LvQtdC00L3Q
+tdCz0L4g0L7QsdGJ0LXQvdC40Y8uINCaINGB0L7QttCw0LvQtdC90LjRjiwg0LLQsNGI0LUg0L/Q
+sNGA0YLQvdC10YDRgdGC0LLQvg0K0YHQviDQvNC90L7QuSDQvdC1INGD0LTQsNC70L7RgdGMINC3
+0LDQstC10YDRiNC40YLRjCDQv9C10YDQtdCy0L7QtCDRgdGA0LXQtNGB0YLQsi4g0K8g0LTRg9C8
+0LDRjiwg0L3QsNGB0YLQsNC70L4g0LLRgNC10LzRjw0K0LrQvtCz0LTQsCDQsdGL0LvQviDRgtCw
+0Log0LzQvdC+0LPQviDQtNCw0LLQu9C10L3QuNGPINC4INC30LDQvNC10YjQsNGC0LXQu9GM0YHR
+gtCy0LAsINGH0YLQviDQstGLINGB0YLQsNC70Lgg0LzQtdC90YzRiNC1DQrQt9Cw0LjQvdGC0LXR
+gNC10YHQvtCy0LDQvSDQsiDRgdC00LXQu9C60LUuDQoNCg0K0JIg0LvRjtCx0L7QvCDRgdC70YPR
+h9Cw0LUg0Y8g0YDQsNC0INGB0L7QvtCx0YnQuNGC0Ywg0LLQsNC8INC+INC80L7QtdC8INGD0YHQ
+v9C10YXQtSDQsiDQv9C+0LvRg9GH0LXQvdC40Lgg0YTQvtC90LTQsA0K0L/QtdGA0LXQtNCw0L3R
+iyDQv9GA0Lgg0YHQvtGC0YDRg9C00L3QuNGH0LXRgdGC0LLQtSDQvdC+0LLQvtCz0L4g0L/QsNGA
+0YLQvdC10YDQsC4g0K8g0YHQtdC50YfQsNGBINCyDQrQktC10L3QtdGB0YPRjdC70LAg0L7QsSDQ
+uNC90LLQtdGB0YLQuNGG0LjRj9GFLiDQntC00L3QsNC60L47INGPINC90LUg0LfQsNCx0YvQuyDR
+gtCy0L7QuCDQv9GA0L7RiNC70YvQtSDRg9GB0LjQu9C40Y8g0LgNCtC/0YvRgtCw0LXRgtGB0Y8g
+0L/QvtC80L7Rh9GMINC80L3QtSDQsiDQv9C10YDQtdCy0L7QtNC1INGB0YDQtdC00YHRgtCyLCDQ
+vdC10YHQvNC+0YLRgNGPINC90LAg0YLQviwg0YfRgtC+INC80YsNCtC90LUg0YHQvNC+0LMg0L/R
+gNC40LnRgtC4INC6INC60L7QvdC60YDQtdGC0L3QvtC80YMg0LLRi9Cy0L7QtNGDLg0KDQrQkiDQ
+t9C90LDQuiDQv9GA0LjQt9C90LDRgtC10LvRjNC90L7RgdGC0Lgg0LfQsCDQstCw0YjRgyDQv9C+
+0L/Ri9GC0LrRgyDQv9C+0LzQvtGH0YwsINGPINC4INC80L7QuSDQvdC+0LLRi9C5INC/0LDRgNGC
+0L3QtdGAINC00L7RgdGC0LjQs9C70LgNCtGA0LXRiNC10L3QuNC1INC+INGC0L7QvCwg0YfRgtC+
+INCy0Ysg0LfQsNGB0LvRg9C20LjQstCw0LXRgtC1INC60L7QvNC/0LXQvdGB0LDRhtC40LgsINC/
+0L7RjdGC0L7QvNGDINGN0YLQviDQv9C40YHRjNC80L4NCtGB0L7QvtCx0YnQsNGOINCy0LDQvCwg
+0YfRgtC+INGPINC+0YHRgtCw0LLQuNC7INC60L7QvNC/0LXQvdGB0LDRhtC40Y4g0LIg0YDQsNC3
+0LzQtdGA0LUgMzUwIDAwMCDQtNC+0LvQu9Cw0YDQvtCyINCh0KjQkA0K0L3QsCDQstCw0YjQtSDQ
+uNC80Y8sINGH0YLQvtCx0YsNCtCS0Ysg0L/QvtC00LXQu9C40YLQtdGB0Ywg0YHQviDQvNC90L7Q
+uSDRgNCw0LTQvtGB0YLRjNGOLiDQodC+0LLQtdGC0YPRjiDQvtCx0YDQsNGC0LjRgtGM0YHRjyDQ
+siDQsdCw0L3QuiBCVENJINC00LvRjyDQv9C+0LvRg9GH0LXQvdC40Y8NCtC/0LXRgNC10LLQvtC0
+ICQgMzUwLDAwMC4wMC4g0KfRgtC+0LHRiyDQuNC30LHQtdC20LDRgtGMINC00L7Qu9Cz0L7QuSDQ
+t9Cw0LTQtdGA0LbQutC4INCy0YvQv9C70LDRgtGLDQrQutC+0LzQv9C10L3RgdCw0YbQuNC+0L3Q
+vdC+0LPQviDRhNC+0L3QtNCwDQrQv9C10YDQtdCy0L7QtCwg0Y8g0L/QvtGA0YPRh9C40Lsg0LHQ
+sNC90LrRgyBCVENJINCy0YvQv9GD0YHRgtC40YLRjCDQvNC10LbQtNGD0L3QsNGA0L7QtNC90YPR
+jiDQsdCw0L3QutC+0LzQsNGC0L3Rg9GOINC60LDRgNGC0YMgdmlzYQ0K0Lgg0L7RgtC/0YDQsNCy
+0YzRgtC1INC10LPQviDQvdCwINC00L7QvNCw0YjQvdC40Lkg0LDQtNGA0LXRgSDQutGD0YDRjNC1
+0YDRgdC60L7QuSDRgdC70YPQttCx0L7QuS4NCg0K0JrQvtC90YLQsNC60YLQvdCw0Y8g0LjQvdGE
+0L7RgNC80LDRhtC40Y8g0LHQsNC90LrQsCDRg9C60LDQt9Cw0L3QsCDQvdC40LbQtToNCg0K0J3Q
+sNC30LLQsNC90LjQtSDQsdCw0L3QutCwOiBCVENJIEJhbmsNCtCt0LvQtdC60YLRgNC+0L3QvdGL
+0Lkg0LDQtNGA0LXRgTogYnRjYmFua3RnNDc4QGdtYWlsLmNvbQ0K0JDQtNGA0LXRgTogMTY5LCBC
+b3VsZXZhcmQgZHUgMTMgamFudmllciBCUCAzNjMgTG9tw6ksINCi0L7Qs9C+Lg0K0JrQvtC90YLQ
+sNC60YLQvdC+0LUg0LvQuNGG0L46INCzLdC9INCb0LXQvtC90LDRgNC0INCc0LDRgtC40LDRgQ0K
+DQrQodC+0L7QsdGJ0LjRgtC1INC80L3QtSwg0LrQsNC6INGC0L7Qu9GM0LrQviDQv9C+0LvRg9GH
+0LjRgtC1INC60LDRgNGC0YMgVmlzYSDQtNC70Y8g0LHQsNC90LrQvtC80LDRgtC+0LIg0L7RgiDQ
+sdCw0L3QutCwDQpCVENJLiDRhdC+0YLQtdC7INCx0Ysg0Y8NCtCS0LDQvCDRg9GB0L/QtdGF0L7Q
+siDQstC+INCy0YHQtdGFINC90LDRh9C40L3QsNC90LjRj9GFLg0KDQrQoSDRg9Cy0LDQttC10L3Q
+uNC10LwNCtCR0LDRgNGA0LjRgdGC0LXRgCDRg9GH0LXQvdC90LAg0LjQu9C+0LHQuA0K
