@@ -2,103 +2,132 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9490436811
-	for <lists+linux-raid@lfdr.de>; Thu, 21 Oct 2021 18:39:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95C29436EB3
+	for <lists+linux-raid@lfdr.de>; Fri, 22 Oct 2021 02:10:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231332AbhJUQlW (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 21 Oct 2021 12:41:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42318 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229702AbhJUQlW (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 21 Oct 2021 12:41:22 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19E64C061764;
-        Thu, 21 Oct 2021 09:39:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=5Fa6osgzG4VxZaX6kVT87k4aCBY3SA+fIXDyr0H5bnE=; b=fWW+67KN3XFJuIVdLP4+f1eJyf
-        OR/jzg6Rs5PFWWNWnsCldxuJ0lRuI967CxMhJdBVWUsqXs8SMf5X/+HGSk11k6vPQcbMndfz1J2Gd
-        N3nVElpGhlnLbq82g/XXeTs+R/SKFqcrTcV5MEpSM0eY6RLn8kUxgRu9Rp2Q3erouKJNi/VXd3fV7
-        D/KIUulfZ7DfcjtSxa5QIF1iOrrXiWuK7aOdFBXjNiQb2+Th+I8rC4bd7uyEVeUsQ8O/24QjHKRqV
-        qJqWoDVDYmIjRW0KMH4ZhozF2irk/8OC8F1co9A8cnrcfTxzm0zvro1N8+ydfi8U8qalRumDg+WC+
-        6XNRJh7A==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mdb5m-008OZ0-1p; Thu, 21 Oct 2021 16:38:58 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     axboe@kernel.dk, hch@lst.de, penguin-kernel@i-love.sakura.ne.jp,
-        schmitzmic@gmail.com, efremov@linux.com, song@kernel.org,
-        jejb@linux.ibm.com, martin.petersen@oracle.com,
-        viro@zeniv.linux.org.uk, hare@suse.de, jack@suse.cz,
-        ming.lei@redhat.com, tj@kernel.org
-Cc:     linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH v3 3/3] block: add __must_check for *add_disk*() callers
-Date:   Thu, 21 Oct 2021 09:38:56 -0700
-Message-Id: <20211021163856.2000993-4-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20211021163856.2000993-1-mcgrof@kernel.org>
-References: <20211021163856.2000993-1-mcgrof@kernel.org>
+        id S232187AbhJVAMW (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 21 Oct 2021 20:12:22 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:35444 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232216AbhJVAMW (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 21 Oct 2021 20:12:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1634861405;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=sB72wAoIUuYd0j10XciX9LUFxZ2h5DO71FAZrvIaI4I=;
+        b=E8eqn1UVxYnlzheLJJ4iUFjgi4OpsERxgXd1KCTKU3TBP05Rm1Zjo3Jvab4SuuhqMWcnVg
+        049ZsuCLO2BN4eX+KX0gcuFTBsEG604dn0lwCQakEPwW7/zvQacCy4ySFm3Tob0x2r2Toq
+        ac4aoX0Jd9oUA6Y+wcT+3W4b2G28EWI=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-433-DsBWkIyNOTW6AJOJ3bJGoA-1; Thu, 21 Oct 2021 20:10:04 -0400
+X-MC-Unique: DsBWkIyNOTW6AJOJ3bJGoA-1
+Received: by mail-ed1-f69.google.com with SMTP id b17-20020a056402351100b003dd23c083b1so158179edd.0
+        for <linux-raid@vger.kernel.org>; Thu, 21 Oct 2021 17:10:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sB72wAoIUuYd0j10XciX9LUFxZ2h5DO71FAZrvIaI4I=;
+        b=tYmmjtvVF0plzY/NW44xjNaaEk8qlE38KqC/KNEPTbE6lR45htHbs8GEdmF2bXR0P9
+         O3Zym2K4Jlfk3DcLXCkT7+fyNwbSeC063M4+3LDNMe+zTB0GrlLF83E/TIn0dWy7REyp
+         BkBJiltTJwLxP3tHUG/WqUhyUPBMKzXnPujJQ9Vo/0ot5cXYOTIGHfBP+wXrllcsCdzi
+         ookabGSNzpSEIIaDu1nNmHfGbteSj921tBnCWhNv0PB1zxVwe74caAu2YdpOlpJYlB24
+         m+eGYMb6IjhPOZG/rBNm6kYU8fn3ojv0tlXUqMUA+XheQ813AHhnAsWKYWzHjmcC2f4X
+         uAUQ==
+X-Gm-Message-State: AOAM533FCF4tnIEWXf86H5ajtRpgiMolzorNqwdV3TCEIVooGN7B0vLZ
+        Mhg5SMUtmjRSVzoKFeBaa5eCIjUNF6Ie9RkMWvWkIFjRoA1TEmzT/p/AaKydIy6hBnstJfFAhQc
+        6zF5puhGa16vvcwirzqtCVs2Togmy9VYJwA1wfQ==
+X-Received: by 2002:a17:907:774d:: with SMTP id kx13mr11330861ejc.239.1634861402896;
+        Thu, 21 Oct 2021 17:10:02 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyNWoNadJE7/Xb+D3DXAkmYKfvgoDLzSF5vjuYXtz5gqEQWWduDlLqIYkM17sl/m0PmSkrtEe5QkQoss9EZmbs=
+X-Received: by 2002:a17:907:774d:: with SMTP id kx13mr11330846ejc.239.1634861402745;
+ Thu, 21 Oct 2021 17:10:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+References: <1634740723-5298-1-git-send-email-xni@redhat.com> <974e4fc3-f85c-bfa7-176e-a440fbdfc001@linux.intel.com>
+In-Reply-To: <974e4fc3-f85c-bfa7-176e-a440fbdfc001@linux.intel.com>
+From:   Xiao Ni <xni@redhat.com>
+Date:   Fri, 22 Oct 2021 08:09:51 +0800
+Message-ID: <CALTww2_3e8-U-s4wkURv=zPATWrKSKcjWgK4EXSV-YtAbMNrkA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] mdadm/Detail: Can't show container name correctly
+ when unpluging disks
+To:     "Tkaczyk, Mariusz" <mariusz.tkaczyk@linux.intel.com>
+Cc:     jes@trained-monkey.org, Nigel Croxon <ncroxon@redhat.com>,
+        Fine Fan <ffan@redhat.com>,
+        linux-raid <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Now that we have done a spring cleaning on all drivers and added
-error checking / handling, let's keep it that way and ensure
-no new drivers fail to stick with it.
+On Thu, Oct 21, 2021 at 5:13 PM Tkaczyk, Mariusz
+<mariusz.tkaczyk@linux.intel.com> wrote:
+>
+> Hi Xiao,
+> On 20.10.2021 16:38, Xiao Ni wrote:
+> > +             char dv[32], dv_rep[32];
+> > +
+> > +             sprintf(dv, "/sys/dev/block/%d:%d",
+> > +                             disks[d*2].major, disks[d*2].minor);
+> > +             sprintf(dv_rep, "/sys/dev/block/%d:%d",
+> > +                             disks[d*2+1].major, disks[d*2+1].minor);Please use snprintf and PATH_MAX instead 32.
+> > +
+> > +             if ((!access(dv, R_OK) &&
+> > +                 (disks[d*2].state & (1<<MD_DISK_SYNC))) ||
+> IMO not correct style, please verify with checkpatch.
+> should be: [d * 2]
 
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- block/genhd.c         | 6 +++---
- include/linux/genhd.h | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+Hi Mariusz
 
-diff --git a/block/genhd.c b/block/genhd.c
-index 404429e6f06c..51ceb084135a 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -397,8 +397,8 @@ static void disk_scan_partitions(struct gendisk *disk)
-  * This function registers the partitioning information in @disk
-  * with the kernel.
-  */
--int device_add_disk(struct device *parent, struct gendisk *disk,
--		     const struct attribute_group **groups)
-+int __must_check device_add_disk(struct device *parent, struct gendisk *disk,
-+				 const struct attribute_group **groups)
- 
- {
- 	struct device *ddev = disk_to_dev(disk);
-@@ -543,7 +543,7 @@ int device_add_disk(struct device *parent, struct gendisk *disk,
- out_free_ext_minor:
- 	if (disk->major == BLOCK_EXT_MAJOR)
- 		blk_free_ext_minor(disk->first_minor);
--	return WARN_ON_ONCE(ret); /* keep until all callers handle errors */
-+	return ret;
- }
- EXPORT_SYMBOL(device_add_disk);
- 
-diff --git a/include/linux/genhd.h b/include/linux/genhd.h
-index f805173de312..bddcb30d94c1 100644
---- a/include/linux/genhd.h
-+++ b/include/linux/genhd.h
-@@ -205,9 +205,9 @@ static inline dev_t disk_devt(struct gendisk *disk)
- void disk_uevent(struct gendisk *disk, enum kobject_action action);
- 
- /* block/genhd.c */
--int device_add_disk(struct device *parent, struct gendisk *disk,
--		const struct attribute_group **groups);
--static inline int add_disk(struct gendisk *disk)
-+int __must_check device_add_disk(struct device *parent, struct gendisk *disk,
-+				 const struct attribute_group **groups);
-+static inline int __must_check add_disk(struct gendisk *disk)
- {
- 	return device_add_disk(NULL, disk, NULL);
- }
--- 
-2.30.2
+I ran checkpatch before sending this patch. The checkpatch I used is
+from Song's git
+(https://git.kernel.org/pub/scm/linux/kernel/git/song/md.git). It only
+reports one warning
+like this:
+
+WARNING: Unknown commit id 'db5377883fef', maybe rebased or not pulled?
+#34:
+Fixes: db5377883fef (It should be FAILED when raid has)
+
+total: 0 errors, 1 warnings, 25 lines checked
+
+It's right. Because the commit is from mdadm git. Do we use different
+checkpatch?
+
+> > +                 (!access(dv_rep, R_OK) &&
+> > +                 (disks[d*2+1].state & (1<<MD_DISK_SYNC)))) {
+>
+> Could you define function for that?
+> something like (you can add access() verification if needed):
+> is_dev_alive(mdu_disk_info_t *disk)
+> {
+>         char *devnm = devid2kname(makedev..);
+>         if (devnm)
+>                 return true;
+>         return false;
+> }
+
+Sure, it sounds better. I'll do this in the next version.
+>
+> using true/false will require to add #include <stdbool.h>.
+> Jes suggests to use meaningful return values. This is only
+> suggestion so you can ignore it and use 0 and 1.
+
+<stdbool.h> is a c++ header and it needs libstdc++-devel, I don't want
+to include one package only for using true/false.
+
+>
+> and then check:
+> if (is_dev_alive([d * 2]) & disks[d * 2].state & (1<<MD_DISK_SYNC) ||
+>     (is_dev_alive([d * 2 + 1]) & disks[d * 2 + 1].state & (1<<MD_DISK_SYNC))
+>
+> What do you think?
+
+It's good for me.
+
+Best Regards
+Xiao
 
