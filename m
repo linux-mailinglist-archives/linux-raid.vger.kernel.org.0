@@ -2,78 +2,72 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF86243BF63
-	for <lists+linux-raid@lfdr.de>; Wed, 27 Oct 2021 04:13:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C474E43C989
+	for <lists+linux-raid@lfdr.de>; Wed, 27 Oct 2021 14:23:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238145AbhJ0CPu (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 26 Oct 2021 22:15:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46260 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238064AbhJ0CPp (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 26 Oct 2021 22:15:45 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D634C06122A
-        for <linux-raid@vger.kernel.org>; Tue, 26 Oct 2021 19:13:20 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id oa4so903617pjb.2
-        for <linux-raid@vger.kernel.org>; Tue, 26 Oct 2021 19:13:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=+OhYyTKGmAf5Y61RBhMkXMlQv+hOjswu4u5NSWPSjMI=;
-        b=EG9Nsjl+Eip141PWF+gaBUl1KOWYkVWkt1OXOEZnqtckn0jrX24eTk8UDRzdanWsjC
-         9yBSsvsQJotknvFKA9EQtwg6TYbjKuB2B6TeA9FpEjuXwfev4spJrb1stelnldSVU05K
-         9gDfyUx9hxjQgXAvSoidRv5/L36SOUZnVcgUrTM9tbDStJSMOyaTK7co10bTYaslWL6G
-         KEMVQ2/UtsJj5Uhe9sAzIbF0NlCUlFDN4b2Grw7CXZCthk66H6QQ7cfpSD7pU+Ay2+Nj
-         Q0QsrrBll0HvZsVEqt8NPrW+XN3K+0FC+b/X0b9b+fJud88cD9kdaePkDe4cxFsTTvDp
-         HYfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=+OhYyTKGmAf5Y61RBhMkXMlQv+hOjswu4u5NSWPSjMI=;
-        b=K/yAtQPZKQBdJ1L4y3sD3THfYCJXyS9c3+KgZ18x79rQvWZsa7IHPmucbbg4mRC5l5
-         Mgy6Tj9S6DiFaQ5sHivcSWMeAc53FNaG5Bco1o0OKTswJB8HYMkU9rgM6vTMnoI2JaQz
-         ok0hqkoM7Xf5xzo1PVYgNMFDHo05Rezw8Wq7QsTyQjpikc+JJdPaqxxd3539qi6/Aenb
-         DP85wtRqiIMTMeDGt0If/8FFH1qL0eZN/oJKaKOVPVdR8HyVCLpn+sGiMKH2kvMcekmX
-         P6IEslmU6Wk0uWz1FARyPZQ0h1D01j9IgRRO2yMupeAZksQ+EBOU6YQzRIFwcxm5Tlky
-         wAKA==
-X-Gm-Message-State: AOAM530zmNXCtToPBFW2quZC/eeoHcRRCspPZfgd7TRjyUs38W36OWjD
-        YISWtYLWO+blWRMikds5HAoboQuJFyvdu9URAm8=
-X-Google-Smtp-Source: ABdhPJzwOfSEFC+ZhBFJFbO7cJJvi3wx28mFQEmwNZmSp0wIuhE8auS2ZQZdxDxGrsxbdq14UKAhXuffjqSVAtd5Ev8=
-X-Received: by 2002:a17:90b:1c02:: with SMTP id oc2mr2782635pjb.52.1635300799308;
- Tue, 26 Oct 2021 19:13:19 -0700 (PDT)
+        id S241867AbhJ0MZ4 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 27 Oct 2021 08:25:56 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:48210 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237338AbhJ0MZ4 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 27 Oct 2021 08:25:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1635337410;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=scBkAtCf/QLbYMmJdq1k9BSAIOE/ZJBkmn3SsdmlTXE=;
+        b=hDJNTLtlRe5qQkRcDb7KHl7uA0mVSntHLs1tqXRVb/+0P0KDIMANvUnNznLMJHojVqfNyH
+        B0ebvWWiOmkPtqJTYc+mXGL0iHyKr7Jt61fKQp39f2FkYw3SJtZM+gn9bOUGHLDnQ7L/oi
+        bwgloit+WyLdI/BPsBBtsy+THyZ+peg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-151-eCWX-FOeMtuX3XafYXNP0Q-1; Wed, 27 Oct 2021 08:23:27 -0400
+X-MC-Unique: eCWX-FOeMtuX3XafYXNP0Q-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 33EEE1808308;
+        Wed, 27 Oct 2021 12:23:26 +0000 (UTC)
+Received: from localhost.localdomain.com (ovpn-12-102.pek2.redhat.com [10.72.12.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 54D2A5C1B4;
+        Wed, 27 Oct 2021 12:23:15 +0000 (UTC)
+From:   Xiao Ni <xni@redhat.com>
+To:     jes@trained-monkey.org
+Cc:     ncroxon@redhat.com, ffan@redhat.com,
+        mariusz.tkaczyk@linux.intel.com, linux-raid@vger.kernel.org
+Subject: [PATCH 0/2] --detail show messy container name
+Date:   Wed, 27 Oct 2021 20:23:12 +0800
+Message-Id: <1635337394-4782-1-git-send-email-xni@redhat.com>
 MIME-Version: 1.0
-Sender: officedeskofgeneral0@gmail.com
-Received: by 2002:a17:90b:4c11:0:0:0:0 with HTTP; Tue, 26 Oct 2021 19:13:18
- -0700 (PDT)
-From:   "Mr. Mustafa Ali." <muafalia@gmail.com>
-Date:   Wed, 27 Oct 2021 03:13:18 +0100
-X-Google-Sender-Auth: -ap4vRnh22PsKG1mBvTJWKrUl0o
-Message-ID: <CAL=mczUC43H-jvBwTepLgLaj-FOUBZcvw1kdD=RpB4-U2MPw0g@mail.gmail.com>
-Subject: Greetings Dear Friend.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hello Friend,
+This patch set tries to fix the bug that --detail show messy container
+name. It adds a new method to check if one device is alive in first
+patch.
 
-This message might meet you in utmost surprise. However, It's just my
-urgent need for a foreign partner that made me contact you for this
-transaction. I assured you of honesty and reliability to champion this
-business opportunity. I am a banker by profession in Turkey, and
-currently holding the post of Auditor in Standard Chartered Bank.
+V2:
+use access rather than devid2kname
 
-I have the opportunity of transferring the leftover funds ($15 Million
-Dollars) of one of my clients who died along with his entire family in
-a crisis in Myanmar Asia. I am inviting you for a business deal where
-this money can be shared between us if you agree to my business
-proposal.
+V3:
+define a new function to check if disk is alive
+include <stdbool.h> to use bool
 
-Further details of the transfer will be forwarded to you immediately
-after I receive your return letter.
+Xiao Ni (2):
+  mdadm/lib: Define a new helper function is_dev_alived
+  mdadm/Detail: Can't show container name correctly when unpluging disks
 
-Best Regards,
-Mr. Mustafa Ali.
-mustafa.ali@rahroco.com
+ Detail.c | 16 ++++++++--------
+ lib.c    | 11 +++++++++++
+ mdadm.h  |  2 ++
+ 3 files changed, 21 insertions(+), 8 deletions(-)
+
+-- 
+2.7.5
+
