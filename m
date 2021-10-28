@@ -2,89 +2,133 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D97743DF6F
-	for <lists+linux-raid@lfdr.de>; Thu, 28 Oct 2021 12:52:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9007343E1BD
+	for <lists+linux-raid@lfdr.de>; Thu, 28 Oct 2021 15:13:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230354AbhJ1Ky6 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 28 Oct 2021 06:54:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37580 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230267AbhJ1Kyv (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 28 Oct 2021 06:54:51 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4533C061745
-        for <linux-raid@vger.kernel.org>; Thu, 28 Oct 2021 03:52:22 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id g10so22795534edj.1
-        for <linux-raid@vger.kernel.org>; Thu, 28 Oct 2021 03:52:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=vprh3gRT3Cegcj0K7Fy7tqOfLGKK384XjLMkCZvF/BY=;
-        b=MqgQiMnth4O6zLvpsYbAhVLW1BorpgoCleWwfkY0/i+i6OSDuXRZO1jIKzpTTrmehO
-         XtsLWdXiTcL+XCe4naFtf2tTUJnbwwmDpuUkpvRhLd+LEnuxY7nNr11hmTRUVX1WOHsO
-         bN0u1arCg4gm9LHdXRMZFcXOD22U5gDGuBOuhPo6qvWbt6nA2j/p/5IZ88XFHrEsiSW3
-         12hentYJMlWeUfa2lUQkLm+5/fvMSizrI7wGoF2taOa3dgGUV5HKZWb0yAAH7nAXVevJ
-         tDC/xbHNLzSn310XeD3Gkoobjl6MPBQzT5DSLzerNBdTKOdmyp3xvfvOyo80qVUTZIED
-         gaRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=vprh3gRT3Cegcj0K7Fy7tqOfLGKK384XjLMkCZvF/BY=;
-        b=RxWfUuusBdSz57nZXtupCpVMuhITfubXN4WVY68wB5LyEH3y24IiHv3YyaPczjBf8t
-         HbuYEDMFDdaSQNUE684o5opp2F1ATSigDo50SYcmDLcjknMkbfIOkIR8h8ZIoMJD8unK
-         /Mcp7MkuBsKLL6AFAwexWuKTbNc36r3jnw4LU9INOlJ7PctfcCpv9BWLm/vPljRNibm8
-         megLFFkKrSNmz6eybFzldkgAB2Uu6Y2IhS4DZsoE5CB+Lp1yo9vGXETdrtDw/ykJBNLp
-         J0+//p1WUL2BFC6TiDMdOgKxvlFXEp3qGvA1yOo4TEltPYSB6iQOCCOuSadJysb0bzb2
-         GKhw==
-X-Gm-Message-State: AOAM532vjUbtrsY8luwVqXl5HugTthMte4k+q1k8m/6A7tP6m3jfEQIB
-        m7LBO147qlstECDojSmgK17IvqEQEV+UKI0J11NAh9p0l9czYEMn
-X-Google-Smtp-Source: ABdhPJw39EF9dJlXS9lAFrZ3adXxB8DVzXcygVzA3uRLiZxWlggxaB9ElCxkEB0P82xisoA6G442GD5iqMe2hCgLIt8=
-X-Received: by 2002:a2e:9a83:: with SMTP id p3mr3750290lji.145.1635418330269;
- Thu, 28 Oct 2021 03:52:10 -0700 (PDT)
+        id S229981AbhJ1NPu (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 28 Oct 2021 09:15:50 -0400
+Received: from smarthost01a.ixn.mail.zen.net.uk ([212.23.1.20]:41170 "EHLO
+        smarthost01a.ixn.mail.zen.net.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229641AbhJ1NPr (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Thu, 28 Oct 2021 09:15:47 -0400
+Received: from [82.71.70.4] (helo=aawcs.co.uk)
+        by smarthost01a.ixn.mail.zen.net.uk with esmtp (Exim 4.90_1)
+        (envelope-from <john@aawcs.co.uk>)
+        id 1mg5DZ-0000FF-Le; Thu, 28 Oct 2021 13:13:17 +0000
+Received: from [192.168.1.200] ( [192.168.1.200])
+          by aawcs.co.uk with ESMTP (Mailtraq/2.17.7.3560) id AWCS4BA63F5C;
+          Thu, 28 Oct 2021 14:14:21 +0100
+Subject: Re: Missing Superblocks
+To:     Wol <antlists@youngman.org.uk>,
+        Roger Heflin <rogerheflin@gmail.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>
+References: <de712291-fa08-b35a-f8fb-6d18b573f3f4@aawcs.co.uk>
+ <a5f362c3-122e-d0ac-1234-d4852e43adfa@aawcs.co.uk>
+ <CAAMCDee8fEHGMg7NBNzMq7+kbFHo-4DM0D2T=rNezpPZgKabeg@mail.gmail.com>
+ <9d80e924-ae3e-4a04-1d17-65bfc949e276@aawcs.co.uk>
+ <880c0b3a-a3b8-d8fa-4ea4-bd0a801938d3@youngman.org.uk>
+From:   John Atkins <John@aawcs.co.uk>
+Organization: AAW Control Systems
+Message-ID: <6327485d-4129-f5b0-1311-8ca1528c55b5@aawcs.co.uk>
+Date:   Thu, 28 Oct 2021 14:13:11 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Received: by 2002:ab3:6f89:0:0:0:0:0 with HTTP; Thu, 28 Oct 2021 03:52:09
- -0700 (PDT)
-Reply-To: aabdulwalialhashmi@gmail.com
-From:   Abdulwali Alhashmi <husamalsayed.hs@gmail.com>
-Date:   Thu, 28 Oct 2021 03:52:09 -0700
-Message-ID: <CAF6yYCeS=rm8=_71-kMjVo4oaVK57w9X52R_yv1HDrBe7vh-sA@mail.gmail.com>
-Subject: PLEASE GET BACK TO ME IF I CAN I TRUST YOU
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <880c0b3a-a3b8-d8fa-4ea4-bd0a801938d3@youngman.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Hops: 1
+X-Originating-smarthost01a-IP: [82.71.70.4]
+Feedback-ID: 82.71.70.4
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
--- 
-Greetings,
+Apologies I feel like I am being extraordinarily thick!
+I am trying to --assemble --force, I have tried listing the devices in 
+the correct order after /dev/md0. To which I get
 
-Firstly, I apologize for encroaching into your privacy in this manner
-as it may seem unethical though it is a matter of great importance.
+        sudo mdadm --assemble --force /dev/md0 /dev/sdc /dev/sdd
+        /dev/sde /dev/sdf /dev/sdg /dev/sdh
+        mdadm: /dev/sdd, is an invalid name for an md device - ignored.
+        mdadm: /dev/sde, is an invalid name for an md device - ignored.
+        mdadm: /dev/sdf, is an invalid name for an md device - ignored.
+        mdadm: /dev/sdg, is an invalid name for an md device - ignored.
+        mdadm: /dev/sdh is an invalid name for an md device - ignored.
+        mdadm: No super block found on /dev/sdd (Expected magic
+        a92b4efc, got 00000000)
+        mdadm: no RAID superblock on /dev/sdd
+        mdadm: /dev/sdd has no superblock - assembly aborted
 
-I am Abdulwali Alhashmi, I work with Cayman National Bank (Cayman Islands).
+I have tried listing the devices in the mdadm.config  again with no luck.
 
-I am contacting you because my status would not permit me to do this
-alone as it is concerning our customer and an investment placed under
-our bank's management over 5 years ago.
+        ARRAY /dev/md0 metadata=1.2 level=6 name=nas:0 devices=/dev/sdc,
+        /dev/sdd, /dev/sde, /dev/sdf, /dev/sdg, /dev/sdh
+        (NB:. both with spaces like above and with out space between the
+        , ers)
 
-I have a proposal I would love to discuss with you which will be very
-beneficial to both of us. It's regarding my late client who has a huge
-deposit with my bank.
+To which I get.
 
-He is from your country and shares the same last name with you.
+        sudo mdadm --assemble --force /dev/md0
+        mdadm: /dev/md0 assembled from 1 drive - not enough to start the
+        array.
 
-I want to seek your consent to present you as the next of kin to my
-late client who died and left a huge deposit with my bank.
+What am I missing?
 
-I would respectfully request that you keep the contents of this mail
-confidential and respect the integrity of the information you come by
-as a result of this mail.
+On 27/10/2021 17:33, Wol wrote:
+> On 26/10/2021 10:45, John Atkins wrote:
+>> Thanks for the suggestions.
+>> No partition ever on these disks.
+>
+> BAD IDEA ... it *should* be okay, but there are too many rogue 
+> programs/utilities out there that think stomping all over a 
+> partition-free disk is acceptable behaviour ...
+>
+> It's bad enough when a GPT or MBR gets trashed, which sadly is not 
+> unusual in your scenario, but without partitions you're inviting 
+> disaster... :-(
+>
+>> I will try the dd method but as there was never a partition on the 
+>> drive I don't think that will return results.
+>
+> Why not? it may return traces of the array ...
+>
+>> The busy drive is not part of an active md array nor mounted so still 
+>> a bit bemused by that.
+>
+> When mdadm attempts to start an array (which it does by default at 
+> boot), if the attempt fails it usually leaves a broken inactive array 
+> in an unusable state. You need to "kill" this mess before you can do 
+> anything with it!
+>
+>> I know the order, after my first few muckups I number them to make 
+>> sure if I have to move them it will work. If I use assume clean, if 
+>> it does not work I can just try another order I assume. I do have a 
+>> backup but 14T will take time to replicate.
+>
+> If you haven't yet tried to force the array, and possibly corrupted 
+> where the headers should be, you could try a plain force-assemble, 
+> which *might* work (very long shot ...)
+>
+> Otherwise, read the wiki and try with overlays until something 
+> "strikes gold". Then I'd be inclined to fail each drive in turn, 
+> re-adding it as a partition, to try and avoid a similar screw-up in 
+> future. That, or disconnect all the raid drives before an upgrade, and 
+> re-connect them afterwards - though that's been known to cause grief, 
+> too :-(
+>
+> (Of course, if you've used all available space, partitioning will 
+> shrink the raid and cause more grief elsewhere ...)
+>
+> Hopefully, you've never resized the array, and the mdadm defaults 
+> haven't changed, so you'll strike gold first attempt. Otherwise it 
+> could be a long hard slog with all the possible options.
+>
+> https://raid.wiki.kernel.org/index.php/Linux_Raid
+>
+> Cheers,
+> Wol
+> .
 
-Please kindly get back to me for more details if I can TRUST YOU.{
-aabdulwalialhashmi@gmail.com }
-
-Regards
-Abdulwali Alhashmi
-Treasury and Deposit Management,
-Cayman National Bank Cayman Islands
