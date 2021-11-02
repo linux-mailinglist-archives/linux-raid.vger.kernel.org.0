@@ -2,39 +2,38 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DED96443311
-	for <lists+linux-raid@lfdr.de>; Tue,  2 Nov 2021 17:37:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C37844343C
+	for <lists+linux-raid@lfdr.de>; Tue,  2 Nov 2021 18:01:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234898AbhKBQjp (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 2 Nov 2021 12:39:45 -0400
-Received: from sender12-1.zoho.eu ([185.20.211.225]:17289 "EHLO
-        sender12-1.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234856AbhKBQNw (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 2 Nov 2021 12:13:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1635869410; cv=none; 
+        id S234165AbhKBREN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 2 Nov 2021 13:04:13 -0400
+Received: from sender11-op-o11.zoho.eu ([31.186.226.225]:17212 "EHLO
+        sender12-1.zoho.eu" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S229684AbhKBREJ (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 2 Nov 2021 13:04:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1635869516; cv=none; 
         d=zohomail.eu; s=zohoarc; 
-        b=c1HxOfbUfYr0KvlxKgiogq0/lcEO7Gtg5F+OluZCdUQKQNeJE5JhA1dIHPuiQyYzbFUym+U5VF/dy8Z0T/oG6ynZiZlIw1lhRd8WVyD7M/hDncIH9/+gsoUUCQxJn09AbA8+J5JUkhaAePC087K1Jx6ZjMU9PW7BSn1k7URq1qI=
+        b=c22QSHf22VzrK8beIEfTBUCEtOEQnPl6vwsqWE6t7I+YdR602k9l5N94SrYkR75ho1ALb+yZ9dvSSv3FjXQivJO3r/O2nMSP9lEc9VlqZ9Jjz8tvvqD9cuQgobjlWlOzGpe+q75r2F8D22HBamXk5DU4dRIUwGJpqpYLsuX+otU=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1635869410; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=sDHTgDJzWNH9cEYl7pSS4Qp9kD8sVCT03DcJ/nYme2E=; 
-        b=jO2aF/HTv6n7aL5aRtRkJXLbnmMWcuit2As2uETABE3fV5apvB7nx2X2wMZCukrsr/tpq8o7/zbRI4HK5rMW9PyDntWmhNZO2F6C8lMNOoWkHgHkqBqR2ATLEI/sbNiYnFn9Wj2D0w9znCvCffCVoqGT6neN4WyCVLD8GXyPry0=
+        t=1635869516; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=8FQY/HvHgf64VBkpjSeBnrSnw/b/2/gLCs5RqjMfHP8=; 
+        b=hVdHNDt+jMISzES5zs3rko77WJ6ZUvjZVBxCdEgpVRgnqUB80KwenuXIAE6/Pe1y277EiM8ZX6dnk8JdDwwcIfL7DHkUkvFxB1Qwi29F9bQEMpL/S4VIHjUceT6P2I+TzifWBdyaeuT9mkimUESUP2w5KzeTw9nNoXxojAyaKGY=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
         spf=pass  smtp.mailfrom=jes@trained-monkey.org;
         dmarc=pass header.from=<jes@trained-monkey.org>
 Received: from [192.168.99.29] (pool-72-69-75-15.nycmny.fios.verizon.net [72.69.75.15]) by mx.zoho.eu
-        with SMTPS id 1635869410118303.8804332174975; Tue, 2 Nov 2021 17:10:10 +0100 (CET)
-Subject: Re: [PATCH 0/2] --detail show messy container name
-To:     Xiao Ni <xni@redhat.com>
-Cc:     ncroxon@redhat.com, ffan@redhat.com,
-        mariusz.tkaczyk@linux.intel.com, linux-raid@vger.kernel.org
-References: <1635337394-4782-1-git-send-email-xni@redhat.com>
+        with SMTPS id 1635869513049567.5764336695256; Tue, 2 Nov 2021 17:11:53 +0100 (CET)
+Subject: Re: [PATCH v2] imsm: introduce helpers to manage file descriptors
+To:     Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+Cc:     linux-raid@vger.kernel.org
+References: <20211019100743.12247-1-mariusz.tkaczyk@linux.intel.com>
 From:   Jes Sorensen <jes@trained-monkey.org>
-Message-ID: <325cb9e1-1106-01e4-3240-f3ce709e4c0a@trained-monkey.org>
-Date:   Tue, 2 Nov 2021 12:10:08 -0400
+Message-ID: <457d68d1-520d-8d8d-a6b8-a972eade7a85@trained-monkey.org>
+Date:   Tue, 2 Nov 2021 12:11:52 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.7.0
 MIME-Version: 1.0
-In-Reply-To: <1635337394-4782-1-git-send-email-xni@redhat.com>
+In-Reply-To: <20211019100743.12247-1-mariusz.tkaczyk@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -43,24 +42,29 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 10/27/21 8:23 AM, Xiao Ni wrote:
-> This patch set tries to fix the bug that --detail show messy container
-> name. It adds a new method to check if one device is alive in first
-> patch.
+On 10/19/21 6:07 AM, Mariusz Tkaczyk wrote:
+> To avoid direct comparisions define dedicated inlines.
+> This patch propagates them in super-intel.c. They are declared globally
+> for future usage outside IMSM.
 > 
-> V2:
-> use access rather than devid2kname
+> Additionally, it adds fd check in save_backup_imsm() to remove
+> code vulnerability and simplifies targets array implementation.
 > 
-> V3:
-> define a new function to check if disk is alive
-> include <stdbool.h> to use bool
+> It also propagates pr_vrb() macro instead if (verbose) condidtion.
 > 
-> Xiao Ni (2):
->   mdadm/lib: Define a new helper function is_dev_alived
->   mdadm/Detail: Can't show container name correctly when unpluging disks
+> Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+> ---
+> Changes:
+> - Fixed bug reported by Jes
+> - changed close_fd to do_close in __free_imsm_disk()
+> 
+>  mdadm.h       |  25 ++++++++
+>  super-intel.c | 167 +++++++++++++++++++++++---------------------------
+>  2 files changed, 100 insertions(+), 92 deletions(-)
 
 Applied!
 
 Thanks,
 Jes
+
 
