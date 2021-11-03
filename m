@@ -2,91 +2,91 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA9EA4448EC
-	for <lists+linux-raid@lfdr.de>; Wed,  3 Nov 2021 20:28:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 52F71444B19
+	for <lists+linux-raid@lfdr.de>; Thu,  4 Nov 2021 00:05:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230243AbhKCTat (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 3 Nov 2021 15:30:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42404 "EHLO
+        id S231533AbhKCXHm (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 3 Nov 2021 19:07:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229697AbhKCTat (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 3 Nov 2021 15:30:49 -0400
-Received: from mail-ot1-x331.google.com (mail-ot1-x331.google.com [IPv6:2607:f8b0:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DBC5C061203
-        for <linux-raid@vger.kernel.org>; Wed,  3 Nov 2021 12:28:12 -0700 (PDT)
-Received: by mail-ot1-x331.google.com with SMTP id s19-20020a056830125300b0055ad9673606so3730309otp.0
-        for <linux-raid@vger.kernel.org>; Wed, 03 Nov 2021 12:28:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UePDyJ5YGTt0SI7wSYrq2teto/cQR2vkkj6nAm2W3a0=;
-        b=iJPu7qjoWnWpnlD3pbi8ofB5MCwNTChZ4jlIPjBLmxcCizs6UsV3G8NIpJvwQns6xz
-         Mcu2063seKgTdnAoui3FtZzMw8tih4oa/T0SA1zkZ8TWIgMTCTlvKwUnRQJJX9o8hTQo
-         NO5VmJ63MSPyzGtQlLxtrNhEUEkrQEkpnINZoI7anc9hmGLMdLfv28zMqBiXyzp7XfrI
-         Ch4low2MMbl4FMIg2eatNVS8VMh4Fy+7tyv+dPfwdSjjwvwv6LXIR/YJ6bywUGJoXBmN
-         xJ2/AiVAJMuY6c1kefCFBdNCE67M6OuV9vkZKDH4WRUFtlR5dRH6zzPvPZ7M7qHdques
-         FncQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UePDyJ5YGTt0SI7wSYrq2teto/cQR2vkkj6nAm2W3a0=;
-        b=KlAxjPcsYeWQQYAI9H8qEdqfwQ3Yem7Y13dDMJOtp5NoU3OYDq1O86nB+jUK5hX79Z
-         svX5OkTDDshN4JTqRAeJGrvmNvIe3bDVXQyFAbnSzcq8kA0HzJvfqHEWEK04nxTHOc4W
-         FYDtJ5McgX8Dd+S2ocmAN3LIPvpBu4e28/biSQLF2uNIjWVAEq2FnGhtZcc3P7W+HYbG
-         C8Ayalalocpe0i4Qaa26oI+E5oAl1uW4JAC5Zw/uS48/jpVYQPttmF+eJnmV2gcoY0U1
-         Ut9osmipcb5PJVoSCI+qQE3pYgQScAMGqIp7Tuq7WRsyuj0/rVlGg6TaPj3LArdPDNnM
-         WRaA==
-X-Gm-Message-State: AOAM5316wdkOyrarX7574gTxgRAELI7kXOdkaLiwNg+cBeuP7UbA+P2X
-        Wxcu/7XOODC70Egbhd8QLnm9IA==
-X-Google-Smtp-Source: ABdhPJyDHe9v7v0ovnKDw8B7RfOBJHhSliZhy8hiaOCde7In7CDoT4l8tvqDIUDUaywzpQBTQ1nVDQ==
-X-Received: by 2002:a05:6830:2058:: with SMTP id f24mr19740345otp.248.1635967691754;
-        Wed, 03 Nov 2021 12:28:11 -0700 (PDT)
-Received: from [192.168.1.30] ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id c1sm790336otl.71.2021.11.03.12.28.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Nov 2021 12:28:11 -0700 (PDT)
-Subject: Re: [PATCH v4 0/4] last set for add_disk() error handling
-To:     Luis Chamberlain <mcgrof@kernel.org>, hch@lst.de,
-        penguin-kernel@i-love.sakura.ne.jp, dan.j.williams@intel.com,
-        vishal.l.verma@intel.com, dave.jiang@intel.com,
-        ira.weiny@intel.com, richard@nod.at, miquel.raynal@bootlin.com,
-        vigneshr@ti.com, efremov@linux.com, song@kernel.org,
-        martin.petersen@oracle.com, hare@suse.de, jack@suse.cz,
-        ming.lei@redhat.com, tj@kernel.org
+        with ESMTP id S231305AbhKCXHg (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 3 Nov 2021 19:07:36 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4C3CC06127A;
+        Wed,  3 Nov 2021 16:04:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=Xd6YuCyb18cjuJyRwo9MyHD/mPo5oA5yl/m0ZXil8Xw=; b=CLzatVB7Y4MA5599zxHd7h+OOU
+        odqO2uUKW1KKAL9CO4igmOm2Q+MtV10TKt7tZy8Lrr09GscZI8U3VCnFlgcuybE4PBMl+0jmA29IV
+        6rGcpBrRuijy7HswKJBDhcBu1rNozvpu8bH2vTYt5Db0t6/yqWrzBZMlJ0nqSu9keFvg19MtXT5u+
+        1pWUciagWYdIqvtc4WYGlZYrB7PcczGEUsSPkkwTIvoJE1Cpxu6O0lV5qt5rOg+ZCLl3/QtpmSvSn
+        bGupuRWJ3IWs5YiyTXTIB/AoSyAEGGu5HNVoIIdEUoB6AFqwMeMf3SybCCNgXabBmIRNT/igJ3HN9
+        BJMApGQQ==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1miPJ8-006seD-EU; Wed, 03 Nov 2021 23:04:38 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     axboe@kernel.dk, hch@lst.de, penguin-kernel@i-love.sakura.ne.jp,
+        dan.j.williams@intel.com, vishal.l.verma@intel.com,
+        dave.jiang@intel.com, ira.weiny@intel.com, richard@nod.at,
+        miquel.raynal@bootlin.com, vigneshr@ti.com, efremov@linux.com,
+        song@kernel.org, martin.petersen@oracle.com, hare@suse.de,
+        jack@suse.cz, ming.lei@redhat.com, tj@kernel.org, mcgrof@kernel.org
 Cc:     linux-mtd@lists.infradead.org, linux-scsi@vger.kernel.org,
         linux-raid@vger.kernel.org, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20211103181258.1462704-1-mcgrof@kernel.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <e01938a3-11c9-e368-65da-fcb5830e5a4c@kernel.dk>
-Date:   Wed, 3 Nov 2021 13:28:10 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Subject: [PATCH v5 00/14] last set for add_disk() error handling
+Date:   Wed,  3 Nov 2021 16:04:23 -0700
+Message-Id: <20211103230437.1639990-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-In-Reply-To: <20211103181258.1462704-1-mcgrof@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 11/3/21 12:12 PM, Luis Chamberlain wrote:
-> This v4 only updates the last 2 patches from my v3 series of stragglers
-> to account for Christoph's request to split the __register_blkdev()
-> probe call changes into 3 patches, one for documentation, the other 2
-> patches for each respective driver.
+Jens,
 
-Part of the reason why I think this has taken so long is that there's
-a hundreds of series, and then you get partial updates, etc. It's really
-super hard to keep track of...
+as requested, I've folded all pending changes into this series. This
+v5 pegs on Christoph's reviewed-by tags and since I was respinning I
+modified the ataprobe and floppy driver changes as he suggested.
 
-Can we please just have one final series, not 1 and then another one
-that turns the last two into more?
+I think this is it. The world of floppy has been exciting for v5.16.
+
+This goes based on your axboe/for-next tree as of just a few minutes ago.
+
+Luis Chamberlain (13):
+  nvdimm/btt: use goto error labels on btt_blk_init()
+  nvdimm/btt: add error handling support for add_disk()
+  nvdimm/blk: avoid calling del_gendisk() on early failures
+  nvdimm/blk: add error handling support for add_disk()
+  nvdimm/pmem: cleanup the disk if pmem_release_disk() is yet assigned
+  nvdimm/pmem: use add_disk() error handling
+  z2ram: add error handling support for add_disk()
+  block/sunvdc: add error handling support for add_disk()
+  mtd/ubi/block: add error handling support for add_disk()
+  block: update __register_blkdev() probe documentation
+  ataflop: address add_disk() error handling on probe
+  floppy: address add_disk() error handling on probe
+  block: add __must_check for *add_disk*() callers
+
+Tetsuo Handa (1):
+  ataflop: remove ataflop_probe_lock mutex
+
+ block/genhd.c           | 11 +++++---
+ drivers/block/ataflop.c | 61 +++++++++++++++++++++++++----------------
+ drivers/block/floppy.c  | 17 +++++++++---
+ drivers/block/sunvdc.c  | 14 ++++++++--
+ drivers/block/z2ram.c   |  7 +++--
+ drivers/mtd/ubi/block.c |  8 +++++-
+ drivers/nvdimm/blk.c    | 21 ++++++++++----
+ drivers/nvdimm/btt.c    | 20 +++++++++-----
+ drivers/nvdimm/pmem.c   | 21 ++++++++++----
+ include/linux/genhd.h   |  6 ++--
+ 10 files changed, 127 insertions(+), 59 deletions(-)
 
 -- 
-Jens Axboe
+2.33.0
 
