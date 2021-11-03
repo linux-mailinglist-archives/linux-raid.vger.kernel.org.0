@@ -2,43 +2,70 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57B084447B3
-	for <lists+linux-raid@lfdr.de>; Wed,  3 Nov 2021 18:49:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 328BE444810
+	for <lists+linux-raid@lfdr.de>; Wed,  3 Nov 2021 19:13:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229558AbhKCRvn (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 3 Nov 2021 13:51:43 -0400
-Received: from verein.lst.de ([213.95.11.211]:60613 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229888AbhKCRvh (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Wed, 3 Nov 2021 13:51:37 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id BFD1168AA6; Wed,  3 Nov 2021 18:48:56 +0100 (CET)
-Date:   Wed, 3 Nov 2021 18:48:56 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     axboe@kernel.dk, hch@lst.de, penguin-kernel@i-love.sakura.ne.jp,
+        id S231593AbhKCSQK (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 3 Nov 2021 14:16:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53794 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231379AbhKCSQE (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 3 Nov 2021 14:16:04 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F327C061203;
+        Wed,  3 Nov 2021 11:13:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=by6uJflRSZTQtQScy9xY7EdpixGFhaKVKW6/eBoiVlM=; b=uKn9h2k73gti5ReaTupFiVo1FJ
+        /IN/qPsGWYh3/bDZMmzmVHyP879ON62mQBObuTiEwITC3ESnNNg0zSokKE98Exfel6vk0sprqI3FO
+        O6wHnltYeGzDngG1cwu0Ar03cFNukxDjfiXQb6YbZWLVSRTJedkvd3+yVfo5p42eUlQ7hyecANdnH
+        ZNpA9jaj04+TRZLRbo4XZe8xOoraj7E7jqdprlRGDoqDfWKxCSmN72UGJsnwCg8CMvc76xeWIfEKc
+        T2dNERsK/o5HHocXZncvczKFFDBCFWaj1Q89XJd353S9gMCfjfZ2OXILJun0hm3faKv/P8ia4jWgt
+        GF8y4QSA==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1miKkt-0068X4-PK; Wed, 03 Nov 2021 18:12:59 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     axboe@kernel.dk, hch@lst.de, penguin-kernel@i-love.sakura.ne.jp,
         dan.j.williams@intel.com, vishal.l.verma@intel.com,
         dave.jiang@intel.com, ira.weiny@intel.com, richard@nod.at,
         miquel.raynal@bootlin.com, vigneshr@ti.com, efremov@linux.com,
         song@kernel.org, martin.petersen@oracle.com, hare@suse.de,
-        jack@suse.cz, ming.lei@redhat.com, tj@kernel.org,
-        linux-mtd@lists.infradead.org, linux-scsi@vger.kernel.org,
+        jack@suse.cz, ming.lei@redhat.com, tj@kernel.org, mcgrof@kernel.org
+Cc:     linux-mtd@lists.infradead.org, linux-scsi@vger.kernel.org,
         linux-raid@vger.kernel.org, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 12/13] block: fix __register_blkdev() probe
- add_disk() failures
-Message-ID: <20211103174856.GA7034@lst.de>
-References: <20211103174521.1426407-1-mcgrof@kernel.org> <20211103174521.1426407-13-mcgrof@kernel.org>
+Subject: [PATCH v4 0/4] last set for add_disk() error handling
+Date:   Wed,  3 Nov 2021 11:12:54 -0700
+Message-Id: <20211103181258.1462704-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211103174521.1426407-13-mcgrof@kernel.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Sorry for being annoying, but I think this really should be three
-patches: the documentation fix and one each for the two floppy
-drivers.  And the two floppy probe routines would probably
-benefit from using goto unwinding as well.
+This v4 only updates the last 2 patches from my v3 series of stragglers
+to account for Christoph's request to split the __register_blkdev()
+probe call changes into 3 patches, one for documentation, the other 2
+patches for each respective driver.
+
+I also noticed I had a typo on the documentation, so fixed that.
+
+Luis Chamberlain (4):
+  block: update __register_blkdev() probe documentation
+  ataflop: address add_disk() error handling on probe
+  floppy: address add_disk() error handling on probe
+  block: add __must_check for *add_disk*() callers
+
+ block/genhd.c           | 11 +++++++----
+ drivers/block/ataflop.c | 16 +++++++++++++---
+ drivers/block/floppy.c  | 15 +++++++++++++--
+ include/linux/genhd.h   |  6 +++---
+ 4 files changed, 36 insertions(+), 12 deletions(-)
+
+-- 
+2.33.0
+
