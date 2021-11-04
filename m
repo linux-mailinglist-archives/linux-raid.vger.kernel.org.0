@@ -2,75 +2,63 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 05F68445872
-	for <lists+linux-raid@lfdr.de>; Thu,  4 Nov 2021 18:34:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EA7144591A
+	for <lists+linux-raid@lfdr.de>; Thu,  4 Nov 2021 18:57:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233876AbhKDRhQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 4 Nov 2021 13:37:16 -0400
-Received: from verein.lst.de ([213.95.11.211]:36174 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231667AbhKDRhP (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Thu, 4 Nov 2021 13:37:15 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 64F956732D; Thu,  4 Nov 2021 18:34:31 +0100 (CET)
-Date:   Thu, 4 Nov 2021 18:34:31 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "target-devel@vger.kernel.org" <target-devel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "agk@redhat.com" <agk@redhat.com>,
-        "snitzer@redhat.com" <snitzer@redhat.com>,
-        "song@kernel.org" <song@kernel.org>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "javier@javigon.com" <javier@javigon.com>,
-        "johannes.thumshirn@wdc.com" <johannes.thumshirn@wdc.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "dongli.zhang@oracle.com" <dongli.zhang@oracle.com>,
-        "ming.lei@redhat.com" <ming.lei@redhat.com>,
-        "osandov@fb.com" <osandov@fb.com>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "jefflexu@linux.alibaba.com" <jefflexu@linux.alibaba.com>,
-        "josef@toxicpanda.com" <josef@toxicpanda.com>,
-        "clm@fb.com" <clm@fb.com>, "dsterba@suse.com" <dsterba@suse.com>,
-        "jack@suse.com" <jack@suse.com>, "tytso@mit.edu" <tytso@mit.edu>,
-        "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
-        "jlayton@kernel.org" <jlayton@kernel.org>,
-        "idryomov@gmail.com" <idryomov@gmail.com>,
-        "danil.kipnis@cloud.ionos.com" <danil.kipnis@cloud.ionos.com>,
-        "ebiggers@google.com" <ebiggers@google.com>,
-        "jinpu.wang@cloud.ionos.com" <jinpu.wang@cloud.ionos.com>
-Subject: Re: [RFC PATCH 0/8] block: add support for REQ_OP_VERIFY
-Message-ID: <20211104173431.GA31740@lst.de>
-References: <20211104064634.4481-1-chaitanyak@nvidia.com> <20211104071439.GA21927@lst.de> <661bcadd-a030-4a72-81ae-ef15080f0241@nvidia.com> <20211104173235.GI2237511@magnolia>
+        id S233924AbhKDR7t (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 4 Nov 2021 13:59:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35210 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229850AbhKDR7t (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 4 Nov 2021 13:59:49 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF160C061714
+        for <linux-raid@vger.kernel.org>; Thu,  4 Nov 2021 10:57:10 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id o4-20020a1c7504000000b0032cab7473caso5601999wmc.1
+        for <linux-raid@vger.kernel.org>; Thu, 04 Nov 2021 10:57:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=9ueNUB2dEeskDIOKGp+hkTTPhTGflizscQkYbtZWi48=;
+        b=WmoLgrl8PoZexGLeoOh/fgEE2ZJzSXpob62QAO2xSBeQqCkA2OgMldhYKMtDQwIjIN
+         ufflHAlOO5iISq/Ipk1nu3C11WXts7JjbreLn4ZD4LyBueqtRODNNpYQVPh+vpIA8IRg
+         1yQrx/V6pThXLTQKLwsy1UUtYDhYOt0kDvQxMhPJ16AaQdRP8OrXObXMReGGomxaRz+p
+         dmUjDeS8ZlKtZ6lpBLiWGI1SxRYb0wU0Dzt3n51UnRLM4qCn1BU6YF7L3hND8Oqxr1n4
+         1Yyw+zKFh4zxOhXEInV0HYEtgclRselKvhMC7CClk6Me3ZWwwQFIfRN2s5iyWAgF5cuU
+         yEZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=9ueNUB2dEeskDIOKGp+hkTTPhTGflizscQkYbtZWi48=;
+        b=K2kSzMbuDaZn2rnuWj9YRT+BjCUGo8D/12LINBbmf5/9AzEtsyg4Zw5sFlTEwX5FGE
+         lSTrXMYMR0VquS3h/wNh9Fw2HYGt4SwWPc3p9P/dRRB1qAZdFNwPQyybyYk5mnWtBq9I
+         rrY3Kaj3bDhPLVAHtjIzpBzmUKYODLQE+Vn2LzBEsCEZNI78TdSPP5hFtx69dfTv/acL
+         kBCsO8JoTDD4psynrec3AooOw5tDOzHPHAXwYe2SdV/6GZDCYMBOM0AYjXxV79P/y0WE
+         tm4gCmy+SG0cr5RBcmCPO87J+Kn/yStXLyph5VAC9SP5QFI1mzpqTPOEYFEEwotvJMs8
+         K4SQ==
+X-Gm-Message-State: AOAM532BT+qZuCvHzJaBWa6V/11QOopUezHGscD23S1WmFWUkrMUGt/I
+        teKbwVrIBewFys7FoVZCCIJdkVCDJ/7DaiOQQXU=
+X-Google-Smtp-Source: ABdhPJwDOCFcfMkteVcy7NSecC3eoV57eNE/KehFi9rvTYBH5wrQgKhHdcsgvNKBKVzWOyuw/qPp/sYckMd5VHsAyQg=
+X-Received: by 2002:a05:600c:202:: with SMTP id 2mr25026789wmi.134.1636048629215;
+ Thu, 04 Nov 2021 10:57:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211104173235.GI2237511@magnolia>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Received: by 2002:a5d:61c7:0:0:0:0:0 with HTTP; Thu, 4 Nov 2021 10:57:08 -0700 (PDT)
+Reply-To: douglasmomoh007@gmail.com
+From:   Douglas Momoh <kuntemrjoshua@gmail.com>
+Date:   Thu, 4 Nov 2021 18:57:08 +0100
+Message-ID: <CAFhr1xBq1=C0CCdg-UYDRRWbup5Y7R479M4mdhcNt=6vjgObDw@mail.gmail.com>
+Subject: Good day
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu, Nov 04, 2021 at 10:32:35AM -0700, Darrick J. Wong wrote:
-> I also wonder if it would be useful (since we're already having a
-> discussion elsewhere about data integrity syscalls for pmem) to be able
-> to call this sort of thing against files?  In which case we'd want
-> another preadv2 flag or something, and then plumb all that through the
-> vfs/iomap as needed?
+-- 
+A mail was sent to you sometime last week with the expectation of
+having a retune mail from you but to my surprise you never bothered to replied.
+Kindly reply for further explanations.
 
-IFF we do this (can't answer if there is a need) we should not
-overload read with it.  It is an operation that does not return
-data but just a status, so let's not get into that mess.
+Respectfully yours,
+Hon. Douglas Momoh.
