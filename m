@@ -2,144 +2,79 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C786D456913
-	for <lists+linux-raid@lfdr.de>; Fri, 19 Nov 2021 05:20:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0F27456917
+	for <lists+linux-raid@lfdr.de>; Fri, 19 Nov 2021 05:23:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230478AbhKSEXf (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 18 Nov 2021 23:23:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35118 "EHLO
+        id S232802AbhKSE02 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 18 Nov 2021 23:26:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229472AbhKSEXf (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 18 Nov 2021 23:23:35 -0500
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 196E1C061574
-        for <linux-raid@vger.kernel.org>; Thu, 18 Nov 2021 20:20:34 -0800 (PST)
-Received: by mail-pf1-x42b.google.com with SMTP id b68so8223241pfg.11
-        for <linux-raid@vger.kernel.org>; Thu, 18 Nov 2021 20:20:34 -0800 (PST)
+        with ESMTP id S231279AbhKSE02 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 18 Nov 2021 23:26:28 -0500
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3662BC061748
+        for <linux-raid@vger.kernel.org>; Thu, 18 Nov 2021 20:23:27 -0800 (PST)
+Received: by mail-io1-xd41.google.com with SMTP id y16so11182883ioc.8
+        for <linux-raid@vger.kernel.org>; Thu, 18 Nov 2021 20:23:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digitalocean.com; s=google;
-        h=message-id:date:mime-version:user-agent:subject:to:cc:references
-         :from:in-reply-to:content-transfer-encoding;
-        bh=puLnF0Rdq4MZNWq7m79ICZ+Aaq88wKpOV4ZezkKYWnY=;
-        b=H4SfpIdHVj/yejZJJt+PrKpFnkg689nU1KZM8tGZJ/DJxCiYJuRIK7CUzXvO1jMSgW
-         8Ex1olvTOsZQZNAiugJ/3IYV98NXtLqXPqZA/hZNNZi2B2FVUQwqqZ5bIjWhtATrkl0u
-         gGSk+mhLvM41E6KYsUXYEpPKX97mXxF+wcS00=
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=eTS1GK69RCI4oJxzikNG+dG1kEXvzkq40C70DiSwh3g=;
+        b=cQL4g+H2gJMJP3xWFQe/KzoyGqIo0AawlIVz6HOmgj7H+oswWn1JndJ03Ybadqh/iG
+         GFezuribER5iOwOrdhcpaLRDpEBug17B9goO8697VSiSH7/hueTiocUUiYuEl0npDX+N
+         7dyH4NYh7rX0U9rKSBeHM3T0tr/VTmzWLqZb6dR+9h3OxCcYEbSP6A9trr03z0AdHvvI
+         ahSumHf41Gk0/WiflEL2tp00pjSmNcuzmCnCLHtvda8y92IYt7+31MLaTkWsbzEryIp/
+         PD6PRbns5nLepTYC8LZKXr6gjYxNXB3IFy8QgwmShmHo9WUyNgKaHeXs5AvuxibzX411
+         sWzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :to:cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=puLnF0Rdq4MZNWq7m79ICZ+Aaq88wKpOV4ZezkKYWnY=;
-        b=UG33pVa26vtzCO7J80IsJT7njHxC85NLsDjeRGw9NtuCCwFO0fE77znfhNk/jaQzOd
-         MHmY505sduNaeBYQZkmViDrUK8tEDiVMvzz0Y3nONw/MmybscWA1cW/obpY+E0qUqakl
-         jVLzx5/DB6Uezu7NeTI6A24v1rqvhWxc/T3All4ZKkkDQJm04Me6SZGTdcxi0K8tublk
-         kStQcIZ3QPyeLn2pRuiHBLfRTlRKeGefpdzynCbfqQcKzEOaCLqxuVC/BfW64HuewNQP
-         yhwrhPSJLMXT8612Rsf3I50gRohjiPfv5GoU2d/DVp4mmsjM0xF5zOkOmAYIbBG1JTf8
-         IEbQ==
-X-Gm-Message-State: AOAM531C6ObeoeMC4/KICi+9jE/OsshXm18LWo1MvNNbgpUehJJ5DY4c
-        XqSMQYxJJPrOSMMdXYfVULABRw==
-X-Google-Smtp-Source: ABdhPJyoovnBVRJ3jzbNrC5Qcdt7oOaDGKKyXZEA4WY7/c6ulzFNv3r0bBLtcPPYwfDtyp8J/4INPw==
-X-Received: by 2002:a62:88c3:0:b0:4a2:b2d2:7082 with SMTP id l186-20020a6288c3000000b004a2b2d27082mr20275358pfd.48.1637295633592;
-        Thu, 18 Nov 2021 20:20:33 -0800 (PST)
-Received: from [192.168.1.5] (ip68-104-251-60.ph.ph.cox.net. [68.104.251.60])
-        by smtp.gmail.com with ESMTPSA id ot7sm10548012pjb.21.2021.11.18.20.20.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Nov 2021 20:20:33 -0800 (PST)
-Message-ID: <7fe8a49f-102f-3739-de08-265ba0450375@digitalocean.com>
-Date:   Thu, 18 Nov 2021 21:20:27 -0700
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=eTS1GK69RCI4oJxzikNG+dG1kEXvzkq40C70DiSwh3g=;
+        b=h1HKsvR7F/Ag6mXaL6BLSjvVsE6rl4MqxJnCN5OuWC9FQtSPGBHdOFZ8T9MeDNIU7S
+         bYx5JP9XRLAntcAPiCIkB4IU5BK20mYtz0fZSdV2uOMhLCIB6eJZ7MpfIihWijLJ+X3z
+         rb82ZXpJmBHgX3/uGFMQ+wCCBpgnc7Hj8UyVSiHO0jW9pObnNBAydh8T/t8m++Po+/FC
+         wD7pB+jjgY9FGokgVk3R2kAtie+JCC1cFdSw2gMsJPGjoX0tY5rEymlxhPzmOAYra8zk
+         Q5QAi9oiuB0NAKj4efSpZUzhTmLcgmK3GjyjBgYJKAodm0GDGwBZSsJzRvPjsuYVlWwn
+         NqDg==
+X-Gm-Message-State: AOAM530izK7m56qKmyWloaqI0N7vTi+TsANqxh0TIyOVNLOMmoQLTWYl
+        jJ3S0ENkJ6CxedPPHEwrM51yFKdheryf+ge5LlQ=
+X-Google-Smtp-Source: ABdhPJyoJdpS7Kf9B+KrNKG19mDCqtighLiNuAqL2cgDQj7eZ+/CBh/r4yLZu32slWVXs7TOdIJDzf3XHUtHh6UYg8Y=
+X-Received: by 2002:a05:6602:164a:: with SMTP id y10mr3074210iow.123.1637295806431;
+ Thu, 18 Nov 2021 20:23:26 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.3.0
-Subject: Re: [RFC PATCH v4 4/4] md: raid456 add nowait support
-To:     Song Liu <song@kernel.org>
-Cc:     linux-raid <linux-raid@vger.kernel.org>, rgoldwyn@suse.de,
-        Jens Axboe <axboe@kernel.dk>
-References: <CAPhsuW6mSmxPOmU9=Gq-z_gV4V09+SFqrpKx33LzR=6Rg1fGZw@mail.gmail.com>
- <20211110181441.9263-1-vverma@digitalocean.com>
- <20211110181441.9263-4-vverma@digitalocean.com>
- <CAPhsuW7=r4AmCqG3M0hU=fps6a-Zu9KF_RnyNf815d=43wTv5A@mail.gmail.com>
- <f8c2a2bc-a885-8254-2b39-fc0c969ac70d@digitalocean.com>
- <CAPhsuW54EJOfAXrE-zVie561n+aF-+jvQz1152rqj=kU5Fk5ug@mail.gmail.com>
-From:   Vishal Verma <vverma@digitalocean.com>
-In-Reply-To: <CAPhsuW54EJOfAXrE-zVie561n+aF-+jvQz1152rqj=kU5Fk5ug@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a05:6602:2f03:0:0:0:0 with HTTP; Thu, 18 Nov 2021 20:23:25
+ -0800 (PST)
+Reply-To: anthonyrrobson@gmail.com
+From:   "Mr. Anthony Robson" <abcudday@gmail.com>
+Date:   Thu, 18 Nov 2021 20:23:25 -0800
+Message-ID: <CADXsGJFbR1Q52ZiBs8f3ijChf5RKGDYxHiXANAhCVcHdcbSS1A@mail.gmail.com>
+Subject: I look forward to hearing from you SOONEST!
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+Hello Friend,
 
-On 11/18/21 9:07 PM, Song Liu wrote:
-> On Thu, Nov 11, 2021 at 10:09 PM Vishal Verma <vverma@digitalocean.com> wrote:
->> Yes, with raid10 the task hung happened when doing write IO using FIO where FIO just gets stuck  after like 30s or so and no I/O happens afterwards.
->> This was on a test nvme based raid10: (tried with both io_uring and aio, same issue)
->>
->> [ 1818.677686] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
->> [ 1818.685512] task:fio             state:D stack:    0 pid:14314 ppid:     1 flags:0x00020004
->> [ 1818.685516] Call Trace:
->> [ 1818.685519]  __schedule+0x295/0x840
->> [ 1818.685525]  ? wbt_cleanup_cb+0x20/0x20
->> [ 1818.685528]  schedule+0x4e/0xb0
->> [ 1818.685529]  io_schedule+0x3f/0x70
->> [ 1818.685531]  rq_qos_wait+0xb9/0x130
->> [ 1818.685535]  ? sysv68_partition+0x280/0x280
->> [ 1818.685537]  ? wbt_cleanup_cb+0x20/0x20
->> [ 1818.685538]  wbt_wait+0x92/0xc0
->> [ 1818.685539]  __rq_qos_throttle+0x25/0x40
->> [ 1818.685541]  blk_mq_submit_bio+0xc6/0x5d0
->> [ 1818.685544]  ? submit_bio_checks+0x39e/0x5f0
->> [ 1818.685547]  __submit_bio+0x1bc/0x1d0
->> [ 1818.685549]  submit_bio_noacct+0x256/0x2a0
->> [ 1818.685550]  ? bio_associate_blkg+0x29/0x70
->> [ 1818.685553]  0xffffffffc028d38a
->> [ 1818.685555]  blk_flush_plug+0xc3/0x130
->> [ 1818.685558]  blk_finish_plug+0x26/0x40
->> [ 1818.685560]  blkdev_write_iter+0xf8/0x160
->> [ 1818.685561]  io_write+0x153/0x2e0
->> [ 1818.685564]  ? blk_mq_put_tags+0x1d/0x20
->> [ 1818.685566]  ? blk_mq_end_request_batch+0x295/0x2e0
->> [ 1818.685568]  ? sysvec_apic_timer_interrupt+0x46/0x80
->> [ 1818.685570]  io_issue_sqe+0x579/0x1990
->> [ 1818.685571]  ? io_req_prep+0x6a9/0xe60
->> [ 1818.685573]  ? __fget_files+0x56/0x80
->> [ 1818.685576]  ? fget+0x2a/0x30
->> [ 1818.685577]  io_submit_sqes+0x28c/0x930
->> [ 1818.685578]  ? __io_submit_flush_completions+0xdc/0x150
->> [ 1818.685580]  ? ctx_flush_and_put+0x4b/0x70
->> [ 1818.685581]  __x64_sys_io_uring_enter+0x1db/0x8e0
->> [ 1818.685583]  ? exit_to_user_mode_prepare+0x3e/0x1e0
->> [ 1818.685586]  ? exit_to_user_mode_prepare+0x3e/0x1e0
->> [ 1818.685588]  do_syscall_64+0x38/0x90
->> [ 1818.685591]  entry_SYSCALL_64_after_hwframe+0x44/0xae
->> [ 1818.685593] RIP: 0033:0x7f8a41c1889d
->> [ 1818.685594] RSP: 002b:00007ffe390d5af8 EFLAGS: 00000246 ORIG_RAX: 00000000000001aa
->> [ 1818.685596] RAX: ffffffffffffffda RBX: 00007ffe390d5b20 RCX: 00007f8a41c1889d
->> [ 1818.685597] RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000006
->> [ 1818.685597] RBP: 000055de073b6ef0 R08: 0000000000000000 R09: 0000000000000000
->> [ 1818.685598] R10: 0000000000000001 R11: 0000000000000246 R12: 00007f8a38400000
->> [ 1818.685599] R13: 0000000000000001 R14: 0000000000875bc1 R15: 0000000000000000
->>
->> For raid456, running into this as soon as I try to create a raid5 volume:
->>
->> [ 5338.620661] Buffer I/O error on dev md5, logical block 0, async page read
->> [ 5338.627457] Buffer I/O error on dev md5, logical block 0, async page read
->> [ 5338.634250] Buffer I/O error on dev md5, logical block 0, async page read
->> [ 5338.641043] Buffer I/O error on dev md5, logical block 0, async page read
->> [ 5338.647836] Buffer I/O error on dev md5, logical block 0, async page read
->> [ 5338.654632] Buffer I/O error on dev md5, logical block 0, async page read
->> [ 5338.661424] Dev md5: unable to read RDB block 0
->> [ 5338.665957] Buffer I/O error on dev md5, logical block 0, async page read
->> [ 5338.672746] Buffer I/O error on dev md5, logical block 0, async page read
->> [ 5338.679540] Buffer I/O error on dev md5, logical block 3, async page read
-> I am sorry that I haven't got time to look into this, and I will be on
-> vacation again from
-> tomorrow. If you make progress, please share your finding and/or
-> updated version.
-> I will try to look into this after Thanksgiving.
+Below is the email i sent to you.
 
-Hi Song,
+I am so sorry for sending you this unsolicited and unexpected email.
 
-Unfortunately, I didn't make any progress after posting my previous 
-email. I'll defintely share if I make any further progress (will be out 
-next week too).
+I actually got your contact from your country website and i decided to
+contact you directly about this business venture.
 
-> Song
+I am contacting you in good faith and this business investment
+proposal will be of mutual benefit for us. I have a business proposal
+in huge sum amount of US$800,000 000 00 (Eight Hundred  Million United
+state dollars only} to be transferred to any safe account with your
+assistance.
+
+Contact me back via my email if you are interested in this business
+investment proposal and if you can be trusted for further briefing and
+details.
+I look forward to hearing from you SOONEST!
+
+Kind Regards.
+Mr. Anthony Robson.
