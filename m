@@ -2,107 +2,59 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 80659458EF0
-	for <lists+linux-raid@lfdr.de>; Mon, 22 Nov 2021 14:04:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E2FA4592B7
+	for <lists+linux-raid@lfdr.de>; Mon, 22 Nov 2021 17:11:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235207AbhKVNHu (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 22 Nov 2021 08:07:50 -0500
-Received: from mga02.intel.com ([134.134.136.20]:41685 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229797AbhKVNHu (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 22 Nov 2021 08:07:50 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10175"; a="222001439"
-X-IronPort-AV: E=Sophos;i="5.87,254,1631602800"; 
-   d="scan'208";a="222001439"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2021 05:04:43 -0800
-X-IronPort-AV: E=Sophos;i="5.87,254,1631602800"; 
-   d="scan'208";a="496852412"
-Received: from ktanska-mobl.ger.corp.intel.com (HELO [10.213.22.108]) ([10.213.22.108])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2021 05:04:42 -0800
-Message-ID: <ab6c516e-c3ba-19e4-379f-692eb3c624c4@linux.intel.com>
-Date:   Mon, 22 Nov 2021 14:04:40 +0100
+        id S239943AbhKVQOg (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 22 Nov 2021 11:14:36 -0500
+Received: from mx08-00227901.pphosted.com ([91.207.212.184]:52378 "EHLO
+        mx08-00227901.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229955AbhKVQOf (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 22 Nov 2021 11:14:35 -0500
+Received: from pps.filterd (m0097674.ppops.net [127.0.0.1])
+        by mx08-.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 1AJ7wixf018132;
+        Fri, 19 Nov 2021 10:27:13 +0100
+Received: from zbw2k16ex01.bardusch.net ([185.80.186.174])
+        by mx08-.pphosted.com (PPS) with ESMTPS id 3cdmdm1455-6
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 19 Nov 2021 10:27:13 +0100
+Received: from zbw2k16ex02.bardusch.net (172.25.1.2) by
+ ZBW2K16EX01.bardusch.net (172.25.1.1) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.2308.20;
+ Fri, 19 Nov 2021 10:27:11 +0100
+Received: from User (172.25.1.131) by zbw2k16ex02.bardusch.net (172.25.1.2)
+ with Microsoft SMTP Server id 15.1.2308.20 via Frontend Transport; Fri, 19
+ Nov 2021 10:27:00 +0100
+Reply-To: <josechoondak@gmail.com>
+From:   Joseph Choondak <info@ndd.co.mz>
+Subject: I hope this email finds you well.
+Date:   Fri, 19 Nov 2021 01:27:14 -0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: Proposal of changing generating version of mdadm
-To:     jes@trained-monkey.org
-References: <MN2PR11MB3776740E926BE3FE37C8B6E389BE9@MN2PR11MB3776.namprd11.prod.outlook.com>
- <835df064-87ca-a3c1-bd29-d8df62c79da3@trained-monkey.org>
- <MN2PR11MB3776D436514419C88FD67B61899F9@MN2PR11MB3776.namprd11.prod.outlook.com>
-From:   "Tanska, Kinga" <kinga.tanska@linux.intel.com>
-Cc:     linux-raid@vger.kernel.org
-In-Reply-To: <MN2PR11MB3776D436514419C88FD67B61899F9@MN2PR11MB3776.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="Windows-1251"
 Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+Message-ID: <e36b6b33-d3b3-4f08-8033-0aba2c4cece8@zbw2k16ex02.bardusch.net>
+To:     Undisclosed recipients:;
+X-Proofpoint-GUID: TLQLmM0KGMyKZ2pptUvqji1PrJ_tMJCL
+X-Proofpoint-ORIG-GUID: TLQLmM0KGMyKZ2pptUvqji1PrJ_tMJCL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
+ definitions=2021-11-19_08,2021-11-17_01,2020-04-07_01
+X-Proofpoint-Spam-Reason: orgsafe
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-> On 10/20/21 8:43 AM, Tanska, Kinga wrote:
->> Hi,
->>
->> recently we diagnosed few issues with 'mdadm -version' output.
->> Main problem is that end output varies on few conditions. We come with
->> simplified proposal. First let's describe current schema:
->>
->> mdadm - version - date - extraversion
->> (example: mdadm - v4.2-rc2 - 2021-08-02 - extraversion)
->>
->> or
->>
->> mdadm - version - date
->> (example: mdadm - v4.2-rc2 - 2021-08-02).
->>
->> VERSION could be taken from code (see ReadMe.c:31), but when git is
->> installed and .git directory is available in mdadm workspace, version
->> is replaced with output from # git describe HEAD command. It is assumed
->> that git command should return last tag from repo, which should contain
->> information about last release. This might not be true, especially if user
->> uses tags to mark internal milestones or custom mdadm spins.
->>
->> The second problem is DATE, which corresponds to date of last release.
->> When few patches are picked onto HEAD date is not reliable. In my opinion
->> DATE is not needed. Usually, packages do not contain this element, e.g.
->> -	# git --version
->> 		git version 2.27.0
->> -	# gcc --version
->> 		gcc (GCC) 8.3.1 20191121 (Red Hat 8.3.1-5)
->> -	# yum --version
->> 		4.2.23
->>
->> To make it const and reliable, I propose removing DATE and always
->> use VERSION from code. VERSION shall keep general release information.
->> I would like to move the changeable elements into EXTRAVERSION. This
->> field will respect following conditions:
->> -	user definition first
->>         	(by respecting EXTRAVERSION=xxx during compilation)
->> -	if not defined by user, result of # git describe HEAD
->> -	else empty.
->>
->> Example output:
->> mdadm - version - extraversion (example: mdadm - v4.2-rc2 - extraversion).
->> Thanks for any opinion about this proposition.
-> 
-> Hi Kinga,
-> 
-> I am not against changing the format, however I worry that doing so may
-> break scripts and tools in the field that nobody is maintaining or have
-> thought of. If we are to change the output, I suggest making a new flag
-> that provides the details you want and we can deprecate the old one, but
-> leave it in place.
-> 
-> Thoughts?
-> 
-> Jes
-> 
+May I please ask with considerable urgency for your kind assistance with the following matter.
+I'm a financial person, I think  I have something huge you might be interested in.
 
-Thanks for your response.
-I'm wondering if this change will be used if not will be set as default. 
-I suggest providing a new flag with old, deprecated version, for any of 
-uses where it couldn't be changed. I can add a description which clarify 
-the change and describe flag, for anybody who will meet errors with 
-scripts after this change.
+Looking forward to hearing from you.
 
-Regards,
-Kinga Tanska
+
+Respectfully!!
+Joseph Choondak
+Account Executive.
