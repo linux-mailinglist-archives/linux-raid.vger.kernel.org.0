@@ -2,79 +2,91 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B0F27456917
-	for <lists+linux-raid@lfdr.de>; Fri, 19 Nov 2021 05:23:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 07580457C13
+	for <lists+linux-raid@lfdr.de>; Sat, 20 Nov 2021 08:24:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232802AbhKSE02 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 18 Nov 2021 23:26:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35740 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231279AbhKSE02 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 18 Nov 2021 23:26:28 -0500
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3662BC061748
-        for <linux-raid@vger.kernel.org>; Thu, 18 Nov 2021 20:23:27 -0800 (PST)
-Received: by mail-io1-xd41.google.com with SMTP id y16so11182883ioc.8
-        for <linux-raid@vger.kernel.org>; Thu, 18 Nov 2021 20:23:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=eTS1GK69RCI4oJxzikNG+dG1kEXvzkq40C70DiSwh3g=;
-        b=cQL4g+H2gJMJP3xWFQe/KzoyGqIo0AawlIVz6HOmgj7H+oswWn1JndJ03Ybadqh/iG
-         GFezuribER5iOwOrdhcpaLRDpEBug17B9goO8697VSiSH7/hueTiocUUiYuEl0npDX+N
-         7dyH4NYh7rX0U9rKSBeHM3T0tr/VTmzWLqZb6dR+9h3OxCcYEbSP6A9trr03z0AdHvvI
-         ahSumHf41Gk0/WiflEL2tp00pjSmNcuzmCnCLHtvda8y92IYt7+31MLaTkWsbzEryIp/
-         PD6PRbns5nLepTYC8LZKXr6gjYxNXB3IFy8QgwmShmHo9WUyNgKaHeXs5AvuxibzX411
-         sWzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=eTS1GK69RCI4oJxzikNG+dG1kEXvzkq40C70DiSwh3g=;
-        b=h1HKsvR7F/Ag6mXaL6BLSjvVsE6rl4MqxJnCN5OuWC9FQtSPGBHdOFZ8T9MeDNIU7S
-         bYx5JP9XRLAntcAPiCIkB4IU5BK20mYtz0fZSdV2uOMhLCIB6eJZ7MpfIihWijLJ+X3z
-         rb82ZXpJmBHgX3/uGFMQ+wCCBpgnc7Hj8UyVSiHO0jW9pObnNBAydh8T/t8m++Po+/FC
-         wD7pB+jjgY9FGokgVk3R2kAtie+JCC1cFdSw2gMsJPGjoX0tY5rEymlxhPzmOAYra8zk
-         Q5QAi9oiuB0NAKj4efSpZUzhTmLcgmK3GjyjBgYJKAodm0GDGwBZSsJzRvPjsuYVlWwn
-         NqDg==
-X-Gm-Message-State: AOAM530izK7m56qKmyWloaqI0N7vTi+TsANqxh0TIyOVNLOMmoQLTWYl
-        jJ3S0ENkJ6CxedPPHEwrM51yFKdheryf+ge5LlQ=
-X-Google-Smtp-Source: ABdhPJyoJdpS7Kf9B+KrNKG19mDCqtighLiNuAqL2cgDQj7eZ+/CBh/r4yLZu32slWVXs7TOdIJDzf3XHUtHh6UYg8Y=
-X-Received: by 2002:a05:6602:164a:: with SMTP id y10mr3074210iow.123.1637295806431;
- Thu, 18 Nov 2021 20:23:26 -0800 (PST)
+        id S236816AbhKTH1C (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 20 Nov 2021 02:27:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41786 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236790AbhKTH0n (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sat, 20 Nov 2021 02:26:43 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9B36A60E93;
+        Sat, 20 Nov 2021 07:23:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637393020;
+        bh=yjzvhNcky041CJZ1uMGGqIn7woM9nhsIlPxWsJ0q0lU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=X6G9mpaBxLI82jpYTQnHU8reA3NvMkFXnOjLYR2QzhXgjjMSRXdBVnExaKyNiZ0Ew
+         GuCP/CEISRCzKKDNr5MgRWbfwpOUEEliAb0NIsU01RvxXaqIuYq8RkpiCEGRxIFKVL
+         0EaN/ra2WMVtVVM6RLOsGkc6TEbjqvTXMWy8FVHuHHeIJhuYcCdeZqSU1ysl+Zp5xN
+         EULeES6C5RRMaeihY6wGozUJWD3OjDceAZkrase5ljOe2rPD83H7+IX6PvZWQ2zVLw
+         dOnSmcVOKzwr0EWWxjjZM6O+x0jNHSvYFMoHxH9t+y962BknJAUE6+ORYx+1AhcSef
+         RDBoB94Zhu4bA==
+Received: by mail-yb1-f174.google.com with SMTP id j77so13907893ybg.6;
+        Fri, 19 Nov 2021 23:23:40 -0800 (PST)
+X-Gm-Message-State: AOAM531YSt5Ml28plT7FFxXMFWJ/kzdqguGSFHOfF6C8V6ywYKJUFq0b
+        BUinIx1a8KYBjZCjsQcRwJLOrVGgAQWLA4sa81Q=
+X-Google-Smtp-Source: ABdhPJxZehMkA4qKbP5ybYfYk3uvwIeMbRvBcKpGd8XnJPkd2cMJZcFHLQfbtjXhnxj/qD5Xz8JJGSIYwGECLEEZC1E=
+X-Received: by 2002:a25:660d:: with SMTP id a13mr44779897ybc.460.1637393019876;
+ Fri, 19 Nov 2021 23:23:39 -0800 (PST)
 MIME-Version: 1.0
-Received: by 2002:a05:6602:2f03:0:0:0:0 with HTTP; Thu, 18 Nov 2021 20:23:25
- -0800 (PST)
-Reply-To: anthonyrrobson@gmail.com
-From:   "Mr. Anthony Robson" <abcudday@gmail.com>
-Date:   Thu, 18 Nov 2021 20:23:25 -0800
-Message-ID: <CADXsGJFbR1Q52ZiBs8f3ijChf5RKGDYxHiXANAhCVcHdcbSS1A@mail.gmail.com>
-Subject: I look forward to hearing from you SOONEST!
-To:     undisclosed-recipients:;
+References: <20211115031817.4193-1-bernard@vivo.com> <PSAPR06MB40216A2C236343B2300EFC48DF9A9@PSAPR06MB4021.apcprd06.prod.outlook.com>
+In-Reply-To: <PSAPR06MB40216A2C236343B2300EFC48DF9A9@PSAPR06MB4021.apcprd06.prod.outlook.com>
+From:   Song Liu <song@kernel.org>
+Date:   Fri, 19 Nov 2021 21:23:28 -1000
+X-Gmail-Original-Message-ID: <CAPhsuW7SCEXrU3AL8isD-3NwH+ChgwbUAR6y+6xDVRbZTFnEJg@mail.gmail.com>
+Message-ID: <CAPhsuW7SCEXrU3AL8isD-3NwH+ChgwbUAR6y+6xDVRbZTFnEJg@mail.gmail.com>
+Subject: Re: [PATCH] drivers/md: fix potential memleak
+To:     =?UTF-8?B?6LW15Yab5aWO?= <bernard@vivo.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hello Friend,
+On Tue, Nov 16, 2021 at 9:57 PM =E8=B5=B5=E5=86=9B=E5=A5=8E <bernard@vivo.c=
+om> wrote:
+>
+>
+>
+> -----=E9=82=AE=E4=BB=B6=E5=8E=9F=E4=BB=B6-----
+> =E5=8F=91=E4=BB=B6=E4=BA=BA: bernard@vivo.com <bernard@vivo.com> =E4=BB=
+=A3=E8=A1=A8 Song Liu
+> =E5=8F=91=E9=80=81=E6=97=B6=E9=97=B4: 2021=E5=B9=B411=E6=9C=8817=E6=97=A5=
+ 15:06
+> =E6=94=B6=E4=BB=B6=E4=BA=BA: =E8=B5=B5=E5=86=9B=E5=A5=8E <bernard@vivo.co=
+m>
+> =E6=8A=84=E9=80=81: linux-raid <linux-raid@vger.kernel.org>; open list <l=
+inux-kernel@vger.kernel.org>
+> =E4=B8=BB=E9=A2=98: Re: [PATCH] drivers/md: fix potential memleak
+>
+> On Sun, Nov 14, 2021 at 7:18 PM Bernard Zhao <bernard@vivo.com> wrote:
+> >
+> > In function get_bitmap_from_slot, when md_bitmap_create failed,
+> > md_bitmap_destroy must be called to do clean up.
+>
+> >Could you please explain which variable(s) need clean up?
+>
+> Hi Song:
+> The follow is the function md_bitmap_create`s annotation :
+> /*
+>  * initialize the bitmap structure
+>  * if this returns an error, bitmap_destroy must be called to do clean up
+>  * once mddev->bitmap is set
+>  */
+> struct bitmap *md_bitmap_create(struct mddev *mddev, int slot)
+>
+> It is mentioned that bitmap_destroy needs to be called to do clean up.
+> Other functions which called md_bitmap_create in the same file also calle=
+d md_bitmap_create to clean up(in the error branch), but this one didn`t.
+> I am not sure if there is some gap?
 
-Below is the email i sent to you.
+I don't think we need to call md_bitmap_destroy in some of these cases.
+Please read the code carefully can decide where these are needed based
+on the logic of the code.
 
-I am so sorry for sending you this unsolicited and unexpected email.
-
-I actually got your contact from your country website and i decided to
-contact you directly about this business venture.
-
-I am contacting you in good faith and this business investment
-proposal will be of mutual benefit for us. I have a business proposal
-in huge sum amount of US$800,000 000 00 (Eight Hundred  Million United
-state dollars only} to be transferred to any safe account with your
-assistance.
-
-Contact me back via my email if you are interested in this business
-investment proposal and if you can be trusted for further briefing and
-details.
-I look forward to hearing from you SOONEST!
-
-Kind Regards.
-Mr. Anthony Robson.
+Thanks,
+Song
