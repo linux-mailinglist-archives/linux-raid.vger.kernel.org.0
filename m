@@ -2,68 +2,107 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 641B0457E08
-	for <lists+linux-raid@lfdr.de>; Sat, 20 Nov 2021 13:34:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 80659458EF0
+	for <lists+linux-raid@lfdr.de>; Mon, 22 Nov 2021 14:04:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231919AbhKTMhE (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 20 Nov 2021 07:37:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236254AbhKTMhE (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 20 Nov 2021 07:37:04 -0500
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F13A8C061756
-        for <linux-raid@vger.kernel.org>; Sat, 20 Nov 2021 04:34:00 -0800 (PST)
-Received: by mail-wr1-x435.google.com with SMTP id n29so23020279wra.11
-        for <linux-raid@vger.kernel.org>; Sat, 20 Nov 2021 04:34:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=w2dLnl5hsLVKZTBAdcVFnDnMtM7+guW1LU+8LG4nir0=;
-        b=SfgrxszVAhIUhPhcltLFYjTgn8qP3dMZiJeatgbs4CMgmp9wHWdKySGpbmjZiqoH7W
-         QqnrA/Luw9RwpQ1sEm3NtAfjUcqrGetfb8MfoniTr/cGOaiUwRnkidKPhG9sJ7Q/ylYg
-         QnhEodclXSg4eKTsXOltnuxbA/MwWdnZgkftZR1xKb9zIdKYIc0J42PA8vFSkmI+Pio1
-         q3vjTpDwjEWKfMMN8Sbyp7O03J26GokdX3bZLF48yRrnVNwstZt61tqobKO1Fh8ulFWA
-         aNFykCu5v2789Xcka6PIGqzYhBcz0Z+Q6K1o0AmOGgc73aPZfDHtbPxq7hOoUe19n+wo
-         avYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=w2dLnl5hsLVKZTBAdcVFnDnMtM7+guW1LU+8LG4nir0=;
-        b=R2+bQd1QlbiQ8augg8xmu53Gb19W4yehy3y8OcCjamhZ3A9mmQr2ofc2JstdC77ArK
-         sbKMByBMOD2O1xdKdrbSy1dT5KrDUiAo8UEYjwL/qWyPNnyIA1lD/8Q4N/1wOpCDMvKA
-         +5m5SaHOMKEdfnm2hlSBNNMrUNblvpohZbkk7XDee9mX+W3Bsa6o/0fJulCDqliX80cC
-         KL1YPLxjQRT6qMaJ22EF9hZvhW42rlcVwBxMPng/IHDeBL9Ps9VT1Z3bKdzUOxr3vBmt
-         +DhvmGehPtfeLY2tSs31W8/fS+1iCj4BB2dZdkjUWpSSqMT69xfS/eXha1HnRmp5C8Pj
-         vaTA==
-X-Gm-Message-State: AOAM533cHbqs6PFxw1PJUotC/Za+yTH79KHlhnEQBN13AVV4WQ1dhYjq
-        SHFI6lGWZIkCKYSDC3O5JRSeKIuAP3+IdWnCTEM=
-X-Google-Smtp-Source: ABdhPJwNeYCRmVDovPQVSwxxibNU3kfyr0SfgKTRhpGgm92tt3xvJBu3f86ir8VvjZwVO3Ztzl/nnM56CXXB2xWuEHE=
-X-Received: by 2002:a05:6000:18ad:: with SMTP id b13mr17285116wri.195.1637411639427;
- Sat, 20 Nov 2021 04:33:59 -0800 (PST)
+        id S235207AbhKVNHu (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 22 Nov 2021 08:07:50 -0500
+Received: from mga02.intel.com ([134.134.136.20]:41685 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229797AbhKVNHu (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Mon, 22 Nov 2021 08:07:50 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10175"; a="222001439"
+X-IronPort-AV: E=Sophos;i="5.87,254,1631602800"; 
+   d="scan'208";a="222001439"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2021 05:04:43 -0800
+X-IronPort-AV: E=Sophos;i="5.87,254,1631602800"; 
+   d="scan'208";a="496852412"
+Received: from ktanska-mobl.ger.corp.intel.com (HELO [10.213.22.108]) ([10.213.22.108])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2021 05:04:42 -0800
+Message-ID: <ab6c516e-c3ba-19e4-379f-692eb3c624c4@linux.intel.com>
+Date:   Mon, 22 Nov 2021 14:04:40 +0100
 MIME-Version: 1.0
-Received: by 2002:adf:f989:0:0:0:0:0 with HTTP; Sat, 20 Nov 2021 04:33:58
- -0800 (PST)
-Reply-To: mitchellvivian01@gamil.com
-From:   Mitchell Vivian <duplanmartine36@gmail.com>
-Date:   Sat, 20 Nov 2021 12:33:58 +0000
-Message-ID: <CAO-XXH5uGE2Yd4cjnLYeWr_OADiBftpJAikaRx5eamVu8xQgPw@mail.gmail.com>
-Subject: Hello
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: Proposal of changing generating version of mdadm
+To:     jes@trained-monkey.org
+References: <MN2PR11MB3776740E926BE3FE37C8B6E389BE9@MN2PR11MB3776.namprd11.prod.outlook.com>
+ <835df064-87ca-a3c1-bd29-d8df62c79da3@trained-monkey.org>
+ <MN2PR11MB3776D436514419C88FD67B61899F9@MN2PR11MB3776.namprd11.prod.outlook.com>
+From:   "Tanska, Kinga" <kinga.tanska@linux.intel.com>
+Cc:     linux-raid@vger.kernel.org
+In-Reply-To: <MN2PR11MB3776D436514419C88FD67B61899F9@MN2PR11MB3776.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hello
+> On 10/20/21 8:43 AM, Tanska, Kinga wrote:
+>> Hi,
+>>
+>> recently we diagnosed few issues with 'mdadm -version' output.
+>> Main problem is that end output varies on few conditions. We come with
+>> simplified proposal. First let's describe current schema:
+>>
+>> mdadm - version - date - extraversion
+>> (example: mdadm - v4.2-rc2 - 2021-08-02 - extraversion)
+>>
+>> or
+>>
+>> mdadm - version - date
+>> (example: mdadm - v4.2-rc2 - 2021-08-02).
+>>
+>> VERSION could be taken from code (see ReadMe.c:31), but when git is
+>> installed and .git directory is available in mdadm workspace, version
+>> is replaced with output from # git describe HEAD command. It is assumed
+>> that git command should return last tag from repo, which should contain
+>> information about last release. This might not be true, especially if user
+>> uses tags to mark internal milestones or custom mdadm spins.
+>>
+>> The second problem is DATE, which corresponds to date of last release.
+>> When few patches are picked onto HEAD date is not reliable. In my opinion
+>> DATE is not needed. Usually, packages do not contain this element, e.g.
+>> -	# git --version
+>> 		git version 2.27.0
+>> -	# gcc --version
+>> 		gcc (GCC) 8.3.1 20191121 (Red Hat 8.3.1-5)
+>> -	# yum --version
+>> 		4.2.23
+>>
+>> To make it const and reliable, I propose removing DATE and always
+>> use VERSION from code. VERSION shall keep general release information.
+>> I would like to move the changeable elements into EXTRAVERSION. This
+>> field will respect following conditions:
+>> -	user definition first
+>>         	(by respecting EXTRAVERSION=xxx during compilation)
+>> -	if not defined by user, result of # git describe HEAD
+>> -	else empty.
+>>
+>> Example output:
+>> mdadm - version - extraversion (example: mdadm - v4.2-rc2 - extraversion).
+>> Thanks for any opinion about this proposition.
+> 
+> Hi Kinga,
+> 
+> I am not against changing the format, however I worry that doing so may
+> break scripts and tools in the field that nobody is maintaining or have
+> thought of. If we are to change the output, I suggest making a new flag
+> that provides the details you want and we can deprecate the old one, but
+> leave it in place.
+> 
+> Thoughts?
+> 
+> Jes
+> 
 
-My name is Miss Vivian Mitchell. I want to donate my fund $ 4.5
-million USD to you on a charity name to help the poor People.
+Thanks for your response.
+I'm wondering if this change will be used if not will be set as default. 
+I suggest providing a new flag with old, deprecated version, for any of 
+uses where it couldn't be changed. I can add a description which clarify 
+the change and describe flag, for anybody who will meet errors with 
+scripts after this change.
 
-As soon as I read from you I will give you more details on how to
-achieve this goal and get this fund transferred into your bank
-account.
-
-Thanks have a nice day,
-Miss.vivian
+Regards,
+Kinga Tanska
