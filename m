@@ -2,59 +2,97 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E2FA4592B7
-	for <lists+linux-raid@lfdr.de>; Mon, 22 Nov 2021 17:11:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A37145B8B8
+	for <lists+linux-raid@lfdr.de>; Wed, 24 Nov 2021 11:57:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239943AbhKVQOg (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 22 Nov 2021 11:14:36 -0500
-Received: from mx08-00227901.pphosted.com ([91.207.212.184]:52378 "EHLO
-        mx08-00227901.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229955AbhKVQOf (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 22 Nov 2021 11:14:35 -0500
-Received: from pps.filterd (m0097674.ppops.net [127.0.0.1])
-        by mx08-.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 1AJ7wixf018132;
-        Fri, 19 Nov 2021 10:27:13 +0100
-Received: from zbw2k16ex01.bardusch.net ([185.80.186.174])
-        by mx08-.pphosted.com (PPS) with ESMTPS id 3cdmdm1455-6
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 19 Nov 2021 10:27:13 +0100
-Received: from zbw2k16ex02.bardusch.net (172.25.1.2) by
- ZBW2K16EX01.bardusch.net (172.25.1.1) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.2308.20;
- Fri, 19 Nov 2021 10:27:11 +0100
-Received: from User (172.25.1.131) by zbw2k16ex02.bardusch.net (172.25.1.2)
- with Microsoft SMTP Server id 15.1.2308.20 via Frontend Transport; Fri, 19
- Nov 2021 10:27:00 +0100
-Reply-To: <josechoondak@gmail.com>
-From:   Joseph Choondak <info@ndd.co.mz>
-Subject: I hope this email finds you well.
-Date:   Fri, 19 Nov 2021 01:27:14 -0800
+        id S233895AbhKXLAS (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 24 Nov 2021 06:00:18 -0500
+Received: from mga03.intel.com ([134.134.136.65]:43017 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231886AbhKXLAS (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 24 Nov 2021 06:00:18 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10177"; a="235202695"
+X-IronPort-AV: E=Sophos;i="5.87,260,1631602800"; 
+   d="scan'208";a="235202695"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2021 02:57:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,260,1631602800"; 
+   d="scan'208";a="457438329"
+Received: from unknown (HELO localhost.igk.intel.com) ([10.102.102.57])
+  by orsmga006.jf.intel.com with ESMTP; 24 Nov 2021 02:57:07 -0800
+From:   Mateusz Grzonka <mateusz.grzonka@intel.com>
+To:     linux-raid@vger.kernel.org
+Cc:     jes@trained-monkey.org
+Subject: [PATCH] Incremental: Close unclosed mdfd in IncrementalScan()
+Date:   Wed, 24 Nov 2021 11:45:30 +0100
+Message-Id: <20211124104530.26592-1-mateusz.grzonka@intel.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="Windows-1251"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-Message-ID: <e36b6b33-d3b3-4f08-8033-0aba2c4cece8@zbw2k16ex02.bardusch.net>
-To:     Undisclosed recipients:;
-X-Proofpoint-GUID: TLQLmM0KGMyKZ2pptUvqji1PrJ_tMJCL
-X-Proofpoint-ORIG-GUID: TLQLmM0KGMyKZ2pptUvqji1PrJ_tMJCL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
- definitions=2021-11-19_08,2021-11-17_01,2020-04-07_01
-X-Proofpoint-Spam-Reason: orgsafe
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-May I please ask with considerable urgency for your kind assistance with the following matter.
-I'm a financial person, I think  I have something huge you might be interested in.
+In addition to closing mdfd, propagate helpers to manage file
+descriptors across IncrementalScan().
 
-Looking forward to hearing from you.
+Signed-off-by: Mateusz Grzonka <mateusz.grzonka@intel.com>
+---
+ Incremental.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
+diff --git a/Incremental.c b/Incremental.c
+index cd9cc0fc..9cdd31f0 100644
+--- a/Incremental.c
++++ b/Incremental.c
+@@ -1346,7 +1346,7 @@ restart:
+ 		}
+ 		mdfd = open_dev(me->devnm);
+ 
+-		if (mdfd < 0)
++		if (!is_fd_valid(mdfd))
+ 			continue;
+ 		if (!isdigit(me->metadata[0])) {
+ 			/* must be a container */
+@@ -1356,7 +1356,7 @@ restart:
+ 
+ 			if (st && st->ss->load_container)
+ 				ret = st->ss->load_container(st, mdfd, NULL);
+-			close(mdfd);
++			close_fd(&mdfd);
+ 			if (!ret && st && st->ss->container_content) {
+ 				if (map_lock(&map))
+ 					pr_err("failed to get exclusive lock on mapfile\n");
+@@ -1368,7 +1368,7 @@ restart:
+ 			continue;
+ 		}
+ 		if (md_array_active(mdfd)) {
+-			close(mdfd);
++			close_fd(&mdfd);
+ 			continue;
+ 		}
+ 		/* Ok, we can try this one.   Maybe it needs a bitmap */
+@@ -1385,9 +1385,9 @@ restart:
+ 			int bmfd;
+ 
+ 			bmfd = open(mddev->bitmap_file, O_RDWR);
+-			if (bmfd >= 0) {
++			if (is_fd_valid(bmfd)) {
+ 				added = ioctl(mdfd, SET_BITMAP_FILE, bmfd);
+-				close(bmfd);
++				close_fd(&bmfd);
+ 			}
+ 			if (c->verbose >= 0) {
+ 				if (added == 0)
+@@ -1416,6 +1416,7 @@ restart:
+ 			}
+ 			sysfs_free(sra);
+ 		}
++		close_fd(&mdfd);
+ 	}
+ 	map_free(mapl);
+ 	return rv;
+-- 
+2.26.2
 
-Respectfully!!
-Joseph Choondak
-Account Executive.
