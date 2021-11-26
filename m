@@ -2,87 +2,65 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 935F445F106
-	for <lists+linux-raid@lfdr.de>; Fri, 26 Nov 2021 16:47:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E90E345F700
+	for <lists+linux-raid@lfdr.de>; Fri, 26 Nov 2021 23:58:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378198AbhKZPu3 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 26 Nov 2021 10:50:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51678 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378263AbhKZPs3 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 26 Nov 2021 10:48:29 -0500
-X-Greylist: delayed 1865 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 26 Nov 2021 07:41:00 PST
-Received: from coinfo.com.mx (coinfo.com.mx [IPv6:2607:f1c0:81f:9400::8b:cb57])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05734C06139A
-        for <linux-raid@vger.kernel.org>; Fri, 26 Nov 2021 07:40:59 -0800 (PST)
-Received: (qmail 22509 invoked from network); 26 Nov 2021 08:51:56 -0600
-Received: from localhost (HELO coinfo.com.mx) (127.0.0.1)
- by localhost with ESMTPSA (DHE-RSA-AES256-SHA encrypted, authenticated);
- 26 Nov 2021 08:51:56 -0600
-Received: from 102.165.16.17 ([102.165.16.17]) by webmail.booksmart.com.mx
- (Horde Framework) with HTTP; Fri, 26 Nov 2021 14:51:56 +0000
-Date:   Fri, 26 Nov 2021 14:51:54 +0000
-Message-ID: <20211126145154.Horde.mq9whhJAeW3bx3-NoM3p-7j@webmail.booksmart.com.mx>
-From:   "Mr. Ibrahim Tafa" <alejandra@summat.com.mx>
-Subject: PROJEKTSPONSORING / DARLEHEN UND INVESTITIONSFINANZIERUNG
-Reply-to: ibrahim.tafa2@globalinvestments-fze.com
-User-Agent: Horde Application Framework 5
-Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
+        id S234654AbhKZXBQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 26 Nov 2021 18:01:16 -0500
+Received: from beige.elm.relay.mailchannels.net ([23.83.212.16]:47352 "EHLO
+        beige.elm.relay.mailchannels.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S238991AbhKZW7P (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 26 Nov 2021 17:59:15 -0500
+X-Sender-Id: hostingershared|x-authuser|u809077756@srv350.main-hosting.eu
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 76244E157D
+        for <linux-raid@vger.kernel.org>; Fri, 26 Nov 2021 22:56:00 +0000 (UTC)
+Received: from srv350.main-hosting.eu (unknown [127.0.0.6])
+        (Authenticated sender: hostingershared)
+        by relay.mailchannels.net (Postfix) with ESMTPA id C2058E165D
+        for <linux-raid@vger.kernel.org>; Fri, 26 Nov 2021 22:55:57 +0000 (UTC)
+X-Sender-Id: hostingershared|x-authuser|u809077756@srv350.main-hosting.eu
+Received: from srv350.main-hosting.eu ([TEMPUNAVAIL]. [46.17.172.203])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384)
+        by 100.112.64.76 (trex/6.4.3);
+        Fri, 26 Nov 2021 22:56:00 +0000
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: hostingershared|x-authuser|u809077756@srv350.main-hosting.eu
+X-MailChannels-Auth-Id: hostingershared
+X-Zesty-Industry: 44b813460bff40fe_1637967360270_4246021429
+X-MC-Loop-Signature: 1637967360269:1605467342
+X-MC-Ingress-Time: 1637967360269
+Received: from u809077756 by srv350.main-hosting.eu with local (Exim 4.94)
+        (envelope-from <u809077756@srv350.main-hosting.eu>)
+        id 1mqk8D-0001q8-U7
+        for linux-raid@vger.kernel.org; Fri, 26 Nov 2021 22:55:49 +0000
+To:     linux-raid@vger.kernel.org
+Subject: Thank You for your Message
+X-PHP-Script: pawprints.in/index.php for 107.189.11.80
+X-PHP-Filename: /home/u809077756/domains/pawprints.in/public_html/index.php REMOTE_ADDR: 107.189.11.80
+X-PHP-Originating-Script: 809077756:class-phpmailer.php
+Date:   Fri, 26 Nov 2021 22:55:49 +0000
+From:   Pawprints <wordpress@pawprints.in>
+Reply-To: prasad@pawprints.in
+Message-ID: <464a539eee5b546acaec82ff9f05b159@pawprints.in>
+X-Mailer: PHPMailer 5.2.27 (https://github.com/PHPMailer/PHPMailer)
 MIME-Version: 1.0
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <20211126145156.22005.10610@coinfo.com.mx>
-X-PPP-Vhost: booksmart.com.mx
-To:     unlisted-recipients:; (no To-header on input)
+Sender:  <u809077756@srv350.main-hosting.eu>
+X-AuthUser: u809077756@srv350.main-hosting.eu
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+Hi ❤️ Alice want to meet you! Click Here: http://bit.do/fSGXu?mxeo ❤️,
+
+Thank You for Reaching Out!
+We will get back to you at the earliest.
+Wish You have a great day!
 
 
-
-Grüße ,
-
-   Ich kontaktiere Sie, um herauszufinden, ob Sie oder Ihr Unternehmen  
-eine Finanzierung für Ihr Projekt / Geschäft benötigen? Wir haben eine  
-neue Finanzierungsmethode entwickelt, bei der die Finanzierung von  
-unseren Kunden nicht länger dauert.
-
-    Wir widmen uns der Projektförderung, Kreditfinanzierung,  
-Projektfinanzierung, Finanzierung
-Investitionen, etc. Wenn Sie nach Mitteln suchen, um Ihr Projekt /  
-Geschäft zu finanzieren, oder wenn Sie bereit sind, als unser Agent in  
-Ihrem Land zu arbeiten, um finanzierungsbedürftige Kunden zu finden  
-und Provisionen zu verdienen, dann wenden Sie sich mit weiteren  
-Details an uns.
-
-   Ich werde mehr mit Ihnen teilen, sobald ich Ihre Antwort auf die  
-Disposition erhalten habe.
-um unsere Finanzierung zu sichern.
-
-Mit freundlichen Grüßen,
-Herr Ibrahim Tafa
-GLOBAL INVESTMENT GROUP FZE, Vereinigte Arabische Emirate
-.........................................
-
-Greetings ,
-
-   I am contacting you to find out if you or your company need    
-financing for your project / business? We have developed a new method   
-  of financing that does not take longer to receive financing from our  
-   clients.
-
-    We are dedicated to project sponsorship, loan financing, project    
-financing, financing
-investment, etc. If you are looking for funds to finance your project   
-  / Business or if you are willing to work as our agent in your  
-country   to find clients in need of financing and earn commissions,  
-then get   back to us with more details.
-
-   I will share more with you once I get your response on its disposition.
-to secure our funding.
-
-Kind regards,
-Mr. Ibrahim Tafa
-GLOBAL INVESTMENT GROUP FZE, United Arab Emirates
+Cheers,
+Pawprints Family
 
