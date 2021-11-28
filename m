@@ -2,70 +2,64 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A57245FDB1
-	for <lists+linux-raid@lfdr.de>; Sat, 27 Nov 2021 10:40:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8179C460571
+	for <lists+linux-raid@lfdr.de>; Sun, 28 Nov 2021 10:27:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353609AbhK0Jnz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 27 Nov 2021 04:43:55 -0500
-Received: from [175.207.13.15] ([175.207.13.15]:33518 "EHLO
-        forestfire.localdomain" rhost-flags-FAIL-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1350827AbhK0Jlq (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Sat, 27 Nov 2021 04:41:46 -0500
-X-Greylist: delayed 70896 seconds by postgrey-1.27 at vger.kernel.org; Sat, 27 Nov 2021 04:41:43 EST
-Received: from User (localhost [127.0.0.1])
-        by forestfire.localdomain (Postfix) with SMTP id D64A8DDA708;
-        Fri, 26 Nov 2021 18:38:09 +0900 (KST)
-Reply-To: <hihulwarence@gmail.com>
-From:   "Mrs.Barbara Sharon" <hihulwarence@gmail.com>
-Subject: US. Security Exchange & Commission 
-Date:   Fri, 26 Nov 2021 10:38:44 +0100
+        id S1357005AbhK1JaX (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 28 Nov 2021 04:30:23 -0500
+Received: from smtp.hosts.co.uk ([85.233.160.19]:14429 "EHLO smtp.hosts.co.uk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1357045AbhK1J2X (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sun, 28 Nov 2021 04:28:23 -0500
+Received: from host81-132-12-162.range81-132.btcentralplus.com ([81.132.12.162] helo=[192.168.1.218])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1mrGQj-0006i0-Bc
+        for linux-raid@vger.kernel.org; Sun, 28 Nov 2021 09:25:05 +0000
+Message-ID: <1c63e476-b253-cb17-3299-f9d09453ee19@youngman.org.uk>
+Date:   Sun, 28 Nov 2021 09:25:05 +0000
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="Windows-1251"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.1
+Content-Language: en-US
+To:     linux-raid <linux-raid@vger.kernel.org>
+From:   Wols Lists <antlists@youngman.org.uk>
+Subject: Nothing wrong, but is my website advice wonky?
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-Message-Id: <20211126093809.D64A8DDA708@forestfire.localdomain>
-To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Security Exchange and Commission
-200 Vesey Street, Suite 400.
-New York, NY 10281.
-Tel: +1(716-608-3814
-Emai:SEC.hihulwarence@gmail.com
+Finally upgrading my system to raid-5 - two Seagate Ironwolves and a 
+Barracuda ... :-(
 
+As per my own advice, I added the third drive as a spare, then grew the 
+array to raid-5 in two separate commands.
 
-Attn: Sir,
+Trying to track what's going on, "cat /proc/mdstat" just shows two 
+drives as sync'ing. "mdadm --detail" shows two active drives and a spare.
 
-We are the US.Security Exchange and Commission pay centre point
-attachedwith  the Deutsche Bank branch in New York City hereby contact
-you today to inform you on  the transfer on transit with this bank
-(Bank of America ) in your favour.
+The drives are quite clearly working away - as I would expect.
 
-Fund worth TEN MILLION, FIVE HUNDRED  THOUSAND US DOLLARS ONLY (US$10.
-500,000.00) You are requested to confirm the ownership so that we can
-proceed with the transaction to transmit your fund to your choice
-account.
+So. What I *think* is happening is that my mirror is upgrading to a 
+2-disk raid-5, and when that's finished it will add the spare and 
+upgrade to a full 3-disk raid-5. Does that sound right?
 
-We request you to send any form of Identification which will
-substantiate your claims. We have been Authorised by the Federal
-Government of Nigeria and the United Nations to wire the above funds
-into your account without any further delay or interception kindly get
-back to us as soon as possible to enable the paying bank to process
-the bank Draft on your behalf which was issued by the Federal
-Government of Nigeria.
+What I *hoped* would happen (and thought *should* happen) was that it 
+would spot the third drive, add it, and just resync straight away to 
+full raid-5.
 
-Thank you.
+So at 7 or 8hrs per pass (3TB per drive) I'm now looking at my upgrade 
+taking about 15 hours. Whoops.
 
-Yours Faithfully
-Mrs.Barbara Sharon (P.A.)to,
-Mrs. Stephanie Avakian
-Director  US Security Exchange
-and Commission (SEC).
+So basically, does my scenario sound right? Would have explicitly 
+changing raid-devices to 3 at the same time as converting to raid-5 
+improved matters?
 
+Okay, I'm going to build a new raid-testing computer in the near future 
+so testing this sort of thing will be easy, but that is predicated on me 
+finding enough time without upsetting the wife ...
+
+Cheers,
+Wol
