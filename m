@@ -2,102 +2,124 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E6F024609A6
-	for <lists+linux-raid@lfdr.de>; Sun, 28 Nov 2021 21:22:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 73798460A4C
+	for <lists+linux-raid@lfdr.de>; Sun, 28 Nov 2021 22:23:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352607AbhK1U0C (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 28 Nov 2021 15:26:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56592 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231527AbhK1UYB (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 28 Nov 2021 15:24:01 -0500
-Received: from mail-vk1-xa2b.google.com (mail-vk1-xa2b.google.com [IPv6:2607:f8b0:4864:20::a2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69ED2C061746
-        for <linux-raid@vger.kernel.org>; Sun, 28 Nov 2021 12:20:45 -0800 (PST)
-Received: by mail-vk1-xa2b.google.com with SMTP id j1so9578515vkr.1
-        for <linux-raid@vger.kernel.org>; Sun, 28 Nov 2021 12:20:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=wK7RAY5cqY98Cfgxq+7iqQZC+Qd7nG111sBT4H9OR7s=;
-        b=XurfQxN/U+LQafAluiGcSb2WQ7UYi/vZg1y777k4gnvh6+Sg6SXxUhwnQ7Yw9WvRlc
-         hJQpzMTxOMpJR3eamNXTOzcw61GYwi4EVnaxZCL0+93WPGB0zNdXqPjHcaRDBdNZpiQT
-         /nwpsg+mS7bc2nwXXT6AM1fun5SZ95q1tjVC0uKK2lsMIa9ZJI1vEOzBBndQRS7mFj/o
-         dvUo5vvuUIMZ0U0XGb8fsXNjkqiDS7s7NZWid81Qj08DluVRsHfRRMKhABcwyQr11Xs2
-         s0fkH/SmWGe4mE6LuKLKf7rQNJI9VVoKif/A64nz+Fpry9T/EonIyB5Lbazzbp9y8+R2
-         ccAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=wK7RAY5cqY98Cfgxq+7iqQZC+Qd7nG111sBT4H9OR7s=;
-        b=OhagRcfLp0Bo4gYe1PRtEq17msgbCB55JtWdxvAE1d76MchxQNwBxeI9W7FF4UL6Se
-         pINrQipY7Yrr7zjuaSbMgslKUAnWRioW4uoOOUrYHvvLy3d4OkL/tFJmPQwXqOq+TEGC
-         D6QTN+zeFstOLmARLa1rnne9g4iBM7noD3Np0YVlbVEnq3O34KzaXU6UM7zZ7kOWwBmu
-         JDNGa+JYxFPEpRkGIVvPyhD2Ocs/jr3yxbWKrkTeuhRXnSsL8Rskba6Onp2w8wPG/WRv
-         QBDGlrx5VmpvHnYRu1z/8Smo/TsKUufRiZSm/Ct52BA/omoHQWQJPAA7BB6pOLkWW1Qq
-         CFjQ==
-X-Gm-Message-State: AOAM531yhZ6y9r1F6fGVCESsjxHutxgFvKCAxTxlXRTCk5ZXCPlaqLF0
-        AeAueZmF+mbJcBsG9ASEf8JoFAsRrXVEfqkliRlaH3i4YTo=
-X-Google-Smtp-Source: ABdhPJznaeOcCW8P0h/Io38IujokuVP4ktla2bdTnBWPc0vIcsHaAhAcAN+SWR9YgVEXkljG0cgwCl8gapElTkDn6X0=
-X-Received: by 2002:a1f:2849:: with SMTP id o70mr26523449vko.35.1638130844345;
- Sun, 28 Nov 2021 12:20:44 -0800 (PST)
+        id S236715AbhK1V1C (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 28 Nov 2021 16:27:02 -0500
+Received: from smtp.hosts.co.uk ([85.233.160.19]:42525 "EHLO smtp.hosts.co.uk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233848AbhK1VZC (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Sun, 28 Nov 2021 16:25:02 -0500
+Received: from host81-132-12-162.range81-132.btcentralplus.com ([81.132.12.162] helo=[192.168.1.65])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1mrRcG-0009El-5R; Sun, 28 Nov 2021 21:21:44 +0000
+Message-ID: <f80d37f6-afb6-4080-d80d-7457a7d26b90@youngman.org.uk>
+Date:   Sun, 28 Nov 2021 21:21:45 +0000
 MIME-Version: 1.0
-From:   Edward Kuns <eddie.kuns@gmail.com>
-Date:   Sun, 28 Nov 2021 14:20:33 -0600
-Message-ID: <CACsGCySaG5ryZULOR=hCqyuFZEFJ3zpsv8WkFLi27_6X+L+USQ@mail.gmail.com>
-Subject: I found how to enable the SCTERC equivalent on an NVMe drive
-To:     Linux-RAID <linux-raid@vger.kernel.org>
-Cc:     Edward Kuns <eddie.kuns@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: Nothing wrong, but is my website advice wonky?
+Content-Language: en-GB
+To:     John Stoffel <john@stoffel.org>
+Cc:     linux-raid <linux-raid@vger.kernel.org>
+References: <1c63e476-b253-cb17-3299-f9d09453ee19@youngman.org.uk>
+ <12dd9f53-aab2-c487-9663-b799c2d0e8dd@youngman.org.uk>
+ <24995.58211.78152.138025@quad.stoffel.home>
+From:   Wol <antlists@youngman.org.uk>
+In-Reply-To: <24995.58211.78152.138025@quad.stoffel.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-I'm on RHEL 8.5.  I don't know how new this feature is, nor what
-kernel is required for it to work.  However, this command gives the
-following output after I've set TLER:
+On 28/11/2021 20:15, John Stoffel wrote:
+>>>>>> "Wol" == Wol  <antlists@youngman.org.uk> writes:
+> 
+> Wol> Problem solved! My usual problem of missing the detail...
+> 
+> How was the problem solved?  Can you provide details on the before and
+> after setup?  It should be trivial to test with loop back devices.
+> 
+> Wol> I'd described starting with a 2-drive mirror and converting it to
+> Wol> a 3-drive raid-5. I was actually starting with a 2-active-1-spare
+> Wol> mirror ...
 
-# for drive in /dev/nvme?n? ; do nvme get-feature $drive -f 5 -H ; done
-get-feature:0x5 (Error Recovery), Current value:0x000046
-Deallocated or Unwritten Logical Block Error Enable (DULBE): Disabled
-Time Limited Error Recovery                          (TLER): 7000 ms
-get-feature:0x5 (Error Recovery), Current value:0x000046
-Deallocated or Unwritten Logical Block Error Enable (DULBE): Disabled
-Time Limited Error Recovery                          (TLER): 7000 ms
+So I converted it to raid-5, and because there were only two active 
+drives, it carried on running as a degraded two-drive raid-5.
 
-"Feature 5" (-f 5) is TLER.  "-H" gives human-readable output.  The
-nvme command doesn't seem to refer to features by any name, but just
-by their hex ID.  The values before I set them were all 0.  I have
-added this block to my /etc/rc.d/rc.local:
+Once I brought the spare into service with --raid-devices=3, it started 
+reshaping.
 
-# Force NVMe SSDs to play nice with MD
-for i in /dev/nvme?n? ; do
-    if nvme set-feature  $i -f 5 -v 70 > /dev/null ; then
-        echo -n $i " TLER successfully set "
-    else
-        echo -n $i " TLER NOT SET "
-    fi
-    smartctl -i $i | egrep "(Device Model|Product|Model Number):"
-    # The default is 256 for my NVMe drives
-    blockdev --setra 1024 $i
-done
+The website said to add the new drive and set raid-devices to three, I 
+misread my own stuff and thought simply converting to raid-5 would bring 
+in the spare.
+> 
+> So if you had removed the spare before hand, would it have jumped
+> straight to a three drive RAID 5 setup? 
 
-(NVMe devices don't seem to have an equivalent of
-/sys/block/sda/device/timeout.)
+No - because I didn't tell it to use all three drives.
 
-Some of the nvme commands seem to allow permanent setting, but TLER at
-least on my drives doesn't allow that.
+> And curious why you didn't
+> goto RAID6?  RAID5 just makes me nervous these days, I don't trust it
+> since drives tend to fail in waves.
 
-My spinning hard drives and my non-NVMe SSDs have a default read-ahead
-of 8192, so I commented out the blockdev command for those drives.  I
-assume the goal of that command is to INCREASE the read-ahead?
+Well, with two DVD drives and a floppy in an old chassis, I've only got 
+room for three drives. Well, there should be room for four, but my 
+drives are a bit too fat ... :-)
 
-Here are the versions of packages used:
+Plus (1) I've had no trouble so far with my drives (famous last words), 
+(2) the drives are two new Ironwolves and an old Barracuda so I'm only 
+likely to lose one so long as I keep an eye on things, and (3) all the 
+drives have dm-integrity on them, so a corrupt drive should sort itself out.
+> 
+> But in my home system, I also mostly just mirror (or even triple
+> mirror!) my important data for both speed and ease of recovery.
+> 
+The trouble with a plain mirror is if your data is corrupted ...
 
-# rpm -q nvme-cli kernel
-nvme-cli-1.14-3.el8.x86_64
-kernel-4.18.0-305.el8.x86_64
-kernel-4.18.0-305.7.1.el8_4.x86_64
-kernel-4.18.0-348.2.1.el8_5.x86_64
+And if you've got raid you need to keep an eye on it. I'm planning to 
+get an 8TB drive for backups ... probably configure it to snapshot once 
+a week (I'm running lvm over raid over dm-integrity) and then use rsync 
+to back up the volume over the network. Mind you I'm going to have to 
+learn a lot of rsync - configure client/server and then get it to back 
+up just the one file ...
 
-                        Eddie
+Cheers,
+Wol
+
+> Wol> On 28/11/2021 09:25, Wols Lists wrote:
+>>> Finally upgrading my system to raid-5 - two Seagate Ironwolves and a
+>>> Barracuda ... :-(
+>>>
+>>> As per my own advice, I added the third drive as a spare, then grew the
+>>> array to raid-5 in two separate commands.
+>>>
+>>> Trying to track what's going on, "cat /proc/mdstat" just shows two
+>>> drives as sync'ing. "mdadm --detail" shows two active drives and a spare.
+>>>
+>>> The drives are quite clearly working away - as I would expect.
+>>>
+>>> So. What I *think* is happening is that my mirror is upgrading to a
+>>> 2-disk raid-5, and when that's finished it will add the spare and
+>>> upgrade to a full 3-disk raid-5. Does that sound right?
+>>>
+>>> What I *hoped* would happen (and thought *should* happen) was that it
+>>> would spot the third drive, add it, and just resync straight away to
+>>> full raid-5.
+>>>
+>>> So at 7 or 8hrs per pass (3TB per drive) I'm now looking at my upgrade
+>>> taking about 15 hours. Whoops.
+>>>
+>>> So basically, does my scenario sound right? Would have explicitly
+>>> changing raid-devices to 3 at the same time as converting to raid-5
+>>> improved matters?
+>>>
+>>> Okay, I'm going to build a new raid-testing computer in the near future
+>>> so testing this sort of thing will be easy, but that is predicated on me
+>>> finding enough time without upsetting the wife ...
+>>>
+>>> Cheers,
+>>> Wol
