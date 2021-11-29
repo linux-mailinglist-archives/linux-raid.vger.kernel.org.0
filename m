@@ -2,60 +2,67 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E547460B80
-	for <lists+linux-raid@lfdr.de>; Mon, 29 Nov 2021 01:15:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B60A461AA5
+	for <lists+linux-raid@lfdr.de>; Mon, 29 Nov 2021 16:12:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359816AbhK2ASf (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 28 Nov 2021 19:18:35 -0500
-Received: from mail.vallenar.cl ([200.54.241.89]:39018 "EHLO mail.vallenar.cl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233716AbhK2AQd (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sun, 28 Nov 2021 19:16:33 -0500
-X-Greylist: delayed 20294 seconds by postgrey-1.27 at vger.kernel.org; Sun, 28 Nov 2021 19:16:30 EST
-Received: from localhost (localhost [127.0.0.1])
-        by mail.vallenar.cl (Postfix) with ESMTP id B6B9E1CC54D2;
-        Sun, 28 Nov 2021 12:29:34 -0300 (-03)
-Received: from mail.vallenar.cl ([127.0.0.1])
-        by localhost (mail.vallenar.cl [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id KoyW2nH7GhDD; Sun, 28 Nov 2021 12:29:34 -0300 (-03)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.vallenar.cl (Postfix) with ESMTP id 3122B1D06842;
-        Sun, 28 Nov 2021 11:45:20 -0300 (-03)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.vallenar.cl 3122B1D06842
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vallenar.cl;
-        s=EC098874-C7DE-11E7-B3B1-1A9A6030413E; t=1638110720;
-        bh=IQxUcKgLaEia+DMrVj9OEHbWOH8TffrzQMeZgAxYubI=;
-        h=MIME-Version:To:From:Date:Message-Id;
-        b=ZNBNFUZbmFa2MHgDVnqeLUNmN1jhvIoIkMHZTp8rDDfwo5mpNBsBVbO8RAJCiC7El
-         +VRB+SyXtRcilNrHQXQaPXnqwriKkMY96p2U9JdvT25Pvs30y1yC0idQP7feAgHN5C
-         510coTQH0yXzg/N7bnGVoeOODT5Bq+9YByGo+oB7uh3zNaT8MZoWKyls6hJSsulfKm
-         cY+YKvYAYXu9tmAGuln574ixcTAY/PY44NpBwFzV7BnN1KA3q0ALEHKkThQ+on5UML
-         Xti6+OBaIapzFEFuHoclzm2AFuLehO8hi0kLvqToLxvFHB2HkAyWBX6wCFV/7hgDMI
-         hu2+d/o+eTobg==
-X-Virus-Scanned: amavisd-new at vallenar.cl
-Received: from mail.vallenar.cl ([127.0.0.1])
-        by localhost (mail.vallenar.cl [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id Wnon1U2B1Kbm; Sun, 28 Nov 2021 11:45:19 -0300 (-03)
-Received: from [192.168.8.101] (unknown [105.0.3.102])
-        by mail.vallenar.cl (Postfix) with ESMTPSA id 756591D08C9F;
-        Sun, 28 Nov 2021 11:21:39 -0300 (-03)
-Content-Type: text/plain; charset="iso-8859-1"
+        id S241902AbhK2PPQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 29 Nov 2021 10:15:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236638AbhK2PNP (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 29 Nov 2021 10:13:15 -0500
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA45BC0613A5
+        for <linux-raid@vger.kernel.org>; Mon, 29 Nov 2021 05:33:00 -0800 (PST)
+Received: by mail-lf1-x144.google.com with SMTP id c32so44697252lfv.4
+        for <linux-raid@vger.kernel.org>; Mon, 29 Nov 2021 05:33:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=Z1mmgGZREih8gBVIcFcE3P5bdv+4dsBN+AoQgoOUZrM=;
+        b=mE37Z1sCNuU6BIXT+ZHMvcAAdzIBHFve4FLBGAWPN90uGVSwvUFWdG9512ASbgTfbc
+         7IMr7xm0LKIKIgiJc+bGnXzc4Y5iPCu7t6LOlTDOwROyz94HNsBwF8A3hssneMYtk4c9
+         7fntFMU/gm0NcXz3vFWL6SDq9mxpK0bIkG2Tw5OB+QAWdJfYRqW07ESSLKi3EtsS0VWu
+         hkmh5pe38GemFi+tuXYXod4bpfJv9owvbBdmayO4z525UvviXLUQG6T1fJORAnDu1X1C
+         8WBLH8m3tUN3MqH/gSZiSijLhVxzWLyX9CzOv7fnb2YKWBPHvPylOSVZzVobEvreo1pz
+         NxAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=Z1mmgGZREih8gBVIcFcE3P5bdv+4dsBN+AoQgoOUZrM=;
+        b=N+DcDSTQfYvv41S4j5WP3GRop51qvUDGo9Q4p1k7QrOQpc8PlqNGhioCxANNgISLYv
+         6UYfIAg91aLkuLPbE1YQRGsJdqBuS9GOgH0HKJkcf5GUhsaFlhD8a59tSkBaAa1gHfor
+         W0NdapW8vgjJ0Ca2ExCqRSlVzPJG7pFKo7ZY+8SRdGOG8jyW+2yRE+ix0BZnrd1QQPB6
+         G2hzEW0D9yw+ArpuuBI51PpfW+rIpPBmWwij0egQ5NJM3oUB9dNNrGfF5MZKuG3AwJam
+         X5OLoONXBybYi59LmjLXe5hrzM8CBXDzXwAWOdH4GYIJWMfkUCIMQx24k4iGfuJDZsw2
+         LMag==
+X-Gm-Message-State: AOAM530N9sb2Tqmy3d/wcUoNPdm0492JGDL3LK/pxZ6DQVBqnjiA6yNl
+        lZR4s4wcJAL/dfDqS0SuMz2RA9kd2A8Xh5kJ8jI=
+X-Google-Smtp-Source: ABdhPJyVfYcst9ICBfafPrvxQ/9jWaKXuAqXqnW0sUtSBb7+M5yzaFB2HNGOmx2B0bhm7A/F+JReziwAfO11qSDkVyo=
+X-Received: by 2002:a19:3817:: with SMTP id f23mr47493773lfa.656.1638192779111;
+ Mon, 29 Nov 2021 05:32:59 -0800 (PST)
 MIME-Version: 1.0
+Received: by 2002:ac2:4e06:0:0:0:0:0 with HTTP; Mon, 29 Nov 2021 05:32:58
+ -0800 (PST)
+Reply-To: c6715203@gmail.com
+From:   Maria-Elisabeth Schaeffler <dp713192@gmail.com>
+Date:   Mon, 29 Nov 2021 16:32:58 +0300
+Message-ID: <CAP=NxAVgh6RyCcHwuJT3xMCYBGJw8TB2Zy=DgGcf=nWX9SmzeA@mail.gmail.com>
+Subject: Spende
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: 2.000.000,00. Euro
-To:     Recipients <yperez@vallenar.cl>
-From:   "manuel franco" <yperez@vallenar.cl>
-Date:   Sun, 28 Nov 2021 16:29:09 +0200
-Reply-To: manuelfrancospende00@gmail.com
-Message-Id: <20211128142139.756591D08C9F@mail.vallenar.cl>
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Sie haben eine Spende von 2.000.000,00. Euro
+--=20
+Hi,
+Ihre Spende in H=C3=B6he von 1.500.000,00 Euro von Maria-Frau Elisabeth
+Schaeffler steht Ihnen weiterhin zur Verf=C3=BCgung. kontaktieren Sie mich
+f=C3=BCr weitere Informationen.
 
-Mein Name ist Manuel Franco aus den Vereinigten Staaten.
-Ich habe die Amerika-Lotterie im Wert von 768 Millionen US-Dollar gewonnen =
-und spende einen Teil davon an nur 5 gl=FCckliche Menschen und ein paar Wai=
-senh=E4user als Wohlwollen f=FCr die Menschheit.
+Mit freundlichen Gr=C3=BC=C3=9Fen
+Frau Maria-Elisabeth Schaeffler
