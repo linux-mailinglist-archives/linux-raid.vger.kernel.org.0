@@ -2,77 +2,88 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7928B464CB7
-	for <lists+linux-raid@lfdr.de>; Wed,  1 Dec 2021 12:34:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EDCF464F2C
+	for <lists+linux-raid@lfdr.de>; Wed,  1 Dec 2021 14:52:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348959AbhLALhZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 1 Dec 2021 06:37:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33422 "EHLO
+        id S1349659AbhLAN4H (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 1 Dec 2021 08:56:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348924AbhLALhY (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 1 Dec 2021 06:37:24 -0500
-Received: from mail-ua1-x931.google.com (mail-ua1-x931.google.com [IPv6:2607:f8b0:4864:20::931])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F364BC06174A
-        for <linux-raid@vger.kernel.org>; Wed,  1 Dec 2021 03:33:59 -0800 (PST)
-Received: by mail-ua1-x931.google.com with SMTP id j14so48059739uan.10
-        for <linux-raid@vger.kernel.org>; Wed, 01 Dec 2021 03:33:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=l4J9Z+m4hmgZbWtQHlC70w1zjUmiI7wjClCwm6dHAnY=;
-        b=nKE9e+4jEQRb21OhoYPSbxPLfJ2IuSmNXU0U6wmcP4ykCacrWpdbtE0jjuz/hSLLGi
-         3CHjeG+lFmWzoULwCsmlhVFgDEk5dLFaYb51pw7bXGjZ9H8t0j91dP9aL17MRQYkMPZK
-         Snvty/Yp8/ZrWZr2EuFXHqBxUdbU8X39ik45viERJ1Dn7qW8BPCFp2vlafV2okU0kn5j
-         QPTIDY8QJSy8zAVbK10d6+AY0lky+mrQRAAg0uS1DacQStzD/dQtt/uBz/RlGIdZCai/
-         BHep24kmiLdl1nvBvHYMFonu8NoJvJlErv7lbZlg2+2c277BpkzmDA4WwPZoxzlIf0Mh
-         Af5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=l4J9Z+m4hmgZbWtQHlC70w1zjUmiI7wjClCwm6dHAnY=;
-        b=qwsaWpqbWYZXnnXD/RCnbURjVf2S1mQsQlyZ5k1jxbu+IFAQof5D9CvgjOyKGcnvz0
-         RlobpHZQ+fjdaHUvsBbGNYNk6fXfXO5Ge9n2oXfW5g17wfaVazspwD+7r1DEldBLrXqd
-         +n6zmpmHIOqJbmRAKD4hYtA7pR4bFekFirA2OrQBYJJZt3DS0Z7b+mEMH9raWl71SatY
-         cEtXoUb72ikkOUuEJlWLX0ZwqRMr7UwSZqsfyLp4BxGNAvsHZ1Qf55Y6yy/zylXfulfN
-         uz7S3CrHSpqIRuAIyTgn6yA1Dg+lur5uIeCBV6OvVtKiq3iwlk4fKDqiebnD3cesMIY0
-         v/5A==
-X-Gm-Message-State: AOAM533AXlSnhCimGR5H6AvZZvNVa/S5ZfoavM7/w9cH7s0zEHQJSx20
-        k7cGljrGtQ57j1k5VnevNK318ZqkmpAoZ+5IK4I=
-X-Google-Smtp-Source: ABdhPJwK+H50pzFgfv5CJPfAwBzUdMqIKHh+Ckkuju2lG2knVlJrzqINPiiwPjc/Uz6xuSJez7Fkn5YZPcfa5CPpvro=
-X-Received: by 2002:a67:ef4d:: with SMTP id k13mr6266305vsr.4.1638358439020;
- Wed, 01 Dec 2021 03:33:59 -0800 (PST)
+        with ESMTP id S1349862AbhLANx6 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 1 Dec 2021 08:53:58 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9C72C0613F1;
+        Wed,  1 Dec 2021 05:50:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=daZqRcrqtRClKybfSmASggxYvpXjW9Q3L8ymYPZL+Rs=; b=3xvQYJuhYFIoGUFLzN8TNO/Wht
+        lc5sv2rA/kqj099GIBu8PgaiA1MmDgezzWxVAI7XLokAUhwMcM/NYT5UAS2/2n0mqUV4K/ehHeHjo
+        ez8cj3ZkjxarMnlPrNrweqdB4HCb9ROTrPBc6zw2eEohgEr3Fw9/tANXC8mHOnDNyfYem6o1Z3lGh
+        Pjc7r/GcAaPVFdPPAS841jOUxlkwFY0lKoh/zD+joWA9OdiAwMc4qPzLYdHpQaL77iQv3qwWxuV7d
+        ru8xneZkGRxbUXpJ0ZPItDzLcOURsokQj5Lhk1LWb49qBTGylhR4fAiyjTYk63cwJzxmUzC6QSXx/
+        daPpBajg==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1msQ0F-008tpW-0x; Wed, 01 Dec 2021 13:50:31 +0000
+Date:   Wed, 1 Dec 2021 05:50:30 -0800
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Li Jinlin <lijinlin3@huawei.com>
+Cc:     song@kernel.org, axboe@kernel.dk, hare@suse.de, jack@suse.cz,
+        ming.lei@redhat.com, tj@kernel.org, linux-raid@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linfeilong@huawei.com
+Subject: Re: [PATCH] md: Fix unexpected behaviour in is_mddev_idle
+Message-ID: <Yad9phRUdKF/giGD@bombadil.infradead.org>
+References: <20211201032712.3684503-1-lijinlin3@huawei.com>
 MIME-Version: 1.0
-Sender: unitednationawardwinner@gmail.com
-Received: by 2002:ab0:6c55:0:0:0:0:0 with HTTP; Wed, 1 Dec 2021 03:33:58 -0800 (PST)
-From:   "Mrs. Orgil Baatar" <mrs.orgilbaatar21@gmail.com>
-Date:   Wed, 1 Dec 2021 03:33:58 -0800
-X-Google-Sender-Auth: uTQ_nfkzXaWGWaTWp1BSFqK3Ucs
-Message-ID: <CAJ4dHaSrD-X=xpfKNZV-hXSiMV6mNYrgy5vWCNkKm6iu5RQStg@mail.gmail.com>
-Subject: Your long awaited part payment of $2.5.000.00Usd
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211201032712.3684503-1-lijinlin3@huawei.com>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Attention: Beneficiary, Your long awaited part payment of
-$2.5.000.00Usd (TWO MILLION FIVE Hundred Thousand United State
-Dollars) is ready for immediate release to you, and it was
-electronically credited into an ATM Visa Card for easy delivery.
+On Wed, Dec 01, 2021 at 11:27:12AM +0800, Li Jinlin wrote:
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 5111ed966947..f47035838c43 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -8429,14 +8429,14 @@ static int is_mddev_idle(struct mddev *mddev, int init)
+>  {
+>  	struct md_rdev *rdev;
+>  	int idle;
+> -	int curr_events;
+> +	long curr_events;
 
-Your new Payment Reference No.- 6363836,
-Pin Code No: 1787
-Your Certificate of Merit Payment No: 05872,
+>  
+>  	idle = 1;
+>  	rcu_read_lock();
+>  	rdev_for_each_rcu(rdev, mddev) {
+>  		struct gendisk *disk = rdev->bdev->bd_disk;
+> -		curr_events = (int)part_stat_read_accum(disk->part0, sectors) -
+> -			      atomic_read(&disk->sync_io);
+> +		curr_events = (long)part_stat_read_accum(disk->part0, sectors) -
+> +			      atomic64_read(&disk->sync_io);
 
-Your Names: |
-Address: |
+And what makes you believe you might not have to go and change all other
+drivers to address this as well?
 
-Person to Contact:MR KELLY HALL the Director of the International
-Audit unit ATM Payment Center,
+>  static inline void md_sync_acct_bio(struct bio *bio, unsigned long nr_sectors)
+> diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+> index 74c410263113..efa7884de11b 100644
+> --- a/include/linux/genhd.h
+> +++ b/include/linux/genhd.h
+> @@ -150,7 +150,7 @@ struct gendisk {
+>  	struct list_head slave_bdevs;
+>  #endif
+>  	struct timer_rand_state *random;
+> -	atomic_t sync_io;		/* RAID */
+> +	atomic64_t sync_io;		/* RAID */
+>  	struct disk_events *ev;
+>  #ifdef  CONFIG_BLK_DEV_INTEGRITY
+>  	struct kobject integrity_kobj;
+> -- 
+> 2.31.1
 
-Email: uba-bf@e-ubabf.com
-TELEPHONE: +226 64865611 You can whatsApp the bank
-
-Regards.
-Mrs ORGIL BAATAR
+  Luis
