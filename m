@@ -2,114 +2,77 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA999467D4A
-	for <lists+linux-raid@lfdr.de>; Fri,  3 Dec 2021 19:30:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 82FBB468630
+	for <lists+linux-raid@lfdr.de>; Sat,  4 Dec 2021 17:27:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234958AbhLCSeL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 3 Dec 2021 13:34:11 -0500
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:59531 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231857AbhLCSeL (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 3 Dec 2021 13:34:11 -0500
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id C13835C044D
-        for <linux-raid@vger.kernel.org>; Fri,  3 Dec 2021 13:30:46 -0500 (EST)
-Received: from imap47 ([10.202.2.97])
-  by compute6.internal (MEProxy); Fri, 03 Dec 2021 13:30:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.fm; h=
-        mime-version:message-id:in-reply-to:references:date:from:to
-        :subject:content-type; s=fm1; bh=hg4OahYr0Ft4WPN+eBw/cGDrUC37eJy
-        lGoL926GDLyk=; b=Vdq4MVLQ9h4C5XN+8M9y9RtsaTNuyIhY5brnsha25Q/B/Of
-        A52GKKx5unqOYkUsekVb8K5jCkifb1gLDme7v8bAjSoY8cR97MTm5WDdS/Vj9Igd
-        UpzkkPNkwhZoQepBBqh/UwGRbtjekezku+xpTQ21aacdiLcsDTpTJOQFQiZEwhbi
-        k8O23Nwlk4ep0VGUWbgr9hqbbotTmoMAm7KCd+VcoHVQ9wj6G2jTUe8wgqMtwRYZ
-        drci9LKrxMEFkIhDNiqaWVH9N26IxFFuQcuMmihC8oIp3KCrybiWkK/R1yMpFoaQ
-        Os5PBHKEJrpHcW8Z2bGaAE+30o440w8TCrX/ugg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=hg4Oah
-        Yr0Ft4WPN+eBw/cGDrUC37eJylGoL926GDLyk=; b=AznFNdPosIZ+gh3b7FrZPW
-        /oMea7aX3tdka4jrnL+pe+G76znixI+LTKTHfpWE/23G3ct925lxlhy7CALFdUCj
-        kDMsPu5NZdP2+ss/pOmRRDOhYmhLWt6ZR8a5Cy9KY3N1w/xsPnsm5Aw9CFBIueyW
-        iPzHiE/jQQ2Q0eg8TxkJZ2gWnIXeoYHU2PaqjEDLMvtjeM5KtJ44/PG/F6jgGgWP
-        S9Q5ulIiuHxs69W4r5Xe/TpER+0aVAJHysJVWKIqlBO8LPiZRq0XLQ4z8TCv65sN
-        KgT2VFuMHmq6iRF4Xl6b3/EGfWqiaCkot/8u9HEwTrwHpVpCHf/BJuIkEyr1wDMg
-        ==
-X-ME-Sender: <xms:VmKqYe5ogHRtafjym0UClFZAlOla04H3bIVLRhBuEEXDRD_i03WYyw>
-    <xme:VmKqYX6dUGAF4a8ZErHNA82rw_LiSspCultEnVMkHaR7MjWOashAhtSUxrNAeMMAh
-    FHPF_k2vz4W31d2>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvuddrieejgdduudeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefofgggkfgjfhffhffvufgtsehttd
-    ertderredtnecuhfhrohhmpehlihhsthihsehfrghsthhmrghilhdrfhhmnecuggftrfgr
-    thhtvghrnhepgfevjeevhfefvefhfeeiieehkeduvdfgudduhfehudetheelffffgfffgf
-    duiefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhep
-    lhhishhthiesfhgrshhtmhgrihhlrdhfmh
-X-ME-Proxy: <xmx:VmKqYdeaWtuFEVZOJ9UR_PNM91u4T2bxpyC1VsRmVedVCnD9es06dA>
-    <xmx:VmKqYbKDyEHPuM0Ll_vrJNaJQweRU1e5ULOxGknxI6DpjpHdyOGMJw>
-    <xmx:VmKqYSLDDSncwtARbUL4C39GW_nRicG6ujaYcljHZ-1fA75MaQBcWQ>
-    <xmx:VmKqYXXDb06O6kZJL1I-SeMccKQi-bPy8AAZ_LVgWKCobEdxcGWMpg>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 89C9827407E5; Fri,  3 Dec 2021 13:30:46 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.5.0-alpha0-4458-g51a91c06b2-fm-20211130.004-g51a91c06
-Mime-Version: 1.0
-Message-Id: <0b869e69-56ae-4eea-8951-bb3b6c5770dd@www.fastmail.com>
-In-Reply-To: <0b763738-8c4a-f960-7e3e-6c94a04ac519@eyal.emu.id.au>
-References: <7be1c467-c2c2-5f90-dc1c-f1c443954f03@mattyo.net>
- <0b763738-8c4a-f960-7e3e-6c94a04ac519@eyal.emu.id.au>
-Date:   Fri, 03 Dec 2021 13:30:16 -0500
-From:   listy@fastmail.fm
-To:     linux-raid@vger.kernel.org
-Subject: Re: Help ironing out persistent mismatches on raid6
-Content-Type: text/plain
+        id S1355239AbhLDQas (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 4 Dec 2021 11:30:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59720 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1355234AbhLDQar (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 4 Dec 2021 11:30:47 -0500
+Received: from mail-qv1-xf2d.google.com (mail-qv1-xf2d.google.com [IPv6:2607:f8b0:4864:20::f2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4664AC061354
+        for <linux-raid@vger.kernel.org>; Sat,  4 Dec 2021 08:27:22 -0800 (PST)
+Received: by mail-qv1-xf2d.google.com with SMTP id i12so5872827qvh.11
+        for <linux-raid@vger.kernel.org>; Sat, 04 Dec 2021 08:27:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=7Z4bIWUJcNwasnOvZT//wASf4/xDxe1Cc4BxfIfuhGs=;
+        b=CylHewW3ulQQFmv/P9CJWB0j1vwlBSfb9y/skh8Kj06fo+qyupUCD1XiCFX+vzgRsN
+         lFSgtw4EB93shNB4RkpqHvvVlC3pzVpDIDjjy3zR9hYAFBJdOI6kSTwIbaR/LbcTbogd
+         OibrZtbC7cCOhftBaH30VP0h3C05ERkyCj/9yT9SyF97P1ZRPsHZSxNRzvj525u0E9Xb
+         roynZIoW57i3J1Ohdy+fC3EwLlxeO8c+Zt/mF0AUznBKIX/iCSMpFqG2eKlU29S/dsRR
+         MU2qqzo/caxLVI2VurD1GZR68gd4kSQ/cPbMTldsJDGR02rLUIY6E2/d6YQlPwB4YUTe
+         3h+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=7Z4bIWUJcNwasnOvZT//wASf4/xDxe1Cc4BxfIfuhGs=;
+        b=7rpXAdtRNQ+bPIWsU9pw76IVKGSZE+VZu7CIGrtTkMzs8k3je9NKJBCEVFxHHXySir
+         0HTx8NALpjew6Qnykkq60qSYt3qeoB/DEHJsR+11rdVGSjKqZ6ZCOhAowp9ojKD+if1G
+         f4H8Ove1hRHIOfVpeUGr6Oy8wuWU17/sirMPoywG/iw8SbqIwibxeH2W1XQhtRnp+66s
+         pPTnVTGthkUPPZTlr5twethaHL04KLq8HMQFXyFJbbeGGWSe3HFeYfzeGcHeYCJYdX0E
+         OgfhA+E6cJNpAwOGncGoy/a2G9xvv1gdcl8KX/Ds6TKKVtONEMW5cXlpLGNQxkVjBW3f
+         d6VQ==
+X-Gm-Message-State: AOAM531ah2rvigAv5gH3Fd+xWQYu+U0rlcEkPa6LcV/l6s7mn3it6K0V
+        IQZPBtgd0WPKURkA3oSNx70kOe/8GcftnUBm8SE=
+X-Google-Smtp-Source: ABdhPJwloyMxrKJlmw+KjbR1T1OX6399f+8oxNhjm0SzAgPHapZSB1oFeD7KSNSt/Vj0seuLGqnafDNaeriuAgi7yVc=
+X-Received: by 2002:ad4:5e8b:: with SMTP id jl11mr26361023qvb.18.1638635241182;
+ Sat, 04 Dec 2021 08:27:21 -0800 (PST)
+MIME-Version: 1.0
+Received: by 2002:a05:6214:2601:0:0:0:0 with HTTP; Sat, 4 Dec 2021 08:27:20
+ -0800 (PST)
+Reply-To: mohammedshamekh24@gmail.com
+From:   Mrmohammed shamekh <sheratonhotels.international@gmail.com>
+Date:   Sat, 4 Dec 2021 08:27:20 -0800
+Message-ID: <CALVFVBeP93vNd=VmMKYwRh-OQxYcrfjH-o8d1m5gWtpELyScxw@mail.gmail.com>
+Subject: THE AMOUNT IS 27.5 MILLIOMS USD
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu, Dec 2, 2021, at 18:33, Eyal Lebedinsky wrote:
-> I use debugfs to do this. Knowing each fs block range (lo hi) 
-> calculated from the raid mismatch notice:
->
-> I first identify the relevant blocks in each reported range with
-> 	debugfs -R "testb $lo $((hi-lo))" $device
-> then locate the associated inodes with
-> 	debugfs -R "icheck $list" $device
-> and finally discover files in these locations with
-> 	debugfs -R "ncheck $inode" $device
-
-
-Thank you very much... this is exactly what I was looking for and it worked brilliantly. For posterity,  here's a summary of the process in my case.  First I converted the md sector numbers to ext4 block numbers:
-2742891144 * 512 / 4096 + 0 =  342861393 
-And md also told me the mismatches basically covered 5 4KiB contiguous blocks.  So...
- 
-   debugfs -R "testb 342861393 5" /dev/md1
-
-told me all 5 blocks were in use.  Then using all 5 block numbers...
-
-   debugfs -R "icheck 342861393 342861394 342861395 342861396 342861397" /dev/md1
-
-gave me a single inode number. Then...
-
-   debugfs -R "ncheck 299893552" /dev/md1
-
-gave me the filename (e.g.)  /videos/00001.MTS         Then...
-
-cp -a /videos/00001.MTS   /tmp  && rm /videos/00001.MTS ;  debugfs -R "testb 342861393 5" /dev/md1
-
-resulted in those same 5 blocks now *not* being in use.    Then
-
-   echo 2742891144 > /sys/block/md1/md/sync_min
-   echo 2743074816 > /sys/block/md1/md/sync_max   # rounded up to next 512KiB chunk
-   echo repair > /sys/block/md1/md/sync_action
-   cat /sys/block/md1/md/sync_completed
-   # only took a couple seconds
-   echo idle > /sys/block/md1/md/sync_action
-   mv /tmp/00001.MTS  /videos
-
-I was surprised that while I was hitting those sectors, md did not report the mismatches.  And I worried that maybe I calculated the wrong blocks.  But then I did a check of the entire array overnight, and there were no mismatches reported, for the first time in a year or two of weeks.  So I guess it worked.  I actully am still a bit confused on when md components are dealing in bytes, sectors or chunks, but in this case it worked out.
-
-Anyway, thank you, Eyal!!
-
--Matt
+RGVhcsKgRnJpZW5kLA0KDQpHcmVldGluZ3MuDQoNCkhvd8KgYXJlwqB5b3XCoGRvaW5nwqB0b2Rh
+ecKgacKgaG9wZcKgZmluZT8NCg0KScKgY2FtZcKgYWNyb3NzwqB5b3VywqBlLW1haWzCoGNvbnRh
+Y3TCoHByaW9ywqBhwqBwcml2YXRlwqBzZWFyY2jCoHdoaWxlwqBpbsKgbmVlZA0Kb2bCoHlvdXLC
+oGFzc2lzdGFuY2UuwqBNecKgbmFtZcKgIE1yICBtb2hhbW1lZCAgIHNoYW1la2ggIOKAmcKgScKg
+d29ya8Kgd2l0aMKgdGhlDQpkZXBhcnRtZW50wqBvZsKgQXVkaXTCoGFuZMKgYWNjb3VudGluZ8Kg
+bWFuYWdlcsKgaGVyZcKgaW7CoFVCQcKgQmFua8Kgb2bCoEFmcmljYSwNClRoZXJlwqBpc8KgdGhp
+c8KgZnVuZMKgdGhhdMKgd2FzwqBrZWVwwqBpbsKgbXnCoGN1c3RvZHnCoHllYXJzwqBhZ2/CoGFu
+ZMKgScKgbmVlZA0KeW91csKgYXNzaXN0YW5jZcKgZm9ywqB0aGXCoHRyYW5zZmVycmluZ8Kgb2bC
+oHRoaXPCoGZ1bmTCoHRvwqB5b3VywqBiYW5rwqBhY2NvdW50DQpmb3LCoGJvdGjCoG9mwqB1c8Kg
+YmVuZWZpdMKgZm9ywqBsaWZlwqB0aW1lwqBpbnZlc3RtZW50wqBhbmTCoHRoZcKgYW1vdW50wqBp
+c8KgKFVTDQokMjcsNTAwLsKgTWlsbGlvbsKgRG9sbGFycykuDQoNCknCoGhhdmXCoGV2ZXJ5wqBp
+bnF1aXJ5wqBkZXRhaWxzwqB0b8KgbWFrZcKgdGhlwqBiYW5rwqBiZWxpZXZlwqB5b3XCoGFuZMKg
+cmVsZWFzZQ0KdGhlwqBmdW5kwqB0b8KgeW91csKgYmFua8KgYWNjb3VudMKgaW7CoHdpdGhpbsKg
+N8KgYmFua2luZ8Kgd29ya2luZ8KgZGF5c8Kgd2l0aA0KeW91csKgZnVsbMKgY28tb3BlcmF0aW9u
+wqB3aXRowqBtZcKgYWZ0ZXLCoHN1Y2Nlc3PCoE5vdGXCoDUwJcKgZm9ywqB5b3XCoHdoaWxlDQo1
+MCXCoGZvcsKgbWXCoGFmdGVywqBzdWNjZXNzwqBvZsKgdGhlwqB0cmFuc2ZlcsKgb2bCoHRoZcKg
+ZnVuZHPCoHRvwqB5b3VywqBiYW5rDQphY2NvdW50wqBva2F5Lg0KDQpXQUlUSU5HwqBUT8KgSEVB
+UsKgRlJPTcKgWU9VLg0KVEhBTktTLg0KDQogTXIgIG1vaGFtbWVkICAgc2hhbWVraCAsDQo=
