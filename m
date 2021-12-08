@@ -2,92 +2,127 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 10A6D46CC16
-	for <lists+linux-raid@lfdr.de>; Wed,  8 Dec 2021 05:13:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 540A846D569
+	for <lists+linux-raid@lfdr.de>; Wed,  8 Dec 2021 15:16:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240929AbhLHERB (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 7 Dec 2021 23:17:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41424 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244173AbhLHEQv (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 7 Dec 2021 23:16:51 -0500
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DC61C061A72
-        for <linux-raid@vger.kernel.org>; Tue,  7 Dec 2021 20:13:20 -0800 (PST)
-Received: by mail-il1-x143.google.com with SMTP id l5so1057189ilv.7
-        for <linux-raid@vger.kernel.org>; Tue, 07 Dec 2021 20:13:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=w0n14T57zPuvlg1YaFYy3gRfrUPFN1bDHGIrct+fXgc=;
-        b=IhzYOc5TV5tRY8NA+oRQO6aAhcoLWjmDIiGp+agW0PuwWFWsW07ntJsVzV38I0OHqC
-         EzpNMp4ySTsTiHWjcoES1pDWfQa3hzEmTAjGEQsGKU00LGNUDJTNHWI4LldEus+S1mKT
-         dko5ukALMgi8bh7atGVs0Rt/fX7KXpplv23WbLhFzP1TfY2PPXBqFY9j53j/esPLibRX
-         1XRHyOwTiT/4tG9WZ3q4H7N/dOnVkB10wmKDHGYmk9qWEUW5JWqpdoVu6C7jO8de13Mw
-         Z0SLBzksJKYbu7/KIOlWOhfXUDnmMk6QWiigAfQd89OMRAg6NTmeD6n5AJpihkslyYUP
-         nSKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=w0n14T57zPuvlg1YaFYy3gRfrUPFN1bDHGIrct+fXgc=;
-        b=q+hB19P3jK+8GN3T0Yz3G+ESTsqKK4YfymJ/XN1CLtl0tX6IrP+SP7uHDjjRM9AC6D
-         4cWG1DT7Ma1wr3s/8FkMvhViU2uutkrv4KX2vJfgEWohxRTmRLk+PZJbVI8MbvSf5Fpb
-         gQeoJkhMRVzmC8bRqdcTwTN9mLntJYdP1NIY0pQ+UsJ1wUHCI+Rm7gNfkPE6OECuFWKW
-         jXTKZGq9hzke0rWFtXoH8/JYZ5l9QGhbdpawjyhjHltt8wLMr6Dfgn37XJqZwVrF9Ldj
-         rVa7drKx4UiNAgfaceLVzTsTHSKeCIPUXtyDnmfCTTlukLoIuDrjhyR+ZhGHBFnbNiCq
-         7mQg==
-X-Gm-Message-State: AOAM531OEdOReqiYdZ5eUj8zu+VLPleRidag7To7tvp5ik75j9hltG8c
-        PDS4X+CTAAgz9uikElNwYzChJEiMe75EwI5043s=
-X-Google-Smtp-Source: ABdhPJyRa63HXlstQIFzLUqJGv8AYgt9EsJ312gy8TgYauJosfme9E4HgsWb4N3jUnNwnaOH3Nf1ZFtOzW3RJg9WBQw=
-X-Received: by 2002:a92:cdac:: with SMTP id g12mr3699225ild.204.1638936799717;
- Tue, 07 Dec 2021 20:13:19 -0800 (PST)
+        id S231815AbhLHOT6 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 8 Dec 2021 09:19:58 -0500
+Received: from out0.migadu.com ([94.23.1.103]:10960 "EHLO out0.migadu.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233375AbhLHOT6 (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 8 Dec 2021 09:19:58 -0500
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1638972981;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HBDxlLmhIcClgdgclfmBhbzS+yPLXMqj2SXtgQ9pG+w=;
+        b=ceIiYTKic4VVQoRFFYQwFQAIMEL6VMt0B2YRl/UAqm7jqcnQKERhB7QzsHaiPxtuMsLG+U
+        KOd7rBhukqYBoI4I4VUgwprb1kyBOqcl3j2jzecwwRhAFvFWAQVEXvzbDrIfQgk891HDSi
+        2bEKF+8yXTkeXgE496Y/1fST95n6bWc=
+From:   Guoqing Jiang <guoqing.jiang@linux.dev>
+Subject: Re: [PATCH V2] md: don't unregister sync_thread with reconfig_mutex
+ held
+To:     Paul Menzel <pmenzel@molgen.mpg.de>, Song Liu <song@kernel.org>,
+        Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>, heinzm@redhat.com,
+        jbrassow@redhat.com
+Cc:     linux-raid <linux-raid@vger.kernel.org>, dm-devel@redhat.com,
+        Donald Buczek <buczek@molgen.mpg.de>, it+raid@molgen.mpg.de
+References: <1613177399-22024-1-git-send-email-guoqing.jiang@cloud.ionos.com>
+ <36a660ed-b995-839e-ac82-dc4ca25ccb8a@molgen.mpg.de>
+ <CAPhsuW5s6fk3kua=9Z9o3VPCcN1wdUqXybXm9cp4arJW5+oBvQ@mail.gmail.com>
+ <9f28f6e2-e46a-bfed-09d8-2fec941ea881@cloud.ionos.com>
+ <CAPhsuW4V8JCCKePj11rf3zo4MJTz6TpW6DDeNmcJBfRSoN+NDA@mail.gmail.com>
+ <a3a1fed7-b886-8603-aa20-20d667a837a7@molgen.mpg.de>
+ <3f2ad763-6fcb-a652-7131-9e20135a1405@molgen.mpg.de>
+Message-ID: <abe73176-03ca-9305-2005-677edc6ef158@linux.dev>
+Date:   Wed, 8 Dec 2021 22:16:16 +0800
 MIME-Version: 1.0
-Received: by 2002:a05:6e02:1a07:0:0:0:0 with HTTP; Tue, 7 Dec 2021 20:13:19
- -0800 (PST)
-Reply-To: dj0015639@gmail.com
-From:   David Jackson <enkenpaul@gmail.com>
-Date:   Wed, 8 Dec 2021 05:13:19 +0100
-Message-ID: <CAG7-cQ-YcFp0byqpLCXPRy0-4+-Zq7hzZMz6DzM5KzsbksYgog@mail.gmail.com>
-Subject: FEDERAL BUREAU OF INVESTIGATION
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3f2ad763-6fcb-a652-7131-9e20135a1405@molgen.mpg.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Migadu-Flow: FLOW_OUT
+X-Migadu-Auth-User: linux.dev
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Our Ref: RTB /SNT/STB
-To: Beneficiary
 
-This is FBI special agents, David Jackson. I was delegated along side
-others by the United Nations to investigate scammers who has been in
-the business of swindling foreigners especially those that has one
-form of transaction/contracts and another. Please be informed that in
-the course of our investigation, we detected that your name and
-details in our Scammed Monitoring Network. We also found out that you
-were scammed of a huge sum of money by scammers via Western union and
-MoneyGram. Be informed here that in a bid to alleviate the suffering
-of scammed victims, the United Nations initiated this compensation
-program and therefore, you are entitled to the sum of Five Million Two
-Hundred Thousand United States Dollars ($5,200,000.00 USD) for being a
-victim.
 
-Note that the said fund will be transfer to you via the Citibank being
-the paying bank mandated by the United Nations officials.
+On 12/1/21 1:27 AM, Paul Menzel wrote:
+>
+>>>>>>> diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
+>>>>>>> index cab12b2..0c4cbba 100644
+>>>>>>> --- a/drivers/md/dm-raid.c
+>>>>>>> +++ b/drivers/md/dm-raid.c
+>>>>>>> @@ -3668,7 +3668,7 @@ static int raid_message(struct dm_target 
+>>>>>>> *ti, unsigned int argc, char **argv,
+>>>>>>>         if (!strcasecmp(argv[0], "idle") || !strcasecmp(argv[0], 
+>>>>>>> "frozen")) {
+>>>>>>>                 if (mddev->sync_thread) {
+>>>>>>>                         set_bit(MD_RECOVERY_INTR, 
+>>>>>>> &mddev->recovery);
+>>>>>>> -                     md_reap_sync_thread(mddev);
+>>>>>>> +                     md_reap_sync_thread(mddev, false);
+>>>>>
+>>>>> I think we can add mddev_lock() and mddev_unlock() here and then 
+>>>>> we don't
+>>>>> need the extra parameter?
+>>>>
+>>>> I thought it too, but I would prefer get the input from DM people 
+>>>> first.
+>>>>
+>>>> @ Mike or Alasdair
+>>>
+>>> Hi Mike and Alasdair,
+>>>
+>>> Could you please comment on this option: adding mddev_lock() and 
+>>> mddev_unlock()
+>>> to raid_message() around md_reap_sync_thread()?
 
-However, we have to inform you that we have been able to arrest some
-of the swindlers who has been in this illicit business and will all be
-prosecuted accordingly. Be informed as well that we have limited time
-to stay back here, so we will advice that you urgently respond to this
-message ASAP. And do not inform any of the people that collected money
-from you before now about this new development to avoid jeopardizing
-our investigation. All you need to do is to follow our instruction and
-receive your compensation accordingly as directed by the United
-Nations.
+Add Heinz and Jonathan, could you comment about this? Thanks.
 
-We urgently wait to receive your response.
+>>
+>> The issue is unfortunately still unresolved (at least Linux 5.10.82). 
+>> How can we move forward?
 
-Regards,
-DAVID JACKSON
-FEDERAL BUREAU OF INVESTIGATION
-INVESTIGATION ON ALL ONLINE WIRE TRANSFER
+If it is not applicable to change dm-raid, another alternative could be 
+like this
+
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -9409,8 +9409,12 @@ void md_reap_sync_thread(struct mdev *mddev)
+         sector_t old_dev_sectors = mddev->dev_sectors;
+         bool is_reshaped = false;
+
++       if (mddev_is_locked(mddev))
++               mddev_unlock(mddev);
+         /* resync has finished, collect result */
+         md_unregister_thread(&mddev->sync_thread);
++       if (mddev_is_locked(mddev))
++               mddev_lock(mddev);
+         if (!test_bit(MD_RECOVERY_INTR, &mddev->recovery) &&
+             !test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery) &&
+             mddev->degraded != mddev->raid_disks) {
+diff --git a/drivers/md/md.h b/drivers/md/md.h
+index 53ea7a6961de..96a88b7681d6 100644
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -549,6 +549,11 @@ static inline int mddev_trylock(struct mddev *mddev)
+  }
+  extern void mddev_unlock(struct mddev *mddev);
+
++static inline int mddev_is_locked(struct mddev *mddev)
++{
++       return mutex_is_locked(&mddev->reconfig_mutex);
++}
++
+
+BTW, it is holiday season,  so people are probably on vacation.
+
+Thanks,
+Guoqing
