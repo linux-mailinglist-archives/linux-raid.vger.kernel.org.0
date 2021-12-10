@@ -2,294 +2,188 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E974246FDC7
-	for <lists+linux-raid@lfdr.de>; Fri, 10 Dec 2021 10:31:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E08DD47005E
+	for <lists+linux-raid@lfdr.de>; Fri, 10 Dec 2021 12:57:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239410AbhLJJfR (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 10 Dec 2021 04:35:17 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:32310 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234263AbhLJJfQ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>);
-        Fri, 10 Dec 2021 04:35:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1639128701;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
+        id S230130AbhLJMBI (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 10 Dec 2021 07:01:08 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:47924 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229664AbhLJMBI (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 10 Dec 2021 07:01:08 -0500
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 2777C1F3A0;
+        Fri, 10 Dec 2021 11:57:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1639137452; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=qyF+Ci3i+7RAXewpi6KMFHsPNBhdSb6c0pTanKvIZ1c=;
-        b=JaWBz7SttHLVstB72AcFL8okONHO6mpHqHtZ+LQQdzVIkaDcgqQ+jhgQf08XwZ7thUJnDj
-        jSAS8ooxB8TGUoavY0xe+hvurijvPpP6W+AtGG2YoBWiBDOrjTxGbFLyZ7xWs/Aj5+CJuW
-        OyhBDOnfyZskPZiPv/GUERto/j2VKwk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-593-8OLSNdL1PAG-TEI6GIzojA-1; Fri, 10 Dec 2021 04:31:38 -0500
-X-MC-Unique: 8OLSNdL1PAG-TEI6GIzojA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        bh=UGqTpPfwCs8oR8Xk7BbaQyH4TxPdYCJW+wRAyjcb1jA=;
+        b=GxujRQKr8kTHW6BgLKXN7cesdcK5g4mrvAjy2ijTC8S5o45G3NDAoNbj52b6dKYukmfgGj
+        I3BbsNBbq9/IYSVZM23rmB60lrmsJvphwGPTW+CzEzYJ0dNu1hWh9qtxyjcF7R3P3SV2qL
+        8DLfVGWxoLc2VdDTWqMsU5HZiQ7LP24=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1639137452;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UGqTpPfwCs8oR8Xk7BbaQyH4TxPdYCJW+wRAyjcb1jA=;
+        b=fYFBwEd9CeYR605E1fzzGEqZpAMN0R+tt0vmupkEFsl59zNCKFlIAYKqnn/pJfKfTjg5tl
+        9fRknwhnez8BnSAw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3F6F7101F7A1;
-        Fri, 10 Dec 2021 09:31:37 +0000 (UTC)
-Received: from fedora.redhat.com (ovpn-12-214.pek2.redhat.com [10.72.12.214])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6C74F1001F4D;
-        Fri, 10 Dec 2021 09:31:35 +0000 (UTC)
-From:   Xiao Ni <xni@redhat.com>
-To:     song@kernel.org
-Cc:     guoqing.jiang@linux.dev, ncroxon@redhat.com,
-        linux-raid@vger.kernel.org
-Subject: [PATCH 2/2] md: Move alloc/free acct bioset in to personality
-Date:   Fri, 10 Dec 2021 17:31:16 +0800
-Message-Id: <20211210093116.7847-3-xni@redhat.com>
-In-Reply-To: <20211210093116.7847-1-xni@redhat.com>
-References: <20211210093116.7847-1-xni@redhat.com>
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id EE3B413C1D;
+        Fri, 10 Dec 2021 11:57:31 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id SX0zOatAs2HqeQAAMHmgww
+        (envelope-from <hare@suse.de>); Fri, 10 Dec 2021 11:57:31 +0000
+To:     Li Jinlin <lijinlin3@huawei.com>, song@kernel.org,
+        philipp.reisner@linbit.com, lars.ellenberg@linbit.com,
+        axboe@kernel.dk, jack@suse.cz, ming.lei@redhat.com, tj@kernel.org,
+        mcgrof@kernel.org
+Cc:     linux-raid@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linfeilong@huawei.com
+References: <20211210120631.2578505-1-lijinlin3@huawei.com>
+ <20211210120631.2578505-2-lijinlin3@huawei.com>
+From:   Hannes Reinecke <hare@suse.de>
+Subject: Re: [PATCH v3 1/3] md: Fix undefined behaviour in is_mddev_idle
+Message-ID: <65d045bc-45d2-9e02-f0f7-7a0f51504eb9@suse.de>
+Date:   Fri, 10 Dec 2021 12:57:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
+In-Reply-To: <20211210120631.2578505-2-lijinlin3@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Now it alloc acct bioset in md_run and only raid0/raid5 need acct
-bioset. For example, it doesn't create acct bioset when creating
-raid1. Then reshape from raid1 to raid0/raid5, it will access acct
-bioset after reshaping. It can panic because of NULL pointer
-reference.
+On 12/10/21 1:06 PM, Li Jinlin wrote:
+> UBSAN reports this problem:
+> 
+> [ 5984.281385] UBSAN: Undefined behaviour in drivers/md/md.c:8175:15
+> [ 5984.281390] signed integer overflow:
+> [ 5984.281393] -2147483291 - 2072033152 cannot be represented in type 'int'
+> [ 5984.281400] CPU: 25 PID: 1854 Comm: md101_resync Kdump: loaded Not tainted 4.19.90
+> [ 5984.281404] Hardware name: Huawei TaiShan 200 (Model 5280)/BC82AMDDA
+> [ 5984.281406] Call trace:
+> [ 5984.281415]  dump_backtrace+0x0/0x310
+> [ 5984.281418]  show_stack+0x28/0x38
+> [ 5984.281425]  dump_stack+0xec/0x15c
+> [ 5984.281430]  ubsan_epilogue+0x18/0x84
+> [ 5984.281434]  handle_overflow+0x14c/0x19c
+> [ 5984.281439]  __ubsan_handle_sub_overflow+0x34/0x44
+> [ 5984.281445]  is_mddev_idle+0x338/0x3d8
+> [ 5984.281449]  md_do_sync+0x1bb8/0x1cf8
+> [ 5984.281452]  md_thread+0x220/0x288
+> [ 5984.281457]  kthread+0x1d8/0x1e0
+> [ 5984.281461]  ret_from_fork+0x10/0x18
+> 
+> When the stat aacum of the disk is greater than INT_MAX, its
+> value becomes negative after casting to 'int', which may lead
+> to overflow after subtracting a positive number. In the same
+> way, when the value of sync_io is greater than INT_MAX,
+> overflow may also occur. These situations will lead to
+> undefined behavior.
+> 
+> Otherwise, if the stat accum of the disk is close to INT_MAX
+> when creating raid arrays, the initial value of last_events
+> would be set close to INT_MAX when mddev initializes IO
+> event counters. 'curr_events - rdev->last_events > 64' will
+> always false during synchronization. If all the disks of mddev
+> are in this case, is_mddev_idle() will always return 1, which
+> may cause non-sync IO is very slow.
+> 
+> Fix by using atomic64_t type for sync_io, and using s64 type
+> for curr_events/last_events.
+> 
+> Signed-off-by: Li Jinlin <lijinlin3@huawei.com>
+> ---
+>  drivers/md/md.c       | 6 +++---
+>  drivers/md/md.h       | 4 ++--
+>  include/linux/genhd.h | 2 +-
+>  3 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 5111ed966947..be73a5ae6864 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -8429,14 +8429,14 @@ static int is_mddev_idle(struct mddev *mddev, int init)
+>  {
+>  	struct md_rdev *rdev;
+>  	int idle;
+> -	int curr_events;
+> +	s64 curr_events;
+>  
+>  	idle = 1;
+>  	rcu_read_lock();
+>  	rdev_for_each_rcu(rdev, mddev) {
+>  		struct gendisk *disk = rdev->bdev->bd_disk;
+> -		curr_events = (int)part_stat_read_accum(disk->part0, sectors) -
+> -			      atomic_read(&disk->sync_io);
+> +		curr_events = (s64)part_stat_read_accum(disk->part0, sectors) -
+> +			      atomic64_read(&disk->sync_io);
+>  		/* sync IO will cause sync_io to increase before the disk_stats
+>  		 * as sync_io is counted when a request starts, and
+>  		 * disk_stats is counted when it completes.
+> diff --git a/drivers/md/md.h b/drivers/md/md.h
+> index 53ea7a6961de..e00d6730da13 100644
+> --- a/drivers/md/md.h
+> +++ b/drivers/md/md.h
+> @@ -50,7 +50,7 @@ struct md_rdev {
+>  
+>  	sector_t sectors;		/* Device size (in 512bytes sectors) */
+>  	struct mddev *mddev;		/* RAID array if running */
+> -	int last_events;		/* IO event timestamp */
+> +	s64 last_events;		/* IO event timestamp */
+>  
+>  	/*
+>  	 * If meta_bdev is non-NULL, it means that a separate device is
+> @@ -551,7 +551,7 @@ extern void mddev_unlock(struct mddev *mddev);
+>  
+>  static inline void md_sync_acct(struct block_device *bdev, unsigned long nr_sectors)
+>  {
+> -	atomic_add(nr_sectors, &bdev->bd_disk->sync_io);
+> +	atomic64_add(nr_sectors, &bdev->bd_disk->sync_io);
+>  }
+>  
+>  static inline void md_sync_acct_bio(struct bio *bio, unsigned long nr_sectors)
+> diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+> index 74c410263113..efa7884de11b 100644
+> --- a/include/linux/genhd.h
+> +++ b/include/linux/genhd.h
+> @@ -150,7 +150,7 @@ struct gendisk {
+>  	struct list_head slave_bdevs;
+>  #endif
+>  	struct timer_rand_state *random;
+> -	atomic_t sync_io;		/* RAID */
+> +	atomic64_t sync_io;		/* RAID */
+>  	struct disk_events *ev;
+>  #ifdef  CONFIG_BLK_DEV_INTEGRITY
+>  	struct kobject integrity_kobj;
+> 
+You haven't answered my question.
+This patch has exactly the same problem than the original, only shifted
+to LONG_MAX instead of INT_MAX.
 
-We can move alloc/free jobs to personality. pers->run alloc acct
-bioset and pers->clean free it.
+Have you considered decreasing 'sync_io' in the endio handler, and then
+just using the 'sync_io' value to figure out if sync_io is active?
 
-Fixes: daee2024715d (md: check level before create and exit io_acct_set)
-Signed-off-by: Xiao Ni <xni@redhat.com>
----
- drivers/md/md.c    | 27 +++++++++++++++++----------
- drivers/md/md.h    |  2 ++
- drivers/md/raid0.c | 10 +++++++++-
- drivers/md/raid5.c | 41 ++++++++++++++++++++++++++++++-----------
- 4 files changed, 58 insertions(+), 22 deletions(-)
+Cheers,
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index e8666bdc0d28..0fc34a05a655 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -5878,13 +5878,6 @@ int md_run(struct mddev *mddev)
- 		if (err)
- 			goto exit_bio_set;
- 	}
--	if (mddev->level != 1 && mddev->level != 10 &&
--	    !bioset_initialized(&mddev->io_acct_set)) {
--		err = bioset_init(&mddev->io_acct_set, BIO_POOL_SIZE,
--				  offsetof(struct md_io_acct, bio_clone), 0);
--		if (err)
--			goto exit_sync_set;
--	}
- 
- 	spin_lock(&pers_lock);
- 	pers = find_pers(mddev->level, mddev->clevel);
-@@ -6061,9 +6054,6 @@ int md_run(struct mddev *mddev)
- 	module_put(pers->owner);
- 	md_bitmap_destroy(mddev);
- abort:
--	if (mddev->level != 1 && mddev->level != 10)
--		bioset_exit(&mddev->io_acct_set);
--exit_sync_set:
- 	bioset_exit(&mddev->sync_set);
- exit_bio_set:
- 	bioset_exit(&mddev->bio_set);
-@@ -8596,6 +8586,23 @@ void md_submit_discard_bio(struct mddev *mddev, struct md_rdev *rdev,
- }
- EXPORT_SYMBOL_GPL(md_submit_discard_bio);
- 
-+int acct_bioset_init(struct mddev *mddev)
-+{
-+	int err = 0;
-+
-+	if (!bioset_initialized(&mddev->io_acct_set))
-+		err = bioset_init(&mddev->io_acct_set, BIO_POOL_SIZE,
-+			offsetof(struct md_io_acct, bio_clone), 0);
-+	return err;
-+}
-+EXPORT_SYMBOL_GPL(acct_bioset_init);
-+
-+void acct_bioset_exit(struct mddev *mddev)
-+{
-+	bioset_exit(&mddev->io_acct_set);
-+}
-+EXPORT_SYMBOL_GPL(acct_bioset_exit);
-+
- static void md_end_io_acct(struct bio *bio)
- {
- 	struct md_io_acct *md_io_acct = bio->bi_private;
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index 53ea7a6961de..f1bf3625ef4c 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -721,6 +721,8 @@ extern void md_error(struct mddev *mddev, struct md_rdev *rdev);
- extern void md_finish_reshape(struct mddev *mddev);
- void md_submit_discard_bio(struct mddev *mddev, struct md_rdev *rdev,
- 			struct bio *bio, sector_t start, sector_t size);
-+int acct_bioset_init(struct mddev *mddev);
-+void acct_bioset_exit(struct mddev *mddev);
- void md_account_bio(struct mddev *mddev, struct bio **bio);
- 
- extern bool __must_check md_flush_request(struct mddev *mddev, struct bio *bio);
-diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
-index 88424d7a6ebd..b59a77b31b90 100644
---- a/drivers/md/raid0.c
-+++ b/drivers/md/raid0.c
-@@ -369,6 +369,7 @@ static void raid0_free(struct mddev *mddev, void *priv)
- 	struct r0conf *conf = priv;
- 
- 	free_conf(mddev, conf);
-+	acct_bioset_exit(mddev);
- }
- 
- static int raid0_run(struct mddev *mddev)
-@@ -383,11 +384,16 @@ static int raid0_run(struct mddev *mddev)
- 	if (md_check_no_bitmap(mddev))
- 		return -EINVAL;
- 
-+	if (acct_bioset_init(mddev)) {
-+		pr_err("md/raid0:%s: alloc acct bioset failed.\n", mdname(mddev));
-+		return -ENOMEM;
-+	}
-+
- 	/* if private is not null, we are here after takeover */
- 	if (mddev->private == NULL) {
- 		ret = create_strip_zones(mddev, &conf);
- 		if (ret < 0)
--			return ret;
-+			goto exit_acct_set;
- 		mddev->private = conf;
- 	}
- 	conf = mddev->private;
-@@ -433,6 +439,8 @@ static int raid0_run(struct mddev *mddev)
- 
- free:
- 	free_conf(mddev, conf);
-+exit_acct_set:
-+	acct_bioset_exit(mddev);
- 	return ret;
- }
- 
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 1240a5c16af8..13afa8c5cc8a 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -7447,12 +7447,19 @@ static int raid5_run(struct mddev *mddev)
- 	struct md_rdev *rdev;
- 	struct md_rdev *journal_dev = NULL;
- 	sector_t reshape_offset = 0;
--	int i;
-+	int i, ret = 0;
- 	long long min_offset_diff = 0;
- 	int first = 1;
- 
--	if (mddev_init_writes_pending(mddev) < 0)
-+	if (acct_bioset_init(mddev)) {
-+		pr_err("md/raid456:%s: alloc acct bioset failed.\n", mdname(mddev));
- 		return -ENOMEM;
-+	}
-+
-+	if (mddev_init_writes_pending(mddev) < 0) {
-+		ret = -ENOMEM;
-+		goto exit_acct_set;
-+	}
- 
- 	if (mddev->recovery_cp != MaxSector)
- 		pr_notice("md/raid:%s: not clean -- starting background reconstruction\n",
-@@ -7483,7 +7490,8 @@ static int raid5_run(struct mddev *mddev)
- 	    (mddev->bitmap_info.offset || mddev->bitmap_info.file)) {
- 		pr_notice("md/raid:%s: array cannot have both journal and bitmap\n",
- 			  mdname(mddev));
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto exit_acct_set;
- 	}
- 
- 	if (mddev->reshape_position != MaxSector) {
-@@ -7508,13 +7516,15 @@ static int raid5_run(struct mddev *mddev)
- 		if (journal_dev) {
- 			pr_warn("md/raid:%s: don't support reshape with journal - aborting.\n",
- 				mdname(mddev));
--			return -EINVAL;
-+			ret = -EINVAL;
-+			goto exit_acct_set;
- 		}
- 
- 		if (mddev->new_level != mddev->level) {
- 			pr_warn("md/raid:%s: unsupported reshape required - aborting.\n",
- 				mdname(mddev));
--			return -EINVAL;
-+			ret = -EINVAL;
-+			goto exit_acct_set;
- 		}
- 		old_disks = mddev->raid_disks - mddev->delta_disks;
- 		/* reshape_position must be on a new-stripe boundary, and one
-@@ -7530,7 +7540,8 @@ static int raid5_run(struct mddev *mddev)
- 		if (sector_div(here_new, chunk_sectors * new_data_disks)) {
- 			pr_warn("md/raid:%s: reshape_position not on a stripe boundary\n",
- 				mdname(mddev));
--			return -EINVAL;
-+			ret = -EINVAL;
-+			goto exit_acct_set;
- 		}
- 		reshape_offset = here_new * chunk_sectors;
- 		/* here_new is the stripe we will write to */
-@@ -7552,7 +7563,8 @@ static int raid5_run(struct mddev *mddev)
- 			else if (mddev->ro == 0) {
- 				pr_warn("md/raid:%s: in-place reshape must be started in read-only mode - aborting\n",
- 					mdname(mddev));
--				return -EINVAL;
-+				ret = -EINVAL;
-+				goto exit_acct_set;
- 			}
- 		} else if (mddev->reshape_backwards
- 		    ? (here_new * chunk_sectors + min_offset_diff <=
-@@ -7562,7 +7574,8 @@ static int raid5_run(struct mddev *mddev)
- 			/* Reading from the same stripe as writing to - bad */
- 			pr_warn("md/raid:%s: reshape_position too early for auto-recovery - aborting.\n",
- 				mdname(mddev));
--			return -EINVAL;
-+			ret = -EINVAL;
-+			goto exit_acct_set;
- 		}
- 		pr_debug("md/raid:%s: reshape will continue\n", mdname(mddev));
- 		/* OK, we should be able to continue; */
-@@ -7586,8 +7599,10 @@ static int raid5_run(struct mddev *mddev)
- 	else
- 		conf = mddev->private;
- 
--	if (IS_ERR(conf))
--		return PTR_ERR(conf);
-+	if (IS_ERR(conf)) {
-+		ret = PTR_ERR(conf);
-+		goto exit_acct_set;
-+	}
- 
- 	if (test_bit(MD_HAS_JOURNAL, &mddev->flags)) {
- 		if (!journal_dev) {
-@@ -7784,7 +7799,10 @@ static int raid5_run(struct mddev *mddev)
- 	free_conf(conf);
- 	mddev->private = NULL;
- 	pr_warn("md/raid:%s: failed to run raid set.\n", mdname(mddev));
--	return -EIO;
-+	ret = -EIO;
-+exit_acct_set:
-+	acct_bioset_exit(mddev);
-+	return ret;
- }
- 
- static void raid5_free(struct mddev *mddev, void *priv)
-@@ -7792,6 +7810,7 @@ static void raid5_free(struct mddev *mddev, void *priv)
- 	struct r5conf *conf = priv;
- 
- 	free_conf(conf);
-+	acct_bioset_exit(mddev);
- 	mddev->to_remove = &raid5_attrs_group;
- }
- 
+Hannes
 -- 
-2.31.1
-
+Dr. Hannes Reinecke		           Kernel Storage Architect
+hare@suse.de			                  +49 911 74053 688
+SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), GF: Felix Imendörffer
