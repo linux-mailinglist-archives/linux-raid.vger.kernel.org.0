@@ -2,240 +2,77 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3216F470DFC
-	for <lists+linux-raid@lfdr.de>; Fri, 10 Dec 2021 23:35:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CFE7E47102A
+	for <lists+linux-raid@lfdr.de>; Sat, 11 Dec 2021 03:01:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240119AbhLJWin (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 10 Dec 2021 17:38:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58464 "EHLO
+        id S236912AbhLKCFP (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 10 Dec 2021 21:05:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236537AbhLJWim (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 10 Dec 2021 17:38:42 -0500
-X-Greylist: delayed 588 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 10 Dec 2021 14:35:06 PST
-Received: from box.sotapeli.fi (sotapeli.fi [IPv6:2001:41d0:302:2200::1c0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD5B1C061746
-        for <linux-raid@vger.kernel.org>; Fri, 10 Dec 2021 14:35:06 -0800 (PST)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id ACD1E7E726
-        for <linux-raid@vger.kernel.org>; Fri, 10 Dec 2021 23:25:15 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sotapeli.fi; s=dkim;
-        t=1639175115; h=from:subject:date:message-id:to:mime-version:content-type:
-         content-transfer-encoding; bh=hR/mh2/21CMtWbl6afLxw0+qpjxPWDxKT8ceLTGC4g4=;
-        b=bVgTX/eyJtvmBgGfJoe47vpzND0QZLdMF7LobgARWfoH/eEyzbz44cpHRJct+wMd1xAHTq
-        zcbN/MXaHvBrtsZzIvsLjPx3IMOuRF+A6AiyxH+c1gyBkkhBPhvBL0UaSBRhZT3YT/cZfD
-        ZR0yFcJoyF3cleNGGuzRZ1oeopRQjhS9f72RhKDT0hfcosd2M0UFyTObyDU65uAM8mIN/a
-        96QmfY5bCfAHrrqlHdGyvBN8TGuTNPoTtt4jkXQNKjzu7K2WcIGTlvk0Rv+RDsBQ3iymXM
-        sO7jXdIY6GZZDs4I+Wy49JxqDF5MclTrRu6A5GC43gabmRrpqoRPe5FJRrzX3A==
-Message-ID: <e349ad6a-f5f7-df22-9753-bca4605e561d@sotapeli.fi>
-Date:   Sat, 11 Dec 2021 00:25:14 +0200
+        with ESMTP id S243808AbhLKCFO (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 10 Dec 2021 21:05:14 -0500
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD5CBC061D5E
+        for <linux-raid@vger.kernel.org>; Fri, 10 Dec 2021 18:01:37 -0800 (PST)
+Received: by mail-lf1-x144.google.com with SMTP id cf39so9041462lfb.8
+        for <linux-raid@vger.kernel.org>; Fri, 10 Dec 2021 18:01:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=UB8HPXfiFrSS8lJHVD9imqT8IM8lXgQeVTQMVTTdoew=;
+        b=mz95yEd7wqF+xhUHtNPAXzDqdjYFScvN3EmOxAWd7Hh/o1vy+XqEivxP3kDofXPyLO
+         W5XYmQxuXpNI3d7FE6qlKbDJOmp94nfu+yejkZPeS8A+ZVAmw4cZ+M6yxC0QmeEf1OXV
+         PvDrRZYwPm6F8rgxNp9KyZWDTRe2X5+2LGXtbLKhD7Oa/8VkVmV/ger+T/AcpZOMY+Hr
+         pk6PIvsKN2RQ9T1Jd5CmaYlFRwzl33lR1Geg2MwN8uXRCax0hB6XBG9KhwPleIbxoFyA
+         9z1MohiiVn4QgqqC9HVrz8gzOxH9wawpDOURL7bzutAg2ChxVB0407dYfMeaU4eByX7U
+         kFyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=UB8HPXfiFrSS8lJHVD9imqT8IM8lXgQeVTQMVTTdoew=;
+        b=tIz4eCB+EjN/NLoCeqveQ7SAuKMHKNzF+xFuPLp5IvVmJuLeAmXb9Rb1deU1gpZKOa
+         n8GDwnXoGpoCs5KKLLekGLKXqF5a6YnQTlJvDWzvb40/9Xd/BftV7FB/xBRVJ8YVZZi9
+         nH2o4IW3WU7sSzn8avwF9KogTrgN4qLV8o3n2kD8OciIGgQ6APKVZQ350dV3PBilqwDJ
+         A2nk72Aazt3J8P1q0TIdRdLb5X7D6QL2TruWrGA2vKTZb0BYMmxc8LqyGoxL52FsFqVz
+         N0TxM5D5Jv4sZPwPhKJsuXFgmKsLYc/ejKQiuEIpj1vuLA6jg+ehAk4fMKkCqWEz3JQe
+         e/xg==
+X-Gm-Message-State: AOAM530XLsWmgNlIcHaEvYt/m9mf+7fTCJaxtzYAOX+CChRCdHjUBR5P
+        JlYD0KixZl73Rv4Wterfh80HEve0oG43PvT+o5M=
+X-Google-Smtp-Source: ABdhPJzO1rWK98J/C4GWmBNNeA4TMusWwthEf445R0dRxZhfqtQs8WAeeSSG9+arglNkiB0I8dDFlCz1Qas71LQQq4Y=
+X-Received: by 2002:a05:6512:3f28:: with SMTP id y40mr15606868lfa.609.1639188095920;
+ Fri, 10 Dec 2021 18:01:35 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-To:     linux-raid@vger.kernel.org
-From:   Jani Partanen <jiipee@sotapeli.fi>
-Subject: Strange behavior when I grow raid0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Received: by 2002:a05:6512:12c7:0:0:0:0 with HTTP; Fri, 10 Dec 2021 18:01:35
+ -0800 (PST)
+Reply-To: internationallmonetary695@gmail.com
+From:   International Monetary fund <abubakarsadiq1297@gmail.com>
+Date:   Fri, 10 Dec 2021 18:01:35 -0800
+Message-ID: <CAHXNoSjzJGPbSRqufvG2p9+fDSLRA_m=x+GXMLdQjX8eJrF8EQ@mail.gmail.com>
+Subject: Dear Beneficiary,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hello,
+-- 
+ I.M.F Head Office
+#1900 Pennsylvania Ave NW,
+Washington, DC 20431
+INTERNATIONAL MONETARY FUND.
+REF:-XVGNN82010
+internationallmonetary695@gmail.com
+Telephone : +12062785473
 
-I recently migrated from btrfs raid-5 to md raid-5 and because I didn't 
-have enough drives to go directly md raid-5, I basicly did this:
-- 2 disks raid-0
-- added 3rd disk with grow when I had moved data, still raid-0
-- added 4th disk with grow when I had moved more data, still raid-0
-- added 5th disk with grow and converted to raid-5
+This message is from International Monetary fund (IMF) I am Mr Bo Li
+deputy to  Kristalina Georgieva the current president of International
+  Monetary fund (IMF) We are aware of the stress you have been passing
+through and how you have lost your money trying to claim your fund ,
+you have to worry no more for the international monetary fund is fully
+ in-charge of your fund now, contact  me for more info on how you will
+receive your fund( internationallmonetary695@gmail.com) or call me
+on-Telephone : +12062785473 for more info.
 
-Everything went fine other than I could not add internal bitmap because 
-array was created as raid-0 originally but thats not an issue, I'll 
-store bitmap to my /boot, it's raid-1 on SSD and ext4.
-
-Today I noticed that my array parity layout is parity-last and I started 
-to wonder why is that, then I did remember that there was some strange 
-things happening when I did add 4th drive and I made testing and was 
-able to replicate what happened.
-
-[root@nas ~]# mdadm -C /dev/md/testraid -l 0 -n 2 -N testraid 
-/dev/loop21 /dev/loop22
-mdadm: Defaulting to version 1.2 metadata
-mdadm: array /dev/md/testraid started.
-
-
-[root@nas ~]# mdadm -D /dev/md/testraid
-/dev/md/testraid:
-            Version : 1.2
-      Creation Time : Fri Dec 10 22:52:01 2021
-         Raid Level : raid0
-         Array Size : 98304 (96.00 MiB 100.66 MB)
-       Raid Devices : 2
-      Total Devices : 2
-        Persistence : Superblock is persistent
-
-        Update Time : Fri Dec 10 22:52:01 2021
-              State : clean
-     Active Devices : 2
-    Working Devices : 2
-     Failed Devices : 0
-      Spare Devices : 0
-
-             Layout : -unknown-
-         Chunk Size : 512K
-
-Consistency Policy : none
-
-               Name : nas:testraid  (local to host nas)
-               UUID : b6e0c60a:da4c6fb1:9dc5ff07:adeda371
-             Events : 0
-
-     Number   Major   Minor   RaidDevice State
-        0       7       21        0      active sync   /dev/loop21
-        1       7       22        1      active sync   /dev/loop22
-
-
-[root@nas ~]# mdadm --grow /dev/md/testraid -n 3 -l 0 --add /dev/loop23
-mdadm: level of /dev/md/testraid changed to raid4
-mdadm: added /dev/loop23
-
-
-[root@nas ~]# mdadm -D /dev/md/testraid
-/dev/md/testraid:
-            Version : 1.2
-      Creation Time : Fri Dec 10 22:52:01 2021
-         Raid Level : raid0
-         Array Size : 147456 (144.00 MiB 150.99 MB)
-       Raid Devices : 3
-      Total Devices : 3
-        Persistence : Superblock is persistent
-
-        Update Time : Fri Dec 10 22:53:33 2021
-              State : clean
-     Active Devices : 3
-    Working Devices : 3
-     Failed Devices : 0
-      Spare Devices : 0
-
-         Chunk Size : 512K
-
-Consistency Policy : none
-
-               Name : nas:testraid  (local to host nas)
-               UUID : b6e0c60a:da4c6fb1:9dc5ff07:adeda371
-             Events : 18
-
-     Number   Major   Minor   RaidDevice State
-        0       7       21        0      active sync   /dev/loop21
-        1       7       22        1      active sync   /dev/loop22
-        3       7       23        2      active sync   /dev/loop23
-
-
-[root@nas ~]# mdadm --grow /dev/md/testraid -n 4 -l 0 --add /dev/loop24
-mdadm: level of /dev/md/testraid changed to raid4
-mdadm: added /dev/loop24
-mdadm: Need to backup 6144K of critical section..
-
-
-[root@nas ~]# mdadm -D /dev/md/testraid
-/dev/md/testraid:
-            Version : 1.2
-      Creation Time : Fri Dec 10 22:52:01 2021
-         Raid Level : raid4
-         Array Size : 196608 (192.00 MiB 201.33 MB)
-      Used Dev Size : 49152 (48.00 MiB 50.33 MB)
-       Raid Devices : 5
-      Total Devices : 4
-        Persistence : Superblock is persistent
-
-        Update Time : Fri Dec 10 22:59:56 2021
-              State : clean, degraded
-     Active Devices : 4
-    Working Devices : 4
-     Failed Devices : 0
-      Spare Devices : 0
-
-         Chunk Size : 512K
-
-Consistency Policy : resync
-
-               Name : nas:testraid  (local to host nas)
-               UUID : b6e0c60a:da4c6fb1:9dc5ff07:adeda371
-             Events : 39
-
-     Number   Major   Minor   RaidDevice State
-        0       7       21        0      active sync   /dev/loop21
-        1       7       22        1      active sync   /dev/loop22
-        3       7       23        2      active sync   /dev/loop23
-        4       7       24        3      active sync   /dev/loop24
-        -       0        0        4      removed
-
-
-[root@nas ~]# mdadm --grow /dev/md/testraid -n 5 -l 5 --add /dev/loop25
-mdadm: level of /dev/md/testraid changed to raid5
-mdadm: added /dev/loop25
-
-
-[root@nas ~]# mdadm -D /dev/md/testraid
-/dev/md/testraid:
-            Version : 1.2
-      Creation Time : Fri Dec 10 22:52:01 2021
-         Raid Level : raid5
-         Array Size : 196608 (192.00 MiB 201.33 MB)
-      Used Dev Size : 49152 (48.00 MiB 50.33 MB)
-       Raid Devices : 5
-      Total Devices : 5
-        Persistence : Superblock is persistent
-
-        Update Time : Fri Dec 10 23:00:39 2021
-              State : clean
-     Active Devices : 5
-    Working Devices : 5
-     Failed Devices : 0
-      Spare Devices : 0
-
-             Layout : parity-last
-         Chunk Size : 512K
-
-Consistency Policy : resync
-
-               Name : nas:testraid  (local to host nas)
-               UUID : b6e0c60a:da4c6fb1:9dc5ff07:adeda371
-             Events : 59
-
-     Number   Major   Minor   RaidDevice State
-        0       7       21        0      active sync   /dev/loop21
-        1       7       22        1      active sync   /dev/loop22
-        3       7       23        2      active sync   /dev/loop23
-        4       7       24        3      active sync   /dev/loop24
-        5       7       25        4      active sync   /dev/loop25
-
-
-Notice how array stay at raid4 degraded after I add 4th drive. Why is 
-this happening? It doesn't happen when I added 3rd drive, it did reshape 
-it through raid-4 but when it was finished it returned raid-0.
-
-I also did another test where I made extra step after adding 4th disk:
-
-[root@nas ~]# mdadm --grow /dev/md/testraid -n 4 -l 0
-mdadm: level of /dev/md/testraid changed to raid0
-[root@nas ~]# cat /proc/mdstat
-Personalities : [raid1] [raid0] [linear] [raid6] [raid5] [raid4]
-md118 : active raid0 loop24[4] loop23[3] loop22[1] loop21[0]
-       196608 blocks super 1.2 512k chunks
-
-
-And when I did add 5th drive and converted array to raid-5, it correctly 
-defaults layout to left-symmetric.
-
-Is this some sort of bug or working as intented? Also why is this "Need 
-to backup 6144K of critical section.." happening when I add 4th disk but 
-not when I add 3rd disk?
-
-
-distro: Fedora 35
-kernel:  5.15.6
-mdadm:  v4.2-rc2
-
-
-// JiiPee
+Regards,
+Mr Bo Li
