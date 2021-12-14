@@ -2,85 +2,121 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 594734748EA
-	for <lists+linux-raid@lfdr.de>; Tue, 14 Dec 2021 18:09:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AF985474962
+	for <lists+linux-raid@lfdr.de>; Tue, 14 Dec 2021 18:28:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236318AbhLNRIz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 14 Dec 2021 12:08:55 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:59722 "EHLO
+        id S233809AbhLNR2I (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 14 Dec 2021 12:28:08 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:39692 "EHLO
         ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236331AbhLNRIw (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 14 Dec 2021 12:08:52 -0500
+        with ESMTP id S233789AbhLNR2H (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 14 Dec 2021 12:28:07 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4BBF4B81BBA
-        for <linux-raid@vger.kernel.org>; Tue, 14 Dec 2021 17:08:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5CC1C34607
-        for <linux-raid@vger.kernel.org>; Tue, 14 Dec 2021 17:08:49 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 82E63B81BB9;
+        Tue, 14 Dec 2021 17:28:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5553BC34604;
+        Tue, 14 Dec 2021 17:28:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639501729;
-        bh=zY43aHOBJqh+dZCLKCeEjnohUZU1HielHhSTn4qnovw=;
+        s=k20201202; t=1639502885;
+        bh=iWhZUpZug7nx6pfIKr0DItc2+D2cy9/JIdFzbQtsEhI=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mq/rkiblZ8yHDrnvVIyki0UEwqaSM4v+x91wfXZ2LeZJBj5G9fAW+EJmcg/t9cHB7
-         s3RX9zwPnrDPd8zKotnPTvhHjZJJ0fiTz8LplSs3xErIkkUbAMLpqoZWKcZlnwF230
-         xQDhl13S5AeN3JmilxvMonNeT5or5nJErkYH7W3tF9nDHDrZotiOqDeYhYMHF/gQzQ
-         wYTgq43cjWiImrcu/lqKEgDiiwlhFnwMpIFAj2aGe7gULQ2AybeaIhNjYY+17Z9lvA
-         ZnGOeoTEJ6/LkXxWKxJqiZUcPfqhK9ISkj9Y4yI1LyL5G+Fx7G+4uVVnP5QBCsERhY
-         yI9dP4jRfsnHA==
-Received: by mail-yb1-f175.google.com with SMTP id v203so47898376ybe.6
-        for <linux-raid@vger.kernel.org>; Tue, 14 Dec 2021 09:08:49 -0800 (PST)
-X-Gm-Message-State: AOAM532K23IMsVQHxmBBd+GdGxiDNIbegfXhFktIc7NtrNF8OKkcVaSo
-        O43849MoSEmMAQa+LW6/V6BPjqDIfvfGbyuMK5U=
-X-Google-Smtp-Source: ABdhPJzSky3GqDYohbnMnKcUJ0ZVrsmBMQRwztvvKUW0b1zbsBXADDVLqCP4hgrp13jK7311zsNndK/8zi/GxpCf1KQ=
-X-Received: by 2002:a25:a283:: with SMTP id c3mr248945ybi.219.1639501728988;
- Tue, 14 Dec 2021 09:08:48 -0800 (PST)
+        b=rYv9JVZ9YX6Z0mBpVDMKm5mu/TzapluDlyLScme2UrTuIXRhZgJB+QO6JHt2eHkyY
+         3+Jqu7AOYi1QgWWEksD+65gGuD0VjAq1acIcvtuXXbqs+tH8BEhJowarrvQvSWSPCS
+         8kJvbqQpEEGu3nXWKmkGoYBqfMPTzpI/yorx8TTNlK8WkzYco3Cu1XxPzAxUGbcxsY
+         iO+svhxl9Uio5GhrkOjfUMJ1zxy9eQVcWcj0E5w9TM/2/0tMICRAFO/Yhd+T1cWrb7
+         gJ3bLGn7U40/JibUXtbMYNVionNiTEfCchB2L6TzUJibY8OBopc2EEs98X8fh7TMjS
+         l3SaS41aVL9JQ==
+Received: by mail-yb1-f180.google.com with SMTP id d10so48128844ybe.3;
+        Tue, 14 Dec 2021 09:28:05 -0800 (PST)
+X-Gm-Message-State: AOAM530j4MZ4wwlvdqpMAD0OIlKF4S3mrXfdpeDpk1u9t+t3reWEPLgJ
+        05JFBUiN2cHil5aUB3xrTVjkaylQzmD5FUbWWUY=
+X-Google-Smtp-Source: ABdhPJzaIWhZ2KXfV3WBSipGqRCpcplKqZGV0U2L1BO8aObP0RNronSXvgKpJlPOO1T9RuBg8PP4FeHUtdss6/yaXVI=
+X-Received: by 2002:a25:8284:: with SMTP id r4mr383980ybk.47.1639502884465;
+ Tue, 14 Dec 2021 09:28:04 -0800 (PST)
 MIME-Version: 1.0
-References: <CAPhsuW6mSmxPOmU9=Gq-z_gV4V09+SFqrpKx33LzR=6Rg1fGZw@mail.gmail.com>
- <20211110181441.9263-1-vverma@digitalocean.com> <20211110181441.9263-4-vverma@digitalocean.com>
- <CAPhsuW5drRBWOV9-i7cQWHAwSe5qHff5k23Y2-LsNGS_s8updw@mail.gmail.com>
- <2354ab61-0d13-aec5-a45f-23c5cd3db319@digitalocean.com> <CAPhsuW7r-JX+zOadzbzLDa0WxZdLws9=mTbPc0ci6qNfRBxgjA@mail.gmail.com>
- <998a933f-e3af-2f2c-79c6-ae5a75f286de@digitalocean.com> <b70fded5-8f65-7767-25c1-d45b1dcbbddf@kernel.dk>
- <78d5f029-791e-6d3f-4871-263ec6b5c09b@digitalocean.com> <CAPhsuW6VsNPcG3VSLPk-zq16GYp1CN=X0jk9AGveAWaCBLgoig@mail.gmail.com>
- <255f6109-55ee-a54e-066a-9690da9412ce@digitalocean.com> <07adb65e-d018-e8d4-61e6-3ca3273cc1bd@digitalocean.com>
-In-Reply-To: <07adb65e-d018-e8d4-61e6-3ca3273cc1bd@digitalocean.com>
+References: <20211214031553.16435-1-yajun.deng@linux.dev>
+In-Reply-To: <20211214031553.16435-1-yajun.deng@linux.dev>
 From:   Song Liu <song@kernel.org>
-Date:   Tue, 14 Dec 2021 09:08:37 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW7OY+5-F6Vk6z=ngSMXEayz3si=Sdf69r4vexRo202X_Q@mail.gmail.com>
-Message-ID: <CAPhsuW7OY+5-F6Vk6z=ngSMXEayz3si=Sdf69r4vexRo202X_Q@mail.gmail.com>
-Subject: Re: [RFC PATCH v4 4/4] md: raid456 add nowait support
-To:     Vishal Verma <vverma@digitalocean.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        linux-raid <linux-raid@vger.kernel.org>, rgoldwyn@suse.de
+Date:   Tue, 14 Dec 2021 09:27:53 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW5X+zewpKoJLjMMGOUeSiJ1EYqD+0i1bA8y7SFtJLkMeg@mail.gmail.com>
+Message-ID: <CAPhsuW5X+zewpKoJLjMMGOUeSiJ1EYqD+0i1bA8y7SFtJLkMeg@mail.gmail.com>
+Subject: Re: [PATCH] lib/raid6: fix abnormally high latency
+To:     Yajun Deng <yajun.deng@linux.dev>
+Cc:     stockhausen@collogia.de, open list <linux-kernel@vger.kernel.org>,
+        linux-rt-users@vger.kernel.org,
+        linux-raid <linux-raid@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Tue, Dec 14, 2021 at 7:30 AM Vishal Verma <vverma@digitalocean.com> wrote:
+On Mon, Dec 13, 2021 at 7:17 PM Yajun Deng <yajun.deng@linux.dev> wrote:
 >
+> We found an abnormally high latency when executing modprobe raid6_pq, the
+> latency is greater than 1.2s when CONFIG_PREEMPT_VOLUNTARY=y, greater than
+> 67ms when CONFIG_PREEMPT=y, and greater than 16ms when CONFIG_PREEMPT_RT=y.
+> This is caused by disable the preemption, this time is too long and
+> unreasonable. We just need to disable migration. so used migrate_disable()/
+> migrate_enable() instead of preempt_disable()/preempt_enable(). This is
+> beneficial for CONFIG_PREEMPT=y or CONFIG_PREEMPT_RT=y, but no effect for
+> CONFIG_PREEMPT_VOLUNTARY=y.
 >
-> On 12/13/21 6:12 PM, Vishal Verma wrote:
-> >
-> > On 12/13/21 6:11 PM, Song Liu wrote:
-> >> On Mon, Dec 13, 2021 at 4:53 PM Vishal Verma
-> >> <vverma@digitalocean.com> wrote:
-> >> [...]
-> >>> What kernel base are you using for your patches?
-> >>>
-> >>> These were based out of for-5.16-tag (037c50bfb)
-> >> Please rebase on top of md-next branch from here:
-> >>
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/song/md.git
-> >>
-> >> Thanks,
-> >> Song
-> > Ack, will do!
-> >
-> After rebasing to md-next branch and re-running the tests 100% W, 100%
-> R, 70%R30%W with both io_uring and libaio I don't see any issue. Thank you!
+> Fixes: fe5cbc6e06c7 ("md/raid6 algorithms: delta syndrome functions")
+> Signed-off-by: Yajun Deng <yajun.deng@linux.dev>
 
-That's great! Please address all the feedback and submit v5.
+We measure the speed of different RAID algorithms.If we don't disable
+preempt, the result may be inaccurate, right? IIUC, we only disable preempt
+for 16 jiffies. Why do we see 1.2 second delay?
 
 Thanks,
 Song
+
+> ---
+>  lib/raid6/algos.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/lib/raid6/algos.c b/lib/raid6/algos.c
+> index 6d5e5000fdd7..21611d05c34c 100644
+> --- a/lib/raid6/algos.c
+> +++ b/lib/raid6/algos.c
+> @@ -162,7 +162,7 @@ static inline const struct raid6_calls *raid6_choose_gen(
+>
+>                         perf = 0;
+>
+> -                       preempt_disable();
+> +                       migrate_disable();
+>                         j0 = jiffies;
+>                         while ((j1 = jiffies) == j0)
+>                                 cpu_relax();
+> @@ -171,7 +171,7 @@ static inline const struct raid6_calls *raid6_choose_gen(
+>                                 (*algo)->gen_syndrome(disks, PAGE_SIZE, *dptrs);
+>                                 perf++;
+>                         }
+> -                       preempt_enable();
+> +                       migrate_enable();
+>
+>                         if (perf > bestgenperf) {
+>                                 bestgenperf = perf;
+> @@ -186,7 +186,7 @@ static inline const struct raid6_calls *raid6_choose_gen(
+>
+>                         perf = 0;
+>
+> -                       preempt_disable();
+> +                       migrate_disable();
+>                         j0 = jiffies;
+>                         while ((j1 = jiffies) == j0)
+>                                 cpu_relax();
+> @@ -196,7 +196,7 @@ static inline const struct raid6_calls *raid6_choose_gen(
+>                                                       PAGE_SIZE, *dptrs);
+>                                 perf++;
+>                         }
+> -                       preempt_enable();
+> +                       migrate_enable();
+>
+>                         if (best == *algo)
+>                                 bestxorperf = perf;
+> --
+> 2.32.0
+>
