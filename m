@@ -2,122 +2,71 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E6416480F9C
-	for <lists+linux-raid@lfdr.de>; Wed, 29 Dec 2021 05:37:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6191448118A
+	for <lists+linux-raid@lfdr.de>; Wed, 29 Dec 2021 11:12:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236329AbhL2EhR (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 28 Dec 2021 23:37:17 -0500
-Received: from dione.uberspace.de ([185.26.156.222]:51678 "EHLO
-        dione.uberspace.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230051AbhL2EhR (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 28 Dec 2021 23:37:17 -0500
-Received: (qmail 13029 invoked by uid 989); 29 Dec 2021 04:37:15 -0000
-Authentication-Results: dione.uberspace.de;
-        auth=pass (plain)
-Date:   Wed, 29 Dec 2021 05:37:14 +0100
-From:   Andreas Klauer <Andreas.Klauer@metamorpher.de>
-To:     Tony Bush <thecompguru@gmail.com>
-Cc:     linux-raid@vger.kernel.org
-Subject: Re: Need help Recover raid5 array
-Message-ID: <Ycvl+joeW+b9CpNj@metamorpher.de>
-References: <CAA9kLn1nZZKHLahjkyJzChgTMC2WKEoyJG2PhHzeXbD_qY_-yw@mail.gmail.com>
- <Yb8ebs7lhEHHTqif@metamorpher.de>
- <CAA9kLn1JwRLWpOd-kRnLj2YqQhkRM_R_LFisA9_acxHdFJpFVg@mail.gmail.com>
- <YcV6tUwlKd+tLd78@metamorpher.de>
- <CAA9kLn3AYkoa5ybqoxoVRg1umhCbAwsshGNDPtV05tU7K-ZCAQ@mail.gmail.com>
+        id S235394AbhL2KMV (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 29 Dec 2021 05:12:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235326AbhL2KMV (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 29 Dec 2021 05:12:21 -0500
+Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 491DEC061574
+        for <linux-raid@vger.kernel.org>; Wed, 29 Dec 2021 02:12:21 -0800 (PST)
+Received: by mail-oi1-x230.google.com with SMTP id s73so34204768oie.5
+        for <linux-raid@vger.kernel.org>; Wed, 29 Dec 2021 02:12:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=UGSEQpU4Z0PunUYnyj3GeEE+sWsdulhA+FyorBdu2Ik=;
+        b=WCeaRpQuDecPTg1g5A/UdWD4Ni5xeqIVS3UikerwIT9HD0KcMEUiAImilwcHJFB/Wm
+         X7qGoEf0HPVoJWFHgTRkpHZwMI5KwuoreoLqa/D9PKWEkpp9Uc95f3lMOVN2R+Hkjk2K
+         QC7i3+PBUTc7XuSpP2x6MmkgQhRUWf7Ao5Ju6/cej4erCmkeRWY/MbUl2AP+xREZ+BpA
+         SyvLKZ+UEnwtzOf+M5YO08irlCozDl/tGa3PcjEKnoOoo3wRQfUhMt5TKBVD/PgqoL8Q
+         UAdF0VLIRroD1hIh4VHQPAqR0hWt95oFVUd4+5m/xPR1Q54TC/GSNL6oJy6hHM6DAh6h
+         /Rfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=UGSEQpU4Z0PunUYnyj3GeEE+sWsdulhA+FyorBdu2Ik=;
+        b=2BQeSPaHijrUFwBzJayH9Da+s168oCmD0ZT/c7EkYrtbFrnywLu58F34TBiwEnwdMl
+         5UA9k9s4JLdrSBIM0U2E1TPd5J7ot5gyoIapN/DhlxatIm+KoXIr6EXFOlQq0aqiwr3K
+         3GZ4fui/m+yZEYQvykFyL8TmdcXp84TJdBuefq6qq1zehrcosTJGqErvmJtTdOK+rm1I
+         ARGBkZh2u334/zegVjOu+TPxd5Cro73EgjunpNE06UHRyzt8dkE/51fMe3F+0JxQU/cv
+         sts1IdvjZoqhsOIHm3iJiH2FtpdFAVN2i+gwp9HekUdBRP0r0tycV1HLmLv7Ld02TRwg
+         jfPA==
+X-Gm-Message-State: AOAM5317RHulLilULpn0zvyQOJw5wJpmLTH/Y9RSJCz81i/pEYzhGmpy
+        X9SUbp9I0IfL07zowPXe20uBgleVS+1bA8s9sek=
+X-Google-Smtp-Source: ABdhPJx5PMxT/cHLV7Fpbd/9nlsVybhaLRn/JVWncmiSLtL9JKI4bJviW4M4klXnytNIxPApPXdT8ySEpoEJIsbHHLg=
+X-Received: by 2002:a05:6808:22a6:: with SMTP id bo38mr19879035oib.78.1640772740606;
+ Wed, 29 Dec 2021 02:12:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA9kLn3AYkoa5ybqoxoVRg1umhCbAwsshGNDPtV05tU7K-ZCAQ@mail.gmail.com>
-X-Rspamd-Bar: /
-X-Rspamd-Report: MIME_GOOD(-0.1)
-X-Rspamd-Score: -0.1
-Received: from unknown (HELO unkown) (::1)
-        by dione.uberspace.de (Haraka/2.8.28) with ESMTPSA; Wed, 29 Dec 2021 05:37:14 +0100
+Received: by 2002:a05:6838:c993:0:0:0:0 with HTTP; Wed, 29 Dec 2021 02:12:20
+ -0800 (PST)
+Reply-To: huanjlaying008@hotmail.com
+From:   "Mrs. Huan Jlayinga" <absaonlinetransfer88@gmail.com>
+Date:   Wed, 29 Dec 2021 04:12:20 -0600
+Message-ID: <CAKXgcRi-GSWUYEBt2Tu=e4p7nDf8xbsbvfmFC66G-6NFLeWQ9w@mail.gmail.com>
+Subject: =?UTF-8?Q?Gesch=C3=A4ftsvorschlag?=
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Tue, Dec 28, 2021 at 06:56:35PM -0500, Tony Bush wrote:
-> I then mounted the drive as my user, tested multiple large files and
-> when i was done crying i unmounted
+--=20
+--=20
+Guten Tag mein Name ist Frau Huan Jlayinga Ich bin Bankerin, der
+Direktor f=C3=BCr Kredit & Marketing Wing Hang Bank, Hongkong, Wing Hang
+Bank Center, 24 Des Voeux Road Central, Hongkong., Ich habe eine
+gewisse Menge an Geldern, die ich aus dem Land bewegen m=C3=B6chte. Ich
+brauche einen guten Partner, dem ich vertrauen kann. Es ist risikofrei
+und legal. Antwort darauf
 
-:-)
+E-Mail: huanjlaying008@hotmail.com
 
-> My next task is creating a new raid that is inside of partitions.
-
-Now that you know how to create overlays and verified the data 
-is still there... if you want partitions you can do the whole 
-thing one more time.
-
-Your data offset is 257024 sectors so you can take 2048 sectors 
-off that to create a partition at 1 MiB offset.
-
-Since GPT has a partition table backup at end of drive, you might 
-also have to shrink the filesystem on the RAID just a little to 
-make room for that.
-
-Test it all on overlays until you make it work...
-
-> Need to do this with 2 new drives, transfer 10TB, then shrink and
-> remove a drive to add to new raid, transfer and repeat.
-
-> Let me know if this is a bad idea please.
-
-Growing is way more common than the other way around.
-Things can go mysteriously wrong when shrinking stuff. 
-
-As an alternative to the overlay method mentioned above, 
-if you do not mind re-syncing, you could also mdadm --replace 
-your full disk members with partitioned members.
-
-It will complain about the device "not large enough to join array" 
-so you still have to shrink the filesystem just a little and shrink 
-the RAID itself accordingly until the device is not too small anymore.
-
-The main issue is that mdadm's --max-size and --size options can 
-be difficult to deal with. So things can go wrong here, too.
-
-Test it on a separate array (loop devices) first...
-
-# mdadm --grow /dev/md100 --array-size=max
-(no output, check dmesg or /proc/mdstat for size)
-      25132032 blocks super 1.2 level 5, 512k chunk, algorithm 2 [4/4] [UUUU]
-# blockdev --getsize64 /dev/md100
-25735200768
-
-### shrink filesystem on /dev/md100 to 25100000K
-
-# mdadm --grow /dev/md100 --array-size=25100000K
-
-### double check that filesystem is still OK here
-
-# mdadm /dev/md100 --add /dev/loop5
-mdadm: /dev/loop5 not large enough to join array
-# mdadm --grow /dev/md100 --size=max
-mdadm: component size of /dev/md100 unchanged at 8377344K
-# mdadm --grow /dev/md100 --size=8377343K
-mdadm: component size of /dev/md100 has been set to 8376832K
-# mdadm /dev/md100 --add /dev/loop5
-mdadm: /dev/loop5 not large enough to join array
-# mdadm --grow /dev/md100 --size=8376831K
-mdadm: component size of /dev/md100 has been set to 8376320K
-# mdadm /dev/md100 --add /dev/loop5
-mdadm: added /dev/loop5
-# mdadm /dev/md100 --replace /dev/loop3
-
-# cat /proc/mdstat
-md100 : active raid5 loop5[6](R) loop4[5] loop3[4] loop2[2] loop1[1] loop0[0](F)
-      25100000 blocks super 1.2 level 5, 512k chunk, algorithm 2 [4/4] [UUUU]
-      [=========>...........]  recovery = 45.4% (3806592/8376320) finish=0.3min speed=200346K/sec
-
-# mdadm --grow /dev/md100 --size=max
-# mdadm --grow /dev/md100 --array-size=max
-# resize2fs /dev/md100
-
-Something like this, might maybe work if you had to do it without overlays.
-
-Not sure if there is a simpler way right now.
-
-Regards
-Andreas Klauer
+Frau Huan
