@@ -2,80 +2,103 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A8A548629E
-	for <lists+linux-raid@lfdr.de>; Thu,  6 Jan 2022 11:03:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CFDE486719
+	for <lists+linux-raid@lfdr.de>; Thu,  6 Jan 2022 16:53:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234435AbiAFKDm (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 6 Jan 2022 05:03:42 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:38630 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237526AbiAFKDj (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 6 Jan 2022 05:03:39 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6439D61671;
-        Thu,  6 Jan 2022 10:03:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C3F6C36AE5;
-        Thu,  6 Jan 2022 10:03:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1641463418;
-        bh=KFWyjx1BkuXLv8yzjWsH/m2TYNLsl9IwdLd6y1DXRKU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ddwopC1Fw6i5MX4RXUlhcY6Qy4GfNYTgzBmFzMfOjms372m13ZudIRxAx34roSZ1Q
-         xlsDs+why3iBIdF7IQ5sqP0v0idmQw8/f8SUCrBLw3tZn6YPHbhIc8pbEzwlajbmHo
-         7Q9Uycd9FSBrKiJdiYTj05KvpHhTLoS04oxvh5DI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Song Liu <song@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH] md: use default_groups in kobj_type
-Date:   Thu,  6 Jan 2022 11:03:35 +0100
-Message-Id: <20220106100335.3279066-1-gregkh@linuxfoundation.org>
-X-Mailer: git-send-email 2.34.1
+        id S240715AbiAFPx3 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 6 Jan 2022 10:53:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47612 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240695AbiAFPx2 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 6 Jan 2022 10:53:28 -0500
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 612CDC061245
+        for <linux-raid@vger.kernel.org>; Thu,  6 Jan 2022 07:53:28 -0800 (PST)
+Received: by mail-wr1-x432.google.com with SMTP id l10so5633624wrh.7
+        for <linux-raid@vger.kernel.org>; Thu, 06 Jan 2022 07:53:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:sender:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=zOHJbgxEeKcTUS1M3dbg/CCHL8zxNc7o7Y1pwSiNVNQ=;
+        b=iTJPKC6qVEtebBfteAkbYzZ+yrh4TAgOSqti+U4PPJ8dKj4SISRwxmprBJDtzhJFQg
+         40BnG/3nIpYGSelZsUEHC75zNzY91BMeP5nQGZ1VkX6HBbsD0/CXtSUrtK1709AvHKa9
+         y9t+taJ0OR4/HUVSs8x2zTICK/LTvIJyCcdqgpJZrR0o0EZzRW1c8L7S3ynYF1lxf1I3
+         6Qa6qt5JmI5/yBE1XjKOHgcojqOM4ffl9Yke4k+e3p++DQ5deV9P0HPsU/55MweQdUr6
+         1GxUYDpHIdF7PxRjMn5j334VTd236KcvQ9uem72juQ1kpuXM+4q2dvtdc1HT7gd/8Rez
+         K9xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to:content-transfer-encoding;
+        bh=zOHJbgxEeKcTUS1M3dbg/CCHL8zxNc7o7Y1pwSiNVNQ=;
+        b=FMQV9vv6BK2Bz0+w2V/BQ1WBuvLAmGAfWZ5mUHPA6jmbHWAltFUrwMjq40+HbrjyBu
+         /XS7tLXK1Ih+LgXKOaLA7OERlk96eMi5Um0NO8BoxDoUAHTURoLVFIwgO3Vu/Tl1LbuI
+         GelTrjrO0J1KNXD+cZvCOqq66t7FY6CBjJ0rLMg+OsiIdfYagyJuiUx09Qg2LwrC/al6
+         dMzYXlerdL08mTIBpCZ5d//dfXLaRL0xZDCLj9+DLgk3Ka2R9dg4KP8Ri+kINdras88i
+         AYRII7gzY4fkfHSK7kaDXNwZsxhpk4AFJzjhk2WunsK/iDyIqqZdYtNZhTctT/qAp37W
+         /hvA==
+X-Gm-Message-State: AOAM532i6PjW0OpyxfAaaj5G6YxkwTkhuYRaVu7pwNfouDHMPU3YUeGE
+        A6ig6MFUD8qAYqOcJPrrfWHGlqpJMopOE9hX0NE=
+X-Google-Smtp-Source: ABdhPJzuwCH8PRii47sMIr9QMAbzvJjFryNmm0s8s2Rd3hMc07PJWYgVtVVqR8Ly1cpw+PQVdnOSIjwOjNyEa8A+B/I=
+X-Received: by 2002:a5d:404a:: with SMTP id w10mr52730203wrp.573.1641484406862;
+ Thu, 06 Jan 2022 07:53:26 -0800 (PST)
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1288; h=from:subject; bh=KFWyjx1BkuXLv8yzjWsH/m2TYNLsl9IwdLd6y1DXRKU=; b=owGbwMvMwCRo6H6F97bub03G02pJDInX9pU7Ju3Y/ZIxW+7OOo8SmW05cz8nxG7SV/aYnfSHY53i RM9/HbEsDIJMDLJiiixftvEc3V9xSNHL0PY0zBxWJpAhDFycAjCRQ2sZFsx9IKXy9vWVl813f1T0XJ v0aJXjsTsMCxqvqG9tOVin/0cxbcexr1ZLvj+92QsA
-X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
-Content-Transfer-Encoding: 8bit
+Sender: donnalouisemchince@gmail.com
+Received: by 2002:adf:f347:0:0:0:0:0 with HTTP; Thu, 6 Jan 2022 07:53:26 -0800 (PST)
+From:   DINA MCKENNA <dinamckennahowley@gmail.com>
+Date:   Thu, 6 Jan 2022 15:53:26 +0000
+X-Google-Sender-Auth: BHTfX1QzurMPDWuAH4z2Jdx2lfU
+Message-ID: <CA+4RuvuDNZveFNt_bhm31Xuh7rQpGV79P-8yKrSvDZ8e2OHktg@mail.gmail.com>
+Subject: Calvary greetings.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-There are currently 2 ways to create a set of sysfs files for a
-kobj_type, through the default_attrs field, and the default_groups
-field.  Move the md rdev sysfs code to use default_groups field which
-has been the preferred way since aa30f47cf666 ("kobject: Add support for
-default attribute groups to kobj_type") so that we can soon get rid of
-the obsolete default_attrs field.
+Hello my dear,
 
-Cc: Song Liu <song@kernel.org>
-Cc: linux-raid@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/md/md.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ I sent this mail praying it will get to you in a good condition of
+health, since I myself are in a very critical health condition in
+which I sleep every night without knowing if I may be alive to see the
+next day. I bring peace and love to you. It is by the grace of God, I
+had no choice than to do what is lawful and right in the sight of God
+for eternal life and in the sight of man, for witness of God=E2=80=99s merc=
+y
+and glory upon my life. I am Mrs. Dina. Howley Mckenna, a widow. I am
+suffering from a long time brain tumor, It has defiled all forms of
+medical treatment, and right now I have about a few months to leave,
+according to medical experts. The situation has gotten complicated
+recently with my inability to hear proper, am communicating with you
+with the help of the chief nurse herein the hospital, from all
+indication my conditions is really deteriorating and it is quite
+obvious that, according to my doctors they have advised me that I may
+not live too long, Because this illness has gotten to a very bad
+stage. I plead that you will not expose or betray this trust and
+confidence that I am about to repose on you for the mutual benefit of
+the orphans and the less privilege. I have some funds I inherited from
+my late husband, the sum of ($ 11,000,000.00, Eleven Million Dollars).
+Having known my condition, I decided to donate this fund to you
+believing that you will utilize it the way i am going to instruct
+herein. I need you to assist me and reclaim this money and use it for
+Charity works therein your country  for orphanages and gives justice
+and help to the poor, needy and widows says The Lord." Jeremiah
+22:15-16.=E2=80=9C and also build schools for less privilege that will be
+named after my late husband if possible and to promote the word of God
+and the effort that the house of God is maintained. I do not want a
+situation where this money will be used in an ungodly manner. That's
+why I'm taking this decision. I'm not afraid of death, so I know where
+I'm going. I accept this decision because I do not have any child who
+will inherit this money after I die.. Please I want your sincerely and
+urgent answer to know if you will be able to execute this project for
+the glory of God, and I will give you more information on how the fund
+will be transferred to your bank account. May the grace, peace, love
+and the truth in the Word of God be with you and all those that you
+love and care for.
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 5111ed966947..7642f3fb38e6 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -3602,6 +3602,7 @@ static struct attribute *rdev_default_attrs[] = {
- 	&rdev_ppl_size.attr,
- 	NULL,
- };
-+ATTRIBUTE_GROUPS(rdev_default);
- static ssize_t
- rdev_attr_show(struct kobject *kobj, struct attribute *attr, char *page)
- {
-@@ -3651,7 +3652,7 @@ static const struct sysfs_ops rdev_sysfs_ops = {
- static struct kobj_type rdev_ktype = {
- 	.release	= rdev_free,
- 	.sysfs_ops	= &rdev_sysfs_ops,
--	.default_attrs	= rdev_default_attrs,
-+	.default_groups	= rdev_default_groups,
- };
- 
- int md_rdev_init(struct md_rdev *rdev)
--- 
-2.34.1
+I'm waiting for your immediate reply..
 
+May God Bless you,
+Mrs. Dina. Howley Mckenna.
