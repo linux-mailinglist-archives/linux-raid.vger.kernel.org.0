@@ -2,189 +2,261 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DDB2448B89B
-	for <lists+linux-raid@lfdr.de>; Tue, 11 Jan 2022 21:26:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C91F448B8CC
+	for <lists+linux-raid@lfdr.de>; Tue, 11 Jan 2022 21:43:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231661AbiAKU0Y (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 11 Jan 2022 15:26:24 -0500
-Received: from outbound5b.eu.mailhop.org ([3.125.66.160]:32977 "EHLO
-        outbound5b.eu.mailhop.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230469AbiAKU0Y (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 11 Jan 2022 15:26:24 -0500
-X-Greylist: delayed 2702 seconds by postgrey-1.27 at vger.kernel.org; Tue, 11 Jan 2022 15:26:23 EST
-ARC-Seal: i=1; a=rsa-sha256; t=1641930019; cv=none;
-        d=outbound.mailhop.org; s=arc-outbound20181012;
-        b=cykwxP5dR30b18DtiL0+gTKidk8czQVawQeBYgkZSyiB34VWPqND32+1FxnKuilygiH2mnmRs4Zgp
-         llMliFp2P3xok45TEaxW4vHRCKKr3kfvS3ebGxGw4ez3RaRDB3nwquxvUsmTzUOpRz3g+zrozgPBDp
-         7gZLIZPJda+yaYBCJwaCdnerU0u8vYnTLvYE2VLZ/17O3PLRk7m7hdJcfv+qZw1Na3KCyFd1HM0/R8
-         K0PPVPcfPA3pNXJNctknomxoxYgpAx9o/Z5kdBvfuInP7KrEjm2MIvaa6oUhA7sN8XOVPlr92RU8UI
-         d9QZ+tU49BkqKslddlK51Rq6cmO3yRA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=outbound.mailhop.org; s=arc-outbound20181012;
-        h=content-transfer-encoding:content-type:in-reply-to:from:references:to:subject:
-         mime-version:date:message-id:dkim-signature:from;
-        bh=DYxxkQkI1WPVJRJjh1Z9EEYr1ScgaEo4aKx6hG3Rd9A=;
-        b=LvM1R/UNWdP3my3R4U5GcOId8/HuBXYICh3GVhYGT8l1iXtUWlmJlDE4xbIRAi32SjrC3lGTB11GE
-         rWxySGjLXm/NB3VlWtg9CmigHg8FET6PKnVYhvbADfeiyMtmiUaHkov2AW6CWringimWCJXipMekCp
-         iBn3I8zkJ45w73xVev/krcT9TIEabQ84WSM2Yk2B/3LPpTjCGpLrOHOwIRY4Jhh+RKmbCZhwnd/3oG
-         76dkrWK38c7ZIbKJYoMwnwE+2jijZDFOy13xuAQNRydJE6Ms2tSxdh/sj18rbvgKBaQIoo0Xvwx58n
-         z+fGbDD5zMiiUefVEvrBKifF8YxIvmQ==
-ARC-Authentication-Results: i=1; outbound3.eu.mailhop.org;
-        spf=softfail smtp.mailfrom=demonlair.co.uk smtp.remote-ip=86.166.202.46;
-        dmarc=none header.from=demonlair.co.uk;
-        arc=none header.oldest-pass=0;
+        id S244153AbiAKUnq (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 11 Jan 2022 15:43:46 -0500
+Received: from UCOL19PA35.eemsg.mail.mil ([214.24.24.195]:53419 "EHLO
+        UCOL19PA35.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233821AbiAKUnp (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 11 Jan 2022 15:43:45 -0500
+X-Greylist: delayed 438 seconds by postgrey-1.27 at vger.kernel.org; Tue, 11 Jan 2022 15:43:45 EST
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=outbound.mailhop.org; s=dkim-high;
-        h=content-transfer-encoding:content-type:in-reply-to:from:references:to:subject:
-         mime-version:date:message-id:from;
-        bh=DYxxkQkI1WPVJRJjh1Z9EEYr1ScgaEo4aKx6hG3Rd9A=;
-        b=MkDJo9ZK5+fZL7qm4Oj8tGMk4G8mTlZ3LtoYoRgV3vxzAA6qlicS+yTCBNIQp75uaefch3xLkToCw
-         xJLmjVWD/mITc2a1ikfYP1tiq64J0z3n8r8M2I9zE7/AcJssoiaqyHz6jHG5ZtWBjhzOcIJoOMZfoV
-         8JLNfmwvCLqHw+iL5yXCDag2d6knX0LXSBls8fqBG70JsgQtstsCdevE5khCuZO7BnBH86HwiB6Mob
-         hL632eo46JC39oyCfG7B7gdXhEZTr3PBCEQikqEktKwX7DBJjz1YAZpT9vnQ2aJ/1tfZD+xO3pmhdU
-         QJO6q0duFsiV18LjsQ3XKOetefg5Nww==
-X-Originating-IP: 86.166.202.46
-X-MHO-RoutePath: ZGVtb25sYWly
-X-MHO-User: 4cdd0c83-7316-11ec-b830-95b64d6800c5
-X-Report-Abuse-To: https://support.duocircle.com/support/solutions/articles/5000540958-duocircle-standard-smtp-abuse-information
-X-Mail-Handler: DuoCircle Outbound SMTP
-Received: from phoenix.demonlair.co.uk (host86-166-202-46.range86-166.btcentralplus.com [86.166.202.46])
-        by outbound3.eu.mailhop.org (Halon) with ESMTPA
-        id 4cdd0c83-7316-11ec-b830-95b64d6800c5;
-        Tue, 11 Jan 2022 19:40:16 +0000 (UTC)
-Received: from [10.57.1.71] (mercury.demonlair.co.uk [10.57.1.71])
-        by phoenix.demonlair.co.uk (Postfix) with ESMTP id 98F401EA047;
-        Tue, 11 Jan 2022 19:40:15 +0000 (GMT)
-Message-ID: <4f30f93a-1f2d-e082-d598-aa2987658b01@demonlair.co.uk>
-Date:   Tue, 11 Jan 2022 19:40:14 +0000
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.1
-Subject: Re: MDRAID NVMe performance question, but I don't know what I don't
- know
-Content-Language: en-GB
-To:     "Finlayson, James M CIV (USA)" <james.m.finlayson4.civ@mail.mil>,
+  d=mail.mil; i=@mail.mil; q=dns/txt; s=EEMSG2021v1a;
+  t=1641933825; x=1673469825;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=/JgWW1RUwgEvv0cD0xPLu3cs60Ms6tQA+rBkXwkH0Jw=;
+  b=LOyWjWjmGs18bYlBKxXk1xjvt10eV7XA+Ioa5pSg97r492jDXy47Gn/D
+   7qVoydzdkrLfybCgECw6cGae8D+B6dgheg+4lijweij0a5afdSoLtzoVK
+   qrv/7d+9UefH2vtl3c8BSgvIRyfJo+Iu2nWxa0hJHpQ3AI6sJz+hVheOU
+   VtoMG8DPuZWEW453Slg6OXvLCndYwR0Kz53A3l2cWv77wbefy6kHFjicP
+   5BzuAmsLszRXN9ShhmizisFi/mnLFUbH5p0OG4wrwYI5uj9x2n6L7jIVY
+   U/jXwClgBOM6BM5hNfVoiEuZK/upLhTENnjUjnISXDdq89SwnBVgF/rk/
+   w==;
+X-EEMSG-check-017: 314763237|UCOL19PA35_ESA_OUT02.csd.disa.mil
+X-IronPort-AV: E=Sophos;i="5.88,279,1635206400"; 
+   d="scan'208";a="314763237"
+IronPort-Data: A9a23:iBOjV67LAB0rvMZHs3paXwxRtNjFchMFZxGqfqrLsTDasY5as4F+v
+ mEZX2GOOK2OazamfdB3aYm19U8CsZ+Ey9ZlGgpl+ylgEysa+MHIO4+Ufxz6V8+wwmwvb67FA
+ +E2MISowPgcFySa/lHxWlTYhSEUOZugHtIQM8aZfHAhLeNYYH1500g7wrdg2tQAbeWRW2thh
+ /uj+6UzB3f4g1aYAkpMg06ygEsHUMba4Vv0jXRnDRx/h2IyolFOZH4pyQFdGFOjKmVcNrbSq
+ +8uV9hV9EuBl/smIovNfroW7iQ3rrDu0Qim0hK6WoCvjhdP4yk/2aZjbrwZYEZTzTCIm7idy
+ v0X7MD2E15vZ/aU3r5HA3G0EAknVUFC0L3OJHWk98nVwUzAd3L92PJoUAc9PJMw/+92BSdL9
+ PhwxDUlNUnf2LztmunkIgVrroF5RCXxB6sbu3d93XTDBPcqaY7MTr+M5tJC2jo0wMdUEp72a
+ MceZzRHYBnFZBtLM1YNTpk52vqr7kQT2RUwREm9qKY47i3WwQdxiOKrNdPUfpqPRME9o6pRn
+ Uqel0yRP/3QHIbDkGDtHq6E7gMXoR7GZQ==
+IronPort-HdrOrdr: A9a23:jPyViK53FpXk3SyKeQPXwMzXdLJyesId70hD6qkXc3Bom62j+P
+ xG+c5x6faaslgssR0b+OxoWpPwIk80hKQU3WB5B97LNmTbUQCTXeNfBOXZslndMhy72ulB1b
+ pxN4hSYeeAamSSVPyKhTWFLw==
+Received: from edge-mech02.mail.mil ([214.21.130.228])
+  by UCOL19PA35.eemsg.mail.mil with ESMTP/TLS/ECDHE-RSA-AES256-SHA384; 11 Jan 2022 20:32:05 +0000
+Received: from UMECHPAOS.easf.csd.disa.mil (214.21.130.162) by
+ edge-mech02.mail.mil (214.21.130.228) with Microsoft SMTP Server (TLS) id
+ 14.3.498.0; Tue, 11 Jan 2022 20:31:39 +0000
+Received: from UMECHPA7B.easf.csd.disa.mil ([169.254.8.86]) by
+ umechpaos.easf.csd.disa.mil ([1.213.132.164]) with mapi id 14.03.0513.000;
+ Tue, 11 Jan 2022 20:31:38 +0000
+From:   "Finlayson, James M CIV (USA)" <james.m.finlayson4.civ@mail.mil>
+To:     'Geoff Back' <geoff@demonlair.co.uk>,
         "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>
+Subject: RE: [Non-DoD Source] Re: MDRAID NVMe performance question, but I
+ don't know what I don't know
+Thread-Topic: [Non-DoD Source] Re: MDRAID NVMe performance question, but I
+ don't know what I don't know
+Thread-Index: AQHYByMXyvUpCYxSGki7I8bujJKJvKxeRb7w
+Date:   Tue, 11 Jan 2022 20:31:38 +0000
+Message-ID: <5EAED86C53DED2479E3E145969315A238926CAB7@UMECHPA7B.easf.csd.disa.mil>
 References: <5EAED86C53DED2479E3E145969315A238926397D@UMECHPA7B.easf.csd.disa.mil>
-From:   Geoff Back <geoff@demonlair.co.uk>
-In-Reply-To: <5EAED86C53DED2479E3E145969315A238926397D@UMECHPA7B.easf.csd.disa.mil>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <4f30f93a-1f2d-e082-d598-aa2987658b01@demonlair.co.uk>
+In-Reply-To: <4f30f93a-1f2d-e082-d598-aa2987658b01@demonlair.co.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [214.21.44.14]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi James,
-
-My first thought would be: how sure are you about which physical socket
-(and hence NUMA node) each NVME drive is connected to?
-
-Regards,
-
-Geoff.
-
-
-On 11/01/2022 16:03, Finlayson, James M CIV (USA) wrote:
-> Hi,
-> Sorry this is a long read.   If you want to get to the gist of it, look for "<KEY>" for key points.   I'm having some issues with where to find information to troubleshoot mdraid performance issues.   The latest "rathole" I'm going down is that I have two identically configured mdraids, 1 per NUMA node on a dual socket AMD Rome with "numas per socket" set to 1 in the BIOS.   Things are cranking with a 64K blocksize but I have a substantial disparity between NUMA0's mdraid and NUMA1's.     
->
-> [root@hornet04 block]# uname -r
-> <KEY> 5.15.13-1.el8.elrepo.x86_64
->
-> <KEY>  [root@hornet04 block]# cat /proc/mdstat  (md127 is NUMA 0, md126 is NUMA 1).
-> Personalities : [raid6] [raid5] [raid4] 
-> md126 : active raid5 nvme22n1p1[10] nvme20n1p1[7] nvme21n1p1[8] nvme18n1p1[5] nvme19n1p1[6] nvme17n1p1[4] nvme15n1p1[3] nvme14n1p1[2] nvme12n1p1[0] nvme13n1p1[1]
->       135007147008 blocks super 1.2 level 5, 128k chunk, algorithm 2 [10/10] [UUUUUUUUUU]
->       bitmap: 0/112 pages [0KB], 65536KB chunk
->
-> md127 : active raid5 nvme9n1p1[10] nvme8n1p1[8] nvme7n1p1[7] nvme6n1p1[6] nvme5n1p1[5] nvme3n1p1[3] nvme4n1p1[4] nvme2n1p1[2] nvme1n1p1[1] nvme0n1p1[0]
->       135007147008 blocks super 1.2 level 5, 128k chunk, algorithm 2 [10/10] [UUUUUUUUUU]
->       bitmap: 0/112 pages [0KB], 65536KB chunk
->
-> unused devices: <none>
->
->
-> I'm running numa aware identical FIOs, but getting the following in iostat (numa 0 mdraid, outperforms numa 1 mdraid by 12GB/s)
->
-> [root@hornet04 ~]#  iostat -xkz 1 
-> avg-cpu:  %user   %nice %system %iowait  %steal   %idle
->            0.20    0.00    3.35    0.00    0.00   96.45
->
-> Device            r/s     w/s     rkB/s     wkB/s   rrqm/s   wrqm/s  %rrqm  %wrqm r_await w_await aqu-sz rareq-sz wareq-sz  svctm  %util
-> nvme2c2n1     72856.00    0.00 4662784.00      0.00     0.00     0.00   0.00   0.00    0.68    0.00  49.50    64.00     0.00   0.01 100.00
-> nvme3c3n1     73077.00    0.00 4676928.00      0.00     0.00     0.00   0.00   0.00    0.68    0.00  49.94    64.00     0.00   0.01 100.00
-> nvme4c4n1     73013.00    0.00 4672896.00      0.00     0.00     0.00   0.00   0.00    0.69    0.00  50.35    64.00     0.00   0.01 100.00
-> <KEY> nvme18c18n1   54384.00    0.00 3480576.00      0.00     0.00     0.00   0.00   0.00  144.80    0.00 7874.85    64.00     0.00   0.02 100.00
-> nvme5c5n1     72841.00    0.00 4661824.00      0.00     0.00     0.00   0.00   0.00    0.70    0.00  51.01    64.00     0.00   0.01 100.00
-> nvme7c7n1     72220.00    0.00 4622080.00      0.00     0.00     0.00   0.00   0.00    0.67    0.00  48.61    64.00     0.00   0.01 100.00
-> nvme22c22n1   54652.00    0.00 3497728.00      0.00     0.00     0.00   0.00   0.00    0.64    0.00  34.73    64.00     0.00   0.02 100.00
-> nvme12c12n1   54756.00    0.00 3504384.00      0.00     0.00     0.00   0.00   0.00    0.66    0.00  36.34    64.00     0.00   0.02 100.00
-> nvme14c14n1   54517.00    0.00 3489088.00      0.00     0.00     0.00   0.00   0.00    0.65    0.00  35.66    64.00     0.00   0.02 100.00
-> nvme6c6n1     72721.00    0.00 4654144.00      0.00     0.00     0.00   0.00   0.00    0.68    0.00  49.77    64.00     0.00   0.01 100.00
-> nvme21c21n1   54731.00    0.00 3502784.00      0.00     0.00     0.00   0.00   0.00    0.67    0.00  36.46    64.00     0.00   0.02 100.00
-> nvme9c9n1     72661.00    0.00 4650304.00      0.00     0.00     0.00   0.00   0.00    0.71    0.00  51.35    64.00     0.00   0.01 100.00
-> nvme17c17n1   54462.00    0.00 3485568.00      0.00     0.00     0.00   0.00   0.00    0.66    0.00  36.09    64.00     0.00   0.02 100.00
-> nvme20c20n1   54463.00    0.00 3485632.00      0.00     0.00     0.00   0.00   0.00    0.66    0.00  36.10    64.00     0.00   0.02 100.10
-> nvme13c13n1   54910.00    0.00 3514240.00      0.00     0.00     0.00   0.00   0.00    0.61    0.00  33.45    64.00     0.00   0.02 100.00
-> nvme8c8n1     72622.00    0.00 4647808.00      0.00     0.00     0.00   0.00   0.00    0.67    0.00  48.52    64.00     0.00   0.01 100.00
-> nvme15c15n1   54543.00    0.00 3490752.00      0.00     0.00     0.00   0.00   0.00    0.61    0.00  33.28    64.00     0.00   0.02 100.00
-> nvme0c0n1     73215.00    0.00 4685760.00      0.00     0.00     0.00   0.00   0.00    0.67    0.00  49.41    64.00     0.00   0.01 100.00
-> nvme19c19n1   55034.00    0.00 3522176.00      0.00     0.00     0.00   0.00   0.00    0.67    0.00  36.93    64.00     0.00   0.02 100.10
-> <KEY> nvme1c1n1     72672.00    0.00 4650944.00      0.00     0.00     0.00   0.00   0.00  106.98    0.00 7774.54    64.00     0.00   0.01 100.00
-> <KEY> md127         727871.00    0.00 46583744.00      0.00     0.00     0.00   0.00   0.00   11.30    0.00 8221.92    64.00     0.00   0.00 100.00
-> <KEY> md126         546553.00    0.00 34979392.00      0.00     0.00     0.00   0.00   0.00   14.99    0.00 8194.91    64.00     0.00   0.00 100.10
->
->
-> <KEY> I started chasing the aqu_sz and r_await to see if I have a device issue or if these are known mdraid "features" when I started to try to find the kernel workers and start chasing kernel workers when it became apparent to me that I DON'T KNOW WHAT I'M DOING OR WHAT TO DO NEXT. Any guidance is appreciated.  Given 1 drive per NUMA is showing the bad behavior, I'm reluctant to point the finger at hardware.
->
->
-> [root@hornet04 ~]# lscpu
-> Architecture:        x86_64
-> CPU op-mode(s):      32-bit, 64-bit
-> Byte Order:          Little Endian
-> CPU(s):              256
-> On-line CPU(s) list: 0-255
-> Thread(s) per core:  2
-> Core(s) per socket:  64
-> Socket(s):           2
-> NUMA node(s):        2
-> Vendor ID:           AuthenticAMD
-> BIOS Vendor ID:      Advanced Micro Devices, Inc.
-> CPU family:          23
-> Model:               49
-> Model name:          AMD EPYC 7742 64-Core Processor
-> BIOS Model name:     AMD EPYC 7742 64-Core Processor                
-> Stepping:            0
-> CPU MHz:             3243.803
-> BogoMIPS:            4491.53
-> Virtualization:      AMD-V
-> L1d cache:           32K
-> L1i cache:           32K
-> L2 cache:            512K
-> L3 cache:            16384K
-> <KEY> NUMA node0 CPU(s):   0-63,128-191
-> <KEY>  NUMA node1 CPU(s):   64-127,192-255
-> Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl nonstop_tsc cpuid extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpb cat_l3 cdp_l3 hw_pstate ssbd mba ibrs ibpb stibp vmmcall fsgsbase bmi1 avx2 smep bmi2 cqm rdt_a rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local clzero irperf xsaveerptr rdpru wbnoinvd amd_ppin arat npt lbrv svm_lock nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold avic v_vmsave_vmload vgif v_spec_ctrl umip rdpid overflow_recov succor smca
->
->
-> <KEY> When I start doing some basic debugging - not a Linux ninja by far, I see the following, but what is throwing me is seeing (at least these workers that I suspect have to do with md, all running on NUMA node 1.   This is catching me by surprise.   Are there other workers that I'm missing?????
->
-> ps -eo pid,tid,class,rtprio,ni,pri,numa,psr,pcpu,stat,wchan:14,comm | head -1; ps -eo pid,tid,class,rtprio,ni,pri,numa,psr,pcpu,stat,wchan:14,comm  | egrep 'md|raid' | grep -v systemd | grep -v mlx
->     PID     TID CLS RTPRIO  NI PRI NUMA PSR %CPU STAT WCHAN          COMMAND
->    1522    1522 TS       -   5  14    1 208  0.0 SN   -              ksmd
->    1590    1590 TS       - -20  39    1 220  0.0 I<   -              md
->    3688    3688 TS       - -20  39    1 198  0.0 I<   -              raid5wq
->    3693    3693 TS       -   0  19    1 234  0.0 S    -              md126_raid5
->    3694    3694 TS       -   0  19    1  95  0.0 S    -              md127_raid5
->    3788    3788 TS       -   0  19    1 240  0.0 Ss   -              lsmdcat /
->
->
->
-> Jim Finlayson
-> U.S. Department of Defense
->
-
--- 
-Geoff Back
-What if we're all just characters in someone's nightmares?
-
+VW5sZXNzIEkgZGlkIHNvbWV0aGluZyBjb21wbGV0ZWx5IGZvb2xpc2g6DQoNCltyb290QGhvcm5l
+dDA0IH5dIyBmb3IgaSBpbiAvc3lzL2NsYXNzL252bWUvbnZtZSogOyBkbyBlY2hvICRpIGBjYXQg
+JGkvbnVtYV9ub2RlYCBgbHMgLWQgJGkvbnZtZSpgIDsgZG9uZQ0KL3N5cy9jbGFzcy9udm1lL252
+bWUwIDAgL3N5cy9jbGFzcy9udm1lL252bWUwL252bWUwYzBuMQ0KL3N5cy9jbGFzcy9udm1lL252
+bWUxIDAgL3N5cy9jbGFzcy9udm1lL252bWUxL252bWUxYzFuMQ0KL3N5cy9jbGFzcy9udm1lL252
+bWUxMCAwIC9zeXMvY2xhc3MvbnZtZS9udm1lMTAvbnZtZTEwYzEwbjENCi9zeXMvY2xhc3MvbnZt
+ZS9udm1lMTEgMCAvc3lzL2NsYXNzL252bWUvbnZtZTExL252bWUxMWMxMW4xDQovc3lzL2NsYXNz
+L252bWUvbnZtZTEyIDEgL3N5cy9jbGFzcy9udm1lL252bWUxMi9udm1lMTJjMTJuMQ0KL3N5cy9j
+bGFzcy9udm1lL252bWUxMyAxIC9zeXMvY2xhc3MvbnZtZS9udm1lMTMvbnZtZTEzYzEzbjENCi9z
+eXMvY2xhc3MvbnZtZS9udm1lMTQgMSAvc3lzL2NsYXNzL252bWUvbnZtZTE0L252bWUxNGMxNG4x
+DQovc3lzL2NsYXNzL252bWUvbnZtZTE1IDEgL3N5cy9jbGFzcy9udm1lL252bWUxNS9udm1lMTVj
+MTVuMQ0KL3N5cy9jbGFzcy9udm1lL252bWUxNiAxIC9zeXMvY2xhc3MvbnZtZS9udm1lMTYvbnZt
+ZTE2YzE2bjENCi9zeXMvY2xhc3MvbnZtZS9udm1lMTcgMSAvc3lzL2NsYXNzL252bWUvbnZtZTE3
+L252bWUxN2MxN24xDQovc3lzL2NsYXNzL252bWUvbnZtZTE4IDEgL3N5cy9jbGFzcy9udm1lL252
+bWUxOC9udm1lMThjMThuMQ0KL3N5cy9jbGFzcy9udm1lL252bWUxOSAxIC9zeXMvY2xhc3MvbnZt
+ZS9udm1lMTkvbnZtZTE5YzE5bjENCi9zeXMvY2xhc3MvbnZtZS9udm1lMiAwIC9zeXMvY2xhc3Mv
+bnZtZS9udm1lMi9udm1lMmMybjENCi9zeXMvY2xhc3MvbnZtZS9udm1lMjAgMSAvc3lzL2NsYXNz
+L252bWUvbnZtZTIwL252bWUyMGMyMG4xDQovc3lzL2NsYXNzL252bWUvbnZtZTIxIDEgL3N5cy9j
+bGFzcy9udm1lL252bWUyMS9udm1lMjFjMjFuMQ0KL3N5cy9jbGFzcy9udm1lL252bWUyMiAxIC9z
+eXMvY2xhc3MvbnZtZS9udm1lMjIvbnZtZTIyYzIybjENCi9zeXMvY2xhc3MvbnZtZS9udm1lMjMg
+MSAvc3lzL2NsYXNzL252bWUvbnZtZTIzL252bWUyM2MyM24xDQovc3lzL2NsYXNzL252bWUvbnZt
+ZTI0IDEgL3N5cy9jbGFzcy9udm1lL252bWUyNC9udm1lMjRjMjRuMQ0KL3N5cy9jbGFzcy9udm1l
+L252bWUzIDAgL3N5cy9jbGFzcy9udm1lL252bWUzL252bWUzYzNuMQ0KL3N5cy9jbGFzcy9udm1l
+L252bWU0IDAgL3N5cy9jbGFzcy9udm1lL252bWU0L252bWU0YzRuMQ0KL3N5cy9jbGFzcy9udm1l
+L252bWU1IDAgL3N5cy9jbGFzcy9udm1lL252bWU1L252bWU1YzVuMQ0KL3N5cy9jbGFzcy9udm1l
+L252bWU2IDAgL3N5cy9jbGFzcy9udm1lL252bWU2L252bWU2YzZuMQ0KL3N5cy9jbGFzcy9udm1l
+L252bWU3IDAgL3N5cy9jbGFzcy9udm1lL252bWU3L252bWU3YzduMQ0KL3N5cy9jbGFzcy9udm1l
+L252bWU4IDAgL3N5cy9jbGFzcy9udm1lL252bWU4L252bWU4YzhuMQ0KL3N5cy9jbGFzcy9udm1l
+L252bWU5IDAgL3N5cy9jbGFzcy9udm1lL252bWU5L252bWU5YzluMQ0KDQoNCg0KLS0tLS1Pcmln
+aW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IEdlb2ZmIEJhY2sgPGdlb2ZmQGRlbW9ubGFpci5jby51
+az4gDQpTZW50OiBUdWVzZGF5LCBKYW51YXJ5IDExLCAyMDIyIDI6NDAgUE0NClRvOiBGaW5sYXlz
+b24sIEphbWVzIE0gQ0lWIChVU0EpIDxqYW1lcy5tLmZpbmxheXNvbjQuY2l2QG1haWwubWlsPjsg
+bGludXgtcmFpZEB2Z2VyLmtlcm5lbC5vcmcNClN1YmplY3Q6IFtOb24tRG9EIFNvdXJjZV0gUmU6
+IE1EUkFJRCBOVk1lIHBlcmZvcm1hbmNlIHF1ZXN0aW9uLCBidXQgSSBkb24ndCBrbm93IHdoYXQg
+SSBkb24ndCBrbm93DQoNCkhpIEphbWVzLA0KDQpNeSBmaXJzdCB0aG91Z2h0IHdvdWxkIGJlOiBo
+b3cgc3VyZSBhcmUgeW91IGFib3V0IHdoaWNoIHBoeXNpY2FsIHNvY2tldCAoYW5kIGhlbmNlIE5V
+TUEgbm9kZSkgZWFjaCBOVk1FIGRyaXZlIGlzIGNvbm5lY3RlZCB0bz8NCg0KUmVnYXJkcywNCg0K
+R2VvZmYuDQoNCg0KT24gMTEvMDEvMjAyMiAxNjowMywgRmlubGF5c29uLCBKYW1lcyBNIENJViAo
+VVNBKSB3cm90ZToNCj4gSGksDQo+IFNvcnJ5IHRoaXMgaXMgYSBsb25nIHJlYWQuICAgSWYgeW91
+IHdhbnQgdG8gZ2V0IHRvIHRoZSBnaXN0IG9mIGl0LCBsb29rIGZvciAiPEtFWT4iIGZvciBrZXkg
+cG9pbnRzLiAgIEknbSBoYXZpbmcgc29tZSBpc3N1ZXMgd2l0aCB3aGVyZSB0byBmaW5kIGluZm9y
+bWF0aW9uIHRvIHRyb3VibGVzaG9vdCBtZHJhaWQgcGVyZm9ybWFuY2UgaXNzdWVzLiAgIFRoZSBs
+YXRlc3QgInJhdGhvbGUiIEknbSBnb2luZyBkb3duIGlzIHRoYXQgSSBoYXZlIHR3byBpZGVudGlj
+YWxseSBjb25maWd1cmVkIG1kcmFpZHMsIDEgcGVyIE5VTUEgbm9kZSBvbiBhIGR1YWwgc29ja2V0
+IEFNRCBSb21lIHdpdGggIm51bWFzIHBlciBzb2NrZXQiIHNldCB0byAxIGluIHRoZSBCSU9TLiAg
+IFRoaW5ncyBhcmUgY3Jhbmtpbmcgd2l0aCBhIDY0SyBibG9ja3NpemUgYnV0IEkgaGF2ZSBhIHN1
+YnN0YW50aWFsIGRpc3Bhcml0eSBiZXR3ZWVuIE5VTUEwJ3MgbWRyYWlkIGFuZCBOVU1BMSdzLiAg
+ICAgDQo+DQo+IFtyb290QGhvcm5ldDA0IGJsb2NrXSMgdW5hbWUgLXINCj4gPEtFWT4gNS4xNS4x
+My0xLmVsOC5lbHJlcG8ueDg2XzY0DQo+DQo+IDxLRVk+ICBbcm9vdEBob3JuZXQwNCBibG9ja10j
+IGNhdCAvcHJvYy9tZHN0YXQgIChtZDEyNyBpcyBOVU1BIDAsIG1kMTI2IGlzIE5VTUEgMSkuDQo+
+IFBlcnNvbmFsaXRpZXMgOiBbcmFpZDZdIFtyYWlkNV0gW3JhaWQ0XQ0KPiBtZDEyNiA6IGFjdGl2
+ZSByYWlkNSBudm1lMjJuMXAxWzEwXSBudm1lMjBuMXAxWzddIG52bWUyMW4xcDFbOF0gbnZtZTE4
+bjFwMVs1XSBudm1lMTluMXAxWzZdIG52bWUxN24xcDFbNF0gbnZtZTE1bjFwMVszXSBudm1lMTRu
+MXAxWzJdIG52bWUxMm4xcDFbMF0gbnZtZTEzbjFwMVsxXQ0KPiAgICAgICAxMzUwMDcxNDcwMDgg
+YmxvY2tzIHN1cGVyIDEuMiBsZXZlbCA1LCAxMjhrIGNodW5rLCBhbGdvcml0aG0gMiBbMTAvMTBd
+IFtVVVVVVVVVVVVVXQ0KPiAgICAgICBiaXRtYXA6IDAvMTEyIHBhZ2VzIFswS0JdLCA2NTUzNktC
+IGNodW5rDQo+DQo+IG1kMTI3IDogYWN0aXZlIHJhaWQ1IG52bWU5bjFwMVsxMF0gbnZtZThuMXAx
+WzhdIG52bWU3bjFwMVs3XSBudm1lNm4xcDFbNl0gbnZtZTVuMXAxWzVdIG52bWUzbjFwMVszXSBu
+dm1lNG4xcDFbNF0gbnZtZTJuMXAxWzJdIG52bWUxbjFwMVsxXSBudm1lMG4xcDFbMF0NCj4gICAg
+ICAgMTM1MDA3MTQ3MDA4IGJsb2NrcyBzdXBlciAxLjIgbGV2ZWwgNSwgMTI4ayBjaHVuaywgYWxn
+b3JpdGhtIDIgWzEwLzEwXSBbVVVVVVVVVVVVVV0NCj4gICAgICAgYml0bWFwOiAwLzExMiBwYWdl
+cyBbMEtCXSwgNjU1MzZLQiBjaHVuaw0KPg0KPiB1bnVzZWQgZGV2aWNlczogPG5vbmU+DQo+DQo+
+DQo+IEknbSBydW5uaW5nIG51bWEgYXdhcmUgaWRlbnRpY2FsIEZJT3MsIGJ1dCBnZXR0aW5nIHRo
+ZSBmb2xsb3dpbmcgaW4gDQo+IGlvc3RhdCAobnVtYSAwIG1kcmFpZCwgb3V0cGVyZm9ybXMgbnVt
+YSAxIG1kcmFpZCBieSAxMkdCL3MpDQo+DQo+IFtyb290QGhvcm5ldDA0IH5dIyAgaW9zdGF0IC14
+a3ogMSANCj4gYXZnLWNwdTogICV1c2VyICAgJW5pY2UgJXN5c3RlbSAlaW93YWl0ICAlc3RlYWwg
+ICAlaWRsZQ0KPiAgICAgICAgICAgIDAuMjAgICAgMC4wMCAgICAzLjM1ICAgIDAuMDAgICAgMC4w
+MCAgIDk2LjQ1DQo+DQo+IERldmljZSAgICAgICAgICAgIHIvcyAgICAgdy9zICAgICBya0IvcyAg
+ICAgd2tCL3MgICBycnFtL3MgICB3cnFtL3MgICVycnFtICAld3JxbSByX2F3YWl0IHdfYXdhaXQg
+YXF1LXN6IHJhcmVxLXN6IHdhcmVxLXN6ICBzdmN0bSAgJXV0aWwNCj4gbnZtZTJjMm4xICAgICA3
+Mjg1Ni4wMCAgICAwLjAwIDQ2NjI3ODQuMDAgICAgICAwLjAwICAgICAwLjAwICAgICAwLjAwICAg
+MC4wMCAgIDAuMDAgICAgMC42OCAgICAwLjAwICA0OS41MCAgICA2NC4wMCAgICAgMC4wMCAgIDAu
+MDEgMTAwLjAwDQo+IG52bWUzYzNuMSAgICAgNzMwNzcuMDAgICAgMC4wMCA0Njc2OTI4LjAwICAg
+ICAgMC4wMCAgICAgMC4wMCAgICAgMC4wMCAgIDAuMDAgICAwLjAwICAgIDAuNjggICAgMC4wMCAg
+NDkuOTQgICAgNjQuMDAgICAgIDAuMDAgICAwLjAxIDEwMC4wMA0KPiBudm1lNGM0bjEgICAgIDcz
+MDEzLjAwICAgIDAuMDAgNDY3Mjg5Ni4wMCAgICAgIDAuMDAgICAgIDAuMDAgICAgIDAuMDAgICAw
+LjAwICAgMC4wMCAgICAwLjY5ICAgIDAuMDAgIDUwLjM1ICAgIDY0LjAwICAgICAwLjAwICAgMC4w
+MSAxMDAuMDANCj4gPEtFWT4gbnZtZTE4YzE4bjEgICA1NDM4NC4wMCAgICAwLjAwIDM0ODA1NzYu
+MDAgICAgICAwLjAwICAgICAwLjAwICAgICAwLjAwICAgMC4wMCAgIDAuMDAgIDE0NC44MCAgICAw
+LjAwIDc4NzQuODUgICAgNjQuMDAgICAgIDAuMDAgICAwLjAyIDEwMC4wMA0KPiBudm1lNWM1bjEg
+ICAgIDcyODQxLjAwICAgIDAuMDAgNDY2MTgyNC4wMCAgICAgIDAuMDAgICAgIDAuMDAgICAgIDAu
+MDAgICAwLjAwICAgMC4wMCAgICAwLjcwICAgIDAuMDAgIDUxLjAxICAgIDY0LjAwICAgICAwLjAw
+ICAgMC4wMSAxMDAuMDANCj4gbnZtZTdjN24xICAgICA3MjIyMC4wMCAgICAwLjAwIDQ2MjIwODAu
+MDAgICAgICAwLjAwICAgICAwLjAwICAgICAwLjAwICAgMC4wMCAgIDAuMDAgICAgMC42NyAgICAw
+LjAwICA0OC42MSAgICA2NC4wMCAgICAgMC4wMCAgIDAuMDEgMTAwLjAwDQo+IG52bWUyMmMyMm4x
+ICAgNTQ2NTIuMDAgICAgMC4wMCAzNDk3NzI4LjAwICAgICAgMC4wMCAgICAgMC4wMCAgICAgMC4w
+MCAgIDAuMDAgICAwLjAwICAgIDAuNjQgICAgMC4wMCAgMzQuNzMgICAgNjQuMDAgICAgIDAuMDAg
+ICAwLjAyIDEwMC4wMA0KPiBudm1lMTJjMTJuMSAgIDU0NzU2LjAwICAgIDAuMDAgMzUwNDM4NC4w
+MCAgICAgIDAuMDAgICAgIDAuMDAgICAgIDAuMDAgICAwLjAwICAgMC4wMCAgICAwLjY2ICAgIDAu
+MDAgIDM2LjM0ICAgIDY0LjAwICAgICAwLjAwICAgMC4wMiAxMDAuMDANCj4gbnZtZTE0YzE0bjEg
+ICA1NDUxNy4wMCAgICAwLjAwIDM0ODkwODguMDAgICAgICAwLjAwICAgICAwLjAwICAgICAwLjAw
+ICAgMC4wMCAgIDAuMDAgICAgMC42NSAgICAwLjAwICAzNS42NiAgICA2NC4wMCAgICAgMC4wMCAg
+IDAuMDIgMTAwLjAwDQo+IG52bWU2YzZuMSAgICAgNzI3MjEuMDAgICAgMC4wMCA0NjU0MTQ0LjAw
+ICAgICAgMC4wMCAgICAgMC4wMCAgICAgMC4wMCAgIDAuMDAgICAwLjAwICAgIDAuNjggICAgMC4w
+MCAgNDkuNzcgICAgNjQuMDAgICAgIDAuMDAgICAwLjAxIDEwMC4wMA0KPiBudm1lMjFjMjFuMSAg
+IDU0NzMxLjAwICAgIDAuMDAgMzUwMjc4NC4wMCAgICAgIDAuMDAgICAgIDAuMDAgICAgIDAuMDAg
+ICAwLjAwICAgMC4wMCAgICAwLjY3ICAgIDAuMDAgIDM2LjQ2ICAgIDY0LjAwICAgICAwLjAwICAg
+MC4wMiAxMDAuMDANCj4gbnZtZTljOW4xICAgICA3MjY2MS4wMCAgICAwLjAwIDQ2NTAzMDQuMDAg
+ICAgICAwLjAwICAgICAwLjAwICAgICAwLjAwICAgMC4wMCAgIDAuMDAgICAgMC43MSAgICAwLjAw
+ICA1MS4zNSAgICA2NC4wMCAgICAgMC4wMCAgIDAuMDEgMTAwLjAwDQo+IG52bWUxN2MxN24xICAg
+NTQ0NjIuMDAgICAgMC4wMCAzNDg1NTY4LjAwICAgICAgMC4wMCAgICAgMC4wMCAgICAgMC4wMCAg
+IDAuMDAgICAwLjAwICAgIDAuNjYgICAgMC4wMCAgMzYuMDkgICAgNjQuMDAgICAgIDAuMDAgICAw
+LjAyIDEwMC4wMA0KPiBudm1lMjBjMjBuMSAgIDU0NDYzLjAwICAgIDAuMDAgMzQ4NTYzMi4wMCAg
+ICAgIDAuMDAgICAgIDAuMDAgICAgIDAuMDAgICAwLjAwICAgMC4wMCAgICAwLjY2ICAgIDAuMDAg
+IDM2LjEwICAgIDY0LjAwICAgICAwLjAwICAgMC4wMiAxMDAuMTANCj4gbnZtZTEzYzEzbjEgICA1
+NDkxMC4wMCAgICAwLjAwIDM1MTQyNDAuMDAgICAgICAwLjAwICAgICAwLjAwICAgICAwLjAwICAg
+MC4wMCAgIDAuMDAgICAgMC42MSAgICAwLjAwICAzMy40NSAgICA2NC4wMCAgICAgMC4wMCAgIDAu
+MDIgMTAwLjAwDQo+IG52bWU4YzhuMSAgICAgNzI2MjIuMDAgICAgMC4wMCA0NjQ3ODA4LjAwICAg
+ICAgMC4wMCAgICAgMC4wMCAgICAgMC4wMCAgIDAuMDAgICAwLjAwICAgIDAuNjcgICAgMC4wMCAg
+NDguNTIgICAgNjQuMDAgICAgIDAuMDAgICAwLjAxIDEwMC4wMA0KPiBudm1lMTVjMTVuMSAgIDU0
+NTQzLjAwICAgIDAuMDAgMzQ5MDc1Mi4wMCAgICAgIDAuMDAgICAgIDAuMDAgICAgIDAuMDAgICAw
+LjAwICAgMC4wMCAgICAwLjYxICAgIDAuMDAgIDMzLjI4ICAgIDY0LjAwICAgICAwLjAwICAgMC4w
+MiAxMDAuMDANCj4gbnZtZTBjMG4xICAgICA3MzIxNS4wMCAgICAwLjAwIDQ2ODU3NjAuMDAgICAg
+ICAwLjAwICAgICAwLjAwICAgICAwLjAwICAgMC4wMCAgIDAuMDAgICAgMC42NyAgICAwLjAwICA0
+OS40MSAgICA2NC4wMCAgICAgMC4wMCAgIDAuMDEgMTAwLjAwDQo+IG52bWUxOWMxOW4xICAgNTUw
+MzQuMDAgICAgMC4wMCAzNTIyMTc2LjAwICAgICAgMC4wMCAgICAgMC4wMCAgICAgMC4wMCAgIDAu
+MDAgICAwLjAwICAgIDAuNjcgICAgMC4wMCAgMzYuOTMgICAgNjQuMDAgICAgIDAuMDAgICAwLjAy
+IDEwMC4xMA0KPiA8S0VZPiBudm1lMWMxbjEgICAgIDcyNjcyLjAwICAgIDAuMDAgNDY1MDk0NC4w
+MCAgICAgIDAuMDAgICAgIDAuMDAgICAgIDAuMDAgICAwLjAwICAgMC4wMCAgMTA2Ljk4ICAgIDAu
+MDAgNzc3NC41NCAgICA2NC4wMCAgICAgMC4wMCAgIDAuMDEgMTAwLjAwDQo+IDxLRVk+IG1kMTI3
+ICAgICAgICAgNzI3ODcxLjAwICAgIDAuMDAgNDY1ODM3NDQuMDAgICAgICAwLjAwICAgICAwLjAw
+ICAgICAwLjAwICAgMC4wMCAgIDAuMDAgICAxMS4zMCAgICAwLjAwIDgyMjEuOTIgICAgNjQuMDAg
+ICAgIDAuMDAgICAwLjAwIDEwMC4wMA0KPiA8S0VZPiBtZDEyNiAgICAgICAgIDU0NjU1My4wMCAg
+ICAwLjAwIDM0OTc5MzkyLjAwICAgICAgMC4wMCAgICAgMC4wMCAgICAgMC4wMCAgIDAuMDAgICAw
+LjAwICAgMTQuOTkgICAgMC4wMCA4MTk0LjkxICAgIDY0LjAwICAgICAwLjAwICAgMC4wMCAxMDAu
+MTANCj4NCj4NCj4gPEtFWT4gSSBzdGFydGVkIGNoYXNpbmcgdGhlIGFxdV9zeiBhbmQgcl9hd2Fp
+dCB0byBzZWUgaWYgSSBoYXZlIGEgZGV2aWNlIGlzc3VlIG9yIGlmIHRoZXNlIGFyZSBrbm93biBt
+ZHJhaWQgImZlYXR1cmVzIiB3aGVuIEkgc3RhcnRlZCB0byB0cnkgdG8gZmluZCB0aGUga2VybmVs
+IHdvcmtlcnMgYW5kIHN0YXJ0IGNoYXNpbmcga2VybmVsIHdvcmtlcnMgd2hlbiBpdCBiZWNhbWUg
+YXBwYXJlbnQgdG8gbWUgdGhhdCBJIERPTidUIEtOT1cgV0hBVCBJJ00gRE9JTkcgT1IgV0hBVCBU
+TyBETyBORVhULiBBbnkgZ3VpZGFuY2UgaXMgYXBwcmVjaWF0ZWQuICBHaXZlbiAxIGRyaXZlIHBl
+ciBOVU1BIGlzIHNob3dpbmcgdGhlIGJhZCBiZWhhdmlvciwgSSdtIHJlbHVjdGFudCB0byBwb2lu
+dCB0aGUgZmluZ2VyIGF0IGhhcmR3YXJlLg0KPg0KPg0KPiBbcm9vdEBob3JuZXQwNCB+XSMgbHNj
+cHUNCj4gQXJjaGl0ZWN0dXJlOiAgICAgICAgeDg2XzY0DQo+IENQVSBvcC1tb2RlKHMpOiAgICAg
+IDMyLWJpdCwgNjQtYml0DQo+IEJ5dGUgT3JkZXI6ICAgICAgICAgIExpdHRsZSBFbmRpYW4NCj4g
+Q1BVKHMpOiAgICAgICAgICAgICAgMjU2DQo+IE9uLWxpbmUgQ1BVKHMpIGxpc3Q6IDAtMjU1DQo+
+IFRocmVhZChzKSBwZXIgY29yZTogIDINCj4gQ29yZShzKSBwZXIgc29ja2V0OiAgNjQNCj4gU29j
+a2V0KHMpOiAgICAgICAgICAgMg0KPiBOVU1BIG5vZGUocyk6ICAgICAgICAyDQo+IFZlbmRvciBJ
+RDogICAgICAgICAgIEF1dGhlbnRpY0FNRA0KPiBCSU9TIFZlbmRvciBJRDogICAgICBBZHZhbmNl
+ZCBNaWNybyBEZXZpY2VzLCBJbmMuDQo+IENQVSBmYW1pbHk6ICAgICAgICAgIDIzDQo+IE1vZGVs
+OiAgICAgICAgICAgICAgIDQ5DQo+IE1vZGVsIG5hbWU6ICAgICAgICAgIEFNRCBFUFlDIDc3NDIg
+NjQtQ29yZSBQcm9jZXNzb3INCj4gQklPUyBNb2RlbCBuYW1lOiAgICAgQU1EIEVQWUMgNzc0MiA2
+NC1Db3JlIFByb2Nlc3NvciAgICAgICAgICAgICAgICANCj4gU3RlcHBpbmc6ICAgICAgICAgICAg
+MA0KPiBDUFUgTUh6OiAgICAgICAgICAgICAzMjQzLjgwMw0KPiBCb2dvTUlQUzogICAgICAgICAg
+ICA0NDkxLjUzDQo+IFZpcnR1YWxpemF0aW9uOiAgICAgIEFNRC1WDQo+IEwxZCBjYWNoZTogICAg
+ICAgICAgIDMySw0KPiBMMWkgY2FjaGU6ICAgICAgICAgICAzMksNCj4gTDIgY2FjaGU6ICAgICAg
+ICAgICAgNTEySw0KPiBMMyBjYWNoZTogICAgICAgICAgICAxNjM4NEsNCj4gPEtFWT4gTlVNQSBu
+b2RlMCBDUFUocyk6ICAgMC02MywxMjgtMTkxDQo+IDxLRVk+ICBOVU1BIG5vZGUxIENQVShzKTog
+ICA2NC0xMjcsMTkyLTI1NQ0KPiBGbGFnczogICAgICAgICAgICAgICBmcHUgdm1lIGRlIHBzZSB0
+c2MgbXNyIHBhZSBtY2UgY3g4IGFwaWMgc2VwIG10cnIgcGdlIG1jYSBjbW92IHBhdCBwc2UzNiBj
+bGZsdXNoIG1teCBmeHNyIHNzZSBzc2UyIGh0IHN5c2NhbGwgbnggbW14ZXh0IGZ4c3Jfb3B0IHBk
+cGUxZ2IgcmR0c2NwIGxtIGNvbnN0YW50X3RzYyByZXBfZ29vZCBub3BsIG5vbnN0b3BfdHNjIGNw
+dWlkIGV4dGRfYXBpY2lkIGFwZXJmbXBlcmYgcmFwbCBwbmkgcGNsbXVscWRxIG1vbml0b3Igc3Nz
+ZTMgZm1hIGN4MTYgc3NlNF8xIHNzZTRfMiB4MmFwaWMgbW92YmUgcG9wY250IGFlcyB4c2F2ZSBh
+dnggZjE2YyByZHJhbmQgbGFoZl9sbSBjbXBfbGVnYWN5IHN2bSBleHRhcGljIGNyOF9sZWdhY3kg
+YWJtIHNzZTRhIG1pc2FsaWduc3NlIDNkbm93cHJlZmV0Y2ggb3N2dyBpYnMgc2tpbml0IHdkdCB0
+Y2UgdG9wb2V4dCBwZXJmY3RyX2NvcmUgcGVyZmN0cl9uYiBicGV4dCBwZXJmY3RyX2xsYyBtd2Fp
+dHggY3BiIGNhdF9sMyBjZHBfbDMgaHdfcHN0YXRlIHNzYmQgbWJhIGlicnMgaWJwYiBzdGlicCB2
+bW1jYWxsIGZzZ3NiYXNlIGJtaTEgYXZ4MiBzbWVwIGJtaTIgY3FtIHJkdF9hIHJkc2VlZCBhZHgg
+c21hcCBjbGZsdXNob3B0IGNsd2Igc2hhX25pIHhzYXZlb3B0IHhzYXZlYyB4Z2V0YnYxIHhzYXZl
+cyBjcW1fbGxjIGNxbV9vY2N1cF9sbGMgY3FtX21ibV90b3RhbCBjcW1fbWJtX2xvY2FsIGNsemVy
+byBpcnBlcmYgeHNhdmVlcnB0ciByZHBydSB3Ym5vaW52ZCBhbWRfcHBpbiBhcmF0IG5wdCBsYnJ2
+IHN2bV9sb2NrIG5yaXBfc2F2ZSB0c2Nfc2NhbGUgdm1jYl9jbGVhbiBmbHVzaGJ5YXNpZCBkZWNv
+ZGVhc3Npc3RzIHBhdXNlZmlsdGVyIHBmdGhyZXNob2xkIGF2aWMgdl92bXNhdmVfdm1sb2FkIHZn
+aWYgdl9zcGVjX2N0cmwgdW1pcCByZHBpZCBvdmVyZmxvd19yZWNvdiBzdWNjb3Igc21jYQ0KPg0K
+Pg0KPiA8S0VZPiBXaGVuIEkgc3RhcnQgZG9pbmcgc29tZSBiYXNpYyBkZWJ1Z2dpbmcgLSBub3Qg
+YSBMaW51eCBuaW5qYSBieSBmYXIsIEkgc2VlIHRoZSBmb2xsb3dpbmcsIGJ1dCB3aGF0IGlzIHRo
+cm93aW5nIG1lIGlzIHNlZWluZyAoYXQgbGVhc3QgdGhlc2Ugd29ya2VycyB0aGF0IEkgc3VzcGVj
+dCBoYXZlIHRvIGRvIHdpdGggbWQsIGFsbCBydW5uaW5nIG9uIE5VTUEgbm9kZSAxLiAgIFRoaXMg
+aXMgY2F0Y2hpbmcgbWUgYnkgc3VycHJpc2UuICAgQXJlIHRoZXJlIG90aGVyIHdvcmtlcnMgdGhh
+dCBJJ20gbWlzc2luZz8/Pz8/DQo+DQo+IHBzIC1lbyBwaWQsdGlkLGNsYXNzLHJ0cHJpbyxuaSxw
+cmksbnVtYSxwc3IscGNwdSxzdGF0LHdjaGFuOjE0LGNvbW0gfCBoZWFkIC0xOyBwcyAtZW8gcGlk
+LHRpZCxjbGFzcyxydHByaW8sbmkscHJpLG51bWEscHNyLHBjcHUsc3RhdCx3Y2hhbjoxNCxjb21t
+ICB8IGVncmVwICdtZHxyYWlkJyB8IGdyZXAgLXYgc3lzdGVtZCB8IGdyZXAgLXYgbWx4DQo+ICAg
+ICBQSUQgICAgIFRJRCBDTFMgUlRQUklPICBOSSBQUkkgTlVNQSBQU1IgJUNQVSBTVEFUIFdDSEFO
+ICAgICAgICAgIENPTU1BTkQNCj4gICAgMTUyMiAgICAxNTIyIFRTICAgICAgIC0gICA1ICAxNCAg
+ICAxIDIwOCAgMC4wIFNOICAgLSAgICAgICAgICAgICAga3NtZA0KPiAgICAxNTkwICAgIDE1OTAg
+VFMgICAgICAgLSAtMjAgIDM5ICAgIDEgMjIwICAwLjAgSTwgICAtICAgICAgICAgICAgICBtZA0K
+PiAgICAzNjg4ICAgIDM2ODggVFMgICAgICAgLSAtMjAgIDM5ICAgIDEgMTk4ICAwLjAgSTwgICAt
+ICAgICAgICAgICAgICByYWlkNXdxDQo+ICAgIDM2OTMgICAgMzY5MyBUUyAgICAgICAtICAgMCAg
+MTkgICAgMSAyMzQgIDAuMCBTICAgIC0gICAgICAgICAgICAgIG1kMTI2X3JhaWQ1DQo+ICAgIDM2
+OTQgICAgMzY5NCBUUyAgICAgICAtICAgMCAgMTkgICAgMSAgOTUgIDAuMCBTICAgIC0gICAgICAg
+ICAgICAgIG1kMTI3X3JhaWQ1DQo+ICAgIDM3ODggICAgMzc4OCBUUyAgICAgICAtICAgMCAgMTkg
+ICAgMSAyNDAgIDAuMCBTcyAgIC0gICAgICAgICAgICAgIGxzbWRjYXQgLw0KPg0KPg0KPg0KPiBK
+aW0gRmlubGF5c29uDQo+IFUuUy4gRGVwYXJ0bWVudCBvZiBEZWZlbnNlDQo+DQoNCi0tDQpHZW9m
+ZiBCYWNrDQpXaGF0IGlmIHdlJ3JlIGFsbCBqdXN0IGNoYXJhY3RlcnMgaW4gc29tZW9uZSdzIG5p
+Z2h0bWFyZXM/DQoNCg==
