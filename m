@@ -2,79 +2,106 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F2C2549264F
-	for <lists+linux-raid@lfdr.de>; Tue, 18 Jan 2022 14:01:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EEC47492EE0
+	for <lists+linux-raid@lfdr.de>; Tue, 18 Jan 2022 21:01:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241274AbiARNBo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 18 Jan 2022 08:01:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36322 "EHLO
+        id S1349041AbiARUBE (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 18 Jan 2022 15:01:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239710AbiARNBm (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 18 Jan 2022 08:01:42 -0500
-Received: from mail-ua1-x92b.google.com (mail-ua1-x92b.google.com [IPv6:2607:f8b0:4864:20::92b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70011C06161C
-        for <linux-raid@vger.kernel.org>; Tue, 18 Jan 2022 05:01:41 -0800 (PST)
-Received: by mail-ua1-x92b.google.com with SMTP id y4so36376964uad.1
-        for <linux-raid@vger.kernel.org>; Tue, 18 Jan 2022 05:01:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=kt7BSYvG+rr2bLEECwLOEMCvBVZotJIk44/4XcKD9H0=;
-        b=DTQLoaLu48QLIW2A2fsd4ZQznPg7q95XpLEuu671e0cgTaX1dO0/eN60g7vR+sWWRS
-         51cliUqJsgdrsHm4Qq/HjrfRylAqlHDAx1DaTq3h2GGws5u4zYwfAsLMYY3S9wJvjE0F
-         etWOuM3GKAc1VhrZTV1kpuEBRXOdCfho8f8MPUUI9P7pUTxDOwzFihYzmBqExIIzHlnS
-         WSlDUAxoidyideHtYmJRM0UVsog+Dtfm4eVno1F9GvXcptJfWhQ5Vmgmbm2CGGMP00eX
-         RoRo9ykI9FjWkoERzcLlDdG1pDah7zuY6+HQ3iKpxoyzcgBHi9rnTe464uLetkOJXEM5
-         27WQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=kt7BSYvG+rr2bLEECwLOEMCvBVZotJIk44/4XcKD9H0=;
-        b=MWVL3UUnThA3I2iLH9kAIIxh85aADg254p5rpK1xXK6WRWQyk3lfg1oyQI2sPUJ2z6
-         oVUWdyCYd0ZcO00TTS39onqlHUjo+70N689DsPHfi5KbtXZ4ZaXTuzmPcgKySmD5sGhl
-         8FJwLzdT5xyrIG801YvDV6j4EfCC1xHpSUuoD8mey2hTQThC5JLqWpL6lOMtrrvCkcmR
-         JxYINHeLFTa9WDiJD88dl/4Qpne/ULhTvF1eLMUvLEN6TDnZsdlYJqvLvFxft/fUb7Xf
-         ID6vd51e3Zj4E32VRsepHmkSYi6AZJhO5eBdAdmtJiNgwvhgNMq3xf/yZpiXO8IGEUAT
-         dA6A==
-X-Gm-Message-State: AOAM533Hxr3ALITEuBMCMLjEcPKURwWW0hszv/LE6o2zINQyTewDwo93
-        JDGbNgmmwuyRsS8sUxzLQeR3z/Jd/qIxNKBD9fQ=
-X-Google-Smtp-Source: ABdhPJyO0ZKQ2S+9S/j8lzS2Um5J2ro1v081FRVaxPRVEdbIUsTLihKFSQE9hcUabQorMcGlpz0Df0aScnUZ/dTZm5I=
-X-Received: by 2002:a05:6102:3913:: with SMTP id e19mr6225785vsu.14.1642510900454;
- Tue, 18 Jan 2022 05:01:40 -0800 (PST)
+        with ESMTP id S1349013AbiARUAo (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 18 Jan 2022 15:00:44 -0500
+Received: from hermes.turmel.org (hermes.turmel.org [IPv6:2604:180:f1::1e9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68E0AC061574
+        for <linux-raid@vger.kernel.org>; Tue, 18 Jan 2022 12:00:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=turmel.org;
+         s=a; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:
+        Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=Fnq+uSh9mXYVj3sp/rH4rzFx4DS1MibCx5l7Nj0NgL8=; b=KHEMOP7H0NLZYn6Ld04Etlholy
+        myiJ8QDyzWhAY9u39RebqC+AppQcMD1DiJraCyKfijSQjtMuokgp3PE+4TmHJ6XfSbfR4a3hFfnrB
+        OAh6lf1phRsAJ7kEkyIOyFsMJ4StMplc2Rek/9UO6K9iDqau1yvJZ2kXJ26FLcVJIuzDn766iUK3g
+        OhCJtMimuGKUrkR+5JcVWApKFvrBRxQVaGVL5k5Wbt7RmHhYd/L/wt3U6WsGd1VqF3OEo7xuopNWl
+        c/CcK9ebowdEUO134WIWyJr5RITzWjMxfBnPn2vlnnE7pFKlE+rBB6cTzQ16KCrkKon1d93e6qPBB
+        ArOU16jQ==;
+Received: from c-98-192-104-236.hsd1.ga.comcast.net ([98.192.104.236] helo=[192.168.19.160])
+        by hermes.turmel.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <philip@turmel.org>)
+        id 1n9ueo-0001E5-Gf; Tue, 18 Jan 2022 20:00:42 +0000
+Subject: Re: The mysterious case of the disappearing superblock ...
+To:     anthony <antmbox@youngman.org.uk>,
+        Linux RAID <linux-raid@vger.kernel.org>
+Cc:     NeilBrown <neilb@suse.com>
+References: <2fa7a4a8-b6c2-ac2f-725b-31620984efce@youngman.org.uk>
+From:   Phil Turmel <philip@turmel.org>
+Message-ID: <d5fe9e4e-0593-9ebd-255b-7f28bc4fb272@turmel.org>
+Date:   Tue, 18 Jan 2022 15:00:41 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Received: by 2002:ab0:3793:0:0:0:0:0 with HTTP; Tue, 18 Jan 2022 05:01:40
- -0800 (PST)
-Reply-To: mohsheikhalhamed@gmail.com
-From:   bratikox <bratikox@gmail.com>
-Date:   Tue, 18 Jan 2022 14:01:40 +0100
-Message-ID: <CAFuXTSxeaNDdRkbDC13mQzPqH71EHX77qfVsS1pSXVFGVWri9w@mail.gmail.com>
-Subject: Salam Alaikum /ADIA LOAN OFFER
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <2fa7a4a8-b6c2-ac2f-725b-31620984efce@youngman.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Salam Alaikum,
+Hi Anthony,
 
-We are a United Arab Emirates based investment company known as Abu
-Dhabi Investment Authority working on expanding its portfolio globally
-and financing projects.
+On 1/18/22 2:51 PM, anthony wrote:
+> You all know the story of how the cobbler's children are the worst shod, 
+> I expect :-) Well, the superblock to my raid (containing /home, etc) has 
+> disappeared, and I don't have a backup ... (well I do but it's now well 
+> out of date).
 
-We are offering Corporate and Personal Loan at 3.5% Interest Rate for
-a duration of 5 to 10 years.
+Glitch when writing something else.  Who knows.
 
-Please get back to us on Email: mohsheikhalhamed@gmail.com ,if you are
-interested for further embellishment.
+> So, a new hard drive is on order, for backup ...
+> 
+> Firstly, given that superblocks seem to disappear every now and then, 
+> does anybody have any ideas for something that might help us track it 
+> down? The 1.2 superblock is 4K into the device I believe? So if I copy 
+> the first 8K ( dd if=/dev/sda4 of=sda4.img bs=4K count=2 ) of each 
+> partition, that might help provide any clues as to what's happened to 
+> it? What am I looking for? What is the superblock supposed to look like?
 
-We also pay 2% commission to brokers who introduce project owners for
-finance or other opportunities.
+Well, I've gone to the kernel code for the structure definition a few 
+times, but never really got much out of it that mdadm -E didn't supply.
 
+Those seem to be missing from your mail, at least for the still-working 
+drives....
 
- Yours truly,
- Hamed Mohammad
- (Personal Assistant)
- Abu Dhabi Investment Authority
- 211 Corniche, P.O Box 3600
- Abu Dhabi,United Arab Emirates
+Wait: they're gone from all three?
+
+> Secondly, once I've backed up my partitions, I obviously need to do 
+> --create --assume-clean ... The only snag is, the array has been 
+> rebuilt, so I doubt my data offset is the default. The history of the 
+> array is simple. It's pretty new, so it will have been created with the 
+> latest mdadm, and was originally a mirror of sda4 and sdb4.
+> 
+> A new drive was added and the array upgraded to raid-5, and I BELIEVE 
+> the order is sdc4, sda4, sdb1 - sdb1 being the new drive that was added.
+
+No mdadm -E at all?
+
+Never ran lsdrv and tucked away the output?
+
+> Am I safe to assume that sdc4 and sda4 will have the same data offset? 
+> What is it likely to be? And seeing as it was the last added am I safe 
+> to assume that sdb1 is the last drive, so all I have to do is see which 
+> way round the other two should be?
+
+Not safe.  But there's only six combinations.
+
+> At least the silver lining behind this, is that having been forced to 
+> recover my own array, I'll understand it much better helping other 
+> people recover theirs!
+> 
+> Cheers,
+> Wol
+
+Phil
