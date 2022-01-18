@@ -2,76 +2,76 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A9E23491BCD
-	for <lists+linux-raid@lfdr.de>; Tue, 18 Jan 2022 04:13:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 290E5492209
+	for <lists+linux-raid@lfdr.de>; Tue, 18 Jan 2022 10:07:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348279AbiARDJa (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 17 Jan 2022 22:09:30 -0500
-Received: from smtp-out2.suse.de ([195.135.220.29]:33020 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352108AbiARC6A (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 17 Jan 2022 21:58:00 -0500
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 4AA731F37F
-        for <linux-raid@vger.kernel.org>; Tue, 18 Jan 2022 02:57:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1642474679; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=df4lKddMQqWsQBLOhcf1fc8T3hjR4l7GjHrFX21Ccy0=;
-        b=rkepUuzn0XYMRGMR3g2EvSzQCoPaMiyz4gp70yu33rlVeiGK0lS0ZhghNnMDPhT5Cnm+v7
-        9Fi/irgFsMYOdni44bXtkNqzziESuUE+9kLlDeGQ9QgjJ89qp6pR6OMNbZLUg4y812C5rQ
-        LtdPXE5Tw4+ZRZMC406IHxWQAg+qBxk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1642474679;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=df4lKddMQqWsQBLOhcf1fc8T3hjR4l7GjHrFX21Ccy0=;
-        b=XYG+WOjCHFJHsdD146IyjuJT58lRH3XvxbK7aOcBVrWnd7+85e3xXRoJnmt0G9mritVHJN
-        8QlirkBMboxM9OBQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B69CB13D88
-        for <linux-raid@vger.kernel.org>; Tue, 18 Jan 2022 02:57:58 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id iXuRHLYs5mGjZAAAMHmgww
-        (envelope-from <neilb@suse.de>)
-        for <linux-raid@vger.kernel.org>; Tue, 18 Jan 2022 02:57:58 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        id S1345245AbiARJGn (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 18 Jan 2022 04:06:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38446 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1345200AbiARJGl (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 18 Jan 2022 04:06:41 -0500
+Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9567FC061749
+        for <linux-raid@vger.kernel.org>; Tue, 18 Jan 2022 01:06:40 -0800 (PST)
+Received: by mail-yb1-xb2c.google.com with SMTP id e195so23616872ybb.7
+        for <linux-raid@vger.kernel.org>; Tue, 18 Jan 2022 01:06:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=AIHedDQeQ2nfeFyhlIY6iBZ7Eo/kAlP72EhStgPHV1I=;
+        b=Soz+QHT0dGLM8FndDi8+DmGrzF8Nand3R01M5J9drC3NXqHN7kmc4VY6l/NuWtUVfL
+         Pw1ipMH9eBCg/ZHqGLeAt2KZPu6XRfsWiJE2xzcq96Ba85LXlrKxOVNuY0HYvfKDfmKc
+         jAQ6EF695L6TTvaCdYqZtBN8gkAnqp1+r0RbNtIeu3qM6gm6h0M3GCKOMUuS25NPcq7T
+         m06EBwLGmWMwlcWjC1WtBCJ/c9tTXkQfsHougCLjPDZp39fgMD8pqVkLYWwbFdfOrAZL
+         FCMwtSnm8Hemf8tY2r2VyBfKOXtSL3AjGIsLn+yMreEST0ocUC4Xu0XEMGJmBV9pdbj2
+         rlHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=AIHedDQeQ2nfeFyhlIY6iBZ7Eo/kAlP72EhStgPHV1I=;
+        b=R0QKYvNffxdiMxFAfyfkXoa8lGCsdraKpQsj96eQ1MGVViUvHywC5R+sca9GYBBXb3
+         y8GLlIrtpaaLOaYEo6hn54lynimEctYnRhGHMo26on3W7UlMLoKqdESAor8UxDWeO19+
+         BLPsNliwwedR0w5bLXklSjKeTn291VGyUW4ex3U+W2LzWllpkisIDT8Vlx6qc5GIEdSE
+         9f63ZYum9WjCihRfcxlgWEmv9JDNls0HKNuaol9dcaLv5rGvxEMMw829eLUbm4dwr9xg
+         +R+UQzuQS73MCqbJv4F3ousFp5BKKQuug0qWAbTeQdmFWx27rvS7bcEbBMNIU9NQ1BAM
+         Yr/A==
+X-Gm-Message-State: AOAM530TdMnmh0RKW1VXuRyrYD4+EamB0JCPGPRYv348kFWaODe7TEF4
+        4hu/rYIQqIs/68oLveMScJaG04kreXVehWs/QUQ=
+X-Google-Smtp-Source: ABdhPJyw0yTCzDjS933NePR8DAFAXJuHa33nOCZujulUZ2idVfAerV+90UYpawy22l7XlVZmlrM9B7gLM03XAJNOkeI=
+X-Received: by 2002:a25:37c2:: with SMTP id e185mr32076301yba.333.1642496799696;
+ Tue, 18 Jan 2022 01:06:39 -0800 (PST)
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     linux-raid@vger.kernel.org
-Subject: Documentation or support for IMSM caching ????
-Date:   Tue, 18 Jan 2022 13:57:50 +1100
-Message-id: <164247467024.24166.12368466830982210087@noble.neil.brown.name>
+Received: by 2002:a05:7108:3655:0:0:0:0 with HTTP; Tue, 18 Jan 2022 01:06:38
+ -0800 (PST)
+Reply-To: asil.ajwad@gmail.com
+From:   Asil Ajwad <graceyaogokamboule@gmail.com>
+Date:   Mon, 17 Jan 2022 21:06:38 -1200
+Message-ID: <CA+Yy_gDoLjOfusfXaCVeyK5wpATnnfHVgZ2fw-LqNg4nowYW8A@mail.gmail.com>
+Subject: Greetings,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+-- 
+Greetings,
 
-Hi all, particularly friends from Intel....
+I am Mr.Asil Ajwad, I work with United Bank of Africa, can you use
+an ATM Visa Card to withdraw money at, ATM Cash Machine in your
+country, if yes I want to transfer abounded fund the sum of $10.5million
+US-Dollars, to you from my country, this is part of the money that was
+abounded by our late old client a politician who unfortunately lost
+his life and was forced out of power Du to his greedy act, the bank will
 
-Does anyone know anything about the caching support in IMSM soft-raid?
+change the account details to your name, and apply for a Visa Card
+with your details, the Visa Card will be send to you, and you can be
+withdrawing money with it always, whatever any amount you withdraw
+daily, you will send 60% to me and you will take 40%, the Visa Card
+and the bank account will be on your name, I will be waiting for your
+response for more details, thanks to you a lot for giving me your time.
 
-There are reports of mdadm complaining:
-
-  mdadm: (IMSM): Unsupported attributes : 3000000
-
-on some laptops - particularly an HP Spectre which has an SSD and Optane
-memory.  Both devices has IMSM metadata, but mdadm cannot handle it.
-Presumable the Optane is being used as a fast cache in front of the SSD.
-
-If we had the specs we might be able to get mdadm to handle it.
-Even better would be if Intel could provide some code :-)
-
-https://bugzilla.suse.com/show_bug.cgi?id=1194355
-
-NeilBrown
+regards,
+Mr.Asil Ajwad.
