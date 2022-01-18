@@ -2,76 +2,74 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 290E5492209
-	for <lists+linux-raid@lfdr.de>; Tue, 18 Jan 2022 10:07:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EF254925F2
+	for <lists+linux-raid@lfdr.de>; Tue, 18 Jan 2022 13:45:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345245AbiARJGn (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 18 Jan 2022 04:06:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38446 "EHLO
+        id S238170AbiARMpa (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 18 Jan 2022 07:45:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345200AbiARJGl (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 18 Jan 2022 04:06:41 -0500
-Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9567FC061749
-        for <linux-raid@vger.kernel.org>; Tue, 18 Jan 2022 01:06:40 -0800 (PST)
-Received: by mail-yb1-xb2c.google.com with SMTP id e195so23616872ybb.7
-        for <linux-raid@vger.kernel.org>; Tue, 18 Jan 2022 01:06:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=AIHedDQeQ2nfeFyhlIY6iBZ7Eo/kAlP72EhStgPHV1I=;
-        b=Soz+QHT0dGLM8FndDi8+DmGrzF8Nand3R01M5J9drC3NXqHN7kmc4VY6l/NuWtUVfL
-         Pw1ipMH9eBCg/ZHqGLeAt2KZPu6XRfsWiJE2xzcq96Ba85LXlrKxOVNuY0HYvfKDfmKc
-         jAQ6EF695L6TTvaCdYqZtBN8gkAnqp1+r0RbNtIeu3qM6gm6h0M3GCKOMUuS25NPcq7T
-         m06EBwLGmWMwlcWjC1WtBCJ/c9tTXkQfsHougCLjPDZp39fgMD8pqVkLYWwbFdfOrAZL
-         FCMwtSnm8Hemf8tY2r2VyBfKOXtSL3AjGIsLn+yMreEST0ocUC4Xu0XEMGJmBV9pdbj2
-         rlHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=AIHedDQeQ2nfeFyhlIY6iBZ7Eo/kAlP72EhStgPHV1I=;
-        b=R0QKYvNffxdiMxFAfyfkXoa8lGCsdraKpQsj96eQ1MGVViUvHywC5R+sca9GYBBXb3
-         y8GLlIrtpaaLOaYEo6hn54lynimEctYnRhGHMo26on3W7UlMLoKqdESAor8UxDWeO19+
-         BLPsNliwwedR0w5bLXklSjKeTn291VGyUW4ex3U+W2LzWllpkisIDT8Vlx6qc5GIEdSE
-         9f63ZYum9WjCihRfcxlgWEmv9JDNls0HKNuaol9dcaLv5rGvxEMMw829eLUbm4dwr9xg
-         +R+UQzuQS73MCqbJv4F3ousFp5BKKQuug0qWAbTeQdmFWx27rvS7bcEbBMNIU9NQ1BAM
-         Yr/A==
-X-Gm-Message-State: AOAM530TdMnmh0RKW1VXuRyrYD4+EamB0JCPGPRYv348kFWaODe7TEF4
-        4hu/rYIQqIs/68oLveMScJaG04kreXVehWs/QUQ=
-X-Google-Smtp-Source: ABdhPJyw0yTCzDjS933NePR8DAFAXJuHa33nOCZujulUZ2idVfAerV+90UYpawy22l7XlVZmlrM9B7gLM03XAJNOkeI=
-X-Received: by 2002:a25:37c2:: with SMTP id e185mr32076301yba.333.1642496799696;
- Tue, 18 Jan 2022 01:06:39 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:a05:7108:3655:0:0:0:0 with HTTP; Tue, 18 Jan 2022 01:06:38
- -0800 (PST)
-Reply-To: asil.ajwad@gmail.com
-From:   Asil Ajwad <graceyaogokamboule@gmail.com>
-Date:   Mon, 17 Jan 2022 21:06:38 -1200
-Message-ID: <CA+Yy_gDoLjOfusfXaCVeyK5wpATnnfHVgZ2fw-LqNg4nowYW8A@mail.gmail.com>
-Subject: Greetings,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+        with ESMTP id S236418AbiARMpa (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 18 Jan 2022 07:45:30 -0500
+Received: from mxd2.seznam.cz (mxd2.seznam.cz [IPv6:2a02:598:2::210])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31442C061574
+        for <linux-raid@vger.kernel.org>; Tue, 18 Jan 2022 04:45:29 -0800 (PST)
+Received: from email.seznam.cz
+        by email-smtpc2a.ng.seznam.cz (email-smtpc2a.ng.seznam.cz [10.23.10.45])
+        id 049629edaa00a68d00854fda;
+        Tue, 18 Jan 2022 13:45:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=email.cz; s=beta;
+        t=1642509916; bh=NMQ7ok2deTuL3nqkYTkftjmIc7SAZ6Qyal6yf7lUhgc=;
+        h=Received:From:To:Cc:Subject:Date:Message-Id:References:
+         Mime-Version:X-Mailer:Content-Type:Content-Transfer-Encoding:
+         X-szn-frgn:X-szn-frgc;
+        b=fh5jkSBNRdohKedcsVOo5rOlfgTeOSAD0MX6VNnxdayk7bhRTFUzX4uZyi9XxPLu+
+         bdGYBIoiGSJzNrEaYsx5qcT+qlpJkRiE9ulceLUttI5yMCHlyCKy2wb34bnHFpxj3d
+         1ynhcO2h7Oa4rZIuDAC96qSaMYqe3InNfd5ru3qs=
+Received: from unknown ([::ffff:46.13.60.217])
+        by email.seznam.cz (szn-ebox-5.0.95) with HTTP;
+        Tue, 18 Jan 2022 13:45:08 +0100 (CET)
+From:   =?utf-8?q?Jarom=C3=ADr_C=C3=A1p=C3=ADk?= <jaromir.capik@email.cz>
+To:     Wol <antlists@youngman.org.uk>
+Cc:     "Linux RAID" <linux-raid@vger.kernel.org>,
+        "Roger Heflin" <rogerheflin@gmail.com>
+Subject: =?utf-8?q?Re=3A_Feature_request=3A_Add_flag_for_assuming_a_new_cl?=
+        =?utf-8?q?ean_drive_completely_dirty_when_adding_to_a_degraded_raid5_arra?=
+        =?utf-8?q?y_in_order_to_increase_the_speed_of_the_array_rebuild?=
+Date:   Tue, 18 Jan 2022 13:45:08 +0100 (CET)
+Message-Id: <RaA.44oPz.6p7zVnhaYjw.1XvhPK@seznam.cz>
+References: <Ja6.44rcR.6N3YLK}k{ZL.1XskzP@seznam.cz>
+        <0394837e-0109-e7b7-59f9-5e90a03bc629@youngman.org.uk>
+        <CAAMCDec5kcK62enZCOh=SJZu0fecSV60jW8QjMierC147HE5bA@mail.gmail.com>
+        <KN4.44rdw.1WKWgyVtkH0.1XtLJu@seznam.cz>
+        <CAAMCDef-bxeM0a_qS0FuviZ89a_Qn496KDsj1WQ3r7NT+t5+_Q@mail.gmail.com>
+        <Ly2.44rd2.7sLtKmD9o5e.1Xto6p@seznam.cz>
+        <NWX.44oOw.7USLwiS0IVD.1XuOH9@seznam.cz>
+        <CAAMCDedMLUPawEwKZWw4gRSP-04SyihqiLcHeXTN2XhfDTcsKg@mail.gmail.com>
+        <Pio.44oOQ.1niDXrCPXrs.1XvQvl@seznam.cz>
+        <ca5651d0-ef02-4a7d-1486-2cdfb1cd4fe1@youngman.org.uk>
+Mime-Version: 1.0 (szn-mime-2.1.18)
+X-Mailer: szn-ebox-5.0.95
+Content-Type: text/plain;
+        charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-szn-frgn: <36719b72-31e7-474b-ada4-1149f4fb0d72>
+X-szn-frgc: <0>
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
--- 
-Greetings,
 
-I am Mr.Asil Ajwad, I work with United Bank of Africa, can you use
-an ATM Visa Card to withdraw money at, ATM Cash Machine in your
-country, if yes I want to transfer abounded fund the sum of $10.5million
-US-Dollars, to you from my country, this is part of the money that was
-abounded by our late old client a politician who unfortunately lost
-his life and was forced out of power Du to his greedy act, the bank will
+>> chasis and going that way requires an external USB3 rack and a bit of=
 
-change the account details to your name, and apply for a Visa Card
-with your details, the Visa Card will be send to you, and you can be
-withdrawing money with it always, whatever any amount you withdraw
-daily, you will send 60% to me and you will take 40%, the Visa Card
-and the bank account will be on your name, I will be waiting for your
-response for more details, thanks to you a lot for giving me your time.
+>> magic if the operation cannot be done offline.
+> 
+> You seen the stuff about running raid over USB? Very unwise?
 
-regards,
-Mr.Asil Ajwad.
+Nope, URL?
+
+I mirror the drive in my Intel NUC router to USB3 drive and it works
+for years with no problems. Of course I'm aware of lower reliability,
+but I hope I'll get I/O errors if something fails. Am I wrong?
+
+Thx, J.
