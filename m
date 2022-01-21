@@ -2,56 +2,62 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EA93496655
-	for <lists+linux-raid@lfdr.de>; Fri, 21 Jan 2022 21:25:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E10349659D
+	for <lists+linux-raid@lfdr.de>; Fri, 21 Jan 2022 20:31:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233093AbiAUUZD (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 21 Jan 2022 15:25:03 -0500
-Received: from icebox.esperi.org.uk ([81.187.191.129]:40338 "EHLO
-        mail.esperi.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232988AbiAUUZD (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 21 Jan 2022 15:25:03 -0500
-X-Greylist: delayed 3400 seconds by postgrey-1.27 at vger.kernel.org; Fri, 21 Jan 2022 15:25:02 EST
-Received: from loom (nix@sidle.srvr.nix [192.168.14.8])
-        by mail.esperi.org.uk (8.16.1/8.16.1) with ESMTPS id 20LJSH8T026191
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 21 Jan 2022 19:28:18 GMT
-From:   Nix <nix@esperi.org.uk>
-To:     Wols Lists <antlists@youngman.org.uk>
-Cc:     NeilBrown <neilb@suse.de>, anthony <antmbox@youngman.org.uk>,
-        Linux RAID <linux-raid@vger.kernel.org>,
-        Phil Turmel <philip@turmel.org>
-Subject: Re: PANIC OVER! Re: The mysterious case of the disappearing
- superblock ...
-References: <2fa7a4a8-b6c2-ac2f-725b-31620984efce@youngman.org.uk>
-        <164254680952.24166.7553126422166310408@noble.neil.brown.name>
-        <cfea15f4-228e-4a38-5567-9b710b6dc5c2@youngman.org.uk>
-Emacs:  The Awakening
-Date:   Fri, 21 Jan 2022 19:28:17 +0000
-In-Reply-To: <cfea15f4-228e-4a38-5567-9b710b6dc5c2@youngman.org.uk> (Wols
-        Lists's message of "Wed, 19 Jan 2022 08:52:56 +0000")
-Message-ID: <87o84428j2.fsf@esperi.org.uk>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.2.50 (gnu/linux)
+        id S232239AbiAUTbE (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 21 Jan 2022 14:31:04 -0500
+Received: from smtp.hosts.co.uk ([85.233.160.19]:47581 "EHLO smtp.hosts.co.uk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232207AbiAUTbE (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Fri, 21 Jan 2022 14:31:04 -0500
+Received: from host81-132-12-162.range81-132.btcentralplus.com ([81.132.12.162] helo=[192.168.1.218])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1nAzck-0009ug-5M;
+        Fri, 21 Jan 2022 19:31:03 +0000
+Message-ID: <6cfb92e5-5845-37ff-d237-4c3d663446e3@youngman.org.uk>
+Date:   Fri, 21 Jan 2022 19:31:02 +0000
 MIME-Version: 1.0
-Content-Type: text/plain
-X-DCC--Metrics: loom 1480; Body=5 Fuz1=5 Fuz2=5
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: hardware recovery and RAID5 services
+Content-Language: en-GB
+To:     David T-G <davidtg+robot@justpickone.org>,
+        Linux RAID <linux-raid@vger.kernel.org>
+References: <20220121164804.GE14596@justpickone.org>
+From:   Wols Lists <antlists@youngman.org.uk>
+In-Reply-To: <20220121164804.GE14596@justpickone.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 19 Jan 2022, Wols Lists said:
-> Oh well, the good thing is that backup drive is on its way. I'm planning to put plain lvm on it, and write a bunch of services that
-> create backup volumes then do a overwrite-in-place rsync. So as I keep advising 
-> people, it does an incremental backup, but the COW volumes mean I have full backups.
+On 21/01/2022 16:48, David T-G wrote:
+> Has anyone worked with any recovery companies in the US?  One of the 4T
+> devices failed, possibly just because of motor issues, and one is
+> throwing read errors, while two are just fine.  This would probably be
+> easy for the right folks to fix, of course at some cost; the question is
+> are there any folks that you might recommend and how much is that cost.
 
-rsync works by rename-then-rewrite on a whole-file basis (it doesn't
-just modify changed bits of files), so I'm afraid it's going to be
-terribly inefficient for large slightly-changed files, with many
-unchanging blocks CoWed nonetheless.
+I've heard assorted stories about sticking drives in the freezer to help 
+them recover, and have personal experience of being given a drive that 
+has "failed" and I've managed to recover. Firstly, do you have a new 4TB 
+drive to recover to? My worry is trying to copy the drive with read 
+errors may lead to even more trouble. I'd try and recover it with 
+ddrescue, and see how much it can get back.
 
-The right way to do a deduplicating backup is to use a deduplicating
-backup system (borg, restic, bup, bupstash -- I swear by bup myself).
-There's a really good list here: <https://github.com/restic/others>.
+Secondly, I'm sure I've dealt with these people in the past, although I 
+can't vouch for them ...
 
--- 
-NULL && (void)
+https://www.vogon-computer-evidence.com/our-story/
+
+I didn't use them for recovering damaged kit, we just had a bunch of 
+9-track backups, but no 9-track drive, so they dumped them to CD for us. 
+ From a business p-o-v it wasn't expensive ... see if they've got an 
+operation near you. Describe your problem in as much detail as you can, 
+and see if they'll give you an estimate ...
+
+Cheers,
+Wol
