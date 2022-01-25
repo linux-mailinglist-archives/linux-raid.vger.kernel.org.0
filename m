@@ -2,56 +2,72 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DE90499006
-	for <lists+linux-raid@lfdr.de>; Mon, 24 Jan 2022 20:57:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C0CB349ACE5
+	for <lists+linux-raid@lfdr.de>; Tue, 25 Jan 2022 08:07:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352518AbiAXT51 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-raid@lfdr.de>); Mon, 24 Jan 2022 14:57:27 -0500
-Received: from [103.153.79.64] ([103.153.79.64]:64023 "EHLO [103.153.79.64]"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1356061AbiAXTtP (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 24 Jan 2022 14:49:15 -0500
-Reply-To: Nasser Rashid <nasserrashid.uae@gmail.com>
-From:   Nasser Rashid <anice.fronteracapitalgroup@gmail.com>
-To:     linux-raid@vger.kernel.org
-Subject: EXPO 2020 BUSINESS PROPOSAL
-Date:   24 Jan 2022 11:49:18 -0800
-Message-ID: <20220124114918.DA0DF6182E5DC653@gmail.com>
+        id S1392573AbiAYHFG (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 25 Jan 2022 02:05:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45988 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1391778AbiAYHCn (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 25 Jan 2022 02:02:43 -0500
+Received: from mail-ua1-x92c.google.com (mail-ua1-x92c.google.com [IPv6:2607:f8b0:4864:20::92c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C307C094252
+        for <linux-raid@vger.kernel.org>; Mon, 24 Jan 2022 21:41:52 -0800 (PST)
+Received: by mail-ua1-x92c.google.com with SMTP id b37so17667706uad.12
+        for <linux-raid@vger.kernel.org>; Mon, 24 Jan 2022 21:41:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=KeMi8W+p20zdR41YZoRj2EapY7imNsLYkAgQIQsIzqY=;
+        b=omchJdYJcVvbnbx3iWDsqNfzfvgFxRY5UV8d5JFHFd0Qxp4Fs99oOTWbnsLJvmkGLO
+         KJ9h0aIZipzZCxLYUC1EbKJQXjsTnrYD4skWPu5L6KEa7WwksJ/DgfAKn2I//FvNz16e
+         yvRSMjBJIkfJOiN7QosmIFzfX6t0OymUxXq/kzoldmt5Tk4SMXy3poAlzZfnj4tLqkCO
+         r1uVZjBjIcfKcTHUm4yIRwmNGijXGA0OAhFYRol/6hiAAZJ37V1K6a3bLM+XpGdFXGos
+         hPiIHyT9XSW8aiVFGjIdHRgRcnWLHkX21ZW87GvspRwlXlL9xuI6dXFZXWxBZnRTJWgA
+         Bk5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=KeMi8W+p20zdR41YZoRj2EapY7imNsLYkAgQIQsIzqY=;
+        b=08ORCtpOOGCsREI8KcAcZgimnkmAot53+lXx7c7cBwATwhOlScJtF4p3NnGigpVn1B
+         C/e6fV06x6KX9R7frmbGGGfiQAHTC37VixT8LhV/xof3DGIJeNXYacRZYGMM+eLBRLQT
+         kHSfrCVeIJLRaugQnlhgY/QGAi09+ADWmQSac5+BZJYjGyAgzIxfAFXrX4m0eJyuMpnY
+         CKuZlcfKZXqx/DNNvkEWLs522xfwNnZlXans++MawxB7eZg1n198F8ZPW6kfXitrn2u3
+         xLjIluTfc+o31Mv98o/KYerNEo4ms9Uj/XsZnRwxpJQmjLoXyYS644bA/l3D1bXvKpfr
+         RmBA==
+X-Gm-Message-State: AOAM533s+xRaZc6RC48m+ZeG68xfwAr798rW+LtBFW2EAZF5p+DtzLFA
+        MOssUYncU7X5bYew4EaMiH9fqyN+q+Q5LSIJIuTfa+mcZds=
+X-Google-Smtp-Source: ABdhPJwywiwyTtOCXfovmJIEM7Vqt+PFDzMW3tzxRj90P3fJDPhIlV2jOd/vI9WPw47eCab8Z7S4n4qldrLRD5Ly+Sc=
+X-Received: by 2002:a25:d783:: with SMTP id o125mr27594671ybg.710.1643089301256;
+ Mon, 24 Jan 2022 21:41:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Received: by 2002:a05:7000:ad9d:0:0:0:0 with HTTP; Mon, 24 Jan 2022 21:41:40
+ -0800 (PST)
+Reply-To: danielseyba@yahoo.com
+From:   Seyba Daniel <mrssuzaramaling19@gmail.com>
+Date:   Tue, 25 Jan 2022 06:41:40 +0100
+Message-ID: <CAKN-9XgQjuMspSnu-F01fv+Bgr6eZEygpsR3pZ-5cF=m78av-Q@mail.gmail.com>
+Subject: Hello,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Greetings!
+Hello,
 
-I'm Nasser Rashid, a business financial specialist and investment 
-expert. consultant experienced in financial funding services. I 
-have a
+I am so sorry contacting you in this means especially when we have never
+met before. I urgently seek your service to represent me in investing in
+your region / country and you will be rewarded for your service without
+affecting your present job with very little time invested in it.
 
-I have a serious business investment opportunity to discuss with 
-you. Century Financial Dubai is the home of discerning investors.
-We
+My interest is in buying real estate, private schools or companies with
+potentials for rapid growth in long terms.
 
-We offer independent financial advice and assist our clients in 
-making sound investment decisions from a variety of investment 
-options.
+So please confirm interest by responding back.
 
-Opportunities are available.
+My dearest regards
 
-Our company is structured to provide personalized services to As 
-a result, capital security and adequate funding are ensured.
-
-returns on investment. Our investors are ready to provide funding 
-for your business expansion, such as debt and equity.
-
-financing. If you require funding, we would be able to partner 
-with you. We look forward to your response.
-
-Thank you and stay safe,
-
-Nasser Rashid, CFA,
-
-Century Financial
+Seyba Daniel
