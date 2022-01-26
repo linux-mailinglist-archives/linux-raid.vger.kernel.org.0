@@ -2,100 +2,124 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C813349C079
-	for <lists+linux-raid@lfdr.de>; Wed, 26 Jan 2022 02:13:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C35549C8D9
+	for <lists+linux-raid@lfdr.de>; Wed, 26 Jan 2022 12:42:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235569AbiAZBNq (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 25 Jan 2022 20:13:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231271AbiAZBNp (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 25 Jan 2022 20:13:45 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68A4FC06161C
-        for <linux-raid@vger.kernel.org>; Tue, 25 Jan 2022 17:13:45 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S240834AbiAZLmI (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 26 Jan 2022 06:42:08 -0500
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:56489 "EHLO mx1.molgen.mpg.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S233852AbiAZLmI (ORCPT <rfc822;linux-raid@vger.kernel.org>);
+        Wed, 26 Jan 2022 06:42:08 -0500
+Received: from localhost.localdomain (ip5f5aecd1.dynamic.kabel-deutschland.de [95.90.236.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 26BDFB819BE
-        for <linux-raid@vger.kernel.org>; Wed, 26 Jan 2022 01:13:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7A11C340E5
-        for <linux-raid@vger.kernel.org>; Wed, 26 Jan 2022 01:13:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643159622;
-        bh=GMT28Kz8yIfP0mgP8R/CzC0RAr1PzRvflmzPVTUGjUk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=VR13SgIzpyhdn20AGMQx1mYsPuQHhp/u8qP1Ff9tJA3KfDor35tNWXIXFaxhrHWTj
-         vSHx1H1aK84fxqCCgpsyP4/1Nf76tHaYy36xFlpyb7lzIpYpPtQB13RUsS9n9XC69R
-         FOSlDHfhSNud/CSA482mYfA8xDg7NWAcyyr9Yr817UO/d08Tc4j5zPseg9TUVUbNWw
-         usl6dUkEOMHjjExP1BM18XHp+6ykAweFzR89yUmQHwdvdSo/+WGvRivHHnA58mLxY2
-         LfdZapWy7MaFkHGIQbJqkjprXeBZukVRGU+Ku00K0am9QS/trdY1g7FP9IkaJ0vjqu
-         01AHT/hDAWuMg==
-Received: by mail-yb1-f179.google.com with SMTP id k17so11631866ybk.6
-        for <linux-raid@vger.kernel.org>; Tue, 25 Jan 2022 17:13:42 -0800 (PST)
-X-Gm-Message-State: AOAM533duy1trmo3uHbIO8uPUHQt1y0S7iNErb50f27FRUmjaXXoAUug
-        uXiPTcJxDHvDvD/pWoNdNC4jQtUwgqhYsrrLTSs=
-X-Google-Smtp-Source: ABdhPJzarp6HgX/jGxCGKiphPyPOC2UQDl09b9OjmqyJQqjqtAA/37OHH9PzcuGz7P/fhfLarnAR1TZJDX1iWFsBDVs=
-X-Received: by 2002:a25:8d0d:: with SMTP id n13mr34244445ybl.208.1643159622001;
- Tue, 25 Jan 2022 17:13:42 -0800 (PST)
+        (Authenticated sender: pmenzel)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id C98BE61EA191D;
+        Wed, 26 Jan 2022 12:42:05 +0100 (CET)
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+To:     Song Liu <song@kernel.org>
+Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-raid@vger.kernel.org,
+        Matt Brown <matthew.brown.dev@gmail.com>
+Subject: [PATCH 1/3] lib/raid6/test/Makefile: Use `$(pound)` instead of `\#` for Make 4.3
+Date:   Wed, 26 Jan 2022 12:41:42 +0100
+Message-Id: <20220126114144.370517-1-pmenzel@molgen.mpg.de>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20211216145222.15370-1-mariusz.tkaczyk@linux.intel.com>
- <CAPhsuW4zmx+mU6vxiTARPme3P0ANMNbC537SDKj2dEDKc_30kg@mail.gmail.com>
- <20211217090238.00000166@linux.intel.com> <20220125165225.00000407@linux.intel.com>
-In-Reply-To: <20220125165225.00000407@linux.intel.com>
-From:   Song Liu <song@kernel.org>
-Date:   Tue, 25 Jan 2022 17:13:31 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW43QfDNGEu72o2_eqDZ5vGq3tbFvdZ-W+dxVqcEhHmJ5w@mail.gmail.com>
-Message-ID: <CAPhsuW43QfDNGEu72o2_eqDZ5vGq3tbFvdZ-W+dxVqcEhHmJ5w@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] Use MD_BROKEN for redundant arrays
-To:     Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Tue, Jan 25, 2022 at 7:52 AM Mariusz Tkaczyk
-<mariusz.tkaczyk@linux.intel.com> wrote:
->
-> On Fri, 17 Dec 2021 09:02:38 +0100
-> Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com> wrote:
->
-> > Hi Song,
-> >
-> > On Thu, 16 Dec 2021 16:52:23 -0800
-> > Song Liu <song@kernel.org> wrote:
-> > > > Mariusz Tkaczyk (3):
-> > > >   raid0, linear, md: add error_handlers for raid0 and linear
-> > > >   md: Set MD_BROKEN for RAID1 and RAID10
-> > > >   raid5: introduce MD_BROKEN
-> > >
-> > > The set looks good to me. The only concern is that we changed some
-> > > messages. While dmesg is not a stable API, I believe there are
-> > > people grep on it to detect errors.
-> > > Therefore, please try to keep these messages same as before (as much
-> > > as possible).
-> >
-> > Will do.
-> > After sending it, I realized that my approach is not correct when
-> > mddev->fail_last_dev is on. MD_BRKOEN should be set even if we agree
-> > to remove the "last" drive. I will fix it too.
-> >
->
-> Hi Song,
-> For raid0 and linear i added new messages so it shouldn't be a problem.
-> I added one message in raid5 for failed state:
-> +               pr_crit("md/raid:%s: Cannot continue on %d devices.\n",
->
-> Do you want to remove it?
-> Other errors are same. Order is also preserved.
+Buidling `raid6test` on Ubuntu 21.10 (ppc64le) with GNU Make 4.3 shows the
+errors below:
 
-I think we should print in this case. How about we change it to something
-similar to the one in raid5_run():
+    $ cd lib/raid6/test/
+    $ make
+    <stdin>:1:1: error: stray ‘\’ in program
+    <stdin>:1:2: error: stray ‘#’ in program
+    <stdin>:1:11: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘<’ token
+    cp -f ../int.uc int.uc
+    awk -f ../unroll.awk -vN=1 < int.uc > int1.c
+    gcc -I.. -I ../../../include -g -O2                      -c -o int1.o int1.c
+    awk -f ../unroll.awk -vN=2 < int.uc > int2.c
+    gcc -I.. -I ../../../include -g -O2                      -c -o int2.o int2.c
+    awk -f ../unroll.awk -vN=4 < int.uc > int4.c
+    gcc -I.. -I ../../../include -g -O2                      -c -o int4.o int4.c
+    awk -f ../unroll.awk -vN=8 < int.uc > int8.c
+    gcc -I.. -I ../../../include -g -O2                      -c -o int8.o int8.c
+    awk -f ../unroll.awk -vN=16 < int.uc > int16.c
+    gcc -I.. -I ../../../include -g -O2                      -c -o int16.o int16.c
+    awk -f ../unroll.awk -vN=32 < int.uc > int32.c
+    gcc -I.. -I ../../../include -g -O2                      -c -o int32.o int32.c
+    rm -f raid6.a
+    ar cq raid6.a int1.o int2.o int4.o int8.o int16.o int32.o recov.o algos.o tables.o
+    ranlib raid6.a
+    gcc -I.. -I ../../../include -g -O2                      -o raid6test test.c raid6.a
+    /usr/bin/ld: raid6.a(algos.o):/dev/shm/linux/lib/raid6/test/algos.c:28: multiple definition of `raid6_call'; /scratch/local/ccIJjN8s.o:/dev/shm/linux/lib/raid6/test/test.c:22: first defined here
+    collect2: error: ld returned 1 exit status
+    make: *** [Makefile:72: raid6test] Error 1
 
-                pr_crit("md/raid:%s: Cannot continue operation (%d/%d
-failed)\n",
-                        mdname(mddev), mddev->degraded, conf->raid_disks);
+The errors come from the `HAS_ALTIVEC` test, which fails, and the POWER
+optimized versions are not built. That’s also reason nobody noticed on the
+other architectures.
 
-Thanks,
-Song
+GNU Make 4.3 does not remove the backslash anymore. From the 4.3 release
+announcment:
+
+> * WARNING: Backward-incompatibility!
+>   Number signs (#) appearing inside a macro reference or function invocation
+>   no longer introduce comments and should not be escaped with backslashes:
+>   thus a call such as:
+>     foo := $(shell echo '#')
+>   is legal.  Previously the number sign needed to be escaped, for example:
+>     foo := $(shell echo '\#')
+>   Now this latter will resolve to "\#".  If you want to write makefiles
+>   portable to both versions, assign the number sign to a variable:
+>     H := \#
+>     foo := $(shell echo '$H')
+>   This was claimed to be fixed in 3.81, but wasn't, for some reason.
+>   To detect this change search for 'nocomment' in the .FEATURES variable.
+
+So, do the same as commit 9564a8cf422d (Kbuild: fix # escaping in .cmd
+files for future Make) and commit 929bef467771 (bpf: Use $(pound) instead
+of \# in Makefiles) and define and use a `$(pound)` variable.
+
+Reference for the change in make:
+https://git.savannah.gnu.org/cgit/make.git/commit/?id=c6966b323811c37acedff05b57
+
+Cc: Matt Brown <matthew.brown.dev@gmail.com>
+Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+---
+ lib/raid6/test/Makefile | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/lib/raid6/test/Makefile b/lib/raid6/test/Makefile
+index a4c7cd74cff5..4fb7700a741b 100644
+--- a/lib/raid6/test/Makefile
++++ b/lib/raid6/test/Makefile
+@@ -4,6 +4,8 @@
+ # from userspace.
+ #
+ 
++pound := \#
++
+ CC	 = gcc
+ OPTFLAGS = -O2			# Adjust as desired
+ CFLAGS	 = -I.. -I ../../../include -g $(OPTFLAGS)
+@@ -42,7 +44,7 @@ else ifeq ($(HAS_NEON),yes)
+         OBJS   += neon.o neon1.o neon2.o neon4.o neon8.o recov_neon.o recov_neon_inner.o
+         CFLAGS += -DCONFIG_KERNEL_MODE_NEON=1
+ else
+-        HAS_ALTIVEC := $(shell printf '\#include <altivec.h>\nvector int a;\n' |\
++        HAS_ALTIVEC := $(shell printf '$(pound)include <altivec.h>\nvector int a;\n' |\
+                          gcc -c -x c - >/dev/null && rm ./-.o && echo yes)
+         ifeq ($(HAS_ALTIVEC),yes)
+                 CFLAGS += -I../../../arch/powerpc/include
+-- 
+2.34.1
+
