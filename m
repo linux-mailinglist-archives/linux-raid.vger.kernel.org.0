@@ -2,59 +2,66 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E06CB4A3051
-	for <lists+linux-raid@lfdr.de>; Sat, 29 Jan 2022 16:36:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 083FE4A33D7
+	for <lists+linux-raid@lfdr.de>; Sun, 30 Jan 2022 05:28:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239551AbiA2Pg0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 29 Jan 2022 10:36:26 -0500
-Received: from smtp.hosts.co.uk ([85.233.160.19]:47187 "EHLO smtp.hosts.co.uk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235877AbiA2PgZ (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Sat, 29 Jan 2022 10:36:25 -0500
-Received: from host81-132-12-162.range81-132.btcentralplus.com ([81.132.12.162] helo=[192.168.1.218])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1nDpm3-0000LK-Dg; Sat, 29 Jan 2022 15:36:23 +0000
-Message-ID: <c3b7a580-952f-7c7a-fddc-88ca0b5fde84@youngman.org.uk>
-Date:   Sat, 29 Jan 2022 15:36:21 +0000
+        id S1354201AbiA3E2g (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 29 Jan 2022 23:28:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38078 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1354197AbiA3E23 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 29 Jan 2022 23:28:29 -0500
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E815C06176C
+        for <linux-raid@vger.kernel.org>; Sat, 29 Jan 2022 20:28:25 -0800 (PST)
+Received: by mail-yb1-xb2e.google.com with SMTP id 23so30408677ybf.7
+        for <linux-raid@vger.kernel.org>; Sat, 29 Jan 2022 20:28:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=B5teSI3NqSzeGu7ngV/22RiyR60khzQ8THYZDZ9DX3Q=;
+        b=QI2firgHOSt+2ZiRAEUqBnRqfCndbuygIyUz1kdYlPzS6AXkdk+mfMubksdM+6U8hJ
+         A4UbXdfo0bhasYFmsw5ceBBj4ub2bgaEqkI+Cp5foQd/M11l9HiEax3hX9+hB29fNDF1
+         4XtAbOKK0Jrn48roHo8mUNvKaz7FG0Csy4DWdnw8Q+/oXs7GbWFZBjN+ifwhy6Rfe8k0
+         Pzhs5uXUX+5v6iQyGpPCJWV84GisQUz+5cfOraMc3PalgV6vYI9t2Z4JMkhIMshepKV2
+         BM+Zj3o1QTUTRt1Kxwo+5vz+cvvR7n44irHUjPq0LbDCW52O0lwQK7qPtMHxw7vn0Id9
+         5U2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=B5teSI3NqSzeGu7ngV/22RiyR60khzQ8THYZDZ9DX3Q=;
+        b=4XwJgAWwYQJy/pMjU1DAa1HFHhQv+lw12SkNbZPxWInH8FOkb66kY/tpdIhXkUtM0B
+         dZF3rHISsAa8TUGuHa5e28wanm4YfuF1XKfjeskWJfF5wnf9LCGk8D/c7JaM9Z3OW95N
+         v/6DIBNkFAu9dtp6rxUIsQ/EHMimh2BcCqpCJqMUPbJG155tVmUIUeSuGHPl4AcQG128
+         UzLj/Q6ggXgJqf7YAuUfPsaoAX1ic9CNnqRxjpOgubEZ04EeSWeAVzBLu5n5BmQilzJb
+         3Jq/jWjj6EqifzFC/167MkLiznyHuNBA88epPXhbHWubQK8jHOATdl7T4oDW8E2FlF2w
+         wNVw==
+X-Gm-Message-State: AOAM532JXHDZsF1Sr1/xJLt2liH46j2aGBnrEGI16NKgsGEyxeAIEBgd
+        t0kA/NychO5EWSPkGGRL/StYl3bXQrn9PDnlpFHRrIEtN1s=
+X-Google-Smtp-Source: ABdhPJz3bgso8viJFkNwiW8XigzdjL6JZBPDE3NfxKOCgEqvWjdU/qagorQKM5joSRLXylFmq9/zlHP85rUYuZ5fTGQ=
+X-Received: by 2002:a25:6d45:: with SMTP id i66mr23246397ybc.352.1643516893721;
+ Sat, 29 Jan 2022 20:28:13 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: hardware recovery and RAID5 services
-Content-Language: en-GB
-To:     Phil Turmel <philip@turmel.org>,
-        Roger Heflin <rogerheflin@gmail.com>
-Cc:     David T-G <davidtg+robot@justpickone.org>,
-        Linux RAID <linux-raid@vger.kernel.org>
-References: <20220121164804.GE14596@justpickone.org>
- <6cfb92e5-5845-37ff-d237-4c3d663446e3@youngman.org.uk>
- <33fb3dfd-e234-14d9-7643-3449c700a241@youngman.org.uk>
- <b052c0be-a57b-7e2f-c2ca-44a58e971e39@youngman.org.uk>
- <CAAMCDeeXT2Sy5Tczou7X6uO1yJx9TigEmJz9guwPUjT5SiEzQQ@mail.gmail.com>
- <7571b432-4b19-3de4-b04d-3a46b09b0629@turmel.org>
-From:   Wols Lists <antlists@youngman.org.uk>
-In-Reply-To: <7571b432-4b19-3de4-b04d-3a46b09b0629@turmel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a05:7010:2312:b0:201:cd76:102e with HTTP; Sat, 29 Jan 2022
+ 20:28:13 -0800 (PST)
+Reply-To: mrs.bill.chantalone01@gmail.com
+From:   "Mrs.Bill.Chantal" <grassroot309@gmail.com>
+Date:   Sun, 30 Jan 2022 05:28:13 +0100
+Message-ID: <CAO3iUMDzg_ZovNWXtuQhU6sDXk7LsNwvNc2pOb7zvX7pPCdMAw@mail.gmail.com>
+Subject: Hello....
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 22/01/2022 22:23, Phil Turmel wrote:
-> That said, I highly recommend copying the disk showing read errors onto 
-> another disk, keeping the log of sectors replaced by zeros. Then 
-> performing a file by file backup from the degraded array, using the copy 
-> instead of the troubled drive.
+You have been compensated with the sum of 9.5 million dollars in this
+united nation the payment will be issue into atm visa  card and send
+to you from the santander bank we need your address and your
+Whatsapp number  + 1 6465853907  this my email.ID
+( mrs.bill.chantal.roland@gmail.com )  contact  me
 
-I believe there is also a way of injecting a hardware error onto a 
-drive. Unless you can take a backup of the backup :-) I wouldn't 
-recommend it at the moment, but there's some ATA command or whatever 
-that tells the drive to flag a sector as bad, and return a read error 
-until it's over-written.
+Thanks my
 
-Obviously, doing that on the sectors that weren't rescued, and then 
-doing a scrub, is going to recover your data if it's both possible and 
-done right :-)
-
-Cheers,
-Wol
+mrs bill chantal
