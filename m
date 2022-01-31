@@ -2,80 +2,79 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C61E54A3F07
-	for <lists+linux-raid@lfdr.de>; Mon, 31 Jan 2022 10:06:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BF764A414B
+	for <lists+linux-raid@lfdr.de>; Mon, 31 Jan 2022 12:03:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234360AbiAaJGQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 31 Jan 2022 04:06:16 -0500
-Received: from mga11.intel.com ([192.55.52.93]:9970 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234044AbiAaJGQ (ORCPT <rfc822;linux-raid@vger.kernel.org>);
-        Mon, 31 Jan 2022 04:06:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643619976; x=1675155976;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ifDXkqoZgh4P4SanoD8OgYGNLadDPk3cO0RH0Ch3JvE=;
-  b=E9/3M1at/Q2miCuf4EA43W2McRXVT7S1I9AY5XVqNnBJh6noN/eApU6r
-   i5NIYskyMNPJhUJnVmsTu6sJDw39u75kLwz5c8vmHa5Kxa0a5HrlNoirj
-   IXcpCWpfSivqltv1+Wy6UB1X+IvKpDDoKQwqpM51Obv469bPQ6vAOVgdv
-   /4n1qWRzQ2GLv9K4F1rp/8FY6gJ0qyFFzXePypdbBovGTPhACjrSwwC19
-   HPRPPw4sBO6dqYSZiW9L2zvVX+yRjAQ8apZqq5cfarXK94SOh4ovLvy9A
-   Smk2UUhqtNSl0F+DCWfTldUUIORDaprfvfSQV7lCs2chWHD4rQFH2p9tg
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10243"; a="245018978"
-X-IronPort-AV: E=Sophos;i="5.88,330,1635231600"; 
-   d="scan'208";a="245018978"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 01:06:16 -0800
-X-IronPort-AV: E=Sophos;i="5.88,330,1635231600"; 
-   d="scan'208";a="537096264"
-Received: from mtkaczyk-mobl1.ger.corp.intel.com (HELO localhost) ([10.213.29.132])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 01:06:14 -0800
-Date:   Mon, 31 Jan 2022 10:06:09 +0100
-From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-To:     Xiao Ni <xni@redhat.com>
-Cc:     Song Liu <song@kernel.org>, linux-raid <linux-raid@vger.kernel.org>
-Subject: Re: [PATCH 2/3] md: Set MD_BROKEN for RAID1 and RAID10
-Message-ID: <20220131100609.000069a2@linux.intel.com>
-In-Reply-To: <CALTww2_pHsq+=bY4CtimwxvarxQBM0ey7Y3xAfa0dwoJytU9kQ@mail.gmail.com>
-References: <20220127153912.26856-1-mariusz.tkaczyk@linux.intel.com>
-        <20220127153912.26856-3-mariusz.tkaczyk@linux.intel.com>
-        <CALTww2_pHsq+=bY4CtimwxvarxQBM0ey7Y3xAfa0dwoJytU9kQ@mail.gmail.com>
+        id S1358496AbiAaLDX (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 31 Jan 2022 06:03:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43316 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1348521AbiAaLCP (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 31 Jan 2022 06:02:15 -0500
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92CDEC061348
+        for <linux-raid@vger.kernel.org>; Mon, 31 Jan 2022 03:00:25 -0800 (PST)
+Received: by mail-il1-x142.google.com with SMTP id z4so11031588ilz.4
+        for <linux-raid@vger.kernel.org>; Mon, 31 Jan 2022 03:00:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=FANIUiWvB3mdY3zLX2DODg2pUIL5eGT5wlydl6jYk40=;
+        b=UiZkV1xu/1z5A/ztD5Jldn3XOzfxCb5dH+/DMk1AFwK/nat4JXJLhGvMZnA2+IcjXR
+         YpW9r7ae6KAHd2sg0/6YFTRnkZ3XqJMzbhN9flAzZs0JoNMicLhQj4whv/k5nByjCpr2
+         OPf/s6NNTy4WRB8M3asGC42AidvYisjk++OWaBieA6XGemBs4Y+JGAvZ5l41ammJrDB4
+         p5lGBdvbZ5NrWMYLncN5GoY37UsWl4xjwHwFxwvY+3e/m9UxQRtNwA1vx+Ngxm2/RcIf
+         HB+3yGJS8mnEVkIPxbImLKA3AmKSXwrPGXKRYLzTh8tWOJi5P+SVpgZzGLkgPt54T4WY
+         uPBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=FANIUiWvB3mdY3zLX2DODg2pUIL5eGT5wlydl6jYk40=;
+        b=BBpgQiPY0VvStbXBxtBbhufXS5cQ5oEAfcXjZuzJazmacIQKmca5bgOHlTGurdX1cX
+         jbA17LDYoBWWv8LOlc9XhpJRK214oNP7dMis+XU9EcgrGtPPWl/VMsSeWk9uoxXhGjSC
+         dAV5rAx9x4kie3Y5NAmQBw0MoQ7arNapbdSNxCglWC5ZsKHle4xitcO4fmpDxcaMj2W6
+         /13hidso+fytMpq5h3C0uL7UN0rP2QKjaAB70BY8fZJScUmu+p1u6/5k79AVEZe79v2f
+         reKNZ+hFn9ro3id3FwBO+mB0kZl7K9TIIkfnPK6+3i7wWLtUpuZYF+3Gtu6e5EbAmJIe
+         CEmA==
+X-Gm-Message-State: AOAM533oa/wwWWM/OOe/nH6wo0E1W51JTIn1WxsBhqNMmK7mIpzxwCXT
+        KXwb8UxdlrQMJe+ruyIRL/RnpMnRzG3b6K/GN6s=
+X-Google-Smtp-Source: ABdhPJzd4XpulgxPqo3GJyz/7qJgMmqyQWLIjLiq4E497a4l1ZK6xwd0ZMb9kbBqw+HfcfevS7FYQFhhZjxFTzbYWZE=
+X-Received: by 2002:a92:bf01:: with SMTP id z1mr11261719ilh.18.1643626824914;
+ Mon, 31 Jan 2022 03:00:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Reply-To: daniellakyle60@gmail.com
+Sender: drdanielmorris11111@gmail.com
+Received: by 2002:a05:6638:1248:0:0:0:0 with HTTP; Mon, 31 Jan 2022 03:00:24
+ -0800 (PST)
+From:   Mrs daniell akyle <daniellakyle60@gmail.com>
+Date:   Mon, 31 Jan 2022 12:00:24 +0100
+X-Google-Sender-Auth: In2hlqlpPwPr7MI-yh9_QFub_fE
+Message-ID: <CAKFcj-MLAnZBo0A2RqXf-exs+KAG-o6Ln5XerrcTvaKWSBL9yQ@mail.gmail.com>
+Subject: Ahoj
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi Xiao,
-Thanks for review.
-
-On Mon, 31 Jan 2022 16:29:27 +0800
-Xiao Ni <xni@redhat.com> wrote:
-
-> > +
-> >         if (test_bit(In_sync, &rdev->flags) && !mddev->fail_last_dev
-> >             && !enough(conf, rdev->raid_disk)) {
-> 
-> The check of mddev->fail_last_dev should be removed here.
-
-Ohh, my bad. I mainly tested it on RAID1 and didn't notice it.
-Thanks!
-
-> 
-> > -               /*
-> > -                * Don't fail the drive, just return an IO error.
-> > -                */
-> 
-> It's the same. These comments can directly give people notes. raid10
-> will return bio here with an error. Is it better to keep them here?
-
-Sure, let wait for Song opinion first and then I will send v4.
-
-Mariusz
-
-
-
+Pozdravy
+Jmenuji se pan=C3=AD Daniella Kyleov=C3=A1, je mi 58 let
+Filip=C3=ADny. V sou=C4=8Dasn=C3=A9 dob=C4=9B jsem hospitalizov=C3=A1n na F=
+ilip=C3=ADn=C3=A1ch, kde jsem
+podstupuje l=C3=A9=C4=8Dbu akutn=C3=ADho karcinomu j=C3=ADcnu. jsem um=C3=
+=ADraj=C3=ADc=C3=AD,
+vdova, kter=C3=A1 se rozhodla darovat =C4=8D=C3=A1st sv=C3=A9ho majetku spo=
+lehliv=C3=A9 osob=C4=9B
+kter=C3=A1 tyto pen=C3=ADze pou=C5=BEije na pomoc chud=C3=BDm a m=C3=A9n=C4=
+=9B privilegovan=C3=BDm. Chci
+poskytnout dar ve v=C3=BD=C5=A1i 3 700 000 =C2=A3 na sirotky nebo charitati=
+vn=C3=AD organizace
+ve va=C5=A1=C3=AD oblasti. Zvl=C3=A1dne=C5=A1 to? Pokud jste ochotni tuto n=
+ab=C3=ADdku p=C5=99ijmout
+a ud=C4=9Blejte p=C5=99esn=C4=9B tak, jak v=C3=A1m =C5=99=C3=ADk=C3=A1m, pa=
+k se mi vra=C5=A5te pro dal=C5=A1=C3=AD vysv=C4=9Btlen=C3=AD.
+pozdravy
+Pan=C3=AD Daniella Kyleov=C3=A1
