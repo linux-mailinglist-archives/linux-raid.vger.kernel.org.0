@@ -1,79 +1,85 @@
 Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C896E4A8C03
-	for <lists+linux-raid@lfdr.de>; Thu,  3 Feb 2022 19:55:37 +0100 (CET)
+Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
+	by mail.lfdr.de (Postfix) with ESMTP id 2AB0E4AA017
+	for <lists+linux-raid@lfdr.de>; Fri,  4 Feb 2022 20:31:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353583AbiBCSzg (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 3 Feb 2022 13:55:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35804 "EHLO
+        id S233661AbiBDTb0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 4 Feb 2022 14:31:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234035AbiBCSzf (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 3 Feb 2022 13:55:35 -0500
-Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3812C061714
-        for <linux-raid@vger.kernel.org>; Thu,  3 Feb 2022 10:55:35 -0800 (PST)
-Received: by mail-io1-xd2f.google.com with SMTP id n17so4480725iod.4
-        for <linux-raid@vger.kernel.org>; Thu, 03 Feb 2022 10:55:35 -0800 (PST)
+        with ESMTP id S233647AbiBDTbZ (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 4 Feb 2022 14:31:25 -0500
+Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1150EC06173D
+        for <linux-raid@vger.kernel.org>; Fri,  4 Feb 2022 11:31:22 -0800 (PST)
+Received: by mail-yb1-xb35.google.com with SMTP id i10so21593589ybt.10
+        for <linux-raid@vger.kernel.org>; Fri, 04 Feb 2022 11:31:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=6CxBR6kFyyd8xbmPbdEADYFDZ4ypQXnmrZTvqJC1nOo=;
-        b=mOTvptVjGQ4nYpt8+KceGqknyiv8lw7xov8VgiyguavJP2DRQ8Q+uCQzNCY9bQs+L/
-         S/Vpod2vo/WfH/2n4JkEWq1OYSzECwuj2GJv3gAG3wXOxm2OQ8LL04KD9EcBFC0b2bjf
-         snfWG3p0I5pgU8hO/DEaClqDAWfw2AQ5/SCaNdNf9gaXoXleLYSuI/dzS0kBR4lPiaMq
-         5hMYh3YheTKm9oQ8QvRAh7Gr/sLZxhVppk//AKPmAsjNxBUxRxNioXs+dhDsEvI4zrjh
-         DMtdYcMRRbShcz8q9T+jYt4of7FM1aq9FccfpBDwvM3NZ75PmhbPqeROTwsrYYJ4Pc7i
-         0MeA==
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=nRLae2EDOIvK+J10/LWcbhWcvU8XY4T61wNYgItmDxs=;
+        b=iglCpIVhvBymHYI4GUfobWAsJvH3R8clVtsV0tFlJjfvjAw6VxxnIc4JpKgtPTF/ah
+         wGBoVfBB58oLelomiPyaP9kS/4gDs/BV8Esx/QFoL0KPjsnkJ5g3uuYV+yOgQQHe+F7F
+         OfTGRyP15ss/LxBWftgCwCI0P9DkmXjPAXWH7uG0UoJqxy384ZUdujVEwWCGgBVo2v3O
+         R5/fhzvQMV3dEdoLjnonplNF2s2kuaG/8LOEJMoBgNkh+XObldrc70WSXSPTv01ZWjQS
+         A/PmyQTO2J6/nCeiqMoz09+coKmokfZnniNjSdC75cY437bgaTPJjdERB/EcHHtofziW
+         F1fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6CxBR6kFyyd8xbmPbdEADYFDZ4ypQXnmrZTvqJC1nOo=;
-        b=4JRdV2FEzza6c9sO2h+87TOwd5y2qytn7tYUcE9EIMGuBxzTGSv6ur2Uf5bH8Y2TpV
-         6+uD9q2ne9HBEBLYYlZz2xhRPmsTqxjaDmjJgTSHYxsQQUsByKQanKuxiwlZLcpC82kz
-         bX8/Fmy0U4r7AhcFKJf2Kslzk+o2g/aLwN5ohoD7ok2OfDeGS66MGi8fx1SOtjE95eZL
-         5GQu3JbUIODGLZ2qfWqDZ3e9usMuTx/jCTtPeikL09saC4hkkfzGkQzI4dFIwf7PsdDp
-         oUrAeuf7VRQ22T1jAq6YFaBE01xrjMTZSqDJbn7j0K0uBXTbf3zxGl9yjN1i6i5Lj2QZ
-         YtRw==
-X-Gm-Message-State: AOAM532UaWssh6qwAXamZFTrenyi3MDj8TNfGeyFk/nMRUAKBWd334JB
-        U8NQf6nnEuuamNPbwly4ZssmaFq99+ezCQ==
-X-Google-Smtp-Source: ABdhPJytx3zZ5K6JAqGL2VL7QybNYnnVsOvLeY3AFAUq5cw5EY0ji/38sBYCpjBa4mdihNO6uayiSw==
-X-Received: by 2002:a05:6638:1408:: with SMTP id k8mr6096592jad.267.1643914534754;
-        Thu, 03 Feb 2022 10:55:34 -0800 (PST)
-Received: from [192.168.1.30] ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id d12sm5179163ilv.42.2022.02.03.10.55.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Feb 2022 10:55:34 -0800 (PST)
-Subject: Re: [GIT PULL] md-fixes 20220203
-To:     Song Liu <songliubraving@fb.com>,
-        linux-raid <linux-raid@vger.kernel.org>
-References: <367A4982-7D31-4E62-8867-3912D5B9FB5C@fb.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <10993cdc-56cb-5ccb-c632-aa4c15633e15@kernel.dk>
-Date:   Thu, 3 Feb 2022 11:55:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=nRLae2EDOIvK+J10/LWcbhWcvU8XY4T61wNYgItmDxs=;
+        b=0ZdcHbpMspd6CJ7T70vsCZYZOf1CZMmTZIyqsP2tYJpp0GIT5KOEYENmmWmxvK6q7i
+         7wucCpZpPL090ksd/AQe3PPQY1juBAMWhffECkULXFuWu3THTFi/+TPLrabVXmpBeNSH
+         9lhhAUFcNGxp+jI8XHIFuNPVPV84h9ikkqSOO4uJrEfCzIeNcq3TkKZky5pygkX0XkA3
+         X34/RcExVjHijRKLC2RU/guxtAGUNKHLSkyBrSpSg+phGbCl+eh0WN9FK9VKOfK0qDHq
+         IxNdGOUaLrBsTe1jq4W2erSE0raH9zM8KKkAoOj1ZToHDeZUaV/GvAfmDrnm/F9WL+WZ
+         gpDw==
+X-Gm-Message-State: AOAM530Jv96JXhXZxUTgEf9wzQvd7TEkEENZb9397OrBfawhofzfgWTu
+        jM+As40dOgSydIpQEFhNX2moHG2tqACmZuZ0znM=
+X-Google-Smtp-Source: ABdhPJydJg2/1P0VqWXnGmMo6kYeDxHB+VFUNrEJWQpEug3oV8XS0ySPhuzPDJXzQWkP7YwVb6K2GP9Nc10ORjWvqIM=
+X-Received: by 2002:a25:b782:: with SMTP id n2mr667195ybh.433.1644003079998;
+ Fri, 04 Feb 2022 11:31:19 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <367A4982-7D31-4E62-8867-3912D5B9FB5C@fb.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a05:7010:1820:b0:203:1c98:58d9 with HTTP; Fri, 4 Feb 2022
+ 11:31:19 -0800 (PST)
+Reply-To: georgesilas@seznam.cz
+From:   Robert Kelvin <doumehaagbessi@gmail.com>
+Date:   Fri, 4 Feb 2022 19:31:19 +0000
+Message-ID: <CA+04rmbb31+M1kA4BJgk60u6o00_R2m0tAR8_aQk_=Arb=NEXg@mail.gmail.com>
+Subject: Greetings
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 2/3/22 11:50 AM, Song Liu wrote:
-> Hi Jens, 
-> 
-> Please consider pulling the following fix on top of your block-5.17 branch. 
-> It fixes a NULL ptr deref case with nowait. 
+Financial Institutions / Managing Director
 
-Pulled, thanks.
+Amount: $ 500,000,000, (500,000, United State Dollars)
 
--- 
-Jens Axboe
+UN and World Bank (IMF) Compensation Program for AWARD Support and Victim.
 
+Attention Recipient,
+
+We agreed with the World Bank and the Federal Bureau of Investigation
+(FBI) that we the Financial Institutions (FI), will monitor this
+payment to overcome the desperate situation of banks and other
+employees. Organizations involved in criminal proceedings.
+
+We have received an irrevocable payment guarantee from the World Bank.
+That your email is found through our database to receive this
+compensation fund this Year 2021.
+
+We would like to inform you that the World Bank has decided to send
+you $ 500,000.00 and transfer it via an international VISA ATM card,
+which you will use to withdraw from any Visa ATM anywhere in the world
+(Bank of America) issues an international ATM visa card for you, we
+will send it to your home address through FEDEX courier services.
+
+Bank of America will issue your compensating visa card and send it to
+your home address. Please contact Peter Frkal for more information.
+
+Peter Frkal.
