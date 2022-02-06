@@ -2,72 +2,96 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EB784AACAE
-	for <lists+linux-raid@lfdr.de>; Sat,  5 Feb 2022 22:17:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DF2C4AB22B
+	for <lists+linux-raid@lfdr.de>; Sun,  6 Feb 2022 21:59:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240641AbiBEVRZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 5 Feb 2022 16:17:25 -0500
-Received: from [194.99.46.237] ([194.99.46.237]:58766 "EHLO
-        slot0.bluewaterleisure.com" rhost-flags-FAIL-FAIL-OK-OK)
-        by vger.kernel.org with ESMTP id S230287AbiBEVRZ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 5 Feb 2022 16:17:25 -0500
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; s=dkim; d=bluewaterleisure.com;
- h=Reply-To:From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding; i=ker.mon@bluewaterleisure.com;
- bh=J0ANz3R69Ps/C79qY+zUPKBNNUU=;
- b=vSPLNWsoLzwGhB4+l6CGXfAeQ3giIW5Sw2WmWQhnXSWMMlnzV3hc6USJ4msjTLY2nPYbF7nD+MGE
-   wsQIqkPjLIInIkdUl5VwcdnywV5VD2MEu/UKV9S8K2eKScn+2aYUIB9aMvaDqOnLsUVnpAubHzfD
-   iJ8kcj9wNqZQRzfTJIvhDxtz87Tw7GTnBZWMiNDlwN0tpWFf0Wv6Q/aCO1KsBFUCcc1RY/3Fkxv1
-   WWV60JT4eyJ72EMvCwDwJzNlPl2zrw54j6kTXzyseRoiRl0pWbbu36EBvnRonztIiTKlOdGyDL9E
-   6OXdW2zNJjOXzpSuwfqxajvSrncK65pT3oWXpA==
-DomainKey-Signature: a=rsa-sha1; c=nofws; q=dns; s=dkim; d=bluewaterleisure.com;
- b=wOqchyvWED+eq24NHjCuxdTQ/6u26sZnVSoX8peTJe59LsmkbMd9Z7qWzLhNOOHW6Acd70UcV/Jp
-   IElvFx7C9nn9F2hGflwiLkTwLyBSWc8OJvAvNAyXZHgzDVjK6/8eIUptPGJUOiQciMJGGv2fMEUQ
-   J9xKZXKDvqi3YMgZiFCCHfpttsgN5JDGSzfc2Fe7hPIo4/IUmAU/wWRanAOw6JOGTBTbe3CbP+eE
-   F3lwt57imHdQSE0Wz++Gpu7Cay8tc6fIlZFcqn5b48CckrNQ7HbSLkoedm2lHTBx16kUZmTe0v9d
-   vTN0KtSFVKnzwiW8zR94CHH8L6I24WXD8EFH7g==;
-Reply-To: tomander231@gmail.com
-From:   "Barrister Mustafa" <ker.mon@bluewaterleisure.com>
+        id S237971AbiBFU67 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 6 Feb 2022 15:58:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38716 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233661AbiBFU66 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 6 Feb 2022 15:58:58 -0500
+X-Greylist: delayed 435 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 06 Feb 2022 12:58:57 PST
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8457C06173B
+        for <linux-raid@vger.kernel.org>; Sun,  6 Feb 2022 12:58:57 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 00D831F386;
+        Sun,  6 Feb 2022 20:51:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1644180701; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=CKuTzZlszbNehKBUrWxmNkvh5/C9qBO0M7ffLgssIOQ=;
+        b=deMcgaE95WHgJd3N8JY1LOU9ZbfokYOTQ2sM/CUMFsHpuUdZl/obxBzOEU37ypdd23wmFQ
+        KUtX8EnMhDyuEXhWLO6ztaRGzJFlTiShBszdvPcsRHhNK2C/EKEw8uQrbo/VdfFdNrjPeJ
+        Um49ySUga2ffOllJiHR76UhND4bibeU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1644180701;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=CKuTzZlszbNehKBUrWxmNkvh5/C9qBO0M7ffLgssIOQ=;
+        b=3Z5W+mZGal0+WQHLWDVHoL1ocK3tS1DHkjGo1bVks1vEasTvA7PFDB2L58zdgAfTpCyuK1
+        T7YITSKbCUQOa2Ag==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id E06E613519;
+        Sun,  6 Feb 2022 20:51:40 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id OUfONdw0AGLTOgAAMHmgww
+        (envelope-from <dmueller@suse.de>); Sun, 06 Feb 2022 20:51:40 +0000
+From:   =?UTF-8?q?Dirk=20M=C3=BCller?= <dmueller@suse.de>
 To:     linux-raid@vger.kernel.org
-Subject: Aufmerksamkeit:
-Date:   5 Feb 2022 22:04:28 +0100
-Message-ID: <20220205220428.F38285FE30FC5A98@bluewaterleisure.com>
+Cc:     =?UTF-8?q?Dirk=20M=C3=BCller?= <dmueller@suse.de>
+Subject: [PATCH] fix multiple definition linking error due to missing extern
+Date:   Sun,  6 Feb 2022 21:51:37 +0100
+Message-Id: <20220206205137.21717-1-dmueller@suse.de>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Lieb linux-raid,
+GCC 10+ defaults to -fno-common, which enforces proper declaration of
+external references using "extern". without this change a link would
+fail with:
 
-Ich bin Barrister Mustafa Ayvaz, hoffe, diese E-Mail findet Sie=20
-gut. Ich bin Anwalt des verstorbenen Herrn Robert, der aufgrund=20
-des Coronavirus sein Leben verlor, kontaktierte er w=C3=A4hrend seiner=20
-Gesch=C3=A4ftsreise in China. Ich kontaktiere Sie, um mit mir=20
-zusammenzuarbeiten, um die =C3=9Cberweisung eines Fonds von vier=20
-Millionen vierhundertzwanzigtausend Dollar zu sichern, verlie=C3=9F=20
-er.
+  lib/raid6/test/algos.c:28: multiple definition of `raid6_call';
+  lib/raid6/test/test.c:22: first defined here
 
-Ich habe nach dem n=C3=A4chsten Angeh=C3=B6rigen meines verstorbenen Kunden=
-=20
-gesucht, ohne Erfolg, da ich seinen aktuellen Wohnsitz und seine=20
-Kontaktdaten nicht habe. Als ich suchte, stie=C3=9F ich auf Ihr Profil=20
-mit dem gleichen Nachnamen und am selben Ort mit den N=C3=A4chsten=20
-Angeh=C3=B6rigen. Ich beschloss, dich zu kontaktieren und dich als=20
-Bonafide Next Of Kin zu benutzen.
+Signed-off-by: Dirk Müller <dmueller@suse.de>
+---
+ lib/raid6/test/test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Ich bitte Sie um Ihre Zustimmung, Sie als Next Of Kin meines=20
-verstorbenen Kunden zu pr=C3=A4sentieren, da Sie beide den gleichen=20
-Nachnamen tragen. Die Gelder werden dann an Sie als Beg=C3=BCnstigten=20
-in Ihrem Land =C3=BCberwiesen und im Verh=C3=A4ltnis 60:40 geteilt, das=20
-sind 60% f=C3=BCr mich und 40% f=C3=BCr Sie. F=C3=BCr weitere Details=20
-kontaktieren Sie mich bitte sofort f=C3=BCr weitere Informationen =C3=BCber=
-=20
-diese meine E-Mail. 
+diff --git a/lib/raid6/test/test.c b/lib/raid6/test/test.c
+index a3cf071941ab..ab0459150a61 100644
+--- a/lib/raid6/test/test.c
++++ b/lib/raid6/test/test.c
+@@ -19,7 +19,7 @@
+ #define NDISKS		16	/* Including P and Q */
+ 
+ const char raid6_empty_zero_page[PAGE_SIZE] __attribute__((aligned(PAGE_SIZE)));
+-struct raid6_calls raid6_call;
++extern struct raid6_calls raid6_call;
+ 
+ char *dataptrs[NDISKS];
+ char data[NDISKS][PAGE_SIZE] __attribute__((aligned(PAGE_SIZE)));
+-- 
+2.35.1
 
-Danach sende ich Ihnen die Details, wie die Transaktion beginnen=20
-wird
-
-Gr=C3=BC=C3=9Fe
-Mustafa Ayvaz
