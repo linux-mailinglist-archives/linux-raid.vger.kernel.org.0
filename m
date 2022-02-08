@@ -2,133 +2,65 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 832634AD47B
-	for <lists+linux-raid@lfdr.de>; Tue,  8 Feb 2022 10:15:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B0544AD671
+	for <lists+linux-raid@lfdr.de>; Tue,  8 Feb 2022 12:26:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353366AbiBHJPK (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 8 Feb 2022 04:15:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57706 "EHLO
+        id S233175AbiBHLZo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 8 Feb 2022 06:25:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240554AbiBHJPJ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 8 Feb 2022 04:15:09 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B2DAC0401F0
-        for <linux-raid@vger.kernel.org>; Tue,  8 Feb 2022 01:15:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644311708; x=1675847708;
-  h=date:from:to:subject:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=K9kiqqK1eZYx/5tarIShqAhFZKKq8PENjqQgV7U50PQ=;
-  b=iLzbU544t4XAha5AbDNvLS011NawMvol7SkbkazaB1L+yFMHZgheBVcn
-   Nx5TNzJy6rWSfcRnPWW42XsL0O3Yz/RxIikTabMMNNeMhFBhCjNkyjzBq
-   CbgZ3Rm70DvtPvVV3UFXpYg28QvmmPoWkjNqozo0nqmQ8O5kUie41r+Dl
-   SGi/wruNscRQ+ZDkcnnzF503nZ0z9+LMvlMgQLTYKkO9UFrHlmeo1dgnG
-   5y2xT8Qe4OVhnwo4Yj0zztKjZaH2MwzGlr1mwJeQsNGxhBTkj4s9uobkk
-   +x7F9Bo96uKlWCTcICvyNMLYpSuITDBH4Jhpj9gqTjkoYrzq+zm/5fEkf
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10251"; a="248856539"
-X-IronPort-AV: E=Sophos;i="5.88,352,1635231600"; 
-   d="scan'208";a="248856539"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2022 01:14:57 -0800
-X-IronPort-AV: E=Sophos;i="5.88,352,1635231600"; 
-   d="scan'208";a="525475363"
-Received: from mtkaczyk-mobl1.ger.corp.intel.com (HELO localhost) ([10.213.30.243])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2022 01:14:55 -0800
-Date:   Tue, 8 Feb 2022 10:14:50 +0100
-From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-To:     Nigel Croxon <ncroxon@redhat.com>, jes@trained-monkey.org,
-        linux-raid@vger.kernel.org, Wu Guanghao <wuguanghao3@huawei.com>,
-        Coly Li <colyli@suse.de>
-Subject: Re: [PATCH] mdadm: fix msg when removing a device using the short
- arg -r
-Message-ID: <20220208101450.00007baf@linux.intel.com>
-In-Reply-To: <20220207221519.3169427-1-ncroxon@redhat.com>
-References: <20220207221519.3169427-1-ncroxon@redhat.com>
+        with ESMTP id S237527AbiBHJl0 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 8 Feb 2022 04:41:26 -0500
+Received: from mx1.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6003C03FEC0
+        for <linux-raid@vger.kernel.org>; Tue,  8 Feb 2022 01:41:24 -0800 (PST)
+Received: from [192.168.0.2] (ip5f5aebc2.dynamic.kabel-deutschland.de [95.90.235.194])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: pmenzel)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id B6FD361E64846;
+        Tue,  8 Feb 2022 10:41:22 +0100 (CET)
+Message-ID: <1df4d951-7152-f17c-7c90-c8138ae645df@molgen.mpg.de>
+Date:   Tue, 8 Feb 2022 10:41:20 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Messages with timestamps from the future from intel.com (was: [PATCH]
+ Replace error prone signal() with sigaction())
+Content-Language: en-US
+To:     Lukasz Florczak <lukasz.florczak@intel.com>
+Cc:     linux-raid@vger.kernel.org
+References: <20220208152915.12858-1-lukasz.florczak@intel.com>
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <20220208152915.12858-1-lukasz.florczak@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Mon,  7 Feb 2022 17:15:19 -0500
-Nigel Croxon <ncroxon@redhat.com> wrote:
+Dear Lukasz,
 
-> The change from commit mdadm: fix coredump of mdadm
-> --monitor -r broke the printing of the return message when
-> passing -r to mdadm --manage, the removal of a device from
-> an array.
-> 
-> If the current code reverts this commit, both issues are
-> still fixed.
-> 
-> The original problem reported that the fix tried to address
-> was:  The --monitor -r option requires a parameter,
-> otherwise a null pointer will be manipulated when
-> converting to integer data, and a core dump will appear.
-> 
-> The original problem was really fixed with:
-> 60815698c0a Refactor parse_num and use it to parse optarg.
-> Which added a check for NULL in 'optarg' before moving it
-> to the 'increments' variable.
-> 
-> New issue: When trying to remove a device using the short
-> argument -r, instead of the long argument --remove, the
-> output is empty. The problem started when commit 
-> 546047688e1c was added.
-> 
-> Steps to Reproduce:
-> 1. create/assemble /dev/md0 device
-> 2. mdadm --manage /dev/md0 -r /dev/vdxx
-> 
-> Actual results:
-> Nothing, empty output, nothing happens, the device is still
-> connected to the array.
-> 
-> The output should have stated "mdadm: hot remove failed
-> for /dev/vdxx: Device or resource busy", if the device was
-> still active. Or it should remove the device and print
-> a message:
-> 
-> # mdadm --set-faulty /dev/md0 /dev/vdd
-> mdadm: set /dev/vdd faulty in /dev/md0
-> # mdadm --manage /dev/md0 -r /dev/vdd
-> mdadm: hot removed /dev/vdd from /dev/md0
-> 
-> 
-> The following commit should be reverted as it breaks
-> mdadm --manage -r.
-> 
-> commit 546047688e1c64638f462147c755b58119cabdc8
-> Author: Wu Guanghao <wuguanghao3@huawei.com>
-> Date:   Mon Aug 16 15:24:51 2021 +0800
-> mdadm: fix coredump of mdadm --monitor -r
-> 
-> -Nigel
-> 
-> Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
-> 
-> 
-Hi,
-Thanks for the reminder. Revert is obviously correct. Jes could you
-merge it?
 
-In systemd world mdmonitor is rarely started from cmdline. If
-"increment" option is not settable via config then it is probably
-unused. I consider this option as deprecated and I suspect that no one
-is using it now. Can we remove it completely?
+Am 08.02.22 um 16:29 schrieb Lukasz Florczak:
 
-If you disagree with that, then we should add support for it in config
-file to make it usable. Additionally, I suggest to change "-r" for
-"increments" to short opt always used with parameter.
+The date of your message is also from the future:
 
-Thanks,
-Mariusz
+     Date:   Tue,  8 Feb 2022 16:29:15 +0100
+
+[…]
+
+This seems to happen a lot with messages from @intel.com (sent from the 
+Poland office). Do you know, what is broken with your setup, and can 
+your IT fix that?
+
+
+Kind regards,
+
+Paul
