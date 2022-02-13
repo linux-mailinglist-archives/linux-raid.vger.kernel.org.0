@@ -2,65 +2,70 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 142884B3A4D
-	for <lists+linux-raid@lfdr.de>; Sun, 13 Feb 2022 09:49:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 38FAD4B3C61
+	for <lists+linux-raid@lfdr.de>; Sun, 13 Feb 2022 18:12:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234462AbiBMItj (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 13 Feb 2022 03:49:39 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:55100 "EHLO
+        id S237227AbiBMRLz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 13 Feb 2022 12:11:55 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:36876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230153AbiBMIth (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 13 Feb 2022 03:49:37 -0500
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C6A65EDCD
-        for <linux-raid@vger.kernel.org>; Sun, 13 Feb 2022 00:49:32 -0800 (PST)
-Received: by mail-ed1-x52e.google.com with SMTP id w2so4042618edc.8
-        for <linux-raid@vger.kernel.org>; Sun, 13 Feb 2022 00:49:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=8+4bnTKYSEomgov0fN4WSzB8Yls69bRxwVLBV1+X8+k=;
-        b=RgNQfOJU4KGFJRpxfHG4Kbbmn3T89mmisaSsxlnizAUJ4AmJe68u+A2LYUWBcdNdqg
-         PMmZ+qfV326CysbnjM8IOMGZ0OhHILu0wXG0Tge3UFb/FiR0zbCRl4fEzxvMSWXQM7V/
-         NnOdqGsiA//vT5sk4Xlnr3gN/BTCfDxLhBoveXiXPJ1tNmceTpKy0BvPNDALaWELH2nu
-         ge484iexd2jvNjNhCYyBv+filmdMnv0qAth2IhyT1+vdPqUaGtfLbGXOYyY8oVJkV3Lu
-         06RK2+Jjo+jKSglfnajRTk6iF0V/LHrz8ECijrgxexBwscvSUBPEbw+CNBDpQJft20N9
-         JUmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=8+4bnTKYSEomgov0fN4WSzB8Yls69bRxwVLBV1+X8+k=;
-        b=siF/ZlRTxuwRsRXURn7exZCg1gG/hcj5ATAFIUww4NyuZ9LaLUWoOLRJGPdvhUAgke
-         ACZUfOTFj5jmCDETRH0CWB8YtdnrWVe2zt2W81vZ1F4m1A3DdLfZoG0wgeriGSJu1/ny
-         xFHe8M63nggLQSCTQww/IYQhhBz5NNd3fiitRjx2+8kibMAYtFnQAcpj8iRoHMkX1bO0
-         c1S66+LD7wDkOLEBAGpcNLUV/DfSKH5VTK1lspbwQU9ic6m8t+YSmA11nOLnKKe78znK
-         E36ReykbZ5zRNm3j5nkPcTzK9M8cg+/DRI/PPTnbNUoKQdkLyI1KRv0yGi01FHhZhtvw
-         bHIw==
-X-Gm-Message-State: AOAM5307hTIvYo5da2/uchg3I4+xOQUXgbdsTdRLnX85dVXh3OZS4D+Z
-        onT/oTPTPY3iADLAvS+6qtIubkxNiltVz22uCmw=
-X-Google-Smtp-Source: ABdhPJzyFpvnVcaRmG4gX3V7+JjVe8tHVF91YR+WrzD1oOxfZvduLJUINiPoGeZfnhyBoRokKNpzi7stt44R3EMOkVM=
-X-Received: by 2002:a50:fb85:: with SMTP id e5mr10042267edq.91.1644742170876;
- Sun, 13 Feb 2022 00:49:30 -0800 (PST)
+        with ESMTP id S232033AbiBMRLz (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 13 Feb 2022 12:11:55 -0500
+Received: from hermes.turmel.org (hermes.turmel.org [IPv6:2604:180:f1::1e9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97EAC58E5B
+        for <linux-raid@vger.kernel.org>; Sun, 13 Feb 2022 09:11:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=turmel.org;
+         s=a; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:To
+        :Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:Cc:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=wE2qerIRoDfeWPCs0RwVKRs3lQhtekPqa5nz9ghiZks=; b=EF8VlkQR8mEpwJahlpkJAuujiI
+        YHvRJCFeBW+moR3rsVvUqN5bknji5ihUyEomFJC9D3AYNvAM1SXg9Sn+kIHlqcmbwowZDws5rHfar
+        IwcVinh6wvksuQIET3mbAbOvKNqL1esuiI+HxucgTW7wwHzoXtT3xNxRZhTG9bKgy20GrWxYXuBQ1
+        38JKvBh807FNB6lIh/2JSVH3+RFd+SXXZxOSokWxUSdb67wCjixHWCXp4M3Afs7hMMwNnPgTsiC3r
+        S+AmRXpWkraB2MnGdGqy7Ouhcgo2hI8VsRILkHS8vH+DOGh/cUvnnaWLxteZ+oN1tuNY12Zw4djZe
+        kn1ags/A==;
+Received: from c-73-43-58-214.hsd1.ga.comcast.net ([73.43.58.214] helo=[192.168.20.123])
+        by hermes.turmel.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <philip@turmel.org>)
+        id 1nJIPZ-00026B-U5; Sun, 13 Feb 2022 17:11:45 +0000
+Message-ID: <592105f9-1b25-9ab0-471e-5c9bf81c0473@turmel.org>
+Date:   Sun, 13 Feb 2022 12:11:44 -0500
 MIME-Version: 1.0
-Received: by 2002:a05:6402:42d4:0:0:0:0 with HTTP; Sun, 13 Feb 2022 00:49:30
- -0800 (PST)
-From:   Ulrica Mica <ulricamica771@gmail.com>
-Date:   Sun, 13 Feb 2022 00:49:30 -0800
-Message-ID: <CAHHQOPfpZEkSBK1=HW=HJBshef8sjo-99RiWEooZqLb_xWH66Q@mail.gmail.com>
-Subject: good morning
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: remove from linux-raid@vger.kernel.org
+Content-Language: en-US
+To:     keld@keldix.com, linux-raid@vger.kernel.org
+References: <20220211205147.GA2397@www5.open-std.org>
+From:   Phil Turmel <philip@turmel.org>
+In-Reply-To: <20220211205147.GA2397@www5.open-std.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
--- 
-Hello dear
-Can i talk to you please?
-Ulrica
+On 2/11/22 15:51, keld@keldix.com wrote:
+> hi
+> 
+> i have tried to be removed from linux-raid@vger.kernel.org but with no success.
+> can somebody please remove me?
+> 
+> keld
+> 
+
+Use the unsubscribe link here:
+
+http://vger.kernel.org/vger-lists.html#linux-raid
+
+(Which actually invokes your email program--look close at the link if 
+necessary.)
