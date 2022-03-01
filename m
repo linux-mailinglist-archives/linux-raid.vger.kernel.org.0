@@ -2,123 +2,87 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 68F974C8597
-	for <lists+linux-raid@lfdr.de>; Tue,  1 Mar 2022 08:54:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 636DD4C86D7
+	for <lists+linux-raid@lfdr.de>; Tue,  1 Mar 2022 09:46:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233125AbiCAHyi (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 1 Mar 2022 02:54:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36116 "EHLO
+        id S233467AbiCAIqu (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 1 Mar 2022 03:46:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231983AbiCAHyi (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 1 Mar 2022 02:54:38 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BFC4A6E8D2
-        for <linux-raid@vger.kernel.org>; Mon, 28 Feb 2022 23:53:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1646121236;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QVnFIZhFNYTKL1SBRvgDq8aonG+DvL7dUgSwlUWc5mM=;
-        b=NJrsCuRO9cLD1bOvDX1ct4+yRVz1L9lej5HJ7eG7Kd+ENz3SeG2b9z1TKEaWgMSbCzR+jn
-        NyIjuaE6L3vkulUYBedQ5qe/3Fi9+MAz2beq9F1i5N1syNldiPZORH6mB8y8+B2IUW4YsN
-        5kO2jOQwKaTMFrNaUmyHVDuodbLQsbQ=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-483--LcuxTIOP2agH7IEJislwQ-1; Tue, 01 Mar 2022 02:53:55 -0500
-X-MC-Unique: -LcuxTIOP2agH7IEJislwQ-1
-Received: by mail-ed1-f69.google.com with SMTP id b13-20020a056402278d00b0041311e02a9bso7245972ede.13
-        for <linux-raid@vger.kernel.org>; Mon, 28 Feb 2022 23:53:54 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QVnFIZhFNYTKL1SBRvgDq8aonG+DvL7dUgSwlUWc5mM=;
-        b=FJIHQSCS3vqkTQ0qjZ3mXqYPjiITRqdSr6ITy7FOtjhTRFc6P668DPuDMFhDO0xy2z
-         a54ArXWQ3uPzdJBOMQ6PgE1Bxl52jLR//m5vghMRsXYBrdebztT11rCIS0vXqboS/552
-         S3jyNGKrBcC4oEDuH3pGIK4bQIaMyL0Fm3+FB0R2Uj8au4kDtqUscSCA6UZEeZ2oY5IO
-         9Dlins/9W6VX+t7gR3QBWGwu8lvEmOIfdenvCHPQfL/BiP3eB3i1L8S27b4Mwlm4IsHH
-         gJQAUT1W6GgAu6veQxj19JKoRNcgbq03pc9uTdrh9/oq44gOvrbQozjLh+GTZDo20eIp
-         rwbQ==
-X-Gm-Message-State: AOAM5326rP3ndlBOMo9HoOnOL8J+8S6XJhjDUu2qqmR+47Am22pajn/g
-        y9RCYHD+j6fytYkgnqeTXRrUHb7Vg8FAeaTLp+ynfccw+SlpXeU432Xy5YGNORWjnW/EPBUmhid
-        v4ECOkrbBImyRlXfxHxFMdg==
-X-Received: by 2002:a17:906:d935:b0:6cc:fcfc:c286 with SMTP id rn21-20020a170906d93500b006ccfcfcc286mr18098683ejb.423.1646121234054;
-        Mon, 28 Feb 2022 23:53:54 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJysts8BwR7kcT2eYdWIeAKaNDkPSFZ3Y7NmajZMDMKGdqDOlJPCJrK4VFsbK9YtcY5F4jFAyA==
-X-Received: by 2002:a17:906:d935:b0:6cc:fcfc:c286 with SMTP id rn21-20020a170906d93500b006ccfcfcc286mr18098675ejb.423.1646121233798;
-        Mon, 28 Feb 2022 23:53:53 -0800 (PST)
-Received: from alatyr-rpi.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id c4-20020a170906340400b006d077e850b5sm5073999ejb.23.2022.02.28.23.53.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Feb 2022 23:53:53 -0800 (PST)
-Date:   Tue, 1 Mar 2022 08:53:49 +0100
-From:   Peter Rajnoha <prajnoha@redhat.com>
-To:     Xiao Ni <xni@redhat.com>
-Cc:     Martin Wilck <mwilck@suse.com>, Jes Sorensen <jsorensen@fb.com>,
-        lvm-devel@redhat.com, linux-raid <linux-raid@vger.kernel.org>,
-        Coly Li <colyli@suse.com>, dm-devel@redhat.com,
-        Heming Zhao <heming.zhao@suse.com>
-Subject: Re: [dm-devel] [PATCH] udev-md-raid-assembly.rules: skip if
- DM_UDEV_DISABLE_OTHER_RULES_FLAG
-Message-ID: <20220301075349.ao7a2rbjqn627oq4@alatyr-rpi.brq.redhat.com>
-References: <20220216205914.7575-1-mwilck@suse.com>
- <164504936873.10228.7361167610237544463@noble.neil.brown.name>
- <e8720e3f8734cbad1af34d5e54afc47ba3ef1b8f.camel@suse.com>
- <20220217130934.lh2b33255kyx2pax@alatyr-rpi.brq.redhat.com>
- <CALTww2-_rJDyVh2GLehJ8Yg9LOy4MnkvDeJnF2uunaOy6ONu7g@mail.gmail.com>
+        with ESMTP id S232922AbiCAIqt (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 1 Mar 2022 03:46:49 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5099688B07;
+        Tue,  1 Mar 2022 00:46:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=cSZLkORyvzwZrDlYPlFtcZZpc85UNe7lWafDSj9PW3A=; b=bOHrh9z9gOP/jl3beLFQx3R3OZ
+        RCetENNwvDJCJVc4y+frLWvMGhyvJ1ETuooTFIVKStmyqeCJre+2cvKNpZE7uEEmoyDp8z91gHGzI
+        Pk9nXVhfx9xskP9BkQB6AEzDZt3rUSKtha0TkUo0lpIURwcvzxfXHdjgMb2dYpc+TCGvZJYmMPmcS
+        oPdH6b37gTVf0HcAcpjuHHUnUHocTQ03mpcRJDWPfGAUVQV+j3W9YPXBOjLAawheeCyFXYeLAwExM
+        fCnVe2YSDVmvKEonBLKr8cGcCFD1ZMDV3Lod6YmmaNQ/Kee+LpAq5G4hgyXjmaMoCODFwMNR1nYsd
+        oamZaitw==;
+Received: from [2.53.44.23] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nOy8p-00FfOp-B9; Tue, 01 Mar 2022 08:45:56 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Coly Li <colyli@suse.de>, Mike Snitzer <snitzer@redhat.com>,
+        Song Liu <song@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Phillip Lougher <phillip@squashfs.org.uk>,
+        linux-block@vger.kernel.org, dm-devel@redhat.com,
+        linux-kernel@vger.kernel.org, linux-bcache@vger.kernel.org,
+        linux-raid@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-btrfs@vger.kernel.org
+Subject: cleanup bio_kmalloc
+Date:   Tue,  1 Mar 2022 10:45:47 +0200
+Message-Id: <20220301084552.880256-1-hch@lst.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALTww2-_rJDyVh2GLehJ8Yg9LOy4MnkvDeJnF2uunaOy6ONu7g@mail.gmail.com>
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi!
+Hi Jens,
 
-On Mon 28 Feb 2022 23:28, Xiao Ni wrote:
-> Hi Peter
-> 
-> In rhel, we have a rhel only udev rule that checks
-> DM_UDEV_DISABLE_OTHER_RULES_FLAG. Maybe it's the reason why you don't
-> notice this. Besides DM_UDEV_DISABLE_OTHER_RULES_FLAG, it still checks
-> other flags.
-> 
+this series finishes off the bio allocation interface cleanups by dealing
+with the weirdest member of the famility.  bio_kmalloc combines a kmalloc
+for the bio and bio_vecs with a hidden bio_init call and magic cleanup
+semantics.
 
-Ah yes, that's it! I've been still recalling this to be patched once.
-So looks like it just didn't get propagated upstream :-/
+This series moves a few callers away from bio_kmalloc and then turns
+bio_kmalloc into a simple wrapper for a slab allocation of a bio and the
+inline biovecs.  The callers need to manually call bio_init instead with
+all that entails and the magic that turns bio_put into a kfree goes away
+as well, allowing for a proper debug check in bio_put that catches
+accidental use on a bio_init()ed bio.
 
-> # Next make sure that this isn't a dm device we should skip for some reason
-> ENV{DM_UDEV_RULES_VSN}!="?*", GOTO="dm_change_end"
-> ENV{DM_UDEV_DISABLE_OTHER_RULES_FLAG}=="1", GOTO="dm_change_end"
-> ENV{DM_SUSPENDED}=="1", GOTO="dm_change_end"
-> KERNEL=="dm-*", SUBSYSTEM=="block", ENV{ID_FS_TYPE}=="linux_raid_member", \
->         ACTION=="change", RUN+="/sbin/mdadm -I $env{DEVNAME}"
-> LABEL="dm_change_end"
-> 
-> In 10-dm.rules, if DM_SUSPENDED is 1, it sets
-> DM_UDEV_DISABLE_OTHER_RULES_FLAG to 1. So we don't need the check of
-> DM_SUSPENDED. But how DM_UDEV_RULES_VSN? Do we need to check it?
-> 
-
-Yes, right, the check for DM_SUSPENDED is superfluous here so we don't
-actually need that one. The single check for DM_UDEV_DISABLE_OTHER_RULES_FLAG
-covers it.
-
-The DM_UDEV_RULES_VSN - this was meant for future changes in case a new
-set of DM udev variables is used or existing set changed so the other rules
-know what exact variable set is available for checking. But I think the rules
-are settled down for a few years now and I don't expect any more radical
-changes here, so we can remove that check for DM_UDEV_RULES_VSN as well.
-
--- 
-Peter
-
+Diffstat:
+ block/bio.c                        |   47 ++++++++++++++-----------------------
+ block/blk-crypto-fallback.c        |   14 ++++++-----
+ block/blk-map.c                    |   42 +++++++++++++++++++++------------
+ drivers/block/pktcdvd.c            |   34 +++++++++++---------------
+ drivers/md/bcache/debug.c          |   10 ++++---
+ drivers/md/dm-bufio.c              |    9 +++----
+ drivers/md/raid1.c                 |   12 ++++++---
+ drivers/md/raid10.c                |   21 +++++++++++-----
+ drivers/target/target_core_pscsi.c |   36 ++++------------------------
+ fs/btrfs/disk-io.c                 |    8 +++---
+ fs/btrfs/volumes.c                 |   11 --------
+ fs/btrfs/volumes.h                 |    2 -
+ fs/squashfs/block.c                |   14 +++--------
+ include/linux/bio.h                |    2 -
+ 14 files changed, 116 insertions(+), 146 deletions(-)
