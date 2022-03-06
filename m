@@ -2,75 +2,110 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 345984CE9AB
-	for <lists+linux-raid@lfdr.de>; Sun,  6 Mar 2022 07:51:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A40F54CEA84
+	for <lists+linux-raid@lfdr.de>; Sun,  6 Mar 2022 11:35:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233081AbiCFGv5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 6 Mar 2022 01:51:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34138 "EHLO
+        id S230004AbiCFKgo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 6 Mar 2022 05:36:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233055AbiCFGvx (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 6 Mar 2022 01:51:53 -0500
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B94931DE8
-        for <linux-raid@vger.kernel.org>; Sat,  5 Mar 2022 22:51:00 -0800 (PST)
-Received: by mail-lf1-x12b.google.com with SMTP id 3so2475706lfr.7
-        for <linux-raid@vger.kernel.org>; Sat, 05 Mar 2022 22:51:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=VaaSLAJ+hgNGNq49WyPsh3ndDLo+mnrYcswrOHpJSv8=;
-        b=KDgAx1nMZI4VA0728iAuqALj69hyn7X0WLLUiz2m+OH09NDtWJqkn0K0IjhaqXccDL
-         nYA9IS56U+BvEYDp5ZuYOTDJ28DkbGQXOo4nCoFRXwOq8btCUGBKve+nLdvXGAtQGfZd
-         8/3HmQyIohZytZNIAaZ2YSJ+VGfF2cuAbX+92kqJIy7dPjcCYPV+qxcIVHj5OJkNioe8
-         RnnPJV63I7FofbcYlKCR7cawwHR+Gyj/OksLFoNh7LOBENUnMHRRrWfgS+R5N0DbQgRd
-         FM7OvtlHYW5haJ9bCovh/xFv8pj40s/F/HFWyLhlvxnDTkjGlvvz7xTkeBicCtgptiHh
-         fIkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=VaaSLAJ+hgNGNq49WyPsh3ndDLo+mnrYcswrOHpJSv8=;
-        b=Du+1mcdor3jAyWJrmxBmE0NstpbzelQ5mXwZQTw65D+/mDp/9hFnxJTqKLhRNmQ2bZ
-         eaqNpUTkR4vwglJN2+zHtuW0jaRQC5GuOzGFLjyfFvMMUYxGGXYOTy3wk4zUPZYVD7WC
-         DtUc5d7mh+lqzVuXHZsk1Abr8I5bG8vtRb0cuZcXDYmEpdWBO/ZKZXzQyHlPOj4CGAcX
-         Kwz2g5S24GxpSN6IaV2/ROJjSXvu0OLZh/4MWVlCMcIV70kTVHPbkjVU3wns9o3uL1bB
-         9bKi9nKMJ+KNFkXiYhDIbvgzLhe0s6o+Hj3j2J0rF1YARVccJvgwlopRsYVDJxof38ok
-         Dw0g==
-X-Gm-Message-State: AOAM531D9j/TKv6yAyt/v/4tD88mVSDqzEBQ3A73U5khznOisacvAm6G
-        G54saH0R6ZfYDR8kDP4dLg0/yvQHd5dEq8xmfVO+AsHvK/0=
-X-Google-Smtp-Source: ABdhPJzq04i8VJyC6uwySEx5tzgrtxCg/XL0hqdBTWFWm66/zQAuy3m2ubrZV75jrYUP9jvmG0PdhfRUhLuebg8/B7w=
-X-Received: by 2002:a2e:94c7:0:b0:247:de4e:e9bc with SMTP id
- r7-20020a2e94c7000000b00247de4ee9bcmr2397951ljh.397.1646549448778; Sat, 05
- Mar 2022 22:50:48 -0800 (PST)
+        with ESMTP id S229686AbiCFKgm (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 6 Mar 2022 05:36:42 -0500
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4893B41FBE;
+        Sun,  6 Mar 2022 02:35:51 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id E6C591F38E;
+        Sun,  6 Mar 2022 10:35:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1646562949; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ncyEBdB3ccJeT/v1FwGpzA012uU/apTZMynZ78KjLtY=;
+        b=hN6/UQ0u7uGcE9vcylCAyQFjqcWaClXVfmJAO5v03VKAxjQA8DRJd69De0wynuQvaR5QA7
+        XRoRJyqA7Z2MfgY7mn+1zt5ReCNLMB1/tst7yvW/l2XhmGi1apjTgkCVJsnh2U+rAfVOQd
+        HjVvXvC+a+ZWK7qhAxAP7w1gDcDIXrQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1646562949;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ncyEBdB3ccJeT/v1FwGpzA012uU/apTZMynZ78KjLtY=;
+        b=SE2Cb90Y+Z+G8eIIJIf69ZN8iJ8wnVqsHRxZ7+DexDeYNLKKCh8cAYlBaUZGCZomNgLU08
+        PjmAHoD8ivL1hjBg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3F29613510;
+        Sun,  6 Mar 2022 10:35:47 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id oL/ZNoOOJGJjDwAAMHmgww
+        (envelope-from <colyli@suse.de>); Sun, 06 Mar 2022 10:35:47 +0000
+Message-ID: <084b5385-ebe7-5fca-8b56-a66276005e78@suse.de>
+Date:   Sun, 6 Mar 2022 18:35:45 +0800
 MIME-Version: 1.0
-Reply-To: mrs.susanelwoodhara17@gmail.com
-Sender: mrs.arawyann@gmail.com
-Received: by 2002:ab3:7d89:0:0:0:0:0 with HTTP; Sat, 5 Mar 2022 22:50:48 -0800 (PST)
-From:   Mrs Susan Elwood Hara <mrs.susanelwoodhara17@gmail.com>
-Date:   Sun, 6 Mar 2022 06:50:48 +0000
-X-Google-Sender-Auth: NOWRSnt_sskMD3s295a30bcHvEs
-Message-ID: <CACppo47TD9J4Sy+vaJu1wXHqd88WqFwMNn6OdkY1khwXu3TuFw@mail.gmail.com>
-Subject: GOD BLESS YOU AS YOU REPLY URGENTLY
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        SUBJ_ALL_CAPS,T_HK_NAME_FM_MR_MRS,T_SCC_BODY_TEXT_LINE,UNDISC_MONEY
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.6.1
+Content-Language: en-US
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-raid <linux-raid@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+From:   Coly Li <colyli@suse.de>
+Subject: bcache patches for Linux v5.18
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-GOD BLESS YOU AS YOU REPLY URGENTLY
+Hi Jens,
 
- Hello Dear,
-Greetings, I am contacting you regarding an important information i
-have for you please reply to confirm your email address and for more
-details Thanks
-Regards
-Mrs Susan Elwood Hara.
+I have technical problem to send patches via email this time, please 
+consider to pull the bcache changes from my bcache tree. They can be 
+applied on top of your for-5.18/drivers branch.
+
+We have 2 patches for Linux v5.18, both of them are from Mingzhe Zou. 
+The first patch improves bcache initialization speed by avoid 
+unnecessary cost of cache consistency, the second one fixes a potential 
+NULL pointer deference in bcache initialization time,
+
+Please take them for Linux v5.18, thanks in advance.
+
+Coly Li
+
+
+The following changes since commit dcde98da997075053041942ecf97d787855722ec:
+
+   Merge branch 'for-linus' of 
+git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input (2022-03-05 
+15:49:45 -0800)
+
+are available in the Git repository at:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/colyli/linux-bcache.git/ 
+for-next
+
+for you to fetch changes up to 387ac428d163b6fffa923618624505e7afe0b53d:
+
+   bcache: fixup multiple threads crash (2022-03-06 18:14:43 +0800)
+
+----------------------------------------------------------------
+Mingzhe Zou (2):
+       bcache: fixup bcache_dev_sectors_dirty_add() multithreaded CPU 
+false sharing
+       bcache: fixup multiple threads crash
+
+  drivers/md/bcache/btree.c     |  6 ++++--
+  drivers/md/bcache/writeback.c | 17 +++++++++++------
+  2 files changed, 15 insertions(+), 8 deletions(-)
