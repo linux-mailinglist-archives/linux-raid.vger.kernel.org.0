@@ -2,95 +2,75 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 755944CE7D7
-	for <lists+linux-raid@lfdr.de>; Sun,  6 Mar 2022 00:55:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 345984CE9AB
+	for <lists+linux-raid@lfdr.de>; Sun,  6 Mar 2022 07:51:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230321AbiCEX4g (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 5 Mar 2022 18:56:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50648 "EHLO
+        id S233081AbiCFGv5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 6 Mar 2022 01:51:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229488AbiCEX4f (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 5 Mar 2022 18:56:35 -0500
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF26F275C6;
-        Sat,  5 Mar 2022 15:55:44 -0800 (PST)
-Received: by mail-pg1-f177.google.com with SMTP id o8so10514700pgf.9;
-        Sat, 05 Mar 2022 15:55:44 -0800 (PST)
+        with ESMTP id S233055AbiCFGvx (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 6 Mar 2022 01:51:53 -0500
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B94931DE8
+        for <linux-raid@vger.kernel.org>; Sat,  5 Mar 2022 22:51:00 -0800 (PST)
+Received: by mail-lf1-x12b.google.com with SMTP id 3so2475706lfr.7
+        for <linux-raid@vger.kernel.org>; Sat, 05 Mar 2022 22:51:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
+        bh=VaaSLAJ+hgNGNq49WyPsh3ndDLo+mnrYcswrOHpJSv8=;
+        b=KDgAx1nMZI4VA0728iAuqALj69hyn7X0WLLUiz2m+OH09NDtWJqkn0K0IjhaqXccDL
+         nYA9IS56U+BvEYDp5ZuYOTDJ28DkbGQXOo4nCoFRXwOq8btCUGBKve+nLdvXGAtQGfZd
+         8/3HmQyIohZytZNIAaZ2YSJ+VGfF2cuAbX+92kqJIy7dPjcCYPV+qxcIVHj5OJkNioe8
+         RnnPJV63I7FofbcYlKCR7cawwHR+Gyj/OksLFoNh7LOBENUnMHRRrWfgS+R5N0DbQgRd
+         FM7OvtlHYW5haJ9bCovh/xFv8pj40s/F/HFWyLhlvxnDTkjGlvvz7xTkeBicCtgptiHh
+         fIkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=fTFM0BLrFEzuVT+NEbfUfqIis6Wa5g9+pZvF27yAoQo=;
-        b=0wPEynVrY/qqA66VbkSOcfZOqffVUei6/bpMorLd1561OW2IiV7qCvgejAuNCp//XQ
-         3Hu6SOrZYdWHBX7EdOQ4Du9vn+6JFWLFbUgZ+B1oTz3qfVud5dNxxmaGjP6pt53irw0p
-         jzlGjQzwSgjAFqZIfZTr7zfJIrb8SYeE0KAgGeRhmuyrJpMCgA55ZXNXh1qOA+pL003Z
-         ZpfyXZt7aXOGVEnFlk+HRpehv1G6q/RORGylCfwhQkk/h4Cj6ksJb6C6+QSb3+hkLFZN
-         BtD5QNnMTnSIpAmc0c4e2efmwusSuyevh8ndn3Z7CP/6aW8uNaMsdG6zo3gMZeAeKRIk
-         sWnA==
-X-Gm-Message-State: AOAM530jGjMJMuFF7TLyaCxrs4S7fVj/sCh01IcmZvw2FvA/FgX2CfPe
-        4YvKFbnE44/UKhKO6wnGfoM8S3uWgqU=
-X-Google-Smtp-Source: ABdhPJz5VvA3U2fLc1z+mBiMQ4u+RZgL1KkG+Po1/Fl96HJUah2jzC5KKpI11NFwskc9qjJ1fhfUsQ==
-X-Received: by 2002:a62:cdc3:0:b0:4e0:e439:ed2d with SMTP id o186-20020a62cdc3000000b004e0e439ed2dmr5770274pfg.39.1646524543626;
-        Sat, 05 Mar 2022 15:55:43 -0800 (PST)
-Received: from ?IPV6:2601:647:4000:d7:feaa:14ff:fe9d:6dbd? ([2601:647:4000:d7:feaa:14ff:fe9d:6dbd])
-        by smtp.gmail.com with ESMTPSA id h2-20020a056a00218200b004f6519ce666sm10984217pfi.170.2022.03.05.15.55.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Mar 2022 15:55:43 -0800 (PST)
-Message-ID: <535ff59f-cde0-caf4-6e47-a0f2db03261e@acm.org>
-Date:   Sat, 5 Mar 2022 15:55:41 -0800
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to;
+        bh=VaaSLAJ+hgNGNq49WyPsh3ndDLo+mnrYcswrOHpJSv8=;
+        b=Du+1mcdor3jAyWJrmxBmE0NstpbzelQ5mXwZQTw65D+/mDp/9hFnxJTqKLhRNmQ2bZ
+         eaqNpUTkR4vwglJN2+zHtuW0jaRQC5GuOzGFLjyfFvMMUYxGGXYOTy3wk4zUPZYVD7WC
+         DtUc5d7mh+lqzVuXHZsk1Abr8I5bG8vtRb0cuZcXDYmEpdWBO/ZKZXzQyHlPOj4CGAcX
+         Kwz2g5S24GxpSN6IaV2/ROJjSXvu0OLZh/4MWVlCMcIV70kTVHPbkjVU3wns9o3uL1bB
+         9bKi9nKMJ+KNFkXiYhDIbvgzLhe0s6o+Hj3j2J0rF1YARVccJvgwlopRsYVDJxof38ok
+         Dw0g==
+X-Gm-Message-State: AOAM531D9j/TKv6yAyt/v/4tD88mVSDqzEBQ3A73U5khznOisacvAm6G
+        G54saH0R6ZfYDR8kDP4dLg0/yvQHd5dEq8xmfVO+AsHvK/0=
+X-Google-Smtp-Source: ABdhPJzq04i8VJyC6uwySEx5tzgrtxCg/XL0hqdBTWFWm66/zQAuy3m2ubrZV75jrYUP9jvmG0PdhfRUhLuebg8/B7w=
+X-Received: by 2002:a2e:94c7:0:b0:247:de4e:e9bc with SMTP id
+ r7-20020a2e94c7000000b00247de4ee9bcmr2397951ljh.397.1646549448778; Sat, 05
+ Mar 2022 22:50:48 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH 2/2] block: remove the per-bio/request write hint
-Content-Language: en-US
-To:     Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@lst.de>
-Cc:     axboe@kernel.dk, sagi@grimberg.me, kbusch@kernel.org,
-        song@kernel.org, linux-block@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, Jaegeuk Kim <jaegeuk@kernel.org>
-References: <20220304175556.407719-1-hch@lst.de>
- <20220304175556.407719-2-hch@lst.de>
- <20220304221255.GL3927073@dread.disaster.area>
- <20220305051929.GA24696@lst.de>
- <20220305214056.GO3927073@dread.disaster.area>
-From:   Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20220305214056.GO3927073@dread.disaster.area>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+Reply-To: mrs.susanelwoodhara17@gmail.com
+Sender: mrs.arawyann@gmail.com
+Received: by 2002:ab3:7d89:0:0:0:0:0 with HTTP; Sat, 5 Mar 2022 22:50:48 -0800 (PST)
+From:   Mrs Susan Elwood Hara <mrs.susanelwoodhara17@gmail.com>
+Date:   Sun, 6 Mar 2022 06:50:48 +0000
+X-Google-Sender-Auth: NOWRSnt_sskMD3s295a30bcHvEs
+Message-ID: <CACppo47TD9J4Sy+vaJu1wXHqd88WqFwMNn6OdkY1khwXu3TuFw@mail.gmail.com>
+Subject: GOD BLESS YOU AS YOU REPLY URGENTLY
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=4.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        SUBJ_ALL_CAPS,T_HK_NAME_FM_MR_MRS,T_SCC_BODY_TEXT_LINE,UNDISC_MONEY
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 3/5/22 13:40, Dave Chinner wrote:
-> On Sat, Mar 05, 2022 at 06:19:29AM +0100, Christoph Hellwig wrote:
->> On Sat, Mar 05, 2022 at 09:12:55AM +1100, Dave Chinner wrote:
->>> AFAICT, this patch leaves just the f2fs allocator usage of
->>> inode->i_rw_hint to select a segment to allocate from as the
->>> remaining consumer of this entire plumbing and user API. Is that
->>> used by applications anywhere, or can that be removed and so the
->>> rest of the infrastructure get removed and the fcntl()s no-op'd or
->>> -EOPNOTSUPP?
->>
->> I was told it is used quite heavily in android.
-> 
-> So it's primarily used by out of tree code? And that after this
-> patch, there's really no way to test that this API does anything
-> useful at all?
+GOD BLESS YOU AS YOU REPLY URGENTLY
 
-Hi Dave,
-
-Android kernel developers follow the "upstream first" policy for core kernel 
-code (this means all kernel code other than kernel drivers that implement 
-support for the phone SoC). As a result, the Android 13 F2FS implementation is 
-very close to the upstream F2FS code. So the statement above about "out of tree 
-code" is not correct.
-
-Bart.
+ Hello Dear,
+Greetings, I am contacting you regarding an important information i
+have for you please reply to confirm your email address and for more
+details Thanks
+Regards
+Mrs Susan Elwood Hara.
