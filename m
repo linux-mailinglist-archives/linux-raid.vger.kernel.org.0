@@ -2,55 +2,66 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A48714D0FEC
-	for <lists+linux-raid@lfdr.de>; Tue,  8 Mar 2022 07:17:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 51E7D4D138D
+	for <lists+linux-raid@lfdr.de>; Tue,  8 Mar 2022 10:41:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344452AbiCHGRT (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 8 Mar 2022 01:17:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45068 "EHLO
+        id S241797AbiCHJmR (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 8 Mar 2022 04:42:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344431AbiCHGRN (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 8 Mar 2022 01:17:13 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 282223BFA2;
-        Mon,  7 Mar 2022 22:16:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=8X3c5XDqthuQdXMBmAKyJ50PsF74xYticZhjJF97a3o=; b=uITWO/byir10fw/w7iDmD1tNU+
-        h4Rx6vQ8VwFOEAgn8RGFju0aeGxhCF9oHFGM5lIEQjGKVjufiRS3s7xY6x2DkMGWFx+IMthmluurN
-        1tTw5NXlhIElgCKzH3KIXBwDpqigoQ6Kw1r8+ha1uWMHxm/Pzg7QGBdihic5MlrpUgq8aa/jyxOc1
-        NcYvI8gbU9V5coVyE7Yd+PwoWLz2S2O7K3N0hwG9eUBffZdtKm1yyEH2fGnTJiG8cbasYZ+GwtLc0
-        Y4TAGvAVwtdHCVt4h9qnhFVIeAYiQmS831f2T6Rer+6UXcoHLqyvX/aQUtXbUK5kSJrVYddH18//b
-        roCZpysA==;
-Received: from [2001:4bb8:184:7746:6f50:7a98:3141:c37b] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nRT8h-002lWm-QS; Tue, 08 Mar 2022 06:16:08 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Coly Li <colyli@suse.de>, Mike Snitzer <snitzer@redhat.com>,
-        Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Phillip Lougher <phillip@squashfs.org.uk>,
-        linux-block@vger.kernel.org, dm-devel@redhat.com,
-        linux-kernel@vger.kernel.org, linux-bcache@vger.kernel.org,
-        linux-raid@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-Subject: [PATCH 5/5] pktcdvd: stop using bio_reset
-Date:   Tue,  8 Mar 2022 07:15:51 +0100
-Message-Id: <20220308061551.737853-6-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220308061551.737853-1-hch@lst.de>
-References: <20220308061551.737853-1-hch@lst.de>
+        with ESMTP id S237159AbiCHJmQ (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 8 Mar 2022 04:42:16 -0500
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0068931511
+        for <linux-raid@vger.kernel.org>; Tue,  8 Mar 2022 01:41:19 -0800 (PST)
+Received: by mail-wr1-x434.google.com with SMTP id j26so17137840wrb.1
+        for <linux-raid@vger.kernel.org>; Tue, 08 Mar 2022 01:41:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:subject:from:to:date:in-reply-to:references
+         :content-transfer-encoding:user-agent:mime-version;
+        bh=jrNNpWlY0stgMR4quabXg7igmoHPmedwMyUXaBM7TZ4=;
+        b=bUPTeTCWMUNbZiVpTV3ySj27HasaXAPEonSBbYlnb2/o5zfhLnxeMkxyKedcmY0JzP
+         ThJX/kceldj/k+o/Uqg71Krwdxj/Q86al5qI1Sr6dvOAcJCa4PGYY9H7I4RIQFJZXWOe
+         a5dI7ODOthkcmdQ+4+2Z0mg5/RdvfdUxZALAqe8EKOm3o0AYW+TJEwfoSNdjRHGqYO9Q
+         aTGUoOR8MRXv5uaiS+kF+ja/1Yue27SVFbGMqsf41KmQ4Y5/3iZ8E5WwtFjhwYreBnrQ
+         2jMf0AIBsVKEACcZo0WGzyc9tgu90N/XfGd2DNU3m0ZsPVF64C1A2C7NZNwpRDyOwA9v
+         lnjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:content-transfer-encoding:user-agent:mime-version;
+        bh=jrNNpWlY0stgMR4quabXg7igmoHPmedwMyUXaBM7TZ4=;
+        b=FfxIBtOomId5JYpb34I3sLkUz1raVfCCWSK/RcbCzvIO7K8dkj+tVeF6FQS8/2gYaU
+         jymVUbPezYkzGgYu/9fOX0gdhdsbQHwF5M+6WWIqhWWTqPqV0KzQlXLut+CzBtfE7oI0
+         v23WP/SxxGEV8t069g6+nlBVHXIFNJ7DenPbnknuwuxg9bUR2gGgTFJJNO4LxjbI58eL
+         VZWw1yrC+w9iB8QZefmUZOsmjoJUKSXvLqTTrV/kG7C3O2ytU8TuVibT1UAEGC7LXqs/
+         splrvEf8r38xHoK8+0qIYwY0R6Fn4e5C09OfWzZCPXz63CT7YrcAw472rvyXweGBunjR
+         S40A==
+X-Gm-Message-State: AOAM5316bmz++LU60rdzLpBARkdSWSXvRFB7b4LW6ldU6qV3pGgAT/sm
+        uciPCobVdVyZNqxGwkW6/MB34OVRvqs=
+X-Google-Smtp-Source: ABdhPJzymZ+8XinX+gGfmkEwincNU36hSYMqFoK+y8Ucg0LW9FCBe//zn3Jsa239x1iR2QhwnGF4YA==
+X-Received: by 2002:adf:ab09:0:b0:1f0:1208:5123 with SMTP id q9-20020adfab09000000b001f012085123mr11367270wrc.146.1646732478406;
+        Tue, 08 Mar 2022 01:41:18 -0800 (PST)
+Received: from www.Debian-Testing-WilsonJTR4 ([213.31.80.52])
+        by smtp.gmail.com with ESMTPSA id o11-20020adf9d4b000000b001f0077ea337sm13897118wre.22.2022.03.08.01.41.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Mar 2022 01:41:18 -0800 (PST)
+Message-ID: <1da6073c37b772a7171504272030af642e72b1d1.camel@gmail.com>
+Subject: Re: Raid6 check performance regression 5.15 -> 5.16
+From:   Wilson Jonathan <i400sjon@gmail.com>
+To:     Larkin Lowrey <llowrey@nuclearwinter.com>,
+        linux-raid <linux-raid@vger.kernel.org>
+Date:   Tue, 08 Mar 2022 09:41:17 +0000
+In-Reply-To: <0eb91a43-a153-6e29-14b6-65f97b9f3d99@nuclearwinter.com>
+References: <0eb91a43-a153-6e29-14b6-65f97b9f3d99@nuclearwinter.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.43.2-2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -58,105 +69,59 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Just initialize the bios on-demand.
+On Mon, 2022-03-07 at 13:15 -0500, Larkin Lowrey wrote:
+> I am seeing a 'check' speed regression between kernels 5.15 and 5.16.
+> One host with a 20 drive array went from 170MB/s to 11MB/s. Another
+> host=20
+> with a 15 drive array went from 180MB/s to 43MB/s. In both cases the=20
+> arrays are almost completely idle. I can flip between the two kernels
+> with no other changes and observe the performance changes.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/block/pktcdvd.c | 25 +++++++++----------------
- 1 file changed, 9 insertions(+), 16 deletions(-)
+I am also seeing a huge slowdown on Debian using 5.16.0-3-amd64.
+Normally my monthly scrub would take from 1am till about 10am.
 
-diff --git a/drivers/block/pktcdvd.c b/drivers/block/pktcdvd.c
-index 5ab43f9027631..335099c4076ee 100644
---- a/drivers/block/pktcdvd.c
-+++ b/drivers/block/pktcdvd.c
-@@ -525,7 +525,6 @@ static struct packet_data *pkt_alloc_packet_data(int frames)
- 	pkt->w_bio = bio_kmalloc(frames, GFP_KERNEL);
- 	if (!pkt->w_bio)
- 		goto no_bio;
--	bio_init(pkt->w_bio, NULL, pkt->w_bio->bi_inline_vecs, frames, 0);
- 
- 	for (i = 0; i < frames / FRAMES_PER_PAGE; i++) {
- 		pkt->pages[i] = alloc_page(GFP_KERNEL|__GFP_ZERO);
-@@ -537,26 +536,20 @@ static struct packet_data *pkt_alloc_packet_data(int frames)
- 	bio_list_init(&pkt->orig_bios);
- 
- 	for (i = 0; i < frames; i++) {
--		struct bio *bio = bio_kmalloc(1, GFP_KERNEL);
--		if (!bio)
-+		pkt->r_bios[i] = bio_kmalloc(1, GFP_KERNEL);
-+		if (!pkt->r_bios[i])
- 			goto no_rd_bio;
--		bio_init(bio, NULL, bio->bi_inline_vecs, 1, 0);
--		pkt->r_bios[i] = bio;
- 	}
- 
- 	return pkt;
- 
- no_rd_bio:
--	for (i = 0; i < frames; i++) {
--		if (pkt->r_bios[i])
--			bio_uninit(pkt->r_bios[i]);
-+	for (i = 0; i < frames; i++)
- 		kfree(pkt->r_bios[i]);
--	}
- no_page:
- 	for (i = 0; i < frames / FRAMES_PER_PAGE; i++)
- 		if (pkt->pages[i])
- 			__free_page(pkt->pages[i]);
--	bio_uninit(pkt->w_bio);
- 	kfree(pkt->w_bio);
- no_bio:
- 	kfree(pkt);
-@@ -571,13 +564,10 @@ static void pkt_free_packet_data(struct packet_data *pkt)
- {
- 	int i;
- 
--	for (i = 0; i < pkt->frames; i++) {
--		bio_uninit(pkt->r_bios[i]);
-+	for (i = 0; i < pkt->frames; i++)
- 		kfree(pkt->r_bios[i]);
--	}
- 	for (i = 0; i < pkt->frames / FRAMES_PER_PAGE; i++)
- 		__free_page(pkt->pages[i]);
--	bio_uninit(pkt->w_bio);
- 	kfree(pkt->w_bio);
- 	kfree(pkt);
- }
-@@ -950,6 +940,7 @@ static void pkt_end_io_read(struct bio *bio)
- 
- 	if (bio->bi_status)
- 		atomic_inc(&pkt->io_errors);
-+	bio_uninit(bio);
- 	if (atomic_dec_and_test(&pkt->io_wait)) {
- 		atomic_inc(&pkt->run_sm);
- 		wake_up(&pd->wqueue);
-@@ -967,6 +958,7 @@ static void pkt_end_io_packet_write(struct bio *bio)
- 
- 	pd->stats.pkt_ended++;
- 
-+	bio_uninit(bio);
- 	pkt_bio_finished(pd);
- 	atomic_dec(&pkt->io_wait);
- 	atomic_inc(&pkt->run_sm);
-@@ -1021,7 +1013,7 @@ static void pkt_gather_data(struct pktcdvd_device *pd, struct packet_data *pkt)
- 			continue;
- 
- 		bio = pkt->r_bios[f];
--		bio_reset(bio, pd->bdev, REQ_OP_READ);
-+		bio_init(bio, pd->bdev, bio->bi_inline_vecs, 1, REQ_OP_READ);
- 		bio->bi_iter.bi_sector = pkt->sector + f * (CD_FRAMESIZE >> 9);
- 		bio->bi_end_io = pkt_end_io_read;
- 		bio->bi_private = pkt;
-@@ -1234,7 +1226,8 @@ static void pkt_start_write(struct pktcdvd_device *pd, struct packet_data *pkt)
- {
- 	int f;
- 
--	bio_reset(pkt->w_bio, pd->bdev, REQ_OP_WRITE);
-+	bio_init(pkt->w_bio, pd->bdev, pkt->w_bio->bi_inline_vecs, pkt->frames,
-+		 REQ_OP_WRITE);
- 	pkt->w_bio->bi_iter.bi_sector = pkt->sector;
- 	pkt->w_bio->bi_end_io = pkt_end_io_packet_write;
- 	pkt->w_bio->bi_private = pkt;
--- 
-2.30.2
+This was a consistent timing which its been doing for close to two
+years without fail. The check speed would start in the 130MB-ish range
+and eventually slow to about 90MB-ish the closer to finishing it got.
+The disks are WD RED's (the non-dodgy ones) WDC WD40EFRX-68N32N0 and
+there are 6 of them in raid6 (no spares). There are no abnormal
+smartctl figures (such as RRER, MZER, etc.) showing so its not one
+starting to fail.
 
+The current speed is now down to 54,851K with at least 4 hours to go
+and has been running from 8PM to 9AM already (I kicked it off manually
+last night as I could see it was going to take forever at the weekend
+and granddaughter doesn't deal with "its going slow" very well so I
+killed it).
+
+The problem is not limited to hard drives. I also run 3
+arrays/partitions on NVME (set up as 3 drives, one spare, raid10-far2
+which are used for /, /var, *swap) which instead of taking about 2 mins
+are taking in excess of 10 mins to complete.
+
+Before running the current mdadm check(s) the kernel was upgraded. I
+try to apt-get update, apt-get dist-upgrade at the weekend but some
+times forget so I can't tell if a check was run under the previous
+version or a version prior to that... The previous version was 5.16.0-
+3-amd64 which as far as I can tell had no issues (I tend access my
+computer around 9 on a Sunday and get hit once a month by programs
+"hanging"/being slow which reminds me to check if a mdadm check is
+running, cat /proc/mdstat, which it usually is and it usually tells me
+that I should be fine by 10-ish (I do the mins/60).
+
+In the time its taken me to type this, and run commands to check
+figures etc, and then check it and amend things (about 30-40 mins) the
+speed is now down to 52,187K. I'm going to let it finish as I don't
+like the idea of not having the monthly scrub complete, but boy does it
+suck when I can see it getting much slower than usual the closer it
+gets to finishing.
+
+>=20
+> Is this a known issue?
+
+Well you and me makes two noticing an issue so...
+
+>=20
+> --Larkin
+
+Jon.
