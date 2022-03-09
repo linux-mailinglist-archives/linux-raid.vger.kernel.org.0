@@ -2,90 +2,256 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD9F74D3A33
-	for <lists+linux-raid@lfdr.de>; Wed,  9 Mar 2022 20:25:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 564014D3D5E
+	for <lists+linux-raid@lfdr.de>; Thu, 10 Mar 2022 00:03:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237852AbiCITYG (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 9 Mar 2022 14:24:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46760 "EHLO
+        id S235778AbiCIXE3 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 9 Mar 2022 18:04:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237855AbiCITYC (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 9 Mar 2022 14:24:02 -0500
-X-Greylist: delayed 942 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 09 Mar 2022 11:22:39 PST
-Received: from mail.bitfolk.com (mail.bitfolk.com [IPv6:2001:ba8:1f1:f019::25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64A386304
-        for <linux-raid@vger.kernel.org>; Wed,  9 Mar 2022 11:22:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bitfolk.com
-        ; s=alpha; h=Content-Type:MIME-Version:Message-ID:Subject:To:From:Date:Sender
-        :Reply-To:Cc:Content-Transfer-Encoding:Content-ID:Content-Description:
-        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=MQZGc6utTZ4kLmO015A5kHP65TZJ4ZaG51zTqLZISdY=; b=gop8ViZ1cYquIe5yh4Js03bgfI
-        L7A9Rit+RbuCkSRVcKFDgJqoSgUioYtV9VSFXB0c9eru7JBkmOmlY8KOxv5mu9pwUbacmREUeMrm+
-        r7mwkbfY7bBdLw76BT3XpsF8q1lA0Ah+Ir6+g6AjFSbAXmfz5SLFmIK/FMzNBw138hCo3gQeuS5ni
-        AKRMAJZrAv+Z8srRjOHQ0+aA6NCQrElQ9cnf1apqmIteKIjoKkwMRQD8l1gmHAag9sOe8zmbXnAaK
-        2q+epS3qqvmYobfm8vX5JIEOM3sJf/E72c+uzeLUGavRI1/SnbkElcb3c+ihySR6egR4dybPTkFz8
-        PziQ6XQQ==;
-Received: from andy by mail.bitfolk.com with local (Exim 4.89)
-        (envelope-from <andy@strugglers.net>)
-        id 1nS1eC-0000CD-FC
-        for linux-raid@vger.kernel.org; Wed, 09 Mar 2022 19:06:56 +0000
-Date:   Wed, 9 Mar 2022 19:06:56 +0000
-From:   Andy Smith <andy@strugglers.net>
-To:     linux-raid@vger.kernel.org
-Subject: Device LBA to array offset calculation
-Message-ID: <20220309190656.lqd5igm6bhzmnun6@bitfolk.com>
-Mail-Followup-To: linux-raid@vger.kernel.org
+        with ESMTP id S236583AbiCIXE1 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 9 Mar 2022 18:04:27 -0500
+Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2670120F70
+        for <linux-raid@vger.kernel.org>; Wed,  9 Mar 2022 15:03:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1646867007; x=1678403007;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Bo3+qEejyFF7IPMyZ2NBAqitRsGe6tafnpUKb2QZcXE=;
+  b=BHNsOa+0VrqsFVnAt7GgXIBHo5ScxkIO8a+R4XMTtXAVxoHhGQNYdq7M
+   P/9L9byqYZBJM7UXMcyibXwkxVrYnae+JwxtxI/+M68EnzerGYGqPb6ta
+   zCGI0oj2z1MIXja3eYgAxNFBXIPuTbEfuUZ+hh/9azkKTzXyn1LsRTU/g
+   mnMushpMpW1G4MLLxU/rVV7s3fnBgBfvgk+gvnvyRYEfXG5ThDuHlosO0
+   lLYyrRn2gqk140UyHt2OB+Mk0AO12KZkhXUKsm6TgwEoRf/LHFx/DF5wI
+   FfKT5eztOk7fZdkUGSgL0xSim4HNPw+DpFii82HDZsgLYMC4NIiJYO7oP
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10281"; a="315828362"
+X-IronPort-AV: E=Sophos;i="5.90,169,1643702400"; 
+   d="scan'208";a="315828362"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2022 15:03:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,169,1643702400"; 
+   d="scan'208";a="496020145"
+Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
+  by orsmga003.jf.intel.com with ESMTP; 09 Mar 2022 15:03:12 -0800
+Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1nS5Kp-0003vo-LV; Wed, 09 Mar 2022 23:03:11 +0000
+Date:   Thu, 10 Mar 2022 07:02:52 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Song Liu <song@kernel.org>
+Cc:     linux-raid@vger.kernel.org
+Subject: [song-md:tmp/fix-5.17] BUILD SUCCESS
+ c06ccb305e697d89fe99376c9036d1a2ece44c77
+Message-ID: <6229321c.v1nPBGhuWlWdyV1h%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-OpenPGP: id=BF15490B; url=http://strugglers.net/~andy/pubkey.asc
-X-URL:  http://strugglers.net/wiki/User:Andy
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: andy@strugglers.net
-X-SA-Exim-Scanned: No (on mail.bitfolk.com); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi,
+tree/branch: git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git tmp/fix-5.17
+branch HEAD: c06ccb305e697d89fe99376c9036d1a2ece44c77  block: check morerequests for multiple_queues in blk_attempt_plug_merge
 
-Is there an easy way to work out what offset into /dev/md3 would
-correspond to LBA 3141211755 on /dev/sdc?
+elapsed time: 723m
 
-$ sudo fdisk -u -l /dev/sdc
-Disk /dev/sdc: 1.8 TiB, 2000398934016 bytes, 3907029168 sectors
-Units: sectors of 1 * 512 = 512 bytes
-Sector size (logical/physical): 512 bytes / 512 bytes
-I/O size (minimum/optimal): 512 bytes / 512 bytes
-Disklabel type: gpt
-Disk identifier: A9D7DEE3-9894-4D43-92D0-F5CC3B6E9E2A
+configs tested: 173
+configs skipped: 4
 
-Device           Start        End    Sectors  Size Type
-/dev/sdc1         2048    1050623    1048576  512M Linux RAID
-/dev/sdc2      1050624    7342079    6291456    3G Linux RAID
-/dev/sdc3      7342080    9439231    2097152    1G Linux swap
-/dev/sdc4      9439232 3907022847 3897583616  1.8T Linux RAID
-/dev/sdc128 3907022848 3907029134       6287  3.1M BIOS boot
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-$ cat /proc/mdstat
-Personalities : [linear] [multipath] [raid0] [raid1] [raid6] [raid5] [raid4] [raid10]
-md3 : active raid10 sdc4[4] sdb4[3] sda4[0]
-      2922991104 blocks super 1.2 512K chunks 2 far-copies [3/3] [UUU]
-      bitmap: 0/22 pages [0KB], 65536KB chunk
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                          randconfig-c001
+mips                  maltasmvp_eva_defconfig
+powerpc                     sequoia_defconfig
+powerpc                     taishan_defconfig
+ia64                             alldefconfig
+arm                        clps711x_defconfig
+m68k                       m5208evb_defconfig
+sparc64                          alldefconfig
+sh                              ul2_defconfig
+sh                          r7785rp_defconfig
+sh                     magicpanelr2_defconfig
+powerpc                      tqm8xx_defconfig
+arm                         cm_x300_defconfig
+arm                       multi_v4t_defconfig
+sh                            migor_defconfig
+h8300                     edosk2674_defconfig
+sh                           se7206_defconfig
+arm                           corgi_defconfig
+arm                        spear6xx_defconfig
+mips                           gcw0_defconfig
+sh                          sdk7786_defconfig
+mips                       capcella_defconfig
+arm                           viper_defconfig
+sh                          rsk7203_defconfig
+powerpc                    klondike_defconfig
+powerpc                 mpc8540_ads_defconfig
+arc                          axs103_defconfig
+arm                       aspeed_g5_defconfig
+sh                        apsh4ad0a_defconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+m68k                         apollo_defconfig
+parisc64                         alldefconfig
+powerpc                  iss476-smp_defconfig
+powerpc                   currituck_defconfig
+powerpc                 mpc85xx_cds_defconfig
+sh                           se7780_defconfig
+powerpc                      pasemi_defconfig
+m68k                        m5307c3_defconfig
+sh                             sh03_defconfig
+m68k                        mvme16x_defconfig
+sh                                  defconfig
+sh                 kfr2r09-romimage_defconfig
+sparc                       sparc64_defconfig
+arm                           tegra_defconfig
+arm                         axm55xx_defconfig
+arc                 nsimosci_hs_smp_defconfig
+h8300                               defconfig
+m68k                          multi_defconfig
+mips                     loongson1b_defconfig
+sh                          lboxre2_defconfig
+mips                         rt305x_defconfig
+sh                          rsk7264_defconfig
+arm                          exynos_defconfig
+sh                   sh7724_generic_defconfig
+arm                        mini2440_defconfig
+powerpc                      chrp32_defconfig
+sh                         ap325rxa_defconfig
+parisc                generic-32bit_defconfig
+powerpc                 mpc837x_mds_defconfig
+sh                            hp6xx_defconfig
+openrisc                         alldefconfig
+sh                             espt_defconfig
+powerpc                     rainier_defconfig
+mips                            gpr_defconfig
+powerpc                        cell_defconfig
+sh                           se7705_defconfig
+sh                           se7722_defconfig
+arm                        keystone_defconfig
+powerpc                 mpc837x_rdb_defconfig
+s390                          debug_defconfig
+sh                               j2_defconfig
+arm                            qcom_defconfig
+powerpc                     stx_gp3_defconfig
+mips                           xway_defconfig
+arm                  randconfig-c002-20220309
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+csky                                defconfig
+nds32                               defconfig
+nios2                            allyesconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+x86_64                        randconfig-a015
+arc                  randconfig-r043-20220309
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                         rhel-8.3-kunit
+x86_64                                  kexec
 
-An easier way than, "read the source," that is, the understanding
-of which is a bit beyond me!
+clang tested configs:
+x86_64                        randconfig-c007
+riscv                randconfig-c006-20220309
+powerpc              randconfig-c003-20220309
+i386                          randconfig-c001
+arm                  randconfig-c002-20220309
+powerpc                 mpc836x_rdk_defconfig
+powerpc                 mpc832x_rdb_defconfig
+powerpc                       ebony_defconfig
+mips                           ip22_defconfig
+powerpc                      obs600_defconfig
+mips                malta_qemu_32r6_defconfig
+arm                            mmp2_defconfig
+powerpc                          allyesconfig
+arm                           sama7_defconfig
+mips                            e55_defconfig
+powerpc                     ppa8548_defconfig
+powerpc               mpc834x_itxgp_defconfig
+powerpc                     akebono_defconfig
+arm                       mainstone_defconfig
+arm                      pxa255-idp_defconfig
+powerpc                 mpc8315_rdb_defconfig
+mips                        omega2p_defconfig
+arm                        neponset_defconfig
+arm                       netwinder_defconfig
+powerpc                      katmai_defconfig
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+hexagon              randconfig-r045-20220309
+hexagon              randconfig-r041-20220309
+riscv                randconfig-r042-20220309
 
-So it seems that is 3141211755 - 9439232 = 3131772523 sectors in to
-device member sdc4, but md3 is a 3 device RAID-10 with far layout.
-
-Cheers,
-Andy
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
