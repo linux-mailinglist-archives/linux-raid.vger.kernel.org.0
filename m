@@ -2,201 +2,74 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 195574D3D5D
-	for <lists+linux-raid@lfdr.de>; Thu, 10 Mar 2022 00:03:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 605414D4152
+	for <lists+linux-raid@lfdr.de>; Thu, 10 Mar 2022 07:48:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232462AbiCIXEP (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 9 Mar 2022 18:04:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36158 "EHLO
+        id S239864AbiCJGtN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 10 Mar 2022 01:49:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229940AbiCIXEO (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 9 Mar 2022 18:04:14 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80858972E3
-        for <linux-raid@vger.kernel.org>; Wed,  9 Mar 2022 15:03:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646866994; x=1678402994;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=m1ku7kZvQOjSAYmzH0DeM/x4Lc09KJS+ggugCZmq3Ls=;
-  b=Gt6eyn8J8aKLyjiBpVXJW/gTMIFe1X3+44zXb5cbztsjB6HSjWgGv1nI
-   rhPvrq58TXrXyPhVErrlwYjot0j7wE9l/x6cfJYMFUPXC9XFa2WdSNeoS
-   1ZN6FiLMxK1SX+JBy1jQ6IjNR/N6aC1OvZOXMUraQCstdmFJLrXjwPceo
-   9cohAbpWh7Q1fbRf8Yh02GH56JDICx2RXka5LPNR/iKg9hp0K5EhU48BR
-   trkOunprFWtUobVad6etkglYJdZlzTP7L62xHEhFR7GMZX0RGTqh7t3iL
-   gHNkrah0bG9M5stcCIyAT3WgHTELdIKkiOY/OQUdH6leS8BEEywoTZqR8
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10281"; a="235718824"
-X-IronPort-AV: E=Sophos;i="5.90,169,1643702400"; 
-   d="scan'208";a="235718824"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2022 15:03:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,169,1643702400"; 
-   d="scan'208";a="578567593"
-Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
-  by orsmga001.jf.intel.com with ESMTP; 09 Mar 2022 15:03:12 -0800
-Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1nS5Kp-0003vu-No; Wed, 09 Mar 2022 23:03:11 +0000
-Date:   Thu, 10 Mar 2022 07:02:56 +0800
-From:   kernel test robot <lkp@intel.com>
+        with ESMTP id S230060AbiCJGtN (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 10 Mar 2022 01:49:13 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2C11C1C88;
+        Wed,  9 Mar 2022 22:48:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=9/MWPObrhuNAehUFkhtELAPhI8PUadmLIfcXXSdHpR8=; b=vfKBc687JPz3JbHB+CL8prpzeq
+        Ajp7A6oLRwHE3bBhZvHdO8SZHDJOzT63zsieCLdnUMiVaam39hcyjz7wRSuWAQOTw3X+VZzJcxQy3
+        GrzOgKJA+6XkZHrpG2On0yxrw8yQUzQo4rnt1DeqHUSfuQ/rKpHOyHtphhWPc0IWQcy6FNLZISVDu
+        SpZxjCiZXj2f32cU9ZEjDCTPIgUyt1jFJB6eccuiFmThlfZX+p+PRKd7Miyfoh8LNGjkFOCQOHYoS
+        vSeDxS8ZpshUP4XLfky1T9mM7+EwFlaehO38U5HmNED0EnRp6FZa2rS28Np9l+8EvfcgkwULjVfvk
+        4cfmL0Lw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nSCaq-00BeZX-B4; Thu, 10 Mar 2022 06:48:12 +0000
+Date:   Wed, 9 Mar 2022 22:48:12 -0800
+From:   Christoph Hellwig <hch@infradead.org>
 To:     Song Liu <song@kernel.org>
-Cc:     linux-raid@vger.kernel.org
-Subject: [song-md:md-next] BUILD SUCCESS
- 03a6b195e8e846f7373bcbeb3ea2a756dfb9ae61
-Message-ID: <62293220.fDpVXuoIpF3Flpc4%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+Cc:     linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
+        axboe@kernel.dk, stable@vger.kernel.org,
+        Larkin Lowrey <llowrey@nuclearwinter.com>,
+        Wilson Jonathan <i400sjon@gmail.com>,
+        Roger Heflin <rogerheflin@gmail.com>
+Subject: Re: [PATCH] block: check more requests for multiple_queues in
+ blk_attempt_plug_merge
+Message-ID: <YimfLJoWLKnnhLfR@infradead.org>
+References: <20220309064209.4169303-1-song@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Disposition: inline
+In-Reply-To: <20220309064209.4169303-1-song@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-tree/branch: git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git md-next
-branch HEAD: 03a6b195e8e846f7373bcbeb3ea2a756dfb9ae61  raid5: initialize the stripe_head embeeded bios as needed
+On Tue, Mar 08, 2022 at 10:42:09PM -0800, Song Liu wrote:
+> RAID arrays check/repair operations benefit a lot from merging requests.
+> If we only check the previous entry for merge attempt, many merge will be
+> missed. As a result, significant regression is observed for RAID check
+> and repair.
+> 
+> Fix this by checking more than just the previous entry when
+> plug->multiple_queues == true.
 
-elapsed time: 724m
+But this also means really significant CPU overhead for all other
+workloads.
 
-configs tested: 118
-configs skipped: 4
+> 
+> This improves the check/repair speed of a 20-HDD raid6 from 19 MB/s to
+> 103 MB/s.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+What driver uses multiple queues for HDDs?
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allmodconfig
-arm                              allyesconfig
-i386                          randconfig-c001
-arm                        clps711x_defconfig
-m68k                       m5208evb_defconfig
-sparc64                          alldefconfig
-sh                              ul2_defconfig
-sh                          r7785rp_defconfig
-sh                     magicpanelr2_defconfig
-h8300                     edosk2674_defconfig
-sh                           se7206_defconfig
-arm                           corgi_defconfig
-arm                        spear6xx_defconfig
-sh                          rsk7203_defconfig
-powerpc                    klondike_defconfig
-powerpc                     taishan_defconfig
-powerpc                 mpc8540_ads_defconfig
-arc                          axs103_defconfig
-m68k                         apollo_defconfig
-parisc64                         alldefconfig
-powerpc                  iss476-smp_defconfig
-mips                     loongson1b_defconfig
-sh                          lboxre2_defconfig
-powerpc                      chrp32_defconfig
-sh                         ap325rxa_defconfig
-parisc                generic-32bit_defconfig
-powerpc                 mpc837x_mds_defconfig
-sh                            hp6xx_defconfig
-mips                            gpr_defconfig
-powerpc                        cell_defconfig
-sh                           se7705_defconfig
-sh                           se7722_defconfig
-arm                        keystone_defconfig
-powerpc                 mpc837x_rdb_defconfig
-mips                           xway_defconfig
-arm                  randconfig-c002-20220309
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-nds32                               defconfig
-nios2                            allyesconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc64                            defconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                         rhel-8.3-kunit
-x86_64                                  kexec
-
-clang tested configs:
-x86_64                        randconfig-c007
-riscv                randconfig-c006-20220309
-powerpc              randconfig-c003-20220309
-i386                          randconfig-c001
-arm                  randconfig-c002-20220309
-powerpc                          allyesconfig
-arm                           sama7_defconfig
-mips                            e55_defconfig
-powerpc                     ppa8548_defconfig
-powerpc                     akebono_defconfig
-arm                       mainstone_defconfig
-arm                      pxa255-idp_defconfig
-powerpc                 mpc8315_rdb_defconfig
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-hexagon              randconfig-r045-20220309
-hexagon              randconfig-r041-20220309
-riscv                randconfig-r042-20220309
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Can you explain the workload submitted by a md a bit better?  I wonder
+if we can easily do the right thing straight in the md driver.
