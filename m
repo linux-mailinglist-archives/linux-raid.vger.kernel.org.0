@@ -2,111 +2,62 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1183E4D9F8D
-	for <lists+linux-raid@lfdr.de>; Tue, 15 Mar 2022 17:02:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D82C4D9FD8
+	for <lists+linux-raid@lfdr.de>; Tue, 15 Mar 2022 17:21:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236833AbiCOQDx (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 15 Mar 2022 12:03:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39362 "EHLO
+        id S239783AbiCOQVy (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 15 Mar 2022 12:21:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242652AbiCOQDw (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 15 Mar 2022 12:03:52 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 376485623B
-        for <linux-raid@vger.kernel.org>; Tue, 15 Mar 2022 09:02:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647360158; x=1678896158;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ZXCwOKH1uj2qnbKec2q307655wWJvJMpOoQlBjuefvU=;
-  b=iO+8e1PdNX/vCOstO3zxSVy7CPXDZbteLk4PxvqjoiUvN1CpsFbtDppK
-   X3uMXSeEqqJ2g0FpIaXybX7rCnvvJBHiA7HGbBFFJtI74E7ESeynHdztM
-   UBPyX6ylpoA8MvrnMaNYU/FcmmdqS5E4uHdADIU8brAyLToOqJPn4Ifen
-   UhahvZ4kF6igZrd1HiXkENjA9bASR0zkJjnRb7UUE4NMJ+Jy7y98R7KiQ
-   IVThoTZ128PSTzBWRs2VrKiYqRFBlUXEu5vulx8IcEOIqjrZI1vgWBzXZ
-   /j4ivAeb9tclz7ikDuSgZV7XvjcBAZc7CsZeSCMLydxjCmFXgwkqOohJ2
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10286"; a="256069535"
-X-IronPort-AV: E=Sophos;i="5.90,184,1643702400"; 
-   d="scan'208";a="256069535"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2022 09:00:13 -0700
-X-IronPort-AV: E=Sophos;i="5.90,184,1643702400"; 
-   d="scan'208";a="515927050"
-Received: from mtkaczyk-mobl1.ger.corp.intel.com (HELO localhost) ([10.213.16.129])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2022 09:00:11 -0700
-Date:   Tue, 15 Mar 2022 17:00:06 +0100
-From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-To:     Coly Li <colyli@suse.de>
-Cc:     Lukasz Florczak <lukasz.florczak@linux.intel.com>,
-        jes@trained-monkey.org, linux-raid@vger.kernel.org
-Subject: Re: [PATCH 2/2] mdadm: Update config man regarding default files
- and multi-keyword behavior.
-Message-ID: <20220315170006.00005871@linux.intel.com>
-In-Reply-To: <70ee6acf-714b-10eb-dfed-284a67ae619d@suse.de>
-References: <20220315085549.59693-1-lukasz.florczak@linux.intel.com>
-        <20220315085549.59693-3-lukasz.florczak@linux.intel.com>
-        <70ee6acf-714b-10eb-dfed-284a67ae619d@suse.de>
+        with ESMTP id S1347846AbiCOQVw (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 15 Mar 2022 12:21:52 -0400
+Received: from sender11-op-o11.zoho.eu (sender11-op-o11.zoho.eu [31.186.226.225])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30D0656C27
+        for <linux-raid@vger.kernel.org>; Tue, 15 Mar 2022 09:20:35 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1647361223; cv=none; 
+        d=zohomail.eu; s=zohoarc; 
+        b=ImW6COpbh023LOAkQxdPV5eC78QMvB+oQ79vkWxLJbInIbuvTVvjETO4AyH/FET1Qh6Anxrob67YcPeUDIoXixUqIA28yL3+o9NO1gxpLylgX4AZCNmoMFBgWA3W7ZJjTD+bynNsmTKvs9R+6Q3UEidon2fHbJ+kBOHXVjjzZQs=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+        t=1647361223; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=olPkQJUM0oJwngNjp7rJD72UCKZTVKM/DrNNsZr81Wo=; 
+        b=WMXhiBp6N0MPJZLlUhafL55+0N6gjn6VU51HpBITRRKvybxoMbwEDFaiOeoCB/fvriuFwh6QlFgjeO4a6VlcMVchlJM7BVE3wC7G1DdkRDUHYf45gD/fPDIEgQ2qZdRelAMXFuOK4P6jwyCu1Sf63aBg8KYDA/hA6o7j/zjhb04=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
+        dmarc=pass header.from=<jes@trained-monkey.org>
+Received: from [172.30.27.237] (163.114.130.4 [163.114.130.4]) by mx.zoho.eu
+        with SMTPS id 1647361220330843.0322169649013; Tue, 15 Mar 2022 17:20:20 +0100 (CET)
+Message-ID: <14629f89-741e-61d3-b410-bfee0292174b@trained-monkey.org>
+Date:   Tue, 15 Mar 2022 12:20:18 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH] Unify error message.
+Content-Language: en-US
+To:     Lukasz Florczak <lukasz.florczak@linux.intel.com>,
+        linux-raid@vger.kernel.org
+Cc:     colyli@suse.de
+References: <20220315083030.58992-1-lukasz.florczak@linux.intel.com>
+From:   Jes Sorensen <jes@trained-monkey.org>
+In-Reply-To: <20220315083030.58992-1-lukasz.florczak@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-ZohoMailClient: External
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Tue, 15 Mar 2022 17:57:09 +0800
-Coly Li <colyli@suse.de> wrote:
+On 3/15/22 04:30, Lukasz Florczak wrote:
+> Provide the same error message for the same error that can occur in Grow.c and super-intel.c.
+> 
+> Signed-off-by: Lukasz Florczak <lukasz.florczak@linux.intel.com>
 
-> On 3/15/22 4:55 PM, Lukasz Florczak wrote:
-> > Simplify default and alternative config file and directory location
-> > references from mdadm(8) as references to mdadm.conf(5). Add FILE
-> > section in config man and explain order and conditions in which
-> > default and alternative config files and directories are used.
-> >
-> > Update config man behavior regarding parsing order when multiple
-> > keywords/config files are involved.
-> >
-> > Additionally add missing HOMECLUSTER keyword description.
-> >
-> > Signed-off-by: Lukasz Florczak <lukasz.florczak@linux.intel.com>  
-> 
-> 
-> Hi Lukasz,
-> 
-> 
-> This patch doesn't apply on branch 20220315-testing of the mdadm-CI 
-> tree, could you please rebase this series on
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/colyli/mdadm.git 
-> 20220315-testing
-> 
-> Then I will continue to test them.
-> 
+Applied, thanks
 
-Hi Coly,
-This is great to see that something is happening in upstream :)
+Jes
 
-I can see that you created branch where some patches were merged and
-now you are reporting conflicts now. Our patches are based on last
-mdadm commit (which is mdadm-4.2 ).
-IMO you should try to apply them first on latest master and later
-cherry-pick/ rebase them on top of your testing branch. This should
-automatically resolve most of conflicts. Could you try that?
-
-This is hard to follow all patches on list (especially that we cannot
-determine in which order they will be applied). Preparing patches for
-you testing branch (which could be changed in any moment), IMO is not a
-good solution.
-
-I really appreciate the work you put to enable upstream testing. If you
-need some help, let me know.
-
-Thanks,
-Mariusz
