@@ -2,119 +2,205 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2237F4E1A62
-	for <lists+linux-raid@lfdr.de>; Sun, 20 Mar 2022 07:28:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 03E894E1AF5
+	for <lists+linux-raid@lfdr.de>; Sun, 20 Mar 2022 10:58:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244798AbiCTG3x (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 20 Mar 2022 02:29:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51028 "EHLO
+        id S243371AbiCTJ40 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 20 Mar 2022 05:56:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231753AbiCTG3w (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 20 Mar 2022 02:29:52 -0400
-Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2C849F6F7
-        for <linux-raid@vger.kernel.org>; Sat, 19 Mar 2022 23:28:29 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id j7-20020a4ad6c7000000b0031c690e4123so15658186oot.11
-        for <linux-raid@vger.kernel.org>; Sat, 19 Mar 2022 23:28:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=CNNPGySxSq7bZ1La6vvay1kp1T7RaMnfdFjrr49KhAk=;
-        b=RSyJ1oD4Fs9XEHIt2Ee3OUpJhLbT/+j4Hd6p3ojngXBP9PDYvrpuWKQW2VNPPYlN49
-         gi08Ej7onWYM+v0SyFwXq0DZ6w7joySTi8ibG3ZvG3xViutrnQouSg5/gDKf+6tnV8Ob
-         IuNUZxsPvTw4/sWl5Lz2uLW2k71ww0YstjhQ4N671c2IIUpt6vGQgmOgEgMkA/oDFD1Z
-         fWbwg/xDJWwBEf6umMEl3tGNEOLJajAEAoavCBHdrEEB2WHuvXx3riVsuUmtx3zl+ryt
-         qIfq9wfKItiLn2KhYH4yrkGdDJoW8qg+EKqO43SDy5z77DqiuJMwVKv6tW6V6qmQyavf
-         3Q3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=CNNPGySxSq7bZ1La6vvay1kp1T7RaMnfdFjrr49KhAk=;
-        b=pCJx3b/7F6Lnl6mKbpGQPDCfFTs22KxigVlMwG+xjyUvYaK7NIJdUvomecZzBTPk/Q
-         mK7Pqu8OUloWVpZf336ThuWae4LxedbTmElwriRGIXwBgxYw1+vQrMiEvUFf3cE86BWv
-         CgCy/nA1SmvjQ0GKMzsnzGqpCu/KXHDNlUNESdueH8WkHzoBgZw8YxgCmCHVdkvIEs+a
-         Bkj8SoExlBx0hyDxo/scQgCmNLDMfKJ6/KtZ5YL9dYOCltqqUoW5a9kGZCnvzoCXIMSI
-         pH48FcCrWeGGSsjhPWndpbUsWSTJP6JMOiVfHjuBtNL/qjz4BI55ZekGavQg/oOHWGpO
-         CDNQ==
-X-Gm-Message-State: AOAM533RHeCwx7WQVzoXYACiVNqZsg2E8xDJEuNT71m4wIIA+KYM0IEm
-        /x1VQqjtcmus8hx0+5kMr/UPeHsGjgekLu60gEU=
-X-Google-Smtp-Source: ABdhPJxdKbQvYY1rmVHXsRJjCmWYr5vWJOHrRj52ZxMUhh2vSuy6GrFto1McVH8GJyPXiNJiWQSt4bt6cMpktFXwbgA=
-X-Received: by 2002:a05:6870:d10b:b0:dd:b6ec:2c90 with SMTP id
- e11-20020a056870d10b00b000ddb6ec2c90mr6444261oac.261.1647757709206; Sat, 19
- Mar 2022 23:28:29 -0700 (PDT)
+        with ESMTP id S236014AbiCTJ40 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 20 Mar 2022 05:56:26 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9565E255B0
+        for <linux-raid@vger.kernel.org>; Sun, 20 Mar 2022 02:55:02 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 0F259210ED;
+        Sun, 20 Mar 2022 09:55:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1647770101; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=X/bur4lxFGZc+G/WNjNC2jYVrWDirYw1CVVqjtcV8r0=;
+        b=LqfcHUB//2WgWY0U6AaBdmB152OR7A9JvA2TF3WABt+kOl419jgiN772NC3Eac4AT7mKRX
+        VTyBXtfqK+Z4vkrccAhbNzxWrpeg9NN7PpGPHAYcP2JWPY8RBz/HKAebbIw/F8dUfs7T99
+        gzNKijfPmxEEcfBJ7VMaGiP5bUxBKEA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1647770101;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=X/bur4lxFGZc+G/WNjNC2jYVrWDirYw1CVVqjtcV8r0=;
+        b=BdA8h7lWSUgdlJ1eHjAwLFH97hlnxWYXHawHeOxJA5uiLKt0RUY4nVFZFtKOUoAWk45UD0
+        VQG+LvV5zEDsEQCw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 5F7B713419;
+        Sun, 20 Mar 2022 09:54:59 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id vq1hAfP5NmIxNQAAMHmgww
+        (envelope-from <colyli@suse.de>); Sun, 20 Mar 2022 09:54:59 +0000
+Message-ID: <51ee6419-9ae4-04a5-1a69-e3fd1b9f0d04@suse.de>
+Date:   Sun, 20 Mar 2022 17:54:56 +0800
 MIME-Version: 1.0
-Sender: mrslila88haber@gmail.com
-Received: by 2002:a4a:e08f:0:0:0:0:0 with HTTP; Sat, 19 Mar 2022 23:28:28
- -0700 (PDT)
-From:   "Dr. Nance Terry Lee" <nance173terry@gmail.com>
-Date:   Sun, 20 Mar 2022 06:28:28 +0000
-X-Google-Sender-Auth: oFt77leiXJcbhQSXKQ-PT5iFCtw
-Message-ID: <CAODWenZV2YaNpibsGOJEnZMuym3Om5G2EPOnjuD5UusNPNeZRg@mail.gmail.com>
-Subject: Hello My Dear Friend
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=6.4 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HK_SCAM,
-        LOTS_OF_MONEY,MONEY_FRAUD_5,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:c41 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5001]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [nance173terry[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.0 HK_SCAM No description available.
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        *  2.8 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-        *  3.0 MONEY_FRAUD_5 Lots of money and many fraud phrases
-X-Spam-Level: ******
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.7.0
+Subject: Re: [PATCH 1/4] mdadm: Respect config file location in man
+Content-Language: en-US
+To:     Lukasz Florczak <lukasz.florczak@linux.intel.com>
+Cc:     jes@trained-monkey.org, pmenzel@molgen.mpg.de,
+        linux-raid@vger.kernel.org
+References: <20220318082607.675665-1-lukasz.florczak@linux.intel.com>
+ <20220318082607.675665-2-lukasz.florczak@linux.intel.com>
+From:   Coly Li <colyli@suse.de>
+In-Reply-To: <20220318082607.675665-2-lukasz.florczak@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hello My Dear Friend,
+On 3/18/22 4:26 PM, Lukasz Florczak wrote:
+> Default config file location could differ depending on OS (e.g. Debian family).
+> This patch takes default config file into consideration when creating mdadm.man
+> file as well as mdadm.conf.man.
+>
+> Rename mdadm.conf.5 to mdadm.conf.5.in. Now mdadm.conf.5 is generated automatically.
+>
+> Signed-off-by: Lukasz Florczak <lukasz.florczak@linux.intel.com>
 
-I am Dr. Nance Terry Lee, the United Nations Representative Washington
--DC - USA.
-I hereby inform you that your UN pending compensation funds the sum of
-$4.2million has been approved to be released to you through Diplomatic
-Courier Service.
 
-In the light of the above, you are advised to send your full receiving
-information as below:
+I test and verify the change under openSUSE.
 
-1. Your full name
-2. Full receiving address
-3. Your mobile number
-4. Nearest airport
 
-Upon the receipt of the above information, I will proceed with the
-delivery process of your compensation funds to your door step through
-our special agent, if you have any questions, don't hesitate to ask
-me.
+Acked-by: Coly Li <colyli@suse.de>
 
-Kindly revert back to this office immediately.
 
 Thanks.
-Dr. Nance Terry Lee.
-United Nations Representative
-Washington-DC USA.
-Tel: +1-703-9877 5463
-Fax: +1-703-9268 5422
+
+
+Coly Li
+
+
+> ---
+>   .gitignore                      |  1 +
+>   Makefile                        |  7 ++++++-
+>   mdadm.8.in                      | 16 ++++++++--------
+>   mdadm.conf.5 => mdadm.conf.5.in |  2 +-
+>   4 files changed, 16 insertions(+), 10 deletions(-)
+>   rename mdadm.conf.5 => mdadm.conf.5.in (99%)
+>
+> diff --git a/.gitignore b/.gitignore
+> index 217fe76d..8d791c6f 100644
+> --- a/.gitignore
+> +++ b/.gitignore
+> @@ -3,6 +3,7 @@
+>   /*-stamp
+>   /mdadm
+>   /mdadm.8
+> +/mdadm.conf.5
+>   /mdadm.udeb
+>   /mdassemble
+>   /mdmon
+> diff --git a/Makefile b/Makefile
+> index 2a51d813..bf126033 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -227,7 +227,12 @@ raid6check : raid6check.o mdadm.h $(CHECK_OBJS)
+>   
+>   mdadm.8 : mdadm.8.in
+>   	sed -e 's/{DEFAULT_METADATA}/$(DEFAULT_METADATA)/g' \
+> -	-e 's,{MAP_PATH},$(MAP_PATH),g'  mdadm.8.in > mdadm.8
+> +	-e 's,{MAP_PATH},$(MAP_PATH),g' -e 's,{CONFFILE},$(CONFFILE),g' \
+> +	-e 's,{CONFFILE2},$(CONFFILE2),g'  mdadm.8.in > mdadm.8
+> +
+> +mdadm.conf.5 : mdadm.conf.5.in
+> +	sed -e 's,{CONFFILE},$(CONFFILE),g' \
+> +	-e 's,{CONFFILE2},$(CONFFILE2),g'  mdadm.conf.5.in > mdadm.conf.5
+>   
+>   mdadm.man : mdadm.8
+>   	man -l mdadm.8 > mdadm.man
+> diff --git a/mdadm.8.in b/mdadm.8.in
+> index be902dba..d41b3ca7 100644
+> --- a/mdadm.8.in
+> +++ b/mdadm.8.in
+> @@ -267,13 +267,13 @@ the exact meaning of this option in different contexts.
+>   .TP
+>   .BR \-c ", " \-\-config=
+>   Specify the config file or directory.  Default is to use
+> -.B /etc/mdadm.conf
+> +.B {CONFFILE}
+>   and
+> -.BR /etc/mdadm.conf.d ,
+> +.BR {CONFFILE}.d ,
+>   or if those are missing then
+> -.B /etc/mdadm/mdadm.conf
+> +.B {CONFFILE2}
+>   and
+> -.BR /etc/mdadm/mdadm.conf.d .
+> +.BR {CONFFILE2}.d .
+>   If the config file given is
+>   .B "partitions"
+>   then nothing will be read, but
+> @@ -2009,9 +2009,9 @@ The config file is only used if explicitly named with
+>   or requested with (a possibly implicit)
+>   .BR \-\-scan .
+>   In the later case,
+> -.B /etc/mdadm.conf
+> +.B {CONFFILE}
+>   or
+> -.B /etc/mdadm/mdadm.conf
+> +.B {CONFFILE2}
+>   is used.
+>   
+>   If
+> @@ -3339,7 +3339,7 @@ uses this to find arrays when
+>   is given in Misc mode, and to monitor array reconstruction
+>   on Monitor mode.
+>   
+> -.SS /etc/mdadm.conf
+> +.SS {CONFFILE} (or {CONFFILE2})
+>   
+>   The config file lists which devices may be scanned to see if
+>   they contain MD super block, and gives identifying information
+> @@ -3347,7 +3347,7 @@ they contain MD super block, and gives identifying information
+>   .BR mdadm.conf (5)
+>   for more details.
+>   
+> -.SS /etc/mdadm.conf.d
+> +.SS {CONFFILE}.d (or {CONFFILE2}.d)
+>   
+>   A directory containing configuration files which are read in lexical
+>   order.
+> diff --git a/mdadm.conf.5 b/mdadm.conf.5.in
+> similarity index 99%
+> rename from mdadm.conf.5
+> rename to mdadm.conf.5.in
+> index 74a21c5f..83edd008 100644
+> --- a/mdadm.conf.5
+> +++ b/mdadm.conf.5.in
+> @@ -8,7 +8,7 @@
+>   .SH NAME
+>   mdadm.conf \- configuration for management of Software RAID with mdadm
+>   .SH SYNOPSIS
+> -/etc/mdadm.conf
+> +{CONFFILE}
+>   .SH DESCRIPTION
+>   .PP
+>   .I mdadm
+
+
