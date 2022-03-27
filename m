@@ -2,75 +2,63 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BCAC54E86FC
-	for <lists+linux-raid@lfdr.de>; Sun, 27 Mar 2022 10:40:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86D8A4E894F
+	for <lists+linux-raid@lfdr.de>; Sun, 27 Mar 2022 20:19:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230284AbiC0Ima (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 27 Mar 2022 04:42:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60056 "EHLO
+        id S232360AbiC0SVH (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 27 Mar 2022 14:21:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230229AbiC0Im3 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 27 Mar 2022 04:42:29 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACA572528F
-        for <linux-raid@vger.kernel.org>; Sun, 27 Mar 2022 01:40:50 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id yy13so22996959ejb.2
-        for <linux-raid@vger.kernel.org>; Sun, 27 Mar 2022 01:40:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=azkHNQx4Fv8/7St7nw5pFIJ2T4r/Wb6L0/DmIGnlte8=;
-        b=TZKtmv7o0Xqe4mGJeYy6TI4q3fWWHODPKUoRS58+dfTimji5xqr+DuLYLpVduyAhP7
-         NCJLnivySIc0KGHXEn96ndeLcC1xedV5q+v06VIL484l7yu10BynLiS2jajelHFoCnWQ
-         sd/po4YIMsh/dVhKc7J/HGGDQYNSxfbJMq2SENbrUAtotbugE7DSEtLjFw4yO+yMW/vy
-         FTqZgMv/2y3FoaRIIqScNTF7Qtd7YnzfGLHQSCSAwfGo80zPJFIRhBbOS50Jddl0tEei
-         n6F1JujjOVG7nd+SUjhIqy4EHAGzMLyL2Vk+0Ky7wWmeDk2iynH5QB3k7NuXz2rCzfuc
-         tVVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=azkHNQx4Fv8/7St7nw5pFIJ2T4r/Wb6L0/DmIGnlte8=;
-        b=qIKqCPQ/uf35xOS+mSL8JDstBMBswSF55Dz2vn5VevTLfpvO73IF78FDQid51XUgS0
-         1deiJQfPiFrSgsmsGuSOb+V/6+4fXPlgF8CtsLJrPyHBDymn2Z5q/fYPHDxrVB1BftJZ
-         8kcGjJ4B8CqLZbjfhFp5XItaXxROUm1VyZaX7cB5Bb0HEX6rvV0a+d6bNLFa2XzlJoA9
-         gS+k52oA2Zy8pytS9ap8MFdSzG63fGMSYIJsMvUYuFgqZDPJkvqExnugMjkCIJIa78Ni
-         Jkic80OKuzQcqKcTQGicIeV78nUMutbNnKP0iowdGZYW7LInftdj/9F4lOkmrFT9l7fr
-         w79Q==
-X-Gm-Message-State: AOAM533Xyv4GR9jNiqFfwMxPw96SvAXC2jnenPj/2CtFx9HZoh4R6uZ3
-        vxKXUnbKMr3ZHvtn4bdNarvd4LszriI6u7M69MyDjS5W
-X-Google-Smtp-Source: ABdhPJwSndqKBZd5c4XyiQZxu6VMcTUBroBvLSm1pTZgsSKkGBl2CSkPXshDQv2YNkWXMDSgMHtz2GN6b8Cae8Uh7bU=
-X-Received: by 2002:a17:906:58cb:b0:6df:f696:9b32 with SMTP id
- e11-20020a17090658cb00b006dff6969b32mr21376114ejs.384.1648370449199; Sun, 27
- Mar 2022 01:40:49 -0700 (PDT)
+        with ESMTP id S230008AbiC0SVG (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 27 Mar 2022 14:21:06 -0400
+X-Greylist: delayed 378 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 27 Mar 2022 11:19:25 PDT
+Received: from lit713.phy.lolipop.jp (lit713.phy.lolipop.jp [118.27.125.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCDEF3DDEC
+        for <linux-raid@vger.kernel.org>; Sun, 27 Mar 2022 11:19:25 -0700 (PDT)
+Received: by lit713.phy.lolipop.jp (Postfix, from userid 995)
+        id 0AAC881DEE08; Mon, 28 Mar 2022 03:13:06 +0900 (JST)
+To:     linux-raid@vger.kernel.org
+Subject: =?us-ascii?Q?=3D=3FISO-2022-JP=3FB=3FGyRCOzNLXDwrRjA8VjkpNkg?=  =?us-ascii?Q?bKEIgIlt5b3VyLXN1YmplY3RdIg=3D=3D=3F=3D?=
+X-PHP-Originating-Script: 1031554:PHPMailer.php
+Date:   Sun, 27 Mar 2022 18:13:05 +0000
+From:   =?ISO-2022-JP?B?GyRCOzNLXDwrRjA8VjkpNkgbKEI=?= 
+        <info@taishishaken.jp>
+Reply-To: info@web-garden-m.com
+Message-ID: <BWcDiQeRK2OZRJKliyo6SHoVzpzhlWFnpifERw0m8@taishishaken.jp>
+X-Mailer: PHPMailer 6.5.0 (https://github.com/PHPMailer/PHPMailer)
 MIME-Version: 1.0
-References: <20220318030855.GV3131742@merlins.org>
-In-Reply-To: <20220318030855.GV3131742@merlins.org>
-From:   d tbsky <tbskyd@gmail.com>
-Date:   Sun, 27 Mar 2022 16:40:38 +0800
-Message-ID: <CAC6SzHKFga59KpzhRhE-sz3K5z+=LUXfyxSB14KaOj7DCxCj-Q@mail.gmail.com>
-Subject: Re: new drive is 4 sectors shorter, can it be used for swraid5 array?
-To:     Marc MERLIN <marc@merlins.org>
-Cc:     list Linux RAID <linux-raid@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=ISO-2022-JP
+X-Spam-Status: Yes, score=7.2 required=5.0 tests=BAYES_50,
+        HEADER_FROM_DIFFERENT_DOMAINS,PHP_ORIG_SCRIPT,SHORT_SHORTNER,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLACK autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: *  1.7 URIBL_BLACK Contains an URL listed in the URIBL blacklist
+        *      [URIs: inx.lv]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.2 HEADER_FROM_DIFFERENT_DOMAINS From and EnvelopeFrom 2nd level
+        *      mail domains are different
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 SPF_NONE SPF: sender does not publish an SPF Record
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  2.0 SHORT_SHORTNER Short body with little more than a link to a
+        *      shortener
+        *  2.5 PHP_ORIG_SCRIPT Sent by bot & other signs
+X-Spam-Level: *******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Marc MERLIN <marc@merlins.org>
-> New drive is 4 sectors shorter, so I assume I can't use it as a replacement in my md5
-> array because it's 4 sectors too short, or does swraid5 not need the last few sectors
-> of a drive?
+名前: ? Margie is interested in you! More info: http://inx.lv/wcup?0lkg ? <linux-raid@vger.kernel.org>
+題名:  ご相談・総合お問合せ
 
-    4 sectors shorter are common for external hard drives (sold from
-seagate,toshiba,etc). if you attach the drive to internal sata port or
-normal usb enclosure(not sold from disk vendors),you will get back
-normal disk size. so maybe you want to check what connect to your
-disk.
+項目（複数選択可）：[checkbox-422]
+
+お問合せ内容：
+gdfy00
+
+-- 
+このメールは 山本自動車工業 (http://taishishaken.jp) のお問い合わせフォームから送信されました
+
