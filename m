@@ -2,63 +2,169 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 86D8A4E894F
-	for <lists+linux-raid@lfdr.de>; Sun, 27 Mar 2022 20:19:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BAC5E4E8B48
+	for <lists+linux-raid@lfdr.de>; Mon, 28 Mar 2022 02:43:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232360AbiC0SVH (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 27 Mar 2022 14:21:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47076 "EHLO
+        id S237094AbiC1Ap2 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 27 Mar 2022 20:45:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230008AbiC0SVG (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 27 Mar 2022 14:21:06 -0400
-X-Greylist: delayed 378 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 27 Mar 2022 11:19:25 PDT
-Received: from lit713.phy.lolipop.jp (lit713.phy.lolipop.jp [118.27.125.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCDEF3DDEC
-        for <linux-raid@vger.kernel.org>; Sun, 27 Mar 2022 11:19:25 -0700 (PDT)
-Received: by lit713.phy.lolipop.jp (Postfix, from userid 995)
-        id 0AAC881DEE08; Mon, 28 Mar 2022 03:13:06 +0900 (JST)
-To:     linux-raid@vger.kernel.org
-Subject: =?us-ascii?Q?=3D=3FISO-2022-JP=3FB=3FGyRCOzNLXDwrRjA8VjkpNkg?=  =?us-ascii?Q?bKEIgIlt5b3VyLXN1YmplY3RdIg=3D=3D=3F=3D?=
-X-PHP-Originating-Script: 1031554:PHPMailer.php
-Date:   Sun, 27 Mar 2022 18:13:05 +0000
-From:   =?ISO-2022-JP?B?GyRCOzNLXDwrRjA8VjkpNkgbKEI=?= 
-        <info@taishishaken.jp>
-Reply-To: info@web-garden-m.com
-Message-ID: <BWcDiQeRK2OZRJKliyo6SHoVzpzhlWFnpifERw0m8@taishishaken.jp>
-X-Mailer: PHPMailer 6.5.0 (https://github.com/PHPMailer/PHPMailer)
+        with ESMTP id S236727AbiC1Ap1 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 27 Mar 2022 20:45:27 -0400
+Received: from out2.migadu.com (out2.migadu.com [IPv6:2001:41d0:2:aacc::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3D121A824
+        for <linux-raid@vger.kernel.org>; Sun, 27 Mar 2022 17:43:46 -0700 (PDT)
+Subject: Re: [PATCH] md/bitmap: don't set sb values if can't pass sanity check
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1648428224;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ngYMjoZvzhBvYaQpw7ASUgBXdsOVe/wv6uX7t9mwEjY=;
+        b=gsRWsiEZEXBMXLCyQgti8evxT79whi1GLR1OxX6oLROq2fBwO/UHHBRPF++YP8YTwha6sx
+        ZseXK8OACBN+L2FW4cpPP3qd5iIHz5g8yOlglAME8+XXGE8X9GvD2R8JVjK0duWId433TL
+        Y3V/z88SMo80+RWx3RmBooN38dzwKG8=
+To:     Heming Zhao <heming.zhao@suse.com>, linux-raid@vger.kernel.org,
+        song@kernel.org
+Cc:     xni@redhat.com
+References: <20220325025223.1866-1-heming.zhao@suse.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Guoqing Jiang <guoqing.jiang@linux.dev>
+Message-ID: <cd198e0b-eebb-f13c-49e7-338aa6835099@linux.dev>
+Date:   Mon, 28 Mar 2022 08:43:41 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-2022-JP
-X-Spam-Status: Yes, score=7.2 required=5.0 tests=BAYES_50,
-        HEADER_FROM_DIFFERENT_DOMAINS,PHP_ORIG_SCRIPT,SHORT_SHORTNER,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLACK autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Report: *  1.7 URIBL_BLACK Contains an URL listed in the URIBL blacklist
-        *      [URIs: inx.lv]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.2 HEADER_FROM_DIFFERENT_DOMAINS From and EnvelopeFrom 2nd level
-        *      mail domains are different
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 SPF_NONE SPF: sender does not publish an SPF Record
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  2.0 SHORT_SHORTNER Short body with little more than a link to a
-        *      shortener
-        *  2.5 PHP_ORIG_SCRIPT Sent by bot & other signs
-X-Spam-Level: *******
+In-Reply-To: <20220325025223.1866-1-heming.zhao@suse.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Migadu-Flow: FLOW_OUT
+X-Migadu-Auth-User: linux.dev
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-$BL>A0(B: ? Margie is interested in you! More info: http://inx.lv/wcup?0lkg ? <linux-raid@vger.kernel.org>
-$BBjL>(B:  $B$4AjCL!&Am9g$*Ld9g$;(B
 
-$B9`L\!JJ#?tA*Br2D!K!'(B[checkbox-422]
 
-$B$*Ld9g$;FbMF!'(B
-gdfy00
+On 3/25/22 10:52 AM, Heming Zhao wrote:
+> If bitmap area contains invalid data, kernel may crash or mdadm
+> triggers FPE (Floating exception)
+> This is cluster-md speical bug. In non-clustered env, mdadm will
+> handle broken metadata case. In clustered array, only kernel space
+> handles bitmap slot info. But even this bug only happened in clustered
+> env, current sanity check is wrong, the code should be changed.
+>
+> How to trigger: (faulty injection)
+>
+> dd if=/dev/zero bs=1M count=3 oflag=direct of=/dev/sda
+> dd if=/dev/zero bs=1M count=3 oflag=direct of=/dev/sdb
+> mdadm -C /dev/md0 -b clustered -e 1.2 -n 2 -l mirror /dev/sda /dev/sdb
+> mdadm -Ss
+> echo aaa > magic.txt
+>   == below modifying slot 2 bitmap data ==
+> dd if=magic.txt of=/dev/sda seek=16384 bs=1 count=3 <== destory magic
+> dd if=/dev/zero of=/dev/sda seek=16436 bs=1 count=4 <== ZERO chunksize
+> mdadm -A /dev/md0 /dev/sda /dev/sdb
+>   == kernel crash. mdadm reports FPE ==
 
--- 
-$B$3$N%a!<%k$O(B $B;3K\<+F0<V9)6H(B (http://taishishaken.jp) $B$N$*Ld$$9g$o$;%U%)!<%`$+$iAw?.$5$l$^$7$?(B
+Thanks, could you also share the crash log to make people understand it
+better?
 
+>
+> Signed-off-by: Heming Zhao <heming.zhao@suse.com>
+> ---
+>   drivers/md/md-bitmap.c | 40 +++++++++++++++++++++-------------------
+>   1 file changed, 21 insertions(+), 19 deletions(-)
+>
+> diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
+> index bfd6026d7809..f6dcdb3683bf 100644
+> --- a/drivers/md/md-bitmap.c
+> +++ b/drivers/md/md-bitmap.c
+> @@ -635,19 +635,6 @@ static int md_bitmap_read_sb(struct bitmap *bitmap)
+>   	err = -EINVAL;
+>   	sb = kmap_atomic(sb_page);
+>   
+> -	chunksize = le32_to_cpu(sb->chunksize);
+> -	daemon_sleep = le32_to_cpu(sb->daemon_sleep) * HZ;
+> -	write_behind = le32_to_cpu(sb->write_behind);
+> -	sectors_reserved = le32_to_cpu(sb->sectors_reserved);
+> -	/* Setup nodes/clustername only if bitmap version is
+> -	 * cluster-compatible
+> -	 */
+> -	if (sb->version == cpu_to_le32(BITMAP_MAJOR_CLUSTERED)) {
+> -		nodes = le32_to_cpu(sb->nodes);
+> -		strlcpy(bitmap->mddev->bitmap_info.cluster_name,
+> -				sb->cluster_name, 64);
+> -	}
+> -
+>   	/* verify that the bitmap-specific fields are valid */
+>   	if (sb->magic != cpu_to_le32(BITMAP_MAGIC))
+>   		reason = "bad magic";
+> @@ -668,6 +655,19 @@ static int md_bitmap_read_sb(struct bitmap *bitmap)
+>   		goto out;
+>   	}
+>   
+> +	chunksize = le32_to_cpu(sb->chunksize);
+> +	daemon_sleep = le32_to_cpu(sb->daemon_sleep) * HZ;
+> +	write_behind = le32_to_cpu(sb->write_behind);
+> +	sectors_reserved = le32_to_cpu(sb->sectors_reserved);
+> +	/* Setup nodes/clustername only if bitmap version is
+> +	 * cluster-compatible
+> +	 */
+
+I suppose kernel should print the "reason" if md failed to verify bitmap sb.
+And at it, pls change the comment style to
+
+/*
+  *
+  */
+
+> +	if (sb->version == cpu_to_le32(BITMAP_MAJOR_CLUSTERED)) {
+> +		nodes = le32_to_cpu(sb->nodes);
+> +		strlcpy(bitmap->mddev->bitmap_info.cluster_name,
+> +				sb->cluster_name, 64);
+> +	}
+> +
+>   	/* keep the array size field of the bitmap superblock up to date */
+>   	sb->sync_size = cpu_to_le64(bitmap->mddev->resync_max_sectors);
+>   
+> @@ -700,9 +700,9 @@ static int md_bitmap_read_sb(struct bitmap *bitmap)
+>   
+>   out:
+>   	kunmap_atomic(sb);
+> -	/* Assigning chunksize is required for "re_read" */
+> -	bitmap->mddev->bitmap_info.chunksize = chunksize;
+>   	if (err == 0 && nodes && (bitmap->cluster_slot < 0)) {
+> +		/* Assigning chunksize is required for "re_read" */
+> +		bitmap->mddev->bitmap_info.chunksize = chunksize;
+>   		err = md_setup_cluster(bitmap->mddev, nodes);
+>   		if (err) {
+>   			pr_warn("%s: Could not setup cluster service (%d)\n",
+> @@ -717,10 +717,12 @@ static int md_bitmap_read_sb(struct bitmap *bitmap)
+>   out_no_sb:
+>   	if (test_bit(BITMAP_STALE, &bitmap->flags))
+>   		bitmap->events_cleared = bitmap->mddev->events;
+> -	bitmap->mddev->bitmap_info.chunksize = chunksize;
+> -	bitmap->mddev->bitmap_info.daemon_sleep = daemon_sleep;
+> -	bitmap->mddev->bitmap_info.max_write_behind = write_behind;
+> -	bitmap->mddev->bitmap_info.nodes = nodes;
+> +	if (err == 0) {
+> +		bitmap->mddev->bitmap_info.chunksize = chunksize;
+> +		bitmap->mddev->bitmap_info.daemon_sleep = daemon_sleep;
+> +		bitmap->mddev->bitmap_info.max_write_behind = write_behind;
+> +		bitmap->mddev->bitmap_info.nodes = nodes;
+> +	}
+>   	if (bitmap->mddev->bitmap_info.space == 0 ||
+>   	    bitmap->mddev->bitmap_info.space > sectors_reserved)
+>   		bitmap->mddev->bitmap_info.space = sectors_reserved;
+
+Generally, I am fine with the change.
+
+Thanks,
+Guoqing
