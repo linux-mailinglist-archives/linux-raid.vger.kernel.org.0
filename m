@@ -2,44 +2,42 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 490234EDD9B
-	for <lists+linux-raid@lfdr.de>; Thu, 31 Mar 2022 17:43:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C71B94EDDC2
+	for <lists+linux-raid@lfdr.de>; Thu, 31 Mar 2022 17:47:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234851AbiCaPoQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 31 Mar 2022 11:44:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51754 "EHLO
+        id S237726AbiCaPqv (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 31 Mar 2022 11:46:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239958AbiCaPna (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 31 Mar 2022 11:43:30 -0400
+        with ESMTP id S239348AbiCaPqn (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 31 Mar 2022 11:46:43 -0400
 Received: from sender11-op-o11.zoho.eu (sender11-op-o11.zoho.eu [31.186.226.225])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 069831D192D
-        for <linux-raid@vger.kernel.org>; Thu, 31 Mar 2022 08:38:58 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1648741134; cv=none; 
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D334322451B
+        for <linux-raid@vger.kernel.org>; Thu, 31 Mar 2022 08:41:34 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1648741289; cv=none; 
         d=zohomail.eu; s=zohoarc; 
-        b=knbDCX7IzGqI+h32qD8D8Q1y+v3Q6yfia5lh6G8T6IxV9PytZ5cgkqCZAcVRQTgFLOIdtzqY/dQIv/1AGUfEUrxxb2Jba2K/XFk7dW+qQfOMXKVG+AAZC+D1hlOfk7JAk2NlSBoq1ibzT7lt/9m6EV64btagmAawWJjdCZuWfZA=
+        b=JNIXyVEvsAIQUd2AwpEdLHkKn4talDshjZt8snKRagSx1j9IIh0s0Sjay4sokXp3R0DM/3GT3unURleCCAmqDQweMA1tXKIEQLs2BjL+6hQ+QBwQaks2XNqrkeBw0xNqbp8RaFTvTuflwP1rO8drCsldFaNQWfoMH2bq7Ju6eFY=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1648741134; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=3/L3jcqN7iPSBTFNtPM3RTBUPj/3xZ25Gxxc0Fr3wP4=; 
-        b=T3Jms3+sVXTF0fZE10ZHfD5O3/lSRB3ngN1Jz75IQ50qfwxt5A5feB54AVx21pHRmH+iUQ/GphNWWCg/TwK3OyibKG7IS9sBI8NuiFtX1NPHEFNuWbbgx0S2/0tpd/TWIxDFl4+FlhA1eSZY5so9qTqwnSNhP6cvkwFQdrfkAXM=
+        t=1648741289; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=OIClQwKwhgRjXzkazoypqiwLx57kdKyHrGAeqLPETTg=; 
+        b=ZdTM7uQEQa46c6cQ5YZbxv89aEnwpd94KFZuMjgzQ2NhgWHTOZxMdbVvZhqcMrHk55eVB7TTRo5QIk1goodi43oRdVHgJ0HQn+vUocmTahm0cMBbrE3D76Ln8XBseAFM+mMWe7SQKCwb7E5SAxRsk3K6IGTdRZM6bi4h3h6thN8=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
         spf=pass  smtp.mailfrom=jes@trained-monkey.org;
         dmarc=pass header.from=<jes@trained-monkey.org>
 Received: from [172.30.27.237] (163.114.130.4 [163.114.130.4]) by mx.zoho.eu
-        with SMTPS id 1648741133416353.14519121880187; Thu, 31 Mar 2022 17:38:53 +0200 (CEST)
-Message-ID: <d2dd311b-9ad0-1241-f360-28a407836953@trained-monkey.org>
-Date:   Thu, 31 Mar 2022 11:38:50 -0400
+        with SMTPS id 1648741287539133.55575443384691; Thu, 31 Mar 2022 17:41:27 +0200 (CEST)
+Message-ID: <8494d046-814b-9ff4-1dc4-d9c49e0f9d93@trained-monkey.org>
+Date:   Thu, 31 Mar 2022 11:41:26 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.2.0
-Subject: Re: [PATCH] Grow_reshape: Add r0 grow size error message and update
- man
+Subject: Re: [PATCH] udev: adapt rules to systemd v247
 Content-Language: en-US
-To:     Mateusz Kusiak <mateusz.kusiak@intel.com>,
-        linux-raid@vger.kernel.org
-Cc:     colyli@suse.de
-References: <20220323140519.1151-1-mateusz.kusiak@intel.com>
+To:     Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+Cc:     linux-raid@vger.kernel.org
+References: <20220114154433.7386-1-mariusz.tkaczyk@linux.intel.com>
 From:   Jes Sorensen <jes@trained-monkey.org>
-In-Reply-To: <20220323140519.1151-1-mateusz.kusiak@intel.com>
+In-Reply-To: <20220114154433.7386-1-mariusz.tkaczyk@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-ZohoMailClient: External
@@ -53,18 +51,19 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 3/23/22 10:05, Mateusz Kusiak wrote:
-> Grow size on r0 is not supported for imsm and native metadata.
-> Add proper error message.
-> Update man for proper use of --size.
-> Signed-off-by: Mateusz Kusiak <mateusz.kusiak@intel.com>
-> ---
->  Grow.c     |  6 ++++++
->  mdadm.8.in | 19 ++++++++++++-------
->  2 files changed, 18 insertions(+), 7 deletions(-)
+On 1/14/22 10:44, Mariusz Tkaczyk wrote:
+> New events have been added in kernel 4.14 ("bind" and "unbind").
+> Systemd maintainer suggests to modify "add|change" branches.
+> This patches implements their suggestions. There is no issue yet because
+> new event types are not used in md.
 > 
+> Please see systemd announcement for details[1].
+> 
+> [1] https://lists.freedesktop.org/archives/systemd-devel/2020-November/045646.html
+> 
+> Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
 
-Applied
+Applied!
 
 Thanks,
 Jes
