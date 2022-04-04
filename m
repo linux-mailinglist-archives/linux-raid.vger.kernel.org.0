@@ -2,152 +2,139 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D4604F14FE
-	for <lists+linux-raid@lfdr.de>; Mon,  4 Apr 2022 14:38:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FAF14F1502
+	for <lists+linux-raid@lfdr.de>; Mon,  4 Apr 2022 14:40:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242555AbiDDMkM (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 4 Apr 2022 08:40:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41612 "EHLO
+        id S1346714AbiDDMlz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 4 Apr 2022 08:41:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345285AbiDDMkM (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 4 Apr 2022 08:40:12 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6A84D27B2B
-        for <linux-raid@vger.kernel.org>; Mon,  4 Apr 2022 05:38:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1649075895;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=juKLOUsIJZ+4brNGn4ICdVclC3eLwMAToH4uvlm5xqE=;
-        b=Kx0S6RSbOZ1syhQONJjhH9P/go8kfMu+n6SDEyVRzWlG5255DyGOGosm0oPunC+9ebrn4d
-        cx+J0F6PgrEVnPYW/BXtktELrfnRwtyisfwJ43LH+COWqErGBIVCpKkam2Kq+XvMQtAPUk
-        rcpSM+MP2DTSqkJ4+hcWH0YwtmnJf1w=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-338-RRgV-R6EMHuEymdBQ_ZOJA-1; Mon, 04 Apr 2022 08:38:14 -0400
-X-MC-Unique: RRgV-R6EMHuEymdBQ_ZOJA-1
-Received: by mail-qt1-f199.google.com with SMTP id h11-20020ac87d4b000000b002e1c9a3ae51so6248006qtb.0
-        for <linux-raid@vger.kernel.org>; Mon, 04 Apr 2022 05:38:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version;
-        bh=juKLOUsIJZ+4brNGn4ICdVclC3eLwMAToH4uvlm5xqE=;
-        b=W21P0lOp1RyeDD48jlWKlIanCIQC6QD4fGb3va2e5LpA/1xt5ndNVmrP/H+Mxqi2x5
-         ffyIBra6Hdw0RqOWNZuuhnFqFl4Kv/zh6qhkKrTlIWwt73xc+mKZRDClI+YM+fKaGC9N
-         /38pc/75cF0tEA80VjsYW6kjTarhJIoPXK+M36bdjDYwFOtAi75O86LGEQoBm+m2FvG6
-         w83yjN9/VBB/Orzx2TTEZa5/0klpQDxisusedfJWr+lLqZLVUVSteNs6tc9Ays8UyYVZ
-         v5fZXdHzCTYrUJxH7HpTTeyyBDiVoJflboAdv0oc511fLLqJnUD1iYCF0c6cdKrMr/D+
-         UP+w==
-X-Gm-Message-State: AOAM530a7Chhuw1LLzo62AihIO3izRlI3Awi8cs+3SQoyKUm7NMsDpGN
-        /a38Q4692WBXIJtS0Xte4HucxdukUsN6w407scHgbhRT7s/BrjvQjddiiRU7DR/TTNWCFPxiMqz
-        g0x2GXk54ZBYoW39o8Fq54Q==
-X-Received: by 2002:a05:6214:c26:b0:441:6696:c806 with SMTP id a6-20020a0562140c2600b004416696c806mr17325767qvd.43.1649075893880;
-        Mon, 04 Apr 2022 05:38:13 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwZAZ0UNf2epIpUz209RBdzGLS9pzacwDKMfZwCO/Uza4lC7QEdbe7pS5+ROjh/hyxJrceAAg==
-X-Received: by 2002:a05:6214:c26:b0:441:6696:c806 with SMTP id a6-20020a0562140c2600b004416696c806mr17325749qvd.43.1649075893610;
-        Mon, 04 Apr 2022 05:38:13 -0700 (PDT)
-Received: from linux-ws.nc.xsintricity.com (104-15-26-233.lightspeed.rlghnc.sbcglobal.net. [104.15.26.233])
-        by smtp.gmail.com with ESMTPSA id a14-20020a05620a066e00b0067d36cc5b12sm5978386qkh.87.2022.04.04.05.38.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Apr 2022 05:38:12 -0700 (PDT)
-Message-ID: <53bc131b71b7f94210e507eed93390b1b3899246.camel@redhat.com>
-Subject: Re: [PATCH] Add RAID 1 chunksize test
-From:   Doug Ledford <dledford@redhat.com>
-To:     Mateusz Kusiak <mateusz.kusiak@intel.com>,
-        linux-raid@vger.kernel.org
-Cc:     jes@trained-monkey.org, colyli@suse.de
-Date:   Mon, 04 Apr 2022 08:38:09 -0400
-In-Reply-To: <20220404070830.7795-1-mateusz.kusiak@intel.com>
-References: <20220404070830.7795-1-mateusz.kusiak@intel.com>
-Organization: Red Hat, Inc.
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-eMeeyUCkEC910YScJX6p"
-User-Agent: Evolution 3.40.4 (3.40.4-3.fc34) 
+        with ESMTP id S1345904AbiDDMlz (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 4 Apr 2022 08:41:55 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 553B028E28
+        for <linux-raid@vger.kernel.org>; Mon,  4 Apr 2022 05:39:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1649075999; x=1680611999;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=hbG+yqtTFNi1h5jbi/rk0WgM8sVaHLK8zxQo7Vue4KQ=;
+  b=e/rsnGJLmo6okJcFPyrwdkIwtoQFFMcGItH2m+FeYEMSCIFqZck26kzy
+   TLQclanXOTmVPJ0leEizWRDSm7zY88htm7Q6nTJsqHIlf8n/bz9vFJHfz
+   Ha+oLPYhMgzOQxBwUGImrJRWXdCAcx9YfSWwVT67p5oonKzAZ3OpVIGkK
+   vcTWuEeBtUl0I8Nk9IIocBwDOXAl/XFa3whxRsExU47LWOWqK86U1aWFK
+   j2aJ+/FfF/mlTA1/dJdSGV2hppQtr7MUhvPK2m++yktit4W+0KDvd/lcb
+   Pula8h1pZf3rSSzPiUeqf+404cN1eAO7Mh+bJ+ADMfRh/T2MrteElgHjl
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10306"; a="259334875"
+X-IronPort-AV: E=Sophos;i="5.90,234,1643702400"; 
+   d="scan'208";a="259334875"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2022 05:39:59 -0700
+X-IronPort-AV: E=Sophos;i="5.90,234,1643702400"; 
+   d="scan'208";a="569365473"
+Received: from ktanska-mobl.ger.corp.intel.com (HELO [10.252.42.48]) ([10.252.42.48])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2022 05:39:57 -0700
+Message-ID: <321885a5-f9c8-f9c2-fab2-2c31ead17b87@linux.intel.com>
+Date:   Mon, 4 Apr 2022 14:39:54 +0200
 MIME-Version: 1.0
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH] Mdmonitor: Fix segfault and improve logging
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     Kinga Tanska <kinga.tanska@intel.com>, linux-raid@vger.kernel.org,
+        jes@trained-monkey.org, colyli@suse.de
+References: <20220321123234.28769-1-kinga.tanska@intel.com>
+ <e5502af7-be1c-da7f-af3d-ca36d45e6301@molgen.mpg.de>
+ <9a062f0c-fcea-c543-3a46-05395c747fcd@linux.intel.com>
+ <9eccf3ed-3db3-7ba7-fd8b-fa4273bc0752@molgen.mpg.de>
+From:   "Tanska, Kinga" <kinga.tanska@linux.intel.com>
+In-Reply-To: <9eccf3ed-3db3-7ba7-fd8b-fa4273bc0752@molgen.mpg.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+Hello Paul,
 
---=-eMeeyUCkEC910YScJX6p
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2022-04-04 at 09:08 +0200, Mateusz Kusiak wrote:
-> Specifying chunksize for raid 1 is forbidden.
-> Add test for blocking raid 1 creation with chunksize.
->=20
-> Signed-off-by: Mateusz Kusiak <mateusz.kusiak@intel.com>
-> ---
-> =C2=A0tests/01r1create-chunk | 15 +++++++++++++++
-> =C2=A01 file changed, 15 insertions(+)
-> =C2=A0create mode 100644 tests/01r1create-chunk
->=20
-> diff --git a/tests/01r1create-chunk b/tests/01r1create-chunk
-> new file mode 100644
-> index 00000000..717a5e5a
-> --- /dev/null
-> +++ b/tests/01r1create-chunk
-> @@ -0,0 +1,15 @@
-> +# RAID 1 volume, 2 disks, chunk 64
-> +# NEGATIVE test - creating raid 1 with chunksize specified is
-> forbidden
-> +
-> +num_disks=3D2
-> +level=3D1
-> +device_list=3D"$dev0 $dev1"
-> +chunk=3D64
-> +
-> +# Create raid 1 with chunk 64k and fail
-> +if ! mdadm --create --run $md0 --auto=3Dmd --level=3D$level --
-> chunk=3D$chunk --raid-disks=3D$num_disks $device_list
-> +then
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0exit 0
-> +fi
-> +
-> +exit 1
+I've tried to reproduce it with mdadm 4.1 and mdadm 4.2 and both apps 
+exit with
 
-This is a case of overkill IMO.  Chunk size with raid1 isn't really a
-problem and shouldn't result in mdadm refusing to work.  Chunk size with
-raid1 simply has no effect and should just be ignored with at most a
-warning by mdadm.
+segmentation fault. This patch is not a fix, it adds checking if device 
+is md array.
 
---=20
-Doug Ledford <dledford@redhat.com>
-=C2=A0=C2=A0=C2=A0=C2=A0GPG KeyID: B826A3330E572FDD
-=C2=A0=C2=A0=C2=A0=C2=A0Fingerprint =3D AE6B 1BDA 122B 23B4 265B=C2=A0=C2=
-=A01274 B826 A333 0E57 2FDD
+It hasn't been checked before in mdmonitor, so segmentation fault should 
+appear.
 
---=-eMeeyUCkEC910YScJX6p
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
 
------BEGIN PGP SIGNATURE-----
+Regards,
 
-iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAmJK5rIACgkQuCajMw5X
-L92KKw//XdPB8a6AJJ6ThLW/j/yVTUcWALsqzBA54JNUxVRrzMfysXZ2g6kuhKnp
-J5sWFzZnKEuULu2Et1P/iko1+I5QdXhjkVwN2+9Ppct77t5Ko9obgjw0Pytq9gjN
-GNKOg+v/uZQMDH282zrXN/Y+HhVi0VOr5ZkEj2lnfjJUHqlogiQ8n7jECMl+908x
-aBGOYIn2T13iPMP9Pi/80E9sNydnARk+6FcQ7Mzgk5TWh+gQYTUFnOAxEr33ICZh
-tHJtf1EJzrB14KDPz6oE+bkIAQi1lMtBtacCYOrzToyfMm+ur/ER/Jr0JwUza1z7
-KWX0Hfh31Kqo/tZ+8ivzS3DSk5l1U+ewviGsfVnx865DgF5m/u4ufwwkczHo+lEF
-d68ST/ba09iVZ6AvjtlioF7PvzZf2gyWG0SNnWjQXRCAsCfR0yjhg8fdbTNKKRnZ
-dTGaKgDTZX/bb5XkgOJX2QJvspSNDwe2pclxFwG3Z6H0NxtAtBAowLg1/lI+LgFM
-XcmvAwDfQQcZ3aIwA3tFCWOr8t7V8WOe6IGWyGbbv4A/4nrR+Rd38eYoztzheaBx
-qLHSr2DSOU3VZX7gTX2WyJxNKpGnScdHjeEQstvhGyKfwcu/mmDKjEFxZ09v2DPX
-D9GRV300L17o4ANb0t6G2kB1Lq8yh3oHOPrGmGzA96Fyx5ea1Jw=
-=vWwP
------END PGP SIGNATURE-----
+Kinga
 
---=-eMeeyUCkEC910YScJX6p--
 
+On 3/23/2022 11:31 AM, Paul Menzel wrote:
+Dear Kinga,
+
+
+Am 23.03.22 um 10:02 schrieb Tanska, Kinga:
+
+> I will send splitted patches in next messages.
+
+Thank you.
+
+> There are steps to reproduce:
+>
+> 1. Stop mdmonitor instance e.g.
+>
+> # systemctl stop mdmonitor
+>
+> 2. Run mdmonitor for non-md device e.g.
+>
+> # mdadm --monitor /dev/nvme1n1
+>
+>
+> Call trace:
+>
+> #0  0x00007ffff7617518 in __strcpy_sse2_unaligned () from 
+> /usr/lib64/libc.so.6
+> #1  0x000000000042bc9e in check_array ()
+> #2  0x000000000042c7af in Monitor ()
+> #3  0x0000000000406edc in main ()
+
+I am unable to reproduce it with mdadm 4.1:
+
+     $ sudo strace mdadm --monitor /dev/sda
+     execve("/usr/bin/mdadm", ["mdadm", "--monitor", "/dev/sda"], 
+0x7ffc8b00e880 /* 14 vars */) = 0
+     […]
+     openat(AT_FDCWD, "/dev/sda", O_RDONLY)  = 3
+fstat(3, {st_mode=S_IFBLK|0660, st_rdev=makedev(0x8, 0), ...}) = 0
+readlink("/sys/dev/block/8:0", "../../devices/pci0000:00/0000:00"..., 
+199) = 91
+     close(3)                                = 0
+     pselect6(1, NULL, NULL, [], {tv_sec=1000, tv_nsec=0}, NULL) = ? 
+ERESTARTNOHAND (To be restarted if no handler)
+     --- SIGWINCH {si_signo=SIGWINCH, si_code=SI_KERNEL} ---
+     pselect6(1, NULL, NULL, [], {tv_sec=999, tv_nsec=568020697}, NULL) 
+= ? ERESTARTNOHAND (To be restarted if no handler)
+     --- SIGWINCH {si_signo=SIGWINCH, si_code=SI_KERNEL} ---
+pselect6(1, NULL, NULL, [], {tv_sec=999, tv_nsec=521836826}, NULL
+
+Did a specific commit introduce the problem? If so, it’d be great if you 
+added a Fixes line.
+
+[…]
+
+
+Kind regards,
+
+Paul
