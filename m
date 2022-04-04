@@ -2,70 +2,90 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB8544F06E4
-	for <lists+linux-raid@lfdr.de>; Sun,  3 Apr 2022 05:06:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8839E4F0FCE
+	for <lists+linux-raid@lfdr.de>; Mon,  4 Apr 2022 09:10:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231533AbiDCDHx (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 2 Apr 2022 23:07:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52082 "EHLO
+        id S1357192AbiDDHLS (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 4 Apr 2022 03:11:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231309AbiDCDHq (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 2 Apr 2022 23:07:46 -0400
-X-Greylist: delayed 328 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 02 Apr 2022 20:05:52 PDT
-Received: from mta-out-04.alice.it (mta-out-04.alice.it [217.169.118.10])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B6C9F2FFE8
-        for <linux-raid@vger.kernel.org>; Sat,  2 Apr 2022 20:05:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alice.it; s=20211207; t=1648955152; 
-        bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-        h=Reply-To:From:To:Date:Message-ID:MIME-Version;
-        b=B1ZjkirI/5s6hyUJRCEtg6/VgPLHngl0W9cDP4iSRkduwKwK0tgZDSb3ok7OgjUf4rxHCiB3EPGvoT5cSXmMX/m/sjrk32lNn78c91gedVE2Z7lLI9CwC9bU/CB2+2itsVAGDX2/B6Q2qCOsmkDcj+Nyh+GzxGpLrmce1nWmnQbrn2DcIwXhq0O7EGwXQR6z3391Z5V2MsBn+q76y9DJMKLoiegiHMh7pttiY6VIT/RcxaH+Sk1+kmcvwLnGGQCbDJPHQWQ71j3NhjWvg9SUTGqJOTYv6Mq7q9+XC+puxNrN5rGriglRm0ycbccoD4CciGLKRCe4LPzGVXbxGIUDWA==
-X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgedvvddrudeiledgiedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuvffgnffgvefqoffkvfetnffktedpqfgfvfenuceurghilhhouhhtmecufedtudenucfgmhhpthihuchsuhgsjhgvtghtucdluddtmdengfhmphhthicusghougihucdlhedtmdenucfjughrpehrhffvfffkggestddtfedttddttdenucfhrhhomhephggvuchhrghvvgcurghnuchofhhfvghruchtohcuihhnvhgvshhtuchinhcuhihouhhrucgtohhunhhtrhihuchunhguvghrucgruchjohhinhhtuchvvghnthhurhgvuchprghrthhnvghrshhhihhpuchplhgvrghsvgcurhgvphhlhicufhhorhcumhhorhgvucguvghtrghilhhsuceofhgpphgvnhhnrgesrghlihgtvgdrihhtqeenucggtffrrghtthgvrhhnpeehjeetgefhleetiedtkeelfffgjeeugeegleekueffgfegtdekkeeifedvvdffteenucfkphepudejiedrvddvjedrvdegvddrudeltdenucevlhhushhtvghrufhiiigvpeefudenucfrrghrrghmpehhvghloheprghlihgtvgdrihhtpdhinhgvthepudejiedrvddvjedrvdegvddrudeltddpmhgrihhlfhhrohhmpehfpghpvghnnhgrsegrlhhitggvrdhithdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhrrghiugesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-RazorGate-Vade-Verdict: clean 60
-X-RazorGate-Vade-Classification: clean
-Received: from alice.it (176.227.242.190) by mta-out-04.alice.it (5.8.807.04) (authenticated as f_penna@alice.it)
-        id 623DC2DC00EF6C2C for linux-raid@vger.kernel.org; Sun, 3 Apr 2022 05:00:21 +0200
-Reply-To: dougfield20@inbox.lv
-From:   We have an offer to invest in your country under a
-         joint venture partnership please reply for more
-         details <f_penna@alice.it>
+        with ESMTP id S234427AbiDDHLS (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 4 Apr 2022 03:11:18 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF7F639148
+        for <linux-raid@vger.kernel.org>; Mon,  4 Apr 2022 00:09:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1649056162; x=1680592162;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=N1v7lJ1I4XkoE6pCWwj/Z3zDIWVTiFhBD0qIb+Ys8bo=;
+  b=Wkmui4yDem8HuTrXPSpmHIdpkEND5f4t7fGyPVArCH7Rp3+PXy/6jQNb
+   TxRps/COBvOQxtH1t9PWTGf0o2MuI9tOcZVrxxraU+86zTMSmpQTC5XtD
+   zzkp6k44EwqOLjp2Zu7N6OrsF/Ay+lGirlR8mZe0nh44Yo6fNjev5URmm
+   6rcNfegO1eIvVGewZgh+bGulEGaWph8nyudb8g9jFiZtTZPTA+LM9PxnZ
+   q7hRyvtNCypuXaFGP+iEg8BHYNdsb0TWdl4u4hviwK5Y7CwRAzxdbOfGf
+   9bnCrUORfQV+y3ZG4qOFCiVTvsjBdNNTEFqHlvE/yUDi0oI4H0Wza4iSK
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10306"; a="259284816"
+X-IronPort-AV: E=Sophos;i="5.90,233,1643702400"; 
+   d="scan'208";a="259284816"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2022 00:09:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,233,1643702400"; 
+   d="scan'208";a="548549488"
+Received: from unknown (HELO localhost.igk.intel.com) ([10.102.92.52])
+  by orsmga007.jf.intel.com with ESMTP; 04 Apr 2022 00:09:21 -0700
+From:   Mateusz Kusiak <mateusz.kusiak@intel.com>
 To:     linux-raid@vger.kernel.org
-Date:   02 Apr 2022 20:00:20 -0700
-Message-ID: <20220402200020.7E08280271C89A98@alice.it>
+Cc:     jes@trained-monkey.org, colyli@suse.de
+Subject: [PATCH] Add RAID 1 chunksize test
+Date:   Mon,  4 Apr 2022 09:08:30 +0200
+Message-Id: <20220404070830.7795-1-mateusz.kusiak@intel.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-X-Spam-Status: Yes, score=5.7 required=5.0 tests=BAYES_50,BODY_EMPTY,
-        DKIM_INVALID,DKIM_SIGNED,EMPTY_MESSAGE,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,MISSING_SUBJECT,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_BL,RCVD_IN_MSPIKE_L4,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.7 RCVD_IN_DNSWL_LOW RBL: Sender listed at https://www.dnswl.org/,
-        *       low trust
-        *      [217.169.118.10 listed in list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5009]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [f_penna[at]alice.it]
-        *  0.0 RCVD_IN_MSPIKE_L4 RBL: Bad reputation (-4)
-        *      [217.169.118.10 listed in bl.mailspike.net]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [dougfield20[at]inbox.lv]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        *  2.3 EMPTY_MESSAGE Message appears to have no textual parts and no
-        *      Subject: text
-        *  1.8 MISSING_SUBJECT Missing Subject: header
-        *  0.1 DKIM_INVALID DKIM or DK signature exists, but is not valid
-        *  0.0 RCVD_IN_MSPIKE_BL Mailspike blacklisted
-        *  0.0 BODY_EMPTY No body text in message
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
+
+Specifying chunksize for raid 1 is forbidden.
+Add test for blocking raid 1 creation with chunksize.
+
+Signed-off-by: Mateusz Kusiak <mateusz.kusiak@intel.com>
+---
+ tests/01r1create-chunk | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+ create mode 100644 tests/01r1create-chunk
+
+diff --git a/tests/01r1create-chunk b/tests/01r1create-chunk
+new file mode 100644
+index 00000000..717a5e5a
+--- /dev/null
++++ b/tests/01r1create-chunk
+@@ -0,0 +1,15 @@
++# RAID 1 volume, 2 disks, chunk 64
++# NEGATIVE test - creating raid 1 with chunksize specified is forbidden
++
++num_disks=2
++level=1
++device_list="$dev0 $dev1"
++chunk=64
++
++# Create raid 1 with chunk 64k and fail
++if ! mdadm --create --run $md0 --auto=md --level=$level --chunk=$chunk --raid-disks=$num_disks $device_list
++then
++	exit 0
++fi
++
++exit 1
+-- 
+2.26.2
 
