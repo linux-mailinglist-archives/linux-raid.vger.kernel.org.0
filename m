@@ -2,54 +2,52 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23E3A4F1501
-	for <lists+linux-raid@lfdr.de>; Mon,  4 Apr 2022 14:39:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 273744F1509
+	for <lists+linux-raid@lfdr.de>; Mon,  4 Apr 2022 14:41:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346695AbiDDMlV (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 4 Apr 2022 08:41:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45850 "EHLO
+        id S1346057AbiDDMm4 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 4 Apr 2022 08:42:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345904AbiDDMlU (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 4 Apr 2022 08:41:20 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CCAF167F7
-        for <linux-raid@vger.kernel.org>; Mon,  4 Apr 2022 05:39:24 -0700 (PDT)
+        with ESMTP id S1347378AbiDDMmz (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 4 Apr 2022 08:42:55 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DECBE2E689
+        for <linux-raid@vger.kernel.org>; Mon,  4 Apr 2022 05:40:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649075964; x=1680611964;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=PsLUrbqrDVYQGJtVj9RMKcbkPUxy7PWFJwYRsIK3yK8=;
-  b=KH6GcGF6toWdLWATgcUSmYEf4OAE2MJ1nsWdppe8oEXY4EF94vULqdph
-   tr7Wz8sjrG1gCcDGfnlzJJ2wgaGphkwGcxQIXV0qmarblmkqneZhzYux+
-   dx8koL7Io9n+3VKFtDPQu87FKSiTu+dpk+WyihYpDJzMiVZ8l0QSATVfz
-   7ykVQyWNqZtfHgcdpsg5nMWEZ5yhipX8tgItGXtIF7tVFtbJRApyHwfE2
-   6gFRdva2Mg7sTo6+5XpMygdR9MkhE/IgLL7sGe4huoIU1e0ppetIq7uqS
-   KwDKwjKrfJNnYIB4fWcWB4IrNENPdVanNx/CtjBNei09aiFA7LFXSbHAX
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10306"; a="241091298"
+  t=1649076059; x=1680612059;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=6BPFWPkpg3nktGwZ2G0wS6rWo0xej4WmdtCuusxAUB0=;
+  b=BOYIdj/anw6aWigC0TTlmg+INO0GxawcKPnOm/6MmXQrOtVRs/HGswy/
+   njB9/842GQG6EblepbAChX/s6iPQ/buLCS63yyxokbjAoMzTAkGxF4Lg8
+   KHOdlkCkgfA3W3vAEWsimUC0WQKee1wXYmWuOHcioWdSPMP9ZwIY1erEL
+   if2ChPUkqu1t7heP1sMyYuz8v3aFiEP3OpqCLg5pV7UWG0I+jRxrCH+H/
+   /wltL7atS4xviASXTlLjfKMqCYTcBnusKHaGlL4NSS16Y+WGNcXd//e0a
+   gqFZKYw9vqs0JA8BRS5FxZZ1EX71cmzdWjJDNdtqA8B9sBghC+EdRYpdW
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10306"; a="260492375"
 X-IronPort-AV: E=Sophos;i="5.90,234,1643702400"; 
-   d="scan'208";a="241091298"
+   d="scan'208";a="260492375"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2022 05:39:24 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2022 05:40:59 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.90,234,1643702400"; 
-   d="scan'208";a="569365373"
+   d="scan'208";a="569365693"
 Received: from unknown (HELO localhost.igk.intel.com) ([10.102.102.97])
-  by orsmga008.jf.intel.com with ESMTP; 04 Apr 2022 05:39:23 -0700
+  by orsmga008.jf.intel.com with ESMTP; 04 Apr 2022 05:40:58 -0700
 From:   Kinga Tanska <kinga.tanska@intel.com>
 To:     linux-raid@vger.kernel.org
 Cc:     jes@trained-monkey.org, colyli@suse.de
-Subject: [PATCH 2/2] Mdmonitor: Improve logging method
-Date:   Mon,  4 Apr 2022 14:43:16 +0200
-Message-Id: <20220404124316.12880-3-kinga.tanska@intel.com>
+Subject: [PATCH] util: replace ioctl use with function
+Date:   Mon,  4 Apr 2022 14:45:01 +0200
+Message-Id: <20220404124501.13218-1-kinga.tanska@intel.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20220404124316.12880-1-kinga.tanska@intel.com>
-References: <20220404124316.12880-1-kinga.tanska@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -58,58 +56,27 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Change logging, and as a result, mdmonitor in verbose
-mode will report its configuration.
+Replace using of ioctl calling to get md array info with
+special function prepared to it.
 
 Signed-off-by: Kinga Tanska <kinga.tanska@intel.com>
-Signed-off-by: Oleksandr Shchirskyi <oleksandr.shchirskyi@intel.com>
 ---
- Monitor.c | 25 ++++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
+ util.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Monitor.c b/Monitor.c
-index 0b24b656..bd417d04 100644
---- a/Monitor.c
-+++ b/Monitor.c
-@@ -137,24 +137,27 @@ int Monitor(struct mddev_dev *devlist,
- 	struct mddev_ident *mdlist;
- 	int delay_for_event = c->delay;
- 
--	if (!mailaddr) {
-+	if (!mailaddr)
- 		mailaddr = conf_get_mailaddr();
--		if (mailaddr && ! c->scan)
--			pr_err("Monitor using email address \"%s\" from config file\n",
--			       mailaddr);
--	}
--	mailfrom = conf_get_mailfrom();
- 
--	if (!alert_cmd) {
-+	if (!alert_cmd)
- 		alert_cmd = conf_get_program();
--		if (alert_cmd && !c->scan)
--			pr_err("Monitor using program \"%s\" from config file\n",
--			       alert_cmd);
--	}
-+
-+	mailfrom = conf_get_mailfrom();
-+
- 	if (c->scan && !mailaddr && !alert_cmd && !dosyslog) {
- 		pr_err("No mail address or alert command - not monitoring.\n");
- 		return 1;
+diff --git a/util.c b/util.c
+index cdf1da24..003b2f86 100644
+--- a/util.c
++++ b/util.c
+@@ -268,7 +268,7 @@ int md_array_active(int fd)
+ 		 * GET_ARRAY_INFO doesn't provide access to the proper state
+ 		 * information, so fallback to a basic check for raid_disks != 0
+ 		 */
+-		ret = ioctl(fd, GET_ARRAY_INFO, &array);
++		ret = md_get_array_info(fd, &array);
  	}
-+
-+	if (c->verbose) {
-+		pr_err("Monitor is started with delay %ds\n", c->delay);
-+		if (mailaddr)
-+			pr_err("Monitor using email address %s\n", mailaddr);
-+		if (alert_cmd)
-+			pr_err("Monitor using program %s\n", alert_cmd);
-+	}
-+
- 	info.alert_cmd = alert_cmd;
- 	info.mailaddr = mailaddr;
- 	info.mailfrom = mailfrom;
+ 
+ 	return !ret;
 -- 
 2.26.2
 
