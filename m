@@ -2,218 +2,222 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23DA24F413C
-	for <lists+linux-raid@lfdr.de>; Tue,  5 Apr 2022 23:28:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C8A94F45D1
+	for <lists+linux-raid@lfdr.de>; Wed,  6 Apr 2022 00:56:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230294AbiDEPAo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 5 Apr 2022 11:00:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53344 "EHLO
+        id S234657AbiDEMzM (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 5 Apr 2022 08:55:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354694AbiDENRa (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 5 Apr 2022 09:17:30 -0400
-Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C94AB130C12
-        for <linux-raid@vger.kernel.org>; Tue,  5 Apr 2022 05:22:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649161321; x=1680697321;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ZnOstJtjyZAyi15BWyku+vhYPAFYrmphCVjkgoGFz6U=;
-  b=RQZ0OUM+DZ1DGQy1cWQZx3VF/apoTJvJTO/4yl0VAUpV7OPfUDRBDwYs
-   h27acV2dODY14OMBV4S4mn+oJtBUgAU46fJDNySZ/ZT5ge6oYy4H9+1n+
-   Z6wpnfhVuH0Y6koZ/JsiSP/6QAluzMN2lyGBNwVm6rFT0/DZat9A0hD6v
-   q8zVqZ/76b43Mz7RD4gf7M1hV3TjQ+D8qnuIMabf1KRF3HjRNTrFvnwnG
-   Nzuac7cqBiage9fcxV3patqy1L3k0haUVFNYq0H7cNdcveLv+zWVo3zLL
-   xBhZNo/TCkQBnoinCzIYFzOwEX3tYTgHgOP5fUuuvchcIrlWp03agcv4b
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10307"; a="321429806"
-X-IronPort-AV: E=Sophos;i="5.90,236,1643702400"; 
-   d="scan'208";a="321429806"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2022 05:22:00 -0700
-X-IronPort-AV: E=Sophos;i="5.90,236,1643702400"; 
-   d="scan'208";a="549034745"
-Received: from ktanska-mobl.ger.corp.intel.com (HELO [10.252.43.42]) ([10.252.43.42])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2022 05:21:59 -0700
-Message-ID: <1f34cd39-c9ee-ee48-6133-67f5abf3e9b1@linux.intel.com>
-Date:   Tue, 5 Apr 2022 14:21:57 +0200
+        with ESMTP id S1383042AbiDEMRx (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 5 Apr 2022 08:17:53 -0400
+Received: from zimbra.karlsbakk.net (zimbra.karlsbakk.net [IPv6:2a0a:51c0:0:1f:4ca5::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1B7CD4466
+        for <linux-raid@vger.kernel.org>; Tue,  5 Apr 2022 04:30:14 -0700 (PDT)
+Received: from localhost (localhost.localdomain [IPv6:::1])
+        by zimbra.karlsbakk.net (Postfix) with ESMTP id 316493C1DC9;
+        Tue,  5 Apr 2022 13:30:13 +0200 (CEST)
+Received: from zimbra.karlsbakk.net ([IPv6:::1])
+        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id JDJFmhaeblPS; Tue,  5 Apr 2022 13:30:09 +0200 (CEST)
+Received: from localhost (localhost.localdomain [IPv6:::1])
+        by zimbra.karlsbakk.net (Postfix) with ESMTP id 7EAB03C1DD6;
+        Tue,  5 Apr 2022 13:30:09 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra.karlsbakk.net 7EAB03C1DD6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=karlsbakk.net;
+        s=1DC131FE-D37A-11E7-BD32-3AD4DFE620DF; t=1649158209;
+        bh=b/thDgml5bJLrJZ4mmPPdsu9YdHB4DWOVC+nFhE7ujM=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=cwl6JJWkCuHUPALV1U3hDLYsQCoawllrFd1AUmQA9+fOuBaOgaZ+mHaZM+wQsQZgE
+         qqJ9j5TmM95+5COokzMRPoKeVSFjj65YswaKmy4ak+z/k+OU2sFkc3DTiqQu4gcFZn
+         gOV9OpzjmU3gDQK8Y54m7zyizxkZ3mD0t7dtbAqVEvgzfBa5BVQScgHSa/vedDqvGA
+         A3bbOKCC0KuWCtZwV/aePL9lIIFSX/V7pCxSV5FENQXb0khV5SuZB2ruwrRwNBrMhI
+         mTpNwmGq/sVJjIrZHUvUydfrMfKl36p1y/J6HnEBtZwybFiPV8P3Gl3CRsoW0HYdUS
+         qhUtiwvLb0Qhg==
+X-Virus-Scanned: amavisd-new at zimbra.karlsbakk.net
+Received: from zimbra.karlsbakk.net ([IPv6:::1])
+        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id GfW5RNa3lemu; Tue,  5 Apr 2022 13:30:08 +0200 (CEST)
+Received: from zimbra.karlsbakk.net (localhost.localdomain [127.0.0.1])
+        by zimbra.karlsbakk.net (Postfix) with ESMTP id 83A1D3C1DD1;
+        Tue,  5 Apr 2022 13:30:07 +0200 (CEST)
+Date:   Tue, 5 Apr 2022 13:30:03 +0200 (CEST)
+From:   Roy Sigurd Karlsbakk <roy@karlsbakk.net>
+To:     Jorge Nunes <jorgebnunes@gmail.com>
+Cc:     Linux Raid <linux-raid@vger.kernel.org>
+Message-ID: <1835444778.3678589.1649158202973.JavaMail.zimbra@karlsbakk.net>
+In-Reply-To: <CANDfL1YiKq9aeUsrmdZyLb5Fy98Tifjcr_zZJY6a+LxyqKYKkA@mail.gmail.com>
+References: <CANDfL1au6kdEkR3bmLAHTdGV-Rb==8Jy1ZnwNFjvjNq7drC1XA@mail.gmail.com> <987997234.3307867.1649118543055.JavaMail.zimbra@karlsbakk.net> <336816279.3605676.1649150230084.JavaMail.zimbra@karlsbakk.net> <CANDfL1YiKq9aeUsrmdZyLb5Fy98Tifjcr_zZJY6a+LxyqKYKkA@mail.gmail.com>
+Subject: Re: RAID 1 to RAID 5 failure
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH] Monitor: use devname as char array instead of pointer
-To:     Jes Sorensen <jes@trained-monkey.org>, Coly Li <colyli@suse.de>,
-        Kinga Tanska <kinga.tanska@intel.com>
-Cc:     linux-raid@vger.kernel.org
-References: <20220209085628.11418-1-kinga.tanska@intel.com>
- <ade5153b-d07a-9c26-5c8e-12b8356f61b4@suse.de>
- <517ddb46-2666-f616-ed56-6f046ef3824e@trained-monkey.org>
-From:   "Tanska, Kinga" <kinga.tanska@linux.intel.com>
-In-Reply-To: <517ddb46-2666-f616-ed56-6f046ef3824e@trained-monkey.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [2001:700:700:403::8:10d2]
+X-Mailer: Zimbra 8.8.10_GA_3801 (ZimbraWebClient - FF98 (Mac)/8.8.10_GA_3786)
+Thread-Topic: RAID 1 to RAID 5 failure
+Thread-Index: roc84SVRQL9DDuvtAnq9EEvDgLPb4A==
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi,
+That's probably a good idea. Hope you get most of it out of there.
 
-I will send correction in next patchset. I didn't include terminating null
-byte '\0' to size in snprintf function, which can cause memleaks.
-Also specific location of incorrect usage of strcpy will be pointed out 
-in commit message.
+And find a way to backup when you're done ;)
 
-Regards,
-Kinga
+Vennlig hilsen
 
-On 4/4/2022 3:54 PM, Jes Sorensen wrote:
+roy
+--=20
+Roy Sigurd Karlsbakk
+(+47) 98013356
+http://blogg.karlsbakk.net/
+GPG Public key: http://karlsbakk.net/roysigurdkarlsbakk.pubkey.txt
+--
+Hi=C3=B0 g=C3=B3=C3=B0a skaltu =C3=AD stein h=C3=B6ggva, hi=C3=B0 illa =C3=
+=AD snj=C3=B3 rita.
 
-On 3/19/22 11:42, Coly Li wrote:
+----- Original Message -----
+> From: "Jorge Nunes" <jorgebnunes@gmail.com>
+> To: "Roy Sigurd Karlsbakk" <roy@karlsbakk.net>
+> Cc: "Linux Raid" <linux-raid@vger.kernel.org>
+> Sent: Tuesday, 5 April, 2022 12:50:20
+> Subject: Re: RAID 1 to RAID 5 failure
 
-> On 2/9/22 4:56 PM, Kinga Tanska wrote:
->> Device name wasn't filled properly due to incorrect use of strcpy.
-> Could you point out the specific location for improper strcpy?
->
->
->> Instead pointer, devname with fixed size is used and safer string
->> functions are propagated.
+> Hi roy.
+>=20
+> Thank you for your time.
+>=20
+> Now, I'm doing a photorec on /dev/sda and /dev/sdd and I get better
+> results on (some) of the data recovered if I do it on top of /dev/md0.
+> I don't care anymore about recovering the filesystem, I just want to
+> maximize the quality of data recovered with photorec.
+>=20
+> Best regards,
+> Jorge
+>=20
+> Roy Sigurd Karlsbakk <roy@karlsbakk.net> escreveu no dia ter=C3=A7a,
+> 5/04/2022 =C3=A0(s) 10:17:
 >>
->> Signed-off-by: Kinga Tanska <kinga.tanska@intel.com>
->> ---
->>    Monitor.c | 30 +++++++++++-------------------
->>    1 file changed, 11 insertions(+), 19 deletions(-)
+>> I re-did these tests this morning, since I was unsure if I could have ma=
+de some
+>> mistake last night - I was tired. There results were about the same - co=
+mplete
+>> data loss.
 >>
->> diff --git a/Monitor.c b/Monitor.c
->> index 30c031a2..d02344ec 100644
->> --- a/Monitor.c
->> +++ b/Monitor.c
->> @@ -34,8 +34,8 @@
->>    #endif
->>      struct state {
->> -    char *devname;
->> -    char devnm[32];    /* to sync with mdstat info */
->> +    char devname[MD_NAME_MAX + 8];
->> +    char devnm[MD_NAME_MAX];    /* to sync with mdstat info */
->>        unsigned int utime;
->>        int err;
->>        char *spare_group;
->> @@ -46,7 +46,7 @@ struct state {
->>        int devstate[MAX_DISKS];
->>        dev_t devid[MAX_DISKS];
->>        int percent;
->> -    char parent_devnm[32]; /* For subarray, devnm of parent.
->> +    char parent_devnm[MD_NAME_MAX]; /* For subarray, devnm of parent.
->>                    * For others, ""
->>                    */
->>        struct supertype *metadata;
->> @@ -184,13 +184,7 @@ int Monitor(struct mddev_dev *devlist,
->>                if (strcasecmp(mdlist->devname, "<ignore>") == 0)
->>                    continue;
->>                st = xcalloc(1, sizeof *st);
->> -            if (mdlist->devname[0] == '/')
->> -                st->devname = xstrdup(mdlist->devname);
->> -            else {
->> -                st->devname = xmalloc(8+strlen(mdlist->devname)+1);
->> -                strcpy(strcpy(st->devname, "/dev/md/"),
->> -                       mdlist->devname);
->> -            }
->> +            snprintf(st->devname, MD_NAME_MAX + 8, "/dev/md/%s",
->> basename(mdlist->devname));
-> I feel the above change is incorrect, the tailing '\0' of the string
-> might be cut by your change.
->
->
->>                st->next = statelist;
->>                st->devnm[0] = 0;
->>                st->percent = RESYNC_UNKNOWN;
->> @@ -206,7 +200,7 @@ int Monitor(struct mddev_dev *devlist,
->>            for (dv = devlist; dv; dv = dv->next) {
->>                struct state *st = xcalloc(1, sizeof *st);
->>                mdlist = conf_get_ident(dv->devname);
->> -            st->devname = xstrdup(dv->devname);
->> +            snprintf(st->devname, MD_NAME_MAX + 8, "%s", dv->devname);
->>                st->next = statelist;
->>                st->devnm[0] = 0;
->>                st->percent = RESYNC_UNKNOWN;
->> @@ -289,7 +283,6 @@ int Monitor(struct mddev_dev *devlist,
->>            for (stp = &statelist; (st = *stp) != NULL; ) {
->>                if (st->from_auto && st->err > 5) {
->>                    *stp = st->next;
->> -                free(st->devname);
->>                    free(st->spare_group);
->>                    free(st);
->>                } else
->> @@ -540,7 +533,7 @@ static int check_array(struct state *st, struct
->> mdstat_ent *mdstat,
->>            goto disappeared;
->>          if (st->devnm[0] == 0)
->> -        strcpy(st->devnm, fd2devnm(fd));
->> +        snprintf(st->devnm, MD_NAME_MAX, "%s", fd2devnm(fd));
->>          for (mse2 = mdstat; mse2; mse2 = mse2->next)
->>            if (strcmp(mse2->devnm, st->devnm) == 0) {
->> @@ -670,7 +663,7 @@ static int check_array(struct state *st, struct
->> mdstat_ent *mdstat,
->>            strncmp(mse->metadata_version, "external:", 9) == 0 &&
->>            is_subarray(mse->metadata_version+9)) {
->>            char *sl;
->> -        strcpy(st->parent_devnm, mse->metadata_version + 10);
->> +        snprintf(st->parent_devnm, MD_NAME_MAX, "%s",
->> mse->metadata_version + 10);
->>            sl = strchr(st->parent_devnm, '/');
->>            if (sl)
->>                *sl = 0;
->> @@ -758,14 +751,13 @@ static int add_new_arrays(struct mdstat_ent
->> *mdstat, struct state **statelist,
->>                    continue;
->>                }
->>    -            st->devname = xstrdup(name);
->> +            snprintf(st->devname, MD_NAME_MAX + 8, "%s", name);
->>                if ((fd = open(st->devname, O_RDONLY)) < 0 ||
->>                    md_get_array_info(fd, &array) < 0) {
->>                    /* no such array */
->>                    if (fd >= 0)
->>                        close(fd);
->>                    put_md_name(st->devname);
->> -                free(st->devname);
->>                    if (st->metadata) {
->>                        st->metadata->ss->free_super(st->metadata);
->>                        free(st->metadata);
->> @@ -777,7 +769,7 @@ static int add_new_arrays(struct mdstat_ent
->> *mdstat, struct state **statelist,
->>                st->next = *statelist;
->>                st->err = 1;
->>                st->from_auto = 1;
->> -            strcpy(st->devnm, mse->devnm);
->> +            snprintf(st->devnm, MD_NAME_MAX, "%s", mse->devnm);
->>                st->percent = RESYNC_UNKNOWN;
->>                st->expected_spares = -1;
->>                if (mse->metadata_version &&
->> @@ -785,8 +777,8 @@ static int add_new_arrays(struct mdstat_ent
->> *mdstat, struct state **statelist,
->>                        "external:", 9) == 0 &&
->>                    is_subarray(mse->metadata_version+9)) {
->>                    char *sl;
->> -                strcpy(st->parent_devnm,
->> -                    mse->metadata_version+10);
->> +                snprintf(st->parent_devnm, MD_NAME_MAX,
->> +                     "%s", mse->metadata_version + 10);
->>                    sl = strchr(st->parent_devnm, '/');
->>                    *sl = 0;
->>                } else
-> With your change, the tailing '\0' for dev name might be cut. Could you
-> please check whether it may introduce potential memleak ?
-
-Kinga,
-
-Any update on this?
-
-Thanks,
-Jes
-
-
+>> As for curiousity, I also tried to skip the expand phase after creating =
+the
+>> initial raid5 on top of the raid1. After creating it, I stopped it and
+>> recreated the old raid1 with --assume-clean. This worked well - no error=
+s from
+>> mount or fsck.
+>>
+>> So I guess it was the mdadm --grow --raid-devices=3D4 that was the final=
+ nail in
+>> the coffin.
+>>
+>> I just hope you find a way to backup your files next time. I'm quite sur=
+e we've
+>> all been there - thought we were smart enough or something and the shit =
+hit the
+>> fan and no - we weren't.
+>>
+>> Vennlig hilsen
+>>
+>> roy
+>> --
+>> Roy Sigurd Karlsbakk
+>> (+47) 98013356
+>> http://blogg.karlsbakk.net/
+>> GPG Public key: http://karlsbakk.net/roysigurdkarlsbakk.pubkey.txt
+>> --
+>> Hi=C3=B0 g=C3=B3=C3=B0a skaltu =C3=AD stein h=C3=B6ggva, hi=C3=B0 illa =
+=C3=AD snj=C3=B3 rita.
+>>
+>> ----- Original Message -----
+>> > From: "Roy Sigurd Karlsbakk" <roy@karlsbakk.net>
+>> > To: "Jorge Nunes" <jorgebnunes@gmail.com>
+>> > Cc: "Linux Raid" <linux-raid@vger.kernel.org>
+>> > Sent: Tuesday, 5 April, 2022 02:29:03
+>> > Subject: Re: RAID 1 to RAID 5 failure
+>>
+>> >> Didn't do a backup :-(
+>> >
+>> > First mistake=E2=80=A6 *Always* keep a backup (or three)
+>> >
+>> >>
+>> >> Unmount everything:
+>> >
+>> > No need - what you should have done, was just to grow the array by
+>> >
+>> > Partition the new drives exactly like the old ones
+>> > mdadm --add /dev/md0 /dev/sd[cd]1 # note that sd[cd] means sdc and sdd=
+, but can
+>> > be written this way on the commandline
+>> > mdadm --grow --level=3D5 --raid-devices=3D4
+>> >
+>> > This would have grown and converted the array to raid5 without any dat=
+a loss.
+>> >
+>> >> $ sudo mdadm --create /dev/md0 -a yes -l 5 -n 2 /dev/sda /dev/sdd
+>> >
+>> > As earlier mentioned, this is to create a new array, not a conversion.
+>> >
+>> >> So, my question is: Is there a chance to redo the array correctly
+>> >> without losing the information inside? Is it possible to recover the
+>> >> 'lost' partition that existed on RAID 1 to be able to do a convenient
+>> >> backup? Or the only chance is to have a correct disk alignment inside
+>> >> the array to be able to use photorec to recover the files correctly?
+>> >
+>> > As mentioned, it doesn't look promising, but there are a few things th=
+at can be
+>> > tried.
+>> >
+>> > Your data may still reside on the sda1 and sdd1, but since it was conv=
+erted to
+>> > RAID-5, the data would have been distributed among the two drives and =
+not being
+>> > the same on both. Further growing the raid, would move the data around=
+ to the
+>> > other disks. I did a small test here on some vdisks to see if this cou=
+ld be
+>> > reversed somehow and see if I could find the original filesystem. I co=
+uld - but
+>> > it was terribly corrupted, so not a single file remained.
+>> >
+>> > If this was valuable data, there might be a way to rescue them, but I =
+fear a lot
+>> > is overwritten already. Others in here (or other places) may know more=
+ about
+>> > how to fix this, though. If you find out how, please tell. It'd be int=
+eresting
+>> > to learn :)
+>> >
+>> > PS: I have my personal notebook for technical stuff at
+>> > https://wiki.karlsbakk.net/index.php/Roy's_notes in case you might fin=
+d that
+>> > interesting. There's quite a bit about storage there. Simply growing a=
+ raid is
+>> > apparently forgotten, since I thought that was too simple. I'll add it=
+.
+>> >
+>> > So hope you didn't lose too much valuable data
+>> >
+>> > Vennlig hilsen / Best regards
+>> >
+>> > roy
+>> > --
+>> > Roy Sigurd Karlsbakk
+>> > (+47) 98013356
+>> > --
+>> > I all pedagogikk er det essensielt at pensum presenteres intelligibelt=
+. Det er
+>> > et element=C3=A6rt imperativ for alle pedagoger =C3=A5 unng=C3=A5 ekse=
+ssiv anvendelse av
+>> > idiomer med xenotyp etymologi. I de fleste tilfeller eksisterer adekva=
+te og
+> > > relevante synonymer p=C3=A5 norsk.
