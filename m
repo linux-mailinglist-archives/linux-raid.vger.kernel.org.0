@@ -2,331 +2,127 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CFA064F1C6C
-	for <lists+linux-raid@lfdr.de>; Mon,  4 Apr 2022 23:28:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F22304F2103
+	for <lists+linux-raid@lfdr.de>; Tue,  5 Apr 2022 06:08:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354918AbiDDV1W (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 4 Apr 2022 17:27:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60128 "EHLO
+        id S230288AbiDEC5c (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 4 Apr 2022 22:57:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379510AbiDDRT2 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 4 Apr 2022 13:19:28 -0400
-Received: from mail-oa1-x35.google.com (mail-oa1-x35.google.com [IPv6:2001:4860:4864:20::35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 305A313F77
-        for <linux-raid@vger.kernel.org>; Mon,  4 Apr 2022 10:17:32 -0700 (PDT)
-Received: by mail-oa1-x35.google.com with SMTP id 586e51a60fabf-e1e5e8d9faso6174568fac.4
-        for <linux-raid@vger.kernel.org>; Mon, 04 Apr 2022 10:17:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=382yYDw6O3X8d0Bx3kqMLxpjxhqH2KpWPzjQIecl8zk=;
-        b=Kp5jiu7WiNj3c5x4oD+ttzqCg3kOXBgs5BM72kiVC4ixF0Jj54yTJzCr+1lMAtGn9r
-         /a7k2GcWkmBkwkwsaHoBE6mykdZv8knDdktaX3f2HHLPUQxZ0LKK+NxbVzt4DaiWYOQk
-         lIBPyr0qXuPdMbYDaogCY2HhHShu8QI+Qd4uSbxZw4/h6S0gDDS5XfC53JAebJO+gyq0
-         hD93Ec2Nga7E0nCLpfvX6ZfHl4IGAcw5PmIbX3FD6WDuqgL57x415UE4aqxTaVWb/89W
-         nQzigAE+PW+xiumbCqplM8DVdQzqFWGD1O43LPtY6RB4GWU+y23QTIXPYZ8IhFZUrE4E
-         EXUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=382yYDw6O3X8d0Bx3kqMLxpjxhqH2KpWPzjQIecl8zk=;
-        b=UYbQcIRcqsUNTOgL5cXyXRcJbmjPZiAW8WfCizca8/q0AYJGUjfCarDQgnjRrNjncq
-         54D/IxUsI6vCsMNAezUh/EO68p5eQqongKv+UdfdVvdgZsvc2jy4MDyy7UqjYbizKkxS
-         4vLIMF2l5eoJbp6pFDzyIWx5tSbhsTTwizhG9xp1aEnixBLuImUREuwG9CZXCcl6llxO
-         Sllq/Ah6SEHLNDMtvMmi+Pc9Ar5FA3CB6Bs4WXFWGxV7Jl9OaZ0q8OG70FiXKltCsvIk
-         6fQiW6cPQ2tyL0T5epWm5Onyva+rXDOcar2xt1Apgo95iUe3Z0oOzQXNiav3SW9pqexq
-         IHHQ==
-X-Gm-Message-State: AOAM533sIBxDK57/sVPZswRZ98GcaM0iCft4HrNdABO/8zxBrvyZDLBa
-        Xj+OhxQPi53athNQG1dCgUInDY0+0yys+inBZQ==
-X-Google-Smtp-Source: ABdhPJxz4qjA5mCSDb+y+p4CXd+mmuU6qPQKp2/G9ZobGDB+FTc7og/ynaTIDcJ0UwOQQ2t+bjUAY0lrwpW2X4667/g=
-X-Received: by 2002:a05:6870:33a5:b0:dd:f6e6:7837 with SMTP id
- w37-20020a05687033a500b000ddf6e67837mr113419oae.154.1649092650400; Mon, 04
- Apr 2022 10:17:30 -0700 (PDT)
-MIME-Version: 1.0
+        with ESMTP id S230265AbiDEC5Y (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 4 Apr 2022 22:57:24 -0400
+X-Greylist: delayed 3706 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 04 Apr 2022 19:19:03 PDT
+Received: from zimbra.karlsbakk.net (zimbra.karlsbakk.net [IPv6:2a0a:51c0:0:1f:4ca5::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72E104EF41
+        for <linux-raid@vger.kernel.org>; Mon,  4 Apr 2022 19:19:03 -0700 (PDT)
+Received: from localhost (localhost.localdomain [IPv6:::1])
+        by zimbra.karlsbakk.net (Postfix) with ESMTP id 0D6DC3C033C;
+        Tue,  5 Apr 2022 02:29:08 +0200 (CEST)
+Received: from zimbra.karlsbakk.net ([IPv6:::1])
+        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id HQxLUP1aHlB6; Tue,  5 Apr 2022 02:29:06 +0200 (CEST)
+Received: from localhost (localhost.localdomain [IPv6:::1])
+        by zimbra.karlsbakk.net (Postfix) with ESMTP id 0EB4D3C1211;
+        Tue,  5 Apr 2022 02:29:06 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra.karlsbakk.net 0EB4D3C1211
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=karlsbakk.net;
+        s=1DC131FE-D37A-11E7-BD32-3AD4DFE620DF; t=1649118546;
+        bh=oXUKOgHcYQeoJcXDVpZjm7u7IbMR0M2ezVZdXj9LBGo=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=WUv5f/2UMpaaS3IMeOW26xfCKGfGKa+og/w1pDMl2fwDfpyXULJnaXb64x0qp5c3J
+         a11PSNp3CiWrhnIkJ844gonhYiOQrhABmvxtxMftmjZ28cbjZCEmISSniFou6YVuHM
+         BIPIfwg9V1vltjfWS44RZnWZ94s+JEmAnBrUezDWQDCZa+RXmJzvMs8EFuGSEjm1V9
+         KA+iydFmB6srfSpm/U7VQqXLw8S/8ZdWxRnB4sOTS2VTh4GMjf8g0aGfGyJENSq5G8
+         P1Iu1wV2Sq8IdIBsyUcRCvc8Wac/Z6KTatltFiKxdcCcOrrOVq4bKVSan8hmAWmc5P
+         6eiRKQluXaI0w==
+X-Virus-Scanned: amavisd-new at zimbra.karlsbakk.net
+Received: from zimbra.karlsbakk.net ([IPv6:::1])
+        by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id CbcBbWlX2AwF; Tue,  5 Apr 2022 02:29:05 +0200 (CEST)
+Received: from zimbra.karlsbakk.net (localhost.localdomain [127.0.0.1])
+        by zimbra.karlsbakk.net (Postfix) with ESMTP id 769FE3C033C;
+        Tue,  5 Apr 2022 02:29:05 +0200 (CEST)
+Date:   Tue, 5 Apr 2022 02:29:03 +0200 (CEST)
+From:   Roy Sigurd Karlsbakk <roy@karlsbakk.net>
+To:     Jorge Nunes <jorgebnunes@gmail.com>
+Cc:     Linux Raid <linux-raid@vger.kernel.org>
+Message-ID: <987997234.3307867.1649118543055.JavaMail.zimbra@karlsbakk.net>
+In-Reply-To: <CANDfL1au6kdEkR3bmLAHTdGV-Rb==8Jy1ZnwNFjvjNq7drC1XA@mail.gmail.com>
 References: <CANDfL1au6kdEkR3bmLAHTdGV-Rb==8Jy1ZnwNFjvjNq7drC1XA@mail.gmail.com>
- <586e0a78-e04e-0e9e-36bd-2b35d179f659@youngman.org.uk>
-In-Reply-To: <586e0a78-e04e-0e9e-36bd-2b35d179f659@youngman.org.uk>
-From:   Jorge Nunes <jorgebnunes@gmail.com>
-Date:   Mon, 4 Apr 2022 18:17:19 +0100
-Message-ID: <CANDfL1YjJLtzzSw59KH8G7eEna+DEVW9uUS2A0xYL7DuJCsrgQ@mail.gmail.com>
 Subject: Re: RAID 1 to RAID 5 failure
-To:     Wols Lists <antlists@youngman.org.uk>
-Cc:     linux-raid@vger.kernel.org, Phil Turmel <philip@turmel.org>,
-        NeilBrown <neilb@suse.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Originating-IP: [2001:700:700:403::8:10d2]
+X-Mailer: Zimbra 8.8.10_GA_3801 (ZimbraWebClient - FF98 (Mac)/8.8.10_GA_3786)
+Thread-Topic: RAID 1 to RAID 5 failure
+Thread-Index: zbJcSRc3ib4HoPi+/Se2lY7m8Hjiig==
+X-Spam-Status: No, score=-0.2 required=5.0 tests=BAYES_40,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi Wol,
+> Didn't do a backup :-(
 
-Thank you for your answer. I'll wait as you suggested.
+First mistake=E2=80=A6 *Always* keep a backup (or three)
 
-Best,
-Jorge
+>=20
+> Unmount everything:
 
-Wols Lists <antlists@youngman.org.uk> escreveu no dia segunda,
-4/04/2022 =C3=A0(s) 17:42:
->
-> On 04/04/2022 16:19, Jorge Nunes wrote:
-> > Hi everyone.
-> > Probably this isn't the forum to post this, but I can't get true
-> > valuable help on this:
->
-> This is exactly the correct forum ...
-> >
-> > I have a NAS which is capable of having a RAID with four disks with
-> > armbian debian bullseye. I used it for a long time with only two, sda
-> > and sdd on RAID 1 - they are WD30EFRX. Now, I bought two more WD30EFRX
-> > (refurbished) and my idea was to add them to have a RAID 5 array.
-> > These were the steps I've made:
-> >
-> > Didn't do a backup :-(
-> >
-> > Unmount everything:
-> > ```
-> > $ sudo umount /srv/dev-disk-by-uuid-d1430a9e-6461-481b-9765-86e18e517cf=
-c
-> >
-> > $ sudo umount -f /dev/md0
-> > ```
-> > Stopped the array:
-> > ```
-> > $ sudo mdadm --stop /dev/md0
-> > ```
-> >
-> > Change the array to a RAID 5 with only the existing disks:
-> > ```
-> > $ sudo mdadm --create /dev/md0 -a yes -l 5 -n 2 /dev/sda /dev/sdd
-> > ```
-> > I made a mistake here and used the whole disks instead of the
-> > /dev/sd[ad]1 partitions and MDADM warned me that /dev/sdd had a
-> > partition and it would be overridden... I pressed 'Y' to continue...
-> > :-(
-> > It took a long time to complete without any errors.
->
-> You made an even bigger error here - and I'm very sorry but it was
-> probably fatal :-(
->
-> If sda and sdd were your original disks, you created a NEW array, with
-> different geometry. This will probably have trashed your data.
-> >
-> > Then I added the two new disks /dev/sdb and /dev/sdc to the array:
-> > ```
-> > $ sudo mdadm --add /dev/md0 /dev/sdb
-> > $ sudo mdadm --add /dev/md0 /dev/sdc
-> > ```
-> > And did a grow to use the four disks:
-> > ```
-> > $ sudo mdadm --grow /dev/md0 --raid-disk=3D4
-> > ```
-> And if the first mistake wasn't fatal, this probably was.
->
-> > During this process a reshape was performed like this
-> > ```
-> > Personalities : [raid1] [linear] [multipath] [raid0] [raid6] [raid5]
-> > [raid4] [raid10]
-> > md0 : active raid5 sdc[4] sdb[3] sdd[2] sda[0]
-> >        2930134016 blocks super 1.2 level 5, 512k chunk, algorithm 2 [4/=
-4] [UUUU]
-> >        [=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D>..]  res=
-hape =3D 90.1% (2640502272/2930134016)
-> > finish=3D64.3min speed=3D75044K/sec
-> >        bitmap: 0/22 pages [0KB], 65536KB chunk
-> > ```
-> > ```
-> > $ sudo mdadm -D /dev/md0
-> >
-> > /dev/md0:
-> >             Version : 1.2
-> >       Creation Time : Fri Mar 11 16:10:02 2022
-> >          Raid Level : raid5
-> >          Array Size : 2930134016 (2794.39 GiB 3000.46 GB)
-> >       Used Dev Size : 2930134016 (2794.39 GiB 3000.46 GB)
-> >        Raid Devices : 4
-> >       Total Devices : 4
-> >         Persistence : Superblock is persistent
-> >
-> >       Intent Bitmap : Internal
-> >
-> >         Update Time : Sat Mar 12 20:20:14 2022
-> >               State : clean, reshaping
-> >      Active Devices : 4
-> >     Working Devices : 4
-> >      Failed Devices : 0
-> >       Spare Devices : 0
-> >
-> >              Layout : left-symmetric
-> >          Chunk Size : 512K
-> >
-> > Consistency Policy : bitmap
-> >
-> >      Reshape Status : 97% complete
-> >       Delta Devices : 2, (2->4)
-> >
-> >                Name : helios4:0  (local to host helios4)
-> >                UUID : 8e1ac1a8:8eabc3de:c01c8976:0be5bf6c
-> >              Events : 12037
-> >
-> >      Number   Major   Minor   RaidDevice State
-> >         0       8        0        0      active sync   /dev/sda
-> >         2       8       48        1      active sync   /dev/sdd
-> >         4       8       32        2      active sync   /dev/sdc
-> >         3       8       16        3      active sync   /dev/sdb
-> > ```
-> >
-> > When this looooooong process has completed without errors, I did a e2fs=
-ck
-> > ```
-> > $ sudo e2fsck /dev/md0
-> > ```
-> > And... it gave this info:
-> > ```
-> > e2fsck 1.46.2 (28-Feb-2021)
-> > ext2fs_open2: Bad magic number in super-block
-> > e2fsck: Superblock invalid, trying backup blocks...
-> > e2fsck: Bad magic number in super-block while trying to open /dev/md0
-> >
-> > The superblock could not be read or does not describe a valid ext2/ext3=
-/ext4
-> > filesystem.  If the device is valid and it really contains an ext2/ext3=
-/ext4
-> > filesystem (and not swap or ufs or something else), then the superblock
-> > is corrupt, and you might try running e2fsck with an alternate superblo=
-ck:
-> >      e2fsck -b 8193 <device>
-> > or
-> >      e2fsck -b 32768 <device>
-> > ```
-> > At this point I realized that I've made some mistakes during this proce=
-ss...
-> > Googled for the problem and I think the disks in the array are somehow
-> > order 'reversed' judging from this post:
-> > https://forum.qnap.com/viewtopic.php?t=3D125534
-> >
-> > So, the partition is 'gone' and when I try to assemble the array now,
-> > I have this info:
-> > ```
-> > $ sudo mdadm --assemble --scan -v
-> >
-> > mdadm: /dev/sdd is identified as a member of /dev/md/0, slot 1.
-> > mdadm: /dev/sdb is identified as a member of /dev/md/0, slot 3.
-> > mdadm: /dev/sdc is identified as a member of /dev/md/0, slot 2.
-> > mdadm: /dev/sda is identified as a member of /dev/md/0, slot 0.
-> > mdadm: added /dev/sdd to /dev/md/0 as 1
-> > mdadm: added /dev/sdc to /dev/md/0 as 2
-> > mdadm: added /dev/sdb to /dev/md/0 as 3
-> > mdadm: added /dev/sda to /dev/md/0 as 0
-> > mdadm: /dev/md/0 has been started with 4 drives.
-> >
-> > $ dmesg
-> >
-> > [143605.261894] md/raid:md0: device sda operational as raid disk 0
-> > [143605.261909] md/raid:md0: device sdb operational as raid disk 3
-> > [143605.261919] md/raid:md0: device sdc operational as raid disk 2
-> > [143605.261927] md/raid:md0: device sdd operational as raid disk 1
-> > [143605.267400] md/raid:md0: raid level 5 active with 4 out of 4
-> > devices, algorithm 2
-> > [143605.792653] md0: detected capacity change from 0 to 17580804096
-> >
-> > $ cat /proc/mdstat
-> >
-> > Personalities : [raid1] [linear] [multipath] [raid0] [raid6] [raid5]
-> > [raid4] [raid10]
-> > md0 : active (auto-read-only) raid5 sda[0] sdb[3] sdc[4] sdd[2]
-> >        8790402048 blocks super 1.2 level 5, 512k chunk, algorithm 2 [4/=
-4] [UUUU]
-> >        bitmap: 0/22 pages [0KB], 65536KB chunk
-> >
-> >
-> > $ sudo mdadm -D /dev/md0
-> >
-> > /dev/md0:
-> >             Version : 1.2
-> >       Creation Time : Fri Mar 11 16:10:02 2022
-> >          Raid Level : raid5
-> >          Array Size : 8790402048 (8383.18 GiB 9001.37 GB)
-> >       Used Dev Size : 2930134016 (2794.39 GiB 3000.46 GB)
-> >        Raid Devices : 4
-> >       Total Devices : 4
-> >         Persistence : Superblock is persistent
-> >
-> >       Intent Bitmap : Internal
-> >
-> >         Update Time : Sat Mar 12 21:24:59 2022
-> >               State : clean
-> >      Active Devices : 4
-> >     Working Devices : 4
-> >      Failed Devices : 0
-> >       Spare Devices : 0
-> >
-> >              Layout : left-symmetric
-> >          Chunk Size : 512K
-> >
-> > Consistency Policy : bitmap
-> >
-> >                Name : helios4:0  (local to host helios4)
-> >                UUID : 8e1ac1a8:8eabc3de:c01c8976:0be5bf6c
-> >              Events : 12124
-> >
-> >      Number   Major   Minor   RaidDevice State
-> >         0       8        0        0      active sync   /dev/sda
-> >         2       8       48        1      active sync   /dev/sdd
-> >         4       8       32        2      active sync   /dev/sdc
-> >         3       8       16        3      active sync   /dev/sdb
-> > ```
-> >
-> > The array mounts but there is no superblock.
-> >
-> > At this stage, I did a photorec to try to recover my valuable data
-> > (mainly family photos):
->
-> This I am afraid is probably your best bet.
-> > ```
-> > $ sudo photorec /log /d ~/k/RAID_REC/ /dev/md0
-> > ```
-> > I just recovered a lot of them but others are corrupted because on the
-> > photorec recovering process (sector by sector) it increments the
-> > sector count as time passes but then the counter is 'reset' to a lower
-> > value (my suspicion that the disks are scrambled in the array) and it
-> > recovers some files again (some are equal).
->
-> No they're not scrambled. The raid spreads blocks across the individual
-> disks. You're running photorec over the md. Try running it over the
-> individual disks, sda,sdb,sdc,sdd. You might get a different set of
-> pictures back.> Best,
->  >
->  > Jorge
->
-> >
-> > So, my question is: Is there a chance to redo the array correctly
-> > without losing the information inside? Is it possible to recover the
-> > 'lost' partition that existed on RAID 1 to be able to do a convenient
-> > backup? Or the only chance is to have a correct disk alignment inside
-> > the array to be able to use photorec to recover the files correctly?
-> >
-> > I appreciate your help.
-> > Thanks!
-> >
-> I've cc'd the guys most likely to be able to help, but I think they'll
-> give you the same answer I have, sorry.
->
-> Your only hope is probably to convert it back to the original two-disk
-> raid 5, then it is *likely* that your original mirror will be in place.
-> If you then recreate the original partition, I'm *hoping* this will give
-> you your original mirror back in a broken state. From which you can
-> might be able to recover.
->
-> But I seriously suggest DON'T DO ANYTHING that writes to the disk until
-> the experts chime in. You've trashed your raid, don't make it any worse.
->
-> Wol
+No need - what you should have done, was just to grow the array by
+
+Partition the new drives exactly like the old ones
+mdadm --add /dev/md0 /dev/sd[cd]1 # note that sd[cd] means sdc and sdd, but=
+ can be written this way on the commandline
+mdadm --grow --level=3D5 --raid-devices=3D4
+
+This would have grown and converted the array to raid5 without any data los=
+s.
+
+> $ sudo mdadm --create /dev/md0 -a yes -l 5 -n 2 /dev/sda /dev/sdd
+
+As earlier mentioned, this is to create a new array, not a conversion.
+
+> So, my question is: Is there a chance to redo the array correctly
+> without losing the information inside? Is it possible to recover the
+> 'lost' partition that existed on RAID 1 to be able to do a convenient
+> backup? Or the only chance is to have a correct disk alignment inside
+> the array to be able to use photorec to recover the files correctly?
+
+As mentioned, it doesn't look promising, but there are a few things that ca=
+n be tried.
+
+Your data may still reside on the sda1 and sdd1, but since it was converted=
+ to RAID-5, the data would have been distributed among the two drives and n=
+ot being the same on both. Further growing the raid, would move the data ar=
+ound to the other disks. I did a small test here on some vdisks to see if t=
+his could be reversed somehow and see if I could find the original filesyst=
+em. I could - but it was terribly corrupted, so not a single file remained.
+
+If this was valuable data, there might be a way to rescue them, but I fear =
+a lot is overwritten already. Others in here (or other places) may know mor=
+e about how to fix this, though. If you find out how, please tell. It'd be =
+interesting to learn :)
+
+PS: I have my personal notebook for technical stuff at https://wiki.karlsba=
+kk.net/index.php/Roy's_notes in case you might find that interesting. There=
+'s quite a bit about storage there. Simply growing a raid is apparently for=
+gotten, since I thought that was too simple. I'll add it.
+
+So hope you didn't lose too much valuable data
+
+Vennlig hilsen / Best regards
+
+roy
+--
+Roy Sigurd Karlsbakk
+(+47) 98013356
+--
+I all pedagogikk er det essensielt at pensum presenteres intelligibelt. Det=
+ er et element=C3=A6rt imperativ for alle pedagoger =C3=A5 unng=C3=A5 ekses=
+siv anvendelse av idiomer med xenotyp etymologi. I de fleste tilfeller eksi=
+sterer adekvate og relevante synonymer p=C3=A5 norsk.
