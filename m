@@ -2,43 +2,43 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 724EA4F20FF
-	for <lists+linux-raid@lfdr.de>; Tue,  5 Apr 2022 06:08:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11A4E4F2113
+	for <lists+linux-raid@lfdr.de>; Tue,  5 Apr 2022 06:08:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229730AbiDECio (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 4 Apr 2022 22:38:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41108 "EHLO
+        id S229718AbiDECgR (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 4 Apr 2022 22:36:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229787AbiDECii (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 4 Apr 2022 22:38:38 -0400
+        with ESMTP id S229728AbiDECgQ (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 4 Apr 2022 22:36:16 -0400
 Received: from sender11-op-o11.zoho.eu (sender11-op-o11.zoho.eu [31.186.226.225])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFDA02661ED
-        for <linux-raid@vger.kernel.org>; Mon,  4 Apr 2022 18:38:24 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1649121668; cv=none; 
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D898434DDE3
+        for <linux-raid@vger.kernel.org>; Mon,  4 Apr 2022 18:32:26 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1649122331; cv=none; 
         d=zohomail.eu; s=zohoarc; 
-        b=ZBGEiffNh9p3A2mxnYtFKxii+MHg2SemSJia4QgEfMGggLQQBhsCo6Oq/LDvLwGeDC1jsHc5yqD3C10kfFECYmHjvxiGgR+8YB4r51wo8hTwtmy3NX3F6ZFEtKaYqh+Xeuyu54nRLLkUuF2BVOLD2czKc/SxDzySWgaeUb/jr4M=
+        b=i6p7UBGEZ919w7Rs8N9NSmcY9B5wT+EH/6fBGxVAuUCzMxDTnGEqkzzj3y5857c5AM0QjvRehBOvH24m6NaCMmcOK7tmiOaZIZlq7dIxVpOInhQhx+LVZ6AOo2GYeYHIrdvD1odUgEsE831A+pLlA6pQXJrFa8y0I3B6uPumszs=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1649121668; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=7guxjgZKymkCyxbdfaVkqHLIp4bWEG0NyfeIRPn4Ehs=; 
-        b=lKIRPwmcCj4t82f2tvDKI7tYqYI17mSkKht2HvLqjVbjMSEKM/xCXBaGkssHYNF1rs2qLIdhlLi8+UuBV9ZiVH7mI/F3eLMncO+X43FTFtcbOglwFb2lmHE84T8WAhdT2wOsBs5zEzUIuFvo36W/VR9l0DPeT4OtaEfchvgqtec=
+        t=1649122331; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=WZnlvyRhPl0m0Urz8Hvt7qwZcPd318GmItqmrMx0spU=; 
+        b=iwd+psw1snk46kQ18IIHQlDQXkWR5wpwTutoqQ+1+9gxaKbet5SgE3ClwPJOJJ1khKvpYycop4s1JrCLWjZ1RCcjZ3BzvZAGCGT3UrrTkdK/1V1QWa/5iwCGV6n1+w6PKoq//dDXMhs4/M5GGvwN0SpKTFjvCuBtenc9g+VrqdE=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
         spf=pass  smtp.mailfrom=jes@trained-monkey.org;
         dmarc=pass header.from=<jes@trained-monkey.org>
 Received: from [172.30.27.237] (163.114.130.4 [163.114.130.4]) by mx.zoho.eu
-        with SMTPS id 1649121667688454.9125670769056; Tue, 5 Apr 2022 03:21:07 +0200 (CEST)
-Message-ID: <93089351-2e02-e647-f2ff-d9cfa1a2d85b@trained-monkey.org>
-Date:   Mon, 4 Apr 2022 21:21:06 -0400
+        with SMTPS id 1649122330177340.88630577511435; Tue, 5 Apr 2022 03:32:10 +0200 (CEST)
+Message-ID: <968c2d7f-5115-486d-063a-f384aba2baae@trained-monkey.org>
+Date:   Mon, 4 Apr 2022 21:32:09 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.2.0
-Subject: Re: [PATCH 1/2] Create, Build: use default_layout()
+Subject: Re: [PATCH 2/2] mdadm: add map_num_s()
 Content-Language: en-US
 To:     Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
 Cc:     linux-raid@vger.kernel.org
 References: <20220120121833.16055-1-mariusz.tkaczyk@linux.intel.com>
- <20220120121833.16055-2-mariusz.tkaczyk@linux.intel.com>
+ <20220120121833.16055-3-mariusz.tkaczyk@linux.intel.com>
 From:   Jes Sorensen <jes@trained-monkey.org>
-In-Reply-To: <20220120121833.16055-2-mariusz.tkaczyk@linux.intel.com>
+In-Reply-To: <20220120121833.16055-3-mariusz.tkaczyk@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-ZohoMailClient: External
@@ -53,22 +53,40 @@ List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
 On 1/20/22 07:18, Mariusz Tkaczyk wrote:
-> This code is duplicated for Build mode so make default_layout() extern
-> and use it. Simplify the function structure.
+> map_num() returns NULL if key is not defined. This patch adds
+> alternative, non NULL version for cases where NULL is not expected.
 > 
-> It introduced change for Build mode, now for raid0 RAID0_ORIG_LAYOUT
-> will be returned same as for Create.
-> 
-> Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-> ---
->  Build.c  | 23 +------------------
->  Create.c | 67 ++++++++++++++++++++++++++++++++++----------------------
->  mdadm.h  |  1 +
->  3 files changed, 43 insertions(+), 48 deletions(-)
+> There are many printf() calls where map_num() is called on variable
+> without NULL verification. It works, even if NULL is passed because
+> gcc is able to ignore NULL argument quietly but the behavior is
+> undefined. For safety reasons such usages will use map_num_s() now.
+> It is a potential point of regression.
 
-Looks good, applied!
+Hi Mariusz,
+
+I'll be honest with you, I don't like assert(), I consider it a lame
+excuse for proper error handling. That said, not blaming you as this is
+old code and it would take a lot of cleaning up, so this is better than
+nothing.
+
+I have applied it with one minor change:
+
+> diff --git a/mdadm.h b/mdadm.h
+> index 6aff034..9e9c4d8 100644
+> --- a/mdadm.h
+> +++ b/mdadm.h
+> @@ -769,7 +769,7 @@ extern int restore_stripes(int *dest, unsigned long long *offsets,
+>  #endif
+>  
+>  #define SYSLOG_FACILITY LOG_DAEMON
+> -
+> +char *map_num_s(mapping_t *map, int num);
+>  extern char *map_num(mapping_t *map, int num);
+>  extern int map_name(mapping_t *map, char *name);
+>  extern mapping_t r0layout[], r5layout[], r6layout[],
+
+I changed this to be extern to be consistent with the other declarations.
 
 Thanks,
 Jes
-
 
