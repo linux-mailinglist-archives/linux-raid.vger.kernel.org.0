@@ -2,108 +2,192 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D3CC74F2FE6
-	for <lists+linux-raid@lfdr.de>; Tue,  5 Apr 2022 14:18:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1F9E4F4049
+	for <lists+linux-raid@lfdr.de>; Tue,  5 Apr 2022 23:15:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235942AbiDEIkt (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 5 Apr 2022 04:40:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45934 "EHLO
+        id S235622AbiDEMzO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 5 Apr 2022 08:55:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241232AbiDEIc4 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 5 Apr 2022 04:32:56 -0400
-Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDE5EC1D
-        for <linux-raid@vger.kernel.org>; Tue,  5 Apr 2022 01:30:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649147400; x=1680683400;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=o1/1mtHEDtIEDPfROzoqHr/naxzbkUZzwVkW8pBTWs4=;
-  b=WlU60BMWeEvmnqgYWNSEBmRiLsUzd6OHaaXwOtCs6oCprKhkh53FeZoa
-   3o6as+7IuyDDkMY5l94UU94xiKuHvTNgGi1vZOg5PAQs9yh+6kExdYolR
-   ZGImk2ow8J79bTkEWrI4cDuoWZYYb+V7RMiy6seiQPrTbQsj9UwAuMMPZ
-   TPXl/fdwSqrmcbmo/atlhhUfVcoZBaCdUNCdNu+gTQ2eKNIovi7Q/Ezap
-   N5U6zUuvoKRbRJJ1vIM0/u9aEYsdNZKPJ82dlyTabGbso5l8+CKaSLbB8
-   14zxtHejiZooHBE4ipmGqLTx+9quqUyk7HB6MWxu5DbscNh6Yxfm/lPZo
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10307"; a="321390852"
-X-IronPort-AV: E=Sophos;i="5.90,236,1643702400"; 
-   d="scan'208";a="321390852"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2022 01:28:31 -0700
-X-IronPort-AV: E=Sophos;i="5.90,236,1643702400"; 
-   d="scan'208";a="548969999"
-Received: from mtkaczyk-mobl1.ger.corp.intel.com (HELO localhost) ([10.213.25.138])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2022 01:28:30 -0700
-Date:   Tue, 5 Apr 2022 10:28:25 +0200
-From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-To:     Jes Sorensen <jes@trained-monkey.org>
-Cc:     linux-raid@vger.kernel.org
-Subject: Re: [PATCH 2/2] mdadm: add map_num_s()
-Message-ID: <20220405102825.00002148@linux.intel.com>
-In-Reply-To: <968c2d7f-5115-486d-063a-f384aba2baae@trained-monkey.org>
-References: <20220120121833.16055-1-mariusz.tkaczyk@linux.intel.com>
-        <20220120121833.16055-3-mariusz.tkaczyk@linux.intel.com>
-        <968c2d7f-5115-486d-063a-f384aba2baae@trained-monkey.org>
+        with ESMTP id S1359146AbiDELRy (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 5 Apr 2022 07:17:54 -0400
+Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC5C4B53D2
+        for <linux-raid@vger.kernel.org>; Tue,  5 Apr 2022 03:50:32 -0700 (PDT)
+Received: by mail-oi1-x230.google.com with SMTP id z8so12973716oix.3
+        for <linux-raid@vger.kernel.org>; Tue, 05 Apr 2022 03:50:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=IJuULAWG/1FoMVqzHQX34K6xZh/Bayqguu7zyUUS81A=;
+        b=WP90U6H3kg4IkJK+XU4uOMDLabMOTjjhMVQdCMsSClpQ95f3n+gSAGwXok55ow7MrW
+         490a/i4ghNafyIy8SQKYU+QXf6k4rfulAfGBh1xST4eK91dnOfUCYoHWQcFJ2BGYEyRe
+         kSN9jqnFw2FNiK5elx0ZDUiK/BrA/wKbNb9WB9WT3bzDgl4hKAbfgqVeFQ9l1eXtuB3O
+         c1tF617cYQjSkEGJeG87braG457aVV/eALR/6pSgx+HndyRUi1kkM20KC6IUVzofvwfT
+         BCwfdtu2cW1SfdNEriym6fIIn6Ye/w6YazLg4Xzj7BG+7BnqWfW13pChzvojIONf4L2a
+         eLxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=IJuULAWG/1FoMVqzHQX34K6xZh/Bayqguu7zyUUS81A=;
+        b=lrBWh76xKadf9jejYonFPUARUe/wilZuE2ICIKqPEIf130S7itJOxiwFhd2xiHkHVm
+         sRvpsT1b2gPMcue1V+cKr5mIhooeabIikPynxtQ3DV8q9rQY270mbZaK8pgD3VyxZIWc
+         yn24fD/uhCLj9ipcYHa/eR7i6EV8qRti62GwfQgSxxCJNoZ73bxTIFJ4JSEFtfGxoquu
+         uB/43aFNn2RpiEGd2AKMOGOmVenJYVhOTGI2U6EJga1DF/7MJGXBe9zxjhvfqc1KG9OV
+         MGXSCGVj4MVls2BFJzOyUeR1QT24X3Jgwpl5LyS5ocl8fsUcVX5JTOx3PK9h8edEcji9
+         YSaw==
+X-Gm-Message-State: AOAM533ZJ7tL+d2fmDuaE54OVHBJpiBWzyRvXl8vXHthtVf5Z3P7XTdU
+        8e9JWDwcEkwWBNvP1TQAD4zUy9V0le4HLgGZykuQhzhDdQ==
+X-Google-Smtp-Source: ABdhPJwrgAoJ/KNVOr8OKzLOFlFiPNt1YsG/thQ5w5AJXrGVDDZu7oD9PLhMyE48tJWwZtshqPQ+YOhqZI0llTn9fto=
+X-Received: by 2002:a05:6808:14c2:b0:2f7:43eb:c824 with SMTP id
+ f2-20020a05680814c200b002f743ebc824mr1028541oiw.154.1649155831719; Tue, 05
+ Apr 2022 03:50:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <CANDfL1au6kdEkR3bmLAHTdGV-Rb==8Jy1ZnwNFjvjNq7drC1XA@mail.gmail.com>
+ <987997234.3307867.1649118543055.JavaMail.zimbra@karlsbakk.net> <336816279.3605676.1649150230084.JavaMail.zimbra@karlsbakk.net>
+In-Reply-To: <336816279.3605676.1649150230084.JavaMail.zimbra@karlsbakk.net>
+From:   Jorge Nunes <jorgebnunes@gmail.com>
+Date:   Tue, 5 Apr 2022 11:50:20 +0100
+Message-ID: <CANDfL1YiKq9aeUsrmdZyLb5Fy98Tifjcr_zZJY6a+LxyqKYKkA@mail.gmail.com>
+Subject: Re: RAID 1 to RAID 5 failure
+To:     Roy Sigurd Karlsbakk <roy@karlsbakk.net>
+Cc:     Linux Raid <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Mon, 4 Apr 2022 21:32:09 -0400
-Jes Sorensen <jes@trained-monkey.org> wrote:
+Hi roy.
 
-> On 1/20/22 07:18, Mariusz Tkaczyk wrote:
-> > map_num() returns NULL if key is not defined. This patch adds
-> > alternative, non NULL version for cases where NULL is not expected.
-> > 
-> > There are many printf() calls where map_num() is called on variable
-> > without NULL verification. It works, even if NULL is passed because
-> > gcc is able to ignore NULL argument quietly but the behavior is
-> > undefined. For safety reasons such usages will use map_num_s() now.
-> > It is a potential point of regression.  
-> 
-> Hi Mariusz,
-> 
-> I'll be honest with you, I don't like assert(), I consider it a lame
-> excuse for proper error handling. That said, not blaming you as this
-> is old code and it would take a lot of cleaning up, so this is better
-> than nothing.
+Thank you for your time.
 
-And that is true, assert() is not for errors handling. Is was made for
-verifying function/application flows. Like here, I made not null
-function and I guarantee that won't be returned. If it comes, then it
-is a developer mistake and assert() should discover that during
-testing.
+Now, I'm doing a photorec on /dev/sda and /dev/sdd and I get better
+results on (some) of the data recovered if I do it on top of /dev/md0.
+I don't care anymore about recovering the filesystem, I just want to
+maximize the quality of data recovered with photorec.
 
-Please see man:
-https://man7.org/linux/man-pages/man3/assert.3.html
+Best regards,
+Jorge
 
-       If the macro NDEBUG is defined at the moment <assert.h> was last
-       included, the macro assert() generates no code, and hence does
-       nothing at all.  It is not recommended to define NDEBUG if using
-       assert() to detect error conditions since the software may behave
-       non-deterministically.
-
-For production, the macro should be set and it generates no code. So
-the behavior is configurable and OSV should add this flag to their
-mdadm builds. In this case, we will end with previous implementation but
-no additional error handling is required to satisfy our and external
-requirements (like static code analysis).
-
-It is also useful to validate function parameters which must be set, to
-not insert dead conditions. Ideally, we should execute test with
-asserts enabled to verify use cases.
-
-Thanks,
-Mariusz
-
+Roy Sigurd Karlsbakk <roy@karlsbakk.net> escreveu no dia ter=C3=A7a,
+5/04/2022 =C3=A0(s) 10:17:
+>
+> I re-did these tests this morning, since I was unsure if I could have mad=
+e some mistake last night - I was tired. There results were about the same =
+- complete data loss.
+>
+> As for curiousity, I also tried to skip the expand phase after creating t=
+he initial raid5 on top of the raid1. After creating it, I stopped it and r=
+ecreated the old raid1 with --assume-clean. This worked well - no errors fr=
+om mount or fsck.
+>
+> So I guess it was the mdadm --grow --raid-devices=3D4 that was the final =
+nail in the coffin.
+>
+> I just hope you find a way to backup your files next time. I'm quite sure=
+ we've all been there - thought we were smart enough or something and the s=
+hit hit the fan and no - we weren't.
+>
+> Vennlig hilsen
+>
+> roy
+> --
+> Roy Sigurd Karlsbakk
+> (+47) 98013356
+> http://blogg.karlsbakk.net/
+> GPG Public key: http://karlsbakk.net/roysigurdkarlsbakk.pubkey.txt
+> --
+> Hi=C3=B0 g=C3=B3=C3=B0a skaltu =C3=AD stein h=C3=B6ggva, hi=C3=B0 illa =
+=C3=AD snj=C3=B3 rita.
+>
+> ----- Original Message -----
+> > From: "Roy Sigurd Karlsbakk" <roy@karlsbakk.net>
+> > To: "Jorge Nunes" <jorgebnunes@gmail.com>
+> > Cc: "Linux Raid" <linux-raid@vger.kernel.org>
+> > Sent: Tuesday, 5 April, 2022 02:29:03
+> > Subject: Re: RAID 1 to RAID 5 failure
+>
+> >> Didn't do a backup :-(
+> >
+> > First mistake=E2=80=A6 *Always* keep a backup (or three)
+> >
+> >>
+> >> Unmount everything:
+> >
+> > No need - what you should have done, was just to grow the array by
+> >
+> > Partition the new drives exactly like the old ones
+> > mdadm --add /dev/md0 /dev/sd[cd]1 # note that sd[cd] means sdc and sdd,=
+ but can
+> > be written this way on the commandline
+> > mdadm --grow --level=3D5 --raid-devices=3D4
+> >
+> > This would have grown and converted the array to raid5 without any data=
+ loss.
+> >
+> >> $ sudo mdadm --create /dev/md0 -a yes -l 5 -n 2 /dev/sda /dev/sdd
+> >
+> > As earlier mentioned, this is to create a new array, not a conversion.
+> >
+> >> So, my question is: Is there a chance to redo the array correctly
+> >> without losing the information inside? Is it possible to recover the
+> >> 'lost' partition that existed on RAID 1 to be able to do a convenient
+> >> backup? Or the only chance is to have a correct disk alignment inside
+> >> the array to be able to use photorec to recover the files correctly?
+> >
+> > As mentioned, it doesn't look promising, but there are a few things tha=
+t can be
+> > tried.
+> >
+> > Your data may still reside on the sda1 and sdd1, but since it was conve=
+rted to
+> > RAID-5, the data would have been distributed among the two drives and n=
+ot being
+> > the same on both. Further growing the raid, would move the data around =
+to the
+> > other disks. I did a small test here on some vdisks to see if this coul=
+d be
+> > reversed somehow and see if I could find the original filesystem. I cou=
+ld - but
+> > it was terribly corrupted, so not a single file remained.
+> >
+> > If this was valuable data, there might be a way to rescue them, but I f=
+ear a lot
+> > is overwritten already. Others in here (or other places) may know more =
+about
+> > how to fix this, though. If you find out how, please tell. It'd be inte=
+resting
+> > to learn :)
+> >
+> > PS: I have my personal notebook for technical stuff at
+> > https://wiki.karlsbakk.net/index.php/Roy's_notes in case you might find=
+ that
+> > interesting. There's quite a bit about storage there. Simply growing a =
+raid is
+> > apparently forgotten, since I thought that was too simple. I'll add it.
+> >
+> > So hope you didn't lose too much valuable data
+> >
+> > Vennlig hilsen / Best regards
+> >
+> > roy
+> > --
+> > Roy Sigurd Karlsbakk
+> > (+47) 98013356
+> > --
+> > I all pedagogikk er det essensielt at pensum presenteres intelligibelt.=
+ Det er
+> > et element=C3=A6rt imperativ for alle pedagoger =C3=A5 unng=C3=A5 ekses=
+siv anvendelse av
+> > idiomer med xenotyp etymologi. I de fleste tilfeller eksisterer adekvat=
+e og
+> > relevante synonymer p=C3=A5 norsk.
