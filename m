@@ -2,148 +2,239 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 30DEA4F5B87
-	for <lists+linux-raid@lfdr.de>; Wed,  6 Apr 2022 12:43:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A0F74F5C9B
+	for <lists+linux-raid@lfdr.de>; Wed,  6 Apr 2022 13:56:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238443AbiDFKIL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 6 Apr 2022 06:08:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52456 "EHLO
+        id S229923AbiDFLvk (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 6 Apr 2022 07:51:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345694AbiDFKG6 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 6 Apr 2022 06:06:58 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4C07A167D6
-        for <linux-raid@vger.kernel.org>; Tue,  5 Apr 2022 23:35:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1649226932;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=rm5ZcYRG9yo1Jj2BdA6/avZk1CyKfinSMrTDramV4ec=;
-        b=egeXnP1hYD9pENenRHMylEl7lLf8zVt6PeUtd5m2TvzNfYqXd2HQSOGGDW/HwENk7tMa2b
-        CmcT4vbvNh+ey3xwoEHLG4K0pMNAtnT6rXaBsk4K0/9JKy6xWJnB0yb3pK15ll8OyncVvI
-        ONETh4EQfYE3MCFSxRbA/hd7XaUCzrc=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-529-j-HBeg_mPoeOuD6Pod620g-1; Wed, 06 Apr 2022 02:35:31 -0400
-X-MC-Unique: j-HBeg_mPoeOuD6Pod620g-1
-Received: by mail-ej1-f72.google.com with SMTP id sd5-20020a1709076e0500b006e6e277d2b4so645002ejc.14
-        for <linux-raid@vger.kernel.org>; Tue, 05 Apr 2022 23:35:30 -0700 (PDT)
+        with ESMTP id S230231AbiDFLv1 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 6 Apr 2022 07:51:27 -0400
+Received: from mail-oa1-x2e.google.com (mail-oa1-x2e.google.com [IPv6:2001:4860:4864:20::2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4275747F01E
+        for <linux-raid@vger.kernel.org>; Tue,  5 Apr 2022 23:58:06 -0700 (PDT)
+Received: by mail-oa1-x2e.google.com with SMTP id 586e51a60fabf-de3ca1efbaso1958039fac.9
+        for <linux-raid@vger.kernel.org>; Tue, 05 Apr 2022 23:58:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=XlA/s7tYmDkAS/6H8h6Ckw+VLfAJXqYxO/DzR4iJpOg=;
+        b=HU9j6l37i5k7VtL4zsVEU8Gl109ym7jD/yR3alrWJAFdX9iEoJXrtFGF0SAeYSUXQ0
+         uLpLnJj3oSyaZzDoffYnyijqbFaGgECmwQs8ad7mYaWDIxMHRu5Vgy27bCpv1z01FCR2
+         Ky7zS8djdDVibRRsHR5GIkgr+J+mopaWGAlMM4metVJadbtt4mVF7fvE+dsISIzoOkFG
+         WSzj6atzhJc35Qk1kUxxnZpP14VnKWpWSdIIs4Su8rGIWAlr38O0sWWGJt+XqGtkTZNm
+         Kt3WT5hfDEN2Pm5dBPvP3L8OhsXrXej2mK4ZKqIra653wHrpo4ooo3HDoC/jET4eM4zX
+         f8vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rm5ZcYRG9yo1Jj2BdA6/avZk1CyKfinSMrTDramV4ec=;
-        b=10UHy/R2zzT9xir4g9Zo3xigEAkgR7xEvh1yFN1iO5IXZjrxXZMpPH8wgPRLv/lc+B
-         F5e+dr9Z5O553Wc3FOnurq96jVnLHcFuD1MHLhrn7WQr4n51EEJKqGIX56fe5Z1UyA3t
-         QdYkWQrX/NzJKBNGjKFkCMd7JjRwZZKMvmCpdYAsdBvCd42sjUdTYFVRISvrWLe9sAS7
-         JlRkB6ebUpuIpL11YCm1WOwgXRGu+PytHP+IoNbnyyhXBOuXrwJStkQPVAeFN1QcmNhB
-         O57BIPR8EpwSA3aFv/UtDAzFKPO/MNu/NMExQXv28HpwqRMbHpG7c/aP6IgMe2Iu34nv
-         L5EQ==
-X-Gm-Message-State: AOAM533ZJ6pVKAleDhXyHy1Zi5KZxMNFvJ+Lfu6IGoph+XpX9F5KCQkN
-        wg0o1jYdLT5rl935hjx/J/r7OTTMUq5kae+DnsulGu5zAu7czB1OREJooqia9J6+rhuFmxxxQ6O
-        f1Hl3eNTg+lhndZ/BTCwBj9bVGxj9en8/GiVLpg==
-X-Received: by 2002:a17:907:d02:b0:6e0:4f1d:7ab1 with SMTP id gn2-20020a1709070d0200b006e04f1d7ab1mr6810601ejc.716.1649226929843;
-        Tue, 05 Apr 2022 23:35:29 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwdpv7VeUVoNDX0dsrhvNzzqQc60bqDcgPlfIZdV+awoCOlx5y5acJnndUmrhc5hpSPz/tSIBZWj8F01Mbcpk8=
-X-Received: by 2002:a17:907:d02:b0:6e0:4f1d:7ab1 with SMTP id
- gn2-20020a1709070d0200b006e04f1d7ab1mr6810589ejc.716.1649226929634; Tue, 05
- Apr 2022 23:35:29 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=XlA/s7tYmDkAS/6H8h6Ckw+VLfAJXqYxO/DzR4iJpOg=;
+        b=nbjooihMh7spKslpBQcJjD7lhRdWirI1vjWWTzIeg5+iK5ZP5cQ9hqS2G+JbU18bbR
+         O4+HQgabE61ZPuqM8Va6SqTeCVlcA4oEUBlIYPUqW7CO6uP9Ca6gUG1scYV2B5lv+Zj3
+         3CYBn2B5EonckRJ7mOfO8EUSV8av3/8/VjUstpxaYE8h9spQ0vKksrDquDiWcyb65fhX
+         XvzjKZgyVoaTyHmKmewY1f8YDaUbtJTP8EdbeV38mqUzxh4Xe1FuN9sQZRbwAza7wmOD
+         gccQy6soYqIR5ubUqFJeMLcolZlfL70NreUyZKQlAWrvFJ3LL4TTmkZq9HuW/4Fh82Bv
+         am/g==
+X-Gm-Message-State: AOAM532V7eWNi282AWcX/JPotoGlybE4a0FBdGz/OM/IQFDK5MlSPuVh
+        3x5XeYz7xDXp37CIHvLCyH5yZ4Qz+LZgS+5rOMbNUQpiog==
+X-Google-Smtp-Source: ABdhPJy88RYm75MkdqNOeTJbmnnvgngw24M0SYTYMqwJNLvsk+QCT0uCx459iXqltY6TYL59ZRUX3GsPPZYVHgVGtUQ=
+X-Received: by 2002:a05:6870:888a:b0:de:6122:2bea with SMTP id
+ m10-20020a056870888a00b000de61222beamr3478531oam.130.1649228285541; Tue, 05
+ Apr 2022 23:58:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220215133415.4138-1-colyli@suse.de>
-In-Reply-To: <20220215133415.4138-1-colyli@suse.de>
-From:   Xiao Ni <xni@redhat.com>
-Date:   Wed, 6 Apr 2022 14:36:13 +0800
-Message-ID: <CALTww28aKNSAj9a7kyYxPEJgUMRA5f0DGjc=X-SrRY5c5p6jyQ@mail.gmail.com>
-Subject: Re: [PATCH] mdadm/systemd: remove KillMode=none from service file
-To:     Coly Li <colyli@suse.de>
-Cc:     linux-raid <linux-raid@vger.kernel.org>,
-        Benjamin Brunner <bbrunner@suse.com>,
-        Franck Bui <fbui@suse.de>,
-        Jes Sorensen <jes@trained-monkey.org>,
-        Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
-        Neil Brown <neilb@suse.de>
+References: <CANDfL1au6kdEkR3bmLAHTdGV-Rb==8Jy1ZnwNFjvjNq7drC1XA@mail.gmail.com>
+ <987997234.3307867.1649118543055.JavaMail.zimbra@karlsbakk.net>
+ <336816279.3605676.1649150230084.JavaMail.zimbra@karlsbakk.net>
+ <CANDfL1YiKq9aeUsrmdZyLb5Fy98Tifjcr_zZJY6a+LxyqKYKkA@mail.gmail.com> <1835444778.3678589.1649158202973.JavaMail.zimbra@karlsbakk.net>
+In-Reply-To: <1835444778.3678589.1649158202973.JavaMail.zimbra@karlsbakk.net>
+From:   Jorge Nunes <jorgebnunes@gmail.com>
+Date:   Wed, 6 Apr 2022 07:57:54 +0100
+Message-ID: <CANDfL1YZGU2BU0HySthiD84OBE4DH5zpki4Df-XFE5-Vna0BNg@mail.gmail.com>
+Subject: Re: RAID 1 to RAID 5 failure
+To:     Roy Sigurd Karlsbakk <roy@karlsbakk.net>
+Cc:     Linux Raid <linux-raid@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi Jes
+I'll never forget to do a backup.
 
-Could you merge this patch.
+Thanks for your help.
+Regards,
+Jorge
 
-On Tue, Feb 15, 2022 at 9:34 PM Coly Li <colyli@suse.de> wrote:
+Roy Sigurd Karlsbakk <roy@karlsbakk.net> escreveu no dia ter=C3=A7a,
+5/04/2022 =C3=A0(s) 12:30:
 >
-> For mdadm's systemd configuration, current systemd KillMode is "none" in
-> following service files,
-> - mdadm-grow-continue@.service
-> - mdmon@.service
+> That's probably a good idea. Hope you get most of it out of there.
 >
-> This "none" mode is strongly againsted by systemd developers (see man 5
-> systemd.kill for "KillMode=" section), and is considering to remove in
-> future systemd version.
+> And find a way to backup when you're done ;)
 >
-> As systemd developer explained in disuccsion, the systemd kill process
-> is,
-> 1. send the signal specified by KillSignal= to the list of processes (if
->    any), TERM is the default
-> 2. wait until either the target of process(es) exit or a timeout expires
-> 3. if the timeout expires send the signal specified by FinalKillSignal=,
->    KILL is the default
+> Vennlig hilsen
 >
-> For "control-group", all remaining processes will receive the SIGTERM
-> signal (by default) and if there are still processes after a period f
-> time, they will get the SIGKILL signal.
->
-> For "mixed", only the main process will receive the SIGTERM signal, and
-> if there are still processes after a period of time, all remaining
-> processes (including the main one) will receive the SIGKILL signal.
->
-> From the above comment, currently KillMode=control-group is a proper
-> kill mode. Since control-gropu is the default kill mode, the fix can be
-> simply removing KillMode=none line from the service file, then the
-> default mode will take effect.
->
-> Signed-off-by: Coly Li <colyli@suse.de>
-> Cc: Benjamin Brunner <bbrunner@suse.com>
-> Cc: Franck Bui <fbui@suse.de>
-> Cc: Jes Sorensen <jes@trained-monkey.org>
-> Cc: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-> Cc: Neil Brown <neilb@suse.de>
-> Cc: Xiao Ni <xni@redhat.com>
-> ---
->  systemd/mdadm-grow-continue@.service | 1 -
->  systemd/mdmon@.service               | 1 -
->  2 files changed, 2 deletions(-)
->
-> diff --git a/systemd/mdadm-grow-continue@.service b/systemd/mdadm-grow-continue@.service
-> index 5c667d2..9fdc8ec 100644
-> --- a/systemd/mdadm-grow-continue@.service
-> +++ b/systemd/mdadm-grow-continue@.service
-> @@ -14,4 +14,3 @@ ExecStart=BINDIR/mdadm --grow --continue /dev/%I
->  StandardInput=null
->  StandardOutput=null
->  StandardError=null
-> -KillMode=none
-> diff --git a/systemd/mdmon@.service b/systemd/mdmon@.service
-> index 85a3a7c..7753395 100644
-> --- a/systemd/mdmon@.service
-> +++ b/systemd/mdmon@.service
-> @@ -25,4 +25,3 @@ Type=forking
->  # it out) and systemd will remove it when transitioning from
->  # initramfs to rootfs.
->  #PIDFile=/run/mdadm/%I.pid
-> -KillMode=none
+> roy
 > --
-> 2.31.1
+> Roy Sigurd Karlsbakk
+> (+47) 98013356
+> http://blogg.karlsbakk.net/
+> GPG Public key: http://karlsbakk.net/roysigurdkarlsbakk.pubkey.txt
+> --
+> Hi=C3=B0 g=C3=B3=C3=B0a skaltu =C3=AD stein h=C3=B6ggva, hi=C3=B0 illa =
+=C3=AD snj=C3=B3 rita.
 >
-
-Acked-by: Xiao Ni <xni@redhat.com>
-
+> ----- Original Message -----
+> > From: "Jorge Nunes" <jorgebnunes@gmail.com>
+> > To: "Roy Sigurd Karlsbakk" <roy@karlsbakk.net>
+> > Cc: "Linux Raid" <linux-raid@vger.kernel.org>
+> > Sent: Tuesday, 5 April, 2022 12:50:20
+> > Subject: Re: RAID 1 to RAID 5 failure
+>
+> > Hi roy.
+> >
+> > Thank you for your time.
+> >
+> > Now, I'm doing a photorec on /dev/sda and /dev/sdd and I get better
+> > results on (some) of the data recovered if I do it on top of /dev/md0.
+> > I don't care anymore about recovering the filesystem, I just want to
+> > maximize the quality of data recovered with photorec.
+> >
+> > Best regards,
+> > Jorge
+> >
+> > Roy Sigurd Karlsbakk <roy@karlsbakk.net> escreveu no dia ter=C3=A7a,
+> > 5/04/2022 =C3=A0(s) 10:17:
+> >>
+> >> I re-did these tests this morning, since I was unsure if I could have =
+made some
+> >> mistake last night - I was tired. There results were about the same - =
+complete
+> >> data loss.
+> >>
+> >> As for curiousity, I also tried to skip the expand phase after creatin=
+g the
+> >> initial raid5 on top of the raid1. After creating it, I stopped it and
+> >> recreated the old raid1 with --assume-clean. This worked well - no err=
+ors from
+> >> mount or fsck.
+> >>
+> >> So I guess it was the mdadm --grow --raid-devices=3D4 that was the fin=
+al nail in
+> >> the coffin.
+> >>
+> >> I just hope you find a way to backup your files next time. I'm quite s=
+ure we've
+> >> all been there - thought we were smart enough or something and the shi=
+t hit the
+> >> fan and no - we weren't.
+> >>
+> >> Vennlig hilsen
+> >>
+> >> roy
+> >> --
+> >> Roy Sigurd Karlsbakk
+> >> (+47) 98013356
+> >> http://blogg.karlsbakk.net/
+> >> GPG Public key: http://karlsbakk.net/roysigurdkarlsbakk.pubkey.txt
+> >> --
+> >> Hi=C3=B0 g=C3=B3=C3=B0a skaltu =C3=AD stein h=C3=B6ggva, hi=C3=B0 illa=
+ =C3=AD snj=C3=B3 rita.
+> >>
+> >> ----- Original Message -----
+> >> > From: "Roy Sigurd Karlsbakk" <roy@karlsbakk.net>
+> >> > To: "Jorge Nunes" <jorgebnunes@gmail.com>
+> >> > Cc: "Linux Raid" <linux-raid@vger.kernel.org>
+> >> > Sent: Tuesday, 5 April, 2022 02:29:03
+> >> > Subject: Re: RAID 1 to RAID 5 failure
+> >>
+> >> >> Didn't do a backup :-(
+> >> >
+> >> > First mistake=E2=80=A6 *Always* keep a backup (or three)
+> >> >
+> >> >>
+> >> >> Unmount everything:
+> >> >
+> >> > No need - what you should have done, was just to grow the array by
+> >> >
+> >> > Partition the new drives exactly like the old ones
+> >> > mdadm --add /dev/md0 /dev/sd[cd]1 # note that sd[cd] means sdc and s=
+dd, but can
+> >> > be written this way on the commandline
+> >> > mdadm --grow --level=3D5 --raid-devices=3D4
+> >> >
+> >> > This would have grown and converted the array to raid5 without any d=
+ata loss.
+> >> >
+> >> >> $ sudo mdadm --create /dev/md0 -a yes -l 5 -n 2 /dev/sda /dev/sdd
+> >> >
+> >> > As earlier mentioned, this is to create a new array, not a conversio=
+n.
+> >> >
+> >> >> So, my question is: Is there a chance to redo the array correctly
+> >> >> without losing the information inside? Is it possible to recover th=
+e
+> >> >> 'lost' partition that existed on RAID 1 to be able to do a convenie=
+nt
+> >> >> backup? Or the only chance is to have a correct disk alignment insi=
+de
+> >> >> the array to be able to use photorec to recover the files correctly=
+?
+> >> >
+> >> > As mentioned, it doesn't look promising, but there are a few things =
+that can be
+> >> > tried.
+> >> >
+> >> > Your data may still reside on the sda1 and sdd1, but since it was co=
+nverted to
+> >> > RAID-5, the data would have been distributed among the two drives an=
+d not being
+> >> > the same on both. Further growing the raid, would move the data arou=
+nd to the
+> >> > other disks. I did a small test here on some vdisks to see if this c=
+ould be
+> >> > reversed somehow and see if I could find the original filesystem. I =
+could - but
+> >> > it was terribly corrupted, so not a single file remained.
+> >> >
+> >> > If this was valuable data, there might be a way to rescue them, but =
+I fear a lot
+> >> > is overwritten already. Others in here (or other places) may know mo=
+re about
+> >> > how to fix this, though. If you find out how, please tell. It'd be i=
+nteresting
+> >> > to learn :)
+> >> >
+> >> > PS: I have my personal notebook for technical stuff at
+> >> > https://wiki.karlsbakk.net/index.php/Roy's_notes in case you might f=
+ind that
+> >> > interesting. There's quite a bit about storage there. Simply growing=
+ a raid is
+> >> > apparently forgotten, since I thought that was too simple. I'll add =
+it.
+> >> >
+> >> > So hope you didn't lose too much valuable data
+> >> >
+> >> > Vennlig hilsen / Best regards
+> >> >
+> >> > roy
+> >> > --
+> >> > Roy Sigurd Karlsbakk
+> >> > (+47) 98013356
+> >> > --
+> >> > I all pedagogikk er det essensielt at pensum presenteres intelligibe=
+lt. Det er
+> >> > et element=C3=A6rt imperativ for alle pedagoger =C3=A5 unng=C3=A5 ek=
+sessiv anvendelse av
+> >> > idiomer med xenotyp etymologi. I de fleste tilfeller eksisterer adek=
+vate og
+> > > > relevante synonymer p=C3=A5 norsk.
