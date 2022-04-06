@@ -2,141 +2,105 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D70554F6781
-	for <lists+linux-raid@lfdr.de>; Wed,  6 Apr 2022 19:39:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C0DE4F690F
+	for <lists+linux-raid@lfdr.de>; Wed,  6 Apr 2022 20:19:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239202AbiDFRi0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 6 Apr 2022 13:38:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57834 "EHLO
+        id S240145AbiDFSI4 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-raid@lfdr.de>); Wed, 6 Apr 2022 14:08:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239512AbiDFRhl (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 6 Apr 2022 13:37:41 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFB6D6E57D
-        for <linux-raid@vger.kernel.org>; Wed,  6 Apr 2022 09:32:49 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 72CA121122;
-        Wed,  6 Apr 2022 16:32:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1649262768; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gZJSRkj7tlbSNjzF6FLqxsiK62xi9qvJDv/1/ccW71s=;
-        b=ErAlS+D2rFwm/GEVoQ0rW00+GErarhBV9gRXTbBa09LnPhyKl5brYq7PhjAOFqBk3sDf6R
-        M7Z0WmLtT4w19+f0cfAiPrX1Zwi20tuhGB4aEFtdXVkcZhnknRwAUmROPYJWjeHhKbrl8T
-        gVpsQ6Mrw/X0zgsVkoe2xXGz6XKB2kY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1649262768;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gZJSRkj7tlbSNjzF6FLqxsiK62xi9qvJDv/1/ccW71s=;
-        b=3RGXgRjKJz9w5FEHKxcCSWMJlKWOuKF/FEJKnYVPm9RAcec7LXmAZZIoKOy84dH9UPGpum
-        9sHZY7kfE8ES31Bg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id DED76139F5;
-        Wed,  6 Apr 2022 16:32:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id JLOtC67ATWLJVgAAMHmgww
-        (envelope-from <colyli@suse.de>); Wed, 06 Apr 2022 16:32:46 +0000
-Message-ID: <ae20a79a-a7f3-c124-b67e-a36e767164e2@suse.de>
-Date:   Thu, 7 Apr 2022 00:32:44 +0800
+        with ESMTP id S240470AbiDFSHz (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 6 Apr 2022 14:07:55 -0400
+Received: from sender11-op-o11.zoho.eu (sender11-op-o11.zoho.eu [31.186.226.225])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CF62190EB2
+        for <linux-raid@vger.kernel.org>; Wed,  6 Apr 2022 09:46:18 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1649263568; cv=none; 
+        d=zohomail.eu; s=zohoarc; 
+        b=kWeyhsEQ31cWDRkH4l2riZGEh3TJnVB/HcG3zrr/gRV8UgbajTroNtErr6UnKrwZiimhXUesoSNpGvHIjLRdyYZx8tEKijU4XhMC7ZHK5f0Ge4xXOmINynLuJinlJxtQszm3H8GxIV8b469lHAAPPiiW5mOdSgU3PyV9YV9fQYQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+        t=1649263568; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=QkiXEz/nKzYteiEb21oAWMBJ79MonU7jpPcdstNaAIM=; 
+        b=PU8b1K9LLwq40eY/jCTzYOuRD6vDrf/zbDvqsUw6T28c7ijhBRjJICCR42sA3WYhx3NJew0m+rd4xhCRCPtWUAGrer33whG6Pj7A6saGCNTIORwwUt+/43fW2jioZaFoYH8LPYIRo2CkQWcTGjCpW1M5lGcp6pVe6WLM3/Qp4nk=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
+        dmarc=pass header.from=<jes@trained-monkey.org>
+Received: from [172.30.27.237] (163.114.130.4 [163.114.130.4]) by mx.zoho.eu
+        with SMTPS id 1649263566307185.44288498971616; Wed, 6 Apr 2022 18:46:06 +0200 (CEST)
+Date:   Wed, 6 Apr 2022 12:46:03 -0400
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.7.0
-Subject: Re: [PATCH v2 2/2] Mdmonitor: Improve logging method
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH] Add RAID 1 chunksize test
 Content-Language: en-US
-To:     Kinga Tanska <kinga.tanska@intel.com>
-Cc:     jes@trained-monkey.org, pmenzel@molgen.mpg.de,
+To:     Doug Ledford <dledford@redhat.com>,
+        Mateusz Kusiak <mateusz.kusiak@intel.com>,
         linux-raid@vger.kernel.org
-References: <20220405114057.27080-1-kinga.tanska@intel.com>
- <20220405114057.27080-3-kinga.tanska@intel.com>
-From:   Coly Li <colyli@suse.de>
-In-Reply-To: <20220405114057.27080-3-kinga.tanska@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Cc:     colyli@suse.de
+References: <20220404070830.7795-1-mateusz.kusiak@intel.com>
+ <53bc131b71b7f94210e507eed93390b1b3899246.camel@redhat.com>
+From:   Jes Sorensen <jes@trained-monkey.org>
+Message-ID: <9653c1f1-1aae-3c5d-2a43-4cb3109392b0@trained-monkey.org>
+In-Reply-To: <53bc131b71b7f94210e507eed93390b1b3899246.camel@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-ZohoMailClient: External
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 4/5/22 7:40 PM, Kinga Tanska wrote:
-> Change logging, and as a result, mdmonitor in verbose
-> mode will report its configuration.
->
-> Signed-off-by: Kinga Tanska <kinga.tanska@intel.com>
-> Signed-off-by: Oleksandr Shchirskyi <oleksandr.shchirskyi@intel.com>
+On 4/4/22 08:38, Doug Ledford wrote:
+> On Mon, 2022-04-04 at 09:08 +0200, Mateusz Kusiak wrote:
+>> Specifying chunksize for raid 1 is forbidden.
+>> Add test for blocking raid 1 creation with chunksize.
+>>
+>> Signed-off-by: Mateusz Kusiak <mateusz.kusiak@intel.com>
+>> ---
+>>  tests/01r1create-chunk | 15 +++++++++++++++
+>>  1 file changed, 15 insertions(+)
+>>  create mode 100644 tests/01r1create-chunk
+>>
+>> diff --git a/tests/01r1create-chunk b/tests/01r1create-chunk
+>> new file mode 100644
+>> index 00000000..717a5e5a
+>> --- /dev/null
+>> +++ b/tests/01r1create-chunk
+>> @@ -0,0 +1,15 @@
+>> +# RAID 1 volume, 2 disks, chunk 64
+>> +# NEGATIVE test - creating raid 1 with chunksize specified is
+>> forbidden
+>> +
+>> +num_disks=2
+>> +level=1
+>> +device_list="$dev0 $dev1"
+>> +chunk=64
+>> +
+>> +# Create raid 1 with chunk 64k and fail
+>> +if ! mdadm --create --run $md0 --auto=md --level=$level --
+>> chunk=$chunk --raid-disks=$num_disks $device_list
+>> +then
+>> +       exit 0
+>> +fi
+>> +
+>> +exit 1
+> 
+> This is a case of overkill IMO.  Chunk size with raid1 isn't really a
+> problem and shouldn't result in mdadm refusing to work.  Chunk size with
+> raid1 simply has no effect and should just be ignored with at most a
+> warning by mdadm.
 
+I agree with Doug here. I think a warning from mdadm that chunksize
+makes no sense for raid1 would be good, but having a failed test over it
+makes little sense. If anything the test should detect the warning is
+happening.
 
-Acked-by: Coly Li <colyli@suse.de>
+Thanks,
+Jes
 
-
-Thanks.
-
-
-Coly Li
-
-
-> ---
->   Monitor.c | 25 ++++++++++++++-----------
->   1 file changed, 14 insertions(+), 11 deletions(-)
->
-> diff --git a/Monitor.c b/Monitor.c
-> index 0b24b656..bd417d04 100644
-> --- a/Monitor.c
-> +++ b/Monitor.c
-> @@ -137,24 +137,27 @@ int Monitor(struct mddev_dev *devlist,
->   	struct mddev_ident *mdlist;
->   	int delay_for_event = c->delay;
->   
-> -	if (!mailaddr) {
-> +	if (!mailaddr)
->   		mailaddr = conf_get_mailaddr();
-> -		if (mailaddr && ! c->scan)
-> -			pr_err("Monitor using email address \"%s\" from config file\n",
-> -			       mailaddr);
-> -	}
-> -	mailfrom = conf_get_mailfrom();
->   
-> -	if (!alert_cmd) {
-> +	if (!alert_cmd)
->   		alert_cmd = conf_get_program();
-> -		if (alert_cmd && !c->scan)
-> -			pr_err("Monitor using program \"%s\" from config file\n",
-> -			       alert_cmd);
-> -	}
-> +
-> +	mailfrom = conf_get_mailfrom();
-> +
->   	if (c->scan && !mailaddr && !alert_cmd && !dosyslog) {
->   		pr_err("No mail address or alert command - not monitoring.\n");
->   		return 1;
->   	}
-> +
-> +	if (c->verbose) {
-> +		pr_err("Monitor is started with delay %ds\n", c->delay);
-> +		if (mailaddr)
-> +			pr_err("Monitor using email address %s\n", mailaddr);
-> +		if (alert_cmd)
-> +			pr_err("Monitor using program %s\n", alert_cmd);
-> +	}
-> +
->   	info.alert_cmd = alert_cmd;
->   	info.mailaddr = mailaddr;
->   	info.mailfrom = mailfrom;
 
 
