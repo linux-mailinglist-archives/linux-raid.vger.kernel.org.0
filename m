@@ -2,64 +2,66 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 271A84F66D3
-	for <lists+linux-raid@lfdr.de>; Wed,  6 Apr 2022 19:19:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDBC04F67E0
+	for <lists+linux-raid@lfdr.de>; Wed,  6 Apr 2022 19:58:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238305AbiDFRRO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 6 Apr 2022 13:17:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33966 "EHLO
+        id S239396AbiDFRvo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 6 Apr 2022 13:51:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238379AbiDFRRC (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 6 Apr 2022 13:17:02 -0400
+        with ESMTP id S239679AbiDFRvY (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 6 Apr 2022 13:51:24 -0400
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E60A24041C4
-        for <linux-raid@vger.kernel.org>; Wed,  6 Apr 2022 08:13:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E61AB307E52
+        for <linux-raid@vger.kernel.org>; Wed,  6 Apr 2022 09:00:10 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 42F12210FC;
-        Wed,  6 Apr 2022 15:12:59 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id ABAB62129B;
+        Wed,  6 Apr 2022 16:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1649257979; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1649260809; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=++rDxnkcOF0H5KHPobpvaWoG0zGZ+mxgerl2rAF6Uro=;
-        b=QynBGiwuKIwCVh2/6eXWzwNrawvx6c6Zf8Vl05LAgPaKwXS7ls8Or/9YMJ7p00aOZUsSLD
-        cnB42VWesNjbM2JHofoC0Ajpw0v7Y1AXqFPEY41O8DELfHrlH7RDsgoTP5JyUJ9ryQti1a
-        oQWUE1FyjdPPzcfnBRVPEMARkSr94m8=
+        bh=hCrOJ6j1edXLj2+GhU9n1Zn7XIh/k8nLjVQMCWzV53k=;
+        b=Vmch1wiI/1mugp8WZQ6VilyX4uugzoF80CThQva7JuoESbzb2xAR7tQh8OqueiVuZtuKNp
+        fo6kdBlF0osKmp113fsT3bWuxsi7W0AooZwllcwQi974qJArWGxJEuv7Le5EM5IAjOUqxY
+        gSIKbhsbIWh9+dqAkN3oXe88B1fO4YY=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1649257979;
+        s=susede2_ed25519; t=1649260809;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=++rDxnkcOF0H5KHPobpvaWoG0zGZ+mxgerl2rAF6Uro=;
-        b=RXmvv/YMyGSq4cntmx3eq2KkhzpsWOM+6WemP4ihy2roF2gxzFk3VQTIzRIe+tgQXE1LRk
-        rw30BbkEXA99SLAQ==
+        bh=hCrOJ6j1edXLj2+GhU9n1Zn7XIh/k8nLjVQMCWzV53k=;
+        b=SboooJe537g0j0XU+gdXM0dNZTJRLdQRkZ+OAWuJDG+jcm5GEpEcUzXpW05NBtCnBfR+pN
+        IxyQOq04ltMaURAw==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 5B97913A8E;
-        Wed,  6 Apr 2022 15:12:58 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 5592F139F5;
+        Wed,  6 Apr 2022 16:00:07 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id GSx5C/qtTWK7MgAAMHmgww
-        (envelope-from <colyli@suse.de>); Wed, 06 Apr 2022 15:12:58 +0000
-Message-ID: <ef2c0d9a-df14-5066-2104-b352e57c6eea@suse.de>
-Date:   Wed, 6 Apr 2022 23:12:56 +0800
+        id 58yKMge5TWIsSAAAMHmgww
+        (envelope-from <colyli@suse.de>); Wed, 06 Apr 2022 16:00:07 +0000
+Message-ID: <486efd7c-b066-7667-9327-2e1284271991@suse.de>
+Date:   Thu, 7 Apr 2022 00:00:05 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
  Gecko/20100101 Thunderbird/91.7.0
-Subject: Re: [PATCH] util: replace ioctl use with function
+Subject: Re: [PATCH v2 1/2] Assemble: check if device is container before
+ scheduling force-clean update
 Content-Language: en-US
 To:     Kinga Tanska <kinga.tanska@intel.com>
 Cc:     jes@trained-monkey.org, linux-raid@vger.kernel.org
-References: <20220404124501.13218-1-kinga.tanska@intel.com>
+References: <20220404140115.16973-1-kinga.tanska@intel.com>
+ <20220404140115.16973-2-kinga.tanska@intel.com>
 From:   Coly Li <colyli@suse.de>
-In-Reply-To: <20220404124501.13218-1-kinga.tanska@intel.com>
+In-Reply-To: <20220404140115.16973-2-kinga.tanska@intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -72,9 +74,12 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 4/4/22 8:45 PM, Kinga Tanska wrote:
-> Replace using of ioctl calling to get md array info with
-> special function prepared to it.
+On 4/4/22 10:01 PM, Kinga Tanska wrote:
+> When assemble is used with --force flag and array is not clean then
+> "force-clean" update is scheduled. Containers are considered as not
+> clean because this field is not set for them. To exclude them from
+> meaningless update (it is ignored quietly) check if the device
+> is a container first.
 >
 > Signed-off-by: Kinga Tanska <kinga.tanska@intel.com>
 
@@ -88,21 +93,25 @@ Coly Li
 
 
 > ---
->   util.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>   Assemble.c | 5 ++---
+>   1 file changed, 2 insertions(+), 3 deletions(-)
 >
-> diff --git a/util.c b/util.c
-> index cdf1da24..003b2f86 100644
-> --- a/util.c
-> +++ b/util.c
-> @@ -268,7 +268,7 @@ int md_array_active(int fd)
->   		 * GET_ARRAY_INFO doesn't provide access to the proper state
->   		 * information, so fallback to a basic check for raid_disks != 0
->   		 */
-> -		ret = ioctl(fd, GET_ARRAY_INFO, &array);
-> +		ret = md_get_array_info(fd, &array);
+> diff --git a/Assemble.c b/Assemble.c
+> index 704b8293..f31372db 100644
+> --- a/Assemble.c
+> +++ b/Assemble.c
+> @@ -1813,10 +1813,9 @@ try_again:
+>   		}
+>   #endif
 >   	}
->   
->   	return !ret;
+> -	if (c->force && !clean &&
+> +	if (c->force && !clean && content->array.level != LEVEL_CONTAINER &&
+>   	    !enough(content->array.level, content->array.raid_disks,
+> -		    content->array.layout, clean,
+> -		    avail)) {
+> +		    content->array.layout, clean, avail)) {
+>   		change += st->ss->update_super(st, content, "force-array",
+>   					       devices[chosen_drive].devname, c->verbose,
+>   					       0, NULL);
 
 
