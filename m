@@ -2,154 +2,108 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A49B150E54D
-	for <lists+linux-raid@lfdr.de>; Mon, 25 Apr 2022 18:12:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A69D50EAB2
+	for <lists+linux-raid@lfdr.de>; Mon, 25 Apr 2022 22:37:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243248AbiDYQPa (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 25 Apr 2022 12:15:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46716 "EHLO
+        id S236285AbiDYUj6 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 25 Apr 2022 16:39:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242499AbiDYQP3 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 25 Apr 2022 12:15:29 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8E13E119ECB
-        for <linux-raid@vger.kernel.org>; Mon, 25 Apr 2022 09:12:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1650903144;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OsPBef0jj6VUn+wTV1avT2qCvK+uErk9g3dM4Rxp5gI=;
-        b=g4vEflGtXkMNpuASGB1m9ak/loLhz0jycvvCjUunIm/fH8Kqk3+ihoCDikYHMZ58/hEx92
-        wc+upJ/p05Zyvnix/n6r5sfc9rlphWJoDUt6CBGEjWLIimPjeWssT5nmlW2cWTQPVICalN
-        +PBEUiP2Yxcp+UScxDdbNhQvEmq4wlE=
-Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com
- [209.85.210.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-237-u_37gboLOKGcXyBmHu_9UA-1; Mon, 25 Apr 2022 12:12:23 -0400
-X-MC-Unique: u_37gboLOKGcXyBmHu_9UA-1
-Received: by mail-ot1-f72.google.com with SMTP id l20-20020a056830269400b00605523dff90so6407628otu.22
-        for <linux-raid@vger.kernel.org>; Mon, 25 Apr 2022 09:12:23 -0700 (PDT)
+        with ESMTP id S235623AbiDYUj5 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 25 Apr 2022 16:39:57 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D6F13A5F8
+        for <linux-raid@vger.kernel.org>; Mon, 25 Apr 2022 13:36:52 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id m20so11197132ejj.10
+        for <linux-raid@vger.kernel.org>; Mon, 25 Apr 2022 13:36:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=lLG88JCPgF7Yhflf4FNi4GQedsSNMbwmPtgneUr9Mu0=;
+        b=d8ZLucicj38STY15e4RBew1U3tYst9Ww7hhfOMjNPXRCLjFdSZy5GsIdWqgav8iNVI
+         J+bsTHrQ2txsDwITCbCiTjFcBOYrXDbyOj+WtotV49zmrC9ue+0/2rvXa0jXJcTtP6RZ
+         BGt+qnd8cowt0gw2120U8egl0120pJ9nGFq/j/XJzXMc0B5zymT1U64ZvRJwYPyP39q4
+         nMrzblvHob8puZbpwGy0Mes+/FUaSlrjsgVZ7E9rze1CQjUdSuBVB9hNQnAHCL+AbzEo
+         fOb4+N91ubKGSeOV2mt898x09K6J4kgnf9igTIUu5BP7Q8b+m9ONXQdpAj8AyZwuVH8v
+         Bxjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=OsPBef0jj6VUn+wTV1avT2qCvK+uErk9g3dM4Rxp5gI=;
-        b=lJe+3Lz9ZONvwLpJRVwFaeMJSMI05Ughk2QThSUyAjf+wxcsCd/+Nl4JgLqjJgsH/2
-         G/tGMXNC2oB+uR8ZVuLy3J0dq968qlR66XdpNk7axy2VasfvkLHpuBk4plRI3qkasgrz
-         3PbZNQLR5fCz/qAWwCo8l622VTX6vBeAG1EQCL9TcEnv9C6OXMscpWFIcGNFaQ5yhoak
-         9p0ziVFpRYm8zpkPvTarRP9P5uzPy4Ltv/VUc4BnwHq3UeqvhCV8VwEzU98Lu1PTKo0Z
-         5w6dSHvajHKWQIBMGD83wo3IafWTRWGpr2dI5YVMH/R5xijJ+yh3IbaZWxWuX+ejtUC+
-         Z5XQ==
-X-Gm-Message-State: AOAM531j2pDqS4vtVWLli9lYsBRphzLuC+5e9EFeDrnIbhCzRkEn5N2n
-        N9dRAlRogtgzh7a7wunxylGAbeBNGGftPlhLHjz2tZrw+mqlg49DjPYeK2TuPXdL7A5y3gQzieY
-        FzQOszJWZ06FbAFLnanuUiYvWkv7FfNf2t4+YXA==
-X-Received: by 2002:a05:6870:a2d0:b0:d9:ae66:b8e2 with SMTP id w16-20020a056870a2d000b000d9ae66b8e2mr11329631oak.7.1650903140887;
-        Mon, 25 Apr 2022 09:12:20 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwQwHS4bz708d6FJC+VSTjdUk3UvGFB8BVNrRh7nHOEPPA1NpxgPFiCtZuZzxOLPjazb4naNn5qPP7kZcH5Wr4=
-X-Received: by 2002:a05:6870:a2d0:b0:d9:ae66:b8e2 with SMTP id
- w16-20020a056870a2d000b000d9ae66b8e2mr11329602oak.7.1650903140350; Mon, 25
- Apr 2022 09:12:20 -0700 (PDT)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=lLG88JCPgF7Yhflf4FNi4GQedsSNMbwmPtgneUr9Mu0=;
+        b=nDOMtTpNPFy+ipz+JqgOzdcR1JNtdGSO/DtMRU4Kr3DzP/2/LmonFQWrLtAvoNHQom
+         30gkomgVVzMG4k6Wqf4eQit8VcGjUm7R7VLdkXsOmhvS8Fsxt1ZuHUlRcHnB/ljye1O1
+         MNNVQI4RtItvNFyOt0U40yHpMt6ouprc9uECH7fE1MQqCE7Y1gCd11bg6kG3G2TYlBmH
+         F3CpgzZrkZyLqtT0qK8I1O+KnoqeZJxU+DY3LittFD8Na3QS+r2o93hMB+CfcWXWsydw
+         4FWSajua5gDjmrL3EoEK9v+P9bYwZYX7ZA/YfhHiYQ8aVEA2YDE6NfungCnY+ZYSz5vI
+         T3OA==
+X-Gm-Message-State: AOAM530UgrwNcI/+OUVVQjSwhEvsl2pczFoIlOLuOyVVjh9IIYczbXGH
+        7YuCwX1Zz99IRC7TK6Oo3jp2C9EZhHZ90HQ8wgE=
+X-Google-Smtp-Source: ABdhPJzvyanVKdn6XF7EjYZWuICm8VEmsNlI6gId536Sp0nGJkL8vpsLHwpCv9z/j2+H/fsO3vacuKy9dVRl1ESl+IA=
+X-Received: by 2002:a17:907:7b92:b0:6db:71f1:fc20 with SMTP id
+ ne18-20020a1709077b9200b006db71f1fc20mr17340913ejc.343.1650919011104; Mon, 25
+ Apr 2022 13:36:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220420195425.34911-1-logang@deltatee.com> <CALTww28fwNpm0O_jc7-2Xr0JSX9i6F1kgoUQ8m_k6ZgPa1XxXw@mail.gmail.com>
- <c14c0103-9cbd-7d0f-486b-344dd33725ab@deltatee.com> <4094aed9-d22d-d14f-07a7-5abe599beeab@linux.dev>
- <8d8fbf24-51b5-a076-b7ad-fcbb7d5c275e@deltatee.com>
-In-Reply-To: <8d8fbf24-51b5-a076-b7ad-fcbb7d5c275e@deltatee.com>
-From:   Xiao Ni <xni@redhat.com>
-Date:   Tue, 26 Apr 2022 00:12:09 +0800
-Message-ID: <CALTww28SuvhzCL6p4L9y9ZH5Mmgss-tTm_QzbEo60hZOXAUS0A@mail.gmail.com>
-Subject: Re: [PATCH v2 00/12] Improve Raid5 Lock Contention
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Guoqing Jiang <guoqing.jiang@linux.dev>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        Song Liu <song@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Stephen Bates <sbates@raithlin.com>,
-        Martin Oliveira <Martin.Oliveira@eideticom.com>,
-        David Sloan <David.Sloan@eideticom.com>
+Received: by 2002:a54:31c1:0:0:0:0:0 with HTTP; Mon, 25 Apr 2022 13:36:50
+ -0700 (PDT)
+Reply-To: clmloans9@gmail.com
+From:   MR ANTHONY EDWARD <zayyanusaidu009@gmail.com>
+Date:   Mon, 25 Apr 2022 21:36:50 +0100
+Message-ID: <CADM+8wTmE33HornPm895Ae56Njf1OfSEFAwFaSSsNUz-HP8wog@mail.gmail.com>
+Subject: SICHERES KREDITANGEBOT BEI 2%
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+X-Spam-Status: Yes, score=6.2 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,SUBJ_ALL_CAPS,
+        T_HK_NAME_FM_MR_MRS,UNDISC_FREEM autolearn=no autolearn_force=no
         version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2a00:1450:4864:20:0:0:0:636 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [zayyanusaidu009[at]gmail.com]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [clmloans9[at]gmail.com]
+        *  0.5 SUBJ_ALL_CAPS Subject is all capitals
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [zayyanusaidu009[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
+        *  3.6 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Mon, Apr 25, 2022 at 11:39 PM Logan Gunthorpe <logang@deltatee.com> wrot=
-e:
->
->
->
-> On 2022-04-24 02:00, Guoqing Jiang wrote:
-> >
-> >
-> > On 4/22/22 12:02 AM, Logan Gunthorpe wrote:
-> >>
-> >> On 2022-04-21 02:45, Xiao Ni wrote:
-> >>> Could you share the commands to get the test result (lock contention
-> >>> and performance)?
-> >> Sure. The performance we were focused on was large block writes. So we
-> >> setup raid5 instances with varying number of disks and ran the followi=
-ng
-> >> fio script directly on the drive.
-> >>
-> >> [simple]
-> >> filename=3D/dev/md0
-> >> ioengine=3Dlibaio
-> >> rw=3Dwrite
-> >> direct=3D1
-> >> size=3D8G
-> >> blocksize=3D2m
-> >> iodepth=3D16
-> >> runtime=3D30s
-> >> time_based=3D1
-> >> offset_increment=3D8G
-> >> numjobs=3D12
-> >> =EF=BF=BC
-> >> (We also played around with tuning this but didn't find substantial
-> >> changes once the bottleneck was hit)
-> >
-> > Nice, I suppose other IO patterns keep the same performance as before.
-> >
-> >> We tuned md with parameters like:
-> >>
-> >> echo 4 > /sys/block/md0/md/group_thread_cnt
-> >> echo 8192 > /sys/block/md0/md/stripe_cache_size
-> >>
-> >> For lock contention stats, we just used lockstat[1]; roughly like:
-> >>
-> >> echo 1 > /proc/sys/kernel/lock_stat
-> >> fio test.fio
-> >> echo 0 > /proc/sys/kernel/lock_stat
-> >> cat /proc/lock_stat
-> >>
-> >> And compared the before and after.
-> >
-> > Thanks for your effort, besides the performance test, please try to run
-> > mdadm test suites to avoid regression.
->
-> Yeah, is there any documentation for that? I tried to look into it but
-> couldn't figure out how it's run.
->
-> I do know that lkp-tests has run it on this series as I did get an error
-> from it. But while I'm pretty sure that error has been resolved, I was
-> never able to figure out how to run them locally.
->
+--=20
+Ben=C3=B6tigen Sie ein Gesch=C3=A4ftsdarlehen oder ein Darlehen jeglicher A=
+rt?
+Wenn ja, kontaktieren Sie uns
 
-Hi Logan
-
-You can clone the mdadm repo at
-git://git.kernel.org/pub/scm/utils/mdadm/mdadm.git
-Then you can find there is a script test under the directory. It's not
-under the tests directory.
-The test cases are under tests directory.
-
-Regards
-Xiao
-
+*Vollst=C3=A4ndiger Name:
+* Ben=C3=B6tigte Menge:
+*Leihdauer:
+*Mobiltelefon:
+*Land:
