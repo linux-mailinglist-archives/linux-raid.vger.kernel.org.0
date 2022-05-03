@@ -2,73 +2,63 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DCE25517A2C
-	for <lists+linux-raid@lfdr.de>; Tue,  3 May 2022 00:45:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23558517FBC
+	for <lists+linux-raid@lfdr.de>; Tue,  3 May 2022 10:28:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230430AbiEBWsa (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 2 May 2022 18:48:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43390 "EHLO
+        id S232818AbiECIcZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 3 May 2022 04:32:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229867AbiEBWs3 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 2 May 2022 18:48:29 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 772B1E08F
-        for <linux-raid@vger.kernel.org>; Mon,  2 May 2022 15:44:58 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id m14-20020a17090a34ce00b001d5fe250e23so574687pjf.3
-        for <linux-raid@vger.kernel.org>; Mon, 02 May 2022 15:44:58 -0700 (PDT)
+        with ESMTP id S232233AbiECIcY (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 3 May 2022 04:32:24 -0400
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44C243205B
+        for <linux-raid@vger.kernel.org>; Tue,  3 May 2022 01:28:52 -0700 (PDT)
+Received: by mail-yb1-xb31.google.com with SMTP id h10so897146ybc.4
+        for <linux-raid@vger.kernel.org>; Tue, 03 May 2022 01:28:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9Pev6TadqoPCvCslhpANrkqa0tRzANTdzEtaxAf0Hbw=;
-        b=IO+ItVxTbHRREuluGK2fhmQblF4cgW5vavOTKIpFPkRROJX9gmuVnnXRYdROnlh0zK
-         5E/tkPZJOY5b9uCPVSTrQo5ZT1qEvx0sCk9u5l6zkQG9tJNfyrMIAV++5Lw/q2Ftl4OP
-         5q5eBsfs5slcB3cSP6ZXkHWEyjFQtO83O56Dk=
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=imkzOOm11fZfVhhu7YTad+xkt2EA3V5dXbkEnDE5CzQ=;
+        b=OB6FeGakm9xfiRTee7LE/PcQtegVqt0O+d2RTupQPpCUuuqa66t7cWtvMJxdeirwKU
+         pp6QLJ9U8UYvOZYqzLiImEDweSXTPMDtF61oRV58b0fKRyfcMWZFAlVcmuIjjqqJCnZg
+         dohAfdMN2u3Ml9xW6qqJ58OeD8O1G5TP+FGqEyHKmHUEbG0JO9ImzDbmhh2NQi4KYf1K
+         F0sxP+yLe6vHwsoDMbt9rAdl7f7Z/pf4ADIWytFr7iETicZnUXyMBaDw0Rab0mIvZG7G
+         hFImabd1scnfPrAzQgmzJb1Wg+Rfo3FKMylEpkKU3oZ3moMtx92SHhoAWi1BWHIJHswL
+         2Kqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9Pev6TadqoPCvCslhpANrkqa0tRzANTdzEtaxAf0Hbw=;
-        b=69F9QpUUxiJibbZefnEHntol4QO/5aIBADS1aRa8JtZvWOkky0r1dvemOWTOvdxZm1
-         inPjT3rA4j/1188fZy/m4V8TShDwg25VcXPeO3KPOWLWKmo7owbWdIDEpU799ZdD85sG
-         1wtDR2CIm20KUmnmiO5ykmb1mj3/KRDH0/5tejF8hCszwUCpnTqwVuqYYXEzO47eMNwJ
-         SjvJqPNqBVC2ku8BUAIRFCSPiOuyEBNiw04lNOmp/5l4StYV9KypreDNsGFkwMTPGnR7
-         XL+x41zWx7HnvYl3pW7orBygdkFAG1UUi+EuYLGt2HSaLtx35faV94ibjRRrllFLIdx1
-         eQ8Q==
-X-Gm-Message-State: AOAM530dw3TGUTR7314eTMPxzb8alXkXGE4vULNBLDgIgct3fZdm9sJe
-        mGstYBML87AoRda2SBtUWuN0Jw==
-X-Google-Smtp-Source: ABdhPJxhVHtiibpNcHj8mIUaI5q3jvfhB3UxBy63zLm72g4zQPjmd26WW0fmoc9EkpEka6ka3qUucw==
-X-Received: by 2002:a17:902:d4c2:b0:15e:abd0:926f with SMTP id o2-20020a170902d4c200b0015eabd0926fmr4925055plg.129.1651531497972;
-        Mon, 02 May 2022 15:44:57 -0700 (PDT)
-Received: from localhost ([2620:15c:202:201:1e1a:955c:a9ca:e550])
-        by smtp.gmail.com with UTF8SMTPSA id f3-20020a17090a654300b001d26c7d5aacsm218470pjs.13.2022.05.02.15.44.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 May 2022 15:44:57 -0700 (PDT)
-Date:   Mon, 2 May 2022 15:44:56 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, dm-devel@redhat.com,
-        linux-raid@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Song Liu <song@kernel.org>
-Subject: Re: [PATCH v2 2/3] LoadPin: Enable loading from trusted dm-verity
- devices
-Message-ID: <YnBe6K72iKSDSqk9@google.com>
-References: <20220426213110.3572568-1-mka@chromium.org>
- <20220426143059.v2.2.I01c67af41d2f6525c6d023101671d7339a9bc8b5@changeid>
- <202204302316.AF04961@keescook>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=imkzOOm11fZfVhhu7YTad+xkt2EA3V5dXbkEnDE5CzQ=;
+        b=GabI37ZPp6ebIO2xhMkqez8WqI7Ot/KyJsSqOTBZtr4fhtbYMusGvVF5ThYGTRClVT
+         /050oHrIbUXs5EZ590xxwFZuAAPkZkq3Cq6kfMbRa8daHZvMRbYag7ZLMg4Wa0NPDVqa
+         xpVl8YQ2jCb66Evx68eYK2oiap+FcEkMAwMKAqyhnEKGrI1+xfxcCfzhHTI2URiTlsKO
+         MOgvR3fXmVz/Hcd9bRiCqn+LcnFigYE4UzAKLjJzQUVNGoY4DLk/2AlIj7FS5SliqOGS
+         WN00E2IwwViA8xSx66nntHOj9JXxzKj5xW+6WwrU3MMdEc6KmDoSUxn8as6k1WmUV3yy
+         yqSA==
+X-Gm-Message-State: AOAM530Q0biJdvGjQIg/8GvBArAQw9XLBisG0zT2vshXXoAJEsnvMKN/
+        yKS56H+nYlTAfYZH4pjpdOshl/h9KU0PTTgBI+A=
+X-Google-Smtp-Source: ABdhPJzfuFmTkrOU7h0ujfk9tMY1oJ4PICZa4P5mIxjjskNbBdXJgMlkAhLuOu5oz03Fl50Z0tBC+aBOaxMr68f51Y0=
+X-Received: by 2002:a25:cfc5:0:b0:647:39d4:49f5 with SMTP id
+ f188-20020a25cfc5000000b0064739d449f5mr13034064ybg.595.1651566531457; Tue, 03
+ May 2022 01:28:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202204302316.AF04961@keescook>
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Received: by 2002:a05:7110:7019:b0:173:e2d7:681d with HTTP; Tue, 3 May 2022
+ 01:28:51 -0700 (PDT)
+Reply-To: katelordloancompany90@gmail.com
+From:   kate lord <katelordloancompany90@gmail.com>
+Date:   Tue, 3 May 2022 01:28:51 -0700
+Message-ID: <CAG1K+31AsNfLRgFqGedAX+ZaqXx4W57ftY-0LVB6XT8zZZ8NWA@mail.gmail.com>
+Subject: =?UTF-8?B?0J7RhNC10YDRgtCwINC30LAg0LfQsNC10Lw=?=
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,39 +66,37 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Sat, Apr 30, 2022 at 11:21:54PM -0700, Kees Cook wrote:
-> On Tue, Apr 26, 2022 at 02:31:09PM -0700, Matthias Kaehlcke wrote:
-> > I'm still doubting what would be the best way to configure
-> > the list of trusted digests. The approach in v2 of writing
-> > a path through sysctl is flexible, but it also feels a bit
-> > odd. I did some experiments with passing a file descriptor
-> > through sysctl, but it's also odd and has its own issues.
-> > Passing the list through a kernel parameter seems hacky.
-> > A Kconfig string would work, but can be have issues when
-> > the same config is used for different platforms, where
-> > some may have trusted digests and others not.
-> 
-> I prefer the idea of passing an fd, since that can just use LoadPin
-> itself to verify the origin of the fd.
-> 
-> I also agree, though, that it's weird as a sysctl. Possible thoughts:
-> 
-> - make it a new ioctl on /dev/mapper/control (seems reasonable given
->   that it's specifically about dm devices).
-> - have LoadPin grow a securityfs node, maybe something like
->   /sys/kernel/security/loadpin/dm-verify and do the ioctl there (seems
->   reasonable given that it's specifically about LoadPin, but is perhaps
->   more overhead to built the securityfs).
-
-Thanks for your feedback!
-
-Agreed that an ioctl is preferable over a sysctl interface. I wasn't aware
-of securityfs and prefer it over a /dev/mapper/control ioctl. Ultimately
-the list of digests is meaningful to LoadPin, not (directly) to the device
-mapper / verity. I'm not sure how well this feature of integrating LoadPin
-with verity will be by the verity maintainers in the first place, it's
-probably best to limit the LoadPin specific stuff in verity to a minimum.
-I experimented a bit with the securityfs option, building it doesn't seem
-too much of an overhead. If loadpin.c ends up too cluttered with the
-verity and securityfs stuff I could try to outsource some of it to (a)
-dedicated file(s).
+0JfQtNGA0LDQstC10LnRgtC1Lg0KDQrQotC+0LLQsCDQuNC80LAg0LfQsCDRhtC10Lsg0LTQsCDQ
+uNC90YTQvtGA0LzQuNGA0LAg0YjQuNGA0L7QutCw0YLQsCDQvtCx0YnQtdGB0YLQstC10L3QvtGB
+0YIsINGH0LUgTXJzLkthdGUgTG9yZCwNCtGH0LDRgdGC0LXQvSDQt9Cw0LXQvCDQvtGCINC60YDQ
+tdC00LjRgtC+0YAsINC+0YLQstC+0YDQuCDQuNC60L7QvdC+0LzQuNGH0LXRgdC60LAg0LLRitC3
+0LzQvtC20L3QvtGB0YIg0LfQsCDRgtC10LfQuCwg0LrQvtC40YLQvg0K0YHQtSDQvdGD0LbQtNCw
+0Y/RgiDQvtGCINGE0LjQvdCw0L3RgdC+0LLQsCDQv9C+0LzQvtGJLiDQndC40LUg0L7RgtC/0YPR
+gdC60LDQvNC1INC30LDQtdC80Lgg0L3QsCDRhNC40LfQuNGH0LXRgdC60Lgg0LvQuNGG0LAsDQrR
+hNC40YDQvNC4INC4INGE0LjRgNC80Lgg0L/RgNC4INGP0YHQvdC4INC4INGA0LDQt9Cx0LjRgNCw
+0LXQvNC4INGD0YHQu9C+0LLQuNGPINGBINC70LjRhdCy0LAg0L7RgiDRgdCw0LzQviAzJS4NCtGB
+0LLRitGA0LbQtdGC0LUg0YHQtSDRgSDQvdCw0YEg0LTQvdC10YEg0YfRgNC10Lcg0LjQvNC10LnQ
+uzogKCBrYXRlbG9yZGxvYW5jb21wYW55OTBAZ21haWwuY29tKSwNCtC30LAg0LTQsCDQvNC+0LbQ
+tdC8INC00LAg0LLQuCDQv9GA0LXQtNC+0YHRgtCw0LLQuNC8INC90LDRiNC40YLQtSDRg9GB0LvQ
+vtCy0LjRjyDQt9CwINC30LDQtdC8Lg0KDQrQmNCd0KTQntCg0JzQkNCm0JjQryDQutGK0Lwg0LrR
+gNC10LTQuNGC0L7Qv9C+0LvRg9GH0LDRgtC10LvRjw0KDQoxKSDQmNC80LU6IC4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLiAuLi4uDQoNCjIpINCU0YrRgNC2
+0LDQstCwOiAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uIC4N
+Cg0KMykg0JDQtNGA0LXRgTogLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLiAuDQoNCjQpINCf0L7QuzogLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uIC4uLi4uDQoNCjUpINCh0LXQvNC10LnQvdC+INC/0L7Qu9C+0LbQtdC9
+0LjQtTogLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLg0KDQo2KSDQn9GA
+0L7RhNC10YHQuNGPOiAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uDQoNCjcpINCi0LXQu9C10YTQvtC9OiAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4NCg0KOCkg0JrQsNC90LTQuNC00LDRgtGB0YLQstCw0LvQuCDQ
+u9C4INGB0YLQtSDQv9GA0LXQtNC4IC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLg0K
+DQo5KSDQnNC10YHQtdGH0LXQvSDQtNC+0YXQvtC0OiAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uDQoNCjEwKSDQndC10L7QsdGF0L7QtNC40LzQsCDRgdGD
+0LzQsCDQvdCwINC30LDQtdC80LA6IC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+DQoNCjExKSDQn9GA0L7QtNGK0LvQttC40YLQtdC70L3QvtGB0YIg0L3QsCDQt9Cw0LXQvNCwOiAu
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uDQoNCjEyKSDQptC1
+0Lsg0L3QsCDQt9Cw0LXQvNCwOiAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4NCg0KMTMpINCg0LXQu9C40LPQuNGPOiAuLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uIC4NCg0K0JfQsCDQstGA0YrQt9C60LA6ICgga2F0ZWxv
+cmRsb2FuY29tcGFueTkwQGdtYWlsLmNvbSApIHdoYXRzYXBwOyArMjM0NzAzMjkwOTcyOA0KDQoN
+CtCR0LvQsNCz0L7QtNCw0YDRjywNCtCTLdC20LAg0JrQtdC50YIg0JvQvtGA0LQNCg==
