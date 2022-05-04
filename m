@@ -2,160 +2,100 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 126D251B1CE
-	for <lists+linux-raid@lfdr.de>; Thu,  5 May 2022 00:27:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 443A551B445
+	for <lists+linux-raid@lfdr.de>; Thu,  5 May 2022 02:09:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359085AbiEDWbX (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 4 May 2022 18:31:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47978 "EHLO
+        id S232385AbiEEAGY (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 4 May 2022 20:06:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358817AbiEDWbW (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 4 May 2022 18:31:22 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E7A71839F;
-        Wed,  4 May 2022 15:27:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651703264; x=1683239264;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Vj0dF0rneHeDuVaqq9G7vHZ4CjgqcvP5nCZmY9HAp6M=;
-  b=fxOL8T+yv9FhuHWniZDPEi4GkTv4kZFJdqhDj6oqxPehKrBLfVvR1BaX
-   LN3LsoaOmhyVPy6CLXMBj7oLPCCaWSx5+IlAtfhKBaCTh3+iLnDMZdu3M
-   9pCGF7Gcmd7EbLHarwbRl3U4Ulo1kQaPcgPcAwSmFoDmD80Sq/ZR2GaHX
-   FeDJq0OkGFViIXRGllR3hMcs2oR468xq++0/q8nZo1sh0/+XVW8WrQaF9
-   WcS3UpJt8HCUSpojovHus93N1Gyvd5QZ6O6G+04XDNwk4kbRBpIt0GcEK
-   DME5nEp8HyyiTifTo8lg3aLQ1oZ6JvSQuckDvM09SIoGjd2E2O73bOIYp
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10337"; a="354354275"
-X-IronPort-AV: E=Sophos;i="5.91,199,1647327600"; 
-   d="scan'208";a="354354275"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2022 15:27:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,199,1647327600"; 
-   d="scan'208";a="568311611"
-Received: from lkp-server01.sh.intel.com (HELO 5056e131ad90) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 04 May 2022 15:27:41 -0700
-Received: from kbuild by 5056e131ad90 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1nmNTA-000BqY-LW;
-        Wed, 04 May 2022 22:27:40 +0000
-Date:   Thu, 5 May 2022 06:26:58 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Matthias Kaehlcke <mka@chromium.org>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>
-Cc:     kbuild-all@lists.01.org, dm-devel@redhat.com,
-        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        Song Liu <song@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-security-module@vger.kernel.org,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v3 2/3] LoadPin: Enable loading from trusted dm-verity
- devices
-Message-ID: <202205050636.VNgSDFVz-lkp@intel.com>
-References: <20220504125404.v3.2.I01c67af41d2f6525c6d023101671d7339a9bc8b5@changeid>
+        with ESMTP id S242413AbiEDX60 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 4 May 2022 19:58:26 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5A5D53A5E
+        for <linux-raid@vger.kernel.org>; Wed,  4 May 2022 16:54:11 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id j2so5115542ybu.0
+        for <linux-raid@vger.kernel.org>; Wed, 04 May 2022 16:54:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=ampHH5WJLIBWSsxWwzVjbk5pO9UBFxn81pZ6QIDzZtY=;
+        b=Dn1MT8x7p4Rbn+pctwVkt7IgIdUxT0LRLjox/JaF9ttsZ2N8sUUglHFRxQa3sl75aK
+         h1U1JpCoOjPff8rV+LL0edQuBh+YvYlTbZ4zx127Qa80qMcS49J0d2nS2s7mVVadwp/M
+         vGp6wV8qQhR9tMRiQjyWHIJslgvG4HigF7p24aLxixJ1l99K68kLikab9Y0HgtSpkDYW
+         0+riuhXlj9dAnGs04evyYz4sFXKtm0FlJKiBI2Dtbo7ebvKr6E7XJkxgxzCXhReMwL1D
+         yv9OUeo9KjH+/RIlVXefhsYivAQRdlwo604eWoXrrvRFVxcSgXwgPis+UtVhyLpBWx3z
+         WyWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=ampHH5WJLIBWSsxWwzVjbk5pO9UBFxn81pZ6QIDzZtY=;
+        b=cnixiJhz1A+yBBeu5ulfbrz5vMa64XDe5Lg7FO5iuNv7NrPXdLfx2QybEhrZcJxwXw
+         nw0azPfXYJhSAeo8Qnt7E/ekntS0GEInd1fHY5elJxJBZNmhQkzYC2p58+FN5dtueXzc
+         qrtSg/WUXP2MYllDMm+C3jJed810ZARb8ZSOXfqRczvVcrK9SgApIpgISPvLvCcwXGBA
+         Ol8XruiQBeA0FqHJA/dOXqKUjDofWUUbjZa1XfujQYp1Mcofh6bmfxXK4HbBtFZB0nKn
+         SP4338G8MeA3YBTRayop53qZdvQjIuHQDsCWxlP5ZIV2YY94vgcuPBeWTIGQR6ne63mQ
+         h9ow==
+X-Gm-Message-State: AOAM533ofmK2wdN9O1B07kG5rsNcFvZ914pxbt/e0M+dKrfWrNIrH8S8
+        YKJO7FnTCDTl4DSkz+mL4ToBKypXrCJ3FFUISgQ8NKckYFtRRQ==
+X-Google-Smtp-Source: ABdhPJyXbFHNtxfp8+qt+M9kuv/iG7XfFeFFPd7I4/fmpdxuycMtmf6dIJw5ghtZAT2CwgvAVE/kUl0HxsirxLIU8v0=
+X-Received: by 2002:a9d:6b16:0:b0:605:e0eb:d3d6 with SMTP id
+ g22-20020a9d6b16000000b00605e0ebd3d6mr8263208otp.213.1651708440302; Wed, 04
+ May 2022 16:54:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220504125404.v3.2.I01c67af41d2f6525c6d023101671d7339a9bc8b5@changeid>
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+Received: by 2002:a05:6802:1a9:0:0:0:0 with HTTP; Wed, 4 May 2022 16:53:59
+ -0700 (PDT)
+Reply-To: ortegainvestmmentforrealinvest@gmail.com
+From:   Info <joybhector64@gmail.com>
+Date:   Thu, 5 May 2022 05:23:59 +0530
+Message-ID: <CAP7KLYgH9LcKHS-KgR0zObHAgC6Fr3D+dOJSbDKurTc_12+iFw@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.3 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:b41 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5004]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [joybhector64[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [joybhector64[at]gmail.com]
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.5 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi Matthias,
-
-Thank you for the patch! Perhaps something to improve:
-
-[auto build test WARNING on device-mapper-dm/for-next]
-[also build test WARNING on song-md/md-next kees/for-next/pstore linus/master v5.18-rc5 next-20220504]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Matthias-Kaehlcke/LoadPin-Enable-loading-from-trusted-dm-verity-devices/20220505-035620
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git for-next
-config: arc-allyesconfig (https://download.01.org/0day-ci/archive/20220505/202205050636.VNgSDFVz-lkp@intel.com/config)
-compiler: arceb-elf-gcc (GCC) 11.3.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/56f912dcbb302f9a7e6694493529abd4e3f337af
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Matthias-Kaehlcke/LoadPin-Enable-loading-from-trusted-dm-verity-devices/20220505-035620
-        git checkout 56f912dcbb302f9a7e6694493529abd4e3f337af
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=arc SHELL=/bin/bash security/loadpin/
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
-
-All warnings (new ones prefixed by >>):
-
-   In file included from include/linux/kernel.h:29,
-                    from include/linux/cpumask.h:10,
-                    from include/linux/mm_types_task.h:14,
-                    from include/linux/mm_types.h:5,
-                    from include/linux/buildid.h:5,
-                    from include/linux/module.h:14,
-                    from security/loadpin/loadpin.c:12:
-   security/loadpin/loadpin.c: In function 'init_loadpin_securityfs':
->> include/linux/kern_levels.h:5:25: warning: format '%d' expects argument of type 'int', but argument 2 has type 'long int' [-Wformat=]
-       5 | #define KERN_SOH        "\001"          /* ASCII Start Of Header */
-         |                         ^~~~~~
-   include/linux/printk.h:418:25: note: in definition of macro 'printk_index_wrap'
-     418 |                 _p_func(_fmt, ##__VA_ARGS__);                           \
-         |                         ^~~~
-   include/linux/printk.h:489:9: note: in expansion of macro 'printk'
-     489 |         printk(KERN_ERR pr_fmt(fmt), ##__VA_ARGS__)
-         |         ^~~~~~
-   include/linux/kern_levels.h:11:25: note: in expansion of macro 'KERN_SOH'
-      11 | #define KERN_ERR        KERN_SOH "3"    /* error conditions */
-         |                         ^~~~~~~~
-   include/linux/printk.h:489:16: note: in expansion of macro 'KERN_ERR'
-     489 |         printk(KERN_ERR pr_fmt(fmt), ##__VA_ARGS__)
-         |                ^~~~~~~~
-   security/loadpin/loadpin.c:413:17: note: in expansion of macro 'pr_err'
-     413 |                 pr_err("LoadPin: could not create securityfs dir: %d\n",
-         |                 ^~~~~~
->> include/linux/kern_levels.h:5:25: warning: format '%d' expects argument of type 'int', but argument 2 has type 'long int' [-Wformat=]
-       5 | #define KERN_SOH        "\001"          /* ASCII Start Of Header */
-         |                         ^~~~~~
-   include/linux/printk.h:418:25: note: in definition of macro 'printk_index_wrap'
-     418 |                 _p_func(_fmt, ##__VA_ARGS__);                           \
-         |                         ^~~~
-   include/linux/printk.h:489:9: note: in expansion of macro 'printk'
-     489 |         printk(KERN_ERR pr_fmt(fmt), ##__VA_ARGS__)
-         |         ^~~~~~
-   include/linux/kern_levels.h:11:25: note: in expansion of macro 'KERN_SOH'
-      11 | #define KERN_ERR        KERN_SOH "3"    /* error conditions */
-         |                         ^~~~~~~~
-   include/linux/printk.h:489:16: note: in expansion of macro 'KERN_ERR'
-     489 |         printk(KERN_ERR pr_fmt(fmt), ##__VA_ARGS__)
-         |                ^~~~~~~~
-   security/loadpin/loadpin.c:421:17: note: in expansion of macro 'pr_err'
-     421 |                 pr_err("LoadPin: could not create securityfs entry 'dm-verity': %d\n",
-         |                 ^~~~~~
-
-
-vim +5 include/linux/kern_levels.h
-
-314ba3520e513a Joe Perches 2012-07-30  4  
-04d2c8c83d0e3a Joe Perches 2012-07-30 @5  #define KERN_SOH	"\001"		/* ASCII Start Of Header */
-04d2c8c83d0e3a Joe Perches 2012-07-30  6  #define KERN_SOH_ASCII	'\001'
-04d2c8c83d0e3a Joe Perches 2012-07-30  7  
-
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+I am an investor. I came from the USA and I have many investments all
+over the world.
+
+I want you to partner with me to invest in your country I am into many
+investment such as real Estate or buying of properties i can also
+invest money in any of existing business with equity royalty or by %
+percentage so on,
+Warm regards
