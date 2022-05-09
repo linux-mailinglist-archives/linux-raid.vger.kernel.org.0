@@ -2,125 +2,229 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE93151F4D1
-	for <lists+linux-raid@lfdr.de>; Mon,  9 May 2022 08:57:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA79551F4EF
+	for <lists+linux-raid@lfdr.de>; Mon,  9 May 2022 09:18:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229557AbiEIGue (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 9 May 2022 02:50:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54000 "EHLO
+        id S233952AbiEIHO6 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 9 May 2022 03:14:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233984AbiEIGnV (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 9 May 2022 02:43:21 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23107190D39
-        for <linux-raid@vger.kernel.org>; Sun,  8 May 2022 23:39:28 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6A881B80ECB
-        for <linux-raid@vger.kernel.org>; Mon,  9 May 2022 06:39:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 225FBC385AE
-        for <linux-raid@vger.kernel.org>; Mon,  9 May 2022 06:39:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652078358;
-        bh=cwX24avHeN2vNEm+oxOZ9bdMgpz2s62OXVsqa0MtqG8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=HI/ZpSHRAgdd7Qg+pZgMf//PShKv94JYb1tJw8jCjK+BZDWrBJzYPk32nPVK5bRCj
-         fDJXMOyog1YdRbpkgM3JNQL/9Z2VphEjn1SzxbhudXEvbjq2OfT6OyotcO/uYPmzj7
-         3aNYvam+XTxr9nn2RfWjcMqqRZN1F61bhWHvtGrhmYookqzFFTW3ZRMb8BhhlI/Xqp
-         ZSRpHnqH+OxBQ47oBNjfaxogl9tcT3OFpjuQPvRrW3GNRms5l+xN1oZ14SYyFJ112A
-         x7AtfauSA5S86pri9/L0tn68gwS5vYBYhAVKGAyQOTAdWDBBnVeXpUoJ8QDV8IL7q4
-         0C4/DHi6V92fQ==
-Received: by mail-yb1-f180.google.com with SMTP id w187so23144225ybe.2
-        for <linux-raid@vger.kernel.org>; Sun, 08 May 2022 23:39:18 -0700 (PDT)
-X-Gm-Message-State: AOAM532U7fm2pM9bwHJREkzEsrdZPCBKvIDK7PDDFI4xUim5HzpoaGWr
-        ZfcK9i0ZslycxtGElHB56wcJ7CmzkPH8A9FS0L0=
-X-Google-Smtp-Source: ABdhPJyLkbgmzo9MvsqT3ZcyxbC+z0kMBL4CJkpjmxgfosELaVoiWwbQiL/OKZKMij2izsIZZqcxK6H6o9gihpPJsUg=
-X-Received: by 2002:a25:395:0:b0:645:8146:9a9e with SMTP id
- 143-20020a250395000000b0064581469a9emr11439109ybd.389.1652078357203; Sun, 08
- May 2022 23:39:17 -0700 (PDT)
+        with ESMTP id S235521AbiEIG43 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 9 May 2022 02:56:29 -0400
+Received: from smtp.hosts.co.uk (smtp.hosts.co.uk [85.233.160.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0C5D158F84
+        for <linux-raid@vger.kernel.org>; Sun,  8 May 2022 23:52:35 -0700 (PDT)
+Received: from host86-155-180-61.range86-155.btcentralplus.com ([86.155.180.61] helo=[192.168.1.218])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1nnxFm-000CTb-Cq;
+        Mon, 09 May 2022 07:52:23 +0100
+Message-ID: <5931f716-008d-399b-2ea8-acbbc9c8d239@youngman.org.uk>
+Date:   Mon, 9 May 2022 07:52:22 +0100
 MIME-Version: 1.0
-References: <20220505081641.21500-1-guoqing.jiang@linux.dev> <20220505081641.21500-3-guoqing.jiang@linux.dev>
-In-Reply-To: <20220505081641.21500-3-guoqing.jiang@linux.dev>
-From:   Song Liu <song@kernel.org>
-Date:   Sun, 8 May 2022 23:39:06 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW4EhdQ6-t8hOyznn0XF2REWLXBCLKh1ru9NZHz9xF5raQ@mail.gmail.com>
-Message-ID: <CAPhsuW4EhdQ6-t8hOyznn0XF2REWLXBCLKh1ru9NZHz9xF5raQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] md: protect md_unregister_thread from reentrancy
-To:     Guoqing Jiang <guoqing.jiang@linux.dev>
-Cc:     Donald Buczek <buczek@molgen.mpg.de>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: Failed adadm RAID array after aborted Grown operation
+Content-Language: en-GB
+To:     Bob Brand <brand@wmawater.com.au>, linux-raid@vger.kernel.org
+Cc:     Phil Turmel <philip@turmel.org>, NeilBrown <neilb@suse.com>
+References: <00ae01d862de$1d336980$579a3c80$@wmawater.com.au>
+ <f4e9c9f8-590d-49a4-39da-e31d81258ff3@youngman.org.uk>
+ <00cf01d86327$9c5dd8a0$d51989e0$@wmawater.com.au>
+ <3f84648b-29db-0819-e3ba-af52435a2aab@youngman.org.uk>
+ <00d101d86329$a2a57130$e7f05390$@wmawater.com.au>
+ <00d601d8632f$ac1f1300$045d3900$@wmawater.com.au>
+ <00e401d86333$e75d8f60$b618ae20$@wmawater.com.au>
+ <00eb01d86339$18cc0860$4a641920$@wmawater.com.au>
+From:   Wols Lists <antlists@youngman.org.uk>
+In-Reply-To: <00eb01d86339$18cc0860$4a641920$@wmawater.com.au>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu, May 5, 2022 at 1:18 AM Guoqing Jiang <guoqing.jiang@linux.dev> wrote:
->
-> From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
->
-> Generally, the md_unregister_thread is called with reconfig_mutex, but
-> raid_message in dm-raid doesn't hold reconfig_mutex to unregister thread,
-> so md_unregister_thread can be called simulitaneously from two call sites
-> in theory.
+On 09/05/2022 01:09, Bob Brand wrote:
+> Hi Wol,
+> 
+> My apologies for continually bothering you but I have a couple of questions:
 
-Can we add lock/unlock into raid_message? Are there some constraints here?
+Did you read the links I sent you?
+> 
+> 1. How do I overcome the error message "mount: /dev/md125: can't read
+> superblock."  Do it use fsck?
+> 
+> 2. The removed disk is showing as "   -   0   0   30   removed". Is it safe
+> to use "mdadm /dev/md2 -r detached" or "mdadm /dev/md2 -r failed" to
+> overcome this?
 
-Thanks,
-Song
+I don't know :-( This is getting a bit out of my depth. But I'm 
+SERIOUSLY concerned you're still futzing about with CentOS 7!!!
 
->
-> Then after previous commit which remove the protection of reconfig_mutex
-> for md_unregister_thread completely, the potential issue could be worse
-> than before.
->
-> Let's take pers_lock at the beginning of function to ensure reentrancy.
->
-> Reported-by: Donald Buczek <buczek@molgen.mpg.de>
-> Signed-off-by: Guoqing Jiang <guoqing.jiang@linux.dev>
-> ---
->  drivers/md/md.c | 15 ++++++++++-----
->  1 file changed, 10 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index a70e7f0f9268..c401e063bec8 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -7962,17 +7962,22 @@ EXPORT_SYMBOL(md_register_thread);
->
->  void md_unregister_thread(struct md_thread **threadp)
->  {
-> -       struct md_thread *thread = *threadp;
-> -       if (!thread)
-> -               return;
-> -       pr_debug("interrupting MD-thread pid %d\n", task_pid_nr(thread->tsk));
-> -       /* Locking ensures that mddev_unlock does not wake_up a
-> +       struct md_thread *thread;
-> +
-> +       /*
-> +        * Locking ensures that mddev_unlock does not wake_up a
->          * non-existent thread
->          */
->         spin_lock(&pers_lock);
-> +       thread = *threadp;
-> +       if (!thread) {
-> +               spin_unlock(&pers_lock);
-> +               return;
-> +       }
->         *threadp = NULL;
->         spin_unlock(&pers_lock);
->
-> +       pr_debug("interrupting MD-thread pid %d\n", task_pid_nr(thread->tsk));
->         kthread_stop(thread->tsk);
->         kfree(thread);
->  }
-> --
-> 2.31.1
->
+Why didn't you download CentOS 8.5? Why didn't you download RHEL 8.5, or 
+the latest Fedora? Why didn't you download SUSE SLES 15?
+
+Any and all CentOS 7 will come with either an out-of-date mdadm, or a 
+Frankenkernel. NEITHER are a good idea.
+
+Go back to the links I gave you, download and run lsdrv, and post the 
+output here. Hopefully somebody will tell you the next steps. I will do 
+my best.
+> 
+> Thank you!
+> 
+Cheers,
+Wol
+> 
+> -----Original Message-----
+> From: Bob Brand <brand@wmawater.com.au>
+> Sent: Monday, 9 May 2022 9:33 AM
+> To: Bob Brand <brand@wmawater.com.au>; Wol <antlists@youngman.org.uk>;
+> linux-raid@vger.kernel.org
+> Cc: Phil Turmel <philip@turmel.org>
+> Subject: RE: Failed adadm RAID array after aborted Grown operation
+> 
+> I just tried it again with the --invalid_backup switch and it's now showing
+> the State as "clean, degraded".and it's showing all the disks except for the
+> suspect one that I removed.
+> 
+> I'm unable to mount it and see the contents. I get the error "mount:
+> /dev/md125: can't read superblock."
+> 
+> Is there more that I need to do?
+> 
+> Thanks
+> 
+> 
+> -----Original Message-----
+> From: Bob Brand <brand@wmawater.com.au>
+> Sent: Monday, 9 May 2022 9:02 AM
+> To: Bob Brand <brand@wmawater.com.au>; Wol <antlists@youngman.org.uk>;
+> linux-raid@vger.kernel.org
+> Cc: Phil Turmel <philip@turmel.org>
+> Subject: RE: Failed adadm RAID array after aborted Grown operation
+> 
+> Hi Wol,
+> 
+> I've booted to the installation media and I've run the following command:
+> 
+> mdadm
+> /dev/md125 --assemble --update=revert-reshape --backup-file=/mnt/sysimage/grow_md125.bak
+>   --verbose --uuid= f9b65f55:5f257add:1140ccc0:46ca6c19
+> /dev/md125mdadm --assemble --update=revert-reshape --backup-file=/grow_md125.bak
+>    --verbose --uuid=f9b65f55:5f257add:1140ccc0:46ca6c19
+> 
+> But I'm still getting the error:
+> 
+> mdadm: /dev/md125 has an active reshape - checking if critical section needs
+> to be restored
+> mdadm: No backup metadata on /mnt/sysimage/grow_md125.back
+> mdadm: Failed to find backup of critical section
+> mdadm: Failed to restore critical section for reshape, sorry.
+> 
+> 
+> Should I try the --invalid_backup switch or --force?
+> 
+> Thanks,
+> Bob
+> 
+> 
+> -----Original Message-----
+> From: Bob Brand <brand@wmawater.com.au>
+> Sent: Monday, 9 May 2022 8:19 AM
+> To: Wol <antlists@youngman.org.uk>; linux-raid@vger.kernel.org
+> Cc: Phil Turmel <philip@turmel.org>
+> Subject: RE: Failed adadm RAID array after aborted Grown operation
+> 
+> OK.  I've downloaded a Centos 7 - 2009 ISO from centos.org - that seems to
+> be the most recent they have.
+> 
+> 
+> -----Original Message-----
+> From: Wol <antlists@youngman.org.uk>
+> Sent: Monday, 9 May 2022 8:16 AM
+> To: Bob Brand <brand@wmawater.com.au>; linux-raid@vger.kernel.org
+> Cc: Phil Turmel <philip@turmel.org>
+> Subject: Re: Failed adadm RAID array after aborted Grown operation
+> 
+> How old is CentOS 7? With that kernel I guess it's quite old?
+> 
+> Try and get a CentOS 8.5 disk. At the end of the day, the version of linux
+> doesn't matter. What you need is an up-to-date rescue disk.
+> Distro/whatever is unimportant - what IS important is that you are using the
+> latest mdadm, and a kernel that matches.
+> 
+> The problem you have sounds like a long-standing but now-fixed bug. An
+> original CentOS disk might be okay (with matched kernel and mdadm), but
+> almost certainly has what I consider to be a "dodgy" version of mdadm.
+> 
+> If you can afford the downtime, after you've reverted the reshape, I'd try
+> starting it again with the rescue disk. It'll probably run fine. Let it
+> complete and then your old CentOS 7 will be fine with it.
+> 
+> Cheers,
+> Wol
+> 
+> On 08/05/2022 23:04, Bob Brand wrote:
+>> Thank Wol.
+>>
+>> Should I use a CentOS 7 disk or a CentOS disk?
+>>
+>> Thanks
+>>
+>> -----Original Message-----
+>> From: Wols Lists <antlists@youngman.org.uk>
+>> Sent: Monday, 9 May 2022 1:32 AM
+>> To: Bob Brand <brand@wmawater.com.au>; linux-raid@vger.kernel.org
+>> Cc: Phil Turmel <philip@turmel.org>
+>> Subject: Re: Failed adadm RAID array after aborted Grown operation
+>>
+>> On 08/05/2022 14:18, Bob Brand wrote:
+>>> If you’ve stuck with me and read all this way, thank you and I hope
+>>> you can help me.
+>>
+>> https://raid.wiki.kernel.org/index.php/Linux_Raid
+>>
+>> Especially
+>> https://raid.wiki.kernel.org/index.php/Linux_Raid#When_Things_Go_Wrogn
+>>
+>> What you need to do is revert the reshape. I know what may have
+>> happened, and what bothers me is your kernel version, 3.10.
+>>
+>> The first thing to try is to boot from up-to-date rescue media and see
+>> if an mdadm --revert works from there. If it does, your Centos should
+>> then bring everything back no problem.
+>>
+>> (You've currently got what I call a Frankensetup, a very old kernel, a
+>> pretty new mdadm, and a whole bunch of patches that does who knows what.
+>> You really need a matching kernel and mdadm, and your frankenkernel
+>> won't match anything ...)
+>>
+>> Let us know how that goes ...
+>>
+>> Cheers,
+>> Wol
+>>
+>>
+>>
+>> CAUTION!!! This E-mail originated from outside of WMA Water. Do not
+>> click links or open attachments unless you recognize the sender and
+>> know the content is safe.
+>>
+>>
+> 
+> 
+> 
+> CAUTION!!! This E-mail originated from outside of WMA Water. Do not click
+> links or open attachments unless you recognize the sender and know the
+> content is safe.
+> 
+> 
+> 
+
