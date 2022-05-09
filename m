@@ -2,56 +2,55 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8000F51F483
-	for <lists+linux-raid@lfdr.de>; Mon,  9 May 2022 08:28:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C1C151F4BF
+	for <lists+linux-raid@lfdr.de>; Mon,  9 May 2022 08:57:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232757AbiEIGb3 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 9 May 2022 02:31:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42678 "EHLO
+        id S231913AbiEIGwP (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 9 May 2022 02:52:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232789AbiEIG2m (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 9 May 2022 02:28:42 -0400
+        with ESMTP id S235007AbiEIGmR (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 9 May 2022 02:42:17 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95B4211E1ED
-        for <linux-raid@vger.kernel.org>; Sun,  8 May 2022 23:24:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF90318C5BB
+        for <linux-raid@vger.kernel.org>; Sun,  8 May 2022 23:38:23 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 97B9D611F1
-        for <linux-raid@vger.kernel.org>; Mon,  9 May 2022 06:24:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3956C385A8
-        for <linux-raid@vger.kernel.org>; Mon,  9 May 2022 06:24:20 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 12B3D6120C
+        for <linux-raid@vger.kernel.org>; Mon,  9 May 2022 06:38:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C4F6C385AB
+        for <linux-raid@vger.kernel.org>; Mon,  9 May 2022 06:38:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652077461;
-        bh=yxb9bztzaWyK394ZlGyuiEoTbzpn6ZxLHLAH2JlK1U0=;
+        s=k20201202; t=1652078287;
+        bh=3tG7YDqt4ro5bBJHs+KmHoHIsp9UMgdAuUAgUE95sN4=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=FMKlBJAO2HirCfH/YAFRJnHdxoBHx6nUg4dikRy+iETKHJ3PD5pJGbM5ZYhnzz8LU
-         ksCurdWvrf6pMFN9yIaZsOIoE1v23zQNFEOi9hz26TLiRCihzS53e/N2cIWg/sh08b
-         3j8Ig/ESRPTuNVIUXwE8PFmLwy7YRZAy1PxmWkioNW9oiYvU0nG0gk5M0jQvBBDknJ
-         A+05HPC5GQuCIc5bXDMhmaai7KfVZgWJDkyoPrOq1z/0V0SXkjqMNIVYcXgCkJKACP
-         ZDp7yYVJH81W5wJE2VxGp/xfGRqUSGhh6zzONnHVetVjoK4I6Hl/HRXJgb4JQpBuW3
-         q3GcOGXGJWuNw==
-Received: by mail-yb1-f182.google.com with SMTP id y76so23116082ybe.1
-        for <linux-raid@vger.kernel.org>; Sun, 08 May 2022 23:24:20 -0700 (PDT)
-X-Gm-Message-State: AOAM531ayE5SkF8xvTqKSUn8oudW5CcHSjEGHs4QJbsH9g8KcJK1sSyS
-        lkXe4KS3sRwdHzUP9/mIRPtlqZeLSYW1A9Xp7UI=
-X-Google-Smtp-Source: ABdhPJwtTxv+A1yV15aJmQxwv2pEiwJrODCs69FlR+wIfttOs6rzacb2W7Dv4YiIydpxRPM76b1cMcQFob5jSbum5Xk=
-X-Received: by 2002:a25:54c6:0:b0:648:3e45:3f32 with SMTP id
- i189-20020a2554c6000000b006483e453f32mr11649948ybb.257.1652077460057; Sun, 08
- May 2022 23:24:20 -0700 (PDT)
+        b=WcL6Ga8HupbuF93hk3rxJh0BDYQnsy0NWFzD/tM+87FAPRdpRcpujj16TSfr6b+g8
+         3cK09DkZZ9LKJ6Ik2xp9AOdplLO/zbmfhhss6wPoi3Xk+HaRvQo+VKh+mRN+cZMnPX
+         VPua5Gx6eXX30FOuTib82TKMrXZF9BACj9EfZEgRVqk4uNIKNRUD8WzDtVcLKrnICm
+         KxMyAf6r+BVieI0DN3Qo51dPoJLjlg9UK2EVdxisT9yXfLii+CYcvsPc/DZHoVPzOv
+         59ZXbmn3boHvGjuCuOqRoj9DqZ5qEBoHBTTFU+jm8C2ZUZbCAMjVyCTDqiYjITYXeQ
+         JHmj5flC4K5dg==
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-2f16645872fso133175807b3.4
+        for <linux-raid@vger.kernel.org>; Sun, 08 May 2022 23:38:07 -0700 (PDT)
+X-Gm-Message-State: AOAM532F5zMpw3EhjLaMdBfxU/8eiMiHEi/Txj7+b720Jc1i9VsSORjO
+        lVzG/uzc+9cL+Tx7qK4g3XCCysjtoVFkoUilF1c=
+X-Google-Smtp-Source: ABdhPJwobpCefaJhAhOGV/+LAIDu2yHARQijRQV9wFdyy92isVrCK7snziSVsLYrOw/LgLQFbtu9JsVjWEFwGtZxyeU=
+X-Received: by 2002:a0d:d787:0:b0:2f4:dfc5:9a70 with SMTP id
+ z129-20020a0dd787000000b002f4dfc59a70mr12831679ywd.447.1652078286431; Sun, 08
+ May 2022 23:38:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <1651208967-4701-1-git-send-email-xni@redhat.com>
-In-Reply-To: <1651208967-4701-1-git-send-email-xni@redhat.com>
+References: <20220505081641.21500-1-guoqing.jiang@linux.dev> <20220506113656.25010-1-guoqing.jiang@linux.dev>
+In-Reply-To: <20220506113656.25010-1-guoqing.jiang@linux.dev>
 From:   Song Liu <song@kernel.org>
-Date:   Sun, 8 May 2022 23:24:08 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW7J3EQde_XGdysjNGjHjEb+Zq2kXwXsj+4xpXBA_Bq2Eg@mail.gmail.com>
-Message-ID: <CAPhsuW7J3EQde_XGdysjNGjHjEb+Zq2kXwXsj+4xpXBA_Bq2Eg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] Don't set mddev private to NULL in raid0 pers->free
-To:     Xiao Ni <xni@redhat.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>,
-        Nigel Croxon <ncroxon@redhat.com>,
-        Heinz Mauelshagen <heinzm@redhat.com>,
-        Fine Fan <ffan@redhat.com>
+Date:   Sun, 8 May 2022 23:37:55 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW6mGnkg4x5xm6x5n06JXxF-7PNubpQiZNmX0BH9Zo1ncA@mail.gmail.com>
+Message-ID: <CAPhsuW6mGnkg4x5xm6x5n06JXxF-7PNubpQiZNmX0BH9Zo1ncA@mail.gmail.com>
+Subject: Re: [Update PATCH V3] md: don't unregister sync_thread with
+ reconfig_mutex held
+To:     Guoqing Jiang <guoqing.jiang@linux.dev>
+Cc:     Donald Buczek <buczek@molgen.mpg.de>,
+        linux-raid <linux-raid@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
@@ -63,77 +62,84 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi Xiao,
-
-Thanks for the patch!
-
-On Thu, Apr 28, 2022 at 10:09 PM Xiao Ni <xni@redhat.com> wrote:
+On Fri, May 6, 2022 at 4:37 AM Guoqing Jiang <guoqing.jiang@linux.dev> wrote:
 >
+> From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+>
+> Unregister sync_thread doesn't need to hold reconfig_mutex since it
+> doesn't reconfigure array.
+>
+> And it could cause deadlock problem for raid5 as follows:
+>
+> 1. process A tried to reap sync thread with reconfig_mutex held after echo
+>    idle to sync_action.
+> 2. raid5 sync thread was blocked if there were too many active stripes.
+> 3. SB_CHANGE_PENDING was set (because of write IO comes from upper layer)
+>    which causes the number of active stripes can't be decreased.
+> 4. SB_CHANGE_PENDING can't be cleared since md_check_recovery was not able
+>    to hold reconfig_mutex.
+>
+> More details in the link:
+> https://lore.kernel.org/linux-raid/5ed54ffc-ce82-bf66-4eff-390cb23bc1ac@molgen.mpg.de/T/#t
+>
+> Let's call unregister thread between mddev_unlock and mddev_lock_nointr
+> (thanks for the report from kernel test robot <lkp@intel.com>) if the
+> reconfig_mutex is held, and mddev_is_locked is introduced accordingly.
 
-prefix the subject with "md:", and provide more details.
+mddev_is_locked() feels really hacky to me. It cannot tell whether
+mddev is locked
+by current thread. So technically, we can unlock reconfigure_mutex for
+other thread
+by accident, no?
 
-> It panics when reshaping from raid0 to other raid levels. raid0 sets
-> mddev->private to NULL. It's the reason that causes the problem.
-> Function level_store finds new pers and create new conf, then it
-> calls oldpers->free. In oldpers->free, raid0 sets mddev->private
-> to NULL again. And __md_stop is the right position to set
-> mddev->private to NULL.
-
-We need more details here: the panic backtrace, and why it panics.
-raid5_free also sets private to NULL. Does it has the same problem?
 
 >
-> And this patch also deletes double free memory codes. io_acct_set
-> is free in pers->free.
-
-Please put this part in a separate patch.
-
-Thanks,
-Song
-
->
-> Fixes: 0c031fd37f69 (md: Move alloc/free acct bioset in to personality)
-> Reported-by: Fine Fan <ffan@redhat.com>
-> Signed-off-by: Xiao Ni <xni@redhat.com>
+> Reported-by: Donald Buczek <buczek@molgen.mpg.de>
+> Signed-off-by: Guoqing Jiang <guoqing.jiang@linux.dev>
 > ---
->  drivers/md/md.c    | 4 ----
->  drivers/md/raid0.c | 1 -
->  2 files changed, 5 deletions(-)
+>  drivers/md/md.c | 9 ++++++++-
+>  drivers/md/md.h | 5 +++++
+>  2 files changed, 13 insertions(+), 1 deletion(-)
 >
 > diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index 707e802..55b6412e 100644
+> index 309b3af906ad..525f65682356 100644
 > --- a/drivers/md/md.c
 > +++ b/drivers/md/md.c
-> @@ -5598,8 +5598,6 @@ static void md_free(struct kobject *ko)
+> @@ -9432,10 +9432,17 @@ void md_reap_sync_thread(struct mddev *mddev)
+>  {
+>         struct md_rdev *rdev;
+>         sector_t old_dev_sectors = mddev->dev_sectors;
+> -       bool is_reshaped = false;
+> +       bool is_reshaped = false, is_locked = false;
 >
->         bioset_exit(&mddev->bio_set);
->         bioset_exit(&mddev->sync_set);
-> -       if (mddev->level != 1 && mddev->level != 10)
-> -               bioset_exit(&mddev->io_acct_set);
->         kfree(mddev);
+> +       if (mddev_is_locked(mddev)) {
+> +               is_locked = true;
+> +               mddev_unlock(mddev);
+> +       }
+>         /* resync has finished, collect result */
+>         md_unregister_thread(&mddev->sync_thread);
+> +       if (is_locked)
+> +               mddev_lock_nointr(mddev);
+> +
+>         if (!test_bit(MD_RECOVERY_INTR, &mddev->recovery) &&
+>             !test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery) &&
+>             mddev->degraded != mddev->raid_disks) {
+> diff --git a/drivers/md/md.h b/drivers/md/md.h
+> index 6ac283864533..af6f3978b62b 100644
+> --- a/drivers/md/md.h
+> +++ b/drivers/md/md.h
+> @@ -549,6 +549,11 @@ static inline int mddev_trylock(struct mddev *mddev)
 >  }
+>  extern void mddev_unlock(struct mddev *mddev);
 >
-> @@ -6285,8 +6283,6 @@ void md_stop(struct mddev *mddev)
->         __md_stop(mddev);
->         bioset_exit(&mddev->bio_set);
->         bioset_exit(&mddev->sync_set);
-> -       if (mddev->level != 1 && mddev->level != 10)
-> -               bioset_exit(&mddev->io_acct_set);
->  }
->
->  EXPORT_SYMBOL_GPL(md_stop);
-> diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
-> index e11701e..5fa0d40 100644
-> --- a/drivers/md/raid0.c
-> +++ b/drivers/md/raid0.c
-> @@ -362,7 +362,6 @@ static void free_conf(struct mddev *mddev, struct r0conf *conf)
->         kfree(conf->strip_zone);
->         kfree(conf->devlist);
->         kfree(conf);
-> -       mddev->private = NULL;
->  }
->
->  static void raid0_free(struct mddev *mddev, void *priv)
+> +static inline int mddev_is_locked(struct mddev *mddev)
+> +{
+> +       return mutex_is_locked(&mddev->reconfig_mutex);
+> +}
+> +
+>  static inline void md_sync_acct(struct block_device *bdev, unsigned long nr_sectors)
+>  {
+>         atomic_add(nr_sectors, &bdev->bd_disk->sync_io);
 > --
-> 2.7.5
+> 2.31.1
 >
