@@ -2,45 +2,45 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CC265221FB
-	for <lists+linux-raid@lfdr.de>; Tue, 10 May 2022 19:09:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CA275221FF
+	for <lists+linux-raid@lfdr.de>; Tue, 10 May 2022 19:09:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347798AbiEJRNW (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 10 May 2022 13:13:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34104 "EHLO
+        id S1347797AbiEJRN0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 10 May 2022 13:13:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347787AbiEJRNV (ORCPT
+        with ESMTP id S1347794AbiEJRNV (ORCPT
         <rfc822;linux-raid@vger.kernel.org>); Tue, 10 May 2022 13:13:21 -0400
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE32D28F1CA
-        for <linux-raid@vger.kernel.org>; Tue, 10 May 2022 10:09:22 -0700 (PDT)
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24AFMkd1024581
-        for <linux-raid@vger.kernel.org>; Tue, 10 May 2022 17:09:22 GMT
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A514228ED2D
+        for <linux-raid@vger.kernel.org>; Tue, 10 May 2022 10:09:23 -0700 (PDT)
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24AFg6pC022886
+        for <linux-raid@vger.kernel.org>; Tue, 10 May 2022 17:09:23 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
  date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2021-07-09;
- bh=aZF4vjl0f3Yr18BWPSUCcs7zqiUm07022sWUV/MkL8I=;
- b=bjukxLPSeV96CU8ivNzADI9+V3qE1RpIXT3a+svRFLUlLqOzwKw0FMEknWg8vtM+/ITw
- OhIByTDumE9DUmqnRi83xYExxLyi0SjYhbfT4UIAtHDUheNWu6UXR87sMLc1zFR2qdv0
- lNE8LDsFIK119iVHmYSYGzIRd42KS32xS83ZEFNUAScOnAE1RLhV0tM+ugbmXbSODdkZ
- HySfCO153aAQnRLjb6uyO3F04wWx3pmqXIsSqkn7SafdWJSVYzIYzQLwnZxCOQix2+PT
- LA8EoegO3Itkw3SRjPzkC/iOPkBziCXs2mc5Ud52KGpYolJV/cewMxmTDHN3mFGphqr9 uQ== 
+ bh=+jhuPB4ojyPCs/5HKBTOvNU+xVtwrIvFftEVtvqByqQ=;
+ b=g+c9MurcKjFKpHNfQzfxQkscZKrEjo5v69NP2FO7L6yP37gG63uW3MK1u3KBDXeZuNfJ
+ 3lqX4SxW5eBVVhb5+E6cNomv7Id8AHyZ5RiBBTUkJWqMrtQDUb8QqHcttBstIKdLGiCx
+ cmFnl6pEhrZeOf+HwmoqdUlAYbC1XySl/IbxQOzTibP39ZW40cW5XmaoY/w/marcAZeu
+ A59qy6s9dm71pthNVFApRYAgM4PDfGH1HGwHp/sau4qLIdcrZla7A51T1Z6y2t1h+otc
+ Pi1PEelKPOMoaOOUGxIwBlNMwKQULnnPrR5zkOt4vzyzDQyjXd3haZaOdQkH93berOpH +Q== 
 Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3fwfc0qdvx-1
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3fwhatfd9p-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-raid@vger.kernel.org>; Tue, 10 May 2022 17:09:22 +0000
+        for <linux-raid@vger.kernel.org>; Tue, 10 May 2022 17:09:23 +0000
 Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 24AH5dqF016348
-        for <linux-raid@vger.kernel.org>; Tue, 10 May 2022 17:09:21 GMT
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 24AH5dqG016348
+        for <linux-raid@vger.kernel.org>; Tue, 10 May 2022 17:09:22 GMT
 Received: from coruscant.us.oracle.com (dhcp-10-159-252-166.vpn.oracle.com [10.159.252.166])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3fwf739t3p-4
-        for <linux-raid@vger.kernel.org>; Tue, 10 May 2022 17:09:21 +0000
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3fwf739t3p-5
+        for <linux-raid@vger.kernel.org>; Tue, 10 May 2022 17:09:22 +0000
 From:   himanshu.madhani@oracle.com
 To:     linux-raid@vger.kernel.org
-Subject: [PATCH v3 3/7] Revert "mdadm: fix coredump of mdadm --monitor -r"
-Date:   Tue, 10 May 2022 10:09:16 -0700
-Message-Id: <20220510170920.18730-4-himanshu.madhani@oracle.com>
+Subject: [PATCH v3 4/7] test: clear the superblock at every iteration in 02lineargrow
+Date:   Tue, 10 May 2022 10:09:17 -0700
+Message-Id: <20220510170920.18730-5-himanshu.madhani@oracle.com>
 X-Mailer: git-send-email 2.33.0.69.gc4203212e360
 In-Reply-To: <20220510170920.18730-1-himanshu.madhani@oracle.com>
 References: <20220510170920.18730-1-himanshu.madhani@oracle.com>
@@ -48,12 +48,12 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.486,18.0.858
  definitions=2022-05-10_04:2022-05-09,2022-05-10 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=905 malwarescore=0
  suspectscore=0 phishscore=0 spamscore=0 bulkscore=0 mlxscore=0
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2202240000 definitions=main-2205100074
-X-Proofpoint-ORIG-GUID: zJuJFXCP_tHw9C67dpLHMNfUdWEGnFdd
-X-Proofpoint-GUID: zJuJFXCP_tHw9C67dpLHMNfUdWEGnFdd
+X-Proofpoint-GUID: BrikDvKbiaGjvU9gv_qSvZMh7diwEgoP
+X-Proofpoint-ORIG-GUID: BrikDvKbiaGjvU9gv_qSvZMh7diwEgoP
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -66,42 +66,26 @@ X-Mailing-List: linux-raid@vger.kernel.org
 
 From: Sudhakar Panneerselvam <sudhakar.panneerselvam@oracle.com>
 
-This reverts commit 546047688e1c64638f462147c755b58119cabdc8.
-
-546047688e1c made -r require parameter in monitor mode but this
-inadvertently broke -r option in "manage" mode which is used for
-removing devices that are either spare or in faulty mode resulting in
-some of the test cases to fail.
-
-Reverting 546047688e1c is safe as the core dump issue that was fixed by
-this commit is addressed by 60815698c0ac where parsing failures are
-handled better.
+This fixes 02lineargrow test as prior metadata causes --add operation
+to misbehave.
 
 Signed-off-by: Sudhakar Panneerselvam <sudhakar.panneerselvam@oracle.com>
 Signed-off-by: Himanshu Madhani <himanshu.madhani@oracle.com>
 ---
- ReadMe.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tests/02lineargrow | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/ReadMe.c b/ReadMe.c
-index 8f873c4895da..bec1be9ab26f 100644
---- a/ReadMe.c
-+++ b/ReadMe.c
-@@ -81,11 +81,11 @@ char Version[] = "mdadm - v" VERSION " - " VERS_DATE EXTRAVERSION "\n";
-  *     found, it is started.
-  */
+diff --git a/tests/02lineargrow b/tests/02lineargrow
+index e05c219d113a..595bf9f20802 100644
+--- a/tests/02lineargrow
++++ b/tests/02lineargrow
+@@ -20,4 +20,6 @@ do
+   testdev $md0 3 $sz 1
  
--char short_options[]="-ABCDEFGIQhVXYWZ:vqbc:i:l:p:m:r:n:x:u:c:d:z:U:N:safRSow1tye:k";
-+char short_options[]="-ABCDEFGIQhVXYWZ:vqbc:i:l:p:m:n:x:u:c:d:z:U:N:sarfRSow1tye:k:";
- char short_bitmap_options[]=
--		"-ABCDEFGIQhVXYWZ:vqb:c:i:l:p:m:r:n:x:u:c:d:z:U:N:sarfRSow1tye:k:";
-+		"-ABCDEFGIQhVXYWZ:vqb:c:i:l:p:m:n:x:u:c:d:z:U:N:sarfRSow1tye:k:";
- char short_bitmap_auto_options[]=
--		"-ABCDEFGIQhVXYWZ:vqb:c:i:l:p:m:r:n:x:u:c:d:z:U:N:sa:rfRSow1tye:k:";
-+		"-ABCDEFGIQhVXYWZ:vqb:c:i:l:p:m:n:x:u:c:d:z:U:N:sa:rfRSow1tye:k:";
- 
- struct option long_options[] = {
-     {"manage",    0, 0, ManageOpt},
+   mdadm -S $md0
++  mdadm --zero /dev/loop2
++  mdadm --zero /dev/loop3
+ done
 -- 
 2.27.0
 
