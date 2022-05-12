@@ -2,72 +2,107 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EF05A525258
-	for <lists+linux-raid@lfdr.de>; Thu, 12 May 2022 18:20:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A85F52527C
+	for <lists+linux-raid@lfdr.de>; Thu, 12 May 2022 18:26:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345159AbiELQUW (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 12 May 2022 12:20:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49872 "EHLO
+        id S236147AbiELQ0h (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 12 May 2022 12:26:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356137AbiELQUW (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 12 May 2022 12:20:22 -0400
-Received: from mail.pekanbaru.go.id (mail.pekanbaru.go.id [103.131.245.194])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B4641E3259
-        for <linux-raid@vger.kernel.org>; Thu, 12 May 2022 09:20:21 -0700 (PDT)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.pekanbaru.go.id (Postfix) with ESMTP id 92A551645BB8;
-        Thu, 12 May 2022 10:45:51 +0700 (WIB)
-Received: from mail.pekanbaru.go.id ([127.0.0.1])
-        by localhost (mail.pekanbaru.go.id [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id nCYhxgjfvsXu; Thu, 12 May 2022 10:45:51 +0700 (WIB)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.pekanbaru.go.id (Postfix) with ESMTP id 1F1CB92E0DD;
-        Thu, 12 May 2022 10:45:50 +0700 (WIB)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.pekanbaru.go.id 1F1CB92E0DD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pekanbaru.go.id;
-        s=EA5C5C9E-4206-11EC-835B-1ADACEA726A0; t=1652327150;
-        bh=WgQd2bW8hb2KeIDNbeIeW1Bb4lp6m29iibMhAQT/egc=;
-        h=MIME-Version:To:From:Date:Message-Id;
-        b=CDHdLcy2Mw0jpGIm/tdOSF6g31kfW6ZssZcQWlLordAkVgBZgCEsBH63RkPWTMFvn
-         sH3qivEYuRfI+ZC8BEVBYtJI0u+3e9l/Z6Fjg86BOITHcnhvSjhkoiV5nvRKLwJXMZ
-         HXSkQpSSPIzFVIFbZdcF/nsLEp4Q1bTECcDmZld6d0i23MLtWCeJaSSOXOCC/r8kbV
-         wQIaUi3//C3coKD4xcf3RyA9x8+lsLjgZX6pCtF4oK+cP/AGvYdwdl0e/dSNnkEM0c
-         kxMlwpADol1vYk7qKC8VDV5kpIwEeXlGK/b5VONfT4DQDz0rYrTMJwOh+BBB3W3eps
-         wr18R2yU0sFVg==
-X-Virus-Scanned: amavisd-new at mail.pekanbaru.go.id
-Received: from mail.pekanbaru.go.id ([127.0.0.1])
-        by localhost (mail.pekanbaru.go.id [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id QJhIuFeVe9z7; Thu, 12 May 2022 10:45:50 +0700 (WIB)
-Received: from [192.168.15.101] (unknown [41.79.219.176])
-        by mail.pekanbaru.go.id (Postfix) with ESMTPSA id 6F57791E2B6;
-        Thu, 12 May 2022 10:45:41 +0700 (WIB)
-Content-Type: text/plain; charset="iso-8859-1"
+        with ESMTP id S1356471AbiELQ0P (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 12 May 2022 12:26:15 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F2DD1D0C0
+        for <linux-raid@vger.kernel.org>; Thu, 12 May 2022 09:26:14 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DDD9961FC0
+        for <linux-raid@vger.kernel.org>; Thu, 12 May 2022 16:26:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 486C4C34100
+        for <linux-raid@vger.kernel.org>; Thu, 12 May 2022 16:26:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652372773;
+        bh=SDd7uldEo9wEuFrc0sb/P5IBpSG8j4kl7ls5k21WzDw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=GIlQwUGRKuYax/mO26p7FV1W4fnsAeT2QTWgszcK/q+++AVXNZxElMRXX3ri6W+Y1
+         hdpk7lf3KBsfGKEcHch5wuEhorZQGkpG7yt8R1TasSfktV1GaiqTigMOsFy/s765DR
+         jVJC8eIrYRtL0zq4guJrc5NxCuQAO/ZLVJE8Fmk/HdWmF3dytHACPc0kN6y4AaAQdx
+         Mr586YIAruZWnYfSkN/1r3eJvf13kRyj2RfuC+4aOPNJVGkqvkLZPXv/vCGSeJGsBx
+         J9jeSEuxvIy4VCwk1WjwEyYbKyZ95ztvJbCtmE4KUQyf/Zm512sNfQaZ0yPtTAIuHZ
+         Z4fjrct3OYU4A==
+Received: by mail-yb1-f175.google.com with SMTP id x17so10771259ybj.3
+        for <linux-raid@vger.kernel.org>; Thu, 12 May 2022 09:26:13 -0700 (PDT)
+X-Gm-Message-State: AOAM5307IOerIUYynwAHf7mdACjPhFZGZKWFQc5+T9P5T+3XE44twxiq
+        W2M3QnEM/t3qAifQ+jJ1VB+pCS1M/izqYPXbfqQ=
+X-Google-Smtp-Source: ABdhPJwSQtQVryjbO4NPxkA0Fkez+S6ncU87DduDhEDbfDFp4ZZCJ7LJkN2NP0m+QmdaeR0Lx91tQKKZMxhX7E4TU30=
+X-Received: by 2002:a25:d9d5:0:b0:648:e2a8:c4f2 with SMTP id
+ q204-20020a25d9d5000000b00648e2a8c4f2mr637820ybg.322.1652372772331; Thu, 12
+ May 2022 09:26:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: Awaiting your response 
-To:     Recipients <waterproject@pekanbaru.go.id>
-From:   waterproject@pekanbaru.go.id
-Date:   Thu, 12 May 2022 04:45:33 +0100
-Reply-To: test@hostnextdoor.com
-Message-Id: <20220512034541.6F57791E2B6@mail.pekanbaru.go.id>
-X-Spam-Status: No, score=3.4 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_BL_SPAMCOP_NET,
-        RCVD_IN_SBL,RCVD_IN_VALIDITY_RPBL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ***
+References: <20220512092109.41606-1-xni@redhat.com> <20220512092109.41606-3-xni@redhat.com>
+In-Reply-To: <20220512092109.41606-3-xni@redhat.com>
+From:   Song Liu <song@kernel.org>
+Date:   Thu, 12 May 2022 09:26:01 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW6i5yGj1dKD4uCTym8HCYhveb0MYtBnB8uyPyHer0+kSw@mail.gmail.com>
+Message-ID: <CAPhsuW6i5yGj1dKD4uCTym8HCYhveb0MYtBnB8uyPyHer0+kSw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] md: Double free io_acct_set bioset
+To:     Xiao Ni <xni@redhat.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>,
+        Nigel Croxon <ncroxon@redhat.com>,
+        Heinz Mauelshagen <heinzm@redhat.com>,
+        Fine Fan <ffan@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi =
+On Thu, May 12, 2022 at 2:21 AM Xiao Ni <xni@redhat.com> wrote:
+>
+> Now io_acct_set is alloc and free in personality. Remove the codes that
+> free io_acct_set in md_free and md_stop.
+>
+> Fixes: 0c031fd37f69 (md: Move alloc/free acct bioset in to personality)
+> Signed-off-by: Xiao Ni <xni@redhat.com>
 
+Applied the set to md-next. Changed the subject of 2/2 as
+ md: *fix* double free of io_acct_set bioset
 
-Did you get my previous email? I have attempted over 3 times to open up com=
-munication with you. Please acknowledge if you receive this email. =
+Thanks,
+Song
 
-
-Regards
-Morten Friis
+> ---
+>  drivers/md/md.c | 4 ----
+>  1 file changed, 4 deletions(-)
+>
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 53787a32166d..91c6cb3da470 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -5598,8 +5598,6 @@ static void md_free(struct kobject *ko)
+>
+>         bioset_exit(&mddev->bio_set);
+>         bioset_exit(&mddev->sync_set);
+> -       if (mddev->level != 1 && mddev->level != 10)
+> -               bioset_exit(&mddev->io_acct_set);
+>         kfree(mddev);
+>  }
+>
+> @@ -6285,8 +6283,6 @@ void md_stop(struct mddev *mddev)
+>         __md_stop(mddev);
+>         bioset_exit(&mddev->bio_set);
+>         bioset_exit(&mddev->sync_set);
+> -       if (mddev->level != 1 && mddev->level != 10)
+> -               bioset_exit(&mddev->io_acct_set);
+>  }
+>
+>  EXPORT_SYMBOL_GPL(md_stop);
+> --
+> 2.32.0 (Apple Git-132)
+>
