@@ -2,140 +2,92 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F2ABC52C8EF
-	for <lists+linux-raid@lfdr.de>; Thu, 19 May 2022 02:50:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 518A152CCA8
+	for <lists+linux-raid@lfdr.de>; Thu, 19 May 2022 09:16:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232460AbiESAs0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 18 May 2022 20:48:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52214 "EHLO
+        id S229682AbiESHQi (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 19 May 2022 03:16:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232316AbiESAsP (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 18 May 2022 20:48:15 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60F283F313
-        for <linux-raid@vger.kernel.org>; Wed, 18 May 2022 17:48:02 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id k16so3695108pff.5
-        for <linux-raid@vger.kernel.org>; Wed, 18 May 2022 17:48:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=B6MA4+HMYbPobnbYL1B2L1IK014KXRJf7a7TG+xfkZ8=;
-        b=Z5bDlAZoAJZzaN0On3Z6T7UXu6nBH07V6MPFeCvzeYdB7AGHqgryugiokuZYFZ8ZGy
-         EpudKlTFAPEab5DxDvnEy1lIzUNPCHMkCFsBv5BMABvUw1FexfGOxVs1Zdnha01KAYjb
-         V0cqc2H2myg58EeZp9uWNZMXVwVLoxwwTgin8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=B6MA4+HMYbPobnbYL1B2L1IK014KXRJf7a7TG+xfkZ8=;
-        b=8Mx5HxJmG58Xrkzwmm4gpF5SeO1USOyfFnXhZHYBJ0mhsYPeZ0BKEu9nFz+PM6uscE
-         kViqu/meHcuRln50m1/pLoWA/JBqDj6+aveIgxx1v8jguGul4y621XFPQWFq6kvS/c5f
-         SXrVuf2XBN00xfZcDxP6hbXk6qD9oDePMRxXJc6T/+TMPXYPdOKrqeh/nExu9OSAw7mO
-         l3U0rs17bBh4V05TXFx9Z6XktNP+2BaWC0igDasrw3go76RZeoBcbLUFNQndAuIiB97l
-         shgPgIoUd8Wceyy5/0VvXegtZhRfJgyyWG9vR21yVkoZXyT+MzuvMtXVUADme4ZrNa1U
-         RGmw==
-X-Gm-Message-State: AOAM530ebulc4o5VResaPtCdW8yR3ECsoJgZY89gducVZnkbftn+w0ow
-        fXMJy9CqIG52fiYkgZMZL/Oc7g==
-X-Google-Smtp-Source: ABdhPJyMv1v72T0i8iVgL2HihKH/xs6LPltgtmNa5ruAuiR2wEA/c9aCEr6jXvMkXU6kAJcVSw0lsw==
-X-Received: by 2002:a65:550c:0:b0:3da:fde8:62d7 with SMTP id f12-20020a65550c000000b003dafde862d7mr1783122pgr.334.1652921281818;
-        Wed, 18 May 2022 17:48:01 -0700 (PDT)
-Received: from localhost ([2620:15c:11a:202:e229:79ea:227e:d9dd])
-        by smtp.gmail.com with UTF8SMTPSA id e11-20020a17090a9a8b00b001df4c27e5a5sm4154913pjp.35.2022.05.18.17.48.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 May 2022 17:48:01 -0700 (PDT)
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>
-Cc:     Song Liu <song@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-raid@vger.kernel.org,
-        dm-devel@redhat.com, Milan Broz <gmazyland@gmail.com>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v5 3/3] dm: verity-loadpin: Use CONFIG_SECURITY_LOADPIN_VERITY for conditional compilation
-Date:   Wed, 18 May 2022 17:47:54 -0700
-Message-Id: <20220518174739.v5.3.I5aca2dcc3b06de4bf53696cd21329dce8272b8aa@changeid>
-X-Mailer: git-send-email 2.36.1.124.g0e6072fb45-goog
-In-Reply-To: <20220519004754.2174254-1-mka@chromium.org>
-References: <20220519004754.2174254-1-mka@chromium.org>
+        with ESMTP id S229477AbiESHQe (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 19 May 2022 03:16:34 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BB05562F9
+        for <linux-raid@vger.kernel.org>; Thu, 19 May 2022 00:16:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652944590; x=1684480590;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=WxTjhBRwe9IbBIvn5KcLAXYIhrVqkGckW7tnDB+7K5I=;
+  b=KYfvwZMdwPIwgyzQlzkgnNsqNWLU0jhKoy35jmaUk7rmGUzXZm7GOSU+
+   NxZ4aCr/L/UYiVEsrzDc6WeyJIDOnIYzZipV4g0LKll8qF/pxoRu/dbdo
+   DhKREw+QMqn0MA7uWAoie8vlQxKh/0rlCY5PZrmgVJwuJ8g7LORZdRLv6
+   ujH1GrGFl41q9XMbus8iLLa0OHggoRhm8t+ybcH4xJSyfIQJtnjVg3Kvc
+   IDySlsllaVLuPeHO2nYGKi0SaNqMqGzR/WYMc4G2OojdX2i6nEGDLun4+
+   wL647C9QCdlvqH4h/P7NAco4IXJyNX69UP/XoWAHsevvBgUOB1IbKRu5q
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10351"; a="254110643"
+X-IronPort-AV: E=Sophos;i="5.91,236,1647327600"; 
+   d="scan'208";a="254110643"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2022 00:16:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,236,1647327600"; 
+   d="scan'208";a="545939796"
+Received: from unknown (HELO localhost.igk.intel.com) ([10.102.92.52])
+  by orsmga006.jf.intel.com with ESMTP; 19 May 2022 00:16:28 -0700
+From:   Mateusz Kusiak <mateusz.kusiak@intel.com>
+To:     linux-raid@vger.kernel.org
+Cc:     jes@trained-monkey.org, colyli@suse.de
+Subject: [PATCH] Grow: block -n on external volumes.
+Date:   Thu, 19 May 2022 09:16:08 +0200
+Message-Id: <20220519071608.26259-1-mateusz.kusiak@intel.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-The verity glue for LoadPin is only needed when CONFIG_SECURITY_LOADPIN_VERITY
-is set, use this option for conditional compilation instead of the combo of
-CONFIG_DM_VERITY and CONFIG_SECURITY_LOADPIN.
+Performing --raid-devices on external metadata volume should be blocked
+as it causes unwanted behaviour.
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Acked-by: Kees Cook <keescook@chromium.org>
+Eg. Performing
+mdadm -G /dev/md/volume -l10 -n4
+on r0_d2 inside 4 disk container, returns
+mdadm: Need 2 spares to avoid degraded array, only have 0.
+
+Signed-off-by: Mateusz Kusiak <mateusz.kusiak@intel.com>
 ---
+ Grow.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Changes in v5:
-- added 'Acked-by' tag from Kees
-
-Changes in v4:
-- none
-
-Changes in v3:
-- none
-
-Changes in v2:
-- none
-
- drivers/md/Makefile               | 7 +------
- include/linux/dm-verity-loadpin.h | 2 +-
- 2 files changed, 2 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/md/Makefile b/drivers/md/Makefile
-index 71771901c823..a96441752ec7 100644
---- a/drivers/md/Makefile
-+++ b/drivers/md/Makefile
-@@ -83,6 +83,7 @@ obj-$(CONFIG_DM_LOG_WRITES)	+= dm-log-writes.o
- obj-$(CONFIG_DM_INTEGRITY)	+= dm-integrity.o
- obj-$(CONFIG_DM_ZONED)		+= dm-zoned.o
- obj-$(CONFIG_DM_WRITECACHE)	+= dm-writecache.o
-+obj-$(CONFIG_SECURITY_LOADPIN_VERITY)	+= dm-verity-loadpin.o
+diff --git a/Grow.c b/Grow.c
+index 8a242b0f..f6efbc48 100644
+--- a/Grow.c
++++ b/Grow.c
+@@ -1892,6 +1892,14 @@ int Grow_reshape(char *devname, int fd,
  
- ifeq ($(CONFIG_DM_INIT),y)
- dm-mod-objs			+= dm-init.o
-@@ -108,12 +109,6 @@ ifeq ($(CONFIG_DM_VERITY_VERIFY_ROOTHASH_SIG),y)
- dm-verity-objs			+= dm-verity-verify-sig.o
- endif
- 
--ifeq ($(CONFIG_DM_VERITY),y)
--ifeq ($(CONFIG_SECURITY_LOADPIN),y)
--dm-verity-objs			+= dm-verity-loadpin.o
--endif
--endif
--
- ifeq ($(CONFIG_DM_AUDIT),y)
- dm-mod-objs			+= dm-audit.o
- endif
-diff --git a/include/linux/dm-verity-loadpin.h b/include/linux/dm-verity-loadpin.h
-index d37146dbb1a8..ac5d9f56c3a3 100644
---- a/include/linux/dm-verity-loadpin.h
-+++ b/include/linux/dm-verity-loadpin.h
-@@ -15,7 +15,7 @@ struct trusted_root_digest {
- 	u8 data[];
- };
- 
--#if IS_ENABLED(CONFIG_SECURITY_LOADPIN) && IS_BUILTIN(CONFIG_DM_VERITY)
-+#if IS_ENABLED(CONFIG_SECURITY_LOADPIN_VERITY)
- bool dm_verity_loadpin_is_bdev_trusted(struct block_device *bdev);
- #else
- static inline bool dm_verity_loadpin_is_bdev_trusted(struct block_device *bdev)
+ 		if (retval) {
+ 			pr_err("Cannot read superblock for %s\n", devname);
++			close(cfd);
++			free(subarray);
++			return 1;
++		}
++
++		if (s->raiddisks && subarray) {
++			pr_err("--raid-devices operation can be performed on a container only\n");
++			close(cfd);
+ 			free(subarray);
+ 			return 1;
+ 		}
 -- 
-2.36.1.124.g0e6072fb45-goog
+2.26.2
 
