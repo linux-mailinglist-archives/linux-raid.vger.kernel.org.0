@@ -2,92 +2,169 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EC9A52C705
-	for <lists+linux-raid@lfdr.de>; Thu, 19 May 2022 00:57:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EBAD52C8E1
+	for <lists+linux-raid@lfdr.de>; Thu, 19 May 2022 02:48:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231321AbiERW5c (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 18 May 2022 18:57:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45418 "EHLO
+        id S232249AbiESAr7 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 18 May 2022 20:47:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231273AbiERW5I (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 18 May 2022 18:57:08 -0400
-Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18350F0C
-        for <linux-raid@vger.kernel.org>; Wed, 18 May 2022 15:57:05 -0700 (PDT)
-Received: by mail-yb1-xb2d.google.com with SMTP id d137so6088588ybc.13
-        for <linux-raid@vger.kernel.org>; Wed, 18 May 2022 15:57:05 -0700 (PDT)
+        with ESMTP id S231404AbiESAr6 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 18 May 2022 20:47:58 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C726CF5BC
+        for <linux-raid@vger.kernel.org>; Wed, 18 May 2022 17:47:57 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id c14so3704652pfn.2
+        for <linux-raid@vger.kernel.org>; Wed, 18 May 2022 17:47:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=mZ3wqB4NmL7z6lpFr/h15h1rYqsZKafJnUpMVahbEPg=;
-        b=ovbcf3BPb/ZrA/FpQ+ZjErGDIEZ9sF3fYOxqsE4Z0xdiTlYY9UY36hS3ty6MLllddq
-         FdZzNc2PcFHW5cwKZ0FlQqx6F8uTY06Ab/cmT+eL89dkm6I4fHT5v6DDGzwY+fqIjM8b
-         RjeYQt93Ckr4p0lPVWY342OwWKznH6xDl4nV36uj7bwrBPcHFh3ePzF5GNEmu/mQBhIV
-         GwWDekgJIDWSV60014hyLdzt2NtjUStY8MI6SiwBWMH8LEBnRGkE0W6Db0zUE9IYWmDQ
-         Ifd6nbhkESdcIbQrjo3sdEfmdPtb1VAIHCw/LAZv1DOtvQwqLYnhML4dVDmuoYeMmVFn
-         q7TQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0dmLJVwCa/DghSPPAq3/ILY1JgWX+nBsu5yiEOAQ9ss=;
+        b=XMODawl+7/0Y5Xh+b7gsipx99R4vrMlDVUJhygLFG7mr2rmjqW84L/f6uhId0MVlCM
+         +7YHF+QsNYi15C1v725aS6OaBX9ZEjzCjL+F41eoG4Hbu8LlXissF8hjPeLMSl9nNire
+         6tWIj/frqGlWx4+/gOTTDSdUVC5q88N9ooLdU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=mZ3wqB4NmL7z6lpFr/h15h1rYqsZKafJnUpMVahbEPg=;
-        b=FOEQ4S7j45SrYxQRgNl7aSGhf6c00lZvz5NV4Zx4yewsUbXHQajE0Lq1UJZABbWNq6
-         GZvdtdUAUMRmiFUZKTNuK9vl/WcUq5ItqQlPtH/djRx4FPb3z5y8bavK9MROqB7tjiqi
-         eZ9UEIQjkLERebryIQgpdXMB3JXr61zWiHmCpJBJCWLqdoMhQiHoarzfhXlR2FdGgVE0
-         C7zT27Ud7Syf8JGiMZMgYuQbiNcuNCsoYxhtolSbLQOTiWz7SdLbHGlXFQxat1R/BYNZ
-         sb/O9Q8cjAIe3BeyQtN0eeshTD/JzCQV987Rx7OsTizFLYbej1+sCEoVZqA4tjnXMIKr
-         tP6Q==
-X-Gm-Message-State: AOAM532m50nFQsJQXDopZOQlFQ/l6uyVV4N1rgzDu3qZOlB1dt/sTICx
-        iTVwBDHqbGCWCVAMmpjji0WLjvPc/wMk2dK2NF8IHoSDlyPA7PAJUkbK68Kt
-X-Google-Smtp-Source: ABdhPJyyLDAg+sVdsLTxwEXiZ5avjedwK/uWMP/Y3UWcChEjwDE+iXuY4kOycHY8vIqM/rcV0hLTcVdg0IN0RAQYgBc=
-X-Received: by 2002:a5b:f87:0:b0:64a:9aa6:e181 with SMTP id
- q7-20020a5b0f87000000b0064a9aa6e181mr1852277ybh.157.1652914614913; Wed, 18
- May 2022 15:56:54 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0dmLJVwCa/DghSPPAq3/ILY1JgWX+nBsu5yiEOAQ9ss=;
+        b=CBpzXXh5dH/XRI1XeEJ7YjTGeT22nrRHGH3mUWLF6Z1V6qfy5N6b9bu7G23KSDpIt1
+         AW7bihDn+Yt963/9egf1IBltkzC6psqEUdUBbmlbd6XkMkIHVlypKvrS1L1Gvf4sf43o
+         O2UsGNhMwvTSZbgXZI5Twe9W+uUXmxYPVAyEgeNG4J8BEtSUNzaYXN2ku00Q8TGgu9gr
+         zdHd2Hk9Rd2GswsV0zOrzRoezmjMSyG/z7xAVZNAsu2xDyk5z0DdvZvzqPiABNkas2aW
+         LCBOSpzetyvCxYxb2SvvGvTKjrAImprB4DonPtnq7QvbuBg79Ct6NlDFkmlHwdTDAd/7
+         E3TQ==
+X-Gm-Message-State: AOAM531SXvTtOFUD/5YhDCdWb5qbdT98U6TuCtUUIAuieKYXJRIWrpnf
+        d5cz36L0w62DhFqEJhD+9SuJvw==
+X-Google-Smtp-Source: ABdhPJxPgVklbI1Lz7IgXdVY0Dozqllrmq/dawwTwH/MMyxvIe35uXRiIXra8YQiTvV2RUlZEyKpvA==
+X-Received: by 2002:a65:554a:0:b0:3f6:885:b291 with SMTP id t10-20020a65554a000000b003f60885b291mr1746494pgr.608.1652921277291;
+        Wed, 18 May 2022 17:47:57 -0700 (PDT)
+Received: from localhost ([2620:15c:11a:202:e229:79ea:227e:d9dd])
+        by smtp.gmail.com with UTF8SMTPSA id u26-20020aa7839a000000b0050dc76281c2sm2515274pfm.156.2022.05.18.17.47.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 May 2022 17:47:56 -0700 (PDT)
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>
+Cc:     Song Liu <song@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-raid@vger.kernel.org,
+        dm-devel@redhat.com, Milan Broz <gmazyland@gmail.com>,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH v5 0/3] LoadPin: Enable loading from trusted dm-verity devices
+Date:   Wed, 18 May 2022 17:47:51 -0700
+Message-Id: <20220519004754.2174254-1-mka@chromium.org>
+X-Mailer: git-send-email 2.36.1.124.g0e6072fb45-goog
 MIME-Version: 1.0
-Received: by 2002:a05:7000:7143:0:0:0:0 with HTTP; Wed, 18 May 2022 15:56:53
- -0700 (PDT)
-Reply-To: tonywenn@asia.com
-From:   Tony Wen <weboutloock4@gmail.com>
-Date:   Thu, 19 May 2022 06:56:53 +0800
-Message-ID: <CAE2_YrD=5bo8j9+ah-xptEBBV-HEC4=Gb0SRHf996phiopc3WQ@mail.gmail.com>
-Subject: engage
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.2 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:b2d listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.4933]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [weboutloock4[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [weboutloock4[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  3.4 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Can I engage your services?
+As of now LoadPin restricts loading of kernel files to a single pinned
+filesystem, typically the rootfs. This works for many systems, however it
+can result in a bloated rootfs (and OTA updates) on platforms where
+multiple boards with different hardware configurations use the same rootfs
+image. Especially when 'optional' files are large it may be preferable to
+download/install them only when they are actually needed by a given board.
+Chrome OS uses Downloadable Content (DLC) [1] to deploy certain 'packages'
+at runtime. As an example a DLC package could contain firmware for a
+peripheral that is not present on all boards. DLCs use dm-verity [2] to
+verify the integrity of the DLC content.
+
+This series extends LoadPin to allow loading of kernel files from trusted
+dm-verity devices. LoadPin maintains a list of root digests of verity
+devices it considers trusted. Userspace can populate this list through an
+ioctl on the new LoadPin securityfs entry 'dm-verity'. The ioctl receives
+a file descriptor of a file with verity digests as parameter. Verity reads
+the digests from this file after confirming that the file is located on the
+pinned root. The digest file must contain one digest per line. The list of
+trusted digests can only be set up once, which is typically done at boot
+time.
+
+When a kernel file is read LoadPin first checks (as usual) whether the file
+is located on the pinned root, if so the file can be loaded. Otherwise, if
+the verity extension is enabled, LoadPin determines whether the file is
+located on a verity backed device and whether the root digest of that
+device is in the list of trusted digests. The file can be loaded if the
+verity device has a trusted root digest.
+
+[1] https://chromium.googlesource.com/chromiumos/platform2/+/HEAD/dlcservice/docs/developer.md
+[2] https://www.kernel.org/doc/html/latest/admin-guide/device-mapper/verity.html
+
+Changes in v5:
+- changed dm_verity_loadpin_is_sb_trusted() to
+  dm_verity_loadpin_is_bdev_trusted()
+- deleted bad semicolon in declaration of stub for
+  dm_verity_loadpin_is_bdev_trusted()
+- bumped verity version number to 1.8.1
+- added 'Acked-by' tags from Kees
+
+Changes in v4:
+- a trusted verity device must have a single target of
+  type 'verity'
+- changed struct trusted_root_digest to have an unsized
+  u8 array instead of a pointer
+- use shared list of verity digests, deleted
+  dm_verity_loadpin_set_trusted_root_digests()
+- use newline as separator in digest file instead of comma
+- after reading an invalid/corrupt digest file deny further attempts
+  of setting up the list of digests
+- added comment to read_trusted_verity_root_digests() explaining that
+  an invalid digests entry invalidates the entire list of digests
+- minor refactoring of verity related code in LoadPin
+
+Changes in v3:
+- added securityfs for LoadPin (currently only populated when
+  CONFIG_SECURITY_LOADPIN_VERITY=y)
+- added uapi include for LoadPin
+- changed the interface for setting up the list of trusted
+  digests from sysctl to ioctl on securityfs entry
+- added stub for loadpin_is_fs_trusted() to be used
+  CONFIG_SECURITY_LOADPIN_VERITY is not select
+- depend on CONFIG_SECURITYFS instead of CONFIG_SYSTCL
+- updated Kconfig help
+- minor changes in read_trusted_verity_root_digests()
+- updated commit message
+
+Changes in v2:
+- userspace now passes the path of the file with the verity digests
+  via systcl, instead of the digests themselves
+- renamed sysctl file to 'trusted_verity_root_digests_path'
+- have CONFIG_SECURITY_LOADPIN_VERITY depend on CONFIG_SYSCTL
+- updated Kconfig doc
+- updated commit message
+
+Matthias Kaehlcke (3):
+  dm: Add verity helpers for LoadPin
+  LoadPin: Enable loading from trusted dm-verity devices
+  dm: verity-loadpin: Use CONFIG_SECURITY_LOADPIN_VERITY for conditional
+    compilation
+
+ drivers/md/Makefile               |   1 +
+ drivers/md/dm-verity-loadpin.c    |  74 +++++++++++++
+ drivers/md/dm-verity-target.c     |  35 ++++++-
+ drivers/md/dm-verity.h            |   4 +
+ include/linux/dm-verity-loadpin.h |  27 +++++
+ include/uapi/linux/loadpin.h      |  22 ++++
+ security/loadpin/Kconfig          |  16 +++
+ security/loadpin/loadpin.c        | 167 +++++++++++++++++++++++++++++-
+ 8 files changed, 344 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/md/dm-verity-loadpin.c
+ create mode 100644 include/linux/dm-verity-loadpin.h
+ create mode 100644 include/uapi/linux/loadpin.h
+
+-- 
+2.36.1.124.g0e6072fb45-goog
+
