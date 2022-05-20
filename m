@@ -2,134 +2,338 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6CA352E40F
-	for <lists+linux-raid@lfdr.de>; Fri, 20 May 2022 06:52:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2D5452EED6
+	for <lists+linux-raid@lfdr.de>; Fri, 20 May 2022 17:13:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229523AbiETEw2 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 20 May 2022 00:52:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46020 "EHLO
+        id S239264AbiETPNs (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 20 May 2022 11:13:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345428AbiETEwX (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 20 May 2022 00:52:23 -0400
-X-Greylist: delayed 1096 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 19 May 2022 21:52:16 PDT
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02hn2233.outbound.protection.partner.outlook.cn [139.219.17.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0373D66FA1;
-        Thu, 19 May 2022 21:52:16 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dTgGc0h/0At8MBttzBkK8Ng18cD+wAmbmz35rRkzX2XuiAckWJA0l1KXg8aLkYfgPi7sDokHr+gmzTfIOQwiuhqYCylSHEqPt4cwrvgFr0m85bRiUMvUETEKTlm2tUySZxPlti+0GU9By9/3mxtOUO/cUjSSKmn595kW29RMwYjYtkiypQRgPmuVxyfcb9fdrJBYHRPYr8r98y/a+ZOGc7Cz05b0xj0XOGRFR/5K2M2Cwk6d50WHTQe/WWhbyj2nzaSrEa3wSi8zTbAhTmFZgTNxODWIAMQF2tutBJ8+w3lTD0TPpI8pR1KexM3pWkefgXNuSL/aAK10aamR2eAVhA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XHa7Vpxtm/u3S4otqoZTmpXUuVJNGmaT4A6UJUMDuKo=;
- b=jIaZzQhQA82X+a0w7q6rEhMwvvJys6dL9lzHi1YcEHPXS0ShHMMxGO/E4kwE5RFdGDsxNV/sDXzSRe5V7FiQcHL7Ts3xOoARSBxYkYqqvuNArc6vqgtGlFu+AzSbLh8oMxVQ9FPDfsbHSlaWFqdvxPZX/f2splna30cRSGNYvSwZ4FzRM49vG68NhNSeZxr5lh/6ufXPq8Z5seuvKGxNF+4vTk6EHcPf3VXZLySJiwb6dS6lBwDOhGTkERmYJy+B1dkjzVFh2cEISar82BftErG47D2dGJELAvGzNLcV/KfE5uLQShbBvdXYkyqL2DULEUdgNIrISQpbX7mJZzo/Dg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=gientech.com; dmarc=pass action=none header.from=gientech.com;
- dkim=pass header.d=gientech.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gientech.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XHa7Vpxtm/u3S4otqoZTmpXUuVJNGmaT4A6UJUMDuKo=;
- b=foLc+ZHUrkiTBblRVDfCc5ao8/S+6hbc/DEoLKcVaPpPajKnX4z7jSqL3SVfuMywUWqjNX+MXQpx8lfrn58abX8BQ7LyfzpBFg7lGTgSn3OWVF6ByZHmCqQIQruFX9tY6ITLzTeCdVYTr3g07IyxdRCBQpaevPHM0jyKGIrqu23jo48JVXDsd/H8mBYChEC31FE1W17JIWlGPi7Yn9hvE5K4PslZrcVIsfkoq8jh5tyLdDvbf3AlnqATiYXQwFGngzOSFF+k3dXhjkcz2T09rHYyBYW90HKJldrCOPFwxUy0umrG6snFvwq5WbkBpNfCmPYPNQe80G+qndcTRfokPA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=gientech.com;
-Received: from SHXPR01MB0623.CHNPR01.prod.partner.outlook.cn (10.43.110.19) by
- SHXPR01MB0575.CHNPR01.prod.partner.outlook.cn (10.43.109.207) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5273.15; Fri, 20 May 2022 04:19:12 +0000
-Received: from SHXPR01MB0623.CHNPR01.prod.partner.outlook.cn ([10.43.110.19])
- by SHXPR01MB0623.CHNPR01.prod.partner.outlook.cn ([10.43.110.19]) with mapi
- id 15.20.5273.017; Fri, 20 May 2022 04:19:12 +0000
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: Ree
-To:     Recipients <cuidong.liu@gientech.com>
-From:   "J Wu" <cuidong.liu@gientech.com>
-Date:   Wed, 18 May 2022 21:19:15 +0000
-Reply-To: contact@jimmywu.online
-X-ClientProxiedBy: BJSPR01CA0002.CHNPR01.prod.partner.outlook.cn
- (10.43.34.142) To SHXPR01MB0623.CHNPR01.prod.partner.outlook.cn
- (10.43.110.19)
-Message-ID: <SHXPR01MB06238D40DEF6AAD61B0227D389D19@SHXPR01MB0623.CHNPR01.prod.partner.outlook.cn>
+        with ESMTP id S232969AbiETPNq (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 20 May 2022 11:13:46 -0400
+Received: from postoffice.wmawater.com.au (postoffice.wmawater.com.au [61.69.178.123])
+        by lindbergh.monkeyblade.net (Postfix) with SMTP id 26C6C17066D
+        for <linux-raid@vger.kernel.org>; Fri, 20 May 2022 08:13:43 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by postoffice.wmawater.com.au (Postfix) with ESMTP id 57B4619F35E;
+        Sat, 21 May 2022 01:13:41 +1000 (AEST)
+Authentication-Results: postoffice.wmawater.com.au (amavisd-new);
+        dkim=pass (1024-bit key) header.d=wmawater.com.au
+Received: from postoffice.wmawater.com.au ([127.0.0.1])
+        by localhost (postoffice.wmawater.com.au [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id Hj_KMHews7Jg; Sat, 21 May 2022 01:13:41 +1000 (AEST)
+Received: from localhost (localhost [127.0.0.1])
+        by postoffice.wmawater.com.au (Postfix) with ESMTP id DEA5119F372;
+        Sat, 21 May 2022 01:13:40 +1000 (AEST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 postoffice.wmawater.com.au DEA5119F372
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wmawater.com.au;
+        s=1D92CC64-C1F9-11E4-96FC-2C1EC0F5F97B; t=1653059620;
+        bh=5aUrabxtT/6Jeg+oHBpKzkR1OKmolXoZ3j849jgSegA=;
+        h=From:To:Date:Message-ID:MIME-Version;
+        b=Sv2Yd2EUsaWfnsN9mDQYcZwzdYmkhtOMtoBYkC9QlEIL4iFJt+FLwLU9KK2Si4kpN
+         GsODluUuewYbuSgvQe7yrS84U3vSCi6UTQ1jjvSIfCxvZIFP08gwCoNZMHc3JcBX84
+         lTilxSX+Cn+z0fDBR4KWHCd3/K2ym2RAwOOZmMQo=
+X-Virus-Scanned: amavisd-new at wmawater.com.au
+Received: from postoffice.wmawater.com.au ([127.0.0.1])
+        by localhost (postoffice.wmawater.com.au [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id GdI1RJfA_QkD; Sat, 21 May 2022 01:13:40 +1000 (AEST)
+Received: from postoffice.wmawater.com.au (postoffice.wmawater.com.au [61.69.178.123])
+        by postoffice.wmawater.com.au (Postfix) with ESMTP id AE9D419F35E;
+        Sat, 21 May 2022 01:13:40 +1000 (AEST)
+Reply-To: "Bob Brand" <brand@wmawater.com.au>
+From:   Bob Brand <brand@wmawater.com.au>
+To:     "Roger Heflin" <rogerheflin@gmail.com>,
+        "Wols Lists" <antlists@youngman.org.uk>
+Cc:     "Linux RAID" <linux-raid@vger.kernel.org>,
+        "Phil Turmel" <philip@turmel.org>, "NeilBrown" <neilb@suse.com>
+References: <00ae01d862de$1d336980$579a3c80$@wmawater.com.au> <f4e9c9f8-590d-49a4-39da-e31d81258ff3@youngman.org.uk> <00cf01d86327$9c5dd8a0$d51989e0$@wmawater.com.au> <3f84648b-29db-0819-e3ba-af52435a2aab@youngman.org.uk> <00d101d86329$a2a57130$e7f05390$@wmawater.com.au> <00d601d8632f$ac1f1300$045d3900$@wmawater.com.au> <00e401d86333$e75d8f60$b618ae20$@wmawater.com.au> <00eb01d86339$18cc0860$4a641920$@wmawater.com.au> <5931f716-008d-399b-2ea8-acbbc9c8d239@youngman.org.uk> <CAAMCDecTb69YY+jGzq9HVqx4xZmdVGiRa54BD55Amcz5yaZo1Q@mail.gmail.com>
+In-Reply-To: <CAAMCDecTb69YY+jGzq9HVqx4xZmdVGiRa54BD55Amcz5yaZo1Q@mail.gmail.com>
+Subject: RE: Failed adadm RAID array after aborted Grown operation
+Thread-Topic: Failed adadm RAID array after aborted Grown operation
+Date:   Sat, 21 May 2022 01:13:39 +1000 (AEST)
+Message-ID: <04ed01d86c5c$2f632f50$8e298df0$@wmawater.com.au>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 41ca1767-fbf2-4795-4231-08da39141d61
-X-MS-TrafficTypeDiagnostic: SHXPR01MB0575:EE_
-X-Microsoft-Antispam-PRVS: <SHXPR01MB05757B59B2D012F5EB1E390D89D39@SHXPR01MB0575.CHNPR01.prod.partner.outlook.cn>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?2HAd0fwgQDXkUZsGOEW4k34pXdmeGj4x7s+V0ucJJ4+0gri2WmjmZnuBM0?=
- =?iso-8859-1?Q?vwoY9h8ruvMfbVR52dwMpwwjF3PjR7nWXSXKTJLbveOT/OOiyP2rOkOTVf?=
- =?iso-8859-1?Q?/PsCHnU7yKCeKnLH2iLW5+7FxP6daDPy34OXIZ3/GIFtlNsB5aAFX0mp5k?=
- =?iso-8859-1?Q?97q76D9I63IVoNUqzQ7cyar+J7q5Gz6MZhEV4qf7vBq98Ywv8wsUnf5M+b?=
- =?iso-8859-1?Q?qkIBcJeSR85lKdc6JVTKjnymWzx4dhPlGXcMOmVHpDiVcODvy84XoZ19vA?=
- =?iso-8859-1?Q?rsiS8UO425yUlZzB/bmJ0XXUo5zxtJuP+ASQ7bttTVyVcWv8rn0Ug04yX9?=
- =?iso-8859-1?Q?FHOkBofWyrZB1A6Fw8Rv3soQkWwFv805wG8/2OO/ztl8FlkwCjSfVfX3Qr?=
- =?iso-8859-1?Q?7ta+6oUgAlRo6uQqaGTaEWebQUUMbF7mhUgeJKmy4sAXhso+1OizEWc870?=
- =?iso-8859-1?Q?N47RC4/V9QyM/2jjKTqzSMUng2a+Q9qtexDhPq+Qo11YjqDiVdh/doiGGf?=
- =?iso-8859-1?Q?utMHTDSXL3bU+iw6D6CzELrMB6LY61pDs6hoz13FBQjUZ4mfKSJb2yNnfR?=
- =?iso-8859-1?Q?82/QueIVmOzx1ejFP7jCP/elAFg1pBYlfvdh1+yTuDgQIAAe7ihfXMBNu1?=
- =?iso-8859-1?Q?DhTATPMOvBpWIVTrbORhG3TRia/8X35kKPMtL/S46PiqHlkvQaAw3N8R25?=
- =?iso-8859-1?Q?nRyhHQ6XWxEldG+T/lTJ1FIBp8K6ec2W5DQjrxKTLNAbVsrplJBZAqLce9?=
- =?iso-8859-1?Q?vq9U0DNC8yjtnQRZCnpFf881vbxkMOtVoYCfU8mXBGFaw+M3nr449bpnDs?=
- =?iso-8859-1?Q?qIGmckV+DkVHmvj3/ctn02kTdqbdAvBnaYItZ1rWXoJWs4qXYJ1UsmUjpw?=
- =?iso-8859-1?Q?GeGB/wzThmlKYdWhtvsN0JBNQbYTe1ZH8D8E+0i8PDqV8D71Mr35xcRfzi?=
- =?iso-8859-1?Q?WtzDAfGQlkAj4OOtAvygcuyTrK2vyO6ss3tCHD0jpvba29iyAMJxYCbKG+?=
- =?iso-8859-1?Q?w5ELAWO/hsrNSfLYPgjkWziv/hV7NdoR60shxlV9dRs5Ywvg+EUdvKY+rB?=
- =?iso-8859-1?Q?7Q=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:5;SRV:;IPV:NLI;SFV:SPM;H:SHXPR01MB0623.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:OSPM;SFS:(13230001)(366004)(7696005)(52116002)(40160700002)(19618925003)(38100700002)(6200100001)(558084003)(38350700002)(26005)(8936002)(8676002)(4270600006)(40180700001)(9686003)(6862004)(66946007)(7406005)(66556008)(7416002)(55016003)(7366002)(66476007)(186003)(86362001)(2906002)(508600001)(7116003)(3480700007)(33656002)(62346012);DIR:OUT;SFP:1501;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?6m47vHuf/0UBnw9LibOUdsnIfmAruF36JKfn1tgu4grukT4hnZWiw5hvE9?=
- =?iso-8859-1?Q?9Vv9ls/8Fdx709ZJdfi0AtnYCnY3DnppEVWL/3JwZpZpqAMd+AOSLonxgZ?=
- =?iso-8859-1?Q?j44XCnFpe0KXi9D/V+11FBhM64kJXv/a/KI8MRje1MWhEYjFEka1OrJzo4?=
- =?iso-8859-1?Q?HGeQ6tuCkcXxCyEw5ObqL8y8XLjCh6ggbAN0Siktlc3NYgcVC9iD9qDryp?=
- =?iso-8859-1?Q?+HCJLqZM1j9QBMuzJUR4tYsHLdSIij0JwdH9ybyEyoBbUSySTQTgKk0Mpf?=
- =?iso-8859-1?Q?sJQXUrASo0euRv2NTSAjnEF50OdOI9MoHsM9j86I8wQwN0pDhf25jeCPlJ?=
- =?iso-8859-1?Q?PJKCzbozxjy7xKoDRMNdYgd60GH0RU07edJnjK/DMndUDLDoRhpPJKIQHc?=
- =?iso-8859-1?Q?um4U9qnjP/yTmhhGGJ0bV/+ZXe99ZcnpjlE9GhNHM85Bv12SkZM0ousRl2?=
- =?iso-8859-1?Q?j5hb2r5OmOvzYrpSUPc8hB6low05FFDDBCyRdF/PDmjnhm10URBsOszZmS?=
- =?iso-8859-1?Q?Wf8Zep1qfz897pLFq6JALjGHmmIllqp5N5OeyLFWkyOnZF/LTR32mjoZbg?=
- =?iso-8859-1?Q?QPsxrbuxJpRK35ZSmX6lZDEvqwgaAaLAnvkWnyO22S6mryutx4WYPszi78?=
- =?iso-8859-1?Q?a4F9MGxm0jYp8TE46NcIg7YypeGQme4quh+Hl3DEZUnY1o/RFcCJ8mo3uQ?=
- =?iso-8859-1?Q?2KhjgzlxS4zmXDO+8C2qFI3SQoa5kshmRK/bUuTIOZkp8hM+sQyDD2WfrY?=
- =?iso-8859-1?Q?HqnLi9Ya6ShG+UIsRIndFqrFxnKIKAWQvdVVeZMAl0r1LsXqn9lRqGaOOi?=
- =?iso-8859-1?Q?L/rvCHRtOaG8NN0AzYg2G32OxvN/7F2D2DEh4d2dZJhXz+rKK60AMG0WQp?=
- =?iso-8859-1?Q?4dgnhHteSpD7702Qwd+xVBwXQT8t1uQ5VLB7VeVfsj9gzAjeRG3dPTX3SQ?=
- =?iso-8859-1?Q?pG9YyFOnd1KEFSeSQijJ12hDt527v0eTjmZUyGQ47NL8VuanUF7GFtiuR9?=
- =?iso-8859-1?Q?tq2jN4xFxNyFbmuaGJdZqLj7Ibja8FxR9yyJM/rKIy6XZd0CX2F3IOYVCr?=
- =?iso-8859-1?Q?ad3RBmaTwUJsQz9Zzmj0zNxzxelisTeF0Ca50tIiXebIwgkW3kdc77h5l1?=
- =?iso-8859-1?Q?L0wYuAj3sOQz0c2EI6l8DNLqrnrSwioDsoybp9p5M5FXjthIN6hh5M3ZCd?=
- =?iso-8859-1?Q?dhLLAcb9iQ/D86VeUjgZpSUlg/+xJF/p4PuzF0UlvUrUTj7di6D2/+R9jb?=
- =?iso-8859-1?Q?IfM7EUwnkm6Ev9UEoTrpOqNFfOeg6K/ifwnW5KU7kaMDHBe7pyim7Go2A3?=
- =?iso-8859-1?Q?2rA7iOiWLwIdGh4cJzn9BbdeSy3FHGfYq5iLYHlIVcb2oNSAYjmK2mp/f0?=
- =?iso-8859-1?Q?E+IANm02fXX9Tg1NNNX8O+wQBlMMgy2Zu5aZlunScS95YdBd3R4sDjm1/v?=
- =?iso-8859-1?Q?NwQSTv0rdTzvP7iDIftbNCTM6ociCiAETUViKxR/nGaIivR+bEG+7YD0Vn?=
- =?iso-8859-1?Q?eAI/Fu/lQT+W0SesbBwgZD/+GmcKA8cjpUMFe6c0Ofl4xa4uIU64/GrPVu?=
- =?iso-8859-1?Q?HGH5toj4UVlzAGpZ82NknoLtJRJIZK78+fQHMO1sWbpUZ828sh7nVWoB19?=
- =?iso-8859-1?Q?WUfT6ORQ2koZBzLDRbeI/EKirVHyLDRCFxVSXDqSoyoZ5xuDe46LIgHaVH?=
- =?iso-8859-1?Q?eU85FZCjjzu5cW1bHrpVXR1iU0zaRt3vZH7Ur58OZw25PB+tAz2Vzl7r8v?=
- =?iso-8859-1?Q?WDLQ=3D=3D?=
-X-OriginatorOrg: gientech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41ca1767-fbf2-4795-4231-08da39141d61
-X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0623.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 May 2022 21:19:38.2482
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 89592e53-6f9d-4b93-82b1-9f8da689f1b4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: k0DUz4TNoHO9cM0vkzNpHWdemcLULpCXtHA3c6a0BN6Aea57Y2GajnwScipA1Nv/Q+ZyJyP/DCFexWvIgzQlyc256IuC6ZL5cypLU3ro7vM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0575
-X-Spam-Status: No, score=3.3 required=5.0 tests=BAYES_50,DATE_IN_PAST_24_48,
-        DKIM_INVALID,DKIM_SIGNED,FORGED_SPF_HELO,KHOP_HELO_FCRDNS,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Level: ***
+Content-Type: text/plain;
+        charset="utf-8"
+X-Mailer: Microsoft Outlook 16.0
+X-Mailer: Zimbra 8.8.15_GA_3894 (Zimbra-ZCO/9.0.0.1903 (10.0.19044  en-AU) P1de8 T376c R27247)
+Thread-Index: AQK0Ylmfkg1g1mZGz7yxBx3O0op7hADpZ3mFAYMzo9kBZlg9dAGZ0oLFAdWidsoCQWnqlQI7z0N+AMQVcYoBrcfnAar+ZeeQ
+Content-Language: en-au
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Can you do a job with me?
+UPDATE:
+
+The array finally finished the reshape process (after almost two weeks!) =
+and=20
+I now have an array that's showing as clean with the original 30 disks.=20
+However, when I try to mount it, I get the message "mount: /dev/md125: ca=
+n't=20
+read superblock".
+
+Any suggestions as to what my next step should be? Note: it's still runni=
+ng=20
+from the rescue disk.
+
+Thank you,
+Bob
+
+From: Roger Heflin <rogerheflin@gmail.com>
+Sent: Monday, 9 May 2022 9:05 PM
+To: Wols Lists <antlists@youngman.org.uk>
+Cc: Bob Brand <brand@wmawater.com.au>; Linux RAID=20
+<linux-raid@vger.kernel.org>; Phil Turmel <philip@turmel.org>; NeilBrown=20
+<neilb@suse.com>
+Subject: Re: Failed adadm RAID array after aborted Grown operation
+
+The short term easiest way for a new kernel might be this.
+
+Download a Fedora 35 livecd and boot from it.  It will allow you to turn =
+on=20
+the raid and/or reshape the raid and/or abort the reshape using the fedor=
+a=20
+35 kernel and mdadm tools.    Though all of this will need to be done=20
+manually from either the gui and/or command line, so it will be somewhat =
+of=20
+a pain.
+
+The other choice is to download/compile/install a current http://kernel.o=
+rg=20
+kernel.  This takes some time (you have to install compiler/header rpms),=
+=20
+and follow this=20
+(https://docs.rockylinux.org/guides/custom-linux-kernel/)--rockylinux so =
+a=20
+redhat clone list of instructions.  How long it takes will depend on the=20
+number of cpus your machine has and the value after the -j<cpustouse>.=20
+The biggest issue with this will likely be dealing with compile errors fo=
+r=20
+missing dependencies you get for this or that tool and/or devel package=20
+being missing.   And then you would still need to download the newest mda=
+dm=20
+and compile and install it.   These steps will take longer, but doing thi=
+s=20
+will get your system on a new kernel and new tools, and typically once yo=
+u=20
+know how to do this, this process of compiling/installing a kernel has fo=
+r=20
+the most part not changed in a long time.  And I have been doing this on =
+and=20
+off for 20+ years and newer kernel on older userspace is widely used by a=
+=20
+lot of the kernel developers so is generally well testing and in my=20
+experience just works to get you on a new kernel with minimal trouble.
+
+
+
+On Mon, May 9, 2022 at 5:24 AM Wols Lists <mailto:antlists@youngman.org.u=
+k>=20
+wrote:
+On 09/05/2022 01:09, Bob Brand wrote:
+> Hi Wol,
+>
+> My apologies for continually bothering you but I have a couple of=20
+> questions:
+
+Did you read the links I sent you?
+>
+> 1. How do I overcome the error message "mount: /dev/md125: can't read
+> superblock."  Do it use fsck?
+>
+> 2. The removed disk is showing as "   -   0   0   30   removed". Is it=20
+> safe
+> to use "mdadm /dev/md2 -r detached" or "mdadm /dev/md2 -r failed" to
+> overcome this?
+
+I don't know :-( This is getting a bit out of my depth. But I'm
+SERIOUSLY concerned you're still futzing about with CentOS 7!!!
+
+Why didn't you download CentOS 8.5? Why didn't you download RHEL 8.5, or
+the latest Fedora? Why didn't you download SUSE SLES 15?
+
+Any and all CentOS 7 will come with either an out-of-date mdadm, or a
+Frankenkernel. NEITHER are a good idea.
+
+Go back to the links I gave you, download and run lsdrv, and post the
+output here. Hopefully somebody will tell you the next steps. I will do
+my best.
+>
+> Thank you!
+>
+Cheers,
+Wol
+>
+> -----Original Message-----
+> From: Bob Brand <mailto:brand@wmawater.com.au>
+> Sent: Monday, 9 May 2022 9:33 AM
+> To: Bob Brand <mailto:brand@wmawater.com.au>; Wol=20
+> <mailto:antlists@youngman.org.uk>;
+> mailto:linux-raid@vger.kernel.org
+> Cc: Phil Turmel <mailto:philip@turmel.org>
+> Subject: RE: Failed adadm RAID array after aborted Grown operation
+>
+> I just tried it again with the --invalid_backup switch and it's now=20
+> showing
+> the State as "clean, degraded".and it's showing all the disks except fo=
+r=20
+> the
+> suspect one that I removed.
+>
+> I'm unable to mount it and see the contents. I get the error "mount:
+> /dev/md125: can't read superblock."
+>
+> Is there more that I need to do?
+>
+> Thanks
+>
+>
+> -----Original Message-----
+> From: Bob Brand <mailto:brand@wmawater.com.au>
+> Sent: Monday, 9 May 2022 9:02 AM
+> To: Bob Brand <mailto:brand@wmawater.com.au>; Wol=20
+> <mailto:antlists@youngman.org.uk>;
+> mailto:linux-raid@vger.kernel.org
+> Cc: Phil Turmel <mailto:philip@turmel.org>
+> Subject: RE: Failed adadm RAID array after aborted Grown operation
+>
+> Hi Wol,
+>
+> I've booted to the installation media and I've run the following comman=
+d:
+>
+> mdadm
+> /dev/md125 --assemble --update=3Drevert-reshape --backup-file=3D/mnt/sy=
+simage/grow_md125.bak
+>   --verbose --uuid=3D f9b65f55:5f257add:1140ccc0:46ca6c19
+> /dev/md125mdadm --assemble --update=3Drevert-reshape --backup-file=3D/g=
+row_md125.bak
+>    --verbose --uuid=3Df9b65f55:5f257add:1140ccc0:46ca6c19
+>
+> But I'm still getting the error:
+>
+> mdadm: /dev/md125 has an active reshape - checking if critical section=20
+> needs
+> to be restored
+> mdadm: No backup metadata on /mnt/sysimage/grow_md125.back
+> mdadm: Failed to find backup of critical section
+> mdadm: Failed to restore critical section for reshape, sorry.
+>
+>
+> Should I try the --invalid_backup switch or --force?
+>
+> Thanks,
+> Bob
+>
+>
+> -----Original Message-----
+> From: Bob Brand <mailto:brand@wmawater.com.au>
+> Sent: Monday, 9 May 2022 8:19 AM
+> To: Wol <mailto:antlists@youngman.org.uk>;=20
+> mailto:linux-raid@vger.kernel.org
+> Cc: Phil Turmel <mailto:philip@turmel.org>
+> Subject: RE: Failed adadm RAID array after aborted Grown operation
+>
+> OK.  I've downloaded a Centos 7 - 2009 ISO from http://centos.org - tha=
+t=20
+> seems to
+> be the most recent they have.
+>
+>
+> -----Original Message-----
+> From: Wol <mailto:antlists@youngman.org.uk>
+> Sent: Monday, 9 May 2022 8:16 AM
+> To: Bob Brand <mailto:brand@wmawater.com.au>;=20
+> mailto:linux-raid@vger.kernel.org
+> Cc: Phil Turmel <mailto:philip@turmel.org>
+> Subject: Re: Failed adadm RAID array after aborted Grown operation
+>
+> How old is CentOS 7? With that kernel I guess it's quite old?
+>
+> Try and get a CentOS 8.5 disk. At the end of the day, the version of li=
+nux
+> doesn't matter. What you need is an up-to-date rescue disk.
+> Distro/whatever is unimportant - what IS important is that you are usin=
+g=20
+> the
+> latest mdadm, and a kernel that matches.
+>
+> The problem you have sounds like a long-standing but now-fixed bug. An
+> original CentOS disk might be okay (with matched kernel and mdadm), but
+> almost certainly has what I consider to be a "dodgy" version of mdadm.
+>
+> If you can afford the downtime, after you've reverted the reshape, I'd =
+try
+> starting it again with the rescue disk. It'll probably run fine. Let it
+> complete and then your old CentOS 7 will be fine with it.
+>
+> Cheers,
+> Wol
+>
+> On 08/05/2022 23:04, Bob Brand wrote:
+>> Thank Wol.
+>>
+>> Should I use a CentOS 7 disk or a CentOS disk?
+>>
+>> Thanks
+>>
+>> -----Original Message-----
+>> From: Wols Lists <mailto:antlists@youngman.org.uk>
+>> Sent: Monday, 9 May 2022 1:32 AM
+>> To: Bob Brand <mailto:brand@wmawater.com.au>;=20
+>> mailto:linux-raid@vger.kernel.org
+>> Cc: Phil Turmel <mailto:philip@turmel.org>
+>> Subject: Re: Failed adadm RAID array after aborted Grown operation
+>>
+>> On 08/05/2022 14:18, Bob Brand wrote:
+>>> If you=E2=80=99ve stuck with me and read all this way, thank you and =
+I hope
+>>> you can help me.
+>>
+>> https://raid.wiki.kernel.org/index.php/Linux_Raid
+>>
+>> Especially
+>> https://raid.wiki.kernel.org/index.php/Linux_Raid#When_Things_Go_Wrogn
+>>
+>> What you need to do is revert the reshape. I know what may have
+>> happened, and what bothers me is your kernel version, 3.10.
+>>
+>> The first thing to try is to boot from up-to-date rescue media and see
+>> if an mdadm --revert works from there. If it does, your Centos should
+>> then bring everything back no problem.
+>>
+>> (You've currently got what I call a Frankensetup, a very old kernel, a
+>> pretty new mdadm, and a whole bunch of patches that does who knows wha=
+t.
+>> You really need a matching kernel and mdadm, and your frankenkernel
+>> won't match anything ...)
+>>
+>> Let us know how that goes ...
+>>
+>> Cheers,
+>> Wol
+>>
+>>
+>>
+>> CAUTION!!! This E-mail originated from outside of WMA Water. Do not
+>> click links or open attachments unless you recognize the sender and
+>> know the content is safe.
+>>
+>>
+>
+>
+>
+> CAUTION!!! This E-mail originated from outside of WMA Water. Do not cli=
+ck
+> links or open attachments unless you recognize the sender and know the
+> content is safe.
+>
+>
+>
