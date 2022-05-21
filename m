@@ -2,31 +2,31 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E3EC52FC1B
-	for <lists+linux-raid@lfdr.de>; Sat, 21 May 2022 13:40:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83BB752FC20
+	for <lists+linux-raid@lfdr.de>; Sat, 21 May 2022 13:42:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344612AbiEULkE (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 21 May 2022 07:40:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52890 "EHLO
+        id S237812AbiEULmC (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 21 May 2022 07:42:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241868AbiEULkE (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 21 May 2022 07:40:04 -0400
+        with ESMTP id S229699AbiEULmB (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 21 May 2022 07:42:01 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AF634CD53;
-        Sat, 21 May 2022 04:40:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CA0C48E51;
+        Sat, 21 May 2022 04:42:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=wrHo5fBu2bjm2sOiWTFsX5Y1WU
-        HkfhV8ufgQG0UhjuE9gXNknKBKKyzPseK6O187GoxoG1/p3d8rFbZ1s04NPbeHAWZdtpUkm3/Bnz0
-        uEXB1GGwmATrnoyeIxzUWkgelcHUOQp4TbvNCzWG3HI2Xnz+mNFjWA5spYb375ukjefQoNao4Y9mL
-        cdu6iOrSf8oagKYKjFcxEVIfQGMaTvFLRRV4R3SazjPBtZn+j4TEEwAJDpl7AB9t1rQqQ7wr73poK
-        UL4+g8a3ekBDJH7m/v+xo0bYi9zN6ubuuuMJ/kpEEe6NgsS/UBB6ZxJG6QXKQ2R+RdMaE+QNOUbZ8
-        vbQLdO5w==;
+        bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=3RM74IgYt2Wlx0/u9ckYoY2Dbl
+        u9fE4pjvw/bbwk0SFdo8mWvoxX5S1hdlmbBUKWZXQ9VA20GavQtbSMghM8KPxk/N0Lw3lHGhy6HtJ
+        5JQmzfFc3GvyWwrH6NHxpEawoY4qic6fHOVmTtWgrO8Je71B3FNyJkl4xBdNrmyeKX/P5yzrhnabD
+        a3PCPc98Eaz4ddEoykcTJNS43hng/rxG3mWHWAgaHGwD2PVq4OvcHC2TJvtNmgEFKf1pDAc5UtnD0
+        44XpKUW5AqtkUiyDX8CWcQfZyLq8mWlqOMlTjDoK1kHvueHLQShC0xJrGkJ/e/xV9OsokZoXRFvUA
+        uEBQsblw==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nsNSk-00GPa0-A3; Sat, 21 May 2022 11:40:02 +0000
-Date:   Sat, 21 May 2022 04:40:02 -0700
+        id 1nsNUd-00GPwJ-H4; Sat, 21 May 2022 11:41:59 +0000
+Date:   Sat, 21 May 2022 04:41:59 -0700
 From:   Christoph Hellwig <hch@infradead.org>
 To:     Logan Gunthorpe <logang@deltatee.com>
 Cc:     linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
@@ -36,15 +36,15 @@ Cc:     linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
         Xiao Ni <xni@redhat.com>, Stephen Bates <sbates@raithlin.com>,
         Martin Oliveira <Martin.Oliveira@eideticom.com>,
         David Sloan <David.Sloan@eideticom.com>
-Subject: Re: [PATCH v1 06/15] md/raid5-cache: Refactor remaining functions to
- take a r5conf
-Message-ID: <YojPkkdP7LfS/mMB@infradead.org>
+Subject: Re: [PATCH v1 07/15] md/raid5-ppl: Drop unused argument from
+ ppl_handle_flush_request()
+Message-ID: <YojQBypoFBzG+xwo@infradead.org>
 References: <20220519191311.17119-1-logang@deltatee.com>
- <20220519191311.17119-7-logang@deltatee.com>
+ <20220519191311.17119-8-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220519191311.17119-7-logang@deltatee.com>
+In-Reply-To: <20220519191311.17119-8-logang@deltatee.com>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
