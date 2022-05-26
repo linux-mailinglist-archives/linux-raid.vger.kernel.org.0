@@ -2,107 +2,131 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87584534515
-	for <lists+linux-raid@lfdr.de>; Wed, 25 May 2022 22:40:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45305534CBA
+	for <lists+linux-raid@lfdr.de>; Thu, 26 May 2022 11:46:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345231AbiEYUkC (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 25 May 2022 16:40:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59702 "EHLO
+        id S231128AbiEZJq0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 26 May 2022 05:46:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237203AbiEYUjx (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 25 May 2022 16:39:53 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91768B0D36
-        for <linux-raid@vger.kernel.org>; Wed, 25 May 2022 13:39:51 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id y13so43217112eje.2
-        for <linux-raid@vger.kernel.org>; Wed, 25 May 2022 13:39:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=LDBqQh/PztHeiDiV9Pr0v62BTTaDnPQyU98FGi1REkw=;
-        b=V8ZoB3zlHdgZ2R2A4vgEAj70aKyCnGGpFtRZ9b0oTxUWZCuNT/gtyTwACRo1CCwI4R
-         IK4Nm9PfwKHWvA3UrYMHrWxHVZx/Fd1WN7EUywQ1Bx9EGwE2G5w+zQhx2dxTEJx/Qhvx
-         kZHC0CLj7Sf9TB4hKuFbYrHXEwFsp8ZlF2JEwj0d8Z6q0YaBJ7Gfmb4lwLJwI4EdSv4O
-         UtqL/rx7DREYH1tyNT+z+VgaTm8jRy/Jx3K7Yn8LdMubX2Ahh10T0v0ikCTHCFRQ16rV
-         PtrFcIYGMYWfojivKhNlerEa9N1T3tnRrDG9EOuK3KSgvDiYyowahaCPNsF4eF/kmTY3
-         r85w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=LDBqQh/PztHeiDiV9Pr0v62BTTaDnPQyU98FGi1REkw=;
-        b=RXnaIJ4umpoo/XETfX3L8w831AJTzwoEKjwrFdQzUbw3MKxJXJ7YfWX4wwU6E7/WsG
-         wnImI/rgfvHC+P2d6tAlJ8ST1fxdIP9kUGKPb9YdWGJD1GJwH7/GqDbkCx8MSh2xubs0
-         3ObKAHTwNDqd8YLhQGxIKqoz2Cp2yERNkTL0t7cCVBqhlUzoHBiFYlMipbk3kSv7Shr8
-         zrGc9rmCYOzLMb7KVk/9K9MZ0YwS7Ee6iYQIAvr2XeR+39Vn66l74ll3U7xceCm0t+2c
-         XP8N57EPWx6RgHZ0GJy2Z/PSo+uqR0Z6yuJjYz8lXq1LGKIncTpKQifSRV2IS6wdJ5A4
-         ZGPg==
-X-Gm-Message-State: AOAM532FHqmt2lnbmosbExG/I9FLmIc801/vEEwVoHs9vwy6v7gTHsDL
-        FH6Zgq4aLZJE2MwfIY9RGPdRfP7XkSl6jUlbR54=
-X-Google-Smtp-Source: ABdhPJwUsfb5OrQ3vcRS6HNq0+X7djtQ2eKtPHczM9HgH7+6P7FYocdSAR9l/DYJudx0gCT9N+SQNUs9NxBhx4GBA2I=
-X-Received: by 2002:a17:906:8301:b0:6e4:896d:59b1 with SMTP id
- j1-20020a170906830100b006e4896d59b1mr29792721ejx.396.1653511190094; Wed, 25
- May 2022 13:39:50 -0700 (PDT)
+        with ESMTP id S1343511AbiEZJqZ (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 26 May 2022 05:46:25 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85E5DC9660
+        for <linux-raid@vger.kernel.org>; Thu, 26 May 2022 02:46:23 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 05C04219B0;
+        Thu, 26 May 2022 09:46:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1653558382; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xAzbDtKzD4j7WOo/trxcSaIx35b+dBXJ2jcwyhV/gKQ=;
+        b=SXV6jkWmQsyI3/1uuzjpf2l3XDsS4ylcmFpC/RUuT3SBXnPVUegmL1/pufTmVlp9g6c2Ek
+        Jc7ucx3BpGUTEb6/mt9TS6OxnelepCVGMMx7Q/O/MAFIo43pmjvwm/keBkHr0EJk7Sx6MM
+        RspV1nG/Utem6ogBIXtF15r88ryuffA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1653558382;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xAzbDtKzD4j7WOo/trxcSaIx35b+dBXJ2jcwyhV/gKQ=;
+        b=VNrE7zY5GIAyhF184Io3FFoYADvZQkPKWaHm7OFpF58xB/EGjl6JH47vXJnlhrbrtOSHaD
+        Ryv02cjd9PlVrsDQ==
+Received: from quack3.suse.cz (unknown [10.100.224.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id BE3B22C141;
+        Thu, 26 May 2022 09:46:21 +0000 (UTC)
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+        id 381B9A0632; Thu, 26 May 2022 11:46:21 +0200 (CEST)
+Date:   Thu, 26 May 2022 11:46:21 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Guoqing Jiang <guoqing.jiang@linux.dev>,
+        Donald Buczek <buczek@molgen.mpg.de>,
+        Song Liu <song@kernel.org>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        linux-raid <linux-raid@vger.kernel.org>
+Subject: Re: [Update PATCH V3] md: don't unregister sync_thread with
+ reconfig_mutex held
+Message-ID: <20220526094621.gzfm2zws325sb7wn@quack3.lan>
+References: <141b4110-767e-7670-21d5-6a5f636d1207@linux.dev>
+ <CAPhsuW6U3g-Xikbw4mAJOH1-kN42rYHLiq_ocv==436azhm33g@mail.gmail.com>
+ <b4244eab-d9e2-20a0-ebce-1a96e8fadb91@deltatee.com>
+ <836b2a93-65be-8d6c-8610-18373b88f86d@molgen.mpg.de>
+ <5b0584a3-c128-cb53-7c8a-63744c60c667@linux.dev>
+ <4edc9468-d195-6937-f550-211bccbd6756@molgen.mpg.de>
+ <954f9c33-7801-b6d2-65e3-9e5237905886@linux.dev>
+ <82a08e9c-e3f4-4eb6-cb06-58b96c0f01a8@deltatee.com>
+ <775d6734-2b08-21a8-a093-f750d31ce6ce@linux.dev>
+ <ae6d294a-e9ec-a81d-6085-a9341ed8a470@deltatee.com>
 MIME-Version: 1.0
-Received: by 2002:a17:907:16a0:0:0:0:0 with HTTP; Wed, 25 May 2022 13:39:49
- -0700 (PDT)
-From:   Deterin Falcao <falcaodeterin@gmail.com>
-Date:   Wed, 25 May 2022 22:39:49 +0200
-Message-ID: <CABCO4Z34L5Ob2sRJ+JwD5j-Hmd-m2wJ6TEysrc=k65vmAnA3cw@mail.gmail.com>
-Subject: Bitte kontaktaufnahme Erforderlich !!! Please Contact Required !!!
-To:     info@firstdiamondbk.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=0.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ae6d294a-e9ec-a81d-6085-a9341ed8a470@deltatee.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Guten Tag,
+On Wed 25-05-22 12:22:06, Logan Gunthorpe wrote:
+> 
+> 
+> On 2022-05-25 03:04, Guoqing Jiang wrote:
+> > I would prefer to focus on block tree or md tree. With latest block tree
+> > (commit 44d8538d7e7dbee7246acda3b706c8134d15b9cb), I get below
+> > similar issue as Donald reported, it happened with the cmd (which did
+> > work with 5.12 kernel).
+> > 
+> > vm79:~/mdadm> sudo ./test --dev=loop --tests=05r1-add-internalbitmap
+> 
+> Ok, so this test passes for me, but my VM was not running with bfq. It
+> also seems we have layers upon layers of different bugs to untangle.
+> Perhaps you can try the tests with bfq disabled to make progress on the
+> other regression I reported.
+> 
+> If I enable bfq and set the loop devices to the bfq scheduler, then I
+> hit the same bug as you and Donald. It's clearly a NULL pointer
+> de-reference in the bfq code, which seems to be triggered on the
+> partition read after mdadm opens a block device (not sure if it's the md
+> device or the loop device but I suspect the latter seeing it's not going
+> through any md code).
+> 
+> Simplifying things down a bit, the null pointer dereference can be
+> triggered by creating an md device with loop devices that have bfq
+> scheduler set:
+> 
+>   mdadm --create --run /dev/md0 --level=1 -n2 /dev/loop0 /dev/loop1
+> 
+> The crash occurs in bfq_bio_bfqg() with blkg_to_bfqg() returning NULL.
+> It's hard to trace where the NULL comes from in there -- the code is a
+> bit complex.
+> 
+> I've found that the bfq bug exists in current md-next (42b805af102) but
+> did not trigger in the base tag of v5.18-rc3. Bisecting revealed the bug
+> was introduced by:
+> 
+>   4e54a2493e58 ("bfq: Get rid of __bio_blkcg() usage")
+> 
+> Reverting that commit and the next commit (075a53b7) on top of md-next
+> was confirmed to fix the bug.
+> 
+> I've copied Jan, Jens and Paolo who can hopefully help with this. A
+> cleaned up stack trace follows this email for their benefit.
 
-Ich habe mich nur gefragt, ob Sie meine vorherige E-Mail bekommen
+Indeed. Thanks for easy reproduction steps. I've reproduced the issue
+locally and I'm looking into it because from a quick look into the code
+this shouldn't be possible which means I'm missing something obvious :).
 
-haben ?
+								Honza
 
-Ich habe versucht, Sie per E-Mail zu erreichen.
-
-Kommen Sie bitte schnell zu mir zur=C3=BCck, es ist sehr wichtig.
-
-Danke
-
-Falcao Deterin
-
-falcaodeterin@gmail.com
-
-
-
-
-
-
-
-
-----------------------------------
-
-
-
-
-Good Afternoon,
-
-I was just wondering if you got my Previous E-mail
-have ?
-
-I tried to reach you by E-mail.
-
-Please come back to me quickly, it is very Important.
-
-Thanks
-
-Falcao Deterin
-
-falcaodeterin@gmail.com
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
