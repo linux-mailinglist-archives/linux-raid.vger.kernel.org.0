@@ -2,65 +2,58 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B0E905355C2
-	for <lists+linux-raid@lfdr.de>; Thu, 26 May 2022 23:42:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A4040536169
+	for <lists+linux-raid@lfdr.de>; Fri, 27 May 2022 14:02:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241525AbiEZVm5 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-raid@lfdr.de>); Thu, 26 May 2022 17:42:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58438 "EHLO
+        id S230251AbiE0L5q convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-raid@lfdr.de>); Fri, 27 May 2022 07:57:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229485AbiEZVm4 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 26 May 2022 17:42:56 -0400
-X-Greylist: delayed 119 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 26 May 2022 14:42:55 PDT
-Received: from mgw1.mx.zaq.ne.jp (fbsnd00103-jc.im.kddi.ne.jp [222.227.81.227])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D50C3AFB32;
-        Thu, 26 May 2022 14:42:54 -0700 (PDT)
-Received: from mgw1.mx.zaq.ne.jp by osmta0002-jc.im.kddi.ne.jp with ESMTP
-          id <20220526213800089.OBYS.27398.mgw1.mx.zaq.ne.jp@omta0002.jcom.zaq.ne.jp>;
-          Fri, 27 May 2022 06:38:00 +0900
-Received: from [172.31.24.11] by dmta0002-jc.im.kddi.ne.jp with ESMTP
-          id <20220526213759514.UZVF.10774.[172.31.24.11]@dmta0002.jcom.zaq.ne.jp>;
-          Fri, 27 May 2022 06:37:59 +0900
+        with ESMTP id S1353180AbiE0L4Q (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 27 May 2022 07:56:16 -0400
+X-Greylist: delayed 2281 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 27 May 2022 04:49:59 PDT
+Received: from mail.composit.net (mail.composit.net [195.49.185.119])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 50CB114CA39
+        for <linux-raid@vger.kernel.org>; Fri, 27 May 2022 04:49:59 -0700 (PDT)
+Received: from mail.composit.net (localhost.localdomain [127.0.0.1])
+        by mail.composit.net (Proxmox) with ESMTP id EC6A938751E;
+        Fri, 27 May 2022 14:09:05 +0300 (MSK)
+Received: from mail.composit.net (mail.composit.local [192.168.101.14])
+        by mail.composit.net (Proxmox) with SMTP id C3FB639463D;
+        Fri, 27 May 2022 14:09:05 +0300 (MSK)
+Received: from [192.168.1.105] (Unknown [197.234.219.23])
+        by mail.composit.net with ESMTPSA
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256)
+        ; Fri, 27 May 2022 14:09:06 +0300
+Message-ID: <42AD30BB-4D4E-4251-858B-43DF82386F0A@mail.composit.net>
 Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8BIT
 Content-Description: Mail message body
-Subject: Guten Tag
-To:     Recipients <ysylk172@jcom.zaq.ne.jp>
-From:   "Francis  Crespo" <ysylk172@jcom.zaq.ne.jp>
-Date:   Thu, 26 May 2022 21:36:03 +0000
-Reply-To: franciscoperezcre@gmail.com
-Message-Id: <20220526213759514.UZVF.10774.[172.31.24.11]@dmta0002.jcom.zaq.ne.jp>
-X-VC-DATE: Fri, 27 May 2022 06:38:00 +0900
-X-Spam-Status: No, score=2.9 required=5.0 tests=BAYES_50,
-        FREEMAIL_FORGED_REPLYTO,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: **
+Subject: Greetings From Ukraine.  
+To:     Recipients <heiss@dnet.it>
+From:   "Kostiantyn Chichkov" <heiss@dnet.it>
+Date:   Fri, 27 May 2022 12:07:58 +0100
+Reply-To: kostiantync@online.ee
+X-Spam-Status: No, score=3.7 required=5.0 tests=BAYES_50,RCVD_IN_SBL,
+        RCVD_IN_SORBS_WEB,RCVD_IN_VALIDITY_RPBL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Guten Tag,
+Good Morning,
 
-Ich möchte Sie persönlich kontaktieren; Ich weiß, Sie werden überrascht sein, meine E-Mail zu lesen. Bitte seien Sie nicht skeptisch, wenn Sie mir antworten. Mein Name ist Rechtsanwalt Francis Perez Crespo. 
+We are Kostiantyn Chychkov and Maryna Chudnovska from Ukraine, we need your service, we have gone through your profile and we will like to work with you on an important service that needs urgent attention due to the ongoing war in our country. Kindly acknowledge this inquiry as soon as possible for a detailed discussion about the service.
 
-Es tut mir leid, Ihren Tag zu unterbrechen, mit gebührendem Respekt, Vertrauen und Demut. Ich schreibe Ihnen diese E-Mail, von der ich glaube, dass sie für Sie von großem Interesse wäre, und um zu sehen, ob Ihre E-Mail funktioniert.
+Thank you.
 
-Ich habe etwas absolut Wichtiges mit Ihnen zu besprechen. Für weitere Einzelheiten senden Sie mir bitte eine E-Mail mit folgenden Angaben.
+Yours expectantly,
 
-
-Vollständiger Name:
-Heimatadresse:
-Telefonnummer:
-Handynummer:
-Geburtsdatum:
-Beruf:
+Kostiantyn Chichkov & Ms. Maryna Chudnovska,
+From Ukraine.
 
 
-
-Mit freundlichen Grüßen.
-
-Francis Pérez Crespo
-RECHTSANWALT
