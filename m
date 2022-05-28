@@ -2,58 +2,98 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A4040536169
-	for <lists+linux-raid@lfdr.de>; Fri, 27 May 2022 14:02:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 182BB536D19
+	for <lists+linux-raid@lfdr.de>; Sat, 28 May 2022 15:29:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230251AbiE0L5q convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-raid@lfdr.de>); Fri, 27 May 2022 07:57:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54552 "EHLO
+        id S235843AbiE1N3d (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 28 May 2022 09:29:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353180AbiE0L4Q (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 27 May 2022 07:56:16 -0400
-X-Greylist: delayed 2281 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 27 May 2022 04:49:59 PDT
-Received: from mail.composit.net (mail.composit.net [195.49.185.119])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 50CB114CA39
-        for <linux-raid@vger.kernel.org>; Fri, 27 May 2022 04:49:59 -0700 (PDT)
-Received: from mail.composit.net (localhost.localdomain [127.0.0.1])
-        by mail.composit.net (Proxmox) with ESMTP id EC6A938751E;
-        Fri, 27 May 2022 14:09:05 +0300 (MSK)
-Received: from mail.composit.net (mail.composit.local [192.168.101.14])
-        by mail.composit.net (Proxmox) with SMTP id C3FB639463D;
-        Fri, 27 May 2022 14:09:05 +0300 (MSK)
-Received: from [192.168.1.105] (Unknown [197.234.219.23])
-        by mail.composit.net with ESMTPSA
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256)
-        ; Fri, 27 May 2022 14:09:06 +0300
-Message-ID: <42AD30BB-4D4E-4251-858B-43DF82386F0A@mail.composit.net>
-Content-Type: text/plain; charset="iso-8859-1"
+        with ESMTP id S235803AbiE1N3b (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 28 May 2022 09:29:31 -0400
+Received: from mail-vs1-xe29.google.com (mail-vs1-xe29.google.com [IPv6:2607:f8b0:4864:20::e29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B1F017AAE
+        for <linux-raid@vger.kernel.org>; Sat, 28 May 2022 06:29:28 -0700 (PDT)
+Received: by mail-vs1-xe29.google.com with SMTP id c62so6697494vsc.10
+        for <linux-raid@vger.kernel.org>; Sat, 28 May 2022 06:29:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=yHYbw2bx/nsQBLFF3gJlg+vRlUz37DtKoW4ftjnCRHI=;
+        b=Xi3ApVFLNOOWluk36mWVEUZu3dk5y/QtW4TTFQ3J/YX+kiA4CjCpvIXZhT2lf/NG31
+         GMJa2R1LVMyoWH0wPp+BtEjoGS7raU5VLZ5jriCiIA0Qmd+MfslRnHJHdM7EwfD6uB2z
+         s2JN5/rvWkLmqbxnjPl4n1U+Pn+d6IEC7vgPn6Kqy7YcXWX0Crnh0oaGfpBSXr7HJBBs
+         FRqvA6nRroem0/uSeEtR1B678z51GyUpuPqBSo3hIrzz4lR9yEKJQl8KWnc1OToJMGNc
+         Xta9UDxWF0v9Hi5UtfMs1MI1Fbi4nip4OcFj3SmJRbPbgZr8sujEN+xCm+Qs4elMEXNk
+         kFFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=yHYbw2bx/nsQBLFF3gJlg+vRlUz37DtKoW4ftjnCRHI=;
+        b=yJx72NILYNJeEsf727H9d4LFuAZxeROFkFtYdYEeoVkNCHX9OJeSNzf5cIQpEKwfDR
+         hx89bts/Thh5LRgD9HrK/WOBAM7/bSRjHPhNhlXS3eK6Tz+a+wbZhMGY9FQVyUyIuUd9
+         h15dp0Ko6x+i9r2pZg7TXyKFcTWOdHYl29PSknJV7B9idJcE1qnobI9rx1zmXv3cfT3p
+         qY6Y0HH3kWYNsDDXlwSOz9WY2hqw4ZY6kb5Jvl/tdudBNJ0kHfJ511CeerJbLP31+lSG
+         ixG4rROF17/k+pkDTLCWhimvxBo/NTeaWUs+6l2YuMgfcP1z6gd6Rknn9e31TVgaSI1W
+         lA2Q==
+X-Gm-Message-State: AOAM531f09Kppkj84ANqWp5fm6L+1csfA37xCWNJtf7SsQiBsuUqTR6W
+        5/cUeKhQE7/C176aVjLaJXhr4D2AOL4nhNckZ2E=
+X-Google-Smtp-Source: ABdhPJz6HXhjANVyyNzrNe2CxlCmFoeTKPLztvqJdkMa4OsVZmsYr22BTxzzpweAMJmN3LMXHRpPsP/LzYGA8XSoke8=
+X-Received: by 2002:a67:ca0b:0:b0:337:bace:569f with SMTP id
+ z11-20020a67ca0b000000b00337bace569fmr12926231vsk.19.1653744566964; Sat, 28
+ May 2022 06:29:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: Greetings From Ukraine.  
-To:     Recipients <heiss@dnet.it>
-From:   "Kostiantyn Chichkov" <heiss@dnet.it>
-Date:   Fri, 27 May 2022 12:07:58 +0100
-Reply-To: kostiantync@online.ee
-X-Spam-Status: No, score=3.7 required=5.0 tests=BAYES_50,RCVD_IN_SBL,
-        RCVD_IN_SORBS_WEB,RCVD_IN_VALIDITY_RPBL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ***
+Received: by 2002:a05:612c:61a:b0:2bd:1783:dbee with HTTP; Sat, 28 May 2022
+ 06:29:26 -0700 (PDT)
+Reply-To: avamedicinemed3@gmail.com
+From:   Dr Ava Smith <mrsnicolemaroisbf@gmail.com>
+Date:   Sat, 28 May 2022 06:29:26 -0700
+Message-ID: <CAAV+NNR98rAGphC9_G5vqGv6iQr7m_40hQEqvbkXvpzB3+z=FA@mail.gmail.com>
+Subject: From Dr Ava Smith from United States
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.1 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:e29 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5002]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [mrsnicolemaroisbf[at]gmail.com]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [avamedicinemed3[at]gmail.com]
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.3 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Good Morning,
-
-We are Kostiantyn Chychkov and Maryna Chudnovska from Ukraine, we need your service, we have gone through your profile and we will like to work with you on an important service that needs urgent attention due to the ongoing war in our country. Kindly acknowledge this inquiry as soon as possible for a detailed discussion about the service.
-
-Thank you.
-
-Yours expectantly,
-
-Kostiantyn Chichkov & Ms. Maryna Chudnovska,
-From Ukraine.
-
-
+-- 
+Hello Dear,
+how are you today
+My name is Dr Ava Smith,Am English and French
+I will share pictures and more details about me as soon as i hear from you
+Thanks
+Ava
