@@ -2,98 +2,60 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 182BB536D19
-	for <lists+linux-raid@lfdr.de>; Sat, 28 May 2022 15:29:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BEE765374D9
+	for <lists+linux-raid@lfdr.de>; Mon, 30 May 2022 09:23:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235843AbiE1N3d (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 28 May 2022 09:29:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41570 "EHLO
+        id S232584AbiE3F4V (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 30 May 2022 01:56:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235803AbiE1N3b (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 28 May 2022 09:29:31 -0400
-Received: from mail-vs1-xe29.google.com (mail-vs1-xe29.google.com [IPv6:2607:f8b0:4864:20::e29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B1F017AAE
-        for <linux-raid@vger.kernel.org>; Sat, 28 May 2022 06:29:28 -0700 (PDT)
-Received: by mail-vs1-xe29.google.com with SMTP id c62so6697494vsc.10
-        for <linux-raid@vger.kernel.org>; Sat, 28 May 2022 06:29:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=yHYbw2bx/nsQBLFF3gJlg+vRlUz37DtKoW4ftjnCRHI=;
-        b=Xi3ApVFLNOOWluk36mWVEUZu3dk5y/QtW4TTFQ3J/YX+kiA4CjCpvIXZhT2lf/NG31
-         GMJa2R1LVMyoWH0wPp+BtEjoGS7raU5VLZ5jriCiIA0Qmd+MfslRnHJHdM7EwfD6uB2z
-         s2JN5/rvWkLmqbxnjPl4n1U+Pn+d6IEC7vgPn6Kqy7YcXWX0Crnh0oaGfpBSXr7HJBBs
-         FRqvA6nRroem0/uSeEtR1B678z51GyUpuPqBSo3hIrzz4lR9yEKJQl8KWnc1OToJMGNc
-         Xta9UDxWF0v9Hi5UtfMs1MI1Fbi4nip4OcFj3SmJRbPbgZr8sujEN+xCm+Qs4elMEXNk
-         kFFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=yHYbw2bx/nsQBLFF3gJlg+vRlUz37DtKoW4ftjnCRHI=;
-        b=yJx72NILYNJeEsf727H9d4LFuAZxeROFkFtYdYEeoVkNCHX9OJeSNzf5cIQpEKwfDR
-         hx89bts/Thh5LRgD9HrK/WOBAM7/bSRjHPhNhlXS3eK6Tz+a+wbZhMGY9FQVyUyIuUd9
-         h15dp0Ko6x+i9r2pZg7TXyKFcTWOdHYl29PSknJV7B9idJcE1qnobI9rx1zmXv3cfT3p
-         qY6Y0HH3kWYNsDDXlwSOz9WY2hqw4ZY6kb5Jvl/tdudBNJ0kHfJ511CeerJbLP31+lSG
-         ixG4rROF17/k+pkDTLCWhimvxBo/NTeaWUs+6l2YuMgfcP1z6gd6Rknn9e31TVgaSI1W
-         lA2Q==
-X-Gm-Message-State: AOAM531f09Kppkj84ANqWp5fm6L+1csfA37xCWNJtf7SsQiBsuUqTR6W
-        5/cUeKhQE7/C176aVjLaJXhr4D2AOL4nhNckZ2E=
-X-Google-Smtp-Source: ABdhPJz6HXhjANVyyNzrNe2CxlCmFoeTKPLztvqJdkMa4OsVZmsYr22BTxzzpweAMJmN3LMXHRpPsP/LzYGA8XSoke8=
-X-Received: by 2002:a67:ca0b:0:b0:337:bace:569f with SMTP id
- z11-20020a67ca0b000000b00337bace569fmr12926231vsk.19.1653744566964; Sat, 28
- May 2022 06:29:26 -0700 (PDT)
+        with ESMTP id S232583AbiE3F4U (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 30 May 2022 01:56:20 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45D3C66F9E;
+        Sun, 29 May 2022 22:56:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=s0zhtSdZDf+E4ShiSmCTSdP5gh
+        vvO5ObOpQpLqm07DqDiKWJiU3YtubIafN2ykZ7WSMWTuaGNZ8VOpS+CdW8G1/xLPpZ5nHYbXEnQvp
+        Uev0ZlpGbpijQP+5q864okDXjMWLpgg7bONvnfu+FcluCoOORL8P6SqNopDSrbEfSpbKOvkqtJVDX
+        7GEQ1HxX+RDxzO81eYmKh7SwDMiPIiebz5ffd3aBvzE57BNcmBB71NiJc2b+ukCwStHlzdXwqWGu4
+        IdkXCLKsV/h85+GIC5OgsXX1WRTLptCYL33gys3Mg4eBHlLK5qTFZRasQw6geP2JaDYEi5gTm+SSD
+        0PaWOXjg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nvYNy-005Tm6-Cl; Mon, 30 May 2022 05:56:14 +0000
+Date:   Sun, 29 May 2022 22:56:14 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        Song Liu <song@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Donald Buczek <buczek@molgen.mpg.de>,
+        Guoqing Jiang <guoqing.jiang@linux.dev>,
+        Xiao Ni <xni@redhat.com>, Stephen Bates <sbates@raithlin.com>,
+        Martin Oliveira <Martin.Oliveira@eideticom.com>,
+        David Sloan <David.Sloan@eideticom.com>
+Subject: Re: [PATCH v2 02/17] md/raid5-cache: Add r5c_conf_is_writeback()
+ helper
+Message-ID: <YpRcfjcFgDcPBqYw@infradead.org>
+References: <20220526163604.32736-1-logang@deltatee.com>
+ <20220526163604.32736-3-logang@deltatee.com>
 MIME-Version: 1.0
-Received: by 2002:a05:612c:61a:b0:2bd:1783:dbee with HTTP; Sat, 28 May 2022
- 06:29:26 -0700 (PDT)
-Reply-To: avamedicinemed3@gmail.com
-From:   Dr Ava Smith <mrsnicolemaroisbf@gmail.com>
-Date:   Sat, 28 May 2022 06:29:26 -0700
-Message-ID: <CAAV+NNR98rAGphC9_G5vqGv6iQr7m_40hQEqvbkXvpzB3+z=FA@mail.gmail.com>
-Subject: From Dr Ava Smith from United States
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.1 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:e29 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5002]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [mrsnicolemaroisbf[at]gmail.com]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [avamedicinemed3[at]gmail.com]
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  3.3 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220526163604.32736-3-logang@deltatee.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
--- 
-Hello Dear,
-how are you today
-My name is Dr Ava Smith,Am English and French
-I will share pictures and more details about me as soon as i hear from you
-Thanks
-Ava
+Looks good:
+
+Reviewed-by: Christoph Hellwig <hch@lst.de>
