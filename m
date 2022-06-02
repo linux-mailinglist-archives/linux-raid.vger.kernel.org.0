@@ -2,109 +2,162 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC3AC53BDDC
-	for <lists+linux-raid@lfdr.de>; Thu,  2 Jun 2022 20:20:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0F8653BE49
+	for <lists+linux-raid@lfdr.de>; Thu,  2 Jun 2022 21:00:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237963AbiFBSSo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 2 Jun 2022 14:18:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43640 "EHLO
+        id S238281AbiFBS7o (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 2 Jun 2022 14:59:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237926AbiFBSSY (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 2 Jun 2022 14:18:24 -0400
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB16D4DF5B;
-        Thu,  2 Jun 2022 11:18:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
-        Message-Id:Date:Cc:To:From:content-disposition;
-        bh=Z2bqpdyim3k54UNGywHdz6SV6HWQMMuMEb3NCguedfE=; b=tLUuTWJGMou4JoIsi68WxJ1Q00
-        tOJduKuINR4axLQfI7zi1WbNIBU/njhnSODNlNjeNGr7NgjiG8TF14svzUIYoFwYbhkwYNxpJMbz5
-        wN0WIWMTywYksQOpihXbT/9XQzfggILEir/tJRkyUImBW4gfV5NPFDSDFFZ8oeVgKFxVh/cTyxCx0
-        FaNrxQPKZKiBIiJwo0FGYaQYZzIfrf2wCigKkirXuEbO6/lubkLymf/ECPXMzGI+H0PyH3Yk95Q9T
-        u3i4+HVCRSxZhP9qEkMx73I3lcSqZbnSeOB7nyY/NoncoXDptztTGw5OwqNT9ATlyKQtMNoBSkevu
-        DvOgZYUQ==;
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1nwpOo-00EPmZ-5d; Thu, 02 Jun 2022 12:18:22 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1nwpOn-000DDm-EL; Thu, 02 Jun 2022 12:18:21 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        Song Liu <song@kernel.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Donald Buczek <buczek@molgen.mpg.de>,
-        Guoqing Jiang <guoqing.jiang@linux.dev>,
-        Xiao Ni <xni@redhat.com>, Stephen Bates <sbates@raithlin.com>,
-        Martin Oliveira <Martin.Oliveira@eideticom.com>,
-        David Sloan <David.Sloan@eideticom.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu,  2 Jun 2022 12:18:17 -0600
-Message-Id: <20220602181818.50729-12-logang@deltatee.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220602181818.50729-1-logang@deltatee.com>
-References: <20220602181818.50729-1-logang@deltatee.com>
+        with ESMTP id S238313AbiFBS7n (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 2 Jun 2022 14:59:43 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC4E11F3
+        for <linux-raid@vger.kernel.org>; Thu,  2 Jun 2022 11:59:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654196381; x=1685732381;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=UyXrf3Xsmt3xqRvg4ZFx6ojrlyA3HooWEfc6ahWAg5o=;
+  b=lIBlaV2wsevV+6SJjmbE7cJj9q+WoG0JPUa2htgbG0DuSOtm5fJbowdS
+   ZACNFWFpe++2A+BykkKM/MXAlbrT9g4wLOr09+rf1BDlk/Vyl2uDSh+kP
+   x0DgHbnb9ok1ZXak4PLXntJW42KVwhIGU8HoZH2JI3dkeUAAhR3z3hTzl
+   iqnJ2GkyLZ+amsbkWtFYcsqW7hqGuXYiD8BFpvUd2DLjr9sCACcDLjo+i
+   lPOvuKM1vkmlLB85kYNxcsTi2gS1mb8RB31B6YBn78xc/HHrOMozSZFYb
+   nDQIb4jrzXzMkP7bIqwtwjqch8ZF1G1eAhcoI1CmJnnB5asvmWCBG7Zau
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10366"; a="275780726"
+X-IronPort-AV: E=Sophos;i="5.91,272,1647327600"; 
+   d="scan'208";a="275780726"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2022 11:59:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,272,1647327600"; 
+   d="scan'208";a="530702954"
+Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 02 Jun 2022 11:59:40 -0700
+Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1nwq2l-0005Ml-GT;
+        Thu, 02 Jun 2022 18:59:39 +0000
+Date:   Fri, 03 Jun 2022 02:58:59 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Song Liu <song@kernel.org>
+Cc:     linux-raid@vger.kernel.org
+Subject: [song-md:test/klp-trampoline] BUILD SUCCESS
+ 6fbf5243a0d6ac55cae9ed84bb5ef0d49d1c00bc
+Message-ID: <62990873.0dk/imW2iFmyG2gi%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, song@kernel.org, hch@infradead.org, buczek@molgen.mpg.de, guoqing.jiang@linux.dev, xni@redhat.com, sbates@raithlin.com, Martin.Oliveira@eideticom.com, David.Sloan@eideticom.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
-Subject: [PATCH v3 11/11] md/raid5-ppl: Fix argument order in bio_alloc_bioset()
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-bio_alloc_bioset() takes a block device, number of vectors, the
-OP flags, the GFP mask and the bio set. However when the prototype
-was changed, the callisite in ppl_do_flush() had the OP flags and
-the GFP flags reversed. This introduced some sparse error:
+tree/branch: git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git test/klp-trampoline
+branch HEAD: 6fbf5243a0d6ac55cae9ed84bb5ef0d49d1c00bc  bpf: trampoline: support FTRACE_OPS_FL_SHARE_IPMODIFY
 
-  drivers/md/raid5-ppl.c:632:57: warning: incorrect type in argument 3
-				    (different base types)
-  drivers/md/raid5-ppl.c:632:57:    expected unsigned int opf
-  drivers/md/raid5-ppl.c:632:57:    got restricted gfp_t [usertype]
-  drivers/md/raid5-ppl.c:633:61: warning: incorrect type in argument 4
-  				    (different base types)
-  drivers/md/raid5-ppl.c:633:61:    expected restricted gfp_t [usertype]
-				    gfp_mask
-  drivers/md/raid5-ppl.c:633:61:    got unsigned long long
+elapsed time: 797m
 
-The sparse error introduction may not have been reported correctly by
-0day due to other work that was cleaning up other sparse errors in this
-area.
+configs tested: 81
+configs skipped: 3
 
-Fixes: 609be1066731 ("block: pass a block_device and opf to bio_alloc_bioset")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- drivers/md/raid5-ppl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-diff --git a/drivers/md/raid5-ppl.c b/drivers/md/raid5-ppl.c
-index 4f5bdb4cad2b..db49edec362a 100644
---- a/drivers/md/raid5-ppl.c
-+++ b/drivers/md/raid5-ppl.c
-@@ -629,9 +629,9 @@ static void ppl_do_flush(struct ppl_io_unit *io)
- 		if (bdev) {
- 			struct bio *bio;
- 
--			bio = bio_alloc_bioset(bdev, 0, GFP_NOIO,
-+			bio = bio_alloc_bioset(bdev, 0,
- 					       REQ_OP_WRITE | REQ_PREFLUSH,
--					       &ppl_conf->flush_bs);
-+					       GFP_NOIO, &ppl_conf->flush_bs);
- 			bio->bi_private = io;
- 			bio->bi_end_io = ppl_flush_endio;
- 
+gcc tested configs:
+arm                              allmodconfig
+arm                              allyesconfig
+arm                                 defconfig
+arm64                               defconfig
+arm64                            allyesconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+alpha                               defconfig
+csky                                defconfig
+nios2                            allyesconfig
+alpha                            allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+h8300                            allyesconfig
+xtensa                           allyesconfig
+parisc                              defconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+s390                             allyesconfig
+parisc64                            defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+i386                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                           allnoconfig
+powerpc                          allmodconfig
+powerpc                          allyesconfig
+i386                          randconfig-a001
+i386                          randconfig-a003
+i386                          randconfig-a005
+x86_64                        randconfig-a013
+x86_64                        randconfig-a011
+x86_64                        randconfig-a015
+i386                          randconfig-a014
+i386                          randconfig-a012
+i386                          randconfig-a016
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+x86_64                        randconfig-a006
+arc                  randconfig-r043-20220531
+riscv                randconfig-r042-20220531
+s390                 randconfig-r044-20220531
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                    nommu_k210_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_virt_defconfig
+riscv                               defconfig
+riscv                            allmodconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
+x86_64                         rhel-8.3-kunit
+x86_64                           rhel-8.3-syz
+x86_64                              defconfig
+x86_64                                  kexec
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+
+clang tested configs:
+i386                          randconfig-a002
+i386                          randconfig-a004
+i386                          randconfig-a006
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a013
+i386                          randconfig-a011
+i386                          randconfig-a015
+x86_64                        randconfig-a005
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+hexagon              randconfig-r041-20220531
+hexagon              randconfig-r045-20220531
+
 -- 
-2.30.2
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
