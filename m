@@ -2,88 +2,131 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 771BB53F763
-	for <lists+linux-raid@lfdr.de>; Tue,  7 Jun 2022 09:39:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5778353F9A9
+	for <lists+linux-raid@lfdr.de>; Tue,  7 Jun 2022 11:28:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237746AbiFGHjJ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 7 Jun 2022 03:39:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54796 "EHLO
+        id S239452AbiFGJ2Q (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 7 Jun 2022 05:28:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237747AbiFGHjH (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 7 Jun 2022 03:39:07 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 344BE9983B
-        for <linux-raid@vger.kernel.org>; Tue,  7 Jun 2022 00:39:05 -0700 (PDT)
-Received: from dggpemm500022.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LHMdg5fXtzjb8n;
-        Tue,  7 Jun 2022 15:37:43 +0800 (CST)
-Received: from dggpemm500014.china.huawei.com (7.185.36.153) by
- dggpemm500022.china.huawei.com (7.185.36.162) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 7 Jun 2022 15:39:02 +0800
-Received: from [10.174.177.211] (10.174.177.211) by
- dggpemm500014.china.huawei.com (7.185.36.153) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 7 Jun 2022 15:39:02 +0800
-Message-ID: <21027a7d-faa5-9903-8e67-b8b8470a1e72@huawei.com>
-Date:   Tue, 7 Jun 2022 15:39:01 +0800
+        with ESMTP id S239523AbiFGJ2N (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 7 Jun 2022 05:28:13 -0400
+Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B8C842490
+        for <linux-raid@vger.kernel.org>; Tue,  7 Jun 2022 02:28:11 -0700 (PDT)
+Received: by mail-ot1-x330.google.com with SMTP id t22-20020a0568301e3600b0060b333f7a1eso12554895otr.0
+        for <linux-raid@vger.kernel.org>; Tue, 07 Jun 2022 02:28:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=ohM259uqobJqtM7gttWurWj7P+4iDfPJquHax95olDY=;
+        b=gujHBVxqWIlmngbJHwwatlrY6K2BhXGLJOXKENebOL4hOCXVjvoa+7rQ+wCwOuo7nz
+         8e28HbaszMFtjrNu2xJwHUtJo1p0vWs5cPK29M2FpYQX1yrDGputAW1tF1NfmP59wawm
+         4ciGU9SnxDgRMb84mTOs96+/9zN97uENfqj9/+eZfuG77h5pSaMszmbmnWOwi9m+gNzd
+         5NtwsZACk2ULSP0cRt0MdNUxBuwzIbCfzmloCBb/Ue1QhCyZ8f6GEgrTXVIY7durHnKk
+         UWQF6j7yHnTlxlvI9xCgSzii4NusQH9ADfpyzQwiF9b+OrCBSH3adFs9TwqclNBk9aQF
+         O14A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=ohM259uqobJqtM7gttWurWj7P+4iDfPJquHax95olDY=;
+        b=x1i5tD6Gvc41yCZug7+URRKhknbMpDO0Bq4zZ2UOkHwtoimx3fFFa66RLXa8FufuuG
+         FnDrm+TXXpdg2DBOg4j+Gur04VwGecMnhE2CtRATepV3nHSh+wisMKUnCcROIIRK3l1N
+         qkQ9uB3exLP1IgdbEQ+505TayHipTYfyXTSRON4jcHndasUenRG5JuQZB8/aigIoQSl0
+         /hnNhPVpRM6Tq+9b3bDEPesBxklemLbZr0tMDFqbBZgViUhTkcbA0RhfQmwaRmHjT3bH
+         wjjmaGd8TrsotLoFCZp41v7epTOGxCoN9+rJWmdYmvLpOQ3WFTLpiHsFhwvVEPoqcwzl
+         ff/A==
+X-Gm-Message-State: AOAM531vCsCeGXY/Uk8/lBJKabF3m06nC+kvj6QzXsjEQrzx8IRCYdZh
+        NJM5BDzte12prywWZhDYftHYvy89w2lelw0r5IDdOQjj7qud6sFs
+X-Google-Smtp-Source: ABdhPJxTYNOyqQTj+pRtv7B26L++zgaw4oyR9fAzq9Xjy/qi86fDOL5mMOdKcDA6Petw4QZgBH7CHdeaexgYk1On3ls=
+X-Received: by 2002:a05:6830:919:b0:60a:fe63:e321 with SMTP id
+ v25-20020a056830091900b0060afe63e321mr11494607ott.227.1654594080399; Tue, 07
+ Jun 2022 02:28:00 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.0.3
-Subject: Re: [PATCH 0/5] mdadm: fix memory leak and double free
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-CC:     <linfeilong@huawei.com>, <lixiaokeng@huawei.com>,
-        <jes@trained-monkey.org>, <linux-raid@vger.kernel.org>
-References: <00992179-9572-ceb4-eb49-492c42e67695@huawei.com>
- <047a161f-ad48-a60f-ae2e-af19234df4e0@molgen.mpg.de>
-From:   Wu Guanghao <wuguanghao3@huawei.com>
-In-Reply-To: <047a161f-ad48-a60f-ae2e-af19234df4e0@molgen.mpg.de>
+Received: by 2002:a05:6358:99a5:b0:a2:a1fa:9308 with HTTP; Tue, 7 Jun 2022
+ 02:28:00 -0700 (PDT)
+Reply-To: robertbaileys_spende@aol.com
+From:   Robert Baileys <mercymiji.j@gmail.com>
+Date:   Tue, 7 Jun 2022 11:28:00 +0200
+Message-ID: <CAAD1zOZ9bCDqBnjmbC3dQfgC=P2zTqAS=TP3q5qK5TFB5=Q9dQ@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.177.211]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemm500014.china.huawei.com (7.185.36.153)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=6.5 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        LOTS_OF_MONEY,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM,UNDISC_MONEY autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:330 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [mercymiji.j[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        *  0.0 LOTS_OF_MONEY Huge... sums of money
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  2.3 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  2.0 MONEY_FREEMAIL_REPTO Lots of money from someone using free
+        *      email?
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+        *  0.6 UNDISC_MONEY Undisclosed recipients + money/fraud signs
+X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+--=20
+Hallo, lieber Beg=C3=BCnstigter,
 
+Sie haben diese E-Mail von der Robert Bailey Foundation erhalten. Ich
+bin ein pensionierter Regierungsangestellter aus Harlem und ein
+Powerball-Lotterie-Jackpot-Gewinner von 343,8 Millionen Dollar. Ich
+bin der gr=C3=B6=C3=9Fte Jackpot-Gewinner in der Geschichte der New York Lo=
+ttery
+in Amerika. Ich habe diesen Wettbewerb am 27. Oktober 2018 gewonnen
+und m=C3=B6chte Ihnen mitteilen, dass Google in Kooperation mit Microsoft
+Ihre "E-Mail-Adresse" f=C3=BCr meine Anfrage hat und diese 3.000.000,00
+Millionen Euro kosten wird. Ich spende diese 3 Millionen Euro an Sie,
+um auch Wohlt=C3=A4tigkeitsorganisationen und armen Menschen in Ihrer
+Gemeinde zu helfen, damit wir die Welt zu einem besseren Ort f=C3=BCr alle
+machen k=C3=B6nnen. Bitte besuchen Sie die folgende Website f=C3=BCr weiter=
+e
+Informationen, damit Sie diesen 3 Mio. EUR Ausgaben nicht skeptisch
+gegen=C3=BCberstehen.
+https://nypost.com/2018/11/14/meet-the-winner-of-the-biggest-lottery-jackpo=
+t-in-new-york-history/Sie
+Weitere Best=C3=A4tigungen kann ich auch auf meinem Youtube suchen:
+https://www.youtube.com/watch?v=3DH5vT18Ysavc
+Bitte antworten Sie mir per E-Mail (robertbaileys_spende@aol.com).
+Sie m=C3=BCssen diese E-Mail sofort beantworten, damit die =C3=BCberweisend=
+e
+Bank mit dem Erhalt dieser Spende in H=C3=B6he von 3.000.000,00 Millionen
+Euro beginnen kann.
+Bitte kontaktieren Sie die untenstehende E-Mail-Adresse f=C3=BCr weitere
+Informationen, damit Sie diese Spende von der =C3=BCberweisenden Bank
+erhalten k=C3=B6nnen. E-Mail: robertbaileys_spende@aol.com
 
-在 2022/5/31 14:57, Paul Menzel 写道:
-> Dear Wu,
-> 
-> 
-> Thank you for the patches.
-> 
-> Am 31.05.22 um 08:48 schrieb Wu Guanghao:
->> Through tool scanning and code review, we found several memory leaks and double free
->>
->> Wu Guanghao (5):
->>    parse_layout_faulty: fix memleak
->>    Detail: fix memleak
->>    load_imsm_mpb: fix double free
->>    find_disk_attached_hba: fix memleak
->>    get_vd_num_of_subarray: fix memleak
->>
->>   Detail.c      | 1 +
->>   super-ddf.c   | 9 +++++++--
->>   super-intel.c | 6 ++++--
->>   util.c        | 1 +
->>   4 files changed, 13 insertions(+), 4 deletions(-)
-> 
-> If an issues was found by a tool, could you please add a Reported-by tag to the corresponding commit message?
-> 
-> Another small nit, could you please add a dot/period at the end of sentences in the commit messages?
-> 
-Sure, I will add in patch V2.
+Gr=C3=BC=C3=9Fe,
+Robert Bailey
+* * * * * * * * * * * * * * * *
 
-> Kind regards,
-> 
-> Paul
-> .
+Powerball-Jackpot-Gewinner
+E-Mail: robertbaileys_spende@aol.com
