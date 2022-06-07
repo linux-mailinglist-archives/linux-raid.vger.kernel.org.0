@@ -2,52 +2,56 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 48EBA540EE7
-	for <lists+linux-raid@lfdr.de>; Tue,  7 Jun 2022 20:59:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70F255425DD
+	for <lists+linux-raid@lfdr.de>; Wed,  8 Jun 2022 08:55:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352400AbiFGS6E (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 7 Jun 2022 14:58:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49540 "EHLO
+        id S1349205AbiFHBRr (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 7 Jun 2022 21:17:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352980AbiFGSym (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 7 Jun 2022 14:54:42 -0400
+        with ESMTP id S1588102AbiFGXyG (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 7 Jun 2022 19:54:06 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6258C14AF57;
-        Tue,  7 Jun 2022 11:03:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0A618AE77
+        for <linux-raid@vger.kernel.org>; Tue,  7 Jun 2022 15:59:26 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1ABB0617AE;
-        Tue,  7 Jun 2022 18:03:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8829BC36AFE;
-        Tue,  7 Jun 2022 18:03:49 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 55019609D0
+        for <linux-raid@vger.kernel.org>; Tue,  7 Jun 2022 22:59:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B226DC3411C
+        for <linux-raid@vger.kernel.org>; Tue,  7 Jun 2022 22:59:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654625030;
-        bh=ggAdO0Ry7BMKXmTuMezMqaYPVCO6EkL3gl5dGlN1l4U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mYzzqzK499ET1wsmZnghxVn+BkAe/pEDGWqy/W2I7xJEU5xqQJTla+lzq2EKr57+A
-         xfVn7LLr5SIrULYwxNS4lAsc3WjKAodj/WkunfA5tGXKGD0K7WV5WpVrrMl38KSwCn
-         EVZluW7AscXBLvNHYV1pC4S3olijG37G8o8qpjVC01WXFHIds1fLASG844w3/pz94t
-         JrvU4AjGsLub/rMbcCrx0uPWzg6JWDeyBvT2Tfd84et5+bgKfoXW19ERZrdz7RulCC
-         71jG2j6EtE411PD0EDaSZaqbncwgjH1XWcHmbmNlScus+2x/Xffe/XDbZLFbI9xoGx
-         EBEo9H5aqkCvg==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Donald Buczek <buczek@molgen.mpg.de>,
-        Guoqing Jiang <guoqing.jiang@linux.dev>,
-        Song Liu <song@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 15/19] md: protect md_unregister_thread from reentrancy
-Date:   Tue,  7 Jun 2022 14:03:10 -0400
-Message-Id: <20220607180317.482354-15-sashal@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220607180317.482354-1-sashal@kernel.org>
-References: <20220607180317.482354-1-sashal@kernel.org>
+        s=k20201202; t=1654642765;
+        bh=wp6pVajhIjhskKi7KKDLZN4rM9HAcDWPaltkDqCDL0Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=DDpDfnWdfq2/1vA3i16045TdokfWSqqdvuccpbKITjhO3p7ZZNfnk3BDRko+i/ens
+         mKw51bk4C5JaDSFaELn3iDJz7DO+ZYU9XHND9DoOCvDx8f86L4iwuWh/XbNynfJjWl
+         YSKkgVZlN7n32IfUwiX4yEoG8GIKmdz94EUZkKwNOyKAq9RoenrPe8Y8B6Hdpgt/0G
+         oZPcMG2aWmMGiGZb3o9HhH6V4infyOd4zHp0lCXNaylP7/2ylM9N/riwLstk4T6cd7
+         vlNdzJAJCBwWbndfujbAJTuqoZv0jFqPYpriVdqueF7XJzXvFkDA0yMcSCzo/+KOX3
+         gh850/kpBaCHg==
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-30c143c41e5so191645457b3.3
+        for <linux-raid@vger.kernel.org>; Tue, 07 Jun 2022 15:59:25 -0700 (PDT)
+X-Gm-Message-State: AOAM530NDELoyoExYk8c1sVDUCBA4ZRZz0c9GhQiNdwPsO6RUheOMRTx
+        jUSoCQ441hbQkkk0QD7+r6CScuI/3w6L13yOPDo=
+X-Google-Smtp-Source: ABdhPJxOOiddX7XlB6Xre4wVRYHXoGxRAEQTNGVkgnF3dm27HD1WLlfFfogfhu34JQF/aXOyIxVcvVxRXS8LMIGR6Tw=
+X-Received: by 2002:a81:5a87:0:b0:2ec:239:d1e with SMTP id o129-20020a815a87000000b002ec02390d1emr33238094ywb.211.1654642764785;
+ Tue, 07 Jun 2022 15:59:24 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20220607020357.14831-1-guoqing.jiang@linux.dev>
+ <20220607020357.14831-3-guoqing.jiang@linux.dev> <008f7fe2-b2f6-56bd-913d-966fe7386874@linux.dev>
+In-Reply-To: <008f7fe2-b2f6-56bd-913d-966fe7386874@linux.dev>
+From:   Song Liu <song@kernel.org>
+Date:   Tue, 7 Jun 2022 15:59:13 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW64cv=gvEy-CzBJqWc7PE9m6hEecdD4pm-8LGVEGPxLjw@mail.gmail.com>
+Message-ID: <CAPhsuW64cv=gvEy-CzBJqWc7PE9m6hEecdD4pm-8LGVEGPxLjw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] md: unlock mddev before reap sync_thread in action_store
+To:     Guoqing Jiang <guoqing.jiang@linux.dev>
+Cc:     Donald Buczek <buczek@molgen.mpg.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-raid <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -58,61 +62,28 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+On Tue, Jun 7, 2022 at 2:46 AM Guoqing Jiang <guoqing.jiang@linux.dev> wrote:
+>
+> Pls hold on, I will verify it with latest kernel.
+>
+> Thanks,
+> Guoqing
+>
+> On 6/7/22 10:03 AM, Guoqing Jiang wrote:
+> > Since the bug which commit 8b48ec23cc51a ("md: don't unregister sync_thread
+> > with reconfig_mutex held") fixed is related with action_store path, other
+> > callers which reap sync_thread didn't need to be changed.
+> >
+> > Let's pull md_unregister_thread from md_reap_sync_thread, then fix previous
+> > bug with belows.
+> >
+> > 1. unlock mddev before md_reap_sync_thread in action_store.
+> > 2. save reshape_position before unlock, then restore it to ensure position
+> >     not changed accidentally by others.
+> >
+> > Signed-off-by: Guoqing Jiang <guoqing.jiang@linux.dev>
 
-[ Upstream commit 1e267742283a4b5a8ca65755c44166be27e9aa0f ]
+This version doesn't really work. Maybe we should ship the revert first?
 
-Generally, the md_unregister_thread is called with reconfig_mutex, but
-raid_message in dm-raid doesn't hold reconfig_mutex to unregister thread,
-so md_unregister_thread can be called simulitaneously from two call sites
-in theory.
-
-Then after previous commit which remove the protection of reconfig_mutex
-for md_unregister_thread completely, the potential issue could be worse
-than before.
-
-Let's take pers_lock at the beginning of function to ensure reentrancy.
-
-Reported-by: Donald Buczek <buczek@molgen.mpg.de>
-Signed-off-by: Guoqing Jiang <guoqing.jiang@linux.dev>
-Signed-off-by: Song Liu <song@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/md/md.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 98c72dd56a2d..d2e2006ed792 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -7252,17 +7252,22 @@ EXPORT_SYMBOL(md_register_thread);
- 
- void md_unregister_thread(struct md_thread **threadp)
- {
--	struct md_thread *thread = *threadp;
--	if (!thread)
--		return;
--	pr_debug("interrupting MD-thread pid %d\n", task_pid_nr(thread->tsk));
--	/* Locking ensures that mddev_unlock does not wake_up a
-+	struct md_thread *thread;
-+
-+	/*
-+	 * Locking ensures that mddev_unlock does not wake_up a
- 	 * non-existent thread
- 	 */
- 	spin_lock(&pers_lock);
-+	thread = *threadp;
-+	if (!thread) {
-+		spin_unlock(&pers_lock);
-+		return;
-+	}
- 	*threadp = NULL;
- 	spin_unlock(&pers_lock);
- 
-+	pr_debug("interrupting MD-thread pid %d\n", task_pid_nr(thread->tsk));
- 	kthread_stop(thread->tsk);
- 	kfree(thread);
- }
--- 
-2.35.1
-
+Thanks,
+Song
