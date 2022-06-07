@@ -2,131 +2,139 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5778353F9A9
-	for <lists+linux-raid@lfdr.de>; Tue,  7 Jun 2022 11:28:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33D9E53FA1B
+	for <lists+linux-raid@lfdr.de>; Tue,  7 Jun 2022 11:46:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239452AbiFGJ2Q (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 7 Jun 2022 05:28:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41090 "EHLO
+        id S239408AbiFGJqT (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 7 Jun 2022 05:46:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239523AbiFGJ2N (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 7 Jun 2022 05:28:13 -0400
-Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B8C842490
-        for <linux-raid@vger.kernel.org>; Tue,  7 Jun 2022 02:28:11 -0700 (PDT)
-Received: by mail-ot1-x330.google.com with SMTP id t22-20020a0568301e3600b0060b333f7a1eso12554895otr.0
-        for <linux-raid@vger.kernel.org>; Tue, 07 Jun 2022 02:28:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=ohM259uqobJqtM7gttWurWj7P+4iDfPJquHax95olDY=;
-        b=gujHBVxqWIlmngbJHwwatlrY6K2BhXGLJOXKENebOL4hOCXVjvoa+7rQ+wCwOuo7nz
-         8e28HbaszMFtjrNu2xJwHUtJo1p0vWs5cPK29M2FpYQX1yrDGputAW1tF1NfmP59wawm
-         4ciGU9SnxDgRMb84mTOs96+/9zN97uENfqj9/+eZfuG77h5pSaMszmbmnWOwi9m+gNzd
-         5NtwsZACk2ULSP0cRt0MdNUxBuwzIbCfzmloCBb/Ue1QhCyZ8f6GEgrTXVIY7durHnKk
-         UWQF6j7yHnTlxlvI9xCgSzii4NusQH9ADfpyzQwiF9b+OrCBSH3adFs9TwqclNBk9aQF
-         O14A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=ohM259uqobJqtM7gttWurWj7P+4iDfPJquHax95olDY=;
-        b=x1i5tD6Gvc41yCZug7+URRKhknbMpDO0Bq4zZ2UOkHwtoimx3fFFa66RLXa8FufuuG
-         FnDrm+TXXpdg2DBOg4j+Gur04VwGecMnhE2CtRATepV3nHSh+wisMKUnCcROIIRK3l1N
-         qkQ9uB3exLP1IgdbEQ+505TayHipTYfyXTSRON4jcHndasUenRG5JuQZB8/aigIoQSl0
-         /hnNhPVpRM6Tq+9b3bDEPesBxklemLbZr0tMDFqbBZgViUhTkcbA0RhfQmwaRmHjT3bH
-         wjjmaGd8TrsotLoFCZp41v7epTOGxCoN9+rJWmdYmvLpOQ3WFTLpiHsFhwvVEPoqcwzl
-         ff/A==
-X-Gm-Message-State: AOAM531vCsCeGXY/Uk8/lBJKabF3m06nC+kvj6QzXsjEQrzx8IRCYdZh
-        NJM5BDzte12prywWZhDYftHYvy89w2lelw0r5IDdOQjj7qud6sFs
-X-Google-Smtp-Source: ABdhPJxTYNOyqQTj+pRtv7B26L++zgaw4oyR9fAzq9Xjy/qi86fDOL5mMOdKcDA6Petw4QZgBH7CHdeaexgYk1On3ls=
-X-Received: by 2002:a05:6830:919:b0:60a:fe63:e321 with SMTP id
- v25-20020a056830091900b0060afe63e321mr11494607ott.227.1654594080399; Tue, 07
- Jun 2022 02:28:00 -0700 (PDT)
+        with ESMTP id S234715AbiFGJqS (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 7 Jun 2022 05:46:18 -0400
+Received: from out2.migadu.com (out2.migadu.com [188.165.223.204])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96383E64DC
+        for <linux-raid@vger.kernel.org>; Tue,  7 Jun 2022 02:46:16 -0700 (PDT)
+Subject: Re: [PATCH 2/2] md: unlock mddev before reap sync_thread in
+ action_store
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1654595174;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=A7lz+rG+vdoAnxNmOym0XrimmiH+k4s1+ihyiTUx0bE=;
+        b=QhmhITLs/VjnF1/K4D5NLeCxnowYLxkl2nX5FL2ZagIRjqAYwOMYveLtshSOpx5f37VsRw
+        cTDIiI4iyHNhObgtSsxXNjPcvRFY9M0hnSPe9iN8H67UWkzFnUgbIp3j6kqlWjBJQyrQ9c
+        s62DzHnhYP5FZOvsicDnnWabR8blJ7g=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Guoqing Jiang <guoqing.jiang@linux.dev>
+To:     song@kernel.org
+Cc:     buczek@molgen.mpg.de, logang@deltatee.com,
+        linux-raid@vger.kernel.org
+References: <20220607020357.14831-1-guoqing.jiang@linux.dev>
+ <20220607020357.14831-3-guoqing.jiang@linux.dev>
+Message-ID: <008f7fe2-b2f6-56bd-913d-966fe7386874@linux.dev>
+Date:   Tue, 7 Jun 2022 17:46:09 +0800
 MIME-Version: 1.0
-Received: by 2002:a05:6358:99a5:b0:a2:a1fa:9308 with HTTP; Tue, 7 Jun 2022
- 02:28:00 -0700 (PDT)
-Reply-To: robertbaileys_spende@aol.com
-From:   Robert Baileys <mercymiji.j@gmail.com>
-Date:   Tue, 7 Jun 2022 11:28:00 +0200
-Message-ID: <CAAD1zOZ9bCDqBnjmbC3dQfgC=P2zTqAS=TP3q5qK5TFB5=Q9dQ@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: Yes, score=6.5 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        LOTS_OF_MONEY,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM,UNDISC_MONEY autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:330 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [mercymiji.j[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  2.3 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  2.0 MONEY_FREEMAIL_REPTO Lots of money from someone using free
-        *      email?
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-        *  0.6 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: ******
+In-Reply-To: <20220607020357.14831-3-guoqing.jiang@linux.dev>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Migadu-Flow: FLOW_OUT
+X-Migadu-Auth-User: linux.dev
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
---=20
-Hallo, lieber Beg=C3=BCnstigter,
+Pls hold on, I will verify it with latest kernel.
 
-Sie haben diese E-Mail von der Robert Bailey Foundation erhalten. Ich
-bin ein pensionierter Regierungsangestellter aus Harlem und ein
-Powerball-Lotterie-Jackpot-Gewinner von 343,8 Millionen Dollar. Ich
-bin der gr=C3=B6=C3=9Fte Jackpot-Gewinner in der Geschichte der New York Lo=
-ttery
-in Amerika. Ich habe diesen Wettbewerb am 27. Oktober 2018 gewonnen
-und m=C3=B6chte Ihnen mitteilen, dass Google in Kooperation mit Microsoft
-Ihre "E-Mail-Adresse" f=C3=BCr meine Anfrage hat und diese 3.000.000,00
-Millionen Euro kosten wird. Ich spende diese 3 Millionen Euro an Sie,
-um auch Wohlt=C3=A4tigkeitsorganisationen und armen Menschen in Ihrer
-Gemeinde zu helfen, damit wir die Welt zu einem besseren Ort f=C3=BCr alle
-machen k=C3=B6nnen. Bitte besuchen Sie die folgende Website f=C3=BCr weiter=
-e
-Informationen, damit Sie diesen 3 Mio. EUR Ausgaben nicht skeptisch
-gegen=C3=BCberstehen.
-https://nypost.com/2018/11/14/meet-the-winner-of-the-biggest-lottery-jackpo=
-t-in-new-york-history/Sie
-Weitere Best=C3=A4tigungen kann ich auch auf meinem Youtube suchen:
-https://www.youtube.com/watch?v=3DH5vT18Ysavc
-Bitte antworten Sie mir per E-Mail (robertbaileys_spende@aol.com).
-Sie m=C3=BCssen diese E-Mail sofort beantworten, damit die =C3=BCberweisend=
-e
-Bank mit dem Erhalt dieser Spende in H=C3=B6he von 3.000.000,00 Millionen
-Euro beginnen kann.
-Bitte kontaktieren Sie die untenstehende E-Mail-Adresse f=C3=BCr weitere
-Informationen, damit Sie diese Spende von der =C3=BCberweisenden Bank
-erhalten k=C3=B6nnen. E-Mail: robertbaileys_spende@aol.com
+Thanks,
+Guoqing
 
-Gr=C3=BC=C3=9Fe,
-Robert Bailey
-* * * * * * * * * * * * * * * *
+On 6/7/22 10:03 AM, Guoqing Jiang wrote:
+> Since the bug which commit 8b48ec23cc51a ("md: don't unregister sync_thread
+> with reconfig_mutex held") fixed is related with action_store path, other
+> callers which reap sync_thread didn't need to be changed.
+>
+> Let's pull md_unregister_thread from md_reap_sync_thread, then fix previous
+> bug with belows.
+>
+> 1. unlock mddev before md_reap_sync_thread in action_store.
+> 2. save reshape_position before unlock, then restore it to ensure position
+>     not changed accidentally by others.
+>
+> Signed-off-by: Guoqing Jiang <guoqing.jiang@linux.dev>
+> ---
+>   drivers/md/dm-raid.c |  1 +
+>   drivers/md/md.c      | 12 ++++++++++--
+>   2 files changed, 11 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
+> index 9526ccbedafb..d43b8075c055 100644
+> --- a/drivers/md/dm-raid.c
+> +++ b/drivers/md/dm-raid.c
+> @@ -3725,6 +3725,7 @@ static int raid_message(struct dm_target *ti, unsigned int argc, char **argv,
+>   	if (!strcasecmp(argv[0], "idle") || !strcasecmp(argv[0], "frozen")) {
+>   		if (mddev->sync_thread) {
+>   			set_bit(MD_RECOVERY_INTR, &mddev->recovery);
+> +			md_unregister_thread(&mddev->sync_thread);
+>   			md_reap_sync_thread(mddev);
+>   		}
+>   	} else if (decipher_sync_action(mddev, mddev->recovery) != st_idle)
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 2e83a19e3aba..4d70672f8ea8 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -4830,6 +4830,12 @@ action_store(struct mddev *mddev, const char *page, size_t len)
+>   			if (work_pending(&mddev->del_work))
+>   				flush_workqueue(md_misc_wq);
+>   			if (mddev->sync_thread) {
+> +				sector_t save_rp = mddev->reshape_position;
+> +
+> +				mddev_unlock(mddev);
+> +				md_unregister_thread(&mddev->sync_thread);
+> +				mddev_lock_nointr(mddev);
+> +				mddev->reshape_position = save_rp;
+>   				set_bit(MD_RECOVERY_INTR, &mddev->recovery);
+>   				md_reap_sync_thread(mddev);
+>   			}
+> @@ -6197,6 +6203,7 @@ static void __md_stop_writes(struct mddev *mddev)
+>   		flush_workqueue(md_misc_wq);
+>   	if (mddev->sync_thread) {
+>   		set_bit(MD_RECOVERY_INTR, &mddev->recovery);
+> +		md_unregister_thread(&mddev->sync_thread);
+>   		md_reap_sync_thread(mddev);
+>   	}
+>   
+> @@ -9303,6 +9310,7 @@ void md_check_recovery(struct mddev *mddev)
+>   			 * ->spare_active and clear saved_raid_disk
+>   			 */
+>   			set_bit(MD_RECOVERY_INTR, &mddev->recovery);
+> +			md_unregister_thread(&mddev->sync_thread);
+>   			md_reap_sync_thread(mddev);
+>   			clear_bit(MD_RECOVERY_RECOVER, &mddev->recovery);
+>   			clear_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
+> @@ -9338,6 +9346,7 @@ void md_check_recovery(struct mddev *mddev)
+>   			goto unlock;
+>   		}
+>   		if (mddev->sync_thread) {
+> +			md_unregister_thread(&mddev->sync_thread);
+>   			md_reap_sync_thread(mddev);
+>   			goto unlock;
+>   		}
+> @@ -9417,8 +9426,7 @@ void md_reap_sync_thread(struct mddev *mddev)
+>   	sector_t old_dev_sectors = mddev->dev_sectors;
+>   	bool is_reshaped = false;
+>   
+> -	/* resync has finished, collect result */
+> -	md_unregister_thread(&mddev->sync_thread);
+> +	/* sync_thread should be unregistered, collect result */
+>   	if (!test_bit(MD_RECOVERY_INTR, &mddev->recovery) &&
+>   	    !test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery) &&
+>   	    mddev->degraded != mddev->raid_disks) {
 
-Powerball-Jackpot-Gewinner
-E-Mail: robertbaileys_spende@aol.com
