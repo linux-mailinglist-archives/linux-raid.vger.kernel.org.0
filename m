@@ -2,43 +2,44 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 45344545764
-	for <lists+linux-raid@lfdr.de>; Fri, 10 Jun 2022 00:26:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 30C875456FE
+	for <lists+linux-raid@lfdr.de>; Fri, 10 Jun 2022 00:14:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232344AbiFIW0I (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 9 Jun 2022 18:26:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55540 "EHLO
+        id S232753AbiFIWOJ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 9 Jun 2022 18:14:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237063AbiFIW0H (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 9 Jun 2022 18:26:07 -0400
+        with ESMTP id S235102AbiFIWOJ (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 9 Jun 2022 18:14:09 -0400
+X-Greylist: delayed 185 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 09 Jun 2022 15:14:05 PDT
 Received: from sender11-op-o11.zoho.eu (sender11-op-o11.zoho.eu [31.186.226.225])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B16602E4373
-        for <linux-raid@vger.kernel.org>; Thu,  9 Jun 2022 15:26:06 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1654812604; cv=none; 
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA32242A34
+        for <linux-raid@vger.kernel.org>; Thu,  9 Jun 2022 15:14:05 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1654812838; cv=none; 
         d=zohomail.eu; s=zohoarc; 
-        b=g5M7LsdCVYMKFzf9DDeYj7xrK4EP+aVdn2/JWINTp5Jj4gTxeeOhnGTCrrgoXkC0TTKcAwFMTzPW49LMA6JvWu+K75UxqK/+jM2P8IFXlioF2lt+SZlL10yrzQZS6ORadiv0gEAHiShBfC804nHBe9RlgQPpqfitOrXmr4ZKYr8=
+        b=ja7CCOBG3EYvIEiSswRaQ9NKJjQ4DkfpyxLJlXzD2j7Q7DVs2hQb4M+8xVBAr88LKF+Byi32jOOBQoDYd9HWSXqdTtU07ApbdU0MdPiKbibW4yhn1/mfNNjFKSTpApBRv06curnDe6oCFVRNO5+pMi2vP8NKG73KdQNtWM0ge58=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1654812604; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=hHYzfkXzvFn15j78ngmRoH1YOamJX+vl/LzYumYL0EM=; 
-        b=gd4DG51mCkP6HO4imcsoDCNrqFkUNBM9Iq4grS15vB+2/xsx2B8+C3lTEw65JYHRLazSYPJRWCNWbvLmZrFib1u4esFuTsA54YilcW3P/xaa/i+giEhEQ7Y0GO5KA2xHedcpHiRHesi+F8wQZOHycEMHquBe7WCl5JaJkW8jbK4=
+        t=1654812838; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=BfrMwlwP70rlkx8Ax1+2LPHVvq4mo3rTCk3g5h2q6jg=; 
+        b=HnZEdgGCVz08aKnavpJ6BiNarQ6cMlvm9BpSRyyd32C70U84v1pWdAjo88Zxn0UXBcEbgjLIu9oQEM8xyIPz6O9tTZAqIKYxffFu6nhwa/VlMoxXQD6lpgqLtTtpsQzLgsOq/OQheeVzWMApY1UZUJJW8/wtVoS9FeHy1sDIqn4=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
         spf=pass  smtp.mailfrom=jes@trained-monkey.org;
         dmarc=pass header.from=<jes@trained-monkey.org>
 Received: from [172.30.27.237] (163.114.130.4 [163.114.130.4]) by mx.zoho.eu
-        with SMTPS id 1654812601404139.32174689914189; Fri, 10 Jun 2022 00:10:01 +0200 (CEST)
-Message-ID: <14c7f83a-bfef-b73e-9d71-0708f6e68985@trained-monkey.org>
-Date:   Thu, 9 Jun 2022 18:08:51 -0400
+        with SMTPS id 1654812837163410.9577372848131; Fri, 10 Jun 2022 00:13:57 +0200 (CEST)
+Message-ID: <07c203b3-a230-4f52-ac95-acadb8881d58@trained-monkey.org>
+Date:   Thu, 9 Jun 2022 18:13:55 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
-Subject: Re: [PATCH] mdmon: Stop parsing duplicate options
+Subject: Re: [PATCH] Grow: block -n on external volumes.
 Content-Language: en-US
-To:     Lukasz Florczak <lukasz.florczak@linux.intel.com>,
+To:     Mateusz Kusiak <mateusz.kusiak@intel.com>,
         linux-raid@vger.kernel.org
-Cc:     colyli@suse.de, Song Liu <songliubraving@fb.com>
-References: <20220513071942.27850-1-lukasz.florczak@linux.intel.com>
+Cc:     colyli@suse.de
+References: <20220519071608.26259-1-mateusz.kusiak@intel.com>
 From:   Jes Sorensen <jes@trained-monkey.org>
-In-Reply-To: <20220513071942.27850-1-lukasz.florczak@linux.intel.com>
+In-Reply-To: <20220519071608.26259-1-mateusz.kusiak@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-ZohoMailClient: External
@@ -51,24 +52,21 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 5/13/22 03:19, Lukasz Florczak wrote:
-> Introduce new function is_duplicate_opt() to check if given option
-> was already used and prevent setting it again along with an error
-> message.
+On 5/19/22 03:16, Mateusz Kusiak wrote:
+> Performing --raid-devices on external metadata volume should be blocked
+> as it causes unwanted behaviour.
 > 
-> Move parsing above in_initrd() check to be able to detect --offroot
-> option duplicates.
+> Eg. Performing
+> mdadm -G /dev/md/volume -l10 -n4
+> on r0_d2 inside 4 disk container, returns
+> mdadm: Need 2 spares to avoid degraded array, only have 0.
 > 
-> Now help option is executed after parsing to prevent executing commands
-> like: 'mdmon --help --ndlksnlksajndfjksndafasj'.
-> 
-> Signed-off-by: Lukasz Florczak <lukasz.florczak@linux.intel.com>
+> Signed-off-by: Mateusz Kusiak <mateusz.kusiak@intel.com>
 > ---
->  mdmon.c | 44 +++++++++++++++++++++++++++++++++++---------
+>  Grow.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
 Applied!
-
-First guineapig patch for the patchworks Song setup (thanks!)
 
 Thanks,
 Jes
