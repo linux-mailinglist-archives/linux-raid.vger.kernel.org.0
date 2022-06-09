@@ -2,35 +2,35 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 99BA1545645
-	for <lists+linux-raid@lfdr.de>; Thu,  9 Jun 2022 23:12:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE6B2545648
+	for <lists+linux-raid@lfdr.de>; Thu,  9 Jun 2022 23:12:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345402AbiFIVMF (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 9 Jun 2022 17:12:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42192 "EHLO
+        id S1345378AbiFIVL4 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 9 Jun 2022 17:11:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345401AbiFIVLo (ORCPT
+        with ESMTP id S1345381AbiFIVLo (ORCPT
         <rfc822;linux-raid@vger.kernel.org>); Thu, 9 Jun 2022 17:11:44 -0400
 Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BC0F4D634
-        for <linux-raid@vger.kernel.org>; Thu,  9 Jun 2022 14:11:44 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9455C26E92F
+        for <linux-raid@vger.kernel.org>; Thu,  9 Jun 2022 14:11:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
         Message-Id:Date:Cc:To:From:content-disposition;
-        bh=qd6TfGvL/Y0MJdGtXjnb4Fd0waxIllFwwtDttAwg+sM=; b=sI/aOsXO/0a/9P7xVIInA9Qw1x
-        qLNljWm3t1sI0/y2/EtkRBf4PSI9TAJnZsQhRHLIUbrvLgOmXCvn12LOhxpUsf4+CRMIpePh64mpV
-        BpTSCfbwEg8+8rYM07PhYLiQ2DatshgTN4ZZ8lmEEBk+IsVqo0cvdlfA1qzyIfNfKCUQ/Y7PDV7Ow
-        DsLHVffHMKXUbSN0liK/rNrdb00BOnd37PORU4cDsvNgq42P8YDqCtlNhF6TOKc6psDvZd9emG6+i
-        WowZMcOtK9r1TGb7TcjzzNcv2CPsYeeV1oN+UQTkHPd61jPtb2XBQ6qYFFKXUczzbF+s94oV3H3t6
-        oyW3b3sQ==;
+        bh=jRp3SM7RH3XEZbQpMQA5f2N3ArXh8hGpvX2L5gF7mKo=; b=omNcalOZFisLXlT963K6nFEWnO
+        jYUND76peOSgGC23N2baqNII3bzd8GXRsyRz2wxbgAjE8g/kjsrRpOhAfgh/iymcrLkaqUewB2WeZ
+        mJvde9msWVKi0QHAf8HBTUjIgn9A3UtmhFK2FyEnGAQMr5yCqhI1QOATWc/R8+YBvbz3jPcouusUo
+        hBnHCJfOk5VdYucI8+2mILIlvDa6iiwfjOgx8Rcvf2XNSYIPQ2DFNS3pEOkgzD16vx6aNvavop5lS
+        ZyfHQxE4fWyTbCsOGIVGGrwsL8an5eVGeBj427cUD3i9yEfHO5A8ACMEb1s4WBK/ryB7dAxw3Da5+
+        vvPkHMOw==;
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1nzPRO-0037Xl-KY; Thu, 09 Jun 2022 15:11:43 -0600
+        id 1nzPRO-0037Xk-6G; Thu, 09 Jun 2022 15:11:42 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1nzPRF-0001Lj-1G; Thu, 09 Jun 2022 15:11:33 -0600
+        id 1nzPRF-0001Lm-54; Thu, 09 Jun 2022 15:11:33 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-raid@vger.kernel.org, Jes Sorensen <jsorensen@fb.com>
 Cc:     Song Liu <song@kernel.org>, Christoph Hellwig <hch@infradead.org>,
@@ -43,17 +43,17 @@ Cc:     Song Liu <song@kernel.org>, Christoph Hellwig <hch@infradead.org>,
         Stephen Bates <sbates@raithlin.com>,
         Martin Oliveira <Martin.Oliveira@eideticom.com>,
         David Sloan <David.Sloan@eideticom.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Mateusz Grzonka <mateusz.grzonka@intel.com>
-Date:   Thu,  9 Jun 2022 15:11:23 -0600
-Message-Id: <20220609211130.5108-8-logang@deltatee.com>
+        Sudhakar Panneerselvam <sudhakar.panneerselvam@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Thu,  9 Jun 2022 15:11:24 -0600
+Message-Id: <20220609211130.5108-9-logang@deltatee.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220609211130.5108-1-logang@deltatee.com>
 References: <20220609211130.5108-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-raid@vger.kernel.org, jsorensen@fb.com, song@kernel.org, hch@infradead.org, buczek@molgen.mpg.de, guoqing.jiang@linux.dev, xni@redhat.com, himanshu.madhani@oracle.com, mariusz.tkaczyk@linux.intel.com, colyli@suse.de, bruce.dubbs@gmail.com, sbates@raithlin.com, Martin.Oliveira@eideticom.com, David.Sloan@eideticom.com, logang@deltatee.com, mateusz.grzonka@intel.com
+X-SA-Exim-Rcpt-To: linux-raid@vger.kernel.org, jsorensen@fb.com, song@kernel.org, hch@infradead.org, buczek@molgen.mpg.de, guoqing.jiang@linux.dev, xni@redhat.com, mariusz.tkaczyk@linux.intel.com, colyli@suse.de, bruce.dubbs@gmail.com, sbates@raithlin.com, Martin.Oliveira@eideticom.com, David.Sloan@eideticom.com, himanshu.madhani@oracle.com, sudhakar.panneerselvam@oracle.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,45 +62,43 @@ X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
         T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
-Subject: [PATCH mdadm v1 07/14] mdadm: Fix optional --write-behind parameter
+Subject: [PATCH mdadm v1 08/14] tests/00raid0: add a test that validates raid0 with layout fails for 0.9
 X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-The commit noted below changed the behaviour of --write-behind to
-require an argument. This broke the 06wrmostly test with the error:
+From: Sudhakar Panneerselvam <sudhakar.panneerselvam@oracle.com>
 
-  mdadm: Invalid value for maximum outstanding write-behind writes: (null).
-         Must be between 0 and 16383.
+329dfc28debb disallows the creation of raid0 with layouts for 0.9
+metadata. This test confirms the new behavior.
 
-To fix this, check if optarg is NULL before parising it, as the origial
-code did.
-
-Fixes: 60815698c0ac ("Refactor parse_num and use it to parse optarg.")
-Cc: Mateusz Grzonka <mateusz.grzonka@intel.com>
+Signed-off-by: Sudhakar Panneerselvam <sudhakar.panneerselvam@oracle.com>
+Signed-off-by: Himanshu Madhani <himanshu.madhani@oracle.com>
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- mdadm.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tests/00raid0 | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/mdadm.c b/mdadm.c
-index d0c5e6def901..56722ed997a2 100644
---- a/mdadm.c
-+++ b/mdadm.c
-@@ -1201,8 +1201,9 @@ int main(int argc, char *argv[])
- 		case O(BUILD, WriteBehind):
- 		case O(CREATE, WriteBehind):
- 			s.write_behind = DEFAULT_MAX_WRITE_BEHIND;
--			if (parse_num(&s.write_behind, optarg) != 0 ||
--			s.write_behind < 0 || s.write_behind > 16383) {
-+			if (optarg &&
-+			    (parse_num(&s.write_behind, optarg) != 0 ||
-+			     s.write_behind < 0 || s.write_behind > 16383)) {
- 				pr_err("Invalid value for maximum outstanding write-behind writes: %s.\n\tMust be between 0 and 16383.\n",
- 						optarg);
- 				exit(2);
+diff --git a/tests/00raid0 b/tests/00raid0
+index 8bc18985f91a..e6b21cc419eb 100644
+--- a/tests/00raid0
++++ b/tests/00raid0
+@@ -6,11 +6,9 @@ check raid0
+ testdev $md0 3 $mdsize2_l 512
+ mdadm -S $md0
+ 
+-# now with version-0.90 superblock
++# verify raid0 with layouts fail for 0.90
+ mdadm -CR $md0 -e0.90 -l0 -n4 $dev0 $dev1 $dev2 $dev3
+-check raid0
+-testdev $md0 4 $mdsize0 512
+-mdadm -S $md0
++check opposite_result
+ 
+ # now with no superblock
+ mdadm -B $md0 -l0 -n5 $dev0 $dev1 $dev2 $dev3 $dev4
 -- 
 2.30.2
 
