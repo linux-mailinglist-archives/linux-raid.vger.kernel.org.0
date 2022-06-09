@@ -2,35 +2,35 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B8C6054564B
-	for <lists+linux-raid@lfdr.de>; Thu,  9 Jun 2022 23:12:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A4F954563D
+	for <lists+linux-raid@lfdr.de>; Thu,  9 Jun 2022 23:11:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345391AbiFIVL6 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 9 Jun 2022 17:11:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42134 "EHLO
+        id S1345380AbiFIVLo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 9 Jun 2022 17:11:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345382AbiFIVLo (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 9 Jun 2022 17:11:44 -0400
+        with ESMTP id S235284AbiFIVLn (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 9 Jun 2022 17:11:43 -0400
 Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9636726EE99
-        for <linux-raid@vger.kernel.org>; Thu,  9 Jun 2022 14:11:43 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCD9A26D900
+        for <linux-raid@vger.kernel.org>; Thu,  9 Jun 2022 14:11:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
         Message-Id:Date:Cc:To:From:content-disposition;
-        bh=+JRZ9g54SAu+siTWbS9T+HaWBQFQ+/nBsrVAy1s0Bnw=; b=aY+3F2y86HsLz2IuPPIe8+F6Gs
-        RH5jUYciOn9K/ApwbVOq5GmFFow5gSazekDhSihetVDEXn2us4fwzUsdAqqtwUH/RQ48kP9wWfggL
-        tFWcfWBohiM1PhCd2KGqj90dIjpz9Q03Dm17rvYgiFi0ye4aH52zlnloPEZzHI2xFGiEzdTJkDWNd
-        QqgMntliRUBuBWxNSYBxIkuhc+fFMWU48kDs+WzaTrwpM2WswDErBj8mxG9225uYJ2nJY4Ssab3FS
-        ia6/FyjnAUqS2QJ4gA00FsvykYEqre8HlmHVuiLk0ScR1tGnAAyV9gDSlvjHp9Ggwn6B2cXody4hs
-        S2VhupfQ==;
+        bh=Izv7CasWdRxZdbqaq8iettcLBBTlXt66MwXBRskp2P0=; b=NiI29QKEYM5oZC23Gqb86KMAlI
+        sCQJlM+i9a147xre/oOVZqBTACaCyhsQ3akWTmXERY7yiMk9BwRaPtNdSe63faZc+e+0RkjtSrjJ5
+        BZ9vgs89WJietnI+iwoTdniUlhTWQ4nbjXtNYZ7O7zVe6Heremt8o6akqiAkK/zu8CgFaoFMkPNol
+        tA6E0+js0WtBHCAZziLDR2rnlqGAN0ralAi2I1rS3HhKvqNcng2HSkv+tF1XsvnKLBgsEWwWDAd0C
+        f7qivPck8KrASVW4bxWTCp/wsk+MGXFwxFqRVJAGfIQz9YmUyXr0n5GKuJJkokv6vN86i5XnNMen/
+        uM8ZvFZw==;
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1nzPRL-0037Xm-8J; Thu, 09 Jun 2022 15:11:42 -0600
+        id 1nzPRL-0037Xk-1x; Thu, 09 Jun 2022 15:11:39 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1nzPRF-0001M4-QH; Thu, 09 Jun 2022 15:11:33 -0600
+        id 1nzPRF-0001M8-V8; Thu, 09 Jun 2022 15:11:34 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-raid@vger.kernel.org, Jes Sorensen <jsorensen@fb.com>
 Cc:     Song Liu <song@kernel.org>, Christoph Hellwig <hch@infradead.org>,
@@ -44,8 +44,8 @@ Cc:     Song Liu <song@kernel.org>, Christoph Hellwig <hch@infradead.org>,
         Martin Oliveira <Martin.Oliveira@eideticom.com>,
         David Sloan <David.Sloan@eideticom.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu,  9 Jun 2022 15:11:28 -0600
-Message-Id: <20220609211130.5108-13-logang@deltatee.com>
+Date:   Thu,  9 Jun 2022 15:11:29 -0600
+Message-Id: <20220609211130.5108-14-logang@deltatee.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220609211130.5108-1-logang@deltatee.com>
 References: <20220609211130.5108-1-logang@deltatee.com>
@@ -61,91 +61,123 @@ X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
         T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
-Subject: [PATCH mdadm v1 12/14] mdadm/test: Add a mode to repeat specified tests
+Subject: [PATCH mdadm v1 13/14] mdadm/test: Mark and ignore broken test failures
 X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Many tests fail infrequently or rarely. To help find these, add
-an option to run the tests multiple times by specifying --loop=N.
+Add functionality to continue if a test marked as broken fails.
 
-If --loop=0 is specified, the test will be looped forever.
+To mark a test as broken, a file with the same name but with the suffix
+'.broken' should exist. The first line in the file will be printed with
+a KNOWN BROKEN message; the rest of the file can describe the how the
+test is broken.
+
+Also adds --skip-broken and --skip-always-broken to skip all the tests
+that have a .broken file or to skip all tests whose .broken file's first
+line contains the keyword always.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- test | 36 ++++++++++++++++++++++++------------
- 1 file changed, 24 insertions(+), 12 deletions(-)
+ test | 37 +++++++++++++++++++++++++++++++++++--
+ 1 file changed, 35 insertions(+), 2 deletions(-)
 
 diff --git a/test b/test
-index 711a3c7a2076..da6db5e0f631 100755
+index da6db5e0f631..61d9ee83226e 100755
 --- a/test
 +++ b/test
-@@ -10,6 +10,7 @@ devlist=
+@@ -10,6 +10,8 @@ devlist=
  
  savelogs=0
  exitonerror=1
-+loop=1
++ctrl_c_error=0
++skipbroken=0
+ loop=1
  prefix='[0-9][0-9]'
  
- # use loop devices by default if doesn't specify --dev
-@@ -117,6 +118,7 @@ do_help() {
- 		--logdir=directory          Directory to save all logfiles in
+@@ -36,6 +38,7 @@ die() {
+ 
+ ctrl_c() {
+ 	exitonerror=1
++	ctrl_c_error=1
+ }
+ 
+ # mdadm always adds --quiet, and we want to see any unexpected messages
+@@ -80,8 +83,21 @@ mdadm() {
+ do_test() {
+ 	_script=$1
+ 	_basename=`basename $_script`
++	_broken=0
++
+ 	if [ -f "$_script" ]
+ 	then
++		if [ -f "${_script}.broken" ]; then
++			_broken=1
++			_broken_msg=$(head -n1 "${_script}.broken" | tr -d '\n')
++			if [ "$skipbroken" == "all" ]; then
++				return
++			elif [ "$skipbroken" == "always" ] &&
++			     [[ "$_broken_msg" == *always* ]]; then
++				return
++			fi
++		fi
++
+ 		rm -f $targetdir/stderr
+ 		# this might have been reset: restore the default.
+ 		echo 2000 > /proc/sys/dev/raid/speed_limit_max
+@@ -98,10 +114,15 @@ do_test() {
+ 		else
+ 			save_log fail
+ 			_fail=1
++			if [ "$_broken" == "1" ]; then
++				echo "  (KNOWN BROKEN TEST: $_broken_msg)"
++			fi
+ 		fi
+ 		[ "$savelogs" == "1" ] &&
+ 			mv -f $targetdir/log $logdir/$_basename.log
+-		[ "$_fail" == "1" -a "$exitonerror" == "1" ] && exit 1
++		[ "$ctrl_c_error" == "1" ] && exit 1
++		[ "$_fail" == "1" -a "$exitonerror" == "1" \
++		  -a "$_broken" == "0" ] && exit 1
+ 	fi
+ }
+ 
+@@ -119,6 +140,8 @@ do_help() {
  		--save-logs                 Usually use with --logdir together
  		--keep-going | --no-error   Don't stop on error, ie. run all tests
-+		--loop=N                    Run tests N times (0 to run forever)
+ 		--loop=N                    Run tests N times (0 to run forever)
++		--skip-broken               Skip tests that are known to be broken
++		--skip-always-broken        Skip tests that are known to always fail
  		--dev=loop|lvm|ram|disk     Use loop devices (default), LVM, RAM or disk
  		--disks=                    Provide a bunch of physical devices for test
  		--volgroup=name             LVM volume group for LVM test
-@@ -211,6 +213,9 @@ parse_args() {
- 		--keep-going | --no-error )
- 			exitonerror=0
+@@ -216,6 +239,12 @@ parse_args() {
+ 		--loop=* )
+ 			loop="${i##*=}"
  			;;
-+		--loop=* )
-+			loop="${i##*=}"
++		--skip-broken )
++			skipbroken=all
++			;;
++		--skip-always-broken )
++			skipbroken=always
 +			;;
  		--disable-multipath )
  			unset MULTIPATH
  			;;
-@@ -263,19 +268,26 @@ main() {
- 	echo "Testing on linux-$(uname -r) kernel"
- 	[ "$savelogs" == "1" ] &&
- 		echo "Saving logs to $logdir"
--	if [ "x$TESTLIST" != "x" ]
--	then
--		for script in ${TESTLIST[@]}
--		do
--			do_test $testdir/$script
--		done
--	else
--		for script in $testdir/$prefix $testdir/$prefix*[^~]
--		do
--			do_test $script
--		done
--	fi
- 
-+	while true; do
-+		if [ "x$TESTLIST" != "x" ]
-+		then
-+			for script in ${TESTLIST[@]}
-+			do
-+				do_test $testdir/$script
-+			done
-+		else
-+			for script in $testdir/$prefix $testdir/$prefix*[^~]
-+			do
-+				do_test $script
-+			done
-+		fi
-+
-+		let loop=$loop-1
-+		if [ "$loop" == "0" ]; then
-+			break
-+		fi
-+	done
- 	exit 0
- }
+@@ -279,7 +308,11 @@ main() {
+ 		else
+ 			for script in $testdir/$prefix $testdir/$prefix*[^~]
+ 			do
+-				do_test $script
++				case $script in
++				 *.broken) ;;
++				 *)
++				     do_test $script
++				 esac
+ 			done
+ 		fi
  
 -- 
 2.30.2
