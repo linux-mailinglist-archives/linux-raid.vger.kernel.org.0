@@ -2,35 +2,35 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 71408545641
-	for <lists+linux-raid@lfdr.de>; Thu,  9 Jun 2022 23:11:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8C6054564B
+	for <lists+linux-raid@lfdr.de>; Thu,  9 Jun 2022 23:12:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344502AbiFIVLt (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 9 Jun 2022 17:11:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42024 "EHLO
+        id S1345391AbiFIVL6 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 9 Jun 2022 17:11:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345121AbiFIVLn (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 9 Jun 2022 17:11:43 -0400
+        with ESMTP id S1345382AbiFIVLo (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 9 Jun 2022 17:11:44 -0400
 Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 077BA26D89C
-        for <linux-raid@vger.kernel.org>; Thu,  9 Jun 2022 14:11:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9636726EE99
+        for <linux-raid@vger.kernel.org>; Thu,  9 Jun 2022 14:11:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
         Message-Id:Date:Cc:To:From:content-disposition;
-        bh=5dbV102Q994V1lyNgmKcn4tb5fiwa3NLzz1hJcS0cnE=; b=dSUN7slw4b32FQZpVAj1kLS2cj
-        IuJmBoeG1k2hgtq2SHXZcE6cr3kuTnBAaArLEL/jAg7FlhoY4I2+fpIFnaOMmrqNsAPsFf2aZwu3p
-        SJyDMvSPPoTGSX6khMfXc0f4z5Pd7mFiLHw/U9E4K9JwvN6U+DVpuwLngmo6ipPFiTzn8HuY48bv2
-        UOzoMSdopsUIT3RBmXQwVxYbvEk185bvImDeUzlACMPVonACwq7iR1bBQlG6WA7I3472RPEZwqXrg
-        efDgXMwV+a6g0G/BNGW1hZeqO7fNtMv42Klo8L0cgmJgeHokAmyfjQla2AnZJRU8f13OZ1ZaWC37l
-        XjmEX0vQ==;
+        bh=+JRZ9g54SAu+siTWbS9T+HaWBQFQ+/nBsrVAy1s0Bnw=; b=aY+3F2y86HsLz2IuPPIe8+F6Gs
+        RH5jUYciOn9K/ApwbVOq5GmFFow5gSazekDhSihetVDEXn2us4fwzUsdAqqtwUH/RQ48kP9wWfggL
+        tFWcfWBohiM1PhCd2KGqj90dIjpz9Q03Dm17rvYgiFi0ye4aH52zlnloPEZzHI2xFGiEzdTJkDWNd
+        QqgMntliRUBuBWxNSYBxIkuhc+fFMWU48kDs+WzaTrwpM2WswDErBj8mxG9225uYJ2nJY4Ssab3FS
+        ia6/FyjnAUqS2QJ4gA00FsvykYEqre8HlmHVuiLk0ScR1tGnAAyV9gDSlvjHp9Ggwn6B2cXody4hs
+        S2VhupfQ==;
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1nzPRM-0037Xk-2T; Thu, 09 Jun 2022 15:11:40 -0600
+        id 1nzPRL-0037Xm-8J; Thu, 09 Jun 2022 15:11:42 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1nzPRF-0001M0-Lz; Thu, 09 Jun 2022 15:11:33 -0600
+        id 1nzPRF-0001M4-QH; Thu, 09 Jun 2022 15:11:33 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-raid@vger.kernel.org, Jes Sorensen <jsorensen@fb.com>
 Cc:     Song Liu <song@kernel.org>, Christoph Hellwig <hch@infradead.org>,
@@ -43,17 +43,16 @@ Cc:     Song Liu <song@kernel.org>, Christoph Hellwig <hch@infradead.org>,
         Stephen Bates <sbates@raithlin.com>,
         Martin Oliveira <Martin.Oliveira@eideticom.com>,
         David Sloan <David.Sloan@eideticom.com>,
-        Sudhakar Panneerselvam <sudhakar.panneerselvam@oracle.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu,  9 Jun 2022 15:11:27 -0600
-Message-Id: <20220609211130.5108-12-logang@deltatee.com>
+Date:   Thu,  9 Jun 2022 15:11:28 -0600
+Message-Id: <20220609211130.5108-13-logang@deltatee.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220609211130.5108-1-logang@deltatee.com>
 References: <20220609211130.5108-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-raid@vger.kernel.org, jsorensen@fb.com, song@kernel.org, hch@infradead.org, buczek@molgen.mpg.de, guoqing.jiang@linux.dev, xni@redhat.com, mariusz.tkaczyk@linux.intel.com, colyli@suse.de, bruce.dubbs@gmail.com, sbates@raithlin.com, Martin.Oliveira@eideticom.com, David.Sloan@eideticom.com, himanshu.madhani@oracle.com, sudhakar.panneerselvam@oracle.com, logang@deltatee.com
+X-SA-Exim-Rcpt-To: linux-raid@vger.kernel.org, jsorensen@fb.com, song@kernel.org, hch@infradead.org, buczek@molgen.mpg.de, guoqing.jiang@linux.dev, xni@redhat.com, himanshu.madhani@oracle.com, mariusz.tkaczyk@linux.intel.com, colyli@suse.de, bruce.dubbs@gmail.com, sbates@raithlin.com, Martin.Oliveira@eideticom.com, David.Sloan@eideticom.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,36 +61,92 @@ X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
         T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
-Subject: [PATCH mdadm v1 11/14] tests/02lineargrow: clear the superblock at every iteration
+Subject: [PATCH mdadm v1 12/14] mdadm/test: Add a mode to repeat specified tests
 X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Sudhakar Panneerselvam <sudhakar.panneerselvam@oracle.com>
+Many tests fail infrequently or rarely. To help find these, add
+an option to run the tests multiple times by specifying --loop=N.
 
-This fixes 02lineargrow test as prior metadata causes --add operation
-to misbehave.
+If --loop=0 is specified, the test will be looped forever.
 
-Signed-off-by: Sudhakar Panneerselvam <sudhakar.panneerselvam@oracle.com>
-Signed-off-by: Himanshu Madhani <himanshu.madhani@oracle.com>
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- tests/02lineargrow | 2 ++
- 1 file changed, 2 insertions(+)
+ test | 36 ++++++++++++++++++++++++------------
+ 1 file changed, 24 insertions(+), 12 deletions(-)
 
-diff --git a/tests/02lineargrow b/tests/02lineargrow
-index e05c219d113a..595bf9f20802 100644
---- a/tests/02lineargrow
-+++ b/tests/02lineargrow
-@@ -20,4 +20,6 @@ do
-   testdev $md0 3 $sz 1
+diff --git a/test b/test
+index 711a3c7a2076..da6db5e0f631 100755
+--- a/test
++++ b/test
+@@ -10,6 +10,7 @@ devlist=
  
-   mdadm -S $md0
-+  mdadm --zero /dev/loop2
-+  mdadm --zero /dev/loop3
- done
+ savelogs=0
+ exitonerror=1
++loop=1
+ prefix='[0-9][0-9]'
+ 
+ # use loop devices by default if doesn't specify --dev
+@@ -117,6 +118,7 @@ do_help() {
+ 		--logdir=directory          Directory to save all logfiles in
+ 		--save-logs                 Usually use with --logdir together
+ 		--keep-going | --no-error   Don't stop on error, ie. run all tests
++		--loop=N                    Run tests N times (0 to run forever)
+ 		--dev=loop|lvm|ram|disk     Use loop devices (default), LVM, RAM or disk
+ 		--disks=                    Provide a bunch of physical devices for test
+ 		--volgroup=name             LVM volume group for LVM test
+@@ -211,6 +213,9 @@ parse_args() {
+ 		--keep-going | --no-error )
+ 			exitonerror=0
+ 			;;
++		--loop=* )
++			loop="${i##*=}"
++			;;
+ 		--disable-multipath )
+ 			unset MULTIPATH
+ 			;;
+@@ -263,19 +268,26 @@ main() {
+ 	echo "Testing on linux-$(uname -r) kernel"
+ 	[ "$savelogs" == "1" ] &&
+ 		echo "Saving logs to $logdir"
+-	if [ "x$TESTLIST" != "x" ]
+-	then
+-		for script in ${TESTLIST[@]}
+-		do
+-			do_test $testdir/$script
+-		done
+-	else
+-		for script in $testdir/$prefix $testdir/$prefix*[^~]
+-		do
+-			do_test $script
+-		done
+-	fi
+ 
++	while true; do
++		if [ "x$TESTLIST" != "x" ]
++		then
++			for script in ${TESTLIST[@]}
++			do
++				do_test $testdir/$script
++			done
++		else
++			for script in $testdir/$prefix $testdir/$prefix*[^~]
++			do
++				do_test $script
++			done
++		fi
++
++		let loop=$loop-1
++		if [ "$loop" == "0" ]; then
++			break
++		fi
++	done
+ 	exit 0
+ }
+ 
 -- 
 2.30.2
 
