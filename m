@@ -2,35 +2,35 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 27B9E5441C3
-	for <lists+linux-raid@lfdr.de>; Thu,  9 Jun 2022 05:08:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8219D5441C5
+	for <lists+linux-raid@lfdr.de>; Thu,  9 Jun 2022 05:08:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237399AbiFIDIB (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 8 Jun 2022 23:08:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47160 "EHLO
+        id S237349AbiFIDIn (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 8 Jun 2022 23:08:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232220AbiFIDIA (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 8 Jun 2022 23:08:00 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1BB3182A6B
-        for <linux-raid@vger.kernel.org>; Wed,  8 Jun 2022 20:07:58 -0700 (PDT)
-Received: from dggpemm500024.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LJTWv6sm0zjYWZ;
-        Thu,  9 Jun 2022 11:06:35 +0800 (CST)
+        with ESMTP id S232220AbiFIDIm (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 8 Jun 2022 23:08:42 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 918EF14478F
+        for <linux-raid@vger.kernel.org>; Wed,  8 Jun 2022 20:08:41 -0700 (PDT)
+Received: from dggpemm500020.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4LJTX96j8TzgZLx;
+        Thu,  9 Jun 2022 11:06:49 +0800 (CST)
 Received: from dggpemm500014.china.huawei.com (7.185.36.153) by
- dggpemm500024.china.huawei.com (7.185.36.203) with Microsoft SMTP Server
+ dggpemm500020.china.huawei.com (7.185.36.49) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 9 Jun 2022 11:07:57 +0800
+ 15.1.2375.24; Thu, 9 Jun 2022 11:08:39 +0800
 Received: from [10.174.177.211] (10.174.177.211) by
  dggpemm500014.china.huawei.com (7.185.36.153) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 9 Jun 2022 11:07:56 +0800
-Message-ID: <3a17cad1-928b-2f44-88e6-df457102cfb2@huawei.com>
-Date:   Thu, 9 Jun 2022 11:07:56 +0800
+ 15.1.2375.24; Thu, 9 Jun 2022 11:08:39 +0800
+Message-ID: <b54a5d8f-f6f4-af57-b54a-74e56f43dbb1@huawei.com>
+Date:   Thu, 9 Jun 2022 11:08:39 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.0.3
-Subject: [PATCH 3/5 v2] load_imsm_mpb: fix double free
+Subject: [PATCH 4/5 v2] find_disk_attached_hba: fix memleak
 From:   Wu Guanghao <wuguanghao3@huawei.com>
 To:     <jes@trained-monkey.org>, <linux-raid@vger.kernel.org>,
         Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
@@ -41,7 +41,7 @@ In-Reply-To: <fd86d427-2d3e-b337-6de8-d70dcbbd6ce1@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.174.177.211]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  dggpemm500014.china.huawei.com (7.185.36.153)
 X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
@@ -53,39 +53,33 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-When free(super->buf) but not set super->buf = NULL, will be double free.
+If disk_path = diskfd_to_devpath(), we need free(disk_path) before
+return, otherwise there will be a memory leak
 
-get_super_block
-	err = load_and_parse_mpb
-		load_imsm_mpb(.., s, ..)
-			if (posix_memalign(&super->buf, MAX_SECTOR_SIZE, super->len) != 0) // true, super->buf != NULL
-			if (posix_memalign(&super->migr_rec_buf, MAX_SECTOR_SIZE,); // false
-				free(super->buf); //but super->buf not set NULL
-				return 2;
-
-	if err ! = 0
-		if (s)
-			free_imsm(s)
-				 __free_imsm(s)
-					if (s)
-						free(s->buf); //double free
-
+Reported-by: Coverity
 Signed-off-by: Wu Guanghao <wuguanghao3@huawei.com>
 ---
- super-intel.c | 1 +
- 1 file changed, 1 insertion(+)
+ super-intel.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/super-intel.c b/super-intel.c
-index ba3bd41f..ee9e112e 100644
+index ee9e112e..e94f3f65 100644
 --- a/super-intel.c
 +++ b/super-intel.c
-@@ -4453,6 +4453,7 @@ static int load_imsm_mpb(int fd, struct intel_super *super, char *devname)
-            MIGR_REC_BUF_SECTORS*MAX_SECTOR_SIZE) != 0) {
-                pr_err("could not allocate migr_rec buffer\n");
-                free(super->buf);
-+               super->buf = NULL;
-                return 2;
-        }
-        super->clean_migration_record_by_mdmon = 0;
+@@ -701,12 +701,12 @@ static struct sys_dev* find_disk_attached_hba(int fd, const char *devname)
+
+        for (elem = list; elem; elem = elem->next)
+                if (path_attached_to_hba(disk_path, elem->path))
+-                       return elem;
++                       break;
+
+        if (disk_path != devname)
+                free(disk_path);
+
+-       return NULL;
++       return elem;
+ }
+
+ static int find_intel_hba_capability(int fd, struct intel_super *super,
 --
 2.27.0
