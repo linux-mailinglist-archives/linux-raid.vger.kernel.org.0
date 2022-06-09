@@ -2,122 +2,189 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F10154504D
-	for <lists+linux-raid@lfdr.de>; Thu,  9 Jun 2022 17:12:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B21DC54563F
+	for <lists+linux-raid@lfdr.de>; Thu,  9 Jun 2022 23:11:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241748AbiFIPLq (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 9 Jun 2022 11:11:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46874 "EHLO
+        id S235676AbiFIVLq (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 9 Jun 2022 17:11:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235178AbiFIPLp (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 9 Jun 2022 11:11:45 -0400
-Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AA0528D68C
-        for <linux-raid@vger.kernel.org>; Thu,  9 Jun 2022 08:11:44 -0700 (PDT)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id B27A1320097C;
-        Thu,  9 Jun 2022 11:11:41 -0400 (EDT)
-Received: from imap49 ([10.202.2.99])
-  by compute4.internal (MEProxy); Thu, 09 Jun 2022 11:11:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=braithwaite.dev;
-         h=cc:cc:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm3; t=1654787501; x=1654873901; bh=GM
-        FMFQAgZAlWntoKFynYOAaMzu/etYvSctBNWU4W6iM=; b=KTSoW4vRmL0f5DyvLx
-        2/61VpU7qR9MFqrDTWgeosv+G6h3MvI8njgp47x5xQ0ImlYheWmZIG2adp1gHA3K
-        bnRKZ6Ra1eVNg1hmXvxzXO1Vb13wnsnMFcp9G/BlTyLTZatvE9XiaxaHMtyzj976
-        NnwFXn1FJIzgT5IhA6GhQe/6lq94XxrKBWdXVxzmX0Fm5C1Ix5R7JNHMMOR6IZYK
-        oIRNmFnHeC5FNh+pBeTaJDyEL1UwVmS6JztQXWg3APrwzk27/8LKvgIQa1semaaw
-        0wqBlGr3HKgZDRNJ3Z5y3CX6o4drycuWsu6VTUTr8zbv9dDyyOpVM/7KUJOfxplw
-        deOw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; t=1654787501; x=1654873901; bh=GMFMFQAgZAlWntoKFynYOAaMzu/e
-        tYvSctBNWU4W6iM=; b=AsAMdrhL3jjyBYHHaB/EjxGvM91C0PCFmDkGbTNEij6E
-        8UE5vTNFveLirA3J+PdK+bkFpyaSMbAwPKmqoEc7ZChxA6qgJo+Z7bfVKRHKiFP1
-        bKUJNoKzalXwd/9UGDDVbY30q2HSP1NWjYUmMNFPFuVMuX6S7mh712Qbzyk1goKA
-        g8mnhu7O0aPTSaUyfPAsuyhd2xkLt5H8kVtQuc+e05weXkjkdlX+eBUPJlBcHxIs
-        YsiqKiJ7zKNY7BX9HrnCEvoEjSS+IENEGr9T4TdvMZGiLW3eu9MqUZbFaprNcrA5
-        n3v8b0XRwFPJdupTAn7K4D/ksfGEGY8kp3Sz1zV4IA==
-X-ME-Sender: <xms:rA2iYlI5whfike9yPVOqjtwzzR6UbHx88n_uJIhAPU_gjuLpNf259w>
-    <xme:rA2iYhIwwNhTe0RmHeaxOWZEtvVSOGKH6B_vZ3gFGjlT8ryOtI22a7F5X8ThFmHT9
-    IkZMlkRwu-0tmIX-gM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedruddtledgkedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehl
-    rghnuceurhgrihhthhifrghithgvfdcuoegrlhgrnhessghrrghithhhfigrihhtvgdrug
-    gvvheqnecuggftrfgrthhtvghrnhepueeujeffuddugffgieetteeijeekueevieekhfeu
-    ffettdeuieevhedtvdeghfeknecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlh
-    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrlhgrnhessghr
-    rghithhhfigrihhtvgdruggvvh
-X-ME-Proxy: <xmx:rQ2iYtv7_NhOB3zH0UdBjuQshPXyLxaAZucyFC1Reh1EU6zlYsaWkQ>
-    <xmx:rQ2iYmZqxQq2M_rWu-Ob1XcqRH6S54kbCIS_w415ZLq6gaf8N4P5cw>
-    <xmx:rQ2iYsa18bmG_ZGK7jnLtwpHeF-v-Q6X4IYtARQ14FuNOMqIlCbPVg>
-    <xmx:rQ2iYlCZ_awtx4J_mH-82GzHHIYjhREDQ4QDSoSEjKXdVgYKjyyHMg>
-Feedback-ID: i1a914699:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id E552515A0080; Thu,  9 Jun 2022 11:11:40 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-692-gb287c361f5-fm-20220603.003-gb287c361
-Mime-Version: 1.0
-Message-Id: <88ffaeae-4f1e-4195-b927-182f21249cf5@www.fastmail.com>
-In-Reply-To: <ba0d6708-1275-6fac-b387-40d5673d6002@youngman.org.uk>
-References: <0fa973c1-2961-4f8f-99fa-b427a5c694fd@www.fastmail.com>
- <CAPpdf5-wEfpHnteLAG-EHD-we+b+0=KB7RcD=U9dw6K-_3f48w@mail.gmail.com>
- <b80c6d10-760e-40a2-b9ca-86aabf3267d0@www.fastmail.com>
- <ba0d6708-1275-6fac-b387-40d5673d6002@youngman.org.uk>
-Date:   Thu, 09 Jun 2022 08:10:36 -0700
-From:   "Alan Braithwaite" <alan@braithwaite.dev>
-To:     "Wols Lists" <antlists@youngman.org.uk>,
-        o1bigtenor <o1bigtenor@gmail.com>
-Cc:     Linux-RAID <linux-raid@vger.kernel.org>
-Subject: Re: MD Array Unexpected Kernel Hang
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229908AbiFIVLn (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 9 Jun 2022 17:11:43 -0400
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76B9426ACBD
+        for <linux-raid@vger.kernel.org>; Thu,  9 Jun 2022 14:11:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:MIME-Version:Message-Id:Date:Cc:To:From
+        :references:content-disposition:in-reply-to;
+        bh=gD6mi6qMOJcEDwnGYXOS3wkEl8C0E+jgTQB1lWeftac=; b=sy1WL6GQBMZhGvN7WsvmRukfhu
+        vXpXY7IGDwokfR1CgnUXkO0BXfrPe6lw/T/JTvASCGBhrkVqP1LERFSuzUjMEj6ghyIsiE4YekNpi
+        uo3iJMyqZdMUdKBC9Z82dfs6sMLxQss2BCsLl3RZUU3MD2FKUZitFtjbDLt4Ej1aIhJnIg+7mocnq
+        it741CmQngNuHqGP+ZaADz1X/m+YzbNi1/5SUn30cvi3lSboaXqMv52oSc9BrO6oIcQOUuf8WoefV
+        R4eOYRyaJUby1WCe+VGLlfXLB7+oXN9pkZG8Vearc3YNwQo+rdOW1J/6d7CpdDWB0DgsV5lwZNZgB
+        oeioSC/w==;
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1nzPRJ-0037Xk-R3; Thu, 09 Jun 2022 15:11:38 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1nzPRE-0001LP-4n; Thu, 09 Jun 2022 15:11:32 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-raid@vger.kernel.org, Jes Sorensen <jsorensen@fb.com>
+Cc:     Song Liu <song@kernel.org>, Christoph Hellwig <hch@infradead.org>,
+        Donald Buczek <buczek@molgen.mpg.de>,
+        Guoqing Jiang <guoqing.jiang@linux.dev>,
+        Xiao Ni <xni@redhat.com>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
+        Coly Li <colyli@suse.de>, Bruce Dubbs <bruce.dubbs@gmail.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Martin Oliveira <Martin.Oliveira@eideticom.com>,
+        David Sloan <David.Sloan@eideticom.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Thu,  9 Jun 2022 15:11:16 -0600
+Message-Id: <20220609211130.5108-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.30.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-raid@vger.kernel.org, jsorensen@fb.com, song@kernel.org, hch@infradead.org, buczek@molgen.mpg.de, guoqing.jiang@linux.dev, xni@redhat.com, himanshu.madhani@oracle.com, mariusz.tkaczyk@linux.intel.com, colyli@suse.de, bruce.dubbs@gmail.com, sbates@raithlin.com, Martin.Oliveira@eideticom.com, David.Sloan@eideticom.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
+Subject: [PATCH mdadm v1 00/14] Bug fixes and testing improvments
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hey all,
+Hi,
 
-Thanks for the responses!
+This series tries to clean up the testing infrastructure to be a bit
+more reliable. It doesn't fix all the broken tests but annotates those
+that I see as broken so testing can continue.
 
-> A quick google also says these are old drives, which may or not be a 
-> concern. That also possibly explains the lack of sct/erc.
+As such, I've fixed all the kernel panics (in md-next now) and segfaults
+that caused testing to halt regardless of whether --keep-going was
+passed. I've also included some patches posted to the list from Sudhakar
+and Himanshu which fix some more broken tests.
 
-These are old SAS drives, correct.  They're in an external JBOD chassis with an HBA expander to the host machine.  I acquired them used with the hopes of extending their life in a raid array.
+I've also included a patch which adds the --loop option to ./test which
+runs tests for a specified number of iterations (or indefinitely if zero
+is specified). This was very useful for ferreting out tests that failed
+randomly.
 
-> Given that you say three drives all failed in the first slot? My money 
-> would actually be on nothing to do with raid, but a dodgy cable or 
-> motherboard connector. I don't think they're rated at being swapped over 
-> that many times ...
+The last two patches adds some infrastructure and annotation for known
+broken tests so that they don't stop the processing (even if
+--keep-going is not passed). Tests that are known to be broken  can
+optionally be skipped with the --skip-broken or --skip-always-broken
+flags.
 
-First position in the virtual array, not physical.  The actual drives are plugged into different drive bays and I'm swapping them into the VM by updating the disk's libvirt XML configuration.
+With these changes it's possible to run './test --loop=0' for several
+days without stopping.
 
-> I don't know how much help this website will be for you, but take a look...
->
-> https://raid.wiki.kernel.org/index.php/Linux_Raid
+There are still a number of broken tests which need more work, and there
+may be other issues on other people's systems (kernel configurations,
+etc) but that will have to be left to other developers.
 
-Thanks!  I've spent a lot of time on that wiki, it's very helpful!  It's also why I've come to the mailing list for help, since I've been using md arrays since 2015 and haven't encountered an issue like this before.
+Thanks,
 
-> I would question why he is passing the disks in via virtio, rather than doing the raid outside the VM and passing in the raid6 block device.
+Logan
 
-I do it for the convenience of managing VMs.  It's for a homelab, so I won't always have remote hands to replace a disk and I like to have the spares free to use for other projects instead of tying them up as a hot-spare full-time.
+--
 
-> I don't believe that using MD-raid with devices virtualized and passed through via a virtio device is going to be valid/supportable.
+Logan Gunthorpe (10):
+  Makefile: Don't build static build with everything
+  DDF: Cleanup validate_geometry_ddf_container()
+  DDF: Fix NULL pointer dereference in validate_geometry_ddf()
+  mdadm/Grow: Fix use after close bug by closing after fork
+  monitor: Avoid segfault when calling NULL get_bad_blocks
+  mdadm: Fix mdadm -r remove option regresision
+  mdadm: Fix optional --write-behind parameter
+  mdadm/test: Add a mode to repeat specified tests
+  mdadm/test: Mark and ignore broken test failures
+  tests: Add broken files for all broken tests
 
-I realize it's a bit wonky, but I'm surprised that this would be the case.  I wouldn't expect it to be that uncommon these days.  I guess I can always go back to zfs if you all feel like this is too crazy. :-P
+Sudhakar Panneerselvam (4):
+  tests/00raid0: add a test that validates raid0 with layout fails for
+    0.9
+  tests: fix raid0 tests for 0.90 metadata
+  tests/04update-metadata: avoid passing chunk size to raid1
+  tests/02lineargrow: clear the superblock at every iteration
 
-If anybody has any other tips for debugging, it would be much appreciated.  I feel that ebpf might be helpful here, but haven't yet been able to quite figure out the right way to inspect the situation with BCC-tools.
+ Grow.c                                     |  4 +-
+ Makefile                                   |  2 +-
+ ReadMe.c                                   |  7 +-
+ mdadm.c                                    |  6 +-
+ mdadm.h                                    |  1 +
+ monitor.c                                  |  3 +
+ super-ddf.c                                | 94 ++++++++++------------
+ test                                       | 71 +++++++++++++---
+ tests/00raid0                              | 10 +--
+ tests/00readonly                           |  4 +
+ tests/01r5integ.broken                     |  7 ++
+ tests/01raid6integ.broken                  |  7 ++
+ tests/02lineargrow                         |  2 +
+ tests/03r0assem                            |  6 +-
+ tests/04r0update                           |  4 +-
+ tests/04r5swap.broken                      |  7 ++
+ tests/04update-metadata                    |  8 +-
+ tests/07autoassemble.broken                |  8 ++
+ tests/07autodetect.broken                  |  5 ++
+ tests/07changelevelintr.broken             |  9 +++
+ tests/07changelevels.broken                |  9 +++
+ tests/07reshape5intr.broken                | 45 +++++++++++
+ tests/07revert-grow.broken                 | 31 +++++++
+ tests/07revert-shrink.broken               |  9 +++
+ tests/07testreshape5.broken                | 12 +++
+ tests/09imsm-assemble.broken               |  6 ++
+ tests/09imsm-create-fail-rebuild.broken    |  5 ++
+ tests/09imsm-overlap.broken                |  7 ++
+ tests/10ddf-assemble-missing.broken        |  6 ++
+ tests/10ddf-fail-create-race.broken        |  7 ++
+ tests/10ddf-fail-two-spares.broken         |  5 ++
+ tests/10ddf-incremental-wrong-order.broken |  9 +++
+ tests/14imsm-r1_2d-grow-r1_3d.broken       |  5 ++
+ tests/14imsm-r1_2d-takeover-r0_2d.broken   |  6 ++
+ tests/18imsm-r10_4d-takeover-r0_2d.broken  |  5 ++
+ tests/18imsm-r1_2d-takeover-r0_1d.broken   |  6 ++
+ tests/19raid6auto-repair.broken            |  5 ++
+ tests/19raid6repair.broken                 |  5 ++
+ 38 files changed, 363 insertions(+), 85 deletions(-)
+ create mode 100644 tests/01r5integ.broken
+ create mode 100644 tests/01raid6integ.broken
+ create mode 100644 tests/04r5swap.broken
+ create mode 100644 tests/07autoassemble.broken
+ create mode 100644 tests/07autodetect.broken
+ create mode 100644 tests/07changelevelintr.broken
+ create mode 100644 tests/07changelevels.broken
+ create mode 100644 tests/07reshape5intr.broken
+ create mode 100644 tests/07revert-grow.broken
+ create mode 100644 tests/07revert-shrink.broken
+ create mode 100644 tests/07testreshape5.broken
+ create mode 100644 tests/09imsm-assemble.broken
+ create mode 100644 tests/09imsm-create-fail-rebuild.broken
+ create mode 100644 tests/09imsm-overlap.broken
+ create mode 100644 tests/10ddf-assemble-missing.broken
+ create mode 100644 tests/10ddf-fail-create-race.broken
+ create mode 100644 tests/10ddf-fail-two-spares.broken
+ create mode 100644 tests/10ddf-incremental-wrong-order.broken
+ create mode 100644 tests/14imsm-r1_2d-grow-r1_3d.broken
+ create mode 100644 tests/14imsm-r1_2d-takeover-r0_2d.broken
+ create mode 100644 tests/18imsm-r10_4d-takeover-r0_2d.broken
+ create mode 100644 tests/18imsm-r1_2d-takeover-r0_1d.broken
+ create mode 100644 tests/19raid6auto-repair.broken
+ create mode 100644 tests/19raid6repair.broken
 
-Thanks everyone,
-- Alan
+
+base-commit: 52c67fcdd6dadc4138ecad73e65599551804d445
+--
+2.30.2
