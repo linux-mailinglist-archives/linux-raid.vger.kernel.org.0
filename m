@@ -2,35 +2,35 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 09FD0545640
-	for <lists+linux-raid@lfdr.de>; Thu,  9 Jun 2022 23:11:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E49B3545646
+	for <lists+linux-raid@lfdr.de>; Thu,  9 Jun 2022 23:12:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229908AbiFIVLs (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 9 Jun 2022 17:11:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42018 "EHLO
+        id S1345381AbiFIVL5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 9 Jun 2022 17:11:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344502AbiFIVLn (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 9 Jun 2022 17:11:43 -0400
+        with ESMTP id S1345391AbiFIVLo (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 9 Jun 2022 17:11:44 -0400
 Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76C6B26D8AD
-        for <linux-raid@vger.kernel.org>; Thu,  9 Jun 2022 14:11:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C22626EEA3
+        for <linux-raid@vger.kernel.org>; Thu,  9 Jun 2022 14:11:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
         Message-Id:Date:Cc:To:From:content-disposition;
-        bh=eIIYYksKwm4eMsz6SISsgJeWHeeGvIWUpSt4vbgnAEw=; b=bGrsPap/3DuZ0e8VX3zeH+jgru
-        62G4A2dQAvMsRCvPRI+pDGZN167+meiWVh/2W8ctzJeX2OEqQU4xuH30bzCxINJ3El2m1Mp6nn1EH
-        eUgMqNHwFIZCkHQjeU19JJ3IfdjjfPbhf3a0UDzt6bdRNccPlnTVXQEBw1Xl28ONYTqoOk5fQCGgS
-        Gv9w3zFk8kCUacGTFfPBKMRutDtH13K/yQ212G/MlaZqAjjZvB53yrRo+YIWZbGWjpgB4ai3uhz8k
-        ytQSl0LfN/XI333bUAEwC4KgH5RnAoahv1V0BqHpvWRVdZ1EWQOnQo0jNPTOTw7gH7wkTDSloTwCN
-        DgRi+q2w==;
+        bh=CUai+BYhwX8qDVpPq+JF2gq73b4UAJsSsckC4YJA9bU=; b=TKpLuxqAB/QkV3rz5JNQC+8GRw
+        3KlJEZXbPkp2VR436ppCW04i0ev/aYKx4UGX40z2qhD+isNjEKX2TTpPrmTwLHO3AgFHiWThj7SHC
+        Xnj5To40jjhu0FtQSbANCR/8W0P8IUIhbq6Wfv2XzZg2JJ3e87XVL5Dm6+MJxnlODLv83nkTPwI6l
+        3F87YZkUFg7XffulIbhr7CmaUrGJR3LYR1kidGnIGRGncud9Y+GSzA8CTb3AFyFWcoEwTUjToAZLX
+        l1T4+ZV5CkG1rR9/5z+VAOFHaFM7jHSOSGzXi1+N7aN/YnqleKp5iIfoqtvAJ2rTV9wfQ5mt3VWOp
+        yvGMS2pA==;
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1nzPRJ-0037Xm-R3; Thu, 09 Jun 2022 15:11:39 -0600
+        id 1nzPRJ-0037Xn-R4; Thu, 09 Jun 2022 15:11:42 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1nzPRE-0001LU-E4; Thu, 09 Jun 2022 15:11:32 -0600
+        id 1nzPRE-0001LX-Hb; Thu, 09 Jun 2022 15:11:32 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-raid@vger.kernel.org, Jes Sorensen <jsorensen@fb.com>
 Cc:     Song Liu <song@kernel.org>, Christoph Hellwig <hch@infradead.org>,
@@ -44,8 +44,8 @@ Cc:     Song Liu <song@kernel.org>, Christoph Hellwig <hch@infradead.org>,
         Martin Oliveira <Martin.Oliveira@eideticom.com>,
         David Sloan <David.Sloan@eideticom.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu,  9 Jun 2022 15:11:18 -0600
-Message-Id: <20220609211130.5108-3-logang@deltatee.com>
+Date:   Thu,  9 Jun 2022 15:11:19 -0600
+Message-Id: <20220609211130.5108-4-logang@deltatee.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220609211130.5108-1-logang@deltatee.com>
 References: <20220609211130.5108-1-logang@deltatee.com>
@@ -61,144 +61,52 @@ X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
         T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
-Subject: [PATCH mdadm v1 02/14] DDF: Cleanup validate_geometry_ddf_container()
+Subject: [PATCH mdadm v1 03/14] DDF: Fix NULL pointer dereference in validate_geometry_ddf()
 X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Move the function up so that the function declaration is not necessary
-and remove the unused arguments to the function.
+A relatively recent patch added a call to validate_geometry() in
+Manage_add() that has level=LEVEL_CONTAINER and chunk=NULL.
 
-No functional changes are intended but will help with a bug fix in the
-next patch.
+This causes some ddf tests to segfault which aborts the test suite.
 
+To fix this, avoid dereferencing chunk when the level is
+LEVEL_CONTAINER or LEVEL_NONE.
+
+Fixes: 1f5d54a06df0 ("Manage: Call validate_geometry when adding drive to external container")
+Cc: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- super-ddf.c | 88 ++++++++++++++++++++++++-----------------------------
- 1 file changed, 39 insertions(+), 49 deletions(-)
+ super-ddf.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/super-ddf.c b/super-ddf.c
-index 8cda23a74030..d3c7a4082046 100644
+index d3c7a4082046..6bd357cf9b82 100644
 --- a/super-ddf.c
 +++ b/super-ddf.c
-@@ -503,13 +503,6 @@ struct ddf_super {
- static int load_super_ddf_all(struct supertype *st, int fd,
- 			      void **sbp, char *devname);
- static int get_svd_state(const struct ddf_super *, const struct vcl *);
--static int
--validate_geometry_ddf_container(struct supertype *st,
--				int level, int layout, int raiddisks,
--				int chunk, unsigned long long size,
--				unsigned long long data_offset,
--				char *dev, unsigned long long *freesize,
--				int verbose);
+@@ -3369,9 +3369,6 @@ static int validate_geometry_ddf(struct supertype *st,
+ 	 * If given BVDs, we make an SVD, changing all the GUIDs in the process.
+ 	 */
  
- static int validate_geometry_ddf_bvd(struct supertype *st,
- 				     int level, int layout, int raiddisks,
-@@ -3322,6 +3315,42 @@ static int reserve_space(struct supertype *st, int raiddisks,
- 	return 1;
- }
- 
-+static int
-+validate_geometry_ddf_container(struct supertype *st,
-+				int level, int raiddisks,
-+				unsigned long long data_offset,
-+				char *dev, unsigned long long *freesize,
-+				int verbose)
-+{
-+	int fd;
-+	unsigned long long ldsize;
-+
-+	if (level != LEVEL_CONTAINER)
-+		return 0;
-+	if (!dev)
-+		return 1;
-+
-+	fd = dev_open(dev, O_RDONLY|O_EXCL);
-+	if (fd < 0) {
-+		if (verbose)
-+			pr_err("ddf: Cannot open %s: %s\n",
-+			       dev, strerror(errno));
-+		return 0;
-+	}
-+	if (!get_dev_size(fd, dev, &ldsize)) {
-+		close(fd);
-+		return 0;
-+	}
-+	close(fd);
-+	if (freesize) {
-+		*freesize = avail_size_ddf(st, ldsize >> 9, INVALID_SECTORS);
-+		if (*freesize == 0)
-+			return 0;
-+	}
-+
-+	return 1;
-+}
-+
- static int validate_geometry_ddf(struct supertype *st,
- 				 int level, int layout, int raiddisks,
- 				 int *chunk, unsigned long long size,
-@@ -3347,11 +3376,9 @@ static int validate_geometry_ddf(struct supertype *st,
+-	if (*chunk == UnSet)
+-		*chunk = DEFAULT_CHUNK;
+-
+ 	if (level == LEVEL_NONE)
  		level = LEVEL_CONTAINER;
  	if (level == LEVEL_CONTAINER) {
- 		/* Must be a fresh device to add to a container */
--		return validate_geometry_ddf_container(st, level, layout,
--						       raiddisks, *chunk,
--						       size, data_offset, dev,
--						       freesize,
--						       verbose);
-+		return validate_geometry_ddf_container(st, level, raiddisks,
-+						       data_offset, dev,
-+						       freesize, verbose);
+@@ -3381,6 +3378,9 @@ static int validate_geometry_ddf(struct supertype *st,
+ 						       freesize, verbose);
  	}
  
++	if (*chunk == UnSet)
++		*chunk = DEFAULT_CHUNK;
++
  	if (!dev) {
-@@ -3449,43 +3476,6 @@ static int validate_geometry_ddf(struct supertype *st,
- 	return 1;
- }
- 
--static int
--validate_geometry_ddf_container(struct supertype *st,
--				int level, int layout, int raiddisks,
--				int chunk, unsigned long long size,
--				unsigned long long data_offset,
--				char *dev, unsigned long long *freesize,
--				int verbose)
--{
--	int fd;
--	unsigned long long ldsize;
--
--	if (level != LEVEL_CONTAINER)
--		return 0;
--	if (!dev)
--		return 1;
--
--	fd = dev_open(dev, O_RDONLY|O_EXCL);
--	if (fd < 0) {
--		if (verbose)
--			pr_err("ddf: Cannot open %s: %s\n",
--			       dev, strerror(errno));
--		return 0;
--	}
--	if (!get_dev_size(fd, dev, &ldsize)) {
--		close(fd);
--		return 0;
--	}
--	close(fd);
--	if (freesize) {
--		*freesize = avail_size_ddf(st, ldsize >> 9, INVALID_SECTORS);
--		if (*freesize == 0)
--			return 0;
--	}
--
--	return 1;
--}
--
- static int validate_geometry_ddf_bvd(struct supertype *st,
- 				     int level, int layout, int raiddisks,
- 				     int *chunk, unsigned long long size,
+ 		mdu_array_info_t array = {
+ 			.level = level,
 -- 
 2.30.2
 
