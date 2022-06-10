@@ -2,72 +2,93 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 30C875456FE
-	for <lists+linux-raid@lfdr.de>; Fri, 10 Jun 2022 00:14:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13277546142
+	for <lists+linux-raid@lfdr.de>; Fri, 10 Jun 2022 11:15:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232753AbiFIWOJ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 9 Jun 2022 18:14:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53894 "EHLO
+        id S1348558AbiFJJPB (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 10 Jun 2022 05:15:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235102AbiFIWOJ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 9 Jun 2022 18:14:09 -0400
-X-Greylist: delayed 185 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 09 Jun 2022 15:14:05 PDT
-Received: from sender11-op-o11.zoho.eu (sender11-op-o11.zoho.eu [31.186.226.225])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA32242A34
-        for <linux-raid@vger.kernel.org>; Thu,  9 Jun 2022 15:14:05 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1654812838; cv=none; 
-        d=zohomail.eu; s=zohoarc; 
-        b=ja7CCOBG3EYvIEiSswRaQ9NKJjQ4DkfpyxLJlXzD2j7Q7DVs2hQb4M+8xVBAr88LKF+Byi32jOOBQoDYd9HWSXqdTtU07ApbdU0MdPiKbibW4yhn1/mfNNjFKSTpApBRv06curnDe6oCFVRNO5+pMi2vP8NKG73KdQNtWM0ge58=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1654812838; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=BfrMwlwP70rlkx8Ax1+2LPHVvq4mo3rTCk3g5h2q6jg=; 
-        b=HnZEdgGCVz08aKnavpJ6BiNarQ6cMlvm9BpSRyyd32C70U84v1pWdAjo88Zxn0UXBcEbgjLIu9oQEM8xyIPz6O9tTZAqIKYxffFu6nhwa/VlMoxXQD6lpgqLtTtpsQzLgsOq/OQheeVzWMApY1UZUJJW8/wtVoS9FeHy1sDIqn4=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
-        dmarc=pass header.from=<jes@trained-monkey.org>
-Received: from [172.30.27.237] (163.114.130.4 [163.114.130.4]) by mx.zoho.eu
-        with SMTPS id 1654812837163410.9577372848131; Fri, 10 Jun 2022 00:13:57 +0200 (CEST)
-Message-ID: <07c203b3-a230-4f52-ac95-acadb8881d58@trained-monkey.org>
-Date:   Thu, 9 Jun 2022 18:13:55 -0400
+        with ESMTP id S1348574AbiFJJOo (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 10 Jun 2022 05:14:44 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93E8429632D
+        for <linux-raid@vger.kernel.org>; Fri, 10 Jun 2022 02:13:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654852397; x=1686388397;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ZHDFcw5x2wNAszp6YVlQ+ukk62WusSkYPhFcolGW+pY=;
+  b=KymnZgGM2HH8yEQlELmxVCGr1tCJ1yrKu7SFlx0FtiftNWodfE8PEIHT
+   foNOEGwdI8qIcfZJ5yIMCT3CNsRkNt4YGPLOKfUTRuRwbgwcLGweq/fm+
+   //CUV/J5wnthjLTkP/SZJGAbo0btXRVNThWGXbkgQGsnT9H+0CLXiixbe
+   MtfRZfz4MEzMmr2cPufksLiDaJ7CAVQdc7beO1spv3awrcEvALw6rGxoZ
+   2Ct8pxxBwNapxM8z+JWGEJtEEj1YRrHxcY2hxRYUrwOBJ2/yN9N2chLta
+   bopi+y4TNp2b4JBKAjLqXDVvAr0VUP6+laMovwZ/mrntG2/UwCvz6AAvD
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10373"; a="339323839"
+X-IronPort-AV: E=Sophos;i="5.91,288,1647327600"; 
+   d="scan'208";a="339323839"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2022 02:13:16 -0700
+X-IronPort-AV: E=Sophos;i="5.91,288,1647327600"; 
+   d="scan'208";a="638034679"
+Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.252.57.21])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2022 02:13:14 -0700
+Date:   Fri, 10 Jun 2022 11:13:10 +0200
+From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+To:     Wu Guanghao <wuguanghao3@huawei.com>
+Cc:     <jes@trained-monkey.org>, <linux-raid@vger.kernel.org>,
+        Paul Menzel <pmenzel@molgen.mpg.de>, <linfeilong@huawei.com>,
+        <lixiaokeng@huawei.com>
+Subject: Re: [PATCH 1/5 v2] parse_layout_faulty: fix memleak
+Message-ID: <20220610111310.0000315d@linux.intel.com>
+In-Reply-To: <00ae6b42-b561-6542-0421-4ab8542d5d75@huawei.com>
+References: <fd86d427-2d3e-b337-6de8-d70dcbbd6ce1@huawei.com>
+        <00ae6b42-b561-6542-0421-4ab8542d5d75@huawei.com>
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH] Grow: block -n on external volumes.
-Content-Language: en-US
-To:     Mateusz Kusiak <mateusz.kusiak@intel.com>,
-        linux-raid@vger.kernel.org
-Cc:     colyli@suse.de
-References: <20220519071608.26259-1-mateusz.kusiak@intel.com>
-From:   Jes Sorensen <jes@trained-monkey.org>
-In-Reply-To: <20220519071608.26259-1-mateusz.kusiak@intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 5/19/22 03:16, Mateusz Kusiak wrote:
-> Performing --raid-devices on external metadata volume should be blocked
-> as it causes unwanted behaviour.
+On Thu, 9 Jun 2022 11:06:13 +0800
+Wu Guanghao <wuguanghao3@huawei.com> wrote:
+
+> char *m is allocated by xstrdup but not free() before return, will cause
+> a memory leak.
 > 
-> Eg. Performing
-> mdadm -G /dev/md/volume -l10 -n4
-> on r0_d2 inside 4 disk container, returns
-> mdadm: Need 2 spares to avoid degraded array, only have 0.
-> 
-> Signed-off-by: Mateusz Kusiak <mateusz.kusiak@intel.com>
+> Signed-off-by: Wu Guanghao <wuguanghao3@huawei.com>
 > ---
->  Grow.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  util.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/util.c b/util.c
+> index cc94f96e..46b04afb 100644
+> --- a/util.c
+> +++ b/util.c
+> @@ -427,8 +427,11 @@ int parse_layout_faulty(char *layout)
+>         int ln = strcspn(layout, "0123456789");
+>         char *m = xstrdup(layout);
+>         int mode;
+> +
+>         m[ln] = 0;
+>         mode = map_name(faultylayout, m);
+> +       free(m);
+> +
+>         if (mode == UnSet)
+>                 return -1;
+> 
+> --
+> 2.27.0
 
-Applied!
-
-Thanks,
-Jes
-
+Acked-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
