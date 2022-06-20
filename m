@@ -2,42 +2,33 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A2D41551FA9
-	for <lists+linux-raid@lfdr.de>; Mon, 20 Jun 2022 17:04:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04A805520CE
+	for <lists+linux-raid@lfdr.de>; Mon, 20 Jun 2022 17:27:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234708AbiFTPER (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 20 Jun 2022 11:04:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59284 "EHLO
+        id S239950AbiFTP1L (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 20 Jun 2022 11:27:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243531AbiFTPD6 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 20 Jun 2022 11:03:58 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E8C92C100
-        for <linux-raid@vger.kernel.org>; Mon, 20 Jun 2022 07:37:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655735852; x=1687271852;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=e1CsuGLTl9o7ol4nSfB/4eR7ixLFaRubWtai0Hp3DMg=;
-  b=hhpocETMs7ksqS3VxuVerJbHKxOKhFIBwrXu2Zr4oh9yoLh0jP6TApFV
-   Mf6/Xc+Gi+WDxWUqB0xH+wIdvaZSKe6w3HSl86wkSrZ6ErK6lFj2fAmmK
-   iasd5X5HzlnTTDXTfuMf+DRDiQOZ1DneNxkPJiHJS/3vMZcYvooIDSzPA
-   kRbBiZ58WairTf5rzcuE3yIQRUL81/2WT5aHnZyUaJIbPtHb/xTCd9Ff6
-   Z3457BYRx/0aiB/RQQZRfMwJFKErbhNfMHGopFJGKcVYR8+2UVb0iwri6
-   YHNaiAV2A+0EmR/mBYxTmm9FciJLFd3lsofPJk3FhWpbx980xVsh0PEE1
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10384"; a="279960572"
-X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="279960572"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2022 07:37:32 -0700
-X-IronPort-AV: E=Sophos;i="5.92,207,1650956400"; 
-   d="scan'208";a="591204030"
-Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.237.142.65])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2022 07:37:28 -0700
-Date:   Mon, 20 Jun 2022 16:37:25 +0200
-From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+        with ESMTP id S244275AbiFTP07 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 20 Jun 2022 11:26:59 -0400
+Received: from mx1.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A133F1E3
+        for <linux-raid@vger.kernel.org>; Mon, 20 Jun 2022 08:26:20 -0700 (PDT)
+Received: from [141.14.220.45] (g45.guest.molgen.mpg.de [141.14.220.45])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: pmenzel)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 3720B61EA1923;
+        Mon, 20 Jun 2022 17:26:17 +0200 (CEST)
+Message-ID: <1828d438-8584-d67b-f35b-631091dad39f@molgen.mpg.de>
+Date:   Mon, 20 Jun 2022 17:26:16 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH mdadm v1 06/14] mdadm: Fix mdadm -r remove option
+ regresision
+Content-Language: en-US
 To:     Logan Gunthorpe <logang@deltatee.com>
 Cc:     linux-raid@vger.kernel.org, Jes Sorensen <jsorensen@fb.com>,
         Song Liu <song@kernel.org>,
@@ -46,46 +37,34 @@ Cc:     linux-raid@vger.kernel.org, Jes Sorensen <jsorensen@fb.com>,
         Guoqing Jiang <guoqing.jiang@linux.dev>,
         Xiao Ni <xni@redhat.com>,
         Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
         Coly Li <colyli@suse.de>, Bruce Dubbs <bruce.dubbs@gmail.com>,
         Stephen Bates <sbates@raithlin.com>,
         Martin Oliveira <Martin.Oliveira@eideticom.com>,
         David Sloan <David.Sloan@eideticom.com>,
-        Mateusz Grzonka <mateusz.grzonka@intel.com>
-Subject: Re: [PATCH mdadm v1 07/14] mdadm: Fix optional --write-behind
- parameter
-Message-ID: <20220620163725.00001690@linux.intel.com>
-In-Reply-To: <20220609211130.5108-8-logang@deltatee.com>
+        Wu Guanghao <wuguanghao3@huawei.com>
 References: <20220609211130.5108-1-logang@deltatee.com>
-        <20220609211130.5108-8-logang@deltatee.com>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+ <20220609211130.5108-7-logang@deltatee.com>
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <20220609211130.5108-7-logang@deltatee.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu,  9 Jun 2022 15:11:23 -0600
-Logan Gunthorpe <logang@deltatee.com> wrote:
+Dear Logan,
 
-> The commit noted below changed the behaviour of --write-behind to
-> require an argument. This broke the 06wrmostly test with the error:
-> 
->   mdadm: Invalid value for maximum outstanding write-behind writes: (null).
->          Must be between 0 and 16383.
-> 
-> To fix this, check if optarg is NULL before parising it, as the origial
-> code did.
-> 
-> Fixes: 60815698c0ac ("Refactor parse_num and use it to parse optarg.")
-> Cc: Mateusz Grzonka <mateusz.grzonka@intel.com>
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> ---
 
-Acked-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+Thank you for the patch. There is a small typo in *regression* in the 
+commit message summary.
+
+
+Kind regards,
+
+Paul
