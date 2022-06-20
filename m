@@ -2,41 +2,41 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 24250551F9C
-	for <lists+linux-raid@lfdr.de>; Mon, 20 Jun 2022 17:02:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 183BA551FA4
+	for <lists+linux-raid@lfdr.de>; Mon, 20 Jun 2022 17:04:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241235AbiFTPCG (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 20 Jun 2022 11:02:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57484 "EHLO
+        id S242277AbiFTPE0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 20 Jun 2022 11:04:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240896AbiFTPBl (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 20 Jun 2022 11:01:41 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C25A120181
-        for <linux-raid@vger.kernel.org>; Mon, 20 Jun 2022 07:29:40 -0700 (PDT)
+        with ESMTP id S242893AbiFTPDf (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 20 Jun 2022 11:03:35 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB8DC13DCB
+        for <linux-raid@vger.kernel.org>; Mon, 20 Jun 2022 07:36:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655735380; x=1687271380;
+  t=1655735762; x=1687271762;
   h=date:from:to:cc:subject:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Wy0kvrcQ6paTAOwBBylUwVwY8Qfdwyd2TRr/y2phzCw=;
-  b=nnIHgBBraxoIN4dI5M3X86CrfiVNWUOKCLK9uF27OOwhh8rsAGHclDOZ
-   39Yl/ybu2HvWS5OaHJSZF21olrBqPlg1bXi7aiOu27A3B9dEuNt3HAKWs
-   vZzOvE5Tz2Toxfpwn7Q2wMXDyfpqBSaoj0NmCyRL2sshKhsmnYKR9z4ED
-   WA3Yp3yaPLYELTLw7/CIMEz3np4OpAezdnXbXZD3QoO6yPb2Fu2mFIsgr
-   b++7HLPoAVFz6/jaf78XkJRj1a3IYzP+nWt78HO8O1Xxct/5vTs8Ttqwk
-   PrXnVCeMDCOb57H6rchZ/Wmnyn+09MmKu30w3WBpnUNnw7CW0q6wSq6tM
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10380"; a="341591061"
+  bh=zbm9fw54fBFC4ZIoGzRYWjZcxRvUwfgr62pl+KPzzgs=;
+  b=kd0nY1Bya/8dx5FR/VzlF+MZZGcW7mYM6PutBN+jMWwPTZTBwHIt9rB7
+   Cf5Sx7tVMZnTWQonncAkRI6URkkFBSHp9KElwrYhnVNPRxfNE2Sc/AKz+
+   PhTbLE59SNPz8lXGUyUcqn4h+UkF/CkM6sprtkptR8zMDRYCPw/KzMPlT
+   fdRWLRaLERL2frTC0paDknOhC59hm27jX+m19mmaz4PoOON/1IgMqzM0v
+   6u69gua4YpaOOy+GsBUn3T6/wt+drOCKVaQ/Wc1Nz8PDXtHts2M38TyCx
+   ilrcglb0bFiyT/F+E6sPT5HATX2h6fpbGpIo1dmYh6TIrR7PUQMJN9Mdf
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10384"; a="305346940"
 X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="341591061"
+   d="scan'208";a="305346940"
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2022 07:29:40 -0700
-X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="591201227"
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2022 07:36:02 -0700
+X-IronPort-AV: E=Sophos;i="5.92,207,1650956400"; 
+   d="scan'208";a="591203601"
 Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.237.142.65])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2022 07:29:36 -0700
-Date:   Mon, 20 Jun 2022 16:29:33 +0200
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2022 07:35:59 -0700
+Date:   Mon, 20 Jun 2022 16:35:55 +0200
 From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
 To:     Logan Gunthorpe <logang@deltatee.com>
 Cc:     linux-raid@vger.kernel.org, Jes Sorensen <jsorensen@fb.com>,
@@ -49,19 +49,20 @@ Cc:     linux-raid@vger.kernel.org, Jes Sorensen <jsorensen@fb.com>,
         Coly Li <colyli@suse.de>, Bruce Dubbs <bruce.dubbs@gmail.com>,
         Stephen Bates <sbates@raithlin.com>,
         Martin Oliveira <Martin.Oliveira@eideticom.com>,
-        David Sloan <David.Sloan@eideticom.com>
-Subject: Re: [PATCH mdadm v1 05/14] monitor: Avoid segfault when calling
- NULL get_bad_blocks
-Message-ID: <20220620162933.000047f0@linux.intel.com>
-In-Reply-To: <20220609211130.5108-6-logang@deltatee.com>
+        David Sloan <David.Sloan@eideticom.com>,
+        Wu Guanghao <wuguanghao3@huawei.com>
+Subject: Re: [PATCH mdadm v1 06/14] mdadm: Fix mdadm -r remove option
+ regresision
+Message-ID: <20220620163555.00005d74@linux.intel.com>
+In-Reply-To: <20220609211130.5108-7-logang@deltatee.com>
 References: <20220609211130.5108-1-logang@deltatee.com>
-        <20220609211130.5108-6-logang@deltatee.com>
+        <20220609211130.5108-7-logang@deltatee.com>
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
         SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -70,16 +71,97 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu,  9 Jun 2022 15:11:21 -0600
+On Thu,  9 Jun 2022 15:11:22 -0600
 Logan Gunthorpe <logang@deltatee.com> wrote:
 
-> Not all struct superswitch implement a get_bad_blocks() function,
-> yet mdmon seems to call it without checking for NULL and thus
-> occasionally segfaults in the test 10ddf-geometry.
+> The commit noted below globally adds a parameter to the -r option but missed
+> the fact that -r is used for another purpose: --remove.
 > 
-> Fix this by checking for NULL before calling it.
+> After that commit, a command such as:
 > 
+>   mdadm /dev/md0 -r /dev/loop0
+> 
+> will do nothing seeing the device parameter will be consumed as a
+> argument to the -r option; thus, there will only be one device
+> seen one the command line, devs_found will only be 1 and nothing will
+> happen.
+> 
+> This caused the 01r5integ and 01raid6integ tests to hang indefinitely
+> as mdadm did not remove the failed device. With the device not removed,
+> it would not be readded. Then the loop waiting for the array status to
+> change would loop forever.
+> 
+> To fix this, revert the changes in the noted patch and create a new subopt
+> type for the monitor mode with parameters required for -r.
+> 
+> Fixes: 546047688e1c ("mdadm: fix coredump of mdadm --monitor -r")
+> Cc: Wu Guanghao <wuguanghao3@huawei.com>
+> Cc: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
 > Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 > ---
 
-Acked-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+
+>  ReadMe.c | 7 ++++---
+>  mdadm.c  | 1 +
+>  mdadm.h  | 1 +
+>  3 files changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/ReadMe.c b/ReadMe.c
+> index 8f873c4895da..556104f75d72 100644
+> --- a/ReadMe.c
+> +++ b/ReadMe.c
+> @@ -81,11 +81,12 @@ char Version[] = "mdadm - v" VERSION " - " VERS_DATE
+> EXTRAVERSION "\n";
+>   *     found, it is started.
+>   */
+>  
+> -char
+> short_options[]="-ABCDEFGIQhVXYWZ:vqbc:i:l:p:m:r:n:x:u:c:d:z:U:N:safRSow1tye:k";
+> +char
+> short_options[]="-ABCDEFGIQhVXYWZ:vqbc:i:l:p:m:n:x:u:c:d:z:U:N:sarfRSow1tye:k";
+> +char
+> short_monitor_options[]="-ABCDEFGIQhVXYWZ:vqbc:i:l:p:m:r:n:x:u:c:d:z:U:N:safRSow1tye:k";
+> char short_bitmap_options[]=
+> -
+> "-ABCDEFGIQhVXYWZ:vqb:c:i:l:p:m:r:n:x:u:c:d:z:U:N:sarfRSow1tye:k:";
+> +
+> "-ABCDEFGIQhVXYWZ:vqb:c:i:l:p:m:n:x:u:c:d:z:U:N:sarfRSow1tye:k:"; char
+> short_bitmap_auto_options[]=
+> -
+> "-ABCDEFGIQhVXYWZ:vqb:c:i:l:p:m:r:n:x:u:c:d:z:U:N:sa:rfRSow1tye:k:";
+> +
+> "-ABCDEFGIQhVXYWZ:vqb:c:i:l:p:m:n:x:u:c:d:z:U:N:sa:rfRSow1tye:k:"; 
+>  struct option long_options[] = {
+>      {"manage",    0, 0, ManageOpt},
+> diff --git a/mdadm.c b/mdadm.c
+> index be40686cf91b..d0c5e6def901 100644
+> --- a/mdadm.c
+> +++ b/mdadm.c
+> @@ -227,6 +227,7 @@ int main(int argc, char *argv[])
+>  			shortopt = short_bitmap_auto_options;
+>  			break;
+>  		case 'F': newmode = MONITOR;
+> +			shortopt = short_monitor_options;
+>  			break;
+>  		case 'G': newmode = GROW;
+>  			shortopt = short_bitmap_options;
+> diff --git a/mdadm.h b/mdadm.h
+> index 09915a0009d9..559da3f6f440 100644
+> --- a/mdadm.h
+> +++ b/mdadm.h
+> @@ -419,6 +419,7 @@ enum mode {
+>  };
+>  
+>  extern char short_options[];
+> +extern char short_monitor_options[];
+>  extern char short_bitmap_options[];
+>  extern char short_bitmap_auto_options[];
+>  extern struct option long_options[];
+
+Jes applied Nigel's revert but I cannot see it on repository yet.
+I consider adding short monitor options as valuable.
+Could you apply revert manually and then adopt your patch?
+https://lore.kernel.org/linux-raid/5f9a4417-d044-a87e-3945-2c6b29278d8c@trained-monkey.org/#t
+
+Thanks,
+Mariusz
