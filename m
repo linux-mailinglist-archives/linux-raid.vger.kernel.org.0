@@ -2,35 +2,35 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4968D555552
-	for <lists+linux-raid@lfdr.de>; Wed, 22 Jun 2022 22:25:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBA6E55555D
+	for <lists+linux-raid@lfdr.de>; Wed, 22 Jun 2022 22:26:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232180AbiFVUZo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 22 Jun 2022 16:25:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52664 "EHLO
+        id S231931AbiFVUZk (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 22 Jun 2022 16:25:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232321AbiFVUZc (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 22 Jun 2022 16:25:32 -0400
+        with ESMTP id S231937AbiFVUZb (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 22 Jun 2022 16:25:31 -0400
 Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5BBC36682
-        for <linux-raid@vger.kernel.org>; Wed, 22 Jun 2022 13:25:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BADF369FB
+        for <linux-raid@vger.kernel.org>; Wed, 22 Jun 2022 13:25:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
         Message-Id:Date:Cc:To:From:content-disposition;
-        bh=jp66Uj0KPYNCtqYBFltKo8R5KGhIAqhSkkfIBhcMyHw=; b=rD8gBslipM98o84FPDQszfV5G/
-        Ep5xQ8Nvri9J2FykBif0OTheYUY0dm/uI7otxxSCVRi64xRmGZJ5UhjsD93TM+lwVzG+uj/EIzL/C
-        4qwWqA91m8DRF9er3kQBmgWZJ3cYcaNHn54tqscRIGVkOXocKodhOaD1ZnnYSLAZ0GhVpF99BnTZr
-        aBvdMCndkj/7h4YrlZvoMUAHLR+QlaEYN58iYMCl8iQI4jcpvF+Cg7w5Q87EUM3lf/JZco3li8AVR
-        OVlBTN3aO1lhXaawCXvPifrAMQIcYgWr/NCsgsBkMqRfmCFYyOR0d6SveYDGg6KfsmwVcZ5npWv2Y
-        JmJeD6qw==;
+        bh=5dbV102Q994V1lyNgmKcn4tb5fiwa3NLzz1hJcS0cnE=; b=B51ZRxAAYlwSB+vfg+dliqE4qJ
+        HeWvONCCuXVSHVRSJHX+JbkPtabh860sT3jRegpFJH+6K2QNw/ym3hauhO8qDladVA38ADGrPG2al
+        lGIQzktfEo/5pdNq7RzGF5qasBX0FuX0zo0ybwHQUpefr4T/VeUY+P7RBkAk5xj7eBasriGiI5wgf
+        RwNwUIEtJ07glzUpywYMpchVW32Sgkt9T/FxsvRS2u1yFlJNpwTYd7c5pI6SMVVK4ahCPHrHjJRhd
+        beEY4u7DFBLV8KqcJdjlEBvv1NMCwaR4GXRxIvuRsnLNNjWe5FIfZdmHQYnWkTJa6bONuammYSRDq
+        FZLLrnwg==;
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1o46un-00EGyZ-Ds; Wed, 22 Jun 2022 14:25:30 -0600
+        id 1o46um-00EGyc-Jh; Wed, 22 Jun 2022 14:25:29 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1o46ui-0009Mf-0y; Wed, 22 Jun 2022 14:25:24 -0600
+        id 1o46ui-0009Mj-5o; Wed, 22 Jun 2022 14:25:24 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-raid@vger.kernel.org, Jes Sorensen <jsorensen@fb.com>
 Cc:     Song Liu <song@kernel.org>, Christoph Hellwig <hch@infradead.org>,
@@ -45,8 +45,8 @@ Cc:     Song Liu <song@kernel.org>, Christoph Hellwig <hch@infradead.org>,
         David Sloan <David.Sloan@eideticom.com>,
         Sudhakar Panneerselvam <sudhakar.panneerselvam@oracle.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed, 22 Jun 2022 14:25:15 -0600
-Message-Id: <20220622202519.35905-11-logang@deltatee.com>
+Date:   Wed, 22 Jun 2022 14:25:16 -0600
+Message-Id: <20220622202519.35905-12-logang@deltatee.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220622202519.35905-1-logang@deltatee.com>
 References: <20220622202519.35905-1-logang@deltatee.com>
@@ -61,7 +61,7 @@ X-Spam-Level:
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
-Subject: [PATCH mdadm v2 10/14] tests/04update-metadata: avoid passing chunk size to raid1
+Subject: [PATCH mdadm v2 11/14] tests/02lineargrow: clear the superblock at every iteration
 X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
@@ -70,35 +70,27 @@ X-Mailing-List: linux-raid@vger.kernel.org
 
 From: Sudhakar Panneerselvam <sudhakar.panneerselvam@oracle.com>
 
-'04update-metadata' test fails with error, "specifying chunk size is
-forbidden for this level" added by commit, 5b30a34aa4b5e. Hence,
-correcting the test to ignore passing chunk size to raid1.
+This fixes 02lineargrow test as prior metadata causes --add operation
+to misbehave.
 
 Signed-off-by: Sudhakar Panneerselvam <sudhakar.panneerselvam@oracle.com>
 Signed-off-by: Himanshu Madhani <himanshu.madhani@oracle.com>
-[logang@deltatee.com: fix if/then style and dropped unrelated hunk]
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- tests/04update-metadata | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ tests/02lineargrow | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tests/04update-metadata b/tests/04update-metadata
-index 08c14af7ed29..2b72a303b6a0 100644
---- a/tests/04update-metadata
-+++ b/tests/04update-metadata
-@@ -11,7 +11,11 @@ dlist="$dev0 $dev1 $dev2 $dev3"
- for ls in linear/4 raid1/1 raid5/3 raid6/2
- do
-   s=${ls#*/} l=${ls%/*}
--  mdadm -CR --assume-clean -e 0.90 $md0 --level $l -n 4 -c 64 $dlist
-+  if [[ $l == 'raid1' ]]; then
-+	mdadm -CR --assume-clean -e 0.90 $md0 --level $l -n 4 $dlist
-+  else
-+	mdadm -CR --assume-clean -e 0.90 $md0 --level $l -n 4 -c 64 $dlist
-+  fi
-   testdev $md0 $s 19904 64
+diff --git a/tests/02lineargrow b/tests/02lineargrow
+index e05c219d113a..595bf9f20802 100644
+--- a/tests/02lineargrow
++++ b/tests/02lineargrow
+@@ -20,4 +20,6 @@ do
+   testdev $md0 3 $sz 1
+ 
    mdadm -S $md0
-   mdadm -A $md0 --update=metadata $dlist
++  mdadm --zero /dev/loop2
++  mdadm --zero /dev/loop3
+ done
 -- 
 2.30.2
 
