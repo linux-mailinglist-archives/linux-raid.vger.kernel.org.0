@@ -2,35 +2,35 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F20BC555551
-	for <lists+linux-raid@lfdr.de>; Wed, 22 Jun 2022 22:25:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2060555553
+	for <lists+linux-raid@lfdr.de>; Wed, 22 Jun 2022 22:25:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233116AbiFVUZg (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 22 Jun 2022 16:25:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52600 "EHLO
+        id S233149AbiFVUZh (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 22 Jun 2022 16:25:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231697AbiFVUZa (ORCPT
+        with ESMTP id S231811AbiFVUZa (ORCPT
         <rfc822;linux-raid@vger.kernel.org>); Wed, 22 Jun 2022 16:25:30 -0400
 Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39C9F369E6
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51AD8369E7
         for <linux-raid@vger.kernel.org>; Wed, 22 Jun 2022 13:25:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
         Message-Id:Date:Cc:To:From:content-disposition;
-        bh=qjAxilDG7mkUuyPnysNS8FuNkZ/GnRP+cKCviJnO1Cg=; b=snTkL9GM0ZJcsEBKSczlZnwlek
-        hyar4WKhjcVhDU5BEaXyhnizCgdxZAHxlufP8jTQ5L1+ablLOL1EP9NHqGMOqn+xG3AWSQv4zNzU5
-        UHYBcGSinhV7Jp8mV8xxLlqUtPbsjzpUO6kxZcqwbOO7ghmOPHRPgFSra2K965yOl2b2T7PnC0PMH
-        k74K12GLWggMHKNkGP60UM0xHYh9TTRFDEybWWf4DwKYSjR0n1sHuTDreH3QBYKnsU/GDaacuXx0Y
-        PbhQvJY8/c4NxbJNt031Qb+aMXeneCx/7TQf1rfhr4CDcvWl/yBmrWbxPRWQreoZ3PVL1sOJwtugF
-        LbqcIM4g==;
+        bh=xa6RljNsyJNqp8MFRueCol0W0ZcLp1UNWG1rmUJ1Rwo=; b=kSWhknefBhgd4rB5iBqgXqT38w
+        IFI5eplhHGqyGsnQYvKMMzaHNZ2Lol5oAk4Skkb/MQpLkYmIeGbjV7+/5FX5FOiJHNYbgJRsMM9PG
+        wRwRWb2XSqUcAcJsv378HRxOQgiHsEoB0xjaxFbGSB6PVSJrSmKV83dULjicyYf4UhsgIpaAINZSi
+        yAnOqGL88KLbD8WZmZJk8v5s4yrtfa88340LARFNOt+s5qk4qTOxEfYXrOqcxdrfPvyWjPJ1IBvJL
+        eLYMbdQ2P6lGZ+dr8eYLoF5SRlzy38Bv6TdRquWl8oaNSEQ/KyXLnLFBKtOgCG5ypxvxRbiuIX0Ve
+        jYvjo+QA==;
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1o46uk-00EGya-Qr; Wed, 22 Jun 2022 14:25:28 -0600
+        id 1o46uk-00EGyc-VL; Wed, 22 Jun 2022 14:25:28 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1o46uh-0009MG-2W; Wed, 22 Jun 2022 14:25:23 -0600
+        id 1o46uh-0009MJ-65; Wed, 22 Jun 2022 14:25:23 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-raid@vger.kernel.org, Jes Sorensen <jsorensen@fb.com>
 Cc:     Song Liu <song@kernel.org>, Christoph Hellwig <hch@infradead.org>,
@@ -43,16 +43,20 @@ Cc:     Song Liu <song@kernel.org>, Christoph Hellwig <hch@infradead.org>,
         Stephen Bates <sbates@raithlin.com>,
         Martin Oliveira <Martin.Oliveira@eideticom.com>,
         David Sloan <David.Sloan@eideticom.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed, 22 Jun 2022 14:25:08 -0600
-Message-Id: <20220622202519.35905-4-logang@deltatee.com>
+        Logan Gunthorpe <logang@deltatee.com>,
+        Alex Wu <alexwu@synology.com>,
+        BingJing Chang <bingjingc@synology.com>,
+        Danny Shih <dannyshih@synology.com>,
+        ChangSyun Peng <allenpeng@synology.com>
+Date:   Wed, 22 Jun 2022 14:25:09 -0600
+Message-Id: <20220622202519.35905-5-logang@deltatee.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220622202519.35905-1-logang@deltatee.com>
 References: <20220622202519.35905-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-raid@vger.kernel.org, jsorensen@fb.com, song@kernel.org, hch@infradead.org, buczek@molgen.mpg.de, guoqing.jiang@linux.dev, xni@redhat.com, himanshu.madhani@oracle.com, mariusz.tkaczyk@linux.intel.com, colyli@suse.de, bruce.dubbs@gmail.com, sbates@raithlin.com, Martin.Oliveira@eideticom.com, David.Sloan@eideticom.com, logang@deltatee.com
+X-SA-Exim-Rcpt-To: linux-raid@vger.kernel.org, jsorensen@fb.com, song@kernel.org, hch@infradead.org, buczek@molgen.mpg.de, guoqing.jiang@linux.dev, xni@redhat.com, himanshu.madhani@oracle.com, mariusz.tkaczyk@linux.intel.com, colyli@suse.de, bruce.dubbs@gmail.com, sbates@raithlin.com, Martin.Oliveira@eideticom.com, David.Sloan@eideticom.com, logang@deltatee.com, alexwu@synology.com, bingjingc@synology.com, dannyshih@synology.com, allenpeng@synology.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -60,52 +64,87 @@ X-Spam-Level:
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
-Subject: [PATCH mdadm v2 03/14] DDF: Fix NULL pointer dereference in validate_geometry_ddf()
+Subject: [PATCH mdadm v2 04/14] mdadm/Grow: Fix use after close bug by closing after fork
 X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-A relatively recent patch added a call to validate_geometry() in
-Manage_add() that has level=LEVEL_CONTAINER and chunk=NULL.
+The test 07reshape-grow fails most of the time. But it succeeds around
+1 in 5 times. When it does succeed, it causes the tests to die because
+mdadm has segfaulted.
 
-This causes some ddf tests to segfault which aborts the test suite.
+The segfault was caused by mdadm attempting to repoen a file
+descriptor that was already closed. The backtrace of the segfault
+was:
 
-To fix this, avoid dereferencing chunk when the level is
-LEVEL_CONTAINER or LEVEL_NONE.
+  #0  __strncmp_avx2 () at ../sysdeps/x86_64/multiarch/strcmp-avx2.S:101
+  #1  0x000056146e31d44b in devnm2devid (devnm=0x0) at util.c:956
+  #2  0x000056146e31dab4 in open_dev_flags (devnm=0x0, flags=0)
+                         at util.c:1072
+  #3  0x000056146e31db22 in open_dev (devnm=0x0) at util.c:1079
+  #4  0x000056146e3202e8 in reopen_mddev (mdfd=4) at util.c:2244
+  #5  0x000056146e329f36 in start_array (mdfd=4,
+              mddev=0x7ffc55342450 "/dev/md0", content=0x7ffc55342860,
+              st=0x56146fc78660, ident=0x7ffc55342f70, best=0x56146fc6f5d0,
+              bestcnt=10, chosen_drive=0, devices=0x56146fc706b0, okcnt=5,
+	      sparecnt=0,  rebuilding_cnt=0, journalcnt=0, c=0x7ffc55342e90,
+	      clean=1,  avail=0x56146fc78720 "\001\001\001\001\001",
+	      start_partial_ok=0, err_ok=0, was_forced=0)
+	                  at Assemble.c:1206
+  #6  0x000056146e32c36e in Assemble (st=0x56146fc78660,
+               mddev=0x7ffc55342450 "/dev/md0", ident=0x7ffc55342f70,
+	       devlist=0x56146fc6e2d0, c=0x7ffc55342e90)
+	                 at Assemble.c:1914
+  #7  0x000056146e312ac9 in main (argc=11, argv=0x7ffc55343238)
+                         at mdadm.c:1510
 
-Fixes: 1f5d54a06df0 ("Manage: Call validate_geometry when adding drive to external container")
+The file descriptor was closed early in Grow_continue(). The noted commit
+moved the close() call to close the fd above the fork which caused the
+parent process to return with a closed fd.
+
+This meant reshape_array() and Grow_continue() would return in the parent
+with the fd forked. The fd would eventually be passed to reopen_mddev()
+which returned an unhandled NULL from fd2devnm() which would then be
+dereferenced in devnm2devid.
+
+Fix this by moving the close() call below the fork. This appears to
+fix the 07revert-grow test. While we're at it, switch to using
+close_fd() to invalidate the file descriptor.
+
+Fixes: 77b72fa82813 ("mdadm/Grow: prevent md's fd from being occupied during delayed time")
+Cc: Alex Wu <alexwu@synology.com>
+Cc: BingJing Chang <bingjingc@synology.com>
+Cc: Danny Shih <dannyshih@synology.com>
+Cc: ChangSyun Peng <allenpeng@synology.com>
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Acked-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
 ---
- super-ddf.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ Grow.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/super-ddf.c b/super-ddf.c
-index 9d867f6910f3..949e7d155474 100644
---- a/super-ddf.c
-+++ b/super-ddf.c
-@@ -3369,9 +3369,6 @@ static int validate_geometry_ddf(struct supertype *st,
- 	 * If given BVDs, we make an SVD, changing all the GUIDs in the process.
- 	 */
+diff --git a/Grow.c b/Grow.c
+index f6efbc48dafd..0e2d7181bcab 100644
+--- a/Grow.c
++++ b/Grow.c
+@@ -3514,7 +3514,6 @@ started:
+ 			return 0;
+ 		}
  
--	if (*chunk == UnSet)
--		*chunk = DEFAULT_CHUNK;
--
- 	if (level == LEVEL_NONE)
- 		level = LEVEL_CONTAINER;
- 	if (level == LEVEL_CONTAINER) {
-@@ -3381,6 +3378,9 @@ static int validate_geometry_ddf(struct supertype *st,
- 						       freesize, verbose);
+-	close(fd);
+ 	/* Now we just need to kick off the reshape and watch, while
+ 	 * handling backups of the data...
+ 	 * This is all done by a forked background process.
+@@ -3535,6 +3534,9 @@ started:
+ 		break;
  	}
  
-+	if (*chunk == UnSet)
-+		*chunk = DEFAULT_CHUNK;
++	/* Close unused file descriptor in the forked process */
++	close_fd(&fd);
 +
- 	if (!dev) {
- 		mdu_array_info_t array = {
- 			.level = level,
+ 	/* If another array on the same devices is busy, the
+ 	 * reshape will wait for them.  This would mean that
+ 	 * the first section that we suspend will stay suspended
 -- 
 2.30.2
 
