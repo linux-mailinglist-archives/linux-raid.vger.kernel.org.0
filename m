@@ -2,107 +2,154 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 887E7552E9C
-	for <lists+linux-raid@lfdr.de>; Tue, 21 Jun 2022 11:41:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDB33554070
+	for <lists+linux-raid@lfdr.de>; Wed, 22 Jun 2022 04:15:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349363AbiFUJkU (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 21 Jun 2022 05:40:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52440 "EHLO
+        id S1355472AbiFVCPL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 21 Jun 2022 22:15:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349368AbiFUJkI (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 21 Jun 2022 05:40:08 -0400
-Received: from mail-oo1-xc30.google.com (mail-oo1-xc30.google.com [IPv6:2607:f8b0:4864:20::c30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AC4A27CDE
-        for <linux-raid@vger.kernel.org>; Tue, 21 Jun 2022 02:39:55 -0700 (PDT)
-Received: by mail-oo1-xc30.google.com with SMTP id h22-20020a4ad756000000b004212ee5928bso1890898oot.10
-        for <linux-raid@vger.kernel.org>; Tue, 21 Jun 2022 02:39:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=/0bRExIb6Mv4sy5raFRmeQINC+UUx7zEZcUUOWWOPJg=;
-        b=NKhg6kSkfnglJlsPDVUWhCY3Iibudx7OhZC5CePFgeNekYJKNrcmU8wB8gkktmjPqY
-         f0o4DET3nwW7oGb1WQAmWVCm6yLISrVrQXMY/9qoCppMNLX7K/jA/JZ+JMs1mNT38j+N
-         qSlM2vTiSOIkQo5cZ6oY4dkMVda7fWn0vzKRT295Q67AStI8u0BTanvw38uSxo4IMvFm
-         mtbeFJOQugEk6bmbrSLJZHxNWvSEoU0AT9TQz59V3jAGDZbWiI6U0Fx8UlroTYMr9wGQ
-         +xC78kHT5AZK7k/f6wmWhdDj3ThC5Cy20ctCKCcYvb/idPExEpgvQXB/UX/ziCu3vO07
-         Q2/g==
+        with ESMTP id S229734AbiFVCPK (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 21 Jun 2022 22:15:10 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2113230570
+        for <linux-raid@vger.kernel.org>; Tue, 21 Jun 2022 19:15:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1655864107;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=nAF9uJDAJOO4/FSOAPwbKJV+7udaVeqmZOgkD10CgzU=;
+        b=O2C9WxhBn7VG0tJORpBySb2J5OSCr4vfcaau2J/ORGLY+qdIhN17eGAe95pw3TezGgrgTA
+        y0cYcGnMEXrWQ9LGzxqka2ctITD6CZBkWR8O1l/oZd12bMreTEPdz9lJTSVQLgl6NpzbiS
+        EM1XWqWdrNGE45pLhhHPiUO/3MzwaNU=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-461-LdyNrDV_NoKO5QIHIO0Qvw-1; Tue, 21 Jun 2022 22:15:05 -0400
+X-MC-Unique: LdyNrDV_NoKO5QIHIO0Qvw-1
+Received: by mail-qv1-f69.google.com with SMTP id kj4-20020a056214528400b0044399a9bb4cso16012102qvb.15
+        for <linux-raid@vger.kernel.org>; Tue, 21 Jun 2022 19:15:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=/0bRExIb6Mv4sy5raFRmeQINC+UUx7zEZcUUOWWOPJg=;
-        b=mdvnlMfL7W2vNGtZWvnbXURB836Jxgv8jbSLNfPCFeEYnXjX+L/Vg/fYc+K5QWSiCH
-         4S6UCqFmLBx7BaYqRQx4WDOMOiK1dY9fancTHOnXPBMpqHUnAMKtkakvkUImaqIvKr8q
-         3h8V2EvuC9xDSrOhD+Ewdm9j3jLm2NuJU5TEeI/gQ/OK0JudGJAihPfDIlv0d2gV5UGS
-         kjIfFTw52RxyaZ9TgYNco6wCBbsvEhQGB2D2ly9YDKPi/3XxwGa6x9L4+h4YUIwL+6jk
-         UhHB8QZWzFYQSQiszzfPiIC7bly0QANl/WB1Jn5kwkZBgVAmPXYVccurPTwbyRTERnlO
-         jncg==
-X-Gm-Message-State: AJIora9Ip2zxLpsDYCAGZAM8fKb4/mlNOUORlUH513J35VwlQTqfHEg9
-        6ncsni3Z4tL632GEtWt0KnrkYu/p9jIidDUAXF3UUYY2Gn3/Rqde
-X-Google-Smtp-Source: AGRyM1sTF/SvvxCyraPE52znD36ZX02jNmxmam87lP8bWzXT3yTfChS1a9JgJI9LjBXh9tpS4qLO5E/t+5efudcEruY=
-X-Received: by 2002:a0d:d7c7:0:b0:317:bfe8:4f2 with SMTP id
- z190-20020a0dd7c7000000b00317bfe804f2mr12417910ywd.276.1655804384555; Tue, 21
- Jun 2022 02:39:44 -0700 (PDT)
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:organization:user-agent:mime-version;
+        bh=nAF9uJDAJOO4/FSOAPwbKJV+7udaVeqmZOgkD10CgzU=;
+        b=SElmjvzCORWVDmHS9j6qTUw2Y1OE7M0BVPjv/RwjB1QPvbvTsZ3HUwbXGztXo20Cj/
+         DLRR8JwRfIvytZAHmDV8w/ob2tLoh0K/lu2ibGRf/j7vViGYYUjX9Mv/u7uX+apXa8dZ
+         VQf1XUs6wl7wUSc306ST1TLzCymX5kWppAYubaA8WeDyebjWpk4ALTh5SPIaGuuCCqoL
+         EGTuEyhGB/+F00ODz+fY82s+DVUkvQVdywHjA7J5qRr5PChNqLcmMmI/0WAWlFNzAKdp
+         +7NkeWmft05ixVhO1eqBlcJ2n0ulTKOMyW10sfN6yEHH4L32iqVaz40NOqh7Gsi46aNa
+         vN6A==
+X-Gm-Message-State: AJIora9B3YeK3Wcjgw32iVRBY4Q3JGQa/3INYwHvPqAMLBzy/QDOhZfA
+        bGKWlx+shjvluCQdAICr5Fq2kMP2C7kj0+SGUlMyBs8utg49AhnWJ86N0g032JdxNjV3bbQEnEY
+        eioxqHXlxNeV80PMAGwJsxg==
+X-Received: by 2002:ac8:5c43:0:b0:315:a78a:4cbe with SMTP id j3-20020ac85c43000000b00315a78a4cbemr1136925qtj.420.1655864105275;
+        Tue, 21 Jun 2022 19:15:05 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1syCWBq2aCBZwpnuVMCc5xkyBqS/3fIksvrt4tcxVHLP8kR+W74PlK2W6u7x8mn6dTy1vEVPA==
+X-Received: by 2002:ac8:5c43:0:b0:315:a78a:4cbe with SMTP id j3-20020ac85c43000000b00315a78a4cbemr1136915qtj.420.1655864105028;
+        Tue, 21 Jun 2022 19:15:05 -0700 (PDT)
+Received: from linux-ws.nc.xsintricity.com (104-15-26-233.lightspeed.rlghnc.sbcglobal.net. [104.15.26.233])
+        by smtp.gmail.com with ESMTPSA id cp8-20020a05622a420800b00304bc2acc25sm13733106qtb.6.2022.06.21.19.15.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jun 2022 19:15:04 -0700 (PDT)
+Message-ID: <87cb53c4f08cc7b18010e62b9b3178ed70e06e8d.camel@redhat.com>
+Subject: Re: About the md-bitmap behavior
+From:   Doug Ledford <dledford@redhat.com>
+To:     Wols Lists <antlists@youngman.org.uk>,
+        Qu Wenruo <quwenruo.btrfs@gmx.com>, linux-raid@vger.kernel.org,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+Date:   Tue, 21 Jun 2022 22:15:01 -0400
+In-Reply-To: <06365833-bd91-7dcf-4541-f8e15ed3bef2@youngman.org.uk>
+References: <d4163d9f-8900-1ec1-ffb8-c3834c512279@gmx.com>
+         <63a9cfb7-4999-d902-a7df-278e2ec37593@youngman.org.uk>
+         <1704788b-fb7d-b532-4911-238e4f7fd448@gmx.com>
+         <06365833-bd91-7dcf-4541-f8e15ed3bef2@youngman.org.uk>
+Organization: Red Hat, Inc.
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-3IS5LZq5RI504sawv6lh"
+User-Agent: Evolution 3.44.2 (3.44.2-1.fc36) 
 MIME-Version: 1.0
-Received: by 2002:a05:7010:e10a:b0:2d9:e631:94d0 with HTTP; Tue, 21 Jun 2022
- 02:39:44 -0700 (PDT)
-Reply-To: dimitryedik@gmail.com
-From:   Dimitry Edik <lsbthdwrds@gmail.com>
-Date:   Tue, 21 Jun 2022 02:39:44 -0700
-Message-ID: <CAGrL05aBO8rbFuij24J-APa+Luis69gEjhj35iv_GZfkHCVYDQ@mail.gmail.com>
-Subject: Dear Partner,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=7.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        LOTS_OF_MONEY,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_MONEY_PERCENT,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM,
-        UNDISC_MONEY autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:c30 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [lsbthdwrds[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  2.2 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-        *  2.0 MONEY_FREEMAIL_REPTO Lots of money from someone using free
-        *      email?
-        *  0.0 T_MONEY_PERCENT X% of a lot of money for you
-        *  2.0 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: *******
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hello Dear,
 
-My Name is Dimitry Edik from Russia A special assistance to my Russia
-boss who deals in oil import and export He was killed by the Ukraine
-soldiers at the border side. He supplied
-oil to the Philippines company and he was paid over 90 per cent of the
-transaction and the remaining $18.6 Million dollars have been paid into a
-Taiwan bank in the Philippines..i want a partner that will assist me
-with the claims. Is a (DEAL ) 40% for you and 60% for me
-I have all information for the claims.
-Kindly read and reply to me back is 100 per cent risk-free
+--=-3IS5LZq5RI504sawv6lh
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Yours Sincerely
-Dimitry Edik
+On Mon, 2022-06-20 at 10:56 +0100, Wols Lists wrote:
+> On 20/06/2022 08:56, Qu Wenruo wrote:
+> > > The write-hole has been addressed with journaling already, and
+> > > this will
+> > > be adding a new and not-needed feature - not saying it wouldn't be
+> > > nice
+> > > to have, but do we need another way to skin this cat?
+> >=20
+> > I'm talking about the BTRFS RAID56, not md-raid RAID56, which is a
+> > completely different thing.
+> >=20
+> > Here I'm just trying to understand how the md-bitmap works, so that
+> > I
+> > can do a proper bitmap for btrfs RAID56.
+>=20
+> Ah. Okay.
+>=20
+> Neil Brown is likely to be the best help here as I believe he wrote a=20
+> lot of the code, although I don't think he's much involved with md-
+> raid=20
+> any more.
+
+I can't speak to how it is today, but I know it was *designed* to be
+sync flush of the dirty bit setting, then lazy, async write out of the
+clear bits.  But, yes, in order for the design to be reliable, you must
+flush out the dirty bits before you put writes in flight.
+
+One thing I'm not sure about though, is that MD RAID5/6 uses fixed
+stripes.  I thought btrfs, since it was an allocation filesystem, didn't
+have to use full stripes?  Am I wrong about that?  Because it would seem
+that if your data isn't necessarily in full stripes, then a bitmap might
+not work so well since it just marks a range of full stripes as
+"possibly dirty, we were writing to them, do a parity resync to make
+sure".
+
+In any case, Wols is right, probably want to ping Neil on this.  Might
+need to ping him directly though.  Not sure he'll see it just on the
+list.
+
+--=20
+Doug Ledford <dledford@redhat.com>
+=C2=A0=C2=A0=C2=A0=C2=A0GPG KeyID: B826A3330E572FDD
+=C2=A0=C2=A0=C2=A0=C2=A0Fingerprint =3D AE6B 1BDA 122B 23B4 265B=C2=A0=C2=
+=A01274 B826 A333 0E57 2FDD
+
+--=-3IS5LZq5RI504sawv6lh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAmKyeyUACgkQuCajMw5X
+L90rAhAAjdD3Vb062jIe2NEUyJrAyeCHkxDNA20ja8gxSCcuEyrCJQ/NcCaK2gnA
+Z1JFxlxfpFf4kb2ZGTYXdA1qbWCwEixHTUV97PodDyfVFIarad0kLZNGmn1ssmyN
+Y33aFl/pqbEGmIZq6YHDc7N3zPgTaM6kKWtQtamklz7TFHZCNfBK1H7EDk/jun8Y
+q7Dhvgtz1W2OpjYjr49sdo0plNSLTfRj8v1h535mXl1sC1g+YvGONgDmdNmNPn12
+f9kbAuSFhVy2FPpbdQlduClAHPjEmLZomEJoy4rr1VOuqir8Yfb0O3s76TDpHs9O
+FydAOfvMabTyF6goZpz+hPN2A70TzNVvOyYnygAVjqq7g+Du+1Ug850htFM4xajQ
+gsIX2NV9HUbURWxbpLq+x2RD8DsjvO79ezEUtS+wY7szE3U7x6Gb2llpFVLPAb6e
+6v7JZ3a49U+zvjJm7hNpisKXE5Y+KwtDyLCmQib+6kG0oSnbSIZCHyZgG4Uejjqz
+GLqrj+yqw+YoVZyOumkUaEY7U0Fl+MhEe25+okj3LsHIeDv9n+JNqHlss4Yp91+Y
+I3LbmummpNbeEmwrNy7o03bnkbuEsHbSd7GCKm/kP4vAqNPHDyBpatN+Lyi5y/FZ
+8P8UTFDZDgHGvsfh7bNvi2ZVCpo9Yhne5LvsURu4hsKALsELeVY=
+=lgLm
+-----END PGP SIGNATURE-----
+
+--=-3IS5LZq5RI504sawv6lh--
+
