@@ -2,67 +2,73 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 52398554416
-	for <lists+linux-raid@lfdr.de>; Wed, 22 Jun 2022 10:11:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B687554E7D
+	for <lists+linux-raid@lfdr.de>; Wed, 22 Jun 2022 17:04:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353245AbiFVHjA (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 22 Jun 2022 03:39:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41966 "EHLO
+        id S1358970AbiFVPER (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 22 Jun 2022 11:04:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353725AbiFVHi6 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 22 Jun 2022 03:38:58 -0400
-Received: from out1.migadu.com (out1.migadu.com [IPv6:2001:41d0:2:863f::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D24C37A1F
-        for <linux-raid@vger.kernel.org>; Wed, 22 Jun 2022 00:38:55 -0700 (PDT)
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1655883532;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Ms8uXQq2ucOha144S/uO33YSzWIdauQr2gJwT7AwRKM=;
-        b=ggdiyp/cIyX7MqaxxFmrVNa++XYa76Rv3G97XVMagQb4tkhRPD5xBjScAMUNyYNN2TNFIu
-        jHQxtQWn3laeDWi/84qnQ/BsuVZ7HZAA+i5GWHRtyu3/3NMcrewsaPjFvO9cY429AeTiuI
-        XeFfg8F8k3pz+fGEDdYisl01bPqwVQc=
-From:   Guoqing Jiang <guoqing.jiang@linux.dev>
-To:     song@kernel.org
-Cc:     linux-raid@vger.kernel.org
-Subject: [PATCH] md: add patchwork URL
-Date:   Wed, 22 Jun 2022 15:38:38 +0800
-Message-Id: <20220622073838.8295-1-guoqing.jiang@linux.dev>
+        with ESMTP id S1358986AbiFVPED (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 22 Jun 2022 11:04:03 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CE933EB8D
+        for <linux-raid@vger.kernel.org>; Wed, 22 Jun 2022 08:03:54 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id w6so9198453pfw.5
+        for <linux-raid@vger.kernel.org>; Wed, 22 Jun 2022 08:03:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=vhZEVnaGNBjosB86GDUW8b2wHjB/+QU31bPXl36TqFE=;
+        b=Jt/qXO7TwQJF3EWuk5p4azKGOCxq/Rzk3KoLqC6Pwff+0tHhs8als9639cidnzFde4
+         ry7ero38QELHA22RBkZWtE0xNRPiiPEWIvKtPd0fZpNhUDrKHRyETW5WgRrbPPmi6/vT
+         vJpxoQNLrGfsMgIfV+PXszjD1nMaBRUe0Gxx0eYZw7YGtSc5pfRkGeshne5cjr5BaKxu
+         3INPcNuWqxw7/0puGY6UuhzUSAv6SoxD7Bz3CVHuDQWru55+lIHO02gOv78FJXnTYNjB
+         rbtWgbiyhkE21LXWR11Bk6fRJOPFFcU92J8XbdNavb7vvb9W0t8MjYRzeI2ufnWOCsiS
+         AGLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=vhZEVnaGNBjosB86GDUW8b2wHjB/+QU31bPXl36TqFE=;
+        b=tz6bxrsInoZcFd/ptJ7mPk/IsF4XSf0WpA2o9HHR/u8parrv2jS5Uw9dBGcKIAS3W1
+         XYnMhRnbnd+VK0+KQUZoI+SyXIs855AFI9Y8X/10gz3AtkfadyLh9FnFrG5P56yAoTUn
+         R6usu6svALVI9BuLGzJ/nnuY6gBVxi4bfLhIgQ/rv8dkYD6zY7l3M9xxM3+XYjyTA66/
+         R0wayXjgEup80sTx8bZMTTDFJQ/tTdw23VAOqM4mNmBJp9blEG3jwCo1I2UKd3kzDq1G
+         Xx6zHTL9dx5EHjtylkbIBeuFuMGjtbxrD+HAjdrMDAYkFZOfjUOFAmlPAFYCnU5K0ygu
+         REMA==
+X-Gm-Message-State: AJIora94PuTFlCzs4s7FkYxHF1uXkWnlSaLzIAOjlmWmdTWGxulYOY9M
+        72xzDf+qYBjgU+NlOd2EpwgCUMugqwIKmB1kq9I=
+X-Google-Smtp-Source: AGRyM1uVFGSnpr+dTCH2B3yi91+xpZWxlNuq532hGAWMLDkFZu1Qrq3wwA6KogrJ63y1ppaQwcWp21NviyeWeo5Xswg=
+X-Received: by 2002:a63:af1c:0:b0:40c:f9fb:deca with SMTP id
+ w28-20020a63af1c000000b0040cf9fbdecamr3305128pge.479.1655910232628; Wed, 22
+ Jun 2022 08:03:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-X-Migadu-Auth-User: linux.dev
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a17:903:2308:b0:16a:1b3f:f74b with HTTP; Wed, 22 Jun 2022
+ 08:03:51 -0700 (PDT)
+Reply-To: sales0212@asonmedsystemsinc.com
+From:   Prasad Ronni <lerwickfinance7@gmail.com>
+Date:   Wed, 22 Jun 2022 16:03:51 +0100
+Message-ID: <CAFkto5szY9scoLwccBhUx92cgUVnT2cx2c=WmxiOTkm7N_y9gg@mail.gmail.com>
+Subject: Service Needed.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=0.0 required=5.0 tests=BAYES_20,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Finally, md has it's own patch tracking system, let's reflect it here.
-
-Signed-off-by: Guoqing Jiang <guoqing.jiang@linux.dev>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3cf9842d9233..450159ded532 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18492,6 +18492,7 @@ SOFTWARE RAID (Multiple Disks) SUPPORT
- M:	Song Liu <song@kernel.org>
- L:	linux-raid@vger.kernel.org
- S:	Supported
-+Q:	http://patchwork.kernel.org/project/linux-raid/list/
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git
- F:	drivers/md/Kconfig
- F:	drivers/md/Makefile
 -- 
-2.31.1
+Hi,
 
+Are you currently open to work as our executive company representative
+on contractual basis working remotely? If yes, we will be happy to
+share more details. Looking forward to your response.
+
+Regards,
