@@ -2,29 +2,32 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 09AD355A81A
-	for <lists+linux-raid@lfdr.de>; Sat, 25 Jun 2022 10:37:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A066955A98D
+	for <lists+linux-raid@lfdr.de>; Sat, 25 Jun 2022 13:45:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231340AbiFYI13 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 25 Jun 2022 04:27:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50738 "EHLO
+        id S232621AbiFYLmD (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 25 Jun 2022 07:42:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229722AbiFYI13 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 25 Jun 2022 04:27:29 -0400
-Received: from maiev.nerim.net (smtp-156-saturday.nerim.net [194.79.134.156])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2C4E93137E
-        for <linux-raid@vger.kernel.org>; Sat, 25 Jun 2022 01:27:28 -0700 (PDT)
-Received: from [192.168.0.250] (plouf.fr.eu.org [213.41.155.166])
-        by maiev.nerim.net (Postfix) with ESMTP id E0F0A2E007;
-        Sat, 25 Jun 2022 10:27:26 +0200 (CEST)
-Message-ID: <350e9a93-7af1-d5e6-62d7-a427e3e78eee@plouf.fr.eu.org>
-Date:   Sat, 25 Jun 2022 10:27:26 +0200
+        with ESMTP id S232542AbiFYLmD (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 25 Jun 2022 07:42:03 -0400
+Received: from smtp.hosts.co.uk (smtp.hosts.co.uk [85.233.160.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B35121DA62
+        for <linux-raid@vger.kernel.org>; Sat, 25 Jun 2022 04:42:01 -0700 (PDT)
+Received: from host86-158-155-35.range86-158.btcentralplus.com ([86.158.155.35] helo=[192.168.1.218])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1o54Ap-000Ajj-B0;
+        Sat, 25 Jun 2022 12:41:59 +0100
+Message-ID: <7d08fbbb-fefa-f57b-d12b-af0f16a3daba@youngman.org.uk>
+Date:   Sat, 25 Jun 2022 12:41:58 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:91.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
 Subject: Re: a new install - - - putting the system on raid
-Content-Language: en-US
-To:     Wol <antlists@youngman.org.uk>, o1bigtenor <o1bigtenor@gmail.com>,
+Content-Language: en-GB
+To:     Pascal Hambourg <pascal@plouf.fr.eu.org>,
+        o1bigtenor <o1bigtenor@gmail.com>,
         Linux-RAID <linux-raid@vger.kernel.org>
 References: <CAPpdf59G6UjOe-80oqgwPmMY14t0_E=D20cbUwDwtOT8=AFcLQ@mail.gmail.com>
  <81c50899-7edb-e629-3bbc-16cfa8f17e34@youngman.org.uk>
@@ -32,13 +35,13 @@ References: <CAPpdf59G6UjOe-80oqgwPmMY14t0_E=D20cbUwDwtOT8=AFcLQ@mail.gmail.com>
  <5cbd9dd1-73fc-ce11-4a9d-8752f7bea979@youngman.org.uk>
  <1de4bf1f-242b-7d02-23dc-a6d05893db81@plouf.fr.eu.org>
  <9ff8c1e7-7c29-6243-2749-c6e0a3e25640@youngman.org.uk>
-From:   Pascal Hambourg <pascal@plouf.fr.eu.org>
-Organization: Plouf !
-In-Reply-To: <9ff8c1e7-7c29-6243-2749-c6e0a3e25640@youngman.org.uk>
+ <350e9a93-7af1-d5e6-62d7-a427e3e78eee@plouf.fr.eu.org>
+From:   Wols Lists <antlists@youngman.org.uk>
+In-Reply-To: <350e9a93-7af1-d5e6-62d7-a427e3e78eee@plouf.fr.eu.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
         SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -47,69 +50,64 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Le 24/06/2022 à 01:44, Wol a écrit :
-> On 23/06/2022 23:27, Pascal Hambourg wrote:
+On 25/06/2022 09:27, Pascal Hambourg wrote:
+> Le 24/06/2022 à 01:44, Wol a écrit :
+>> On 23/06/2022 23:27, Pascal Hambourg wrote:
+>>>
+>>>> Firstly, the system shouldn't be swapping. MOST systems, under MOST 
+>>>> workloads, don't need swap.
+>>>
+>>> Conversely, some systems, under some workloads, do need swap. And 
+>>> when they do, swap needs to be as reliable as any other storage space.
 >>
->>> Firstly, the system shouldn't be swapping. MOST systems, under MOST 
->>> workloads, don't need swap.
->>
->> Conversely, some systems, under some workloads, do need swap. And when 
->> they do, swap needs to be as reliable as any other storage space.
+>> And if your system is one of the ?majority? that shouldn't swap, the 
+>> cost/benefit analysis is COMPLETELY different for swap than for main 
+>> storage. So don't treat them the same.
 > 
-> And if your system is one of the ?majority? that shouldn't swap, the 
-> cost/benefit analysis is COMPLETELY different for swap than for main 
-> storage. So don't treat them the same.
+> If your system should not swap, then why use any swap at all ?
 
-If your system should not swap, then why use any swap at all ?
-
->>> And secondly, the *system* should not be using swap. User space, yes. 
->>> So a bunch of running stuff might crash. But the system should stay up.
->>
->> Firstly, the *system* is not only the kernel. Many user space 
->> processes are part of the *system*. Secondly, you were the one who wrote:
->>
->> "/tmp - is usually tmpfs nowadays, if you need disk backing, just make 
->> sure you've got a big-enough swap (tmpfs defaults to half ram, make it 
->> bigger and let it swap)."
->>
-> And? /tmp is *explicitly* not to be trusted in the event of problems. If 
-> you lose a disk and it takes /tmp out, sorry.
-
-Source ?
-
-> If the tmp-cleaner decides 
-> to do a random "rm /tmp/*" at an inconvenient moment, well, if the 
-> system can't handle it then whoever set the system up (or wrote the 
-> program) was incompetent.
-
-Cleaning /tmp is not the same as loosing access to it. Opened files are 
-still accessible.
-
->>> Raid is meant to protect your data. The benefit for raiding your swap 
->>> is much less, and *should* be negligible.
->>
->> No, this is what backup is meant to. RAID does not protect your data 
->> against accidental or malicious deletion or corruption. RAID is meant 
->> to provide availabity. The benefit of having everything including swap 
->> on RAID is that the system as a whole will continue to operate 
->> normally when a drive fails.
+Same reason I do? I have a whole bunch of rarely used, and not-at-all 
+critical tmpfs's, so the system occasionally spills into swap. A system 
+failure is no grief - reboot, carry on where it left off ...
 > 
-> And how does backup protect your data when the system crashes? You know, 
-> all that web-shop data that is fresh and new and arrived after the most 
-> recent backup 5mins ago?
+>>>> And secondly, the *system* should not be using swap. User space, 
+>>>> yes. So a bunch of running stuff might crash. But the system should 
+>>>> stay up.
+>>>
+>>> Firstly, the *system* is not only the kernel. Many user space 
+>>> processes are part of the *system*. Secondly, you were the one who 
+>>> wrote:
+>>>
+>>> "/tmp - is usually tmpfs nowadays, if you need disk backing, just 
+>>> make sure you've got a big-enough swap (tmpfs defaults to half ram, 
+>>> make it bigger and let it swap)."
+>>>
+>> And? /tmp is *explicitly* not to be trusted in the event of problems. 
+>> If you lose a disk and it takes /tmp out, sorry.
+> 
+> Source ?
 
-Use RAID, so that the system does not crash when a drive fails.
+Linux Filesystem Hierarchy Standard? The presence of ANY files in /tmp 
+is not to be trusted - even if you created it ten seconds ago ...
+> 
+> 
+>> (Oh, and I didn't tell o1bigtenor NOT to raid his swap. I asked him 
+>> WHY he would want to. Maybe he has good reason. But I know him of old, 
+>> and have good reason to suspect he's going OTT.)
+> 
+> I think you do not need a good reason to have swap on RAID when all the 
+> rest is on RAID. It is the other way around : you need a good reason not 
+> to have swap on RAID.
+> 
+>> I run xosview. Even with gentoo, and a massive tmpfs, swap in-use sits 
+>> at 0B practically ALL the time. Why would I want to protect it?
+> 
+> Because you may not want anything to crash when a drive fails while the 
+> swap is used. If you don't care, well, don't protect the swap.
 
-> (Oh, and I didn't tell o1bigtenor NOT to raid his swap. I asked him WHY 
-> he would want to. Maybe he has good reason. But I know him of old, and 
-> have good reason to suspect he's going OTT.)
+And most people nowadays - certainly on a single-user system - will have 
+no reason to care. Certainly my system, with 32GB of ram, is very 
+unlikely to spill into swap in normal operation ...
 
-I think you do not need a good reason to have swap on RAID when all the 
-rest is on RAID. It is the other way around : you need a good reason not 
-to have swap on RAID.
-
-> I run xosview. Even with gentoo, and a massive tmpfs, swap in-use sits 
-> at 0B practically ALL the time. Why would I want to protect it?
-
-Because you may not want anything to crash when a drive fails while the 
-swap is used. If you don't care, well, don't protect the swap.
+Cheers,
+Wol
