@@ -2,32 +2,31 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0043155A7E4
-	for <lists+linux-raid@lfdr.de>; Sat, 25 Jun 2022 09:55:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27D6A55A813
+	for <lists+linux-raid@lfdr.de>; Sat, 25 Jun 2022 10:37:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230029AbiFYHyV (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 25 Jun 2022 03:54:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33768 "EHLO
+        id S231782AbiFYI0o (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 25 Jun 2022 04:26:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229732AbiFYHyV (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 25 Jun 2022 03:54:21 -0400
-Received: from smtp-delay1.nerim.net (unknown [195.5.209.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 08EA43EB85
-        for <linux-raid@vger.kernel.org>; Sat, 25 Jun 2022 00:54:18 -0700 (PDT)
-Received: from maiev.nerim.net (smtp-156-saturday.nerim.net [194.79.134.156])
-        by smtp-delay1.nerim.net (Postfix) with ESMTP id A81F725CC2B
-        for <linux-raid@vger.kernel.org>; Sat, 25 Jun 2022 09:54:16 +0200 (CEST)
-Received: from [192.168.0.250] (plouf.fr.eu.org [213.41.155.166])
-        by maiev.nerim.net (Postfix) with ESMTP id 9090E2E007;
-        Sat, 25 Jun 2022 09:54:09 +0200 (CEST)
-Message-ID: <ae2288f4-ad06-65af-d30c-4aef6d478f27@plouf.fr.eu.org>
-Date:   Sat, 25 Jun 2022 09:54:08 +0200
+        with ESMTP id S231340AbiFYI0n (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 25 Jun 2022 04:26:43 -0400
+Received: from smtp.hosts.co.uk (smtp.hosts.co.uk [85.233.160.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5018B3137E
+        for <linux-raid@vger.kernel.org>; Sat, 25 Jun 2022 01:26:41 -0700 (PDT)
+Received: from host86-158-155-35.range86-158.btcentralplus.com ([86.158.155.35] helo=[192.168.1.218])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1o500O-0001Iq-CJ;
+        Sat, 25 Jun 2022 08:14:57 +0100
+Message-ID: <d912cd74-7140-c440-f3e2-1aad3be83464@youngman.org.uk>
+Date:   Sat, 25 Jun 2022 08:14:56 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:91.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
 Subject: Re: Upgrading motherboard + CPU
-Content-Language: en-US
-To:     Roman Mamedov <rm@romanrm.net>, Wol <antlists@youngman.org.uk>
+Content-Language: en-GB
+To:     Roman Mamedov <rm@romanrm.net>
 Cc:     Alexander Shenkin <al@shenkin.org>,
         Linux-RAID <linux-raid@vger.kernel.org>
 References: <CAPpdf59G6UjOe-80oqgwPmMY14t0_E=D20cbUwDwtOT8=AFcLQ@mail.gmail.com>
@@ -43,13 +42,12 @@ References: <CAPpdf59G6UjOe-80oqgwPmMY14t0_E=D20cbUwDwtOT8=AFcLQ@mail.gmail.com>
  <b664e4ce-6ebe-86c6-78d9-d5606c0f6555@shenkin.org>
  <5cb8d159-be2a-aa6c-888a-fcb9ed4555c1@youngman.org.uk>
  <20220625030833.3398d8a4@nvm>
-From:   Pascal Hambourg <pascal@plouf.fr.eu.org>
-Organization: Plouf !
+From:   Wols Lists <antlists@youngman.org.uk>
 In-Reply-To: <20220625030833.3398d8a4@nvm>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
         SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -58,18 +56,41 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Le 25/06/2022 à 00:08, Roman Mamedov a écrit :
+On 24/06/2022 23:08, Roman Mamedov wrote:
+> On Fri, 24 Jun 2022 23:00:02 +0100
+> Wol <antlists@youngman.org.uk> wrote:
+> 
+>> So your boot device is currently in physical connector 1 on the mobo. If
+>> you move it across, you need to make sure it stays in physical position
+>> 1, otherwise the mobo will try to boot off whatever disk is in position
+>> 1, and there won't be a boot system to boot off!
 > 
 > Using RAID1 across all disks with metadata 0.90 for /boot makes sure the BIOS
 > can boot no matter which disk it tries first.
-
-Why 0.90 ? It is obsolete. If you need RAID metadata at the end of RAID 
-members for whatever ugly reason, you can use metadata 1.0 instead. But 
-AFAIK it is only needed as a dirty hack with boot loaders which do not 
-really support software RAID and must see RAID partitions as native 
-filesystems.
-
+> 
 > In fact it could be with recent grub the "0.90" part is not even required
 > anymore.
+> 
+> Just make sure to "grub-install /dev/sdX" at least once to all of them.
+> 
+Don't use 0.9, use 1.0.
 
-GRUB has supported RAID metadata 1.x since version 1.99 (2010).
+Both of these put the superblock at the end, so the start of the array 
+on disk is also the start of the data area. Which means you can bypass 
+the raid (normally a bad idea, but here you need it).
+
+Thing is, v0.x is deprecated, if it breaks it won't be fixed. v1.x is 
+supported, all the x indicates is the location of the superblock, it's 
+identical across all 1.x arrays.
+
+1.0 is at the end, not necessarily a good idea. To be avoided where 
+possible.
+
+1.1 is at the start. Where any problems with a rogue partitioner will 
+trample it. To be avoided.
+
+1.2 leaves a 4K scratch space and puts the superblock after that. So it 
+will survive most damage to the start of a partition. Recommended.
+
+Cheers,
+Wol
