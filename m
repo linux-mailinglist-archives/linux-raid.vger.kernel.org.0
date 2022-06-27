@@ -2,84 +2,72 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF4DC55D8E7
-	for <lists+linux-raid@lfdr.de>; Tue, 28 Jun 2022 15:20:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C3ED55D31B
+	for <lists+linux-raid@lfdr.de>; Tue, 28 Jun 2022 15:11:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234277AbiF0KuS (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 27 Jun 2022 06:50:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49378 "EHLO
+        id S234064AbiF0LGG (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 27 Jun 2022 07:06:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233298AbiF0KuR (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 27 Jun 2022 06:50:17 -0400
-X-Greylist: delayed 541 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 27 Jun 2022 03:50:13 PDT
-Received: from www18.qth.com (www18.qth.com [69.16.238.59])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A55E062C9
-        for <linux-raid@vger.kernel.org>; Mon, 27 Jun 2022 03:50:13 -0700 (PDT)
-Received: from [73.207.192.158] (port=33414 helo=justpickone.org)
-        by www18.qth.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <davidtg-robot@justpickone.org>)
-        id 1o5mJp-0000M5-OV
-        for linux-raid@vger.kernel.org;
-        Mon, 27 Jun 2022 05:50:12 -0500
-Date:   Mon, 27 Jun 2022 06:50:11 -0400
-From:   David T-G <davidtg-robot@justpickone.org>
-To:     Linux-RAID <linux-raid@vger.kernel.org>
-Subject: swapping (was "Re: a new install - - - putting the system on raid")
-Message-ID: <20220627105011.GK18273@justpickone.org>
+        with ESMTP id S234168AbiF0LGF (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 27 Jun 2022 07:06:05 -0400
+Received: from rin.romanrm.net (rin.romanrm.net [IPv6:2001:bc8:2dd2:1000::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 574836468
+        for <linux-raid@vger.kernel.org>; Mon, 27 Jun 2022 04:06:03 -0700 (PDT)
+Received: from nvm (nvm2.home.romanrm.net [IPv6:fd39::4a:3cff:fe57:d6b5])
+        by rin.romanrm.net (Postfix) with SMTP id B3BD15C1;
+        Mon, 27 Jun 2022 11:05:59 +0000 (UTC)
+Date:   Mon, 27 Jun 2022 16:05:58 +0500
+From:   Roman Mamedov <rm@romanrm.net>
+To:     Alexander Shenkin <al@shenkin.org>
+Cc:     Pascal Hambourg <pascal@plouf.fr.eu.org>,
+        Wols Lists <antlists@youngman.org.uk>,
+        Stephan <linux@psjt.org>, Linux-RAID <linux-raid@vger.kernel.org>
+Subject: Re: Upgrading motherboard + CPU
+Message-ID: <20220627160558.0ec507ae@nvm>
+In-Reply-To: <b1c6b0c2-ff7b-59e0-580c-81d57b8f8ddb@shenkin.org>
 References: <CAPpdf59G6UjOe-80oqgwPmMY14t0_E=D20cbUwDwtOT8=AFcLQ@mail.gmail.com>
- <81c50899-7edb-e629-3bbc-16cfa8f17e34@youngman.org.uk>
- <b777865e-b265-1e83-dae0-f89654e86332@plouf.fr.eu.org>
- <5cbd9dd1-73fc-ce11-4a9d-8752f7bea979@youngman.org.uk>
- <1de4bf1f-242b-7d02-23dc-a6d05893db81@plouf.fr.eu.org>
- <9ff8c1e7-7c29-6243-2749-c6e0a3e25640@youngman.org.uk>
- <350e9a93-7af1-d5e6-62d7-a427e3e78eee@plouf.fr.eu.org>
- <7d08fbbb-fefa-f57b-d12b-af0f16a3daba@youngman.org.uk>
+        <81c50899-7edb-e629-3bbc-16cfa8f17e34@youngman.org.uk>
+        <b777865e-b265-1e83-dae0-f89654e86332@plouf.fr.eu.org>
+        <5cbd9dd1-73fc-ce11-4a9d-8752f7bea979@youngman.org.uk>
+        <1de4bf1f-242b-7d02-23dc-a6d05893db81@plouf.fr.eu.org>
+        <20220624232049.502a541e@nvm>
+        <dab2fe0a-c49e-5da7-5df3-4d01c86a65a7@shenkin.org>
+        <20220624234453.43cf4c74@nvm>
+        <22102e4b-4738-672d-0d00-bbeccb54fe84@shenkin.org>
+        <d85093a4-be3e-d4f2-eca0-e20882584bab@youngman.org.uk>
+        <b664e4ce-6ebe-86c6-78d9-d5606c0f6555@shenkin.org>
+        <5cb8d159-be2a-aa6c-888a-fcb9ed4555c1@youngman.org.uk>
+        <20220625030833.3398d8a4@nvm>
+        <ae2288f4-ad06-65af-d30c-4aef6d478f27@plouf.fr.eu.org>
+        <s6nh748amrs.fsf@blaulicht.dmz.brux>
+        <1b6c6601-22a0-af2a-81a9-34599b1b0fa7@youngman.org.uk>
+        <f971e15d-9cd4-e6de-c174-f3c6bd338bb6@plouf.fr.eu.org>
+        <b1c6b0c2-ff7b-59e0-580c-81d57b8f8ddb@shenkin.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7d08fbbb-fefa-f57b-d12b-af0f16a3daba@youngman.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - www18.qth.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - justpickone.org
-X-Get-Message-Sender-Via: www18.qth.com: authenticated_id: dmail@justpickone.org
-X-Authenticated-Sender: www18.qth.com: dmail@justpickone.org
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Spam-Status: No, score=-0.7 required=5.0 tests=BAYES_40,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-...and then Wols Lists said...
-% 
-...
-% And most people nowadays - certainly on a single-user system - will have no
-% reason to care. Certainly my system, with 32GB of ram, is very unlikely to
-% spill into swap in normal operation ...
+On Sun, 26 Jun 2022 18:32:26 -0700
+Alexander Shenkin <al@shenkin.org> wrote:
 
-... but my desktop, with 16G of RAM and 64G of swap, routinely runs along
-at about half used.  There are lits of different configs out there :-)
+> Ok all.  I've put in the new mobo + CPU, and the BIOS isn't finding any 
+> bootable devices.  Suggestions for next steps?  Thanks in advance...
 
+As mentioned before, did you find and enable CSM and "Boot mode: UEFI and
+Legacy" in BIOS?
 
-% 
-% Cheers,
-% Wol
+If you have trouble finding any of that, perhaps post the motherboard model,
+we could check the exact settings to look for.
 
-
-HAND
-
-:-D
 -- 
-David T-G
-See http://justpickone.org/davidtg/email/
-See http://justpickone.org/davidtg/tofu.txt
-
+With respect,
+Roman
