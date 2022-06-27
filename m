@@ -2,113 +2,80 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 21FBD55C55D
-	for <lists+linux-raid@lfdr.de>; Tue, 28 Jun 2022 14:51:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A352E55DBE8
+	for <lists+linux-raid@lfdr.de>; Tue, 28 Jun 2022 15:25:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233896AbiF0KEC (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 27 Jun 2022 06:04:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50058 "EHLO
+        id S233992AbiF0K7u (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 27 Jun 2022 06:59:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233538AbiF0KEB (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 27 Jun 2022 06:04:01 -0400
-Received: from maiev.nerim.net (smtp-151-monday.nerim.net [194.79.134.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E321DDE8
-        for <linux-raid@vger.kernel.org>; Mon, 27 Jun 2022 03:03:58 -0700 (PDT)
-Received: from [192.168.0.250] (plouf.fr.eu.org [213.41.155.166])
-        by maiev.nerim.net (Postfix) with ESMTP id 6ECD62E008;
-        Mon, 27 Jun 2022 12:03:51 +0200 (CEST)
-Message-ID: <b8ee1e06-bace-6c83-8ec3-00440281049f@plouf.fr.eu.org>
-Date:   Mon, 27 Jun 2022 12:03:47 +0200
+        with ESMTP id S233475AbiF0K7s (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 27 Jun 2022 06:59:48 -0400
+Received: from www18.qth.com (www18.qth.com [69.16.238.59])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B914E10FE
+        for <linux-raid@vger.kernel.org>; Mon, 27 Jun 2022 03:59:46 -0700 (PDT)
+Received: from [73.207.192.158] (port=33404 helo=justpickone.org)
+        by www18.qth.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <davidtg-robot@justpickone.org>)
+        id 1o5mB5-0005Q8-Uw
+        for linux-raid@vger.kernel.org;
+        Mon, 27 Jun 2022 05:41:11 -0500
+Date:   Mon, 27 Jun 2022 06:41:09 -0400
+From:   David T-G <davidtg-robot@justpickone.org>
+To:     Linux-RAID <linux-raid@vger.kernel.org>
+Subject: what's wrong with RAID-10? (was "Re: moving a working array")
+Message-ID: <20220627104109.GJ18273@justpickone.org>
+References: <CAPpdf595_7eW8amX8eueMxgjaWvLW-hWHh1SHHaGAt8YyP7yDw@mail.gmail.com>
+ <7683b644cf076f8db06d60fdd3e4f88424f35bd2.camel@gmail.com>
+ <92378403-adf6-dedb-828c-81b331c1d8c1@youngman.org.uk>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: Upgrading motherboard + CPU
-Content-Language: en-US
-To:     Stephan <linux@psjt.org>
-Cc:     Wols Lists <antlists@youngman.org.uk>,
-        Linux-RAID <linux-raid@vger.kernel.org>
-References: <CAPpdf59G6UjOe-80oqgwPmMY14t0_E=D20cbUwDwtOT8=AFcLQ@mail.gmail.com>
- <81c50899-7edb-e629-3bbc-16cfa8f17e34@youngman.org.uk>
- <b777865e-b265-1e83-dae0-f89654e86332@plouf.fr.eu.org>
- <5cbd9dd1-73fc-ce11-4a9d-8752f7bea979@youngman.org.uk>
- <1de4bf1f-242b-7d02-23dc-a6d05893db81@plouf.fr.eu.org>
- <20220624232049.502a541e@nvm>
- <dab2fe0a-c49e-5da7-5df3-4d01c86a65a7@shenkin.org>
- <20220624234453.43cf4c74@nvm>
- <22102e4b-4738-672d-0d00-bbeccb54fe84@shenkin.org>
- <d85093a4-be3e-d4f2-eca0-e20882584bab@youngman.org.uk>
- <b664e4ce-6ebe-86c6-78d9-d5606c0f6555@shenkin.org>
- <5cb8d159-be2a-aa6c-888a-fcb9ed4555c1@youngman.org.uk>
- <20220625030833.3398d8a4@nvm>
- <ae2288f4-ad06-65af-d30c-4aef6d478f27@plouf.fr.eu.org>
- <s6nh748amrs.fsf@blaulicht.dmz.brux>
- <1b6c6601-22a0-af2a-81a9-34599b1b0fa7@youngman.org.uk>
- <f971e15d-9cd4-e6de-c174-f3c6bd338bb6@plouf.fr.eu.org>
- <s6n7d52poia.fsf@blaulicht.dmz.brux>
-From:   Pascal Hambourg <pascal@plouf.fr.eu.org>
-Organization: Plouf !
-In-Reply-To: <s6n7d52poia.fsf@blaulicht.dmz.brux>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <92378403-adf6-dedb-828c-81b331c1d8c1@youngman.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - www18.qth.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - justpickone.org
+X-Get-Message-Sender-Via: www18.qth.com: authenticated_id: dmail@justpickone.org
+X-Authenticated-Sender: www18.qth.com: dmail@justpickone.org
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Le 27/06/2022 à 09:13, Stephan a écrit :
-> Pascal Hambourg <pascal@plouf.fr.eu.org> writes:
-> 
->> Le 25/06/2022 à 19:10, Wols Lists wrote :
->>> On 25/06/2022 14:35, Stephan wrote:
->>>>
->>>> Does mdraid with metadata 1 work on the root filesystem w/o initramfs?
->>
->> No. Why would one not use an initramfs ?
-> 
-> An initramfs adds unnecessary intransparency to the system.
+Wol, et al --
 
-An initramfs is already necessary if root|usr|hibernation swap is on LVM 
-or LUKS, if UUID or LABEL is used for root specification, with 
-merged+separated /usr... Some distributions do not support booting 
-without an initramfs any more.
+...and then Wols Lists said...
+% 
+% On 24/06/2022 15:09, Wilson Jonathan wrote:
+% > On Fri, 2022-06-24 at 08:38 -0500, o1bigtenor wrote:
+% > > 
+% > > I have a working (no issues) raid-10 array in one box.
+% 
+% Bummer. It's a raid-10. A raid-1 would have been easier.
+[snip]
 
->>> If you're using v1.0, then you could boot off of one of the mirror
->>> members no problem.
->>>
->>> You would point the kernel boot line at sda1 say (if that's part of
->>> your mirror). IFF that is mounted read-only for boot, then that's
->>> not a problem.
->>
->> Mounting read-only does not guarantee that there won't be any
->> write. See man mount(8)
-(...)
-> Good point.  Thus, there is no alternative to superblock 0.90 for root on
-> mdraid w/o initramfs.  This is the answer to the question why somebody
-> (like me) may need to use superblock 0.90.
-> 
->>> Your fstab would then mount /dev/md0 as root read-write
->>
->> I don't think so. IME the root device in fstab is ignored, only the
->> options are used.
-> 
-> This is some of the intransparency.  Will the / entry in the /etc/fstab
-> be copied to the initramfs to use it for mounting the real root
-> filesystem?  You imply that this is the case but the device will be
-> ignored.  Why?
+This tripped me.  I presumed that the reason for -10, not least because
+he also said "these 4 drives", was because the array space is bigger than
+just one hard drive size, ie 6T on 4ea 3T drives.  How would RAID-1 work
+for that storage?  And why would it be easier than RAID-10?
 
-There are different kind of initramfs out there, and I don't know them 
-all. I can only speak about the initramfs built by initramfs-tools used 
-by default in Debian and derivatives.
 
-AFAIK, /etc/fstab is not copied into the initramfs. The initramfs uses 
-only the command line parameters (root=, rootfstype=, rootflags=, 
-ro|rw...) to mount the real root filesystem, then hands over to the real 
-root init.
+TIA
 
-At some point, init remounts the root filesystem (mount -o remount /) to 
-apply the mount options in /etc/fstab (this is usually when ro is 
-changed to rw). Remount does not change the root device.
+:-D
+-- 
+David T-G
+See http://justpickone.org/davidtg/email/
+See http://justpickone.org/davidtg/tofu.txt
+
