@@ -2,106 +2,75 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 06FD4568C6C
-	for <lists+linux-raid@lfdr.de>; Wed,  6 Jul 2022 17:12:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E939F5690DB
+	for <lists+linux-raid@lfdr.de>; Wed,  6 Jul 2022 19:42:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231663AbiGFPMC (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 6 Jul 2022 11:12:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56962 "EHLO
+        id S233990AbiGFRmg (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 6 Jul 2022 13:42:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232070AbiGFPMB (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 6 Jul 2022 11:12:01 -0400
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31BC810559
-        for <linux-raid@vger.kernel.org>; Wed,  6 Jul 2022 08:12:01 -0700 (PDT)
-Received: by mail-qt1-f175.google.com with SMTP id z13so18612790qts.12
-        for <linux-raid@vger.kernel.org>; Wed, 06 Jul 2022 08:12:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=u094c1pWAuc2qjFRYuYIiBLyQBzCT6qd8wf4uxXSTSI=;
-        b=OC7O1vgKMDe34BAPg45Yvnl+i4WYmdLKqvDBHMLhKCZ0cu6cIAqbusb9O/vnU8HgDk
-         lOM5APRmokdl7RL6FSmnR8iANQX47uaD6gswvBTg8obhWYzH5WmgwCstbh+Ep8ilcsdf
-         1SCbd7H4U5SaeyRlsluEmY2gobHqL1qxOJlvOZVuLPWPJ/0iiTklxfXBqz3mWn6N+Moe
-         dQOe3Jxhp+Gy9nFf4KxOCZfFtb59RsR6lTlvcAX670odPCkXzw9czZcqAqSEdjDCUOiU
-         g1WGb/obrBUx+BNR2fJ+3LtJL76tUzwm1UYAr0pDW8hnngfmcg37/fG+SRRo2lxg2J5W
-         Lz3w==
-X-Gm-Message-State: AJIora+Mu79xuZNvy9/eUIKE6dM5Ry+vqzJMBfabbvi/ZYfMYaVos5qi
-        +o1ClJFpaLu+AkASM+sBzg++
-X-Google-Smtp-Source: AGRyM1tmmHS3hmEoSfozfOq3OFvufYVLm+WLqowCSt0K1ZgT8OE07PhhFHfBTGi7f9mSyqrGwqz2Lg==
-X-Received: by 2002:ac8:5985:0:b0:31d:3ea5:12f4 with SMTP id e5-20020ac85985000000b0031d3ea512f4mr18144555qte.274.1657120320113;
-        Wed, 06 Jul 2022 08:12:00 -0700 (PDT)
-Received: from localhost (pool-68-160-176-52.bstnma.fios.verizon.net. [68.160.176.52])
-        by smtp.gmail.com with ESMTPSA id j4-20020a05620a410400b006a6278a2b31sm20037145qko.75.2022.07.06.08.11.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Jul 2022 08:11:59 -0700 (PDT)
-Date:   Wed, 6 Jul 2022 11:11:58 -0400
-From:   Mike Snitzer <snitzer@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Alasdair Kergon <agk@redhat.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        linux-kernel@vger.kernel.org, dm-devel@redhat.com,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-raid@vger.kernel.org, Song Liu <song@kernel.org>,
-        linux-security-module@vger.kernel.org,
-        Milan Broz <gmazyland@gmail.com>
-Subject: Re: [PATCH v7 0/3] LoadPin: Enable loading from trusted dm-verity
- devices
-Message-ID: <YsWmPt7xwTlvTfAf@redhat.com>
-References: <20220627153526.3750341-1-mka@chromium.org>
+        with ESMTP id S234071AbiGFRmd (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 6 Jul 2022 13:42:33 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16ECA255AB;
+        Wed,  6 Jul 2022 10:42:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=5Xz4cgyr907laE8FVhXtKTrrGymLfm+M6u2vDoD+N0M=; b=GvPwHahMBbuNaNdNezm22avvV9
+        vEac+n/N1Md008SH2L9+RDomZy7o87JiMqMajIYvZXSQyUWO2GenBJAXWxZQyy4d8LU0kQ+wuiB4k
+        NxtxcPAT8s2zJx1qInWe7P31NX/HMJOck6wbES12nfC+bEDbeTCgdXS8Ew77H04ohvWLCy5kLxDkR
+        V8eZ2n6shRdVtN++uP0oM6PTMFz8/tiCXLPt2D6q735qAFICn1hUOb2hLczXweoLsSsDN55y5VwDI
+        fETBNiD7Fh1XFY5nzF9NnBzGZK+Dt8XwewYnqS7DzAJC3mrAbIABzZvzPdzeT5X83wyn7tXopbVkk
+        pqvxP0ng==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1o992T-001q54-UO; Wed, 06 Jul 2022 17:42:13 +0000
+Date:   Wed, 6 Jul 2022 18:42:13 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Chaitanya Kulkarni <kch@nvidia.com>
+Cc:     linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        axboe@kernel.dk, agk@redhat.com, song@kernel.org,
+        djwong@kernel.org, kbusch@kernel.org, hch@lst.de, sagi@grimberg.me,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        viro@zeniv.linux.org.uk, javier@javigon.com,
+        johannes.thumshirn@wdc.com, bvanassche@acm.org,
+        dongli.zhang@oracle.com, ming.lei@redhat.com,
+        jefflexu@linux.alibaba.com, josef@toxicpanda.com, clm@fb.com,
+        dsterba@suse.com, jack@suse.com, tytso@mit.edu,
+        adilger.kernel@dilger.ca, jlayton@kernel.org, idryomov@gmail.com,
+        danil.kipnis@cloud.ionos.com, ebiggers@google.com,
+        jinpu.wang@cloud.ionos.com
+Subject: Re: [PATCH 0/6] block: add support for REQ_OP_VERIFY
+Message-ID: <YsXJdXnXsMtaC8DJ@casper.infradead.org>
+References: <20220630091406.19624-1-kch@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220627153526.3750341-1-mka@chromium.org>
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220630091406.19624-1-kch@nvidia.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Mon, Jun 27 2022 at 11:35P -0400,
-Matthias Kaehlcke <mka@chromium.org> wrote:
+On Thu, Jun 30, 2022 at 02:14:00AM -0700, Chaitanya Kulkarni wrote:
+> This adds support for the REQ_OP_VERIFY. In this version we add
 
-> As of now LoadPin restricts loading of kernel files to a single pinned
-> filesystem, typically the rootfs. This works for many systems, however it
-> can result in a bloated rootfs (and OTA updates) on platforms where
-> multiple boards with different hardware configurations use the same rootfs
-> image. Especially when 'optional' files are large it may be preferable to
-> download/install them only when they are actually needed by a given board.
-> Chrome OS uses Downloadable Content (DLC) [1] to deploy certain 'packages'
-> at runtime. As an example a DLC package could contain firmware for a
-> peripheral that is not present on all boards. DLCs use dm-verity [2] to
-> verify the integrity of the DLC content.
-> 
-> This series extends LoadPin to allow loading of kernel files from trusted
-> dm-verity devices. LoadPin maintains a list of root digests of verity
-> devices it considers trusted. Userspace can populate this list through an
-> ioctl on the new LoadPin securityfs entry 'dm-verity'. The ioctl receives
-> a file descriptor of a file with verity digests as parameter. Verity reads
-> the digests from this file after confirming that the file is located on the
-> pinned root. The digest file must contain one digest per line. The list of
-> trusted digests can only be set up once, which is typically done at boot
-> time.
-> 
-> When a kernel file is read LoadPin first checks (as usual) whether the file
-> is located on the pinned root, if so the file can be loaded. Otherwise, if
-> the verity extension is enabled, LoadPin determines whether the file is
-> located on a verity backed device and whether the root digest of that
-> device is in the list of trusted digests. The file can be loaded if the
-> verity device has a trusted root digest.
-> 
-> [1] https://chromium.googlesource.com/chromiumos/platform2/+/HEAD/dlcservice/docs/developer.md
-> [2] https://www.kernel.org/doc/html/latest/admin-guide/device-mapper/verity.html
+IMO, VERIFY is a useless command.  The history of storage is full of
+devices which simply lie.  Since there's no way for the host to check if
+the device did any work, cheap devices may simply implement it as a NOOP.
+Even expensive devices where there's an ironclad legal contract between
+the vendor and customer may have bugs that result in only some of the
+bytes being VERIFYed.  We shouldn't support it.
 
-Hi Kees,
-
-Please pick this series up, thanks.
-
-Mike
+Now, everything you say about its value (not consuming bus bandwidth)
+is true, but the device should provide the host with proof-of-work.
+I'd suggest calculating some kind of checksum, even something like a
+SHA-1 of the contents would be worth having.  It doesn't need to be
+crypto-secure; just something the host can verify the device didn't spoof.
