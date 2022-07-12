@@ -2,128 +2,183 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C0265712BF
-	for <lists+linux-raid@lfdr.de>; Tue, 12 Jul 2022 09:04:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3522E5729C3
+	for <lists+linux-raid@lfdr.de>; Wed, 13 Jul 2022 01:14:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231790AbiGLHEO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 12 Jul 2022 03:04:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46490 "EHLO
+        id S234094AbiGLXOy (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 12 Jul 2022 19:14:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232314AbiGLHED (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 12 Jul 2022 03:04:03 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D1D7222B5;
-        Tue, 12 Jul 2022 00:03:58 -0700 (PDT)
+        with ESMTP id S234095AbiGLXOS (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 12 Jul 2022 19:14:18 -0400
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33B2F2CE1B;
+        Tue, 12 Jul 2022 16:13:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=VTm6s9SmDuZ9dA5svbuA0w1568aKRNH1L+rjycJno/c=; b=p4RVydkImXOQrBnsOTrKN+GtYq
-        IrkRYZILTucK6GivH6pVNeOg8CKSkYH8/w4nJA3ULSDtLDkEczcYffEN08kbaofsr+TFChFgZdbRC
-        nGFqyoQ3R65l/sZHb4a53i8qESnfgQbdaghbo3Lj6XLXgOW1wXObh6uyE5BS4S/EJLpDZrPsgFaBa
-        gn2oGe9rUoa6H3qJpaxX0yE+oY6/YNie4CBDFa41xfTvuJI8nlCnQGMV5zs1MSd488ZUfRcRn373E
-        F8vzLNug/xCPOTHHEP90YTnb4ZkjxVFKMlvUBO+YlMeYnjoq9o264DNE0YRsM9vm7bf7T2BZHLolb
-        ZFAumzlw==;
-Received: from ip4d15c27d.dynamic.kabel-deutschland.de ([77.21.194.125] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oB9w4-008DcU-E7; Tue, 12 Jul 2022 07:03:56 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Song Liu <song@kernel.org>
-Cc:     Logan Gunthorpe <logang@deltatee.com>, linux-raid@vger.kernel.org,
-        linux-block@vger.kernel.org
-Subject: [PATCH 8/8] md: simplify md_open
-Date:   Tue, 12 Jul 2022 09:03:31 +0200
-Message-Id: <20220712070331.1390700-9-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220712070331.1390700-1-hch@lst.de>
-References: <20220712070331.1390700-1-hch@lst.de>
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:References:Cc:To:From:
+        MIME-Version:Date:Message-ID:content-disposition;
+        bh=9+LUIa8fi0KZwpbpSUAEi2kecm8NS6b7ZZDNCe5GTjc=; b=pk3gukehO86ZkxHJ4HcPOaw77A
+        LfGqwNjJItWwr46Rs082oPsvDbVzr+1XXL0do+4gCznrznKyGchiZnBavFmIQAjy215HOmJxkObAA
+        iPhcQIv30f5kVH3pDAwQSuMQ1ayMi4xZgIHcm2OpQd1wiRRX8EBfLkRDAzWjNfkbRkyAvvS+F+Kar
+        EyP4gN/DopkmvU1/BSa1Nsgumd+vU2+hx99oscYsDwFP7xUusac0lN01FNqaF/T4wEBtxVccmyrgq
+        rFk92pdcQDbKV7tnYrhvqWZIICMu0xaoRTz3VmLHq8AeNAcjUmEFc9ynIZ4fo4UnzKoH1E65dakEu
+        K9neoJ8g==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <logang@deltatee.com>)
+        id 1oBP4f-00DQQY-2t; Tue, 12 Jul 2022 17:13:49 -0600
+Message-ID: <85666118-cbb0-83e2-5c27-c3be8c5c6688@deltatee.com>
+Date:   Tue, 12 Jul 2022 17:13:48 -0600
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     Christoph Hellwig <hch@lst.de>, Song Liu <song@kernel.org>
+Cc:     linux-raid@vger.kernel.org, linux-block@vger.kernel.org
+References: <20220712070331.1390700-1-hch@lst.de>
+ <20220712070331.1390700-3-hch@lst.de>
+Content-Language: en-CA
+In-Reply-To: <20220712070331.1390700-3-hch@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: hch@lst.de, song@kernel.org, linux-raid@vger.kernel.org, linux-block@vger.kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
+Subject: Re: [PATCH 2/8] md: implement ->free_disk
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Now that devices are on the all_mddevs list until the gendisk is freed,
-there can't be any duplicates.  Remove the global list lookup and just
-grab a reference.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/md/md.c | 42 +++++++++++++++---------------------------
- 1 file changed, 15 insertions(+), 27 deletions(-)
+
+On 2022-07-12 01:03, Christoph Hellwig wrote:
+> Ensure that all private data is only freed once all accesses are done.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  drivers/md/md.c | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 861d6a9481b2e..ae076a7a87796 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -5581,11 +5581,6 @@ static void md_free(struct kobject *ko)
+>  		del_gendisk(mddev->gendisk);
+>  		put_disk(mddev->gendisk);
+>  	}
+> -	percpu_ref_exit(&mddev->writes_pending);
+> -
+> -	bioset_exit(&mddev->bio_set);
+> -	bioset_exit(&mddev->sync_set);
+> -	kfree(mddev);
+>  }
+>  
+>  static const struct sysfs_ops md_sysfs_ops = {
+> @@ -7844,6 +7839,17 @@ static unsigned int md_check_events(struct gendisk *disk, unsigned int clearing)
+>  	return ret;
+>  }
+>  
+> +static void md_free_disk(struct gendisk *disk)
+> +{
+> +	struct mddev *mddev = disk->private_data;
+> +
+> +	percpu_ref_exit(&mddev->writes_pending);
+> +	bioset_exit(&mddev->bio_set);
+> +	bioset_exit(&mddev->sync_set);
+> +
+> +	kfree(mddev);
+> +}
+
+I still don't think this is entirely correct. There are error paths that
+will put the kobject before the disk is created and if they get hit then
+the kfree(mddev) will never be called and the memory will be leaked.
+
+Instead of creating an ugly special path for that, I came up with a solution 
+that I think  makes a bit more sense: the kobject is still freed in it's 
+own free  function, but the disk holds a reference to the kobject and drops
+it in its free function. The sysfs puts and del_gendisk are then moved
+into mddev_delayed_delete() so they happen earlier.
+
+Thoughts?
+
+Logan
+
+--
 
 diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 9afc438a08e4d..53a92b306b1fc 100644
+index 78e2588ed43e..330db78a5b38 100644
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -7753,45 +7753,33 @@ static int md_set_read_only(struct block_device *bdev, bool ro)
- 
- static int md_open(struct block_device *bdev, fmode_t mode)
+@@ -5585,15 +5585,6 @@ static void md_free(struct kobject *ko)
  {
--	/*
--	 * Succeed if we can lock the mddev, which confirms that
--	 * it isn't being stopped right now.
--	 */
--	struct mddev *mddev = mddev_find(bdev->bd_dev);
-+	struct mddev *mddev;
- 	int err;
+        struct mddev *mddev = container_of(ko, struct mddev, kobj);
  
-+	spin_lock(&all_mddevs_lock);
-+	mddev = mddev_get(bdev->bd_disk->private_data);
-+	spin_unlock(&all_mddevs_lock);
- 	if (!mddev)
- 		return -ENODEV;
- 
--	if (mddev->gendisk != bdev->bd_disk) {
--		/* we are racing with mddev_put which is discarding this
--		 * bd_disk.
--		 */
--		mddev_put(mddev);
--		/* Wait until bdev->bd_disk is definitely gone */
--		if (work_pending(&mddev->del_work))
--			flush_workqueue(md_misc_wq);
--		return -EBUSY;
--	}
--	BUG_ON(mddev != bdev->bd_disk->private_data);
+-       if (mddev->sysfs_state)
+-               sysfs_put(mddev->sysfs_state);
+-       if (mddev->sysfs_level)
+-               sysfs_put(mddev->sysfs_level);
 -
--	if ((err = mutex_lock_interruptible(&mddev->open_mutex)))
-+	err = mutex_lock_interruptible(&mddev->open_mutex);
-+	if (err)
- 		goto out;
+-       if (mddev->gendisk) {
+-               del_gendisk(mddev->gendisk);
+-               blk_cleanup_disk(mddev->gendisk);
+-       }
+        percpu_ref_exit(&mddev->writes_pending);
  
--	if (test_bit(MD_CLOSING, &mddev->flags)) {
--		mutex_unlock(&mddev->open_mutex);
--		err = -ENODEV;
--		goto out;
--	}
-+	err = -ENODEV;
-+	if (test_bit(MD_CLOSING, &mddev->flags))
-+		goto out_unlock;
+        bioset_exit(&mddev->bio_set);
+@@ -5618,6 +5609,17 @@ static void mddev_delayed_delete(struct work_struct *ws)
+        struct mddev *mddev = container_of(ws, struct mddev, del_work);
  
--	err = 0;
- 	atomic_inc(&mddev->openers);
- 	mutex_unlock(&mddev->open_mutex);
- 
- 	bdev_check_media_change(bdev);
-- out:
--	if (err)
--		mddev_put(mddev);
-+	return 0;
+        kobject_del(&mddev->kobj);
 +
-+out_unlock:
-+	mutex_unlock(&mddev->open_mutex);
-+out:
-+	mddev_put(mddev);
- 	return err;
++       if (mddev->sysfs_state)
++               sysfs_put(mddev->sysfs_state);
++       if (mddev->sysfs_level)
++               sysfs_put(mddev->sysfs_level);
++
++       if (mddev->gendisk) {
++               del_gendisk(mddev->gendisk);
++               blk_cleanup_disk(mddev->gendisk);
++       }
++
+        kobject_put(&mddev->kobj);
  }
  
--- 
-2.30.2
-
+@@ -5708,6 +5710,7 @@ int md_alloc(dev_t dev, char *name)
+        else
+                sprintf(disk->disk_name, "md%d", unit);
+        disk->fops = &md_fops;
++       kobject_get(&mddev->kobj);
+        disk->private_data = mddev;
+ 
+        mddev->queue = disk->queue;
+@@ -7858,6 +7861,13 @@ static unsigned int md_check_events(struct gendisk *disk, unsign>
+        return ret;
+ }
+ 
++static void md_free_disk(struct gendisk *disk)
++{
++       struct mddev *mddev = disk->private_data;
++
++       kobject_put(&mddev->kobj);
++}
++
+ const struct block_device_operations md_fops =
+ {
+        .owner          = THIS_MODULE,
+@@ -7871,6 +7881,7 @@ const struct block_device_operations md_fops =
+        .getgeo         = md_getgeo,
+        .check_events   = md_check_events,
+        .set_read_only  = md_set_read_only,
++       .free_disk      = md_free_disk,
+ };
