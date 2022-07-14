@@ -2,186 +2,97 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 47B1E57455B
-	for <lists+linux-raid@lfdr.de>; Thu, 14 Jul 2022 08:55:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A110F574734
+	for <lists+linux-raid@lfdr.de>; Thu, 14 Jul 2022 10:38:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233920AbiGNGzN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 14 Jul 2022 02:55:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38576 "EHLO
+        id S236629AbiGNIh5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 14 Jul 2022 04:37:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233723AbiGNGzN (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 14 Jul 2022 02:55:13 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51D652A97D
-        for <linux-raid@vger.kernel.org>; Wed, 13 Jul 2022 23:55:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657781712; x=1689317712;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=hmSSLvxVIX+QfY6uYQD1ge+EV4339bYBR/lhYq356hA=;
-  b=ParkjOOpeEuaQpmuEDI41fm9YLm7YEMHDWsoAGqYbsLA8z4SYOR9Smm0
-   /38wiyM6KvCWnuA7XS3WjK7sfY/LEsk/PWBpWE7wrWk4BiDtWWEsmiZBw
-   S2nsuQ399ECT3p9KWI52XjageU3l7If6fDE44Cu3m2BnHAqG2mxoiMsOv
-   kREFqbTxLUQzuR/gMVWXC1kC7Zv5Zek0uIG0Lv2ZhkD2rGE4WwveNUYug
-   f15UzaSuGpEB/PHpEs3rSMqXwaMooMSSwcNMvbz3YOE3iAye58JWIWjhH
-   QXeoHioI/iL7OZZy5nvtNLxfgOxoU7ECKS9Ot7BfOu//OMXItQ0E0Lkg0
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10407"; a="265845872"
-X-IronPort-AV: E=Sophos;i="5.92,269,1650956400"; 
-   d="scan'208";a="265845872"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2022 23:55:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,269,1650956400"; 
-   d="scan'208";a="570945163"
-Received: from unknown (HELO localhost.igk.intel.com) ([10.102.102.97])
-  by orsmga006.jf.intel.com with ESMTP; 13 Jul 2022 23:55:10 -0700
-From:   Kinga Tanska <kinga.tanska@intel.com>
-To:     linux-raid@vger.kernel.org
-Cc:     jes@trained-monkey.org, colyli@suse.de
-Subject: [PATCH 2/2] Monitor: use snprintf to fill device name
-Date:   Thu, 14 Jul 2022 09:02:11 +0200
-Message-Id: <20220714070211.9941-3-kinga.tanska@intel.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20220714070211.9941-1-kinga.tanska@intel.com>
-References: <20220714070211.9941-1-kinga.tanska@intel.com>
+        with ESMTP id S236411AbiGNIhP (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 14 Jul 2022 04:37:15 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47A773FA3E
+        for <linux-raid@vger.kernel.org>; Thu, 14 Jul 2022 01:37:13 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id t1so1627908lft.8
+        for <linux-raid@vger.kernel.org>; Thu, 14 Jul 2022 01:37:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=H3bGT1ZyGPu3PRQJlJHyQI9TvTjBPuNSyHjFOzNfiP0=;
+        b=eOKhIHPUU5qPTZbjyQcWfvRUY0zDAP8hnIUzGBjF2Jn5DfdNsbEWN2bt7ALPYmKFVp
+         Dxr1gDHkbIBW6Zt+nHPJYVynuk8AW0yQZ/Zbg6Hs/Db/0s9SnaRXX8dPxs4FUxGCTJqt
+         PUYZva9zdBfTCaw+ACjLsUUgRvbYiV1yKAF3EhOBh+YW55bYBsAw2vjNobpxCrdB648X
+         A9Vj0WSfJubet8viXTg/I9X1Zmn6KwP7YNCJiSogQMOb5VTL9XQBYGsxHSC28kklqMwQ
+         Xqm1mx/as6lOSd/UexvuUJPMkR0uIfSfLSUsGSd7SP6mXh7BeziDYVk18AfHAMhcFado
+         ZNLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=H3bGT1ZyGPu3PRQJlJHyQI9TvTjBPuNSyHjFOzNfiP0=;
+        b=XJnKeSBy4Cv2ligfa4SdTvRpUQy8Z+dzT8nlnCX/XiVvgc3it2cT6DQzm3LsMmIh5o
+         R9pNdquJ+8ttYid9PqP3gRCMuSkpMcRCll2UpPWnklYbF5cPUsU4VB1YtGv8NKGB5Bqy
+         bJOVr15+rjBZ1rPnGUfV/6er/AUIpEtFbBIdWT+CYTTr3govdJzevLG2evvUxvnEA/xr
+         E+PzAivlg16MX3CjSy9B5kE5mKUakkAnHuaC7vk1lj5CETJMUNbA98hRIRbLvQf92iPK
+         EyK5M8rcH2OUeUxxRetorKYpvwWfw1eDq7xRQt2Kpp+Xrjy967ptJ2B0GozLehKzKN/5
+         gskg==
+X-Gm-Message-State: AJIora8Zlz+skcSLFovAoe0WEU4gE9+XGbfA8UPCj0y3IgVXYLIdtVOx
+        dPCzUQ8zlEDpa8QC1sJWKoXsYyFND1bkOAgWkbQ=
+X-Google-Smtp-Source: AGRyM1suH6kpL0bxxrdPqBdRw7fjg6QmbYsIJ5KtUWeYknhIH8CIkHpjEQ1bnLxbFcENJg0E8wYhVlYhJeESVTPizkI=
+X-Received: by 2002:a05:6512:12c8:b0:489:efbf:18d1 with SMTP id
+ p8-20020a05651212c800b00489efbf18d1mr4734610lfg.192.1657787832538; Thu, 14
+ Jul 2022 01:37:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+Received: by 2002:a2e:9041:0:0:0:0:0 with HTTP; Thu, 14 Jul 2022 01:37:11
+ -0700 (PDT)
+Reply-To: abdwabbomaddahm@gmail.com
+From:   Abdwabbo Maddah <abdwabbomaddah746@gmail.com>
+Date:   Thu, 14 Jul 2022 09:37:11 +0100
+Message-ID: <CAFC-3icPrpmNqEMcqzAOFvzCPc-r5yv89mNAZ9SsCQvcOZ=+9g@mail.gmail.com>
+Subject: Get back to me... URGENT
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.0 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2a00:1450:4864:20:0:0:0:134 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.4900]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [abdwabbomaddah746[at]gmail.com]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [abdwabbomaddah746[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.2 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Safe string functions are propagated in Monitor.c.
-
-Signed-off-by: Kinga Tanska <kinga.tanska@intel.com>
----
- Monitor.c | 37 ++++++++++++++-----------------------
- 1 file changed, 14 insertions(+), 23 deletions(-)
-
-diff --git a/Monitor.c b/Monitor.c
-index a5b11ae2..93f36ac0 100644
---- a/Monitor.c
-+++ b/Monitor.c
-@@ -33,8 +33,8 @@
- #endif
- 
- struct state {
--	char *devname;
--	char devnm[32];	/* to sync with mdstat info */
-+	char devname[MD_NAME_MAX + sizeof("/dev/md/")];	/* length of "/dev/md/" + device name + terminating byte*/
-+	char devnm[MD_NAME_MAX];	/* to sync with mdstat info */
- 	unsigned int utime;
- 	int err;
- 	char *spare_group;
-@@ -45,9 +45,9 @@ struct state {
- 	int devstate[MAX_DISKS];
- 	dev_t devid[MAX_DISKS];
- 	int percent;
--	char parent_devnm[32]; /* For subarray, devnm of parent.
--				* For others, ""
--				*/
-+	char parent_devnm[MD_NAME_MAX]; /* For subarray, devnm of parent.
-+					* For others, ""
-+					*/
- 	struct supertype *metadata;
- 	struct state *subarray;/* for a container it is a link to first subarray
- 				* for a subarray it is a link to next subarray
-@@ -187,15 +187,8 @@ int Monitor(struct mddev_dev *devlist,
- 				continue;
- 
- 			st = xcalloc(1, sizeof *st);
--			if (mdlist->devname[0] == '/')
--				st->devname = xstrdup(mdlist->devname);
--			else {
--				/* length of "/dev/md/" + device name + terminating byte */
--				size_t _len = sizeof("/dev/md/") + strnlen(mdlist->devname, PATH_MAX);
--
--				st->devname = xcalloc(_len, sizeof(char));
--				snprintf(st->devname, _len, "/dev/md/%s", mdlist->devname);
--			}
-+			snprintf(st->devname, MD_NAME_MAX + sizeof("/dev/md/"),
-+				 "/dev/md/%s", basename(mdlist->devname));
- 			if (!is_mddev(mdlist->devname))
- 				return 1;
- 			st->next = statelist;
-@@ -218,7 +211,7 @@ int Monitor(struct mddev_dev *devlist,
- 
- 			st = xcalloc(1, sizeof *st);
- 			mdlist = conf_get_ident(dv->devname);
--			st->devname = xstrdup(dv->devname);
-+			snprintf(st->devname, MD_NAME_MAX + sizeof("/dev/md/"), "%s", dv->devname);
- 			st->next = statelist;
- 			st->devnm[0] = 0;
- 			st->percent = RESYNC_UNKNOWN;
-@@ -301,7 +294,6 @@ int Monitor(struct mddev_dev *devlist,
- 		for (stp = &statelist; (st = *stp) != NULL; ) {
- 			if (st->from_auto && st->err > 5) {
- 				*stp = st->next;
--				free(st->devname);
- 				free(st->spare_group);
- 				free(st);
- 			} else
-@@ -554,7 +546,7 @@ static int check_array(struct state *st, struct mdstat_ent *mdstat,
- 		goto disappeared;
- 
- 	if (st->devnm[0] == 0)
--		strcpy(st->devnm, fd2devnm(fd));
-+		snprintf(st->devnm, MD_NAME_MAX, "%s", fd2devnm(fd));
- 
- 	for (mse2 = mdstat; mse2; mse2 = mse2->next)
- 		if (strcmp(mse2->devnm, st->devnm) == 0) {
-@@ -684,7 +676,7 @@ static int check_array(struct state *st, struct mdstat_ent *mdstat,
- 	    strncmp(mse->metadata_version, "external:", 9) == 0 &&
- 	    is_subarray(mse->metadata_version+9)) {
- 		char *sl;
--		strcpy(st->parent_devnm, mse->metadata_version + 10);
-+		snprintf(st->parent_devnm, MD_NAME_MAX, "%s", mse->metadata_version + 10);
- 		sl = strchr(st->parent_devnm, '/');
- 		if (sl)
- 			*sl = 0;
-@@ -772,14 +764,13 @@ static int add_new_arrays(struct mdstat_ent *mdstat, struct state **statelist,
- 				continue;
- 			}
- 
--			st->devname = xstrdup(name);
-+			snprintf(st->devname, MD_NAME_MAX + sizeof("/dev/md/"), "%s", name);
- 			if ((fd = open(st->devname, O_RDONLY)) < 0 ||
- 			    md_get_array_info(fd, &array) < 0) {
- 				/* no such array */
- 				if (fd >= 0)
- 					close(fd);
- 				put_md_name(st->devname);
--				free(st->devname);
- 				if (st->metadata) {
- 					st->metadata->ss->free_super(st->metadata);
- 					free(st->metadata);
-@@ -791,7 +782,7 @@ static int add_new_arrays(struct mdstat_ent *mdstat, struct state **statelist,
- 			st->next = *statelist;
- 			st->err = 1;
- 			st->from_auto = 1;
--			strcpy(st->devnm, mse->devnm);
-+			snprintf(st->devnm, MD_NAME_MAX, "%s", mse->devnm);
- 			st->percent = RESYNC_UNKNOWN;
- 			st->expected_spares = -1;
- 			if (mse->metadata_version &&
-@@ -799,8 +790,8 @@ static int add_new_arrays(struct mdstat_ent *mdstat, struct state **statelist,
- 				    "external:", 9) == 0 &&
- 			    is_subarray(mse->metadata_version+9)) {
- 				char *sl;
--				strcpy(st->parent_devnm,
--					mse->metadata_version+10);
-+				snprintf(st->parent_devnm, MD_NAME_MAX,
-+					 "%s", mse->metadata_version + 10);
- 				sl = strchr(st->parent_devnm, '/');
- 				*sl = 0;
- 			} else
 -- 
-2.26.2
-
+Dear,
+I had sent you a mail but i don't think you received it that's why am
+writing you again.It is important you get back to me as soon as you
+can.
+Abd-Wabbo Maddah
