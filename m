@@ -2,137 +2,78 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE8E057897E
-	for <lists+linux-raid@lfdr.de>; Mon, 18 Jul 2022 20:25:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F2D6578A24
+	for <lists+linux-raid@lfdr.de>; Mon, 18 Jul 2022 21:01:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229798AbiGRSZK (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 18 Jul 2022 14:25:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33320 "EHLO
+        id S235114AbiGRTBo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 18 Jul 2022 15:01:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229639AbiGRSZJ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 18 Jul 2022 14:25:09 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1F5413E2F
-        for <linux-raid@vger.kernel.org>; Mon, 18 Jul 2022 11:25:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1658168708; x=1689704708;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=v3jKC+AA1hHYDrEIVV4YEk8hYkzlekNmR4vmxI3iiTI=;
-  b=eYK1Wec16bxFt7a2l/wyFbPFWy4st7R1/0xYmonJ2EKW2rm2a/rbBEjL
-   uut5YdPB7/kwnsyvm6LpC7yKtX/78ln2JlUguJlbGhNY+R/NN6M2ie+uy
-   GpXaqAXlIIGlsSO3DYfGXyPEeini25QhBifsN6tF9I0LyZwZvgAv9vKEZ
-   rcygzPPo55ZzpXa3ziqUtdYMFJb03Wdw7wm9CF1Vbm1bePBVWHSeDlTiN
-   VB9MVHQckVQN9uc2ZrXkgxe9nO/PRxqX91mkHZXFSzpmAf7QXC6xQMhbd
-   wMMykNQMUvdccvsaf5L21VS9saEwew+HdOeWN3lGBPc3937GHBzlDAV8r
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10412"; a="311976596"
-X-IronPort-AV: E=Sophos;i="5.92,281,1650956400"; 
-   d="scan'208";a="311976596"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2022 11:25:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,281,1650956400"; 
-   d="scan'208";a="572519977"
-Received: from lkp-server02.sh.intel.com (HELO ff137eb26ff1) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 18 Jul 2022 11:25:07 -0700
-Received: from kbuild by ff137eb26ff1 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1oDVQY-0004dm-I5;
-        Mon, 18 Jul 2022 18:25:06 +0000
-Date:   Tue, 19 Jul 2022 02:24:26 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Song Liu <song@kernel.org>
-Cc:     linux-raid@vger.kernel.org
-Subject: [song-md:md-next] BUILD SUCCESS
- 07ac95f0d934331ed71b45cc0bbcafe5f3136a79
-Message-ID: <62d5a55a.8IjFxhfUsZ4uxI/P%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S235139AbiGRTBb (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 18 Jul 2022 15:01:31 -0400
+Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A40F02FFF5
+        for <linux-raid@vger.kernel.org>; Mon, 18 Jul 2022 12:01:19 -0700 (PDT)
+Received: by mail-ua1-x92a.google.com with SMTP id u12so5641926uap.11
+        for <linux-raid@vger.kernel.org>; Mon, 18 Jul 2022 12:01:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=h0ZslgqQ94UM3iGDYCZGEx8ZwvbYHY5ZrQARiO/Kpbc=;
+        b=IQXHlBQ3jHSYUTt89EYBBYMpS/rXYtHBaNUJ6e2ZzB07/ETpvOJM0/ZijryokIEfDh
+         oJG0jiachEiIldTcksV5XzU+dy3csOVeMrzVRYAIpdf4PUrGYfI/KNNvcLIWjvmc8oHa
+         yWKlPWKnOFkuEw2Mq2CzZYpqcRK9kJ+LygeUXE0izxh4s3I+nauj1w40rP+480vJCi+X
+         rAPSoEvo8wXV23cydMjOZnuzBivYToT/OwjRuq1iqX/8Isb8Rqougy46FnOdoQuh9Z/u
+         z7xKihQATs9EIIDqpmGAQl/2n//vpMk3ZDpLHQioaLk/1hVBrL4som/CgeyT77yPFwbn
+         VU6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=h0ZslgqQ94UM3iGDYCZGEx8ZwvbYHY5ZrQARiO/Kpbc=;
+        b=nUpTplJxfvR8YNKJ8Bz/bcxItzWt0oKFM/AaS3oduaqNZFNI/QUxvc86am5RqI+4hf
+         Pnzv8wsSAeMZiFgaErQ1PC3zc4BFol0lyfvEd0Bhpx7jEID8IngJAgkLLpeqvWR5+348
+         29uBJ24a5wPCafGOzHC/CvJ67VPGUAKiNLCmL5xYlVvQWyD+ZGtYrramqQSV+4ERuguZ
+         LJnlO4RQjDnaVbALzWeIUNjuhME8y7JcZ3GxbnagoHAXWeFzBGjkbyMT+PiFevW4ferZ
+         1At3vq8jDs9p8sIhSREBaGLWysOeLxhrWy3Qy4ONR5epNIW6MtBVcHUf5Pnju1Kewm3G
+         iGrQ==
+X-Gm-Message-State: AJIora+KDMPkb9iB37DaH5Rs7kkm8ZrCZ2t+ElO42p39Tz8W1aKkhDgx
+        eZUunQFuZ4psjCJ+V27sDteiuSb5PEk514XKo7Ov9ojL9x0kiQ==
+X-Google-Smtp-Source: AGRyM1sOF4caZ/Mzb7i1HwUB8dyXYAmjf9y+Pd1nVHRKiUHeMR6opOrMc10oZNu5DLkN2HS0cpkKNGEh0T+MU99Jmes=
+X-Received: by 2002:a81:5747:0:b0:31d:1bb8:65b7 with SMTP id
+ l68-20020a815747000000b0031d1bb865b7mr30830046ywb.168.1658170865217; Mon, 18
+ Jul 2022 12:01:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:6919:4004:b0:cc:50ff:b3d8 with HTTP; Mon, 18 Jul 2022
+ 12:01:04 -0700 (PDT)
+Reply-To: lilywilliam989@gmail.com
+From:   Lily William <sgtalberts@gmail.com>
+Date:   Mon, 18 Jul 2022 11:01:04 -0800
+Message-ID: <CALPTejMFgL0Bg7jCKa7j+5KxVv_jnSM4ZPq-QhHCiUpG_ZswsQ@mail.gmail.com>
+Subject: Hi Dear,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=4.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-tree/branch: git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git md-next
-branch HEAD: 07ac95f0d934331ed71b45cc0bbcafe5f3136a79  raid5: fix duplicate checks for rdev->saved_raid_disk
+Hi Dear,
 
-elapsed time: 721m
+My name is Dr Lily William from the United States.I am a French and
+American nationality (dual) living in the U.S and sometimes in France
+for Work Purpose.
 
-configs tested: 56
-configs skipped: 2
+I hope you consider my friend request. I will share some of my pics
+and more details about myself when I get your response.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Thanks
 
-gcc tested configs:
-arm                                 defconfig
-arm                              allyesconfig
-arm64                            allyesconfig
-ia64                             allmodconfig
-arc                               allnoconfig
-alpha                             allnoconfig
-riscv                             allnoconfig
-csky                              allnoconfig
-alpha                            allyesconfig
-arc                              allyesconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-powerpc                           allnoconfig
-sh                               allmodconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-i386                                defconfig
-i386                             allyesconfig
-x86_64                        randconfig-a002
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                          randconfig-a005
-x86_64                        randconfig-a015
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-i386                          randconfig-a014
-i386                          randconfig-a012
-i386                          randconfig-a016
-riscv                randconfig-r042-20220718
-arc                  randconfig-r043-20220718
-s390                 randconfig-r044-20220718
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                           allyesconfig
-x86_64                           rhel-8.3-syz
-x86_64                          rhel-8.3-func
-x86_64                         rhel-8.3-kunit
-x86_64                    rhel-8.3-kselftests
-
-clang tested configs:
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a005
-i386                          randconfig-a002
-i386                          randconfig-a004
-i386                          randconfig-a006
-x86_64                        randconfig-a016
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-i386                          randconfig-a013
-i386                          randconfig-a015
-i386                          randconfig-a011
-hexagon              randconfig-r041-20220718
-hexagon              randconfig-r045-20220718
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+With love
+Lily
