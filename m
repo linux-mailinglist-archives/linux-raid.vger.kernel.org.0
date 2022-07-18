@@ -2,78 +2,73 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F2D6578A24
-	for <lists+linux-raid@lfdr.de>; Mon, 18 Jul 2022 21:01:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16BB4578B2F
+	for <lists+linux-raid@lfdr.de>; Mon, 18 Jul 2022 21:48:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235114AbiGRTBo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 18 Jul 2022 15:01:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55782 "EHLO
+        id S236310AbiGRTsV (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 18 Jul 2022 15:48:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235139AbiGRTBb (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 18 Jul 2022 15:01:31 -0400
-Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A40F02FFF5
-        for <linux-raid@vger.kernel.org>; Mon, 18 Jul 2022 12:01:19 -0700 (PDT)
-Received: by mail-ua1-x92a.google.com with SMTP id u12so5641926uap.11
-        for <linux-raid@vger.kernel.org>; Mon, 18 Jul 2022 12:01:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=h0ZslgqQ94UM3iGDYCZGEx8ZwvbYHY5ZrQARiO/Kpbc=;
-        b=IQXHlBQ3jHSYUTt89EYBBYMpS/rXYtHBaNUJ6e2ZzB07/ETpvOJM0/ZijryokIEfDh
-         oJG0jiachEiIldTcksV5XzU+dy3csOVeMrzVRYAIpdf4PUrGYfI/KNNvcLIWjvmc8oHa
-         yWKlPWKnOFkuEw2Mq2CzZYpqcRK9kJ+LygeUXE0izxh4s3I+nauj1w40rP+480vJCi+X
-         rAPSoEvo8wXV23cydMjOZnuzBivYToT/OwjRuq1iqX/8Isb8Rqougy46FnOdoQuh9Z/u
-         z7xKihQATs9EIIDqpmGAQl/2n//vpMk3ZDpLHQioaLk/1hVBrL4som/CgeyT77yPFwbn
-         VU6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=h0ZslgqQ94UM3iGDYCZGEx8ZwvbYHY5ZrQARiO/Kpbc=;
-        b=nUpTplJxfvR8YNKJ8Bz/bcxItzWt0oKFM/AaS3oduaqNZFNI/QUxvc86am5RqI+4hf
-         Pnzv8wsSAeMZiFgaErQ1PC3zc4BFol0lyfvEd0Bhpx7jEID8IngJAgkLLpeqvWR5+348
-         29uBJ24a5wPCafGOzHC/CvJ67VPGUAKiNLCmL5xYlVvQWyD+ZGtYrramqQSV+4ERuguZ
-         LJnlO4RQjDnaVbALzWeIUNjuhME8y7JcZ3GxbnagoHAXWeFzBGjkbyMT+PiFevW4ferZ
-         1At3vq8jDs9p8sIhSREBaGLWysOeLxhrWy3Qy4ONR5epNIW6MtBVcHUf5Pnju1Kewm3G
-         iGrQ==
-X-Gm-Message-State: AJIora+KDMPkb9iB37DaH5Rs7kkm8ZrCZ2t+ElO42p39Tz8W1aKkhDgx
-        eZUunQFuZ4psjCJ+V27sDteiuSb5PEk514XKo7Ov9ojL9x0kiQ==
-X-Google-Smtp-Source: AGRyM1sOF4caZ/Mzb7i1HwUB8dyXYAmjf9y+Pd1nVHRKiUHeMR6opOrMc10oZNu5DLkN2HS0cpkKNGEh0T+MU99Jmes=
-X-Received: by 2002:a81:5747:0:b0:31d:1bb8:65b7 with SMTP id
- l68-20020a815747000000b0031d1bb865b7mr30830046ywb.168.1658170865217; Mon, 18
- Jul 2022 12:01:05 -0700 (PDT)
+        with ESMTP id S229639AbiGRTsV (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 18 Jul 2022 15:48:21 -0400
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC15431910;
+        Mon, 18 Jul 2022 12:48:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+        MIME-Version:Date:Message-ID:content-disposition;
+        bh=jiYDnRlg8vD8I3boxOMCBSw0y+zNL0+9apdYiwcaldM=; b=ib2fiI9WwzOyDvkFi4yiKqYc0K
+        iG1QiG+JVB/VmwcL8YX6NVeG7SXqA2xKmiWH8n7GHnu8F9fLTbFK27G093k02UWdg61s+5t14wyC0
+        OBZtMQWHZqZ3cr2upNiVMVOWcdN4rHfOn0wB6AV1tXuZMUfs5Q3Wml4N1JqtiTDjtLWNnxzOONH8i
+        gPvjly+vVrb3kc27U8/ao+hS+VJHHJICjVVY2o/ALmdtDE5QmOoXcfijzmdhf6lH0SiMTm9Y6OhDp
+        w0S6ZCEDppru1RNmUE3fTjWCUK5Wv2Yf02PXJg3hJ1XL5uOI36Pf1PZUH+J2y2eJww57yAalkl+xz
+        /qWqkOlg==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <logang@deltatee.com>)
+        id 1oDWiz-000iAS-Fl; Mon, 18 Jul 2022 13:48:14 -0600
+Message-ID: <d69c2adc-c75a-1ba0-ef72-1e736e5c4fe5@deltatee.com>
+Date:   Mon, 18 Jul 2022 13:48:12 -0600
 MIME-Version: 1.0
-Received: by 2002:a05:6919:4004:b0:cc:50ff:b3d8 with HTTP; Mon, 18 Jul 2022
- 12:01:04 -0700 (PDT)
-Reply-To: lilywilliam989@gmail.com
-From:   Lily William <sgtalberts@gmail.com>
-Date:   Mon, 18 Jul 2022 11:01:04 -0800
-Message-ID: <CALPTejMFgL0Bg7jCKa7j+5KxVv_jnSM4ZPq-QhHCiUpG_ZswsQ@mail.gmail.com>
-Subject: Hi Dear,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Content-Language: en-CA
+To:     Christoph Hellwig <hch@lst.de>, Song Liu <song@kernel.org>
+Cc:     linux-raid@vger.kernel.org, linux-block@vger.kernel.org
+References: <20220718063410.338626-1-hch@lst.de>
+ <20220718063410.338626-2-hch@lst.de>
+From:   Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <20220718063410.338626-2-hch@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: hch@lst.de, song@kernel.org, linux-raid@vger.kernel.org, linux-block@vger.kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Subject: Re: [PATCH 01/10] md: fix mddev->kobj lifetime
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi Dear,
 
-My name is Dr Lily William from the United States.I am a French and
-American nationality (dual) living in the U.S and sometimes in France
-for Work Purpose.
 
-I hope you consider my friend request. I will share some of my pics
-and more details about myself when I get your response.
+On 2022-07-18 00:34, Christoph Hellwig wrote:
+> Once a kobject is initialized, the containing object should not be
+> directly freed.  So delay initialization until it is added.  Also
+> remove the kobject_del call as the last put will remove the kobject as
+> well.  The explicitly delete isn't needed here, and dropping it will
+> simplify further fixes.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Thanks
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 
-With love
-Lily
+Logan
