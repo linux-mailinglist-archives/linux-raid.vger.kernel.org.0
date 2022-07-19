@@ -2,91 +2,74 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E9B3F5795F2
-	for <lists+linux-raid@lfdr.de>; Tue, 19 Jul 2022 11:17:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2041E57961A
+	for <lists+linux-raid@lfdr.de>; Tue, 19 Jul 2022 11:19:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236930AbiGSJRN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 19 Jul 2022 05:17:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46096 "EHLO
+        id S237213AbiGSJTR (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 19 Jul 2022 05:19:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236924AbiGSJRM (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 19 Jul 2022 05:17:12 -0400
-Received: from box.sotapeli.fi (sotapeli.fi [37.59.98.201])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD942220C3
-        for <linux-raid@vger.kernel.org>; Tue, 19 Jul 2022 02:17:10 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 07E9E8358C;
-        Tue, 19 Jul 2022 11:17:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sotapeli.fi; s=dkim;
-        t=1658222227; h=from:subject:date:message-id:to:mime-version:content-type:
-         content-transfer-encoding:in-reply-to:references;
-        bh=sqDIWDH7NzKvAOS6v1TMwfvR+dADBtb5sUYL5smPFMM=;
-        b=QdPj/m7DoJzKuF2T7mt1CwcNqPvRDRr9KwnfL5OLeJhRvcesqY957I3avnprpu/gY4Ts38
-        S9qBPXA0Y3TrOaGfVJ+9iS6qFynA3M8bIN8tMBbtWymfx4ZuKHBnzPIa1D6KuVXXYR6FbX
-        4X2E1Gf3q6yXrLcIQ0CA49dFtmVwZx98L1zM4/j1/zerJb5NUl2AlxiksiHJMJUMaB4yLj
-        OtTpeyDqEgpvNwugntKHRNJbQNlhVk+PLKXdHTIBs452w49hkUEOuizfvG6lSlmS9XcC6E
-        t8N1JmS0im7dxzMQo7aVHnmI2ZmdHT70/PIma4NMYYl9ry8uIJTK7qeyFvx64g==
-Message-ID: <8ac1185f-1522-6343-c6c4-19bd307858f4@sotapeli.fi>
-Date:   Tue, 19 Jul 2022 12:17:03 +0300
+        with ESMTP id S237030AbiGSJSt (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 19 Jul 2022 05:18:49 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80CF23CBCA;
+        Tue, 19 Jul 2022 02:18:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=BWHU/qiQ/hDDEsc8QOBKzO6kidTibXRobxGYXa9myaE=; b=VzJqY+2LrcHq/kzj/zmTOjx8kY
+        R1vx3fgu3B791DdMuAdGubgextv43rd9RWOPbOpSy/uxlrBtE7gMMhfSKbqUipG/Nj6pOBPmoMJRe
+        Ro2T7gLt+lWe6eBqW3N3Eao9v4zwY17mefj0fkiheen61acsO82taVdMQjqxMxJzz5Pe5ofYy70WP
+        uDiXLPWIzhl2z+FxBlqYJO8sEZKVfSZQFzYee2+m12TcUT8AOz1x8+L5XFq7zhi1jI0CQ+YlJSFJN
+        /d4DiWAoYIq6v9BTIJH0In5J92LqJVEDaC1ylzvAOs9hzFuHbxwy/JTiGkW9olDCQ/MwAwq1F2jn1
+        7/mpwcYA==;
+Received: from 089144198117.atnat0007.highway.a1.net ([89.144.198.117] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oDjN6-007C3N-Aw; Tue, 19 Jul 2022 09:18:28 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Song Liu <song@kernel.org>
+Cc:     Logan Gunthorpe <logang@deltatee.com>, linux-raid@vger.kernel.org,
+        linux-block@vger.kernel.org
+Subject: fix md disk_name lifetime problems v4
+Date:   Tue, 19 Jul 2022 11:18:14 +0200
+Message-Id: <20220719091824.1064989-1-hch@lst.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: 5.18: likely useless very preliminary bug report: mdadm raid-6
- boot-time assembly failure
-To:     Wols Lists <antlists@youngman.org.uk>, Nix <nix@esperi.org.uk>,
-        linux-raid@vger.kernel.org
-References: <87o7xmsjcv.fsf@esperi.org.uk>
- <d28a695e-1958-d438-b43d-65470c1bbe7a@youngman.org.uk>
-From:   Jani Partanen <jiipee@sotapeli.fi>
-In-Reply-To: <d28a695e-1958-d438-b43d-65470c1bbe7a@youngman.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Sorry to jump in but could you suggest something what is quite much 
-default programs, not something that works only debian or something..
-lsdrv on Fedora 36 spit this:
-  ./lsdrv
-   File "/root/lsdrv/./lsdrv", line 323
-     os.mkdir('/dev/block', 0755)
-                            ^
-SyntaxError: leading zeros in decimal integer literals are not 
-permitted; use an 0o prefix for octal integers
+Hi all,
 
+this series tries to fix a problem repored by Logan where we see
+duplicate sysfs file name in md.  It is due to the fact that the
+md driver only checks for duplicates on currently live mddevs,
+while the sysfs name can live on longer.  It is an old problem,
+but the race window got longer due to waiting for the device freeze
+earlier in del_gendisk.
 
+Changes since v3:
+ - remove a now superflous mddev->gendisk NULL check
+ - use a bit in mddev->flags instead of a new field
 
-Wols Lists kirjoitti 18/07/2022 klo 16.17:
-> On 18/07/2022 13:20, Nix wrote:
->> So I have a pair of RAID-6 mdraid arrays on this machine (one of which
->> has a bcache layered on top of it, with an LVM VG stretched across
->> both). Kernel 5.16 + mdadm 4.0 (I know, it's old) works fine, but I just
->> rebooted into 5.18.12 and it failed to assemble. mdadm didn't display
->> anything useful: an mdadm --assemble --scan --auto=md --freeze-reshape
->> simply didn't find anything to assemble, and after that nothing else was
->> going to work. But rebooting into 5.16 worked fine, so everything was
->> (thank goodness) actually still there.
->
-> Everything should still be there ... and the difference between mdadm 
-> 4.0 and 4.2 isn't that much I don't think ... a few bugfixes here and 
-> there ...
->
-> When you reboot into the new kernel, try lsdrv
->
-> https://raid.wiki.kernel.org/index.php/Asking_for_help#lsdrv
->
-> I don't know the current state of play with regard to Python versions 
-> there ... last I knew I had to explicitly get it to invoke 2.7 ...
->
-> But I've not seen any reports of problems elsewhere, so this is either 
-> new or unique to you I would think ...
->
-> Cheers,
-> Wol
+Changes since v2:
+ - delay mddev->kobj initialization
 
+Changes since v1:
+ - rebased to the md-next branch
+ - fixed error handling in md_alloc for real
+ - add a little cleanup patch
+
+Diffstat:
+ md.c |  310 +++++++++++++++++++++++++++++++++++--------------------------------
+ md.h |    2 
+ 2 files changed, 165 insertions(+), 147 deletions(-)
