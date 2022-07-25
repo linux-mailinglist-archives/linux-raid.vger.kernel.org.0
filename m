@@ -2,57 +2,57 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D2DB95805CE
-	for <lists+linux-raid@lfdr.de>; Mon, 25 Jul 2022 22:38:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E209A5805D3
+	for <lists+linux-raid@lfdr.de>; Mon, 25 Jul 2022 22:39:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236940AbiGYUiv (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 25 Jul 2022 16:38:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43666 "EHLO
+        id S237000AbiGYUi5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 25 Jul 2022 16:38:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229666AbiGYUiu (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 25 Jul 2022 16:38:50 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8895722BF5
-        for <linux-raid@vger.kernel.org>; Mon, 25 Jul 2022 13:38:49 -0700 (PDT)
+        with ESMTP id S237076AbiGYUiv (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 25 Jul 2022 16:38:51 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E8D6523156
+        for <linux-raid@vger.kernel.org>; Mon, 25 Jul 2022 13:38:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1658781528;
+        s=mimecast20190719; t=1658781530;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=TFks5NMd4f1nVcmXW8iPb003X6v5Rn8Pambi3h60UGU=;
-        b=IeiiKEbpKjWNCbOfzfmL5IA4F52GVibIeiXH7HhpuL80L8q96H1mF6CGSrWzf1DkmXfqxz
-        fSvnv19Hs7f+IVKfH2tUJPOGlVEOtjgnKTUiA/imkHlf0UKI7mcnYwq22FdB0oYKi3MhCA
-        ltqnlUitgIUj2As2j7D5/jhO+KpcLJM=
+        bh=1RKIBtu0FOweCY92vvZDLfDpbPY3XDlSi5UZ3Y5Tv6s=;
+        b=btmd6zLkdrAOQK8n1d/f8HmA9ItyAzXIlYHWrVZWBcTTb+hxmakQNnKZ3G+8d2f6aYTlbh
+        zIB97KSf+50ArZJe9kRK0sTjM2mTAVXIGS7iQV43UUVvjg9zrUIoqEWiXGMVQAG5xfnIhI
+        XObWo92uvvPvXUkCEJvPmKoq290bE5A=
 Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
  [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-352-NFtFJNLZPHiDGzqGoMuu2w-1; Mon, 25 Jul 2022 16:38:45 -0400
-X-MC-Unique: NFtFJNLZPHiDGzqGoMuu2w-1
+ us-mta-651-dHTrcp_iMfKQeV68k6EbeA-1; Mon, 25 Jul 2022 16:38:45 -0400
+X-MC-Unique: dHTrcp_iMfKQeV68k6EbeA-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1ABA73C025CE;
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 611331C06EC3;
         Mon, 25 Jul 2022 20:38:45 +0000 (UTC)
 Received: from fs-i40c-03.fs.lab.eng.bos.redhat.com (fs-i40c-03.fs.lab.eng.bos.redhat.com [10.16.224.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D0B13403D0D9;
-        Mon, 25 Jul 2022 20:38:44 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 238ED40D282F;
+        Mon, 25 Jul 2022 20:38:45 +0000 (UTC)
 From:   Alexander Aring <aahringo@redhat.com>
 To:     teigland@redhat.com
 Cc:     cluster-devel@redhat.com, song@kernel.org, mark@fasheh.com,
         jlbec@evilplan.org, joseph.qi@linux.alibaba.com,
         ocfs2-devel@oss.oracle.com, linux-raid@vger.kernel.org,
         aahringo@redhat.com
-Subject: [PATCH dlm/next 2/5] fs: dlm: change ls_clear_proc_locks to spinlock
-Date:   Mon, 25 Jul 2022 16:38:32 -0400
-Message-Id: <20220725203835.860277-3-aahringo@redhat.com>
+Subject: [PATCH dlm/next 3/5] fs: dlm: trace user space callbacks
+Date:   Mon, 25 Jul 2022 16:38:33 -0400
+Message-Id: <20220725203835.860277-4-aahringo@redhat.com>
 In-Reply-To: <20220725203835.860277-1-aahringo@redhat.com>
 References: <20220725203835.860277-1-aahringo@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -60,107 +60,219 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-This patch changes the ls_clear_proc_locks to a spinlock because there
-is no need to handle it as a mutex as there is no sleepable context when
-ls_clear_proc_locks is held. This allows us to call those functionality
-in non-sleepable contexts.
+This patch adds trace callbacks for user locks. Unfortenately user locks
+are handled in a different way than kernel locks in some cases. User
+locks never call the dlm_lock()/dlm_unlock() kernel API and use the next
+step internal API of dlm. Adding those traces from user API callers
+should make it possible for dlm trace system to see lock handling for
+user locks as well.
 
 Signed-off-by: Alexander Aring <aahringo@redhat.com>
 ---
- fs/dlm/dlm_internal.h | 2 +-
- fs/dlm/lock.c         | 8 ++++----
- fs/dlm/lockspace.c    | 2 +-
- fs/dlm/user.c         | 4 ++--
- 4 files changed, 8 insertions(+), 8 deletions(-)
+ fs/dlm/lock.c              | 24 ++++++++++++++++++++----
+ fs/dlm/user.c              |  7 ++++++-
+ include/trace/events/dlm.h | 23 +++++++++++++----------
+ 3 files changed, 39 insertions(+), 15 deletions(-)
 
-diff --git a/fs/dlm/dlm_internal.h b/fs/dlm/dlm_internal.h
-index 8aca8085d24e..e34c3d2639a5 100644
---- a/fs/dlm/dlm_internal.h
-+++ b/fs/dlm/dlm_internal.h
-@@ -661,7 +661,7 @@ struct dlm_ls {
- 	spinlock_t		ls_recover_idr_lock;
- 	wait_queue_head_t	ls_wait_general;
- 	wait_queue_head_t	ls_recover_lock_wait;
--	struct mutex		ls_clear_proc_locks;
-+	spinlock_t		ls_clear_proc_locks;
- 
- 	struct list_head	ls_root_list;	/* root resources */
- 	struct rw_semaphore	ls_root_sem;	/* protect root_list */
 diff --git a/fs/dlm/lock.c b/fs/dlm/lock.c
-index 061fa96fc978..4c7ed4bec3f4 100644
+index 4c7ed4bec3f4..44c85930211d 100644
 --- a/fs/dlm/lock.c
 +++ b/fs/dlm/lock.c
-@@ -6208,7 +6208,7 @@ static struct dlm_lkb *del_proc_lock(struct dlm_ls *ls,
- {
- 	struct dlm_lkb *lkb = NULL;
+@@ -3462,7 +3462,7 @@ int dlm_lock(dlm_lockspace_t *lockspace,
+ 	if (error == -EINPROGRESS)
+ 		error = 0;
+  out_put:
+-	trace_dlm_lock_end(ls, lkb, name, namelen, mode, flags, error);
++	trace_dlm_lock_end(ls, lkb, name, namelen, mode, flags, error, true);
  
--	mutex_lock(&ls->ls_clear_proc_locks);
-+	spin_lock(&ls->ls_clear_proc_locks);
- 	if (list_empty(&proc->locks))
+ 	if (convert || error)
+ 		__put_lkb(ls, lkb);
+@@ -5835,13 +5835,15 @@ int dlm_user_request(struct dlm_ls *ls, struct dlm_user_args *ua,
+ 		goto out;
+ 	}
+ 
++	trace_dlm_lock_start(ls, lkb, name, namelen, mode, flags);
++
+ 	if (flags & DLM_LKF_VALBLK) {
+ 		ua->lksb.sb_lvbptr = kzalloc(DLM_USER_LVB_LEN, GFP_NOFS);
+ 		if (!ua->lksb.sb_lvbptr) {
+ 			kfree(ua);
+ 			__put_lkb(ls, lkb);
+ 			error = -ENOMEM;
+-			goto out;
++			goto out_trace_end;
+ 		}
+ 	}
+ #ifdef CONFIG_DLM_DEPRECATED_API
+@@ -5856,7 +5858,7 @@ int dlm_user_request(struct dlm_ls *ls, struct dlm_user_args *ua,
+ 		ua->lksb.sb_lvbptr = NULL;
+ 		kfree(ua);
+ 		__put_lkb(ls, lkb);
+-		goto out;
++		goto out_trace_end;
+ 	}
+ 
+ 	/* After ua is attached to lkb it will be freed by dlm_free_lkb().
+@@ -5876,7 +5878,7 @@ int dlm_user_request(struct dlm_ls *ls, struct dlm_user_args *ua,
+ 		fallthrough;
+ 	default:
+ 		__put_lkb(ls, lkb);
+-		goto out;
++		goto out_trace_end;
+ 	}
+ 
+ 	/* add this new lkb to the per-process list of locks */
+@@ -5884,6 +5886,8 @@ int dlm_user_request(struct dlm_ls *ls, struct dlm_user_args *ua,
+ 	hold_lkb(lkb);
+ 	list_add_tail(&lkb->lkb_ownqueue, &ua->proc->locks);
+ 	spin_unlock(&ua->proc->locks_spin);
++ out_trace_end:
++	trace_dlm_lock_end(ls, lkb, name, namelen, mode, flags, error, false);
+  out:
+ 	dlm_unlock_recovery(ls);
+ 	return error;
+@@ -5909,6 +5913,8 @@ int dlm_user_convert(struct dlm_ls *ls, struct dlm_user_args *ua_tmp,
+ 	if (error)
  		goto out;
  
-@@ -6220,7 +6220,7 @@ static struct dlm_lkb *del_proc_lock(struct dlm_ls *ls,
- 	else
- 		lkb->lkb_flags |= DLM_IFL_DEAD;
++	trace_dlm_lock_start(ls, lkb, NULL, 0, mode, flags);
++
+ 	/* user can change the params on its lock when it converts it, or
+ 	   add an lvb that didn't exist before */
+ 
+@@ -5946,6 +5952,7 @@ int dlm_user_convert(struct dlm_ls *ls, struct dlm_user_args *ua_tmp,
+ 	if (error == -EINPROGRESS || error == -EAGAIN || error == -EDEADLK)
+ 		error = 0;
+  out_put:
++	trace_dlm_lock_end(ls, lkb, NULL, 0, mode, flags, error, false);
+ 	dlm_put_lkb(lkb);
   out:
--	mutex_unlock(&ls->ls_clear_proc_locks);
-+	spin_unlock(&ls->ls_clear_proc_locks);
- 	return lkb;
- }
- 
-@@ -6257,7 +6257,7 @@ void dlm_clear_proc_locks(struct dlm_ls *ls, struct dlm_user_proc *proc)
- 		dlm_put_lkb(lkb);
- 	}
- 
--	mutex_lock(&ls->ls_clear_proc_locks);
-+	spin_lock(&ls->ls_clear_proc_locks);
- 
- 	/* in-progress unlocks */
- 	list_for_each_entry_safe(lkb, safe, &proc->unlocking, lkb_ownqueue) {
-@@ -6273,7 +6273,7 @@ void dlm_clear_proc_locks(struct dlm_ls *ls, struct dlm_user_proc *proc)
- 		dlm_put_lkb(lkb);
- 	}
- 
--	mutex_unlock(&ls->ls_clear_proc_locks);
-+	spin_unlock(&ls->ls_clear_proc_locks);
  	dlm_unlock_recovery(ls);
- }
+@@ -6038,6 +6045,8 @@ int dlm_user_unlock(struct dlm_ls *ls, struct dlm_user_args *ua_tmp,
+ 	if (error)
+ 		goto out;
  
-diff --git a/fs/dlm/lockspace.c b/fs/dlm/lockspace.c
-index 6e449abdc5f4..3cf4790dfb8b 100644
---- a/fs/dlm/lockspace.c
-+++ b/fs/dlm/lockspace.c
-@@ -584,7 +584,7 @@ static int new_lockspace(const char *name, const char *cluster,
- 	atomic_set(&ls->ls_requestqueue_cnt, 0);
- 	init_waitqueue_head(&ls->ls_requestqueue_wait);
- 	mutex_init(&ls->ls_requestqueue_mutex);
--	mutex_init(&ls->ls_clear_proc_locks);
-+	spin_lock_init(&ls->ls_clear_proc_locks);
++	trace_dlm_unlock_start(ls, lkb, flags);
++
+ 	ua = lkb->lkb_ua;
  
- 	/* Due backwards compatibility with 3.1 we need to use maximum
- 	 * possible dlm message size to be sure the message will fit and
+ 	if (lvb_in && ua->lksb.sb_lvbptr)
+@@ -6066,6 +6075,7 @@ int dlm_user_unlock(struct dlm_ls *ls, struct dlm_user_args *ua_tmp,
+ 		list_move(&lkb->lkb_ownqueue, &ua->proc->unlocking);
+ 	spin_unlock(&ua->proc->locks_spin);
+  out_put:
++	trace_dlm_unlock_end(ls, lkb, flags, error);
+ 	dlm_put_lkb(lkb);
+  out:
+ 	dlm_unlock_recovery(ls);
+@@ -6087,6 +6097,8 @@ int dlm_user_cancel(struct dlm_ls *ls, struct dlm_user_args *ua_tmp,
+ 	if (error)
+ 		goto out;
+ 
++	trace_dlm_unlock_start(ls, lkb, flags);
++
+ 	ua = lkb->lkb_ua;
+ 	if (ua_tmp->castparam)
+ 		ua->castparam = ua_tmp->castparam;
+@@ -6104,6 +6116,7 @@ int dlm_user_cancel(struct dlm_ls *ls, struct dlm_user_args *ua_tmp,
+ 	if (error == -EBUSY)
+ 		error = 0;
+  out_put:
++	trace_dlm_unlock_end(ls, lkb, flags, error);
+ 	dlm_put_lkb(lkb);
+  out:
+ 	dlm_unlock_recovery(ls);
+@@ -6125,6 +6138,8 @@ int dlm_user_deadlock(struct dlm_ls *ls, uint32_t flags, uint32_t lkid)
+ 	if (error)
+ 		goto out;
+ 
++	trace_dlm_unlock_start(ls, lkb, flags);
++
+ 	ua = lkb->lkb_ua;
+ 
+ 	error = set_unlock_args(flags, ua, &args);
+@@ -6153,6 +6168,7 @@ int dlm_user_deadlock(struct dlm_ls *ls, uint32_t flags, uint32_t lkid)
+ 	if (error == -EBUSY)
+ 		error = 0;
+  out_put:
++	trace_dlm_unlock_end(ls, lkb, flags, error);
+ 	dlm_put_lkb(lkb);
+  out:
+ 	dlm_unlock_recovery(ls);
 diff --git a/fs/dlm/user.c b/fs/dlm/user.c
-index 999918348b31..c6d38a06e94c 100644
+index c6d38a06e94c..792a3efb8d60 100644
 --- a/fs/dlm/user.c
 +++ b/fs/dlm/user.c
-@@ -184,7 +184,7 @@ void dlm_user_add_ast(struct dlm_lkb *lkb, uint32_t flags, int mode,
- 		return;
+@@ -16,6 +16,8 @@
+ #include <linux/slab.h>
+ #include <linux/sched/signal.h>
  
- 	ls = lkb->lkb_resource->res_ls;
--	mutex_lock(&ls->ls_clear_proc_locks);
-+	spin_lock(&ls->ls_clear_proc_locks);
- 
- 	/* If ORPHAN/DEAD flag is set, it means the process is dead so an ast
- 	   can't be delivered.  For ORPHAN's, dlm_clear_proc_locks() freed
-@@ -230,7 +230,7 @@ void dlm_user_add_ast(struct dlm_lkb *lkb, uint32_t flags, int mode,
- 		spin_unlock(&proc->locks_spin);
++#include <trace/events/dlm.h>
++
+ #include "dlm_internal.h"
+ #include "lockspace.h"
+ #include "lock.h"
+@@ -882,7 +884,9 @@ static ssize_t device_read(struct file *file, char __user *buf, size_t count,
+ 		goto try_another;
  	}
-  out:
--	mutex_unlock(&ls->ls_clear_proc_locks);
-+	spin_unlock(&ls->ls_clear_proc_locks);
- }
  
- static int device_user_lock(struct dlm_user_proc *proc,
+-	if (cb.flags & DLM_CB_CAST) {
++	if (cb.flags & DLM_CB_BAST) {
++		trace_dlm_bast(lkb->lkb_resource->res_ls, lkb, cb.mode);
++	} else if (cb.flags & DLM_CB_CAST) {
+ 		new_mode = cb.mode;
+ 
+ 		if (!cb.sb_status && lkb->lkb_lksb->sb_lvbptr &&
+@@ -891,6 +895,7 @@ static ssize_t device_read(struct file *file, char __user *buf, size_t count,
+ 
+ 		lkb->lkb_lksb->sb_status = cb.sb_status;
+ 		lkb->lkb_lksb->sb_flags = cb.sb_flags;
++		trace_dlm_ast(lkb->lkb_resource->res_ls, lkb);
+ 	}
+ 
+ 	rv = copy_result_to_user(lkb->lkb_ua,
+diff --git a/include/trace/events/dlm.h b/include/trace/events/dlm.h
+index bad21222130e..92d263aab848 100644
+--- a/include/trace/events/dlm.h
++++ b/include/trace/events/dlm.h
+@@ -92,9 +92,10 @@ TRACE_EVENT(dlm_lock_start,
+ TRACE_EVENT(dlm_lock_end,
+ 
+ 	TP_PROTO(struct dlm_ls *ls, struct dlm_lkb *lkb, void *name,
+-		 unsigned int namelen, int mode, __u32 flags, int error),
++		 unsigned int namelen, int mode, __u32 flags, int error,
++		 bool kernel_lock),
+ 
+-	TP_ARGS(ls, lkb, name, namelen, mode, flags, error),
++	TP_ARGS(ls, lkb, name, namelen, mode, flags, error, kernel_lock),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(__u32, ls_id)
+@@ -122,14 +123,16 @@ TRACE_EVENT(dlm_lock_end,
+ 			memcpy(__get_dynamic_array(res_name), name,
+ 			       __get_dynamic_array_len(res_name));
+ 
+-		/* return value will be zeroed in those cases by dlm_lock()
+-		 * we do it here again to not introduce more overhead if
+-		 * trace isn't running and error reflects the return value.
+-		 */
+-		if (error == -EAGAIN || error == -EDEADLK)
+-			__entry->error = 0;
+-		else
+-			__entry->error = error;
++		if (kernel_lock) {
++			/* return value will be zeroed in those cases by dlm_lock()
++			 * we do it here again to not introduce more overhead if
++			 * trace isn't running and error reflects the return value.
++			 */
++			if (error == -EAGAIN || error == -EDEADLK)
++				__entry->error = 0;
++			else
++				__entry->error = error;
++		}
+ 
+ 	),
+ 
 -- 
 2.31.1
 
