@@ -2,74 +2,94 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC8F25802B2
-	for <lists+linux-raid@lfdr.de>; Mon, 25 Jul 2022 18:30:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A44435805D0
+	for <lists+linux-raid@lfdr.de>; Mon, 25 Jul 2022 22:38:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236098AbiGYQak (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 25 Jul 2022 12:30:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58858 "EHLO
+        id S229666AbiGYUiv (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 25 Jul 2022 16:38:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232437AbiGYQah (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 25 Jul 2022 12:30:37 -0400
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AE0F641A
-        for <linux-raid@vger.kernel.org>; Mon, 25 Jul 2022 09:30:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-        MIME-Version:Date:Message-ID:content-disposition;
-        bh=v80hSsg09U5QiSVNa/44Fw0crFJzZ3cJaLp6nGR/l+c=; b=dGnXjYRn7DNgv5F8xXw9t4Ox4k
-        /tTd2VefeWNPzGZkycxrurhVj+UV53oQvdl1Yf0goSlqdJnHXsl6XzMS7IOm18SGSJZjAt7eq4zRJ
-        BlIAjRcEpy/ofCzSH5H7PCR9KPgrC3kWk+l8hdWOGreBJ7lueOiAfuYzNT+FDPvMmokr74QqR1Kty
-        W4tlF1+iIQEehhm6SuOHhy8XpgCY4Nwkew3w3E+8Jkt9vurBazfgPfAz/dsf+bt/4YjkbMsaJHMbt
-        ZxufB2SW4CnzQn/ogsa2ZQLUBCObjjJetHFOyqJPAg6BtJ4ZV36m3i8P47WSsjBWjJLStTrgwZr09
-        5M/Mfy7A==;
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <logang@deltatee.com>)
-        id 1oG0yS-0002eA-ME; Mon, 25 Jul 2022 10:30:30 -0600
-Message-ID: <8663e200-a825-d169-cb27-dff774f0a9ed@deltatee.com>
-Date:   Mon, 25 Jul 2022 10:30:28 -0600
+        with ESMTP id S236668AbiGYUiu (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 25 Jul 2022 16:38:50 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8F55022BF7
+        for <linux-raid@vger.kernel.org>; Mon, 25 Jul 2022 13:38:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1658781528;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=sogPp70ZC2D8gfw2PwjlEtTgvtGFqDXiU9fOvLqURpk=;
+        b=ceQIpDaPg1Fqm7KAWDpxZOVfbEYK33zN1JwAAHid2FgMp+GRJTafbhYVAjWUGq/7+IMSQH
+        U0YeNT5Je9jwF3Vw+XohdiRbmZnJgKsZ9P/R3SUmbcvtMLrrzvGZ6wXXbzA3M8NuJpnZV9
+        fa4mGj1gCbBX0bYbCv9tjyCZ07Piduo=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-54-uwt5IIAEPmOKezaDzdh2og-1; Mon, 25 Jul 2022 16:38:45 -0400
+X-MC-Unique: uwt5IIAEPmOKezaDzdh2og-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 811693801144;
+        Mon, 25 Jul 2022 20:38:44 +0000 (UTC)
+Received: from fs-i40c-03.fs.lab.eng.bos.redhat.com (fs-i40c-03.fs.lab.eng.bos.redhat.com [10.16.224.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2B73B40C128A;
+        Mon, 25 Jul 2022 20:38:44 +0000 (UTC)
+From:   Alexander Aring <aahringo@redhat.com>
+To:     teigland@redhat.com
+Cc:     cluster-devel@redhat.com, song@kernel.org, mark@fasheh.com,
+        jlbec@evilplan.org, joseph.qi@linux.alibaba.com,
+        ocfs2-devel@oss.oracle.com, linux-raid@vger.kernel.org,
+        aahringo@redhat.com
+Subject: [PATCH dlm/next 0/5] fs: dlm: misc cleanups
+Date:   Mon, 25 Jul 2022 16:38:30 -0400
+Message-Id: <20220725203835.860277-1-aahringo@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Content-Language: en-CA
-To:     Christoph Hellwig <hch@lst.de>, Song Liu <song@kernel.org>
-Cc:     linux-raid@vger.kernel.org
-References: <20220723062429.2210193-1-hch@lst.de>
-From:   Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <20220723062429.2210193-1-hch@lst.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: hch@lst.de, song@kernel.org, linux-raid@vger.kernel.org
-X-SA-Exim-Mail-From: logang@deltatee.com
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
-Subject: Re: md device allocation cleanups
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+Hi,
 
+as I am working on some bigger change in the callback handling I
+separated this patch series from a bigger series. This series removes
+unused prototype, change a lock to spinlock because no sleepable
+context, adding traces for user space locks, moving DLM_LSFL_FS out of
+uapi because the user space should never set this flag and move
+LSFL_CB_DELAY to kernel space lockspaces only.
 
-On 2022-07-23 00:24, Christoph Hellwig wrote:
-> Hi all,
-> 
-> this small series cleans up the mddev allocation a bit by returning
-> the structure to callers that want it instead of requiring another
-> lookup.
+- Alex
 
-I've reviewed and tested these two patches and they look good to me.
+Alexander Aring (5):
+  fs: dlm: remove dlm_del_ast prototype
+  fs: dlm: change ls_clear_proc_locks to spinlock
+  fs: dlm: trace user space callbacks
+  fs: dlm: move DLM_LSFL_FS out of uapi
+  fs: dlm: LSFL_CB_DELAY only for kernel lockspaces
 
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+ drivers/md/md-cluster.c    |  4 ++--
+ fs/dlm/ast.c               | 13 +++++++------
+ fs/dlm/ast.h               |  1 -
+ fs/dlm/dlm_internal.h      |  2 +-
+ fs/dlm/lock.c              | 32 ++++++++++++++++++++++++--------
+ fs/dlm/lockspace.c         | 30 +++++++++++++++++++++++++-----
+ fs/dlm/lockspace.h         | 13 +++++++++++++
+ fs/dlm/user.c              | 17 +++++++++++------
+ fs/gfs2/lock_dlm.c         |  2 +-
+ fs/ocfs2/stack_user.c      |  2 +-
+ include/linux/dlm.h        |  3 ---
+ include/trace/events/dlm.h | 23 +++++++++++++----------
+ include/uapi/linux/dlm.h   |  1 -
+ 13 files changed, 98 insertions(+), 45 deletions(-)
 
-Thanks,
+-- 
+2.31.1
 
-Logan
