@@ -2,155 +2,98 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 79B3B58201F
-	for <lists+linux-raid@lfdr.de>; Wed, 27 Jul 2022 08:31:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A61025834AE
+	for <lists+linux-raid@lfdr.de>; Wed, 27 Jul 2022 23:09:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229809AbiG0GbC (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 27 Jul 2022 02:31:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44462 "EHLO
+        id S237395AbiG0VIs (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 27 Jul 2022 17:08:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229501AbiG0GbA (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 27 Jul 2022 02:31:00 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7EA1A441
-        for <linux-raid@vger.kernel.org>; Tue, 26 Jul 2022 23:30:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1658903459; x=1690439459;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=KloebxEd8umrL1N3eaTqRYYwtGGjacnMnhNtNqzNR8o=;
-  b=j2Iin8YmM5Eu+046hdReR24GdonkfU5038kcKCaQ3KoNgFoyub1Wgaat
-   3rXruMHwyBYdqLIz2UstZJ4RfHA1VCu2ER9PMQTHnR8xCzyK6zn0hxuzj
-   GVhJ0eXnfCD0Xx0ik6JctnFsxxz2oBmqq2VCZMZTIhk2Wn4GjOROHKKt1
-   fn/6VDK3tesXBvVNbQN+WJ+QJKnQKMbebU3PFrUWD5c0M61rwiNbzGnBw
-   QXOrjry3MNIyOurYuGEXxO+fREWrAyQgR+fKz6UQsf5Xw0Jyg+ICr1WZU
-   JOk7wxsouqrU95NMhAWtiduH5IasH9rxfR8IyvTagelLgMMbrZraKIvLv
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10420"; a="349861518"
-X-IronPort-AV: E=Sophos;i="5.93,195,1654585200"; 
-   d="scan'208";a="349861518"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2022 23:30:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,195,1654585200"; 
-   d="scan'208";a="668214803"
-Received: from lkp-server01.sh.intel.com (HELO e0eace57cfef) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 26 Jul 2022 23:30:54 -0700
-Received: from kbuild by e0eace57cfef with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oGaZJ-0008PO-23;
-        Wed, 27 Jul 2022 06:30:53 +0000
-Date:   Wed, 27 Jul 2022 14:30:52 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Song Liu <song@kernel.org>
-Cc:     linux-raid@vger.kernel.org
-Subject: [song-md:md-next] BUILD SUCCESS
- 7a6f9e9cf1befa0a1578501966d3c9b0cae46727
-Message-ID: <62e0db9c.0diy2qC7IBsqXLAH%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S236522AbiG0VIa (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 27 Jul 2022 17:08:30 -0400
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68DCB61B0E;
+        Wed, 27 Jul 2022 14:06:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:MIME-Version:Message-Id:Date:Cc:To:From
+        :references:content-disposition:in-reply-to;
+        bh=pbiuIq9jtjkddiglS5lYviW8nD5Vw/eI1dLbTz+VrxU=; b=LbKb5LqYGKVbOT8Nx2rV/kfSpI
+        h50N439y/MEYnB/m9W4ZOEXAmoS4HFGi0CJY6hmF8CmcO+3bR+n7YA+Qq8gI94Tt9Ey3OIwSfa33a
+        ctglrElWde7QZvkuuCc7ogCTP9FLFvTXFHzIx6aJUGo0BMxpzDhaa/QxCMjNZUTYtqksbltEY4PiH
+        vhmw1VUAr3t5RRkrwjNN72+0o2KfKlCv4iVgW34Wv+V12kL7l6y+F+ohwnCvuf+biQqvXOnVP5gZp
+        BkJu5Ti29gyrEfDFH2psv0ZS1lvmmtjFTRO+wKzB+K5olbph9sZaUFeLa2A3ia6p2gnjVteqj2hib
+        EHv54lzg==;
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1oGoEG-001pyC-GI; Wed, 27 Jul 2022 15:06:05 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1oGoEE-000VHv-II; Wed, 27 Jul 2022 15:06:02 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        Song Liu <song@kernel.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Guoqing Jiang <guoqing.jiang@linux.dev>,
+        Stephen Bates <sbates@raithlin.com>,
+        Martin Oliveira <Martin.Oliveira@eideticom.com>,
+        David Sloan <David.Sloan@eideticom.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Wed, 27 Jul 2022 15:05:55 -0600
+Message-Id: <20220727210600.120221-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, song@kernel.org, hch@infradead.org, guoqing.jiang@linux.dev, sbates@raithlin.com, Martin.Oliveira@eideticom.com, David.Sloan@eideticom.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
+Subject: [PATCH 0/5] Bug fix for recent batching change
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-tree/branch: git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git md-next
-branch HEAD: 7a6f9e9cf1befa0a1578501966d3c9b0cae46727  md-raid10: fix KASAN warning
+Hey,
 
-elapsed time: 726m
+We hit another bug on my recent batching patch. In this case the
+bug has never been hit with the current md/md-next branch but
+some other patches we were working on changed the timing such
+that we hit this bug. It is theoretically possible to hit in
+the md/md-next batch so this patchset contains a fix.
 
-configs tested: 74
-configs skipped: 2
+The fix is the last commit. The first four commits are some
+basic refactoring that makes the final commit a bit easier.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+A git repo is here and is based on current md/md-next (7a6f9e9cf1):
 
-gcc tested configs:
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-i386                          randconfig-c001
-arm64                               defconfig
-arm                        spear6xx_defconfig
-powerpc                         ps3_defconfig
-arm                        keystone_defconfig
-nios2                            allyesconfig
-arc                          axs103_defconfig
-nios2                               defconfig
-m68k                         apollo_defconfig
-um                                  defconfig
-parisc                           allyesconfig
-ia64                             allmodconfig
-csky                              allnoconfig
-alpha                             allnoconfig
-arc                               allnoconfig
-riscv                             allnoconfig
-powerpc                           allnoconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-sh                               allmodconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-i386                                defconfig
-i386                             allyesconfig
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                          randconfig-a005
-x86_64                        randconfig-a015
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-i386                          randconfig-a014
-i386                          randconfig-a012
-i386                          randconfig-a016
-x86_64                        randconfig-a002
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-s390                 randconfig-r044-20220724
-riscv                randconfig-r042-20220724
-arc                  randconfig-r043-20220724
-arc                  randconfig-r043-20220726
-s390                 randconfig-r044-20220726
-riscv                randconfig-r042-20220726
-x86_64                    rhel-8.3-kselftests
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                           allyesconfig
-x86_64                           rhel-8.3-kvm
-x86_64                          rhel-8.3-func
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
+   https://github.com/sbates130272/linux-p2pmem raid5_batch_quiesce
 
-clang tested configs:
-powerpc                          allmodconfig
-mips                  cavium_octeon_defconfig
-powerpc               mpc834x_itxgp_defconfig
-powerpc                 mpc836x_rdk_defconfig
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
-hexagon              randconfig-r045-20220726
-hexagon              randconfig-r041-20220726
+Thanks,
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Logan
+
+--
+
+Logan Gunthorpe (5):
+  md/raid5: Refactor raid5_get_active_stripe()
+  md/raid5: Make is_inactive_blocked() helper
+  md/raid5: Drop unnecessary call to r5c_check_stripe_cache_usage()
+  md/raid5: Move stripe_request_ctx up
+  md/raid5: Ensure batch_last is released before sleeping for quiesce
+
+ drivers/md/raid5.c | 162 ++++++++++++++++++++++++++++-----------------
+ drivers/md/raid5.h |   2 +-
+ 2 files changed, 101 insertions(+), 63 deletions(-)
+
+
+base-commit: 7a6f9e9cf1befa0a1578501966d3c9b0cae46727
+--
+2.30.2
