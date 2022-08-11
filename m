@@ -2,182 +2,95 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E8BFA58FA96
-	for <lists+linux-raid@lfdr.de>; Thu, 11 Aug 2022 12:18:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 724745905A6
+	for <lists+linux-raid@lfdr.de>; Thu, 11 Aug 2022 19:19:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234502AbiHKKSq (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 11 Aug 2022 06:18:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57756 "EHLO
+        id S235333AbiHKRS4 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 11 Aug 2022 13:18:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234492AbiHKKSq (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 11 Aug 2022 06:18:46 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBF996DFA4
-        for <linux-raid@vger.kernel.org>; Thu, 11 Aug 2022 03:18:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1660213124; x=1691749124;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=MRWUTOLA0u4dz2bw4O8DQhHymyWHqFQbtIPedYQMhYw=;
-  b=GxQV627dtPxgIkNZWDZnXnrRkI3bZpnDM/QXeGSmCcqVA5wVB7axe8Fu
-   g8vaNWZohnHPHlL62P6E5A58+zBPtSwVnPDosX17/P46WvbE9O+Z+6ohA
-   HsHrKhbcZyZRvMawfp25SminXqmKxlM5oT/Gviz7sQpvBwSLVzrXlScd/
-   aEqRmtJCVu9p/UXdo2KnbcrzEcMzyOiHRYj50fHJXNr4/okjGJNKMreze
-   KIie9MJcgnMC4kq4nswXDQH/rnQl+JtDDDulgN52O31zjT36qdyOccnjw
-   IUugR5+KGS/QKTVC0igeuWv2rjYwsVb130l8wZSL+dCzQ46KwLj+v5mS9
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10435"; a="274368484"
-X-IronPort-AV: E=Sophos;i="5.93,228,1654585200"; 
-   d="scan'208";a="274368484"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2022 03:18:44 -0700
-X-IronPort-AV: E=Sophos;i="5.93,228,1654585200"; 
-   d="scan'208";a="581616564"
-Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.249.130.243])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2022 03:18:43 -0700
-Date:   Thu, 11 Aug 2022 12:18:38 +0200
-From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-To:     =?UTF-8?Q?Old=C5=99ich_Jedli=C4=8Dka?= <oldium.pro@gmail.com>
-Cc:     Kinga Tanska <kinga.tanska@linux.intel.com>,
-        linux-raid@vger.kernel.org
-Subject: Re: [PATCH 1/1] mdadm: enable Intel Alderlake RST VMD configuration
-Message-ID: <20220811121838.0000585e@linux.intel.com>
-In-Reply-To: <CALdrqORp1vTu+c8C9Pydn_ftGuSL_6QH1hhKe=Gd7Vo4AdrNKQ@mail.gmail.com>
-References: <20220805100545.9369-1-oldium.pro@gmail.com>
-        <20220805100545.9369-2-oldium.pro@gmail.com>
-        <20220805135603.00002723@intel.linux.com>
-        <CALdrqORp1vTu+c8C9Pydn_ftGuSL_6QH1hhKe=Gd7Vo4AdrNKQ@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S235270AbiHKRSf (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 11 Aug 2022 13:18:35 -0400
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07BE398CB8;
+        Thu, 11 Aug 2022 10:14:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:MIME-Version:Message-Id:Date:Cc:To:From
+        :references:content-disposition:in-reply-to;
+        bh=0WBH3Y4rYTh90rPLxupZdKv6P+bY7E5sqeNBGenrUSw=; b=hEr30uX6mheZ4FG9n8yWx7VpvU
+        z0keuLldb/JLPhN3suo2d6b8/PUhpaSlZASTP5Cj7Z1+L9aOweuBKcPlZpcSb7pP0JTX16Cx7AnFY
+        6WRQIhb/l3WClvv7WOnksnWQxskihzoMFPL79ijTR8VC24NgvtMmKWx2hiFeADzxa/QeoJ1oEkkhJ
+        86u2w9dqYEK0h3wRYN09K10bB4QU3Qq7rjEaTZ3aacm8i3UEAEmd+SOvrE8jxlmpftknx1DvuUFS9
+        2XhsJwImU08YebM1Ty2YFUM3f40wRBy+LLJ9yGrzByWyNK2p1Lc6JxclkSRI0FA168+nSFMT7G2nN
+        0G+5j7Mg==;
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1oMBlJ-00EAye-Ri; Thu, 11 Aug 2022 11:14:27 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1oMBlH-000cR5-Mb; Thu, 11 Aug 2022 11:14:23 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        Song Liu <song@kernel.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Guoqing Jiang <guoqing.jiang@linux.dev>,
+        Stephen Bates <sbates@raithlin.com>,
+        Martin Oliveira <Martin.Oliveira@eideticom.com>,
+        David Sloan <David.Sloan@eideticom.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Thu, 11 Aug 2022 11:14:12 -0600
+Message-Id: <20220811171417.147697-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, song@kernel.org, hch@infradead.org, guoqing.jiang@linux.dev, sbates@raithlin.com, Martin.Oliveira@eideticom.com, David.Sloan@eideticom.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Subject: [PATCH 0/5] More fixups for raid5
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hello Old=C5=99ich,
+Hey,
 
-On Fri, 5 Aug 2022 14:50:36 +0200
-Old=C5=99ich Jedli=C4=8Dka <oldium.pro@gmail.com> wrote:
+The first patch in this series is a fix for another race issue with
+the test infrastructure.
 
-> p=C3=A1 5. 8. 2022 v 13:56 odes=C3=ADlatel Kinga Tanska
-> <kinga.tanska@linux.intel.com> napsal:
-> >
-> > On Fri,  5 Aug 2022 12:05:45 +0200
-> > Old=C5=99ich Jedli=C4=8Dka <oldium.pro@gmail.com> wrote:
-> >
-> > > Alderlake changed UEFI variable name to 'RstVmdV' also and for VMD
-> > > devices, so check the updated name for VMD devices like it is done in
-> > > the SATA case.
+The remaining 4 patches address Christoph's feedback in my previous
+patchset that I sent rather late in the cycle. (Sorry about that).
 
-Alderlake is RST so it doesn't changed, it is different. It is a support for
-RST family product.
-> > >
-> > > Signed-off-by: Old=C5=99ich Jedli=C4=8Dka <oldium.pro@gmail.com>
-> > > ---
-> > >  platform-intel.c | 19 ++++++++++++-------
-> > >  1 file changed, 12 insertions(+), 7 deletions(-)
-> > >
-> > > diff --git a/platform-intel.c b/platform-intel.c
-> > > index a4d55a3..2f8e6af 100644
-> > > --- a/platform-intel.c
-> > > +++ b/platform-intel.c
-> > > @@ -512,8 +512,8 @@ static const struct imsm_orom
-> > > *find_imsm_hba_orom(struct sys_dev *hba) #define AHCI_PROP "RstSataV"
-> > >  #define AHCI_SSATA_PROP "RstsSatV"
-> > >  #define AHCI_TSATA_PROP "RsttSatV"
-> > > -#define AHCI_RST_PROP "RstVmdV"
-> > > -#define VMD_PROP "RstUefiV"
-> > > +#define RST_VMD_PROP "RstVmdV"
-> > > +#define RST_UEFI_PROP "RstUefiV"
+This series is based on current md-next (ae0a80935d6a6).
 
-There are two products RSTe/ VROC and RST.  Here you are adding support for=
- RST
-platform. Please name it accordingly (yeah, I know that naming is confusing=
-).
-I propose:
+Logan
 
-#define RST_VMD_PROP "RstVmdV"
-#define VROC_VMD_PROP "RstUefiV"
+--
 
-> > >
-> > >  #define VENDOR_GUID \
-> > >       EFI_GUID(0x193dfefa, 0xa445, 0x4302, 0x99, 0xd8, 0xef, 0x3a,
-> > > 0xad, 0x1a, 0x04, 0xc6) @@ -607,7 +607,8 @@ const struct imsm_orom
-> > > *find_imsm_efi(struct sys_dev *hba) struct orom_entry *ret;
-> > >       static const char * const sata_efivars[] =3D {AHCI_PROP,
-> > > AHCI_SSATA_PROP, AHCI_TSATA_PROP,
-> > > -                                                 AHCI_RST_PROP};
-> > > +                                                 RST_VMD_PROP};
-> > > +     static const char * const vmd_efivars[] =3D {RST_UEFI_PROP,
-> > > RST_VMD_PROP}; unsigned long i;
-> > >
-> > >       if (check_env("IMSM_TEST_AHCI_EFI") ||
-> > > check_env("IMSM_TEST_SCU_EFI")) @@ -640,10 +641,14 @@ const struct
-> > > imsm_orom *find_imsm_efi(struct sys_dev *hba)
-> > >               break;
-> > >       case SYS_DEV_VMD:
-> > > -             if (!read_efi_variable(&orom, sizeof(orom), VMD_PROP,
-> > > -                                    VENDOR_GUID))
-> > > -                     break;
-> > > -             return NULL;
-> > > +             for (i =3D 0; i < ARRAY_SIZE(vmd_efivars); i++) {
-> > > +                     if (!read_efi_variable(&orom, sizeof(orom),
-> > > +                                             vmd_efivars[i],
-> > > VENDOR_GUID))
-> > > +                             break;
-> > > +             }
-> > > +             if (i =3D=3D ARRAY_SIZE(vmd_efivars))
-> > > +                     return NULL;
-> > > +             break;
-> > >       default:
-> > >               return NULL;
-> > >       }
-> >
-> > Hi,
-> >
-> > please have a look at the following mail:
-> > https://marc.info/?l=3Dlinux-raid&m=3D165969352101643&w=3D2
->=20
->=20
-> Hi, the described issue applies specifically in the SYS_DEV_SATA (SATA
-> configuration) case, so it should not apply to SYS_DEV_VMD (VMD configura=
-tion)
-> one.
->=20
-> For me, the platform output looks reasonable (I have RAID 0 active):
->=20
-> #> sudo mdadm --detail-platform
->        Platform : Intel(R) Rapid Storage Technology
->         Version : 19.0.7.5579
->     RAID Levels : raid0 raid1 raid10 raid5
->     Chunk Sizes : 4k 8k 16k 32k 64k 128k
->     2TB volumes : supported
->       2TB disks : supported
->       Max Disks : 32
->     Max Volumes : 2 per array, 4 per controller
->  3rd party NVMe : supported
->  I/O Controller : /sys/devices/pci0000:00/0000:00:0e.0 (VMD)
->  NVMe under VMD : /dev/nvme0n1 (S6P1NS0T318266R)
->  NVMe under VMD : /dev/nvme1n1 (S6P1NS0T318223V)
->=20
-> Without the patch the platform isn't even recognized. Common to both chan=
-ges
-> is the usage of the new UEFI variable 'RstVmdV', not the changes to the
-> controller.
->=20
+David Sloan (1):
+  md: Flush workqueue md_rdev_misc_wq in md_alloc()
 
-This version is different than one sent by Coly. We will test that to see i=
-f it
-doesn't cause regression in our VROC product.
-I noted  some nits, we will test this version anyway.
+Logan Gunthorpe (4):
+  md/raid5: Refactor raid5_get_active_stripe()
+  md/raid5: Drop extern on function declarations in raid5.h
+  md/raid5: Cleanup prototype of raid5_get_active_stripe()
+  md/raid5: Don't read ->active_stripes if it's not needed
 
-Thanks,
-Mariusz
+ drivers/md/md.c          |   1 +
+ drivers/md/raid5-cache.c |   3 +-
+ drivers/md/raid5.c       | 132 ++++++++++++++++++++-------------------
+ drivers/md/raid5.h       |  32 ++++++----
+ 4 files changed, 90 insertions(+), 78 deletions(-)
 
+
+base-commit: ae0a80935d6a65764b0db00c8b03d3807b4110a6
+--
+2.30.2
