@@ -2,85 +2,137 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FE0F592708
-	for <lists+linux-raid@lfdr.de>; Mon, 15 Aug 2022 02:14:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CC6E592980
+	for <lists+linux-raid@lfdr.de>; Mon, 15 Aug 2022 08:20:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229604AbiHOANz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 14 Aug 2022 20:13:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54844 "EHLO
+        id S240934AbiHOGTg (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 15 Aug 2022 02:19:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbiHOANz (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 14 Aug 2022 20:13:55 -0400
-Received: from mail-ot1-x32c.google.com (mail-ot1-x32c.google.com [IPv6:2607:f8b0:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F4761147D
-        for <linux-raid@vger.kernel.org>; Sun, 14 Aug 2022 17:13:54 -0700 (PDT)
-Received: by mail-ot1-x32c.google.com with SMTP id 53-20020a9d0838000000b006371d896343so4541799oty.10
-        for <linux-raid@vger.kernel.org>; Sun, 14 Aug 2022 17:13:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc;
-        bh=t32Qb/mkYhtxsCn4y+TW2WtYKhq2OTr5K6X7UMsrQBA=;
-        b=XItww1LI9n6F/9IzYjQdtKiQUGNnYFjFntpucLGsLynYH8ErJqRRfgRrP2nKGq5jSz
-         czkf/Ks+VnXS+Qjo7+xIw6m5wIhlvo+wQM9/xp7zPhrUd8JTf6ZTA3WJnyRlG3m3asFr
-         skaPC99N5ivMARvWqBCQRM79uzCYEyqqsqu4LoKbEQy8fi0hFnnZ63AVfTubPv5SQhzl
-         gdBoc1NUJ+q9lY4VOreeLofBes5ZnJSpbpZoCa6lGmflihGCKfpZSvFCkR3v6B+eGbzA
-         7x6FP6n1ZK2Im/RVj1ux8kPvZqCqLE3O1hkTYTuBLcOwepPvD8AEd4MpKbwFr7A8Ktl3
-         dmgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc;
-        bh=t32Qb/mkYhtxsCn4y+TW2WtYKhq2OTr5K6X7UMsrQBA=;
-        b=8Dl8wiuZhtTAV5CwUbD2CJbtm+CdKZWAaf+lCSS3pLK79WcllVBTMQqxVpltTN8Oj/
-         USfGffpMP1SWW9LwVEsfPZEzQ22AG6Uf0+R+caTrkSJFvNJfH9D+ZbHUuwsFknuTQ0ry
-         VoMiYUqcFru89qULRgeWvAjWRV9NWiyHv/GOgMQRfQn8XlfsKMimYAsJ0sos+x8M8FOO
-         Ur+RXijj3KhefiVGtZpwjceTlMw5qvqnDKRepx4MmOQrodgYEWk2KllDJywOQToMcuJp
-         sjKt+tF/65zw5B0F6EYyBnPrUPPUtMRe+OyZGtdziJvgO8a/4qt+FAdP20d+nWv1gbTe
-         Iplg==
-X-Gm-Message-State: ACgBeo05lsSvER4SK6szgjaOyIhYzYn9Oc1b6Tm61kWGACpMM427PENU
-        MyVWpSuHmkJZFqUjR7mbJRZukQ4e5FC1xbtkavMVzT9WDLE=
-X-Google-Smtp-Source: AA6agR7/BCVgQTNH/mM7UlNuKlde/wL2/XPT2CYrzCZUGqGbvnSzj3MC21MwYnSWibU0sqwLySoTNZ5Zv5Uuo9Wfsxg=
-X-Received: by 2002:a05:6830:1bc4:b0:636:e925:c3b6 with SMTP id
- v4-20020a0568301bc400b00636e925c3b6mr5293648ota.86.1660522432871; Sun, 14 Aug
- 2022 17:13:52 -0700 (PDT)
+        with ESMTP id S231825AbiHOGT2 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 15 Aug 2022 02:19:28 -0400
+Received: from out0.migadu.com (out0.migadu.com [94.23.1.103])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB78A1A3AD
+        for <linux-raid@vger.kernel.org>; Sun, 14 Aug 2022 23:19:27 -0700 (PDT)
+Subject: Re: [PATCH RFC] md: call md_cluster_stop() in __md_stop()
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1660544366;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AYlXTuPW6E9XJqByOHQ3ruEs3a63NvPXGxIqXzBRKWU=;
+        b=cPo4qMI8bYEbIfQvQQQwVZPgnrr13Qoe9DU99R4c7PrvdUToNSqtKsZniR7gwrAgCXfqmq
+        BuBT7Kb71dl2r/OoyQEBn2DhFDeujFIIDGMetugekdXSYHLO81NhV+lcnSdubc+ABZLZQw
+        cqUWKpMLJV2hw3WyhJI/n/VszW53pd4=
+To:     NeilBrown <neilb@suse.de>, Song Liu <song@kernel.org>
+Cc:     linux-raid@vger.kernel.org
+References: <166027061107.20931.13490156249149223084@noble.neil.brown.name>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Guoqing Jiang <guoqing.jiang@linux.dev>
+Message-ID: <d45190a8-fffe-3a96-19ff-bdeccbc31945@linux.dev>
+Date:   Mon, 15 Aug 2022 14:19:13 +0800
 MIME-Version: 1.0
-From:   "David F." <df7729@gmail.com>
-Date:   Sun, 14 Aug 2022 17:13:42 -0700
-Message-ID: <CAGRSmLsNjss5snncB0LfWmKnZUQ9Lfoth76FWf5w3d0WtgDrAg@mail.gmail.com>
-Subject: Attempt to assemble RAID times out and drives go busy?
-To:     "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <166027061107.20931.13490156249149223084@noble.neil.brown.name>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Migadu-Flow: FLOW_OUT
+X-Migadu-Auth-User: linux.dev
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-If I start kernel 5.15.60 with parameter "nodmraid" then attempt to
-run the script below, it will fail (attempts to assemble but it will
-timeout and sda/sdb become busy).  Yet, loading through the udev rules
-the raid is created okay.  Although dmraid overtakes the mdadm.
+Hi Neil,
 
-Here's the script that always worked until updating to both 5.15.x and
-all the various libraries and utilities.
+Sorry for later reply since I was on vacation last week.
 
-#! /bin/bash
+On 8/12/22 10:16 AM, NeilBrown wrote:
+> [[ I noticed the e151 patch recently which seems to admit that it broke
+>     something.  So I looked into it and came up with this.
 
-if [ ! -e /proc/mdstat ]; then
-    echo "Software RAID drivers not loaded"
-    exit 0
-fi
+I just noticed it ...
 
-if [ ! -e /etc/mdadm/mdadm.conf-default ]; then
-    echo "Default config file not found in /etc/mdadm"
-    exit 0
-else
-    cp /etc/mdadm/mdadm.conf-default /etc/mdadm/mdadm.conf
-fi
+>     It seems to make sense, but I'm not in a position to test it.
+>     Guoqing: does it look OK to you?
+>     - NeilBrown
+> ]]
+>
+> As described in Commit: 48df498daf62 ("md: move bitmap_destroy to the
+> beginning of __md_stop") md_cluster_stop() needs to run before the
+> mdddev->thread is stopped.
+> The change to make this happen was reverted in Commit: e151db8ecfb0
+> ("md-raid: destroy the bitmap after destroying the thread") due to
+> problems it caused.
+>
+> To restore correct behaviour, make md_cluster_stop() reentrant and
+> explicitly call it at the start of __md_stop(), after first calling
+> md_bitmap_wait_behind_writes().
+>
+> Fixes: e151db8ecfb0 ("md-raid: destroy the bitmap after destroying the thread")
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
+>   drivers/md/md-cluster.c | 1 +
+>   drivers/md/md.c         | 3 +++
+>   2 files changed, 4 insertions(+)
+>
+> diff --git a/drivers/md/md-cluster.c b/drivers/md/md-cluster.c
+> index 742b2349fea3..37bf0aa4ed71 100644
+> --- a/drivers/md/md-cluster.c
+> +++ b/drivers/md/md-cluster.c
+> @@ -1009,6 +1009,7 @@ static int leave(struct mddev *mddev)
+>   	     test_bit(MD_CLOSING, &mddev->flags)))
+>   		resync_bitmap(mddev);
+>   
+> +	mddev->cluster_info = NULL;
 
-mdadm --examine --scan >> /etc/mdadm/mdadm.conf
-mdadm --assemble --scan --no-degraded -v
+The above makes sense.
+
+>   	set_bit(MD_CLUSTER_HOLDING_MUTEX_FOR_RECVD, &cinfo->state);
+>   	md_unregister_thread(&cinfo->recovery_thread);
+>   	md_unregister_thread(&cinfo->recv_thread);
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index afaf36b2f6ab..a57b2dff64dd 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -6238,6 +6238,9 @@ static void mddev_detach(struct mddev *mddev)
+>   static void __md_stop(struct mddev *mddev)
+>   {
+>   	struct md_personality *pers = mddev->pers;
+> +
+> +	md_bitmap_wait_behind_writes(mddev);
+> +	md_cluster_stop(mddev);
+>   	mddev_detach(mddev);
+>   	/* Ensure ->event_work is done */
+>   	if (mddev->event_work.func)
+
+The md_bitmap_destroy is called in __md_stop with or without e151db8ecfb0,
+and it already invokes md_bitmap_wait_behind_writes and md_cluster_stop by
+md_bitmap_free. So the above is sort of redundant to me.
+
+For the issue described in e151db8ecfb, looks like raid1d was running after
+__md_stop, I am wondering if dm-raid should stop write first just like 
+normal
+md-raid.
+
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index afaf36b2f6ab..afc8d638eba0 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -6260,6 +6260,7 @@ void md_stop(struct mddev *mddev)
+         /* stop the array and free an attached data structures.
+          * This is called from dm-raid
+          */
++       __md_stop_writes(mddev);
+         __md_stop(mddev);
+         bioset_exit(&mddev->bio_set);
+         bioset_exit(&mddev->sync_set);
+
+Thanks,
+Guoqing
