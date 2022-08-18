@@ -2,301 +2,269 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 370D359859F
-	for <lists+linux-raid@lfdr.de>; Thu, 18 Aug 2022 16:21:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3375598584
+	for <lists+linux-raid@lfdr.de>; Thu, 18 Aug 2022 16:15:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245149AbiHROUz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 18 Aug 2022 10:20:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44288 "EHLO
+        id S245628AbiHROMI (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 18 Aug 2022 10:12:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343560AbiHROUx (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 18 Aug 2022 10:20:53 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0930CAFAF7
-        for <linux-raid@vger.kernel.org>; Thu, 18 Aug 2022 07:20:51 -0700 (PDT)
+        with ESMTP id S245222AbiHROMH (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 18 Aug 2022 10:12:07 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07E08857DA
+        for <linux-raid@vger.kernel.org>; Thu, 18 Aug 2022 07:12:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1660832452; x=1692368452;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
+  t=1660831925; x=1692367925;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=F35PxKee0nkDAmiYOMThE9NZRtva0CXTFB/DBHyELac=;
-  b=kuzCOlbRrZC5rDfzNKxAbThSXX04F0JQS/ravi49byNsg/5ysFnXlNGE
-   OW9XKeiHFXRRI4PkZDMfi/tLA2LHaN7/s41sR1KCL1c0L/GJpucJH34He
-   4ScUL7vCQSODHlfWWyRy6N2183/u9MpAjNQ0WtAwgpPXWhVPixxYP4iKM
-   9MZjgBJzhAt7pOHdc5NZsG4c06ia4d2TbW/JWFa7VipsscLMeAwAEZubs
-   sn3NT5diDXcQ98YEdXqXCeONAgYWxpyk+8WGC1uAdtWwrgH8/F/JsW0Ky
-   7al8GlHhCsi8IGUerGgOXdTdU2kWxrVdbHMwraCOD+VOYPSfuU3lmh4KQ
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10443"; a="356757972"
+  bh=DItNEUs4PhbiDqfiAdGd97bozz98lgARVhjwIVkGmNU=;
+  b=ahXD+tIPj6foXKYooxdzKSzyObtB/SHWlDm61K8aysVUCQWaMAK2m7Bm
+   A1jLYC43Z+xmJAkV5N69x+s5QihuE5Dhp0GA7SatVRj1AR9hTDMobx+Vh
+   gpFCZbTW9HW0htyALYZCwmrr4Tnxb67dhYPwaOELMWB1kd9Kx5x6U+CsZ
+   2gAQbvfLpy6DFNY4viE1RYCwDHXUNqe1RCHBy+0TsvtzncYjSMmc1aSE/
+   4PIVShPp5NtJXNeA4pe0PalingAP+5hQUWdmDKk38TRto8+2wKqUQxqYq
+   dwdghFUkxAVvGsSy0ICy3Cpj1hzWyHwPcn/iCKzhAP6mBqnzIGN4hdnXh
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10443"; a="273157546"
 X-IronPort-AV: E=Sophos;i="5.93,246,1654585200"; 
-   d="scan'208";a="356757972"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2022 07:20:30 -0700
-X-ExtLoop1: 1
+   d="scan'208";a="273157546"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2022 07:12:05 -0700
 X-IronPort-AV: E=Sophos;i="5.93,246,1654585200"; 
-   d="scan'208";a="636840657"
-Received: from unknown (HELO unbrick.amr.corp.intel.com) ([10.102.92.203])
-  by orsmga008.jf.intel.com with ESMTP; 18 Aug 2022 07:20:29 -0700
-From:   Kinga Tanska <kinga.tanska@intel.com>
-To:     linux-raid@vger.kernel.org
-Cc:     jes@trained-monkey.org, colyli@suse.de
-Subject: [PATCH v3 2/2] mdadm: replace container level checking with inline
-Date:   Thu, 18 Aug 2022 09:20:41 +0200
-Message-Id: <20220818072041.13586-3-kinga.tanska@intel.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20220818072041.13586-1-kinga.tanska@intel.com>
-References: <20220818072041.13586-1-kinga.tanska@intel.com>
+   d="scan'208";a="584221130"
+Received: from ktanska-mobl1.ger.corp.intel.com (HELO intel.linux.com) ([10.213.27.72])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2022 07:12:04 -0700
+Date:   Thu, 18 Aug 2022 16:12:02 +0200
+From:   Kinga Tanska <kinga.tanska@linux.intel.com>
+To:     =?UTF-8?Q?Old=C5=99ich_Jedli=C4=8Dka?= <oldium.pro@gmail.com>
+Cc:     linux-raid@vger.kernel.org
+Subject: Re: [PATCH 1/1] mdadm: enable Intel Alderlake RST VMD configuration
+Message-ID: <20220818161202.0000034f@intel.linux.com>
+In-Reply-To: <CALdrqORp1vTu+c8C9Pydn_ftGuSL_6QH1hhKe=Gd7Vo4AdrNKQ@mail.gmail.com>
+References: <20220805100545.9369-1-oldium.pro@gmail.com>
+        <20220805100545.9369-2-oldium.pro@gmail.com>
+        <20220805135603.00002723@intel.linux.com>
+        <CALdrqORp1vTu+c8C9Pydn_ftGuSL_6QH1hhKe=Gd7Vo4AdrNKQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DATE_IN_PAST_06_12,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-To unify all containers checks in code, is_container() function is
-added and propagated.
+On Fri, 5 Aug 2022 14:50:36 +0200
+Old=C5=99ich Jedli=C4=8Dka <oldium.pro@gmail.com> wrote:
 
-Signed-off-by: Kinga Tanska <kinga.tanska@intel.com>
----
- Assemble.c    |  5 ++---
- Create.c      |  6 +++---
- Grow.c        |  6 +++---
- Incremental.c |  4 ++--
- mdadm.h       | 14 ++++++++++++++
- super-ddf.c   |  6 +++---
- super-intel.c |  4 ++--
- super0.c      |  2 +-
- super1.c      |  2 +-
- sysfs.c       |  2 +-
- 10 files changed, 32 insertions(+), 19 deletions(-)
+> p=C3=A1 5. 8. 2022 v 13:56 odes=C3=ADlatel Kinga Tanska
+> <kinga.tanska@linux.intel.com> napsal:
+> >
+> > On Fri,  5 Aug 2022 12:05:45 +0200
+> > Old=C5=99ich Jedli=C4=8Dka <oldium.pro@gmail.com> wrote:
+> >
+> > > Alderlake changed UEFI variable name to 'RstVmdV' also and for VMD
+> > > devices, so check the updated name for VMD devices like it is
+> > > done in the SATA case.
+> > >
+> > > Signed-off-by: Old=C5=99ich Jedli=C4=8Dka <oldium.pro@gmail.com>
+> > > ---
+> > >  platform-intel.c | 19 ++++++++++++-------
+> > >  1 file changed, 12 insertions(+), 7 deletions(-)
+> > >
+> > > diff --git a/platform-intel.c b/platform-intel.c
+> > > index a4d55a3..2f8e6af 100644
+> > > --- a/platform-intel.c
+> > > +++ b/platform-intel.c
+> > > @@ -512,8 +512,8 @@ static const struct imsm_orom
+> > > *find_imsm_hba_orom(struct sys_dev *hba) #define AHCI_PROP
+> > > "RstSataV" #define AHCI_SSATA_PROP "RstsSatV"
+> > >  #define AHCI_TSATA_PROP "RsttSatV"
+> > > -#define AHCI_RST_PROP "RstVmdV"
+> > > -#define VMD_PROP "RstUefiV"
+> > > +#define RST_VMD_PROP "RstVmdV"
+> > > +#define RST_UEFI_PROP "RstUefiV"
+> > >
+> > >  #define VENDOR_GUID \
+> > >       EFI_GUID(0x193dfefa, 0xa445, 0x4302, 0x99, 0xd8, 0xef, 0x3a,
+> > > 0xad, 0x1a, 0x04, 0xc6) @@ -607,7 +607,8 @@ const struct imsm_orom
+> > > *find_imsm_efi(struct sys_dev *hba) struct orom_entry *ret;
+> > >       static const char * const sata_efivars[] =3D {AHCI_PROP,
+> > > AHCI_SSATA_PROP, AHCI_TSATA_PROP,
+> > > -                                                 AHCI_RST_PROP};
+> > > +                                                 RST_VMD_PROP};
+> > > +     static const char * const vmd_efivars[] =3D {RST_UEFI_PROP,
+> > > RST_VMD_PROP}; unsigned long i;
+> > >
+> > >       if (check_env("IMSM_TEST_AHCI_EFI") ||
+> > > check_env("IMSM_TEST_SCU_EFI")) @@ -640,10 +641,14 @@ const struct
+> > > imsm_orom *find_imsm_efi(struct sys_dev *hba)
+> > >               break;
+> > >       case SYS_DEV_VMD:
+> > > -             if (!read_efi_variable(&orom, sizeof(orom),
+> > > VMD_PROP,
+> > > -                                    VENDOR_GUID))
+> > > -                     break;
+> > > -             return NULL;
+> > > +             for (i =3D 0; i < ARRAY_SIZE(vmd_efivars); i++) {
+> > > +                     if (!read_efi_variable(&orom, sizeof(orom),
+> > > +                                             vmd_efivars[i],
+> > > VENDOR_GUID))
+> > > +                             break;
+> > > +             }
+> > > +             if (i =3D=3D ARRAY_SIZE(vmd_efivars))
+> > > +                     return NULL;
+> > > +             break;
+> > >       default:
+> > >               return NULL;
+> > >       }
+> >
+> > Hi,
+> >
+> > please have a look at the following mail:
+> > https://marc.info/?l=3Dlinux-raid&m=3D165969352101643&w=3D2
+>=20
+> Sorry for double-posting, I received rejection emails regarding HTML
+> content. Gmail switched to HTML.
+>=20
+> Hi, the described issue applies specifically in the SYS_DEV_SATA (SATA
+> configuration) case, so it should not apply to SYS_DEV_VMD (VMD
+> configuration) one.
+>=20
+> For me, the platform output looks reasonable (I have RAID 0 active):
+>=20
+> #> sudo mdadm --detail-platform
+>        Platform : Intel(R) Rapid Storage Technology
+>         Version : 19.0.7.5579
+>     RAID Levels : raid0 raid1 raid10 raid5
+>     Chunk Sizes : 4k 8k 16k 32k 64k 128k
+>     2TB volumes : supported
+>       2TB disks : supported
+>       Max Disks : 32
+>     Max Volumes : 2 per array, 4 per controller
+>  3rd party NVMe : supported
+>  I/O Controller : /sys/devices/pci0000:00/0000:00:0e.0 (VMD)
+>  NVMe under VMD : /dev/nvme0n1 (S6P1NS0T318266R)
+>  NVMe under VMD : /dev/nvme1n1 (S6P1NS0T318223V)
+>=20
+> Without the patch the platform isn't even recognized. Common to both
+> changes is the usage of the new UEFI variable 'RstVmdV', not the
+> changes to the controller.
+>=20
+> Regards,
+> Oldrich.
+>=20
+> >
+> > Regards,
+> > Kinga Tanska
 
-diff --git a/Assemble.c b/Assemble.c
-index f31372db..27324939 100644
---- a/Assemble.c
-+++ b/Assemble.c
-@@ -1123,7 +1123,7 @@ static int start_array(int mdfd,
- 			       i/2, mddev);
- 	}
- 
--	if (content->array.level == LEVEL_CONTAINER) {
-+	if (is_container(content->array.level)) {
- 		sysfs_rules_apply(mddev, content);
- 		if (c->verbose >= 0) {
- 			pr_err("Container %s has been assembled with %d drive%s",
-@@ -1553,8 +1553,7 @@ try_again:
- 			 */
- 			trustworthy = LOCAL;
- 
--		if (name[0] == 0 &&
--		    content->array.level == LEVEL_CONTAINER) {
-+		if (!name[0] && is_container(content->array.level)) {
- 			name = content->text_version;
- 			trustworthy = METADATA;
- 		}
-diff --git a/Create.c b/Create.c
-index 0ff1922d..6edc4ad3 100644
---- a/Create.c
-+++ b/Create.c
-@@ -472,7 +472,7 @@ int Create(struct supertype *st, char *mddev,
- 			    st->minor_version >= 1)
- 				/* metadata at front */
- 				warn |= check_partitions(fd, dname, 0, 0);
--			else if (s->level == 1 || s->level == LEVEL_CONTAINER ||
-+			else if (s->level == 1 || is_container(s->level) ||
- 				 (s->level == 0 && s->raiddisks == 1))
- 				/* partitions could be meaningful */
- 				warn |= check_partitions(fd, dname, freesize*2, s->size*2);
-@@ -982,7 +982,7 @@ int Create(struct supertype *st, char *mddev,
- 			 * again returns container info.
- 			 */
- 			st->ss->getinfo_super(st, &info_new, NULL);
--			if (st->ss->external && s->level != LEVEL_CONTAINER &&
-+			if (st->ss->external && !is_container(s->level) &&
- 			    !same_uuid(info_new.uuid, info.uuid, 0)) {
- 				map_update(&map, fd2devnm(mdfd),
- 					   info_new.text_version,
-@@ -1025,7 +1025,7 @@ int Create(struct supertype *st, char *mddev,
- 	map_unlock(&map);
- 	free(infos);
- 
--	if (s->level == LEVEL_CONTAINER) {
-+	if (is_container(s->level)) {
- 		/* No need to start.  But we should signal udev to
- 		 * create links */
- 		sysfs_uevent(&info, "change");
-diff --git a/Grow.c b/Grow.c
-index 9c6fc95e..391c4212 100644
---- a/Grow.c
-+++ b/Grow.c
-@@ -2156,7 +2156,7 @@ size_change_error:
- 					devname, s->size);
- 		}
- 		changed = 1;
--	} else if (array.level != LEVEL_CONTAINER) {
-+	} else if (!is_container(array.level)) {
- 		s->size = get_component_size(fd)/2;
- 		if (s->size == 0)
- 			s->size = array.size;
-@@ -2212,7 +2212,7 @@ size_change_error:
- 	info.component_size = s->size*2;
- 	info.new_level = s->level;
- 	info.new_chunk = s->chunk * 1024;
--	if (info.array.level == LEVEL_CONTAINER) {
-+	if (is_container(info.array.level)) {
- 		info.delta_disks = UnSet;
- 		info.array.raid_disks = s->raiddisks;
- 	} else if (s->raiddisks)
-@@ -2325,7 +2325,7 @@ size_change_error:
- 				printf("layout for %s set to %d\n",
- 				       devname, array.layout);
- 		}
--	} else if (array.level == LEVEL_CONTAINER) {
-+	} else if (is_container(array.level)) {
- 		/* This change is to be applied to every array in the
- 		 * container.  This is only needed when the metadata imposes
- 		 * restraints of the various arrays in the container.
-diff --git a/Incremental.c b/Incremental.c
-index a57fc323..077d4eea 100644
---- a/Incremental.c
-+++ b/Incremental.c
-@@ -244,7 +244,7 @@ int Incremental(struct mddev_dev *devlist, struct context *c,
- 		c->autof = ci->autof;
- 
- 	name_to_use = info.name;
--	if (name_to_use[0] == 0 && info.array.level == LEVEL_CONTAINER) {
-+	if (name_to_use && is_container(info.array.level)) {
- 		name_to_use = info.text_version;
- 		trustworthy = METADATA;
- 	}
-@@ -472,7 +472,7 @@ int Incremental(struct mddev_dev *devlist, struct context *c,
- 
- 	/* 7/ Is there enough devices to possibly start the array? */
- 	/* 7a/ if not, finish with success. */
--	if (info.array.level == LEVEL_CONTAINER) {
-+	if (is_container(info.array.level)) {
- 		char devnm[32];
- 		/* Try to assemble within the container */
- 		sysfs_uevent(sra, "change");
-diff --git a/mdadm.h b/mdadm.h
-index c7268a71..72abfc50 100644
---- a/mdadm.h
-+++ b/mdadm.h
-@@ -1885,3 +1885,17 @@ enum r0layout {
-  * This is true for native and DDF, IMSM allows 16.
-  */
- #define MD_NAME_MAX 32
-+
-+/**
-+ * is_container() - check if @level is &LEVEL_CONTAINER
-+ * @level: level value
-+ *
-+ * return:
-+ * 1 if level is equal to &LEVEL_CONTAINER, 0 otherwise.
-+ */
-+static inline int is_container(const int level)
-+{
-+	if (level == LEVEL_CONTAINER)
-+		return 1;
-+	return 0;
-+}
-\ No newline at end of file
-diff --git a/super-ddf.c b/super-ddf.c
-index 3f304cdc..bd366da2 100644
---- a/super-ddf.c
-+++ b/super-ddf.c
-@@ -3345,7 +3345,7 @@ static int validate_geometry_ddf(struct supertype *st,
- 
- 	if (level == LEVEL_NONE)
- 		level = LEVEL_CONTAINER;
--	if (level == LEVEL_CONTAINER) {
-+	if (is_container(level)) {
- 		/* Must be a fresh device to add to a container */
- 		return validate_geometry_ddf_container(st, level, layout,
- 						       raiddisks, *chunk,
-@@ -3460,7 +3460,7 @@ validate_geometry_ddf_container(struct supertype *st,
- 	int fd;
- 	unsigned long long ldsize;
- 
--	if (level != LEVEL_CONTAINER)
-+	if (!is_container(level))
- 		return 0;
- 	if (!dev)
- 		return 1;
-@@ -3498,7 +3498,7 @@ static int validate_geometry_ddf_bvd(struct supertype *st,
- 	struct dl *dl;
- 	unsigned long long maxsize;
- 	/* ddf/bvd supports lots of things, but not containers */
--	if (level == LEVEL_CONTAINER) {
-+	if (is_container(level)) {
- 		if (verbose)
- 			pr_err("DDF cannot create a container within an container\n");
- 		return 0;
-diff --git a/super-intel.c b/super-intel.c
-index d5fad102..7376a2e9 100644
---- a/super-intel.c
-+++ b/super-intel.c
-@@ -6661,7 +6661,7 @@ static int validate_geometry_imsm_container(struct supertype *st, int level,
- 	struct intel_super *super = NULL;
- 	int rv = 0;
- 
--	if (level != LEVEL_CONTAINER)
-+	if (!is_container(level))
- 		return 0;
- 	if (!dev)
- 		return 1;
-@@ -7580,7 +7580,7 @@ static int validate_geometry_imsm(struct supertype *st, int level, int layout,
- 	 * if given unused devices create a container
- 	 * if given given devices in a container create a member volume
- 	 */
--	if (level == LEVEL_CONTAINER)
-+	if (is_container(level))
- 		/* Must be a fresh device to add to a container */
- 		return validate_geometry_imsm_container(st, level, raiddisks,
- 							data_offset, dev,
-diff --git a/super0.c b/super0.c
-index b79b97a9..87a4b374 100644
---- a/super0.c
-+++ b/super0.c
-@@ -1273,7 +1273,7 @@ static int validate_geometry0(struct supertype *st, int level,
- 	if (get_linux_version() < 3001000)
- 		tbmax = 2;
- 
--	if (level == LEVEL_CONTAINER) {
-+	if (is_container(level)) {
- 		if (verbose)
- 			pr_err("0.90 metadata does not support containers\n");
- 		return 0;
-diff --git a/super1.c b/super1.c
-index a12a5bc8..d3a48478 100644
---- a/super1.c
-+++ b/super1.c
-@@ -2800,7 +2800,7 @@ static int validate_geometry1(struct supertype *st, int level,
- 	unsigned long long overhead;
- 	int fd;
- 
--	if (level == LEVEL_CONTAINER) {
-+	if (is_container(level)) {
- 		if (verbose)
- 			pr_err("1.x metadata does not support containers\n");
- 		return 0;
-diff --git a/sysfs.c b/sysfs.c
-index 2995713d..054842c2 100644
---- a/sysfs.c
-+++ b/sysfs.c
-@@ -762,7 +762,7 @@ int sysfs_add_disk(struct mdinfo *sra, struct mdinfo *sd, int resume)
- 
- 	rv = sysfs_set_num(sra, sd, "offset", sd->data_offset);
- 	rv |= sysfs_set_num(sra, sd, "size", (sd->component_size+1) / 2);
--	if (sra->array.level != LEVEL_CONTAINER) {
-+	if (!is_container(sra->array.level)) {
- 		if (sra->consistency_policy == CONSISTENCY_POLICY_PPL) {
- 			rv |= sysfs_set_num(sra, sd, "ppl_sector", sd->ppl_sector);
- 			rv |= sysfs_set_num(sra, sd, "ppl_size", sd->ppl_size);
--- 
-2.26.2
+Hello,
 
+I've done test to check if your patch doesn't change way of recognizing
+controllers. I've got two SATA controllers - first one with AHCI mode
+and the other one with RAID MODE enabled. Command "mdadm
+--detail-platform" should display info only about controller with RAID
+MODE:
+
+mdadm: imsm capabilities not found for controller:
+/sys/devices/pci0000:00/0000:00:17.0 (type SATA) Platform : Intel(R)
+Rapid Storage Technology enterprise Version : 5.3.0.1052
+    RAID Levels : raid0 raid1 raid10 raid5
+    Chunk Sizes : 4k 8k 16k 32k 64k 128k
+    2TB volumes : supported
+      2TB disks : supported
+      Max Disks : 8
+    Max Volumes : 2 per array, 8 per controller
+ I/O Controller : /sys/devices/pci0000:00/0000:00:11.5 (SATA)
+          Port4 : - non-disk device (TEAC DV-W28S-B) -
+          Port0 : - no device attached -
+          Port1 : - no device attached -
+          Port2 : - no device attached -
+          Port3 : - no device attached -
+          Port5 : - no device attached -
+
+       Platform : Intel(R) Rapid Storage Technology enterprise
+        Version : 5.3.0.1052
+    RAID Levels : raid0 raid1 raid10 raid5
+    Chunk Sizes : 4k 8k 16k 32k 64k 128k
+    2TB volumes : supported
+      2TB disks : supported
+      Max Disks : 24
+    Max Volumes : 2 per array, 24 per controller
+ 3rd party NVMe : supported
+ I/O Controller : /sys/devices/pci0000:17/0000:17:05.5 (VMD)
+ I/O Controller : /sys/devices/pci0000:d7/0000:d7:05.5 (VMD)
+ NVMe under VMD : /dev/nvme3n1 (PHLJ915000201P0FGN)
+ NVMe under VMD : /dev/nvme2n1 (PHLJ915003201P0FGN)
+ I/O Controller : /sys/devices/pci0000:85/0000:85:05.5 (VMD)
+ I/O Controller : /sys/devices/pci0000:ae/0000:ae:05.5 (VMD)
+ I/O Controller : /sys/devices/pci0000:5d/0000:5d:05.5 (VMD)
+ NVMe under VMD : /dev/nvme0n1 (PHFT536600GT400GGN)
+ NVMe under VMD : /dev/nvme1n1 (CVFT523100122P0KGN)
+
+But with your patch this command returns info about all controllers
+which is not correct:
+
+Platform : Intel(R) Rapid Storage Technology enterprise
+        Version : 5.3.0.1052
+    RAID Levels : raid0 raid1 raid10 raid5
+    Chunk Sizes : 4k 8k 16k 32k 64k 128k
+    2TB volumes : supported
+      2TB disks : supported
+      Max Disks : 8
+    Max Volumes : 2 per array, 8 per controller
+ I/O Controller : /sys/devices/pci0000:00/0000:00:17.0 (SATA)
+          Port2 : /dev/sdd (WDEBMLJ2)
+          Port3 : /dev/sde (BTPR2300034W120LGN)
+          Port0 : /dev/sdb (CVTS5396007S240JGN)
+          Port1 : /dev/sdc (ZDE0XM9Z)
+          Port4 : - no device attached -
+          Port5 : - no device attached -
+          Port6 : - no device attached -
+          Port7 : - no device attached -
+
+       Platform : Intel(R) Rapid Storage Technology enterprise
+        Version : 5.3.0.1052
+    RAID Levels : raid0 raid1 raid10 raid5
+    Chunk Sizes : 4k 8k 16k 32k 64k 128k
+    2TB volumes : supported
+      2TB disks : supported
+      Max Disks : 8
+    Max Volumes : 2 per array, 8 per controller
+ I/O Controller : /sys/devices/pci0000:00/0000:00:11.5 (SATA)
+          Port4 : - non-disk device (TEAC DV-W28S-B) -
+          Port0 : - no device attached -
+          Port1 : - no device attached -
+          Port2 : - no device attached -
+          Port3 : - no device attached -
+          Port5 : - no device attached -
+
+       Platform : Intel(R) Rapid Storage Technology enterprise
+        Version : 5.3.0.1052
+    RAID Levels : raid0 raid1 raid10 raid5
+    Chunk Sizes : 4k 8k 16k 32k 64k 128k
+    2TB volumes : supported
+      2TB disks : supported
+      Max Disks : 24
+    Max Volumes : 2 per array, 24 per controller
+ 3rd party NVMe : supported
+ I/O Controller : /sys/devices/pci0000:17/0000:17:05.5 (VMD)
+ I/O Controller : /sys/devices/pci0000:d7/0000:d7:05.5 (VMD)
+ NVMe under VMD : /dev/nvme3n1 (PHLJ915000201P0FGN)
+ NVMe under VMD : /dev/nvme2n1 (PHLJ915003201P0FGN)
+ I/O Controller : /sys/devices/pci0000:85/0000:85:05.5 (VMD)
+ I/O Controller : /sys/devices/pci0000:ae/0000:ae:05.5 (VMD)
+ I/O Controller : /sys/devices/pci0000:5d/0000:5d:05.5 (VMD)
+ NVMe under VMD : /dev/nvme0n1 (PHFT536600GT400GGN)
+ NVMe under VMD : /dev/nvme1n1 (CVFT523100122P0KGN)
+
+Please analyze it.
+Regards,
+Kinga Tanska
