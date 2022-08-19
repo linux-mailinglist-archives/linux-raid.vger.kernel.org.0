@@ -2,47 +2,47 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B535B59969C
-	for <lists+linux-raid@lfdr.de>; Fri, 19 Aug 2022 10:06:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6EFE5996AF
+	for <lists+linux-raid@lfdr.de>; Fri, 19 Aug 2022 10:06:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347369AbiHSIBr (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 19 Aug 2022 04:01:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57638 "EHLO
+        id S1347225AbiHSIBv (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 19 Aug 2022 04:01:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347357AbiHSIBi (ORCPT
+        with ESMTP id S1347366AbiHSIBi (ORCPT
         <rfc822;linux-raid@vger.kernel.org>); Fri, 19 Aug 2022 04:01:38 -0400
 Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DD84E42F1
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75A8B52DE4
         for <linux-raid@vger.kernel.org>; Fri, 19 Aug 2022 01:01:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1660896097; x=1692432097;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=J8q/EG3e+YZD+2ViwIvgzZnFSxL2L20MLea6+q65R8w=;
-  b=LTtRdbOUVNc58SUGVkORtN8iFg3icVXzX6a5RSvpD5p8UJ2MsqjkiGRN
-   ujj0myxctS0PoOK24F7WTiW0E2kqpmsAO9OA7jaeuJYjfnO7cDx1vqfsV
-   P5hNIEZvcSbVUtyJ2x62IkqAFjeU/owNjkxrr8Syd+ZygzPRCYFsbNlcL
-   2vjUD/6clm3SpoDQ7J/qSUBdBV1ux2Y+nRFSlMdeA3Fb/krr2v7MLWP8o
-   HY53lcG9uUjVeEjy1krnb5H8T/FIMqB3FLOxMqQN1A0ksXIHVfpczIsgW
-   UOxv1AHEwXJHwCOA7HcfsWmUKIrPOU6nvW6r4Zx3YuhdYd/l2XEpzlDF8
+  bh=F35PxKee0nkDAmiYOMThE9NZRtva0CXTFB/DBHyELac=;
+  b=DkhX3emGZ3TYMLTMoNBsI7fUBW4krYBaoSbS7hlNb5isPFKkGpKIb1nt
+   ke3RO+a/EPOpxyFQlGMT08s7Oo8mRd+WeAlbf8aUWSpHYaucJ84zw/WyD
+   UGKNqdkH2qKNCL0vSdCpmCg4qqG4MjMEuUUDPiqZRJogEcccpKPhA2t/v
+   1qrTwNQzYtayLv0JBumckhWWwbB+yROWBANs63n4GJ1guC2DTcOJNKMrW
+   PZNIRMLpguS+O2aFvbtXJx1GbaYQ/KNKPq5B0ZNJc735HQeg35oLzbA9K
+   JEqc9knqymjGwpIjf/I40i61zKUncB4leNipVWPU00JBy17U9ptgM1LMv
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10443"; a="292958961"
+X-IronPort-AV: E=McAfee;i="6500,9779,10443"; a="292958962"
 X-IronPort-AV: E=Sophos;i="5.93,247,1654585200"; 
-   d="scan'208";a="292958961"
+   d="scan'208";a="292958962"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
   by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2022 01:01:35 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.93,247,1654585200"; 
-   d="scan'208";a="668478540"
+   d="scan'208";a="668478557"
 Received: from unknown (HELO unbrick.amr.corp.intel.com) ([10.102.92.203])
-  by fmsmga008.fm.intel.com with ESMTP; 19 Aug 2022 00:55:34 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 19 Aug 2022 00:55:36 -0700
 From:   Kinga Tanska <kinga.tanska@intel.com>
 To:     linux-raid@vger.kernel.org
 Cc:     jes@trained-monkey.org, colyli@suse.de
-Subject: [PATCH v3 1/2] Assemble: check if device is container before scheduling force-clean update
-Date:   Fri, 19 Aug 2022 02:55:46 +0200
-Message-Id: <20220819005547.17343-2-kinga.tanska@intel.com>
+Subject: [PATCH v3 2/2] mdadm: replace container level checking with inline
+Date:   Fri, 19 Aug 2022 02:55:47 +0200
+Message-Id: <20220819005547.17343-3-kinga.tanska@intel.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20220819005547.17343-1-kinga.tanska@intel.com>
 References: <20220819005547.17343-1-kinga.tanska@intel.com>
@@ -58,32 +58,245 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Up to now using assemble with force flag making each array as clean.
-Force-clean should not be done for the container. This commit add
-check if device is different than container before cleaning.
+To unify all containers checks in code, is_container() function is
+added and propagated.
 
 Signed-off-by: Kinga Tanska <kinga.tanska@intel.com>
 ---
- Assemble.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ Assemble.c    |  5 ++---
+ Create.c      |  6 +++---
+ Grow.c        |  6 +++---
+ Incremental.c |  4 ++--
+ mdadm.h       | 14 ++++++++++++++
+ super-ddf.c   |  6 +++---
+ super-intel.c |  4 ++--
+ super0.c      |  2 +-
+ super1.c      |  2 +-
+ sysfs.c       |  2 +-
+ 10 files changed, 32 insertions(+), 19 deletions(-)
 
 diff --git a/Assemble.c b/Assemble.c
-index 704b8293..f31372db 100644
+index f31372db..27324939 100644
 --- a/Assemble.c
 +++ b/Assemble.c
-@@ -1813,10 +1813,9 @@ try_again:
- 		}
- #endif
+@@ -1123,7 +1123,7 @@ static int start_array(int mdfd,
+ 			       i/2, mddev);
  	}
--	if (c->force && !clean &&
-+	if (c->force && !clean && content->array.level != LEVEL_CONTAINER &&
- 	    !enough(content->array.level, content->array.raid_disks,
--		    content->array.layout, clean,
--		    avail)) {
-+		    content->array.layout, clean, avail)) {
- 		change += st->ss->update_super(st, content, "force-array",
- 					       devices[chosen_drive].devname, c->verbose,
- 					       0, NULL);
+ 
+-	if (content->array.level == LEVEL_CONTAINER) {
++	if (is_container(content->array.level)) {
+ 		sysfs_rules_apply(mddev, content);
+ 		if (c->verbose >= 0) {
+ 			pr_err("Container %s has been assembled with %d drive%s",
+@@ -1553,8 +1553,7 @@ try_again:
+ 			 */
+ 			trustworthy = LOCAL;
+ 
+-		if (name[0] == 0 &&
+-		    content->array.level == LEVEL_CONTAINER) {
++		if (!name[0] && is_container(content->array.level)) {
+ 			name = content->text_version;
+ 			trustworthy = METADATA;
+ 		}
+diff --git a/Create.c b/Create.c
+index 0ff1922d..6edc4ad3 100644
+--- a/Create.c
++++ b/Create.c
+@@ -472,7 +472,7 @@ int Create(struct supertype *st, char *mddev,
+ 			    st->minor_version >= 1)
+ 				/* metadata at front */
+ 				warn |= check_partitions(fd, dname, 0, 0);
+-			else if (s->level == 1 || s->level == LEVEL_CONTAINER ||
++			else if (s->level == 1 || is_container(s->level) ||
+ 				 (s->level == 0 && s->raiddisks == 1))
+ 				/* partitions could be meaningful */
+ 				warn |= check_partitions(fd, dname, freesize*2, s->size*2);
+@@ -982,7 +982,7 @@ int Create(struct supertype *st, char *mddev,
+ 			 * again returns container info.
+ 			 */
+ 			st->ss->getinfo_super(st, &info_new, NULL);
+-			if (st->ss->external && s->level != LEVEL_CONTAINER &&
++			if (st->ss->external && !is_container(s->level) &&
+ 			    !same_uuid(info_new.uuid, info.uuid, 0)) {
+ 				map_update(&map, fd2devnm(mdfd),
+ 					   info_new.text_version,
+@@ -1025,7 +1025,7 @@ int Create(struct supertype *st, char *mddev,
+ 	map_unlock(&map);
+ 	free(infos);
+ 
+-	if (s->level == LEVEL_CONTAINER) {
++	if (is_container(s->level)) {
+ 		/* No need to start.  But we should signal udev to
+ 		 * create links */
+ 		sysfs_uevent(&info, "change");
+diff --git a/Grow.c b/Grow.c
+index 9c6fc95e..391c4212 100644
+--- a/Grow.c
++++ b/Grow.c
+@@ -2156,7 +2156,7 @@ size_change_error:
+ 					devname, s->size);
+ 		}
+ 		changed = 1;
+-	} else if (array.level != LEVEL_CONTAINER) {
++	} else if (!is_container(array.level)) {
+ 		s->size = get_component_size(fd)/2;
+ 		if (s->size == 0)
+ 			s->size = array.size;
+@@ -2212,7 +2212,7 @@ size_change_error:
+ 	info.component_size = s->size*2;
+ 	info.new_level = s->level;
+ 	info.new_chunk = s->chunk * 1024;
+-	if (info.array.level == LEVEL_CONTAINER) {
++	if (is_container(info.array.level)) {
+ 		info.delta_disks = UnSet;
+ 		info.array.raid_disks = s->raiddisks;
+ 	} else if (s->raiddisks)
+@@ -2325,7 +2325,7 @@ size_change_error:
+ 				printf("layout for %s set to %d\n",
+ 				       devname, array.layout);
+ 		}
+-	} else if (array.level == LEVEL_CONTAINER) {
++	} else if (is_container(array.level)) {
+ 		/* This change is to be applied to every array in the
+ 		 * container.  This is only needed when the metadata imposes
+ 		 * restraints of the various arrays in the container.
+diff --git a/Incremental.c b/Incremental.c
+index a57fc323..077d4eea 100644
+--- a/Incremental.c
++++ b/Incremental.c
+@@ -244,7 +244,7 @@ int Incremental(struct mddev_dev *devlist, struct context *c,
+ 		c->autof = ci->autof;
+ 
+ 	name_to_use = info.name;
+-	if (name_to_use[0] == 0 && info.array.level == LEVEL_CONTAINER) {
++	if (name_to_use && is_container(info.array.level)) {
+ 		name_to_use = info.text_version;
+ 		trustworthy = METADATA;
+ 	}
+@@ -472,7 +472,7 @@ int Incremental(struct mddev_dev *devlist, struct context *c,
+ 
+ 	/* 7/ Is there enough devices to possibly start the array? */
+ 	/* 7a/ if not, finish with success. */
+-	if (info.array.level == LEVEL_CONTAINER) {
++	if (is_container(info.array.level)) {
+ 		char devnm[32];
+ 		/* Try to assemble within the container */
+ 		sysfs_uevent(sra, "change");
+diff --git a/mdadm.h b/mdadm.h
+index c7268a71..72abfc50 100644
+--- a/mdadm.h
++++ b/mdadm.h
+@@ -1885,3 +1885,17 @@ enum r0layout {
+  * This is true for native and DDF, IMSM allows 16.
+  */
+ #define MD_NAME_MAX 32
++
++/**
++ * is_container() - check if @level is &LEVEL_CONTAINER
++ * @level: level value
++ *
++ * return:
++ * 1 if level is equal to &LEVEL_CONTAINER, 0 otherwise.
++ */
++static inline int is_container(const int level)
++{
++	if (level == LEVEL_CONTAINER)
++		return 1;
++	return 0;
++}
+\ No newline at end of file
+diff --git a/super-ddf.c b/super-ddf.c
+index 3f304cdc..bd366da2 100644
+--- a/super-ddf.c
++++ b/super-ddf.c
+@@ -3345,7 +3345,7 @@ static int validate_geometry_ddf(struct supertype *st,
+ 
+ 	if (level == LEVEL_NONE)
+ 		level = LEVEL_CONTAINER;
+-	if (level == LEVEL_CONTAINER) {
++	if (is_container(level)) {
+ 		/* Must be a fresh device to add to a container */
+ 		return validate_geometry_ddf_container(st, level, layout,
+ 						       raiddisks, *chunk,
+@@ -3460,7 +3460,7 @@ validate_geometry_ddf_container(struct supertype *st,
+ 	int fd;
+ 	unsigned long long ldsize;
+ 
+-	if (level != LEVEL_CONTAINER)
++	if (!is_container(level))
+ 		return 0;
+ 	if (!dev)
+ 		return 1;
+@@ -3498,7 +3498,7 @@ static int validate_geometry_ddf_bvd(struct supertype *st,
+ 	struct dl *dl;
+ 	unsigned long long maxsize;
+ 	/* ddf/bvd supports lots of things, but not containers */
+-	if (level == LEVEL_CONTAINER) {
++	if (is_container(level)) {
+ 		if (verbose)
+ 			pr_err("DDF cannot create a container within an container\n");
+ 		return 0;
+diff --git a/super-intel.c b/super-intel.c
+index d5fad102..7376a2e9 100644
+--- a/super-intel.c
++++ b/super-intel.c
+@@ -6661,7 +6661,7 @@ static int validate_geometry_imsm_container(struct supertype *st, int level,
+ 	struct intel_super *super = NULL;
+ 	int rv = 0;
+ 
+-	if (level != LEVEL_CONTAINER)
++	if (!is_container(level))
+ 		return 0;
+ 	if (!dev)
+ 		return 1;
+@@ -7580,7 +7580,7 @@ static int validate_geometry_imsm(struct supertype *st, int level, int layout,
+ 	 * if given unused devices create a container
+ 	 * if given given devices in a container create a member volume
+ 	 */
+-	if (level == LEVEL_CONTAINER)
++	if (is_container(level))
+ 		/* Must be a fresh device to add to a container */
+ 		return validate_geometry_imsm_container(st, level, raiddisks,
+ 							data_offset, dev,
+diff --git a/super0.c b/super0.c
+index b79b97a9..87a4b374 100644
+--- a/super0.c
++++ b/super0.c
+@@ -1273,7 +1273,7 @@ static int validate_geometry0(struct supertype *st, int level,
+ 	if (get_linux_version() < 3001000)
+ 		tbmax = 2;
+ 
+-	if (level == LEVEL_CONTAINER) {
++	if (is_container(level)) {
+ 		if (verbose)
+ 			pr_err("0.90 metadata does not support containers\n");
+ 		return 0;
+diff --git a/super1.c b/super1.c
+index a12a5bc8..d3a48478 100644
+--- a/super1.c
++++ b/super1.c
+@@ -2800,7 +2800,7 @@ static int validate_geometry1(struct supertype *st, int level,
+ 	unsigned long long overhead;
+ 	int fd;
+ 
+-	if (level == LEVEL_CONTAINER) {
++	if (is_container(level)) {
+ 		if (verbose)
+ 			pr_err("1.x metadata does not support containers\n");
+ 		return 0;
+diff --git a/sysfs.c b/sysfs.c
+index 2995713d..054842c2 100644
+--- a/sysfs.c
++++ b/sysfs.c
+@@ -762,7 +762,7 @@ int sysfs_add_disk(struct mdinfo *sra, struct mdinfo *sd, int resume)
+ 
+ 	rv = sysfs_set_num(sra, sd, "offset", sd->data_offset);
+ 	rv |= sysfs_set_num(sra, sd, "size", (sd->component_size+1) / 2);
+-	if (sra->array.level != LEVEL_CONTAINER) {
++	if (!is_container(sra->array.level)) {
+ 		if (sra->consistency_policy == CONSISTENCY_POLICY_PPL) {
+ 			rv |= sysfs_set_num(sra, sd, "ppl_sector", sd->ppl_sector);
+ 			rv |= sysfs_set_num(sra, sd, "ppl_size", sd->ppl_size);
 -- 
 2.26.2
 
