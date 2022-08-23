@@ -2,54 +2,53 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B9F4459EBB2
-	for <lists+linux-raid@lfdr.de>; Tue, 23 Aug 2022 21:01:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4229F59EBD9
+	for <lists+linux-raid@lfdr.de>; Tue, 23 Aug 2022 21:11:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231523AbiHWS72 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 23 Aug 2022 14:59:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49802 "EHLO
+        id S229793AbiHWTJn (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 23 Aug 2022 15:09:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231856AbiHWS7B (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 23 Aug 2022 14:59:01 -0400
+        with ESMTP id S230009AbiHWTJH (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 23 Aug 2022 15:09:07 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4825F5D0F7
-        for <linux-raid@vger.kernel.org>; Tue, 23 Aug 2022 10:28:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A686AE206
+        for <linux-raid@vger.kernel.org>; Tue, 23 Aug 2022 10:47:51 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 157B461375
-        for <linux-raid@vger.kernel.org>; Tue, 23 Aug 2022 17:26:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75771C433D6
-        for <linux-raid@vger.kernel.org>; Tue, 23 Aug 2022 17:25:59 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3ED6A615FB
+        for <linux-raid@vger.kernel.org>; Tue, 23 Aug 2022 17:39:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 946BAC433D6
+        for <linux-raid@vger.kernel.org>; Tue, 23 Aug 2022 17:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661275559;
-        bh=GwhVsTCo8BYtSkDTjWkY7aZTW+47t3KVDrYG0hgLRtY=;
+        s=k20201202; t=1661276381;
+        bh=tQi3HvWT0U/0YO1dP0DgLQ6zsdi5e6MkpMuAu5df4HM=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=uEA+oGxAacoHfhzApNdFHlHQUBNP6sWiT/FV9L3oN2Qe3T5Gz/SJQLbM/6tl0ivXU
-         khZ2bAo8Vl6/f8aOAOF4D8eYY1tAG7zB5bgYpOZVkSKuVvstWqe+k4xRLWAJzEJijw
-         9QcO1aty5fEmVrkjMllnJHkR/80f91J91R0bJFYSAyAd6ggUuJZMrXARw6MtuA5Rba
-         i/dvDuIMRkil7yIr7cbMrxCK/f51wBAMp0tw7ByqD7qA6zgN672xnt+TyyZRmgFLrO
-         jOFT29r5DF0GeOi4jLHGTzG1kyMfQjfJ7c9VZVkcpvctWiQLipHDhx3YGkmeDLHdIg
-         zbza9ANkF72xA==
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-335624d1e26so398241747b3.4
-        for <linux-raid@vger.kernel.org>; Tue, 23 Aug 2022 10:25:59 -0700 (PDT)
-X-Gm-Message-State: ACgBeo2lrPOD+Vfj0Bw1pifV0MDX6VO7iAycYen87IxlHqp9SlRLdzcv
-        Xf/rVjKsNNTrt9DsBqByXn9C2NAt0TJjqzrD+FA=
-X-Google-Smtp-Source: AA6agR5fpAYgMJhOezdx0g8Pu7eZlXadQdIR4QKKI2wrrlSJmp8meXFs2GHers0t9K+kMiHMGbb0OcIZpEOboYc2qSk=
-X-Received: by 2002:a05:6902:110d:b0:670:b10b:d16e with SMTP id
- o13-20020a056902110d00b00670b10bd16emr25377683ybu.259.1661275558542; Tue, 23
- Aug 2022 10:25:58 -0700 (PDT)
+        b=amzAahpqwybunADLynMOrEpM+O5xrN5/Q/9CUem6LpSKbTAIRf5XKLUQvftMOT3V2
+         jSPOdQenn4J4KOWBua2/Yr1hMFBhHAu4r6JZXaprS2fiRTaiHEfpylAp6lnjivDyJX
+         zcv0v5xbHBbac4AQ8XtEnMHCVcgx23vh4goFcHM5nUFc28o5Qs0c4x/2zKvwpS3p+6
+         qW+Pd4agOSsreEQG8/ICxurd+jkNW9+YTQwxCwW/tq2IJqACD/sf7TTnqT9bNFtMQ2
+         GX6EENpBO2VrXEll60oJixNL9M0tFNC95LjKzf1nwkoR/Ttze0zWk/5N8n7xuaT0AR
+         EixcFwp/cNMGA==
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-333b049f231so399152227b3.1
+        for <linux-raid@vger.kernel.org>; Tue, 23 Aug 2022 10:39:41 -0700 (PDT)
+X-Gm-Message-State: ACgBeo1n1GmTofh/sGxYGMWqYLjL/GLqSWmJ1UlTalu8Ym4XXE62dCOd
+        6jW1KMxvRfxSK5jj8gteD2CLXWT3e4dy8is4R8k=
+X-Google-Smtp-Source: AA6agR74Aq/L/YU0gwJTCETt3CkVgcoeG3ja2t0M27J/pXD1/j92ahRh5mV6FwuynT4HiKXI8fVj5FWhKg2xhw0Mb1c=
+X-Received: by 2002:a25:3813:0:b0:68d:c8f8:60b9 with SMTP id
+ f19-20020a253813000000b0068dc8f860b9mr25935649yba.257.1661276380551; Tue, 23
+ Aug 2022 10:39:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220817120514.5536-1-guoqing.jiang@linux.dev>
-In-Reply-To: <20220817120514.5536-1-guoqing.jiang@linux.dev>
+References: <20220822074539.12877-1-guoqing.jiang@linux.dev>
+In-Reply-To: <20220822074539.12877-1-guoqing.jiang@linux.dev>
 From:   Song Liu <song@kernel.org>
-Date:   Tue, 23 Aug 2022 10:25:47 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW7VTipS2zjnuto6OS2vkVKrebpT0cLQwMG7L70009fyHw@mail.gmail.com>
-Message-ID: <CAPhsuW7VTipS2zjnuto6OS2vkVKrebpT0cLQwMG7L70009fyHw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] fix KASAN issue for dm-raid
+Date:   Tue, 23 Aug 2022 10:39:28 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW763vum3E240rC4XhnsGL-NSH5sdvtn--5ajMiCGF14MQ@mail.gmail.com>
+Message-ID: <CAPhsuW763vum3E240rC4XhnsGL-NSH5sdvtn--5ajMiCGF14MQ@mail.gmail.com>
+Subject: Re: [PATCH] md/raid10: fix compile warning
 To:     Guoqing Jiang <guoqing.jiang@linux.dev>
-Cc:     NeilBrown <neilb@suse.de>, Mikulas Patocka <mpatocka@redhat.com>,
-        linux-raid <linux-raid@vger.kernel.org>
+Cc:     linux-raid <linux-raid@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
@@ -61,29 +60,36 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Wed, Aug 17, 2022 at 5:05 AM Guoqing Jiang <guoqing.jiang@linux.dev> wrote:
+On Mon, Aug 22, 2022 at 12:46 AM Guoqing Jiang <guoqing.jiang@linux.dev> wrote:
 >
-> Hi,
+> With W=1, compiler complains.
 >
-> Let's try another approach to fix the KASAN issue, and to avoid cause
-> issue for clustered raid.
+> drivers/md/raid10.c:1983: warning: bad line:
+>
+> Signed-off-by: Guoqing Jiang <guoqing.jiang@linux.dev>
 
-Applied to md-fixes.
+Applied to md-next.
 
-Thanks,
+Thanks!
 Song
 
+> ---
+>  drivers/md/raid10.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> Thanks,
-> Guoqing
->
-> Guoqing Jiang (2):
->   Revert "md-raid: destroy the bitmap after destroying the thread"
->   md: call __md_stop_writes in md_stop
->
->  drivers/md/md.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
+> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+> index 26545950ca42..aa5b28017a49 100644
+> --- a/drivers/md/raid10.c
+> +++ b/drivers/md/raid10.c
+> @@ -1980,7 +1980,7 @@ static int enough(struct r10conf *conf, int ignore)
+>   * Otherwise, it must be degraded:
+>   *     - recovery is interrupted.
+>   *     - &mddev->degraded is bumped.
+> -
+> + *
+>   * @rdev is marked as &Faulty excluding case when array is failed and
+>   * &mddev->fail_last_dev is off.
+>   */
 > --
 > 2.31.1
 >
