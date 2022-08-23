@@ -2,54 +2,56 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B0E1059EBD3
-	for <lists+linux-raid@lfdr.de>; Tue, 23 Aug 2022 21:09:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2C4359EBDB
+	for <lists+linux-raid@lfdr.de>; Tue, 23 Aug 2022 21:11:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231519AbiHWTI1 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 23 Aug 2022 15:08:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38644 "EHLO
+        id S229608AbiHWTK6 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 23 Aug 2022 15:10:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231272AbiHWTIJ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 23 Aug 2022 15:08:09 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52F0C13492A;
-        Tue, 23 Aug 2022 10:46:33 -0700 (PDT)
+        with ESMTP id S232249AbiHWTKT (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 23 Aug 2022 15:10:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ADDE72877;
+        Tue, 23 Aug 2022 10:48:17 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 680B26160B;
-        Tue, 23 Aug 2022 17:44:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7A80C433D7;
-        Tue, 23 Aug 2022 17:44:21 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 743C66162A;
+        Tue, 23 Aug 2022 17:46:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D02D1C433C1;
+        Tue, 23 Aug 2022 17:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661276661;
-        bh=Ul5bZ380er40qNxMbPejlJJeqU3zD3OVNwa3ZFt/HIo=;
+        s=k20201202; t=1661276805;
+        bh=+Pmlr84ILXzSyfNtmT4XWQ44Hi8a4+P3uTpYyORdvXw=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=C9zBoc5PKmp58NcyygnC6xcVGC6VM2MA3uszmJexg+uHCcrbJ0MX1lMzFwmLesHlz
-         FyEHsjikk6au2Q51Ryztu++WlzbTLWFOQttW01f5sdl4u/w6qhKnP37jnTixRrp9FL
-         zlq6bnHQk34Qgdy37OdQ2jU+xBnqn11n9AE4Gda2LQWQ+OWI/yOQntH6CxrgHvYo29
-         eF24dMainibdHMsjSWGg2yLcrDh2Th11zIOur+y7mpvgEm5aPFCPppIsgcelHHE1Kw
-         KaPt9GTdxxXJp6kjj4bwGYco5nwDZXlWK+ftIpqXKpQy+GcyhRDCpxBQmjl7OmtQUE
-         yzhWCDDAbKSaw==
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-33387bf0c4aso398390557b3.11;
-        Tue, 23 Aug 2022 10:44:21 -0700 (PDT)
-X-Gm-Message-State: ACgBeo0SAp8HRqPvHP51DW/A8/QZsbSioXKA6PT4PMd34X3/PeIpSjTu
-        /Yx0FVBYNfx0s2aLXoZ3wSHXfLaufIT/aIEGJkA=
-X-Google-Smtp-Source: AA6agR79RaYtkRmNjikCF3kqnEzKZQ6FfCWzj8r6LytYF5P1bOwtbDnte6PXDP5blgsV1thflnHhQEUQ8ZFu0DZWeiA=
-X-Received: by 2002:a81:63c3:0:b0:323:ce27:4e4d with SMTP id
- x186-20020a8163c3000000b00323ce274e4dmr27052114ywb.472.1661276660744; Tue, 23
- Aug 2022 10:44:20 -0700 (PDT)
+        b=sCpmYXaDTgSTLECpnsoy1jyQRIUuY46NuMGbp/wFxkqlTrKs3QrMM9PhvWJ60UfKi
+         j325vCefiQ68NcM8VETleqzzklPlR2Xk5WTODIl+bO/sPAWEz+uegKyxu5mBH6keit
+         M+MGyK4Go/PbFq/TvNpSnxjI0GeG+9X3+04TwsCSz7Hxz5g3PZNTtnImTiEfBFNwUF
+         KUz0cZ0NThWxzDbJIrnln4zNPmtPqBROHCebay/4d96oZnB4lvnihbzheVOe3ku0vM
+         nhYWlY725tQm09ENuibV09xXeGEtd7aBHMelkwzlGLK872Xx+GKgcnvPZORHiq2MQF
+         lZHruNLCd2epA==
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-333b049f231so399625827b3.1;
+        Tue, 23 Aug 2022 10:46:45 -0700 (PDT)
+X-Gm-Message-State: ACgBeo2ql3XksCg4NhsTXwhSKRUg5DO7YboChFB+SZEkvY1lMjl66oP9
+        A5JGXsmeUyGdv0FQ7xTKnqx/0hHJ6hPnVI/npLQ=
+X-Google-Smtp-Source: AA6agR4p0U3TeJNvdFofG46Krctsvf0ACF0C/916DEUToOrwC9aXZqAetTciGDKMj6tXNUDVyBER7sgeu4ai4f5r3Q4=
+X-Received: by 2002:a05:6902:725:b0:695:b0c7:a248 with SMTP id
+ l5-20020a056902072500b00695b0c7a248mr10341711ybt.389.1661276804849; Tue, 23
+ Aug 2022 10:46:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220817092140.4252-1-xupengfei@nfschina.com>
-In-Reply-To: <20220817092140.4252-1-xupengfei@nfschina.com>
+References: <20220818210027.6964-1-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20220818210027.6964-1-wsa+renesas@sang-engineering.com>
 From:   Song Liu <song@kernel.org>
-Date:   Tue, 23 Aug 2022 10:44:09 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW51y6dEVPs_WatXvXNnELk5UvvKkk8_kLrySUDP_OSUBA@mail.gmail.com>
-Message-ID: <CAPhsuW51y6dEVPs_WatXvXNnELk5UvvKkk8_kLrySUDP_OSUBA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] md/raid5: Fix spelling mistakes in comments
-To:     XU pengfei <xupengfei@nfschina.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+Date:   Tue, 23 Aug 2022 10:46:33 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW6ve-1Y2ZCWrmQ7+U2u+X=oQSoDLso=PUDAGc_98y-v6A@mail.gmail.com>
+Message-ID: <CAPhsuW6ve-1Y2ZCWrmQ7+U2u+X=oQSoDLso=PUDAGc_98y-v6A@mail.gmail.com>
+Subject: Re: [PATCH] md: move from strlcpy with unused retval to strscpy
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@kernel.org>, dm-devel@redhat.com,
+        linux-raid <linux-raid@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
@@ -61,38 +63,60 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Wed, Aug 17, 2022 at 2:21 AM XU pengfei <xupengfei@nfschina.com> wrote:
+On Thu, Aug 18, 2022 at 2:00 PM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
 >
-> Fix spelling of 'waitting' in comments.
+> Follow the advice of the below link and prefer 'strscpy' in this
+> subsystem. Conversion is 1:1 because the return value is not used.
+> Generated by a coccinelle script.
 >
-> Signed-off-by: XU pengfei <xupengfei@nfschina.com>
+> Link: https://lore.kernel.org/r/CAHk-=wgfRnXz0W3D37d01q3JFkr_i_uTL=V6A6G1oUZcprmknw@mail.gmail.com/
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Applied to md-next.
+Looks good to me.
+
+Alasdair and Mike,
+
+This patch touches both dm and md code. Would you like me to take it
+via the md tree?
 
 Thanks,
 Song
 
 > ---
->  drivers/md/raid5-cache.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  drivers/md/dm-ioctl.c | 4 ++--
+>  drivers/md/md.c       | 2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 >
-> diff --git a/drivers/md/raid5-cache.c b/drivers/md/raid5-cache.c
-> index f4e1cc1ece43..058d82e7fa13 100644
-> --- a/drivers/md/raid5-cache.c
-> +++ b/drivers/md/raid5-cache.c
-> @@ -1327,9 +1327,9 @@ static void r5l_write_super_and_discard_space(struct r5l_log *log,
->          * superblock is updated to new log tail. Updating superblock (either
->          * directly call md_update_sb() or depend on md thread) must hold
->          * reconfig mutex. On the other hand, raid5_quiesce is called with
-> -        * reconfig_mutex hold. The first step of raid5_quiesce() is waitting
-> -        * for all IO finish, hence waitting for reclaim thread, while reclaim
-> -        * thread is calling this function and waitting for reconfig mutex. So
-> +        * reconfig_mutex hold. The first step of raid5_quiesce() is waiting
-> +        * for all IO finish, hence waiting for reclaim thread, while reclaim
-> +        * thread is calling this function and waiting for reconfig mutex. So
->          * there is a deadlock. We workaround this issue with a trylock.
->          * FIXME: we could miss discard if we can't take reconfig mutex
+> diff --git a/drivers/md/dm-ioctl.c b/drivers/md/dm-ioctl.c
+> index 98976aaa9db9..6148fb73ccb4 100644
+> --- a/drivers/md/dm-ioctl.c
+> +++ b/drivers/md/dm-ioctl.c
+> @@ -921,9 +921,9 @@ static struct hash_cell *__find_device_hash_cell(struct dm_ioctl *param)
+>          * Sneakily write in both the name and the uuid
+>          * while we have the cell.
 >          */
+> -       strlcpy(param->name, hc->name, sizeof(param->name));
+> +       strscpy(param->name, hc->name, sizeof(param->name));
+>         if (hc->uuid)
+> -               strlcpy(param->uuid, hc->uuid, sizeof(param->uuid));
+> +               strscpy(param->uuid, hc->uuid, sizeof(param->uuid));
+>         else
+>                 param->uuid[0] = '\0';
+>
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index afaf36b2f6ab..4d019ac0a549 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -5743,7 +5743,7 @@ static int add_named_array(const char *val, const struct kernel_param *kp)
+>                 len--;
+>         if (len >= DISK_NAME_LEN)
+>                 return -E2BIG;
+> -       strscpy(buf, val, len+1);
+> +       strscpy(buf, val, len + 1);
+>         if (strncmp(buf, "md_", 3) == 0)
+>                 return md_alloc_and_put(0, buf);
+>         if (strncmp(buf, "md", 2) == 0 &&
 > --
-> 2.18.2
+> 2.35.1
 >
