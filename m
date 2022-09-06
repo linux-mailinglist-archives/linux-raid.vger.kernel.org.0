@@ -2,94 +2,80 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 74C7C5ADF61
-	for <lists+linux-raid@lfdr.de>; Tue,  6 Sep 2022 08:07:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C34BE5AE477
+	for <lists+linux-raid@lfdr.de>; Tue,  6 Sep 2022 11:41:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231913AbiIFGHQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 6 Sep 2022 02:07:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48840 "EHLO
+        id S233537AbiIFJlD (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 6 Sep 2022 05:41:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231836AbiIFGHP (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 6 Sep 2022 02:07:15 -0400
-Received: from out0.migadu.com (out0.migadu.com [94.23.1.103])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 890776EF37;
-        Mon,  5 Sep 2022 23:07:12 -0700 (PDT)
-Subject: Re: [PATCH 2/2] md: Remove extra mddev_get() in md_seq_start()
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1662444431;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Y1CvBcxrHvkaMLJk5BCgtnP/bQwD8Zm5U2RwKt6uWao=;
-        b=kOyQ4jXN8FYJcHCE6RT1CkOxgPt/OJ2qu67NYxffw5ImSjOgHdTEM1GaYxLhnafgSrfFb1
-        8C7dg6Mpw2rK2VTD8Ytln5grtPk4AYoU3HZahU5gLhL6J9pk1py2c2IdvOgYO1rp218zZ9
-        bKn42dPBBPv5Pw6i6GC9hgIY7iN/CM8=
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        Song Liu <song@kernel.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Stephen Bates <sbates@raithlin.com>,
-        Martin Oliveira <Martin.Oliveira@eideticom.com>,
-        David Sloan <David.Sloan@eideticom.com>
-References: <20220902171609.23376-1-logang@deltatee.com>
- <20220902171609.23376-3-logang@deltatee.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Guoqing Jiang <guoqing.jiang@linux.dev>
-Message-ID: <09bd3888-db60-3221-6820-055c0ee9e29a@linux.dev>
-Date:   Tue, 6 Sep 2022 14:06:51 +0800
+        with ESMTP id S238987AbiIFJlC (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 6 Sep 2022 05:41:02 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E91E25EDDD
+        for <linux-raid@vger.kernel.org>; Tue,  6 Sep 2022 02:40:59 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id c20so7542788qtw.8
+        for <linux-raid@vger.kernel.org>; Tue, 06 Sep 2022 02:40:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc:subject:date;
+        bh=u9uKjPX3k13UvUOYMOJvh5rXl4CYd65xfgfhCzs7K28=;
+        b=F1PGCXHhhlo+hOM1MVmJtg4Gg49ij3aMGUUB6qA8YhbNT50hokNE71CszDZ9L0WXTW
+         p/+A3tEJxmy4HarXJUGEn8IGtXspNgq/Z8jJnK2vSM4fPU8fNeH3DJwk0i395qmZZQy8
+         uxOzKy3CwftrLtRVyrS4Np+dPl8JRqffWp9bkT3Hg6O9v+6m6O/9W6pcgO9WrSMpiUQa
+         28jW66g/uf4JYW1TLML5NeQEY4Mx8orfivVuNnlX+mW5Jr2HPHT8Unhut8mDsoFf3Tv6
+         4vbNN08XxUq9R4Z8bmKvLoBtbSDH0Wvf0ORGqld9pHcrAbQAgLzNWRJXOh6XH8fClcZC
+         m//A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=u9uKjPX3k13UvUOYMOJvh5rXl4CYd65xfgfhCzs7K28=;
+        b=03ZrVsexCJGB8Hw0Vn4/H+AsyQu4iQfhHi8hRWE2qd1gp/ubqUZVD8PYGw44jnkEyv
+         5W+VfalPQXNIcKkG6GaKK33aKg0eFDDHYSc1pKD7k+v1cNCtgsIhmhKG0SFISVpSH1nU
+         90iabkqDT7aw6Ugk2UkCNA1kPkwPZ2ACfbW27FLoSe+xZe8LBZHNgz33GS5X7TP1j3x1
+         POjMiaPWRYPsmkHTErsENa+VQgMiBuFuvANKt55dPm5DsfjYfetIA/Fk20ine/0N3bNF
+         pYxwQyvjy+8Jo7lxoF2JHMSVL7Xo29QsOSQBMWx1VVR5CEBVKKu5WZVR7VLD2AGjUmnz
+         dRHg==
+X-Gm-Message-State: ACgBeo3ziQGamS6/RxZTnI77FfWE5Tre5pxO1UWhcZlqhc0+LJZkjOkX
+        W+l8gVBVlev60Asx1HfJDSO7MuomaRs4ZNtynU0=
+X-Google-Smtp-Source: AA6agR5EQ9Qi5CdX/BrX7Uq3bTmqpqMjXAtiCNqMgVTofcNxpkKIvHi4u451tsP6G7Ioy7sRu4GLbII3kJin72ctCr8=
+X-Received: by 2002:a05:622a:40e:b0:343:7769:5895 with SMTP id
+ n14-20020a05622a040e00b0034377695895mr43930269qtx.467.1662457258921; Tue, 06
+ Sep 2022 02:40:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20220902171609.23376-3-logang@deltatee.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Migadu-Flow: FLOW_OUT
-X-Migadu-Auth-User: linux.dev
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Received: by 2002:a05:6214:20a1:0:0:0:0 with HTTP; Tue, 6 Sep 2022 02:40:58
+ -0700 (PDT)
+Reply-To: olsonfinancial.de@gmail.com
+From:   OLSON FINANCIAL GROUP <aminaaliyugarki1@gmail.com>
+Date:   Tue, 6 Sep 2022 02:40:58 -0700
+Message-ID: <CAAtz+bh2buq_DUyU-i17N66a0JbfNax81aEqbca5CVabPE5cug@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=4.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-
-
-On 9/3/22 1:16 AM, Logan Gunthorpe wrote:
-> A regression is seen where mddev devices stay permanently after they
-> are stopped due to an elevated reference count.
->
-> This was tracked down to an extra mddev_get() in md_seq_start().
->
-> It only happened rarely because most of the time the md_seq_start()
-> is called with a zero offset. The path with an extra mddev_get() only
-> happens when it starts with a non-zero offset.
->
-> The commit noted below changed an mddev_get() to check its success
-> but inadevrtantly left the original call in. Remove the extra call.
->
-> Fixes: 12a6caf27324 ("md: only delete entries from all_mddevs when the disk is freed")
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> ---
->   drivers/md/md.c | 1 -
->   1 file changed, 1 deletion(-)
->
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index afaf36b2f6ab..9dc0175280b4 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -8154,7 +8154,6 @@ static void *md_seq_start(struct seq_file *seq, loff_t *pos)
->   	list_for_each(tmp,&all_mddevs)
->   		if (!l--) {
->   			mddev = list_entry(tmp, struct mddev, all_mddevs);
-> -			mddev_get(mddev);
->   			if (!mddev_get(mddev))
->   				continue;
->   			spin_unlock(&all_mddevs_lock);
-
-Acked-by: Guoqing Jiang <Guoqing.jiang@linux.dev>
-
-Thanks,
-Guoqing
+--=20
+h Guten Morgen,
+Ben=C3=B6tigen Sie dringend einen Kredit, um ein Haus oder ein Unternehmen
+zu kaufen? oder ben=C3=B6tigen Sie ein Gesch=C3=A4fts- oder Privatdarlehen,=
+ um
+zu investieren? ein neues Gesch=C3=A4ft er=C3=B6ffnen, Rechnungen bezahlen?=
+ Und
+zahlen Sie uns Installationen zur=C3=BCck? Wir sind ein zertifiziertes
+Finanzunternehmen. Wir bieten Privatpersonen und Unternehmen Kredite
+an. Wir bieten zuverl=C3=A4ssige Kredite zu einem sehr niedrigen Zinssatz
+von 2 %. F=C3=BCr weitere Informationen
+mailen Sie uns an: olsonfinancial.de@gmail.com........
