@@ -2,70 +2,76 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B9D905AE88F
-	for <lists+linux-raid@lfdr.de>; Tue,  6 Sep 2022 14:39:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAE1A5AE8EE
+	for <lists+linux-raid@lfdr.de>; Tue,  6 Sep 2022 15:00:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232666AbiIFMjT (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 6 Sep 2022 08:39:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49274 "EHLO
+        id S233477AbiIFM7n (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 6 Sep 2022 08:59:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231700AbiIFMjS (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 6 Sep 2022 08:39:18 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7EA626119
-        for <linux-raid@vger.kernel.org>; Tue,  6 Sep 2022 05:39:17 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id q63so10500402pga.9
-        for <linux-raid@vger.kernel.org>; Tue, 06 Sep 2022 05:39:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:sender:mime-version:from:to:cc
-         :subject:date;
-        bh=lb7mKHsaIcUxW+3Jy2BJQ41sCMA+sLqu9myEjLcTq6E=;
-        b=qCNGl5vw1Rp1JAJf2CoWp5cZ+hqwn8317SMrAQ82JBgMYPnfaI3hlomJwVoC3Mcy3d
-         HyRoYMtFNHxVbGYDLrXQxZUAKi4a65XunYle39ecqmUYjQlOlhQJCzeNbmwlE9H2UC/Q
-         +YiMpbqkAV3EV4r3quyENt+TyqV+UYn2N3AIXpeE9E6vQixLO/bR5BEMdcFrsXUJ9XOW
-         10rK2LlcJ5rJygcPBxZPxid89nqXkFMi5g6Dp4+8WRyryvdvsQusYxUBFAVqOjQe0s+H
-         1LczXhqMTmi47ea3rASusmzyqtjj3D3jJirqeXX9YInMOXxK1r9p6Hk5OBh5Sv7S/kD7
-         rw+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:sender:mime-version
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=lb7mKHsaIcUxW+3Jy2BJQ41sCMA+sLqu9myEjLcTq6E=;
-        b=1x5ky4yPFW0DuQSg3w5zWN7dX5fEicMgxDORJlECKidGeCJtOglnQQQFGaariNNKnc
-         Q1FoozDdLUu+/5qR/oPevVpXOmvdaYnwDdToABWSzR7bIyQeWN0Or9DhwJYXaD8Cg+IY
-         gOXPl6sC2/iB5ee0Rn88b8bw8+f4Fw0OnBSwNPnJFh/5J1jBqErLqT5lsA5VK24Cj28R
-         43NSV5ZuWQtt3KRiyjQdnVU8EbgeJY73kYgHKEZNflv4x3CmIUnUoT3PSSfDvw3p5XgT
-         xjfylRXfJHo6Y5yOlryEA5+6cN/jJHb3dljkCwJ8wOSwg4YCqof2jlYZ7r6RGDdibPit
-         +6cw==
-X-Gm-Message-State: ACgBeo03BaHkVJK+E2HF1wOz1IdOTCsfWnYCHJlW2yTERzz6zBeCeIJ5
-        JeTpj/I4mOkwqoEkcW7rsiIziOjTywfjwTDEzLrECbhP
-X-Google-Smtp-Source: AA6agR7WSk/buCHxY7CB6Ii17+6essnU4J2czmv98TJ2Bwidpgdn/m4/6LJEEN29n8nKHG7Il1Yjof9E8o7eF7srI74=
-X-Received: by 2002:a63:e317:0:b0:432:38c0:bde3 with SMTP id
- f23-20020a63e317000000b0043238c0bde3mr15822464pgh.567.1662467957492; Tue, 06
- Sep 2022 05:39:17 -0700 (PDT)
+        with ESMTP id S232347AbiIFM7m (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 6 Sep 2022 08:59:42 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50F30BC1B
+        for <linux-raid@vger.kernel.org>; Tue,  6 Sep 2022 05:59:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662469182; x=1694005182;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=HvdeXuVicA9I7FZ/hyS8crXrhAbNqM9BzWZWP3qOQZY=;
+  b=GjxIWMSObAb0YDpBlOkLn/spkk0EbP6Y9bf9W8fFp8WlQh2qYxIJJ0tb
+   X2ggipoy/t/Sep2OXmV00dklh9Y5RHfUAXkbUo3EizLiHQiyUOPic5dKv
+   RpYYQIoZaH579offsRR8tJ6q91+33pwQP89bIQuMiXghm5ClEvGVmw4nf
+   j8Bz+yOyEOG8WsfGplAMmKtN5MjRAeVPFf6wN49pxvTwWaOHX+3EKHlsH
+   d0udvZQspnDfUg9sPPu4aB0/3kkjqmCazdNf+pz16zdd01UFOQ12+Rcj2
+   rFul+gIu38AVqTGisKLIg2QIKkDDk8oB71fLiJPc4DE3ZsK56zz9hoLHU
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10462"; a="296585125"
+X-IronPort-AV: E=Sophos;i="5.93,294,1654585200"; 
+   d="scan'208";a="296585125"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 05:59:42 -0700
+X-IronPort-AV: E=Sophos;i="5.93,294,1654585200"; 
+   d="scan'208";a="675679146"
+Received: from mtkaczyk-devel.igk.intel.com ([10.102.105.40])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 05:59:40 -0700
+From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+To:     jes@trained-monkey.org, colyli@suse.de
+Cc:     linux-raid@vger.kernel.org, felix.lechner@lease-up.com
+Subject: [PATCH 0/2] small fixes from Debian
+Date:   Tue,  6 Sep 2022 14:59:30 +0200
+Message-Id: <20220906125932.15214-1-mariusz.tkaczyk@linux.intel.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Sender: ndubuisio992@gmail.com
-Received: by 2002:a05:7300:c09:b0:6f:e3f6:8ca4 with HTTP; Tue, 6 Sep 2022
- 05:39:17 -0700 (PDT)
-From:   Jessica Daniel <jessicadaniel7833@gmail.com>
-Date:   Tue, 6 Sep 2022 12:39:17 +0000
-X-Google-Sender-Auth: hx-dRgF0c1IU3pyOJ6ozfcMMQg4
-Message-ID: <CAO7YTNmsAO3VB9bBWrmRKsrFHNErNMiz641y-nYu86bDMbg8cQ@mail.gmail.com>
-Subject: Hi
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=0.0 required=5.0 tests=BAYES_40,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+Hi Jes and Coly,
+Here we have small Debian customizations worth to be integrated.
+
+Mariusz Tkaczyk (2):
+  mdadm: systemd services adjustments
+  ReadMe: fix command-line help
+
+ ReadMe.c                             | 2 +-
+ systemd/mdadm-grow-continue@.service | 1 +
+ systemd/mdadm-last-resort@.service   | 1 +
+ systemd/mdcheck_continue.service     | 3 ++-
+ systemd/mdcheck_start.service        | 1 +
+ systemd/mdmon@.service               | 1 +
+ systemd/mdmonitor-oneshot.service    | 1 +
+ systemd/mdmonitor.service            | 1 +
+ 8 files changed, 9 insertions(+), 2 deletions(-)
+
 -- 
-Hello Dear,
-Did you receive my mail
-thanks??
+2.26.2
+
