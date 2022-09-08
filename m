@@ -2,65 +2,92 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A6355B22E6
-	for <lists+linux-raid@lfdr.de>; Thu,  8 Sep 2022 17:57:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A754B5B2361
+	for <lists+linux-raid@lfdr.de>; Thu,  8 Sep 2022 18:16:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229455AbiIHP5R (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 8 Sep 2022 11:57:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60040 "EHLO
+        id S229548AbiIHQP6 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 8 Sep 2022 12:15:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229716AbiIHP5R (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 8 Sep 2022 11:57:17 -0400
-Received: from sender11-op-o11.zoho.eu (sender11-op-o11.zoho.eu [31.186.226.225])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73F87D740B
-        for <linux-raid@vger.kernel.org>; Thu,  8 Sep 2022 08:57:15 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1662652625; cv=none; 
-        d=zohomail.eu; s=zohoarc; 
-        b=jUOfy2DBdH1Jc+8PlpvshDtMwto/uECYk7vIwzGPRvs7oOWys1xsNfpUuLTeyAF96rh1ksah8xsiDgHsE/etKjOs5UQz13J/JQ8urVSXE4WFEbPbgr/jRhRe5WoQMWMBD/zhSNbU8JgeGX5KxMLAP/WORKJXEGmWOSpXavo1pFY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1662652625; h=Content-Type:Content-Transfer-Encoding:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=xf8nusNxM8H7Ea99S83GEndZ/n6igAC+ltk1QQHu+CU=; 
-        b=GWzs2j+NKqx0c4arCvVfj2VHLCKtwIk6rYveO/VmDFYd6+KV0f6PDSSC9i7QWc0YWeMUqT3Z5sLs3x2bq/sQZ85d1cyYEPc4BSaGAFvpenEv7Vi9MTZKNoER3JvTow6TTw65FkkTLvTA6Zh06R11IoL5JOh86YcXJ37xOSYcg4I=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
-        dmarc=pass header.from=<jes@trained-monkey.org>
-Received: from [100.109.63.17] (163.114.130.7 [163.114.130.7]) by mx.zoho.eu
-        with SMTPS id 1662652620963608.021443150562; Thu, 8 Sep 2022 17:57:00 +0200 (CEST)
-Message-ID: <f3ddb157-0479-fc9c-54f7-def2d620cb1e@trained-monkey.org>
-Date:   Thu, 8 Sep 2022 11:56:57 -0400
+        with ESMTP id S231320AbiIHQPi (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 8 Sep 2022 12:15:38 -0400
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 207952F65A;
+        Thu,  8 Sep 2022 09:15:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:MIME-Version:Message-Id:Date:Cc:To:From
+        :references:content-disposition:in-reply-to;
+        bh=MUbL2/8sV8NjRJrfnFrUb43I1jVP85ixEqFrubpQfm0=; b=bk67QBxBQCfIeJgkM/gnPK13OG
+        C9io++B7NX0eEYm0VC9p7mg+GxzDCW/KyEKq0aoUf1BdfstWZGB61epgGIvYtgya7fqCY+FvgwN3q
+        E1a6Dg5Gbq5zexTnA+X0hPm6a70sZyiK3vktHlUFrk0O2w+2EqQrewlHrcAeURNBAAFwSEr+H2yXx
+        gpVtcGd4HbOJauGCsUh0BA2mMjPsKCoQEgHhrcG7ykvXYxD2iX4UVrPn/MEJsLF70elZURqBwG6i6
+        Ps7YJjIY2ng7LzYg/jA+ZaqZEgJgKmMhPA4tCDqV5AxoVSWhTKbekg7tIJmK4uswDvL8bbo4yjMPX
+        z4iCAVig==;
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1oWKBW-001jJy-2K; Thu, 08 Sep 2022 10:15:22 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1oWKBU-00019B-BW; Thu, 08 Sep 2022 10:15:20 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        Song Liu <song@kernel.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Guoqing Jiang <guoqing.jiang@linux.dev>,
+        Stephen Bates <sbates@raithlin.com>,
+        Martin Oliveira <Martin.Oliveira@eideticom.com>,
+        David Sloan <David.Sloan@eideticom.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Thu,  8 Sep 2022 10:15:13 -0600
+Message-Id: <20220908161516.4361-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH v2] mdadm: Correct typos, punctuation and grammar in man
-Content-Language: en-US
-To:     Mateusz Grzonka <mateusz.grzonka@intel.com>,
-        linux-raid@vger.kernel.org, Wols Lists <antlists@youngman.org.uk>
-References: <20220812145212.16138-1-mateusz.grzonka@intel.com>
-From:   Jes Sorensen <jes@trained-monkey.org>
-In-Reply-To: <20220812145212.16138-1-mateusz.grzonka@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
-X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, song@kernel.org, hch@infradead.org, guoqing.jiang@linux.dev, sbates@raithlin.com, Martin.Oliveira@eideticom.com, David.Sloan@eideticom.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Subject: [PATCH v2 0/3] A couple more bug fixes
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 8/12/22 10:52, Mateusz Grzonka wrote:
-> Signed-off-by: Mateusz Grzonka <mateusz.grzonka@intel.com>
-> Reviewed-by: Wol <anthony@youngman.org.uk>
-> ---
->  mdadm.8.in | 178 ++++++++++++++++++++++++++---------------------------
->  1 file changed, 88 insertions(+), 90 deletions(-)
-> 
+Hey,
 
-Applied!
+The first two patches are a resend of the two sent earlier with tags
+collected and a couple minor typos fixed.
+
+The third patch fixes the deadlock issue I brought up in another email.
+
+These patches are based on the current md/md-next branch (526bd69b9d3).
 
 Thanks,
-Jes
+
+Logan
+
+--
+
+David Sloan (1):
+  md/raid5: Remove unnecessary bio_put() in raid5_read_one_chunk()
+
+Logan Gunthorpe (2):
+  md: Remove extra mddev_get() in md_seq_start()
+  md/raid5: Wait for MD_SB_CHANGE_PENDING in raid5d
+
+ drivers/md/md.c    | 1 -
+ drivers/md/raid5.c | 5 ++++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
 
+base-commit: 526bd69b9d330eed1db59b2cf6a7d18caf866847
+--
+2.30.2
