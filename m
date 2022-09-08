@@ -2,289 +2,149 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E8755B1610
-	for <lists+linux-raid@lfdr.de>; Thu,  8 Sep 2022 09:56:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E40ED5B1C39
+	for <lists+linux-raid@lfdr.de>; Thu,  8 Sep 2022 14:09:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229644AbiIHH4i (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 8 Sep 2022 03:56:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59728 "EHLO
+        id S231553AbiIHMIr (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 8 Sep 2022 08:08:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230138AbiIHH4b (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 8 Sep 2022 03:56:31 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04873286C7
-        for <linux-raid@vger.kernel.org>; Thu,  8 Sep 2022 00:56:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662623790; x=1694159790;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Zz+gK4GCWRLTsVDb0EXTHh394X1oevcwUVPFlCor7Zc=;
-  b=ItIKHvXBFUgiPSK7tYa9o4gDCOFissWWrwWGQscQ/FaygroXskVscjU5
-   E8qFd3zjVlpbg8imV3k1kknxkgxiv3pssjvwjQvsDPovcr1oORGqXBEBQ
-   vO8sts0lMjTJhJhRoOYsaWpYNZ7SiffPmD74ZrB+r7nDdhFp2FyYPS2lq
-   BoRv7hOQ3UBgoDs4wU7S0pDcSlUpcB8G2P5VNUrLmbGwt9kMsI/UUwjpK
-   rjli9pOzrsajIAVDflx3zJLreCNormh5lYt5tpZSERKCwaizSDMr6k+2r
-   127TS9nQnIrZdsYRtt+zmY8botoXuZIPMYYM0Y8U6HTeB575HNqNemvff
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10463"; a="280129587"
-X-IronPort-AV: E=Sophos;i="5.93,299,1654585200"; 
-   d="scan'208";a="280129587"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2022 00:56:19 -0700
-X-IronPort-AV: E=Sophos;i="5.93,299,1654585200"; 
-   d="scan'208";a="676576593"
-Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.252.47.178])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2022 00:56:16 -0700
-Date:   Thu, 8 Sep 2022 09:56:11 +0200
-From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-raid@vger.kernel.org, Jes Sorensen <jsorensen@fb.com>,
-        Guoqing Jiang <guoqing.jiang@linux.dev>,
-        Xiao Ni <xni@redhat.com>, Coly Li <colyli@suse.de>,
-        Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-        Jonmichael Hands <jm@chia.net>,
-        Stephen Bates <sbates@raithlin.com>,
-        Martin Oliveira <Martin.Oliveira@eideticom.com>,
-        David Sloan <David.Sloan@eideticom.com>
-Subject: Re: [PATCH mdadm 1/2] mdadm: Add --discard option for Create
-Message-ID: <20220908095611.000072df@linux.intel.com>
-In-Reply-To: <20220907200355.205045-2-logang@deltatee.com>
-References: <20220907200355.205045-1-logang@deltatee.com>
-        <20220907200355.205045-2-logang@deltatee.com>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S229658AbiIHMIm (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 8 Sep 2022 08:08:42 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB8C0FCA07
+        for <linux-raid@vger.kernel.org>; Thu,  8 Sep 2022 05:08:37 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id nc14so37525493ejc.4
+        for <linux-raid@vger.kernel.org>; Thu, 08 Sep 2022 05:08:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc:subject:date;
+        bh=61JNgHFLNVCOHtS3GBlVT+sTDzg02TjYElOUCZQYEf8=;
+        b=HtgKNuSMlm36EUZXIQjvg66VG4Cf9KG9o7TXw54X62EKPmk+Ub/rVrVF7Jzl7Ds7kO
+         UCH679hMgBDNwFLGGeHb/2LN8HSMepKYQ4XHZWOYz2pfFTRTo10jgM61feW0CtIH9wTs
+         cWDVplksOqYnCDhQZqLWKFvC/ITbZV1SE7ZOJKNcvW/zr6YWejyvShHr4HqV1XqqLKSi
+         aHWzLSbuPSm4DXlJKfkx9cjhQ8ly/i7YVPOUpfNC3SpdRtbgdpYeqV+sVkApZCZesmsU
+         GaR5lECUziqJ61lt1CqsdCA5x5rBiwWkFcCMmQ9iK1vrrbk84so4bGOLELfaa0Dt/Xs0
+         /qWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=61JNgHFLNVCOHtS3GBlVT+sTDzg02TjYElOUCZQYEf8=;
+        b=fjSwMFK6WXjB88Skdvb+dwu3thB9HobcFm+707emdSNtzCI3kNLeodLJT09uBLC1pB
+         726/dj7apuGcjaZsFx3E57J5k3hlA/6uWT6yLUYxr4M+JtpsPOjxpNl+OaeDtUWUonGj
+         QjLUvlW1zPY1S9KmS8fAF9f7uhmQDuR4sCzOOUG+kcrXEIYR7qllLEIzMz1GvGWD4YNu
+         nBZZywuSelCHbeytY7R4oAtuTAbaMAKoVSJXaMqP0MPxFKI54/+9lgOJC4YUasLJsZMG
+         1x88MWDSDYoGNyViEI/ZQtFyb93KmthO8TJnvKExWfJ9QW6mio50P0PHA0HumshLme/j
+         eMag==
+X-Gm-Message-State: ACgBeo1bfh9zvkQOjuiHVI20n8ypZ39qEsna5nFdNxYX9nUepskMQQI6
+        5+zNQCHg0urRCqeEWHq9B5rbC93snJ6FLQSMTX4=
+X-Google-Smtp-Source: AA6agR4faGLlknEVHCd7paYi7uHizUiDAwBUfsO6+JblJj9xGRNmTX1c8O11BeMjUhyh3saGVevsRUjxGHHK3sBQAxs=
+X-Received: by 2002:a17:907:6e18:b0:73d:63d9:945f with SMTP id
+ sd24-20020a1709076e1800b0073d63d9945fmr5985318ejc.12.1662638916092; Thu, 08
+ Sep 2022 05:08:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a17:906:749d:b0:743:2e24:e8cd with HTTP; Thu, 8 Sep 2022
+ 05:08:35 -0700 (PDT)
+Reply-To: mrtonyelumelu98@gmail.com
+From:   "Mrs. Cristalina Georgieva" <nastyanastya88889@gmail.com>
+Date:   Thu, 8 Sep 2022 13:08:35 +0100
+Message-ID: <CADsX60CBiVvwN+F4ym_2zFH_MaVo9i9qaarXjBKw+YCBOGqM=w@mail.gmail.com>
+Subject: hi
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+X-Spam-Status: No, score=2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
+        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi Logan,
-I like this idea but I have some question.
-
-Thanks,
-Mariusz
-
-On Wed,  7 Sep 2022 14:03:54 -0600
-Logan Gunthorpe <logang@deltatee.com> wrote:
-
-> Add the --discard option for Create which will send BLKDISCARD requests to
-> all disks before assembling the array. This is a fast way to know the
-> current state of all the disks. If the discard request zeros the data
-> on the disks (as is common but not universal) then the array is in a
-> state with correct parity. Thus the initial sync may be skipped.
-
-Are we discarding whole device or only space for array? I can see that we are
-specifying range in ioctl.
-> 
-> After issuing each discard request, check if the first page of the
-> block device is zero. If it is, it is safe to assume the entire
-> disk should be zero. If it's not report an error.
-> 
-> If all the discard requests are successful and there are no missing
-> disks thin it is safe to set assume_clean as we know the array is clean.
-> 
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> ---
->  Create.c | 75 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  ReadMe.c |  1 +
->  mdadm.c  |  4 +++
->  mdadm.h  |  2 ++
->  4 files changed, 82 insertions(+)
-> 
-> diff --git a/Create.c b/Create.c
-> index e06ec2ae96a1..db99da1e8571 100644
-> --- a/Create.c
-> +++ b/Create.c
-> @@ -26,6 +26,12 @@
->  #include	"md_u.h"
->  #include	"md_p.h"
->  #include	<ctype.h>
-> +#include	<sys/ioctl.h>
-> +
-> +#ifndef BLKDISCARD
-> +#define BLKDISCARD _IO(0x12,119)
-> +#endif
-> +#include	<fcntl.h>
->  
->  static int round_size_and_verify(unsigned long long *size, int chunk)
->  {
-> @@ -91,6 +97,63 @@ int default_layout(struct supertype *st, int level, int
-> verbose) return layout;
->  }
->  
-> +static int discard_device(const char *devname, unsigned long long size)
-> +{
-> +	uint64_t range[2] = {0, size};
-Are we starting always from 0? If yest then it introduces bug. In IMSM there is
-a matrix array conception. Two arrays on same drives.
-I suspect that we are able to erase data from first array when we set --discard
-during second volume creation.
-
-> +	unsigned long buf[4096 / sizeof(unsigned long)];
-> +	unsigned long i;
-> +	int fd;
-> +
-> +	fd = open(devname, O_RDWR | O_EXCL);
-
-Do we need to to open another RDWR descriptor, I think that mdadm will open
-something again soon. We are opening descriptors many times, it generates
-unnecessary uvents. We can incorporate it with existing logic and add
-discarding just before st->ss->add_to_super() and discard every drive one by
-one.
-We will fail on error anyway.
-
-> +	if (fd < 0) {
-> +		pr_err("could not open device for discard: %s\n", devname);
-> +		return 1;
-> +	}
-
-Please use is_fd_valid() here.
-
-> +
-> +	if (ioctl(fd, BLKDISCARD, &range)) {
-> +		pr_err("discard failed on '%s': %m\n", devname);
-> +		goto out_err;
-> +	}
-> +
-> +	if (read(fd, buf, sizeof(buf)) != sizeof(buf)) {
-> +		pr_err("failed to readback '%s' after discard: %m\n",
-> devname);
-> +		goto out_err;
-> +	}
-> +
-> +	for (i = 0; i < ARRAY_SIZE(buf); i++) {
-> +		if (buf[i]) {
-> +			pr_err("device did not read back zeros after discard
-> on '%s': %lx\n",
-> +			       devname, buf[i]);
-> +			goto out_err;
-Do we really need to print data here? Could you move it to debug?
-
-> +		}
-> +	}
-> +
-> +	close(fd);
-there is also close_fd() but I don't see it useful here.
-
-> +	return 0;
-> +
-> +out_err:
-> +	close(fd);
-> +	return 1;
-> +}
-> +
-> +static int discard_devices(struct context *c, struct mddev_dev *devlist,
-> +			   unsigned long long size)
-> +{
-> +	struct mddev_dev *dv;
-> +
-> +	for (dv = devlist; dv; dv = dv->next) {
-> +		if (!strcmp(dv->devname, "missing"))
-> +			continue;
-> +
-> +		if (c->verbose)
-> +			pr_err("discarding all data on: %s\n", dv->devname);
-I know that mdadm is printing messages to stderr mainly but for this one,
-stdout is enough IMO. I give it to you.
-
-> +		if (discard_device(dv->devname, size))
-> +			return 1;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  int Create(struct supertype *st, char *mddev,
->  	   char *name, int *uuid,
->  	   int subdevs, struct mddev_dev *devlist,
-> @@ -603,6 +666,18 @@ int Create(struct supertype *st, char *mddev,
->  		}
->  	}
->  
-> +	if (s->discard) {
-> +		if (discard_devices(c, devlist, (s->size << 10) +
-> +				    (st->data_offset << 9)))
-> +			return 1;
-> +
-> +		/* All disks are zero so if there are none missing assume
-> +		 * the array is clean
-> +		 */
-> +		if (first_missing >= s->raiddisks)
-> +			s->assume_clean = 1;
-
-IMO missing drive has nothing to do with clean conception but please correct me
-I'm wrong. All assume_clean does is skipping resync after the creation and that
-is true even if some drives are missing. Array will be still clean but will be
-also degraded.
-
-If I'm correct then it simplifies implementation because we can set
-s.assume_clean if s.discard is set too in mdadm.c.
-
-If I'm wrong what is the point of discard when resync is started anyway with
-missing drive? Maybe those features should be mutually exclusive?
-
-> +	}
-
-> +
->  	/* If this is raid4/5, we want to configure the last active slot
->  	 * as missing, so that a reconstruct happens (faster than re-parity)
->  	 * FIX: Can we do this for raid6 as well?
-> diff --git a/ReadMe.c b/ReadMe.c
-> index 7f94847e9769..544a057f83a0 100644
-> --- a/ReadMe.c
-> +++ b/ReadMe.c
-> @@ -138,6 +138,7 @@ struct option long_options[] = {
->      {"size",	  1, 0, 'z'},
->      {"auto",	  1, 0, Auto}, /* also for --assemble */
->      {"assume-clean",0,0, AssumeClean },
-> +    {"discard",	  0, 0, Discard },
->      {"metadata",  1, 0, 'e'}, /* superblock format */
->      {"bitmap",	  1, 0, Bitmap},
->      {"bitmap-chunk", 1, 0, BitmapChunk},
-> diff --git a/mdadm.c b/mdadm.c
-> index 972adb524dfb..8dee85a54a6a 100644
-> --- a/mdadm.c
-> +++ b/mdadm.c
-> @@ -602,6 +602,10 @@ int main(int argc, char *argv[])
->  			s.assume_clean = 1;
->  			continue;
->  
-> +		case O(CREATE, Discard):
-> +			s.discard = 1;
-please use true.
-
-> +			continue;
-> +
->  		case O(GROW,'n'):
->  		case O(CREATE,'n'):
->  		case O(BUILD,'n'): /* number of raid disks */
-> diff --git a/mdadm.h b/mdadm.h
-> index 941a5f3823a0..99769be57ac5 100644
-> --- a/mdadm.h
-> +++ b/mdadm.h
-> @@ -433,6 +433,7 @@ extern char Version[], Usage[], Help[], OptionHelp[],
->   */
->  enum special_options {
->  	AssumeClean = 300,
-> +	Discard,
->  	BitmapChunk,
->  	WriteBehind,
->  	ReAdd,
-> @@ -593,6 +594,7 @@ struct shape {
->  	int	bitmap_chunk;
->  	char	*bitmap_file;
->  	int	assume_clean;
-> +	int	discard;
-
-please use bool type.
-
->  	int	write_behind;
->  	unsigned long long size;
->  	unsigned long long data_offset;
+2LXZhtiv2YjZgiDYp9mE2YbZgtivINin2YTYr9mI2YTZiiAoSS5NLkYpDQrYtNi52KjYqSDYpdiv
+2KfYsdipINin2YTYr9mK2YjZhiDYp9mE2K/ZiNmE2YrYqSDYjA0KIyAxOTAwINiMINi02KfYsdi5
+INin2YTYsdim2YrYsw0KDQrZhdix2K3YqNmL2Kcg2KjZg9mFINmB2Yog2LnZhtmI2KfZhiDYp9mE
+2KjYsdmK2K8g2KfZhNil2YTZg9iq2LHZiNmG2Yog2KfZhNix2LPZhdmKINmE2YTZhdiv2YrYsSBJ
+Lk0uRi4g2YPYsdmK2LPYqtin2YTZitmG2Kcg2KzZiNix2KzZitmB2KcNCg0KDQrYudiy2YrYstmK
+INin2YTZhdiz2KrZgdmK2K8hDQoNCtmE2YLYryDYs9mF2K0g2YTZhtinINmI2LLZitixINin2YTY
+rtiy2KfZhtipINin2YTZhdi52YrZhiDYrdiv2YrYq9mL2Kcg2YjYp9mE2YfZitim2Kkg2KfZhNit
+2KfZg9mF2Kkg2YTZhNiz2YTYt9ipINin2YTZhtmC2K/ZitipDQrZhNmE2KPZhdmFINin2YTZhdiq
+2K3Yr9ipINio2YHYrdi1INin2YTYo9mF2YjYp9mEINin2YTYqtmKINmE2YUg2KrYqtmFINin2YTZ
+hdi32KfZhNio2Kkg2KjZh9inINmI2KfZhNiq2Yog2YTYt9in2YTZhdinINmD2KfZhtiqDQrZhdiv
+2YrZhtipINmE2K3Zg9mI2YXYqSDYp9mE2KPZhdmFINin2YTZhdiq2K3Yr9ipINiMINmE2LDZhNmD
+INiq2YUg2KfYqtmH2KfZhSDZhdin2YTZg9mK2YfYpyDYqNin2YTYp9it2KrZitin2YQuDQrYp9mE
+2YXYrdiq2KfZhNmI2YYg2KfZhNiw2YrZhiDZitiz2KrYrtiv2YXZiNmGINin2LPZhSDYp9mE2KPZ
+hdmFINin2YTZhdiq2K3Yr9ipINiMINmI2YHZgtmL2Kcg2YTYs9is2YQg2KrYrtiy2YrZhiDYp9mE
+2KjZitin2YbYp9iqDQrZhdi5INi52YbZiNin2YYg2KfZhNio2LHZitivINin2YTYpdmE2YPYqtix
+2YjZhtmKINmE2YbYuNin2YXZhtinINij2KvZhtin2KEg2KfZhNiq2K3ZgtmK2YIg2KfZhNiw2Yog
+2KPYrNix2YrZhtin2Ycg2Iwg2YHYpdmGDQrYr9mB2LnYqtmDINmF2K/Ysdis2Kkg2YHZiiDZgtin
+2KbZhdipINiq2LbZhSAxNTAg2YXYs9iq2YHZitiv2YvYpyDZgdmKINin2YTZgdim2KfYqiDYp9mE
+2KrYp9mE2YrYqTog2LXZhtiv2YjZgiDZitin2YbYtdmK2KgNCti62YrYsSDZhdmP2LPZhNmO2ZHZ
+hSAvINi12YbYr9mI2YIg2YrYp9mG2LXZitioINi62YrYsSDZhdiv2YHZiNi5IC8g2YjYsdin2KvY
+qSDZhtmC2YQg2LrZitixINmF2YPYqtmF2YTYqSAvINij2YXZiNin2YQNCtin2YTYudmC2K8uDQoN
+CtmC2KfZhSDZhdiz2KTZiNmE2Ygg2KfZhNio2YbZgyDYp9mE2YHYp9iz2K8g2Iwg2KfZhNiw2YrZ
+hiDYp9ix2KrZg9io2YjYpyDYp9mE2YHYs9in2K8g2YXZhiDYo9is2YQg2KfZhNin2K3YqtmK2KfZ
+hCDYudmE2YkNCtij2YXZiNin2YTZgyDYjCDYqNiq2KPYrtmK2LEg2K/Zgdi52YMg2KjYtNmD2YQg
+2LrZitixINmF2LnZgtmI2YQg2Iwg2YXZhdinINij2K/ZiSDYpdmE2Ykg2KrYrdmF2YTZgyDYp9mE
+2YPYq9mK2LEg2YXZhg0K2KfZhNiq2YPYp9mE2YrZgSDZiNiq2KPYrtmK2LEg2LrZitixINmF2LnZ
+gtmI2YQg2YHZiiDZgtio2YjZhCDZhdiv2YHZiNi52KfYqtmDLiDYp9iu2KrYp9ix2Kog2KfZhNij
+2YXZhSDYp9mE2YXYqtit2K/YqQ0K2YjYtdmG2K/ZiNmCINin2YTZhtmC2K8g2KfZhNiv2YjZhNmK
+IChJTUYpINiv2YHYuSDYrNmF2YrYuSDYp9mE2KrYudmI2YrYttin2Kog2YTZgCAxNTAg2YXYs9iq
+2YHZitiv2YvYpyDYqNin2LPYqtiu2K/Yp9mFDQrYqNi32KfZgtin2KogVmlzYSBBVE0g2YXZhiDY
+o9mF2LHZitmD2Kcg2KfZhNi02YXYp9mE2YrYqSDZiNij2YXYsdmK2YPYpyDYp9mE2KzZhtmI2KjZ
+itipINmI2KfZhNmI2YTYp9mK2KfYqiDYp9mE2YXYqtit2K/YqQ0K2YjYo9mI2LHZiNio2Kcg2YjY
+otiz2YrYpyDZiNit2YjZhCDYp9mE2LnYp9mE2YUg2Iwg2K3ZitirINiq2KrZiNmB2LEg2KrZgtmG
+2YrYqSDYp9mE2K/Zgdi5INin2YTYudin2YTZhdmK2Kkg2YfYsNmHDQrZhNmE2YXYs9iq2YfZhNmD
+2YrZhiDZiNin2YTYtNix2YPYp9iqINmI2KfZhNmF2KTYs9iz2KfYqiDYp9mE2YXYp9mE2YrYqS4g
+2YjZitiz2YXYrSDZhNmE2K3Zg9mI2YXYp9iqINio2KfYs9iq2K7Yr9in2YUg2KfZhNi52YXZhNin
+2KoNCtin2YTYsdmC2YXZitipINio2K/ZhNin2Ysg2YXZhiDYp9mE2YbZgtivINmI2KfZhNi02YrZ
+g9in2KouDQoNCtmE2YLYryDZgtmF2YbYpyDYqNin2YTYqtix2KrZitioINmE2LPYr9in2K8g2YXY
+r9mB2YjYudin2KrZgyDYqNin2LPYqtiu2K/Yp9mFINio2LfYp9mC2KkgVmlzYSBBVE0g2YjYs9mK
+2KrZhSDYpdi12K/Yp9ix2YfYpw0K2YTZgyDZiNil2LHYs9in2YTZh9inINmF2KjYp9i02LHYqdmL
+INil2YTZiSDYudmG2YjYp9mG2YMg2LnYqNixINij2Yog2K7Yr9mF2KfYqiDYqNix2YrYryDYs9ix
+2YrYuSDZhdiq2KfYrdipLiDYqNi52K8NCtin2YTYp9iq2LXYp9mEINio2YbYpyDYjCDYs9mK2KrZ
+hSDYqtit2YjZitmEINmF2KjZhNi6IDHYjDUwMNiMMDAwLjAwINiv2YjZhNin2LEg2KPZhdix2YrZ
+g9mKINil2YTZiSDYqNi32KfZgtipIFZpc2ENCkFUTSDYjCDZiNin2YTYqtmKINiz2KrYs9mF2K0g
+2YTZgyDYqNiz2K3YqCDYo9mF2YjYp9mE2YMg2LnZhiDYt9ix2YrZgiDYs9it2Kgg2YXYpyDZhNin
+INmK2YLZhCDYudmGIDEw2IwwMDAg2K/ZiNmE2KfYsQ0K2KPZhdix2YrZg9mKINmB2Yog2KfZhNmK
+2YjZhSDZhdmGINij2Yog2YXYp9mD2YrZhtipINi12LHYp9mBINii2YTZiiDZgdmKINio2YTYr9mD
+LiDYqNmG2KfYodmLINi52YTZiSDYt9mE2KjZgyDYjCDZitmF2YPZhtmDDQrYstmK2KfYr9ipINin
+2YTYrdivINil2YTZiSAyMNiMMDAwLjAwINiv2YjZhNin2LEg2YHZiiDYp9mE2YrZiNmFLiDZgdmK
+INmH2LDYpyDYp9mE2LXYr9ivINiMINmK2KzYqCDYudmE2YrZgw0K2KfZhNin2KrYtdin2YQg2KjY
+pdiv2KfYsdipINin2YTZhdiv2YHZiNi52KfYqiDZiNin2YTYqtit2YjZitmE2KfYqiDYp9mE2K/Z
+iNmE2YrYqSDZiNiq2YLYr9mK2YUg2KfZhNmF2LnZhNmI2YXYp9iqINin2YTZhdi32YTZiNio2KkN
+CtmF2YYg2K7ZhNin2YQ6DQoNCjEuINin2LPZhdmDINin2YTZg9in2YXZhCAuLi4uLi4uLi4uLi4u
+Lg0KMi4g2LnZhtmI2KfZhtmDINin2YTZg9in2YXZhCAuLi4NCjMuINin2YTYrNmG2LPZitipIC4u
+Li4uLi4uLi4uLi4uLi4NCjQuINiq2KfYsdmK2K4g2KfZhNmF2YrZhNin2K8gLyDYp9mE2KzZhtiz
+IC4uLi4uLi4uLg0KNS4g2KfZhNiq2K7Ytdi1IC4uLg0KNi4g2LHZgtmFINin2YTZh9in2KrZgSAu
+Li4uLi4uLi4NCjcuINi52YbZiNin2YYg2KfZhNio2LHZitivINin2YTYpdmE2YPYqtix2YjZhtmK
+INmE2LTYsdmD2KrZgyAuLi4uLi4NCjguINi52YbZiNin2YYg2KfZhNio2LHZitivINin2YTYpdmE
+2YPYqtix2YjZhtmKINin2YTYtNiu2LXZiiAuLi4uLi4NCg0KDQrZhNiq2K3Yr9mK2K8g2YfYsNin
+INin2YTYsdmF2LIgKNin2YTYsdin2KjYtzogQ0xJRU5ULTk2Ni8xNikg2Iwg2KfYs9iq2K7Yr9mF
+2Ycg2YPZhdmI2LbZiNi5INmE2YTYqNix2YrYrw0K2KfZhNil2YTZg9iq2LHZiNmG2Yog2KfZhNiu
+2KfYtSDYqNmDINmI2K3Yp9mI2YQg2KrZgtiv2YrZhSDYp9mE2YXYudmE2YjZhdin2Kog2KfZhNmF
+2LDZg9mI2LHYqSDYo9i52YTYp9mHINil2YTZiSDYp9mE2YXZiNi42YHZitmGDQrYp9mE2KrYp9mE
+2YrZitmGINmE2KXYtdiv2KfYsSDZiNiq2LPZhNmK2YUg2KjYt9in2YLYqSBWaXNhIEFUTSDYmw0K
+DQrZhtmI2LXZitmDINio2YHYqtitINi52YbZiNin2YYg2KjYsdmK2K8g2KXZhNmD2KrYsdmI2YbZ
+iiDYtNiu2LXZiiDYqNix2YLZhSDYrNiv2YrYryDZhNmE2LPZhdin2K0g2YTZiNmD2YrZhCDYp9mE
+2KjZhtmDINio2KrYqtio2LkNCtmH2LDZhyDYp9mE2YXYr9mB2YjYudin2Kog2YjYqtio2KfYr9mE
+INin2YTYsdiz2KfYptmEINmE2YXZhti5INin2YTZhdiy2YrYryDZhdmGINin2YTYqtij2K7Zitix
+INij2Ygg2KfZhNiq2YjYrNmK2Ycg2KfZhNiu2KfYt9imDQrZhNij2YXZiNin2YTZgy4g2KfYqti1
+2YQg2KjZiNmD2YrZhCDYp9mE2KjZhtmDINin2YTYpdmB2LHZitmC2Yog2KfZhNmF2KrYrdivINin
+2YTYotmGINio2KfYs9iq2K7Yr9in2YUg2YXYudmE2YjZhdin2KoNCtin2YTYp9iq2LXYp9mEINij
+2K/Zhtin2Yc6DQoNCtin2YTYtNiu2LUg2KfZhNmF2LPYpNmI2YQ6INin2YTYs9mK2K8g2KrZiNmG
+2Yog2KXZhNmI2YXZitmE2YgNCtil2K/Yp9ix2Kkg2KrYrdmI2YrZhCDYo9mF2YjYp9mEINin2YTY
+qti52YjZiti22KfYqiDYjCDYrNmH2Kkg2KfZhNin2KrYtdin2YQg2KjYp9mE2KjYsdmK2K8g2KfZ
+hNil2YTZg9iq2LHZiNmG2Yog2YTYqNmG2YMNCtil2YHYsdmK2YLZitinINin2YTZhdiq2K3Yrzog
+KG1ydG9ueWVsdW1lbHU5OEBnbWFpbC5jb20pDQoNCtmG2K3Yqtin2Kwg2KXZhNmJINix2K8g2LPY
+sdmK2Lkg2LnZhNmJINmH2LDYpyDYp9mE2KjYsdmK2K8g2KfZhNil2YTZg9iq2LHZiNmG2Yog2YTY
+qtis2YbYqCDYp9mE2YXYstmK2K8g2YXZhiDYp9mE2KrYo9iu2YrYsS4NCg0K2LXYr9mK2YLZgyDY
+p9mE2YXYrtmE2LUNCtin2YTYs9mR2YrYr9ipLiDZg9ix2YrYs9iq2KfZhNmK2YbYpyDYrNmI2LHY
+rNmK2YHYpw0K
