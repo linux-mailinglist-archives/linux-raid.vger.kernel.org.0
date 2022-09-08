@@ -2,149 +2,156 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E40ED5B1C39
-	for <lists+linux-raid@lfdr.de>; Thu,  8 Sep 2022 14:09:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE5515B2148
+	for <lists+linux-raid@lfdr.de>; Thu,  8 Sep 2022 16:52:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231553AbiIHMIr (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 8 Sep 2022 08:08:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43808 "EHLO
+        id S232633AbiIHOwq (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 8 Sep 2022 10:52:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229658AbiIHMIm (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 8 Sep 2022 08:08:42 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB8C0FCA07
-        for <linux-raid@vger.kernel.org>; Thu,  8 Sep 2022 05:08:37 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id nc14so37525493ejc.4
-        for <linux-raid@vger.kernel.org>; Thu, 08 Sep 2022 05:08:37 -0700 (PDT)
+        with ESMTP id S232772AbiIHOwa (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 8 Sep 2022 10:52:30 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2BFB1223A2
+        for <linux-raid@vger.kernel.org>; Thu,  8 Sep 2022 07:52:27 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id p18so18120181plr.8
+        for <linux-raid@vger.kernel.org>; Thu, 08 Sep 2022 07:52:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:from:to:cc:subject:date;
-        bh=61JNgHFLNVCOHtS3GBlVT+sTDzg02TjYElOUCZQYEf8=;
-        b=HtgKNuSMlm36EUZXIQjvg66VG4Cf9KG9o7TXw54X62EKPmk+Ub/rVrVF7Jzl7Ds7kO
-         UCH679hMgBDNwFLGGeHb/2LN8HSMepKYQ4XHZWOYz2pfFTRTo10jgM61feW0CtIH9wTs
-         cWDVplksOqYnCDhQZqLWKFvC/ITbZV1SE7ZOJKNcvW/zr6YWejyvShHr4HqV1XqqLKSi
-         aHWzLSbuPSm4DXlJKfkx9cjhQ8ly/i7YVPOUpfNC3SpdRtbgdpYeqV+sVkApZCZesmsU
-         GaR5lECUziqJ61lt1CqsdCA5x5rBiwWkFcCMmQ9iK1vrrbk84so4bGOLELfaa0Dt/Xs0
-         /qWA==
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date;
+        bh=NT8pFe8DS6wtnbv2yHYTCWSten605vvSuplkcKIiyyA=;
+        b=ogmnwLdLsU2uWbRkw2x0q/05/vinyH1xE5YApy3sGCddv5tJJuiC/ib+I5g7OLEm+J
+         iTf2hyawHk19XdUbiHKTdgSr9/wio5rbE9WcXorSUq4bTyYyPq7RPkz+mvAecI6ATdmi
+         ag+esPLQD0cllJ9jrATPc43zFmjuwRQ+H6Ey9vxGFGLywO2C7zPmV9uV0svwxP2Q6mMK
+         W2brNbWmLPpK8hgIwkFt8NHPzManKmTjAqAlJaRxiYgpSVF5+dPdvaLWYSiE6jWpUVmu
+         dlzaksPxrYZZP2q6LIn9nXSW2kpLDeg5RCZlA+zQ+CqkW4IDoi7G1HEDtt3r8cL/Cosu
+         K0KQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=61JNgHFLNVCOHtS3GBlVT+sTDzg02TjYElOUCZQYEf8=;
-        b=fjSwMFK6WXjB88Skdvb+dwu3thB9HobcFm+707emdSNtzCI3kNLeodLJT09uBLC1pB
-         726/dj7apuGcjaZsFx3E57J5k3hlA/6uWT6yLUYxr4M+JtpsPOjxpNl+OaeDtUWUonGj
-         QjLUvlW1zPY1S9KmS8fAF9f7uhmQDuR4sCzOOUG+kcrXEIYR7qllLEIzMz1GvGWD4YNu
-         nBZZywuSelCHbeytY7R4oAtuTAbaMAKoVSJXaMqP0MPxFKI54/+9lgOJC4YUasLJsZMG
-         1x88MWDSDYoGNyViEI/ZQtFyb93KmthO8TJnvKExWfJ9QW6mio50P0PHA0HumshLme/j
-         eMag==
-X-Gm-Message-State: ACgBeo1bfh9zvkQOjuiHVI20n8ypZ39qEsna5nFdNxYX9nUepskMQQI6
-        5+zNQCHg0urRCqeEWHq9B5rbC93snJ6FLQSMTX4=
-X-Google-Smtp-Source: AA6agR4faGLlknEVHCd7paYi7uHizUiDAwBUfsO6+JblJj9xGRNmTX1c8O11BeMjUhyh3saGVevsRUjxGHHK3sBQAxs=
-X-Received: by 2002:a17:907:6e18:b0:73d:63d9:945f with SMTP id
- sd24-20020a1709076e1800b0073d63d9945fmr5985318ejc.12.1662638916092; Thu, 08
- Sep 2022 05:08:36 -0700 (PDT)
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date;
+        bh=NT8pFe8DS6wtnbv2yHYTCWSten605vvSuplkcKIiyyA=;
+        b=NV9TvS3D1cxM1k2j/PDK84Wr3dREckr6/3saZn7ljA0H7Wv7muXMOfdp7pTfk+/LEr
+         xYFvB4aGp5cZTUjIEi6Xr8VICewK0M3lePnRJ9O7HBFFum9P5BIOI6GYS0ByeAqmDdEK
+         jxPbLY4NTQ5h9p+qpNYcCQtEzniuBAlnwbQ/n0MLeFQgEIFVV+5ZGwCFtR/E+/dobm8t
+         c7AQBBZweUIKuCJIMczhd54E5ZdW2BBxNepHdxxdp8R8qW/RDU3iFNTSkNlZ4+TvgK6n
+         1XHLe4hk23dOFjUK8g42+ea+tRVNPMinWZKKWnhDSiPS06Zzu+7V64Vq49ei4FvNMwh7
+         lpQQ==
+X-Gm-Message-State: ACgBeo3W8XIdLmKOhes7dePOc2tTkWHIKrYDreIe9K/uAAgo8IN6vU/G
+        8gAApsXjwUym2YEmK1VXz97A3jStlhdP7uVj5AlDAOepDmQ=
+X-Google-Smtp-Source: AA6agR6HU70kQb21/XZRzwGE6V7//hHMA+6Z1s1AK8ScJ3QR9KYphVwm0k+z2UEs/jrdrusR5dkAP9QcqGq50sIVHQg=
+X-Received: by 2002:a17:90a:6784:b0:200:36ea:fe58 with SMTP id
+ o4-20020a17090a678400b0020036eafe58mr4533067pjj.16.1662648746471; Thu, 08 Sep
+ 2022 07:52:26 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a17:906:749d:b0:743:2e24:e8cd with HTTP; Thu, 8 Sep 2022
- 05:08:35 -0700 (PDT)
-Reply-To: mrtonyelumelu98@gmail.com
-From:   "Mrs. Cristalina Georgieva" <nastyanastya88889@gmail.com>
-Date:   Thu, 8 Sep 2022 13:08:35 +0100
-Message-ID: <CADsX60CBiVvwN+F4ym_2zFH_MaVo9i9qaarXjBKw+YCBOGqM=w@mail.gmail.com>
-Subject: hi
-To:     undisclosed-recipients:;
+From:   Luigi Fabio <luigi.fabio@gmail.com>
+Date:   Thu, 8 Sep 2022 10:51:50 -0400
+Message-ID: <CAJJqR20U=OcMq_8wBMQ5xmWmcBcYoKN5+Fe9sPHYPkZ_yHurQQ@mail.gmail.com>
+Subject: RAID5 failure and consequent ext4 problems
+To:     linux-raid@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-X-Spam-Status: No, score=2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
-        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Level: **
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-2LXZhtiv2YjZgiDYp9mE2YbZgtivINin2YTYr9mI2YTZiiAoSS5NLkYpDQrYtNi52KjYqSDYpdiv
-2KfYsdipINin2YTYr9mK2YjZhiDYp9mE2K/ZiNmE2YrYqSDYjA0KIyAxOTAwINiMINi02KfYsdi5
-INin2YTYsdim2YrYsw0KDQrZhdix2K3YqNmL2Kcg2KjZg9mFINmB2Yog2LnZhtmI2KfZhiDYp9mE
-2KjYsdmK2K8g2KfZhNil2YTZg9iq2LHZiNmG2Yog2KfZhNix2LPZhdmKINmE2YTZhdiv2YrYsSBJ
-Lk0uRi4g2YPYsdmK2LPYqtin2YTZitmG2Kcg2KzZiNix2KzZitmB2KcNCg0KDQrYudiy2YrYstmK
-INin2YTZhdiz2KrZgdmK2K8hDQoNCtmE2YLYryDYs9mF2K0g2YTZhtinINmI2LLZitixINin2YTY
-rtiy2KfZhtipINin2YTZhdi52YrZhiDYrdiv2YrYq9mL2Kcg2YjYp9mE2YfZitim2Kkg2KfZhNit
-2KfZg9mF2Kkg2YTZhNiz2YTYt9ipINin2YTZhtmC2K/ZitipDQrZhNmE2KPZhdmFINin2YTZhdiq
-2K3Yr9ipINio2YHYrdi1INin2YTYo9mF2YjYp9mEINin2YTYqtmKINmE2YUg2KrYqtmFINin2YTZ
-hdi32KfZhNio2Kkg2KjZh9inINmI2KfZhNiq2Yog2YTYt9in2YTZhdinINmD2KfZhtiqDQrZhdiv
-2YrZhtipINmE2K3Zg9mI2YXYqSDYp9mE2KPZhdmFINin2YTZhdiq2K3Yr9ipINiMINmE2LDZhNmD
-INiq2YUg2KfYqtmH2KfZhSDZhdin2YTZg9mK2YfYpyDYqNin2YTYp9it2KrZitin2YQuDQrYp9mE
-2YXYrdiq2KfZhNmI2YYg2KfZhNiw2YrZhiDZitiz2KrYrtiv2YXZiNmGINin2LPZhSDYp9mE2KPZ
-hdmFINin2YTZhdiq2K3Yr9ipINiMINmI2YHZgtmL2Kcg2YTYs9is2YQg2KrYrtiy2YrZhiDYp9mE
-2KjZitin2YbYp9iqDQrZhdi5INi52YbZiNin2YYg2KfZhNio2LHZitivINin2YTYpdmE2YPYqtix
-2YjZhtmKINmE2YbYuNin2YXZhtinINij2KvZhtin2KEg2KfZhNiq2K3ZgtmK2YIg2KfZhNiw2Yog
-2KPYrNix2YrZhtin2Ycg2Iwg2YHYpdmGDQrYr9mB2LnYqtmDINmF2K/Ysdis2Kkg2YHZiiDZgtin
-2KbZhdipINiq2LbZhSAxNTAg2YXYs9iq2YHZitiv2YvYpyDZgdmKINin2YTZgdim2KfYqiDYp9mE
-2KrYp9mE2YrYqTog2LXZhtiv2YjZgiDZitin2YbYtdmK2KgNCti62YrYsSDZhdmP2LPZhNmO2ZHZ
-hSAvINi12YbYr9mI2YIg2YrYp9mG2LXZitioINi62YrYsSDZhdiv2YHZiNi5IC8g2YjYsdin2KvY
-qSDZhtmC2YQg2LrZitixINmF2YPYqtmF2YTYqSAvINij2YXZiNin2YQNCtin2YTYudmC2K8uDQoN
-CtmC2KfZhSDZhdiz2KTZiNmE2Ygg2KfZhNio2YbZgyDYp9mE2YHYp9iz2K8g2Iwg2KfZhNiw2YrZ
-hiDYp9ix2KrZg9io2YjYpyDYp9mE2YHYs9in2K8g2YXZhiDYo9is2YQg2KfZhNin2K3YqtmK2KfZ
-hCDYudmE2YkNCtij2YXZiNin2YTZgyDYjCDYqNiq2KPYrtmK2LEg2K/Zgdi52YMg2KjYtNmD2YQg
-2LrZitixINmF2LnZgtmI2YQg2Iwg2YXZhdinINij2K/ZiSDYpdmE2Ykg2KrYrdmF2YTZgyDYp9mE
-2YPYq9mK2LEg2YXZhg0K2KfZhNiq2YPYp9mE2YrZgSDZiNiq2KPYrtmK2LEg2LrZitixINmF2LnZ
-gtmI2YQg2YHZiiDZgtio2YjZhCDZhdiv2YHZiNi52KfYqtmDLiDYp9iu2KrYp9ix2Kog2KfZhNij
-2YXZhSDYp9mE2YXYqtit2K/YqQ0K2YjYtdmG2K/ZiNmCINin2YTZhtmC2K8g2KfZhNiv2YjZhNmK
-IChJTUYpINiv2YHYuSDYrNmF2YrYuSDYp9mE2KrYudmI2YrYttin2Kog2YTZgCAxNTAg2YXYs9iq
-2YHZitiv2YvYpyDYqNin2LPYqtiu2K/Yp9mFDQrYqNi32KfZgtin2KogVmlzYSBBVE0g2YXZhiDY
-o9mF2LHZitmD2Kcg2KfZhNi02YXYp9mE2YrYqSDZiNij2YXYsdmK2YPYpyDYp9mE2KzZhtmI2KjZ
-itipINmI2KfZhNmI2YTYp9mK2KfYqiDYp9mE2YXYqtit2K/YqQ0K2YjYo9mI2LHZiNio2Kcg2YjY
-otiz2YrYpyDZiNit2YjZhCDYp9mE2LnYp9mE2YUg2Iwg2K3ZitirINiq2KrZiNmB2LEg2KrZgtmG
-2YrYqSDYp9mE2K/Zgdi5INin2YTYudin2YTZhdmK2Kkg2YfYsNmHDQrZhNmE2YXYs9iq2YfZhNmD
-2YrZhiDZiNin2YTYtNix2YPYp9iqINmI2KfZhNmF2KTYs9iz2KfYqiDYp9mE2YXYp9mE2YrYqS4g
-2YjZitiz2YXYrSDZhNmE2K3Zg9mI2YXYp9iqINio2KfYs9iq2K7Yr9in2YUg2KfZhNi52YXZhNin
-2KoNCtin2YTYsdmC2YXZitipINio2K/ZhNin2Ysg2YXZhiDYp9mE2YbZgtivINmI2KfZhNi02YrZ
-g9in2KouDQoNCtmE2YLYryDZgtmF2YbYpyDYqNin2YTYqtix2KrZitioINmE2LPYr9in2K8g2YXY
-r9mB2YjYudin2KrZgyDYqNin2LPYqtiu2K/Yp9mFINio2LfYp9mC2KkgVmlzYSBBVE0g2YjYs9mK
-2KrZhSDYpdi12K/Yp9ix2YfYpw0K2YTZgyDZiNil2LHYs9in2YTZh9inINmF2KjYp9i02LHYqdmL
-INil2YTZiSDYudmG2YjYp9mG2YMg2LnYqNixINij2Yog2K7Yr9mF2KfYqiDYqNix2YrYryDYs9ix
-2YrYuSDZhdiq2KfYrdipLiDYqNi52K8NCtin2YTYp9iq2LXYp9mEINio2YbYpyDYjCDYs9mK2KrZ
-hSDYqtit2YjZitmEINmF2KjZhNi6IDHYjDUwMNiMMDAwLjAwINiv2YjZhNin2LEg2KPZhdix2YrZ
-g9mKINil2YTZiSDYqNi32KfZgtipIFZpc2ENCkFUTSDYjCDZiNin2YTYqtmKINiz2KrYs9mF2K0g
-2YTZgyDYqNiz2K3YqCDYo9mF2YjYp9mE2YMg2LnZhiDYt9ix2YrZgiDYs9it2Kgg2YXYpyDZhNin
-INmK2YLZhCDYudmGIDEw2IwwMDAg2K/ZiNmE2KfYsQ0K2KPZhdix2YrZg9mKINmB2Yog2KfZhNmK
-2YjZhSDZhdmGINij2Yog2YXYp9mD2YrZhtipINi12LHYp9mBINii2YTZiiDZgdmKINio2YTYr9mD
-LiDYqNmG2KfYodmLINi52YTZiSDYt9mE2KjZgyDYjCDZitmF2YPZhtmDDQrYstmK2KfYr9ipINin
-2YTYrdivINil2YTZiSAyMNiMMDAwLjAwINiv2YjZhNin2LEg2YHZiiDYp9mE2YrZiNmFLiDZgdmK
-INmH2LDYpyDYp9mE2LXYr9ivINiMINmK2KzYqCDYudmE2YrZgw0K2KfZhNin2KrYtdin2YQg2KjY
-pdiv2KfYsdipINin2YTZhdiv2YHZiNi52KfYqiDZiNin2YTYqtit2YjZitmE2KfYqiDYp9mE2K/Z
-iNmE2YrYqSDZiNiq2YLYr9mK2YUg2KfZhNmF2LnZhNmI2YXYp9iqINin2YTZhdi32YTZiNio2KkN
-CtmF2YYg2K7ZhNin2YQ6DQoNCjEuINin2LPZhdmDINin2YTZg9in2YXZhCAuLi4uLi4uLi4uLi4u
-Lg0KMi4g2LnZhtmI2KfZhtmDINin2YTZg9in2YXZhCAuLi4NCjMuINin2YTYrNmG2LPZitipIC4u
-Li4uLi4uLi4uLi4uLi4NCjQuINiq2KfYsdmK2K4g2KfZhNmF2YrZhNin2K8gLyDYp9mE2KzZhtiz
-IC4uLi4uLi4uLg0KNS4g2KfZhNiq2K7Ytdi1IC4uLg0KNi4g2LHZgtmFINin2YTZh9in2KrZgSAu
-Li4uLi4uLi4NCjcuINi52YbZiNin2YYg2KfZhNio2LHZitivINin2YTYpdmE2YPYqtix2YjZhtmK
-INmE2LTYsdmD2KrZgyAuLi4uLi4NCjguINi52YbZiNin2YYg2KfZhNio2LHZitivINin2YTYpdmE
-2YPYqtix2YjZhtmKINin2YTYtNiu2LXZiiAuLi4uLi4NCg0KDQrZhNiq2K3Yr9mK2K8g2YfYsNin
-INin2YTYsdmF2LIgKNin2YTYsdin2KjYtzogQ0xJRU5ULTk2Ni8xNikg2Iwg2KfYs9iq2K7Yr9mF
-2Ycg2YPZhdmI2LbZiNi5INmE2YTYqNix2YrYrw0K2KfZhNil2YTZg9iq2LHZiNmG2Yog2KfZhNiu
-2KfYtSDYqNmDINmI2K3Yp9mI2YQg2KrZgtiv2YrZhSDYp9mE2YXYudmE2YjZhdin2Kog2KfZhNmF
-2LDZg9mI2LHYqSDYo9i52YTYp9mHINil2YTZiSDYp9mE2YXZiNi42YHZitmGDQrYp9mE2KrYp9mE
-2YrZitmGINmE2KXYtdiv2KfYsSDZiNiq2LPZhNmK2YUg2KjYt9in2YLYqSBWaXNhIEFUTSDYmw0K
-DQrZhtmI2LXZitmDINio2YHYqtitINi52YbZiNin2YYg2KjYsdmK2K8g2KXZhNmD2KrYsdmI2YbZ
-iiDYtNiu2LXZiiDYqNix2YLZhSDYrNiv2YrYryDZhNmE2LPZhdin2K0g2YTZiNmD2YrZhCDYp9mE
-2KjZhtmDINio2KrYqtio2LkNCtmH2LDZhyDYp9mE2YXYr9mB2YjYudin2Kog2YjYqtio2KfYr9mE
-INin2YTYsdiz2KfYptmEINmE2YXZhti5INin2YTZhdiy2YrYryDZhdmGINin2YTYqtij2K7Zitix
-INij2Ygg2KfZhNiq2YjYrNmK2Ycg2KfZhNiu2KfYt9imDQrZhNij2YXZiNin2YTZgy4g2KfYqti1
-2YQg2KjZiNmD2YrZhCDYp9mE2KjZhtmDINin2YTYpdmB2LHZitmC2Yog2KfZhNmF2KrYrdivINin
-2YTYotmGINio2KfYs9iq2K7Yr9in2YUg2YXYudmE2YjZhdin2KoNCtin2YTYp9iq2LXYp9mEINij
-2K/Zhtin2Yc6DQoNCtin2YTYtNiu2LUg2KfZhNmF2LPYpNmI2YQ6INin2YTYs9mK2K8g2KrZiNmG
-2Yog2KXZhNmI2YXZitmE2YgNCtil2K/Yp9ix2Kkg2KrYrdmI2YrZhCDYo9mF2YjYp9mEINin2YTY
-qti52YjZiti22KfYqiDYjCDYrNmH2Kkg2KfZhNin2KrYtdin2YQg2KjYp9mE2KjYsdmK2K8g2KfZ
-hNil2YTZg9iq2LHZiNmG2Yog2YTYqNmG2YMNCtil2YHYsdmK2YLZitinINin2YTZhdiq2K3Yrzog
-KG1ydG9ueWVsdW1lbHU5OEBnbWFpbC5jb20pDQoNCtmG2K3Yqtin2Kwg2KXZhNmJINix2K8g2LPY
-sdmK2Lkg2LnZhNmJINmH2LDYpyDYp9mE2KjYsdmK2K8g2KfZhNil2YTZg9iq2LHZiNmG2Yog2YTY
-qtis2YbYqCDYp9mE2YXYstmK2K8g2YXZhiDYp9mE2KrYo9iu2YrYsS4NCg0K2LXYr9mK2YLZgyDY
-p9mE2YXYrtmE2LUNCtin2YTYs9mR2YrYr9ipLiDZg9ix2YrYs9iq2KfZhNmK2YbYpyDYrNmI2LHY
-rNmK2YHYpw0K
+[also on linux-ext4]
+
+I am encountering an unusual problem after an mdraid failure, I'll
+summarise briefly and can provide further details as required.
+
+First of all, the context. This is happening on a Debian 11 system,
+amd64 arch, with current updates (kernel 5.10.136-1, util-linux
+2.36.1).
+
+The system has a 12 drive mdraid RAID5 for data, recently migrated to
+LSI 2308 HBAs.
+This is relevant because earlier this week, at around 13,00 local (EST), four
+drives, an entire HBA channel, decided to drop from the RAID.
+
+Of course, mdraid didn't like that and stopped the arrays. I reverted
+to best practice and shut down the system first of all.
+
+Further context: the filesystem in the array is ancient - I am vaguely
+proud of that - from 2001.
+It started as ext2, grew to ext3, then to ext4 and finally to ext4 with 64 bits.
+Because I am paranoid, I always mount ext4 with nodelalloc and data=journal.
+The journal is external on a RAID1 of SSDs.
+I recently (within the last ~3 months) enabled metadata_csum, which is
+relevant to the following - the filesystem had never had metadata_csum
+enabled before.
+
+Upon reboot, the arrays would not reassemble - this is expected,
+because 4/12 drives were marked faulty. So I re--created the array
+using the same parameters as were used back when the array was built.
+Unfortunately, I had a moment of stupid and didn't specify metadata
+0.90 in the re--create, so it was recreated with metadata 1.2... which
+writes its data block at the beginning of the components, not at the
+end. I noticed it, restopped the array and recreated with the correct
+0.90, but the damage was done: the 256 byte + 12 * 20 header was
+written at the beginning of each of the 12 components.
+Still, unless I am mistaken, this just means that at worst 12x (second
+block of each component) were damaged, which shouldn't be too bad. The
+only further possibility is that mdraid also zeroed out the 'blank
+space' that it puts AFTER the header block and BEFORE the data, but
+according to documentation it shouldn't do that.
+In any case, I subsequently reassembled the array 'correctly' to match
+the previous order and settings and I believe I got it right. I kept
+the array RO and tried fsck -n, which gave me this:
+
+ext2fs_check_desc: Corrupt group descriptor: bad block for block bitmap
+fsck.ext4: Group descriptors look bad... trying backup blocks...
+
+It then warns that it won't attempt journal recovery because it's in
+RO mode and declares the fs clean - with a reasonable looking number
+of files and blocks.
+
+If I try to mount -t ext4 -o ro, I get :
+
+mount: /mnt: mount(2) system call failed: Structure needs cleaning.
+
+so before anything else, I tried fsck -nf to make sure that the REST
+of the filesystem is in one logical piece.
+THAT painted a very different picture:
+On pass 1, I get approximately 980k (almost 10^6) of
+Inode nnnnn passes checks, but checksum does not match inode
+and ~ 2000
+Inode nnnnn contains garbage
+Plus some 'tree not optimised' which are technically not errors, from
+what I understand.
+After ~11 hours, it switches to 1b, tells me that inode 12 has a long
+list of duplicate blocks
+
+Running additional passes to resolve blocks claimed by more than one inode...
+Pass 1B: Rescanning for multiply-claimed blocks
+Multiply-claimed block(s) in inode 12: 2928004133 [....]
+
+And ends after the list of multiply claimed blocks with:
+
+e2fsck: aborted
+Error while scanning inodes (8193): Inode checksum does not match inode
+
+/dev/md123: ********** WARNING: Filesystem still has errors **********
+
+
+/dev/md123: ********** WARNING: Filesystem still has errors **********
+
+So, what is my next step? I realise I should NOT have touched the
+original drives and dd-ed images to a separate array to work on those,
+but I believe the only writing that occurred were the mdraid
+superblocks. I am, in any case, grabbing more drives to image the
+'faulty' array and work on the images, leaving the original data
+alone.
+
+Where do I go from here? I have had similar issues in the past, all
+the way back to the early 00s, and I had a near-100% success rate by
+re--creating the arrays. What is different this time?
+Or, is nothing different and is the problem just in the checksumming?
+
+Thanks!
