@@ -2,70 +2,122 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E47315B4CDE
-	for <lists+linux-raid@lfdr.de>; Sun, 11 Sep 2022 11:08:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 487F55B4E89
+	for <lists+linux-raid@lfdr.de>; Sun, 11 Sep 2022 13:41:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229566AbiIKJIh (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 11 Sep 2022 05:08:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56734 "EHLO
+        id S230325AbiIKLlj (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 11 Sep 2022 07:41:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229896AbiIKJIg (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 11 Sep 2022 05:08:36 -0400
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E76813A171
-        for <linux-raid@vger.kernel.org>; Sun, 11 Sep 2022 02:08:35 -0700 (PDT)
-Received: by mail-lj1-x22f.google.com with SMTP id z23so7235544ljk.1
-        for <linux-raid@vger.kernel.org>; Sun, 11 Sep 2022 02:08:35 -0700 (PDT)
+        with ESMTP id S230390AbiIKLlc (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 11 Sep 2022 07:41:32 -0400
+X-Greylist: delayed 3603 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 11 Sep 2022 04:41:25 PDT
+Received: from outbound5d.eu.mailhop.org (outbound5d.eu.mailhop.org [3.121.156.226])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68A0E399CC
+        for <linux-raid@vger.kernel.org>; Sun, 11 Sep 2022 04:41:23 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1662889812; cv=none;
+        d=outbound.mailhop.org; s=arc-outbound20181012;
+        b=VX32VfJlA4VS6rCY2ob9cAfoslIYSVWitiueRC94hecoBmg3BTncKw7nTpY6VO9jd93EVA7Ow1iro
+         LQYfFYuV8Pq0bi1WKdjgKAjTB9qdPc4lbR4RXZD2KDtQ2G9T9RAlvdhw2lddWMJtJq7qU9Ks0F8xBp
+         kzPYxttSyzk+dbkkTQ/w+3yZxLbVN+ZUiFOBzTvVfu8wDl7QxTwVAkZH+IaHGm3nRjwCLW3KOGtx93
+         5EjjSnBeyaa8YTWfUcpRYwgrQqGHG4ZQwH+o4LvTIxJ0SZjSwxvgro/D4Mfj24Ja+fy3ccEqSaRC/8
+         60rTLL5KFn+k5c/sgtI4GUD5jir5YLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=outbound.mailhop.org; s=arc-outbound20181012;
+        h=content-transfer-encoding:content-type:in-reply-to:from:references:to:subject:
+         mime-version:date:message-id:dkim-signature:from;
+        bh=hSOEtcdm5Mcl84PQhyk/fdxEP0foMQZ0NUQIMpeUE8Y=;
+        b=IQemHrFF71AXtbTfh/DUcyewXQRz+4+84eJxsHM7+XMJc1ygZhC2J7f+4fZNw+I7H9waQ71TVNlSE
+         2v0NEVKmPg1hpFE+WQlQ+tzCMybua7PyOK9vMtn9QqlyXbXU65bNUhPfvX94SktJnx0qh0fm2vUM76
+         A32denJO+JmLC3Achv/Qu6FM9UjVNxr27G3gJpkFLh3biMd9cuKFte/GpGN7TI7lj69IHWpZFLWD7t
+         2EvM/XXUYI6D6Z70tylRLPj0LzDJCJV7Xq7cMc5xH35ZUtyYsF/w6Fn7GYbl1IQZTpsRPncxMsZxmn
+         o6eQxxQuv5S/BNiNVNrRnaM10nuZRsA==
+ARC-Authentication-Results: i=1; outbound3.eu.mailhop.org;
+        spf=softfail smtp.mailfrom=demonlair.co.uk smtp.remote-ip=86.157.202.140;
+        dmarc=none header.from=demonlair.co.uk;
+        arc=none header.oldest-pass=0;
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date;
-        bh=L0diiU3b+QpuNpgkyw2w1F961JsLaTWAJLSKlcLX4Fg=;
-        b=SYAeVsqZ4Xbv4qFk/07A+F9Qe/EtrDJ8yxydGNXenAZHhmJsqsMgaHdyP15vj542zz
-         tj9A5brw76DV3NLjpHWFEzFp+8nEPSmnA9EBikIkXlOUjY5dfr0vuU4yRZ+C2jKdNuGI
-         hUhcpgpgcX/KqnVoGSYnS8NIcki7Qm8BVf7v+7XBCyYdpmCnQFw6LoJnNkht0lOM4kQb
-         g/U0l39FLmzz8tRKgRTqWvBuyt3LjbFp1e2gFYsyWzzpTHboAmsgUXc3ZEcpVzYKR5jy
-         Ts+Lh3+UOS51+/UylWxiF7yhq0rFdg4gvsB5M3FgcyY9TxdEWdtFlgH2wZbLX9RsjTIi
-         HEkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date;
-        bh=L0diiU3b+QpuNpgkyw2w1F961JsLaTWAJLSKlcLX4Fg=;
-        b=jnvFcrg/4IXGjv40uEQ/+9ApKshGWkWYrkGvmRrYWPnP75GVVdxOXbNV0PpHD1iO5n
-         KZkVYH++30LGT0aXtn0qUrYSam6U+8ZUeaVG8FHh4iBLGwZAQLZl6YGjZD6GWJUJLLxq
-         hSjt3ZfcmUR9eZUw/E2bAU9czXyDQxNrp/EZQ1j0blzTf+7YKLbhj1DUuDY/cier1nLD
-         BO+9drbjTabCE5hnSEhPL6QxE568Cqyfyr1AAtI/wLc60VeHuN+ElQjqexKI0JoLwh/i
-         vvlXC/s9wfJdb+67dsXOmUj9GuXfAIEYE2Au0bjY3Zf4OXMbJnzhbvUvV7wOcrnIAuT1
-         I/4w==
-X-Gm-Message-State: ACgBeo3N8kWmu4Id3BSQ8yMWUtIhR7ZpOEMXE7mrk5JB+0N+YgTXSUCa
-        DjEl0arK4otAtIY74kH66T+7K9Eqyk/KuLwuVxNGA24Hre4=
-X-Google-Smtp-Source: AA6agR6dpUM2S2cUR4O6bDuW0PSLMJBagxzI1UTwbYULyHrK71aUBcA+M7EcOUuzvHLi1XzmBDrH7wJQfNn6eoLOxu0=
-X-Received: by 2002:a2e:a550:0:b0:25f:9ae6:e40f with SMTP id
- e16-20020a2ea550000000b0025f9ae6e40fmr6466642ljn.408.1662887313283; Sun, 11
- Sep 2022 02:08:33 -0700 (PDT)
+        d=outbound.mailhop.org; s=dkim-high;
+        h=content-transfer-encoding:content-type:in-reply-to:from:references:to:subject:
+         mime-version:date:message-id:from;
+        bh=hSOEtcdm5Mcl84PQhyk/fdxEP0foMQZ0NUQIMpeUE8Y=;
+        b=ppUBnp5KdVUyBUDf406PCEYHD5YVLAdAoanOBaK8nzNyC/QOD/0nv/lWneFiQmVRdzxowv4r+8bN2
+         HF2JEAghZBzFtamv6mKYrm8W6apqNntKLedV157gTPUgmZydHo4nsJBUwzKEtqf7yyHgPmLVE3OLKP
+         bLNOYj5KYVSnccLSRcl3hMDMVpE9CdvaG5hGJIl0IFcF5NYybG/vixVjMnLlRkZJDO+j9AXmQg1Xjd
+         DW0qfN4tX0UqomOqh1bEyEiAQqBBeU38liQCI+nopBHfDkfPCCGkHpcWB/3MK2Hzo089OhETjn6Y2N
+         NOaMUGndLEkvGMdPpwbiTk/jYxg/FnQ==
+X-Originating-IP: 86.157.202.140
+X-MHO-RoutePath: ZGVtb25sYWly
+X-MHO-User: 1febcab5-31b7-11ed-be1c-8777f00826c1
+X-Report-Abuse-To: https://support.duocircle.com/support/solutions/articles/5000540958-duocircle-standard-smtp-abuse-information
+X-Mail-Handler: DuoCircle Outbound SMTP
+Received: from phoenix.demonlair.co.uk (host86-157-202-140.range86-157.btcentralplus.com [86.157.202.140])
+        by outbound3.eu.mailhop.org (Halon) with ESMTPA
+        id 1febcab5-31b7-11ed-be1c-8777f00826c1;
+        Sun, 11 Sep 2022 09:50:10 +0000 (UTC)
+Received: from [10.57.1.71] (mercury.demonlair.co.uk [10.57.1.71])
+        by phoenix.demonlair.co.uk (Postfix) with ESMTP id 255A31EA0E1;
+        Sun, 11 Sep 2022 10:50:10 +0100 (BST)
+Message-ID: <d40ed93b-ed5d-61de-fba8-7c20251c911f@demonlair.co.uk>
+Date:   Sun, 11 Sep 2022 10:50:10 +0100
 MIME-Version: 1.0
-From:   Gandalf Corvotempesta <gandalf.corvotempesta@gmail.com>
-Date:   Sun, 11 Sep 2022 11:08:21 +0200
-Message-ID: <CAJH6TXj0y_bfJ1q50S7xnTyz_4BSrgNboim9e+zK1nKZX9MR3g@mail.gmail.com>
-Subject: 3 way mirror
-To:     Linux RAID Mailing List <linux-raid@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-0.2 required=5.0 tests=BAYES_40,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: 3 way mirror
+Content-Language: en-GB
+To:     Gandalf Corvotempesta <gandalf.corvotempesta@gmail.com>,
+        Linux RAID Mailing List <linux-raid@vger.kernel.org>
+References: <CAJH6TXj0y_bfJ1q50S7xnTyz_4BSrgNboim9e+zK1nKZX9MR3g@mail.gmail.com>
+From:   Geoff Back <geoff@demonlair.co.uk>
+In-Reply-To: <CAJH6TXj0y_bfJ1q50S7xnTyz_4BSrgNboim9e+zK1nKZX9MR3g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_20,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-let's assume a 3 way mirror (raid1 with 3 disks)
-One disk got a bad sector detrcted by smartd
-what happens trying to read or write to that sector?
+On 11/09/2022 10:08, Gandalf Corvotempesta wrote:
+> let's assume a 3 way mirror (raid1 with 3 disks)
+> One disk got a bad sector detrcted by smartd
+> what happens trying to read or write to that sector?
+>
+> is md smart enough to read from the other 2 disks and serve consistant data?
+>
+> in other words, can i delay the disk replacement for a couple of days
+> (i've ordered the disk today, will came tuesday) ?
 
-is md smart enough to read from the other 2 disks and serve consistant data?
+If this is a recorded grown defect or block reallocation, the drive will
+continue to operate normally anyway; the disk will have remapped the
+sector internally to one of a few thousand spares kept for the purpose.
 
-in other words, can i delay the disk replacement for a couple of days
-(i've ordered the disk today, will came tuesday) ?
+However for failed sectors in general, and especially ones that have not
+been remapped, yes if MD tries to read from the block and the disk
+reports a read error it will automatically redirect to another drive.  I
+believe it will also attempt to rewrite the bad sector with the data
+from the other drive in order to repair the mirror.  Write operations
+will be sent to all three drives and the drive with the bad sector will
+normally automatically remap to a spare sector if the internal write
+fails.  Once available spare sectors are exhausted the drive will fail
+the write, at which point md will fail the drive out of the array.
+
+Of course, this is dependent on your disks returning errors in a timely
+fashion rather than locking up on extensive retries.  If you are using
+NAS-level or enterprise drives, you should be good, but if you are using
+desktop-grade drives they are likely by default to retry for so long
+that the kernel times out and the drive drops off the bus instead of
+reporting an error.  At that point, of course, md sees the drive as failed.
+
+Cheers,
+
+Geoff.
+
+Geoff Back
+What if we're all just characters in someone's nightmares?
+
+
