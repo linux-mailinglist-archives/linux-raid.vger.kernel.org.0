@@ -2,80 +2,103 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 951EB5B4E77
-	for <lists+linux-raid@lfdr.de>; Sun, 11 Sep 2022 13:36:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F93C5B4EB9
+	for <lists+linux-raid@lfdr.de>; Sun, 11 Sep 2022 14:21:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230149AbiIKLgL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 11 Sep 2022 07:36:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54692 "EHLO
+        id S230197AbiIKMVB (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 11 Sep 2022 08:21:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230310AbiIKLgI (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 11 Sep 2022 07:36:08 -0400
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1C5836DDD
-        for <linux-raid@vger.kernel.org>; Sun, 11 Sep 2022 04:36:06 -0700 (PDT)
-Received: by mail-lj1-x232.google.com with SMTP id x10so7437350ljq.4
-        for <linux-raid@vger.kernel.org>; Sun, 11 Sep 2022 04:36:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=mGRuhu0M/cDXEak5SFcr8UabzAc35oG4qt55lav4BvY=;
-        b=IgihWEaL44pgU/Z2rJ/5XsB8k8HwmzEG57G6sCPGrESHDV/MVCx2zqxmxHUKf4kyJ1
-         9bTzMJOPh/enbCS8InFo0UVlqGen+knIghCFhBzwo8KydX57vNLCl5aL14UeJXzyKsvL
-         Ue4hFXeSMNL5iW7pVLGN2jbkfE61NcSw4bW/GE74D+biEBuPztpZ+OLcEN3vpj7Tm+V9
-         Dx4UBoBeOaYpK6jy+7PoHP95zUHEWprOlSzzP/Fj28j5KS1f0l+nBaVjjSiHJ0xBhy67
-         dutAPMfa15peKxnIAqRgSz05WxdDQhO719kM9uLylNwIToC4INx8xRCBWWxj35gzJsEA
-         HjRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=mGRuhu0M/cDXEak5SFcr8UabzAc35oG4qt55lav4BvY=;
-        b=AD2Dlge/CuMGKZcn0kn2bICN8qWOMXLMMIj+71hpjve/pJcVgnjolYxV8jBHvWAHS+
-         wa9NPMuRnNhQy2QwucSTK9X8lrOTLzqwCXQquC+YkC/hMuHpfqyWktie4uwPa+h6Cn8s
-         HZ6uu2nIOLyWbzGISQBY0N/iusfnPY2++saVgE6xHZixPbcBzpW9MAviho1Fsp4gxEvu
-         LtACTnUoFnzlz/e0Dh0AVXPXy+1BkjqssoYtJaGIhya5bEbeW6cUVf8Yz/UKfksy5y+t
-         hBJpVcCVA8l/U73WJUiG/T2jXrzWHu1mPbCkDNCiJkCnbhy2/S5ttF+kOm4bk6y4X/C+
-         TVAw==
-X-Gm-Message-State: ACgBeo2U3NcI12iYfGJ+WJWbeRPVBCgDlAjU0Gku8AkL3y2QCsbj0JO+
-        N6KZBEwZcqYtKxeANrap05gkYGTiAyAdEAfPWeqx4bRi
-X-Google-Smtp-Source: AA6agR6e4SHBsV6ptxG/em7hEG0fWrvBGuXZZ+zEaG0MgUyKi6Sy8Dt31K6pzMRUWUNNewdsslzsMREq22nVx3TC9Bs=
-X-Received: by 2002:a2e:a550:0:b0:25f:9ae6:e40f with SMTP id
- e16-20020a2ea550000000b0025f9ae6e40fmr6601944ljn.408.1662896165245; Sun, 11
- Sep 2022 04:36:05 -0700 (PDT)
+        with ESMTP id S230116AbiIKMVB (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 11 Sep 2022 08:21:01 -0400
+Received: from mail.thelounge.net (mail.thelounge.net [91.118.73.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9623930F67
+        for <linux-raid@vger.kernel.org>; Sun, 11 Sep 2022 05:20:56 -0700 (PDT)
+Received: from [10.10.10.2] (rh.vpn.thelounge.net [10.10.10.2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: h.reindl@thelounge.net)
+        by mail.thelounge.net (THELOUNGE MTA) with ESMTPSA id 4MQTN63jmWzXLX;
+        Sun, 11 Sep 2022 14:20:54 +0200 (CEST)
+Message-ID: <dcef59a2-b8f6-ef8b-2fd6-2c8bfdfba4ad@thelounge.net>
+Date:   Sun, 11 Sep 2022 14:20:54 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Subject: Re: 3 way mirror
+Content-Language: en-US
+To:     Gandalf Corvotempesta <gandalf.corvotempesta@gmail.com>
+Cc:     Linux RAID Mailing List <linux-raid@vger.kernel.org>
 References: <CAJH6TXj0y_bfJ1q50S7xnTyz_4BSrgNboim9e+zK1nKZX9MR3g@mail.gmail.com>
  <53f5754d-e3e2-a8ba-bedb-07eb2b594595@thelounge.net>
-In-Reply-To: <53f5754d-e3e2-a8ba-bedb-07eb2b594595@thelounge.net>
-From:   Gandalf Corvotempesta <gandalf.corvotempesta@gmail.com>
-Date:   Sun, 11 Sep 2022 13:35:51 +0200
-Message-ID: <CAJH6TXi=pCvV2xcyWcOD4KVDP6BcoPdgdMqhSwyW9BMVEhtzYA@mail.gmail.com>
-Subject: Re: 3 way mirror
-To:     Reindl Harald <h.reindl@thelounge.net>
-Cc:     Linux RAID Mailing List <linux-raid@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+ <CAJH6TXi=pCvV2xcyWcOD4KVDP6BcoPdgdMqhSwyW9BMVEhtzYA@mail.gmail.com>
+From:   Reindl Harald <h.reindl@thelounge.net>
+Organization: the lounge interactive design
+In-Reply-To: <CAJH6TXi=pCvV2xcyWcOD4KVDP6BcoPdgdMqhSwyW9BMVEhtzYA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Il giorno dom 11 set 2022 alle ore 12:52 Reindl Harald
-<h.reindl@thelounge.net> ha scritto:
-> just throw it out of the array - on a RAID 1 with two disk you have
-> still redundancy and i won't trust a disk which recognized that it has
-> errors on it's own
 
-Why ? if it's just a single sector, the rest of the disk could be used
-properly until the replacement.
 
-> what's the point of "can i delay" when you have no other options? :-)
+Am 11.09.22 um 13:35 schrieb Gandalf Corvotempesta:
+> Il giorno dom 11 set 2022 alle ore 12:52 Reindl Harald
+> <h.reindl@thelounge.net> ha scritto:
+>> just throw it out of the array - on a RAID 1 with two disk you have
+>> still redundancy and i won't trust a disk which recognized that it has
+>> errors on it's own
+> 
+> Why ? if it's just a single sector, the rest of the disk could be used
+> properly until the replacement.
 
-The option is: i've ordered the new disk, it should arrive this thursday.
-If i'm still on the safe side, i'll wait, if not, i'll replace with
-the first disk I have here, even if slower
+i simply don't trust drives which have thrown errors
+you don't lose anything when you push it out of the array
+
+>> what's the point of "can i delay" when you have no other options? :-)
+> 
+> The option is: i've ordered the new disk, it should arrive this thursday.
+> If i'm still on the safe side, i'll wait, if not, i'll replace with
+> the first disk I have here, even if slower
+
+you are clearly on the safe side with 3 mirrors and every rebuild wears 
+out the remaining drives, 1 out of the 3 would be enough since they hold 
+identical data
+
+----------------------
+
+the only thing one should think of: are all 3 drives identical types 
+with identical age - then it's more likely that they fail all within a 
+short time
+
+that's why i try to mix different disks in a mirror to avoid failing 
+both sides of a mirror due firmware-error or a charge of bad disks
+
+----------------------
+
+as i replaced my HDD to SSD i removed two drives out of my RAID10, as it 
+didn't boot exchange two of them
+
+so at that point 1 mirror of each stripe was a HDD and one a new SSD, 
+after one year i replaced the remaining two disks
+
+2 x 850 EVO 2TB
+2 x 860 EVO 2TB
+
+/dev/sda: GB Written: 72.020
+/dev/sdb: GB Written: 69.709
+/dev/sdc: GB Written: 91.367
+/dev/sdd: GB Written: 94.134
+
+pretty impossible that both sides of the same mirror will fail within a 
+few hours
+
+
