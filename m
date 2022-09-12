@@ -2,20 +2,21 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B8D15B618B
-	for <lists+linux-raid@lfdr.de>; Mon, 12 Sep 2022 21:15:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 217645B6183
+	for <lists+linux-raid@lfdr.de>; Mon, 12 Sep 2022 21:12:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230049AbiILTPB (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 12 Sep 2022 15:15:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36962 "EHLO
+        id S229730AbiILTMi (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 12 Sep 2022 15:12:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230388AbiILTO6 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 12 Sep 2022 15:14:58 -0400
+        with ESMTP id S230049AbiILTMi (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 12 Sep 2022 15:12:38 -0400
+X-Greylist: delayed 223 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 12 Sep 2022 12:12:37 PDT
 Received: from vps.thesusis.net (vps.thesusis.net [34.202.238.73])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E92A13F87
-        for <linux-raid@vger.kernel.org>; Mon, 12 Sep 2022 12:14:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6620D32D82
+        for <linux-raid@vger.kernel.org>; Mon, 12 Sep 2022 12:12:37 -0700 (PDT)
 Received: by vps.thesusis.net (Postfix, from userid 1000)
-        id 9E3FEE607E; Mon, 12 Sep 2022 15:08:53 -0400 (EDT)
+        id 94C28E608E; Mon, 12 Sep 2022 15:12:06 -0400 (EDT)
 References: <CAJJqR20U=OcMq_8wBMQ5xmWmcBcYoKN5+Fe9sPHYPkZ_yHurQQ@mail.gmail.com>
  <e8b44f4a-b6ae-6912-1b26-f900a24204af@turmel.org>
  <CAJJqR209OzydScj2jScKvKBR=B6d5JErfaFg=4qcSuC7aEvHEg@mail.gmail.com>
@@ -25,14 +26,16 @@ References: <CAJJqR20U=OcMq_8wBMQ5xmWmcBcYoKN5+Fe9sPHYPkZ_yHurQQ@mail.gmail.com>
  <CAJJqR22XEbkzF1wfO_RrnVV01E25q_OBHGdDOyBzOcGfUSwadg@mail.gmail.com>
  <CAJJqR23vGGpL-QRGKi-ft6X4RWWF0SPWJEEa=TPuo1zRnHPS3A@mail.gmail.com>
  <593e868a-d0a4-3ad5-d983-e585607ec212@turmel.org>
+ <CAJJqR23RE3Hfrm-bkiyMm3OjUTCFhXsRvBXr4H8563t1VyY=0g@mail.gmail.com>
+ <CAJJqR23+V1_DTzYQv7=6M9U6qbd7yEHE3WR2XuXbaBH2oVqLQw@mail.gmail.com>
 User-agent: mu4e 1.7.12; emacs 27.1
 From:   Phillip Susi <phill@thesusis.net>
-To:     Phil Turmel <philip@turmel.org>
-Cc:     Luigi Fabio <luigi.fabio@gmail.com>, linux-raid@vger.kernel.org
+To:     Luigi Fabio <luigi.fabio@gmail.com>
+Cc:     Phil Turmel <philip@turmel.org>, linux-raid@vger.kernel.org
 Subject: Re: RAID5 failure and consequent ext4 problems
-Date:   Mon, 12 Sep 2022 15:06:47 -0400
-In-reply-to: <593e868a-d0a4-3ad5-d983-e585607ec212@turmel.org>
-Message-ID: <87k0688l6i.fsf@vps.thesusis.net>
+Date:   Mon, 12 Sep 2022 15:09:24 -0400
+In-reply-to: <CAJJqR23+V1_DTzYQv7=6M9U6qbd7yEHE3WR2XuXbaBH2oVqLQw@mail.gmail.com>
+Message-ID: <87fsgw8l15.fsf@vps.thesusis.net>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
@@ -45,14 +48,28 @@ List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
 
-Phil Turmel <philip@turmel.org> writes:
+Luigi Fabio <luigi.fabio@gmail.com> writes:
 
-> Yes.  Same kernels are pretty repeatable for device order on bootup as
-> long as all are present.  Anything missing will shift the letter 
-> assignments.
+> Well, I found SOMETHING of decided interest: when I run dumpe2fs with
+> any backup superblock, this happens:
+>
+> ---
+> Filesystem created:       Tue Nov  4 08:56:08 2008
+> Last mount time:          Thu Aug 18 21:04:22 2022
+> Last write time:          Thu Aug 18 21:04:22 2022
+> ---
+>
+> So the backups have not been updated since boot-before-last? That
+> would explain why, when fsck tries to use those backups, it comes up
+> with funny results.
 
-Every time I think about this I find myself amayzed that it does seem to
-be so stable, and wonder how that can be.  The drives are all enumerated
-in paralell these days so the order they get assigned in should be a
-total crap shoot, shouldn't it?
+
+That's funny.  IIRC, the backups virtually never get updated.  The only
+thing e2fsck needs to get from them is the location of the inode tables
+and block groups, and that does not change during the life of the
+filesystem.
+
+I might have something tickling the back of my memory that when e2fsck
+is run, it updates the first backup superblock, but the others never got
+updated.
 
