@@ -2,92 +2,63 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D809B5B6D8A
-	for <lists+linux-raid@lfdr.de>; Tue, 13 Sep 2022 14:47:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50D8F5B6DCB
+	for <lists+linux-raid@lfdr.de>; Tue, 13 Sep 2022 14:57:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230176AbiIMMrh (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 13 Sep 2022 08:47:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60910 "EHLO
+        id S231302AbiIMM5K (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 13 Sep 2022 08:57:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229876AbiIMMrh (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 13 Sep 2022 08:47:37 -0400
-Received: from mallaury.nerim.net (smtp-102-tuesday.noc.nerim.net [178.132.17.102])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 39CC94F6B8
-        for <linux-raid@vger.kernel.org>; Tue, 13 Sep 2022 05:47:34 -0700 (PDT)
-Received: from [192.168.0.247] (plouf.fr.eu.org [213.41.155.166])
-        by mallaury.nerim.net (Postfix) with ESMTP id 06CE4DB18B;
-        Tue, 13 Sep 2022 14:47:27 +0200 (CEST)
-Message-ID: <8babedc5-a2e7-326f-3340-10e354aecb45@plouf.fr.eu.org>
-Date:   Tue, 13 Sep 2022 14:47:27 +0200
+        with ESMTP id S231130AbiIMM5I (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 13 Sep 2022 08:57:08 -0400
+Received: from vps.thesusis.net (vps.thesusis.net [34.202.238.73])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D583425F3
+        for <linux-raid@vger.kernel.org>; Tue, 13 Sep 2022 05:57:07 -0700 (PDT)
+Received: by vps.thesusis.net (Postfix, from userid 1000)
+        id 1C62FE62B5; Tue, 13 Sep 2022 08:56:37 -0400 (EDT)
+References: <CAJJqR20U=OcMq_8wBMQ5xmWmcBcYoKN5+Fe9sPHYPkZ_yHurQQ@mail.gmail.com>
+ <e8b44f4a-b6ae-6912-1b26-f900a24204af@turmel.org>
+ <CAJJqR209OzydScj2jScKvKBR=B6d5JErfaFg=4qcSuC7aEvHEg@mail.gmail.com>
+ <CAJJqR22EWec7gMwtVZCxxWc4-w9fEp8jaHWmtENwsLYSi7G5PQ@mail.gmail.com>
+ <df503250-7c8e-d6f7-21fd-2fe4f1cae961@turmel.org>
+ <CAJJqR231QRUexo=eqi=ijF+ErT=LZHr7DxWPAqC+RqF51ehmxw@mail.gmail.com>
+ <CAJJqR22XEbkzF1wfO_RrnVV01E25q_OBHGdDOyBzOcGfUSwadg@mail.gmail.com>
+ <CAJJqR23vGGpL-QRGKi-ft6X4RWWF0SPWJEEa=TPuo1zRnHPS3A@mail.gmail.com>
+ <593e868a-d0a4-3ad5-d983-e585607ec212@turmel.org>
+ <87k0688l6i.fsf@vps.thesusis.net>
+ <CAJJqR21N2G5-nN_Ef+2W51FmQ40e8WbZfmrN6c42rdid2T_GoA@mail.gmail.com>
+User-agent: mu4e 1.7.12; emacs 27.1
+From:   Phillip Susi <phill@thesusis.net>
+To:     Luigi Fabio <luigi.fabio@gmail.com>
+Cc:     Phil Turmel <philip@turmel.org>, linux-raid@vger.kernel.org
+Subject: Re: RAID5 failure and consequent ext4 problems
+Date:   Tue, 13 Sep 2022 08:51:25 -0400
+In-reply-to: <CAJJqR21N2G5-nN_Ef+2W51FmQ40e8WbZfmrN6c42rdid2T_GoA@mail.gmail.com>
+Message-ID: <87sfkvzb3u.fsf@vps.thesusis.net>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Subject: Re: change UUID of RAID devcies
-Content-Language: en-US
-To:     Reindl Harald <h.reindl@thelounge.net>,
-        Linux RAID Mailing List <linux-raid@vger.kernel.org>
-References: <2341a2a9-b86e-f0e5-784a-05dbd474dec5@thelounge.net>
- <729bdc01-b0ae-887a-6d2a-5135d287636c@youngman.org.uk>
- <05a1161b-d798-c68f-d37c-a9fc373c6e73@thelounge.net>
- <0023fefe-aad1-e692-48dd-e354497f6e41@plouf.fr.eu.org>
- <1fb05e0f-34b7-3ec4-bc00-ec540e592f19@thelounge.net>
- <3fc0b889-3ef9-652e-6452-2eeede918683@plouf.fr.eu.org>
- <9e537739-2fbd-2c99-8191-54faf0a69a8b@thelounge.net>
- <6b4a5399-5053-4a51-26d7-2f62c47c2981@plouf.fr.eu.org>
- <65ee1134-60e4-4577-74c7-0ba15ae39225@thelounge.net>
- <97b66977-97c7-21aa-f1d9-f0d34a0fcf9b@plouf.fr.eu.org>
- <b428f8c6-cf8b-218c-3cae-8f36327901f7@thelounge.net>
- <ec3b9673-688b-18c8-188b-246e9c63a2d0@plouf.fr.eu.org>
- <071b8b8a-7a50-3eec-22d4-5880ff3f80e9@thelounge.net>
-From:   Pascal Hambourg <pascal@plouf.fr.eu.org>
-Organization: Plouf !
-In-Reply-To: <071b8b8a-7a50-3eec-22d4-5880ff3f80e9@thelounge.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 13/09/2022 at 14:21, Reindl Harald wrote:
-> Am 13.09.22 um 14:03 schrieb Pascal Hambourg:
->> On 13/09/2022 at 13:50, Reindl Harald wrote:
->>> Am 13.09.22 um 13:48 schrieb Pascal Hambourg:
->>>>
->>>> Legacy boot on GPT has some requirements, but it works
->>>
->>> but we are talking about a LIVE-migration/reshape of existing disks 
->>> with no place left for another partition
->>
->> So what ? Aren't you going to create a GPT partition table on your 
->> 4-TB drives ? Else you won't be able to use the space beyond 2 TiB. (*)
->> A GPT partition table supports up to 128 partitions by default.
-> 
-> i won't have a choice as it looks like and so the easiest choice would 
-> be migrate /boot completly to a USB-stick and simply ignore the current 
-> /boot RAID1 which is just 482M small
 
-I don't see how it is easier. Also, USB sticks are not reliable.
-However you are right that you can get rid of the current /boot array; I 
-don't see the need for a separate /boot, its contents could be included 
-in the root filesystem.
+Luigi Fabio <luigi.fabio@gmail.com> writes:
 
-> since finally the new machines in the next step only support UEFI and 
-> the uefi-system partition can't live on a RAID it would end there over 
-> time anyways
+> Well, there are several possible explanations, but persistence is
+> desireable - so evidently enumeration occurs according to controller
+> order in a repeatable way until something changes in the configuration
+> - or until you change kernel, someone does something funny with a
+> driver and the order changes. In 28 years of using Linux, however,
+> this has happened.. rarely, save for before things were sensible WAY
+> back when.
 
-Software is not natively supported by EFI boot but there are a few 
-tricks to set up a redundant EFI boot: create independent EFI partitions 
-on each disk, or create a RAID 1 array with metadata 1.0 (at the end of 
-the partition) so that the UEFI firmware can see each RAID partition as 
-a normal EFI partition with a FAT filesystem.
+I *think* it is only because the probes are all *started* in the natural
+order, so as long as the drives all respond in the same, short amount of
+time, you get no surprises.  If one drive decides to take a little
+longer to answer today though, it can throw things off.
 
-> so for now my last remaining question is "how would the command look for 
-> "Then with just two drives you change the raid to raid-1"
-
-I would not convert existing arrays. Rather create new arrays on the new 
-disks and copy the data.
