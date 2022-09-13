@@ -2,73 +2,86 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A34E35B77F3
-	for <lists+linux-raid@lfdr.de>; Tue, 13 Sep 2022 19:31:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB6645B7771
+	for <lists+linux-raid@lfdr.de>; Tue, 13 Sep 2022 19:14:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233070AbiIMR1m (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 13 Sep 2022 13:27:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55164 "EHLO
+        id S231571AbiIMROB (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 13 Sep 2022 13:14:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231623AbiIMR1B (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 13 Sep 2022 13:27:01 -0400
-Received: from mail.thelounge.net (mail.thelounge.net [91.118.73.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D21B69F54
-        for <linux-raid@vger.kernel.org>; Tue, 13 Sep 2022 09:15:33 -0700 (PDT)
-Received: from [10.10.10.2] (rh.vpn.thelounge.net [10.10.10.2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-256))
-        (No client certificate requested)
-        (Authenticated sender: h.reindl@thelounge.net)
-        by mail.thelounge.net (THELOUNGE MTA) with ESMTPSA id 4MRndf1zPtzXLb;
-        Tue, 13 Sep 2022 17:37:10 +0200 (CEST)
-Message-ID: <3c299ccc-01e6-a94f-df50-f51243f834f0@thelounge.net>
-Date:   Tue, 13 Sep 2022 17:37:09 +0200
+        with ESMTP id S232305AbiIMRNc (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 13 Sep 2022 13:13:32 -0400
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41F169674F
+        for <linux-raid@vger.kernel.org>; Tue, 13 Sep 2022 09:02:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+        MIME-Version:Date:Message-ID:content-disposition;
+        bh=NOG8GVF1ChlhrvX3zIYUlC9Qd3IHqr+qX9dV2D2DJ5Q=; b=Y7YVbEKt20M1DuY7lTXxAwHIXK
+        xg0FaI6m9qwt+Yi7PVtkEd5o3T7U3Fr/noOvdF7vKFG9vAnLuwq2XPYzQzutx3HfRFWg3S+cgxCGJ
+        +aPTWQnn0TngnyeWedFw04A/l8hjZO8bSk5KIjBWkKJimvcrSNyc3uuDApi/8KYn2lt2DGxQhhIsv
+        lZVLBiDIrb2DmTDvAzJUGyqrQs8Cp4K2JkxdnGJbbUd26bNMacomTO7fLYBfAuUSLxCrKqlzwD5ca
+        BAldXiR/PffpIlPdKJkUWPA/i0qjbFYYlHK/usCzIU/7p0et8CFRayImimThdhwLkwdI5s1obA0An
+        cScGp1lA==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <logang@deltatee.com>)
+        id 1oY7zk-000puu-A6; Tue, 13 Sep 2022 09:38:41 -0600
+Message-ID: <64d4b251-c10f-aac1-0ba6-fa1e2b30792f@deltatee.com>
+Date:   Tue, 13 Sep 2022 09:38:36 -0600
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.1
-Subject: Re: change UUID of RAID devcies
-Content-Language: en-US
-From:   Reindl Harald <h.reindl@thelounge.net>
-To:     Wol <antlists@youngman.org.uk>,
-        Linux RAID Mailing List <linux-raid@vger.kernel.org>
-References: <2341a2a9-b86e-f0e5-784a-05dbd474dec5@thelounge.net>
- <729bdc01-b0ae-887a-6d2a-5135d287636c@youngman.org.uk>
- <05a1161b-d798-c68f-d37c-a9fc373c6e73@thelounge.net>
-Organization: the lounge interactive design
-In-Reply-To: <05a1161b-d798-c68f-d37c-a9fc373c6e73@thelounge.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Content-Language: en-CA
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-raid@vger.kernel.org, Jes Sorensen <jes@trained-monkey.org>,
+        Guoqing Jiang <guoqing.jiang@linux.dev>,
+        Xiao Ni <xni@redhat.com>,
+        Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
+        Coly Li <colyli@suse.de>,
+        Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+        Jonmichael Hands <jm@chia.net>,
+        Stephen Bates <sbates@raithlin.com>,
+        Martin Oliveira <Martin.Oliveira@eideticom.com>,
+        David Sloan <David.Sloan@eideticom.com>
+References: <20220908230847.5749-1-logang@deltatee.com>
+ <yq1fsgwbijv.fsf@ca-mkp.ca.oracle.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <yq1fsgwbijv.fsf@ca-mkp.ca.oracle.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: martin.petersen@oracle.com, linux-raid@vger.kernel.org, jes@trained-monkey.org, guoqing.jiang@linux.dev, xni@redhat.com, mariusz.tkaczyk@linux.intel.com, colyli@suse.de, chaitanyak@nvidia.com, jm@chia.net, sbates@raithlin.com, Martin.Oliveira@eideticom.com, David.Sloan@eideticom.com
+X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
+Subject: Re: [PATCH mdadm v2 0/2] Discard Option for Creating Arrays
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
 
 
-Am 13.09.22 um 12:28 schrieb Reindl Harald:
-> Am 12.09.22 um 23:37 schrieb Wol:
->> On 12/09/2022 16:04, Reindl Harald wrote:
->>> the reason for that game is that the machines are running for 10 
->>> years now and all the new desktop hardware can't hold 4x3.5" disks 
->>> and so just put them in a new one isn't possible
->>
->> How many SATA ports does the mobo have? Can you --replace onto the new 
->> drives (especially if it's raid-10!), then just fail the remaining two 
->> drives?
->>
->> Iirc raid-10 doesn't require the drives to be the same size, so 
->> provided the two new drives are big enough, that should just work.
->>
->> Then with just two drives you change the raid to raid-1
+On 2022-09-12 11:40, Martin K. Petersen wrote:
+>> Because write-zero requests may be slow and most (but not all) discard
+>> requests read back as zeros, this work uses only discard requests.
+> 
+> REQ_OP_WRITE_ZEROES will pick the most optimal way to guarantee that all
+> blocks in the requested range will return zeroes for subsequent reads.
 
-[root@testserver:~]$ mdadm /dev/md0 --grow --level=1
-mdadm: RAID10 can only be changed to RAID0
+Makes sense to me. I wanted to use WRITE_ZEROS but was disappointed in
+the performance even on the nvme drive we tested. I'll respin this to
+use WRITE_ZEROS and maybe we can do some investigation on more NVMe
+drives to see if more of them might do it efficiently.
 
-virtual machine with two drives replaced against double sized
+Thanks,
 
-so we are back at the dd/ssh-game and how do i set the UUIDs identical?
+Logan
