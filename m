@@ -2,152 +2,122 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FF6C5BA3F1
-	for <lists+linux-raid@lfdr.de>; Fri, 16 Sep 2022 03:18:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AAD25BAC45
+	for <lists+linux-raid@lfdr.de>; Fri, 16 Sep 2022 13:23:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229886AbiIPBSk (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 15 Sep 2022 21:18:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34932 "EHLO
+        id S230474AbiIPLXj (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 16 Sep 2022 07:23:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229816AbiIPBRu (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 15 Sep 2022 21:17:50 -0400
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01hn2245.outbound.protection.outlook.com [52.100.164.245])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 711F0876BB;
-        Thu, 15 Sep 2022 18:17:45 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JhyLOY+N/a0hl5iqFUhc+Ouqf1B2ohoULHIHKKaG9WwDaV6o5ulQUl+18rUpEvCM1Gpeb4b9tAK3UtfuDVdDnkahC/Swbwj4j4jlYEk7fFCW1zaB2Y1pkcDIHsBSp5unPes18XFe+H5DtPDl/mbKLq/6wb0gMvr5Y41LXwV86CJLbdDMy6IV2kyDurK/WdKaZAvmwMVkITGqqgzJM5VkBvBTh1XKHAHAHC6b8Bmlis6E+4vcqP8oXSlwFDQ4svQLidKiKhXYz2O6z659PJkQWOLk78ypyYTDIDvNqa6+zRtYBtbVXGgVgt7cNl1uWXpxwmByJBE1MWTSXIIiWWcUBQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Bs10Md+15nMnyayKLyd22Uv+/ZH79IcFcpzuzGLq1Fg=;
- b=fLdaE+A2GAzG3Nl4NeUw3cj0Y9kfK7Y0J6mx0yEReLLby2KkhycHSzFuQX3U0WG5JlFTpU09hC/UYTSdnse1sQtR2gp91ykj23Xae3OVbs43frizA1UAMFyNFUEEZ8ZN6+GKXmsQO0oQJCW4DKUkKY6OdQlHFq+BkoNvFZ9BRzHjFZPXU6g81wqF1yMzoM62fb++iCF94yOKt98pVdgb/+KHOctEl/Re7GB8yG2xciHmtqKys8dKACU2MH+j7U7CJGM9n3SzphxC8dSZjCz9jFngvhuegqq/UYeYToe+MV8jg7/O21P+D5rRnCqjl5J3WU4SEQdzb0+4SQLkRRrlrg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 45.14.71.5) smtp.rcpttodomain=vger.kernel.orgq smtp.mailfrom=t4.cims.jp;
- dmarc=bestguesspass action=none header.from=t4.cims.jp; dkim=none (message
- not signed); arc=none (0)
-Received: from TY1PR01CA0184.jpnprd01.prod.outlook.com (2603:1096:403::14) by
- HKAPR04MB4033.apcprd04.prod.outlook.com (2603:1096:203:c6::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5612.19; Fri, 16 Sep 2022 01:17:42 +0000
-Received: from TYZAPC01FT021.eop-APC01.prod.protection.outlook.com
- (2603:1096:403:0:cafe::94) by TY1PR01CA0184.outlook.office365.com
- (2603:1096:403::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5632.12 via Frontend
- Transport; Fri, 16 Sep 2022 01:17:42 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 45.14.71.5)
- smtp.mailfrom=t4.cims.jp; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=t4.cims.jp;
-Received-SPF: Pass (protection.outlook.com: domain of t4.cims.jp designates
- 45.14.71.5 as permitted sender) receiver=protection.outlook.com;
- client-ip=45.14.71.5; helo=User; pr=M
-Received: from mail.prasarana.com.my (58.26.8.158) by
- TYZAPC01FT021.mail.protection.outlook.com (10.118.152.130) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5632.12 via Frontend Transport; Fri, 16 Sep 2022 01:17:42 +0000
-Received: from MRL-EXH-02.prasarana.com.my (10.128.66.101) by
- MRL-EXH-01.prasarana.com.my (10.128.66.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.14; Fri, 16 Sep 2022 09:17:01 +0800
-Received: from User (45.14.71.5) by MRL-EXH-02.prasarana.com.my
- (10.128.66.101) with Microsoft SMTP Server id 15.1.2176.14 via Frontend
- Transport; Fri, 16 Sep 2022 09:16:30 +0800
-Reply-To: <rhashimi202222@kakao.com>
-From:   Consultant Swift Capital Loans Ltd <info@t4.cims.jp>
-Subject: I hope you are doing well, and business is great!
-Date:   Fri, 16 Sep 2022 09:17:12 +0800
+        with ESMTP id S230008AbiIPLXi (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 16 Sep 2022 07:23:38 -0400
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2D6A6717D;
+        Fri, 16 Sep 2022 04:23:35 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4MTWqQ3FrPzKG7L;
+        Fri, 16 Sep 2022 19:21:38 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.127.227])
+        by APP2 (Coremail) with SMTP id Syh0CgDXKXOzXCRjdyK5Aw--.60594S4;
+        Fri, 16 Sep 2022 19:23:33 +0800 (CST)
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+To:     song@kernel.org, logang@deltatee.com, guoqing.jiang@linux.dev,
+        pmenzel@molgen.mpg.de
+Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com
+Subject: [PATCH v3 0/5] md/raid10: reduce lock contention for io
+Date:   Fri, 16 Sep 2022 19:34:23 +0800
+Message-Id: <20220916113428.774061-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="Windows-1251"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-Message-ID: <9503e0ab-4510-47d5-bcde-9fb0a78227ed@MRL-EXH-02.prasarana.com.my>
-To:     Undisclosed recipients:;
-X-EOPAttributedMessage: 0
-X-MS-Exchange-SkipListedInternetSender: ip=[45.14.71.5];domain=User
-X-MS-Exchange-ExternalOriginalInternetSender: ip=[45.14.71.5];domain=User
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYZAPC01FT021:EE_|HKAPR04MB4033:EE_
-X-MS-Office365-Filtering-Correlation-Id: 629bded5-1128-4957-f6d7-08da978140f0
-X-MS-Exchange-AtpMessageProperties: SA|SL
-X-MS-Exchange-SenderADCheck: 0
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: =?windows-1251?Q?vcG2ZJ3c7cHHwBxLwaIoH+mS9wdGk/tReUPMbRPGf2GVJPKHxy8K1iXb?=
- =?windows-1251?Q?IQffiUP8k7IEcJri6j24FoR2oNikZBD2Wa9pWUeWpplUI/NxrmmJAKe/?=
- =?windows-1251?Q?tH6ZgM9B+qFV3OdoY+9FjexkZcQo2kAzsAkgCocGGCRM/5J83ubRrnQz?=
- =?windows-1251?Q?gOIDRDrLttf8vfg4Bjy/NeVd7ADvsVsYZ5ZT5mIQdoYV2AP4+AR7s9ch?=
- =?windows-1251?Q?DniXh47s/wErYVvCFvrxxh7HE6BSL1HTpjSAq35OBanAgfOh3TZealw1?=
- =?windows-1251?Q?GNkIx9yrqssEpWzLbBQDge+ftyRckG3cMrzph+fypJnv69sElpAwK3K5?=
- =?windows-1251?Q?6AeaN48XK4rV2uaWEdYJT0Ww8Lrf6imjqaTaaUkF8A7zjm9tV3UUqrbL?=
- =?windows-1251?Q?x63qAk5poPHlrvbJhNSEE2EWBsfovoWM8Rl3gBn3+yo5o1aT//XD2cWu?=
- =?windows-1251?Q?onVveE4NtKKtJDqb7LkzITyf8B9PW7iOUPUh/ooOeL4biG5WNHkK9dN1?=
- =?windows-1251?Q?S/ifuTKuXcJZfpExvP/yRHA6bD2vpWYMDXdoYzjjCAPuYiZNCQeTtIoi?=
- =?windows-1251?Q?pQSv5am/6fSAyTvVn48LHSFsfbuwcvZSQf1QjH7jsMozM2FVOiGf+M3W?=
- =?windows-1251?Q?tJIRDhmpAScZQSsMNdwjb3dbHE0W6gN6kI+ijQZr0ldSEZPNE4eJDQQ2?=
- =?windows-1251?Q?OFBRgBLmjGdDw3vZnWP5pQkiyGiWAJPR5Wt9jxmqoqgIJkItGsh1h0PQ?=
- =?windows-1251?Q?pHLfe6qUKqD2Y0e5+ydbWytS1ZRTu5UQHcBMpHQ8r98ZjLGNgkBWIKFJ?=
- =?windows-1251?Q?XnyN7Z9Uos5gmARBc23bW8hVP4i7TtKE9xpJfGmaEFt53iZrO5jxDLcb?=
- =?windows-1251?Q?7tqKq1tY5BbE5OiksSqpNgx1XpyAP1UrJFemIWmgXPkbsyBw93IHtLNQ?=
- =?windows-1251?Q?HU0o9drnK33Vjv7WJT24hwu8P+aQuhzgXFcIAdQewip05I8ixdtrLDgi?=
- =?windows-1251?Q?2UJv9NuchlqKW7g9u7bsk41TB/3noQ0v4aFOx4tX1fV4ucse/xxqTcvs?=
- =?windows-1251?Q?algx4oLtHkJg59+Y+9xcJpQg2eMQ3iqpDBv8qX9L6LKBBIHuBX43VMNA?=
- =?windows-1251?Q?/vD7IYfomzMXCemBsTUlinUydK6IHTRUyIyiK9FeS6oWUbYzOqsqLwf7?=
- =?windows-1251?Q?+rUcu9MS7xc4tVpHkNQsCI+SVLg7fCR4Q2vL+pDeUr7y9NqCnjJTm2mJ?=
- =?windows-1251?Q?AfaXVXcHhmhciN49a2FzDPTz+5jwCOxLUdlRte/8Ig+onKI7C37Vfdpx?=
- =?windows-1251?Q?I8xALmlS5AE0ZHBl7wnjx9cL+byAK2XcWAecWsTpNHHw4LRv?=
-X-Forefront-Antispam-Report: CIP:58.26.8.158;CTRY:JP;LANG:en;SCL:5;SRV:;IPV:NLI;SFV:SPM;H:User;PTR:45.14.71.5.static.xtom.com;CAT:OSPM;SFS:(13230022)(4636009)(136003)(346002)(376002)(396003)(39860400002)(451199015)(40470700004)(46966006)(498600001)(109986005)(40480700001)(41300700001)(316002)(8676002)(6666004)(47076005)(40460700003)(7406005)(9686003)(81166007)(70206006)(2906002)(36906005)(82310400005)(7416002)(70586007)(4744005)(8936002)(86362001)(31696002)(5660300002)(26005)(82740400003)(32850700003)(336012)(31686004)(956004)(35950700001)(156005)(66899012)(2700400008);DIR:OUT;SFP:1501;
-X-OriginatorOrg: myprasarana.onmicrosoft.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2022 01:17:42.0737
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 629bded5-1128-4957-f6d7-08da978140f0
-X-MS-Exchange-CrossTenant-Id: 3cbb2ff2-27fb-4993-aecf-bf16995e64c0
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3cbb2ff2-27fb-4993-aecf-bf16995e64c0;Ip=[58.26.8.158];Helo=[mail.prasarana.com.my]
-X-MS-Exchange-CrossTenant-AuthSource: TYZAPC01FT021.eop-APC01.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HKAPR04MB4033
-X-Spam-Status: Yes, score=6.2 required=5.0 tests=AXB_XMAILER_MIMEOLE_OL_024C2,
-        AXB_X_FF_SEZ_S,BAYES_50,FORGED_MUA_OUTLOOK,FSL_CTYPE_WIN1251,
-        FSL_NEW_HELO_USER,HEADER_FROM_DIFFERENT_DOMAINS,NSL_RCVD_FROM_USER,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5012]
-        *  0.0 NSL_RCVD_FROM_USER Received from User
-        *  0.0 FSL_CTYPE_WIN1251 Content-Type only seen in 419 spam
-        *  3.2 AXB_X_FF_SEZ_S Forefront sez this is spam
-        * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [52.100.164.245 listed in list.dnswl.org]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        * -0.0 SPF_HELO_PASS SPF: HELO matches SPF record
-        *  0.2 HEADER_FROM_DIFFERENT_DOMAINS From and EnvelopeFrom 2nd level
-        *      mail domains are different
-        * -0.0 RCVD_IN_MSPIKE_H2 RBL: Average reputation (+2)
-        *      [52.100.164.245 listed in wl.mailspike.net]
-        *  0.0 AXB_XMAILER_MIMEOLE_OL_024C2 Yet another X header trait
-        *  0.0 FSL_NEW_HELO_USER Spam's using Helo and User
-        *  1.9 FORGED_MUA_OUTLOOK Forged mail pretending to be from MS Outlook
-X-Spam-Level: ******
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: Syh0CgDXKXOzXCRjdyK5Aw--.60594S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ar1fKF15Jw1DWFW8XF1UKFg_yoW8uF4rpa
+        1fJrna9FsrAryIvrZxKr17CryYv3WFq39rCF97G34fZF98ArW5JF1xtFWrur1DXr9aqFy7
+        J3WUCa9agFyjvaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUyK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l42xK82IYc2Ij64vI
+        r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+        xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
+        cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+        AvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7Cj
+        xVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hello,
+From: Yu Kuai <yukuai3@huawei.com>
 
-I hope you are doing well, and business is great!
-However, if you need working capital to further grow and expand your business, we may be a perfect fit for you. I am Ms. Kaori Ichikawa Swift Capital Loans Ltd Consultant, Our loans are NOT based on your personal credit, and NO collateral is required.
+Changes in v3:
+ - split a patch from patch 1
+ - only modify hot path in patch 3
+ - wake up barrier if 'nr_pending' is decreased to 0 in
+ wait_barrier_nolock(), otherwise raise_barrier() might hung.
 
-We are a Direct Lender who can approve your loan today, and fund as Early as Tomorrow.
+Changes in v2:
+ - add patch 1, as suggested by Logan Gunthorpe.
+ - in patch 4, instead of use spin_lock/unlock in wait_event, which will
+ confuse lockdep, use write_seqlock/unlock instead.
+ - in patch 4, use read_seqbegin() to get seqcount instead of unusual
+ usage of raw_read_seqcount().
+ - test result is different from v1 in aarch64 due to retest from different
+ environment.
 
-Once your reply I will send you the official website to complete your application
+This patchset tries to avoid that two locks are held unconditionally
+in hot path.
 
-Waiting for your reply.
+Test environment:
 
-Regards
-Ms. Kaori Ichikawa
-Consultant Swift Capital Loans Ltd
+Architecture:
+aarch64 Huawei KUNPENG 920
+x86 Intel(R) Xeon(R) Platinum 8380
+
+Raid10 initialize:
+mdadm --create /dev/md0 --level 10 --bitmap none --raid-devices 4 /dev/nvme0n1 /dev/nvme1n1 /dev/nvme2n1 /dev/nvme3n1
+
+Test cmd:
+(task set -c 0-15) fio -name=0 -ioengine=libaio -direct=1 -group_reporting=1 -randseed=2022 -rwmixread=70 -refill_buffers -filename=/dev/md0 -numjobs=16 -runtime=60s -bs=4k -iodepth=256 -rw=randread
+
+Test result:
+
+aarch64:
+before this patchset:		3.2 GiB/s
+bind node before this patchset: 6.9 Gib/s
+after this patchset:		7.9 Gib/s
+bind node after this patchset:	8.0 Gib/s
+
+x86:(bind node is not tested yet)
+before this patchset: 7.0 GiB/s
+after this patchset : 9.3 GiB/s
+
+Please noted that in the test machine, memory access latency is very bad
+across nodes compare to local node in aarch64, which is why bandwidth
+while bind node is much better.
+
+Yu Kuai (5):
+  md/raid10: Factor out code from wait_barrier() to
+    stop_waiting_barrier()
+  md/raid10: don't modify 'nr_waitng' in wait_barrier() for the case
+    nowait
+  md/raid10: prevent unnecessary calls to wake_up() in fast path
+  md/raid10: fix improper BUG_ON() in raise_barrier()
+  md/raid10: convert resync_lock to use seqlock
+
+ drivers/md/raid10.c | 149 ++++++++++++++++++++++++++++----------------
+ drivers/md/raid10.h |   2 +-
+ 2 files changed, 96 insertions(+), 55 deletions(-)
+
+-- 
+2.31.1
+
