@@ -2,166 +2,152 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F6025B9E9F
-	for <lists+linux-raid@lfdr.de>; Thu, 15 Sep 2022 17:21:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FF6C5BA3F1
+	for <lists+linux-raid@lfdr.de>; Fri, 16 Sep 2022 03:18:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229727AbiIOPVH (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 15 Sep 2022 11:21:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46724 "EHLO
+        id S229886AbiIPBSk (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 15 Sep 2022 21:18:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231143AbiIOPUo (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 15 Sep 2022 11:20:44 -0400
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DECDF7FF95;
-        Thu, 15 Sep 2022 08:15:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-        MIME-Version:Date:Message-ID:content-disposition;
-        bh=rtmvdMNM1tIKTKTQ4X5UMPpH4NaSm76HjovqLB0QykE=; b=NfPcGucCbwdJT5fmosDrNL6bvP
-        Kus2Ef7Lkkd+ewc/l/HMeOxqAzSLH4mhEk8JllOwXwHEL0Gacq53by8GBEm/LOeq1CkgjBUE4citj
-        0Q4YX/opu6q2vVm8GZyeFK5aXmCMDDsi4EQfS13vZ0ta0+n/1m1i+4b24CyhKvN4VXdiFCXUMIw0q
-        57cEScy+ksf21bInUh9SySdhARep7B+fX7bvAzOYx+zSlppFso/oy/TDmNKiDlhbFQbaQ0xdKrNf1
-        TB575RnLLh1fXwiSQC6tR1US1mKzC2A/lG+Q4YWkQcPO8iZM3MwBEM/oGvANF3tVSqY+449FTB9Mp
-        nYA1sM7A==;
-Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
-        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <logang@deltatee.com>)
-        id 1oYqa4-002TWX-CQ; Thu, 15 Sep 2022 09:15:09 -0600
-Message-ID: <67168c64-25f2-6efd-c743-9bc459ff87d2@deltatee.com>
-Date:   Thu, 15 Sep 2022 09:15:04 -0600
+        with ESMTP id S229816AbiIPBRu (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 15 Sep 2022 21:17:50 -0400
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01hn2245.outbound.protection.outlook.com [52.100.164.245])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 711F0876BB;
+        Thu, 15 Sep 2022 18:17:45 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JhyLOY+N/a0hl5iqFUhc+Ouqf1B2ohoULHIHKKaG9WwDaV6o5ulQUl+18rUpEvCM1Gpeb4b9tAK3UtfuDVdDnkahC/Swbwj4j4jlYEk7fFCW1zaB2Y1pkcDIHsBSp5unPes18XFe+H5DtPDl/mbKLq/6wb0gMvr5Y41LXwV86CJLbdDMy6IV2kyDurK/WdKaZAvmwMVkITGqqgzJM5VkBvBTh1XKHAHAHC6b8Bmlis6E+4vcqP8oXSlwFDQ4svQLidKiKhXYz2O6z659PJkQWOLk78ypyYTDIDvNqa6+zRtYBtbVXGgVgt7cNl1uWXpxwmByJBE1MWTSXIIiWWcUBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Bs10Md+15nMnyayKLyd22Uv+/ZH79IcFcpzuzGLq1Fg=;
+ b=fLdaE+A2GAzG3Nl4NeUw3cj0Y9kfK7Y0J6mx0yEReLLby2KkhycHSzFuQX3U0WG5JlFTpU09hC/UYTSdnse1sQtR2gp91ykj23Xae3OVbs43frizA1UAMFyNFUEEZ8ZN6+GKXmsQO0oQJCW4DKUkKY6OdQlHFq+BkoNvFZ9BRzHjFZPXU6g81wqF1yMzoM62fb++iCF94yOKt98pVdgb/+KHOctEl/Re7GB8yG2xciHmtqKys8dKACU2MH+j7U7CJGM9n3SzphxC8dSZjCz9jFngvhuegqq/UYeYToe+MV8jg7/O21P+D5rRnCqjl5J3WU4SEQdzb0+4SQLkRRrlrg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 45.14.71.5) smtp.rcpttodomain=vger.kernel.orgq smtp.mailfrom=t4.cims.jp;
+ dmarc=bestguesspass action=none header.from=t4.cims.jp; dkim=none (message
+ not signed); arc=none (0)
+Received: from TY1PR01CA0184.jpnprd01.prod.outlook.com (2603:1096:403::14) by
+ HKAPR04MB4033.apcprd04.prod.outlook.com (2603:1096:203:c6::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5612.19; Fri, 16 Sep 2022 01:17:42 +0000
+Received: from TYZAPC01FT021.eop-APC01.prod.protection.outlook.com
+ (2603:1096:403:0:cafe::94) by TY1PR01CA0184.outlook.office365.com
+ (2603:1096:403::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5632.12 via Frontend
+ Transport; Fri, 16 Sep 2022 01:17:42 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 45.14.71.5)
+ smtp.mailfrom=t4.cims.jp; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=t4.cims.jp;
+Received-SPF: Pass (protection.outlook.com: domain of t4.cims.jp designates
+ 45.14.71.5 as permitted sender) receiver=protection.outlook.com;
+ client-ip=45.14.71.5; helo=User; pr=M
+Received: from mail.prasarana.com.my (58.26.8.158) by
+ TYZAPC01FT021.mail.protection.outlook.com (10.118.152.130) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5632.12 via Frontend Transport; Fri, 16 Sep 2022 01:17:42 +0000
+Received: from MRL-EXH-02.prasarana.com.my (10.128.66.101) by
+ MRL-EXH-01.prasarana.com.my (10.128.66.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.14; Fri, 16 Sep 2022 09:17:01 +0800
+Received: from User (45.14.71.5) by MRL-EXH-02.prasarana.com.my
+ (10.128.66.101) with Microsoft SMTP Server id 15.1.2176.14 via Frontend
+ Transport; Fri, 16 Sep 2022 09:16:30 +0800
+Reply-To: <rhashimi202222@kakao.com>
+From:   Consultant Swift Capital Loans Ltd <info@t4.cims.jp>
+Subject: I hope you are doing well, and business is great!
+Date:   Fri, 16 Sep 2022 09:17:12 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Content-Language: en-CA
-To:     linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        Song Liu <song@kernel.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Guoqing Jiang <guoqing.jiang@linux.dev>,
-        Stephen Bates <sbates@raithlin.com>,
-        Martin Oliveira <Martin.Oliveira@eideticom.com>,
-        David Sloan <David.Sloan@eideticom.com>
-References: <20220908161516.4361-1-logang@deltatee.com>
- <20220908161516.4361-4-logang@deltatee.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <20220908161516.4361-4-logang@deltatee.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="Windows-1251"
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 24.64.144.200
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, song@kernel.org, hch@infradead.org, guoqing.jiang@linux.dev, sbates@raithlin.com, Martin.Oliveira@eideticom.com, David.Sloan@eideticom.com
-X-SA-Exim-Mail-From: logang@deltatee.com
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+Message-ID: <9503e0ab-4510-47d5-bcde-9fb0a78227ed@MRL-EXH-02.prasarana.com.my>
+To:     Undisclosed recipients:;
+X-EOPAttributedMessage: 0
+X-MS-Exchange-SkipListedInternetSender: ip=[45.14.71.5];domain=User
+X-MS-Exchange-ExternalOriginalInternetSender: ip=[45.14.71.5];domain=User
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYZAPC01FT021:EE_|HKAPR04MB4033:EE_
+X-MS-Office365-Filtering-Correlation-Id: 629bded5-1128-4957-f6d7-08da978140f0
+X-MS-Exchange-AtpMessageProperties: SA|SL
+X-MS-Exchange-SenderADCheck: 0
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: =?windows-1251?Q?vcG2ZJ3c7cHHwBxLwaIoH+mS9wdGk/tReUPMbRPGf2GVJPKHxy8K1iXb?=
+ =?windows-1251?Q?IQffiUP8k7IEcJri6j24FoR2oNikZBD2Wa9pWUeWpplUI/NxrmmJAKe/?=
+ =?windows-1251?Q?tH6ZgM9B+qFV3OdoY+9FjexkZcQo2kAzsAkgCocGGCRM/5J83ubRrnQz?=
+ =?windows-1251?Q?gOIDRDrLttf8vfg4Bjy/NeVd7ADvsVsYZ5ZT5mIQdoYV2AP4+AR7s9ch?=
+ =?windows-1251?Q?DniXh47s/wErYVvCFvrxxh7HE6BSL1HTpjSAq35OBanAgfOh3TZealw1?=
+ =?windows-1251?Q?GNkIx9yrqssEpWzLbBQDge+ftyRckG3cMrzph+fypJnv69sElpAwK3K5?=
+ =?windows-1251?Q?6AeaN48XK4rV2uaWEdYJT0Ww8Lrf6imjqaTaaUkF8A7zjm9tV3UUqrbL?=
+ =?windows-1251?Q?x63qAk5poPHlrvbJhNSEE2EWBsfovoWM8Rl3gBn3+yo5o1aT//XD2cWu?=
+ =?windows-1251?Q?onVveE4NtKKtJDqb7LkzITyf8B9PW7iOUPUh/ooOeL4biG5WNHkK9dN1?=
+ =?windows-1251?Q?S/ifuTKuXcJZfpExvP/yRHA6bD2vpWYMDXdoYzjjCAPuYiZNCQeTtIoi?=
+ =?windows-1251?Q?pQSv5am/6fSAyTvVn48LHSFsfbuwcvZSQf1QjH7jsMozM2FVOiGf+M3W?=
+ =?windows-1251?Q?tJIRDhmpAScZQSsMNdwjb3dbHE0W6gN6kI+ijQZr0ldSEZPNE4eJDQQ2?=
+ =?windows-1251?Q?OFBRgBLmjGdDw3vZnWP5pQkiyGiWAJPR5Wt9jxmqoqgIJkItGsh1h0PQ?=
+ =?windows-1251?Q?pHLfe6qUKqD2Y0e5+ydbWytS1ZRTu5UQHcBMpHQ8r98ZjLGNgkBWIKFJ?=
+ =?windows-1251?Q?XnyN7Z9Uos5gmARBc23bW8hVP4i7TtKE9xpJfGmaEFt53iZrO5jxDLcb?=
+ =?windows-1251?Q?7tqKq1tY5BbE5OiksSqpNgx1XpyAP1UrJFemIWmgXPkbsyBw93IHtLNQ?=
+ =?windows-1251?Q?HU0o9drnK33Vjv7WJT24hwu8P+aQuhzgXFcIAdQewip05I8ixdtrLDgi?=
+ =?windows-1251?Q?2UJv9NuchlqKW7g9u7bsk41TB/3noQ0v4aFOx4tX1fV4ucse/xxqTcvs?=
+ =?windows-1251?Q?algx4oLtHkJg59+Y+9xcJpQg2eMQ3iqpDBv8qX9L6LKBBIHuBX43VMNA?=
+ =?windows-1251?Q?/vD7IYfomzMXCemBsTUlinUydK6IHTRUyIyiK9FeS6oWUbYzOqsqLwf7?=
+ =?windows-1251?Q?+rUcu9MS7xc4tVpHkNQsCI+SVLg7fCR4Q2vL+pDeUr7y9NqCnjJTm2mJ?=
+ =?windows-1251?Q?AfaXVXcHhmhciN49a2FzDPTz+5jwCOxLUdlRte/8Ig+onKI7C37Vfdpx?=
+ =?windows-1251?Q?I8xALmlS5AE0ZHBl7wnjx9cL+byAK2XcWAecWsTpNHHw4LRv?=
+X-Forefront-Antispam-Report: CIP:58.26.8.158;CTRY:JP;LANG:en;SCL:5;SRV:;IPV:NLI;SFV:SPM;H:User;PTR:45.14.71.5.static.xtom.com;CAT:OSPM;SFS:(13230022)(4636009)(136003)(346002)(376002)(396003)(39860400002)(451199015)(40470700004)(46966006)(498600001)(109986005)(40480700001)(41300700001)(316002)(8676002)(6666004)(47076005)(40460700003)(7406005)(9686003)(81166007)(70206006)(2906002)(36906005)(82310400005)(7416002)(70586007)(4744005)(8936002)(86362001)(31696002)(5660300002)(26005)(82740400003)(32850700003)(336012)(31686004)(956004)(35950700001)(156005)(66899012)(2700400008);DIR:OUT;SFP:1501;
+X-OriginatorOrg: myprasarana.onmicrosoft.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2022 01:17:42.0737
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 629bded5-1128-4957-f6d7-08da978140f0
+X-MS-Exchange-CrossTenant-Id: 3cbb2ff2-27fb-4993-aecf-bf16995e64c0
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3cbb2ff2-27fb-4993-aecf-bf16995e64c0;Ip=[58.26.8.158];Helo=[mail.prasarana.com.my]
+X-MS-Exchange-CrossTenant-AuthSource: TYZAPC01FT021.eop-APC01.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HKAPR04MB4033
+X-Spam-Status: Yes, score=6.2 required=5.0 tests=AXB_XMAILER_MIMEOLE_OL_024C2,
+        AXB_X_FF_SEZ_S,BAYES_50,FORGED_MUA_OUTLOOK,FSL_CTYPE_WIN1251,
+        FSL_NEW_HELO_USER,HEADER_FROM_DIFFERENT_DOMAINS,NSL_RCVD_FROM_USER,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5012]
+        *  0.0 NSL_RCVD_FROM_USER Received from User
+        *  0.0 FSL_CTYPE_WIN1251 Content-Type only seen in 419 spam
+        *  3.2 AXB_X_FF_SEZ_S Forefront sez this is spam
+        * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [52.100.164.245 listed in list.dnswl.org]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.0 SPF_HELO_PASS SPF: HELO matches SPF record
+        *  0.2 HEADER_FROM_DIFFERENT_DOMAINS From and EnvelopeFrom 2nd level
+        *      mail domains are different
+        * -0.0 RCVD_IN_MSPIKE_H2 RBL: Average reputation (+2)
+        *      [52.100.164.245 listed in wl.mailspike.net]
+        *  0.0 AXB_XMAILER_MIMEOLE_OL_024C2 Yet another X header trait
+        *  0.0 FSL_NEW_HELO_USER Spam's using Helo and User
+        *  1.9 FORGED_MUA_OUTLOOK Forged mail pretending to be from MS Outlook
+X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
-Subject: Re: [PATCH v2 3/3] md/raid5: Wait for MD_SB_CHANGE_PENDING in raid5d
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+Hello,
 
-Hi Song,
+I hope you are doing well, and business is great!
+However, if you need working capital to further grow and expand your business, we may be a perfect fit for you. I am Ms. Kaori Ichikawa Swift Capital Loans Ltd Consultant, Our loans are NOT based on your personal credit, and NO collateral is required.
 
-On 2022-09-08 10:15, Logan Gunthorpe wrote:
-> A complicated deadlock exists when using the journal and an elevated
-> group_thrtead_cnt. It was found with loop devices, but its not clear
-> whether it can be seen with real disks. The deadlock can occur simply
-> by writing data with an fio script.
-> 
-> When the deadlock occurs, multiple threads will hang in different ways:
-> 
->  1) The group threads will hang in the blk-wbt code with bios waiting to
->     be submitted to the block layer:
-> 
->         io_schedule+0x70/0xb0
->         rq_qos_wait+0x153/0x210
->         wbt_wait+0x115/0x1b0
->         io_schedule+0x70/0xb0
->         rq_qos_wait+0x153/0x210
->         wbt_wait+0x115/0x1b0
->         __rq_qos_throttle+0x38/0x60
->         blk_mq_submit_bio+0x589/0xcd0
->         wbt_wait+0x115/0x1b0
->         __rq_qos_throttle+0x38/0x60
->         blk_mq_submit_bio+0x589/0xcd0
->         __submit_bio+0xe6/0x100
->         submit_bio_noacct_nocheck+0x42e/0x470
->         submit_bio_noacct+0x4c2/0xbb0
->         ops_run_io+0x46b/0x1a30
->         handle_stripe+0xcd3/0x36b0
->         handle_active_stripes.constprop.0+0x6f6/0xa60
->         raid5_do_work+0x177/0x330
-> 
->     Or:
->         io_schedule+0x70/0xb0
->         rq_qos_wait+0x153/0x210
->         wbt_wait+0x115/0x1b0
->         __rq_qos_throttle+0x38/0x60
->         blk_mq_submit_bio+0x589/0xcd0
->         __submit_bio+0xe6/0x100
->         submit_bio_noacct_nocheck+0x42e/0x470
->         submit_bio_noacct+0x4c2/0xbb0
->         flush_deferred_bios+0x136/0x170
->         raid5_do_work+0x262/0x330
-> 
->  2) The r5l_reclaim thread will hang in the same way, submitting a
->     bio to the block layer:
-> 
->         io_schedule+0x70/0xb0
->         rq_qos_wait+0x153/0x210
->         wbt_wait+0x115/0x1b0
->         __rq_qos_throttle+0x38/0x60
->         blk_mq_submit_bio+0x589/0xcd0
->         __submit_bio+0xe6/0x100
->         submit_bio_noacct_nocheck+0x42e/0x470
->         submit_bio_noacct+0x4c2/0xbb0
->         submit_bio+0x3f/0xf0
->         md_super_write+0x12f/0x1b0
->         md_update_sb.part.0+0x7c6/0xff0
->         md_update_sb+0x30/0x60
->         r5l_do_reclaim+0x4f9/0x5e0
->         r5l_reclaim_thread+0x69/0x30b
-> 
->     However, before hanging, the MD_SB_CHANGE_PENDING flag will be
->     set for sb_flags in r5l_write_super_and_discard_space(). This
->     flag will never be cleared because the submit_bio() call never
->     returns.
-> 
->  3) Due to the MD_SB_CHANGE_PENDING flag being set, handle_stripe()
->     will do no processing on any pending stripes and re-set
->     STRIPE_HANDLE. This will cause the raid5d thread to enter an
->     infinite loop, constantly trying to handle the same stripes
->     stuck in the queue.
-> 
->     The raid5d thread has a blk_plug that holds a number of bios
->     that are also stuck waiting seeing the thread is in a loop
->     that never schedules. These bios have been accounted for by
->     blk-wbt thus preventing the other threads above from
->     continuing when they try to submit bios. --Deadlock.
-> 
-> To fix this, add the same wait_event() that is used in raid5_do_work()
-> to raid5d() such that if MD_SB_CHANGE_PENDING is set, the thread will
-> schedule and wait until the flag is cleared. The schedule action will
-> flush the plug which will allow the r5l_reclaim thread to continue,
-> thus preventing the deadlock.
-> 
-> It's not clear when the deadlock was introduced, but the similar
-> wait_event() call in raid5_do_work() was added in 2017 by this
-> commit:
-> 
->     16d997b78b15 ("md/raid5: simplfy delaying of writes while metadata
->                    is updated.")
-> 
-> Link: https://lore.kernel.org/r/7f3b87b6-b52a-f737-51d7-a4eec5c44112@deltatee.com
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+We are a Direct Lender who can approve your loan today, and fund as Early as Tomorrow.
 
-Seems this patch of mine that is in md-next is causing an 1 in ~30
-failure on the mdadm test 13imsm-r0_r5_3d-grow-r0_r5_4d.
+Once your reply I will send you the official website to complete your application
 
-I'm looking into it and will try to send an updated patch when I have a fix.
+Waiting for your reply.
 
-Logan
+Regards
+Ms. Kaori Ichikawa
+Consultant Swift Capital Loans Ltd
