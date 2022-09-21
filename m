@@ -2,35 +2,35 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BEE85E54AF
-	for <lists+linux-raid@lfdr.de>; Wed, 21 Sep 2022 22:44:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A39635E54AC
+	for <lists+linux-raid@lfdr.de>; Wed, 21 Sep 2022 22:44:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229723AbiIUUoP (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 21 Sep 2022 16:44:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38222 "EHLO
+        id S229663AbiIUUoK (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 21 Sep 2022 16:44:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229731AbiIUUoH (ORCPT
+        with ESMTP id S229669AbiIUUoH (ORCPT
         <rfc822;linux-raid@vger.kernel.org>); Wed, 21 Sep 2022 16:44:07 -0400
 Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A1D4A4045
-        for <linux-raid@vger.kernel.org>; Wed, 21 Sep 2022 13:44:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5F95A1A5B
+        for <linux-raid@vger.kernel.org>; Wed, 21 Sep 2022 13:44:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
         Message-Id:Date:Cc:To:From:content-disposition;
-        bh=jYRRA3Y3GV2CCww+fuAWzB1qlgX/6h/DeZRk6odNSLc=; b=Oil9cFiVRiGkEfnB6Q9pz2BkiD
-        4rmLuZ8WQk5W4ap4NTIWfQnd6SOH2jLM2D1SDQM1um19hJCPoGbICNpaXsXj+kI6fiLgtzDV9T0ow
-        gecVMXDilxdNriqcnY68gXctDQ5LTmQPiPT3sHeshb1moQIGYfd0uGRwRh5IR38iaPQh36BAgE0SQ
-        VFZLgVtnSwnJwIkiYWP+SjisANl4n9RoQBqMQ47GnPqjYrc1yf+Rupe1QYe33yVLykoMjqVqmqaMs
-        eWggr4LqttRpqLnHZ498J4QJ9p30n1JB/1IyVAP5s+OK8qglaHZ+iieSqMVV1950X8CUUgbz28EiV
-        2+SzOglQ==;
+        bh=C9njKuHJey4mbVDcLPNMY/HZOYTGdBFGokirIE34hTI=; b=KYo88TG7ILSQDdI/p5Q+Cj0Ehd
+        H4bJ/IPADz3aG1qZ498sCGq93OPfKvIFUgRGN4I/ewxPqvzLA6vadX3GOTlIsdnoUvd4qltGFApQ5
+        0FrY6IM1vAHHZElAm8telhkAlThsn/WZln84LuuIONWlh2h0czZuJ7O1INnK7JkkBNl7hMrpTmHFV
+        AawGVuqAyhXDtTlAUDX7sfd0GaoCO8thye1I1/KKlvaI99eI6sIQbZsC3ZVAiJkACekSkZS49//nL
+        UM/XWQOYArg1y5LIFJ9q5rm94NTvj6kC6ssftLsqadW6vsB1OGTFrnbirz00LO/fdYP2brPfvnzP6
+        5bARjc2g==;
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1ob6Zg-007H4j-Uu; Wed, 21 Sep 2022 14:44:06 -0600
+        id 1ob6Zg-007H4k-AR; Wed, 21 Sep 2022 14:44:05 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1ob6Zd-000197-Uc; Wed, 21 Sep 2022 14:44:01 -0600
+        id 1ob6Ze-00019A-2r; Wed, 21 Sep 2022 14:44:02 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-raid@vger.kernel.org, Jes Sorensen <jes@trained-monkey.org>
 Cc:     Guoqing Jiang <guoqing.jiang@linux.dev>, Xiao Ni <xni@redhat.com>,
@@ -42,8 +42,8 @@ Cc:     Guoqing Jiang <guoqing.jiang@linux.dev>, Xiao Ni <xni@redhat.com>,
         Martin Oliveira <Martin.Oliveira@eideticom.com>,
         David Sloan <David.Sloan@eideticom.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed, 21 Sep 2022 14:43:55 -0600
-Message-Id: <20220921204356.4336-7-logang@deltatee.com>
+Date:   Wed, 21 Sep 2022 14:43:56 -0600
+Message-Id: <20220921204356.4336-8-logang@deltatee.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220921204356.4336-1-logang@deltatee.com>
 References: <20220921204356.4336-1-logang@deltatee.com>
@@ -58,43 +58,47 @@ X-Spam-Level:
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
-Subject: [PATCH mdadm v3 6/7] tests/00raid5-zero: Introduce test to exercise --write-zeros.
+Subject: [PATCH mdadm v3 7/7] manpage: Add --write-zeroes option to manpage
 X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Attempt to create a raid5 array with --write-zeros. If it is successful
-check the array to ensure it is in sync.
-
-If it is unsuccessful and an unsupported error is printed, skip the
-test.
+Document the new --write-zeroes option in the manpage.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- tests/00raid5-zero | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 tests/00raid5-zero
+ mdadm.8.in | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/tests/00raid5-zero b/tests/00raid5-zero
-new file mode 100644
-index 000000000000..7d0f05a12539
---- /dev/null
-+++ b/tests/00raid5-zero
-@@ -0,0 +1,12 @@
+diff --git a/mdadm.8.in b/mdadm.8.in
+index f273622641da..4e57358d9c1e 100644
+--- a/mdadm.8.in
++++ b/mdadm.8.in
+@@ -836,6 +836,22 @@ array is resynced at creation.  From Linux version 3.0,
+ .B \-\-assume\-clean
+ can be used with that command to avoid the automatic resync.
+ 
++.TP
++.BR \-\-write-zeroes
++When creating an array, send write zeroes requests to all the block
++devices.  This should zero the data area on all disks such that the
++initial sync is not necessary and, if successfull, will behave
++as if
++.B \-\-assume\-clean
++was specified.
++.IP
++This is intended for use with devices that have hardware offload for
++zeroing, but despit this zeroing can still take several minutes for
++large disks.  Thus a message is printed before and after zeroing and
++each disk is zeroed in parallel with the others.
++.IP
++This is only meaningful with --create.
 +
-+if mdadm -CfR $md0 -l 5 -n3 $dev0 $dev1 $dev2 --write-zeroes ; then
-+  check nosync
-+  echo check > /sys/block/md0/md/sync_action;
-+  check wait
-+elif grep "zeroing [^ ]* failed: Operation not supported" \
-+     $targetdir/stderr; then
-+  echo "write-zeros not supported, skipping"
-+else
-+  echo >&2 "ERROR: mdadm return failure without not supported message"
-+  exit 1
-+fi
+ .TP
+ .BR \-\-backup\-file=
+ This is needed when
 -- 
 2.30.2
 
