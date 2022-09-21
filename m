@@ -2,35 +2,35 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 505C45E54AE
+	by mail.lfdr.de (Postfix) with ESMTP id 04F045E54AD
 	for <lists+linux-raid@lfdr.de>; Wed, 21 Sep 2022 22:44:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229780AbiIUUoL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 21 Sep 2022 16:44:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38210 "EHLO
+        id S229729AbiIUUoS (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 21 Sep 2022 16:44:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229723AbiIUUoH (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 21 Sep 2022 16:44:07 -0400
+        with ESMTP id S229471AbiIUUoI (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 21 Sep 2022 16:44:08 -0400
 Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD1469F8FB
-        for <linux-raid@vger.kernel.org>; Wed, 21 Sep 2022 13:44:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A28AA4077
+        for <linux-raid@vger.kernel.org>; Wed, 21 Sep 2022 13:44:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
         Message-Id:Date:Cc:To:From:content-disposition;
-        bh=B5bSp/aB/kivvUH+gBCDDCqUdBe2yhm89nb7bvXEdig=; b=ECdUXgkErdlBxWiRm8wymVZOm5
-        WOFzDJivHJF/siVjYK8cKhYf1Dwg6q+N/DN+3G7Slbv1jFsS1MZpE0+SuqGUKcl8wzoY8quGiNq3p
-        qqKg0Ez6/3wcSNTxsKSChQbeRYkmLLJUb2u1yVkTgbxV6gfwFMQBqgdOAzYtI/Fql+q3mjgZyRApM
-        Jh6gPHnqy7oFxB2OQ6G8JpgGkSg2zq0+Md4m3t9dmz32slF5pH70B0ak5SqDQ0qBpZZWIUZZ4uWlr
-        7LhdRV0O69jvotR403E4PCCt2OL3L77Zdsaqv3ypyVcua1Po8/OmEk8bpztIU+cLfNpKsnVFNfP3w
-        xp7Yzl9Q==;
+        bh=ikP2qPV3Xw3lbe0Zc81A1cyv8hIHbRv61bVUNz73tas=; b=ax1x7UKgt0hnfVnFrVWSArxn1Q
+        tcRky1yeFJTeFI4Q5w+c79BX6/mpTRlQ88nxhWcvPqi1kVJau+Tm/gkbLWjCu6oj5YySZ5DnyOQ8x
+        9ubrbK4FPie0rpEpyBR9ZJ5d9oVjrNwkDWwrh3XUyIL3mnu7441AtuCiWwtzysDrNXKH0+/CHlE/Q
+        HlbEjWOyH4vzgW3w0s5M15igTBTnPyvNobcz15fCYKEwEIIYkRUDf3+JIwMZ2ezrj34qftYty02Ce
+        QqU7aeUsdpprgOPQU3tSSOgZpqTWcaNIP9dUcpd2ZdHbst/bK8uHckIZXj53xcLWEzmuv/8pINewq
+        S0QMZdMw==;
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1ob6Zf-007H4m-Hs; Wed, 21 Sep 2022 14:44:05 -0600
+        id 1ob6Zh-007H4l-1S; Wed, 21 Sep 2022 14:44:06 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1ob6Zd-000191-La; Wed, 21 Sep 2022 14:44:01 -0600
+        id 1ob6Zd-000194-Pm; Wed, 21 Sep 2022 14:44:01 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-raid@vger.kernel.org, Jes Sorensen <jes@trained-monkey.org>
 Cc:     Guoqing Jiang <guoqing.jiang@linux.dev>, Xiao Ni <xni@redhat.com>,
@@ -42,8 +42,8 @@ Cc:     Guoqing Jiang <guoqing.jiang@linux.dev>, Xiao Ni <xni@redhat.com>,
         Martin Oliveira <Martin.Oliveira@eideticom.com>,
         David Sloan <David.Sloan@eideticom.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed, 21 Sep 2022 14:43:53 -0600
-Message-Id: <20220921204356.4336-5-logang@deltatee.com>
+Date:   Wed, 21 Sep 2022 14:43:54 -0600
+Message-Id: <20220921204356.4336-6-logang@deltatee.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220921204356.4336-1-logang@deltatee.com>
 References: <20220921204356.4336-1-logang@deltatee.com>
@@ -58,71 +58,243 @@ X-Spam-Level:
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
-Subject: [PATCH mdadm v3 4/7] mdadm: Introduce pr_info()
+Subject: [PATCH mdadm v3 5/7] mdadm: Add --write-zeros option for Create
 X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Feedback was given to avoid informational pr_err() calls that print
-to stderr, even though that's done all through out the code.
+Add the --write-zeros option for Create which will send a write zeros
+request to all the disks before assembling the array. After zeroing
+the array, the disks will be in a known clean state and the initial
+sync may be skipped.
 
-Using printf() directly doesn't maintain the same format (an "mdadm"
-prefix on every line.
-
-So introduce pr_info() which prints to stdout with the same format
-and use it for a couple informational pr_err() calls in Create().
-
-Future work can make this call used in more cases.
+Writing zeroes is best used when there is a hardware offload method
+to zero the data. But even still, zeroing can take several minutes on
+a large device. Because of this, all disks are zeroed in parallel using
+their own forked process and a message is printed to the user. The main
+process will proceed only after all the zeroing processes have completed
+successfully.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+
+fixup! mdadm: Add --write-zeros option for Create
 ---
- Create.c | 7 ++++---
- mdadm.h  | 2 ++
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ Create.c | 83 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ ReadMe.c |  2 ++
+ mdadm.c  |  9 ++++++
+ mdadm.h  |  7 +++++
+ 4 files changed, 101 insertions(+)
 
 diff --git a/Create.c b/Create.c
-index 7ab3c41783bd..1e94b90b96bd 100644
+index 1e94b90b96bd..31bed3a37a90 100644
 --- a/Create.c
 +++ b/Create.c
-@@ -984,11 +984,12 @@ int Create(struct supertype *st, char *mddev,
+@@ -26,6 +26,8 @@
+ #include	"md_u.h"
+ #include	"md_p.h"
+ #include	<ctype.h>
++#include	<fcntl.h>
++#include	<sys/wait.h>
  
- 			mdi = sysfs_read(-1, devnm, GET_VERSION);
+ static int round_size_and_verify(unsigned long long *size, int chunk)
+ {
+@@ -91,6 +93,73 @@ int default_layout(struct supertype *st, int level, int verbose)
+ 	return layout;
+ }
  
--			pr_err("Creating array inside %s container %s\n",
-+			pr_info("Creating array inside %s container %s\n",
- 				mdi?mdi->text_version:"managed", devnm);
- 			sysfs_free(mdi);
- 		} else
--			pr_err("Defaulting to version %s metadata\n", info.text_version);
-+			pr_info("Defaulting to version %s metadata\n",
-+				info.text_version);
++static pid_t write_zeroes_fork(int fd, struct shape *s, struct supertype *st,
++			       struct mddev_dev *dv)
++
++{
++	unsigned long long offset_bytes, size_bytes;
++	int ret = 0;
++	pid_t pid;
++
++	size_bytes = KIB_TO_BYTES(s->size);
++
++	/*
++	 * If size_bytes is zero, this is a zoned raid array where
++	 * each disk is of a different size and uses its full
++	 * disk. Thus zero the entire disk.
++	 */
++	if (!size_bytes && !get_dev_size(fd, dv->devname, &size_bytes))
++		return -1;
++
++	if (dv->data_offset != INVALID_SECTORS)
++		offset_bytes = SEC_TO_BYTES(dv->data_offset);
++	else
++		offset_bytes = SEC_TO_BYTES(st->data_offset);
++
++	pr_info("zeroing data from %lld to %lld on: %s\n",
++		offset_bytes, size_bytes, dv->devname);
++
++	pid = fork();
++	if (pid < 0) {
++		pr_err("Could not fork to zero disks: %m\n");
++		return pid;
++	} else if (pid != 0) {
++		return pid;
++	}
++
++	if (fallocate(fd, FALLOC_FL_ZERO_RANGE | FALLOC_FL_KEEP_SIZE,
++		      offset_bytes, size_bytes)) {
++		pr_err("zeroing %s failed: %m\n", dv->devname);
++		ret = 1;
++	}
++
++	exit(ret);
++}
++
++static int wait_for_zero_forks(struct mdinfo *info, int count)
++{
++	int wstatus, ret = 0, i;
++	bool waited = false;
++
++	for (i = 0; i < count; i++) {
++		if (!info[i].zero_pid)
++			continue;
++
++		waited = true;
++		waitpid(info[i].zero_pid, &wstatus, 0);
++
++		if (!WIFEXITED(wstatus) || WEXITSTATUS(wstatus))
++			ret = 1;
++	}
++
++	if (ret)
++		pr_err("zeroing failed!\n");
++	else if (waited)
++		pr_info("zeroing finished\n");
++
++	return ret;
++}
++
+ static int add_disk_to_super(int mdfd, struct shape *s, struct context *c,
+ 		struct supertype *st, struct mddev_dev *dv,
+ 		struct mdinfo *info, int have_container, int major_num)
+@@ -148,6 +217,14 @@ static int add_disk_to_super(int mdfd, struct shape *s, struct context *c,
+ 	}
+ 	st->ss->getinfo_super(st, info, NULL);
+ 
++	if (s->write_zeroes) {
++		info->zero_pid = write_zeroes_fork(fd, s, st, dv);
++		if (info->zero_pid <= 0) {
++			ioctl(mdfd, STOP_ARRAY, NULL);
++			return 1;
++		}
++	}
++
+ 	if (have_container && c->verbose > 0)
+ 		pr_err("Using %s for device %d\n",
+ 		       map_dev(info->disk.major, info->disk.minor, 0),
+@@ -287,6 +364,10 @@ static int add_disks(int mdfd, struct mdinfo *info, struct shape *s,
+ 		}
+ 
+ 		if (pass == 1) {
++			ret = wait_for_zero_forks(infos, total_slots);
++			if (ret)
++				goto out;
++
+ 			ret = update_metadata(mdfd, s, st, map, info,
+ 					      chosen_name);
+ 			if (ret)
+@@ -295,6 +376,8 @@ static int add_disks(int mdfd, struct mdinfo *info, struct shape *s,
  	}
  
- 	map_update(&map, fd2devnm(mdfd), info.text_version,
-@@ -1145,7 +1146,7 @@ int Create(struct supertype *st, char *mddev,
- 			ioctl(mdfd, RESTART_ARRAY_RW, NULL);
+ out:
++	if (ret)
++		wait_for_zero_forks(infos, total_slots);
+ 	free(infos);
+ 	return ret;
+ }
+diff --git a/ReadMe.c b/ReadMe.c
+index 7f94847e9769..50913dabca40 100644
+--- a/ReadMe.c
++++ b/ReadMe.c
+@@ -138,6 +138,7 @@ struct option long_options[] = {
+     {"size",	  1, 0, 'z'},
+     {"auto",	  1, 0, Auto}, /* also for --assemble */
+     {"assume-clean",0,0, AssumeClean },
++    {"write-zeroes",0,0, WriteZeroes },
+     {"metadata",  1, 0, 'e'}, /* superblock format */
+     {"bitmap",	  1, 0, Bitmap},
+     {"bitmap-chunk", 1, 0, BitmapChunk},
+@@ -390,6 +391,7 @@ char Help_create[] =
+ "  --write-journal=      : Specify journal device for RAID-4/5/6 array\n"
+ "  --consistency-policy= : Specify the policy that determines how the array\n"
+ "                     -k : maintains consistency in case of unexpected shutdown.\n"
++"  --write-zeroes        : Write zeroes to the disks before creating. This will bypass initial sync.\n"
+ "\n"
+ ;
+ 
+diff --git a/mdadm.c b/mdadm.c
+index 972adb524dfb..141838bd394f 100644
+--- a/mdadm.c
++++ b/mdadm.c
+@@ -602,6 +602,10 @@ int main(int argc, char *argv[])
+ 			s.assume_clean = 1;
+ 			continue;
+ 
++		case O(CREATE, WriteZeroes):
++			s.write_zeroes = 1;
++			continue;
++
+ 		case O(GROW,'n'):
+ 		case O(CREATE,'n'):
+ 		case O(BUILD,'n'): /* number of raid disks */
+@@ -1306,6 +1310,11 @@ int main(int argc, char *argv[])
  		}
- 		if (c->verbose >= 0)
--			pr_err("array %s started.\n", mddev);
-+			pr_info("array %s started.\n", mddev);
- 		if (st->ss->external && st->container_devnm[0]) {
- 			if (need_mdmon)
- 				start_mdmon(st->container_devnm);
+ 	}
+ 
++	if (s.write_zeroes && !s.assume_clean) {
++		pr_info("Disk zeroing requested, setting --assume-clean to skip resync\n");
++		s.assume_clean = 1;
++	}
++
+ 	if (!mode && devs_found) {
+ 		mode = MISC;
+ 		devmode = 'Q';
 diff --git a/mdadm.h b/mdadm.h
-index 941a5f3823a0..1ab31564efef 100644
+index 1ab31564efef..c7e00195d8c8 100644
 --- a/mdadm.h
 +++ b/mdadm.h
-@@ -1798,6 +1798,8 @@ static inline int xasprintf(char **strp, const char *fmt, ...) {
- #endif
- #define cont_err(fmt ...) fprintf(stderr, "       " fmt)
+@@ -273,6 +273,9 @@ static inline void __put_unaligned32(__u32 val, void *p)
  
-+#define pr_info(fmt, args...) printf("%s: "fmt, Name, ##args)
+ #define ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
+ 
++#define KIB_TO_BYTES(x)	((x) << 10)
++#define SEC_TO_BYTES(x)	((x) << 9)
 +
- void *xmalloc(size_t len);
- void *xrealloc(void *ptr, size_t len);
- void *xcalloc(size_t num, size_t size);
+ extern const char Name[];
+ 
+ struct md_bb_entry {
+@@ -387,6 +390,8 @@ struct mdinfo {
+ 		ARRAY_UNKNOWN_STATE,
+ 	} array_state;
+ 	struct md_bb bb;
++
++	pid_t zero_pid;
+ };
+ 
+ struct createinfo {
+@@ -433,6 +438,7 @@ extern char Version[], Usage[], Help[], OptionHelp[],
+  */
+ enum special_options {
+ 	AssumeClean = 300,
++	WriteZeroes,
+ 	BitmapChunk,
+ 	WriteBehind,
+ 	ReAdd,
+@@ -593,6 +599,7 @@ struct shape {
+ 	int	bitmap_chunk;
+ 	char	*bitmap_file;
+ 	int	assume_clean;
++	bool	write_zeroes;
+ 	int	write_behind;
+ 	unsigned long long size;
+ 	unsigned long long data_offset;
 -- 
 2.30.2
 
