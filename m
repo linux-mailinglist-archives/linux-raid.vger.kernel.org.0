@@ -2,68 +2,98 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F28515E798F
-	for <lists+linux-raid@lfdr.de>; Fri, 23 Sep 2022 13:28:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 706895E7CF8
+	for <lists+linux-raid@lfdr.de>; Fri, 23 Sep 2022 16:27:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229549AbiIWL2A (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 23 Sep 2022 07:28:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60358 "EHLO
+        id S232159AbiIWO1M (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 23 Sep 2022 10:27:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbiIWL17 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 23 Sep 2022 07:27:59 -0400
-Received: from mail-yw1-x1130.google.com (mail-yw1-x1130.google.com [IPv6:2607:f8b0:4864:20::1130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B6D9E0B9
-        for <linux-raid@vger.kernel.org>; Fri, 23 Sep 2022 04:27:58 -0700 (PDT)
-Received: by mail-yw1-x1130.google.com with SMTP id 00721157ae682-333a4a5d495so128708217b3.10
-        for <linux-raid@vger.kernel.org>; Fri, 23 Sep 2022 04:27:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:sender:mime-version:from:to:cc
-         :subject:date;
-        bh=AH29rNFat8gr8vzSfH/p9KdgBsHyVh3Eh4ohXf5CfQ4=;
-        b=m5V+wfm0GRpUgQ8DwHNKVITMfMQxYm2pTGBO0Sw4GV3t7ZMm2DVSE+u1MUoTuTXIjN
-         zb6fAFVeKmmwnqEpRkxsOfhiuyyhiFHuVhZIcA+Rk/6ZQdhaOYg0kkJXupLbkf6oqIbH
-         ZiRmCK73rLje6EwEiNcHYXtf1MHBgcXyFsM9SoW+cSTEVcRRe2NH6xBnNf9WBJbVckci
-         dg4hZyqXau6zoeEFFIL59CMw19N4NrxCqUWe8dRD+32qGxibecF3VaFQmWTUERoJcYp5
-         O/bFYN2jwzERohaBWzSFZlspiSFpgZbkgUNl2rOS0AMviKBOthIpYbAaOh69+aMo3XY+
-         SewQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:sender:mime-version
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=AH29rNFat8gr8vzSfH/p9KdgBsHyVh3Eh4ohXf5CfQ4=;
-        b=n+4rBn8eXF26nByQZzkwqSECmbCqsXOBNjaJuiWkbZbyWmQxeosFCN2Wl4xJs7pC/6
-         1AbBahQ2/69+QpF10zc7mnSoYVLzxoyzmdWyruXia/mWnXVTR/1eBojUsHMo3fSi0G7y
-         YyZjqMXQHR30osrs7/My2TSTZcYcbD5kz6aS7sTVx/cTM0NR+Q4kmm3xNBqttR1CXCE3
-         eVE4gU1oMBBQuDjZMfuzkZpfm7fOmjf8+7Og03nA/UFS0vpwtM2e/hfya7t55dre1qsH
-         TgF8plFv+ghqN/b5Gxd6/3diD+l5eul17k3P2EchNI+dE8mli19xAJKEWutIOEXm92kE
-         64EQ==
-X-Gm-Message-State: ACrzQf1N/CCQ08ZCmXI9hC7kqC48KpoTBNLYbXO0wWYDG1V+B395agvl
-        EYgLybGP3qci7TJy38aO8TbP3xvdw2UXsOy74ac=
-X-Google-Smtp-Source: AMsMyM4GKzjZuSS5ACst4r7mz2rILTm/0mujkkX5nVEct25l7x8k/MpHOVFXYqEKisW+Nhcn2nG4mt6thx27IMBEQNg=
-X-Received: by 2002:a0d:e815:0:b0:345:4:e358 with SMTP id r21-20020a0de815000000b003450004e358mr8123935ywe.291.1663932477668;
- Fri, 23 Sep 2022 04:27:57 -0700 (PDT)
+        with ESMTP id S232606AbiIWO0l (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 23 Sep 2022 10:26:41 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54C28115BE5
+        for <linux-raid@vger.kernel.org>; Fri, 23 Sep 2022 07:26:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1663943199;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=w180rBcBHN2Zcn2xdzc4KVZDpW6w9VEo6bhjsfHEXCg=;
+        b=AvlOFOb6Fg+mpFVgJwGMItHUhkkIaHhRZYVmvQF2iABcrwUO53me6Owykn5zZFgLEYl6FR
+        QE2iwX2JNS/Slk+WXgsoTTY5hjGakv0qXRW/uuleGoMsLADHyke/tg8X8HDD4Z//m0Rd70
+        yUg9zoVXEitbGoQ2D50hHWZC5HArC6I=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-524-7LkeCMd5MEur_H9NM96TaQ-1; Fri, 23 Sep 2022 10:26:36 -0400
+X-MC-Unique: 7LkeCMd5MEur_H9NM96TaQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8B842185A7AC;
+        Fri, 23 Sep 2022 14:26:35 +0000 (UTC)
+Received: from localhost (dhcp-17-75.bos.redhat.com [10.18.17.75])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5D357C15BA4;
+        Fri, 23 Sep 2022 14:26:35 +0000 (UTC)
+From:   Nigel Croxon <ncroxon@redhat.com>
+To:     linux-raid@vger.kernel.org, jes@trained-monkey.org,
+        mariusz.tkaczyk@intel.com, kinga.tanska@intel.com
+Subject: [PATCH] mdadm reshape hangs on external grow chunk
+Date:   Fri, 23 Sep 2022 10:26:35 -0400
+Message-Id: <20220923142635.470305-1-ncroxon@redhat.com>
 MIME-Version: 1.0
-Sender: katherinemcmillian2@gmail.com
-Received: by 2002:a05:6918:71c8:b0:df:4fe9:b499 with HTTP; Fri, 23 Sep 2022
- 04:27:57 -0700 (PDT)
-From:   Jessica Daniel <jessicadaniel7833@gmail.com>
-Date:   Fri, 23 Sep 2022 11:27:57 +0000
-X-Google-Sender-Auth: 0PXLawz2dpUUL-9z-ihW9B9ztw0
-Message-ID: <CAGn3a5gpWfNCdQ4qRH6TNO8_mrSQE7_Ha4zH+Se=GTpy+--1gg@mail.gmail.com>
-Subject: Hi
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=0.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+After creating a raid array on top of a imsm container. Try to
+grow the chunk size and the reshape will hang with zero progress.
+The reason is the computation of sync_max_to_set value:
+if (before_data_disks <= data_disks)
+        sync_max_to_set = sra->reshape_progress / data_disks;
+    else
+        sync_max_to_set = (sra->component_size * data_disks
+                       - sra->reshape_progress) / data_disks;
+
+Can produce a zero result. Which is then used to set the maximum
+sync value, causing zero progress to the reshape.  The change is to
+test if the sync_max_to_set value is zero. And if so, set the sysfs
+sync_max to "max".
+
+Steps to Reproduce:
+1. Create a container and RAID0 array
+mdadm -CR /dev/md/imsm -e imsm -n2 /dev/nvme0n1 /dev/nvme1n1
+mdadm -CR  /dev/md/vol -l0 --chunk=16 -n2 /dev/nvme0n1 /dev/nvme1n1
+2. Wait for resync
+3. Try to grow the chunk size
+mdadm --grow /dev/md/vol --chunk=256
+
+Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
+---
+ Grow.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Grow.c b/Grow.c
+index 0f07a894..6c5021bc 100644
+--- a/Grow.c
++++ b/Grow.c
+@@ -943,7 +943,7 @@ int start_reshape(struct mdinfo *sra, int already_running,
+ 	if (!already_running)
+ 		sysfs_set_num(sra, NULL, "sync_min", sync_max_to_set);
+ 
+-        if (st->ss->external)
++        if (sync_max_to_set)
+ 		err = err ?: sysfs_set_num(sra, NULL, "sync_max", sync_max_to_set);
+ 	else
+ 		err = err ?: sysfs_set_str(sra, NULL, "sync_max", "max");
 -- 
-Hello Dear
-Good Day
+2.31.1
+
