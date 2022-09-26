@@ -2,160 +2,106 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A1425E9BCF
-	for <lists+linux-raid@lfdr.de>; Mon, 26 Sep 2022 10:19:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C4A25EB152
+	for <lists+linux-raid@lfdr.de>; Mon, 26 Sep 2022 21:30:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231241AbiIZIT3 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 26 Sep 2022 04:19:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46474 "EHLO
+        id S229749AbiIZTaZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 26 Sep 2022 15:30:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231218AbiIZIT2 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 26 Sep 2022 04:19:28 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77EC9237CA
-        for <linux-raid@vger.kernel.org>; Mon, 26 Sep 2022 01:19:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664180366; x=1695716366;
-  h=message-id:date:from:to:cc:subject:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=CY6EqXwLY64IJr0FbjC+ERepncJUBR8Z9ilmrqiZNVQ=;
-  b=L6u6185MqJ5jEM0+eBkP7ZQB4TvSpJ5ndMc9Lqgn4SOh4Vkag6cmALV5
-   Ksdg09ceoSvSFtBh+mxrEIkcajPBVgIvtQANF90XKqMB0t+MZqKqvhvSh
-   FelElsLbiy8Gqgh8V+A3yvUkWjMD3r9r0MML3fZDRiAhNwIwsK/sLF7/i
-   M26GLCmzk9v7/PCQPMV+HOrxgHFRUSBuJTgsDbvLX67kyiHFYrWwQBNdA
-   ZXmW/9FHzna0stEkuQ5HvVpkw3TM3YOB9/vq4yq+gRaXZK3Dig4HWRCYL
-   r+Ms472ktchwVfzBEUIUAFpoq4z0ge49LKzDiccoTsxuYUEEN3GeNdgFA
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10481"; a="299695996"
-X-IronPort-AV: E=Sophos;i="5.93,345,1654585200"; 
-   d="scan'208";a="299695996"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2022 01:19:16 -0700
-Message-Id: <d46734$mnvmir@fmsmga001-auth.fm.intel.com>
-X-IronPort-AV: E=McAfee;i="6500,9779,10481"; a="763353691"
-X-IronPort-AV: E=Sophos;i="5.93,345,1654585200"; 
-   d="scan'208";a="763353691"
-Received: from lflorcza-mobl.ger.corp.intel.com (HELO intel.linux.com) ([10.237.140.89])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2022 01:19:15 -0700
-Date:   Mon, 26 Sep 2022 10:19:11 +0200
-From:   Lukasz Florczak <lukasz.florczak@linux.intel.com>
-To:     Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-Cc:     Logan Gunthorpe <logan@eideticom.com>,
-        Hannes Reinecke <hare@suse.de>, Coly Li <colyli@suse.de>,
-        linux-raid@vger.kernel.org
-Subject: Re: Python tests
-In-Reply-To: <20220826101242.000055d0@linux.intel.com>
-References: <11ab82$jvatnj@fmsmga008-auth.fm.intel.com>
-        <8C1AB1D5-54FD-406C-BBA3-509F669C9116@suse.de>
-        <494eee73-5da3-55c9-c374-4166f0117288@eideticom.com>
-        <f40217bd-5db4-65e9-0829-5d652281f3f2@suse.de>
-        <20220826101242.000055d0@linux.intel.com>
+        with ESMTP id S229852AbiIZTaY (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 26 Sep 2022 15:30:24 -0400
+Received: from mail-oa1-x44.google.com (mail-oa1-x44.google.com [IPv6:2001:4860:4864:20::44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF69439BBE
+        for <linux-raid@vger.kernel.org>; Mon, 26 Sep 2022 12:30:22 -0700 (PDT)
+Received: by mail-oa1-x44.google.com with SMTP id 586e51a60fabf-127ba06d03fso10593242fac.3
+        for <linux-raid@vger.kernel.org>; Mon, 26 Sep 2022 12:30:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc:subject:date;
+        bh=rA5xeXD0TyjUhjvsrx6ejmOzOVqFLC9Uf1Of+5mK/os=;
+        b=gphcxxEMn90zrJiwxd+Tzx4hPLJ6ARFvHuMWuASeYcvRsTXBWJF9nLniPC9na4y2z1
+         9a3iRwQvIgnvaoaeTozFR4byJaOT+pVlJ7o2hQLCqRV2Lsmhx8leX+8RyLg1kYM2oxLR
+         cVVgzwsOJvXG4zHEOeEOwL7vwIfcKnTc7WeZsuI6Ftw0I3pjgCqdhIk1GFsCXHowNwUo
+         +7PTL96GM14NoE9snttptEHJ/Wdgx9Hp+pv2FWsmfv7tbYs2DsNPUwIwXDBY0Wo1RCR3
+         L5TrVdDBagqgP0tmy2lhoshBIW8oM/SHYNY3y3xju5u0fNCMRT6D/IJ0nj/gLcNqCXGY
+         WOWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=rA5xeXD0TyjUhjvsrx6ejmOzOVqFLC9Uf1Of+5mK/os=;
+        b=DpeTv5pWAMqfBeHMwcjaex7qcGPm/9XbfVxF3JIhMun5tyjjoybNlB0/ahV1LZQDGI
+         86ATouUJneU54Uxl0KwT1oLKVABuoSrSsVsSi6u0WAcSEK48QY6gy/iSEHSXR4tYENuc
+         N3OXjpi5XvZzc6Ggu+g4MNWnxZWVghzT5ylAG+CgHENPRC9Y5Q8tbjvppQMItDwIAVo1
+         /dv/88VbDc9BkXxm+DL0lBxaUOkRR02QvcXu8INp7Nw8H3UDW/CQN7mfu/qw7qYApzfS
+         /nF2T3hujuRvxyLZ53J+b7xM8Jf1hggJj189KPPKysoQ9Hh94yIeIvc6sHKIDKW/PbaV
+         xaYQ==
+X-Gm-Message-State: ACrzQf1uTqg81cVsdF72diMzMYKfqpz2dXO+hIjPv1eeJRREwtNvExAf
+        fj4Ch/bk+C95zhi4npMmrvihMNlOL/PkaWoaunA=
+X-Google-Smtp-Source: AMsMyM6W6PAcWorxaMwG5LQ/ZIUWafx7mO8th7lDN18N4aqQA4KxbYHhmKGLYYDuTS+TYZyDcZ6UU64ckTJ4ghF2CPA=
+X-Received: by 2002:a05:6870:783:b0:11c:7d1c:6ede with SMTP id
+ en3-20020a056870078300b0011c7d1c6edemr151616oab.239.1664220622029; Mon, 26
+ Sep 2022 12:30:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Received: by 2002:a05:6358:7253:b0:c7:f373:780 with HTTP; Mon, 26 Sep 2022
+ 12:30:21 -0700 (PDT)
+Reply-To: pointerscott009@gmail.com
+From:   Aminuind Aabawa <aminuindabawa00@gmail.com>
+Date:   Mon, 26 Sep 2022 20:30:21 +0100
+Message-ID: <CAP_Jfyq5V1pweG2VSZ=xQe4B=TsvP6Qu5GuwXwCg28oLvXNrOw@mail.gmail.com>
+Subject: =?UTF-8?Q?Bussines_offer_Gesch=C3=A4ftsangebot=2E?=
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,MSGID_FROM_MTA_HEADER,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+X-Spam-Status: Yes, score=5.2 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,UNDISC_FREEM autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2001:4860:4864:20:0:0:0:44 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [pointerscott009[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [aminuindabawa00[at]gmail.com]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [aminuindabawa00[at]gmail.com]
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  3.1 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Fri, 26 Aug 2022 10:12:42 +0200, Mariusz Tkaczyk
-<mariusz.tkaczyk@linux.intel.com> wrote:
+--=20
+Hello, Do you have a projects that need urgent loan??
+Granting out loans today in 10,000 / 500 Million to Interested
+Investors, Companies & Private Individuals.
+Revert back if you interested.
 
-> On Thu, 25 Aug 2022 08:15:14 +0200
-> Hannes Reinecke <hare@suse.de> wrote:
->=20
-> > On 8/24/22 22:40, Logan Gunthorpe wrote: =20
-> > > Hi,
-> > >=20
-> > > On 2022-08-24 10:23, Coly Li wrote:   =20
-> > >>
-> > >>   =20
-> > >>> 2022=E5=B9=B48=E6=9C=8824=E6=97=A5 16:15=EF=BC=8CLukasz Florczak
-> > >>> <lukasz.florczak@linux.intel.com> =E5=86=99=E9=81=93=EF=BC=9A
-> > >>>
-> > >>> Hi Coly,
-> > >>> I want to write some mdadm tests for assemblation and
-> > >>> incremental regarding duplicated array names in config and I'd
-> > >>> like to do it in python. I've seen that some time ago[1] you
-> > >>> said that you could try to integrate the python tests framework
-> > >>> into the mdadm ci. I was wondering how is it going? Do you need
-> > >>> any help with this subject?
-> > >>>
-> > >>> Thanks,
-> > >>> Lukasz
-> > >>>
-> > >>> [1] https://marc.info/?l=3Dlinux-raid&m=3D165277539509464&w=3D2   =
-=20
-> > >>
-> > >> Hi Lukasz,
-> > >>
-> > >> Now I just make some of the existed mdadm test scripts running,
-> > >> which are copied from upstream mdadm. There won=E2=80=99t be any
-> > >> conflict for the python testing code between you and me, because
-> > >> now I am just studying Python again and not do any useful thing
-> > >> yet.
-> > >>
-> > >> As I said if no one works on the testing framework, I will do
-> > >> it, but it may take time. How about posting out the python code
-> > >> once you make it, then let=E2=80=99s put it into mdadm-test to test
-> > >> mdadm-CI, and improve whole things step by step.  =20
-> > >=20
-> > > I'm not sure if this is of use to anyone but we are very slowly
-> > > growing a testing framework written mostly in python. Its focused
-> > > on raid5 at the moment and still is a fairly sizable mess, but
-> > > we've caught a lot of bugs with it and continue to run it, clean
-> > > it up and make improvements.
-> > >=20
-> > > https://github.com/Eideticom/raid5-tests/
-> > >=20
-> > > The 'md.py 'file provides a nice interface to setup an array
-> > > based on ram, loop or block devices and provides methods to
-> > > degrade, recover or grow the array. 'test3' does grow/degrade
-> > > tests while running IO, 'test_all' runs all the tests with an
-> > > array of different settings.
-> > >=20
-> > > Feel free to use anything from it that you may find useful.
-> > >    =20
-> > When developing 'md_monitor'
-> > (https://github.com/hreinecke/md_monitor) I've also created an
-> > extensive testsuite for it. The one thing which I found
-> > particularly painful is error handling once mdadm fails. It's
-> > really hard to figure out _what_ went wrong, and more often than
-> > not mdadm simply locked up on me (try to stall I/O on one component
-> > device while md is running and you are in a world of pain).
-> >=20
-> > That's when I started to split mdadm into a library, as then we
-> > could have a python binding and the life would so much more fun.
-> > So maybe I should resurrect that patchset.
-> >  =20
-> Hi Hannes,
->=20
-> Will be great if you can handle this. Beside library part you did
-> huge code rearrangement and divides one big mdadm.h header into
-> separate ones which is also great improvement. mdadm.h is still
-> growing.
->=20
-> It is hard to do this separately, one by one due to cross references
-> between files.
->=20
-> Thanks,
-> Mariusz
 
-Hi,
-I'm writing with a little update. I was trying to work with python
-libraries pytest and ctypes. They look promising to me as with them
-you can load shared objects and create unit tests. Unfortunately I
-didn't manage to compile mdadm sources as library yet.
-I don't think I can manage to work more on this topic anymore due to
-structural changes on my team at work, so this must be postponed from
-my side. Maybe one of my collegues will try to take this subject
-further in the near future.=20
-
-Thanks,
-Lukasz
+Hallo, haben Sie Projekte, die dringend einen Kredit ben=C3=B6tigen?
+Vergeben Sie heute Kredite in H=C3=B6he von 10.000 / 500 Millionen an
+interessierte Investoren, Unternehmen und Privatpersonen. Kommen Sie
+zur=C3=BCck, wenn Sie interessiert sind.
