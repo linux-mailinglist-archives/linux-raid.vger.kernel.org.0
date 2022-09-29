@@ -2,106 +2,117 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C4A25EB152
-	for <lists+linux-raid@lfdr.de>; Mon, 26 Sep 2022 21:30:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89B5F5EF22F
+	for <lists+linux-raid@lfdr.de>; Thu, 29 Sep 2022 11:36:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229749AbiIZTaZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 26 Sep 2022 15:30:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47346 "EHLO
+        id S235038AbiI2JgT (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 29 Sep 2022 05:36:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229852AbiIZTaY (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 26 Sep 2022 15:30:24 -0400
-Received: from mail-oa1-x44.google.com (mail-oa1-x44.google.com [IPv6:2001:4860:4864:20::44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF69439BBE
-        for <linux-raid@vger.kernel.org>; Mon, 26 Sep 2022 12:30:22 -0700 (PDT)
-Received: by mail-oa1-x44.google.com with SMTP id 586e51a60fabf-127ba06d03fso10593242fac.3
-        for <linux-raid@vger.kernel.org>; Mon, 26 Sep 2022 12:30:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:from:to:cc:subject:date;
-        bh=rA5xeXD0TyjUhjvsrx6ejmOzOVqFLC9Uf1Of+5mK/os=;
-        b=gphcxxEMn90zrJiwxd+Tzx4hPLJ6ARFvHuMWuASeYcvRsTXBWJF9nLniPC9na4y2z1
-         9a3iRwQvIgnvaoaeTozFR4byJaOT+pVlJ7o2hQLCqRV2Lsmhx8leX+8RyLg1kYM2oxLR
-         cVVgzwsOJvXG4zHEOeEOwL7vwIfcKnTc7WeZsuI6Ftw0I3pjgCqdhIk1GFsCXHowNwUo
-         +7PTL96GM14NoE9snttptEHJ/Wdgx9Hp+pv2FWsmfv7tbYs2DsNPUwIwXDBY0Wo1RCR3
-         L5TrVdDBagqgP0tmy2lhoshBIW8oM/SHYNY3y3xju5u0fNCMRT6D/IJ0nj/gLcNqCXGY
-         WOWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=rA5xeXD0TyjUhjvsrx6ejmOzOVqFLC9Uf1Of+5mK/os=;
-        b=DpeTv5pWAMqfBeHMwcjaex7qcGPm/9XbfVxF3JIhMun5tyjjoybNlB0/ahV1LZQDGI
-         86ATouUJneU54Uxl0KwT1oLKVABuoSrSsVsSi6u0WAcSEK48QY6gy/iSEHSXR4tYENuc
-         N3OXjpi5XvZzc6Ggu+g4MNWnxZWVghzT5ylAG+CgHENPRC9Y5Q8tbjvppQMItDwIAVo1
-         /dv/88VbDc9BkXxm+DL0lBxaUOkRR02QvcXu8INp7Nw8H3UDW/CQN7mfu/qw7qYApzfS
-         /nF2T3hujuRvxyLZ53J+b7xM8Jf1hggJj189KPPKysoQ9Hh94yIeIvc6sHKIDKW/PbaV
-         xaYQ==
-X-Gm-Message-State: ACrzQf1uTqg81cVsdF72diMzMYKfqpz2dXO+hIjPv1eeJRREwtNvExAf
-        fj4Ch/bk+C95zhi4npMmrvihMNlOL/PkaWoaunA=
-X-Google-Smtp-Source: AMsMyM6W6PAcWorxaMwG5LQ/ZIUWafx7mO8th7lDN18N4aqQA4KxbYHhmKGLYYDuTS+TYZyDcZ6UU64ckTJ4ghF2CPA=
-X-Received: by 2002:a05:6870:783:b0:11c:7d1c:6ede with SMTP id
- en3-20020a056870078300b0011c7d1c6edemr151616oab.239.1664220622029; Mon, 26
- Sep 2022 12:30:22 -0700 (PDT)
+        with ESMTP id S234766AbiI2Jfy (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 29 Sep 2022 05:35:54 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88D3B32EFE
+        for <linux-raid@vger.kernel.org>; Thu, 29 Sep 2022 02:35:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1664444127; x=1695980127;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=xSbKkSbBDeN+VY9iY8PjgYZQxq2GnCxPC2HLkKI4Qpg=;
+  b=cmw2XOg2G0CB6c9BwcWo4oLDE85lof/hPyNq3DkSSsKOyjfruDZ7/Dex
+   K+zdITYb1QBecj1ALMBms9vgzW4Kax1+UF4zyMzut9U6Y3jPFL8y7qlAD
+   c1wPbR60wgSdRfy+nbyO0nUwC89HrfQwo1c0mjkuZz0y2nUACkTLpTVrx
+   /GVXbV0F7Xac9ANYJ0duYc2aJCSCGhMhHCMN9HO9vqvWO4/BjLBREkklP
+   lvsag0fMzrQELbfIBWAlaNnXylyHscP4+e0zVqB3RQMz5Mi5EmN8b0mbY
+   Ya8+UHYWAlr+ONkZ7hAW8YRvmLD/h3uLa4hD0VdYt/qgkabgy4MNcZGC3
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10484"; a="302758297"
+X-IronPort-AV: E=Sophos;i="5.93,354,1654585200"; 
+   d="scan'208";a="302758297"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2022 02:35:25 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10484"; a="622288758"
+X-IronPort-AV: E=Sophos;i="5.93,354,1654585200"; 
+   d="scan'208";a="622288758"
+Received: from ktanska-mobl1.ger.corp.intel.com (HELO intel.linux.com) ([10.237.140.95])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2022 02:35:23 -0700
+Date:   Thu, 29 Sep 2022 11:35:21 +0200
+From:   Kinga Tanska <kinga.tanska@linux.intel.com>
+To:     Nigel Croxon <ncroxon@redhat.com>
+Cc:     linux-raid@vger.kernel.org, jes@trained-monkey.org,
+        mariusz.tkaczyk@intel.com, kinga.tanska@intel.com
+Subject: Re: [PATCH] mdadm reshape hangs on external grow chunk
+Message-ID: <20220929113521.000012af@intel.linux.com>
+In-Reply-To: <20220923142635.470305-1-ncroxon@redhat.com>
+References: <20220923142635.470305-1-ncroxon@redhat.com>
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Received: by 2002:a05:6358:7253:b0:c7:f373:780 with HTTP; Mon, 26 Sep 2022
- 12:30:21 -0700 (PDT)
-Reply-To: pointerscott009@gmail.com
-From:   Aminuind Aabawa <aminuindabawa00@gmail.com>
-Date:   Mon, 26 Sep 2022 20:30:21 +0100
-Message-ID: <CAP_Jfyq5V1pweG2VSZ=xQe4B=TsvP6Qu5GuwXwCg28oLvXNrOw@mail.gmail.com>
-Subject: =?UTF-8?Q?Bussines_offer_Gesch=C3=A4ftsangebot=2E?=
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: Yes, score=5.2 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,UNDISC_FREEM autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2001:4860:4864:20:0:0:0:44 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [pointerscott009[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [aminuindabawa00[at]gmail.com]
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [aminuindabawa00[at]gmail.com]
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  3.1 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
---=20
-Hello, Do you have a projects that need urgent loan??
-Granting out loans today in 10,000 / 500 Million to Interested
-Investors, Companies & Private Individuals.
-Revert back if you interested.
+On Fri, 23 Sep 2022 10:26:35 -0400
+Nigel Croxon <ncroxon@redhat.com> wrote:
 
+> After creating a raid array on top of a imsm container. Try to
+> grow the chunk size and the reshape will hang with zero progress.
+> The reason is the computation of sync_max_to_set value:
+> if (before_data_disks <= data_disks)
+>         sync_max_to_set = sra->reshape_progress / data_disks;
+>     else
+>         sync_max_to_set = (sra->component_size * data_disks
+>                        - sra->reshape_progress) / data_disks;
+> 
+> Can produce a zero result. Which is then used to set the maximum
+> sync value, causing zero progress to the reshape.  The change is to
+> test if the sync_max_to_set value is zero. And if so, set the sysfs
+> sync_max to "max".
+> 
+> Steps to Reproduce:
+> 1. Create a container and RAID0 array
+> mdadm -CR /dev/md/imsm -e imsm -n2 /dev/nvme0n1 /dev/nvme1n1
+> mdadm -CR  /dev/md/vol -l0 --chunk=16 -n2 /dev/nvme0n1 /dev/nvme1n1
+> 2. Wait for resync
+> 3. Try to grow the chunk size
+> mdadm --grow /dev/md/vol --chunk=256
+> 
+> Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
+> ---
+>  Grow.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Grow.c b/Grow.c
+> index 0f07a894..6c5021bc 100644
+> --- a/Grow.c
+> +++ b/Grow.c
+> @@ -943,7 +943,7 @@ int start_reshape(struct mdinfo *sra, int
+> already_running, if (!already_running)
+>  		sysfs_set_num(sra, NULL, "sync_min",
+> sync_max_to_set); 
+> -        if (st->ss->external)
+> +        if (sync_max_to_set)
+>  		err = err ?: sysfs_set_num(sra, NULL, "sync_max",
+> sync_max_to_set); else
+>  		err = err ?: sysfs_set_str(sra, NULL, "sync_max",
+> "max");
 
-Hallo, haben Sie Projekte, die dringend einen Kredit ben=C3=B6tigen?
-Vergeben Sie heute Kredite in H=C3=B6he von 10.000 / 500 Millionen an
-interessierte Investoren, Unternehmen und Privatpersonen. Kommen Sie
-zur=C3=BCck, wenn Sie interessiert sind.
+Hi Nigel,
+
+I was trying to retest with your patch but still have the defect. I
+analyzed it and found another reason, which causes this defect. In
+validate_geometry_imsm function freesize and super is being checked and
+return 1 if any of those is NULL. In my opinion 0 shall be returned
+here, because it is an error and reshape should be stopped here. I will
+prepare proper patch and send to review immediately.
+
+King regards,
+Kinga Tanska
