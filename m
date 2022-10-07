@@ -2,35 +2,35 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3221D5F7E7D
-	for <lists+linux-raid@lfdr.de>; Fri,  7 Oct 2022 22:10:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFA5E5F7E80
+	for <lists+linux-raid@lfdr.de>; Fri,  7 Oct 2022 22:10:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229495AbiJGUKw (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 7 Oct 2022 16:10:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38504 "EHLO
+        id S229720AbiJGUK5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 7 Oct 2022 16:10:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229641AbiJGUKv (ORCPT
+        with ESMTP id S229899AbiJGUKv (ORCPT
         <rfc822;linux-raid@vger.kernel.org>); Fri, 7 Oct 2022 16:10:51 -0400
 Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA1098E447
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA22090815
         for <linux-raid@vger.kernel.org>; Fri,  7 Oct 2022 13:10:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
         Message-Id:Date:Cc:To:From:content-disposition;
-        bh=4jHRCjTs2Tf5fptdRfe4Q6NCIdRAou99u2vnFIDG55A=; b=V46NWmautQBcrXQ3jciISZQNk3
-        LiSc9Qo8a78xbiyG5MmwPWWKx/qQpc37ODB3IenterlCCjOW68vmsnXEbttDrIc1mcC/UOZF6Bvny
-        MQsOUry8vlmIEvDoKC1vroY+1TBknmL1rB6jHZoCS+OQvwBh7nJVxMC7Id//tL/ieaqIWrsckMmDY
-        4vUEQBLLYxhAfnScXgHWvqulcKOIeUD2hAVDtZhtUSOzt1VZ59TRTLUIwoSW6TWHLXWHhPPHJT66n
-        XN6DaheuvL6CzND6TheXIx9rDqJZF2cpSgq+13n+3t+yiOB3323koLTRun40DLF99tMKPwn1KVJ6w
-        SHBfdkWQ==;
+        bh=zWnVVlN0LUVuLI2jGl0+g7XO4OjCrdP+3IoV9dVD6Vo=; b=GoiDfdV17X5xFUTslgGOSGhiis
+        FB37j490s9v0pnEXpwacB3r3TTwhjHN0CxdSvkDQPQUkdlnxXm6PhDZ4I0eMic/QH4FPvNiUl0DS8
+        2OGdO4aw5q14EtVoDsxGbPyQ8J/kwGpJK3knBTazoZcpMqxR3D3NznvJ0yQ3yPiorucxBXB0Y5OmF
+        6asMqojropNzyswHjNC/I3GDqgoAuB8a6PITKVNkjZmaUWAHDMctC++LE8KZ9lhENcx9KXF94kiCa
+        r1l4DUBz2e2VRq1CHM0hwTMn2hfM3vn32dcYPW/28TJUvYW9hzG01t4XJ/SZS6NXh4cStwC8XmTjd
+        HFt0Igsg==;
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1ogtgA-002hCj-9n; Fri, 07 Oct 2022 14:10:43 -0600
+        id 1ogtgA-002hCk-9n; Fri, 07 Oct 2022 14:10:43 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1ogtg7-0005Ho-A0; Fri, 07 Oct 2022 14:10:39 -0600
+        id 1ogtg7-0005Hr-Dd; Fri, 07 Oct 2022 14:10:39 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-raid@vger.kernel.org, Jes Sorensen <jes@trained-monkey.org>
 Cc:     Guoqing Jiang <guoqing.jiang@linux.dev>, Xiao Ni <xni@redhat.com>,
@@ -42,8 +42,8 @@ Cc:     Guoqing Jiang <guoqing.jiang@linux.dev>, Xiao Ni <xni@redhat.com>,
         Martin Oliveira <Martin.Oliveira@eideticom.com>,
         David Sloan <David.Sloan@eideticom.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Fri,  7 Oct 2022 14:10:32 -0600
-Message-Id: <20221007201037.20263-3-logang@deltatee.com>
+Date:   Fri,  7 Oct 2022 14:10:33 -0600
+Message-Id: <20221007201037.20263-4-logang@deltatee.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20221007201037.20263-1-logang@deltatee.com>
 References: <20221007201037.20263-1-logang@deltatee.com>
@@ -58,64 +58,452 @@ X-Spam-Level:
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
-Subject: [PATCH mdadm v4 2/7] Create: remove safe_mode_delay local variable
+Subject: [PATCH mdadm v4 3/7] Create: Factor out add_disks() helpers
 X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-All .getinfo_super() call sets the info.safe_mode_delay variables
-to a constant value, so no matter what the current state is
-that function will always set it to the same value.
+The Create function is massive with a very large number of variables.
+Reading and understanding the function is almost impossible. To help
+with this, factor out the two pass loop that adds the disks to the array.
 
-Create() calls .getinfo_super() multiple times while creating the array.
-The value is stored in a local variable for every disk in the loop
-to add disks (so the last disc call takes precedence). The local
-variable is then used in the call to sysfs_set_safemode().
+This moves about 160 lines into three new helper functions and removes
+a bunch of local variables from the main Create function. The main new
+helper function add_disks() does the two pass loop and calls into
+add_disk_to_super() and update_metadata(). Factoring out the
+latter two helpers also helps to reduce a ton of indentation.
 
-This can be simplified by using info.safe_mode_delay directly. The info
-variable had .getinfo_super() called on it early in the function so, by the
-reasoning above, it will have the same value as the local variable which
-can thus be removed.
-
-Doing this allows for factoring out code from Create() in a subsequent
-patch.
+No functional changes intended.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- Create.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ Create.c | 382 +++++++++++++++++++++++++++++++------------------------
+ 1 file changed, 213 insertions(+), 169 deletions(-)
 
 diff --git a/Create.c b/Create.c
-index 2e8203ecdccd..8ded81dc265d 100644
+index 8ded81dc265d..6a0446644e04 100644
 --- a/Create.c
 +++ b/Create.c
-@@ -137,7 +137,6 @@ int Create(struct supertype *st, char *mddev,
+@@ -91,6 +91,214 @@ int default_layout(struct supertype *st, int level, int verbose)
+ 	return layout;
+ }
+ 
++static int add_disk_to_super(int mdfd, struct shape *s, struct context *c,
++		struct supertype *st, struct mddev_dev *dv,
++		struct mdinfo *info, int have_container, int major_num)
++{
++	dev_t rdev;
++	int fd;
++
++	if (dv->disposition == 'j') {
++		info->disk.raid_disk = MD_DISK_ROLE_JOURNAL;
++		info->disk.state = (1<<MD_DISK_JOURNAL);
++	} else if (info->disk.raid_disk < s->raiddisks) {
++		info->disk.state = (1<<MD_DISK_ACTIVE) |
++			(1<<MD_DISK_SYNC);
++	} else {
++		info->disk.state = 0;
++	}
++
++	if (dv->writemostly == FlagSet) {
++		if (major_num == BITMAP_MAJOR_CLUSTERED) {
++			pr_err("Can not set %s --write-mostly with a clustered bitmap\n",dv->devname);
++			return 1;
++		} else {
++			info->disk.state |= (1<<MD_DISK_WRITEMOSTLY);
++		}
++
++	}
++
++	if (dv->failfast == FlagSet)
++		info->disk.state |= (1<<MD_DISK_FAILFAST);
++
++	if (have_container) {
++		fd = -1;
++	} else {
++		if (st->ss->external && st->container_devnm[0])
++			fd = open(dv->devname, O_RDWR);
++		else
++			fd = open(dv->devname, O_RDWR|O_EXCL);
++
++		if (fd < 0) {
++			pr_err("failed to open %s after earlier success - aborting\n",
++			       dv->devname);
++			return 1;
++		}
++		if (!fstat_is_blkdev(fd, dv->devname, &rdev))
++			return 1;
++		info->disk.major = major(rdev);
++		info->disk.minor = minor(rdev);
++	}
++	if (fd >= 0)
++		remove_partitions(fd);
++	if (st->ss->add_to_super(st, &info->disk, fd, dv->devname,
++				 dv->data_offset)) {
++		ioctl(mdfd, STOP_ARRAY, NULL);
++		return 1;
++	}
++	st->ss->getinfo_super(st, info, NULL);
++
++	if (have_container && c->verbose > 0)
++		pr_err("Using %s for device %d\n",
++		       map_dev(info->disk.major, info->disk.minor, 0),
++		       info->disk.number);
++
++	if (!have_container) {
++		/* getinfo_super might have lost these ... */
++		info->disk.major = major(rdev);
++		info->disk.minor = minor(rdev);
++	}
++
++	return 0;
++}
++
++static int update_metadata(int mdfd, struct shape *s, struct supertype *st,
++			   struct map_ent **map, struct mdinfo *info,
++			   char *chosen_name)
++{
++	struct mdinfo info_new;
++	struct map_ent *me = NULL;
++
++	/* check to see if the uuid has changed due to these
++	 * metadata changes, and if so update the member array
++	 * and container uuid.  Note ->write_init_super clears
++	 * the subarray cursor such that ->getinfo_super once
++	 * again returns container info.
++	 */
++	st->ss->getinfo_super(st, &info_new, NULL);
++	if (st->ss->external && is_container(s->level) &&
++	    !same_uuid(info_new.uuid, info->uuid, 0)) {
++		map_update(map, fd2devnm(mdfd),
++			   info_new.text_version,
++			   info_new.uuid, chosen_name);
++		me = map_by_devnm(map, st->container_devnm);
++	}
++
++	if (st->ss->write_init_super(st)) {
++		st->ss->free_super(st);
++		return 1;
++	}
++
++	/*
++	 * Before activating the array, perform extra steps
++	 * required to configure the internal write-intent
++	 * bitmap.
++	 */
++	if (info_new.consistency_policy == CONSISTENCY_POLICY_BITMAP &&
++	    st->ss->set_bitmap && st->ss->set_bitmap(st, info)) {
++		st->ss->free_super(st);
++		return 1;
++	}
++
++	/* update parent container uuid */
++	if (me) {
++		char *path = xstrdup(me->path);
++
++		st->ss->getinfo_super(st, &info_new, NULL);
++		map_update(map, st->container_devnm, info_new.text_version,
++			   info_new.uuid, path);
++		free(path);
++	}
++
++	flush_metadata_updates(st);
++	st->ss->free_super(st);
++
++	return 0;
++}
++
++static int add_disks(int mdfd, struct mdinfo *info, struct shape *s,
++		     struct context *c, struct supertype *st,
++		     struct map_ent **map, struct mddev_dev *devlist,
++		     int total_slots, int have_container, int insert_point,
++		     int major_num, char *chosen_name)
++{
++	struct mddev_dev *moved_disk = NULL;
++	int pass, raid_disk_num, dnum;
++	struct mddev_dev *dv;
++	struct mdinfo *infos;
++	int ret = 0;
++
++	infos = xmalloc(sizeof(*infos) * total_slots);
++	enable_fds(total_slots);
++	for (pass = 1; pass <= 2; pass++) {
++		for (dnum = 0, raid_disk_num = 0, dv = devlist; dv;
++		     dv = (dv->next) ? (dv->next) : moved_disk, dnum++) {
++			if (dnum >= total_slots)
++				abort();
++			if (dnum == insert_point) {
++				raid_disk_num += 1;
++				moved_disk = dv;
++				continue;
++			}
++			if (strcasecmp(dv->devname, "missing") == 0) {
++				raid_disk_num += 1;
++				continue;
++			}
++			if (have_container)
++				moved_disk = NULL;
++			if (have_container && dnum < total_slots - 1)
++				/* repeatedly use the container */
++				moved_disk = dv;
++
++			switch(pass) {
++			case 1:
++				infos[dnum] = *info;
++				infos[dnum].disk.number = dnum;
++				infos[dnum].disk.raid_disk = raid_disk_num++;
++
++				if (dv->disposition == 'j')
++					raid_disk_num--;
++
++				ret = add_disk_to_super(mdfd, s, c, st, dv,
++						&infos[dnum], have_container,
++						major_num);
++				if (ret)
++					goto out;
++
++				break;
++			case 2:
++				infos[dnum].errors = 0;
++
++				ret = add_disk(mdfd, st, info, &infos[dnum]);
++				if (ret) {
++					pr_err("ADD_NEW_DISK for %s failed: %s\n",
++					       dv->devname, strerror(errno));
++					if (errno == EINVAL &&
++					    info->array.level == 0) {
++						pr_err("Possibly your kernel doesn't support RAID0 layouts.\n");
++						pr_err("Either upgrade, or use --layout=dangerous\n");
++					}
++					goto out;
++				}
++				break;
++			}
++			if (!have_container &&
++			    dv == moved_disk && dnum != insert_point) break;
++		}
++
++		if (pass == 1) {
++			ret = update_metadata(mdfd, s, st, map, info,
++					      chosen_name);
++			if (ret)
++				goto out;
++		}
++	}
++
++out:
++	free(infos);
++	return ret;
++}
++
+ int Create(struct supertype *st, char *mddev,
+ 	   char *name, int *uuid,
+ 	   int subdevs, struct mddev_dev *devlist,
+@@ -117,7 +325,7 @@ int Create(struct supertype *st, char *mddev,
+ 	unsigned long long minsize = 0, maxsize = 0;
+ 	char *mindisc = NULL;
+ 	char *maxdisc = NULL;
+-	int dnum, raid_disk_num;
++	int dnum;
+ 	struct mddev_dev *dv;
+ 	dev_t rdev;
+ 	int fail = 0, warn = 0;
+@@ -126,14 +334,13 @@ int Create(struct supertype *st, char *mddev,
+ 	int missing_disks = 0;
+ 	int insert_point = subdevs * 2; /* where to insert a missing drive */
+ 	int total_slots;
+-	int pass;
+ 	int rv;
+ 	int bitmap_fd;
+ 	int have_container = 0;
+ 	int container_fd = -1;
+ 	int need_mdmon = 0;
+ 	unsigned long long bitmapsize;
+-	struct mdinfo info, *infos;
++	struct mdinfo info;
  	int did_default = 0;
  	int do_default_layout = 0;
  	int do_default_chunk = 0;
--	unsigned long safe_mode_delay = 0;
- 	char chosen_name[1024];
- 	struct map_ent *map = NULL;
- 	unsigned long long newsize;
-@@ -952,7 +951,6 @@ int Create(struct supertype *st, char *mddev,
- 					goto abort_locked;
- 				}
- 				st->ss->getinfo_super(st, inf, NULL);
--				safe_mode_delay = inf->safe_mode_delay;
+@@ -869,174 +1076,11 @@ int Create(struct supertype *st, char *mddev,
+ 		}
+ 	}
  
- 				if (have_container && c->verbose > 0)
- 					pr_err("Using %s for device %d\n",
-@@ -1065,7 +1063,7 @@ int Create(struct supertype *st, char *mddev,
- 						    "readonly");
- 				break;
- 			}
--			sysfs_set_safemode(&info, safe_mode_delay);
-+			sysfs_set_safemode(&info, info.safe_mode_delay);
- 			if (err) {
- 				pr_err("failed to activate array.\n");
- 				ioctl(mdfd, STOP_ARRAY, NULL);
+-	infos = xmalloc(sizeof(*infos) * total_slots);
+-	enable_fds(total_slots);
+-	for (pass = 1; pass <= 2; pass++) {
+-		struct mddev_dev *moved_disk = NULL; /* the disk that was moved out of the insert point */
+-
+-		for (dnum = 0, raid_disk_num = 0, dv = devlist; dv;
+-		     dv = (dv->next) ? (dv->next) : moved_disk, dnum++) {
+-			int fd;
+-			struct mdinfo *inf = &infos[dnum];
+-
+-			if (dnum >= total_slots)
+-				abort();
+-			if (dnum == insert_point) {
+-				raid_disk_num += 1;
+-				moved_disk = dv;
+-				continue;
+-			}
+-			if (strcasecmp(dv->devname, "missing") == 0) {
+-				raid_disk_num += 1;
+-				continue;
+-			}
+-			if (have_container)
+-				moved_disk = NULL;
+-			if (have_container && dnum < info.array.raid_disks - 1)
+-				/* repeatedly use the container */
+-				moved_disk = dv;
+-
+-			switch(pass) {
+-			case 1:
+-				*inf = info;
+-
+-				inf->disk.number = dnum;
+-				inf->disk.raid_disk = raid_disk_num++;
+-
+-				if (dv->disposition == 'j') {
+-					inf->disk.raid_disk = MD_DISK_ROLE_JOURNAL;
+-					inf->disk.state = (1<<MD_DISK_JOURNAL);
+-					raid_disk_num--;
+-				} else if (inf->disk.raid_disk < s->raiddisks)
+-					inf->disk.state = (1<<MD_DISK_ACTIVE) |
+-						(1<<MD_DISK_SYNC);
+-				else
+-					inf->disk.state = 0;
+-
+-				if (dv->writemostly == FlagSet) {
+-					if (major_num == BITMAP_MAJOR_CLUSTERED) {
+-						pr_err("Can not set %s --write-mostly with a clustered bitmap\n",dv->devname);
+-						goto abort_locked;
+-					} else
+-						inf->disk.state |= (1<<MD_DISK_WRITEMOSTLY);
+-				}
+-				if (dv->failfast == FlagSet)
+-					inf->disk.state |= (1<<MD_DISK_FAILFAST);
+-
+-				if (have_container)
+-					fd = -1;
+-				else {
+-					if (st->ss->external &&
+-					    st->container_devnm[0])
+-						fd = open(dv->devname, O_RDWR);
+-					else
+-						fd = open(dv->devname, O_RDWR|O_EXCL);
+-
+-					if (fd < 0) {
+-						pr_err("failed to open %s after earlier success - aborting\n",
+-							dv->devname);
+-						goto abort_locked;
+-					}
+-					if (!fstat_is_blkdev(fd, dv->devname, &rdev))
+-						goto abort_locked;
+-					inf->disk.major = major(rdev);
+-					inf->disk.minor = minor(rdev);
+-				}
+-				if (fd >= 0)
+-					remove_partitions(fd);
+-				if (st->ss->add_to_super(st, &inf->disk,
+-							 fd, dv->devname,
+-							 dv->data_offset)) {
+-					ioctl(mdfd, STOP_ARRAY, NULL);
+-					goto abort_locked;
+-				}
+-				st->ss->getinfo_super(st, inf, NULL);
+-
+-				if (have_container && c->verbose > 0)
+-					pr_err("Using %s for device %d\n",
+-						map_dev(inf->disk.major,
+-							inf->disk.minor,
+-							0), dnum);
+-
+-				if (!have_container) {
+-					/* getinfo_super might have lost these ... */
+-					inf->disk.major = major(rdev);
+-					inf->disk.minor = minor(rdev);
+-				}
+-				break;
+-			case 2:
+-				inf->errors = 0;
+-
+-				rv = add_disk(mdfd, st, &info, inf);
+-
+-				if (rv) {
+-					pr_err("ADD_NEW_DISK for %s failed: %s\n",
+-					       dv->devname, strerror(errno));
+-					if (errno == EINVAL &&
+-					    info.array.level == 0) {
+-						pr_err("Possibly your kernel doesn't support RAID0 layouts.\n");
+-						pr_err("Either upgrade, or use --layout=dangerous\n");
+-					}
+-					goto abort_locked;
+-				}
+-				break;
+-			}
+-			if (!have_container &&
+-			    dv == moved_disk && dnum != insert_point) break;
+-		}
+-		if (pass == 1) {
+-			struct mdinfo info_new;
+-			struct map_ent *me = NULL;
+-
+-			/* check to see if the uuid has changed due to these
+-			 * metadata changes, and if so update the member array
+-			 * and container uuid.  Note ->write_init_super clears
+-			 * the subarray cursor such that ->getinfo_super once
+-			 * again returns container info.
+-			 */
+-			st->ss->getinfo_super(st, &info_new, NULL);
+-			if (st->ss->external && !is_container(s->level) &&
+-			    !same_uuid(info_new.uuid, info.uuid, 0)) {
+-				map_update(&map, fd2devnm(mdfd),
+-					   info_new.text_version,
+-					   info_new.uuid, chosen_name);
+-				me = map_by_devnm(&map, st->container_devnm);
+-			}
+-
+-			if (st->ss->write_init_super(st)) {
+-				st->ss->free_super(st);
+-				goto abort_locked;
+-			}
+-			/*
+-			 * Before activating the array, perform extra steps
+-			 * required to configure the internal write-intent
+-			 * bitmap.
+-			 */
+-			if (info_new.consistency_policy ==
+-				    CONSISTENCY_POLICY_BITMAP &&
+-			    st->ss->set_bitmap &&
+-			    st->ss->set_bitmap(st, &info)) {
+-				st->ss->free_super(st);
+-				goto abort_locked;
+-			}
+-
+-			/* update parent container uuid */
+-			if (me) {
+-				char *path = xstrdup(me->path);
+-
+-				st->ss->getinfo_super(st, &info_new, NULL);
+-				map_update(&map, st->container_devnm,
+-					   info_new.text_version,
+-					   info_new.uuid, path);
+-				free(path);
+-			}
++	if (add_disks(mdfd, &info, s, c, st, &map, devlist, total_slots,
++		      have_container, insert_point, major_num, chosen_name))
++		goto abort_locked;
+ 
+-			flush_metadata_updates(st);
+-			st->ss->free_super(st);
+-		}
+-	}
+ 	map_unlock(&map);
+-	free(infos);
+ 
+ 	if (is_container(s->level)) {
+ 		/* No need to start.  But we should signal udev to
 -- 
 2.30.2
 
