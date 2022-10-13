@@ -2,217 +2,190 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 738705FD26F
-	for <lists+linux-raid@lfdr.de>; Thu, 13 Oct 2022 03:17:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B6D35FD2A4
+	for <lists+linux-raid@lfdr.de>; Thu, 13 Oct 2022 03:34:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230074AbiJMBRH (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 12 Oct 2022 21:17:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47942 "EHLO
+        id S229436AbiJMBeU (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 12 Oct 2022 21:34:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230392AbiJMBQq (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 12 Oct 2022 21:16:46 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB8F0D8EC3
-        for <linux-raid@vger.kernel.org>; Wed, 12 Oct 2022 18:15:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1665623649;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=N0Byx2bgYmFLKlhgaK0IR+lobbgzJzqZq2FLRANpW1w=;
-        b=MzxGuZhEjbYcB++/fqY1uTWlCCk5LYVv+qB6eT1lLh0jK+etGtsniGL2PJe2Ps88AlDNJ0
-        wbUiXsxSfS+H7k4lsHcLSX7/Ze8pj6afWeDRWyHPRK47woToZcoktK+YiJPuHB/AZaHHQn
-        8qOwLXwolGk43xsnDwhTKezSVakauIU=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-629-8Y8Ba6mjNEudHrZXXKtZWg-1; Wed, 12 Oct 2022 20:45:20 -0400
-X-MC-Unique: 8Y8Ba6mjNEudHrZXXKtZWg-1
-Received: by mail-pj1-f71.google.com with SMTP id bx24-20020a17090af49800b0020d9ac4b475so235062pjb.4
-        for <linux-raid@vger.kernel.org>; Wed, 12 Oct 2022 17:45:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=N0Byx2bgYmFLKlhgaK0IR+lobbgzJzqZq2FLRANpW1w=;
-        b=kGyoa6MAbe0ySQXgmskS9boIK48N/Wmn7h+5YX9D3xXzZ8sq0zQjRWZJXD5cd6Bw3i
-         YyCwvKiSDKYJw0XX7WEG8umJYlq8QXbqSiXwrH4Pl/LGlAhxM1ilrPeZgZ70P34PwBmH
-         m+o/gEC+AmPXEUpPD7DhhtPOLyK28DtA5y5p0pSSYDpUMUbM4tremyYyKYxnh6at8ich
-         JhgVN6FY9gWu75d7zqOzbs4i6rMYtmSD+kH5C/idVvxJ3xEcU9FqLEprk3R23UMEzNUF
-         /ea8Dd5K9IvOC0eh9iVBq/yRrMufHnY32ON240K1U74Fw+MhpiH0P/qMDhwoHg1NaqY4
-         ytQg==
-X-Gm-Message-State: ACrzQf1rQYJAyAtK3W9X0Zucb4oZL2cyeZ9eJONnu58HkdGSV7Qh6WJs
-        rWXhgFt/JjolkPDUBczn78mmojy9fNULplSiZ6v1IxXKb2zf+aPjzBNvG8BAxKcPZfnWcATCluf
-        uY5pU4VWtW42Ekbw/NDudmHIl5ddLLbk8yc2lhQ==
-X-Received: by 2002:a17:90a:eb0b:b0:20c:e5fa:db6d with SMTP id j11-20020a17090aeb0b00b0020ce5fadb6dmr8340451pjz.73.1665621919692;
-        Wed, 12 Oct 2022 17:45:19 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM4LhWsxc9lJ1ly4HYYIKIWQzp1QAaqQAk+ifzYbLjwRkwIR6xrHk5bYuEGvxJYFnTqFRlLHoXnVzmgvalEwYXo=
-X-Received: by 2002:a17:90a:eb0b:b0:20c:e5fa:db6d with SMTP id
- j11-20020a17090aeb0b00b0020ce5fadb6dmr8340429pjz.73.1665621919393; Wed, 12
- Oct 2022 17:45:19 -0700 (PDT)
+        with ESMTP id S229506AbiJMBeS (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 12 Oct 2022 21:34:18 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7A95103DBC
+        for <linux-raid@vger.kernel.org>; Wed, 12 Oct 2022 18:34:17 -0700 (PDT)
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29CMxIec019012;
+        Thu, 13 Oct 2022 01:33:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : content-type :
+ mime-version; s=corp-2022-7-12;
+ bh=Ji1ECKUxJOBaGxWKGfYaAHRlHe8zG8IDD0GRea+MVUk=;
+ b=gCX3RVYJCt/OBQGZjQg+PBjTyGtPIzm72x4D6UystUUcxbPzDBl0HGeoqp4j7sbEZtgM
+ m/zGDKc3iGn+T42kb4WkjCj7bW3+eUBL4OKRElfCOjLFx5KeZPlhZa5hvpEh2HOwK9/x
+ oM4B4vOl59Xs71IJ9YQdHI9BLpv7JD7lRa0AqAtJgZBFpIrAWS0uqCoV2kPVzi6w+z+2
+ pmmUvV2I6cEpcMs1YQGgTPzCMZqmNdzUImsqYlQhsbMV7A/noOoIQDzeEHFcbuyL7ple
+ ZWarVoNg5zhZj+mHV086B5Aa3dJjwD2qwWsnj7ZpQzr0FcYh92z0MOoS02BEI0GUyLDe kg== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3k62bsgr0c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Oct 2022 01:33:57 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 29CNoQpI016222;
+        Thu, 13 Oct 2022 01:33:56 GMT
+Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam04lp2049.outbound.protection.outlook.com [104.47.74.49])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3k2ynbrk7r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Oct 2022 01:33:56 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=j5Vu7eXHfZbZ3aaPD5ImTHYk2jfVyZsgPAGQGDIaTyCRuGSBqtYWLfvDS3mGvXggrZtcQVgrR+LltcB6GOFxb80B2H5khI8ycoL8cC0mNMM/ksez9kjcYRGa77gNqwPJQYODLeT+AI1EH30MYAh2+ub27vJMtug5em8t8kraymykX09CqTKZuf3M9StQAvQJUsDOeBWNirWNKhZRMpjyWmYmXGdx7fHfs/HK+RdkkXzQA7BmkWQJPGjHZl7Ol3ZwL9xp8kcPNtUd3ydSQSGC65OX9WISjHZEEj3JZg5bf/ebIyW92s5elwDkIEUGcBnblr4yIVVT+TOTRXhOrLP8Ow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ji1ECKUxJOBaGxWKGfYaAHRlHe8zG8IDD0GRea+MVUk=;
+ b=KHuLzzejMnlGyrq+4KS6g5uHU9tUQ+HiLfUuLaQSw44ndXo0Lo5utfVJ1gHrv2BjUJofeGQnEoExKnwfr32Fx10EPlEPhi3hMIVepxkB5mfCrecmc+nydSPJr5EQesCR+HR/kafsIrO064nxbPyeMsp6XvDZoyLFmNv8vG4P+x42rpfjOicYmLHbgNChoDLagfxVkAKDv3WsAj2Pg0h9VontKOzUbZsRvTX6VfmdIiKDB/Ba/j94Eh2PntkX4T5V9cSn9tdbGCsSPeYYo9Ja2YGRrkmyVR1Br705QIVBXsVedNF4xnwd/I3q4IBNEPJuy5rbWYfK+vR2SDelUtPJAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ji1ECKUxJOBaGxWKGfYaAHRlHe8zG8IDD0GRea+MVUk=;
+ b=IoUzAaf56hT+P9nYMxsRSrMdhyrhwyNm1FmWE8/XKa8X1rrZDfcZkERl4h9dZG7ApwlAKbbJ8BunJ/HRAAyt42/gqtLi80d6YcJLvTn814sG80lZWBd6RuVD15sXMlAcNobJpq1ocowUL0fZ357dgwDK6m/Af2yvJeyb9ZkKAnE=
+Received: from CO1PR10MB4754.namprd10.prod.outlook.com (2603:10b6:303:91::24)
+ by PH0PR10MB4486.namprd10.prod.outlook.com (2603:10b6:510:42::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.26; Thu, 13 Oct
+ 2022 01:33:55 +0000
+Received: from CO1PR10MB4754.namprd10.prod.outlook.com
+ ([fe80::13ed:5c00:56c0:93c4]) by CO1PR10MB4754.namprd10.prod.outlook.com
+ ([fe80::13ed:5c00:56c0:93c4%7]) with mapi id 15.20.5709.015; Thu, 13 Oct 2022
+ 01:33:55 +0000
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Xiao Ni <xni@redhat.com>, linux-raid@vger.kernel.org,
+        Jes Sorensen <jes@trained-monkey.org>,
+        Guoqing Jiang <guoqing.jiang@linux.dev>,
+        Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
+        Coly Li <colyli@suse.de>,
+        Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+        Jonmichael Hands <jm@chia.net>,
+        Stephen Bates <sbates@raithlin.com>,
+        Martin Oliveira <Martin.Oliveira@eideticom.com>,
+        David Sloan <David.Sloan@eideticom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: Re: [PATCH mdadm v4 0/7] Write Zeroes option for Creating Arrays
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq15ygo4jkv.fsf@ca-mkp.ca.oracle.com>
+References: <20221007201037.20263-1-logang@deltatee.com>
+        <CALTww28HQUPbB647oP9WKvkLX=9PqZv+9am-884zZVM923H-KA@mail.gmail.com>
+        <8ee5368c-1808-d2bc-9ad2-2f8332d2704e@deltatee.com>
+Date:   Wed, 12 Oct 2022 21:33:51 -0400
+In-Reply-To: <8ee5368c-1808-d2bc-9ad2-2f8332d2704e@deltatee.com> (Logan
+        Gunthorpe's message of "Wed, 12 Oct 2022 10:59:45 -0600")
+Content-Type: text/plain
+X-ClientProxiedBy: SN6PR01CA0017.prod.exchangelabs.com (2603:10b6:805:b6::30)
+ To CO1PR10MB4754.namprd10.prod.outlook.com (2603:10b6:303:91::24)
 MIME-Version: 1.0
-References: <20221012091151.71241-1-xni@redhat.com>
-In-Reply-To: <20221012091151.71241-1-xni@redhat.com>
-From:   Xiao Ni <xni@redhat.com>
-Date:   Thu, 13 Oct 2022 08:45:07 +0800
-Message-ID: <CALTww2_adYGMHo6je2-15oK5bN61k-hZccyG+Qdu6LJw_ap_aQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] Add mddev->io_acct_cnt for raid0_quiesce
-To:     song@kernel.org
-Cc:     ffan@redhat.com, guoqing.jiang@linux.dev,
-        linux-raid@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PR10MB4754:EE_|PH0PR10MB4486:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1856085c-a16f-4366-db89-08daacbafda1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Yns1ya7TKZYYkXxzwlRFelopTaMFsd07jOuri6XwCL1oGeL4F8fOPNrwc82MJfv7SJbKk5GXrVW23rukfDXcgROulBCJANQ/SBrCJBS49berOtGMZcXcEd/VWPULyMZ5V9ZhUIk7H9JHQ1T6Dy9TqoHxsDBFT9qOs55r2HeGfgd7O21DTNvjZsYkkLnbiQlNQYDUEgidh3kX0ckmQGLrgfgRaikNNRWhw0WDAv+0jdPX0nFcpFkGeKegzoJhBERLJ1xJ2Wj6EMFGDCoYWMeToZuRe2TrXU42t9i4nPF8tBtqAH9ydM/lGZze9FGXzorLK7Uebyu9mqx9mM/y7Fl9+YYrQDLaiQ9uTUbTJU8a/1QcDKx/ujVn9tJzgLw+zJ2ZyZSLNEcURCpBz8igXeLuHqbX9TnfhhLYrF9H8j1I7xFQ/6E1wy+HR4x9OjxJBr9bW/QisjEPtL3Khe03fm9qxsNHaTB7ma0w1qaKBjPZH1DUDNaB6JjdTHh9aEBHDpDnbNnOg2XQYaxmnhUp7r0bAJCWtmIgP2MmPJ3U6I97ivnGh4reWTMmqolY2cDjDlPsqgSz6A9a1UQD+c2fh4jW39MVhDaVmU/6BF2iTQDEc3o+/6iiE2GoV9TxZpHN0FYwezkdHMYN9uGMFlQQlknrUPoe6mYiy5eCoZmMgBhEkrWk2a4izKiOVYJEwIU9e7Mr+/kRUXUjsspbeCnFYAOI/g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR10MB4754.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(136003)(366004)(396003)(39860400002)(346002)(376002)(451199015)(107886003)(316002)(6666004)(6512007)(83380400001)(66946007)(66556008)(66476007)(8676002)(4326008)(36916002)(6506007)(38100700002)(66899015)(8936002)(6916009)(54906003)(7416002)(41300700001)(6486002)(26005)(478600001)(186003)(5660300002)(2906002)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?5cjssCUkIMgPRqhhnS66kshhLLl4aG22RM4nlnzU0CdUAWU2mtiBul1ki9St?=
+ =?us-ascii?Q?71bb0hck+R+Nqs2etIeQd7DbL8kbzbFP7ox9pXx//klZ5egi4maxVBRh2vAk?=
+ =?us-ascii?Q?iH6/WrpMzVdVfG1O0rDSgGhEUfpEz2cU8VrpNWdYuJ3VEmbZ/vITbo22wbVV?=
+ =?us-ascii?Q?RDnTguc7vx35X7lOagNHociopYFaQcsZLcU7itmdWL8ahRYqFUgPZg9zqEu1?=
+ =?us-ascii?Q?pEMQPznfRnYKfvrZY+LtP9wvR+sHgjsM51aR1ts2d7t6D94Jt334BSJL29an?=
+ =?us-ascii?Q?3YmQQJAFysa0RkvMbs+22lBiBxHziQ+fm8ddvxbfgqT8Mdkkv8TyB8opScwJ?=
+ =?us-ascii?Q?UMaVIW+xXu4d6d/dl2suVecSyihQrO45rA80BgLNYa23LuRLntQWT5WZEYIT?=
+ =?us-ascii?Q?Thq5qe8+PKKh9aOhEKDeIAuH0qtzHNvxYqP4KU2NhH4jDFwiHH9ALog7D7me?=
+ =?us-ascii?Q?P3pD4uRTXN0TYCO91iDOd1tw8OTtZy+PAKt3CBK2pi8Zf7YqUPHQie+sK1UB?=
+ =?us-ascii?Q?ouQ0bLFD6ZHyFjHtRZAgcmCjtQuAigb0fR0NVywPckl4yJ/5znRusvF1xVbv?=
+ =?us-ascii?Q?gXQq6O7GjFnrIrauJjcvKuQqNpru+uLoSKJDmB0+RECig4LetMQajVpNBwKa?=
+ =?us-ascii?Q?oStka9f8gBL1IYD4Qml6AomrXjgDsD/WuajMy7ebeXgAY7lIqDrPe5A8zkdj?=
+ =?us-ascii?Q?PWOpxkyKM/QjFEujvhaRP29jXCEl28zqOHFi1hEqGL2XCJomAZGLjDAUC03H?=
+ =?us-ascii?Q?opSbM3i9hyIGzhvP6zn0dC31pLjcULeNRz399cmEIHNxEYDYrkEv1HQo05fQ?=
+ =?us-ascii?Q?3vqmK1/YI9zYm1D3+kmm0en/NAz0cPLp4KP/pE/MavIphoVGBewAxCNqyjvz?=
+ =?us-ascii?Q?U8p0wOveNsa9m6O8I7gr/YMYCxBEEUjs2UlnOGYl2snVpAic5lAB8k6ZnIYc?=
+ =?us-ascii?Q?Z/KE4DytV60DHCts4kbY5PZcKWDvFW38sTPP7JLeZa/DGM65qbw7s+jAi4YJ?=
+ =?us-ascii?Q?KVOeE3L/nSgiSEd1srrK3hjdQiFvf2YBLt0af+QzmNC2KgIFrs6So3tjF8R8?=
+ =?us-ascii?Q?dmBELepN36ae0Ke+hSzd5XMHBhNne1JUrOdKlILtbHyA5yrPVQttYaRewqHR?=
+ =?us-ascii?Q?W7e6enLNYpMKWjiec2C6RXz0ehidZeuXzhfRxzYdSQrOJpU52nBJOYx48dF7?=
+ =?us-ascii?Q?uOX4r8i5f469jyoW9aAQLzfylhcJ3Gn4/0LbJ4vCSXHk9o6UXquebljb9YAY?=
+ =?us-ascii?Q?Yr6MNPiRilZcO58biWwuVEjwRwGq/i7PerplkWL7LJEQJoxAr19W/JQHSZQI?=
+ =?us-ascii?Q?uKUInHHeAturr7IGUAM38RViBaKLjPwfo2SbYw0gVf6r7NPIMKEp2njEgYRd?=
+ =?us-ascii?Q?YoLVXF2CK5ooO+VAXnShu6kQAiX4xBW0PIQHwHdKsfzqQFGX9XIKr5iB9fw1?=
+ =?us-ascii?Q?luYCPn25oaAM+VXwSVZ+B/d2uRWzMv/y8G39juT4SQFcHLg3kYmkfoZrpDrl?=
+ =?us-ascii?Q?+1wmBOLpdFc3rzC90FewHoeS1Jq+MLCFYCy727q739ZclSw5WQU46hifipU7?=
+ =?us-ascii?Q?BWCttOrJEDqp8B3siJiIhvwniOdw1Icjl4cT6d9tgxjNtQwNgJb3vrdvilMF?=
+ =?us-ascii?Q?AQ=3D=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1856085c-a16f-4366-db89-08daacbafda1
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR10MB4754.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Oct 2022 01:33:55.0639
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AA+kjbbJsB3L0he37cwcQLzxrZ1mY4cxbVzoCVXSYrj3t4GoHaKH1Rsa1umrIjwQN0Wl2peSj2dot/8gWX6k2P9LssW2AUf/12L2hMZbGvo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB4486
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-10-12_12,2022-10-12_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
+ adultscore=0 mlxscore=0 bulkscore=0 malwarescore=0 phishscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2209130000 definitions=main-2210130007
+X-Proofpoint-GUID: IxpUpW-dnvnq-77KfNInM1GEcN_dghmi
+X-Proofpoint-ORIG-GUID: IxpUpW-dnvnq-77KfNInM1GEcN_dghmi
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Please ignore this patch. Now there is no place to wake up raid0_quiesce.
-I'll send a new one.
 
-Regards
-Xiao
+Logan,
 
-On Wed, Oct 12, 2022 at 5:12 PM Xiao Ni <xni@redhat.com> wrote:
->
-> It has added io_acct_set for raid0/raid5 io accounting and it needs to
-> alloc md_io_acct in the i/o path. They are free when the bios come back
-> from member disks. Now we don't have a method to monitor if those bios
-> are all come back. In the takeover process, it needs to free the raid0
-> memory resource including the memory pool for md_io_acct. But maybe some
-> bios are still not returned. When those bios are returned, it can cause
-> panic bcause of introducing NULL pointer or invalid address.
->
-> This patch adds io_acct_cnt. So when stopping raid0, it can use this
-> to wait until all bios come back.
->
-> Reported-by: Fine Fan <ffan@redhat.com>
-> Signed-off-by: Xiao Ni <xni@redhat.com>
-> ---
->  drivers/md/md.c    | 10 +++++++++-
->  drivers/md/md.h    |  8 +++++---
->  drivers/md/raid0.c |  8 ++++++++
->  drivers/md/raid0.h |  1 +
->  4 files changed, 23 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index 9dc0175280b4..d6e9fa914087 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -8600,15 +8600,18 @@ int acct_bioset_init(struct mddev *mddev)
->  {
->         int err = 0;
->
-> -       if (!bioset_initialized(&mddev->io_acct_set))
-> +       if (!bioset_initialized(&mddev->io_acct_set)) {
-> +               atomic_set(&mddev->io_acct_cnt, 0);
->                 err = bioset_init(&mddev->io_acct_set, BIO_POOL_SIZE,
->                         offsetof(struct md_io_acct, bio_clone), 0);
-> +       }
->         return err;
->  }
->  EXPORT_SYMBOL_GPL(acct_bioset_init);
->
->  void acct_bioset_exit(struct mddev *mddev)
->  {
-> +       WARN_ON(atomic_read(&mddev->io_acct_cnt) != 0);
->         bioset_exit(&mddev->io_acct_set);
->  }
->  EXPORT_SYMBOL_GPL(acct_bioset_exit);
-> @@ -8617,12 +8620,15 @@ static void md_end_io_acct(struct bio *bio)
->  {
->         struct md_io_acct *md_io_acct = bio->bi_private;
->         struct bio *orig_bio = md_io_acct->orig_bio;
-> +       struct mddev *mddev = md_io_acct->mddev;
->
->         orig_bio->bi_status = bio->bi_status;
->
->         bio_end_io_acct(orig_bio, md_io_acct->start_time);
->         bio_put(bio);
->         bio_endio(orig_bio);
-> +
-> +       atomic_dec(&mddev->io_acct_cnt);
->  }
->
->  /*
-> @@ -8642,6 +8648,8 @@ void md_account_bio(struct mddev *mddev, struct bio **bio)
->         md_io_acct = container_of(clone, struct md_io_acct, bio_clone);
->         md_io_acct->orig_bio = *bio;
->         md_io_acct->start_time = bio_start_io_acct(*bio);
-> +       md_io_acct->mddev = mddev;
-> +       atomic_inc(&mddev->io_acct_cnt);
->
->         clone->bi_end_io = md_end_io_acct;
->         clone->bi_private = md_io_acct;
-> diff --git a/drivers/md/md.h b/drivers/md/md.h
-> index b4e2d8b87b61..29d30642e13f 100644
-> --- a/drivers/md/md.h
-> +++ b/drivers/md/md.h
-> @@ -513,6 +513,7 @@ struct mddev {
->                                                    * metadata and bitmap writes
->                                                    */
->         struct bio_set                  io_acct_set; /* for raid0 and raid5 io accounting */
-> +       atomic_t                        io_acct_cnt;
->
->         /* Generic flush handling.
->          * The last to finish preflush schedules a worker to submit
-> @@ -710,9 +711,10 @@ struct md_thread {
->  };
->
->  struct md_io_acct {
-> -       struct bio *orig_bio;
-> -       unsigned long start_time;
-> -       struct bio bio_clone;
-> +       struct bio      *orig_bio;
-> +       unsigned long   start_time;
-> +       struct bio      bio_clone;
-> +       struct mddev    *mddev;
->  };
->
->  #define THREAD_WAKEUP  0
-> diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
-> index 857c49399c28..1d2e098e0d52 100644
-> --- a/drivers/md/raid0.c
-> +++ b/drivers/md/raid0.c
-> @@ -73,6 +73,8 @@ static int create_strip_zones(struct mddev *mddev, struct r0conf **private_conf)
->         *private_conf = ERR_PTR(-ENOMEM);
->         if (!conf)
->                 return -ENOMEM;
-> +
-> +       init_waitqueue_head(&conf->wait_quiesce);
->         rdev_for_each(rdev1, mddev) {
->                 pr_debug("md/raid0:%s: looking at %pg\n",
->                          mdname(mddev),
-> @@ -754,6 +756,12 @@ static void *raid0_takeover(struct mddev *mddev)
->
->  static void raid0_quiesce(struct mddev *mddev, int quiesce)
->  {
-> +       struct r0conf *conf = mddev->private;
-> +
-> +       /* It doesn't use a separate struct to count how many bios are submitted
-> +        * to member disks to avoid memory alloc and performance decrease
-> +        */
-> +       wait_event(conf->wait_quiesce, atomic_read(&mddev->io_acct_cnt) == 0);
->  }
->
->  static struct md_personality raid0_personality=
-> diff --git a/drivers/md/raid0.h b/drivers/md/raid0.h
-> index 3816e5477db1..560dec93d459 100644
-> --- a/drivers/md/raid0.h
-> +++ b/drivers/md/raid0.h
-> @@ -27,6 +27,7 @@ struct r0conf {
->                                             * by strip_zone->dev */
->         int                     nr_strip_zones;
->         enum r0layout           layout;
-> +       wait_queue_head_t       wait_quiesce;
->  };
->
->  #endif
-> --
-> 2.32.0 (Apple Git-132)
->
+> 2) We could split up the fallocate call into multiple calls to zero
+> the entire disk. This would allow a quicker ctrl-c to occur, however
+> it's not clear what the best size would be to split it into. Even
+> zeroing 1GB can take a few seconds,
 
+FWIW, we default to 32MB per request in SCSI unless the device
+explicitly advertises wanting something larger.
+
+> (with NVMe, discard only requires a single command to handle the
+> entire disk
+
+In NVMe there's a limit of 64K blocks per range and 256 ranges per
+request. So 8GB or 64GB per request for discard depending on the block
+size. So presumably it will take several operations to deallocate an
+entire drive.
+
+> where as write-zeroes requires a minimum of one command per 2MB of
+> data to zero).
+
+32MB for 512-byte blocks and 256MB for 4096-byte blocks. Which matches
+how it currently works for SCSI devices.
+
+> I was hoping write-zeroes could be made faster in the future, at least
+> for NVMe.
+
+Deallocate had a bit of a head start and vendors are still catching up
+in the zeroing department. Some drives do support using Deallocate for
+zeroing and we quirk those in the driver so they should perform OK with
+your change.
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
