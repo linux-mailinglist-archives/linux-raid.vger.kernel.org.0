@@ -2,49 +2,45 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E2D235FCFC9
-	for <lists+linux-raid@lfdr.de>; Thu, 13 Oct 2022 02:22:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08A765FD16A
+	for <lists+linux-raid@lfdr.de>; Thu, 13 Oct 2022 02:36:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230281AbiJMAWF (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 12 Oct 2022 20:22:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38528 "EHLO
+        id S232068AbiJMAgV (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 12 Oct 2022 20:36:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230140AbiJMAVZ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 12 Oct 2022 20:21:25 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AE6212344B;
-        Wed, 12 Oct 2022 17:18:21 -0700 (PDT)
+        with ESMTP id S232575AbiJMAf2 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 12 Oct 2022 20:35:28 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2DD415E0E0;
+        Wed, 12 Oct 2022 17:31:03 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1A8A6B81CCC;
-        Thu, 13 Oct 2022 00:18:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 769D0C433D7;
-        Thu, 13 Oct 2022 00:18:10 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CE7FD616E8;
+        Thu, 13 Oct 2022 00:20:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A06AC43151;
+        Thu, 13 Oct 2022 00:20:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665620291;
-        bh=GhQcifaJLHmSWV1FJcckCCWe5jRuznAVJImLAHQm4YM=;
+        s=k20201202; t=1665620410;
+        bh=UrXTYZN138iLWkLhD3izbZxRH1f7d/hFdAP7pXGR8dE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=StF+L++WCzSkRTBHIiFgpICXinMNQSLJ+HnjyLHK4D4JiSkAv8OOEnoOzrHmNfDKk
-         qZL72uKS3IvFWx3l21dee8KS7a4G1P7egBzP9pZTk4WxFzJTobGBTQR427d2XWLDjX
-         w0mU9fcqRYoulPQPQ+UETWozS1ntC7Pm23qAkt8xS3UPCndNnSwY/87aMzLhtPmQTM
-         05xVOjaW1+1bmoWqB1bZl0XB0gTHjbf3tihq4i0CbmBtwFPXpzJx5EVHChrhVRi83u
-         4arIuDSdeSCSlINeDz5xTuSQi3nGK35C6vN2w721s8Yj1vUpEhLGEsaoO483u7a0rZ
-         NRFEUVmGfDW+Q==
+        b=VF5dUWeBSZYhsl9KxXaasoQT1U/wXBl383JCxrzxfNVGPQsUssF8KY1U5THrbApTY
+         QAtue2bKWCIJiWOVh2sZAFowJ2YIq0JXUr6kZXw6AJg7ApW7CHdElptRT8HJ4Qzr1r
+         o0W011rFloeGg3YyaPrZQ5ca76lZs+CKrk1/KylO2TsBdfoXzmmhj4GwxgGsL7tBN5
+         TzGEjL5i6FB7IsD79ogXsTIfqaNzbCO1PE/f1tnnDmT48t5CuMc9FUknsx39q6o2tr
+         yN5etcHT1Jo55igGjhTnp5PeUYWSCJfXD2j3FkDeDDlNGy+VvLxSfM3BnhgPxauXVP
+         inbNs34uNxilg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Pankaj Raghav <p.raghav@samsung.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        agk@redhat.com, snitzer@kernel.org, dm-devel@redhat.com,
-        song@kernel.org, linux-block@vger.kernel.org,
-        linux-raid@vger.kernel.org, io-uring@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.0 56/67] block: replace blk_queue_nowait with bdev_nowait
-Date:   Wed, 12 Oct 2022 20:15:37 -0400
-Message-Id: <20221013001554.1892206-56-sashal@kernel.org>
+Cc:     Logan Gunthorpe <logang@deltatee.com>, Song Liu <song@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.19 35/63] md/raid5: Wait for MD_SB_CHANGE_PENDING in raid5d
+Date:   Wed, 12 Oct 2022 20:18:09 -0400
+Message-Id: <20221013001842.1893243-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221013001554.1892206-1-sashal@kernel.org>
-References: <20221013001554.1892206-1-sashal@kernel.org>
+In-Reply-To: <20221013001842.1893243-1-sashal@kernel.org>
+References: <20221013001842.1893243-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,114 +54,143 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit 568ec936bf1384fc15873908c96a9aeb62536edb ]
+[ Upstream commit 5e2cf333b7bd5d3e62595a44d598a254c697cd74 ]
 
-Replace blk_queue_nowait with a bdev_nowait helpers that takes the
-block_device given that the I/O submission path should not have to
-look into the request_queue.
+A complicated deadlock exists when using the journal and an elevated
+group_thrtead_cnt. It was found with loop devices, but its not clear
+whether it can be seen with real disks. The deadlock can occur simply
+by writing data with an fio script.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Pankaj Raghav <p.raghav@samsung.com>
-Link: https://lore.kernel.org/r/20220927075815.269694-1-hch@lst.de
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+When the deadlock occurs, multiple threads will hang in different ways:
+
+ 1) The group threads will hang in the blk-wbt code with bios waiting to
+    be submitted to the block layer:
+
+        io_schedule+0x70/0xb0
+        rq_qos_wait+0x153/0x210
+        wbt_wait+0x115/0x1b0
+        io_schedule+0x70/0xb0
+        rq_qos_wait+0x153/0x210
+        wbt_wait+0x115/0x1b0
+        __rq_qos_throttle+0x38/0x60
+        blk_mq_submit_bio+0x589/0xcd0
+        wbt_wait+0x115/0x1b0
+        __rq_qos_throttle+0x38/0x60
+        blk_mq_submit_bio+0x589/0xcd0
+        __submit_bio+0xe6/0x100
+        submit_bio_noacct_nocheck+0x42e/0x470
+        submit_bio_noacct+0x4c2/0xbb0
+        ops_run_io+0x46b/0x1a30
+        handle_stripe+0xcd3/0x36b0
+        handle_active_stripes.constprop.0+0x6f6/0xa60
+        raid5_do_work+0x177/0x330
+
+    Or:
+        io_schedule+0x70/0xb0
+        rq_qos_wait+0x153/0x210
+        wbt_wait+0x115/0x1b0
+        __rq_qos_throttle+0x38/0x60
+        blk_mq_submit_bio+0x589/0xcd0
+        __submit_bio+0xe6/0x100
+        submit_bio_noacct_nocheck+0x42e/0x470
+        submit_bio_noacct+0x4c2/0xbb0
+        flush_deferred_bios+0x136/0x170
+        raid5_do_work+0x262/0x330
+
+ 2) The r5l_reclaim thread will hang in the same way, submitting a
+    bio to the block layer:
+
+        io_schedule+0x70/0xb0
+        rq_qos_wait+0x153/0x210
+        wbt_wait+0x115/0x1b0
+        __rq_qos_throttle+0x38/0x60
+        blk_mq_submit_bio+0x589/0xcd0
+        __submit_bio+0xe6/0x100
+        submit_bio_noacct_nocheck+0x42e/0x470
+        submit_bio_noacct+0x4c2/0xbb0
+        submit_bio+0x3f/0xf0
+        md_super_write+0x12f/0x1b0
+        md_update_sb.part.0+0x7c6/0xff0
+        md_update_sb+0x30/0x60
+        r5l_do_reclaim+0x4f9/0x5e0
+        r5l_reclaim_thread+0x69/0x30b
+
+    However, before hanging, the MD_SB_CHANGE_PENDING flag will be
+    set for sb_flags in r5l_write_super_and_discard_space(). This
+    flag will never be cleared because the submit_bio() call never
+    returns.
+
+ 3) Due to the MD_SB_CHANGE_PENDING flag being set, handle_stripe()
+    will do no processing on any pending stripes and re-set
+    STRIPE_HANDLE. This will cause the raid5d thread to enter an
+    infinite loop, constantly trying to handle the same stripes
+    stuck in the queue.
+
+    The raid5d thread has a blk_plug that holds a number of bios
+    that are also stuck waiting seeing the thread is in a loop
+    that never schedules. These bios have been accounted for by
+    blk-wbt thus preventing the other threads above from
+    continuing when they try to submit bios. --Deadlock.
+
+To fix this, add the same wait_event() that is used in raid5_do_work()
+to raid5d() such that if MD_SB_CHANGE_PENDING is set, the thread will
+schedule and wait until the flag is cleared. The schedule action will
+flush the plug which will allow the r5l_reclaim thread to continue,
+thus preventing the deadlock.
+
+However, md_check_recovery() calls can also clear MD_SB_CHANGE_PENDING
+from the same thread and can thus deadlock if the thread is put to
+sleep. So avoid waiting if md_check_recovery() is being called in the
+loop.
+
+It's not clear when the deadlock was introduced, but the similar
+wait_event() call in raid5_do_work() was added in 2017 by this
+commit:
+
+    16d997b78b15 ("md/raid5: simplfy delaying of writes while metadata
+                   is updated.")
+
+Link: https://lore.kernel.org/r/7f3b87b6-b52a-f737-51d7-a4eec5c44112@deltatee.com
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Song Liu <song@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-core.c       | 2 +-
- drivers/md/dm-table.c  | 4 +---
- drivers/md/md.c        | 4 ++--
- include/linux/blkdev.h | 6 +++++-
- io_uring/io_uring.c    | 2 +-
- 5 files changed, 10 insertions(+), 8 deletions(-)
+ drivers/md/raid5.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 651057c4146b..4ec669b0eadc 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -717,7 +717,7 @@ void submit_bio_noacct(struct bio *bio)
- 	 * For a REQ_NOWAIT based request, return -EOPNOTSUPP
- 	 * if queue does not support NOWAIT.
- 	 */
--	if ((bio->bi_opf & REQ_NOWAIT) && !blk_queue_nowait(q))
-+	if ((bio->bi_opf & REQ_NOWAIT) && !bdev_nowait(bdev))
- 		goto not_supported;
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index 1c1310d539f2..2905017184db 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -36,6 +36,7 @@
+  */
  
- 	if (should_fail_bio(bio))
-diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
-index 332f96b58252..d8034ff0cb24 100644
---- a/drivers/md/dm-table.c
-+++ b/drivers/md/dm-table.c
-@@ -1856,9 +1856,7 @@ static bool dm_table_supports_write_zeroes(struct dm_table *t)
- static int device_not_nowait_capable(struct dm_target *ti, struct dm_dev *dev,
- 				     sector_t start, sector_t len, void *data)
- {
--	struct request_queue *q = bdev_get_queue(dev->bdev);
--
--	return !blk_queue_nowait(q);
-+	return !bdev_nowait(dev->bdev);
- }
- 
- static bool dm_table_supports_nowait(struct dm_table *t)
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 729be2c5296c..72ad352cb41a 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -5845,7 +5845,7 @@ int md_run(struct mddev *mddev)
- 			}
- 		}
- 		sysfs_notify_dirent_safe(rdev->sysfs_state);
--		nowait = nowait && blk_queue_nowait(bdev_get_queue(rdev->bdev));
-+		nowait = nowait && bdev_nowait(rdev->bdev);
- 	}
- 
- 	if (!bioset_initialized(&mddev->bio_set)) {
-@@ -6982,7 +6982,7 @@ static int hot_add_disk(struct mddev *mddev, dev_t dev)
- 	 * If the new disk does not support REQ_NOWAIT,
- 	 * disable on the whole MD.
- 	 */
--	if (!blk_queue_nowait(bdev_get_queue(rdev->bdev))) {
-+	if (!bdev_nowait(rdev->bdev)) {
- 		pr_info("%s: Disabling nowait because %pg does not support nowait\n",
- 			mdname(mddev), rdev->bdev);
- 		blk_queue_flag_clear(QUEUE_FLAG_NOWAIT, mddev->queue);
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 84b13fdd34a7..4750772ef228 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -618,7 +618,6 @@ bool blk_queue_flag_test_and_set(unsigned int flag, struct request_queue *q);
- #define blk_queue_quiesced(q)	test_bit(QUEUE_FLAG_QUIESCED, &(q)->queue_flags)
- #define blk_queue_pm_only(q)	atomic_read(&(q)->pm_only)
- #define blk_queue_registered(q)	test_bit(QUEUE_FLAG_REGISTERED, &(q)->queue_flags)
--#define blk_queue_nowait(q)	test_bit(QUEUE_FLAG_NOWAIT, &(q)->queue_flags)
- #define blk_queue_sq_sched(q)	test_bit(QUEUE_FLAG_SQ_SCHED, &(q)->queue_flags)
- 
- extern void blk_set_pm_only(struct request_queue *q);
-@@ -1280,6 +1279,11 @@ static inline bool bdev_fua(struct block_device *bdev)
- 	return test_bit(QUEUE_FLAG_FUA, &bdev_get_queue(bdev)->queue_flags);
- }
- 
-+static inline bool bdev_nowait(struct block_device *bdev)
-+{
-+	return test_bit(QUEUE_FLAG_NOWAIT, &bdev_get_queue(bdev)->queue_flags);
-+}
+ #include <linux/blkdev.h>
++#include <linux/delay.h>
+ #include <linux/kthread.h>
+ #include <linux/raid/pq.h>
+ #include <linux/async_tx.h>
+@@ -6553,7 +6554,18 @@ static void raid5d(struct md_thread *thread)
+ 			spin_unlock_irq(&conf->device_lock);
+ 			md_check_recovery(mddev);
+ 			spin_lock_irq(&conf->device_lock);
 +
- static inline enum blk_zoned_model bdev_zoned_model(struct block_device *bdev)
- {
- 	struct request_queue *q = bdev_get_queue(bdev);
-diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
-index 13af6b56ebd2..c13122a87c40 100644
---- a/io_uring/io_uring.c
-+++ b/io_uring/io_uring.c
-@@ -1384,7 +1384,7 @@ static void io_iopoll_req_issued(struct io_kiocb *req, unsigned int issue_flags)
++			/*
++			 * Waiting on MD_SB_CHANGE_PENDING below may deadlock
++			 * seeing md_check_recovery() is needed to clear
++			 * the flag when using mdmon.
++			 */
++			continue;
+ 		}
++
++		wait_event_lock_irq(mddev->sb_wait,
++			!test_bit(MD_SB_CHANGE_PENDING, &mddev->sb_flags),
++			conf->device_lock);
+ 	}
+ 	pr_debug("%d stripes handled\n", handled);
  
- static bool io_bdev_nowait(struct block_device *bdev)
- {
--	return !bdev || blk_queue_nowait(bdev_get_queue(bdev));
-+	return !bdev || bdev_nowait(bdev);
- }
- 
- /*
 -- 
 2.35.1
 
