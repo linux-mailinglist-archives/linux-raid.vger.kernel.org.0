@@ -2,74 +2,154 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5481F5FFD6A
-	for <lists+linux-raid@lfdr.de>; Sun, 16 Oct 2022 08:10:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD23260037C
+	for <lists+linux-raid@lfdr.de>; Sun, 16 Oct 2022 23:39:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229720AbiJPGKs (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 16 Oct 2022 02:10:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59792 "EHLO
+        id S229751AbiJPVi7 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 16 Oct 2022 17:38:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229579AbiJPGKq (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 16 Oct 2022 02:10:46 -0400
-Received: from mail-ot1-x335.google.com (mail-ot1-x335.google.com [IPv6:2607:f8b0:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46C853ED40
-        for <linux-raid@vger.kernel.org>; Sat, 15 Oct 2022 23:10:45 -0700 (PDT)
-Received: by mail-ot1-x335.google.com with SMTP id e53-20020a9d01b8000000b006619152f3cdso4149054ote.0
-        for <linux-raid@vger.kernel.org>; Sat, 15 Oct 2022 23:10:45 -0700 (PDT)
+        with ESMTP id S229472AbiJPVi6 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 16 Oct 2022 17:38:58 -0400
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 984D430F66
+        for <linux-raid@vger.kernel.org>; Sun, 16 Oct 2022 14:38:57 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id f37so14784157lfv.8
+        for <linux-raid@vger.kernel.org>; Sun, 16 Oct 2022 14:38:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:sender:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OQx//nIMTXIuGES5wdU306SDyqo/9GYHWGhMmpKB5Ag=;
-        b=WQ5pM6CkDPbJu+vP70fSiqdptJ+u9+2OciCXNMnt1mMMqihAznw4h3f3yqJt0nBh2d
-         EQHnExnnr82M71wvRui86FRUh8bwVl1fWn2+lU287aOJl9Lv9H59oAGBCBwmeM4SDnjM
-         m+t22VfmD4lMXp1r7l1/D0T3lNG7fhBSe/WviGFJqgXARHcrR6G82BoqrWJHWyHpkXR4
-         UxVu6NZuVNmXMf3QdVIENqBXDzFGSqKjtT9Sp/0YTfbHmmjNG91pODeaaYHjzgD9lOuz
-         6+8NHOJxqLTK7TVAClOn7mR2EkRn9a2jbid84NqJMgRTcHN/tvyT+S0ECZG+se3qKJ41
-         h37w==
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3bQpeb7qbgz7OnKA4Ek9nSQvzAXF8C8FDtCTFu1YNAM=;
+        b=Za8dL20qAFhRRZyq/hSCRlsvJCt39fTZSSoZybDaoSdffCNmRqPIeYdYb5WtgHBeBz
+         Tee+XW7qTPBPDv5WtRj+2ZqhNiFkm1UCZq012XWtY5rCxLMGaE2uG6CwyUA6rbAST53b
+         yl4xUHHaYrpEElwbhS3C0Ynjy1dj8FcrJX+zKcWliyToyfZanGOq0bBaEM8C6Y49pmhm
+         BDPK7g1uZ4qe0kCi4A1D2fpFlyLFQcbEX4gPJdaSaZCPmFgcbmGWKlAh0dQ2juWza0V1
+         f9q+JX7nLec79mLurt2ZAOJuT52GHs6UqRIX7PnYasWR1r6vdO9DLqy9noI5MrXhU3gO
+         vvzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:sender:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OQx//nIMTXIuGES5wdU306SDyqo/9GYHWGhMmpKB5Ag=;
-        b=Yj+Aod0ysCP3mGx2k4xVeSyg+dQ49uy3PXJ5xYORjOGln7KY6rtAHvudn8jaeNGKzF
-         WMpSR7PUWShXNo1Ij5QkLdM/PnR3n2aCmcv1h4qBPUOlOR5TLfAb0QpF3wjfiU19x1A8
-         V5ONnh28HMFtCPMhxtenraTZ4o6Mh1xBnJQYfnx1wmFj3+6KrXn6LGNjL5B9SP2uLSKA
-         KbwpbttSr3XdWwqhftZ0YVe23Jlx3URViLFBYW6j5Bdqg+vV9/kT37hzWQdZTif4RFKZ
-         GVlcIRjVrs4/y1c9nv8JwRutf5eTW5aHM1jUz3X65UpR+aJl+EMbVgu4Zk2J61BmceaG
-         uFyQ==
-X-Gm-Message-State: ACrzQf1HIDn99gdOZrwn1qhcTq7i45S90XsK/k04imbmVbR1sU3MxkIW
-        eg5zDL7/ofY0krgz6cavEfy3yyvpnK1/ahOd5Lw=
-X-Google-Smtp-Source: AMsMyM4cOh9hi6ZtmdYfhgh9MPi0Ku8f3PmQzRiGDu6atmIJQrdJ/iunUp9fLy+hOWLhI1bdAJ3KIPsDa8Ypo1a0s40=
-X-Received: by 2002:a05:6830:2475:b0:661:b91c:f32a with SMTP id
- x53-20020a056830247500b00661b91cf32amr2496295otr.123.1665900644559; Sat, 15
- Oct 2022 23:10:44 -0700 (PDT)
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3bQpeb7qbgz7OnKA4Ek9nSQvzAXF8C8FDtCTFu1YNAM=;
+        b=3kjL9rdHta0DwB8FuZmbc3W1UhoSboueXAFfkHgYIVWBtRwX/cpQgTe8kq36KYtpm+
+         OTHtXXGUbcVJYGPYMM9QLiLU6qcnMzSh3+ZM2rAYH2fDz02mXNkdm3Pm/Q+S8uMZGe6q
+         qfx+GyIpXtBmrle90SWkp1bE1NEW0epv1pBmvILeDz9ZhvjNOmlYEhqbpvsNuk9qdZEu
+         8auO7Vg3kiHHN18O8kgVjj4KO2CdkgpK229JvFzqOhgs14qte6I2d2F02nHYidrPa5p0
+         gsNf+zXRk1lJDYELY/hLpr3bHGZ2zvJVjZRdnidnF+St9D0f9q4kCch7Asjam3zPbpGQ
+         vvTg==
+X-Gm-Message-State: ACrzQf1Cd1wjDmxw6DiVn7EwuVAYiRbYZg2+9q2DB5jKu3/KO8io28mj
+        AbiB6viQpe8uytnVfg4XY5NPh8wU4v8jBdUxUbKFFRe5rjc=
+X-Google-Smtp-Source: AMsMyM7o0Ekl4zphCcjjeK0IctmyjwviOZ03RtgRVa1UiJHI4BhGi3KBSVCJQpthnwfeuZ7+HpekNorFib1TNXvXT9k=
+X-Received: by 2002:a05:6512:2310:b0:4a2:a50a:82d5 with SMTP id
+ o16-20020a056512231000b004a2a50a82d5mr2578333lfu.266.1665956335241; Sun, 16
+ Oct 2022 14:38:55 -0700 (PDT)
 MIME-Version: 1.0
-Sender: lolorachida@gmail.com
-Received: by 2002:a05:6838:fe29:0:0:0:0 with HTTP; Sat, 15 Oct 2022 23:10:44
- -0700 (PDT)
-From:   Hassan Abdul <abdulhassanmimi973@gmail.com>
-Date:   Sun, 16 Oct 2022 07:10:44 +0100
-X-Google-Sender-Auth: -NGhVAqeTrj212hiTkcFQ533j38
-Message-ID: <CAPDHN6qmO6N3zq80aM4EBv1YQOZ71heCG0v5jX=Ty_m++TDgEQ@mail.gmail.com>
-Subject: Reply Me
-To:     undisclosed-recipients:;
+From:   Steve Kolk <stevekolk@gmail.com>
+Date:   Sun, 16 Oct 2022 17:38:40 -0400
+Message-ID: <CACZftsg4Cg5UM8derE46m2JgHWFAoNYFvDXbFKfoU4Jrbmhx_g@mail.gmail.com>
+Subject: Rebuilding mdadm RAID array after OS drive failure
+To:     linux-raid@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=3.1 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,LOTS_OF_MONEY,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,UNDISC_MONEY autolearn=no
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
-X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-i am Mrs Mimi Hassan Abdul Muhammad, and i was diagnosed with  cancer
-about 2 years ago,before i go for my surgery i  have to do this by helping the
-Less-privileged, with this fund so If you are interested to use the
-sum of US17.3Million that is in  a Finance house) in  OUAGADOUGOU
-BURKINA FASO to help them, kindly get back to me for more information.
-Warm Regards,
-Mrs Mimi Hassan Abdul Muhammad
+I have a system that was running Ubuntu 18.04 server with a 5 drive
+RAID 6 array using mdadm. I had a hard drive failure, but instead of
+the array it was the OS hard drive that completely failed. I also do
+not have access to the original mdadm.conf file.
+
+In an attempt to get my array back up, I booted Ubuntu 22.04 from a
+USB and tried to assemble and mount the array.  It did not work.
+Trying some diagnostic steps I found online, it seems to be claiming
+that there is no md superblock on any of the drives.
+
+I've included the commands I ran and their output below. Does anyone
+have any advice on what next steps I can take? I have no reason to
+think these drives have failed mechanically (much less all of them). I
+also tried with Ubuntu 18.04 and got the same results.
+
+ubuntu@ubuntu:~$ lsblk
+NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+loop0    7:0    0   2.2G  1 loop /rofs
+loop1    7:1    0  32.3M  1 loop /snap/snapd/12883
+loop2    7:2    0  55.4M  1 loop /snap/core18/2128
+loop3    7:3    0  61.8M  1 loop /snap/core20/1081
+loop4    7:4    0  65.1M  1 loop /snap/gtk-common-themes/1515
+loop5    7:5    0   219M  1 loop /snap/gnome-3-34-1804/72
+loop6    7:6    0 241.4M  1 loop /snap/gnome-3-38-2004/70
+loop7    7:7    0   2.5M  1 loop /snap/gnome-calculator/884
+loop8    7:8    0   704K  1 loop /snap/gnome-characters/726
+loop9    7:9    0   548K  1 loop /snap/gnome-logs/106
+loop10   7:10   0   2.5M  1 loop /snap/gnome-system-monitor/163
+sda      8:0    0   9.1T  0 disk
+=E2=94=9C=E2=94=80sda1   8:1    0   9.1T  0 part
+=E2=94=94=E2=94=80sda9   8:9    0     8M  0 part
+sdb      8:16   0   9.1T  0 disk
+=E2=94=9C=E2=94=80sdb1   8:17   0   9.1T  0 part
+=E2=94=94=E2=94=80sdb9   8:25   0     8M  0 part
+sdc      8:32   0   9.1T  0 disk
+=E2=94=9C=E2=94=80sdc1   8:33   0   9.1T  0 part
+=E2=94=94=E2=94=80sdc9   8:41   0     8M  0 part
+sdd      8:48   0   9.1T  0 disk
+=E2=94=9C=E2=94=80sdd1   8:49   0   9.1T  0 part
+=E2=94=94=E2=94=80sdd9   8:57   0     8M  0 part
+sde      8:64   0   9.1T  0 disk
+=E2=94=9C=E2=94=80sde1   8:65   0   9.1T  0 part
+=E2=94=94=E2=94=80sde9   8:73   0     8M  0 part
+sdf      8:80   1   7.6G  0 disk
+=E2=94=94=E2=94=80sdf1   8:81   1   7.6G  0 part /cdrom
+
+ubuntu@ubuntu:~$ sudo mdadm --assemble /dev/sda1 /dev/sdb1 /dev/sdc1
+/dev/sdd1 /dev/sde1
+mdadm: device /dev/sda1 exists but is not an md array.
+
+ubuntu@ubuntu:~$ sudo mdadm --examine --verbose /dev/sd[a-e]1
+mdadm: No md superblock detected on /dev/sda1.
+mdadm: No md superblock detected on /dev/sdb1.
+mdadm: No md superblock detected on /dev/sdc1.
+mdadm: No md superblock detected on /dev/sdd1.
+mdadm: No md superblock detected on /dev/sde1.
+
+ubuntu@ubuntu:~$ sudo mdadm --assemble --scan --verbose
+mdadm: looking for devices for further assembly
+mdadm: no recogniseable superblock on /dev/loop10
+mdadm: no recogniseable superblock on /dev/loop9
+mdadm: no recogniseable superblock on /dev/loop8
+mdadm: Cannot assemble mbr metadata on /dev/sdf1
+mdadm: Cannot assemble mbr metadata on /dev/sdf
+mdadm: no recogniseable superblock on /dev/sdb9
+mdadm: no recogniseable superblock on /dev/sdb1
+mdadm: Cannot assemble mbr metadata on /dev/sdb
+mdadm: no recogniseable superblock on /dev/sde9
+mdadm: no recogniseable superblock on /dev/sde1
+mdadm: Cannot assemble mbr metadata on /dev/sde
+mdadm: no recogniseable superblock on /dev/sdd9
+mdadm: no recogniseable superblock on /dev/sdd1
+mdadm: Cannot assemble mbr metadata on /dev/sdd
+mdadm: no recogniseable superblock on /dev/sdc9
+mdadm: no recogniseable superblock on /dev/sdc1
+mdadm: Cannot assemble mbr metadata on /dev/sdc
+mdadm: no recogniseable superblock on /dev/sda9
+mdadm: no recogniseable superblock on /dev/sda1
+mdadm: Cannot assemble mbr metadata on /dev/sda
+mdadm: no recogniseable superblock on /dev/loop7
+mdadm: no recogniseable superblock on /dev/loop6
+mdadm: no recogniseable superblock on /dev/loop5
+mdadm: no recogniseable superblock on /dev/loop4
+mdadm: no recogniseable superblock on /dev/loop3
+mdadm: no recogniseable superblock on /dev/loop2
+mdadm: no recogniseable superblock on /dev/loop1
+mdadm: no recogniseable superblock on /dev/loop0
+mdadm: No arrays found in config file or automatically
+
+Steve
