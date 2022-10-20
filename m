@@ -2,171 +2,74 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D60926068C9
-	for <lists+linux-raid@lfdr.de>; Thu, 20 Oct 2022 21:22:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7755D6068D5
+	for <lists+linux-raid@lfdr.de>; Thu, 20 Oct 2022 21:26:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229494AbiJTTWO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 20 Oct 2022 15:22:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47830 "EHLO
+        id S229937AbiJTT0t (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 20 Oct 2022 15:26:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229613AbiJTTWN (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 20 Oct 2022 15:22:13 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24C241F8101
-        for <linux-raid@vger.kernel.org>; Thu, 20 Oct 2022 12:22:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B36F4B828A0
-        for <linux-raid@vger.kernel.org>; Thu, 20 Oct 2022 19:22:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 656B0C433C1
-        for <linux-raid@vger.kernel.org>; Thu, 20 Oct 2022 19:22:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666293729;
-        bh=tLN/bvwCjD9mskphLI4GLxNf5lXMyGRzn47ZmjUhUfw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Xox6/Op2N+eW6fqOh2rfJWsU2MrVC/0yVkiieJtJMlBkC0VNaxFLdCVnxq1NdvHht
-         ae7hV1RYakKkalWw8LYMsalxbpNTtD6wEPawI42CleLI5ihFvi3DAe4oQUnlLIeIhP
-         vCcgfa4Qco/A1UOz8uakJ+FwHVBWTnwMhKnOC3bABv8B2q3qQS1v04fo1sboa/CC7y
-         D9Q1SagkMch8spIoIDN0dmB7kfdzayVRgyz2kKanPasIBY8GtvvyZ+LG1WpMBnyDn8
-         oTttsWKIyajq+O16mIKO7hK6GvS8gVe/fIvlNTRoKNQ5Bm+xRNqkzomIcKD7DlXS/M
-         2fFc2l7Zb5bjg==
-Received: by mail-ej1-f49.google.com with SMTP id r17so1886595eja.7
-        for <linux-raid@vger.kernel.org>; Thu, 20 Oct 2022 12:22:09 -0700 (PDT)
-X-Gm-Message-State: ACrzQf1USbv0t1eVbizQ8lDjkMlBhfsa5nb4avc9KDuw6Pjebj46Zy67
-        kmTohMwFshpMekAISdzVyiJ4CCSopQoOCVwJGNk=
-X-Google-Smtp-Source: AMsMyM4vS5AoNoLidMUKh6W/I+m7JuefJ5kz3qPZJOQRKLLnBDxB8w3EdbdJHmkK8XKebWUP9uX69hPFUsIXfzyO5gc=
-X-Received: by 2002:a17:907:970b:b0:78d:8d70:e4e8 with SMTP id
- jg11-20020a170907970b00b0078d8d70e4e8mr11906503ejc.614.1666293727630; Thu, 20
- Oct 2022 12:22:07 -0700 (PDT)
+        with ESMTP id S229925AbiJTT0s (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 20 Oct 2022 15:26:48 -0400
+Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D178420FB02
+        for <linux-raid@vger.kernel.org>; Thu, 20 Oct 2022 12:26:46 -0700 (PDT)
+Received: by mail-yb1-xb32.google.com with SMTP id e83so806047ybh.1
+        for <linux-raid@vger.kernel.org>; Thu, 20 Oct 2022 12:26:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:sender:reply-to:mime-version:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=qKZQaYvyG0T9Uj1OTzAaNf0j1uBekm8T04WhuHWE0ug=;
+        b=LIXersO5hI3bqNT+wlnLHbQEAnQ2iSkzh3oE42uZ7tJMzOUHQ4fNfBIXczDg3VmrlN
+         TOoqzVoF8I0CfTu+t1HXJpG2mEmng9n2PR6U7Qxob6tDBEF/WS2UWLCjr7mVppL7W2Cx
+         3B8fNtOrA9DgV3W/94xmdXfTs7J0E+gaEIZolVE5Aff1LyYj94PxNaUTIZ3wdilu8jVx
+         87HpqeR9uKOV/Z7FMB3yA5MeuV2gLu5NWAtb57PI9AMc+H5G/kgUl8g8SGQNnVJSKrfm
+         NV1cB6HhlQB7t0X648IZPC1j87xk/ZVZzZwAdeRAryT4wg54hLxQs8N9T5Db7H8ixZ0J
+         LRuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:sender:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qKZQaYvyG0T9Uj1OTzAaNf0j1uBekm8T04WhuHWE0ug=;
+        b=qyU3L4r9IlhQujthVAlk9MPPBzF0YbF2BvFIGM2kjpjgu7tIn7oGT9Urj5xqUKSPk8
+         xsfN5fbDRlyv1vmMUfzyndDFz/ZFd8pIC3fU3KzXWAMH0WXKW4BJ42Xv7sO2sq9N7ZeF
+         DzCsYJkR1cl1HKLFMyVrgfd7VQtDU+aZFIjx7jvVKD0+jalwuFAhIHEat742YxzT59WG
+         zKcdI4bQX68FoqtFUWjwWMWCaYwaK+5zrQbAzj9kh64PHYO/MkGmQuK/N8nv7UzsP9uR
+         T+IsRCYTVbd5fLcNYYvL4W0kdichR8/3hT2idIYn9lizWGbVvYEtHPVaR5BYN9VBBITp
+         08cw==
+X-Gm-Message-State: ACrzQf2Jp61lNHuRein1MTSphQVsIwhzeBf4L2qYDTc9dl6uR9bNQsrR
+        Nf+gv/nJDdH+Od/2sZpjt3EIYC8BLAV8e1hiFlA=
+X-Google-Smtp-Source: AMsMyM4MZqqQCkrNpUjA/ELjxViiC6Pz8vx5cEBnMl8MfR9PhoGgRR7veuDlNNuAGZAI7DM2BoKAxGvAwxZiIYh3HJc=
+X-Received: by 2002:a05:6902:1081:b0:6be:22e8:f73a with SMTP id
+ v1-20020a056902108100b006be22e8f73amr13256554ybu.372.1666294005880; Thu, 20
+ Oct 2022 12:26:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20221014122210.47888-1-jinpu.wang@ionos.com>
-In-Reply-To: <20221014122210.47888-1-jinpu.wang@ionos.com>
-From:   Song Liu <song@kernel.org>
-Date:   Thu, 20 Oct 2022 12:21:55 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW7hSruJhubAcmwcpTbGPKXq2H3mBkC3FjBt6mWeZXtyRw@mail.gmail.com>
-Message-ID: <CAPhsuW7hSruJhubAcmwcpTbGPKXq2H3mBkC3FjBt6mWeZXtyRw@mail.gmail.com>
-Subject: Re: [RFC PATCH] md-bitmap: reuse former bitmap chunk size on resizing.
-To:     Jack Wang <jinpu.wang@ionos.com>
-Cc:     linux-raid@vger.kernel.org,
-        Florian-Ewald Mueller <florian-ewald.mueller@ionos.com>
+Reply-To: anabellemarieclaude@gmail.com
+Sender: ezeblessingchinaza2030@gmail.com
+Received: by 2002:a05:7010:224f:b0:30b:2c86:372f with HTTP; Thu, 20 Oct 2022
+ 12:26:45 -0700 (PDT)
+From:   Anabelle Marie Claude <anabellemarieclaude@gmail.com>
+Date:   Thu, 20 Oct 2022 20:26:45 +0100
+X-Google-Sender-Auth: 2l_vYI1EJaEL_SzHHrlRnY4H7tg
+Message-ID: <CADEx5XjU0=ULCmKDkB84fvGWM8X04NsJ=oapjERE3A7XXYAdXQ@mail.gmail.com>
+Subject: Hello
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=0.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Fri, Oct 14, 2022 at 5:22 AM Jack Wang <jinpu.wang@ionos.com> wrote:
->
-> From: Florian-Ewald Mueller <florian-ewald.mueller@ionos.com>
->
-> On bitmap resizing, attempt to reuse the former chunk size (if any)
-> in order to preserve the, ev. on purpose set, chunk size resolution.
+Good Day,
 
-Could you please explain more on why we would rather keep the chunk size
-instead of recalculating it?
+I will like to disclose something very important to you,
+get back to me for more details, please.
 
-Thanks,
-Song
-
->
-> Signed-off-by: Florian-Ewald Mueller <florian-ewald.mueller@ionos.com>
-> Signed-off-by: Jack Wang <jinpu.wang@ionos.com>
-> ---
->  drivers/md/md-cluster.c |  3 ++-
->  drivers/md/raid1.c      |  3 ++-
->  drivers/md/raid10.c     | 12 ++++++++----
->  drivers/md/raid5.c      |  3 ++-
->  4 files changed, 14 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/md/md-cluster.c b/drivers/md/md-cluster.c
-> index 10e0c5381d01..9929631bdc94 100644
-> --- a/drivers/md/md-cluster.c
-> +++ b/drivers/md/md-cluster.c
-> @@ -604,7 +604,8 @@ static int process_recvd_msg(struct mddev *mddev, struct cluster_msg *msg)
->         case BITMAP_RESIZE:
->                 if (le64_to_cpu(msg->high) != mddev->pers->size(mddev, 0, 0))
->                         ret = md_bitmap_resize(mddev->bitmap,
-> -                                           le64_to_cpu(msg->high), 0, 0);
-> +                                           le64_to_cpu(msg->high),
-> +                                           mddev->bitmap_info.chunksize, 0);
->                 break;
->         default:
->                 ret = -1;
-> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-> index 05d8438cfec8..8f1d25064a53 100644
-> --- a/drivers/md/raid1.c
-> +++ b/drivers/md/raid1.c
-> @@ -3225,7 +3225,8 @@ static int raid1_resize(struct mddev *mddev, sector_t sectors)
->             mddev->array_sectors > newsize)
->                 return -EINVAL;
->         if (mddev->bitmap) {
-> -               int ret = md_bitmap_resize(mddev->bitmap, newsize, 0, 0);
-> +               int ret = md_bitmap_resize(mddev->bitmap, newsize,
-> +                               mddev->bitmap_info.chunksize, 0);
->                 if (ret)
->                         return ret;
->         }
-> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-> index 3aa8b6e11d58..8f0453b6e0c6 100644
-> --- a/drivers/md/raid10.c
-> +++ b/drivers/md/raid10.c
-> @@ -4346,7 +4346,8 @@ static int raid10_resize(struct mddev *mddev, sector_t sectors)
->             mddev->array_sectors > size)
->                 return -EINVAL;
->         if (mddev->bitmap) {
-> -               int ret = md_bitmap_resize(mddev->bitmap, size, 0, 0);
-> +               int ret = md_bitmap_resize(mddev->bitmap, size,
-> +                               mddev->bitmap_info.chunksize, 0);
->                 if (ret)
->                         return ret;
->         }
-> @@ -4618,7 +4619,8 @@ static int raid10_start_reshape(struct mddev *mddev)
->                 newsize = raid10_size(mddev, 0, conf->geo.raid_disks);
->
->                 if (!mddev_is_clustered(mddev)) {
-> -                       ret = md_bitmap_resize(mddev->bitmap, newsize, 0, 0);
-> +                       ret = md_bitmap_resize(mddev->bitmap, newsize,
-> +                                       mddev->bitmap_info.chunksize, 0);
->                         if (ret)
->                                 goto abort;
->                         else
-> @@ -4640,13 +4642,15 @@ static int raid10_start_reshape(struct mddev *mddev)
->                             MD_FEATURE_RESHAPE_ACTIVE)) || (oldsize == newsize))
->                         goto out;
->
-> -               ret = md_bitmap_resize(mddev->bitmap, newsize, 0, 0);
-> +               ret = md_bitmap_resize(mddev->bitmap, newsize,
-> +                               mddev->bitmap_info.chunksize, 0);
->                 if (ret)
->                         goto abort;
->
->                 ret = md_cluster_ops->resize_bitmaps(mddev, newsize, oldsize);
->                 if (ret) {
-> -                       md_bitmap_resize(mddev->bitmap, oldsize, 0, 0);
-> +                       md_bitmap_resize(mddev->bitmap, oldsize,
-> +                                       mddev->bitmap_info.chunksize, 0);
->                         goto abort;
->                 }
->         }
-> diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-> index 7b820b81d8c2..bff7d3d779ae 100644
-> --- a/drivers/md/raid5.c
-> +++ b/drivers/md/raid5.c
-> @@ -8372,7 +8372,8 @@ static int raid5_resize(struct mddev *mddev, sector_t sectors)
->             mddev->array_sectors > newsize)
->                 return -EINVAL;
->         if (mddev->bitmap) {
-> -               int ret = md_bitmap_resize(mddev->bitmap, sectors, 0, 0);
-> +               int ret = md_bitmap_resize(mddev->bitmap, sectors,
-> +                               mddev->bitmap_info.chunksize, 0);
->                 if (ret)
->                         return ret;
->         }
-> --
-> 2.34.1
->
+Regards.
+Mrs Anabelle Marie Claude.
