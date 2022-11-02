@@ -2,102 +2,133 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C3F466160C4
-	for <lists+linux-raid@lfdr.de>; Wed,  2 Nov 2022 11:26:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C2F5616919
+	for <lists+linux-raid@lfdr.de>; Wed,  2 Nov 2022 17:33:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229871AbiKBK0A (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 2 Nov 2022 06:26:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43052 "EHLO
+        id S231601AbiKBQdH (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 2 Nov 2022 12:33:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229704AbiKBKZ6 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 2 Nov 2022 06:25:58 -0400
-Received: from mail-vk1-xa32.google.com (mail-vk1-xa32.google.com [IPv6:2607:f8b0:4864:20::a32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40A65BC7
-        for <linux-raid@vger.kernel.org>; Wed,  2 Nov 2022 03:25:58 -0700 (PDT)
-Received: by mail-vk1-xa32.google.com with SMTP id g26so8703273vkm.12
-        for <linux-raid@vger.kernel.org>; Wed, 02 Nov 2022 03:25:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ddKdS4x8c4ZSI9PbKdla4xMHlbecpUYnHnf7KqPY/v4=;
-        b=PRwQsumImJ1w+A81klK5cl5HbSQMLLj+xdE65DAptFirzwRVucG7L0cAOBTIgYwcGP
-         Ef/MTQ/6PWdAsIAmRwGvGJi6qNadskzRF3hMBun/Hnlc50A6QXrlG34GVTiCPzzkadF/
-         EbyZLZbyPlYfGWSR/20uMIV1XpH2S5Q1A9CcKVQ7r7aAZ2xS0vXfJKUQE6UthBFsVZ2l
-         ptWwhY1Q5n7zCpAF/LI0owO2FT7KAKnH9Uf/JrEVWQ5JQaZUqCIqQWmMKIPFgg3FxedV
-         4Crcj7XkYcuPKV8JyhTCcfxb25rye2GsmoezxZqQA0kZjxmAtXmIgJyHlYAfOHSyzknq
-         Se0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ddKdS4x8c4ZSI9PbKdla4xMHlbecpUYnHnf7KqPY/v4=;
-        b=JHCZ6FjC5xjolvyF9WDuBDYpp9v/SPgGLZwVEGbmsYmItoWuI4YmsZaosf9U4pbqQj
-         2AUtQRB7oQsagWr4YcVodknHA0fnB0oPkJUjWYIAfdsE7s/OcvI5p02s5ZfjEnsiDeS3
-         6x/ytKARm/KkQtTcOfpXHvE1bJA65SGm0u9YvtS0p0Ns11fbHcOl90I4RehfgkpoIQZ5
-         SNOZqGsSeLvhLfMXUr3v+CnFh9uwrVVb1y46coNZlpKvbeVvjb+fA+ChIjCZ+tt8RPgt
-         OiQOR9wLqtQaPnUDcvUeyMQKgwST6ID5BOUXqKDExYPjPNFIktoV9Bs9/jPC2DUtz1Yc
-         CO4A==
-X-Gm-Message-State: ACrzQf2GXwQW2tctzErKO2Lm/blyI12MlohAwe9T/6tnp9WR5gbtTRAO
-        Y2kTFiuxGAaL7OxcTVT/sPWHAzN0r3sQ73CrSZE=
-X-Google-Smtp-Source: AMsMyM4cDsgn9soSrkV/Cu1RCT5jVdcQzug0ImUZ4Z4LOwyKmBMTyh5ryRigeiyCaKvPkh8CkDAYEhIRZK4c5Z/HEj4=
-X-Received: by 2002:a1f:e9c6:0:b0:3ab:aee7:841f with SMTP id
- g189-20020a1fe9c6000000b003abaee7841fmr11475654vkh.19.1667384757376; Wed, 02
- Nov 2022 03:25:57 -0700 (PDT)
+        with ESMTP id S231994AbiKBQbn (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 2 Nov 2022 12:31:43 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83F152D777
+        for <linux-raid@vger.kernel.org>; Wed,  2 Nov 2022 09:27:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1667406463;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=+X8NvTsJp5OorZQ9td9eE0XJO1fm0tDjulHeQibU3Rs=;
+        b=IMNVhP102eeEc4+o9SEMpuRYAhPlRguBJDDgoWmSt4DueWM7Vy3SgV8p+RsRXmHojIX6ih
+        9Hyd4o7s99ChnTCGNqp8DGuIuUGB7uViJU2fuHuw+dhhtp59RILEFYUr3hO2aryx0X3Jzu
+        tjclf455yeHbvlX4SsujmykEaA5Fd0I=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-648-QilbEzSyPVSeSKRI3OQgQg-1; Wed, 02 Nov 2022 12:27:40 -0400
+X-MC-Unique: QilbEzSyPVSeSKRI3OQgQg-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4927685A5A6;
+        Wed,  2 Nov 2022 16:27:40 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 33650492CA5;
+        Wed,  2 Nov 2022 16:27:40 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 2A2GRev2026132;
+        Wed, 2 Nov 2022 12:27:40 -0400
+Received: from localhost (mpatocka@localhost)
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 2A2GRexq026128;
+        Wed, 2 Nov 2022 12:27:40 -0400
+X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
+Date:   Wed, 2 Nov 2022 12:27:40 -0400 (EDT)
+From:   Mikulas Patocka <mpatocka@redhat.com>
+X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
+To:     Guoqing Jiang <guoqing.jiang@linux.dev>, Song Liu <song@kernel.org>
+cc:     Zdenek Kabelac <zkabelac@redhat.com>, linux-raid@vger.kernel.org,
+        dm-devel@redhat.com
+Subject: A crash caused by the commit
+ 0dd84b319352bb8ba64752d4e45396d8b13e6018
+Message-ID: <alpine.LRH.2.21.2211021214390.25745@file01.intranet.prod.int.rdu2.redhat.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Received: by 2002:ac5:c764:0:0:0:0:0 with HTTP; Wed, 2 Nov 2022 03:25:57 -0700 (PDT)
-Reply-To: subik7633@gmail.com
-From:   Susan Bikram <jbi880375@gmail.com>
-Date:   Wed, 2 Nov 2022 03:25:57 -0700
-Message-ID: <CAHiEHe-WJ2p2=fLeHdq+Ga40V-ofpmNkSHCKG5+bvNqMxsnZBQ@mail.gmail.com>
-Subject: Please can i have your attention
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.1 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,UNDISC_FREEM autolearn=no
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
+X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:a32 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.4994]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [jbi880375[at]gmail.com]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [subik7633[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [jbi880375[at]gmail.com]
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  3.0 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Dear ,
+Hi
 
-Please can I have your attention and possibly help me for humanity's
-sake please. I am writing this message with a heavy heart filled with
-sorrows and sadness.
-Please if you can respond, i have an issue that i will be most
-grateful if you could help me deal with it please.
+There's a crash in the test shell/lvchange-rebuild-raid.sh when running 
+the lvm testsuite. It can be reproduced by running "make check_local 
+T=shell/lvchange-rebuild-raid.sh" in a loop.
 
-Susan
+The crash happens in the kernel 6.0 and 6.1-rc3, but not in 5.19.
+
+I bisected the crash and it is caused by the commit 
+0dd84b319352bb8ba64752d4e45396d8b13e6018.
+
+I uploaded my .config here (it's 12-core virtual machine): 
+https://people.redhat.com/~mpatocka/testcases/md-crash-config/config.txt
+
+Mikulas
+
+[   78.478417] BUG: kernel NULL pointer dereference, address: 0000000000000000
+[   78.479166] #PF: supervisor write access in kernel mode
+[   78.479671] #PF: error_code(0x0002) - not-present page
+[   78.480171] PGD 11557f0067 P4D 11557f0067 PUD 0
+[   78.480626] Oops: 0002 [#1] PREEMPT SMP
+[   78.481001] CPU: 0 PID: 73 Comm: kworker/0:1 Not tainted 6.1.0-rc3 #5
+[   78.481661] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.14.0-2 04/01/2014
+[   78.482471] Workqueue: kdelayd flush_expired_bios [dm_delay]
+[   78.483021] RIP: 0010:mempool_free+0x47/0x80
+[   78.483455] Code: 48 89 ef 5b 5d ff e0 f3 c3 48 89 f7 e8 32 45 3f 00 48 63 53 08 48 89 c6 3b 53 04 7d 2d 48 8b 43 10 8d 4a 01 48 89 df 89 4b 08 <48> 89 2c d0 e8 b0 45 3f 00 48 8d 7b 30 5b 5d 31 c9 ba 01 00 00 00
+[   78.485220] RSP: 0018:ffff88910036bda8 EFLAGS: 00010093
+[   78.485719] RAX: 0000000000000000 RBX: ffff8891037b65d8 RCX: 0000000000000001
+[   78.486404] RDX: 0000000000000000 RSI: 0000000000000202 RDI: ffff8891037b65d8
+[   78.487080] RBP: ffff8891447ba240 R08: 0000000000012908 R09: 00000000003d0900
+[   78.487764] R10: 0000000000000000 R11: 0000000000173544 R12: ffff889101a14000
+[   78.488451] R13: ffff8891562ac300 R14: ffff889102b41440 R15: ffffe8ffffa00d05
+[   78.489146] FS:  0000000000000000(0000) GS:ffff88942fa00000(0000) knlGS:0000000000000000
+[   78.489913] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   78.490474] CR2: 0000000000000000 CR3: 0000001102e99000 CR4: 00000000000006b0
+[   78.491165] Call Trace:
+[   78.491429]  <TASK>
+[   78.491640]  clone_endio+0xf4/0x1c0 [dm_mod]
+[   78.492072]  clone_endio+0xf4/0x1c0 [dm_mod]
+[   78.492505]  __submit_bio+0x76/0x120
+[   78.492859]  submit_bio_noacct_nocheck+0xb6/0x2a0
+[   78.493325]  flush_expired_bios+0x28/0x2f [dm_delay]
+[   78.493808]  process_one_work+0x1b4/0x300
+[   78.494211]  worker_thread+0x45/0x3e0
+[   78.494570]  ? rescuer_thread+0x380/0x380
+[   78.494957]  kthread+0xc2/0x100
+[   78.495279]  ? kthread_complete_and_exit+0x20/0x20
+[   78.495743]  ret_from_fork+0x1f/0x30
+[   78.496096]  </TASK>
+[   78.496326] Modules linked in: brd dm_delay dm_raid dm_mod af_packet uvesafb cfbfillrect cfbimgblt cn cfbcopyarea fb font fbdev tun autofs4 binfmt_misc configfs ipv6 virtio_rng virtio_balloon rng_core virtio_net pcspkr net_failover failover qemu_fw_cfg button mousedev raid10 raid456 libcrc32c async_raid6_recov async_memcpy async_pq raid6_pq async_xor xor async_tx raid1 raid0 md_mod sd_mod t10_pi crc64_rocksoft crc64 virtio_scsi scsi_mod evdev psmouse bsg scsi_common [last unloaded: brd]
+[   78.500425] CR2: 0000000000000000
+[   78.500752] ---[ end trace 0000000000000000 ]---
+[   78.501214] RIP: 0010:mempool_free+0x47/0x80
+[   78.501633] Code: 48 89 ef 5b 5d ff e0 f3 c3 48 89 f7 e8 32 45 3f 00 48 63 53 08 48 89 c6 3b 53 04 7d 2d 48 8b 43 10 8d 4a 01 48 89 df 89 4b 08 <48> 89 2c d0 e8 b0 45 3f 00 48 8d 7b 30 5b 5d 31 c9 ba 01 00 00 00
+[   78.503420] RSP: 0018:ffff88910036bda8 EFLAGS: 00010093
+[   78.503921] RAX: 0000000000000000 RBX: ffff8891037b65d8 RCX: 0000000000000001
+[   78.504611] RDX: 0000000000000000 RSI: 0000000000000202 RDI: ffff8891037b65d8
+[   78.505374] RBP: ffff8891447ba240 R08: 0000000000012908 R09: 00000000003d0900
+[   78.506075] R10: 0000000000000000 R11: 0000000000173544 R12: ffff889101a14000
+[   78.506766] R13: ffff8891562ac300 R14: ffff889102b41440 R15: ffffe8ffffa00d05
+[   78.507481] FS:  0000000000000000(0000) GS:ffff88942fa00000(0000) knlGS:0000000000000000
+[   78.508273] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   78.508837] CR2: 0000000000000000 CR3: 0000001102e99000 CR4: 00000000000006b0
+[   78.509542] note: kworker/0:1[73] exited with preempt_count 1
+[   78.510427] md/raid10:mdX: active with 4 out of 8 devices
+[   96.902910] sysrq: Resetting
+
