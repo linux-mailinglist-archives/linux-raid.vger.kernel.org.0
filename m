@@ -2,87 +2,88 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 84AD36187FA
-	for <lists+linux-raid@lfdr.de>; Thu,  3 Nov 2022 19:53:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AACB36188C0
+	for <lists+linux-raid@lfdr.de>; Thu,  3 Nov 2022 20:26:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230187AbiKCSx3 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 3 Nov 2022 14:53:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43858 "EHLO
+        id S229481AbiKCT02 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 3 Nov 2022 15:26:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229699AbiKCSx1 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 3 Nov 2022 14:53:27 -0400
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE2149FEF;
-        Thu,  3 Nov 2022 11:53:24 -0700 (PDT)
-Received: by mail-qt1-f172.google.com with SMTP id hh9so1798029qtb.13;
-        Thu, 03 Nov 2022 11:53:24 -0700 (PDT)
+        with ESMTP id S231134AbiKCT0Y (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 3 Nov 2022 15:26:24 -0400
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADD811129
+        for <linux-raid@vger.kernel.org>; Thu,  3 Nov 2022 12:26:22 -0700 (PDT)
+Received: by mail-lj1-x22f.google.com with SMTP id t10so3528283ljj.0
+        for <linux-raid@vger.kernel.org>; Thu, 03 Nov 2022 12:26:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=gO37JDtP/8vBFvPBdBNf1boDLrRmfcP+qSqSTBrttho=;
+        b=RP6ha3FtVKIruU6YJ5DeggWR4M4NEnTm9kHiXuRMa39miimkpvaW5lqn9Skfh2qDfF
+         NvWLet/RcCH4hZAK0YXeGz7ZGuG9qPK2PzUim24Amq0fMNiRt5Kw089IjKoSoDMB9DHl
+         rOIflIm/F3kIv2pdwyYBs5z2bGqw3AzrfmM88mvy/eRoySVRpAnb3n8WVrkzld7RDebC
+         QNvr79U6vbJ4tciJEKOv2E/bhkDt8ZE5AjIvTA4b2VTGsl2K4RzhMbRnS8vFM4jibnDf
+         W5DFwoh7fUJE6AoRWsMudTP1snECv6y6cp3m9fH9hSg7FtHR93eNiCspDcmLi14rQpiE
+         2ZCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=e3P3zdhy8GKexWx3vyrC2poycFZmbZATTV4uCKdeI44=;
-        b=BkmpreiOCbLX+dtUWJ+2YdF9+bdOs8FJkLKV/MOd138mAPNSrWqt2OisXMxL0B49gA
-         Xkj9B+giyvQh4Vp/LghlyHW3gU8ruEist71r5kXjp0kXPDlFe4l+bhO0TfCYLv5Zslr/
-         fPAwLT3SJ0lAJJvMPMOjMmE25nKsBIT1Ai6d95zcfZ0Vhn6Eu2MuTW59aDuUR5sok7KP
-         PDrvjus151I2wZ8rFkbM5Md0piP2VR1tgQD/3wztWYW3UazR0kMaiSF7pK8oChyBbidc
-         jYruMe3giJsXWjhDSWniiz5vl2nf/38WUtelp8IR2eemPPDaco0nlQXgI9z6wdMX9AeM
-         SrYQ==
-X-Gm-Message-State: ACrzQf0ihpYA6saMeAKUgr2ERNhOWhUmRqaySke5GELgHX+Ax34aUHZz
-        cM14/O7ivZcvSlQlHaXOk3tz+UqzdaKabkOAt+A=
-X-Google-Smtp-Source: AMsMyM4QSySjm+ZEB/jau7CJMJJfWL1+5ZQtQRrNl6i66knX97g4Qv73Gu/6SVigeCoz4CyrTFJzPtEC8KPqj3i61Aw=
-X-Received: by 2002:a05:622a:1a25:b0:39c:b862:7318 with SMTP id
- f37-20020a05622a1a2500b0039cb8627318mr26133393qtb.147.1667501603818; Thu, 03
- Nov 2022 11:53:23 -0700 (PDT)
+        bh=gO37JDtP/8vBFvPBdBNf1boDLrRmfcP+qSqSTBrttho=;
+        b=z7sITMfnSf6u6hNyjCRnHte8Mswus0tHkFTwKS7B2z/lthmv6IlbuVCcbdczdwbWJj
+         Ezh3+vyWm2bEFNG22Ni2Ny9IlRnI9GPzZPgdEE5BwBwbm4eA29RzilA/Dy0yQb+0C9jJ
+         pu5DIAstZjZMGNHaZpZsPt/OxJmLLtupnLXwAwTJXGikxEAMTV7tFfk/OM11IsIqzG0Q
+         4ne0k2HYpqi0148mlsqm/semm+DrzEu5D8nAjTNaCB6gnrhcz6FF9Zxj+tGShFOkYsYj
+         dmGZhMJVzQvh3n8gG7ShPgtqCNtHLA9mH0egsS5aTwrFJvpYLO4Pb1PjAUfDNasVJHZh
+         lKCw==
+X-Gm-Message-State: ACrzQf1EQ4vT1Cl3RrYYrauG3pEHcFSZK5qc4lDdi6nlGdNUqT2TPb5B
+        Cb1titPAcJaVRKJpkJ0sIkYesLnCTXyHl830qqc=
+X-Google-Smtp-Source: AMsMyM7RRpCcODI3BsAq28CV/5vfL+WfaRyB+k93j105Sq002ALK1c0xasiCMKwUGWjYa2Kp9UUyCPU62O6gLrI1kes=
+X-Received: by 2002:a05:651c:239b:b0:277:5175:4fa0 with SMTP id
+ bk27-20020a05651c239b00b0027751754fa0mr9874271ljb.327.1667503580957; Thu, 03
+ Nov 2022 12:26:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20221018215755.33566-1-giulio.benetti@benettiengineering.com>
-In-Reply-To: <20221018215755.33566-1-giulio.benetti@benettiengineering.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 3 Nov 2022 19:53:12 +0100
-Message-ID: <CAJZ5v0hRBd8OEg1CJUQGhb6_59j-+-zZTid8kmMV9nUk2CF3EA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] ACPI: scan: substitute empty_zero_page with helper ZERO_PAGE(0)
-To:     Giulio Benetti <giulio.benetti@benettiengineering.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-raid@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Song Liu <song@kernel.org>
+Received: by 2002:a05:6520:812:b0:22a:97d0:b58a with HTTP; Thu, 3 Nov 2022
+ 12:26:20 -0700 (PDT)
+Reply-To: georgebrown0004@gmail.com
+From:   george brown <eddywilliam6659@gmail.com>
+Date:   Thu, 3 Nov 2022 20:26:20 +0100
+Message-ID: <CAPdfmQLjD0XjsiW5XQpNRD=u9xx-bf6qZQF7gu3pXbnCR90mbw@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=4.2 required=5.0 tests=BAYES_20,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,UNDISC_FREEM autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Tue, Oct 18, 2022 at 11:59 PM Giulio Benetti
-<giulio.benetti@benettiengineering.com> wrote:
->
-> Not all zero page implementations use empty_zero_page global pointer so
-> let's substitute empty_zero_page occurence with helper ZERO_PAGE(0).
->
-> Signed-off-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
-> ---
->  drivers/acpi/scan.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> index 558664d169fc..4d2d274cc8ad 100644
-> --- a/drivers/acpi/scan.c
-> +++ b/drivers/acpi/scan.c
-> @@ -30,7 +30,7 @@ extern struct acpi_device *acpi_root;
->  #define ACPI_BUS_HID                   "LNXSYBUS"
->  #define ACPI_BUS_DEVICE_NAME           "System Bus"
->
-> -#define INVALID_ACPI_HANDLE    ((acpi_handle)empty_zero_page)
-> +#define INVALID_ACPI_HANDLE    ((acpi_handle)ZERO_PAGE(0))
->
->  static const char *dummy_hid = "device";
->
-> --
+Ahoj
 
-Applied as 6.2 material, thanks!
+Jmenuji se George Brown. Povol=C3=A1n=C3=ADm jsem pr=C3=A1vn=C3=ADk. R=C3=
+=A1d bych v=C3=A1m nab=C3=ADdl
+nejbli=C5=BE=C5=A1=C3=AD p=C5=99=C3=ADbuzn=C3=BD m=C3=A9ho klienta. Zd=C4=
+=9Bd=C3=ADte =C4=8D=C3=A1stku (8,5 milionu dolar=C5=AF).
+Dolary, kter=C3=A9 m=C5=AFj klient nechal v bance, ne=C5=BE zem=C5=99el.
+
+M=C5=AFj klient je ob=C4=8Dan va=C5=A1=C3=AD zem=C4=9B, kter=C3=BD byl zabi=
+t p=C5=99i autonehod=C4=9B se svou =C5=BEenou.
+a jedin=C3=BD syn. M=C3=A1m n=C3=A1rok na 50 % z celkov=C3=A9ho fondu, zat=
+=C3=ADmco n=C3=A1rok m=C3=A1m na 50 %.
+b=C3=BDt pro tebe
+Kontaktujte m=C5=AFj soukrom=C3=BD e-mail zde pro v=C3=ADce podrobnost=C3=
+=AD:
+georgebrown0004@gmail.com
+
+D=C3=ADky p=C5=99edem,
+pane george brown,
