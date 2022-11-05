@@ -2,73 +2,155 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5516D61DA2D
-	for <lists+linux-raid@lfdr.de>; Sat,  5 Nov 2022 13:39:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF9BC61DF0F
+	for <lists+linux-raid@lfdr.de>; Sat,  5 Nov 2022 23:34:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229782AbiKEMj0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 5 Nov 2022 08:39:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39862 "EHLO
+        id S229902AbiKEWeQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 5 Nov 2022 18:34:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229828AbiKEMjS (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 5 Nov 2022 08:39:18 -0400
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6F4F18B36
-        for <linux-raid@vger.kernel.org>; Sat,  5 Nov 2022 05:39:09 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id k22so6742474pfd.3
-        for <linux-raid@vger.kernel.org>; Sat, 05 Nov 2022 05:39:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=c8XA1N0uaxkLO/wKHErNWHaSuu64k5Pjb5u9dmcZrOc=;
-        b=kq8TjKIfMuAddEcVf9rp0MAfAJKYgNJ2cBueguYMfNrrn5Y92RfhwFFtqQvsnJ25Za
-         h8SiEvPnMYeYwSArc6GY5SQq2zL79mDe+hlmdrq1jqhbH32Nym17IyGJ74jGudUVTyjZ
-         ZLa+VsNOq9rTzyLWrUxnZgdCFuXXszm94ql2h5uYD4teS2ObX7Ib8b3enSyx0rZvP7zG
-         5FbHMpk+xlNrX2y2GPhcopcKv7ZR4EpypqjNop73JfuR6545JlmmQxS6l+camVmBR4vB
-         Qcb7Ryy9wzPcpeWZUz6H6C51a26OjytDawXkXf5lh/Pu+41hWQfHFExixc8fiMddJWTE
-         Lgyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=c8XA1N0uaxkLO/wKHErNWHaSuu64k5Pjb5u9dmcZrOc=;
-        b=Ep4Sv611yIHzf7KTI5umtdevzeS8eZmAMxYpEOfBc3gUU401xkAiiojKeR1DyBgTVs
-         iWvtkJ03zRDg6nsbsBZ2AXK9+r27UCEswBxKbBA9PfkHlww/y37tQs0Jmd1tEELPIEHl
-         o41UP56oZOe0CV5L7AvhfQCbh+b7mhGrPuwQ+SvZs4KsgsGtbTxNUso3j19APT5RTNL0
-         BtwNfJw1EY+sRn6+T6vOPjv/sxTFbqrTWCyPHYR4N9nXopdLasnPVryIkW9hqldTAM4E
-         4nyZE226o6M2Ddt2deRLpRHTQ20SsAzoRHp/65lkROmGtYhihJpwFA/bQL1eG2OLvQgP
-         pfRg==
-X-Gm-Message-State: ACrzQf0UAoT2EROKlG/IbwCD2dqSkXmAYyt8aGHrwTzJBEW+uWeaFt2O
-        7taaCnTspiST2EzKkzIp2CaoI2MbgHA1RROF0z0=
-X-Google-Smtp-Source: AMsMyM5P7QJPc4xabig4w413XzwG+LvLR4ujBQF052MYyp4X4jLct43goqeG6nAke9/cOoRc7kMVFnOPm8Ba6LmlOPE=
-X-Received: by 2002:a05:6a00:1251:b0:56d:b039:1f8 with SMTP id
- u17-20020a056a00125100b0056db03901f8mr23491834pfi.72.1667651947721; Sat, 05
- Nov 2022 05:39:07 -0700 (PDT)
+        with ESMTP id S229607AbiKEWeP (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 5 Nov 2022 18:34:15 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D758A11154
+        for <linux-raid@vger.kernel.org>; Sat,  5 Nov 2022 15:34:13 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 7B8FF1F37C;
+        Sat,  5 Nov 2022 22:34:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1667687652; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6/IBun3eEoGw1C80XiwUaEKaky/xKSAd5oZts/sTyQ4=;
+        b=BKPC7h47sd2H7fPhqhbQ1TtDwjlbvWUQzcmeOxT5qsTPQvYhrSuWxmQx3nRhNlzQVgVLAI
+        qXrjkTXPi94vYZlUHErd43BAiDCHOe/JcCou1W6bX8FAnjFcZ08xspit06zkRCGeu7JgYd
+        7jppqVwlmEX5PBO4I9RyoVHCcBicytg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1667687652;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6/IBun3eEoGw1C80XiwUaEKaky/xKSAd5oZts/sTyQ4=;
+        b=/sPFWZB9yGBpazM/9uco8Hm1PEqvIvzYUjW7Ldg5rV1HjO0Z7W2QiQRO/Suh6HsT0bE1ay
+        ZZ5PT5qYpKSE7HAA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 71D6413AD7;
+        Sat,  5 Nov 2022 22:34:10 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id PTeoCuLkZmNUdAAAMHmgww
+        (envelope-from <neilb@suse.de>); Sat, 05 Nov 2022 22:34:10 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Received: by 2002:a05:7301:2e91:b0:83:922d:c616 with HTTP; Sat, 5 Nov 2022
- 05:39:07 -0700 (PDT)
-Reply-To: stefanopessia755@hotmail.com
-From:   Stefano Pessina <wamathaibenard@gmail.com>
-Date:   Sat, 5 Nov 2022 15:39:07 +0300
-Message-ID: <CAN7bvZ+AZ+N2xWXWK-6rTbyGw_5yApLbz-J5U42mOWMbcyp4aA@mail.gmail.com>
-Subject: Geldspende
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=4.7 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Mikulas Patocka" <mpatocka@redhat.com>
+Cc:     "Song Liu" <song@kernel.org>,
+        "Guoqing Jiang" <guoqing.jiang@linux.dev>,
+        "Zdenek Kabelac" <zkabelac@redhat.com>, linux-raid@vger.kernel.org,
+        dm-devel@redhat.com
+Subject: Re: [dm-devel] [PATCH] md: fix a crash in mempool_free
+In-reply-to: =?utf-8?q?=3Calpine=2ELRH=2E2=2E21=2E2211040941112=2E19553=40fi?=
+ =?utf-8?q?le01=2Eintranet=2Eprod=2Eint=2Erdu2=2Eredhat=2Ecom=3E?=
+References: =?utf-8?q?=3Calpine=2ELRH=2E2=2E21=2E2211031121070=2E18305=40fil?=
+ =?utf-8?q?e01=2Eintranet=2Eprod=2Eint=2Erdu2=2Eredhat=2Ecom=3E=2C?=
+ <166753684502.19313.12105294223332649758@noble.neil.brown.name>, 
+ =?utf-8?q?=3Calpine=2ELRH=2E2=2E21=2E2211040941112=2E19553=40file01=2Eintra?=
+ =?utf-8?q?net=2Eprod=2Eint=2Erdu2=2Eredhat=2Ecom=3E?=
+Date:   Sun, 06 Nov 2022 09:34:04 +1100
+Message-id: <166768764482.19313.4863003667431957512@noble.neil.brown.name>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
---=20
-Die Summe von 500.000,00 =E2=82=AC wurde Ihnen von STEFANO PESSINA gespende=
-t.
-Bitte kontaktieren Sie uns f=C3=BCr weitere Informationen =C3=BCber
-stefanopessia755@hotmail.com
+On Sat, 05 Nov 2022, Mikulas Patocka wrote:
+> 
+> On Fri, 4 Nov 2022, NeilBrown wrote:
+> 
+> > > ---
+> > >  drivers/md/md.c |    6 ++++--
+> > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > > 
+> > > Index: linux-2.6/drivers/md/md.c
+> > > ===================================================================
+> > > --- linux-2.6.orig/drivers/md/md.c	2022-11-03 15:29:02.000000000 +0100
+> > > +++ linux-2.6/drivers/md/md.c	2022-11-03 15:33:17.000000000 +0100
+> > > @@ -509,13 +509,14 @@ static void md_end_flush(struct bio *bio
+> > >  	struct md_rdev *rdev = bio->bi_private;
+> > >  	struct mddev *mddev = rdev->mddev;
+> > >  
+> > > +	bio_put(bio);
+> > > +
+> > >  	rdev_dec_pending(rdev, mddev);
+> > >  
+> > >  	if (atomic_dec_and_test(&mddev->flush_pending)) {
+> > >  		/* The pre-request flush has finished */
+> > >  		queue_work(md_wq, &mddev->flush_work);
+> > >  	}
+> > > -	bio_put(bio);
+> > >  }
+> > >  
+> > >  static void md_submit_flush_data(struct work_struct *ws);
+> > > @@ -913,10 +914,11 @@ static void super_written(struct bio *bi
+> > >  	} else
+> > >  		clear_bit(LastDev, &rdev->flags);
+> > >  
+> > > +	bio_put(bio);
+> > > +
+> > >  	if (atomic_dec_and_test(&mddev->pending_writes))
+> > >  		wake_up(&mddev->sb_wait);
+> > >  	rdev_dec_pending(rdev, mddev);
+> > > -	bio_put(bio);
+> > >  }
+> > 
+> > Thanks. I think this is a clear improvement.
+> > I think it would be a little better if the rdev_dec_pending were also
+> > move up.
+> > Then both code fragments would be:
+> >   bio_put ; rdev_dec_pending ; atomic_dec_and_test
+> > 
+> > Thanks,
+> > NeilBrown
+> 
+> Yes, I'll send a second patch that moves rdev_dec_pending up too.
+> 
+> BTW. even this is theoretically incorrect:
+> 
+> > >     if (atomic_dec_and_test(&mddev->pending_writes))
+> > >             wake_up(&mddev->sb_wait);
+> 
+> Suppose that you execute atomic_dec_and_test and then there's a context 
+> switch to a process that destroys the md device and then there's a context 
+> switch back and you call "wake_up(&mddev->sb_wait)" on freed memory.
+> 
+> I think that we should use wait_var_event/wake_up_var instead of sb_wait. 
+> That will use preallocated hashed wait queues.
+> 
+
+I agree there is a potential problem.  Using wait_var_event is an
+approach that could work.
+An alternate would be to change that code to
+
+  if (atomic_dec_and_lock(&mddev->pending_writes, &mddev->lock)) {
+           wake_up(&mddev->sb_wait);
+           spin_unlock(&mddev->lock);
+  }
+
+As __md_stop() takes mddev->lock, it would not be able to get to the
+'free' until after the lock was dropped.
+
+Thanks,
+NeilBrown
