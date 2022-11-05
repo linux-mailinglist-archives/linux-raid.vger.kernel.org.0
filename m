@@ -2,157 +2,73 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 843EB61D7EA
-	for <lists+linux-raid@lfdr.de>; Sat,  5 Nov 2022 07:25:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 59F3D61DA26
+	for <lists+linux-raid@lfdr.de>; Sat,  5 Nov 2022 13:39:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229487AbiKEGYP (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 5 Nov 2022 02:24:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45318 "EHLO
+        id S229862AbiKEMjY (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 5 Nov 2022 08:39:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229486AbiKEGYO (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 5 Nov 2022 02:24:14 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A52B13D1A
-        for <linux-raid@vger.kernel.org>; Fri,  4 Nov 2022 23:24:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667629454; x=1699165454;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=qse/7qILfOEvFiHVvI6NTYkbKA/WfTET79t2WYFXTmQ=;
-  b=LKvQWS5xhD3yDdE33G3+iCgFFa1OPTImFDfxM5P/rMzskTScIzPJF618
-   Y+dcMnxJC6Sd22M/pY5yrUvmYE5KWa+AZ9cM5K9HgBcxhlkWOSfkOQcv9
-   eXfqoAWneKueQATw1Kn3s9qMR2KR/A6FikWosM28bbq28ZcUaXsFLn7N5
-   tevWvPvXZEnb0dtTYdEJyDi8GVQYEO98vqcy4kPKm8jdGj/0mpO63mImK
-   CSv4FRa5HCAmgYTdrupqMAAIv8O7xRM+XV1acH4dhLZwp15OnR/YBfIjs
-   WSOpr2ZBPrSlADbrP0MTAU098VKEceEh1TQCkQxJQ9A2tJrwSBnWMPPxL
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10521"; a="374375399"
-X-IronPort-AV: E=Sophos;i="5.96,140,1665471600"; 
-   d="scan'208";a="374375399"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2022 23:24:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10521"; a="964587901"
-X-IronPort-AV: E=Sophos;i="5.96,140,1665471600"; 
-   d="scan'208";a="964587901"
-Received: from lkp-server02.sh.intel.com (HELO b6d29c1a0365) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 04 Nov 2022 23:24:12 -0700
-Received: from kbuild by b6d29c1a0365 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1orCbD-000HhX-22;
-        Sat, 05 Nov 2022 06:24:11 +0000
-Date:   Sat, 05 Nov 2022 14:23:15 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Song Liu <song@kernel.org>
-Cc:     linux-raid@vger.kernel.org
-Subject: [song-md:md-next] BUILD SUCCESS
- 7476cc5394a10e982a4daa56079093a8b88e4bf3
-Message-ID: <63660153.YDtlqI8kSHyX4u//%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229782AbiKEMjR (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 5 Nov 2022 08:39:17 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70E2418B06
+        for <linux-raid@vger.kernel.org>; Sat,  5 Nov 2022 05:39:09 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id b62so6606953pgc.0
+        for <linux-raid@vger.kernel.org>; Sat, 05 Nov 2022 05:39:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=c8XA1N0uaxkLO/wKHErNWHaSuu64k5Pjb5u9dmcZrOc=;
+        b=RIHC9n/dKVExSLG73bd8Y0TEFLCe8HTSL+2d7yE6D2NKhaBTGC77yJTmz2n+UQEoLn
+         jxE36/CP2zWRsxdrbl6Qipo/1wujKwbWTegmQtKA5KaKY5c5k0uls/46uPweryK1Q/70
+         p7KuiiXfJ0vih3FChZlrnOZ0SimajpgL+AXRNjZnSx1jbzFH5llJcPftmYgxT0KBp7aY
+         Nvw2mfIN1dkT84jofHnK9dh7XMfTMquPbJMMLMjB0Dp08MAIB2DxhF8xAtCfYFVwsPDo
+         kuNK/heTlVtwv9hHFhKrR/b4yxRwRja7vVsRsbB9inWGKh1FmpKXNdm91a1Uu/cF0CiR
+         QmBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=c8XA1N0uaxkLO/wKHErNWHaSuu64k5Pjb5u9dmcZrOc=;
+        b=OrgwmQ5FNjWwG8hbcoG33nI9ZuxoGZrpQbAf4UaSGym/4eBEh+XP6T+bDaMRXMd77d
+         u5O9nCVqU7rdhUwBqqHz4lFXz0ha4sLaYVCtbLza4eYj4RDH8ncBjR2ujTn/y1jn6+Bd
+         +njpetANoWxvI8EcH62I3T0uxMfd5n1VwdrNThgXcu7ZEd/5pck8DbX5pzo2E7774ivv
+         BZeFLi1jnAFrwi+ylDI27s7cpdV8fab3ACw5R8Wu5G5dmcGzthcuPQu25gf7r+vUFPcv
+         FfgiKWG54KHdAjj0BO3Eg4wwVCJ7hf4Yp4J+zmpD5ZYfpPeDJxWuAg9mb3arEj9AMKd4
+         Xojw==
+X-Gm-Message-State: ACrzQf0eCe7zbO6yVwRDVqL/1xrrrxnBznn9n3k38prXHAztWSYSyvxs
+        O4ZMg6zJFsSE0tNXzBZBrxNCmiNFrpu9aoVWO0w=
+X-Google-Smtp-Source: AMsMyM7B0KgO1ePqgiznBJPxBFqW0p1QJVzP9XdnRybtCWEEA1+7r7SGcBMaZXE781qwVCHZ0F/UGDKN4buuMG8EUng=
+X-Received: by 2002:a63:8aca:0:b0:461:25fe:e7c5 with SMTP id
+ y193-20020a638aca000000b0046125fee7c5mr34958534pgd.395.1667651947704; Sat, 05
+ Nov 2022 05:39:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:7301:2e91:b0:83:922d:c616 with HTTP; Sat, 5 Nov 2022
+ 05:39:06 -0700 (PDT)
+Reply-To: stefanopessia755@hotmail.com
+From:   Stefano Pessina <wamathaibenard@gmail.com>
+Date:   Sat, 5 Nov 2022 15:39:06 +0300
+Message-ID: <CAN7bvZKFRi6jCy913fp9Nu5T=uorMfPGun5ibm5bYqhSVn2ZFA@mail.gmail.com>
+Subject: Geldspende
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=4.7 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-tree/branch: git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git md-next
-branch HEAD: 7476cc5394a10e982a4daa56079093a8b88e4bf3  md/raid0, raid10: Don't set discard sectors for request queue
-
-elapsed time: 720m
-
-configs tested: 76
-configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-x86_64                           rhel-8.3-syz
-arc                                 defconfig
-alpha                               defconfig
-s390                                defconfig
-arc                  randconfig-r043-20221104
-um                           x86_64_defconfig
-s390                             allmodconfig
-um                             i386_defconfig
-x86_64                        randconfig-a002
-i386                                defconfig
-s390                             allyesconfig
-riscv                randconfig-r042-20221104
-alpha                            allyesconfig
-s390                 randconfig-r044-20221104
-x86_64                        randconfig-a006
-m68k                             allmodconfig
-x86_64                          rhel-8.3-func
-x86_64                        randconfig-a004
-arc                              allyesconfig
-x86_64                    rhel-8.3-kselftests
-m68k                             allyesconfig
-arm                                 defconfig
-i386                          randconfig-a014
-ia64                             allmodconfig
-i386                          randconfig-a012
-i386                          randconfig-a001
-i386                          randconfig-a016
-powerpc                           allnoconfig
-i386                          randconfig-a003
-powerpc                          allmodconfig
-x86_64                              defconfig
-mips                             allyesconfig
-i386                          randconfig-a005
-x86_64                        randconfig-a013
-i386                             allyesconfig
-x86_64                        randconfig-a011
-sh                               allmodconfig
-x86_64                        randconfig-a015
-x86_64                               rhel-8.3
-arm64                            allyesconfig
-arm                              allyesconfig
-x86_64                           allyesconfig
-powerpc                     taishan_defconfig
-powerpc                      ppc6xx_defconfig
-mips                     loongson1b_defconfig
-arm                           viper_defconfig
-i386                          randconfig-c001
-powerpc              randconfig-c003-20221104
-arm                         s3c6400_defconfig
-arc                      axs103_smp_defconfig
-m68k                       bvme6000_defconfig
-
-clang tested configs:
-hexagon              randconfig-r041-20221104
-hexagon              randconfig-r045-20221104
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a005
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
-x86_64                        randconfig-a014
-i386                          randconfig-a002
-i386                          randconfig-a006
-x86_64                        randconfig-a016
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-mips                        bcm63xx_defconfig
-powerpc                   bluestone_defconfig
-mips                        omega2p_defconfig
-powerpc                     akebono_defconfig
-powerpc                     mpc512x_defconfig
-x86_64                        randconfig-k001
-arm                        spear3xx_defconfig
-mips                           ip28_defconfig
-powerpc                 xes_mpc85xx_defconfig
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+--=20
+Die Summe von 500.000,00 =E2=82=AC wurde Ihnen von STEFANO PESSINA gespende=
+t.
+Bitte kontaktieren Sie uns f=C3=BCr weitere Informationen =C3=BCber
+stefanopessia755@hotmail.com
