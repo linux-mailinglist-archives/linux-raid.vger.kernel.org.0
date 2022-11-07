@@ -2,262 +2,128 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E413361EF14
-	for <lists+linux-raid@lfdr.de>; Mon,  7 Nov 2022 10:33:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD5AB61F02F
+	for <lists+linux-raid@lfdr.de>; Mon,  7 Nov 2022 11:21:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231158AbiKGJdF (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 7 Nov 2022 04:33:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58024 "EHLO
+        id S229638AbiKGKVW (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 7 Nov 2022 05:21:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230502AbiKGJdE (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 7 Nov 2022 04:33:04 -0500
-Received: from out2.migadu.com (out2.migadu.com [IPv6:2001:41d0:2:aacc::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B9EBE58
-        for <linux-raid@vger.kernel.org>; Mon,  7 Nov 2022 01:33:01 -0800 (PST)
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1667813579;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=grRm51fJYQow8zvkKIcsTmPNXLCcX5WSgYbGqQK4PYI=;
-        b=WqOTRwL2maGdfzAMNV68BgplA7bj8tGZia81++KyZ6kI/KuXMt3B2bdTAfEO5SLga6PU5W
-        byhpIOINOSxMSzTD0BpX0QNVJJzePtSZbk3qK+/0K1EypW2ZUGkOLbWM4xeT/5/6YZBHLJ
-        tOBdnV4wYCcbLG/KKf5qj5ltfEV5GzY=
-From:   Guoqing Jiang <guoqing.jiang@linux.dev>
-Subject: Re: A crash caused by the commit
- 0dd84b319352bb8ba64752d4e45396d8b13e6018
-To:     Mikulas Patocka <mpatocka@redhat.com>
-Cc:     Zdenek Kabelac <zkabelac@redhat.com>, Song Liu <song@kernel.org>,
-        linux-raid@vger.kernel.org, dm-devel@redhat.com,
-        Neil Brown <neilb@suse.de>
-References: <alpine.LRH.2.21.2211021214390.25745@file01.intranet.prod.int.rdu2.redhat.com>
- <78646e88-2457-81e1-e3e7-cf66b67ba923@linux.dev>
- <alpine.LRH.2.21.2211030851090.10884@file01.intranet.prod.int.rdu2.redhat.com>
- <alpine.LRH.2.21.2211031018030.18305@file01.intranet.prod.int.rdu2.redhat.com>
- <5dd07779-5c09-4c75-6e34-392e4c05c3c8@linux.dev>
- <alpine.LRH.2.21.2211040909470.19553@file01.intranet.prod.int.rdu2.redhat.com>
-Message-ID: <beba4872-9cee-03e7-f147-1a7c6e84e9a4@linux.dev>
-Date:   Mon, 7 Nov 2022 17:32:55 +0800
+        with ESMTP id S230475AbiKGKVR (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 7 Nov 2022 05:21:17 -0500
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE7331658C
+        for <linux-raid@vger.kernel.org>; Mon,  7 Nov 2022 02:21:15 -0800 (PST)
+Received: by mail-pj1-x1041.google.com with SMTP id f5-20020a17090a4a8500b002131bb59d61so12232686pjh.1
+        for <linux-raid@vger.kernel.org>; Mon, 07 Nov 2022 02:21:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=AOmtRIzmF5dcnWrT0j3skK83MYTC+QvduwZ6ndeN2Ks=;
+        b=L9okY7Icb0Gf5ctoFsS3m7Ms6FyffuhIG/wumllqb99pGSDM0eKoVdXRomu4k2Vvje
+         vaAAA5b5CG4T9vL3DYzTbt6i7ilTYVRiZHeAf51qWroCKMi/06UV8twkwYbbvcb58b0c
+         O8aiXYIeKLPGKFxD8AeTNjdm9XiiwAwYXXYnxXnBzQtt4ZaPQYbu2mn3d4/wBF5dq0sI
+         fYgKey8dWac3TMQ3pm+aZLL8XgADS0c8wc9DQhJYDoGLimjkDspSigMMA/pe1/be4Mmf
+         FTMTprRtatoAeN10/4e16TIuQYPcJ6zZ7AsqjnUqg8Bde3BWUPkO4V20s/KjpolOjYbD
+         1dVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AOmtRIzmF5dcnWrT0j3skK83MYTC+QvduwZ6ndeN2Ks=;
+        b=t+Wqjp5eYxByFBKXw651aWy1nGrpf19knSY9wktR7cxxu+3AnLmCIdhMcU54O1IiFZ
+         dh11INM8XjcVnOGpJQWtrpH50a6yzmqtABSJEF85xnWV8yfzc7vXHX0JCYXjrby5HIS1
+         SqQDVTEO1ZnNsfzm/eKEDsZ/YrCEQaK+hCqJR2eGC4pVrKIEJyKGdSax/TNh6I0EC3Xg
+         bM793hS6z8AUv2x0iirTPvdxqPSeTGlS1UzHgr1kxIb6OPKy/m7HSFU7PA1qM1CHuosc
+         XPhrL70MwRCSTaqa6ZCqFP+oQn4t2lx5+eEhzEHWY5Cok/I9AJn/RShgP9RK4n6D9Dih
+         5pkA==
+X-Gm-Message-State: ACrzQf23oUpgoP6ESdmjbkkqZ7tJkE4ZeEjOSGyycco6MzpVHko4ZfhM
+        KryJOGUmiI6apLX9WLnMz/g6OFVdwoSltfTNtps=
+X-Google-Smtp-Source: AMsMyM4Z92xjGZXgCyg2wym9Bu3/u65n6EL2ZpWI9kWf7s8xWZden0QG/zdZVfFd3uCVmOfceIs+YigxV7lXSF4Af+Y=
+X-Received: by 2002:a17:90b:2393:b0:213:ecb2:2e04 with SMTP id
+ mr19-20020a17090b239300b00213ecb22e04mr38944517pjb.100.1667816475223; Mon, 07
+ Nov 2022 02:21:15 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <alpine.LRH.2.21.2211040909470.19553@file01.intranet.prod.int.rdu2.redhat.com>
-Content-Type: text/plain; charset=iso-8859-15; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:6a06:925:b0:587:19e0:c567 with HTTP; Mon, 7 Nov 2022
+ 02:21:14 -0800 (PST)
+Reply-To: contact@ammico.it
+From:   =?UTF-8?Q?Mrs=2E_Monika_Everenov=C3=A1?= <977638ib@gmail.com>
+Date:   Mon, 7 Nov 2022 11:21:14 +0100
+Message-ID: <CAHAXD+Z_SoFK+TjW_6apBCCLtc_awXEjaqOdf77jdLRxxup3TA@mail.gmail.com>
+Subject: Re:
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=6.6 required=5.0 tests=ADVANCE_FEE_2_NEW_MONEY,
+        BAYES_50,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        FREEMAIL_FROM,FROM_STARTS_WITH_NUMS,LOTS_OF_MONEY,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,UNDISC_MONEY autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:1041 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.7 FROM_STARTS_WITH_NUMS From: starts with several numbers
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [977638ib[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
+        *  0.0 LOTS_OF_MONEY Huge... sums of money
+        *  3.3 UNDISC_MONEY Undisclosed recipients + money/fraud signs
+        *  2.0 ADVANCE_FEE_2_NEW_MONEY Advance Fee fraud and lots of money
+X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-
-
-On 11/4/22 9:40 PM, Mikulas Patocka wrote:
-> On Fri, 4 Nov 2022, Guoqing Jiang wrote:
->
->> On 11/3/22 11:20 PM, Mikulas Patocka wrote:
->>> On Thu, 3 Nov 2022, Mikulas Patocka wrote:
->>>
->>>>> BTW, is the mempool_free from endio -> dec_count -> complete_io?
->>>>> And io which caused the crash is from dm_io -> async_io / sync_io
->>>>>    -> dispatch_io, seems dm-raid1 can call it instead of dm-raid, so I
->>>>> suppose the io is for mirror image.
->>>>>
->>>>> Thanks,
->>>>> Guoqing
->>>> I presume that the bug is caused by destruction of a bio set while bio
->>>> from that set was in progress. When the bio finishes and an attempt is
->>>> made to free the bio, a crash happens when the code tries to free the bio
->>>> into a destroyed mempool.
->>>>
->>>> I can do more testing to validate this theory.
->>>>
->>>> Mikulas
->>> When I disable tail-call optimizations with "-fno-optimize-sibling-calls",
->>> I get this stacktrace:
->> Just curious, is the option used for compile kernel or lvm?
-> I used it to compile the kernel. I set
-> export KCFLAGS="-march=barcelona -fno-optimize-sibling-calls"
-> and recompiled the kernel.
-
-Thanks for the sharing!
-
->> BTW, this trace is different from previous one, and it is more
->> understandable to me, thanks.
->>
->>> [  200.105367] Call Trace:
->>> [  200.105611]  <TASK>
->>> [  200.105825]  dump_stack_lvl+0x33/0x42
->>> [  200.106196]  dump_stack+0xc/0xd
->>> [  200.106516]  mempool_free.cold+0x22/0x32
->>> [  200.106921]  bio_free+0x49/0x60
->>> [  200.107239]  bio_put+0x95/0x100
->>> [  200.107567]  super_written+0x4f/0x120 [md_mod]
->>> [  200.108020]  bio_endio+0xe8/0x100
->>> [  200.108359]  __dm_io_complete+0x1e9/0x300 [dm_mod]
->>> [  200.108847]  clone_endio+0xf4/0x1c0 [dm_mod]
->>> [  200.109288]  bio_endio+0xe8/0x100
->>> [  200.109621]  __dm_io_complete+0x1e9/0x300 [dm_mod]
->>> [  200.110102]  clone_endio+0xf4/0x1c0 [dm_mod]
->> Assume the above from this chain.
->>
->> clone_endio -> dm_io_dec_pending -> __dm_io_dec_pending -> dm_io_complete
->> -> __dm_io_complete -> bio_endio
->>
->>> [  200.110543]  bio_endio+0xe8/0x100
->>> [  200.110877]  brd_submit_bio+0xf8/0x123 [brd]
->>> [  200.111310]  __submit_bio+0x7a/0x120
->>> [  200.111670]  submit_bio_noacct_nocheck+0xb6/0x2a0
->>> [  200.112138]  submit_bio_noacct+0x12e/0x3e0
->>> [  200.112551]  dm_submit_bio_remap+0x46/0xa0 [dm_mod]
->>> [  200.113036]  flush_expired_bios+0x28/0x2f [dm_delay]
->> Was flush_expired_bios triggered by the path?
->>
->> __dm_destroy or __dm_suspend -> suspend_targets -> delay_presuspend
->> -> del_timer_sync(&dc->delay_timer) -> handle_delayed_timer
-> No - del_timer_sync doesn't call handle_delayed_timer.
->
-> The timer was set by "mod_timer(&dc->delay_timer, expires);". When the
-> time expires, it calls handle_delayed_timer. handle_delayed_timer calls
-> "queue_work(dc->kdelayd_wq, &dc->flush_expired_bios);" - this submits a
-> work item that calls "flush_expired_bios" and triggers this stacktrace.
-
-Ok, so the queue_timeout which sets expire timer is called by delay_map
--> delay_bio or flush_delayed_bios, and in either way the bio is originated
-from delayed_bios list.
-
->>> [  200.113536]  process_one_work+0x1b4/0x320
->>> [  200.113943]  worker_thread+0x45/0x3e0
->>> [  200.114319]  ? rescuer_thread+0x380/0x380
->>> [  200.114714]  kthread+0xc2/0x100
->>> [  200.115035]  ? kthread_complete_and_exit+0x20/0x20
->>> [  200.115517]  ret_from_fork+0x1f/0x30
->>> [  200.115874]  </TASK>
->>>
->>> The function super_written is obviously buggy, because it first wakes up a
->>> process and then calls bio_put(bio) - so the woken-up process is racing
->>> with bio_put(bio) and the result is that we attempt to free a bio into a
->>> destroyed bio set.
->> Does it mean the woken-up process destroyed the bio set?
-> Yes.
->
->> The io for super write is allocated from sync_set, and the bio set is
->> mostly destroyed in md_free_disk or md_stop, I assume md_stop is more
->> relevant here as it is called by dm-raid.
-> Yes.
->
->> So I guess the problem is, raid_dtr is called while in flight (or
->> expired) bio still not completed,
-> When device mapper calls raid_dtr, there are no external bios in progress
-> (this is guaranteed by dm design). However, the bio that writes the
-> superblock is still in progress and it races with the md_stop. I am not an
-> expert in md, so I don't know if this is OK or not.
-
-For md raid, I think the same situation can't happen given the bioset 
-can only
-be destroyed from disk_release, and block layer guarantees all bios 
-happen to
-array should be finished before release disk.
-
-Also I believe dm can guarantee all bio happened to dm should be 
-finished before
-dtr, but the bio in the call trace was issued to md layer instead of 
-inside dm, not
-sure how dm handle this case correctly.
-
-And super write bio is kind of special, it happens mostly when the 
-configuration
-of array is changed, e.g. size,  disk member, but seems mddev_detach is not
-capable to guarantee the completion of super write bio, which means when the
-path (md_stop -> __md_stop) destroys bioset, the super write bio could 
-still exist.
-Maybe it is necessary to check pending_writes for super write io in md_stop
-before bioset_exit.
-
-> maybe lvm issues cmd to call dm_table_destroy and dm was in the progress
-> of suspend or destroy. Just my $0.02.
->
->>> When I fix super_written, there are no longer any crashes. I'm posting a
->>> patch in the next email.
->> IIRC, the code existed for a long time, I'd suggest try with mdadm test
->> suite first with the change. Cc Neil too.
-> I get an error when attempting to run the testsuite:
-> [debian:/usr/src/git/mdadm]# ./test
-> Testing on linux-6.1.0-rc3 kernel
-> /usr/src/git/mdadm/tests/00createnames... FAILED - see
-> /var/tmp/00createnames.log and /var/tmp/fail00createnames.log for details
->
-> [debian:/usr/src/git/mdadm]# cat /var/tmp/00createnames.log
-> + . /usr/src/git/mdadm/tests/00createnames
-> ++ set -x -e
-> ++ _create /dev/md/name
-> ++ local DEVNAME=/dev/md/name
-> ++ local NAME=
-> ++ [[ -z '' ]]
-> ++ mdadm -CR /dev/md/name -l0 -n 1 /dev/loop0 --force
-> ++ rm -f /var/tmp/stderr
-> ++ case $* in
-> ++ case $* in
-> ++ for args in $*
-> ++ [[ -CR =~ /dev/ ]]
-> ++ for args in $*
-> ++ [[ /dev/md/name =~ /dev/ ]]
-> ++ [[ /dev/md/name =~ md ]]
-> ++ for args in $*
-> ++ [[ -l0 =~ /dev/ ]]
-> ++ for args in $*
-> ++ [[ -n =~ /dev/ ]]
-> ++ for args in $*
-> ++ [[ 1 =~ /dev/ ]]
-> ++ for args in $*
-> ++ [[ /dev/loop0 =~ /dev/ ]]
-> ++ [[ /dev/loop0 =~ md ]]
-> ++ /usr/src/git/mdadm/mdadm --zero /dev/loop0
-> mdadm: Unrecognised md component device - /dev/loop0
-> ++ for args in $*
-> ++ [[ --force =~ /dev/ ]]
-> ++ /usr/src/git/mdadm/mdadm --quiet -CR /dev/md/name -l0 -n 1 /dev/loop0
-> --force --auto=yes
-> ++ rv=1
-> ++ case $* in
-> ++ cat /var/tmp/stderr
-> mdadm: unexpected failure opening /dev/md127
-> ++ return 1
-> ++ [[ 1 != \0 ]]
-> ++ echo 'Cannot create device.'
-> Cannot create device.
-> ++ exit 1
-> mdadm: unexpected failure opening /dev/md127
->
-> [debian:/usr/src/git/mdadm]# cat /var/tmp/fail00createnames.log
-> ## debian.vm: saving dmesg.
-> ## debian.vm: saving proc mdstat.
-> Personalities : [raid0] [raid1] [raid6] [raid5] [raid4] [raid10]
-> unused devices: <none>
-> ## debian.vm: no array assembled!
-> ## debian.vm: saving dmesg.
-> ## debian.vm: saving proc mdstat.
-> Personalities : [raid0] [raid1] [raid6] [raid5] [raid4] [raid10]
-> unused devices: <none>
-> ## debian.vm: no array assembled!
-> ## debian.vm: saving dmesg.
-> ## debian.vm: saving proc mdstat.
-> Personalities : [raid0] [raid1] [raid6] [raid5] [raid4] [raid10]
-> unused devices: <none>
-> ## debian.vm: no array assembled!
-> ## debian.vm: saving dmesg.
-> ## debian.vm: saving proc mdstat.
-> Personalities : [raid0] [raid1] [raid6] [raid5] [raid4] [raid10]
-> unused devices: <none>
-> ## debian.vm: no array assembled!
-
-I guess the problem is that loop module was not loaded, but I didn't
-have experience with debian.
-
-Thanks,
-Guoqing
+Hei ja miten voit?
+Nimeni on rouva Evereen, l=C3=A4het=C3=A4n t=C3=A4m=C3=A4n viestin suurella=
+ toivolla
+v=C3=A4lit=C3=B6n vastaus, koska minun on teht=C3=A4v=C3=A4 uusi syd=C3=A4n=
+leikkaus
+t=C3=A4ll=C3=A4 hetkell=C3=A4 huonokuntoinen ja v=C3=A4h=C3=A4iset mahdolli=
+suudet selviyty=C3=A4.
+Mutta ennen kuin min=C3=A4
+Tee toinen vaarallinen operaatio, annan sen sinulle
+Minulla on 6 550 000 dollaria yhdysvaltalaisella pankkitilill=C3=A4
+sijoittamista, hallinnointia ja k=C3=A4ytt=C3=B6=C3=A4 varten
+voittoa hyv=C3=A4ntekev=C3=A4isyysprojektin toteuttamiseen. Tarkoitan saira=
+iden auttamista
+ja k=C3=B6yh=C3=A4t ovat viimeinen haluni maan p=C3=A4=C3=A4ll=C3=A4, sill=
+=C3=A4 minulla ei ole niit=C3=A4
+kenelt=C3=A4 perii rahaa.
+Vastaa minulle nopeasti
+terveisi=C3=A4
+Rouva Monika Evereen
+Florida, Amerikan Yhdysvallat
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+Hi and how are you?
+My name is Mrs. Evereen, I am sending this message with great hope for
+an immediate response, as I have to undergo heart reoperation in my
+current poor health with little chance of survival. But before I
+undertake the second dangerous operation, I will give you the
+$6,550,000 I have in my US bank account to invest well, manage and use
+the profits to run a charity project for me. I count helping the sick
+and the poor as my last wish on earth, because I have no one to
+inherit money from.
+Please give me a quick reply
+regards
+Mrs. Monika Evereen
+Florida, United States of America
