@@ -2,35 +2,35 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 74CD062CF10
-	for <lists+linux-raid@lfdr.de>; Thu, 17 Nov 2022 00:47:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B65662CF1A
+	for <lists+linux-raid@lfdr.de>; Thu, 17 Nov 2022 00:50:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234669AbiKPXq6 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 16 Nov 2022 18:46:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39678 "EHLO
+        id S237493AbiKPXuR (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 16 Nov 2022 18:50:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233688AbiKPXqp (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 16 Nov 2022 18:46:45 -0500
+        with ESMTP id S234596AbiKPXuP (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 16 Nov 2022 18:50:15 -0500
 Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0FB226F9
-        for <linux-raid@vger.kernel.org>; Wed, 16 Nov 2022 15:46:36 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ACD82937C
+        for <linux-raid@vger.kernel.org>; Wed, 16 Nov 2022 15:50:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
-        Message-Id:Date:Cc:To:From:content-disposition;
-        bh=9HNQQ7vpqG7tbLU5LWomzVfWMMKNI2PFBkHz+ntg0fE=; b=izI0MesrkGG8VRFEULe++xKVML
-        1MJrgoxb7K53W+HC6PsXu+WD+e2N4yOkr+2iJG5VrBhXJoxaxeznGzr80mh+Gl2HjLI+ROJxF1ZG+
-        6xDw2CLt0Su/y/sCPfKDpBcCR5PSqqKDzcSq2BHT2W3xKeyVhcbSI5KuXSXxbDG6PQELShAxrWphq
-        JQoqSdyEdsqKUw5DpI1hJNPcgtQjLXePZFzV/UvlUhurBOJzZMVenASGZeXnfq7JNruYo301Mc/Te
-        XsEoQbCB5UahTK43PUIlpTw5xr3XaKa/FLokSpBWJ6mYbl3kq5WmFuoQQYoVXf6zFQi0X01SEuqVb
-        Bam7ZgSA==;
+        d=deltatee.com; s=20200525; h=Subject:MIME-Version:Message-Id:Date:Cc:To:From
+        :references:content-disposition:in-reply-to;
+        bh=bgJTGYfOlIgFtkvKUid9cIPqD6De9XBkvRP1i2N0GCo=; b=TkGI3h+I4GXUZ5x/8r89lHB5kU
+        Mq0KaEtUwlf3wB/NuJGmHJmxFeBV380MuU7XihTk5mpklmby2r/jT6ZiZN705eIc6CCadjyQwdeEq
+        jVptWHHLQoGkfmVNEAWh7HN85BtsfO0/zQVdhjUIC/1f5D3yei/Hk8QbIbX8qB1BBM8AHyfe5FYNY
+        +PqkeHInSARJUxyRxiahb8FdxRPs6mwuaHB7wU97ym1mQ1z7jqLgfwplH92f7JcO89bj1JWaPuHDT
+        wjl2uMzpK3rUrXNL0nwJh1rlpkw52JngkrUp1pMAWgLy7BysMIX1IsES+trrrL0L+WOL/ZnYVyZMe
+        dzWN24xw==;
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1ovS70-0043vS-8Q; Wed, 16 Nov 2022 16:46:36 -0700
+        id 1ovSAW-0043zO-KG; Wed, 16 Nov 2022 16:50:13 -0700
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1ovS6x-000KgX-38; Wed, 16 Nov 2022 16:46:31 -0700
+        id 1ovSAW-000KnD-AK; Wed, 16 Nov 2022 16:50:12 -0700
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-raid@vger.kernel.org, Jes Sorensen <jes@trained-monkey.org>
 Cc:     Guoqing Jiang <guoqing.jiang@linux.dev>, Xiao Ni <xni@redhat.com>,
@@ -41,17 +41,14 @@ Cc:     Guoqing Jiang <guoqing.jiang@linux.dev>, Xiao Ni <xni@redhat.com>,
         Stephen Bates <sbates@raithlin.com>,
         Martin Oliveira <Martin.Oliveira@eideticom.com>,
         David Sloan <David.Sloan@eideticom.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Kinga Tanska <kinga.tanska@linux.intel.com>
-Date:   Wed, 16 Nov 2022 16:46:17 -0700
-Message-Id: <20221116234617.79441-8-logang@deltatee.com>
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Wed, 16 Nov 2022 16:50:02 -0700
+Message-Id: <20221116235009.79875-1-logang@deltatee.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221116234617.79441-1-logang@deltatee.com>
-References: <20221116234617.79441-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-raid@vger.kernel.org, jes@trained-monkey.org, guoqing.jiang@linux.dev, xni@redhat.com, colyli@suse.de, chaitanyak@nvidia.com, jm@chia.net, sbates@raithlin.com, Martin.Oliveira@eideticom.com, David.Sloan@eideticom.com, logang@deltatee.com, mariusz.tkaczyk@linux.intel.com, kinga.tanska@linux.intel.com
+X-SA-Exim-Rcpt-To: linux-raid@vger.kernel.org, jes@trained-monkey.org, guoqing.jiang@linux.dev, xni@redhat.com, mariusz.tkaczyk@linux.intel.com, colyli@suse.de, chaitanyak@nvidia.com, jm@chia.net, sbates@raithlin.com, Martin.Oliveira@eideticom.com, David.Sloan@eideticom.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,453 +56,109 @@ X-Spam-Level:
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
-Subject: [PATCH mdadm v5 3/7] Create: Factor out add_disks() helpers
+Subject: [PATCH mdadm v5 0/7] RESEND: Write Zeroes option for Creating Arrays
 X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-The Create function is massive with a very large number of variables.
-Reading and understanding the function is almost impossible. To help
-with this, factor out the two pass loop that adds the disks to the array.
+Hi,
 
-This moves about 160 lines into three new helper functions and removes
-a bunch of local variables from the main Create function. The main new
-helper function add_disks() does the two pass loop and calls into
-add_disk_to_super() and update_metadata(). Factoring out the
-latter two helpers also helps to reduce a ton of indentation.
+*Sorry, I got some new scripts that messed up the order of the send
+of the patches, this is a resend to fix the order*
 
-No functional changes intended.
+This is the next iteration of the patchset to add a zeroing option
+which bypasses the inital sync for arrays. This version of the patch
+set handles interrupts better by submitting smaller zero commands
+to the kernel in the zeroing threads so they can be interrupted
+and ensuring the main thread waits for the zeroing threads to
+finish (with an appropriate message printed to inform the user).
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Acked-by: Kinga Tanska <kinga.tanska@linux.intel.com>
----
- Create.c | 382 +++++++++++++++++++++++++++++++------------------------
- 1 file changed, 213 insertions(+), 169 deletions(-)
+This patch set adds the --write-zeroes option which will imply
+--assume-clean and write zeros to the data region in each disk before
+starting the array. This can take some time so each disk is done in
+parallel in its own fork. To make the forking code easier to
+understand this patch set also starts with some cleanup of the
+existing Create code.
 
-diff --git a/Create.c b/Create.c
-index 8ded81dc265d..6a0446644e04 100644
---- a/Create.c
-+++ b/Create.c
-@@ -91,6 +91,214 @@ int default_layout(struct supertype *st, int level, int verbose)
- 	return layout;
- }
- 
-+static int add_disk_to_super(int mdfd, struct shape *s, struct context *c,
-+		struct supertype *st, struct mddev_dev *dv,
-+		struct mdinfo *info, int have_container, int major_num)
-+{
-+	dev_t rdev;
-+	int fd;
-+
-+	if (dv->disposition == 'j') {
-+		info->disk.raid_disk = MD_DISK_ROLE_JOURNAL;
-+		info->disk.state = (1<<MD_DISK_JOURNAL);
-+	} else if (info->disk.raid_disk < s->raiddisks) {
-+		info->disk.state = (1<<MD_DISK_ACTIVE) |
-+			(1<<MD_DISK_SYNC);
-+	} else {
-+		info->disk.state = 0;
-+	}
-+
-+	if (dv->writemostly == FlagSet) {
-+		if (major_num == BITMAP_MAJOR_CLUSTERED) {
-+			pr_err("Can not set %s --write-mostly with a clustered bitmap\n",dv->devname);
-+			return 1;
-+		} else {
-+			info->disk.state |= (1<<MD_DISK_WRITEMOSTLY);
-+		}
-+
-+	}
-+
-+	if (dv->failfast == FlagSet)
-+		info->disk.state |= (1<<MD_DISK_FAILFAST);
-+
-+	if (have_container) {
-+		fd = -1;
-+	} else {
-+		if (st->ss->external && st->container_devnm[0])
-+			fd = open(dv->devname, O_RDWR);
-+		else
-+			fd = open(dv->devname, O_RDWR|O_EXCL);
-+
-+		if (fd < 0) {
-+			pr_err("failed to open %s after earlier success - aborting\n",
-+			       dv->devname);
-+			return 1;
-+		}
-+		if (!fstat_is_blkdev(fd, dv->devname, &rdev))
-+			return 1;
-+		info->disk.major = major(rdev);
-+		info->disk.minor = minor(rdev);
-+	}
-+	if (fd >= 0)
-+		remove_partitions(fd);
-+	if (st->ss->add_to_super(st, &info->disk, fd, dv->devname,
-+				 dv->data_offset)) {
-+		ioctl(mdfd, STOP_ARRAY, NULL);
-+		return 1;
-+	}
-+	st->ss->getinfo_super(st, info, NULL);
-+
-+	if (have_container && c->verbose > 0)
-+		pr_err("Using %s for device %d\n",
-+		       map_dev(info->disk.major, info->disk.minor, 0),
-+		       info->disk.number);
-+
-+	if (!have_container) {
-+		/* getinfo_super might have lost these ... */
-+		info->disk.major = major(rdev);
-+		info->disk.minor = minor(rdev);
-+	}
-+
-+	return 0;
-+}
-+
-+static int update_metadata(int mdfd, struct shape *s, struct supertype *st,
-+			   struct map_ent **map, struct mdinfo *info,
-+			   char *chosen_name)
-+{
-+	struct mdinfo info_new;
-+	struct map_ent *me = NULL;
-+
-+	/* check to see if the uuid has changed due to these
-+	 * metadata changes, and if so update the member array
-+	 * and container uuid.  Note ->write_init_super clears
-+	 * the subarray cursor such that ->getinfo_super once
-+	 * again returns container info.
-+	 */
-+	st->ss->getinfo_super(st, &info_new, NULL);
-+	if (st->ss->external && is_container(s->level) &&
-+	    !same_uuid(info_new.uuid, info->uuid, 0)) {
-+		map_update(map, fd2devnm(mdfd),
-+			   info_new.text_version,
-+			   info_new.uuid, chosen_name);
-+		me = map_by_devnm(map, st->container_devnm);
-+	}
-+
-+	if (st->ss->write_init_super(st)) {
-+		st->ss->free_super(st);
-+		return 1;
-+	}
-+
-+	/*
-+	 * Before activating the array, perform extra steps
-+	 * required to configure the internal write-intent
-+	 * bitmap.
-+	 */
-+	if (info_new.consistency_policy == CONSISTENCY_POLICY_BITMAP &&
-+	    st->ss->set_bitmap && st->ss->set_bitmap(st, info)) {
-+		st->ss->free_super(st);
-+		return 1;
-+	}
-+
-+	/* update parent container uuid */
-+	if (me) {
-+		char *path = xstrdup(me->path);
-+
-+		st->ss->getinfo_super(st, &info_new, NULL);
-+		map_update(map, st->container_devnm, info_new.text_version,
-+			   info_new.uuid, path);
-+		free(path);
-+	}
-+
-+	flush_metadata_updates(st);
-+	st->ss->free_super(st);
-+
-+	return 0;
-+}
-+
-+static int add_disks(int mdfd, struct mdinfo *info, struct shape *s,
-+		     struct context *c, struct supertype *st,
-+		     struct map_ent **map, struct mddev_dev *devlist,
-+		     int total_slots, int have_container, int insert_point,
-+		     int major_num, char *chosen_name)
-+{
-+	struct mddev_dev *moved_disk = NULL;
-+	int pass, raid_disk_num, dnum;
-+	struct mddev_dev *dv;
-+	struct mdinfo *infos;
-+	int ret = 0;
-+
-+	infos = xmalloc(sizeof(*infos) * total_slots);
-+	enable_fds(total_slots);
-+	for (pass = 1; pass <= 2; pass++) {
-+		for (dnum = 0, raid_disk_num = 0, dv = devlist; dv;
-+		     dv = (dv->next) ? (dv->next) : moved_disk, dnum++) {
-+			if (dnum >= total_slots)
-+				abort();
-+			if (dnum == insert_point) {
-+				raid_disk_num += 1;
-+				moved_disk = dv;
-+				continue;
-+			}
-+			if (strcasecmp(dv->devname, "missing") == 0) {
-+				raid_disk_num += 1;
-+				continue;
-+			}
-+			if (have_container)
-+				moved_disk = NULL;
-+			if (have_container && dnum < total_slots - 1)
-+				/* repeatedly use the container */
-+				moved_disk = dv;
-+
-+			switch(pass) {
-+			case 1:
-+				infos[dnum] = *info;
-+				infos[dnum].disk.number = dnum;
-+				infos[dnum].disk.raid_disk = raid_disk_num++;
-+
-+				if (dv->disposition == 'j')
-+					raid_disk_num--;
-+
-+				ret = add_disk_to_super(mdfd, s, c, st, dv,
-+						&infos[dnum], have_container,
-+						major_num);
-+				if (ret)
-+					goto out;
-+
-+				break;
-+			case 2:
-+				infos[dnum].errors = 0;
-+
-+				ret = add_disk(mdfd, st, info, &infos[dnum]);
-+				if (ret) {
-+					pr_err("ADD_NEW_DISK for %s failed: %s\n",
-+					       dv->devname, strerror(errno));
-+					if (errno == EINVAL &&
-+					    info->array.level == 0) {
-+						pr_err("Possibly your kernel doesn't support RAID0 layouts.\n");
-+						pr_err("Either upgrade, or use --layout=dangerous\n");
-+					}
-+					goto out;
-+				}
-+				break;
-+			}
-+			if (!have_container &&
-+			    dv == moved_disk && dnum != insert_point) break;
-+		}
-+
-+		if (pass == 1) {
-+			ret = update_metadata(mdfd, s, st, map, info,
-+					      chosen_name);
-+			if (ret)
-+				goto out;
-+		}
-+	}
-+
-+out:
-+	free(infos);
-+	return ret;
-+}
-+
- int Create(struct supertype *st, char *mddev,
- 	   char *name, int *uuid,
- 	   int subdevs, struct mddev_dev *devlist,
-@@ -117,7 +325,7 @@ int Create(struct supertype *st, char *mddev,
- 	unsigned long long minsize = 0, maxsize = 0;
- 	char *mindisc = NULL;
- 	char *maxdisc = NULL;
--	int dnum, raid_disk_num;
-+	int dnum;
- 	struct mddev_dev *dv;
- 	dev_t rdev;
- 	int fail = 0, warn = 0;
-@@ -126,14 +334,13 @@ int Create(struct supertype *st, char *mddev,
- 	int missing_disks = 0;
- 	int insert_point = subdevs * 2; /* where to insert a missing drive */
- 	int total_slots;
--	int pass;
- 	int rv;
- 	int bitmap_fd;
- 	int have_container = 0;
- 	int container_fd = -1;
- 	int need_mdmon = 0;
- 	unsigned long long bitmapsize;
--	struct mdinfo info, *infos;
-+	struct mdinfo info;
- 	int did_default = 0;
- 	int do_default_layout = 0;
- 	int do_default_chunk = 0;
-@@ -869,174 +1076,11 @@ int Create(struct supertype *st, char *mddev,
- 		}
- 	}
- 
--	infos = xmalloc(sizeof(*infos) * total_slots);
--	enable_fds(total_slots);
--	for (pass = 1; pass <= 2; pass++) {
--		struct mddev_dev *moved_disk = NULL; /* the disk that was moved out of the insert point */
--
--		for (dnum = 0, raid_disk_num = 0, dv = devlist; dv;
--		     dv = (dv->next) ? (dv->next) : moved_disk, dnum++) {
--			int fd;
--			struct mdinfo *inf = &infos[dnum];
--
--			if (dnum >= total_slots)
--				abort();
--			if (dnum == insert_point) {
--				raid_disk_num += 1;
--				moved_disk = dv;
--				continue;
--			}
--			if (strcasecmp(dv->devname, "missing") == 0) {
--				raid_disk_num += 1;
--				continue;
--			}
--			if (have_container)
--				moved_disk = NULL;
--			if (have_container && dnum < info.array.raid_disks - 1)
--				/* repeatedly use the container */
--				moved_disk = dv;
--
--			switch(pass) {
--			case 1:
--				*inf = info;
--
--				inf->disk.number = dnum;
--				inf->disk.raid_disk = raid_disk_num++;
--
--				if (dv->disposition == 'j') {
--					inf->disk.raid_disk = MD_DISK_ROLE_JOURNAL;
--					inf->disk.state = (1<<MD_DISK_JOURNAL);
--					raid_disk_num--;
--				} else if (inf->disk.raid_disk < s->raiddisks)
--					inf->disk.state = (1<<MD_DISK_ACTIVE) |
--						(1<<MD_DISK_SYNC);
--				else
--					inf->disk.state = 0;
--
--				if (dv->writemostly == FlagSet) {
--					if (major_num == BITMAP_MAJOR_CLUSTERED) {
--						pr_err("Can not set %s --write-mostly with a clustered bitmap\n",dv->devname);
--						goto abort_locked;
--					} else
--						inf->disk.state |= (1<<MD_DISK_WRITEMOSTLY);
--				}
--				if (dv->failfast == FlagSet)
--					inf->disk.state |= (1<<MD_DISK_FAILFAST);
--
--				if (have_container)
--					fd = -1;
--				else {
--					if (st->ss->external &&
--					    st->container_devnm[0])
--						fd = open(dv->devname, O_RDWR);
--					else
--						fd = open(dv->devname, O_RDWR|O_EXCL);
--
--					if (fd < 0) {
--						pr_err("failed to open %s after earlier success - aborting\n",
--							dv->devname);
--						goto abort_locked;
--					}
--					if (!fstat_is_blkdev(fd, dv->devname, &rdev))
--						goto abort_locked;
--					inf->disk.major = major(rdev);
--					inf->disk.minor = minor(rdev);
--				}
--				if (fd >= 0)
--					remove_partitions(fd);
--				if (st->ss->add_to_super(st, &inf->disk,
--							 fd, dv->devname,
--							 dv->data_offset)) {
--					ioctl(mdfd, STOP_ARRAY, NULL);
--					goto abort_locked;
--				}
--				st->ss->getinfo_super(st, inf, NULL);
--
--				if (have_container && c->verbose > 0)
--					pr_err("Using %s for device %d\n",
--						map_dev(inf->disk.major,
--							inf->disk.minor,
--							0), dnum);
--
--				if (!have_container) {
--					/* getinfo_super might have lost these ... */
--					inf->disk.major = major(rdev);
--					inf->disk.minor = minor(rdev);
--				}
--				break;
--			case 2:
--				inf->errors = 0;
--
--				rv = add_disk(mdfd, st, &info, inf);
--
--				if (rv) {
--					pr_err("ADD_NEW_DISK for %s failed: %s\n",
--					       dv->devname, strerror(errno));
--					if (errno == EINVAL &&
--					    info.array.level == 0) {
--						pr_err("Possibly your kernel doesn't support RAID0 layouts.\n");
--						pr_err("Either upgrade, or use --layout=dangerous\n");
--					}
--					goto abort_locked;
--				}
--				break;
--			}
--			if (!have_container &&
--			    dv == moved_disk && dnum != insert_point) break;
--		}
--		if (pass == 1) {
--			struct mdinfo info_new;
--			struct map_ent *me = NULL;
--
--			/* check to see if the uuid has changed due to these
--			 * metadata changes, and if so update the member array
--			 * and container uuid.  Note ->write_init_super clears
--			 * the subarray cursor such that ->getinfo_super once
--			 * again returns container info.
--			 */
--			st->ss->getinfo_super(st, &info_new, NULL);
--			if (st->ss->external && !is_container(s->level) &&
--			    !same_uuid(info_new.uuid, info.uuid, 0)) {
--				map_update(&map, fd2devnm(mdfd),
--					   info_new.text_version,
--					   info_new.uuid, chosen_name);
--				me = map_by_devnm(&map, st->container_devnm);
--			}
--
--			if (st->ss->write_init_super(st)) {
--				st->ss->free_super(st);
--				goto abort_locked;
--			}
--			/*
--			 * Before activating the array, perform extra steps
--			 * required to configure the internal write-intent
--			 * bitmap.
--			 */
--			if (info_new.consistency_policy ==
--				    CONSISTENCY_POLICY_BITMAP &&
--			    st->ss->set_bitmap &&
--			    st->ss->set_bitmap(st, &info)) {
--				st->ss->free_super(st);
--				goto abort_locked;
--			}
--
--			/* update parent container uuid */
--			if (me) {
--				char *path = xstrdup(me->path);
--
--				st->ss->getinfo_super(st, &info_new, NULL);
--				map_update(&map, st->container_devnm,
--					   info_new.text_version,
--					   info_new.uuid, path);
--				free(path);
--			}
-+	if (add_disks(mdfd, &info, s, c, st, &map, devlist, total_slots,
-+		      have_container, insert_point, major_num, chosen_name))
-+		goto abort_locked;
- 
--			flush_metadata_updates(st);
--			st->ss->free_super(st);
--		}
--	}
- 	map_unlock(&map);
--	free(infos);
- 
- 	if (is_container(s->level)) {
- 		/* No need to start.  But we should signal udev to
--- 
+We tested write-zeroes requests on a number of modern nvme drives of
+various manufacturers and found most are not as optimized as the
+discard path. A couple drives that were tested did not support
+write-zeroes at all but still performed similarly with the kernel
+falling back to writing zero pages. Typically we see it take on the
+order of one minute per 100GB of data zeroed.
+
+One reason write-zeroes is slower than discard is that today's NVMe
+devices only allow about 2MB to be zeroed in one command where as
+the entire drive can typically be discarded in one command. Partly,
+this is a limitation of the spec as there are only 16 bits avalaible
+in the write-zeros command size but drives still don't max this out.
+Hopefully, in the future this will all be optimized a bit more
+and this work will be able to take advantage of that.
+
+Logan
+
+--
+
+Changes since v4:
+   * Handle SIGINT better. Previous versions would leave the zeroing
+     processes behind after the main thread exitted which would
+     continue zeroing in the background (possibly for some time).
+     This version splits the zero fallocate commands up so they can be
+     interrupted quicker, and intercepts SIGINT in the main thread
+     to print an appropriate message and wait for the threads
+     to finish up. (as noticed by Xiao)
+
+Changes since v3:
+   * Store the pid in a local variable instead of the mdinfo struct
+    (per Mariusz and Xiao)
+
+Changes since v2:
+
+   * Use write-zeroes instead of discard to zero the disks (per
+     Martin)
+   * Due to the time required to zero the disks, each disk is
+     now done in parallel with separate forks of the process.
+   * In order to add the forking some refactoring was done on the
+     Create() function to make it easier to understand
+   * Added a pr_info() call so that some prints can be done
+     to stdout instead of stdour (per Mariusz)
+   * Added KIB_TO_BYTES and SEC_TO_BYTES helpers (per Mariusz)
+   * Added a test to the mdadm test suite to test the option
+     works.
+   * Fixed up how the size and offset are calculated with some
+     great information from Xiao.
+
+Changes since v1:
+
+   * Discard the data in the devices later in the create process
+     while they are already open. This requires treating the
+     s.discard option the same as the s.assume_clean option.
+     Per Mariusz.
+   * A couple other minor cleanup changes from Mariusz.
+
+--
+
+Logan Gunthorpe (7):
+  Create: goto abort_locked instead of return 1 in error path
+  Create: remove safe_mode_delay local variable
+  Create: Factor out add_disks() helpers
+  mdadm: Introduce pr_info()
+  mdadm: Add --write-zeros option for Create
+  tests/00raid5-zero: Introduce test to exercise --write-zeros.
+  manpage: Add --write-zeroes option to manpage
+
+ Create.c           | 562 +++++++++++++++++++++++++++++++--------------
+ ReadMe.c           |   2 +
+ mdadm.8.in         |  16 ++
+ mdadm.c            |   9 +
+ mdadm.h            |   7 +
+ tests/00raid5-zero |  12 +
+ 6 files changed, 433 insertions(+), 175 deletions(-)
+ create mode 100644 tests/00raid5-zero
+
+
+base-commit: 8b668d4aa3305af5963162b7499b128bd71f8f29
+--
 2.30.2
-
