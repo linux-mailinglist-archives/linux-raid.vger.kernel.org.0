@@ -2,35 +2,35 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 577E263699E
-	for <lists+linux-raid@lfdr.de>; Wed, 23 Nov 2022 20:10:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C6156369A0
+	for <lists+linux-raid@lfdr.de>; Wed, 23 Nov 2022 20:10:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239790AbiKWTKF (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 23 Nov 2022 14:10:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40972 "EHLO
+        id S239782AbiKWTKM (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 23 Nov 2022 14:10:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239773AbiKWTKE (ORCPT
+        with ESMTP id S239783AbiKWTKE (ORCPT
         <rfc822;linux-raid@vger.kernel.org>); Wed, 23 Nov 2022 14:10:04 -0500
 Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BF868FB3F
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93DB38FE64
         for <linux-raid@vger.kernel.org>; Wed, 23 Nov 2022 11:10:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
         Message-Id:Date:Cc:To:From:content-disposition;
-        bh=BtJOqeCS7SNVXx7/5uk1g4w35hWKG91Ntf3f/X0gC7M=; b=t7xoOshEUxkdaF3RXYZocFKO/6
-        soRvxZyJkyHY8T5t6MdJixXjP/W8x0+KDEF8oxd2E8/cD8x3GJ/60AMA9TEQSIuFfp5wdoeYPchgv
-        6EfYPsrSfVsXSIXXxKJ4qttFHlPIRkJCMZ7zZwF+kKncJPTQndMPBVjuwuaWcvHFU82ZmLh/yKo5P
-        ODEhiXdxdNOVN4cFy94FkOWlUKY9CYcypo1UzamnuFO6aBePs0VUqSG1L6VNdRuW+IfU1C/Ansjdj
-        O43XagNWmKmCHVswKrZCD4Lb2Tg0mXGdNU3FC4rOjky3EI1NYaUOrzlDQVpqxcCrFR29WsABxT+QI
-        mpWMDnMQ==;
+        bh=rlxtNyPmFWFPQgVVnPcBXfpoPxvJcmCLlS4oCAhQclo=; b=WvrBFccjfRiAZUPs1neoQ8geOG
+        5RdWsE69zBe2zCiOgpyKSVuG+2rcNi3uKclL7KaiFEZ5KrDShwfleJVrbcON2Hq/28Rz9A5H/YDzG
+        2bB4guZs/lrXIK37PiBVR09DdX62ksnr5ZKcp4+6xInJYhlcsdJOFrPIvlOS8NYeLedRud614ZwAt
+        vr4F2PmX+FkmDVhG1szlL1YY9agEkPkBNAQOpbK6RFXfK/9tdk4zApERh6rYgTIMXfu9DQthT09pj
+        uC9rRQ/FDDHyW0T07SWelXNALrxTtBeFekRmWRPPZoO6O5EFUuh+p51wPBOuzx2z2GBxzhUhQmX9Z
+        IYLiYx+g==;
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1oxv8B-009Siy-EC; Wed, 23 Nov 2022 12:10:00 -0700
+        id 1oxv8B-009Siz-EC; Wed, 23 Nov 2022 12:10:01 -0700
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1oxv88-000OpV-Mk; Wed, 23 Nov 2022 12:09:56 -0700
+        id 1oxv88-000OpY-QF; Wed, 23 Nov 2022 12:09:56 -0700
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-raid@vger.kernel.org, Jes Sorensen <jes@trained-monkey.org>
 Cc:     Guoqing Jiang <guoqing.jiang@linux.dev>, Xiao Ni <xni@redhat.com>,
@@ -43,8 +43,8 @@ Cc:     Guoqing Jiang <guoqing.jiang@linux.dev>, Xiao Ni <xni@redhat.com>,
         David Sloan <David.Sloan@eideticom.com>,
         Logan Gunthorpe <logang@deltatee.com>,
         Kinga Tanska <kinga.tanska@linux.intel.com>
-Date:   Wed, 23 Nov 2022 12:09:48 -0700
-Message-Id: <20221123190954.95391-2-logang@deltatee.com>
+Date:   Wed, 23 Nov 2022 12:09:49 -0700
+Message-Id: <20221123190954.95391-3-logang@deltatee.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20221123190954.95391-1-logang@deltatee.com>
 References: <20221123190954.95391-1-logang@deltatee.com>
@@ -59,36 +59,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
-Subject: [PATCH mdadm v6 1/7] Create: goto abort_locked instead of return 1 in error path
+Subject: [PATCH mdadm v6 2/7] Create: remove safe_mode_delay local variable
 X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-The return 1 after the fstat_is_blkdev() check should be replaced
-with an error return that goes through the error path to unlock
-resources locked by this function.
+All .getinfo_super() call sets the info.safe_mode_delay variables
+to a constant value, so no matter what the current state is
+that function will always set it to the same value.
+
+Create() calls .getinfo_super() multiple times while creating the array.
+The value is stored in a local variable for every disk in the loop
+to add disks (so the last disc call takes precedence). The local
+variable is then used in the call to sysfs_set_safemode().
+
+This can be simplified by using info.safe_mode_delay directly. The info
+variable had .getinfo_super() called on it early in the function so, by the
+reasoning above, it will have the same value as the local variable which
+can thus be removed.
+
+Doing this allows for factoring out code from Create() in a subsequent
+patch.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 Acked-by: Kinga Tanska <kinga.tanska@linux.intel.com>
 ---
- Create.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Create.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/Create.c b/Create.c
-index 953e73722518..2e8203ecdccd 100644
+index 2e8203ecdccd..8ded81dc265d 100644
 --- a/Create.c
 +++ b/Create.c
-@@ -939,7 +939,7 @@ int Create(struct supertype *st, char *mddev,
- 						goto abort_locked;
- 					}
- 					if (!fstat_is_blkdev(fd, dv->devname, &rdev))
--						return 1;
-+						goto abort_locked;
- 					inf->disk.major = major(rdev);
- 					inf->disk.minor = minor(rdev);
+@@ -137,7 +137,6 @@ int Create(struct supertype *st, char *mddev,
+ 	int did_default = 0;
+ 	int do_default_layout = 0;
+ 	int do_default_chunk = 0;
+-	unsigned long safe_mode_delay = 0;
+ 	char chosen_name[1024];
+ 	struct map_ent *map = NULL;
+ 	unsigned long long newsize;
+@@ -952,7 +951,6 @@ int Create(struct supertype *st, char *mddev,
+ 					goto abort_locked;
  				}
+ 				st->ss->getinfo_super(st, inf, NULL);
+-				safe_mode_delay = inf->safe_mode_delay;
+ 
+ 				if (have_container && c->verbose > 0)
+ 					pr_err("Using %s for device %d\n",
+@@ -1065,7 +1063,7 @@ int Create(struct supertype *st, char *mddev,
+ 						    "readonly");
+ 				break;
+ 			}
+-			sysfs_set_safemode(&info, safe_mode_delay);
++			sysfs_set_safemode(&info, info.safe_mode_delay);
+ 			if (err) {
+ 				pr_err("failed to activate array.\n");
+ 				ioctl(mdfd, STOP_ARRAY, NULL);
 -- 
 2.30.2
 
