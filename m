@@ -2,75 +2,162 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 43E7D635AF3
-	for <lists+linux-raid@lfdr.de>; Wed, 23 Nov 2022 12:05:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E91426369A2
+	for <lists+linux-raid@lfdr.de>; Wed, 23 Nov 2022 20:10:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237203AbiKWLEU (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 23 Nov 2022 06:04:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36500 "EHLO
+        id S239817AbiKWTKI (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 23 Nov 2022 14:10:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237222AbiKWLD6 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 23 Nov 2022 06:03:58 -0500
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B23A12D23
-        for <linux-raid@vger.kernel.org>; Wed, 23 Nov 2022 03:00:31 -0800 (PST)
-Received: by mail-ed1-x535.google.com with SMTP id l24so11749104edj.8
-        for <linux-raid@vger.kernel.org>; Wed, 23 Nov 2022 03:00:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ddKdS4x8c4ZSI9PbKdla4xMHlbecpUYnHnf7KqPY/v4=;
-        b=cIOG5ZDiCrgD7AZ13BEWrnYVz7xO/rdANSTRMp38BAoYaQhbgiOr3fRNGv8Hji/kY+
-         txPz/BaS6q5QWIEuCoiSi5Ybo/RRbNGAgWUb3jSiwFjvpKLJT3TqbpiCMkj/rsmRLPvB
-         SXQwmQjZw6CVCUHtG3YweBsH5fOPl8C+3udiblItW1M3BrEtz5y2lwn7Qk+JZ/kwiddy
-         ba3GlDhglutZpAmljTV4KzkctKK0HhEDRWogkccFEwcwXlDWRE66PLkAA9MmjWyEJnJT
-         /n8E7oJ/mlN65ZQIaRRV9Heas5Cz2YsbJkAAbYB9TO+NUAfUsAMH+Fcoe4bISnLuxlTc
-         7d/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ddKdS4x8c4ZSI9PbKdla4xMHlbecpUYnHnf7KqPY/v4=;
-        b=JytrDSSuIVocNJsCuaGyKgOjVRlFuidDlpx/tL9UjVPBfFXsGtKPNKnf1qml2WXxkO
-         q+eFf9Rcb13+ltaFHIovz2tSlxF+sVK6tF7vR2YVvRdSgmIhrHH/W57gLoNCMcwq1u1z
-         SmBiNMl+paRGNVTL29F3dUEuDWpK1ZlxyaqVYUaqXLkYrPblz+kUmkkE2WqJJcFZ8vkV
-         7mQIemr2tjJvnQ0eb15ZzRf94TR54A3NnO1MLtuO9E7ylyqRotktQRfIM7h2QXnrylIa
-         aTUMDc8tExl3VvLSfS+N5qDNt9QPsIcfwMTvFhgl1IHvd3czgBSTi8wR/6BAhhn80oM7
-         AnFw==
-X-Gm-Message-State: ANoB5pmXaIgTTV9YYsDOkC61fIdSJvI02lyGscn3l2+MR9zk3vB7zfBJ
-        txKp06yDBVro9DlgSIlx+/RKGcwBI72I426HvxY=
-X-Google-Smtp-Source: AA0mqf7QR5YoEddEBUw1vdHIweUVEEdAn116+c0tneN6JuGtfJsNTiXt/PMRonVtRki6mns2RUNxz6TTqja0No/RSJ8=
-X-Received: by 2002:a05:6402:181:b0:461:ea0c:e151 with SMTP id
- r1-20020a056402018100b00461ea0ce151mr10850563edv.376.1669201229565; Wed, 23
- Nov 2022 03:00:29 -0800 (PST)
+        with ESMTP id S239666AbiKWTKE (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 23 Nov 2022 14:10:04 -0500
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C1188FE47
+        for <linux-raid@vger.kernel.org>; Wed, 23 Nov 2022 11:10:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:MIME-Version:Message-Id:Date:Cc:To:From
+        :references:content-disposition:in-reply-to;
+        bh=BrvQ8NBSzQ4Rm/HPN86qTW3eeXaJulms19jNw5KLn+U=; b=J8KZ+1q/ykKEbd12BY43w9XG04
+        WK2485+misrDapLCMiIfFcrVUlxSkt02PdSBiXDUTTqSEH5UUUdo+cpZsx17qeF2xWNNxjSd0mz8K
+        ArwdyP+o+TVCEgtmQbiNHirmJ3v3JylqrHztnr+R8+R+ai8blMR6AwwUUE2+092ej1tj9HY5Nnk70
+        gzDCVp6ZQ/Ik/l9nkDvD6mp6XTXWb0iFBKb5fUdK3O4EQ8oCYNkm+tP5yz6DHpDKp33zOfqD27nXR
+        ANRNAI5apKa3cHYLSu9MdyvziZhp68JMMD5Y3tEnX/MQiHp/zLD9C7/OhBu15Jl4DjUHYEQWDz6NP
+        JehR+htQ==;
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1oxv8B-009Six-E8; Wed, 23 Nov 2022 12:10:00 -0700
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1oxv88-000OpT-Jm; Wed, 23 Nov 2022 12:09:56 -0700
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-raid@vger.kernel.org, Jes Sorensen <jes@trained-monkey.org>
+Cc:     Guoqing Jiang <guoqing.jiang@linux.dev>, Xiao Ni <xni@redhat.com>,
+        Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
+        Coly Li <colyli@suse.de>,
+        Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+        Jonmichael Hands <jm@chia.net>,
+        Stephen Bates <sbates@raithlin.com>,
+        Martin Oliveira <Martin.Oliveira@eideticom.com>,
+        David Sloan <David.Sloan@eideticom.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Wed, 23 Nov 2022 12:09:47 -0700
+Message-Id: <20221123190954.95391-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Received: by 2002:a05:6f02:4097:b0:26:957f:2a0f with HTTP; Wed, 23 Nov 2022
- 03:00:28 -0800 (PST)
-Reply-To: subik7633@gmail.com
-From:   Susan Bikram <sokportina@gmail.com>
-Date:   Wed, 23 Nov 2022 03:00:28 -0800
-Message-ID: <CANEE7CobmmK524J3WVb+ePr9a_8sWHb9dv2H0JGLuH8HQpYERA@mail.gmail.com>
-Subject: Please can i have your attention
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-raid@vger.kernel.org, jes@trained-monkey.org, guoqing.jiang@linux.dev, xni@redhat.com, mariusz.tkaczyk@linux.intel.com, colyli@suse.de, chaitanyak@nvidia.com, jm@chia.net, sbates@raithlin.com, Martin.Oliveira@eideticom.com, David.Sloan@eideticom.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
+Subject: [PATCH mdadm v6 0/7] Write Zeroes option for Creating Arrays
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Dear ,
+Hi,
 
-Please can I have your attention and possibly help me for humanity's
-sake please. I am writing this message with a heavy heart filled with
-sorrows and sadness.
-Please if you can respond, i have an issue that i will be most
-grateful if you could help me deal with it please.
+This is the next iteration of the patchset to add a zeroing option
+which bypasses the inital sync for arrays. This version of the patch
+set fixes an unitialized variable bug in v5.
 
-Susan
+This patch set adds the --write-zeroes option which will imply
+--assume-clean and write zeros to the data region in each disk before
+starting the array. This can take some time so each disk is done in
+parallel in its own fork. To make the forking code easier to
+understand this patch set also starts with some cleanup of the
+existing Create code.
+
+We tested write-zeroes requests on a number of modern nvme drives of
+various manufacturers and found most are not as optimized as the
+discard path. A couple drives that were tested did not support
+write-zeroes at all but still performed similarly with the kernel
+falling back to writing zero pages. Typically we see it take on the
+order of one minute per 100GB of data zeroed.
+
+One reason write-zeroes is slower than discard is that today's NVMe
+devices only allow about 2MB to be zeroed in one command where as
+the entire drive can typically be discarded in one command. Partly,
+this is a limitation of the spec as there are only 16 bits avalaible
+in the write-zeros command size but drives still don't max this out.
+Hopefully, in the future this will all be optimized a bit more
+and this work will be able to take advantage of that.
+
+Logan
+
+--
+
+Changes since v5:
+   * Ensure 'interrupted' is initialized in wait_for_zero_forks().
+     (as noticed by Xiao)
+   * Print a message indicating that the zeroing was interrupted.
+
+Changes since v4:
+   * Handle SIGINT better. Previous versions would leave the zeroing
+     processes behind after the main thread exitted which would
+     continue zeroing in the background (possibly for some time).
+     This version splits the zero fallocate commands up so they can be
+     interrupted quicker, and intercepts SIGINT in the main thread
+     to print an appropriate message and wait for the threads
+     to finish up. (as noticed by Xiao)
+
+Changes since v3:
+   * Store the pid in a local variable instead of the mdinfo struct
+    (per Mariusz and Xiao)
+
+Changes since v2:
+
+   * Use write-zeroes instead of discard to zero the disks (per
+     Martin)
+   * Due to the time required to zero the disks, each disk is
+     now done in parallel with separate forks of the process.
+   * In order to add the forking some refactoring was done on the
+     Create() function to make it easier to understand
+   * Added a pr_info() call so that some prints can be done
+     to stdout instead of stdour (per Mariusz)
+   * Added KIB_TO_BYTES and SEC_TO_BYTES helpers (per Mariusz)
+   * Added a test to the mdadm test suite to test the option
+     works.
+   * Fixed up how the size and offset are calculated with some
+     great information from Xiao.
+
+Changes since v1:
+
+   * Discard the data in the devices later in the create process
+     while they are already open. This requires treating the
+     s.discard option the same as the s.assume_clean option.
+     Per Mariusz.
+   * A couple other minor cleanup changes from Mariusz.
+
+--
+
+Logan Gunthorpe (7):
+  Create: goto abort_locked instead of return 1 in error path
+  Create: remove safe_mode_delay local variable
+  Create: Factor out add_disks() helpers
+  mdadm: Introduce pr_info()
+  mdadm: Add --write-zeros option for Create
+  tests/00raid5-zero: Introduce test to exercise --write-zeros.
+  manpage: Add --write-zeroes option to manpage
+
+ Create.c           | 564 +++++++++++++++++++++++++++++++--------------
+ ReadMe.c           |   2 +
+ mdadm.8.in         |  16 ++
+ mdadm.c            |   9 +
+ mdadm.h            |   7 +
+ tests/00raid5-zero |  12 +
+ 6 files changed, 435 insertions(+), 175 deletions(-)
+ create mode 100644 tests/00raid5-zero
+
+
+base-commit: 8b668d4aa3305af5963162b7499b128bd71f8f29
+--
+2.30.2
