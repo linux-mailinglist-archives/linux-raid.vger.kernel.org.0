@@ -2,31 +2,33 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B94EB639E3E
-	for <lists+linux-raid@lfdr.de>; Mon, 28 Nov 2022 00:40:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 88180639EE5
+	for <lists+linux-raid@lfdr.de>; Mon, 28 Nov 2022 02:26:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229606AbiK0Xkx (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 27 Nov 2022 18:40:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41544 "EHLO
+        id S229664AbiK1B0d (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 27 Nov 2022 20:26:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229533AbiK0Xkw (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 27 Nov 2022 18:40:52 -0500
-Received: from smtp.hosts.co.uk (smtp.hosts.co.uk [85.233.160.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE585BCA4
-        for <linux-raid@vger.kernel.org>; Sun, 27 Nov 2022 15:40:50 -0800 (PST)
-Received: from host86-138-24-20.range86-138.btcentralplus.com ([86.138.24.20] helo=[192.168.1.65])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1ozNDZ-0007ZZ-DZ;
-        Sun, 27 Nov 2022 19:21:33 +0000
-Message-ID: <2c013c78-99ca-df05-117a-2f58b237b595@youngman.org.uk>
-Date:   Sun, 27 Nov 2022 19:21:31 +0000
+        with ESMTP id S229695AbiK1B0c (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 27 Nov 2022 20:26:32 -0500
+Received: from mail.thelounge.net (mail.thelounge.net [91.118.73.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A40C833A
+        for <linux-raid@vger.kernel.org>; Sun, 27 Nov 2022 17:26:30 -0800 (PST)
+Received: from [10.10.10.2] (rh.vpn.thelounge.net [10.10.10.2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-256))
+        (No client certificate requested)
+        (Authenticated sender: h.reindl@thelounge.net)
+        by mail.thelounge.net (THELOUNGE MTA) with ESMTPSA id 4NL7903n3nzXLf;
+        Mon, 28 Nov 2022 02:26:28 +0100 (CET)
+Message-ID: <d28810e6-7a6d-86c3-fb59-55d45e5fcdc0@thelounge.net>
+Date:   Mon, 28 Nov 2022 02:26:28 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.0
 Subject: Re: how do i fix these RAID5 arrays?
-Content-Language: en-GB
-To:     Roman Mamedov <rm@romanrm.net>
+Content-Language: en-US
+To:     Wol <antlists@youngman.org.uk>, Roman Mamedov <rm@romanrm.net>
 Cc:     John Stoffel <john@stoffel.org>,
         David T-G <davidtg-robot@justpickone.org>,
         Linux RAID list <linux-raid@vger.kernel.org>
@@ -39,12 +41,14 @@ References: <20221123220736.GD19721@jpo> <20221124032821.628cd042@nvm>
  <7316d29a-bab6-b8a2-5c77-803af8de378b@thelounge.net>
  <fd6a2f41-405a-7ec7-e8f1-c970e32973c4@youngman.org.uk>
  <20221127230828.3cfe728b@nvm>
-From:   Wol <antlists@youngman.org.uk>
-In-Reply-To: <20221127230828.3cfe728b@nvm>
+ <2c013c78-99ca-df05-117a-2f58b237b595@youngman.org.uk>
+From:   Reindl Harald <h.reindl@thelounge.net>
+Organization: the lounge interactive design
+In-Reply-To: <2c013c78-99ca-df05-117a-2f58b237b595@youngman.org.uk>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
+X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
         SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -52,23 +56,31 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 27/11/2022 18:08, Roman Mamedov wrote:
-> On Sun, 27 Nov 2022 14:33:37 +0000
-> Wol <antlists@youngman.org.uk> wrote:
-> 
->> If raid supports trim, that means it intercepts the trim commands, and
->> uses it to keep track of what's being used by the layer above.
->>
->> In other words, if the filesystem is only using 10% of the disk,
->> supporting trim means that raid knows which 10% is being used and only
->> bothers syncing that!
-> 
-> Not sure which RAID system you are speaking of, but that's not presently
-> implemented in mdadm RAID. It does not use TRIM of the array to keep track of
-> unused areas on the underlying devices, to skip those during rebuilds. And I
-> am unaware of any other RAID that does. Would be nice to have though.
-> 
-Yup that's what I was saying - it would very much be a "nice to have".
 
-Cheers,
-Wol
+
+Am 27.11.22 um 20:21 schrieb Wol:
+> On 27/11/2022 18:08, Roman Mamedov wrote:
+>> On Sun, 27 Nov 2022 14:33:37 +0000
+>> Wol <antlists@youngman.org.uk> wrote:
+>>
+>>> If raid supports trim, that means it intercepts the trim commands, and
+>>> uses it to keep track of what's being used by the layer above.
+>>>
+>>> In other words, if the filesystem is only using 10% of the disk,
+>>> supporting trim means that raid knows which 10% is being used and only
+>>> bothers syncing that!
+>>
+>> Not sure which RAID system you are speaking of, but that's not presently
+>> implemented in mdadm RAID. It does not use TRIM of the array to keep 
+>> track of
+>> unused areas on the underlying devices, to skip those during rebuilds. 
+>> And I
+>> am unaware of any other RAID that does. Would be nice to have though.
+>>
+> Yup that's what I was saying - it would very much be a "nice to have"
+
+you clearly need to distinct "nice to have" vesus "state of play" - 
+nobody gain anything from nice to have when the topic are *existing* 
+differences
+
+what is "nice to have" for mdadm is "exists in ZFS/BTRFS"
