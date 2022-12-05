@@ -2,93 +2,77 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E8BD641F89
-	for <lists+linux-raid@lfdr.de>; Sun,  4 Dec 2022 21:30:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 90CA6642DB8
+	for <lists+linux-raid@lfdr.de>; Mon,  5 Dec 2022 17:50:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230376AbiLDUaF (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 4 Dec 2022 15:30:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49876 "EHLO
+        id S233167AbiLEQuk (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 5 Dec 2022 11:50:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230209AbiLDUaA (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 4 Dec 2022 15:30:00 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FB061403A;
-        Sun,  4 Dec 2022 12:29:59 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id EA72EB80B94;
-        Sun,  4 Dec 2022 20:29:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDF49C433D6;
-        Sun,  4 Dec 2022 20:29:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670185796;
-        bh=7pr8hVZJ6Hx+FhaG0oa2FI+IrcOdsDHZDzij5USkQBU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MFvp8AzxAXsyTBEEXEMbXnCLpf+zYijfGRBH4KHkeeX2G2mBh37L/+578ilVGPD2l
-         PoVAvjiI26kfkHkt8OMgVk4Gcs/8dC5RSBWLzBHfqNYgo5G0NBWpG0J+R7pMesASJ7
-         cvXULRwUdPgnjgPO+WBWoIUGv+y34BnD1BPDy2U3s9U22/QodgTeLHge8CCx2NzKcF
-         LUxs/vaZBRj3PAH644643/uG7BM0fmwvDKbjvZsv307Hx5MsEsRI3Ru/J+oAqoXXcv
-         ngbINzNer5vFsz2CdyEfCVtl2K0roS/mneQVhFN8E1djrf9eboEcFlTQVLvmyoWPs+
-         8inCg7btm82Uw==
-Date:   Sun, 4 Dec 2022 20:29:44 +0000
-From:   Keith Busch <kbusch@kernel.org>
-To:     Javier =?iso-8859-1?Q?Gonz=E1lez?= <javier@javigon.com>
-Cc:     Hannes Reinecke <hare@suse.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-        linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        axboe@kernel.dk, djwong@kernel.org, hch@lst.de, sagi@grimberg.me,
-        jejb@linux.ibm.com, martin.petersen@oracle.com,
-        Johannes.Thumshirn@wdc.com, bvanassche@acm.org,
-        dongli.zhang@oracle.com, jefflexu@linux.alibaba.com,
-        josef@toxicpanda.com, clm@fb.com, dsterba@suse.com, jack@suse.com,
-        tytso@mit.edu, adilger.kernel@dilger.ca, jlayton@kernel.org,
-        idryomov@gmail.com, danil.kipnis@cloud.ionos.com,
-        ebiggers@google.com, jinpu.wang@cloud.ionos.com
-Subject: Re: [PATCH 0/6] block: add support for REQ_OP_VERIFY
-Message-ID: <Y40DOJ+7WlqIwkbD@kbusch-mbp>
-References: <Y4oSiPH0ENFktioQ@kbusch-mbp.dhcp.thefacebook.com>
- <4F15C752-AE73-4F10-B5DD-C37353782111@javigon.com>
+        with ESMTP id S231156AbiLEQuB (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 5 Dec 2022 11:50:01 -0500
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20747BE2C
+        for <linux-raid@vger.kernel.org>; Mon,  5 Dec 2022 08:49:14 -0800 (PST)
+Received: by mail-wm1-x344.google.com with SMTP id c65-20020a1c3544000000b003cfffd00fc0so12201138wma.1
+        for <linux-raid@vger.kernel.org>; Mon, 05 Dec 2022 08:49:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=O4WPtqOs6pYDke8VCfpzwsIX+8zN33o8tLS2XMy/lFU=;
+        b=Z2wBWagY9UnEZ+M5YPDdGkg6nVUsQfYS1BhjpcwGEao2GhG01+Mm/qvV+1fKOq1lbu
+         EFS78qR+UGfEwXQVt6IRXk6jTGT8mo+KAwwjj0fZxBmjE1jztugOoJP4/rka0x6XFhxu
+         W6iUCvsIDO6eHcdCHFvdIDlIVpJCsES5SD3xSnapoHClZmLcHlXbjXoeix+TX99ab7ry
+         BqOOHDFzUlmJeyU3OvUitATOsPkFA0DOczbi/Afsjm9NHI/YtApk72ny0qjFhFTXO+XP
+         yKXAtBeMHMlIwSKvmuRpEfOfWiK9b959mo8P7Fx64Ot+uHxQXUUrd10S+RG2s/yWLOX2
+         BSUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=O4WPtqOs6pYDke8VCfpzwsIX+8zN33o8tLS2XMy/lFU=;
+        b=itM55tKhstPQtaIl75RAmRUCW9bMqohUJNHOw879td7VhHVzcluo85B399YL6jVaCN
+         VRTj7gq2zKeYjsN+yeDZAv2dw875ZQSGRxinJpr8QcJweTKzZ25c0A+e44GwwsQUzTzy
+         ux1m0quy9lul2RIjYRx/lgYKiiSgA5x7HODyjLscw3kTQoni3b5cYdkMmDk/+8obTJoQ
+         rXYTvL15hqthat2YB/XQmSr0Pic62pnm+PUT22lKchLn3+U7xYbO2XQB7u/nftZK5wpN
+         BSoBY10Jcrwho5qtyYl1U3KDaG1+H/J5wsgx7w5nesFakIXix6p0wuH4sfhUOvjN+D3Q
+         1E7A==
+X-Gm-Message-State: ANoB5pmgFy3UIgZHDyuvHlSAwBgdUnIEkmscmD3ovTKyMJGtbAqLwJTq
+        Egw3vLCuyxJxQNPIilpR9opFw6sWKc6un45srWU8tCa+rN0=
+X-Google-Smtp-Source: AA0mqf6LlThRqxALxahU+d5CDCL5XgA0Iri4oQFEx6hETTBFBZxUw9iI5CXyM5b3WvWotoaM22oBvK+CwFtVO/zgxX4=
+X-Received: by 2002:a7b:c8d0:0:b0:3cf:ca91:7094 with SMTP id
+ f16-20020a7bc8d0000000b003cfca917094mr60628535wml.24.1670258943314; Mon, 05
+ Dec 2022 08:49:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4F15C752-AE73-4F10-B5DD-C37353782111@javigon.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:6000:5c1:0:0:0:0 with HTTP; Mon, 5 Dec 2022 08:49:02
+ -0800 (PST)
+Reply-To: phmanu14@hotmail.com
+From:   Philip Manul <zagbamdjala@gmail.com>
+Date:   Mon, 5 Dec 2022 08:49:02 -0800
+Message-ID: <CAPCnorG0wZz4L65xmUUzHEvxvuhrsq0nQnSPJqno3Ah89AhSwA@mail.gmail.com>
+Subject: REP:
+To:     in <in@proposal.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=1.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Sat, Dec 03, 2022 at 07:19:17AM +0300, Javier González wrote:
-> 
-> > On 2 Dec 2022, at 17.58, Keith Busch <kbusch@kernel.org> wrote:
-> > 
-> > ﻿On Fri, Dec 02, 2022 at 08:16:30AM +0100, Hannes Reinecke wrote:
-> >>> On 12/1/22 20:39, Matthew Wilcox wrote:
-> >>> On Thu, Dec 01, 2022 at 06:12:46PM +0000, Chaitanya Kulkarni wrote:
-> >>>> So nobody can get away with a lie.
-> >>> 
-> >>> And yet devices do exist which lie.  I'm not surprised that vendors
-> >>> vehemently claim that they don't, or "nobody would get away with it".
-> >>> But, of course, they do.  And there's no way for us to find out if
-> >>> they're lying!
-> >>> 
-> >> But we'll never be able to figure that out unless we try.
-> >> 
-> >> Once we've tried we will have proof either way.
-> > 
-> > As long as the protocols don't provide proof-of-work, trying this
-> > doesn't really prove anything with respect to this concern.
-> 
-> Is this something we should bring to NVMe? Seems like the main disagreement can be addressed there. 
-
-Yeah, proof for the host appears to require a new feature, so we'd need
-to bring this to the TWG. I can draft a TPAR if there's interest and
-have ideas on how the feature could be implemented, but I currently
-don't have enough skin in this game to sponser it.
+--=20
+Guten tag,
+Mein Name ist Philip Manul. Ich bin von Beruf Rechtsanwalt. Ich habe
+einen verstorbenen Kunden, der zuf=C3=A4llig denselben Namen mit Ihnen
+teilt. Ich habe alle Papierdokumente in meinem Besitz. Ihr Verwandter,
+mein verstorbener Kunde, hat hier in meinem Land einen nicht
+beanspruchten Fonds zur=C3=BCckgelassen. Ich warte auf Ihre Antwort zum
+Verfahren.
+Philip Manul.
