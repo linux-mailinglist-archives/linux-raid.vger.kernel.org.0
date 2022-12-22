@@ -2,121 +2,88 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A4632653CDA
-	for <lists+linux-raid@lfdr.de>; Thu, 22 Dec 2022 09:18:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 44D9E653D75
+	for <lists+linux-raid@lfdr.de>; Thu, 22 Dec 2022 10:25:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229579AbiLVISK (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 22 Dec 2022 03:18:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52510 "EHLO
+        id S235219AbiLVJZd (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 22 Dec 2022 04:25:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229567AbiLVISJ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 22 Dec 2022 03:18:09 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC75F10067
-        for <linux-raid@vger.kernel.org>; Thu, 22 Dec 2022 00:17:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1671697040;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=R79QPZKIRetvP7dENpcF1leEO2IFk9biokbxnaVlMZI=;
-        b=Bts3hCs53y19cd1+6L28ADzGACAorTSGkd3KCqsu3sUKMcKw0jn3PiYZHWohaT/jvjhRK4
-        ZSpc0xhHOOdXHTIOiZcT1TB7G+9eS6AOhbI9BspBzKTMHnCXfoPmtrNg91n7EgyNbIvDy0
-        k9ddLpWTf4jno64nDDFTLgMiv1Ef9uI=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-299-JyiUlNfYOwixijemGH_nuA-1; Thu, 22 Dec 2022 03:17:19 -0500
-X-MC-Unique: JyiUlNfYOwixijemGH_nuA-1
-Received: by mail-pj1-f70.google.com with SMTP id z4-20020a17090ab10400b002195a146546so2767243pjq.9
-        for <linux-raid@vger.kernel.org>; Thu, 22 Dec 2022 00:17:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=R79QPZKIRetvP7dENpcF1leEO2IFk9biokbxnaVlMZI=;
-        b=yDAiRZQ0pfUA1yu0qYk/YuQwc6qAYMgA5qAwSw0OBfHrjzgk1HyUORxJII96Gg+uS0
-         XxPGNb3N20IkhAoC+c5pWUh5sIizKzQn1qmO9/wZlkCy2F+X3uMbWLc3QtsOGDylNHaR
-         4QOHWtUWa7fP1ZQ6SdEagUpWdv36/fGB72xJhY5paNkfJk0/s3uvMlH80dGW+aZNRqOx
-         jWuTIJWLQdPYLBnA1JIUTiIfrz8IYxZmVT55yuHXFUga1NJag+EhSoZGle1Hnc3IHgvn
-         d/5qWURw8mjT6ZDz7h26vFiVSVcxvIp6O3dLjZzNt+gcG46BlUFTqvJTEhBCqPn/Li5h
-         nRaw==
-X-Gm-Message-State: AFqh2kqryqF8nn3P/XwJZd89IhhIB5ZwBLB/Od6iHGzD8aoE094doD0L
-        tE2Ba6J9JUreq3i8Sndqcnwa1h/YcW3+ozkkfqf8CP/3MaUt4LNMNyJ7bcSUxE30LFx0LrYIL35
-        2o6Hj0uNwwn9LTsKACAiDq4eoIgqGe6i8eR3kFw==
-X-Received: by 2002:a63:4041:0:b0:478:bc19:a510 with SMTP id n62-20020a634041000000b00478bc19a510mr283553pga.288.1671697038617;
-        Thu, 22 Dec 2022 00:17:18 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXvuVJFNkTvkMcer5fCvVb9SyXK9/6SGy5DwYObkAe4h2J3fNScCvPEjB4DK2adxkmMP0Q3hUmkHr3OiWoTzyT4=
-X-Received: by 2002:a63:4041:0:b0:478:bc19:a510 with SMTP id
- n62-20020a634041000000b00478bc19a510mr283550pga.288.1671697038385; Thu, 22
- Dec 2022 00:17:18 -0800 (PST)
+        with ESMTP id S235217AbiLVJZc (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 22 Dec 2022 04:25:32 -0500
+X-Greylist: delayed 585 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 22 Dec 2022 01:25:31 PST
+Received: from mail.svorkabrattegg.com (mail.svorkabrattegg.com [51.38.115.213])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A676127919
+        for <linux-raid@vger.kernel.org>; Thu, 22 Dec 2022 01:25:31 -0800 (PST)
+Received: by mail.svorkabrattegg.com (Postfix, from userid 1002)
+        id ED7AAA3EBA; Thu, 22 Dec 2022 09:15:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=svorkabrattegg.com;
+        s=mail; t=1671700544;
+        bh=9HcAmZM8CdhTVzUTZhsW/Q7+graOYPdwGoAVqnU6Io8=;
+        h=Date:From:To:Subject:From;
+        b=bb04Q+TF8RSl3w1ddghZnoih6NS8BSnUUkir1ibCY7p3/hbufeWD+upxf0ZKEsf9v
+         J5F/luNxwbC35fSkjQe+/8z+G8NBDQCeAcVOLXfE/8mIr7yYTb99r86AU2rWiixQDW
+         K6NzXpoNe/DCPSFnApYjDNrA9/JmR/5Xn4abGaPEin7wTArBPXOLXdnknuXjlF5NTp
+         U8mNkz8Ig/paZXSfroyTLKO1T33Wg8zZogl+85f5/Dj1lqgTx1FXF0n4gTg5jcj2fx
+         0aZefksxRK+DOGFHMr3oxs324spoxj0rNy48TXzKgjRBVjyAqjSU98gPUPp7lq+1kk
+         /LM25AFg2KsQQ==
+Received: by mail.svorkabrattegg.com for <linux-raid@vger.kernel.org>; Thu, 22 Dec 2022 09:15:37 GMT
+Message-ID: <20221222074500-0.1.7z.hin5.0.lyvc0c0rhl@svorkabrattegg.com>
+Date:   Thu, 22 Dec 2022 09:15:37 GMT
+From:   "Timeo Moreau" <timeo.moreau@svorkabrattegg.com>
+To:     <linux-raid@vger.kernel.org>
+Subject: Emballage
+X-Mailer: mail.svorkabrattegg.com
 MIME-Version: 1.0
-References: <20221221063846.20710-1-kinga.tanska@intel.com>
-In-Reply-To: <20221221063846.20710-1-kinga.tanska@intel.com>
-From:   Xiao Ni <xni@redhat.com>
-Date:   Thu, 22 Dec 2022 16:17:07 +0800
-Message-ID: <CALTww2-yT8QKUzJ0hagehsAy4Hp2+eMfxk-iW9FiZQz3TeGOSA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] Incremental mode: remove safety verification
-To:     Kinga Tanska <kinga.tanska@intel.com>
-Cc:     linux-raid@vger.kernel.org, jes@trained-monkey.org, colyli@suse.de
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=7.3 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FROM_FMBLA_NEWDOM28,
+        RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS,URIBL_CSS_A,URIBL_DBL_SPAM
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: *  2.5 URIBL_DBL_SPAM Contains a spam URL listed in the Spamhaus DBL
+        *      blocklist
+        *      [URIs: svorkabrattegg.com]
+        *  3.3 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
+        *      [51.38.115.213 listed in zen.spamhaus.org]
+        *  0.1 URIBL_CSS_A Contains URL's A record listed in the Spamhaus CSS
+        *      blocklist
+        *      [URIs: svorkabrattegg.com]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.8 FROM_FMBLA_NEWDOM28 From domain was registered in last 14-28
+        *      days
+X-Spam-Level: *******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi Kinga
+Bonjour,
 
-For the series, it's ok for me.
+Avez-vous besoin d'un emballage en aluminium?
 
-Do you want to fix another regression problem? Now we can't set a
-member disk as faulty when
-array is active.
+Nous fournissons des conditions comp=C3=A9titives de coop=C3=A9ration dan=
+s le domaine des livraisons rapides et stables d'emballages imprim=C3=A9s=
+ flexographiques et lamin=C3=A9s, d'emballages biod=C3=A9gradables et com=
+postables, ainsi que de vernis structuraux appliqu=C3=A9s ou de vernis am=
+=C3=A9liorant les propri=C3=A9t=C3=A9s du film.
 
-The original patch is used to make sure the admin doesn't remove the
-disk and the raid can't work.
-So it doesn't need to check the array state. How about
+Nous fournissons =C3=A9galement des sacs et emballages Doypack avec fen=C3=
+=AAtre permettant de visualiser le produit.
 
-diff --git a/Manage.c b/Manage.c
-index 9d85237ceab5..eee25fd8cda0 100644
---- a/Manage.c
-+++ b/Manage.c
-@@ -1322,8 +1322,7 @@ bool is_remove_safe(mdu_array_info_t *array,
-const int fd, char *devname, const
-        sysfs_free(mdi);
+Si vous =C3=AAtes int=C3=A9ress=C3=A9 s'il vous pla=C3=AEt faites le moi =
+savoir.
 
-        bool is_enough = enough(array->level, array->raid_disks,
--                               array->layout, (array->state & 1),
--                               avail);
-+                               array->layout, 1, avail);
 
-        free(avail);
-        return is_enough;
-
-Regards
-Xiao
-
-On Wed, Dec 21, 2022 at 9:37 PM Kinga Tanska <kinga.tanska@intel.com> wrote:
->
-> Changes in incremental mode. Removing verification
-> if remove is safe, when this mode is triggered. Also
-> moving commit description to obey kernel coding style.
->
-> Kinga Tanska (2):
->   incremental, manage: do not verify if remove is safe
->   manage: move comment with function description
->
->  Incremental.c |  2 +-
->  Manage.c      | 79 +++++++++++++++++++++++++++++++--------------------
->  2 files changed, 49 insertions(+), 32 deletions(-)
->
-> --
-> 2.26.2
->
-
+Timeo Moreau
