@@ -2,146 +2,74 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B97E659765
-	for <lists+linux-raid@lfdr.de>; Fri, 30 Dec 2022 11:39:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB1FD659980
+	for <lists+linux-raid@lfdr.de>; Fri, 30 Dec 2022 15:51:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233830AbiL3KjA (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 30 Dec 2022 05:39:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54986 "EHLO
+        id S229441AbiL3OvT (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 30 Dec 2022 09:51:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229485AbiL3Ki7 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 30 Dec 2022 05:38:59 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61400101E3
-        for <linux-raid@vger.kernel.org>; Fri, 30 Dec 2022 02:38:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1672396695;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AQulwiKtYiaPuuoNEmPSCSrTfFcWcq8QyxpM7GVLj6U=;
-        b=akEkTkAHZoEIjiJgJ4wr2hJnCgFTDE1FC8xhGiezR5kEbWMyYdDzWUI8KEbqEr9NLeGM9S
-        kTKjWCADb+69s18Yl4JpkV4uNbN1zUnpV8szp4/yK6Abhaxd0pq9x6fxco72pJLXNaLREC
-        TBkln2ff6fNv66TGjm+U7xUBOBCEoEA=
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
- [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-589-3j3sZDuxP_a6Rhoke-x9Aw-1; Fri, 30 Dec 2022 05:38:11 -0500
-X-MC-Unique: 3j3sZDuxP_a6Rhoke-x9Aw-1
-Received: by mail-pj1-f69.google.com with SMTP id a23-20020a17090a8c1700b002263980f032so1554225pjo.5
-        for <linux-raid@vger.kernel.org>; Fri, 30 Dec 2022 02:38:11 -0800 (PST)
+        with ESMTP id S234990AbiL3OvS (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 30 Dec 2022 09:51:18 -0500
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C27711A3BB
+        for <linux-raid@vger.kernel.org>; Fri, 30 Dec 2022 06:51:16 -0800 (PST)
+Received: by mail-ej1-x631.google.com with SMTP id ud5so51844040ejc.4
+        for <linux-raid@vger.kernel.org>; Fri, 30 Dec 2022 06:51:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:sender:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7ShM4D9zrO/l9vlRJr4GjItrMAMbHERXsnMH9h5W3eA=;
+        b=PjfvgoAtrOlN8nuMOYB/ZVbcYgMFTFc2lQwhd0SgMW6Ui2YdR+wVPNQQpBuFYFm7e5
+         ji7cSiopMaWlost3TONRRMlUq5XvIhAbSE0tV1gB1h31eRM0DNJ2biJ+zCKHdokKha5n
+         MKenrHtmiSaEUyhq+3aETencKkkQy5PJGJoN/cpYvFG26TqkEQPgHbrqxBALL60tK2Si
+         Cw0UUKS7mcFsffB7BR/gPQzSw8gWqjFqQRG2P/eeYh6LFdcLnHiCfVIaw7WxbXBELAry
+         RBUpBOFAozRBFP8xvqwbtP6kbqRq94DM/oT5eZ/kUronTf/Xbj3mkPQ2GebDyVZmbU/S
+         ewoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AQulwiKtYiaPuuoNEmPSCSrTfFcWcq8QyxpM7GVLj6U=;
-        b=kbByq9hSpHL9Q30kY5LCTRxV0G+M+7u/7x1SLu69BL64sh0IMutbeMPc6IGjyRgoXa
-         CaYkrZnNzowUj8dkrUQ0uiTFVqzihIbG6yAyPHJWD9jW7gxcK8gJWr01BWoTE42v+Eiz
-         FKl5eJOw1piyDrZAaK8A+apIi4XeDbToNO00b2xWneNkNxghVdfWyPSyx1rglzdP9Vz3
-         zomVTIyrIxrF1BcBezqx00wx/s1VBYzogqJwUrBYBO8Yn4DUgWBa8dj+SRQ8kZ8AhJXH
-         X5hR+O6wr+wd9YUrAxLT7YQfsctVId4Lj9p6T8U7onshRgNQjm23fuvChlklEMkHHSVc
-         Jl5Q==
-X-Gm-Message-State: AFqh2kpuVIWr5BzaQ4sVAa1sQi97KwPykA5pLk+2J9f/6KzO7ojx3lCM
-        Jz1CqGiDIT7ezMXSp4rMXcQAqr52X0ACMvZwrNo5Dwa2DrkPD8iAhHZlOd7+0w81WOztbK3vxpF
-        7ghKeL/PL/HKx5xdyg0YNigSLKKVzrCUiJl7p3g==
-X-Received: by 2002:a17:902:ee41:b0:191:255c:9bd5 with SMTP id 1-20020a170902ee4100b00191255c9bd5mr1769848plo.82.1672396690444;
-        Fri, 30 Dec 2022 02:38:10 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXvKiKolEQxrovEdqSf3K/t/R18c2UCWPxb22oz8rA19E69dy2+Wn47Z5cyEg8LMD/h/9zoHPlUpPshg8Mmn7fI=
-X-Received: by 2002:a17:902:ee41:b0:191:255c:9bd5 with SMTP id
- 1-20020a170902ee4100b00191255c9bd5mr1769845plo.82.1672396690084; Fri, 30 Dec
- 2022 02:38:10 -0800 (PST)
+        h=to:subject:message-id:date:from:sender:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7ShM4D9zrO/l9vlRJr4GjItrMAMbHERXsnMH9h5W3eA=;
+        b=AiJL44ORAXJm8F3CWLyMUcpAGtKtTBUnlzdDCsMRjbMNQx377HDaveb0JqoWrWFNw9
+         BAQfrwpuS+APqvPleAE5TPHYfBV2GBWxPJKwP5i5epLJ0tuRcrMs1Ykt2lsydk36J28f
+         2DqtyHg+V3OBg5QvNG/C/HOw5ouQMQV2gzbD2VzfOxX2LY0f0EJGvrLi2bRytzRAAQH+
+         u13ZbupZ4MUJsP4ldyqTAWrbg8+zF7OWTc+DabUiDbW9rjpUm7HPZ8u9opz/sfOVk8DD
+         9abjoNYcjk3+e+Q3/6p7FgRus1uAZY+G5tuMVS8nUiuoWJl60t8gk/kX97+zKi9wOqGy
+         qDEw==
+X-Gm-Message-State: AFqh2koUvYZlBPVnAUfQflkqU5pCLCFxuqBQaSuGrAYQw0pVheshjpfL
+        f6JzIPZ5ovoWzaKwK2JenTFV6Gmb5sZ6FXBW6ZM=
+X-Google-Smtp-Source: AMrXdXsLFCkdD1hvQiwWm7g8ItNj0Qe3Vn6hrMmfDJW1KPQqYt4mReBRvHgD7veBgITehGTzqDlQKwkqceyoICDWfIM=
+X-Received: by 2002:a17:906:4f12:b0:77f:9082:73c7 with SMTP id
+ t18-20020a1709064f1200b0077f908273c7mr1721808eju.517.1672411874984; Fri, 30
+ Dec 2022 06:51:14 -0800 (PST)
 MIME-Version: 1.0
-References: <20221230090748.53598-1-xni@redhat.com> <293f8482-8032-d857-2811-1fdd022b0742@molgen.mpg.de>
-In-Reply-To: <293f8482-8032-d857-2811-1fdd022b0742@molgen.mpg.de>
-From:   Xiao Ni <xni@redhat.com>
-Date:   Fri, 30 Dec 2022 18:37:58 +0800
-Message-ID: <CALTww28mmnVwL_FWT6zXXEdSk=6B24zXVxji-Etm=SxFhjPnVg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] Don't handle change event against raw devices
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     jes@trained-monkey.org, linux-raid@vger.kernel.org,
-        ncroxon@redhat.com
+Sender: goodw771@gmail.com
+Received: by 2002:a05:640c:1a0c:b0:189:ab5b:3d94 with HTTP; Fri, 30 Dec 2022
+ 06:51:13 -0800 (PST)
+From:   DB HM <mimiabdulhassan39@gmail.com>
+Date:   Fri, 30 Dec 2022 14:51:13 +0000
+X-Google-Sender-Auth: 9lcIS3KwSXNG_57-zP7JFVtlGT0
+Message-ID: <CAM0SVCaw_CA7PdtcpGT9iedXkGHMyiyfw9ZFt69+9Amz1_90Uw@mail.gmail.com>
+Subject: HELLO
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=3.5 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,LOTS_OF_MONEY,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        UNDISC_MONEY autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Fri, Dec 30, 2022 at 6:20 PM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
->
-> Dear Xiao,
->
->
-> Thank you for the patch.
->
-> Am 30.12.22 um 10:07 schrieb Xiao Ni:
->
-> It=E2=80=99d be great if you described the problem.
-
-Hi Paul
-
-Thanks. I'll describe more in next version.
->
-> > Signed-off-by: Xiao Ni <xni@redhat.com>
-> > ---
-> >   udev-md-raid-assembly.rules | 10 ++++++++++
-> >   1 file changed, 10 insertions(+)
-> >
-> > diff --git a/udev-md-raid-assembly.rules b/udev-md-raid-assembly.rules
-> > index 39b4344b8592..748ea05dadaa 100644
-> > --- a/udev-md-raid-assembly.rules
-> > +++ b/udev-md-raid-assembly.rules
-> > @@ -11,6 +11,11 @@ SUBSYSTEM!=3D"block", GOTO=3D"md_inc_end"
-> >   ENV{SYSTEMD_READY}=3D=3D"0", GOTO=3D"md_inc_end"
-> >
-> >   # handle potential components of arrays (the ones supported by md)
-> > +# For member devices which are md/dm devices, we don't need to
-> > +# handle add event. Because md/dm devices need to do some init jobs.
-> > +# Then the change event happens.
-> > +# When adding md/dm devices, ID_FS_TYPE only be linux_raid_member
->
-> A verb is missing. Maybe: =E2=80=A6 can only be =E2=80=A6
->
-> > +# after change event happens.
-> >   ENV{ID_FS_TYPE}=3D=3D"linux_raid_member", GOTO=3D"md_inc"
-> >
-> >   # "noiswmd" on kernel command line stops mdadm from handling
-> > @@ -28,6 +33,11 @@ GOTO=3D"md_inc_end"
-> >
-> >   LABEL=3D"md_inc"
-> >
-> > +# We only handle add event on raw disks. If we handle change event on =
-raw disk,
-> > +# the tool parted can't change partition table unless clear superblock=
- on
->
-> 1.  *the* partition table
-> 2.  Please excuse my ignorance, but what is a =E2=80=9Cclear superblock=
-=E2=80=9D?
-
-It means clearing superblock with command mdadm --zero-superblock
-
->
-> > +# member disks
->
-> Add a dot/period at the end of sentences?
->
-> > +ACTION=3D=3D"change", KERNEL!=3D"dm-*|md*", GOTO=3D"md_inc_end"
-> > +
-> >   # remember you can limit what gets auto/incrementally assembled by
-> >   # mdadm.conf(5)'s 'AUTO' and selectively whitelist using 'ARRAY'
-> >   ACTION!=3D"remove", IMPORT{program}=3D"BINDIR/mdadm --incremental --e=
-xport $devnode --offroot $env{DEVLINKS}"
->
-
-
-Best Regards
-Xiao
-
+If you are interested to use the sum US17.3Million to help the
+orphans around the world and invest it in your country, kindly get
+back to me for more information On how you can contact the company and
+tell them to deliver the consignment box to your care on behalf of me,
+Warm
+Regards,
+Mrs Mimi Hassan Abdul Mohammad
