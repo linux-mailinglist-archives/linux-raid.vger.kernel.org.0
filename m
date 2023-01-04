@@ -2,76 +2,79 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EE1B65E0F0
-	for <lists+linux-raid@lfdr.de>; Thu,  5 Jan 2023 00:27:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DA2365E0FD
+	for <lists+linux-raid@lfdr.de>; Thu,  5 Jan 2023 00:39:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234977AbjADX1a (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 4 Jan 2023 18:27:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42566 "EHLO
+        id S230312AbjADXjJ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 4 Jan 2023 18:39:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235330AbjADX1K (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 4 Jan 2023 18:27:10 -0500
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 493431C412
-        for <linux-raid@vger.kernel.org>; Wed,  4 Jan 2023 15:27:07 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id fz16-20020a17090b025000b002269d6c2d83so2328432pjb.0
-        for <linux-raid@vger.kernel.org>; Wed, 04 Jan 2023 15:27:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:sender:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t/5j0HMIROp/JxV6/R9sjnLWhlmItvlsfO7Z4TUm1OQ=;
-        b=a3bfWfEv6ILrN2PRlQUfewcOfEar5b4AsXAzrxi9n9fBjzDw2/5hnkybB/+odJ/ohA
-         65S6PzdA8DpOVfEjQEiiL5H26QC0RBH49QJQIOGpYecmnGA+nEOoaKHS62C4ufJ8VyNx
-         dc7N5shoulOx2X66RJR9tujxWyltmUdAyssx6CicB/I0ycHLPFluaK7KDVASTlsxfCla
-         iOqcRlfyIQr1/GKtTPw7QNeqG4Amgjhnn3pJqsPQ1xGucrHW5GZGinGyZH67xofxhXSM
-         zoX+QWges9grhZKlheNJxihnnaTX04g8aOGk9D7FEc5btz6QXj5kL/lmUCFT/1tFNmGP
-         sGng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:sender:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=t/5j0HMIROp/JxV6/R9sjnLWhlmItvlsfO7Z4TUm1OQ=;
-        b=UI1WeqKt+1vLAHPaMKBy8CY96BCl0831eGrCeO2TXN+cMDoMoRlgagAQ7NfQSsXyvH
-         FkvfUHaA5cXsfjeHFOLaN6Tr/7AjHN62KwzP9GMKCFSO03ZDW3rX54+5ykI9l8mKNxlT
-         pjx6jezQBJ6+kGkkgkV2/Vy03RyY6GnJKSPrg+fNtcAfcJCU1rYtWlsepE8u4+9YfNzn
-         DGq8Jv7MOUiiKxSLYAkppRAAPO0jrPTZ8y49wgtch5De4RyRkbpcG0Idrd3gSJZPcpJb
-         FmL588pNr6jO49morbwrAcD1wAmSxrGZaFi1bEUKuMTHzfEP9BeWEdBVJQ150CfVP0sB
-         chfQ==
-X-Gm-Message-State: AFqh2kpX8vJM/7u9XT3QNF+jev/I+ltGcEBUGP2i93+vFA0ufSaJlWQY
-        Gi6+K8IBiA7QdiojgTW0ujm0+yEdTBDwPLia6YA=
-X-Google-Smtp-Source: AMrXdXvLNBgEv25uQ9FV9ilN/NVaSESZDTSCn37lTsUvlhk0BfGcpuezz/T8fGib/m8PAB9meuvCpNgSlG0Ei0WDSgY=
-X-Received: by 2002:a17:90b:302:b0:219:455a:f232 with SMTP id
- ay2-20020a17090b030200b00219455af232mr3787684pjb.140.1672874826842; Wed, 04
- Jan 2023 15:27:06 -0800 (PST)
+        with ESMTP id S230233AbjADXjI (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 4 Jan 2023 18:39:08 -0500
+Received: from sender11-op-o11.zoho.eu (sender11-op-o11.zoho.eu [31.186.226.225])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AC2F42E0B
+        for <linux-raid@vger.kernel.org>; Wed,  4 Jan 2023 15:39:06 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1672875530; cv=none; 
+        d=zohomail.eu; s=zohoarc; 
+        b=fBtI5iMbTXdIpVyQGTJTCuyFkxdM4mnYCk+jamaDuMce5ZDGb9jWctGjrvp/ah7X8FOS5Dktl5B8N4HhmLc4sWt32C1Y/mrafutcUdOHzr9T8DhtwNmVRcvcE2l0LjLECbk7TLoTG4bo/+iFYPe9gmO1yY+LhltN2gkKM0bickI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+        t=1672875530; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=raFaAdK0whXkw/kHcwmRbB4l0DFR17Hl+Befc7hXl2o=; 
+        b=BM/P4OHvDo1FORSLjWbgX2pOPZSWIxdKopt/5LKv0CnSVv9VxAZtx+er8t55lc5MsllEYRdZ47Ogvjv/JPbHKKsdI903LrlNDOleg7hyEhnlJE1hsLIL5z/XHrHVapzWDzET1TMHrGrlcK/T1FMZw12LrPlxJog/AZc8BeCUGfY=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
+        dmarc=pass header.from=<jes@trained-monkey.org>
+Received: from [192.168.99.50] (pool-98-113-67-206.nycmny.fios.verizon.net [98.113.67.206]) by mx.zoho.eu
+        with SMTPS id 1672875527802549.9313216156378; Thu, 5 Jan 2023 00:38:47 +0100 (CET)
+Message-ID: <a61b4f7e-aded-c40f-c6ee-966e64142c8b@trained-monkey.org>
+Date:   Wed, 4 Jan 2023 18:38:45 -0500
 MIME-Version: 1.0
-Sender: gabriellealgernon20@gmail.com
-Received: by 2002:a05:6a11:c9a8:b0:378:e553:a6d1 with HTTP; Wed, 4 Jan 2023
- 15:27:06 -0800 (PST)
-From:   Hamza Kabore <mr.hamzak252@gmail.com>
-Date:   Wed, 4 Jan 2023 15:27:06 -0800
-X-Google-Sender-Auth: FpgqH3dj1AMpd6AqKF5xMZ8Iyxc
-Message-ID: <CANofRNuOCQpjYCmwgRkJWPq5dp_UwHrudOPoRqKJLv1z5Tm3iQ@mail.gmail.com>
-Subject: HELLO
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=2.5 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,LOTS_OF_MONEY,MILLION_HUNDRED,NA_DOLLARS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,UNDISC_MONEY autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Level: **
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: [PATCH v2 1/1] mdadm/udev: Don't handle change event on raw
+ devices
+Content-Language: en-US
+To:     Xiao Ni <xni@redhat.com>
+Cc:     pmenzel@molgen.mpg.de, ncroxon@redhat.com,
+        linux-raid@vger.kernel.org
+References: <20230104162920.18172-1-xni@redhat.com>
+From:   Jes Sorensen <jes@trained-monkey.org>
+In-Reply-To: <20230104162920.18172-1-xni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hello,
+On 1/4/23 11:29, Xiao Ni wrote:
+> The raw devices are ready when add event happpens and the raid
+> can be assembled. So there is no need to handle change events.
+> And it can cause some inconvenient problems.
+> 
+> For example, the OS is installed on md0(/root) and md1(/home).
+> md0 and md1 are created on partitions. When it wants to re-install
+> OS, anaconda can't clear the storage configure. It deletes one
+> partition and does some jobs. The change event happens. Now
+> the raid device is assembled again. It can't delete the other
+> partitions.
+> 
+> So in this patch, we don't handle change event on raw devices
+> anymore.
+> 
+> Signed-off-by: Xiao Ni <xni@redhat.com>
+> ---
+>  udev-md-raid-assembly.rules | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
-I am Hamza Kabore and a Banker, I want you to cooperate with me for
-the transfer of a deceased customer's funds which is to the ton of
-Twenty Five Million Five Hundred Thousand US Dollars.  Please contact
-me for more details.
+Applied!
 
-Kind Regards
+Thanks,
+Jes
+
+
