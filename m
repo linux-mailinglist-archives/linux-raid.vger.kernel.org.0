@@ -2,70 +2,91 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E2EA865D359
-	for <lists+linux-raid@lfdr.de>; Wed,  4 Jan 2023 13:56:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 47AF465D733
+	for <lists+linux-raid@lfdr.de>; Wed,  4 Jan 2023 16:22:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239270AbjADMz2 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 4 Jan 2023 07:55:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36072 "EHLO
+        id S230095AbjADPWO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 4 Jan 2023 10:22:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236070AbjADMyz (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 4 Jan 2023 07:54:55 -0500
-Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E0371DDE5
-        for <linux-raid@vger.kernel.org>; Wed,  4 Jan 2023 04:54:53 -0800 (PST)
-Received: by mail-qk1-x72e.google.com with SMTP id pe2so16230721qkn.1
-        for <linux-raid@vger.kernel.org>; Wed, 04 Jan 2023 04:54:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g2m/uNsCm/OsAUZxAnJOSdXXDa9Gh4wg88n4VPL2lMU=;
-        b=BQfo1+41q2NZR57Q7BFlMODaOza2AgrRvUpAp3daCd4t1w84OEhFtXAM1g7CkVTr/y
-         mvXWkJvXCDM96Iy3cSf9E37Th3uZX5TzmwlIsHFzK3DAyLuSjJ8d3uR9drr/ahkzPGkt
-         iW+sw+gZOJCd7bumtfoM4UR2xOfXz6tdmGq2f+IJJhoSBazdofAm5Gs9PxuweXnk264c
-         knSGf1CtrqZScdeov1GoaGbl2sApMUXYjJGPCObPVA0UTlHx2t6+wdp4VOKHmsqLWM8X
-         lQt15zqigA6uJCG+q37n0r4mLK1MKtsniT1i9jhRA9qlN9E2Mf0sYN4W9Jd0n+39BoCK
-         yzWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g2m/uNsCm/OsAUZxAnJOSdXXDa9Gh4wg88n4VPL2lMU=;
-        b=iFMHr74HFZ2R6TefZeVMGO07anPfrPlc3PqbhPmRmrcYd1pOkyYbxB65PwagzWM1og
-         fmPIU1A0ziq0fU/NI0FADG936PPXZA9KzZnygKEwuXdz9PpK5WUTvBqh5nuYbhWlne75
-         ggZ6dPHo4WxzapR5Sll31rP/4oI9FtrZ0jvPwAn3qsVZ58ErKL5No4dI9pfw6zFwHlsk
-         5IPjpnD4Di8BkJ8AMP90z5qU9hugpLB7OG0JQKszL1Mdj+UK6qmdaniuxGI5vM4y9vg0
-         0fpz999ct7RzXLluyH9XrJSj8rDGy+60WdWmsdoo4w64RWI0PKjQJKUwvpuqhgYm3aMD
-         v/nQ==
-X-Gm-Message-State: AFqh2krHqS9vPChqCNqqOBRG2NQ7kr+d76KldfUUnrfXNg6hskguJvAv
-        zThU30k9EPG9qeDaMAr4PYw1pLI/3UOjYHF+8EzngqMEvy0=
-X-Google-Smtp-Source: AMrXdXuKXTvNK0aSB9vnyjtdhrZfKmRzvU9Jw1W0zhcD7x19AMFVNgTh5oL+8ilZBOfTDf/bL64QVz1mYULxa/ftADs=
-X-Received: by 2002:ac8:568a:0:b0:3a9:688d:fad2 with SMTP id
- h10-20020ac8568a000000b003a9688dfad2mr1976067qta.646.1672836882017; Wed, 04
- Jan 2023 04:54:42 -0800 (PST)
+        with ESMTP id S239702AbjADPWB (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 4 Jan 2023 10:22:01 -0500
+Received: from sender11-op-o11.zoho.eu (sender11-op-o11.zoho.eu [31.186.226.225])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5365DEB1
+        for <linux-raid@vger.kernel.org>; Wed,  4 Jan 2023 07:22:00 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1672845711; cv=none; 
+        d=zohomail.eu; s=zohoarc; 
+        b=DAfQte7l158amjF5gau3Xsw1v5vPuJF3mwyD09p5pVTWFqybY9BLmwkfLi4GA6oMWQxCXMgpnwcxifofI6AkbstQqWXS1Mbw+vq0aQv40wnz2ZahsD7wcMuQrhjyVzCroC/07k6iVsRFE7tpRihHhzsOkLf4PxVrgAHL+tNXUgM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+        t=1672845711; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=n8D8E4QIQ4wafdx+uaC7PgiyUq3M4ToGLvcJ1+AeG6g=; 
+        b=iMXoAuIQtCVWW4vrUI8UpQRLKTcSXt8eGXAaJkZFpuoxuS26sG8lW1dRP8CrizGaVX8o99I4Ccvk+tnL1p5OhLenFjpNQ5tvYbWQoDsVtmIzJ5Gd/6iUIgY/c59P7BJ5nKK9ZSMDKNTTr/Bekect0tdX8IxpJKIq58udH15ggQc=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
+        dmarc=pass header.from=<jes@trained-monkey.org>
+Received: from [192.168.99.50] (pool-98-113-67-206.nycmny.fios.verizon.net [98.113.67.206]) by mx.zoho.eu
+        with SMTPS id 1672845707536306.8213726627197; Wed, 4 Jan 2023 16:21:47 +0100 (CET)
+Message-ID: <fb00dd4f-6696-f74a-c543-6891f0793124@trained-monkey.org>
+Date:   Wed, 4 Jan 2023 10:21:45 -0500
 MIME-Version: 1.0
-Received: by 2002:a05:6200:5d91:b0:4a5:78e9:2012 with HTTP; Wed, 4 Jan 2023
- 04:54:41 -0800 (PST)
-Reply-To: Gregdenzell9@gmail.com
-From:   Greg Denzell <mzsophie@gmail.com>
-Date:   Wed, 4 Jan 2023 12:54:41 +0000
-Message-ID: <CAEoj5=ZpJ15GRz-U33Ocbu5-P3Va+3bNv3476+mmJJ52cwx7tA@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: [PATCH v2 00/10] Block update-subarray and refactor context
+ update v2
+Content-Language: en-US
+To:     Mateusz Kusiak <mateusz.kusiak@intel.com>,
+        linux-raid@vger.kernel.org
+Cc:     colyli@suse.de
+References: <20230102083524.28893-1-mateusz.kusiak@intel.com>
+From:   Jes Sorensen <jes@trained-monkey.org>
+In-Reply-To: <20230102083524.28893-1-mateusz.kusiak@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Seasons Greetings!
+On 1/2/23 03:35, Mateusz Kusiak wrote:
+> This is the v2 of the patchset I submitted long time ago.
+> I applied the changes that were requested, but since long time has
+> passed I'm submitting the whole patchset once again.
+> 
+> Mateusz Kusiak (10):
+>   mdadm: Add option validation for --update-subarray
+>   Fix --update-subarray on active volume
+>   Add code specific update options to enum.
+>   super-ddf: Remove update_super_ddf.
+>   super0: refactor the code for enum
+>   super1: refactor the code for enum
+>   super-intel: refactor the code for enum
+>   Change update to enum in update_super and update_subarray
+>   Manage&Incremental: code refactor, string to enum
+>   Change char* to enum in context->update & refactor code
+> 
+>  Assemble.c    |  46 ++++++++-------
+>  Examine.c     |   2 +-
+>  Grow.c        |  17 +++---
+>  Incremental.c |   8 +--
+>  Manage.c      |  42 ++++++++------
+>  ReadMe.c      |  31 ++++++++++
+>  maps.c        |  31 ++++++++++
+>  mdadm.c       | 129 ++++++++++++++----------------------------
+>  mdadm.h       |  65 ++++++++++++++++++---
+>  super-ddf.c   |  70 -----------------------
+>  super-intel.c |  48 +++++++++-------
+>  super0.c      | 103 ++++++++++++++++++++-------------
+>  super1.c      | 153 ++++++++++++++++++++++++++++++--------------------
+>  13 files changed, 406 insertions(+), 339 deletions(-)
+> 
 
-This will remind you again that I have not yet received your reply to
-my last message to you.
+Applied!
+
+Thanks,
+Jes
+
