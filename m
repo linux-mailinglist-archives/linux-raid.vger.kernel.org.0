@@ -2,164 +2,81 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DA11E660836
-	for <lists+linux-raid@lfdr.de>; Fri,  6 Jan 2023 21:22:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BBFE660B32
+	for <lists+linux-raid@lfdr.de>; Sat,  7 Jan 2023 02:04:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235599AbjAFUWz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 6 Jan 2023 15:22:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60610 "EHLO
+        id S236037AbjAGBEG (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 6 Jan 2023 20:04:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236408AbjAFUWg (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 6 Jan 2023 15:22:36 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 567CF88DE7
-        for <linux-raid@vger.kernel.org>; Fri,  6 Jan 2023 12:21:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673036468; x=1704572468;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Wz7eIUDiE4+B/o1SzyrBzvsdOuLbNkWF56z4xYDcSSY=;
-  b=aXgepsMGUPZGdKoW0gUafSAQizdQBGknd1GmoTr6K2RHfV2lLCJ+/6os
-   m739c4/fk1R9KPbvtk9tAgPLyuYZRt+9N+pqKkTfmSleHRepdgcThKmaX
-   BEVUQAdrpV3h7qe9M7kC1ZEuU47QXhXyftd1jjO+kohtMXhqP5XMkBdIf
-   6qzH6qgQFgvHvKdTwAQe0SBDfbPGHOEOxzNg0dbszF6qPo9vaVVFC3tn2
-   v5oM8FuvEGCYIUYBcaZHZg33s+12f8CKTeh2qBxpYWw30iIM3FOwiy25q
-   3zAkMpTV+kXY+kso/lGT2KkL3G1ulZbnBJjq40XidF0YBJL3hOKRCMW87
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10582"; a="302917092"
-X-IronPort-AV: E=Sophos;i="5.96,306,1665471600"; 
-   d="scan'208";a="302917092"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2023 12:21:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10582"; a="763628591"
-X-IronPort-AV: E=Sophos;i="5.96,306,1665471600"; 
-   d="scan'208";a="763628591"
-Received: from lkp-server02.sh.intel.com (HELO f1920e93ebb5) ([10.239.97.151])
-  by fmsmga002.fm.intel.com with ESMTP; 06 Jan 2023 12:21:06 -0800
-Received: from kbuild by f1920e93ebb5 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pDtD8-0003rY-05;
-        Fri, 06 Jan 2023 20:21:06 +0000
-Date:   Sat, 07 Jan 2023 04:20:14 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Song Liu <song@kernel.org>
-Cc:     linux-raid@vger.kernel.org
-Subject: [song-md:new_module_alloc_build_test] BUILD REGRESSION
- 59c58e6f71e349eab2b969a214f7a2c0f60490ae
-Message-ID: <63b8827e.clJQX2wg+I+tiX7m%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S234934AbjAGBEA (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 6 Jan 2023 20:04:00 -0500
+Received: from mail-oa1-x44.google.com (mail-oa1-x44.google.com [IPv6:2001:4860:4864:20::44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E661B83187
+        for <linux-raid@vger.kernel.org>; Fri,  6 Jan 2023 17:03:59 -0800 (PST)
+Received: by mail-oa1-x44.google.com with SMTP id 586e51a60fabf-1441d7d40c6so3400657fac.8
+        for <linux-raid@vger.kernel.org>; Fri, 06 Jan 2023 17:03:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=C56Q+YV0i1VwzqpPgsaApjf/2tDIDNvnJyLhwVpmM08=;
+        b=Ui1nZAQwen1JZHhk/UNb1oDDJUikJKWwSFDQT7fDxIdrjTsFTfnr65aD0MQpJxZuMF
+         RmyXYHMc9Ky4LUKKCV35cfXeVKg9kcUaSr4tiVZgaqF5EFPOnEzUzKBi95ahnFWEJuB/
+         wikAeNAEQCrGUuHayT33w+2rQ4+HBUUxhxKBasC1xNVeOOKwbrPJi4n0XGoiGNV0Ta5k
+         CclCoy5QAcIdpNT2BCRseJKd9epac9YGs66Cgc9nZMojVBhKvtImHmE+ZbhBIfigRiBi
+         98nZh86gtiJqweGJlylRyzSsCuKNMTFPzlfmr38W444ZCFDfVUVeCB+li6CwVFx/Asvw
+         l86g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=C56Q+YV0i1VwzqpPgsaApjf/2tDIDNvnJyLhwVpmM08=;
+        b=XTZSFj8VmhUQZAF/pdRPOxsLkQ4U5Q8IGlaorcXZI/FAfNUWnj/c7YM39rbTmegqmR
+         iMRYbEFKUU3bfkAkFXuIoS6KWLZ7DCgET39EN9Amdwp500x55FOfU3V8Y8rNW0uKVE7i
+         d5YyeOi4fy88wHyeDTCznt60IeGIWoMwwp0754ax5ScYpPZT/wPKnHx4as6NptMdc4Yy
+         dzw+ct7bGTuyCiDUqvf0o9qDpLB8usqIfHJqxkHcOqnKR+X5UrpaR9DETteyVtCvyZg4
+         fw9e0IlrHtQZ2jor75W0BSGrG4Uwakr3Xki74avgavFyZfcLfexWEPw1petagsGRqbsi
+         xoMA==
+X-Gm-Message-State: AFqh2kr5xc63DRMOOUmb5Y+R4pdpukD3cVtC620cfqqrDFNqyhBbvvZu
+        cPo0p6FUs3kiUAwzoP+k91HpRvUBUI5MUvHBwj0=
+X-Google-Smtp-Source: AMrXdXuy6RV5DBW3idauFhx1utsKIy/tzX1PwuIHZiENrh5zCMKQgqD9oBX+tZBveG7/3LbSFusOjNssMxTFlJ2Y1NU=
+X-Received: by 2002:a05:6870:4b8d:b0:14f:d35e:b7fa with SMTP id
+ lx13-20020a0568704b8d00b0014fd35eb7famr3510003oab.222.1673053439258; Fri, 06
+ Jan 2023 17:03:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:6808:2387:0:0:0:0 with HTTP; Fri, 6 Jan 2023 17:03:58
+ -0800 (PST)
+Reply-To: jamesaissy13@gmail.com
+From:   James AISSY <samueltia200@gmail.com>
+Date:   Fri, 6 Jan 2023 17:03:58 -0800
+Message-ID: <CAOD2y7mxfJEiJcw8zGx8n6ktU0yeDj2shbDio9PsogOVj9NGZQ@mail.gmail.com>
+Subject: Hello
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=4.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,UNDISC_FREEM autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-tree/branch: git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git new_module_alloc_build_test
-branch HEAD: 59c58e6f71e349eab2b969a214f7a2c0f60490ae  module: replace module_layout with module_memory
+Hello My Dear,
 
-Error/Warning reports:
+I hope this message finds you in good Health.
 
-https://lore.kernel.org/oe-kbuild-all/202301061151.XetztmJd-lkp@intel.com
+My name is Mr. James AISSY. I am looking for a partner who is willing to
+team up with me for potential investment opportunities. I shall provide the
+FUND for the investment, and upon your acknowledgment of receiving this
+Message I will therefore enlighten you with the Full Details of my
+investment proposal.
 
-Error/Warning: (recently discovered and may have been fixed)
+I'm awaiting your Response.
 
-arch/parisc/kernel/module.c:89:21: error: 'lod' undeclared (first use in this function); did you mean 'loc'?
-
-Error/Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-`-- parisc-allyesconfig
-    `-- arch-parisc-kernel-module.c:error:lod-undeclared-(first-use-in-this-function)
-
-elapsed time: 720m
-
-configs tested: 72
-configs skipped: 2
-
-gcc tested configs:
-x86_64                            allnoconfig
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                          randconfig-a014
-i386                          randconfig-a012
-arc                  randconfig-r043-20230106
-i386                          randconfig-a016
-arm                  randconfig-r046-20230106
-arm                      jornada720_defconfig
-i386                          randconfig-a005
-powerpc                       maple_defconfig
-sh                           se7751_defconfig
-csky                             alldefconfig
-sh                        edosk7760_defconfig
-arm                        spear6xx_defconfig
-sh                                  defconfig
-sh                          sdk7786_defconfig
-i386                             allyesconfig
-i386                                defconfig
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-x86_64                           rhel-8.3-kvm
-x86_64                           rhel-8.3-syz
-x86_64                           rhel-8.3-bpf
-x86_64                         rhel-8.3-kunit
-i386                          randconfig-c001
-powerpc                    klondike_defconfig
-mips                     decstation_defconfig
-powerpc                        warp_defconfig
-powerpc                           allnoconfig
-um                             i386_defconfig
-arm                                 defconfig
-um                           x86_64_defconfig
-arc                                 defconfig
-m68k                             allyesconfig
-s390                             allmodconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-alpha                               defconfig
-arm                              allyesconfig
-alpha                            allyesconfig
-s390                                defconfig
-arm64                            allyesconfig
-sh                               allmodconfig
-s390                             allyesconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-
-clang tested configs:
-i386                          randconfig-a002
-i386                          randconfig-a004
-i386                          randconfig-a013
-i386                          randconfig-a011
-x86_64                        randconfig-a016
-hexagon              randconfig-r041-20230106
-s390                 randconfig-r044-20230106
-i386                          randconfig-a015
-arm                          pxa168_defconfig
-riscv                randconfig-r042-20230106
-i386                              allnoconfig
-hexagon              randconfig-r045-20230106
-arm                       netwinder_defconfig
-arm                         orion5x_defconfig
-arm                           omap1_defconfig
-powerpc                 mpc8272_ads_defconfig
-arm                            dove_defconfig
-i386                          randconfig-a006
-mips                        maltaup_defconfig
-x86_64                          rhel-8.3-rust
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+My regards,
+Mr. James AISSY.
