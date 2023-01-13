@@ -2,88 +2,68 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D9A2668824
-	for <lists+linux-raid@lfdr.de>; Fri, 13 Jan 2023 01:11:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 760F166903D
+	for <lists+linux-raid@lfdr.de>; Fri, 13 Jan 2023 09:13:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240079AbjAMALo (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 12 Jan 2023 19:11:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56398 "EHLO
+        id S239998AbjAMINu (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 13 Jan 2023 03:13:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240146AbjAMALk (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 12 Jan 2023 19:11:40 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8428A5B16C;
-        Thu, 12 Jan 2023 16:11:36 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S231745AbjAMINL (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 13 Jan 2023 03:13:11 -0500
+X-Greylist: delayed 3602 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 13 Jan 2023 00:11:49 PST
+Received: from mp-relay-02.fibernetics.ca (mp-relay-02.fibernetics.ca [208.85.217.137])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4DF048827;
+        Fri, 13 Jan 2023 00:11:46 -0800 (PST)
+Received: from mailpool-fe-01.fibernetics.ca (mailpool-fe-01.fibernetics.ca [208.85.217.144])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1C53E621EB;
-        Fri, 13 Jan 2023 00:11:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4808FC43446;
-        Fri, 13 Jan 2023 00:11:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673568695;
-        bh=LyGbrGRKlgQUG/6dRhmrOxWQZAI+7ZeRlrySnO8o+wY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CGz2fCFBpFPtDlfqbl722O++VKcLg5CZhk3XeXgsvT10C/Lk0VXQ2IByAiFnnOpSy
-         gWUmtwgJqL3dAN8LS0BuxIXt59+wTDaQQdeyV1GBG3ENjo3tXaDCIn5qVz8HFOXqxT
-         wH4kyN6ceuuw5zV579pwfsPQMxsu3zUyaJTWU1AD3DnSM9InxH6rmgStmHdokViarP
-         +3+2hvcSjhPoGeD4M9gClP/w/MylYUL7F6i+aLgIyrJCWFZ2JsSq1xX90lJeoIpHKp
-         xjq40rF/U6aF+RMYUIeYJN5cZr/RQovux3mXIcMUCw0JxX1AKmpFTX8KjTo1EmUtvj
-         OJGYcub5PB5ww==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-        id A0E425C118F; Thu, 12 Jan 2023 16:11:34 -0800 (PST)
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@meta.com,
-        rostedt@goodmis.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Song Liu <song@kernel.org>, Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@kernel.org>, dm-devel@redhat.com,
-        linux-raid@vger.kernel.org, John Ogness <john.ogness@linutronix.de>
-Subject: [PATCH rcu v2 06/20] drivers/md: Remove "select SRCU"
-Date:   Thu, 12 Jan 2023 16:11:18 -0800
-Message-Id: <20230113001132.3375334-6-paulmck@kernel.org>
-X-Mailer: git-send-email 2.31.1.189.g2e36527f23
-In-Reply-To: <20230113001103.GA3374173@paulmck-ThinkPad-P17-Gen-1>
-References: <20230113001103.GA3374173@paulmck-ThinkPad-P17-Gen-1>
+        by mp-relay-02.fibernetics.ca (Postfix) with ESMTPS id 2BD0A70D66;
+        Fri, 13 Jan 2023 05:47:46 +0000 (UTC)
+Received: from localhost (mailpool-mx-01.fibernetics.ca [208.85.217.140])
+        by mailpool-fe-01.fibernetics.ca (Postfix) with ESMTP id D208626892;
+        Fri, 13 Jan 2023 05:47:45 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at 
+X-Spam-Score: 3.651
+X-Spam-Level: ***
+X-Spam-Status: No, score=3.6 required=5.0 tests=BAYES_50,
+        FREEMAIL_FORGED_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,SPF_HELO_NONE,
+        SPF_PASS,SUBJ_ALL_CAPS autolearn=no autolearn_force=no version=3.4.6
+Received: from mailpool-fe-01.fibernetics.ca ([208.85.217.144])
+        by localhost (mail-mx-01.fibernetics.ca [208.85.217.140]) (amavisd-new, port 10024)
+        with ESMTP id esUwsufxhvnb; Fri, 13 Jan 2023 05:47:45 +0000 (UTC)
+Received: from localhost (unknown [208.85.220.72])
+        by mail.ca.inter.net (Postfix) with ESMTP id F10692688E;
+        Fri, 13 Jan 2023 05:47:42 +0000 (UTC)
+Received: from reverse.rain.network (reverse.rain.network [197.184.176.8])
+ by webmail.ca.inter.net (Horde Framework) with HTTP; Fri, 13 Jan 2023
+ 00:47:42 -0500
+Message-ID: <20230113004742.621163hyb1z0eida@webmail.ca.inter.net>
+Date:   Fri, 13 Jan 2023 00:47:42 -0500
+From:   INFO <boothg@istar.ca>
+Reply-to: s.g0392440821@gmail.com
+To:     undisclosed-recipients:;
+Subject: IST DIESE E-MAIL AKTIV?
 MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=ISO-8859-1;
+ DelSp="Yes";
+ format="flowed"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Internet Messaging Program (IMP) H3 (4.3.7)
+X-Originating-User-Info: boothg@istar.ca 208.85.219.96
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Now that the SRCU Kconfig option is unconditionally selected, there is
-no longer any point in selecting it.  Therefore, remove the "select SRCU"
-Kconfig statements.
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Cc: Song Liu <song@kernel.org>
-Cc: Alasdair Kergon <agk@redhat.com>
-Cc: Mike Snitzer <snitzer@kernel.org>
-Cc: <dm-devel@redhat.com>
-Cc: <linux-raid@vger.kernel.org>
-Reviewed-by: John Ogness <john.ogness@linutronix.de>
----
- drivers/md/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/md/Kconfig b/drivers/md/Kconfig
-index 998a5cfdbc4e9..5f1e2593fad7e 100644
---- a/drivers/md/Kconfig
-+++ b/drivers/md/Kconfig
-@@ -6,7 +6,6 @@
- menuconfig MD
- 	bool "Multiple devices driver support (RAID and LVM)"
- 	depends on BLOCK
--	select SRCU
- 	help
- 	  Support multiple physical spindles through a single logical device.
- 	  Required for RAID and logical volume management.
--- 
-2.31.1.189.g2e36527f23
+Sehr geehrter E-Mail-Begünstigter, Sie wurden für eine Spende in Höhe  
+von 3.500.000,00 ? ausgewählt. Wenden Sie sich an diese  
+E-Mail-Adresse: s.g0392440821@gmail.com, um weitere Informationen zum  
+Erhalt Ihrer Spende zu erhalten. Vielen Dank
 
