@@ -2,83 +2,77 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ADAF96719A2
-	for <lists+linux-raid@lfdr.de>; Wed, 18 Jan 2023 11:51:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 87F7F673622
+	for <lists+linux-raid@lfdr.de>; Thu, 19 Jan 2023 11:55:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229535AbjARKvG (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 18 Jan 2023 05:51:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44040 "EHLO
+        id S229606AbjASKzR (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 19 Jan 2023 05:55:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230182AbjARKtD (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 18 Jan 2023 05:49:03 -0500
-Received: from mail.thelounge.net (mail.thelounge.net [91.118.73.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFF734C0F
-        for <linux-raid@vger.kernel.org>; Wed, 18 Jan 2023 01:57:11 -0800 (PST)
-Received: from [10.10.10.2] (rh.vpn.thelounge.net [10.10.10.2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: h.reindl@thelounge.net)
-        by mail.thelounge.net (THELOUNGE MTA) with ESMTPSA id 4Nxh4h1gBrzXKm;
-        Wed, 18 Jan 2023 10:57:08 +0100 (CET)
-Message-ID: <964b05d3-4782-55be-1487-613fd9c5019f@thelounge.net>
-Date:   Wed, 18 Jan 2023 10:57:07 +0100
+        with ESMTP id S230114AbjASKzI (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 19 Jan 2023 05:55:08 -0500
+Received: from mail-vs1-xe35.google.com (mail-vs1-xe35.google.com [IPv6:2607:f8b0:4864:20::e35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21F784ABFF
+        for <linux-raid@vger.kernel.org>; Thu, 19 Jan 2023 02:55:06 -0800 (PST)
+Received: by mail-vs1-xe35.google.com with SMTP id 3so1704739vsq.7
+        for <linux-raid@vger.kernel.org>; Thu, 19 Jan 2023 02:55:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=HU/pnOZYgJ2SpGrPDXce4RvNZtRSAHBUc68+RlbrRf4=;
+        b=KQUpkkI7fwH5bSh62ZwzdnloHQrgrM7kAGV9A9Gf/CXUTJO3YAipzSExFXI9oicHTw
+         yQQJDhDfrQtC3tqnJxmKGFyLwcn2GL4R/70paaDjkTEXdB9Lv9/TlOCZoA4+DxgqjZ21
+         MhR/sQSgqiBg+4gaUFBKL/i4HFjC5pKfap1n2C3eAEPcJ/bpPRNeyhSe6i+0r79JoQLW
+         HENL9zO5b5SSD4xOE26JF1LZ3CJ1TG1Jf7RHgT8sl2KqUH4uQksAs4rrlL4q2w87J2hJ
+         qS7A8U3hQfngl16D9Ci4K2EWJH1YRUKD1Vq6+XV2cuWQtG0WzonXsGG4Lm1IG8hF9z/q
+         o3vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HU/pnOZYgJ2SpGrPDXce4RvNZtRSAHBUc68+RlbrRf4=;
+        b=H7z0Q5/OvSHufJGsMeL923YA0NsVBEPN9lDervaqH2kycvD7dv0srTH//1JsZQjCPI
+         qBp8PNaCHepQzveuS1Q7wBH5oFYRehwvb60NORaITp5GKgIr0E51q7YSedN6GuZ57MXm
+         dr3VcQtlRysmi29SwrVgQ8PSiHzbg+xxiUJl6XzN1PcSR96iFQlWH6m9L2rqpBVTmchJ
+         VsNZJw55xfN/nNvysfTTurQBrTYlgPfOdSFFBiqGqHjPiIJBBkfD/RLDpp6MqZLwV/yE
+         pkAAwBNsjEexeLF32DieGzgjmUeJZjxTwaAQTeDEEVN1FAYjeH9oS2mxDFYhdB86ugAE
+         aKFA==
+X-Gm-Message-State: AFqh2ko0+OscF3Ikm6nIz3Vvdco+n8DH66n0yJxN/KQDtytOWvx4UKsU
+        Qm2bl7hizpNUgdkta8YiC6L+xO/8Qf7Y/AoWo0jqR5+I10g=
+X-Google-Smtp-Source: AMrXdXuzuJ62FLj4yxwgVb02fgowvx3uO95hok2toa9e6QVdmn/k1vzagC+3LZY1TH1ov/PNWtIHOBd7NVDyGAk0NjM=
+X-Received: by 2002:a05:6102:1349:b0:3b1:3552:cb03 with SMTP id
+ j9-20020a056102134900b003b13552cb03mr1678184vsl.53.1674125705053; Thu, 19 Jan
+ 2023 02:55:05 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: What does TRIM/discard in RAID do ?
-Content-Language: en-US
-To:     Pascal Hambourg <pascal@plouf.fr.eu.org>,
-        Wols Lists <antlists@youngman.org.uk>,
-        linux-raid <linux-raid@vger.kernel.org>
-References: <f8531fc8-6928-5300-b43e-1cad0a4ab03b@plouf.fr.eu.org>
- <dbca2904-1200-a81f-cc6d-300e8def6a96@thelounge.net>
- <2d0a1dad-1961-78df-4c89-e404537c1350@plouf.fr.eu.org>
- <61723f2a-8447-c694-f0b2-1b2b538aa5d0@thelounge.net>
- <68262873-6ceb-f28a-0dae-67d373af7d1f@youngman.org.uk>
- <28fe352b-1391-0227-5a1d-a3122c5e2e78@thelounge.net>
- <f7b9c725-d807-87c1-0fbd-774c18eeb8dc@thelounge.net>
- <162b3fc0-b5ee-f4e2-7f02-2e95cc20047b@plouf.fr.eu.org>
-From:   Reindl Harald <h.reindl@thelounge.net>
-Organization: the lounge interactive design
-In-Reply-To: <162b3fc0-b5ee-f4e2-7f02-2e95cc20047b@plouf.fr.eu.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <CAMnA3U1b6n34SzNh9RQROyP-=AkN9ZsLunm_aokV+BDAeR2vrw@mail.gmail.com>
+ <CAMnA3U00_JONs-e8afbUE+EOf2Zex0wOKSaWc1YxeF5hQh5nQQ@mail.gmail.com>
+ <3199b9d7-3974-a953-e101-f48d8661fd2b@youngman.org.uk> <CAMnA3U0NfnunoTfQJ5VmkRVWFP3KCXU4ZZgmY7zTMHaHrL2CUw@mail.gmail.com>
+ <02c27a6b-1675-16ca-5261-78b02f7142f4@youngman.org.uk>
+In-Reply-To: <02c27a6b-1675-16ca-5261-78b02f7142f4@youngman.org.uk>
+From:   Tiago Afonso <tiaafo@gmail.com>
+Date:   Thu, 19 Jan 2023 10:54:53 +0000
+Message-ID: <CAMnA3U1ZCXYbFsCOCV5ogX77cN0gTOs54CSLRhR4Z5LkFEnVaA@mail.gmail.com>
+Subject: Re: Fwd: RAID 5 growing hanged at 0.0%
+To:     Wols Lists <antlists@youngman.org.uk>
+Cc:     linux-raid@vger.kernel.org, Phil Turmel <philip@turmel.org>,
+        NeilBrown <neilb@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+Hi,
+So, no other ideas?
+I'm thinking of buying 4 toshiba N300 drives to clone these 4 drives,
+just so I can be safer in messing around.
 
-
-Am 18.01.23 um 00:26 schrieb Pascal Hambourg:
-> On 15/01/2023 at 17:01, Reindl Harald wrote:
->>
->>
->> Am 15.01.23 um 16:52 schrieb Reindl Harald:
->>
->> in such implementations you have to consider
->>
->> * re-add of devices
-> 
-> Not affected. Use the event count and the write-intent bitmap as usual.
-> 
->> * file-systems with no trim-support
-> 
-> Not affected. An device does not need TRIM support to know which blocks 
-> have been written and contain valid data
-
-well, fstrim/discard don't do anything on a HDD at the FS layer
-
-[root@localhost:~]$ lsscsi
-[0:0:0:0]    disk    ATA      WDC WD10EZEX-60Z 0A80  /dev/sda
-[1:0:0:0]    disk    ATA      ST1000DM003-1ER1 CC43  /dev/sdb
-
-[root@localhost:~]$ fstrim -v  /
-fstrim: /: the discard operation is not supported
-
-
+BR,
+Tiago Afonso
