@@ -2,75 +2,83 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5741A67412A
-	for <lists+linux-raid@lfdr.de>; Thu, 19 Jan 2023 19:44:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B0AB6749A1
+	for <lists+linux-raid@lfdr.de>; Fri, 20 Jan 2023 03:58:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229630AbjASSoK (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 19 Jan 2023 13:44:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60422 "EHLO
+        id S229552AbjATC6f (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 19 Jan 2023 21:58:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230326AbjASSoH (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 19 Jan 2023 13:44:07 -0500
-Received: from mallaury.nerim.net (smtp-104-thursday.noc.nerim.net [178.132.17.104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 02947792B4
-        for <linux-raid@vger.kernel.org>; Thu, 19 Jan 2023 10:44:03 -0800 (PST)
-Received: from [192.168.0.252] (plouf.fr.eu.org [213.41.155.166])
-        by mallaury.nerim.net (Postfix) with ESMTP id C4A9FDB17D;
-        Thu, 19 Jan 2023 19:43:56 +0100 (CET)
-Message-ID: <b4af98c2-c621-f2c0-1f55-d7fcf4959871@plouf.fr.eu.org>
-Date:   Thu, 19 Jan 2023 19:43:53 +0100
+        with ESMTP id S229453AbjATC6f (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 19 Jan 2023 21:58:35 -0500
+Received: from hermes.turmel.org (hermes.turmel.org [IPv6:2604:180:f1::1e9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F05A59D0
+        for <linux-raid@vger.kernel.org>; Thu, 19 Jan 2023 18:58:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=turmel.org;
+         s=a; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:To
+        :Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:Cc:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=P9C21OWwtcXow7rFt4uZknHc835fHfInJvd/XRZKD+8=; b=pp5zL+hDDrRMGGiKhSWmSKNnw+
+        XN6U3m84MfxYuVvnjlM/UiGoUOnhb5JWF14rfLHN1/y8L1wzi6Wfr6zU9PjUUdqHEcIW3yaXNjau/
+        8yqsEYbSCLSUexYGWpNCtvh8NspFxkCyHVSYpH6RCv1V9CB7lsxKXlJOqvlPdelR/9UTmGeRgdday
+        m8gn2X+M1n+HTyI0mM+FjSNWc7Z6IHNMBdAYUHz43bSEHaEo4Yj/Z1O04DCoPjBGpGdcS9H4VC3fN
+        RiwLU1gnOTCQInRXfgvftbOpzM3lM58LJmfKI6q0udIQT3qwvvjeVVju16evuJjQ79dIuqHqhMEjw
+        rCYXlW6A==;
+Received: from 108-70-166-50.lightspeed.tukrga.sbcglobal.net ([108.70.166.50] helo=[192.168.20.123])
+        by hermes.turmel.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <philip@turmel.org>)
+        id 1pIhSB-0002Pb-47; Fri, 20 Jan 2023 02:48:31 +0000
+Message-ID: <5d2a537e-79bf-18df-6288-cc3a54834147@turmel.org>
+Date:   Thu, 19 Jan 2023 21:48:30 -0500
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: What does TRIM/discard in RAID do ?
+ Thunderbird/102.4.2
+Subject: Re: Transferring an existing system from non-RAID disks to RAID1
+ disks in the same computer
+To:     Wols Lists <antlists@youngman.org.uk>,
+        Reindl Harald <h.reindl@thelounge.net>,
+        H <agents@meddatainc.com>,
+        Linux RAID Mailing List <linux-raid@vger.kernel.org>
+References: <273d1fc9-853f-a8fa-bb47-2883ba217820@meddatainc.com>
+ <37a150cb-286b-4137-bb72-08e2de21c851@youngman.org.uk>
+ <9aab4088-3ba3-3c7c-4254-a0d829b06066@thelounge.net>
+ <d9a4dea4-c15d-453d-9a60-4694e31147b1@youngman.org.uk>
 Content-Language: en-US
-To:     Reindl Harald <h.reindl@thelounge.net>,
-        Wols Lists <antlists@youngman.org.uk>,
-        linux-raid <linux-raid@vger.kernel.org>
-References: <f8531fc8-6928-5300-b43e-1cad0a4ab03b@plouf.fr.eu.org>
- <dbca2904-1200-a81f-cc6d-300e8def6a96@thelounge.net>
- <2d0a1dad-1961-78df-4c89-e404537c1350@plouf.fr.eu.org>
- <61723f2a-8447-c694-f0b2-1b2b538aa5d0@thelounge.net>
- <68262873-6ceb-f28a-0dae-67d373af7d1f@youngman.org.uk>
- <28fe352b-1391-0227-5a1d-a3122c5e2e78@thelounge.net>
- <f7b9c725-d807-87c1-0fbd-774c18eeb8dc@thelounge.net>
- <162b3fc0-b5ee-f4e2-7f02-2e95cc20047b@plouf.fr.eu.org>
- <964b05d3-4782-55be-1487-613fd9c5019f@thelounge.net>
-From:   Pascal Hambourg <pascal@plouf.fr.eu.org>
-Organization: Plouf !
-In-Reply-To: <964b05d3-4782-55be-1487-613fd9c5019f@thelounge.net>
+From:   Phil Turmel <philip@turmel.org>
+In-Reply-To: <d9a4dea4-c15d-453d-9a60-4694e31147b1@youngman.org.uk>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 18/01/2023 at 10:57, Reindl Harald wrote:
-> Am 18.01.23 um 00:26 schrieb Pascal Hambourg:
->>>
->>> in such implementations you have to consider
->>
->>> * file-systems with no trim-support
->>
->> Not affected. A device does not need TRIM support to know which 
->> blocks have been written and contain valid data
-> 
-> well, fstrim/discard don't do anything on a HDD at the FS layer
+On 1/15/23 04:20, Wols Lists wrote:
 
-(Hard disks with SMR technology may support TRIM to avoid useless 
-read-modify-write operations, but SMR is not recommended for RAID so it 
-is a bit out-topic.)
+> IF YOU CAN GUARANTEE that /boot/efi is only ever modified inside linux, 
+> then raid it. Why not? Personally, I'm not sure that guarantee holds.
 
-Not sure I get your point. How is a filesystem with no TRIM support 
-related with a hard disk with no TRIM support ?
+Your EFI bios can write to these partitions, too, under operator control.
 
-Currently the RAID layer does TRIM/discard pass-through only, so it 
-returns the status of the underlying devices. If it stored information 
-about which blocks contain valid data, I guess it would have to 
-advertise TRIM/discard support for itself regardless of the underlying 
-devices.
+> If you do raid it, then you MUST use the 1.0 superblock, otherwise it 
+> will be inaccessible outside of linux. Seeing as the system needs it 
+> before linux boots, that's your classic catch-22.
+
+I recommend *not* using any raid on your EFI partitions.  Make them all 
+separate, so your BIOS can tell that they are distinct filesystems (raid 
+would duplicate the FS UUID/label/CRC).
+
+When separate, you can use efibootmgr to make the extra one(s) fallback 
+boot devices.
+
+Use a hook in initramfs-tools to make /boot/efi[2..N] match /boot/efi 
+whenever kernels get installed/modified.
+
+Phil
