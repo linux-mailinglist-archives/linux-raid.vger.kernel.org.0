@@ -2,27 +2,27 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EEA66769E7
-	for <lists+linux-raid@lfdr.de>; Sat, 21 Jan 2023 23:59:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CE83B676A40
+	for <lists+linux-raid@lfdr.de>; Sun, 22 Jan 2023 00:02:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229709AbjAUW7G (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 21 Jan 2023 17:59:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53854 "EHLO
+        id S229735AbjAUXCL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 21 Jan 2023 18:02:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229463AbjAUW7G (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 21 Jan 2023 17:59:06 -0500
+        with ESMTP id S229463AbjAUXCK (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 21 Jan 2023 18:02:10 -0500
 Received: from mail.thelounge.net (mail.thelounge.net [91.118.73.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A821A44B9
-        for <linux-raid@vger.kernel.org>; Sat, 21 Jan 2023 14:59:05 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 217F044B9
+        for <linux-raid@vger.kernel.org>; Sat, 21 Jan 2023 15:02:10 -0800 (PST)
 Received: from [10.10.10.2] (rh.vpn.thelounge.net [10.10.10.2])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-256))
         (No client certificate requested)
         (Authenticated sender: h.reindl@thelounge.net)
-        by mail.thelounge.net (THELOUNGE MTA) with ESMTPSA id 4NzsHT00W0zXL7;
-        Sat, 21 Jan 2023 23:59:00 +0100 (CET)
-Message-ID: <68c6a9ff-91c9-811a-b4eb-9981ae8ad0a6@thelounge.net>
-Date:   Sat, 21 Jan 2023 23:59:00 +0100
+        by mail.thelounge.net (THELOUNGE MTA) with ESMTPSA id 4NzsM130wmzXL7;
+        Sun, 22 Jan 2023 00:02:05 +0100 (CET)
+Message-ID: <2e189f92-6067-2d55-1b86-2143d3183112@thelounge.net>
+Date:   Sun, 22 Jan 2023 00:02:05 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
@@ -77,11 +77,25 @@ Am 21.01.23 um 23:56 schrieb Pascal Hambourg:
 >>
 >> LSB is dead
 > 
-> LSB has nothing to do with this
+> LSB has nothing to do with this.
+> 
+>> "BootLoaderSpec" is supposed to fix all the mess around UEFI and 
+>> bootloaders
+> 
+> You are not seriously believing this, are you ?
 
-fine, so nobody else but you knows what "part of standard Linux 
-filesystem" means - i can't read your mind
+i have no idea what you don't understand in "is supposed to"
 
-it's difficult wehn people mix different topics as well as questions 
-about "what is" and "what would be nice if it would"
+>> initramfs execution is completly irrelevant for the topic
+> 
+> Why they did you agree that it was a fine place to sync EFI partitions ?
+
+i did not
+
+> I'm not talking about that. I'm talking about other boot loader updates 
+> that may happen independently of kernel updates
+
+which is the reason why multi-boot is dead - it didnt't work well 20 
+years ago and it works worser these days
+
 
