@@ -2,60 +2,65 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AFA2E68670B
-	for <lists+linux-raid@lfdr.de>; Wed,  1 Feb 2023 14:37:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3678B6867D8
+	for <lists+linux-raid@lfdr.de>; Wed,  1 Feb 2023 15:01:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232103AbjBANhT (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 1 Feb 2023 08:37:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32896 "EHLO
+        id S230174AbjBAOBO (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 1 Feb 2023 09:01:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229487AbjBANhS (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 1 Feb 2023 08:37:18 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57EC61BFE
-        for <linux-raid@vger.kernel.org>; Wed,  1 Feb 2023 05:37:17 -0800 (PST)
+        with ESMTP id S231725AbjBAOBI (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 1 Feb 2023 09:01:08 -0500
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70DF63AB7
+        for <linux-raid@vger.kernel.org>; Wed,  1 Feb 2023 06:01:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675258637; x=1706794637;
+  t=1675260067; x=1706796067;
   h=date:from:to:cc:subject:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=/fX9RN8wKIjs5YOlPSnu5gurBPYSXAaefH0lNds4jMc=;
-  b=kXbrc20ZlB8jOG8v+BwEQGS/p4AlQOuGNkbvsTj/JHTKjmzt1/1EfcW6
-   WruRtpXDXLFkVWogvWzlaA19OUkJi2Q/7xlxYPjbK0GZ/l3366U10AXNX
-   iMLnVg7plp7bgFJqzW9M+6rvqn9InMThui53QdCbxMiAYEROXi70jAkno
-   VPxih7JfmTfyUFznvhTJgJNrDjirVww2FtEaqQCEiOQcCJyhR3hzwdORX
-   tXILWsmI4/8Vc/T67UtneSw63fz0X40cdIgTGscxW8CCPQKB6VyyNhGze
-   E66EmSoy1QIujhLw5LU8digFG1/fxU0NgxRYs3l6grmMWYsMlQALLXsvU
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10607"; a="316137676"
+  bh=0X2lUjLNY0Dd/hbMlfh4kjnagH7R7iP3W1vu9whl+5c=;
+  b=UHf/CKO0yCe6l6HEuHriGWSaNjW9yW5pO1ZtTtO+pZkofiuy2c6FpS2w
+   7teoOPFoEadxmvMU5UZ7h1ivOC/Enlvxg1i73CDVhygrNSszAxPTmqWzm
+   1u6q/aAwCjdK+c5IfucMIRYlewI6LS3rOjalWZL6Sz4+t/XOGc0Q4/UoZ
+   zRvZKWGhrsNqsw8O3tjph4IHfJdbdKjlbZIt08ltqCJcaYJjuAO+iIAlH
+   pqvoBizERvQU88yHnRYBTyLmCU4A7smwNIeS3I/s82VGnywKcYNETdSBQ
+   RXd6CXUk37uIBkJ9+oiM6WydI4GCCCWkAjnLa3MFHN41RxGfrir7VeQrS
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="311790904"
 X-IronPort-AV: E=Sophos;i="5.97,263,1669104000"; 
-   d="scan'208";a="316137676"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2023 05:37:16 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10607"; a="695358714"
+   d="scan'208";a="311790904"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2023 06:01:06 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="728409554"
 X-IronPort-AV: E=Sophos;i="5.97,263,1669104000"; 
-   d="scan'208";a="695358714"
-Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.252.35.103])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2023 05:37:14 -0800
-Date:   Wed, 1 Feb 2023 14:37:09 +0100
+   d="scan'208";a="728409554"
+Received: from todonova-mobl3.ger.corp.intel.com (HELO localhost) ([10.252.35.103])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2023 06:01:03 -0800
+Date:   Wed, 1 Feb 2023 15:00:32 +0100
 From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-To:     Kinga Tanska <kinga.tanska@linux.intel.com>
-Cc:     Nigel Croxon <ncroxon@redhat.com>, linux-raid@vger.kernel.org,
-        jes@trained-monkey.org, mariusz.tkaczyk@intel.com,
-        kinga.tanska@intel.com
-Subject: Re: [PATCH] mdadm reshape hangs on external grow chunk
-Message-ID: <20230201143709.00001086@linux.intel.com>
-In-Reply-To: <20221117150525.00002743@linux.intel.com>
-References: <20220923142635.470305-1-ncroxon@redhat.com>
-        <20220929113521.000012af@intel.linux.com>
-        <20221117150525.00002743@linux.intel.com>
+To:     Jes Sorensen <jes@trained-monkey.org>, Coly Li <colyli@suse.de>
+Cc:     Logan Gunthorpe <logang@deltatee.com>, Xiao Ni <xni@redhat.com>,
+        linux-raid@vger.kernel.org,
+        Guoqing Jiang <guoqing.jiang@linux.dev>,
+        Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+        Jonmichael Hands <jm@chia.net>,
+        Stephen Bates <sbates@raithlin.com>,
+        Martin Oliveira <Martin.Oliveira@eideticom.com>,
+        David Sloan <David.Sloan@eideticom.com>
+Subject: Re: [PATCH mdadm v6 0/7] Write Zeroes option for Creating Arrays
+Message-ID: <20230201150032.00003a4f@linux.intel.com>
+In-Reply-To: <753b5edc-9a34-dce3-051d-514f8d43f3cd@deltatee.com>
+References: <20221123190954.95391-1-logang@deltatee.com>
+        <CALTww2_veP=bkpz5Z03VjmF=0dH-D9WqD2+K5A9cBiK5Pb-USg@mail.gmail.com>
+        <85822a83-f4cc-b699-d589-b6c5590b3f98@redhat.com>
+        <753b5edc-9a34-dce3-051d-514f8d43f3cd@deltatee.com>
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -63,38 +68,24 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi Nigel,
-Ping?
+Hi Jes and Coly,
+Could you take this? I believe that it is ready to be merged.
 
 Thanks,
 Mariusz
 
-On Thu, 17 Nov 2022 15:07:41 +0100
-Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com> wrote:
-> On Thu, 29 Sep 2022 11:35:21 +0200
-> Kinga Tanska <kinga.tanska@linux.intel.com> wrote:
+On Thu, 19 Jan 2023 10:39:54 -0700
+Logan Gunthorpe <logang@deltatee.com> wrote:
+
+> On 2023-01-06 00:53, Xiao Ni wrote:
+> > Hi Jes
+> > 
+> > Just a reminder about this series of patches.  
 > 
-> > On Fri, 23 Sep 2022 10:26:35 -0400
-> > Nigel Croxon <ncroxon@redhat.com> wrote:
-> >   
-> > > After creating a raid array on top of a imsm container. Try to
-> > > grow the chunk size and the reshape will hang with zero progress.
-> > > The reason is the computation of sync_max_to_set value:
-> > 
-> > Hi Nigel,
-> > 
-> > I was trying to retest with your patch but still have the defect. I
-> > analyzed it and found another reason, which causes this defect. In
-> > validate_geometry_imsm function freesize and super is being checked and
-> > return 1 if any of those is NULL. In my opinion 0 shall be returned
-> > here, because it is an error and reshape should be stopped here. I will
-> > prepare proper patch and send to review immediately.
-> >   
-> Hi Nigel,
-> I agree with Kinga.
-> https://patchwork.kernel.org/project/linux-raid/patch/20221028025117.27048-1-kinga.tanska@intel.com/
-> Could you please retest the proposed patch on your side and provide feedback?
+> Any progress on this? Should I resend it? I haven't heard much feedback
+> in a while.
 > 
 > Thanks,
-> Mariusz
+> 
+> Logan
 
