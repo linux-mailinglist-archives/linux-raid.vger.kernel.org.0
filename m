@@ -2,77 +2,73 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AD8268DC75
-	for <lists+linux-raid@lfdr.de>; Tue,  7 Feb 2023 16:07:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 688AF68DFA1
+	for <lists+linux-raid@lfdr.de>; Tue,  7 Feb 2023 19:12:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230411AbjBGPHq (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 7 Feb 2023 10:07:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49838 "EHLO
+        id S231263AbjBGSMf (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 7 Feb 2023 13:12:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231258AbjBGPHp (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 7 Feb 2023 10:07:45 -0500
-Received: from mail-vk1-xa2f.google.com (mail-vk1-xa2f.google.com [IPv6:2607:f8b0:4864:20::a2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5C904490
-        for <linux-raid@vger.kernel.org>; Tue,  7 Feb 2023 07:07:41 -0800 (PST)
-Received: by mail-vk1-xa2f.google.com with SMTP id g25so437735vkk.11
-        for <linux-raid@vger.kernel.org>; Tue, 07 Feb 2023 07:07:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=hZCrZKTJaKHFkgYbRknNmliNod7nxAZfgWs4NlP6H28=;
-        b=BNDgpD67jepvnBTdC2YGoVtTvDu78AN81TLJwE1menCZt6z56dR+vMxjlUl0e3Ga5C
-         36QLSvAXdYpLqsXvjKjvuKJPYQVlM736v9wNoW4rDMlvmD0//K78xCB+veR6dJwHrzra
-         GmamWCQMQA3pbUeaMHrvyTV4O5ehOxF0NXTb3Qk6/g1qYliHnm4a7NAmqzbRTL3StzaQ
-         gdXIFuOHtcKVQQ6HCwlhpWFArIiPdCPwhcxjY1LK1WQZJg/6SXas1huDdm/kLYq7SLuj
-         gWiDUB80m/sABWBQVMOIJ4Zg+LU8MQ7CZ11u1wvQJFH/MhJtw8YagxREPHyi4vVhhhJ0
-         sEng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hZCrZKTJaKHFkgYbRknNmliNod7nxAZfgWs4NlP6H28=;
-        b=VJg/+vD4bD0764Om5D1G/EfWu+joehm6h/AF/QDaZe5L3tNJwFxdMxKSBXVSm4OfiA
-         fSFnLpZAqzCNwj+ix2HKh94ZYa/Ra+sEem9chKW2T/v8E4vg9FQiP6n4LiXcclaQ0gnv
-         BzbqkLld9i0keWBF73uqvMre3EJZTK2K4M8I5HiZvk4hVYgbXPXoEPc6BTxmIubkbapV
-         5t1DqsbrQ3iQmXH2slU//xJorx8zelt24eQvimRDXZtFzPrHS2UIeXJt+5eVVZzLe7l9
-         Bq5RPlKll5DbJwFgpknN01dDJ/+ooWZCbdiAwSQrj0JG37ia+R4RwkT0rYtwkUobtXKE
-         iu1Q==
-X-Gm-Message-State: AO0yUKUwn6X0qxAUiBHM3XKpyvvR8fCi3dXRVLqpSl1pGp7sSBX9x9uX
-        L/609hFMrqBZ0cLqosAEkfVS7NEW/ImSUJXucag=
-X-Google-Smtp-Source: AK7set8/9jrENWAsSR/anTjmf67dPxxRr0m8dTKwZF+j+PSc4gWNRMjv1nt9YdIyxyBOsVkk2Y/AtHOPHeUayjvgp1w=
-X-Received: by 2002:a1f:abd0:0:b0:3e9:ffc0:fb54 with SMTP id
- u199-20020a1fabd0000000b003e9ffc0fb54mr531404vke.9.1675782460752; Tue, 07 Feb
- 2023 07:07:40 -0800 (PST)
+        with ESMTP id S229679AbjBGSMe (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 7 Feb 2023 13:12:34 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C1233A876
+        for <linux-raid@vger.kernel.org>; Tue,  7 Feb 2023 10:12:34 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A5B5BB80AED
+        for <linux-raid@vger.kernel.org>; Tue,  7 Feb 2023 18:12:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 415C6C433EF
+        for <linux-raid@vger.kernel.org>; Tue,  7 Feb 2023 18:12:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675793551;
+        bh=cwdct/sugDevBPVRATw8t4tTasgEzsVowI/v1v2+PUY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TqCXEd/XFwIZ12XSD559xgVyRWf7rXkHWqectcsYSklSjS5NIOLxxjTx02i0C0USi
+         HC1idrgn62QTN3ClNorWv53rZ0dLKGxVmTOhlIgmBACC7ImHKu+ms0D1aqSraNdXuR
+         cdLPmN6+TCeW7xnCvVHgT0AFEGfn1eSDw95ngrhoHNPfFwEmznALMDwSjrqdPpAV3+
+         Of5iS2HRGFIOxn429W1MqbPc37sMgyQS2o6irnBBZiVR8XVYaX83qzTjcWng+IdAYv
+         3OsIn7cVDzk9wdSPt13iWF/67A0je3b3zHeLXZiX6O/jejl0LwWxu3HPU8g+HJ6/rX
+         U9MZdUegxq3/w==
+Received: by mail-lf1-f50.google.com with SMTP id cf42so23526302lfb.1
+        for <linux-raid@vger.kernel.org>; Tue, 07 Feb 2023 10:12:31 -0800 (PST)
+X-Gm-Message-State: AO0yUKWbUY6MDFQfqCBY3a/oZA3XZrp3MCDxem69LSiygGWnOTe0/UNk
+        +gxWSfBwYmUoAn7/E03j1grszEMfBacMVzt2JOA=
+X-Google-Smtp-Source: AK7set9odP28GNslcQ6EAiV/EdP/GgUzDVeedgeFBsugHXDTXjBE7hzoLqr2XyrCNPESkqKVWcAvskpOK1yUAvHh950=
+X-Received: by 2002:ac2:4e4c:0:b0:4cc:a1e3:c04b with SMTP id
+ f12-20020ac24e4c000000b004cca1e3c04bmr699730lfr.15.1675793549200; Tue, 07 Feb
+ 2023 10:12:29 -0800 (PST)
 MIME-Version: 1.0
-Received: by 2002:a59:c145:0:b0:37e:13d1:8774 with HTTP; Tue, 7 Feb 2023
- 07:07:40 -0800 (PST)
-Reply-To: kl145177@gmail.com
-From:   Ken Lawson <david12aketi@gmail.com>
-Date:   Tue, 7 Feb 2023 15:07:40 +0000
-Message-ID: <CAEqccGGZnn30Q0+6=iEguqd7E+zoe-zNSRP0xJGM=7S_NGt4hw@mail.gmail.com>
-Subject: Jeg er stadig overrasket over
-To:     undisclosed-recipients:;
+References: <20230203051344.19328-1-xni@redhat.com> <CALTww28SZ+3uP_6+Y058fvQqLC1fc9GjTDAUC440kd++ZnUTcg@mail.gmail.com>
+In-Reply-To: <CALTww28SZ+3uP_6+Y058fvQqLC1fc9GjTDAUC440kd++ZnUTcg@mail.gmail.com>
+From:   Song Liu <song@kernel.org>
+Date:   Tue, 7 Feb 2023 10:12:17 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW5is9zyYCq09y=fHcPLWfVEADMey+FLV70E224G1M2n-g@mail.gmail.com>
+Message-ID: <CAPhsuW5is9zyYCq09y=fHcPLWfVEADMey+FLV70E224G1M2n-g@mail.gmail.com>
+Subject: Re: [PATCH 1/1] md: Increase active_io to count acct_io
+To:     Xiao Ni <xni@redhat.com>
+Cc:     linux-raid@vger.kernel.org, ming.lei@redhat.com,
+        ncroxon@redhat.com, heinzm@redhat.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=4.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-De bedste =C3=B8nsker til dig og din familie. Jeg er stadig overrasket
-over, hvorfor du besluttede at opgive din familiearvefond. Jeg vil
-blot informere dig om, at bankmyndigheden ikke er glad for det.
+On Tue, Feb 7, 2023 at 5:49 AM Xiao Ni <xni@redhat.com> wrote:
+>
+> Hi Song
+>
+> Is the patch ok? If so, are there chances to merge this into md-next this week?
+>
 
-Jeg venter i =C3=B8jeblikket p=C3=A5 at h=C3=B8re fra dig for flere detalje=
-r.
+I rewrote the commit log and applied it to md-next. Please double check
+the new commit log is accurate.
 
-Venlig hilsen,
-Ken Lawson
+Thanks,
+Song
