@@ -2,137 +2,69 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CC9069EDB8
-	for <lists+linux-raid@lfdr.de>; Wed, 22 Feb 2023 05:00:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 21B2A69ED9C
+	for <lists+linux-raid@lfdr.de>; Wed, 22 Feb 2023 04:46:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229581AbjBVEAR (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 21 Feb 2023 23:00:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47216 "EHLO
+        id S231210AbjBVDqi (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 21 Feb 2023 22:46:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229546AbjBVEAP (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 21 Feb 2023 23:00:15 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A31311DE
-        for <linux-raid@vger.kernel.org>; Tue, 21 Feb 2023 19:59:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1677038366;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=xBkjQCGV7p/3sYFnO7HyEL3fl8bOYDO2YOFFwrGDyZ4=;
-        b=DUjSO8uZbL/rKypd+1HVsI7e47fDiVC6zWUw9ds2o/Zl7Ao2bayXdcA6q4Df6P5tl2y2Ev
-        yvjfOvmGnsen29dluAnbFBCJhVcL1gdfAMMvRSoA4Sm/RDSVcawWiwuFLJQmO5hyb3mOUW
-        MeBO7kLPxuJbAaC8nY1Y0HcvyZrt2+g=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-655-2mhfDB6hNP6tyXT_ol7iYw-1; Tue, 21 Feb 2023 22:59:22 -0500
-X-MC-Unique: 2mhfDB6hNP6tyXT_ol7iYw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C9711185A7A4;
-        Wed, 22 Feb 2023 03:59:21 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-12-116.pek2.redhat.com [10.72.12.116])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 691CF440D9;
-        Wed, 22 Feb 2023 03:59:18 +0000 (UTC)
-From:   Xiao Ni <xni@redhat.com>
-To:     song@kernel.org
-Cc:     yukuai1@huaweicloud.com, linux-raid@vger.kernel.org,
-        yi.zhang@huawei.com, yangerkun@huawei.com, heinzm@redhat.com,
-        ncroxon@redhat.com
-Subject: [PATCH 1/1] md: Free resources in __md_stop
-Date:   Wed, 22 Feb 2023 11:59:16 +0800
-Message-Id: <20230222035916.83647-1-xni@redhat.com>
+        with ESMTP id S230242AbjBVDqh (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 21 Feb 2023 22:46:37 -0500
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0CFA265B4;
+        Tue, 21 Feb 2023 19:46:35 -0800 (PST)
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4PM2Bs0GKhz4f3wRk;
+        Wed, 22 Feb 2023 11:46:29 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.127.227])
+        by APP3 (Coremail) with SMTP id _Ch0CgA35CEVkPVjUibtDg--.64292S4;
+        Wed, 22 Feb 2023 11:46:30 +0800 (CST)
+From:   linan666@huaweicloud.com
+To:     song@kernel.org, ncroxon@redhat.com, vmayatskikh@digitalocean.com
+Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+        guoqing.jiang@linux.dev, logang@deltatee.com, axboe@kernel.dk,
+        linan122@huawei.com, yukuai3@huawei.com, yi.zhang@huawei.com
+Subject: [PATCH 0/2] md/raid10: random bugfix
+Date:   Wed, 22 Feb 2023 12:09:58 +0800
+Message-Id: <20230222041000.3341651-1-linan666@huaweicloud.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-CM-TRANSID: _Ch0CgA35CEVkPVjUibtDg--.64292S4
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYg7kC6x804xWl14x267AKxVW8JVW5JwAF
+        c2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII
+        0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xv
+        wVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7
+        xvwVC2z280aVCY1x0267AKxVW0oVCq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE
+        52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJV
+        WUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAK
+        I48JM4IIrI8v6xkF7I0E8cxan2IY04v7M4kE6xkIj40Ew7xC0wCF04k20xvY0x0EwIxGrw
+        CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
+        14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
+        IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxK
+        x2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
+        AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1kpnJUUUUU==
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-If md_run() fails after ->active_io is initialized, then percpu_ref_exit
-is called in error path. However, later md_free_disk will call
-percpu_ref_exit again which leads to a panic because of null pointer
-dereference. It can also trigger this bug when resources are initialized
-but are freed in error path, then will be freed again in md_free_disk.
+From: Li Nan <linan122@huawei.com>
 
-BUG: kernel NULL pointer dereference, address: 0000000000000038
-Oops: 0000 [#1] PREEMPT SMP
-Workqueue: md_misc mddev_delayed_delete
-RIP: 0010:free_percpu+0x110/0x630
-Call Trace:
- <TASK>
- __percpu_ref_exit+0x44/0x70
- percpu_ref_exit+0x16/0x90
- md_free_disk+0x2f/0x80
- disk_release+0x101/0x180
- device_release+0x84/0x110
- kobject_put+0x12a/0x380
- kobject_put+0x160/0x380
- mddev_delayed_delete+0x19/0x30
- process_one_work+0x269/0x680
- worker_thread+0x266/0x640
- kthread+0x151/0x1b0
- ret_from_fork+0x1f/0x30
+Li Nan (2):
+  md/raid10: fix taks hung in raid10d
+  md/raid10: fix null-ptr-deref in raid10_sync_request
 
-For creating raid device, md raid calls do_md_run->md_run, dm raid calls
-md_run. We alloc those memory in md_run. For stopping raid device, md raid
-calls do_md_stop->__md_stop, dm raid calls md_stop->__md_stop. So we can
-free those memory resources in __md_stop.
+ drivers/md/raid10.c | 26 +++++++++++++++++---------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
 
-Fixes: 72adae23a72c ("md: Change active_io to percpu")
-Reported-and-tested-by: Yu Kuai <yukuai3@huawei.com>
-Signed-off-by: Xiao Ni <xni@redhat.com>
----
- drivers/md/md.c | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 927a43db5dfb..f5480778e2f7 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -6256,6 +6256,11 @@ static void __md_stop(struct mddev *mddev)
- 		mddev->to_remove = &md_redundancy_group;
- 	module_put(pers->owner);
- 	clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
-+
-+	percpu_ref_exit(&mddev->writes_pending);
-+	percpu_ref_exit(&mddev->active_io);
-+	bioset_exit(&mddev->bio_set);
-+	bioset_exit(&mddev->sync_set);
- }
- 
- void md_stop(struct mddev *mddev)
-@@ -6265,10 +6270,6 @@ void md_stop(struct mddev *mddev)
- 	 */
- 	__md_stop_writes(mddev);
- 	__md_stop(mddev);
--	percpu_ref_exit(&mddev->writes_pending);
--	percpu_ref_exit(&mddev->active_io);
--	bioset_exit(&mddev->bio_set);
--	bioset_exit(&mddev->sync_set);
- }
- 
- EXPORT_SYMBOL_GPL(md_stop);
-@@ -7839,11 +7840,6 @@ static void md_free_disk(struct gendisk *disk)
- {
- 	struct mddev *mddev = disk->private_data;
- 
--	percpu_ref_exit(&mddev->writes_pending);
--	percpu_ref_exit(&mddev->active_io);
--	bioset_exit(&mddev->bio_set);
--	bioset_exit(&mddev->sync_set);
--
- 	mddev_free(mddev);
- }
- 
 -- 
-2.32.0 (Apple Git-132)
+2.31.1
 
