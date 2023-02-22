@@ -2,245 +2,83 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AB6569F039
-	for <lists+linux-raid@lfdr.de>; Wed, 22 Feb 2023 09:31:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F5DE69FE0F
+	for <lists+linux-raid@lfdr.de>; Wed, 22 Feb 2023 23:01:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229880AbjBVIbA (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 22 Feb 2023 03:31:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47748 "EHLO
+        id S229604AbjBVWBq (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 22 Feb 2023 17:01:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230374AbjBVIa7 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 22 Feb 2023 03:30:59 -0500
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D0CF30B11
-        for <linux-raid@vger.kernel.org>; Wed, 22 Feb 2023 00:30:57 -0800 (PST)
-Received: from kwepemi500002.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4PM8Ss6QK5zKpqx;
-        Wed, 22 Feb 2023 16:29:01 +0800 (CST)
-Received: from [10.174.179.167] (10.174.179.167) by
- kwepemi500002.china.huawei.com (7.221.188.171) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.17; Wed, 22 Feb 2023 16:30:54 +0800
-Message-ID: <5ab784a2-df14-62d7-873a-622b34b6a646@huawei.com>
-Date:   Wed, 22 Feb 2023 16:30:53 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.0.3
-Content-Language: en-US
-To:     Jes Sorensen <jes@trained-monkey.org>,
-        Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
+        with ESMTP id S229755AbjBVWBo (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 22 Feb 2023 17:01:44 -0500
+Received: from resdmta-a1p-077303.sys.comcast.net (resdmta-a1p-077303.sys.comcast.net [IPv6:2001:558:fd01:2bb4::d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB01A41B5C
+        for <linux-raid@vger.kernel.org>; Wed, 22 Feb 2023 14:01:42 -0800 (PST)
+Received: from resomta-a1p-077058.sys.comcast.net ([96.103.145.239])
+        by resdmta-a1p-077303.sys.comcast.net with ESMTP
+        id UoFCpSICj5N5pUx8opd6Wb; Wed, 22 Feb 2023 21:59:10 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=comcastmailservice.net; s=20211018a; t=1677103150;
+        bh=h+0C5NtDYVf+FIPJ1ybE+IeZyPYfTeODToIYG/ajIrc=;
+        h=Received:Received:From:To:Subject:Date:Message-Id:MIME-Version:
+         Xfinity-Spam-Result;
+        b=oLqo74iDUDKQcJnu/qq0e4biqhDiRmMua4BSVL5o4u1W9u7RVUCUyCTIV3tk84cYx
+         Ngd82y/KjD/TUd60BCp99fqDaijhu4Rp0JcqRYRpIIOnJGY9jixH7y2dYRDcePZA0H
+         gDszJN7uYBPjec8kE6ZmtaY2U9GGMKehkNCcOJwX24n2pptoQdWLQ1c3XbdisgEV+x
+         QwsxaDpKYYR1ixLZifZuBHwRETB5r93gQiRGYlH48vycq5l06AJ7eTUqIYOtNdYQBK
+         MVIeqMibnl9bjL3mei+om+n4xeeBMl2Byw/YY6snWD1v4X5Tyxobz82TLAhZgKaBpw
+         dCJrfoY9jPPvw==
+Received: from jderrick-mobl4.amr.corp.intel.com ([71.205.181.50])
+        by resomta-a1p-077058.sys.comcast.net with ESMTPA
+        id Ux8JpSr0ZqdkEUx8Npx9ah; Wed, 22 Feb 2023 21:58:48 +0000
+X-Xfinity-VAAS: gggruggvucftvghtrhhoucdtuddrgedvhedrudejledgudehfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucevohhmtggrshhtqdftvghsihdpqfgfvfdppffquffrtefokffrnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeflohhnrghthhgrnhcuffgvrhhrihgtkhcuoehjohhnrghthhgrnhdruggvrhhrihgtkheslhhinhhugidruggvvheqnecuggftrfgrthhtvghrnhepvddtjeeigfeuleetveduvefhvdejvdfhtdfgheejiedtveeukedtgeettddthedvnecukfhppeejuddrvddthedrudekuddrhedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehhvghlohepjhguvghrrhhitghkqdhmohgslhegrdgrmhhrrdgtohhrphdrihhnthgvlhdrtghomhdpihhnvghtpeejuddrvddthedrudekuddrhedtpdhmrghilhhfrhhomhepjhhonhgrthhhrghnrdguvghrrhhitghksehlihhnuhigrdguvghvpdhnsggprhgtphhtthhopeejpdhrtghpthhtohepshhonhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrrghiugesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeignhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehhtghhsehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepphhmvghniigvlh
+ esmhholhhgvghnrdhmphhgrdguvgdprhgtphhtthhopehsuhhshhhmrgdrkhgrlhgrkhhothgrsehinhhtvghlrdgtohhm
+X-Xfinity-VMeta: sc=-100.00;st=legit
+From:   Jonathan Derrick <jonathan.derrick@linux.dev>
+To:     Song Liu <song@kernel.org>, <linux-raid@vger.kernel.org>
+Cc:     Xiao Ni <xni@redhat.com>, Christoph Hellwig <hch@infradead.org>,
         Paul Menzel <pmenzel@molgen.mpg.de>,
-        <linux-raid@vger.kernel.org>
-CC:     linfeilong <linfeilong@huawei.com>,
-        "liuzhiqiang (I)" <liuzhiqiang26@huawei.com>,
-        Wu Guanghao <wuguanghao3@huawei.com>, <lixiaokeng@huawei.com>
-From:   miaoguanqin <miaoguanqin@huawei.com>
-Subject: [PATCH] Fix memory leak for function Manage_subdevs Manage_add Kill
- V2
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.179.167]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemi500002.china.huawei.com (7.221.188.171)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Sushma Kalakota <sushma.kalakota@intel.com>,
+        Jon Derrick <jonathan.derrick@linux.dev>
+Subject: [PATCH v3 0/3] md/bitmap: Optimal last page size
+Date:   Wed, 22 Feb 2023 14:58:25 -0700
+Message-Id: <20230222215828.225-1-jonathan.derrick@linux.dev>
+X-Mailer: git-send-email 2.30.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,SPF_HELO_PASS,SPF_SOFTFAIL autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-When we test mdadm with asan,we found some memory leaks.
-We fix these memory leaks based on code logic.
+From: Jon Derrick <jonathan.derrick@linux.dev>
 
-Signed-off-by: miaoguanqin <miaoguanqin@huawei.com>
----
-  Assemble.c | 16 +++++++++++++---
-  Kill.c     | 10 +++++++++-
-  Manage.c   | 16 +++++++++++++++-
-  mdadm.c    |  6 ++++++
-  4 files changed, 43 insertions(+), 5 deletions(-)
+Currently the last bitmap page write will size itself down to the logical block
+size. This could cause less performance for devices which have atomic write
+units larger than the block size, such as many NVMe devices with 4kB write
+units and 512B block sizes. There is usually a large amount of space after the
+bitmap and using the optimal I/O size could favor speed over size.
 
-diff --git a/Assemble.c b/Assemble.c
-index 3ef4b29..c23567f 100644
---- a/Assemble.c
-+++ b/Assemble.c
-@@ -281,8 +281,10 @@ static int select_devices(struct mddev_dev *devlist,
-  				st->ss->free_super(st);
-  			dev_policy_free(pol);
-  			domain_free(domains);
--			if (tst)
-+			if (tst) {
-  				tst->ss->free_super(tst);
-+				free(tst);
-+			}
-  			return -1;
-  		}
+This was tested on an Intel/Solidigm P5520 drive with lba format 512B,
+optimal I/O size of 4kB, resulting in a > 10x IOPS increase.
 
-@@ -357,6 +359,7 @@ static int select_devices(struct mddev_dev *devlist,
-  				st->ss->free_super(st);
-  				dev_policy_free(pol);
-  				domain_free(domains);
-+				free(st);
-  				return -1;
-  			}
-  			if (c->verbose > 0)
-@@ -365,6 +368,8 @@ static int select_devices(struct mddev_dev *devlist,
+See patch 3 log for results.
 
-  			/* make sure we finished the loop */
-  			tmpdev = NULL;
-+			if (st)
-+				free(st);
-  			goto loop;
-  		} else {
-  			content = *contentp;
-@@ -473,6 +478,7 @@ static int select_devices(struct mddev_dev *devlist,
-  				st->ss->free_super(st);
-  				dev_policy_free(pol);
-  				domain_free(domains);
-+				free(tst);
-  				return -1;
-  			}
-  			tmpdev->used = 1;
-@@ -486,8 +492,10 @@ static int select_devices(struct mddev_dev *devlist,
-  		}
-  		dev_policy_free(pol);
-  		pol = NULL;
--		if (tst)
-+		if (tst) {
-  			tst->ss->free_super(tst);
-+			free(tst);
-+		}
-  	}
+v2->v3: Prep patch added and types fixed
+Added helpers for optimal I/O sizes
 
-  	/* Check if we found some imsm spares but no members */
-@@ -778,6 +786,7 @@ static int load_devices(struct devs *devices, char 
-*devmap,
-  				close(mdfd);
-  				free(devices);
-  				free(devmap);
-+				free(best);
-  				*stp = st;
-  				return -1;
-  			}
-@@ -1882,7 +1891,8 @@ out:
-  		}
-  	} else if (mdfd >= 0)
-  		close(mdfd);
--
-+	if (best)
-+		free(best);
-  	/* '2' means 'OK, but not started yet' */
-  	if (rv == -1) {
-  		free(devices);
-diff --git a/Kill.c b/Kill.c
-index d4767e2..073288e 100644
---- a/Kill.c
-+++ b/Kill.c
-@@ -41,6 +41,7 @@ int Kill(char *dev, struct supertype *st, int force, 
-int verbose, int noexcl)
-  	 *  4 - failed to find a superblock.
-  	 */
+Jon Derrick (3):
+  md: Move sb writer loop to its own function
+  md: Fix types in sb writer
+  md: Use optimal I/O size for last bitmap page
 
-+	int flags = 0;
-  	int fd, rv = 0;
+ drivers/md/md-bitmap.c | 142 ++++++++++++++++++++++++-----------------
+ 1 file changed, 82 insertions(+), 60 deletions(-)
 
-  	if (force)
-@@ -52,8 +53,10 @@ int Kill(char *dev, struct supertype *st, int force, 
-int verbose, int noexcl)
-  				dev);
-  		return 2;
-  	}
--	if (st == NULL)
-+	if (st == NULL) {
-  		st = guess_super(fd);
-+		flags = 1;
-+	}
-  	if (st == NULL || st->ss->init_super == NULL) {
-  		if (verbose >= 0)
-  			pr_err("Unrecognised md component device - %s\n", dev);
-@@ -77,6 +80,11 @@ int Kill(char *dev, struct supertype *st, int force, 
-int verbose, int noexcl)
-  			rv = 0;
-  		}
-  	}
-+	if (flags == 1 && st) {
-+		if (st->sb)
-+			free(st->sb);
-+		free(st);
-+	}
-  	close(fd);
-  	return rv;
-  }
-diff --git a/Manage.c b/Manage.c
-index ffe55f8..60c6d12 100644
---- a/Manage.c
-+++ b/Manage.c
-@@ -222,6 +222,8 @@ int Manage_stop(char *devname, int fd, int verbose, 
-int will_retry)
-  		if (verbose >= 0)
-  			pr_err("Cannot get exclusive access to %s:Perhaps a running 
-process, mounted filesystem or active volume group?\n",
-  			       devname);
-+		if (mdi)
-+			sysfs_free(mdi);
-  		return 1;
-  	}
-  	/* If this is an mdmon managed array, just write 'inactive'
-@@ -819,8 +821,16 @@ int Manage_add(int fd, int tfd, struct mddev_dev *dv,
-  						    rdev, update, devname,
-  						    verbose, array);
-  				dev_st->ss->free_super(dev_st);
--				if (rv)
-+				if (rv){
-+					if (dev_st)
-+						free(dev_st);
-  					return rv;
-+				}
-+			}
-+			if (dev_st) {
-+				if (dev_st->sb)
-+					dev_st->ss->free_super(dev_st);
-+				free(dev_st);
-  			}
-  		}
-  		if (dv->disposition == 'M') {
-@@ -1649,6 +1659,8 @@ int Manage_subdevs(char *devname, int fd,
-  			break;
-  		}
-  	}
-+	if (tst)
-+		free(tst);
-  	if (frozen > 0)
-  		sysfs_set_str(&info, NULL, "sync_action","idle");
-  	if (test && count == 0)
-@@ -1656,6 +1668,8 @@ int Manage_subdevs(char *devname, int fd,
-  	return 0;
-
-  abort:
-+	if(tst)
-+		free(tst);
-  	if (frozen > 0)
-  		sysfs_set_str(&info, NULL, "sync_action","idle");
-  	return !test && busy ? 2 : 1;
-diff --git a/mdadm.c b/mdadm.c
-index da66c76..981fa98 100644
---- a/mdadm.c
-+++ b/mdadm.c
-@@ -1765,6 +1765,12 @@ int main(int argc, char *argv[])
-  		autodetect();
-  		break;
-  	}
-+	if (ss) {
-+		if (ss->sb)
-+			free(ss->sb);
-+		free(ss);
-+	
-+	}
-  	if (locked)
-  		cluster_release_dlmlock();
-  	if (mdfd > 0)
 -- 
-2.33.0
+2.27.0
 
