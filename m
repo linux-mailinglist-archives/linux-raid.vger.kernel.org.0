@@ -2,117 +2,245 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A20F69ED9D
-	for <lists+linux-raid@lfdr.de>; Wed, 22 Feb 2023 04:46:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AB6569F039
+	for <lists+linux-raid@lfdr.de>; Wed, 22 Feb 2023 09:31:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231281AbjBVDqi (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 21 Feb 2023 22:46:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36634 "EHLO
+        id S229880AbjBVIbA (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 22 Feb 2023 03:31:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229930AbjBVDqh (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 21 Feb 2023 22:46:37 -0500
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0B8A1167D;
-        Tue, 21 Feb 2023 19:46:35 -0800 (PST)
-Received: from mail02.huawei.com (unknown [172.30.67.143])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4PM2Bs63VDz4f3l88;
-        Wed, 22 Feb 2023 11:46:29 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.127.227])
-        by APP3 (Coremail) with SMTP id _Ch0CgA35CEVkPVjUibtDg--.64292S6;
-        Wed, 22 Feb 2023 11:46:31 +0800 (CST)
-From:   linan666@huaweicloud.com
-To:     song@kernel.org, ncroxon@redhat.com, vmayatskikh@digitalocean.com
-Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
-        guoqing.jiang@linux.dev, logang@deltatee.com, axboe@kernel.dk,
-        linan122@huawei.com, yukuai3@huawei.com, yi.zhang@huawei.com
-Subject: [PATCH 2/2] md/raid10: fix null-ptr-deref in  raid10_sync_request
-Date:   Wed, 22 Feb 2023 12:10:00 +0800
-Message-Id: <20230222041000.3341651-3-linan666@huaweicloud.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20230222041000.3341651-1-linan666@huaweicloud.com>
-References: <20230222041000.3341651-1-linan666@huaweicloud.com>
+        with ESMTP id S230374AbjBVIa7 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 22 Feb 2023 03:30:59 -0500
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D0CF30B11
+        for <linux-raid@vger.kernel.org>; Wed, 22 Feb 2023 00:30:57 -0800 (PST)
+Received: from kwepemi500002.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4PM8Ss6QK5zKpqx;
+        Wed, 22 Feb 2023 16:29:01 +0800 (CST)
+Received: from [10.174.179.167] (10.174.179.167) by
+ kwepemi500002.china.huawei.com (7.221.188.171) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.17; Wed, 22 Feb 2023 16:30:54 +0800
+Message-ID: <5ab784a2-df14-62d7-873a-622b34b6a646@huawei.com>
+Date:   Wed, 22 Feb 2023 16:30:53 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: _Ch0CgA35CEVkPVjUibtDg--.64292S6
-X-Coremail-Antispam: 1UD129KBjvJXoW7CFyfGr4rKF15JF4ktFyDGFg_yoW8ZFWfpa
-        nrXwnxtrW8W39Yya1kJw17WFyF934xJ3y5tr4fu3s3CFn5WFW7ArW5Kay2qFyUXryrtFWU
-        X3yUJrW5CFn8AaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUmjb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXw
-        A2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-        w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-        W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-        6rxl6s0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrV
-        ACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWU
-        JVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2
-        ka0xkIwI1lw4CEc2x0rVAKj4xxMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-        6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
-        AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE
-        2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
-        C2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kfnx
-        nUUI43ZEXa7IU1H7K7UUUUU==
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.0.3
+Content-Language: en-US
+To:     Jes Sorensen <jes@trained-monkey.org>,
+        Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        <linux-raid@vger.kernel.org>
+CC:     linfeilong <linfeilong@huawei.com>,
+        "liuzhiqiang (I)" <liuzhiqiang26@huawei.com>,
+        Wu Guanghao <wuguanghao3@huawei.com>, <lixiaokeng@huawei.com>
+From:   miaoguanqin <miaoguanqin@huawei.com>
+Subject: [PATCH] Fix memory leak for function Manage_subdevs Manage_add Kill
+ V2
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.179.167]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemi500002.china.huawei.com (7.221.188.171)
 X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Li Nan <linan122@huawei.com>
+When we test mdadm with asan,we found some memory leaks.
+We fix these memory leaks based on code logic.
 
-init_resync() init mempool and set conf->have_replacemnt at the begaining
-of sync, close_sync() free the mempool when sync is completed.
-
-After commit 7e83ccbecd60 ("md/raid10: Allow skipping recovery when clean
-arrays are assembled"), recovery might skipped and init_resync() is called
-but close_sync() is not. null-ptr-deref occurs as below:
-  1) creat a array, wait for resync to complete, mddev->recovery_cp is set
-     to MaxSector.
-  2) recovery is woken and it is skipped. conf->have_replacement is set to
-     0 in init_resync(). close_sync() not called.
-  3) some io errors and rdev A is set to WantReplacement.
-  4) a new device is added and set to A's replacement.
-  5) recovery is woken, A have replacement, but conf->have_replacemnt is
-     0. r10bio->dev[i].repl_bio will not be alloced and null-ptr-deref
-     occurs.
-
-Fix it by not init_resync() if recovery skipped.
-
-Fixes: 7e83ccbecd60 md/raid10: Allow skipping recovery when clean arrays are assembled")
-Signed-off-by: Li Nan <linan122@huawei.com>
+Signed-off-by: miaoguanqin <miaoguanqin@huawei.com>
 ---
- drivers/md/raid10.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+  Assemble.c | 16 +++++++++++++---
+  Kill.c     | 10 +++++++++-
+  Manage.c   | 16 +++++++++++++++-
+  mdadm.c    |  6 ++++++
+  4 files changed, 43 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index db9ee3b637d6..9e0e7bf524aa 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -3297,10 +3297,6 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
- 	sector_t chunk_mask = conf->geo.chunk_mask;
- 	int page_idx = 0;
- 
--	if (!mempool_initialized(&conf->r10buf_pool))
--		if (init_resync(conf))
--			return 0;
+diff --git a/Assemble.c b/Assemble.c
+index 3ef4b29..c23567f 100644
+--- a/Assemble.c
++++ b/Assemble.c
+@@ -281,8 +281,10 @@ static int select_devices(struct mddev_dev *devlist,
+  				st->ss->free_super(st);
+  			dev_policy_free(pol);
+  			domain_free(domains);
+-			if (tst)
++			if (tst) {
+  				tst->ss->free_super(tst);
++				free(tst);
++			}
+  			return -1;
+  		}
+
+@@ -357,6 +359,7 @@ static int select_devices(struct mddev_dev *devlist,
+  				st->ss->free_super(st);
+  				dev_policy_free(pol);
+  				domain_free(domains);
++				free(st);
+  				return -1;
+  			}
+  			if (c->verbose > 0)
+@@ -365,6 +368,8 @@ static int select_devices(struct mddev_dev *devlist,
+
+  			/* make sure we finished the loop */
+  			tmpdev = NULL;
++			if (st)
++				free(st);
+  			goto loop;
+  		} else {
+  			content = *contentp;
+@@ -473,6 +478,7 @@ static int select_devices(struct mddev_dev *devlist,
+  				st->ss->free_super(st);
+  				dev_policy_free(pol);
+  				domain_free(domains);
++				free(tst);
+  				return -1;
+  			}
+  			tmpdev->used = 1;
+@@ -486,8 +492,10 @@ static int select_devices(struct mddev_dev *devlist,
+  		}
+  		dev_policy_free(pol);
+  		pol = NULL;
+-		if (tst)
++		if (tst) {
+  			tst->ss->free_super(tst);
++			free(tst);
++		}
+  	}
+
+  	/* Check if we found some imsm spares but no members */
+@@ -778,6 +786,7 @@ static int load_devices(struct devs *devices, char 
+*devmap,
+  				close(mdfd);
+  				free(devices);
+  				free(devmap);
++				free(best);
+  				*stp = st;
+  				return -1;
+  			}
+@@ -1882,7 +1891,8 @@ out:
+  		}
+  	} else if (mdfd >= 0)
+  		close(mdfd);
 -
- 	/*
- 	 * Allow skipping a full rebuild for incremental assembly
- 	 * of a clean array, like RAID1 does.
-@@ -3316,6 +3312,10 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
- 		return mddev->dev_sectors - sector_nr;
- 	}
- 
-+	if (!mempool_initialized(&conf->r10buf_pool))
-+		if (init_resync(conf))
-+			return 0;
-+
-  skipped:
- 	max_sector = mddev->dev_sectors;
- 	if (test_bit(MD_RECOVERY_SYNC, &mddev->recovery) ||
++	if (best)
++		free(best);
+  	/* '2' means 'OK, but not started yet' */
+  	if (rv == -1) {
+  		free(devices);
+diff --git a/Kill.c b/Kill.c
+index d4767e2..073288e 100644
+--- a/Kill.c
++++ b/Kill.c
+@@ -41,6 +41,7 @@ int Kill(char *dev, struct supertype *st, int force, 
+int verbose, int noexcl)
+  	 *  4 - failed to find a superblock.
+  	 */
+
++	int flags = 0;
+  	int fd, rv = 0;
+
+  	if (force)
+@@ -52,8 +53,10 @@ int Kill(char *dev, struct supertype *st, int force, 
+int verbose, int noexcl)
+  				dev);
+  		return 2;
+  	}
+-	if (st == NULL)
++	if (st == NULL) {
+  		st = guess_super(fd);
++		flags = 1;
++	}
+  	if (st == NULL || st->ss->init_super == NULL) {
+  		if (verbose >= 0)
+  			pr_err("Unrecognised md component device - %s\n", dev);
+@@ -77,6 +80,11 @@ int Kill(char *dev, struct supertype *st, int force, 
+int verbose, int noexcl)
+  			rv = 0;
+  		}
+  	}
++	if (flags == 1 && st) {
++		if (st->sb)
++			free(st->sb);
++		free(st);
++	}
+  	close(fd);
+  	return rv;
+  }
+diff --git a/Manage.c b/Manage.c
+index ffe55f8..60c6d12 100644
+--- a/Manage.c
++++ b/Manage.c
+@@ -222,6 +222,8 @@ int Manage_stop(char *devname, int fd, int verbose, 
+int will_retry)
+  		if (verbose >= 0)
+  			pr_err("Cannot get exclusive access to %s:Perhaps a running 
+process, mounted filesystem or active volume group?\n",
+  			       devname);
++		if (mdi)
++			sysfs_free(mdi);
+  		return 1;
+  	}
+  	/* If this is an mdmon managed array, just write 'inactive'
+@@ -819,8 +821,16 @@ int Manage_add(int fd, int tfd, struct mddev_dev *dv,
+  						    rdev, update, devname,
+  						    verbose, array);
+  				dev_st->ss->free_super(dev_st);
+-				if (rv)
++				if (rv){
++					if (dev_st)
++						free(dev_st);
+  					return rv;
++				}
++			}
++			if (dev_st) {
++				if (dev_st->sb)
++					dev_st->ss->free_super(dev_st);
++				free(dev_st);
+  			}
+  		}
+  		if (dv->disposition == 'M') {
+@@ -1649,6 +1659,8 @@ int Manage_subdevs(char *devname, int fd,
+  			break;
+  		}
+  	}
++	if (tst)
++		free(tst);
+  	if (frozen > 0)
+  		sysfs_set_str(&info, NULL, "sync_action","idle");
+  	if (test && count == 0)
+@@ -1656,6 +1668,8 @@ int Manage_subdevs(char *devname, int fd,
+  	return 0;
+
+  abort:
++	if(tst)
++		free(tst);
+  	if (frozen > 0)
+  		sysfs_set_str(&info, NULL, "sync_action","idle");
+  	return !test && busy ? 2 : 1;
+diff --git a/mdadm.c b/mdadm.c
+index da66c76..981fa98 100644
+--- a/mdadm.c
++++ b/mdadm.c
+@@ -1765,6 +1765,12 @@ int main(int argc, char *argv[])
+  		autodetect();
+  		break;
+  	}
++	if (ss) {
++		if (ss->sb)
++			free(ss->sb);
++		free(ss);
++	
++	}
+  	if (locked)
+  		cluster_release_dlmlock();
+  	if (mdfd > 0)
 -- 
-2.31.1
+2.33.0
 
