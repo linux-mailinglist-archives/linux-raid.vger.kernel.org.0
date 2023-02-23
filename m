@@ -2,196 +2,156 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E8A686A10DB
-	for <lists+linux-raid@lfdr.de>; Thu, 23 Feb 2023 20:53:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD9416A13A7
+	for <lists+linux-raid@lfdr.de>; Fri, 24 Feb 2023 00:19:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229462AbjBWTxL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 23 Feb 2023 14:53:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48336 "EHLO
+        id S229436AbjBWXT2 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 23 Feb 2023 18:19:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbjBWTxK (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 23 Feb 2023 14:53:10 -0500
-Received: from resqmta-c1p-023465.sys.comcast.net (resqmta-c1p-023465.sys.comcast.net [IPv6:2001:558:fd00:56::5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FA80199E1
-        for <linux-raid@vger.kernel.org>; Thu, 23 Feb 2023 11:53:08 -0800 (PST)
-Received: from resomta-c1p-023265.sys.comcast.net ([96.102.18.226])
-        by resqmta-c1p-023465.sys.comcast.net with ESMTP
-        id VD0Ep9ZTQPNtkVHeNpU6j5; Thu, 23 Feb 2023 19:53:07 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=comcastmailservice.net; s=20211018a; t=1677181987;
-        bh=9SmOtYrj9Wwzzt1LueQRy09ixZmccr4ER0xEtdETA20=;
-        h=Received:Received:From:To:Subject:Date:Message-Id:MIME-Version:
-         Xfinity-Spam-Result;
-        b=ZkMheLwnHQvmWh7wP+WPZfKvBk/FPoP/RoqyLJDY2SKtBdrvGk9NV93gKV8EfvsSj
-         jiHWrhOMWP7bxf0EE0NC99BrtOP0ugztj6A/TvEV7lYI9hNC2cb8qYJyT0QrqdB0zv
-         BGttLQ/f+2gEjPaHIma3wJO96f/r/Nx2NtrNiBB+ykawchAC3M9uMsfyRyOnsbSdGz
-         L3tE7JiAN2+zLziPVDZUS7CqJjm2Yz1jW0uEIJ7eL/uxSXJ2T67UvR4IsV7UH48OFj
-         3wUASK7pp0U9WN8WtGrbjVaJf1Kojl7P4MN8kOIlIv70cqUWpRrsqQ4hUDXVamRmSD
-         gy6GZqGiPISSQ==
-Received: from jderrick-mobl4.amr.corp.intel.com ([71.205.181.50])
-        by resomta-c1p-023265.sys.comcast.net with ESMTPA
-        id VHdspbaW8XNRJVHe4pbD6K; Thu, 23 Feb 2023 19:52:49 +0000
-X-Xfinity-VAAS: gggruggvucftvghtrhhoucdtuddrgedvhedrudekuddguddvjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucevohhmtggrshhtqdftvghsihdpqfgfvfdppffquffrtefokffrnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeflohhnrghthhgrnhcuffgvrhhrihgtkhcuoehjohhnrghthhgrnhdruggvrhhrihgtkheslhhinhhugidruggvvheqnecuggftrfgrthhtvghrnheptdetleejfffgffevhefhteevfeeuvdehveffffehtdejuedvvefgfedttdehfedtnecukfhppeejuddrvddthedrudekuddrhedtnecuvehluhhsthgvrhfuihiivgepvdenucfrrghrrghmpehhvghlohepjhguvghrrhhitghkqdhmohgslhegrdgrmhhrrdgtohhrphdrihhnthgvlhdrtghomhdpihhnvghtpeejuddrvddthedrudekuddrhedtpdhmrghilhhfrhhomhepjhhonhgrthhhrghnrdguvghrrhhitghksehlihhnuhigrdguvghvpdhnsggprhgtphhtthhopeelpdhrtghpthhtohepshhonhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrrghiugesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehhrdhrvghinhgulhesthhhvghlohhunhhgvgdrnhgvthdprhgtphhtthhopeignhhisehrvgguhhgrthdrtghomhdprhgtphhtthhope
- hhtghhsehlshhtrdguvgdprhgtphhtthhopehhtghhsehinhhfrhgruggvrggurdhorhhg
-X-Xfinity-VMeta: sc=-100.00;st=legit
-From:   Jonathan Derrick <jonathan.derrick@linux.dev>
-To:     Song Liu <song@kernel.org>, <linux-raid@vger.kernel.org>
-Cc:     Reindl Harald <h.reindl@thelounge.net>, Xiao Ni <xni@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Sushma Kalakota <sushma.kalakota@intel.com>,
-        Jon Derrick <jonathan.derrick@linux.dev>
-Subject: [PATCH v4 3/3] md: Use optimal I/O size for last bitmap page
-Date:   Thu, 23 Feb 2023 12:52:25 -0700
-Message-Id: <20230223195225.534-4-jonathan.derrick@linux.dev>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230223195225.534-1-jonathan.derrick@linux.dev>
-References: <20230223195225.534-1-jonathan.derrick@linux.dev>
+        with ESMTP id S229379AbjBWXT2 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 23 Feb 2023 18:19:28 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4880B5507F
+        for <linux-raid@vger.kernel.org>; Thu, 23 Feb 2023 15:19:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1677194367; x=1708730367;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=nipzcrSE78w09fZd7eabz8ZqVvIRrcrHvctj9YTzoKA=;
+  b=nmc0gEGWpbIfRgTGxYTlq6zeeiw6saU1CUY1js45dtw/oEpPoSP9StQh
+   LxFOKcfVBHZRtlDESGpwolFyyEbLqP03CTDZ2E91dLsvui9D96H5f1rNh
+   ORIWiJU9fWSSmUkq+YkRIH8s9GMhvqdguvlC21LIzF3GekPSokRkt9nbm
+   wfSgg8W+a7ClbfgRpd3I+9z+ZumIinRBUqDWMVGIwatK0LrRwAqTNA4RM
+   omz+y74in950Hdo6qB7sthHMkdpBNqSC24nd4cLCkNQHEkfNGMohmNpkh
+   I9GVLVOfP09xHALXUHo8UwplkwJQuu6epXUAbUvsH6aAiYAun9Y9yIUdr
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10630"; a="333356168"
+X-IronPort-AV: E=Sophos;i="5.97,322,1669104000"; 
+   d="scan'208";a="333356168"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2023 15:19:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10630"; a="736582927"
+X-IronPort-AV: E=Sophos;i="5.97,322,1669104000"; 
+   d="scan'208";a="736582927"
+Received: from lkp-server01.sh.intel.com (HELO 3895f5c55ead) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 23 Feb 2023 15:19:25 -0800
+Received: from kbuild by 3895f5c55ead with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pVKs0-0001td-2m;
+        Thu, 23 Feb 2023 23:19:24 +0000
+Date:   Fri, 24 Feb 2023 07:18:40 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Song Liu <song@kernel.org>
+Cc:     linux-raid@vger.kernel.org
+Subject: [song-md:md-fixes] BUILD SUCCESS
+ 6e95cefc15299684b031ea5cbb8cdf627c069d66
+Message-ID: <63f7f450.9AE91KhIHVfZfBVH%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,SPF_HELO_PASS,SPF_SOFTFAIL autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,LONGWORDS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Jon Derrick <jonathan.derrick@linux.dev>
+tree/branch: git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git md-fixes
+branch HEAD: 6e95cefc15299684b031ea5cbb8cdf627c069d66  md: Free resources in __md_stop
 
-If the bitmap space has enough room, size the I/O for the last bitmap
-page write to the optimal I/O size for the storage device. The expanded
-write is checked that it won't overrun the data or metadata.
+elapsed time: 848m
 
-The drive this was tested against has higher latencies when there are
-sub-4k writes due to device-side read-mod-writes of its atomic 4k write
-unit. This change helps increase performance by sizing the last bitmap
-page I/O for the device's preferred write unit, if it is given.
+configs tested: 74
+configs skipped: 3
 
-Example Intel/Solidigm P5520
-Raid10, Chunk-size 64M, bitmap-size 57228 bits
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-$ mdadm --create /dev/md0 --level=10 --raid-devices=4 /dev/nvme{0,1,2,3}n1
-        --assume-clean --bitmap=internal --bitmap-chunk=64M
-$ fio --name=test --direct=1 --filename=/dev/md0 --rw=randwrite --bs=4k --runtime=60
+gcc tested configs:
+alpha                            allyesconfig
+alpha                               defconfig
+arc                              allyesconfig
+arc                                 defconfig
+arc                  randconfig-r043-20230222
+arm                              allmodconfig
+arm                              allyesconfig
+arm                                 defconfig
+arm                  randconfig-r046-20230222
+arm64                            allyesconfig
+arm64                               defconfig
+csky                                defconfig
+i386                             allyesconfig
+i386                              debian-10.3
+i386                                defconfig
+i386                          randconfig-a001
+i386                          randconfig-a003
+i386                          randconfig-a005
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+ia64                             allmodconfig
+ia64                                defconfig
+loongarch                        allmodconfig
+loongarch                         allnoconfig
+loongarch                           defconfig
+m68k                             allmodconfig
+m68k                                defconfig
+mips                             allmodconfig
+mips                             allyesconfig
+nios2                               defconfig
+parisc                              defconfig
+parisc64                            defconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+s390                             allmodconfig
+s390                             allyesconfig
+s390                                defconfig
+sh                               allmodconfig
+sparc                               defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                            allnoconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                                  kexec
+x86_64                        randconfig-a002
+x86_64                        randconfig-a004
+x86_64                        randconfig-a006
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+x86_64                        randconfig-a015
+x86_64                               rhel-8.3
 
-Without patch:
-  write: IOPS=1676, BW=6708KiB/s (6869kB/s)(393MiB/60001msec); 0 zone resets
+clang tested configs:
+hexagon              randconfig-r041-20230222
+hexagon              randconfig-r045-20230222
+i386                          randconfig-a002
+i386                          randconfig-a004
+i386                          randconfig-a006
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+riscv                randconfig-r042-20230222
+s390                 randconfig-r044-20230222
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+x86_64                        randconfig-a005
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+x86_64                        randconfig-k001
 
-With patch:
-  write: IOPS=15.7k, BW=61.4MiB/s (64.4MB/s)(3683MiB/60001msec); 0 zone resets
-
-Biosnoop:
-Without patch:
-Time        Process        PID     Device      LBA        Size      Lat
-1.410377    md0_raid10     6900    nvme0n1   W 16         4096      0.02
-1.410387    md0_raid10     6900    nvme2n1   W 16         4096      0.02
-1.410374    md0_raid10     6900    nvme3n1   W 16         4096      0.01
-1.410381    md0_raid10     6900    nvme1n1   W 16         4096      0.02
-1.410411    md0_raid10     6900    nvme1n1   W 115346512  4096      0.01
-1.410418    md0_raid10     6900    nvme0n1   W 115346512  4096      0.02
-1.410915    md0_raid10     6900    nvme2n1   W 24         3584      0.43 <--
-1.410935    md0_raid10     6900    nvme3n1   W 24         3584      0.45 <--
-1.411124    md0_raid10     6900    nvme1n1   W 24         3584      0.64 <--
-1.411147    md0_raid10     6900    nvme0n1   W 24         3584      0.66 <--
-1.411176    md0_raid10     6900    nvme3n1   W 2019022184 4096      0.01
-1.411189    md0_raid10     6900    nvme2n1   W 2019022184 4096      0.02
-
-With patch:
-Time        Process        PID     Device      LBA        Size      Lat
-5.747193    md0_raid10     727     nvme0n1   W 16         4096      0.01
-5.747192    md0_raid10     727     nvme1n1   W 16         4096      0.02
-5.747195    md0_raid10     727     nvme3n1   W 16         4096      0.01
-5.747202    md0_raid10     727     nvme2n1   W 16         4096      0.02
-5.747229    md0_raid10     727     nvme3n1   W 1196223704 4096      0.02
-5.747224    md0_raid10     727     nvme0n1   W 1196223704 4096      0.01
-5.747279    md0_raid10     727     nvme0n1   W 24         4096      0.01 <--
-5.747279    md0_raid10     727     nvme1n1   W 24         4096      0.02 <--
-5.747284    md0_raid10     727     nvme3n1   W 24         4096      0.02 <--
-5.747291    md0_raid10     727     nvme2n1   W 24         4096      0.02 <--
-5.747314    md0_raid10     727     nvme2n1   W 2234636712 4096      0.01
-5.747317    md0_raid10     727     nvme1n1   W 2234636712 4096      0.02
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jon Derrick <jonathan.derrick@linux.dev>
----
- drivers/md/md-bitmap.c | 33 +++++++++++++++++++++++++++++----
- 1 file changed, 29 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-index 20791d5e8903..06b2d7da57da 100644
---- a/drivers/md/md-bitmap.c
-+++ b/drivers/md/md-bitmap.c
-@@ -209,6 +209,28 @@ static struct md_rdev *next_active_rdev(struct md_rdev *rdev, struct mddev *mdde
- 	return NULL;
- }
- 
-+static unsigned int optimal_io_size(struct block_device *bdev,
-+				    unsigned int last_page_size,
-+				    unsigned int io_size)
-+{
-+	if (bdev_io_opt(bdev) > bdev_logical_block_size(bdev))
-+		return roundup(last_page_size, bdev_io_opt(bdev));
-+	return io_size;
-+}
-+
-+static unsigned int bitmap_io_size(unsigned int io_size, unsigned int opt_size,
-+				   sector_t start, sector_t boundary)
-+{
-+	if (io_size != opt_size &&
-+	    start + opt_size / SECTOR_SIZE <= boundary)
-+		return opt_size;
-+	if (start + io_size / SECTOR_SIZE <= boundary)
-+		return io_size;
-+
-+	/* Overflows boundary */
-+	return 0;
-+}
-+
- static int __write_sb_page(struct md_rdev *rdev, struct bitmap *bitmap,
- 			   struct page *page)
- {
-@@ -218,6 +240,7 @@ static int __write_sb_page(struct md_rdev *rdev, struct bitmap *bitmap,
- 	sector_t offset = mddev->bitmap_info.offset;
- 	sector_t ps, sboff, doff;
- 	unsigned int size = PAGE_SIZE;
-+	unsigned int opt_size = PAGE_SIZE;
- 
- 	bdev = (rdev->meta_bdev) ? rdev->meta_bdev : rdev->bdev;
- 	if (page->index == store->file_pages - 1) {
-@@ -225,8 +248,8 @@ static int __write_sb_page(struct md_rdev *rdev, struct bitmap *bitmap,
- 
- 		if (last_page_size == 0)
- 			last_page_size = PAGE_SIZE;
--		size = roundup(last_page_size,
--			       bdev_logical_block_size(bdev));
-+		size = roundup(last_page_size, bdev_logical_block_size(bdev));
-+		opt_size = optimal_io_size(bdev, last_page_size, size);
- 	}
- 
- 	ps = page->index * PAGE_SIZE / SECTOR_SIZE;
-@@ -241,7 +264,8 @@ static int __write_sb_page(struct md_rdev *rdev, struct bitmap *bitmap,
- 			return -EINVAL;
- 	} else if (offset < 0) {
- 		/* DATA  BITMAP METADATA  */
--		if (offset + ps + size / SECTOR_SIZE > 0)
-+		size = bitmap_io_size(size, opt_size, offset + ps, 0);
-+		if (size == 0)
- 			/* bitmap runs in to metadata */
- 			return -EINVAL;
- 
-@@ -250,7 +274,8 @@ static int __write_sb_page(struct md_rdev *rdev, struct bitmap *bitmap,
- 			return -EINVAL;
- 	} else if (rdev->sb_start < rdev->data_offset) {
- 		/* METADATA BITMAP DATA */
--		if (sboff + ps + size / SECTOR_SIZE > doff)
-+		size = bitmap_io_size(size, opt_size, sboff + ps, doff);
-+		if (size == 0)
- 			/* bitmap runs in to data */
- 			return -EINVAL;
- 	} else {
 -- 
-2.27.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
