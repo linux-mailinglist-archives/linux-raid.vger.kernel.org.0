@@ -2,196 +2,87 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E9D7D6A2176
-	for <lists+linux-raid@lfdr.de>; Fri, 24 Feb 2023 19:27:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BCFAD6A2197
+	for <lists+linux-raid@lfdr.de>; Fri, 24 Feb 2023 19:36:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229551AbjBXS1f (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 24 Feb 2023 13:27:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54440 "EHLO
+        id S229481AbjBXSgj (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 24 Feb 2023 13:36:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbjBXS1f (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 24 Feb 2023 13:27:35 -0500
-Received: from out-23.mta0.migadu.com (out-23.mta0.migadu.com [91.218.175.23])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 144321714D
-        for <linux-raid@vger.kernel.org>; Fri, 24 Feb 2023 10:27:33 -0800 (PST)
-Message-ID: <85b2413d-607a-0afe-b673-08f58df802fa@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1677263249;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zGrjznz52fPIfd/MbWCsDDdVdhThhU86iD+qDMZlPxQ=;
-        b=b/B2ZDcoOKNLyJ0Y0U8w/iF54Iee/+1bw5gfjUPfd1TvJrD/99QXYvnnGU9afEBXrrU3A+
-        QA7cFnYY+RrcqlIQIEpRHiOkIGfewrQlCJ66bivAlb1m4vj5u31QrnaiVsOlZc1AfY6V7G
-        xa4tu6UabIY4f4waJYsLiKD/hddoxCY=
-Date:   Fri, 24 Feb 2023 11:27:25 -0700
-MIME-Version: 1.0
-Subject: Re: [PATCH v4 1/3] md: Move sb writer loop to its own function
-Content-Language: en-US
-To:     kernel test robot <lkp@intel.com>, Song Liu <song@kernel.org>,
-        linux-raid@vger.kernel.org
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        Reindl Harald <h.reindl@thelounge.net>,
-        Xiao Ni <xni@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Sushma Kalakota <sushma.kalakota@intel.com>
-References: <20230223195225.534-2-jonathan.derrick@linux.dev>
- <202302241507.7JQRJLLW-lkp@intel.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+        with ESMTP id S229458AbjBXSgi (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 24 Feb 2023 13:36:38 -0500
+Received: from resqmta-h1p-028589.sys.comcast.net (resqmta-h1p-028589.sys.comcast.net [IPv6:2001:558:fd02:2446::6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EA5A6C51B
+        for <linux-raid@vger.kernel.org>; Fri, 24 Feb 2023 10:36:37 -0800 (PST)
+Received: from resomta-h1p-027911.sys.comcast.net ([96.102.179.202])
+        by resqmta-h1p-028589.sys.comcast.net with ESMTP
+        id VbNnpHY5mEHHIVctRpD1Wt; Fri, 24 Feb 2023 18:34:05 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=comcastmailservice.net; s=20211018a; t=1677263645;
+        bh=78so3fKGuj8F6zb7IeKTcDs5CHPtkAK2XUSzVQMT474=;
+        h=Received:Received:From:To:Subject:Date:Message-Id:MIME-Version:
+         Xfinity-Spam-Result;
+        b=h02q92QO7O7gH/4U5NUFejbJ7xzOqQMp06lqKJ+O7kiTt3oY2Wa2Z/2gLhyTKV4i/
+         fqOCaE/HoOgGISbHVKifxJjHVFy0TNZXJ9AWKveuM+jCh2Wg2drawaKRcpFEm1n+MI
+         GWI5GzaVV9f7KypyNTKhH2Hn2woSAatjeVQoNYnbb4WyzK1qmO/QxkLJqSQKWFY4Kj
+         CN2SUg4oSVH6YNDCTGB+Omcl7f/1ytm+OdzwKiPqQyT0jY1if91dOVEnpwsS7fRnrN
+         Q03DmCjOHvbv74rqz2Tr8gCxIotIZmd8OFGXIDb8MxhQ7KSCYwy+WvxIV+0sapHen9
+         ZCbsK1qN7WeZg==
+Received: from jderrick-mobl4.amr.corp.intel.com ([71.205.181.50])
+        by resomta-h1p-027911.sys.comcast.net with ESMTPA
+        id VcsvpymQMN2puVct0pamhq; Fri, 24 Feb 2023 18:33:44 +0000
+X-Xfinity-VAAS: gggruggvucftvghtrhhoucdtuddrgedvhedrudekfedguddtlecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucevohhmtggrshhtqdftvghsihdpqfgfvfdppffquffrtefokffrnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeflohhnrghthhgrnhcuffgvrhhrihgtkhcuoehjohhnrghthhgrnhdruggvrhhrihgtkheslhhinhhugidruggvvheqnecuggftrfgrthhtvghrnhepvddtjeeigfeuleetveduvefhvdejvdfhtdfgheejiedtveeukedtgeettddthedvnecukfhppeejuddrvddthedrudekuddrhedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehhvghlohepjhguvghrrhhitghkqdhmohgslhegrdgrmhhrrdgtohhrphdrihhnthgvlhdrtghomhdpihhnvghtpeejuddrvddthedrudekuddrhedtpdhmrghilhhfrhhomhepjhhonhgrthhhrghnrdguvghrrhhitghksehlihhnuhigrdguvghvpdhnsggprhgtphhtthhopeelpdhrtghpthhtohepshhonhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrrghiugesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehhrdhrvghinhgulhesthhhvghlohhunhhgvgdrnhgvthdprhgtphhtthhopeignhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehhtg
+ hhsehlshhtrdguvgdprhgtphhtthhopehhtghhsehinhhfrhgruggvrggurdhorhhg
+X-Xfinity-VMeta: sc=-100.00;st=legit
 From:   Jonathan Derrick <jonathan.derrick@linux.dev>
-In-Reply-To: <202302241507.7JQRJLLW-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+To:     Song Liu <song@kernel.org>, <linux-raid@vger.kernel.org>
+Cc:     Reindl Harald <h.reindl@thelounge.net>, Xiao Ni <xni@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Sushma Kalakota <sushma.kalakota@intel.com>,
+        Jon Derrick <jonathan.derrick@linux.dev>
+Subject: [PATCH v5 0/3] md/bitmap: Optimal last page size
+Date:   Fri, 24 Feb 2023 11:33:20 -0700
+Message-Id: <20230224183323.638-1-jonathan.derrick@linux.dev>
+X-Mailer: git-send-email 2.30.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,SPF_HELO_PASS,SPF_SOFTFAIL autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+From: Jon Derrick <jonathan.derrick@linux.dev>
 
+Currently the last bitmap page write will size itself down to the logical block
+size. This could cause less performance for devices which have atomic write
+units larger than the block size, such as many NVMe devices with 4kB write
+units and 512B block sizes. There is usually a large amount of space after the
+bitmap and using the optimal I/O size could favor speed over size.
 
-On 2/24/2023 12:23 AM, kernel test robot wrote:
-> Hi Jonathan,
-> 
-> Thank you for the patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on song-md/md-next]
-> [also build test WARNING on linus/master v6.2 next-20230224]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Jonathan-Derrick/md-Move-sb-writer-loop-to-its-own-function/20230224-035451
-> base:   git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git md-next
-> patch link:    https://lore.kernel.org/r/20230223195225.534-2-jonathan.derrick%40linux.dev
-> patch subject: [PATCH v4 1/3] md: Move sb writer loop to its own function
-> config: s390-randconfig-r036-20230223 (https://download.01.org/0day-ci/archive/20230224/202302241507.7JQRJLLW-lkp@intel.com/config)
-> compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project db89896bbbd2251fff457699635acbbedeead27f)
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # install s390 cross compiling tool for clang build
->         # apt-get install binutils-s390x-linux-gnu
->         # https://github.com/intel-lab-lkp/linux/commit/93818e631c76938f9a3ad87d1baf681645d02ba7
->         git remote add linux-review https://github.com/intel-lab-lkp/linux
->         git fetch --no-tags linux-review Jonathan-Derrick/md-Move-sb-writer-loop-to-its-own-function/20230224-035451
->         git checkout 93818e631c76938f9a3ad87d1baf681645d02ba7
->         # save the config file
->         mkdir build_dir && cp config build_dir/.config
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=s390 olddefconfig
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=s390 SHELL=/bin/bash
-> 
-> If you fix the issue, kindly add following tag where applicable
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Link: https://lore.kernel.org/oe-kbuild-all/202302241507.7JQRJLLW-lkp@intel.com/
-> 
-> All warnings (new ones prefixed by >>):
-> 
->    In file included from drivers/md/md-bitmap.c:31:
->    In file included from include/trace/events/block.h:8:
->    In file included from include/linux/blktrace_api.h:5:
->    In file included from include/linux/blk-mq.h:8:
->    In file included from include/linux/scatterlist.h:9:
->    In file included from arch/s390/include/asm/io.h:75:
->    include/asm-generic/io.h:547:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
->            val = __raw_readb(PCI_IOBASE + addr);
->                              ~~~~~~~~~~ ^
->    include/asm-generic/io.h:560:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
->            val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
->                                                            ~~~~~~~~~~ ^
->    include/uapi/linux/byteorder/big_endian.h:37:59: note: expanded from macro '__le16_to_cpu'
->    #define __le16_to_cpu(x) __swab16((__force __u16)(__le16)(x))
->                                                              ^
->    include/uapi/linux/swab.h:102:54: note: expanded from macro '__swab16'
->    #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
->                                                         ^
->    In file included from drivers/md/md-bitmap.c:31:
->    In file included from include/trace/events/block.h:8:
->    In file included from include/linux/blktrace_api.h:5:
->    In file included from include/linux/blk-mq.h:8:
->    In file included from include/linux/scatterlist.h:9:
->    In file included from arch/s390/include/asm/io.h:75:
->    include/asm-generic/io.h:573:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
->            val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
->                                                            ~~~~~~~~~~ ^
->    include/uapi/linux/byteorder/big_endian.h:35:59: note: expanded from macro '__le32_to_cpu'
->    #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
->                                                              ^
->    include/uapi/linux/swab.h:115:54: note: expanded from macro '__swab32'
->    #define __swab32(x) (__u32)__builtin_bswap32((__u32)(x))
->                                                         ^
->    In file included from drivers/md/md-bitmap.c:31:
->    In file included from include/trace/events/block.h:8:
->    In file included from include/linux/blktrace_api.h:5:
->    In file included from include/linux/blk-mq.h:8:
->    In file included from include/linux/scatterlist.h:9:
->    In file included from arch/s390/include/asm/io.h:75:
->    include/asm-generic/io.h:584:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
->            __raw_writeb(value, PCI_IOBASE + addr);
->                                ~~~~~~~~~~ ^
->    include/asm-generic/io.h:594:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
->            __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
->                                                          ~~~~~~~~~~ ^
->    include/asm-generic/io.h:604:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
->            __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
->                                                          ~~~~~~~~~~ ^
->    include/asm-generic/io.h:692:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
->            readsb(PCI_IOBASE + addr, buffer, count);
->                   ~~~~~~~~~~ ^
->    include/asm-generic/io.h:700:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
->            readsw(PCI_IOBASE + addr, buffer, count);
->                   ~~~~~~~~~~ ^
->    include/asm-generic/io.h:708:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
->            readsl(PCI_IOBASE + addr, buffer, count);
->                   ~~~~~~~~~~ ^
->    include/asm-generic/io.h:717:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
->            writesb(PCI_IOBASE + addr, buffer, count);
->                    ~~~~~~~~~~ ^
->    include/asm-generic/io.h:726:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
->            writesw(PCI_IOBASE + addr, buffer, count);
->                    ~~~~~~~~~~ ^
->    include/asm-generic/io.h:735:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
->            writesl(PCI_IOBASE + addr, buffer, count);
->                    ~~~~~~~~~~ ^
->>> drivers/md/md-bitmap.c:273:18: warning: variable 'rdev' is used uninitialized whenever function 'write_sb_page' is called [-Wsometimes-uninitialized]
->            struct md_rdev *rdev;
->            ~~~~~~~~~~~~~~~~^~~~
->    drivers/md/md-bitmap.c:278:35: note: uninitialized use occurs here
->                    while ((rdev = next_active_rdev(rdev, mddev)) != NULL) {
->                                                    ^~~~
->    drivers/md/md-bitmap.c:273:22: note: initialize the variable 'rdev' to silence this warning
-Oops, I missed the rdev = NULL;
-V5 incoming
+This was tested on an Intel/Solidigm P5520 drive with lba format 512B,
+optimal I/O size of 4kB, resulting in a > 10x IOPS increase.
 
->            struct md_rdev *rdev;
->                                ^
->                                 = NULL
->    13 warnings generated.
-> 
-> 
-> vim +273 drivers/md/md-bitmap.c
-> 
->    270	
->    271	static int write_sb_page(struct bitmap *bitmap, struct page *page, int wait)
->    272	{
->  > 273		struct md_rdev *rdev;
->    274		struct mddev *mddev = bitmap->mddev;
->    275		int ret;
->    276	
->    277		do {
->    278			while ((rdev = next_active_rdev(rdev, mddev)) != NULL) {
->    279				ret = __write_sb_page(rdev, bitmap, page);
->    280				if (ret)
->    281					return ret;
->    282			}
->    283		} while (wait && md_super_wait(mddev) < 0);
->    284	
->    285		return 0;
->    286	}
->    287	
-> 
+See patch 3 log for results.
+
+v4->v5: Initialized rdev (kernel test bot)
+v3->v4: Fixed reviewers concerns
+v2->v3: Prep patch added and types fixed
+Added helpers for optimal I/O sizes
+
+Jon Derrick (3):
+  md: Move sb writer loop to its own function
+  md: Fix types in sb writer
+  md: Use optimal I/O size for last bitmap page
+
+ drivers/md/md-bitmap.c | 143 ++++++++++++++++++++++++-----------------
+ 1 file changed, 83 insertions(+), 60 deletions(-)
+
+-- 
+2.27.0
+
