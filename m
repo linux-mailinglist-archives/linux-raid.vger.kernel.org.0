@@ -2,80 +2,72 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EF49D6A14CE
-	for <lists+linux-raid@lfdr.de>; Fri, 24 Feb 2023 03:11:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ED7056A16B1
+	for <lists+linux-raid@lfdr.de>; Fri, 24 Feb 2023 07:42:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229535AbjBXCL5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 23 Feb 2023 21:11:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37442 "EHLO
+        id S229510AbjBXGmZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 24 Feb 2023 01:42:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbjBXCL4 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 23 Feb 2023 21:11:56 -0500
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 403175E84A
-        for <linux-raid@vger.kernel.org>; Thu, 23 Feb 2023 18:11:55 -0800 (PST)
-Received: from dggpeml500025.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4PNCxr5qL6znWSm;
-        Fri, 24 Feb 2023 10:09:20 +0800 (CST)
-Received: from [10.174.176.117] (10.174.176.117) by
- dggpeml500025.china.huawei.com (7.185.36.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.17; Fri, 24 Feb 2023 10:11:52 +0800
-Subject: =?UTF-8?Q?Re=3a_question_about_5e8daf906f89_=28=22md=3a_Flush_workq?=
- =?UTF-8?B?dWV1ZSBtZF9yZGV2X21pc2Nfd3EgaW4gbWRfYWxsb2MoKeKAnSk=?=
-To:     <david.sloan@eideticom.com>, Logan Gunthorpe <logang@deltatee.com>
-CC:     <linux-raid@vger.kernel.org>, <yangerkun@huawei.com>,
-        <yukuai@huawei.com>, <song@kernel.org>,
-        Li Nan <linan666@huaweicloud.com>
-References: <639bcf6e-b8b1-e002-a61f-93ec7ad04bbd@huaweicloud.com>
-From:   Hou Tao <houtao1@huawei.com>
-Message-ID: <bd26c2c9-9ab6-71e0-b73f-c0ed9a81f4a0@huawei.com>
-Date:   Fri, 24 Feb 2023 10:11:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+        with ESMTP id S229446AbjBXGmY (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 24 Feb 2023 01:42:24 -0500
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1E50136C9;
+        Thu, 23 Feb 2023 22:42:22 -0800 (PST)
+Received: from [192.168.0.185] (ip5f5aee41.dynamic.kabel-deutschland.de [95.90.238.65])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: pmenzel)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id B271B60027FE6;
+        Fri, 24 Feb 2023 07:42:19 +0100 (CET)
+Message-ID: <97a94478-7767-e2a9-a3da-85ae81f3ba5b@molgen.mpg.de>
+Date:   Fri, 24 Feb 2023 07:42:18 +0100
 MIME-Version: 1.0
-In-Reply-To: <639bcf6e-b8b1-e002-a61f-93ec7ad04bbd@huaweicloud.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Timestamps from the future (was: [PATCH 5.10] md: Flush workqueue
+ md_rdev_misc_wq in md_alloc())
+To:     Hou Tao <houtao@huaweicloud.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, linux-raid@vger.kernel.org,
+        David Sloan <david.sloan@eideticom.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Song Liu <song@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, houtao1@huawei.com
+References: <20230224065209.3170104-1-houtao@huaweicloud.com>
 Content-Language: en-US
-X-Originating-IP: [10.174.176.117]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpeml500025.china.huawei.com (7.185.36.35)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <20230224065209.3170104-1-houtao@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi,
+Dear Hou,
 
-On 2/10/2023 10:10 AM, Li Nan wrote:
-> Hi,
-> Commit log says there is race condition in md_rdev_misc_wq, but I find nothing
-> wrong with it. Could you tell me how to trigger the bug?
->
-> Thansks,
-> nan.
->
-We want to back-port commit 5e8daf906f89 ("md: Flush workqueue md_rdev_misc_wq
-in md_alloc()") into v5.10 LTS, but only judging from its commit message, we
-don't know whether it is a good candidate or not. According to my understanding,
-the commit tries to wait for the deletion and the release of rdev kobject. The
-release of rdev kobject will call rdev_free() to free the allocated memory and
-it will not being related with any race, so I think the race mentioned in commit
-message must be related with the deletion of rdev kobject. Because the parent of
-rdev kobject is mddev and rdev kobject must have been acquired one reference of
-mddev kobject, so if the deletion of rdev kobject doesn't completes,
-md_kobj_release() and its callee del_gendisk() will be not called, right ? If
-the previous created mddev has not already called del_gendisk(), the current
-creation of mddev with the same name will fail in add_disk() or kobject_add(). I
-think this is the mentioned race in the commit message, right ? If that is the
-case, v5.10 LTS also have the same race problem. We will try to reproduce the
-problem and post it to v5.10 LTS.
->
-> .
 
+Am 24.02.23 um 07:52 schrieb Hou Tao:
+
+[…]
+
+Just a heads-up that the date/timestamp is from the future
+
+     Received: from huaweicloud.com (unknown [10.175.124.27])
+             by APP4 (Coremail) with SMTP id 
+gCh0CgBXwLPzV_hjqVfcEA--.64482S4;
+             Fri, 24 Feb 2023 14:23:49 +0800 (CST)
+     […]
+     Date:   Fri, 24 Feb 2023 14:52:09 +0800
+
+Please check the time of your (development) system.
+
+
+Kind regards,
+
+Paul
