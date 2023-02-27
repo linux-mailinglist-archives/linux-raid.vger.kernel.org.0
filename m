@@ -2,59 +2,59 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 032746A35DD
-	for <lists+linux-raid@lfdr.de>; Mon, 27 Feb 2023 01:16:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AE9CF6A35E1
+	for <lists+linux-raid@lfdr.de>; Mon, 27 Feb 2023 01:16:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229754AbjB0AQQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 26 Feb 2023 19:16:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55258 "EHLO
+        id S229760AbjB0AQk (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 26 Feb 2023 19:16:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229744AbjB0AQO (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 26 Feb 2023 19:16:14 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9028D166CE
-        for <linux-raid@vger.kernel.org>; Sun, 26 Feb 2023 16:16:09 -0800 (PST)
+        with ESMTP id S229768AbjB0AQh (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 26 Feb 2023 19:16:37 -0500
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 440911165E
+        for <linux-raid@vger.kernel.org>; Sun, 26 Feb 2023 16:16:34 -0800 (PST)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 26FB81F8D4;
-        Mon, 27 Feb 2023 00:16:08 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 034C821A05;
+        Mon, 27 Feb 2023 00:16:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1677456968; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1677456993; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=xobv0DnPyfW8nbWZggzLrgYlm9PvuCQvc2eEluVNtiY=;
-        b=SMybNcFJxtGGbIPd/7yGuxp3xd6oBW7mPqyKDXj78i9JynQXFGNY7WPxASKSEmFOB8RGWN
-        ff5cnnfA3CigT0g7MO7X3Hy0zcP5YDoYSOWxqU4QGkeI51kGPk738/oitNgcyqrycILxJ8
-        nY81w/BOUZNr0ZhsipzdqWGna/1quBc=
+        bh=OnuuiDXyXQA7WhhmDH1jD1SiUQHW0N971Em3IYMJMRs=;
+        b=pXfSa7mX0ZVHC2YNQhpwiOhVb+q5imraHSud+ibPIwrcnu2TZd0eAEMrmsGBAsuxfRRqyy
+        EhWbB1jWw7cTvhD8M2maL78xGO0oJ/FTMnbJaLi700aC1pRwXYwU7MQS3SUEsIP6illigX
+        wC/VBFbEBxYpGT4QxwhV1lb8KA+pJIg=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1677456968;
+        s=susede2_ed25519; t=1677456993;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=xobv0DnPyfW8nbWZggzLrgYlm9PvuCQvc2eEluVNtiY=;
-        b=W20qQz8lUNrlNGX0ATgWP1LOm4N6pXIZTe80J7QeC9X96xSWMSoqVOkvAwaZX7vq9x3S0h
-        dpW2vjJ/L12uPdCQ==
+        bh=OnuuiDXyXQA7WhhmDH1jD1SiUQHW0N971Em3IYMJMRs=;
+        b=mgMUGlowi/YM4qJfU64ChyKmoKiIElR/MF/5MTZtFkJjj9/FaDSE9JkVUkkR9IKjRPw9N4
+        bhKtwOvmGywGiZDQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 8AFEE13912;
-        Mon, 27 Feb 2023 00:16:06 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 66C4613912;
+        Mon, 27 Feb 2023 00:16:31 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id bvXXD0b2+2PCdQAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 27 Feb 2023 00:16:06 +0000
-Subject: [PATCH 2/6] Improvements for IMSM_NO_PLATFORM testing.
+        id QwaUBl/2+2P6dQAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 27 Feb 2023 00:16:31 +0000
+Subject: [PATCH 6/6] mdmon improvements for switchroot
 From:   NeilBrown <neilb@suse.de>
 To:     Jes Sorensen <jes@trained-monkey.org>
 Cc:     linux-raid@vger.kernel.org, Martin Wilck <martin.wilck@suse.com>,
         Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
 Date:   Mon, 27 Feb 2023 11:13:07 +1100
-Message-ID: <167745678751.16565.9453697155261795182.stgit@noble.brown>
+Message-ID: <167745678753.16565.5052083348539533042.stgit@noble.brown>
 In-Reply-To: <167745586347.16565.4353184078424535907.stgit@noble.brown>
 References: <167745586347.16565.4353184078424535907.stgit@noble.brown>
 User-Agent: StGit/1.5
@@ -70,142 +70,161 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Factor out IMSM_NO_PLATFORM testing into a single function that caches
-the result.
+We need a new mdmon@mdfoo instance to run in the root filesystem after
+switch root, as /sys and /dev are removed from the initrd.
 
-Allow mdmon to explicitly set the result to "1" so that we don't need
-the ENV var in the unit file
+systemd will not start a new unit with the same name running while the
+old unit is still active, and we want the two mdmon processes to overlap
+in time to avoid any risk of deadlock which a write is attempted with no
+mdmon running.
 
-Check if the kernel command line contains "mdadm.imsm.test=1" and in
-that case assert NO_PLATFORM.  This simplifies testing in a virtual
-machine.
+So we need a different unit name in the initrd than in the root.  Apart
+from the name, everything else should be the same.
+
+This is easily achieved using a different instance name as the
+mdmon@.service unit file already supports multiple instances (for
+different arrays).
+
+So start "mdmon@mdfoo.service" from root, but
+"mdmon@initrd-mdfoo.service" from the initrd.  udev can tell which
+circumstance is the case by looking for /etc/initrd-release.
+continue_from_systemd() is enhanced so that the "initrd-" prefix can be
+requested.
+
+Teach mdmon that a container name like "initrd/foo" should be treated
+just like "foo".  Note that systemd passes the instance name
+"initrd-foo" as "initrd/foo".
+
+We don't need a similar machanism at shutdown because dracut runs
+"mdmon --takeover --all" when appropriate.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- mdadm.h                |    2 ++
- mdmon.c                |    6 ++++++
- super-intel.c          |   43 ++++++++++++++++++++++++++++++++++++++++---
- systemd/mdmon@.service |    3 ---
- 4 files changed, 48 insertions(+), 6 deletions(-)
+ Grow.c                    |    4 ++--
+ mdadm.h                   |    2 +-
+ mdmon.c                   |    6 +++++-
+ systemd/mdmon@.service    |    2 +-
+ udev-md-raid-arrays.rules |    3 ++-
+ util.c                    |    7 ++++---
+ 6 files changed, 15 insertions(+), 9 deletions(-)
 
+diff --git a/Grow.c b/Grow.c
+index bb5fe45c851c..06001f2d334a 100644
+--- a/Grow.c
++++ b/Grow.c
+@@ -3516,7 +3516,7 @@ started:
+ 
+ 	if (!forked)
+ 		if (continue_via_systemd(container ?: sra->sys_name,
+-					 GROW_SERVICE)) {
++					 GROW_SERVICE, NULL)) {
+ 			free(fdlist);
+ 			free(offsets);
+ 			sysfs_free(sra);
+@@ -3714,7 +3714,7 @@ int reshape_container(char *container, char *devname,
+ 	ping_monitor(container);
+ 
+ 	if (!forked && !freeze_reshape)
+-		if (continue_via_systemd(container, GROW_SERVICE))
++		if (continue_via_systemd(container, GROW_SERVICE, NULL))
+ 			return 0;
+ 
+ 	switch (forked ? 0 : fork()) {
 diff --git a/mdadm.h b/mdadm.h
-index 13f8b4cb5a6b..0939fd3cb1ee 100644
+index 0939fd3cb1ee..f208ed5ec22f 100644
 --- a/mdadm.h
 +++ b/mdadm.h
-@@ -1258,6 +1258,8 @@ extern struct superswitch super0, super1;
- extern struct superswitch super_imsm, super_ddf;
- extern struct superswitch mbr, gpt;
+@@ -1605,7 +1605,7 @@ extern int same_dev(char *one, char *two);
+ extern int compare_paths (char* path1,char* path2);
+ extern void enable_fds(int devices);
+ extern void manage_fork_fds(int close_all);
+-extern int continue_via_systemd(char *devnm, char *service_name);
++extern int continue_via_systemd(char *devnm, char *service_name, char *prefix);
  
-+void imsm_set_no_platform(int v);
-+
- struct metadata_update {
- 	int	len;
- 	char	*buf;
+ extern void ident_init(struct mddev_ident *ident);
+ 
 diff --git a/mdmon.c b/mdmon.c
-index 60ba318253b9..f557e12c6533 100644
+index 6d37b17c3f53..25abdd71fb1e 100644
 --- a/mdmon.c
 +++ b/mdmon.c
-@@ -318,6 +318,12 @@ int main(int argc, char *argv[])
- 		{NULL, 0, NULL, 0}
- 	};
- 
-+	/*
-+	 * mdmon should never complain due to lack of a platform,
-+	 * that is mdadm's job if at all.
-+	 */
-+	imsm_set_no_platform(1);
-+
- 	while ((opt = getopt_long(argc, argv, "thaF", options, NULL)) != -1) {
- 		switch (opt) {
- 		case 'a':
-diff --git a/super-intel.c b/super-intel.c
-index 89fac6263172..9180d050083a 100644
---- a/super-intel.c
-+++ b/super-intel.c
-@@ -629,6 +629,43 @@ static const char *_sys_dev_type[] = {
- 	[SYS_DEV_VMD] = "VMD"
- };
- 
-+static int no_platform = -1;
-+
-+static int check_no_platform(void)
-+{
-+	static const char search[] = "mdadm.imsm.test=1";
-+	int fd;
-+	char buf[1024];
-+	int n = 0;
-+
-+	if (no_platform >= 0)
-+		return no_platform;
-+
-+	if (check_env("IMSM_NO_PLATFORM")) {
-+		no_platform = 1;
-+		return 1;
-+	}
-+	fd = open("/proc/cmdline", O_RDONLY);
-+	if (fd >= 0) {
-+		n = read(fd, buf, sizeof(buf)-1);
-+		close(fd);
-+	}
-+	if (n >= (int)sizeof(search)) {
-+		buf[n] = 0;
-+		if (strstr(buf, search) != NULL) {
-+			no_platform = 1;
-+			return 1;
-+		}
-+	}
-+	no_platform = 0;
-+	return 0;
-+}
-+
-+void imsm_set_no_platform(int v)
-+{
-+	no_platform = v;
-+}
-+
- const char *get_sys_dev_type(enum sys_dev_type type)
- {
- 	if (type >= SYS_DEV_MAX)
-@@ -2699,7 +2736,7 @@ static int detail_platform_imsm(int verbose, int enumerate_only, char *controlle
- 	int result=1;
- 
- 	if (enumerate_only) {
--		if (check_env("IMSM_NO_PLATFORM"))
-+		if (check_no_platform())
- 			return 0;
- 		list = find_intel_devices();
- 		if (!list)
-@@ -4721,7 +4758,7 @@ static int find_intel_hba_capability(int fd, struct intel_super *super, char *de
- 		       devname);
- 		return 1;
+@@ -368,7 +368,11 @@ int main(int argc, char *argv[])
  	}
--	if (!is_fd_valid(fd) || check_env("IMSM_NO_PLATFORM")) {
-+	if (!is_fd_valid(fd) || check_no_platform()) {
- 		super->orom = NULL;
- 		super->hba = NULL;
- 		return 0;
-@@ -10696,7 +10733,7 @@ static int imsm_get_allowed_degradation(int level, int raid_disks,
-  ******************************************************************************/
- int validate_container_imsm(struct mdinfo *info)
- {
--	if (check_env("IMSM_NO_PLATFORM"))
-+	if (check_no_platform())
- 		return 0;
  
- 	struct sys_dev *idev;
+ 	if (!all && argv[optind]) {
+-		container_name = get_md_name(argv[optind]);
++		static const char prefix[] = "initrd/";
++		container_name = argv[optind];
++		if (strncmp(container_name, prefix, sizeof(prefix)-1) == 0)
++			container_name += sizeof(prefix)-1;
++		container_name = get_md_name(container_name);
+ 		if (!container_name)
+ 			return 1;
+ 	}
 diff --git a/systemd/mdmon@.service b/systemd/mdmon@.service
-index cb6482d9ff29..e7ee17a8bf91 100644
+index 3ab908c45a3b..8d55fa63ce28 100644
 --- a/systemd/mdmon@.service
 +++ b/systemd/mdmon@.service
-@@ -12,9 +12,6 @@ Before=initrd-switch-root.target
- Documentation=man:mdmon(8)
+@@ -6,7 +6,7 @@
+ #  (at your option) any later version.
  
- [Service]
--# mdmon should never complain due to lack of a platform,
--# that is mdadm's job if at all.
--Environment=IMSM_NO_PLATFORM=1
- # The mdmon starting in the initramfs (with dracut at least)
- # cannot see sysfs after root is mounted, so we will have to
- # 'takeover'.  As the '--offroot --takeover' don't hurt when
+ [Unit]
+-Description=MD Metadata Monitor on /dev/%I
++Description=MD Metadata Monitor on %I
+ DefaultDependencies=no
+ Before=initrd-switch-root.target
+ Documentation=man:mdmon(8)
+diff --git a/udev-md-raid-arrays.rules b/udev-md-raid-arrays.rules
+index 2967ace1f040..4e64b249b2db 100644
+--- a/udev-md-raid-arrays.rules
++++ b/udev-md-raid-arrays.rules
+@@ -38,7 +38,8 @@ ENV{MD_LEVEL}=="raid[1-9]*", ENV{SYSTEMD_WANTS}+="mdmonitor.service"
+ 
+ # Tell systemd to run mdmon for our container, if we need it.
+ ENV{MD_LEVEL}=="raid[1-9]*", ENV{MD_CONTAINER}=="?*", PROGRAM="/usr/bin/readlink $env{MD_CONTAINER}", ENV{MD_MON_THIS}="%c"
+-ENV{MD_MON_THIS}=="?*", PROGRAM="/usr/bin/basename $env{MD_MON_THIS}", ENV{SYSTEMD_WANTS}+="mdmon@%c.service"
++ENV{MD_MON_THIS}=="?*", TEST=="/etc/initrd-release", PROGRAM="/usr/bin/basename $env{MD_MON_THIS}", ENV{SYSTEMD_WANTS}+="mdmon@initrd-%c.service"
++ENV{MD_MON_THIS}=="?*", TEST!="/etc/initrd-release", PROGRAM="/usr/bin/basename $env{MD_MON_THIS}", ENV{SYSTEMD_WANTS}+="mdmon@%c.service"
+ ENV{RESHAPE_ACTIVE}=="yes", PROGRAM="/usr/bin/basename $env{MD_MON_THIS}", ENV{SYSTEMD_WANTS}+="mdadm-grow-continue@%c.service"
+ 
+ LABEL="md_end"
+diff --git a/util.c b/util.c
+index 6b44662db7cd..1d433d1826b5 100644
+--- a/util.c
++++ b/util.c
+@@ -1906,6 +1906,7 @@ int start_mdmon(char *devnm)
+ 	int len;
+ 	pid_t pid;
+ 	int status;
++	char *prefix = in_initrd() ? "initrd-", "";
+ 	char pathbuf[1024];
+ 	char *paths[4] = {
+ 		pathbuf,
+@@ -1916,7 +1917,7 @@ int start_mdmon(char *devnm)
+ 
+ 	if (check_env("MDADM_NO_MDMON"))
+ 		return 0;
+-	if (continue_via_systemd(devnm, MDMON_SERVICE))
++	if (continue_via_systemd(devnm, MDMON_SERVICE, prefix))
+ 		return 0;
+ 
+ 	/* That failed, try running mdmon directly */
+@@ -2187,7 +2188,7 @@ void manage_fork_fds(int close_all)
+  *	1- if systemd service has been started
+  *	0- otherwise
+  */
+-int continue_via_systemd(char *devnm, char *service_name)
++int continue_via_systemd(char *devnm, char *service_name, char *prefix)
+ {
+ 	int pid, status;
+ 	char pathbuf[1024];
+@@ -2199,7 +2200,7 @@ int continue_via_systemd(char *devnm, char *service_name)
+ 	case  0:
+ 		manage_fork_fds(1);
+ 		snprintf(pathbuf, sizeof(pathbuf),
+-			 "%s@%s.service", service_name, devnm);
++			 "%s@%s%s.service", service_name, prefix ?: "", devnm);
+ 		status = execl("/usr/bin/systemctl", "systemctl", "restart",
+ 			       pathbuf, NULL);
+ 		status = execl("/bin/systemctl", "systemctl", "restart",
 
 
