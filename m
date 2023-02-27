@@ -2,57 +2,61 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 71B136A35D9
-	for <lists+linux-raid@lfdr.de>; Mon, 27 Feb 2023 01:16:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0BDD6A35DF
+	for <lists+linux-raid@lfdr.de>; Mon, 27 Feb 2023 01:16:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229722AbjB0AQH (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 26 Feb 2023 19:16:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55166 "EHLO
+        id S229769AbjB0AQb (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 26 Feb 2023 19:16:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbjB0AQG (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 26 Feb 2023 19:16:06 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 369F615554
-        for <linux-raid@vger.kernel.org>; Sun, 26 Feb 2023 16:15:59 -0800 (PST)
+        with ESMTP id S229752AbjB0AQX (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 26 Feb 2023 19:16:23 -0500
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDFF116AE8
+        for <linux-raid@vger.kernel.org>; Sun, 26 Feb 2023 16:16:21 -0800 (PST)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id C05F61F8D7;
-        Mon, 27 Feb 2023 00:15:57 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 91BC321A05;
+        Mon, 27 Feb 2023 00:16:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1677456957; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1677456980; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Psue0GUxz2Hf3DaFntJazFuxRNgFNDIcENslsqrnnMc=;
-        b=U3Y7WMDfIQqhV0qXSVsDWwD+K8cIAMr2WhU9biWywVnVyvg6k/uYaSKoyTWypCjPfZxbqd
-        dMedzzetTRwj1TE9UbHz1U2FRrKn+xWtoh1AuA9dAg1n+25xS9D75/ewNnESiP7HKzit1h
-        8pXDFk/S4lCwqtr/rw/LmHObt9+zU4I=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JJaKBkydodC5lrhtBAnyoOz6Znaw5dF4tyZ0+FiHqxU=;
+        b=gpYcW+1C6+x81I5udSHwlhBPjltC1xIv1rAxsGESnHSzUrzx6XKi1u4/WcNGvO3UP5J3oY
+        srH4xXx0htxR1HM34F+nTUj5wH5Zk/92cVqGRN3YpJ9UBt3Wf7EusF0jlbfyrlbON35Tax
+        zh8q5qLAV3DGfFEtRBDJMrUqTTaOdQg=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1677456957;
+        s=susede2_ed25519; t=1677456980;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Psue0GUxz2Hf3DaFntJazFuxRNgFNDIcENslsqrnnMc=;
-        b=S+VlNBTdB9kmx5MR0W0HXkHuHR06wjz25Ado8nzJSGctzAbqhAh6p8djdX/Nf1c5FSTyTO
-        RITCE65pqcOkfeAg==
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JJaKBkydodC5lrhtBAnyoOz6Znaw5dF4tyZ0+FiHqxU=;
+        b=somrpsiByP+1lWbjMTQUeiNEzDE68y7rItrChRHoESCjEUGac7VDUPwpMAygVHMOoFf3B9
+        zsIaJS5FC3YYJjDQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 38CCE13912;
-        Mon, 27 Feb 2023 00:15:55 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 40D1113912;
+        Mon, 27 Feb 2023 00:16:17 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id K4r7Njv2+2OndQAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 27 Feb 2023 00:15:55 +0000
-Subject: [PATCH 0/6] Assorted patches relating to mdmon
+        id aLBbOVH2+2PcdQAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 27 Feb 2023 00:16:17 +0000
+Subject: [PATCH 4/6] mdmon: change systemd unit file to use --foreground
 From:   NeilBrown <neilb@suse.de>
 To:     Jes Sorensen <jes@trained-monkey.org>
 Cc:     linux-raid@vger.kernel.org, Martin Wilck <martin.wilck@suse.com>,
         Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
 Date:   Mon, 27 Feb 2023 11:13:07 +1100
-Message-ID: <167745586347.16565.4353184078424535907.stgit@noble.brown>
+Message-ID: <167745678752.16565.7116046778637460538.stgit@noble.brown>
+In-Reply-To: <167745586347.16565.4353184078424535907.stgit@noble.brown>
+References: <167745586347.16565.4353184078424535907.stgit@noble.brown>
 User-Agent: StGit/1.5
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -66,73 +70,29 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-mdmon is a root-storage daemon is the sense defined by systemd
-documentation, but it does not follow the practice that systemd
-recommends.  Specifically it is run from the root filesystem when
-possible.  The instance started in the initrd hands-over to a root-fs
-based instance, which then hands-over to an initrd-based instance
-started by dracut at shutdown.
+There is no value in mdmon forking when it is running under systemd -
+systemd can still track it anyway.
 
-Part of the reason that we ignore systemd advise is that mdmon needs
-access to the filesystem - specifically /dev and /sys - which is not
-available in the initrd context after switchroot.  We could possibly
-change mdmon to work in the systemd-preferred way by splitting mdmon
-into two processes instead of just having 2 threads.  The "monitor"
-process could running entirely in the initrd context, the "manager"
-process could safely run in the root-fs context, passing newly opened
-file descriptors to the monitor over a unix-domain socket.
+So add --foreground option, and remove "Type=forking".
 
-But we aren't there yet and may never be.
-
-For now, mdmon doesn't work correctly.  There is no mechanism to ensure
-a new instance starts after switchroot.  Until recently the initrd
-instance of the systemd mdmon unit would be stopped at switchroot time
-because udev would temporarily forget about md devices.  This would
-allow the "udevadm trigger" process to start a new instance.  udev was
-recently fixed:
-
-Commit: 7ec624147a41 ("udevadm: cleanup-db: don't delete information for kept db entries")
-
-so now the attempt to start mdmon via "udevadm trigger" does nothing as
-mdmon already has an active unit.
-
-The net result is that mdmon continues running in the initrd mount
-namespace and so cannot access new devices.  Adding a device to a root
-md array that depends on mdmon will no longer work.
-
-We want the initrd instance of mdmon to continue running until the
-root-fs based instance starts, and that really requires we have two
-different systemd units.  This series achieves this in the final patch by
-using a different instance name inside or initrd and outside.
-"initrd-mdfoo" and "mdfoo".
-
-Other patches in the series are mostly clean-ups and minor improvements
-in related code.
-
-NeilBrown
-
-
-
+Signed-off-by: NeilBrown <neilb@suse.de>
 ---
+ systemd/mdmon@.service |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-NeilBrown (6):
-      Use existence of /etc/initrd-release to detect initrd.
-      Improvements for IMSM_NO_PLATFORM testing.
-      mdmon: don't test both 'all' and 'container_name'.
-      mdmon: change systemd unit file to use --foreground
-      mdmon: Remove need for KillMode=none
-      mdmon improvements for switchroot
+diff --git a/systemd/mdmon@.service b/systemd/mdmon@.service
+index e7ee17a8bf91..3502fadc3fc4 100644
+--- a/systemd/mdmon@.service
++++ b/systemd/mdmon@.service
+@@ -17,8 +17,7 @@ Documentation=man:mdmon(8)
+ # 'takeover'.  As the '--offroot --takeover' don't hurt when
+ # not necessary, are are useful with root-on-md in dracut,
+ # have them always present.
+-ExecStart=BINDIR/mdmon --offroot --takeover %I
+-Type=forking
++ExecStart=BINDIR/mdmon --foreground --offroot --takeover %I
+ # Don't set the PIDFile.  It isn't necessary (systemd can work
+ # it out) and systemd will remove it when transitioning from
+ # initramfs to rootfs.
 
-
- Grow.c                    |  4 ++--
- mdadm.h                   |  4 +++-
- mdmon.c                   | 21 ++++++++++++-------
- super-intel.c             | 43 ++++++++++++++++++++++++++++++++++++---
- systemd/mdmon@.service    | 15 +++++++-------
- udev-md-raid-arrays.rules |  3 ++-
- util.c                    | 17 +++++-----------
- 7 files changed, 74 insertions(+), 33 deletions(-)
-
---
-Signature
 
