@@ -2,196 +2,210 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 672D06A2199
-	for <lists+linux-raid@lfdr.de>; Fri, 24 Feb 2023 19:36:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 032746A35DD
+	for <lists+linux-raid@lfdr.de>; Mon, 27 Feb 2023 01:16:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229832AbjBXSgl (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 24 Feb 2023 13:36:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35168 "EHLO
+        id S229754AbjB0AQQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 26 Feb 2023 19:16:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229887AbjBXSgi (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 24 Feb 2023 13:36:38 -0500
-Received: from resqmta-h1p-028594.sys.comcast.net (resqmta-h1p-028594.sys.comcast.net [IPv6:2001:558:fd02:2446::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ECB16C51F
-        for <linux-raid@vger.kernel.org>; Fri, 24 Feb 2023 10:36:37 -0800 (PST)
-Received: from resomta-h1p-027911.sys.comcast.net ([96.102.179.202])
-        by resqmta-h1p-028594.sys.comcast.net with ESMTP
-        id VXICpGQKuzZgKVctRpvO6g; Fri, 24 Feb 2023 18:34:05 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=comcastmailservice.net; s=20211018a; t=1677263645;
-        bh=0VaiQ+Sfjsrp/FZM+TlYPCjyB5kxNAvjLskIS4PXKUc=;
-        h=Received:Received:From:To:Subject:Date:Message-Id:MIME-Version:
-         Xfinity-Spam-Result;
-        b=ubCm1ybGx14TyzWDxFqCpEylURuKyYam9v9bGuMV5lar3rYrqXWnyzoMvub0Qs1Lz
-         Tr0tNi5v8J9NNVoXw0JqNoNl/sDfPWmd75nH9uZW3ih/C/QZ6x1lggBmYRPgco49cF
-         zj6peSYAa97U6r3xcVEJ28ezxgzoqETq/L7QQkj+JJLDjyfdr7A0GwPPfH6jlp4u9U
-         FTa+1z2/7FRVDy8nGx+sBnub3z8sdnZE4lmcBbMzAiDUy+4OlDOm76JTnUq38NP/ZG
-         1G9m4DrFDWkGa6U8iB9GKHQk9VhgWlxkRN3pgO41oQ7K5wm0memASrZmWfRVCGM/Qi
-         zVGTkPWoTBTPA==
-Received: from jderrick-mobl4.amr.corp.intel.com ([71.205.181.50])
-        by resomta-h1p-027911.sys.comcast.net with ESMTPA
-        id VcsvpymQMN2puVct9pamiU; Fri, 24 Feb 2023 18:33:48 +0000
-X-Xfinity-VAAS: gggruggvucftvghtrhhoucdtuddrgedvhedrudekfedguddtlecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucevohhmtggrshhtqdftvghsihdpqfgfvfdppffquffrtefokffrnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeflohhnrghthhgrnhcuffgvrhhrihgtkhcuoehjohhnrghthhgrnhdruggvrhhrihgtkheslhhinhhugidruggvvheqnecuggftrfgrthhtvghrnheptdetleejfffgffevhefhteevfeeuvdehveffffehtdejuedvvefgfedttdehfedtnecukfhppeejuddrvddthedrudekuddrhedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehhvghlohepjhguvghrrhhitghkqdhmohgslhegrdgrmhhrrdgtohhrphdrihhnthgvlhdrtghomhdpihhnvghtpeejuddrvddthedrudekuddrhedtpdhmrghilhhfrhhomhepjhhonhgrthhhrghnrdguvghrrhhitghksehlihhnuhigrdguvghvpdhnsggprhgtphhtthhopeelpdhrtghpthhtohepshhonhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrrghiugesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehhrdhrvghinhgulhesthhhvghlohhunhhgvgdrnhgvthdprhgtphhtthhopeignhhisehrvgguhhgrthdrtghomhdprhgtphhtthhope
- hhtghhsehlshhtrdguvgdprhgtphhtthhopehhtghhsehinhhfrhgruggvrggurdhorhhg
-X-Xfinity-VMeta: sc=-100.00;st=legit
-From:   Jonathan Derrick <jonathan.derrick@linux.dev>
-To:     Song Liu <song@kernel.org>, <linux-raid@vger.kernel.org>
-Cc:     Reindl Harald <h.reindl@thelounge.net>, Xiao Ni <xni@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Sushma Kalakota <sushma.kalakota@intel.com>,
-        Jon Derrick <jonathan.derrick@linux.dev>
-Subject: [PATCH v5 3/3] md: Use optimal I/O size for last bitmap page
-Date:   Fri, 24 Feb 2023 11:33:23 -0700
-Message-Id: <20230224183323.638-4-jonathan.derrick@linux.dev>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230224183323.638-1-jonathan.derrick@linux.dev>
-References: <20230224183323.638-1-jonathan.derrick@linux.dev>
+        with ESMTP id S229744AbjB0AQO (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 26 Feb 2023 19:16:14 -0500
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9028D166CE
+        for <linux-raid@vger.kernel.org>; Sun, 26 Feb 2023 16:16:09 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 26FB81F8D4;
+        Mon, 27 Feb 2023 00:16:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1677456968; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xobv0DnPyfW8nbWZggzLrgYlm9PvuCQvc2eEluVNtiY=;
+        b=SMybNcFJxtGGbIPd/7yGuxp3xd6oBW7mPqyKDXj78i9JynQXFGNY7WPxASKSEmFOB8RGWN
+        ff5cnnfA3CigT0g7MO7X3Hy0zcP5YDoYSOWxqU4QGkeI51kGPk738/oitNgcyqrycILxJ8
+        nY81w/BOUZNr0ZhsipzdqWGna/1quBc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1677456968;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xobv0DnPyfW8nbWZggzLrgYlm9PvuCQvc2eEluVNtiY=;
+        b=W20qQz8lUNrlNGX0ATgWP1LOm4N6pXIZTe80J7QeC9X96xSWMSoqVOkvAwaZX7vq9x3S0h
+        dpW2vjJ/L12uPdCQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 8AFEE13912;
+        Mon, 27 Feb 2023 00:16:06 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id bvXXD0b2+2PCdQAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 27 Feb 2023 00:16:06 +0000
+Subject: [PATCH 2/6] Improvements for IMSM_NO_PLATFORM testing.
+From:   NeilBrown <neilb@suse.de>
+To:     Jes Sorensen <jes@trained-monkey.org>
+Cc:     linux-raid@vger.kernel.org, Martin Wilck <martin.wilck@suse.com>,
+        Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
+Date:   Mon, 27 Feb 2023 11:13:07 +1100
+Message-ID: <167745678751.16565.9453697155261795182.stgit@noble.brown>
+In-Reply-To: <167745586347.16565.4353184078424535907.stgit@noble.brown>
+References: <167745586347.16565.4353184078424535907.stgit@noble.brown>
+User-Agent: StGit/1.5
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,SPF_HELO_PASS,SPF_SOFTFAIL autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Jon Derrick <jonathan.derrick@linux.dev>
+Factor out IMSM_NO_PLATFORM testing into a single function that caches
+the result.
 
-If the bitmap space has enough room, size the I/O for the last bitmap
-page write to the optimal I/O size for the storage device. The expanded
-write is checked that it won't overrun the data or metadata.
+Allow mdmon to explicitly set the result to "1" so that we don't need
+the ENV var in the unit file
 
-The drive this was tested against has higher latencies when there are
-sub-4k writes due to device-side read-mod-writes of its atomic 4k write
-unit. This change helps increase performance by sizing the last bitmap
-page I/O for the device's preferred write unit, if it is given.
+Check if the kernel command line contains "mdadm.imsm.test=1" and in
+that case assert NO_PLATFORM.  This simplifies testing in a virtual
+machine.
 
-Example Intel/Solidigm P5520
-Raid10, Chunk-size 64M, bitmap-size 57228 bits
-
-$ mdadm --create /dev/md0 --level=10 --raid-devices=4 /dev/nvme{0,1,2,3}n1
-        --assume-clean --bitmap=internal --bitmap-chunk=64M
-$ fio --name=test --direct=1 --filename=/dev/md0 --rw=randwrite --bs=4k --runtime=60
-
-Without patch:
-  write: IOPS=1676, BW=6708KiB/s (6869kB/s)(393MiB/60001msec); 0 zone resets
-
-With patch:
-  write: IOPS=15.7k, BW=61.4MiB/s (64.4MB/s)(3683MiB/60001msec); 0 zone resets
-
-Biosnoop:
-Without patch:
-Time        Process        PID     Device      LBA        Size      Lat
-1.410377    md0_raid10     6900    nvme0n1   W 16         4096      0.02
-1.410387    md0_raid10     6900    nvme2n1   W 16         4096      0.02
-1.410374    md0_raid10     6900    nvme3n1   W 16         4096      0.01
-1.410381    md0_raid10     6900    nvme1n1   W 16         4096      0.02
-1.410411    md0_raid10     6900    nvme1n1   W 115346512  4096      0.01
-1.410418    md0_raid10     6900    nvme0n1   W 115346512  4096      0.02
-1.410915    md0_raid10     6900    nvme2n1   W 24         3584      0.43 <--
-1.410935    md0_raid10     6900    nvme3n1   W 24         3584      0.45 <--
-1.411124    md0_raid10     6900    nvme1n1   W 24         3584      0.64 <--
-1.411147    md0_raid10     6900    nvme0n1   W 24         3584      0.66 <--
-1.411176    md0_raid10     6900    nvme3n1   W 2019022184 4096      0.01
-1.411189    md0_raid10     6900    nvme2n1   W 2019022184 4096      0.02
-
-With patch:
-Time        Process        PID     Device      LBA        Size      Lat
-5.747193    md0_raid10     727     nvme0n1   W 16         4096      0.01
-5.747192    md0_raid10     727     nvme1n1   W 16         4096      0.02
-5.747195    md0_raid10     727     nvme3n1   W 16         4096      0.01
-5.747202    md0_raid10     727     nvme2n1   W 16         4096      0.02
-5.747229    md0_raid10     727     nvme3n1   W 1196223704 4096      0.02
-5.747224    md0_raid10     727     nvme0n1   W 1196223704 4096      0.01
-5.747279    md0_raid10     727     nvme0n1   W 24         4096      0.01 <--
-5.747279    md0_raid10     727     nvme1n1   W 24         4096      0.02 <--
-5.747284    md0_raid10     727     nvme3n1   W 24         4096      0.02 <--
-5.747291    md0_raid10     727     nvme2n1   W 24         4096      0.02 <--
-5.747314    md0_raid10     727     nvme2n1   W 2234636712 4096      0.01
-5.747317    md0_raid10     727     nvme1n1   W 2234636712 4096      0.02
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jon Derrick <jonathan.derrick@linux.dev>
+Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- drivers/md/md-bitmap.c | 33 +++++++++++++++++++++++++++++----
- 1 file changed, 29 insertions(+), 4 deletions(-)
+ mdadm.h                |    2 ++
+ mdmon.c                |    6 ++++++
+ super-intel.c          |   43 ++++++++++++++++++++++++++++++++++++++++---
+ systemd/mdmon@.service |    3 ---
+ 4 files changed, 48 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-index bf250a5e3a86..920bb68156d2 100644
---- a/drivers/md/md-bitmap.c
-+++ b/drivers/md/md-bitmap.c
-@@ -209,6 +209,28 @@ static struct md_rdev *next_active_rdev(struct md_rdev *rdev, struct mddev *mdde
- 	return NULL;
- }
+diff --git a/mdadm.h b/mdadm.h
+index 13f8b4cb5a6b..0939fd3cb1ee 100644
+--- a/mdadm.h
++++ b/mdadm.h
+@@ -1258,6 +1258,8 @@ extern struct superswitch super0, super1;
+ extern struct superswitch super_imsm, super_ddf;
+ extern struct superswitch mbr, gpt;
  
-+static unsigned int optimal_io_size(struct block_device *bdev,
-+				    unsigned int last_page_size,
-+				    unsigned int io_size)
-+{
-+	if (bdev_io_opt(bdev) > bdev_logical_block_size(bdev))
-+		return roundup(last_page_size, bdev_io_opt(bdev));
-+	return io_size;
-+}
++void imsm_set_no_platform(int v);
 +
-+static unsigned int bitmap_io_size(unsigned int io_size, unsigned int opt_size,
-+				   sector_t start, sector_t boundary)
-+{
-+	if (io_size != opt_size &&
-+	    start + opt_size / SECTOR_SIZE <= boundary)
-+		return opt_size;
-+	if (start + io_size / SECTOR_SIZE <= boundary)
-+		return io_size;
+ struct metadata_update {
+ 	int	len;
+ 	char	*buf;
+diff --git a/mdmon.c b/mdmon.c
+index 60ba318253b9..f557e12c6533 100644
+--- a/mdmon.c
++++ b/mdmon.c
+@@ -318,6 +318,12 @@ int main(int argc, char *argv[])
+ 		{NULL, 0, NULL, 0}
+ 	};
+ 
++	/*
++	 * mdmon should never complain due to lack of a platform,
++	 * that is mdadm's job if at all.
++	 */
++	imsm_set_no_platform(1);
 +
-+	/* Overflows boundary */
+ 	while ((opt = getopt_long(argc, argv, "thaF", options, NULL)) != -1) {
+ 		switch (opt) {
+ 		case 'a':
+diff --git a/super-intel.c b/super-intel.c
+index 89fac6263172..9180d050083a 100644
+--- a/super-intel.c
++++ b/super-intel.c
+@@ -629,6 +629,43 @@ static const char *_sys_dev_type[] = {
+ 	[SYS_DEV_VMD] = "VMD"
+ };
+ 
++static int no_platform = -1;
++
++static int check_no_platform(void)
++{
++	static const char search[] = "mdadm.imsm.test=1";
++	int fd;
++	char buf[1024];
++	int n = 0;
++
++	if (no_platform >= 0)
++		return no_platform;
++
++	if (check_env("IMSM_NO_PLATFORM")) {
++		no_platform = 1;
++		return 1;
++	}
++	fd = open("/proc/cmdline", O_RDONLY);
++	if (fd >= 0) {
++		n = read(fd, buf, sizeof(buf)-1);
++		close(fd);
++	}
++	if (n >= (int)sizeof(search)) {
++		buf[n] = 0;
++		if (strstr(buf, search) != NULL) {
++			no_platform = 1;
++			return 1;
++		}
++	}
++	no_platform = 0;
 +	return 0;
 +}
 +
- static int __write_sb_page(struct md_rdev *rdev, struct bitmap *bitmap,
- 			   struct page *page)
++void imsm_set_no_platform(int v)
++{
++	no_platform = v;
++}
++
+ const char *get_sys_dev_type(enum sys_dev_type type)
  {
-@@ -218,6 +240,7 @@ static int __write_sb_page(struct md_rdev *rdev, struct bitmap *bitmap,
- 	sector_t offset = mddev->bitmap_info.offset;
- 	sector_t ps, sboff, doff;
- 	unsigned int size = PAGE_SIZE;
-+	unsigned int opt_size = PAGE_SIZE;
+ 	if (type >= SYS_DEV_MAX)
+@@ -2699,7 +2736,7 @@ static int detail_platform_imsm(int verbose, int enumerate_only, char *controlle
+ 	int result=1;
  
- 	bdev = (rdev->meta_bdev) ? rdev->meta_bdev : rdev->bdev;
- 	if (page->index == store->file_pages - 1) {
-@@ -225,8 +248,8 @@ static int __write_sb_page(struct md_rdev *rdev, struct bitmap *bitmap,
- 
- 		if (last_page_size == 0)
- 			last_page_size = PAGE_SIZE;
--		size = roundup(last_page_size,
--			       bdev_logical_block_size(bdev));
-+		size = roundup(last_page_size, bdev_logical_block_size(bdev));
-+		opt_size = optimal_io_size(bdev, last_page_size, size);
+ 	if (enumerate_only) {
+-		if (check_env("IMSM_NO_PLATFORM"))
++		if (check_no_platform())
+ 			return 0;
+ 		list = find_intel_devices();
+ 		if (!list)
+@@ -4721,7 +4758,7 @@ static int find_intel_hba_capability(int fd, struct intel_super *super, char *de
+ 		       devname);
+ 		return 1;
  	}
+-	if (!is_fd_valid(fd) || check_env("IMSM_NO_PLATFORM")) {
++	if (!is_fd_valid(fd) || check_no_platform()) {
+ 		super->orom = NULL;
+ 		super->hba = NULL;
+ 		return 0;
+@@ -10696,7 +10733,7 @@ static int imsm_get_allowed_degradation(int level, int raid_disks,
+  ******************************************************************************/
+ int validate_container_imsm(struct mdinfo *info)
+ {
+-	if (check_env("IMSM_NO_PLATFORM"))
++	if (check_no_platform())
+ 		return 0;
  
- 	ps = page->index * PAGE_SIZE / SECTOR_SIZE;
-@@ -241,7 +264,8 @@ static int __write_sb_page(struct md_rdev *rdev, struct bitmap *bitmap,
- 			return -EINVAL;
- 	} else if (offset < 0) {
- 		/* DATA  BITMAP METADATA  */
--		if (offset + ps + size / SECTOR_SIZE > 0)
-+		size = bitmap_io_size(size, opt_size, offset + ps, 0);
-+		if (size == 0)
- 			/* bitmap runs in to metadata */
- 			return -EINVAL;
+ 	struct sys_dev *idev;
+diff --git a/systemd/mdmon@.service b/systemd/mdmon@.service
+index cb6482d9ff29..e7ee17a8bf91 100644
+--- a/systemd/mdmon@.service
++++ b/systemd/mdmon@.service
+@@ -12,9 +12,6 @@ Before=initrd-switch-root.target
+ Documentation=man:mdmon(8)
  
-@@ -250,7 +274,8 @@ static int __write_sb_page(struct md_rdev *rdev, struct bitmap *bitmap,
- 			return -EINVAL;
- 	} else if (rdev->sb_start < rdev->data_offset) {
- 		/* METADATA BITMAP DATA */
--		if (sboff + ps + size / SECTOR_SIZE > doff)
-+		size = bitmap_io_size(size, opt_size, sboff + ps, doff);
-+		if (size == 0)
- 			/* bitmap runs in to data */
- 			return -EINVAL;
- 	} else {
--- 
-2.27.0
+ [Service]
+-# mdmon should never complain due to lack of a platform,
+-# that is mdadm's job if at all.
+-Environment=IMSM_NO_PLATFORM=1
+ # The mdmon starting in the initramfs (with dracut at least)
+ # cannot see sysfs after root is mounted, so we will have to
+ # 'takeover'.  As the '--offroot --takeover' don't hurt when
+
 
