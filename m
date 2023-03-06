@@ -2,47 +2,47 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7263D6AD058
-	for <lists+linux-raid@lfdr.de>; Mon,  6 Mar 2023 22:29:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 354B26AD05C
+	for <lists+linux-raid@lfdr.de>; Mon,  6 Mar 2023 22:30:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230104AbjCFV3o (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 6 Mar 2023 16:29:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52854 "EHLO
+        id S230212AbjCFVaC (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 6 Mar 2023 16:30:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229897AbjCFV3P (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 6 Mar 2023 16:29:15 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B476630D1
-        for <linux-raid@vger.kernel.org>; Mon,  6 Mar 2023 13:28:19 -0800 (PST)
+        with ESMTP id S230118AbjCFV3S (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 6 Mar 2023 16:29:18 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50B1355079
+        for <linux-raid@vger.kernel.org>; Mon,  6 Mar 2023 13:28:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1678138099;
+        s=mimecast20190719; t=1678138100;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=LCGuROQ/Kb1G9JfeQNfTp0LsTsDyLGp+Sz8iQSLeyvo=;
-        b=VjJBjt1KYDnYJ+HNClXIkTLjG++ab2ZkNcCF6CZfeYJRT85oWQ0ptxxMmuGnviEjp7FRnY
-        84wTLavXaRpTDxvTV2Fz3lcNvhSj1GkOgG58zczOy3CPapxcheGZEdShBi8IYWPVoRMBuN
-        nEhP/HP4yF2KOzVyHaOYx+RvQ4sV7/I=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=wUwYAf75kzN555j1xhSkYSjgQC7AbJj+p2a7KS8azRA=;
+        b=hg4ZwGdnJllgdhkttWTk/Fy3M66/pJeHPyNfQgMZ0+Z1Qezz+3tLcWbC7Aqo8QQNzutEsV
+        x1ZFckeEhRd3qP8KMlSvjvbSSxglkizwBX4TX5suzaBPKTh1I467EtZT8FqrbJc/m9UcvZ
+        R8C/Mzf/7FwboFnJoAU8RnE2Ns/BpyY=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-548-tJTq4wY4PIGp5Xy8KzF3gg-1; Mon, 06 Mar 2023 16:28:17 -0500
-X-MC-Unique: tJTq4wY4PIGp5Xy8KzF3gg-1
+ us-mta-647-dN8WH9yxO_mrcSnSUCTIrQ-1; Mon, 06 Mar 2023 16:28:18 -0500
+X-MC-Unique: dN8WH9yxO_mrcSnSUCTIrQ-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7D4CD29DD981
-        for <linux-raid@vger.kernel.org>; Mon,  6 Mar 2023 21:28:17 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7BB7D101A55E
+        for <linux-raid@vger.kernel.org>; Mon,  6 Mar 2023 21:28:18 +0000 (UTC)
 Received: from o.redhat.com (unknown [10.39.192.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B9F9740AE20A;
-        Mon,  6 Mar 2023 21:28:16 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B7DAC400DFA1;
+        Mon,  6 Mar 2023 21:28:17 +0000 (UTC)
 From:   heinzm@redhat.com
 To:     linux-raid@vger.kernel.org
 Cc:     ncroxon@redhat.com, xni@redhat.com, dkeefe@redhat.com
-Subject: [PATCH 18/34] md: avoid redundant braces in single line statements [WARNING]
-Date:   Mon,  6 Mar 2023 22:27:41 +0100
-Message-Id: <258d52b52c0e1e202c0e5b3e128e5967ffd5f8a1.1678136717.git.heinzm@redhat.com>
+Subject: [PATCH 19/34] md: place constant on the right side of a test [WARNING]
+Date:   Mon,  6 Mar 2023 22:27:42 +0100
+Message-Id: <df99a439378c49212db62b1b8b42a166e8b014bc.1678136717.git.heinzm@redhat.com>
 In-Reply-To: <cover.1678136717.git.heinzm@redhat.com>
 References: <cover.1678136717.git.heinzm@redhat.com>
 MIME-Version: 1.0
@@ -62,56 +62,24 @@ From: Heinz Mauelshagen <heinzm@redhat.com>
 
 Signed-off-by: heinzm <heinzm@redhat.com>
 ---
- drivers/md/md-bitmap.c  | 3 +--
- drivers/md/md-cluster.c | 3 +--
- drivers/md/raid5.c      | 3 +--
- 3 files changed, 3 insertions(+), 6 deletions(-)
+ drivers/md/raid10.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-index 9f1e25927d13..65e77a7e3656 100644
---- a/drivers/md/md-bitmap.c
-+++ b/drivers/md/md-bitmap.c
-@@ -2173,9 +2173,8 @@ int md_bitmap_resize(struct bitmap *bitmap, sector_t blocks,
- 				unsigned long k;
+diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+index 510000de0886..60c9fba59d9f 100644
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -3259,8 +3259,8 @@ static void raid10_set_cluster_sync_high(struct r10conf *conf)
+ 	/*
+ 	 * At least use a 32M window to align with raid1's resync window
+ 	 */
+-	window_size = (CLUSTER_RESYNC_WINDOW_SECTORS > window_size) ?
+-			CLUSTER_RESYNC_WINDOW_SECTORS : window_size;
++	window_size = (window_size < CLUSTER_RESYNC_WINDOW_SECTORS) ?
++		      CLUSTER_RESYNC_WINDOW_SECTORS : window_size;
  
- 				/* deallocate the page memory */
--				for (k = 0; k < page; k++) {
-+				for (k = 0; k < page; k++)
- 					kfree(new_bp[k].map);
--				}
- 				kfree(new_bp);
- 
- 				/* restore some fields from old_counts */
-diff --git a/drivers/md/md-cluster.c b/drivers/md/md-cluster.c
-index 7ad5e1a97638..762160e81ce8 100644
---- a/drivers/md/md-cluster.c
-+++ b/drivers/md/md-cluster.c
-@@ -1531,9 +1531,8 @@ static void unlock_all_bitmaps(struct mddev *mddev)
- 	/* release other node's bitmap lock if they are existed */
- 	if (cinfo->other_bitmap_lockres) {
- 		for (i = 0; i < mddev->bitmap_info.nodes - 1; i++) {
--			if (cinfo->other_bitmap_lockres[i]) {
-+			if (cinfo->other_bitmap_lockres[i])
- 				lockres_free(cinfo->other_bitmap_lockres[i]);
--			}
- 		}
- 		kfree(cinfo->other_bitmap_lockres);
- 		cinfo->other_bitmap_lockres = NULL;
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 08a0ee77cacb..f834c497b8fe 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -4109,9 +4109,8 @@ static void handle_stripe_clean_event(struct r5conf *conf,
- 				pr_debug("Return write for disc %d\n", i);
- 				if (test_and_clear_bit(R5_Discard, &dev->flags))
- 					clear_bit(R5_UPTODATE, &dev->flags);
--				if (test_and_clear_bit(R5_SkipCopy, &dev->flags)) {
-+				if (test_and_clear_bit(R5_SkipCopy, &dev->flags))
- 					WARN_ON(test_bit(R5_UPTODATE, &dev->flags));
--				}
- 				do_endio = true;
- 
- returnbi:
+ 	conf->cluster_sync_high = conf->cluster_sync_low + window_size;
+ }
 -- 
 2.39.2
 
