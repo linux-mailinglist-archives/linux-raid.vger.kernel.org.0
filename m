@@ -2,47 +2,47 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A3446AD06F
-	for <lists+linux-raid@lfdr.de>; Mon,  6 Mar 2023 22:31:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 360286AD06D
+	for <lists+linux-raid@lfdr.de>; Mon,  6 Mar 2023 22:30:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230196AbjCFVa6 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 6 Mar 2023 16:30:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52186 "EHLO
+        id S230106AbjCFVa4 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 6 Mar 2023 16:30:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230176AbjCFV3p (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 6 Mar 2023 16:29:45 -0500
+        with ESMTP id S230109AbjCFV3o (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 6 Mar 2023 16:29:44 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D32AA79B08
-        for <linux-raid@vger.kernel.org>; Mon,  6 Mar 2023 13:28:36 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E41F74A69
+        for <linux-raid@vger.kernel.org>; Mon,  6 Mar 2023 13:28:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1678138116;
+        s=mimecast20190719; t=1678138113;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=UDd5P5VAosuwMMUkLlkztfFCkxckm/gcCcf5OmcFEAE=;
-        b=J1YFnJweSLMmhEMcp/pLdBmWee4By+wuRNWpP8W5u4PT+TKCtWK7zywqqDhuiOwV89Fyko
-        FV+Q4I03CMmo/jbVqq4hnBwgZ0cyTBLg8zDQzy2H8QUnTLuoQv6ts2q0+pzbHi5+/9BB5p
-        Wt6U4NB1S6ZZLxsppDuplkHThZL352M=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=WWqWPwAc36DW/+jhuR5a+KhVC0W45qlvrYtC1lizJZU=;
+        b=X66roOW5MwgigHiZeG3ZbkI7ovW4sgaD+2qBOF+hcDyZ84LvFDVfuOSxjb/iN9hazKWkoI
+        PAPbPA+Py6Dgp/EjKyO8U2eZ7OGcPY9nhsjiOhc8S/3ZHw+p0KwmBGpOaf39OqUw99lzcf
+        lf6edD06gBkvNEuk7euOOXXgCqpiWds=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-541-Tq1HAUKoNe-A08-lx7TL5w-1; Mon, 06 Mar 2023 16:28:30 -0500
-X-MC-Unique: Tq1HAUKoNe-A08-lx7TL5w-1
+ us-mta-549-odKrxz-iNeC2YxTtR94qhQ-1; Mon, 06 Mar 2023 16:28:31 -0500
+X-MC-Unique: odKrxz-iNeC2YxTtR94qhQ-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7AED03801F61
-        for <linux-raid@vger.kernel.org>; Mon,  6 Mar 2023 21:28:30 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7A2F7800B23
+        for <linux-raid@vger.kernel.org>; Mon,  6 Mar 2023 21:28:31 +0000 (UTC)
 Received: from o.redhat.com (unknown [10.39.192.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B79F6400DFA1;
-        Mon,  6 Mar 2023 21:28:29 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B576F40C83B6;
+        Mon,  6 Mar 2023 21:28:30 +0000 (UTC)
 From:   heinzm@redhat.com
 To:     linux-raid@vger.kernel.org
 Cc:     ncroxon@redhat.com, xni@redhat.com, dkeefe@redhat.com
-Subject: [PATCH 31/34] md raid5: prefer 'int' instead of 'signed' [WARNING]
-Date:   Mon,  6 Mar 2023 22:27:54 +0100
-Message-Id: <f3e5bc07a97201d971b92fbc26c16fa12b160c61.1678136717.git.heinzm@redhat.com>
+Subject: [PATCH 32/34] md: prefer kvmalloc_array() with multiply [WARNING]
+Date:   Mon,  6 Mar 2023 22:27:55 +0100
+Message-Id: <6aced08ad5b32655537d43ba24ba124c3b0b22f9.1678136717.git.heinzm@redhat.com>
 In-Reply-To: <cover.1678136717.git.heinzm@redhat.com>
 References: <cover.1678136717.git.heinzm@redhat.com>
 MIME-Version: 1.0
@@ -62,25 +62,23 @@ From: Heinz Mauelshagen <heinzm@redhat.com>
 
 Signed-off-by: heinzm <heinzm@redhat.com>
 ---
- drivers/md/raid5.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/md/md.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 557398bf4c72..fb6e0cf727a6 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -1393,9 +1393,9 @@ async_copy_data(int frombio, struct bio *bio, struct page **page,
- 	struct r5conf *conf = sh->raid_conf;
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 9b734720b9c1..3d17773e058f 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -164,8 +164,7 @@ static int rdev_init_serial(struct md_rdev *rdev)
+ 	if (test_bit(CollisionCheck, &rdev->flags))
+ 		return 0;
  
- 	if (bio->bi_iter.bi_sector >= sector)
--		page_offset = (signed)(bio->bi_iter.bi_sector - sector) * 512;
-+		page_offset = (int)(bio->bi_iter.bi_sector - sector) * 512;
- 	else
--		page_offset = (signed)(sector - bio->bi_iter.bi_sector) * -512;
-+		page_offset = (int)(sector - bio->bi_iter.bi_sector) * -512;
+-	serial = kvmalloc(sizeof(struct serial_in_rdev) * serial_nums,
+-			  GFP_KERNEL);
++	serial = kvmalloc_array(serial_nums, sizeof(struct serial_in_rdev), GFP_KERNEL);
+ 	if (!serial)
+ 		return -ENOMEM;
  
- 	if (frombio)
- 		flags |= ASYNC_TX_FENCE;
 -- 
 2.39.2
 
