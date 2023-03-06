@@ -2,108 +2,75 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F3C4C6AB84C
-	for <lists+linux-raid@lfdr.de>; Mon,  6 Mar 2023 09:31:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DDD56ABC47
+	for <lists+linux-raid@lfdr.de>; Mon,  6 Mar 2023 11:26:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229543AbjCFIbJ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 6 Mar 2023 03:31:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59628 "EHLO
+        id S231138AbjCFK0f (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 6 Mar 2023 05:26:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229558AbjCFIbI (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 6 Mar 2023 03:31:08 -0500
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 020F9AD02
-        for <linux-raid@vger.kernel.org>; Mon,  6 Mar 2023 00:31:05 -0800 (PST)
-Received: from [192.168.0.2] (ip5f5aefdc.dynamic.kabel-deutschland.de [95.90.239.220])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 5C4FC61CC40F9;
-        Mon,  6 Mar 2023 09:31:04 +0100 (CET)
-Message-ID: <6e0c915c-a9f4-17b4-97a1-abac9fc1a68d@molgen.mpg.de>
-Date:   Mon, 6 Mar 2023 09:31:03 +0100
+        with ESMTP id S230504AbjCFK0S (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 6 Mar 2023 05:26:18 -0500
+Received: from mail-oa1-x33.google.com (mail-oa1-x33.google.com [IPv6:2001:4860:4864:20::33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABC03265AB
+        for <linux-raid@vger.kernel.org>; Mon,  6 Mar 2023 02:25:51 -0800 (PST)
+Received: by mail-oa1-x33.google.com with SMTP id 586e51a60fabf-1767a208b30so8876591fac.2
+        for <linux-raid@vger.kernel.org>; Mon, 06 Mar 2023 02:25:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678098351;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Vh7FN/ulAdnmY8O0LKz7bqpIFk4oOSQ9iCZ8VQ/AkNo=;
+        b=EDbhPO1WKzSJy97Cp1KR4Ue1wIcLFSscoH9L1E67CyPoJvstONJwP7RxKCqsDiuar/
+         4XZc6UhnyOFrEHlIQ3KmGU6oX8xWOyZpiVA4bD6F27cjopM5KQeiwoXnQq1r2hu/0hkW
+         LgiQ9FGonNq8AsMsEKBqZEvtwgOfW2lv3iUKapY2ocqE+LRWfsVifUNA3eNbIcULbvPT
+         nBBU0ns0xWwmvS7ETCAh5Z5lhdCiLVSRis+m63aq8CObwyUrMLAjGQpDeSf4OVAOQav5
+         5TuEH4NOUnTGCqcHGRIE0/tBavRRplzW4HaWY1DRs+pas+nyfL/37adPjYmqfexbl/Di
+         PS3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678098351;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vh7FN/ulAdnmY8O0LKz7bqpIFk4oOSQ9iCZ8VQ/AkNo=;
+        b=GUFZEY+NOPHEEkM7kzcv3YJ0DsZWhefFJrvNPMmbEtnH5IsBGN5YnfDnsf5yKxyPya
+         YG4Y5MhcPMviaCm3o1QYm03UVK3dZxtHI+KSzjn9POJv8D5PXRgveef6lRFfboJB26Rg
+         a2ROmHeMJ8Wlzf6oSdxy1/Tn/WXFt2iskZIpPGGjVWAIey5aKFwaWUdFc9TB8gYfH/IJ
+         QY04XbXWnTJQi1NOjnwOORUFz5lHq6nVun9X/eDfK562aSmqUfBe/bx0uQ2GW61RIB8S
+         /FlmOAHBxbKQZOjmAUX6bwx3ZLFrv3i2Aq5/76H/ZdYgkC7OmuhJe5GfZJm7XMNxAKj3
+         CJmw==
+X-Gm-Message-State: AO0yUKXk4tvpwLpggQq1rtZn9d/Sw4HL1/oWairxVLDH3kYkCD/CUsFu
+        2dg07QC8a18mI8foDVn7SUUWvGwTIstqKATvN8tP3IGsPic=
+X-Google-Smtp-Source: AK7set9YqazPiOkBuGm+YrFZOLe51O90+qKBrIr6WBjXtnVrmZ9RIOYyWRLBWcHI+/rsVoNhMQhwnCpcR6G8n2Z6mzE=
+X-Received: by 2002:a05:6102:e44:b0:402:999f:44d3 with SMTP id
+ p4-20020a0561020e4400b00402999f44d3mr6975472vst.1.1678098330725; Mon, 06 Mar
+ 2023 02:25:30 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH 6/6] mdmon improvements for switchroot
-Content-Language: en-US
-To:     NeilBrown <neilb@suse.de>
-Cc:     Jes Sorensen <jes@trained-monkey.org>, linux-raid@vger.kernel.org,
-        Martin Wilck <martin.wilck@suse.com>,
-        Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
-References: <167745586347.16565.4353184078424535907.stgit@noble.brown>
- <167745678753.16565.5052083348539533042.stgit@noble.brown>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <167745678753.16565.5052083348539533042.stgit@noble.brown>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Received: by 2002:a59:ce6f:0:b0:3ae:930b:3e70 with HTTP; Mon, 6 Mar 2023
+ 02:25:30 -0800 (PST)
+Reply-To: madis.scarl@terlera.it
+From:   "Ms Eve from U.N" <denisagotou@gmail.com>
+Date:   Mon, 6 Mar 2023 11:25:30 +0100
+Message-ID: <CAD6bNBi6bPCYboaF4-xBgmeUTFn6JMXqU6TNepQig=NRMqhdUg@mail.gmail.com>
+Subject: Re: Claim of Fund:
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=4.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HK_SCAM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,UNDISC_MONEY autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Dear Neil,
+Hello Good Morning,
+This is to bring to your notice that all our efforts to contact you
+through this your email ID failed Please Kindly contact Barrister.
+Steven Mike { mbarrsteven@gmail.com } on his private email for the
+claim of your compensation entitlement
 
-
-Thank you for your patch.
-
-Am 27.02.23 um 01:13 schrieb NeilBrown:
-
-For commit message summary, I’d use a statement – maybe:
-
-mdmon: Improve switchroot
-
-> We need a new mdmon@mdfoo instance to run in the root filesystem after
-> switch root, as /sys and /dev are removed from the initrd.
-> 
-> systemd will not start a new unit with the same name running while the
-> old unit is still active, and we want the two mdmon processes to overlap
-> in time to avoid any risk of deadlock which a write is attempted with no
-> mdmon running.
-
-I do not understand the part after *deadlock*.
-
-> So we need a different unit name in the initrd than in the root.  Apart
-> from the name, everything else should be the same.
-> 
-> This is easily achieved using a different instance name as the
-> mdmon@.service unit file already supports multiple instances (for
-> different arrays).
-> 
-> So start "mdmon@mdfoo.service" from root, but
-> "mdmon@initrd-mdfoo.service" from the initrd.  udev can tell which
-> circumstance is the case by looking for /etc/initrd-release.
-> continue_from_systemd() is enhanced so that the "initrd-" prefix can be
-> requested.
-> 
-> Teach mdmon that a container name like "initrd/foo" should be treated
-> just like "foo".  Note that systemd passes the instance name
-> "initrd-foo" as "initrd/foo".
-> 
-> We don't need a similar machanism at shutdown because dracut runs
-
-mechanism
-
-> "mdmon --takeover --all" when appropriate.
-> 
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
->   Grow.c                    |    4 ++--
->   mdadm.h                   |    2 +-
->   mdmon.c                   |    6 +++++-
->   systemd/mdmon@.service    |    2 +-
->   udev-md-raid-arrays.rules |    3 ++-
->   util.c                    |    7 ++++---
->   6 files changed, 15 insertions(+), 9 deletions(-)
-
-[…]
-
-
-Kind regards,
-
-Paul
+Note: You have to pay for the delivery fee.
+Yours Sincerely
+Mrs EVE LEWIS
