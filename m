@@ -2,47 +2,47 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 39A546AD057
-	for <lists+linux-raid@lfdr.de>; Mon,  6 Mar 2023 22:29:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B84646AD05A
+	for <lists+linux-raid@lfdr.de>; Mon,  6 Mar 2023 22:29:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230041AbjCFV3m (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 6 Mar 2023 16:29:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52264 "EHLO
+        id S229717AbjCFV3r (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 6 Mar 2023 16:29:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230104AbjCFV3I (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 6 Mar 2023 16:29:08 -0500
+        with ESMTP id S230105AbjCFV3M (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 6 Mar 2023 16:29:12 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F379931E3E
-        for <linux-raid@vger.kernel.org>; Mon,  6 Mar 2023 13:28:15 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D99743527C
+        for <linux-raid@vger.kernel.org>; Mon,  6 Mar 2023 13:28:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1678138095;
+        s=mimecast20190719; t=1678138096;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=tkf/Uh8kRNULlUthMljCS+VSjoh0FSo2IdjXFx3wd20=;
-        b=jCC0SZNFWiq98lh2J6kw4o6ZcnNMTO7bZ+bW/58AHNN5t8bNodlh/WCxn2hR9wSZ7TtTXP
-        kOqYbJsBD9z8Fk+72v0Z15VnQvHyoOiRY6YNnX3S8VPdPNSa71Obgx9Fwc9K0LDTweAZjg
-        1SCwfc3QAXoemcoIzqoGUg1enGtL1Sc=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=Rbo53No23YfTeWXuKKbyDPigg7MscXQ8KwGcV+U3+TM=;
+        b=JLoP3Y1Sp9enF0JKxCmLTZPq1vDsecKHpo2Nt4ju+7jdCgdr4pjXdTo6e12nIOf+kcNrGL
+        Mmv+h80NdhtlCPNyFfe+Jx5Jum0Nu20qLJ9bcNMrTcDf5tUPXM9KnkLeSGvObYQR5fZHyY
+        ZrAyiZC9tPQjpayklAvBn63NcLlUmrM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-94-giPAycpcPSGTbRlHBEbqog-1; Mon, 06 Mar 2023 16:28:13 -0500
-X-MC-Unique: giPAycpcPSGTbRlHBEbqog-1
+ us-mta-518-ZhCMQsEaOICnX4TJJ39a6A-1; Mon, 06 Mar 2023 16:28:14 -0500
+X-MC-Unique: ZhCMQsEaOICnX4TJJ39a6A-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 850E83801F5B
-        for <linux-raid@vger.kernel.org>; Mon,  6 Mar 2023 21:28:13 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 82D52183B3C0
+        for <linux-raid@vger.kernel.org>; Mon,  6 Mar 2023 21:28:14 +0000 (UTC)
 Received: from o.redhat.com (unknown [10.39.192.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BFA0C4010E7B;
-        Mon,  6 Mar 2023 21:28:12 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BFAF040C83B6;
+        Mon,  6 Mar 2023 21:28:13 +0000 (UTC)
 From:   heinzm@redhat.com
 To:     linux-raid@vger.kernel.org
 Cc:     ncroxon@redhat.com, xni@redhat.com, dkeefe@redhat.com
-Subject: [PATCH 14/34] md: prefer seq_put[cs]() to seq_printf() |WARNING]
-Date:   Mon,  6 Mar 2023 22:27:37 +0100
-Message-Id: <ef50d556f676c2b05b0ee5d6bba58fe1fd2b45c8.1678136717.git.heinzm@redhat.com>
+Subject: [PATCH 15/34] md: avoid multiple line dereference [WARNING}
+Date:   Mon,  6 Mar 2023 22:27:38 +0100
+Message-Id: <0a57310b9bd33a0cdec7f7cd45883a69e32130cb.1678136717.git.heinzm@redhat.com>
 In-Reply-To: <cover.1678136717.git.heinzm@redhat.com>
 References: <cover.1678136717.git.heinzm@redhat.com>
 MIME-Version: 1.0
@@ -62,227 +62,121 @@ From: Heinz Mauelshagen <heinzm@redhat.com>
 
 Signed-off-by: heinzm <heinzm@redhat.com>
 ---
- drivers/md/md-bitmap.c |  4 ++--
- drivers/md/md-faulty.c |  2 +-
- drivers/md/md.c        | 52 +++++++++++++++++++++---------------------
- drivers/md/raid1.c     |  2 +-
- drivers/md/raid10.c    |  2 +-
- drivers/md/raid5.c     |  2 +-
- 6 files changed, 32 insertions(+), 32 deletions(-)
+ drivers/md/md-bitmap.c |  3 +--
+ drivers/md/md.c        | 30 ++++++++++++------------------
+ 2 files changed, 13 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-index 3cee70340024..2db748c998e1 100644
+index 2db748c998e1..fcf516d7fcff 100644
 --- a/drivers/md/md-bitmap.c
 +++ b/drivers/md/md-bitmap.c
-@@ -2055,11 +2055,11 @@ void md_bitmap_status(struct seq_file *seq, struct bitmap *bitmap)
- 		   chunk_kb ? chunk_kb : bitmap->mddev->bitmap_info.chunksize,
- 		   chunk_kb ? "KB" : "B");
- 	if (bitmap->storage.file) {
--		seq_printf(seq, ", file: ");
-+		seq_puts(seq, ", file: ");
- 		seq_file_path(seq, bitmap->storage.file, " \t\n");
- 	}
- 
--	seq_printf(seq, "\n");
-+	seq_putc(seq, '\n');
- }
- 
- int md_bitmap_resize(struct bitmap *bitmap, sector_t blocks,
-diff --git a/drivers/md/md-faulty.c b/drivers/md/md-faulty.c
-index d6dbca5edab8..5d2de3f32ae7 100644
---- a/drivers/md/md-faulty.c
-+++ b/drivers/md/md-faulty.c
-@@ -255,7 +255,7 @@ static void faulty_status(struct seq_file *seq, struct mddev *mddev)
- 			   n, conf->period[ReadFixable]);
- 
- 	if (atomic_read(&conf->counters[WriteAll]))
--		seq_printf(seq, " WriteAll");
-+		seq_puts(seq, " WriteAll");
- 
- 	seq_printf(seq, " nfaults=%d", conf->nfaults);
+@@ -469,8 +469,7 @@ void md_bitmap_update_sb(struct bitmap *bitmap)
+ 	sb->sync_size = cpu_to_le64(bitmap->mddev->resync_max_sectors);
+ 	sb->chunksize = cpu_to_le32(bitmap->mddev->bitmap_info.chunksize);
+ 	sb->nodes = cpu_to_le32(bitmap->mddev->bitmap_info.nodes);
+-	sb->sectors_reserved = cpu_to_le32(bitmap->mddev->
+-					   bitmap_info.space);
++	sb->sectors_reserved = cpu_to_le32(bitmap->mddev->bitmap_info.space);
+ 	kunmap_atomic(sb);
+ 	write_page(bitmap, bitmap->storage.sb_page, 1);
  }
 diff --git a/drivers/md/md.c b/drivers/md/md.c
-index e50a1bcf0a1c..2e764ddc55d6 100644
+index 2e764ddc55d6..187fe8a25fc1 100644
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -8036,16 +8036,16 @@ static void status_unused(struct seq_file *seq)
- 	int i = 0;
- 	struct md_rdev *rdev;
+@@ -2833,8 +2833,7 @@ static int add_bound_rdev(struct md_rdev *rdev)
+ 		 * then added disks for geometry changes,
+ 		 * and should be added immediately.
+ 		 */
+-		super_types[mddev->major_version].
+-			validate_super(mddev, rdev);
++		super_types[mddev->major_version].validate_super(mddev, rdev);
+ 		if (add_journal)
+ 			mddev_suspend(mddev);
+ 		err = mddev->pers->hot_add_disk(mddev, rdev);
+@@ -3292,8 +3291,7 @@ static ssize_t new_offset_store(struct md_rdev *rdev,
+ 		return -EINVAL;
  
--	seq_printf(seq, "unused devices: ");
-+	seq_puts(seq, "unused devices: ");
- 
- 	list_for_each_entry(rdev, &pending_raid_disks, same_set) {
- 		i++;
- 		seq_printf(seq, "%pg ", rdev->bdev);
+ 	if (mddev->pers && mddev->persistent &&
+-	    !super_types[mddev->major_version]
+-	    .allow_new_offset(rdev, new_offset))
++	    !super_types[mddev->major_version].allow_new_offset(rdev, new_offset))
+ 		return -E2BIG;
+ 	rdev->new_data_offset = new_offset;
+ 	if (new_offset > rdev->data_offset)
+@@ -3377,8 +3375,8 @@ rdev_size_store(struct md_rdev *rdev, const char *buf, size_t len)
+ 		return -EINVAL; /* too confusing */
+ 	if (my_mddev->pers && rdev->raid_disk >= 0) {
+ 		if (my_mddev->persistent) {
+-			sectors = super_types[my_mddev->major_version].
+-				rdev_size_change(rdev, sectors);
++			sectors = super_types[my_mddev->major_version].rdev_size_change(rdev,
++											sectors);
+ 			if (!sectors)
+ 				return -EBUSY;
+ 		} else if (!sectors)
+@@ -3701,8 +3699,7 @@ static struct md_rdev *md_import_device(dev_t newdev, int super_format, int supe
  	}
- 	if (!i)
--		seq_printf(seq, "<none>");
-+		seq_puts(seq, "<none>");
  
--	seq_printf(seq, "\n");
-+	seq_putc(seq, '\n');
- }
+ 	if (super_format >= 0) {
+-		err = super_types[super_format].
+-			load_super(rdev, NULL, super_minor);
++		err = super_types[super_format].load_super(rdev, NULL, super_minor);
+ 		if (err == -EINVAL) {
+ 			pr_warn("md: %pg does not have a valid v%d.%d superblock, not importing!\n",
+ 				rdev->bdev,
+@@ -3738,8 +3735,8 @@ static int analyze_sbs(struct mddev *mddev)
  
- static int status_resync(struct seq_file *seq, struct mddev *mddev)
-@@ -8091,23 +8091,23 @@ static int status_resync(struct seq_file *seq, struct mddev *mddev)
- 				    !test_bit(Faulty, &rdev->flags) &&
- 				    rdev->recovery_offset != MaxSector &&
- 				    rdev->recovery_offset) {
--					seq_printf(seq, "\trecover=REMOTE");
-+					seq_puts(seq, "\trecover=REMOTE");
- 					return 1;
- 				}
- 			if (mddev->reshape_position != MaxSector)
--				seq_printf(seq, "\treshape=REMOTE");
-+				seq_puts(seq, "\treshape=REMOTE");
- 			else
--				seq_printf(seq, "\tresync=REMOTE");
-+				seq_puts(seq, "\tresync=REMOTE");
- 			return 1;
+ 	freshest = NULL;
+ 	rdev_for_each_safe(rdev, tmp, mddev)
+-		switch (super_types[mddev->major_version].
+-			load_super(rdev, freshest, mddev->minor_version)) {
++		switch (super_types[mddev->major_version].load_super(rdev, freshest,
++								     mddev->minor_version)) {
+ 		case 1:
+ 			freshest = rdev;
+ 			break;
+@@ -3757,8 +3754,7 @@ static int analyze_sbs(struct mddev *mddev)
+ 		return -EINVAL;
+ 	}
+ 
+-	super_types[mddev->major_version].
+-		validate_super(mddev, freshest);
++	super_types[mddev->major_version].validate_super(mddev, freshest);
+ 
+ 	i = 0;
+ 	rdev_for_each_safe(rdev, tmp, mddev) {
+@@ -3772,8 +3768,7 @@ static int analyze_sbs(struct mddev *mddev)
+ 			continue;
  		}
- 		if (mddev->recovery_cp < MaxSector) {
--			seq_printf(seq, "\tresync=PENDING");
-+			seq_puts(seq, "\tresync=PENDING");
- 			return 1;
- 		}
- 		return 0;
- 	}
- 	if (resync < MD_RESYNC_ACTIVE) {
--		seq_printf(seq, "\tresync=DELAYED");
-+		seq_puts(seq, "\tresync=DELAYED");
- 		return 1;
- 	}
- 
-@@ -8129,13 +8129,13 @@ static int status_resync(struct seq_file *seq, struct mddev *mddev)
- 	{
- 		int i, x = per_milli/50, y = 20-x;
- 
--		seq_printf(seq, "[");
-+		seq_putc(seq, '[');
- 		for (i = 0; i < x; i++)
--			seq_printf(seq, "=");
--		seq_printf(seq, ">");
-+			seq_putc(seq, '=');
-+		seq_putc(seq, '>');
- 		for (i = 0; i < y; i++)
--			seq_printf(seq, ".");
--		seq_printf(seq, "] ");
-+			seq_putc(seq, '.');
-+		seq_puts(seq, "] ");
- 	}
- 	seq_printf(seq, " %s =%3u.%u%% (%llu/%llu)",
- 		   (test_bit(MD_RECOVERY_RESHAPE, &mddev->recovery) ?
-@@ -8280,7 +8280,7 @@ static int md_seq_show(struct seq_file *seq, void *v)
- 			seq_printf(seq, "[%s] ", pers->name);
- 
- 		spin_unlock(&pers_lock);
--		seq_printf(seq, "\n");
-+		seq_putc(seq, '\n');
- 		seq->poll_event = atomic_read(&md_event_count);
- 		return 0;
- 	}
-@@ -8295,9 +8295,9 @@ static int md_seq_show(struct seq_file *seq, void *v)
- 						mddev->pers ? "" : "in");
- 		if (mddev->pers) {
- 			if (mddev->ro == MD_RDONLY)
--				seq_printf(seq, " (read-only)");
-+				seq_puts(seq, " (read-only)");
- 			if (mddev->ro == MD_AUTO_READ)
--				seq_printf(seq, " (auto-read-only)");
-+				seq_puts(seq, " (auto-read-only)");
- 			seq_printf(seq, " %s", mddev->pers->name);
- 		}
- 
-@@ -8307,17 +8307,17 @@ static int md_seq_show(struct seq_file *seq, void *v)
- 			seq_printf(seq, " %pg[%d]", rdev->bdev, rdev->desc_nr);
- 
- 			if (test_bit(WriteMostly, &rdev->flags))
--				seq_printf(seq, "(W)");
-+				seq_puts(seq, "(W)");
- 			if (test_bit(Journal, &rdev->flags))
--				seq_printf(seq, "(J)");
-+				seq_puts(seq, "(J)");
- 			if (test_bit(Faulty, &rdev->flags)) {
--				seq_printf(seq, "(F)");
-+				seq_puts(seq, "(F)");
- 				continue;
- 			}
- 			if (rdev->raid_disk < 0)
--				seq_printf(seq, "(S)"); /* spare */
-+				seq_puts(seq, "(S)"); /* spare */
- 			if (test_bit(Replacement, &rdev->flags))
--				seq_printf(seq, "(R)");
-+				seq_puts(seq, "(R)");
- 			sectors += rdev->sectors;
- 		}
- 		rcu_read_unlock();
-@@ -8342,21 +8342,21 @@ static int md_seq_show(struct seq_file *seq, void *v)
- 			seq_printf(seq, " super external:%s",
- 				   mddev->metadata_type);
- 		else
--			seq_printf(seq, " super non-persistent");
-+			seq_puts(seq, " super non-persistent");
- 
- 		if (mddev->pers) {
- 			mddev->pers->status(seq, mddev);
--			seq_printf(seq, "\n      ");
-+			seq_puts(seq, "\n      ");
- 			if (mddev->pers->sync_request) {
- 				if (status_resync(seq, mddev))
--					seq_printf(seq, "\n      ");
-+					seq_puts(seq, "\n      ");
- 			}
+ 		if (rdev != freshest) {
+-			if (super_types[mddev->major_version].
+-			    validate_super(mddev, rdev)) {
++			if (super_types[mddev->major_version].validate_super(mddev, rdev)) {
+ 				pr_warn("md: kicking non-fresh %pg from array!\n",
+ 					rdev->bdev);
+ 				md_kick_rdev_from_array(rdev);
+@@ -6793,8 +6788,7 @@ int md_add_new_disk(struct mddev *mddev, struct mdu_disk_info_s *info)
+ 				rdev->raid_disk = -1;
+ 			rdev->saved_raid_disk = rdev->raid_disk;
  		} else
--			seq_printf(seq, "\n       ");
-+			seq_puts(seq, "\n       ");
- 
- 		md_bitmap_status(seq, mddev->bitmap);
- 
--		seq_printf(seq, "\n");
-+		seq_putc(seq, '\n');
+-			super_types[mddev->major_version].
+-				validate_super(mddev, rdev);
++			super_types[mddev->major_version].validate_super(mddev, rdev);
+ 		if ((info->state & (1<<MD_DISK_SYNC)) &&
+ 		     rdev->raid_disk != info->raid_disk) {
+ 			/* This was a hot-add request, but events doesn't
+@@ -9831,8 +9825,8 @@ static int read_rdev(struct mddev *mddev, struct md_rdev *rdev)
+ 	if (err == 0) {
+ 		ClearPageUptodate(rdev->sb_page);
+ 		rdev->sb_loaded = 0;
+-		err = super_types[mddev->major_version].
+-			load_super(rdev, NULL, mddev->minor_version);
++		err = super_types[mddev->major_version].load_super(rdev, NULL,
++								   mddev->minor_version);
  	}
- 	spin_unlock(&mddev->lock);
- 
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index be86333104fe..42671d0147ea 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -1646,7 +1646,7 @@ static void raid1_status(struct seq_file *seq, struct mddev *mddev)
- 			   rdev && test_bit(In_sync, &rdev->flags) ? "U" : "_");
- 	}
- 	rcu_read_unlock();
--	seq_printf(seq, "]");
-+	seq_puts(seq, "]");
- }
- 
- /**
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index c8f909e8a25e..61eb64ecd373 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -1963,7 +1963,7 @@ static void raid10_status(struct seq_file *seq, struct mddev *mddev)
- 		seq_printf(seq, "%s", rdev && test_bit(In_sync, &rdev->flags) ? "U" : "_");
- 	}
- 	rcu_read_unlock();
--	seq_printf(seq, "]");
-+	seq_puts(seq, "]");
- }
- 
- /* check if there are enough drives for
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index f5167eb71b5f..55afe09202c0 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -8159,7 +8159,7 @@ static void raid5_status(struct seq_file *seq, struct mddev *mddev)
- 		seq_printf(seq, "%s", rdev && test_bit(In_sync, &rdev->flags) ? "U" : "_");
- 	}
- 	rcu_read_unlock();
--	seq_printf(seq, "]");
-+	seq_putc(seq, ']');
- }
- 
- static void print_raid5_conf(struct r5conf *conf)
+ 	if (err < 0) {
+ 		pr_warn("%s: %d Could not reload rdev(%d) err: %d. Restoring old values\n",
 -- 
 2.39.2
 
