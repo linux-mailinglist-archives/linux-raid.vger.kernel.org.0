@@ -2,47 +2,47 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB2686AD05D
-	for <lists+linux-raid@lfdr.de>; Mon,  6 Mar 2023 22:30:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E57F6AD05E
+	for <lists+linux-raid@lfdr.de>; Mon,  6 Mar 2023 22:30:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230118AbjCFVaD (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 6 Mar 2023 16:30:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53204 "EHLO
+        id S230027AbjCFVaE (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 6 Mar 2023 16:30:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230121AbjCFV3U (ORCPT
+        with ESMTP id S229687AbjCFV3U (ORCPT
         <rfc822;linux-raid@vger.kernel.org>); Mon, 6 Mar 2023 16:29:20 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32D0B39BAA
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34F3D6C185
         for <linux-raid@vger.kernel.org>; Mon,  6 Mar 2023 13:28:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1678138101;
+        s=mimecast20190719; t=1678138102;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=GvRWzge/GH9C2SWwVECbnVZ5E7NstB1bc8yQoVWBEtU=;
-        b=I8Uf9rndWIiI8kYgAWizUSzVLJC+8dsMjez+IflDbRalsiXqkjbYBoyYnJ+86h9VrrmGWC
-        jbJGC1MQEng1NFtwgbpT5rniuKD12B9PxZXYzQZmPX9tTUCL1oHyxMZ+mdPJ30GkReRLb6
-        epcFLM0FWaNn/TCqM2yZE/x4hSP4wHI=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=FpEbCnY02Tktf1RuN8EWmBR3DZbLTfkJHxOE1VSEPNg=;
+        b=TcHxqudZWEEjYuo5KHTGcvgNK9Y2zFFoan5GIvKQXVCEPc65TJsagQpMJ9yTGTiYN03FeV
+        yj0xnFAvpoDormMx03Dy/l3cLKrY7un3CuetPtZEL5k5Ic1pXzoS8vH6I1cXOTL3INIppr
+        436xjtq423SS0zo9Qx5bEmIHhAQt+7I=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-377-oAf-4WpHNWC8k5bFWRoBlg-1; Mon, 06 Mar 2023 16:28:19 -0500
-X-MC-Unique: oAf-4WpHNWC8k5bFWRoBlg-1
+ us-mta-449-kbRh7OG1M76s8k4lhH6kPQ-1; Mon, 06 Mar 2023 16:28:20 -0500
+X-MC-Unique: kbRh7OG1M76s8k4lhH6kPQ-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 79FA71C06EC0
-        for <linux-raid@vger.kernel.org>; Mon,  6 Mar 2023 21:28:19 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 77779802D2E
+        for <linux-raid@vger.kernel.org>; Mon,  6 Mar 2023 21:28:20 +0000 (UTC)
 Received: from o.redhat.com (unknown [10.39.192.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B64BE40C83B6;
-        Mon,  6 Mar 2023 21:28:18 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B469240CF8F0;
+        Mon,  6 Mar 2023 21:28:19 +0000 (UTC)
 From:   heinzm@redhat.com
 To:     linux-raid@vger.kernel.org
 Cc:     ncroxon@redhat.com, xni@redhat.com, dkeefe@redhat.com
-Subject: [PATCH 20/34] md: avoid pointless filenames in files [WARNING]
-Date:   Mon,  6 Mar 2023 22:27:43 +0100
-Message-Id: <5e82beab0a2b132f4af30187dbce80e565383bd6.1678136717.git.heinzm@redhat.com>
+Subject: [PATCH 21/34] md: avoid useless else after break or return [WARNING]
+Date:   Mon,  6 Mar 2023 22:27:44 +0100
+Message-Id: <7735a0a5cc4a92519c8c457c3ffe40b40e0c4021.1678136717.git.heinzm@redhat.com>
 In-Reply-To: <cover.1678136717.git.heinzm@redhat.com>
 References: <cover.1678136717.git.heinzm@redhat.com>
 MIME-Version: 1.0
@@ -62,74 +62,149 @@ From: Heinz Mauelshagen <heinzm@redhat.com>
 
 Signed-off-by: heinzm <heinzm@redhat.com>
 ---
- drivers/md/md.c     | 2 +-
- drivers/md/raid0.c  | 3 ++-
- drivers/md/raid1.c  | 2 +-
- drivers/md/raid10.c | 2 +-
- drivers/md/raid5.c  | 2 +-
- 5 files changed, 6 insertions(+), 5 deletions(-)
+ drivers/md/md-bitmap.c  |  5 +++--
+ drivers/md/md-cluster.c |  5 +++--
+ drivers/md/md.c         | 31 ++++++++++++++++---------------
+ drivers/md/raid10.c     | 18 +++++++++---------
+ 4 files changed, 31 insertions(+), 28 deletions(-)
 
+diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
+index 65e77a7e3656..e739efe2249d 100644
+--- a/drivers/md/md-bitmap.c
++++ b/drivers/md/md-bitmap.c
+@@ -2188,8 +2188,9 @@ int md_bitmap_resize(struct bitmap *bitmap, sector_t blocks,
+ 				blocks = old_counts.chunks << old_counts.chunkshift;
+ 				pr_warn("Could not pre-allocate in-memory bitmap for cluster raid\n");
+ 				break;
+-			} else
+-				bitmap->counts.bp[page].count += 1;
++			}
++
++			bitmap->counts.bp[page].count += 1;
+ 		}
+ 	}
+ 
+diff --git a/drivers/md/md-cluster.c b/drivers/md/md-cluster.c
+index 762160e81ce8..e115603ff0d9 100644
+--- a/drivers/md/md-cluster.c
++++ b/drivers/md/md-cluster.c
+@@ -174,8 +174,9 @@ static int dlm_lock_sync_interruptible(struct dlm_lock_resource *res, int mode,
+ 			pr_info("failed to cancel previous lock request "
+ 				 "%s return %d\n", res->name, ret);
+ 		return -EPERM;
+-	} else
+-		res->sync_locking_done = false;
++	}
++
++	res->sync_locking_done = false;
+ 	if (res->lksb.sb_status == 0)
+ 		res->mode = mode;
+ 	return res->lksb.sb_status;
 diff --git a/drivers/md/md.c b/drivers/md/md.c
-index dbdd0288ddd2..e19edfe62516 100644
+index e19edfe62516..37f1323306aa 100644
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
- /*
-- * md.c : Multiple Devices driver for Linux
-+ * Multiple Devices driver for Linux
-  *   Copyright (C) 1998, 1999, 2000 Ingo Molnar
-  *
-  *   completely rewritten, based on the MD driver code from Marc Zyngier
-diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
-index 0089f0657651..b4c372c6861b 100644
---- a/drivers/md/raid0.c
-+++ b/drivers/md/raid0.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
- /*
-- * raid0.c : Multiple Devices driver for Linux
-+ * Multiple Devices driver for Linux
-+ *
-  *	     Copyright (C) 1994-96 Marc ZYNGIER
-  *	     <zyngier@ufr-info-p7.ibp.fr> or
-  *	     <maz@gloups.fdn.fr>
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 5b7d1dea889d..bd245f41393a 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
- /*
-- * raid1.c : Multiple Devices driver for Linux
-+ * Multiple Devices driver for Linux
-  *
-  * Copyright (C) 1999, 2000, 2001 Ingo Molnar, Red Hat
-  *
+@@ -2180,7 +2180,6 @@ super_1_rdev_size_change(struct md_rdev *rdev, sector_t num_sectors)
+ 			sb_start &= ~(sector_t)(4*2 - 1);
+ 
+ 			bm_space = super_1_choose_bm_space(dev_size);
+-
+ 			/* Space that can be used to store date needs to decrease
+ 			 * superblock bitmap space and bad block space(4K)
+ 			 */
+@@ -3200,8 +3199,9 @@ slot_store(struct md_rdev *rdev, const char *buf, size_t len)
+ 		if (err) {
+ 			rdev->raid_disk = -1;
+ 			return err;
+-		} else
+-			sysfs_notify_dirent_safe(rdev->sysfs_state);
++		}
++
++		sysfs_notify_dirent_safe(rdev->sysfs_state);
+ 		/* failure here is OK */;
+ 		sysfs_link_rdev(rdev->mddev, rdev);
+ 		/* don't wakeup anyone, leave that to userspace. */
+@@ -7359,13 +7359,12 @@ static int update_array_info(struct mddev *mddev, mdu_array_info_t *info)
+ 		 */
+ 		if (mddev->pers->check_reshape == NULL)
+ 			return -EINVAL;
+-		else {
+-			mddev->new_layout = info->layout;
+-			rv = mddev->pers->check_reshape(mddev);
+-			if (rv)
+-				mddev->new_layout = mddev->layout;
+-			return rv;
+-		}
++
++		mddev->new_layout = info->layout;
++		rv = mddev->pers->check_reshape(mddev);
++		if (rv)
++			mddev->new_layout = mddev->layout;
++		return rv;
+ 	}
+ 	if (info->size >= 0 && mddev->dev_sectors / 2 != info->size)
+ 		rv = update_size(mddev, (sector_t)info->size * 2);
+@@ -7689,16 +7688,18 @@ static int md_ioctl(struct block_device *bdev, fmode_t mode,
+ 		if (mddev->pers) {
+ 			mdu_disk_info_t info;
+ 
+-			if (copy_from_user(&info, argp, sizeof(info)))
++			if (copy_from_user(&info, argp, sizeof(info))) {
+ 				err = -EFAULT;
+-			else if (!(info.state & (1<<MD_DISK_SYNC)))
++				goto unlock;
++			}
++
++			if (!(info.state & (1<<MD_DISK_SYNC)))
+ 				/* Need to clear read-only for this */
+ 				break;
+-			else
+-				err = md_add_new_disk(mddev, &info);
++
++			err = md_add_new_disk(mddev, &info);
+ 			goto unlock;
+ 		}
+-		break;
+ 	}
+ 
+ 	/*
 diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index 60c9fba59d9f..dbad26fcca12 100644
+index dbad26fcca12..7ab011cdb995 100644
 --- a/drivers/md/raid10.c
 +++ b/drivers/md/raid10.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
- /*
-- * raid10.c : Multiple Devices driver for Linux
-+ * Multiple Devices driver for Linux
-  *
-  * Copyright (C) 2000-2004 Neil Brown
-  *
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index f834c497b8fe..a7b37a4e3f66 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
- /*
-- * raid5.c : Multiple Devices driver for Linux
-+ * Multiple Devices driver for Linux
-  *	   Copyright (C) 1996, 1997 Ingo Molnar, Miguel de Icaza, Gadi Oxman
-  *	   Copyright (C) 1999, 2000 Ingo Molnar
-  *	   Copyright (C) 2002, 2003 H. Peter Anvin
+@@ -2325,6 +2325,7 @@ static void end_reshape_read(struct bio *bio)
+ static void end_sync_request(struct r10bio *r10_bio)
+ {
+ 	struct mddev *mddev = r10_bio->mddev;
++	struct r10bio *r10_bio2;
+ 
+ 	while (atomic_dec_and_test(&r10_bio->remaining)) {
+ 		if (r10_bio->master_bio == NULL) {
+@@ -2338,16 +2339,15 @@ static void end_sync_request(struct r10bio *r10_bio)
+ 				put_buf(r10_bio);
+ 			md_done_sync(mddev, s, 1);
+ 			break;
+-		} else {
+-			struct r10bio *r10_bio2 = (struct r10bio *)r10_bio->master_bio;
+-
+-			if (test_bit(R10BIO_MadeGood, &r10_bio->state) ||
+-			    test_bit(R10BIO_WriteError, &r10_bio->state))
+-				reschedule_retry(r10_bio);
+-			else
+-				put_buf(r10_bio);
+-			r10_bio = r10_bio2;
+ 		}
++
++		r10_bio2 = (struct r10bio *)r10_bio->master_bio;
++		if (test_bit(R10BIO_MadeGood, &r10_bio->state) ||
++		    test_bit(R10BIO_WriteError, &r10_bio->state))
++			reschedule_retry(r10_bio);
++		else
++			put_buf(r10_bio);
++		r10_bio = r10_bio2;
+ 	}
+ }
+ 
 -- 
 2.39.2
 
