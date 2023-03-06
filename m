@@ -2,47 +2,47 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D7BE86AD05F
-	for <lists+linux-raid@lfdr.de>; Mon,  6 Mar 2023 22:30:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A38B46AD062
+	for <lists+linux-raid@lfdr.de>; Mon,  6 Mar 2023 22:30:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229687AbjCFVaF (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 6 Mar 2023 16:30:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53226 "EHLO
+        id S229651AbjCFVaJ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 6 Mar 2023 16:30:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230123AbjCFV3U (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 6 Mar 2023 16:29:20 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D368143455
-        for <linux-raid@vger.kernel.org>; Mon,  6 Mar 2023 13:28:23 -0800 (PST)
+        with ESMTP id S230126AbjCFV3V (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 6 Mar 2023 16:29:21 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0779498A0
+        for <linux-raid@vger.kernel.org>; Mon,  6 Mar 2023 13:28:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1678138103;
+        s=mimecast20190719; t=1678138104;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=PwjQZblfiJvlT8vNeewx4/kThyis4XkB9jBxOgnUfWI=;
-        b=hegteEeap4hSybbHLMmGFc1YegJfPsKpdlKXtzSohnTDG7WgJLnzwbm6tO3Z7tTO++oBmC
-        eTp3VXpDDY1USlMyPTfk+YPn/8tYBRrb8vzFSW2uuY2gsTWJuJnxU1T4bwQb9G//q30EQo
-        +MYRTWgtb0i09Fs8yvANBdczOlU9WIQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=BdHMxOZARKYfBfDyD25CfhCW4wrT+6ERM+s727/uZGI=;
+        b=WFbViPOpCEtHM8G4C7RnxQZtBCCexLfb/GINLkL2ZU63RvBXwdp8q7px8/zNaBUAkwZyUF
+        hf2fedI3mglfxdNaeQQtZ1MM3ujcjvRVHaAsnSscJ+YVc3SYah7h6pUU7CyyRNvfc0cxWL
+        YN4KaCSf5XvX098fsVn7L7PjvF6Yty4=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-664-jJpMo2fhOpmRk58Vk4ZBzA-1; Mon, 06 Mar 2023 16:28:21 -0500
-X-MC-Unique: jJpMo2fhOpmRk58Vk4ZBzA-1
+ us-mta-335-krVAYvJBO6-rV4hhsU3wSg-1; Mon, 06 Mar 2023 16:28:22 -0500
+X-MC-Unique: krVAYvJBO6-rV4hhsU3wSg-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 77ACB101A55E
-        for <linux-raid@vger.kernel.org>; Mon,  6 Mar 2023 21:28:21 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 763873C10225
+        for <linux-raid@vger.kernel.org>; Mon,  6 Mar 2023 21:28:22 +0000 (UTC)
 Received: from o.redhat.com (unknown [10.39.192.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B2A5840C83B6;
-        Mon,  6 Mar 2023 21:28:20 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B23A940C83B6;
+        Mon,  6 Mar 2023 21:28:21 +0000 (UTC)
 From:   heinzm@redhat.com
 To:     linux-raid@vger.kernel.org
 Cc:     ncroxon@redhat.com, xni@redhat.com, dkeefe@redhat.com
-Subject: [PATCH 22/34] md: don't indent labels [WARNING]
-Date:   Mon,  6 Mar 2023 22:27:45 +0100
-Message-Id: <8aadc9ab5e20a5d855c0e2eb2f68387d0ac61cb5.1678136717.git.heinzm@redhat.com>
+Subject: [PATCH 23/34] md: fix code indent for conditional statements [WARNING]
+Date:   Mon,  6 Mar 2023 22:27:46 +0100
+Message-Id: <eed3b7ffa311b473a9470c3a41d2de7e1d725ba0.1678136717.git.heinzm@redhat.com>
 In-Reply-To: <cover.1678136717.git.heinzm@redhat.com>
 References: <cover.1678136717.git.heinzm@redhat.com>
 MIME-Version: 1.0
@@ -62,77 +62,86 @@ From: Heinz Mauelshagen <heinzm@redhat.com>
 
 Signed-off-by: heinzm <heinzm@redhat.com>
 ---
- drivers/md/md.c     | 8 ++++----
- drivers/md/raid10.c | 2 +-
- drivers/md/raid5.c  | 2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/md/md-bitmap.c | 2 +-
+ drivers/md/md.c        | 8 ++++----
+ drivers/md/raid5.c     | 4 ++--
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
+diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
+index e739efe2249d..b78b3647c4e7 100644
+--- a/drivers/md/md-bitmap.c
++++ b/drivers/md/md-bitmap.c
+@@ -2327,7 +2327,7 @@ location_store(struct mddev *mddev, const char *buf, size_t len)
+ 		long long offset;
+ 
+ 		if (strncmp(buf, "none", 4) == 0)
+-			/* nothing to be done */;
++			; /* nothing to be done */
+ 		else if (strncmp(buf, "file:", 5) == 0) {
+ 			/* Not supported yet */
+ 			rv = -EINVAL;
 diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 37f1323306aa..b68b6d9dd8b6 100644
+index b68b6d9dd8b6..858cbb5252df 100644
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -8818,7 +8818,7 @@ void md_do_sync(struct md_thread *thread)
+@@ -2053,7 +2053,7 @@ static void super_1_sync(struct mddev *mddev, struct md_rdev *rdev)
+ 		sb->feature_map |= cpu_to_le32(MD_FEATURE_CLUSTERED);
  
- 		mddev->curr_resync = MD_RESYNC_DELAYED;
+ 	if (rdev->badblocks.count == 0)
+-		/* Nothing to do for bad blocks*/;
++		; /* Nothing to do for bad blocks*/
+ 	else if (sb->bblog_offset == 0)
+ 		/* Cannot record bad blocks on this device */
+ 		md_error(mddev, rdev);
+@@ -2676,7 +2676,7 @@ void md_update_sb(struct mddev *mddev, int force_change)
+ 		    !test_bit(Journal, &rdev->flags) &&
+ 		    !test_bit(In_sync, &rdev->flags) &&
+ 		    mddev->curr_resync_completed > rdev->recovery_offset)
+-				rdev->recovery_offset = mddev->curr_resync_completed;
++			rdev->recovery_offset = mddev->curr_resync_completed;
  
--	try_again:
-+try_again:
- 		if (test_bit(MD_RECOVERY_INTR, &mddev->recovery))
- 			goto skip;
- 		spin_lock(&all_mddevs_lock);
-@@ -9033,7 +9033,7 @@ void md_do_sync(struct md_thread *thread)
- 			continue;
- 
- 		last_check = io_sectors;
--	repeat:
-+repeat:
- 		if (time_after_eq(jiffies, mark[last_mark] + SYNC_MARK_STEP)) {
- 			/* step marks */
- 			int next = (last_mark+1) % SYNC_MARKS;
-@@ -9476,7 +9476,7 @@ void md_check_recovery(struct mddev *mddev)
- 			queue_work(md_misc_wq, &mddev->del_work);
- 			goto unlock;
- 		}
--	not_running:
-+not_running:
- 		if (!mddev->sync_thread) {
- 			clear_bit(MD_RECOVERY_RUNNING, &mddev->recovery);
- 			wake_up(&resync_wait);
-@@ -9485,7 +9485,7 @@ void md_check_recovery(struct mddev *mddev)
- 				if (mddev->sysfs_action)
- 					sysfs_notify_dirent_safe(mddev->sysfs_action);
- 		}
--	unlock:
-+unlock:
- 		wake_up(&mddev->sb_wait);
- 		mddev_unlock(mddev);
  	}
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index 7ab011cdb995..a95609d5e79c 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -5194,7 +5194,7 @@ static int handle_reshape_read_error(struct mddev *mddev,
- 			rcu_read_lock();
- 			if (success)
- 				break;
--		failed:
-+failed:
- 			slot++;
- 			if (slot >= conf->copies)
- 				slot = 0;
+ 	if (!mddev->persistent) {
+@@ -5854,7 +5854,7 @@ int md_run(struct mddev *mddev)
+ 		 * Internal Bitmap issues have been handled elsewhere.
+ 		 */
+ 		if (rdev->meta_bdev) {
+-			/* Nothing to check */;
++			; /* Nothing to check */
+ 		} else if (rdev->data_offset < rdev->sb_start) {
+ 			if (mddev->dev_sectors &&
+ 			    rdev->data_offset + mddev->dev_sectors > rdev->sb_start) {
+@@ -6151,7 +6151,7 @@ static int restart_array(struct mddev *mddev)
+ 	rcu_read_unlock();
+ 	if (test_bit(MD_HAS_JOURNAL, &mddev->flags) && !has_journal)
+ 		/* Don't restart rw with journal missing/faulty */
+-			return -EINVAL;
++		return -EINVAL;
+ 	if (has_readonly)
+ 		return -EROFS;
+ 
 diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index a7b37a4e3f66..a1da82a72553 100644
+index a1da82a72553..f418035da889 100644
 --- a/drivers/md/raid5.c
 +++ b/drivers/md/raid5.c
-@@ -5864,7 +5864,7 @@ static void make_discard_request(struct mddev *mddev, struct bio *bi)
- 	     logical_sector += RAID5_STRIPE_SECTORS(conf)) {
- 		DEFINE_WAIT(w);
- 		int d;
--	again:
-+again:
- 		sh = raid5_get_active_stripe(conf, NULL, logical_sector, 0);
- 		prepare_to_wait(&conf->wait_for_overlap, &w,
- 				TASK_UNINTERRUPTIBLE);
+@@ -4811,7 +4811,7 @@ static void analyse_stripe(struct stripe_head *sh, struct stripe_head_state *s)
+ 		}
+ 		clear_bit(R5_Insync, &dev->flags);
+ 		if (!rdev)
+-			/* Not in-sync */;
++			; /* Not in-sync */
+ 		else if (is_bad) {
+ 			/* also not in-sync */
+ 			if (!test_bit(WriteErrorSeen, &rdev->flags) &&
+@@ -7888,7 +7888,7 @@ static int raid5_run(struct mddev *mddev)
+ 			 */
+ 			if (abs(min_offset_diff) >= mddev->chunk_sectors &&
+ 			    abs(min_offset_diff) >= mddev->new_chunk_sectors)
+-				/* not really in-place - so OK */;
++				; /* not really in-place - so OK */
+ 			else if (mddev->ro == 0) {
+ 				pr_warn("md/raid:%s: in-place reshape must be started in read-only mode - aborting\n",
+ 					mdname(mddev));
 -- 
 2.39.2
 
