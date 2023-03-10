@@ -2,89 +2,84 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F3286B3054
-	for <lists+linux-raid@lfdr.de>; Thu,  9 Mar 2023 23:20:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B9DA6B3784
+	for <lists+linux-raid@lfdr.de>; Fri, 10 Mar 2023 08:40:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231147AbjCIWUY (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 9 Mar 2023 17:20:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59554 "EHLO
+        id S230333AbjCJHkY (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 10 Mar 2023 02:40:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229910AbjCIWUW (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 9 Mar 2023 17:20:22 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2CCEF8F20;
-        Thu,  9 Mar 2023 14:19:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=jK36Zpm8T2on+df54b6OGLN8ramQR+T+L8HPs8R5yHE=; b=MQBnApNDuji9teSFgOuyjM3C/p
-        Lgjgf584li4FUT3/bLPnV5yqTuo2UTXDrn/714v2Ip8g3XpbRRwZD7nJgpfEz6h2qyYzLRoVFAzS5
-        tMd/9xsj+xvHf9pg1aj6/tfQOstrhGZ+G1zt8z2KHggdwT/JzAOm9MQzVoQv6izhooEbpCzv0yw5r
-        tM+8qfELGYvw7DcEBgzyGxOP+nBEwfiCipPOReirB45OyXkLojYq6dLPJAZ2LdHzds1OUB+inU0LV
-        2hzU4mCm7TVY5QLhVwYJxgZVITHlU54t7YIlOR63U6xiYpBenGFdRnv1EDD5XMZzQjyOtadrDKozg
-        W7Wm31lw==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1paOao-00C8rx-Vc; Thu, 09 Mar 2023 22:18:34 +0000
-Date:   Thu, 9 Mar 2023 14:18:34 -0800
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     ebiederm@xmission.com, keescook@chromium.org, yzaikin@google.com,
-        jejb@linux.ibm.com, martin.petersen@oracle.com, minyard@acm.org,
-        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, song@kernel.org, robinmholt@gmail.com,
-        steve.wahl@hpe.com, mike.travis@hpe.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org, jirislaby@kernel.org, jgross@suse.com,
-        sstabellini@kernel.org, oleksandr_tyshchenko@epam.com,
-        xen-devel@lists.xenproject.org
-Cc:     j.granados@samsung.com, zhangpeng362@huawei.com,
-        tangmeng@uniontech.com, willy@infradead.org, nixiaoming@huawei.com,
-        sujiaxun@uniontech.com, patches@lists.linux.dev,
-        linux-fsdevel@vger.kernel.org, apparmor@lists.ubuntu.com,
-        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-hyperv@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/7] sysctl: slowly deprecate register_sysctl_table()
-Message-ID: <ZApbOilWsw9Sk/k4@bombadil.infradead.org>
-References: <20230302204612.782387-1-mcgrof@kernel.org>
+        with ESMTP id S230338AbjCJHjt (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 10 Mar 2023 02:39:49 -0500
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56111F8656;
+        Thu,  9 Mar 2023 23:39:38 -0800 (PST)
+Received: from mail02.huawei.com (unknown [172.30.67.169])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4PXycN2cnDz4f3nTN;
+        Fri, 10 Mar 2023 15:39:32 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.127.227])
+        by APP3 (Coremail) with SMTP id _Ch0CgDn4R+03gpkwSimEg--.34063S4;
+        Fri, 10 Mar 2023 15:39:33 +0800 (CST)
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+To:     guoqing.jiang@linux.dev, song@kernel.org, jgq516@gmail.com,
+        neilb@suse.de, shli@fb.com, lzhong@suse.com
+Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com,
+        yangerkun@huawei.com
+Subject: [PATCH v2 0/6] md/raid10: several simple obvious bugfix
+Date:   Fri, 10 Mar 2023 15:38:49 +0800
+Message-Id: <20230310073855.1337560-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230302204612.782387-1-mcgrof@kernel.org>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: _Ch0CgDn4R+03gpkwSimEg--.34063S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrtr1UKr18KrykGr4xAw13urg_yoW3Cwc_Ka
+        ykAFW5tr42qFZ3ta43Cr18ury7XFs0vryxXF18KFWDZ343ur1UCr18Xr4Sqr4rZrs0qFn8
+        JrW8tryIvrsFyjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbxkFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+        6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+        n2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
+        0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFyl
+        IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
+        AFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_
+        Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUb
+        XdbUUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-0.5 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
+        MAY_BE_FORGED,SPF_HELO_NONE,SPF_NONE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu, Mar 02, 2023 at 12:46:05PM -0800, Luis Chamberlain wrote:
-> I'm happy to take these via sysctl-next [0] but since
-> I don' think register_sysctl_table() will be nuked on v6.4 I think
-> it's fine for each of these to go into each respective tree. I can
-> pick up last stragglers on sysctl-next. If you want me to take this
-> via sysctl-next too, just let me know and I'm happy to do that. Either
-> way works.
+From: Yu Kuai <yukuai3@huawei.com>
 
-As I noted I've dropped the following already-picked-up patches from
-my queue:
+We're running many tests for raid10 currently, and we found a lot of
+problems already. This patchset is the first part for some simple and
+obvious problems. Most of the patches were sent separately already, but
+I think a patchset is better for review.
 
-ipmi: simplify sysctl registration
-sgi-xp: simplify sysctl registration
-tty: simplify sysctl registration
+Yu Kuai (6):
+  md/raid10: don't call bio_start_io_acct twice for bio which
+    experienced read error
+  md: fix soft lockup in status_resync
+  md/raid10: don't BUG_ON() in raise_barrier()
+  md/radi10: fix leak of 'r10bio->remaining' for recovery
+  md/raid10: fix memleak for 'conf->bio_split'
+  md/raid10: fix memleak of md thread
 
-I've taken the rest now through sysctl-next:
+ drivers/md/md.c     | 18 +++++------
+ drivers/md/raid10.c | 78 +++++++++++++++++++++++----------------------
+ 2 files changed, 49 insertions(+), 47 deletions(-)
 
-scsi: simplify sysctl registration with register_sysctl()
-hv: simplify sysctl registration
-md: simplify sysctl registration
-xen: simplify sysctl registration for balloon
+-- 
+2.31.1
 
-If a maintainer would prefer to take one on through their
-tree fine by me too, just let me know and I'll drop the patch.
-
-  Luis
