@@ -2,85 +2,107 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E59216B4685
-	for <lists+linux-raid@lfdr.de>; Fri, 10 Mar 2023 15:43:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A759C6B5A0F
+	for <lists+linux-raid@lfdr.de>; Sat, 11 Mar 2023 10:32:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232882AbjCJOnv (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 10 Mar 2023 09:43:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35098 "EHLO
+        id S229942AbjCKJcd (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 11 Mar 2023 04:32:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232933AbjCJOnd (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 10 Mar 2023 09:43:33 -0500
-Received: from sender11-op-o11.zoho.eu (sender11-op-o11.zoho.eu [31.186.226.225])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EAABD13C7
-        for <linux-raid@vger.kernel.org>; Fri, 10 Mar 2023 06:43:26 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1678459397; cv=none; 
-        d=zohomail.eu; s=zohoarc; 
-        b=fp4Dpq2sffM/HHVswHM7H0igryXw8UvVFTkmI1MSwB+5JFNpEG+Ugj4BCbry/ruuBUcM7DuKiJxsCbE6lnl6swUKlOJTDd46YbdBqyJRm3cszPj4maQ784n2/siLpUm8+FSsY/QNvw5BXoenmIWCl/Kfwwi6dCsimzlxBcNEObw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1678459397; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=xZt8RGeS8fIpgpZkhCcxmqzsmTv2eRogBjqb33r0Bj0=; 
-        b=DvDaoN/j9OCXP53vgih5ntYHiilZvQEy/lwWRoLtFTj+d3/lEGwqXhY3ExCl5YbKEOKuHNb1m7xZtsABORuDDg611WT+HyWglHw6NgShdsGo4o0Hwtncpgok2l71BTcVfRkltXKy6BiUPxBdQA6eBBcAwKVjN5ob21ER5x/p7mA=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
-        dmarc=pass header.from=<jes@trained-monkey.org>
-Received: from [192.168.99.50] (pool-98-113-67-206.nycmny.fios.verizon.net [98.113.67.206]) by mx.zoho.eu
-        with SMTPS id 1678459394332800.980885178361; Fri, 10 Mar 2023 15:43:14 +0100 (CET)
-Message-ID: <3f1f7b12-397a-d363-d075-e074c0913e64@trained-monkey.org>
-Date:   Fri, 10 Mar 2023 09:43:11 -0500
+        with ESMTP id S229754AbjCKJcc (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 11 Mar 2023 04:32:32 -0500
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76B0293E04;
+        Sat, 11 Mar 2023 01:32:31 -0800 (PST)
+Received: from mail02.huawei.com (unknown [172.30.67.169])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4PYd4B5l70z4f3jHr;
+        Sat, 11 Mar 2023 17:32:26 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.127.227])
+        by APP3 (Coremail) with SMTP id _Ch0CgC3YiCqSgxkFn3mEg--.16173S4;
+        Sat, 11 Mar 2023 17:32:28 +0800 (CST)
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+To:     agk@redhat.com, snitzer@kernel.org, song@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com,
+        yangerkun@huawei.com
+Subject: [PATCH -next 0/5] md: fix uaf for sync_thread
+Date:   Sat, 11 Mar 2023 17:31:43 +0800
+Message-Id: <20230311093148.2595222-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH 2/3] mdadm: refactor ident->name handling
-Content-Language: en-US
-To:     Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-Cc:     colyli@suse.de, linux-raid@vger.kernel.org
-References: <20221221115019.26276-1-mariusz.tkaczyk@linux.intel.com>
- <20221221115019.26276-3-mariusz.tkaczyk@linux.intel.com>
- <bef57069-acdb-3a2f-b691-2c438c4247fb@trained-monkey.org>
- <20221229103931.00006ff0@linux.intel.com>
- <0017b6dc-b0c0-7d4e-4765-fcc429b41862@trained-monkey.org>
- <20230303130410.000043e0@linux.intel.com>
- <824b2eca-cada-43b2-be8f-100676654bb2@trained-monkey.org>
- <20230309090207.00002769@linux.intel.com>
-From:   Jes Sorensen <jes@trained-monkey.org>
-In-Reply-To: <20230309090207.00002769@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: _Ch0CgC3YiCqSgxkFn3mEg--.16173S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7uF4rtFWDGrWDtr1UXF1UZFb_yoW8Gr1xpa
+        4fJry3Zr40yr43Zr13XFyjka45Jw1Sgay7KryxCw4fXa45XrW5tr4jyFW8XF9rAFyfJFsr
+        JF15GF4rWF1DtFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUyG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+        6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxG
+        rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+        vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
+        x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
+        xKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
+        67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-0.5 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
+        MAY_BE_FORGED,SPF_HELO_NONE,SPF_NONE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 3/9/23 03:02, Mariusz Tkaczyk wrote:
-> On Wed, 8 Mar 2023 14:04:12 -0500
->> Maybe it would be worth starting the enum outside the range of the
->> regular errno so they can overlap? Not sure if it adds any value, just a
->> thought.
->>
-> I see no value either.
-> What if someone will add new error definition to errno? Should we change our
-> enum start then? I think that nobody will notice it until issue but it is
-> unlikely too. For that reason I think that it is pointless from the beggining
-> because we are defnining rule which won't be honored later.
-> 
-> I think that we can just to redefine errno codes in enum if they are needed. We
-> are free to change particular enum constant value to make room for errno
-> compatible codes if there will be need to. That should be safe if some code
-> does not have ugly trick like calling external function and comparing it with
-> enum constant:
-> 
-> */ let's say that SUCCESS is 0 */
-> if (strncmp(arg, arg1, arg2) == ENUM_STATUS_SUCCESS)
-> 
-> but it is our job to catch it on review so we are safe here, right? :)
+From: Yu Kuai <yukuai3@huawei.com>
 
-Fair enough
+Our test reports a uaf for 'mddev->sync_thread':
 
-Jes
+T1                      T2
+md_start_sync
+ md_register_thread
+			raid1d
+			 md_check_recovery
+			  md_reap_sync_thread
+			   md_unregister_thread
+			    kfree
+
+ md_wakeup_thread
+  wake_up
+  ->sync_thread was freed
+
+Currently, a global spinlock 'pers_lock' is borrowed to protect
+'mddev->thread', this problem can be fixed likewise, however, there might
+be similar problem for other md_thread, and I really don't like the idea to
+borrow a global lock.
+
+This patchset do some refactor, and then use a disk level spinlock to
+protect md_thread in relevant apis.
+
+Yu Kuai (5):
+  md: pass a md_thread pointer to md_register_thread()
+  md: refactor md_wakeup_thread()
+  md: use md_thread api to wake up sync_thread
+  md: pass a mddev to md_unregister_thread()
+  md: protect md_thread with a new disk level spin lock
+
+ drivers/md/dm-raid.c      |   6 +-
+ drivers/md/md-bitmap.c    |   6 +-
+ drivers/md/md-cluster.c   |  39 +++++-----
+ drivers/md/md-multipath.c |   8 +-
+ drivers/md/md.c           | 157 ++++++++++++++++++++------------------
+ drivers/md/md.h           |  15 ++--
+ drivers/md/raid1.c        |  19 +++--
+ drivers/md/raid10.c       |  31 ++++----
+ drivers/md/raid5-cache.c  |  19 +++--
+ drivers/md/raid5-ppl.c    |   2 +-
+ drivers/md/raid5.c        |  48 ++++++------
+ 11 files changed, 175 insertions(+), 175 deletions(-)
+
+-- 
+2.31.1
 
