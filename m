@@ -2,211 +2,79 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 845626B6E11
-	for <lists+linux-raid@lfdr.de>; Mon, 13 Mar 2023 04:45:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CDAA06B7712
+	for <lists+linux-raid@lfdr.de>; Mon, 13 Mar 2023 13:00:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229919AbjCMDph (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 12 Mar 2023 23:45:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33284 "EHLO
+        id S230344AbjCMMAs (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 13 Mar 2023 08:00:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229885AbjCMDpd (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 12 Mar 2023 23:45:33 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78272360A8
-        for <linux-raid@vger.kernel.org>; Sun, 12 Mar 2023 20:45:30 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 2F76522AB4;
-        Mon, 13 Mar 2023 03:45:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1678679129; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ezkKjWE1IkDRXLSbKlEKlCvi1goNhfhZXqX8dSPA9Tk=;
-        b=CqXR4FzZBicXjDjLm5HFlvgi6wjyL2vIHGeYmsYzcjV8loJoIxbE3PIal5EP9PI2brJ7Qp
-        lISFEzWD2akKL0GjaogDgcI7I//Qpi/K3Ewb3xIwzF4IIfZ4brtc8A3exa2BgjZCYf3EW2
-        vqaChSv/eFjbFAzqzCGKxyZr+spIqCI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1678679129;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ezkKjWE1IkDRXLSbKlEKlCvi1goNhfhZXqX8dSPA9Tk=;
-        b=U0B3NK4SESUZJt+Rh2z1rEnbctQ0K1oxtBaLSAvhT5iHOyyXtCVvXvi2811sUCxZQHeGN/
-        aHWfzwXWIq5IGfCw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 4C3F713463;
-        Mon, 13 Mar 2023 03:45:27 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id eeMXAFecDmSHCAAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 13 Mar 2023 03:45:27 +0000
-Subject: [PATCH 2/6] Improvements for IMSM_NO_PLATFORM testing.
-From:   NeilBrown <neilb@suse.de>
-To:     Jes Sorensen <jes@trained-monkey.org>
-Cc:     linux-raid@vger.kernel.org, Martin Wilck <martin.wilck@suse.com>,
-        Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>
-Date:   Mon, 13 Mar 2023 14:42:58 +1100
-Message-ID: <167867897868.11443.7240557073570592164.stgit@noble.brown>
-In-Reply-To: <167867886675.11443.523512156999408649.stgit@noble.brown>
-References: <167867886675.11443.523512156999408649.stgit@noble.brown>
-User-Agent: StGit/1.5
+        with ESMTP id S230097AbjCMMAg (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 13 Mar 2023 08:00:36 -0400
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B51F34C21;
+        Mon, 13 Mar 2023 05:00:20 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4PZwFq54HJz4f3k5Z;
+        Mon, 13 Mar 2023 20:00:15 +0800 (CST)
+Received: from [10.174.179.247] (unknown [10.174.179.247])
+        by APP4 (Coremail) with SMTP id gCh0CgD3X7NQEA9kSqIsFQ--.25647S3;
+        Mon, 13 Mar 2023 20:00:17 +0800 (CST)
+Message-ID: <66c29a8a-9888-8ebc-d4cc-9cfea750a0fc@huaweicloud.com>
+Date:   Mon, 13 Mar 2023 20:00:16 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH 0/2] md/raid10: random bugfix
+To:     song@kernel.org, ncroxon@redhat.com, vmayatskikh@digitalocean.com
+Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yukuai3@huawei.com, yi.zhang@huawei.com, neilb@suse.de,
+        linan666@huaweicloud.com
+References: <20230222041000.3341651-1-linan666@huaweicloud.com>
+From:   Li Nan <linan666@huaweicloud.com>
+In-Reply-To: <20230222041000.3341651-1-linan666@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: gCh0CgD3X7NQEA9kSqIsFQ--.25647S3
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYh7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8I
+        cVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2js
+        IEc7CjxVAFwI0_GcCE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAa
+        Y2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4
+        A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0
+        II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2
+        IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
+        6r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
+        AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IY
+        s7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
+        WUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUFYFADUUUU
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Factor out IMSM_NO_PLATFORM testing into a single function that caches
-the result.
+Hi,
 
-Allow mdmon to explicitly set the result to "1" so that we don't need
-the ENV var in the unit file
+friendly ping ...
 
-Check if the kernel command line contains "mdadm.imsm.test=1" and in
-that case assert NO_PLATFORM.  This simplifies testing in a virtual
-machine.
+Thanks,
+Nan
 
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- mdadm.h                |    2 ++
- mdmon.c                |    6 ++++++
- super-intel.c          |   43 ++++++++++++++++++++++++++++++++++++++++---
- systemd/mdmon@.service |    3 ---
- 4 files changed, 48 insertions(+), 6 deletions(-)
-
-diff --git a/mdadm.h b/mdadm.h
-index 1674ce1307b2..16acb2dd1ce4 100644
---- a/mdadm.h
-+++ b/mdadm.h
-@@ -1258,6 +1258,8 @@ extern struct superswitch super0, super1;
- extern struct superswitch super_imsm, super_ddf;
- extern struct superswitch mbr, gpt;
- 
-+void imsm_set_no_platform(int v);
-+
- struct metadata_update {
- 	int	len;
- 	char	*buf;
-diff --git a/mdmon.c b/mdmon.c
-index 60ba318253b9..f557e12c6533 100644
---- a/mdmon.c
-+++ b/mdmon.c
-@@ -318,6 +318,12 @@ int main(int argc, char *argv[])
- 		{NULL, 0, NULL, 0}
- 	};
- 
-+	/*
-+	 * mdmon should never complain due to lack of a platform,
-+	 * that is mdadm's job if at all.
-+	 */
-+	imsm_set_no_platform(1);
-+
- 	while ((opt = getopt_long(argc, argv, "thaF", options, NULL)) != -1) {
- 		switch (opt) {
- 		case 'a':
-diff --git a/super-intel.c b/super-intel.c
-index e155a8ae99cb..a514dea6f95c 100644
---- a/super-intel.c
-+++ b/super-intel.c
-@@ -629,6 +629,43 @@ static const char *_sys_dev_type[] = {
- 	[SYS_DEV_VMD] = "VMD"
- };
- 
-+static int no_platform = -1;
-+
-+static int check_no_platform(void)
-+{
-+	static const char search[] = "mdadm.imsm.test=1";
-+	int fd;
-+	char buf[1024];
-+	int n = 0;
-+
-+	if (no_platform >= 0)
-+		return no_platform;
-+
-+	if (check_env("IMSM_NO_PLATFORM")) {
-+		no_platform = 1;
-+		return 1;
-+	}
-+	fd = open("/proc/cmdline", O_RDONLY);
-+	if (fd >= 0) {
-+		n = read(fd, buf, sizeof(buf)-1);
-+		close(fd);
-+	}
-+	if (n >= (int)sizeof(search)) {
-+		buf[n] = 0;
-+		if (strstr(buf, search) != NULL) {
-+			no_platform = 1;
-+			return 1;
-+		}
-+	}
-+	no_platform = 0;
-+	return 0;
-+}
-+
-+void imsm_set_no_platform(int v)
-+{
-+	no_platform = v;
-+}
-+
- const char *get_sys_dev_type(enum sys_dev_type type)
- {
- 	if (type >= SYS_DEV_MAX)
-@@ -2699,7 +2736,7 @@ static int detail_platform_imsm(int verbose, int enumerate_only, char *controlle
- 	int result=1;
- 
- 	if (enumerate_only) {
--		if (check_env("IMSM_NO_PLATFORM"))
-+		if (check_no_platform())
- 			return 0;
- 		list = find_intel_devices();
- 		if (!list)
-@@ -4722,7 +4759,7 @@ static int find_intel_hba_capability(int fd, struct intel_super *super, char *de
- 		       devname);
- 		return 1;
- 	}
--	if (!is_fd_valid(fd) || check_env("IMSM_NO_PLATFORM")) {
-+	if (!is_fd_valid(fd) || check_no_platform()) {
- 		super->orom = NULL;
- 		super->hba = NULL;
- 		return 0;
-@@ -10697,7 +10734,7 @@ static int imsm_get_allowed_degradation(int level, int raid_disks,
-  ******************************************************************************/
- int validate_container_imsm(struct mdinfo *info)
- {
--	if (check_env("IMSM_NO_PLATFORM"))
-+	if (check_no_platform())
- 		return 0;
- 
- 	struct sys_dev *idev;
-diff --git a/systemd/mdmon@.service b/systemd/mdmon@.service
-index cb6482d9ff29..e7ee17a8bf91 100644
---- a/systemd/mdmon@.service
-+++ b/systemd/mdmon@.service
-@@ -12,9 +12,6 @@ Before=initrd-switch-root.target
- Documentation=man:mdmon(8)
- 
- [Service]
--# mdmon should never complain due to lack of a platform,
--# that is mdadm's job if at all.
--Environment=IMSM_NO_PLATFORM=1
- # The mdmon starting in the initramfs (with dracut at least)
- # cannot see sysfs after root is mounted, so we will have to
- # 'takeover'.  As the '--offroot --takeover' don't hurt when
-
+在 2023/2/22 12:09, linan666@huaweicloud.com 写道:
+> From: Li Nan <linan122@huawei.com>
+> 
+> Li Nan (2):
+>    md/raid10: fix taks hung in raid10d
+>    md/raid10: fix null-ptr-deref in raid10_sync_request
+> 
+>   drivers/md/raid10.c | 26 +++++++++++++++++---------
+>   1 file changed, 17 insertions(+), 9 deletions(-)
+> 
 
