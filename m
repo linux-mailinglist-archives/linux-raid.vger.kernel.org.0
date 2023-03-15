@@ -2,112 +2,140 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8706F6BB6DD
-	for <lists+linux-raid@lfdr.de>; Wed, 15 Mar 2023 16:02:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 70B4F6BB811
+	for <lists+linux-raid@lfdr.de>; Wed, 15 Mar 2023 16:38:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232693AbjCOPCv (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 15 Mar 2023 11:02:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45390 "EHLO
+        id S232222AbjCOPie (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 15 Mar 2023 11:38:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232318AbjCOPCc (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 15 Mar 2023 11:02:32 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5539C6F4B3
-        for <linux-raid@vger.kernel.org>; Wed, 15 Mar 2023 08:01:38 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 0D79F1FD7C;
-        Wed, 15 Mar 2023 15:01:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1678892487; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FhekvPnw88JecXtqKAPfB8BWggLLDulP9x+6ZfxYjX8=;
-        b=g3WLLOw/UDWheQsqpUwgZ6E7Ri0smPE7tknW795cFUPWRSGzdMvBH8g4eEHGA2kI6gwEF8
-        kzMA4Q6jt9yLC393SGiLmfebFV20hi9CpTIrTYiM3pJmbXhZ35pS0zC/505QyZGFuNPAjl
-        gd7bxZLLmnCqh10Sx9BpwQ6YWG1jafQ=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A724213A00;
-        Wed, 15 Mar 2023 15:01:26 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id oCcyJ8bdEWS1WwAAMHmgww
-        (envelope-from <mwilck@suse.com>); Wed, 15 Mar 2023 15:01:26 +0000
-Message-ID: <e5e2cf8fc9903aab6a781c5b925d12023a59b387.camel@suse.com>
-Subject: Re: [QUESTION] How to fix the race of "mdadm --add" and "mdadm
- mdadm --incremental --export"
-From:   Martin Wilck <mwilck@suse.com>
-To:     Li Xiao Keng <lixiaokeng@huawei.com>,
-        Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
-        Song Liu <song@kernel.org>
-Cc:     Jes Sorensen <jes@trained-monkey.org>,
-        Paul Menzel <pmenzel@molgen.mpg.de>, Coly Li <colyli@suse.de>,
-        linux-raid@vger.kernel.org, linfeilong <linfeilong@huawei.com>,
-        louhongxiang@huawei.com,
-        "liuzhiqiang (I)" <liuzhiqiang26@huawei.com>,
-        miaoguanqin <miaoguanqin@huawei.com>
-Date:   Wed, 15 Mar 2023 16:01:26 +0100
-In-Reply-To: <5fe3dfca-10ad-989a-717d-3007b04163ed@huawei.com>
-References: <252cdcda-afcd-ce76-00cf-c138136e70ab@huawei.com>
-         <c00c211a3126d7a30c662117d28f3a4a9c81f7dc.camel@suse.com>
-         <20230314165938.00003030@linux.intel.com>
-         <04a4cc6aac10cd24d5bc0b3485d47f6ccb752eab.camel@suse.com>
-         <20230315111027.0000372d@linux.intel.com>
-         <cbea1358-768d-d5f7-5733-06687ad3243a@huawei.com>
-         <c3d451cc0c96d1a8c8d129448c1d7c3e340e8fac.camel@suse.com>
-         <5fe3dfca-10ad-989a-717d-3007b04163ed@huawei.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4 
+        with ESMTP id S232663AbjCOPiY (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 15 Mar 2023 11:38:24 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B54A2D56
+        for <linux-raid@vger.kernel.org>; Wed, 15 Mar 2023 08:38:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1678894698; x=1710430698;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=my+1eaYYbjkuQi8/aV/P27e7gqYYBgLvC5nNOOiwsmM=;
+  b=Qfwvnr6dnyXX6csID00S8Re1lYPkNqICT+ZwcvQVTEA83HZ/k4Skl3Bw
+   mP/wJu52CTovvvIqlRqWA95DA0pOyNMgJwelq1xLgNP8+9EKnciT3e1Vw
+   YeJb5EKfgAsL0Xyc22HSE7n3mFxfjMW8qItDlDBzyZObA0EngKCdEWQgq
+   7yqFKSnqmCkghJr9d3IUqI2UFQt8j2xULTpQ+4ma+5OchkNCvDVke/d2g
+   /7xlXF2d/isVncFaoZcD+zhavGaFlnsZYmCQtWzqmTEoyc9oSEXCo3+Zx
+   6faGiMWxFsf6caISjq4ryHg6dfpE7CPN35a/YUQ9bAesEDhA6TwQ7Yj8y
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10650"; a="321577058"
+X-IronPort-AV: E=Sophos;i="5.98,262,1673942400"; 
+   d="scan'208";a="321577058"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2023 08:37:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10650"; a="711965134"
+X-IronPort-AV: E=Sophos;i="5.98,262,1673942400"; 
+   d="scan'208";a="711965134"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 15 Mar 2023 08:37:56 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pcTCM-0007pP-1x;
+        Wed, 15 Mar 2023 15:37:54 +0000
+Date:   Wed, 15 Mar 2023 23:37:15 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Jon Derrick <jonathan.derrick@linux.dev>
+Cc:     oe-kbuild-all@lists.linux.dev, linux-raid@vger.kernel.org,
+        Song Liu <song@kernel.org>, Christoph Hellwig <hch@lst.de>
+Subject: [song-md:md-next 6/14] drivers/md/md-bitmap.c:242 __write_sb_page()
+ warn: unsigned 'offset' is never less than zero.
+Message-ID: <202303152311.cmIqIgUw-lkp@intel.com>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Wed, 2023-03-15 at 22:57 +0800, Li Xiao Keng wrote:
->=20
->=20
-> On 2023/3/15 22:14, Martin Wilck wrote:
-> > On Wed, 2023-03-15 at 21:10 +0800, Li Xiao Keng wrote:
-> > > >=20
-> > > =A0 I test move close() after ioctl(). The reason of EBUSY is that
-> > > mdadm
-> > > open(sdf) with O_EXCL. So fd should be closed before ioctl. When
-> > > I
-> > > remove
-> > > O_EXCL, ioctl() will return success.
-> >=20
-> > This makes sense. I suppose mdadm must use O_EXCL if it modifies
-> > RAID
-> > meta data, otherwise data corruption is just too likely. It is also
-> > impossible to drop the O_EXCL flag with fcntl() without closing the
-> > fd.
-> >=20
-> > So, if mdadm must close the fd before calling ioctl(), the race can
-> > hardly be avoided. The close() will cause a uevent, and nothing
-> > prevents the udev rules from running before the ioctl() returns.
-> >=20
-> =A0 Now I find that close() cause a change udev. Is it necessary to
-> import
-> "mdadm --incremental --export" when change udev cause? Can we ignore
-> it?
+tree:   git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git md-next
+head:   703c560db9a7b61c6ac7cb5fd634d7d5c1c4f38f
+commit: d0c7aab97dbfa289ea6ac06acf65c5191f41f9c6 [6/14] md: Fix types in sb writer
+config: ia64-randconfig-m031-20230312 (https://download.01.org/0day-ci/archive/20230315/202303152311.cmIqIgUw-lkp@intel.com/config)
+compiler: ia64-linux-gcc (GCC) 12.1.0
 
-Normally this is what you want to happen if a change uevent for a MD
-member device is processed.
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202303152311.cmIqIgUw-lkp@intel.com/
 
-The case you're looking at is the exception, as another instance of
-mdamn is handling the device right at this point in time.
+smatch warnings:
+drivers/md/md-bitmap.c:242 __write_sb_page() warn: unsigned 'offset' is never less than zero.
 
-Martin
+vim +/offset +242 drivers/md/md-bitmap.c
 
+b2d2c4ceaddc30 drivers/md/bitmap.c    NeilBrown        2008-09-01  211  
+459bd47c515277 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  212  static int __write_sb_page(struct md_rdev *rdev, struct bitmap *bitmap,
+459bd47c515277 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  213  			   struct page *page)
+a654b9d8f851f4 drivers/md/bitmap.c    NeilBrown        2005-06-21  214  {
+a6ff7e089c7fca drivers/md/bitmap.c    Jonathan Brassow 2011-01-14  215  	struct block_device *bdev;
+fd01b88c75a718 drivers/md/bitmap.c    NeilBrown        2011-10-11  216  	struct mddev *mddev = bitmap->mddev;
+1ec885cdd01a9a drivers/md/bitmap.c    NeilBrown        2012-05-22  217  	struct bitmap_storage *store = &bitmap->storage;
+d0c7aab97dbfa2 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  218  	sector_t offset = mddev->bitmap_info.offset;
+d0c7aab97dbfa2 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  219  	sector_t ps, sboff, doff;
+d0c7aab97dbfa2 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  220  	unsigned int size = PAGE_SIZE;
+a6ff7e089c7fca drivers/md/bitmap.c    Jonathan Brassow 2011-01-14  221  
+a6ff7e089c7fca drivers/md/bitmap.c    Jonathan Brassow 2011-01-14  222  	bdev = (rdev->meta_bdev) ? rdev->meta_bdev : rdev->bdev;
+9b1215c102d4b1 drivers/md/bitmap.c    NeilBrown        2012-05-22  223  	if (page->index == store->file_pages - 1) {
+d0c7aab97dbfa2 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  224  		unsigned int last_page_size = store->bytes & (PAGE_SIZE - 1);
+459bd47c515277 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  225  
+9b1215c102d4b1 drivers/md/bitmap.c    NeilBrown        2012-05-22  226  		if (last_page_size == 0)
+9b1215c102d4b1 drivers/md/bitmap.c    NeilBrown        2012-05-22  227  			last_page_size = PAGE_SIZE;
+9b1215c102d4b1 drivers/md/bitmap.c    NeilBrown        2012-05-22  228  		size = roundup(last_page_size,
+a6ff7e089c7fca drivers/md/bitmap.c    Jonathan Brassow 2011-01-14  229  			       bdev_logical_block_size(bdev));
+9b1215c102d4b1 drivers/md/bitmap.c    NeilBrown        2012-05-22  230  	}
+459bd47c515277 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  231  
+d0c7aab97dbfa2 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  232  	ps = page->index * PAGE_SIZE / SECTOR_SIZE;
+d0c7aab97dbfa2 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  233  	sboff = rdev->sb_start + offset;
+d0c7aab97dbfa2 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  234  	doff = rdev->data_offset;
+d0c7aab97dbfa2 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  235  
+459bd47c515277 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  236  	/* Just make sure we aren't corrupting data or metadata */
+f6af949c567211 drivers/md/bitmap.c    NeilBrown        2009-12-14  237  	if (mddev->external) {
+f6af949c567211 drivers/md/bitmap.c    NeilBrown        2009-12-14  238  		/* Bitmap could be anywhere. */
+d0c7aab97dbfa2 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  239  		if (sboff + ps > doff &&
+d0c7aab97dbfa2 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  240  		    sboff < (doff + mddev->dev_sectors + PAGE_SIZE / SECTOR_SIZE))
+459bd47c515277 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  241  			return -EINVAL;
+f6af949c567211 drivers/md/bitmap.c    NeilBrown        2009-12-14 @242  	} else if (offset < 0) {
+f0d76d70bc77b9 drivers/md/bitmap.c    NeilBrown        2007-07-17  243  		/* DATA  BITMAP METADATA  */
+d0c7aab97dbfa2 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  244  		if (offset + ps + size / SECTOR_SIZE > 0)
+f0d76d70bc77b9 drivers/md/bitmap.c    NeilBrown        2007-07-17  245  			/* bitmap runs in to metadata */
+459bd47c515277 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  246  			return -EINVAL;
+459bd47c515277 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  247  
+d0c7aab97dbfa2 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  248  		if (doff + mddev->dev_sectors > sboff)
+f0d76d70bc77b9 drivers/md/bitmap.c    NeilBrown        2007-07-17  249  			/* data runs in to bitmap */
+459bd47c515277 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  250  			return -EINVAL;
+0f420358e3a2ab drivers/md/bitmap.c    Andre Noll       2008-07-11  251  	} else if (rdev->sb_start < rdev->data_offset) {
+f0d76d70bc77b9 drivers/md/bitmap.c    NeilBrown        2007-07-17  252  		/* METADATA BITMAP DATA */
+d0c7aab97dbfa2 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  253  		if (sboff + ps + size / SECTOR_SIZE > doff)
+f0d76d70bc77b9 drivers/md/bitmap.c    NeilBrown        2007-07-17  254  			/* bitmap runs in to data */
+459bd47c515277 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  255  			return -EINVAL;
+f0d76d70bc77b9 drivers/md/bitmap.c    NeilBrown        2007-07-17  256  	} else {
+f0d76d70bc77b9 drivers/md/bitmap.c    NeilBrown        2007-07-17  257  		/* DATA METADATA BITMAP - no problems */
+f0d76d70bc77b9 drivers/md/bitmap.c    NeilBrown        2007-07-17  258  	}
+459bd47c515277 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  259  
+d0c7aab97dbfa2 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  260  	md_super_write(mddev, rdev, sboff + ps, (int) size, page);
+459bd47c515277 drivers/md/md-bitmap.c Jon Derrick      2023-02-24  261  	return 0;
+ab6085c795a71b drivers/md/bitmap.c    NeilBrown        2007-05-23  262  }
+a654b9d8f851f4 drivers/md/bitmap.c    NeilBrown        2005-06-21  263  
+
+:::::: The code at line 242 was first introduced by commit
+:::::: f6af949c5672115313cc3c976d85b0533f607d7e md: support bitmap offset appropriate for external-metadata arrays.
+
+:::::: TO: NeilBrown <neilb@suse.de>
+:::::: CC: NeilBrown <neilb@suse.de>
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
