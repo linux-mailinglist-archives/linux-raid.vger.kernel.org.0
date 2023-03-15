@@ -2,180 +2,184 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A77CE6BA7A6
-	for <lists+linux-raid@lfdr.de>; Wed, 15 Mar 2023 07:19:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E7736BAA09
+	for <lists+linux-raid@lfdr.de>; Wed, 15 Mar 2023 08:52:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231166AbjCOGTH (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 15 Mar 2023 02:19:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52166 "EHLO
+        id S231942AbjCOHwx (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 15 Mar 2023 03:52:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230461AbjCOGTC (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 15 Mar 2023 02:19:02 -0400
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 007A01BADF;
-        Tue, 14 Mar 2023 23:18:59 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.169])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Pc0b35SVGz4f4PQs;
-        Wed, 15 Mar 2023 14:18:55 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.127.227])
-        by APP3 (Coremail) with SMTP id _Ch0CgCnUyFNYxFklvvMEw--.20241S9;
-        Wed, 15 Mar 2023 14:18:57 +0800 (CST)
-From:   Yu Kuai <yukuai1@huaweicloud.com>
-To:     agk@redhat.com, snitzer@kernel.org, song@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com,
-        yangerkun@huawei.com
-Subject: [PATCH v2 5/5] md: protect md_thread with a new disk level spin lock
-Date:   Wed, 15 Mar 2023 14:18:10 +0800
-Message-Id: <20230315061810.653263-6-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20230315061810.653263-1-yukuai1@huaweicloud.com>
-References: <20230315061810.653263-1-yukuai1@huaweicloud.com>
+        with ESMTP id S231993AbjCOHw1 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 15 Mar 2023 03:52:27 -0400
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 564756FFF5;
+        Wed, 15 Mar 2023 00:52:05 -0700 (PDT)
+Received: from [192.168.1.190] (ip5b426bea.dynamic.kabel-deutschland.de [91.66.107.234])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        (Authenticated sender: buczek)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 6C79C61CC457B;
+        Wed, 15 Mar 2023 08:52:02 +0100 (CET)
+Message-ID: <37a0cd0f-2613-e2de-286f-b762312f6c3e@molgen.mpg.de>
+Date:   Wed, 15 Mar 2023 08:52:02 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: md_raid: mdX_raid6 looping after sync_action "check" to "idle"
+ transition
+Content-Language: en-US
+To:     Marc Smith <msmith626@gmail.com>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Cc:     Song Liu <song@kernel.org>, linux-raid@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        it+raid@molgen.mpg.de
+References: <aa9567fd-38e1-7b9c-b3e1-dc2fdc055da5@molgen.mpg.de>
+ <55e30408-ac63-965f-769f-18be5fd5885c@molgen.mpg.de>
+ <d95aa962-9750-c27c-639a-2362bdb32f41@cloud.ionos.com>
+ <30576384-682c-c021-ff16-bebed8251365@molgen.mpg.de>
+ <cdc0b03c-db53-35bc-2f75-93bbca0363b5@molgen.mpg.de>
+ <bc342de0-98d2-1733-39cd-cc1999777ff3@molgen.mpg.de>
+ <c3390ab0-d038-f1c3-5544-67ae9c8408b1@cloud.ionos.com>
+ <a27c5a64-62bf-592c-e547-1e8e904e3c97@molgen.mpg.de>
+ <6c7008df-942e-13b1-2e70-a058e96ab0e9@cloud.ionos.com>
+ <12f09162-c92f-8fbb-8382-cba6188bfb29@molgen.mpg.de>
+ <6757d55d-ada8-9b7e-b7fd-2071fe905466@cloud.ionos.com>
+ <93d8d623-8aec-ad91-490c-a414c4926fb2@molgen.mpg.de>
+ <0bb7c8d8-6b96-ce70-c5ee-ba414de10561@cloud.ionos.com>
+ <e271e183-20e9-8ca2-83eb-225d4d7ab5db@molgen.mpg.de>
+ <1cdfceb6-f39b-70e1-3018-ea14dbe257d9@cloud.ionos.com>
+ <7733de01-d1b0-e56f-db6a-137a752f7236@molgen.mpg.de>
+ <d92922af-f411-fc53-219f-154de855cd13@cloud.ionos.com>
+ <CAH6h+hf7Y-kurBJG+pnH6WCQiaEK+Jq3KG5JOGnHJ4Uw6AbUjg@mail.gmail.com>
+From:   Donald Buczek <buczek@molgen.mpg.de>
+In-Reply-To: <CAH6h+hf7Y-kurBJG+pnH6WCQiaEK+Jq3KG5JOGnHJ4Uw6AbUjg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: _Ch0CgCnUyFNYxFklvvMEw--.20241S9
-X-Coremail-Antispam: 1UD129KBjvJXoWxXFyUZF4UXr1xtr1Uuw48JFb_yoW5uF45pa
-        yIqF9xAr4UZws8ZrnrGa4v93WYqw1vgayUJrW3u3WfA3WUG3yaqryY9Fy8ZFn8A3W3CFsx
-        J3WrGayrurWDKr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9K14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-        kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-        z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-        4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-        3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-        IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-        M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxGrw
-        CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
-        14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
-        IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAv
-        wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
-        v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUOBTYUUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-0.5 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
-        MAY_BE_FORGED,SPF_HELO_NONE,SPF_NONE autolearn=no autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+Hi,
 
-Our test reports a uaf for 'mddev->sync_thread':
+I can just comment, that the simple patch I proposed at https://lore.kernel.org/linux-raid/bc342de0-98d2-1733-39cd-cc1999777ff3@molgen.mpg.de/ works for us with several different kernel versions and currently 195 raid6 jbods on 105 systems going through several "idle->sync->idle" transitions each month for over two years now.
 
-T1                      T2
-md_start_sync
- md_register_thread
-			raid1d
-			 md_check_recovery
-			  md_reap_sync_thread
-			   md_unregister_thread
-			    kfree
+So if you suffer from the problem and are able to add patches to the kernel you use, you might give it a try.
 
- md_wakeup_thread
-  wake_up
-  ->sync_thread was freed
+Best
+   Donald
 
-Currently, a global spinlock 'pers_lock' is borrowed to protect
-'mddev->thread', this problem can be fixed likewise, however, there might
-be similar problem for other md_thread, and I really don't like the idea to
-borrow a global lock.
+On 3/14/23 14:25, Marc Smith wrote:
+> On Mon, Feb 8, 2021 at 7:49 PM Guoqing Jiang
+> <guoqing.jiang@cloud.ionos.com> wrote:t
+>>
+>> Hi Donald,
+>>
+>> On 2/8/21 19:41, Donald Buczek wrote:
+>>> Dear Guoqing,
+>>>
+>>> On 08.02.21 15:53, Guoqing Jiang wrote:
+>>>>
+>>>>
+>>>> On 2/8/21 12:38, Donald Buczek wrote:
+>>>>>> 5. maybe don't hold reconfig_mutex when try to unregister
+>>>>>> sync_thread, like this.
+>>>>>>
+>>>>>>           /* resync has finished, collect result */
+>>>>>>           mddev_unlock(mddev);
+>>>>>>           md_unregister_thread(&mddev->sync_thread);
+>>>>>>           mddev_lock(mddev);
+>>>>>
+>>>>> As above: While we wait for the sync thread to terminate, wouldn't it
+>>>>> be a problem, if another user space operation takes the mutex?
+>>>>
+>>>> I don't think other places can be blocked while hold mutex, otherwise
+>>>> these places can cause potential deadlock. Please try above two lines
+>>>> change. And perhaps others have better idea.
+>>>
+>>> Yes, this works. No deadlock after >11000 seconds,
+>>>
+>>> (Time till deadlock from previous runs/seconds: 1723, 37, 434, 1265,
+>>> 3500, 1136, 109, 1892, 1060, 664, 84, 315, 12, 820 )
+>>
+>> Great. I will send a formal patch with your reported-by and tested-by.
+>>
+>> Thanks,
+>> Guoqing
+> 
+> I'm still hitting this issue with Linux 5.4.229 -- it looks like 1/2
+> of the patches that supposedly resolve this were applied to the stable
+> kernels, however, one was omitted due to a regression:
+> md: don't unregister sync_thread with reconfig_mutex held (upstream
+> commit 8b48ec23cc51a4e7c8dbaef5f34ebe67e1a80934)
+> 
+> I don't see any follow-up on the thread from June 8th 2022 asking for
+> this patch to be dropped from all stable kernels since it caused a
+> regression.
+> 
+> The patch doesn't appear to be present in the current mainline kernel
+> (6.3-rc2) either. So I assume this issue is still present there, or it
+> was resolved differently and I just can't find the commit/patch.
+> 
+> I can induce the issue by using Donald's script above which will
+> eventually result in hangs:
+> ...
+> 147948.504621] INFO: task md_test_2.sh:68033 blocked for more than 122 seconds.
+> [147948.504624]       Tainted: P           OE     5.4.229-esos.prod #1
+> [147948.504624] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+> disables this message.
+> [147948.504625] md_test_2.sh    D    0 68033      1 0x00000004
+> [147948.504627] Call Trace:
+> [147948.504634]  __schedule+0x4ab/0x4f3
+> [147948.504637]  ? usleep_range+0x7a/0x7a
+> [147948.504638]  schedule+0x67/0x81
+> [147948.504639]  schedule_timeout+0x2c/0xe5
+> [147948.504643]  ? do_raw_spin_lock+0x2b/0x52
+> [147948.504644]  __wait_for_common+0xc4/0x13a
+> [147948.504647]  ? wake_up_q+0x40/0x40
+> [147948.504649]  kthread_stop+0x9a/0x117
+> [147948.504653]  md_unregister_thread+0x43/0x4d
+> [147948.504655]  md_reap_sync_thread+0x1c/0x1d5
+> [147948.504657]  action_store+0xc9/0x284
+> [147948.504658]  md_attr_store+0x9f/0xb8
+> [147948.504661]  kernfs_fop_write+0x10a/0x14c
+> [147948.504664]  vfs_write+0xa0/0xdd
+> [147948.504666]  ksys_write+0x71/0xba
+> [147948.504668]  do_syscall_64+0x52/0x60
+> [147948.504671]  entry_SYSCALL_64_after_hwframe+0x5c/0xc1
+> ...
+> [147948.504748] INFO: task md120_resync:135315 blocked for more than
+> 122 seconds.
+> [147948.504749]       Tainted: P           OE     5.4.229-esos.prod #1
+> [147948.504749] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+> disables this message.
+> [147948.504749] md120_resync    D    0 135315      2 0x80004000
+> [147948.504750] Call Trace:
+> [147948.504752]  __schedule+0x4ab/0x4f3
+> [147948.504754]  ? printk+0x53/0x6a
+> [147948.504755]  schedule+0x67/0x81
+> [147948.504756]  md_do_sync+0xae7/0xdd9
+> [147948.504758]  ? remove_wait_queue+0x41/0x41
+> [147948.504759]  md_thread+0x128/0x151
+> [147948.504761]  ? _raw_spin_lock_irqsave+0x31/0x5d
+> [147948.504762]  ? md_start_sync+0xdc/0xdc
+> [147948.504763]  kthread+0xe4/0xe9
+> [147948.504764]  ? kthread_flush_worker+0x70/0x70
+> [147948.504765]  ret_from_fork+0x35/0x40
+> ...
+> 
+> This happens on 'raid6' MD RAID arrays that initially have sync_action==resync.
+> 
+> Any guidance would be greatly appreciated.
+> 
+> --Marc
 
-This patch use a disk level spinlock to protect md_thread in relevant apis.
-
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- drivers/md/md.c | 28 ++++++++++++----------------
- drivers/md/md.h |  1 +
- 2 files changed, 13 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index ab9299187cfe..926285bece5d 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -663,6 +663,7 @@ void mddev_init(struct mddev *mddev)
- 	atomic_set(&mddev->active, 1);
- 	atomic_set(&mddev->openers, 0);
- 	spin_lock_init(&mddev->lock);
-+	spin_lock_init(&mddev->thread_lock);
- 	atomic_set(&mddev->flush_pending, 0);
- 	init_waitqueue_head(&mddev->sb_wait);
- 	init_waitqueue_head(&mddev->recovery_wait);
-@@ -801,13 +802,8 @@ void mddev_unlock(struct mddev *mddev)
- 	} else
- 		mutex_unlock(&mddev->reconfig_mutex);
- 
--	/* As we've dropped the mutex we need a spinlock to
--	 * make sure the thread doesn't disappear
--	 */
--	spin_lock(&pers_lock);
- 	md_wakeup_thread(&mddev->thread, mddev);
- 	wake_up(&mddev->sb_wait);
--	spin_unlock(&pers_lock);
- }
- EXPORT_SYMBOL_GPL(mddev_unlock);
- 
-@@ -7895,8 +7891,11 @@ static int md_thread(void *arg)
- 
- void md_wakeup_thread(struct md_thread **threadp, struct mddev *mddev)
- {
--	struct md_thread *thread = *threadp;
-+	struct md_thread *thread;
- 
-+	spin_lock_irq(&mddev->thread_lock);
-+	thread = *threadp;
-+	spin_unlock_irq(&mddev->thread_lock);
- 	if (thread) {
- 		pr_debug("md: waking up MD thread %s.\n", thread->tsk->comm);
- 		set_bit(THREAD_WAKEUP, &thread->flags);
-@@ -7929,7 +7928,9 @@ int md_register_thread(struct md_thread **threadp,
- 		return err;
- 	}
- 
-+	spin_lock_irq(&mddev->thread_lock);
- 	*threadp = thread;
-+	spin_unlock_irq(&mddev->thread_lock);
- 	return 0;
- }
- EXPORT_SYMBOL(md_register_thread);
-@@ -7938,18 +7939,13 @@ void md_unregister_thread(struct md_thread **threadp, struct mddev *mddev)
- {
- 	struct md_thread *thread;
- 
--	/*
--	 * Locking ensures that mddev_unlock does not wake_up a
--	 * non-existent thread
--	 */
--	spin_lock(&pers_lock);
-+	spin_lock_irq(&mddev->thread_lock);
- 	thread = *threadp;
--	if (!thread) {
--		spin_unlock(&pers_lock);
--		return;
--	}
- 	*threadp = NULL;
--	spin_unlock(&pers_lock);
-+	spin_unlock_irq(&mddev->thread_lock);
-+
-+	if (!thread)
-+		return;
- 
- 	pr_debug("interrupting MD-thread pid %d\n", task_pid_nr(thread->tsk));
- 	kthread_stop(thread->tsk);
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index 8f4137ad2dde..ca182d21dd8d 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -367,6 +367,7 @@ struct mddev {
- 	int				new_chunk_sectors;
- 	int				reshape_backwards;
- 
-+	spinlock_t			thread_lock;
- 	struct md_thread		*thread;	/* management thread */
- 	struct md_thread		*sync_thread;	/* doing resync or reconstruct */
- 
 -- 
-2.31.1
-
+Donald Buczek
+buczek@molgen.mpg.de
+Tel: +49 30 8413 1433
