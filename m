@@ -2,130 +2,78 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BCD1D6C1AD3
-	for <lists+linux-raid@lfdr.de>; Mon, 20 Mar 2023 17:03:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 379256C1ED9
+	for <lists+linux-raid@lfdr.de>; Mon, 20 Mar 2023 19:01:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232335AbjCTQDZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 20 Mar 2023 12:03:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58616 "EHLO
+        id S230128AbjCTSBZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 20 Mar 2023 14:01:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233305AbjCTQDG (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 20 Mar 2023 12:03:06 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B22FB658C
-        for <linux-raid@vger.kernel.org>; Mon, 20 Mar 2023 08:52:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679327541; x=1710863541;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=chyLW3Lo7zkYu/6OtpaFPQkIA2axrlU0IgRfvpmMdpI=;
-  b=Uc5G343isgPuqTAXu+HcI96FV8VCgniytOMwhWZ2X6WRKX1xFFJ9zXdR
-   SuJ3Q2SCpySQG/vPWF6G8AkYmcr0brGReHGz/1FIqJwXvfFceO2/FGz9v
-   g9rDvG62RWzqPL0sRFKZH+S9cbKRzI+ISQgr3NM09gOFWp30siPj39E/P
-   YTUmZ7EAKli+I4hpxncgEfvTSAsbYZ23O+QkK+d8mr85fVp46C9xBsDQJ
-   Gjo3FpitdO30zBe4jx4WzfWRDISfuji9CJ9VQmeeOxnEl2Fm/ZH/+h5Rh
-   nmOOpwIx8oAk51OiKgrZo74+PpL0i4SyRbEcgqiXaTtUxFgNLTpVL6yNM
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="341060513"
-X-IronPort-AV: E=Sophos;i="5.98,276,1673942400"; 
-   d="scan'208";a="341060513"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 08:51:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="658388219"
-X-IronPort-AV: E=Sophos;i="5.98,276,1673942400"; 
-   d="scan'208";a="658388219"
-Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.237.142.82])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 08:51:21 -0700
-Date:   Mon, 20 Mar 2023 16:51:17 +0100
-From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-To:     Martin Wilck <mwilck@suse.com>
-Cc:     Li Xiao Keng <lixiaokeng@huawei.com>, Song Liu <song@kernel.org>,
-        Jes Sorensen <jes@trained-monkey.org>,
-        Paul Menzel <pmenzel@molgen.mpg.de>, Coly Li <colyli@suse.de>,
-        linux-raid@vger.kernel.org, linfeilong <linfeilong@huawei.com>,
-        louhongxiang@huawei.com,
-        "liuzhiqiang (I)" <liuzhiqiang26@huawei.com>,
-        miaoguanqin <miaoguanqin@huawei.com>
-Subject: Re: [QUESTION] How to fix the race of "mdadm --add" and "mdadm
- mdadm --incremental --export"
-Message-ID: <20230320165117.000011d5@linux.intel.com>
-In-Reply-To: <b3b124db659115dd2523dab828ad463d88afbe54.camel@suse.com>
-References: <252cdcda-afcd-ce76-00cf-c138136e70ab@huawei.com>
-        <c00c211a3126d7a30c662117d28f3a4a9c81f7dc.camel@suse.com>
-        <20230314165938.00003030@linux.intel.com>
-        <04a4cc6aac10cd24d5bc0b3485d47f6ccb752eab.camel@suse.com>
-        <20230315111027.0000372d@linux.intel.com>
-        <cbea1358-768d-d5f7-5733-06687ad3243a@huawei.com>
-        <c3d451cc0c96d1a8c8d129448c1d7c3e340e8fac.camel@suse.com>
-        <5fe3dfca-10ad-989a-717d-3007b04163ed@huawei.com>
-        <e5e2cf8fc9903aab6a781c5b925d12023a59b387.camel@suse.com>
-        <20230316114314.00003004@linux.intel.com>
-        <b3b124db659115dd2523dab828ad463d88afbe54.camel@suse.com>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S230472AbjCTSAy (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 20 Mar 2023 14:00:54 -0400
+Received: from sender11-op-o11.zoho.eu (sender11-op-o11.zoho.eu [31.186.226.225])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DB7AAF23
+        for <linux-raid@vger.kernel.org>; Mon, 20 Mar 2023 10:55:42 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1679332152; cv=none; 
+        d=zohomail.eu; s=zohoarc; 
+        b=aDG4YWiqxAp5Gwfm2d4Qj0zREJH4l/BHMObiETHotrU7ZX81Gh7pr7NyUVin2/DVdUt4AaKdexnEeZrxP809CX52oUUA0b0iz+HhXdHDpzIy9DA8DQIHHyDNcGVBFuLXYHXG+9miQyCI9mjZ9gxsyWUl6AXXfKl7PCbuiPFVsiI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+        t=1679332152; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=bJlLsX0nyFaYF7hIUH9bXTjaDDsycbDrUuCp6TXlzcA=; 
+        b=iJpJS2IBY5a2mSgEDf2s9/zX+UfdV2dgnmokRRgbd/xH9UomSHRAbzV39POmk4PHAbHtCB1sD7gnXVYWn0RNgo74G9ViNSSy+RbthkHQyxzDoE9QJD0b/rmXQIQ9dwGvqFMyVVir8Sbrz39r7qp2iYTwcYEMfQaUJulhG1ekW8w=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
+        dmarc=pass header.from=<jes@trained-monkey.org>
+Received: from [192.168.99.50] (pool-98-113-67-206.nycmny.fios.verizon.net [98.113.67.206]) by mx.zoho.eu
+        with SMTPS id 167933215020965.08403524953167; Mon, 20 Mar 2023 18:09:10 +0100 (CET)
+Message-ID: <a319db18-f56a-0b03-8eb3-64a10fe69e63@trained-monkey.org>
+Date:   Mon, 20 Mar 2023 13:09:08 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH v2] Improvements for IMSM_NO_PLATFORM testing.
+Content-Language: en-US
+To:     NeilBrown <neilb@suse.de>
+Cc:     linux-raid <linux-raid@vger.kernel.org>
+References: <167928383495.8008.10987312807759367944@noble.neil.brown.name>
+From:   Jes Sorensen <jes@trained-monkey.org>
+In-Reply-To: <167928383495.8008.10987312807759367944@noble.neil.brown.name>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Mon, 20 Mar 2023 16:36:44 +0100
-Martin Wilck <mwilck@suse.com> wrote:
+On 3/19/23 23:43, NeilBrown wrote:
+> 
+> Factor out IMSM_NO_PLATFORM testing into a single function that caches
+> the result.
+> 
+> Allow mdmon to explicitly set the result to "1" so that we don't need
+> the ENV var in the unit file
+> 
+> Check if the kernel command line contains "mdadm.imsm.test=1" and in
+> that case assert NO_PLATFORM.  This simplifies testing in a virtual
+> machine.
+> 
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
+>  mdadm.8.in             |  5 +++++
+>  mdadm.h                |  2 ++
+>  mdmon.c                |  6 ++++++
+>  super-intel.c          | 45 +++++++++++++++++++++++++++++++++++++++---
+>  systemd/mdmon@.service |  3 ---
+>  5 files changed, 55 insertions(+), 6 deletions(-)
 
-> On Thu, 2023-03-16 at 11:44 +0100, Mariusz Tkaczyk wrote:
-> > On Wed, 15 Mar 2023 16:01:26 +0100
-> > Martin Wilck <mwilck@suse.com> wrote: =20
-> > >=20
-> > > Normally this is what you want to happen if a change uevent for a
-> > > MD
-> > > member device is processed.
-> > >=20
-> > > The case you're looking at is the exception, as another instance of
-> > > mdamn is handling the device right at this point in time.
-> > >=20
-> > > Martin
-> > >  =20
-> > Hi,
-> > Code snipped from Incremental, devname seems to be our disk:
-> >=20
-> > =A0=A0=A0=A0=A0=A0=A0=A0/* 4/ Check if array exists.
-> > =A0=A0=A0=A0=A0=A0=A0=A0 */
-> > =A0=A0=A0=A0=A0=A0=A0=A0if (map_lock(&map))
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0pr_err("failed to get e=
-xclusive lock on mapfile\n");
-> > =A0=A0=A0=A0=A0=A0=A0=A0/* Now check we can get O_EXCL.=A0 If not, prob=
-ably "mdadm -A"
-> > has
-> > =A0=A0=A0=A0=A0=A0=A0=A0 * taken over
-> > =A0=A0=A0=A0=A0=A0=A0=A0 */
-> > =A0=A0=A0=A0=A0=A0=A0=A0dfd =3D dev_open(devname, O_RDONLY|O_EXCL);
-> >=20
-> > The map_lock in --add should resolve your issue. It seems to be
-> > simplest
-> > option. I we cannot lock udev effectively then it seems to be the
-> > best one.
-> > We need to control adding the device because external metadata is
-> > quite
-> > different and for example in IMSM the initial metadata doesn't point
-> > to
-> > container wanted by user. Hope it clarifies all objections here.
-> >=20
-> > I don't see any blocker from using locking mechanism for --add. =20
->=20
->=20
-> AFAICS it would only help if the code snipped above did not only
-> pr_err() but exit if it can't get an exclusive lock.
->=20
-> Martin
->=20
+Applied!
 
-Indeed. I missed that... Thanks for catching. My idea is no longer valid.
+Thanks,
+Jes
 
-Mariusz
+
