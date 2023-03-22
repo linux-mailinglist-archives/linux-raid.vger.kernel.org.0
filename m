@@ -2,240 +2,208 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 39F496C43A1
-	for <lists+linux-raid@lfdr.de>; Wed, 22 Mar 2023 07:52:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC8B36C43D3
+	for <lists+linux-raid@lfdr.de>; Wed, 22 Mar 2023 08:05:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229555AbjCVGwz (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 22 Mar 2023 02:52:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37858 "EHLO
+        id S229541AbjCVHFu (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 22 Mar 2023 03:05:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230047AbjCVGwl (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 22 Mar 2023 02:52:41 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8B4E2B9EA;
-        Tue, 21 Mar 2023 23:52:37 -0700 (PDT)
+        with ESMTP id S229684AbjCVHFt (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 22 Mar 2023 03:05:49 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 984A758B60
+        for <linux-raid@vger.kernel.org>; Wed, 22 Mar 2023 00:05:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679467957; x=1711003957;
+  t=1679468748; x=1711004748;
   h=date:from:to:cc:subject:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ylgya/uy4m5dg2f0yWBBb1jbOoNOCKIoIbUTuCbiP4c=;
-  b=PDgbxYgO3gKFfDkwDk2lUiuVXBNRK59Miz0Q4ZYVcO2IQcW2mQdCsZGS
-   FqRmJ+ZpBO6XI3F0hLX/34lZVRM3f2gm3UpcKN1XKm2RTtAyzOD8kFp+6
-   DI+/9XpuvbzaA8FlkhYDkLMWajSjFb1ojiFohBYzCwaLIv+MIRXPcRZWe
-   rFrwPj/SiUqo9w/1RrtQ8QrH3TF4NjZQVrFwDej+WLw1/PpckAAzEL6Cf
-   tOzxr5a7Ct7eNXsYj8XpIns2LzEae7NQI83u73o4VNR2BipuNZOLrXJXE
-   73hfA47Njyu2Lq2R0W1UQxf49HD3hjMNm/ySLpdqN66KF5N0eoyIytmt5
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10656"; a="401710162"
+  bh=D9qYI2yUJuU48b/Mn4fBVApxOB2BQkB+vZaQuO3fxOU=;
+  b=R9d9JMFTabIQdi6iHHXQZmFOQWNE+XM1ISL1wNgpqXwnjh3XB9Y7aR/k
+   hDbxTR0J3ODBpQl08j3Sv/HaWPQs7pzIz6jbDP3ZrngckiJwvGt9Pgm9T
+   PQL1w9CoSXZYk5C3mh1FmeI1nEYTt3xFRJ8x/cplRyWeqUJLqbtXG6EQT
+   gH+k6K/xlMqPXqGR2tSt3qM4m8jFgSdlenLO7Lq7pw0vxWTy9f0QDDUN4
+   dzqtA+mJAjbOutJTMl/1OwMZbP8j8TYvdDOca6dBzByL3bnZl0Sm6XIeA
+   8u6pGqUPLWCpwdvUDJkUpkKVKz54Tr7fLwkDxvq7M/KseQ4DQ2kY/eT+w
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10656"; a="366880885"
 X-IronPort-AV: E=Sophos;i="5.98,281,1673942400"; 
-   d="scan'208";a="401710162"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2023 23:51:19 -0700
+   d="scan'208";a="366880885"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2023 00:05:48 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10656"; a="825267927"
+X-IronPort-AV: E=McAfee;i="6600,9927,10656"; a="770944313"
 X-IronPort-AV: E=Sophos;i="5.98,281,1673942400"; 
-   d="scan'208";a="825267927"
+   d="scan'208";a="770944313"
 Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.252.62.75])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2023 23:51:16 -0700
-Date:   Wed, 22 Mar 2023 07:51:11 +0100
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2023 00:05:46 -0700
+Date:   Wed, 22 Mar 2023 08:05:41 +0100
 From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-To:     "NeilBrown" <neilb@suse.de>
-Cc:     "Xiao Ni" <xni@redhat.com>,
-        "Jes Sorensen" <jes@trained-monkey.org>,
-        "Song Liu" <song@kernel.org>,
-        "Linux regressions mailing list" <regressions@lists.linux.dev>,
-        "linux-raid" <linux-raid@vger.kernel.org>,
-        "LKML" <linux-kernel@vger.kernel.org>,
-        "Nikolay Kichukov" <hijacker@oldum.net>,
-        Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [PATCH - mdadm] mdopen: always try create_named_array()
-Message-ID: <20230322075111.000064bc@linux.intel.com>
-In-Reply-To: <167945548970.8008.8910680813298326328@noble.neil.brown.name>
-References: <167875238571.8008.9808655454439667586@noble.neil.brown.name>
-        <CALTww2916uiO8_ViJQXutO2BPasFmiUJtfz8MxW0HKjDzwGFeQ@mail.gmail.com>
-        <167945548970.8008.8910680813298326328@noble.neil.brown.name>
+To:     Wu Guanghao <wuguanghao3@huawei.com>
+Cc:     <song@kernel.org>, <linux-raid@vger.kernel.org>,
+        "liuzhiqiang (I)" <liuzhiqiang26@huawei.com>,
+        <louhongxiang@huawei.com>
+Subject: Re: [PATCH] raid0: fix set_disk_faulty doesn't return -EBUSY
+Message-ID: <20230322080541.00004e8a@linux.intel.com>
+In-Reply-To: <91f6086c-249d-167c-4948-1359d7b4115b@huawei.com>
+References: <df1fc8d7-0a34-aef7-aeeb-db4f59755f78@huawei.com>
+        <20230321111828.0000172d@linux.intel.com>
+        <91f6086c-249d-167c-4948-1359d7b4115b@huawei.com>
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,
-        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Wed, 22 Mar 2023 14:24:49 +1100
-"NeilBrown" <neilb@suse.de> wrote:
+On Wed, 22 Mar 2023 10:24:41 +0800
+Wu Guanghao <wuguanghao3@huawei.com> wrote:
 
-> On Wed, 22 Mar 2023, Xiao Ni wrote:
-> > On Tue, Mar 14, 2023 at 8:08=E2=80=AFAM NeilBrown <neilb@suse.de> wrote=
-: =20
-> > >
-> > >
-> > > mdopen() will use create_named_array() to ask the kernel to create the
-> > > given md array, but only if it is given a number or name.
-> > > If it is NOT given a name and is required to choose one itself using
-> > > find_free_devnm() it does NOT use create_named_array().
-> > >
-> > > On kernels with CONFIG_BLOCK_LEGACY_AUTOLOAD not set, this can result=
- in
-> > > failure to assemble an array.  This can particularly seen when the
-> > > "name" of the array begins with a host name different to the name of =
-the
-> > > host running the command.
-> > >
-> > > So add the missing call to create_named_array().
-> > >
-> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D217074 =20
+> =E5=9C=A8 2023/3/21 18:18, Mariusz Tkaczyk =E5=86=99=E9=81=93:
+> > On Tue, 21 Mar 2023 16:56:37 +0800
+> > Wu Guanghao <wuguanghao3@huawei.com> wrote:
+> >  =20
+> >> The latest kernel version will not report an error through mdadm
+> >> set_disk_faulty.
+> >>
+> >> $ lsblk
+> >> sdb                                           8:16   0   10G  0 disk
+> >> =E2=94=94=E2=94=80md0                                         9:0    0=
+ 19.9G  0 raid0
+> >> sdc                                           8:32   0   10G  0 disk
+> >> =E2=94=94=E2=94=80md0                                         9:0    0=
+ 19.9G  0 raid0
+> >>
+> >> old kernel:
+> >> ...
+> >> $ mdadm /dev/md0 -f /dev/sdb
+> >> mdadm: set device faulty failed for /dev/sdb:  Device or resource busy
+> >> ...
+> >>
+> >> latest kernel:
+> >> ...
+> >> $ mdadm /dev/md0 -f /dev/sdb
+> >> mdadm: set /dev/sdb faulty in /dev/md0
+> >> ...
+> >>
+> >> The old kernel judges whether the Faulty flag is set in rdev->flags,
+> >> and returns -EBUSY if not. And The latest kernel only return -EBUSY
+> >> if the MD_BROKEN flag is set in mddev->flags. raid0 doesn't set
+> >> error_handler, so MD_BROKEN will not be set, it will return 0.
+> >>
+> >> So if error_handler isn't set for a raid type, also return -EBUSY. =20
+> > Hi,
+> > Please test with:
+> > https://lore.kernel.org/linux-raid/20230306130317.3418-1-mariusz.tkaczy=
+k@linux.intel.com/
 > >=20
-> > Hi Neil
-> >=20
-> > I have two questions, hope you can help to understand the function
-> > create_mddev better.
-> >=20
-> > Frist, from the comment7 of the bug you mentioned:
-> >=20
-> > There are two different sorts names.  Note that you almost
-> > acknowledged this by writing "name for my md device node" while the
-> > documentation only talks about names for "md devices", not for "md
-> > device nodes".
-> >=20
-> > There are
-> > 1/ there are names in /dev or /dev/md/ (device nodes)
-> > 2/ there are names that appear in /proc/mdstat and in /sys/block/ (devi=
-ces)
-> >=20
-> > Thanks for the clarification. But it looks like it doesn't work like
-> > what you said.
-> > For example:
-> > mdadm -CR /dev/md/root -l0 -n2 /dev/sda /dev/sdc --name=3Dtest
-> > cat /proc/mdstat
-> > Personalities : [raid0]
-> > md127 : active raid0 sdc[1] sda[0]
-> >       3906764800 blocks super 1.2 512k chunks
-> > cd /sys/block/md127/md/
-> >=20
-> > In /proc/mdstat and /sys/block, they all use md127 rather than the
-> > name(root) =20
->=20
-> Try again with "CREATE names=3Dyes" in /etc/mdadm.conf.
->=20
-> mdadm generally tries to keep:
->   - the names in /dev/
->   - the names in /dev/md/
->   - the names in /proc/mdstat
->   - the names stored in the metadata
->=20
-> in sync.  It can only do this when:
->  - you enabled "names=3Dyes"
->  - you don't confuse it by specifying a device name (/dev/md/root) that
->    is different from the metadata names "test".
->=20
-> If you don't have "names=3Dyes" then the name in /proc/mdstat and the name
-> in /dev/md* will be numeric.  The name in /dev/md/ and the name in the
-> metadata can be different and will usually be the same.
->=20
-> If you explicitly give a different name with --name=3D than the device
-> name then obviously they will be different.  If you then stop the array
-> and restart with "mdadm -As" or "mdadm -I /dev/sda; mdadm -I /dev/sdb"
-> then mdadm will create a name in /dev/md/ that matches the name in the
-> metadata.
->=20
-> >=20
-> > Before this patch,  it creates a symbol link with the name root rather =
-than
-> > test ll /dev/md/root
-> > lrwxrwxrwx. 1 root root 8 Mar 21 22:35 /dev/md/root -> ../md127 =20
->=20
-> That is what you asked it to do.
->=20
-> >=20
-> > So "test" which is specified by --name looks like it has little usage.
+> > Thanks,
+> > Mariusz
 > >  =20
 >=20
-> It is stored in the metadata.  You can see it in --examine output.  If
-> you reassemble the array without specifying a device name, it will use
-> the name "test".
+> Hi, Mariusz
 >=20
-> >=20
-> > By the way, after this patch, the symbol link /dev/md/root can't be
-> > created anymore.
-> > Is it a regression problem? =20
+> Are there other patches?  There are other problems with this patch.
+> https://lore.kernel.org/linux-raid/20230306130317.3418-1-mariusz.tkaczyk@=
+linux.intel.com/
 >=20
-> I cannot reproduce any problem like that.  Please provide a sequence of
-> steps so that I can try to duplicate it.
+> md_submit_bio()
+> 	...
+> 	// raid0 set disk faulty failed, but MD_BROKEN flag is set=EF=BC=8C
+> 	// write IO will fail.
+> 	if (unlikely(test_bit(MD_BROKEN, &mddev->flags)) && (rw =3D=3D WRITE)) {
+> 		bio_io_error(bio);
+> 		return;
+> 	}
+> 	...
+>=20
+> old kernel:
+> ...
+> $ mdadm /dev/md0 -f /dev/sdb
+> mdadm: set device faulty failed for /dev/sdb:  Device or resource busy
+>=20
+> $ mkfs.xfs /dev/md0
+> log stripe unit (524288 bytes) is too large (maximum is 256KiB)
+> log stripe unit adjusted to 32KiB
+> meta-data=3D/dev/md0               isize=3D512    agcount=3D16, agsize=3D=
+1800064 blks
+>          =3D                       sectsz=3D512   attr=3D2, projid32bit=
+=3D1
+>          =3D                       crc=3D1        finobt=3D1, sparse=3D1,=
+ rmapbt=3D0
+>          =3D                       reflink=3D1    bigtime=3D0 inobtcount=
+=3D0
+> data     =3D                       bsize=3D4096   blocks=3D28801024, imax=
+pct=3D25
+>          =3D                       sunit=3D128    swidth=3D256 blks
+> naming   =3Dversion 2              bsize=3D4096   ascii-ci=3D0, ftype=3D1
+> log      =3Dinternal log           bsize=3D4096   blocks=3D14064, version=
+=3D2
+>          =3D                       sectsz=3D512   sunit=3D8 blks, lazy-co=
+unt=3D1
+> realtime =3Dnone                   extsz=3D4096   blocks=3D0, rtextents=
+=3D0
+> Discarding blocks...Done.
+> ...
+>=20
+>=20
+> merged patch kernel:
+> ...
+> # mdadm /dev/md0 -f /dev/sdb
+> mdadm: set device faulty failed for /dev/sdb:  Device or resource busy
+>=20
+> mkfs.xfs /dev/md0
+> log stripe unit (524288 bytes) is too large (maximum is 256KiB)
+> log stripe unit adjusted to 32KiB
+> meta-data=3D/dev/md0               isize=3D512    agcount=3D8, agsize=3D6=
+5408 blks
+>          =3D                       sectsz=3D512   attr=3D2, projid32bit=
+=3D1
+>          =3D                       crc=3D1        finobt=3D1, sparse=3D1,=
+ rmapbt=3D0
+>          =3D                       reflink=3D1    bigtime=3D0 inobtcount=
+=3D0
+> data     =3D                       bsize=3D4096   blocks=3D523264, imaxpc=
+t=3D25
+>          =3D                       sunit=3D128    swidth=3D256 blks
+> naming   =3Dversion 2              bsize=3D4096   ascii-ci=3D0, ftype=3D1
+> log      =3Dinternal log           bsize=3D4096   blocks=3D2560, version=
+=3D2
+>          =3D                       sectsz=3D512   sunit=3D8 blks, lazy-co=
+unt=3D1
+> realtime =3Dnone                   extsz=3D4096   blocks=3D0, rtextents=
+=3D0
+> mkfs.xfs: pwrite failed: Input/output error
+> ...
+>=20
+>=20
+Hi Wu,
+Beside the kernel, there are also patches in mdadm. Please check if you have
+them all.
+https://git.kernel.org/pub/scm/utils/mdadm/mdadm.git/commit/?id=3Db3e7b7eb1=
+dfedd7cbd9a3800e884941f67d94c96
+https://git.kernel.org/pub/scm/utils/mdadm/mdadm.git/commit/?id=3D461fae7e7=
+809670d286cc19aac5bfa861c29f93a
+https://git.kernel.org/pub/scm/utils/mdadm/mdadm.git/commit/?id=3Dfc6fd4063=
+769f4194c3fb8f77b32b2819e140fb9
 
-Hi,
-It is not caused by this patch. Regression is caused by:
-https://git.kernel.org/pub/scm/utils/mdadm/mdadm.git/commit/?id=3D8a4ce2c05=
-3866ac97feb436c4c85a54446ee0016
+Some background:
+--faulty (-f) is intended to be used by administrators. We cannot rely on
+kernel answer because if mdadm will try to set device faulty, it results in
+MD_BROKEN and every new IO will be failed (and that is intended change).
 
-We noticed that yesterday.
-
-In our case, udev fails to create link, timeout happens. This is caused by
-missing MD_DEVNAME property in --detail --export. At that is all I know for=
- now.
-Work in progress.
-
-Steps:
-#mdadm -CR imsm -e imsm -n4 /dev/nvme[0-3]n1
-#mdadm -CR vol -l5 -n4 /dev/nvme[0-3]n1 --assume-clean
+Simply, mdadm must check first if it can remove the drive and that was adde=
+d by
+the mentioned patches. The first patch (the last one) added verification but
+brings regression, the next two patches are fixes for omitted scenarios.
 
 Thanks,
 Mariusz
-
->=20
-> >=20
-> > Second, are there possibilities that the arguments "dev" and "name" of
-> > function create_mddev
-> > are null at the same time? =20
->=20
-> No.  For Build or Create, dev is never NULL.  For Assemble and
-> Incremental, name is never NULL.
->=20
->=20
-> > After some tests, I found dev can't be null when creating a raid
-> > device. It can be checked before
-> > calling create_mddev. And we must get a name after creating a raid
-> > device. So when assembling
-> > a raid device, the name must not be null. So the dev and name can't be
-> > null at the same time, right? =20
->=20
-> Correct.
->=20
-> NeilBrown
->=20
->=20
-> >=20
-> > Best Regards
-> > Xiao
-> >=20
-> >  =20
-> > > Signed-off-by: NeilBrown <neilb@suse.de>
-> > > ---
-> > >  mdopen.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/mdopen.c b/mdopen.c
-> > > index d18c931996d2..810f79a3d19a 100644
-> > > --- a/mdopen.c
-> > > +++ b/mdopen.c
-> > > @@ -370,6 +370,7 @@ int create_mddev(char *dev, char *name, int autof,
-> > > int trustworthy, }
-> > >                 if (block_udev)
-> > >                         udev_block(devnm);
-> > > +               create_named_array(devnm);
-> > >         }
-> > >
-> > >         sprintf(devname, "/dev/%s", devnm);
-> > > --
-> > > 2.39.2
-> > > =20
-> >=20
-> >  =20
->=20
-
