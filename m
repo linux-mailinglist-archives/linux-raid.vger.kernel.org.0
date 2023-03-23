@@ -2,68 +2,48 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D034F6C6DFC
-	for <lists+linux-raid@lfdr.de>; Thu, 23 Mar 2023 17:44:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DEEF6C6E09
+	for <lists+linux-raid@lfdr.de>; Thu, 23 Mar 2023 17:45:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232375AbjCWQo0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 23 Mar 2023 12:44:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39156 "EHLO
+        id S231314AbjCWQp4 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 23 Mar 2023 12:45:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232145AbjCWQoE (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 23 Mar 2023 12:44:04 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41AEF3584
-        for <linux-raid@vger.kernel.org>; Thu, 23 Mar 2023 09:42:45 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id F346E337E2;
-        Thu, 23 Mar 2023 16:42:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1679589763; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=N8rMQZu7E5GucYoWPOJch1GlCD3bZXkoScm6XyFnoEM=;
-        b=LEhf/aHpRo1cDj9U1sL16qn+Kb6tPM4oblInpSKwx1mW4pd5ORSNK5f4omOcokT7sMfCTy
-        RxIEAZ5n8lr0bimOZm1UuccgTAEu3iijiAw1HwkXPHr8K2HM+syzO2vbN0nHHZPiteqHe+
-        B2foSNNhT33TgGGTSseSsutT1AHwWxo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1679589764;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=N8rMQZu7E5GucYoWPOJch1GlCD3bZXkoScm6XyFnoEM=;
-        b=qdSMKeJDmQ9Qt2K5+GTrMfwJ6q9qUa5BK0+FI18QbQLiJnJerZTfiC9ZlX5M9Gsj9jjv5Y
-        uQjv4qK4gsmvo3Ag==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 2BD7C132C2;
-        Thu, 23 Mar 2023 16:42:42 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id EuHeOoKBHGRfUQAAMHmgww
-        (envelope-from <colyli@suse.de>); Thu, 23 Mar 2023 16:42:42 +0000
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.400.51.1.1\))
+        with ESMTP id S231778AbjCWQpY (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 23 Mar 2023 12:45:24 -0400
+Received: from sender11-op-o11.zoho.eu (sender11-op-o11.zoho.eu [31.186.226.225])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF0EF5FD9
+        for <linux-raid@vger.kernel.org>; Thu, 23 Mar 2023 09:44:49 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1679589865; cv=none; 
+        d=zohomail.eu; s=zohoarc; 
+        b=kQu1SJPfUrUHiMaAi+EcdlL5KACF3GkxXhHWSBWHG45haNUWlLnr42ewdIHOCktE2qoUYWoGp/N/wHEGTpUkGLIPSPWy9PEU+zfNHOjBJflszkTvkC00NQIu2nzlBdsP1U0Od7dMUzdeQTp+VplIdP5LpH9JwbYJlBnod1+tKwU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+        t=1679589865; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=0lG2zttwKncyh21FHDaQqGHNK3uy+Ex1VfezoIGuNmY=; 
+        b=P7Bg6DEvtQCmpzMs0upc6pk6lY1GjMfOJqUFNv8C7N9lIZHab1AX1IViD5dSVjD5S+X/Hf08CDiDGpFijZyaCh6bcijAZwnQZkhuY1xC6Nx0zPuobiK9jgxrcNf3qj8uM4v+e6chNSQt6cIYCps/B5YlGEsg2vHj/WHyKW1GxOY=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
+        dmarc=pass header.from=<jes@trained-monkey.org>
+Received: from [192.168.99.50] (pool-98-113-67-206.nycmny.fios.verizon.net [98.113.67.206]) by mx.zoho.eu
+        with SMTPS id 1679589863833170.9146010704875; Thu, 23 Mar 2023 17:44:23 +0100 (CET)
+Message-ID: <def99610-2b46-a434-6ef0-f1df7fd42f6b@trained-monkey.org>
+Date:   Thu, 23 Mar 2023 12:44:22 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
 Subject: Re: [PATCH] Revert "Revert "mdadm/systemd: remove KillMode=none from
  service file""
-From:   Coly Li <colyli@suse.de>
-In-Reply-To: <20230323161318.25564-1-mariusz.tkaczyk@linux.intel.com>
-Date:   Fri, 24 Mar 2023 00:42:30 +0800
-Cc:     Jes Sorensen <jes@trained-monkey.org>, linux-raid@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <71199967-8DB0-48F1-BAF9-1FBB6FC8DE5B@suse.de>
-References: <20230323161318.25564-1-mariusz.tkaczyk@linux.intel.com>
+Content-Language: en-US
 To:     Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-X-Mailer: Apple Mail (2.3731.400.51.1.1)
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
+Cc:     linux-raid@vger.kernel.org, colyli@suse.de
+References: <20230323161318.25564-1-mariusz.tkaczyk@linux.intel.com>
+From:   Jes Sorensen <jes@trained-monkey.org>
+In-Reply-To: <20230323161318.25564-1-mariusz.tkaczyk@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
+X-Spam-Status: No, score=-0.0 required=5.0 tests=NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,41 +51,29 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-
-
-> 2023=E5=B9=B43=E6=9C=8824=E6=97=A5 00:13=EF=BC=8CMariusz Tkaczyk =
-<mariusz.tkaczyk@linux.intel.com> =E5=86=99=E9=81=93=EF=BC=9A
->=20
+On 3/23/23 12:13, Mariusz Tkaczyk wrote:
 > This reverts commit 28a083955c6f58f8e582734c8c82aff909a7d461.
->=20
+> 
 > Resolved by commit 723d1df4946e ("mdmon: Improve switchroot
 > interactions.") We are ready to drop it.
->=20
+> 
 > Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-
-
-Acked-by: Coly Li <colyli@suse.de>
-
-Thanks.
-
-Coly Li
-
-
 > ---
-> systemd/mdadm-grow-continue@.service | 1 -
-> 1 file changed, 1 deletion(-)
->=20
-> diff --git a/systemd/mdadm-grow-continue@.service =
-b/systemd/mdadm-grow-continue@.service
+>  systemd/mdadm-grow-continue@.service | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/systemd/mdadm-grow-continue@.service b/systemd/mdadm-grow-continue@.service
 > index 9ccadca3..64b8254a 100644
 > --- a/systemd/mdadm-grow-continue@.service
 > +++ b/systemd/mdadm-grow-continue@.service
-> @@ -15,4 +15,3 @@ ExecStart=3DBINDIR/mdadm --grow --continue /dev/%I
-> StandardInput=3Dnull
-> StandardOutput=3Dnull
-> StandardError=3Dnull
-> -KillMode=3Dnone
-> --=20
-> 2.26.2
->=20
+> @@ -15,4 +15,3 @@ ExecStart=BINDIR/mdadm --grow --continue /dev/%I
+>  StandardInput=null
+>  StandardOutput=null
+>  StandardError=null
+> -KillMode=none
+
+Applied!
+
+Thanks,
+Jes
 
