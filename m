@@ -2,53 +2,56 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 612766D0208
-	for <lists+linux-raid@lfdr.de>; Thu, 30 Mar 2023 12:47:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2119E6D0A75
+	for <lists+linux-raid@lfdr.de>; Thu, 30 Mar 2023 17:52:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231463AbjC3KrP (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 30 Mar 2023 06:47:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34278 "EHLO
+        id S233507AbjC3Pw2 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 30 Mar 2023 11:52:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230085AbjC3Kp7 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 30 Mar 2023 06:45:59 -0400
-Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1CCC9EF5;
-        Thu, 30 Mar 2023 03:45:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1680173121; x=1711709121;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=9YnFTpWsIBbNef/OiYe0uKZ66yfnQqenOqdfFhTWuvw=;
-  b=iGMu/L9fgOtfibbb1VDb+c5bVNJyPDUAIlLuCPl/SAuPEttkaJpYKSCW
-   VEIoIlmbgtDpIBh0IejCgxxQY0knILwStNSiwoLXwlFFWtwzwds36sJkv
-   bUaCyXaUOrdcoaTaHfOMkYAjGWPQzIeoSgMnzhx5vicbeEysGyhx1xdT5
-   YUaOq7f9MqkZJbzU5BDBo1DH8EDRqTAQHpp9MJ/MDVcSjQkv1SlR4gelU
-   m/fxwrs/zWQweACbzMxZOnlqsTgsgzPYAdpnDdBtLSBgY1+z7tvkUJs5P
-   E3og1lcio7n/1xq/AewEdPRvNkjNBZKqGpHWFHldu1W2U2ZIY8zdkydm5
-   A==;
-X-IronPort-AV: E=Sophos;i="5.98,303,1673884800"; 
-   d="scan'208";a="331317939"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 30 Mar 2023 18:45:02 +0800
-IronPort-SDR: Oj3XXvuBoG4EbDpmh92r68PyzslfXegh6DwzwZj4SRi1waK/UBUGnoEEyc/9qwgY4UqCrH8tm1
- kxn9WTp8ndvKgRkRtHPJNqUnubk3ATXb9bcK6TgUVBNLr/OUEVq5K8vTvsKpIpn1IN80DpZA1J
- xNPa926zmR1wVfbGX8EZeFMx7nGXBdOosBUcC0PvUN2+mxdgHImS57At5QgxiApRYSiF4R3EcI
- 7s9cKHx55R1R/vmrAi9FHsJYeJVxddBfjY1GypsFHXCPd0T2s9EAARIaTqF3y3IDG/bs+bghQL
- W+g=
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 30 Mar 2023 03:01:10 -0700
-IronPort-SDR: 9/iVByN1BTBiF+2N/dyRq0R7dQSPqShiTdspahbVYlwZj+qd277O1HWwqfoLFDxzoWSe+cmGNO
- qkqMCZzgrdZnDhpQxYdEe8150myn5LsK8KEx5pL72+ObD0hqMaaHSizvdtrMKOqlTNP+VQELhc
- NlTnbrlHYwL6lfM55WWo+X+nqbpVvrNh8MXJJfN+oROGcrGXbtZ95QXnOLEHZI8U/WSie1EYFD
- ciM8A+htMWi8T8Q2A6kN9QQtMNJHy+EVASUqPt+O4sCYrrpZ40AnMpPDuYxlZJyUb2MJgf0HsW
- yDM=
-WDCIronportException: Internal
-Received: from unknown (HELO redsun91.ssa.fujisawa.hgst.com) ([10.149.66.72])
-  by uls-op-cesaip01.wdc.com with ESMTP; 30 Mar 2023 03:45:00 -0700
-From:   Johannes Thumshirn <johannes.thumshirn@wdc.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
+        with ESMTP id S233505AbjC3PwY (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 30 Mar 2023 11:52:24 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D622DE1AD;
+        Thu, 30 Mar 2023 08:51:59 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id E7EC321A44;
+        Thu, 30 Mar 2023 15:51:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1680191504;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=2yS40KCGRn33M8KOiRBih+sriFcKgmpqdM+Nv90LiDU=;
+        b=MFS5n40yxVAJF9ZO+WaiYvkkpgBDqrv9lgebTzMeE1hI+hm4f7RZcVq/aMPquuCibm4WDb
+        LRmREwdLyX3d2H3T+KlqlbYXmXRmouPrPQa2u7HWoHjP/db/A/ksgwv8RGSdw0GsSdscas
+        0tyjAoJ2+DXv2pdfoarhmeZnqqeyauQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1680191504;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=2yS40KCGRn33M8KOiRBih+sriFcKgmpqdM+Nv90LiDU=;
+        b=cRXQrMF8Zho2lVcr5CfxyUDFpcyx+CZ3wYvx/HWOczyJAbF0WSnRlIHHHz5Z2RU/Y1x4fP
+        bvQUDtYlWWMz+gDA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 737D31348E;
+        Thu, 30 Mar 2023 15:51:44 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id l9JXGxCwJWRXWAAAMHmgww
+        (envelope-from <dsterba@suse.cz>); Thu, 30 Mar 2023 15:51:44 +0000
+Date:   Thu, 30 Mar 2023 17:45:29 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Hannes Reinecke <hare@suse.de>,
         Chaitanya Kulkarni <kch@nvidia.com>,
         Damien Le Moal <damien.lemoal@wdc.com>,
         Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
@@ -60,19 +63,18 @@ Cc:     Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
         jfs-discussion@lists.sourceforge.net, cluster-devel@redhat.com,
         Bob Peterson <rpeterso@redhat.com>,
         Andreas Gruenbacher <agruenba@redhat.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Subject: [PATCH v2 19/19] block: mark bio_add_page as __must_check
-Date:   Thu, 30 Mar 2023 03:44:01 -0700
-Message-Id: <981a2b8809dedbd6dd756d7af1df4251944f42b0.1680172791.git.johannes.thumshirn@wdc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <cover.1680172791.git.johannes.thumshirn@wdc.com>
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH v2 00/19] bio: check return values of bio_add_page
+Message-ID: <20230330154529.GS10580@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
 References: <cover.1680172791.git.johannes.thumshirn@wdc.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1680172791.git.johannes.thumshirn@wdc.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_NONE
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,28 +82,28 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Now that all users of bio_add_page check for the return value, mark
-bio_add_page as __must_check.
+On Thu, Mar 30, 2023 at 03:43:42AM -0700, Johannes Thumshirn wrote:
+> We have two functions for adding a page to a bio, __bio_add_page() which is
+> used to add a single page to a freshly created bio and bio_add_page() which is
+> used to add a page to an existing bio.
+> 
+> While __bio_add_page() is expected to succeed, bio_add_page() can fail.
+> 
+> This series converts the callers of bio_add_page() which can easily use
+> __bio_add_page() to using it and checks the return of bio_add_page() for
+> callers that don't work on a freshly created bio.
+> 
+> Lastly it marks bio_add_page() as __must_check so we don't have to go again
+> and audit all callers.
+> 
+> Changes to v1:
+> - Removed pointless comment pointed out by Willy
+> - Changed commit messages pointed out by Damien
+> - Colledted Damien's Reviews and Acks
+> 
+> Johannes Thumshirn (19):
 
-Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Reviewed-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
----
- include/linux/bio.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>   btrfs: repair: use __bio_add_page for adding single page
+>   btrfs: raid56: use __bio_add_page to add single page
 
-diff --git a/include/linux/bio.h b/include/linux/bio.h
-index d766be7152e1..0f8a8d7a6384 100644
---- a/include/linux/bio.h
-+++ b/include/linux/bio.h
-@@ -465,7 +465,7 @@ extern void bio_uninit(struct bio *);
- void bio_reset(struct bio *bio, struct block_device *bdev, blk_opf_t opf);
- void bio_chain(struct bio *, struct bio *);
- 
--int bio_add_page(struct bio *, struct page *, unsigned len, unsigned off);
-+int __must_check bio_add_page(struct bio *, struct page *, unsigned len, unsigned off);
- bool bio_add_folio(struct bio *, struct folio *, size_t len, size_t off);
- extern int bio_add_pc_page(struct request_queue *, struct bio *, struct page *,
- 			   unsigned int, unsigned int);
--- 
-2.39.2
-
+The btrfs patches added to misc-next, thanks.
