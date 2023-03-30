@@ -2,180 +2,138 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FBE56D0488
-	for <lists+linux-raid@lfdr.de>; Thu, 30 Mar 2023 14:21:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 698586D1224
+	for <lists+linux-raid@lfdr.de>; Fri, 31 Mar 2023 00:30:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231544AbjC3MVb (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 30 Mar 2023 08:21:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49704 "EHLO
+        id S230342AbjC3WaA (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 30 Mar 2023 18:30:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231477AbjC3MVa (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 30 Mar 2023 08:21:30 -0400
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A16A3868D;
-        Thu, 30 Mar 2023 05:21:28 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.143])
-        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4PnMwM4mRGz4f3r2G;
-        Thu, 30 Mar 2023 20:21:23 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-        by APP4 (Coremail) with SMTP id gCh0CgD3rLC5fiVkFoZ2GQ--.46838S7;
-        Thu, 30 Mar 2023 20:21:25 +0800 (CST)
-From:   Yu Kuai <yukuai1@huaweicloud.com>
-To:     logang@deltatee.com, song@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com,
-        yangerkun@huawei.com
-Subject: [PATCH v3 3/3] md: protect md_thread with rcu
-Date:   Fri, 31 Mar 2023 04:20:46 +0800
-Message-Id: <20230330202046.795213-4-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230330202046.795213-1-yukuai1@huaweicloud.com>
-References: <20230330202046.795213-1-yukuai1@huaweicloud.com>
+        with ESMTP id S230339AbjC3W37 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 30 Mar 2023 18:29:59 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8468E1BE1;
+        Thu, 30 Mar 2023 15:29:58 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id j13so18658666pjd.1;
+        Thu, 30 Mar 2023 15:29:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680215398;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x7V03//xrMoj2maIfgC2qsiNLnzTtZRlKFOvF+x+bJg=;
+        b=mlMMJ39hyYXqt+JHj1LUKtCdNF3jPgcvR5YIbnZgjG2qBiSoA+kwmOTqtkW+KgUjT+
+         f3e/T8MSaieLqfYE0dDEdexsiqrRYKBvODsqM2N1upFbF1vKGKnEQRNu6sm836+CwA5C
+         ck0fVumW1XKGVaDTiJc1oZcOOCIV226dBsy+ORXRDdb3DqX9xOqXNxevXkMcMjtEUDFn
+         3DS5IHtGgjR5BAJQeAORmm+Co3dYw4PAzJtKWdjXOIijVMdHsC+Mv7hna+osVcIUucg/
+         sMDusNSOtuWu7xAgNPPArSDS5AjN3qPzyekWsD7Mi/qHO9lJ1NdSDNgcsKtE2ONpmI68
+         vTqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680215398;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=x7V03//xrMoj2maIfgC2qsiNLnzTtZRlKFOvF+x+bJg=;
+        b=6o7qy2ghE+jk/5ofPwYNeI4QpWdVyjYfDNSM0TQHZNE7sscvLiiPuD2c+UMvxkhkuh
+         SmkJEdBWFmp2OWCIZjHJNgZscC4O+I5OQRswSS0rS1B3zscTxhSWSONNDTtsyyUpvSge
+         PS8JqHSRRKX8AG1AUSdgDhOHcQ87lHS9kRRRPCcZjSKgJwKp7syX9Fr/1qvo3Xia6iCo
+         hCnibPPIySq1TGdvhrIaz8WPVIjuCpmIdqpO3cHi6VEKue5t2CncB00p5BwgzHeN8r5T
+         ErqeoaYXPlbH6Ygmw5NKp/OnqRuG+yLPzx4P+34hrX1MRyvNr4voKq7Au2VJ4Z4rTYvt
+         8spg==
+X-Gm-Message-State: AAQBX9e/4dn5WZ7tKJuxFTCb0GlGltJtdYyPCN6VZ/qUjfFSxUBc/9PY
+        crpfzNTVJ37SwhiHZdhiwclp1V22H2mStOwqYWw=
+X-Google-Smtp-Source: AKy350ZrPyR1hRVTBuZnQUpMEn54ihWHCa7XbNjYLmiSy4XxnRAJ80dimqjvvbOmN9ocOuC+cire+hzLe0DMBMrzkWw=
+X-Received: by 2002:a17:90a:fb57:b0:23d:30c2:c5b7 with SMTP id
+ iq23-20020a17090afb5700b0023d30c2c5b7mr2603971pjb.3.1680215397861; Thu, 30
+ Mar 2023 15:29:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgD3rLC5fiVkFoZ2GQ--.46838S7
-X-Coremail-Antispam: 1UD129KBjvJXoWxXFyUZF4UXr1xurWkAw4kCrg_yoW5Cr4rp3
-        y3JFy3Ar48Ars8Zw4UG3WUA3WYqw1Iq3WUAry7Gw1fA3WUG3yaqry2kFy0qFn8Aa43AFs8
-        Jr15KayrZ3yDtw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUBE14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2jI8I6cxK62vIxIIY0VWUZVW8XwA2048vs2IY02
-        0E87I2jVAFwI0_JrWl82xGYIkIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2
-        F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjx
-        v20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2
-        z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0V
-        AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1l
-        Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErc
-        IFxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
-        6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2
-        Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
-        Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMI
-        IF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRPEf5UUUUU
-        =
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=0.0 required=5.0 tests=DATE_IN_FUTURE_06_12,
-        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <cover.1680108414.git.johannes.thumshirn@wdc.com>
+ <beea645603eccbb045ad9bb777e05a085b91808a.1680108414.git.johannes.thumshirn@wdc.com>
+ <3a0f0c92-63cb-3624-c2fe-049a76d1a64a@opensource.wdc.com> <CAHbLzkoRdTTbnfz3RyLQAeNJBOEVNGL2WLgRSE2eQ4nR8sRe2g@mail.gmail.com>
+ <b19696d3-54bb-d997-5e56-aa5fd58b469f@opensource.wdc.com>
+In-Reply-To: <b19696d3-54bb-d997-5e56-aa5fd58b469f@opensource.wdc.com>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Thu, 30 Mar 2023 15:29:46 -0700
+Message-ID: <CAHbLzkrEXVDf4TYLw_MPrFNybWQHWXKX=zP5GhxHQFdpVPWhEg@mail.gmail.com>
+Subject: Re: [PATCH 18/19] dm-crypt: check if adding pages to clone bio fails
+To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Cc:     Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Hannes Reinecke <hare@suse.de>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        dm-devel@redhat.com, Song Liu <song@kernel.org>,
+        linux-raid@vger.kernel.org, Mike Snitzer <snitzer@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Dave Kleikamp <shaggy@kernel.org>,
+        jfs-discussion@lists.sourceforge.net, cluster-devel@redhat.com,
+        Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=0.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+On Wed, Mar 29, 2023 at 5:24=E2=80=AFPM Damien Le Moal
+<damien.lemoal@opensource.wdc.com> wrote:
+>
+> On 3/30/23 09:17, Yang Shi wrote:
+> > On Wed, Mar 29, 2023 at 4:49=E2=80=AFPM Damien Le Moal
+> > <damien.lemoal@opensource.wdc.com> wrote:
+> >>
+> >> On 3/30/23 02:06, Johannes Thumshirn wrote:
+> >>> Check if adding pages to clone bio fails and if bail out.
+> >>
+> >> Nope. The code retries with direct reclaim until it succeeds. Which is=
+ very
+> >> suspicious...
+> >
+> > It is not related to bio_add_page() failure. It is used to avoid a
+> > race condition when two processes are depleting the mempool
+> > simultaneously.
+> >
+> > IIUC I don't think page merge may happen for dm-crypt, so is
+> > __bio_add_page() good enough? I'm working on this code too, using
+> > __bio_add_page() would make my patch easier.
+>
+> If the BIO was allocated with enough bvecs, we could use that function. B=
+ut page
+> merging reduces overhead, so if it can happen, let's use it.
 
-Our test reports a uaf for 'mddev->sync_thread':
+It does allocate BIO with enough bvecs. IIUC it will merge the
+adjacent pages? If so page merging may happen. Since dm-crypt does
+allocate BIO with enough bvces, so it can't fail if I read the code
+correctly. I'm wondering whether we could have a never fail variant.
 
-T1                      T2
-md_start_sync
- md_register_thread
- // mddev->sync_thread is set
-			raid1d
-			 md_check_recovery
-			  md_reap_sync_thread
-			   md_unregister_thread
-			    kfree
-
- md_wakeup_thread
-  wake_up
-  ->sync_thread was freed
-
-Root cause is that there is a small windown between register thread and
-wake up thread, where the thread can be freed concurrently.
-
-Currently, a global spinlock 'pers_lock' is borrowed to protect
-'mddev->thread', this problem can be fixed likewise, however, there might
-be similar problem for other md_thread, and I really don't like the idea to
-borrow a global lock.
-
-This patch protect md_thread with rcu.
-
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- drivers/md/md.c | 32 ++++++++++----------------------
- 1 file changed, 10 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 9e80c5491c9a..161231e01faa 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -70,11 +70,7 @@
- #include "md-bitmap.h"
- #include "md-cluster.h"
- 
--/* pers_list is a list of registered personalities protected
-- * by pers_lock.
-- * pers_lock does extra service to protect accesses to
-- * mddev->thread when the mutex cannot be held.
-- */
-+/* pers_list is a list of registered personalities protected by pers_lock. */
- static LIST_HEAD(pers_list);
- static DEFINE_SPINLOCK(pers_lock);
- 
-@@ -802,13 +798,8 @@ void mddev_unlock(struct mddev *mddev)
- 	} else
- 		mutex_unlock(&mddev->reconfig_mutex);
- 
--	/* As we've dropped the mutex we need a spinlock to
--	 * make sure the thread doesn't disappear
--	 */
--	spin_lock(&pers_lock);
- 	md_wakeup_thread(&mddev->thread);
- 	wake_up(&mddev->sb_wait);
--	spin_unlock(&pers_lock);
- }
- EXPORT_SYMBOL_GPL(mddev_unlock);
- 
-@@ -7921,13 +7912,16 @@ static int md_thread(void *arg)
- 
- void md_wakeup_thread(struct md_thread **threadp)
- {
--	struct md_thread *thread = *threadp;
-+	struct md_thread *thread;
- 
-+	rcu_read_lock();
-+	thread = rcu_dereference(*threadp);
- 	if (thread) {
- 		pr_debug("md: waking up MD thread %s.\n", thread->tsk->comm);
- 		set_bit(THREAD_WAKEUP, &thread->flags);
- 		wake_up(&thread->wqueue);
- 	}
-+	rcu_read_unlock();
- }
- EXPORT_SYMBOL(md_wakeup_thread);
- 
-@@ -7955,7 +7949,7 @@ int md_register_thread(struct md_thread **threadp,
- 		return err;
- 	}
- 
--	*threadp = thread;
-+	rcu_assign_pointer(*threadp, thread);
- 	return 0;
- }
- EXPORT_SYMBOL(md_register_thread);
-@@ -7964,18 +7958,12 @@ void md_unregister_thread(struct md_thread **threadp)
- {
- 	struct md_thread *thread;
- 
--	/*
--	 * Locking ensures that mddev_unlock does not wake_up a
--	 * non-existent thread
--	 */
--	spin_lock(&pers_lock);
- 	thread = *threadp;
--	if (!thread) {
--		spin_unlock(&pers_lock);
-+	if (!thread)
- 		return;
--	}
--	*threadp = NULL;
--	spin_unlock(&pers_lock);
-+
-+	rcu_assign_pointer(*threadp, NULL);
-+	synchronize_rcu();
- 
- 	pr_debug("interrupting MD-thread pid %d\n", task_pid_nr(thread->tsk));
- 	kthread_stop(thread->tsk);
--- 
-2.39.2
-
+>
+> >
+> >>
+> >>>
+> >>> This way we can mark bio_add_pages as __must_check.
+> >>>
+> >>> Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+> >>
+> >> With the commit message fixed,
+> >>
+> >> Reviewed-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+> >>
+> >>
+> >> --
+> >> Damien Le Moal
+> >> Western Digital Research
+> >>
+> >>
+>
+> --
+> Damien Le Moal
+> Western Digital Research
+>
