@@ -2,167 +2,115 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 149D76D0EED
-	for <lists+linux-raid@lfdr.de>; Thu, 30 Mar 2023 21:35:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E5C16D0484
+	for <lists+linux-raid@lfdr.de>; Thu, 30 Mar 2023 14:21:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230245AbjC3Tft (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 30 Mar 2023 15:35:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40142 "EHLO
+        id S230480AbjC3MV3 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 30 Mar 2023 08:21:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232152AbjC3Tfs (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 30 Mar 2023 15:35:48 -0400
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D41526195;
-        Thu, 30 Mar 2023 12:35:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-        MIME-Version:Date:Message-ID:content-disposition;
-        bh=6iPlweaVoC3evjbevPt/I1/K/+EOpwnFBna9xVH19Lo=; b=qXd5OCqYPnGow+Oz3mZ9DTkkx7
-        XunwCUvSM1QeRCmOaRJkgI1EfhfpQedhoCWpWzOJIvjIxPE2Xn7jZeQgWHQ25ABEm1MZY15NQC9z/
-        n9NrKfWBOyBkzjHtEonTOm4Xfs4S8nc4cnI6TgJWOCsNO84Li8WdliBbUmq9qaLY4h8CWx76MJKGf
-        Ucz1++n+s7An9SnUQC4yfuvl9XmxII2Azjg5W8H0sVBXFmnoAtYSCUPvb8Z8a6nfhBpru43JuJWa8
-        LUY6q0QKps0ZWeuo7S2cu0MIKNVpcvEg5KkmHXhcbNesDPAG/lRkDWMiNQq1WLamvuFVpfSMibExR
-        xPCPsHMw==;
-Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
-        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <logang@deltatee.com>)
-        id 1phy3X-00DjYL-JS; Thu, 30 Mar 2023 13:35:32 -0600
-Message-ID: <67b0f0fb-e9f3-b716-f22f-0ca091a291b0@deltatee.com>
-Date:   Thu, 30 Mar 2023 13:35:29 -0600
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Content-Language: en-CA
-To:     Yu Kuai <yukuai1@huaweicloud.com>, song@kernel.org
+        with ESMTP id S230198AbjC3MV2 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 30 Mar 2023 08:21:28 -0400
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AACF7A8B;
+        Thu, 30 Mar 2023 05:21:27 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4PnMwL4mShz4f3kpq;
+        Thu, 30 Mar 2023 20:21:22 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+        by APP4 (Coremail) with SMTP id gCh0CgD3rLC5fiVkFoZ2GQ--.46838S4;
+        Thu, 30 Mar 2023 20:21:24 +0800 (CST)
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+To:     logang@deltatee.com, song@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        yukuai3@huawei.com, yi.zhang@huawei.com, yangerkun@huawei.com
-References: <20230330202046.795213-1-yukuai1@huaweicloud.com>
- <20230330202046.795213-4-yukuai1@huaweicloud.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <20230330202046.795213-4-yukuai1@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 24.64.144.200
-X-SA-Exim-Rcpt-To: yukuai1@huaweicloud.com, song@kernel.org, linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, yukuai3@huawei.com, yi.zhang@huawei.com, yangerkun@huawei.com
-X-SA-Exim-Mail-From: logang@deltatee.com
+        yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com,
+        yangerkun@huawei.com
+Subject: [PATCH v3 0/3] md: fix uaf for sync_thread
+Date:   Fri, 31 Mar 2023 04:20:43 +0800
+Message-Id: <20230330202046.795213-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: gCh0CgD3rLC5fiVkFoZ2GQ--.46838S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7Aw15CrW7XF4xuFWDJr18Krg_yoW8Gw4xpa
+        4fJry3Zw40yr43ZrnrX3Wjka45Gw1Sgay7Kry7Gw4fWa45urW5Xr4jyFWkXF9rZFyfJFsr
+        Jr15JF1ruF1DtaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUv014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2jI8I6cxK62vIxIIY0VWUZVW8XwA2ocxC64kIII
+        0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xv
+        wVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4
+        x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG
+        64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r
+        1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAq
+        YI8I648v4I1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+        xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+        MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+        0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v2
+        6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7sRi
+        Pl1DUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=1.4 required=5.0 tests=DATE_IN_FUTURE_06_12,
+        KHOP_HELO_FCRDNS,MAY_BE_FORGED,SPF_HELO_NONE,SPF_NONE autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
-Subject: Re: [PATCH v3 3/3] md: protect md_thread with rcu
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+From: Yu Kuai <yukuai3@huawei.com>
 
+Changes in v3:
+ - remove patch 3 from v2
+ - use rcu instead of a new lock
 
-On 2023-03-30 14:20, Yu Kuai wrote:
-> From: Yu Kuai <yukuai3@huawei.com>
-> 
-> Our test reports a uaf for 'mddev->sync_thread':
-> 
-> T1                      T2
-> md_start_sync
->  md_register_thread
->  // mddev->sync_thread is set
-> 			raid1d
-> 			 md_check_recovery
-> 			  md_reap_sync_thread
-> 			   md_unregister_thread
-> 			    kfree
-> 
->  md_wakeup_thread
->   wake_up
->   ->sync_thread was freed
-> 
-> Root cause is that there is a small windown between register thread and
-> wake up thread, where the thread can be freed concurrently.
-> 
-> Currently, a global spinlock 'pers_lock' is borrowed to protect
-> 'mddev->thread', this problem can be fixed likewise, however, there might
-> be similar problem for other md_thread, and I really don't like the idea to
-> borrow a global lock.
-> 
-> This patch protect md_thread with rcu.
-> 
-> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-> ---
->  drivers/md/md.c | 32 ++++++++++----------------------
->  1 file changed, 10 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index 9e80c5491c9a..161231e01faa 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -70,11 +70,7 @@
->  #include "md-bitmap.h"
->  #include "md-cluster.h"
->  
-> -/* pers_list is a list of registered personalities protected
-> - * by pers_lock.
-> - * pers_lock does extra service to protect accesses to
-> - * mddev->thread when the mutex cannot be held.
-> - */
-> +/* pers_list is a list of registered personalities protected by pers_lock. */
->  static LIST_HEAD(pers_list);
->  static DEFINE_SPINLOCK(pers_lock);
->  
-> @@ -802,13 +798,8 @@ void mddev_unlock(struct mddev *mddev)
->  	} else
->  		mutex_unlock(&mddev->reconfig_mutex);
->  
-> -	/* As we've dropped the mutex we need a spinlock to
-> -	 * make sure the thread doesn't disappear
-> -	 */
-> -	spin_lock(&pers_lock);
->  	md_wakeup_thread(&mddev->thread);
->  	wake_up(&mddev->sb_wait);
-> -	spin_unlock(&pers_lock);
->  }
->  EXPORT_SYMBOL_GPL(mddev_unlock);
->  
-> @@ -7921,13 +7912,16 @@ static int md_thread(void *arg)
->  
->  void md_wakeup_thread(struct md_thread **threadp)
->  {
-> -	struct md_thread *thread = *threadp;
-> +	struct md_thread *thread;
->  
-> +	rcu_read_lock();
-> +	thread = rcu_dereference(*threadp);
+Changes in v2:
+ - fix a compile error for md-cluster in patch 2
+ - replace spin_lock/unlock with spin_lock/unlock_irq in patch 5
+ - don't wake up inside the new lock in md wakeup_thread in patch 5
 
-A couple points:
+Our test reports a uaf for 'mddev->sync_thread':
 
-I don't think we need a double pointer here. rcu_dereference() doesn't
-actually do anything but annotate the fact that we are accessing a
-pointer protected by rcu. It does require annotations on that pointer
-(__rcu) which is checked by sparse (I suspect this patch will produce a
-lot of sparse errors from kbuild bot).
+T1                      T2
+md_start_sync
+ md_register_thread
+			raid1d
+			 md_check_recovery
+			  md_reap_sync_thread
+			   md_unregister_thread
+			    kfree
 
-I think all we need is:
+ md_wakeup_thread
+  wake_up
+  ->sync_thread was freed
 
-void md_wakeup_thread(struct md_thread __rcu *rthread)
-{
-	struct md_thread *thread;
-   	
-	rcu_read_lock();
-	thread = rcu_dereference(rthread);
-	...
-	rcu_read_unlock();
-	
-}
+Currently, a global spinlock 'pers_lock' is borrowed to protect
+'mddev->thread', this problem can be fixed likewise, however, there might
+be similar problem for other md_thread, and I really don't like the idea to
+borrow a global lock.
 
-The __rcu annotation will have to be added to all the pointers this
-function is called on as well as to md_register_thread() and
-md_unregister_thread(). And anything else that uses those pointers.
-Running sparse on the code and eliminating all new errors for the patch
-is important.
+This patchset do some refactor and use rcu to protect md_thread.
 
-Thanks,
+Yu Kuai (3):
+  md: pass a md_thread pointer to md_register_thread()
+  md: refactor md_wakeup_thread()
+  md: protect md_thread with rcu
 
-Logan
+ drivers/md/dm-raid.c      |   4 +-
+ drivers/md/md-bitmap.c    |   6 +-
+ drivers/md/md-cluster.c   |  31 +++++----
+ drivers/md/md-multipath.c |   8 +--
+ drivers/md/md.c           | 129 ++++++++++++++++++--------------------
+ drivers/md/md.h           |  11 ++--
+ drivers/md/raid1.c        |  15 +++--
+ drivers/md/raid10.c       |  29 ++++-----
+ drivers/md/raid5-cache.c  |  17 +++--
+ drivers/md/raid5-ppl.c    |   2 +-
+ drivers/md/raid5.c        |  45 +++++++------
+ 11 files changed, 139 insertions(+), 158 deletions(-)
+
+-- 
+2.39.2
+
