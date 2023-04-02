@@ -2,52 +2,54 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D21BC6D3402
-	for <lists+linux-raid@lfdr.de>; Sat,  1 Apr 2023 23:10:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64BB26D366E
+	for <lists+linux-raid@lfdr.de>; Sun,  2 Apr 2023 11:13:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229788AbjDAVHx (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 1 Apr 2023 17:07:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54532 "EHLO
+        id S230307AbjDBJNN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sun, 2 Apr 2023 05:13:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229591AbjDAVHx (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 1 Apr 2023 17:07:53 -0400
-X-Greylist: delayed 3933 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 01 Apr 2023 14:07:50 PDT
-Received: from a1-bg02.venev.name (a1-bg02.venev.name [213.240.239.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC3AA72B7
-        for <linux-raid@vger.kernel.org>; Sat,  1 Apr 2023 14:07:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=venev.name;
-        s=default; h=Content-Transfer-Encoding:Message-Id:Date:Subject:To:From:
-        Content-Type:Reply-To:Sender; bh=rK+tf5hZCcUtIobl689XTDQlN0aPAaBJ9TzKkwwpQJQ=
-        ; b=X3Q1fgpvHzmiU4nEWdt+wpDTZQMyH5rMYJdyX0N3qYTHwF9kY8ZOX/hG6VOIImQdY7fpAuw+N
-        UJ7/hXO3z7sroC8DyZh+hlQS7O5eoo8agortDqnHWWO45pUpEOZ5gE5eYhSqHAFqY6AWzNQKEdkIW
-        eHQwVkWU/yowBIndiNeGMt7tfYOIUOmuWVm9BKiiTDJ8+J3PGWhXhCBZhD66x6fHP9+wUU3ywjPqI
-        /XbE7eE1y3/6MXgnBUOQYCp5bd+wNhnoDKi8TvEepWoqq+HESX+vNQycHCwJH0ojBGvwZ6yYow8Ya
-        HlXgRnFEA5cx+C5CftNw6tZJFusgjiRqH2lYhX9ZXkEg8JEHSQIZrNjpI4SMDBP4RtMx+amBWbFyS
-        0wg/51MyilxoPiU4y0LMpT8MqrqzMthS8wto+kIYWYmbO/+uLwAgnB6Jkfx1bDxc/LP/tPdbZy+c5
-        lm9QN7vG/ustVnL9f3CVmzxg2Qq25ymF15wAp9mypIVqLiYhBEBb2O8So3FVENe1PD7+ap4OYnY7a
-        MH9QVTT9/Os1Oekzs/9Kh/Kz0J4fI4eLtDiHqSXzg+2RKcMlKpFWd+I+jPVHd9ux38lRhjO/F84Q0
-        IIugH2VcBpbzU2XVRiWAxyZGJ/d6imAuVG+JoljpgFlCN0vTFYIS2lApA+r3TWbnyibnfvk=;
-Received: from a1-bg02.venev.name ([213.240.239.49] helo=pmx1.venev.name)
-        by a1-bg02.venev.name with esmtps
-        id 1pihQT-0001l6-0H
-        (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-        (envelope-from <hristo@venev.name>);
-        Sat, 01 Apr 2023 20:02:13 +0000
-Received: from venev.name ([213.240.239.49])
-        by pmx1.venev.name with ESMTPSA
-        id W9FpFcONKGRoGgAAdB6GMg
-        (envelope-from <hristo@venev.name>); Sat, 01 Apr 2023 20:02:13 +0000
-From:   Hristo Venev <hristo@venev.name>
-To:     linux-raid@vger.kernel.org
-Cc:     NeilBrown <neilb@suse.de>, Hristo Venev <hristo@venev.name>
-Subject: [PATCH] super1: fix truncation check for journal device
-Date:   Sat,  1 Apr 2023 23:01:35 +0300
-Message-Id: <20230401200134.6688-1-hristo@venev.name>
-X-Mailer: git-send-email 2.40.0
+        with ESMTP id S230287AbjDBJNK (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sun, 2 Apr 2023 05:13:10 -0400
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A21EC641;
+        Sun,  2 Apr 2023 02:13:08 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Pq7bf42Lrz4f3p1B;
+        Sun,  2 Apr 2023 17:13:02 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+        by APP4 (Coremail) with SMTP id gCh0CgD3X7MeRylkVUE8Gg--.50168S4;
+        Sun, 02 Apr 2023 17:13:03 +0800 (CST)
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+To:     logang@deltatee.com, song@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com,
+        yangerkun@huawei.com
+Subject: [PATCH v4 0/5] md: fix uaf for sync_thread
+Date:   Sun,  2 Apr 2023 17:12:31 +0800
+Message-Id: <20230402091236.976723-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+X-CM-TRANSID: gCh0CgD3X7MeRylkVUE8Gg--.50168S4
+X-Coremail-Antispam: 1UD129KBjvJXoWrZry3AFy3uFyUWr4DXryrWFg_yoW8JF1fpF
+        W3WrZxZw4UCrsxZFsrXryj9a45G3W8Kay7KryIyw4rXa45uFWUJr4UJFWkWF9rWFyfJay7
+        Xr15Jr18CF10yFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUyl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+        6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxG
+        rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+        vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
+        x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
+        xKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
+        67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=0.0 required=5.0 tests=SPF_HELO_NONE,SPF_NONE
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,30 +57,45 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-The journal device can be smaller than the component devices.
+From: Yu Kuai <yukuai3@huawei.com>
 
-Fixes: 171e9743881e ("super1: report truncated device")
-Signed-off-by: Hristo Venev <hristo@venev.name>
----
- super1.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Changes in v4:
+ - remove patch 2 from v3
+ - fix sparse errors and warnings from v3, in order to do that, all access
+ to md_thread need to be modified, patch 2-4 is splited to avoid a huge
+ patch.
 
-diff --git a/super1.c b/super1.c
-index f7020320..44d6ecad 100644
---- a/super1.c
-+++ b/super1.c
-@@ -2359,8 +2359,9 @@ static int load_super1(struct supertype *st, int fd, char *devname)
- 
- 	if (st->minor_version >= 1 &&
- 	    st->ignore_hw_compat == 0 &&
--	    (dsize < (__le64_to_cpu(super->data_offset) +
--		      __le64_to_cpu(super->size))
-+	    ((role_from_sb(super) != MD_DISK_ROLE_JOURNAL &&
-+		  dsize < (__le64_to_cpu(super->data_offset) +
-+		      __le64_to_cpu(super->size)))
- 	     ||
- 	     dsize < (__le64_to_cpu(super->data_offset) +
- 		      __le64_to_cpu(super->data_size)))) {
+Changes in v3:
+ - remove patch 3 from v2
+ - use rcu instead of a new lock
+
+Changes in v2:
+ - fix a compile error for md-cluster in patch 2
+ - replace spin_lock/unlock with spin_lock/unlock_irq in patch 5
+ - don't wake up inside the new lock in md wakeup_thread in patch 5
+
+Yu Kuai (5):
+  md: pass a md_thread pointer to md_register_thread()
+  md: factor out a helper to wake up md_thread directly
+  md: add a helper to access md_thread() directly
+  dm-raid: remove useless checking in raid_message()
+  md: protect md_thread with rcu
+
+ drivers/md/dm-raid.c      |   4 +-
+ drivers/md/md-bitmap.c    |  28 +++++++---
+ drivers/md/md-cluster.c   |  11 ++--
+ drivers/md/md-multipath.c |   6 +--
+ drivers/md/md.c           | 108 ++++++++++++++++++++------------------
+ drivers/md/md.h           |  21 +++++---
+ drivers/md/raid1.c        |   9 ++--
+ drivers/md/raid1.h        |   2 +-
+ drivers/md/raid10.c       |  21 ++++----
+ drivers/md/raid10.h       |   2 +-
+ drivers/md/raid5-cache.c  |  14 ++---
+ drivers/md/raid5.c        |  19 +++----
+ drivers/md/raid5.h        |   2 +-
+ 13 files changed, 132 insertions(+), 115 deletions(-)
+
 -- 
-2.40.0
+2.39.2
 
