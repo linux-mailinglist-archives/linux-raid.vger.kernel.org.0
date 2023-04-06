@@ -2,33 +2,33 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D23D76D96BA
-	for <lists+linux-raid@lfdr.de>; Thu,  6 Apr 2023 14:05:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F3096D96AF
+	for <lists+linux-raid@lfdr.de>; Thu,  6 Apr 2023 14:03:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237586AbjDFMF0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 6 Apr 2023 08:05:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42600 "EHLO
+        id S238258AbjDFMDI (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 6 Apr 2023 08:03:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238774AbjDFMFG (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 6 Apr 2023 08:05:06 -0400
+        with ESMTP id S236881AbjDFMCt (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 6 Apr 2023 08:02:49 -0400
 Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE2C49EEE
-        for <linux-raid@vger.kernel.org>; Thu,  6 Apr 2023 05:03:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74F9FBBAE
+        for <linux-raid@vger.kernel.org>; Thu,  6 Apr 2023 05:00:25 -0700 (PDT)
 Received: from kwepemi500002.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Psfdh0WVyzKwyt;
-        Thu,  6 Apr 2023 19:38:32 +0800 (CST)
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4PsfcC0xCtzSqsF;
+        Thu,  6 Apr 2023 19:37:15 +0800 (CST)
 Received: from huawei.com (10.175.101.6) by kwepemi500002.china.huawei.com
  (7.221.188.171) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 6 Apr
- 2023 19:41:01 +0800
+ 2023 19:41:02 +0800
 From:   Guanqin Miao <miaoguanqin@huawei.com>
 To:     <jes@trained-monkey.org>, <mariusz.tkaczyk@linux.intel.com>,
         <pmenzel@molgen.mpg.de>, <linux-raid@vger.kernel.org>
 CC:     <linfeilong@huawei.com>, <lixiaokeng@huawei.com>,
         <louhongxiang@huawei.com>
-Subject: [PATCH 1/4] Fix memory leak in file Assemble
-Date:   Thu, 6 Apr 2023 19:40:08 +0800
-Message-ID: <20230406114011.3297545-2-miaoguanqin@huawei.com>
+Subject: [PATCH 2/4] Fix memory leak in file Kill
+Date:   Thu, 6 Apr 2023 19:40:09 +0800
+Message-ID: <20230406114011.3297545-3-miaoguanqin@huawei.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20230406114011.3297545-1-miaoguanqin@huawei.com>
 References: <20230406114011.3297545-1-miaoguanqin@huawei.com>
@@ -48,85 +48,50 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-When we test mdadm with asan, we found some memory leaks in Assemble.c
+When we test mdadm with asan, we found some memory leaks in Kill.c
 We fix these memory leaks based on code logic.
 
 Signed-off-by: Guanqin Miao <miaoguanqin@huawei.com>
 Signed-off-by: Li Xiao Keng <lixiaokeng@huawei.com>
 ---
- Assemble.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ Kill.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/Assemble.c b/Assemble.c
-index 49804941..574865eb 100644
---- a/Assemble.c
-+++ b/Assemble.c
-@@ -341,8 +341,10 @@ static int select_devices(struct mddev_dev *devlist,
- 				st->ss->free_super(st);
- 			dev_policy_free(pol);
- 			domain_free(domains);
--			if (tst)
-+			if (tst) {
- 				tst->ss->free_super(tst);
-+				free(tst);
-+			}
- 			return -1;
- 		}
+diff --git a/Kill.c b/Kill.c
+index bfd0efdc..43c9abed 100644
+--- a/Kill.c
++++ b/Kill.c
+@@ -41,6 +41,7 @@ int Kill(char *dev, struct supertype *st, int force, int verbose, int noexcl)
+ 	 *  4 - failed to find a superblock.
+ 	 */
  
-@@ -417,6 +419,7 @@ static int select_devices(struct mddev_dev *devlist,
- 				st->ss->free_super(st);
- 				dev_policy_free(pol);
- 				domain_free(domains);
-+				free(st);
- 				return -1;
- 			}
- 			if (c->verbose > 0)
-@@ -425,6 +428,8 @@ static int select_devices(struct mddev_dev *devlist,
++	bool free_super = false;
+ 	int fd, rv = 0;
  
- 			/* make sure we finished the loop */
- 			tmpdev = NULL;
-+			if (st)
-+				free(st);
- 			goto loop;
- 		} else {
- 			content = *contentp;
-@@ -533,6 +538,7 @@ static int select_devices(struct mddev_dev *devlist,
- 				st->ss->free_super(st);
- 				dev_policy_free(pol);
- 				domain_free(domains);
-+				free(tst);
- 				return -1;
- 			}
- 			tmpdev->used = 1;
-@@ -546,8 +552,10 @@ static int select_devices(struct mddev_dev *devlist,
- 		}
- 		dev_policy_free(pol);
- 		pol = NULL;
--		if (tst)
-+		if (tst) {
- 			tst->ss->free_super(tst);
-+			free(tst);
-+		}
+ 	if (force)
+@@ -52,8 +53,10 @@ int Kill(char *dev, struct supertype *st, int force, int verbose, int noexcl)
+ 				dev);
+ 		return 2;
  	}
- 
- 	/* Check if we found some imsm spares but no members */
-@@ -839,6 +847,7 @@ static int load_devices(struct devs *devices, char *devmap,
- 				close(mdfd);
- 				free(devices);
- 				free(devmap);
-+				free(best);
- 				*stp = st;
- 				return -1;
- 			}
-@@ -1950,6 +1959,8 @@ out:
- 	} else if (mdfd >= 0)
- 		close(mdfd);
- 
-+	if (best)
-+		free(best);
- 	/* '2' means 'OK, but not started yet' */
- 	if (rv == -1) {
- 		free(devices);
+-	if (st == NULL)
++	if (st == NULL) {
+ 		st = guess_super(fd);
++		free_super = true;
++	}
+ 	if (st == NULL || st->ss->init_super == NULL) {
+ 		if (verbose >= 0)
+ 			pr_err("Unrecognised md component device - %s\n", dev);
+@@ -77,6 +80,10 @@ int Kill(char *dev, struct supertype *st, int force, int verbose, int noexcl)
+ 			rv = 0;
+ 		}
+ 	}
++	if (free_super && st) {
++		st->ss->free_super(st);
++		free(st);
++	}
+ 	close(fd);
+ 	return rv;
+ }
 -- 
 2.33.0
 
