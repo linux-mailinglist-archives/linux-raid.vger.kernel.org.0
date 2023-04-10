@@ -2,55 +2,97 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 85DCE6DD2EA
-	for <lists+linux-raid@lfdr.de>; Tue, 11 Apr 2023 08:35:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 482FF6DCCEE
+	for <lists+linux-raid@lfdr.de>; Mon, 10 Apr 2023 23:54:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230106AbjDKGfB convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-raid@lfdr.de>); Tue, 11 Apr 2023 02:35:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45498 "EHLO
+        id S229803AbjDJVyM (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 10 Apr 2023 17:54:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229624AbjDKGfA (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 11 Apr 2023 02:35:00 -0400
-Received: from zimbra-dc.paul-scerri.ch (dc.paul-scerri.ch [62.220.130.141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C40659D;
-        Mon, 10 Apr 2023 23:34:58 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra-dc.paul-scerri.ch (Postfix) with ESMTP id 01D4C5E2AB0;
-        Mon, 10 Apr 2023 22:04:32 +0200 (CEST)
-Received: from zimbra-dc.paul-scerri.ch ([127.0.0.1])
-        by localhost (zimbra-dc.paul-scerri.ch [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id X24hj2SPXlp2; Mon, 10 Apr 2023 22:04:31 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra-dc.paul-scerri.ch (Postfix) with ESMTP id CA730597736;
-        Mon, 10 Apr 2023 21:47:19 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at zimbra-dc.paul-scerri.ch
-Received: from zimbra-dc.paul-scerri.ch ([127.0.0.1])
-        by localhost (zimbra-dc.paul-scerri.ch [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id vStYXekUpadl; Mon, 10 Apr 2023 21:47:19 +0200 (CEST)
-Received: from [185.169.4.108] (unknown [185.169.4.108])
-        by zimbra-dc.paul-scerri.ch (Postfix) with ESMTPSA id 4D50C5B21DF;
-        Mon, 10 Apr 2023 21:34:31 +0200 (CEST)
+        with ESMTP id S229767AbjDJVyM (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 10 Apr 2023 17:54:12 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B62619B6
+        for <linux-raid@vger.kernel.org>; Mon, 10 Apr 2023 14:54:11 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id ADEBB21A25;
+        Mon, 10 Apr 2023 21:54:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1681163648; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bf2DHyP9u9EIK+h/BbZm6RMAg0k54faWO6d9BFKbedE=;
+        b=gdu/fpsMFDqDlVovNUXbZRyxI2byeaF1/GZA6kXXrJLuWY8s0E5SRohZGS7CTHs8Vxj7Qq
+        Phn2173VztyoeiaKKqMhvZNOrqj1Gy0vhEnhMMsirfaA3qT3pi+qSdnf6R967yuLTKi9T7
+        6K+mJT0FRN2LPVMnLlxjRxWYbGGcf4k=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1681163648;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bf2DHyP9u9EIK+h/BbZm6RMAg0k54faWO6d9BFKbedE=;
+        b=V3AB+TxeY7ZsZVhdbFm6KdeydHVKUSTRGMBIeTwCmIJzhNJ7Rftbuq34UdJkeXFJa/aN2u
+        7Cru0iRDEgcKOeCA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7468D13902;
+        Mon, 10 Apr 2023 21:54:07 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id mg1rCn+FNGR1SwAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 10 Apr 2023 21:54:07 +0000
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: Re
-To:     Recipients <wiki@paul-scerri.ch>
-From:   "Maria-Elisabeth Schaeffler" <wiki@paul-scerri.ch>
-Date:   Mon, 10 Apr 2023 12:34:30 -0700
-Reply-To: mariaelisabeths457@gmail.com
-Message-Id: <20230410193431.4D50C5B21DF@zimbra-dc.paul-scerri.ch>
-X-Spam-Status: No, score=2.8 required=5.0 tests=FREEMAIL_FORGED_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Level: **
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Jes Sorensen" <jes@trained-monkey.org>
+Cc:     "Kernel.org-Linux-RAID" <linux-raid@vger.kernel.org>,
+        "Mariusz Tkaczyk" <mariusz.tkaczyk@linux.intel.com>
+Subject: Re: mdadm minimum kernel version requirements?
+In-reply-to: <e8ed86bb-4162-7d8e-ece9-eb75e045bcc5@trained-monkey.org>
+References: <e8ed86bb-4162-7d8e-ece9-eb75e045bcc5@trained-monkey.org>
+Date:   Tue, 11 Apr 2023 07:54:04 +1000
+Message-id: <168116364433.24821.9557577764628245206@noble.neil.brown.name>
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Your email account has been selected for a donation of €1,700,000. Please contact for more information.
+On Tue, 11 Apr 2023, Jes Sorensen wrote:
+> Hi,
+> 
+> I bumped the minimum kernel version required for mdadm to 2.6.32.
+> 
+> Should we drop support for anything prior to 3.10 at this point, since
+> RHEL7 is 3.10 based and SLES12 seems to be 3.12 based.
+> 
+> Thoughts?
 
-Mrs Maria Elisabeth Schaeffler
-CEO SCHAEFFLER.
+When you talk about changing the required kernel version, I would find
+it helpful if you at least mention what actual kernel features you now
+want to depend on - at least the more significant ones.
+
+Aside from features, I'd rather think about how old the kernel is.
+2.6.32 is over 13 years old.
+3.10 is very nearly 10 years old.
+If there is something significant that landed in 3.10 that we want to
+depend on, then requiring that seems perfectly reasonable.
+
+I think the oldest SLE kernel that you might care about would be 4.12
+(SLE12-SP5 - nearly 6 years old).  Anyone using an older SLE release
+values stability over new functionality and is not going to be trialling
+a new mdadm.
+
+Thanks,
+NeilBrown
