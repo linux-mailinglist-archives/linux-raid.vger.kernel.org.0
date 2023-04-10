@@ -2,91 +2,106 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E82996DA6AC
-	for <lists+linux-raid@lfdr.de>; Fri,  7 Apr 2023 02:46:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 572AA6DC64C
+	for <lists+linux-raid@lfdr.de>; Mon, 10 Apr 2023 13:37:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229980AbjDGAqZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 6 Apr 2023 20:46:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46736 "EHLO
+        id S229937AbjDJLhA (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 10 Apr 2023 07:37:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229669AbjDGAqY (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 6 Apr 2023 20:46:24 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90E716EA1
-        for <linux-raid@vger.kernel.org>; Thu,  6 Apr 2023 17:45:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1680828336;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=OAK2MVwskbD4sv0QXFxEpgJJ2jIM2d/e5FTZqVMwUnA=;
-        b=MmdkxGymMyZq9vdbffqRs01ULPWLoeGmyBDJJjdDEdPmsBbVW4OncC6kFNkwqT65xZiJFU
-        10uflrLdQJgDcKb4O8w/UIxPPAEOVbouhrirc0XgnepqGkSIiLMRrJuIh699wSEzaOpbyJ
-        0Qs3eHf9Qqd5aciJ09dAoMgOhcp10Kw=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-557-etoEZvLFMJehl59shG5ntQ-1; Thu, 06 Apr 2023 20:45:33 -0400
-X-MC-Unique: etoEZvLFMJehl59shG5ntQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 07D83884343;
-        Fri,  7 Apr 2023 00:45:33 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-12-95.pek2.redhat.com [10.72.12.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 037E8440D8;
-        Fri,  7 Apr 2023 00:45:30 +0000 (UTC)
-From:   Xiao Ni <xni@redhat.com>
-To:     jes@trained-monkey.org
-Cc:     neilb@suse.de, linux-raid@vger.kernel.org
-Subject: [PATCH 1/1] Remove the config files in mdcheck_start|continue service
-Date:   Fri,  7 Apr 2023 08:45:28 +0800
-Message-Id: <20230407004528.59539-1-xni@redhat.com>
+        with ESMTP id S229719AbjDJLg6 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 10 Apr 2023 07:36:58 -0400
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74BAD44BE;
+        Mon, 10 Apr 2023 04:36:57 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.153])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Pw6Pw2lsMz4f4FSF;
+        Mon, 10 Apr 2023 19:36:52 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+        by APP4 (Coremail) with SMTP id gCh0CgAHvbDT9DNk0tNvHA--.50875S4;
+        Mon, 10 Apr 2023 19:36:53 +0800 (CST)
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+To:     logang@deltatee.com, song@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com,
+        yangerkun@huawei.com
+Subject: [PATCH -next v5 0/6] md: fix uaf for sync_thread
+Date:   Mon, 10 Apr 2023 19:35:53 +0800
+Message-Id: <20230410113559.1610455-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-CM-TRANSID: gCh0CgAHvbDT9DNk0tNvHA--.50875S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zr1DXF43tr4DAF4kXFykGrg_yoW8XFy3pF
+        Wagr9xZw4UCrsxZFsxZFyjka45G3Wrtay7KryxC34rZa45uFWUJr4UGFWkWF9ruFyfJa9r
+        Xr15Jr18uF1jyaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUyG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+        6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxG
+        rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+        vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
+        x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
+        xKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
+        67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=0.0 required=5.0 tests=SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-We set MDADM_CHECK_DURATION in the mdcheck_start|continue.service files.
-And mdcheck doesn't use any configs from the config file. So we can remove
-the dependencies.
+From: Yu Kuai <yukuai3@huawei.com>
 
-Signed-off-by: Xiao Ni <xni@redhat.com>
----
- systemd/mdcheck_continue.service | 2 --
- systemd/mdcheck_start.service    | 2 --
- 2 files changed, 4 deletions(-)
+Changes in v5:
+ - use rcu_dereference_protected() instead of rcu_access_pointer() where
+ rcu_read_lock/unlock is not required.
+ - add patch 4,5 to handle that bitmap timeout is set multiple times.
 
-diff --git a/systemd/mdcheck_continue.service b/systemd/mdcheck_continue.service
-index 854317f11700..f576e0167f3c 100644
---- a/systemd/mdcheck_continue.service
-+++ b/systemd/mdcheck_continue.service
-@@ -12,6 +12,4 @@ ConditionPathExistsGlob = /var/lib/mdcheck/MD_UUID_*
- [Service]
- Type=oneshot
- Environment="MDADM_CHECK_DURATION=6 hours"
--EnvironmentFile=-/run/sysconfig/mdadm
--ExecStartPre=-/usr/lib/mdadm/mdadm_env.sh
- ExecStart=/usr/share/mdadm/mdcheck --continue --duration ${MDADM_CHECK_DURATION}
-diff --git a/systemd/mdcheck_start.service b/systemd/mdcheck_start.service
-index 3bb3d130801f..f98e5c6f52d7 100644
---- a/systemd/mdcheck_start.service
-+++ b/systemd/mdcheck_start.service
-@@ -12,6 +12,4 @@ Wants=mdcheck_continue.timer
- [Service]
- Type=oneshot
- Environment="MDADM_CHECK_DURATION=6 hours"
--EnvironmentFile=-/run/sysconfig/mdadm
--ExecStartPre=-/usr/lib/mdadm/mdadm_env.sh
- ExecStart=/usr/share/mdadm/mdcheck --duration ${MDADM_CHECK_DURATION}
+Changes in v4:
+ - remove patch 2 from v3
+ - fix sparse errors and warnings from v3, in order to do that, all access
+ to md_thread need to be modified, patch 2-4 is splited to avoid a huge
+ patch.
+
+Changes in v3:
+ - remove patch 3 from v2
+ - use rcu instead of a new lock
+
+Changes in v2:
+ - fix a compile error for md-cluster in patch 2
+ - replace spin_lock/unlock with spin_lock/unlock_irq in patch 5
+ - don't wake up inside the new lock in md wakeup_thread in patch 5
+
+Yu Kuai (6):
+  md: pass a md_thread pointer to md_register_thread()
+  md: factor out a helper to wake up md_thread directly
+  dm-raid: remove useless checking in raid_message()
+  md/bitmap: always wake up md_thread in timeout_store
+  md/bitmap: factor out a helper to set timeout
+  md: protect md_thread with rcu
+
+ drivers/md/dm-raid.c      |   4 +-
+ drivers/md/md-bitmap.c    |  50 +++++++++++------
+ drivers/md/md-cluster.c   |  11 ++--
+ drivers/md/md-multipath.c |   6 +--
+ drivers/md/md.c           | 110 ++++++++++++++++++++------------------
+ drivers/md/md.h           |  15 +++---
+ drivers/md/raid1.c        |   9 ++--
+ drivers/md/raid1.h        |   2 +-
+ drivers/md/raid10.c       |  25 ++++-----
+ drivers/md/raid10.h       |   2 +-
+ drivers/md/raid5-cache.c  |  20 +++----
+ drivers/md/raid5.c        |  19 +++----
+ drivers/md/raid5.h        |   2 +-
+ 13 files changed, 148 insertions(+), 127 deletions(-)
+
 -- 
-2.32.0 (Apple Git-132)
+2.39.2
 
