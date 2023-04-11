@@ -2,72 +2,76 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E6E76DE3C4
-	for <lists+linux-raid@lfdr.de>; Tue, 11 Apr 2023 20:20:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E35C26DE519
+	for <lists+linux-raid@lfdr.de>; Tue, 11 Apr 2023 21:47:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229703AbjDKSUw (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 11 Apr 2023 14:20:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42654 "EHLO
+        id S229617AbjDKTru (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 11 Apr 2023 15:47:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229807AbjDKSUu (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 11 Apr 2023 14:20:50 -0400
-X-Greylist: delayed 505 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 11 Apr 2023 11:20:48 PDT
-Received: from itrosinen.de (itrosinen.de [185.13.148.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13B515B92
-        for <linux-raid@vger.kernel.org>; Tue, 11 Apr 2023 11:20:47 -0700 (PDT)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by itrosinen.de (Postfix) with ESMTP id 428AF4E5E7
-        for <linux-raid@vger.kernel.org>; Tue, 11 Apr 2023 20:12:22 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at itrosinen.de
-Received: from itrosinen.de ([127.0.0.1])
-        by localhost (itrosinen.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id hDEUJi69LKNY for <linux-raid@vger.kernel.org>;
-        Tue, 11 Apr 2023 20:12:21 +0200 (CEST)
-Received: from www.itrosinen.de (unknown [172.17.0.2])
+        with ESMTP id S229596AbjDKTrt (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 11 Apr 2023 15:47:49 -0400
+Received: from mail.stoffel.org (mail.stoffel.org [172.104.24.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06B9C2D55
+        for <linux-raid@vger.kernel.org>; Tue, 11 Apr 2023 12:47:47 -0700 (PDT)
+Received: from quad.stoffel.org (097-095-183-072.res.spectrum.com [97.95.183.72])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        (Authenticated sender: moritz)
-        by itrosinen.de (Postfix) with ESMTPSA id E2BEA4E5E6
-        for <linux-raid@vger.kernel.org>; Tue, 11 Apr 2023 20:12:21 +0200 (CEST)
+        by mail.stoffel.org (Postfix) with ESMTPSA id DCBD51E6EC;
+        Tue, 11 Apr 2023 15:47:46 -0400 (EDT)
+Received: by quad.stoffel.org (Postfix, from userid 1000)
+        id 82086A8575; Tue, 11 Apr 2023 15:47:46 -0400 (EDT)
 MIME-Version: 1.0
-Date:   Tue, 11 Apr 2023 20:12:21 +0200
-From:   Moritz Rosin <moritz@itrosinen.de>
-To:     linux-raid@vger.kernel.org
-Subject: Recover data from accidentally created raid5 over raid1
-Message-ID: <432ab0ccdb077378295ceedb82ac162f@itrosinen.de>
-X-Sender: moritz@itrosinen.de
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-0.0 required=5.0 tests=SPF_HELO_PASS,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Message-ID: <25653.47458.489415.933722@quad.stoffel.home>
+Date:   Tue, 11 Apr 2023 15:47:46 -0400
+From:   "John Stoffel" <john@stoffel.org>
+To:     Moritz Rosin <moritz.rosin@itrosinen.de>
+Cc:     linux-raid@vger.kernel.org
+Subject: Re: Recover data from accidentally created raid5 over raid1
+In-Reply-To: <c0a9e08b91e86c86038be889907f0796@itrosinen.de>
+References: <c0a9e08b91e86c86038be889907f0796@itrosinen.de>
+X-Mailer: VM 8.2.0b under 27.1 (x86_64-pc-linux-gnu)
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_PASS,T_SPF_HELO_PERMERROR autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hey there,
+>>>>> "Moritz" == Moritz Rosin <moritz.rosin@itrosinen.de> writes:
 
-unfortunately I have to admit, that I learned my lesson the hard way 
-dealing with software raids.
+> Hey there,
+> unfortunately I have to admit, that I learned my lesson the hard way 
+> dealing with software raids.
 
-I had a raid1 running reliable over month using two 4TB HDDs.
-Since I ran short on free space I tried to convert the raid1 to a raid5 
-in-place (with the plan to add the 3rd HDD after converting).
-That's where my incredibly stupid mistake kicked in.
+> I had a raid1 running reliable over month using two 4TB HDDs.
+> Since I ran short on free space I tried to convert the raid1 to a raid5 
+> in-place (with the plan to add the 3rd HDD after converting).
+> That's where my incredibly stupid mistake kicked in.
 
-I followed an internet tutorial that told me to do:
-mdadm --create /dev/md0 --level=5 --raid-devices=2 /dev/sdX1 /dev/sdY1
+> I followed an internet tutorial that told me to do:
+> mdadm --create /dev/md0 --level=5 --raid-devices=2 /dev/sdX1 /dev/sdY1
 
-I learned that I re-created a raid5 array instead of converting the 
-raid1 :-(
+Please share the link to the tutorial so we can maybe shame that
+person into fixing it.  Or removing it.  
 
-Is there any chance to un-do the conversion or restore the data?
-Has the process of creation really overwritten data or is there anythins 
-left on the disk itself that can be rescued?
+> I learned that I re-created a raid5 array instead of converting the 
+> raid1 :-(
 
-Any help would be appreciated. Thanks!!!
+Yeah, I think you're out of luck here.  What kind of filesystem did
+you have on your setup?  Were you using MD -> LVM -> filesystem stack?
+Or just a raw filesystem on top of the /dev/md?  device?
 
-Moritz
+> Is there any chance to un-do the conversion or restore the data?
+> Has the process of creation really overwritten data or is there
+> anythins left on the disk itself that can be rescued?
+
+If you have any information on your setup before you did this, then
+you might be ok, but honestly, I think you're toast.
+
+John
