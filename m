@@ -2,74 +2,137 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 662506E58FE
-	for <lists+linux-raid@lfdr.de>; Tue, 18 Apr 2023 08:00:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 749D46E7B97
+	for <lists+linux-raid@lfdr.de>; Wed, 19 Apr 2023 16:10:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230425AbjDRF7t (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 18 Apr 2023 01:59:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43826 "EHLO
+        id S231953AbjDSOKp (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 19 Apr 2023 10:10:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230393AbjDRF7o (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 18 Apr 2023 01:59:44 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 841C75BA9
-        for <linux-raid@vger.kernel.org>; Mon, 17 Apr 2023 22:59:34 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id xd13so36322046ejb.4
-        for <linux-raid@vger.kernel.org>; Mon, 17 Apr 2023 22:59:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681797571; x=1684389571;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dQlu0Oc2Q0nPMBCNq5iTPUZpwrRZlsMdPt2zjra8+VI=;
-        b=h2u+IvYIbnFxxtQG/ZtOJXOGODtmHZE6DE2kphmV5deUhBtI5SSl5ZpPS81I4DoyvM
-         cL/QsMoq/nZ79QoTUVBpjigDCpbkhNV4ihdOYSWAZCOke9dA/QR1VB/koOlQ9LVEDYMX
-         XtbtlwSc8k7WA+c3R6xpugIUkMv4IcvxiBX5jugHOkE6bIQRd6XIP4bPoYTYUOtLJ8cY
-         jqOSy7VahCSY+50nHqKMLAvtMY0jgSKZG9RLZ0VM4rlX3dlYAIwPmpAZEs5sdE1jKPzt
-         sUSa+Yt3rvdogEL685HX9OzzgKvbxUuLxSFiR0ubii95w3DTWRmDDneYGKBqJn2l6obd
-         7Bag==
+        with ESMTP id S231319AbjDSOKo (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 19 Apr 2023 10:10:44 -0400
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C6EB15A10;
+        Wed, 19 Apr 2023 07:10:30 -0700 (PDT)
+Received: by mail-wm1-f50.google.com with SMTP id he11-20020a05600c540b00b003ef6d684102so1520272wmb.3;
+        Wed, 19 Apr 2023 07:10:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681797571; x=1684389571;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dQlu0Oc2Q0nPMBCNq5iTPUZpwrRZlsMdPt2zjra8+VI=;
-        b=G8nEuadEasvWv3rP4zf70hpI1XQO6At0UtHsRoeBzu7yfdvSbLLTi1Rs6KJ01YyqX8
-         DEDL365sEJgLCWmoC+ZFBzeH14BI/xGDNZHv0pk7NEf27y6yGMlRVgHodfgmjj0YZLm+
-         QQKgVNxAXl9MGMv6egXLfVF/OD7triK48GUWH4YV44Wk9epbBwcwYgmKhgR2cWgw0vX1
-         P/k87cAByXkLcxm31IXKmVefARDtWLDBbHSQ8qEsHtybKUC3H37H2ab8vRmWPNcV7ygo
-         ugEkweLU+ZtswPYhKvlAK/RFxQ1XHHxXQ6F5e1BucGq+UBxuLW0ku9aIQmw+e8j/k3vD
-         /Zyg==
-X-Gm-Message-State: AAQBX9dzRGftO5hJu/QgprOruXEonsA9/mQe+Qbh0qfysFdqTN+R6zYG
-        5m01tm7SNUHfO+iur8cfcIDryWi66ezHCNLRmiNB68fJOFJ/yqvT
-X-Google-Smtp-Source: AKy350YRsUSKQ0+i58Lzun7WtY7IrRwSkm+DWIi2JdfS71rVYYWUT2OQ/a/Q5PRWIBazn3AQLm2dWBYGVxBajLvvRoE=
-X-Received: by 2002:a05:6512:96b:b0:4e8:4b7a:6b73 with SMTP id
- v11-20020a056512096b00b004e84b7a6b73mr2935594lft.4.1681797550844; Mon, 17 Apr
- 2023 22:59:10 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1681913428; x=1684505428;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ds+4u+CqEC3ZGaEOp3gVvQ4zLD/cUEcU9lJQRjxdLNA=;
+        b=WX5EowMjS9XI2UcO7k7N2sKja7Qujs2MuxPF+ITs9uQJ59E2W7CDS4aAFza9vyYC5V
+         A+lcsR43X3/BqzbYfET7qJhVlroKrkZXjRXWFs1E0vc9jD440wiQigJ/yyg6NlwCOqdM
+         V/fA4dLotHR+ti15hsg6t7bcWZSie2Y8BRuiOIOYRHG04f5vvZIx7YmnqymPxqj6v6u9
+         L6UxUPiU/uwj9rQ8jTGS9E09iyLTjAjTct1kkGiZZKb48Ji7IjsqkenNkt65LuQHujPU
+         bUZ8zz2lTh51vIefhWpXPr1zYtAeh1V+t0xN+eOv1BKu4/WRIwyg2vHauowhB4ge+N2y
+         6fpQ==
+X-Gm-Message-State: AAQBX9dCt3wzuDiI9i96wDEslyFOlFG83SOUY+MffW5H+ir0Ko8xdqkc
+        CQXft7cNlIWsv78MbBabI80=
+X-Google-Smtp-Source: AKy350Y4xTG1OoU4RldSmLjAWxwSQmurOCS31djj2xM4db5/3zz7gZSX8s3hL+Z3d0qabHExFnk4cg==
+X-Received: by 2002:a05:600c:3ca2:b0:3f1:7371:86bb with SMTP id bg34-20020a05600c3ca200b003f1737186bbmr1907296wmb.20.1681913428480;
+        Wed, 19 Apr 2023 07:10:28 -0700 (PDT)
+Received: from localhost.localdomain (aftr-62-216-205-204.dynamic.mnet-online.de. [62.216.205.204])
+        by smtp.googlemail.com with ESMTPSA id q17-20020a5d61d1000000b002faaa9a1721sm7612089wrv.58.2023.04.19.07.10.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Apr 2023 07:10:27 -0700 (PDT)
+From:   Johannes Thumshirn <jth@kernel.org>
+To:     axboe@kernel.dk
+Cc:     johannes.thumshirn@wdc.com, agruenba@redhat.com,
+        cluster-devel@redhat.com, damien.lemoal@wdc.com,
+        dm-devel@redhat.com, dsterba@suse.com, hare@suse.de, hch@lst.de,
+        jfs-discussion@lists.sourceforge.net, kch@nvidia.com,
+        linux-block@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-raid@vger.kernel.org, ming.lei@redhat.com,
+        rpeterso@redhat.com, shaggy@kernel.org, snitzer@kernel.org,
+        song@kernel.org, willy@infradead.org,
+        Johannes Thumshirn <jth@kernel.org>
+Subject: [PATCH v3 00/19] bio: check return values of bio_add_page
+Date:   Wed, 19 Apr 2023 16:09:10 +0200
+Message-Id: <20230419140929.5924-1-jth@kernel.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Received: by 2002:ab2:2681:0:b0:1b6:840f:9075 with HTTP; Mon, 17 Apr 2023
- 22:59:10 -0700 (PDT)
-Reply-To: mariamkouame.info@myself.com
-From:   Mariam Kouame <mariamkouame1992@gmail.com>
-Date:   Mon, 17 Apr 2023 22:59:10 -0700
-Message-ID: <CADUz=agNY633M0qMXMnAP3Ms7-3rKuWtAZGCOQZKeYpCdBxT_w@mail.gmail.com>
-Subject: from mariam kouame
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Level: **
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Dear,
+We have two functions for adding a page to a bio, __bio_add_page() which is
+used to add a single page to a freshly created bio and bio_add_page() which is
+used to add a page to an existing bio.
 
-Please grant me permission to share a very crucial discussion with
-you. I am looking forward to hearing from you at your earliest
-convenience.
+While __bio_add_page() is expected to succeed, bio_add_page() can fail.
 
-Mrs. Mariam Kouame
+This series converts the callers of bio_add_page() which can easily use
+__bio_add_page() to using it and checks the return of bio_add_page() for
+callers that don't work on a freshly created bio.
+
+Lastly it marks bio_add_page() as __must_check so we don't have to go again
+and audit all callers.
+
+NOTE: David already applied the two btrfs patches to his tree but I've left
+them in the series to make the build bot happy.
+
+Changes to v2:
+- Removed 'wont fail' comments pointed out by Song
+
+Changes to v1:
+- Removed pointless comment pointed out by Willy
+- Changed commit messages pointed out by Damien
+- Colledted Damien's Reviews and Acks
+
+Johannes Thumshirn (19):
+  swap: use __bio_add_page to add page to bio
+  drbd: use __bio_add_page to add page to bio
+  dm: dm-zoned: use __bio_add_page for adding single metadata page
+  fs: buffer: use __bio_add_page to add single page to bio
+  md: use __bio_add_page to add single page
+  md: raid5-log: use __bio_add_page to add single page
+  md: raid5: use __bio_add_page to add single page to new bio
+  btrfs: repair: use __bio_add_page for adding single page
+  btrfs: raid56: use __bio_add_page to add single page
+  jfs: logmgr: use __bio_add_page to add single page to bio
+  gfs: use __bio_add_page for adding single page to bio
+  zonefs: use __bio_add_page for adding single page to bio
+  zram: use __bio_add_page for adding single page to bio
+  floppy: use __bio_add_page for adding single page to bio
+  md: check for failure when adding pages in alloc_behind_master_bio
+  md: raid1: use __bio_add_page for adding single page to bio
+  md: raid1: check if adding pages to resync bio fails
+  dm-crypt: check if adding pages to clone bio fails
+  block: mark bio_add_page as __must_check
+
+ drivers/block/drbd/drbd_bitmap.c |  4 +---
+ drivers/block/floppy.c           |  2 +-
+ drivers/block/zram/zram_drv.c    |  2 +-
+ drivers/md/dm-crypt.c            |  9 ++++++++-
+ drivers/md/dm-zoned-metadata.c   |  6 +++---
+ drivers/md/md.c                  |  4 ++--
+ drivers/md/raid1-10.c            | 11 ++++++-----
+ drivers/md/raid1.c               |  7 +++++--
+ drivers/md/raid10.c              | 20 ++++++++++----------
+ drivers/md/raid5-cache.c         |  2 +-
+ drivers/md/raid5-ppl.c           |  4 ++--
+ fs/btrfs/bio.c                   |  2 +-
+ fs/btrfs/raid56.c                |  2 +-
+ fs/buffer.c                      |  2 +-
+ fs/gfs2/ops_fstype.c             |  2 +-
+ fs/jfs/jfs_logmgr.c              |  4 ++--
+ fs/zonefs/super.c                |  2 +-
+ include/linux/bio.h              |  2 +-
+ mm/page_io.c                     |  8 ++++----
+ 19 files changed, 52 insertions(+), 43 deletions(-)
+
+
+base-commit: af67688dca57999fd848f051eeea1d375ba546b2
+-- 
+2.39.2
+
