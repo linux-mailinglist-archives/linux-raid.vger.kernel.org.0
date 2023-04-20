@@ -2,167 +2,76 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC4756E9CDF
-	for <lists+linux-raid@lfdr.de>; Thu, 20 Apr 2023 22:10:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DC8F6EA3F9
+	for <lists+linux-raid@lfdr.de>; Fri, 21 Apr 2023 08:47:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229599AbjDTUKQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 20 Apr 2023 16:10:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39674 "EHLO
+        id S229830AbjDUGrp (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 21 Apr 2023 02:47:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229772AbjDTUKP (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 20 Apr 2023 16:10:15 -0400
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4CC6170C
-        for <linux-raid@vger.kernel.org>; Thu, 20 Apr 2023 13:10:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-        MIME-Version:Date:Message-ID:content-disposition;
-        bh=GTzNy7C2T6muFzioVbesJTYC9mO0Es0QkEJN8gC7hbQ=; b=MMg8RV/05LMPWR8v5QuGP2fgW/
-        goB+F3XddxaPUAwsn+Yd5kWxbfyo/wUFDuzMmTcGtbRrEL2+hcFLw/U9NFg2HYNlXDjc35A2Xnef6
-        G7aEQGZ7ZY4/nLg0CdlCZHXqJQodmGLd8G6fJ/E0Y1AiKi67ic4MboysRDSmncWjCpKWxZ07g92+y
-        gOIAYoQm0GeVsj7Zgb+3ZH0ouiYrC2VblEwdYq/2Vzxwgbo2yRXOsxdkPKRLl9MzcUG68u8Zytn3s
-        PlHJl5FVy9bqXtAVIUTR67Z0Fqu/YSJEnMDvSaj/Hr/LX1yMyc41lD03qdL0QgubAMJ+UVj+gzOET
-        BZ6cGeoA==;
-Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
-        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <logang@deltatee.com>)
-        id 1ppabT-00DZEE-Kp; Thu, 20 Apr 2023 14:10:05 -0600
-Message-ID: <e6343cab-01e3-77da-8380-137703344768@deltatee.com>
-Date:   Thu, 20 Apr 2023 14:10:02 -0600
+        with ESMTP id S229956AbjDUGro (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 21 Apr 2023 02:47:44 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D3C8E74
+        for <linux-raid@vger.kernel.org>; Thu, 20 Apr 2023 23:47:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1682059663; x=1713595663;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=sApTg0dA9XKTX7g+K7fS+iS3sanx13QRLeq7iLKIQi4=;
+  b=Ka3jeROEx2UzFv94UcjFMPYu4lv14NYZLS8O9YkI08D/XxjjlA4KwEOA
+   YOXWN0N4lZkU+409anhwI/gF2N78DJUAYHdQPfc68debPWQJbgm1IdZft
+   BCk2A/BRVW2c2ecCvpUbMPzkgcOoCFCl3PEnVIU9uXYbIc6mqU3lxqSNj
+   CMx+qKR8M0MicWRgqq4mxumrz/WWJWkqUMK5UzIrGeGufkLd0dzHJmgjE
+   c+IwPHtxPHRZGDGOC5JvVY7jb5QjkLc/u2o5w342ZaSXJwYrDVBTXkbr6
+   0WpFm8w6z4FkCbENvUp6REATTT/mEdDo95hZfsmqTGqUK9r29wwxnqF89
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="330128180"
+X-IronPort-AV: E=Sophos;i="5.99,214,1677571200"; 
+   d="scan'208";a="330128180"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2023 23:47:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="685641214"
+X-IronPort-AV: E=Sophos;i="5.99,214,1677571200"; 
+   d="scan'208";a="685641214"
+Received: from unknown (HELO localhost.igk.intel.com) ([10.102.92.203])
+  by orsmga007.jf.intel.com with ESMTP; 20 Apr 2023 23:47:42 -0700
+From:   Kinga Tanska <kinga.tanska@intel.com>
+To:     linux-raid@vger.kernel.org
+Cc:     jes@trained-monkey.org, colyli@suse.de
+Subject: [PATCH 0/2] Fix unsafe string functions
+Date:   Fri, 21 Apr 2023 01:46:56 +0200
+Message-Id: <20230420234658.367-1-kinga.tanska@intel.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Content-Language: en-CA
-To:     Song Liu <song@kernel.org>
-Cc:     Jan Kara <jack@suse.cz>, linux-raid@vger.kernel.org,
-        David Sloan <David.Sloan@eideticom.com>
-References: <20230417171537.17899-1-jack@suse.cz>
- <9a1e2e05-72cd-aba2-b380-d0836d2e98dd@deltatee.com>
- <CAPhsuW76n5w7AJ5Ee6foGgm4U2FpRDfpMYhELS7=gJE5SeGwAA@mail.gmail.com>
- <20230420112613.l5wyzi7ran556pum@quack3>
- <c5830dd8-57c5-0d94-a48d-d85f154607e0@deltatee.com>
- <CAPhsuW5aaaTL1Ed-wKb82DKSSqg+ckC0MboaOLSUuaiGmTYTuA@mail.gmail.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <CAPhsuW5aaaTL1Ed-wKb82DKSSqg+ckC0MboaOLSUuaiGmTYTuA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 24.64.144.200
-X-SA-Exim-Rcpt-To: song@kernel.org, jack@suse.cz, linux-raid@vger.kernel.org, David.Sloan@eideticom.com
-X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DATE_IN_PAST_06_12,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
-Subject: Re: [PATCH] md/raid5: Improve performance for sequential IO
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+This series of patches contains fixes for unsafe string
+functions usings. Unsafe functions were replaced with
+new ones that limites the input length.
 
+Kinga Tanska (2):
+  Fix unsafe string functions
+  platform-intel: limit guid length
 
-On 2023-04-20 14:07, Song Liu wrote:
-> On Thu, Apr 20, 2023 at 8:54 AM Logan Gunthorpe <logang@deltatee.com> wrote:
->>
->>
->>
->> On 2023-04-20 05:26, Jan Kara wrote:
->>> On Wed 19-04-23 22:26:07, Song Liu wrote:
->>>> On Wed, Apr 19, 2023 at 12:04 PM Logan Gunthorpe <logang@deltatee.com> wrote:
->>>>> On 2023-04-17 11:15, Jan Kara wrote:
->>>>>> Commit 7e55c60acfbb ("md/raid5: Pivot raid5_make_request()") changed the
->>>>>> order in which requests for underlying disks are created. Since for
->>>>>> large sequential IO adding of requests frequently races with md_raid5
->>>>>> thread submitting bios to underlying disks, this results in a change in
->>>>>> IO pattern because intermediate states of new order of request creation
->>>>>> result in more smaller discontiguous requests. For RAID5 on top of three
->>>>>> rotational disks our performance testing revealed this results in
->>>>>> regression in write throughput:
->>>>>>
->>>>>> iozone -a -s 131072000 -y 4 -q 8 -i 0 -i 1 -R
->>>>>>
->>>>>> before 7e55c60acfbb:
->>>>>>               KB  reclen   write rewrite    read    reread
->>>>>>        131072000       4  493670  525964   524575   513384
->>>>>>        131072000       8  540467  532880   512028   513703
->>>>>>
->>>>>> after 7e55c60acfbb:
->>>>>>               KB  reclen   write rewrite    read    reread
->>>>>>        131072000       4  421785  456184   531278   509248
->>>>>>        131072000       8  459283  456354   528449   543834
->>>>>>
->>>>>> To reduce the amount of discontiguous requests we can start generating
->>>>>> requests with the stripe with the lowest chunk offset as that has the
->>>>>> best chance of being adjacent to IO queued previously. This improves the
->>>>>> performance to:
->>>>>>               KB  reclen   write rewrite    read    reread
->>>>>>        131072000       4  497682  506317   518043   514559
->>>>>>        131072000       8  514048  501886   506453   504319
->>>>>>
->>>>>> restoring big part of the regression.
->>>>>>
->>>>>> Fixes: 7e55c60acfbb ("md/raid5: Pivot raid5_make_request()")
->>>>>> Signed-off-by: Jan Kara <jack@suse.cz>
->>>>>
->>>>> Looks good to me. I ran it through some of the functional tests I used
->>>>> to develop the patch in question and found no issues.
->>>>>
->>>>> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
->>>>
->>>> Thanks Jan and Logan! I will apply this to md-next. But it may not make
->>>> 6.4 release, as we are already at rc7.
->>>
->>> OK, sure, this is not a critical issue.
->>>
->>>>>> ---
->>>>>>  drivers/md/raid5.c | 45 ++++++++++++++++++++++++++++++++++++++++++++-
->>>>>>  1 file changed, 44 insertions(+), 1 deletion(-)
->>>>>>
->>>>>> I'm by no means raid5 expert but this is what I was able to come up with. Any
->>>>>> opinion or ideas how to fix the problem in a better way?
->>>>>
->>>>> The other option would be to revert to the old method for spinning disks
->>>>> and use the pivot option only on SSDs. The pivot optimization really
->>>>> only applies at IO speeds that can be achieved by fast solid state disks
->>>>> anyway, and there isn't likely enough IOPS possible on spinning disks to
->>>>> get enough lock contention that the optimization would provide any benefit.
->>>>>
->>>>> So it could make sense to just fall back to the old method of preparing
->>>>> the stripes in logical block order if we are running on spinning disks.
->>>>> Though, that might be a bit more involved than what this patch does. So
->>>>> I think this is probably a good approach, unless we want to recover more
->>>>> of the lost throughput.
->>>>
->>>> How about we only do the optimization in this patch for spinning disks?
->>>> Something like:
->>>>
->>>>         if (likely(conf->reshape_progress == MaxSector) &&
->>>>             !blk_queue_nonrot(mddev->queue))
->>>>                 logical_sector = raid5_bio_lowest_chunk_sector(conf, bi);
->>>
->>> Yeah, makes sense. On SSD disks I was not able to observe any adverse
->>> effects of the different stripe order. Will you update the patch or should
->>> I respin it?
->>
->> Does it make sense? If SSDs work fine with the new stripe order, why do
->> things different for them? So I don't see a  benefit of making the fix
->> only work with non-rotational devices. It's my original change which
->> could be made for non-rotationatial only, but that's much more involved.
-> 
-> I am hoping to make raid5_make_request() a little faster for non-rotational
-> devices. We may not easily observe a difference in performance, but things
-> add up. Does this make sense?
+ mdmon.c          | 6 +++---
+ mdopen.c         | 4 ++--
+ platform-intel.c | 5 +----
+ platform-intel.h | 5 ++++-
+ super-intel.c    | 6 +++---
+ 5 files changed, 13 insertions(+), 13 deletions(-)
 
-I guess. But without a performance test that shows that it makes an
-improvement, I'm hesitant about that. It could also be that it helps a
-tiny bit for non-rotational disks, but we just don't know.
+-- 
+2.26.2
 
-Unfortunately, I don't have the time right now to do these performance
-tests.
-
-Logan
