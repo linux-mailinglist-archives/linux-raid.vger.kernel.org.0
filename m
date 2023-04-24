@@ -2,21 +2,21 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F7856EC79F
-	for <lists+linux-raid@lfdr.de>; Mon, 24 Apr 2023 10:07:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CF366EC7A1
+	for <lists+linux-raid@lfdr.de>; Mon, 24 Apr 2023 10:07:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231497AbjDXIHn (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 24 Apr 2023 04:07:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46282 "EHLO
+        id S231499AbjDXIHq (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 24 Apr 2023 04:07:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231506AbjDXIHk (ORCPT
+        with ESMTP id S230453AbjDXIHk (ORCPT
         <rfc822;linux-raid@vger.kernel.org>); Mon, 24 Apr 2023 04:07:40 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36736E72
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E44A171A
         for <linux-raid@vger.kernel.org>; Mon, 24 Apr 2023 01:07:38 -0700 (PDT)
-Received: from kwepemi500002.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Q4d481qjdzsRGb;
-        Mon, 24 Apr 2023 16:06:00 +0800 (CST)
+Received: from kwepemi500002.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Q4d163yYZzSv5J;
+        Mon, 24 Apr 2023 16:03:22 +0800 (CST)
 Received: from huawei.com (10.175.101.6) by kwepemi500002.china.huawei.com
  (7.221.188.171) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Mon, 24 Apr
@@ -26,9 +26,9 @@ To:     <jes@trained-monkey.org>, <mariusz.tkaczyk@linux.intel.com>,
         <pmenzel@molgen.mpg.de>, <linux-raid@vger.kernel.org>
 CC:     <linfeilong@huawei.com>, <lixiaokeng@huawei.com>,
         <louhongxiang@huawei.com>
-Subject: [PATCH 2/4] Fix memory leak in file Kill
-Date:   Mon, 24 Apr 2023 16:06:35 +0800
-Message-ID: <20230424080637.2152893-3-miaoguanqin@huawei.com>
+Subject: [PATCH 3/4] Fix memory leak in file Manage
+Date:   Mon, 24 Apr 2023 16:06:36 +0800
+Message-ID: <20230424080637.2152893-4-miaoguanqin@huawei.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20230424080637.2152893-1-miaoguanqin@huawei.com>
 References: <20230424080637.2152893-1-miaoguanqin@huawei.com>
@@ -48,50 +48,59 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-When we test mdadm with asan, we found some memory leaks in Kill.c
+When we test mdadm with asan, we found some memory leaks in Manage.c
 We fix these memory leaks based on code logic.
 
 Signed-off-by: Guanqin Miao <miaoguanqin@huawei.com>
 Signed-off-by: Li Xiao Keng <lixiaokeng@huawei.com>
 ---
- Kill.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ Manage.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/Kill.c b/Kill.c
-index bfd0efdc..43c9abed 100644
---- a/Kill.c
-+++ b/Kill.c
-@@ -41,6 +41,7 @@ int Kill(char *dev, struct supertype *st, int force, int verbose, int noexcl)
- 	 *  4 - failed to find a superblock.
- 	 */
- 
-+	bool free_super = false;
- 	int fd, rv = 0;
- 
- 	if (force)
-@@ -52,8 +53,10 @@ int Kill(char *dev, struct supertype *st, int force, int verbose, int noexcl)
- 				dev);
- 		return 2;
- 	}
--	if (st == NULL)
-+	if (st == NULL) {
- 		st = guess_super(fd);
-+		free_super = true;
-+	}
- 	if (st == NULL || st->ss->init_super == NULL) {
+diff --git a/Manage.c b/Manage.c
+index f54de7c6..7b6b2798 100644
+--- a/Manage.c
++++ b/Manage.c
+@@ -222,6 +222,7 @@ int Manage_stop(char *devname, int fd, int verbose, int will_retry)
  		if (verbose >= 0)
- 			pr_err("Unrecognised md component device - %s\n", dev);
-@@ -77,6 +80,10 @@ int Kill(char *dev, struct supertype *st, int force, int verbose, int noexcl)
- 			rv = 0;
+ 			pr_err("Cannot get exclusive access to %s:Perhaps a running process, mounted filesystem or active volume group?\n",
+ 			       devname);
++		sysfs_free(mdi);
+ 		return 1;
+ 	}
+ 	/* If this is an mdmon managed array, just write 'inactive'
+@@ -801,8 +802,14 @@ int Manage_add(int fd, int tfd, struct mddev_dev *dv,
+ 						    rdev, update, devname,
+ 						    verbose, array);
+ 				dev_st->ss->free_super(dev_st);
+-				if (rv)
++				if (rv) {
++					free(dev_st);
+ 					return rv;
++				}
++			}
++			if (dev_st) {
++				dev_st->ss->free_super(dev_st);
++				free(dev_st);
+ 			}
+ 		}
+ 		if (dv->disposition == 'M') {
+@@ -1699,6 +1706,7 @@ int Manage_subdevs(char *devname, int fd,
+ 			break;
  		}
  	}
-+	if (free_super && st) {
-+		st->ss->free_super(st);
-+		free(st);
-+	}
- 	close(fd);
- 	return rv;
- }
++	free(tst);
+ 	if (frozen > 0)
+ 		sysfs_set_str(&info, NULL, "sync_action","idle");
+ 	if (test && count == 0)
+@@ -1706,6 +1714,7 @@ int Manage_subdevs(char *devname, int fd,
+ 	return 0;
+ 
+ abort:
++	free(tst);
+ 	if (frozen > 0)
+ 		sysfs_set_str(&info, NULL, "sync_action","idle");
+ 	return !test && busy ? 2 : 1;
 -- 
 2.33.0
 
