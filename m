@@ -2,76 +2,137 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BF896EC7A0
-	for <lists+linux-raid@lfdr.de>; Mon, 24 Apr 2023 10:07:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6217E6ECE6C
+	for <lists+linux-raid@lfdr.de>; Mon, 24 Apr 2023 15:32:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231501AbjDXIHp (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 24 Apr 2023 04:07:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45960 "EHLO
+        id S232399AbjDXNce (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 24 Apr 2023 09:32:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231499AbjDXIHk (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 24 Apr 2023 04:07:40 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EF0C1727
-        for <linux-raid@vger.kernel.org>; Mon, 24 Apr 2023 01:07:39 -0700 (PDT)
-Received: from kwepemi500002.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Q4d493xdwzsS62;
-        Mon, 24 Apr 2023 16:06:01 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by kwepemi500002.china.huawei.com
- (7.221.188.171) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Mon, 24 Apr
- 2023 16:07:36 +0800
-From:   Guanqin Miao <miaoguanqin@huawei.com>
-To:     <jes@trained-monkey.org>, <mariusz.tkaczyk@linux.intel.com>,
-        <pmenzel@molgen.mpg.de>, <linux-raid@vger.kernel.org>
-CC:     <linfeilong@huawei.com>, <lixiaokeng@huawei.com>,
-        <louhongxiang@huawei.com>
-Subject: [PATCH 4/4] Fix memory leak in file mdadm
-Date:   Mon, 24 Apr 2023 16:06:37 +0800
-Message-ID: <20230424080637.2152893-5-miaoguanqin@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20230424080637.2152893-1-miaoguanqin@huawei.com>
-References: <20230424080637.2152893-1-miaoguanqin@huawei.com>
+        with ESMTP id S232527AbjDXNcT (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 24 Apr 2023 09:32:19 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C0417DB9
+        for <linux-raid@vger.kernel.org>; Mon, 24 Apr 2023 06:31:57 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-94f109b1808so809458266b.1
+        for <linux-raid@vger.kernel.org>; Mon, 24 Apr 2023 06:31:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1682343105; x=1684935105;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J87qHIx77TLbe3aqPxqmJmQdnv6HEaNsFndEw1Bs7A0=;
+        b=L8G3phQMP1IsOLX2qND6qNP4bO989xmvqfwps7wVmdnCcd0Ne1csniBenmsporQdlB
+         vEuNP+sQK0cmpoBuYETgGQ7sfDUOB6qcGGt5AqaP4QQIaMEMUYOvbgkbGQt/R2p/mQ2F
+         Tl51RJDuHrSn6gmGYE0H4+a/vHoH2x7bGPMx9avjMOHrXimGtE+aRYG2ArI86pk4MuQq
+         IbfE5n/1KisjKBEuhx999tzmHswkdYXz4buk7/YeWeptgq4mSv4H/JxpQKh7dN/FkTL9
+         kqqh3O1DSAAmqCEgfpm3ILFruJ3dMO1FeQ8xjluKVHcRTjKJPFGIoWttAT2Nr4tlwx7v
+         ZFnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682343105; x=1684935105;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=J87qHIx77TLbe3aqPxqmJmQdnv6HEaNsFndEw1Bs7A0=;
+        b=K4bYooIh0BhuLKIjD+xOsp82AwTD1DUKNoSRRqRqcb2Of3/408U7eg3/TVuVtqESow
+         nrO6ipjYQQI5XJLJYj/KKowBpZL5L5xnmEMdWppZz6Wke16KObUnd8paKYT283yR30DS
+         XquzBd52egZI0yqJG9NploZlrD0u6VbDwAArDnVVLJT/rGzl4npFPJVvdM5bpAWLlKNU
+         wwx7O2FBE8YfnqKmlMLfEkiGzFwp4E6RejOA+QXQy6UhGLFzdwFrW+PipR8ZVN3w3v9i
+         ViyDTG3jWazrQpvpCDTI2O57GvpjZxck3n4rz9GCMpS8pOKYlSTX1FupAb2TabOSbrpz
+         OscQ==
+X-Gm-Message-State: AAQBX9fA/jRa+GE/gck3RmNW4x9JD4Ki4HetMa2i9CCQd1NSgW2ObgaS
+        ls0QiyEq0ECGDoo8Q9ZhMFY+3PpjKf3X37kZ2Zo=
+X-Google-Smtp-Source: AKy350auzmNfl0tCnam9Fob/sDOp2q2G01p9WIP2Lad32DuYz0JVvErfVFc5gxbFKB9oJaWqwPh3twD6/USfkj9Y8Hk=
+X-Received: by 2002:a17:907:c285:b0:955:34a5:ae46 with SMTP id
+ tk5-20020a170907c28500b0095534a5ae46mr9225183ejc.77.1682343105214; Mon, 24
+ Apr 2023 06:31:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.101.6]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemi500002.china.huawei.com (7.221.188.171)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <CAFig2csUV2QiomUhj_t3dPOgV300dbQ6XtM9ygKPdXJFSH__Nw@mail.gmail.com>
+ <bf2f7cb0-c0ae-540d-4231-a3ec9e52da3e@youngman.org.uk>
+In-Reply-To: <bf2f7cb0-c0ae-540d-4231-a3ec9e52da3e@youngman.org.uk>
+From:   Jove <jovetoo@gmail.com>
+Date:   Mon, 24 Apr 2023 15:31:34 +0200
+Message-ID: <CAFig2ctxhgV-D8C7HJmFNssewnd_nJzdhfQhhWaRXo8rmKWhyQ@mail.gmail.com>
+Subject: Re: Raid5 to raid6 grow interrupted, mdadm hangs on assemble command
+To:     Wols Lists <antlists@youngman.org.uk>
+Cc:     linux-raid@vger.kernel.org, Phil Turmel <philip@turmel.org>,
+        NeilBrown <neilb@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-When we test mdadm with asan, we found some memory leaks in mdadm.c
-We fix these memory leaks based on code logic.
+Any data that can be retrieved would be a plus. There is much data on
+this array that I don't mind being trashed.
 
-Signed-off-by: Guanqin Miao <miaoguanqin@huawei.com>
-Signed-off-by: Li Xiao Keng <lixiaokeng@huawei.com>
----
- mdadm.c | 4 ++++
- 1 file changed, 4 insertions(+)
+The older drives are WD Red, they are pre-SHMR. I have made sure after
+that to use WD Red Plus and WD Red Pro drives. From what I found
+online, they should be CMR too. Unless they quietly changed those too.
 
-diff --git a/mdadm.c b/mdadm.c
-index 2296911d..409da62c 100644
---- a/mdadm.c
-+++ b/mdadm.c
-@@ -1709,6 +1709,10 @@ int main(int argc, char *argv[])
- 		autodetect();
- 		break;
- 	}
-+	if (ss) {
-+		ss->ss->free_super(ss);
-+		free(ss);
-+	}
- 	if (locked)
- 		cluster_release_dlmlock();
- 	close_fd(&mdfd);
--- 
-2.33.0
+No, the conversion definitely did not stop at 0%. It ran for several
+hours. It stopped during the night, so I can't tell you more.
 
+I am worried that the processes are hung, though. Is that normal?
+
+Thank you for your time!
+
+On Mon, Apr 24, 2023 at 9:41=E2=80=AFAM Wols Lists <antlists@youngman.org.u=
+k> wrote:
+>
+> On 23/04/2023 20:09, Jove wrote:
+> > # mdadm --version
+> > mdadm - v4.2 - 2021-12-30 - 8
+> >
+> > # mdadm -D /dev/md0
+> > /dev/md0:
+> >             Version : 1.2
+> >       Creation Time : Sat Oct 21 01:57:20 2017
+> >          Raid Level : raid6
+> >          Array Size : 7813771264 (7.28 TiB 8.00 TB)
+> >       Used Dev Size : 3906885632 (3.64 TiB 4.00 TB)
+> >        Raid Devices : 4
+> >       Total Devices : 5
+> >         Persistence : Superblock is persistent
+> >
+> >       Intent Bitmap : Internal
+> >
+> >         Update Time : Sun Apr 23 10:32:01 2023
+> >               State : clean, degraded
+> >      Active Devices : 3
+> >     Working Devices : 5
+> >      Failed Devices : 0
+> >       Spare Devices : 2
+> >
+> >              Layout : left-symmetric-6
+> >          Chunk Size : 512K
+> >
+> > Consistency Policy : bitmap
+> >
+> >          New Layout : left-symmetric
+> >
+> >                Name : atom:0  (local to host atom)
+> >                UUID : 8c56384e:ba1a3cec:aaf34c17:d0cd9318
+> >              Events : 669453
+> >
+> >      Number   Major   Minor   RaidDevice State
+> >         0       8       33        0      active sync   /dev/sdc1
+> >         1       8       97        1      active sync   /dev/sdg1
+> >         3       8       49        2      active sync   /dev/sdd1
+> >         5       8       80        3      spare rebuilding   /dev/sdf
+> >
+> >         4       8       64        -      spare   /dev/sde
+>
+> This bit looks good. You have three active drives, so I'm HOPEFUL your
+> data hasn't actually been damaged.
+>
+> I've cc'd two people more experienced than me who I hope can help.
+>
+> Cheers,
+> Wol
