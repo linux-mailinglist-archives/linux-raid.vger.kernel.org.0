@@ -2,58 +2,56 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 794E36EF023
-	for <lists+linux-raid@lfdr.de>; Wed, 26 Apr 2023 10:22:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 600076EF84C
+	for <lists+linux-raid@lfdr.de>; Wed, 26 Apr 2023 18:21:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230484AbjDZIWc (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 26 Apr 2023 04:22:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44962 "EHLO
+        id S231372AbjDZQVA (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 26 Apr 2023 12:21:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240125AbjDZIW2 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 26 Apr 2023 04:22:28 -0400
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70A333C1B;
-        Wed, 26 Apr 2023 01:22:26 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.153])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Q5sL649TFz4f55b3;
-        Wed, 26 Apr 2023 16:22:22 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-        by APP2 (Coremail) with SMTP id Syh0CgBnW+k430hkUexVIA--.50201S11;
-        Wed, 26 Apr 2023 16:22:23 +0800 (CST)
-From:   Yu Kuai <yukuai1@huaweicloud.com>
-To:     song@kernel.org, akpm@osdl.org, neilb@suse.de
-Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com,
-        yangerkun@huawei.com
-Subject: [PATCH -next v2 7/7] md/raid1-10: limit the number of plugged bio
-Date:   Wed, 26 Apr 2023 16:20:31 +0800
-Message-Id: <20230426082031.1299149-8-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230426082031.1299149-1-yukuai1@huaweicloud.com>
-References: <20230426082031.1299149-1-yukuai1@huaweicloud.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: Syh0CgBnW+k430hkUexVIA--.50201S11
-X-Coremail-Antispam: 1UD129KBjvJXoWxZr4rKF4fXry8CFyfZry3XFb_yoW5try8pa
-        1Dta4YvrWUZFW7X3yDJayUCFyFga1DWFZFkrZ5C395ZF17XFWjga15JFWrWr1DZFZxGFy3
-        J3Z8Kr4xGF15tF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9E14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-        kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-        z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-        4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-        3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-        IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-        M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxGrw
-        CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
-        14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
-        IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAv
-        wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14
-        v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUbmZX7UUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
-        MAY_BE_FORGED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
+        with ESMTP id S233271AbjDZQU7 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 26 Apr 2023 12:20:59 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1422F7AAB
+        for <linux-raid@vger.kernel.org>; Wed, 26 Apr 2023 09:20:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1682526047; x=1714062047;
+  h=date:from:to:cc:subject:message-id;
+  bh=Wk7y5RWuA8OzC5tm9adyWSk1YDKCtO1Df2FA9a0YkKU=;
+  b=fZA95BuRpQ9IZY5DCdBbSXmazGaGonZjHblpVIHxIajGJZYjOPULrwxq
+   rk6jVCVMU59caEFbrI4btL0CiHEaU5h+UFUMfmX2Fr67HZaghMxU0rEmp
+   Hk471a/jgcNj6mlC+RJ1S1Pqq3jOi62Gwx8h3s4ztoFJKfSgVbWUOIFhD
+   JXKZgxraQcA57izqPTV8RQJNnYhqE76ZVZA7Eq5+ltO83Owmw3pxK4iGH
+   nb8kWxdByes9VwBDG9gSfZDYgDXjkWESCqSdrBeXgl2s9hNqD4w94HzA/
+   DBP1RFiKRX3uYYc8Snqn1FQxdfZki3ODB+u0Np2kQpx4BDeCMEP5JJ2Fs
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10692"; a="331390985"
+X-IronPort-AV: E=Sophos;i="5.99,228,1677571200"; 
+   d="scan'208";a="331390985"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2023 09:19:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10692"; a="694011053"
+X-IronPort-AV: E=Sophos;i="5.99,228,1677571200"; 
+   d="scan'208";a="694011053"
+Received: from lkp-server01.sh.intel.com (HELO 041f065c1b1b) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 26 Apr 2023 09:19:44 -0700
+Received: from kbuild by 041f065c1b1b with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1prhrr-0000MU-1f;
+        Wed, 26 Apr 2023 16:19:43 +0000
+Date:   Thu, 27 Apr 2023 00:19:18 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Song Liu <song@kernel.org>
+Cc:     linux-raid@vger.kernel.org
+Subject: [song-md:md-next] BUILD SUCCESS
+ 871634828fc3c8069941c7b6a031a71faa61a9f4
+Message-ID: <20230426161918.3i9u4%lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,102 +59,79 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+tree/branch: git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git md-next
+branch HEAD: 871634828fc3c8069941c7b6a031a71faa61a9f4  md: Fix bitmap offset type in sb writer
 
-bio can be added to plug infinitely, and following writeback test can
-trigger huge amount of plugged bio:
+elapsed time: 726m
 
-Test script:
-modprobe brd rd_nr=4 rd_size=10485760
-mdadm -CR /dev/md0 -l10 -n4 /dev/ram[0123] --assume-clean
-echo 0 > /proc/sys/vm/dirty_background_ratio
-echo 60 > /proc/sys/vm/dirty_ratio
-fio -filename=/dev/md0 -ioengine=libaio -rw=write -bs=4k -numjobs=1 -iodepth=128 -name=test
+configs tested: 60
+configs skipped: 3
 
-Test result:
-Monitor /sys/block/md0/inflight will found that inflight keep increasing
-until fio finish writing, after running for about 2 minutes:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-[root@fedora ~]# cat /sys/block/md0/inflight
-       0  4474191
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r021-20230423   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                                defconfig   gcc  
+csky                 randconfig-r001-20230425   gcc  
+csky                 randconfig-r022-20230423   gcc  
+csky                 randconfig-r025-20230423   gcc  
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+ia64                             allmodconfig   gcc  
+ia64                                defconfig   gcc  
+ia64                 randconfig-r005-20230425   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze           randconfig-r004-20230425   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                randconfig-r024-20230423   gcc  
+nios2                randconfig-r026-20230423   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r006-20230425   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+sh                               allmodconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r002-20230425   gcc  
+sparc64              randconfig-r023-20230423   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-a011-20230424   gcc  
+x86_64               randconfig-a012-20230424   gcc  
+x86_64               randconfig-a013-20230424   gcc  
+x86_64               randconfig-a014-20230424   gcc  
+x86_64               randconfig-a015-20230424   gcc  
+x86_64               randconfig-a016-20230424   gcc  
+x86_64                               rhel-8.3   gcc  
 
-Fix the problem by limiting the number of plugged bio based on the number
-of copies for original bio.
-
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- drivers/md/raid1-10.c | 9 ++++++++-
- drivers/md/raid1.c    | 2 +-
- drivers/md/raid10.c   | 2 +-
- 3 files changed, 10 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/md/raid1-10.c b/drivers/md/raid1-10.c
-index 98d678b7df3f..35fb80aa37aa 100644
---- a/drivers/md/raid1-10.c
-+++ b/drivers/md/raid1-10.c
-@@ -21,6 +21,7 @@
- #define IO_MADE_GOOD ((struct bio *)2)
- 
- #define BIO_SPECIAL(bio) ((unsigned long)bio <= 2)
-+#define MAX_PLUG_BIO 32
- 
- /* for managing resync I/O pages */
- struct resync_pages {
-@@ -31,6 +32,7 @@ struct resync_pages {
- struct raid1_plug_cb {
- 	struct blk_plug_cb	cb;
- 	struct bio_list		pending;
-+	unsigned int		count;
- };
- 
- static void rbio_pool_free(void *rbio, void *data)
-@@ -127,7 +129,7 @@ static inline void md_submit_write(struct bio *bio)
- }
- 
- static inline bool md_add_bio_to_plug(struct mddev *mddev, struct bio *bio,
--				      blk_plug_cb_fn unplug)
-+				      blk_plug_cb_fn unplug, int copies)
- {
- 	struct raid1_plug_cb *plug = NULL;
- 	struct blk_plug_cb *cb;
-@@ -147,6 +149,11 @@ static inline bool md_add_bio_to_plug(struct mddev *mddev, struct bio *bio,
- 
- 	plug = container_of(cb, struct raid1_plug_cb, cb);
- 	bio_list_add(&plug->pending, bio);
-+	if (++plug->count / MAX_PLUG_BIO >= copies) {
-+		list_del(&cb->list);
-+		cb->callback(cb, false);
-+	}
-+
- 
- 	return true;
- }
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 639e09cecf01..c6066408a913 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -1562,7 +1562,7 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
- 					      r1_bio->sector);
- 		/* flush_pending_writes() needs access to the rdev so...*/
- 		mbio->bi_bdev = (void *)rdev;
--		if (!md_add_bio_to_plug(mddev, mbio, raid1_unplug)) {
-+		if (!md_add_bio_to_plug(mddev, mbio, raid1_unplug, disks)) {
- 			spin_lock_irqsave(&conf->device_lock, flags);
- 			bio_list_add(&conf->pending_bio_list, mbio);
- 			spin_unlock_irqrestore(&conf->device_lock, flags);
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index bd9e655ca408..7135cfaf75db 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -1306,7 +1306,7 @@ static void raid10_write_one_disk(struct mddev *mddev, struct r10bio *r10_bio,
- 
- 	atomic_inc(&r10_bio->remaining);
- 
--	if (!md_add_bio_to_plug(mddev, mbio, raid10_unplug)) {
-+	if (!md_add_bio_to_plug(mddev, mbio, raid10_unplug, conf->copies)) {
- 		spin_lock_irqsave(&conf->device_lock, flags);
- 		bio_list_add(&conf->pending_bio_list, mbio);
- 		spin_unlock_irqrestore(&conf->device_lock, flags);
 -- 
-2.39.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
