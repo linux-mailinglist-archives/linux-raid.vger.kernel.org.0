@@ -2,88 +2,75 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 890026F0255
-	for <lists+linux-raid@lfdr.de>; Thu, 27 Apr 2023 10:09:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ABB446F02D9
+	for <lists+linux-raid@lfdr.de>; Thu, 27 Apr 2023 10:57:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242556AbjD0IJV (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 27 Apr 2023 04:09:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36206 "EHLO
+        id S242999AbjD0I5Q (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 27 Apr 2023 04:57:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232094AbjD0IJU (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 27 Apr 2023 04:09:20 -0400
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BF802D71
-        for <linux-raid@vger.kernel.org>; Thu, 27 Apr 2023 01:09:19 -0700 (PDT)
+        with ESMTP id S242675AbjD0I5O (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 27 Apr 2023 04:57:14 -0400
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6395B30FC;
+        Thu, 27 Apr 2023 01:57:12 -0700 (PDT)
 Received: from mail02.huawei.com (unknown [172.30.67.153])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Q6T0W1qQgz4f3nJN
-        for <linux-raid@vger.kernel.org>; Thu, 27 Apr 2023 16:09:15 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-        by APP4 (Coremail) with SMTP id gCh0CgD3rLCqLUpkEPH+IA--.22003S3;
-        Thu, 27 Apr 2023 16:09:16 +0800 (CST)
-Subject: Re: [question] solution for raid10 configuration concurrent with io
-To:     Xiao Ni <xni@redhat.com>
-Cc:     Linux-RAID <linux-raid@vger.kernel.org>,
-        Song Liu <song@kernel.org>, logang@deltatee.com,
-        guoqing.jiang@linux.dev, "yukuai (C)" <yukuai3@huawei.com>
-References: <cb390b39-1b1e-04e1-55ad-2ff8afc47e1b@huawei.com>
- <CALTww2__S7y9zZ0Y2R6qOW4A_V0S0Z7Z_ixOvoe6BoGxqbnd4g@mail.gmail.com>
-From:   Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <f442f2d1-122e-44fb-5bad-fc14a35e782a@huaweicloud.com>
-Date:   Thu, 27 Apr 2023 16:09:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Q6V3m05nyz4f3jHW;
+        Thu, 27 Apr 2023 16:57:08 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.127.227])
+        by APP4 (Coremail) with SMTP id gCh0CgBH_rHjOEpkmCsBIQ--.37560S4;
+        Thu, 27 Apr 2023 16:57:09 +0800 (CST)
+From:   linan666@huaweicloud.com
+To:     song@kernel.org, neilb@suse.de, Rob.Becker@riverbed.com
+Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linan122@huawei.com, yukuai3@huawei.com, yi.zhang@huawei.com,
+        houtao1@huawei.com, yangerkun@huawei.com
+Subject: [PATCH 0/3] md: bugfix of writing raid sysfs
+Date:   Thu, 27 Apr 2023 16:56:09 +0800
+Message-Id: <20230427085612.1346752-1-linan666@huaweicloud.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-In-Reply-To: <CALTww2__S7y9zZ0Y2R6qOW4A_V0S0Z7Z_ixOvoe6BoGxqbnd4g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgD3rLCqLUpkEPH+IA--.22003S3
+X-CM-TRANSID: gCh0CgBH_rHjOEpkmCsBIQ--.37560S4
 X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYj7kC6x804xWl14x267AKxVW8JVW5JwAF
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYv7kC6x804xWl14x267AKxVW8JVW5JwAF
         c2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII
         0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xv
         wVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4
-        x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG
-        64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r
-        1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vI
-        Y487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
-        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
-        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-        WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_
-        Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1zuWJ
-        UUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+        x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY
+        6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr
+        0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0E
+        wIxGrwACI402YVCY1x02628vn2kIc2xKxwAKzVCY07xG64k0F24l42xK82IYc2Ij64vIr4
+        1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+        67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
+        8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAv
+        wI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I
+        0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7IU1kpnJUUUUU==
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi,
+From: Li Nan <linan122@huawei.com>
 
-在 2023/04/27 14:53, Xiao Ni 写道:
+The patch series fix the bug of writing raid sysfs.
 
->> // assum that rdev is NULL, and replacement is not NULL
-> 
-> How can trigger this? Could you give the detailed commands?
-> 
+Li Nan (3):
+  md/raid10: fix slab-out-of-bounds in md_bitmap_get_counter
+  md/raid10: fix overflow in safe_delay_store
+  md/raid10: fix wrong setting of max_corr_read_errors
 
-This is just because raid10_remove_disk() set rdev to NULL first, and
-then replace rdev with replacement. This is temporary but io can
-concurrent with this temporary status.
+ drivers/md/md-bitmap.c |  2 ++
+ drivers/md/md.c        | 68 +++++++++++++++++++++++++++---------------
+ drivers/md/raid10.c    |  4 +--
+ 3 files changed, 48 insertions(+), 26 deletions(-)
 
-raid10_remove_disk
-
-  p = conf->mirrors + number;
-  rdevp = &p->rdev;
-  *rdevp = NULL;
-  // here!
-  p->rdev = p->replacement;
-  p->replacement = NULL;
-
-Thanks,
-Kuai
+-- 
+2.31.1
 
