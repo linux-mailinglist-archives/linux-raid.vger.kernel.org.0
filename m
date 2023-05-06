@@ -2,185 +2,161 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D09426F8D7E
-	for <lists+linux-raid@lfdr.de>; Sat,  6 May 2023 03:24:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24D056F8D9D
+	for <lists+linux-raid@lfdr.de>; Sat,  6 May 2023 03:33:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231826AbjEFBYg (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 5 May 2023 21:24:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50426 "EHLO
+        id S231628AbjEFBdu (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 5 May 2023 21:33:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231530AbjEFBY3 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 5 May 2023 21:24:29 -0400
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 907D96EAF;
-        Fri,  5 May 2023 18:24:28 -0700 (PDT)
+        with ESMTP id S230131AbjEFBds (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 5 May 2023 21:33:48 -0400
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42F35469F
+        for <linux-raid@vger.kernel.org>; Fri,  5 May 2023 18:33:33 -0700 (PDT)
 Received: from mail02.huawei.com (unknown [172.30.67.143])
-        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4QCqbD2gl1z4f3npy;
-        Sat,  6 May 2023 09:24:24 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.127.227])
-        by APP4 (Coremail) with SMTP id gCh0CgD3X7NHrFVkfh1lIw--.56086S8;
-        Sat, 06 May 2023 09:24:26 +0800 (CST)
-From:   linan666@huaweicloud.com
-To:     song@kernel.org, neilb@suse.de, Rob.Becker@riverbed.com
-Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linan122@huawei.com, yukuai3@huawei.com, yi.zhang@huawei.com,
-        houtao1@huawei.com, yangerkun@huawei.com
-Subject: [PATCH v2 4/4] md/raid10: optimize check_decay_read_errors()
-Date:   Sat,  6 May 2023 09:23:15 +0800
-Message-Id: <20230506012315.3370489-5-linan666@huaweicloud.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20230506012315.3370489-1-linan666@huaweicloud.com>
-References: <20230506012315.3370489-1-linan666@huaweicloud.com>
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QCqnj2dn0z4f3jLq
+        for <linux-raid@vger.kernel.org>; Sat,  6 May 2023 09:33:29 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+        by APP4 (Coremail) with SMTP id gCh0CgCnD7NprlVkbpBlIw--.33975S3;
+        Sat, 06 May 2023 09:33:30 +0800 (CST)
+Subject: Re: Raid5 to raid6 grow interrupted, mdadm hangs on assemble command
+To:     Jove <jovetoo@gmail.com>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc:     Wol <antlists@youngman.org.uk>, linux-raid@vger.kernel.org,
+        "yukuai (C)" <yukuai3@huawei.com>
+References: <CAFig2csUV2QiomUhj_t3dPOgV300dbQ6XtM9ygKPdXJFSH__Nw@mail.gmail.com>
+ <63d92097-5299-2ae8-9697-768c52678578@huaweicloud.com>
+ <CAFig2ct4BJZ0A9BKuXn8RM71+KrUzB8vKGQY0fSjNZiNenQZBg@mail.gmail.com>
+ <c71c8381-f26e-f7de-c6f5-3c4411f08b15@huaweicloud.com>
+ <d159161d-a5eb-8790-49c4-b7013e66ba65@youngman.org.uk>
+ <6f391690-992f-1196-3109-6d422b3522f7@huaweicloud.com>
+ <CAFig2ct+ZbHYEho7p9eubaz-kozGR+GkSJ1tVL+LGaciUBixyw@mail.gmail.com>
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <bc698b03-446b-a42e-cf0c-5c1b3cb62559@huaweicloud.com>
+Date:   Sat, 6 May 2023 09:33:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <CAFig2ct+ZbHYEho7p9eubaz-kozGR+GkSJ1tVL+LGaciUBixyw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgD3X7NHrFVkfh1lIw--.56086S8
-X-Coremail-Antispam: 1UD129KBjvJXoWxCFWxAF4UZFWfKrWkJrW8JFb_yoWrZF4fpa
-        n8Aas8Jr1UJryUAw1DJFyDt3WFyryfAayjyrWxJa1xXwn5Jrn8ta4UGry29348Gas8Aw15
-        XFZ8Grs8CF4DKFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUmFb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
-        Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
-        rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267
-        AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E
-        14v26rxl6s0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I
-        8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
-        xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxV
-        A2Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-        6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-        CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
-        0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
-        AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2
-        KfnxnUUI43ZEXa7IU1nmitUUUUU==
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+X-CM-TRANSID: gCh0CgCnD7NprlVkbpBlIw--.33975S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxCFWxuF13Kw15uw4DKFyUZFb_yoW5XF1kpa
+        y8t3Wqkr4DJF9YyFW2y34Iqa4Fkry5Gr98Xwn0q34UCrZ8KFyIkrWxKrs0kF92kw1fCr4Y
+        yF4Ut3srWryYgaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkC14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
+        IcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+        v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
+        c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+        0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_
+        Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfU5WlkUU
+        UUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-6.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Li Nan <linan122@huawei.com>
+Hi,
 
-check_decay_read_errors() is used to handle rdev->read_errors. But
-read_errors is inc and read after check_decay_read_errors() is invoked
-in fix_read_error().
+在 2023/05/05 23:47, Jove 写道:
+> Hi Kuai.
+> 
+>> Jove, As I understand this, if mdadm make progress without a blocked
+>> io, and reshape continues, it seems you can use this array without
+>> problem
+> 
+> I've had to do some sleuthing to figure out who was doing that array
+> access, I was already running a minimal FedoraCore image. I've
+> discovered that the culprit is the systemd-udevd daemon. I do not know
+> why it accesses the array but if I stop it and rename that executable
+> (it gets started automatically when the array is assembled) then the
+> reshape continues.
 
-Put all operations of read_errors into check_decay_read_errors() and
-clean up unnecessary atomic_read of read_errors.
+Thanks for confirming this, however, I have no idea why systemd-udevd is
+accessing the array.
 
-Suggested-by: Yu Kuai <yukuai3@huawei.com>
-Signed-off-by: Li Nan <linan122@huawei.com>
----
- drivers/md/raid10.c | 66 ++++++++++++++++++++++++---------------------
- 1 file changed, 35 insertions(+), 31 deletions(-)
+In the meantime, I'll try to fix this deadlock, hope you don't mind a
+reported-by tag.
 
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index 4d615fcc6a50..79f94882227d 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -2655,39 +2655,53 @@ static void recovery_request_write(struct mddev *mddev, struct r10bio *r10_bio)
- }
- 
- /*
-- * Used by fix_read_error() to decay the per rdev read_errors.
-+ * Used by fix_read_error() to decay the per rdev read_errors and check if
-+ * read_error > max_read_errors.
-  * We halve the read error count for every hour that has elapsed
-  * since the last recorded read error.
-  *
-  */
--static void check_decay_read_errors(struct mddev *mddev, struct md_rdev *rdev)
-+static bool check_decay_read_errors(struct mddev *mddev, struct md_rdev *rdev)
- {
--	long cur_time_mon;
-+	time64_t cur_time_mon = ktime_get_seconds();
- 	unsigned long hours_since_last;
--	unsigned int read_errors = atomic_read(&rdev->read_errors);
--
--	cur_time_mon = ktime_get_seconds();
-+	unsigned int read_errors;
-+	unsigned int max_read_errors =
-+			atomic_read(&mddev->max_corr_read_errors);
- 
- 	if (rdev->last_read_error == 0) {
- 		/* first time we've seen a read error */
- 		rdev->last_read_error = cur_time_mon;
--		return;
--	}
-+	} else {
-+		hours_since_last = (long)(cur_time_mon -
-+				    rdev->last_read_error) / 3600;
- 
--	hours_since_last = (long)(cur_time_mon -
--			    rdev->last_read_error) / 3600;
-+		rdev->last_read_error = cur_time_mon;
- 
--	rdev->last_read_error = cur_time_mon;
-+		/*
-+		 * if hours_since_last is > the number of bits in read_errors
-+		 * just set read errors to 0. We do this to avoid
-+		 * overflowing the shift of read_errors by hours_since_last.
-+		 */
-+		read_errors = atomic_read(&rdev->read_errors);
-+		if (hours_since_last >= 8 * sizeof(read_errors))
-+			atomic_set(&rdev->read_errors, 0);
-+		else
-+			atomic_set(&rdev->read_errors,
-+				   read_errors >> hours_since_last);
-+	}
- 
--	/*
--	 * if hours_since_last is > the number of bits in read_errors
--	 * just set read errors to 0. We do this to avoid
--	 * overflowing the shift of read_errors by hours_since_last.
--	 */
--	if (hours_since_last >= 8 * sizeof(read_errors))
--		atomic_set(&rdev->read_errors, 0);
--	else
--		atomic_set(&rdev->read_errors, read_errors >> hours_since_last);
-+	read_errors = atomic_inc_return(&rdev->read_errors);
-+	if (read_errors > max_read_errors) {
-+		pr_notice("md/raid10:%s: %pg: Raid device exceeded read_error threshold [cur %u:max %u]\n",
-+			  mdname(mddev), rdev->bdev, read_errors, max_read_errors);
-+		pr_notice("md/raid10:%s: %pg: Failing raid device\n",
-+			  mdname(mddev), rdev->bdev);
-+		md_error(mddev, rdev);
-+		return false;
-+	}
-+
-+	return true;
- }
- 
- static int r10_sync_page_io(struct md_rdev *rdev, sector_t sector,
-@@ -2727,8 +2741,6 @@ static void fix_read_error(struct r10conf *conf, struct mddev *mddev, struct r10
- 	int sect = 0; /* Offset from r10_bio->sector */
- 	int sectors = r10_bio->sectors;
- 	struct md_rdev *rdev;
--	unsigned int max_read_errors =
--			atomic_read(&mddev->max_corr_read_errors);
- 	int d = r10_bio->devs[r10_bio->read_slot].devnum;
- 
- 	/* still own a reference to this rdev, so it cannot
-@@ -2741,15 +2753,7 @@ static void fix_read_error(struct r10conf *conf, struct mddev *mddev, struct r10
- 		   more fix_read_error() attempts */
- 		return;
- 
--	check_decay_read_errors(mddev, rdev);
--	atomic_inc(&rdev->read_errors);
--	if (atomic_read(&rdev->read_errors) > max_read_errors) {
--		pr_notice("md/raid10:%s: %pg: Raid device exceeded read_error threshold [cur %u:max %u]\n",
--			  mdname(mddev), rdev->bdev,
--			  atomic_read(&rdev->read_errors), max_read_errors);
--		pr_notice("md/raid10:%s: %pg: Failing raid device\n",
--			  mdname(mddev), rdev->bdev);
--		md_error(mddev, rdev);
-+	if (check_decay_read_errors(mddev, rdev)) {
- 		r10_bio->devs[r10_bio->read_slot].bio = IO_BLOCKED;
- 		return;
- 	}
--- 
-2.31.1
+Thanks,
+Kuai
+> 
+> Now it is just a matter of time until the reshape is finished and I
+> can discover just how much data I still have :)
+> 
+> Thank you all for your help, I will send a last mail when I know more.
+> 
+> Best regards,
+> 
+>        Johan
+> 
+> 
+> 
+> On Fri, May 5, 2023 at 10:02 AM Yu Kuai <yukuai1@huaweicloud.com> wrote:
+>>
+>> Hi,
+>>
+>> 在 2023/05/05 14:58, Wol 写道:
+>>> On 05/05/2023 02:34, Yu Kuai wrote:
+>>>>> I have had one case in which mdadm didn't hang and in which the
+>>>>> reshape continued. Sadly, I was using sparse overlay files and the
+>>>>> filesystem could not handle the full 4x 4TB. I had to terminate the
+>>>>> reshape.
+>>>>
+>>>> This sounds like a dead end for now, normal io beyond reshape position
+>>>> must wait:
+>>>>
+>>>> raid5_make_request
+>>>>    make_stripe_request
+>>>>     ahead_of_reshape
+>>>>      wait_woken
+>>>
+>>> Not sure if I've got the wrong end of the stick, but if I've understood
+>>> correctly, that shouldn't be the case.
+>>>
+>>> Reshape takes place in a window. All io *beyond* the window is allowed
+>>> to proceed normally - that part of the array has not been reshaped so
+>>> the old parameters are used.
+>>>
+>>> All io *in front* of the window is allowed to proceed normally - that
+>>> part of the array has been reshaped so the new parameters are used.
+>>>
+>>> io *IN* the window is paused until the window has passed. This
+>>> interruption should be short and sweet.
+>>
+>> Yes, it's correct, and in this case reshape_safe should be the same as
+>> reshapge_progress, and I guess io is stuck because
+>> stripe_ahead_of_reshape() return true.
+>>
+>> So this deadlock happens when io is blocked because of reshape, and
+>> mddev_suspend() is waiting for this io to be done, in the meantime
+>> reshape can't start untill mddev_suspend() returns.
+>>
+>> Jove, As I understand this, if mdadm make progress without a blocked
+>> io, and reshape continues, it seems you can use this array without
+>> problem.
+>>
+>> Thanks,
+>> Kuai
+>>>
+>>> Cheers,
+>>> Wol
+>>>
+>>> .
+>>>
+>>
+> .
+> 
 
