@@ -2,65 +2,49 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A46670549E
-	for <lists+linux-raid@lfdr.de>; Tue, 16 May 2023 19:01:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EAC217069AB
+	for <lists+linux-raid@lfdr.de>; Wed, 17 May 2023 15:22:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229888AbjEPRB2 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 16 May 2023 13:01:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35630 "EHLO
+        id S229545AbjEQNWp (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 17 May 2023 09:22:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230318AbjEPRB0 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 16 May 2023 13:01:26 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D531293C2
-        for <linux-raid@vger.kernel.org>; Tue, 16 May 2023 10:00:54 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id a640c23a62f3a-96598a7c5e0so2330684466b.3
-        for <linux-raid@vger.kernel.org>; Tue, 16 May 2023 10:00:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684256452; x=1686848452;
-        h=content-transfer-encoding:to:subject:message-id:date:from:sender
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4/sySkFBOR2Hnso7Rs7LEKhuuYS+AT+syOblrJTklYQ=;
-        b=KZX2jEiMydjCMV9CDO9S/JnETPjF74Iji14qD1Zjj1dW9QHuHAONBd3Cjm9wE6kBd5
-         cABVbAzprSbLp8Ls5jSZRh75HAAqi6oKEbvuhgoADvZ7Y7WQJRGdymk3ANx1+vL9npNm
-         Af5MWNGZ/dDBFty860l2h8yAJpzyKhCw6bbBAocXzvDJhepXImwKMgGdtxoN9BWptqUU
-         0zYGiETPaqwVz+77Etryx3IpjgMuUDVaAnfmpG8/b1yoKBGeuMIF5hnPsamT+rjYYvtI
-         5ayoGOhkBf69DeNOFWbXyStNvPFZQ91LRYqN+eT8snanzgF3KbjW3uZG25QqjIJNTOS9
-         p+7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684256452; x=1686848452;
-        h=content-transfer-encoding:to:subject:message-id:date:from:sender
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4/sySkFBOR2Hnso7Rs7LEKhuuYS+AT+syOblrJTklYQ=;
-        b=SMuDu56IBXRmFqu+Kl1ZaWVdbAbixsiWBkDkirb8A77iJNEzYgdJShHfGyCS+cZspJ
-         +KpVUnC4d+e65g5RdOq2CbygtqjXxF9LYtqwiZMQGmzlzm8o2oGX5g2UiecoZoEwAi2T
-         odH4p3p+5m8BxDfwydPev8scnoMV5n0MFN8PrHXmEcQtAeFUFxZG+pM0kn191Z26TNG0
-         CGklurQij+nFGa5MdJkORMo6wEhlx4F7xOORoh9/T68YBRGwm6YtYYfdC/L0WWlt/4Us
-         +rF4SesouWBkB8njgwOdTv+7kHVs7ziiMEFeyyVlo+96Btm5MSi7ZLPJEH7oBf4opWzP
-         Tvew==
-X-Gm-Message-State: AC+VfDzWgDKPRUad88E8WAatMafI8fQRaWqnDXmOvPJUo1/JiMs5vk9D
-        p0q4U5AQrWZkr1r9ma7TJ8wk5MLbaQhPcpMMgs8=
-X-Google-Smtp-Source: ACHHUZ6kTW53oKW0VOzKMVoj25QsqmvOWm76vMOZZDSoXjDJNAs84+e6qqXJ+y1KHQgDZ/3vOx+xqYVbUZPyuFwkte0=
-X-Received: by 2002:a17:907:708:b0:961:be96:b0e7 with SMTP id
- xb8-20020a170907070800b00961be96b0e7mr34104667ejb.48.1684256451466; Tue, 16
- May 2023 10:00:51 -0700 (PDT)
+        with ESMTP id S231932AbjEQNWg (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 17 May 2023 09:22:36 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 700CC19BD;
+        Wed, 17 May 2023 06:22:28 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DAA3D6435E;
+        Wed, 17 May 2023 13:22:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C252C433EF;
+        Wed, 17 May 2023 13:22:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684329747;
+        bh=kOiatuzHsXf6QCfoX/dn21WUzpfgb5KaOfzC26f90Zo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XHdoBVopIBFp9u3NUtzX8zsVUCrgJPg/GcgSg2H2tRYfaboEy+qNa2efQnFLRnTiZ
+         RV8zuBCCNbIg+8I1i4wPMiMblmAbyfDt4sySoL9MseG4Vw1H1qcr5O6E078MDAZChN
+         UB+1hJ3JE8W4twf5vYYzn1wSFvmZbdslrLVE65xMkBvsuCQtoxbRJHqomHmt5TDSlm
+         ppx3jUpbCLVufS93I5hT5Qp/HkBoSyT6Ma+TQn1qd/v39HXL5TVYPns28GrQZP1quP
+         olyGfnx7ZX3UgAMMtnxJpV5xW1aewJhKW8oGd2ZBKvtMqoMwWD2bx9g4d9jMKVi1q4
+         n3BnP7qfBecSw==
+From:   Arnd Bergmann <arnd@kernel.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Song Liu <song@kernel.org>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-raid@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: [PATCH] raid6: neon: add missing prototypes
+Date:   Wed, 17 May 2023 15:22:12 +0200
+Message-Id: <20230517132220.937200-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Sender: extra.bognon05@gmail.com
-Received: by 2002:a05:7208:1494:b0:67:3fcf:83ff with HTTP; Tue, 16 May 2023
- 10:00:51 -0700 (PDT)
-From:   Miss Reacheal <Reacheal4u@gmail.com>
-Date:   Tue, 16 May 2023 17:00:51 +0000
-X-Google-Sender-Auth: QUVLr_GK5jjQ7BOIvl5YhtODo3c
-Message-ID: <CAFONc4zWypYeo8iOBxMrjViKL+vjQVaFPd-xoDJCPezL1uZ5tw@mail.gmail.com>
-Subject: RE: HELLO DEAR
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=0.6 required=5.0 tests=BAYES_40,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,SUBJ_ALL_CAPS,
-        T_HK_NAME_FM_MR_MRS,T_SCC_BODY_TEXT_LINE autolearn=no
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,14 +52,114 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hej,
+From: Arnd Bergmann <arnd@arndb.de>
 
-Modtog du min tidligere besked? Jeg kontaktede dig f=C3=B8r, men beskeden
-kom ikke tilbage, s=C3=A5 jeg besluttede at skrive igen. Bekr=C3=A6ft venli=
-gst,
-om du modtager dette, s=C3=A5 jeg kan forts=C3=A6tte,
+The raid6 syndrome functions are generated for different sizes and have
+no generic prototype, while in the inner functions have a prototype
+in a header that cannot be included from the correct file. In both
+cases, the compiler warns about missing prototypes:
 
-venter p=C3=A5 dit svar.
+lib/raid6/recov_neon_inner.c:27:6: warning: no previous prototype for '__raid6_2data_recov_neon' [-Wmissing-prototypes]
+lib/raid6/recov_neon_inner.c:77:6: warning: no previous prototype for '__raid6_datap_recov_neon' [-Wmissing-prototypes]
+lib/raid6/neon1.c:56:6: warning: no previous prototype for 'raid6_neon1_gen_syndrome_real' [-Wmissing-prototypes]
+lib/raid6/neon1.c:86:6: warning: no previous prototype for 'raid6_neon1_xor_syndrome_real' [-Wmissing-prototypes]
+lib/raid6/neon2.c:56:6: warning: no previous prototype for 'raid6_neon2_gen_syndrome_real' [-Wmissing-prototypes]
+lib/raid6/neon2.c:97:6: warning: no previous prototype for 'raid6_neon2_xor_syndrome_real' [-Wmissing-prototypes]
+lib/raid6/neon4.c:56:6: warning: no previous prototype for 'raid6_neon4_gen_syndrome_real' [-Wmissing-prototypes]
+lib/raid6/neon4.c:119:6: warning: no previous prototype for 'raid6_neon4_xor_syndrome_real' [-Wmissing-prototypes]
+lib/raid6/neon8.c:56:6: warning: no previous prototype for 'raid6_neon8_gen_syndrome_real' [-Wmissing-prototypes]
+lib/raid6/neon8.c:163:6: warning: no previous prototype for 'raid6_neon8_xor_syndrome_real' [-Wmissing-prototypes]
 
-Med venlig hilsen
-Miss Reacheal
+Add a new header file that contains the prototypes for both to avoid
+the warnings.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ lib/raid6/neon.h             | 22 ++++++++++++++++++++++
+ lib/raid6/neon.uc            |  1 +
+ lib/raid6/recov_neon.c       |  8 +-------
+ lib/raid6/recov_neon_inner.c |  1 +
+ 4 files changed, 25 insertions(+), 7 deletions(-)
+ create mode 100644 lib/raid6/neon.h
+
+diff --git a/lib/raid6/neon.h b/lib/raid6/neon.h
+new file mode 100644
+index 000000000000..2ca41ee9b499
+--- /dev/null
++++ b/lib/raid6/neon.h
+@@ -0,0 +1,22 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++void raid6_neon1_gen_syndrome_real(int disks, unsigned long bytes, void **ptrs);
++void raid6_neon1_xor_syndrome_real(int disks, int start, int stop,
++				    unsigned long bytes, void **ptrs);
++void raid6_neon2_gen_syndrome_real(int disks, unsigned long bytes, void **ptrs);
++void raid6_neon2_xor_syndrome_real(int disks, int start, int stop,
++				    unsigned long bytes, void **ptrs);
++void raid6_neon4_gen_syndrome_real(int disks, unsigned long bytes, void **ptrs);
++void raid6_neon4_xor_syndrome_real(int disks, int start, int stop,
++				    unsigned long bytes, void **ptrs);
++void raid6_neon8_gen_syndrome_real(int disks, unsigned long bytes, void **ptrs);
++void raid6_neon8_xor_syndrome_real(int disks, int start, int stop,
++				    unsigned long bytes, void **ptrs);
++void __raid6_2data_recov_neon(int bytes, uint8_t *p, uint8_t *q, uint8_t *dp,
++			      uint8_t *dq, const uint8_t *pbmul,
++			      const uint8_t *qmul);
++
++void __raid6_datap_recov_neon(int bytes, uint8_t *p, uint8_t *q, uint8_t *dq,
++			      const uint8_t *qmul);
++
++
+diff --git a/lib/raid6/neon.uc b/lib/raid6/neon.uc
+index b7c68030da4f..355270af0cd6 100644
+--- a/lib/raid6/neon.uc
++++ b/lib/raid6/neon.uc
+@@ -25,6 +25,7 @@
+  */
+ 
+ #include <arm_neon.h>
++#include "neon.h"
+ 
+ typedef uint8x16_t unative_t;
+ 
+diff --git a/lib/raid6/recov_neon.c b/lib/raid6/recov_neon.c
+index d6fba8bf8c0a..1bfc14174d4d 100644
+--- a/lib/raid6/recov_neon.c
++++ b/lib/raid6/recov_neon.c
+@@ -8,6 +8,7 @@
+ 
+ #ifdef __KERNEL__
+ #include <asm/neon.h>
++#include "neon.h"
+ #else
+ #define kernel_neon_begin()
+ #define kernel_neon_end()
+@@ -19,13 +20,6 @@ static int raid6_has_neon(void)
+ 	return cpu_has_neon();
+ }
+ 
+-void __raid6_2data_recov_neon(int bytes, uint8_t *p, uint8_t *q, uint8_t *dp,
+-			      uint8_t *dq, const uint8_t *pbmul,
+-			      const uint8_t *qmul);
+-
+-void __raid6_datap_recov_neon(int bytes, uint8_t *p, uint8_t *q, uint8_t *dq,
+-			      const uint8_t *qmul);
+-
+ static void raid6_2data_recov_neon(int disks, size_t bytes, int faila,
+ 		int failb, void **ptrs)
+ {
+diff --git a/lib/raid6/recov_neon_inner.c b/lib/raid6/recov_neon_inner.c
+index 90eb80d43790..f9e7e8f5a151 100644
+--- a/lib/raid6/recov_neon_inner.c
++++ b/lib/raid6/recov_neon_inner.c
+@@ -5,6 +5,7 @@
+  */
+ 
+ #include <arm_neon.h>
++#include "neon.h"
+ 
+ #ifdef CONFIG_ARM
+ /*
+-- 
+2.39.2
+
