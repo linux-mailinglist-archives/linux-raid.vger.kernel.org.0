@@ -2,58 +2,65 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EB32B70DDC1
-	for <lists+linux-raid@lfdr.de>; Tue, 23 May 2023 15:43:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE7DF70DDD1
+	for <lists+linux-raid@lfdr.de>; Tue, 23 May 2023 15:46:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236929AbjEWNm4 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 23 May 2023 09:42:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32948 "EHLO
+        id S236906AbjEWNqc (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 23 May 2023 09:46:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236760AbjEWNms (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 23 May 2023 09:42:48 -0400
+        with ESMTP id S234585AbjEWNqb (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 23 May 2023 09:46:31 -0400
 Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8012BE4C
-        for <linux-raid@vger.kernel.org>; Tue, 23 May 2023 06:42:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64A3CCA;
+        Tue, 23 May 2023 06:46:30 -0700 (PDT)
 Received: from mail02.huawei.com (unknown [172.30.67.143])
-        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4QQb8r3Bpfz4f3kjQ
-        for <linux-raid@vger.kernel.org>; Tue, 23 May 2023 21:42:20 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-        by APP1 (Coremail) with SMTP id cCh0CgAHJzG4wmxkVTLYJQ--.25598S9;
-        Tue, 23 May 2023 21:42:22 +0800 (CST)
+        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4QQbFX1Z0xz4f3kjM;
+        Tue, 23 May 2023 21:46:24 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+        by APP2 (Coremail) with SMTP id Syh0CgAXvuuww2xkCSPIJw--.31377S3;
+        Tue, 23 May 2023 21:46:26 +0800 (CST)
+Subject: Re: [PATCH] md/raid5: Convert stripe_head's "dev" to flexible array
+ member
+To:     Christoph Hellwig <hch@infradead.org>,
+        Yu Kuai <yukuai1@huaweicloud.com>
+Cc:     Kees Cook <keescook@chromium.org>, Song Liu <song@kernel.org>,
+        linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, "yukuai (C)" <yukuai3@huawei.com>
+References: <20230517233313.never.130-kees@kernel.org>
+ <ZGWpLClY7vz+xl5A@infradead.org>
+ <229ac866-9710-5dbe-80c4-61498f807662@huaweicloud.com>
+ <ZGxU/zSGkqGhGWmF@infradead.org>
 From:   Yu Kuai <yukuai1@huaweicloud.com>
-To:     linux-raid@vger.kernel.org, mariusz.tkaczyk@linux.intel.com,
-        jes@trained-monkey.org, pmenzel@molgen.mpg.de, logang@deltatee.com,
-        song@kernel.org
-Cc:     yukuai3@huawei.com, yangerkun@huawei.com
-Subject: [PATCH tests 5/5] tests: add a regression test for raid456 deadlock
-Date:   Tue, 23 May 2023 21:39:00 +0800
-Message-Id: <20230523133900.3149123-6-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230523133900.3149123-1-yukuai1@huaweicloud.com>
-References: <20230523133900.3149123-1-yukuai1@huaweicloud.com>
+Message-ID: <33c61f2b-2391-1199-d760-b438aff2cebe@huaweicloud.com>
+Date:   Tue, 23 May 2023 21:46:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <ZGxU/zSGkqGhGWmF@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cCh0CgAHJzG4wmxkVTLYJQ--.25598S9
-X-Coremail-Antispam: 1UD129KBjvJXoW7Zr1kXFyDGw45Xr17JFyftFb_yoW8ZF4kpa
-        15uF1Ykr17Xw13uwsxW34UGa4F9a1kJr43Jry2ga1avFW3ZryxX3Z7Kr1YvFyxtrWSqa4k
-        uwn8Ja4xKryjya7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvEb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
-        Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
-        rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267
-        AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAF
-        wI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2
-        WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkE
-        bVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbV
-        WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
-        67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42
-        IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF
-        0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWI
-        evJa73UjIFyTuYvjxUFgAwUUUUU
+X-CM-TRANSID: Syh0CgAXvuuww2xkCSPIJw--.31377S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrZFW3Xr1UXF4rurykuFy3Arb_yoWxCwc_Za
+        1akF47Gr17AFyvvF47twn8WrWv93W8WFZxAry0gFs2q3s8Zas3Cr4kAwnavF98t3Wftr4Y
+        9F90qF15JFs7KjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb4AFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+        6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
+        Y487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
+        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+        WxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVW8JVWx
+        JwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbU
+        UUUUU==
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
+        NICE_REPLY_A,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,84 +68,27 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+Hi,
 
-The deadlock is described in [1], as the last patch described, it's
-fixed first by [2], however this fix will be reverted and the deadlock
-is supposed to be fixed by [3].
+在 2023/05/23 13:54, Christoph Hellwig 写道:
+> On Mon, May 22, 2023 at 07:49:38PM +0800, Yu Kuai wrote:
+>> Hi, Christoph
+>>
+>> 在 2023/05/18 12:27, Christoph Hellwig 写道:
+>>
+>> It's not related to this patch, just I think I found a problem while
+>> reviewing raid5 code, commit e82ed3a4fbb5 ("md/raid6: refactor
+>> raid5_read_one_chunk") changes the caculation of 'end_sector',
+>> 'end_sector' is compared to 'rdev->recovery_offset', so it should be
+>> offset to rdev, but this commit change it to offset to the array.
+>>
+>> Perhaps following change will make sense:
+> 
+> Yes, I think it does.  Can you send a patch?
+> .
+> 
 
-[1] https://lore.kernel.org/linux-raid/5ed54ffc-ce82-bf66-4eff-390cb23bc1ac@molgen.mpg.de/T/#t
-[2] https://lore.kernel.org/linux-raid/20220621031129.24778-1-guoqing.jiang@linux.dev/
-[3] https://lore.kernel.org/linux-raid/20230322064122.2384589-5-yukuai1@huaweicloud.com/
+Of course, thanks for your response.
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- tests/24raid456deadlock | 56 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 tests/24raid456deadlock
-
-diff --git a/tests/24raid456deadlock b/tests/24raid456deadlock
-new file mode 100644
-index 00000000..161c3ab8
---- /dev/null
-+++ b/tests/24raid456deadlock
-@@ -0,0 +1,56 @@
-+devs="$dev0 $dev1 $dev2 $dev3 $dev4 $dev5"
-+runtime=120
-+pid=""
-+old=`cat /proc/sys/vm/dirty_background_ratio`
-+
-+test_write_action()
-+{
-+	while true; do
-+		echo check > /sys/block/md0/md/sync_action &> /dev/null
-+		sleep 0.1
-+		echo idle > /sys/block/md0/md/sync_action &> /dev/null
-+	done
-+}
-+
-+test_write_back()
-+{
-+	fio -filename=$md0 -bs=4k -rw=write -numjobs=1 -name=test \
-+		-time_based -runtime=$runtime &> /dev/null
-+}
-+
-+set_up_test()
-+{
-+	fio -h &> /dev/null || die "fio not found"
-+
-+	# create a simple raid6
-+	mdadm -Cv -R -n 6 -l6 $md0 $devs --assume-clean || die "create raid6 failed"
-+
-+	# trigger dirty pages write back
-+	echo 0 > /proc/sys/vm/dirty_background_ratio
-+}
-+
-+clean_up_test()
-+{
-+	echo $old > /proc/sys/vm/dirty_background_ratio
-+
-+	kill -9 $pid
-+	sync $md0
-+
-+	if ! mdadm -S $md0; then
-+		die "can't stop array, deadlock is probably triggered"
-+	fi
-+}
-+
-+trap 'clean_up_test' EXIT
-+
-+set_up_test || die "set up test failed"
-+
-+test_write_back &
-+pid="$pid $!"
-+
-+test_write_action &
-+pid="$pid $!"
-+
-+sleep $runtime
-+
-+exit 0
--- 
-2.39.2
+Kuai
 
