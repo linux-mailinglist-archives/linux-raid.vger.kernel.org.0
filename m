@@ -2,144 +2,84 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 12F7C70D3D2
-	for <lists+linux-raid@lfdr.de>; Tue, 23 May 2023 08:19:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D2CB70DDC0
+	for <lists+linux-raid@lfdr.de>; Tue, 23 May 2023 15:42:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230474AbjEWGTG (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 23 May 2023 02:19:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58968 "EHLO
+        id S236491AbjEWNmv (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 23 May 2023 09:42:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235171AbjEWGSv (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 23 May 2023 02:18:51 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6551611A
-        for <linux-raid@vger.kernel.org>; Mon, 22 May 2023 23:18:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684822727; x=1716358727;
-  h=date:from:to:cc:subject:message-id;
-  bh=7YFJNKk33M1aV6lkgo96U6NHzFvTRft2x0sNDxDcNOM=;
-  b=RrwdTG+RWyNwrHJLdco3Sreaz051c0AUZP4AqN3AKp0g+uRTtXm7MavH
-   qy3/93cEps/u2aScaBtr6filq1w1aNSXLmpChmS8sd0jvpP9UxwWiT+kc
-   voy2iUmQaJuLzgnTP94n/ly2n05C1bn+vPA2vMjZSi0jiUnQ6KrgEAcGo
-   3ptkWSh0KKsZjRPj9WoFu/mmqAoQ1an4Xvf9qo877O/19bVYwNKBrq921
-   abe6F3OU7Kb/3HKpEm3K2i0kL/g8/evyVGLbtHn4uK2t9wJDVJv6tCRk/
-   HOJaID4NgURXuROw8jG8LvU220BGg/cMBsEgM484w+zAQD540M6jDyAYg
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10718"; a="416609571"
-X-IronPort-AV: E=Sophos;i="6.00,185,1681196400"; 
-   d="scan'208";a="416609571"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2023 23:18:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10718"; a="1033918466"
-X-IronPort-AV: E=Sophos;i="6.00,185,1681196400"; 
-   d="scan'208";a="1033918466"
-Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 22 May 2023 23:18:45 -0700
-Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q1LM4-000DWv-2Y;
-        Tue, 23 May 2023 06:18:44 +0000
-Date:   Tue, 23 May 2023 14:18:11 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Song Liu <song@kernel.org>
-Cc:     linux-raid@vger.kernel.org
-Subject: [song-md:md-next] BUILD SUCCESS
- 7f102f1ef365d75ff7ebc235d0d1e72c5b7f0314
-Message-ID: <20230523061811.oIaoa%lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S235740AbjEWNmr (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 23 May 2023 09:42:47 -0400
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 699D61AC
+        for <linux-raid@vger.kernel.org>; Tue, 23 May 2023 06:42:31 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QQb8n24RQz4f3k6S
+        for <linux-raid@vger.kernel.org>; Tue, 23 May 2023 21:42:17 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+        by APP1 (Coremail) with SMTP id cCh0CgAHJzG4wmxkVTLYJQ--.25598S4;
+        Tue, 23 May 2023 21:42:18 +0800 (CST)
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+To:     linux-raid@vger.kernel.org, mariusz.tkaczyk@linux.intel.com,
+        jes@trained-monkey.org, pmenzel@molgen.mpg.de, logang@deltatee.com,
+        song@kernel.org
+Cc:     yukuai3@huawei.com, yangerkun@huawei.com
+Subject: [PATCH tests 0/5] tests: add some regression tests
+Date:   Tue, 23 May 2023 21:38:55 +0800
+Message-Id: <20230523133900.3149123-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: cCh0CgAHJzG4wmxkVTLYJQ--.25598S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKFWkWw4xuw4rJry3KrWruFg_yoWfGFbEgw
+        48Z34ktF47AF13ta45t3WjqrZ0krW8Gr1xtFn0kFy3XFsxZryjy3WkJr15Way5Gw13Xr13
+        t3yxCrWvyrn5ZjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUboxYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
+        Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
+        A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x02
+        67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267
+        AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80
+        ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4
+        AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
+        6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
+        CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
+        0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3w
+        CI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnI
+        WIevJa73UjIFyTuYvjxUrR6zUUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-tree/branch: INFO setup_repo_specs: /db/releases/20230523114855/lkp-src/repo/*/song-md
-git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git md-next
-branch HEAD: 7f102f1ef365d75ff7ebc235d0d1e72c5b7f0314  md/raid10: fix wrong setting of max_corr_read_errors
+From: Yu Kuai <yukuai3@huawei.com>
 
-elapsed time: 728m
+Yu Kuai (5):
+  tests: add a new test to check if pluged bio is unlimited for raid10
+  tests: add a new test for rdev lifetime
+  tests: support to skip checking dmesg
+  tests: add a regression test for raid10 deadlock
+  tests: add a regression test for raid456 deadlock
 
-configs tested: 67
-configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                                defconfig   gcc  
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-ia64                             allmodconfig   gcc  
-ia64                                defconfig   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r026-20230522   gcc  
-m68k                             allmodconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r021-20230522   gcc  
-microblaze           randconfig-r022-20230522   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                               defconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                      pmac32_defconfig   clang
-powerpc              randconfig-r023-20230522   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-sh                               allmodconfig   gcc  
-sparc                               defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-r025-20230522   clang
-x86_64               randconfig-x051-20230522   clang
-x86_64               randconfig-x052-20230522   clang
-x86_64               randconfig-x053-20230522   clang
-x86_64               randconfig-x054-20230522   clang
-x86_64               randconfig-x055-20230522   clang
-x86_64               randconfig-x056-20230522   clang
-x86_64               randconfig-x061-20230522   clang
-x86_64               randconfig-x062-20230522   clang
-x86_64               randconfig-x063-20230522   clang
-x86_64               randconfig-x064-20230522   clang
-x86_64               randconfig-x065-20230522   clang
-x86_64               randconfig-x066-20230522   clang
-x86_64               randconfig-x081-20230522   gcc  
-x86_64               randconfig-x082-20230522   gcc  
-x86_64               randconfig-x083-20230522   gcc  
-x86_64               randconfig-x084-20230522   gcc  
-x86_64               randconfig-x085-20230522   gcc  
-x86_64               randconfig-x086-20230522   gcc  
-x86_64                               rhel-8.3   gcc  
+ test                                |  8 ++-
+ tests/22raid10plug                  | 41 ++++++++++++++
+ tests/23rdev-lifetime               | 48 ++++++++++++++++
+ tests/24raid10deadlock              | 85 +++++++++++++++++++++++++++++
+ tests/24raid10deadlock.inject_error |  0
+ tests/24raid456deadlock             | 56 +++++++++++++++++++
+ 6 files changed, 236 insertions(+), 2 deletions(-)
+ create mode 100644 tests/22raid10plug
+ create mode 100644 tests/23rdev-lifetime
+ create mode 100644 tests/24raid10deadlock
+ create mode 100644 tests/24raid10deadlock.inject_error
+ create mode 100644 tests/24raid456deadlock
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+2.39.2
+
