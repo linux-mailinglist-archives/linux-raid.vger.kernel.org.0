@@ -2,166 +2,128 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ABB1670F162
-	for <lists+linux-raid@lfdr.de>; Wed, 24 May 2023 10:48:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84E6E70F1BF
+	for <lists+linux-raid@lfdr.de>; Wed, 24 May 2023 11:05:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240279AbjEXIsl (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 24 May 2023 04:48:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56240 "EHLO
+        id S234293AbjEXJFw (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 24 May 2023 05:05:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240469AbjEXIsi (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 24 May 2023 04:48:38 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 711DA184
-        for <linux-raid@vger.kernel.org>; Wed, 24 May 2023 01:48:36 -0700 (PDT)
+        with ESMTP id S240194AbjEXJFu (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 24 May 2023 05:05:50 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D63628E
+        for <linux-raid@vger.kernel.org>; Wed, 24 May 2023 02:05:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684918116; x=1716454116;
+  t=1684919149; x=1716455149;
   h=date:from:to:cc:subject:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=8gyKpVk2xV72vFNd0hZbe+6POrbVEVHvovzjsCLFc80=;
-  b=XzRWrixHjutP1LIBvjtzc36q/hBmK5ITONRDEQ3nRbJtbyE1m5wEkwYV
-   TY55gzQCIDn4qoOS6TX4praUT5Ab/6QCj8DI5YU98cj7njqIdtREolyct
-   gRI9jRoSkP1Xk+QdJkSs2LSZhsjjzrL715R/jTvk+UgFdamTT+6wpsODW
-   w3Xq4+uio9g0SFtoaKosyVEtMMmHcDwut9UED+G/LiPRIBWh3MHWU2fkT
-   mX94vtEHXNfWg5KfDWdB997+YYimYsAm8V9bKmIXGvFnbwwzGj12FgmxW
-   /YjczIBZlAP6h29vSR4SHMDnr8svZ0vSg7BjeXSwbrE7In6iogCmYUDzN
+  bh=mZonNzxleSu/nW6F82ZzAUCzAhsCXVZI8o9eGtLQM3w=;
+  b=Iq+QiaIfD2hrBRO73IGgXXEM5bRfLLXcEkzyxs78iP988+qf/QouOcog
+   gkMTq6wWg8HzKYl2RAsPGDcqgU15xjrbCCXHgVGSDL4MZTdNenX2Dv2Nz
+   Mu/tY9ieFBWb+GZ6hDT5bPiZ9gcUsfrk/7wtQ6O3kb+ZxBHIensDjrREi
+   TGKGFy9HgyQ7fE/ELoKjuf982RlUDOJvgS3NKIXaAYEv4y8pBSQ77QWZ6
+   0OC4ZxUsASNFxN+mhdiWnDSHUGsf3bpU8YKdyqn7UrQJY1skwRou1rwfS
+   hwuTZBDrFHbhCf1u5R4VixxzVZlJIokXt7DqFPg/QC0N6tTQ4p+ID6uti
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10719"; a="342964290"
+X-IronPort-AV: E=McAfee;i="6600,9927,10719"; a="439860572"
 X-IronPort-AV: E=Sophos;i="6.00,188,1681196400"; 
-   d="scan'208";a="342964290"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2023 01:48:35 -0700
+   d="scan'208";a="439860572"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2023 02:01:03 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10719"; a="794103621"
+X-IronPort-AV: E=McAfee;i="6600,9927,10719"; a="698444198"
 X-IronPort-AV: E=Sophos;i="6.00,188,1681196400"; 
-   d="scan'208";a="794103621"
+   d="scan'208";a="698444198"
 Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.249.129.144])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2023 01:48:33 -0700
-Date:   Wed, 24 May 2023 10:48:28 +0200
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2023 02:00:43 -0700
+Date:   Wed, 24 May 2023 11:00:38 +0200
 From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-To:     Yu Kuai <yukuai1@huaweicloud.com>
+To:     Yu Kuai <yukuai1@huaweicloud.com>, song@kernel.org
 Cc:     linux-raid@vger.kernel.org, jes@trained-monkey.org,
-        pmenzel@molgen.mpg.de, logang@deltatee.com, song@kernel.org,
-        yukuai3@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH tests 4/5] tests: add a regression test for raid10
- deadlock
-Message-ID: <20230524104828.000070bf@linux.intel.com>
-In-Reply-To: <20230523133900.3149123-5-yukuai1@huaweicloud.com>
+        pmenzel@molgen.mpg.de, logang@deltatee.com, yangerkun@huawei.com,
+        "yukuai (C)" <yukuai3@huawei.com>
+Subject: Re: [PATCH tests 1/5] tests: add a new test to check if pluged bio
+ is unlimited for raid10
+Message-ID: <20230524110038.00006c2f@linux.intel.com>
+In-Reply-To: <5fdfece6-6a45-7de7-7754-afc16d58145b@huaweicloud.com>
 References: <20230523133900.3149123-1-yukuai1@huaweicloud.com>
-        <20230523133900.3149123-5-yukuai1@huaweicloud.com>
+        <20230523133900.3149123-2-yukuai1@huaweicloud.com>
+        <20230524095314.000007f9@linux.intel.com>
+        <5fdfece6-6a45-7de7-7754-afc16d58145b@huaweicloud.com>
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Tue, 23 May 2023 21:38:59 +0800
+On Wed, 24 May 2023 16:26:45 +0800
 Yu Kuai <yukuai1@huaweicloud.com> wrote:
 
-> From: Yu Kuai <yukuai3@huawei.com>
+> Hi,
 > 
-> The deadlock is described in [1], it's fixed first by [2], however,
-> it turns out this commit will trigger other problems[3], hence this
-> commit will be reverted and the deadlock is supposed to be fixed by [1].
+> ÔÚ 2023/05/24 15:53, Mariusz Tkaczyk Ð´µÀ:
+> > On Tue, 23 May 2023 21:38:56 +0800
+> > Yu Kuai <yukuai1@huaweicloud.com> wrote:
+> >   
+> >> From: Yu Kuai <yukuai3@huawei.com>
+> >>
+> >> Pluged bio is unlimited means that all submitted bio will be pluged, and
+> >> those bio won't be issued to underlaying disks until blk_finish_plug() or
+> >> blk_flush_plug(). In this case, a lot memory will be used for
+> >> raid10_bio and io latency will be very bad.
+> >>
+> >> This test do some dirty pages writeback for raid10, where plug is used, and
+> >> check if device inflight counter exceed threshold.
+> >>
+> >> This problem is supposed to be fixed by [1].  
+> > 
+> > The test here is for md, mdadm has nothing to do here. I'm not against it
+> > but please extract it to separate directory because like "md_tests".
+> > We need to start grouping tests.  
 > 
-> [1]
-> https://lore.kernel.org/linux-raid/20230322064122.2384589-5-yukuai1@huaweicloud.com/
-> [2]
-> https://lore.kernel.org/linux-raid/20220621031129.24778-1-guoqing.jiang@linux.dev/
-> [3]
-> https://lore.kernel.org/linux-raid/20230322064122.2384589-2-yukuai1@huaweicloud.com/
-> 
-> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-> ---
->  tests/24raid10deadlock              | 85 +++++++++++++++++++++++++++++
->  tests/24raid10deadlock.inject_error |  0
->  2 files changed, 85 insertions(+)
->  create mode 100644 tests/24raid10deadlock
->  create mode 100644 tests/24raid10deadlock.inject_error
-> 
-> diff --git a/tests/24raid10deadlock b/tests/24raid10deadlock
-> new file mode 100644
-> index 00000000..27869840
-> --- /dev/null
-> +++ b/tests/24raid10deadlock
-> @@ -0,0 +1,85 @@
-> +devs="$dev0 $dev1 $dev2 $dev3"
-> +runtime=120
-> +pid=""
-> +
-> +set_up_injection()
-> +{
-> +	echo -1 > /sys/kernel/debug/fail_make_request/times
-> +	echo 1 > /sys/kernel/debug/fail_make_request/probability
-> +	echo 0 > /sys/kernel/debug/fail_make_request/verbose
-> +	echo 1 > /sys/block/${1##*/}/make-it-fail
-> +}
-> +
-> +clean_up_injection()
-> +{
-> +	echo 0 > /sys/block/${1##*/}/make-it-fail
-> +	echo 0 > /sys/kernel/debug/fail_make_request/times
-> +	echo 0 > /sys/kernel/debug/fail_make_request/probability
-> +	echo 2 > /sys/kernel/debug/fail_make_request/verbose
-> +}
-> +
-> +test_rdev()
-> +{
-> +	while true; do
-> +		mdadm -f $md0 $1 &> /dev/null
-> +		mdadm -r $md0 $1 &> /dev/null
-> +		mdadm --zero-superblock $1 &> /dev/null
-> +		mdadm -a $md0 $1 &> /dev/null
-> +		sleep $2
-> +	done
-> +}
-> +
-> +test_write_action()
-> +{
-> +	while true; do
-> +		echo frozen > /sys/block/md0/md/sync_action
-> +		echo idle > /sys/block/md0/md/sync_action
-> +		sleep 0.1
-> +	done
-> +}
-> +
-> +set_up_test()
-> +{
-> +	fio -h &> /dev/null || die "fio not found"
-> +
-> +	# create a simple raid10
-> +	mdadm -Cv -R -n 4 -l10 $md0 $devs || die "create raid10 failed"
-> +}
-> +
-> +clean_up_test()
-> +{
-> +	clean_up_injection $dev0
-> +	kill -9 $pid
-> +	pkill -9 fio
-> +
-> +	sleep 1
-> +
-> +	if ! mdadm -S $md0; then
-> +		die "can't stop array, deadlock is probably triggered"
-> +	fi
+> Sorry I don't understand this, currently the test for md is here, I
+> don't see why need a seperate directory, is there a plan to move all
+> these tests into new directory?
 
-stop may fail from different reasons I see it as too big to be marker of
-"deadlock". I know that --stop still fails because md is unable to clear sysfs
-attrs in expected time (or a least it was a problem few years ago). Is there a
-better way to check that? I would prefer, different less complicated action to
-exclude false positives.
+Yes, that how it was in the past, and I would like to change it because 
+tests directory is too big and we are still adding new tests.
 
-In my IMSM environment I still see that md stop stress test is failing
-sporadically (1/100).
+Ideally, tests like that should stay with kernel, because repository you are
+contributing now is "mdadm" - userspace application to manage md devices, not
+the driver itself.
+That is why I wanted to highlight that placement is controversial but I'm fine
+with that. As you said, we did that in the past.
+
+Song, what do you think? Where we should put the test like in the future?
+
+
+> >> +
+> >> +# check if inflight exceed threshold
+> >> +while true; do
+> >> +        tmp=`cat /sys/block/md0/inflight | awk '{printf("%d\n", $1 +
+> >> $2);}'`
+> >> +        if [ $tmp -gt $threshold ]; then
+> >> +                die "inflight is greater than 4096"  
+> > 
+> > The message here is not meaningful, what 4096 is? Please add comment
+> > describing why value above 4096 causes an error. We need to understand how
+> > the future changes in md may affect this setting (I think that there is a
+> > correlation between the value and MAX_PLUG_BIO).  
+> 
+> MAX_PLUG_BIO is just limit for one task, I'm not sure if there will only
+> be one task issuing io, that why I choose a much larger value 4096.
+
+Please add it in comment above the value.
 
 Thanks,
 Mariusz
