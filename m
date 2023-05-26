@@ -2,72 +2,152 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EEEEA711D4D
-	for <lists+linux-raid@lfdr.de>; Fri, 26 May 2023 04:02:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A0DDE711D77
+	for <lists+linux-raid@lfdr.de>; Fri, 26 May 2023 04:09:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233074AbjEZCBz convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-raid@lfdr.de>); Thu, 25 May 2023 22:01:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44274 "EHLO
+        id S232344AbjEZCJL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 25 May 2023 22:09:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231344AbjEZCBy (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 25 May 2023 22:01:54 -0400
-X-Greylist: delayed 385 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 25 May 2023 19:01:51 PDT
-Received: from mwp-bld-mts-003c1.ocn.ad.jp (mwp-bld-mts-003c1.ocn.ad.jp [153.128.188.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C77190;
-        Thu, 25 May 2023 19:01:51 -0700 (PDT)
-Received: from cmn-spm-mts-025c1.ocn.ad.jp (cmn-spm-mts-025c1.ocn.ad.jp [153.138.238.89])
-        by mwp-bld-mts-003c1.ocn.ad.jp (Postfix) with ESMTP id 5DDF8540018D5;
-        Fri, 26 May 2023 10:55:24 +0900 (JST)
-Received: from mgw-vc-mts-005c1.ocn.ad.jp ([153.138.238.156])
-        by cmn-spm-mts-025c1.ocn.ad.jp with ESMTP
-        id 2MfsqMZM96aVN2Mfsq7G0l; Fri, 26 May 2023 10:55:24 +0900
-X-BIZ-RELAY: yes
-Received: from mwp-sdgw-mts-007c1.ocn.ad.jp ([122.28.88.74])
-        by mgw-vc-mts-005c1.ocn.ad.jp with ESMTP
-        id 2MfsqcUz4dEGV2MfsqmmZC; Fri, 26 May 2023 10:55:24 +0900
-Received: from c15u1u5l.mwprem.net (c15u1u5l.mwprem.net [122.17.164.24])
-        by mwp-sdgw-mts-007c1.ocn.ad.jp (Postfix) with SMTP id E9D78800042A;
-        Fri, 26 May 2023 10:55:23 +0900 (JST)
-Content-Type: text/plain; charset="iso-8859-1"
+        with ESMTP id S230049AbjEZCJK (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 25 May 2023 22:09:10 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77829195
+        for <linux-raid@vger.kernel.org>; Thu, 25 May 2023 19:08:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1685066903;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JQr5uTDo02zAtp27aliOjrl2+aB1h/YA+111dOmh72I=;
+        b=cMd3q68H/H4p3cy3wkJf6EoZgoL5YTLxshLMAvikoOltojGHhFT+LDTJn/sgvHJRN1MRau
+        X/pO0/PwsarXtFtfQQFNC/Ilejx+dgDf3zeb3G4Ld7aBTnXaUo7M5uE9cj+65rLgYwV8cc
+        qE1ca3SryUy9w9qLTdr0xhn/D2h70JQ=
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
+ [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-644-B2-9htEZNdqo3tQxWQZyEw-1; Thu, 25 May 2023 22:08:22 -0400
+X-MC-Unique: B2-9htEZNdqo3tQxWQZyEw-1
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-25338b76f79so262920a91.3
+        for <linux-raid@vger.kernel.org>; Thu, 25 May 2023 19:08:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685066901; x=1687658901;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JQr5uTDo02zAtp27aliOjrl2+aB1h/YA+111dOmh72I=;
+        b=Up8O/DdSG1W9J86/6peFmeb+IT9HIrC5ZexVQ5lncPfG5KkXgqQsJ3xyVX722RIKHa
+         ivOm6ZLwFIf/g1SwFPaXygB4GqyfCxML6ayhutn16N5M3RITkAfzWy2oKcpVOy5Qp9OR
+         UhjDhoOs+O7ypX8QZNv89cUj5emDVnl7DyUBtjsHMobynas9bp+pgiSRZso2o+l8h9u3
+         cuHx1umXHfR0MbhX76XGLvJnv8bUajt+7hHvFA16p05qOLCv4iQ2s+AjE24nTmtN13xP
+         IRVqGoqoPqUploaEEGyegRcT4niS7AMY6ovEmnh+TU2TYxp5k8ecLDsB81SE+sb6Y7gs
+         PI9A==
+X-Gm-Message-State: AC+VfDw6cmXNy37pvk9T1EKwXKiI/R8qGUnYc3uo1HptSIpirsbwmPjx
+        YrFZzpDzF14p2yxcf0v2AxbiWxFL7/ex28caHQr5mEjZw8En+OXgJfaWqG2ATek2ALtEYNBUCgr
+        n7ubnNGAGPSh0gtPxp2470259REkGYPJR6OElylsfcwb/o+gJ
+X-Received: by 2002:a17:902:d4ca:b0:1ae:50cc:45b with SMTP id o10-20020a170902d4ca00b001ae50cc045bmr953199plg.36.1685066901246;
+        Thu, 25 May 2023 19:08:21 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ4zQvqbd0HZxa1FpY5z8E7d1yT3tu703w4yQtJQODN87tykK21GX/DSpFphuKiqeVCdMBHAkUuXLCfihyWUm3I=
+X-Received: by 2002:a17:902:d4ca:b0:1ae:50cc:45b with SMTP id
+ o10-20020a170902d4ca00b001ae50cc045bmr953181plg.36.1685066900955; Thu, 25 May
+ 2023 19:08:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: Project Proposal
-To:     Recipients <k-takahashi@maxis.ne.jp>
-From:   "T Peter" <k-takahashi@maxis.ne.jp>
-Date:   Thu, 25 May 2023 18:55:10 -0700
-Reply-To: tanglkpeter11@gmail.com
-Message-Id: <20230526015518.84F8440812CC@c15u1u5l.mwprem.net>
-X-Spam-Status: Yes, score=7.1 required=5.0 tests=BAYES_50,
-        FREEMAIL_FORGED_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,HK_RANDOM_REPLYTO,
-        NIXSPAM_IXHASH,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  1.0 HK_RANDOM_REPLYTO Reply-To username looks random
-        *  3.0 NIXSPAM_IXHASH http://www.nixspam.org/
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [tanglkpeter11[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  2.1 FREEMAIL_FORGED_REPLYTO Freemail in Reply-To, but not From
-X-Spam-Level: *******
+References: <CALTww28aV5CGXQAu46Rkc=fG1jK=ARzCT8VGoVyje8kQdqEXMg@mail.gmail.com>
+In-Reply-To: <CALTww28aV5CGXQAu46Rkc=fG1jK=ARzCT8VGoVyje8kQdqEXMg@mail.gmail.com>
+From:   Xiao Ni <xni@redhat.com>
+Date:   Fri, 26 May 2023 10:08:09 +0800
+Message-ID: <CALTww2_4pS=wF6tR0rVejg1ocyGhkTJic0aA=WCcTXDh+cZXQQ@mail.gmail.com>
+Subject: Fwd: The read data is wrong from raid5 when recovery happens
+To:     linux-raid <linux-raid@vger.kernel.org>,
+        Song Liu <song@kernel.org>,
+        Guoqing Jiang <guoqing.jiang@linux.dev>,
+        Heinz Mauelshagen <heinzm@redhat.com>,
+        Nigel Croxon <ncroxon@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hello Dear, 
+I received an email that this email can't delivered to someone. Resent
+it to linux-raid again.
 
-Please Confirm the project proposition I sent to you has been duly received.
+---------- Forwarded message ---------
+From: Xiao Ni <xni@redhat.com>
+Date: Fri, May 26, 2023 at 9:49=E2=80=AFAM
+Subject: The read data is wrong from raid5 when recovery happens
+To: Song Liu <song@kernel.org>, Guoqing Jiang <guoqing.jiang@linux.dev>
+Cc: linux-raid <linux-raid@vger.kernel.org>, Heinz Mauelshagen
+<heinzm@redhat.com>, Nigel Croxon <ncroxon@redhat.com>
 
-Thank you
 
-I anticipate your response
+Hi all
 
-Regards,
+We found a problem recently. The read data is wrong when recovery
+happens. Now we've found it's introduced by patch 10764815f (md: add
+io accounting for raid0 and raid5). I can reproduce this 100%. This
+problem exists in upstream. The test steps are like this:
 
-T LK Peter
+1. mdadm -CR $devname -l5 -n4 /dev/sd[b-e] --force --assume-clean
+2. mkfs.ext4 -F $devname
+3. mount $devname $mount_point
+4. mdadm --incremental --fail sdd
+5. dd if=3D/dev/zero of=3D/tmp/pythontest/file1 bs=3D1M count=3D100000 stat=
+us=3Dprogress
+6. mdadm /dev/md126 --add /dev/sdd
+7. create 31 processes that writes and reads. It compares the content
+with md5sum. The test will go on until the recovery stops
+8. wait for about 10 minutes, we can see some processes report
+checksum is wrong. But if it re-read the data again, the checksum will
+be good.
+
+I tried to narrow this problem like this:
+
+-       md_account_bio(mddev, &bi);
++       if (rw =3D=3D WRITE)
++               md_account_bio(mddev, &bi);
+If it only do account for write requests, the problem can disappear.
+
+-       if (rw =3D=3D READ && mddev->degraded =3D=3D 0 &&
+-           mddev->reshape_position =3D=3D MaxSector) {
+-               bi =3D chunk_aligned_read(mddev, bi);
+-               if (!bi)
+-                       return true;
+-       }
++       //if (rw =3D=3D READ && mddev->degraded =3D=3D 0 &&
++       //    mddev->reshape_position =3D=3D MaxSector) {
++       //      bi =3D chunk_aligned_read(mddev, bi);
++       //      if (!bi)
++       //              return true;
++       //}
+
+        if (unlikely(bio_op(bi) =3D=3D REQ_OP_DISCARD)) {
+                make_discard_request(mddev, bi);
+@@ -6180,7 +6180,8 @@ static bool raid5_make_request(struct mddev
+*mddev, struct bio * bi)
+                        md_write_end(mddev);
+                return true;
+        }
+-       md_account_bio(mddev, &bi);
++       if (rw =3D=3D READ)
++               md_account_bio(mddev, &bi);
+
+I comment the chunk_aligned_read out and only account for read
+requests, this problem can be reproduced.
+
+--=20
+Best Regards
+Xiao Ni
+
+
+--=20
+Best Regards
+Xiao Ni
+
