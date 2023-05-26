@@ -2,60 +2,60 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 01F06712172
-	for <lists+linux-raid@lfdr.de>; Fri, 26 May 2023 09:48:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9C11712188
+	for <lists+linux-raid@lfdr.de>; Fri, 26 May 2023 09:52:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242226AbjEZHrl (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 26 May 2023 03:47:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42448 "EHLO
+        id S242512AbjEZHwP (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 26 May 2023 03:52:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236450AbjEZHrj (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 26 May 2023 03:47:39 -0400
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A860F12F;
-        Fri, 26 May 2023 00:47:37 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.153])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QSH860R3wz4f3nKX;
-        Fri, 26 May 2023 15:47:34 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.127.227])
-        by APP4 (Coremail) with SMTP id gCh0CgCX_7INZHBko+n3KA--.7888S8;
-        Fri, 26 May 2023 15:47:34 +0800 (CST)
-From:   linan666@huaweicloud.com
-To:     song@kernel.org, bingjingc@synology.com, allenpeng@synology.com,
-        alexwu@synology.com, shli@fb.com, neilb@suse.de
-Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linan122@huawei.com, yukuai3@huawei.com, yi.zhang@huawei.com,
-        houtao1@huawei.com, yangerkun@huawei.com
-Subject: [PATCH v2 4/4] md/raid10: fix io loss while replacement replace rdev
-Date:   Fri, 26 May 2023 15:45:51 +0800
-Message-Id: <20230526074551.669792-5-linan666@huaweicloud.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20230526074551.669792-1-linan666@huaweicloud.com>
-References: <20230526074551.669792-1-linan666@huaweicloud.com>
+        with ESMTP id S242560AbjEZHwO (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 26 May 2023 03:52:14 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99549E4D
+        for <linux-raid@vger.kernel.org>; Fri, 26 May 2023 00:52:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685087527; x=1716623527;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=uhlz3ulBE2nfUIRVg+goYyDJMeE5/Ss9tv6TDEpGuGI=;
+  b=jQw+yLWSTjwDlWZMLnk2D70eXLM+N/2nv4HryM5teZUlyEWIo0a7p682
+   srQWhGCSt5QR8RzSFLSfz3J6/ie2aoIMk6XL0ssltMjN8aenguaCPUKZy
+   Zoy74pruoo5yEhQEWvUQdVsJOZnQlnLGck76EjUD7ZBybhAFnW5tGeEaa
+   cGQXKNiBF5vVB0sV97FCGAkvo3lFDG6nmKVbocbpVeaNrypsS45Prw+Ms
+   freC3M50GNlI/UHc5vy8pP/2VMVfI3YjlM1QRaDDbnpRq2GXVmxAhfFSR
+   urtLv5TD/+0IFXZHbn4IFaWewnLhqhxhthKFWOEj/kc7vXmx8Eov1pWe+
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10721"; a="343641523"
+X-IronPort-AV: E=Sophos;i="6.00,193,1681196400"; 
+   d="scan'208";a="343641523"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2023 00:52:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10721"; a="775000601"
+X-IronPort-AV: E=Sophos;i="6.00,193,1681196400"; 
+   d="scan'208";a="775000601"
+Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.249.130.205])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2023 00:52:05 -0700
+Date:   Fri, 26 May 2023 09:52:00 +0200
+From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+To:     Coly Li <colyli@suse.de>
+Cc:     linux-raid@vger.kernel.org,
+        Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>,
+        Jes Sorensen <jes@trained-monkey.org>
+Subject: Re: [PATCH v2] Incremental: remove obsoleted calls to udisks
+Message-ID: <20230526095200.00004c9c@linux.intel.com>
+In-Reply-To: <20230525170843.4616-1-colyli@suse.de>
+References: <20230525170843.4616-1-colyli@suse.de>
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgCX_7INZHBko+n3KA--.7888S8
-X-Coremail-Antispam: 1UD129KBjvJXoW7tFWkCrWkKr4xKrykJry8AFb_yoW8Kr1xpF
-        4DK3W5Zr1UAwsrKFs8AF4DJa4S9rWxtFs5Jry3W343ua1rtrWUAay7GrW3Zrs8ZFZ8XryY
-        qa13Kws5u3W2gFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUm2b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
-        Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
-        rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267
-        AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E
-        14v26rxl6s0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I
-        8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AK
-        xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxV
-        A2Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-        6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-        CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
-        0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
-        IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVF
-        xhVjvjDU0xZFpf9x07UKLvtUUUUU=
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -63,69 +63,171 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Li Nan <linan122@huawei.com>
+On Fri, 26 May 2023 01:08:43 +0800
+Coly Li <colyli@suse.de> wrote:
 
-When we remove a disk which has replacement, first set rdev to NULL
-and then set replacement to rdev, finally set replacement to NULL (see
-raid10_remove_disk()). If io is submitted during the same time, it might
-read both rdev and replacement as NULL, and io will not be submitted.
+> Utilility udisks is removed from udev upstream, calling this obsoleted
+> command in run_udisks() doesn't make any sense now.
+> 
+> This patch removes the calls chain of udisks, which includes routines
+> run_udisk(), force_remove(), and 2 locations where force_remove() are
+> called. Considering force_remove() is removed with udisks util, it is
+> fair to remove Manage_stop() inside force_remove() as well.
+> 
+> After force_remove() is not called anymore, if Manage_subdevs() returns
+> failure due to a busy array, nothing else to do. If the failure is from
+> a broken array and verbose information is wanted, a warning message will
+> be printed by pr_err().
+> 
+> Signed-off-by: Coly Li <colyli@suse.de>
+> Cc: Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
+> Cc: Jes Sorensen <jes@trained-monkey.org>
+> ---
+> Changelog,
+> v2: improve based on code review comments from Mariusz.
+> v1: initial version.
+> 
+>  Incremental.c | 88 ++++++++++++++++++++++++---------------------------
+>  1 file changed, 42 insertions(+), 46 deletions(-)
+> 
+> diff --git a/Incremental.c b/Incremental.c
+> index f13ce02..d390a08 100644
+> --- a/Incremental.c
+> +++ b/Incremental.c
+> @@ -1628,56 +1628,38 @@ release:
+>  	return rv;
+>  }
+>  
+> -static void run_udisks(char *arg1, char *arg2)
+> -{
+> -	int pid = fork();
+> -	int status;
+> -	if (pid == 0) {
+> -		manage_fork_fds(1);
+> -		execl("/usr/bin/udisks", "udisks", arg1, arg2, NULL);
+> -		execl("/bin/udisks", "udisks", arg1, arg2, NULL);
+> -		exit(1);
+> -	}
+> -	while (pid > 0 && wait(&status) != pid)
+> -		;
+> -}
+> -
+> -static int force_remove(char *devnm, int fd, struct mdinfo *mdi, int verbose)
+> -{
+> -	int rv;
+> -	int devid = devnm2devid(devnm);
+> -
+> -	run_udisks("--unmount", map_dev(major(devid), minor(devid), 0));
+> -	rv = Manage_stop(devnm, fd, verbose, 1);
+> -	if (rv) {
+> -		/* At least we can try to trigger a 'remove' */
+> -		sysfs_uevent(mdi, "remove");
+> -		if (verbose)
+> -			pr_err("Fail to stop %s too.\n", devnm);
+> -	}
+> -	return rv;
+> -}
+> -
+>  static void remove_from_member_array(struct mdstat_ent *memb,
+>  				    struct mddev_dev *devlist, int verbose)
+>  {
+>  	int rv;
+>  	struct mdinfo mmdi;
+> +	char buf[32];
 
-  rdev -> NULL
-			read rdev
-  replacement -> NULL
-			read replacement
+Another place where we hard-coding array size. We already
+addressed it (patch is waiting for internal regression), so please left it as is
+for now. Just to let everyone know.
 
-Fix it by reading replacement first and rdev later, meanwhile, use smp_mb()
-to prevent memory reordering.
+>  	int subfd = open_dev(memb->devnm);
+>  
+> -	if (subfd >= 0) {
+> -		rv = Manage_subdevs(memb->devnm, subfd, devlist, verbose,
+> -				    0, UOPT_UNDEFINED, 0);
+> -		if (rv & 2) {
+> -			if (sysfs_init(&mmdi, -1, memb->devnm))
+> -				pr_err("unable to initialize sysfs for:
+> %s\n",
+> -				       memb->devnm);
+> -			else
+> -				force_remove(memb->devnm, subfd, &mmdi,
+> -					     verbose);
+> +	if (subfd < 0)
+> +		return;
+> +
+> +	rv = Manage_subdevs(memb->devnm, subfd, devlist, verbose,
+> +			    0, UOPT_UNDEFINED, 0);
+> +	if (rv) {
+> +		/*
+> +		 * If the array is busy or no verbose info
+> +		 * desired, nonthing else to do.
+> +		 */
+> +		if ((rv & 2) || verbose <= 0)
+> +			goto close;
+> +
+> +		/* Otherwise if failed due to a broken array, warn */
+> +		if (sysfs_init(&mmdi, -1, memb->devnm) == 0 &&
+> +		    sysfs_get_str(&mmdi, NULL, "array_state",
+> +				  buf, sizeof(buf)) > 0 &&
+> +		    strncmp(buf, "broken", 6) == 0) {
+> +			pr_err("Fail to remove %s from broken array.\n",
+> +			       memb->devnm);
 
-Fixes: 475b0321a4df ("md/raid10: writes should get directed to replacement as well as original.")
-Signed-off-by: Li Nan <linan122@huawei.com>
-Reviewed-by: Yu Kuai <yukuai3@huawei.com>
----
- drivers/md/raid10.c | 22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
+The codes above and below are almost the same now, can we move them to a
+function?
+>  		}
+> -		close(subfd);
+>  	}
+> +close:
+> +	close(subfd);
+>  }
+>  
+>  /*
+> @@ -1760,11 +1742,22 @@ int IncrementalRemove(char *devname, char *id_path,
+> int verbose) } else {
+>  		rv |= Manage_subdevs(ent->devnm, mdfd, &devlist,
+>  				    verbose, 0, UOPT_UNDEFINED, 0);
+> -		if (rv & 2) {
+> -		/* Failed due to EBUSY, try to stop the array.
+> -		 * Give udisks a chance to unmount it first.
+> -		 */
+> -			rv = force_remove(ent->devnm, mdfd, &mdi, verbose);
+> +		if (rv) {
+I would prefer to reverse logic to make one indentation less (if that is
+possible):
+if (rv != 0)
+    goto end;
+but it is fine anyway.
 
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index aa22782a7330..88e4bae15143 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -779,8 +779,16 @@ static struct md_rdev *read_balance(struct r10conf *conf,
- 		disk = r10_bio->devs[slot].devnum;
- 		rdev = rcu_dereference(conf->mirrors[disk].replacement);
- 		if (rdev == NULL || test_bit(Faulty, &rdev->flags) ||
--		    r10_bio->devs[slot].addr + sectors > rdev->recovery_offset)
-+		    r10_bio->devs[slot].addr + sectors >
-+		    rdev->recovery_offset) {
-+			/*
-+			 * Read replacement first to prevent reading both rdev
-+			 * and replacement as NULL during replacement replace
-+			 * rdev.
-+			 */
-+			smp_mb();
- 			rdev = rcu_dereference(conf->mirrors[disk].rdev);
-+		}
- 		if (rdev == NULL ||
- 		    test_bit(Faulty, &rdev->flags))
- 			continue;
-@@ -1479,9 +1487,15 @@ static void raid10_write_request(struct mddev *mddev, struct bio *bio,
- 
- 	for (i = 0;  i < conf->copies; i++) {
- 		int d = r10_bio->devs[i].devnum;
--		struct md_rdev *rdev = rcu_dereference(conf->mirrors[d].rdev);
--		struct md_rdev *rrdev = rcu_dereference(
--			conf->mirrors[d].replacement);
-+		struct md_rdev *rdev, *rrdev;
-+
-+		rrdev = rcu_dereference(conf->mirrors[d].replacement);
-+		/*
-+		 * Read replacement first to Prevent reading both rdev and
-+		 * replacement as NULL during replacement replace rdev.
-+		 */
-+		smp_mb();
-+		rdev = rcu_dereference(conf->mirrors[d].rdev);
- 		if (rdev == rrdev)
- 			rrdev = NULL;
- 		if (rdev && (test_bit(Faulty, &rdev->flags)))
--- 
-2.31.1
+> +			/*
+> +			 * If the array is busy or no verbose info
+> +			 * desired, nothing else to do.
+> +			 */
+> +			if ((rv & 2) || verbose <= 0)
+> +				goto end;
+> +
+> +			/* Otherwise if failed due to a broken array, warn */
+> +			if (sysfs_get_str(&mdi, NULL, "array_state",
+> +					  buf, sizeof(buf)) > 0 &&
+> +			    strncmp(buf, "broken", 6) == 0) {
 
+Broken is defined in sysfs_array_states[], can we use it?
+if (map_name(sysfs_array_states, buf) == ARRAY_BROKEN)
+I know that it could looks like a little overhead but compiler should do
+the job here.
+> +				pr_err("Fail to remove %s from broken
+> array.\n",
+> +				       ent->devnm);
+Not exactly, The broken may be raised even if disk is removed. It is a case for
+raid456 and raid1/10 with fail_last_dev=1. I would say just "%s is in broken
+state.\n" 
+Should be exclude arrays which are already broken (broken was set before we
+called mdadm -If)? I don't see printing this message everytime as a problem, but
+it is something you should consider.
+
+And I forgot to say it eariler, could you consider adding test/s for both IMSM and native?
+It is something that should be tested.
+Sorry, scope is growing :(
+
+Thanks,
+Mariusz
