@@ -2,56 +2,52 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B7C28713318
-	for <lists+linux-raid@lfdr.de>; Sat, 27 May 2023 09:41:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C54A71339E
+	for <lists+linux-raid@lfdr.de>; Sat, 27 May 2023 11:21:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232341AbjE0Hll (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sat, 27 May 2023 03:41:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41582 "EHLO
+        id S231967AbjE0JVt (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 27 May 2023 05:21:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232145AbjE0Hlk (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sat, 27 May 2023 03:41:40 -0400
+        with ESMTP id S231775AbjE0JVs (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 27 May 2023 05:21:48 -0400
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63A7490;
-        Sat, 27 May 2023 00:41:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D766FE3;
+        Sat, 27 May 2023 02:21:46 -0700 (PDT)
 Received: from mail02.huawei.com (unknown [172.30.67.153])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QStZP5ZrTz4f3w0V;
-        Sat, 27 May 2023 15:23:57 +0800 (CST)
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QSxBH3WZsz4f3nTh;
+        Sat, 27 May 2023 17:21:43 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.127.227])
-        by APP4 (Coremail) with SMTP id gCh0CgD3rLAKsHFk67lAKQ--.30654S8;
-        Sat, 27 May 2023 15:23:58 +0800 (CST)
+        by APP4 (Coremail) with SMTP id gCh0CgBH_rGny3Fk4ZBGKQ--.53868S4;
+        Sat, 27 May 2023 17:21:44 +0800 (CST)
 From:   linan666@huaweicloud.com
-To:     song@kernel.org, bingjingc@synology.com, allenpeng@synology.com,
-        shli@fb.com, alexwu@synology.com, neilb@suse.de
+To:     song@kernel.org
 Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
         linan122@huawei.com, yukuai3@huawei.com, yi.zhang@huawei.com,
         houtao1@huawei.com, yangerkun@huawei.com
-Subject: [PATCH v3 4/4] md/raid10: fix io loss while replacement replace rdev
-Date:   Sat, 27 May 2023 15:22:18 +0800
-Message-Id: <20230527072218.2365857-5-linan666@huaweicloud.com>
+Subject: [PATCH] md/raid10: prioritize adding disk to 'removed' mirror
+Date:   Sat, 27 May 2023 17:20:07 +0800
+Message-Id: <20230527092007.3008856-1-linan666@huaweicloud.com>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20230527072218.2365857-1-linan666@huaweicloud.com>
-References: <20230527072218.2365857-1-linan666@huaweicloud.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgD3rLAKsHFk67lAKQ--.30654S8
-X-Coremail-Antispam: 1UD129KBjvJXoW7tFWkCrWkKr4xKrykJry8AFb_yoW8Kr1xpF
-        4DK3W5ZryUAwsFgFs8AF4DJa4S9rWxtFs5Jry3W343ua1rtrWUAay7GrW3Zrs8ZFWDXryY
-        qa13Kws5u3W7KFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUmIb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
-        Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
-        rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267
-        AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E
-        14v26rxl6s0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I
-        8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
-        xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxV
-        A2Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-        6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-        CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
-        0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
-        IF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnI
-        WIevJa73UjIFyTuYvjxUwZ2-UUUUU
+X-CM-TRANSID: gCh0CgBH_rGny3Fk4ZBGKQ--.53868S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxCF47Jw18KF4UArWrJFWxXrb_yoW5CF18pa
+        nxJ3ZxGrW8JwsIkF4DJayDWFWSqrWkKaykKry3W34F9F43trWUGa48CrW5Zr98AFZ8Zw43
+        t3W5JrZ8KF1xuFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkCb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+        xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+        0267AKxVW0oVCq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487
+        Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aV
+        AFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4kE6xkIj40E
+        w7xC0wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+        v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
+        c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+        0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUMIIF0xvEx4A2jsIE14v26r4j6F4U
+        MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjxUouc_DU
+        UUU
 X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
@@ -65,67 +61,100 @@ X-Mailing-List: linux-raid@vger.kernel.org
 
 From: Li Nan <linan122@huawei.com>
 
-When we remove a disk which has replacement, first set rdev to NULL
-and then set replacement to rdev, finally set replacement to NULL (see
-raid10_remove_disk()). If io is submitted during the same time, it might
-read both rdev and replacement as NULL, and io will not be submitted.
+When add a new disk to raid10, it will traverse conf->mirror from start
+and find one of the following mirror to add:
+  1. mirror->rdev is set to WantReplacement and it have no replacement,
+     set new disk to mirror->replacement.
+  2. no mirror->rdev, set new disk to mirror->rdev.
 
-  rdev -> NULL
-			read rdev
-  replacement -> NULL
-			read replacement
+There is a array as below (sda is set to WantReplacement):
 
-Fix it by reading replacement first and rdev later, meanwhile, use smp_mb()
-to prevent memory reordering.
+    Number   Major   Minor   RaidDevice State
+       0       8        0        0      active sync set-A   /dev/sda
+       -       0        0        1      removed
+       2       8       32        2      active sync set-A   /dev/sdc
+       3       8       48        3      active sync set-B   /dev/sdd
 
-Fixes: 475b0321a4df ("md/raid10: writes should get directed to replacement as well as original.")
+Use 'mdadm --add' to add a new disk to this array, the new disk will
+become sda's replacement instead of add to removed position, which is
+confusing for users. Meanwhile, after new disk recovery success, sda
+will be set to Faulty.
+
+Prioritize adding disk to 'removed' mirror is a better choice. In the
+above scenario, the behavior is the same as before, except sda will not
+be deleted. Before other disks are added, continued use sda is more
+reliable.
+
 Signed-off-by: Li Nan <linan122@huawei.com>
-Reviewed-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/md/raid10.c | 22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
+ drivers/md/raid10.c | 35 ++++++++++++++++++++---------------
+ 1 file changed, 20 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index 3ba1516ea160..a7830d2c7477 100644
+index 4fcfcb350d2b..d90eb830ca1a 100644
 --- a/drivers/md/raid10.c
 +++ b/drivers/md/raid10.c
-@@ -779,8 +779,16 @@ static struct md_rdev *read_balance(struct r10conf *conf,
- 		disk = r10_bio->devs[slot].devnum;
- 		rdev = rcu_dereference(conf->mirrors[disk].replacement);
- 		if (rdev == NULL || test_bit(Faulty, &rdev->flags) ||
--		    r10_bio->devs[slot].addr + sectors > rdev->recovery_offset)
-+		    r10_bio->devs[slot].addr + sectors >
-+		    rdev->recovery_offset) {
-+			/*
-+			 * Read replacement first to prevent reading both rdev
-+			 * and replacement as NULL during replacement replace
-+			 * rdev.
-+			 */
-+			smp_mb();
- 			rdev = rcu_dereference(conf->mirrors[disk].rdev);
-+		}
- 		if (rdev == NULL ||
- 		    test_bit(Faulty, &rdev->flags))
- 			continue;
-@@ -1479,9 +1487,15 @@ static void raid10_write_request(struct mddev *mddev, struct bio *bio,
+@@ -2148,9 +2148,10 @@ static int raid10_add_disk(struct mddev *mddev, struct md_rdev *rdev)
+ {
+ 	struct r10conf *conf = mddev->private;
+ 	int err = -EEXIST;
+-	int mirror;
++	int mirror, repl_slot = -1;
+ 	int first = 0;
+ 	int last = conf->geo.raid_disks - 1;
++	struct raid10_info *p;
  
- 	for (i = 0;  i < conf->copies; i++) {
- 		int d = r10_bio->devs[i].devnum;
--		struct md_rdev *rdev = rcu_dereference(conf->mirrors[d].rdev);
--		struct md_rdev *rrdev = rcu_dereference(
--			conf->mirrors[d].replacement);
-+		struct md_rdev *rdev, *rrdev;
+ 	if (mddev->recovery_cp < MaxSector)
+ 		/* only hot-add to in-sync arrays, as recovery is
+@@ -2173,23 +2174,14 @@ static int raid10_add_disk(struct mddev *mddev, struct md_rdev *rdev)
+ 	else
+ 		mirror = first;
+ 	for ( ; mirror <= last ; mirror++) {
+-		struct raid10_info *p = &conf->mirrors[mirror];
++		p = &conf->mirrors[mirror];
+ 		if (p->recovery_disabled == mddev->recovery_disabled)
+ 			continue;
+ 		if (p->rdev) {
+-			if (!test_bit(WantReplacement, &p->rdev->flags) ||
+-			    p->replacement != NULL)
+-				continue;
+-			clear_bit(In_sync, &rdev->flags);
+-			set_bit(Replacement, &rdev->flags);
+-			rdev->raid_disk = mirror;
+-			err = 0;
+-			if (mddev->gendisk)
+-				disk_stack_limits(mddev->gendisk, rdev->bdev,
+-						  rdev->data_offset << 9);
+-			conf->fullsync = 1;
+-			rcu_assign_pointer(p->replacement, rdev);
+-			break;
++			if (test_bit(WantReplacement, &p->rdev->flags) &&
++			    p->replacement == NULL && repl_slot < 0)
++				repl_slot = mirror;
++			continue;
+ 		}
+ 
+ 		if (mddev->gendisk)
+@@ -2206,6 +2198,19 @@ static int raid10_add_disk(struct mddev *mddev, struct md_rdev *rdev)
+ 		break;
+ 	}
+ 
++	if (err && repl_slot >= 0) {
++		p = &conf->mirrors[repl_slot];
++		clear_bit(In_sync, &rdev->flags);
++		set_bit(Replacement, &rdev->flags);
++		rdev->raid_disk = repl_slot;
++		err = 0;
++		if (mddev->gendisk)
++			disk_stack_limits(mddev->gendisk, rdev->bdev,
++					  rdev->data_offset << 9);
++		conf->fullsync = 1;
++		rcu_assign_pointer(p->replacement, rdev);
++	}
 +
-+		rrdev = rcu_dereference(conf->mirrors[d].replacement);
-+		/*
-+		 * Read replacement first to Prevent reading both rdev and
-+		 * replacement as NULL during replacement replace rdev.
-+		 */
-+		smp_mb();
-+		rdev = rcu_dereference(conf->mirrors[d].rdev);
- 		if (rdev == rrdev)
- 			rrdev = NULL;
- 		if (rdev && (test_bit(Faulty, &rdev->flags)))
+ 	print_conf(conf);
+ 	return err;
+ }
 -- 
 2.31.1
 
