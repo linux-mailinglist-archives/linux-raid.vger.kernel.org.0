@@ -2,56 +2,52 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 11969714B28
-	for <lists+linux-raid@lfdr.de>; Mon, 29 May 2023 15:55:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB707714DE4
+	for <lists+linux-raid@lfdr.de>; Mon, 29 May 2023 18:09:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230183AbjE2NzN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 29 May 2023 09:55:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36238 "EHLO
+        id S229660AbjE2QJH (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 29 May 2023 12:09:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230199AbjE2Nyn (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 29 May 2023 09:54:43 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 590A6C7
-        for <linux-raid@vger.kernel.org>; Mon, 29 May 2023 06:53:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685368430; x=1716904430;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=xe9jcM/fPQk3i94c/NyAOmvisI2GUPt0m3tuzVY62vw=;
-  b=YSAtAmZTvTYh2FPH3Xh90rZffIKlEEMG9ARw0mwAJgn8XsaeX9FbEc8Y
-   myHpQShzMNAAV3/7Bph6Vv6K+Q5HY7N1IpNE/KLmQkpBGVjz84ewInF1t
-   ZavIm9IcsicQebdLK/hz3x3o6Q5Q1L9t8PPKyfWINzE0PvTSZHy30MMRE
-   398WCdaaeDuDU3gP69hWMZDQfo2mWHl9HFrHqJqALwni+36xKmxEKd8za
-   +KKDWUG7vxkzpdXNiwwMz8kjHTiS4IXo2jfxafDYDLhBL+oV8VCzS2xUw
-   bkwnt4NldhZ+mx2xXlkfoifLMe+yb7bDwi2bLXCo4VFBzsu/SLclHNP1V
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10725"; a="418193882"
-X-IronPort-AV: E=Sophos;i="6.00,201,1681196400"; 
-   d="scan'208";a="418193882"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 06:53:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10725"; a="706069278"
-X-IronPort-AV: E=Sophos;i="6.00,201,1681196400"; 
-   d="scan'208";a="706069278"
-Received: from mtkaczyk-devel.igk.intel.com ([10.102.105.40])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 06:53:06 -0700
-From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-To:     jes@trained-monkey.org
-Cc:     linux-raid@vger.kernel.org, colyli@suse.de
-Subject: [PATCH 6/6] imsm: fix free space calculations
-Date:   Mon, 29 May 2023 15:52:38 +0200
-Message-Id: <20230529135238.18602-7-mariusz.tkaczyk@linux.intel.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20230529135238.18602-1-mariusz.tkaczyk@linux.intel.com>
-References: <20230529135238.18602-1-mariusz.tkaczyk@linux.intel.com>
+        with ESMTP id S229553AbjE2QJF (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 29 May 2023 12:09:05 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DB5CCD
+        for <linux-raid@vger.kernel.org>; Mon, 29 May 2023 09:09:03 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 06B6D21A67;
+        Mon, 29 May 2023 16:09:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1685376542; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=lw0ywLHXt41KIUG7iDSlhj3sb6MqxBygXLIDKtz8QLA=;
+        b=JGVz7IsGxEg+WLpcCHYQ5RUzs2s9EbEYN7Ih3LdIleaDpAxetV8v4MHunQSARAcEVlLjcO
+        BzYs7qbDJZQcB4UHlKf8yUvcKqZLZy/ZpzMwRcA51MWrMYIcjbAdF/R2/5g9IrsPiRJ5L+
+        VoKdw1mNF9qXsaTlOzn758tvKe96fjE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1685376542;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=lw0ywLHXt41KIUG7iDSlhj3sb6MqxBygXLIDKtz8QLA=;
+        b=tPlskpkzOAMmTKDWb2BUveUpbQ24L5lr2javws06tSeEk4zvM9r1wYmxwfacgFPLlTrpf9
+        iojOt4cJ5nXX0tAw==
+Received: from localhost.localdomain (unknown [10.163.16.22])
+        by relay2.suse.de (Postfix) with ESMTP id 078502C141;
+        Mon, 29 May 2023 16:08:59 +0000 (UTC)
+From:   Coly Li <colyli@suse.de>
+To:     linux-raid@vger.kernel.org
+Cc:     Coly Li <colyli@suse.de>,
+        Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>,
+        Jes Sorensen <jes@trained-monkey.org>
+Subject: [PATCH v3] Incremental: remove obsoleted calls to udisks
+Date:   Tue, 30 May 2023 00:07:54 +0800
+Message-Id: <20230529160754.26849-1-colyli@suse.de>
+X-Mailer: git-send-email 2.35.3
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,110 +55,131 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Between two volumes or between last volume and metadata at least
-IMSM_RESERVED_SECTORS gap must exist. Currently the gap can be doubled
-because metadata reservation contains IMSM_RESERVED_SECTORS too.
+Utilility udisks is removed from udev upstream, calling this obsoleted
+command in run_udisks() doesn't make any sense now.
 
-Divide reserve variable into pre_reservation and post_reservation to be
-more flexible and decide separately if each reservation is needed.
+This patch removes the calls chain of udisks, which includes routines
+run_udisk(), force_remove(), and 2 locations where force_remove() are
+called. Considering force_remove() is removed with udisks util, it is
+fair to remove Manage_stop() inside force_remove() as well.
 
-Pre_reservation is needed only when a volume is created and it is not a
-real first volume in a container (we can check that by extent_idx).
-This type of reservation is not needed for expand.
+In the two modifications where calling force_remove() are removed,
+the failure from Manage_subdevs() can be safely ignored, because,
+1) udisks doesn't exist, no need to check the return value to umount
+   the file system by udisks and remove the component disk again.
+2) After the 'I' inremental remove, there is another 'r' hot remove
+   following up. The first incremental remove is a best-try effort.
 
-Post_reservation is not needed only if real last volume is created or
-expanded because reservation is done with the metadata.
+Therefore in this patch, where force_remove() is removed, the return
+value of calling Manage_subdevs() is not checked too.
 
-The volume index in metadata cannot be trusted, because the real volume
-order can be reversed. It is safer to use extent table, it is sorted by
-start position.
-
-Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Cc: Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
+Cc: Jes Sorensen <jes@trained-monkey.org>
 ---
- super-intel.c | 50 ++++++++++++++++++++++++++++++--------------------
- 1 file changed, 30 insertions(+), 20 deletions(-)
+Changelog,
+v3: remove the almost-useless warning message, and make the change
+    more simplified.
+v2: improve based on code review comments from Mariusz.
+v1: initial version.
 
-diff --git a/super-intel.c b/super-intel.c
-index 1559c837..c012b220 100644
---- a/super-intel.c
-+++ b/super-intel.c
-@@ -6861,8 +6861,11 @@ static unsigned long long merge_extents(struct intel_super *super, const bool ex
- 	int sum_extents = 0;
- 	unsigned long long pos = 0;
- 	unsigned long long start = 0;
--	unsigned long long maxsize = 0;
--	unsigned long reserve;
-+	unsigned long long free_size = 0;
-+
-+	unsigned long pre_reservation = 0;
-+	unsigned long post_reservation = IMSM_RESERVED_SECTORS;
-+	unsigned long reservation_size;
- 
- 	for (dl = super->disks; dl; dl = dl->next)
- 		if (dl->e)
-@@ -6897,8 +6900,8 @@ static unsigned long long merge_extents(struct intel_super *super, const bool ex
- 	do {
- 		unsigned long long esize = e[i].start - pos;
- 
--		if (expanding ? pos_vol_idx == super->current_vol : esize >= maxsize) {
--			maxsize = esize;
-+		if (expanding ? pos_vol_idx == super->current_vol : esize >= free_size) {
-+			free_size = esize;
- 			start = pos;
- 			extent_idx = i;
- 		}
-@@ -6908,28 +6911,35 @@ static unsigned long long merge_extents(struct intel_super *super, const bool ex
- 
- 		i++;
- 	} while (e[i-1].size);
--	free(e);
- 
--	if (maxsize == 0)
-+	if (free_size == 0) {
-+		dprintf("imsm: Cannot find free size.\n");
-+		free(e);
- 		return 0;
-+	}
- 
--	/* FIXME assumes volume at offset 0 is the first volume in a
--	 * container
--	 */
--	if (extent_idx > 0)
--		reserve = IMSM_RESERVED_SECTORS; /* gap between raid regions */
--	else
--		reserve = 0;
-+	if (!expanding && extent_idx != 0)
-+		/*
-+		 * Not a real first volume in a container is created, pre_reservation is needed.
-+		 */
-+		pre_reservation = IMSM_RESERVED_SECTORS;
- 
--	if (maxsize < reserve)
--		return 0;
-+	if (e[extent_idx].size == 0)
-+		/*
-+		 * extent_idx points to the metadata, post_reservation is allready done.
-+		 */
-+		post_reservation = 0;
-+	free(e);
- 
--	super->create_offset = ~((unsigned long long) 0);
--	if (start + reserve > super->create_offset)
--		return 0; /* start overflows create_offset */
--	super->create_offset = start + reserve;
-+	reservation_size = pre_reservation + post_reservation;
-+
-+	if (free_size < reservation_size) {
-+		dprintf("imsm: Reservation size is greater than free space.\n");
-+		return 0;
-+	}
- 
--	return maxsize - reserve;
-+	super->create_offset = start + pre_reservation;
-+	return free_size - reservation_size;
+ Incremental.c | 64 +++++++++++----------------------------------------
+ 1 file changed, 13 insertions(+), 51 deletions(-)
+
+diff --git a/Incremental.c b/Incremental.c
+index f13ce02..05b33c4 100644
+--- a/Incremental.c
++++ b/Incremental.c
+@@ -1628,54 +1628,18 @@ release:
+ 	return rv;
  }
  
- static int is_raid_level_supported(const struct imsm_orom *orom, int level, int raiddisks)
+-static void run_udisks(char *arg1, char *arg2)
+-{
+-	int pid = fork();
+-	int status;
+-	if (pid == 0) {
+-		manage_fork_fds(1);
+-		execl("/usr/bin/udisks", "udisks", arg1, arg2, NULL);
+-		execl("/bin/udisks", "udisks", arg1, arg2, NULL);
+-		exit(1);
+-	}
+-	while (pid > 0 && wait(&status) != pid)
+-		;
+-}
+-
+-static int force_remove(char *devnm, int fd, struct mdinfo *mdi, int verbose)
+-{
+-	int rv;
+-	int devid = devnm2devid(devnm);
+-
+-	run_udisks("--unmount", map_dev(major(devid), minor(devid), 0));
+-	rv = Manage_stop(devnm, fd, verbose, 1);
+-	if (rv) {
+-		/* At least we can try to trigger a 'remove' */
+-		sysfs_uevent(mdi, "remove");
+-		if (verbose)
+-			pr_err("Fail to stop %s too.\n", devnm);
+-	}
+-	return rv;
+-}
+-
+ static void remove_from_member_array(struct mdstat_ent *memb,
+ 				    struct mddev_dev *devlist, int verbose)
+ {
+-	int rv;
+-	struct mdinfo mmdi;
+ 	int subfd = open_dev(memb->devnm);
+ 
+ 	if (subfd >= 0) {
+-		rv = Manage_subdevs(memb->devnm, subfd, devlist, verbose,
+-				    0, UOPT_UNDEFINED, 0);
+-		if (rv & 2) {
+-			if (sysfs_init(&mmdi, -1, memb->devnm))
+-				pr_err("unable to initialize sysfs for: %s\n",
+-				       memb->devnm);
+-			else
+-				force_remove(memb->devnm, subfd, &mmdi,
+-					     verbose);
+-		}
++		/*
++		 * Ignore the return value because it's necessary
++		 * to handle failure condition here.
++		 */
++		Manage_subdevs(memb->devnm, subfd, devlist, verbose,
++			       0, UOPT_UNDEFINED, 0);
+ 		close(subfd);
+ 	}
+ }
+@@ -1758,21 +1722,19 @@ int IncrementalRemove(char *devname, char *id_path, int verbose)
+ 		}
+ 		free_mdstat(mdstat);
+ 	} else {
+-		rv |= Manage_subdevs(ent->devnm, mdfd, &devlist,
+-				    verbose, 0, UOPT_UNDEFINED, 0);
+-		if (rv & 2) {
+-		/* Failed due to EBUSY, try to stop the array.
+-		 * Give udisks a chance to unmount it first.
++		/*
++		 * This 'I' incremental remove is a try-best effort,
++		 * the failure condition can be safely ignored
++		 * because of the following up 'r' remove.
+ 		 */
+-			rv = force_remove(ent->devnm, mdfd, &mdi, verbose);
+-			goto end;
+-		}
++		Manage_subdevs(ent->devnm, mdfd, &devlist,
++			       verbose, 0, UOPT_UNDEFINED, 0);
+ 	}
+ 
+ 	devlist.disposition = 'r';
+ 	rv = Manage_subdevs(ent->devnm, mdfd, &devlist,
+ 			    verbose, 0, UOPT_UNDEFINED, 0);
+-end:
++
+ 	close(mdfd);
+ 	free_mdstat(ent);
+ 	return rv;
 -- 
-2.26.2
+2.35.3
 
