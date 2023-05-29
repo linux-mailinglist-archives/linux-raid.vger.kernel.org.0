@@ -2,41 +2,41 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D6D2714A67
-	for <lists+linux-raid@lfdr.de>; Mon, 29 May 2023 15:32:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34D1C714A63
+	for <lists+linux-raid@lfdr.de>; Mon, 29 May 2023 15:32:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229836AbjE2NcW (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 29 May 2023 09:32:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53182 "EHLO
+        id S229846AbjE2NcQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 29 May 2023 09:32:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229824AbjE2NcM (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 29 May 2023 09:32:12 -0400
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 576BED9
-        for <linux-raid@vger.kernel.org>; Mon, 29 May 2023 06:32:10 -0700 (PDT)
+        with ESMTP id S229841AbjE2NcO (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 29 May 2023 09:32:14 -0400
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FBF3E0
+        for <linux-raid@vger.kernel.org>; Mon, 29 May 2023 06:32:12 -0700 (PDT)
 Received: from mail02.huawei.com (unknown [172.30.67.153])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QVGfG3Yhkz4f3pr1
+        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4QVGfG1pQcz4f3nx7
         for <linux-raid@vger.kernel.org>; Mon, 29 May 2023 21:32:06 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-        by APP4 (Coremail) with SMTP id gCh0CgBH_rFSqXRkMLjoKQ--.57183S9;
+        by APP4 (Coremail) with SMTP id gCh0CgBH_rFSqXRkMLjoKQ--.57183S10;
         Mon, 29 May 2023 21:32:07 +0800 (CST)
 From:   Yu Kuai <yukuai1@huaweicloud.com>
 To:     linux-raid@vger.kernel.org, mariusz.tkaczyk@linux.intel.com,
         jes@trained-monkey.org, pmenzel@molgen.mpg.de, logang@deltatee.com,
         song@kernel.org, guoqing.jiang@linux.dev
 Cc:     yukuai3@huawei.com, yangerkun@huawei.com, yi.zhang@huawei.com
-Subject: [PATCH v2 5/8] tests: add a regression test that raid456 can't assemble
-Date:   Mon, 29 May 2023 21:28:23 +0800
-Message-Id: <20230529132826.2125392-6-yukuai1@huaweicloud.com>
+Subject: [PATCH v2 6/8] tests: add a regression test that raid456 can't assemble again
+Date:   Mon, 29 May 2023 21:28:24 +0800
+Message-Id: <20230529132826.2125392-7-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230529132826.2125392-1-yukuai1@huaweicloud.com>
 References: <20230529132826.2125392-1-yukuai1@huaweicloud.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgBH_rFSqXRkMLjoKQ--.57183S9
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ww13KFyxKFyUWFyDCFW3Jrb_yoW8Xr48pa
-        nxurnIkr4xAFs2yFZIg3WrWa4rWaykJrW5C3sxJr1Ikr47uryIv3yxKF15tryxXr4I9ay5
-        Z34kKa4fGw40k3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID: gCh0CgBH_rFSqXRkMLjoKQ--.57183S10
+X-Coremail-Antispam: 1UD129KBjvJXoW7tw43Ar1xCF13uFW3Ww48Zwb_yoW8GF4xpw
+        sxZF9Ikr4UCanayFW3G3WfWa4rWaykJrWYkwsxXF1IkrW3Zr1vvw4xKF1YyryfXr4I9395
+        u34kKa4Fgw1FkaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
         9KBjDU0xBIdaVrnRJUUUBSb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
         6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
         Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
@@ -52,9 +52,9 @@ X-Coremail-Antispam: 1UD129KBjvJXoW7Ww13KFyxKFyUWFyDCFW3Jrb_yoW8Xr48pa
         IEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjxUoeOJUUUUU
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
-        MAY_BE_FORGED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -63,23 +63,21 @@ X-Mailing-List: linux-raid@vger.kernel.org
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-If recovery is interrupted and reshape is started, then this array can't
-assemble anymore. The problem is supposed to be fixed by [1].
-
-[1] https://lore.kernel.org/linux-raid/20230529031045.1760883-1-yukuai1@huaweicloud.com/
+This is a regression test for commit 0aecb06e2249 ("md/raid5: don't allow
+replacement while reshape is in progress").
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- tests/25raid456-reshape-while-recovery | 32 ++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 tests/25raid456-reshape-while-recovery
+ tests/25raid456-recovery-while-reshape | 33 ++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 tests/25raid456-recovery-while-reshape
 
-diff --git a/tests/25raid456-reshape-while-recovery b/tests/25raid456-reshape-while-recovery
+diff --git a/tests/25raid456-recovery-while-reshape b/tests/25raid456-recovery-while-reshape
 new file mode 100644
-index 00000000..b9f871f2
+index 00000000..3f6251bf
 --- /dev/null
-+++ b/tests/25raid456-reshape-while-recovery
-@@ -0,0 +1,32 @@
++++ b/tests/25raid456-recovery-while-reshape
+@@ -0,0 +1,33 @@
 +devs="$dev0 $dev1 $dev2"
 +
 +set_up_test()
@@ -98,13 +96,14 @@ index 00000000..b9f871f2
 +
 +set_up_test || die "set up test failed"
 +
-+# set up replacement
-+echo want_replacement > /sys/block/md0/md/rd0/state
++# trigger reshape
++mdadm --grow -l 6 $md0
 +sleep 1
 +
-+# trigger reshape
++# set up replacement
 +echo frozen > /sys/block/md0/md/sync_action
-+mdadm --grow -l 6 $md0
++echo want_replacement > /sys/block/md0/md/rd0/state
++echo reshape > /sys/block/md0/md/sync_action
 +sleep 1
 +
 +# reassemeble array
