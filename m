@@ -2,112 +2,89 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72B107149FF
-	for <lists+linux-raid@lfdr.de>; Mon, 29 May 2023 15:15:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 065B3714A35
+	for <lists+linux-raid@lfdr.de>; Mon, 29 May 2023 15:24:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229723AbjE2NPK (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 29 May 2023 09:15:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42020 "EHLO
+        id S229721AbjE2NYV (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 29 May 2023 09:24:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229494AbjE2NPH (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 29 May 2023 09:15:07 -0400
+        with ESMTP id S229518AbjE2NYU (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 29 May 2023 09:24:20 -0400
 Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3D63F1;
-        Mon, 29 May 2023 06:14:48 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1313CC4;
+        Mon, 29 May 2023 06:24:19 -0700 (PDT)
 Received: from mail02.huawei.com (unknown [172.30.67.153])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QVGGD3MmNz4f3prh;
-        Mon, 29 May 2023 21:14:44 +0800 (CST)
-Received: from [10.174.179.247] (unknown [10.174.179.247])
-        by APP4 (Coremail) with SMTP id gCh0CgD3X7NDpXRkydjnKQ--.33661S3;
-        Mon, 29 May 2023 21:14:45 +0800 (CST)
-Message-ID: <e7b9a1ae-3dd9-84a1-561f-88d1cf3bf117@huaweicloud.com>
-Date:   Mon, 29 May 2023 21:14:43 +0800
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QVGT93tDkz4f3v58;
+        Mon, 29 May 2023 21:24:13 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+        by APP4 (Coremail) with SMTP id gCh0CgAHvbB9p3RkWVPoKQ--.23397S4;
+        Mon, 29 May 2023 21:24:14 +0800 (CST)
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+To:     guoqing.jiang@linux.dev, agk@redhat.com, snitzer@kernel.org,
+        dm-devel@redhat.com, song@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com,
+        yangerkun@huawei.com
+Subject: [PATCH -next v2 0/6] md: fix that MD_RECOVERY_RUNNING can be cleared while sync_thread is still running
+Date:   Mon, 29 May 2023 21:20:31 +0800
+Message-Id: <20230529132037.2124527-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH] md/raid10: prioritize adding disk to 'removed' mirror
-To:     Yu Kuai <yukuai1@huaweicloud.com>, linan666@huaweicloud.com,
-        song@kernel.org
-Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yi.zhang@huawei.com, houtao1@huawei.com, yangerkun@huawei.com,
-        "yukuai (C)" <yukuai3@huawei.com>
-References: <20230527092007.3008856-1-linan666@huaweicloud.com>
- <45ee7cb9-6651-46a5-87a2-dd66532084d7@huaweicloud.com>
-From:   Li Nan <linan666@huaweicloud.com>
-In-Reply-To: <45ee7cb9-6651-46a5-87a2-dd66532084d7@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgD3X7NDpXRkydjnKQ--.33661S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kw4DCw15WF1xAw1rCF4xtFb_yoW8AF4Upr
-        40yw15KrWUJw1kKr1UGr1UJryrtrW8Jw4UJryUXFy7Cr45JryjqrWUXr4Y9r1DJrs3Jr15
-        t3W5Jrn8ZFy8GrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
-        JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIF
-        xwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
-        1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
-        b7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
-        vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI
-        42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxh
-        VjvjDU0xZFpf9x0JUQZ23UUUUU=
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+X-CM-TRANSID: gCh0CgAHvbB9p3RkWVPoKQ--.23397S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7Gw1rAw43JrW7Zr4kur4fGrg_yoWfurX_Xa
+        43XFy3Gr47WF15JFyDKr1jv3yDGF45ur1DXFyFqayjyr17WrnrCr1Duw1a9w1Yva42yF18
+        ArWUCrWxurs7WjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbIxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+        6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+        n2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
+        0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFyl
+        IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxV
+        AFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AK
+        xVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa
+        7VU1a9aPUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
-        MAY_BE_FORGED,NICE_REPLY_A,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
+        MAY_BE_FORGED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+From: Yu Kuai <yukuai3@huawei.com>
 
+Changes in v2:
+ - rebase for the latest md-next
 
-在 2023/5/29 21:00, Yu Kuai 写道:
-> Hi,
-> 
-> 在 2023/05/27 17:20, linan666@huaweicloud.com 写道:
->> From: Li Nan <linan122@huawei.com>
->>
->> When add a new disk to raid10, it will traverse conf->mirror from start
->> and find one of the following mirror to add:
->>    1. mirror->rdev is set to WantReplacement and it have no replacement,
->>       set new disk to mirror->replacement.
->>    2. no mirror->rdev, set new disk to mirror->rdev.
->>
->> There is a array as below (sda is set to WantReplacement):
->>
->>      Number   Major   Minor   RaidDevice State
->>         0       8        0        0      active sync set-A   /dev/sda
->>         -       0        0        1      removed
->>         2       8       32        2      active sync set-A   /dev/sdc
->>         3       8       48        3      active sync set-B   /dev/sdd
->>
->> Use 'mdadm --add' to add a new disk to this array, the new disk will
->> become sda's replacement instead of add to removed position, which is
->> confusing for users. Meanwhile, after new disk recovery success, sda
->> will be set to Faulty.
->>
->> Prioritize adding disk to 'removed' mirror is a better choice. In the
->> above scenario, the behavior is the same as before, except sda will not
->> be deleted. Before other disks are added, continued use sda is more
->> reliable.
->>
-> 
-> I think this change make sense, however, it's better to do this for all
-> personality instead of just for raid10.
-> 
-> Thanks,
-> Kuai
+Patch 1 revert the commit because it will cause MD_RECOVERY_RUNNING to be
+cleared while sync_thread is still running. The deadlock this patch tries
+to fix will be fixed by patch 2-5.
 
-raid5 is currently like this. If others are OK with this changes to 
-raid10, I will modify raid1 later.
+Patch 6 enhance checking to prevent MD_RECOVERY_RUNNING to be cleared
+while sync_thread is still running.
+
+Yu Kuai (6):
+  Revert "md: unlock mddev before reap sync_thread in action_store"
+  md: refactor action_store() for 'idle' and 'frozen'
+  md: add a mutex to synchronize idle and frozen in action_store()
+  md: refactor idle/frozen_sync_thread() to fix deadlock
+  md: wake up 'resync_wait' at last in md_reap_sync_thread()
+  md: enhance checking in md_check_recovery()
+
+ drivers/md/dm-raid.c |   1 -
+ drivers/md/md.c      | 124 +++++++++++++++++++++++++++++--------------
+ drivers/md/md.h      |   5 ++
+ 3 files changed, 88 insertions(+), 42 deletions(-)
 
 -- 
-Thanks,
-Nan
+2.39.2
 
