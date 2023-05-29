@@ -2,171 +2,89 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C5FDA7149C7
-	for <lists+linux-raid@lfdr.de>; Mon, 29 May 2023 15:00:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E55E2714A00
+	for <lists+linux-raid@lfdr.de>; Mon, 29 May 2023 15:15:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229529AbjE2NA4 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 29 May 2023 09:00:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34284 "EHLO
+        id S229727AbjE2NPL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 29 May 2023 09:15:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229455AbjE2NA4 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 29 May 2023 09:00:56 -0400
+        with ESMTP id S229461AbjE2NPH (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 29 May 2023 09:15:07 -0400
 Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DC6899;
-        Mon, 29 May 2023 06:00:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B67BBFE;
+        Mon, 29 May 2023 06:14:48 -0700 (PDT)
 Received: from mail02.huawei.com (unknown [172.30.67.153])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QVFyB2PNQz4f3vdW;
-        Mon, 29 May 2023 21:00:50 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-        by APP4 (Coremail) with SMTP id gCh0CgD3X7MBonRkXhznKQ--.32845S3;
-        Mon, 29 May 2023 21:00:51 +0800 (CST)
-Subject: Re: [PATCH] md/raid10: prioritize adding disk to 'removed' mirror
-To:     linan666@huaweicloud.com, song@kernel.org
-Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linan122@huawei.com, yi.zhang@huawei.com, houtao1@huawei.com,
-        yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20230527092007.3008856-1-linan666@huaweicloud.com>
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QVGGD0SXsz4f44Cf;
+        Mon, 29 May 2023 21:14:44 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+        by APP4 (Coremail) with SMTP id gCh0CgAHcLNDpXRknNjnKQ--.28139S4;
+        Mon, 29 May 2023 21:14:44 +0800 (CST)
 From:   Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <45ee7cb9-6651-46a5-87a2-dd66532084d7@huaweicloud.com>
-Date:   Mon, 29 May 2023 21:00:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+To:     song@kernel.org, neilb@suse.de, akpm@osdl.org
+Cc:     xni@redhat.com, linux-raid@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yukuai3@huawei.com,
+        yukuai1@huaweicloud.com, yi.zhang@huawei.com, yangerkun@huawei.com
+Subject: [PATCH -next v3 0/7] limit the number of plugged bio
+Date:   Mon, 29 May 2023 21:10:59 +0800
+Message-Id: <20230529131106.2123367-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-In-Reply-To: <20230527092007.3008856-1-linan666@huaweicloud.com>
-Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgD3X7MBonRkXhznKQ--.32845S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxCF47WFWkZrW8JrWrXw4fKrg_yoW5uw13pa
-        93J3ZxKry8JwsI9F1UJayDWFWSqrZ5Kayvkry3W34S9rZxtrWUGa4xG3y5JryDArZ8Zw4a
-        q3W5GrZ09a4I9rDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
-        IcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-        v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
-        c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-        0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_
-        Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbU
-        UUUUU==
+X-CM-TRANSID: gCh0CgAHcLNDpXRknNjnKQ--.28139S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7Gw4kKF1xKr4kWw1fJrW3GFg_yoWDWFXEvF
+        yqqF9xtr47XF1ayay7Gr1xZryUCrWqqFnrJanrKrWrZry3ur1UAr1j9r48X3WrZFyUZrn8
+        Ary8Gr1rJrnxujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbxkFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr1j
+        6rxdM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+        0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+        jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+        1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
+        n2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
+        AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCI
+        c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267
+        AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_
+        Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUb
+        XdbUUUUUU==
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
-        MAY_BE_FORGED,NICE_REPLY_A,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
+        MAY_BE_FORGED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi,
+From: Yu Kuai <yukuai3@huawei.com>
 
-ÔÚ 2023/05/27 17:20, linan666@huaweicloud.com Ð´µÀ:
-> From: Li Nan <linan122@huawei.com>
-> 
-> When add a new disk to raid10, it will traverse conf->mirror from start
-> and find one of the following mirror to add:
->    1. mirror->rdev is set to WantReplacement and it have no replacement,
->       set new disk to mirror->replacement.
->    2. no mirror->rdev, set new disk to mirror->rdev.
-> 
-> There is a array as below (sda is set to WantReplacement):
-> 
->      Number   Major   Minor   RaidDevice State
->         0       8        0        0      active sync set-A   /dev/sda
->         -       0        0        1      removed
->         2       8       32        2      active sync set-A   /dev/sdc
->         3       8       48        3      active sync set-B   /dev/sdd
-> 
-> Use 'mdadm --add' to add a new disk to this array, the new disk will
-> become sda's replacement instead of add to removed position, which is
-> confusing for users. Meanwhile, after new disk recovery success, sda
-> will be set to Faulty.
-> 
-> Prioritize adding disk to 'removed' mirror is a better choice. In the
-> above scenario, the behavior is the same as before, except sda will not
-> be deleted. Before other disks are added, continued use sda is more
-> reliable.
-> 
+Changes in v3:
+ - prefix function with 'raid1_' instead of 'md_'
+ - use a globle workequeue instead of per bitmap in patch 5
+Changes in v2:
+ - remove the patch to rename raid1-10.c
 
-I think this change make sense, however, it's better to do this for all
-personality instead of just for raid10.
+Yu Kuai (7):
+  md/raid10: prevent soft lockup while flush writes
+  md/raid1-10: factor out a helper to add bio to plug
+  md/raid1-10: factor out a helper to submit normal write
+  md/raid1-10: submit write io directly if bitmap is not enabled
+  md/md-bitmap: add a new helper to unplug bitmap asynchrously
+  md/raid1-10: don't handle pluged bio by daemon thread
+  md/raid1-10: limit the number of plugged bio
 
-Thanks,
-Kuai
-> Signed-off-by: Li Nan <linan122@huawei.com>
-> ---
->   drivers/md/raid10.c | 35 ++++++++++++++++++++---------------
->   1 file changed, 20 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-> index 4fcfcb350d2b..d90eb830ca1a 100644
-> --- a/drivers/md/raid10.c
-> +++ b/drivers/md/raid10.c
-> @@ -2148,9 +2148,10 @@ static int raid10_add_disk(struct mddev *mddev, struct md_rdev *rdev)
->   {
->   	struct r10conf *conf = mddev->private;
->   	int err = -EEXIST;
-> -	int mirror;
-> +	int mirror, repl_slot = -1;
->   	int first = 0;
->   	int last = conf->geo.raid_disks - 1;
-> +	struct raid10_info *p;
->   
->   	if (mddev->recovery_cp < MaxSector)
->   		/* only hot-add to in-sync arrays, as recovery is
-> @@ -2173,23 +2174,14 @@ static int raid10_add_disk(struct mddev *mddev, struct md_rdev *rdev)
->   	else
->   		mirror = first;
->   	for ( ; mirror <= last ; mirror++) {
-> -		struct raid10_info *p = &conf->mirrors[mirror];
-> +		p = &conf->mirrors[mirror];
->   		if (p->recovery_disabled == mddev->recovery_disabled)
->   			continue;
->   		if (p->rdev) {
-> -			if (!test_bit(WantReplacement, &p->rdev->flags) ||
-> -			    p->replacement != NULL)
-> -				continue;
-> -			clear_bit(In_sync, &rdev->flags);
-> -			set_bit(Replacement, &rdev->flags);
-> -			rdev->raid_disk = mirror;
-> -			err = 0;
-> -			if (mddev->gendisk)
-> -				disk_stack_limits(mddev->gendisk, rdev->bdev,
-> -						  rdev->data_offset << 9);
-> -			conf->fullsync = 1;
-> -			rcu_assign_pointer(p->replacement, rdev);
-> -			break;
-> +			if (test_bit(WantReplacement, &p->rdev->flags) &&
-> +			    p->replacement == NULL && repl_slot < 0)
-> +				repl_slot = mirror;
-> +			continue;
->   		}
->   
->   		if (mddev->gendisk)
-> @@ -2206,6 +2198,19 @@ static int raid10_add_disk(struct mddev *mddev, struct md_rdev *rdev)
->   		break;
->   	}
->   
-> +	if (err && repl_slot >= 0) {
-> +		p = &conf->mirrors[repl_slot];
-> +		clear_bit(In_sync, &rdev->flags);
-> +		set_bit(Replacement, &rdev->flags);
-> +		rdev->raid_disk = repl_slot;
-> +		err = 0;
-> +		if (mddev->gendisk)
-> +			disk_stack_limits(mddev->gendisk, rdev->bdev,
-> +					  rdev->data_offset << 9);
-> +		conf->fullsync = 1;
-> +		rcu_assign_pointer(p->replacement, rdev);
-> +	}
-> +
->   	print_conf(conf);
->   	return err;
->   }
-> 
+ drivers/md/md-bitmap.c | 33 ++++++++++++++++++++--
+ drivers/md/md-bitmap.h |  8 ++++++
+ drivers/md/md.c        |  9 ++++++
+ drivers/md/md.h        |  1 +
+ drivers/md/raid1-10.c  | 63 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/md/raid1.c     | 29 ++++---------------
+ drivers/md/raid10.c    | 47 +++++++------------------------
+ 7 files changed, 126 insertions(+), 64 deletions(-)
+
+-- 
+2.39.2
 
