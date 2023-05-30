@@ -2,107 +2,67 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EFD5871556F
-	for <lists+linux-raid@lfdr.de>; Tue, 30 May 2023 08:17:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA531715810
+	for <lists+linux-raid@lfdr.de>; Tue, 30 May 2023 10:11:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229864AbjE3GR1 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 30 May 2023 02:17:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54866 "EHLO
+        id S229564AbjE3ILA (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 30 May 2023 04:11:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229491AbjE3GR0 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 30 May 2023 02:17:26 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FD84BF
-        for <linux-raid@vger.kernel.org>; Mon, 29 May 2023 23:17:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685427445; x=1716963445;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=1YVHLzFolUZQ+Oe+H1XD6s8g5+vJh17dZXlf9wuJhFo=;
-  b=Py/9VDBInuh6RqDxCX9IyF8lBXN5a1SiSr9psagyceOxgNUnKAlWxZih
-   CoWJBTvhcs10rqVn9Y3z2M3SGuUtm6lRGi00uULJqI2WikQU2VdBx0e5y
-   xvvSk5DJQA9nXZKg4r3xoeEqxGrporSUX5c9s7naQ2qRYTjn2Bhhw9Ld6
-   aeOHdnjmykJ2c3IU0KYZe3dPrhwu3b+guTEoG6PignY/Da8a9Kk/a4qvW
-   P128Z1qGCxJNWDZv8VgRQTFMqcpfNmDbqYeHajOc62ayg7fqLL7MggrF5
-   ShQFH6O5T0pRfRkrqO6Yih61xeNNjMblQAhJv5NNo9CtcX/nA1YqJpM+o
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10725"; a="420585827"
-X-IronPort-AV: E=Sophos;i="6.00,203,1681196400"; 
-   d="scan'208";a="420585827"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 23:17:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10725"; a="818652142"
-X-IronPort-AV: E=Sophos;i="6.00,203,1681196400"; 
-   d="scan'208";a="818652142"
-Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.249.155.14])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 23:17:23 -0700
-Date:   Tue, 30 May 2023 08:17:18 +0200
-From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-To:     Coly Li <colyli@suse.de>
-Cc:     linux-raid@vger.kernel.org,
-        Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>,
-        Jes Sorensen <jes@trained-monkey.org>
-Subject: Re: [PATCH v3] Incremental: remove obsoleted calls to udisks
-Message-ID: <20230530081718.00003cb7@linux.intel.com>
-In-Reply-To: <20230529160754.26849-1-colyli@suse.de>
-References: <20230529160754.26849-1-colyli@suse.de>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S230040AbjE3IK4 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 30 May 2023 04:10:56 -0400
+Received: from mail.mahavavy.com (mail.mahavavy.com [92.222.170.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC2F2EA
+        for <linux-raid@vger.kernel.org>; Tue, 30 May 2023 01:10:52 -0700 (PDT)
+Received: by mail.mahavavy.com (Postfix, from userid 1002)
+        id 2A26522282; Tue, 30 May 2023 08:10:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mahavavy.com; s=mail;
+        t=1685434250; bh=IfqQW79nVX/qUpmHcJiWDpV9BQnOf/s+Zcq9ON74QJY=;
+        h=Date:From:To:Subject:From;
+        b=lGp28ODjSpTrkbh8+bliuYrl9v2fHurIzQNPyRU8ipzDrgNcFsbF0xEEIYFgz4zsF
+         vc5xtmsUJzeUJnkH+QvjjG3StB5clS+dE6Nynntu7T+dZIB5ScS0USD1wOtn2tpeu6
+         g/Dzev23I84tWoffZLz3gVJI/I6WRCpGHQuEVyhtqHBRdN0hcHnQC5IML5cuyBilO2
+         7b7IF4JX3qU3s6NodREtUfCWdKbg3EnZ7/IQSzcdycf892gh5SEjdjfw9S7ZCLBrzk
+         PYkprpnIjUXxyyrX2z93qA2DNqk700Qe9AxiFn5pQNft8ZoKfaxEFOltpZChYadIO/
+         NBgwe1NICWVIQ==
+Received: by mail.mahavavy.com for <linux-raid@vger.kernel.org>; Tue, 30 May 2023 08:10:41 GMT
+Message-ID: <20230530064500-0.1.2t.5hpf.0.hmn77m9k9d@mahavavy.com>
+Date:   Tue, 30 May 2023 08:10:41 GMT
+From:   =?UTF-8?Q? "Kristi=C3=A1n_Plet=C3=A1nek" ?= 
+        <kristian.pletanek@mahavavy.com>
+To:     <linux-raid@vger.kernel.org>
+Subject: =?UTF-8?Q?Tlakov=C4=9B_lit=C3=BD?=
+X-Mailer: mail.mahavavy.com
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=0.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,MIXED_ES,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Tue, 30 May 2023 00:07:54 +0800
-Coly Li <colyli@suse.de> wrote:
+Dobr=C3=A9 r=C3=A1no,
 
-> Utilility udisks is removed from udev upstream, calling this obsoleted
-> command in run_udisks() doesn't make any sense now.
-> 
-> This patch removes the calls chain of udisks, which includes routines
-> run_udisk(), force_remove(), and 2 locations where force_remove() are
-> called. Considering force_remove() is removed with udisks util, it is
-> fair to remove Manage_stop() inside force_remove() as well.
-> 
-> In the two modifications where calling force_remove() are removed,
-> the failure from Manage_subdevs() can be safely ignored, because,
-> 1) udisks doesn't exist, no need to check the return value to umount
->    the file system by udisks and remove the component disk again.
-> 2) After the 'I' inremental remove, there is another 'r' hot remove
->    following up. The first incremental remove is a best-try effort.
-Hi Coly,
+zaji=C5=A1=C5=A5ujeme technologii tlakov=C3=A9ho lit=C3=AD hlin=C3=ADku.
 
-I'm not sure what you meant here. I know that on "remove" event udev will call
-mdadm -If <devname>. And that is all I'm familiar with. I don't see another
-branch executed in code to handle "remove" event, no second attempt for clean
-up is made. Could you clarify? How is it executed?
-Perhaps, I understand it incorrectly as second action that is always executed
-automatically. I know that there is an action "--remove" which can be manually
-triggered. Is that what you meant?
+M=C3=A1me v=C3=BDrobn=C3=AD z=C3=A1vody v Polsku, =C5=A0v=C3=A9dsku a =C4=
+=8C=C3=ADn=C4=9B se schopnost=C3=AD flexibiln=C4=9B p=C5=99esouvat v=C3=BD=
+robu mezi lokalitami.
 
-> Therefore in this patch, where force_remove() is removed, the return
-> value of calling Manage_subdevs() is not checked too.
-> 
-> Signed-off-by: Coly Li <colyli@suse.de>
-> Cc: Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
-> Cc: Jes Sorensen <jes@trained-monkey.org>
-> ---
-> Changelog,
-> v3: remove the almost-useless warning message, and make the change
->     more simplified.
-> v2: improve based on code review comments from Mariusz.
-> v1: initial version.
+Na=C5=A1e lic=C3=AD bu=C5=88ky jsou v=C4=9Bt=C5=A1inou automatick=C3=A9 n=
+ebo poloautomatick=C3=A9, co=C5=BE umo=C5=BE=C5=88uje v=C3=BDrobu velk=C3=
+=BDch v=C3=BDrobn=C3=ADch s=C3=A9ri=C3=AD s vysokou flexibilitou detail=C5=
+=AF.
+=20
+Poskytujeme podporu v ka=C5=BEd=C3=A9 f=C3=A1zi v=C3=BDvoje projektu, vyv=
+=C3=ADj=C3=ADme strukturu detailu.
 
-For the code:
-Reviewed-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+Cht=C4=9Bli byste mluvit o spolupr=C3=A1ci v t=C3=A9to oblasti?
 
-Mariusz
+Pozdravy
+Kristi=C3=A1n Plet=C3=A1nek
