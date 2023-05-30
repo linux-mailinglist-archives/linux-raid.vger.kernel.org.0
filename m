@@ -2,67 +2,153 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BA531715810
-	for <lists+linux-raid@lfdr.de>; Tue, 30 May 2023 10:11:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02AB2715C70
+	for <lists+linux-raid@lfdr.de>; Tue, 30 May 2023 13:00:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229564AbjE3ILA (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 30 May 2023 04:11:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60512 "EHLO
+        id S231741AbjE3LAL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 30 May 2023 07:00:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230040AbjE3IK4 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 30 May 2023 04:10:56 -0400
-Received: from mail.mahavavy.com (mail.mahavavy.com [92.222.170.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC2F2EA
-        for <linux-raid@vger.kernel.org>; Tue, 30 May 2023 01:10:52 -0700 (PDT)
-Received: by mail.mahavavy.com (Postfix, from userid 1002)
-        id 2A26522282; Tue, 30 May 2023 08:10:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mahavavy.com; s=mail;
-        t=1685434250; bh=IfqQW79nVX/qUpmHcJiWDpV9BQnOf/s+Zcq9ON74QJY=;
-        h=Date:From:To:Subject:From;
-        b=lGp28ODjSpTrkbh8+bliuYrl9v2fHurIzQNPyRU8ipzDrgNcFsbF0xEEIYFgz4zsF
-         vc5xtmsUJzeUJnkH+QvjjG3StB5clS+dE6Nynntu7T+dZIB5ScS0USD1wOtn2tpeu6
-         g/Dzev23I84tWoffZLz3gVJI/I6WRCpGHQuEVyhtqHBRdN0hcHnQC5IML5cuyBilO2
-         7b7IF4JX3qU3s6NodREtUfCWdKbg3EnZ7/IQSzcdycf892gh5SEjdjfw9S7ZCLBrzk
-         PYkprpnIjUXxyyrX2z93qA2DNqk700Qe9AxiFn5pQNft8ZoKfaxEFOltpZChYadIO/
-         NBgwe1NICWVIQ==
-Received: by mail.mahavavy.com for <linux-raid@vger.kernel.org>; Tue, 30 May 2023 08:10:41 GMT
-Message-ID: <20230530064500-0.1.2t.5hpf.0.hmn77m9k9d@mahavavy.com>
-Date:   Tue, 30 May 2023 08:10:41 GMT
-From:   =?UTF-8?Q? "Kristi=C3=A1n_Plet=C3=A1nek" ?= 
-        <kristian.pletanek@mahavavy.com>
-To:     <linux-raid@vger.kernel.org>
-Subject: =?UTF-8?Q?Tlakov=C4=9B_lit=C3=BD?=
-X-Mailer: mail.mahavavy.com
+        with ESMTP id S231778AbjE3LAG (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 30 May 2023 07:00:06 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 676C6E5
+        for <linux-raid@vger.kernel.org>; Tue, 30 May 2023 04:00:02 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 165FA21A18;
+        Tue, 30 May 2023 10:59:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1685444390; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=DLjm4vXmkf72B/B3/1r/iDlYetTRhM9Sr7WAZg6c20Y=;
+        b=dphKTDN5RuvcPOhTzSQTBA1T7kipYRyHUdz7j+ZlNRs8/AtUBezjQhyPrPbvhVlSlg72zx
+        xt8ZcuHUm3Fw0h5bzjSYIektb2CHmWZB4QkyFwc1YY6DisFTS8MFUfHBZQ2SHtiZr9wwsk
+        x203IDEc4scW5ebza4qxGBbz7jaqt0U=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1685444390;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=DLjm4vXmkf72B/B3/1r/iDlYetTRhM9Sr7WAZg6c20Y=;
+        b=m5hc1LhoV3I1MVRzqu8KmicT56hqtZmLmaxlIf93vVR1uieK3EWv2g9yTkm6jS1lS+6dgv
+        PUGiuRJ8h6zvsSBg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id D764813478;
+        Tue, 30 May 2023 10:59:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id mDGPKCTXdWSCagAAMHmgww
+        (envelope-from <colyli@suse.de>); Tue, 30 May 2023 10:59:48 +0000
+Date:   Tue, 30 May 2023 18:59:46 +0800
+From:   Coly Li <colyli@suse.de>
+To:     Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+Cc:     linux-raid@vger.kernel.org,
+        Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>,
+        Jes Sorensen <jes@trained-monkey.org>
+Subject: Re: [PATCH v3] Incremental: remove obsoleted calls to udisks
+Message-ID: <c6jr4jmfkesjfxon7wsaxcw2qj52dvgrtjsxuuddoxhpftaly4@3vqllxix4otq>
+References: <20230529160754.26849-1-colyli@suse.de>
+ <20230530081718.00003cb7@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=0.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,MIXED_ES,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230530081718.00003cb7@linux.intel.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Dobr=C3=A9 r=C3=A1no,
+On Tue, May 30, 2023 at 08:17:18AM +0200, Mariusz Tkaczyk wrote:
+> On Tue, 30 May 2023 00:07:54 +0800
+> Coly Li <colyli@suse.de> wrote:
+> 
+> > Utilility udisks is removed from udev upstream, calling this obsoleted
+> > command in run_udisks() doesn't make any sense now.
+> > 
+> > This patch removes the calls chain of udisks, which includes routines
+> > run_udisk(), force_remove(), and 2 locations where force_remove() are
+> > called. Considering force_remove() is removed with udisks util, it is
+> > fair to remove Manage_stop() inside force_remove() as well.
+> > 
+> > In the two modifications where calling force_remove() are removed,
+> > the failure from Manage_subdevs() can be safely ignored, because,
+> > 1) udisks doesn't exist, no need to check the return value to umount
+> >    the file system by udisks and remove the component disk again.
+> > 2) After the 'I' inremental remove, there is another 'r' hot remove
+> >    following up. The first incremental remove is a best-try effort.
+> Hi Coly,
+> 
+> I'm not sure what you meant here. I know that on "remove" event udev will call
+> mdadm -If <devname>. And that is all I'm familiar with. I don't see another
+> branch executed in code to handle "remove" event, no second attempt for clean
+> up is made. Could you clarify? How is it executed?
+> Perhaps, I understand it incorrectly as second action that is always executed
+> automatically. I know that there is an action "--remove" which can be manually
+> triggered. Is that what you meant?
+> 
 
-zaji=C5=A1=C5=A5ujeme technologii tlakov=C3=A9ho lit=C3=AD hlin=C3=ADku.
+What I mentioned was only related to the source code.
 
-M=C3=A1me v=C3=BDrobn=C3=AD z=C3=A1vody v Polsku, =C5=A0v=C3=A9dsku a =C4=
-=8C=C3=ADn=C4=9B se schopnost=C3=AD flexibiln=C4=9B p=C5=99esouvat v=C3=BD=
-robu mezi lokalitami.
+Before force_remove() is removed, it was called on 2 locations, one was from
+remove_from_member_array(), another was from IncrementalRemove().
 
-Na=C5=A1e lic=C3=AD bu=C5=88ky jsou v=C4=9Bt=C5=A1inou automatick=C3=A9 n=
-ebo poloautomatick=C3=A9, co=C5=BE umo=C5=BE=C5=88uje v=C3=BDrobu velk=C3=
-=BDch v=C3=BDrobn=C3=ADch s=C3=A9ri=C3=AD s vysokou flexibilitou detail=C5=
-=AF.
-=20
-Poskytujeme podporu v ka=C5=BEd=C3=A9 f=C3=A1zi v=C3=BDvoje projektu, vyv=
-=C3=ADj=C3=ADme strukturu detailu.
+But remove_from_member_array() was called from IncrementalRemove() too. The
+code flow is,
 
-Cht=C4=9Bli byste mluvit o spolupr=C3=A1ci v t=C3=A9to oblasti?
+	if (container) {
+		call remove_from_member_array()
+	} else {
+		call Manage_subdevs() with 'I' operation.
+		if (return 2)
+			call force_remove()
+	}
+		
+	call Manage_subdevs() with 'r' operation
 
-Pozdravy
-Kristi=C3=A1n Plet=C3=A1nek
+From the above bogus code, the first call to Manage_subdevs() was an Incremental
+remove, and the second call to Manage_subdevs() was a hot remove. No matter it
+succeed or failed on the first call, the second call for hot remove will always
+happen.
+
+Therefore, after removing force_remove(), it is unnecessary to check the return
+value of the first call to IncrementalRemove(). Because always the second call
+to Manage_subdevs() with 'r' operation will follow up.
+
+This was what I meant, it was only related to the code I modified.
+
+
+e > Therefore in this patch, where force_remove() is removed, the return
+> > value of calling Manage_subdevs() is not checked too.
+> > 
+> > Signed-off-by: Coly Li <colyli@suse.de>
+> > Cc: Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
+> > Cc: Jes Sorensen <jes@trained-monkey.org>
+> > ---
+> > Changelog,
+> > v3: remove the almost-useless warning message, and make the change
+> >     more simplified.
+> > v2: improve based on code review comments from Mariusz.
+> > v1: initial version.
+> 
+> For the code:
+> Reviewed-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+
+Thanks.
+
+BTW, do you have any suggestion for the commit log? It seems current commit
+message is not that clear, and I want to listen to your input :-)
+
+-- 
+Coly Li
