@@ -2,103 +2,77 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AF0E7191D5
-	for <lists+linux-raid@lfdr.de>; Thu,  1 Jun 2023 06:26:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09E86719331
+	for <lists+linux-raid@lfdr.de>; Thu,  1 Jun 2023 08:26:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230479AbjFAE0i (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 1 Jun 2023 00:26:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36104 "EHLO
+        id S231649AbjFAG0S (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 1 Jun 2023 02:26:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229562AbjFAE0h (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 1 Jun 2023 00:26:37 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A65F123
-        for <linux-raid@vger.kernel.org>; Wed, 31 May 2023 21:26:36 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1b041cceb16so3434315ad.2
-        for <linux-raid@vger.kernel.org>; Wed, 31 May 2023 21:26:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1685593596; x=1688185596;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HH54ZfR07bvx2it5kMbT2XCoKq4FYr76emvIl28NWxo=;
-        b=XboIlDk6Glckt0sGHOtjbw6iiPKyy3vUg0ctkhF0OKTH2CIPL7wBwcdMMK9gWQNfX7
-         12wjr48MrbLmZPXhqx6s/hmcAY+vKX0027Sh8qUOS0Xh8BOpfAlEoIxdHBfNd5jzbEKw
-         e+6pfHEO2OpXvwHCA7ZjasUfm8+D6I2fd2yZ6XLBxLVjLscZyucIUDh4Ydks3vK9XC4f
-         TaiAk0Rbskf4ZlMxfrDHQaUqeeQUVXUJBTKxnxguxWjQMrGrbp8VWeZyIbzF40zH4YU3
-         9Zx+fWIQv0ERI7wQudqS9d1ttQ/nZcQWf9kOw8V0bB/EgKGKbGVx0zQOgtawjec2gHoC
-         vSLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685593596; x=1688185596;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HH54ZfR07bvx2it5kMbT2XCoKq4FYr76emvIl28NWxo=;
-        b=Hza3VbyEno2yPjCjoPNoaA17CKk3fQYS0+ZuUMYJP+votOrbeXwdrRM3p6KJ0Vc8PH
-         fAM8daMxdfKgvoU+IOqzB1NcEc1CSV3Me3Yf5oXT2rb3kYxkwbGhqHXfMfZNheJ/tXP9
-         LriAehELpGBMCXY+dB6zEUqB6qVMf68nBtC/HHQIc/F489Ny02YgxstDz5LzG0vvozOp
-         9UtcHkYDrX8/OudWKiZG2x2gom1nH8idVCbaoVNt5nxjyC11F5O6phJGjkfGiRnugRwt
-         hsxqqJYJS6N9mrOvnO4D5yal46l3sWVVpm4ktWFyGgNvIN+Vy65mD2bVI7gL1PHb5XNW
-         pJGQ==
-X-Gm-Message-State: AC+VfDyKC1MV/RlvL/8cwaRjRgd0074XglB36mvZDl1CG1EoOO3R2sXI
-        j2ULcFYI5BskfLkg7ypQUID/og==
-X-Google-Smtp-Source: ACHHUZ6hlZU/MsjoyVz4yyhoe997V/qcrYIwn3uWW59qEXQKN9Rt7VfRZ5XiA6hG1XPeblBFMsaoCQ==
-X-Received: by 2002:a17:902:724c:b0:1af:b9ed:1677 with SMTP id c12-20020a170902724c00b001afb9ed1677mr6568666pll.2.1685593595885;
-        Wed, 31 May 2023 21:26:35 -0700 (PDT)
-Received: from dread.disaster.area (pa49-179-0-188.pa.nsw.optusnet.com.au. [49.179.0.188])
-        by smtp.gmail.com with ESMTPSA id f13-20020a170902684d00b001a980a23802sm2281781pln.111.2023.05.31.21.26.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 May 2023 21:26:34 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-        (envelope-from <david@fromorbit.com>)
-        id 1q4ZtQ-006NBe-17;
-        Thu, 01 Jun 2023 14:26:32 +1000
-Date:   Thu, 1 Jun 2023 14:26:32 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>, Hannes Reinecke <hare@suse.de>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        dm-devel@redhat.com, Song Liu <song@kernel.org>,
-        linux-raid@vger.kernel.org, Mike Snitzer <snitzer@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dave Kleikamp <shaggy@kernel.org>,
-        jfs-discussion@lists.sourceforge.net, cluster-devel@redhat.com,
-        Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Mikulas Patocka <mpatocka@redhat.com>, gouha7@uniontech.com
-Subject: Re: [PATCH v7 19/20] fs: iomap: use bio_add_folio_nofail where
- possible
-Message-ID: <ZHgd+G7/gg0uOGMF@dread.disaster.area>
-References: <cover.1685532726.git.johannes.thumshirn@wdc.com>
- <58fa893c24c67340a63323f09a179fefdca07f2a.1685532726.git.johannes.thumshirn@wdc.com>
- <ZHfMC86ktyLtIxNb@dread.disaster.area>
- <20230601042021.GA21768@lst.de>
+        with ESMTP id S231224AbjFAG0P (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 1 Jun 2023 02:26:15 -0400
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C31F1E2;
+        Wed, 31 May 2023 23:26:14 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.153])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QWx3N1jR0z4f3prK;
+        Thu,  1 Jun 2023 14:26:08 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.127.227])
+        by APP4 (Coremail) with SMTP id gCh0CgBnHbH_OXhko4G0Kg--.24198S4;
+        Thu, 01 Jun 2023 14:26:09 +0800 (CST)
+From:   linan666@huaweicloud.com
+To:     song@kernel.org, neilb@suse.de
+Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linan122@huawei.com, yukuai3@huawei.com, yi.zhang@huawei.com,
+        houtao1@huawei.com, yangerkun@huawei.com
+Subject: [PATCH v5 0/2] raid10 bugfix
+Date:   Thu,  1 Jun 2023 14:24:22 +0800
+Message-Id: <20230601062424.3613218-1-linan666@huaweicloud.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230601042021.GA21768@lst.de>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: gCh0CgBnHbH_OXhko4G0Kg--.24198S4
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYz7kC6x804xWl14x267AKxVW8JVW5JwAF
+        c2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII
+        0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xv
+        wVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4
+        x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY
+        6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr
+        0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0E
+        wIxGrwAKzVCY07xG64k0F24l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
+        1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
+        14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
+        IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvE
+        x4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa
+        73UjIFyTuYvjxUwc_TUUUUU
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu, Jun 01, 2023 at 06:20:21AM +0200, Christoph Hellwig wrote:
-> On Thu, Jun 01, 2023 at 08:36:59AM +1000, Dave Chinner wrote:
-> > We lose adjacent page merging with this change.
-> 
-> This is only used for adding the first folio to a brand new bio,
-> so there is nothing to merge with yet at this point.
+From: Li Nan <linan122@huawei.com>
 
-Ah, sorry, missed that. Carry on. :)
+Changes in v5:
+ - v4 send wrong patch, correct and resend.
 
--Dave.
+Changes in v4:
+ - improve commit log
+ - removed applied patches
+
+Li Nan (2):
+  md/raid10: fix incorrect done of recovery
+  md/raid10: fix io loss while replacement replace rdev
+
+ drivers/md/raid10.c | 40 +++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 35 insertions(+), 5 deletions(-)
+
 -- 
-Dave Chinner
-david@fromorbit.com
+2.31.1
+
