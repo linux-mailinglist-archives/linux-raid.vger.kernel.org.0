@@ -2,92 +2,86 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 55E39730D88
-	for <lists+linux-raid@lfdr.de>; Thu, 15 Jun 2023 05:31:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67ED77310A2
+	for <lists+linux-raid@lfdr.de>; Thu, 15 Jun 2023 09:30:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234019AbjFODb1 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 14 Jun 2023 23:31:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47632 "EHLO
+        id S244780AbjFOHas (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 15 Jun 2023 03:30:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234331AbjFODbY (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 14 Jun 2023 23:31:24 -0400
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5DD81FF9;
-        Wed, 14 Jun 2023 20:31:22 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.153])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QhSWB4kRYz4f3pJX;
-        Thu, 15 Jun 2023 11:31:18 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-        by APP4 (Coremail) with SMTP id gCh0CgCH77IFhopkUxHyLg--.45217S3;
-        Thu, 15 Jun 2023 11:31:19 +0800 (CST)
-Subject: Re: [PATCH 0/3] md/raid10: record rdev/replacement in r10bio
-To:     linan666@huaweicloud.com, song@kernel.org, neilb@suse.de
-Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linan122@huawei.com, yi.zhang@huawei.com, houtao1@huawei.com,
-        yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20230614084740.1493969-1-linan666@huaweicloud.com>
-From:   Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <5c6ff37b-4285-f62a-c910-67401b0b9c1f@huaweicloud.com>
-Date:   Thu, 15 Jun 2023 11:31:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        with ESMTP id S244613AbjFOHap (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 15 Jun 2023 03:30:45 -0400
+X-Greylist: delayed 10270 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 15 Jun 2023 00:30:43 PDT
+Received: from mail.sitirkam.com (mail.aurorateknoglobal.com [103.126.10.58])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5455E69;
+        Thu, 15 Jun 2023 00:30:43 -0700 (PDT)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by mail.sitirkam.com (Postfix) with ESMTP id 16CDD4E7BE8D;
+        Thu, 15 Jun 2023 08:32:17 +0700 (WIB)
+Received: from mail.sitirkam.com ([127.0.0.1])
+        by localhost (mail.sitirkam.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id Ese7-pAPUxzt; Thu, 15 Jun 2023 08:32:16 +0700 (WIB)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by mail.sitirkam.com (Postfix) with ESMTP id 29E3C4E7BA8C;
+        Thu, 15 Jun 2023 08:32:05 +0700 (WIB)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.sitirkam.com 29E3C4E7BA8C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sitirkam.com;
+        s=B8AB377C-ED3B-11EA-8736-9248CAEF674E; t=1686792725;
+        bh=q7vDHy+gLAr4GKZUDI+hjt8I93kvW09nNmGJORUTyfg=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=Xb++C53IX6it0NRdJ6KCI6lXfhAKCq8P8Ks4ohctCBfc2WvkzaYUrDEbpIjtMfZM6
+         gwATCPxfO+XYuxJPNqaezrRwlrrZFnDgM3A1BLcJqYJVx+8XBBtXz2vL5vF0AE1l6G
+         guIKrbBV8tBP0pQEYkK8JYl/PGU1zWqrdVasxD98/swdJ2VGyaUPe0DtY1e4zV7gmW
+         3QR7PzCVRhGpRjm4sUM22RfpoasHalob+LUPqOlS+Wl/vP12LSG1XoiSThFLP72YM5
+         GLpk+2HNVmRN72yYrA3XTeCiRT10hIqpfMlnd6eUpWmOZ5Q/kW2WB+mXltuqM9dtz0
+         9/VdXlfQ6bf9Q==
+X-Virus-Scanned: amavisd-new at mail.sitirkam.com
+Received: from mail.sitirkam.com ([127.0.0.1])
+        by localhost (mail.sitirkam.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id EtD8e92cZ5a5; Thu, 15 Jun 2023 08:32:04 +0700 (WIB)
+Received: from [185.169.4.111] (unknown [185.169.4.111])
+        by mail.sitirkam.com (Postfix) with ESMTPSA id 21E5C4E7BA81;
+        Thu, 15 Jun 2023 08:31:55 +0700 (WIB)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20230614084740.1493969-1-linan666@huaweicloud.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgCH77IFhopkUxHyLg--.45217S3
-X-Coremail-Antispam: 1UD129KBjvdXoWrtryUtFyktw1rXr45tryDGFg_yoWfZwbE9F
-        yjyFy3Gw10q3WIkayYkr1xZFZxWF4UuryxJ3Z0qrWFqFZxuF47Jrn0grWxWw4fWFyvyryj
-        yr18uFySyr17ZjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb3AFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-        6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
-        c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
-        AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-        17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
-        IF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq
-        3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-        nIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
-        NICE_REPLY_A,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: Spende
+To:     Recipients <admin@sitirkam.com>
+From:   "Maria-Elisabeth Schaeffler" <admin@sitirkam.com>
+Date:   Wed, 14 Jun 2023 18:34:03 -0700
+Reply-To: schaefflermariaelisabeth1941@gmail.com
+Message-Id: <20230615013156.21E5C4E7BA81@mail.sitirkam.com>
+X-Spam-Status: Yes, score=5.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FORGED_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,NIXSPAM_IXHASH,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: *  3.0 NIXSPAM_IXHASH http://www.nixspam.org/
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [schaefflermariaelisabeth1941[at]gmail.com]
+        * -0.0 SPF_HELO_PASS SPF: HELO matches SPF record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  2.1 FREEMAIL_FORGED_REPLYTO Freemail in Reply-To, but not From
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi,
+Your email account has been selected for a donation of =E2=82=AC1,700,000. =
+Please contact me for more information.
 
-ÔÚ 2023/06/14 16:47, linan666@huaweicloud.com Ð´µÀ:
-> From: Li Nan <linan122@huawei.com>
-> 
-> Replacement can replace rdev during replacement io pending.
-> mirror->rdev/replacement might be changed during io pending. Get rdev from
-> it is risky. This patch series record rdev/replacement in r10bio, and get
-> rdev from r10bio to fix bugs in normal write. And I want to do
-> this for each io type later.
-
-I personally don't like this, do things by half. I'm good with this
-approch for raid10, but can you send a new version to use this for all
-io?
-
-Thanks,
-Kuai
-> 
-> Li Nan (3):
->    md/raid10: record rdev/replacement in struct r10bio
->    md/raid10: get rdev/replacemenet from r10bio for normal write
->    md/raid10: improve raid10_end_write_request()
-> 
->   drivers/md/raid10.c | 96 ++++++++++++++++++++++-----------------------
->   drivers/md/raid10.h | 12 +++---
->   2 files changed, 54 insertions(+), 54 deletions(-)
-> 
-
+Mrs Maria Elisabeth Schaeffler
+CEO SCHAEFFLER.
