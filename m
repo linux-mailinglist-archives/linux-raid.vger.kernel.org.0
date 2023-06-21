@@ -2,128 +2,118 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E68CE737DA9
-	for <lists+linux-raid@lfdr.de>; Wed, 21 Jun 2023 10:40:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F236B737E7C
+	for <lists+linux-raid@lfdr.de>; Wed, 21 Jun 2023 11:17:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230012AbjFUI06 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 21 Jun 2023 04:26:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57194 "EHLO
+        id S230509AbjFUI5f (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 21 Jun 2023 04:57:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229840AbjFUI04 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 21 Jun 2023 04:26:56 -0400
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E3A7DD
-        for <linux-raid@vger.kernel.org>; Wed, 21 Jun 2023 01:26:54 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.143])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QmGnQ675vz4f3n6h
-        for <linux-raid@vger.kernel.org>; Wed, 21 Jun 2023 16:26:50 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-        by APP4 (Coremail) with SMTP id gCh0CgBnHbFKtJJkfP3DMA--.4360S3;
-        Wed, 21 Jun 2023 16:26:51 +0800 (CST)
-Subject: Re: Unacceptably Poor RAID1 Performance with Many CPU Cores
-To:     Xiao Ni <xni@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc:     Ali Gholami Rudi <aligrudi@gmail.com>, linux-raid@vger.kernel.org,
-        song@kernel.org, "yukuai (C)" <yukuai3@huawei.com>
-References: <20231506112411@laper.mirepesht>
- <82d2e7c4-1029-ec7b-a8c5-5a6deebfae31@huaweicloud.com>
- <CALTww28VaFnsBQhkbWMRvqQv6c9HyP-iSFPwG_tn2SqQVLB+7Q@mail.gmail.com>
- <20231606091224@laper.mirepesht> <20231606110134@laper.mirepesht>
- <8b288984-396a-6093-bd1f-266303a8d2b6@huaweicloud.com>
- <20231606115113@laper.mirepesht>
- <1117f940-6c7f-5505-f962-a06e3227ef24@huaweicloud.com>
- <20231606122233@laper.mirepesht> <20231606152106@laper.mirepesht>
- <cbc45f91-c341-2207-b3ec-81701a8651b5@huaweicloud.com>
- <CALTww2-Wkvxo3C2OCFrG9Wr_7RynjxnBMtPwR4GppbArZYNzsQ@mail.gmail.com>
-From:   Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <2311bff8-232c-916b-98b6-7543bd48ecfa@huaweicloud.com>
-Date:   Wed, 21 Jun 2023 16:26:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        with ESMTP id S231142AbjFUI45 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 21 Jun 2023 04:56:57 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 672592953
+        for <linux-raid@vger.kernel.org>; Wed, 21 Jun 2023 01:54:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1687337656;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tUeqDc8Opf0qvxHmjDxn90zahKMQD9aZkovKepPjZUA=;
+        b=Q7/CSyeT4WR3bdYqNom6ky5d8RcqAzy6ZcemN1tV55YP4DlVQJssHwzmRxDmG97JXzgbsq
+        GYQoTD+QHFfH1w7TVUgBS0WaRAr1nkXaD0x1ioBriFZ0whJs0ndbdB7+yA+iJkTIOeqiO8
+        SOPz0JvnrfSuGR1m08Y/5fz5AaQsoE8=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-116-6SBu1HhhNbG2EjUI36pkAQ-1; Wed, 21 Jun 2023 04:54:14 -0400
+X-MC-Unique: 6SBu1HhhNbG2EjUI36pkAQ-1
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-25e18dac4a3so2482152a91.2
+        for <linux-raid@vger.kernel.org>; Wed, 21 Jun 2023 01:54:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687337653; x=1689929653;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tUeqDc8Opf0qvxHmjDxn90zahKMQD9aZkovKepPjZUA=;
+        b=hCsP4AEHP6rUlvsuFkVc4zWG2yfTWc/Zek/5cbNucQH47orZbsnnQ5wmkWiWJnbwRu
+         bD6Q1v7ZvBs0V/knqpfOwh8qlwLkCwMpBcKpcN//f9qCWyOWiJ6vsL4nQmGN6XCnJFTv
+         axgbwFlj3MbZuwpM3F5Vkv7VuZqX6axyTZcl6HII3/zQO6nKTYYePgQU9bR1qNnVr4Lr
+         0Emdznnd/fZ1lJqj2aoG92GuUosM766jJgcH9rxMhjtm19D0OOQ0y9SdggZrckYk2Z1W
+         ZvIMvLQgye9txHvgpuqQPJLwBdgVMbWtyCubQxGIg8L93MHRKIXNvpKKzQIsiZr8KIjb
+         Lj4A==
+X-Gm-Message-State: AC+VfDxomyY5jWlRjlLQK/HunW02jS1sl3Tm+u6NF2AnVZE+knsIN0UD
+        KVVvEIF4cE/8VCFkGRyTd+Tm9atldElT5vx/lPV6fagkhdapShOqmvEQ5YSdLxKpOiAY80qmBis
+        oDQnJKU/K6aiH8d7oEbXWeGjUmG6v1ReC1uT7TQ==
+X-Received: by 2002:a17:90a:7892:b0:259:d0f2:3576 with SMTP id x18-20020a17090a789200b00259d0f23576mr11216613pjk.19.1687337653361;
+        Wed, 21 Jun 2023 01:54:13 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ7s0sLYCC/Kgqb7IWgIG55HJgxMIIJsmoaEG2Fbph6Xt57Pt6Zp55wzkhsMm/ccLZ7/a7Zo7dBbpJj7EFn7JHs=
+X-Received: by 2002:a17:90a:7892:b0:259:d0f2:3576 with SMTP id
+ x18-20020a17090a789200b00259d0f23576mr11216605pjk.19.1687337653084; Wed, 21
+ Jun 2023 01:54:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CALTww2-Wkvxo3C2OCFrG9Wr_7RynjxnBMtPwR4GppbArZYNzsQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgBnHbFKtJJkfP3DMA--.4360S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ww47CFy3Zr13CF1fXFykGrg_yoW8XrWrpF
-        4Yqa4akFs8WrWIv3Z2qr4UuF48twsrXr15JF4ktrWSy3ZFvF93Wa1jqrySkayUGF4DC34U
-        Xa4vqwnxX3W5CFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
-        IcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-        v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
-        c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-        0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j
-        6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUZa9
-        -UUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
-        NICE_REPLY_A,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230617052405.305871-1-song@kernel.org> <CALTww2-f7vSXugM0kMMMG==YgmDOEqSLk+vLf2U_ZyprDKk2+w@mail.gmail.com>
+ <2909cd3b-7716-a0ae-1ced-b5c78b0573da@huaweicloud.com>
+In-Reply-To: <2909cd3b-7716-a0ae-1ced-b5c78b0573da@huaweicloud.com>
+From:   Xiao Ni <xni@redhat.com>
+Date:   Wed, 21 Jun 2023 16:54:01 +0800
+Message-ID: <CALTww2_3E2eTCEb86GrK1cdmUsesuNPNFJgf4nPf=RFKmecgBw@mail.gmail.com>
+Subject: Re: [PATCH] md: use mddev->external to select holder in export_rdev()
+To:     Yu Kuai <yukuai1@huaweicloud.com>
+Cc:     Song Liu <song@kernel.org>, linux-raid@vger.kernel.org,
+        linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Jens Axboe <axboe@kernel.dk>, "yukuai (C)" <yukuai3@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi,
+On Wed, Jun 21, 2023 at 4:21=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.com> w=
+rote:
+>
+> Hi,
+>
+> =E5=9C=A8 2023/06/21 16:10, Xiao Ni =E5=86=99=E9=81=93:
+> > Hi Song
+> >
+> > After applying your patch, there are still warning messages in the
+> > calltrace. It looks like a deadlock. The test case is
+> > 10ddf-fail-stop-readd.
+> >
+> > [  381.825307] INFO: task md126_raid1:1896 blocked for more than 122 se=
+conds.
+> > [  381.825722]       Tainted: G           OE      6.4.0-rc2+ #1
+> > [  381.826626] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+> > disables this message.
+> > [  381.827080] task:md126_raid1     state:D stack:0     pid:1896
+> > ppid:2      flags:0x00004000
+> > [  381.827864] Call Trace:
+> > [  381.828013]  <TASK>
+> > [  381.828514]  __schedule+0x2ad/0x7c0
+> > [  381.829126]  schedule+0x5a/0xd0
+> > [  381.829733]  schedule_preempt_disabled+0x11/0x20
+> > [  381.830396]  __mutex_lock+0x5c8/0xcc0
+>
+> Looks like this is the same deadlock that should be fixed by following
+> patch:
+>
+> https://lore.kernel.org/linux-raid/20230621142933.1395629-1-yukuai1@huawe=
+icloud.com/
+>
+> Thanks,
+> Kuai
 
-在 2023/06/21 16:05, Xiao Ni 写道:
-> On Fri, Jun 16, 2023 at 8:27 PM Yu Kuai <yukuai1@huaweicloud.com> wrote:
->>
->> Hi,
->>
->> 在 2023/06/16 19:51, Ali Gholami Rudi 写道:
->>>
->>
->> Thanks for testing!
->>
->>> Perf's output:
->>>
->>> +   93.79%     0.09%  fio      [kernel.kallsyms]       [k] entry_SYSCALL_64_after_hwframe
->>> +   92.89%     0.05%  fio      [kernel.kallsyms]       [k] do_syscall_64
->>> +   86.59%     0.07%  fio      [kernel.kallsyms]       [k] __x64_sys_io_submit
->>> -   85.61%     0.10%  fio      [kernel.kallsyms]       [k] io_submit_one
->>>      - 85.51% io_submit_one
->>>         - 47.98% aio_read
->>>            - 46.18% blkdev_read_iter
->>>               - 44.90% __blkdev_direct_IO_async
->>>                  - 41.68% submit_bio_noacct_nocheck
->>>                     - 41.50% __submit_bio
->>>                        - 18.76% md_handle_request
->>>                           - 18.71% raid10_make_request
->>>                              - 18.54% raid10_read_request
->>>                                   16.54% read_balance
->>
->> There is not any spin_lock in fast path anymore. Now, looks like
->> main cost is raid10 io path now(read_balance looks worth
->> investigation, 16.54% is too much), and for a real device with ms
->> io latency, I think latency in io path may not matter.
-> 
-> Hi Kuai
-> 
-> Cool. And I noticed you mentioned 'fast path' in many places. What's
-> the meaning of 'fast path'? Does it mean the path that i/os are
-> submitting?
+After applying these two patches, the warning messages disappear.
 
-Yes, and fast path means the case all resources is available and io can
-be submitted to device without blocking.
-
-There should be no spin_lock or atomic ops in fast path, otherwise io
-performance will be affected.
-
-Thanks,
-Kuai
-> 
-> Regards
-> Xiao
-> 
-> 
-> .
-> 
+Regards
+Xiao
 
