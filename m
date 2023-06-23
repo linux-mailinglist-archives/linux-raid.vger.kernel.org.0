@@ -2,164 +2,156 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E913273B3A9
-	for <lists+linux-raid@lfdr.de>; Fri, 23 Jun 2023 11:34:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F41C73B478
+	for <lists+linux-raid@lfdr.de>; Fri, 23 Jun 2023 12:05:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229712AbjFWJeU (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 23 Jun 2023 05:34:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54782 "EHLO
+        id S230270AbjFWKE6 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 23 Jun 2023 06:04:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230317AbjFWJeS (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 23 Jun 2023 05:34:18 -0400
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81FFC184;
-        Fri, 23 Jun 2023 02:34:15 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.143])
-        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4QnXBB6JpXz4f3qRk;
-        Fri, 23 Jun 2023 17:34:10 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-        by APP4 (Coremail) with SMTP id gCh0CgCXaK8TZ5VkaZ1hMQ--.14505S7;
-        Fri, 23 Jun 2023 17:34:12 +0800 (CST)
-From:   linan666@huaweicloud.com
-To:     song@kernel.org
-Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linan122@huawei.com, yukuai3@huawei.com, yi.zhang@huawei.com,
-        houtao1@huawei.com, yangerkun@huawei.com
-Subject: [PATCH 3/3] md/raid10: handle replacement devices in fix_read_error
-Date:   Sat, 24 Jun 2023 01:32:36 +0800
-Message-Id: <20230623173236.2513554-4-linan666@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230623173236.2513554-1-linan666@huaweicloud.com>
-References: <20230623173236.2513554-1-linan666@huaweicloud.com>
+        with ESMTP id S231937AbjFWKEY (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 23 Jun 2023 06:04:24 -0400
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E878F26AD;
+        Fri, 23 Jun 2023 03:04:13 -0700 (PDT)
+Received: from [141.14.220.45] (g45.guest.molgen.mpg.de [141.14.220.45])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        (Authenticated sender: pmenzel)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id EBEE761E5FE03;
+        Fri, 23 Jun 2023 12:03:40 +0200 (CEST)
+Message-ID: <d1778341-549e-6f88-0282-3096bfcd6614@molgen.mpg.de>
+Date:   Fri, 23 Jun 2023 12:03:40 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH 1/3] md/raid10: optimize fix_read_error
+To:     linan666@huaweicloud.com
+Cc:     song@kernel.org, linux-raid@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linan122@huawei.com,
+        yukuai3@huawei.com, yi.zhang@huawei.com, houtao1@huawei.com,
+        yangerkun@huawei.com
+References: <20230623173236.2513554-1-linan666@huaweicloud.com>
+ <20230623173236.2513554-2-linan666@huaweicloud.com>
+Content-Language: en-US
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <20230623173236.2513554-2-linan666@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgCXaK8TZ5VkaZ1hMQ--.14505S7
-X-Coremail-Antispam: 1UD129KBjvJXoWxAw1xZFyUJFW3JryfJF47Jwb_yoW5ur1Upr
-        ZrGa4YvrZxJrWUur1jqrWDuanYkr1fGFWFyr48Jw1xWwn5try5KF1UGryY9ry5AFZxZr10
-        qFn8KrsruF9rKF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUHlb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
-        8IrcIa0xkI8VA2jI8067AKxVWUWwA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK
-        0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4
-        x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l
-        84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcx
-        kEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
-        6r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2
-        Ij64vIr41lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48J
-        MxAqzxv26xkF7I0En4kS14v26r126r1DMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-        8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-        ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x
-        0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v2
-        6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07
-        jaMKZUUUUU=
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=0.0 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
-        KHOP_HELO_FCRDNS,MAY_BE_FORGED,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Li Nan <linan122@huawei.com>
+Dear Li,
 
-In fix_read_error(), the handling of replacement devices is missing. If
-read replacement device errors, we will attempt to fix 'mirror->rdev'.
-It is wrong. Get rdev from r10bio to ensure that the fixed device is the
-one which read error occurred.
 
-Signed-off-by: Li Nan <linan122@huawei.com>
----
- drivers/md/raid10.c | 32 +++++++++++++++++---------------
- 1 file changed, 17 insertions(+), 15 deletions(-)
+Thank you for your patch.
 
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index a36e53fce21f..4a7c8eaf6ea0 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -2726,15 +2726,10 @@ static void fix_read_error(struct r10conf *conf, struct mddev *mddev, struct r10
- {
- 	int sect = 0; /* Offset from r10_bio->sector */
- 	int sectors = r10_bio->sectors, slot = r10_bio->read_slot;
--	struct md_rdev *rdev;
-+	struct md_rdev *rdev = r10_bio->devs[slot].rdev;
- 	int max_read_errors = atomic_read(&mddev->max_corr_read_errors);
- 	int d = r10_bio->devs[slot].devnum;
- 
--	/* still own a reference to this rdev, so it cannot
--	 * have been cleared recently.
--	 */
--	rdev = conf->mirrors[d].rdev;
--
- 	if (test_bit(Faulty, &rdev->flags))
- 		/* drive has already been failed, just ignore any
- 		   more fix_read_error() attempts */
-@@ -2763,12 +2758,11 @@ static void fix_read_error(struct r10conf *conf, struct mddev *mddev, struct r10
- 			s = PAGE_SIZE >> 9;
- 
- 		rcu_read_lock();
-+		rdev = r10_bio->devs[slot].rdev;
- 		do {
- 			sector_t first_bad;
- 			int bad_sectors;
- 
--			d = r10_bio->devs[sl].devnum;
--			rdev = rcu_dereference(conf->mirrors[d].rdev);
- 			if (rdev &&
- 			    test_bit(In_sync, &rdev->flags) &&
- 			    !test_bit(Faulty, &rdev->flags) &&
-@@ -2790,6 +2784,8 @@ static void fix_read_error(struct r10conf *conf, struct mddev *mddev, struct r10
- 			sl++;
- 			if (sl == conf->copies)
- 				sl = 0;
-+			d = r10_bio->devs[sl].devnum;
-+			rdev = rcu_dereference(conf->mirrors[d].rdev);
- 		} while (sl != slot);
- 		rcu_read_unlock();
- 
-@@ -2798,9 +2794,7 @@ static void fix_read_error(struct r10conf *conf, struct mddev *mddev, struct r10
- 			 * as bad on the first device to discourage future
- 			 * reads.
- 			 */
--			int dn = r10_bio->devs[slot].devnum;
--			rdev = conf->mirrors[dn].rdev;
--
-+			rdev = r10_bio->devs[slot].rdev;
- 			if (!rdev_set_badblocks(
- 				    rdev,
- 				    r10_bio->devs[slot].addr
-@@ -2820,8 +2814,12 @@ static void fix_read_error(struct r10conf *conf, struct mddev *mddev, struct r10
- 			if (sl==0)
- 				sl = conf->copies;
- 			sl--;
--			d = r10_bio->devs[sl].devnum;
--			rdev = rcu_dereference(conf->mirrors[d].rdev);
-+			if (sl == slot) {
-+				rdev = r10_bio->devs[slot].rdev;
-+			} else {
-+				d = r10_bio->devs[sl].devnum;
-+				rdev = rcu_dereference(conf->mirrors[d].rdev);
-+			}
- 			if (!rdev ||
- 			    test_bit(Faulty, &rdev->flags) ||
- 			    !test_bit(In_sync, &rdev->flags))
-@@ -2854,8 +2852,12 @@ static void fix_read_error(struct r10conf *conf, struct mddev *mddev, struct r10
- 			if (sl==0)
- 				sl = conf->copies;
- 			sl--;
--			d = r10_bio->devs[sl].devnum;
--			rdev = rcu_dereference(conf->mirrors[d].rdev);
-+			if (sl == slot) {
-+				rdev = r10_bio->devs[slot].rdev;
-+			} else {
-+				d = r10_bio->devs[sl].devnum;
-+				rdev = rcu_dereference(conf->mirrors[d].rdev);
-+			}
- 			if (!rdev ||
- 			    test_bit(Faulty, &rdev->flags) ||
- 			    !test_bit(In_sync, &rdev->flags))
--- 
-2.39.2
+Am 23.06.23 um 19:32 schrieb linan666@huaweicloud.com:
+> From: Li Nan <linan122@huawei.com>
+> 
+> We dereference r10_bio->read_slot too many times in fix_read_error().
+> Optimize it by using a variable to store read_slot.
 
+I am always cautious reading about optimizations without any benchmarks 
+or object code analysis. Although your explanation makes sense, did you 
+check, that performance didn’t decrease in some way? (Maybe the compiler 
+even generates the same code.)
+
+
+Kind regards,
+
+Paul
+
+
+> Signed-off-by: Li Nan <linan122@huawei.com>
+> ---
+>   drivers/md/raid10.c | 20 ++++++++++----------
+>   1 file changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+> index 381c21f7fb06..94ae294c8a3c 100644
+> --- a/drivers/md/raid10.c
+> +++ b/drivers/md/raid10.c
+> @@ -2725,10 +2725,10 @@ static int r10_sync_page_io(struct md_rdev *rdev, sector_t sector,
+>   static void fix_read_error(struct r10conf *conf, struct mddev *mddev, struct r10bio *r10_bio)
+>   {
+>   	int sect = 0; /* Offset from r10_bio->sector */
+> -	int sectors = r10_bio->sectors;
+> +	int sectors = r10_bio->sectors, slot = r10_bio->read_slot;
+>   	struct md_rdev *rdev;
+>   	int max_read_errors = atomic_read(&mddev->max_corr_read_errors);
+> -	int d = r10_bio->devs[r10_bio->read_slot].devnum;
+> +	int d = r10_bio->devs[slot].devnum;
+>   
+>   	/* still own a reference to this rdev, so it cannot
+>   	 * have been cleared recently.
+> @@ -2749,13 +2749,13 @@ static void fix_read_error(struct r10conf *conf, struct mddev *mddev, struct r10
+>   		pr_notice("md/raid10:%s: %pg: Failing raid device\n",
+>   			  mdname(mddev), rdev->bdev);
+>   		md_error(mddev, rdev);
+> -		r10_bio->devs[r10_bio->read_slot].bio = IO_BLOCKED;
+> +		r10_bio->devs[slot].bio = IO_BLOCKED;
+>   		return;
+>   	}
+>   
+>   	while(sectors) {
+>   		int s = sectors;
+> -		int sl = r10_bio->read_slot;
+> +		int sl = slot;
+>   		int success = 0;
+>   		int start;
+>   
+> @@ -2790,7 +2790,7 @@ static void fix_read_error(struct r10conf *conf, struct mddev *mddev, struct r10
+>   			sl++;
+>   			if (sl == conf->copies)
+>   				sl = 0;
+> -		} while (!success && sl != r10_bio->read_slot);
+> +		} while (!success && sl != slot);
+>   		rcu_read_unlock();
+>   
+>   		if (!success) {
+> @@ -2798,16 +2798,16 @@ static void fix_read_error(struct r10conf *conf, struct mddev *mddev, struct r10
+>   			 * as bad on the first device to discourage future
+>   			 * reads.
+>   			 */
+> -			int dn = r10_bio->devs[r10_bio->read_slot].devnum;
+> +			int dn = r10_bio->devs[slot].devnum;
+>   			rdev = conf->mirrors[dn].rdev;
+>   
+>   			if (!rdev_set_badblocks(
+>   				    rdev,
+> -				    r10_bio->devs[r10_bio->read_slot].addr
+> +				    r10_bio->devs[slot].addr
+>   				    + sect,
+>   				    s, 0)) {
+>   				md_error(mddev, rdev);
+> -				r10_bio->devs[r10_bio->read_slot].bio
+> +				r10_bio->devs[slot].bio
+>   					= IO_BLOCKED;
+>   			}
+>   			break;
+> @@ -2816,7 +2816,7 @@ static void fix_read_error(struct r10conf *conf, struct mddev *mddev, struct r10
+>   		start = sl;
+>   		/* write it back and re-read */
+>   		rcu_read_lock();
+> -		while (sl != r10_bio->read_slot) {
+> +		while (sl != slot) {
+>   			if (sl==0)
+>   				sl = conf->copies;
+>   			sl--;
+> @@ -2850,7 +2850,7 @@ static void fix_read_error(struct r10conf *conf, struct mddev *mddev, struct r10
+>   			rcu_read_lock();
+>   		}
+>   		sl = start;
+> -		while (sl != r10_bio->read_slot) {
+> +		while (sl != slot) {
+>   			if (sl==0)
+>   				sl = conf->copies;
+>   			sl--;
