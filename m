@@ -2,209 +2,119 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D868273B454
-	for <lists+linux-raid@lfdr.de>; Fri, 23 Jun 2023 12:01:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E62473B37E
+	for <lists+linux-raid@lfdr.de>; Fri, 23 Jun 2023 11:27:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231829AbjFWKBZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 23 Jun 2023 06:01:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43210 "EHLO
+        id S230348AbjFWJ1I (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 23 Jun 2023 05:27:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229564AbjFWKBV (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 23 Jun 2023 06:01:21 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EC52D189;
-        Fri, 23 Jun 2023 03:01:18 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 61950C14;
-        Fri, 23 Jun 2023 03:02:02 -0700 (PDT)
-Received: from [10.1.30.17] (e122027.cambridge.arm.com [10.1.30.17])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E25C23F64C;
-        Fri, 23 Jun 2023 03:01:13 -0700 (PDT)
-Message-ID: <35f80572-0ba2-be54-c947-fcbe2d71ed5e@arm.com>
-Date:   Fri, 23 Jun 2023 11:01:11 +0100
+        with ESMTP id S229715AbjFWJ1H (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 23 Jun 2023 05:27:07 -0400
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A130E9D;
+        Fri, 23 Jun 2023 02:27:05 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QnX1x03NZz4f3mWf;
+        Fri, 23 Jun 2023 17:27:01 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+        by APP4 (Coremail) with SMTP id gCh0CgAHoZRkZZVkAjlhMQ--.8026S4;
+        Fri, 23 Jun 2023 17:27:01 +0800 (CST)
+From:   linan666@huaweicloud.com
+To:     song@kernel.org
+Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linan122@huawei.com, yukuai3@huawei.com, yi.zhang@huawei.com,
+        houtao1@huawei.com, yangerkun@huawei.com
+Subject: [PATCH] md/raid1: prioritize adding disk to 'removed' mirror
+Date:   Sat, 24 Jun 2023 01:25:25 +0800
+Message-Id: <20230623172525.2513235-1-linan666@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH 05/29] drm/panfrost: dynamically allocate the drm-panfrost
- shrinker
-To:     Qi Zheng <qi.zheng@linux.dev>, akpm@linux-foundation.org,
-        david@fromorbit.com, tkhai@ya.ru, vbabka@suse.cz,
-        roman.gushchin@linux.dev, djwong@kernel.org, brauner@kernel.org,
-        paulmck@kernel.org, tytso@mit.edu
-Cc:     linux-bcache@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org,
-        linux-raid@vger.kernel.org, linux-mm@kvack.org,
-        dm-devel@redhat.com, Qi Zheng <zhengqi.arch@bytedance.com>,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        freedreno@lists.freedesktop.org, linux-btrfs@vger.kernel.org
-References: <20230622083932.4090339-1-qi.zheng@linux.dev>
- <20230622083932.4090339-6-qi.zheng@linux.dev>
-Content-Language: en-GB
-From:   Steven Price <steven.price@arm.com>
-In-Reply-To: <20230622083932.4090339-6-qi.zheng@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: gCh0CgAHoZRkZZVkAjlhMQ--.8026S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7WFy7ArWDGF1ftFy7tr47Jwb_yoW8ArWkpa
+        nIqasxGF48Aw12grsrJayDC3Wftw4kJFWkGFyfWw1j9FZIqrWrX3y8tFy5Gr1UJFW5Aw13
+        JF1YkrZ8ta4UuFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU90b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
+        8lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_
+        tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gc
+        CE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2vYz4IE04k24VAvwVAKI4IrM2AI
+        xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
+        vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
+        r2IYc2Ij64vIr41lw4CEc2x0rVAKj4xxMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+        AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+        17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+        IF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq
+        3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIda
+        VFxhVjvjDU0xZFpf9x07j33ktUUUUU=
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=0.0 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 22/06/2023 09:39, Qi Zheng wrote:
-> From: Qi Zheng <zhengqi.arch@bytedance.com>
-> 
-> In preparation for implementing lockless slab shrink,
-> we need to dynamically allocate the drm-panfrost shrinker,
-> so that it can be freed asynchronously using kfree_rcu().
-> Then it doesn't need to wait for RCU read-side critical
-> section when releasing the struct panfrost_device.
-> 
-> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
-> ---
->  drivers/gpu/drm/panfrost/panfrost_device.h    |  2 +-
->  .../gpu/drm/panfrost/panfrost_gem_shrinker.c  | 24 ++++++++++---------
->  2 files changed, 14 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
-> index b0126b9fbadc..e667e5689353 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_device.h
-> +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
-> @@ -118,7 +118,7 @@ struct panfrost_device {
->  
->  	struct mutex shrinker_lock;
->  	struct list_head shrinker_list;
-> -	struct shrinker shrinker;
-> +	struct shrinker *shrinker;
->  
->  	struct panfrost_devfreq pfdevfreq;
->  };
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_gem_shrinker.c b/drivers/gpu/drm/panfrost/panfrost_gem_shrinker.c
-> index bf0170782f25..2a5513eb9e1f 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_gem_shrinker.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_gem_shrinker.c
-> @@ -18,8 +18,7 @@
->  static unsigned long
->  panfrost_gem_shrinker_count(struct shrinker *shrinker, struct shrink_control *sc)
->  {
-> -	struct panfrost_device *pfdev =
-> -		container_of(shrinker, struct panfrost_device, shrinker);
-> +	struct panfrost_device *pfdev = shrinker->private_data;
->  	struct drm_gem_shmem_object *shmem;
->  	unsigned long count = 0;
->  
-> @@ -65,8 +64,7 @@ static bool panfrost_gem_purge(struct drm_gem_object *obj)
->  static unsigned long
->  panfrost_gem_shrinker_scan(struct shrinker *shrinker, struct shrink_control *sc)
->  {
-> -	struct panfrost_device *pfdev =
-> -		container_of(shrinker, struct panfrost_device, shrinker);
-> +	struct panfrost_device *pfdev = shrinker->private_data;
->  	struct drm_gem_shmem_object *shmem, *tmp;
->  	unsigned long freed = 0;
->  
-> @@ -100,10 +98,15 @@ panfrost_gem_shrinker_scan(struct shrinker *shrinker, struct shrink_control *sc)
->  void panfrost_gem_shrinker_init(struct drm_device *dev)
->  {
->  	struct panfrost_device *pfdev = dev->dev_private;
-> -	pfdev->shrinker.count_objects = panfrost_gem_shrinker_count;
-> -	pfdev->shrinker.scan_objects = panfrost_gem_shrinker_scan;
-> -	pfdev->shrinker.seeks = DEFAULT_SEEKS;
-> -	WARN_ON(register_shrinker(&pfdev->shrinker, "drm-panfrost"));
-> +
-> +	pfdev->shrinker = shrinker_alloc_and_init(panfrost_gem_shrinker_count,
-> +						  panfrost_gem_shrinker_scan, 0,
-> +						  DEFAULT_SEEKS, 0, pfdev);
-> +	if (pfdev->shrinker &&
-> +	    register_shrinker(pfdev->shrinker, "drm-panfrost")) {
-> +		shrinker_free(pfdev->shrinker);
-> +		WARN_ON(1);
-> +	}
+From: Li Nan <linan122@huawei.com>
 
-So we didn't have good error handling here before, but this is
-significantly worse. Previously if register_shrinker() failed then the
-driver could safely continue without a shrinker - it would waste memory
-but still function.
+New disk should be added to "removed" position first instead of to be a
+replacement. Commit 6090368abcb4 ("md/raid10: prioritize adding disk to
+'removed' mirror") has fixed this issue for raid10. This patch fixes raid1.
 
-However we now have two failure conditions:
- * shrinker_alloc_init() returns NULL. No warning and NULL deferences
-   will happen later.
+Signed-off-by: Li Nan <linan122@huawei.com>
+---
+ drivers/md/raid1.c | 26 +++++++++++++++-----------
+ 1 file changed, 15 insertions(+), 11 deletions(-)
 
- * register_shrinker() fails, shrinker_free() will free pdev->shrinker
-   we get a warning, but followed by a use-after-free later.
-
-I think we need to modify panfrost_gem_shrinker_init() to be able to
-return an error, so a change something like the below (untested) before
-your change.
-
-Steve
-
-----8<---
-diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c
-b/drivers/gpu/drm/panfrost/panfrost_drv.c
-index bbada731bbbd..f705bbdea360 100644
---- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-@@ -598,10 +598,14 @@ static int panfrost_probe(struct platform_device
-*pdev)
- 	if (err < 0)
- 		goto err_out1;
-
--	panfrost_gem_shrinker_init(ddev);
-+	err = panfrost_gem_shrinker_init(ddev);
-+	if (err)
-+		goto err_out2;
-
- 	return 0;
-
-+err_out2:
-+	drm_dev_unregister(ddev);
- err_out1:
- 	pm_runtime_disable(pfdev->dev);
- 	panfrost_device_fini(pfdev);
-diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.h
-b/drivers/gpu/drm/panfrost/panfrost_gem.h
-index ad2877eeeccd..863d2ec8d4f0 100644
---- a/drivers/gpu/drm/panfrost/panfrost_gem.h
-+++ b/drivers/gpu/drm/panfrost/panfrost_gem.h
-@@ -81,7 +81,7 @@ panfrost_gem_mapping_get(struct panfrost_gem_object *bo,
- void panfrost_gem_mapping_put(struct panfrost_gem_mapping *mapping);
- void panfrost_gem_teardown_mappings_locked(struct panfrost_gem_object *bo);
-
--void panfrost_gem_shrinker_init(struct drm_device *dev);
-+int panfrost_gem_shrinker_init(struct drm_device *dev);
- void panfrost_gem_shrinker_cleanup(struct drm_device *dev);
-
- #endif /* __PANFROST_GEM_H__ */
-diff --git a/drivers/gpu/drm/panfrost/panfrost_gem_shrinker.c
-b/drivers/gpu/drm/panfrost/panfrost_gem_shrinker.c
-index bf0170782f25..90265b37636f 100644
---- a/drivers/gpu/drm/panfrost/panfrost_gem_shrinker.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_gem_shrinker.c
-@@ -97,13 +97,17 @@ panfrost_gem_shrinker_scan(struct shrinker
-*shrinker, struct shrink_control *sc)
-  *
-  * This function registers and sets up the panfrost shrinker.
-  */
--void panfrost_gem_shrinker_init(struct drm_device *dev)
-+int panfrost_gem_shrinker_init(struct drm_device *dev)
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 68a9e2d9985b..320bede4bfab 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -1782,7 +1782,7 @@ static int raid1_add_disk(struct mddev *mddev, struct md_rdev *rdev)
  {
- 	struct panfrost_device *pfdev = dev->dev_private;
-+	int ret;
+ 	struct r1conf *conf = mddev->private;
+ 	int err = -EEXIST;
+-	int mirror = 0;
++	int mirror = 0, repl_slot = -1;
+ 	struct raid1_info *p;
+ 	int first = 0;
+ 	int last = conf->raid_disks - 1;
+@@ -1825,17 +1825,21 @@ static int raid1_add_disk(struct mddev *mddev, struct md_rdev *rdev)
+ 			break;
+ 		}
+ 		if (test_bit(WantReplacement, &p->rdev->flags) &&
+-		    p[conf->raid_disks].rdev == NULL) {
+-			/* Add this device as a replacement */
+-			clear_bit(In_sync, &rdev->flags);
+-			set_bit(Replacement, &rdev->flags);
+-			rdev->raid_disk = mirror;
+-			err = 0;
+-			conf->fullsync = 1;
+-			rcu_assign_pointer(p[conf->raid_disks].rdev, rdev);
+-			break;
+-		}
++		    p[conf->raid_disks].rdev == NULL && repl_slot < 0)
++			repl_slot = mirror;
+ 	}
 +
- 	pfdev->shrinker.count_objects = panfrost_gem_shrinker_count;
- 	pfdev->shrinker.scan_objects = panfrost_gem_shrinker_scan;
- 	pfdev->shrinker.seeks = DEFAULT_SEEKS;
--	WARN_ON(register_shrinker(&pfdev->shrinker, "drm-panfrost"));
-+	ret = register_shrinker(&pfdev->shrinker, "drm-panfrost");
++	if (err && repl_slot >= 0) {
++		/* Add this device as a replacement */
++		p = conf->mirrors + repl_slot;
++		clear_bit(In_sync, &rdev->flags);
++		set_bit(Replacement, &rdev->flags);
++		rdev->raid_disk = repl_slot;
++		err = 0;
++		conf->fullsync = 1;
++		rcu_assign_pointer(p[conf->raid_disks].rdev, rdev);
++	}
 +
-+	return ret;
+ 	print_conf(conf);
+ 	return err;
  }
-
- /**
+-- 
+2.39.2
 
