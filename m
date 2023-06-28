@@ -2,64 +2,129 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 444FC740AC0
-	for <lists+linux-raid@lfdr.de>; Wed, 28 Jun 2023 10:11:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D8ED740DBB
+	for <lists+linux-raid@lfdr.de>; Wed, 28 Jun 2023 11:51:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234015AbjF1IK5 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 28 Jun 2023 04:10:57 -0400
-Received: from relay-b03.edpnet.be ([212.71.1.220]:52190 "EHLO
-        relay-b03.edpnet.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233161AbjF1IF4 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 28 Jun 2023 04:05:56 -0400
-X-ASG-Debug-ID: 1687935176-24639c1bb149a40001-LoH05x
-Received: from [192.168.177.53] (212.233.33.219.adsl.dyn.edpnet.net [212.233.33.219]) by relay-b03.edpnet.be with ESMTP id dTAS1st7BaJMibzT for <linux-raid@vger.kernel.org>; Wed, 28 Jun 2023 08:52:56 +0200 (CEST)
-X-Barracuda-Envelope-From: janpieter.sollie@kabelmail.de
-X-Barracuda-Effective-Source-IP: 212.233.33.219.adsl.dyn.edpnet.net[212.233.33.219]
-X-Barracuda-Apparent-Source-IP: 212.233.33.219
-Message-ID: <ef8a467a-ebf6-96e9-c8fb-b7d83506b22f@kabelmail.de>
-Date:   Wed, 28 Jun 2023 08:52:42 +0200
+        id S229687AbjF1JtY (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 28 Jun 2023 05:49:24 -0400
+Received: from dggsgout11.his.huawei.com ([45.249.212.51]:12484 "EHLO
+        dggsgout11.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232152AbjF1J0n (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 28 Jun 2023 05:26:43 -0400
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QrbnD1dNJz4f3l1j;
+        Wed, 28 Jun 2023 17:26:40 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+        by APP4 (Coremail) with SMTP id gCh0CgA30JPP_JtkFqjhMg--.49301S3;
+        Wed, 28 Jun 2023 17:26:40 +0800 (CST)
+Subject: Re: [PATCH 2/3] md/raid10: factor out get_rdev_repl_from_mirror()
+To:     linan666@huaweicloud.com, song@kernel.org,
+        guoqing.jiang@cloud.ionos.com, colyli@suse.de, xni@redhat.com
+Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linan122@huawei.com, yi.zhang@huawei.com, houtao1@huawei.com,
+        yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <20230628015752.102267-1-linan666@huaweicloud.com>
+ <20230628015752.102267-3-linan666@huaweicloud.com>
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <36a6be92-f9c5-fd7c-20d9-741e2a6f133f@huaweicloud.com>
+Date:   Wed, 28 Jun 2023 17:26:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Content-Language: en-US, nl-BE
-To:     linux-raid@vger.kernel.org
-From:   Janpieter Sollie <janpieter.sollie@kabelmail.de>
-Subject: md: timeout for kicking out devices when resuming from S3?
-Content-Type: text/plain; charset=UTF-8; format=flowed
-X-ASG-Orig-Subj: md: timeout for kicking out devices when resuming from S3?
-Content-Transfer-Encoding: 7bit
-X-Barracuda-Connect: 212.233.33.219.adsl.dyn.edpnet.net[212.233.33.219]
-X-Barracuda-Start-Time: 1687935176
-X-Barracuda-URL: https://212.71.1.220:443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at edpnet.be
-X-Barracuda-Scan-Msg-Size: 862
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Spam-Score: 0.00
-X-Barracuda-Spam-Status: No, SCORE=0.00 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=7.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.110631
-        Rule breakdown below
-         pts rule name              description
-        ---- ---------------------- --------------------------------------------------
+In-Reply-To: <20230628015752.102267-3-linan666@huaweicloud.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: gCh0CgA30JPP_JtkFqjhMg--.49301S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7tF1xuFyDAr1DKF17XF1DWrg_yoW8uw4UpF
+        4DK3WSyr4UJw42kFsrXFWDAa4avrn2qF40yry3u34ruw13trWUAF1kG3yfArn8ZFZ5u34j
+        qa15Kr4kC3WjqFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
+        JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+        c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+        AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+        17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+        IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq
+        3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+        nIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hello everyone,
+Hi,
 
-Due to high electricity prices, I'm starting to experiment with pushing my linux NAS into ACPI 
-S3 at night.
-the embedded system has no other option than using "echo mem > /sys/power/state", or rtcwake.
-Unfortunately, when waking up (ether-wake or rtcwake), the MD driver starts kicking out SCSI 
-disks from a RAID6 array.
-SAS HBA initialization is slow due to a large nr of disks, so some are not yet available at that 
-time.
-when you see in dmesg, a few seconds later, they appear.
-Is there a way to tell the md raid subsystem "wait xx seconds after resuming from S3 before you 
-decide to kick out disks"?
-another option would be: the journal on the RAID volumes is a 60GB SSD partition,
-is there an option to kick out preventively and re-add when it appears, simply by replaying the 
-journal?
+ÔÚ 2023/06/28 9:57, linan666@huaweicloud.com Ð´µÀ:
+> From: Li Nan <linan122@huawei.com>
+> 
+> Factor out a helper to get 'rdev' and 'replacement' from config->mirrors.
+> Just to make code cleaner and prepare to fix the bug of io loss while
+> 'replacement' replace 'rdev'.
+> 
+> There is no functional change.
+> 
+> Signed-off-by: Li Nan <linan122@huawei.com>
+> ---
+>   drivers/md/raid10.c | 30 +++++++++++++++++++++---------
+>   1 file changed, 21 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+> index 3e6a09aaaba6..eaaf6307ddda 100644
+> --- a/drivers/md/raid10.c
+> +++ b/drivers/md/raid10.c
+> @@ -1346,6 +1346,26 @@ static void raid10_write_one_disk(struct mddev *mddev, struct r10bio *r10_bio,
+>   	}
+>   }
+>   
+> +static void get_rdev_repl_from_mirror(struct raid10_info *mirror,
+> +				 struct md_rdev **prdev,
+> +				 struct md_rdev **prrdev)
 
-Thank you,
+I don't like this name, but I can live with this for now, related code
+will be removed eventually.
 
-Janpieter Sollie
+Reviewed-by: Yu Kuai <yukuai3@huawei.com>
+> +{
+> +	struct md_rdev *rdev, *rrdev;
+> +
+> +	rrdev = rcu_dereference(mirror->replacement);
+> +	/*
+> +	 * Read replacement first to prevent reading both rdev and
+> +	 * replacement as NULL during replacement replace rdev.
+> +	 */
+> +	smp_mb();
+> +	rdev = rcu_dereference(mirror->rdev);
+> +	if (rdev == rrdev)
+> +		rrdev = NULL;
+> +
+> +	*prrdev = rrdev;
+> +	*prdev = rdev;
+> +}
+> +
+>   static void wait_blocked_dev(struct mddev *mddev, struct r10bio *r10_bio)
+>   {
+>   	int i;
+> @@ -1489,15 +1509,7 @@ static void raid10_write_request(struct mddev *mddev, struct bio *bio,
+>   		int d = r10_bio->devs[i].devnum;
+>   		struct md_rdev *rdev, *rrdev;
+>   
+> -		rrdev = rcu_dereference(conf->mirrors[d].replacement);
+> -		/*
+> -		 * Read replacement first to prevent reading both rdev and
+> -		 * replacement as NULL during replacement replace rdev.
+> -		 */
+> -		smp_mb();
+> -		rdev = rcu_dereference(conf->mirrors[d].rdev);
+> -		if (rdev == rrdev)
+> -			rrdev = NULL;
+> +		get_rdev_repl_from_mirror(&conf->mirrors[d], &rdev, &rrdev);
+>   		if (rdev && (test_bit(Faulty, &rdev->flags)))
+>   			rdev = NULL;
+>   		if (rrdev && (test_bit(Faulty, &rrdev->flags)))
+> 
+
