@@ -2,154 +2,97 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 830B373FF5B
-	for <lists+linux-raid@lfdr.de>; Tue, 27 Jun 2023 17:13:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F18F740771
+	for <lists+linux-raid@lfdr.de>; Wed, 28 Jun 2023 03:09:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231267AbjF0PNQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 27 Jun 2023 11:13:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37938 "EHLO
+        id S229985AbjF1BI4 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 27 Jun 2023 21:08:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229608AbjF0PNP (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 27 Jun 2023 11:13:15 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5055F1FD8;
-        Tue, 27 Jun 2023 08:13:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687878794; x=1719414794;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HlcACu4NktYvHeJklJldH7nKa6V69m9Xmjro04VfQZ4=;
-  b=VMJoIKVCVvHgdVnA8L6/A0oZFlS2Iywyqq9nBMZWnewQpZT4aSBJzamy
-   V73wcw8SitXPMbUxINF94msHqzjMQC9Pcw4FvgfygoWI8kJiwd0qBQF3Y
-   K7BwAPK4+NtPG+L8aO21kqAJIynQwya0KylabCcnqu+WUoN38MhNdKLPZ
-   Oq8futiJ765+NVE67pzK+hxiA3Qvf8llSmonq8nByY8A5xFs04zDxms+R
-   nUEXZjW/XHkf+RHJ0z8seXyndUqfXAVm7a8V4H67FfAuoiwMXOgpvhHCT
-   bSC1+RXZ12E2cOY31bLVdik4Mfqt9Fht0AcF1B4LPEWiSf9RDKrpsAgCE
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10754"; a="341937583"
-X-IronPort-AV: E=Sophos;i="6.01,162,1684825200"; 
-   d="scan'208";a="341937583"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2023 08:13:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10754"; a="719801536"
-X-IronPort-AV: E=Sophos;i="6.01,162,1684825200"; 
-   d="scan'208";a="719801536"
-Received: from lkp-server01.sh.intel.com (HELO 783282924a45) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 27 Jun 2023 08:13:10 -0700
-Received: from kbuild by 783282924a45 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qEANR-000C0j-2z;
-        Tue, 27 Jun 2023 15:13:09 +0000
-Date:   Tue, 27 Jun 2023 23:12:34 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Yu Kuai <yukuai1@huaweicloud.com>, logang@deltatee.com, hch@lst.de,
-        song@kernel.org, shli@fb.com
-Cc:     oe-kbuild-all@lists.linux.dev, linux-raid@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yukuai3@huawei.com,
-        yukuai1@huaweicloud.com, yi.zhang@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH -next 2/2] md/raid5-cache: fix null-ptr-deref in
- r5l_reclaim_thread()
-Message-ID: <202306272247.VWiGIFDe-lkp@intel.com>
-References: <20230627085611.4186951-3-yukuai1@huaweicloud.com>
+        with ESMTP id S229593AbjF1BIy (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 27 Jun 2023 21:08:54 -0400
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B60E9E5B;
+        Tue, 27 Jun 2023 18:08:52 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4QrNkl30ctz4f3l26;
+        Wed, 28 Jun 2023 09:08:47 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+        by APP4 (Coremail) with SMTP id gCh0CgAHuKsfiJtk9u_GMg--.34640S4;
+        Wed, 28 Jun 2023 09:08:49 +0800 (CST)
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+To:     xni@redhat.com, logang@deltatee.com, hch@lst.de, song@kernel.org,
+        shli@fb.com
+Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com,
+        yangerkun@huawwe.com
+Subject: [PATCH -next v2 0/2] md/raid5-cache: fix a deadlock in r5l_exit_log()
+Date:   Wed, 28 Jun 2023 09:07:54 +0800
+Message-Id: <20230628010756.70649-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230627085611.4186951-3-yukuai1@huaweicloud.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: gCh0CgAHuKsfiJtk9u_GMg--.34640S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7Wr45JF43Kw1UJFW5XF4DCFg_yoWftrcEqF
+        y8WF98Gw1rAF1akas5Cr1xGr97KrW8ZF4rtFy8tFWa9Fy3Xr1Fkr48Gr4rWa9xWFWDuF13
+        CrW8JFW8JrnFgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbxkFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+        6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+        n2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
+        0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFyl
+        IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
+        AFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_
+        Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUb
+        XdbUUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi Yu,
+From: Yu Kuai <yukuai3@huawei.com>
 
-kernel test robot noticed the following build warnings:
+Changes in v2:
+ - remove a now unused local variable in patch 2;
 
-[auto build test WARNING on next-20230626]
+Commit b13015af94cf ("md/raid5-cache: Clear conf->log after finishing
+work") introduce a new problem:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Yu-Kuai/md-raid5-cache-Revert-md-raid5-cache-Clear-conf-log-after-finishing-work/20230627-165746
-base:   next-20230626
-patch link:    https://lore.kernel.org/r/20230627085611.4186951-3-yukuai1%40huaweicloud.com
-patch subject: [PATCH -next 2/2] md/raid5-cache: fix null-ptr-deref in r5l_reclaim_thread()
-config: x86_64-buildonly-randconfig-r003-20230627 (https://download.01.org/0day-ci/archive/20230627/202306272247.VWiGIFDe-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20230627/202306272247.VWiGIFDe-lkp@intel.com/reproduce)
+// caller hold reconfig_mutex
+r5l_exit_log
+ flush_work(&log->disable_writeback_work)
+			r5c_disable_writeback_async
+			 wait_event
+			  /*
+			   * conf->log is not NULL, and mddev_trylock()
+			   * will fail, wait_event() can never pass.
+			   */
+ conf->log = NULL
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202306272247.VWiGIFDe-lkp@intel.com/
+patch 1 revert this patch, an patch 2 fix the original problem in a
+different way.
 
-All warnings (new ones prefixed by >>):
+Noted this problem is just found by code review, and I think this is
+probably the reason that some mdadm tests is broken.
 
-   drivers/md/raid5-cache.c: In function 'r5l_do_reclaim':
->> drivers/md/raid5-cache.c:1496:24: warning: unused variable 'conf' [-Wunused-variable]
-    1496 |         struct r5conf *conf = log->rdev->mddev->private;
-         |                        ^~~~
+Yu Kuai (2):
+  md/raid5-cache: Revert "md/raid5-cache: Clear conf->log after
+    finishing work"
+  md/raid5-cache: fix null-ptr-deref in r5l_reclaim_thread()
 
-
-vim +/conf +1496 drivers/md/raid5-cache.c
-
-a39f7afde358ca Song Liu          2016-11-17  1493  
-0576b1c618ef22 Shaohua Li        2015-08-13  1494  static void r5l_do_reclaim(struct r5l_log *log)
-0576b1c618ef22 Shaohua Li        2015-08-13  1495  {
-a39f7afde358ca Song Liu          2016-11-17 @1496  	struct r5conf *conf = log->rdev->mddev->private;
-0576b1c618ef22 Shaohua Li        2015-08-13  1497  	sector_t reclaim_target = xchg(&log->reclaim_target, 0);
-170364619ac21c Christoph Hellwig 2015-10-05  1498  	sector_t reclaimable;
-170364619ac21c Christoph Hellwig 2015-10-05  1499  	sector_t next_checkpoint;
-a39f7afde358ca Song Liu          2016-11-17  1500  	bool write_super;
-0576b1c618ef22 Shaohua Li        2015-08-13  1501  
-0576b1c618ef22 Shaohua Li        2015-08-13  1502  	spin_lock_irq(&log->io_list_lock);
-a39f7afde358ca Song Liu          2016-11-17  1503  	write_super = r5l_reclaimable_space(log) > log->max_free_space ||
-a39f7afde358ca Song Liu          2016-11-17  1504  		reclaim_target != 0 || !list_empty(&log->no_space_stripes);
-0576b1c618ef22 Shaohua Li        2015-08-13  1505  	/*
-0576b1c618ef22 Shaohua Li        2015-08-13  1506  	 * move proper io_unit to reclaim list. We should not change the order.
-0576b1c618ef22 Shaohua Li        2015-08-13  1507  	 * reclaimable/unreclaimable io_unit can be mixed in the list, we
-0576b1c618ef22 Shaohua Li        2015-08-13  1508  	 * shouldn't reuse space of an unreclaimable io_unit
-0576b1c618ef22 Shaohua Li        2015-08-13  1509  	 */
-0576b1c618ef22 Shaohua Li        2015-08-13  1510  	while (1) {
-170364619ac21c Christoph Hellwig 2015-10-05  1511  		reclaimable = r5l_reclaimable_space(log);
-170364619ac21c Christoph Hellwig 2015-10-05  1512  		if (reclaimable >= reclaim_target ||
-0576b1c618ef22 Shaohua Li        2015-08-13  1513  		    (list_empty(&log->running_ios) &&
-0576b1c618ef22 Shaohua Li        2015-08-13  1514  		     list_empty(&log->io_end_ios) &&
-a8c34f915976e3 Shaohua Li        2015-09-02  1515  		     list_empty(&log->flushing_ios) &&
-04732f741dce5e Christoph Hellwig 2015-10-05  1516  		     list_empty(&log->finished_ios)))
-0576b1c618ef22 Shaohua Li        2015-08-13  1517  			break;
-0576b1c618ef22 Shaohua Li        2015-08-13  1518  
-170364619ac21c Christoph Hellwig 2015-10-05  1519  		md_wakeup_thread(log->rdev->mddev->thread);
-170364619ac21c Christoph Hellwig 2015-10-05  1520  		wait_event_lock_irq(log->iounit_wait,
-170364619ac21c Christoph Hellwig 2015-10-05  1521  				    r5l_reclaimable_space(log) > reclaimable,
-170364619ac21c Christoph Hellwig 2015-10-05  1522  				    log->io_list_lock);
-0576b1c618ef22 Shaohua Li        2015-08-13  1523  	}
-170364619ac21c Christoph Hellwig 2015-10-05  1524  
-f2ca7c4bb59762 Yu Kuai           2023-06-27  1525  	next_checkpoint = r5c_calculate_new_cp(log);
-0576b1c618ef22 Shaohua Li        2015-08-13  1526  	spin_unlock_irq(&log->io_list_lock);
-0576b1c618ef22 Shaohua Li        2015-08-13  1527  
-a39f7afde358ca Song Liu          2016-11-17  1528  	if (reclaimable == 0 || !write_super)
-0576b1c618ef22 Shaohua Li        2015-08-13  1529  		return;
-0576b1c618ef22 Shaohua Li        2015-08-13  1530  
-0576b1c618ef22 Shaohua Li        2015-08-13  1531  	/*
-0576b1c618ef22 Shaohua Li        2015-08-13  1532  	 * write_super will flush cache of each raid disk. We must write super
-0576b1c618ef22 Shaohua Li        2015-08-13  1533  	 * here, because the log area might be reused soon and we don't want to
-0576b1c618ef22 Shaohua Li        2015-08-13  1534  	 * confuse recovery
-0576b1c618ef22 Shaohua Li        2015-08-13  1535  	 */
-4b482044d24f3d Shaohua Li        2015-10-08  1536  	r5l_write_super_and_discard_space(log, next_checkpoint);
-0576b1c618ef22 Shaohua Li        2015-08-13  1537  
-0576b1c618ef22 Shaohua Li        2015-08-13  1538  	mutex_lock(&log->io_mutex);
-170364619ac21c Christoph Hellwig 2015-10-05  1539  	log->last_checkpoint = next_checkpoint;
-a39f7afde358ca Song Liu          2016-11-17  1540  	r5c_update_log_state(log);
-0576b1c618ef22 Shaohua Li        2015-08-13  1541  	mutex_unlock(&log->io_mutex);
-0576b1c618ef22 Shaohua Li        2015-08-13  1542  
-170364619ac21c Christoph Hellwig 2015-10-05  1543  	r5l_run_no_space_stripes(log);
-0576b1c618ef22 Shaohua Li        2015-08-13  1544  }
-0576b1c618ef22 Shaohua Li        2015-08-13  1545  
+ drivers/md/raid5-cache.c | 25 ++++++++++---------------
+ 1 file changed, 10 insertions(+), 15 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.39.2
+
