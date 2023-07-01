@@ -2,87 +2,77 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F229744614
-	for <lists+linux-raid@lfdr.de>; Sat,  1 Jul 2023 04:12:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6B997447E9
+	for <lists+linux-raid@lfdr.de>; Sat,  1 Jul 2023 10:07:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229547AbjGACMQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 30 Jun 2023 22:12:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41150 "EHLO
+        id S230045AbjGAIGr (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 1 Jul 2023 04:06:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229520AbjGACMQ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 30 Jun 2023 22:12:16 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B936EB4
-        for <linux-raid@vger.kernel.org>; Fri, 30 Jun 2023 19:12:14 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-6748a616e17so637752b3a.1
-        for <linux-raid@vger.kernel.org>; Fri, 30 Jun 2023 19:12:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1688177534; x=1690769534;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4/EDsj4PlwF/xWAR4TDb9cVNGDCwaYrP9o0xdTMAM8M=;
-        b=1I+Kj/8FtWzVbEy7UUkLK8tVdk5uO9TdxLddvSvXJ53iA/uG2dANOXbqoED5FCLCaJ
-         WTP1l0TXBx1DnXYukq2+s+c1yiOHjIWxl15ISfxGkGVWmExJTsbzqvUta9PlM5kOBnHr
-         mVJ1rOFQqbsJYqAKw8GuI+y6PzSV+V9Wjdl33E5VmO3/2cY/pNyG43ElMbLs3VumeTZO
-         TmmXTETKPmzj7nJeUQGpQC91fHuhQksQvz4sA/jAUzil97AFCZt1gRELVuvQxgUPHwJt
-         nwqOlxPZILKQCRfj0LImcplMstrr6FIzIAcUhBOPTuc3DuuoKQT6NAWk2/yNPhCHtoX1
-         zH6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688177534; x=1690769534;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4/EDsj4PlwF/xWAR4TDb9cVNGDCwaYrP9o0xdTMAM8M=;
-        b=V4RjbQw1hZ/FHXqjmqlcphMSO0Cdrtj+E2XwrUqxgQz8YkobqqTCl9cyMHceNkeN0Y
-         +9VW7OrBd7/qcyzONvDFb4/soQn8cGX3obG9+4Wr3Mb+vnumYWCILiN7W+Wj0bOVmkxf
-         k4BO4E6DFSZePMoJdmzH702TOoAjy1ssS6liebez54EVypikRaMbpKUpoQinlgeHJODT
-         1FVT8V7IxM3DEcQSVfWMrWjVH/GuvRamCe/TJz7xDpyX5tH6n0tV+HrJFwxAMvDiukGo
-         K1SZgSW+SbRJiBMj581DQIJStyRiH09kPholypZLxqfqWlI97Lw+p8KIOKNYKGbuiSv5
-         Z1ng==
-X-Gm-Message-State: AC+VfDwaHV8GGfoUZo5mei5Ro16/4+yB1oN9Asa+PNt/+3JYQfv0AzQo
-        RWPsAdrWMlrkmtbEOe7byBrulw==
-X-Google-Smtp-Source: ACHHUZ71DJVFRI7TyMVM7pLw6gpU8T2aoAg/e3snxmJX1GDuANg1/vMCM04UV7sT/Rwo/MkYym8T5A==
-X-Received: by 2002:a05:6a20:8e08:b0:121:84ce:c629 with SMTP id y8-20020a056a208e0800b0012184cec629mr6128438pzj.0.1688177534190;
-        Fri, 30 Jun 2023 19:12:14 -0700 (PDT)
-Received: from [192.168.1.136] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id j6-20020aa78006000000b00643355ff6a6sm10941730pfi.99.2023.06.30.19.12.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 Jun 2023 19:12:13 -0700 (PDT)
-Message-ID: <a2213cd8-0273-1943-f5aa-e38ca3a9beeb@kernel.dk>
-Date:   Fri, 30 Jun 2023 20:12:12 -0600
+        with ESMTP id S229919AbjGAIGl (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 1 Jul 2023 04:06:41 -0400
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E533E58;
+        Sat,  1 Jul 2023 01:06:39 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QtPsN1jfNz4f3sv5;
+        Sat,  1 Jul 2023 16:06:32 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+        by APP4 (Coremail) with SMTP id gCh0CgA30JOH3p9kdvLGMw--.57184S4;
+        Sat, 01 Jul 2023 16:06:32 +0800 (CST)
+From:   linan666@huaweicloud.com
+To:     song@kernel.org, guoqing.jiang@cloud.ionos.com, xni@redhat.com,
+        colyli@suse.de
+Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linan122@huawei.com, yukuai3@huawei.com, yi.zhang@huawei.com,
+        houtao1@huawei.com, yangerkun@huawei.com
+Subject: [PATCH v2 0/3] raid10 bugfix
+Date:   Sat,  1 Jul 2023 16:05:26 +0800
+Message-Id: <20230701080529.2684932-1-linan666@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [GIT PULL] md-fixes 20230630
-To:     Song Liu <songliubraving@meta.com>,
-        linux-raid <linux-raid@vger.kernel.org>
-Cc:     Jason Baron <jbaron@akamai.com>
-References: <A098F73A-40A2-4B8D-8BDC-BB228B4F70A0@fb.com>
-Content-Language: en-US
-From:   Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <A098F73A-40A2-4B8D-8BDC-BB228B4F70A0@fb.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-CM-TRANSID: gCh0CgA30JOH3p9kdvLGMw--.57184S4
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYg7kC6x804xWl14x267AKxVW8JVW5JwAF
+        c2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII
+        0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xv
+        wVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7
+        xvwVC2z280aVCY1x0267AKxVW0oVCq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE
+        52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJV
+        WUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAK
+        I48JM4IIrI8v6xkF7I0E8cxan2IY04v7M4kE6xkIj40Ew7xC0wCF04k20xvY0x0EwIxGrw
+        CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
+        14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
+        IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxK
+        x2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
+        AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1kpnJUUUUU==
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
+        MAY_BE_FORGED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 6/30/23 6:12 PM, Song Liu wrote:
-> Hi Jens, 
-> 
-> Please consider pulling the following change for md-fixes on top of your
-> block-6.5 branch. This patch fixes data corruption caused by discard on
-> raid0 array with original layout. 
+From: Li Nan <linan122@huawei.com>
 
-Pulled, thanks.
+Changes in v2:
+ - patch 2/3, change function name to dereference_rdev_and_rrdev. Return
+   rdev to reduce output argument.
+
+Li Nan (3):
+  md/raid10: check replacement and rdev to prevent submit the same io
+    twice
+  md/raid10: factor out dereference_rdev_and_rrdev()
+  md/raid10: use dereference_rdev_and_rrdev() to get devices
+
+ drivers/md/raid10.c | 42 +++++++++++++++++++++++++-----------------
+ 1 file changed, 25 insertions(+), 17 deletions(-)
 
 -- 
-Jens Axboe
-
+2.39.2
 
