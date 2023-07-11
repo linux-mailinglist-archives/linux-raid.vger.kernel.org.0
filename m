@@ -2,135 +2,111 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 94D3774E2A5
-	for <lists+linux-raid@lfdr.de>; Tue, 11 Jul 2023 02:40:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A4A1874EF6A
+	for <lists+linux-raid@lfdr.de>; Tue, 11 Jul 2023 14:51:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229528AbjGKAkV (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 10 Jul 2023 20:40:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39524 "EHLO
+        id S231256AbjGKMvx (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 11 Jul 2023 08:51:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229512AbjGKAkU (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 10 Jul 2023 20:40:20 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0E511AC
-        for <linux-raid@vger.kernel.org>; Mon, 10 Jul 2023 17:39:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1689035974;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=o6HpwZnfr49cquFGvcuFiLt6/jJy1ahhoV//DTpoAHs=;
-        b=UDZRsjDTroJV4Pt9lC+IHnGlZVdbAgefbu7R9AppILfiIRmdVjhBNDE6iVL8iRF4FDw1N+
-        +TQ4X6Z27p0l5xnXuDIYXu8XyN730CFaWLlJsRiniYvrMN/hl1AqwouVA9r2MCAx5kj8ch
-        0+NdJGPrMnFKr9lx3v4S+1H3yv4RbG8=
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
- [209.85.210.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-515-48iJi2zaMZS5rOwKAvUx0w-1; Mon, 10 Jul 2023 20:39:33 -0400
-X-MC-Unique: 48iJi2zaMZS5rOwKAvUx0w-1
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-682a4f1253aso8532262b3a.0
-        for <linux-raid@vger.kernel.org>; Mon, 10 Jul 2023 17:39:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689035972; x=1691627972;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=o6HpwZnfr49cquFGvcuFiLt6/jJy1ahhoV//DTpoAHs=;
-        b=MsEWj9di06BgOEf03YfPPM31KCTzCZmxqSlZ26Mz16mIVxCqj+68YvltuFmPUHAv7m
-         StlQFkP2pUF0q+4NoEpzUFaVnP5uszW51KbU198n//wbIG9YRoubVoQhb589jahobBA1
-         8aPPUCrj99MZHQmVHbPcmnmV/C/eU6g/zD98tZ7Yx7jJl9pkD/CcVh375cz6PPDI+p1M
-         3zApACndZjELIv3IuJOJENoN5ZOC3kJVVG6ubAVd6ycOLQuTvcgtmmMyJlwnr8pEpOr7
-         ctmMx5mxiOw2C7eRr8Jqp/5486USxRwAnMxTjqx/3nxd5oczVV1O2Hjp9HpX6VP87MYA
-         u0fA==
-X-Gm-Message-State: ABy/qLaeS6CPVEnISxSWzYFYKPMhmXODOEkuSbQedNZvQL53a3GTPc07
-        +N1mxJ2IyC8pVJZMOEIxdazK49SI+ca7kMosAju7Mosp2CKW++Vppzv2nE2ryiIT0Lp+ClVU5RR
-        7zNZb1BLF/Syg8is8LtXjIQ==
-X-Received: by 2002:a05:6a20:7294:b0:12c:1183:edb9 with SMTP id o20-20020a056a20729400b0012c1183edb9mr20522816pzk.3.1689035972443;
-        Mon, 10 Jul 2023 17:39:32 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlHr3KlTX9TeFnhToT2iCdd6B04WLLt+2XWLU6h2d230zcbyvTJpL8qbB/mGYSI2SCjaWmonzg==
-X-Received: by 2002:a05:6a20:7294:b0:12c:1183:edb9 with SMTP id o20-20020a056a20729400b0012c1183edb9mr20522802pzk.3.1689035972106;
-        Mon, 10 Jul 2023 17:39:32 -0700 (PDT)
-Received: from [10.72.12.51] ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id x22-20020aa793b6000000b006826c9e4397sm390986pff.48.2023.07.10.17.39.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Jul 2023 17:39:31 -0700 (PDT)
-Message-ID: <1ad13b8c-7601-bbee-3197-cdfcd87173d6@redhat.com>
-Date:   Tue, 11 Jul 2023 08:39:27 +0800
+        with ESMTP id S230447AbjGKMvq (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 11 Jul 2023 08:51:46 -0400
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 220B210EA
+        for <linux-raid@vger.kernel.org>; Tue, 11 Jul 2023 05:51:45 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.153])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4R0gLn6m8Pz4f3pFv
+        for <linux-raid@vger.kernel.org>; Tue, 11 Jul 2023 20:35:13 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+        by APP4 (Coremail) with SMTP id gCh0CgBH_rGBTK1k5cPnNg--.55600S3;
+        Tue, 11 Jul 2023 20:35:14 +0800 (CST)
+Subject: Re: [PATCH v2 1/3] md/raid1: gave up reshape in case there's queued
+ io
+To:     Xueshi Hu <xueshi.hu@smartx.com>, song@kernel.org
+Cc:     linux-raid@vger.kernel.org, "yukuai (C)" <yukuai3@huawei.com>
+References: <20230709102956.1716708-1-hubachelar@gmail.com>
+ <20230709102956.1716708-2-hubachelar@gmail.com>
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <ff93bc7a-5ae2-7a85-91c9-9662d3c5a442@huaweicloud.com>
+Date:   Tue, 11 Jul 2023 20:35:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.12.0
-Subject: Re: The read data is wrong from raid5 when recovery happens
-From:   Xiao Ni <xni@redhat.com>
-To:     Song Liu <song@kernel.org>
-Cc:     Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
-        Guoqing Jiang <guoqing.jiang@linux.dev>,
-        "Tkaczyk, Mariusz" <mariusz.tkaczyk@intel.com>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        Heinz Mauelshagen <heinzm@redhat.com>,
-        Nigel Croxon <ncroxon@redhat.com>
-References: <CALTww28aV5CGXQAu46Rkc=fG1jK=ARzCT8VGoVyje8kQdqEXMg@mail.gmail.com>
- <ebe7fa31-2e9a-74da-bbbd-3d5238590a7c@linux.dev>
- <CALTww2_ks+Ac0hHkVS0mBaKi_E2r=Jq-7g2iubtCcKoVsZEbXQ@mail.gmail.com>
- <7e9fd8ba-aacd-3697-15fe-dc0b292bd177@linux.dev>
- <CALTww297Q+FAFMVBQd-1dT7neYrMjC-UZnAw8Q3UeuEoOCy6Yg@mail.gmail.com>
- <20230526111312.000065f2@linux.intel.com>
- <CAPhsuW4XKYDsEJsbJJX7mDdq_hhF1D8YLN5oyBi746EUtYVv8A@mail.gmail.com>
- <CALTww29YU+ZtbJanzB0buFfofDMv2C68EL2C_Ocr375amCAh+w@mail.gmail.com>
-In-Reply-To: <CALTww29YU+ZtbJanzB0buFfofDMv2C68EL2C_Ocr375amCAh+w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <20230709102956.1716708-2-hubachelar@gmail.com>
+Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+X-CM-TRANSID: gCh0CgBH_rGBTK1k5cPnNg--.55600S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zr17uw43XFW7WrWkXFW3trb_yoW8GFW3pw
+        s8JasxCFWUW34fKF45Xa4UuFyFvan7KryUKFZ5C34UZr13JFyxZrW8Kay5Kr1qvry3Gws2
+        qF4rtrZ3Ca9Fqa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
+        xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+        0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+        x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+        0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0E
+        wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E74
+        80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0
+        I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04
+        k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
+        1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1CPfJUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+Hi,
 
-在 2023/5/27 上午8:56, Xiao Ni 写道:
-> Hi all
->
-> The attachment is the scripts.
->
-> 1. It needs to modify the member disks and raid name in prepare_rebuild_env.sh
-> 2. It needs to modify the member disks and raid name in 01-test.sh
-> 3. Then run 01-test.sh directly
->
+�� 2023/07/09 18:29, Xueshi Hu д��:
+> From: Xueshi Hu <xueshi.hu@smartx.com>
+> 
+> When an IO error happens, reschedule_retry() will increase
+> r1conf::nr_queued, which makes freeze_array() unblocked. However, before
+> all r1bio in the memory pool are released, the memory pool should not be
+> modified.
+> 
 
-Hi all
+I didn't recieve these emails directly, I just notice this patchse...
 
-I have tried with a work around patch and can confirm this problem can't 
-be reproduced again with this patch.
+It's right this is a problem, but I'm not sure about the fix, this fix
+will work fine for the case that new reshape is started, however, for
+the case that reshape is interrupted, this might cause that
+md_check_recovery() can't continue to reshape atomically.
 
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 4cdb35e54251..96d7f8048876 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -6190,7 +6190,8 @@ static bool raid5_make_request(struct mddev 
-*mddev, struct bio * bi)
-                         md_write_end(mddev);
-                 return true;
-         }
--       md_account_bio(mddev, &bi);
-+       if (rw == WRITE)
-+               md_account_bio(mddev, &bi);
+Perhaps raid1_reshape() can be improved that if oldpool and newpool is
+the same, don't reallocate it.
 
-         /*
-          * Lets start with the stripe with the lowest chunk offset in 
-the first
-
-
-This patch only disables the accounting for non-align read requests. I 
-know it's not a good one. But the data corruption is more
-
-serious than io accouting.
-
-Regards
-
-Xiao
+Thanks,
+Kuai
+> Signed-off-by: Xueshi Hu <xueshi.hu@smartx.com>
+> ---
+>   drivers/md/raid1.c | 7 +++++++
+>   1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+> index dd25832eb045..ce48cb3af301 100644
+> --- a/drivers/md/raid1.c
+> +++ b/drivers/md/raid1.c
+> @@ -3298,6 +3298,13 @@ static int raid1_reshape(struct mddev *mddev)
+>   
+>   	freeze_array(conf, 0);
+>   
+> +	if (unlikely(atomic_read(conf->nr_queued))) {
+> +		kfree(newpoolinfo);
+> +		mempool_exit(&newpool);
+> +		unfreeze_array(conf);
+> +		return -EBUSY;
+> +	}
+> +
+>   	/* ok, everything is stopped */
+>   	oldpool = conf->r1bio_pool;
+>   	conf->r1bio_pool = newpool;
+> 
 
