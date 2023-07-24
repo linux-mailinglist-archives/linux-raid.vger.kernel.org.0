@@ -2,53 +2,53 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B13875F25E
-	for <lists+linux-raid@lfdr.de>; Mon, 24 Jul 2023 12:13:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 55B4875F279
+	for <lists+linux-raid@lfdr.de>; Mon, 24 Jul 2023 12:15:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230011AbjGXKNm (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 24 Jul 2023 06:13:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46080 "EHLO
+        id S231742AbjGXKPN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 24 Jul 2023 06:15:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233157AbjGXKMn (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 24 Jul 2023 06:12:43 -0400
-Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5F337A8A
-        for <linux-raid@vger.kernel.org>; Mon, 24 Jul 2023 03:05:01 -0700 (PDT)
-Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-57a4c0324b5so5225377b3.0
-        for <linux-raid@vger.kernel.org>; Mon, 24 Jul 2023 03:05:01 -0700 (PDT)
+        with ESMTP id S231853AbjGXKOw (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 24 Jul 2023 06:14:52 -0400
+Received: from mail-ot1-x32d.google.com (mail-ot1-x32d.google.com [IPv6:2607:f8b0:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65EDB1BE2
+        for <linux-raid@vger.kernel.org>; Mon, 24 Jul 2023 03:06:57 -0700 (PDT)
+Received: by mail-ot1-x32d.google.com with SMTP id 46e09a7af769-6b879511707so649347a34.0
+        for <linux-raid@vger.kernel.org>; Mon, 24 Jul 2023 03:06:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1690193082; x=1690797882;
+        d=bytedance.com; s=google; t=1690193216; x=1690798016;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TdB9rRMLZCcd9e2nqCLYXDwhc2GYqBzgLTOCktFYsxc=;
-        b=kwZ62tUUy/nXx03U/jznws9oK+q8udDb1KeaX52FqiPos4rw8KBvFVKcDyxOMNJU8O
-         2XvNijrCOLtZs7c5LkqP1yTIK4jJ4NoabcWQlkDuNuSze6xy/6AfDtiBgItWeVl7rg/M
-         09Rq5J+msLPh8QkV9LLfwqDVjgd/SSBElqACXWWSBtQ5Wth6z6CjMExqVim3ptx8khjM
-         Q3P012DvRHy78MdtEodsvQoynZXyzd/cgASvw9UCp0ARnUsANyNydMLgCzTqfh+a2YA7
-         NntZxPsG00KCnBH6IzAuMVjJ/GYdyIJulo3U6mrR1jvU8i0CcZjTwduZDPxah+ekhONm
-         oFgA==
+        bh=9IhUpcns1yxxzymDv5YqZr0WL/UQLCqdNy71sVoDGM4=;
+        b=QhGL9rawmMYryj0uuqvCh6HHL4uW+7Shto6EqI/JsGy0ScQvgJrh3If1+ldlhHx2eB
+         nxoLKVoFGbO2Aws75LENPPay3y9tWms2cTbm7gUcaKFPD/QAj5kwbWACo34YLOtXmvHY
+         kaUs1gFIIBLrC2kTDM+04Jh/jvif4Eo/mdqT8yK3uPSoDHy0sR/DHjdI/9QrIA9AKyqp
+         9ZTHLvUvgQN5D+KQ7G44pg7d9PyhfgQeN6xxZkh4aH51vdMS5vl/h+blWYxQoMv8Reaf
+         CFKBibC7qahF+Qn960wUS5VhyHQm3tMp8X542XB5kge+zQO6U2yiAmR8K4FFtsdKGoHj
+         WVvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690193082; x=1690797882;
+        d=1e100.net; s=20221208; t=1690193216; x=1690798016;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TdB9rRMLZCcd9e2nqCLYXDwhc2GYqBzgLTOCktFYsxc=;
-        b=L96To95GVsAuZoBrEiEP6RU2aEAnYwozJ25gQxFIbiPyrXtxG8EcJbKnpyL1m5k4k8
-         HHEUFIi6II4zSKpSHbrseGru3AVEpMABvUHpCddBl22wfYjY/pOyszXex8STXk8NP3gm
-         ZVy9n+IB2eCzxrfJ2YaygMwUZbwzzE5gd7WISJNulLkJkUlYJO6GC2TOvUdb1lgYzSI4
-         zgYWdQs71oE252kq172fiwwHIK1tsYzIzezxAzqrpLgo3jk/Z5zlVcViLmOefxDxXAG6
-         xaW1Yym+6DTF79qElT9EwgNdLf89kJcWRusx2DKHKbDYS05VWwHtGm3X/1wWRDkICeFq
-         CNcw==
-X-Gm-Message-State: ABy/qLYoPST+cqSlHsBod/CsYptYRMEC5RXgQwGeW0TZpLANX9F6l/LV
-        M2fsy7CieWgjmv4mGis9ozsDz7I2h94KfLQZvhY=
-X-Google-Smtp-Source: APBJJlGv61W8KGqFtJwXjT0bM91VjHnubPgHDdaymusYtIYliDl3QXXildbsEKZFPobYebqub0cGDA==
-X-Received: by 2002:a17:902:f681:b0:1b8:17e8:5472 with SMTP id l1-20020a170902f68100b001b817e85472mr12096259plg.1.1690192338295;
-        Mon, 24 Jul 2023 02:52:18 -0700 (PDT)
+        bh=9IhUpcns1yxxzymDv5YqZr0WL/UQLCqdNy71sVoDGM4=;
+        b=MIsljZcJFvDxmnp+/58Z4uiNREVNvTBTmn8v4sE8b3J0pC1l4AEhougp9tajFAySco
+         35LCbCBhDOtSDUCC/efpkC8ts+VZ2dCTnAnByalpqRuDj6fGgsgXziBrOdEOKVITehHe
+         hEe2leqXx58iTpn4phfoIXEezaDuB0n6ZgOhS2/q/KF3K7OrIaQbONrgbHavDOYbnADz
+         wx/vgdu4YHaqeS3cdYDSvQFFfAJLy0LKZR8KCn5PHelZXySrpkEBQBFTI0t0YLLNKLz9
+         MNznK4MXAY2JbNxLQ9c+knmmnY8+VBvzH/MJhmf3IkL0ZVO5a/rf9VYp7j52E9HGRbSL
+         3/xQ==
+X-Gm-Message-State: ABy/qLZFuJ8YMuwUaEWrM8rfSnvsqLcIHKlV9pYQE9uzCGCI0Zjb1onZ
+        gY0klR7UZ9OvS+G603zCNID56A==
+X-Google-Smtp-Source: APBJJlHBx7nK5g3+kldzxnSt3u+r3r/G3QW+9x74hGsko9rk5z0xsgiAGVczPyEk+gpBI6IeMpdddg==
+X-Received: by 2002:a17:902:dad1:b0:1b8:aded:524c with SMTP id q17-20020a170902dad100b001b8aded524cmr12547787plx.1.1690192373829;
+        Mon, 24 Jul 2023 02:52:53 -0700 (PDT)
 Received: from C02DW0BEMD6R.bytedance.net ([203.208.167.147])
-        by smtp.gmail.com with ESMTPSA id d5-20020a170902c18500b001bb20380bf2sm8467233pld.13.2023.07.24.02.52.06
+        by smtp.gmail.com with ESMTPSA id d5-20020a170902c18500b001bb20380bf2sm8467233pld.13.2023.07.24.02.52.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jul 2023 02:52:17 -0700 (PDT)
+        Mon, 24 Jul 2023 02:52:53 -0700 (PDT)
 From:   Qi Zheng <zhengqi.arch@bytedance.com>
 To:     akpm@linux-foundation.org, david@fromorbit.com, tkhai@ya.ru,
         vbabka@suse.cz, roman.gushchin@linux.dev, djwong@kernel.org,
@@ -69,16 +69,16 @@ Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
         linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
         linux-xfs@vger.kernel.org, linux-btrfs@vger.kernel.org,
         Qi Zheng <zhengqi.arch@bytedance.com>
-Subject: [PATCH v2 36/47] xfs: dynamically allocate the xfs-buf shrinker
-Date:   Mon, 24 Jul 2023 17:43:43 +0800
-Message-Id: <20230724094354.90817-37-zhengqi.arch@bytedance.com>
+Subject: [PATCH v2 39/47] zsmalloc: dynamically allocate the mm-zspool shrinker
+Date:   Mon, 24 Jul 2023 17:43:46 +0800
+Message-Id: <20230724094354.90817-40-zhengqi.arch@bytedance.com>
 X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 In-Reply-To: <20230724094354.90817-1-zhengqi.arch@bytedance.com>
 References: <20230724094354.90817-1-zhengqi.arch@bytedance.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -88,87 +88,80 @@ List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
 In preparation for implementing lockless slab shrink, use new APIs to
-dynamically allocate the xfs-buf shrinker, so that it can be freed
+dynamically allocate the mm-zspool shrinker, so that it can be freed
 asynchronously using kfree_rcu(). Then it doesn't need to wait for RCU
-read-side critical section when releasing the struct xfs_buftarg.
+read-side critical section when releasing the struct zs_pool.
 
 Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
 ---
- fs/xfs/xfs_buf.c | 25 ++++++++++++++-----------
- fs/xfs/xfs_buf.h |  2 +-
- 2 files changed, 15 insertions(+), 12 deletions(-)
+ mm/zsmalloc.c | 28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
-diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index 15d1e5a7c2d3..19a0bf6ce115 100644
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -1906,8 +1906,7 @@ xfs_buftarg_shrink_scan(
- 	struct shrinker		*shrink,
- 	struct shrink_control	*sc)
- {
--	struct xfs_buftarg	*btp = container_of(shrink,
--					struct xfs_buftarg, bt_shrinker);
-+	struct xfs_buftarg	*btp = shrink->private_data;
- 	LIST_HEAD(dispose);
- 	unsigned long		freed;
+diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
+index 32f5bc4074df..bbbffe313318 100644
+--- a/mm/zsmalloc.c
++++ b/mm/zsmalloc.c
+@@ -229,7 +229,7 @@ struct zs_pool {
+ 	struct zs_pool_stats stats;
  
-@@ -1929,8 +1928,7 @@ xfs_buftarg_shrink_count(
- 	struct shrinker		*shrink,
- 	struct shrink_control	*sc)
+ 	/* Compact classes */
+-	struct shrinker shrinker;
++	struct shrinker *shrinker;
+ 
+ #ifdef CONFIG_ZSMALLOC_STAT
+ 	struct dentry *stat_dentry;
+@@ -2082,8 +2082,7 @@ static unsigned long zs_shrinker_scan(struct shrinker *shrinker,
+ 		struct shrink_control *sc)
  {
--	struct xfs_buftarg	*btp = container_of(shrink,
--					struct xfs_buftarg, bt_shrinker);
-+	struct xfs_buftarg	*btp = shrink->private_data;
- 	return list_lru_shrink_count(&btp->bt_lru, sc);
+ 	unsigned long pages_freed;
+-	struct zs_pool *pool = container_of(shrinker, struct zs_pool,
+-			shrinker);
++	struct zs_pool *pool = shrinker->private_data;
+ 
+ 	/*
+ 	 * Compact classes and calculate compaction delta.
+@@ -2101,8 +2100,7 @@ static unsigned long zs_shrinker_count(struct shrinker *shrinker,
+ 	int i;
+ 	struct size_class *class;
+ 	unsigned long pages_to_free = 0;
+-	struct zs_pool *pool = container_of(shrinker, struct zs_pool,
+-			shrinker);
++	struct zs_pool *pool = shrinker->private_data;
+ 
+ 	for (i = ZS_SIZE_CLASSES - 1; i >= 0; i--) {
+ 		class = pool->size_class[i];
+@@ -2117,18 +2115,24 @@ static unsigned long zs_shrinker_count(struct shrinker *shrinker,
+ 
+ static void zs_unregister_shrinker(struct zs_pool *pool)
+ {
+-	unregister_shrinker(&pool->shrinker);
++	shrinker_unregister(pool->shrinker);
  }
  
-@@ -1938,7 +1936,7 @@ void
- xfs_free_buftarg(
- 	struct xfs_buftarg	*btp)
+ static int zs_register_shrinker(struct zs_pool *pool)
  {
--	unregister_shrinker(&btp->bt_shrinker);
-+	shrinker_unregister(btp->bt_shrinker);
- 	ASSERT(percpu_counter_sum(&btp->bt_io_count) == 0);
- 	percpu_counter_destroy(&btp->bt_io_count);
- 	list_lru_destroy(&btp->bt_lru);
-@@ -2021,13 +2019,18 @@ xfs_alloc_buftarg(
- 	if (percpu_counter_init(&btp->bt_io_count, 0, GFP_KERNEL))
- 		goto error_lru;
- 
--	btp->bt_shrinker.count_objects = xfs_buftarg_shrink_count;
--	btp->bt_shrinker.scan_objects = xfs_buftarg_shrink_scan;
--	btp->bt_shrinker.seeks = DEFAULT_SEEKS;
--	btp->bt_shrinker.flags = SHRINKER_NUMA_AWARE;
--	if (register_shrinker(&btp->bt_shrinker, "xfs-buf:%s",
--			      mp->m_super->s_id))
-+	btp->bt_shrinker = shrinker_alloc(SHRINKER_NUMA_AWARE, "xfs-buf:%s",
-+					  mp->m_super->s_id);
-+	if (!btp->bt_shrinker)
- 		goto error_pcpu;
+-	pool->shrinker.scan_objects = zs_shrinker_scan;
+-	pool->shrinker.count_objects = zs_shrinker_count;
+-	pool->shrinker.batch = 0;
+-	pool->shrinker.seeks = DEFAULT_SEEKS;
++	pool->shrinker = shrinker_alloc(0, "mm-zspool:%s", pool->name);
++	if (!pool->shrinker)
++		return -ENOMEM;
 +
-+	btp->bt_shrinker->count_objects = xfs_buftarg_shrink_count;
-+	btp->bt_shrinker->scan_objects = xfs_buftarg_shrink_scan;
-+	btp->bt_shrinker->seeks = DEFAULT_SEEKS;
-+	btp->bt_shrinker->private_data = btp;
++	pool->shrinker->scan_objects = zs_shrinker_scan;
++	pool->shrinker->count_objects = zs_shrinker_count;
++	pool->shrinker->batch = 0;
++	pool->shrinker->seeks = DEFAULT_SEEKS;
++	pool->shrinker->private_data = pool;
+ 
+-	return register_shrinker(&pool->shrinker, "mm-zspool:%s",
+-				 pool->name);
++	shrinker_register(pool->shrinker);
 +
-+	shrinker_register(btp->bt_shrinker);
-+
- 	return btp;
++	return 0;
+ }
  
- error_pcpu:
-diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
-index 549c60942208..4e6969a675f7 100644
---- a/fs/xfs/xfs_buf.h
-+++ b/fs/xfs/xfs_buf.h
-@@ -102,7 +102,7 @@ typedef struct xfs_buftarg {
- 	size_t			bt_logical_sectormask;
- 
- 	/* LRU control structures */
--	struct shrinker		bt_shrinker;
-+	struct shrinker		*bt_shrinker;
- 	struct list_lru		bt_lru;
- 
- 	struct percpu_counter	bt_io_count;
+ static int calculate_zspage_chain_size(int class_size)
 -- 
 2.30.2
 
