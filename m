@@ -2,104 +2,74 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CD8C75E9B9
-	for <lists+linux-raid@lfdr.de>; Mon, 24 Jul 2023 04:29:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4533E75EF5A
+	for <lists+linux-raid@lfdr.de>; Mon, 24 Jul 2023 11:44:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229753AbjGXC3e (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 23 Jul 2023 22:29:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39006 "EHLO
+        id S232052AbjGXJoM (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 24 Jul 2023 05:44:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230178AbjGXC3d (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 23 Jul 2023 22:29:33 -0400
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 163D6180;
-        Sun, 23 Jul 2023 19:29:24 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.143])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4R8NvS0qN1z4f3jq6;
-        Mon, 24 Jul 2023 10:11:48 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-        by APP4 (Coremail) with SMTP id gCh0CgAHoZTj3b1kkguwOg--.21875S3;
-        Mon, 24 Jul 2023 10:11:48 +0800 (CST)
-Subject: Re: [PATCH v2] md: raid1: fix potential OOB in raid1_remove_disk()
-To:     Zhang Shurong <zhang_shurong@foxmail.com>, song@kernel.org,
-        yukuai1@huaweicloud.com
-Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "yukuai (C)" <yukuai3@huawei.com>
-References: <tencent_0D24426FAC6A21B69AC0C03CE4143A508F09@qq.com>
-From:   Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <d8fde5d9-3ac5-0945-dc8e-315092a67528@huaweicloud.com>
-Date:   Mon, 24 Jul 2023 10:11:46 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        with ESMTP id S231458AbjGXJoE (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 24 Jul 2023 05:44:04 -0400
+X-Greylist: delayed 744 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 24 Jul 2023 02:44:04 PDT
+Received: from fluorez-com.cfd (fluorez-com.cfd [107.174.244.118])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55C091A1
+        for <linux-raid@vger.kernel.org>; Mon, 24 Jul 2023 02:44:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=re1; d=fluorez-com.cfd;
+ h=Reply-To:From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:
+ Content-Transfer-Encoding; i=info@fluorez-com.cfd;
+ bh=LqAKS0rQcqRhfS2AomqosmxOtHjI8TSd2DPxtKmN8Fo=;
+ b=evg/LWOKlh4e/kGwKqf1DeCfZFNJktzZsafOab0k36OCqZufmC6gJov19cJ/oP/Q1mvZoy9a0xHM
+   N4ff51CfSVLVqieLSBZx/JhmHlhrFfxIjWtfhmVLpzJvS6quFvUlWonPAynP0NFTD0XAiVw1OiTv
+   5K97vJDotXGpTP314/JuJHpmvTKcYMATHsMSxDMr/KhOhpjjCycmwJFU1mO3MK5n/cqFuxO4tbEp
+   y9GFCmSR5a9z1i7N77m+Y2bYSpk3aAbv3MrF3LnVMHnwvHRSB4iLH4esSTlr0boE6AOcmzIdMQri
+   WgZm6w+E/E0PLRbCE86bb+y5G/88Yc8rb9Ix9A==
+Reply-To: info@coinloansupport.online
+From:   Coinloan Support Center <info@fluorez-com.cfd>
+To:     linux-raid@vger.kernel.org
+Subject: Don't miss out on our low Interest loan opportunity
+Date:   24 Jul 2023 10:47:17 +0200
+Message-ID: <20230724104717.CB30615A03810743@fluorez-com.cfd>
 MIME-Version: 1.0
-In-Reply-To: <tencent_0D24426FAC6A21B69AC0C03CE4143A508F09@qq.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgAHoZTj3b1kkguwOg--.21875S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7XrWfJw15Ww47KFykWryrCrg_yoWktrcE9F
-        yjva4rXF4IqryIkw47Ww1fZr9Ika4kWa1rZayFgF98Wa4Duw4Fgryku348XasxKryaqr17
-        Ar1DW348Ars3ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb4xFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-        6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
-        Y487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
-        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
-        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-        WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8
-        JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHUDUUU
-        UU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.0 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
-        MAY_BE_FORGED,NICE_REPLY_A,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=6.1 required=5.0 tests=BAYES_60,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FROM_FMBLA_NEWDOM28,
+        RCVD_IN_BL_SPAMCOP_NET,RCVD_IN_MSPIKE_BL,RCVD_IN_MSPIKE_L4,
+        RCVD_IN_PSBL,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: *  0.0 RCVD_IN_MSPIKE_L4 RBL: Bad reputation (-4)
+        *      [107.174.244.118 listed in bl.mailspike.net]
+        *  2.7 RCVD_IN_PSBL RBL: Received via a relay in PSBL
+        *      [107.174.244.118 listed in psbl.surriel.com]
+        *  1.3 RCVD_IN_BL_SPAMCOP_NET RBL: Received via a relay in
+        *      bl.spamcop.net
+        *      [Blocked - see <https://www.spamcop.net/bl.shtml?107.174.244.118>]
+        *  1.5 BAYES_60 BODY: Bayes spam probability is 60 to 80%
+        *      [score: 0.6577]
+        * -0.0 SPF_HELO_PASS SPF: HELO matches SPF record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.8 FROM_FMBLA_NEWDOM28 From domain was registered in last 14-28
+        *      days
+        *  0.0 RCVD_IN_MSPIKE_BL Mailspike blocklisted
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-ÔÚ 2023/07/22 15:53, Zhang Shurong Ð´µÀ:
-> If rddev->raid_disk is greater than mddev->raid_disks, there will be
-> an out-of-bounds in raid1_remove_disk(). We have already found
-> similar reports as follows:
-> 
-> 1) commit d17f744e883b ("md-raid10: fix KASAN warning")
-> 2) commit 1ebc2cec0b7d ("dm raid: fix KASAN warning in raid5_remove_disk")
-> 
-> Fix this bug by checking whether the "number" variable is
-> valid.
-
-LGTM
-
-Reviewed-by: Yu Kuai <yukuai3@huawei.com>
-> 
-> Signed-off-by: Zhang Shurong <zhang_shurong@foxmail.com>
-> ---
-> Changes in v2:
->   - Using conf->raid_disks instead of mddev->raid_disks.
-> 
->   drivers/md/raid1.c | 4 ++++
->   1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-> index dd25832eb045..80aeee63dfb7 100644
-> --- a/drivers/md/raid1.c
-> +++ b/drivers/md/raid1.c
-> @@ -1829,6 +1829,10 @@ static int raid1_remove_disk(struct mddev *mddev, struct md_rdev *rdev)
->   	struct r1conf *conf = mddev->private;
->   	int err = 0;
->   	int number = rdev->raid_disk;
-> +
-> +	if (unlikely(number >= conf->raid_disks))
-> +		goto abort;
-> +
->   	struct raid1_info *p = conf->mirrors + number;
->   
->   	if (rdev != p->rdev)
-> 
-
+Are you looking for a loan to either increase your activity or to=20
+carry out a project.=20
+We offer Crypto Loans at 2-7% interest rate with or without a=20
+credit check.
+Please get back to us if you are interested in more details.
