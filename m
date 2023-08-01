@@ -2,94 +2,140 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 828A076AE5D
-	for <lists+linux-raid@lfdr.de>; Tue,  1 Aug 2023 11:38:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1508476B27E
+	for <lists+linux-raid@lfdr.de>; Tue,  1 Aug 2023 13:01:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233145AbjHAJiN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 1 Aug 2023 05:38:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35038 "EHLO
+        id S234267AbjHALBU (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 1 Aug 2023 07:01:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233131AbjHAJho (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 1 Aug 2023 05:37:44 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE98A212D
-        for <linux-raid@vger.kernel.org>; Tue,  1 Aug 2023 02:36:05 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id 5b1f17b1804b1-3fbc54cab6fso51139935e9.0
-        for <linux-raid@vger.kernel.org>; Tue, 01 Aug 2023 02:36:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690882564; x=1691487364;
-        h=reply-to:date:to:subject:content-description
-         :content-transfer-encoding:mime-version:from:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ANXExHiurpsLW1+AnLl79UdLdXb9JEMrjqkSigWkyLQ=;
-        b=ZQW246AZoFvB3hhurfyRQ76vAF+FnJzNpWaRZmGoeeVjR4CVn+Xeg8kzNJyKVJuV8n
-         96iq1raw/QJ2h4unBekQkBeQ1prQ6tRR07c/jKThzzFscy62mukf3mdt2ya9f/a7bH8G
-         31XF7e+QS0axG/fHFpQTCRQiMSRrJNwfYVi8iQZlT9Dd5OOXN0IebjJGSWVlNCUNUnbl
-         E2HckSUpAt4UjtUGRUc3QtGRBx5jcl+0YHdgSWZHpjZqaupg3OiZjdTmA4NqyRkEdFx9
-         2P3ouA4Z888BXZnuoc15BWzK+LzAekxznwQiijVs+HUXU5LTglA0tu2qtD9C7gANQwoD
-         d3Yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690882564; x=1691487364;
-        h=reply-to:date:to:subject:content-description
-         :content-transfer-encoding:mime-version:from:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ANXExHiurpsLW1+AnLl79UdLdXb9JEMrjqkSigWkyLQ=;
-        b=Yue8Kg7It/JZnijskmvcEaV8nzfE3ZSVKhuXNYfbypDrPvCET/aFjr0TtwrbnrJ+Y6
-         RxD9tp9BwjFFIjOqfapW1fZwhrwNYSjyMdBt6kXXdvtOiZwDprtPid1ch/bHW2NvOPe6
-         f+Jn+zAQe5+BF9LAs4G8MTtEnfO6JdnKRohxgM4lyS8gw1D7TFD6osAlMHHWNy7DGfzv
-         Q6OJnt4JSu5Z2hsWLNu4J/N9Lpe6JvQEeXR62bXKyBBF+1Cx8hzXrn7l+JxC+v4Z8+0o
-         cnYcGK1xkiJRB1S6GOaoI5W0sMv9lyUPa5t1+6/Iwrj8eF5lHJt28WF0RFNADBad3+Gc
-         Uxhw==
-X-Gm-Message-State: ABy/qLakupEOnZdN2SIkpNPf0Mkbwu6WBSGgkZ/q13FLJiNLD9wbk1Dq
-        OFJh7UfEkkPVPFU3HTTmr7l6vAFz8M3ugg==
-X-Google-Smtp-Source: APBJJlGlDITblt/zfqLglniCBl5pLym1fNSvtvAhnHQ+7ij4J+udVl1ji+vNZ1R2azEHfDmlxDdKhg==
-X-Received: by 2002:a1c:770c:0:b0:3fb:fea1:affa with SMTP id t12-20020a1c770c000000b003fbfea1affamr1936558wmi.37.1690882564067;
-        Tue, 01 Aug 2023 02:36:04 -0700 (PDT)
-Received: from [192.168.1.102] ([91.239.206.92])
-        by smtp.gmail.com with ESMTPSA id k17-20020a7bc411000000b003fe17901fcdsm8477610wmi.32.2023.08.01.02.36.02
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Tue, 01 Aug 2023 02:36:03 -0700 (PDT)
-Message-ID: <64c8d203.7b0a0220.a701d.3bbb@mx.google.com>
-From:   World Health Empowerment Organization Group 
-        <petricaluchian839@gmail.com>
-X-Google-Original-From: World Health Empowerment Organization Group
-Content-Type: text/plain; charset="iso-8859-1"
+        with ESMTP id S234139AbjHALA6 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 1 Aug 2023 07:00:58 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 013F2422D;
+        Tue,  1 Aug 2023 03:55:29 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B6064614B3;
+        Tue,  1 Aug 2023 10:54:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C8E1C433C9;
+        Tue,  1 Aug 2023 10:54:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690887267;
+        bh=VO7pcsxb+oB+wsS8Ud4w4F+HV0+ydxKFE3sGoD1VYDM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LvsYD/hTg82xvObqT/fOTuY/qbEyrDy2SiPENS5hu4V2VV+Wb2p+Cpn/ufHQXK8A/
+         iqzqoxFbb9DkGLkDaQsLprSKQ9Wl7kTgUPk63stF57ZKx2izMAU1qDtaY7JTenp2ai
+         7x9dH1p4cdmmkH6UosrkXjt3czFgdzrT58WO9IC7nkPwtrB8kuy5FSmCit6CJ8IGUW
+         jSgInZdEghSOynt3rlrHieQGbTasBh4gk4tmbxtx+KEKuDhgKBAfhbFda9CCVtS6Mh
+         B7lpMyYk4VCTVTgipPjwgVAsiqhXacDMQSjN8O2t5OH8gG6Vj6vtOJiw09/CZTX9hX
+         RpLT7chS3o5Lg==
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-51cff235226so11562527a12.0;
+        Tue, 01 Aug 2023 03:54:26 -0700 (PDT)
+X-Gm-Message-State: ABy/qLZHSCj2xRiGY/s/wDSM9+2pbRnD7N/dlz08wGTB71FdpSn5Ewf7
+        lRk7OGWPqbYoBrgwKbVd6JrZczm2qj7HmUogrNY=
+X-Google-Smtp-Source: APBJJlFukzChUGvsSOXUWygUB+0GArc3ZLcnrvtrngLoHxRu+4XYsAq8yQC+cOozTfOJnJ5RtEFuOWHH+6HmrOhgMKM=
+X-Received: by 2002:aa7:c309:0:b0:522:3a1d:c233 with SMTP id
+ l9-20020aa7c309000000b005223a1dc233mr3075933edq.11.1690887265380; Tue, 01 Aug
+ 2023 03:54:25 -0700 (PDT)
 MIME-Version: 1.0
+References: <20230801081335.523097-1-kernel@xen0n.name>
+In-Reply-To: <20230801081335.523097-1-kernel@xen0n.name>
+From:   Huacai Chen <chenhuacai@kernel.org>
+Date:   Tue, 1 Aug 2023 18:54:12 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6Tq7E5sSHUq+FSgs-GpHSMmmp=KDPBpKJt1vXRkMv9Cw@mail.gmail.com>
+Message-ID: <CAAhV-H6Tq7E5sSHUq+FSgs-GpHSMmmp=KDPBpKJt1vXRkMv9Cw@mail.gmail.com>
+Subject: Re: [PATCH 0/3] raid5, raid6: Accelerate RAID math with LoongArch SIMD
+To:     WANG Xuerui <kernel@xen0n.name>
+Cc:     Song Liu <song@kernel.org>, linux-raid@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+        WANG Xuerui <git@xen0n.name>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: We have a Job opportunity for you in your country;
-To:     Recipients <World@vger.kernel.org>
-Date:   Tue, 01 Aug 2023 16:35:54 +0700
-Reply-To: drjeromewalcott@gmail.com
-X-Spam-Status: No, score=2.0 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-        SPF_PASS,TO_MALFORMED,T_FILL_THIS_FORM_SHORT,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Greetings! Sir /Madam.
-                   =
+Hi, Xuerui,
 
-We are writing this email to you from (World Health Organization Empowermen=
-t Group) to inform you that we have a Job opportunity for you in your count=
-ry, if you receive this message, send your CV or your information, Your Ful=
-l Name, Your Address, Your Occupation, to (Dr.Jerome) via this email addres=
-s: drjeromewalcott@gmail.com  For more information about the Job. The Job c=
-annot stop your business or the work you are doing already. =
+On Tue, Aug 1, 2023 at 4:13=E2=80=AFPM WANG Xuerui <kernel@xen0n.name> wrot=
+e:
+>
+> From: WANG Xuerui <git@xen0n.name>
+>
+> Hi,
+>
+> Seeing the LoongArch port recently (finally!) gained the ability to use
+> the vector units, I've subsequently ported the RAID5/6 math to LSX and
+> LASX (which are LoongArch's 128-bit and 256-bit SIMD extensions), with
+> nice speedups observed. They are reasonably straight-forward conversions
+> of existing code, and I hope the comments I put in there are helpful
+> enough for anyone not familiar with LoongArch assembly to get a rough
+> picture of how things work here. Performance numbers are included in
+> each commit's commit message.
+>
+> This series needs [1] ("LoongArch: Allow usage of LSX/LASX in the
+> kernel") as a prerequisite, or the vector context would likely get
+> corrupted by the vector-unaware kernel_fpu_{begin,end} calls. I tested
+> the changes on top of next-20230731 with the raid6test build fixes [2]
+> applied, but the series should apply cleanly to v6.5-rc4 (or maybe any
+> other tag) too.
+Thank you for your patches, but the kernel coding style prefers /* ...
+*/ rather than // ...
 
-
-We know that this Message may come as a surprise to you.
-
-Best Regards
-Dr.Jerome =
-
-Office Email:drjeromewalcott@gmail.com
-Office  WhatsApp Number: +447405575102. =
-
-Office Contact Number: +1-7712204594
+Huacai
+>
+> [1]: https://lore.kernel.org/loongarch/20230722072201.2677516-1-chenhuaca=
+i@loongson.cn/
+> [2]: https://lore.kernel.org/linux-raid/20230731104911.411964-1-kernel@xe=
+n0n.name/
+>
+> WANG Xuerui (3):
+>   LoongArch: Add SIMD-optimized XOR routines
+>   raid6: Add LoongArch SIMD syndrome calculation
+>   raid6: Add LoongArch SIMD recovery implementation
+>
+>  arch/loongarch/include/asm/xor.h      |  68 ++++
+>  arch/loongarch/include/asm/xor_simd.h |  42 +++
+>  arch/loongarch/lib/Makefile           |   3 +
+>  arch/loongarch/lib/xor_simd.c         |  92 +++++
+>  arch/loongarch/lib/xor_simd.h         |  46 +++
+>  arch/loongarch/lib/xor_simd_glue.c    |  71 ++++
+>  arch/loongarch/lib/xor_template.c     | 109 ++++++
+>  include/linux/raid/pq.h               |   4 +
+>  lib/raid6/Makefile                    |   1 +
+>  lib/raid6/algos.c                     |  16 +
+>  lib/raid6/loongarch.h                 |  38 ++
+>  lib/raid6/loongarch_simd.c            | 417 +++++++++++++++++++++
+>  lib/raid6/recov_loongarch_simd.c      | 501 ++++++++++++++++++++++++++
+>  lib/raid6/test/Makefile               |  12 +
+>  14 files changed, 1420 insertions(+)
+>  create mode 100644 arch/loongarch/include/asm/xor.h
+>  create mode 100644 arch/loongarch/include/asm/xor_simd.h
+>  create mode 100644 arch/loongarch/lib/xor_simd.c
+>  create mode 100644 arch/loongarch/lib/xor_simd.h
+>  create mode 100644 arch/loongarch/lib/xor_simd_glue.c
+>  create mode 100644 arch/loongarch/lib/xor_template.c
+>  create mode 100644 lib/raid6/loongarch.h
+>  create mode 100644 lib/raid6/loongarch_simd.c
+>  create mode 100644 lib/raid6/recov_loongarch_simd.c
+>
+>
+> base-commit: 5d0c230f1de8c7515b6567d9afba1f196fb4e2f4
+> prerequisite-patch-id: 85d08a9828893250ae78dbca9d6e6f8dac755f61
+> prerequisite-patch-id: fe0bba41e0bbc676454365ed16fb13fc0aac6ee0
+> prerequisite-patch-id: 84ef8212b74e696ce019255bbfd9679d7516f7f7
+> prerequisite-patch-id: b1f8fc4e4acdaff7f821a9fcbd063475178e037b
+> prerequisite-patch-id: 82aacbf27f249fdefe40dd6bcc712e5795256926
+> prerequisite-patch-id: ae4e026e18f92ffcc93f6b135a3bd48fbdded39a
+> --
+> 2.40.0
+>
