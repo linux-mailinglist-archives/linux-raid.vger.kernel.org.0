@@ -2,58 +2,55 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 980C176EA76
-	for <lists+linux-raid@lfdr.de>; Thu,  3 Aug 2023 15:32:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FE8D76EA87
+	for <lists+linux-raid@lfdr.de>; Thu,  3 Aug 2023 15:34:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235984AbjHCNcY (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 3 Aug 2023 09:32:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48318 "EHLO
+        id S236277AbjHCNeJ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 3 Aug 2023 09:34:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235596AbjHCNcD (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 3 Aug 2023 09:32:03 -0400
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6C0E212A;
-        Thu,  3 Aug 2023 06:30:57 -0700 (PDT)
+        with ESMTP id S235377AbjHCNdn (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 3 Aug 2023 09:33:43 -0400
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8A5C4694;
+        Thu,  3 Aug 2023 06:32:31 -0700 (PDT)
 Received: from mail02.huawei.com (unknown [172.30.67.143])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4RGqVK38B6z4f3l1N;
-        Thu,  3 Aug 2023 21:30:49 +0800 (CST)
+        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4RGqX83Vg5z4f3l7M;
+        Thu,  3 Aug 2023 21:32:24 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-        by APP4 (Coremail) with SMTP id gCh0CgCnD7MGrMtkNVvlPQ--.7517S11;
-        Thu, 03 Aug 2023 21:30:50 +0800 (CST)
+        by APP4 (Coremail) with SMTP id gCh0CgAHuKtqrMtkWHLlPQ--.49699S4;
+        Thu, 03 Aug 2023 21:32:27 +0800 (CST)
 From:   Yu Kuai <yukuai1@huaweicloud.com>
 To:     song@kernel.org, xni@redhat.com
 Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
         yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com,
         yangerkun@huawei.com
-Subject: [PATCH -next 7/7] md: don't check 'mddev->pers' and 'pers->quiesce' from suspend_lo_store()
-Date:   Thu,  3 Aug 2023 21:27:51 +0800
-Message-Id: <20230803132751.2741652-8-yukuai1@huaweicloud.com>
+Subject: [PATCH -next 00/29] md: synchronize io with array reconfiguration
+Date:   Thu,  3 Aug 2023 21:29:01 +0800
+Message-Id: <20230803132930.2742286-1-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230803132751.2741652-1-yukuai1@huaweicloud.com>
-References: <20230803132751.2741652-1-yukuai1@huaweicloud.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgCnD7MGrMtkNVvlPQ--.7517S11
-X-Coremail-Antispam: 1UD129KBjvdXoW7XFWUWry7Jr1DWw43Cry3Jwb_yoWDAFcEgF
-        nY9FZ3Jr1Sqry7trn0kw4xZryUtF1kW3ZrW3W3t34YyF15tFy0yFyFka45X3savFWjka4U
-        Jryqyr47Xr4qkjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbf8FF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2
-        IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28E
-        F7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr
-        1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0D
-        M2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjx
-        v20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1l
-        F7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxAIw28IcxkI7VAKI48JMx
-        C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
-        wI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
-        vE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE42xK8VAv
-        wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14
-        v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VU17GYJUUUUU==
+X-CM-TRANSID: gCh0CgAHuKtqrMtkWHLlPQ--.49699S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxZr4DWr48Cr1xWryxKr1Utrb_yoW5trWfp3
+        9rtFZIvw48JFy5Ar4xX3yDGF95Jw1rKrW2kr9xCw4rC3W3GryrZrWUGr98XrZYkFyfAF9r
+        Ja4UX34rGr18Aa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUyE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l42xK82IYc2Ij64vI
+        r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+        xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
+        cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF04
+        k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF
+        7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUb7GYJUUUUU==
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
-        MAY_BE_FORGED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -63,42 +60,82 @@ X-Mailing-List: linux-raid@vger.kernel.org
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-Now that mddev_suspend() doean't rely on 'mddev->pers' to be set, it's
-safe to remove such checking.
+After previous four patchset of preparatory work, this patchset impelement
+a new version of mddev_suspend(), the new apis:
+ - reconfig_mutex is not required;
+ - the weird logical that suspend array hold 'reconfig_mutex' for
+   mddev_check_recovery() to update superblock is not needed;
+ - the special handling, 'pers->prepare_suspend', for raid456 is not
+   needed;
+ - It's safe to be called at any time once mddev is allocated, and it's
+   designed to be used from slow path where array configuration is changed;
 
-This will also allow the array to be suspended even before the array
-is ran.
+And use the new api to replace:
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- drivers/md/md.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+mddev_lock
+mddev_suspend or not
+// array reconfiguration
+mddev_resume or not
+mddev_unlock
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index a66e00b45be1..55a74d9b7457 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -5192,18 +5192,13 @@ suspend_lo_store(struct mddev *mddev, const char *buf, size_t len)
- 	err = mddev_lock(mddev);
- 	if (err)
- 		return err;
--	err = -EINVAL;
--	if (mddev->pers == NULL ||
--	    mddev->pers->quiesce == NULL)
--		goto unlock;
-+
- 	mddev_suspend(mddev);
- 	mddev->suspend_lo = new;
- 	mddev_resume(mddev);
- 
--	err = 0;
--unlock:
- 	mddev_unlock(mddev);
--	return err ?: len;
-+	return len;
- }
- static struct md_sysfs_entry md_suspend_lo =
- __ATTR(suspend_lo, S_IRUGO|S_IWUSR, suspend_lo_show, suspend_lo_store);
+With:
+
+mddev_suspend
+mddev_lock
+// array reconfiguration
+mddev_unlock
+mddev_resume
+
+However, the above change is not possible for raid5 and raid-cluster in
+some corner cases, and mddev_suspend/resume() is replaced with quiesce()
+callback, which will suspend the array as well.
+
+This patchset is tested in my VM with mdadm testsuite with loop device
+except for 10ddf tests(they always fail before this patchset).
+
+A lot of cleanups will be started after this patchset.
+
+Yu Kuai (29):
+  md: use READ_ONCE/WRITE_ONCE for 'suspend_lo' and 'suspend_hi'
+  md: use 'mddev->suspended' for is_md_suspended()
+  md: add new helpers to suspend/resume array
+  md: add new helpers to suspend/resume and lock/unlock array
+  md: use new apis to suspend array for suspend_lo/hi/store()
+  md: use new apis to suspend array for level_store()
+  md: use new apis to suspend array for serialize_policy_store()
+  md/dm-raid: use new apis to suspend array
+  md/md-bitmap: use new apis to suspend array for location_store()
+  md/raid5-cache: use READ_ONCE/WRITE_ONCE for 'conf->log'
+  md/raid5-cache: use new apis to suspend array for r5c_disable_writeback_async()
+  md/raid5-cache: use new apis to suspend array for r5c_journal_mode_store()
+  md/raid5: use new apis to suspend array for raid5_store_stripe_size()
+  md/raid5: use new apis to suspend array for raid5_store_skip_copy()
+  md/raid5: use new apis to suspend array for raid5_store_group_thread_cnt()
+  md/raid5: use new apis to suspend array for raid5_change_consistency_policy()
+  md/raid5: replace suspend with quiesce() callback
+  md: quiesce before md_kick_rdev_from_array() for md-cluster
+  md: use new apis to suspend array for ioctls involed array reconfiguration
+  md: use new apis to suspend array for adding/removing rdev from state_store()
+  md: use new apis to suspend array for bind_rdev_to_array()
+  md: use new apis to suspend array related to serial pool in state_store()
+  md: use new apis to suspend array in backlog_store()
+  md: suspend array in md_start_sync() if array need reconfiguration
+  md: cleanup mddev_create/destroy_serial_pool()
+  md/md-linear: cleanup linear_add()
+  md: remove mddev_suspend() and mddev_resume()
+  md/raid5: Revert "md/raid5: fix a deadlock in the case that reshape is interrupted"
+  md: Revert "md: add a new api prepare_suspend() in md_personality"
+
+ drivers/md/dm-raid.c       |  12 +-
+ drivers/md/md-autodetect.c |   4 +-
+ drivers/md/md-bitmap.c     |  18 ++-
+ drivers/md/md-linear.c     |   2 -
+ drivers/md/md.c            | 267 ++++++++++++++++++++++---------------
+ drivers/md/md.h            |  57 ++++++--
+ drivers/md/raid5-cache.c   |  65 +++++----
+ drivers/md/raid5.c         | 100 +++-----------
+ 8 files changed, 267 insertions(+), 258 deletions(-)
+
 -- 
 2.39.2
 
