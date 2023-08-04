@@ -2,210 +2,127 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 71FF276FA01
-	for <lists+linux-raid@lfdr.de>; Fri,  4 Aug 2023 08:24:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7ED0D77006F
+	for <lists+linux-raid@lfdr.de>; Fri,  4 Aug 2023 14:46:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232563AbjHDGY0 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 4 Aug 2023 02:24:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32882 "EHLO
+        id S229766AbjHDMqZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 4 Aug 2023 08:46:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232571AbjHDGYX (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 4 Aug 2023 02:24:23 -0400
+        with ESMTP id S229649AbjHDMqY (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 4 Aug 2023 08:46:24 -0400
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF14930C0;
-        Thu,  3 Aug 2023 23:24:16 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1276EA;
+        Fri,  4 Aug 2023 05:46:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-        t=1691130253; bh=Ml+2o2coZyFwXLt1pDiShFgGa38mdGTl6NbjJ3zSPR0=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=jPL8PmVG9vYf+Dvnn6yL8DKdoJdeSVtwqngcjpDmbGCAfphQMyJ8Bld8gxFn+K3/Y
-         csrmLcih49YCU9tyCFJOAy+Hqfwjlu1fZzf+afNXBBGLycuo0p82FngYv+mZiMmEIM
-         FdkvcBhRxqIa7CbLTWIiJmLmfxHqx0BTUR3g9/Us=
-Received: from [100.100.34.13] (unknown [220.248.53.61])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+        t=1691153175; bh=9xhxTfJsmP/j0QZixW+WVMVjURciT9Pau9sHFu6Fvd8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=b21yVI5CZNtOHjmWB1AUq9p/kDLAABoY5Reuq3s+UwOtrDGrFsw89mBXf52l/mlAp
+         triEWHjAz8gIgP8BiJtSVwhoPm4I32B1AlW16midUARZdZ48MloENkTA48r2gK1/Gd
+         K+MA52aK0xA5a6pxaW0klYo2qUmgrSTwGuMVfwbk=
+Received: from ld50.lan (unknown [101.88.28.229])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 6ABE5600CE;
-        Fri,  4 Aug 2023 14:24:13 +0800 (CST)
-Message-ID: <32a2ee70-c964-5a1e-06b5-d64c43384f2c@xen0n.name>
-Date:   Fri, 4 Aug 2023 14:24:12 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.13.0
-Subject: Re: [PATCH v2 3/3] raid6: Add LoongArch SIMD recovery implementation
-Content-Language: en-US
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     Song Liu <song@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-        linux-raid@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-kernel@vger.kernel.org, WANG Xuerui <git@xen0n.name>
-References: <20230803170858.781245-1-kernel@xen0n.name>
- <20230803170858.781245-4-kernel@xen0n.name>
- <1363eb24-e209-6617-c205-19f13aa97b95@molgen.mpg.de>
+        by mailbox.box.xen0n.name (Postfix) with ESMTPSA id E16BC600A6;
+        Fri,  4 Aug 2023 20:46:12 +0800 (CST)
 From:   WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <1363eb24-e209-6617-c205-19f13aa97b95@molgen.mpg.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To:     Song Liu <song@kernel.org>
+Cc:     Huacai Chen <chenhuacai@kernel.org>, linux-raid@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+        WANG Xuerui <git@xen0n.name>
+Subject: [PATCH v3 0/3] raid5, raid6: Accelerate RAID math with LoongArch SIMD
+Date:   Fri,  4 Aug 2023 20:46:08 +0800
+Message-Id: <20230804124611.2051048-1-kernel@xen0n.name>
+X-Mailer: git-send-email 2.40.0
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+From: WANG Xuerui <git@xen0n.name>
+
 Hi,
 
-On 2023/8/4 03:49, Paul Menzel wrote:
-> Dear Xuerui,
-> 
-> 
-> Thank you for your patches.
-> 
-> 
-> Am 03.08.23 um 19:08 schrieb WANG Xuerui:
->> From: WANG Xuerui <git@xen0n.name>
->>
->> Similar to the syndrome calculation, the recovery algorithms also work
->> on 64 bytes at a time to align with the L1 cache line size of current
->> and future LoongArch cores (that we care about). Which means
->> unrolled-by-4 LSX and unrolled-by-2 LASX code.
->>
->> The assembly is originally based on the x86 SSSE3/AVX2 ports, but
->> register allocation has been redone to take advantage of LSX/LASX's 32
->> vector registers, and instruction sequence has been optimized to suit
->> (e.g. LoongArch can perform per-byte srl and andi on vectors, but x86
->> cannot).
->>
->> Performance numbers measured by instrumenting the raid6test code:
-> 
-> It’d be great, if you also documented your test setup. That’s always 
-> good for benchmarking numbers.
-> 
+Seeing the LoongArch port recently (finally!) gained the ability to use
+the vector units, I've subsequently ported the RAID5/6 math to LSX and
+LASX (which are LoongArch's 128-bit and 256-bit SIMD extensions), with
+nice speedups observed. They are reasonably straight-forward conversions
+of existing code, and I hope the comments I put in there are helpful
+enough for anyone not familiar with LoongArch assembly to get a rough
+picture of how things work here. Performance numbers are included in
+each commit's commit message.
 
-Ah they're the same as described in the previous patches: a Loongson 
-3A5000 + 7A1000 board (the Lemote A2101 board to be precise), with the 
-3A5000 clocked at 2.5GHz. I'll amend the description in v3.
+This series needs [1] ("LoongArch: Allow usage of LSX/LASX in the
+kernel") as a prerequisite, or the vector context would likely get
+corrupted by the vector-unaware kernel_fpu_{begin,end} calls. I tested
+the changes on top of next-20230731 with the raid6test build fixes [2]
+applied, but the series should apply cleanly to v6.5-rc4 (or maybe any
+other tag) too; it doesn't depend on the raid6test fixes.
+The base-commit and prerequisite-patch-id info is available for
+minimally recreating a working configuration for both the kernel and
+raid6test tool.
 
->>> lasx  2data: 354.987 MiB/s
->>> lasx  datap: 350.430 MiB/s
->>> lsx   2data: 340.026 MiB/s
->>> lsx   datap: 337.318 MiB/s
->>> intx1 2data: 164.280 MiB/s
->>> intx1 datap: 187.966 MiB/s
-> 
-> So the speed is more than doubled. Nice job! The lasx implementation is 
-> always the fastest. Is it therefore the preferred one? Or does it come 
-> with higher power consumption?
+[1]: https://lore.kernel.org/loongarch/20230722072201.2677516-1-chenhuacai@loongson.cn/
+[2]: https://lore.kernel.org/linux-raid/20230731104911.411964-1-kernel@xen0n.name/
 
-According to my experiments and other public info regarding the LA464 
-micro-architecture such as [1], this should be the case for LA464, with 
-no power consumption worries.
+Changes in v3 (no functional change):
 
-(Both LASX and LSX are handled by the same vector unit on LA464, so 
-whenever LASX is available it should be preferred, as it's LSX that 
-would be purely wasteful in this case: a full 256-bit result would get 
-computed regardless.)
+- coding style tweaks to the recovery code
+  (Patch 2 is not touched because it is much more resembling the
+  original int.uc code before unrolling.)
+- more detail in the commit message of Patch 3
 
-[1]: 
-https://chipsandcheese.com/2023/04/09/loongsons-3a5000-chinas-best-shot/
+Changes in v2 (no functional change):
 
-> 
->> Signed-off-by: WANG Xuerui <git@xen0n.name>
-> 
-> Out of curiosity, what is your “first” name?
+- minor commit message tweaks
+- changed comment style from // to /* */ throughout
 
-My first name / given name is "Xuerui"; I usually prefer having my 
-romanized name in "native-endian" whenever it's convenient ;-)
+WANG Xuerui (3):
+  LoongArch: Add SIMD-optimized XOR routines
+  raid6: Add LoongArch SIMD syndrome calculation
+  raid6: Add LoongArch SIMD recovery implementation
 
-> 
->> ---
->>   include/linux/raid/pq.h          |   2 +
->>   lib/raid6/Makefile               |   2 +-
->>   lib/raid6/algos.c                |   8 +
->>   lib/raid6/recov_loongarch_simd.c | 515 +++++++++++++++++++++++++++++++
->>   lib/raid6/test/Makefile          |   2 +-
->>   5 files changed, 527 insertions(+), 2 deletions(-)
->>   create mode 100644 lib/raid6/recov_loongarch_simd.c
-> 
-> 
-> Kind regards,
-> 
-> Paul
-> 
-> 
-> [snip]
->> +
->> +    /* Now, pick the proper data tables */
->> +    pbmul = raid6_vgfmul[raid6_gfexi[failb-faila]];
-> 
-> Should spaces be put around the operator?
+ arch/loongarch/include/asm/xor.h      |  68 ++++
+ arch/loongarch/include/asm/xor_simd.h |  42 +++
+ arch/loongarch/lib/Makefile           |   3 +
+ arch/loongarch/lib/xor_simd.c         |  93 +++++
+ arch/loongarch/lib/xor_simd.h         |  46 +++
+ arch/loongarch/lib/xor_simd_glue.c    |  71 ++++
+ arch/loongarch/lib/xor_template.c     | 110 ++++++
+ include/linux/raid/pq.h               |   4 +
+ lib/raid6/Makefile                    |   1 +
+ lib/raid6/algos.c                     |  16 +
+ lib/raid6/loongarch.h                 |  38 ++
+ lib/raid6/loongarch_simd.c            | 422 +++++++++++++++++++++
+ lib/raid6/recov_loongarch_simd.c      | 515 ++++++++++++++++++++++++++
+ lib/raid6/test/Makefile               |  12 +
+ 14 files changed, 1441 insertions(+)
+ create mode 100644 arch/loongarch/include/asm/xor.h
+ create mode 100644 arch/loongarch/include/asm/xor_simd.h
+ create mode 100644 arch/loongarch/lib/xor_simd.c
+ create mode 100644 arch/loongarch/lib/xor_simd.h
+ create mode 100644 arch/loongarch/lib/xor_simd_glue.c
+ create mode 100644 arch/loongarch/lib/xor_template.c
+ create mode 100644 lib/raid6/loongarch.h
+ create mode 100644 lib/raid6/loongarch_simd.c
+ create mode 100644 lib/raid6/recov_loongarch_simd.c
 
-Hmm, AFAICS almost all raid6 files "inherit" the scalar reference 
-implementation's coding style, that happens to differ from the 
-documented one. But given I already adjusted some of the comments, I 
-think it would be best to also touch these too. Thanks for spotting this 
-(and the others below).
 
-> 
->> +    qmul  = raid6_vgfmul[raid6_gfinv[raid6_gfexp[faila] ^
->> +        raid6_gfexp[failb]]];
->> +
->> [snip]
->> +
->> +    /* Now, pick the proper data tables */
->> +    qmul  = raid6_vgfmul[raid6_gfinv[raid6_gfexp[faila]]];
-> 
-> Only one space after qmul?
-
-As explained above; I'll fix this one and others in v3.
-
-> [snip]
->> +    /* Now, pick the proper data tables */
->> +    pbmul = raid6_vgfmul[raid6_gfexi[failb-faila]];
-> 
-> Ditto.
-> 
-> [snip]
->> +    /* Now, pick the proper data tables */
->> +    qmul  = raid6_vgfmul[raid6_gfinv[raid6_gfexp[faila]]];
-> 
-> Ditto.
-> 
-> [snip]
->> diff --git a/lib/raid6/test/Makefile b/lib/raid6/test/Makefile
->> index 7b244bce32b3d..2abe0076a636c 100644
->> --- a/lib/raid6/test/Makefile
->> +++ b/lib/raid6/test/Makefile
->> @@ -65,7 +65,7 @@ else ifeq ($(HAS_ALTIVEC),yes)
->>           OBJS += altivec1.o altivec2.o altivec4.o altivec8.o \
->>                   vpermxor1.o vpermxor2.o vpermxor4.o vpermxor8.o
->>   else ifeq ($(ARCH),loongarch64)
->> -        OBJS += loongarch_simd.o
->> +        OBJS += loongarch_simd.o recov_loongarch_simd.o
->>   endif
->>   .c.o:
-> 
-> 
-> Kind regards,
-> 
-> Paul
-> 
-> 
-> PS: I brought up the raid speed tests in the past, and Borislav called 
-> them a random number generator [1]. ;-)
-> 
-> 
-> [1]: https://lore.kernel.org/all/20210406124126.GM17806@zn.tnic/
-
-Interesting, so the reason I've yet to observe such wild fluctuations 
-may simply be that I didn't reboot that rig as many times. :D
-
-And thanks for the review! I'll send v3 some time later (and stress the 
-code more meanwhile).
-
+base-commit: 5d0c230f1de8c7515b6567d9afba1f196fb4e2f4
+prerequisite-patch-id: 85d08a9828893250ae78dbca9d6e6f8dac755f61
+prerequisite-patch-id: fe0bba41e0bbc676454365ed16fb13fc0aac6ee0
+prerequisite-patch-id: 84ef8212b74e696ce019255bbfd9679d7516f7f7
+prerequisite-patch-id: b1f8fc4e4acdaff7f821a9fcbd063475178e037b
+prerequisite-patch-id: 82aacbf27f249fdefe40dd6bcc712e5795256926
+prerequisite-patch-id: ae4e026e18f92ffcc93f6b135a3bd48fbdded39a
 -- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+2.40.0
 
