@@ -2,53 +2,53 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 93EF8772076
-	for <lists+linux-raid@lfdr.de>; Mon,  7 Aug 2023 13:15:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 293C4772255
+	for <lists+linux-raid@lfdr.de>; Mon,  7 Aug 2023 13:32:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232167AbjHGLPq (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 7 Aug 2023 07:15:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49252 "EHLO
+        id S232866AbjHGLcd (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 7 Aug 2023 07:32:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230362AbjHGLPY (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 7 Aug 2023 07:15:24 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9545F30D7
-        for <linux-raid@vger.kernel.org>; Mon,  7 Aug 2023 04:14:01 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id 98e67ed59e1d1-267f32e89a5so665987a91.0
-        for <linux-raid@vger.kernel.org>; Mon, 07 Aug 2023 04:14:01 -0700 (PDT)
+        with ESMTP id S232598AbjHGLcH (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 7 Aug 2023 07:32:07 -0400
+Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DF42E53
+        for <linux-raid@vger.kernel.org>; Mon,  7 Aug 2023 04:29:29 -0700 (PDT)
+Received: by mail-qt1-x82e.google.com with SMTP id d75a77b69052e-4053d203c07so8370881cf.0
+        for <linux-raid@vger.kernel.org>; Mon, 07 Aug 2023 04:29:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1691406791; x=1692011591;
+        d=bytedance.com; s=google; t=1691407734; x=1692012534;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=urGrhHBCGKwKuhIkQmOHRuysXuy1mToQA+AaHWoY6PY=;
-        b=gvEcin7S0wJ5rW0wtj9WnWp/4gO3FOqyEc5Qy3KVjjCOMIdl063r7goatTKMU5K63u
-         IABDDkTZbyMiPq/rwoG72XrgfLWlV6/YJwymkZtRfBVcrDOzJOk+V88T6EEEXGW6nfh0
-         le0xVwnZY7As0nXjZy+hSjIWRCXvYGRHiEKZrDZnQb7QflVpjM7uq/81aSxj3traKDGt
-         VXa/baYLLxxBhWBawSSBHT4dMsZ/NRoyUnn0XTD8JWz4/O0ULe9Suh4wohOUxiotc5cA
-         +kJEwQbIJfS1Vrk1T3/Loi8TKjO+pow/TrGBcBE2xp4OSLxBFU0bCUPycoGAdA8SsoOk
-         yeOw==
+        bh=4VJlLpDqVGiuvI83ez+3bl7yR5bVuWalBgtTU2vfBLE=;
+        b=XGyfk3IkvLUk7Hk0G8RCy+tQm4zP6nL4JV+t9pY86YfFxwIG/HeW+2wAC3/k1Xz73Z
+         9bDEiISRR5jfWBuIaVoGyNG6dh9bxKu6nA99nc3p8iUd0EMvSMrZHciSe5c9cdDCkGua
+         aZQM/coIsuGQp1ZIigwB7hd80v9iHLRXqonf6EFXUegyvyzllyt5+TZ+xIvcz8R5peI2
+         UssL+iMjPVTwrwYqz2ALM/SFXbRJjs76ZbVogXx20Yj8TKG7CG2HnuqNLmWxQoUpGdV0
+         Oe+kUf1NbE16LVGRxvUk7LhwYPws8lBQ86vrcTD6ZY2vF5yHdY9d2QZc9MdjztF/K4wu
+         3s4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691406791; x=1692011591;
+        d=1e100.net; s=20221208; t=1691407734; x=1692012534;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=urGrhHBCGKwKuhIkQmOHRuysXuy1mToQA+AaHWoY6PY=;
-        b=gqhdTh6fC0PszObj4CyGIt20knKGleDOqQWRgd1Zz+ZGBOJ94aZDE4dkSMm8eJpWHM
-         TYovfUYokHQplXtPpvnfY0U6GS4P7vHTEE+T/momCK2LG6ljKckwRQMx7R2LF1DOTMif
-         W7JRcltZpB6M7TC/XgVJeG+WaLW//VhhE9q0CWag/UMgdXM0SglOr+5RHESqXb+xkqL/
-         CNN49HuMzzzhGN6KxTl6bAfh+cXkEak5kvuccUSKVe5FMPIBrGVqQdo9LpqfQHhXLGHz
-         K+islV7NbbdnF9mQ3nwe5AD3O+jaYb1bkmAz8PtDYEUQ+PcfA8HrHapa1Gtu/aDIVQW3
-         xy5A==
-X-Gm-Message-State: ABy/qLaIiqYQAbG3PUpxj4/wg/rZHgLYY5dHHTsUbF/tWmWejfKRPs78
-        KycXEghBtbsbRHhGQY6CcwlVAA==
-X-Google-Smtp-Source: APBJJlGG9fl/KZM7Wu/aB3nA3qPBXzAgCls0ii/X4UboFM2rQSd7zbDq190u8vBbdPOZ8QFUsdy1lw==
-X-Received: by 2002:a17:90a:faf:b0:268:abc:83d5 with SMTP id 44-20020a17090a0faf00b002680abc83d5mr23478200pjz.4.1691406791204;
-        Mon, 07 Aug 2023 04:13:11 -0700 (PDT)
+        bh=4VJlLpDqVGiuvI83ez+3bl7yR5bVuWalBgtTU2vfBLE=;
+        b=NtwDWkHAUH9bRsRH2ZwiKA4qasENXWF1qjpjV31gaLnO986FQQXFR3pzmtbMBJDFaJ
+         wDLZaY9ZWNwgKjMC3tnQZuDewsoiMoM2/OyVZ3gNjL4QD/+IMqAWrWfuLw7q8pTJE5ws
+         2hD+WBlNWK28LG5ZSeaU+/Z4rPub/l6Lpo2U31G3XpWnr7WCuBVb8+0OiOZofrFO58dk
+         FuHazYHCP6mM9ihVctDT0Dv9bmRkhJ8VJBNzWBv7fQSqBdNV26/4JhUspyD/qykFexX1
+         Gptj711U+YG4QZnz7QQECN4UFStuqB3UgQjzlFf3NYSt1yZvpk2tgUJD26hSsJvSBxVh
+         pmNA==
+X-Gm-Message-State: ABy/qLY5EfkQZU5Sh74TIsX5VTqb3QlUpJ4SQVtIjFbi6qDqUlS+RyxN
+        HnoBURmyT1aTTuHGmHYWmAzMJruj+0H8QPiyCSc=
+X-Google-Smtp-Source: APBJJlG6KxjpSP18cuDMGPLwCal+2Q6XOYkRmOlR+93TSEU+QOz0TNU1VRvfHZPrdEq648UTFq+gsw==
+X-Received: by 2002:a92:d944:0:b0:349:3c78:fd14 with SMTP id l4-20020a92d944000000b003493c78fd14mr13499018ilq.1.1691406803912;
+        Mon, 07 Aug 2023 04:13:23 -0700 (PDT)
 Received: from C02DW0BEMD6R.bytedance.net ([203.208.167.146])
-        by smtp.gmail.com with ESMTPSA id y13-20020a17090aca8d00b0025be7b69d73sm5861191pjt.12.2023.08.07.04.12.58
+        by smtp.gmail.com with ESMTPSA id y13-20020a17090aca8d00b0025be7b69d73sm5861191pjt.12.2023.08.07.04.13.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Aug 2023 04:13:10 -0700 (PDT)
+        Mon, 07 Aug 2023 04:13:23 -0700 (PDT)
 From:   Qi Zheng <zhengqi.arch@bytedance.com>
 To:     akpm@linux-foundation.org, david@fromorbit.com, tkhai@ya.ru,
         vbabka@suse.cz, roman.gushchin@linux.dev, djwong@kernel.org,
@@ -71,9 +71,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
         linux-xfs@vger.kernel.org, linux-btrfs@vger.kernel.org,
         Qi Zheng <zhengqi.arch@bytedance.com>,
         Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH v4 15/48] nfsd: dynamically allocate the nfsd-filecache shrinker
-Date:   Mon,  7 Aug 2023 19:09:03 +0800
-Message-Id: <20230807110936.21819-16-zhengqi.arch@bytedance.com>
+Subject: [PATCH v4 16/48] quota: dynamically allocate the dquota-cache shrinker
+Date:   Mon,  7 Aug 2023 19:09:04 +0800
+Message-Id: <20230807110936.21819-17-zhengqi.arch@bytedance.com>
 X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 In-Reply-To: <20230807110936.21819-1-zhengqi.arch@bytedance.com>
 References: <20230807110936.21819-1-zhengqi.arch@bytedance.com>
@@ -81,79 +81,65 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Use new APIs to dynamically allocate the nfsd-filecache shrinker.
+Use new APIs to dynamically allocate the dquota-cache shrinker.
 
 Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
 Reviewed-by: Muchun Song <songmuchun@bytedance.com>
 ---
- fs/nfsd/filecache.c | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+ fs/quota/dquot.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index ee9c923192e0..9c62b4502539 100644
---- a/fs/nfsd/filecache.c
-+++ b/fs/nfsd/filecache.c
-@@ -521,11 +521,7 @@ nfsd_file_lru_scan(struct shrinker *s, struct shrink_control *sc)
- 	return ret;
+diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+index 9e72bfe8bbad..c303cffdf433 100644
+--- a/fs/quota/dquot.c
++++ b/fs/quota/dquot.c
+@@ -791,12 +791,6 @@ dqcache_shrink_count(struct shrinker *shrink, struct shrink_control *sc)
+ 	percpu_counter_read_positive(&dqstats.counter[DQST_FREE_DQUOTS]));
  }
  
--static struct shrinker	nfsd_file_shrinker = {
--	.scan_objects = nfsd_file_lru_scan,
--	.count_objects = nfsd_file_lru_count,
--	.seeks = 1,
+-static struct shrinker dqcache_shrinker = {
+-	.count_objects = dqcache_shrink_count,
+-	.scan_objects = dqcache_shrink_scan,
+-	.seeks = DEFAULT_SEEKS,
 -};
-+static struct shrinker *nfsd_file_shrinker;
+-
+ /*
+  * Safely release dquot and put reference to dquot.
+  */
+@@ -2956,6 +2950,7 @@ static int __init dquot_init(void)
+ {
+ 	int i, ret;
+ 	unsigned long nr_hash, order;
++	struct shrinker *dqcache_shrinker;
  
- /**
-  * nfsd_file_cond_queue - conditionally unhash and queue a nfsd_file
-@@ -746,12 +742,19 @@ nfsd_file_cache_init(void)
- 		goto out_err;
- 	}
+ 	printk(KERN_NOTICE "VFS: Disk quotas %s\n", __DQUOT_VERSION__);
  
--	ret = register_shrinker(&nfsd_file_shrinker, "nfsd-filecache");
--	if (ret) {
--		pr_err("nfsd: failed to register nfsd_file_shrinker: %d\n", ret);
-+	nfsd_file_shrinker = shrinker_alloc(0, "nfsd-filecache");
-+	if (!nfsd_file_shrinker) {
-+		ret = -ENOMEM;
-+		pr_err("nfsd: failed to allocate nfsd_file_shrinker\n");
- 		goto out_lru;
- 	}
+@@ -2990,8 +2985,15 @@ static int __init dquot_init(void)
+ 	pr_info("VFS: Dquot-cache hash table entries: %ld (order %ld,"
+ 		" %ld bytes)\n", nr_hash, order, (PAGE_SIZE << order));
  
-+	nfsd_file_shrinker->count_objects = nfsd_file_lru_count;
-+	nfsd_file_shrinker->scan_objects = nfsd_file_lru_scan;
-+	nfsd_file_shrinker->seeks = 1;
+-	if (register_shrinker(&dqcache_shrinker, "dquota-cache"))
+-		panic("Cannot register dquot shrinker");
++	dqcache_shrinker = shrinker_alloc(0, "dquota-cache");
++	if (!dqcache_shrinker)
++		panic("Cannot allocate dquot shrinker");
 +
-+	shrinker_register(nfsd_file_shrinker);
++	dqcache_shrinker->count_objects = dqcache_shrink_count;
++	dqcache_shrinker->scan_objects = dqcache_shrink_scan;
++	dqcache_shrinker->seeks = DEFAULT_SEEKS;
 +
- 	ret = lease_register_notifier(&nfsd_file_lease_notifier);
- 	if (ret) {
- 		pr_err("nfsd: unable to register lease notifier: %d\n", ret);
-@@ -774,7 +777,7 @@ nfsd_file_cache_init(void)
- out_notifier:
- 	lease_unregister_notifier(&nfsd_file_lease_notifier);
- out_shrinker:
--	unregister_shrinker(&nfsd_file_shrinker);
-+	shrinker_free(nfsd_file_shrinker);
- out_lru:
- 	list_lru_destroy(&nfsd_file_lru);
- out_err:
-@@ -891,7 +894,7 @@ nfsd_file_cache_shutdown(void)
- 		return;
++	shrinker_register(dqcache_shrinker);
  
- 	lease_unregister_notifier(&nfsd_file_lease_notifier);
--	unregister_shrinker(&nfsd_file_shrinker);
-+	shrinker_free(nfsd_file_shrinker);
- 	/*
- 	 * make sure all callers of nfsd_file_lru_cb are done before
- 	 * calling nfsd_file_cache_purge
+ 	return 0;
+ }
 -- 
 2.30.2
 
