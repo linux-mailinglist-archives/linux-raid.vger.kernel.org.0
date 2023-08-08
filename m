@@ -2,15 +2,15 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50159773B11
-	for <lists+linux-raid@lfdr.de>; Tue,  8 Aug 2023 17:40:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 323F1773B0A
+	for <lists+linux-raid@lfdr.de>; Tue,  8 Aug 2023 17:38:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229854AbjHHPkw (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 8 Aug 2023 11:40:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36178 "EHLO
+        id S229505AbjHHPiN (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 8 Aug 2023 11:38:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229757AbjHHPkj (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 8 Aug 2023 11:40:39 -0400
+        with ESMTP id S229500AbjHHPhO (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 8 Aug 2023 11:37:14 -0400
 Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
         by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A838212C
         for <linux-raid@vger.kernel.org>; Mon,  7 Aug 2023 20:32:28 -0700 (PDT)
