@@ -2,111 +2,83 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7804777B4AD
-	for <lists+linux-raid@lfdr.de>; Mon, 14 Aug 2023 10:52:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F12F077B56E
+	for <lists+linux-raid@lfdr.de>; Mon, 14 Aug 2023 11:28:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232651AbjHNIwF (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 14 Aug 2023 04:52:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59474 "EHLO
+        id S236451AbjHNJ2H (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 14 Aug 2023 05:28:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232618AbjHNIvf (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 14 Aug 2023 04:51:35 -0400
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DFD7BB
-        for <linux-raid@vger.kernel.org>; Mon, 14 Aug 2023 01:51:33 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-686b643df5dso2703260b3a.1
-        for <linux-raid@vger.kernel.org>; Mon, 14 Aug 2023 01:51:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smartx-com.20221208.gappssmtp.com; s=20221208; t=1692003093; x=1692607893;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YxJk6xFqYMyd2Arn2NrhuCFZq+WpZgkUoQ8LNr9Tn9U=;
-        b=z5A8Mq4DNvfueMGNESjXSgyINye8JiOBGqS52Pev9HPBvM92wTI5rIirLp4+3Ba05K
-         mYt/q7CW4HAw2q0lf0j5Nf+tPk3yLojMzTgROrMiDcReIaHgN+yxF4YFIZ3ZoRoHzi75
-         n7Y7/euENKy16U3HhoVU505CIJRsYCyFljQyHZztAtfNYP/vkUlVNwIbWTehA66cgw7H
-         Jskl+CS9hW0ydPYxtN/F5ppz0GHVkVUGfp1YrdaFZHRC5w9aofpLh2ZLvm8HrrwMGJTD
-         eUwfonluEOKh4q1XEV88otDrmiT9I6ZLDrMzHjs4NulcH/amhMGJeV7+E6S6M1l1Mvfy
-         UeNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692003093; x=1692607893;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YxJk6xFqYMyd2Arn2NrhuCFZq+WpZgkUoQ8LNr9Tn9U=;
-        b=Lt2ANGo8a3NnwV0mWMNagQATagt3GhnanfLzT9WJxRUlvr9ExJrNRU9HpDyu5lQ7GN
-         cakDLKH6npvwxRAJ+rOP4VrvRgtVCWwVu//Zg/rFKsIslWQS/jz09/p1ED+gVFx04G0t
-         +IbIsUfijQRjwtBPFrKlcsLm1PMzbHJiusbZy0/+l9t1AJVh7RJ36HVcYrKHtFEmoMVg
-         gtm6dShmIaibwl2mlw+PzVFLznPyvq0U4i+jHEfFoj7F17Wm40jAs7XDKuiT+GlBBogY
-         SWxjrhanjIKpsXS8XHR1ArVIUgC8okr+3zr5cs245bI25LAeX3puGL9w54LGte4gExcA
-         zaWA==
-X-Gm-Message-State: AOJu0Yx8xQbuBLzAdgPC/3PAQ9R1zt9FodpmVx7ECZExXyiMHkzbxZe1
-        HxTRr7B5q/FAviAtsLbQKZb5/+UXpHOsOvdOGw10yHaI
-X-Google-Smtp-Source: AGHT+IGHQVtpLPTqgN4QjmWjMMR3idbTYDD0RytfRBFJfQYjuDrXNv9n5xJ+Ib0oOBvhsxKvIxQt3Q==
-X-Received: by 2002:a05:6a20:3947:b0:135:293b:efaf with SMTP id r7-20020a056a20394700b00135293befafmr10826465pzg.10.1692003092968;
-        Mon, 14 Aug 2023 01:51:32 -0700 (PDT)
-Received: from nixos.tailf4e9e.ts.net ([47.75.78.161])
-        by smtp.googlemail.com with ESMTPSA id fk1-20020a056a003a8100b006765cb3255asm7439668pfb.68.2023.08.14.01.51.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Aug 2023 01:51:32 -0700 (PDT)
-From:   Xueshi Hu <xueshi.hu@smartx.com>
-To:     song@kernel.org, djeffery@redhat.com, dan.j.williams@intel.com,
-        neilb@suse.de, akpm@linux-foundation.org, neilb@suse.com
-Cc:     linux-raid@vger.kernel.org, Xueshi Hu <xueshi.hu@smartx.com>
-Subject: [PATCH v5 3/3] md/raid1: keep the barrier held until handle_read_error() finished
-Date:   Mon, 14 Aug 2023 16:51:08 +0800
-Message-Id: <20230814085108.991040-4-xueshi.hu@smartx.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230814085108.991040-1-xueshi.hu@smartx.com>
-References: <20230814085108.991040-1-xueshi.hu@smartx.com>
+        with ESMTP id S236103AbjHNJ1y (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 14 Aug 2023 05:27:54 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A37D10E5
+        for <linux-raid@vger.kernel.org>; Mon, 14 Aug 2023 02:27:23 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 46FD41FD5F;
+        Mon, 14 Aug 2023 09:27:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1692005241; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=WPCecHx/X5o2QLBa71xyOJ5n76FRecdKSSeNuEogV0U=;
+        b=DN5/tzOT+vDmtmp1co5amWhbl6JemKKeCJc68g3oUwPde7AuvEYvDXQq/lL47RisIZMg0o
+        DG4PaX9plNsDwHRUVAXpv8j95JCE+YUJ800OsNSYyl2TFfgDF1KVsW1fpWBjMSjxJXbpKP
+        a19DFkEsuXnQiat1uBp7C3hHh1uDgNs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1692005241;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=WPCecHx/X5o2QLBa71xyOJ5n76FRecdKSSeNuEogV0U=;
+        b=XkF0CYSyfDBxfyo2gqQgFMv502zIwTRDSBWzbMupxkAbAm4yUEjjAC9lPMeqDZXJMiD7lm
+        UyGXruZ47FU1OKCA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3370E13AA6;
+        Mon, 14 Aug 2023 09:27:21 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id hoo5DHnz2WRKbAAAMHmgww
+        (envelope-from <jack@suse.cz>); Mon, 14 Aug 2023 09:27:21 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+        id 6C793A0769; Mon, 14 Aug 2023 11:27:20 +0200 (CEST)
+From:   Jan Kara <jack@suse.cz>
+To:     Song Liu <song@kernel.org>
+Cc:     linux-raid@vger.kernel.org, Neil Brown <neilb@suse.de>,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH 0/2] md/raid0: Fix performance regression for large sequential IO
+Date:   Mon, 14 Aug 2023 11:27:06 +0200
+Message-Id: <20230814091452.9670-1-jack@suse.cz>
+X-Mailer: git-send-email 2.35.3
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=795; i=jack@suse.cz; h=from:subject:message-id; bh=+/3G/Eb6HMaomoT23p+VYSEUj01IlUGXx+HeU5Zuo80=; b=owGbwMvMwME4Z+4qdvsUh5uMp9WSGFJufo4r2VPX90l04XPW/QKSx39bRThcDHjHt/Nu3cOTTPrn ixTNOxmNWRgYORhkxRRZVkde1L42z6hra6iGDMwgViaQKQxcnAJwERMOhrkXam9sNpDVkTTtOCYgaW v8yjhG81LgxC0az+fqS/0RZp0R11RVNy+Q/UaT7EyxWXb3NM+GNa9VdYv37vCc1BlU/3hducdz+/Nq 01dPSe89qPqedaXOyRcl3lemqp+VPF6u63jqUaCRXnSZ8Kk3N0PbtJ3uTC3TnthQWrr6xOborA0yHR mewcxC+kHemYuFH11wYv+z91/JLR7TlTNsX/Ll3O51Pqv2it/36UPXvun8HrbMDya0q7EHKb3VvzJ9 12nR+MJnazTu+XXqnWgxZ/tfoGS4eIqTvP+BkK7HJT++5X9ZnFxV+WXD7Mn3YvKrHNZvXTmXT9myvv PTjTM/Gt4oNsTbX/x+VSN140QWAA==
+X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_SOFTFAIL autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-handle_read_error() will call allow_barrier() to match the former barrier
-raising. However, it should put the allow_barrier() at the end to avoid an
-concurrent raid reshape.
+Hello,
 
-Fixes: 689389a06ce7 ("md/raid1: simplify handle_read_error().")
-Signed-off-by: Xueshi Hu <xueshi.hu@smartx.com>
----
- drivers/md/raid1.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+one of our customers reported a noticeable performance regression with his
+raid0 setup after updating to newer kernels. After investigation of the block
+traces it was obvious that raid0 code generates very suboptimal IO pattern for
+large requests that are not properly aligned to the raid chunk boundary (see
+patch 2 for detailed description). The regression has been introduced already 6
+years ago by commit f00d7c85be9e ("md/raid0: fix up bio splitting.") but likely
+because it requires multimegabyte requests (only possible after multipage bvec
+work) which are not aligned to the chunk boundary (which is usually possible
+only if the filesystems are created with suboptimal parameters) it went
+unnoticed for a long time. These patches fix the regression.
 
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 5f17f30a00a9..5a5eb5f1a224 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -2499,6 +2499,7 @@ static void handle_read_error(struct r1conf *conf, struct r1bio *r1_bio)
- 	struct mddev *mddev = conf->mddev;
- 	struct bio *bio;
- 	struct md_rdev *rdev;
-+	sector_t sector;
- 
- 	clear_bit(R1BIO_ReadError, &r1_bio->state);
- 	/* we got a read error. Maybe the drive is bad.  Maybe just
-@@ -2528,12 +2529,13 @@ static void handle_read_error(struct r1conf *conf, struct r1bio *r1_bio)
- 	}
- 
- 	rdev_dec_pending(rdev, conf->mddev);
--	allow_barrier(conf, r1_bio->sector);
-+	sector = r1_bio->sector;
- 	bio = r1_bio->master_bio;
- 
- 	/* Reuse the old r1_bio so that the IO_BLOCKED settings are preserved */
- 	r1_bio->state = 0;
- 	raid1_read_request(mddev, bio, r1_bio->sectors, r1_bio);
-+	allow_barrier(conf, sector);
- }
- 
- static void raid1d(struct md_thread *thread)
--- 
-2.40.1
-
+								Honza
