@@ -2,60 +2,60 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23F8A77B4A7
-	for <lists+linux-raid@lfdr.de>; Mon, 14 Aug 2023 10:52:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85BCA77B4AA
+	for <lists+linux-raid@lfdr.de>; Mon, 14 Aug 2023 10:52:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232731AbjHNIvb (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 14 Aug 2023 04:51:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37322 "EHLO
+        id S229762AbjHNIwD (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 14 Aug 2023 04:52:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234072AbjHNIv3 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 14 Aug 2023 04:51:29 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6301BF
-        for <linux-raid@vger.kernel.org>; Mon, 14 Aug 2023 01:51:28 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-686ba97e4feso3959974b3a.0
-        for <linux-raid@vger.kernel.org>; Mon, 14 Aug 2023 01:51:28 -0700 (PDT)
+        with ESMTP id S231764AbjHNIvb (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 14 Aug 2023 04:51:31 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E4D791
+        for <linux-raid@vger.kernel.org>; Mon, 14 Aug 2023 01:51:31 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-687ca37628eso3950705b3a.1
+        for <linux-raid@vger.kernel.org>; Mon, 14 Aug 2023 01:51:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smartx-com.20221208.gappssmtp.com; s=20221208; t=1692003088; x=1692607888;
+        d=smartx-com.20221208.gappssmtp.com; s=20221208; t=1692003090; x=1692607890;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JYH9G+Wt6Ub5OE4dUzW+0/2J+mzsvG/nR+TsZwqDITw=;
-        b=JQO8nPP8tAnsFE77Kf75i+mjqeukEdDjug3P4Ol03TUmYpMuFw08d6qmjt8z85xX84
-         DhAJ1cWO3ml+FTvguVtxQcEDgxtV/vbXlea6TL7TpmYbaxW3UnLG6ajVROQwlwf7fG6D
-         Y87BcshvQeHHfoqMX2rcvbhNyqoLUk5i7gbOuh6eAebrOc/tSe8A4vo/5xwJ/6Qbowr4
-         NvNYSFidlYFOPMdAaaiFTZiUTgaG9MXk7H9nyBxsAa/N/27xuT6pgV2/5p/ssR1DKBdY
-         YAEpzBGP/o48F6icTFiu14y3MW7ujidz0Dy/+KBkEyZ8zrI2+1aqamCi0S1DK0PBraEK
-         xrEA==
+        bh=CWWBCzOt57+qvyHkw3KX99OkaI9d/CMtTn9A66pF5gI=;
+        b=mejzojIkIqugIpRepLf04mfYDF9dICV+jihyazhmfuNWTFgqoBNxuTrdmMhIDGrwRb
+         2WKpadrJQJ6ZW0z8GrlhlNHbQP5vhYpfqcUTfBMD4iwAUaNlSSTpQg4XCI6MV5IIDs8j
+         HDpf2dg5fw8vHjkL1swaV6h6VpNJ9UKA3RkOyiJeLOXS+V3WWfAA3sYkWja4cftgFi58
+         WX0Tj5BPkX3eKNpDCJBr+Cz0TLl7IXjOCt5JdR528qBwLllra+DMC0oq61N8pg5E3zg0
+         2d04B5812Fn51nMku/euwQXDXilj+WsFPI45Pf2fWm6SPfLuCqTejE5LZoKuTjYaryqi
+         ohyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692003088; x=1692607888;
+        d=1e100.net; s=20221208; t=1692003090; x=1692607890;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JYH9G+Wt6Ub5OE4dUzW+0/2J+mzsvG/nR+TsZwqDITw=;
-        b=LvJD0Km9EC0p32PHwlG2g+pL9pgcwakGzGE01oqm76BZZCvVD9fcM1Ty/NvxIBtzXN
-         EIavmhgUFuVpOMXn5Kaz5+/fQNsEzKT3SYQmoNcm28Ksg/Ix6oDTDPQUYY+nEhyS0cOV
-         yaMHwOmT7aCH4Q4YIkorv91jpojxRFqsQlsVnEi5ttoXDqKOWjixlB0XLP2h98rXIeJU
-         LSHOtERnj7pQYCYxjWd9MUJIlVmMbvTBrsQCMYQEDrAAcHYOYdlbLTyJGx00Uprjz6D2
-         chx10OiKoI+hPjGPcCy8WND4ewU4HMBSa29gXahq1FqGnPcz9FT9Lq9Mv4643YdxC+pv
-         aNTQ==
-X-Gm-Message-State: AOJu0YzyyND42AJcovPkuXxWUXNT3mfo3YduGQn3H7lh8eXezQjhXm6X
-        9ljvBubSvMnWW0Nj9hHJtoZTkaTXgU9wJm7Z+yUCTGXY
-X-Google-Smtp-Source: AGHT+IHZDM8HenNPnRE++mOH5+KBAfHhah9kpsKQN6+Zf0AaG1BybiZV0OMykyj25Id8DA8VUNSLEw==
-X-Received: by 2002:a05:6a20:431a:b0:13f:9232:fd39 with SMTP id h26-20020a056a20431a00b0013f9232fd39mr13073181pzk.53.1692003087859;
-        Mon, 14 Aug 2023 01:51:27 -0700 (PDT)
+        bh=CWWBCzOt57+qvyHkw3KX99OkaI9d/CMtTn9A66pF5gI=;
+        b=CoUzxRFo0ukTsP/vkwX5Zp75iWaemrj98Oxh0r+71o2jbLQxXEVEvgOsDS/Vg70C8P
+         anY1/PyAjZ/yFJ6qjdHEgIvHwVW1Ac2Y8glHYk+1U8mQvht6Wi+FKGoEojNRQn2iD6CH
+         dUYJBUyqifLjttnWP5K2PtVJq0Lxa6cYG7O8ofAzwqSpSl8BwE4UW6GvGddaBVbQxgBo
+         b8XrO8R0YRXBcqAuOYfMMoZB7gKgooS9rvZwre0KhWp8AFsF68wWiqTFdQBAbiWfzYgj
+         foJx/FLA90aRoBZwzOtUW067HR50Z1oE1NjUfgvh3pUzHMLZY1tBQbeuD1NIk7LUSpUY
+         z8vA==
+X-Gm-Message-State: AOJu0YzVasxJRrqIdhH2XBk3E5Ra6XyksTuk+0siO3m+QhfABL18BwZT
+        yIqU0ZKVh+ZDu10+hSMG9C9Wag==
+X-Google-Smtp-Source: AGHT+IH7woDi33QaVWN03ikKJs4yTs6CqRRl+gJUknPZ0PQEYbDodRnzDK9Yj9n6uUL3IsDWkLJbWA==
+X-Received: by 2002:a05:6a20:938c:b0:13a:6bca:7a84 with SMTP id x12-20020a056a20938c00b0013a6bca7a84mr14198342pzh.44.1692003090509;
+        Mon, 14 Aug 2023 01:51:30 -0700 (PDT)
 Received: from nixos.tailf4e9e.ts.net ([47.75.78.161])
-        by smtp.googlemail.com with ESMTPSA id fk1-20020a056a003a8100b006765cb3255asm7439668pfb.68.2023.08.14.01.51.25
+        by smtp.googlemail.com with ESMTPSA id fk1-20020a056a003a8100b006765cb3255asm7439668pfb.68.2023.08.14.01.51.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Aug 2023 01:51:27 -0700 (PDT)
+        Mon, 14 Aug 2023 01:51:30 -0700 (PDT)
 From:   Xueshi Hu <xueshi.hu@smartx.com>
 To:     song@kernel.org, djeffery@redhat.com, dan.j.williams@intel.com,
         neilb@suse.de, akpm@linux-foundation.org, neilb@suse.com
 Cc:     linux-raid@vger.kernel.org, Xueshi Hu <xueshi.hu@smartx.com>
-Subject: [PATCH v5 1/3] md/raid1: call free_r1bio() before allow_barrier()
-Date:   Mon, 14 Aug 2023 16:51:06 +0800
-Message-Id: <20230814085108.991040-2-xueshi.hu@smartx.com>
+Subject: [PATCH v5 2/3] md/raid1: free the r1bio firstly before waiting for blocked rdev
+Date:   Mon, 14 Aug 2023 16:51:07 +0800
+Message-Id: <20230814085108.991040-3-xueshi.hu@smartx.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230814085108.991040-1-xueshi.hu@smartx.com>
 References: <20230814085108.991040-1-xueshi.hu@smartx.com>
@@ -70,46 +70,46 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-After allow_barrier(), an concurrent raid1_reshape() will replace old
-mempool and r1conf::raid_disks, which are necessary when freeing the
-r1bio. Change the execution order of free_r1bio() and allow_barrier() so
-that kernel can free r1bio safely.
+Raid1 reshape will change mempool and r1conf::raid_disks which are 
+necessary when freeing r1bio. allow_barrier() make an concurrent 
+raid1_reshape() possible. So, free the in-flight r1bio firstly before
+waiting blocked rdev. 
 
-Fixes: c91114c2b89d ("md/raid1: release pending accounting for an I/O only after write-behind is also finished")
+Fixes: 6bfe0b499082 ("md: support blocking writes to an array on device failure")
 Signed-off-by: Xueshi Hu <xueshi.hu@smartx.com>
 ---
- drivers/md/raid1.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/md/raid1.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index dd25832eb045..dbbee0c14a5b 100644
+index dbbee0c14a5b..5f17f30a00a9 100644
 --- a/drivers/md/raid1.c
 +++ b/drivers/md/raid1.c
-@@ -313,6 +313,7 @@ static void raid_end_bio_io(struct r1bio *r1_bio)
- {
- 	struct bio *bio = r1_bio->master_bio;
- 	struct r1conf *conf = r1_bio->mddev->private;
-+	sector_t sector = r1_bio->sector;
- 
- 	/* if nobody has done the final endio yet, do it now */
- 	if (!test_and_set_bit(R1BIO_Returned, &r1_bio->state)) {
-@@ -323,13 +324,13 @@ static void raid_end_bio_io(struct r1bio *r1_bio)
- 
- 		call_bio_endio(r1_bio);
+@@ -1374,6 +1374,7 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
+ 		return;
  	}
-+
-+	free_r1bio(r1_bio);
- 	/*
- 	 * Wake up any possible resync thread that waits for the device
- 	 * to go idle.  All I/Os, even write-behind writes, are done.
- 	 */
--	allow_barrier(conf, r1_bio->sector);
--
--	free_r1bio(r1_bio);
-+	allow_barrier(conf, sector);
- }
  
- /*
++ retry_write:
+ 	r1_bio = alloc_r1bio(mddev, bio);
+ 	r1_bio->sectors = max_write_sectors;
+ 
+@@ -1389,7 +1390,6 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
+ 	 */
+ 
+ 	disks = conf->raid_disks * 2;
+- retry_write:
+ 	blocked_rdev = NULL;
+ 	rcu_read_lock();
+ 	max_sectors = r1_bio->sectors;
+@@ -1469,7 +1469,7 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
+ 		for (j = 0; j < i; j++)
+ 			if (r1_bio->bios[j])
+ 				rdev_dec_pending(conf->mirrors[j].rdev, mddev);
+-		r1_bio->state = 0;
++		free_r1bio(r1_bio);
+ 		allow_barrier(conf, bio->bi_iter.bi_sector);
+ 
+ 		if (bio->bi_opf & REQ_NOWAIT) {
 -- 
 2.40.1
 
