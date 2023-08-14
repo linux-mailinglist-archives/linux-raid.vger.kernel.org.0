@@ -2,70 +2,61 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DC0B77B570
-	for <lists+linux-raid@lfdr.de>; Mon, 14 Aug 2023 11:29:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B61D677B5E9
+	for <lists+linux-raid@lfdr.de>; Mon, 14 Aug 2023 12:04:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233592AbjHNJ2j (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 14 Aug 2023 05:28:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50466 "EHLO
+        id S234555AbjHNKD1 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 14 Aug 2023 06:03:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236285AbjHNJ2G (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 14 Aug 2023 05:28:06 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 921A8E77
-        for <linux-raid@vger.kernel.org>; Mon, 14 Aug 2023 02:27:50 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        with ESMTP id S235120AbjHNKDF (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 14 Aug 2023 06:03:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D6DF101;
+        Mon, 14 Aug 2023 03:03:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 4B5641FD60;
-        Mon, 14 Aug 2023 09:27:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1692005241; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MLf4dsN/4HaX73SrOX4tPPdgwuMr94/niyIot57MHUU=;
-        b=vu5696MuxiQGbl9YPVd2vKt6SwKMn7PxcTVXF5qi3FQY7W23ea9uvvhdr9Qt3Kr38uNWyd
-        al82HRYh75dr+rypQehFZXKkujj7LzzluZNqS0JW1kDq1CqMqWW1+vwdQl0ELCd3FtUQQE
-        XDPy40m/1dyVuk2O0nOkRuQkRu9a2oQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1692005241;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MLf4dsN/4HaX73SrOX4tPPdgwuMr94/niyIot57MHUU=;
-        b=5LgxoQ+XaveT+zRFv5QtQctba7y9iPsCFB96Xy0U4gYdq3u9TbArRATNdwggwRXRCG6lND
-        JkolL46uLvnxWrAw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 39BF213AA7;
-        Mon, 14 Aug 2023 09:27:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id JZ4RDnnz2WRObAAAMHmgww
-        (envelope-from <jack@suse.cz>); Mon, 14 Aug 2023 09:27:21 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id 76E8BA0775; Mon, 14 Aug 2023 11:27:20 +0200 (CEST)
-From:   Jan Kara <jack@suse.cz>
-To:     Song Liu <song@kernel.org>
-Cc:     linux-raid@vger.kernel.org, Neil Brown <neilb@suse.de>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 2/2] md/raid0: Fix performance regression for large sequential writes
-Date:   Mon, 14 Aug 2023 11:27:08 +0200
-Message-Id: <20230814092720.3931-2-jack@suse.cz>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20230814091452.9670-1-jack@suse.cz>
-References: <20230814091452.9670-1-jack@suse.cz>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 31F8C630C6;
+        Mon, 14 Aug 2023 10:03:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9188EC433C7;
+        Mon, 14 Aug 2023 10:03:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692007382;
+        bh=2baMMu10BTlNnRlxChQfVIeEOTLRrj+HEavQv1/cdkQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mD+eO47ww0TjWGYkWoRRgmlJgZGJpk8k/6//YxxKruk1Xm8RqwiwHwWWN6pgMiwJF
+         u1BV6xCM0wF+476kJxKKWCnI1wqEaZoRbbf0dZSW3z0TpThf71DZCAy2Upsmzuv1ch
+         CtrDU6EHpRBjbXkb/dZajgD2E3fCYYTntS18wyYZ8wXwsSt6yQiYhntWHgpY02imp3
+         p6O2UEFDUX1fPjMi09gmBBTPqsvbKjklsUn823pHm10K5nBJMyzZjISD9XjauRmQcF
+         a1c5enC8uzSiM68KWJqqHnp3nEkyvv+e1WhxkAYT9/ez/ss6A+IZYu1n2T34I2J5kb
+         RjV91UQsBIQPw==
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-4fe2d152f62so6660617e87.0;
+        Mon, 14 Aug 2023 03:03:02 -0700 (PDT)
+X-Gm-Message-State: AOJu0YxSITZtIZcDMNQgFY7Tjj6/Tz/tq386K01G936V4038YqmhGkq9
+        W0cmViy3Iy65PvGyqUopo+nlR74IvuZHlkEX1WU=
+X-Google-Smtp-Source: AGHT+IEioZDUAppLUKgxk9zLKuOj7vrg5iTnjd/frXnKrVo9ytuRU76uz08sWmD3r1FEcWHAXAo7oHMogeDhKSDg774=
+X-Received: by 2002:a05:6512:3b08:b0:4fe:82c:5c8a with SMTP id
+ f8-20020a0565123b0800b004fe082c5c8amr7285763lfv.58.1692007380508; Mon, 14 Aug
+ 2023 03:03:00 -0700 (PDT)
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3248; i=jack@suse.cz; h=from:subject; bh=7ampjRduZyHKAVEtuJBNxWHOUxJWLU2eh6Z3RGx8LdE=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBk2fNrxcCeIoHBDkXCfmmvVx6QESJrrQikEricr/5V R/5F8z+JATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCZNnzawAKCRCcnaoHP2RA2bIyCA Cmi3RKUFzAasCVsfSFYcPEiUQ6wsFwbeSXSAm00X4qxnSG7ovd5WNu2Lw5hnIqCXuNYDf+9C0Ra5JK QsTafD6E90OZ0Rm6Bc1BQEXwp47ghyOvrzrjhgr9qbNdo3GA7twL1i4KK+z0zsGWE3hc8+fXqwHmFb mwJR57SRv5t1lrgYZfaLWpY4I0GxVorIceV9cdkGjCcWbUTBSvdcMFY1dpsOfeI6Svpl9efYP8ODpQ NDdciKmda4LCDLLAuVDFadZwaPA+EgYNBMJpLYR4jh0aLEw68Ni22BKnCKfOMYtRDDWCalPewYRHz7 odl5Mdg/s59phdbd/zf9qmEpfSfwyD
-X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+References: <20230803132426.2688608-1-yukuai1@huaweicloud.com> <20230803132426.2688608-2-yukuai1@huaweicloud.com>
+In-Reply-To: <20230803132426.2688608-2-yukuai1@huaweicloud.com>
+From:   Song Liu <song@kernel.org>
+Date:   Mon, 14 Aug 2023 18:02:46 +0800
+X-Gmail-Original-Message-ID: <CAPhsuW5m0bzO_FKw4VxE9S4KK6p7EZaffX+ZoYJZ6VGZQrf1hQ@mail.gmail.com>
+Message-ID: <CAPhsuW5m0bzO_FKw4VxE9S4KK6p7EZaffX+ZoYJZ6VGZQrf1hQ@mail.gmail.com>
+Subject: Re: [PATCH -next 01/13] md: remove rdev flag 'RemoveSynchronized'
+To:     Yu Kuai <yukuai1@huaweicloud.com>, NeilBrown <neil@brown.name>,
+        NeilBrown <neilb@suse.de>
+Cc:     xni@redhat.com, linux-raid@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yukuai3@huawei.com,
+        yi.zhang@huawei.com, yangerkun@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,81 +64,228 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Commit f00d7c85be9e ("md/raid0: fix up bio splitting.") among other
-things changed how bio that needs to be split is submitted. Before this
-commit, we have split the bio, mapped and submitted each part. After
-this commit, we map only the first part of the split bio and submit the
-second part unmapped. Due to bio sorting in __submit_bio_noacct() this
-results in the following request ordering:
++ Neil
 
-  9,0   18     1181     0.525037895 15995  Q  WS 1479315464 + 63392
+RemoveSynchronized was added by Neil not too long ago. I wonder whether
+we still need it in some cases (large raid10 losing a large set of disks).
 
-  Split off chunk-sized (1024 sectors) request:
+Thanks,
+Song
 
-  9,0   18     1182     0.629019647 15995  X  WS 1479315464 / 1479316488
 
-  Request is unaligned to the chunk so it's split in
-  raid0_make_request().  This is the first part mapped and punted to
-  bio_list:
-
-  8,0   18     7053     0.629020455 15995  A  WS 739921928 + 1016 <- (9,0) 1479315464
-
-  Now raid0_make_request() returns, second part is postponed on
-  bio_list. __submit_bio_noacct() resorts the bio_list, mapped request
-  is submitted to the underlying device:
-
-  8,0   18     7054     0.629022782 15995  G  WS 739921928 + 1016
-
-  Now we take another request from the bio_list which is the remainder
-  of the original huge request. Split off another chunk-sized bit from
-  it and the situation repeats:
-
-  9,0   18     1183     0.629024499 15995  X  WS 1479316488 / 1479317512
-  8,16  18     6998     0.629025110 15995  A  WS 739921928 + 1016 <- (9,0) 1479316488
-  8,16  18     6999     0.629026728 15995  G  WS 739921928 + 1016
-  ...
-  9,0   18     1184     0.629032940 15995  X  WS 1479317512 / 1479318536 [libnetacq-write]
-  8,0   18     7059     0.629033294 15995  A  WS 739922952 + 1016 <- (9,0) 1479317512
-  8,0   18     7060     0.629033902 15995  G  WS 739922952 + 1016
-  ...
-
-  This repeats until we consume the whole original huge request. Now we
-  finally get to processing the second parts of the split off requests
-  (in reverse order):
-
-  8,16  18     7181     0.629161384 15995  A  WS 739952640 + 8 <- (9,0) 1479377920
-  8,0   18     7239     0.629162140 15995  A  WS 739952640 + 8 <- (9,0) 1479376896
-  8,16  18     7186     0.629163881 15995  A  WS 739951616 + 8 <- (9,0) 1479375872
-  8,0   18     7242     0.629164421 15995  A  WS 739951616 + 8 <- (9,0) 1479374848
-  ...
-
-I guess it is obvious that this IO pattern is extremely inefficient way
-to perform sequential IO. It also makes bio_list to grow to rather long
-lengths.
-
-Change raid0_make_request() to map both parts of the split bio. Since we
-know we are provided with at most chunk-sized bios, we will always need
-to split the incoming bio at most once.
-
-Fixes: f00d7c85be9e ("md/raid0: fix up bio splitting.")
-Signed-off-by: Jan Kara <jack@suse.cz>
----
- drivers/md/raid0.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
-index d3c55f2e9b18..595856948dff 100644
---- a/drivers/md/raid0.c
-+++ b/drivers/md/raid0.c
-@@ -626,7 +626,7 @@ static bool raid0_make_request(struct mddev *mddev, struct bio *bio)
- 		struct bio *split = bio_split(bio, sectors, GFP_NOIO,
- 					      &mddev->bio_set);
- 		bio_chain(split, bio);
--		submit_bio_noacct(bio);
-+		raid0_map_submit_bio(mddev, bio);
- 		bio = split;
- 	}
- 
--- 
-2.35.3
-
+On Thu, Aug 3, 2023 at 9:27=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.com> wr=
+ote:
+>
+> From: Yu Kuai <yukuai3@huawei.com>
+>
+> When multiple rdevs are removed from array in remove_and_add_spares(),
+> which is only possible from daemon thread(user can only remove one rdev
+> through ioctl/sysfs at one time), the flag is used to avoid calling
+> synchronize_rcu() multiple times for each rdev.
+>
+> However, remove rdev from daemon thread really is super cold path, while
+> removing n rdevs, it doesn't matter sync rcu n times or just one time.
+> Hence remove this flag and make code simpler.
+>
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> ---
+>  drivers/md/md-multipath.c | 15 +++++++--------
+>  drivers/md/md.c           | 26 ++------------------------
+>  drivers/md/md.h           |  5 -----
+>  drivers/md/raid1.c        | 15 +++++++--------
+>  drivers/md/raid10.c       | 15 +++++++--------
+>  drivers/md/raid5.c        | 15 +++++++--------
+>  6 files changed, 30 insertions(+), 61 deletions(-)
+>
+> diff --git a/drivers/md/md-multipath.c b/drivers/md/md-multipath.c
+> index d22276870283..9e4ddd5240cd 100644
+> --- a/drivers/md/md-multipath.c
+> +++ b/drivers/md/md-multipath.c
+> @@ -258,14 +258,13 @@ static int multipath_remove_disk(struct mddev *mdde=
+v, struct md_rdev *rdev)
+>                         goto abort;
+>                 }
+>                 p->rdev =3D NULL;
+> -               if (!test_bit(RemoveSynchronized, &rdev->flags)) {
+> -                       synchronize_rcu();
+> -                       if (atomic_read(&rdev->nr_pending)) {
+> -                               /* lost the race, try later */
+> -                               err =3D -EBUSY;
+> -                               p->rdev =3D rdev;
+> -                               goto abort;
+> -                       }
+> +
+> +               synchronize_rcu();
+> +               if (atomic_read(&rdev->nr_pending)) {
+> +                       /* lost the race, try later */
+> +                       err =3D -EBUSY;
+> +                       p->rdev =3D rdev;
+> +                       goto abort;
+>                 }
+>                 err =3D md_integrity_register(mddev);
+>         }
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index a3d98273b295..cd7ac1dee3b8 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -9155,7 +9155,6 @@ static int remove_and_add_spares(struct mddev *mdde=
+v,
+>         struct md_rdev *rdev;
+>         int spares =3D 0;
+>         int removed =3D 0;
+> -       bool remove_some =3D false;
+>
+>         if (this && test_bit(MD_RECOVERY_RUNNING, &mddev->recovery))
+>                 /* Mustn't remove devices when resync thread is running *=
+/
+> @@ -9165,28 +9164,9 @@ static int remove_and_add_spares(struct mddev *mdd=
+ev,
+>                 if ((this =3D=3D NULL || rdev =3D=3D this) &&
+>                     rdev->raid_disk >=3D 0 &&
+>                     !test_bit(Blocked, &rdev->flags) &&
+> -                   test_bit(Faulty, &rdev->flags) &&
+> +                   !test_bit(In_sync, &rdev->flags) &&
+> +                   !test_bit(Journal, &rdev->flags) &&
+>                     atomic_read(&rdev->nr_pending)=3D=3D0) {
+> -                       /* Faulty non-Blocked devices with nr_pending =3D=
+=3D 0
+> -                        * never get nr_pending incremented,
+> -                        * never get Faulty cleared, and never get Blocke=
+d set.
+> -                        * So we can synchronize_rcu now rather than once=
+ per device
+> -                        */
+> -                       remove_some =3D true;
+> -                       set_bit(RemoveSynchronized, &rdev->flags);
+> -               }
+> -       }
+> -
+> -       if (remove_some)
+> -               synchronize_rcu();
+> -       rdev_for_each(rdev, mddev) {
+> -               if ((this =3D=3D NULL || rdev =3D=3D this) &&
+> -                   rdev->raid_disk >=3D 0 &&
+> -                   !test_bit(Blocked, &rdev->flags) &&
+> -                   ((test_bit(RemoveSynchronized, &rdev->flags) ||
+> -                    (!test_bit(In_sync, &rdev->flags) &&
+> -                     !test_bit(Journal, &rdev->flags))) &&
+> -                   atomic_read(&rdev->nr_pending)=3D=3D0)) {
+>                         if (mddev->pers->hot_remove_disk(
+>                                     mddev, rdev) =3D=3D 0) {
+>                                 sysfs_unlink_rdev(mddev, rdev);
+> @@ -9195,8 +9175,6 @@ static int remove_and_add_spares(struct mddev *mdde=
+v,
+>                                 removed++;
+>                         }
+>                 }
+> -               if (remove_some && test_bit(RemoveSynchronized, &rdev->fl=
+ags))
+> -                       clear_bit(RemoveSynchronized, &rdev->flags);
+>         }
+>
+>         if (removed && mddev->kobj.sd)
+> diff --git a/drivers/md/md.h b/drivers/md/md.h
+> index 8ae957480976..b25b6d061372 100644
+> --- a/drivers/md/md.h
+> +++ b/drivers/md/md.h
+> @@ -189,11 +189,6 @@ enum flag_bits {
+>                                  * than other devices in the array
+>                                  */
+>         ClusterRemove,
+> -       RemoveSynchronized,     /* synchronize_rcu() was called after
+> -                                * this device was known to be faulty,
+> -                                * so it is safe to remove without
+> -                                * another synchronize_rcu() call.
+> -                                */
+>         ExternalBbl,            /* External metadata provides bad
+>                                  * block management for a disk
+>                                  */
+> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+> index 23d211969565..acb6d6542619 100644
+> --- a/drivers/md/raid1.c
+> +++ b/drivers/md/raid1.c
+> @@ -1859,15 +1859,14 @@ static int raid1_remove_disk(struct mddev *mddev,=
+ struct md_rdev *rdev)
+>                         goto abort;
+>                 }
+>                 p->rdev =3D NULL;
+> -               if (!test_bit(RemoveSynchronized, &rdev->flags)) {
+> -                       synchronize_rcu();
+> -                       if (atomic_read(&rdev->nr_pending)) {
+> -                               /* lost the race, try later */
+> -                               err =3D -EBUSY;
+> -                               p->rdev =3D rdev;
+> -                               goto abort;
+> -                       }
+> +               synchronize_rcu();
+> +               if (atomic_read(&rdev->nr_pending)) {
+> +                       /* lost the race, try later */
+> +                       err =3D -EBUSY;
+> +                       p->rdev =3D rdev;
+> +                       goto abort;
+>                 }
+> +
+>                 if (conf->mirrors[conf->raid_disks + number].rdev) {
+>                         /* We just removed a device that is being replace=
+d.
+>                          * Move down the replacement.  We drain all IO be=
+fore
+> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+> index 7704a4c7f469..64dd5cb6133e 100644
+> --- a/drivers/md/raid10.c
+> +++ b/drivers/md/raid10.c
+> @@ -2247,15 +2247,14 @@ static int raid10_remove_disk(struct mddev *mddev=
+, struct md_rdev *rdev)
+>                 goto abort;
+>         }
+>         *rdevp =3D NULL;
+> -       if (!test_bit(RemoveSynchronized, &rdev->flags)) {
+> -               synchronize_rcu();
+> -               if (atomic_read(&rdev->nr_pending)) {
+> -                       /* lost the race, try later */
+> -                       err =3D -EBUSY;
+> -                       *rdevp =3D rdev;
+> -                       goto abort;
+> -               }
+> +       synchronize_rcu();
+> +       if (atomic_read(&rdev->nr_pending)) {
+> +               /* lost the race, try later */
+> +               err =3D -EBUSY;
+> +               *rdevp =3D rdev;
+> +               goto abort;
+>         }
+> +
+>         if (p->replacement) {
+>                 /* We must have just cleared 'rdev' */
+>                 p->rdev =3D p->replacement;
+> diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+> index 4cdb35e54251..37d9865b180a 100644
+> --- a/drivers/md/raid5.c
+> +++ b/drivers/md/raid5.c
+> @@ -8267,15 +8267,14 @@ static int raid5_remove_disk(struct mddev *mddev,=
+ struct md_rdev *rdev)
+>                 goto abort;
+>         }
+>         *rdevp =3D NULL;
+> -       if (!test_bit(RemoveSynchronized, &rdev->flags)) {
+> -               lockdep_assert_held(&mddev->reconfig_mutex);
+> -               synchronize_rcu();
+> -               if (atomic_read(&rdev->nr_pending)) {
+> -                       /* lost the race, try later */
+> -                       err =3D -EBUSY;
+> -                       rcu_assign_pointer(*rdevp, rdev);
+> -               }
+> +       lockdep_assert_held(&mddev->reconfig_mutex);
+> +       synchronize_rcu();
+> +       if (atomic_read(&rdev->nr_pending)) {
+> +               /* lost the race, try later */
+> +               err =3D -EBUSY;
+> +               rcu_assign_pointer(*rdevp, rdev);
+>         }
+> +
+>         if (!err) {
+>                 err =3D log_modify(conf, rdev, false);
+>                 if (err)
+> --
+> 2.39.2
+>
