@@ -2,56 +2,64 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2ACEB77B20B
-	for <lists+linux-raid@lfdr.de>; Mon, 14 Aug 2023 09:07:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FF7477B4A8
+	for <lists+linux-raid@lfdr.de>; Mon, 14 Aug 2023 10:52:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232553AbjHNHHM (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 14 Aug 2023 03:07:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41572 "EHLO
+        id S231783AbjHNIvb (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 14 Aug 2023 04:51:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234042AbjHNHHJ (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 14 Aug 2023 03:07:09 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4D7FE63
-        for <linux-raid@vger.kernel.org>; Mon, 14 Aug 2023 00:07:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691996828; x=1723532828;
-  h=date:from:to:cc:subject:message-id;
-  bh=cDRKaMo6DwO9hx9eJ4CqMgO/xDER9UQ8IYffgoAXVKw=;
-  b=UcZG0yL1gv/4si0ADa2ukk8+RD3Nfrw5AN15jsb4ehZGwMySirctwELI
-   vvUIerwz7Wjo9SLSTUggqFjika5etEheziky588jbrZmbtz/vbG50edCR
-   EaFBTLRAGf46uoa0k5WUrRT7WSnAV9jI6VjZC/iPMwzOaGSZza88riP4P
-   bTT3DElOZLc3RjGZlH5NBFEuPLIjNb1ztrErX4tjHGLqgyedKoq6kwcr4
-   yX71wqaLH7dkfw6ywKlDnDJrVmTvndP4OcyMXQLvo4upoMkOzfHWBhfsC
-   GcxDbrBCS/aVekggYy9eRw+Pn0S2HyfE1aqAb5LrNwwclhADBdseIwJr6
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10801"; a="370878116"
-X-IronPort-AV: E=Sophos;i="6.01,171,1684825200"; 
-   d="scan'208";a="370878116"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 00:07:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10801"; a="1063962521"
-X-IronPort-AV: E=Sophos;i="6.01,172,1684825200"; 
-   d="scan'208";a="1063962521"
-Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 14 Aug 2023 00:06:44 -0700
-Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qVRf1-0009P2-2O;
-        Mon, 14 Aug 2023 07:06:43 +0000
-Date:   Mon, 14 Aug 2023 15:06:05 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Song Liu <song@kernel.org>
-Cc:     linux-raid@vger.kernel.org
-Subject: [song-md:md-next] BUILD SUCCESS
- 733fd910ffa5cdc26776c98cc4612b0ce3e2bbfd
-Message-ID: <202308141502.TKaGobvr-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        with ESMTP id S234922AbjHNIv2 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 14 Aug 2023 04:51:28 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E779C127
+        for <linux-raid@vger.kernel.org>; Mon, 14 Aug 2023 01:51:25 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-686f94328a4so2706030b3a.0
+        for <linux-raid@vger.kernel.org>; Mon, 14 Aug 2023 01:51:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=smartx-com.20221208.gappssmtp.com; s=20221208; t=1692003085; x=1692607885;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/bkh6h4jMoCcSaWgrHFeEKjBXByfWBFPM0qOpMiZbmo=;
+        b=Y7JD4jfTeQ498Q8tUC9uSXZTWef8RrxqcOSBSgJ60AbLeFcp3JZzmJD2Pi7HG17QG/
+         YAJ8M6PAYMZs5IsQn4rMOSwCli+amFAo18tZa6gPO8D9j+O2JysmYYsm3twoRTEYrpgR
+         Splubll8jn30cHWh0gNgQRkMiWQ2ypPlS7E+e1UVkgmAmoevzZENbeXb2WAMQxwtErde
+         0ZA180BXckgRoEOn0FOCSLGopK1PdrqFn9l2MB7/5/+uP5TIz1/dN9we6TkE5ML7BFUg
+         2c3doh3m0DDzt86dkWNxYPRG9PEv9+/tN4vAh6wbeGZG1znkSkcvgUJP0qUg8lSGvPQD
+         PEQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692003085; x=1692607885;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/bkh6h4jMoCcSaWgrHFeEKjBXByfWBFPM0qOpMiZbmo=;
+        b=RLemyuTNNIzlF9gNP4PhtjMTYrEHmZ5n84t5Y1CBmLYkZ19VuuqXb4krzVsgmppmAa
+         hSHXmXcfUno20p4UWGjfRFfWGcHXe/ThcliPOtpVRJTaebDvbGiG760w7anOQ2bos6GM
+         AGv7QeZYjt1rmOyiK4UKF+kLI0TGj0wA1u2/W1Xm0oH0k22mqflrUxoKeI81sRkYlBA1
+         FxZ0CVjVJ1zyIld4whGLB98P5phki1XinJW8sBQjI+Wr4UeZT3h/knINw6fwQWk6Kfl9
+         XcYc25xQ/rbIUmVL3DatS5PSzTkL3NOPj0dfJCaZw0L1fMYKW9J6LFqPQB0HvHA1bPQH
+         8T1A==
+X-Gm-Message-State: AOJu0YwFykNA/DUx7v2takbwWYfBIN6HIfukFoUkHXUGi++Q27MUGWWR
+        xkXd90rL8AwDWRnEoJ0o9V2Hgg==
+X-Google-Smtp-Source: AGHT+IE7Dxf76qIV0yMIldChCtbV4dWh7QFfgZXYDywsndz299Kwo6mscFyP6ViIUpN5K20WAAlPdw==
+X-Received: by 2002:a05:6a00:1685:b0:666:c1ab:d6e5 with SMTP id k5-20020a056a00168500b00666c1abd6e5mr10858749pfc.16.1692003085270;
+        Mon, 14 Aug 2023 01:51:25 -0700 (PDT)
+Received: from nixos.tailf4e9e.ts.net ([47.75.78.161])
+        by smtp.googlemail.com with ESMTPSA id fk1-20020a056a003a8100b006765cb3255asm7439668pfb.68.2023.08.14.01.51.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Aug 2023 01:51:24 -0700 (PDT)
+From:   Xueshi Hu <xueshi.hu@smartx.com>
+To:     song@kernel.org, djeffery@redhat.com, dan.j.williams@intel.com,
+        neilb@suse.de, akpm@linux-foundation.org, neilb@suse.com
+Cc:     linux-raid@vger.kernel.org, Xueshi Hu <xueshi.hu@smartx.com>
+Subject: [PATCH v5 0/3] md/raid1: don't allow_barrier() before r1bio got freed
+Date:   Mon, 14 Aug 2023 16:51:05 +0800
+Message-Id: <20230814085108.991040-1-xueshi.hu@smartx.com>
+X-Mailer: git-send-email 2.40.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,126 +67,36 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-tree/branch: git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git md-next
-branch HEAD: 733fd910ffa5cdc26776c98cc4612b0ce3e2bbfd  md/raid5-cache: fix null-ptr-deref for r5l_flush_stripe_to_raid()
+Because raid reshape changes the r1conf::raid_disks and the mempool, it
+orders that there's no in-flight r1bio when reshaping. However, the
+current caller of allow_barrier() allows the reshape
+operation to proceed even if the old r1bio requests have not been freed.
 
-elapsed time: 723m
+-> v2:
+	- fix the problem one by one instead of calling
+	blk_mq_freeze_queue() as suggested by Yu Kuai
+-> v3:
+	- add freeze_array_totally() to replace freeze_array() instead
+	  of gave up in raid1_reshape()
+	- add a missed fix in raid_end_bio_io()
+	- add a small check at the start of raid1_reshape()
+-> v4:
+	- add fix tag and revise the commit message
+	- drop patch 1 as there is an ongoing systematic fix for the bug
+	- drop patch 3 as it's unrelated which will be sent in
+	another patch
+-> v5:
+	- split the patch into three parts, with each individual patch fix
+	one bug.
 
-configs tested: 107
-configs skipped: 4
+Xueshi Hu (3):
+  md/raid1: call free_r1bio() before allow_barrier()
+  md/raid1: free the r1bio firstly before waiting for blocked rdev
+  md/raid1: keep the barrier held until handle_read_error() finished
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r031-20230814   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r043-20230814   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                  randconfig-r046-20230814   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r016-20230814   clang
-csky                                defconfig   gcc  
-hexagon              randconfig-r012-20230814   clang
-hexagon              randconfig-r041-20230814   clang
-hexagon              randconfig-r045-20230814   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230814   gcc  
-i386         buildonly-randconfig-r005-20230814   gcc  
-i386         buildonly-randconfig-r006-20230814   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230814   gcc  
-i386                 randconfig-i002-20230814   gcc  
-i386                 randconfig-i003-20230814   gcc  
-i386                 randconfig-i004-20230814   gcc  
-i386                 randconfig-i005-20230814   gcc  
-i386                 randconfig-i006-20230814   gcc  
-i386                 randconfig-i011-20230814   clang
-i386                 randconfig-i012-20230814   clang
-i386                 randconfig-i013-20230814   clang
-i386                 randconfig-i014-20230814   clang
-i386                 randconfig-i015-20230814   clang
-i386                 randconfig-i016-20230814   clang
-i386                 randconfig-r022-20230814   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r026-20230814   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r033-20230814   gcc  
-microblaze           randconfig-r032-20230814   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r006-20230814   gcc  
-openrisc             randconfig-r024-20230814   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r036-20230814   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r003-20230814   gcc  
-riscv                randconfig-r021-20230814   clang
-riscv                randconfig-r034-20230814   gcc  
-riscv                randconfig-r042-20230814   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r023-20230814   clang
-s390                 randconfig-r044-20230814   clang
-sh                               allmodconfig   gcc  
-sh                   randconfig-r035-20230814   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r025-20230814   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r004-20230814   clang
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230814   gcc  
-x86_64       buildonly-randconfig-r002-20230814   gcc  
-x86_64       buildonly-randconfig-r003-20230814   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-r005-20230814   gcc  
-x86_64               randconfig-x001-20230814   clang
-x86_64               randconfig-x002-20230814   clang
-x86_64               randconfig-x003-20230814   clang
-x86_64               randconfig-x004-20230814   clang
-x86_64               randconfig-x005-20230814   clang
-x86_64               randconfig-x006-20230814   clang
-x86_64               randconfig-x011-20230814   gcc  
-x86_64               randconfig-x012-20230814   gcc  
-x86_64               randconfig-x013-20230814   gcc  
-x86_64               randconfig-x014-20230814   gcc  
-x86_64               randconfig-x015-20230814   gcc  
-x86_64               randconfig-x016-20230814   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa               randconfig-r001-20230814   gcc  
-xtensa               randconfig-r002-20230814   gcc  
-xtensa               randconfig-r013-20230814   gcc  
-xtensa               randconfig-r015-20230814   gcc  
+ drivers/md/raid1.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.40.1
+
