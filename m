@@ -2,67 +2,98 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9ED647852E6
-	for <lists+linux-raid@lfdr.de>; Wed, 23 Aug 2023 10:43:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 944BD7855E9
+	for <lists+linux-raid@lfdr.de>; Wed, 23 Aug 2023 12:49:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234303AbjHWImb (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 23 Aug 2023 04:42:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54814 "EHLO
+        id S234084AbjHWKtb (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 23 Aug 2023 06:49:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234762AbjHWIjI (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 23 Aug 2023 04:39:08 -0400
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9E291705;
-        Wed, 23 Aug 2023 01:37:14 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.169])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4RW02F2FqTz4f3pHZ;
-        Wed, 23 Aug 2023 16:37:09 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-        by APP4 (Coremail) with SMTP id gCh0CgDHVqk0xeVke9mIBQ--.11337S3;
-        Wed, 23 Aug 2023 16:37:10 +0800 (CST)
-Subject: Re: [PATCH -next v3 6/7] md: factor out a helper rdev_addable() from
- remove_and_add_spares()
-To:     Song Liu <song@kernel.org>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc:     xni@redhat.com, mariusz.tkaczyk@linux.intel.com,
-        linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yi.zhang@huawei.com, yangerkun@huawei.com,
-        "yukuai (C)" <yukuai3@huawei.com>
-References: <20230820090949.2874537-1-yukuai1@huaweicloud.com>
- <20230820090949.2874537-7-yukuai1@huaweicloud.com>
- <CAPhsuW74MEFjNTNErYfOT1gX+BUdbDwaV1oTmmcz=_76Ym3ZuA@mail.gmail.com>
- <c7a82fb2-cf4b-2095-e813-84aed2418ff0@huaweicloud.com>
- <2766d001-f618-d224-f8a9-ec38ed1dc2a7@huaweicloud.com>
- <CAPhsuW6JQX7ujeO77NVTme8t0DvzVBrsXRHmayVnp4fwWoYhZg@mail.gmail.com>
-From:   Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <a004ed5b-cf4a-2392-c7e5-fcd1161a29a4@huaweicloud.com>
-Date:   Wed, 23 Aug 2023 16:37:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        with ESMTP id S233987AbjHWKt1 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 23 Aug 2023 06:49:27 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D141810CC;
+        Wed, 23 Aug 2023 03:49:01 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 1F89B21EDA;
+        Wed, 23 Aug 2023 10:48:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1692787738; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=czbolVCNdiRIhtzRMydBVuDGtNoMVf0uK7rI8VUw4Wg=;
+        b=cea+STFByaV36NWMjg8zifEKP9bUJaVFrhrdsQ1BHrDjc+6YKTyOk0XUYe/aGcn7z1GdBW
+        Sp5Xg8/PcrR30C9G8GkmtNgleVHgoFT9VpO4HmYAD81nOJQ/2ts6Z2GJ97FCPouubZqTfM
+        7Ki5cRwEgj/8O3iByHVAhCDVhrdgZS0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1692787738;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=czbolVCNdiRIhtzRMydBVuDGtNoMVf0uK7rI8VUw4Wg=;
+        b=ccloVX/Tox8MPvEstSnU1swyihs7KV2puBqol0j3M4wpbT7Z67JF74RuKmYp8i9zsSQ2aK
+        Q/J06H24OiSZjOBw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 0486813592;
+        Wed, 23 Aug 2023 10:48:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id hdjcABrk5WQsIAAAMHmgww
+        (envelope-from <jack@suse.cz>); Wed, 23 Aug 2023 10:48:58 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+        id 0E216A0774; Wed, 23 Aug 2023 12:48:57 +0200 (CEST)
+From:   Jan Kara <jack@suse.cz>
+To:     Christian Brauner <brauner@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, <linux-fsdevel@vger.kernel.org>,
+        <linux-block@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
+        Alasdair Kergon <agk@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anna Schumaker <anna@kernel.org>, Chao Yu <chao@kernel.org>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Kleikamp <shaggy@kernel.org>,
+        David Sterba <dsterba@suse.com>, dm-devel@redhat.com,
+        drbd-dev@lists.linbit.com, Gao Xiang <xiang@kernel.org>,
+        Jack Wang <jinpu.wang@ionos.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        jfs-discussion@lists.sourceforge.net,
+        Joern Engel <joern@lazybastard.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        linux-bcache@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-mm@kvack.org,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pm@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-xfs@vger.kernel.org,
+        "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
+        Mike Snitzer <snitzer@kernel.org>,
+        Minchan Kim <minchan@kernel.org>, ocfs2-devel@oss.oracle.com,
+        reiserfs-devel@vger.kernel.org,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Song Liu <song@kernel.org>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        target-devel@vger.kernel.org, Ted Tso <tytso@mit.edu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        xen-devel@lists.xenproject.org
+Subject: [PATCH v3 0/29] block: Make blkdev_get_by_*() return handle
+Date:   Wed, 23 Aug 2023 12:48:11 +0200
+Message-Id: <20230818123232.2269-1-jack@suse.cz>
+X-Mailer: git-send-email 2.35.3
 MIME-Version: 1.0
-In-Reply-To: <CAPhsuW6JQX7ujeO77NVTme8t0DvzVBrsXRHmayVnp4fwWoYhZg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3781; i=jack@suse.cz; h=from:subject:message-id; bh=cMBb8bZk7tVGWo+BW5D78pH+ebOvNFFLsxdd3Uvzd/w=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBk5ePhrEMij+4xGF6e8K//xuADex0OXIFxlpO0VT6g 42vu5BeJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCZOXj4QAKCRCcnaoHP2RA2RqoB/ 91nt6Qs4NSStbt9M1WXY1akBbAqu+Bv3ZXdZ6WMy9kKyYwY7zCnyQziikP60M2MjCrud4NP9os4YAr 4uXdyOyVcdJ9TjbciDgTyoYdfkFl7g+rZhj1pyPeep1xmvDMn3QtNJ28EbhLegdC+nkmL6+bxPGEwd IdsuBKGrdIIEryWwhBq0+BWowL3nzmQjs5GoDtXLoHADfHYhgC8RKYK/4FaML1/SsAZRvGJ/C8wFB4 JUGsDGFE4CJx9XgiRx407CSIGNSoCciqBpMaMA7x/dbq9Tu76xcqN4/DZrtT2qyG4I7GZYetndEl3F vWMZMQFPauZmB2S1r30HY+nn2IOCrM
+X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgDHVqk0xeVke9mIBQ--.11337S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxuFW8WrW3Ary7AryrJF15CFg_yoW7Ww4xpF
-        W8XFWSkr4UAr17uw1qgr1rX3WFqr18KF4xurySk34xZas0qrn8Gw48CFy5uFyDJr45ur1Y
-        vF15J3yxCw1YgFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
-        JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
-        Y487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
-        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
-        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-        WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8
-        JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUoOJ5UU
-        UUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_SOFTFAIL,URIBL_BLOCKED autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,184 +101,94 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi,
+Hello,
 
-在 2023/08/23 13:26, Song Liu 写道:
-> On Tue, Aug 22, 2023 at 8:04 PM Yu Kuai <yukuai1@huaweicloud.com> wrote:
->>
->> Hi,
->>
->> 在 2023/08/22 10:17, Yu Kuai 写道:
->>> Hi,
->>>
->>> 在 2023/08/22 7:22, Song Liu 写道:
->>>> On Sun, Aug 20, 2023 at 2:13 AM Yu Kuai <yukuai1@huaweicloud.com> wrote:
->>>>>
->>>>> From: Yu Kuai <yukuai3@huawei.com>
->>>>>
->>>>> There are no functional changes, just to make the code simpler and
->>>>> prepare to delay remove_and_add_spares() to md_start_sync().
->>>>>
->>>>> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
->>>>> ---
->>>>>    drivers/md/md.c | 28 ++++++++++++++++------------
->>>>>    1 file changed, 16 insertions(+), 12 deletions(-)
->>>>>
->>>>> diff --git a/drivers/md/md.c b/drivers/md/md.c
->>>>> index 11d27c934fdd..cdc361c521d4 100644
->>>>> --- a/drivers/md/md.c
->>>>> +++ b/drivers/md/md.c
->>>>> @@ -9177,6 +9177,20 @@ static bool rdev_is_spare(struct md_rdev *rdev)
->>>>>                  !test_bit(Faulty, &rdev->flags);
->>>>>    }
->>>>>
->>>>> +static bool rdev_addable(struct md_rdev *rdev)
->>>>> +{
->>>>> +       if (test_bit(Candidate, &rdev->flags) || rdev->raid_disk >= 0 ||
->>>>> +           test_bit(Faulty, &rdev->flags))
->>>>> +               return false;
->>>>> +
->>>>> +       if (!test_bit(Journal, &rdev->flags) &&
->>>>> !md_is_rdwr(rdev->mddev) &&
->>>>
->>>> Instead of straightforward refactoring, I hope we can make these rdev_*
->>>> helpers more meaningful, and hopefullly reusable. For example, let's
->>>> define
->>>> the meaning of "addable", and write the function to match that
->>>> meaning. In
->>>> this case, I think we shouldn't check md_is_rdwr() inside rdev_addable().
->>>>
->>>> Does this make sense?
->>>
->>> Yes, this make sense, rdev can be added to read-only array.
->>>
->>> There are total three callers of pers->hot_add_sisk, I'll try to find if
->>> they have common conditions.
->>
->> Unfortunately, the conditions is quite different, and It's difficult to
->> factor out a common helper for them to use.
->>
->> In this case, !md_is_rdwr() is one of the four conditions, which means
->> if the array is read-only, there is a special case that rdev can't be
->> added to the configuration. Perhaps it's okay to keep this?
-> 
-> My main concern is that rdev_addable() is not making the code easier to
-> understand. We have a few different cases at this point:
-> 
-> 1. rdev is not suitable for add (Faulty, raid_disk>=0, Candidate);
-> 2. rdev is Journal;
-> 3. Re-add rdev to RO array;
-> 4. Non-re-add rdev to RO array;
-> 5. Other cases.
-> 
-> Current rdev_addable() handles more or less all of this, which is
-> confusing. Maybe we can do something along similar to the
-> following (not tested). Does this look more clear?
-> 
-> Thanks,
-> Song
-> 
-> diff --git i/drivers/md/md.c w/drivers/md/md.c
-> index 78be7811a89f..8cb855d03e0a 100644
-> --- i/drivers/md/md.c
-> +++ w/drivers/md/md.c
-> @@ -9117,6 +9117,20 @@ void md_do_sync(struct md_thread *thread)
->   }
->   EXPORT_SYMBOL_GPL(md_do_sync);
-> 
-> +static bool rdev_addable(struct md_rdev *rdev)
-> +{
-> +       if (test_bit(Candidate, &rdev->flags) || rdev->raid_disk >= 0 ||
-> +           test_bit(Faulty, &rdev->flags))
-> +               return false;
-> +       return true;
-> +}
-> +
-> +static bool rdev_is_readd(struct md_rdev *rdev)
-> +{
-> +       return rdev->saved_raid_disk >= 0 ||
-> +               !test_bit(Bitmap_sync, &rdev->flags);
-This should use '&&' instead of '||' ?
+this is a v3 of the patch series which implements the idea of blkdev_get_by_*()
+calls returning bdev_handle which is then passed to blkdev_put() [1]. This
+makes the get and put calls for bdevs more obviously matching and allows us to
+propagate context from get to put without having to modify all the users
+(again!). In particular I need to propagate used open flags to blkdev_put() to
+be able count writeable opens and add support for blocking writes to mounted
+block devices. I'll send that series separately.
 
-> +}
-> +
->   static int remove_and_add_spares(struct mddev *mddev,
->                                   struct md_rdev *this)
->   {
-> @@ -9176,25 +9190,24 @@ static int remove_and_add_spares(struct mddev *mddev,
->          rdev_for_each(rdev, mddev) {
->                  if (this && this != rdev)
->                          continue;
-> -               if (test_bit(Candidate, &rdev->flags))
-> -                       continue;
->                  if (rdev->raid_disk >= 0 &&
->                      !test_bit(In_sync, &rdev->flags) &&
->                      !test_bit(Journal, &rdev->flags) &&
->                      !test_bit(Faulty, &rdev->flags))
->                          spares++;
-> -               if (rdev->raid_disk >= 0)
-> +
-> +               if (!rdev_addable(rdev))
->                          continue;
-> -               if (test_bit(Faulty, &rdev->flags))
-> +
-> +               if (test_bit(Journal, &rdev->flags))
-> +                       goto hot_add_disk;
-> +
+The series is based on Christian's vfs tree as of today as there is quite
+some overlap. Patches have passed some reasonable testing - I've tested block
+changes, md, dm, bcache, xfs, btrfs, ext4, swap. More testing or review is
+always welcome. Thanks! I've pushed out the full branch to:
 
-I understand what you mean now, but I must use the exact same judgement
-in the new helper md_spares_need_change() in patch 7, there will be 
-redundant code this way.
+git://git.kernel.org/pub/scm/linux/kernel/git/jack/linux-fs.git bdev_handle
 
-How about this, rework rdev_addable():
+to ease review / testing. Since there were not many comments for v2 and
+Christoph has acked the series I think we should start discussing how to merge
+the series. Most collisions with this series seem to happen in the filesystems
+area so VFS tree would seem as the least painful way to merge this. Jens,
+are you OK with that?
 
-   static bool rdev_addable(struct md_rdev *rdev)
-   {
-+         /* rdev is already used, don't add it again. */
-           if (test_bit(Candidate, &rdev->flags) || rdev->raid_disk >= 0 ||
-               test_bit(Faulty, &rdev->flags))
-                   return false;
+Changes since v2:
+* Rebased on top of current vfs tree
+* Added some acks
+* Reflected minor nits from Christoph
+* Added missing conversion of blkdev_put() calls in cramfs and erofs
+* Fixed possible leak of bdev handle in xfs if logdev is the same as fs dev
 
-~         /* Allow to add journal disk. */
-~         if (test_bit(Journal, &rdev->flags))
-~_                return true;
+Changes since v1:
+* Rebased on top of current vfs tree
+* Renamed final functions to bdev_open_by_*() and bdev_release()
+* Fixed detection of exclusive open in blkdev_ioctl() and blkdev_fallocate()
+* Fixed swap conversion to properly reinitialize swap_info->bdev_handle
+* Fixed xfs conversion to not oops with rtdev without logdev
+* Couple other minor fixups
 
-~         /* Allow to add if array is read-write. */
-+         if (md_is_rdwr(rdev->mddev))
-+                 return true;
-+
-+         /*
-+          * For read-only array, only allow to readd a rdev. And if 
-bitmap is
-+          * used, don't allow to readd a rdev that is too old.
-+          */
-+         if (rdev->saved_raid_disk >=0 && !test_bit(Bitmap_sync, 
-&rdev->flags))
-+                 return true;
-+
-+         return false;
-   }
+								Honza
 
+[1] https://lore.kernel.org/all/ZJGNsVDhZx0Xgs2H@infradead.org
 
-Thanks,
-Kuai
+CC: Alasdair Kergon <agk@redhat.com>
+CC: Andrew Morton <akpm@linux-foundation.org>
+CC: Anna Schumaker <anna@kernel.org>
+CC: Chao Yu <chao@kernel.org>
+CC: Christian Borntraeger <borntraeger@linux.ibm.com>
+CC: Coly Li <colyli@suse.de
+CC: "Darrick J. Wong" <djwong@kernel.org>
+CC: Dave Kleikamp <shaggy@kernel.org>
+CC: David Sterba <dsterba@suse.com>
+CC: dm-devel@redhat.com
+CC: drbd-dev@lists.linbit.com
+CC: Gao Xiang <xiang@kernel.org>
+CC: Jack Wang <jinpu.wang@ionos.com>
+CC: Jaegeuk Kim <jaegeuk@kernel.org>
+CC: jfs-discussion@lists.sourceforge.net
+CC: Joern Engel <joern@lazybastard.org>
+CC: Joseph Qi <joseph.qi@linux.alibaba.com>
+CC: Kent Overstreet <kent.overstreet@gmail.com>
+CC: linux-bcache@vger.kernel.org
+CC: linux-btrfs@vger.kernel.org
+CC: linux-erofs@lists.ozlabs.org
+CC: <linux-ext4@vger.kernel.org>
+CC: linux-f2fs-devel@lists.sourceforge.net
+CC: linux-mm@kvack.org
+CC: linux-mtd@lists.infradead.org
+CC: linux-nfs@vger.kernel.org
+CC: linux-nilfs@vger.kernel.org
+CC: linux-nvme@lists.infradead.org
+CC: linux-pm@vger.kernel.org
+CC: linux-raid@vger.kernel.org
+CC: linux-s390@vger.kernel.org
+CC: linux-scsi@vger.kernel.org
+CC: linux-xfs@vger.kernel.org
+CC: "Md. Haris Iqbal" <haris.iqbal@ionos.com>
+CC: Mike Snitzer <snitzer@kernel.org>
+CC: Minchan Kim <minchan@kernel.org>
+CC: ocfs2-devel@oss.oracle.com
+CC: reiserfs-devel@vger.kernel.org
+CC: Sergey Senozhatsky <senozhatsky@chromium.org>
+CC: Song Liu <song@kernel.org>
+CC: Sven Schnelle <svens@linux.ibm.com>
+CC: target-devel@vger.kernel.org
+CC: Ted Tso <tytso@mit.edu>
+CC: Trond Myklebust <trond.myklebust@hammerspace.com>
+CC: xen-devel@lists.xenproject.org
 
-> +               if (!md_is_rdwr(mddev) && !rdev_is_readd(rdev))
->                          continue;
-> -               if (!test_bit(Journal, &rdev->flags)) {
-> -                       if (!md_is_rdwr(mddev) &&
-> -                           !(rdev->saved_raid_disk >= 0 &&
-> -                             !test_bit(Bitmap_sync, &rdev->flags)))
-> -                               continue;
-> 
-> -                       rdev->recovery_offset = 0;
-> -               }
-> +               rdev->recovery_offset = 0;
-> +
-> +       hot_add_disk:
->                  if (mddev->pers->hot_add_disk(mddev, rdev) == 0) {
->                          /* failure here is OK */
->                          sysfs_link_rdev(mddev, rdev);
-> .
-> 
-
+Previous versions:
+Link: http://lore.kernel.org/r/20230629165206.383-1-jack@suse.cz # v1
+Link: http://lore.kernel.org/r/20230810171429.31759-1-jack@suse.cz # v2
