@@ -2,60 +2,71 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BC08478A466
-	for <lists+linux-raid@lfdr.de>; Mon, 28 Aug 2023 04:06:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A4E978A523
+	for <lists+linux-raid@lfdr.de>; Mon, 28 Aug 2023 07:21:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229729AbjH1CFZ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Sun, 27 Aug 2023 22:05:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58540 "EHLO
+        id S229492AbjH1FVU (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 28 Aug 2023 01:21:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229758AbjH1CFC (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Sun, 27 Aug 2023 22:05:02 -0400
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39C0BD8;
-        Sun, 27 Aug 2023 19:05:00 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.169])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4RYv5P0QPYz4f3jZ6;
-        Mon, 28 Aug 2023 10:04:57 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-        by APP4 (Coremail) with SMTP id gCh0CgAnBai7AOxk9qcCBw--.25880S32;
-        Mon, 28 Aug 2023 10:04:57 +0800 (CST)
-From:   Yu Kuai <yukuai1@huaweicloud.com>
-To:     agk@redhat.com, snitzer@kernel.org, dm-devel@redhat.com,
-        song@kernel.org, xni@redhat.com
-Cc:     linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com,
-        yangerkun@huawei.com
-Subject: [PATCH -next v2 28/28] md: rename __mddev_suspend/resume() back to mddev_suspend/resume()
-Date:   Mon, 28 Aug 2023 10:00:21 +0800
-Message-Id: <20230828020021.2489641-29-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230828020021.2489641-1-yukuai1@huaweicloud.com>
-References: <20230828020021.2489641-1-yukuai1@huaweicloud.com>
+        with ESMTP id S229480AbjH1FVG (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 28 Aug 2023 01:21:06 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BA3510D;
+        Sun, 27 Aug 2023 22:21:02 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D4897614D1;
+        Mon, 28 Aug 2023 05:21:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3872BC433CB;
+        Mon, 28 Aug 2023 05:21:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693200061;
+        bh=o6Ew4a0egDJtKNJrPTRM1TAOKdBDuhOU8FHng0duLm4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Qmu2T2IGU5q9w6osl2nWee8D+zK0LFTcjjQJ9RUrNsZn6H0XJn+j2eKmEXbI2tg0A
+         QRW3kuTqnRvuyi94TFbPtJFoJ3U9/cR58you9KUZho72uUVJoutEOe1u183xFCpXDy
+         mKLo3MywRQdiVyp/0XFPNiz7Z2L2NNcjUFbr7r6g8snehhjRtnpAzwNcW26u4hj/ek
+         3vkaE2/VpsW6jtndr4iFRp5h6NFCV1DcGpRyNu6Ek+B+KL8eeyBuhsvZHdbsHPokdu
+         C35ZfO+QyTuwjxpgbla4S/9QbcGwlEhG/lzBWSd5LPAn4xM/2NrK7vpzR2mRXzTepM
+         PBZDvSqL43YhA==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-500bb392ab7so499141e87.1;
+        Sun, 27 Aug 2023 22:21:01 -0700 (PDT)
+X-Gm-Message-State: AOJu0Yxdykk55/59OC6quoFio5qTIv9+VuUuVE9ayi8Su2T1qavSrk0E
+        IjlBBreYQSl7/m/XcmoEVp1txDK0FKuJHm5Np0k=
+X-Google-Smtp-Source: AGHT+IGSiwRimUgdAKIu1ItKmlOorMF/6CiiBLR9d2vv+IpXl2kMYbgzKLtAlVnQtaWAZpctEPrzR4zzrKlmkI8HkVI=
+X-Received: by 2002:ac2:5f8c:0:b0:500:a00e:1415 with SMTP id
+ r12-20020ac25f8c000000b00500a00e1415mr7175934lfe.35.1693200059126; Sun, 27
+ Aug 2023 22:20:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgAnBai7AOxk9qcCBw--.25880S32
-X-Coremail-Antispam: 1UD129KBjvJXoWxKrW7KrWrCw4UZF15GF1UGFg_yoWxtr4rpr
-        WxtayrZr48tFZaqryDAan7Ca45Jw1SkrZFyrW3X3s3Cas3t34fGF15ur4rJryvya4fXrn8
-        Jw4Yva48Zr18GFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUP214x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-        kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-        z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr1j6r
-        xdM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0D
-        M2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjx
-        v20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1l
-        F7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2
-        IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-        wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
-        0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AK
-        xVW8Jr0_Cr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JV
-        WxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUbmZ
-        X7UUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=0.3 required=5.0 tests=BAYES_00,MAY_BE_FORGED,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=no
+References: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
+ <20230818101630.000027f4@linux.intel.com> <b0488ff7-10c8-4b4e-28b8-01809133c297@linux.dev>
+ <CAPhsuW6cSLqwRVO_EpFyimvc7hgi1rb3T8-NA+stHdwrqrScBA@mail.gmail.com>
+ <20230822083923.00007fb6@linux.intel.com> <CAMz9Wg8KE1rDkSaQnUTJ5ikzH7YGGYbkLM3AcrVue3=JgK+14w@mail.gmail.com>
+ <35130b3f-c0fd-e2d6-e849-a5ceb6a2895f@linux.dev> <CAMz9Wg_zKSJ2vL=r2zAtLBOv4GSMT63+ZQGXfYTjVJsE+DLQGA@mail.gmail.com>
+ <CAPhsuW6W0XgFjH1zNC+EFYjujd4smEiWs+-nYCWQ+KaFmbuvkg@mail.gmail.com> <CAMz9Wg9y52iuxJRSQFC2N5Katt72v-o=JvEjegJt-MwORmw9tQ@mail.gmail.com>
+In-Reply-To: <CAMz9Wg9y52iuxJRSQFC2N5Katt72v-o=JvEjegJt-MwORmw9tQ@mail.gmail.com>
+From:   Song Liu <song@kernel.org>
+Date:   Sun, 27 Aug 2023 22:20:46 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW7XEy4q3XR389F7CUvXvJ=0JR0QkMOr4LU03avT0erAfg@mail.gmail.com>
+Message-ID: <CAPhsuW7XEy4q3XR389F7CUvXvJ=0JR0QkMOr4LU03avT0erAfg@mail.gmail.com>
+Subject: Re: Infiniate systemd loop when power off the machine with multiple
+ MD RAIDs
+To:     AceLan Kao <acelan@gmail.com>
+Cc:     Guoqing Jiang <guoqing.jiang@linux.dev>,
+        Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Regressions <regressions@lists.linux.dev>,
+        Linux RAID <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -63,241 +74,115 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+Hi AceLan,
 
-Now that the old apis are removed, __mddev_suspend/resume() can be
-renamed to their original names.
+Thanks for running the experiments.
 
-This is done by:
+On Fri, Aug 25, 2023 at 9:32=E2=80=AFPM AceLan Kao <acelan@gmail.com> wrote=
+:
+[...]
+> >
+> > Could you please run the follow two experiments?
+> >
+> > 1. Confirm 12a6caf273240a triggers this. Specifically:
+> >    git checkout 12a6caf273240a =3D> repros
+> >    git checkout 12a6caf273240a~1 =3D> cannot repro
+> Yes, I'm pretty sure about this, that's my bisect result and I just
+> confirmed it again.
+> I also tried reverting 12a6caf273240a and the issue is gone.
 
-sed -i "s/__mddev_suspend/mddev_suspend/g" *.[ch]
-sed -i "s/__mddev_resume/mddev_resume/g" *.[ch]
+The log doesn't match my guess. Specifically:
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- drivers/md/dm-raid.c     |  4 ++--
- drivers/md/md.c          | 30 +++++++++++++++---------------
- drivers/md/md.h          | 16 ++++++++--------
- drivers/md/raid5-cache.c |  4 ++--
- 4 files changed, 27 insertions(+), 27 deletions(-)
+[  420.068142] systemd-shutdown[1]: Stopping MD /dev/md123 (9:123).
+[  420.074718] md_open:md123 openers++ =3D 1 by systemd-shutdow
+[  420.080787] systemd-shutdown[1]: Failed to sync MD block device
+/dev/md123, ignoring: Input/output error
+[  420.090831] md: md123 stopped.
+[  420.094465] systemd-shutdown[1]: Stopping MD /dev/md122 (9:122).
+[  420.101045] systemd-shutdown[1]: Could not stop MD /dev/md122:
+Device or resource busy
 
-diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
-index 2ff33b5d9a1b..5114daead945 100644
---- a/drivers/md/dm-raid.c
-+++ b/drivers/md/dm-raid.c
-@@ -3799,7 +3799,7 @@ static void raid_postsuspend(struct dm_target *ti)
- 		if (!test_bit(MD_RECOVERY_FROZEN, &rs->md.recovery))
- 			md_stop_writes(&rs->md);
- 
--		__mddev_suspend(&rs->md);
-+		mddev_suspend(&rs->md);
- 	}
- }
- 
-@@ -4011,7 +4011,7 @@ static int raid_preresume(struct dm_target *ti)
- 	}
- 
- 	/* Check for any resize/reshape on @rs and adjust/initiate */
--	/* Be prepared for __mddev_resume() in raid_resume() */
-+	/* Be prepared for mddev_resume() in raid_resume() */
- 	set_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
- 	if (mddev->recovery_cp && mddev->recovery_cp < MaxSector) {
- 		set_bit(MD_RECOVERY_REQUESTED, &mddev->recovery);
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index bb67734eded6..3afaf960aa4a 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -422,7 +422,7 @@ static void md_submit_bio(struct bio *bio)
-  * Make sure no new requests are submitted to the device, and any requests that
-  * have been submitted are completely handled.
-  */
--void __mddev_suspend(struct mddev *mddev)
-+void mddev_suspend(struct mddev *mddev)
- {
- 
- 	/*
-@@ -456,9 +456,9 @@ void __mddev_suspend(struct mddev *mddev)
- 
- 	mutex_unlock(&mddev->suspend_mutex);
- }
--EXPORT_SYMBOL_GPL(__mddev_suspend);
-+EXPORT_SYMBOL_GPL(mddev_suspend);
- 
--void __mddev_resume(struct mddev *mddev)
-+void mddev_resume(struct mddev *mddev)
- {
- 	lockdep_assert_not_held(&mddev->reconfig_mutex);
- 
-@@ -469,7 +469,7 @@ void __mddev_resume(struct mddev *mddev)
- 		return;
- 	}
- 
--	/* entred the memalloc scope from __mddev_suspend() */
-+	/* entred the memalloc scope from mddev_suspend() */
- 	memalloc_noio_restore(mddev->noio_flag);
- 
- 	percpu_ref_resurrect(&mddev->active_io);
-@@ -481,7 +481,7 @@ void __mddev_resume(struct mddev *mddev)
- 
- 	mutex_unlock(&mddev->suspend_mutex);
- }
--EXPORT_SYMBOL_GPL(__mddev_resume);
-+EXPORT_SYMBOL_GPL(mddev_resume);
- 
- /*
-  * Generic flush handling for md
-@@ -3609,7 +3609,7 @@ rdev_attr_store(struct kobject *kobj, struct attribute *attr,
- 		if (cmd_match(page, "remove") || cmd_match(page, "re-add") ||
- 		    cmd_match(page, "writemostly") ||
- 		    cmd_match(page, "-writemostly")) {
--			__mddev_suspend(mddev);
-+			mddev_suspend(mddev);
- 			suspended = true;
- 		}
- 	}
-@@ -3623,7 +3623,7 @@ rdev_attr_store(struct kobject *kobj, struct attribute *attr,
- 		mddev_unlock(mddev);
- 
- 		if (suspended)
--			__mddev_resume(mddev);
-+			mddev_resume(mddev);
- 	}
- 
- 	if (kn)
-@@ -5197,9 +5197,9 @@ suspend_lo_store(struct mddev *mddev, const char *buf, size_t len)
- 	if (new != (sector_t)new)
- 		return -EINVAL;
- 
--	__mddev_suspend(mddev);
-+	mddev_suspend(mddev);
- 	WRITE_ONCE(mddev->suspend_lo, new);
--	__mddev_resume(mddev);
-+	mddev_resume(mddev);
- 
- 	return len;
- }
-@@ -5225,9 +5225,9 @@ suspend_hi_store(struct mddev *mddev, const char *buf, size_t len)
- 	if (new != (sector_t)new)
- 		return -EINVAL;
- 
--	__mddev_suspend(mddev);
-+	mddev_suspend(mddev);
- 	WRITE_ONCE(mddev->suspend_hi, new);
--	__mddev_resume(mddev);
-+	mddev_resume(mddev);
- 
- 	return len;
- }
-@@ -7789,7 +7789,7 @@ static int md_ioctl(struct block_device *bdev, blk_mode_t mode,
- 
- 	mddev_unlock(mddev);
- 	if (md_ioctl_need_suspend(cmd))
--		__mddev_resume(mddev);
-+		mddev_resume(mddev);
- 
- out:
- 	if(did_set_md_closing)
-@@ -9383,7 +9383,7 @@ static void md_start_sync(struct work_struct *ws)
- 	bool suspended = false;
- 
- 	if (md_spares_need_change(mddev)) {
--		__mddev_suspend(mddev);
-+		mddev_suspend(mddev);
- 		suspended = true;
- 	}
- 
-@@ -9425,7 +9425,7 @@ static void md_start_sync(struct work_struct *ws)
- 
- 	mddev_unlock(mddev);
- 	if (suspended)
--		__mddev_resume(mddev);
-+		mddev_resume(mddev);
- 
- 	md_wakeup_thread(mddev->sync_thread);
- 	sysfs_notify_dirent_safe(mddev->sysfs_action);
-@@ -9440,7 +9440,7 @@ static void md_start_sync(struct work_struct *ws)
- 	clear_bit(MD_RECOVERY_RUNNING, &mddev->recovery);
- 	mddev_unlock(mddev);
- 	if (suspended)
--		__mddev_resume(mddev);
-+		mddev_resume(mddev);
- 
- 	wake_up(&resync_wait);
- 	if (test_and_clear_bit(MD_RECOVERY_RECOVER, &mddev->recovery) &&
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index f932d0cb9db0..fc64dea4f84d 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -804,8 +804,8 @@ extern int md_rdev_init(struct md_rdev *rdev);
- extern void md_rdev_clear(struct md_rdev *rdev);
- 
- extern void md_handle_request(struct mddev *mddev, struct bio *bio);
--extern void __mddev_suspend(struct mddev *mddev);
--extern void __mddev_resume(struct mddev *mddev);
-+extern void mddev_suspend(struct mddev *mddev);
-+extern void mddev_resume(struct mddev *mddev);
- 
- extern void md_reload_sb(struct mddev *mddev, int raid_disk);
- extern void md_update_sb(struct mddev *mddev, int force);
-@@ -853,17 +853,17 @@ static inline int mddev_suspend_and_lock(struct mddev *mddev)
- {
- 	int ret;
- 
--	__mddev_suspend(mddev);
-+	mddev_suspend(mddev);
- 	ret = mddev_lock(mddev);
- 	if (ret)
--		__mddev_resume(mddev);
-+		mddev_resume(mddev);
- 
- 	return ret;
- }
- 
- static inline void mddev_suspend_and_lock_nointr(struct mddev *mddev)
- {
--	__mddev_suspend(mddev);
-+	mddev_suspend(mddev);
- 	mutex_lock(&mddev->reconfig_mutex);
- }
- 
-@@ -871,10 +871,10 @@ static inline int mddev_suspend_and_trylock(struct mddev *mddev)
- {
- 	int ret;
- 
--	__mddev_suspend(mddev);
-+	mddev_suspend(mddev);
- 	ret = mutex_trylock(&mddev->reconfig_mutex);
- 	if (ret)
--		__mddev_resume(mddev);
-+		mddev_resume(mddev);
- 
- 	return ret;
- }
-@@ -882,7 +882,7 @@ static inline int mddev_suspend_and_trylock(struct mddev *mddev)
- static inline void mddev_unlock_and_resume(struct mddev *mddev)
- {
- 	mddev_unlock(mddev);
--	__mddev_resume(mddev);
-+	mddev_resume(mddev);
- }
- 
- struct mdu_array_info_s;
-diff --git a/drivers/md/raid5-cache.c b/drivers/md/raid5-cache.c
-index 38d38f2e33bc..4dc69826a5d3 100644
---- a/drivers/md/raid5-cache.c
-+++ b/drivers/md/raid5-cache.c
-@@ -698,9 +698,9 @@ static void r5c_disable_writeback_async(struct work_struct *work)
- 		   !test_bit(MD_SB_CHANGE_PENDING, &mddev->sb_flags));
- 
- 	if (READ_ONCE(conf->log)) {
--		__mddev_suspend(mddev);
-+		mddev_suspend(mddev);
- 		log->r5c_journal_mode = R5C_JOURNAL_MODE_WRITE_THROUGH;
--		__mddev_resume(mddev);
-+		mddev_resume(mddev);
- 	}
- }
- 
--- 
-2.39.2
+For a successful stop on md123, we reach the pr_info() in md_open().
+For a failed stop on md122, the kernel returns -EBUSY before that
+pr_info() in md_open(). There are some changes in md_open() in
+the past few release, so I am not quite sure we are looking at the
+same code.
 
+Therefore, could you please help clarify:
+
+1. Which base kernel are you using?
+
+From the log, you are using 6.5-rc7-706a74159504. However,
+I think we cannot cleanly revert 12a6caf273240a on top of
+6.5-rc7-706a74159504. Did you manually fix some issue in the
+revert? If so, could you please share the revert commit?
+
+2. If you are not using 6.5-rc7-706a74159504 as base kernel, which
+one are you using?
+
+Thanks,
+Song
+
+>
+> >
+> > 2. Try with the following change (add debug messages), which hopefully
+> >    shows which command is holding a reference on mddev->openers.
+> >
+> > Thanks,
+> > Song
+> >
+> > diff --git i/drivers/md/md.c w/drivers/md/md.c
+> > index 78be7811a89f..3e9b718b32c1 100644
+> > --- i/drivers/md/md.c
+> > +++ w/drivers/md/md.c
+> > @@ -7574,11 +7574,15 @@ static int md_ioctl(struct block_device *bdev,
+> > blk_mode_t mode,
+> >                 if (mddev->pers && atomic_read(&mddev->openers) > 1) {
+> >                         mutex_unlock(&mddev->open_mutex);
+> >                         err =3D -EBUSY;
+> > +                       pr_warn("%s return -EBUSY for %s with
+> > mddev->openers =3D %d\n",
+> > +                               __func__, mdname(mddev),
+> > atomic_read(&mddev->openers));
+> >                         goto out;
+> >                 }
+> >                 if (test_and_set_bit(MD_CLOSING, &mddev->flags)) {
+> >                         mutex_unlock(&mddev->open_mutex);
+> >                         err =3D -EBUSY;
+> > +                       pr_warn("%s return -EBUSY for %s with
+> > MD_CLOSING bit set\n",
+> > +                               __func__, mdname(mddev));
+> >                         goto out;
+> >                 }
+> >                 did_set_md_closing =3D true;
+> > @@ -7789,6 +7793,8 @@ static int md_open(struct gendisk *disk, blk_mode=
+_t mode)
+> >                 goto out_unlock;
+> >
+> >         atomic_inc(&mddev->openers);
+> > +       pr_info("%s:%s openers++ =3D %d by %s\n", __func__, mdname(mdde=
+v),
+> > +               atomic_read(&mddev->openers), current->comm);
+> >         mutex_unlock(&mddev->open_mutex);
+> >
+> >         disk_check_media_change(disk);
+> > @@ -7807,6 +7813,8 @@ static void md_release(struct gendisk *disk)
+> >
+> >         BUG_ON(!mddev);
+> >         atomic_dec(&mddev->openers);
+> > +       pr_info("%s:%s openers-- =3D %d by %s\n", __func__, mdname(mdde=
+v),
+> > +               atomic_read(&mddev->openers), current->comm);
+> >         mddev_put(mddev);
+> >  }
+> It's pretty strange that I can't reproduce the issue after applied the pa=
+tch.
+>
+> I tried to figure out which part affect the issue and found when I
+> comment out the pr_info() In md_release(), the issue could be
+> reproduced.
+>
+> --
+> Chia-Lin Kao(AceLan)
+> http://blog.acelan.idv.tw/
+> E-Mail: acelan.kaoATcanonical.com (s/AT/@/)
