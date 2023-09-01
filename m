@@ -2,93 +2,82 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1679F78F97D
-	for <lists+linux-raid@lfdr.de>; Fri,  1 Sep 2023 10:05:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBF8E790027
+	for <lists+linux-raid@lfdr.de>; Fri,  1 Sep 2023 17:51:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348583AbjIAIFB (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 1 Sep 2023 04:05:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33614 "EHLO
+        id S233832AbjIAPvb (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 1 Sep 2023 11:51:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240849AbjIAIFA (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 1 Sep 2023 04:05:00 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A043E56
-        for <linux-raid@vger.kernel.org>; Fri,  1 Sep 2023 01:04:57 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 47A702183A;
-        Fri,  1 Sep 2023 08:04:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1693555496; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4t5xvki63577YuGaTCESG7L+CxKk0i+s7+vMNPLKcik=;
-        b=Bw42zbNKycnJojqPhUCWJcAk50Tr+VEuiIF1iTaRmDmqOgyTrUqoTzkAl2uCkrl5cdpOH+
-        An+tY/1AfuELUA9XbKB0Ak+aWLlhl16FgCBL5hBrwLz6vUh+00emPRzOWreLySzp0dxW/f
-        OLnC06L5sPTe6arKOyFEFix+86zryJ8=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 016021358B;
-        Fri,  1 Sep 2023 08:04:55 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id xsaEOieb8WTQEgAAMHmgww
-        (envelope-from <mwilck@suse.com>); Fri, 01 Sep 2023 08:04:55 +0000
-Message-ID: <c0cf475b190e7ab85061a9f462f4ea07587fa7eb.camel@suse.com>
-Subject: Re: [Question] mdadm CVE-2023-28736 and CVE-2023-28938 problem
-From:   Martin Wilck <mwilck@suse.com>
-To:     miaoguanqin <miaoguanqin@huawei.com>,
-        Jes Sorensen <jes@trained-monkey.org>,
-        Paul Menzel <pmenzel@molgen.mpg.de>, colyli@suse.de,
-        linux-raid@vger.kernel.org
-Cc:     linfeilong <linfeilong@huawei.com>, louhongxiang@huawei.com,
-        lixiaokeng@huawei.com
-Date:   Fri, 01 Sep 2023 10:04:55 +0200
-In-Reply-To: <0837f65fca414498441d6f18904d89f9a09e1a9e.camel@suse.com>
-References: <72867401-8805-4bdb-abe4-c34ff2f06f07@huawei.com>
-         <0837f65fca414498441d6f18904d89f9a09e1a9e.camel@suse.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 
+        with ESMTP id S235364AbjIAPvb (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 1 Sep 2023 11:51:31 -0400
+Received: from sender-op-o9.zoho.eu (sender-op-o9.zoho.eu [136.143.169.9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D07010EF
+        for <linux-raid@vger.kernel.org>; Fri,  1 Sep 2023 08:51:27 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1693582562; cv=none; 
+        d=zohomail.eu; s=zohoarc; 
+        b=azh1H70tg342Qw3+SnWrZ4Xzg8SV0kxmbC5ffEdGTRePdtIlP9gEoFUCOfKEQbKHKnNqwbSFz4kWr02/fyCIeUi5VKkb8EgmmQQvo+OxiIPUVh+eduR/mtG5NPGX4CiHHFJK3G14acBgFU/eQSDXxIKgKT9/gWsAUsBCjF6TrbI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+        t=1693582562; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+        bh=a7d4ly5jdTg0LjUgp4IlVJj4l1AVouEJVRBYw/cmNy4=; 
+        b=KhAlXPLxUH3w+DbljA7PtPdQ3F3dOBqbL3Iq22ITYkHVOXmvP1tnU7p36prTy/CFpOXu3X2v8YukxrAXWAVdK9FETgC38pduTT3DTVO/CMcgsjohwR9PJas8lKOMQVM2nFzCeu6fz28pVfDOas39QN/2F5LGOlpNiV2ua8VDyMM=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+        spf=pass  smtp.mailfrom=jes@trained-monkey.org;
+        dmarc=pass header.from=<jes@trained-monkey.org>
+Received: from [192.168.99.50] (pool-98-113-67-206.nycmny.fios.verizon.net [98.113.67.206]) by mx.zoho.eu
+        with SMTPS id 1693582560000277.6982892516347; Fri, 1 Sep 2023 17:36:00 +0200 (CEST)
+Message-ID: <52f43128-6f68-49fd-9b25-c3026d007d83@trained-monkey.org>
+Date:   Fri, 1 Sep 2023 11:35:57 -0400
 MIME-Version: 1.0
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v4 1/2] Mdmonitor: Improve udev event handling
+Content-Language: en-US
+To:     Mateusz Grzonka <mateusz.grzonka@intel.com>,
+        linux-raid@vger.kernel.org
+References: <20230705145020.31144-1-mateusz.grzonka@intel.com>
+Cc:     Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+From:   Jes Sorensen <jes@trained-monkey.org>
+In-Reply-To: <20230705145020.31144-1-mateusz.grzonka@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
+X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu, 2023-08-31 at 12:04 +0200, Martin Wilck wrote:
-> On Thu, 2023-08-31 at 17:26 +0800, miaoguanqin wrote:
-> > Dear mdadm committers:
-> >=20
-> > Hi! I noticed that the community did not provide the concrete patch
-> > that could fix CVE-2023-28736 and CVE-2023-28938. Intel, in
-> > specific,
-> > suggests upgrading mdadm to version 4.2-rc2 or later [1], to get
-> > rid
-> > of
-> > the issue, however, without finding the root cause or providing
-> > further
-> > explanation.I would like to know if there is such a specific patch,
-> > or a set of patches that actually solve these two CVE problems.
-> >=20
-> > [1]=20
-> > https://www.intel.com/content/www/us/en/security-center/advisory/intel-=
-sa-00690.html
-> >=20
->=20
-> I think it's ced5fa8 ("mdadm: block creation with long names").
+On 7/5/23 10:50, Mateusz Grzonka wrote:
+> Mdmonitor is waiting for udev queue to become empty.
+> Even if the queue becomes empty, udev might still be processing last event.
+> However we want to wait and wake up mdmonitor when udev finished
+> processing events..
+> 
+> Also, the udev queue interface is considered legacy and should not be
+> used outside of udev.
+> 
+> Use udev monitor instead, and wake up mdmonitor on every event triggered
+> by udev for md block device.
+> 
+> We need to generate more change events from kernel, because they are
+> missing in some situations, for example, when rebuild started.
+> This will be addressed in a separate patch.
+> 
+> Move udev specific code into separate functions, and place them in udev.c file.
+> Also move use_udev() logic from lib.c into newly created file.
+> 
+> Signed-off-by: Mateusz Grzonka <mateusz.grzonka@intel.com>
 
-... and the other was  7d374a1 ("Fix memory leak after "mdadm --
-detail"")
+Generally looks good to me.
 
-Martin
+One question, is there a minimum version of udev required for this to
+work or has it been around long enough that we don't need to worry?
+
+Thanks,
+Jes
+
 
