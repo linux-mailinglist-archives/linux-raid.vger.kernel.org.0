@@ -2,106 +2,59 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E1CF79284D
-	for <lists+linux-raid@lfdr.de>; Tue,  5 Sep 2023 18:43:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6A327927CC
+	for <lists+linux-raid@lfdr.de>; Tue,  5 Sep 2023 18:37:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236995AbjIEQDn (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 5 Sep 2023 12:03:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45920 "EHLO
+        id S237044AbjIEQDp (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 5 Sep 2023 12:03:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354732AbjIENye (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 5 Sep 2023 09:54:34 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C8C6197;
-        Tue,  5 Sep 2023 06:54:30 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dragan@stancevic.com
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 631BE6C1B64;
-        Tue,  5 Sep 2023 13:54:30 +0000 (UTC)
-Received: from pdx1-sub0-mail-a249.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id EB55D6C0A37;
-        Tue,  5 Sep 2023 13:54:27 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1693922068; a=rsa-sha256;
-        cv=none;
-        b=sfCdsw5E7KRHfj6qb6YmO0BB4kOSq1ntVsk3HDwmsQJck6haIW/8iUKzPmcIXyhpt5vBH7
-        VTjGmv/72bIT6LlgcbX1Md07B4Wf+YsfgvZXPjCth/2v2b3+SMDl1UimP3LBY9eGgNnbKl
-        Whxxc3kDAPysmpIW7HP/alr/kHYvZ4oapBBO4v+4zmwVKeCSr8D6TcVPZlDwoVnQsXwSpK
-        xob4R0G+N2CTdgJJ+dJTxXku0Xf2kJVywzPuKX42gDGBCDY2utcDvDmx9899lBnVBJ0YU4
-        JSRtGqp5z2b8OCPnAEtAdsfIYKlUGeax4rTdKxynqtSDjCPgG9HXM+w2qvHkXA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1693922068;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=YSrH/KnkOMtWbkKTTQFyMqEbfklmyppO1MILJK4fgqs=;
-        b=vq16WH467qElQg1T6C3st3Wj8VSqGT6UEEKI8vrS8kOPXgsp5gVJdMyFqq0KaYqlkZ/uZg
-        O/F26JUOGdDV4KCbbjIMC4Ilwd+yZm8DijKRcvObd400cLfjbrXXeU3irSIGazVpE9+VE9
-        3YxB7Qh+iNT6egJRtGyVFagEiZtUn0zH3ArZCQAxENPFhcazs/+qmFYvIamBPWK3KuBbvP
-        6HgJKYJmlBQlZkHJZOiGxEUEuwz0PSKl8+eOPQUEeUuKEDf1c8LZvFIzzthMFwy8kzlNZ+
-        sVCShbUwHxI5VkEX/m2V6VNqvNnvmgHXGKSpZ4N7SD3YsdVFzVHLq4X7EKzXvw==
-ARC-Authentication-Results: i=1;
-        rspamd-6fd95854bb-lb46n;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dragan@stancevic.com
-X-Sender-Id: dreamhost|x-authsender|dragan@stancevic.com
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dragan@stancevic.com
-X-MailChannels-Auth-Id: dreamhost
-X-Abiding-Macabre: 3b4a416e5ee73ca8_1693922068939_3873094390
-X-MC-Loop-Signature: 1693922068939:3117084652
-X-MC-Ingress-Time: 1693922068939
-Received: from pdx1-sub0-mail-a249.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.120.143.185 (trex/6.9.1);
-        Tue, 05 Sep 2023 13:54:28 +0000
-Received: from [192.168.1.36] (99-160-136-52.lightspeed.nsvltn.sbcglobal.net [99.160.136.52])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        with ESMTP id S1354856AbjIEPHT (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 5 Sep 2023 11:07:19 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E0B818D
+        for <linux-raid@vger.kernel.org>; Tue,  5 Sep 2023 08:07:15 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        (Authenticated sender: dragan@stancevic.com)
-        by pdx1-sub0-mail-a249.dreamhost.com (Postfix) with ESMTPSA id 4Rg6SL751Rz1b;
-        Tue,  5 Sep 2023 06:54:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stancevic.com;
-        s=dreamhost; t=1693922067;
-        bh=YSrH/KnkOMtWbkKTTQFyMqEbfklmyppO1MILJK4fgqs=;
-        h=Date:Subject:To:Cc:From:Content-Type:Content-Transfer-Encoding;
-        b=byyMlp3+1fl5LGzbfN+YOL6wXZCQgOTBOG5ipX8gUSEV5aBIGNLAGUa0qOaDEpUjM
-         Y2otfwCbqxr5cEL4zZz8Gor4fXvs6PIC4Hs89+fF94NJmErxUG1Q9ytGovsXwCyK0A
-         2vBUCAWQ+npgZBemO+yJo5xYRUnvrPSckmnUnMGP768hidm4JwYswMuCpi7uyanPdc
-         L/dkujl4izMS183NDMUedFoNKSLq5GJz2yqhRb5qdRN8rdVa5vffj7k+P8Yzkf1Ey2
-         cjxY1jRHbM9osKzbt8ABD7QUYvVUT8NgqAeCUYUKBguhhjqKMZ0dox4SKCG2cIwR5j
-         zULsCfiaIa+JQ==
-Message-ID: <07ef7b78-66d4-d3de-4e25-8a889b902e14@stancevic.com>
-Date:   Tue, 5 Sep 2023 08:54:25 -0500
+        by smtp-out1.suse.de (Postfix) with ESMTPS id D367221BF4;
+        Tue,  5 Sep 2023 15:07:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1693926433; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=aYBioI7hDw6gZmrpEGH9M6jXBsJjL4gB/otP/tCbPcs=;
+        b=FRXejz7AcTaXSMSAf2cf1TfiTolBmJTliCnDVtNo2HFNFL6jK1PDPCnL4YBeROiNW4vg8a
+        YnKetBBVl32/b20zNWdOdwRm3lA5aCucjvtkn3WH7sxkOb/l65pflM3oBgeCQE/Dh2cJ+N
+        wv/CAzdS1xkcMcCVgYtSOEroGrTt+Iw=
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9860D13911;
+        Tue,  5 Sep 2023 15:07:13 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id aYWaIyFE92TbbgAAMHmgww
+        (envelope-from <mwilck@suse.com>); Tue, 05 Sep 2023 15:07:13 +0000
+Message-ID: <f22989f511b55e200f63a27ff60d14951bfb139c.camel@suse.com>
+Subject: Re: [PATCH v2] Fix race of "mdadm --add" and "mdadm --incremental"
+From:   Martin Wilck <mwilck@suse.com>
+To:     Li Xiao Keng <lixiaokeng@huawei.com>,
+        Jes Sorensen <jes@trained-monkey.org>,
+        Coly Li <colyli@suse.de>, linux-raid@vger.kernel.org
+Cc:     louhongxiang@huawei.com, miaoguanqin <miaoguanqin@huawei.com>
+Date:   Tue, 05 Sep 2023 17:07:12 +0200
+In-Reply-To: <bcc2d161-521b-ea19-b090-9822925645e5@huawei.com>
+References: <bcc2d161-521b-ea19-b090-9822925645e5@huawei.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.48.4 
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: md_raid: mdX_raid6 looping after sync_action "check" to "idle"
- transition
-Content-Language: en-US
-To:     Yu Kuai <yukuai1@huaweicloud.com>, song@kernel.org
-Cc:     buczek@molgen.mpg.de, guoqing.jiang@linux.dev,
-        it+raid@molgen.mpg.de, linux-kernel@vger.kernel.org,
-        linux-raid@vger.kernel.org, msmith626@gmail.com,
-        "yangerkun@huawei.com" <yangerkun@huawei.com>
-References: <CAPhsuW6R11y6vETeZ4vmFGmV6DRrj2gwhp1-Nm+csvtHb2nQYg@mail.gmail.com>
- <20230822211627.1389410-1-dragan@stancevic.com>
- <ab757e2b-3ff0-33d9-d30c-61669b738664@huaweicloud.com>
- <2061b123-6332-1456-e7c3-b713752527fb@stancevic.com>
- <07d5c7c2-c444-8747-ed6d-ca24231decd8@huaweicloud.com>
- <cf765117-7270-1b98-7e82-82a1ca1daa2a@stancevic.com>
- <0d79d1f9-00e8-93be-3c7c-244030521cd7@huaweicloud.com>
- <ff996ffb-cba5-cc9b-2740-49ba4a1869b5@huaweicloud.com>
-From:   Dragan Stancevic <dragan@stancevic.com>
-In-Reply-To: <ff996ffb-cba5-cc9b-2740-49ba4a1869b5@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -109,65 +62,109 @@ Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 9/4/23 22:50, Yu Kuai wrote:
-> Hi,
-> 
-> 在 2023/08/30 9:36, Yu Kuai 写道:
->> Hi,
->>
->> 在 2023/08/29 4:32, Dragan Stancevic 写道:
->>
->>> Just a followup on 6.1 testing. I tried reproducing this problem for 
->>> 5 days with 6.1.42 kernel without your patches and I was not able to 
->>> reproduce it.
-> 
-> oops, I forgot that you need to backport this patch first to reporduce
-> this problem:
-> 
-> https://lore.kernel.org/all/20230529132037.2124527-2-yukuai1@huaweicloud.com/
-> 
-> The patch fix the deadlock as well, but it introduce some regressions.
-
-Ha, jinx :) I was about to email you that I isolated that change with 
-the testing over the weekend that made it more difficult to reproduce in 
-6.1 and that the original change must be reverted :)
-
-
-
-> 
-> Thanks,
-> Kuai
-> 
->>>
->>> It seems that 6.1 has some other code that prevents this from happening.
->>>
->>
->> I see that there are lots of patches for raid456 between 5.10 and 6.1,
->> however, I remember that I used to reporduce the deadlock after 6.1, and
->> it's true it's not easy to reporduce, see below:
->>
->> https://lore.kernel.org/linux-raid/e9067438-d713-f5f3-0d3d-9e6b0e9efa0e@huaweicloud.com/
->>
->> My guess is that 6.1 is harder to reporduce than 5.10 due to some
->> changes inside raid456.
->>
->> By the way, raid10 had a similiar deadlock, and can be fixed the same
->> way, so it make sense to backport these patches.
->>
->> https://lore.kernel.org/r/20230529132037.2124527-5-yukuai1@huaweicloud.com
->>
->> Thanks,
->> Kuai
->>
->>
->>> On 5.10 I can reproduce it within minutes to an hour.
->>>
->>
->> .
->>
-> 
-
--- 
-Peace can only come as a natural consequence
-of universal enlightenment -Dr. Nikola Tesla
+T24gVHVlLCAyMDIzLTA5LTA1IGF0IDIwOjAyICswODAwLCBMaSBYaWFvIEtlbmcgd3JvdGU6Cj4g
+V2hlbiB3ZSBhZGQgYSBuZXcgZGlzayB0byBhIHJhaWQsIGl0IG1heSByZXR1cm4gLUVCVVNZLgo+
+IAo+IFRoZSBtYWluIHByb2Nlc3Mgb2YgLS1hZGQ6Cj4gMS4gZGV2X29wZW4KPiAyLiBzdG9yZV9z
+dXBlcjEoc3QsIGRpLT5mZCkgaW4gd3JpdGVfaW5pdF9zdXBlcjEKPiAzLiBmc3luYyhkaS0+ZmQp
+IGluIHdyaXRlX2luaXRfc3VwZXIxCj4gNC4gY2xvc2UoZGktPmZkKQo+IDUuIGlvY3RsKEFERF9O
+RVdfRElTSykKPiAKPiBIb3dldmVyLCB0aGVyZSB3aWxsIGJlIHNvbWUgdWRldihjaGFuZ2UpIGV2
+ZW50IGFmdGVyIHN0ZXA0LiBUaGVuCj4gIi91c3Ivc2Jpbi9tZGFkbSAtLWluY3JlbWVudGFsIC4u
+LiIgd2lsbCBiZSBydW4sIGFuZCB0aGUgbmV3IGRpc2sKPiB3aWxsIGJlIGFkZCB0byBtZCBkZXZp
+Y2UuIEFmdGVyIHRoYXQsIGlvY3RsIHdpbGwgcmV0dXJuIC1FQlVTWS4KPiAKPiBIZXJlIHdlIGFk
+ZCBtYXBfbG9jayBiZWZvcmUgd3JpdGVfaW5pdF9zdXBlciBpbiAibWRhZG0gLS1hZGQiCj4gdG8g
+Zml4IHRoaXMgcmFjZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBMaSBYaWFvIEtlbmcgPGxpeGlhb2tl
+bmdAaHVhd2VpLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBHdWFucWluIE1pYW8gPG1pYW9ndWFucWlu
+QGh1YXdlaS5jb20+CgpSZXZpZXdlZC1ieTogTWFydGluIFdpbGNrIDxtd2lsY2tAc3VzZS5jb20+
+Cgo+IC0tLQo+IKBBc3NlbWJsZS5jIHygIDUgKysrKy0KPiCgTWFuYWdlLmOgoCB8IDI1ICsrKysr
+KysrKysrKysrKysrLS0tLS0tLS0KPiCgMiBmaWxlcyBjaGFuZ2VkLCAyMSBpbnNlcnRpb25zKCsp
+LCA5IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9Bc3NlbWJsZS5jIGIvQXNzZW1ibGUu
+Ywo+IGluZGV4IDQ5ODA0OTQxLi4wODY4OTBlZCAxMDA2NDQKPiAtLS0gYS9Bc3NlbWJsZS5jCj4g
+KysrIGIvQXNzZW1ibGUuYwo+IEBAIC0xNDc5LDggKzE0NzksMTEgQEAgdHJ5X2FnYWluOgo+IKCg
+oKCgoKCgICogdG8gb3VyIGxpc3QuoCBXZSBmbGFnIHRoZW0gc28gdGhhdCB3ZSBkb24ndCB0cnkg
+dG8gcmUtYWRkLAo+IKCgoKCgoKCgICogYnV0IGNhbiByZW1vdmUgaWYgdGhleSB0dXJuIG91dCB0
+byBub3QgYmUgd2FudGVkLgo+IKCgoKCgoKCgICovCj4gLaCgoKCgoKBpZiAobWFwX2xvY2soJm1h
+cCkpCj4gK6CgoKCgoKBpZiAobWFwX2xvY2soJm1hcCkpIHsKPiCgoKCgoKCgoKCgoKCgoKCgcHJf
+ZXJyKCJmYWlsZWQgdG8gZ2V0IGV4Y2x1c2l2ZSBsb2NrIG9uIG1hcGZpbGUgLQo+IGNvbnRpbnVl
+IGFueXdheS4uLlxuIik7Cj4gK6CgoKCgoKCgoKCgoKCgoHJldHVybiAxOwo+ICugoKCgoKCgfQo+
+ICsKPiCgoKCgoKCgoGlmIChjLT51cGRhdGUgPT0gVU9QVF9VVUlEKQo+IKCgoKCgoKCgoKCgoKCg
+oKBtcCA9IE5VTEw7Cj4goKCgoKCgoKBlbHNlCj4gZGlmZiAtLWdpdCBhL01hbmFnZS5jIGIvTWFu
+YWdlLmMKPiBpbmRleCBmNTRkZTdjNi4uNmExMDFiYWUgMTAwNjQ0Cj4gLS0tIGEvTWFuYWdlLmMK
+PiArKysgYi9NYW5hZ2UuYwo+IEBAIC03MDMsNiArNzAzLDcgQEAgaW50IE1hbmFnZV9hZGQoaW50
+IGZkLCBpbnQgdGZkLCBzdHJ1Y3QgbWRkZXZfZGV2Cj4gKmR2LAo+IKCgoKCgoKCgc3RydWN0IHN1
+cGVydHlwZSAqZGV2X3N0Owo+IKCgoKCgoKCgaW50IGo7Cj4goKCgoKCgoKBtZHVfZGlza19pbmZv
+X3QgZGlzYzsKPiAroKCgoKCgoHN0cnVjdCBtYXBfZW50ICptYXAgPSBOVUxMOwo+IAo+IKCgoKCg
+oKCgaWYgKCFnZXRfZGV2X3NpemUodGZkLCBkdi0+ZGV2bmFtZSwgJmxkc2l6ZSkpIHsKPiCgoKCg
+oKCgoKCgoKCgoKCgaWYgKGR2LT5kaXNwb3NpdGlvbiA9PSAnTScpCj4gQEAgLTkwMCw2ICs5MDEs
+MTAgQEAgaW50IE1hbmFnZV9hZGQoaW50IGZkLCBpbnQgdGZkLCBzdHJ1Y3QgbWRkZXZfZGV2Cj4g
+KmR2LAo+IKCgoKCgoKCgoKCgoKCgoKBkaXNjLnJhaWRfZGlzayA9IDA7Cj4goKCgoKCgoKB9Cj4g
+Cj4gK6CgoKCgoKBpZiAobWFwX2xvY2soJm1hcCkpIHsKPiAroKCgoKCgoKCgoKCgoKCgcHJfZXJy
+KCJmYWlsZWQgdG8gZ2V0IGV4Y2x1c2l2ZSBsb2NrIG9uIG1hcGZpbGUgd2hlbgo+IGFkZCBkaXNr
+XG4iKTsKPiAroKCgoKCgoKCgoKCgoKCgcmV0dXJuIC0xOwo+ICugoKCgoKCgfQo+IKCgoKCgoKCg
+aWYgKGFycmF5LT5ub3RfcGVyc2lzdGVudD09MCkgewo+IKCgoKCgoKCgoKCgoKCgoKBpbnQgZGZk
+Owo+IKCgoKCgoKCgoKCgoKCgoKBpZiAoZHYtPmRpc3Bvc2l0aW9uID09ICdqJykKPiBAQCAtOTEx
+LDkgKzkxNiw5IEBAIGludCBNYW5hZ2VfYWRkKGludCBmZCwgaW50IHRmZCwgc3RydWN0IG1kZGV2
+X2Rldgo+ICpkdiwKPiCgoKCgoKCgoKCgoKCgoKCgZGZkID0gZGV2X29wZW4oZHYtPmRldm5hbWUs
+IE9fUkRXUiB8Cj4gT19FWENMfE9fRElSRUNUKTsKPiCgoKCgoKCgoKCgoKCgoKCgaWYgKHRzdC0+
+c3MtPmFkZF90b19zdXBlcih0c3QsICZkaXNjLCBkZmQsCj4goKCgoKCgoKCgoKCgoKCgoKCgoKCg
+oKCgoKCgoKCgoKCgoKCgoKCgoKAgZHYtPmRldm5hbWUsCj4gSU5WQUxJRF9TRUNUT1JTKSkKPiAt
+oKCgoKCgoKCgoKCgoKCgoKCgoKCgoKByZXR1cm4gLTE7Cj4gK6CgoKCgoKCgoKCgoKCgoKCgoKCg
+oKCgZ290byB1bmxvY2s7Cj4goKCgoKCgoKCgoKCgoKCgoGlmICh0c3QtPnNzLT53cml0ZV9pbml0
+X3N1cGVyKHRzdCkpCj4gLaCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgcmV0dXJuIC0xOwo+ICugoKCg
+oKCgoKCgoKCgoKCgoKCgoKCgoGdvdG8gdW5sb2NrOwo+IKCgoKCgoKCgfSBlbHNlIGlmIChkdi0+
+ZGlzcG9zaXRpb24gPT0gJ0EnKSB7Cj4goKCgoKCgoKCgoKCgoKCgoC8qoCB0aGlzIGhhZCBiZXR0
+ZXIgYmUgcmFpZDEuCj4goKCgoKCgoKCgoKCgoKCgoCAqIEFzIHdlIGFyZSAiLS1yZS1hZGQiaW5n
+IHdlIG11c3QgZmluZCBhIHNwYXJlIHNsb3QKPiBAQCAtOTcxLDE0ICs5NzYsMTQgQEAgaW50IE1h
+bmFnZV9hZGQoaW50IGZkLCBpbnQgdGZkLCBzdHJ1Y3QKPiBtZGRldl9kZXYgKmR2LAo+IKCgoKCg
+oKCgoKCgoKCgoKCgoKCgoKCgoHByX2VycigiYWRkIGZhaWxlZCBmb3IgJXM6IGNvdWxkIG5vdCBn
+ZXQKPiBleGNsdXNpdmUgYWNjZXNzIHRvIGNvbnRhaW5lclxuIiwKPiCgoKCgoKCgoKCgoKCgoKCg
+oKCgoKCgoKCgoKCgoKAgZHYtPmRldm5hbWUpOwo+IKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoHRz
+dC0+c3MtPmZyZWVfc3VwZXIodHN0KTsKPiAtoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKByZXR1cm4g
+LTE7Cj4gK6CgoKCgoKCgoKCgoKCgoKCgoKCgoKCgZ290byB1bmxvY2s7Cj4goKCgoKCgoKCgoKCg
+oKCgoH0KPiAKPiCgoKCgoKCgoKCgoKCgoKCgLyogQ2hlY2sgaWYgbWV0YWRhdGEgaGFuZGxlciBp
+cyBhYmxlIHRvIGFjY2VwdCB0aGUKPiBkcml2ZSAqLwo+IKCgoKCgoKCgoKCgoKCgoKBpZiAoIXRz
+dC0+c3MtPnZhbGlkYXRlX2dlb21ldHJ5KHRzdCwgTEVWRUxfQ09OVEFJTkVSLAo+IDAsIDEsIE5V
+TEwsCj4goKCgoKCgoKCgoKCgoKCgoKCgoCAwLCAwLCBkdi0+ZGV2bmFtZSwgTlVMTCwgMCwgMSkp
+IHsKPiCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKBjbG9zZShjb250YWluZXJfZmQpOwo+IC2goKCg
+oKCgoKCgoKCgoKCgoKCgoKCgoHJldHVybiAtMTsKPiAroKCgoKCgoKCgoKCgoKCgoKCgoKCgoKBn
+b3RvIHVubG9jazsKPiCgoKCgoKCgoKCgoKCgoKCgfQo+IAo+IKCgoKCgoKCgoKCgoKCgoKBLaWxs
+KGR2LT5kZXZuYW1lLCBOVUxMLCAwLCAtMSwgMCk7Cj4gQEAgLTk4Nyw3ICs5OTIsNyBAQCBpbnQg
+TWFuYWdlX2FkZChpbnQgZmQsIGludCB0ZmQsIHN0cnVjdCBtZGRldl9kZXYKPiAqZHYsCj4goKCg
+oKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKAgZHYtPmRldm5hbWUsCj4gSU5W
+QUxJRF9TRUNUT1JTKSkgewo+IKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoGNsb3NlKGRmZCk7Cj4g
+oKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgY2xvc2UoY29udGFpbmVyX2ZkKTsKPiAtoKCgoKCgoKCg
+oKCgoKCgoKCgoKCgoKByZXR1cm4gLTE7Cj4gK6CgoKCgoKCgoKCgoKCgoKCgoKCgoKCgZ290byB1
+bmxvY2s7Cj4goKCgoKCgoKCgoKCgoKCgoH0KPiCgoKCgoKCgoKCgoKCgoKCgaWYgKCFtZG1vbl9y
+dW5uaW5nKHRzdC0+Y29udGFpbmVyX2Rldm5tKSkKPiCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKB0
+c3QtPnNzLT5zeW5jX21ldGFkYXRhKHRzdCk7Cj4gQEAgLTk5OCw3ICsxMDAzLDcgQEAgaW50IE1h
+bmFnZV9hZGQoaW50IGZkLCBpbnQgdGZkLCBzdHJ1Y3QgbWRkZXZfZGV2Cj4gKmR2LAo+IKCgoKCg
+oKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoCBkdi0+ZGV2bmFtZSk7Cj4goKCgoKCgoKCgoKCgoKCg
+oKCgoKCgoKCgY2xvc2UoY29udGFpbmVyX2ZkKTsKPiCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKB0
+c3QtPnNzLT5mcmVlX3N1cGVyKHRzdCk7Cj4gLaCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgcmV0dXJu
+IC0xOwo+ICugoKCgoKCgoKCgoKCgoKCgoKCgoKCgoGdvdG8gdW5sb2NrOwo+IKCgoKCgoKCgoKCg
+oKCgoKB9Cj4goKCgoKCgoKCgoKCgoKCgoHNyYS0+YXJyYXkubGV2ZWwgPSBMRVZFTF9DT05UQUlO
+RVI7Cj4goKCgoKCgoKCgoKCgoKCgoC8qIE5lZWQgdG8gc2V0IGRhdGFfb2Zmc2V0IGFuZCBjb21w
+b25lbnRfc2l6ZSAqLwo+IEBAIC0xMDEzLDcgKzEwMTgsNyBAQCBpbnQgTWFuYWdlX2FkZChpbnQg
+ZmQsIGludCB0ZmQsIHN0cnVjdAo+IG1kZGV2X2RldiAqZHYsCj4goKCgoKCgoKCgoKCgoKCgoKCg
+oKCgoKCgcHJfZXJyKCJhZGQgbmV3IGRldmljZSB0byBleHRlcm5hbCBtZXRhZGF0YQo+IGZhaWxl
+ZCBmb3IgJXNcbiIsIGR2LT5kZXZuYW1lKTsKPiCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKBjbG9z
+ZShjb250YWluZXJfZmQpOwo+IKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoHN5c2ZzX2ZyZWUoc3Jh
+KTsKPiAtoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKByZXR1cm4gLTE7Cj4gK6CgoKCgoKCgoKCgoKCg
+oKCgoKCgoKCgZ290byB1bmxvY2s7Cj4goKCgoKCgoKCgoKCgoKCgoH0KPiCgoKCgoKCgoKCgoKCg
+oKCgcGluZ19tb25pdG9yKGRldm5tKTsKPiCgoKCgoKCgoKCgoKCgoKCgc3lzZnNfZnJlZShzcmEp
+Owo+IEBAIC0xMDI3LDcgKzEwMzIsNyBAQCBpbnQgTWFuYWdlX2FkZChpbnQgZmQsIGludCB0ZmQs
+IHN0cnVjdAo+IG1kZGV2X2RldiAqZHYsCj4goKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgZWxzZQo+
+IKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgcHJfZXJyKCJhZGQgbmV3IGRldmljZSBm
+YWlsZWQgZm9yICVzCj4gYXMgJWQ6ICVzXG4iLAo+IKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCg
+oKCgoKCgoKCgoKCgIGR2LT5kZXZuYW1lLCBqLAo+IHN0cmVycm9yKGVycm5vKSk7Cj4gLaCgoKCg
+oKCgoKCgoKCgoKCgoKCgoKCgcmV0dXJuIC0xOwo+ICugoKCgoKCgoKCgoKCgoKCgoKCgoKCgoGdv
+dG8gdW5sb2NrOwo+IKCgoKCgoKCgoKCgoKCgoKB9Cj4goKCgoKCgoKCgoKCgoKCgoGlmIChkdi0+
+ZGlzcG9zaXRpb24gPT0gJ2onKSB7Cj4goKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgcHJfZXJyKCJK
+b3VybmFsIGFkZGVkIHN1Y2Nlc3NmdWxseSwgbWFraW5nICVzCj4gcmVhZC13cml0ZVxuIiwgZGV2
+bmFtZSk7Cj4gQEAgLTEwMzgsNyArMTA0MywxMSBAQCBpbnQgTWFuYWdlX2FkZChpbnQgZmQsIGlu
+dCB0ZmQsIHN0cnVjdAo+IG1kZGV2X2RldiAqZHYsCj4goKCgoKCgoKB9Cj4goKCgoKCgoKBpZiAo
+dmVyYm9zZSA+PSAwKQo+IKCgoKCgoKCgoKCgoKCgoKBwcl9lcnIoImFkZGVkICVzXG4iLCBkdi0+
+ZGV2bmFtZSk7Cj4gK6CgoKCgoKBtYXBfdW5sb2NrKCZtYXApOwo+IKCgoKCgoKCgcmV0dXJuIDE7
+Cj4gK3VubG9jazoKPiAroKCgoKCgoG1hcF91bmxvY2soJm1hcCk7Cj4gK6CgoKCgoKByZXR1cm4g
+LTE7Cj4goH0KPiAKPiCgaW50IE1hbmFnZV9yZW1vdmUoc3RydWN0IHN1cGVydHlwZSAqdHN0LCBp
+bnQgZmQsIHN0cnVjdCBtZGRldl9kZXYKPiAqZHYsCgo=
 
