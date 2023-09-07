@@ -2,248 +2,327 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9743879756A
-	for <lists+linux-raid@lfdr.de>; Thu,  7 Sep 2023 17:51:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E12A797385
+	for <lists+linux-raid@lfdr.de>; Thu,  7 Sep 2023 17:26:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235275AbjIGPrL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 7 Sep 2023 11:47:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52098 "EHLO
+        id S230116AbjIGP0D (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 7 Sep 2023 11:26:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239158AbjIGPi0 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 7 Sep 2023 11:38:26 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24814210B
-        for <linux-raid@vger.kernel.org>; Thu,  7 Sep 2023 08:37:09 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id ffacd0b85a97d-31c479ede21so1099819f8f.2
-        for <linux-raid@vger.kernel.org>; Thu, 07 Sep 2023 08:37:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694100997; x=1694705797; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GTBDC0NtQ86OlxmzNZkq0p3yRwTevFGZ90eicV4tpVs=;
-        b=rjs77/kmbPTxtGgDw1u8YxjKB2jhAQJcpk5VkKz6pB1VRR8JyuV51FO3VE/18xNKSA
-         j1m6YErMPJhgsDSR+iGrgoe9eggW0Lu9dvzwCjCVfOU996sUhU0MNjgz7hClvvsbHdXE
-         Rt8TmQ7CQjDJhuYfoMAhNlZlw8ypk+1YlXmCd6JYmFAYdQWSKj2IqZq+Ya9FyFedxDYZ
-         axvEN4EuPb+BDbpGDb8TrmC4pV50eeVN6w2tX/wbfQFSSA/CJKv16cV/QPdRpZPR3d4r
-         wyrMTX3LvstzUVYv2uafobz3v+Zw+CCRPs/0fx/JGttX/psdIJkV/Ewiv5EksS+jqdZd
-         HmNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1694100997; x=1694705797;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GTBDC0NtQ86OlxmzNZkq0p3yRwTevFGZ90eicV4tpVs=;
-        b=DkMzBf4xsu/JqZFNgRjgAez+/BoUDb5xH+Y5oW4I0gh3epWnlDx7lZvKNUX08mdIHt
-         aSjEJbRrCWnnkFJZ0+G2G48UA3e56c7USyZZ2m/N5D8Xnhc+09y+vCEVN37x+6d0Pk6E
-         iFGdYXcGt+uPW/zbs7PQAGSzwve5TUCrl6kUVOSN4MLlLH+HdVU/KtLR09b0ap/P4YsD
-         PZJPk50pK+yTH3r0S+23lY2cxQngGTk1Z78ZwfLIFOseB4DSQNBgvZnpnkWfK9LmUhoS
-         wTrKNwyDlbTmPwXwp09Ig3yS50+7n16r5n2lVnMmwVbvxo1K2h/z3MLUS+FN6BFFdDta
-         Syuw==
-X-Gm-Message-State: AOJu0YwtpQwEwTefXAqgpEO45tb9lHRlfK13uRkFEgD92YXu0Zx9gA0P
-        +vB37OoQciFI7s1E1QV1mAEDFRVWNiCSZYlB3zuILW/9l+hyDA==
-X-Google-Smtp-Source: AGHT+IGZZBZjOZiibbT6zP5QW/5w+3Cg4dcRVzZfr/twCorcJ3RKfYjJvqs4xWLT7dOI/erdqu4ev0psZkkbsOcOiSg=
-X-Received: by 2002:a05:6512:104a:b0:4fe:8c1d:9e81 with SMTP id
- c10-20020a056512104a00b004fe8c1d9e81mr5771001lfb.36.1694086213514; Thu, 07
- Sep 2023 04:30:13 -0700 (PDT)
+        with ESMTP id S231245AbjIGPVo (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 7 Sep 2023 11:21:44 -0400
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 031E3121;
+        Thu,  7 Sep 2023 08:21:18 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4RhK182Bwhz4f3pCG;
+        Thu,  7 Sep 2023 20:53:32 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+        by APP4 (Coremail) with SMTP id gCh0CgDHVqnLx_lk6IRbCg--.35707S3;
+        Thu, 07 Sep 2023 20:53:32 +0800 (CST)
+Subject: Re: Infiniate systemd loop when power off the machine with multiple
+ MD RAIDs
+To:     Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
+        Yu Kuai <yukuai1@huaweicloud.com>
+Cc:     AceLan Kao <acelan@gmail.com>, Song Liu <song@kernel.org>,
+        Guoqing Jiang <guoqing.jiang@linux.dev>,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Regressions <regressions@lists.linux.dev>,
+        Linux RAID <linux-raid@vger.kernel.org>,
+        "yangerkun@huawei.com" <yangerkun@huawei.com>,
+        "yukuai (C)" <yukuai3@huawei.com>
+References: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
+ <CAMz9Wg8KE1rDkSaQnUTJ5ikzH7YGGYbkLM3AcrVue3=JgK+14w@mail.gmail.com>
+ <35130b3f-c0fd-e2d6-e849-a5ceb6a2895f@linux.dev>
+ <CAMz9Wg_zKSJ2vL=r2zAtLBOv4GSMT63+ZQGXfYTjVJsE+DLQGA@mail.gmail.com>
+ <CAPhsuW6W0XgFjH1zNC+EFYjujd4smEiWs+-nYCWQ+KaFmbuvkg@mail.gmail.com>
+ <CAMz9Wg9y52iuxJRSQFC2N5Katt72v-o=JvEjegJt-MwORmw9tQ@mail.gmail.com>
+ <CAPhsuW7XEy4q3XR389F7CUvXvJ=0JR0QkMOr4LU03avT0erAfg@mail.gmail.com>
+ <354004ce-ad4e-5ad5-8fe6-303216647e0c@huaweicloud.com>
+ <03b79ab0-0bb0-ac29-4a70-37d902f9a05b@huaweicloud.com>
+ <20230831085057.00001795@linux.intel.com>
+ <CAMz9Wg8bhCG=qSLia943dwr=LV7Kum=bZPq2s_2coV6a_bmDeA@mail.gmail.com>
+ <20230906122751.00001e5b@linux.intel.com>
+ <43b0b2f4-17c0-61d2-9c41-0595fb6f2efc@huaweicloud.com>
+ <20230907121819.00005a15@linux.intel.com>
+ <cffca94f-5729-622d-9327-632b3ff2891a@huaweicloud.com>
+ <3e7edf0c-cadd-59b0-4e10-dffdb86b93b7@huaweicloud.com>
+ <20230907144153.00002492@linux.intel.com>
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <513ea05e-cc2e-e0c8-43cc-6636b0631cdf@huaweicloud.com>
+Date:   Thu, 7 Sep 2023 20:53:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <CAGqmV7ojxmsMVStS2LWzfeN+A565z4U=d9kUBUnAfCGq5TGtsw@mail.gmail.com>
- <c22e4c16-ad15-b358-ac42-778675aeb5ad@huaweicloud.com>
-In-Reply-To: <c22e4c16-ad15-b358-ac42-778675aeb5ad@huaweicloud.com>
-From:   CoolCold <coolthecold@gmail.com>
-Date:   Thu, 7 Sep 2023 18:29:13 +0700
-Message-ID: <CAGqmV7obHLD5FOT_jL05gw5-kMLXsWJpvv6VfoHce9-Pz6i74Q@mail.gmail.com>
-Subject: Re: RADI10 slower than SINGLE drive - tests with fio for block device
- (no filesystem in use) - 18.5k vs 26k iops
-To:     Yu Kuai <yukuai1@huaweicloud.com>
-Cc:     Linux RAID <linux-raid@vger.kernel.org>,
-        "yukuai (C)" <yukuai3@huawei.com>,
-        "yangerkun@huawei.com" <yangerkun@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-0.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230907144153.00002492@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: gCh0CgDHVqnLx_lk6IRbCg--.35707S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxtF15Xr13Ww1UGF18try8AFb_yoWfXFy5pF
+        W8JF4YkrWUGw18Jw4jqw1UXa45twnFyayDXry3Jas3A34vyryjgw15Xr4j9ryDGr4rCr1j
+        qw1UtF47Zr1UtwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+        6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+        c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+        AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+        17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+        IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3
+        Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
+        sGvfC2KfnxnUUI43ZEXa7VUb0D73UUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.5 required=5.0 tests=NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Good day!
+Hi,
 
-On Mon, Sep 4, 2023 at 2:16=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.com> wr=
-ote:
->
-> Hi,
->
-> =E5=9C=A8 2023/09/02 14:56, CoolCold =E5=86=99=E9=81=93:
-> > Good day!
-> > 2nd part of the question, in relation of hardware/system from previous
-> > thread -  "raid10, far layout initial sync slow + XFS question"
-> > https://www.spinics.net/lists/raid/msg74907.html - Ubuntu 20.04 with
-> > kernel "5.4.0-153-generic #170-Ubuntu" on Hetzner AX161 / AMD EPYC
-> > 7502P 32-Core Processor
-> >
-> > Gist: issuing the same load on RAID10 4 drives N2 16kb chunk is slower
-> > than running the same load on a single member of that RAID
-> > Question: is such kind of behavior normal and expected? Am I doing
-> > something terribly wrong?
->
-> Write will be slower is normal, because each write to the array must
-> write to all the rdev and wait for these write be be done.
+在 2023/09/07 20:41, Mariusz Tkaczyk 写道:
+> On Thu, 7 Sep 2023 20:14:03 +0800
+> Yu Kuai <yukuai1@huaweicloud.com> wrote:
+> 
+>> Hi,
+>>
+>> 在 2023/09/07 19:26, Yu Kuai 写道:
+>>> Hi,
+>>>
+>>> 在 2023/09/07 18:18, Mariusz Tkaczyk 写道:
+>>>> On Thu, 7 Sep 2023 10:04:11 +0800
+>>>> Yu Kuai <yukuai1@huaweicloud.com> wrote:
+>>>>   
+>>>>> Hi,
+>>>>>
+>>>>> 在 2023/09/06 18:27, Mariusz Tkaczyk 写道:
+>>>>>> On Wed, 6 Sep 2023 14:26:30 +0800
+>>>>>> AceLan Kao <acelan@gmail.com> wrote:
+>>>>>>>    From previous testing, I don't think it's an issue in systemd, so I
+>>>>>>> did a simple test and found the issue is gone.
+>>>>>>> You only need to add a small delay in md_release(), then the issue
+>>>>>>> can't be reproduced.
+>>>>>>>
+>>>>>>> diff --git a/drivers/md/md.c b/drivers/md/md.c
+>>>>>>> index 78be7811a89f..ef47e34c1af5 100644
+>>>>>>> --- a/drivers/md/md.c
+>>>>>>> +++ b/drivers/md/md.c
+>>>>>>> @@ -7805,6 +7805,7 @@ static void md_release(struct gendisk *disk)
+>>>>>>> {
+>>>>>>>           struct mddev *mddev = disk->private_data;
+>>>>>>>
+>>>>>>> +       msleep(10);
+>>>>>>>           BUG_ON(!mddev);
+>>>>>>>           atomic_dec(&mddev->openers);
+>>>>>>>           mddev_put(mddev);
+>>>>>>
+>>>>>> I have repro and I tested it on my setup. It is not working for me.
+>>>>>> My setup could be more "advanced" to maximalize chance of reproduction:
+>>>>>>
+>>>>>> # cat /proc/mdstat
+>>>>>> Personalities : [raid1] [raid6] [raid5] [raid4] [raid10] [raid0]
+>>>>>> md121 : active raid0 nvme2n1[1] nvme5n1[0]
+>>>>>>          7126394880 blocks super external:/md127/0 128k chunks
+>>>>>>
+>>>>>> md122 : active raid10 nvme6n1[3] nvme4n1[2] nvme1n1[1] nvme7n1[0]
+>>>>>>          104857600 blocks super external:/md126/0 64K chunks 2
+>>>>>> near-copies
+>>>>>> [4/4] [UUUU]
+>>>>>>
+>>>>>> md123 : active raid5 nvme6n1[3] nvme4n1[2] nvme1n1[1] nvme7n1[0]
+>>>>>>          2655765504 blocks super external:/md126/1 level 5, 32k chunk,
+>>>>>> algorithm 0 [4/4] [UUUU]
+>>>>>>
+>>>>>> md124 : active raid1 nvme0n1[1] nvme3n1[0]
+>>>>>>          99614720 blocks super external:/md125/0 [2/2] [UU]
+>>>>>>
+>>>>>> md125 : inactive nvme3n1[1](S) nvme0n1[0](S)
+>>>>>>          10402 blocks super external:imsm
+>>>>>>
+>>>>>> md126 : inactive nvme7n1[3](S) nvme1n1[2](S) nvme6n1[1](S)
+>>>>>> nvme4n1[0](S)
+>>>>>>          20043 blocks super external:imsm
+>>>>>>
+>>>>>> md127 : inactive nvme2n1[1](S) nvme5n1[0](S)
+>>>>>>          10402 blocks super external:imsm
+>>>>>>
+>>>>>> I have almost 99% repro ratio, slowly moving forward..
+>>>>>>
+>>>>>> It is endless loop because systemd-shutdown sends ioctl "stop_array"
+>>>>>> which
+>>>>>> is successful but array is not stopped. For that reason it sets
+>>>>>> "changed =
+>>>>>> true".
+>>>>>
+>>>>> How does systemd-shutdown judge if array is stopped? cat /proc/mdstat or
+>>>>> ls /dev/md* or other way?
+>>>>
+>>>> Hi Yu,
+>>>>
+>>>> It trusts return result, I confirmed that 0 is returned.
+>>>> The most weird is we are returning 0 but array is still there, and it is
+>>>> stopped again in next systemd loop. I don't understand why yet..
+>>>>   
+>>>>>> Systemd-shutdown see the change and retries to check if there is
+>>>>>> something
+>>>>>> else which can be stopped now, and again, again...
+>>>>>>
+>>>>>> I will check what is returned first, it could be 0 or it could be
+>>>>>> positive
+>>>>>> errno (nit?) because systemd cares "if(r < 0)".
+>>>>>
+>>>>> I do noticed that there are lots of log about md123 stopped:
+>>>>>
+>>>>> [ 1371.834034] md122:systemd-shutdow bd_prepare_to_claim return -16
+>>>>> [ 1371.840294] md122:systemd-shutdow blkdev_get_by_dev return -16
+>>>>> [ 1371.846845] md: md123 stopped.
+>>>>> [ 1371.850155] md122:systemd-shutdow bd_prepare_to_claim return -16
+>>>>> [ 1371.856411] md122:systemd-shutdow blkdev_get_by_dev return -16
+>>>>> [ 1371.862941] md: md123 stopped.
+>>>>>
+>>>>> And md_ioctl->do_md_stop doesn't have error path after printing this
+>>>>> log, hence 0 will be returned to user.
+>>>>>
+>>>>> The normal case is that:
+>>>>>
+>>>>> open md123
+>>>>> ioctl STOP_ARRAY -> all rdev should be removed from array
+>>>>> close md123 -> mddev will finally be freed by:
+>>>>>      md_release
+>>>>>       mddev_put
+>>>>>        set_bit(MD_DELETED, &mddev->flags) -> user shound not see this
+>>>>> mddev
+>>>>>        queue_work(md_misc_wq, &mddev->del_work)
+>>>>>
+>>>>>      mddev_delayed_delete
+>>>>>       kobject_put(&mddev->kobj)
+>>>>>
+>>>>>      md_kobj_release
+>>>>>       del_gendisk
+>>>>>        md_free_disk
+>>>>>         mddev_free
+>>>>>   
+>>>> Ok thanks, I understand that md_release is called on descriptor
+>>>> closing, right?
+>>>>   
+>>>
+>>> Yes, normally close md123 should drop that last reference.
+>>>>   
+>>>>> Now that you can reporduce this problem 99%, can you dig deeper and find
+>>>>> out what is wrong?
+>>>>
+>>>> Yes, working on it!
+>>>>
+>>>> My first idea was that mddev_get and mddev_put are missing on
+>>>> md_ioctl() path
+>>>> but it doesn't help for the issue. My motivation here was that
+>>>> md_attr_store and
+>>>> md_attr_show are using them.
+>>>>
+>>>> Systemd regenerates list of MD arrays on every loop and it is always
+>>>> there, systemd is able to open file descriptor (maybe inactive?).
+>>>
+>>> md123 should not be opended again, ioctl(STOP_ARRAY) already set the
+>>> flag 'MD_CLOSING' to prevent that. Are you sure that systemd-shutdown do
+>>> open and close the array in each loop?
+>>
+>> I realized that I'm wrong here. 'MD_CLOSING' is cleared before ioctl
+>> return by commit 065e519e71b2 ("md: MD_CLOSING needs to be cleared after
+>> called md_set_readonly or do_md_stop").
+>>
+>> I'm confused here, commit message said 'MD_CLOSING' shold not be set for
+>> the case STOP_ARRAY_RO, but I don't understand why it's cleared for
+>> STOP_ARRAY as well.
+>>
 
-This contradicts with common wisdom and basically eliminates one of
-the points of having striped setups - having N stripes, excepted to
-give up to N/2 improvement in iops.
+Can you try the following patch?
 
-Say, 3Ware "hardware" RAID has public benchmarks -
-https://www.broadcom.com/support/knowledgebase/1211161476065/what-kind-of-r=
-esults-can-i-expect-to-see-under-windows-with-3war
-, test: 2K Random Writes (IOs/sec)(256 outstanding I/Os)
-showing single drive ( 203.0 iops )  vs RAID10 4 drives ( 299.8 iops )
-, which is roughly 1.5 times better, no WORSE as we see it with mdadm
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 3afd57622a0b..31b9cec7e4c0 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -7668,7 +7668,8 @@ static int md_ioctl(struct block_device *bdev, 
+fmode_t mode,
+                         err = -EBUSY;
+                         goto out;
+                 }
+-               did_set_md_closing = true;
++               if (cmd == STOP_ARRAY_RO)
++                       did_set_md_closing = true;
+                 mutex_unlock(&mddev->open_mutex);
+                 sync_blockdev(bdev);
+         }
 
-I've done slightly different test, with fio numjobs=3D4 , result it 20k
-(single job) vs 35k iops, which is just on par with single drive
-performance.
+I think prevent array to be opened again after STOP_ARRAY might fix
+this.
 
->
-> On the other hand, read should be faster, because raid10 only need to
-> choose one rdev to read.
->
+Thanks,
+Kuai
+
+> Not related with your findings but:
+> 
+> I replaced if (!atomic_dec_and_lock(&mddev->active, &all_mddevs_lock))
+> because that is the way to exit without queuing work:
+> 
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 0fe7ab6e8ab9..80bd7446be94 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -618,8 +618,7 @@ static void mddev_delayed_delete(struct work_struct *ws);
+> 
+>   
+> 
+> void mddev_put(struct mddev *mddev)
+> {
+> -       if (!atomic_dec_and_lock(&mddev->active, &all_mddevs_lock))
+> -               return;
+> +       spin_lock(&all_mddevs_lock);
+>          if (!mddev->raid_disks && list_empty(&mddev->disks) &&
+>              mddev->ctime == 0 && !mddev->hold_active) {
+>                  /* Array is not configured at all, and not held active,
+> @@ -634,6 +633,7 @@ void mddev_put(struct mddev *mddev)
+>                  INIT_WORK(&mddev->del_work, mddev_delayed_delete);
+>                  queue_work(md_misc_wq, &mddev->del_work);
+>          }
+> +       atomic_dec(&mddev->active);
+>          spin_unlock(&all_mddevs_lock);
+> }
+> 
+> After that I got kernel panic but it seems that workqueue is scheduled:
+> 
+>   51.535103] BUG: kernel NULL pointer dereference, address: 0000000000000008
+> [   51.539115] ------------[ cut here ]------------
+> [   51.543867] #PF: supervisor read access in kernel mode
+> 1;[3 9 m S5t1a.r5tPF: error_code(0x0000) - not-present page
+> [   51.543875] PGD 0 P4D 0
+> .k[ 0 m5.1
+>   54ops: 0000 [#1] PREEMPT SMP NOPTI
+> [   51.552207] refcount_t: underflow; use-after-free.
+> [   51.556820] CPU: 19 PID: 368 Comm: kworker/19:1 Not tainted 6.5.0+ #57
+> [   51.556825] Hardware name: Intel Corporation WilsonCity/WilsonCity, BIOS
+> WLYDCRB1.SYS.0027.P82.2204080829 04/08/2022 [   51.561979] WARNING: CPU: 26
+> PID: 376 at lib/refcount.c:28 refcount_warn_saturate+0x99/0xe0 [   51.567273]
+> Workqueue:  mddev_delayed_delete [md_mod] [   51.569822] Modules linked in:
+> [   51.574351]  (events)
+> [   51.574353] RIP: 0010:process_one_work+0x10f/0x3d0
+> [   51.579155]  configfs
+> 
+> In my case, it seems to be IMSM container device is stopped in loop, which is an
+> inactive from the start. It is not something I'm totally sure but it could lead
+> us to the root cause. So far I know, the original reported uses IMSM arrays too.
+> 
 > Thanks,
-> Kuai
->
-> >
-> > RAID10: 18.5k iops
-> > SINGLE DRIVE: 26k iops
-> >
-> > raw data:
-> >
-> > RAID config
-> > root@node2:/data# cat /proc/mdstat
-> > Personalities : [raid1] [linear] [multipath] [raid0] [raid6] [raid5]
-> > [raid4] [raid10]
-> > md3 : active raid10 nvme5n1[3] nvme3n1[2] nvme4n1[1] nvme0n1[0]
-> >        7501212320 blocks super 1.2 16K chunks 2 near-copies [4/4] [UUUU=
-]
-> >
-> > Single drive with:
-> > root@node2:/data# mdadm /dev/md3 --fail /dev/nvme5n1 --remove /dev/nvme=
-5n1
-> > mdadm: set /dev/nvme5n1 faulty in /dev/md3
-> > mdadm: hot removed /dev/nvme5n1 from /dev/md3
-> >
-> > mdadm --zero-superblock /dev/nvme5n1
-> >
-> > TEST COMMANDS
-> > RADI10:              fio --rw=3Dwrite --ioengine=3Dsync --fdatasync=3D1
-> > --filename=3D/dev/md3 --size=3D8200m --bs=3D16k --name=3Dmytest
-> > SINGLE DRIVE: fio --rw=3Dwrite --ioengine=3Dsync --fdatasync=3D1
-> > --filename=3D/dev/nvme5n1 --size=3D8200m --bs=3D16k --name=3Dmytest
-> >
-> > FIO output:
-> >
-> > RAID10:
-> > root@node2:/mnt# fio --rw=3Dwrite --ioengine=3Dsync --fdatasync=3D1
-> > --filename=3D/dev/md3 --size=3D8200m --bs=3D16k --name=3Dmytest
-> > mytest: (g=3D0): rw=3Dwrite, bs=3D(R) 16.0KiB-16.0KiB, (W) 16.0KiB-16.0=
-KiB,
-> > (T) 16.0KiB-16.0KiB, ioengine=3Dsync, iodepth=3D1
-> > fio-3.16
-> > Starting 1 process
-> > Jobs: 1 (f=3D1): [W(1)][100.0%][w=3D298MiB/s][w=3D19.0k IOPS][eta 00m:0=
-0s]
-> > mytest: (groupid=3D0, jobs=3D1): err=3D 0: pid=3D2130392: Sat Sep  2 08=
-:21:39 2023
-> >    write: IOPS=3D18.5k, BW=3D290MiB/s (304MB/s)(8200MiB/28321msec); 0 z=
-one resets
-> >      clat (usec): min=3D5, max=3D745, avg=3D12.12, stdev=3D 7.30
-> >       lat (usec): min=3D6, max=3D746, avg=3D12.47, stdev=3D 7.34
-> >      clat percentiles (usec):
-> >       |  1.00th=3D[    8],  5.00th=3D[    9], 10.00th=3D[   10], 20.00t=
-h=3D[   10],
-> >       | 30.00th=3D[   10], 40.00th=3D[   11], 50.00th=3D[   11], 60.00t=
-h=3D[   11],
-> >       | 70.00th=3D[   12], 80.00th=3D[   13], 90.00th=3D[   16], 95.00t=
-h=3D[   20],
-> >       | 99.00th=3D[   39], 99.50th=3D[   55], 99.90th=3D[  100], 99.95t=
-h=3D[  116],
-> >       | 99.99th=3D[  147]
-> >     bw (  KiB/s): min=3D276160, max=3D308672, per=3D99.96%, avg=3D29635=
-4.86,
-> > stdev=3D6624.06, samples=3D56
-> >     iops        : min=3D17260, max=3D19292, avg=3D18522.18, stdev=3D414=
-.00, samples=3D56
-> >
-> > Run status group 0 (all jobs):
-> >    WRITE: bw=3D290MiB/s (304MB/s), 290MiB/s-290MiB/s (304MB/s-304MB/s),
-> > io=3D8200MiB (8598MB), run=3D28321-28321msec
-> >
-> >
-> >                                                Disk stats (read/write):
-> >
-> >                                       md3: ios=3D0/2604727, merge=3D0/0=
-,
-> > ticks=3D0/0, in_queue=3D0, util=3D0.00%, aggrios=3D25/262403,
-> > aggrmerge=3D0/787199, aggrticks=3D1/5563, aggrin_queue=3D0, aggrutil=3D=
-98.10%
-> >    nvme0n1: ios=3D40/262402, merge=3D1/787200, ticks=3D3/5092, in_queue=
-=3D0, util=3D98.09%
-> >    nvme3n1: ios=3D33/262404, merge=3D1/787198, ticks=3D2/5050, in_queue=
-=3D0, util=3D98.08%
-> >    nvme5n1: ios=3D15/262404, merge=3D0/787198, ticks=3D1/6061, in_queue=
-=3D0, util=3D98.08%
-> >    nvme4n1: ios=3D12/262402, merge=3D0/787200, ticks=3D1/6052, in_queue=
-=3D0, util=3D98.10%
-> >
-> >
-> > SINGLE DRIVE:
-> > root@node2:/mnt# fio --rw=3Dwrite --ioengine=3Dsync --fdatasync=3D1
-> > --filename=3D/dev/nvme5n1 --size=3D8200m --bs=3D16k --name=3Dmytest
-> > mytest: (g=3D0): rw=3Dwrite, bs=3D(R) 16.0KiB-16.0KiB, (W) 16.0KiB-16.0=
-KiB,
-> > (T) 16.0KiB-16.0KiB, ioengine=3Dsync, iodepth=3D1
-> > fio-3.16
-> > Starting 1 process
-> > Jobs: 1 (f=3D1): [W(1)][100.0%][w=3D414MiB/s][w=3D26.5k IOPS][eta 00m:0=
-0s]
-> > mytest: (groupid=3D0, jobs=3D1): err=3D 0: pid=3D2155313: Sat Sep  2 08=
-:26:23 2023
-> >    write: IOPS=3D26.2k, BW=3D410MiB/s (430MB/s)(8200MiB/20000msec); 0 z=
-one resets
-> >      clat (usec): min=3D4, max=3D848, avg=3D11.25, stdev=3D 7.15
-> >       lat (usec): min=3D5, max=3D848, avg=3D11.50, stdev=3D 7.17
-> >      clat percentiles (usec):
-> >       |  1.00th=3D[    7],  5.00th=3D[    9], 10.00th=3D[    9], 20.00t=
-h=3D[    9],
-> >       | 30.00th=3D[   10], 40.00th=3D[   10], 50.00th=3D[   10], 60.00t=
-h=3D[   11],
-> >       | 70.00th=3D[   11], 80.00th=3D[   12], 90.00th=3D[   15], 95.00t=
-h=3D[   18],
-> >       | 99.00th=3D[   43], 99.50th=3D[   62], 99.90th=3D[   95], 99.95t=
-h=3D[  108],
-> >       | 99.99th=3D[  133]
-> >     bw (  KiB/s): min=3D395040, max=3D464480, per=3D99.90%, avg=3D41943=
-8.95,
-> > stdev=3D17496.05, samples=3D39
-> >     iops        : min=3D24690, max=3D29030, avg=3D26214.92, stdev=3D109=
-3.56, samples=3D39
-> >
-> > Run status group 0 (all jobs):
-> >    WRITE: bw=3D423MiB/s (444MB/s), 423MiB/s-423MiB/s (444MB/s-444MB/s),
-> > io=3D8200MiB (8598MB), run=3D19379-19379msec
-> >
-> > Disk stats (read/write):
-> >    nvme5n1: ios=3D49/518250, merge=3D0/1554753, ticks=3D2/10629, in_que=
-ue=3D0,
-> > util=3D99.61%
-> >
->
+> Mariusz
+> 
+> .
+> 
 
-
---=20
-Best regards,
-[COOLCOLD-RIPN]
