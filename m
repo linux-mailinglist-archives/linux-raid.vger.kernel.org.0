@@ -2,45 +2,45 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D2EC0799006
-	for <lists+linux-raid@lfdr.de>; Fri,  8 Sep 2023 21:36:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FFF57990B7
+	for <lists+linux-raid@lfdr.de>; Fri,  8 Sep 2023 22:02:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241528AbjIHTgs (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 8 Sep 2023 15:36:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54950 "EHLO
+        id S242886AbjIHUCU (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 8 Sep 2023 16:02:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231347AbjIHTgm (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 8 Sep 2023 15:36:42 -0400
+        with ESMTP id S230457AbjIHUCT (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 8 Sep 2023 16:02:19 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B6021B0;
-        Fri,  8 Sep 2023 12:36:21 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79D21C433CA;
-        Fri,  8 Sep 2023 19:35:26 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 958A5B9;
+        Fri,  8 Sep 2023 13:02:15 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 660D7C116AF;
+        Fri,  8 Sep 2023 19:36:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694201727;
-        bh=dcHgw5lG4T1RSyZSuYFil0vixaTEjMtdzWRedIsn5hY=;
+        s=k20201202; t=1694201767;
+        bh=/+U7vK2l/Vz6gYSB1Dor6YlWyc9Do0vycQyHbHRI+b0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d5PfrjQr9kLnlpR7hi+hECgsCds74wg1RumERzC5Vj69UXmLrKqeRVtKt5fh/P9Bq
-         NaYgOwHWxdPr6DXdRXQT4Nwj4WYcX6Le2QuS6DCp6HkAoLNRAWOhmm006s/Vbmz1Aj
-         Mm4YWckkzvt5y7chhVlY+Y+21EjOhjyIevUpwMUPlxT8cwbEW1TkE98rQYH2U8jyxj
-         lxVxwalv5CrZZr1TzB59TYZf2GzWYiNfMwL1q97btIZ8c7Tr6yaWWFlOOkJbI7akuu
-         xax/iBMVSpyC1KQn+E18QoL5oJjkJ53gF+NyZ7Jor7UaV8EgD6UvTpe90b6Tok781y
-         WTgpVCW3MPkqw==
+        b=iC8A16KPhWicVOweVdiRwegeT1qI8vq6eG26WxF12r/M9S6JADQe5ymu2tubXp2hB
+         NoonBcA8vA0gBgHPGqVfPJtu2gzNMJGuUNjF6O+zpd/N+wfJHUEzY8Kvsaj3TM8VNP
+         11brah2ZGz9YJ/1AsBqzPXB8xYNakmbATA/4Q2fp3HmPZh9Yk+EkCXvFWwUBae4lwL
+         p9K+wJOTxGI1ui9XitxGqIAagNHoDL4KiNq63gx8pIWewI+C65jnnRfAPlXysxGQPD
+         ERnSbJI1NEZ1IdsVccADRWEhJ8HKW5TGlm0yoEo69JB6Bv6eG7sSQvh0n5qSEK4YDd
+         bJg84JQCZxIAg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Zhang Shurong <zhang_shurong@foxmail.com>,
         Yu Kuai <yukuai3@huawei.com>, Song Liu <song@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 21/22] md: raid1: fix potential OOB in raid1_remove_disk()
-Date:   Fri,  8 Sep 2023 15:34:05 -0400
-Message-Id: <20230908193407.3463368-21-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 12/13] md: raid1: fix potential OOB in raid1_remove_disk()
+Date:   Fri,  8 Sep 2023 15:35:28 -0400
+Message-Id: <20230908193530.3463647-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230908193407.3463368-1-sashal@kernel.org>
-References: <20230908193407.3463368-1-sashal@kernel.org>
+In-Reply-To: <20230908193530.3463647-1-sashal@kernel.org>
+References: <20230908193530.3463647-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.52
+X-stable-base: Linux 5.15.131
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
@@ -75,10 +75,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+)
 
 diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index ac64c587191b9..72303c6201747 100644
+index 47997a9a3ca18..447ceb86367ec 100644
 --- a/drivers/md/raid1.c
 +++ b/drivers/md/raid1.c
-@@ -1826,6 +1826,10 @@ static int raid1_remove_disk(struct mddev *mddev, struct md_rdev *rdev)
+@@ -1811,6 +1811,10 @@ static int raid1_remove_disk(struct mddev *mddev, struct md_rdev *rdev)
  	struct r1conf *conf = mddev->private;
  	int err = 0;
  	int number = rdev->raid_disk;
