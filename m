@@ -2,60 +2,102 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 69CCC79B418
-	for <lists+linux-raid@lfdr.de>; Tue, 12 Sep 2023 02:01:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB51279B4B8
+	for <lists+linux-raid@lfdr.de>; Tue, 12 Sep 2023 02:02:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244048AbjIKV7P (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 11 Sep 2023 17:59:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57222 "EHLO
+        id S236026AbjIKV71 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 11 Sep 2023 17:59:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236737AbjIKLTk (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 11 Sep 2023 07:19:40 -0400
-Received: from sanan-e.com (unknown [218.107.219.99])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DD952CDD
-        for <linux-raid@vger.kernel.org>; Mon, 11 Sep 2023 04:19:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sanan-e.com; s=dkim; h=Received:Content-Type:MIME-Version:
-        Content-Transfer-Encoding:Content-Description:Subject:To:From:
-        Date:Reply-To:Message-Id; bh=qcS40TKk7lDEkm1RQbO1KTL2NSc/wnLNi62
-        pjzED0xE=; b=nfo3zDBVtuDEzDiCUzUnj+GjoFfjQWBppcDLZsfic279VcXeL79
-        a01+1gtvoEw4cvuzo4gT2C4/TFKfcekyzTlhXhnYHU16PeYBvR4JZuysvx8TTqMP
-        T/1Eu7iOx0bwjeXzREDvHufp+HGZThOWHN5CZOGbVdC9M4gToKImTV4c=
-Received: from [156.96.56.92] (unknown [128.14.67.204])
-        by MailDR (Coremail) with SMTP id AQAAfwAXuv7W9v5kRVGbAA--.1405S21;
-        Mon, 11 Sep 2023 19:18:10 +0800 (CST)
-Content-Type: text/plain; charset="iso-8859-1"
+        with ESMTP id S239352AbjIKOSk (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 11 Sep 2023 10:18:40 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7245DE
+        for <linux-raid@vger.kernel.org>; Mon, 11 Sep 2023 07:18:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694441916; x=1725977916;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=qYSd61TVB0F8sXHsY6QMfghBVoIlLkKJPSn7nXp7MJY=;
+  b=nGXQzzzTWV39HHe0eE3XJQbT9zYNz7bWkjI5bJ1f4SRPsQteTcts8+di
+   /LHMQjIJmYlr28ap/9UKLPx55aqVynS5bpArkoVmWcLP/dQhhTsZAkShY
+   QA9TB0Riin4+tYrihk9czCyU4/sKg+/0Xz96qsUww9SWfOMQQIyvhUBDM
+   TEuEqgoPD3gpO+ACjNhQx65AKUaWu/TFVZQN+3T+YJgiRgdrOisr3J2iR
+   qeWL+X+1ycUYdGzcBqbDPv2i/zGWK77zJKvoAqD9/ZfuAHUUnsoZScKCR
+   wMa6eEQl4SqTcUoq5Kaq+iEBCKg/CyDihyAe5/MKvSOL3WDDyEGa8ZPEa
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="381898788"
+X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
+   d="scan'208";a="381898788"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 07:18:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="917040939"
+X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
+   d="scan'208";a="917040939"
+Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.249.141.71])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 07:18:25 -0700
+Date:   Mon, 11 Sep 2023 16:18:20 +0200
+From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+To:     Jes Sorensen <jes@trained-monkey.org>
+Cc:     Mateusz Grzonka <mateusz.grzonka@intel.com>,
+        linux-raid@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] Mdmonitor: Improve udev event handling
+Message-ID: <20230911161820.00007e6f@linux.intel.com>
+In-Reply-To: <52f43128-6f68-49fd-9b25-c3026d007d83@trained-monkey.org>
+References: <20230705145020.31144-1-mateusz.grzonka@intel.com>
+        <52f43128-6f68-49fd-9b25-c3026d007d83@trained-monkey.org>
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: Help
-To:     Recipients <olena@sanan-e.com>
-From:   olena@sanan-e.com
-Date:   Mon, 11 Sep 2023 04:17:54 -0700
-Reply-To: olenasheve73@gmail.com
-X-CM-TRANSID: AQAAfwAXuv7W9v5kRVGbAA--.1405S21
-Message-Id: <64FEF7A4.46F5AE.70031@sanan-e.com>
-Authentication-Results: MailDR; spf=neutral smtp.mail=olena@sanan-e.co
-        m;
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRUUUUUUUUU
-        =
-X-Spam-Status: No, score=4.7 required=5.0 tests=BAYES_50,DKIM_INVALID,
-        DKIM_SIGNED,FREEMAIL_FORGED_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_BL,RCVD_IN_MSPIKE_L4,
-        RCVD_IN_VALIDITY_RPBL,SPF_HELO_PASS,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi,
-I am a Ukrainian, I have funds for investment, can you please help me reloc=
-ate and invest in your country? Thank you as i possibly wait to hear from y=
-ou, =
+On Fri, 1 Sep 2023 11:35:57 -0400
+Jes Sorensen <jes@trained-monkey.org> wrote:
 
-Olena.
+> On 7/5/23 10:50, Mateusz Grzonka wrote:
+> > Mdmonitor is waiting for udev queue to become empty.
+> > Even if the queue becomes empty, udev might still be processing last event.
+> > However we want to wait and wake up mdmonitor when udev finished
+> > processing events..
+> > 
+> > Also, the udev queue interface is considered legacy and should not be
+> > used outside of udev.
+> > 
+> > Use udev monitor instead, and wake up mdmonitor on every event triggered
+> > by udev for md block device.
+> > 
+> > We need to generate more change events from kernel, because they are
+> > missing in some situations, for example, when rebuild started.
+> > This will be addressed in a separate patch.
+> > 
+> > Move udev specific code into separate functions, and place them in udev.c
+> > file. Also move use_udev() logic from lib.c into newly created file.
+> > 
+> > Signed-off-by: Mateusz Grzonka <mateusz.grzonka@intel.com>  
+> 
+> Generally looks good to me.
+> 
+> One question, is there a minimum version of udev required for this to
+> work or has it been around long enough that we don't need to worry?
+> 
+> Thanks,
+> Jes
+> 
+> 
 
+Hi Jes,
+We don't need to worry. I checked one random commit (25e773e) from 2014 and
+udev_monitor stuff is there.
+
+Thanks,
+Mariusz
