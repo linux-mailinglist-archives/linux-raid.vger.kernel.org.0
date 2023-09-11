@@ -2,251 +2,118 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E9DC679C1D4
-	for <lists+linux-raid@lfdr.de>; Tue, 12 Sep 2023 03:45:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 293F879C2F1
+	for <lists+linux-raid@lfdr.de>; Tue, 12 Sep 2023 04:32:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231363AbjILBpa (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 11 Sep 2023 21:45:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35946 "EHLO
+        id S239308AbjILCca (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 11 Sep 2023 22:32:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232880AbjILBpO (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 11 Sep 2023 21:45:14 -0400
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6B9AA0A60;
-        Mon, 11 Sep 2023 18:21:17 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.143])
-        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Rl50914Cbz4f3jYQ;
-        Tue, 12 Sep 2023 09:02:17 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-        by APP4 (Coremail) with SMTP id gCh0CgCHHt6buP9kMlr7AA--.14108S3;
-        Tue, 12 Sep 2023 09:02:21 +0800 (CST)
-Subject: Re: [PATCH -next] md: simplify md_seq_ops
-To:     Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
-        Yu Kuai <yukuai1@huaweicloud.com>
-Cc:     song@kernel.org, linux-raid@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
-        yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20230911065010.3530461-1-yukuai1@huaweicloud.com>
- <20230911160540.0000060e@linux.intel.com>
-From:   Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <b2754d8e-dfe7-ffff-66ac-052f366530e4@huaweicloud.com>
-Date:   Tue, 12 Sep 2023 09:02:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        with ESMTP id S239115AbjILCcS (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 11 Sep 2023 22:32:18 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B43CC9031
+        for <linux-raid@vger.kernel.org>; Mon, 11 Sep 2023 18:57:25 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50B43C433B9
+        for <linux-raid@vger.kernel.org>; Mon, 11 Sep 2023 21:35:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694468120;
+        bh=AbXB0IBtKSZkT6cYIuMcjRGLzokXpK55uELGvv0nNz0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JyQDEfMtr36WsUl6CmemafKw7BXdOH06irb9JH3mkDPd+JXTmYMYyPZdXyrLTQf6y
+         xRhnn2um6VAICVoaY1+3IsHlIuD1HJgRvBe1jcuJqP0eco6D/amPV8P1pLvaNkRbIr
+         B3OXPLWMozw0MH9oIEyA9YAvOXFFp2ADjJ2Wh0P8vZq6aWb+puqckmgHyHYXZVZsgZ
+         mjJzece4qt2lfUNqrunxpYukZi+lbBTknisBFcT627qo2jCRYVw1p4TQwGEnQumPJl
+         zxlLVP2fQYKpjdTm8TCQ423uv61sgx7Pu7wJxk03JSOTNmkIpTUnDmQbZFYtFhWhgJ
+         E/MOnIkVRDMdQ==
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5029e4bfa22so5609441e87.3
+        for <linux-raid@vger.kernel.org>; Mon, 11 Sep 2023 14:35:20 -0700 (PDT)
+X-Gm-Message-State: AOJu0YwIO7EnmGRwPArjMlO9Xin3LY8R1omyWG1bhZr3fPrTPZFtFKkz
+        lbW5Rra8+kqdEHTEIuEQiF/hhjL4qLAolCZgCyA=
+X-Google-Smtp-Source: AGHT+IHpusnuiVkSJMGjSWzP4+Z0Qtf87a2BBnl63/lGIr2ZhaexNZ6XVWY3SXbOGWpwAvQVMB/f/T1NMR38wDqtC+w=
+X-Received: by 2002:a05:6512:4007:b0:4fd:d9dd:7a1a with SMTP id
+ br7-20020a056512400700b004fdd9dd7a1amr10507305lfb.31.1694468118529; Mon, 11
+ Sep 2023 14:35:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20230911160540.0000060e@linux.intel.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgCHHt6buP9kMlr7AA--.14108S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxKF1UKF4DWr43XF1rZr18Krg_yoW7Gw1xpF
-        ZIqFW5Ar4rXFWrXr1DXa1kuFyFqwn7Grn2gr9xGa95Cr1qqrn3AF1Sgw4fu3sI9ayxGrnY
-        vw4DKa47Wr18G37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
-        IcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-        v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
-        c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-        0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_
-        Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUoOJ5UU
-        UUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
+References: <20230911105657.6816-1-mariusz.tkaczyk@linux.intel.com>
+In-Reply-To: <20230911105657.6816-1-mariusz.tkaczyk@linux.intel.com>
+From:   Song Liu <song@kernel.org>
+Date:   Mon, 11 Sep 2023 14:35:06 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW42GFkekozN9MuAoZEpDQk-3ChgyGtuVKdN74eqEgZLBA@mail.gmail.com>
+Message-ID: <CAPhsuW42GFkekozN9MuAoZEpDQk-3ChgyGtuVKdN74eqEgZLBA@mail.gmail.com>
+Subject: Re: [PATCH] md: do not _put wrong device
+To:     Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+Cc:     linux-raid@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Hi,
+On Mon, Sep 11, 2023 at 3:57=E2=80=AFAM Mariusz Tkaczyk
+<mariusz.tkaczyk@linux.intel.com> wrote:
+>
+> Put the device which has been _get with previous md_seq_next call.
+> Add guard for improper mddev_put usage(). It shouldn't be called if
+> there are less than 1 for mddev->active.
+>
+> I didn't convert atomic_t to refcount_t because refcount warns when 0 is
+> achieved which is likely to happen for mddev->active.
+>
+> It fixes [1], I'm unable to reproduce this issue now.
+>
+> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D217798
+> Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
 
-ÔÚ 2023/09/11 22:05, Mariusz Tkaczyk Ð´µÀ:
-> On Mon, 11 Sep 2023 14:50:10 +0800
-> Yu Kuai <yukuai1@huaweicloud.com> wrote:
-> 
->> From: Yu Kuai <yukuai3@huawei.com>
->>
->> Use seq_list_start/next/stop() directly. Move printing "Personalities"
->> to md_sep_start() and "unsed devices" to md_seq_stop().
->>
->> Cc: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
->> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
->> ---
->>   drivers/md/md.c | 124 ++++++++++++------------------------------------
->>   1 file changed, 31 insertions(+), 93 deletions(-)
->>
->> diff --git a/drivers/md/md.c b/drivers/md/md.c
->> index 0fe7ab6e8ab9..9c1155042335 100644
->> --- a/drivers/md/md.c
->> +++ b/drivers/md/md.c
->> @@ -8192,105 +8192,14 @@ static int status_resync(struct seq_file *seq,
->> struct mddev *mddev) return 1;
->>   }
->>   
->> -static void *md_seq_start(struct seq_file *seq, loff_t *pos)
->> -{
->> -	struct list_head *tmp;
->> -	loff_t l = *pos;
->> -	struct mddev *mddev;
->> -
->> -	if (l == 0x10000) {
->> -		++*pos;
->> -		return (void *)2;
->> -	}
->> -	if (l > 0x10000)
->> -		return NULL;
->> -	if (!l--)
->> -		/* header */
->> -		return (void*)1;
->> -
->> -	spin_lock(&all_mddevs_lock);
->> -	list_for_each(tmp,&all_mddevs)
->> -		if (!l--) {
->> -			mddev = list_entry(tmp, struct mddev, all_mddevs);
->> -			if (!mddev_get(mddev))
->> -				continue;
->> -			spin_unlock(&all_mddevs_lock);
->> -			return mddev;
->> -		}
->> -	spin_unlock(&all_mddevs_lock);
->> -	if (!l--)
->> -		return (void*)2;/* tail */
->> -	return NULL;
->> -}
->> -
->> -static void *md_seq_next(struct seq_file *seq, void *v, loff_t *pos)
->> -{
->> -	struct list_head *tmp;
->> -	struct mddev *next_mddev, *mddev = v;
->> -	struct mddev *to_put = NULL;
->> -
->> -	++*pos;
->> -	if (v == (void*)2)
->> -		return NULL;
->> -
->> -	spin_lock(&all_mddevs_lock);
->> -	if (v == (void*)1) {
->> -		tmp = all_mddevs.next;
->> -	} else {
->> -		to_put = mddev;
->> -		tmp = mddev->all_mddevs.next;
->> -	}
->> -
->> -	for (;;) {
->> -		if (tmp == &all_mddevs) {
->> -			next_mddev = (void*)2;
->> -			*pos = 0x10000;
->> -			break;
->> -		}
->> -		next_mddev = list_entry(tmp, struct mddev, all_mddevs);
->> -		if (mddev_get(next_mddev))
->> -			break;
->> -		mddev = next_mddev;
->> -		tmp = mddev->all_mddevs.next;
->> -	}
->> -	spin_unlock(&all_mddevs_lock);
->> -
->> -	if (to_put)
->> -		mddev_put(mddev);
->> -	return next_mddev;
->> -
->> -}
->> -
->> -static void md_seq_stop(struct seq_file *seq, void *v)
->> -{
->> -	struct mddev *mddev = v;
->> -
->> -	if (mddev && v != (void*)1 && v != (void*)2)
->> -		mddev_put(mddev);
->> -}
->> -
->>   static int md_seq_show(struct seq_file *seq, void *v)
->>   {
->> -	struct mddev *mddev = v;
->> +	struct mddev *mddev = list_entry(v, struct mddev, all_mddevs);
->>   	sector_t sectors;
->>   	struct md_rdev *rdev;
->>   
->> -	if (v == (void*)1) {
->> -		struct md_personality *pers;
->> -		seq_printf(seq, "Personalities : ");
->> -		spin_lock(&pers_lock);
->> -		list_for_each_entry(pers, &pers_list, list)
->> -			seq_printf(seq, "[%s] ", pers->name);
->> -
->> -		spin_unlock(&pers_lock);
->> -		seq_printf(seq, "\n");
->> -		seq->poll_event = atomic_read(&md_event_count);
->> -		return 0;
->> -	}
->> -	if (v == (void*)2) {
->> -		status_unused(seq);
->> +	if (test_bit(MD_DELETED, &mddev->flags))
->>   		return 0;
->> -	}
->>   
->>   	spin_lock(&mddev->lock);
->>   	if (mddev->pers || mddev->raid_disks || !list_empty(&mddev->disks)) {
->> @@ -8366,6 +8275,35 @@ static int md_seq_show(struct seq_file *seq, void *v)
->>   	return 0;
->>   }
->>   
->> +static void *md_seq_start(struct seq_file *seq, loff_t *pos)
->> +{
->> +	struct md_personality *pers;
->> +
->> +	seq_puts(seq, "Personalities : ");
->> +	spin_lock(&pers_lock);
->> +	list_for_each_entry(pers, &pers_list, list)
->> +		seq_printf(seq, "[%s] ", pers->name);
->> +
->> +	spin_unlock(&pers_lock);
->> +	seq_puts(seq, "\n");
->> +	seq->poll_event = atomic_read(&md_event_count);
->> +
->> +	spin_lock(&all_mddevs_lock);
-> 
-> I would prefer to increase "active" instead holding lock when enumerating over
-> the devices. the main reason is that parsing mdstat is implemented in mdadm, so
-> it could kind of blocker action- for example mdmon follows mdstat so it is read
-> frequently. The time of getting other actions done can highly increase because
-> every open or sysfs_read/write requires this lock.
-> 
->> +
->> +	return seq_list_start(&all_mddevs, *pos);
->> +}
->> +
->> +static void *md_seq_next(struct seq_file *seq, void *v, loff_t *pos)
->> +{
->> +	return seq_list_next(v, &all_mddevs, pos);
->> +}
-> Can it be so simple? Why previous versions takes care of holding "(void)*1" and
-> "(void)*2" then? Could you elaborate?
-
-"1" means printing "Personalities", which is now moved to md_seq_start,
-and "2" means printing "unsed devices" which is now moved to
-md_seq_stop. And now md_seq_next is only used to iterate the mddev list.
+This patch somehow didn't make it through lore. Please repost and
+CC folks so we can test it thoroughly. Also, please add more information
+about the failure for future reference.
 
 Thanks,
-Kuai
+Song
 
-> 
->> +
->> +static void md_seq_stop(struct seq_file *seq, void *v)
->> +{
->> +	status_unused(seq);
->> +	spin_unlock(&all_mddevs_lock);
->> +}
->> +
->>   static const struct seq_operations md_seq_ops = {
->>   	.start  = md_seq_start,
->>   	.next   = md_seq_next,
-> 
-> Thanks,
-> Mariusz
-> 
-> .
-> 
 
+> ---
+>
+> There is md_seq cleanup proposed by Yu, this one should be merged
+> first, because it is low risk fix for particular regression.
+>
+> This is not complete fix for the problem, we need to prevent new open
+> in the middle of removal, I will propose patchset separately.
+>
+>  drivers/md/md.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 0fe7ab6e8ab9..ffae02406175 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -618,6 +618,12 @@ static void mddev_delayed_delete(struct work_struct =
+*ws);
+>
+>  void mddev_put(struct mddev *mddev)
+>  {
+> +       /* Guard for ambiguous put. */
+> +       if (unlikely(atomic_read(&mddev->active) < 1)) {
+> +               pr_warn("%s: active refcount is lower than 1\n", mdname(m=
+ddev));
+> +               return;
+> +       }
+> +
+>         if (!atomic_dec_and_lock(&mddev->active, &all_mddevs_lock))
+>                 return;
+>         if (!mddev->raid_disks && list_empty(&mddev->disks) &&
+> @@ -8250,8 +8256,7 @@ static void *md_seq_next(struct seq_file *seq, void=
+ *v, loff_t *pos)
+>                 next_mddev =3D list_entry(tmp, struct mddev, all_mddevs);
+>                 if (mddev_get(next_mddev))
+>                         break;
+> -               mddev =3D next_mddev;
+> -               tmp =3D mddev->all_mddevs.next;
+> +               tmp =3D next_mddev->all_mddevs.next;
+>         }
+>         spin_unlock(&all_mddevs_lock);
+>
+> --
+> 2.26.2
+>
