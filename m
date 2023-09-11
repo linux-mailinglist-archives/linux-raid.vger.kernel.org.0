@@ -2,118 +2,104 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 293F879C2F1
-	for <lists+linux-raid@lfdr.de>; Tue, 12 Sep 2023 04:32:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D56779C2CC
+	for <lists+linux-raid@lfdr.de>; Tue, 12 Sep 2023 04:28:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239308AbjILCca (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 11 Sep 2023 22:32:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55906 "EHLO
+        id S236349AbjILC2f (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 11 Sep 2023 22:28:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239115AbjILCcS (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 11 Sep 2023 22:32:18 -0400
+        with ESMTP id S236983AbjILC2I (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 11 Sep 2023 22:28:08 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B43CC9031
-        for <linux-raid@vger.kernel.org>; Mon, 11 Sep 2023 18:57:25 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50B43C433B9
-        for <linux-raid@vger.kernel.org>; Mon, 11 Sep 2023 21:35:20 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19CBD130F84;
+        Mon, 11 Sep 2023 18:52:26 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A0C7C43142;
+        Mon, 11 Sep 2023 21:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694468120;
-        bh=AbXB0IBtKSZkT6cYIuMcjRGLzokXpK55uELGvv0nNz0=;
+        s=k20201202; t=1694468577;
+        bh=Ag/MFnka3ZnPLSy5WMSn6IxdyE0vi9B+yEJg4mBMGTQ=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JyQDEfMtr36WsUl6CmemafKw7BXdOH06irb9JH3mkDPd+JXTmYMYyPZdXyrLTQf6y
-         xRhnn2um6VAICVoaY1+3IsHlIuD1HJgRvBe1jcuJqP0eco6D/amPV8P1pLvaNkRbIr
-         B3OXPLWMozw0MH9oIEyA9YAvOXFFp2ADjJ2Wh0P8vZq6aWb+puqckmgHyHYXZVZsgZ
-         mjJzece4qt2lfUNqrunxpYukZi+lbBTknisBFcT627qo2jCRYVw1p4TQwGEnQumPJl
-         zxlLVP2fQYKpjdTm8TCQ423uv61sgx7Pu7wJxk03JSOTNmkIpTUnDmQbZFYtFhWhgJ
-         E/MOnIkVRDMdQ==
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5029e4bfa22so5609441e87.3
-        for <linux-raid@vger.kernel.org>; Mon, 11 Sep 2023 14:35:20 -0700 (PDT)
-X-Gm-Message-State: AOJu0YwIO7EnmGRwPArjMlO9Xin3LY8R1omyWG1bhZr3fPrTPZFtFKkz
-        lbW5Rra8+kqdEHTEIuEQiF/hhjL4qLAolCZgCyA=
-X-Google-Smtp-Source: AGHT+IHpusnuiVkSJMGjSWzP4+Z0Qtf87a2BBnl63/lGIr2ZhaexNZ6XVWY3SXbOGWpwAvQVMB/f/T1NMR38wDqtC+w=
-X-Received: by 2002:a05:6512:4007:b0:4fd:d9dd:7a1a with SMTP id
- br7-20020a056512400700b004fdd9dd7a1amr10507305lfb.31.1694468118529; Mon, 11
- Sep 2023 14:35:18 -0700 (PDT)
+        b=vQ9lQUHBxXbrfTm2DxwmUvlWBAVisYCwnHt0bhq7nc+e/3BS1NWJAZ6WsSzclvhiL
+         iNDZnkt2jzW0oBt8avx0G6n8puvL5S0/vXLMIzkGsmUpS7UlOTZfY60mgrXZghCdJg
+         pUG3SNPdHHlCDWNm9gwqh9Z/z/D4xirKDsYt3l09ciDFlGfWEuPuKsmPeZPXxEATkZ
+         t4cjSmVQzAHkWHfZfBbIp0vxZir0sNYEienYs8N3YtpFE67JNjjc4iF7lLrkWQap4p
+         wLLt9ewzxxiBtMQvMqqVwNQnsaLz9ivDruVHuw0XHg9gJos2G4vfIXE3rtr17oYwQ6
+         pwKPhMTsaUtQQ==
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-501bd164fbfso8025490e87.0;
+        Mon, 11 Sep 2023 14:42:57 -0700 (PDT)
+X-Gm-Message-State: AOJu0YyGFwP50aUqdQgu7V0aq6CF0lMj1WLfCvuUWmW4+glBeLcOh05u
+        HndRWRYPrWB3H/FhfC/9qFO2MRfsU2Y7C+lFeJo=
+X-Google-Smtp-Source: AGHT+IFrCviCM3IpvjWVAqlwTRZ8SaJi9Q+Hl5L1DMRhKxrw7BsiVZTh/LdGvY6nPjYcRmSaWDwbNY/a2XY+OtzJMLw=
+X-Received: by 2002:a05:6512:2026:b0:500:12c6:c91b with SMTP id
+ s6-20020a056512202600b0050012c6c91bmr7662891lfs.40.1694468575702; Mon, 11 Sep
+ 2023 14:42:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230911105657.6816-1-mariusz.tkaczyk@linux.intel.com>
-In-Reply-To: <20230911105657.6816-1-mariusz.tkaczyk@linux.intel.com>
+References: <46d929d0-2aab-4cf2-b2bf-338963e8ba5a@redhat.com>
+In-Reply-To: <46d929d0-2aab-4cf2-b2bf-338963e8ba5a@redhat.com>
 From:   Song Liu <song@kernel.org>
-Date:   Mon, 11 Sep 2023 14:35:06 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW42GFkekozN9MuAoZEpDQk-3ChgyGtuVKdN74eqEgZLBA@mail.gmail.com>
-Message-ID: <CAPhsuW42GFkekozN9MuAoZEpDQk-3ChgyGtuVKdN74eqEgZLBA@mail.gmail.com>
-Subject: Re: [PATCH] md: do not _put wrong device
-To:     Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-Cc:     linux-raid@vger.kernel.org
+Date:   Mon, 11 Sep 2023 14:42:43 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW7zmj_+7cUocbi4bmLoJ8OR3m-expVixAY7E=GNcpyF1g@mail.gmail.com>
+Message-ID: <CAPhsuW7zmj_+7cUocbi4bmLoJ8OR3m-expVixAY7E=GNcpyF1g@mail.gmail.com>
+Subject: Re: [PATCH] raid1: fix error: ISO C90 forbids mixed declarations
+To:     Nigel Croxon <ncroxon@redhat.com>
+Cc:     yukuai1@huaweicloud.com, Zhang Shurong <zhang_shurong@foxmail.com>,
+        linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yukuai3@huawei.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 3:57=E2=80=AFAM Mariusz Tkaczyk
-<mariusz.tkaczyk@linux.intel.com> wrote:
+On Sat, Sep 9, 2023 at 4:53=E2=80=AFAM Nigel Croxon <ncroxon@redhat.com> wr=
+ote:
 >
-> Put the device which has been _get with previous md_seq_next call.
-> Add guard for improper mddev_put usage(). It shouldn't be called if
-> there are less than 1 for mddev->active.
+> There is a compile error when this commit is added:
+> md: raid1: fix potential OOB in raid1_remove_disk()
 >
-> I didn't convert atomic_t to refcount_t because refcount warns when 0 is
-> achieved which is likely to happen for mddev->active.
+> drivers/md/raid1.c: In function 'raid1_remove_disk':
+> drivers/md/raid1.c:1844:9: error: ISO C90 forbids mixed declarations
+> and code [-Werror=3Ddeclaration-after-statement]
+> 1844 |         struct raid1_info *p =3D conf->mirrors + number;
+>       |         ^~~~~~
 >
-> It fixes [1], I'm unable to reproduce this issue now.
+> That's because the new code was inserted before the struct.
+> The change is move the struct command above this commit.
 >
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D217798
-> Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+> Fixes: md: raid1: fix potential OOB in raid1_remove_disk()
+> commit 8b0472b50bcf
+>
+> Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
 
-This patch somehow didn't make it through lore. Please repost and
-CC folks so we can test it thoroughly. Also, please add more information
-about the failure for future reference.
+Applied to md-fixes after some minor fixes.
 
 Thanks,
 Song
 
-
 > ---
+>   drivers/md/raid1.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> There is md_seq cleanup proposed by Yu, this one should be merged
-> first, because it is low risk fix for particular regression.
+> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+> index a5453b126aab..4f1483bb708b 100644
+> --- a/drivers/md/raid1.c
+> +++ b/drivers/md/raid1.c
+> @@ -1846,11 +1846,11 @@ static int raid1_remove_disk(struct mddev
+> *mddev, struct md_rdev *rdev)
+>       int err =3D 0;
+>       int number =3D rdev->raid_disk;
 >
-> This is not complete fix for the problem, we need to prevent new open
-> in the middle of removal, I will propose patchset separately.
->
->  drivers/md/md.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index 0fe7ab6e8ab9..ffae02406175 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -618,6 +618,12 @@ static void mddev_delayed_delete(struct work_struct =
-*ws);
->
->  void mddev_put(struct mddev *mddev)
->  {
-> +       /* Guard for ambiguous put. */
-> +       if (unlikely(atomic_read(&mddev->active) < 1)) {
-> +               pr_warn("%s: active refcount is lower than 1\n", mdname(m=
-ddev));
-> +               return;
-> +       }
+> +    struct raid1_info *p =3D conf->mirrors + number;
 > +
->         if (!atomic_dec_and_lock(&mddev->active, &all_mddevs_lock))
->                 return;
->         if (!mddev->raid_disks && list_empty(&mddev->disks) &&
-> @@ -8250,8 +8256,7 @@ static void *md_seq_next(struct seq_file *seq, void=
- *v, loff_t *pos)
->                 next_mddev =3D list_entry(tmp, struct mddev, all_mddevs);
->                 if (mddev_get(next_mddev))
->                         break;
-> -               mddev =3D next_mddev;
-> -               tmp =3D mddev->all_mddevs.next;
-> +               tmp =3D next_mddev->all_mddevs.next;
->         }
->         spin_unlock(&all_mddevs_lock);
+>       if (unlikely(number >=3D conf->raid_disks))
+>           goto abort;
+>
+> -    struct raid1_info *p =3D conf->mirrors + number;
+> -
+>       if (rdev !=3D p->rdev)
+>           p =3D conf->mirrors + conf->raid_disks + number;
 >
 > --
-> 2.26.2
+> 2.31.1
 >
