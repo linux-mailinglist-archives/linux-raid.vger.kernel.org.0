@@ -2,144 +2,172 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E0B6979B2AE
-	for <lists+linux-raid@lfdr.de>; Tue, 12 Sep 2023 01:59:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27E2A79B8AA
+	for <lists+linux-raid@lfdr.de>; Tue, 12 Sep 2023 02:08:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240210AbjIKV7c (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 11 Sep 2023 17:59:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35746 "EHLO
+        id S1353596AbjIKV7Z (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 11 Sep 2023 17:59:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242868AbjIKQ10 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 11 Sep 2023 12:27:26 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63589CCD
-        for <linux-raid@vger.kernel.org>; Mon, 11 Sep 2023 09:27:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694449641; x=1725985641;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=fLe1eVF0AyQjKFE2tRHJ1P6Lg3GSKkOCJmYP0mm4GKo=;
-  b=ZlV/pDFwkxOEVp7I7+uu70+I5g+t+RlARjLclYzNdaNcN1nrzIn21SAF
-   nbu9+kjkyR/uSf0wlALRI+Z4ohuHSGP5vVAxzPq/F0d9zAtcu5bG1pBfJ
-   Z+SLc4NXLMHJzOyC29SM6sPOHXO6O341hJPY+aie94sHSP+oisO0SP2nD
-   CdGL8CnXzJUOBzPrt+bOyVH/BajSaIksJKlcDojs2/cGxu0Q0YDE3B3HT
-   jAWDRga19YiHw3YCR/PSHXkR+l1VOXkQGWDsptSy/gJRxRp8YeAgRyoXq
-   o5AMuUVPPWBHCg5ru/LYCNU2usJxoECfYyHz88WZ+99DC8nAw9KiYmwxe
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="380829242"
-X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
-   d="scan'208";a="380829242"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 09:00:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="990139590"
-X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
-   d="scan'208";a="990139590"
-Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.249.141.71])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 09:00:36 -0700
-Date:   Mon, 11 Sep 2023 18:00:32 +0200
-From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-To:     Li Xiao Keng <lixiaokeng@huawei.com>
-Cc:     Jes Sorensen <jes@trained-monkey.org>,
-        Martin Wilck <mwilck@suse.com>, Coly Li <colyli@suse.de>,
-        <linux-raid@vger.kernel.org>, <louhongxiang@huawei.com>,
-        miaoguanqin <miaoguanqin@huawei.com>
-Subject: Re: [PATCH v3] Fix race of "mdadm --add" and "mdadm --incremental"
-Message-ID: <20230911180032.00007bbb@linux.intel.com>
-In-Reply-To: <a25e4d75-ebc3-0841-832c-34b8e5f4cbb7@huawei.com>
-References: <a25e4d75-ebc3-0841-832c-34b8e5f4cbb7@huawei.com>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S236026AbjIKJtV (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 11 Sep 2023 05:49:21 -0400
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79679E44
+        for <linux-raid@vger.kernel.org>; Mon, 11 Sep 2023 02:48:57 -0700 (PDT)
+Received: by mail-pg1-x530.google.com with SMTP id 41be03b00d2f7-569612f9d89so232998a12.0
+        for <linux-raid@vger.kernel.org>; Mon, 11 Sep 2023 02:48:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1694425737; x=1695030537; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3Yj0gPfexl8jpeLTCYtbI5G1wb/s5xsc3LDcKfsQ+pE=;
+        b=LGytzLADMvz42cQawUan3xnLXtANYbud1cRcAZwJG5FijecCSDmQZvr+QBLmXOukJ9
+         3jNTD/CDG6fXwEytC3/zyCQN7cHZDiTbGEyYM8uIGYUzLbvVou1jygZbrHeyajShPE/y
+         Dpfk56OUrrQbiOzN0APGBlyJtJ/bjs/pdIgJWPc+quQsG+ICVXfjrle0Agim+UlPeNBw
+         9zdkSJy2/jf/RUPHm++4C6LaY2mCp73ndfPwMLzJN0AN6aH650FHjYVfDcSPJ8GFZxiS
+         OUXYupXWfSE6QDx7090oSFOFXVJB0zVsiTuAZzaqrFWkkGylhIkwbvbqYPOeYzTRoImc
+         fM9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694425737; x=1695030537;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3Yj0gPfexl8jpeLTCYtbI5G1wb/s5xsc3LDcKfsQ+pE=;
+        b=qc8h9Er5knUAS0ubLPMObLisAtnTqwZckb3GfGiWt684vxGL8tSOOh0bBWPophuVbi
+         hXiD0siYZQsCmzGtL0bxDaCDCxtz1r6Ud83Pmy9apMyqsE3Rcth0fdnjbKN0wdTTzHf7
+         CDanyz6RonjHp2K0yKoA3H0e+W9+xF64ZAIYC3iOE60kgrLJJfeKjfnYAHWX2xl6xm1T
+         iA6GvgTYYLN0AZ1yGLCsh3KpRF+h6lRbiz9i2WYpksiaEZg9Ova4zrTnKnxMKOXgs8bF
+         RgVvIkOq0tvzT0nAe9FbvUzwJiX75UTImuHjjWNYfFTJyHGbp91ffqFvVMl3RugfKP7W
+         wXPw==
+X-Gm-Message-State: AOJu0Yzx8UOsofmdyN8oivAx1tLyc2cXvlOPWy+ftBH/ds6083P7BUYl
+        R7ZNxHQrYQax2Nkrp2PZVNM3xw==
+X-Google-Smtp-Source: AGHT+IFZ0Cuso7zcW7EGyUKF+CdPkMsrNNduA/1bSkXKanT+gK0Pmmcny6T+hZLeB0kr56AjQb9xKw==
+X-Received: by 2002:a05:6a20:4401:b0:140:ca4c:740d with SMTP id ce1-20020a056a20440100b00140ca4c740dmr14472508pzb.4.1694425737026;
+        Mon, 11 Sep 2023 02:48:57 -0700 (PDT)
+Received: from C02DW0BEMD6R.bytedance.net ([203.208.167.146])
+        by smtp.gmail.com with ESMTPSA id az7-20020a170902a58700b001bdc2fdcf7esm5988188plb.129.2023.09.11.02.48.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Sep 2023 02:48:56 -0700 (PDT)
+From:   Qi Zheng <zhengqi.arch@bytedance.com>
+To:     akpm@linux-foundation.org, david@fromorbit.com, tkhai@ya.ru,
+        vbabka@suse.cz, roman.gushchin@linux.dev, djwong@kernel.org,
+        brauner@kernel.org, paulmck@kernel.org, tytso@mit.edu,
+        steven.price@arm.com, cel@kernel.org, senozhatsky@chromium.org,
+        yujie.liu@intel.com, gregkh@linuxfoundation.org,
+        muchun.song@linux.dev
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org,
+        Qi Zheng <zhengqi.arch@bytedance.com>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Song Liu <song@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH v6 25/45] md/raid5: dynamically allocate the md-raid5 shrinker
+Date:   Mon, 11 Sep 2023 17:44:24 +0800
+Message-Id: <20230911094444.68966-26-zhengqi.arch@bytedance.com>
+X-Mailer: git-send-email 2.24.3 (Apple Git-128)
+In-Reply-To: <20230911094444.68966-1-zhengqi.arch@bytedance.com>
+References: <20230911094444.68966-1-zhengqi.arch@bytedance.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Thu, 7 Sep 2023 19:37:44 +0800
-Li Xiao Keng <lixiaokeng@huawei.com> wrote:
+In preparation for implementing lockless slab shrink, use new APIs to
+dynamically allocate the md-raid5 shrinker, so that it can be freed
+asynchronously via RCU. Then it doesn't need to wait for RCU read-side
+critical section when releasing the struct r5conf.
 
-> There is a raid1 with sda and sdb. And we add sdc to this raid,
-> it may return -EBUSY.
->=20
-> The main process of --add:
-> 1. dev_open=EF=BC=88sdc) in Manage_add
-> 2. store_super1(st, di->fd) in write_init_super1
-> 3. fsync(fd) in store_super1
-> 4. close(di->fd) in write_init_super1
-> 5. ioctl(ADD_NEW_DISK)
->=20
-> Step 2 and 3 will add sdc to metadata of raid1. There will be
-> udev(change of sdc) event after step4. Then "/usr/sbin/mdadm
-> --incremental --export $devnode --offroot $env{DEVLINKS}"
-> will be run, and the sdc will be added to the raid1. Then
-> step 5 will return -EBUSY because it checks if device isn't
-> claimed in md_import_device()->lock_rdev()->blkdev_get_by_dev()
-> ->blkdev_get(). =20
->=20
-> It will be confusing for users because sdc is added first time.
-> The "incremental" will get map_lock before add sdc to raid1.
-> So we add map_lock before write_init_super in "mdadm --add"
-> to fix the race of "add" and "incremental".
->=20
-> Signed-off-by: Li Xiao Keng <lixiaokeng@huawei.com>
-> Signed-off-by: Guanqin Miao <miaoguanqin@huawei.com>
+Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+Reviewed-by: Muchun Song <songmuchun@bytedance.com>
+Reviewed-by: Song Liu <song@kernel.org>
+CC: linux-raid@vger.kernel.org
+---
+ drivers/md/raid5.c | 26 +++++++++++++++-----------
+ drivers/md/raid5.h |  2 +-
+ 2 files changed, 16 insertions(+), 12 deletions(-)
 
-Hello Li Xiao Keng,
-Thanks for the patch, I'm trying to get my head around this.
-As I understand, you added a mapfile locking and you are failing when the l=
-og
-is already claimed, but you prefer to return -1 and print error instead of
-returning EBUSY, right?
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index 4cb9c608ee19..c8d2c6e50aa1 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -7401,7 +7401,7 @@ static void free_conf(struct r5conf *conf)
+ 
+ 	log_exit(conf);
+ 
+-	unregister_shrinker(&conf->shrinker);
++	shrinker_free(conf->shrinker);
+ 	free_thread_groups(conf);
+ 	shrink_stripes(conf);
+ 	raid5_free_percpu(conf);
+@@ -7449,7 +7449,7 @@ static int raid5_alloc_percpu(struct r5conf *conf)
+ static unsigned long raid5_cache_scan(struct shrinker *shrink,
+ 				      struct shrink_control *sc)
+ {
+-	struct r5conf *conf = container_of(shrink, struct r5conf, shrinker);
++	struct r5conf *conf = shrink->private_data;
+ 	unsigned long ret = SHRINK_STOP;
+ 
+ 	if (mutex_trylock(&conf->cache_size_mutex)) {
+@@ -7470,7 +7470,7 @@ static unsigned long raid5_cache_scan(struct shrinker *shrink,
+ static unsigned long raid5_cache_count(struct shrinker *shrink,
+ 				       struct shrink_control *sc)
+ {
+-	struct r5conf *conf = container_of(shrink, struct r5conf, shrinker);
++	struct r5conf *conf = shrink->private_data;
+ 
+ 	if (conf->max_nr_stripes < conf->min_nr_stripes)
+ 		/* unlikely, but not impossible */
+@@ -7705,18 +7705,22 @@ static struct r5conf *setup_conf(struct mddev *mddev)
+ 	 * it reduces the queue depth and so can hurt throughput.
+ 	 * So set it rather large, scaled by number of devices.
+ 	 */
+-	conf->shrinker.seeks = DEFAULT_SEEKS * conf->raid_disks * 4;
+-	conf->shrinker.scan_objects = raid5_cache_scan;
+-	conf->shrinker.count_objects = raid5_cache_count;
+-	conf->shrinker.batch = 128;
+-	conf->shrinker.flags = 0;
+-	ret = register_shrinker(&conf->shrinker, "md-raid5:%s", mdname(mddev));
+-	if (ret) {
+-		pr_warn("md/raid:%s: couldn't register shrinker.\n",
++	conf->shrinker = shrinker_alloc(0, "md-raid5:%s", mdname(mddev));
++	if (!conf->shrinker) {
++		ret = -ENOMEM;
++		pr_warn("md/raid:%s: couldn't allocate shrinker.\n",
+ 			mdname(mddev));
+ 		goto abort;
+ 	}
+ 
++	conf->shrinker->seeks = DEFAULT_SEEKS * conf->raid_disks * 4;
++	conf->shrinker->scan_objects = raid5_cache_scan;
++	conf->shrinker->count_objects = raid5_cache_count;
++	conf->shrinker->batch = 128;
++	conf->shrinker->private_data = conf;
++
++	shrinker_register(conf->shrinker);
++
+ 	sprintf(pers_name, "raid%d", mddev->new_level);
+ 	rcu_assign_pointer(conf->thread,
+ 			   md_register_thread(raid5d, mddev, pers_name));
+diff --git a/drivers/md/raid5.h b/drivers/md/raid5.h
+index 97a795979a35..22bea20eccbd 100644
+--- a/drivers/md/raid5.h
++++ b/drivers/md/raid5.h
+@@ -670,7 +670,7 @@ struct r5conf {
+ 	wait_queue_head_t	wait_for_stripe;
+ 	wait_queue_head_t	wait_for_overlap;
+ 	unsigned long		cache_state;
+-	struct shrinker		shrinker;
++	struct shrinker		*shrinker;
+ 	int			pool_size; /* number of disks in stripeheads in pool */
+ 	spinlock_t		device_lock;
+ 	struct disk_info	*disks;
+-- 
+2.30.2
 
-If yes, it has nothing to do with fixing. It is just a obscure hack to make=
- it,
-let say more reliable. We can either get EBUSY and know that is expected. I
-see no difference, your solution is same confusing as current implementatio=
-n.
-
-Also, you used map_lock(). I remember that initially I proposed - my bad.
-We also rejected udev locking, as a buggy. In fact- I don't see ready
-synchronization method to avoid this race in mdadm right now.
-
-The best way, I see is:
-1. Write metadata.
-2. Give udev chance to process the device.
-3. Add it manually if udev failed (or D_NO_UDEV).
-
-If it does not work for you, we need to add synchronization, I know that th=
-ere
-is pidfile used for mdmon, perhaps we can reuse it? We don't need something
-fancy, just something to keep all synchronised and block incremental to led
---add finish the action.
-
-We cannot use map_lock() and map_unlock() in this context. It claims lock on
-mapfile which describes every array in your system (base details, there is =
-no
-info about members), see /var/run/mdadm. Add is just a tiny action to add d=
-isk
-and we are not going to update the map. Taking this lock will make --add
-more vulnerable, for example it will fail because another array is assemble=
-d or
-created in the same time (I know that it will be hard to achieve but it is
-another race - we don't want it).
-
-And we cannot allow for partially done action, you added this lock after
-writing metadata (according to description), we are not taking this lock to
-complete the action, just to hide race. Lock should be taken before
-writing metadata, but we know that it will not hide an issue.
-
-In this for it cannot be merged I don't see a gain, we are returning -1 ins=
-tead
--22, what is the difference? I don't see error message as more meaningful n=
-ow.
-
-Thanks,
-Mariusz
