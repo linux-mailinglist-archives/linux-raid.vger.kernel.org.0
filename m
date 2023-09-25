@@ -2,116 +2,111 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE7107AD280
-	for <lists+linux-raid@lfdr.de>; Mon, 25 Sep 2023 09:58:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45EC57AD3D7
+	for <lists+linux-raid@lfdr.de>; Mon, 25 Sep 2023 10:55:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229588AbjIYH6t (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 25 Sep 2023 03:58:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47130 "EHLO
+        id S232873AbjIYIzD (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 25 Sep 2023 04:55:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232148AbjIYH6s (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 25 Sep 2023 03:58:48 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6411101
-        for <linux-raid@vger.kernel.org>; Mon, 25 Sep 2023 00:58:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695628721; x=1727164721;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Z5VBCx0VNVg1mH/OOR+2dBjPUoJe2zuwfaMtt9dMU0g=;
-  b=ADLUbCLHQWxy84UJNGyVwnI7DUhqODHvD/+MmDoCOjyDtNnTpGE63zEp
-   A13ZG5OSYmUFTmXqATa/J8V6RmPjzGYXyYnkU3aS31g45hB1MWdFDGX/l
-   i8cmovxnvL1ZBgLZMjU4bmYjGlutDrA/C5bVgRg+/ZBpH2A7U5W2zpzFs
-   EDNpRv+2u+7Z0DOHL6hE+Ni9CvmTnDfD6fFdAiVgIl/JCJiZb0aqkyVOC
-   5KGX8B2qaT2pFx5+U1v0jBS6x88hiG7zooYZ4lmmKDHviA8KPMq5YsCzA
-   ZbOg/8FWK4R36/FsMKbthpHzROb6MW/1vwMF4n24E93Nna+zsgPqmNtOp
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="366252241"
-X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
-   d="scan'208";a="366252241"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 00:58:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="777572808"
-X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
-   d="scan'208";a="777572808"
-Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.237.142.90])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 00:58:39 -0700
-Date:   Mon, 25 Sep 2023 09:58:35 +0200
-From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-To:     Yu Kuai <yukuai1@huaweicloud.com>
-Cc:     Song Liu <song@kernel.org>, linux-raid@vger.kernel.org,
-        "yukuai (C)" <yukuai3@huawei.com>
-Subject: Re: [PATCH] md: do not require mddev_lock() for all options
-Message-ID: <20230925095835.00002fcc@linux.intel.com>
-In-Reply-To: <175273eb-35a2-507d-ec0c-0685e7f6acd7@huaweicloud.com>
-References: <20230913085502.17856-1-mariusz.tkaczyk@linux.intel.com>
-        <CAPhsuW6qk=XbbOxtzr0FGVuZHLr4kbzODkTSPjcBmK4YYGWWKw@mail.gmail.com>
-        <175273eb-35a2-507d-ec0c-0685e7f6acd7@huaweicloud.com>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S233030AbjIYIzC (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 25 Sep 2023 04:55:02 -0400
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F31BE8;
+        Mon, 25 Sep 2023 01:54:55 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4RvGsP2PHVz4f3m7G;
+        Mon, 25 Sep 2023 16:54:49 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+        by APP4 (Coremail) with SMTP id gCh0CgB3Dt7ZShFlAYZjBQ--.35145S3;
+        Mon, 25 Sep 2023 16:54:51 +0800 (CST)
+Subject: Re: [PATCH -next 0/2] md: fix potential hang for mddev_suspend()
+To:     Xiao Ni <xni@redhat.com>, Song Liu <song@kernel.org>
+Cc:     Yu Kuai <yukuai1@huaweicloud.com>, linux-raid@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
+        yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <20230830092902.1236950-1-yukuai1@huaweicloud.com>
+ <CAPhsuW4QNwL3+AXk8_ZNwgSAZj9k6Ce=tPmz9xPHwC+BjT=Dcg@mail.gmail.com>
+ <CALTww28+gk4upte4wo=VBJxYCJxr2i1hdcwy+OwNHY1PqaCqVg@mail.gmail.com>
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <aa13ca78-72b1-699a-5179-85fbc3a3c219@huaweicloud.com>
+Date:   Mon, 25 Sep 2023 16:54:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <CALTww28+gk4upte4wo=VBJxYCJxr2i1hdcwy+OwNHY1PqaCqVg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: gCh0CgB3Dt7ZShFlAYZjBQ--.35145S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrtr45GF4UAFyxAr43uFyxAFb_yoWfJwb_JF
+        4UCr97Gw1UJ3W0qa4Durn0v3yq9ay5Gr43Ja4Utry2v3s8JrWUJFs5K395Xr13JFW8tFn8
+        Ar4kZa40yr13WjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb4kFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+        6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
+        Y487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
+        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+        WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8
+        JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUoOJ5UU
+        UUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
+        NICE_REPLY_A,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Mon, 25 Sep 2023 11:05:42 +0800
-Yu Kuai <yukuai1@huaweicloud.com> wrote:
+Hi,
 
-> =E5=9C=A8 2023/09/23 5:04, Song Liu =E5=86=99=E9=81=93:
-> > Hi Mariusz,
-> >=20
-> > Sorry for the late reply.
-> >=20
-> > On Wed, Sep 13, 2023 at 1:55=E2=80=AFAM Mariusz Tkaczyk
-> > <mariusz.tkaczyk@linux.intel.com> wrote: =20
-> >>
-> >> We don't need to lock device to reject not supported request
-> >> in array_state_store().
-> >> Main motivation is to make a room for action does not require lock yet,
-> >> like prepare to stop (see md_ioctl()). =20
-> >=20
-> > I made some changes to the commit log:
-> >=20
-> >      md: do not require mddev_lock() for all options
-> >=20
-> >      We don't need to lock device to reject not supported request
-> >      in array_state_store().
-> >      Main motivation is to make a room for action does not require lock=
- yet,
-> >      like prepare to stop (see md_ioctl()).
-> >=20
-> > But I am not sure what you meant by "make a room for action does not
-> > require lock yet". Could you please explain? =20
->=20
-> Yes, this sounds confusing, if 'action does not require lock', then it
-> shound not be blocked by array_state_store() with or without this patch.
+在 2023/09/25 15:58, Xiao Ni 写道:
+> On Sat, Sep 23, 2023 at 5:33 AM Song Liu <song@kernel.org> wrote:
+>>
+>> On Wed, Aug 30, 2023 at 2:33 AM Yu Kuai <yukuai1@huaweicloud.com> wrote:
+>>>
+>>> From: Yu Kuai <yukuai3@huawei.com>
+>>>
+>>> Yu Kuai (2):
+>>>    md: factor out helpers to grab and put 'active_io'
+>>>    md: fix potential hang for mddev_suspend()
+>>
+>> Applied to md-next. Thanks!
+>>
+>> Song
+>>
+>>>
+>>>   drivers/md/md.c | 36 ++++++++++++++++++++++++++++++------
+>>>   1 file changed, 30 insertions(+), 6 deletions(-)
+>>>
+>>> --
+>>> 2.39.2
+>>>
+>>
+> 
+> Hi all
+> 
+> For the second patch, active_io_release does this job. So it doesn't
+> need to do this in md_array_exit again.
 
-In md_ioctl() we do some actions before stopping. We are verifying
-how many holders are there (mddev->openers), we are setting MD_CLOSING and
-sync_blockdev() is executed. I see that it is omitted in array_state_store(=
-).
-https://elixir.bootlin.com/linux/latest/source/drivers/md/md.c#L7580
+Yes, this is correct, I missed this while reviewing related code.
 
-I meant that with this separated switch before locking mddev it is now easy=
- to
-add other actions, like mentioned code above for stopping.
->=20
-> >=20
-> > Otherwise, the code looks reasonable to me. =20
->=20
-> Changes look good to me, after clarify commit message, feel free to add
->=20
-> Reviewed-by: Yu Kuai <yukuai3@huawei.com>
+Song, can you revert this patchset for now? Sorry for the trouble.
 
-Thanks!
-I will send v2.
+Thanks,
+Kuai
 
-Mariusz
+> 
+> Best Regards
+> Xiao
+> 
+> .
+> 
+
