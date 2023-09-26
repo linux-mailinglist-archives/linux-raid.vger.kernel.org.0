@@ -2,230 +2,130 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C648A7AE3ED
-	for <lists+linux-raid@lfdr.de>; Tue, 26 Sep 2023 05:04:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 206E67AE419
+	for <lists+linux-raid@lfdr.de>; Tue, 26 Sep 2023 05:28:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231430AbjIZDEv (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 25 Sep 2023 23:04:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43538 "EHLO
+        id S232577AbjIZD3A (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 25 Sep 2023 23:29:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231653AbjIZDEt (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 25 Sep 2023 23:04:49 -0400
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D63A6116;
-        Mon, 25 Sep 2023 20:04:39 -0700 (PDT)
+        with ESMTP id S232816AbjIZD26 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 25 Sep 2023 23:28:58 -0400
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8242ED8
+        for <linux-raid@vger.kernel.org>; Mon, 25 Sep 2023 20:28:50 -0700 (PDT)
 Received: from mail02.huawei.com (unknown [172.30.67.143])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Rvl2l70Yyz4f3kpy;
-        Tue, 26 Sep 2023 11:04:31 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-        by APP4 (Coremail) with SMTP id gCh0CgDnfd0+ShJlShWjBQ--.31625S6;
-        Tue, 26 Sep 2023 11:04:32 +0800 (CST)
+        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4RvlZf5ShCz4f3jsq
+        for <linux-raid@vger.kernel.org>; Tue, 26 Sep 2023 11:28:42 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+        by APP4 (Coremail) with SMTP id gCh0CgAnvdztTxJlxXikBQ--.47968S3;
+        Tue, 26 Sep 2023 11:28:47 +0800 (CST)
+Subject: Re: fstrim on raid1 LV with writemostly PV leads to system freeze
+To:     Kirill Kirilenko <kirill@ultracoder.org>,
+        Yu Kuai <yukuai1@huaweicloud.com>
+Cc:     Roman Mamedov <rm@romanrm.net>, Song Liu <song@kernel.org>,
+        linux-raid@vger.kernel.org, dm-devel@redhat.com,
+        "yukuai (C)" <yukuai3@huawei.com>
+References: <0e15b760-2d5f-f639-0fc7-eed67f8c385c@ultracoder.org>
+ <ZQy5dClooWaZoS/N@redhat.com> <20230922030340.2eaa46bc@nvm>
+ <6b7c6377-c4be-a1bc-d05d-37680175f84c@huaweicloud.com>
+ <6a1165f7-c792-c054-b8f0-1ad4f7b8ae01@ultracoder.org>
 From:   Yu Kuai <yukuai1@huaweicloud.com>
-To:     mariusz.tkaczyk@linux.intel.com, xni@redhat.com, song@kernel.org
-Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com,
-        yangerkun@huawei.com
-Subject: [PATCH v2 2/2] md: simplify md_seq_ops
-Date:   Tue, 26 Sep 2023 10:58:27 +0800
-Message-Id: <20230926025827.671407-3-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230926025827.671407-1-yukuai1@huaweicloud.com>
-References: <20230926025827.671407-1-yukuai1@huaweicloud.com>
+Message-ID: <d45ffbcd-cf55-f07c-c406-0cf762a4b4ec@huaweicloud.com>
+Date:   Tue, 26 Sep 2023 11:28:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <6a1165f7-c792-c054-b8f0-1ad4f7b8ae01@ultracoder.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgDnfd0+ShJlShWjBQ--.31625S6
-X-Coremail-Antispam: 1UD129KBjvJXoWxJw47XF18KrWDCw4kCr4Durg_yoWrCFy7pa
-        nI9FZxAr48Z3yFqan8Ja1Du3W3Jws7t34qgr9rG3s5Cr1jqr13ZF1aqr40qr90gayUWrn0
-        qw4UKa45urWxGwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9v14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-        x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-        Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr1j6rxdM2
-        8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
-        xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
-        vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
-        r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxAIw28IcxkI7VAKI48JMxC20s
-        026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
-        JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
-        v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xva
-        j40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JV
-        W8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjYiiDUUUUU==
+X-CM-TRANSID: gCh0CgAnvdztTxJlxXikBQ--.47968S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7uF17KFWUtF4fArWDAr1fZwb_yoW8trWDpr
+        WvqFWYvrWUJr1kJr1DJr1UAry8Jr1Dt39rKr18XFyUXr17JFyjqr4kXryjgr1DGr48Gw1j
+        qw1UJr1UuFyUJrUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
+        IcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+        v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
+        c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+        0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j
+        6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHU
+        DUUUUU=
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+Hi,
 
-Before this patch, the implementation is hacky and hard to understand:
+在 2023/09/26 7:59, Kirill Kirilenko 写道:
+> On 25.09.2023 05:58 +0300, Yu Kuai wrote:
+>> Roman and Kirill, can you test the following patch?
+>>
+>> Thanks,
+>> Kuai
+>>
+>> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+>> index 4b30a1742162..4963f864ef99 100644
+>> --- a/drivers/md/raid1.c
+>> +++ b/drivers/md/raid1.c
+>> @@ -1345,6 +1345,7 @@ static void raid1_write_request(struct mddev
+>> *mddev, struct bio *bio,
+>>          int first_clone;
+>>          int max_sectors;
+>>          bool write_behind = false;
+>> +       bool is_discard = (bio_op(bio) == REQ_OP_DISCARD);
+>>
+>>          if (mddev_is_clustered(mddev) &&
+>>               md_cluster_ops->area_resyncing(mddev, WRITE,
+>> @@ -1405,7 +1406,7 @@ static void raid1_write_request(struct mddev
+>> *mddev, struct bio *bio,
+>>                   * write-mostly, which means we could allocate write
+>> behind
+>>                   * bio later.
+>>                   */
+>> -               if (rdev && test_bit(WriteMostly, &rdev->flags))
+>> +               if (!is_discard && rdev && test_bit(WriteMostly,
+>> &rdev->flags))
+>>                          write_behind = true;
+>>
+>>                  if (rdev && unlikely(test_bit(Blocked, &rdev->flags))) {
+> 
+> Thank you. I can confirm, that your patch eliminates freezes during
+> 'fstrim' execution. Tested on kernel 6.5.0.
+> Still 'fstrim' takes more than 2 minutes, but I believe it's normal to a
+> file system with 1M+ inodes.
+Thanks for the test.
 
-1) md_seq_start set pos to 1;
-2) md_seq_show found pos is 1, then print Personalities;
-3) md_seq_next found pos is 1, then it update pos to the first mddev;
-4) md_seq_show found pos is not 1 or 2, show mddev;
-5) md_seq_next found pos is not 1 or 2, update pos to next mddev;
-6) loop 4-5 until the last mddev, then md_seq_next update pos to 2;
-7) md_seq_show found pos is 2, then print unused devices;
-8) md_seq_next found pos is 2, stop;
+> 
+> Probably I'm wrong here, but to me this doesn't look like a solution,
+> more like a masking the real problem.
+> Even with TRIM operations split in 1MB pieces, I don't expect kernel to
+> freeze.
 
-This patch remove the magic value and use seq_list_start/next/stop()
-directly, and move printing "Personalities" to md_sep_start(),
-"unsed devices" to md_seq_stop():
+I still don't quite understand what you mean 'kernel freeze', this patch
+indeed fix a problem that diskcard bio is treated as normal write bio
+and it's splitted.
 
-1) md_seq_start print Personalities, and then set pos to first mddev;
-2) md_seq_show show mddev;
-3) md_seq_next update pos to next mddev;
-4) loop 2-3 until the last mddev;
-5) md_seq_stop print unsed devices;
+Can you explain more by how do you judge 'kernel freeze'? In the
+meantime dose 'iostat -dmx 1' shows that disk is idle and no dicard io
+is handled?
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- drivers/md/md.c | 99 +++++++++++--------------------------------------
- 1 file changed, 21 insertions(+), 78 deletions(-)
+Thanks,
+Kuai
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index a5ef6f7da8ec..44635b6ee26f 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -8220,105 +8220,46 @@ static int status_resync(struct seq_file *seq, struct mddev *mddev)
- }
- 
- static void *md_seq_start(struct seq_file *seq, loff_t *pos)
-+	__acquires(&all_mddevs_lock)
- {
--	struct list_head *tmp;
--	loff_t l = *pos;
--	struct mddev *mddev;
-+	struct md_personality *pers;
- 
--	if (l == 0x10000) {
--		++*pos;
--		return (void *)2;
--	}
--	if (l > 0x10000)
--		return NULL;
--	if (!l--)
--		/* header */
--		return (void*)1;
-+	seq_puts(seq, "Personalities : ");
-+	spin_lock(&pers_lock);
-+	list_for_each_entry(pers, &pers_list, list)
-+		seq_printf(seq, "[%s] ", pers->name);
-+
-+	spin_unlock(&pers_lock);
-+	seq_puts(seq, "\n");
-+	seq->poll_event = atomic_read(&md_event_count);
- 
- 	spin_lock(&all_mddevs_lock);
--	list_for_each(tmp,&all_mddevs)
--		if (!l--) {
--			mddev = list_entry(tmp, struct mddev, all_mddevs);
--			if (!mddev_get(mddev))
--				continue;
--			spin_unlock(&all_mddevs_lock);
--			return mddev;
--		}
--	spin_unlock(&all_mddevs_lock);
--	if (!l--)
--		return (void*)2;/* tail */
--	return NULL;
-+
-+	return seq_list_start(&all_mddevs, *pos);
- }
- 
- static void *md_seq_next(struct seq_file *seq, void *v, loff_t *pos)
- {
--	struct list_head *tmp;
--	struct mddev *next_mddev, *mddev = v;
--	struct mddev *to_put = NULL;
--
--	++*pos;
--	if (v == (void*)2)
--		return NULL;
--
--	spin_lock(&all_mddevs_lock);
--	if (v == (void*)1) {
--		tmp = all_mddevs.next;
--	} else {
--		to_put = mddev;
--		tmp = mddev->all_mddevs.next;
--	}
--
--	for (;;) {
--		if (tmp == &all_mddevs) {
--			next_mddev = (void*)2;
--			*pos = 0x10000;
--			break;
--		}
--		next_mddev = list_entry(tmp, struct mddev, all_mddevs);
--		if (mddev_get(next_mddev))
--			break;
--		mddev = next_mddev;
--		tmp = mddev->all_mddevs.next;
--	}
--	spin_unlock(&all_mddevs_lock);
--
--	if (to_put)
--		mddev_put(to_put);
--	return next_mddev;
--
-+	return seq_list_next(v, &all_mddevs, pos);
- }
- 
- static void md_seq_stop(struct seq_file *seq, void *v)
-+	__releases(&all_mddevs_lock)
- {
--	struct mddev *mddev = v;
--
--	if (mddev && v != (void*)1 && v != (void*)2)
--		mddev_put(mddev);
-+	status_unused(seq);
-+	spin_unlock(&all_mddevs_lock);
- }
- 
- static int md_seq_show(struct seq_file *seq, void *v)
- {
--	struct mddev *mddev = v;
-+	struct mddev *mddev = list_entry(v, struct mddev, all_mddevs);
- 	sector_t sectors;
- 	struct md_rdev *rdev;
- 
--	if (v == (void*)1) {
--		struct md_personality *pers;
--		seq_printf(seq, "Personalities : ");
--		spin_lock(&pers_lock);
--		list_for_each_entry(pers, &pers_list, list)
--			seq_printf(seq, "[%s] ", pers->name);
--
--		spin_unlock(&pers_lock);
--		seq_printf(seq, "\n");
--		seq->poll_event = atomic_read(&md_event_count);
-+	if (!mddev_get(mddev))
- 		return 0;
--	}
--	if (v == (void*)2) {
--		status_unused(seq);
--		return 0;
--	}
- 
-+	spin_unlock(&all_mddevs_lock);
- 	spin_lock(&mddev->lock);
- 	if (mddev->pers || mddev->raid_disks || !list_empty(&mddev->disks)) {
- 		seq_printf(seq, "%s : %sactive", mdname(mddev),
-@@ -8390,6 +8331,8 @@ static int md_seq_show(struct seq_file *seq, void *v)
- 	}
- 	spin_unlock(&mddev->lock);
- 
-+	__mddev_put(mddev, true);
-+
- 	return 0;
- }
- 
--- 
-2.39.2
+> 
+> .
+> 
 
