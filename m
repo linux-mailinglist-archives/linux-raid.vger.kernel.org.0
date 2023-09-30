@@ -2,112 +2,84 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 59C657B3D10
-	for <lists+linux-raid@lfdr.de>; Sat, 30 Sep 2023 01:51:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 047307B3EEE
+	for <lists+linux-raid@lfdr.de>; Sat, 30 Sep 2023 10:05:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229824AbjI2Xn7 (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 29 Sep 2023 19:43:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37080 "EHLO
+        id S232172AbjI3IFL (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Sat, 30 Sep 2023 04:05:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229508AbjI2Xn6 (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 29 Sep 2023 19:43:58 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD965EB
-        for <linux-raid@vger.kernel.org>; Fri, 29 Sep 2023 16:43:55 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1c723f1c80fso45213605ad.1
-        for <linux-raid@vger.kernel.org>; Fri, 29 Sep 2023 16:43:55 -0700 (PDT)
+        with ESMTP id S229588AbjI3IFK (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Sat, 30 Sep 2023 04:05:10 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BAC9E6
+        for <linux-raid@vger.kernel.org>; Sat, 30 Sep 2023 01:05:08 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id 4fb4d7f45d1cf-53639fb0ba4so3847293a12.0
+        for <linux-raid@vger.kernel.org>; Sat, 30 Sep 2023 01:05:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696031035; x=1696635835; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=XxXRgVO4X0oKRg65wlMjf/8hMDTc8L5/nBKtcjEkozU=;
-        b=Hmj/u6JX3APrdAtp+lWft1v2b2K7cwvLYfnu+z8b3s1WYhckbuHMr1IBmkzPir84R3
-         OAavnQIx9fgd/xcemBXRDE/upbNAdSLRlMyRXMsxKRzbg/ZLzjopNvNYTGqGeiPnE0in
-         MNE9wzIU6E9nvj8sf2u8oxRs7Br/+50ZuWb9U=
+        d=gmail.com; s=20230601; t=1696061107; x=1696665907; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:sender:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WQmcG0PhXG0UkauFZ2tR7iCsRk7FCdRiSqPhAfmvbuo=;
+        b=mbCTseysw8GgZKJs7PSui6McDux9lcc8lK5rbX4T2k7TawfepDAEjHJjLTUcQij3Xe
+         jP8BoURML7b0lo1IFAYFvn0sJSgMxsB8RPmzQsDUKdVHX69mQzH6PvYp4aP4auleQPJA
+         R9+7qkgkeOOYZ4p2iJcUT6BSRhvpyuuZIu+aaXYD/aW05a36fn9WnxaJXf9baag35ZaD
+         o3bpuRN+b4BcB0NYLodCR8/oBwyqs8jsJvAsw1BEOFQtz0peRBwzfH/SlgLDrU5PqSA0
+         EGSAz3UTwvOyOna2ydUpI1U58S1oxEt585UYz3q8gZTFxF31MU+4ZaujeSRfHxUcghQk
+         /HzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696031035; x=1696635835;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1696061107; x=1696665907;
+        h=to:subject:message-id:date:from:sender:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XxXRgVO4X0oKRg65wlMjf/8hMDTc8L5/nBKtcjEkozU=;
-        b=ljAR4i0+cMDqG/OAsPW8x1PZFnt02kZ5T5bT0pr9ysz5ade0UxwjVnZy9TZVirnW3Q
-         I56RLt8Sy+GDvXByFt4rV2ceMSxWU61XSPmts1gjoB3I53K6Qdcw9r2vDfbnv8JFWuRq
-         2Fe1UWjIqjotOEi/hrTPHSr56uK+ugrh5sNn5delNp6CX7GbCmLqMgV96Fa275I8zaMj
-         bQp7THHM4aVVVEfvZVdNF+UVyDLf0wZnAd4V7OlQ5h7hm2fT46BvDGsOM+Zu7m5yjq4k
-         Hdp0oUmCVxkBzMJTtc07HLKzq+NtLlr6gQ5XHIAlNiDOmnyzCW6Dc2EDaKnTama8yY8K
-         Be+Q==
-X-Gm-Message-State: AOJu0YwZmhMLHt5YpdZDeEWPkvM1zvmhrWVor/rewpZEKA373+5pq6Cp
-        eZMRfbzUYh5BmzwcQ4HhAC03jA==
-X-Google-Smtp-Source: AGHT+IFoyjufbN/+tXciMnWrLm1gtDSKSS/anCouRumZaJShGMHHhX6IW7ptFVzMTxsQrVkg++m9jw==
-X-Received: by 2002:a17:903:25d4:b0:1c6:112f:5d02 with SMTP id jc20-20020a17090325d400b001c6112f5d02mr4765528plb.55.1696031035416;
-        Fri, 29 Sep 2023 16:43:55 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id f9-20020a170902ce8900b001c5076ae6absm17466616plg.126.2023.09.29.16.43.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Sep 2023 16:43:54 -0700 (PDT)
-Date:   Fri, 29 Sep 2023 16:43:53 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Song Liu <song@kernel.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-raid@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] md/md-linear: Annotate struct linear_conf with
- __counted_by
-Message-ID: <202309291643.BF67044DA@keescook>
-References: <20230915200328.never.064-kees@kernel.org>
- <169601526973.3013632.16756928162777602693.b4-ty@chromium.org>
- <CAPhsuW6RfCryssufHjWHRdUGCh2DywnNNtidZ-UxEWvwo4gcbQ@mail.gmail.com>
+        bh=WQmcG0PhXG0UkauFZ2tR7iCsRk7FCdRiSqPhAfmvbuo=;
+        b=RQG4xyYGiPNcAoPH/MK77wuBNvSGMapMCs2hByZR74cSZ5P2om91foELQq7vKhtXCg
+         C2KUP4aq1969BDxI+FCC7TafplfUH8gh27yWzr3+T7/NsgcDV37K3roEHJXJwEkxuBt7
+         3FIqEV9+WMmbkXkmjr+hVLkphK14Pr0cF7cUCvdeZAcjwUoiR7uP/JzGXHtoWLapx4Ca
+         yWMc8dCI8lpZ5k4WYb5av8q4/bS8bGfWzBZsEBHj8CvSoCpTR9beucNhk/YgnDfC2JUa
+         SxeZDixuLc5NZOR7zIGm4mSIeDOdn0LL1DfkYfvoPtJJqkTP4XHgTBYhYuHfUrb7Ex2c
+         Bm4Q==
+X-Gm-Message-State: AOJu0Yw6zaICiwCVKxTfoD7QbaLA1vyYUeH8CHbPsgVFj8nBGA1aROt1
+        z/djyIcGf8SKM+Q0FHrsE4tm70uABsKyTHZpGwU=
+X-Google-Smtp-Source: AGHT+IERKUuERGPdAG9R0mKALVVrheMxMY4N3c1bZFXBta2rJVSJ3rbydw35/DM9QJAUFf72UepVY0/YshwbkW68x1U=
+X-Received: by 2002:a17:907:788d:b0:9b2:717a:c0ec with SMTP id
+ ku13-20020a170907788d00b009b2717ac0ecmr5966220ejc.69.1696061106482; Sat, 30
+ Sep 2023 01:05:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPhsuW6RfCryssufHjWHRdUGCh2DywnNNtidZ-UxEWvwo4gcbQ@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Sender: justicethomson1@gmail.com
+Received: by 2002:a05:6f02:c252:b0:5b:e7cf:1540 with HTTP; Sat, 30 Sep 2023
+ 01:05:05 -0700 (PDT)
+From:   "Dr. Thomsom Jack." <jackthomsom7@gmail.com>
+Date:   Sat, 30 Sep 2023 10:05:05 +0200
+X-Google-Sender-Auth: bP0TTnKqM4BPV4jbq6rOJX9omlw
+Message-ID: <CAH0Xq2+AgBZBNYyxGw6c+aTu-jtjTpnzphPJDgHCXBkNeMJEhA@mail.gmail.com>
+Subject: : Hello,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=0.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On Fri, Sep 29, 2023 at 04:40:13PM -0700, Song Liu wrote:
-> On Fri, Sep 29, 2023 at 12:21 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Fri, 15 Sep 2023 13:03:28 -0700, Kees Cook wrote:
-> > > Prepare for the coming implementation by GCC and Clang of the __counted_by
-> > > attribute. Flexible array members annotated with __counted_by can have
-> > > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> > > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> > > functions).
-> > >
-> > > As found with Coccinelle[1], add __counted_by for struct linear_conf.
-> > > Additionally, since the element count member must be set before accessing
-> > > the annotated flexible array member, move its initialization earlier.
-> > >
-> > > [...]
-> >
-> > Applied to for-next/hardening, thanks!
-> >
-> > [1/1] md/md-linear: Annotate struct linear_conf with __counted_by
-> >       https://git.kernel.org/kees/c/9add7681e09b
-> 
-> Hmm..
-> 
-> Jens pulled this into his for-next branch and for-6.7/block branch
-> earlier today:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-next&id=e887544d7620f1d3cef017e45df7bc625182caff
-> 
-> Do we need to do anything about this (drop one of them)?
+Good Day,
 
-Whoops! Sorry, I hadn't seen it picked up. I'll drop it from my tree.
-Thanks!
+I have a good news for you.Please contact me for more details. Sorry
+if
+you received this letter in your spam, Due to recent connection error
+here in my country.a
 
--Kees
+Looking forward for your immediate response to me through my private
 
--- 
-Kees Cook
+e-mail id: (jackthomsom7@gmail.com)
+
+
+Best Regards,
+
+Regards,
+Dr. Thomsom Jack.
+My Telephone number
++226-67 -44 - 42- 36
