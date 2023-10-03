@@ -2,96 +2,88 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 803837B6E22
-	for <lists+linux-raid@lfdr.de>; Tue,  3 Oct 2023 18:10:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D91F7B6F30
+	for <lists+linux-raid@lfdr.de>; Tue,  3 Oct 2023 19:00:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240344AbjJCQKt (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Tue, 3 Oct 2023 12:10:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45036 "EHLO
+        id S232265AbjJCRAa convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-raid@lfdr.de>); Tue, 3 Oct 2023 13:00:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231669AbjJCQKs (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Tue, 3 Oct 2023 12:10:48 -0400
-X-Greylist: delayed 1380 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 03 Oct 2023 09:10:45 PDT
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBE62AB
-        for <linux-raid@vger.kernel.org>; Tue,  3 Oct 2023 09:10:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-        MIME-Version:Date:Message-ID:content-disposition;
-        bh=c8fTMQRoOAH3yKhYSq3QBrsY4of6j8yY+zsW1oSVzDE=; b=djWKznI+5kwQwNMUBKvQwSwtOh
-        cyqmu/yS+kjjYw92I+mJ52LfqgRoeHvYx6CTXHpssXC+9GP6NGzooC++G6k6kybgLjW29SCkFBczk
-        P0KOwqH8l+Z0gLO4lFuwbOF2izyLoNZVKuut1jUHw7aLCkRBnT0URNOAwVK4ZFvk/EhUPaG+AlsFp
-        yvlGJdrxaglq0vMXLhv6nZkfP9l18OEexIMAneE/vFMzgGMdNDoNYXRvmTtB1xk+BFhawoQI8IM9F
-        MQCT7vQuD97DnhUXOeCs7abXyE+gt9Dw3w29Ew1VAORVG/pbf1xawMgFMwFnFWoBZZJfgiJ3NV8+w
-        cJvbfg4g==;
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <logang@deltatee.com>)
-        id 1qnhcd-003fvb-3R; Tue, 03 Oct 2023 09:47:43 -0600
-Message-ID: <40c7dd5d-7dcb-b17e-593d-966b3f115fb4@deltatee.com>
-Date:   Tue, 3 Oct 2023 09:47:42 -0600
+        with ESMTP id S240555AbjJCRAa (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 3 Oct 2023 13:00:30 -0400
+Received: from esa2.hc5620-63.iphmx.com (esa2.hc5620-63.iphmx.com [68.232.149.158])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 05557A7
+        for <linux-raid@vger.kernel.org>; Tue,  3 Oct 2023 10:00:26 -0700 (PDT)
+X-CSE-ConnectionGUID: mxjZfAtjQHW8Zjzp5mvA8A==
+X-CSE-MsgGUID: iVHPZ+NlRCCCh5lQuF1ALw==
+Message-Id: <bc8e20$nckh@esa2.hc5620-63.iphmx.com>
+X-IronPort-RemoteIP: 185.225.73.120
+X-IronPort-MID: 766609
+X-IronPort-Reputation: -5.6
+X-IronPort-Listener: MailFlow
+X-IronPort-SenderGroup: RELAY_O365
+X-IronPort-MailFlowPolicy: $RELAYED
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from unknown (HELO [185.225.73.120]) ([185.225.73.120])
+  by esa2.hc5620-63.iphmx.com with ESMTP; 03 Oct 2023 13:00:23 -0400
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Content-Language: en-CA
-To:     Song Liu <song@kernel.org>, John Pittman <jpittman@redhat.com>
-Cc:     David Jeffery <djeffery@redhat.com>, linux-raid@vger.kernel.org,
-        Laurence Oberman <loberman@redhat.com>
-References: <20231002183422.13047-1-djeffery@redhat.com>
- <CA+RJvhxrkSXRPc9wELyfYYCy_dpRaa+9=fTY7NQR0tP=MO8xUQ@mail.gmail.com>
- <CAPhsuW6iSTRGFDfbP_nQR5eeKWEY=begDZ_H8QgK+tqhKaqELw@mail.gmail.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <CAPhsuW6iSTRGFDfbP_nQR5eeKWEY=begDZ_H8QgK+tqhKaqELw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: song@kernel.org, jpittman@redhat.com, djeffery@redhat.com, linux-raid@vger.kernel.org, loberman@redhat.com
-X-SA-Exim-Mail-From: logang@deltatee.com
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: business reminder please call me +2378124804975
+To:     Recipients <test@mail2world.com>
+From:   "Mr. mohd" <test@mail2world.com>
+Date:   Tue, 03 Oct 2023 10:00:10 -0700
+Reply-To: abdulmkkh1971@gmail.com
+X-Spam-Status: Yes, score=5.1 required=5.0 tests=BAYES_50,FREEMAIL_FROM,
+        FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,HK_NAME_FM_MR_MRS,
+        MSGID_FROM_MTA_HEADER,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_SBL,SPF_FAIL,
+        SPF_HELO_PASS,SPOOFED_FREEMAIL,SPOOFED_FREEM_REPTO,
+        TO_EQ_FM_DOM_SPF_FAIL,TO_EQ_FM_SPF_FAIL autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: *  0.0 RCVD_IN_DNSWL_BLOCKED RBL: ADMINISTRATOR NOTICE: The query to
+        *      DNSWL was blocked.  See
+        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
+        *      for more information.
+        *      [68.232.149.158 listed in list.dnswl.org]
+        *  0.1 RCVD_IN_SBL RBL: Received via a relay in Spamhaus SBL
+        *      [185.225.73.120 listed in zen.spamhaus.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5006]
+        *  0.0 SPF_FAIL SPF: sender does not match SPF record (fail)
+        *      [SPF failed: Please see http://www.openspf.org/Why?s=mfrom;id=test%40mail2world.com;ip=68.232.149.158;r=lindbergh.monkeyblade.net]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [abdulmkkh1971[at]gmail.com]
+        * -0.0 SPF_HELO_PASS SPF: HELO matches SPF record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [test[at]mail2world.com]
+        *  0.0 MSGID_FROM_MTA_HEADER Message-Id was added by a relay
+        *  1.5 HK_NAME_FM_MR_MRS No description available.
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+        *  0.0 TO_EQ_FM_SPF_FAIL To == From and external SPF failed
+        *  0.0 TO_EQ_FM_DOM_SPF_FAIL To domain == From domain and external SPF
+        *       failed
+        *  0.4 SPOOFED_FREEMAIL No description available.
+        *  1.0 SPOOFED_FREEM_REPTO Forged freemail sender with freemail
+        *      reply-to
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
-Subject: Re: [PATCH] md/raid5: release batch_last before waiting for another
- stripe_head
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
 
+Dear
+My name is Mohamed Abdul I have the capacity to inject a considerable
+amount of capital in any viable project 
+1,cell phone number 
+2,full name
 
-On 2023-10-03 00:48, Song Liu wrote:
-> CC Logan.
-> 
-> On Mon, Oct 2, 2023 at 12:22 PM John Pittman <jpittman@redhat.com> wrote:
->>
->> Thanks a lot David.  Song, as a note, David's patch was tested by a
->> Red Hat customer and it indeed resolved their hit on the deadlock.
->> cc. Laurence Oberman who assisted on that case.
->>
->>
->> On Mon, Oct 2, 2023 at 2:39 PM David Jeffery <djeffery@redhat.com> wrote:
->>>
->>> When raid5_get_active_stripe is called with a ctx containing a stripe_head in
->>> its batch_last pointer, it can cause a deadlock if the task sleeps waiting on
->>> another stripe_head to become available. The stripe_head held by batch_last
->>> can be blocking the advancement of other stripe_heads, leading to no
->>> stripe_heads being released so raid5_get_active_stripe waits forever.
->>>
->>> Like with the quiesce state handling earlier in the function, batch_last
->>> needs to be released by raid5_get_active_stripe before it waits for another
->>> stripe_head.
->>>
->>>
->>> Fixes: 3312e6c887fe ("md/raid5: Keep a reference to last stripe_head for batch")
->>> Signed-off-by: David Jeffery <djeffery@redhat.com>
 
-This makes sense to me. Nice catch on the difficult bug.
-
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-
-Logan
+yours truly
+Mohamed Abdul Ahmed
