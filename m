@@ -2,103 +2,293 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FD637BA21E
-	for <lists+linux-raid@lfdr.de>; Thu,  5 Oct 2023 17:14:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9D917BC431
+	for <lists+linux-raid@lfdr.de>; Sat,  7 Oct 2023 04:32:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231362AbjJEPOW (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 5 Oct 2023 11:14:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39802 "EHLO
+        id S233600AbjJGCcv (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 6 Oct 2023 22:32:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232518AbjJEPNf (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 5 Oct 2023 11:13:35 -0400
-Received: from micaiah.parthemores.com (micaiah.parthemores.com [199.26.172.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12537B28A
-        for <linux-raid@vger.kernel.org>; Thu,  5 Oct 2023 07:36:37 -0700 (PDT)
-Received: from [10.21.1.136] (unknown [193.11.98.138])
-        by micaiah.parthemores.com (Postfix) with ESMTPSA id 0BAA2300314;
-        Thu,  5 Oct 2023 09:27:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=parthemores.com;
-        s=micaiah; t=1696490822;
-        bh=DP7w7lHsnorhSlbBVBO12so5vcK/3NARMXHR89c6eV0=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To;
-        b=YvhN69PshBAp1KTHCN3nDR8P2XIZqn+mU9AlBOf43ZNhchXgfmf7A8phvDX6aA9Df
-         lVFsGKFvBFgPuiwM5rAqVnQ/5ApxImHF1lwjAh4mL/qNAxY3iYMYTkE9lO+j68nanY
-         MkErnbwpNjuS1Pm+PG1Hr5TYOkp+gVciMeVhC7UI=
-Message-ID: <37b90505-6bef-6bb8-5576-19b30017697b@parthemores.com>
-Date:   Thu, 5 Oct 2023 09:28:01 +0200
+        with ESMTP id S233755AbjJGCcv (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 6 Oct 2023 22:32:51 -0400
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C8D2C2;
+        Fri,  6 Oct 2023 19:32:46 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4S2Tpw5Hy8z4f3jJ4;
+        Sat,  7 Oct 2023 10:32:40 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+        by APP4 (Coremail) with SMTP id gCh0CgB3Dt5HwyBl+tZOCQ--.41587S3;
+        Sat, 07 Oct 2023 10:32:41 +0800 (CST)
+Subject: Re: [PATCH -next v3 00/25] md: synchronize io with array
+ reconfiguration
+To:     Song Liu <song@kernel.org>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc:     xni@redhat.com, agk@redhat.com, snitzer@kernel.org,
+        dm-devel@redhat.com, linux-kernel@vger.kernel.org,
+        linux-raid@vger.kernel.org, yi.zhang@huawei.com,
+        yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <20230928061543.1845742-1-yukuai1@huaweicloud.com>
+ <CAPhsuW5cUgqy9fqj+Z4nGPQrAok-eQ=NipNxb0TL_kuCFaPMcw@mail.gmail.com>
+ <f59cbb99-33dd-c427-2e43-5a07ab9fbf51@huaweicloud.com>
+ <CAPhsuW7TRODsR_N95AmXJCZvpTuSKgbOjnYGxMGAWtmt3x9Vkw@mail.gmail.com>
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <eb4ea24d-f7b4-899b-9259-2d48dc83e48f@huaweicloud.com>
+Date:   Sat, 7 Oct 2023 10:32:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: request for help on IMSM-metadata RAID-5 array
-Content-Language: en-GB
-To:     Yu Kuai <yukuai1@huaweicloud.com>, Roman Mamedov <rm@romanrm.net>
-Cc:     linux-raid@vger.kernel.org, "yukuai (C)" <yukuai3@huawei.com>
-References: <507b6ab0-fd8f-d770-ba82-28def5f53d25@parthemores.com>
- <20230923162449.3ea0d586@nvm>
- <4095b51a-1038-2fd0-6503-64c0daa913d8@parthemores.com>
- <20230923203512.581fcd7d@nvm>
- <72388663-3997-a410-76f0-066dcd7d2a63@parthemores.com>
- <4d606b3d-ccec-e791-97ba-2cb5af0cc226@huaweicloud.com>
- <02a12a6d-eac4-51a1-e5ab-3df4d79bb87b@parthemores.com>
- <86dd0750-d060-eada-dc16-03a783c3bd1d@huaweicloud.com>
- <9c67d4b6-9b7d-467c-827a-729f62348d54@parthemores.com>
- <a0b8a693-5d9c-d354-5afc-4500b78a983e@huaweicloud.com>
-From:   Joel Parthemore <joel@parthemores.com>
-In-Reply-To: <a0b8a693-5d9c-d354-5afc-4500b78a983e@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <CAPhsuW7TRODsR_N95AmXJCZvpTuSKgbOjnYGxMGAWtmt3x9Vkw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-6.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+X-CM-TRANSID: gCh0CgB3Dt5HwyBl+tZOCQ--.41587S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxtF45KFy5GF17WF45WrWxWFg_yoWxXFWrp3
+        y2qan0kr4DJrn7ZFs7J3y8uF1Sy3yfWFW5GryfK34akwn8Aryvvry8Ka15urZ09r9rGF12
+        vF4UKa98Aa4YyFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+        0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+        kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+        67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+        CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E
+        3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
+        sGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-5.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
+Hi,
 
-Den 2023-10-05 kl. 04:50, skrev Yu Kuai:
-> Hi,
->
-> 在 2023/09/30 3:44, Joel Parthemore 写道:
->> Den 2023-09-26 kl. 03:10, skrev Yu Kuai:
+在 2023/10/05 11:55, Song Liu 写道:
+> On Wed, Oct 4, 2023 at 8:42 PM Yu Kuai <yukuai1@huaweicloud.com> wrote:
 >>
+>> Hi,
 >>
->>>>> It'll be much helper for developers to collect kernel stack for 
->>>>> all stuck thread(and it'll be much better to use add2line).
->>>>
->>>>
->>>> Presuming I can re-create the problem, let me know what I should do 
->>>> to collect that information for you. I'm very much a newbie in that 
->>>> area.
+>> 在 2023/09/29 3:15, Song Liu 写道:
+>>> Hi Kuai,
 >>>
->>> You can use following cmd:
+>>> Thanks for the patchset!
 >>>
->>> for pid in `ps -elf | grep " D " | awk '{print $4}'`; do ps $pid; 
->>> cat /proc/$pid/stack; done
+>>> A few high level questions/suggestions:
+>>
+>> Thanks a lot for these!
 >>>
->>> Thanks,
->>> Kuai
+>>> 1. This is a big change that needs a lot of explanation. While you managed to
+>>> keep each patch relatively small (great job btw), it is not very clear why we
+>>> need these changes. Specifically, we are adding a new mutex, it is worth
+>>> mentioning why we cannot achieve the same goal without it. Please add
+>>> more information in the cover letter. We will put part of the cover letter in
+>>> the merge commit.
 >>
+>> Yeah, I realize that I explain too little. I will add background and
+>> design.
+>>>
+Can you take a look about this new cover letter?
+
+##### Backgroud
+
+Our testers started to test raid10 last year, and we found that there
+are lots of problem in the following test scenario:
+
+- add or remove disks to the array
+- issue io to the array
+
+At first, we fixed each problem independently respect that io can
+concurrent with array reconfiguration.  However, on the one hand new
+issues are continuously reported, on the other hand other personalities
+might have the same problems. I'm thinking about how to fix these
+problems thoroughly.
+
+Refer to how block layer protect io with queue reconfiguration(for
+example, change elevator):
+
+```
+blk_mq_freeze_queue
+-> wait for all io to be done, and prevent new io to be dispatched
+// reconfiguration
+blk_mq_unfreeze_queue
+```
+
+Then it comes to my mind that I can do something similar to synchronize
+io with array reconfiguration.
+
+##### rcu introduction
+
+see details in https://www.kernel.org/doc/html/next/RCU/whatisRCU.html
+
+- writer should replace old data with new data first, and free old data
+after grace period;
+- reader should handle both cases that old data and new data is read,
+and the data that is read should not be dereferenced after critical
+section;
+
+##### Current synchronization
+
+Add or remove disks to the array can be triggered by ioctl/sysfs/daemon
+thread:
+
+1. hold 'reconfig_mutex';
+
+2. check that rdev can be added/removed, one condition is that there is
+no IO, for example:
+
+    ```
+    raid10_remove_disk
+     if (atomic_read(&rdev->nr_pending))
+      err = -EBUSY;
+    ```
+
+3. do the actual operations to add/remove a rdev, one procedure is
+set/clear a pointer to rdev, for example:
+
+    ```
+    raid10_remove_disk
+     p = conf->mirrors[xx]
+     rdevp = &p->rdev/replacement
+     *rdevp = NULL
+    ```
+
+4. check if there is still no io on this rdev, if not, revert the
+pointer to rdev and return failure, for example
+
+    ```
+    raid10_remove_disk
+     synchronize_rcu()
+     if (atomic_read(&rdev->nr_pending))
+      err = -EBUSY
+      *rdevp = rdev
+    ```
+
+IO path is using rcu_read_lock/unlock() to access rdev, for example:
+
+```
+raid10_write_request
+  rcu_read_lock
+  rdev = rcu_dereference(mirror->rdev/replacement)
+  rcu_read_unlock
+
+raid10_end_write_request
+  rdev = conf->mirrors[dev].rdev/replacement
+  -> rdev/rrdev is still used after rcu_read_unlock()
+```
+
+##### Current problems
+
+- rcu is used wrongly;
+- There are lots of places involved that old value is read, however,
+many places doesn't handle this correctly;
+- Between step 3 and 4, if new io is dispatched, NULL will be read for
+the rdev, and data will be lost.
+
+##### New synchronization
+
+Similar to how blk_mq_freeze_queue() works
+
+Add or remove disks:
+
+1. suspend the array, this should guarantee no new io is dispatched and
+wait for dispatched io to be done;
+2. add or remove rdevs from array;
+3. resume the array;
+
+IO path doesn't need to change for now, and all rcu implementation can
+be removed.
+
+There are already apis to suspend/resume the array, unfortunately, they
+can't be used here because:
+
+- old apis only wait for io to be dispatched, not to be done;
+- old apis is only supported for the personality that implement quiesce
+callback;
+- old apis must be called after the array start running;
+- old apis must hold 'reconfig_mutex', and will wait for io to be done,
+this behavior is risky because 'reconfig_mutex' is used for daemon
+thread to update super_block and handle io. In order to prevent
+potential problems, there is a weird logical that suspend array hold
+'reconfig_mutex' for mddev_check_recovery() to update super_block;
+
+Then main work is divided into 3 steps, at first make sure new apis to
+suspend the array is general:
+
+- make sure suspend array will wait for io to be done(Done by []);
+- make sure suspend array can be called for all personalities(Done by
+[]);
+- make sure suspend array can be called at any time(Done by []);
+- make sure suspend array doesn't rely on 'reconfig_mutex';
+
+The second step is to replace old apis with new apis:
+
+```
+From:
+lock reconfig_mutex
+suspend array
+resume array
+unlock reconfig_mutex
+
+To:
+suspend array
+lock reconfig_mutex
+unlock reconfig_mutex
+resume array
+```
+
+Finally, for the remain path that involved reconfiguration, suspend the
+array first:
+
+```
+From:
+// reconfiguration
+
+To:
+suspend array
+// reconfiguration
+resume array
+```
+
+>>> 2. In the cover letter, please also highlight that we are removing
+>>>    MD_ALLOW_SB_UPDATE and MD_UPDATING_SB. This is a big improvement.
+>>>
 >>
->> for pid in `ps -elf | grep " D " | awk '{print $4}'`; do ps $pid; cat 
->> /proc/$pid/stack; done
->>    PID TTY      STAT   TIME COMMAND
->>   4017 tty1     D+     0:00 e2fsck /dev/md126
->
-> Do you check that this thread is hanged and the e2fsck doesn't make 
-> progress?
-
-
-I wasn't trying to run e2fsck at the time. Instead I had run mdadm 
---stop /dev/md126, which was hanging. (Sorry; looks like I forgot to 
-include that!) mdadm -D /md126 showed no re-syncing happening at the time.
-
-Unfortunately, I had not heard back from you, and I felt like I couldn't 
-keep the problematic RAID array around any longer, so I wiped it and 
-replaced it with a fully native-Linux RAID5 array instead of one using 
-IMSM metadata.
-
-Joel
+>> Okay.
+>>> 3. Please rearrange the patch set so that the two "READ_ONCE/WRITE_ONCE"
+>>> patches are at the beginning.
+>>
+>> Okay.
+>>>
+>>> 4. Please consider merging some patches. Current "add-api => use-api =>
+>>> remove-old-api" makes it tricky to follow what is being changed. For this set,
+>>> I found the diff of the whole set easier to follow than some of the big patches.
+>> I refer to some other big patchset to replace an old api, for example:
+>>
+>> https://lore.kernel.org/all/20230818123232.2269-1-jack@suse.cz/
+> 
+> Yes, this is a safe way to replace old APIs. Since the scale of this
+> patchset is
+> smaller, I was thinking it might not be necessary to go that path. But
+> I will let
+> you make the decision.
+> 
+>> Currently I prefer to use one patch for each function point. And I do
+>> merged some patches in this version, and for remaining patches, do you
+>> prefer to use one patch for one file instead of one function point?(For
+>> example, merge patch 10-12 for md/raid5-cache, and 13-16 for md/raid5).
+> 
+> I think 10 should be a separate patch, and we can merge 11 and 12. We can
+> merge 13-16, and maybe also 5-7 and 18-20.
+> 
+> Thanks,
+> Song
+> .
+> 
 
