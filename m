@@ -2,195 +2,118 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DFF887C8CA7
-	for <lists+linux-raid@lfdr.de>; Fri, 13 Oct 2023 19:58:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23EF17C8CF6
+	for <lists+linux-raid@lfdr.de>; Fri, 13 Oct 2023 20:16:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230006AbjJMR6M (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 13 Oct 2023 13:58:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32808 "EHLO
+        id S230260AbjJMSQa (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Fri, 13 Oct 2023 14:16:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229704AbjJMR6L (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 13 Oct 2023 13:58:11 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27560BB
-        for <linux-raid@vger.kernel.org>; Fri, 13 Oct 2023 10:58:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697219890; x=1728755890;
-  h=date:from:to:cc:subject:message-id;
-  bh=0QpdK4zsntGPst0g0xjCjp/sGQx+RtvAfiYVVxdPKx8=;
-  b=Dpk48KNMi5X5LNQjeNcOhGhb6n9h3KAnyyDKB+hrF+B/eu9Ng5yq2T1L
-   8pUIx7m+8vNAIF3Hv4bcGoIxCpJ6BoLWU2rYtAt23IrIu5iGi9gHx186W
-   es5jxmwhSPst/GGfGN3EpnlFb8MC1VSUOjxC8Gt+bQlLW+l7AioGS6bAp
-   /8cZEr1shC+pI3OYPdcb32v6I7G68TaUObMao/65WNnyh1mv7Sll4eEGI
-   FmyKKWswZwfR24HLhvvaB0j28u5yJRt0Xtu0j1FF/tsC9MLO9MZRMUTwG
-   27V4zvQCCqp6OfmWpp/1AZV/dDnDkHwwSZbcabU3MA41ooWxkE10IM/Bl
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10862"; a="385071849"
-X-IronPort-AV: E=Sophos;i="6.03,222,1694761200"; 
-   d="scan'208";a="385071849"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2023 10:58:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10862"; a="704730814"
-X-IronPort-AV: E=Sophos;i="6.03,222,1694761200"; 
-   d="scan'208";a="704730814"
-Received: from lkp-server02.sh.intel.com (HELO f64821696465) ([10.239.97.151])
-  by orsmga003.jf.intel.com with ESMTP; 13 Oct 2023 10:58:01 -0700
-Received: from kbuild by f64821696465 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qrMQA-0005Dj-3C;
-        Fri, 13 Oct 2023 17:57:58 +0000
-Date:   Sat, 14 Oct 2023 01:57:08 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Song Liu <song@kernel.org>
-Cc:     linux-raid@vger.kernel.org
-Subject: [song-md:md-next] BUILD SUCCESS
- 1bbe254e4336c0944dd4fb6f0b8c9665b81de50f
-Message-ID: <202310140105.8QMELTA0-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S231513AbjJMSQ3 (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Fri, 13 Oct 2023 14:16:29 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11olkn2018.outbound.protection.outlook.com [40.92.18.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39797D7
+        for <linux-raid@vger.kernel.org>; Fri, 13 Oct 2023 11:16:27 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=C88HcX2XSDpaqzWjl31LNc6XIz086obOimOtT/fU5TV/ILSDYArTWGOGS8hZuv6aHBH6Wl3ecbgxnI/0HUSwBLyOCucVbWndDOHB5mn+d/8ydvdty/8/iGvrpq8eIqRhlLlMHA/YgJWcWw0uMZl26driMiS7EyTWvuPYZhjUBZ1e5HZpJE1sg/ugt5mf1zK+PkU7FqQ5qL09iZq7aKKBS04iFcWehjNrEgLsEgGoSo5oXrwIpkSc1xFtpvgdKEjadRNO0+TDHVvqJjtfyCkiWmFTQ6XPwY7bXpkJU3oJFKDIPJAxHUDXq74N0ocQ0k3u6IJUik5Z6XCZU1JZwpjj/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HQ64g0tr+8l5t9RYmzWX1hIsdXFL1lQQnTPxuaeASog=;
+ b=YfwXCrvt7UYkGM3qcMl0tHvqjqlzXOWdl8NtfBMOxsX671abwlBnCA1yqTxW6ZVSC9RuxL45nOFacMsqEpXm3BowvjXtsleQDhdMoFY5mMQ54lGiAr5hl2Ot0RhcU4XFPU/ruMAPDAbzFLUsa5uXWoOSbU4OCO1wrmD7mcW2uJDJZIl0f0dku2qS/TkNQftN0W5wOGmrOiwotXyZ0JPqwvKtzht7WIXy0BDDVo9YFlFRmYR7DQAqrtBJb+KgJeF1keRWCnP77hFcN6PWNv5eU0v6hjEJMXtcm6PBHr9VtVex9pEhbQtVZTvI1MwOrer+gA/UcQ4N1Wnot/ywmMxLQQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HQ64g0tr+8l5t9RYmzWX1hIsdXFL1lQQnTPxuaeASog=;
+ b=lGxMI3FMnOJcchnhd6Cfh1Sd+bgO3Jj1ZtAPGHMBIkOtRB7MvCUD0Rm1Yddy18Bp6oza9EUpzpLBcf33i7netfQDrEg7u7lXWiFBelEJx9hFJPPdUbKO3M34DyY7WyhqvnwrUM4kD1nGdMFOwgK4UGuvppxMcek3Ngpykv5FsSveP5dRUOlq55JuyVvMuSmmSJZHOuke8AehMU2r+Infe/psxrHqif7/5YwKO4wfuD2FAMQ2bPmQLeqK/5gPfZi9BBM29GgN0kHjGM9b+lHC9futVi/+ioR3JOfuKWnWT0VmMFKFSKbvSS5aGiiPSgxMiuCvO5Hox7HacAXEo+8pBA==
+Received: from DM4PR20MB6481.namprd20.prod.outlook.com (2603:10b6:8:18a::8) by
+ SJ2PR20MB6623.namprd20.prod.outlook.com (2603:10b6:a03:4d0::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6863.45; Fri, 13 Oct 2023 18:16:24 +0000
+Received: from DM4PR20MB6481.namprd20.prod.outlook.com
+ ([fe80::ccef:68db:5a3a:bf65]) by DM4PR20MB6481.namprd20.prod.outlook.com
+ ([fe80::ccef:68db:5a3a:bf65%6]) with mapi id 15.20.6863.043; Fri, 13 Oct 2023
+ 18:16:24 +0000
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: Confirm receipt of this mail
+To:     Recipients <Gong.Zhengyang1@outlook.com>
+From:   "Mr. Gong Zhengyang" <Gong.Zhengyang1@outlook.com>
+Date:   Fri, 13 Oct 2023 11:16:16 -0700
+Reply-To: gongzhengyang49@gmail.com
+X-TMN:  [5f/zt1eZ8FM/ysxspthZFa/Ks0LQQbwI]
+X-ClientProxiedBy: BYAPR05CA0041.namprd05.prod.outlook.com
+ (2603:10b6:a03:74::18) To DM4PR20MB6481.namprd20.prod.outlook.com
+ (2603:10b6:8:18a::8)
+Message-ID: <DM4PR20MB64816AD0EEBAB20FE3564BC3ADD2A@DM4PR20MB6481.namprd20.prod.outlook.com>
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR20MB6481:EE_|SJ2PR20MB6623:EE_
+X-MS-Office365-Filtering-Correlation-Id: f58796d7-5fcb-45c2-f422-08dbcc18817f
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: t/4nGKkxzjVq1NmtvjWy9jBCpGp1KS6uojb45hE1D9gw/xIsDTyAL9PBn2oAztaI8R0V/HjjgXSpYX8nwddEVhzVmGTD0KnS9TYQZezftO20WHIAFUzmv7bBI8RyhoslDvj7fc8ET+kYWJht18FTRB7DBpnAq+KvPHRPoRsCVs//L8+MDhyGRbWXRIe7c1xi8JKZ64xAFCNfutMrdNQLdCagVtJyoBFdEICi/UFRRdqV3qjUpbtjxp/1Xl2GaFabBgAmGy7d8BYQURImmzV6tIIVHtxB3Sn0byrjsTTdICVByJ+hQnOP5BSACxn6tHqyTImDWJ5FH+6oHxxhYxFDqiQAeiWgyoXivtQUtS74RuNg/rgwG9Q1ndKPf9r6tGT/16R+a77exp4/CxdUVX335Rg8c3eW4Dtf73b4xfTa4PpcmwVJFJdPbDRLdWQ0WhhIa2SlniAefECmOPG1FIWQDyQpDBMyEgFr2/ICCMfRdMcm19lrLKBYyt+I52VC7a6+u4D6WBRkA/UGiMYcA/xXpyEWtpt9QodvVTrdTsjG2t/DOweMyUR0I4p/dC1ECQh1BJJ0a9fF3Z2m9vQfynJBebLC69z07rbXrp8V38RHlxr9Ox5era9TNfIjJLGtCceV
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?FiB6OoeFkfdRYBLUbnKL9jCB2r6nNGl2CabkUq8x6Md70NoRK6aUcKjJ3D?=
+ =?iso-8859-1?Q?EuNMVAjxHGSEQj0feBhRub3hcQQE36W8IMjcA2/feS1TBZ1eP0k91oayft?=
+ =?iso-8859-1?Q?GOGv4P0nU5YV8SRkzfTy3RO2XiHpJKsfTZX1zyjDOF9DrkyYItgu45OSXn?=
+ =?iso-8859-1?Q?i37Y+997aUPoRhRGXEKJuggkA9hIKWYomwdNtr/UyLd+nqIAx5/H+7/umY?=
+ =?iso-8859-1?Q?8QHLX8Xs2thRK5V57G6qusqELIwDzj0VyZ40EMUAysJdL/0ZZTQxhAbg8U?=
+ =?iso-8859-1?Q?CSmKR5yR6guXTVnSoQ1Q4i/rRTJxBWoc8czvN4sjN99BMHtkNDa8tAYqiT?=
+ =?iso-8859-1?Q?b5kSCoI9dPwUk+Z4NhUkncI4XFC6FRm0wkXJjKt2ONhyevYBESDU2fiJV6?=
+ =?iso-8859-1?Q?Yoa8xaLZs+/jaXObXo4/yqe9kpqVHTc9vtlQ54CNOs73q3ZXQQzBOaPikR?=
+ =?iso-8859-1?Q?zKBOSXid/GsG+Ct9jzRLhlWFWnLHKvGpojsVBu+ZhWOzuMLOKfgD8nAlkw?=
+ =?iso-8859-1?Q?CvlWxl54Dr2UnftBwk+Wl2a70lW1hRmkDy3EGEbvkis3p2vk4HrIUkca/m?=
+ =?iso-8859-1?Q?jjD9y4lt1ROXs1IZCvMAQdDpEq4uWZN8Kqu3i69cfDhuQowvQlf3DWgV1q?=
+ =?iso-8859-1?Q?i0LqkXognwKIvga0sWSxbPnNJTuxsFY543MIbJm02ONWyHO8qxzDBg265f?=
+ =?iso-8859-1?Q?rrnhVGVOMcRm/5vusSLSwQNMl/OgjEdevW7sFgOxelazTqswXAIT7oZiwZ?=
+ =?iso-8859-1?Q?bxfd9J9HRsEq8x5bAC5PjrIVvLE4GEPFtJXRlDjPVpDddRORx65PH3vwtp?=
+ =?iso-8859-1?Q?MZ9r/4VfP4PX78T7zmKw3iwzh+jvL/Pt7lNBHEwMebU4xbe3y3pPvt891I?=
+ =?iso-8859-1?Q?Kiy6Nf+f3xVtqPKjThvbHLG5eyC/yhzTcfJljl8VVevPmmfnIGCxo0DgAl?=
+ =?iso-8859-1?Q?LJNV6IXo986DEBQ8iKxp1yMlodWhZImHRa0nl/qWlGCd+92Bx8oo+kRBIw?=
+ =?iso-8859-1?Q?nfhkMSO8GhcWFNyG8q8ou3Kre7f5S1CsFhzGl/iYw3PWdXRR37lHl2vjFq?=
+ =?iso-8859-1?Q?4SLD0hmjVoxYlsLu7RPnfKK+/A2AY7pesa0ZZXPZseWLRe+irW6DYMZ8MC?=
+ =?iso-8859-1?Q?kPoQtyd1ck+E6LZnYncayJNByNRmnSSTd6geAnPGl504oqxdsclbC4KmZb?=
+ =?iso-8859-1?Q?q4TesAyjersYaacJMsAntJpg3rFTOGAf8DI0uq4bF6nEn3ToV2bMagUlZK?=
+ =?iso-8859-1?Q?4ClmrZfLcafm9CoUq6Y8BdwDlc7s7ss4rdbSfN0/A=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f58796d7-5fcb-45c2-f422-08dbcc18817f
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR20MB6481.namprd20.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Oct 2023 18:16:24.5195
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR20MB6623
+X-Spam-Status: No, score=3.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        HK_NAME_FM_MR_MRS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-tree/branch: git://git.kernel.org/pub/scm/linux/kernel/git/song/md.git md-next
-branch HEAD: 1bbe254e4336c0944dd4fb6f0b8c9665b81de50f  md-cluster: check for timeout while a new disk adding
+Hello
 
-elapsed time: 1449m
+I am Mr. Gong Zhengyang, Assistant General Manager & Deposit Management Hea=
+d at Bank of Singapore.
 
-configs tested: 119
-configs skipped: 2
+I wish to share a viable proposition with you which must be held in trust. =
+I understand we have never met before, and one has to be circumspect before=
+ responding to matters of this sort. All this will be addressed upon your r=
+eply, given the conditions I shall highlight in my detailed request for you=
+r sincere collaboration.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Your prompt response is most appreciated in giving you a briefing on this s=
+ubject.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20231013   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                   randconfig-001-20231013   gcc  
-arm64                            allmodconfig   gcc  
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20231013   gcc  
-i386                  randconfig-002-20231013   gcc  
-i386                  randconfig-003-20231013   gcc  
-i386                  randconfig-004-20231013   gcc  
-i386                  randconfig-005-20231013   gcc  
-i386                  randconfig-006-20231013   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20231013   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                        bcm63xx_defconfig   clang
-mips                           ip27_defconfig   clang
-mips                           rs90_defconfig   clang
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   gcc  
-powerpc                      ppc6xx_defconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                    nommu_virt_defconfig   clang
-riscv                 randconfig-001-20231013   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20231013   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                            migor_defconfig   gcc  
-sh                            shmin_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                 randconfig-001-20231013   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64                randconfig-001-20231013   gcc  
-x86_64                randconfig-002-20231013   gcc  
-x86_64                randconfig-003-20231013   gcc  
-x86_64                randconfig-004-20231013   gcc  
-x86_64                randconfig-005-20231013   gcc  
-x86_64                randconfig-006-20231013   gcc  
-x86_64                           rhel-8.3-bpf   gcc  
-x86_64                          rhel-8.3-func   gcc  
-x86_64                    rhel-8.3-kselftests   gcc  
-x86_64                         rhel-8.3-kunit   gcc  
-x86_64                           rhel-8.3-ltp   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+With kind regards,
+Gong Zhengyang.
