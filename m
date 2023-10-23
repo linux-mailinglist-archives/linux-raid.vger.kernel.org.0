@@ -2,145 +2,107 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B0B77D1A80
-	for <lists+linux-raid@lfdr.de>; Sat, 21 Oct 2023 04:25:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF6847D2ACF
+	for <lists+linux-raid@lfdr.de>; Mon, 23 Oct 2023 08:59:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232919AbjJUCZd (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Fri, 20 Oct 2023 22:25:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35660 "EHLO
+        id S229675AbjJWG7b (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Mon, 23 Oct 2023 02:59:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231201AbjJUCZV (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Fri, 20 Oct 2023 22:25:21 -0400
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91A4DD7D;
-        Fri, 20 Oct 2023 19:25:18 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.153])
-        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4SC4zn4G3Rz4f3kG1;
-        Sat, 21 Oct 2023 10:25:09 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-        by APP4 (Coremail) with SMTP id gCh0CgAnt9aHNjNlZ+cUDg--.5642S10;
-        Sat, 21 Oct 2023 10:25:15 +0800 (CST)
-From:   Yu Kuai <yukuai1@huaweicloud.com>
-To:     song@kernel.org
-Cc:     linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com,
-        yangerkun@huawei.com
-Subject: [PATCH -next v2 6/6] md/md-multipath: remove rcu protection to access rdev from conf
-Date:   Sat, 21 Oct 2023 18:20:59 +0800
-Message-Id: <20231021102059.3198284-7-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20231021102059.3198284-1-yukuai1@huaweicloud.com>
-References: <20231021102059.3198284-1-yukuai1@huaweicloud.com>
+        with ESMTP id S229450AbjJWG7a (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Mon, 23 Oct 2023 02:59:30 -0400
+X-Greylist: delayed 91 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 22 Oct 2023 23:59:28 PDT
+Received: from omta33.uswest2.a.cloudfilter.net (omta33.uswest2.a.cloudfilter.net [35.89.44.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A00DEE;
+        Sun, 22 Oct 2023 23:59:28 -0700 (PDT)
+Received: from eig-obgw-5009a.ext.cloudfilter.net ([10.0.29.176])
+        by cmsmtp with ESMTPS
+        id uPdGqIpfQ8HteuosvqJz9T; Mon, 23 Oct 2023 06:57:57 +0000
+Received: from 162-240-83-27.unifiedlayer.com ([137.59.148.200])
+        by cmsmtp with ESMTPS
+        id uostqqf19I9guuosuq5ahA; Mon, 23 Oct 2023 06:57:56 +0000
+X-Authority-Analysis: v=2.4 cv=Ds1FRUz+ c=1 sm=1 tr=0 ts=65361974
+ a=MgGYFET5X96nYrQ76toljg==:117 a=/5CYD1hNzocxg58dEBddTw==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=kj9zAlcOel0A:10 a=bhdUkHdE2iEA:10 a=lUDAUsI-kUQA:10
+ a=9m64_h_j2zU8ieQoq-sA:9 a=CjuIK1q_8ugA:10
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=35686686.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        Message-ID:Reply-To:Subject:To:From:Date:MIME-Version:Sender:Cc:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Dm1nus89JLbD/65ItGQLhdR/UwQLhddPM+BxEJ7yOwM=; b=JFP9PqkwSdBW/5BnZLvEh3O0/I
+        9HUaQ2GIBX2J845NgWsUkRRpIcgmqSVPqgla6YFZ1F0cG1RycxOdwmaZpTAVyO2oa0ETe7a+WeQu/
+        OxjycM40OWJyzZ7r7iWNXpNC/IOgpZ88wNjA4G47kjsy677Zvlv6RH2baPHhx/TRZL8Tu2gH4lOt2
+        BUT04Thnh9esPXppM4TpGoT+SvyH9UkZMwCtNemVJSS62p6FudVDPEjKYTZHUZr0bdqNao7EHzY4z
+        S+CpLgIxzeiqYarWPpZor3S7lFuV91Sx3v4OXFX7phX55Kf1uhg+5txphKV3R0/VtHYjBuVN9NakT
+        dIknl/Uw==;
+Received: from md-hk-12.webhostbox.net ([137.59.148.200]:54486)
+        by md-hk-12.webhostbox.net with esmtpa (Exim 4.96.2)
+        (envelope-from <jc@35686686.com>)
+        id 1qulIb-003ZCm-2a;
+        Mon, 23 Oct 2023 08:38:13 +0530
+Received: from [181.214.94.254]
+ by 35686686.com
+ with HTTP (HTTP/1.1 POST); Mon, 23 Oct 2023 08:38:08 +0530
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgAnt9aHNjNlZ+cUDg--.5642S10
-X-Coremail-Antispam: 1UD129KBjvJXoWxXw1kJF4UZr43uw17Wr17ZFb_yoW5Jw4kpa
-        yaqasxtr4UXryakrnFka1Uua4Skw43tFWIkryfC3yIva15Gry5XF1rtryUXFn5AFZ5AF45
-        XFn8Kw4DAFyxGaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUPY14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2jI8I6cxK62vIxIIY0VWUZVW8XwA2048vs2IY02
-        0E87I2jVAFwI0_JF0E3s1l82xGYIkIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0
-        rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6x
-        IIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xv
-        wVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFc
-        xC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_
-        Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2
-        IErcIFxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-        14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-        kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAF
-        wI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-        4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRvJPtU
-        UUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=0.4 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
-        KHOP_HELO_FCRDNS,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=no
-        autolearn_force=no version=3.4.6
+Date:   Mon, 23 Oct 2023 11:08:08 +0800
+From:   jc@35686686.com
+To:     undisclosed-recipients:;
+Subject: LOAN SCHEME
+Reply-To: info@kafurinvestment.com
+Mail-Reply-To: info@kafurinvestment.com
+User-Agent: Roundcube Webmail/1.6.0
+Message-ID: <d76e4ab48498742dd7c9d43057a84008@35686686.com>
+X-Sender: jc@35686686.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - md-hk-12.webhostbox.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - 35686686.com
+X-BWhitelist: no
+X-Source-IP: 137.59.148.200
+X-Source-L: No
+X-Exim-ID: 1qulIb-003ZCm-2a
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: md-hk-12.webhostbox.net [137.59.148.200]:54486
+X-Source-Auth: jc@35686686.com
+X-Email-Count: 0
+X-Org:  HG=dishared_whb_net_legacy;ORG=directi;
+X-Source-Cap: ZmJkZXN4amc7Ymx1ZWhvc3Q7bWQtaGstMTIud2ViaG9zdGJveC5uZXQ=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfN/VpKAd/dVnsdzNFOkvZFmKda0s9MH2LJ2Ga8PjsB/OW+OCgwqyT3iuYaHCBNzDmuu7BspmEkzlwT9UkPpPke5FbFWQUSqXQuwLwtNwmcrO/ZC7HsrJ
+ Jp8eC7AnHTNLUdFllw4KiNM9TUXqye+qOYUcLmEmaUzpCj0WE0jrr3alokDtUdnqR3R9+GJMpN7C+uXn+GbNKYt8gtMrqbPN+5aQx8bACAQjE8RPwZkzapmq
+ ZOeVZkap6bkHSF0d+XB261RM4esja8rCUHdp0kSdEEb0dh+DcfkYztpXvWnLAHgWM4zUTMovoSl+Pc/Nm+PsS5ISv6VRuAasb17FjrXM8SLG8SQtyxq7YQeI
+ cWqgrJJoWQCFO4t0Y4eYeUKQS9BUmsOs4nNs7HMeYZZ1iS0/hKkJqWL5GQOnNH7Kwzc3WFngPwNy24URG/ktULk4NxQIew==
+X-Spam-Status: No, score=1.5 required=5.0 tests=BAYES_50,DKIM_INVALID,
+        DKIM_SIGNED,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
+        SPF_NONE,SUBJ_ALL_CAPS autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+Greetings:
 
-Because it's safe to accees rdev from conf:
- - If any spinlock is held, because synchronize_rcu() from
-   md_kick_rdev_from_array() will prevent 'rdev' to be freed until
-   spinlock is released;
- - If there is normal IO inflight, because mddev_suspend() will prevent
-   rdev to be added or removed from array;
+I am Mr. Faheem Badawi, working as a project facilitator for (Kafur 
+Project Management Services) also, with numerous investors worldwide. As 
+a means of widening our global portfolio we would like to know if you 
+have any project(s) requiring funding. We also offer business, personal 
+and home loans to finance new projects as well as expansion capital.
 
-And these will cover all the scenarios in md-multipath.
+For more updates on the mode of operation send a reply.
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- drivers/md/md-multipath.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+Waiting for your prompt response.
 
-diff --git a/drivers/md/md-multipath.c b/drivers/md/md-multipath.c
-index aa77133f3188..51c5390c517d 100644
---- a/drivers/md/md-multipath.c
-+++ b/drivers/md/md-multipath.c
-@@ -32,17 +32,15 @@ static int multipath_map (struct mpconf *conf)
- 	 * now we use the first available disk.
- 	 */
- 
--	rcu_read_lock();
- 	for (i = 0; i < disks; i++) {
--		struct md_rdev *rdev = rcu_dereference(conf->multipaths[i].rdev);
-+		struct md_rdev *rdev = conf->multipaths[i].rdev;
-+
- 		if (rdev && test_bit(In_sync, &rdev->flags) &&
- 		    !test_bit(Faulty, &rdev->flags)) {
- 			atomic_inc(&rdev->nr_pending);
--			rcu_read_unlock();
- 			return i;
- 		}
- 	}
--	rcu_read_unlock();
- 
- 	pr_crit_ratelimited("multipath_map(): no more operational IO paths?\n");
- 	return (-1);
-@@ -137,14 +135,16 @@ static void multipath_status(struct seq_file *seq, struct mddev *mddev)
- 	struct mpconf *conf = mddev->private;
- 	int i;
- 
-+	lockdep_assert_held(&mddev->lock);
-+
- 	seq_printf (seq, " [%d/%d] [", conf->raid_disks,
- 		    conf->raid_disks - mddev->degraded);
--	rcu_read_lock();
- 	for (i = 0; i < conf->raid_disks; i++) {
--		struct md_rdev *rdev = rcu_dereference(conf->multipaths[i].rdev);
--		seq_printf (seq, "%s", rdev && test_bit(In_sync, &rdev->flags) ? "U" : "_");
-+		struct md_rdev *rdev = READ_ONCE(conf->multipaths[i].rdev);
-+
-+		seq_printf(seq, "%s",
-+			   rdev && test_bit(In_sync, &rdev->flags) ? "U" : "_");
- 	}
--	rcu_read_unlock();
- 	seq_putc(seq, ']');
- }
- 
-@@ -231,7 +231,7 @@ static int multipath_add_disk(struct mddev *mddev, struct md_rdev *rdev)
- 			rdev->raid_disk = path;
- 			set_bit(In_sync, &rdev->flags);
- 			spin_unlock_irq(&conf->device_lock);
--			rcu_assign_pointer(p->rdev, rdev);
-+			WRITE_ONCE(p->rdev, rdev);
- 			err = 0;
- 			break;
- 		}
-@@ -257,7 +257,7 @@ static int multipath_remove_disk(struct mddev *mddev, struct md_rdev *rdev)
- 			err = -EBUSY;
- 			goto abort;
- 		}
--		p->rdev = NULL;
-+		WRITE_ONCE(p->rdev, NULL);
- 		err = md_integrity_register(mddev);
- 	}
- abort:
--- 
-2.39.2
-
+Kind regards,
+Faheem Badawi.
+(Financial Advisory - KPMS)
