@@ -2,107 +2,80 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CF6847D2ACF
-	for <lists+linux-raid@lfdr.de>; Mon, 23 Oct 2023 08:59:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDD8D7D479D
+	for <lists+linux-raid@lfdr.de>; Tue, 24 Oct 2023 08:43:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229675AbjJWG7b (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Mon, 23 Oct 2023 02:59:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55604 "EHLO
+        id S232335AbjJXGnD (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Tue, 24 Oct 2023 02:43:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229450AbjJWG7a (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Mon, 23 Oct 2023 02:59:30 -0400
-X-Greylist: delayed 91 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 22 Oct 2023 23:59:28 PDT
-Received: from omta33.uswest2.a.cloudfilter.net (omta33.uswest2.a.cloudfilter.net [35.89.44.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A00DEE;
-        Sun, 22 Oct 2023 23:59:28 -0700 (PDT)
-Received: from eig-obgw-5009a.ext.cloudfilter.net ([10.0.29.176])
-        by cmsmtp with ESMTPS
-        id uPdGqIpfQ8HteuosvqJz9T; Mon, 23 Oct 2023 06:57:57 +0000
-Received: from 162-240-83-27.unifiedlayer.com ([137.59.148.200])
-        by cmsmtp with ESMTPS
-        id uostqqf19I9guuosuq5ahA; Mon, 23 Oct 2023 06:57:56 +0000
-X-Authority-Analysis: v=2.4 cv=Ds1FRUz+ c=1 sm=1 tr=0 ts=65361974
- a=MgGYFET5X96nYrQ76toljg==:117 a=/5CYD1hNzocxg58dEBddTw==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=kj9zAlcOel0A:10 a=bhdUkHdE2iEA:10 a=lUDAUsI-kUQA:10
- a=9m64_h_j2zU8ieQoq-sA:9 a=CjuIK1q_8ugA:10
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=35686686.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        Message-ID:Reply-To:Subject:To:From:Date:MIME-Version:Sender:Cc:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Dm1nus89JLbD/65ItGQLhdR/UwQLhddPM+BxEJ7yOwM=; b=JFP9PqkwSdBW/5BnZLvEh3O0/I
-        9HUaQ2GIBX2J845NgWsUkRRpIcgmqSVPqgla6YFZ1F0cG1RycxOdwmaZpTAVyO2oa0ETe7a+WeQu/
-        OxjycM40OWJyzZ7r7iWNXpNC/IOgpZ88wNjA4G47kjsy677Zvlv6RH2baPHhx/TRZL8Tu2gH4lOt2
-        BUT04Thnh9esPXppM4TpGoT+SvyH9UkZMwCtNemVJSS62p6FudVDPEjKYTZHUZr0bdqNao7EHzY4z
-        S+CpLgIxzeiqYarWPpZor3S7lFuV91Sx3v4OXFX7phX55Kf1uhg+5txphKV3R0/VtHYjBuVN9NakT
-        dIknl/Uw==;
-Received: from md-hk-12.webhostbox.net ([137.59.148.200]:54486)
-        by md-hk-12.webhostbox.net with esmtpa (Exim 4.96.2)
-        (envelope-from <jc@35686686.com>)
-        id 1qulIb-003ZCm-2a;
-        Mon, 23 Oct 2023 08:38:13 +0530
-Received: from [181.214.94.254]
- by 35686686.com
- with HTTP (HTTP/1.1 POST); Mon, 23 Oct 2023 08:38:08 +0530
+        with ESMTP id S230304AbjJXGnD (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Tue, 24 Oct 2023 02:43:03 -0400
+X-Greylist: delayed 29026 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 23 Oct 2023 23:43:01 PDT
+Received: from mail.tehinnovacii.ru (mail.tehinnovacii.ru [185.221.212.125])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41FBCDD
+        for <linux-raid@vger.kernel.org>; Mon, 23 Oct 2023 23:43:01 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.tehinnovacii.ru (Postfix) with ESMTP id ECE3A81E919C6;
+        Mon, 23 Oct 2023 23:45:36 +0300 (MSK)
+Received: from mail.tehinnovacii.ru ([127.0.0.1])
+        by localhost (mail.tehinnovacii.ru [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id ObDS5_4JDk8o; Mon, 23 Oct 2023 23:45:36 +0300 (MSK)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.tehinnovacii.ru (Postfix) with ESMTP id 5B4F384757173;
+        Mon, 23 Oct 2023 23:45:20 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.tehinnovacii.ru 5B4F384757173
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tehinnovacii.ru;
+        s=mail; t=1698093920;
+        bh=Ws5TcS6EV4V7aiUY6u9eol5cuGGKUQT0mSrLKF+Le3s=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=V59UKj7oyrgI9SyWic9t3VQ8J9wsJJNse3hqoAZxSIs2HZ9fgCMiXFc1YOulirE8Q
+         6jB7gr0z549NbZT5+L8HRQjiKcpitQJ4jCUuX3+2++goCikzDASBjc8M1rwVIEEtlr
+         LfPxGtY0vDV4HneQQCxAybQTGEeEwc/uChR8rOR0XIGYtzJ0YguLAjCvgSPO00Bk/7
+         mja63U+e07pN4vr4ubqgYSUGrkJ2HSXNd7KuO6BYgHIgwYs+qR0sNcjAitpnXQQyGh
+         dJSz3tP2QCuGAhPCfKFfGp9AgnvJD40se6VUBEoU3ZKp6XXjm7LNNZtl/W2kASfjbK
+         31YTlsgCMlshw==
+Received: from mail.tehinnovacii.ru ([127.0.0.1])
+        by localhost (mail.tehinnovacii.ru [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id iiciovoTvv4v; Mon, 23 Oct 2023 23:45:20 +0300 (MSK)
+Received: from DESKTOP-0AG4O9B.lan (unknown [41.157.248.166])
+        by mail.tehinnovacii.ru (Postfix) with ESMTPSA id 02C20805E0AAF;
+        Mon, 23 Oct 2023 23:45:10 +0300 (MSK)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Date:   Mon, 23 Oct 2023 11:08:08 +0800
-From:   jc@35686686.com
-To:     undisclosed-recipients:;
-Subject: LOAN SCHEME
-Reply-To: info@kafurinvestment.com
-Mail-Reply-To: info@kafurinvestment.com
-User-Agent: Roundcube Webmail/1.6.0
-Message-ID: <d76e4ab48498742dd7c9d43057a84008@35686686.com>
-X-Sender: jc@35686686.com
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - md-hk-12.webhostbox.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - 35686686.com
-X-BWhitelist: no
-X-Source-IP: 137.59.148.200
-X-Source-L: No
-X-Exim-ID: 1qulIb-003ZCm-2a
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: md-hk-12.webhostbox.net [137.59.148.200]:54486
-X-Source-Auth: jc@35686686.com
-X-Email-Count: 0
-X-Org:  HG=dishared_whb_net_legacy;ORG=directi;
-X-Source-Cap: ZmJkZXN4amc7Ymx1ZWhvc3Q7bWQtaGstMTIud2ViaG9zdGJveC5uZXQ=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfN/VpKAd/dVnsdzNFOkvZFmKda0s9MH2LJ2Ga8PjsB/OW+OCgwqyT3iuYaHCBNzDmuu7BspmEkzlwT9UkPpPke5FbFWQUSqXQuwLwtNwmcrO/ZC7HsrJ
- Jp8eC7AnHTNLUdFllw4KiNM9TUXqye+qOYUcLmEmaUzpCj0WE0jrr3alokDtUdnqR3R9+GJMpN7C+uXn+GbNKYt8gtMrqbPN+5aQx8bACAQjE8RPwZkzapmq
- ZOeVZkap6bkHSF0d+XB261RM4esja8rCUHdp0kSdEEb0dh+DcfkYztpXvWnLAHgWM4zUTMovoSl+Pc/Nm+PsS5ISv6VRuAasb17FjrXM8SLG8SQtyxq7YQeI
- cWqgrJJoWQCFO4t0Y4eYeUKQS9BUmsOs4nNs7HMeYZZ1iS0/hKkJqWL5GQOnNH7Kwzc3WFngPwNy24URG/ktULk4NxQIew==
-X-Spam-Status: No, score=1.5 required=5.0 tests=BAYES_50,DKIM_INVALID,
-        DKIM_SIGNED,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
-        SPF_NONE,SUBJ_ALL_CAPS autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: Brauchen Sie einen Kredit?
+To:     Recipients <zp@tehinnovacii.ru>
+From:   Georg Johannes Proksch <zp@tehinnovacii.ru>
+Date:   Mon, 23 Oct 2023 13:44:08 -0700
+Reply-To: kreditschufadeutsch0@gmail.com
+Message-Id: <20231023204511.02C20805E0AAF@mail.tehinnovacii.ru>
+X-Spam-Status: No, score=4.3 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FORGED_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_BL_SPAMCOP_NET,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-Greetings:
+Brauchen Sie einen Kredit?
+Tr=E4umen Sie davon, ein Unternehmen zu gr=FCnden?
+Sie ben=F6tigen Geld f=FCr Ihre Gesch=E4ftsidee, ben=F6tigen aber eine gro=
+=DFe Finanzierung?
+Besitzen Sie ein Unternehmen und m=F6chten expandieren?
 
-I am Mr. Faheem Badawi, working as a project facilitator for (Kafur 
-Project Management Services) also, with numerous investors worldwide. As 
-a means of widening our global portfolio we would like to know if you 
-have any project(s) requiring funding. We also offer business, personal 
-and home loans to finance new projects as well as expansion capital.
+Wir bieten Gesch=E4ftskredite, Privatkredite, Projektkredite und Autokredit=
+e mit einem Zinssatz von 2 % an.
 
-For more updates on the mode of operation send a reply.
+Vollst=E4ndiger Name:
+Kreditbetrag:
+Kreditlaufzeit:
+Land:
+Telefonnummer:
 
-Waiting for your prompt response.
-
-Kind regards,
-Faheem Badawi.
-(Financial Advisory - KPMS)
+Herr Georg Johannes Proksch
+Kreditberater/Berater
