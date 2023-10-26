@@ -2,86 +2,98 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DA49B7D8A6E
-	for <lists+linux-raid@lfdr.de>; Thu, 26 Oct 2023 23:35:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F94C7D8A77
+	for <lists+linux-raid@lfdr.de>; Thu, 26 Oct 2023 23:37:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230271AbjJZVfV (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 26 Oct 2023 17:35:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50084 "EHLO
+        id S1344879AbjJZVhQ (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 26 Oct 2023 17:37:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229785AbjJZVfU (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 26 Oct 2023 17:35:20 -0400
-Received: from sender-op-o10.zoho.eu (sender-op-o10.zoho.eu [136.143.169.10])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F70EC1
-        for <linux-raid@vger.kernel.org>; Thu, 26 Oct 2023 14:35:17 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1698356109; cv=none; 
+        with ESMTP id S1344860AbjJZVhP (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 26 Oct 2023 17:37:15 -0400
+Received: from sender-op-o11.zoho.eu (sender-op-o11.zoho.eu [136.143.169.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 023251B2
+        for <linux-raid@vger.kernel.org>; Thu, 26 Oct 2023 14:37:12 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1698356226; cv=none; 
         d=zohomail.eu; s=zohoarc; 
-        b=DccRrAnm8n2yTQBAmf4XIBqYky/TAa8QZ5MNmGg3EDqO5bMVsExojCDUmHBRLxwT7y22zNaD9mBWcS0Hui8YY2DoUMnDopOBML4d2xdyexpQimtfGRei0/igfLIS2+x0jAVCP9S5qbegBbS03QGfG/lBBjJW/U9rVPIWhcs9o14=
+        b=I5Bd6fgNDbLy/48rqAoSJJAJnEPMeKuovRH/vHO6VLb5KqLLGLXzz18b53gNkqF0NFt/cce7qcwF67cJ6Rj/KstIXbM/cR17nDUuN0kmvWgxQbBeLGb8BLBPXqbJUpWaLCC/zR6KvvNqlYZNBZKb+6IGe3TSsEsGFT4/1Ip96ug=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1698356109; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-        bh=B5szUlrjPEodfe4IwDJZlEsLhGfClGFD5nz3gj6G58g=; 
-        b=GGLvQtPFx5EsrgNXdwr7Bzh3xmMOfiOoQNj5Y56hv+zb5pQbB9Y+PuuqSwS3ZA6V+s9lu4zRFSzIZgR5ftkbdWlVOo1m86e1wXtk3F8FFem/RtDhKWct4gAPde9TIPgQAUqm0mzDPJAenS0HZKS9qzzIsW8Rs1ylj/ro4FsKmpE=
+        t=1698356226; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+        bh=z7jrUQFeY1GwH7i70Ocjfj4u0WHpY4qhYs6/BEsq3wU=; 
+        b=NglmoxtOQn5Sahr/sxHx0DVmGEhinYqy7s/mTjOVzPNVR9R5sPYwXFpS7qM2hIKbfDBKeFviLCBZcVs2DHbA0Hn69CdbbrTlh78oTOMIYV5AA4BH10eODg7kv8idJOI8e2TE6GBkUNLTMeltWymtZILxb1S34nqsgln+8RbtXqc=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
         spf=pass  smtp.mailfrom=jes@trained-monkey.org;
         dmarc=pass header.from=<jes@trained-monkey.org>
 Received: from [192.168.99.50] (pool-98-113-67-206.nycmny.fios.verizon.net [98.113.67.206]) by mx.zoho.eu
-        with SMTPS id 1698356106997454.1054082337779; Thu, 26 Oct 2023 23:35:06 +0200 (CEST)
-Message-ID: <bca30a85-b4f1-51bf-6530-ec1f4925154e@trained-monkey.org>
-Date:   Thu, 26 Oct 2023 17:35:05 -0400
+        with SMTPS id 1698356223343168.68718483329576; Thu, 26 Oct 2023 23:37:03 +0200 (CEST)
+Message-ID: <13054f53-4b9b-77f4-bd36-42ad50e40858@trained-monkey.org>
+Date:   Thu, 26 Oct 2023 17:37:02 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH v4 1/2] Mdmonitor: Improve udev event handling
+Subject: Re: [PATCH v5] Incremental: remove obsoleted calls to udisks
 Content-Language: en-US
 To:     Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-Cc:     Mateusz Grzonka <mateusz.grzonka@intel.com>,
-        linux-raid@vger.kernel.org
-References: <20230705145020.31144-1-mateusz.grzonka@intel.com>
- <52f43128-6f68-49fd-9b25-c3026d007d83@trained-monkey.org>
- <20230911161820.00007e6f@linux.intel.com>
+Cc:     Coly Li <colyli@suse.de>, linux-raid@vger.kernel.org
+References: <20230813164613.11912-1-colyli@suse.de>
+ <3dddeea7-cfda-63d3-7169-e42ef05f9467@trained-monkey.org>
+ <20230904094832.000033a7@linux.intel.com>
 From:   Jes Sorensen <jes@trained-monkey.org>
-In-Reply-To: <20230911161820.00007e6f@linux.intel.com>
+In-Reply-To: <20230904094832.000033a7@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-ZohoMailClient: External
 X-Spam-Status: No, score=-5.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 9/11/23 10:18, Mariusz Tkaczyk wrote:
-> On Fri, 1 Sep 2023 11:35:57 -0400
+On 9/4/23 03:48, Mariusz Tkaczyk wrote:
+> On Fri, 1 Sep 2023 11:47:09 -0400
 > Jes Sorensen <jes@trained-monkey.org> wrote:
 > 
->> On 7/5/23 10:50, Mateusz Grzonka wrote:
->>> Mdmonitor is waiting for udev queue to become empty.
->>> Even if the queue becomes empty, udev might still be processing last event.
->>> However we want to wait and wake up mdmonitor when udev finished
->>> processing events..
+>> On 8/13/23 12:46, Coly Li wrote:
+>>> Utility udisks is removed from udev upstream, calling this obsoleted
+>>> command in run_udisks() doesn't make any sense now.
 >>>
->>> Also, the udev queue interface is considered legacy and should not be
->>> used outside of udev.
+>>> This patch removes the calls chain of udisks, which includes routines
+>>> run_udisk(), force_remove(), and 2 locations where force_remove() are
+>>> called. Considering force_remove() is removed with udisks util, it is
+>>> fair to remove Manage_stop() inside force_remove() as well.
 >>>
->>> Use udev monitor instead, and wake up mdmonitor on every event triggered
->>> by udev for md block device.
+>>> In the two modifications where calling force_remove() are removed,
+>>> the failure from Manage_subdevs() can be safely ignored, because,
+>>> 1) udisks doesn't exist, no need to check the return value to umount
+>>>    the file system by udisks and remove the component disk again.
+>>> 2) After the 'I' inremental remove, there is another 'r' hot remove
+>>>    following up. The first incremental remove is a best-try effort.
 >>>
->>> We need to generate more change events from kernel, because they are
->>> missing in some situations, for example, when rebuild started.
->>> This will be addressed in a separate patch.
+>>> Therefore in this patch, where force_remove() is removed, the return
+>>> value of calling Manage_subdevs() is not checked too.
 >>>
->>> Move udev specific code into separate functions, and place them in udev.c
->>> file. Also move use_udev() logic from lib.c into newly created file.
+>>> Signed-off-by: Coly Li <colyli@suse.de>
+>>> Reviewed-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+>>> Cc: Jes Sorensen <jes@trained-monkey.org>
+>>> ---
+>>> Changelog,
+>>> v5: change Mariusz's email address as he suggested
+>>> v4: add Reviewed-by from Mariusz.
+>>> v3: remove the almost-useless warning message, and make the change
+>>>    more simplified.
+>>> v2: improve based on code review comments from Mariusz.
+>>> v1: initial version.
 >>>
->>> Signed-off-by: Mateusz Grzonka <mateusz.grzonka@intel.com>  
+>>>  Incremental.c | 64 +++++++++++----------------------------------------
+>>>  1 file changed, 13 insertions(+), 51 deletions(-)  
 >>
->> Generally looks good to me.
+>> Been out of the loop for a while, trying to catch up.
 >>
->> One question, is there a minimum version of udev required for this to
->> work or has it been around long enough that we don't need to worry?
+>> Mariusz, do you consider this one good to go now? You were the one
+>> providing feedback multiple times.
 >>
 >> Thanks,
 >> Jes
@@ -89,11 +101,15 @@ On 9/11/23 10:18, Mariusz Tkaczyk wrote:
 >>
 > 
 > Hi Jes,
-> We don't need to worry. I checked one random commit (25e773e) from 2014 and
-> udev_monitor stuff is there.
+> 
+> Yes, I see this as a good change. The current behavior is not stable, because
+> udev is not able to "umount"- if array is not mounted it is stopped, otherwise
+> not.
+> 
+> With the change, we will not try to stop it at all- fair for me, behavior is
+> same every time. If we cannot stop array every time we should not try to.
 
-Unfortunately this set no longer applies. If you want to send an updated
-version I'll do my best to look at it quickly.
+Applied!
 
 Thanks,
 Jes
