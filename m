@@ -2,78 +2,99 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 919177D8A81
-	for <lists+linux-raid@lfdr.de>; Thu, 26 Oct 2023 23:41:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4DE57D8A61
+	for <lists+linux-raid@lfdr.de>; Thu, 26 Oct 2023 23:32:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232160AbjJZVlU (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Thu, 26 Oct 2023 17:41:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50488 "EHLO
+        id S229680AbjJZVcT (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Thu, 26 Oct 2023 17:32:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229621AbjJZVlT (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 26 Oct 2023 17:41:19 -0400
-X-Greylist: delayed 907 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 26 Oct 2023 14:41:17 PDT
-Received: from sender11-op-o11.zoho.eu (sender11-op-o11.zoho.eu [31.186.226.225])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 039F2128
-        for <linux-raid@vger.kernel.org>; Thu, 26 Oct 2023 14:41:16 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1698355518; cv=none; 
+        with ESMTP id S230271AbjJZVcS (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 26 Oct 2023 17:32:18 -0400
+X-Greylist: delayed 643 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 26 Oct 2023 14:32:12 PDT
+Received: from sender-op-o11.zoho.eu (sender-op-o11.zoho.eu [136.143.169.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77F95DC
+        for <linux-raid@vger.kernel.org>; Thu, 26 Oct 2023 14:32:12 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1698355924; cv=none; 
         d=zohomail.eu; s=zohoarc; 
-        b=O9oIfEO9OBo1ICjBaTrkKQiPdnHh8LkDS3CNkwhv/uM9pASzR23GusoXxI7jGSgvge39BbcY9e/4X5w4Cl+T9c7d4GlRrxUx7R51qo7gl6Hy2FCa4rdnORknPrZf51DRJClK2+8DuvoTqpOvw/61MEiVaCMdbdETcpa2Vy4AArw=
+        b=aQvfZIKeuZiyedbjtcTl5R9h+15l2JnPxcMMM9UHTCZYjc+9Tcx/Dzz9FkYnmQXdDZG/bnpp/qHBJDfvwhsntWm+VUa1B6bC6pyh/XGspvNd+3z/xr1nCwebbEqtOc/oH7kvK1W95ErHuchmPlxONsCkckpBNtap65G1kr9idEI=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1698355518; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-        bh=Wo/MIgqo/AZ9yzJv6KfqbERlZJ9DV73FHRNkLQWYUM0=; 
-        b=eHXbmy/rR7SjWypH96hF/JuOXh1fKrTm+Bon9JWtnpV8eon64jRBzPjC+2kCyYOx3ia54Ud1R/7JsYhsR1v6MaFhjiLT0Yo4gALpA1o9QB9MXMyg/15oUZN43McgHbtS5w9CqFW6Eu+1qpmsPxF+TiNllkil4xJ+jPKvZOvX3AE=
+        t=1698355924; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+        bh=xJACe4fQoOnAx6J0Fug3rNsBMaTr9j9+2uZcdnJ+sco=; 
+        b=Fp62DetrJh2p3xZR+CGPji3cIioFbDsqUur+//5juOgerNxdBXxzuTb6/OBQhkdlpeVE4oK7u1ojDSKLxl+3ITzGgNaakaCE0fJ0cJ3nJSc7zF2VzilNUnq7w3Ntqo8dt4AEF/Zls1sfa/7S6NuQpE7tTbivSLph6A5/mwTCTg8=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
         spf=pass  smtp.mailfrom=jes@trained-monkey.org;
         dmarc=pass header.from=<jes@trained-monkey.org>
 Received: from [192.168.99.50] (pool-98-113-67-206.nycmny.fios.verizon.net [98.113.67.206]) by mx.zoho.eu
-        with SMTPS id 1698355512996680.2185422634632; Thu, 26 Oct 2023 23:25:12 +0200 (CEST)
-Message-ID: <7c04183c-b596-ee4b-0e74-3d61806912af@trained-monkey.org>
-Date:   Thu, 26 Oct 2023 17:25:10 -0400
+        with SMTPS id 1698355920373638.0346469042669; Thu, 26 Oct 2023 23:32:00 +0200 (CEST)
+Message-ID: <ff7cc9e9-532b-5a23-cdb7-e6b4521a2004@trained-monkey.org>
+Date:   Thu, 26 Oct 2023 17:31:59 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH tests v2 0/8] tests: add some regression tests
+Subject: Re: [PATCH v2 0/6] mdadm: POSIX portable naming rules
 Content-Language: en-US
-To:     Yu Kuai <yukuai1@huaweicloud.com>, linux-raid@vger.kernel.org,
-        mariusz.tkaczyk@linux.intel.com, pmenzel@molgen.mpg.de,
-        logang@deltatee.com, song@kernel.org, guoqing.jiang@linux.dev
-Cc:     yukuai3@huawei.com, yangerkun@huawei.com, yi.zhang@huawei.com
-References: <20230529132826.2125392-1-yukuai1@huaweicloud.com>
+To:     Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+Cc:     linux-raid@vger.kernel.org, colyli@suse.de
+References: <20230601072750.20796-1-mariusz.tkaczyk@linux.intel.com>
 From:   Jes Sorensen <jes@trained-monkey.org>
-In-Reply-To: <20230529132826.2125392-1-yukuai1@huaweicloud.com>
+In-Reply-To: <20230601072750.20796-1-mariusz.tkaczyk@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-ZohoMailClient: External
 X-Spam-Status: No, score=-5.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 5/29/23 09:28, Yu Kuai wrote:
-> From: Yu Kuai <yukuai3@huawei.com>
+On 6/1/23 03:27, Mariusz Tkaczyk wrote:
+> Hi Jes,
+> To avoid problem with udev and VROC UEFI driver I developed stronger
+> naming policy, basing on POSIX portable names standard. Verification is
+> added for names and config entries. In case of an issue, user can update
+> name to make it compatible (for IMSM and native).
 > 
-> Total 7 regression test is added:
+> The changes here may cause /dev/md/ link will be different than before
+> mdadm update. To make any of that happen user need to use unusual naming
+> convention, like:
+> - special, non standard signs like, $,%,&,* or space.
+> - '-' used as first sign.
+> - locals.
 > 
->  - 23rdev-lifetime
->  - 25raid456-recovery-while-reshape
->  - 25raid456-reshape-corrupt-data
->  - 25raid456-reshape-deadlock
-> fixed patches is applied for above tests.
+> Note: I didn't analyze configurations with "names=1". If name cannot be
+> determined mdadm should fallback to default numbered dev creation.
 > 
->  - 25raid456-reshape-while-recovery
->  - 24raid10deadlock
->  - 24raid456deadlock
-> fixed patches is not merged yet, and they're still in maillist.
+> If you are planning release soon then feel free to merge it after the
+> release. It is a potential regression point.
 > 
-> Changes in v2:
->  - use new way to judge if test failed for patch 1,34
->  - add four new tests, patch 5-8
+> It is a new version of [1] but it is strongly rebuild. Here is a list
+> of changes:
+> 1. negative and positive test scenarios for both create and config
+>    entries are added.
+> 2. Save parsed parameters in dedicated structs. It is a way to control
+>    what is parsed, assuming that we should use dedicated set_* function.
+> 3. Verification for config entries is added.
+> 5. Improved error logging for names:
+>    - during creation, these messages are errors, printed to stderr.
+>    - for config entries, messages are just a warnings printed to stdout.
+> 6. Error messages reworked.
+> 7. Updates in manual.
+> 
+> [1] https://lore.kernel.org/linux-raid/20221221115019.26276-1-mariusz.tkaczyk@linux.intel.com/
+> 
+> Mariusz Tkaczyk (6):
+>   tests: create names_template
+>   tests: create 00confnames
+>   mdadm: set ident.devname if applicable
+>   mdadm: refactor ident->name handling
+>   mdadm: define ident_set_devname()
+>   mdadm: Follow POSIX Portable Character Set
 
-All applied!
+Applied!
 
 Thanks,
 Jes
