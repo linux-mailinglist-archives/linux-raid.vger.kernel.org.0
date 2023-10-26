@@ -2,100 +2,82 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 633147D8A7F
-	for <lists+linux-raid@lfdr.de>; Thu, 26 Oct 2023 23:39:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD2997D8ABD
+	for <lists+linux-raid@lfdr.de>; Thu, 26 Oct 2023 23:44:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231701AbjJZVjy convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-raid@lfdr.de>); Thu, 26 Oct 2023 17:39:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49434 "EHLO
+        id S235077AbjJZVoP convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-raid@lfdr.de>); Thu, 26 Oct 2023 17:44:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229621AbjJZVjy (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Thu, 26 Oct 2023 17:39:54 -0400
-Received: from sender-op-o11.zoho.eu (sender-op-o11.zoho.eu [136.143.169.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF65FDC
-        for <linux-raid@vger.kernel.org>; Thu, 26 Oct 2023 14:39:51 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1698356384; cv=none; 
+        with ESMTP id S234964AbjJZVoM (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Thu, 26 Oct 2023 17:44:12 -0400
+Received: from sender11-op-o11.zoho.eu (sender11-op-o11.zoho.eu [31.186.226.225])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE97810F7
+        for <linux-raid@vger.kernel.org>; Thu, 26 Oct 2023 14:43:01 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1698356564; cv=none; 
         d=zohomail.eu; s=zohoarc; 
-        b=OL7pk/T/32ItNlGgoxAvHdW5XMAFXwA2CZMoNUKzzqqee2NI6KHTSJbKc0oTL8aRKg7UjIHUar1Zz3HcR7pnm3Rpn8TZvI+Mrhe446uhm+j3zh2mbm/gKpg9XGbuqKKOnNebaU7EyB1A1FH6StRSYkAGeb29l4krPBMBvszFQ0g=
+        b=K4wTpaZK8wHYRP0jwrw9CHDjSwc7kMHeBTvoWvP53+Wu2gLm7/pc//fWqzNcXBXTnxEuKKWoWQBT6mNEtJoBk8lMI2iKylEPu2Nyl1Aeh3o9JBK6EjCtqbFKfcVcgzSRva7h+ysAcyIhaOBuYaV/Do8LcZCP98TXpS6iEe2jX/M=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-        t=1698356384; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-        bh=crHlGODsTyC9vatkuNpIt8UrjjNZ51FsP8Juox/WS+c=; 
-        b=H5/JllKMF9ipXpfQPzL/1gvpDEYiUdojt25hNBmizoNjsYENFi2pYw/RifzQHBQlAD/YyY7JZWpxA2pIubiN/lTxjpONyoo0Jp6IRSX5qNP43+4dSNrEh8BhYkbJOiXqkQN9yn1l0WazyvgdPTZO8OB1GU8N3DtkvhEzHiyZkm0=
+        t=1698356564; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+        bh=+osDMo2jFE3XtQTzmUsP4IjA787HjENnj/7TuRqtd3c=; 
+        b=jGIn4DPDJVn4F5jAst3jzxnMdaM8pMs9IC4Qnsshn5qbTH4S5/+I9XQ2uz4/bquIceOpwDxAnPoBif4luH/OtbcpXuJT4XaYbS7I1Wstm51Wv5a3F2pxVZ8Sb9zsOWdfrxkdGQ8F3XZ144MeccAsF+bae0ON3Kh6QEVKaUBrFOA=
 ARC-Authentication-Results: i=1; mx.zohomail.eu;
         spf=pass  smtp.mailfrom=jes@trained-monkey.org;
         dmarc=pass header.from=<jes@trained-monkey.org>
 Received: from [192.168.99.50] (pool-98-113-67-206.nycmny.fios.verizon.net [98.113.67.206]) by mx.zoho.eu
-        with SMTPS id 1698356381875875.3219231557148; Thu, 26 Oct 2023 23:39:41 +0200 (CEST)
-Date:   Thu, 26 Oct 2023 17:39:40 -0400
+        with SMTPS id 1698356561393808.8828833919055; Thu, 26 Oct 2023 23:42:41 +0200 (CEST)
+Date:   Thu, 26 Oct 2023 17:42:39 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH 1/4 v2] mdadm/tests: Fix regular expression failure
+Subject: Re: [PATCH v3] Fix race of "mdadm --add" and "mdadm --incremental"
 Content-Language: en-US
-To:     Xiao Ni <xni@redhat.com>,
-        Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-Cc:     linux-raid@vger.kernel.org
-References: <20230927025219.49915-1-xni@redhat.com>
- <20230927025219.49915-2-xni@redhat.com>
- <20230928112448.000010f6@linux.intel.com>
- <CALTww2_EKnO=uE81=3O48rPCfebkFXAGSQVW+w4FWZ3jH15T-g@mail.gmail.com>
+To:     Li Xiao Keng <lixiaokeng@huawei.com>,
+        Martin Wilck <mwilck@suse.com>, Coly Li <colyli@suse.de>,
+        linux-raid@vger.kernel.org
+Cc:     louhongxiang@huawei.com, miaoguanqin <miaoguanqin@huawei.com>
+References: <a25e4d75-ebc3-0841-832c-34b8e5f4cbb7@huawei.com>
 From:   Jes Sorensen <jes@trained-monkey.org>
-Message-ID: <4abf64c5-7066-78dc-f6f9-53b3f89d8223@trained-monkey.org>
-In-Reply-To: <CALTww2_EKnO=uE81=3O48rPCfebkFXAGSQVW+w4FWZ3jH15T-g@mail.gmail.com>
+Message-ID: <cc19fa8a-55e8-9b34-5de9-1c78b0762ed9@trained-monkey.org>
+In-Reply-To: <a25e4d75-ebc3-0841-832c-34b8e5f4cbb7@huawei.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
 X-ZohoMailClient: External
 X-Spam-Status: No, score=-5.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        T_SPF_TEMPERROR autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 10/7/23 09:35, Xiao Ni wrote:
-> On Thu, Sep 28, 2023 at 5:25 PM Mariusz Tkaczyk
-> <mariusz.tkaczyk@linux.intel.com> wrote:
->>
->> On Wed, 27 Sep 2023 10:52:16 +0800
->> Xiao Ni <xni@redhat.com> wrote:
->>
->>> The test fails because of the regular expression.
->>>
->>> Signed-off-by: Xiao Ni <xni@redhat.com>
->>> ---
->>>  tests/06name | 4 ++--
->>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/tests/06name b/tests/06name
->>> index 4d5e824d3e0e..86eaab69e3a1 100644
->>> --- a/tests/06name
->>> +++ b/tests/06name
->>> @@ -3,8 +3,8 @@ set -x
->>>  # create an array with a name
->>>
->>>  mdadm -CR $md0 -l0 -n2 --metadata=1 --name="Fred" $dev0 $dev1
->>> -mdadm -E $dev0 | grep 'Name : [^:]*:Fred ' > /dev/null || exit 1
->>> -mdadm -D $md0 | grep 'Name : [^:]*:Fred ' > /dev/null || exit 1
->>> +mdadm -E $dev0 | grep 'Name : Fred' > /dev/null || exit 1
->>> +mdadm -D $md0 | grep 'Name : Fred' > /dev/null || exit 1
->>>  mdadm -S $md0
->>>
->>>  mdadm -A $md0 --name="Fred" $devlist
->>
->> Hello Xiao,
->> I can see that it is not sent first time. Previous version was moved by me to
->> the "awaiting_upstream" state on patchwork but I forgot to answer.
->> You don't need to send it again. I'm ignoring this one. Anyway, here my
->> approval:
->>
->> Reviewed-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
->>
->> https://patchwork.kernel.org/project/linux-raid/patch/20230907085744.18967-1-xni@redhat.com/
+On 9/7/23 07:37, Li Xiao Keng wrote:
+> There is a raid1 with sda and sdb. And we add sdc to this raid,
+> it may return -EBUSY.
 > 
-> Thanks for the information :)
->
+> The main process of --add:
+> 1. dev_open（sdc) in Manage_add
+> 2. store_super1(st, di->fd) in write_init_super1
+> 3. fsync(fd) in store_super1
+> 4. close(di->fd) in write_init_super1
+> 5. ioctl(ADD_NEW_DISK)
+> 
+> Step 2 and 3 will add sdc to metadata of raid1. There will be
+> udev(change of sdc) event after step4. Then "/usr/sbin/mdadm
+> --incremental --export $devnode --offroot $env{DEVLINKS}"
+> will be run, and the sdc will be added to the raid1. Then
+> step 5 will return -EBUSY because it checks if device isn't
+> claimed in md_import_device()->lock_rdev()->blkdev_get_by_dev()
+> ->blkdev_get().
+> 
+> It will be confusing for users because sdc is added first time.
+> The "incremental" will get map_lock before add sdc to raid1.
+> So we add map_lock before write_init_super in "mdadm --add"
+> to fix the race of "add" and "incremental".
+> 
+> Signed-off-by: Li Xiao Keng <lixiaokeng@huawei.com>
+> Signed-off-by: Guanqin Miao <miaoguanqin@huawei.com>
 
 Applied!
 
