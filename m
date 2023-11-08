@@ -2,164 +2,272 @@ Return-Path: <linux-raid-owner@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FF957E500E
-	for <lists+linux-raid@lfdr.de>; Wed,  8 Nov 2023 06:34:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 070BE7E5A11
+	for <lists+linux-raid@lfdr.de>; Wed,  8 Nov 2023 16:33:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234706AbjKHFer (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
-        Wed, 8 Nov 2023 00:34:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45824 "EHLO
+        id S232414AbjKHPdu (ORCPT <rfc822;lists+linux-raid@lfdr.de>);
+        Wed, 8 Nov 2023 10:33:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229835AbjKHFeq (ORCPT
-        <rfc822;linux-raid@vger.kernel.org>); Wed, 8 Nov 2023 00:34:46 -0500
-Received: from lists.tip.net.au (pasta.tip.net.au [203.10.76.2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B28E10C9
-        for <linux-raid@vger.kernel.org>; Tue,  7 Nov 2023 21:34:44 -0800 (PST)
-Received: from lists.tip.net.au (pasta.tip.net.au [IPv6:2401:fc00:0:129::2])
-        by mailhost.tip.net.au (Postfix) with ESMTP id 4SQDL839xVz9QMk
-        for <linux-raid@vger.kernel.org>; Wed,  8 Nov 2023 16:34:40 +1100 (AEDT)
-Received: from [IPV6:2405:6e00:4ed:cdf7:21b:21ff:fe3a:5672] (unknown [IPv6:2405:6e00:4ed:cdf7:21b:21ff:fe3a:5672])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mailhost.tip.net.au (Postfix) with ESMTPSA id 4SQDJB73Zrz9PZ1
-        for <linux-raid@vger.kernel.org>; Wed,  8 Nov 2023 16:32:58 +1100 (AEDT)
-Message-ID: <2d44a37a-ca08-4d74-ab7e-16f51a0004c4@eyal.emu.id.au>
-Date:   Wed, 8 Nov 2023 16:32:45 +1100
+        with ESMTP id S229799AbjKHPdt (ORCPT
+        <rfc822;linux-raid@vger.kernel.org>); Wed, 8 Nov 2023 10:33:49 -0500
+Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60D511BF7
+        for <linux-raid@vger.kernel.org>; Wed,  8 Nov 2023 07:33:47 -0800 (PST)
+Received: by mail-ua1-x935.google.com with SMTP id a1e0cc1a2514c-7b9ff2b6f9bso3139642241.3
+        for <linux-raid@vger.kernel.org>; Wed, 08 Nov 2023 07:33:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=zadara.com; s=google; t=1699457626; x=1700062426; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=hJYuYwx8ogXPEqH3WNqEK0VxiKsmOfqUyYR7dSZ1eNk=;
+        b=K/f8prLzT1x0B6PzCqvKiSABTWIokyVLQVPTDi8ZFPVuI2USkWbY+XVsOaHRzrUHnS
+         8iCHi2hAmFb/KarPENwdgj9wSN2Z5m4p3Xb0wmWJi58yixTCqFJIo7LNcRZD/YRScu15
+         CpptWqm66AZFa7NRWA6OZAh4S1YHf7sfMEOneC2AX6WUJfphmjthe2DqNS2774ulpDFQ
+         vv3sOkk9/fb9f/aLGIE7/ukBmKww+u5Nfc/TQEVxDlsGd4ZDuK5PzmPHp/Zzhg9PSMrC
+         IVm0QW8djRjz+v7ke+Yf9Dwl6zKBJmZcsXUVic1fuQPIkDCgHy/mCQscQoZ12Xb9//tg
+         Kqiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699457626; x=1700062426;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hJYuYwx8ogXPEqH3WNqEK0VxiKsmOfqUyYR7dSZ1eNk=;
+        b=G8EH242GD1kk9UhfdN6bxk4rte1Y5szH0aZdqfqcW6roEGHOdESYNx26wcvs8bZ3rB
+         oiGo3TAI/VKBEbEjdNDzjP1rQ9cQTOxxZ0PzDibpYqD7ItjlHAzSnZ6hWomtNDYho3Kg
+         4YstcvVFvbK1S3q2wawN2pSUFPaCsUtD+IvOTMAmTJmPB6Gl9YUxiVzgkUPmYYlL9UTY
+         9RVBZC0n1MQ+Cyd1MVDO2fnsj5/iyP7gEw3P8uwBrHtBFwu90pCHRnGp+as/CW8qbvHL
+         iCqIai/Y4hdhAHePxrhBT05fIF3OoM5HF6M1db56Op1+bh+RqXyc+jnvdzCJX4JLiQYp
+         3NOQ==
+X-Gm-Message-State: AOJu0Ywn3ZBX/cE3G/pvIVnjyLZthnGQDcMn8pvKGjA8AyliLao6tr3v
+        lf6EcgMDX/mPx1lVVFeoWWnKVlOR7+lwQQXUEAX8wgwcZKuFBdP9YwU=
+X-Google-Smtp-Source: AGHT+IEfYzT3GWlqvllEJNQoMgf1FftMoMPMHviFZOC7laZmafbP76N5ks/0s6d7UOfqwvOFNFyd5J47Hr4tK1Zy/OU=
+X-Received: by 2002:a05:6102:4714:b0:45d:988b:e38c with SMTP id
+ ei20-20020a056102471400b0045d988be38cmr2167771vsb.10.1699457626221; Wed, 08
+ Nov 2023 07:33:46 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: extremely slow writes to degraded array
-Content-Language: en-US
-To:     list Linux RAID <linux-raid@vger.kernel.org>
-References: <eb9a7323-f955-4b1c-b1c4-7f0723078c42@eyal.emu.id.au>
- <25930.43201.247015.388374@petal.ty.sabi.co.uk>
- <3a6d41e6-7e49-4d6d-acb4-f10b05b02ee5@eyal.emu.id.au>
-From:   eyal@eyal.emu.id.au
-In-Reply-To: <3a6d41e6-7e49-4d6d-acb4-f10b05b02ee5@eyal.emu.id.au>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From:   Yaron Presente <yaron.presente@zadara.com>
+Date:   Wed, 8 Nov 2023 17:33:35 +0200
+Message-ID: <CAH4CUCMS-FBH7mgKUGEwMMjMWQx3ZNDfAAKABbx5dA7XbUREMg@mail.gmail.com>
+Subject: RAID1 possible data corruption following a write failure to superblock
+To:     linux-raid@vger.kernel.org
+Cc:     Lev Vainblat <lev@zadara.com>,
+        Shyam Kaushik <shyam.kaushik@zadara.com>,
+        Alex Lyakas <alex@zadara.com>,
+        Yaron Presente <yaron@zadara.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-raid.vger.kernel.org>
 X-Mailing-List: linux-raid@vger.kernel.org
 
-On 08/11/2023 12.37, eyal@eyal.emu.id.au wrote:
-> On 08/11/2023 08.14, Peter Grandi wrote:
->>> 7 disks raid6 array(*1). boot, root and swap on a separate
->>> SSD. [...] One disk was removed recently and sent for
->>> replacement. The system felt OK but a few days later I noticed
->>> an issue... I started copying the full dataset (260GB 8,911k
->>> files). [...] 4GB (system limit) dirty blocks were created,
->>> which took 12h to clear.
->>
->> The MD RAID set is performing well as designed. The achievable
->> speed is very low except on special workloads, but that low
->> speed is still good performance for that design, which is close
->> to optimal for maximizing wait times on your workload.
->> Maximizing storage wait times is a common optimization in many
->> IT places.
->> https://www.sabi.co.uk/blog/17-one.html?170610#170610
->> https://www.sabi.co.uk/blog/15-one.html?150305#150305
->>
->>> [...] The copy completed fast but the kthread took about 1.5
->>> hours at 100%CPU to clear the dirty blocks.
->>> - When copying more files (3-5GB) the rsync was consuming
->>>    100%CPU and started pausing every few files (then killed). A
->>> - 'dd if=/dev/zero of=/data1/no-backup/old-backups/100GB'
->>>    completed quickly, no issues. [...]
->> [...]
->>> +  100.00%     1.60%  [kernel]  [k] ext4_mb_regular_allocator
->>> +   67.08%     5.93%  [kernel]  [k] ext4_mb_find_good_group_avg_frag_lists
->>> +   62.47%    42.34%  [kernel]  [k] ext4_mb_good_group
->>> +   22.51%    11.36%  [kernel]  [k] ext4_get_group_info
->>> +   19.70%    10.80%  [kernel]  [k] ext4_mb_scan_aligned
->>
->> My guess is that the filesystem residing on that RAID set is
->> nearly full, has lots of fragmentation, has lots of small files
->> and likely two out of three or even all three. Those are also
->> common optimizations used in many IT places to maximize storage
->> wait times.
-> 
-> Most of the files are not tiny as I archive and compress and significant collections.
-> What I copied in the test IS a collection of very small files (see further down).
-> 
->> https://www.techrepublic.com/forums/discussions/low-disk-performance-after-reching-75-of-disk-space/
->> https://www.spinics.net/lists/linux-ext4/msg26470.html
-> 
-> I plan to reboot at some point soon, in case a clean restart will fix the problem,
-> but I first want to get what I can from the current situation.
-> I also fear that the restart may not be straight forward. One hopes though.
+Hi All,
+While investigating data corruption that occurred on one of our
+systems, we came across a theoretical RAID1 scenario which we thought
+could be problematic (detail follow below).
+In order to create the scenario we used a VM installed with Ubuntu
+Mantic 23.10 (kernel 6.5.0), configured with a RAID1 on top of 2 iSCSi
+drives that were exported from a second VM.
+On the latter VM we ran a proprietary device mapper on top of the
+drives which allowed us to inject errors at the exact timing that we
+wanted. This is the flow:
+0. 'zero' a specific block using dd (direct) on top of the raid1. read
+it to make sure that the block was indeed zeroed out
+1. Issue a 'write' on top of the RAID1 device (using 'dd' direct of random =
+data)
+2. Allow 'write' to the 2nd leg to succeed, but fail 'write' to the
+1st leg. Then fail also 'write' to the Superblock of both legs so that
+the events counters (on both drives) are not updated
+3. 'dd' returns with a success (although at this point the RAID cannot
+tell which leg is more updated)
+4. Stop the raid device and then re-assemble it, and let it re-sync
+5. Read the same offset, it reads zeros (as it sync'ed from the wrong
+drive - in the case of matching event counters always from the 1st to
+the 2nd ).
 
-Done. No problems in the restart. Now not degraded.
+Indeed, there are 2 concurrent failures (of different drives) in this
+scenario. However, we still think that once returning 'ok' to a user
+write operation, it is an unexpected behavior of the RAID1 to return
+bad data.
+Regards,
+Yaron
 
-The same issue is still there. Short of a kernel bug, maybe some md settings are less than optimal.
-I see some postings saying dirty limit should actually be lowered?
 
-> While the fs is at about 83% full (10TB free out of 60TB) I had the array almost 100% full in the past
-> (it was then a 20TB array) and did not notice such a drastic slowdown.
-> 
-> $ df -h /data1
-> Filesystem      Size  Used Avail Use% Mounted on
-> /dev/md127       55T   45T  9.8T  83% /data1
-> 
-> Now the recovery finished and it is not degraded, yet the problem remains. The bitmap is now clear.
-> 
-> $ cat /proc/mdstat
-> Personalities : [raid6] [raid5] [raid4]
-> md127 : active raid6 sdh1[10] sde1[4] sdc1[9] sdf1[5] sdb1[8] sdd1[7] sdg1[6]
->        58593761280 blocks super 1.2 level 6, 512k chunk, algorithm 2 [7/7] [UUUUUUU]
->        bitmap: 0/88 pages [0KB], 65536KB chunk
-> 
-> I copied (rsync) files to the array
->      Number of created files: 15,754 (reg: 13,056, dir: 2,435, link: 1, dev: 260, special: 2)
->      Total transferred file size: 242,397,771 bytes
-> Which completed rapidly. It created a bunch of dirty blocks
->      2023-11-08 11:04:52 Dirty:    254328 kB  Buffers:   4190376 kB  MemFree:   1480148 kB
-> which took 20m to drain:
->      2023-11-08 11:24:33 Dirty:     44624 kB  Buffers:   4565116 kB  MemFree:    888884 kB
->      2023-11-08 11:24:43 Dirty:     44548 kB  Buffers:   4565136 kB  MemFree:    894436 kB
->      2023-11-08 11:24:53 Dirty:        56 kB  Buffers:   4565192 kB  MemFree:    894052 kB
-> 
-> %util is not that bad, though the array is significantly higher than the members, and there is still much reading while writing.
-> 
-> 11:08:58 Device            r/s     rkB/s   rrqm/s  %rrqm r_await rareq-sz     w/s     wkB/s   wrqm/s  %wrqm w_await wareq-sz     d/s     dkB/s   drqm/s  %drqm d_await dareq-sz     f/s f_await  aqu-sz  %util
-> 11:08:58 md127            0.00      0.00     0.00   0.00    0.00     0.00    3.80     21.60     0.00   0.00 3669.63     5.68    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00   13.94  12.37
-> 11:08:58 sdb              0.40     16.40     3.70  90.24    0.25    41.00    1.60     19.00     3.70  69.81    2.19    11.88    0.00      0.00     0.00   0.00    0.00     0.00    1.20    2.42    0.01   0.30
-> 11:08:58 sdc              0.40     16.40     3.70  90.24   11.50    41.00    2.00     24.20     4.60  69.70    6.75    12.10    0.00      0.00     0.00   0.00    0.00     0.00    1.20    7.00    0.03   1.01
-> 11:08:58 sdd              0.00      0.00     0.00   0.00    0.00     0.00    1.60      7.80     0.90  36.00   18.94     4.88    0.00      0.00     0.00   0.00    0.00     0.00    1.20    3.00    0.03   2.87
-> 11:08:58 sde              0.40     16.40     3.70  90.24    4.25    41.00    1.60     19.00     3.70  69.81   13.31    11.88    0.00      0.00     0.00   0.00    0.00     0.00    1.20    2.33    0.03   1.97
-> 11:08:58 sdf              0.40      5.20     0.90  69.23    0.50    13.00    1.60      7.80     0.90  36.00   14.00     4.88    0.00      0.00     0.00   0.00    0.00     0.00    1.20    2.67    0.03   2.18
-> 11:08:58 sdg              0.00      0.00     0.00   0.00    0.00     0.00    1.20      2.60     0.00   0.00   15.58     2.17    0.00      0.00     0.00   0.00    0.00     0.00    1.20    0.42    0.02   1.77
-> 11:08:58 sdh              0.00      0.00     0.00   0.00    0.00     0.00    1.20      2.60     0.00   0.00    1.50     2.17    0.00      0.00     0.00   0.00    0.00     0.00    1.20    1.17    0.00   0.28
-> 
-> I also noticed that I have an old (since 2012) stanza in rc.local to set stripe_cache_size:
->      # cat /sys/block/md127/md/stripe_cache_size
->      16384
-> Is it possibly unsuitable for this array?
-> Any other setting I should investigate?
-> 
-> 
-> Finally (important? I think it is OK), I see different UUIDs in different places:
-> 
-> /dev/disk/by-uuid
->          378e74a6-e379-4bd5-ade5-f3cd85952099 -> ../../md127
-> 
-> /etc/fstab
->          UUID=378e74a6-e379-4bd5-ade5-f3cd85952099 /data1 ext4   noatime 0 0
-> 
-> /dev/disk/by-id
->      md-uuid-15d250cf:fe43eafb:5779f3d8:7e79affc -> ../../md127
-> 
-> mdadm -D /dev/md127    # also in mdadm -E
->          UUID : 15d250cf:fe43eafb:5779f3d8:7e79affc
-> 
-> /etc/mdadm.conf
->          ARRAY /dev/md127 metadata=1.2 name=e4.eyal.emu.id.au:127 UUID=15d250cf:fe43eafb:5779f3d8:7e79affc
-> 
-> The first  (f3cd85952099) is the UUID of the ext4 fs,
-> The second (:7e79affc) is what I see in my array logs since it was created 5 years ago.
-> 
-> TIA
-> 
+Issue reproduction on kernel 6.5.0 (Ubuntu Mantic 23.10):
 
--- 
-Eyal at Home (eyal@eyal.emu.id.au)
+root@mantic:~# uname -a
+Linux mantic 6.5.0-10-generic #10-Ubuntu SMP PREEMPT_DYNAMIC Fri Oct
+13 13:49:38 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
 
+1. Create md raid1 with 2 legs:
+root@mantic:~# mdadm --create --verbose /dev/md0 --level=3D1
+--raid-devices=3D2 /dev/sdb /dev/sdc
+mdadm: array /dev/md0 started.
+
+2. Write zeros to md0.
+root@mantic:~# dd if=3D/dev/zero bs=3D512 count=3D1 seek=3D1000 oflag=3Ddir=
+ect of=3D/dev/md0
+1+0 records in
+1+0 records out
+512 bytes copied, 0.00271111 s, 189 kB/s
+
+3. Read from md0 =E2=80=93 read zeros, as expected
+root@mantic:~# dd if=3D/dev/md0 iflag=3Ddirect bs=3D512 count=3D1 skip=3D10=
+00
+2>/dev/null | hexdump =E2=80=93C
+00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |..............=
+..|
+*
+00000200
+
+4. Enable error injection on the target
+
+5. Write some random data to md0. Only data write to /dev/sdc
+succeeded, data write to /dev/sdb and all superblock updates failed.
+root@mantic:~# dd if=3D/dev/urandom bs=3D512 count=3D1 seek=3D1000
+oflag=3Ddirect of=3D/dev/md0
+1+0 records in
+1+0 records out
+512 bytes copied, 1.94887 s, 0.3 kB/s
+root@mantic:~# echo $?
+0
+
+root@mantic:~# cat /proc/mdstat
+Personalities : [linear] [multipath] [raid0] [raid1] [raid6] [raid5]
+[raid4] [raid10]
+md0 : active raid1 sdb[0](F) sdc[1]
+      31744 blocks super 1.2 [2/1] [_U]
+
+root@mantic:~# tail -F /var/log/kern.log
+Nov  7 16:01:24.559661 mantic kernel: [ 6443.216430] sd 2:0:0:0: [sdb]
+tag#81 FAILED Result: hostbyte=3DDID_OK driverbyte=3DDRIVER_OK cmd_age=3D0s
+Nov  7 16:01:24.559688 mantic kernel: [ 6443.216455] sd 2:0:0:0: [sdb]
+tag#81 Sense Key : Medium Error [current]
+Nov  7 16:01:24.559689 mantic kernel: [ 6443.216458] sd 2:0:0:0: [sdb]
+tag#81 Add. Sense: Peripheral device write fault
+Nov  7 16:01:24.559689 mantic kernel: [ 6443.216462] sd 2:0:0:0: [sdb]
+tag#81 CDB: Write(10) 2a 00 00 00 0b e8 00 00 01 00
+Nov  7 16:01:24.559690 mantic kernel: [ 6443.216465] I/O error, dev
+sdb, sector 3048 op 0x1:(WRITE) flags 0x800 phys_seg 1 prio class 2
+Nov  7 16:01:25.069779 mantic kernel: [ 6443.726477] sd 2:0:0:0: [sdb]
+tag#87 FAILED Result: hostbyte=3DDID_OK driverbyte=3DDRIVER_OK cmd_age=3D0s
+Nov  7 16:01:25.069805 mantic kernel: [ 6443.726495] sd 2:0:0:0: [sdb]
+tag#87 Sense Key : Medium Error [current]
+Nov  7 16:01:25.069806 mantic kernel: [ 6443.726498] sd 2:0:0:0: [sdb]
+tag#87 Add. Sense: Peripheral device write fault
+Nov  7 16:01:25.069807 mantic kernel: [ 6443.726502] sd 2:0:0:0: [sdb]
+tag#87 CDB: Write(10) 2a 00 00 00 0b e8 00 00 01 00
+Nov  7 16:01:25.069808 mantic kernel: [ 6443.726504] I/O error, dev
+sdb, sector 3048 op 0x1:(WRITE) flags 0x800 phys_seg 1 prio class 2
+Nov  7 16:01:25.153362 mantic kernel: [ 6443.808395] sd 2:0:0:1: [sdc]
+tag#83 FAILED Result: hostbyte=3DDID_OK driverbyte=3DDRIVER_OK cmd_age=3D0s
+Nov  7 16:01:25.153367 mantic kernel: [ 6443.808401] sd 2:0:0:1: [sdc]
+tag#83 Sense Key : Medium Error [current]
+Nov  7 16:01:25.153368 mantic kernel: [ 6443.808404] sd 2:0:0:1: [sdc]
+tag#83 Add. Sense: Peripheral device write fault
+Nov  7 16:01:25.153368 mantic kernel: [ 6443.808406] sd 2:0:0:1: [sdc]
+tag#83 CDB: Synchronize Cache(10) 35 00 00 00 00 00 00 00 00 00
+Nov  7 16:01:25.153369 mantic kernel: [ 6443.808411] I/O error, dev
+sdc, sector 8 op 0x1:(WRITE) flags 0x20800 phys_seg 1 prio class 2
+Nov  7 16:01:25.153370 mantic kernel: [ 6443.808459] md: super_written
+gets error=3D-5
+Nov  7 16:01:25.153377 mantic kernel: [ 6443.808480] md/raid1:md0:
+Disk failure on sdc, disabling device.
+Nov  7 16:01:25.153378 mantic kernel: [ 6443.808480] md/raid1:md0:
+Operation continuing on 1 devices.
+Nov  7 16:01:25.157324 mantic kernel: [ 6443.812155] sd 2:0:0:0: [sdb]
+tag#84 FAILED Result: hostbyte=3DDID_OK driverbyte=3DDRIVER_OK cmd_age=3D0s
+Nov  7 16:01:25.157334 mantic kernel: [ 6443.812160] sd 2:0:0:0: [sdb]
+tag#84 Sense Key : Medium Error [current]
+Nov  7 16:01:25.157335 mantic kernel: [ 6443.812162] sd 2:0:0:0: [sdb]
+tag#84 Add. Sense: Peripheral device write fault
+Nov  7 16:01:25.157336 mantic kernel: [ 6443.812164] sd 2:0:0:0: [sdb]
+tag#84 CDB: Synchronize Cache(10) 35 00 00 00 00 00 00 00 00 00
+Nov  7 16:01:25.157336 mantic kernel: [ 6443.812169] I/O error, dev
+sdb, sector 8 op 0x1:(WRITE) flags 0x20800 phys_seg 1 prio class 2
+Nov  7 16:01:25.157337 mantic kernel: [ 6443.812193] md: super_written
+gets error=3D-5
+Nov  7 16:01:25.235620 mantic kernel: [ 6443.892311] sd 2:0:0:0: [sdb]
+tag#90 FAILED Result: hostbyte=3DDID_OK driverbyte=3DDRIVER_OK cmd_age=3D0s
+Nov  7 16:01:25.235634 mantic kernel: [ 6443.892330] sd 2:0:0:0: [sdb]
+tag#90 Sense Key : Medium Error [current]
+Nov  7 16:01:25.235635 mantic kernel: [ 6443.892333] sd 2:0:0:0: [sdb]
+tag#90 Add. Sense: Peripheral device write fault
+Nov  7 16:01:25.235635 mantic kernel: [ 6443.892336] sd 2:0:0:0: [sdb]
+tag#90 CDB: Synchronize Cache(10) 35 00 00 00 00 00 00 00 00 00
+Nov  7 16:01:25.235636 mantic kernel: [ 6443.892341] I/O error, dev
+sdb, sector 24 op 0x1:(WRITE) flags 0x20800 phys_seg 1 prio class 2
+Nov  7 16:01:25.235637 mantic kernel: [ 6443.892366] md: super_written
+gets error=3D-5
+Nov  7 16:01:25.319616 mantic kernel: [ 6443.976317] sd 2:0:0:0: [sdb]
+tag#80 FAILED Result: hostbyte=3DDID_OK driverbyte=3DDRIVER_OK cmd_age=3D0s
+Nov  7 16:01:25.319635 mantic kernel: [ 6443.976336] sd 2:0:0:0: [sdb]
+tag#80 Sense Key : Medium Error [current]
+Nov  7 16:01:25.319637 mantic kernel: [ 6443.976341] sd 2:0:0:0: [sdb]
+tag#80 Add. Sense: Peripheral device write fault
+Nov  7 16:01:25.319638 mantic kernel: [ 6443.976346] sd 2:0:0:0: [sdb]
+tag#80 CDB: Synchronize Cache(10) 35 00 00 00 00 00 00 00 00 00
+Nov  7 16:01:25.319639 mantic kernel: [ 6443.976353] I/O error, dev
+sdb, sector 8 op 0x1:(WRITE) flags 0x20800 phys_seg 1 prio class 2
+Nov  7 16:01:25.319640 mantic kernel: [ 6443.976404] md: super_written
+gets error=3D-5
+Nov  7 16:01:25.414605 mantic kernel: [ 6444.068218] sd 2:0:0:0: [sdb]
+tag#86 FAILED Result: hostbyte=3DDID_OK driverbyte=3DDRIVER_OK cmd_age=3D0s
+Nov  7 16:01:25.414621 mantic kernel: [ 6444.068235] sd 2:0:0:0: [sdb]
+tag#86 Sense Key : Medium Error [current]
+Nov  7 16:01:25.414623 mantic kernel: [ 6444.068240] sd 2:0:0:0: [sdb]
+tag#86 Add. Sense: Peripheral device write fault
+Nov  7 16:01:25.414624 mantic kernel: [ 6444.068245] sd 2:0:0:0: [sdb]
+tag#86 CDB: Synchronize Cache(10) 35 00 00 00 00 00 00 00 00 00
+Nov  7 16:01:25.414625 mantic kernel: [ 6444.068252] I/O error, dev
+sdb, sector 8 op 0x1:(WRITE) flags 0x20800 phys_seg 1 prio class 2
+Nov  7 16:01:25.414626 mantic kernel: [ 6444.068320] md: super_written
+gets error=3D-5
+Nov  7 16:01:25.915709 mantic kernel: [ 6444.572401] sd 2:0:0:0: [sdb]
+tag#84 FAILED Result: hostbyte=3DDID_OK driverbyte=3DDRIVER_OK cmd_age=3D0s
+Nov  7 16:01:25.915732 mantic kernel: [ 6444.572423] sd 2:0:0:0: [sdb]
+tag#84 Sense Key : Medium Error [current]
+Nov  7 16:01:25.915733 mantic kernel: [ 6444.572427] sd 2:0:0:0: [sdb]
+tag#84 Add. Sense: Peripheral device write fault
+Nov  7 16:01:25.915733 mantic kernel: [ 6444.572430] sd 2:0:0:0: [sdb]
+tag#84 CDB: Synchronize Cache(10) 35 00 00 00 00 00 00 00 00 00
+Nov  7 16:01:25.915734 mantic kernel: [ 6444.572448] I/O error, dev
+sdb, sector 8 op 0x1:(WRITE) flags 0x20800 phys_seg 1 prio class 2
+Nov  7 16:01:25.915735 mantic kernel: [ 6444.572495] md: super_written
+gets error=3D-5
+
+6. Disable error injection on the target
+
+7. Reassemble md raid1
+root@mantic:~# mdadm --stop /dev/md0
+mdadm: stopped /dev/md0
+
+root@mantic:~# mdadm --verbose --assemble /dev/md0 /dev/sdb /dev/sdc
+mdadm: looking for devices for /dev/md0
+mdadm: /dev/sdb is identified as a member of /dev/md0, slot 0.
+mdadm: /dev/sdc is identified as a member of /dev/md0, slot 1.
+mdadm: added /dev/sdc to /dev/md0 as 1
+mdadm: added /dev/sdb to /dev/md0 as 0
+mdadm: /dev/md0 has been started with 2 drives.
+
+root@mantic:~# tail -F /var/log/kern.log
+Nov  7 16:06:27.073412 mantic kernel: [ 6745.728446] md: md0 stopped.
+Nov  7 16:06:27.085369 mantic kernel: [ 6745.740822] md/raid1:md0: not
+clean -- starting background reconstruction
+Nov  7 16:06:27.085382 mantic kernel: [ 6745.740827] md/raid1:md0:
+active with 2 out of 2 mirrors
+Nov  7 16:06:27.085384 mantic kernel: [ 6745.740842] md0: detected
+capacity change from 0 to 63488
+Nov  7 16:06:27.089518 mantic kernel: [ 6745.742959] md: resync of
+RAID array md0
+Nov  7 16:06:27.365351 mantic kernel: [ 6746.019437] md: md0: resync done.
+
+8. Read from md0 =E2=80=93 read zeros, although previously write random dat=
+a succeeded
+root@mantic:~# dd if=3D/dev/md0 iflag=3Ddirect bs=3D512 count=3D1 skip=3D10=
+00
+2>/dev/null | hexdump =E2=80=93C
+00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |..............=
+..|
+*
+00000200
