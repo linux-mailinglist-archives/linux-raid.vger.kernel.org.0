@@ -1,87 +1,99 @@
-Return-Path: <linux-raid+bounces-55-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-56-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D3687F95EF
-	for <lists+linux-raid@lfdr.de>; Sun, 26 Nov 2023 23:53:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 527897F96C7
+	for <lists+linux-raid@lfdr.de>; Mon, 27 Nov 2023 01:24:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B3F19B20A54
-	for <lists+linux-raid@lfdr.de>; Sun, 26 Nov 2023 22:53:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0CE4F280D69
+	for <lists+linux-raid@lfdr.de>; Mon, 27 Nov 2023 00:24:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8375914F7A;
-	Sun, 26 Nov 2023 22:53:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D19AC363;
+	Mon, 27 Nov 2023 00:23:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-raid@vger.kernel.org
-Received: from shin.romanrm.net (shin.romanrm.net [146.185.199.61])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ABDCE4
-	for <linux-raid@vger.kernel.org>; Sun, 26 Nov 2023 14:52:54 -0800 (PST)
-Received: from nvm (unknown [IPv6:fd39::101])
-	by shin.romanrm.net (Postfix) with SMTP id 29C793F083;
-	Sun, 26 Nov 2023 22:52:43 +0000 (UTC)
-Date: Mon, 27 Nov 2023 03:52:37 +0500
-From: Roman Mamedov <rm@romanrm.net>
-To: Gandalf Corvotempesta <gandalf.corvotempesta@gmail.com>
-Cc: Wols Lists <antlists@youngman.org.uk>, Linux RAID Mailing List
- <linux-raid@vger.kernel.org>
-Subject: Re: SMR or SSD disks?
-Message-ID: <20231127035237.3e7d78da@nvm>
-In-Reply-To: <CAJH6TXiKLitvausMWgwZ_kNQbvp7sDA4AfaLvO2M54E7qLq8cg@mail.gmail.com>
-References: <CAJH6TXh-FB0HaCJGFKHHgzaSqh+cQefPsK45Y_UBTsrcxaa6ww@mail.gmail.com>
-	<ZWMf+lg/CgRlxKtb@mail.bitfolk.com>
-	<20938de4-65f2-4bab-90c0-018fe485c0e7@suse.de>
-	<d1ab59c2-e172-400d-8d6c-68f4bfce3a65@youngman.org.uk>
-	<CAJH6TXiKLitvausMWgwZ_kNQbvp7sDA4AfaLvO2M54E7qLq8cg@mail.gmail.com>
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+X-Greylist: delayed 43304 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 26 Nov 2023 16:23:52 PST
+Received: from smtp.hosts.co.uk (smtp.hosts.co.uk [85.233.160.19])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01C6910F
+	for <linux-raid@vger.kernel.org>; Sun, 26 Nov 2023 16:23:51 -0800 (PST)
+Received: from host109-150-116-140.range109-150.btcentralplus.com ([109.150.116.140] helo=[192.168.1.99])
+	by smtp.hosts.co.uk with esmtpa (Exim)
+	(envelope-from <antlists@youngman.org.uk>)
+	id 1r7E9E-0000aD-52;
+	Sun, 26 Nov 2023 12:22:04 +0000
+Message-ID: <d1ab59c2-e172-400d-8d6c-68f4bfce3a65@youngman.org.uk>
+Date: Sun, 26 Nov 2023 12:22:03 +0000
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: SMR or SSD disks?
+Content-Language: en-GB
+To: Linux RAID Mailing List <linux-raid@vger.kernel.org>,
+ Gandalf Corvotempesta <gandalf.corvotempesta@gmail.com>
+References: <CAJH6TXh-FB0HaCJGFKHHgzaSqh+cQefPsK45Y_UBTsrcxaa6ww@mail.gmail.com>
+ <ZWMf+lg/CgRlxKtb@mail.bitfolk.com>
+ <20938de4-65f2-4bab-90c0-018fe485c0e7@suse.de>
+From: Wols Lists <antlists@youngman.org.uk>
+In-Reply-To: <20938de4-65f2-4bab-90c0-018fe485c0e7@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Sun, 26 Nov 2023 23:22:51 +0100
-Gandalf Corvotempesta <gandalf.corvotempesta@gmail.com> wrote:
+On 26/11/2023 11:55, Hannes Reinecke wrote:
+> On 11/26/23 11:37, Andy Smith wrote:
+>> Hello,
+>>
+>> On Sun, Nov 26, 2023 at 11:18:39AM +0100, Gandalf Corvotempesta wrote:
+>>> i'm doing some maintenance replacing some not-yet-failed HDD with WD 
+>>> RED SSD.
+>>> I've read the warning on the homepage
+>>> https://raid.wiki.kernel.org/index.php/Linux_Raid
+>>>
+>>> Are SSD drives still subject to SMR ? I've thought that it was related
+>>> only to magnetic drives not on SSD.
+>>
+>> SMR is not applicable to flash-based storage. I expect the warning
+>> on the wiki was written at a time when the only drives bearing the
+>> WD Red brand were HDDs, not any SSDs.
 
-> Il giorno dom 26 nov 2023 alle ore 13:22 Wols Lists
-> <antlists@youngman.org.uk> ha scritto:
-> > If you look at what SMR is, it's only relevant to spinning rust. It
-> > relies on the fact that a read head can be much smaller than a write
-> > head, so provided you shingle your writes (hence the name), you can
-> > over-write half the previous track (so saving space) without rendering
-> > the data unreadable.
+Yes. The WD Red line was always advertised as "optimised for raid" 
+(which was debatable, but okay), then they switched it to SMR. So the 
+notice was saying "keep away !!!". I think several new SMR Reds failed 
+badly when people tried to rebuild their array.
+>>
+> Correct. Typically SATA SSDs do not expose SMR capabilities; it's all
+> hidden by the FTL there.
+
+If you look at what SMR is, it's only relevant to spinning rust. It 
+relies on the fact that a read head can be much smaller than a write 
+head, so provided you shingle your writes (hence the name), you can 
+over-write half the previous track (so saving space) without rendering 
+the data unreadable.
+
+The problem is you have to stream your writes, you can't go back, which 
+is why these drives - especially the early ones - had a habit of 
+stalling for minutes on end, as they shuffled stuff around.
 > 
-> Thank you all.
-> That's what i've thought but better stay safe than sorry so i've asked.
+> And the warning really is outdated. What matters is that the HDD needs
+> to support TLER (ie scterc capabilities); the brand or series really is 
+> immaterial. There are plenty of non-SMR HDDs which do not support it. 
+> Sadly it's not well advertised, so you really have to test
+> (or invest in the HDD range which is geared up for this kind of usage.)
 > 
-> In other words WD Red SSD are safe for a RAID, there is no need to change them
-> (as mostly new) in both array (the grow was finished 1 hour ago: 2 WD
-> Gold SATA 3.5 plus 1 WD RED SSD)
-> 
-> Slowly, i'll replace all spinning disks with WD Red SSD
-> I'm not a fan of WD, but 2TB disks able to replace a 2TB HDD are very
-> very rare (the 1.92TB, much more common, can't replace a 2TB disk)
+I'm not sure how true that is now, I've not been keeping up. But about 
+that time (2020), most desktop drives - the sort that don't have TLER - 
+were transitioning to SMR. Hence the warning following immediately - 
+don't use desktop drives! I suspect non-SMR is now a premium feature 
+which will usually come with TLER as a matter of course.
 
-There are three grades of capacity that you can get:
-1) ~1920 000 000 000 bytes
-2) ~2000 000 000 000 bytes
-3) ~2048 000 000 000 bytes
+As I say, I'm not up-to-date any more. If anybody can give me some 
+facts, I'll happily update the site.
 
-Nobody is marketing the 1st variant as "2TB", you will find "1920G" on the
-packaging and datasheets instead.
-
-2nd one should be able to replace an HDD, unless there's some smaller
-discrepancy in the sizes near the 2 billion byte mark between HDDs and SSDs. A
-reason to use smaller-than-whole-disk partitions for your RAID.
-
-3rd is not a common sight in SATA SSDs (but still happens), and is nearly
-universal in NVMe. Of about ten "2 TB" NVMe models I've tested, only one had
-2000, *all* others were 2048. The 2000 one was Netac NV7000.
-
--- 
-With respect,
-Roman
+Cheers,
+Wol
 
