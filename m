@@ -1,125 +1,90 @@
-Return-Path: <linux-raid+bounces-106-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-109-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26DA6802BD8
-	for <lists+linux-raid@lfdr.de>; Mon,  4 Dec 2023 08:04:42 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0AD71803230
+	for <lists+linux-raid@lfdr.de>; Mon,  4 Dec 2023 13:11:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C6E041F21071
-	for <lists+linux-raid@lfdr.de>; Mon,  4 Dec 2023 07:04:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A9A5D1F2106D
+	for <lists+linux-raid@lfdr.de>; Mon,  4 Dec 2023 12:11:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D3E08F6E;
-	Mon,  4 Dec 2023 07:04:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E59A023764;
+	Mon,  4 Dec 2023 12:10:53 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CFF9D5;
-	Sun,  3 Dec 2023 23:04:31 -0800 (PST)
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4SkF5g51Crz4f3lgC;
-	Mon,  4 Dec 2023 15:04:23 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 5A9AA1A0E29;
-	Mon,  4 Dec 2023 15:04:28 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgDX2hD5eW1lTQvKCg--.62157S6;
-	Mon, 04 Dec 2023 15:04:28 +0800 (CST)
-From: linan666@huaweicloud.com
-To: song@kernel.org
-Cc: linux-raid@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linan122@huawei.com,
-	yukuai3@huawei.com,
-	yi.zhang@huawei.com,
-	houtao1@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH 2/2] md/raid1: support read error check
-Date: Mon,  4 Dec 2023 15:03:27 +0800
-Message-Id: <20231204070327.3150356-3-linan666@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20231204070327.3150356-1-linan666@huaweicloud.com>
-References: <20231204070327.3150356-1-linan666@huaweicloud.com>
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A671FD2;
+	Mon,  4 Dec 2023 04:10:49 -0800 (PST)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rA7mh-0000e8-Iq; Mon, 04 Dec 2023 13:10:47 +0100
+Message-ID: <17bd838f-12a0-43c2-a45c-46021083170b@leemhuis.info>
+Date: Mon, 4 Dec 2023 13:10:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: block/badblocks.c warning in 6.7-rc2
+Content-Language: en-US, de-DE
+To: Coly Li <colyli@suse.de>, Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Block Devices <linux-block@vger.kernel.org>,
+ Linux RAID <linux-raid@vger.kernel.org>,
+ Linux bcachefs <linux-bcachefs@vger.kernel.org>, Xiao Ni <xni@redhat.com>,
+ Geliang Tang <geliang.tang@suse.com>, Jens Axboe <axboe@kernel.dk>,
+ Song Liu <song@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>,
+ Janpieter Sollie <janpieter.sollie@edpnet.be>
+References: <562a2442-d098-4972-baa1-5a843e06b180@gmail.com>
+ <C8305655-3749-411B-A696-E07E95882215@suse.de>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <C8305655-3749-411B-A696-E07E95882215@suse.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgDX2hD5eW1lTQvKCg--.62157S6
-X-Coremail-Antispam: 1UD129KBjvJXoW7Zr1kZF13uF17JryxGF17Wrg_yoW8Aw4kpa
-	15AF95ArW5J345Zw1DJFWDC3WFk34fKay8Ar95Jw4Ig3s3trZ8KFWjga4agrn8GFn8Gr13
-	X398Gr4DCFs7tFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBlb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXw
-	A2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrV
-	ACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWU
-	JVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lw4CEc2x0rVAKj4xxMx
-	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
-	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwI
-	xGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWx
-	JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcV
-	C2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU89L05UUUUU==
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1701691849;400920e5;
+X-HE-SMSGID: 1rA7mh-0000e8-Iq
 
-From: Li Nan <linan122@huawei.com>
+On 29.11.23 09:08, Coly Li wrote:
+>> 2023年11月29日 07:47，Bagas Sanjaya <bagasdotme@gmail.com> 写道：
+>>
+>> I notice a regression report that is rather well-handled on Bugzilla [1].
+>> Quoting from it:
+>>
+>>>
+>>> when booting from 6.7-rc2, compiled with clang, I get this warning on one of my 3 bcachefs volumes:
+>>> WARNING: CPU: 3 PID: 712 at block/badblocks.c:1284 badblocks_check (block/badblocks.c:1284) 
+>>> The reason why isn't clear, but the stack trace points to an error in md error handling.
+>>> This bug didn't happen in 6.6
+>>> there are 3 commits in 6.7-rc2 which may cause them,
+>>> in attachment:
+>>> - decoded stacktrace of dmesg
+>>> - kernel .config
+>> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=218184
+> 
+> It seems the improved bad blocks code caught a zero-size bio request
+> from upper layer, this improper behavior was silently neglected before.
+> It might be too early or simple to decide this is a regression,
 
-After commit 1e50915fe0bb ("raid: improve MD/raid10 handling of correctable
-read errors."), rdev will be set to faulty if it reads data error to many
-times in raid10. Add this mechanism to raid1 now.
+Well, it's often better to add an issue to the tracking even if there is
+a chance that it's not a real regression, as the issue might otherwise
+fall through the cracks. But given...
 
-Signed-off-by: Li Nan <linan122@huawei.com>
----
- drivers/md/raid1.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+> especially Janpieter closes the report for now.
 
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 9348f1709512..be4e654744c1 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -2257,16 +2257,24 @@ static void sync_request_write(struct mddev *mddev, struct r1bio *r1_bio)
-  *	3.	Performs writes following reads for array synchronising.
-  */
- 
--static void fix_read_error(struct r1conf *conf, int read_disk,
--			   sector_t sect, int sectors)
-+static void fix_read_error(struct r1conf *conf, struct r1bio *r1_bio)
- {
-+	sector_t sect = r1_bio->sector;
-+	int sectors = r1_bio->sectors;
-+	int read_disk = r1_bio->read_disk;
- 	struct mddev *mddev = conf->mddev;
-+	struct md_rdev *rdev = rcu_dereference(conf->mirrors[read_disk].rdev);
-+
-+	if (exceed_read_errors(mddev, rdev)) {
-+		r1_bio->bios[r1_bio->read_disk] = IO_BLOCKED;
-+		return;
-+	}
-+
- 	while(sectors) {
- 		int s = sectors;
- 		int d = read_disk;
- 		int success = 0;
- 		int start;
--		struct md_rdev *rdev;
- 
- 		if (s > (PAGE_SIZE>>9))
- 			s = PAGE_SIZE >> 9;
-@@ -2507,8 +2515,7 @@ static void handle_read_error(struct r1conf *conf, struct r1bio *r1_bio)
- 	if (mddev->ro == 0
- 	    && !test_bit(FailFast, &rdev->flags)) {
- 		freeze_array(conf, 1);
--		fix_read_error(conf, r1_bio->read_disk,
--			       r1_bio->sector, r1_bio->sectors);
-+		fix_read_error(conf, r1_bio);
- 		unfreeze_array(conf);
- 	} else if (mddev->ro == 0 && test_bit(FailFast, &rdev->flags)) {
- 		md_error(mddev, rdev);
--- 
-2.39.2
+...this I agree that this is likely not worth tracking, hence:
 
+#regzbot inconclusive: maybe not a regression and report can not
+reproduce it anymore
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
 
