@@ -1,228 +1,95 @@
-Return-Path: <linux-raid+bounces-230-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-234-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 187E381AF31
-	for <lists+linux-raid@lfdr.de>; Thu, 21 Dec 2023 08:12:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0269C81AFD5
+	for <lists+linux-raid@lfdr.de>; Thu, 21 Dec 2023 08:54:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C365E286D4F
-	for <lists+linux-raid@lfdr.de>; Thu, 21 Dec 2023 07:12:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B3B4D285C93
+	for <lists+linux-raid@lfdr.de>; Thu, 21 Dec 2023 07:54:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E44C8C148;
-	Thu, 21 Dec 2023 07:11:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F788156CB;
+	Thu, 21 Dec 2023 07:53:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1oPi9niK";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Xtepv643";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1oPi9niK";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Xtepv643"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kZ2Ga1OS"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9084913FF4
-	for <linux-raid@vger.kernel.org>; Thu, 21 Dec 2023 07:11:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 74B6022077;
-	Thu, 21 Dec 2023 07:11:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1703142713; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CXGAlsUyCVFCKcf8cXOpYHfSbLn7SKDe5/aWhNL1Iwo=;
-	b=1oPi9niKrcgI0HZDlqUy4p9k4LLKsxojffWTAqDpET5Q60aOJPrtA7yMVKG3jDr/Xk7ma2
-	ZBxCWkNwqEzX8XoA6i5XvVA/XIYvBb3kao08Ptfcx5nh+9SR8/kYqiqZ28B340EQ6YqrKp
-	Yz0JT6u5Q5mBtkYV0MMqgt7P0TNDZrM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1703142713;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CXGAlsUyCVFCKcf8cXOpYHfSbLn7SKDe5/aWhNL1Iwo=;
-	b=Xtepv643ZnryzaWp4iGpVMeu+cEnVOEUHJY3E4w+Cmh1aKbBew4Y/npn44cPNpMSH5eVEM
-	Iwukms8a06NwA5Dw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1703142713; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CXGAlsUyCVFCKcf8cXOpYHfSbLn7SKDe5/aWhNL1Iwo=;
-	b=1oPi9niKrcgI0HZDlqUy4p9k4LLKsxojffWTAqDpET5Q60aOJPrtA7yMVKG3jDr/Xk7ma2
-	ZBxCWkNwqEzX8XoA6i5XvVA/XIYvBb3kao08Ptfcx5nh+9SR8/kYqiqZ28B340EQ6YqrKp
-	Yz0JT6u5Q5mBtkYV0MMqgt7P0TNDZrM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1703142713;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CXGAlsUyCVFCKcf8cXOpYHfSbLn7SKDe5/aWhNL1Iwo=;
-	b=Xtepv643ZnryzaWp4iGpVMeu+cEnVOEUHJY3E4w+Cmh1aKbBew4Y/npn44cPNpMSH5eVEM
-	Iwukms8a06NwA5Dw==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 2377013C18;
-	Thu, 21 Dec 2023 07:11:50 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id 0r2JMDblg2VtHwAAn2gu4w
-	(envelope-from <colyli@suse.de>); Thu, 21 Dec 2023 07:11:50 +0000
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 067FF154BB;
+	Thu, 21 Dec 2023 07:53:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85AD8C433C9;
+	Thu, 21 Dec 2023 07:53:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703145237;
+	bh=Zniq9fFh7CYXfCkclrR1BmQlS9tAvfFqLd2yx4PM9qg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=kZ2Ga1OSSas/8HrDA0DHBfSa0urFoG8iWMiKaAPUuOQ61OYEXPphP5UUaUreKXpRZ
+	 /jc63UtFGHYTTDqYAyiqnKfYysQ74w8olCK0mce1n5EAsUiaocWv+6C0pAIOY3+QSr
+	 1hZOd/VNNfCyQKkjLONcDd1bxIhqKlwBJ0Mp4l4hfb0+Z+qzRSDhb1zsIg2z95WcbO
+	 OI8mBKn8gsbFiU8sCEYcl/rWLJ/MmaAoMqSY8/zhSj5DUGi/tCUUXpb4N8hTCbNeiV
+	 fd9GVWM3A3ubZJiXvaryz8e2nqxw+8E0PWLNCVtTsPJDi/oyERwapuHtkSqIXb4eW+
+	 Zs/zcbS4Py8iw==
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2cc259392a6so4785141fa.2;
+        Wed, 20 Dec 2023 23:53:57 -0800 (PST)
+X-Gm-Message-State: AOJu0Yx66DJItg+zQWuYK7C4hLy0cFqQvQ0LZENLqck7BS0k3DZg6qjZ
+	l02IBUMmAbDgyXeteXAziyTKfNBFg+Dm5cFy2tc=
+X-Google-Smtp-Source: AGHT+IGOoTMIt9w7fzlnd56F3v3rdh7FCJZC5qY+o4sQUK8vbjsKPHfoXAV77RrE97CwlYH7Ya3kR62WAfNz8SVdeXI=
+X-Received: by 2002:a05:6512:1322:b0:50d:1f0c:2b24 with SMTP id
+ x34-20020a056512132200b0050d1f0c2b24mr10407561lfu.20.1703145235724; Wed, 20
+ Dec 2023 23:53:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.300.61.1.2\))
-Subject: Re: [PATCH] Revert "raid: Remove now superfluous sentinel element
- from ctl_table array"
-From: Coly Li <colyli@suse.de>
-In-Reply-To: <aef386e9-90b2-9847-89cd-1566a5969a08@huaweicloud.com>
-Date: Thu, 21 Dec 2023 15:11:37 +0800
-Cc: Song Liu <song@kernel.org>,
- "Kernel.org-Linux-RAID" <linux-raid@vger.kernel.org>,
- Joel Granados <j.granados@samsung.com>,
- Luis Chamberlain <mcgrof@kernel.org>,
- "yukuai (C)" <yukuai3@huawei.com>
+MIME-Version: 1.0
+References: <20231221012715.3048221-1-song@kernel.org> <20231221012715.3048221-2-song@kernel.org>
+ <ZYPXYdBAdNoKXI8b@infradead.org>
+In-Reply-To: <ZYPXYdBAdNoKXI8b@infradead.org>
+From: Song Liu <song@kernel.org>
+Date: Wed, 20 Dec 2023 23:53:44 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW7qg0OwE3wx-mgcdZHUM1o7XY5CXMqJajtuib+sSEwxQw@mail.gmail.com>
+Message-ID: <CAPhsuW7qg0OwE3wx-mgcdZHUM1o7XY5CXMqJajtuib+sSEwxQw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] block: Check REQ_OP_FLUSH in op_is_flush()
+To: Christoph Hellwig <hch@infradead.org>
+Cc: linux-block@vger.kernel.org, linux-raid@vger.kernel.org, axboe@kernel.dk, 
+	kent.overstreet@linux.dev, janpieter.sollie@edpnet.be, colyli@suse.de, 
+	bagasdotme@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <DA283F34-30A1-49CE-8FD9-C3A98F491779@suse.de>
-References: <20231221044925.10178-1-colyli@suse.de>
- <aef386e9-90b2-9847-89cd-1566a5969a08@huaweicloud.com>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-X-Mailer: Apple Mail (2.3774.300.61.1.2)
-X-Spam-Level: 
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.60 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 FROM_HAS_DN(0.00)[];
-	 MV_CASE(0.50)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCPT_COUNT_FIVE(0.00)[6];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 TO_DN_ALL(0.00)[];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[]
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Score: -2.60
-X-Spam-Flag: NO
 
+On Wed, Dec 20, 2023 at 10:12=E2=80=AFPM Christoph Hellwig <hch@infradead.o=
+rg> wrote:
+>
+> On Wed, Dec 20, 2023 at 05:27:14PM -0800, Song Liu wrote:
+> > Upper layer (fs, etc.) may issue flush with something like:
+> >
+> >   bio_reset(bio, bdev, REQ_OP_FLUSH);
+> >   bio->bi_end_io =3D xxx;
+> >   submit_bio(bio);
+>
+> No, they can't.  REQ_OP_FLUSH is currently only used by request
+> based drivers and only generated by the flush state machine.
 
+Hmm... Then this call trace from bcachefs is the exception here:
 
-> 2023=E5=B9=B412=E6=9C=8821=E6=97=A5 14:19=EF=BC=8CYu Kuai =
-<yukuai1@huaweicloud.com> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> Hi,
->=20
-> =E5=9C=A8 2023/12/21 12:49, Coly Li =E5=86=99=E9=81=93:
->> This reverts commit dd6291c506490c195620b394dc96763675e7e5f4.
->> With this patch, a kernel oops triggered when creating a md device,
->> [  311.224353][ T3545] BUG: unable to handle page fault for address: =
-000003e800030d40
->> [  311.314951][ T3545] #PF: supervisor read access in kernel mode
->> [  311.384748][ T3545] #PF: error_code(0x0000) - not-present page
->> [  311.454538][ T3545] PGD 12be1c067 P4D 0
->> [  311.501451][ T3545] Oops: 0000 [#1] PREEMPT SMP NOPTI
->> [  311.561888][ T3545] CPU: 19 PID: 3545 Comm: modprobe [snipped...]
->> [  311.869958][ T3545] RIP: 0010:string+0x48/0xe0
->> [  311.923116][ T3545] Code: 3b 45 89 d1 45 31 c0 49 01 f9 66 45 85 =
-d2 75 1a eb 1f 48 39 f7 73 02 88 07 48 83 c7 01 41 83 c0 01 48 83 c2 01 =
-4c 39 cf 74 07 <0f> b6 02 84 c0 75 e1 48 89 f2 44 89 c6 e9 c6 e3 ff ff =
-48 c7 c0 3d
->> [  312.156194][ T3545] RSP: 0018:ffa000000b877a70 EFLAGS: 00010086
->> [  312.227025][ T3545] RAX: 000003e80002fd40 RBX: ffa000000b877b86 =
-RCX: ffff0a00ffffff04
->> [  312.320737][ T3545] RDX: 000003e800030d40 RSI: ffa000000b877b68 =
-RDI: ffa000000b877b86
->> [  312.414449][ T3545] RBP: ffa000000b877b48 R08: 0000000000000000 =
-R09: ffa000010b877b85
->> [  312.508160][ T3545] R10: ffffffffffffffff R11: 0000000000000040 =
-R12: ffa000000b877b68
->> [  312.601873][ T3545] R13: ffffffff99c221fa R14: 0000000000000008 =
-R15: ffffffff99c221fa
->> [  312.695583][ T3545] FS:  00007fea7a856740(0000) =
-GS:ff11000fffd80000(0000) knlGS:0000000000000000
->> [  312.800733][ T3545] CS:  0010 DS: 0000 ES: 0000 CR0: =
-0000000080050033
->> [  312.877805][ T3545] CR2: 000003e800030d40 CR3: 0000000123790001 =
-CR4: 0000000000771ee0
->> [  312.971518][ T3545] DR0: 0000000000000000 DR1: 0000000000000000 =
-DR2: 0000000000000000
->> [  313.065229][ T3545] DR3: 0000000000000000 DR6: 00000000fffe0ff0 =
-DR7: 0000000000000400
->> [  313.158940][ T3545] PKRU: 55555554
->> [  313.199610][ T3545] Call Trace:
->> [  313.237162][ T3545]  <TASK>
->> [  313.270554][ T3545]  ? __die+0x23/0x70
->> [  313.315391][ T3545]  ? page_fault_oops+0x14d/0x490
->> [  313.372701][ T3545]  ? update_load_avg+0x7e/0x7d0
->> [  313.428972][ T3545]  ? exc_page_fault+0x71/0x160
->> [  313.484203][ T3545]  ? asm_exc_page_fault+0x26/0x30
->> [  313.542555][ T3545]  ? string+0x48/0xe0
->> [  313.588426][ T3545]  vsnprintf+0x2d5/0x5a0
->> [  313.637417][ T3545]  vprintk_store+0x15e/0x4b0
->> [  313.690567][ T3545]  ? schedule_timeout+0x147/0x160
->> [  313.748918][ T3545]  ? wait_for_completion_killable+0x1a6/0x1d0
->> [  313.819750][ T3545]  vprintk_emit+0xc9/0x230
->> [  313.870823][ T3545]  _printk+0x5c/0x80
->> [  313.915657][ T3545]  sysctl_err+0x6a/0x90
->> [  313.963610][ T3545]  ? __kmalloc+0x4d/0x150
->> [  314.013639][ T3545]  __register_sysctl_table+0x144/0x7d0
->> [  314.077192][ T3545]  ? kmalloc_trace+0x2a/0xa0
->> [  314.130341][ T3545]  md_init+0xd2/0xff0 [snipped...]
->> [  314.228226][ T3545]  ? __pfx_md_init+0x10/0x10 [snipped...]
->> [  314.333383][ T3545]  do_one_initcall+0x47/0x220
->> [  314.387576][ T3545]  ? kmalloc_trace+0x2a/0xa0
->> [  314.440726][ T3545]  do_init_module+0x60/0x240
->> [  314.493878][ T3545]  __do_sys_finit_module+0xac/0x120
->> [  314.554308][ T3545]  do_syscall_64+0x5d/0x90
->> [  314.605380][ T3545]  ? ksys_lseek+0x66/0xb0
->> [  314.655411][ T3545]  ? syscall_exit_to_user_mode+0x2b/0x40
->> [  314.721042][ T3545]  ? do_syscall_64+0x6c/0x90
->> [  314.774194][ T3545]  ? exit_to_user_mode_prepare+0x142/0x1f0
->> [  314.841906][ T3545]  ? syscall_exit_to_user_mode+0x2b/0x40
->> [  314.907535][ T3545]  ? do_syscall_64+0x6c/0x90
->> [  314.960685][ T3545]  ? exc_page_fault+0x71/0x160
->> [  315.015917][ T3545]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
->> [  315.084667][ T3545] RIP: 0033:0x7fea79f161bd
->> The last NULL element in raid_table[] is necessary, after reverting =
-this
->=20
+bch2_journal_write=3D>
+  submit_bio=3D>
+    ...
+    md_handle_request =3D>
+      raid5_make_request =3D>
+        chunk_aligned_read =3D>
+          raid5_read_one_chunk =3D>
 
-Hi Kuai,
+> (Not that I particularly like this wart, I'd much prefer file systems
+> to submit a REQ_OP_FLUSH than an empty write with a preflush flag,
+> but that's not a trivial change).
 
-> Based on commit message, avoid last NULL element is exactly what [1]
-> did, if this is not true, can you explame more how sysctl_err() is
-> called from md_init()? I can't find this by code review, and I think
-> maybe it's better to fix this in sysctl error path.
->=20
+ Kent, I think we need to update how bcachefs issue flushes.
 
-I feel you are right! The test was based on a backport of stable tree, =
-and the register_sysctl() related code was not included.
-After look at the changes of sysctl, I feel the oops should go away =
-after taking the sysctl changes.
-
-Thanks, and please ignore the noise.
-
-Coly Li
-
-[snipped]=
+Thanks,
+Song
 
