@@ -1,99 +1,89 @@
-Return-Path: <linux-raid+bounces-252-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-255-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A09181D050
-	for <lists+linux-raid@lfdr.de>; Sat, 23 Dec 2023 00:06:15 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48F5D81D1F6
+	for <lists+linux-raid@lfdr.de>; Sat, 23 Dec 2023 04:40:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A4F7C1F22D60
-	for <lists+linux-raid@lfdr.de>; Fri, 22 Dec 2023 23:06:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7B2551C20A09
+	for <lists+linux-raid@lfdr.de>; Sat, 23 Dec 2023 03:40:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48B283307D;
-	Fri, 22 Dec 2023 23:06:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0EE11368;
+	Sat, 23 Dec 2023 03:39:19 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from lists.tip.net.au (pasta.tip.net.au [203.10.76.2])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B6833064;
-	Fri, 22 Dec 2023 23:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eyal.emu.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tip.net.au
-Received: from lists.tip.net.au (pasta.tip.net.au [203.10.76.2])
-	by mailhost.tip.net.au (Postfix) with ESMTP id 4SxjSL5Zp3z9R3h;
-	Sat, 23 Dec 2023 10:00:18 +1100 (AEDT)
-Received: from [192.168.2.7] (unknown [101.115.64.11])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailhost.tip.net.au (Postfix) with ESMTPSA id 4SxjSK60j3z9QyH;
-	Sat, 23 Dec 2023 10:00:16 +1100 (AEDT)
-Message-ID: <c4f84de0-ee0e-4e29-a9f5-346823bb3d53@eyal.emu.id.au>
-Date: Sat, 23 Dec 2023 10:00:05 +1100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D025F9453;
+	Sat, 23 Dec 2023 03:39:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Sxqf141ycz4f3jHl;
+	Sat, 23 Dec 2023 11:39:05 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 6B9A71A08E7;
+	Sat, 23 Dec 2023 11:39:08 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgD3Rg1aVoZl1dePEQ--.1070S4;
+	Sat, 23 Dec 2023 11:39:08 +0800 (CST)
+From: linan666@huaweicloud.com
+To: song@kernel.org,
+	axboe@kernel.dk
+Cc: linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linan666@huaweicloud.com,
+	yukuai3@huawei.com,
+	yi.zhang@huawei.com,
+	houtao1@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH v3 0/2] md: fix is_mddev_idle()
+Date: Sat, 23 Dec 2023 11:37:01 +0800
+Message-Id: <20231223033703.2949831-1-linan666@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: parity raid and ext4 get stuck in writes
-To: linux-raid@vger.kernel.org, linux-ext4@vger.kernel.org,
- carlos@fisica.ufpr.br
-References: <ZYX2AS8isUHtbMXe@fisica.ufpr.br>
-Content-Language: en-US
-From: eyal@eyal.emu.id.au
-In-Reply-To: <ZYX2AS8isUHtbMXe@fisica.ufpr.br>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgD3Rg1aVoZl1dePEQ--.1070S4
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYJ7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87
+	Iv6xkF7I0E14v26rxl6s0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvE
+	ncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I
+	8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I2
+	1c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7M4kE6xkIj40Ew7xC0w
+	CF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64
+	vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_
+	Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIx
+	AIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUYuc_UUUUU
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
-On 23/12/23 07:48, Carlos Carvalho wrote:
-> This is finally a summary of a long standing problem. When lots of writes to
-> many files are sent in a short time the kernel gets stuck and stops sending
-> write requests to the disks. Sometimes it recovers and finally sends the
-> modified pages to permanent storage, sometimes not and eventually other
-> functions degrade and the machine crashes.
-> 
-> A simple way to reproduce: expand a kernel source tree, like
-> xzcat linux-6.5.tar.xz | tar x -f -
-> 
-> With the default vm settings for dirty_background_ratio and dirty_ratio this
-> will finish quickly with ~1.5GB of dirty pages in ram and ~100k inodes to be
-> written and the kernel gets stuck.
-> 
-> The bug exists in all 6.* kernels; I've tested the latest release of all
-> 6.[1-6]. However some conditions must exist for the problem to appear:
-> 
-> - there must be many inodes to be flushed; just many bytes in a few files don't
->    show the problem
-> - it happens only with ext4 on a parity raid array
+From: Li Nan <linan122@huawei.com>
 
-This may be unrelated but there is an open problem that looks somewhat similar.
-It is tracked at
-	https://bugzilla.kernel.org/show_bug.cgi?id=217965
+Changes in v3:
+ - patch 2, move check from md_sync_acct_bio() to to md_sync_acct().
+   Fix the check in is_mddev_idle().
 
-If your fs is mounted with a non-zero 'stripe=' (as RAID arrays usually are),
-try to get around the issue with
-	$ sudo mount -o remount,stripe=0 YourFS
-If it makes a difference then you may be looking at a similar issue.
+Li Nan (2):
+  md: Fix overflow in is_mddev_idle
+  md: don't account sync_io if iostats of the disk is disabled
 
-> I've moved one of our arrays to xfs and everything works fine, so it's either
-> specific to ext4 or xfs is not affected. When the lockup happens the flush
-> kworker starts using 100% cpu permanently. I have not observed the bug in
-> raid10, only in raid[56].
-> 
-> The problem is more easily triggered with 6.[56] but 6.1 is also affected.
-
-The issue was seen in kernels 6.5 and later but not in 6.4, so maybe not the same thing.
-
-> Limiting dirty_bytes and dirty_background_bytes to low values reduce the
-> probability of lockup, probably because the process generating writes is
-> stopped before too many files are created.
-
-HTH
+ drivers/md/md.h        |  5 +++--
+ include/linux/blkdev.h |  2 +-
+ drivers/md/md.c        | 11 ++++++++---
+ 3 files changed, 12 insertions(+), 6 deletions(-)
 
 -- 
-Eyal at Home (eyal@eyal.emu.id.au)
+2.39.2
 
 
