@@ -1,53 +1,53 @@
-Return-Path: <linux-raid+bounces-265-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-266-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B40281E357
-	for <lists+linux-raid@lfdr.de>; Tue, 26 Dec 2023 01:27:31 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1EF5C81E3A5
+	for <lists+linux-raid@lfdr.de>; Tue, 26 Dec 2023 01:34:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BF1DB1F23EC4
-	for <lists+linux-raid@lfdr.de>; Tue, 26 Dec 2023 00:27:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 40D3D1C21413
+	for <lists+linux-raid@lfdr.de>; Tue, 26 Dec 2023 00:34:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C63A553E1C;
-	Tue, 26 Dec 2023 00:21:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 579405810F;
+	Tue, 26 Dec 2023 00:23:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VcXizfEF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UruK2fyZ"
 X-Original-To: linux-raid@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CED94CB51;
-	Tue, 26 Dec 2023 00:21:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51308C433C7;
-	Tue, 26 Dec 2023 00:21:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F9858102;
+	Tue, 26 Dec 2023 00:23:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B067C433C7;
+	Tue, 26 Dec 2023 00:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703550093;
-	bh=D7XK7v7jtXA2/XI9KF+CUXl+rUqCWqgp3kQRkq8o2r8=;
+	s=k20201202; t=1703550222;
+	bh=b4DDAmGv18Y0v7dNLBafuHTTJE18Ii6KicK0PHMLmq0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VcXizfEF31rMlNoDH51JyhaTZ1i7TthQNHv/BsOdfBuQsY3v9hsXshd7qtci7pTuq
-	 ohOXR6xtypvypN2MKQgQRHbsWPotcq9vb4GhBOHeINqsiXTxBxk2JwnSaeuFZqVJ4l
-	 d91ZuXPiGBmUAtKkWxDJAWUH2CJveiIABkUt5+JAVBOM3djVWJ7jR3xE5CF497/ejc
-	 pmvYzb7N3LlYYZ6MBhkCI5g8Wdlphh1DoSOq+RPw5U6g52w+ojjKhu7e8jdkLghiIX
-	 bZ2w9gUNzAary6DURYCRw1SDr+iVTdHaavzhH5NaulKoL49HOeznX+nxEK6t1MDkqC
-	 hR+O4LYflcvzA==
+	b=UruK2fyZZWrujbUP+XBWr2iuNzMtDX1WugQLfnrHGXvKJRLN/WU9wFY7tE5T7RQPc
+	 WzPln4jK4mT6apU7eqlJfVhahJGmyvJoi4Ug1hRcZxFnICF9AY7RRT4Ahto0xwwgXx
+	 lSPjiFegRnwf9Tste+UzK6f2RyPYkKIRARTPPo2Jw1TzMTmej3g4M87q93VNvgeJHG
+	 3q5JamIHxagIUUy2ALx9W1bvBBaR1x4jnIa16AFQEgXgRTYQ63BUIJaYFqTyyoCjN1
+	 dRAmu+SKf34z9CrhGrH0zBdWs9jTrTD4c7OFVx/nxKkKFyCWKZHoQO/gbKBtXooQ+k
+	 fL+AKpSrqRn4A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Mike Snitzer <snitzer@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	song@kernel.org,
 	agk@redhat.com,
 	mpatocka@redhat.com,
 	dm-devel@lists.linux.dev,
+	song@kernel.org,
 	linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 27/39] dm audit: fix Kconfig so DM_AUDIT depends on BLK_DEV_DM
-Date: Mon, 25 Dec 2023 19:19:17 -0500
-Message-ID: <20231226002021.4776-27-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 16/24] dm audit: fix Kconfig so DM_AUDIT depends on BLK_DEV_DM
+Date: Mon, 25 Dec 2023 19:22:09 -0500
+Message-ID: <20231226002255.5730-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231226002021.4776-1-sashal@kernel.org>
-References: <20231226002021.4776-1-sashal@kernel.org>
+In-Reply-To: <20231226002255.5730-1-sashal@kernel.org>
+References: <20231226002255.5730-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.8
+X-stable-base: Linux 6.1.69
 Content-Transfer-Encoding: 8bit
 
 From: Mike Snitzer <snitzer@kernel.org>
@@ -70,10 +70,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/md/Kconfig b/drivers/md/Kconfig
-index 2a8b081bce7dd..3ff87cb4dc494 100644
+index 662d219c39bf4..db0e97020256e 100644
 --- a/drivers/md/Kconfig
 +++ b/drivers/md/Kconfig
-@@ -660,6 +660,7 @@ config DM_ZONED
+@@ -650,6 +650,7 @@ config DM_ZONED
  
  config DM_AUDIT
  	bool "DM audit events"
