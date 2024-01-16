@@ -1,152 +1,142 @@
-Return-Path: <linux-raid+bounces-360-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-362-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F01F483027D
-	for <lists+linux-raid@lfdr.de>; Wed, 17 Jan 2024 10:41:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 92321830A5C
+	for <lists+linux-raid@lfdr.de>; Wed, 17 Jan 2024 17:07:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8A8021F25405
-	for <lists+linux-raid@lfdr.de>; Wed, 17 Jan 2024 09:41:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2B5EB1F24634
+	for <lists+linux-raid@lfdr.de>; Wed, 17 Jan 2024 16:07:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9995514AA1;
-	Wed, 17 Jan 2024 09:40:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A89822321;
+	Wed, 17 Jan 2024 16:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R4jY++AZ"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9D214005;
-	Wed, 17 Jan 2024 09:40:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD461EB39
+	for <linux-raid@vger.kernel.org>; Wed, 17 Jan 2024 16:06:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705484445; cv=none; b=UCzNYV0A2QLeaNZo6H4C84oKaWP20xTIB8CJAxHBI0HbLOcAft9uF7FLbbbAhwBAF5b+qG3nxlYPUngXTVpslWNCgihDVCvmvsJ1r1czQAwEne2Y5C/Ad10d9SgYnVOrad03r7UZdYJFBqH4faJSbjNR0015xk/bNgv2kgjc5Uw=
+	t=1705507608; cv=none; b=SSLyMkREMwnnNraAEGebT+9tuPeJAw/biHjEyNPEZufUYHYSzQyoDKQTiiRVFrcMTnub+UJL+RiylgEOKs0FiwRKIiOeYz5kWSj4noPzyjYbNISqURiSh1a9aPYRExgdoLBM3L93L0LcX0u1CVk3BmjQZ1cw5u2iQV8ae6TJy/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705484445; c=relaxed/simple;
-	bh=+x+3AstNH/jlZEVQp/Xzwlu0EpVCjYl0Dxlb3aZMB7s=;
-	h=Received:Received:Received:From:To:Cc:Subject:Date:Message-Id:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-CM-TRANSID:X-Coremail-Antispam:
-	 X-CM-SenderInfo; b=NzVEPdujcZqDuVVwnbFtyqAILGqI2k9G/gUwwdxZihFvGiE/H1CBzj1hHRndJgTV5Q1NwOLf1QkAs6h0Ql5xi/RejQ2AhlY2UL95b73lwiWxHV95WIHW0zaXxB1s/9f14Sh+Ap0YrapZmapWoTfeH68JZF6CPu1ie+UGBQFIWig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TFLTZ4k80z4f3lVv;
-	Wed, 17 Jan 2024 17:40:34 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id BF6111A0C68;
-	Wed, 17 Jan 2024 17:40:40 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgCXaBGUoKdlvS9nBA--.17816S7;
-	Wed, 17 Jan 2024 17:40:40 +0800 (CST)
-From: linan666@huaweicloud.com
-To: song@kernel.org,
-	shli@fb.com,
-	neilb@suse.com,
-	zlliu@suse.com,
-	mariusz.tkaczyk@linux.intel.com
-Cc: linux-raid@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linan666@huaweicloud.com,
-	yukuai3@huawei.com,
-	yi.zhang@huawei.com,
-	houtao1@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH v2 3/3] md: sync blockdev before stopping raid or setting readonly
-Date: Wed, 17 Jan 2024 17:37:07 +0800
-Message-Id: <20240117093707.2767209-4-linan666@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240117093707.2767209-1-linan666@huaweicloud.com>
-References: <20240117093707.2767209-1-linan666@huaweicloud.com>
+	s=arc-20240116; t=1705507608; c=relaxed/simple;
+	bh=4SO5gJg61qQ+xDNYMh9UjBXJcwyOObG+r/dhNtm//xs=;
+	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
+	 X-IronPort-AV:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding; b=HcS3M0KN9lHAL31wPIksacPOCt0MFXv2PAJP3By1kNG7oXJc8MUzwd6VmDbnpnkebDcyk6eKBmaG2FGMq7gujrTAm3vcLnNxfNZmQLgHVNcUSas+69bShgK8X8BTvdI2utMwPC4odcschJjqSzmT0rJxYQSZAvGK8dGf7TFBOiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R4jY++AZ; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705507608; x=1737043608;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=4SO5gJg61qQ+xDNYMh9UjBXJcwyOObG+r/dhNtm//xs=;
+  b=R4jY++AZrbypHnPWv1Ue2iPKinKGaylq0js72uB0eSP8o7KtjspU0djB
+   qMashLLO5H/9uz7sA7uS54Jd8FCF6o78Yc4p+EvYT5++kpLdCrd7mAEon
+   qu2mDhEwEUyLvo4fJKH89+POdUtZS/JdrcFMtkdOR1DsBBEaizhjWKj7+
+   pOBJIsFg2dApk8TL/hDw5EwhvLhqvYURy8Qxu5z19CZ6tSUfvH+ccho60
+   9vyk8cmea2ivDzcTtC7H5ZXAn5BIJBsVtlN3txvXx+A+A/5MdbYGu+VUp
+   8/FIK69WSqal2WXx+O6y1neQ1m55nmD4xL/rGcQ9zc8MbW923nAZVPThK
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="18795025"
+X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
+   d="scan'208";a="18795025"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 08:06:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
+   d="scan'208";a="52802"
+Received: from jbelkin-mobl.amr.corp.intel.com (HELO peluse-desk5) ([10.212.92.214])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 08:06:46 -0800
+Date: Tue, 16 Jan 2024 01:31:36 -0700
+From: Paul E Luse <paul.e.luse@linux.intel.com>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Yiming Xu <teddyxym@outlook.com>, song@kernel.org,
+ linux-raid@vger.kernel.org, paul.e.luse@intel.com, firnyee@gmail.com
+Subject: Re: [RFC] md/raid5: optimize RAID5 performance.
+Message-ID: <20240116013136.06d3d173@peluse-desk5>
+In-Reply-To: <ZWQ63SpjIE4bc+pi@infradead.org>
+References: <SJ2PR11MB75742EC42986F1532F7A0977D8BEA@SJ2PR11MB7574.namprd11.prod.outlook.com>
+	<ZWQ63SpjIE4bc+pi@infradead.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; aarch64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgCXaBGUoKdlvS9nBA--.17816S7
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cw4UuryxXry8Xw43tFW5KFg_yoW8Cw4rpF
-	s2ya45Wr1jqw1fXwnrWayDGa45Gw1xKrWDtrW3A3W8ZFyrZwnxWFZagF4FvryDK3s3Ja4r
-	ta1UAFn8Wa4xtF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmC14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr1j6rxdM2
-	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2vY
-	z4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c
-	02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE
-	4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4
-	IIrI8v6xkF7I0E8cxan2IY04v7M4kE6xkIj40Ew7xC0wCF04k20xvY0x0EwIxGrwCFx2Iq
-	xVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r
-	106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AK
-	xVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7
-	xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_
-	Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JU9Z23UUUUU=
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Li Nan <linan122@huawei.com>
+On Sun, 26 Nov 2023 22:44:45 -0800
+Christoph Hellwig <hch@infradead.org> wrote:
 
-Commit a05b7ea03d72 ("md: avoid crash when stopping md array races
-with closing other open fds.") added sync_block before stopping raid and
-setting readonly. Later in commit 260fa034ef7a ("md: avoid deadlock when
-dirty buffers during md_stop.") it is moved to ioctl. array_state_store()
-was ignored. Add sync blockdev to array_state_store() now.
+> Hi Shushu,
+> 
+> the work certainly l-ooks interesting!
+> 
+> However:
+> 
+> > Optimized by using fine-grained locks, customized data structures,
+> > and scattered address space. Achieves significant improvements in
+> > both throughput and latency.
+> 
+> this is a lot of work for a single Linux patch, we usually do that
+> work pice by pice instead of complete rewrite, and for such
+> signigicant changes the commit logs also tend to be a bit extensive.
+> 
+> I'm also not quite sure what scattered address spaces are - I bet
+> reading the paper (I plan to get to that) would explain it, but it
+> also helps to explain the idea in the commit message.
+> 
+> That's my high level nitpicking for now, I'll try to read the paper
+> and the patch in detail and come back later.
+> 
+> 
 
-Signed-off-by: Li Nan <linan122@huawei.com>
----
- drivers/md/md.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Hi Everyone,
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 2c793992a604..aea39598457c 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -4477,6 +4477,7 @@ array_state_store(struct mddev *mddev, const char *buf, size_t len)
- {
- 	int err = 0;
- 	enum array_state st = match_word(buf, array_states);
-+	bool clear_md_closing = false;
- 
- 	/* No lock dependent actions */
- 	switch (st) {
-@@ -4511,6 +4512,16 @@ array_state_store(struct mddev *mddev, const char *buf, size_t len)
- 		spin_unlock(&mddev->lock);
- 		return err ?: len;
- 	}
-+
-+	/* we will call set readonly or stop raid, sync blockdev */
-+	if (st == clear || (mddev->pers && (st == readonly ||
-+	    st == inactive || (st == read_auto && md_is_rdwr(mddev))))) {
-+		err = mddev_sync_blockdev(mddev);
-+		if (err)
-+			return err;
-+		clear_md_closing = true;
-+	}
-+
- 	err = mddev_lock(mddev);
- 	if (err)
- 		return err;
-@@ -4523,6 +4534,8 @@ array_state_store(struct mddev *mddev, const char *buf, size_t len)
- 		break;
- 	case clear:
- 		err = do_md_stop(mddev, 0, NULL);
-+		if (!err)
-+			clear_md_closing = false;
- 		break;
- 	case readonly:
- 		if (mddev->pers)
-@@ -4585,6 +4598,8 @@ array_state_store(struct mddev *mddev, const char *buf, size_t len)
- 		sysfs_notify_dirent_safe(mddev->sysfs_state);
- 	}
- 	mddev_unlock(mddev);
-+	if (clear_md_closing)
-+		clear_bit(MD_CLOSING, &mddev->flags);
- 	return err ?: len;
- }
- static struct md_sysfs_entry md_array_state =
--- 
-2.39.2
+I went ahead and ran a series of performance tests on this patch to
+help the community understand the value.Here's a summary of what have
+completed and am happy to run some more to keep the patch moving.
+
+I have not yet reviewed the code as I wanted to make sure it provided
+good benefit first and it does for sure. I will be reviewing shortly.
+Here is a summary of my tests:
+
+* Kioxia CM7 drives
+  https://americas.kioxia.com/content/dam/kioxia/shared/business/ssd/enterprise-ssd/asset/productbrief/eSSD-CM7-V-product-brief.pdf
+* Dual Socket Xeon 8368 2.4GHz 256G RAM
+* Results are the average of just 2 60 second runs per data point, if
+  interest continues I can re-run to eliminate any potential anomalies
+* I used 8 fio jobs per disk and 2 group_thread_cnt per disk so when
+  reading the graph, for example, 8DR5_patch_64j15gtc means an 8 Disk
+  RAID5 run against the patch with 64 fio jobs and group-thread_cnt set
+  to 16.  'base' in the name is md-next branch as of yesterday.
+* Sample fio command: fio --filename=/dev/md0 --direct=1
+  --output=/root/remote/8DR5_patch_64j16gtc_1/randrw_131072_1.json
+  --rw=randrw --bs=131072 --ioengine=libaio --ramp_time=3 --runtime=60
+  --iodepth=1 --numjobs=64 --time_based --group_reporting
+  --name=131072_1_randrw --output-format=json --numa_cpu_nodes=0
+
+Results: https://photos.app.goo.gl/Cip1rU3spbD8nvG28 
+
+-Paul
+
+
+
+
+
+
+
+
 
 
