@@ -1,47 +1,47 @@
-Return-Path: <linux-raid+bounces-345-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-346-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B304482F6C3
-	for <lists+linux-raid@lfdr.de>; Tue, 16 Jan 2024 21:07:31 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CA7582F8C9
+	for <lists+linux-raid@lfdr.de>; Tue, 16 Jan 2024 21:52:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 22E8D1F21769
-	for <lists+linux-raid@lfdr.de>; Tue, 16 Jan 2024 20:07:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 746E9B255F0
+	for <lists+linux-raid@lfdr.de>; Tue, 16 Jan 2024 20:52:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 757FA59B7F;
-	Tue, 16 Jan 2024 19:46:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C551139172;
+	Tue, 16 Jan 2024 19:53:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JyL+bfyT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="unUMoSN0"
 X-Original-To: linux-raid@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119D459B62;
-	Tue, 16 Jan 2024 19:46:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC32139164;
+	Tue, 16 Jan 2024 19:53:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705434370; cv=none; b=VL9INU5D18zDLF84mgUFy6/FHrjso4cImveZSFMNCcEammNPvYdHLV//gcI9QiGBMLG+DF5dXM82k11FsfgtIApS2ZBSz7IPkoTDN3jVWk0mSsfnsX20M1Y1B5BjHNKIReMoXSHY+pgG2ZUGacQg0csMa+7dXrZ1QaO77Ag7pfY=
+	t=1705434792; cv=none; b=r4WjB+Ipp3ASKWjjmPqSv4c70Y4i0GDmai92Cmm/pNCd5YSSJiI6f4gUmSdphZN377jCHTvMDfhgG5NTri4RtnBauz8nICrgDY31S0ptU8lxNfjfI4bFIquzY7dyOBlFAFyEDrW6R0f+t4Y6BrQPyA1PJML1mo0uztgF7j3h6UE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705434370; c=relaxed/simple;
-	bh=v1W0l4Sblp5LD2bIM4/cINPUeiALjJSbooXMHtzDdgY=;
+	s=arc-20240116; t=1705434792; c=relaxed/simple;
+	bh=7mBFf0SS4RTNJKlUTWaTdQo4thG88fiBhzHYmpBJ4oo=;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
 	 X-Mailer:In-Reply-To:References:MIME-Version:X-stable:
-	 X-Patchwork-Hint:X-stable-base:Content-Transfer-Encoding; b=VhZxt7CoNHeSS/b6zDm0rlT8GY2ioYolbyEvw8ckav6Xg7iO2aWeR45Y3oJTefwDAOqqPvhyXTh1QImsxTyWrF/IsW1TAFgQdUuDZcosToSthBsDnQodWIDrBn3d+30RC5mG955xlexrzKDJWG8TL3jCvM8waKvVvLOnLpDjlYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JyL+bfyT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 123B4C43394;
-	Tue, 16 Jan 2024 19:46:08 +0000 (UTC)
+	 X-Patchwork-Hint:X-stable-base:Content-Transfer-Encoding; b=DqsD+2jWqYCmfyVe7L2e4RRxQdewSS3zN6ivwRX4oOQmHHtxNRo1vejM4qstqTLzb9PF4R9PPLDcOPyAffRiOKa9udsGIDIl7419MRisK5F4WJ5UdiNXnlKvzDWvYvZrN/0CzUCwCHGbV3SrdYLY10l9somdXbbfBgwWjr9DWcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=unUMoSN0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF171C433F1;
+	Tue, 16 Jan 2024 19:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705434369;
-	bh=v1W0l4Sblp5LD2bIM4/cINPUeiALjJSbooXMHtzDdgY=;
+	s=k20201202; t=1705434792;
+	bh=7mBFf0SS4RTNJKlUTWaTdQo4thG88fiBhzHYmpBJ4oo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JyL+bfyTGCVkFtZhr7MCc7qB+D4adADe2XCOa9/kXhMs45hlRevl7dC5PpXXS6gpV
-	 PgrbUzarWJ76yUaGDQyZA1gMq5W9DX/8pBWWnVBAVtAmhiK94eiUskd1B53aL5gPjZ
-	 KBRAqdhRynMAxqN0LsHVBO18iMovK7AEwZncnKph+pm9TI9ljQ0lJTrhc3MrZJEvsh
-	 f2cEfJFTg4UgYN9Hi+CskRuMXJ6vM38Yj8PpPwWr7ZilmLTFB6DHLm/QZWIxSWZYL/
-	 1xcxZJrhagGjocgtnuhzTz4b8WGCZIb6WdHyY9tcL6+voTQb+Kjq/yjBmMiCaDbT/Q
-	 P1KJMqMhPPQmg==
+	b=unUMoSN0wpLxH8v9+RuCxuCXbNaVrTk22gPg+TzAbZc20QmYzCMmAlgmjfT+0MRNk
+	 xfLdDagzhi6GXUzQy2Vb/BlYO5Rm0Q+mShtbBuqDCccAZatHVac6F9mUIpk/9aeNHx
+	 cz4F2Ikd9mtQRVGLTuGh4Bl/fkeokR28u6YHAi2eA69jEpw3CchCzsRi6SMLGK+I19
+	 huOIAxfqynJoJiA9Yj987mP0yzcK7+5jyWopI05TKVgbHxQFYBtVXmz3sgELDj7Pi5
+	 3V0scvdcDwHmh8YLxSyEV9w1yNYhPmPEU1xVrszcFMNwINWSClvzdJqR7R5H1b+Mmh
+	 8PcZIdM/OD1vg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -49,12 +49,12 @@ Cc: Alex Lyakas <alex.lyakas@zadara.com>,
 	Song Liu <song@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
 	linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.7 081/108] md: Whenassemble the array, consult the superblock of the freshest device
-Date: Tue, 16 Jan 2024 14:39:47 -0500
-Message-ID: <20240116194225.250921-81-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 080/104] md: Whenassemble the array, consult the superblock of the freshest device
+Date: Tue, 16 Jan 2024 14:46:46 -0500
+Message-ID: <20240116194908.253437-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240116194225.250921-1-sashal@kernel.org>
-References: <20240116194225.250921-1-sashal@kernel.org>
+In-Reply-To: <20240116194908.253437-1-sashal@kernel.org>
+References: <20240116194908.253437-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
@@ -63,7 +63,7 @@ List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.7
+X-stable-base: Linux 6.6.12
 Content-Transfer-Encoding: 8bit
 
 From: Alex Lyakas <alex.lyakas@zadara.com>
@@ -86,10 +86,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 44 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 9bdd57324c37..da33270971ab 100644
+index b2ef6af8376a..0f52e6505a7b 100644
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -1209,6 +1209,7 @@ struct super_type  {
+@@ -1112,6 +1112,7 @@ struct super_type  {
  					  struct md_rdev *refdev,
  					  int minor_version);
  	int		    (*validate_super)(struct mddev *mddev,
@@ -97,7 +97,7 @@ index 9bdd57324c37..da33270971ab 100644
  					      struct md_rdev *rdev);
  	void		    (*sync_super)(struct mddev *mddev,
  					  struct md_rdev *rdev);
-@@ -1346,8 +1347,9 @@ static int super_90_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor
+@@ -1249,8 +1250,9 @@ static int super_90_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor
  
  /*
   * validate_super for 0.90.0
@@ -108,7 +108,7 @@ index 9bdd57324c37..da33270971ab 100644
  {
  	mdp_disk_t *desc;
  	mdp_super_t *sb = page_address(rdev->sb_page);
-@@ -1859,7 +1861,7 @@ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_
+@@ -1762,7 +1764,7 @@ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_
  	return ret;
  }
  
@@ -117,7 +117,7 @@ index 9bdd57324c37..da33270971ab 100644
  {
  	struct mdp_superblock_1 *sb = page_address(rdev->sb_page);
  	__u64 ev1 = le64_to_cpu(sb->events);
-@@ -1955,13 +1957,15 @@ static int super_1_validate(struct mddev *mddev, struct md_rdev *rdev)
+@@ -1858,13 +1860,15 @@ static int super_1_validate(struct mddev *mddev, struct md_rdev *rdev)
  		}
  	} else if (mddev->pers == NULL) {
  		/* Insist of good event counter while assembling, except for
@@ -136,7 +136,7 @@ index 9bdd57324c37..da33270971ab 100644
  				return -EINVAL;
  	} else if (mddev->bitmap) {
  		/* If adding to array with a bitmap, then we can accept an
-@@ -1982,8 +1986,38 @@ static int super_1_validate(struct mddev *mddev, struct md_rdev *rdev)
+@@ -1885,8 +1889,38 @@ static int super_1_validate(struct mddev *mddev, struct md_rdev *rdev)
  		    rdev->desc_nr >= le32_to_cpu(sb->max_dev)) {
  			role = MD_DISK_ROLE_SPARE;
  			rdev->desc_nr = -1;
@@ -176,16 +176,16 @@ index 9bdd57324c37..da33270971ab 100644
  		switch(role) {
  		case MD_DISK_ROLE_SPARE: /* spare */
  			break;
-@@ -2890,7 +2924,7 @@ static int add_bound_rdev(struct md_rdev *rdev)
+@@ -2794,7 +2828,7 @@ static int add_bound_rdev(struct md_rdev *rdev)
  		 * and should be added immediately.
  		 */
  		super_types[mddev->major_version].
 -			validate_super(mddev, rdev);
 +			validate_super(mddev, NULL/*freshest*/, rdev);
+ 		if (add_journal)
+ 			mddev_suspend(mddev);
  		err = mddev->pers->hot_add_disk(mddev, rdev);
- 		if (err) {
- 			md_kick_rdev_from_array(rdev);
-@@ -3827,7 +3861,7 @@ static int analyze_sbs(struct mddev *mddev)
+@@ -3732,7 +3766,7 @@ static int analyze_sbs(struct mddev *mddev)
  	}
  
  	super_types[mddev->major_version].
@@ -194,7 +194,7 @@ index 9bdd57324c37..da33270971ab 100644
  
  	i = 0;
  	rdev_for_each_safe(rdev, tmp, mddev) {
-@@ -3842,7 +3876,7 @@ static int analyze_sbs(struct mddev *mddev)
+@@ -3747,7 +3781,7 @@ static int analyze_sbs(struct mddev *mddev)
  		}
  		if (rdev != freshest) {
  			if (super_types[mddev->major_version].
@@ -203,7 +203,7 @@ index 9bdd57324c37..da33270971ab 100644
  				pr_warn("md: kicking non-fresh %pg from array!\n",
  					rdev->bdev);
  				md_kick_rdev_from_array(rdev);
-@@ -6833,7 +6867,7 @@ int md_add_new_disk(struct mddev *mddev, struct mdu_disk_info_s *info)
+@@ -6799,7 +6833,7 @@ int md_add_new_disk(struct mddev *mddev, struct mdu_disk_info_s *info)
  			rdev->saved_raid_disk = rdev->raid_disk;
  		} else
  			super_types[mddev->major_version].
