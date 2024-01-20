@@ -1,131 +1,107 @@
-Return-Path: <linux-raid+bounces-402-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-404-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BB228320B8
-	for <lists+linux-raid@lfdr.de>; Thu, 18 Jan 2024 22:10:48 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8364D8333A6
+	for <lists+linux-raid@lfdr.de>; Sat, 20 Jan 2024 11:41:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E2371C22B74
-	for <lists+linux-raid@lfdr.de>; Thu, 18 Jan 2024 21:10:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6C29AB21BD3
+	for <lists+linux-raid@lfdr.de>; Sat, 20 Jan 2024 10:41:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC6FB2EB00;
-	Thu, 18 Jan 2024 21:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i5v1G8oN"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A080EEACE;
+	Sat, 20 Jan 2024 10:41:23 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A722E850
-	for <linux-raid@vger.kernel.org>; Thu, 18 Jan 2024 21:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6131ED299;
+	Sat, 20 Jan 2024 10:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705612240; cv=none; b=RXU6UsxjExTitU8CkHC5itcdT7XQkHyb2lrCrVj4eCiLcMcF4pVh3k5XwmXMbgvNJRY50ZUWZzpaPolwa0F28aoHYFKBwulT9v0tCBeU/NmlpjmYDJXReEomlYld5F4sSXd1YcSD2OH3/K70Os40NnDzFElevH83ZQuQKEHqtic=
+	t=1705747283; cv=none; b=AEX7OzCQ/asV2+HkJP87VBD+54ouS5oL5ck6jQb8PWM802NdayF+wUBi9z0IB1eABeSIiq2hw2+ZOikaTvG37mqYLjlc9sKF/fh8KMAgfq6ZMQtw3s7r0++jpvX19GkcyZ0wfAlP5iSS8IW8o0he7yl1//a9w6yAYi/xFjzRwGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705612240; c=relaxed/simple;
-	bh=E36lb9971gspdwHvqSU1/PsIOqT0FM9IV+e+X0oDMWM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UrUTzHa60ouXsz8T2ptovyJP7WfgyXDowfIE+VOUKfdFh6akBwo1SyaWTfG1mk4/mp6GJEy5s8rDnO6lWCu0lfDjQB97UZDnhs+IGn3CkfSMmDJ62t5i1d8NGESbTamvsI7/C8GTeSpzBFoQXDC6IZpBl4dg1fvBPD5lhS0pK+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i5v1G8oN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFF0FC433F1
-	for <linux-raid@vger.kernel.org>; Thu, 18 Jan 2024 21:10:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705612239;
-	bh=E36lb9971gspdwHvqSU1/PsIOqT0FM9IV+e+X0oDMWM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=i5v1G8oNmaA5WEwACNLCQTk8rygkE5SCUeM5hQNsuWpjX9O0oqIX93l5K7Cr8R2I+
-	 dAtaMSLPaRrf/Z9UeRBkdoE9gLwSpiVnEFE6Szky5jCWCU72rhhJdobKBtElvImYnu
-	 v8mCUVTxuE/7vGSJBz5MXvdArpQAhg4t6g4DFqIp3cCXIyGUb0AKsir3shRcuNqUID
-	 dp/+wBU5cKyQwIuh3KGVi41Fp5tSm+3IMaYNrPXHOFwgIGhtHI9873gKRhzVhuH/fx
-	 ICB3Dn+sSI5T1NOxhZQtsSwjkXdR3gMjS7yDsd3LPe/yIZlFZkPmVVRYDYWdyNVnZj
-	 Fpg1TEmAaBnuQ==
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-50e7abe4be4so46974e87.2
-        for <linux-raid@vger.kernel.org>; Thu, 18 Jan 2024 13:10:39 -0800 (PST)
-X-Gm-Message-State: AOJu0YypMXn2PM9LzVDKrDKu4l+WvQ1hBb3Q3QJOqV1X2io4Xq6SpsmL
-	NDLe/DE7vZtnWcIqdPQoY3ZsA5O6SORJIIFEF853pILhIe1GZMxBcSOrPeMDanf3qInJRlSJlMK
-	NioQW/xjUZR/lBXgNktxgW/zbQCI=
-X-Google-Smtp-Source: AGHT+IFu2+ALYFAH2oZVTnMUCSYFs9LjmzHM81+AXJfESBRuaPMfDftzsau+nfNTcYukQe+XMXqBmRduns0x3HG4u1U=
-X-Received: by 2002:a19:5f0f:0:b0:50e:7cbf:7d82 with SMTP id
- t15-20020a195f0f000000b0050e7cbf7d82mr123238lfb.128.1705612238158; Thu, 18
- Jan 2024 13:10:38 -0800 (PST)
+	s=arc-20240116; t=1705747283; c=relaxed/simple;
+	bh=fWSeSobJcb8/VlAKsgexEgZ0zygnoLBIO2J4LToYTbQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QWiOeuw4gFQHRVUjKXOj/UJHTMWK2qzs0CYneZr5cC8UeT70SbWdVNeaR5Ct5sG5re1uB+WYot9rPco1VWtdJ8XcjZadmL5Tah4+lduNjT0Y9l6+h3N176Rk2JyPUzyU03XAqff5rstgz/PepMpNYHmKqiOkXbSj9LZ1wOQOOtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4THCh62z2vz4f3lCp;
+	Sat, 20 Jan 2024 18:41:10 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 97CD61A0B3B;
+	Sat, 20 Jan 2024 18:41:16 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgAn+RFKo6tlY4mmBQ--.38494S4;
+	Sat, 20 Jan 2024 18:41:16 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: mpatocka@redhat.com,
+	dm-devel@lists.linux.dev,
+	msnitzer@redhat.com,
+	heinzm@redhat.com,
+	song@kernel.org,
+	yukuai3@huawei.com
+Cc: linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH 0/5] md: fix/prevent dm-raid regressions
+Date: Sat, 20 Jan 2024 18:37:29 +0800
+Message-Id: <20240120103734.4155446-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <e5e8afe2-e9a8-49a2-5ab0-958d4065c55e@redhat.com>
- <9801e40-8ac7-e225-6a71-309dcf9dc9aa@redhat.com> <CAPhsuW483DSEvgoT0c-Mo1gdpVKRRLkTxu+kuxYG6k-zew+FFA@mail.gmail.com>
- <82e9b11f-e28-683-782d-aa5b8c62ff1a@redhat.com>
-In-Reply-To: <82e9b11f-e28-683-782d-aa5b8c62ff1a@redhat.com>
-From: Song Liu <song@kernel.org>
-Date: Thu, 18 Jan 2024 13:10:26 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW4YLVLhv2ii0UjiQOmiqR3mk6u8r94-SVZjMs6LVp+WaQ@mail.gmail.com>
-Message-ID: <CAPhsuW4YLVLhv2ii0UjiQOmiqR3mk6u8r94-SVZjMs6LVp+WaQ@mail.gmail.com>
-Subject: Re: [PATCH 3/7] md: test for MD_RECOVERY_DONE in stop_sync_thread
-To: Mikulas Patocka <mpatocka@redhat.com>
-Cc: Yu Kuai <yukuai3@huawei.com>, David Jeffery <djeffery@redhat.com>, 
-	Li Nan <linan122@huawei.com>, dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, 
-	Mike Snitzer <msnitzer@redhat.com>, Heinz Mauelshagen <heinzm@redhat.com>, 
-	Benjamin Marzinski <bmarzins@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgAn+RFKo6tlY4mmBQ--.38494S4
+X-Coremail-Antispam: 1UD129KBjvdXoWruFW8Cry7KF4rCrWrJw4kCrg_yoWDWFbEka
+	yI9F97Gr1Uu3Z3WayUur4SyryUCFZrWayUXFWDKrW0qry7X34fuF4Dtr4F9ry7ZFWDKF1k
+	Cry8Z3yFv3sFvjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbx8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s
+	1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0
+	cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8Jw
+	ACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j
+	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHU
+	DUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Thu, Jan 18, 2024 at 5:24=E2=80=AFAM Mikulas Patocka <mpatocka@redhat.co=
-m> wrote:
->
->
->
-> On Wed, 17 Jan 2024, Song Liu wrote:
->
-> > On Wed, Jan 17, 2024 at 10:19=E2=80=AFAM Mikulas Patocka <mpatocka@redh=
-at.com> wrote:
-> > >
-> > > stop_sync_thread sets MD_RECOVERY_INTR and then waits for
-> > > MD_RECOVERY_RUNNING to be cleared. However, md_do_sync will not clear
-> > > MD_RECOVERY_RUNNING when exiting, it will set MD_RECOVERY_DONE instea=
-d.
-> > >
-> > > So, we must wait for MD_RECOVERY_DONE to be set as well.
-> > >
-> > > This patch fixes a deadlock in the LVM2 test shell/integrity-caching.=
-sh.
-> >
-> > I am not able to reproduce the issue on 6.7 kernel with
-> > shell/integrity-caching.sh.
-> > I got:
-> >
-> > VERBOSE=3D0 ./lib/runner \
-> >         --testdir . --outdir results \
-> >         --flavours ndev-vanilla --only shell/integrity-caching.sh --ski=
-p @
-> > running 1 tests
-> > ###       passed: [ndev-vanilla] shell/integrity-caching.sh  4:24.225
-> >
-> > ### 1 tests: 1 passed, 0 skipped, 0 timed out, 0 warned, 0 failed   in =
- 4:24.453
-> > make[1]: Leaving directory '/root/lvm2/test'
-> >
-> > Do you see the issue every time with shell/integrity-caching.sh?
->
-> Hmm, that's strange - I get a hang with this stacktrace sometimes
-> instantly, sometimes in 30 seconds. I test it on the current kernel from
-> Linus' git - 052d534373b7ed33712a63d5e17b2b6cdbce84fd.
+From: Yu Kuai <yukuai3@huawei.com>
 
-It works for me. I guess there is some difference in the config/system?
+There are some problems that we fixed in md/raid, and some apis is changed.
+However, dm-raid rely the old apis(noted that old apis is problematic in
+corner cases), and now there are regressions in lvm2 testsuite.
 
-VERBOSE=3D0 ./lib/runner \
-        --testdir . --outdir results \
-        --flavours ndev-vanilla --only shell/integrity-caching.sh --skip @
-running 1 tests
-###       passed: [ndev-vanilla] shell/integrity-caching.sh  4:18.360
+This patchset fix some regressions(patch 1-3), and revert changes to
+prevent regressions(patch 4,5). Noted that the problems in patch 4,5 is
+not clear yet, and I'm not able to locate the root cause ASAP, hence I
+decide to revert changes to prevent regressions first.
 
-### 1 tests: 1 passed, 0 skipped, 0 timed out, 0 warned, 0 failed   in  4:1=
-8.749
-make[1]: Leaving directory '/root/lvm2/test'
+Yu Kuai (5):
+  md: don't ignore suspended array in md_check_recovery()
+  md: don't ignore read-only array in md_check_recovery()
+  md: make sure md_do_sync() will set MD_RECOVERY_DONE
+  md: revert commit fa2bbff7b0b4 ("md: synchronize flush io with array
+    reconfiguration") for dm-raid
+  md: use md_reap_sync_thread() directly for dm-raid
 
-[root@ ~]# uname -r
-6.7.0-09928-g052d534373b7
+ drivers/md/md.c | 58 ++++++++++++++++++++++++++++++-------------------
+ 1 file changed, 36 insertions(+), 22 deletions(-)
+
+-- 
+2.39.2
+
 
