@@ -1,77 +1,76 @@
-Return-Path: <linux-raid+bounces-431-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-433-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 120CC839459
-	for <lists+linux-raid@lfdr.de>; Tue, 23 Jan 2024 17:11:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 923F183947B
+	for <lists+linux-raid@lfdr.de>; Tue, 23 Jan 2024 17:16:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 366301C26D79
-	for <lists+linux-raid@lfdr.de>; Tue, 23 Jan 2024 16:11:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 034D81F22B0B
+	for <lists+linux-raid@lfdr.de>; Tue, 23 Jan 2024 16:16:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 826B766B2B;
-	Tue, 23 Jan 2024 16:10:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F04A263518;
+	Tue, 23 Jan 2024 16:16:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="a5tV5Qgf"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="cYI7IASr"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from sonic317-26.consmr.mail.bf2.yahoo.com (sonic317-26.consmr.mail.bf2.yahoo.com [74.6.129.81])
+Received: from sonic306-2.consmr.mail.bf2.yahoo.com (sonic306-2.consmr.mail.bf2.yahoo.com [74.6.132.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3776461674
-	for <linux-raid@vger.kernel.org>; Tue, 23 Jan 2024 16:10:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.6.129.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F27A63513
+	for <linux-raid@vger.kernel.org>; Tue, 23 Jan 2024 16:16:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.6.132.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706026205; cv=none; b=CfRHLTRhqNdJZHODRo04MX8b/Bvi785bjajHW9KWvZQ5TCGO/NFjpq1zaViPGKSCHpG8kirzOqu6CJDG9+ei8kYAq1qgHBK1YbY5czD18VTFWJCVS4gSgsbRsjEHxSFD9bFGSf5PLNwwfZq7ZmjYeVgAjyHlH+RRIZg0q2N7dcE=
+	t=1706026578; cv=none; b=fBPC4NwHQt5xzbZAj9VLdOVAZIHsBn02FLljC63F5Q7XqXh/R4Oo2XoZGFk6mmUZqmeAE2JPOPJLP/a8hKc8gVZFULocBzfGbbm/EPzf8xCNPfMillJtk1b3U72/qsWUmibR3o4MVYLjtR6FqFLeez9ky/u6P3XW0Z8XQePWHqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706026205; c=relaxed/simple;
-	bh=VXn0OdQcpJDyXiqMc03PJE4Z7XB3PnILvWC/e9e2uW0=;
+	s=arc-20240116; t=1706026578; c=relaxed/simple;
+	bh=M8Xd9Jg/bVvdf8GKswGem1cnbh0xsH6WdUG4FNu/dc8=;
 	h=Date:From:To:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=hgCMzG+HomTBtyZfLDkkHKW9goWFUGh9dzwukQGbaNBwmEnFd6sTVQpRUMqmOSoLwoFRNUKcuRaKeboCaqPYZU1Jr7KG+BG9V5ztEg6IHLyxk6je2akWvVi88lbJhMgoTkkTyC6BBBz2+4dJsfBXSYaHRdWx7WonY5Cijacej24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=a5tV5Qgf; arc=none smtp.client-ip=74.6.129.81
+	 MIME-Version:Content-Type; b=HmlR6gCDas0eSe4ddqTS9nhNvm39F1W8gPogaKeCbZyrnqGuIHYsfyat12MUIhiiZ1Ki/RGiU46kSrBlcQuzpirzjuSDUFhl8PtRyfMmAxNJAvtJy1qb6RH6Dxa2jTb50qaa8TRqsRLQtAeTVTgpPUcbKWDch5pDWdAnPyr1Iww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=cYI7IASr; arc=none smtp.client-ip=74.6.132.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1706026201; bh=VXn0OdQcpJDyXiqMc03PJE4Z7XB3PnILvWC/e9e2uW0=; h=Date:From:To:In-Reply-To:References:Subject:From:Subject:Reply-To; b=a5tV5QgfAWdb+V5ZvjXC2Ig6UIhHiCeBungmjd+LFeRv2/pDvIdTrUkOz97l2Ina9z+7ZNFgg6a+KK4fOcqqklVyTdySHD8Q4V8BIu+oB4Z0e/UsB3lZtOofRobzB6SRFYzb09DL+FfvEPDCz+XIW03VCFrvUDZy7t22v1Izs6zxWfWK7IT4xpTHgyvZisZLfbH/8XEY28JlRBICU2KZett8xUXK/bV8CWssr8Po5dyJeoSwBeCERhFYwuJ/OZR7hdHZzEakLgbfxZSNl0szHT4++7WUh9haOLZ+h00PsGjI/24yEiew82VBOgR1o/oItJHj1uA5qBWFmTMIh5CeCg==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1706026201; bh=J4rZ+MxbXBBZMknuExkA3lOVz2AiBEDG0997TH8sgxR=; h=X-Sonic-MF:Date:From:To:Subject:From:Subject; b=W/fiW3u4e5VanVXLQR94I7lNW649cCIJ3wQ+wnCzrP4jfgS9aWa4sben/iX8ZnIzAAHCl8lUu9MWoO/Y02AF9d6zZ7SF40+KvP3s8ZZC25LtAGyjcG8xqQk1GgrZFewNl0C3bYd3l/Oiyp9fHG6Kd2j7Tsci6Q4pheGBmBdhuwBUzN1vF4QHjgxLFouxTBvI/XZOtC/rYc4ObWYYFkQ6PRdxA8MQ+WdEzPrHfOOswzFWp58RgFEnVSbQtKn74qQ25mDrKmQAz8Vrvbfubs0YmtII7N+kaujmu6xPC4hrnVg4JTnIsUy87KkfZtS7ERa0eGBV89N8Zs2A3At08bWNIQ==
-X-YMail-OSG: Xz14f40VM1kc.7L0ti69svvpqlpVSiOpfmEoH88Vq17uPJ1iHevh6w68dsWBZKq
- W4NuCV6XaaMmLAZxWBpTBm2a8s1ex0.AaJx7RuLzoB.VWV6TlYnX0qjrqkweLk6DUFCTcc0ggSj7
- emuU949meFY7zazgemyhTpCta2SL24a1GVieXm6RtwLTUDmDbmSDrPWjc5sJmoou4txtSAEsDmtf
- b5K.WSB8EB6Kn.uNioF5hBjURLfw9pSAB7.1COBgEyWWOfM1Zu975ESJ89Kjaq5psEgoCzYG7FGJ
- UiBQSjT42UjXQ5ahQIuPEXKvjPb3gTBcZz0TyJwSqPYVdkVPs4fIVzf6KbxHi4KiIqCIqopbFVw.
- _Vdo7U7WayiOL2L1TastW1xwJI6NGw7f0s241ZakIYCS_OXVw31eo8eql0JmK_G4fbBGirpN0.Ft
- 5kTuE3ClbLQYkCSMrfA9ZIrq2JcpimgQbaklVE0aXWHpPrZ0xNO.LxoLR2t4o6a70TlX7Ge9upnI
- gEkpddhF4iBvypPJl70xVLwE3ZB4NRbWpAZohLeWe86xezNdFQUfwsHX9K9onf1uoYtbvYAcTTLw
- fOfySmAcSr8q5ivc0LriYWXht3DlPCINVaHOiqJDxIrUSTzFNO.L_5gZhArdjamSYNgLIDVOP7Qj
- aGeS7vXW19NGoy5AYsNuwR_g19nREZFv7tSK.tIsF40WljjzWylM0X1kPWB_FP0h_KoD0g6pKc2X
- iFgYEds8.TMUSksCONktjSUTgTQVZ9Uh.1sGvAdmozcHMvoxYoMrzzldN4Br3h7zDhVC7RlFQf8S
- bO.b7UZro9EEjw3GZFrJ5wvYBTv7Qv9E3QPVBqZVZhw0MHnwj6H4.xPqf05kKweRDbK4ykRpRK6L
- aFghEgeSCDdx7OZbQbq3334Gz.HPwy7JxRYAYrcjoAxlvCUWkpZb6nC8PzwUXgRBW5foV8WRczRQ
- m3bCL5BonP6wsaLwARm8qzp9YarrPj6C71lY0MfDh82Y1ISuw_4qpgctz0qplbTK5qNVXjJ3Zsr3
- s4gqpgdmuR9pJ0DcvWbFK3K4pYCiTEODtSLQiWZFqkSwxLukMgkkHQ39otmR1LpOjyandTPhyhbb
- YdxF3Yizoq6PxLbgAht65F9moHFIe3KTV3hIMIE.q1GOBt1s0Csxkyrca_Ab.93W3XIKzxNlQRvu
- sVlv83x4nDT36Y1A07KUejWBgQGcZcKirYnavMUbNM0CXfElZxOKfXjLSxtBtOPJqCXrS9HvBPib
- MM9i5bMhUo2g93OBA96paxKp0k1siVY_Sv5BoifemPiCBr.sfgNPNIpkUloWmChqoxGoRTxGMcRI
- .gmgbITR1udCMU4Arrp5PM.i7LRxi55bDL_PMb1xD35DfEMi3dYkhGDlFu_NQg05RnofPleza7b7
- pIGkA30RwFjmgey2gJDOsZlysfCD3rCk.bAbohhBuU6Uomqaux8D4JXaOM8eSU6oLtW0VU2enWM7
- 9lwEMcssr_wZJvNv_ToNXFQWSZ8bXnD.LOxioMUUW2m3vr5WkoTeZ60OBl3SbgglWY4.ayDkPa.Q
- 49H.V4Q_qVis5VXTnnfRS8TAIggnTv3BfR_QsxJJOERk5EExlU3yi7KUJ_Ua.UjSjpfWsSVea9JG
- wMwoNJnxYHVJnfjmL76AGtA.heGITehElNEWjPox7UWdm5l.ajYfMmy.sVgHcR_48NSCKabrlgqj
- 3BCvA_Gni1oHHSvTbn3BSNp4aOXWHip2PFT4ev1ZgL1XOiaK..F3faPghj_cEuMR0VpaKHXLRmxs
- F9O5Orha_Zf.NGQyoRJnYsD5pN3X_WSuPcP83XJ3mS1lj9WxoPHRXx2gN72eBTizEvIc60MfAXBz
- 9gzrEKobjkpDuih325IxvrV.sm.NqG7sw5KQ7bfTM.h0f.QIDR39hl5.N5_8Y89ZCyQkKPgN8aNb
- cBV88Ic9GVT_wuAui53BQpg9kCugWmpkbTphrit6ws3Kn.liIFk77jxkdg8agCpRjM.susmowGpd
- m7.zTgswAg.7a0Cg0aJ7rEmqpX6LXUgMe0o8UOq7ge_c.8M3ltaB4F.S6JyCAkEqXpyFy6wCkSsZ
- U1OlrRfL4h70z6GdLXFFwKmimaM21GhS490kCRgKgcHhgaXlEy51M1jnI_Xi4bYth0sqxBWf5UAk
- SBXstBalgZYRCzwDdwbwpKqImu2qlRoR5uwWsQDTQIg1UB0y8JYU3K48BpOnvNhoCAwhJ1XALA5c
- k6FA-
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1706026575; bh=M8Xd9Jg/bVvdf8GKswGem1cnbh0xsH6WdUG4FNu/dc8=; h=Date:From:To:In-Reply-To:References:Subject:From:Subject:Reply-To; b=cYI7IASrmJ/zy7EJOOoZ7MtJsB/7gfX7/tmbflUaOYmCVX2BtIqObILXMdA+pONShmyce2H8cQWPRzIdil3SrKstjITAgjw9DQrTXq1h7zeWc0LUTNmnCacXbA8K4MuQlt4z5frdELBXeMM/rJ3wZxQNQrLDHkWs80ahsQCe9/3BGna7v5PyqDOInKIaqGQGaBgVxdzFRyU5gKM7fLv3j+2DEw43cFMvngcYOwhMb0OR/JyNtrlNJ3v5hBG/fjUBnSXZAy2y1r+03LYEgTXsl2/iZdu+Kq/U3npOf+hzvhChpWyyn6N5G0OohV08KhH8+BBnuNtVn1qC3iR21HmaGA==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1706026575; bh=iqiPMjelbkygSQxD2B3thx7Fq+rzGytcCXGv3hPk15H=; h=X-Sonic-MF:Date:From:To:Subject:From:Subject; b=UM6UdEviO7stSaLBzCYZ+CSSlB6MSIYIjQrdf/0HqlsniXXGejT0huMDNUKdM1UtWfhrdSC/5I3sYsqkG9fQaIKSRtEITnmgSvAYzQkHKXUM1pmW69y7XzfAi0rBnDz+cvoaohoOGUdP9U65/rOT+db2EUrTc+CBZMZ+oLFd7W9Y+i9eevsqQ27BCKxajniIUebvnbQOZCpEXnGDVRCUykWJXmPAKizO2BYTM46DSgOyaFrhHj+yxwkwB1jTcdNOvNH2V8SLDqJySlFuZwg1/5KO0SvmE8X3dwxvlJxScT8YOlYI5K9SzGXwmAJXHZlPwOFkH14rZAXhagVHRMsp0w==
+X-YMail-OSG: 2Y_3.Z0VM1mGTjlhzGCDZinhIv2wh.Pr6.BGR67E78eoOYALAeCNUEjyqyyO25F
+ TGnoVii4X0ly23fLoG5hMYeREdCJce9o0lrQtdf93GueNLfN1WRrfdQjxpxqblMwcP3A.jKfOON0
+ cbRrBjgBFK9q46.BeIBrvQaRPxUXucT6XPXrCi.bFcLTwoQzS1RQbNJdz9lhwP25uNo9JVlG2Phh
+ Nn4.MhWwzNxOBBuKHOYRm82eWS2rVvjTJxQh3PCISzEWMUvRejMA6YnMuYTvcAAZSfp0atOXao_D
+ qY.XC10LOT809fbz._pJp1I9JTE8gvLsJ2c54bssASVq9aEEDsdnbvQQQfl8ZuAM4too.aLPlEBy
+ J8Cji3XXM255K3ACzooKHGWoc0PiHOlN6aqEIxnE_Xx0lYI2dOaCoYfTA18OFquGqNoJKTYxNj1K
+ J.sAoSWhOYtHrIlR0WAXFSIDOWLt5UzRg_5ma7plNVr5HLoEAhiQfvCJ9krChGLmIHwnM_hfVdSw
+ RGLWkpo1mkSnuEa8N0O56dUVvV7B1mEefNNewbLekPjgqQa_VaHQRoQA4YC_SOKr_leWMHYsy7Dg
+ 9.69oXiZKMZkr.jKdkHXokBhPrGFmSdnc5bBM7Vfq6kqoDwiORbBIoenJ_T5bfqpzxBPIH5g2P2e
+ .syKsoYGEaFnzH4dONcaRs60lwBnnQDIcMPkKtZor5X5XB2wm_iDX8RC9_Yd2e0cL7ZUP1TkDbpQ
+ bvhGW6SjTTrt7WAFyGWKk0kFQek.Wp8oUjwq3QR3m5cOERPnMZLRAVrBcumBZ9n6cgdWpgStBVSy
+ MOTC8vY8U38rDRHUASKSLYr8cEpuRRwDzyTkPmOc.WB2soDRQ4lIExwMDILPBfUw0V7lSR_OY5mn
+ XqnWuvnkCl1u45y2ifiug6xnsS5O2bC5fI.wSXR1q0oEOISUCAc_Td2su0Sc5ZmEmSe.da62ksI9
+ z0Vu4b92YuDy25N1fI.DLt0FNw6B4N1TRgldgcBxNQQAKf7aYyuU1VhQElMzxd.cJSSDWSNNa7cv
+ SJ.g3IKjBgS.m9pLwt2y4.Llv9O2oi1ADbSUXWKGRoX1GBOOnfw6pLfZkBFJEQTdGTCohmkpWQqv
+ N8Ha9IMPhQenGJ4Ehvo6gZolSEFtstTK4lyEK0qXKI2R5vXjUrCqzLpCC39qiZgQigDtgbCz8DFo
+ an3nlgz2dib.GUo1hjKcW.rSOeIpVp_vN8i2taTEmMaYpACsqXIQLpK6_9JvoJqTsy_J_VsfqvIm
+ .86UZtFgE0tDdfArcSAKhoebYu.hrgv84fJ261mNHcTRFnk5pu9LiwiZIQ0Em9Vs_oO3W_XKjorV
+ 9kCrLK_EJLQj4ns2AZss722M6iC3CKIpp40hVif5ffmHE574IjKpFld.0LOHC6O0Us9aoCptFTzs
+ VF8Z_6PMkBeuXmGZUMKYNDgs4VoHLfwrproP4hGPMoYMUP_BFbT0EOhwZ8gvvYM2mdyQKCeyzcJ5
+ i5xgAL9e6uqC.M3bqnQ9aIReSCzbQebdO0V6wy80HSOIhiIGXoe34wXu3qgLZip_nb11g5a0XJiN
+ VOBU9ZekJg_njxsNYnZGH7t.PvhSaK6T86jY8ujRjmtyyL1z6df5s0WKFfc5x32FzJr9WdakYHtX
+ jhIJk5.XK0bwWucFWTHHnXwElAwjChCVZab4IbksNhetaNZymhzLdd3_pZReIos9wdRn2V5uSB0v
+ _TjMZ7WY3gsS_9uNnDqj7ZlyI76hgVKIeKb8TbyPDNdyp8Y1ytuQb.W1E0L5DswK6DDSSdiZko5s
+ GWw6GjjZ_ydKokex7_fBvpX5lPyMO98pR_q0f1guhjzRrpqVSnnmKQG8kFoaIcaRZBsY8ySL9DSa
+ q78yWsiiuoxiiJTyeC5IzftHuIAjrdDPFGVxEHmkkKLDfVlttAqoW4HEk0EVjVpopX3HeIk2chGO
+ Hpsg1AejA3mflu6OcKbQhzpyKtDYMyHv17G0MeWJWuFNxqi2zrQJcaISwY9sbVT1OVrZIeaFIowH
+ zHE_s4C9u4c2i14nuxi4nDA2NyDKvphUrGrKHij7VOcsuJtaIFySPK3zRGTsTO.dgnngZP9RqYTJ
+ .oZryp301LxqAg5d3Yq2JjJvyjvhMhYxGVnpFHraqk8cJmPz1YXPAexMnIAiOE.aivxQENvuDPvP
+ KmddveGNJJN4BPX05yqwKmjvtpPj_OIK5u6iP7xeHoQC4
 X-Sonic-MF: <rjm1@yahoo.com>
-X-Sonic-ID: 403a8f9d-ec71-4532-84be-a38815f781ad
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic317.consmr.mail.bf2.yahoo.com with HTTP; Tue, 23 Jan 2024 16:10:01 +0000
-Date: Tue, 23 Jan 2024 16:09:56 +0000 (UTC)
+X-Sonic-ID: 878695c7-5a26-4734-be4b-b4c01995f879
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic306.consmr.mail.bf2.yahoo.com with HTTP; Tue, 23 Jan 2024 16:16:15 +0000
+Date: Tue, 23 Jan 2024 16:16:12 +0000 (UTC)
 From: RJ Marquette <rjm1@yahoo.com>
 To: "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>, 
 	David Niklas <simd@vfemail.net>
-Message-ID: <1544132674.1091677.1706026196909@mail.yahoo.com>
+Message-ID: <12445908.1094378.1706026572835@mail.yahoo.com>
 In-Reply-To: <20240123110624.1b625180@firefly>
 References: <432300551.863689.1705953121879.ref@mail.yahoo.com> <432300551.863689.1705953121879@mail.yahoo.com> <04757cef-9edf-449a-93ab-a0534a821dc6@thelounge.net> <1085291040.906901.1705961588972@mail.yahoo.com> <0f28b23e-54f2-49ed-9149-87dbe3cffb30@thelounge.net> <598555968.936049.1705968542252@mail.yahoo.com> <755754794.951974.1705974751281@mail.yahoo.com> <20240123110624.1b625180@firefly>
 Subject: Re: Requesting help recovering my array
@@ -84,6 +83,9 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 X-Mailer: WebService/1.1.22027 YMailNorrin
+
+(Sorry if this came through twice without the mdadm.conf contents, somehow =
+I accidentally hit send when I was trying to paste in.)
 
 Thanks.=C2=A0 All drives in the system are being detected (/dev/sdd is my s=
 ystem drive - the rest are all of the array):
@@ -110,10 +112,40 @@ brw-rw---- 1 root disk 8, 97 Jan 21 19:08 /dev/sdg1
 
 
 The devices are not listed in the mdadm.conf, nor were they ever.=C2=A0 Her=
-e's everything that's not commented out in that file:
+e's everything (except the initial header comments about updating initramfs=
+ and all) from that file:
+
+# by default (built-in), scan all partitions (/proc/partitions) and all
+# containers for MD superblocks. alternatively, specify devices to scan, us=
+ing
+# wildcards if desired.
+#DEVICE partitions containers
+
+# automatically tag new arrays as belonging to the local system
+HOMEHOST <system>
+
+# instruct the monitoring daemon where to send mail alerts
+MAILADDR rj
+
+# definitions of existing MD arrays
+#ARRAY /dev/md/0=C2=A0 metadata=3D1.2 UUID=3D74a11272:9b233a5b:2506f763:276=
+93ccc name=3Djackie:0
+
+# This configuration was auto-generated on Wed, 27 Nov 2019 15:53:23 -0500 =
+by mkconf
+ARRAY /dev/md0 metadata=3D1.2 spares=3D1 name=3Djackie:0 UUID=3D74a11272:9b=
+233a5b:2506f763:27693ccc
 
 
+I assume that last line was added when I added the spare drive.=C2=A0 Shoul=
+d I add the drives to the mdadm.conf then run the assemble command you sugg=
+ested?
 
+It's like mdadm was assembling them automatically upon bootup, but that sto=
+pped working with the new motherboard for some reason.
+
+Thanks.
+--RJ
 
 
 
@@ -422,5 +454,4 @@ Nov 2019
 > >> ARRAY /dev/md0 metadata=3D1.2 spares=3D1 name=3Djackie:0
 > >> UUID=3D74a11272:9b233a5b:2506f763:27693cccr=C2=A0=20
 >=20
-
 
