@@ -1,160 +1,205 @@
-Return-Path: <linux-raid+bounces-476-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-480-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86DA883BA1E
-	for <lists+linux-raid@lfdr.de>; Thu, 25 Jan 2024 07:38:45 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE68C83BAF7
+	for <lists+linux-raid@lfdr.de>; Thu, 25 Jan 2024 08:51:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3F27C28B410
-	for <lists+linux-raid@lfdr.de>; Thu, 25 Jan 2024 06:38:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2DA7E1C2512D
+	for <lists+linux-raid@lfdr.de>; Thu, 25 Jan 2024 07:51:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61F1511700;
-	Thu, 25 Jan 2024 06:32:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D948413AD9;
+	Thu, 25 Jan 2024 07:51:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Eeo9A142"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C59E1CD11;
-	Thu, 25 Jan 2024 06:32:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D3A134DE
+	for <linux-raid@vger.kernel.org>; Thu, 25 Jan 2024 07:51:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706164367; cv=none; b=J1YaBxPMJpraIMccMX5hcsrwiZ4Wa/pApPyz9+c5G6AhLbxzCZfqDWw0Guoc/E21TGX49L9+FCAkySMNr5a5TX/po9eNgKAUOTi849gxb8BvPTnnvZe+J42fYpamVtOkS5SSLvz+RzJA7LqbaWziLk+zxOQ+yvojbSi4S4z3ly8=
+	t=1706169085; cv=none; b=ArczAkUBRFdIIu7viXH7fuJV/qL9us1QZIoDq8+CZZdBp34m86aeSzCbHl2Mco6ONz+6EWbhIFBKGkAxdJcI+oQ8/9mf2763G8v7aO4HyMDSo+IlXYkx3uHpoVi8oFswrv7HZ61n60R22rvqr0zR63YqByYyxZK0W2PMnRDSGdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706164367; c=relaxed/simple;
-	bh=I6GQ6RxCtuu7526D85swr+qORYFRM/saE4BZV8O9Qw0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QnKWcO5ijmFnsIcFw/pJQJ3JH5j7sT9KPgNcRwtKGHdNNCwNUfSQqVzQhfz+EUe7F7hyXTI2byq765ou/NK2wRJQEwrDjEB/W4xVV5In5ZFULGonc72js0DcR7BrGP3JKRsvmV7EeXJkrXaVXEljoy9VrVYqjtD8wXJqnNJ1hxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TL9x35pJ8z4f3jqx;
-	Thu, 25 Jan 2024 14:32:39 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 2EC4C1A0232;
-	Thu, 25 Jan 2024 14:32:42 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgBHGBGGALJlUoSmBw--.63362S8;
-	Thu, 25 Jan 2024 14:32:41 +0800 (CST)
-From: linan666@huaweicloud.com
-To: song@kernel.org,
-	neilb@suse.com,
-	shli@fb.com,
-	mariusz.tkaczyk@linux.intel.com
-Cc: linux-raid@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linan666@huaweicloud.com,
-	yukuai3@huawei.com,
-	yi.zhang@huawei.com,
-	houtao1@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH v3 4/4] md: check mddev->pers before calling md_set_readonly()
-Date: Thu, 25 Jan 2024 14:28:41 +0800
-Message-Id: <20240125062841.1721193-5-linan666@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240125062841.1721193-1-linan666@huaweicloud.com>
-References: <20240125062841.1721193-1-linan666@huaweicloud.com>
+	s=arc-20240116; t=1706169085; c=relaxed/simple;
+	bh=IJk53f2ApOxRAEPTKIzDtiOaoN3YBA85NACNk6p/iB4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E22FeCmJc8nf0B/lGNdQmuQTV7xDHWUvKl0o4Yt8KQ/c8OqHrlkqDqCvkiSZT2QMNhTHparMG39l4kL3dJ1xv4Td/5LX0qf1VOAeHgSRikx6ROdgwuyBPP/dFVn1G8NylZOMUV4CPzhX2BJgGVxMj1ZpZGgWdv0IFxCKkTVXh4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Eeo9A142; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706169083;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LyC31zzzcvBQLccO8yitrHL0CNB1m9jX4OQ2W97orWU=;
+	b=Eeo9A142nrlESfzN5SuMt7VbtXV/ff5X4629s+1QLTXxr7UCuuHc1hGXCy0INc3h5w6WVB
+	5PxoioksFMFUKkuD4sdOgLALlfbei+NdyHcDP1IGRMdG71BmHqRpk8BnZKEPheSn0sC1yC
+	xuFt4jbVpVeXm7ORU4HGEe5f0+ZVQfI=
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
+ [209.85.210.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-379-rEZdGG5_O5-8XgQBctPzPA-1; Thu, 25 Jan 2024 02:51:21 -0500
+X-MC-Unique: rEZdGG5_O5-8XgQBctPzPA-1
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-6d9b266183eso6049869b3a.1
+        for <linux-raid@vger.kernel.org>; Wed, 24 Jan 2024 23:51:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706169080; x=1706773880;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LyC31zzzcvBQLccO8yitrHL0CNB1m9jX4OQ2W97orWU=;
+        b=ptYmtE93bI3F1J2ialplClQE67nti/tqRJybdj7P4xeqAFw73TmKGHQtp0ZGhlj/nT
+         U8h30HADnqPZ+j0JsKZIAkwAtMNd766hIg0YjW49g0U8DbCzkhq1SyRDEWDt0ybbJIqu
+         iPE8KFRzDtG6xoT8jycC/cF+Ozb5/vaOhqorIyIOGuZTKQMK3EYecYHIugqOSfKHO5lB
+         SJp6w0Q95UwnL0cLcjNMrjdlM2Tj7p+p483kW5nhHNuvcSg/2GzOj/JaSplv8qN5sqKL
+         AyTjkFoyknK7fjtDSgvdieyRFmbVW9bIvDBxfv9wlmSU3O4OwzssilTKaczFy0rL6yZs
+         G5xg==
+X-Gm-Message-State: AOJu0YxgWxkXKOlY+i4NPaNmsl+2Lv6nbWeyXF7ykxhM/zeL+wVSkke/
+	gLDJ0+PvA2t26YaIsDKfH/VNYhvM9cwcOYMb/PwlYJdhe6WyKvWsOAssdPBzkX1cLE091TxZ/PF
+	oRVaSTFhaxpbE4ys2hL4MPacMU/lDUb2SMo2S39g8NGyCIoKoc2TDAuxqhraelQOO/vBfmIahpD
+	WG/gppWFHd7NQ40dv8ShIG+6iNJ5CEiaQHcw==
+X-Received: by 2002:aa7:9819:0:b0:6dd:c379:28f7 with SMTP id e25-20020aa79819000000b006ddc37928f7mr252932pfl.21.1706169079990;
+        Wed, 24 Jan 2024 23:51:19 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHSlcVyOOUsGiV0wV1PdgkTikecKl6oWsCQDpmwLacZpUS4x9H+HIkFzdIbi1zrP/QBZOMNarTehuzV4tTCU7g=
+X-Received: by 2002:aa7:9819:0:b0:6dd:c379:28f7 with SMTP id
+ e25-20020aa79819000000b006ddc37928f7mr252918pfl.21.1706169079670; Wed, 24 Jan
+ 2024 23:51:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBHGBGGALJlUoSmBw--.63362S8
-X-Coremail-Antispam: 1UD129KBjvJXoW7tF15CFyUKryfXF4rZrWfGrg_yoW8ur15p3
-	ySqF98Gr18Xryavw4UtaykZa45Xw1xta4qyry7u3yfZF1ftrn8WrySg3W8ArWvgas7AF45
-	Xa1UJFW7uFyIgFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQY14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0V
-	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1l
-	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErc
-	IFxwACI402YVCY1x02628vn2kIc2xKxwAKzVCY07xG64k0F24l42xK82IYc2Ij64vIr41l
-	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbxR67UUUUU==
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+References: <20240124091421.1261579-1-yukuai3@huawei.com> <20240124091421.1261579-6-yukuai3@huawei.com>
+In-Reply-To: <20240124091421.1261579-6-yukuai3@huawei.com>
+From: Xiao Ni <xni@redhat.com>
+Date: Thu, 25 Jan 2024 15:51:08 +0800
+Message-ID: <CALTww2_hG2_YL1v-d0=uv2=bVzJ2wwpSJyQdBBGMCBx79bot-Q@mail.gmail.com>
+Subject: Re: [PATCH v2 05/11] md: export helpers to stop sync_thread
+To: Yu Kuai <yukuai3@huawei.com>
+Cc: agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com, 
+	dm-devel@lists.linux.dev, song@kernel.org, jbrassow@f14.redhat.com, 
+	neilb@suse.de, heinzm@redhat.com, shli@fb.com, akpm@osdl.org, 
+	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, 
+	yukuai1@huaweicloud.com, yi.zhang@huawei.com, yangerkun@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Li Nan <linan122@huawei.com>
+On Wed, Jan 24, 2024 at 5:19=E2=80=AFPM Yu Kuai <yukuai3@huawei.com> wrote:
+>
+> The new heleprs will be used in dm-raid in later patches to fix
+> regressions and prevent calling md_reap_sync_thread() directly.
+>
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> ---
+>  drivers/md/md.c | 41 +++++++++++++++++++++++++++++++++++++----
+>  drivers/md/md.h |  3 +++
+>  2 files changed, 40 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 6c5d0a372927..90cf31b53804 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -4915,30 +4915,63 @@ static void stop_sync_thread(struct mddev *mddev,=
+ bool locked, bool check_seq)
+>                 mddev_lock_nointr(mddev);
+>  }
+>
+> -static void idle_sync_thread(struct mddev *mddev)
+> +void md_idle_sync_thread(struct mddev *mddev)
+>  {
+> +       lockdep_assert_held(mddev->reconfig_mutex);
+> +
 
-If 'mddev->pers' is NULL, there is nothing to do in md_set_readonly().
-To simplify the code, move the check of 'mddev->pers' to the caller of
-md_set_readonly().
+Hi Kuai
 
-Signed-off-by: Li Nan <linan122@huawei.com>
----
- drivers/md/md.c | 25 ++++++++++++-------------
- 1 file changed, 12 insertions(+), 13 deletions(-)
+There is a building error. It should give a pointer to
+lockdep_assert_held. And same with the other two places in this patch.
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 3f1c9a264c8a..ca034861891e 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -6411,6 +6411,7 @@ void md_stop(struct mddev *mddev)
- 
- EXPORT_SYMBOL_GPL(md_stop);
- 
-+/* ensure 'mddev->pers' exist before calling md_set_readonly() */
- static int md_set_readonly(struct mddev *mddev, struct block_device *bdev)
- {
- 	int err = 0;
-@@ -6431,28 +6432,25 @@ static int md_set_readonly(struct mddev *mddev, struct block_device *bdev)
- 	mddev_lock_nointr(mddev);
- 
- 	mutex_lock(&mddev->open_mutex);
--	if ((mddev->pers && atomic_read(&mddev->openers) > !!bdev) ||
--	    mddev->sync_thread ||
-+	if (atomic_read(&mddev->openers) > !!bdev || mddev->sync_thread ||
- 	    test_bit(MD_RECOVERY_RUNNING, &mddev->recovery)) {
- 		pr_warn("md: %s still in use.\n",mdname(mddev));
- 		err = -EBUSY;
- 		goto out;
- 	}
- 
--	if (mddev->pers) {
--		__md_stop_writes(mddev);
--
--		if (mddev->ro == MD_RDONLY) {
--			err  = -ENXIO;
--			goto out;
--		}
-+	__md_stop_writes(mddev);
- 
--		mddev->ro = MD_RDONLY;
--		set_disk_ro(mddev->gendisk, 1);
-+	if (mddev->ro == MD_RDONLY) {
-+		err  = -ENXIO;
-+		goto out;
- 	}
- 
-+	mddev->ro = MD_RDONLY;
-+	set_disk_ro(mddev->gendisk, 1);
-+
- out:
--	if ((mddev->pers && !err) || did_freeze) {
-+	if (!err || did_freeze) {
- 		clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
- 		set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
- 		md_wakeup_thread(mddev->thread);
-@@ -7771,7 +7769,8 @@ static int md_ioctl(struct block_device *bdev, blk_mode_t mode,
- 		goto unlock;
- 
- 	case STOP_ARRAY_RO:
--		err = md_set_readonly(mddev, bdev);
-+		if (mddev->pers)
-+			err = md_set_readonly(mddev, bdev);
- 		goto unlock;
- 
- 	case HOT_REMOVE_DISK:
--- 
-2.39.2
+Regards
+Xiao
+
+>         mutex_lock(&mddev->sync_mutex);
+>         clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+> +       stop_sync_thread(mddev, true, true);
+> +       mutex_unlock(&mddev->sync_mutex);
+> +}
+> +EXPORT_SYMBOL_GPL(md_idle_sync_thread);
+> +
+> +void md_frozen_sync_thread(struct mddev *mddev)
+> +{
+> +       lockdep_assert_held(mddev->reconfig_mutex);
+> +
+> +       mutex_lock(&mddev->sync_mutex);
+> +       set_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+> +       stop_sync_thread(mddev, true, false);
+> +       mutex_unlock(&mddev->sync_mutex);
+> +}
+> +EXPORT_SYMBOL_GPL(md_frozen_sync_thread);
+>
+> +void md_unfrozen_sync_thread(struct mddev *mddev)
+> +{
+> +       lockdep_assert_held(mddev->reconfig_mutex);
+> +
+> +       mutex_lock(&mddev->sync_mutex);
+> +       clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+> +       set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
+> +       md_wakeup_thread(mddev->thread);
+> +       sysfs_notify_dirent_safe(mddev->sysfs_action);
+> +       mutex_unlock(&mddev->sync_mutex);
+> +}
+> +EXPORT_SYMBOL_GPL(md_unfrozen_sync_thread);
+> +
+> +static void idle_sync_thread(struct mddev *mddev)
+> +{
+>         if (mddev_lock(mddev)) {
+>                 mutex_unlock(&mddev->sync_mutex);
+>                 return;
+>         }
+>
+> +       mutex_lock(&mddev->sync_mutex);
+> +       clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+>         stop_sync_thread(mddev, false, true);
+>         mutex_unlock(&mddev->sync_mutex);
+>  }
+>
+>  static void frozen_sync_thread(struct mddev *mddev)
+>  {
+> -       mutex_lock(&mddev->sync_mutex);
+> -       set_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+> -
+>         if (mddev_lock(mddev)) {
+>                 mutex_unlock(&mddev->sync_mutex);
+>                 return;
+>         }
+>
+> +       mutex_lock(&mddev->sync_mutex);
+> +       set_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+>         stop_sync_thread(mddev, false, false);
+>         mutex_unlock(&mddev->sync_mutex);
+>  }
+> diff --git a/drivers/md/md.h b/drivers/md/md.h
+> index 8d881cc59799..437ab70ce79b 100644
+> --- a/drivers/md/md.h
+> +++ b/drivers/md/md.h
+> @@ -781,6 +781,9 @@ extern void md_rdev_clear(struct md_rdev *rdev);
+>  extern void md_handle_request(struct mddev *mddev, struct bio *bio);
+>  extern int mddev_suspend(struct mddev *mddev, bool interruptible);
+>  extern void mddev_resume(struct mddev *mddev);
+> +extern void md_idle_sync_thread(struct mddev *mddev);
+> +extern void md_frozen_sync_thread(struct mddev *mddev);
+> +extern void md_unfrozen_sync_thread(struct mddev *mddev);
+>
+>  extern void md_reload_sb(struct mddev *mddev, int raid_disk);
+>  extern void md_update_sb(struct mddev *mddev, int force);
+> --
+> 2.39.2
+>
 
 
