@@ -1,160 +1,135 @@
-Return-Path: <linux-raid+bounces-519-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-521-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A67E383D90E
-	for <lists+linux-raid@lfdr.de>; Fri, 26 Jan 2024 12:09:50 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17AD083D913
+	for <lists+linux-raid@lfdr.de>; Fri, 26 Jan 2024 12:12:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 27185B3709D
-	for <lists+linux-raid@lfdr.de>; Fri, 26 Jan 2024 10:09:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3DE39B2BEDB
+	for <lists+linux-raid@lfdr.de>; Fri, 26 Jan 2024 10:34:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6BCC1DFE1;
-	Fri, 26 Jan 2024 09:27:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B5FA14276;
+	Fri, 26 Jan 2024 10:29:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BtvyLsy5"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83EC01A29C;
-	Fri, 26 Jan 2024 09:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B635B13FFB
+	for <linux-raid@vger.kernel.org>; Fri, 26 Jan 2024 10:29:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706261224; cv=none; b=J+Ark5dg6Cmnp7f4ygfTWdlBKlot5WYTZMbxpwFvXUe1X13xregTGJo8tNZV7NtY0tx/HcBQ+7Yjr/FNbLJC2FzgL833F3QHWRb/7fbXN3hpmUMyT0U5vkYfHDsZwn2jqPXtq+GEUGGqmd/w/LPHaGn/lmuOaTxtcgr/kzffwNY=
+	t=1706264978; cv=none; b=WVMDFnYTxz6dZSRQ824PECdUHofxnmTHosirFuktWKych9pFZhXs6Qa0t18KInUbUWPRqK2p6Qv6sQ+7L2/uGbTv1Tb8JLsrTAK8UDOpyk7PELdbkiuwafe1jlMdczIh50EH1dw8SeuK1/AG6F73mqM6cOeCfI4LCC+ZmlUTl3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706261224; c=relaxed/simple;
-	bh=kir+NFI9Hc5LZ5fsAA20JMPLyqKzJwdYV2OkBR2+Mi8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tE1wm+mUCH0H+GEiiaCJDGPHjDBUqjJEj7kDWKgDr3mpfGzHCx1ntAD3gJqOW1YNAJoLwhS9tuzDh0ItpzgEsUuc5tg5q1bsOR6LWp/mwJisLE4yjq3tLle/oscs50JPrKTQBwUQVBWZIdMEMffq6POG5ryXEJEpfufL118JxY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TLsld2NPvz4f3mHQ;
-	Fri, 26 Jan 2024 17:26:53 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id A763D1A0232;
-	Fri, 26 Jan 2024 17:26:59 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgCXaBHferNlLsUdCA--.25360S8;
-	Fri, 26 Jan 2024 17:26:59 +0800 (CST)
-From: linan666@huaweicloud.com
-To: song@kernel.org,
-	neilb@suse.com,
-	shli@fb.com,
-	mariusz.tkaczyk@linux.intel.com
-Cc: linux-raid@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linan666@huaweicloud.com,
-	yukuai3@huawei.com,
-	yi.zhang@huawei.com,
-	houtao1@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH v4 4/4] md: check mddev->pers before calling md_set_readonly()
-Date: Fri, 26 Jan 2024 17:22:54 +0800
-Message-Id: <20240126092254.1314908-5-linan666@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240126092254.1314908-1-linan666@huaweicloud.com>
-References: <20240126092254.1314908-1-linan666@huaweicloud.com>
+	s=arc-20240116; t=1706264978; c=relaxed/simple;
+	bh=kHbs2sXHOEle8XXVyH+2aGcMmkid+9VRHmF7NB1eMLs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dK6lEf/HcnSWK5IlTlMrK8TixbeffSux9h9z+i81mv8o+dbp7fwvGPhMnrmrbWToFmJzjHAGagJVPwV6ohAwdnN3gpMMLjYw8kH4KKvqKx8s3A2hR26SqGqPvtpF9stwpvwFA7mU14nF5YQ2CFQ3OqHcX9zBjsXLmY3yZbmhWpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BtvyLsy5; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706264975;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9UWZ7/84YH3KBx/D9SUjpm1tFQZfr5i37U38dsc6EZU=;
+	b=BtvyLsy5EHnHVlc9t69tPocHbm8e5rNsDaTiJv1NKtSTpzct71MEetwSPKp1pMNdpAK3oQ
+	CSNdHWl5gyv54t44GpORqf9vAjd2mALxKJTKXTEeVyZo9UnjXhaB9OpU8B+GZvyWiAlKgm
+	iRocmBuHSj8w22rehc3ITmHTxJbDa/0=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-447-8iBNiK2aMeSMp0Vo6UruXQ-1; Fri,
+ 26 Jan 2024 05:29:31 -0500
+X-MC-Unique: 8iBNiK2aMeSMp0Vo6UruXQ-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B3078380670C;
+	Fri, 26 Jan 2024 10:29:30 +0000 (UTC)
+Received: from [10.43.17.38] (unknown [10.43.17.38])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 31384492BC6;
+	Fri, 26 Jan 2024 10:29:28 +0000 (UTC)
+Message-ID: <86a989b0-53ee-4915-8ff4-aafa3ad18d16@redhat.com>
+Date: Fri, 26 Jan 2024 11:29:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/7] md: test for MD_RECOVERY_DONE in stop_sync_thread
+To: Yu Kuai <yukuai1@huaweicloud.com>,
+ Benjamin Marzinski <bmarzins@redhat.com>,
+ Mikulas Patocka <mpatocka@redhat.com>
+Cc: Song Liu <song@kernel.org>, David Jeffery <djeffery@redhat.com>,
+ Li Nan <linan122@huawei.com>, dm-devel@lists.linux.dev,
+ linux-raid@vger.kernel.org, Mike Snitzer <msnitzer@redhat.com>,
+ Heinz Mauelshagen <heinzm@redhat.com>, "yukuai (C)" <yukuai3@huawei.com>
+References: <e5e8afe2-e9a8-49a2-5ab0-958d4065c55e@redhat.com>
+ <9801e40-8ac7-e225-6a71-309dcf9dc9aa@redhat.com>
+ <CAPhsuW483DSEvgoT0c-Mo1gdpVKRRLkTxu+kuxYG6k-zew+FFA@mail.gmail.com>
+ <82e9b11f-e28-683-782d-aa5b8c62ff1a@redhat.com>
+ <CAPhsuW4YLVLhv2ii0UjiQOmiqR3mk6u8r94-SVZjMs6LVp+WaQ@mail.gmail.com>
+ <56ff3ba-9a60-1930-a2a1-c2562ece1ec1@redhat.com>
+ <Za8k8GityCXjSVJ-@bmarzins-01.fast.eng.rdu2.dc.redhat.com>
+ <08748e1b-e947-44d3-34dc-7dc0f9db1c04@huaweicloud.com>
+ <166bea43-1d1e-3938-3af1-491e61d5bcf6@huaweicloud.com>
+Content-Language: en-US, cs
+From: Zdenek Kabelac <zkabelac@redhat.com>
+In-Reply-To: <166bea43-1d1e-3938-3af1-491e61d5bcf6@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgCXaBHferNlLsUdCA--.25360S8
-X-Coremail-Antispam: 1UD129KBjvJXoW7tF15CFyUKryfXF4rZrWfGrg_yoW8ur15p3
-	ySqF98Gr1UXryavr4Ut3WkZa45Xw1xta4ktry7u3yrZF1fJrs8WrWSgF18ArWvgas7Aay5
-	Xa1UJrW7uFy2g3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQY14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0V
-	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1l
-	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErc
-	IFxwACI402YVCY1x02628vn2kIc2xKxwAKzVCY07xG64k0F24l42xK82IYc2Ij64vIr41l
-	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbxR67UUUUU==
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-From: Li Nan <linan122@huawei.com>
+Dne 26. 01. 24 v 10:37 Yu Kuai napsal(a):
+> Hi,
+>
+> 在 2024/01/26 17:17, Yu Kuai 写道:
+>> Hi,
+>>
+>> 在 2024/01/23 10:31, Benjamin Marzinski 写道:
+>>> On Mon, Jan 22, 2024 at 05:34:54PM +0100, Mikulas Patocka wrote:
+>>>
+>>> This test always hangs for me as well. You can try this for a reproducer
+>>>
+>>> Create a F39 Cloud image VM on a host machine (tweaking the root-ssh-key
+>>> if necessary):
+>>
+>> Just borrow this thread for a question, it takes a long time to run the
+>> whole test suite, can I just run the tests related to dm-raid?
+>>
+>> For example:
+>>
+>> ls test/shell | grep raid
+>
+> This is not enough, like integrity-caching.sh doesn't include 'raid' in
+> the name. How about following script, total 99 tests are found:
+>
+> for t in `ls test/shell`; do
+>         if cat test/shell/$t | grep raid &> /dev/null; then
+>                 make check T=$t $t
+>         fi
+> done
+> this should hang. From the host machine, run
 
-If 'mddev->pers' is NULL, there is nothing to do in md_set_readonly().
-To simplify the code, move the check of 'mddev->pers' to the caller of
-md_set_readonly().
 
-Signed-off-by: Li Nan <linan122@huawei.com>
----
- drivers/md/md.c | 25 ++++++++++++-------------
- 1 file changed, 12 insertions(+), 13 deletions(-)
+make check_local T=raid
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 24e33b65c6ff..ece6eddb2748 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -6412,6 +6412,7 @@ void md_stop(struct mddev *mddev)
- 
- EXPORT_SYMBOL_GPL(md_stop);
- 
-+/* ensure 'mddev->pers' exist before calling md_set_readonly() */
- static int md_set_readonly(struct mddev *mddev, struct block_device *bdev)
- {
- 	int err = 0;
-@@ -6432,28 +6433,25 @@ static int md_set_readonly(struct mddev *mddev, struct block_device *bdev)
- 	mddev_lock_nointr(mddev);
- 
- 	mutex_lock(&mddev->open_mutex);
--	if ((mddev->pers && atomic_read(&mddev->openers) > !!bdev) ||
--	    mddev->sync_thread ||
-+	if (atomic_read(&mddev->openers) > !!bdev || mddev->sync_thread ||
- 	    test_bit(MD_RECOVERY_RUNNING, &mddev->recovery)) {
- 		pr_warn("md: %s still in use.\n",mdname(mddev));
- 		err = -EBUSY;
- 		goto out;
- 	}
- 
--	if (mddev->pers) {
--		__md_stop_writes(mddev);
--
--		if (mddev->ro == MD_RDONLY) {
--			err  = -ENXIO;
--			goto out;
--		}
-+	__md_stop_writes(mddev);
- 
--		mddev->ro = MD_RDONLY;
--		set_disk_ro(mddev->gendisk, 1);
-+	if (mddev->ro == MD_RDONLY) {
-+		err  = -ENXIO;
-+		goto out;
- 	}
- 
-+	mddev->ro = MD_RDONLY;
-+	set_disk_ro(mddev->gendisk, 1);
-+
- out:
--	if ((mddev->pers && !err) || did_freeze) {
-+	if (!err || did_freeze) {
- 		clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
- 		set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
- 		md_wakeup_thread(mddev->thread);
-@@ -7772,7 +7770,8 @@ static int md_ioctl(struct block_device *bdev, blk_mode_t mode,
- 		goto unlock;
- 
- 	case STOP_ARRAY_RO:
--		err = md_set_readonly(mddev, bdev);
-+		if (mddev->pers)
-+			err = md_set_readonly(mddev, bdev);
- 		goto unlock;
- 
- 	case HOT_REMOVE_DISK:
--- 
-2.39.2
+
+will do the same thing.  With S=   you could even select list of tests you 
+want to skip.
+
+Regards
+
+
+Zdenek
+
 
 
