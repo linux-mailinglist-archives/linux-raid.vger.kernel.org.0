@@ -1,112 +1,160 @@
-Return-Path: <linux-raid+bounces-522-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-519-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8BA383D866
-	for <lists+linux-raid@lfdr.de>; Fri, 26 Jan 2024 11:46:38 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A67E383D90E
+	for <lists+linux-raid@lfdr.de>; Fri, 26 Jan 2024 12:09:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 272C21C23E94
-	for <lists+linux-raid@lfdr.de>; Fri, 26 Jan 2024 10:46:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 27185B3709D
+	for <lists+linux-raid@lfdr.de>; Fri, 26 Jan 2024 10:09:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CA9211CBD;
-	Fri, 26 Jan 2024 10:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RF0yhoZt"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6BCC1DFE1;
+	Fri, 26 Jan 2024 09:27:04 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBD1125AB
-	for <linux-raid@vger.kernel.org>; Fri, 26 Jan 2024 10:46:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83EC01A29C;
+	Fri, 26 Jan 2024 09:27:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706265992; cv=none; b=Fjd2ZvBHnSqjCCwq1/mjS8Pf+Wi6W1/lsXFmL+tlrJUmEJkOnhwvfFKfG7z694FhsG6SND0P67oUyghHRum+K2fw0ZzbJj/z3CgN3+QD7LKG/h/fobtBxpPKzj6JB85gfPuNSj9T20yGYBxTHjIBSNZZ1k14pTsyXOIolnb+0WE=
+	t=1706261224; cv=none; b=J+Ark5dg6Cmnp7f4ygfTWdlBKlot5WYTZMbxpwFvXUe1X13xregTGJo8tNZV7NtY0tx/HcBQ+7Yjr/FNbLJC2FzgL833F3QHWRb/7fbXN3hpmUMyT0U5vkYfHDsZwn2jqPXtq+GEUGGqmd/w/LPHaGn/lmuOaTxtcgr/kzffwNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706265992; c=relaxed/simple;
-	bh=bYr6zz3JCs6V8j1TOSkJQRHg/kmoF+tqDNun6+QZnQc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=M+PvRxyQk1fM9I/FQPkcL5qNv4qi4m3VWr6hqAXTG8ivr3cQte93VBB7vzSR+pyZuhxWx5sW3yOizUd/+1MD460mtvTMXqPSCl4XPVGrX6jU2+gutzXofBknwkO8vQnubWM9fs5ot45IvPM5H6FlqV9dVqkFgQauioCuvN/x6RY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RF0yhoZt; arc=none smtp.client-ip=209.85.161.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-59927972125so132698eaf.3
-        for <linux-raid@vger.kernel.org>; Fri, 26 Jan 2024 02:46:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706265989; x=1706870789; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bYr6zz3JCs6V8j1TOSkJQRHg/kmoF+tqDNun6+QZnQc=;
-        b=RF0yhoZtzgAKfOtv/uMUaMq8LJukkQJS4bxcvo0RTWq2lldQTXX4LJTG5VxkDMutkk
-         uZNHBCWHO34/2orXAWwyYe+3RXYX28KrhpQuEcwngJUNK8zAEwZ8AGloLRQhDJf7DylS
-         10izdGN6kiBlf3GCoPqdTFnX2pChlGVU2lc28lMbdBM32cZTTkvO3YhCKocm3m2jkt7W
-         TUgSK8tzi6PfNg1Mxh8jDHvshFAhPsD0FyMiy77aDfUToPsgiOAh6yAVnWmFGAV7NGB+
-         29s3lYQRjdFcdYNfUS5VBOwq+r6jw4463sCiG2aOp60ltrHb6zPj1ae1AGMx0/FxPJJV
-         5Abw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706265989; x=1706870789;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bYr6zz3JCs6V8j1TOSkJQRHg/kmoF+tqDNun6+QZnQc=;
-        b=p/w9bUqwy3cpCG6cGlKYuPnxUQbQxP4tj5VKgykjpCg8rfh5MATIFL3/C//Rebgg0F
-         fQmzcUHWyUTfyWH/nzFdb8592va9IEQssqMc9dFJ4unoROsiqAuCw1yDvsha38XS4hfM
-         pfb4enBr5vvYZHAiJyQPGvrl967VI0Lwxu2Wau5hpWRUkHZxhobs1kVF3gHckDSK7tHF
-         Exn6OE1hWRxwMVblfyqfIWPIiDUfJ2OIvE6Mc78ifJ9W0t3iKZ82tJIfH++O3UxNCFIH
-         ShwjPm0sBS1fxyJMaKV0w+RAnUmzkZR1sTs+BCtwbBaBSKpTH2dsMxfjPG038ahK16MY
-         wZIg==
-X-Gm-Message-State: AOJu0Yya9FjnZej6CXP7ZVwfFVt/d1Fdpc3bwzViVXP/GiByVZ/8NOux
-	0vsfjgI/0TV6vhwDxVevZwTg1P1pTXu7f6sg9xZhJ0Fm3vHyBwdXKxDoNcwhoD5iSyKBpGY7N2y
-	/BdDva4E6AMt2L2xE2GcQSNF2JTGXuQfL
-X-Google-Smtp-Source: AGHT+IGngCXp90ahq9mqLuz0LT33pgebCiWv3xO9d85E8xw8peG0MQT/PqmudGRRu6HVODNVhbP/jzuHERAimyR7rHY=
-X-Received: by 2002:a4a:a809:0:b0:599:c8cd:f26e with SMTP id
- o9-20020a4aa809000000b00599c8cdf26emr809432oom.4.1706265989490; Fri, 26 Jan
- 2024 02:46:29 -0800 (PST)
+	s=arc-20240116; t=1706261224; c=relaxed/simple;
+	bh=kir+NFI9Hc5LZ5fsAA20JMPLyqKzJwdYV2OkBR2+Mi8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=tE1wm+mUCH0H+GEiiaCJDGPHjDBUqjJEj7kDWKgDr3mpfGzHCx1ntAD3gJqOW1YNAJoLwhS9tuzDh0ItpzgEsUuc5tg5q1bsOR6LWp/mwJisLE4yjq3tLle/oscs50JPrKTQBwUQVBWZIdMEMffq6POG5ryXEJEpfufL118JxY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TLsld2NPvz4f3mHQ;
+	Fri, 26 Jan 2024 17:26:53 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id A763D1A0232;
+	Fri, 26 Jan 2024 17:26:59 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgCXaBHferNlLsUdCA--.25360S8;
+	Fri, 26 Jan 2024 17:26:59 +0800 (CST)
+From: linan666@huaweicloud.com
+To: song@kernel.org,
+	neilb@suse.com,
+	shli@fb.com,
+	mariusz.tkaczyk@linux.intel.com
+Cc: linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linan666@huaweicloud.com,
+	yukuai3@huawei.com,
+	yi.zhang@huawei.com,
+	houtao1@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH v4 4/4] md: check mddev->pers before calling md_set_readonly()
+Date: Fri, 26 Jan 2024 17:22:54 +0800
+Message-Id: <20240126092254.1314908-5-linan666@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240126092254.1314908-1-linan666@huaweicloud.com>
+References: <20240126092254.1314908-1-linan666@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJH6TXjrmVRBpP-vr1io0unxqKZ_QE464G9R6G4Ekct3ShVx6g@mail.gmail.com>
-In-Reply-To: <CAJH6TXjrmVRBpP-vr1io0unxqKZ_QE464G9R6G4Ekct3ShVx6g@mail.gmail.com>
-From: Gandalf Corvotempesta <gandalf.corvotempesta@gmail.com>
-Date: Fri, 26 Jan 2024 11:46:18 +0100
-Message-ID: <CAJH6TXgCOBRVc4rkrXjgxLxih6h1Avkn6x4JaJ3YZ20rAq5kig@mail.gmail.com>
-Subject: Re: New device added but i did a mess
-To: Linux RAID Mailing List <linux-raid@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgCXaBHferNlLsUdCA--.25360S8
+X-Coremail-Antispam: 1UD129KBjvJXoW7tF15CFyUKryfXF4rZrWfGrg_yoW8ur15p3
+	ySqF98Gr1UXryavr4Ut3WkZa45Xw1xta4ktry7u3yrZF1fJrs8WrWSgF18ArWvgas7Aay5
+	Xa1UJrW7uFy2g3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUQY14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
+	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
+	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
+	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
+	3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0V
+	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1l
+	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErc
+	IFxwACI402YVCY1x02628vn2kIc2xKxwAKzVCY07xG64k0F24l42xK82IYc2Ij64vIr41l
+	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbxR67UUUUU==
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
-Any help ?
+From: Li Nan <linan122@huawei.com>
 
-Il giorno gio 25 gen 2024 alle ore 15:49 Gandalf Corvotempesta
-<gandalf.corvotempesta@gmail.com> ha scritto:
->
-> Ok, i think i did a mess.
-> I have a 3 way mirror with 3 drives on it
-> All drives are working, not failed.
-> I would like to replace one of these drive (because it's very old)
-> with a new drive.
-> I would like to to the add and replace in the same phase, without
-> reducing the redundancy level
-> I did this multiple times before, during the sync, the array is a 4 way mirror
->
-> BUT this time i think i did an issue, i've just run this:
->
-> $ mdadm /dev/md0 --add /dev/sdd1 --replace /dev/sda1 --with /dev/sdd1
->
-> sda was marked failed immediately, and sdd1 is marked as active sync.
-> Less than 1 second.
->
-> Is this ok or i've just added a blank drive and forced the removal of
-> a working one ?
->
-> Honestly, and this is something that comes to mind right now, the
-> partition is very very small, like 64MB so 1 second sync (on a SSD)
-> could be ok.
->
-> but:
-> 1. which is the right command to run to add-sync-remove a not-failed disk ?
-> 2. how can I ensure that sdd is working as expected and data were
-> synced properly?
+If 'mddev->pers' is NULL, there is nothing to do in md_set_readonly().
+To simplify the code, move the check of 'mddev->pers' to the caller of
+md_set_readonly().
+
+Signed-off-by: Li Nan <linan122@huawei.com>
+---
+ drivers/md/md.c | 25 ++++++++++++-------------
+ 1 file changed, 12 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 24e33b65c6ff..ece6eddb2748 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -6412,6 +6412,7 @@ void md_stop(struct mddev *mddev)
+ 
+ EXPORT_SYMBOL_GPL(md_stop);
+ 
++/* ensure 'mddev->pers' exist before calling md_set_readonly() */
+ static int md_set_readonly(struct mddev *mddev, struct block_device *bdev)
+ {
+ 	int err = 0;
+@@ -6432,28 +6433,25 @@ static int md_set_readonly(struct mddev *mddev, struct block_device *bdev)
+ 	mddev_lock_nointr(mddev);
+ 
+ 	mutex_lock(&mddev->open_mutex);
+-	if ((mddev->pers && atomic_read(&mddev->openers) > !!bdev) ||
+-	    mddev->sync_thread ||
++	if (atomic_read(&mddev->openers) > !!bdev || mddev->sync_thread ||
+ 	    test_bit(MD_RECOVERY_RUNNING, &mddev->recovery)) {
+ 		pr_warn("md: %s still in use.\n",mdname(mddev));
+ 		err = -EBUSY;
+ 		goto out;
+ 	}
+ 
+-	if (mddev->pers) {
+-		__md_stop_writes(mddev);
+-
+-		if (mddev->ro == MD_RDONLY) {
+-			err  = -ENXIO;
+-			goto out;
+-		}
++	__md_stop_writes(mddev);
+ 
+-		mddev->ro = MD_RDONLY;
+-		set_disk_ro(mddev->gendisk, 1);
++	if (mddev->ro == MD_RDONLY) {
++		err  = -ENXIO;
++		goto out;
+ 	}
+ 
++	mddev->ro = MD_RDONLY;
++	set_disk_ro(mddev->gendisk, 1);
++
+ out:
+-	if ((mddev->pers && !err) || did_freeze) {
++	if (!err || did_freeze) {
+ 		clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+ 		set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
+ 		md_wakeup_thread(mddev->thread);
+@@ -7772,7 +7770,8 @@ static int md_ioctl(struct block_device *bdev, blk_mode_t mode,
+ 		goto unlock;
+ 
+ 	case STOP_ARRAY_RO:
+-		err = md_set_readonly(mddev, bdev);
++		if (mddev->pers)
++			err = md_set_readonly(mddev, bdev);
+ 		goto unlock;
+ 
+ 	case HOT_REMOVE_DISK:
+-- 
+2.39.2
+
 
