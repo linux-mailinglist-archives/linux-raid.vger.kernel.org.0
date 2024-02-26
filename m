@@ -1,50 +1,50 @@
-Return-Path: <linux-raid+bounces-866-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-869-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 022E086718B
-	for <lists+linux-raid@lfdr.de>; Mon, 26 Feb 2024 11:41:30 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D209867196
+	for <lists+linux-raid@lfdr.de>; Mon, 26 Feb 2024 11:42:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B103028322A
-	for <lists+linux-raid@lfdr.de>; Mon, 26 Feb 2024 10:41:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 21CA728657C
+	for <lists+linux-raid@lfdr.de>; Mon, 26 Feb 2024 10:42:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DBC758AC5;
-	Mon, 26 Feb 2024 10:31:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D4CA56B73;
+	Mon, 26 Feb 2024 10:31:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FqI2JI6M"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lX3fK5Mo"
 X-Original-To: linux-raid@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F54C58132;
-	Mon, 26 Feb 2024 10:31:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7333421106;
+	Mon, 26 Feb 2024 10:31:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708943488; cv=none; b=E1qLCHDVOTqVeMkuExZdoujfuye6YNYATGW2ig+pkYJZRZQR7+tsmmvaKZLMsmILTjOAd4p67q5BJsdcYGx/xOC8qS7/UV3DaJRLWMOeGu4CR5C0rwYcIi2tLzoeFXXuCBMaD7HbeePQJcIGIIMteKIQR7+kht+h1btbsCrlqyI=
+	t=1708943507; cv=none; b=Aa1BTiLC2PuGXsGMcczZR9hPkErDrvBiuOHy7XFCCFoBUoRiCHO/RDUNRPPePRF++b5osb4GRjanigLFVqd+0CUCQF8G2VK0nVKD6u++vMs1PtAdKvYrm3U20hGlwCRi3bu5shv5goDESOnIk01/J4uSE/OkzaIW5/EM9KPEsfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708943488; c=relaxed/simple;
-	bh=YEE0K3C4YljkDRp3e1N4QWFxGsJWb+5rxLnM57XLEB0=;
+	s=arc-20240116; t=1708943507; c=relaxed/simple;
+	bh=QyWcRrNxVgK384e9YKYldUdazeaevTm41k1lsqyTxkw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UgfVwCKV32tzbRyImw2nLgjwftS/BdF/Fb4U1DH6nXFC7zsSYh0+DTQPvP0e6PPq2IKVd2LJHr25gjPauRiX8IsnUVib8dNtV7UyX0JHuLbis418EKnkV2wamxeZu8OGmoYaBeNXVcNq+RCsE3SDAX2wc8Ri15wyOhaN0N4fuk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FqI2JI6M; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=MbJ401dKgPHFeNAFqpuQ4HchFMjBIrKw0lTUjwU0aDqP1jvWacxkd2I/7VvZNSLTLntp70FPNFq5m3HKW90zIH+XL5PTOcACqrqkEfoByKy5lrJL0FbjUQqhwl9yPDORgm5WtuqSqSiGSfufXJ8vtFP+UTVK6RHVVUdv2ZO5J8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lX3fK5Mo; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=oCgQZaiF/v38Xtofqeuu4eAUS7fzPBaKg2U7fjijjbw=; b=FqI2JI6M3qofTF9w+6ijD2ioqg
-	pSUUTadeeHiaRaG3ggKME5+KmS0Q2tK9zyDCayjhmRbHNmHSFEo88sYEd9pS0V4iwOrGbXQ/Cc611
-	SVyJd3nZdf9fmcX+6C/ziUEHreOkvk0yH4z6QWZvvwkgcCY0ZwfdbekjVh3L45Fd1lvt9qXJ5ZUKb
-	IKo/jvl2ywF75BuQPhyJ+80bXwkAlmtgnPw8RZCpegYhQv8UADO1GG8PUwXlGYJtbL6GXaqpBIiZ5
-	KDgaUueWcoKcBsceAP+G3UKkZdaGUBZyOtWpSjyuJp5v4guyc+wKG7fN1D2BQOJJKU/0qzErWqeEU
-	i2LujmoQ==;
+	bh=fs+hHzeY50NjZ+wR6CygHlhg6UmFfdzm3awOpeO+YYg=; b=lX3fK5Mos3bVKyiReLKAy74d77
+	OlNeuMFrECES3IMZI2+mz/WP+gFirc2rsbHnVBvKXc53k9Uc5r3xM6nPGi45iRzv4f2QowTebqCHJ
+	0CpwHGgQ24r0eTM1ABEn4Uiwuju2EgWpJ/jFiooU0v2lSdXUBHU7DVY9h5QHmvB7FaSBKsp3vn5Oa
+	xIyTsCOJ3kl3RPV8SHnW/3BYxdzY48BYwwLD2Jy2PLSjZtM2Nn77/Claxy8XR12rItU8k7N2wX9uV
+	7BfliIcmFsyY/779OU4eRdn7hb2GVl1C1NMgCxaXhBVlH6xF1f3S7UvlJIdrptmCDWQyWm0O4A7wu
+	ro7SUxLQ==;
 Received: from 213-147-167-65.nat.highway.webapn.at ([213.147.167.65] helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1reYGa-0000000052z-2Ade;
-	Mon, 26 Feb 2024 10:31:25 +0000
+	id 1reYGr-000000005CO-0Tit;
+	Mon, 26 Feb 2024 10:31:41 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Jens Axboe <axboe@kernel.dk>,
 	Mike Snitzer <snitzer@kernel.org>,
@@ -58,9 +58,9 @@ Cc: drbd-dev@lists.linbit.com,
 	dm-devel@lists.linux.dev,
 	linux-block@vger.kernel.org,
 	linux-raid@vger.kernel.org
-Subject: [PATCH 13/16] drbd: merge drbd_setup_queue_param into drbd_reconsider_queue_parameters
-Date: Mon, 26 Feb 2024 11:30:01 +0100
-Message-Id: <20240226103004.281412-14-hch@lst.de>
+Subject: [PATCH 16/16] drbd: atomically update queue limits in drbd_reconsider_queue_parameters
+Date: Mon, 26 Feb 2024 11:30:04 +0100
+Message-Id: <20240226103004.281412-17-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240226103004.281412-1-hch@lst.de>
 References: <20240226103004.281412-1-hch@lst.de>
@@ -73,92 +73,172 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-drbd_setup_queue_param is only called by drbd_reconsider_queue_parameters
-and there is no really clear boundary of responsibilities between the
-two.
+Switch drbd_reconsider_queue_parameters to set up the queue parameters
+in an on-stack queue_limits structure and apply the atomically.  Remove
+various helpers that have become so trivial that they can be folded into
+drbd_reconsider_queue_parameters.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/block/drbd/drbd_nl.c | 56 ++++++++++++++----------------------
- 1 file changed, 22 insertions(+), 34 deletions(-)
+ drivers/block/drbd/drbd_nl.c | 119 ++++++++++++++---------------------
+ 1 file changed, 46 insertions(+), 73 deletions(-)
 
 diff --git a/drivers/block/drbd/drbd_nl.c b/drivers/block/drbd/drbd_nl.c
-index 0326b7322ceb48..0f40fdee089971 100644
+index 94ed2b3ea6361d..fbd92803dc1da4 100644
 --- a/drivers/block/drbd/drbd_nl.c
 +++ b/drivers/block/drbd/drbd_nl.c
-@@ -1309,45 +1309,16 @@ static unsigned int drbd_backing_dev_max_segments(struct drbd_device *device)
- 	return max_segments;
+@@ -1216,11 +1216,6 @@ static unsigned int drbd_max_peer_bio_size(struct drbd_device *device)
+ 	return DRBD_MAX_BIO_SIZE;
  }
  
--static void drbd_setup_queue_param(struct drbd_device *device, struct drbd_backing_dev *bdev,
--				   unsigned int max_bio_size, struct o_qlim *o)
+-static void blk_queue_discard_granularity(struct request_queue *q, unsigned int granularity)
 -{
--	struct request_queue * const q = device->rq_queue;
--	unsigned int max_hw_sectors = max_bio_size >> 9;
--	unsigned int max_segments = BLK_MAX_SEGMENTS;
--	struct request_queue *b = NULL;
--
--	if (bdev) {
--		b = bdev->backing_bdev->bd_disk->queue;
--
--		max_hw_sectors = min(queue_max_hw_sectors(b), max_bio_size >> 9);
--		max_segments = drbd_backing_dev_max_segments(device);
--
--		blk_set_stacking_limits(&q->limits);
--	}
--
--	blk_queue_max_hw_sectors(q, max_hw_sectors);
--	blk_queue_max_segments(q, max_segments);
--	blk_queue_segment_boundary(q, PAGE_SIZE-1);
--	decide_on_discard_support(device, bdev);
--
--	if (b) {
--		blk_stack_limits(&q->limits, &b->limits, 0);
--		disk_update_readahead(device->vdisk);
--	}
--	fixup_write_zeroes(device, q);
--	fixup_discard_support(device, q);
+-	q->limits.discard_granularity = granularity;
 -}
 -
+ static unsigned int drbd_max_discard_sectors(struct drbd_connection *connection)
+ {
+ 	/* when we introduced REQ_WRITE_SAME support, we also bumped
+@@ -1247,62 +1242,6 @@ static bool drbd_discard_supported(struct drbd_connection *connection,
+ 	return true;
+ }
+ 
+-static void decide_on_discard_support(struct drbd_device *device,
+-		struct drbd_backing_dev *bdev)
+-{
+-	struct drbd_connection *connection =
+-		first_peer_device(device)->connection;
+-	struct request_queue *q = device->rq_queue;
+-	unsigned int max_discard_sectors;
+-
+-	if (!drbd_discard_supported(connection, bdev))
+-		goto not_supported;
+-
+-	/*
+-	 * We don't care for the granularity, really.
+-	 *
+-	 * Stacking limits below should fix it for the local device.  Whether or
+-	 * not it is a suitable granularity on the remote device is not our
+-	 * problem, really. If you care, you need to use devices with similar
+-	 * topology on all peers.
+-	 */
+-	blk_queue_discard_granularity(q, 512);
+-	max_discard_sectors = drbd_max_discard_sectors(connection);
+-	blk_queue_max_discard_sectors(q, max_discard_sectors);
+-	return;
+-
+-not_supported:
+-	blk_queue_discard_granularity(q, 0);
+-	blk_queue_max_discard_sectors(q, 0);
+-}
+-
+-static void fixup_write_zeroes(struct drbd_device *device, struct request_queue *q)
+-{
+-	/* Fixup max_write_zeroes_sectors after blk_stack_limits():
+-	 * if we can handle "zeroes" efficiently on the protocol,
+-	 * we want to do that, even if our backend does not announce
+-	 * max_write_zeroes_sectors itself. */
+-	struct drbd_connection *connection = first_peer_device(device)->connection;
+-	/* If the peer announces WZEROES support, use it.  Otherwise, rather
+-	 * send explicit zeroes than rely on some discard-zeroes-data magic. */
+-	if (connection->agreed_features & DRBD_FF_WZEROES)
+-		q->limits.max_write_zeroes_sectors = DRBD_MAX_BBIO_SECTORS;
+-	else
+-		q->limits.max_write_zeroes_sectors = 0;
+-}
+-
+-static void fixup_discard_support(struct drbd_device *device, struct request_queue *q)
+-{
+-	unsigned int max_discard = device->rq_queue->limits.max_discard_sectors;
+-	unsigned int discard_granularity =
+-		device->rq_queue->limits.discard_granularity >> SECTOR_SHIFT;
+-
+-	if (discard_granularity > max_discard) {
+-		blk_queue_discard_granularity(q, 0);
+-		blk_queue_max_discard_sectors(q, 0);
+-	}
+-}
+-
+ /* This is the workaround for "bio would need to, but cannot, be split" */
+ static unsigned int drbd_backing_dev_max_segments(struct drbd_device *device)
+ {
+@@ -1320,8 +1259,11 @@ static unsigned int drbd_backing_dev_max_segments(struct drbd_device *device)
  void drbd_reconsider_queue_parameters(struct drbd_device *device,
  		struct drbd_backing_dev *bdev, struct o_qlim *o)
  {
--	unsigned int now = queue_max_hw_sectors(device->rq_queue) <<
--			SECTOR_SHIFT;
-+	struct request_queue * const q = device->rq_queue;
-+	unsigned int now = queue_max_hw_sectors(q) << 9;
-+	struct request_queue *b = NULL;
++	struct drbd_connection *connection =
++		first_peer_device(device)->connection;
+ 	struct request_queue * const q = device->rq_queue;
+ 	unsigned int now = queue_max_hw_sectors(q) << 9;
++	struct queue_limits lim;
+ 	struct request_queue *b = NULL;
  	unsigned int new;
  
- 	if (bdev) {
--		struct request_queue *b = bdev->backing_bdev->bd_disk->queue;
-+		b = bdev->backing_bdev->bd_disk->queue;
- 
- 		device->local_max_bio_size =
- 			queue_max_hw_sectors(b) << SECTOR_SHIFT;
-@@ -1369,7 +1340,24 @@ void drbd_reconsider_queue_parameters(struct drbd_device *device,
+@@ -1348,24 +1290,55 @@ void drbd_reconsider_queue_parameters(struct drbd_device *device,
  		drbd_info(device, "max BIO size = %u\n", new);
  	}
  
--	drbd_setup_queue_param(device, bdev, new, o);
-+	if (bdev) {
-+		blk_set_stacking_limits(&q->limits);
-+		blk_queue_max_segments(q,
-+			drbd_backing_dev_max_segments(device));
++	lim = queue_limits_start_update(q);
+ 	if (bdev) {
+-		blk_set_stacking_limits(&q->limits);
+-		blk_queue_max_segments(q,
+-			drbd_backing_dev_max_segments(device));
++		blk_set_stacking_limits(&lim);
++		lim.max_segments = drbd_backing_dev_max_segments(device);
+ 	} else {
+-		blk_queue_max_segments(q, BLK_MAX_SEGMENTS);
++		lim.max_segments = BLK_MAX_SEGMENTS;
+ 	}
+ 
+-	blk_queue_max_hw_sectors(q, new >> SECTOR_SHIFT);
+-	blk_queue_segment_boundary(q, PAGE_SIZE - 1);
+-	decide_on_discard_support(device, bdev);
++	lim.max_hw_sectors = new >> SECTOR_SHIFT;
++	lim.seg_boundary_mask = PAGE_SIZE - 1;
+ 
+-	if (bdev) {
+-		blk_stack_limits(&q->limits, &b->limits, 0);
+-		disk_update_readahead(device->vdisk);
++	/*
++	 * We don't care for the granularity, really.
++	 *
++	 * Stacking limits below should fix it for the local device.  Whether or
++	 * not it is a suitable granularity on the remote device is not our
++	 * problem, really. If you care, you need to use devices with similar
++	 * topology on all peers.
++	 */
++	if (drbd_discard_supported(connection, bdev)) {
++		lim.discard_granularity = 512;
++		lim.max_hw_discard_sectors =
++			drbd_max_discard_sectors(connection);
 +	} else {
-+		blk_queue_max_segments(q, BLK_MAX_SEGMENTS);
++		lim.discard_granularity = 0;
++		lim.max_hw_discard_sectors = 0;
+ 	}
+-	fixup_write_zeroes(device, q);
+-	fixup_discard_support(device, q);
++
++	if (bdev)
++		blk_stack_limits(&lim, &b->limits, 0);
++
++	/*
++	 * If we can handle "zeroes" efficiently on the protocol, we want to do
++	 * that, even if our backend does not announce max_write_zeroes_sectors
++	 * itself.
++	 */
++	if (connection->agreed_features & DRBD_FF_WZEROES)
++		lim.max_write_zeroes_sectors = DRBD_MAX_BBIO_SECTORS;
++	else
++		lim.max_write_zeroes_sectors = 0;
++
++	if ((lim.discard_granularity >> SECTOR_SHIFT) >
++	    lim.max_hw_discard_sectors) {
++		lim.discard_granularity = 0;
++		lim.max_hw_discard_sectors = 0;
 +	}
 +
-+	blk_queue_max_hw_sectors(q, new >> SECTOR_SHIFT);
-+	blk_queue_segment_boundary(q, PAGE_SIZE - 1);
-+	decide_on_discard_support(device, bdev);
-+
-+	if (bdev) {
-+		blk_stack_limits(&q->limits, &b->limits, 0);
-+		disk_update_readahead(device->vdisk);
-+	}
-+	fixup_write_zeroes(device, q);
-+	fixup_discard_support(device, q);
++	if (queue_limits_commit_update(q, &lim))
++		drbd_err(device, "setting new queue limits failed\n");
  }
  
  /* Starts the worker thread */
