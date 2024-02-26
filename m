@@ -1,49 +1,50 @@
-Return-Path: <linux-raid+bounces-853-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-858-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEBD08672D4
-	for <lists+linux-raid@lfdr.de>; Mon, 26 Feb 2024 12:16:57 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D9BD86730B
+	for <lists+linux-raid@lfdr.de>; Mon, 26 Feb 2024 12:28:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F1F97B2FA8E
-	for <lists+linux-raid@lfdr.de>; Mon, 26 Feb 2024 10:38:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 34F03B2DDCD
+	for <lists+linux-raid@lfdr.de>; Mon, 26 Feb 2024 10:40:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82B8D54745;
-	Mon, 26 Feb 2024 10:30:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49B5F57861;
+	Mon, 26 Feb 2024 10:30:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PVY5zDhQ"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ViVd9ngd"
 X-Original-To: linux-raid@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6694254662;
-	Mon, 26 Feb 2024 10:30:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FE35730B;
+	Mon, 26 Feb 2024 10:30:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708943413; cv=none; b=q8zWU7UH+RLtw0iSfEWBqIm8cSM+jYARLXjkXYiAc5r2R+obUbkMJJ8vp9ryoaOsLYFV7bB/kIT21oanVssHMCg72/26JosARSEv4ayLGFCpDAxm39Y/KALRQY3TS/I8sfGPMcSe5/e4w74l4+bjvj+DCtGgAEJOw/CqNBWHfn4=
+	t=1708943445; cv=none; b=pwld/p2jVr5jt8gt97vJ8JcScSRvu7czE/bzQW/W1wDSpnVb0U03m26AdVs4U0oSTYJHPV1FMQZxa+73oaHqP1J0XcrfYHzqvl+uRkdZ+EIdw7twQmbo46N/Eyl5cC3HezsUdVPosdeJKhtyiGUfBqHYw4Lqxx3Jq4Ph9LWa5Wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708943413; c=relaxed/simple;
-	bh=PzLygCOwXvtGAVXHFdpWVOEeJPDkmJsSwnSUM+iouxQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nUZaKC6qW//lv5xdgz8W+D5PXDdsRqtW80qH24gFU3DCRR5m5LUTy67OqOkX+6d6mmflBN+2qaB+HA7T6AfjppMANyaHJhlEtygAC5qRiSM8Nni3jH4Jjdu4BlZtzFGZLRKKuSWkSoOdu2O7cyWSCGmamRKYT5T+K7PweaeFk90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PVY5zDhQ; arc=none smtp.client-ip=198.137.202.133
+	s=arc-20240116; t=1708943445; c=relaxed/simple;
+	bh=qkrvkJlyDXhDeLlNMru1+MYxZ4VRAl/ThVRgaiQjMh0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=rHoHib+h1x9HFAy9kPsrSb1nbsaMI9xGWmlMz0BklTBZjB16YEnLbb7SZfnX53D2SCG2kRMISDsgFXZU6IRy4RQwI1zObYKjT7bfQcPLBnuzLV83voj1lAQTaF2GFIYkaSgvvZ6d4iR7QRGvHplR9UILsRqwdFJUa1pIY8Gvu9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ViVd9ngd; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=UGOSCCyPj/BmRrHF9CnihwGu6XS72OjDXvKcF03cHYA=; b=PVY5zDhQgnDSI3xSU6JaYDl3yV
-	DI+C56e+8os7t3dK8OC8gGlQMnO6B1Nf5dsaqNKizXuShwPEAfCqW6NEI9wrzKg/tX70chdIPPUsW
-	AV7KihXFeQpy9VwQRd8rNmFKm6KBpfwgv37P2mlUz2ih5C0wC7LRIYrSyXYrriLDQEYYmt5FDMLwI
-	B3wpoIKggevVlZ+30j0svvtMdwN0KMSrsP37jyLCZwmoKIN+FlFn7FQSXgwsbUobSjRWDT4tAMsUC
-	2lE4G1uSQEBameQtvWHf0bpn4xAibws088GAdTVLnpWSKThCGSU3LqsCnaCGOMzURH23XOcuAVhN+
-	SS3AJNVQ==;
+	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+	:Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=/W7QiFrwP9NDOeY0MMQGkpN8cv8t6hi9lmA8LIVLFK4=; b=ViVd9ngdKC+pbVTXEzzZVIeiIo
+	uvWg2BFfZZmC4/wIR84Yn1UMLKp/TLOAa9H1J8WJakxb7d/stmiK37EL+g2XdyxQMaElOh0CASdaZ
+	tjJpJHYYk+AsQxwCmY3Id8M5tSQq+CyxtJxZ9g7Fk30croBHKS6PGoGSjHg+XbfCrrIopnVNxnBHW
+	67Hs075ipfe8eUW1lpfmmnaV/MiYv9EoVMUIeMa8LlWsWr19smweCYciwC+89kX+QzW1PPCdikaO+
+	+LzEG3Xtbjf4R1Zl+jhpxLLatyNOaa5VnejTj0/Ijn2gbYMfWw4+VF+19RR6+QnyYIiG6WUpYLu3N
+	TbDdcgpQ==;
 Received: from 213-147-167-65.nat.highway.webapn.at ([213.147.167.65] helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1reYFM-000000004WJ-2FR6;
-	Mon, 26 Feb 2024 10:30:09 +0000
+	id 1reYFn-000000004ga-46GF;
+	Mon, 26 Feb 2024 10:30:41 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Jens Axboe <axboe@kernel.dk>,
 	Mike Snitzer <snitzer@kernel.org>,
@@ -57,10 +58,12 @@ Cc: drbd-dev@lists.linbit.com,
 	dm-devel@lists.linux.dev,
 	linux-block@vger.kernel.org,
 	linux-raid@vger.kernel.org
-Subject: atomic queue limit updates for stackable devices v2
-Date: Mon, 26 Feb 2024 11:29:48 +0100
-Message-Id: <20240226103004.281412-1-hch@lst.de>
+Subject: [PATCH 05/16] md/raid0: use the atomic queue limit update APIs
+Date: Mon, 26 Feb 2024 11:29:53 +0100
+Message-Id: <20240226103004.281412-6-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240226103004.281412-1-hch@lst.de>
+References: <20240226103004.281412-1-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
@@ -70,37 +73,84 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Hi all,
+Build the queue limits outside the queue and apply them using
+queue_limits_set.  Also remove the bogus ->gendisk and ->queue NULL
+checks in the are while touching it.
 
-this series adds new helpers for the atomic queue limit update
-functionality and then switches dm and md over to it.  The dm switch is
-pretty trivial as it was basically implementing the model by hand
-already, md is a bit more work.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/md/raid0.c | 37 +++++++++++++++++--------------------
+ 1 file changed, 17 insertions(+), 20 deletions(-)
 
-I've run the mdadm testsuite, and it has the same (rather large) number
-of failures as the baseline.  I've still not managed to get the dm
-testuite running unfortunately, but it survives xfstests which exercises
-quite a few dm targets and blktests.
+diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
+index c50a7abda744ad..dd070e9b2d5643 100644
+--- a/drivers/md/raid0.c
++++ b/drivers/md/raid0.c
+@@ -381,7 +381,8 @@ static void raid0_free(struct mddev *mddev, void *priv)
+ 
+ static int raid0_run(struct mddev *mddev)
+ {
+-	struct r0conf *conf;
++	struct r0conf *conf = mddev->private;
++	struct queue_limits lim;
+ 	int ret;
+ 
+ 	if (mddev->chunk_sectors == 0) {
+@@ -391,29 +392,23 @@ static int raid0_run(struct mddev *mddev)
+ 	if (md_check_no_bitmap(mddev))
+ 		return -EINVAL;
+ 
+-	/* if private is not null, we are here after takeover */
+-	if (mddev->private == NULL) {
++	/* if conf is not null, we are here after takeover */
++	if (!conf) {
+ 		ret = create_strip_zones(mddev, &conf);
+ 		if (ret < 0)
+ 			return ret;
+ 		mddev->private = conf;
+ 	}
+-	conf = mddev->private;
+-	if (mddev->queue) {
+-		struct md_rdev *rdev;
+-
+-		blk_queue_max_hw_sectors(mddev->queue, mddev->chunk_sectors);
+-		blk_queue_max_write_zeroes_sectors(mddev->queue, mddev->chunk_sectors);
+ 
+-		blk_queue_io_min(mddev->queue, mddev->chunk_sectors << 9);
+-		blk_queue_io_opt(mddev->queue,
+-				 (mddev->chunk_sectors << 9) * mddev->raid_disks);
+-
+-		rdev_for_each(rdev, mddev) {
+-			disk_stack_limits(mddev->gendisk, rdev->bdev,
+-					  rdev->data_offset << 9);
+-		}
+-	}
++	blk_set_stacking_limits(&lim);
++	lim.max_hw_sectors = mddev->chunk_sectors;
++	lim.max_write_zeroes_sectors = mddev->chunk_sectors;
++	lim.io_min = mddev->chunk_sectors << 9;
++	lim.io_opt = lim.io_min * mddev->raid_disks;
++	mddev_stack_rdev_limits(mddev, &lim);
++	ret = queue_limits_set(mddev->queue, &lim);
++	if (ret)
++		goto out_free_conf;
+ 
+ 	/* calculate array device size */
+ 	md_set_array_sectors(mddev, raid0_size(mddev, 0, 0));
+@@ -426,8 +421,10 @@ static int raid0_run(struct mddev *mddev)
+ 
+ 	ret = md_integrity_register(mddev);
+ 	if (ret)
+-		free_conf(mddev, conf);
+-
++		goto out_free_conf;
++	return 0;
++out_free_conf:
++	free_conf(mddev, conf);
+ 	return ret;
+ }
+ 
+-- 
+2.39.2
 
-nvme-multipath will be handled separately as it is too tightly integrated
-with the rest of nvme.
-
-Changes since v1:
- - a few kerneldoc fixes
- - fix a line remove after testing in raid0
- - also add drbd
-
-Diffstat:
- block/blk-settings.c           |   47 ++++++---
- drivers/block/drbd/drbd_main.c |   13 +-
- drivers/block/drbd/drbd_nl.c   |  210 +++++++++++++++++++----------------------
- drivers/md/dm-table.c          |   27 ++---
- drivers/md/md.c                |   37 +++++++
- drivers/md/md.h                |    3 
- drivers/md/raid0.c             |   37 +++----
- drivers/md/raid1.c             |   24 +---
- drivers/md/raid10.c            |   52 ++++------
- drivers/md/raid5.c             |  123 ++++++++++--------------
- include/linux/blkdev.h         |    5 
- 11 files changed, 305 insertions(+), 273 deletions(-)
 
