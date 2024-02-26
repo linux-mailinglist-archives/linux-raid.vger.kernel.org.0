@@ -1,64 +1,106 @@
-Return-Path: <linux-raid+bounces-870-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-853-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3D7386728B
-	for <lists+linux-raid@lfdr.de>; Mon, 26 Feb 2024 12:04:30 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEBD08672D4
+	for <lists+linux-raid@lfdr.de>; Mon, 26 Feb 2024 12:16:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 44EE42867F8
-	for <lists+linux-raid@lfdr.de>; Mon, 26 Feb 2024 11:04:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F1F97B2FA8E
+	for <lists+linux-raid@lfdr.de>; Mon, 26 Feb 2024 10:38:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96B5D1CD20;
-	Mon, 26 Feb 2024 11:04:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82B8D54745;
+	Mon, 26 Feb 2024 10:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PVY5zDhQ"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0791CD36
-	for <linux-raid@vger.kernel.org>; Mon, 26 Feb 2024 11:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6694254662;
+	Mon, 26 Feb 2024 10:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708945463; cv=none; b=aNYjdBVvvKuwv4hqY1a/2Ftlm3+/ThFL3OYrvyJTA+u7hxjn11DYvhdH2aH/O3N4HQGuhwGuZp1C6NbBuedSFQasOnPrC1yDcGtsgrpNvOxIHmkb8mg+QpN/ccGT4lpUDBnGRSp/R0Bc4UGdure+Vh+F1qROlyJk19LA2SYV07A=
+	t=1708943413; cv=none; b=q8zWU7UH+RLtw0iSfEWBqIm8cSM+jYARLXjkXYiAc5r2R+obUbkMJJ8vp9ryoaOsLYFV7bB/kIT21oanVssHMCg72/26JosARSEv4ayLGFCpDAxm39Y/KALRQY3TS/I8sfGPMcSe5/e4w74l4+bjvj+DCtGgAEJOw/CqNBWHfn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708945463; c=relaxed/simple;
-	bh=v7C8ugB6Vr2W66GTbtzQ8MxV0zjTX2LRiEtuJcgOsSs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rZnFkNKEON0KholClDbosCoMyJcoIS85Y41yL/8NdzKpzoqoqCv4wntwqCUSxYffJvuklwpdeWrqY+9Z4r/7iE6MYVbk4+sEHnFZxSeoJD9aO959csUOVrvba6rgWF0lkXh7TBCw+RZhUhQEhA1cf6A9t6TIsp+wWdu5fEHIFfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+	s=arc-20240116; t=1708943413; c=relaxed/simple;
+	bh=PzLygCOwXvtGAVXHFdpWVOEeJPDkmJsSwnSUM+iouxQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nUZaKC6qW//lv5xdgz8W+D5PXDdsRqtW80qH24gFU3DCRR5m5LUTy67OqOkX+6d6mmflBN+2qaB+HA7T6AfjppMANyaHJhlEtygAC5qRiSM8Nni3jH4Jjdu4BlZtzFGZLRKKuSWkSoOdu2O7cyWSCGmamRKYT5T+K7PweaeFk90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PVY5zDhQ; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 4CEE868CFE; Mon, 26 Feb 2024 12:04:15 +0100 (CET)
-Date: Mon, 26 Feb 2024 12:04:14 +0100
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=UGOSCCyPj/BmRrHF9CnihwGu6XS72OjDXvKcF03cHYA=; b=PVY5zDhQgnDSI3xSU6JaYDl3yV
+	DI+C56e+8os7t3dK8OC8gGlQMnO6B1Nf5dsaqNKizXuShwPEAfCqW6NEI9wrzKg/tX70chdIPPUsW
+	AV7KihXFeQpy9VwQRd8rNmFKm6KBpfwgv37P2mlUz2ih5C0wC7LRIYrSyXYrriLDQEYYmt5FDMLwI
+	B3wpoIKggevVlZ+30j0svvtMdwN0KMSrsP37jyLCZwmoKIN+FlFn7FQSXgwsbUobSjRWDT4tAMsUC
+	2lE4G1uSQEBameQtvWHf0bpn4xAibws088GAdTVLnpWSKThCGSU3LqsCnaCGOMzURH23XOcuAVhN+
+	SS3AJNVQ==;
+Received: from 213-147-167-65.nat.highway.webapn.at ([213.147.167.65] helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1reYFM-000000004WJ-2FR6;
+	Mon, 26 Feb 2024 10:30:09 +0000
 From: Christoph Hellwig <hch@lst.de>
-To: Heming Zhao <heming.zhao@suse.com>
-Cc: Christoph Hellwig <hch@lst.de>, song@kernel.org,
-	guoqing.jiang@linux.dev, linux-raid@vger.kernel.org, colyli@suse.de,
-	hare@suse.de
-Subject: Re: [PATCH] md/md-bitmap: fix incorrect usage for sb_index
-Message-ID: <20240226110414.GA28930@lst.de>
-References: <20240223121128.28985-1-heming.zhao@suse.com> <20240223153713.GA1366@lst.de> <a19824b2-f1c5-460f-9688-35d8c4c1605e@suse.com>
+To: Jens Axboe <axboe@kernel.dk>,
+	Mike Snitzer <snitzer@kernel.org>,
+	Mikulas Patocka <mpatocka@redhat.com>,
+	Song Liu <song@kernel.org>,
+	Yu Kuai <yukuai3@huawei.com>,
+	Philipp Reisner <philipp.reisner@linbit.com>,
+	Lars Ellenberg <lars.ellenberg@linbit.com>,
+	=?UTF-8?q?Christoph=20B=C3=B6hmwalder?= <christoph.boehmwalder@linbit.com>
+Cc: drbd-dev@lists.linbit.com,
+	dm-devel@lists.linux.dev,
+	linux-block@vger.kernel.org,
+	linux-raid@vger.kernel.org
+Subject: atomic queue limit updates for stackable devices v2
+Date: Mon, 26 Feb 2024 11:29:48 +0100
+Message-Id: <20240226103004.281412-1-hch@lst.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a19824b2-f1c5-460f-9688-35d8c4c1605e@suse.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Sat, Feb 24, 2024 at 04:41:43PM +0800, Heming Zhao wrote:
-> maybe I misunderstood your meaning, do you mean: you don't like the design of the bitmap, and you hope/plan to drop it?
-> bitmap is a journal-like stuff. we could get an idea from filesystem journal, just write data status to the bitmap area, rather than managing it in kernel memory. with this idea, writing data protection may involve more simpler code, the replay will become more complex.
+Hi all,
 
-The main problem with the dm-bitmap code is the way it does I/O.  Using
-->bmap to try to map blocks ahead is cumbersome, and unsafe in many
-ways.  If you want to keep the MD bitmap code alive someone needs to
-rewrite it to go through the file systems read_iter/write_iter ops
-and do direct I/O.
+this series adds new helpers for the atomic queue limit update
+functionality and then switches dm and md over to it.  The dm switch is
+pretty trivial as it was basically implementing the model by hand
+already, md is a bit more work.
 
+I've run the mdadm testsuite, and it has the same (rather large) number
+of failures as the baseline.  I've still not managed to get the dm
+testuite running unfortunately, but it survives xfstests which exercises
+quite a few dm targets and blktests.
+
+nvme-multipath will be handled separately as it is too tightly integrated
+with the rest of nvme.
+
+Changes since v1:
+ - a few kerneldoc fixes
+ - fix a line remove after testing in raid0
+ - also add drbd
+
+Diffstat:
+ block/blk-settings.c           |   47 ++++++---
+ drivers/block/drbd/drbd_main.c |   13 +-
+ drivers/block/drbd/drbd_nl.c   |  210 +++++++++++++++++++----------------------
+ drivers/md/dm-table.c          |   27 ++---
+ drivers/md/md.c                |   37 +++++++
+ drivers/md/md.h                |    3 
+ drivers/md/raid0.c             |   37 +++----
+ drivers/md/raid1.c             |   24 +---
+ drivers/md/raid10.c            |   52 ++++------
+ drivers/md/raid5.c             |  123 ++++++++++--------------
+ include/linux/blkdev.h         |    5 
+ 11 files changed, 305 insertions(+), 273 deletions(-)
 
