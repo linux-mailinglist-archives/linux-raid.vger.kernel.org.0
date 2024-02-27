@@ -1,65 +1,65 @@
-Return-Path: <linux-raid+bounces-914-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-909-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 300C4869882
-	for <lists+linux-raid@lfdr.de>; Tue, 27 Feb 2024 15:37:29 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 497C186922B
+	for <lists+linux-raid@lfdr.de>; Tue, 27 Feb 2024 14:33:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DE4642860BE
-	for <lists+linux-raid@lfdr.de>; Tue, 27 Feb 2024 14:37:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DBA051F2B8A4
+	for <lists+linux-raid@lfdr.de>; Tue, 27 Feb 2024 13:33:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E01926A033;
-	Tue, 27 Feb 2024 14:37:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1529F13B7A3;
+	Tue, 27 Feb 2024 13:32:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R4pn/1T+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qe95m0cj"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A89E813A26F
-	for <linux-raid@vger.kernel.org>; Tue, 27 Feb 2024 14:37:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEC732F2D
+	for <linux-raid@vger.kernel.org>; Tue, 27 Feb 2024 13:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709044643; cv=none; b=Dbzt/SXult8123+Dp8bvqd0k4cj4aHEA8TND47yk1X0tvf97SWIHnrIzmjjK7TpHC/sLANinI2dJx50RTwTpuCIuxYnvgGrotU2Zqaumo7BqBAoxw2Glqc/NJriXLPXOqi/8BSovbjCKmfoL+o2Fw/qq1V8uIFpcy9MEgCxh/rM=
+	t=1709040751; cv=none; b=C7ArVHJ/balHxe+8kS1i6jmyTM51ak4mUCujIPBXIHPmGhIOaIRCnhPU8J0sAqTzUsLiC0PVSH3dbIvltuWmKv+xtYAnYSOtoTtyq0ySaibogmBemfXV//FlZ4rFGbl6FIaOXZE1J8mEq7cUAjy3bZP6vtvmyZMOkGGOGrCIVt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709044643; c=relaxed/simple;
-	bh=TAZuETMtx59N+TZkP2u4d//zqz8LfnjMat/UV6mqhxo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=a2Art3Laf3w6cChuJ0HJbVkmrK5BBBUcI2DkTkMAmBa7Kt7GlP5bV10zW5S/gjR3n/1DoEwHOxHaBymyrxzroBlZ4GNxWjcO47wbmVKhKsrD/XaWn+8H+xm95xNz93y4qdhsYbI4Bho5LP+MkL3BZt0vtDJc38K1SCxmezvrll8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R4pn/1T+; arc=none smtp.client-ip=192.198.163.7
+	s=arc-20240116; t=1709040751; c=relaxed/simple;
+	bh=yI1AZFvsCXvk+tcpSOxdx9fepAVS7vzwoPUouISPaw4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KcVCvVF1zjbLE+KNIbJZ9fyXG5l2KgwOWq0Rf/kEJ3OHnLeSddLo3TFFPfOHvQ65Rc3Jf8gLwiy4xuuTNw3fN7bNDNpUEjP4/0buNRLDzGltiUjhKssxOs0zuul/pIH6bfbm0r1d1gvJEIiUe4d76bcShcx+9dP43Ct4Ag9xraw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qe95m0cj; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709044642; x=1740580642;
+  t=1709040750; x=1740576750;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=TAZuETMtx59N+TZkP2u4d//zqz8LfnjMat/UV6mqhxo=;
-  b=R4pn/1T+Z52ACMZGZszRUXh92h/gEfcjeaH5p4K/uqzNaLGPzIXRgi9h
-   sOy/VphYoa6wiKEaL8w2gdrqR08if3Bvqd4AwT1yHWB3Ow4+c64XKnJX8
-   mTniZdcHQAiot3WeHADL7BTsVAfRPsyXcXUYREIVB2M79cMBYEITgcM9X
-   +2jWt01DPSGNbgcAu6tn/Q+iVGBh4Lamkm3fIS+JibrD7GgIxuMa3PtUJ
-   tP8fco+ysM0exawHvhQDhDY3Jo/Vbyg50JmeGX1TQSh5QDZbu/+XnU542
-   HfkSwbmSg+w7EqZD0BarFxjjbX8hrIwRAMzAHlYpFAybCB77w3duRI8wY
+  bh=yI1AZFvsCXvk+tcpSOxdx9fepAVS7vzwoPUouISPaw4=;
+  b=Qe95m0cjHLcrtJaxDSkC68S3s3VdlxJ62Ngbi3l/LzLauAUCL0nCjK7g
+   YQ/mGawzo2mZCNBqx3fbKz8TOUd8LUaseLEJB5bQUnZuOs1cJrm0lffEN
+   GJwXAJ0Km0KnMamwig9qkSfTDHcxyI9BCmMC9Q/GVuMPS/BBAw5nQqNYT
+   xLikAZ3OZkyk6m9a3JJ5/eVavHabj7wRLbYyCAqpEl//nydFSWninW/oW
+   +R7Tx64qkK5NW6RzSerb99Z0fZ1HnA6oYYeRjbAgJjaPc6AHIbi7dWUnl
+   zQwknE0LB2DLaMszxjKDTrHT+a8/uGA4RnQjzAMZJhFDDvIfthVqNIUN6
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="28824082"
-X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="28824082"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 06:37:21 -0800
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="14017512"
+X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
+   d="scan'208";a="14017512"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 05:32:29 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="30232776"
+X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
+   d="scan'208";a="7190104"
 Received: from unknown (HELO localhost.igk.intel.com) ([10.102.92.203])
-  by fmviesa002.fm.intel.com with ESMTP; 27 Feb 2024 06:37:19 -0800
+  by fmviesa008.fm.intel.com with ESMTP; 27 Feb 2024 05:32:28 -0800
 From: Kinga Tanska <kinga.tanska@intel.com>
 To: linux-raid@vger.kernel.org
 Cc: jes@trained-monkey.org,
 	mariusz.tkaczyk@linux.intel.com
-Subject: [PATCH,v2] Detail: remove duplicated code
-Date: Tue, 27 Feb 2024 03:36:14 +0100
-Message-Id: <20240227023614.32386-1-kinga.tanska@intel.com>
+Subject: [PATCH] super-intel: respect IMSM_DEVNAME_AS_SERIAL flag
+Date: Tue, 27 Feb 2024 07:36:39 +0100
+Message-Id: <20240227063639.31396-1-kinga.tanska@intel.com>
 X-Mailer: git-send-email 2.26.2
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
@@ -69,72 +69,44 @@ List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Remove duplicated code from Detail(), where MD_UUID and MD_DEVNAME
-are being set. Superblock is no longer required to print system
-properties. Now it tries to obtain map in two ways.
+IMSM_DEVNAME_AS_SERIAL flag was respected only when searching
+serial using nvme or scsi device wasn't successful. This
+flag shall be applied first, to have user settings with
+the highest priority.
 
 Signed-off-by: Kinga Tanska <kinga.tanska@intel.com>
 ---
- Detail.c | 33 +++++++++++++--------------------
- 1 file changed, 13 insertions(+), 20 deletions(-)
+ super-intel.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/Detail.c b/Detail.c
-index 57ac336f..92affdc6 100644
---- a/Detail.c
-+++ b/Detail.c
-@@ -226,6 +226,9 @@ int Detail(char *dev, struct context *c)
- 		str = map_num(pers, array.level);
+diff --git a/super-intel.c b/super-intel.c
+index 6bdd5c4c..880e5977 100644
+--- a/super-intel.c
++++ b/super-intel.c
+@@ -4172,17 +4172,17 @@ static int imsm_read_serial(int fd, char *devname,
  
- 	if (c->export) {
-+		char nbuf[64];
-+		struct map_ent *mp = NULL, *map = NULL;
+ 	memset(buf, 0, sizeof(buf));
+ 
++	if (check_env("IMSM_DEVNAME_AS_SERIAL")) {
++		memset(serial, 0, serial_buf_len);
++		fd2devname(fd, (char *) serial);
++		return 0;
++	}
 +
- 		if (array.raid_disks) {
- 			if (str)
- 				printf("MD_LEVEL=%s\n", str);
-@@ -247,32 +250,22 @@ int Detail(char *dev, struct context *c)
- 				       array.minor_version);
- 		}
+ 	rv = nvme_get_serial(fd, buf, sizeof(buf));
  
--		if (st && st->sb && info) {
--			char nbuf[64];
--			struct map_ent *mp, *map = NULL;
+ 	if (rv)
+ 		rv = scsi_get_serial(fd, buf, sizeof(buf));
+ 
+-	if (rv && check_env("IMSM_DEVNAME_AS_SERIAL")) {
+-		memset(serial, 0, MAX_RAID_SERIAL_LEN);
+-		fd2devname(fd, (char *) serial);
+-		return 0;
+-	}
 -
--			fname_from_uuid(st, info, nbuf, ':');
--			printf("MD_UUID=%s\n", nbuf + 5);
-+		if (info)
- 			mp = map_by_uuid(&map, info->uuid);
-+		if (!mp)
-+			mp = map_by_devnm(&map, fd2devnm(fd));
- 
--			if (mp && mp->path && strncmp(mp->path, DEV_MD_DIR, DEV_MD_DIR_LEN) == 0)
-+		if (mp) {
-+			__fname_from_uuid(mp->uuid, 0, nbuf, ':');
-+			printf("MD_UUID=%s\n", nbuf + 5);
-+			if (mp->path && strncmp(mp->path, DEV_MD_DIR, DEV_MD_DIR_LEN) == 0)
- 				printf("MD_DEVNAME=%s\n", mp->path + DEV_MD_DIR_LEN);
-+		}
- 
-+		map_free(map);
-+		if (st && st->sb) {
- 			if (st->ss->export_detail_super)
- 				st->ss->export_detail_super(st);
--			map_free(map);
--		} else {
--			struct map_ent *mp, *map = NULL;
--			char nbuf[64];
--			mp = map_by_devnm(&map, fd2devnm(fd));
--			if (mp) {
--				__fname_from_uuid(mp->uuid, 0, nbuf, ':');
--				printf("MD_UUID=%s\n", nbuf+5);
--			}
--			if (mp && mp->path && strncmp(mp->path, DEV_MD_DIR, DEV_MD_DIR_LEN) == 0)
--				printf("MD_DEVNAME=%s\n", mp->path + DEV_MD_DIR_LEN);
--
--			map_free(map);
- 		}
- 		if (!c->no_devices && sra) {
- 			struct mdinfo *mdi;
+ 	if (rv != 0) {
+ 		if (devname)
+ 			pr_err("Failed to retrieve serial for %s\n",
 -- 
 2.26.2
 
