@@ -1,131 +1,123 @@
-Return-Path: <linux-raid+bounces-973-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-975-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CBCE86BB57
-	for <lists+linux-raid@lfdr.de>; Wed, 28 Feb 2024 23:58:35 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FC2186BE21
+	for <lists+linux-raid@lfdr.de>; Thu, 29 Feb 2024 02:14:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4D16A1C23951
-	for <lists+linux-raid@lfdr.de>; Wed, 28 Feb 2024 22:58:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4ADB32859C7
+	for <lists+linux-raid@lfdr.de>; Thu, 29 Feb 2024 01:14:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82B8715DBCA;
-	Wed, 28 Feb 2024 22:57:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ObCMGTaY"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D3302557F;
+	Thu, 29 Feb 2024 01:14:47 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1B17290B;
-	Wed, 28 Feb 2024 22:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB6815D4;
+	Thu, 29 Feb 2024 01:14:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709161027; cv=none; b=oko8Z5AlwreFdg7Ls+MRKfxXVTuF7zYjAGeVvy0AlMHZs9ZIWbeB3FCR6u9XM28aRIJQaddqjEKJHrTGP1vaplk8hxdyyyCwdOjHnYM9N8tIbson73fuMYkfH22y5Jakv6QVfljuNEZkuupEjB6kMcP9oCYbQKTEdQC7tmyjnPg=
+	t=1709169287; cv=none; b=m4z2zqqIYBlO3H138DWoXSQm/ubvGji93PfRcP3/LgkzPbN76aD74YuAHoKtoKnvb+2dIcOek/xffSvowZu12EsllAl1iabU1oE9u4W2q1kU6hsoh/LR1S5woNU9uaiZQSBNHdxQPY089x3r5sg9WhiRsCtxm/Jen8pD3dNiguE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709161027; c=relaxed/simple;
-	bh=rjrBsSeN4TvfsIeude8FJjx7Vee0SyykGlyHSUvPlkU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Hc/CRwQlTzORP5lXLe8nfS+XwzXAvVnFo8+07UFOkkm814Th99HSMo42Dn9BpGDZLnWKaTteg49NKqBaAWpsvGLZ5KkHBO0g+ZWVMJSdXz6dTHRYgQleXfMMKzBspZwXSnWtWcAkspM1Owwmlm43hcL/8h17W7QdEa9w48iJXig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ObCMGTaY; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=s9Pu6ieiVUWU70yfnx7yKzpl91lyIUDqJOc53o+My9E=; b=ObCMGTaYmZ7eGaBIveicf6zCPg
-	4ldJZK3Zo/x9AzzJN+CyLM4jJgIgwbFC5bApatXQGhx3iDMfEQL+2Rc8oDSIj3Bpo4bOOqTjY/VUx
-	p9FHFxyBZ5XG1SLLPVDWVT+sSxR10tnFG8PmOSPxceqiRaUPC5Z7YCQ4oSDD13tZ6gqUOZKrLga33
-	wBVeBIo6p6zAHp4M+FYPMTJuLcjjBzLhQItZOYd2BODrPdKRcEFGuzSnRTUY4RVwE3HDE8KVZe2oY
-	GjPu5Fr/BVqq9v0i4JN4BYMvryraC5/39T6UIE+96kQ/e0vNpjxqnX9G//ASIDbgf/BPQXYR7mBVM
-	52OC7idg==;
-Received: from [4.28.11.157] (helo=localhost)
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rfSrI-0000000BCQ7-3WqO;
-	Wed, 28 Feb 2024 22:57:04 +0000
-From: Christoph Hellwig <hch@lst.de>
-To: Jens Axboe <axboe@kernel.dk>,
-	Mike Snitzer <snitzer@kernel.org>,
-	Mikulas Patocka <mpatocka@redhat.com>,
-	Song Liu <song@kernel.org>,
-	Yu Kuai <yukuai3@huawei.com>
-Cc: dm-devel@lists.linux.dev,
-	linux-block@vger.kernel.org,
-	linux-raid@vger.kernel.org
-Subject: [PATCH 14/14] block: remove disk_stack_limits
-Date: Wed, 28 Feb 2024 14:56:53 -0800
-Message-Id: <20240228225653.947152-15-hch@lst.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240228225653.947152-1-hch@lst.de>
-References: <20240228225653.947152-1-hch@lst.de>
+	s=arc-20240116; t=1709169287; c=relaxed/simple;
+	bh=jvzwDYNMl5w8ktvjCOLH/IA6mhdUthHTHBdZ65FsKWw=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=V8io/2PIcbpl7+uKtSvGGEHiE316bwxsHM5l/4GSwLn1KDRpsYLKEtvnjb8SpGzKF4A+Xg4dxY+PSTSyz487vNi0cXMSzpNaV+RfBT4y/a+QjWmskiFm1Fv/pYzHDW8dTCkAdXkKU+o717dN0Gri9dAd5a1LuZ8P4K1F+LnIIVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TlYCs2nXvz4f3lDF;
+	Thu, 29 Feb 2024 09:14:33 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id B64FF1A0232;
+	Thu, 29 Feb 2024 09:14:40 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP1 (Coremail) with SMTP id cCh0CgCXaBF+2t9lmqThFQ--.56717S3;
+	Thu, 29 Feb 2024 09:14:40 +0800 (CST)
+Subject: Re: [PATCH md-6.9 v3 00/11] md/raid1: refactor read_balance() and
+ some minor fix
+To: Song Liu <song@kernel.org>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: xni@redhat.com, paul.e.luse@linux.intel.com, shli@fb.com, neilb@suse.com,
+ linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+ yi.zhang@huawei.com, yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <20240228114333.527222-1-yukuai1@huaweicloud.com>
+ <CAPhsuW5cJZdvia0HSDcn7v+62E04AP5P=UaqUW4LKDMqm33PAQ@mail.gmail.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <4da77457-6eb7-1977-4686-28e4a7aab8e2@huaweicloud.com>
+Date: Thu, 29 Feb 2024 09:14:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <CAPhsuW5cJZdvia0HSDcn7v+62E04AP5P=UaqUW4LKDMqm33PAQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-CM-TRANSID:cCh0CgCXaBF+2t9lmqThFQ--.56717S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrtrW3Zw1xWF4xWrW8ur1kAFb_yoWkGrbEg3
+	Z0v348GwnxJF42kF47GF4xXFW0q3W5uw1UZayqvr1fXFykZ3WkGrWktrs7Wa4fXayrtFna
+	kFW8uF4IqwsrAjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb3AFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq
+	3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-disk_stack_limits is unused now, remove it.
+Hi,
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/blk-settings.c   | 24 ------------------------
- include/linux/blkdev.h |  2 --
- 2 files changed, 26 deletions(-)
+在 2024/02/29 5:23, Song Liu 写道:
+> On Wed, Feb 28, 2024 at 3:49 AM Yu Kuai <yukuai1@huaweicloud.com> wrote:
+>>
+>> From: Yu Kuai <yukuai3@huawei.com>
+>>
+>> Changes in v3:
+>>   - add patch 2, and fix that setup_conf() is missing in patch3;
+>>   - add some review tag from Xiao Ni(other than patch 2,3);
+> 
+> It appears that v3 causes mdadm test "01replace" to run forever.
+> I haven't figured out why, but v2 doesn't seem to have this issue.
 
-diff --git a/block/blk-settings.c b/block/blk-settings.c
-index 13865a9f89726c..3c7d8d638ab59d 100644
---- a/block/blk-settings.c
-+++ b/block/blk-settings.c
-@@ -916,30 +916,6 @@ void queue_limits_stack_bdev(struct queue_limits *t, struct block_device *bdev,
- }
- EXPORT_SYMBOL_GPL(queue_limits_stack_bdev);
- 
--/**
-- * disk_stack_limits - adjust queue limits for stacked drivers
-- * @disk:  MD/DM gendisk (top)
-- * @bdev:  the underlying block device (bottom)
-- * @offset:  offset to beginning of data within component device
-- *
-- * Description:
-- *    Merges the limits for a top level gendisk and a bottom level
-- *    block_device.
-- */
--void disk_stack_limits(struct gendisk *disk, struct block_device *bdev,
--		       sector_t offset)
--{
--	struct request_queue *t = disk->queue;
--
--	if (blk_stack_limits(&t->limits, &bdev_get_queue(bdev)->limits,
--			get_start_sect(bdev) + (offset >> 9)) < 0)
--		pr_notice("%s: Warning: Device %pg is misaligned\n",
--			disk->disk_name, bdev);
--
--	disk_update_readahead(disk);
--}
--EXPORT_SYMBOL(disk_stack_limits);
--
- /**
-  * blk_queue_update_dma_pad - update pad mask
-  * @q:     the request queue for the device
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 285e82723d641f..75c909865a8b7b 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -926,8 +926,6 @@ extern int blk_stack_limits(struct queue_limits *t, struct queue_limits *b,
- 			    sector_t offset);
- void queue_limits_stack_bdev(struct queue_limits *t, struct block_device *bdev,
- 		sector_t offset, const char *pfx);
--extern void disk_stack_limits(struct gendisk *disk, struct block_device *bdev,
--			      sector_t offset);
- extern void blk_queue_update_dma_pad(struct request_queue *, unsigned int);
- extern void blk_queue_segment_boundary(struct request_queue *, unsigned long);
- extern void blk_queue_virt_boundary(struct request_queue *, unsigned long);
--- 
-2.39.2
+I'm running tests while sending this version, and I found that too this
+morning. :(
+
+I'll check out what's wrong and update soon.
+
+Thanks,
+Kuai
+
+> 
+> Thanks,
+> Song
+> 
+>> Changes in v2:
+>>   - add new conter in conf for patch 2;
+>>   - fix the case choose next idle while there is no other idle disk in
+>>   patch 3;
+>>   - add some review tag from Xiao Ni for patch 1, 4-8
+>>
+>> The original idea is that Paul want to optimize raid1 read
+>> performance([1]), however, we think that the original code for
+>> read_balance() is quite complex, and we don't want to add more
+>> complexity. Hence we decide to refactor read_balance() first, to make
+>> code cleaner and easier for follow up.
+> 
+> .
+> 
 
 
