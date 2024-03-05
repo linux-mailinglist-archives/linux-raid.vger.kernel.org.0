@@ -1,124 +1,135 @@
-Return-Path: <linux-raid+bounces-1094-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-1096-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDD5F8704B1
-	for <lists+linux-raid@lfdr.de>; Mon,  4 Mar 2024 16:01:23 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C112C8716C8
+	for <lists+linux-raid@lfdr.de>; Tue,  5 Mar 2024 08:29:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A7E752862D8
-	for <lists+linux-raid@lfdr.de>; Mon,  4 Mar 2024 15:01:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D6ED91C210EC
+	for <lists+linux-raid@lfdr.de>; Tue,  5 Mar 2024 07:29:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98BB847793;
-	Mon,  4 Mar 2024 15:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iYrVYos8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 666097EEF2;
+	Tue,  5 Mar 2024 07:29:33 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A64946B8B
-	for <linux-raid@vger.kernel.org>; Mon,  4 Mar 2024 15:01:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27C77E0E8;
+	Tue,  5 Mar 2024 07:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709564468; cv=none; b=YGrY02rZXlBHhO/TqhKGtrTESCEbvAKUN1yTv3U1dIt97c9Unnj2+LQsewmq4/D4u/NGo7RbRItSbCyLC+kfWhTq2hCmFKUju31iopVokb5bRBpz6a+AFp0sUMj0A9bgB+t3zRYvhCscV2qsnr6N9dIGcNlnq65rV2RuypcOREI=
+	t=1709623773; cv=none; b=jtv5yUC7rxZ2MQDzy1TxyqQwLIK80qcXf84hzlvYxnT7e5Wky71npuN1toEYLFRIdXPK+o/6R+bxWuGUWPHdOqGY8+vDC7+6iLVDNBxN1I9PlFJGD4zyFDP2sfqoQaDSGzEDsEoxbbLVTU/pWVMD3IgEelIiWeYfhibQDkyUGSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709564468; c=relaxed/simple;
-	bh=gudjzYHutrrl1pDWYjaVVbYekNWuJO9I8LuZFggfMa0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KR+kUkiZGPZWuyeofXKtJd4I2Rmn9ZpXqZ+IQm5TNEbr/RfsFizb26uiEyo1W5IQ/NfBoRiJZouqVQM17RPZUkI2f8Hpfjj8Q8j9Jqz81diI/b0jzKSGjHTz44nCH0Lc1mKIskq5rZMWrSfVCioJZVD3/EyTrrOY7H3/5UVAKqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iYrVYos8; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709564466; x=1741100466;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=gudjzYHutrrl1pDWYjaVVbYekNWuJO9I8LuZFggfMa0=;
-  b=iYrVYos8eZFEkYhizkkwzVE5jk67U70zAvKiYBgpINFlrdE9zkpJVqlE
-   i3dNDIp3s7BpTCaNUa+g+R9tKQwPkqUwsS4D8kgu4Voju8olTEuqnOdIN
-   wft5TD2RupAA4d5CvJpfqVV0ptYQ5GUm5TxG0o+45xgEwfypKm16irAzG
-   3qygJ9SDPG4VGgEeZMrDA2oQPH6DG4Kzd8Nq6H9gBKRVyy+sbDLII6Z69
-   MXdU+dITWtvufo9d+FiyKay1MqT8k6Mie79vj30sV7+L4Vf65bT6sWncU
-   KUPiub/0faEbM2+Ys7H4RYc1g7r8cucu5AUjlgM3uQbuMbxk+3qjLX6UL
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="3914863"
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="3914863"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 07:00:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="8967318"
-Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.237.142.43])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 07:00:56 -0800
-Date: Mon, 4 Mar 2024 16:00:51 +0100
-From: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-To: Andreas Klauer <Andreas.Klauer@metamorpher.de>
-Cc: linux-raid@vger.kernel.org
-Subject: Re: mdadm 4.3 rejects /dev/md128 and larger numbers
-Message-ID: <20240304160051.000037a7@linux.intel.com>
-In-Reply-To: <ZeXKYbxagk7SD0UH@metamorpher.de>
-References: <ZeXKYbxagk7SD0UH@metamorpher.de>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1709623773; c=relaxed/simple;
+	bh=ojoWb/Jkc5XMZZ+TuEOXOAjzQPzYFCm5VsSiYRYXWDE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SREdcTVKV33f5LHSMk3Hg4rKPLZR0YeuM778R/EefDX+iepLllGpacJMG+4vEh/jtP2DfrUOZEm1kARNFQardbtSLEoU6nN5ePawL4Bk+uXx7F6UzI6jA8xk3bO4vGfTm0f+TggFuH8zUUjk5AyYANWPUO1+GGwSahwmbM62N+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TpnHy2BjWz4f3lgB;
+	Tue,  5 Mar 2024 15:29:18 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id C2E661A016E;
+	Tue,  5 Mar 2024 15:29:25 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgBHGBHRyeZlGnf+Fw--.17927S4;
+	Tue, 05 Mar 2024 15:29:23 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: xni@redhat.com,
+	zkabelac@redhat.com,
+	agk@redhat.com,
+	snitzer@kernel.org,
+	mpatocka@redhat.com,
+	dm-devel@lists.linux.dev,
+	song@kernel.org,
+	yukuai3@huawei.com,
+	heinzm@redhat.com,
+	jbrassow@redhat.com,
+	neilb@suse.de
+Cc: linux-kernel@vger.kernel.org,
+	linux-raid@vger.kernel.org,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH md-6.8 v2 0/9] dm-raid, md/raid: fix v6.7 regressions part2
+Date: Tue,  5 Mar 2024 15:22:57 +0800
+Message-Id: <20240305072306.2562024-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgBHGBHRyeZlGnf+Fw--.17927S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7try8GFy8Zry5Xr1rCFyDZFb_yoW8WFW7pa
+	y3CF13Zw4kAr13ursxW3Wjga4rta1rJrWDJ3sxGw4rZr1UZr1Ikw17tF15WF98ZFyfXr4D
+	JF4ay3WUGF1jqrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvY14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v2
+	6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0J
+	UQvtAUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Mon, 4 Mar 2024 14:19:29 +0100
-Andreas Klauer <Andreas.Klauer@metamorpher.de> wrote:
+From: Yu Kuai <yukuai3@huawei.com>
 
-> Hello,
-> 
-> since mdadm 4.3, trying to use numbers larger than 127 results in:
-> 
->   mdadm: Value "/dev/md3032" cannot be set as devname. 
->   Reason: Not POSIX compatible. Value ignored.
-> 
-> Because in util.c :: is_devname_numbered() (commit 25aa73291):
-> 
->   if (val > 127)
->     return false;
-> 
-> The kernel seems to be fine with MINORMASK (2^20 - 1).
-> If so, instead of 127, the limit here should be 1048575?
-> 
-> I don't need a million arrays. But I do have more arrays than 
-> average because I use partitions instead of one big array 
-> for everything. And some flexibility in using distinct number 
-> ranges per group of arrays makes /proc/mdstat easier to read.
-> 
-> Regards,
-> Andreas Klauer
-> 
+Changes in v2:
+ - Change the title from '-next' to 'md-6.8';
+ - Add Acked-by tag from Mike;
+ - Add Singed-off-by tag from Xiao;
 
-Hello Andreas,
-Indeed, that it the case I missed. Sorry for bringing regression.
+link to part1: https://lore.kernel.org/all/CAPhsuW7u1UKHCDOBDhD7DzOVtkGemDz_QnJ4DUq_kSN-Q3G66Q@mail.gmail.com/
 
-In the longer term, for better user experience I would like promote conception
-called "named arrays", so could you please try to create "/dev/md/md_3032" and
-test and see if that works for you?
+part1 contains fixes for deadlocks for stopping sync_thread
 
-The difference is that you will not be restricted to numbered devices, you can
-also use asci letters like: "md_myarray", "md_do_not_touch".
+This set contains fixes:
+ - reshape can start unexpected, cause data corruption, patch 1,5,6;
+ - deadlocks that reshape concurrent with IO, patch 8;
+ - a lockdep warning, patch 9;
 
-Of course, it is kind of regression so I'm open to fix it for you but if I will
-be able to convince you to use named arrays format (and help me fix issues!)
-then whole community will gain.
+I'm running lvm2 tests with following scripts with a few rounds now,
 
-You have to enable it first, but please note that it is not widely used now:
+for t in `ls test/shell`; do
+        if cat test/shell/$t | grep raid &> /dev/null; then
+                make check T=shell/$t
+        fi
+done
 
-echo CREATE name=yes > /etc/mdadm.conf
+There are no deadlocks now, there are still some fs corruption, however,
+it's verified there are no new failed tests compared to v6.6.
 
-Please test it and let me know!
+Yu Kuai (9):
+  md: don't clear MD_RECOVERY_FROZEN for new dm-raid until resume
+  md: export helpers to stop sync_thread
+  md: export helper md_is_rdwr()
+  md: add a new helper reshape_interrupted()
+  dm-raid: really frozen sync_thread during suspend
+  md/dm-raid: don't call md_reap_sync_thread() directly
+  dm-raid: add a new helper prepare_suspend() in md_personality
+  dm-raid456, md/raid456: fix a deadlock for dm-raid456 while io
+    concurrent with reshape
+  dm-raid: fix lockdep waring in "pers->hot_add_disk"
 
-Thanks,
-Mariusz
+ drivers/md/dm-raid.c | 93 ++++++++++++++++++++++++++++++++++----------
+ drivers/md/md.c      | 73 ++++++++++++++++++++++++++--------
+ drivers/md/md.h      | 38 +++++++++++++++++-
+ drivers/md/raid5.c   | 32 ++++++++++++++-
+ 4 files changed, 196 insertions(+), 40 deletions(-)
+
+-- 
+2.39.2
+
 
