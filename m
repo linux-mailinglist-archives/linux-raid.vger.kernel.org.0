@@ -1,233 +1,151 @@
-Return-Path: <linux-raid+bounces-1180-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-1182-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3F3287EF66
-	for <lists+linux-raid@lfdr.de>; Mon, 18 Mar 2024 19:01:07 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C85F087FBA7
+	for <lists+linux-raid@lfdr.de>; Tue, 19 Mar 2024 11:18:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6B5391F237FB
-	for <lists+linux-raid@lfdr.de>; Mon, 18 Mar 2024 18:01:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7BC3F280E23
+	for <lists+linux-raid@lfdr.de>; Tue, 19 Mar 2024 10:18:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D742C55E7D;
-	Mon, 18 Mar 2024 18:00:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 422C57D419;
+	Tue, 19 Mar 2024 10:17:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PYGBFiDR"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A395644E
-	for <linux-raid@vger.kernel.org>; Mon, 18 Mar 2024 18:00:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5889D7C6CC
+	for <linux-raid@vger.kernel.org>; Tue, 19 Mar 2024 10:17:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710784850; cv=none; b=lkg+T73tiuv/qiR6zNxmdl5Su5Jayj+FofWSl8SjLo1aq18k0DzK4+KXjM9SSB8F/5IfBxgq8bUjisv31orOZu2oWBSHbnhNRI6QG2h3PRPMlMEW2lTfPwBD3mZKe0tR9psXHeseB7HD9nG4c0sgddkDLjxw3bn5JBj91TmkHEc=
+	t=1710843478; cv=none; b=BSRQ0nyPc5ZGqh1GXDMYzecrnkM6j6k2i2PlJYTy1apSGPktSDNgyL92TTBeJBaZM4/RLJ4qKksH8pesY/DHvy/bxzMSRK635VgGy8mpeTmZa6TznRsm+qayKgaNqRucVRpwpsBd+IGNtw2NWCGZ8HIp4TKJwNE+jxFdlkatVqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710784850; c=relaxed/simple;
-	bh=OES84+7byXumjHSAOGTBO3R15VYn1ttuzpawWvt9q7I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ldmoO5xWQ9XyoaUWUUvqn7SUElQSbY0LXTXiO5JsynPDiEHdC38XMBJZZIrsWfQe3yZGpVJKcQiFMzs36J02Gac6vapGm4fUjXQIYBCJY2+LhzcVg1cd407bfzjJN2Fui8GMYFM3lpKZE/FmN0Xl7fiEajDLC0ENlLR8N2lzpt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.178.112] (p57b378ee.dip0.t-ipconnect.de [87.179.120.238])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id B65B861E5FE06;
-	Mon, 18 Mar 2024 19:00:20 +0100 (CET)
-Message-ID: <d9b973fb-c7cf-4d6e-9a3c-092893112b0d@molgen.mpg.de>
-Date: Mon, 18 Mar 2024 19:00:20 +0100
+	s=arc-20240116; t=1710843478; c=relaxed/simple;
+	bh=lZpOyE5AP3t4pAWF1y7sNwGoIoPjv6dYjG+zlOUl3p8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aanl82JLqTDfcg24h/TvXuGTtbjeV5nhrkpMV2JBO9m/blgLRcC9WsluH0cuogQEmh6b8lM/lh/LXnC4fr+6H0Wj3vnDBu9cl+VcCdZAEVuXvTnR4NUbTDoGHrTKJp80LYjA1ip45jM3hg4zaIgJP2xVUdeeD5SV6CW9MrIhbEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PYGBFiDR; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710843478; x=1742379478;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=lZpOyE5AP3t4pAWF1y7sNwGoIoPjv6dYjG+zlOUl3p8=;
+  b=PYGBFiDRQy+0ovuNofkIzrtcJIUJ1Xy2TNTfEfENYblvg1sdZKugbddr
+   PnjveUdfwRRnWKV37t7ABzBL8xe3O8Q6+6FDGvy4/PmU0bCiaSZs8Iqoa
+   iIyeUIumwrioLDUdlNtjd14TjNrk6kSDkgqKrQT4ybmcB81VofcPdDWPH
+   jvnmZKBWk+DrT6+vWvK9R1zXYORGuM7HjTqMgqA8EFvrjZQFAbaeh1Gmq
+   YbTrZGtx2oMyyl9GseoWNvZxX9SZETCcsavLPG1jrJ1bgIUiuYCPZ3qPM
+   /nm4n0wos4GR9KugLrhFRaa0psI1yyjPXcuapegSRx+sAssPddrQDSrdd
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="5551714"
+X-IronPort-AV: E=Sophos;i="6.07,136,1708416000"; 
+   d="scan'208";a="5551714"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 03:17:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,136,1708416000"; 
+   d="scan'208";a="14145023"
+Received: from patodeveloperka.igk.intel.com ([10.102.109.29])
+  by orviesa006.jf.intel.com with ESMTP; 19 Mar 2024 03:17:55 -0700
+From: Mateusz Kusiak <mateusz.kusiak@intel.com>
+To: linux-raid@vger.kernel.org
+Cc: mariusz.tkaczyk@linux.intel.com,
+	jes@trained-monkey.org
+Subject: [PATCH] Remove all "if zeros" pt.2
+Date: Tue, 19 Mar 2024 11:15:29 +0100
+Message-Id: <20240319101529.5098-1-mateusz.kusiak@intel.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] Add key ENCRYPTION_NO_VERIFY to conf
-Content-Language: en-US
-To: Blazej Kucman <blazej.kucman@intel.com>
-Cc: mariusz.tkaczyk@linux.intel.com, jes@trained-monkey.org,
- linux-raid@vger.kernel.org
-References: <20240318162535.13674-1-blazej.kucman@intel.com>
- <20240318162535.13674-4-blazej.kucman@intel.com>
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240318162535.13674-4-blazej.kucman@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Dear Blazej,
+Commit e15e8b00cbce ("Remove all "if zeros"") did not remove all "if 0"
+code blocks.
 
+This commit is cleanup for that commit.
 
-Thank you for your patch.
+Signed-off-by: Mateusz Kusiak <mateusz.kusiak@intel.com>
+---
+ Build.c  |  6 ------
+ Grow.c   | 13 +------------
+ super1.c | 11 -----------
+ 3 files changed, 1 insertion(+), 29 deletions(-)
 
-Am 18.03.24 um 17:25 schrieb Blazej Kucman:
-> Add ENCRYPTION_NO_VERIFY config key and allow to disable
-> checking encryption status for given type of drives.
-> 
-> The key is introduced because of SATA Opal disks for which
-> TPM commands must be enabled in libata kernel module,
-> (libata.allow_tpm=1), otherwise it is impossible to verify
-> encryption status. TPM commands are disabled by default.
-> 
-> Currently the key only supports the "sata_opal" value,
-> if necessary, the functionality is ready to support more types of disks.
+diff --git a/Build.c b/Build.c
+index 1fbf8596a9dd..1be90e418ad1 100644
+--- a/Build.c
++++ b/Build.c
+@@ -156,12 +156,6 @@ int Build(struct mddev_ident *ident, struct mddev_dev *devlist, struct shape *s,
+ 		bitmap_fd = open(s->bitmap_file, O_RDWR);
+ 		if (bitmap_fd < 0) {
+ 			int major = BITMAP_MAJOR_HI;
+-#if 0
+-			if (s->bitmap_chunk == UnSet) {
+-				pr_err("%s cannot be opened.\n", s->bitmap_file);
+-				goto abort;
+-			}
+-#endif
+ 			bitmapsize = s->size >> 9; /* FIXME wrong for RAID10 */
+ 			if (CreateBitmap(s->bitmap_file, 1, NULL,
+ 					 s->bitmap_chunk, c->delay,
+diff --git a/Grow.c b/Grow.c
+index 5498e54fec11..97782fbc48cf 100644
+--- a/Grow.c
++++ b/Grow.c
+@@ -4417,19 +4417,8 @@ static void validate(int afd, int bfd, unsigned long long offset)
+ 		lseek64(afd, __le64_to_cpu(bsb2.arraystart)*512, 0);
+ 		if ((unsigned long long)read(afd, abuf, len) != len)
+ 			fail("read first from array failed");
+-		if (memcmp(bbuf, abuf, len) != 0) {
+-#if 0
+-			int i;
+-			printf("offset=%llu len=%llu\n",
+-			       (unsigned long long)__le64_to_cpu(bsb2.arraystart)*512, len);
+-			for (i=0; i<len; i++)
+-				if (bbuf[i] != abuf[i]) {
+-					printf("first diff byte %d\n", i);
+-					break;
+-				}
+-#endif
++		if (memcmp(bbuf, abuf, len) != 0)
+ 			fail("data1 compare failed");
+-		}
+ 	}
+ 	if (bsb2.length2) {
+ 		unsigned long long len = __le64_to_cpu(bsb2.length2)*512;
+diff --git a/super1.c b/super1.c
+index 871d19f0398c..0d059b4321b8 100644
+--- a/super1.c
++++ b/super1.c
+@@ -575,17 +575,6 @@ static void examine_super1(struct supertype *st, char *homehost)
+ 			inconsistent = 1;
+ 		}
+ 	}
+-#if 0
+-	/* This is confusing too */
+-	faulty = 0;
+-	for (i = 0; i < __le32_to_cpu(sb->max_dev); i++) {
+-		int role = __le16_to_cpu(sb->dev_roles[i]);
+-		if (role == MD_DISK_ROLE_FAULTY)
+-			faulty++;
+-	}
+-	if (faulty)
+-		printf(" %d failed", faulty);
+-#endif
+ 	printf(" ('A' == active, '.' == missing, 'R' == replacing)");
+ 	printf("\n");
+ 	for (d = 0; d < __le32_to_cpu(sb->max_dev); d++) {
+-- 
+2.39.2
 
-Please use 75 characters per line consistently.
-
-Maybe document how to test this feature, preferebly with QEMU.
-
-> Signed-off-by: Blazej Kucman <blazej.kucman@intel.com>
-> ---
->   config.c           | 25 ++++++++++++++++++++++++-
->   drive_encryption.c | 16 ++++++++++++----
->   mdadm.conf.5.in    | 13 +++++++++++++
->   mdadm.h            |  1 +
->   4 files changed, 50 insertions(+), 5 deletions(-)
-> 
-> diff --git a/config.c b/config.c
-> index 44f7dd2f..b46d71cb 100644
-> --- a/config.c
-> +++ b/config.c
-> @@ -81,7 +81,7 @@ char DefaultAltConfDir[] = CONFFILE2 ".d";
->   
->   enum linetype { Devices, Array, Mailaddr, Mailfrom, Program, CreateDev,
->   		Homehost, HomeCluster, AutoMode, Policy, PartPolicy, Sysfs,
-> -		MonitorDelay, LTEnd };
-> +		MonitorDelay, EncryptionNoVerify, LTEnd };
->   char *keywords[] = {
->   	[Devices]  = "devices",
->   	[Array]    = "array",
-> @@ -96,6 +96,7 @@ char *keywords[] = {
->   	[PartPolicy]="part-policy",
->   	[Sysfs]    = "sysfs",
->   	[MonitorDelay] = "monitordelay",
-> +	[EncryptionNoVerify] = "ENCRYPTION_NO_VERIFY",
->   	[LTEnd]    = NULL
->   };
->   
-> @@ -729,6 +730,19 @@ void monitordelayline(char *line)
->   	}
->   }
->   
-> +static bool sata_opal_encryption_no_verify;
-> +void encryption_no_verify_line(char *line)
-> +{
-> +	char *word;
-> +
-> +	for (word = dl_next(line); word != line; word = dl_next(word)) {
-> +		if (strcasecmp(word, "sata_opal") == 0)
-> +			sata_opal_encryption_no_verify = true;
-> +		else
-> +			pr_err("unrecognised word on ENCRYPTION_NO_VERIFY line: %s\n", word);
-> +	}
-> +}
-> +
->   char auto_yes[] = "yes";
->   char auto_no[] = "no";
->   char auto_homehost[] = "homehost";
-> @@ -913,6 +927,9 @@ void conf_file(FILE *f)
->   		case MonitorDelay:
->   			monitordelayline(line);
->   			break;
-> +		case EncryptionNoVerify:
-> +			encryption_no_verify_line(line);
-> +			break;
->   		default:
->   			pr_err("Unknown keyword %s\n", line);
->   		}
-> @@ -1075,6 +1092,12 @@ int conf_get_monitor_delay(void)
->   	return monitor_delay;
->   }
->   
-> +bool conf_get_sata_opal_encryption_no_verify(void)
-> +{
-> +	load_conffile();
-> +	return sata_opal_encryption_no_verify;
-> +}
-> +
->   struct createinfo *conf_get_create_info(void)
->   {
->   	load_conffile();
-> diff --git a/drive_encryption.c b/drive_encryption.c
-> index 8421e374..5b9cdc00 100644
-> --- a/drive_encryption.c
-> +++ b/drive_encryption.c
-> @@ -656,10 +656,18 @@ get_ata_encryption_information(int disk_fd, struct encryption_information *infor
->   	if (status == MDADM_STATUS_ERROR)
->   		return MDADM_STATUS_ERROR;
->   
-> -	if (is_ata_trusted_computing_supported(buffer_identify) &&
-> -	    !sysfs_is_libata_allow_tpm_enabled(verbose)) {
-> -		pr_vrb("For SATA with Trusted Computing support, required libata.tpm_enabled=1.\n");
-> -		return MDADM_STATUS_ERROR;
-> +	/* Possible OPAL support, further checks require tpm_enabled.*/
-> +	if (is_ata_trusted_computing_supported(buffer_identify)) {
-> +		/* OPAL SATA encryption checking disabled. */
-> +		if (conf_get_sata_opal_encryption_no_verify())
-> +			return MDADM_STATUS_SUCCESS;
-> +
-> +		if (!sysfs_is_libata_allow_tpm_enabled(verbose)) {
-> +			pr_vrb("Detected SATA drive /dev/%s with Trusted Computing support.\n",
-> +			       fd2kname(disk_fd));
-> +			pr_vrb("Cannot verify encryption state. Required libata.tpm_enabled=1.\n");
-
-Require*s*?
-
-> +			return MDADM_STATUS_ERROR;
-> +		}
->   	}
->   
->   	ata_opal_status = is_ata_opal(disk_fd, buffer_identify, verbose);
-> diff --git a/mdadm.conf.5.in b/mdadm.conf.5.in
-> index 787e51e9..afb0a296 100644
-> --- a/mdadm.conf.5.in
-> +++ b/mdadm.conf.5.in
-> @@ -636,6 +636,17 @@ If multiple
->   .B MINITORDELAY
->   lines are provided, only first non-zero value is considered.
->   
-> +.TP
-> +.B ENCRYPTION_NO_VERIFY
-> +The
-> +.B ENCRYPTION_NO_VERIFY
-> +disables encryption verification for devices with particular encryption support detected.
-> +Currently, only verification of SATA OPAL encryption can be disabled.
-> +It does not disable ATA security encryption verification.
-> +Available parameter
-> +.I "sata_opal".
-> +
-> +
->   .SH FILES
->   
->   .SS {CONFFILE}
-> @@ -744,6 +755,8 @@ SYSFS uuid=bead5eb6:31c17a27:da120ba2:7dfda40d group_thread_cnt=4
->   sync_speed_max=1000000
->   .br
->   MONITORDELAY 60
-> +.br
-> +ENCRYPTION_NO_VERIFY sata_opal
->   
->   .SH SEE ALSO
->   .BR mdadm (8),
-> diff --git a/mdadm.h b/mdadm.h
-> index f64bb783..9d98693b 100644
-> --- a/mdadm.h
-> +++ b/mdadm.h
-> @@ -1673,6 +1673,7 @@ extern char *conf_get_program(void);
->   extern char *conf_get_homehost(int *require_homehostp);
->   extern char *conf_get_homecluster(void);
->   extern int conf_get_monitor_delay(void);
-> +extern bool conf_get_sata_opal_encryption_no_verify(void);
->   extern char *conf_line(FILE *file);
->   extern char *conf_word(FILE *file, int allow_key);
->   extern void print_quoted(char *str);
-
-The diff looks good.
-
-
-Kind regards,
-
-Paul
 
