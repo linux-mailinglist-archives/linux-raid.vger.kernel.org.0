@@ -1,69 +1,69 @@
-Return-Path: <linux-raid+bounces-1223-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-1225-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F79988C1F6
-	for <lists+linux-raid@lfdr.de>; Tue, 26 Mar 2024 13:22:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB47F88C1F8
+	for <lists+linux-raid@lfdr.de>; Tue, 26 Mar 2024 13:22:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 834321C2CEF3
-	for <lists+linux-raid@lfdr.de>; Tue, 26 Mar 2024 12:22:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 15F351F36FA3
+	for <lists+linux-raid@lfdr.de>; Tue, 26 Mar 2024 12:22:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCE8573522;
-	Tue, 26 Mar 2024 12:21:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88D8874402;
+	Tue, 26 Mar 2024 12:21:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lSdE/83z"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ApIU8ygD"
 X-Original-To: linux-raid@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D757A12B6C
-	for <linux-raid@vger.kernel.org>; Tue, 26 Mar 2024 12:21:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27D27316A
+	for <linux-raid@vger.kernel.org>; Tue, 26 Mar 2024 12:21:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711455702; cv=none; b=Sgj2kWQhnuQ5DUCHYc/E55umV4eZgKHxpa3XwwR86SPUV4UnwRLIW52EZcfl6UXSSt7sNrkTnh+vTw5+iJ9JXOu/+Tc81lzj3OyCTnM2Gc2apot/d7Kkxud/QXkD0WTJ54yNlSCO2dJ/R3JjSDT0C+6JrMSIpp4nuE8iU3GG6iU=
+	t=1711455705; cv=none; b=qOK2eHHYobS/vO1lsgS81Dws5OwPTnLd4N/tq0eZj78EBdysvOqwNv5EiHRauPZjOB7b84t2TDBU1FZyfNsec7ckb+W2saXmIkY0b5LbJBovhYYCPBfguwNYQJXkUY1B0dZOJkhpnB1HuCYwf4aHkOzPFr/khel7+TIXigLR9mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711455702; c=relaxed/simple;
-	bh=/y0YuaFDpWGKpcMVUAF/1imv13E2F4OVbBgGfW9kcY0=;
+	s=arc-20240116; t=1711455705; c=relaxed/simple;
+	bh=SYE4jA+PrnI+riGNBmIFEd7NtGhK2AlmrdTOqfG2FTk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GmN/OMIaOhv5mkTDxbjpo6YOdjo+NB9xE2mg2Qlx0nJZCQnmz+Lh5v5KUr4cSFSNJJR9Oc5SLHAKg5pBcfqu0WIofrKWRWbjImC+Ev8wKDVFcv+dY11NLE8dLhQiLK2J1VzyNlbJI54j5dMO2quyw7SFU0QWCrPHWjaMn4rmf3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lSdE/83z; arc=none smtp.client-ip=192.198.163.10
+	 MIME-Version:Content-Type; b=fc4ZR1P0mLhawTV00H5G+alDOuls7LMAUI/NSleAYiTxqxkv+xipD9h8GrqHBoLCBIeG3xvhUJuXNKGXOR6NGsHvU0wYhVbtIaxgDxaczz/u+pTsigSXlsEXxm2GcbvBExJHZ/zRx7nO/qORfMLJkZtQ/B8ObC6N7rJg1YekuAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ApIU8ygD; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711455701; x=1742991701;
+  t=1711455703; x=1742991703;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=/y0YuaFDpWGKpcMVUAF/1imv13E2F4OVbBgGfW9kcY0=;
-  b=lSdE/83zrJu9loBDpVLTyMXABvxnKdUFQiV4oXYZgiLO/1bmbLQbVAAB
-   4/TeDSjudCE3NcoxRwnzkxbZ/eUUn6Xgp/i7fgyxCeCWWC6G4J9pLjcLl
-   be1Bpzg1TRTEly65GG0/9DXWXykt9Ed39oQTM9wFredAb2gQ2QE5Rxul0
-   9s7E3uZ9PaMGoHkEOYVr8EKN1Pjwlg8AlehkHozZI63EdZZfq+jGTOZ6W
-   K72ILB/1AHz8MOEFiwj0LU/XEhtF7ESDnRtc+ukGtCqEDSXU9DEK0FooY
-   b94DqLIPKZ0GwkEI7dXOYuWYGt7BKGeWIq0JmFEz8XlLo5++lDD6hv+7D
-   A==;
-X-CSE-ConnectionGUID: fxxVmhtWRG+ssAvZPtdvZQ==
-X-CSE-MsgGUID: fnKO7y1ERM+s0rZkQ2KiyA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="17891012"
+  bh=SYE4jA+PrnI+riGNBmIFEd7NtGhK2AlmrdTOqfG2FTk=;
+  b=ApIU8ygDihztqIYzYqMDHuFAJ5f5OaSXFhicMoRKYnV67aCLQ6H65OQF
+   b6AJs7kohjkWqs/m9mn3JefjU1Z+qdIbqACTugLV6xqj2OnASVJOwVF6c
+   0sL2iF63zClwurF3CAT0ddb951X01fDABdgGPCMxeFKrI2x6/w+Cq/SKK
+   XmzHTOOSJ1JPgkt13BcnKY0gecSVOQ51o2ZZtX+qjpGS5QiTmFxT9sq0v
+   e3cP5gOp4iH42Wmv198t0yW/gU4ABotvIxOn//O5NPieRvnYvewlJsc5p
+   KfjJRglSPsLencbdqGUayY3xPKk6njUyQB7/psQPANKeexWj5mAfZQrQp
+   w==;
+X-CSE-ConnectionGUID: wBDEimg/TUSpOkUu1WDuBw==
+X-CSE-MsgGUID: ukuwWA5yQX+2x3VqQkzbUQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="17891015"
 X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="17891012"
+   d="scan'208";a="17891015"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 05:21:40 -0700
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 05:21:42 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="20425530"
+   d="scan'208";a="20425544"
 Received: from unknown (HELO mtkaczyk-devel.igk.intel.com) ([10.102.108.91])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 05:21:39 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 05:21:41 -0700
 From: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
 To: linux-raid@vger.kernel.org
 Cc: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
 	Jes Sorensen <jes@trained-monkey.org>,
 	Nix <nix@esperi.org.uk>
-Subject: [PATCH 2/3] mdadm: Add MAINTAINERS.md
-Date: Tue, 26 Mar 2024 13:21:11 +0100
-Message-Id: <20240326122112.25552-3-mariusz.tkaczyk@linux.intel.com>
+Subject: [PATCH 3/3] mdadm: Add README.md
+Date: Tue, 26 Mar 2024 13:21:12 +0100
+Message-Id: <20240326122112.25552-4-mariusz.tkaczyk@linux.intel.com>
 X-Mailer: git-send-email 2.35.3
 In-Reply-To: <20240326122112.25552-1-mariusz.tkaczyk@linux.intel.com>
 References: <20240326122112.25552-1-mariusz.tkaczyk@linux.intel.com>
@@ -73,66 +73,107 @@ List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-Describe rules maintainer should follow.
+Describe supported metadata types, add step-by-step patch sending
+instruction, mention minimally supported kernel version and licensing.
 
 Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
 ---
- MAINTAINERS.md | 44 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 MAINTAINERS.md
+ README.md | 83 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 83 insertions(+)
+ create mode 100644 README.md
 
-diff --git a/MAINTAINERS.md b/MAINTAINERS.md
+diff --git a/README.md b/README.md
 new file mode 100644
-index 000000000000..9c79ba8748cd
+index 000000000000..64f2ecec784e
 --- /dev/null
-+++ b/MAINTAINERS.md
-@@ -0,0 +1,44 @@
-+# Maintainer tools
++++ b/README.md
+@@ -0,0 +1,83 @@
++**mdadm** is a utility used to create and manage **software RAID** devices implemented through
++**Multiple devices driver (MD)** in kernel. It supports following RAID metadata formats:
 +
-+Useful tools used in daily routines:
-+- [checkpatch](https://docs.kernel.org/dev-tools/checkpatch.html)
-+- [kup](https://korg.docs.kernel.org/kup.html)
-+- [Auto-publishing](https://korg.docs.kernel.org/kup.html#auto-publishing-with-git-archive-signer)
-+- [b4](https://b4.docs.kernel.org/en/latest/)
++* [Linux native RAID](https://raid.wiki.kernel.org/index.php/RAID_superblock_formats):
 +
-+# Checklist before applying patch
++  Known as **native** or **native RAID**. First and default metadata format. Metadata management
++  is implemented in **MD driver**.
 +
-+We don't have CI testing yet, so all those steps must be performed manually:
-+- Style check with [checkpatch](https://docs.kernel.org/dev-tools/checkpatch.html):
++* Matrix Storage Manager Support (no reference, metadata format documentation is proprietary).
 +
-+  This is the current code style follows. We are not strict to all rules. It must be run
-+  by **checkpatch --no-tree**, see README.md.
++  Known as **IMSM**. Metadata format developed and maintained by **Intel®** as a part of **VROC**
++  solution. There are some functional differences between **native** and **imsm**. The most
++  important difference is that the metadata is managed from userspace.
 +
-+- [Commit style](https://www.kernel.org/doc/html/v4.10/process/submitting-patches.html):
++  **CAUTION:** **imsm** is compatible with **Intel RST**, however it is not officially supported.
++  You are using it on your own risk.
 +
-+  It doesn't need to be followed as strictly as is in kernel but changes should be logically
-+  separated. Submitter should care at least to mention "It is used in next patches" if unused
-+  externs/files are added in patch. We love: *Reported-by:*, *Suggested-by:*, *Fixes:* tags.
++* [Common RAID DDF Specification Revision](https://www.snia.org/sites/default/files/SNIA_DDF_Technical_Position_v2.0.pdf)
 +
-+- Compilation, ideally on various gcc versions.
-+- Mdadm test suite execution.
-+- Consider requesting new tests from submitter, especially for new functionalities.
-+- Ensure that maintainer *sign-off* is added, before pushing.
++    **IMPORTANT:** DDF is in **maintenance only** mode. There is no active development around it.
++    Please do not use it in new solutions.
 +
-+# Making a release
++# How to Contribute
 +
-+Assuming that maintainer is certain that release is safe, following steps must be done:
++ **mdadm** is hosted on [kernel.org](https://kernel.org/). You can access repository
++[here](https://git.kernel.org/pub/scm/utils/mdadm/mdadm.git).
 +
-+- Update versions strings in release commit, please refer to previous releases for examples.
++It is maintained similarly to kernel, using *mailing list*. Patches must be send through email.
++Please familiarize with general kernel
++[submitting patches](https://www.kernel.org/doc/html/v4.17/process/submitting-patches.html)
++documentation. Formatting, tags and commit message guidelines applies to **mdadm**.
 +
-+- Create GPG signed tag and push it to repo. Use same format as was used previously, prefixed by
-+  **mdadm-**, e.g. **mdadm-3.1.2**, **mdadm-4.1**.
++## Sending patches step-by-step
 +
-+- [Auto-publishing](https://korg.docs.kernel.org/kup.html#auto-publishing-with-git-archive-signer):
++To maximize change of patches being taken, follow this instruction when submitting:
 +
-+  Adopt script to our release tag model. When ready, push signed note to repository. If it is done
-+  correctly, then *(sig)* is added to the package automatically generated by kernel.org automation.
-+  There is no need to upload archive manually.
++1. Create possibly logically separated commits and generate patches:
 +
-+- Update CHANGELOG.md.
-+- Write "ANNOUNCE" mail to linux-raid@kernel.org to notify community.
++   Use ``git format-patch --cover-letter --signoff -v <nr>`` to create patches:
++   * ``--cover-letter`` can be skipped if it is only one patch;
++   * ``--signoff`` adds sign-off tag;
++   * ``-v <nr>`` indicates review revision number, sender should increment it before resending.
++
++2. Check style of every patch with kernel
++   [checkpatch](https://docs.kernel.org/dev-tools/checkpatch.html) script:
++
++   It is important to keep same coding style that is why in **mdadm**
++   [kernel coding style](https://www.kernel.org/doc/html/v4.10/process/coding-style.html)
++   is preferred. ``checkpath --no-tree <patch_file>`` can be used to verify patches.
++   Following checkpatch issues can be ignored:
++   - New typedefs.
++   - comparing with *True/False*.
++   - kernel *MAINTAINERS* file warning.
++   - *extern* keyword in headers.
++
++3. Send patches using ``git send-mail --to=linux-raid@vger.kernel.org <cover-letter> <patch1> <patch2> (...)``
++
++# Maintainers
++
++It is good practice to add **mdadm maintainers** to recipients for patches:
++
++- Jes Sorensen <jes@trained-monkey.org>;
++- Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>;
++
++Adding **MD maintainers** could be reasonable, especially if patches may affect MD driver:
++
++- Song Liu <song@kernel.org>;
++- Yu Kuai <yukuai3@huawei.com>;
++
++# Reviewers
++
++**mdadm** utility is not part of kernel tree, so there is no certificated *Reviewers* list. Everyone
++can comment on mailing list, last decision (and merging) belongs to maintainers.
++
++# Minimal supported kernel version
++
++We do not support kernel versions below **v3.10**. Please be aware that maintainers may remove
++workarounds and fixes for legacy issues.
++
++# License
++
++It is released under the terms of the **GNU General Public License version 2** as published
++by the **Free Software Foundation**.
 -- 
 2.35.3
 
