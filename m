@@ -1,224 +1,120 @@
-Return-Path: <linux-raid+bounces-1290-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-1298-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D6F88A933D
-	for <lists+linux-raid@lfdr.de>; Thu, 18 Apr 2024 08:40:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BCE648A9404
+	for <lists+linux-raid@lfdr.de>; Thu, 18 Apr 2024 09:31:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 16E681F218D8
-	for <lists+linux-raid@lfdr.de>; Thu, 18 Apr 2024 06:40:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5E62F1F226E5
+	for <lists+linux-raid@lfdr.de>; Thu, 18 Apr 2024 07:31:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1396525777;
-	Thu, 18 Apr 2024 06:40:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F7436A356;
+	Thu, 18 Apr 2024 07:31:21 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E709E125D6;
-	Thu, 18 Apr 2024 06:39:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA2538F96
+	for <linux-raid@vger.kernel.org>; Thu, 18 Apr 2024 07:31:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713422401; cv=none; b=H1Dn5ccYgOiPzpo2Y+1ZfSpgtuFovRLPwlwhZlsmO48hEUAfg0H8Utb5B3susJ7UQ2bL978FZOc7yZ0nTW6x38T0Fl99zEdRHuM3asaz9Lh+IKE0DbB5XgA5P2CEn4s0sJrmsnDsNVlI8RfShXeIAWAJ2RGV1QaTCaB0fYy335c=
+	t=1713425481; cv=none; b=WRJybi3WTQqV5VkcW/05VAjBCI0iU5fAbje7r/GWE4aThMvhDJAQMiHUX9ggAdnfukiebPEHtB6+ZrEmCNvCayvWPvnU5wLqeZGeEQ2MvvpYHF//qJIBqg+gsAj7Cm6njbwPDSatIuONz5igqwbD9RM2uazwDJjetfoHb3MHrVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713422401; c=relaxed/simple;
-	bh=pC89AagWu2You0KtbPjpaU08FxSfXSL8O/XwdhWm7gA=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=NWNooYnVOUgKBLSmRRIaG8dzRjjwwPbBcH8xCIhnTeb9cci0J4/dVm/OQEkidZ3TTKvgTzjb6U/ezavqFpfE5croxoKFS28n0cBuzrZsIHuXKzXlXWZ93NCXClHhagKRRflbhA8+e/du43zfcR8MZuTFKsudphNqLFK7gRdHNeo=
+	s=arc-20240116; t=1713425481; c=relaxed/simple;
+	bh=tP0P8MAot1WM2ypcdPyKuQhxCOjQNqRdg4l0D2qqubw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=qLiNHV4j6Rc5zmk1bgWmOynNAbYyBlvGGnczjkIfEgFH1g67EDcQbJZwSJVdXWcQ7h/j9AdWjb5JZQR6hGqEogj0NA1ipc3WdQLuUMEL1sF88KT+mJPMYiymP7MhKRmQXu0wHFN/aVMBvoNVumOotqgr3KX8vCV4rHjR+38H4ok=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VKp6V0ffXz4f3n6f;
-	Thu, 18 Apr 2024 14:39:46 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 0D9BA1A0175;
-	Thu, 18 Apr 2024 14:39:55 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP1 (Coremail) with SMTP id cCh0CgCXaBE5wCBmYPgmKQ--.31834S3;
-	Thu, 18 Apr 2024 14:39:54 +0800 (CST)
-Subject: Re: [PATCH v2 08/11] md: add atomic mode switching in RAID 1/10
-To: tada keisuke <keisuke1.tada@kioxia.com>, "song@kernel.org"
- <song@kernel.org>, "yukuai (C)" <yukuai3@huawei.com>
-Cc: "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "Luse, Paul E" <paul.e.luse@intel.com>
-References: <47c035c3e741418b80eb6b73d96e7e92@kioxia.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <8d21354c-9e67-b19c-1986-b4c027dff125@huaweicloud.com>
-Date: Thu, 18 Apr 2024 14:39:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VKqFn6YVdz4f3m8T
+	for <linux-raid@vger.kernel.org>; Thu, 18 Apr 2024 15:31:09 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 91EF31A016E
+	for <linux-raid@vger.kernel.org>; Thu, 18 Apr 2024 15:31:14 +0800 (CST)
+Received: from [10.174.179.247] (unknown [10.174.179.247])
+	by APP2 (Coremail) with SMTP id Syh0CgCnyw4_zCBmq2gVKg--.45828S3;
+	Thu, 18 Apr 2024 15:31:12 +0800 (CST)
+Message-ID: <cffea7de-edf4-c97b-3fc7-c87038123593@huaweicloud.com>
+Date: Thu, 18 Apr 2024 15:31:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <47c035c3e741418b80eb6b73d96e7e92@kioxia.com>
-Content-Type: text/plain; charset=iso-2022-jp; format=flowed; delsp=yes
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:cCh0CgCXaBE5wCBmYPgmKQ--.31834S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxuFyDZFWfAF1rurWUZF1fJFb_yoW7GrWrp3
-	yjqFyrAr4UX34jq3Z8GF4kCa4Yqw12kFW0krZIk34fu3WagFZ8Ja4UJFyjvryDAFy3Cw1a
-	qw1UGrsrCayxGrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1zuWJUUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: regression: drive was detected as raid member due to metadata on
+ partition
+To: =?UTF-8?Q?Sven_K=c3=b6hler?= <sven.koehler@gmail.com>,
+ Li Nan <linan666@huaweicloud.com>, linux-raid@vger.kernel.org
+References: <93d95bbe-f804-4d12-bd0d-7d3cc82650b3@gmail.com>
+ <90ebc7c2-624c-934b-1b5b-e8efccfda209@huaweicloud.com>
+ <08a82e10-dc6b-41f9-976a-e86a59cfd54d@gmail.com>
+ <fe14b4b4-9ab2-93f5-85a8-3416d79dffa2@huaweicloud.com>
+ <5a4a9b82-2082-4d25-906d-ee01b10fad65@gmail.com>
+From: Li Nan <linan666@huaweicloud.com>
+In-Reply-To: <5a4a9b82-2082-4d25-906d-ee01b10fad65@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgCnyw4_zCBmq2gVKg--.45828S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7GFy3AF45Ar17XrW5XF4rAFb_yoWfArXE9F
+	Wj9F1qgw18t39xZrs8Jr4Sga17G39rtrWFyr1UXrsxt34rG3Z2yrZxuF1Fvwn7tFZ5Jr9x
+	Z343Xr47WanI9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbVkFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr1j
+	6rxdM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
+	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7
+	Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
+	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
+	17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF
+	0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2Kf
+	nxnUUI43ZEXa7VUb0PfJUUUUU==
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
-Hi,
 
-$B:_(B 2024/04/18 13:44, tada keisuke $B<LF;(B:
-> This patch depends on patch 07.
+
+在 2024/4/14 5:37, Sven Köhler 写道:
+
+[...]
+
+>>
+>> I used your command and config, updated kernel and mdadm, but raid also
+>> created correctly after reboot.
+>>
+>> My OS is fedora, it may have been affected by some other system tools? I
+>> have no idea.
 > 
-> All rdevs running in RAID 1/10 switch nr_pending to atomic mode.
-> The value of nr_pending is read in a normal operation (choose_best_rdev()).
-> Therefore, nr_pending must always be consistent.
+> The Arch kernel has RAID autodetection enabled. I just tried to reproduce 
+> it. While mdadm will not consider /dev/sd[ab] as members, the kernel's 
+> autodetection will. For that you have to reboot.
 > 
-> Signed-off-by: Keisuke TADA <keisuke1.tada@kioxia.com>
-> Signed-off-by: Toshifumi OHTAKE <toshifumi.ootake@kioxia.com>
-> ---
->   drivers/md/md.h     | 14 ++++++++++++++
->   drivers/md/raid1.c  |  7 +++++++
->   drivers/md/raid10.c |  4 ++++
->   3 files changed, 25 insertions(+)
+
+It is not about autodetection. Autodetection only deals with the devices in
+list 'all_detected_devices', device is added to it by blk_add_partition().
+So sdx will not be added to this list, and will not be autodetect.
+
+> I used this ISO in a VM with 2 harddisks to reproduce the issue: 
+> https://mirror.informatik.tu-freiberg.de/arch/iso/2024.04.01/archlinux-2024.04.01-x86_64.iso 
 > 
-> diff --git a/drivers/md/md.h b/drivers/md/md.h
-> index ab09e312c9bb..57b09b567ffa 100644
-> --- a/drivers/md/md.h
-> +++ b/drivers/md/md.h
-> @@ -236,6 +236,20 @@ static inline unsigned long nr_pending_read(struct md_rdev *rdev)
->   	return atomic_long_read(&rdev->nr_pending.data->count);
->   }
->   
-> +static inline bool nr_pending_is_percpu_mode(struct md_rdev *rdev)
-> +{
-> +	unsigned long __percpu *percpu_count;
-> +
-> +	return __ref_is_percpu(&rdev->nr_pending, &percpu_count);
-> +}
-> +
-> +static inline bool nr_pending_is_atomic_mode(struct md_rdev *rdev)
-> +{
-> +	unsigned long __percpu *percpu_count;
-> +
-> +	return !__ref_is_percpu(&rdev->nr_pending, &percpu_count);
-> +}
-> +
->   static inline int is_badblock(struct md_rdev *rdev, sector_t s, int sectors,
->   			      sector_t *first_bad, int *bad_sectors)
->   {
-> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-> index 12318fb15a88..c38ae13aadab 100644
-> --- a/drivers/md/raid1.c
-> +++ b/drivers/md/raid1.c
-> @@ -784,6 +784,7 @@ static int choose_best_rdev(struct r1conf *conf, struct r1bio *r1_bio)
->   		if (ctl.readable_disks++ == 1)
->   			set_bit(R1BIO_FailFast, &r1_bio->state);
->   
-> +		WARN_ON_ONCE(nr_pending_is_percpu_mode(rdev));
->   		pending = nr_pending_read(rdev);
->   		dist = abs(r1_bio->sector - conf->mirrors[disk].head_position);
->   
-> @@ -1930,6 +1931,7 @@ static int raid1_add_disk(struct mddev *mddev, struct md_rdev *rdev)
->   			if (err)
->   				return err;
->   
-> +			percpu_ref_switch_to_atomic_sync(&rdev->nr_pending);
->   			raid1_add_conf(conf, rdev, mirror, false);
->   			/* As all devices are equivalent, we don't need a full recovery
->   			 * if this was recently any drive of the array
-> @@ -1949,6 +1951,7 @@ static int raid1_add_disk(struct mddev *mddev, struct md_rdev *rdev)
->   		set_bit(Replacement, &rdev->flags);
->   		raid1_add_conf(conf, rdev, repl_slot, true);
->   		err = 0;
-> +		percpu_ref_switch_to_atomic_sync(&rdev->nr_pending);
+> 
+> 
+> Kind Regards,
+>    Sven
+> 
+> 
+> .
 
-I don't understand what's the point here, 'nr_pending' will be used when
-the rdev issuing IO, and it's always used as atomic mode, there is no
-difference.
-
-Consider that 'nr_pending' must be read from IO fast path, use it as
-atomic is something we must accept. Unless someone comes up with a plan
-to avoid reading 'inflight' counter from fast path like generic block
-layer, it's not ok to me to switch to percpu_ref for now.
-
-+CC Paul
-
-HI, Paul, perhaps you RR mode doesn't need such 'inflight' counter
-anymore?
-
+-- 
 Thanks,
-Kuai
-
->   		conf->fullsync = 1;
->   	}
->   
-> @@ -3208,6 +3211,7 @@ static void raid1_free(struct mddev *mddev, void *priv);
->   static int raid1_run(struct mddev *mddev)
->   {
->   	struct r1conf *conf;
-> +	struct md_rdev *rdev;
->   	int i;
->   	int ret;
->   
-> @@ -3269,6 +3273,9 @@ static int raid1_run(struct mddev *mddev)
->   	/*
->   	 * Ok, everything is just fine now
->   	 */
-> +	rdev_for_each(rdev, mddev) {
-> +		percpu_ref_switch_to_atomic_sync(&rdev->nr_pending);
-> +	}
->   	rcu_assign_pointer(mddev->thread, conf->thread);
->   	rcu_assign_pointer(conf->thread, NULL);
->   	mddev->private = conf;
-> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-> index b91dd6c0be5a..66896a1076e1 100644
-> --- a/drivers/md/raid10.c
-> +++ b/drivers/md/raid10.c
-> @@ -808,6 +808,7 @@ static struct md_rdev *read_balance(struct r10conf *conf,
->   
->   		nonrot = bdev_nonrot(rdev->bdev);
->   		has_nonrot_disk |= nonrot;
-> +		WARN_ON_ONCE(nr_pending_is_percpu_mode(rdev));
->   		pending = nr_pending_read(rdev);
->   		if (min_pending > pending && nonrot) {
->   			min_pending = pending;
-> @@ -2113,6 +2114,7 @@ static int raid10_add_disk(struct mddev *mddev, struct md_rdev *rdev)
->   		p->recovery_disabled = mddev->recovery_disabled - 1;
->   		rdev->raid_disk = mirror;
->   		err = 0;
-> +		percpu_ref_switch_to_atomic_sync(&rdev->nr_pending);
->   		if (rdev->saved_raid_disk != mirror)
->   			conf->fullsync = 1;
->   		WRITE_ONCE(p->rdev, rdev);
-> @@ -2127,6 +2129,7 @@ static int raid10_add_disk(struct mddev *mddev, struct md_rdev *rdev)
->   		err = mddev_stack_new_rdev(mddev, rdev);
->   		if (err)
->   			return err;
-> +		percpu_ref_switch_to_atomic_sync(&rdev->nr_pending);
->   		conf->fullsync = 1;
->   		WRITE_ONCE(p->replacement, rdev);
->   	}
-> @@ -4028,6 +4031,7 @@ static int raid10_run(struct mddev *mddev)
->   	rdev_for_each(rdev, mddev) {
->   		long long diff;
->   
-> +		percpu_ref_switch_to_atomic_sync(&rdev->nr_pending);
->   		disk_idx = rdev->raid_disk;
->   		if (disk_idx < 0)
->   			continue;
-> 
+Nan
 
 
