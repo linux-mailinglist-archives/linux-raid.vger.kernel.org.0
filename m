@@ -1,308 +1,137 @@
-Return-Path: <linux-raid+bounces-1426-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-1428-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 626148BE5E4
-	for <lists+linux-raid@lfdr.de>; Tue,  7 May 2024 16:28:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 347988BE788
+	for <lists+linux-raid@lfdr.de>; Tue,  7 May 2024 17:35:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 85E021C21E21
-	for <lists+linux-raid@lfdr.de>; Tue,  7 May 2024 14:28:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 66BD91C23C56
+	for <lists+linux-raid@lfdr.de>; Tue,  7 May 2024 15:35:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41BC715FD10;
-	Tue,  7 May 2024 14:27:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C6811635CF;
+	Tue,  7 May 2024 15:35:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UzC3FhzI"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1649D15FA67
-	for <linux-raid@vger.kernel.org>; Tue,  7 May 2024 14:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F450161331
+	for <linux-raid@vger.kernel.org>; Tue,  7 May 2024 15:35:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715092029; cv=none; b=LZHQml2LdSyGmVKfO3o+zwKbjeYCMGnxtFoUkCvjnRASDqriM2/V22pjN25AxKkVFO6mYhxxiXyE+JzARFKlXu6pAxc3u+zlFlePz8AtTHlcmoKVbF1/GJc2ev6OCcG9xkYLQ9FC1in4qv0ropHG9xfK7GSIl/G+um+1Z+0g4sg=
+	t=1715096137; cv=none; b=jMHaosoQTo7ADTSCBW+aJFbyLxo6PaRvuoTpuxeq/Kp6rD5DZKBVVQp+0dmZTUG0EaAIfD6O0P4w076QknHa6N1ZUMLVsPoWGUK78E/9tbOJqvdljk6bFxd2dlH1l9iliwUDA9nf0b775k6zFhzLzXgTuUiDL2I5LyvfbJdOZxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715092029; c=relaxed/simple;
-	bh=JwUSmnyi34yds3S/xYTK2LzaDPUKgIyC5RCByIc0wLg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NBUzUcZmW4a2a9O6WoWAftyXDe99XU30dWs8GimIfaftHfJb36OLXjDsQHgcH/snWZkdDMSSxZTxp2roN3x/h1k09DpkiSSYNWos7kAn+7ysnaoRSg8mDfFGRHNaEWo9TUL32tAThDULc1iB60XkOtRQDjNnI9TgRKimraevPUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.34] (g34.guest.molgen.mpg.de [141.14.220.34])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 58D1661E5FE01;
-	Tue,  7 May 2024 16:26:26 +0200 (CEST)
-Message-ID: <b0263ec1-6677-4aca-a24b-ebd467cd2e43@molgen.mpg.de>
-Date: Tue, 7 May 2024 16:26:25 +0200
+	s=arc-20240116; t=1715096137; c=relaxed/simple;
+	bh=meoJAmNwJwn7roIrBQimdpvAaCylC56wBSKydflmhrA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fTyeNDGnkhJ9v1xf1r9XpGefftTaT05y+FaPw5FghIOEXJKfJcGUeTlkcE+4dHV14mKYAvwLLK7Ak9gALW0n+6uEESD9NXMBh/1JDEFCOapLRh/ouNkV+oX3BvPOf0gBO00nWaydKpGvYbAg1s0/jecjj7VqFHzKnSyBwrZnZIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UzC3FhzI; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715096135; x=1746632135;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=meoJAmNwJwn7roIrBQimdpvAaCylC56wBSKydflmhrA=;
+  b=UzC3FhzIkKkyqTMPsDVd8COqdYn/crACQ98KFBFh3JJ9yd7D0N34LgGR
+   htk3eF/e10tMgxqCDD4bmNZTJlx+dGfC0o2F5vk4ItbE/9up0Vyih+GeQ
+   TJ3G2gL3XuKsLU4TGXxMkbNkGC3SKpYrGAcb6ZMVQ9VxMrToi46ipC6eu
+   YoVPj7P40sD9lSGCCXz+0twq3NAc0LlC3qWuanmV871IA+ZpvfEETfZda
+   8o9YkIsvJ0iGSgPGLaG9avZWQBjMRImKmVIjgAsR6AvNBhIs4B1/EKf6V
+   wwz5xX83a+2wf3ND/7b+uq0+fTHfNQsXET2LrXowIRWKri3k7ZSdgFJ65
+   g==;
+X-CSE-ConnectionGUID: 6knAobWmQm+S3IQpD4WoIA==
+X-CSE-MsgGUID: vtzkT0r1Sea1JZ4cxrOmzA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="10767825"
+X-IronPort-AV: E=Sophos;i="6.08,142,1712646000"; 
+   d="scan'208";a="10767825"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 08:35:34 -0700
+X-CSE-ConnectionGUID: maWL8IWjSWCRrLa/5IseWw==
+X-CSE-MsgGUID: tU/4XZ3HRyS3KDp0WaadqA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,142,1712646000"; 
+   d="scan'208";a="33126932"
+Received: from unknown (HELO mtkaczyk-dev.igk.intel.com) ([10.102.108.41])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 08:35:31 -0700
+From: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+To: linux-raid@vger.kernel.org
+Cc: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
+	Hannes Reinecke <hare@suse.de>,
+	Paul E Luse <paul.e.luse@linux.intel.com>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Song Liu <song@kernel.org>,
+	Kinga Tanska <kinga.tanska@linux.intel.com>,
+	Jes Sorensen <jes@trained-monkey.org>
+Subject: [RFC PATCH v3 0/1] mdadm: Change main repository to Github
+Date: Tue,  7 May 2024 17:35:08 +0200
+Message-Id: <20240507153509.23451-1-mariusz.tkaczyk@linux.intel.com>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] md: generate CHANGE uevents for md device
-To: Kinga Stefaniuk <kinga.stefaniuk@intel.com>
-Cc: song@kernel.org, linux-raid@vger.kernel.org
-References: <20240507140657.6974-1-kinga.stefaniuk@intel.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240507140657.6974-1-kinga.stefaniuk@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Dear Kinga,
+Thanks to Song and Paul, we created organization for md-raid on Github.
+This is a perfect place to maintain mdadm. I would like announce moving
+mdadm development to Github.
 
+It is already forked, feel free to explore:
+https://github.com/md-raid-utilities/mdadm
 
-Thank you for the patch.
+Github is powerful and it has well integrated CI. On the repo, you can
+already find a pull request which will add compilation and code style
+tests (Thanks to Kinga!).
+This is MORE than we have now so I believe that with the change mdadm
+stability and code quality will be increased. The participating method
+will be simplified, it is really easy to create pull request. Also,
+anyone can fork repo with base tests included and properly configured.
 
-Am 07.05.24 um 16:06 schrieb Kinga Stefaniuk:
-> Due to changes in mdadm event handling and moving to udev based
-> approach, more CHANGE uevents need to be added.
+Note that Song and Paul are working on a per patch CI system using GitHub
+Actions and a dedicated rack of servers to enable fast container, VM and
+bare metal testing for both mdraid and mdadm. Having mdadm on GitHub will
+help with that integration.
 
-Can you please reference these changes in the commit message?
+Patches sent to ML will be accepted but Github Pull Requests are
+preferred so please use mailing list only if it is necessary. I will
+setup GitHub to send email to the mailing list on each new PR so that
+everyone is still aware of pending patches via the mailing list.
 
-> Generate CHANGE uevents to give a udev based software (for ex. mdmonitor)
-> chance to see changes in case of any array reconfiguration.
+As a kernel.org mdadm maintainer, I will keep kernel.org repo and Github
+in-sync for both master/main branches. Although they will be kept
+in sync, developers should consider GitHub/main effective immediately
+after merging this patchset.
 
-*a* chance
+I have strong confidence that it is good change for mdadm but I
+understand that review flow will be worse.
 
-> Add emitting a new CHANGE uevent into md_new_event() to keep consistency
-> with previous mdstat based approach.
+Thanks all for comments!
 
-Excuse my ignorance. What was the mdstat based approach?
+Cc: Hannes Reinecke <hare@suse.de>
+Cc: Paul E Luse <paul.e.luse@linux.intel.com>
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: Song Liu <song@kernel.org>
+Cc: Kinga Tanska <kinga.tanska@linux.intel.com>
+Cc: Jes Sorensen <jes@trained-monkey.org>
 
+v2: Highlight that linux-raid@kernel.org remains as main place for
+    questions and discussions.
+v3: Accept patches sent through Mailing List and missed RFC tag.
 
-Kind regards,
+Mariusz Tkaczyk (1):
+  mdadm: Change main repository to Github
 
-Paul
+ MAINTAINERS.md | 41 ++++++++----------------
+ README.md      | 86 ++++++++++++++++++++++++++++----------------------
+ 2 files changed, 61 insertions(+), 66 deletions(-)
 
+-- 
+2.35.3
 
-> Signed-off-by: Mateusz Grzonka <mateusz.grzonka@intel.com>
-> Signed-off-by: Kinga Stefaniuk <kinga.stefaniuk@intel.com>
-> ---
->   drivers/md/md.c     | 41 ++++++++++++++++++++++++++---------------
->   drivers/md/md.h     |  3 ++-
->   drivers/md/raid10.c |  2 +-
->   drivers/md/raid5.c  |  2 +-
->   4 files changed, 30 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index e575e74aabf5..98a7f2c1182c 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -313,6 +313,15 @@ static int start_readonly;
->    */
->   static bool create_on_open = true;
->   
-> +/*
-> + * Send every new event to the userspace.
-> + */
-> +static void trigger_event(struct work_struct *work)
-> +{
-> +	struct mddev *mddev = container_of(work, struct mddev, uevent_work);
-> +	kobject_uevent(&disk_to_dev(mddev->gendisk)->kobj, KOBJ_CHANGE);
-> +}
-> +
->   /*
->    * We have a system wide 'event count' that is incremented
->    * on any 'interesting' event, and readers of /proc/mdstat
-> @@ -325,10 +334,11 @@ static bool create_on_open = true;
->    */
->   static DECLARE_WAIT_QUEUE_HEAD(md_event_waiters);
->   static atomic_t md_event_count;
-> -void md_new_event(void)
-> +void md_new_event(struct mddev *mddev)
->   {
->   	atomic_inc(&md_event_count);
->   	wake_up(&md_event_waiters);
-> +	schedule_work(&mddev->uevent_work);
->   }
->   EXPORT_SYMBOL_GPL(md_new_event);
->   
-> @@ -2940,7 +2950,7 @@ static int add_bound_rdev(struct md_rdev *rdev)
->   	if (mddev->degraded)
->   		set_bit(MD_RECOVERY_RECOVER, &mddev->recovery);
->   	set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
-> -	md_new_event();
-> +	md_new_event(mddev);
->   	return 0;
->   }
->   
-> @@ -3057,7 +3067,7 @@ state_store(struct md_rdev *rdev, const char *buf, size_t len)
->   				md_kick_rdev_from_array(rdev);
->   				if (mddev->pers)
->   					set_bit(MD_SB_CHANGE_DEVS, &mddev->sb_flags);
-> -				md_new_event();
-> +				md_new_event(mddev);
->   			}
->   		}
->   	} else if (cmd_match(buf, "writemostly")) {
-> @@ -4173,7 +4183,7 @@ level_store(struct mddev *mddev, const char *buf, size_t len)
->   	if (!mddev->thread)
->   		md_update_sb(mddev, 1);
->   	sysfs_notify_dirent_safe(mddev->sysfs_level);
-> -	md_new_event();
-> +	md_new_event(mddev);
->   	rv = len;
->   out_unlock:
->   	mddev_unlock_and_resume(mddev);
-> @@ -4700,7 +4710,7 @@ new_dev_store(struct mddev *mddev, const char *buf, size_t len)
->   		export_rdev(rdev, mddev);
->   	mddev_unlock_and_resume(mddev);
->   	if (!err)
-> -		md_new_event();
-> +		md_new_event(mddev);
->   	return err ? err : len;
->   }
->   
-> @@ -5902,6 +5912,7 @@ struct mddev *md_alloc(dev_t dev, char *name)
->   		return ERR_PTR(error);
->   	}
->   
-> +	INIT_WORK(&mddev->uevent_work, trigger_event);
->   	kobject_uevent(&mddev->kobj, KOBJ_ADD);
->   	mddev->sysfs_state = sysfs_get_dirent_safe(mddev->kobj.sd, "array_state");
->   	mddev->sysfs_level = sysfs_get_dirent_safe(mddev->kobj.sd, "level");
-> @@ -6244,7 +6255,7 @@ int md_run(struct mddev *mddev)
->   	if (mddev->sb_flags)
->   		md_update_sb(mddev, 0);
->   
-> -	md_new_event();
-> +	md_new_event(mddev);
->   	return 0;
->   
->   bitmap_abort:
-> @@ -6603,7 +6614,7 @@ static int do_md_stop(struct mddev *mddev, int mode)
->   		if (mddev->hold_active == UNTIL_STOP)
->   			mddev->hold_active = 0;
->   	}
-> -	md_new_event();
-> +	md_new_event(mddev);
->   	sysfs_notify_dirent_safe(mddev->sysfs_state);
->   	return 0;
->   }
-> @@ -7099,7 +7110,7 @@ static int hot_remove_disk(struct mddev *mddev, dev_t dev)
->   	set_bit(MD_SB_CHANGE_DEVS, &mddev->sb_flags);
->   	if (!mddev->thread)
->   		md_update_sb(mddev, 1);
-> -	md_new_event();
-> +	md_new_event(mddev);
->   
->   	return 0;
->   busy:
-> @@ -7179,7 +7190,7 @@ static int hot_add_disk(struct mddev *mddev, dev_t dev)
->   	 * array immediately.
->   	 */
->   	set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
-> -	md_new_event();
-> +	md_new_event(mddev);
->   	return 0;
->   
->   abort_export:
-> @@ -8158,7 +8169,7 @@ void md_error(struct mddev *mddev, struct md_rdev *rdev)
->   	}
->   	if (mddev->event_work.func)
->   		queue_work(md_misc_wq, &mddev->event_work);
-> -	md_new_event();
-> +	md_new_event(mddev);
->   }
->   EXPORT_SYMBOL(md_error);
->   
-> @@ -9044,7 +9055,7 @@ void md_do_sync(struct md_thread *thread)
->   		mddev->curr_resync = MD_RESYNC_ACTIVE; /* no longer delayed */
->   	mddev->curr_resync_completed = j;
->   	sysfs_notify_dirent_safe(mddev->sysfs_completed);
-> -	md_new_event();
-> +	md_new_event(mddev);
->   	update_time = jiffies;
->   
->   	blk_start_plug(&plug);
-> @@ -9115,7 +9126,7 @@ void md_do_sync(struct md_thread *thread)
->   			/* this is the earliest that rebuild will be
->   			 * visible in /proc/mdstat
->   			 */
-> -			md_new_event();
-> +			md_new_event(mddev);
->   
->   		if (last_check + window > io_sectors || j == max_sectors)
->   			continue;
-> @@ -9381,7 +9392,7 @@ static int remove_and_add_spares(struct mddev *mddev,
->   			sysfs_link_rdev(mddev, rdev);
->   			if (!test_bit(Journal, &rdev->flags))
->   				spares++;
-> -			md_new_event();
-> +			md_new_event(mddev);
->   			set_bit(MD_SB_CHANGE_DEVS, &mddev->sb_flags);
->   		}
->   	}
-> @@ -9500,7 +9511,7 @@ static void md_start_sync(struct work_struct *ws)
->   		__mddev_resume(mddev, false);
->   	md_wakeup_thread(mddev->sync_thread);
->   	sysfs_notify_dirent_safe(mddev->sysfs_action);
-> -	md_new_event();
-> +	md_new_event(mddev);
->   	return;
->   
->   not_running:
-> @@ -9752,7 +9763,7 @@ void md_reap_sync_thread(struct mddev *mddev)
->   	set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
->   	sysfs_notify_dirent_safe(mddev->sysfs_completed);
->   	sysfs_notify_dirent_safe(mddev->sysfs_action);
-> -	md_new_event();
-> +	md_new_event(mddev);
->   	if (mddev->event_work.func)
->   		queue_work(md_misc_wq, &mddev->event_work);
->   	wake_up(&resync_wait);
-> diff --git a/drivers/md/md.h b/drivers/md/md.h
-> index 097d9dbd69b8..111aa3a0f60c 100644
-> --- a/drivers/md/md.h
-> +++ b/drivers/md/md.h
-> @@ -528,6 +528,7 @@ struct mddev {
->   						*/
->   	struct work_struct flush_work;
->   	struct work_struct event_work;	/* used by dm to report failure event */
-> +	struct work_struct uevent_work;
->   	mempool_t *serial_info_pool;
->   	void (*sync_super)(struct mddev *mddev, struct md_rdev *rdev);
->   	struct md_cluster_info		*cluster_info;
-> @@ -802,7 +803,7 @@ extern int md_super_wait(struct mddev *mddev);
->   extern int sync_page_io(struct md_rdev *rdev, sector_t sector, int size,
->   		struct page *page, blk_opf_t opf, bool metadata_op);
->   extern void md_do_sync(struct md_thread *thread);
-> -extern void md_new_event(void);
-> +extern void md_new_event(struct mddev *mddev);
->   extern void md_allow_write(struct mddev *mddev);
->   extern void md_wait_for_blocked_rdev(struct md_rdev *rdev, struct mddev *mddev);
->   extern void md_set_array_sectors(struct mddev *mddev, sector_t array_sectors);
-> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-> index a4556d2e46bf..6f459d47e2a5 100644
-> --- a/drivers/md/raid10.c
-> +++ b/drivers/md/raid10.c
-> @@ -4545,7 +4545,7 @@ static int raid10_start_reshape(struct mddev *mddev)
->   	set_bit(MD_RECOVERY_RESHAPE, &mddev->recovery);
->   	set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
->   	conf->reshape_checkpoint = jiffies;
-> -	md_new_event();
-> +	md_new_event(mddev);
->   	return 0;
->   
->   abort:
-> diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-> index d874abfc1836..f5736fa1b318 100644
-> --- a/drivers/md/raid5.c
-> +++ b/drivers/md/raid5.c
-> @@ -8512,7 +8512,7 @@ static int raid5_start_reshape(struct mddev *mddev)
->   	set_bit(MD_RECOVERY_RESHAPE, &mddev->recovery);
->   	set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
->   	conf->reshape_checkpoint = jiffies;
-> -	md_new_event();
-> +	md_new_event(mddev);
->   	return 0;
->   }
->   
 
