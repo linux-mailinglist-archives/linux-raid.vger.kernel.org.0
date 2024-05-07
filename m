@@ -1,112 +1,103 @@
-Return-Path: <linux-raid+bounces-1424-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-1427-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61DFC8BE469
-	for <lists+linux-raid@lfdr.de>; Tue,  7 May 2024 15:41:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E27338BE738
+	for <lists+linux-raid@lfdr.de>; Tue,  7 May 2024 17:19:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1C89D2870FE
-	for <lists+linux-raid@lfdr.de>; Tue,  7 May 2024 13:41:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 69AE4282CD7
+	for <lists+linux-raid@lfdr.de>; Tue,  7 May 2024 15:19:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C182215EFD8;
-	Tue,  7 May 2024 13:34:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F053B16192F;
+	Tue,  7 May 2024 15:19:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="d/ZoamSZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="knoaLihx"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE2115EFCE
-	for <linux-raid@vger.kernel.org>; Tue,  7 May 2024 13:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58DC0160862
+	for <linux-raid@vger.kernel.org>; Tue,  7 May 2024 15:19:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715088887; cv=none; b=Ha4+EeF3uzrypQ77uw81PUZSjQ4lM53Eu3L7z5ZYQh1nrX8o8gjx38c3T1yvudAqKR4/3Em1SjbbfJcZpfxwHPXjGcI4/IaHWAMlV104NQemJUg6ko3wQD+i7nVffvoNWdI8Y190BsLqvWJTReGETiPqpVOpN/p0TKvT8xvg7fI=
+	t=1715095159; cv=none; b=G17qedJ/bxIIjnWjpZs2viYOwfRJrKfGuJy+coOYhTH7w1UF9IekKe5b4O3DcrfiyXjsaevwNGEMl9Q34+i/1C60Pj6jxatCzprnA5uCxz81M9FzwRFwD7zkf8uxahXBLKH7ZCqDfmxllQ5N27EeuXXedotuwn9895LuS1/ZXVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715088887; c=relaxed/simple;
-	bh=bV3hZF+yWnUvLfolt0qL3m4QpmW8/sDlFRD//n8L/aY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=RxGq3BG6eYru+//toFvUcu4iYAppoER5Szl0oJxMroedtRgLwW5IQwa2r5Nd8gBb7jaV+7oShzpSm9UCVmbwzjZpzaxXanoecrYF5VFxbG66gQ1Uf3CxIwa436lpJqxCduJChE4JTq/3N6BX5nuHZbFEsw1icCYRAYrnPy2dRKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=d/ZoamSZ; arc=none smtp.client-ip=209.85.166.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-7e17a11da38so10176739f.3
-        for <linux-raid@vger.kernel.org>; Tue, 07 May 2024 06:34:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1715088885; x=1715693685; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KP5HKRW4kBbKaUQGr7WJW/KutC9oC2MC2S4+gvWBuKE=;
-        b=d/ZoamSZxjkvWrrT1IMnPjBogp7aF4nGIKxTB+uXxJOsWbIZSeYZx7XBltN96MBlQk
-         8tB1owEP+Sq59e+aiay7+QEqKGYaRV7LMii6hgkaVGmXBl14rd4Tyc3gRzOazu22Z9oT
-         m/iOa4Wm5Bc2SiavE0gfOi66WP++JsHD9ubhyN25XFE1pH+i8ZM9btDDBTsKFIxHse2i
-         VNkHmz/hODE6fGbDTAesR+VQi3QZEPyvBPl+i02MCabTbS0xgxnKe6XLNyyciUeKZssB
-         c862NBTqVEvNr7EgZkyxZ61vUZlPtZoe4dEh8w7KeuL3SesZBhQJSIMIfFBoRn5kHBuQ
-         HQiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715088885; x=1715693685;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KP5HKRW4kBbKaUQGr7WJW/KutC9oC2MC2S4+gvWBuKE=;
-        b=kg1SDATgsvLC0bPymrAQz0gMNzDs/dvz8wwtum5DFKofF6apsqBLoY7e4RELUNqe7+
-         UjGSh2iDPquSRhxB87Iwv0m53X43CtIKSXcudLsqFsLlQs080lk4w+CvdZVCJMa2iGyl
-         Sn06SQJm/1a7A1K8aoAhG6HdSp1YJl3vI/12SLT/1oJvAlWvbxDf0bgKNo5UiL1UJLKM
-         qGpocEw5rFwHVoR/02FcDVBMWsj9oiapwg5802hPoPKHZnk3kuzTQINtwk0Mb3EXlVtz
-         OfYFtf5SyTHNijnQ93rdzmSg/4NjR9g9ZPEB3aWNTgm3c/CmxEsib12OoM2KgsPT2BPk
-         3Veg==
-X-Gm-Message-State: AOJu0YwVQ/o9GML0Mdxr6x9boEMDMG4TkHQ8SlwTey5Bp7HJkHT6Pggv
-	0gbGI31GZjOaWGl9CA5UIxZl42eIz1DMVTtkrgbE3+jLwPFmdRSwlZD8bcdiyaY=
-X-Google-Smtp-Source: AGHT+IEfjA72JzoPNtuzqqBb/n6TSa5TGv07xhF8//9/sK/vhyY+R3mRWtXhNQLSmyncdcc61+6t5g==
-X-Received: by 2002:a6b:3f45:0:b0:7e1:8829:51f6 with SMTP id m66-20020a6b3f45000000b007e1882951f6mr974176ioa.1.1715088885335;
-        Tue, 07 May 2024 06:34:45 -0700 (PDT)
-Received: from [127.0.0.1] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id x6-20020a056638248600b0048859a02138sm2249450jat.86.2024.05.07.06.34.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 06:34:44 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: song@kernel.org, linan666@huaweicloud.com
-Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-block@vger.kernel.org, yukuai3@huawei.com, yi.zhang@huawei.com, 
- houtao1@huawei.com, yangerkun@huawei.com
-In-Reply-To: <20240507023103.781816-1-linan666@huaweicloud.com>
-References: <20240507023103.781816-1-linan666@huaweicloud.com>
-Subject: Re: [PATCH] md: Revert "md: Fix overflow in is_mddev_idle"
-Message-Id: <171508888455.12290.2983821888497713665.b4-ty@kernel.dk>
-Date: Tue, 07 May 2024 07:34:44 -0600
+	s=arc-20240116; t=1715095159; c=relaxed/simple;
+	bh=Nwqc290FgzbvbkInmt9zG4elRZksTnfdFTRwJPCDKLM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VF/KghQT3CQzmp8tCzkb76fVqUyJQbYAIsuUWZJdzPdHHMTw6P14F6tX78Bb57vGRMm67aOUJHob9B9B7jHGrDBGgaTgR57JjttVw0uFCYilvTOdPg36889Gtk+uzbPA1r2oaphRMAGyhDY6CHQCoX2khKn4a7ILAB70CGLoO2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=knoaLihx; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715095159; x=1746631159;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Nwqc290FgzbvbkInmt9zG4elRZksTnfdFTRwJPCDKLM=;
+  b=knoaLihxbCejCsnPFDVkvSEqfxaQ+JK8TM4sQGXXvZ8TN35YxOH6lfDj
+   3aD7eWu+9kvpeMFC2jhqGQyqH2oHkh6aNj7lf/nP5PVEwv7PSp9c8cyHs
+   3xQ+86ysYZzd9yosxIRMCe51LsUJWZqOy0DJX25+NYwwufpyHsv/tcdNg
+   qlp8sEWS0aWlsgv/CmFuDOwxt/NyYwopjcyoOWLSVLnt2t5h/Dg5c4+wg
+   Vqez41oVx90KFfxQDS/+ljZgnwUFu00jUVJsE55XFgwVIUNsMGyXbOgLl
+   P1aB0SI6Ok9sznTGGubX1TmY3Kqr9UfEoamj8xW+iZlYww1S82YTgI01l
+   w==;
+X-CSE-ConnectionGUID: YZl9YtZdTAqNYwBQvQwpVQ==
+X-CSE-MsgGUID: TlcbMERkQNKSZLrSmyzctg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="33408718"
+X-IronPort-AV: E=Sophos;i="6.08,142,1712646000"; 
+   d="scan'208";a="33408718"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 08:19:18 -0700
+X-CSE-ConnectionGUID: SCP7hbFfQ7KMWgrSprAGcQ==
+X-CSE-MsgGUID: SHYfAYFDSyiWnNi26Gy6XQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,142,1712646000"; 
+   d="scan'208";a="33121771"
+Received: from shoang-mobl1.amr.corp.intel.com (HELO peluse-desk5) ([10.212.51.191])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 08:19:17 -0700
+Date: Mon, 6 May 2024 21:28:59 -0700
+From: Paul E Luse <paul.e.luse@linux.intel.com>
+To: Kinga Stefaniuk <kinga.stefaniuk@intel.com>
+Cc: linux-raid@vger.kernel.org, jes@trained-monkey.org,
+ mariusz.tkaczyk@linux.intel.com
+Subject: Re: [PATCH 0/2] New timeout while waiting for mdmon
+Message-ID: <20240506212859.4044771f@peluse-desk5>
+In-Reply-To: <20240507033856.2195-1-kinga.stefaniuk@intel.com>
+References: <20240507033856.2195-1-kinga.stefaniuk@intel.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; aarch64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.5-dev-2aabd
 
+On Tue,  7 May 2024 05:38:54 +0200
+Kinga Stefaniuk <kinga.stefaniuk@intel.com> wrote:
 
-On Tue, 07 May 2024 10:31:03 +0800, linan666@huaweicloud.com wrote:
-> This reverts commit 3f9f231236ce7e48780d8a4f1f8cb9fae2df1e4e.
+> This series of patches contains adding new timeout
+> which is needed to have mdmon started completely.
 > 
-> Using 64bit for 'sync_io' is unnecessary from the gendisk side. This
-> overflow will not cause any functional impact, except for a UBSAN
-> warning. Solving this overflow requires introducing additional
-> calculations and checks which are not necessary. So just keep using
-> 32bit for 'sync_io'.
+
+Thanks Kinga!  What is the end user experience w/o this patch? (ie what
+negative impact does this patch address? mystery hang?  missing events?)
+
+-Paul
+
+> Kinga Stefaniuk (2):
+>   util.c: change devnm to const in mdmon functions
+>   Wait for mdmon when it is stared via systemd
 > 
-> [...]
-
-Applied, thanks!
-
-[1/1] md: Revert "md: Fix overflow in is_mddev_idle"
-      commit: 504fbcffea649cad69111e7597081dd8adc3b395
-
-Best regards,
--- 
-Jens Axboe
-
-
+>  Assemble.c |  4 ++--
+>  Grow.c     |  7 ++++---
+>  mdadm.h    |  6 ++++--
+>  util.c     | 33 +++++++++++++++++++++++++++++++--
+>  4 files changed, 41 insertions(+), 9 deletions(-)
+> 
 
 
