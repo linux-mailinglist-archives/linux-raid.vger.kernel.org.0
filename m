@@ -1,55 +1,70 @@
-Return-Path: <linux-raid+bounces-1588-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-1599-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3D608D1B72
-	for <lists+linux-raid@lfdr.de>; Tue, 28 May 2024 14:39:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 576D88D1EE7
+	for <lists+linux-raid@lfdr.de>; Tue, 28 May 2024 16:33:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 46D98B22DDA
-	for <lists+linux-raid@lfdr.de>; Tue, 28 May 2024 12:39:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 123032865A0
+	for <lists+linux-raid@lfdr.de>; Tue, 28 May 2024 14:33:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C6AA16D9AA;
-	Tue, 28 May 2024 12:39:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1739716D313;
+	Tue, 28 May 2024 14:33:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P46vIK2M"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E984B16D9A0;
-	Tue, 28 May 2024 12:39:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84D71DFDE
+	for <linux-raid@vger.kernel.org>; Tue, 28 May 2024 14:33:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716899948; cv=none; b=rY3nJ1KIGVREtMvX50jW3wFuWuCiT9N1Xh3OCmbRt6JX5lNkUAEm3W6+0csUVQnVVw/1T21hmLM3WZi/K2ykm4eb2MkFfaD35ydM3d1pJpdubHW6bweWxCDhHPluJwdskEoQIgb53ZyuaWrJTW5diz0p2xm5i8I7cx6KukOwXcc=
+	t=1716906798; cv=none; b=KlXpXGu1vl8iVF7O3HPKvDlCUA5BYz/cVIbpHgK9jzkR9aDoNeuHF19Jyhvq6U0VYaazmeRAZ5i7OAuOZMBrM0CdTkHkvV2yrF93c/EIfJxxbmX0W1WILwaKBq8gOsVKXgSbverA0OQBwjhIKfAS670cneZE+pYQfqyukAYRQYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716899948; c=relaxed/simple;
-	bh=SwlaZwQTe+WOm3AHJ1DNVfrfD6aHDXuHVxx1381y2W8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RiDx/O/FWtuyw27a58fEOoqe3Qs9aM14NpGnS643opChnUTgmp5W0bZIIIxozbtIuvECg38y3iw7sDrJHblm3a6SDDfzyk8mnzF5oXPietJddRNXIdHk/W+z2C3U8FrHkKQHVN/HVUSc3xLCXSr1mEo+23KuTazGwjK74kSglkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VpXBG46h7z4f3jHg;
-	Tue, 28 May 2024 20:38:46 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id CF25D1A0568;
-	Tue, 28 May 2024 20:38:55 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgAn+RFd0FVmCNenNw--.15805S4;
-	Tue, 28 May 2024 20:38:55 +0800 (CST)
-From: linan666@huaweicloud.com
-To: song@kernel.org
-Cc: linux-raid@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linan666@huaweicloud.com,
-	yukuai3@huawei.com,
-	yi.zhang@huawei.com,
-	houtao1@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH v2] md: make md_flush_request() more readable
-Date: Wed, 29 May 2024 04:31:49 +0800
-Message-Id: <20240528203149.2383260-1-linan666@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1716906798; c=relaxed/simple;
+	bh=JXorx8Bldaj/na3q4Fbb9D0mI0a/zBZ2iUyD3ES8Hok=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=H92KgJ0Nk9ZqBXyNqmjbggK4VjY8tyUj7L/8S2HRXfUhphHfheXpX9ZMqrWxMYNuDPc3mkGSb6FpXhzJYlvzrcdiuUWUV4wMTyMMATeuVf7J8DY1esyKQ9frCSH/Ni8cvX409GjHPQWxgifqjbIw9ZJl+pqE3ywK5KPc9QUXqWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P46vIK2M; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716906797; x=1748442797;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=JXorx8Bldaj/na3q4Fbb9D0mI0a/zBZ2iUyD3ES8Hok=;
+  b=P46vIK2MTk2SJqwRGj4G2wnCePh6o4bCe4uowk+j+nZU3MgnzM8rJk/c
+   NdAIUW2o/XXsO2bOfId6GXHyugcgnROrZjdAEMkw7yKmvQiPm+TKXNd1s
+   1/ar/RBFCqVVv567gVCm9IcDOKqi8JI1KuNryhhH2SmvDyJ0eyFHD+mn/
+   B7Z6/xyhzNqTyUmfjyeWqlzNOhQ0SzNp+G6LQyuiDUWpEqWgdBrLXSkaG
+   MD1rOJu+2NpD6yXN/wchpYbU8QLIGZvdkc96RBcXxOfEBCa1CMYXTGrjG
+   5hnVZbT9IMgbwj7B+JI+qy0yCwf5uqNOLsWUhlOyd8hjDZ4gILi9d6NrX
+   A==;
+X-CSE-ConnectionGUID: 3WNOdCuDSO2MVAomNuAmvg==
+X-CSE-MsgGUID: 6tQHUff1TJmULBVt1Zcv/Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="24382819"
+X-IronPort-AV: E=Sophos;i="6.08,195,1712646000"; 
+   d="scan'208";a="24382819"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 07:33:17 -0700
+X-CSE-ConnectionGUID: O/l4Pr7yTsaBRCDFQreKFQ==
+X-CSE-MsgGUID: e7dCdDRcTtamTyT3/yu/sg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,195,1712646000"; 
+   d="scan'208";a="66298868"
+Received: from unknown (HELO mtkaczyk-dev.igk.intel.com) ([10.102.108.41])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 07:33:15 -0700
+From: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+To: linux-raid@vger.kernel.org
+Cc: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
+	Logan Gunthorpe <logang@deltatee.com>
+Subject: [RFC PATCH] mdadm: add --fast-initialize
+Date: Tue, 28 May 2024 16:33:05 +0200
+Message-Id: <20240528143305.18374-1-mariusz.tkaczyk@linux.intel.com>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
@@ -57,81 +72,50 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAn+RFd0FVmCNenNw--.15805S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7WFyfZw13Aw4rKr15GrWruFg_yoW8Wr4Up3
-	9akF93Zrs5Aws8Aw47JFykJ3Z8Wws3tFWDtrWavws3ZF15ZFn5Gw1SgryvqFykGryfurW3
-	Jrs5A3yrCay8ZwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUB014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2jI8I6cxK62vIxIIY0VWUZVW8XwA2ocxC64kIII
-	0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xv
-	wVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4
-	x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY
-	6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr
-	0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0E
-	wIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lw4CEc2x0rVAKj4xxMxAIw28IcxkI7VAKI4
-	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
-	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
-	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20E
-	Y4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjTRuMKZUUUUU
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
-From: Li Nan <linan122@huawei.com>
+This is not complete change but I would like to get the feedback on
+concept proposed. There are few features for optimized space zeroing.
+We already support --write-zeroes but Intel would like to add support of
+deallocate command (discard) in the future. There is also Sata trim
+which could be potentially used.
 
-Setting bio to NULL and checking 'if(!bio)' is redundant and looks strange,
-just consolidate them into one condition. There are no functional changes.
+The goal of this RFC is to get feedback about proposing one option to
+check for few features which can be used for performing smarter
+initialization instead of resync. With that, user may just type
+--fast-initialize and mdadm will determine what can be used, else abort.
 
-Suggested-by: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Li Nan <linan122@huawei.com>
+This won't be merged.
+
+Cc: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+
 ---
-v2: Rewrite the code according to Christoph's suggestion.
+ mdadm.8.in | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
- drivers/md/md.c | 28 +++++++++++++---------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index aff9118ff697..9598b4898ea9 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -654,24 +654,22 @@ bool md_flush_request(struct mddev *mddev, struct bio *bio)
- 		WARN_ON(percpu_ref_is_zero(&mddev->active_io));
- 		percpu_ref_get(&mddev->active_io);
- 		mddev->flush_bio = bio;
--		bio = NULL;
--	}
--	spin_unlock_irq(&mddev->lock);
--
--	if (!bio) {
-+		spin_unlock_irq(&mddev->lock);
- 		INIT_WORK(&mddev->flush_work, submit_flushes);
- 		queue_work(md_wq, &mddev->flush_work);
--	} else {
--		/* flush was performed for some other bio while we waited. */
--		if (bio->bi_iter.bi_size == 0)
--			/* an empty barrier - all done */
--			bio_endio(bio);
--		else {
--			bio->bi_opf &= ~REQ_PREFLUSH;
--			return false;
--		}
-+		return true;
- 	}
--	return true;
-+
-+	/* flush was performed for some other bio while we waited. */
-+	spin_unlock_irq(&mddev->lock);
-+	if (bio->bi_iter.bi_size == 0) {
-+		/* pure flush without data - all done */
-+		bio_endio(bio);
-+		return true;
-+	}
-+
-+	bio->bi_opf &= ~REQ_PREFLUSH;
-+	return false;
- }
- EXPORT_SYMBOL(md_flush_request);
+diff --git a/mdadm.8.in b/mdadm.8.in
+index aa0c540399f6..be592d70ac9b 100644
+--- a/mdadm.8.in
++++ b/mdadm.8.in
+@@ -849,6 +849,17 @@ each disk is zeroed in parallel with the others.
+ .IP
+ This is only meaningful with --create.
  
++.TP
++.BR \-\-fast-initialize
++When creating an array, check disks for optional features to perform optimized initialization
++instead of resync. These features are: NVMe's write-zeros or deallocate and Sata trims. If there is
++feature supported by all drives, it is executed, otherwise error is returned. This option invokes
++.B \-\-assume\-clean
++.This is intended for use with devices that have hardware offload for zeroing, but despite this
++zeroing can still take several minutes for large disks to complete.
++.IP
++This is only meaningful with --create.
++
+ .TP
+ .BR \-\-backup\-file=
+ This is needed when
 -- 
-2.39.2
+2.35.3
 
 
