@@ -1,68 +1,55 @@
-Return-Path: <linux-raid+bounces-1598-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-1588-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A44988D1D9D
-	for <lists+linux-raid@lfdr.de>; Tue, 28 May 2024 15:54:31 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C3D608D1B72
+	for <lists+linux-raid@lfdr.de>; Tue, 28 May 2024 14:39:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 370991F23A2F
-	for <lists+linux-raid@lfdr.de>; Tue, 28 May 2024 13:54:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 46D98B22DDA
+	for <lists+linux-raid@lfdr.de>; Tue, 28 May 2024 12:39:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37BB8170846;
-	Tue, 28 May 2024 13:52:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dhXqLSKo"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C6AA16D9AA;
+	Tue, 28 May 2024 12:39:09 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61EA717085A
-	for <linux-raid@vger.kernel.org>; Tue, 28 May 2024 13:52:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E984B16D9A0;
+	Tue, 28 May 2024 12:39:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716904328; cv=none; b=MrbjLDVTCLY2mwsdfiCrxruP/eYWkU/BayfknpT/r026/SgpLLIVqgZBXh5o/sPbE21YGsWSTrg7s+2rKJ9Ht2hsV/tLsBe9mLlqJmT/B9X7IVKnCAhgmo4FAxw+8v4LP6/nENDlax4PSJ2/a+o8froBetoAW8PuQ210c4yn6/c=
+	t=1716899948; cv=none; b=rY3nJ1KIGVREtMvX50jW3wFuWuCiT9N1Xh3OCmbRt6JX5lNkUAEm3W6+0csUVQnVVw/1T21hmLM3WZi/K2ykm4eb2MkFfaD35ydM3d1pJpdubHW6bweWxCDhHPluJwdskEoQIgb53ZyuaWrJTW5diz0p2xm5i8I7cx6KukOwXcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716904328; c=relaxed/simple;
-	bh=uD7/azniFaS0ib6QYlCshC8A1sx51IVUEmypsvKWeFA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Dpxy+3R67zwmSMNkzXLkRXC9awN/uuB9bjjZeBW7rcQsRY/LvYAlsqEq71cUWdmjwLEiQkE+JkSJvdIvdD0lsS6NjjQ4y8HZycieFLkITzP0pDmpvGFk8pgONex6kSG6ylabZhDNxzBBDflQn/MDpSm5/LH3lnMV40neLasIr3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dhXqLSKo; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716904326;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6QKm/tcpcIHkaAFytzjNc1Gn9MZzZy0u0pPg9exlKfc=;
-	b=dhXqLSKoiU8p7zwfBWVQLFL4KHo0y/tu1FXrHVPkx7xKpwgRvjAeGgLqbyWKdOsug0BoKB
-	pONU3BBICgMFn4kYmDoIl/aAMyac2sPX47FUdbs8SaEYDvhPwS0wZgF22t9gWQpf4q474H
-	CWBp/DYErnBScXYD8E+8kGXMwtZ/rR0=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-556-i1TCZ-AVPQigunjbbuY1KA-1; Tue, 28 May 2024 09:52:02 -0400
-X-MC-Unique: i1TCZ-AVPQigunjbbuY1KA-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 91A11800281;
-	Tue, 28 May 2024 13:52:02 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.72.120.10])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 25427492BC6;
-	Tue, 28 May 2024 13:52:00 +0000 (UTC)
-From: Xiao Ni <xni@redhat.com>
-To: mariusz.tkaczyk@linux.intel.com
-Cc: linux-raid@vger.kernel.org
-Subject: [PATCH 4/4] mdadm/tests: remove strace test
-Date: Tue, 28 May 2024 21:51:50 +0800
-Message-Id: <20240528135150.26823-5-xni@redhat.com>
-In-Reply-To: <20240528135150.26823-1-xni@redhat.com>
-References: <20240528135150.26823-1-xni@redhat.com>
+	s=arc-20240116; t=1716899948; c=relaxed/simple;
+	bh=SwlaZwQTe+WOm3AHJ1DNVfrfD6aHDXuHVxx1381y2W8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RiDx/O/FWtuyw27a58fEOoqe3Qs9aM14NpGnS643opChnUTgmp5W0bZIIIxozbtIuvECg38y3iw7sDrJHblm3a6SDDfzyk8mnzF5oXPietJddRNXIdHk/W+z2C3U8FrHkKQHVN/HVUSc3xLCXSr1mEo+23KuTazGwjK74kSglkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VpXBG46h7z4f3jHg;
+	Tue, 28 May 2024 20:38:46 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id CF25D1A0568;
+	Tue, 28 May 2024 20:38:55 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgAn+RFd0FVmCNenNw--.15805S4;
+	Tue, 28 May 2024 20:38:55 +0800 (CST)
+From: linan666@huaweicloud.com
+To: song@kernel.org
+Cc: linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linan666@huaweicloud.com,
+	yukuai3@huawei.com,
+	yi.zhang@huawei.com,
+	houtao1@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH v2] md: make md_flush_request() more readable
+Date: Wed, 29 May 2024 04:31:49 +0800
+Message-Id: <20240528203149.2383260-1-linan666@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
@@ -70,44 +57,81 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+X-CM-TRANSID:cCh0CgAn+RFd0FVmCNenNw--.15805S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7WFyfZw13Aw4rKr15GrWruFg_yoW8Wr4Up3
+	9akF93Zrs5Aws8Aw47JFykJ3Z8Wws3tFWDtrWavws3ZF15ZFn5Gw1SgryvqFykGryfurW3
+	Jrs5A3yrCay8ZwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUB014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2jI8I6cxK62vIxIIY0VWUZVW8XwA2ocxC64kIII
+	0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xv
+	wVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4
+	x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY
+	6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr
+	0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0E
+	wIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lw4CEc2x0rVAKj4xxMxAIw28IcxkI7VAKI4
+	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
+	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20E
+	Y4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjTRuMKZUUUUU
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
-Some tests will fail if the test env doesn't have strace
-commands. So remove the dependency.
+From: Li Nan <linan122@huawei.com>
 
-Signed-off-by: Xiao Ni <xni@redhat.com>
+Setting bio to NULL and checking 'if(!bio)' is redundant and looks strange,
+just consolidate them into one condition. There are no functional changes.
+
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Li Nan <linan122@huawei.com>
 ---
- tests/07revert-grow    | 2 +-
- tests/07revert-inplace | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+v2: Rewrite the code according to Christoph's suggestion.
 
-diff --git a/tests/07revert-grow b/tests/07revert-grow
-index c8c4e855f628..333483dc0478 100644
---- a/tests/07revert-grow
-+++ b/tests/07revert-grow
-@@ -43,7 +43,7 @@ testdev $md0 2 $mdsize1 512
- mdadm -G $md0 -n 5
- sleep 3
- mdadm -S $md0
--strace -o /tmp/str ./mdadm -A $md0 --update=revert-reshape $devlist4
-+mdadm -A $md0 --update=revert-reshape $devlist4
- check wait
- check raid10
- testdev $md0 2 $mdsize1 512
-diff --git a/tests/07revert-inplace b/tests/07revert-inplace
-index a73eb977374d..776324ac22fb 100644
---- a/tests/07revert-inplace
-+++ b/tests/07revert-inplace
-@@ -37,7 +37,7 @@ testdev $md0 3 $mdsize1 64
- mdadm -G $md0 -c 32
- sleep 2
- mdadm -S $md0
--strace -o /tmp/str ./mdadm -A $md0 --update=revert-reshape $devlist5
-+mdadm -A $md0 --update=revert-reshape $devlist5
- check wait
- check raid10
- testdev $md0 3 $mdsize1 64
+ drivers/md/md.c | 28 +++++++++++++---------------
+ 1 file changed, 13 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index aff9118ff697..9598b4898ea9 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -654,24 +654,22 @@ bool md_flush_request(struct mddev *mddev, struct bio *bio)
+ 		WARN_ON(percpu_ref_is_zero(&mddev->active_io));
+ 		percpu_ref_get(&mddev->active_io);
+ 		mddev->flush_bio = bio;
+-		bio = NULL;
+-	}
+-	spin_unlock_irq(&mddev->lock);
+-
+-	if (!bio) {
++		spin_unlock_irq(&mddev->lock);
+ 		INIT_WORK(&mddev->flush_work, submit_flushes);
+ 		queue_work(md_wq, &mddev->flush_work);
+-	} else {
+-		/* flush was performed for some other bio while we waited. */
+-		if (bio->bi_iter.bi_size == 0)
+-			/* an empty barrier - all done */
+-			bio_endio(bio);
+-		else {
+-			bio->bi_opf &= ~REQ_PREFLUSH;
+-			return false;
+-		}
++		return true;
+ 	}
+-	return true;
++
++	/* flush was performed for some other bio while we waited. */
++	spin_unlock_irq(&mddev->lock);
++	if (bio->bi_iter.bi_size == 0) {
++		/* pure flush without data - all done */
++		bio_endio(bio);
++		return true;
++	}
++
++	bio->bi_opf &= ~REQ_PREFLUSH;
++	return false;
+ }
+ EXPORT_SYMBOL(md_flush_request);
+ 
 -- 
-2.32.0 (Apple Git-132)
+2.39.2
 
 
