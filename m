@@ -1,59 +1,59 @@
-Return-Path: <linux-raid+bounces-1630-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-1625-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0E3A8FA4FC
-	for <lists+linux-raid@lfdr.de>; Mon,  3 Jun 2024 23:56:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D40298FA4F7
+	for <lists+linux-raid@lfdr.de>; Mon,  3 Jun 2024 23:56:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A50D1F24652
-	for <lists+linux-raid@lfdr.de>; Mon,  3 Jun 2024 21:56:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 865BB2819DF
+	for <lists+linux-raid@lfdr.de>; Mon,  3 Jun 2024 21:56:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8590A13CA8E;
-	Mon,  3 Jun 2024 21:56:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16D5413C908;
+	Mon,  3 Jun 2024 21:56:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iB+umQEx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fC8OXNaH"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C4B13C8FE
-	for <linux-raid@vger.kernel.org>; Mon,  3 Jun 2024 21:56:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3CF13C69C
+	for <linux-raid@vger.kernel.org>; Mon,  3 Jun 2024 21:56:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717451776; cv=none; b=U3K1EfdBXaSz1tBw9x+C7w/I4OS9sVR5641iJAUzG6tKL7Qb9IYBsNgn3dZi5jS0frXuMO6ZeZ1sqDI+F33hl2om+g5SD6hj7qCH7RuYr9+/RSz8xrtiga66l9Vbl2towuyMH9tP/ECYMjeCbgyKIGOCZG7+mHxtraknuq4dQeE=
+	t=1717451774; cv=none; b=hH+CrgjloIja5K70slFqVG+leXVnfBnB674qwdZtd0wHpdGriY7/IG0O+o7urzXERWeLQfqb1SLqPVFunHeMbUgsUhTO4HSsqysfIISn2LMABoAZkU/pNWv+ZGjomKOqE+ap2TQJdn9Z4VET4xWooZ3U6eOqGloKoVzp2rkE34c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717451776; c=relaxed/simple;
-	bh=uPyZhTczRbt6lqW73u9fuXTsDjMV6sRnxpZDbjct/CM=;
+	s=arc-20240116; t=1717451774; c=relaxed/simple;
+	bh=jWJWtpYyHQWZir+Z7m4u7eN7tveGJS5Q+6RYhmr9P4I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nU/bXE6WXvNKQUndzdcsg26lLIPOrbObJ2qErHF69xlqQ7gco6l3SCw8I2/PZG9oYOA9oeu09oh6UX7hJNgvKqrAaoweA42GCWWf74T5giYoJa8nqJGh7+kNCmA4nZWMYH5V7YmzwqJ9WmvM0GTDZ0XYeho6SPcw94n/iq7aDj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iB+umQEx; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=JSKbdNZQ05GGtt921wvi2qSjkNf9QlulLMYirJgH6Jp/sPGTbM/9T1DZOcWEgA6mLSwl5WfF88SmV660HM25sEiPXiRheFvlWJZlFEEFjn5hX53kvAmzQYzK2KoMor6JirXenr/S4VNF3KM03KRogixJQ1w6FJhbpEeOWFn6pfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fC8OXNaH; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717451773;
+	s=mimecast20190719; t=1717451772;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=bShP03m/lI8RlVt6OnEiJn+8a8V/jVoXU4sKIi3R2B4=;
-	b=iB+umQExTBjj/syCEgRVZPZJI9B222xBtZ0TUMvu0h2Ss3JqvCTHbuDhSxwcYSZofoOx9n
-	VpnHym0IDJ7T2f9kwcbZcuU6K1Qcsc2mjsj1+9hDlvt5ZkVH8IrAHGGRtt3HfNAgi1LzX4
-	RlO3EP7b0c+8IC4871DtNH17dsU7GB8=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-625-xU-geX_dMD2EwJnmtGkG4g-1; Mon,
- 03 Jun 2024 17:56:09 -0400
-X-MC-Unique: xU-geX_dMD2EwJnmtGkG4g-1
+	bh=v8QQ+DkGq/TPZFhs6jqyCdzFqoMg+zkrinBIcXp5DV0=;
+	b=fC8OXNaHe+bI2ukgSqJ47t4JZRWmkGeWBqVcuNV1W+gSqyt4hg9c/M1ceKDOroaQqb8dfV
+	mKuIwumMBN9OHXBrWdOZTddEfvrhDae20YQxihuCiCr2RA72WG2gsgNSCfI85bdqBHXX+4
+	DQSNikazwdmctm80I3S0aGF4WKYYnIo=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-410-c5Q-to2QObC-IKcNM7hXJQ-1; Mon, 03 Jun 2024 17:56:09 -0400
+X-MC-Unique: c5Q-to2QObC-IKcNM7hXJQ-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B7CC33C025A1;
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C211A800CAC;
 	Mon,  3 Jun 2024 21:56:08 +0000 (UTC)
 Received: from fs-i40c-03.mgmt.fast.eng.rdu2.dc.redhat.com (fs-i40c-03.mgmt.fast.eng.rdu2.dc.redhat.com [10.6.24.150])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id AD40F200E575;
+	by smtp.corp.redhat.com (Postfix) with ESMTP id B714B200E576;
 	Mon,  3 Jun 2024 21:56:08 +0000 (UTC)
 From: Alexander Aring <aahringo@redhat.com>
 To: teigland@redhat.com
@@ -62,9 +62,9 @@ Cc: gfs2@lists.linux.dev,
 	yukuai3@huawei.com,
 	linux-raid@vger.kernel.org,
 	aahringo@redhat.com
-Subject: [PATCH dlm/next 3/8] dlm: use is_master() on checks if we are the master
-Date: Mon,  3 Jun 2024 17:55:53 -0400
-Message-ID: <20240603215558.2722969-4-aahringo@redhat.com>
+Subject: [PATCH dlm/next 4/8] dlm: use LSFL_FS to check if it's a kernel lockspace
+Date: Mon,  3 Jun 2024 17:55:54 -0400
+Message-ID: <20240603215558.2722969-5-aahringo@redhat.com>
 In-Reply-To: <20240603215558.2722969-1-aahringo@redhat.com>
 References: <20240603215558.2722969-1-aahringo@redhat.com>
 Precedence: bulk
@@ -76,72 +76,102 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-There are checks if we are the master or not done by
-"r->res_master_nodeid == dlm_our_nodeid()" or unequal to check if we are
-not the master. There is a helper function is_master() for doing this
-kind of check. This patch replaces several checks of those by using the
-helper instead of using the mentioned condition check.
+This patch sets and uses the internal flag LSFL_FS to check in workqueue
+handling if it's a kernel lockspace or not in the callback workqueue
+handling. Currently user space lockspaces don't require the callback
+workqueue. Upcoming changes will make it possible to remove the
+the callback workqueue context switch when a specific lockspace flag is
+passed. This patch prepares for such handling as some handling like
+setting of LSFL_CB_DELAY is still required for those kernel lockspaces
+but they don't have a callback workqueue.
 
 Signed-off-by: Alexander Aring <aahringo@redhat.com>
 ---
- fs/dlm/lock.c     | 9 ++++-----
- fs/dlm/recoverd.c | 2 +-
- 2 files changed, 5 insertions(+), 6 deletions(-)
+ fs/dlm/ast.c          | 17 +++++++++++------
+ fs/dlm/dlm_internal.h |  1 +
+ fs/dlm/lockspace.c    | 13 +++++++------
+ 3 files changed, 19 insertions(+), 12 deletions(-)
 
-diff --git a/fs/dlm/lock.c b/fs/dlm/lock.c
-index 3195d0b96c74..a41a6fa2123b 100644
---- a/fs/dlm/lock.c
-+++ b/fs/dlm/lock.c
-@@ -242,7 +242,7 @@ static inline int is_granted(struct dlm_lkb *lkb)
- static inline int is_remote(struct dlm_rsb *r)
+diff --git a/fs/dlm/ast.c b/fs/dlm/ast.c
+index 59711486d801..52ce27031314 100644
+--- a/fs/dlm/ast.c
++++ b/fs/dlm/ast.c
+@@ -161,6 +161,9 @@ void dlm_add_cb(struct dlm_lkb *lkb, uint32_t flags, int mode, int status,
+ 
+ int dlm_callback_start(struct dlm_ls *ls)
  {
- 	DLM_ASSERT(r->res_master_nodeid != 0, dlm_print_rsb(r););
--	return r->res_master_nodeid != dlm_our_nodeid();
-+	return !is_master(r);
++	if (!test_bit(LSFL_FS, &ls->ls_flags))
++		return 0;
++
+ 	ls->ls_callback_wq = alloc_ordered_workqueue("dlm_callback",
+ 						     WQ_HIGHPRI | WQ_MEM_RECLAIM);
+ 	if (!ls->ls_callback_wq) {
+@@ -178,13 +181,15 @@ void dlm_callback_stop(struct dlm_ls *ls)
+ 
+ void dlm_callback_suspend(struct dlm_ls *ls)
+ {
+-	if (ls->ls_callback_wq) {
+-		spin_lock_bh(&ls->ls_cb_lock);
+-		set_bit(LSFL_CB_DELAY, &ls->ls_flags);
+-		spin_unlock_bh(&ls->ls_cb_lock);
++	if (!test_bit(LSFL_FS, &ls->ls_flags))
++		return;
+ 
++	spin_lock_bh(&ls->ls_cb_lock);
++	set_bit(LSFL_CB_DELAY, &ls->ls_flags);
++	spin_unlock_bh(&ls->ls_cb_lock);
++
++	if (ls->ls_callback_wq)
+ 		flush_workqueue(ls->ls_callback_wq);
+-	}
  }
  
- static inline int is_process_copy(struct dlm_lkb *lkb)
-@@ -4025,7 +4025,7 @@ static int receive_request(struct dlm_ls *ls, const struct dlm_message *ms)
+ #define MAX_CB_QUEUE 25
+@@ -195,7 +200,7 @@ void dlm_callback_resume(struct dlm_ls *ls)
+ 	int count = 0, sum = 0;
+ 	bool empty;
  
- 	lock_rsb(r);
+-	if (!ls->ls_callback_wq)
++	if (!test_bit(LSFL_FS, &ls->ls_flags))
+ 		return;
  
--	if (r->res_master_nodeid != dlm_our_nodeid()) {
-+	if (!is_master(r)) {
- 		error = validate_master_nodeid(ls, r, from_nodeid);
- 		if (error) {
- 			unlock_rsb(r);
-@@ -4447,8 +4447,7 @@ static int receive_request_reply(struct dlm_ls *ls,
- 			  from_nodeid, result, r->res_master_nodeid,
- 			  r->res_dir_nodeid, r->res_first_lkid, r->res_name);
+ more:
+diff --git a/fs/dlm/dlm_internal.h b/fs/dlm/dlm_internal.h
+index 2c7ad3c5e893..3b026d80aa2b 100644
+--- a/fs/dlm/dlm_internal.h
++++ b/fs/dlm/dlm_internal.h
+@@ -726,6 +726,7 @@ struct dlm_ls {
+ #define LSFL_CB_DELAY		9
+ #define LSFL_NODIR		10
+ #define LSFL_RECV_MSG_BLOCKED	11
++#define LSFL_FS			12
  
--		if (r->res_dir_nodeid != dlm_our_nodeid() &&
--		    r->res_master_nodeid != dlm_our_nodeid()) {
-+		if (r->res_dir_nodeid != dlm_our_nodeid() && !is_master(r)) {
- 			/* cause _request_lock->set_master->send_lookup */
- 			r->res_master_nodeid = 0;
- 			lkb->lkb_master_nodeid = 0;
-@@ -4462,7 +4461,7 @@ static int receive_request_reply(struct dlm_ls *ls,
- 		} else {
- 			_request_lock(r, lkb);
+ #define DLM_PROC_FLAGS_CLOSING 1
+ #define DLM_PROC_FLAGS_COMPAT  2
+diff --git a/fs/dlm/lockspace.c b/fs/dlm/lockspace.c
+index f54f43dbe7b6..be5dd5c990e5 100644
+--- a/fs/dlm/lockspace.c
++++ b/fs/dlm/lockspace.c
+@@ -500,12 +500,13 @@ static int new_lockspace(const char *name, const char *cluster,
+ 	list_add(&ls->ls_list, &lslist);
+ 	spin_unlock_bh(&lslist_lock);
  
--			if (r->res_master_nodeid == dlm_our_nodeid())
-+			if (is_master(r))
- 				confirm_master(r, 0);
- 		}
- 		break;
-diff --git a/fs/dlm/recoverd.c b/fs/dlm/recoverd.c
-index 06959b128bd0..98d83f90a0db 100644
---- a/fs/dlm/recoverd.c
-+++ b/fs/dlm/recoverd.c
-@@ -34,7 +34,7 @@ static int dlm_create_masters_list(struct dlm_ls *ls)
+-	if (flags & DLM_LSFL_FS) {
+-		error = dlm_callback_start(ls);
+-		if (error) {
+-			log_error(ls, "can't start dlm_callback %d", error);
+-			goto out_delist;
+-		}
++	if (flags & DLM_LSFL_FS)
++		set_bit(LSFL_FS, &ls->ls_flags);
++
++	error = dlm_callback_start(ls);
++	if (error) {
++		log_error(ls, "can't start dlm_callback %d", error);
++		goto out_delist;
+ 	}
  
- 	read_lock_bh(&ls->ls_rsbtbl_lock);
- 	list_for_each_entry(r, &ls->ls_keep, res_rsbs_list) {
--		if (r->res_master_nodeid != dlm_our_nodeid())
-+		if (!is_master(r))
- 			continue;
- 
- 		list_add(&r->res_masters_list, &ls->ls_masters_list);
+ 	init_waitqueue_head(&ls->ls_recover_lock_wait);
 -- 
 2.43.0
 
