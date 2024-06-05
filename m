@@ -1,150 +1,91 @@
-Return-Path: <linux-raid+bounces-1674-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-1679-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31C698FDCF7
-	for <lists+linux-raid@lfdr.de>; Thu,  6 Jun 2024 04:48:14 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2291F8FDE02
+	for <lists+linux-raid@lfdr.de>; Thu,  6 Jun 2024 07:02:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AB06428590E
-	for <lists+linux-raid@lfdr.de>; Thu,  6 Jun 2024 02:48:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 38BAE1C2383F
+	for <lists+linux-raid@lfdr.de>; Thu,  6 Jun 2024 05:02:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5D26EEDB;
-	Thu,  6 Jun 2024 02:48:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CFF83FBAD;
+	Thu,  6 Jun 2024 05:01:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LE1C+HyZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GGQ70kMy"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258C41C68E
-	for <linux-raid@vger.kernel.org>; Thu,  6 Jun 2024 02:48:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6F841C86;
+	Thu,  6 Jun 2024 05:01:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717642089; cv=none; b=QMBjIiqQsjxnH5UyOWuQpMY8iBAIXta6mlPEqnwdoUksBhCvVV41ztNkmP9rUlbSMjI+Au2abr4mc/dj046yhVNIqxasvRXUvVgvSdbn+zHXivzADoFPfQ6XMpZ2mCHiYmEwLB6/hM6xFlcPlXgG0f8uym4E8x65CkWc9uHmAk0=
+	t=1717650107; cv=none; b=rp5zF5dcepT+GNxFVp0r+zoAz2eO6lE3BgL8Lp7BL4BuLslpoiutDrD82VxbMNO3SKY7P3qPBIcb6FUKPoxQ6VhUdexen4Ulmk1bJoEXuxJ8n0GL7vr7zP7yJYZ3Ce0xeCxz0lSAXk0Q2qN/Zoh3m7JjnejscBmCklCvB6VGf50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717642089; c=relaxed/simple;
-	bh=5NSZrFpB/GonGD46gDAy0SbbwmVebNNq7DJjorbO0dk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XLCQIO+ZMVHzyDl9sRh7DrmC78mkm7HWvbinCbT4tB2VmOL08A332c+/UcdidFRFlQGRM2aknsF3jJDsSjA2iRAJL/iC6zaVgeJe7go+54retYtRsqwVN+22deiXUgx5BWGrzqD0+VRR1XlgRtHkNyUtq9Mkv3RubW/sgZYpDsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LE1C+HyZ; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2e6f2534e41so4801911fa.0
-        for <linux-raid@vger.kernel.org>; Wed, 05 Jun 2024 19:48:06 -0700 (PDT)
+	s=arc-20240116; t=1717650107; c=relaxed/simple;
+	bh=MPy2dmqKlCsrw5okIZFwkiGzwVi0bWXg1j0NfWvMFRQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CMZTkv4QYznZrpOeFn66RO6matHFvu1hp0xSHV1JB0SrIQk9fk2xEC3JUd4I1FN+fn5Qu0Mv8S8e9DMoUaEm5eMeQIkVEbU5hOQ0XTblcqcX4QDFsf3/7brO/zczfNbVACAswAIkqgCEzBWTqIL4B8ndCZW/rtaNUnXECA2ULPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GGQ70kMy; arc=none smtp.client-ip=209.85.160.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-24c0dbd2866so288636fac.0;
+        Wed, 05 Jun 2024 22:01:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1717642085; x=1718246885; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=N0jfz+nnR88SF/3jl+2qqnrwZqfMXV0m/DMzFLp5rwQ=;
-        b=LE1C+HyZm0yqa161sPPvKWPOxJsDLFefLlWrYnlhoQHYeUmwTyy5YbRQcLOlz9UCd9
-         9BL1AEyIuY0oyGV1ckWyITw9wLGuL3aJJWmOunRi0i+helQrqRCSmjbCyKwjAQyh2WCK
-         TUpOsCxG7E9nImGUVz71jTFgCsYEWihH+zgQrktt2fXswx/2XGBvin50HJeDxVnX5AHv
-         dc2Fd6kJue8H5cEU33oUg44U3U6O+fk0lelP9X3X3ToS2PA5vav2ELGYSxao2uZqeDvp
-         iD2eLwT18GLPgxSo+0NQW8c3tyQegrHXyOYYtQEuIwoKrUq6+GlvqrX7Xm4HXSiwjj9H
-         XzOA==
+        d=gmail.com; s=20230601; t=1717650105; x=1718254905; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=MPy2dmqKlCsrw5okIZFwkiGzwVi0bWXg1j0NfWvMFRQ=;
+        b=GGQ70kMyOaf3qVVHW5pfE4C71CC2vsNRsos/HhlSxlff6OruKXqfLttMWDS9AmgvIC
+         haVcSbD12yXB8LUcP+e99oc+ZsaFWW53v89bIvejSDOPa0T4KgOtGPLhm5oCoyfbLkbC
+         i1+Nfrwg1a61eOyekm3mAAYlf3i+PXWKIZTGE1oMEZkosF/Ekr/G7tEyrdR283xRPJhk
+         nBluX6eykwKocxe7wSexYbF1d6B1p2aFQDaYhOdRPvdbWFtVPYVvz/3tWyC/wL9Q01rT
+         Mmi1JflWyXYVpJMUhv1taFL+phIwVN1GbVqT4bPPrCOxpKwC4d4/3ZkQJpb6nGgr9sCP
+         kiww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717642085; x=1718246885;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=N0jfz+nnR88SF/3jl+2qqnrwZqfMXV0m/DMzFLp5rwQ=;
-        b=QpqSdG+jz82myJ0Gib8Pxm1pguYMgTiz+t3QQrZvngpXequx5wSnjFPGSD8qUP2RcD
-         q+WhK46YLhSdGMzk4T6ia85okl4cVHzLLF6e4GzFeISIfZUmpe78fwxC2qvW1Yh8aPyP
-         knEk126iIXx0ZK6TDkNlbyi6Vb8r2WZVc5TMZZnheSG3ESKKau47eAo+AsN7ds6yOJ+W
-         DoZlXHzSwoTSRW+q5aC0O7NW02eT/SlK9gtxTiu/mznl/lN4tyiNmPRTEkZVq8cNuvkc
-         HZq878kiT7asK5YrlSe4YwVx3EPmVA7CPFvE6OfO2QmPm+4cISk4/9Ktocc6RrUCw9yv
-         lw5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWTPZLx3mH/ARZ6ugYqKdoRDfASDLe4FNHLjEpPawYp3AnALCeHyVd3m1Ujt0dF/1E3Aj5N8WO733FHYKjd+hSV9Qeq/O322oMR2A==
-X-Gm-Message-State: AOJu0YwAj7AN4LQOND36BA+g4Xnz8dU8bjEZNqFDTSIq0xT9camnHp8O
-	za0tEf9FtNn3wPt5sq2WFna7OFC0tajt9bqozAeB0eaV9/M/0LCNOXP4r5Xp6DE=
-X-Google-Smtp-Source: AGHT+IGazauN7aYw4PWByspyMiWDy+JywTjNvJ4Lkfm0DiySPRKfR6McZKYIQ8XSsbXI4yyAp55L5Q==
-X-Received: by 2002:a05:651c:2224:b0:2ea:8188:5bdf with SMTP id 38308e7fff4ca-2eac7a52b99mr29005151fa.36.1717642085173;
-        Wed, 05 Jun 2024 19:48:05 -0700 (PDT)
-Received: from [10.202.32.28] ([202.127.77.110])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c2806cfa62sm2240261a91.48.2024.06.05.19.48.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Jun 2024 19:48:04 -0700 (PDT)
-Message-ID: <41da824f-f3e5-429f-a701-5feddf8b2ed1@suse.com>
-Date: Thu, 6 Jun 2024 10:48:00 +0800
+        d=1e100.net; s=20230601; t=1717650105; x=1718254905;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MPy2dmqKlCsrw5okIZFwkiGzwVi0bWXg1j0NfWvMFRQ=;
+        b=iBL6KMhONbRj+XqGUPtyKYuKBQ7E56eK7UBYlJ+8Yj6LFy0OjQMDqWe6u3SZIgxy/y
+         qjzxHLsmemAyjAp7OfdQ1IfkKZ48qet/YeS4bikuC5CxZP1UOZuXqaWu6hYudhNQ+KA0
+         +EdCGR6ZfsFWjrhB+3VLKdYGGBZ8DTnpq4URnUnRqokCTQdWf4GxrRWH/IevEzH846c4
+         RcLgOrrDJo7qTaztzM/XCcOnPYt3MohJ/ub6QeoeRyM10176luqMT1m2UvFpLVae3WNi
+         mKv0uc5HfVSeWG1y7pgfPYMY0yRBz5zNweNx5HuckeHU0qQJMx0dgUcfraqrLsIi8Xed
+         p4dg==
+X-Forwarded-Encrypted: i=1; AJvYcCWk5Mh8DvagESfQr5C0F97pcoWiDkfwfOMeNq2Zr7gXXJEpTp6iyh4Sgr30Th6xQll8Gjr9RcQ29H2dWvD6mDc0FUbF2SIYk2ssluRWFzNEOfVUkba3AVBNzzLLJ/CIJJHAqYvcYY7fsM0e9nN9rB6QIK2qsRZQuSm7pUWzogROIPPXCA==
+X-Gm-Message-State: AOJu0YzD+WFszlbln0vHoFQyGKkIphcwnViMrWLAyk4uhDBES3hzW2Fa
+	ofgMmMyQM0tUFDrsk6gFDkjTcwUYyFlqiSnPLvbEa+t8nip4zWecErXp4xHWdFJ78XZtn+/vH2W
+	48W/Q0Sk8uqXqbm2aE7ljiz+ISndCQgOLsZk=
+X-Google-Smtp-Source: AGHT+IG959oSX54MQq8GKfVWKo3o05hRklNZiBoCzbvR+OQgV8iL3zKUSZnj1CdwY90/HxmBqEYVn80Ozx7+RJmP7Ig=
+X-Received: by 2002:a05:6870:970d:b0:24e:896f:6a25 with SMTP id
+ 586e51a60fabf-251220b9deemr5280914fac.58.1717650104968; Wed, 05 Jun 2024
+ 22:01:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH dlm/next 8/8] md-cluster: use DLM_LSFL_SOFTIRQ for
- dlm_new_lockspace()
-To: Alexander Aring <aahringo@redhat.com>, teigland@redhat.com,
- yukuai3@huawei.com, song@kernel.org
-Cc: gfs2@lists.linux.dev, linux-raid@vger.kernel.org
-References: <20240603215558.2722969-1-aahringo@redhat.com>
- <20240603215558.2722969-9-aahringo@redhat.com>
- <CAK-6q+i18_oHfdh6Odfidi0y4hWiR9bn_svWf2BwPqnLwdEFGQ@mail.gmail.com>
-Content-Language: en-US
-From: Heming Zhao <heming.zhao@suse.com>
-In-Reply-To: <CAK-6q+i18_oHfdh6Odfidi0y4hWiR9bn_svWf2BwPqnLwdEFGQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240605063031.3286655-1-hch@lst.de> <20240605063031.3286655-3-hch@lst.de>
+In-Reply-To: <20240605063031.3286655-3-hch@lst.de>
+From: Kanchan Joshi <joshiiitr@gmail.com>
+Date: Thu, 6 Jun 2024 05:01:18 +0530
+Message-ID: <CA+1E3rLUA_hnGsXF7p14Hap9jKk1hHDTicYuHMque10QV3GEDQ@mail.gmail.com>
+Subject: Re: [PATCH 02/12] block: remove the unused BIP_{CTRL,DISK}_NOCHECK flags
+To: Christoph Hellwig <hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
+	Mike Snitzer <snitzer@kernel.org>, Mikulas Patocka <mpatocka@redhat.com>, Song Liu <song@kernel.org>, 
+	Yu Kuai <yukuai3@huawei.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Ira Weiny <ira.weiny@intel.com>, Keith Busch <kbusch@kernel.org>, 
+	Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>, linux-block@vger.kernel.org, 
+	dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, nvdimm@lists.linux.dev, 
+	linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 6/6/24 02:54, Alexander Aring wrote:
-> Hi,
-> 
-> On Mon, Jun 3, 2024 at 5:56 PM Alexander Aring <aahringo@redhat.com> wrote:
->>
->> Recently the DLM subsystem introduced the flag DLM_LSFL_SOFTIRQ for
->> dlm_new_lockspace() to signal the capability to handle DLM ast/bast
->> callbacks in softirq context to avoid an additional context switch due
->> the DLM callback workqueue.
->>
->> The md-cluster implementation only does synchronized calls above the
->> async DLM API. That synchronized API should may be also offered by DLM,
->> however it is very simple as md-cluster callbacks only does a complete()
->> call for their wait_for_completion() wait that is occurred after the
->> async DLM API call. This patch activates the recently introduced
->> DLM_LSFL_SOFTIRQ flag that allows that the DLM callbacks are executed in
->> a softirq context that md-cluster can handle. It is reducing a
->> unnecessary context workqueue switch and should speed up DLM in some
->> circumstance.
->>
-> 
-> Can somebody with a md-cluster environment test it as well? All I was
-> doing was (with a working dlm_controld cluster env):
-> 
-> mdadm --create /dev/md0 --bitmap=clustered --metadata=1.2
-> --raid-devices=2 --level=mirror /dev/sda /dev/sdb
-> 
-> sda and sdb are shared block devices on each node.
-> 
-> Create a /etc/mdadm.conf with the content mostly out of:
-> 
-> mdadm --detail --scan
-> 
-> on each node.
-> 
-> Then call mdadm --assemble on all nodes where not "mdadm --create ..." happened.
-> I hope that is the right thing to do and I had with "dlm_tool ls" a
-> UUID as a lockspace name with some md-cluster locks being around.
-
-The above setup method is correct.
-SUSE doc [1] provides more details on assembling the clustered array.
-
-[1]: https://documentation.suse.com/fr-fr/sle-ha/15-SP5/html/SLE-HA-all/cha-ha-cluster-md.html#sec-ha-cluster-md-create
-
-> 
-> To bring this new flag upstream, would it be okay to get this through
-> dlm-tree? I am requesting here for an "Acked-by" tag from the md
-> maintainers.
-> 
-
-I compiled & tested the dlm-tree [2] with SUSE CI env, and didn't see these
-patches introduce new issue.
-
-[2]: https://git.kernel.org/pub/scm/linux/kernel/git/teigland/linux-dlm.git/log/?h=next
-
-Thanks,
-Heming
+Reviewed-by: Kanchan Joshi <joshi.k@samsung.com>
 
