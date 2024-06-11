@@ -1,67 +1,44 @@
-Return-Path: <linux-raid+bounces-1783-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-1786-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72D33903227
-	for <lists+linux-raid@lfdr.de>; Tue, 11 Jun 2024 08:05:29 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 064BE903249
+	for <lists+linux-raid@lfdr.de>; Tue, 11 Jun 2024 08:13:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E9887B2B950
-	for <lists+linux-raid@lfdr.de>; Tue, 11 Jun 2024 05:59:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 30CFAB27590
+	for <lists+linux-raid@lfdr.de>; Tue, 11 Jun 2024 06:13:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D9E0171678;
-	Tue, 11 Jun 2024 05:59:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAA5717107E;
+	Tue, 11 Jun 2024 06:13:26 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829EA17085D;
-	Tue, 11 Jun 2024 05:59:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F96379C2
+	for <linux-raid@vger.kernel.org>; Tue, 11 Jun 2024 06:13:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718085554; cv=none; b=FNZQ9noFTMqletWy/FxZknmSPDNB7t/uB2AmS5fJoMz+L2tYbAY0bXeRLYM0CdeqOy5g0X1Z7FyBjrPZCi/R2Sn3Eo53lS8hcv6x9gUiUh1xLy1OUSTswxxmE2Bbph0SLl828q65Z8K/W02jUgyDlex168bOIQGN29JTfe078xI=
+	t=1718086406; cv=none; b=hgUdKmOBy0NrAz+0LuID6yiDGXEvhkBwKFxvI/2Nu3esMPo5jZyOMM3nr95ZptxI0iUlIGzk1WlWnEA0cAoctWsJa6+qwlO0D6WHcXMNR3cfSoq5YMNiwTMQeg3ujHR53KvAs7d78xAtfMoIhRvf2oEVYLvIN1nzSgqsL2ku3VU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718085554; c=relaxed/simple;
-	bh=cnjedp2uVnzEopZTQQoYup8KDP0AjEtAiNcdLbnmZME=;
+	s=arc-20240116; t=1718086406; c=relaxed/simple;
+	bh=ewGDcnYpWIfI8siIUIVdRSO4LJ6d/2xAMHpoRgL7sKA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SzHpXy0YPEoFfguoBfIXKctGQVKR/iLM42t4Jt5tKMxnkVUu1W2a0enGlY24m7ZQNlPhedVEwDKxKYw/Ieo4qP59fo8MlsvJvrw4bWpY2oBzKyJxkmUGRUV1IkT3gt9svP0NKrw3HKxyam5ID14Ln+Q3KCt3dj5KptNAffZ0wnY=
+	 Content-Type:Content-Disposition:In-Reply-To; b=qUNKjvgY0pm/Jayr7zMVpVqm8DfJ0gzWK2btq6ftS+Ki7n7qaLZ7mP+Hy8TUycEq4o4FxLvUOiuDUGPmuVRFpLTVcc9F9sLn3uAUPp97tH2TyXl+JpF0WwBgMLWv6l2JFJ4oXPN+AWzMogoh7js7bNrbveZx9pJpj+xylK1vSMY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id B7C0F68CFE; Tue, 11 Jun 2024 07:59:06 +0200 (CEST)
-Date: Tue, 11 Jun 2024 07:59:06 +0200
+	id 27AFC67373; Tue, 11 Jun 2024 08:13:21 +0200 (CEST)
+Date: Tue, 11 Jun 2024 08:13:20 +0200
 From: Christoph Hellwig <hch@lst.de>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Richard Weinberger <richard@nod.at>,
-	Philipp Reisner <philipp.reisner@linbit.com>,
-	Lars Ellenberg <lars.ellenberg@linbit.com>,
-	Christoph B??hmwalder <christoph.boehmwalder@linbit.com>,
-	Josef Bacik <josef@toxicpanda.com>, Ming Lei <ming.lei@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Roger Pau Monn?? <roger.pau@citrix.com>,
-	Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
-	Mikulas Patocka <mpatocka@redhat.com>, Song Liu <song@kernel.org>,
-	Yu Kuai <yukuai3@huawei.com>,
-	Vineeth Vijayan <vneethv@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-m68k@lists.linux-m68k.org, linux-um@lists.infradead.org,
-	drbd-dev@lists.linbit.com, nbd@other.debian.org,
-	linuxppc-dev@lists.ozlabs.org, ceph-devel@vger.kernel.org,
-	virtualization@lists.linux.dev, xen-devel@lists.xenproject.org,
-	linux-bcache@vger.kernel.org, dm-devel@lists.linux.dev,
-	linux-raid@vger.kernel.org, linux-mmc@vger.kernel.org,
-	linux-mtd@lists.infradead.org, nvdimm@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-block@vger.kernel.org
-Subject: Re: [PATCH 05/26] loop: regularize upgrading the lock size for
- direct I/O
-Message-ID: <20240611055906.GA3640@lst.de>
-References: <20240611051929.513387-1-hch@lst.de> <20240611051929.513387-6-hch@lst.de> <dabc33cd-feb9-4263-8f6e-4d2ab3d71430@kernel.org>
+To: Song Liu <song@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Yu Kuai <yukuai3@huawei.com>,
+	linux-raid@vger.kernel.org
+Subject: Re: fix ->run failure handling
+Message-ID: <20240611061320.GA4744@lst.de>
+References: <20240604172607.3185916-1-hch@lst.de> <CAPhsuW7cBhbH9iQQunmVohGkwnGJNnw7PFfExXh3umL1qB=SVw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
@@ -70,18 +47,22 @@ List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <dabc33cd-feb9-4263-8f6e-4d2ab3d71430@kernel.org>
+In-Reply-To: <CAPhsuW7cBhbH9iQQunmVohGkwnGJNnw7PFfExXh3umL1qB=SVw@mail.gmail.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Tue, Jun 11, 2024 at 02:56:59PM +0900, Damien Le Moal wrote:
-> > +	if (!bsize)
-> > +		bsize = loop_default_blocksize(lo, inode->i_sb->s_bdev);
+On Mon, Jun 10, 2024 at 01:58:17PM -0700, Song Liu wrote:
+> > raid10 and raid5 also free conf on failure in their ->run handle,
+> > but set mddev->private to NULL which prevents the double free as well
+> > (but requires more code)
+> >
+> > Diffstat:
+> >  raid0.c |   21 +++++----------------
+> >  raid1.c |   14 +++-----------
+> >  2 files changed, 8 insertions(+), 27 deletions(-)
 > 
-> If bsize is specified and there is a backing dev used with direct IO, should it
-> be checked that bsize is a multiple of bdev_logical_block_size(backing_bdev) ?
+> Thanks for the patchset. I applied it to the md-6.11 branch.
 
-For direct I/O that check would be useful.  For buffered I/O we can do
-read-modify-write cycles.  However this series is already huge and not
-primarily about improving the loop driver parameter validation, so
-I'll defer this for now.
+I was planning to respin this to also handle failures in the takeover
+path.
+
 
