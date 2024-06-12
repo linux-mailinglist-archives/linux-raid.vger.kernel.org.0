@@ -1,139 +1,146 @@
-Return-Path: <linux-raid+bounces-1886-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-1889-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61C8B9058EF
-	for <lists+linux-raid@lfdr.de>; Wed, 12 Jun 2024 18:39:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A2639059F5
+	for <lists+linux-raid@lfdr.de>; Wed, 12 Jun 2024 19:30:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 57B6AB21174
-	for <lists+linux-raid@lfdr.de>; Wed, 12 Jun 2024 16:39:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8A6391F2414A
+	for <lists+linux-raid@lfdr.de>; Wed, 12 Jun 2024 17:30:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 740D518131D;
-	Wed, 12 Jun 2024 16:39:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A0D11822E7;
+	Wed, 12 Jun 2024 17:30:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CmVhUPS6"
+	dkim=pass (1024-bit key) header.d=nexgo.de header.i=@nexgo.de header.b="PMlkbcB+"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mr4.vodafonemail.de (mr4.vodafonemail.de [145.253.228.164])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1891916F295
-	for <linux-raid@vger.kernel.org>; Wed, 12 Jun 2024 16:39:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC35329CE5
+	for <linux-raid@vger.kernel.org>; Wed, 12 Jun 2024 17:30:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.253.228.164
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718210347; cv=none; b=qxoQ3UlBa5Bt9vIliLw8HT0bfLqUoIEO2JbzpgXeeHxEFQ7gDwes/LJ7q585pBNEcFWt1vG/5rVgVu0nofkmOHBIhwTiK+YjMYtG6kdTIiycO5WPzAwp+/DnbE/L+kJfYbJpIjIBGeK9LZHdoIgemCvOXt8GIAgQiywM3fSenlg=
+	t=1718213411; cv=none; b=CvN5xj5ihHUQ8Kchm+AYVVCW7mkrKVTbZ+6q22et9vRSZG54ZRq2HHOT7IEiVkEHw2sWrfIqoEqWM5Bg9qc4DaoXMu++/l6LQvy9ldEiZJ1oRtYwtCWq0Ye/kN8dTtsxO2dihsKKSRiaK+KFXMjOz4xZC2GLpPUv+lCaTSHIF1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718210347; c=relaxed/simple;
-	bh=l/maHTeU7cAMtDxppxyx7oMNBBXGDvuL1ia82Q5xe3Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b72De408NQlz/pUa7ecYLvxHhACcufyWnjU0+5ECM1WmESjFAbCf6QeM4g7u5YZSW99w4GHGFLzsu2FNQZ8+m2ghdPHpidDL9YkwFqO65XVP+iJOxuZr3+n+fBOwspvZ2dn5SyOLsdsEJCgcDj434WUW/0cx5xjG80El8zBtuxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CmVhUPS6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1A25C4AF1C
-	for <linux-raid@vger.kernel.org>; Wed, 12 Jun 2024 16:39:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718210346;
-	bh=l/maHTeU7cAMtDxppxyx7oMNBBXGDvuL1ia82Q5xe3Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=CmVhUPS6ccxzKRSDnsk+EQZ6ECfTYkoCTJlREPBoriaUajpmsVFzLsv13YZ3c6jVW
-	 BUfjBtConqHds7IFFNzUCJck+sGdSGBD3B4jXwN+szRtR9L/rBkJi0CpWWUMeRymLH
-	 c6oaaGfeNg+xMErGQfmT4KFk+ZS5CY2V51D7qLgxFzG0aFdedvTvDLLGDvVfWTmaYC
-	 cannzZS/6cj9EKyZOdFXGj9V7ie8kOEepJwgxbUNnr+VXZPQ9Gtm8SKPdxqrKT7ei4
-	 E6YdtyXd1AmbkRP7p6c7/preWtyUtiVFOirnWTEow5wLFnpia4cqFW+6AEdlOKeuCR
-	 4RmD6LLyjawow==
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2eadaac1d28so63795511fa.3
-        for <linux-raid@vger.kernel.org>; Wed, 12 Jun 2024 09:39:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUVqAqsg4BUVzOTtwxkUuOq5BakKVOwmIfDQmu+Ulrpm4cOGHv6BOLgHuol3aSQ95HWkDdFhNUyIyml8jPextTM68xnxGJ3p6p78w==
-X-Gm-Message-State: AOJu0Ywg87py3wYvrxPsfud1Xc6P8yUvuNNdXQvnJ4K+m2E4xeSamC4G
-	wmZh9bBh6hjmGmGYPVcZka/SoZITHs6bq7jX4MjcGw1lJJYDRPKlcbvUkWquyr6/iWjulSGi86h
-	i58tawzOPEEMt9S6se04yv7+4c+I=
-X-Google-Smtp-Source: AGHT+IHKocuoGt2TRzdhxvFnyQAgHzZgnCw5xQXU4dxh9ygR1OEOEv9HCsv0fLbIBiAsAGnQ2SLwh4fmnQ138mZBinA=
-X-Received: by 2002:a2e:9cd6:0:b0:2eb:fa7b:557c with SMTP id
- 38308e7fff4ca-2ebfc8f93ccmr17577061fa.0.1718210345027; Wed, 12 Jun 2024
- 09:39:05 -0700 (PDT)
+	s=arc-20240116; t=1718213411; c=relaxed/simple;
+	bh=xMc2i+UsiHIE4fABWDUQbTIkaMBIsbSVtsDUcEsuUFs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LDoYNqC4pi3Y6EH1/U8RUXfYcc9N+p38ELjEPugFC3L1sqVDrCKEPyuClIZ/aQsDVUpG0CE1462u75PA3Zfs7QDNq3Le8M3x7coykzs24WrsWMcPvLXYUxBaAzfw9VlDWsdqu2eHh/3exSRSBpF9VkJLaA6C50X8vgeyrx6yrnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexgo.de; spf=pass smtp.mailfrom=nexgo.de; dkim=pass (1024-bit key) header.d=nexgo.de header.i=@nexgo.de header.b=PMlkbcB+; arc=none smtp.client-ip=145.253.228.164
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexgo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nexgo.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nexgo.de;
+	s=vfde-mb-mr2-23sep; t=1718212976;
+	bh=b3sQkTXGjigQQ+octqlbSxeWcI8yoA/DhT9YKY01Wrw=;
+	h=Date:From:To:Subject:Message-ID:References:Content-Type:
+	 In-Reply-To:From;
+	b=PMlkbcB+mRXTAHmnCPmG/CaIxM5bwgNenwkMJn3sNkkgZGRDNwvg7VAoqpAFedZ/A
+	 5HeRDCPvAURq6ZsGdXxKQw7HIn6N6YGsSE0csMsKVOXC3tbRxwWskd0H78j2f6fTGu
+	 3k1U5imODEBlTJ87Sfj18IgWBVrDxRyMlphKlJwA=
+Received: from smtp.vodafone.de (unknown [10.0.0.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by mr4.vodafonemail.de (Postfix) with ESMTPS id 4VzsnD3Dqgz1yGd;
+	Wed, 12 Jun 2024 17:22:56 +0000 (UTC)
+Received: from lazy.lzy (p579d746a.dip0.t-ipconnect.de [87.157.116.106])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.vodafone.de (Postfix) with ESMTPSA id 4Vzsn21ssRzHngB;
+	Wed, 12 Jun 2024 17:22:43 +0000 (UTC)
+Received: from lazy.lzy (localhost [127.0.0.1])
+	by lazy.lzy (8.18.1/8.14.5) with ESMTPS id 45CHMgIN005337
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Wed, 12 Jun 2024 19:22:42 +0200
+Received: (from red@localhost)
+	by lazy.lzy (8.18.1/8.17.2/Submit) id 45CHMgjc005336;
+	Wed, 12 Jun 2024 19:22:42 +0200
+Date: Wed, 12 Jun 2024 19:22:42 +0200
+From: Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
+To: Reindl Harald <h.reindl@thelounge.net>
+Cc: Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>,
+        linux-raid@vger.kernel.org
+Subject: Re: RAID-10 near vs. RAID-1
+Message-ID: <ZmnZYgerX5g8S9Cp@lazy.lzy>
+References: <ZmiYHFiqK33Y-_91@lazy.lzy>
+ <cd3ed227-1410-478b-b86b-973d76b587df@thelounge.net>
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240607072748.3182199-1-ofir.gal@volumez.com>
-In-Reply-To: <20240607072748.3182199-1-ofir.gal@volumez.com>
-From: Song Liu <song@kernel.org>
-Date: Wed, 12 Jun 2024 09:38:53 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW43KFshDwvwT3Nz8S6uMH+MBdjMc+yZ6e8wwrrMX5qANA@mail.gmail.com>
-Message-ID: <CAPhsuW43KFshDwvwT3Nz8S6uMH+MBdjMc+yZ6e8wwrrMX5qANA@mail.gmail.com>
-Subject: Re: [PATCH v2] md/md-bitmap: fix writing non bitmap pages
-To: Ofir Gal <ofir.gal@volumez.com>
-Cc: yukuai3@huawei.com, hch@lst.de, linux-raid@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cd3ed227-1410-478b-b86b-973d76b587df@thelounge.net>
+X-purgate-type: clean
+X-purgate: clean
+X-purgate-size: 1852
+X-purgate-ID: 155817::1718212972-627B2BC3-64C003DA/0/0
 
-On Fri, Jun 7, 2024 at 12:28=E2=80=AFAM Ofir Gal <ofir.gal@volumez.com> wro=
-te:
->
-> __write_sb_page() rounds up the io size to the optimal io size if it
-> doesn't exceed the data offset, but it doesn't check the final size
-> exceeds the bitmap length.
->
-> For example:
-> page count      - 1
-> page size       - 4K
-> data offset     - 1M
-> optimal io size - 256K
->
-> The final io size would be 256K (64 pages) but md_bitmap_storage_alloc()
-> allocated 1 page, the IO would write 1 valid page and 63 pages that
-> happens to be allocated afterwards. This leaks memory to the raid device
-> superblock.
->
-> This issue caused a data transfer failure in nvme-tcp. The network
-> drivers checks the first page of an IO with sendpage_ok(), it returns
-> true if the page isn't a slabpage and refcount >=3D 1. If the page
-> !sendpage_ok() the network driver disables MSG_SPLICE_PAGES.
->
-> As of now the network layer assumes all the pages of the IO are
-> sendpage_ok() when MSG_SPLICE_PAGES is on.
->
-> The bitmap pages aren't slab pages, the first page of the IO is
-> sendpage_ok(), but the additional pages that happens to be allocated
-> after the bitmap pages might be !sendpage_ok(). That cause
-> skb_splice_from_iter() to stop the data transfer, in the case below it
-> hangs 'mdadm --create'.
->
-> The bug is reproducible, in order to reproduce we need nvme-over-tcp
-> controllers with optimal IO size bigger than PAGE_SIZE. Creating a raid
-> with bitmap over those devices reproduces the bug.
->
-> In order to simulate large optimal IO size you can use dm-stripe with a
-> single device.
-> Script to reproduce the issue on top of brd devices using dm-stripe is
-> attached below (will be added to blktest).
->
-> I have added some logs to test the theory:
-> ...
-> md: created bitmap (1 pages) for device md127
-> __write_sb_page before md_super_write offset: 16, size: 262144. pfn: 0x53=
-ee
-> =3D=3D=3D __write_sb_page before md_super_write. logging pages =3D=3D=3D
-> pfn: 0x53ee, slab: 0 <-- the only page that allocated for the bitmap
-> pfn: 0x53ef, slab: 1
-> pfn: 0x53f0, slab: 0
-> pfn: 0x53f1, slab: 0
-> pfn: 0x53f2, slab: 0
-> pfn: 0x53f3, slab: 1
-> ...
-> nvme_tcp: sendpage_ok - pfn: 0x53ee, len: 262144, offset: 0
-> skbuff: before sendpage_ok() - pfn: 0x53ee
-> skbuff: before sendpage_ok() - pfn: 0x53ef
-> WARNING at net/core/skbuff.c:6848 skb_splice_from_iter+0x142/0x450
-> skbuff: !sendpage_ok - pfn: 0x53ef. is_slab: 1, page_count: 1
-> ...
->
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Ofir Gal <ofir.gal@volumez.com>
+On Wed, Jun 12, 2024 at 01:04:18AM +0200, Reindl Harald wrote:
+> 
+> 
+> Am 11.06.24 um 20:31 schrieb Piergiorgio Sartor:
+> > I'm setting up a system with 2 SSD M.2 (NVME).
+> > 
+> > I was wondering if would it be better, performace
+> > wise, to have a RAID-10 near layout or a RAID-1.
+> > 
+> > Looking around I found only one benchmark:
+> > 
+> > https://strugglers.net/~andy/blog/2019/06/02/exploring-different-linux-raid-10-layouts-with-unbalanced-devices/
+> > 
+> > Which uses mixed SSD, NVME and SATA.
+> > 
+> > Does anybody have any suggestions, links, or
+> > ideas on the topic?
+> > 
+> > BTW, practically speaking, what's the difference,
+> > between the two RAIDs?
+> 
+> i wouldn't even consider a RAID10 with two disks, especially with SSD and
+> practically you end with a unsupported RAID1 because there are no stripes
+> with 2 disks
+> 
 
-Applied to md-6.11. Thanks!
+Hi, thanks for the answer.
 
-Song
+I'm a bit confused here. What do you mean
+with "unsupported RAID1"?
+
+As far as I know, but please correct me if
+I'm wrong, a Linux md RAID-10 *near* layout,
+with 2 devices, has identical data distribution
+as a RAID-1 with 2 devices.
+Meaning the 2 devices are a mirror.
+
+The difference, if I understood it correctly,
+is that the RAID-10 has chunks, and hence stripes,
+while the RAID-1 does not have stripes.
+Furthermore, the read operation on RAID-10 are
+interleaved, delivering (for SSDs) double
+sequential read speed (for 2 devices), while
+the RAID-1 can handle two independent (one per
+device) read stream, each with single device
+reading speed.
+
+Of course, depending on the requirements,
+assuming what I wrote is correct, performances
+might be different.
+
+I was just wondering if anybody has some hints,
+some experience, some references, or, as you
+suggested, not to care at all.
+
+Thanks again,
+
+bye,
+
+-- 
+
+piergiorgio
 
