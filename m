@@ -1,143 +1,103 @@
-Return-Path: <linux-raid+bounces-2214-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-2216-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40A039374F5
-	for <lists+linux-raid@lfdr.de>; Fri, 19 Jul 2024 10:21:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D427937626
+	for <lists+linux-raid@lfdr.de>; Fri, 19 Jul 2024 11:52:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B6CF41F2260A
-	for <lists+linux-raid@lfdr.de>; Fri, 19 Jul 2024 08:21:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 31AFE1F25532
+	for <lists+linux-raid@lfdr.de>; Fri, 19 Jul 2024 09:52:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50ED96EB7D;
-	Fri, 19 Jul 2024 08:20:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79B6A8289A;
+	Fri, 19 Jul 2024 09:52:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QV/BST8i"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 036C17CF30
-	for <linux-raid@vger.kernel.org>; Fri, 19 Jul 2024 08:20:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD537F7DB
+	for <linux-raid@vger.kernel.org>; Fri, 19 Jul 2024 09:52:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721377257; cv=none; b=is5CdZLI1W1Yqr7b1qgQHIUVaLbxvwVc+vKKWgvSnc70uX1Lm2AF2Et3iwAm/C+o6oIqyFoW7ODuxdjJpE6hfpVqsZDVtg/KZiwM0/Vlk0LA0zo911MVc0alAJEKpJfYBq93Ch2p9NfjpPqApmiBPfcZchIrLi1b4qc55BleO8U=
+	t=1721382751; cv=none; b=ilCIJarh9NfYm5gMdyHruF4pka5CGV1WhGL56Yuny/+lXFQVg5riW8jRZd5nrj9SN4c7yuCimgkjcbJvRgRU8O68Nb24UIeaUCMV9qtRXLm1ChRO+zNI/5iXr3FRkhJS3S8MBMrUYMe3NJlCkA2rwUuj/mNHbIRUrwfEFBFWFLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721377257; c=relaxed/simple;
-	bh=+rXu3gIK7pdWenUmhsOV0LZqBWiqOUr/oxdWRCIKhBw=;
-	h=Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=qv++PHwEg+s8yma1qUka4AkiLjdYKVyXLJnHXlbt1Z5UI4yhTayPqmTR3g8mmWB5qPPg6VTKRBRWA/qJNuTiQ4IW/T+1Hl6mMqrj9ZufFj0yLpQ1W+Ga9bPrYantHak5Nol00nwlTMiSUv0OwkI6z13CLWmOIHSRYrxoR4VG0d8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4WQN0W5wF7z4f3jYh
-	for <linux-raid@vger.kernel.org>; Fri, 19 Jul 2024 16:20:43 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id E37921A0572
-	for <linux-raid@vger.kernel.org>; Fri, 19 Jul 2024 16:20:51 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP4 (Coremail) with SMTP id gCh0CgCXyDbiIZpmYMs6Ag--.33675S3;
-	Fri, 19 Jul 2024 16:20:51 +0800 (CST)
-Subject: Re: IMSM: Drive removed during I/O is set to faulty but not removed
- from volume
-To: Mateusz Kusiak <mateusz.kusiak@linux.intel.com>,
- Yu Kuai <yukuai1@huaweicloud.com>, linux-raid@vger.kernel.org,
- "yangerkun@huawei.com" <yangerkun@huawei.com>,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <f34452df-810b-48b2-a9b4-7f925699a9e7@linux.intel.com>
- <f3d0f203-f9b9-04c1-e5a0-d61fc5c6c0d2@huaweicloud.com>
- <3564b25f-e754-4556-afcc-c6045d38e183@linux.intel.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <36abf047-20f0-2647-83dc-c1c685a9d056@huaweicloud.com>
-Date: Fri, 19 Jul 2024 16:20:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1721382751; c=relaxed/simple;
+	bh=mAXVNBETz5ILyI6C03rte0bGASKky2Ukx5z2ZNenvy0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=knDJbBvsGxCcJljkKavJEukIs0H37TI/0GDNU5MS4WBP+Uy1e9ntW335wGrwWxmSgAStR+Q+ZwJu2o1RtIEwh+OLUcPoY3VLDjQ//Kasu2cleJl0zF3eSXEzEYzHvAQihk+o70oODtKbxVnYu6yAJgV37ICsPLnuCwRXAi85vqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QV/BST8i; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1721382748;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=IDUt88c77yAafCZDTt86qhBHdubZaNzbeByVBx+egWg=;
+	b=QV/BST8iNMTsrcogTVdDPerN9fCnXrSiQeDHon1jCGH+rYixr5DxWwiU8LzwfihuOBQXE4
+	fXRdX/YGSTDLObM0wv5cC9CzZk6t4QoK0x3EREwCDyWIBbDUuNGx6pB7q89CexZGyBBrJP
+	qZACkKqAZAMVmMeoPj4SZbv4Q6ZQKzs=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-336-VvD107vsN_euG6X7WPiPRA-1; Fri,
+ 19 Jul 2024 05:52:26 -0400
+X-MC-Unique: VvD107vsN_euG6X7WPiPRA-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 96FC31955D54;
+	Fri, 19 Jul 2024 09:52:25 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.72.120.6])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CCEC81955F6B;
+	Fri, 19 Jul 2024 09:52:22 +0000 (UTC)
+From: Xiao Ni <xni@redhat.com>
+To: mariusz.tkaczyk@linux.intel.com
+Cc: ncroxon@redhat.com,
+	linux-raid@vger.kernel.org
+Subject: [PATCH V2 00/14] mdadm: fix coverity issues
+Date: Fri, 19 Jul 2024 17:52:05 +0800
+Message-Id: <20240719095219.9705-1-xni@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <3564b25f-e754-4556-afcc-c6045d38e183@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCXyDbiIZpmYMs6Ag--.33675S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7WrWkGFyDJFy8CF45uw48JFb_yoW8Xw4rpr
-	WktFy5ArWUCr1kJw17tw1UCry5tr1UK3srKryUZ3WUZry5JFn0qr47Wrs0gr1DArWxCr4U
-	Jw1UJF1DZr10gr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvE14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
-	IcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbV
-	WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
-	67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42
-	IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF
-	0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWI
-	evJa73UjIFyTuYvjfUehL0UUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Hi,
+V2: replace close with close_fd and use is_fd_valid
 
-在 2024/07/19 16:02, Mateusz Kusiak 写道:
-> 
-> 
-> On 19.07.2024 09:02, Yu Kuai wrote:
->>
->> Hi,
->>
->> With some discussion and log collection, looks like this is a deadlock
->> introduced by:
->>
->> https://lore.kernel.org/r/20230825031622.1530464-8-yukuai1@huaweicloud.com 
->>
->>
->> Root cause is that:
->>
->> 1) New io is blocked because array is suspended;
->> 2) md_start_sync suspend the array, and it's waiting for inflight IO 
->> to be done;
->> 3) inflight IO is waiting for md_start_sync to be done, from
->> md_start_write->flush_work().
->>
->> Can you give following patch a test?
->>
->> Thanks!
->> Kuai
->>
->> diff --git a/drivers/md/md.c b/drivers/md/md.c
->> index 64693913ed18..10c2d816062a 100644
->> --- a/drivers/md/md.c
->> +++ b/drivers/md/md.c
->> @@ -8668,7 +8668,6 @@ void md_write_start(struct mddev *mddev, struct 
->> bio *bi)
->>          BUG_ON(mddev->ro == MD_RDONLY);
->>          if (mddev->ro == MD_AUTO_READ) {
->>                  /* need to switch to read/write */
->> -               flush_work(&mddev->sync_work);
->>                  mddev->ro = MD_RDWR;
->>                  set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
->>                  md_wakeup_thread(mddev->thread);
->>
-> 
-> Hi Kuai,
-> With the patch you provided the issue still reproduces.
+Xiao Ni (14):
+  mdadm/Grow: fix coverity issue CHECKED_RETURN
+  mdadm/Grow: fix coverity issue RESOURCE_LEAK
+  mdadm/Grow: fix coverity issue STRING_OVERFLOW
+  mdadm/Incremental: fix coverity issues.
+  mdadm/mdmon: fix coverity issue CHECKED_RETURN
+  mdadm/mdmon: fix coverity issue RESOURCE_LEAK
+  mdadm/mdopen: fix coverity issue CHECKED_RETURN
+  mdadm/mdopen: fix coverity issue STRING_OVERFLOW
+  mdadm/mdstat: fix coverity issue CHECKED_RETURN
+  mdadm/super0: fix coverity issue CHECKED_RETURN and EVALUATION_ORDER
+  mdadm/super1: fix coverity issue CHECKED_RETURN
+  mdadm/super1: fix coverity issue DEADCODE
+  mdadm/super1: fix coverity issue EVALUATION_ORDER
+  mdadm/super1: fix coverity issue RESOURCE_LEAK
 
-Thanks for the test, then after eliminating this problem, can we collect
-log with this patch?
+ Grow.c        | 92 +++++++++++++++++++++++++++++++++++++++++----------
+ Incremental.c | 20 +++++------
+ mdmon.c       | 17 +++++++---
+ mdopen.c      |  8 +++--
+ mdstat.c      | 12 +++++--
+ super0.c      | 10 ++++--
+ super1.c      | 32 +++++++++++++-----
+ 7 files changed, 142 insertions(+), 49 deletions(-)
 
-Thanks,
-Kuai
-
-
-> 
-> Thanks,
-> Mateusz
-> 
-> .
-> 
+-- 
+2.41.0
 
 
