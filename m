@@ -1,68 +1,68 @@
-Return-Path: <linux-raid+bounces-2222-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-2224-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C39093762C
-	for <lists+linux-raid@lfdr.de>; Fri, 19 Jul 2024 11:53:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3BEAC93762E
+	for <lists+linux-raid@lfdr.de>; Fri, 19 Jul 2024 11:53:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6BF351C221CD
-	for <lists+linux-raid@lfdr.de>; Fri, 19 Jul 2024 09:53:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D7A771F2596D
+	for <lists+linux-raid@lfdr.de>; Fri, 19 Jul 2024 09:53:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB744824BC;
-	Fri, 19 Jul 2024 09:52:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B62CB81219;
+	Fri, 19 Jul 2024 09:52:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B/srJ3FK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A6eFDNpr"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA45180639
-	for <linux-raid@vger.kernel.org>; Fri, 19 Jul 2024 09:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB07839EB
+	for <linux-raid@vger.kernel.org>; Fri, 19 Jul 2024 09:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721382775; cv=none; b=DbSJHlNLHve1yuOpNKonEyAUwuIuJhAW+Z7vC/0DRqvKjL7w8efthvp4rW1rMZsRvAbSJrXD6LmLD1b6/0T6jAdyXkqL6h1P0sLreV9uqgPmER8ddwJbFSjWBAXulzQspsR76jqw0NR78E1UzwT0SJpM2IsbB6axexn7TqrM6RM=
+	t=1721382779; cv=none; b=RK0WwkJBl1joXJd6Q6RheeuQqgCTMTLj2+mkBRlqp3pikysek6TBy+0L1I8vxXv+slY1bRfhUbhlGpIzzPk4tKGEm+UhUruUNdNkOEF/2ITOTuSg9O3MZ23GsCv1dB119wWDhq59kwzPYCUbS6sqacP0EabepB85QwQF4mA4+jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721382775; c=relaxed/simple;
-	bh=tag5BlftefiepJqc7jkWwcTRjCO/ns9zT6GikqDABIk=;
+	s=arc-20240116; t=1721382779; c=relaxed/simple;
+	bh=mj/hG55vEBwcYs01mRR4jqVx95Byiv3WI9XL9XdudXU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fcZgZiduR8J3pX+dXrR0RtEXDY32Q0SsrpuezBqXXygf9dfEE0uo4b7DO3fnUhilU/reaRec6pRqSDluRsgg29AkjSnJGyF8irzPMcbF+RmTkaAeWf4WvzEb7lq5eW0XPKsbNmSzfYj3UiEFjBaMQ061KCpIwTF3xj/0eK9eFEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B/srJ3FK; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=ax5+/y2++hyCtanUYe6H6+2ZToiP8al7pn3coXHsG9vhfoc2RQmx766gjxL6OwVdPyNTB8j8x6Px8aonWSc4sIlZ4rFE9SOGa/ymTxrPiYB1yZiKrYIqybQKHHoIqm1fFp5+Yk73Tjz5N+na7ZwdsI00zF1sgwFdCQ3GRdW5880=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A6eFDNpr; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721382773;
+	s=mimecast20190719; t=1721382777;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ySk5ed983etPNR4bLHTO3/Hak9aRMCgSrgfYZy1ukuo=;
-	b=B/srJ3FK324l2OzAZ9lIYfnJfySC93q3fgfkGOjatVU3J9mA4ZwmtIkUg3k3E8S0TilIJX
-	Q6/eoBp9fgmwhBo6knTZQuVyMlv8ANrxbHA18SzjS2STuLroo529jTFnISy/rRa8KfZxU1
-	N81zvoiQbV8cLVqJTbaQjV4Z1r+Ku9Y=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=gIXj55dTuCrNogC1R/0EHFWhf6PbEP5I3np/C27l4yM=;
+	b=A6eFDNprqhrazKDwG5wUxrpyfZ2cEqPqBwRrwuwclWvlOOB/77CFgdp59LzBh+XSkFco/R
+	qsx29gNLd+X4lXsVu7j6ZXCqEivuARrSaKeMCwepcproSKKTwcmPkugsy2APcMdbSHehNz
+	VT9G4DJJdlEavxpMU7dgaBlSMtkoljQ=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-219-8E7m3fC0NRmV2naVyjjCKg-1; Fri,
- 19 Jul 2024 05:52:51 -0400
-X-MC-Unique: 8E7m3fC0NRmV2naVyjjCKg-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-244-wpsLGIZvOPWZoyrRz8cTjw-1; Fri,
+ 19 Jul 2024 05:52:55 -0400
+X-MC-Unique: wpsLGIZvOPWZoyrRz8cTjw-1
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CFBD51955BEF;
-	Fri, 19 Jul 2024 09:52:50 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7FF871955D4E;
+	Fri, 19 Jul 2024 09:52:54 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.72.120.6])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5038419560B2;
-	Fri, 19 Jul 2024 09:52:47 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B70D51956046;
+	Fri, 19 Jul 2024 09:52:51 +0000 (UTC)
 From: Xiao Ni <xni@redhat.com>
 To: mariusz.tkaczyk@linux.intel.com
 Cc: ncroxon@redhat.com,
 	linux-raid@vger.kernel.org
-Subject: [PATCH 07/14] mdadm/mdopen: fix coverity issue CHECKED_RETURN
-Date: Fri, 19 Jul 2024 17:52:12 +0800
-Message-Id: <20240719095219.9705-8-xni@redhat.com>
+Subject: [PATCH 08/14] mdadm/mdopen: fix coverity issue STRING_OVERFLOW
+Date: Fri, 19 Jul 2024 17:52:13 +0800
+Message-Id: <20240719095219.9705-9-xni@redhat.com>
 In-Reply-To: <20240719095219.9705-1-xni@redhat.com>
 References: <20240719095219.9705-1-xni@redhat.com>
 Precedence: bulk
@@ -76,26 +76,22 @@ X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
 Signed-off-by: Xiao Ni <xni@redhat.com>
 ---
- mdopen.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ mdopen.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/mdopen.c b/mdopen.c
-index eaa59b59..c9fda131 100644
+index c9fda131..e49defb6 100644
 --- a/mdopen.c
 +++ b/mdopen.c
-@@ -406,7 +406,11 @@ int create_mddev(char *dev, char *name, int autof, int trustworthy,
- 				perror("chown");
- 			if (chmod(devname, ci->mode))
- 				perror("chmod");
--			stat(devname, &stb);
-+			if (stat(devname, &stb) < 0) {
-+				pr_err("failed to stat %s\n",
-+						devname);
-+				return -1;
-+			}
- 			add_dev(devname, &stb, 0, NULL);
- 		}
- 		if (use_mdp == 1)
+@@ -376,7 +376,7 @@ int create_mddev(char *dev, char *name, int autof, int trustworthy,
+ 
+ 	sprintf(devname, "/dev/%s", devnm);
+ 
+-	if (dev && dev[0] == '/')
++	if (dev && dev[0] == '/' && strlen(dev) < 400)
+ 		strcpy(chosen, dev);
+ 	else if (cname[0] == 0)
+ 		strcpy(chosen, devname);
 -- 
 2.41.0
 
