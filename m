@@ -1,112 +1,97 @@
-Return-Path: <linux-raid+bounces-2281-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-2283-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F52D93CEAF
-	for <lists+linux-raid@lfdr.de>; Fri, 26 Jul 2024 09:15:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC0A093CF26
+	for <lists+linux-raid@lfdr.de>; Fri, 26 Jul 2024 10:02:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CC4D1B23131
-	for <lists+linux-raid@lfdr.de>; Fri, 26 Jul 2024 07:15:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 252B2282A3A
+	for <lists+linux-raid@lfdr.de>; Fri, 26 Jul 2024 08:02:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7FBA17625C;
-	Fri, 26 Jul 2024 07:15:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QV51+zqt"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83D11176AB7;
+	Fri, 26 Jul 2024 08:02:06 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 064DF176AB6
-	for <linux-raid@vger.kernel.org>; Fri, 26 Jul 2024 07:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70AE524B4
+	for <linux-raid@vger.kernel.org>; Fri, 26 Jul 2024 08:01:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721978114; cv=none; b=BeY71uBWbg1/HgwLf6IbkrsBGDzyLVJbj4pOabtpggUcfdALu4+DdmRGTKGvglknr8r8/yFxSvLq29ou8NPHDSZbMwy5c8eKQFjgw8o0U8mGADt2dI2CZn/DoAct//2BGb+Y0C1G4v4RJYK3qQNzxEALJCjbD0fQx+mzKRjTqPI=
+	t=1721980926; cv=none; b=a+q5Bvi4G7LurnMUJcpYrGZ5PviqV/xD7149Yk6TNCHbMjAKXHxSAoHbRp+teY1fMjK8ZI2aY9vIPPPOS0TGn/+WCXm0hrv3Jyv4C/+VMnspDSeDzyUg5Luml88q1rc3Tcwz4ndTBCUPDT1RXweE3RcjvjqBSQ0NEucm4Mhmxkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721978114; c=relaxed/simple;
-	bh=V+zXZbJgDyBPenD0c5qiKDpT+aQzBt7IfeoYwYBQxVQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=n1nunyD0pTgo9ax+S+t+CJoOM/XHpCIr8IAx5ZFduSgG8sg2ZtZYSddkARl/sOkU+6mgE8q3HGiymy9IuXNNTbTIstswsMEC3PJ/W9XzbEdUFhun3+ePfA3dsFeITfwglkiqpwYNdsI7kO0xmfJFSVZaqlkXclTyQQ8d5K24G70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QV51+zqt; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721978112;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Hv9jq78OuV0w889CMuzeafnKXeA/VUKWQvplB4JzTM8=;
-	b=QV51+zqtZngMNsfXs0MMLdpbCzAIVCvDnAxxV2Fiqn9jgRhHw6X3q2fKNE7ulp9bzHJCiB
-	u8/t3PO/xd8f2sfDdoMUEDz84/mvMoSRqdeo1VsNIc2ap3mBMU/+sSmFdmGuSWKH5CFK1I
-	aaHU17mUlNnwG9y2jD8ehN1rGF9GhcM=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-438-94eXCbpsPf6Xkjz_NrC9nA-1; Fri,
- 26 Jul 2024 03:15:10 -0400
-X-MC-Unique: 94eXCbpsPf6Xkjz_NrC9nA-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	s=arc-20240116; t=1721980926; c=relaxed/simple;
+	bh=KhCpDU1QyUMZNXccHXPG/8y5JuxTG/TULEZjlhkuoNs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=djexxQvg+BEfUVNTL6+5EaSLpsDJ2OYlPokrId1Z50mvrisJoqlcGPy8pd8tFp0aQ1Lqt2gcmXkSqvoZg51XySLY+xt4E2D6f1Mx6aFRROgnktT/JIT0pgPomrgCHUCFrRq/Tlm9IZOxuuRsKWMm1IdEfNKATydr5HWmB77I7rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.2] (ip5f5af4fb.dynamic.kabel-deutschland.de [95.90.244.251])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 90E691955D50;
-	Fri, 26 Jul 2024 07:15:09 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.72.120.28])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 172C019560AE;
-	Fri, 26 Jul 2024 07:15:06 +0000 (UTC)
-From: Xiao Ni <xni@redhat.com>
-To: mariusz.tkaczyk@linux.intel.com
-Cc: ncroxon@redhat.com,
-	linux-raid@vger.kernel.org
-Subject: [PATCH 14/14] mdadm/super1: fix coverity issue RESOURCE_LEAK
-Date: Fri, 26 Jul 2024 15:14:16 +0800
-Message-Id: <20240726071416.36759-15-xni@redhat.com>
-In-Reply-To: <20240726071416.36759-1-xni@redhat.com>
-References: <20240726071416.36759-1-xni@redhat.com>
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 58A5D61E5FE06;
+	Fri, 26 Jul 2024 10:01:30 +0200 (CEST)
+Message-ID: <657cd05c-cc98-4f98-bd02-3db72089356b@molgen.mpg.de>
+Date: Fri, 26 Jul 2024 10:01:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4 00/14] mdadm: fix coverity issues
+To: Xiao Ni <xni@redhat.com>
+Cc: mariusz.tkaczyk@linux.intel.com, ncroxon@redhat.com,
+ linux-raid@vger.kernel.org
+References: <20240726071416.36759-1-xni@redhat.com>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <20240726071416.36759-1-xni@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Fix resource leak problems in super1.c
+Dear Xiao,
 
-Signed-off-by: Xiao Ni <xni@redhat.com>
----
- super1.c | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/super1.c b/super1.c
-index 243eeb1a0174..9c9c7dd14c15 100644
---- a/super1.c
-+++ b/super1.c
-@@ -923,10 +923,12 @@ static int examine_badblocks_super1(struct supertype *st, int fd, char *devname)
- 	offset <<= 9;
- 	if (lseek64(fd, offset, 0) < 0) {
- 		pr_err("Cannot seek to bad-blocks list\n");
-+		free(bbl);
- 		return 1;
- 	}
- 	if (read(fd, bbl, size) != size) {
- 		pr_err("Cannot read bad-blocks list\n");
-+		free(bbl);
- 		return 1;
- 	}
- 	/* 64bits per entry. 10 bits is block-count, 54 bits is block
-@@ -947,6 +949,7 @@ static int examine_badblocks_super1(struct supertype *st, int fd, char *devname)
- 
- 		printf("%20llu for %d sectors\n", sector, count);
- 	}
-+	free(bbl);
- 	return 0;
- }
- 
--- 
-2.32.0 (Apple Git-132)
+Thank you for taking care of these things. Some comments on minor things.
 
+
+Am 26.07.24 um 09:14 schrieb Xiao Ni:
+
+[…]
+
+> Xiao Ni (14):
+>    mdadm/Grow: fix coverity issue CHECKED_RETURN
+>    mdadm/Grow: fix coverity issue RESOURCE_LEAK
+>    mdadm/Grow: fix coverity issue STRING_OVERFLOW
+>    mdadm/Incremental: fix coverity issues.
+
+I’d remove the dot/period at the end
+
+>    mdadm/mdmon: fix coverity issue CHECKED_RETURN
+>    mdadm/mdmon: fix coverity issue RESOURCE_LEAK
+>    mdadm/mdopen: fix coverity issue CHECKED_RETURN
+>    mdadm/mdopen: fix coverity issue STRING_OVERFLOW
+>    mdadm/mdstat: fix coverity issue CHECKED_RETURN
+>    mdadm/super0: fix coverity issue CHECKED_RETURN and EVALUATION_ORDER
+>    mdadm/super1: fix coverity issue CHECKED_RETURN
+>    mdadm/super1: fix coverity issue DEADCODE
+>    mdadm/super1: fix coverity issue EVALUATION_ORDER
+>    mdadm/super1: fix coverity issue RESOURCE_LEAK
+
+In my opinion, naming the tool reporting the issue in the commit message 
+summary is not beneficial, and I’d prefer to have more detail on the 
+change in there. The tool could be named/credited in the commit message 
+body.
+
+
+Kind regards,
+
+Paul
 
