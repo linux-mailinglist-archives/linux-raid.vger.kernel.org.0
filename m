@@ -1,42 +1,42 @@
-Return-Path: <linux-raid+bounces-2349-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-2359-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BB7094D9EF
-	for <lists+linux-raid@lfdr.de>; Sat, 10 Aug 2024 04:13:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2196D94DA03
+	for <lists+linux-raid@lfdr.de>; Sat, 10 Aug 2024 04:15:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B8F0A283477
-	for <lists+linux-raid@lfdr.de>; Sat, 10 Aug 2024 02:13:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8FE4B284AAD
+	for <lists+linux-raid@lfdr.de>; Sat, 10 Aug 2024 02:15:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 934FA13A3F4;
-	Sat, 10 Aug 2024 02:12:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B25D146D65;
+	Sat, 10 Aug 2024 02:13:04 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1E4433A0;
-	Sat, 10 Aug 2024 02:12:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88AAC140E22;
+	Sat, 10 Aug 2024 02:13:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723255979; cv=none; b=qlkcjZ/rLMewIGAK8T5CpF+o9FX+zMGAhB+OGPV++lCmzvhj0I3pHkBPrnAznGlENedzbGf8BJb5XaaY/p+t+6xuKzqqHuKrfNLlKXgu5Srpv5l7ol1Ca4VDkWsfoiNcnE7zOrU9Ylv3dsw8AmcIX3Ob+aSbfmQ+FQCfLA9geFk=
+	t=1723255984; cv=none; b=hS2q+4i9gKlWHdjsofrgF8L57s16JFtMO4u0tQzrqTj9rQxdn3p2mey8Hn6gbHGq9n0xRm7s6yz98YGRPyYvQxTTuXD+6B2WpXfdrm9yWkRFkSFv37gSbCn20pd/MVfPM0+Li+2U66LYTNpdgIo8daMikjNoKofn2BtuKjiEh4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723255979; c=relaxed/simple;
-	bh=XuzieE8hEXTvl4iETklpJsh4ejMMZBLqiyTNyaxkPp0=;
+	s=arc-20240116; t=1723255984; c=relaxed/simple;
+	bh=kfyzLf4j4zTDCXEueW1t7qzELjN1/EPMb3+fZXgAFsw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iSbHJIWpIWn5LS4gtXiQzVdEEvUHyH2cdswcpm6ELBQ5yKm7TeTSoKEztiBG9YMP5J9f0GNwW0huuN+OycPv30kiHKVGmB/7NbNkk+QDs4zwh3Va1CfDk6pe2bIs3N3M7I2KpwH+8Rhoy1REVEOWj88ldfj3rMY+XUNQ9tk4gnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=KmktVlu/73QAlwsVn2uDF8A8u3yFkxkirojQ/AedmDApV5LeDYw1PHrzmsrI4SGV3jdRaUj3XvewoJpOcdv8tdmq4kCpizx0bBvoYKtoPviXfsQ0qg5cEdEF3o7ZXmIgoBWzBM43VziQvsoUWu7REIe7FGGlLom9LCtpc5HQB1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Wgkng5rxFz4f3jLc;
-	Sat, 10 Aug 2024 10:12:39 +0800 (CST)
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Wgknj0RCcz4f3jQv;
+	Sat, 10 Aug 2024 10:12:41 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 4B41A1A058E;
+	by mail.maildlp.com (Postfix) with ESMTP id 8D2801A018D;
 	Sat, 10 Aug 2024 10:12:54 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgAHL4WizLZmErwLBQ--.1937S9;
+	by APP4 (Coremail) with SMTP id gCh0CgAHL4WizLZmErwLBQ--.1937S10;
 	Sat, 10 Aug 2024 10:12:54 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: song@kernel.org
@@ -46,9 +46,9 @@ Cc: linux-kernel@vger.kernel.org,
 	yukuai1@huaweicloud.com,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com
-Subject: [PATCH RFC -next 05/26] md/md-bitmap: merge md_bitmap_flush() into bitmap_operations
-Date: Sat, 10 Aug 2024 10:08:33 +0800
-Message-Id: <20240810020854.797814-6-yukuai1@huaweicloud.com>
+Subject: [PATCH RFC -next 06/26] md/md-bitmap: don't expose md_bitmap_print_sb()
+Date: Sat, 10 Aug 2024 10:08:34 +0800
+Message-Id: <20240810020854.797814-7-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240810020854.797814-1-yukuai1@huaweicloud.com>
 References: <20240810020854.797814-1-yukuai1@huaweicloud.com>
@@ -59,10 +59,10 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAHL4WizLZmErwLBQ--.1937S9
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kr45Cr4rAr1Uuw4rJw4DXFb_yoW8Cw1rpF
-	srt3W5Cw43tFW3Ww1UZFyDCa4FvF1ktrZrKFyfCw1rCF9xXFnxGF4rWa4jyw1rGF13JFsI
-	vw15tr1UWr18XFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgAHL4WizLZmErwLBQ--.1937S10
+X-Coremail-Antispam: 1UD129KBjvJXoW7WF18Aw1rWryxJFy5JF43KFg_yoW8WF17pr
+	Z8Gwn8CrW5JF43X3W7Zry09FyrJw4Dtr9rKFyfC34ruFy7XFnxGr48K3Wqywn5Gr13JFsx
+	Xwn8tryUGr18Xa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUBE14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -81,63 +81,49 @@ X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-So that the implementation won't be exposed, and it'll be possible
-to invent a new bitmap by replacing bitmap_operations.
+md_bitmap_print_sb() is only used inside md-bitmap.c, hence make it
+static, and also rename it to bitmap_print_sb().
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/md/md-bitmap.c | 3 ++-
- drivers/md/md-bitmap.h | 9 ++++++++-
- 2 files changed, 10 insertions(+), 2 deletions(-)
+ drivers/md/md-bitmap.c | 4 ++--
+ drivers/md/md-bitmap.h | 1 -
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-index 8aaf0491bf5d..33bcae5594e2 100644
+index 33bcae5594e2..0ff733756043 100644
 --- a/drivers/md/md-bitmap.c
 +++ b/drivers/md/md-bitmap.c
-@@ -1776,7 +1776,7 @@ void md_bitmap_dirty_bits(struct bitmap *bitmap, unsigned long s, unsigned long
- /*
-  * flush out any pending updates
-  */
--void md_bitmap_flush(struct mddev *mddev)
-+static void bitmap_flush(struct mddev *mddev)
- {
- 	struct bitmap *bitmap = mddev->bitmap;
- 	long sleep;
-@@ -2711,6 +2711,7 @@ static struct bitmap_operations bitmap_ops = {
- 	.create			= bitmap_create,
- 	.load			= bitmap_load,
- 	.destroy		= bitmap_destroy,
-+	.flush			= bitmap_flush,
- };
+@@ -513,7 +513,7 @@ void md_bitmap_update_sb(struct bitmap *bitmap)
+ EXPORT_SYMBOL(md_bitmap_update_sb);
  
- void mddev_set_bitmap_ops(struct mddev *mddev)
+ /* print out the bitmap file superblock */
+-void md_bitmap_print_sb(struct bitmap *bitmap)
++static void bitmap_print_sb(struct bitmap *bitmap)
+ {
+ 	bitmap_super_t *sb;
+ 
+@@ -760,7 +760,7 @@ static int md_bitmap_read_sb(struct bitmap *bitmap)
+ 			bitmap->mddev->bitmap_info.space > sectors_reserved)
+ 			bitmap->mddev->bitmap_info.space = sectors_reserved;
+ 	} else {
+-		md_bitmap_print_sb(bitmap);
++		bitmap_print_sb(bitmap);
+ 		if (bitmap->cluster_slot < 0)
+ 			md_cluster_stop(bitmap->mddev);
+ 	}
 diff --git a/drivers/md/md-bitmap.h b/drivers/md/md-bitmap.h
-index 46db4d8199d8..749351db04d3 100644
+index 749351db04d3..935c5dc45b89 100644
 --- a/drivers/md/md-bitmap.h
 +++ b/drivers/md/md-bitmap.h
-@@ -238,6 +238,7 @@ struct bitmap_operations {
- 	struct bitmap* (*create)(struct mddev *mddev, int slot);
- 	int (*load)(struct mddev *mddev);
- 	void (*destroy)(struct mddev *mddev);
-+	void (*flush)(struct mddev *mddev);
- };
- 
- /* the bitmap API */
-@@ -268,7 +269,13 @@ static inline void md_bitmap_destroy(struct mddev *mddev)
- 	mddev->bitmap_ops->destroy(mddev);
+@@ -277,7 +277,6 @@ static inline void md_bitmap_flush(struct mddev *mddev)
+ 	mddev->bitmap_ops->flush(mddev);
  }
  
--void md_bitmap_flush(struct mddev *mddev);
-+static inline void md_bitmap_flush(struct mddev *mddev)
-+{
-+	if (!mddev->bitmap_ops->flush)
-+		return;
-+
-+	mddev->bitmap_ops->flush(mddev);
-+}
- 
- void md_bitmap_print_sb(struct bitmap *bitmap);
+-void md_bitmap_print_sb(struct bitmap *bitmap);
  void md_bitmap_update_sb(struct bitmap *bitmap);
+ void md_bitmap_status(struct seq_file *seq, struct bitmap *bitmap);
+ 
 -- 
 2.39.2
 
