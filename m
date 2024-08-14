@@ -1,42 +1,42 @@
-Return-Path: <linux-raid+bounces-2398-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-2404-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D8E6951536
-	for <lists+linux-raid@lfdr.de>; Wed, 14 Aug 2024 09:18:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58EC9951540
+	for <lists+linux-raid@lfdr.de>; Wed, 14 Aug 2024 09:19:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EE3A028679D
-	for <lists+linux-raid@lfdr.de>; Wed, 14 Aug 2024 07:18:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 300E4289D2C
+	for <lists+linux-raid@lfdr.de>; Wed, 14 Aug 2024 07:19:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95A7314A098;
-	Wed, 14 Aug 2024 07:15:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B04A15443F;
+	Wed, 14 Aug 2024 07:15:39 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A96143875;
-	Wed, 14 Aug 2024 07:15:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9294C1442EA;
+	Wed, 14 Aug 2024 07:15:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723619736; cv=none; b=RvA+fuWJUI3frgS6ncPUt30bWXCSz1DhxX7yABfP+uZQmOjqNxVXIvXYiqYR82SmTbv0PPstPzidiK/jilAaUXYJlJQB1gIAYSIqUOEkX0GeiQ2sepHQyWVRAQJIkI8RQMK346sVPf/j4+Z7cPzuuXXTJNLP9aVNXulzC3kkwY8=
+	t=1723619738; cv=none; b=nnheWq7H42MhGTSNBd2pN7UKowYKKmcf7xQynwzpglElvGnfMkkjuatayTxmBrEg2QfxGSmpkfGjYImIeUuFwjYm7MHdKYQsXRtTpaLWsGzfhOy2kr9Mdx+ez+Dg0y0xzlsdVJampjiSouUYFhjn2GH520Hzk34ixjlD1fy2K1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723619736; c=relaxed/simple;
-	bh=5N7GpYxrlUSkabbjcRn1AqKF1nVvJqhpLJpI3gi6j38=;
+	s=arc-20240116; t=1723619738; c=relaxed/simple;
+	bh=qJ5Ws8gFElh5+O0qOkHmRBc25ywKKEZL54O1PFiEM6k=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BBvTlWLuh2avwf0KBVtZUYXSkL+wTM2d0osSqy8Rfy6w+ialH/uhGLkftFBPCU1YvMWGqGetf79CiavchIlNumhfZ1+VulC5dnjv09MjbXCLdVP9Ef9JgkJGqxwgq/YrxsX7NThLlJZF2L7UpMBH/H0WGv8WBSShI/VPg5R3Qpo=
+	 MIME-Version; b=Dnn87DTJpNKZ5c28POSTwwhB2Nyb6qcAcCaP6Z/vzsJbgONm0XBPqW2akwnt93uisV14Vvd7ym4dLd3hxbP4m4C6SEZRg3mi0+4wD2aFBzuIVV1ejTrb8C6KTAwkKy2CQR5tdvxVfLrdBgINS1XG/RIrA4JG9oZ7NoKMXRUAnoQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4WkKK042Vcz4f3jJG;
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4WkKK06x9yz4f3kvl;
 	Wed, 14 Aug 2024 15:15:16 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 450D51A0359;
+	by mail.maildlp.com (Postfix) with ESMTP id A8AC11A0359;
 	Wed, 14 Aug 2024 15:15:31 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgBHboSLWbxmIxKbBg--.47745S17;
+	by APP4 (Coremail) with SMTP id gCh0CgBHboSLWbxmIxKbBg--.47745S18;
 	Wed, 14 Aug 2024 15:15:31 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: mariusz.tkaczyk@linux.intel.com,
@@ -48,9 +48,9 @@ Cc: linux-kernel@vger.kernel.org,
 	yukuai1@huaweicloud.com,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com
-Subject: [PATCH RFC -next v2 13/41] md/md-bitmap: merge md_bitmap_load() into bitmap_operations
-Date: Wed, 14 Aug 2024 15:10:45 +0800
-Message-Id: <20240814071113.346781-14-yukuai1@huaweicloud.com>
+Subject: [PATCH RFC -next v2 14/41] md/md-bitmap: merge md_bitmap_destroy() into bitmap_operations
+Date: Wed, 14 Aug 2024 15:10:46 +0800
+Message-Id: <20240814071113.346781-15-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240814071113.346781-1-yukuai1@huaweicloud.com>
 References: <20240814071113.346781-1-yukuai1@huaweicloud.com>
@@ -61,10 +61,10 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBHboSLWbxmIxKbBg--.47745S17
-X-Coremail-Antispam: 1UD129KBjvJXoWxZFWUtw1UXF15WF47Aw1rXrb_yoWrJr4kpr
-	sFqa45Cr43JrW3Ww1UuFyv9a4Yqw1vgrZrtrWxC34fuF93XFnxGF4FgF17tw18Ka43AFsx
-	X3W5tr1UGr1xXrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgBHboSLWbxmIxKbBg--.47745S18
+X-Coremail-Antispam: 1UD129KBjvJXoWxXrW5ArW5tw4xur17Kry8Zrb_yoWrArW5pa
+	yxt3Z8Kr1YqrW3Wr4UAFWq9a4FqF1ktr9xKryxWw1rCFn3JrnxWF4rWFyUtw1fWa4rAFs0
+	qw45tr1rWr1UWFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUPY14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -88,116 +88,134 @@ to invent a new bitmap by replacing bitmap_operations.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/md/dm-raid.c   | 4 +++-
- drivers/md/md-bitmap.c | 6 +++---
- drivers/md/md-bitmap.h | 2 +-
- drivers/md/md.c        | 7 ++++---
- 4 files changed, 11 insertions(+), 8 deletions(-)
+ drivers/md/md-bitmap.c |  7 ++++---
+ drivers/md/md-bitmap.h |  2 +-
+ drivers/md/md.c        | 15 ++++++++-------
+ 3 files changed, 13 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
-index 0c3323e0adb2..c3e201fde4c5 100644
---- a/drivers/md/dm-raid.c
-+++ b/drivers/md/dm-raid.c
-@@ -3949,7 +3949,9 @@ static int __load_dirty_region_bitmap(struct raid_set *rs)
- 	/* Try loading the bitmap unless "raid0", which does not have one */
- 	if (!rs_is_raid0(rs) &&
- 	    !test_and_set_bit(RT_FLAG_RS_BITMAP_LOADED, &rs->runtime_flags)) {
--		r = md_bitmap_load(&rs->md);
-+		struct mddev *mddev = &rs->md;
-+
-+		r = mddev->bitmap_ops->load(mddev);
- 		if (r)
- 			DMERR("Failed to load bitmap");
- 	}
 diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-index 9606bcafb834..0113a972e42d 100644
+index 0113a972e42d..94cf3c6e96e3 100644
 --- a/drivers/md/md-bitmap.c
 +++ b/drivers/md/md-bitmap.c
-@@ -1977,7 +1977,7 @@ static int bitmap_create(struct mddev *mddev, int slot)
- 	return 0;
+@@ -1853,7 +1853,7 @@ void md_bitmap_wait_behind_writes(struct mddev *mddev)
  }
+ EXPORT_SYMBOL_GPL(md_bitmap_wait_behind_writes);
  
--int md_bitmap_load(struct mddev *mddev)
-+static int bitmap_load(struct mddev *mddev)
+-void md_bitmap_destroy(struct mddev *mddev)
++static void bitmap_destroy(struct mddev *mddev)
  {
- 	int err = 0;
- 	sector_t start = 0;
-@@ -2033,7 +2033,6 @@ int md_bitmap_load(struct mddev *mddev)
- out:
- 	return err;
- }
--EXPORT_SYMBOL_GPL(md_bitmap_load);
+ 	struct bitmap *bitmap = mddev->bitmap;
  
- /* caller need to free returned bitmap with md_bitmap_free() */
- struct bitmap *get_bitmap_from_slot(struct mddev *mddev, int slot)
-@@ -2422,7 +2421,7 @@ location_store(struct mddev *mddev, const char *buf, size_t len)
- 			if (rv)
- 				goto out;
+@@ -2381,7 +2381,7 @@ location_store(struct mddev *mddev, const char *buf, size_t len)
+ 			goto out;
+ 		}
  
--			rv = md_bitmap_load(mddev);
-+			rv = bitmap_load(mddev);
+-		md_bitmap_destroy(mddev);
++		bitmap_destroy(mddev);
+ 		mddev->bitmap_info.offset = 0;
+ 		if (mddev->bitmap_info.file) {
+ 			struct file *f = mddev->bitmap_info.file;
+@@ -2424,7 +2424,7 @@ location_store(struct mddev *mddev, const char *buf, size_t len)
+ 			rv = bitmap_load(mddev);
  			if (rv) {
  				mddev->bitmap_info.offset = 0;
- 				md_bitmap_destroy(mddev);
-@@ -2721,6 +2720,7 @@ const struct attribute_group md_bitmap_group = {
- 
+-				md_bitmap_destroy(mddev);
++				bitmap_destroy(mddev);
+ 				goto out;
+ 			}
+ 		}
+@@ -2721,6 +2721,7 @@ const struct attribute_group md_bitmap_group = {
  static struct bitmap_operations bitmap_ops = {
  	.create			= bitmap_create,
-+	.load			= bitmap_load,
+ 	.load			= bitmap_load,
++	.destroy		= bitmap_destroy,
  };
  
  void mddev_set_bitmap_ops(struct mddev *mddev)
 diff --git a/drivers/md/md-bitmap.h b/drivers/md/md-bitmap.h
-index 4b9c22b66e65..ba912f5f3450 100644
+index ba912f5f3450..9376bbeb4698 100644
 --- a/drivers/md/md-bitmap.h
 +++ b/drivers/md/md-bitmap.h
-@@ -247,13 +247,13 @@ struct md_bitmap_stats {
- 
+@@ -248,6 +248,7 @@ struct md_bitmap_stats {
  struct bitmap_operations {
  	int (*create)(struct mddev *mddev, int slot);
-+	int (*load)(struct mddev *mddev);
+ 	int (*load)(struct mddev *mddev);
++	void (*destroy)(struct mddev *mddev);
  };
  
  /* the bitmap API */
- void mddev_set_bitmap_ops(struct mddev *mddev);
+@@ -255,7 +256,6 @@ void mddev_set_bitmap_ops(struct mddev *mddev);
  
  /* these are used only by md/bitmap */
--int md_bitmap_load(struct mddev *mddev);
  void md_bitmap_flush(struct mddev *mddev);
- void md_bitmap_destroy(struct mddev *mddev);
+-void md_bitmap_destroy(struct mddev *mddev);
  
+ void md_bitmap_print_sb(struct bitmap *bitmap);
+ void md_bitmap_update_sb(struct bitmap *bitmap);
 diff --git a/drivers/md/md.c b/drivers/md/md.c
-index b32ab7ca7640..2fe25a6257e6 100644
+index 2fe25a6257e6..7aecd99d50e2 100644
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -6303,7 +6303,8 @@ int do_md_run(struct mddev *mddev)
- 	err = md_run(mddev);
- 	if (err)
- 		goto out;
--	err = md_bitmap_load(mddev);
-+
-+	err = mddev->bitmap_ops->load(mddev);
+@@ -6284,7 +6284,7 @@ int md_run(struct mddev *mddev)
+ 		pers->free(mddev, mddev->private);
+ 	mddev->private = NULL;
+ 	module_put(pers->owner);
+-	md_bitmap_destroy(mddev);
++	mddev->bitmap_ops->destroy(mddev);
+ abort:
+ 	bioset_exit(&mddev->io_clone_set);
+ exit_sync_set:
+@@ -6306,7 +6306,7 @@ int do_md_run(struct mddev *mddev)
+ 
+ 	err = mddev->bitmap_ops->load(mddev);
  	if (err) {
- 		md_bitmap_destroy(mddev);
+-		md_bitmap_destroy(mddev);
++		mddev->bitmap_ops->destroy(mddev);
  		goto out;
-@@ -7271,7 +7272,7 @@ static int set_bitmap_file(struct mddev *mddev, int fd)
- 		if (fd >= 0) {
- 			err = mddev->bitmap_ops->create(mddev, -1);
- 			if (!err)
--				err = md_bitmap_load(mddev);
-+				err = mddev->bitmap_ops->load(mddev);
+ 	}
+ 
+@@ -6492,7 +6492,8 @@ static void mddev_detach(struct mddev *mddev)
+ static void __md_stop(struct mddev *mddev)
+ {
+ 	struct md_personality *pers = mddev->pers;
+-	md_bitmap_destroy(mddev);
++
++	mddev->bitmap_ops->destroy(mddev);
+ 	mddev_detach(mddev);
+ 	spin_lock(&mddev->lock);
+ 	mddev->pers = NULL;
+@@ -7275,11 +7276,11 @@ static int set_bitmap_file(struct mddev *mddev, int fd)
+ 				err = mddev->bitmap_ops->load(mddev);
  
  			if (err) {
- 				md_bitmap_destroy(mddev);
-@@ -7565,7 +7566,7 @@ static int update_array_info(struct mddev *mddev, mdu_array_info_t *info)
- 				mddev->bitmap_info.default_space;
- 			rv = mddev->bitmap_ops->create(mddev, -1);
- 			if (!rv)
--				rv = md_bitmap_load(mddev);
-+				rv = mddev->bitmap_ops->load(mddev);
+-				md_bitmap_destroy(mddev);
++				mddev->bitmap_ops->destroy(mddev);
+ 				fd = -1;
+ 			}
+ 		} else if (fd < 0) {
+-			md_bitmap_destroy(mddev);
++			mddev->bitmap_ops->destroy(mddev);
+ 		}
+ 	}
+ 
+@@ -7569,7 +7570,7 @@ static int update_array_info(struct mddev *mddev, mdu_array_info_t *info)
+ 				rv = mddev->bitmap_ops->load(mddev);
  
  			if (rv)
- 				md_bitmap_destroy(mddev);
+-				md_bitmap_destroy(mddev);
++				mddev->bitmap_ops->destroy(mddev);
+ 		} else {
+ 			struct md_bitmap_stats stats;
+ 
+@@ -7596,7 +7597,7 @@ static int update_array_info(struct mddev *mddev, mdu_array_info_t *info)
+ 				module_put(md_cluster_mod);
+ 				mddev->safemode_delay = DEFAULT_SAFEMODE_DELAY;
+ 			}
+-			md_bitmap_destroy(mddev);
++			mddev->bitmap_ops->destroy(mddev);
+ 			mddev->bitmap_info.offset = 0;
+ 		}
+ 	}
 -- 
 2.39.2
 
