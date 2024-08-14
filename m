@@ -1,42 +1,42 @@
-Return-Path: <linux-raid+bounces-2419-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-2421-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E5F7951560
-	for <lists+linux-raid@lfdr.de>; Wed, 14 Aug 2024 09:23:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 961FB951566
+	for <lists+linux-raid@lfdr.de>; Wed, 14 Aug 2024 09:24:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CF01628961A
-	for <lists+linux-raid@lfdr.de>; Wed, 14 Aug 2024 07:23:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E73CC289967
+	for <lists+linux-raid@lfdr.de>; Wed, 14 Aug 2024 07:24:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D39814A639;
-	Wed, 14 Aug 2024 07:15:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6CB216C6AD;
+	Wed, 14 Aug 2024 07:15:46 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C71515AD96;
-	Wed, 14 Aug 2024 07:15:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85B615B143;
+	Wed, 14 Aug 2024 07:15:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723619744; cv=none; b=WDjL30TsGcZzWdO5dLMQNmXMLouAe1nNsnjGFs75jOpt2EbXy8oooXrHQDCo9ksJQliOuTZJ2fGN3rHFOiGIwjx2u0qgjdepqP1vPB5RCUu+rytMO+qBkKs7XD4rdddNOjP2b42cA6qnm/PeB5Y6ZgMKFq5EmaoKopcWiLibmDo=
+	t=1723619746; cv=none; b=UOw0y31i6nGer+nX6hqlGMp75NsK8Ad5M5Ni131jV7nm9Id2g+0A/PKDnC0R8QhEaaZzFWZO/IbxI5h6WZGnlWEaOTPUX5rvJhfepXqbg2FbdJbbxvaPfvZ5MWtW5A1Vrq/gQVrCsx2Xn68SH8vSePWoHLKp9bpgTERNb1DukkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723619744; c=relaxed/simple;
-	bh=kfPUOBX5myP5ZAJ7cMLo81iumeHhKtPIn3/NgRLmBdM=;
+	s=arc-20240116; t=1723619746; c=relaxed/simple;
+	bh=GQVz2V4nQivFlHCPiVLRvXPPPmW4VhHG3R/MlabDpdo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZrikbMHQSCeauV1yyuCqq17aTlALqeBzKdyKRaga4cuzK/Ddc1G+MiMoZgAS+u/OUBOM2vGRpUy6hcuiW6BnUfrsZR4LA1qG0i+P+AP5Y/XcT4IGFEPdYsBGPfn38RNAFzW1leD6cwvkF3QxTZctiyfDL2mNBaskCcgUJwV1eFI=
+	 MIME-Version; b=XmNk1sXiotoov1Sb8iOqd0+sVGtAwo8mZOZKsMLqCRjdjuPYdi+GSQf03bme1BUz6H4T1FHAxxB3fWbIJOYll2mspFl+/yHYnD8PLt1wmJ6r84mu4mh64O9wULtKaPPFJxkC/Jq7mteKlFDRwpsglNvoO2dZfzQ0h51nyEwVMkk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4WkKK94sWrz4f3jMs;
-	Wed, 14 Aug 2024 15:15:25 +0800 (CST)
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4WkKKB0bs9z4f3jMx;
+	Wed, 14 Aug 2024 15:15:26 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 6CCD31A018D;
+	by mail.maildlp.com (Postfix) with ESMTP id CF7B81A0359;
 	Wed, 14 Aug 2024 15:15:39 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgBHboSLWbxmIxKbBg--.47745S37;
+	by APP4 (Coremail) with SMTP id gCh0CgBHboSLWbxmIxKbBg--.47745S38;
 	Wed, 14 Aug 2024 15:15:39 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: mariusz.tkaczyk@linux.intel.com,
@@ -48,9 +48,9 @@ Cc: linux-kernel@vger.kernel.org,
 	yukuai1@huaweicloud.com,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com
-Subject: [PATCH RFC -next v2 33/41] md/md-bitmap: pass in mddev directly for md_bitmap_resize()
-Date: Wed, 14 Aug 2024 15:11:05 +0800
-Message-Id: <20240814071113.346781-34-yukuai1@huaweicloud.com>
+Subject: [PATCH RFC -next v2 34/41] md/md-bitmap: merge md_bitmap_resize() into bitmap_operations
+Date: Wed, 14 Aug 2024 15:11:06 +0800
+Message-Id: <20240814071113.346781-35-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240814071113.346781-1-yukuai1@huaweicloud.com>
 References: <20240814071113.346781-1-yukuai1@huaweicloud.com>
@@ -61,10 +61,10 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBHboSLWbxmIxKbBg--.47745S37
-X-Coremail-Antispam: 1UD129KBjvJXoW3GFy5KFW3Zw45Wr18WF4xCrg_yoWxuw4Dpa
-	y7JF9xCry5GrW5Ww15ZFykuFyFq34Dtr9rtryxu34ruFy7WF9xAF4rWFy0qF1UWa4rJF45
-	Xan8JrWUCF1kXF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgBHboSLWbxmIxKbBg--.47745S38
+X-Coremail-Antispam: 1UD129KBjvJXoWxKw4kury8XrW3AF43KrWkCrg_yoWxCrWfpa
+	17ta43Cry3GrW5Wa1UZFykuFyFqw1ktr9rtryxC34fWF9rXF9xuF4rWFW0qF1UKa45XFsx
+	Xan8trW5CF1xXF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUPY14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -83,210 +83,195 @@ X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-And move the condition "if (mddev->bitmap)" into md_bitmap_resize() as
-well, on the one hand make code cleaner, on the other hand try not to
-access bitmap directly.
-
-Since we are here, also change the parameter 'init' from int to bool.
+So that the implementation won't be exposed, and it'll be possible
+to invent a new bitmap by replacing bitmap_operations.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/md/dm-raid.c    |  2 +-
- drivers/md/md-bitmap.c  | 10 +++++++---
- drivers/md/md-bitmap.h  |  4 ++--
- drivers/md/md-cluster.c |  4 ++--
- drivers/md/raid1.c      | 12 +++++++-----
- drivers/md/raid10.c     | 17 +++++++++--------
- drivers/md/raid5.c      | 11 ++++++-----
- 7 files changed, 34 insertions(+), 26 deletions(-)
+ drivers/md/dm-raid.c    |  3 ++-
+ drivers/md/md-bitmap.c  | 11 +++++++----
+ drivers/md/md-bitmap.h  |  5 +++--
+ drivers/md/md-cluster.c |  5 +++--
+ drivers/md/raid1.c      |  2 +-
+ drivers/md/raid10.c     | 10 +++++-----
+ drivers/md/raid5.c      |  2 +-
+ 7 files changed, 22 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
-index c3e201fde4c5..cc071fcd7a04 100644
+index cc071fcd7a04..63682d27fc8d 100644
 --- a/drivers/md/dm-raid.c
 +++ b/drivers/md/dm-raid.c
-@@ -4068,7 +4068,7 @@ static int raid_preresume(struct dm_target *ti)
+@@ -4068,7 +4068,8 @@ static int raid_preresume(struct dm_target *ti)
  	       mddev->bitmap_info.chunksize != to_bytes(rs->requested_bitmap_chunk_sectors)))) {
  		int chunksize = to_bytes(rs->requested_bitmap_chunk_sectors) ?: mddev->bitmap_info.chunksize;
  
--		r = md_bitmap_resize(mddev->bitmap, mddev->dev_sectors, chunksize, 0);
-+		r = md_bitmap_resize(mddev, mddev->dev_sectors, chunksize, false);
+-		r = md_bitmap_resize(mddev, mddev->dev_sectors, chunksize, false);
++		r = mddev->bitmap_ops->resize(mddev, mddev->dev_sectors,
++					      chunksize, false);
  		if (r)
  			DMERR("Failed to resize bitmap");
  	}
 diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-index a1f57f751b55..04f32f18e734 100644
+index 04f32f18e734..4dc48055b18f 100644
 --- a/drivers/md/md-bitmap.c
 +++ b/drivers/md/md-bitmap.c
-@@ -1975,7 +1975,7 @@ static struct bitmap *__bitmap_create(struct mddev *mddev, int slot)
+@@ -32,6 +32,9 @@
+ #include "md.h"
+ #include "md-bitmap.h"
+ 
++static int bitmap_resize(struct mddev *mddev, sector_t blocks, int chunksize,
++			 bool init);
++
+ static inline char *bmname(struct bitmap *bitmap)
+ {
+ 	return bitmap->mddev ? mdname(bitmap->mddev) : "mdX";
+@@ -1975,7 +1978,7 @@ static struct bitmap *__bitmap_create(struct mddev *mddev, int slot)
  		goto error;
  
  	bitmap->daemon_lastrun = jiffies;
--	err = md_bitmap_resize(bitmap, blocks, mddev->bitmap_info.chunksize, 1);
-+	err = md_bitmap_resize(mddev, blocks, mddev->bitmap_info.chunksize, true);
+-	err = md_bitmap_resize(mddev, blocks, mddev->bitmap_info.chunksize, true);
++	err = bitmap_resize(mddev, blocks, mddev->bitmap_info.chunksize, true);
  	if (err)
  		goto error;
  
-@@ -2160,8 +2160,8 @@ static int bitmap_get_stats(struct bitmap *bitmap, struct md_bitmap_stats *stats
+@@ -2160,8 +2163,8 @@ static int bitmap_get_stats(struct bitmap *bitmap, struct md_bitmap_stats *stats
  	return 0;
  }
  
--int md_bitmap_resize(struct bitmap *bitmap, sector_t blocks,
--		  int chunksize, int init)
-+int md_bitmap_resize(struct mddev *mddev, sector_t blocks, int chunksize,
-+		     bool init)
+-int md_bitmap_resize(struct mddev *mddev, sector_t blocks, int chunksize,
+-		     bool init)
++static int bitmap_resize(struct mddev *mddev, sector_t blocks, int chunksize,
++			 bool init)
  {
  	/* If chunk_size is 0, choose an appropriate chunk size.
  	 * Then possibly allocate new storage space.
-@@ -2182,6 +2182,10 @@ int md_bitmap_resize(struct bitmap *bitmap, sector_t blocks,
- 	int ret = 0;
- 	long pages;
- 	struct bitmap_page *new_bp;
-+	struct bitmap *bitmap = mddev->bitmap;
-+
-+	if (!bitmap)
-+		return 0;
+@@ -2370,7 +2373,6 @@ int md_bitmap_resize(struct mddev *mddev, sector_t blocks, int chunksize,
+ err:
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(md_bitmap_resize);
  
- 	if (bitmap->storage.file && !init) {
- 		pr_info("md: cannot resize file-based bitmap\n");
+ static ssize_t
+ location_show(struct mddev *mddev, char *page)
+@@ -2749,6 +2751,7 @@ const struct attribute_group md_bitmap_group = {
+ 
+ static struct bitmap_operations bitmap_ops = {
+ 	.create			= bitmap_create,
++	.resize			= bitmap_resize,
+ 	.load			= bitmap_load,
+ 	.destroy		= bitmap_destroy,
+ 	.flush			= bitmap_flush,
 diff --git a/drivers/md/md-bitmap.h b/drivers/md/md-bitmap.h
-index b4c3e4faf288..ffb6e027dfff 100644
+index ffb6e027dfff..64ab063734c9 100644
 --- a/drivers/md/md-bitmap.h
 +++ b/drivers/md/md-bitmap.h
-@@ -279,8 +279,8 @@ void mddev_set_bitmap_ops(struct mddev *mddev);
+@@ -247,6 +247,9 @@ struct md_bitmap_stats {
+ 
+ struct bitmap_operations {
+ 	int (*create)(struct mddev *mddev, int slot);
++	int (*resize)(struct mddev *mddev, sector_t blocks, int chunksize,
++		      bool init);
++
+ 	int (*load)(struct mddev *mddev);
+ 	void (*destroy)(struct mddev *mddev);
+ 	void (*flush)(struct mddev *mddev);
+@@ -279,8 +282,6 @@ void mddev_set_bitmap_ops(struct mddev *mddev);
  
  /* these are exported */
  
--int md_bitmap_resize(struct bitmap *bitmap, sector_t blocks,
--		     int chunksize, int init);
-+int md_bitmap_resize(struct mddev *mddev, sector_t blocks, int chunksize,
-+		     bool init);
+-int md_bitmap_resize(struct mddev *mddev, sector_t blocks, int chunksize,
+-		     bool init);
  struct bitmap *get_bitmap_from_slot(struct mddev *mddev, int slot);
  int md_bitmap_copy_from_slot(struct mddev *mddev, int slot,
  			     sector_t *lo, sector_t *hi, bool clear_bits);
 diff --git a/drivers/md/md-cluster.c b/drivers/md/md-cluster.c
-index b36b9f449f9d..d0f9ff7bd663 100644
+index d0f9ff7bd663..2250bd6dddb7 100644
 --- a/drivers/md/md-cluster.c
 +++ b/drivers/md/md-cluster.c
-@@ -628,8 +628,8 @@ static int process_recvd_msg(struct mddev *mddev, struct cluster_msg *msg)
+@@ -628,8 +628,9 @@ static int process_recvd_msg(struct mddev *mddev, struct cluster_msg *msg)
  		break;
  	case BITMAP_RESIZE:
  		if (le64_to_cpu(msg->high) != mddev->pers->size(mddev, 0, 0))
--			ret = md_bitmap_resize(mddev->bitmap,
--					    le64_to_cpu(msg->high), 0, 0);
-+			ret = md_bitmap_resize(mddev, le64_to_cpu(msg->high), 0,
-+					       false);
+-			ret = md_bitmap_resize(mddev, le64_to_cpu(msg->high), 0,
+-					       false);
++			ret = mddev->bitmap_ops->resize(mddev,
++							le64_to_cpu(msg->high),
++							0, false);
  		break;
  	default:
  		ret = -1;
 diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 3dedb7fd74c4..ba5df105d735 100644
+index ba5df105d735..e285f01e3ef6 100644
 --- a/drivers/md/raid1.c
 +++ b/drivers/md/raid1.c
-@@ -3309,14 +3309,16 @@ static int raid1_resize(struct mddev *mddev, sector_t sectors)
- 	 * worth it.
- 	 */
- 	sector_t newsize = raid1_size(mddev, sectors, 0);
-+	int ret;
-+
- 	if (mddev->external_size &&
+@@ -3315,7 +3315,7 @@ static int raid1_resize(struct mddev *mddev, sector_t sectors)
  	    mddev->array_sectors > newsize)
  		return -EINVAL;
--	if (mddev->bitmap) {
--		int ret = md_bitmap_resize(mddev->bitmap, newsize, 0, 0);
--		if (ret)
--			return ret;
--	}
-+
-+	ret = md_bitmap_resize(mddev, newsize, 0, false);
-+	if (ret)
-+		return ret;
-+
- 	md_set_array_sectors(mddev, newsize);
- 	if (sectors > mddev->dev_sectors &&
- 	    mddev->recovery_cp > mddev->dev_sectors) {
+ 
+-	ret = md_bitmap_resize(mddev, newsize, 0, false);
++	ret = mddev->bitmap_ops->resize(mddev, newsize, 0, false);
+ 	if (ret)
+ 		return ret;
+ 
 diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index 085a85945a42..343c9bcc3104 100644
+index 343c9bcc3104..a1e25c250d46 100644
 --- a/drivers/md/raid10.c
 +++ b/drivers/md/raid10.c
-@@ -4196,6 +4196,7 @@ static int raid10_resize(struct mddev *mddev, sector_t sectors)
- 	 */
- 	struct r10conf *conf = mddev->private;
- 	sector_t oldsize, size;
-+	int ret;
- 
- 	if (mddev->reshape_position != MaxSector)
- 		return -EBUSY;
-@@ -4208,11 +4209,11 @@ static int raid10_resize(struct mddev *mddev, sector_t sectors)
- 	if (mddev->external_size &&
+@@ -4210,7 +4210,7 @@ static int raid10_resize(struct mddev *mddev, sector_t sectors)
  	    mddev->array_sectors > size)
  		return -EINVAL;
--	if (mddev->bitmap) {
--		int ret = md_bitmap_resize(mddev->bitmap, size, 0, 0);
--		if (ret)
--			return ret;
--	}
-+
-+	ret = md_bitmap_resize(mddev, size, 0, false);
-+	if (ret)
-+		return ret;
-+
- 	md_set_array_sectors(mddev, size);
- 	if (sectors > mddev->dev_sectors &&
- 	    mddev->recovery_cp > oldsize) {
-@@ -4478,7 +4479,7 @@ static int raid10_start_reshape(struct mddev *mddev)
+ 
+-	ret = md_bitmap_resize(mddev, size, 0, false);
++	ret = mddev->bitmap_ops->resize(mddev, size, 0, false);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -4479,7 +4479,7 @@ static int raid10_start_reshape(struct mddev *mddev)
  		newsize = raid10_size(mddev, 0, conf->geo.raid_disks);
  
  		if (!mddev_is_clustered(mddev)) {
--			ret = md_bitmap_resize(mddev->bitmap, newsize, 0, 0);
-+			ret = md_bitmap_resize(mddev, newsize, 0, false);
+-			ret = md_bitmap_resize(mddev, newsize, 0, false);
++			ret = mddev->bitmap_ops->resize(mddev, newsize, 0, false);
  			if (ret)
  				goto abort;
  			else
-@@ -4500,13 +4501,13 @@ static int raid10_start_reshape(struct mddev *mddev)
+@@ -4494,20 +4494,20 @@ static int raid10_start_reshape(struct mddev *mddev)
+ 
+ 		/*
+ 		 * some node is already performing reshape, and no need to
+-		 * call md_bitmap_resize again since it should be called when
++		 * call bitmap_ops->resize again since it should be called when
+ 		 * receiving BITMAP_RESIZE msg
+ 		 */
+ 		if ((sb && (le32_to_cpu(sb->feature_map) &
  			    MD_FEATURE_RESHAPE_ACTIVE)) || (oldsize == newsize))
  			goto out;
  
--		ret = md_bitmap_resize(mddev->bitmap, newsize, 0, 0);
-+		ret = md_bitmap_resize(mddev, newsize, 0, false);
+-		ret = md_bitmap_resize(mddev, newsize, 0, false);
++		ret = mddev->bitmap_ops->resize(mddev, newsize, 0, false);
  		if (ret)
  			goto abort;
  
  		ret = md_cluster_ops->resize_bitmaps(mddev, newsize, oldsize);
  		if (ret) {
--			md_bitmap_resize(mddev->bitmap, oldsize, 0, 0);
-+			md_bitmap_resize(mddev, oldsize, 0, false);
+-			md_bitmap_resize(mddev, oldsize, 0, false);
++			mddev->bitmap_ops->resize(mddev, oldsize, 0, false);
  			goto abort;
  		}
  	}
 diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 91b610d11c6a..47c89f7b1dfe 100644
+index 47c89f7b1dfe..c84a7e0263cd 100644
 --- a/drivers/md/raid5.c
 +++ b/drivers/md/raid5.c
-@@ -8313,6 +8313,7 @@ static int raid5_resize(struct mddev *mddev, sector_t sectors)
- 	 */
- 	sector_t newsize;
- 	struct r5conf *conf = mddev->private;
-+	int ret;
- 
- 	if (raid5_has_log(conf) || raid5_has_ppl(conf))
- 		return -EINVAL;
-@@ -8321,11 +8322,11 @@ static int raid5_resize(struct mddev *mddev, sector_t sectors)
- 	if (mddev->external_size &&
+@@ -8323,7 +8323,7 @@ static int raid5_resize(struct mddev *mddev, sector_t sectors)
  	    mddev->array_sectors > newsize)
  		return -EINVAL;
--	if (mddev->bitmap) {
--		int ret = md_bitmap_resize(mddev->bitmap, sectors, 0, 0);
--		if (ret)
--			return ret;
--	}
-+
-+	ret = md_bitmap_resize(mddev, sectors, 0, false);
-+	if (ret)
-+		return ret;
-+
- 	md_set_array_sectors(mddev, newsize);
- 	if (sectors > mddev->dev_sectors &&
- 	    mddev->recovery_cp > mddev->dev_sectors) {
+ 
+-	ret = md_bitmap_resize(mddev, sectors, 0, false);
++	ret = mddev->bitmap_ops->resize(mddev, sectors, 0, false);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
 2.39.2
 
