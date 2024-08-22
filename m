@@ -1,42 +1,42 @@
-Return-Path: <linux-raid+bounces-2521-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-2512-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF80D95AB50
-	for <lists+linux-raid@lfdr.de>; Thu, 22 Aug 2024 04:54:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2699695AB3F
+	for <lists+linux-raid@lfdr.de>; Thu, 22 Aug 2024 04:53:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7C4C81F25E37
-	for <lists+linux-raid@lfdr.de>; Thu, 22 Aug 2024 02:54:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D8DAD284878
+	for <lists+linux-raid@lfdr.de>; Thu, 22 Aug 2024 02:53:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D93213B284;
-	Thu, 22 Aug 2024 02:52:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4B6E3A8D8;
+	Thu, 22 Aug 2024 02:52:09 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408BC1CFBE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446D01F16B;
 	Thu, 22 Aug 2024 02:52:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724295131; cv=none; b=mAyiWJy19sr96OK+0Gj0x/vd1kmmuad2pZ5/1mtsG4QbLxrshbb1cdpD0yU549+/zQ/o2SnSlNiJUZ04jNpaore97gO0KHfXqKRKFGXmSDyVkJSgW5nZRjwDpSWP35109MBedQ4HbSuVH8fjHQKtOeuL4i4MQK+ctHG6tf2CT7k=
+	t=1724295129; cv=none; b=XlZCO8klLrI/gKxRzlStheBzl1I0ZcYS1lofgwsA9aFI596aFORZKdC1AYo2bf2Co4O7CQLGYHZw6+sdNH7BdKRJ7/byCZJNRO9j4JS5cdPm+PtUtcPwSenaS5tMuuwg8yP4xbi9v/lJ4noN3LfGEH8X6dP9OuPOTCZ3tgHu/58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724295131; c=relaxed/simple;
-	bh=aUzKtCnZV18bC7cCEQnI7mbJOfidHVcbtPHpuZAop9s=;
+	s=arc-20240116; t=1724295129; c=relaxed/simple;
+	bh=aMg0D1L2FDO5tJBJElv5MZ6uxUbRC8lz3qHploltyDI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Tw3B7dT0U/YYxRZX8YYhqzymPTov+sNFnpM5DlYFCErnSr7yCtAhfY/GgswIUVTZgj1ZFS1yRNibcWlDr216UxEhy32GmzYfPWXeqDSR/Xh3Ew1PG8wfcmO4sQJmQe337YC7vNxJtlPdEMeyZiXUe9fhWcsVYG5kRgF2Us36woQ=
+	 MIME-Version; b=snOI+9INaYSO2uBnsxRbkrVFNoV8kvFJV+Bx73++Rarm5otx6UYG+YTCosKh8I10cGHyWxPUJXUpVhHJMcT40Q2wbL7E5jGQP0dV52jKgTRfz4P+vPX/qg89lkpmrKuHoOh157QEp6GDF6LTXIO8VuyjoDkZgevSWBg+DCZUCco=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Wq75P3ldNz4f3kny;
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Wq75P6yTbz4f3kp7;
 	Thu, 22 Aug 2024 10:51:53 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 36CFD1A06D7;
+	by mail.maildlp.com (Postfix) with ESMTP id A71BA1A13E9;
 	Thu, 22 Aug 2024 10:52:03 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgAXPoTNp8ZmyXl2CQ--.42363S11;
+	by APP4 (Coremail) with SMTP id gCh0CgAXPoTNp8ZmyXl2CQ--.42363S12;
 	Thu, 22 Aug 2024 10:52:03 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: song@kernel.org,
@@ -49,9 +49,9 @@ Cc: linux-kernel@vger.kernel.org,
 	yukuai1@huaweicloud.com,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com
-Subject: [PATCH md-6.12 07/41] md/md-bitmap: add 'behind_writes' and 'behind_wait' into struct md_bitmap_stats
-Date: Thu, 22 Aug 2024 10:46:44 +0800
-Message-Id: <20240822024718.2158259-8-yukuai1@huaweicloud.com>
+Subject: [PATCH md-6.12 08/41] md/md-cluster: use helper md_bitmap_get_stats() to get pages in resize_bitmaps()
+Date: Thu, 22 Aug 2024 10:46:45 +0800
+Message-Id: <20240822024718.2158259-9-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240822024718.2158259-1-yukuai1@huaweicloud.com>
 References: <20240822024718.2158259-1-yukuai1@huaweicloud.com>
@@ -62,10 +62,10 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAXPoTNp8ZmyXl2CQ--.42363S11
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kr47Kr4xtF15Jry8XrWUJwb_yoW5JF47pF
-	WDX345uw45JF45Xr1DZFyUZFyrJasaqFZrKFWfu3s5uFy2yF9IgF40gFW5Cw1DCF93AF45
-	Xr45JryUuryYqF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgAXPoTNp8ZmyXl2CQ--.42363S12
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZF4fGr18tryrXr1xWF1UGFg_yoW8ur1fpF
+	47KayakrWrXrW3XwsrWrykCFyaqw1ktrZrtryfG34fGFnrtFnIgF4rGFyUtr4UCFy5JFn0
+	qws8Kr4UurW8XaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUm214x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -84,76 +84,69 @@ X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-There are no functional changes, avoid dereferencing bitmap directly to
-prepare inventing a new bitmap.
-
-Also fix following checkpatch warning by using wq_has_sleeper().
-
-WARNING: waitqueue_active without comment
+Use the existed helper instead of open coding it, avoid dereferencing
+bitmap directly to prepare inventing a new bitmap.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/md/md-bitmap.c |  2 ++
- drivers/md/md-bitmap.h |  3 +++
- drivers/md/raid1.c     | 13 ++++++++-----
- 3 files changed, 13 insertions(+), 5 deletions(-)
+ drivers/md/md-cluster.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-index 82b31a46caa1..ab349182e646 100644
---- a/drivers/md/md-bitmap.c
-+++ b/drivers/md/md-bitmap.c
-@@ -2115,6 +2115,8 @@ int md_bitmap_get_stats(struct bitmap *bitmap, struct md_bitmap_stats *stats)
- 	stats->file_pages = storage->file_pages;
- 	stats->file = storage->file;
+diff --git a/drivers/md/md-cluster.c b/drivers/md/md-cluster.c
+index e3faf752f0b1..76febdc5d7f6 100644
+--- a/drivers/md/md-cluster.c
++++ b/drivers/md/md-cluster.c
+@@ -1143,13 +1143,16 @@ static int update_bitmap_size(struct mddev *mddev, sector_t size)
  
-+	stats->behind_writes = atomic_read(&bitmap->behind_writes);
-+	stats->behind_wait = wq_has_sleeper(&bitmap->behind_wait);
- 	stats->events_cleared = bitmap->events_cleared;
- 	return 0;
- }
-diff --git a/drivers/md/md-bitmap.h b/drivers/md/md-bitmap.h
-index 870125670087..909a661383c6 100644
---- a/drivers/md/md-bitmap.h
-+++ b/drivers/md/md-bitmap.h
-@@ -236,6 +236,9 @@ struct bitmap {
+ static int resize_bitmaps(struct mddev *mddev, sector_t newsize, sector_t oldsize)
+ {
+-	struct bitmap_counts *counts;
+-	char str[64];
+-	struct dlm_lock_resource *bm_lockres;
+ 	struct bitmap *bitmap = mddev->bitmap;
+-	unsigned long my_pages = bitmap->counts.pages;
++	struct md_bitmap_stats stats;
++	unsigned long my_pages;
+ 	int i, rv;
  
- struct md_bitmap_stats {
- 	u64		events_cleared;
-+	int		behind_writes;
-+	bool		behind_wait;
++	rv = md_bitmap_get_stats(bitmap, &stats);
++	if (rv)
++		return rv;
 +
- 	unsigned long	missing_pages;
- 	unsigned long	file_pages;
- 	unsigned long	sync_size;
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 81fc100e7830..f9861f9103c2 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -1603,16 +1603,19 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
++	my_pages = stats.pages;
+ 	/*
+ 	 * We need to ensure all the nodes can grow to a larger
+ 	 * bitmap size before make the reshaping.
+@@ -1159,6 +1162,10 @@ static int resize_bitmaps(struct mddev *mddev, sector_t newsize, sector_t oldsiz
+ 		return rv;
+ 
+ 	for (i = 0; i < mddev->bitmap_info.nodes; i++) {
++		struct dlm_lock_resource *bm_lockres;
++		struct bitmap_counts *counts;
++		char str[64];
++
+ 		if (i == md_cluster_ops->slot_number(mddev))
  			continue;
  
- 		if (first_clone) {
-+			unsigned long max_write_behind =
-+				mddev->bitmap_info.max_write_behind;
-+			struct md_bitmap_stats stats;
-+			int err;
-+
- 			/* do behind I/O ?
- 			 * Not if there are too many, or cannot
- 			 * allocate memory, or a reader on WriteMostly
- 			 * is waiting for behind writes to flush */
--			if (bitmap && write_behind &&
--			    (atomic_read(&bitmap->behind_writes)
--			     < mddev->bitmap_info.max_write_behind) &&
--			    !waitqueue_active(&bitmap->behind_wait)) {
-+			err = md_bitmap_get_stats(bitmap, &stats);
-+			if (!err && write_behind && !stats.behind_wait &&
-+			    stats.behind_writes < max_write_behind)
- 				alloc_behind_master_bio(r1_bio, bio);
--			}
+@@ -1170,6 +1177,9 @@ static int resize_bitmaps(struct mddev *mddev, sector_t newsize, sector_t oldsiz
+ 		}
+ 		counts = &bitmap->counts;
  
- 			md_bitmap_startwrite(bitmap, r1_bio->sector, r1_bio->sectors,
- 					     test_bit(R1BIO_BehindIO, &r1_bio->state));
++		rv = md_bitmap_get_stats(bitmap, &stats);
++		if (rv)
++			goto out;
+ 		/*
+ 		 * If we can hold the bitmap lock of one node then
+ 		 * the slot is not occupied, update the pages.
+@@ -1186,7 +1196,7 @@ static int resize_bitmaps(struct mddev *mddev, sector_t newsize, sector_t oldsiz
+ 			counts->pages = my_pages;
+ 		lockres_free(bm_lockres);
+ 
+-		if (my_pages != counts->pages)
++		if (my_pages != stats.pages)
+ 			/*
+ 			 * Let's revert the bitmap size if one node
+ 			 * can't resize bitmap
 -- 
 2.39.2
 
