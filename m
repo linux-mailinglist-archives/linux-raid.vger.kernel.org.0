@@ -1,43 +1,43 @@
-Return-Path: <linux-raid+bounces-2513-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-2521-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9090B95AB40
-	for <lists+linux-raid@lfdr.de>; Thu, 22 Aug 2024 04:53:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF80D95AB50
+	for <lists+linux-raid@lfdr.de>; Thu, 22 Aug 2024 04:54:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 86383B23A9E
-	for <lists+linux-raid@lfdr.de>; Thu, 22 Aug 2024 02:53:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7C4C81F25E37
+	for <lists+linux-raid@lfdr.de>; Thu, 22 Aug 2024 02:54:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0000D3CF4F;
-	Thu, 22 Aug 2024 02:52:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D93213B284;
+	Thu, 22 Aug 2024 02:52:12 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408F01D556;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408BC1CFBE;
 	Thu, 22 Aug 2024 02:52:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724295129; cv=none; b=A5uNDIGMBb5C795fYPMAjYiISExoBJoekjCyQaDVjXAUa7yU/q8KB/m/Ad+yV6VX9VCDgOMondBs9cqHHKBce/BrTsqTyTdYHjKgZrZrGoH+Oi9OZJdEEsc2qpnZ1tA3S1ZZmNzMp31WBDZaWBWvm8QV+pfynY9Ia4GCDeNya0s=
+	t=1724295131; cv=none; b=mAyiWJy19sr96OK+0Gj0x/vd1kmmuad2pZ5/1mtsG4QbLxrshbb1cdpD0yU549+/zQ/o2SnSlNiJUZ04jNpaore97gO0KHfXqKRKFGXmSDyVkJSgW5nZRjwDpSWP35109MBedQ4HbSuVH8fjHQKtOeuL4i4MQK+ctHG6tf2CT7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724295129; c=relaxed/simple;
-	bh=Q7SkfTQXxWr6QrJyEz4+56fT5Aw+t0GfLN+J4+XvkHA=;
+	s=arc-20240116; t=1724295131; c=relaxed/simple;
+	bh=aUzKtCnZV18bC7cCEQnI7mbJOfidHVcbtPHpuZAop9s=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XRRKnNN7zqVBe66qkDQsKhGuBPqpVOalXFF2iLo+sDfeDgqlbVXlc1jg2PJC5buH8B3GXP2Mwb6/3vfMOj2r9HikJiwfezocQwIvJBXxGkepI94aRaytnx13ScKr8szvt5wlKJwuq6VzHHvGdoIZ8IBMA0VCC7Rh6UN50RxD/f0=
+	 MIME-Version; b=Tw3B7dT0U/YYxRZX8YYhqzymPTov+sNFnpM5DlYFCErnSr7yCtAhfY/GgswIUVTZgj1ZFS1yRNibcWlDr216UxEhy32GmzYfPWXeqDSR/Xh3Ew1PG8wfcmO4sQJmQe337YC7vNxJtlPdEMeyZiXUe9fhWcsVYG5kRgF2Us36woQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Wq75H4Y7zz4f3nJd;
-	Thu, 22 Aug 2024 10:51:47 +0800 (CST)
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Wq75P3ldNz4f3kny;
+	Thu, 22 Aug 2024 10:51:53 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id BDBA91A0568;
-	Thu, 22 Aug 2024 10:52:02 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 36CFD1A06D7;
+	Thu, 22 Aug 2024 10:52:03 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgAXPoTNp8ZmyXl2CQ--.42363S10;
-	Thu, 22 Aug 2024 10:52:02 +0800 (CST)
+	by APP4 (Coremail) with SMTP id gCh0CgAXPoTNp8ZmyXl2CQ--.42363S11;
+	Thu, 22 Aug 2024 10:52:03 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: song@kernel.org,
 	mariusz.tkaczyk@linux.intel.com,
@@ -49,9 +49,9 @@ Cc: linux-kernel@vger.kernel.org,
 	yukuai1@huaweicloud.com,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com
-Subject: [PATCH md-6.12 06/41] md/md-bitmap: add 'file_pages' into struct md_bitmap_stats
-Date: Thu, 22 Aug 2024 10:46:43 +0800
-Message-Id: <20240822024718.2158259-7-yukuai1@huaweicloud.com>
+Subject: [PATCH md-6.12 07/41] md/md-bitmap: add 'behind_writes' and 'behind_wait' into struct md_bitmap_stats
+Date: Thu, 22 Aug 2024 10:46:44 +0800
+Message-Id: <20240822024718.2158259-8-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240822024718.2158259-1-yukuai1@huaweicloud.com>
 References: <20240822024718.2158259-1-yukuai1@huaweicloud.com>
@@ -62,10 +62,10 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAXPoTNp8ZmyXl2CQ--.42363S10
-X-Coremail-Antispam: 1UD129KBjvJXoWxur1UJF1kGF1kAr47ur47twb_yoW5WryDpa
-	yUJa45urWrXw45Xw17Xry8ZFyrXwnxKFZrKF93C3s8ua4jyF9xWFW8GFWUAwn8GFWUAFsr
-	Zws8trWUCr10gaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgAXPoTNp8ZmyXl2CQ--.42363S11
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kr47Kr4xtF15Jry8XrWUJwb_yoW5JF47pF
+	WDX345uw45JF45Xr1DZFyUZFyrJasaqFZrKFWfu3s5uFy2yF9IgF40gFW5Cw1DCF93AF45
+	Xr45JryUuryYqF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUm214x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -87,86 +87,73 @@ From: Yu Kuai <yukuai3@huawei.com>
 There are no functional changes, avoid dereferencing bitmap directly to
 prepare inventing a new bitmap.
 
+Also fix following checkpatch warning by using wq_has_sleeper().
+
+WARNING: waitqueue_active without comment
+
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/md/md-bitmap.c |  7 +++++--
- drivers/md/md-bitmap.h |  1 +
- drivers/md/md.c        | 17 +++++++++++------
- 3 files changed, 17 insertions(+), 8 deletions(-)
+ drivers/md/md-bitmap.c |  2 ++
+ drivers/md/md-bitmap.h |  3 +++
+ drivers/md/raid1.c     | 13 ++++++++-----
+ 3 files changed, 13 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-index 105778cc34ed..82b31a46caa1 100644
+index 82b31a46caa1..ab349182e646 100644
 --- a/drivers/md/md-bitmap.c
 +++ b/drivers/md/md-bitmap.c
-@@ -2096,6 +2096,7 @@ EXPORT_SYMBOL_GPL(md_bitmap_copy_from_slot);
+@@ -2115,6 +2115,8 @@ int md_bitmap_get_stats(struct bitmap *bitmap, struct md_bitmap_stats *stats)
+ 	stats->file_pages = storage->file_pages;
+ 	stats->file = storage->file;
  
- int md_bitmap_get_stats(struct bitmap *bitmap, struct md_bitmap_stats *stats)
- {
-+	struct bitmap_storage *storage;
- 	struct bitmap_counts *counts;
- 	bitmap_super_t *sb;
- 
-@@ -2110,9 +2111,11 @@ int md_bitmap_get_stats(struct bitmap *bitmap, struct md_bitmap_stats *stats)
- 	stats->missing_pages = counts->missing_pages;
- 	stats->pages = counts->pages;
- 
--	stats->events_cleared = bitmap->events_cleared;
--	stats->file = bitmap->storage.file;
-+	storage = &bitmap->storage;
-+	stats->file_pages = storage->file_pages;
-+	stats->file = storage->file;
- 
-+	stats->events_cleared = bitmap->events_cleared;
++	stats->behind_writes = atomic_read(&bitmap->behind_writes);
++	stats->behind_wait = wq_has_sleeper(&bitmap->behind_wait);
+ 	stats->events_cleared = bitmap->events_cleared;
  	return 0;
  }
- EXPORT_SYMBOL_GPL(md_bitmap_get_stats);
 diff --git a/drivers/md/md-bitmap.h b/drivers/md/md-bitmap.h
-index a43a75575769..870125670087 100644
+index 870125670087..909a661383c6 100644
 --- a/drivers/md/md-bitmap.h
 +++ b/drivers/md/md-bitmap.h
-@@ -237,6 +237,7 @@ struct bitmap {
+@@ -236,6 +236,9 @@ struct bitmap {
+ 
  struct md_bitmap_stats {
  	u64		events_cleared;
++	int		behind_writes;
++	bool		behind_wait;
++
  	unsigned long	missing_pages;
-+	unsigned long	file_pages;
+ 	unsigned long	file_pages;
  	unsigned long	sync_size;
- 	unsigned long	pages;
- 	struct file	*file;
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 5e1dd3009092..53e10dc28f72 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -2335,7 +2335,6 @@ super_1_allow_new_offset(struct md_rdev *rdev,
- 			 unsigned long long new_offset)
- {
- 	/* All necessary checks on new >= old have been done */
--	struct bitmap *bitmap;
- 	if (new_offset >= rdev->data_offset)
- 		return 1;
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 81fc100e7830..f9861f9103c2 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -1603,16 +1603,19 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
+ 			continue;
  
-@@ -2352,11 +2351,17 @@ super_1_allow_new_offset(struct md_rdev *rdev,
- 	 */
- 	if (rdev->sb_start + (32+4)*2 > new_offset)
- 		return 0;
--	bitmap = rdev->mddev->bitmap;
--	if (bitmap && !rdev->mddev->bitmap_info.file &&
--	    rdev->sb_start + rdev->mddev->bitmap_info.offset +
--	    bitmap->storage.file_pages * (PAGE_SIZE>>9) > new_offset)
--		return 0;
+ 		if (first_clone) {
++			unsigned long max_write_behind =
++				mddev->bitmap_info.max_write_behind;
++			struct md_bitmap_stats stats;
++			int err;
 +
-+	if (!rdev->mddev->bitmap_info.file) {
-+		struct md_bitmap_stats stats;
-+		int err;
-+
-+		err = md_bitmap_get_stats(rdev->mddev->bitmap, &stats);
-+		if (!err && rdev->sb_start + rdev->mddev->bitmap_info.offset +
-+		    stats.file_pages * (PAGE_SIZE >> 9) > new_offset)
-+			return 0;
-+	}
-+
- 	if (rdev->badblocks.sector + rdev->badblocks.size > new_offset)
- 		return 0;
+ 			/* do behind I/O ?
+ 			 * Not if there are too many, or cannot
+ 			 * allocate memory, or a reader on WriteMostly
+ 			 * is waiting for behind writes to flush */
+-			if (bitmap && write_behind &&
+-			    (atomic_read(&bitmap->behind_writes)
+-			     < mddev->bitmap_info.max_write_behind) &&
+-			    !waitqueue_active(&bitmap->behind_wait)) {
++			err = md_bitmap_get_stats(bitmap, &stats);
++			if (!err && write_behind && !stats.behind_wait &&
++			    stats.behind_writes < max_write_behind)
+ 				alloc_behind_master_bio(r1_bio, bio);
+-			}
  
+ 			md_bitmap_startwrite(bitmap, r1_bio->sector, r1_bio->sectors,
+ 					     test_bit(R1BIO_BehindIO, &r1_bio->state));
 -- 
 2.39.2
 
