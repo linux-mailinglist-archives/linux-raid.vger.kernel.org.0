@@ -1,164 +1,114 @@
-Return-Path: <linux-raid+bounces-2678-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-2681-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78551965760
-	for <lists+linux-raid@lfdr.de>; Fri, 30 Aug 2024 08:11:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 195DF96586A
+	for <lists+linux-raid@lfdr.de>; Fri, 30 Aug 2024 09:29:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 36EAF284251
-	for <lists+linux-raid@lfdr.de>; Fri, 30 Aug 2024 06:11:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4B5F41C2315D
+	for <lists+linux-raid@lfdr.de>; Fri, 30 Aug 2024 07:29:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13AC715099A;
-	Fri, 30 Aug 2024 06:11:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="JDfMqMoD";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="zUVLLfle";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="JDfMqMoD";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="zUVLLfle"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B44715C155;
+	Fri, 30 Aug 2024 07:28:42 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137E714C596;
-	Fri, 30 Aug 2024 06:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233301586CD;
+	Fri, 30 Aug 2024 07:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724998264; cv=none; b=grx4TdPsfhVI40vFJ2aXRI4hFbr3E5pjeY3GzjRNykes/yBTsnMdZrJHZM8Wspb5uaUGwlYHyBn4dWi+731WGWwc+b5vMLCovHUDbVafHNxX/7AB4x44ihJrZ24I+nHsiyKJQDzIDRU5Lv1cltFBQV8dFS6oMws3g3jn6Hi3TCU=
+	t=1725002921; cv=none; b=XJIBNZ2anFqCpBvw91Qn1uNhTa5RF0/hwd+wQHKrLpUblztdFw6yYoLh6FN2n3v1qJvcRA5ALjJEZlX8qc0voYNmBVuhlAEA/f4XUVtaby0iqBqrE3NuDrwiNEvymKgiwPOm/+ZB/Q2N0ARUwaPCFBClzswJrx/7/RBAOJOBmAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724998264; c=relaxed/simple;
-	bh=g5qiXH6/WtVjU3jF2wRxOveJ9MIcV4A0/6sKE7TEqiM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UA0Y0vdKDYFNHNG0Kh1jCSlA9KQAgh2aAFiqVLO6cRkYZs3JsvzN5CTcpRwePIq21oPB+gsamMfn9pOC8PsXR1ISn4Ne5oysBXa7rpmwGVs75WyhmJAleNzOYg+DZeXuZJIDpOdQ/JUjTerhzu8a8dtDsF4eLMPvzZyO22ml9JA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=JDfMqMoD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=zUVLLfle; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=JDfMqMoD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=zUVLLfle; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 3E5AB1F7A0;
-	Fri, 30 Aug 2024 06:11:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1724998261; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PwD1A+dPCAQTtJUtxAfsvK6ToX4dZSDfYvcEiw+etw4=;
-	b=JDfMqMoDN3c6QjxNybEbVOAxAyTIMbjnFSsak255GdZM+fsIXxggkCrMx5NOn/tq8LIrM9
-	H7BRPyZkKBfhWMMhTHMZOrRoLFf0iNYNnrS4j8wtHS73lbW54I23fkhc5aa1Lf28aiCIQE
-	bHW6GRFwLfibWZkVHGJnsz/uj7wkgkQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1724998261;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PwD1A+dPCAQTtJUtxAfsvK6ToX4dZSDfYvcEiw+etw4=;
-	b=zUVLLfleivqOuGeSvJTH7GvjB4icviBsxydl1mNXu1N+xYMn48Amd+PjTIgLVBQYFC1zHF
-	PucOn+V7bEmJ5OAQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1724998261; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PwD1A+dPCAQTtJUtxAfsvK6ToX4dZSDfYvcEiw+etw4=;
-	b=JDfMqMoDN3c6QjxNybEbVOAxAyTIMbjnFSsak255GdZM+fsIXxggkCrMx5NOn/tq8LIrM9
-	H7BRPyZkKBfhWMMhTHMZOrRoLFf0iNYNnrS4j8wtHS73lbW54I23fkhc5aa1Lf28aiCIQE
-	bHW6GRFwLfibWZkVHGJnsz/uj7wkgkQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1724998261;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PwD1A+dPCAQTtJUtxAfsvK6ToX4dZSDfYvcEiw+etw4=;
-	b=zUVLLfleivqOuGeSvJTH7GvjB4icviBsxydl1mNXu1N+xYMn48Amd+PjTIgLVBQYFC1zHF
-	PucOn+V7bEmJ5OAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C905513A3D;
-	Fri, 30 Aug 2024 06:11:00 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id xq8TL3Ri0WYoTQAAD6G6ig
-	(envelope-from <hare@suse.de>); Fri, 30 Aug 2024 06:11:00 +0000
-Message-ID: <4dfed593-5b0c-4565-a6dd-108f1b1fe961@suse.de>
-Date: Fri, 30 Aug 2024 08:11:00 +0200
+	s=arc-20240116; t=1725002921; c=relaxed/simple;
+	bh=C2XbD7UCV3dLEwUkE9B8HkZu1UETNiUlfpNP4DFVeh4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sVdOix1DTPzmDjQkxsxwPV68AyNaly0Tm13bq9P93cH9l6dxte3dAClyXIWuWxoJlwiqnbwLON44Md3CJqB61dmJwxdjyZzXPXADFmx3xybIDUTGSI+QGOCAnFT+So+8GaQZ85WwZk/KucIQs/KUZ8Sh52KcnmALmawJig4QDVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Ww8rn66Dnz4f3jkv;
+	Fri, 30 Aug 2024 15:28:25 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id E09A41A07B6;
+	Fri, 30 Aug 2024 15:28:35 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgAHL4WhdNFmxAd_DA--.47391S4;
+	Fri, 30 Aug 2024 15:28:35 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: mariusz.tkaczyk@intel.com,
+	song@kernel.org
+Cc: linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai3@huawei.com,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH md-6.12 0/7] md: enhance faulty chekcing for blocked handling
+Date: Fri, 30 Aug 2024 15:27:14 +0800
+Message-Id: <20240830072721.2112006-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] fs: drop GFP_NOFAIL mode from alloc_page_buffers
-Content-Language: en-US
-To: Jan Kara <jack@suse.cz>, Michal Hocko <mhocko@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-raid@vger.kernel.org,
- linux-kernel@vger.kernel.org, Song Liu <song@kernel.org>,
- Yu Kuai <yukuai3@huawei.com>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Michal Hocko <mhocko@suse.com>
-References: <20240829130640.1397970-1-mhocko@kernel.org>
- <20240829191746.tsrojxj3kntt4jhp@quack3>
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20240829191746.tsrojxj3kntt4jhp@quack3>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.997];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,suse.com:email,imap1.dmz-prg2.suse.org:helo,suse.cz:email]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+X-CM-TRANSID:gCh0CgAHL4WhdNFmxAd_DA--.47391S4
+X-Coremail-Antispam: 1UD129KBjvJXoWrtF48Kr1fGr4fAr4UXF4xWFg_yoW8JF4rpw
+	sIga43Zr1UWr13X3ZxZF4UGryrWw18JFW3ArsrKw18W3yUZryxJa1kJ3WrWryYgryavws0
+	qF15GrZ3WFy5Ca7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUYCJmUU
+	UUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On 8/29/24 21:17, Jan Kara wrote:
-> On Thu 29-08-24 15:06:40, Michal Hocko wrote:
->> From: Michal Hocko <mhocko@suse.com>
->>
->> There is only one called of alloc_page_buffers and it doesn't require
->> __GFP_NOFAIL so drop this allocation mode.
->>
->> Signed-off-by: Michal Hocko <mhocko@suse.com>
-> 
-> Looks good. Feel free to add:
-> 
-> Reviewed-by: Jan Kara <jack@suse.cz>
-> 
-> Although even better fix would be to convert the last remaining caller of
-> alloc_page_buffers() to folio_alloc_buffers()... But that may be more
-> difficult.
-> 
-Already done by Pankajs large-block patchset, currently staged in vfs.git.
+From: Yu Kuai <yukuai3@huawei.com>
 
-Cheers,
+The lifetime of badblocks:
 
-Hannes
+- IO error, and decide to record badblocks, and record sb_flags;
+- write IO found rdev has badblocks and not yet acknowledged, then this
+IO is blocked;
+- daemon found sb_flags is set, update superblock and flush badblocks;
+- write IO continue;
+
+Main idea is that badblocks will be set in memory fist, before badblocks
+are acknowledged, new write request must be blocked to prevent reading
+old data after power failure, and this behaviour is not necessary if rdev
+is faulty in the first place.
+
+Yu Kuai (7):
+  md: add a new helper rdev_blocked()
+  md: don't wait faulty rdev in md_wait_for_blocked_rdev()
+  md: don't record new badblocks for faulty rdev
+  md/raid1: factor out helper to handle blocked rdev from
+    raid1_write_request()
+  md/raid1: don't wait for Faulty rdev in wait_blocked_rdev()
+  md/raid10: don't wait for Faulty rdev in wait_blocked_rdev()
+  md/raid5: don't set Faulty rdev for blocked_rdev
+
+ drivers/md/md.c     |  8 +++--
+ drivers/md/md.h     | 24 +++++++++++++++
+ drivers/md/raid1.c  | 75 +++++++++++++++++++++++----------------------
+ drivers/md/raid10.c | 40 +++++++++++-------------
+ drivers/md/raid5.c  | 13 ++++----
+ 5 files changed, 92 insertions(+), 68 deletions(-)
+
 -- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+2.39.2
 
 
