@@ -1,42 +1,43 @@
-Return-Path: <linux-raid+bounces-2681-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-2679-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 195DF96586A
-	for <lists+linux-raid@lfdr.de>; Fri, 30 Aug 2024 09:29:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD261965865
+	for <lists+linux-raid@lfdr.de>; Fri, 30 Aug 2024 09:28:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4B5F41C2315D
-	for <lists+linux-raid@lfdr.de>; Fri, 30 Aug 2024 07:29:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DFB911F21927
+	for <lists+linux-raid@lfdr.de>; Fri, 30 Aug 2024 07:28:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B44715C155;
-	Fri, 30 Aug 2024 07:28:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30CDB155332;
+	Fri, 30 Aug 2024 07:28:41 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233301586CD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F40E1586D0;
 	Fri, 30 Aug 2024 07:28:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725002921; cv=none; b=XJIBNZ2anFqCpBvw91Qn1uNhTa5RF0/hwd+wQHKrLpUblztdFw6yYoLh6FN2n3v1qJvcRA5ALjJEZlX8qc0voYNmBVuhlAEA/f4XUVtaby0iqBqrE3NuDrwiNEvymKgiwPOm/+ZB/Q2N0ARUwaPCFBClzswJrx/7/RBAOJOBmAo=
+	t=1725002921; cv=none; b=UcGyp90fbay0StfXjJEXZVaG3pRZR53li4+GoQmnjzGLatSNGunB4QGScFJHwy3Y5LWFPKoZWcHcreU2CWExsiTni0+MK68Ba0VYC3H7G7azk17sPOO6LKUK5V1NrinBi5lNuVOXXgqZy2r6OHu32Ld5wgjW2cgK0N8tdinouaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1725002921; c=relaxed/simple;
-	bh=C2XbD7UCV3dLEwUkE9B8HkZu1UETNiUlfpNP4DFVeh4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sVdOix1DTPzmDjQkxsxwPV68AyNaly0Tm13bq9P93cH9l6dxte3dAClyXIWuWxoJlwiqnbwLON44Md3CJqB61dmJwxdjyZzXPXADFmx3xybIDUTGSI+QGOCAnFT+So+8GaQZ85WwZk/KucIQs/KUZ8Sh52KcnmALmawJig4QDVA=
+	bh=attVgK11ki1hQ05AyqN2qN9lo6ovOyONuf46lry9MhY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=haReIn803B6R8tkmzcTsPjQyUO+TyxRIrFNquU4TJpG33dhZv98n80Jvn0M8PnlXUEumqjzfsXA1f/EiAerLqFHpaIiqf30RnXDkWJZsDD+IzhNFydz2xySHbpxWXBMMjSn3uYl6S17WX6X+gBK4QiEDCP/I8txkpPiqrBJ96mo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Ww8rn66Dnz4f3jkv;
-	Fri, 30 Aug 2024 15:28:25 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Ww8rp1K9yz4f3jqZ;
+	Fri, 30 Aug 2024 15:28:26 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id E09A41A07B6;
-	Fri, 30 Aug 2024 15:28:35 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 3E6F91A058E;
+	Fri, 30 Aug 2024 15:28:36 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgAHL4WhdNFmxAd_DA--.47391S4;
-	Fri, 30 Aug 2024 15:28:35 +0800 (CST)
+	by APP4 (Coremail) with SMTP id gCh0CgAHL4WhdNFmxAd_DA--.47391S5;
+	Fri, 30 Aug 2024 15:28:36 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: mariusz.tkaczyk@intel.com,
 	song@kernel.org
@@ -46,10 +47,12 @@ Cc: linux-raid@vger.kernel.org,
 	yukuai1@huaweicloud.com,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com
-Subject: [PATCH md-6.12 0/7] md: enhance faulty chekcing for blocked handling
-Date: Fri, 30 Aug 2024 15:27:14 +0800
-Message-Id: <20240830072721.2112006-1-yukuai1@huaweicloud.com>
+Subject: [PATCH md-6.12 1/7] md: add a new helper rdev_blocked()
+Date: Fri, 30 Aug 2024 15:27:15 +0800
+Message-Id: <20240830072721.2112006-2-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240830072721.2112006-1-yukuai1@huaweicloud.com>
+References: <20240830072721.2112006-1-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
@@ -57,57 +60,71 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAHL4WhdNFmxAd_DA--.47391S4
-X-Coremail-Antispam: 1UD129KBjvJXoWrtF48Kr1fGr4fAr4UXF4xWFg_yoW8JF4rpw
-	sIga43Zr1UWr13X3ZxZF4UGryrWw18JFW3ArsrKw18W3yUZryxJa1kJ3WrWryYgryavws0
-	qF15GrZ3WFy5Ca7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
-	JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUYCJmUU
-	UUU
+X-CM-TRANSID:gCh0CgAHL4WhdNFmxAd_DA--.47391S5
+X-Coremail-Antispam: 1UD129KBjvJXoW7AFWDAF47Gr1DJr47Kr45Jrb_yoW8GrW8pa
+	n3WFW5tw1UCr17W3ZIgF1UCa45Xw1FyFW0kFW3t3y7Xa4UG3yfWanYgrWUJrykXrWfXrsI
+	qF43GrW8CFyfXF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBG14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+	x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWUAVWUtw
+	CF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64
+	vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0x
+	vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUfDGrUUUUU=
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-The lifetime of badblocks:
+The helper will be used in later patches for raid1/raid10/raid5, the
+difference is that Faulty rdev with unacknowledged bad block will not
+be considered blocked.
 
-- IO error, and decide to record badblocks, and record sb_flags;
-- write IO found rdev has badblocks and not yet acknowledged, then this
-IO is blocked;
-- daemon found sb_flags is set, update superblock and flush badblocks;
-- write IO continue;
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+---
+ drivers/md/md.h | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-Main idea is that badblocks will be set in memory fist, before badblocks
-are acknowledged, new write request must be blocked to prevent reading
-old data after power failure, and this behaviour is not necessary if rdev
-is faulty in the first place.
-
-Yu Kuai (7):
-  md: add a new helper rdev_blocked()
-  md: don't wait faulty rdev in md_wait_for_blocked_rdev()
-  md: don't record new badblocks for faulty rdev
-  md/raid1: factor out helper to handle blocked rdev from
-    raid1_write_request()
-  md/raid1: don't wait for Faulty rdev in wait_blocked_rdev()
-  md/raid10: don't wait for Faulty rdev in wait_blocked_rdev()
-  md/raid5: don't set Faulty rdev for blocked_rdev
-
- drivers/md/md.c     |  8 +++--
- drivers/md/md.h     | 24 +++++++++++++++
- drivers/md/raid1.c  | 75 +++++++++++++++++++++++----------------------
- drivers/md/raid10.c | 40 +++++++++++-------------
- drivers/md/raid5.c  | 13 ++++----
- 5 files changed, 92 insertions(+), 68 deletions(-)
-
+diff --git a/drivers/md/md.h b/drivers/md/md.h
+index 5d2e6bd58e4d..4ba93af36126 100644
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -1002,6 +1002,30 @@ static inline void mddev_trace_remap(struct mddev *mddev, struct bio *bio,
+ 		trace_block_bio_remap(bio, disk_devt(mddev->gendisk), sector);
+ }
+ 
++static inline bool rdev_blocked(struct md_rdev *rdev)
++{
++	/*
++	 * Blocked will be set by error handler and cleared by daemon after
++	 * updating superblock, meanwhile write IO should be blocked to prevent
++	 * reading old data after power failure.
++	 */
++	if (test_bit(Blocked, &rdev->flags))
++		return true;
++
++	/*
++	 * Faulty device should not be accessed anymore, there is no need to
++	 * wait for bad block to be acknowledged.
++	 */
++	if (test_bit(Faulty, &rdev->flags))
++		return false;
++
++	/* rdev is blocked by badblocks. */
++	if (test_bit(BlockedBadBlocks, &rdev->flags))
++		return true;
++
++	return false;
++}
++
+ #define mddev_add_trace_msg(mddev, fmt, args...)			\
+ do {									\
+ 	if (!mddev_is_dm(mddev))					\
 -- 
 2.39.2
 
