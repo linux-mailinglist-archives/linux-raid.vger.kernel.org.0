@@ -1,68 +1,68 @@
-Return-Path: <linux-raid+bounces-2753-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-2754-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 620C8974DA0
-	for <lists+linux-raid@lfdr.de>; Wed, 11 Sep 2024 10:56:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0078C974DA1
+	for <lists+linux-raid@lfdr.de>; Wed, 11 Sep 2024 10:56:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 943E71C21074
-	for <lists+linux-raid@lfdr.de>; Wed, 11 Sep 2024 08:56:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E0321C2174D
+	for <lists+linux-raid@lfdr.de>; Wed, 11 Sep 2024 08:56:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B1D5183CAB;
-	Wed, 11 Sep 2024 08:55:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 918F21547CF;
+	Wed, 11 Sep 2024 08:55:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ReQ6g4Cu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ahV2asOh"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA3A17F500
-	for <linux-raid@vger.kernel.org>; Wed, 11 Sep 2024 08:55:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26091714A1
+	for <linux-raid@vger.kernel.org>; Wed, 11 Sep 2024 08:55:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726044913; cv=none; b=TOsrl3rFcJQBBcLOVhml9sv4Wy05K/CdUwr8MIrwp/A1dbL3lTTbBFQR8nMtLpq/B5YDljB6mn/xLHThkNVSI9dh+NrKFRWzaFwbtBsu/sFAcBxlAbSjyMUMhej4GE8iQ1g61h4s4WHdLpkBhg7UTxzUGKbbIm4W5tWqKK49t+Q=
+	t=1726044916; cv=none; b=lFpkERdafvqVLZuMfkjJuPSIrjQvUNsKK1KZH6V7hb2c1WJfzM3f3gSWWM1kp+Or60Kziecuk9qgFSyq0oaBSs1dOIXV0SJvqZ+XTTDfihitPbjWbS06wenz/2bxpEQtAg0vxzi5tSBfnL1WmJS8vymmZTjwKFKbOIXjlqhvXb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726044913; c=relaxed/simple;
-	bh=8PqiUkFVBO/ty1x89DfvANMtc9MNw1bLGJfMq5PzzOc=;
+	s=arc-20240116; t=1726044916; c=relaxed/simple;
+	bh=vKFkNuEedEjjKQPRKZIOznDQ6HPCvciNpWM/fv8O0lE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KxJAQ38SKDNKolvB6kpyUb/arXEzugZw6DG6iHTdz32unSfx4qnwt9ldvWRYVtjNMX/zQXBRrpItBKk7QUq3a48BzOOvLen3qrS+0nvxrMgUU72TT1x7D522OYbOrd7kiGbDnU1aYthmtp9f+t542sRJgtEr62XViw0U6PTvkuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ReQ6g4Cu; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=KDXT9qhaHN8XUBbKvEbWwowt+YbE7o1TGVLjlN00v9Qd0450+9DsaUfwGbIEwzHGXhc1glrbHuWNXnwhw2sFKas7XiGOR2xxgwLFhhB4K14sv6VK6rFpLm4h3patnSji6GKVKqpxDbWFrwLb7rqGMbIU8pPspDXh3ynFNWOrmAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ahV2asOh; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1726044910;
+	s=mimecast20190719; t=1726044913;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1hTP7jiUhayaW8uExnNuDO1aX1pMU5eDC1T6UohjVIo=;
-	b=ReQ6g4CubCIUxIM3siDa5X0SBH6hmJErBUSbCcibGwqJyvRYkIOO9LsqK45aE6JIeQHg+x
-	YYnGLWNTwE8NiTpOdHyvGv1oHqTGypW/BohTXkDlrdu5z6oV8eqJQR2gODlx1Jfi1lAHXv
-	fAcIppfx3D2n5fn+sKeGf3NZAY3J8sg=
+	bh=wO51OinyxmL8YM6r78uSv88XCuoLuUrLG9NsHQWm1ZM=;
+	b=ahV2asOhWwZSUvQzUmvMiI/1TxbHkJcw3H7Qk+6piEiw8abOZJ9aGnStmj3rruM9YerGg0
+	bh5xw7JdHHFs1R5HD7PR0P9+aEbik92SPx0TMiw6FpDHhaza/YttZkPE9maHTPlVbkxtVl
+	gYBH3IGNmWte8CCh3Q/o0s9vUlbqBwQ=
 Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-371-b65YinnBPG6Laa2r2rD2lQ-1; Wed,
- 11 Sep 2024 04:55:07 -0400
-X-MC-Unique: b65YinnBPG6Laa2r2rD2lQ-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-558-zvFk1B6tMnu3QM1k36XoQA-1; Wed,
+ 11 Sep 2024 04:55:10 -0400
+X-MC-Unique: zvFk1B6tMnu3QM1k36XoQA-1
 Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 390951958B1D;
-	Wed, 11 Sep 2024 08:55:06 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B38951955DC1;
+	Wed, 11 Sep 2024 08:55:09 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.72.120.25])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 909C01956086;
-	Wed, 11 Sep 2024 08:55:03 +0000 (UTC)
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 10D7B1956086;
+	Wed, 11 Sep 2024 08:55:06 +0000 (UTC)
 From: Xiao Ni <xni@redhat.com>
 To: mariusz.tkaczyk@linux.intel.com
 Cc: linux-raid@vger.kernel.org,
 	ncroxon@redhat.com
-Subject: [PATCH 08/10] mdadm/tests: 07testreshape5 fix
-Date: Wed, 11 Sep 2024 16:54:30 +0800
-Message-Id: <20240911085432.37828-9-xni@redhat.com>
+Subject: [PATCH 09/10] mdadm/tests: remove 09imsm-assemble.broken
+Date: Wed, 11 Sep 2024 16:54:31 +0800
+Message-Id: <20240911085432.37828-10-xni@redhat.com>
 In-Reply-To: <20240911085432.37828-1-xni@redhat.com>
 References: <20240911085432.37828-1-xni@redhat.com>
 Precedence: bulk
@@ -74,44 +74,25 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Init dir to avoid test failure.
+09imsm-assemble can run successfully.
 
 Signed-off-by: Xiao Ni <xni@redhat.com>
 ---
- tests/07testreshape5        |  1 +
- tests/07testreshape5.broken | 12 ------------
- 2 files changed, 1 insertion(+), 12 deletions(-)
- delete mode 100644 tests/07testreshape5.broken
+ tests/09imsm-assemble.broken | 6 ------
+ 1 file changed, 6 deletions(-)
+ delete mode 100644 tests/09imsm-assemble.broken
 
-diff --git a/tests/07testreshape5 b/tests/07testreshape5
-index 0e1f25f98bc8..d90fd15e0e61 100644
---- a/tests/07testreshape5
-+++ b/tests/07testreshape5
-@@ -4,6 +4,7 @@
- # kernel md code to move data into and out of variously
- # shaped md arrays.
- set -x
-+dir="."
- layouts=(la ra ls rs)
- for level in 5 6
- do
-diff --git a/tests/07testreshape5.broken b/tests/07testreshape5.broken
-index a8ce03e491b3..000000000000
---- a/tests/07testreshape5.broken
+diff --git a/tests/09imsm-assemble.broken b/tests/09imsm-assemble.broken
+index a6d4d5cf911b..000000000000
+--- a/tests/09imsm-assemble.broken
 +++ /dev/null
-@@ -1,12 +0,0 @@
--always fails
+@@ -1,6 +0,0 @@
+-fails infrequently
 -
--Test seems to run 'test_stripe' at $dir directory, but $dir is never
--set. If $dir is adjusted to $PWD, the test still fails with:
+-Fails roughly 1 in 10 runs with errors:
 -
--    mdadm: /dev/loop2 is not suitable for this array.
--    mdadm: create aborted
--    ++ return 1
--    ++ cmp -s -n 8192 /dev/md0 /tmp/RandFile
--    ++ echo cmp failed
--    cmp failed
--    ++ exit 2
+-    mdadm: /dev/loop2 is still in use, cannot remove.
+-    /dev/loop2 removal from /dev/md/container should have succeeded
 -- 
 2.32.0 (Apple Git-132)
 
