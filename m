@@ -1,320 +1,139 @@
-Return-Path: <linux-raid+bounces-2841-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-2844-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6EC5798ADFE
-	for <lists+linux-raid@lfdr.de>; Mon, 30 Sep 2024 22:18:25 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EECFF98AE2B
+	for <lists+linux-raid@lfdr.de>; Mon, 30 Sep 2024 22:23:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 26F3C1F21894
-	for <lists+linux-raid@lfdr.de>; Mon, 30 Sep 2024 20:18:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 69084B23E48
+	for <lists+linux-raid@lfdr.de>; Mon, 30 Sep 2024 20:23:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57E911AD410;
-	Mon, 30 Sep 2024 20:14:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C72871A2577;
+	Mon, 30 Sep 2024 20:22:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z7Cjk+Gp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MGpW3wqZ"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B101A19F10E
-	for <linux-raid@vger.kernel.org>; Mon, 30 Sep 2024 20:14:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009DF1A256A
+	for <linux-raid@vger.kernel.org>; Mon, 30 Sep 2024 20:22:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727727286; cv=none; b=G2RRoN5TE3l78vl7QAx+7OImSEGFCBKneXaYTRqyrq4htB0bVZwh/pac9C30kCZOArMEsmc+axdkiEb3Yg0yjv70cVI3VWfjdmpXvVT7+72pWVmInIgZp2riT2sLDOlDrYaYCrqqU3f4lPomb0ryxFIX4fBH104N6DXoy9zG92k=
+	t=1727727772; cv=none; b=TcXfVo+tjj6VUAW69POLmErluQfFO7y7naX1LDWLieGKHv50jrZAsDV8meWfUb/Vs0yqDoZVlny/Qv6zXf1yjB97kPpz4N86FB/WlG5LSxEXEgMzMTEtrtThnyRLHxLzKxzh29xkVWKmQ6Mpv+w9Cwm1TMDS2YZVOTOIxQH7Pvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727727286; c=relaxed/simple;
-	bh=IRo7YIBWvmWZSfbq3JDjRGZXVyg8r2TXLVMBFb95yFo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aCcoHvB7fkYtXcGOjtXEujRmHChL/VNBqchYyPj7BwG+yWQhjcXODB+F26tEjLIWGZE9IA1VHEcskgEYGCw+3ul2AxGa84rSIjZhcAmd4ZR/z0o4mLXeAz+makkzyN7Z/2Vr/Y0jQI0MPt9HuYvL7idJjj15U76EBbmixyq/pOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z7Cjk+Gp; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1727727772; c=relaxed/simple;
+	bh=kMZH+xLU9w/w+jErL7nAUzTIjTaixU+hbZdI5UMjEAs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LlAC2AAabhcN2w6TFTBSmdd97BE/znVDo6phi5RNT8hDCXKeTw7QStkijko4+hoGktZXF6QuLf3aWsP35QEYDqmJKfOTEwwHigddixR2E5PB1dC6xyoxYrscgM0Ra0jnn5wLK6w2NGljcjHUY8zypudBJgN+AAqJxWjt8xLuLc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MGpW3wqZ; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1727727281;
+	s=mimecast20190719; t=1727727769;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UebUkHvPnMtBUbbevfLUYqoky+XpU/uj6FMG7w5VMyQ=;
-	b=Z7Cjk+GpKLFjnTCavNJJIux7K5BLzKXIamZoAWL3W8WaOJznXMrXHgcGPkbAI/PY7V6Rz2
-	jSXZ2EPf/babjbQJISqegJAYrK/gSz2deoG0o010XbLp7tVGYjR7iQz6KZ/fF6OfRViHDI
-	CXszNZVaz5F44o74YDAlfzMnBk4cuGI=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-612-0RCV3U_SO827I_4OGqQh-A-1; Mon,
- 30 Sep 2024 16:14:40 -0400
-X-MC-Unique: 0RCV3U_SO827I_4OGqQh-A-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (unknown [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 05F811955F09;
-	Mon, 30 Sep 2024 20:14:38 +0000 (UTC)
-Received: from fs-i40c-03.mgmt.fast.eng.rdu2.dc.redhat.com (unknown [10.6.24.150])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 96A921955DC7;
-	Mon, 30 Sep 2024 20:14:35 +0000 (UTC)
-From: Alexander Aring <aahringo@redhat.com>
-To: teigland@redhat.com
-Cc: gfs2@lists.linux.dev,
-	song@kernel.org,
-	yukuai3@huawei.com,
-	agruenba@redhat.com,
-	mark@fasheh.com,
-	jlbec@evilplan.org,
-	joseph.qi@linux.alibaba.com,
-	gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org,
-	linux-raid@vger.kernel.org,
-	ocfs2-devel@lists.linux.dev,
-	netdev@vger.kernel.org,
-	vvidic@valentin-vidic.from.hr,
-	heming.zhao@suse.com,
-	lucien.xin@gmail.com,
-	donald.hunter@gmail.com,
-	aahringo@redhat.com
-Subject: [PATCHv2 dlm/next 12/12] gfs2: separate mount context by net-namespaces
-Date: Mon, 30 Sep 2024 16:13:58 -0400
-Message-ID: <20240930201358.2638665-13-aahringo@redhat.com>
-In-Reply-To: <20240930201358.2638665-1-aahringo@redhat.com>
-References: <20240930201358.2638665-1-aahringo@redhat.com>
+	bh=SVaqJm7tLoF1HWWT2ray8rPf/j7gC0aKBR8MDdz/TH4=;
+	b=MGpW3wqZraBFuul1MtMDJThpJNLdF0TQbnX4rZPU5zmFMKKuhrXqXYz+mQ3atnFypJamnv
+	GP5R2l/GIVnNto8MVZzDC7Pt8dq/a8ujYXe4dKD0r1SKQO8obHcfzX8oxm6DtE9CB7US9g
+	mOxJWvhTcYwASEvsbtX8Yjg1atOUR14=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-271-D8wrNIxQPE6e3Brafw8xiQ-1; Mon, 30 Sep 2024 16:22:48 -0400
+X-MC-Unique: D8wrNIxQPE6e3Brafw8xiQ-1
+Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2fac931e7c6so12219811fa.3
+        for <linux-raid@vger.kernel.org>; Mon, 30 Sep 2024 13:22:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727727767; x=1728332567;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SVaqJm7tLoF1HWWT2ray8rPf/j7gC0aKBR8MDdz/TH4=;
+        b=m+YvdWVqdGIj20qVKPSybdEaS+9LMwsJDbj3j3z4USRPAuys9Y66r/YMLhCOZpLNYb
+         VfsiHAyDLHHWgLWnAm15lfDU7kXcu4nR59tvefRM3/zfGkPaYqd7Yws8dTaCHlpIKEu4
+         fHHIdV7dzTKlkf9GgyjdEBYfowtBcoI45oMQqjG6KmnFSPXpax0PedBok0kDd2WaNOcG
+         jUIFfJiKJ00LRr6WD+0UYsNWQckfl4CaeFNfMpE4IPcxnH4/cZDVoJzMQc31qaC1r8la
+         gdQBKJodtmyPde21/g7X0BNKgss3u/cK5eLwPKGsxiCXlOpqRBhOjGwLiaI31Q2jcRZg
+         pSEw==
+X-Forwarded-Encrypted: i=1; AJvYcCUMBrwxk40XYZi1ritNAGS+697D83W8UcH41nI4xVVN9rr1lRZs8cxZtsB8yyE8s9yTy/OoqfZ3p29C@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+mLN646BoKt6+Jt1oFybJRFWRTZSdx9ijCDhVxU4HITL0cyF3
+	jiOlwtqGls/m0OOFfgq6FfhMXcGEWnaN05cFfOO3Uu6XegUuXOvp/CfbVGAkeNBclppGNaO11gb
+	ezKPv+Dp1V0sG3CsZmzpXoFR0Rav0ZbCHhp5g6O4HxKEFMVSRPIO9xXK7SpDjP1rKXWDH/y/ZqJ
+	HLuVWJuagwvYXkLUaHBc49SCmrW7eRn2a5sw==
+X-Received: by 2002:a2e:a58d:0:b0:2ef:2cdb:5055 with SMTP id 38308e7fff4ca-2f9d3e56140mr78848841fa.20.1727727766773;
+        Mon, 30 Sep 2024 13:22:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHOED+J7NIK671EAM5WNjgF/ITexh9huIebyGUKOqbFC6PtuFqTW3MFJhR+aLaTHS/W0tzN6SptNXddUS+y8JA=
+X-Received: by 2002:a2e:a58d:0:b0:2ef:2cdb:5055 with SMTP id
+ 38308e7fff4ca-2f9d3e56140mr78848661fa.20.1727727766316; Mon, 30 Sep 2024
+ 13:22:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+References: <20240930201358.2638665-1-aahringo@redhat.com> <20240930201358.2638665-12-aahringo@redhat.com>
+In-Reply-To: <20240930201358.2638665-12-aahringo@redhat.com>
+From: Alexander Aring <aahringo@redhat.com>
+Date: Mon, 30 Sep 2024 16:22:34 -0400
+Message-ID: <CAK-6q+h2-APvPUUDYgjGx2FzeJVkeAzH5Br+27A6bZyztfD5mA@mail.gmail.com>
+Subject: Re: [PATCHv2 dlm/next 11/12] dlm: add nldlm net-namespace aware UAPI
+To: teigland@redhat.com
+Cc: gfs2@lists.linux.dev, song@kernel.org, yukuai3@huawei.com, 
+	agruenba@redhat.com, mark@fasheh.com, jlbec@evilplan.org, 
+	joseph.qi@linux.alibaba.com, gregkh@linuxfoundation.org, rafael@kernel.org, 
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
+	linux-raid@vger.kernel.org, ocfs2-devel@lists.linux.dev, 
+	netdev@vger.kernel.org, vvidic@valentin-vidic.from.hr, heming.zhao@suse.com, 
+	lucien.xin@gmail.com, donald.hunter@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This patch changes gfs2 to be the first user of the recently introduced
-net-namespace feature of DLM. It uses the current net-namespace context
-of the get_tree() callback of "struct fs_context_operations" that is
-e.g. being called by syscalls of the coreutils mount process.
+Hi,
 
-Debugfs is being disabled for non "init_net" net-namespaces as debugfs
-is not net-namespace aware. Otherwise we would see kernel log error
-messages about existing debugfs entries. There might be in future
-another ways to get similar information with an UAPI mechanism that is
-namespace aware.
+On Mon, Sep 30, 2024 at 4:14=E2=80=AFPM Alexander Aring <aahringo@redhat.co=
+m> wrote:
+>
+> Recent patches introduced support to separate DLM lockspaces on a per
+> net-namespace basis. Currently the file based configfs mechanism is used
+> to configure parts of DLM. Due the lack of namespace awareness (and it's
+> probably complicated to add support for this) in configfs we introduce a
+> socket based UAPI using "netlink". As the DLM subsystem offers now a
+> config layer it can simultaneously being used with configfs, just that
+> nldlm is net-namespace aware.
+>
+> Most of the current configfs functionality that is necessary to
+> configure DLM is being adapted for now. The nldlm netlink interface
+> offers also a multicast group for lockspace events NLDLM_MCGRP_EVENT.
+> This event group can be used as alternative to the already existing udev
+> event behaviour just it only contains DLM related subsystem events.
+>
+> Attributes e.g. nodeid, port, IP addresses are expected from the user
+> space to fill those numbers as they appear on the wire. In case of DLM
+> fields it is using little endian byte order.
+>
+> The dumps are being designed to scale in future with high numbers of
+> members in a lockspace. E.g. dump members require an unique lockspace
+> identifier (currently only the name) and nldlm is using a netlink dump
+> behaviour to be prepared if all entries may not fit into one netlink
+> message.
+>
+> Signed-off-by: Alexander Aring <aahringo@redhat.com>
+> ---
+>  Documentation/netlink/specs/nldlm.yaml |  438 ++++++++
+>  fs/dlm/Makefile                        |    2 +
+>  fs/dlm/config.c                        |   20 +-
+>  fs/dlm/dlm_internal.h                  |    4 +
+>  fs/dlm/lockspace.c                     |   13 +-
+>  fs/dlm/netlink2.c                      | 1330 ++++++++++++++++++++++++
 
-With this patch you can setup a cluster in one machine without using
-multiple Linux kernel instances. The idea is to use this for
-developing/testing as a first use-case. Especially scale testing, a gfs2
-file system with a lot of members can be setup without running a large
-set of virtual machines.
+and this file shouldn't be there anymore. Will be dropped in v3.
 
-There is a small example script how it works:
-
-https://gitlab.com/netcoder/gfs2ns-examples/-/blob/main/three_nodes
-
-it uses multiple loop block devices references to the same file to
-provide a kind of shared block device (an alternative could be using dm
-linear mapping, but loop block device also works). After setting up
-multiple net-namespaces with a virtual bridge interface DLM can be
-configured by using nldlmd that is using the recently introduced
-net-namespace aware nldlm netlink API. Over a shell command like:
-
-ip netns exec node1 sh -c "mount /dev/loop1 /cluster/node1"
-ip netns exec node2 sh -c "mount /dev/loop2 /cluster/node2"
-...
-
-every cluster "node" (hereby identifier with a "node#" string in the
-iproute2 namespace management mechanism) can mount the shared block
-device e.g. /dev/loop1, /dev/loop# that references to the same block
-image on a different file system. Note that the caller in the script
-will be unmount the file system if the last user left the namespace. I
-currently workaround this use case by mountbind each block device again
-in a kind of "default" namespace (usually it should be where "init_net"
-references to).
-
-Then each mountpoint of "/cluster/node#" acts like being a cluster node
-access to the gfs2 file system with DLM locking enabled. This offers us
-new possibilities to write testcases as we operate on a single machine
-and can "easier" synchronize vfs syscalls in our testcase as no
-"remote machine" kind network communication is being involved.
-
-The mount sysfs directory for gfs2 needs to be separated by
-net-namespace as our mount call is from namespace view separated and be
-treated as per "node" (machine) call. Otherwise we would run into
-conflicts on files/directories that already exists as the cluster wide
-unique identifiers are already being in use.
-
-The gfs2 file system has some global variables and it seems it is not
-necessary to separate them by net-namespace as they store a unique per
-mount identifier. I didn't had problems yet and it seems it is currently
-okay to do that, otherwise there might be issues with "things" that are
-not net-namespace aware in gfs2 yet. However we only should find issues
-only when we using net-namespaces. If a user only uses "init_net" as
-this is the current default, there should not be any problems.
-
-Signed-off-by: Alexander Aring <aahringo@redhat.com>
----
- fs/gfs2/glock.c      |  8 ++++++++
- fs/gfs2/incore.h     |  2 ++
- fs/gfs2/lock_dlm.c   |  2 +-
- fs/gfs2/ops_fstype.c |  5 +++++
- fs/gfs2/sys.c        | 35 ++++++++++++++++++++++++++++++++++-
- 5 files changed, 50 insertions(+), 2 deletions(-)
-
-diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
-index 269c3bc7fced..8c2d715485ef 100644
---- a/fs/gfs2/glock.c
-+++ b/fs/gfs2/glock.c
-@@ -2901,6 +2901,10 @@ DEFINE_SEQ_ATTRIBUTE(gfs2_sbstats);
- 
- void gfs2_create_debugfs_file(struct gfs2_sbd *sdp)
- {
-+	/* debugfs is only available for init_net users */
-+	if (!net_eq(read_pnet(&sdp->net), &init_net))
-+		return;
-+
- 	sdp->debugfs_dir = debugfs_create_dir(sdp->sd_table_name, gfs2_root);
- 
- 	debugfs_create_file("glocks", S_IFREG | S_IRUGO, sdp->debugfs_dir, sdp,
-@@ -2918,6 +2922,10 @@ void gfs2_create_debugfs_file(struct gfs2_sbd *sdp)
- 
- void gfs2_delete_debugfs_file(struct gfs2_sbd *sdp)
- {
-+	/* debugfs is only available for init_net users */
-+	if (!net_eq(read_pnet(&sdp->net), &init_net))
-+		return;
-+
- 	debugfs_remove_recursive(sdp->debugfs_dir);
- 	sdp->debugfs_dir = NULL;
- }
-diff --git a/fs/gfs2/incore.h b/fs/gfs2/incore.h
-index aa4ef67a34e0..1273ef3dbef5 100644
---- a/fs/gfs2/incore.h
-+++ b/fs/gfs2/incore.h
-@@ -710,6 +710,8 @@ struct gfs2_sbd {
- 
- 	/* Lock Stuff */
- 
-+	possible_net_t net;
-+	netns_tracker tracker;	/* keep track of net references */
- 	struct lm_lockstruct sd_lockstruct;
- 	struct gfs2_holder sd_live_gh;
- 	struct gfs2_glock *sd_rename_gl;
-diff --git a/fs/gfs2/lock_dlm.c b/fs/gfs2/lock_dlm.c
-index 6c5dce57a2ee..d8e1bb99dac2 100644
---- a/fs/gfs2/lock_dlm.c
-+++ b/fs/gfs2/lock_dlm.c
-@@ -1328,7 +1328,7 @@ static int gdlm_mount(struct gfs2_sbd *sdp, const char *table)
- 	 * create/join lockspace
- 	 */
- 
--	error = dlm_new_lockspace(&init_net, fsname, cluster, flags,
-+	error = dlm_new_lockspace(read_pnet(&sdp->net), fsname, cluster, flags,
- 				  GDLM_LVB_SIZE, &gdlm_lockspace_ops, sdp,
- 				  &ops_result, &ls->ls_dlm);
- 	if (error) {
-diff --git a/fs/gfs2/ops_fstype.c b/fs/gfs2/ops_fstype.c
-index e83d293c3614..62555fd33210 100644
---- a/fs/gfs2/ops_fstype.c
-+++ b/fs/gfs2/ops_fstype.c
-@@ -64,6 +64,8 @@ static void gfs2_tune_init(struct gfs2_tune *gt)
- 
- void free_sbd(struct gfs2_sbd *sdp)
- {
-+	put_net_track(read_pnet(&sdp->net), &sdp->tracker);
-+
- 	if (sdp->sd_lkstats)
- 		free_percpu(sdp->sd_lkstats);
- 	kfree(sdp);
-@@ -71,6 +73,7 @@ void free_sbd(struct gfs2_sbd *sdp)
- 
- static struct gfs2_sbd *init_sbd(struct super_block *sb)
- {
-+	struct net *net = current->nsproxy->net_ns;
- 	struct gfs2_sbd *sdp;
- 	struct address_space *mapping;
- 
-@@ -78,6 +81,8 @@ static struct gfs2_sbd *init_sbd(struct super_block *sb)
- 	if (!sdp)
- 		return NULL;
- 
-+	/* store the net-namespace the sdp is created into */
-+	write_pnet(&sdp->net, get_net_track(net, &sdp->tracker, GFP_KERNEL));
- 	sdp->sd_vfs = sb;
- 	sdp->sd_lkstats = alloc_percpu(struct gfs2_pcpu_lkstats);
- 	if (!sdp->sd_lkstats)
-diff --git a/fs/gfs2/sys.c b/fs/gfs2/sys.c
-index ecc699f8d9fc..20d1d1fed189 100644
---- a/fs/gfs2/sys.c
-+++ b/fs/gfs2/sys.c
-@@ -16,6 +16,7 @@
- #include <linux/uaccess.h>
- #include <linux/gfs2_ondisk.h>
- #include <linux/blkdev.h>
-+#include <linux/netdevice.h>
- 
- #include "gfs2.h"
- #include "incore.h"
-@@ -57,6 +58,24 @@ static const struct sysfs_ops gfs2_attr_ops = {
- 
- static struct kset *gfs2_kset;
- 
-+#if IS_ENABLED(CONFIG_NET)
-+/* gfs2 sysfs is separated by net-namespaces */
-+static const struct kobj_ns_type_operations *
-+gfs2_sysfs_object_child_ns_type(const struct kobject *kobj)
-+{
-+	return &net_ns_type_operations;
-+}
-+#endif
-+
-+static const struct kobj_type gfs2_kset_ktype = {
-+	.sysfs_ops      = &kobj_sysfs_ops,
-+	.release	= kset_release,
-+	.get_ownership  = kset_get_ownership,
-+#if IS_ENABLED(CONFIG_NET)
-+	.child_ns_type  = gfs2_sysfs_object_child_ns_type,
-+#endif
-+};
-+
- static ssize_t id_show(struct gfs2_sbd *sdp, char *buf)
- {
- 	return snprintf(buf, PAGE_SIZE, "%u:%u\n",
-@@ -383,10 +402,23 @@ static void gfs2_sbd_release(struct kobject *kobj)
- 	complete(&sdp->sd_kobj_unregister);
- }
- 
-+#if IS_ENABLED(CONFIG_NET)
-+/* return the net-namespace the kobj belonging to */
-+static const void *gfs2_kobj_namespace(const struct kobject *kobj)
-+{
-+	struct gfs2_sbd *sdp = container_of(kobj, struct gfs2_sbd, sd_kobj);
-+
-+	return read_pnet(&sdp->net);
-+}
-+#endif
-+
- static struct kobj_type gfs2_ktype = {
- 	.release = gfs2_sbd_release,
- 	.default_groups = gfs2_groups,
- 	.sysfs_ops     = &gfs2_attr_ops,
-+#if IS_ENABLED(CONFIG_NET)
-+	.namespace = gfs2_kobj_namespace,
-+#endif
- };
- 
- 
-@@ -797,7 +829,8 @@ static const struct kset_uevent_ops gfs2_uevent_ops = {
- 
- int gfs2_sys_init(void)
- {
--	gfs2_kset = kset_create_and_add("gfs2", &gfs2_uevent_ops, fs_kobj);
-+	gfs2_kset = kset_type_create_and_add("gfs2", &gfs2_uevent_ops,
-+					     fs_kobj, &gfs2_kset_ktype);
- 	if (!gfs2_kset)
- 		return -ENOMEM;
- 	return 0;
--- 
-2.43.0
+- Alex
 
 
