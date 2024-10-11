@@ -1,100 +1,118 @@
-Return-Path: <linux-raid+bounces-2890-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-2893-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C11F998652
-	for <lists+linux-raid@lfdr.de>; Thu, 10 Oct 2024 14:41:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5D639998FD
+	for <lists+linux-raid@lfdr.de>; Fri, 11 Oct 2024 03:18:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3F7F71F218AC
-	for <lists+linux-raid@lfdr.de>; Thu, 10 Oct 2024 12:41:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 216511C2185C
+	for <lists+linux-raid@lfdr.de>; Fri, 11 Oct 2024 01:18:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D1B41C57A7;
-	Thu, 10 Oct 2024 12:40:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 187BD17548;
+	Fri, 11 Oct 2024 01:18:32 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C8811C0DFB;
-	Thu, 10 Oct 2024 12:40:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81FB4A2D;
+	Fri, 11 Oct 2024 01:18:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728564044; cv=none; b=TbapELlh9AeUjYtg0C9uEqlnx19TE3WSdgyzKVsQEjZFzxSagO8J6t0E4UxhY9FZPFEGvdaC3NjLYfMevMUloqmzhccUPQol0lkf/Hq6Hy6cvSp07qMdNPZqIh/elUxyXSuPCGZKI8uB8kkglnKuuFAEldeyUTKKmZSS6pRd4Bo=
+	t=1728609511; cv=none; b=dktWy/NwolIvgPmbEyRZIEr0uzpJZermr36RPp8DZychhsB6fNMf4v8xmBY2DcEoM/D83kQBWgHZrQWiQkirSHARwkaUvK+09jwWAdunisPKsWzp6jmlWO0F77f7H4UK/X5Q78gAul9Y1U7zMUzqsB7HvHNFCq7dJDvBZNJMwFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728564044; c=relaxed/simple;
-	bh=Uc4Kvqmn9EbcxxmPd3uqXOAszpiVk8BgOQd/SxCsQWc=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=V49PQTlKwbWVgIgrsNVUQghkb1orZgkJo/TwoXf9d2h70XNqfAXm1cYeOWXhgpWR2zVXF1zfzxH/CF/cVvlZQ01/NHliIWkMzbxXuPBi3xC8FQ8XP6rq+dkyZeF2zIeHfkIZyeZ4hEkPsEWLt6sK4s5vsMe9mqs4tG75HPMUg/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	s=arc-20240116; t=1728609511; c=relaxed/simple;
+	bh=yrc5s+9o+gbztC/j2sh5MbfFaE4EN4fTQfBq1nNR+jo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FY4q3m38hh4ZUhkc3vaeYzvNw/dSscjgHzfRDEDAv5dPifee2qiF5h9ZmxlnQKu6f5VvFdG24nOHaNY8QNvvMU+BLMndOG43EoVwuxvyN0YpeFIlU3gjURIsqTtmeqvXfyNmro99bpVwmOtg2umKqMb07WIsujc2ErQ05rO93u8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4XPTqj4lvrz4f3pJK;
-	Thu, 10 Oct 2024 20:40:17 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4XPpf75mD4z4f3jMX;
+	Fri, 11 Oct 2024 09:18:07 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 46A6C1A058E;
-	Thu, 10 Oct 2024 20:40:35 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP4 (Coremail) with SMTP id gCh0CgD3LMlCywdnjGzVDg--.51194S3;
-	Thu, 10 Oct 2024 20:40:35 +0800 (CST)
-Subject: Re: [PATCH md-6.12 0/7] md: enhance faulty chekcing for blocked
- handling
-To: Paul Menzel <pmenzel@molgen.mpg.de>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: mariusz.tkaczyk@intel.com, song@kernel.org, linux-raid@vger.kernel.org,
- linux-kernel@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20240830072721.2112006-1-yukuai1@huaweicloud.com>
- <05afc661-9aef-415f-a429-eade6e6a72a4@molgen.mpg.de>
+	by mail.maildlp.com (Postfix) with ESMTP id B0D891A0359;
+	Fri, 11 Oct 2024 09:18:24 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgDH+sbefAhnm9MFDw--.55490S4;
+	Fri, 11 Oct 2024 09:18:24 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <dbc9c9bf-9507-f966-1f7a-99a0b1ae076d@huaweicloud.com>
-Date: Thu, 10 Oct 2024 20:40:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+To: song@kernel.org,
+	mariusz.tkaczyk@intel.com
+Cc: linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai3@huawei.com,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH v2 0/7] md: enhance faulty checking for blocked handling
+Date: Fri, 11 Oct 2024 09:16:23 +0800
+Message-Id: <20241011011630.2002803-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <05afc661-9aef-415f-a429-eade6e6a72a4@molgen.mpg.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgD3LMlCywdnjGzVDg--.51194S3
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYk7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
-	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8I
-	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87
-	Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
-	6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72
-	CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7Mxk0
-	xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4c8EcI0Ec7CjxVAaw2AFwI0_Jw
-	0_GFyl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUF9a9DUUUU
+X-CM-TRANSID:gCh0CgDH+sbefAhnm9MFDw--.55490S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7CF4xJr1kXr1fur4DJw1xGrg_yoW8GryDpr
+	nxta43Zr1UWr13X3Z3ZF1UXryrWw18JFW3Ar47Kw18W34UZryxJw4kt3WrWr90gryavws0
+	qr15GrZxWFy5Ca7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUBVbkUUU
+	UU=
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Hi,
+From: Yu Kuai <yukuai3@huawei.com>
 
-在 2024/10/09 16:52, Paul Menzel 写道:
-> Dear Kuai,
-> 
-> 
-> Thank you for this patch series. Just a note about the typo in che*ck*ing.
+Changes in v2:
+ - add more comments and commit message in patch 3;
+ - fix some typo;
 
-Thanks for the notice. :)
+The lifetime of badblocks:
 
-Kuai
+1) IO error, and decide to record badblocks, and record sb_flags;
+2) write IO found rdev has badblocks and not yet acknowledged, then this
+IO is blocked;
+3) daemon found sb_flags is set, update superblock and flush badblocks;
+4) write IO continue;
 
-> 
-> 
-> Kind regards,
-> 
-> Paul
-> .
-> 
+Main idea is that badblocks will be set in memory fist, before badblocks
+are acknowledged, new write request must be blocked to prevent reading
+old data after power failure, and this behaviour is not necessary if rdev
+is faulty in the first place.
+
+Yu Kuai (7):
+  md: add a new helper rdev_blocked()
+  md: don't wait faulty rdev in md_wait_for_blocked_rdev()
+  md: don't record new badblocks for faulty rdev
+  md/raid1: factor out helper to handle blocked rdev from
+    raid1_write_request()
+  md/raid1: don't wait for Faulty rdev in wait_blocked_rdev()
+  md/raid10: don't wait for Faulty rdev in wait_blocked_rdev()
+  md/raid5: don't set Faulty rdev for blocked_rdev
+
+ drivers/md/md.c     | 15 +++++++--
+ drivers/md/md.h     | 24 +++++++++++++++
+ drivers/md/raid1.c  | 75 +++++++++++++++++++++++----------------------
+ drivers/md/raid10.c | 40 +++++++++++-------------
+ drivers/md/raid5.c  | 13 ++++----
+ 5 files changed, 99 insertions(+), 68 deletions(-)
+
+-- 
+2.39.2
 
 
