@@ -1,240 +1,259 @@
-Return-Path: <linux-raid+bounces-3048-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-3050-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7B9A9B6514
-	for <lists+linux-raid@lfdr.de>; Wed, 30 Oct 2024 15:01:49 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49EC49B654F
+	for <lists+linux-raid@lfdr.de>; Wed, 30 Oct 2024 15:09:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C4758B211B2
-	for <lists+linux-raid@lfdr.de>; Wed, 30 Oct 2024 14:01:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D59041F26D37
+	for <lists+linux-raid@lfdr.de>; Wed, 30 Oct 2024 14:09:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A08551F1300;
-	Wed, 30 Oct 2024 14:01:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D5BF1EF0B4;
+	Wed, 30 Oct 2024 14:09:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kRQ6vm3k"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AIHkGzsL";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="lghd0ocS"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA971EF94E;
-	Wed, 30 Oct 2024 14:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730296880; cv=none; b=Q8fv/w0gzBBAxzp6Ms0cTM1+eFpi5nOsxc8zth5rgZSTlbS+nN7zWFrLc/69C8G6GzCJNdtgP/keMGU1um9TgEQRH8PSX9U/dqwXDTdk9pLKd/0/8bfPOOeJpB050DBjWbQIVjwTExST6w5/aKNzIDiIb9kvRzS86ry3Ccg9R1I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730296880; c=relaxed/simple;
-	bh=YIhTsercrbzL7x0w06FHLQISue1sNjFdKSssjAjGdqw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oBOCIbtN4NiGdMxYTBowpNTl9PzuhIqHTsUxZ29X5mCyIxdtQ/v33LdLytkLO4aiLkVkGuc8JSUhXbwrE9zNg0H2plhETyJO5U+Hf5Jy+1wxcFly7oz+4GFfv2jqTkuvgyEICOCyLhLduNGn9lcUibtrrB6i94fDdW/vGAAP+mE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kRQ6vm3k; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730296876; x=1761832876;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=YIhTsercrbzL7x0w06FHLQISue1sNjFdKSssjAjGdqw=;
-  b=kRQ6vm3kk2r5V1ZILNOAsabLdYexIAdZDf7N8M/WDS6QtEKxJzDfIfjh
-   paZp8UkxWYp+YiUv5r9t20tqtTGqYMitjjE0I2ZRZ+pO6fyBXRDTA4wk8
-   qPfqnLaVLpWvifHIUnX+YlmYtQHZMSaEZV29Lg5MTzYtB9REkkDboSr2k
-   dfSnxoyW7iE3q13iv8vWYd2Bmqn4A4L1nG0vmKNDBc9rzAMFPpeMYzYzl
-   LY3CJwgWUDd/dliUgqM1Nb+Gu8Nc4KtZWvWTO5lbvKBBY/21X70B6qCwX
-   AHHMHrrlKmlWXeow/OtEMs/Pft6rzBpl7ccS3uUng1VBrRXJDRxTdf9yC
-   g==;
-X-CSE-ConnectionGUID: 1nskTdLHQPyhhWgvQIyNsw==
-X-CSE-MsgGUID: onDg7ezQRguPbiZCVatVJA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11241"; a="29416464"
-X-IronPort-AV: E=Sophos;i="6.11,245,1725346800"; 
-   d="scan'208";a="29416464"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2024 07:01:15 -0700
-X-CSE-ConnectionGUID: XO4nsi38RbOjeSgf09lQ9Q==
-X-CSE-MsgGUID: M/qK/mcFRLO3gGzk/0zsnA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="87111576"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 30 Oct 2024 07:01:12 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1t69G1-000euW-1b;
-	Wed, 30 Oct 2024 14:01:09 +0000
-Date: Wed, 30 Oct 2024 22:00:47 +0800
-From: kernel test robot <lkp@intel.com>
-To: Johannes Thumshirn <jth@kernel.org>,
-	John Garry <john.g.garry@oracle.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-block@vger.kernel.org,
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-raid@vger.kernel.org, axboe@kernel.dk, song@kernel.org,
-	yukuai3@huawei.com, hch@lst.de, martin.petersen@oracle.com,
-	hare@suse.de, Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: Re: [PATCH] btrfs: handle bio_split() error
-Message-ID: <202410302118.6igPxwWv-lkp@intel.com>
-References: <20241029091121.16281-1-jth@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0511EBFFD;
+	Wed, 30 Oct 2024 14:09:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730297343; cv=fail; b=Ty5KwXCBahPHiJiv3CPiwt7vaatOpE5e7tzlotg91mWbE/OCUE21CWdp+dnUK9DZzaLYMiL4+IFD4tAGf2cIHaGoMxABqBv5VgET/V6K7gOgkil7n3i8Q53hxtV7Dgf93u2Swmz3KlOcvKfT3Q/89bUTLouwIJxMJbaAVVhiZh4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730297343; c=relaxed/simple;
+	bh=GIN92EyB4CtdzoPODS3+oYgyDrf28O+bwi02l4BnAcQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=YBn9kmqicR3kt36WkXVwpXw7rux9QsqZ7cSOBYjmxCg1Ht/KsKKxUIkjQ91QQzQ3RdFh9jHwrqy22W/qgLw0AeSZ1kR14rcIuG5yxV6jLy4hfpPBuU/slqttamzCFjk3AQNS9/688t9VC1f+t6d5XjrVrEEcR/9G1hBMqHejDgs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=AIHkGzsL; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=lghd0ocS; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49UCi6xp008940;
+	Wed, 30 Oct 2024 14:03:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=e6evJDlpFxeMT41U39oTm/K1U3VZ1vHkLE4+ksNyW3o=; b=
+	AIHkGzsLsstFLaWD7W2Xagnvnag6PwTkPTTna4iqc0fP9/W6sCTUMRzerEJUjwzc
+	TjQfrBj8KYqNIWIt73aDzx9IUgFGdcS/SWfoebEKP/Gb2mnNfnKC2ieTPsxQEkoI
+	jPlRcHmjk3s6LFa5940yaXhbGYuihO+EGfRz7V+8qFjJ5lCN+VAIYkJcURm9+ZOQ
+	HVCG/oopDHS6oRQAVHRbROTRE+kBmYvJ+QOGcczHzNHJ1Svzv4VZpNnWvUUP1hlV
+	eCvybJ0w4m9GmiLc9Dq00DhocqPOLAC+08UcvoNHskGt/1/qXjrz+s9TeCqKeRIk
+	59yw+sWMTjRf02WSJt4Bog==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 42grdxr2kq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 30 Oct 2024 14:03:39 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 49UChmNq011848;
+	Wed, 30 Oct 2024 14:03:38 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2045.outbound.protection.outlook.com [104.47.55.45])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 42hnae2gyj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 30 Oct 2024 14:03:38 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=C/MX2Zg1DcutoIiqXUBQSlofhyGQikpthIT87hglDuNCt1c3CRso3SnrnLdZsuA3fiNb8k1FgwRl4GGlqBBr8ZTiJrnELYDQ6Gv8ytg+7eB16syLiq+DN3Y6uhuQLnENgeteuiHL2r2o3jPC7y9nqwLioDESDTCc3kIoYJT52e8zTC0oAq6THhTEftMnQQ+sgYrA8OnrtZ8QvITyZYH9b3a1NvJBhGmJEPODq+9aT4Rcjkyo9h/M5kokFv2FpfndTPkGyLb+cJ7wtMqyHdQ7pGiCA4yZJqZwchKRZn/oJDm802z2wB1XxPJMTG7nkq/xmtpPwoSanzSxbafgNwHXxw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=e6evJDlpFxeMT41U39oTm/K1U3VZ1vHkLE4+ksNyW3o=;
+ b=Zibr0YWDxEDaTPeyc4bkpSydSCJUBMaMscw5Tr/e1Zf31BZDNALFA1v9E4irzbYAbr+6VwrjqMS9y34xUJX6ebcgZfHeabL+fsKOA7hprqUd5gjS4phcyk9BWlW4h3Vsn/w0vGJ9j/PwuQ6cxTeKPML/jTc/X8C//NSCiQ9PZWl3bKKqmKkwgDWA1+pKg68AETGpR3ADB7dc9abzoLfGsT51quYgR0jUV3EOy+E6Jwe6eX24Bty74n1VippnBu+BunvLyJLo8IWfxwSvYAXYjT5i6myti4BkcG/fmIpxz3J9A4H8Drj/RXabpuYeobWUKyEqL/tBG+GtGE7CAd9/Iw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e6evJDlpFxeMT41U39oTm/K1U3VZ1vHkLE4+ksNyW3o=;
+ b=lghd0ocSeb1Lf4qnukxwr8RFHIU2jMhm1f2iBxHWmFzxxYUuhMzj1leUc808xGrjqmq7Jr5oSXhxPSCWXhQTBe+jA58ZebCreeitg0shWAUxohOzNqzm28gudNHH5aflT79VprjR+pGd7LkVojGEgcKGHP+7lZXN4H1MsjU+VE0=
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by DS0PR10MB8078.namprd10.prod.outlook.com (2603:10b6:8:1fd::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.20; Wed, 30 Oct
+ 2024 14:03:08 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088%5]) with mapi id 15.20.8093.027; Wed, 30 Oct 2024
+ 14:03:07 +0000
+Message-ID: <28fb29cc-1c1b-4b26-a859-c29b6cfa337e@oracle.com>
+Date: Wed, 30 Oct 2024 14:03:03 +0000
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/5] block: Support atomic writes limits for stacked
+ devices
+To: Christoph Hellwig <hch@lst.de>
+Cc: axboe@kernel.dk, song@kernel.org, yukuai3@huawei.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-raid@vger.kernel.org, martin.petersen@oracle.com
+References: <20241030094912.3960234-1-john.g.garry@oracle.com>
+ <20241030094912.3960234-3-john.g.garry@oracle.com>
+ <20241030135006.GC27762@lst.de>
+Content-Language: en-US
+From: John Garry <john.g.garry@oracle.com>
+Organization: Oracle Corporation
+In-Reply-To: <20241030135006.GC27762@lst.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PAZP264CA0093.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:102:1fb::10) To DM6PR10MB4313.namprd10.prod.outlook.com
+ (2603:10b6:5:212::20)
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241029091121.16281-1-jth@kernel.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|DS0PR10MB8078:EE_
+X-MS-Office365-Filtering-Correlation-Id: dba8e554-ad4d-400c-13c2-08dcf8eb94bc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bVAxaXYrd01VK0FjWTJIMjYyTWNUNlNvNFQvQ1YvNUtHWGQ1MzREWk5YQ1Uz?=
+ =?utf-8?B?T1NPYTNUdkpKTGpzb3RjTUYwZzNrckwvN0MxbGRlZ0NkMkVYU2k2SnY1OVdm?=
+ =?utf-8?B?QkJHRWFWUE5QUkxhbHcwdUlNbnNybm4vNy9ZOStDTjhCZlJLZ2dzNE82MmEy?=
+ =?utf-8?B?TkZjejBqK0JHODI0cWt4dlpEaitRL283YXcvU0hySkpOTmEvRDhEUVpZNFd4?=
+ =?utf-8?B?T012Q09CY1lvRDh0eGZkNlkyR3RySmsrRFJrSDZOVzhvM3BWVmhlUFYwaWpO?=
+ =?utf-8?B?QkkvRG9JNTR1UnhaQUlFYkJPYlkzOVVlZTRvK3Z5L1RjenJZR2tWVmhBQ0JC?=
+ =?utf-8?B?Ni85K3FFcGZFeUpqblpUekR0djlDWEhlVDRiVHdET29TTjJraEpMQVVoUDl2?=
+ =?utf-8?B?RlZSK3hKbXBoM0lyZ3FTQk1hTjFFSE9zNDVNbHFhYUpyZkx1bUtTdmx5ek5D?=
+ =?utf-8?B?bm44d2dpRDZGZnZiUlduVEtIdlhvY3ZmRzFIeGtLTVBqM2xreDU2RVpRdFZa?=
+ =?utf-8?B?a2RuaHpoTTRlcVh1S0JIRkZReGZCYjdWM1JzeFJDaDl6Rm9WeXNGN2pDMlNx?=
+ =?utf-8?B?WE9uc3lIK3ZZS2Z2MVlUanh4dlJIcE05eFd1aFVna2FkdldzSWNBQzAreU1O?=
+ =?utf-8?B?TnIrd084dEw1TWZxUTY2UWZhSU9qY3ppWGZDN3p3MEg5a3V3eWQ5ODBsR2Fi?=
+ =?utf-8?B?MHBuT2c2cXNjaVBTN25TREtXekdMMXJRYlllL2VmNzVTTG9TR3FhVkpDaCtn?=
+ =?utf-8?B?R2xaZDFCS2xHTFlXYTlGcnVxV3dtM25INmV2M3ZQN29raEVFcWVBdEVMT0xr?=
+ =?utf-8?B?dHpBZ3c4b2Y0MzF4aVBrQVpCL05scEh5dlp4dkdOeGpxaExUU1NMaXdtdjBF?=
+ =?utf-8?B?M2pES3JSdG5qYzVEKzMxbnJTaGUyR2U0NzBQTGM4U1N2NXNFK3A3TTN1YWpK?=
+ =?utf-8?B?QzBYa1JDZFd1QU1SZ1k0UG0wclgwV21NbHE3MmpDQVl0SU12UTRPSHJRelRF?=
+ =?utf-8?B?RGdzWkxkbVFLckpBc0tYQkRxZWQ1R1lHTFYzcHRFSHlKcGo5eGQ4MnRmUUFr?=
+ =?utf-8?B?YVpBRDY0ODFBa1U2ZFhwdDBObkFHUzZwZ25nbzlncXVVQ2dvWWdUVUVFbHBM?=
+ =?utf-8?B?ZjNrdTRsMFVuUGxuRWlYY2c1VVFwVU1Tc0pvYXZxcmcrZGo2N3NUQWVMYllC?=
+ =?utf-8?B?OXJaeGNWTmxkcU5FZTNmQ2VoVkJ2YnNUczY1blpKajdJMzE2MWhiN2taUmRH?=
+ =?utf-8?B?NUxjU1FLb3ZWSW5JREtEU1NYbmpZMGRWL3IwTnpNY0Y1dW5NdWFpN0drNmdV?=
+ =?utf-8?B?a05PVmY4VVQ4L2ZZRi9hM0Q4RHJwTkZtakRyU3FaaVpKNk5aSUpjcmUySVVz?=
+ =?utf-8?B?VEFyKzBRWnZDcU9NZjE1WWdJWHRDYlhFRDZhNGxudUxBQnB4b3hsU0Y1eFRi?=
+ =?utf-8?B?Vk1tSmxGT1BRK0JIM25nNUJQQ293LzBiMFE5NllBYmNXakl3bUdTOTVHdUo3?=
+ =?utf-8?B?TThFOVMwcDlTMnFwWUZSN0lqUDVidHpUbDdkK2F0dHAxTXJIOE5VTmdQbEd0?=
+ =?utf-8?B?OWQrZ3I1UU15OWk0MmtuTm8xQUJCcnlpZm9WeU5xYnRmaUFwdG92TlJtNlZS?=
+ =?utf-8?B?OWxnbEQvZkFPZFFaaHpHbllzRVBIWStWU2laVjEwVlErOGxVRjdsOTBON3dk?=
+ =?utf-8?B?QXJKRVFIVnJKMjA0c2l2L09nMGVwYjRjQUJpcVpCNWczSVVmcWxSVkxKSTlq?=
+ =?utf-8?Q?kMudEkW0JQISMaDkl74ilJy4ZyMUin5azdMFD8O?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WGJ6blFIVnlPTzdXMHNNNEFtVDlncldyLzBUTk44am4xOE5ZUXFhMjNtRUcw?=
+ =?utf-8?B?NE1lcVNDczFvWWdXZjJ6TUJma2dXOWRWZnY2S29NUkJoUjJ5WjhaRmxhcGhJ?=
+ =?utf-8?B?bUl3RnNJTmJQdjRNWkp6eXdtbEZUei9pY3RURzF0S1p4YUtoellFUm5SWWZV?=
+ =?utf-8?B?TWQ5SXQvb2dNL0dnSW5VQzhKRVFqMUViakFLa2xEcmtReHlDVEFMNGtFVXRE?=
+ =?utf-8?B?c25abEU1WlE5M2o3dGJuWjBUTXptWmcxeFExanNZMHpMd1puMjFvVHVad0ps?=
+ =?utf-8?B?eVkycEtycTlycmNlZWcxL2xOUm5LbitZUVYvZG1LOWdlSExYNVR0MG9xMW9Y?=
+ =?utf-8?B?bHpLNzA2d0oyNVdNT1QydzJyVVBwbHZZQTVDdVBrLzdyaXpzUzZyamcrVTha?=
+ =?utf-8?B?NHZyMWYrSUtYUFI5OTRBd2EwL2lPM1hjQkg1bW1rMmJTZGFHVUdVN01FODU0?=
+ =?utf-8?B?eEkxU2cxU2dRWlFXLzFEUDF5MnI3ZFVXYW9VOFhva0ZmMUh1dy9rQTRmR29H?=
+ =?utf-8?B?Rmw4ZHJEenJaaGg1ZXdiUnZBZDVNRS9qcTB6NzBtWUlReEpWN0hKSHlxczA4?=
+ =?utf-8?B?NWtHUmZUeVRvTmlvT0RwRitLSFp0NmlWdFQvbWhJOTRPbDMrZFhaT25YZktl?=
+ =?utf-8?B?WkFrcGp6ZUhWMFFCd0gzNnUxVGNDVUVuc3hqMjhRQlBKNmx1NDZvY3MwQXdF?=
+ =?utf-8?B?WDVqUnJxaS9mWG9iOWY5Wm44ajR0a2xrR0VnWjlzTks4bGdsWkRKYVQ5Ykow?=
+ =?utf-8?B?ZGVKU2NNcjY5a0xaWklSK2dvRDJtK1V1WjVXbkZTemp2WldpMi91dnVYMkp5?=
+ =?utf-8?B?MTNtaFJIa1U5alZ3R2V2YXhyQmliRll2N0l6eFM4bmc5SElhdmtJT2hLc1lI?=
+ =?utf-8?B?VVZCbGhmTnhFcDBYN1BUVkFTakxlR2U3RVQ4bWtHYTJqUXk5aFJGa3pwWDlT?=
+ =?utf-8?B?NE9iQmJQZGpleFNOaVVVRUlvbHo2NW95SkFPLzJzalNKVEM3MFl2SW5qMHR6?=
+ =?utf-8?B?NU1HaDFJaWZDRDVKTjdTRHkwT0QzcVlob1hXRXltczNVTU1mQUVpUmN4ZG1q?=
+ =?utf-8?B?cGtTbXhCd0JtYklvYnJTaFpwL3BkZnBLaURyelE2citRczd6TlUzeTUzU3o0?=
+ =?utf-8?B?NzJiNFpwYzMza2dWRGhXa3dwYmprZUpxcm5Zc2tuTmU3cW1iVG5YbHBzWWhP?=
+ =?utf-8?B?cmVlSzJvZEhyQkR1bSt2MHFhdFVyc0EwNGhyYjJLeTFrMjM5YVdvMm94VERm?=
+ =?utf-8?B?dmE3eXpTYnBPeE9LejIxaEVoQVNyTkxvU2RXY0h6SkVEMEt5dnQwUFVJZFNO?=
+ =?utf-8?B?alEzNjNRZ20zMVBzeHdkeWxrVk1LVDlySTFxNjVLS0k2Vm9JOWNyditjVzY0?=
+ =?utf-8?B?Y011NE1YQzl4NHN0Rkw4QTczRStYUzNIRFlsWnU1aG5YSUNjRG1RODR0dFcz?=
+ =?utf-8?B?NitpVFBtWjFSWUlqOW8xaEhDWkhnd21BTW9iQlBucGg1WkFLYXdJSGpoTGRJ?=
+ =?utf-8?B?bDlwbzNJeXJqbXZLM1E0STN0a1hpbFJCcm5lR1pKVm51bFhWeWRXY0RrZjlJ?=
+ =?utf-8?B?VXprRXEramxmejRnZVV2T3M4MDNYbXc2RVJ4cnVaa0t1TU95UU5TQzlMbU1Z?=
+ =?utf-8?B?WmRlYjl5WUlodUdreCsxeTltN2dZZzYyN3c3czgyU1RrWVhzRGlNeFBDUXkr?=
+ =?utf-8?B?TC9RYWpGdmxDaThOTkpRNHAwQ0JvVWhMN1NzNnQ2aFVEeWVzMmN5Tm0rS1BZ?=
+ =?utf-8?B?ZzB6dmZWaHJ0VkpSeGtXMDl0R0x2b0FaeThrSUE5Z3ZQSXNURFlPOVM3cTdN?=
+ =?utf-8?B?WndHRzgzRVRmY0hnWS9nQ00vdDE3bmlRK1M5N3phWCtucjhhcmxUdVZrcjk4?=
+ =?utf-8?B?ODFNREVZazA4eUN0S1Jack9ZbnpIRmdwZzNEMk4xWkJNYUlJTHpVMlY3bjFt?=
+ =?utf-8?B?enpuK3JVeWdsaE5iNTNFeEVrSzdFejVVUy9FZTZVZlp4RTFpSmtsSytYWSt4?=
+ =?utf-8?B?VEZBek5lUXFhQUJNVlo2YjRNV0tqei93VkxWREVTWE1Jd0t4VWVIU1VPREg0?=
+ =?utf-8?B?Q1dhSDl6Q2tkV01kM1JvTkdnLzBkSnhuUlBId0JhaU1RNkhZTWFzSVhLVHly?=
+ =?utf-8?B?TWpldHZkWXlSVnRkcytyaHAvQTFSbC93ZndBZTVVNkI1NFgzendCUVlsclR5?=
+ =?utf-8?B?R1E9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	Kjvhj9rArXWyMiS11I5qck4WMHEkSB6WY63Y4dJ1Gx8ZhkNHYKV+VOIBnqxlAafSwY8B2n0d46RIIBr9Oue1FvQQOwXzpZfNsNJibED7ElYQMiW4sGDgqLx7Xzsmfpd3Kkohk890gRsdhkk0hoMtzVS9AiHJp+50DLouS5x68P8Uo7xO4HJxRw795AjPJpz3H+NAYr1IcouVriZHVrPLiKC+HqTzby3ZOr8MesQtApoohpel4P1qxh7sNZKvt5kV8R2U+6KRl+4BtGQ1l18EEV3uucDhKZIA0yO9nfM1JmGnYMSq49erutGifsveo30GtwkZUzmQkVataeOHJfAnJQ0VJS1120o9d4BAe+sv3Sa3A8ptss+xIciFIs99MmoC6mR6I9OU7JVySLnqB7bDSSi3d6h1zua8nIgoz7KisYdANy/G0wCmbjq6A3CaLLreLF8gqdwTVMUr0OLvZYa5BFKMmfueDg5VE1Vh0OtRm2pLTsIYAtFjiAhJ/Q/s5W1fThsnczKODMs+8tpW9fu58ODQZPwwq6CYs8IGRUoXprBwWD+/XeYlc+i+yI6pEZrrCuLw9qjZhCc1nFo9Hcw0LUE/HzFsMlfLB9dsEG5W5uk=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dba8e554-ad4d-400c-13c2-08dcf8eb94bc
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Oct 2024 14:03:07.8664
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OK5EoJ0APE7TjrIBLAzXVbc9ppEp2n+3TgXFbsOeZxX48ytxJ5FuxS7PQAJ/AVCGbrWtFc2571hb1sHvh9EFoA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB8078
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-30_12,2024-10-30_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0 spamscore=0
+ bulkscore=0 mlxscore=0 suspectscore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2409260000
+ definitions=main-2410300111
+X-Proofpoint-GUID: _YZ7oHfSJlQeWiLrnN21OmPp7JH0wr0l
+X-Proofpoint-ORIG-GUID: _YZ7oHfSJlQeWiLrnN21OmPp7JH0wr0l
 
-Hi Johannes,
+On 30/10/2024 13:50, Christoph Hellwig wrote:
+>>   
+>> +static void blk_stack_atomic_writes_limits(struct queue_limits *t, struct queue_limits *b)
+> Avoid the overly long line here.
 
-kernel test robot noticed the following build warnings:
+sure
 
-[auto build test WARNING on kdave/for-next]
-[also build test WARNING on linus/master v6.12-rc5 next-20241030]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+>> +	if (t->atomic_write_hw_max) {
+> Maybe split this branch and the code for when it is not set into
+> separate helpers to keep the function to a size where it can be
+> easily understood?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Johannes-Thumshirn/btrfs-handle-bio_split-error/20241029-171227
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-next
-patch link:    https://lore.kernel.org/r/20241029091121.16281-1-jth%40kernel.org
-patch subject: [PATCH] btrfs: handle bio_split() error
-config: x86_64-randconfig-121-20241030 (https://download.01.org/0day-ci/archive/20241030/202410302118.6igPxwWv-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241030/202410302118.6igPxwWv-lkp@intel.com/reproduce)
+I was trying to reduce indentation, but it does read a bit messy now, so 
+I can try break into a smaller function.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410302118.6igPxwWv-lkp@intel.com/
+> 
+>> +	/* Check first bottom device limits */
+>> +	if (!b->atomic_write_hw_boundary)
+>> +		goto check_unit;
+>> +	/*
+>> +	 * Ensure atomic write boundary is aligned with chunk sectors. Stacked
+>> +	 * devices store chunk sectors in t->io_min.
+>> +	 */
+>> +	if (b->atomic_write_hw_boundary > t->io_min &&
+>> +	    b->atomic_write_hw_boundary % t->io_min)
+>> +		goto unsupported;
+>> +	else if (t->io_min > b->atomic_write_hw_boundary &&
+> No need for the else here.
+> 
+>> +		 t->io_min % b->atomic_write_hw_boundary)
+>> +		goto unsupported;
+>> +
+>> +	t->atomic_write_hw_boundary = b->atomic_write_hw_boundary;
+>> +
+>> +check_unit:
+> Maybe instead of the check_unit goto just move the checks between the
+> goto above and this into a branch?
 
-sparse warnings: (new ones prefixed by >>)
->> fs/btrfs/bio.c:694:29: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted blk_status_t [assigned] [usertype] ret @@     got long @@
-   fs/btrfs/bio.c:694:29: sparse:     expected restricted blk_status_t [assigned] [usertype] ret
-   fs/btrfs/bio.c:694:29: sparse:     got long
-   fs/btrfs/bio.c: note: in included file (through include/linux/mmzone.h, include/linux/gfp.h, include/linux/xarray.h, ...):
-   include/linux/page-flags.h:237:46: sparse: sparse: self-comparison always evaluates to false
-   include/linux/page-flags.h:237:46: sparse: sparse: self-comparison always evaluates to false
+I'm not sure, but I can try to avoid using the "goto check_unit" just to 
+skip code.
 
-vim +694 fs/btrfs/bio.c
+> 
+> Otherwise this looks conceptually fine to me.
 
-   659	
-   660	static bool btrfs_submit_chunk(struct btrfs_bio *bbio, int mirror_num)
-   661	{
-   662		struct btrfs_inode *inode = bbio->inode;
-   663		struct btrfs_fs_info *fs_info = bbio->fs_info;
-   664		struct bio *bio = &bbio->bio;
-   665		u64 logical = bio->bi_iter.bi_sector << SECTOR_SHIFT;
-   666		u64 length = bio->bi_iter.bi_size;
-   667		u64 map_length = length;
-   668		bool use_append = btrfs_use_zone_append(bbio);
-   669		struct btrfs_io_context *bioc = NULL;
-   670		struct btrfs_io_stripe smap;
-   671		blk_status_t ret;
-   672		int error;
-   673	
-   674		if (!bbio->inode || btrfs_is_data_reloc_root(inode->root))
-   675			smap.rst_search_commit_root = true;
-   676		else
-   677			smap.rst_search_commit_root = false;
-   678	
-   679		btrfs_bio_counter_inc_blocked(fs_info);
-   680		error = btrfs_map_block(fs_info, btrfs_op(bio), logical, &map_length,
-   681					&bioc, &smap, &mirror_num);
-   682		if (error) {
-   683			ret = errno_to_blk_status(error);
-   684			goto fail;
-   685		}
-   686	
-   687		map_length = min(map_length, length);
-   688		if (use_append)
-   689			map_length = btrfs_append_map_length(bbio, map_length);
-   690	
-   691		if (map_length < length) {
-   692			bbio = btrfs_split_bio(fs_info, bbio, map_length);
-   693			if (IS_ERR(bbio)) {
- > 694				ret = PTR_ERR(bbio);
-   695				goto fail;
-   696			}
-   697			bio = &bbio->bio;
-   698		}
-   699	
-   700		/*
-   701		 * Save the iter for the end_io handler and preload the checksums for
-   702		 * data reads.
-   703		 */
-   704		if (bio_op(bio) == REQ_OP_READ && is_data_bbio(bbio)) {
-   705			bbio->saved_iter = bio->bi_iter;
-   706			ret = btrfs_lookup_bio_sums(bbio);
-   707			if (ret)
-   708				goto fail;
-   709		}
-   710	
-   711		if (btrfs_op(bio) == BTRFS_MAP_WRITE) {
-   712			if (use_append) {
-   713				bio->bi_opf &= ~REQ_OP_WRITE;
-   714				bio->bi_opf |= REQ_OP_ZONE_APPEND;
-   715			}
-   716	
-   717			if (is_data_bbio(bbio) && bioc &&
-   718			    btrfs_need_stripe_tree_update(bioc->fs_info, bioc->map_type)) {
-   719				/*
-   720				 * No locking for the list update, as we only add to
-   721				 * the list in the I/O submission path, and list
-   722				 * iteration only happens in the completion path, which
-   723				 * can't happen until after the last submission.
-   724				 */
-   725				btrfs_get_bioc(bioc);
-   726				list_add_tail(&bioc->rst_ordered_entry, &bbio->ordered->bioc_list);
-   727			}
-   728	
-   729			/*
-   730			 * Csum items for reloc roots have already been cloned at this
-   731			 * point, so they are handled as part of the no-checksum case.
-   732			 */
-   733			if (inode && !(inode->flags & BTRFS_INODE_NODATASUM) &&
-   734			    !test_bit(BTRFS_FS_STATE_NO_DATA_CSUMS, &fs_info->fs_state) &&
-   735			    !btrfs_is_data_reloc_root(inode->root)) {
-   736				if (should_async_write(bbio) &&
-   737				    btrfs_wq_submit_bio(bbio, bioc, &smap, mirror_num))
-   738					goto done;
-   739	
-   740				ret = btrfs_bio_csum(bbio);
-   741				if (ret)
-   742					goto fail;
-   743			} else if (use_append ||
-   744				   (btrfs_is_zoned(fs_info) && inode &&
-   745				    inode->flags & BTRFS_INODE_NODATASUM)) {
-   746				ret = btrfs_alloc_dummy_sum(bbio);
-   747				if (ret)
-   748					goto fail;
-   749			}
-   750		}
-   751	
-   752		btrfs_submit_bio(bio, bioc, &smap, mirror_num);
-   753	done:
-   754		return map_length == length;
-   755	
-   756	fail:
-   757		btrfs_bio_counter_dec(fs_info);
-   758		/*
-   759		 * We have split the original bbio, now we have to end both the current
-   760		 * @bbio and remaining one, as the remaining one will never be submitted.
-   761		 */
-   762		if (map_length < length) {
-   763			struct btrfs_bio *remaining = bbio->private;
-   764	
-   765			ASSERT(bbio->bio.bi_pool == &btrfs_clone_bioset);
-   766			ASSERT(remaining);
-   767	
-   768			btrfs_bio_end_io(remaining, ret);
-   769		}
-   770		btrfs_bio_end_io(bbio, ret);
-   771		/* Do not submit another chunk */
-   772		return true;
-   773	}
-   774	
+ok, thanks!
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
