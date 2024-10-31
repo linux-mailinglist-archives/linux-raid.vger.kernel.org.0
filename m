@@ -1,42 +1,42 @@
-Return-Path: <linux-raid+bounces-3058-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-3063-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3FC7B9B7307
-	for <lists+linux-raid@lfdr.de>; Thu, 31 Oct 2024 04:34:58 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 857299B7314
+	for <lists+linux-raid@lfdr.de>; Thu, 31 Oct 2024 04:36:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C2EC2B2373D
-	for <lists+linux-raid@lfdr.de>; Thu, 31 Oct 2024 03:34:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4A0A2286B44
+	for <lists+linux-raid@lfdr.de>; Thu, 31 Oct 2024 03:36:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7AE413D24E;
-	Thu, 31 Oct 2024 03:34:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74EBF14900F;
+	Thu, 31 Oct 2024 03:34:37 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A005413B7BC;
-	Thu, 31 Oct 2024 03:34:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D7614264A;
+	Thu, 31 Oct 2024 03:34:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730345672; cv=none; b=oWBNKSLRvj42A1QTs/xZo6csIrGngqoAHbKA6pZBo+EZjlBPBuNbuw70M1xxi31rU7Zz11cc6s9ooaJzLH8iIORGvmU8IWeVTktOYPiet++GqeKhzVET0M66Zsx/E4dh72pISUCduB/wvj5aAlHw/fOLgAMs8UE+lAg9Nd0ldRE=
+	t=1730345677; cv=none; b=pgWVJkHjGfpaosr+LRBsBECA4NvOePLZuTDojjnUHS6uvM+rAbbSOFe5cJuI4UBo1cs5GwTPXgKkZv+Ev5ehRg6ErhAg4s4PAYjH8WRtHvXvWQMjwxxBIBDh7FmiGvWt82hKtpSG23W74Gl6v1hBtbyxpjzZ6qUbIkkx4Vu+QFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730345672; c=relaxed/simple;
-	bh=Lx6ANa7NRU5QksnZsL+37RITL0Jg2i4arTTXt6NAw+s=;
+	s=arc-20240116; t=1730345677; c=relaxed/simple;
+	bh=HCadqzRGDHXPvMHcSezNPjkg2eia/z32SkyaCn+eH8w=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=so0Es0HcLgm/20OcVBMRi9ZuNgxMt+qspUE9n8D4H/7ULLfjZ02yrwGiZ6PA2bB9iVKTdjmw4fR9gNxNnFqQ+SRC3iumm9YQGxGqz4Ld3cAtNf47eGODgykXkqaKwcuL4V5vvj8R5cfA1RG9Dc04RiYKniwi/0vHQh6zZG2/M4A=
+	 MIME-Version; b=XiQJmGZ5btk1sKx2aUka6JARfnYk1TMeWbqE58LVqR8o+G6x9ZdiyFN87FlXkp07ZdA4pb8R2Nerm+2xPKQ/hJVAYTKwOdd/1iHhDVI+WtracA05ZpyxloFJHlGEKZUutWcytPE2v+8CdWLapll7e3Q+sc/TiTPCgKEdwoepDA4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Xf8jk6KHfz4f3lVX;
-	Thu, 31 Oct 2024 11:34:02 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Xf8jw0HN6z4f3jkv;
+	Thu, 31 Oct 2024 11:34:12 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 6FF6A1A058E;
-	Thu, 31 Oct 2024 11:34:21 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id A56A91A018D;
+	Thu, 31 Oct 2024 11:34:24 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgCXcYW6+iJnhVy1AQ--.50328S6;
+	by APP4 (Coremail) with SMTP id gCh0CgCXcYW6+iJnhVy1AQ--.50328S7;
 	Thu, 31 Oct 2024 11:34:21 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: song@kernel.org,
@@ -47,9 +47,9 @@ Cc: linux-raid@vger.kernel.org,
 	yukuai1@huaweicloud.com,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com
-Subject: [PATCH RESEND 2/7] md: don't wait faulty rdev in md_wait_for_blocked_rdev()
-Date: Thu, 31 Oct 2024 11:31:09 +0800
-Message-Id: <20241031033114.3845582-3-yukuai1@huaweicloud.com>
+Subject: [PATCH RESEND 3/7] md: don't record new badblocks for faulty rdev
+Date: Thu, 31 Oct 2024 11:31:10 +0800
+Message-Id: <20241031033114.3845582-4-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20241031033114.3845582-1-yukuai1@huaweicloud.com>
 References: <20241031033114.3845582-1-yukuai1@huaweicloud.com>
@@ -60,53 +60,70 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCXcYW6+iJnhVy1AQ--.50328S6
-X-Coremail-Antispam: 1UD129KBjvdXoW7GFy5WFWrXF48Kry3Cr4xXrb_yoWkXrgE9a
-	s3Zr97Gr1xJF1Syr1YyFW8ZrZ0kw1kWF4xXFy2qFya9F15Jw48Cw4qv34rJwsruasxC3sI
-	krW0gFyavr1SkjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbhAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXwA2048vs2IY02
-	0Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
-	ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I2
-	62IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcV
-	AFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG
-	0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_JF0_Jw1l42
-	xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
-	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI4
-	8JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4U
-	MIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I
-	8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU1c_TUUUUU
+X-CM-TRANSID:gCh0CgCXcYW6+iJnhVy1AQ--.50328S7
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ary7tw13tr43JF48Xr4fKrg_yoW8WFWrpa
+	ySqFyrJr4UWr12vw1kXw12ga4Fgas5CrWUKry3Ga4UZay5JrySgwsxta13urZ09ry3XF45
+	XF15Kay8ua4vq37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBG14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWUAVWUtw
+	CF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64
+	vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0x
+	vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JU9J5rUUUUU=
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-md_wait_for_blocked_rdev() is called for write IO while rdev is
-blocked, howerver, rdev can be faulty after choosing this rdev to write,
-and faulty rdev should never be accessed anymore, hence there is no point
-to wait for faulty rdev to be unblocked.
+Faulty will be checked before issuing IO to the rdev, however, rdev can
+be faulty at any time, hence it's possible that rdev_set_badblocks()
+will be called for faulty rdev. In this case, mddev->sb_flags will be
+set and some other path can be blocked by updating super block.
+
+Since faulty rdev will not be accesed anymore, there is no need to
+record new babblocks for faulty rdev and forcing updating super block.
+
+Noted this is not a bugfix, just prevent updating superblock in some
+corner cases, and will help to slice a bug related to external
+metadata[1], testing also shows that devices are removed faster in the
+case IO error.
+
+[1] https://lore.kernel.org/all/f34452df-810b-48b2-a9b4-7f925699a9e7@linux.intel.com/
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 Tested-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
 ---
- drivers/md/md.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/md/md.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 179ee4afe937..37d1469bfc82 100644
+index 37d1469bfc82..35c2e1e761aa 100644
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -9762,9 +9762,7 @@ EXPORT_SYMBOL(md_reap_sync_thread);
- void md_wait_for_blocked_rdev(struct md_rdev *rdev, struct mddev *mddev)
+@@ -9791,6 +9791,17 @@ int rdev_set_badblocks(struct md_rdev *rdev, sector_t s, int sectors,
  {
- 	sysfs_notify_dirent_safe(rdev->sysfs_state);
--	wait_event_timeout(rdev->blocked_wait,
--			   !test_bit(Blocked, &rdev->flags) &&
--			   !test_bit(BlockedBadBlocks, &rdev->flags),
-+	wait_event_timeout(rdev->blocked_wait, !rdev_blocked(rdev),
- 			   msecs_to_jiffies(5000));
- 	rdev_dec_pending(rdev, mddev);
- }
+ 	struct mddev *mddev = rdev->mddev;
+ 	int rv;
++
++	/*
++	 * Recording new badblocks for faulty rdev will force unnecessary
++	 * super block updating. This is fragile for external management because
++	 * userspace daemon may trying to remove this device and deadlock may
++	 * occur. This will be probably solved in the mdadm, but it is safer to
++	 * avoid it.
++	 */
++	if (test_bit(Faulty, &rdev->flags))
++		return 1;
++
+ 	if (is_new)
+ 		s += rdev->new_data_offset;
+ 	else
 -- 
 2.39.2
 
