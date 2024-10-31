@@ -1,134 +1,110 @@
-Return-Path: <linux-raid+bounces-3055-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-3059-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B94F49B724B
-	for <lists+linux-raid@lfdr.de>; Thu, 31 Oct 2024 02:58:08 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D75BB9B730A
+	for <lists+linux-raid@lfdr.de>; Thu, 31 Oct 2024 04:35:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 384A0B2313E
-	for <lists+linux-raid@lfdr.de>; Thu, 31 Oct 2024 01:58:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 152371C23E90
+	for <lists+linux-raid@lfdr.de>; Thu, 31 Oct 2024 03:35:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDEF483CD9;
-	Thu, 31 Oct 2024 01:57:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6104613E8AE;
+	Thu, 31 Oct 2024 03:34:33 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD6F288B5;
-	Thu, 31 Oct 2024 01:57:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A000414F90;
+	Thu, 31 Oct 2024 03:34:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730339866; cv=none; b=tEI4+tLO7kRZ46WiPBrZ9G1zWTNtmk9m76H+mb8AS6x1TnUCrgoQ2po1M+IHBM8cq59Gbe9h6vt9DdwkSldufxVDNUHs2IpGYHfanZU5fNT+wHdctEBrKBNVlq4yZ838e2HJ67KNuxbFSPvNptpVuC/avRIdBUV8KX9ni3AbORc=
+	t=1730345673; cv=none; b=je2a37yMAcWUTpawlgS6m701WNTT/Kb6yQ6P4JrJuZ5Po0ydm7Wt9UKv8fpwaZDhbY8B98ZK5Hv0iuaow0CSZdR5cLBzZxT0yXVLrtNzdSMvzSfydrmOx0aFyrdTgo8S20RQT1sSM2vyI4TsTa8eZ2aZNfjiliNG85xNHmaicOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730339866; c=relaxed/simple;
-	bh=Nvk6gtzOUBBKduL7W20nZi58AzXjD2xlg9jDt0cmKuQ=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=MJWB6a681CwCFIMTo2meA2IVC9oxDNJs7BGAlc6xgfNN4Pj0N+lrf1QURv/070jnpXvlEB9PNVtcRue3J1WwxnRgX/RGuHfh0J+5FWv/qiiQC9ZMSv4dn6QUhfZi/HhVOeagZR651DLk6e0HUm35TjHIFIhBSyi3W/IwSvk7xp0=
+	s=arc-20240116; t=1730345673; c=relaxed/simple;
+	bh=pnvS/E1BSjVpVZqHh/Cr5jGl9cgy4BF3pwhoUhBsjs4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UUvZzHrIsTZYLPK9oRGpyGvZG7vYg3uEI9OQ9mLhgEbdUFB9OAU8MZYJNgV/mYmQgEZEwlrooMx+iuky/VApWwqiKOBy+h+0itdH0uVVKRH0UOMR8HUe8SW2Jq9V+SYVAN0vC2sotyOO5Mhq0vQTSMzbZCkoPGK6mZjtxt0mrz4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Xf6ZG3rWJz4f3jkV;
-	Thu, 31 Oct 2024 09:57:26 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Xf8jk0rkrz4f3lfY;
+	Thu, 31 Oct 2024 11:34:02 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 28F101A058E;
-	Thu, 31 Oct 2024 09:57:39 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP4 (Coremail) with SMTP id gCh0CgCHYoYR5CJnOgSvAQ--.50242S3;
-	Thu, 31 Oct 2024 09:57:39 +0800 (CST)
-Subject: Re: [PATCH v2 4/5] md/raid1: Atomic write support
-To: John Garry <john.g.garry@oracle.com>, axboe@kernel.dk, song@kernel.org,
- hch@lst.de
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org, martin.petersen@oracle.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20241030094912.3960234-1-john.g.garry@oracle.com>
- <20241030094912.3960234-5-john.g.garry@oracle.com>
+	by mail.maildlp.com (Postfix) with ESMTP id A98BB1A0196;
+	Thu, 31 Oct 2024 11:34:20 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgCXcYW6+iJnhVy1AQ--.50328S4;
+	Thu, 31 Oct 2024 11:34:20 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <d4d9d0cf-08ff-6494-172a-44694b6d13f9@huaweicloud.com>
-Date: Thu, 31 Oct 2024 09:57:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+To: song@kernel.org,
+	mariusz.tkaczyk@intel.com
+Cc: linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai3@huawei.com,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH RESEND 0/7] md: enhance faulty checking for blocked handling
+Date: Thu, 31 Oct 2024 11:31:07 +0800
+Message-Id: <20241031033114.3845582-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20241030094912.3960234-5-john.g.garry@oracle.com>
-Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCHYoYR5CJnOgSvAQ--.50242S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ww48GFy7tF1xAF18Cr45KFg_yoW8Wr1rp3
-	9Iga4Yyr4Ut3W2kasrAFWUCa1Fyw4kKFWIkF1fJ3yFvrnIgrWDKF4FqFWDWr1jvFyfX34U
-	tanYkrZrGF13JaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
-	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UAwI
-	DUUUUU=
+X-CM-TRANSID:gCh0CgCXcYW6+iJnhVy1AQ--.50328S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrtr1xJrWkCw1DJw1UAF1DJrb_yoWfZFg_tF
+	93ZFy3Jr1xXFy5Aa42krnxZryYyw4DuF17X3Wrtr4Yqr13ur4UKr4qy3yrW3yfXFZxWrn5
+	Jry8WF48Ar9rAjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb48FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+	Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r12
+	6r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+	IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbSfO7UUUU
+	U==
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Hi,
+From: Yu Kuai <yukuai3@huawei.com>
 
-ÔÚ 2024/10/30 17:49, John Garry Ð´µÀ:
-> Set BLK_FEAT_ATOMIC_WRITES_STACKED to enable atomic writes.
-> 
-> For an attempt to atomic write to a region which has bad blocks, error
-> the write as we just cannot do this. It is unlikely to find devices which
-> support atomic writes and bad blocks.
-> 
-> Signed-off-by: John Garry <john.g.garry@oracle.com>
-> ---
->   drivers/md/raid1.c | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-> index a10018282629..b57f69e3e8a7 100644
-> --- a/drivers/md/raid1.c
-> +++ b/drivers/md/raid1.c
-> @@ -1524,6 +1524,13 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
->   				blocked_rdev = rdev;
->   				break;
->   			}
-> +
-> +			if (is_bad && bio->bi_opf & REQ_ATOMIC) {
-> +				/* We just cannot atomically write this ... */
-> +				error = -EFAULT;
-> +				goto err_handle;
-> +			}
+Why resend?
+ - fix a wrong condition in patch 2;
+ - the md-6.13 branch will have to update;
 
-One nit here. If the write range are all badblocks, then this rdev is
-skipped, and bio won't be splited, so I think atomic write is still fine
-in this case. Perhaps move this conditon below?
+Changes in v2:
+ - add more comments and commit message in patch 3;
+ - fix some typo;
 
-Same for raid10.
 
-Thanks,
-Kuai
+Yu Kuai (7):
+  md: add a new helper rdev_blocked()
+  md: don't wait faulty rdev in md_wait_for_blocked_rdev()
+  md: don't record new badblocks for faulty rdev
+  md/raid1: factor out helper to handle blocked rdev from
+    raid1_write_request()
+  md/raid1: don't wait for Faulty rdev in wait_blocked_rdev()
+  md/raid10: don't wait for Faulty rdev in wait_blocked_rdev()
+  md/raid5: don't set Faulty rdev for blocked_rdev
 
-> +
->   			if (is_bad && first_bad <= r1_bio->sector) {
->   				/* Cannot write here at all */
->   				bad_sectors -= (r1_bio->sector - first_bad);
-> @@ -3220,6 +3227,7 @@ static int raid1_set_limits(struct mddev *mddev)
->   
->   	md_init_stacking_limits(&lim);
->   	lim.max_write_zeroes_sectors = 0;
-> +	lim.features |= BLK_FEAT_ATOMIC_WRITES_STACKED;
->   	err = mddev_stack_rdev_limits(mddev, &lim, MDDEV_STACK_INTEGRITY);
->   	if (err) {
->   		queue_limits_cancel_update(mddev->gendisk->queue);
-> 
+ drivers/md/md.c     | 15 +++++++--
+ drivers/md/md.h     | 24 +++++++++++++++
+ drivers/md/raid1.c  | 75 +++++++++++++++++++++++----------------------
+ drivers/md/raid10.c | 40 +++++++++++-------------
+ drivers/md/raid5.c  | 13 ++++----
+ 5 files changed, 99 insertions(+), 68 deletions(-)
+
+-- 
+2.39.2
 
 
