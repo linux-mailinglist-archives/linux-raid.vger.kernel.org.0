@@ -1,42 +1,42 @@
-Return-Path: <linux-raid+bounces-3060-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-3057-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 537369B730E
-	for <lists+linux-raid@lfdr.de>; Thu, 31 Oct 2024 04:35:49 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 982C29B7305
+	for <lists+linux-raid@lfdr.de>; Thu, 31 Oct 2024 04:34:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0B00CB24257
-	for <lists+linux-raid@lfdr.de>; Thu, 31 Oct 2024 03:35:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BB46D1C23D5F
+	for <lists+linux-raid@lfdr.de>; Thu, 31 Oct 2024 03:34:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A3601442E8;
-	Thu, 31 Oct 2024 03:34:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0E2613BC12;
+	Thu, 31 Oct 2024 03:34:31 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A150142900;
-	Thu, 31 Oct 2024 03:34:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3740F13B280;
+	Thu, 31 Oct 2024 03:34:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730345675; cv=none; b=ZthtShufRHYnyhORgG9ILIKSQfG6FGOkjWSOcb5SmtxIIpAP3cudYxs2uP7CFLtM5qTU+7VfcJkoLjYrwvihocRBshm5fb6bFEoMMwEvmHwdkBuKHcX5vOon6kEHTxrQ7Y77VsO4JECCfgF/GliLCsPf4HfaK6r4gQN4evUgxvM=
+	t=1730345671; cv=none; b=r/g3Yo+HvDXIyIujqbQBLinKGCsWq5QTXrFndqvps/gwe2YCLR5Ukq25mgUYVIykxU2ULfh1RbFptnxFVgGlMf+zTfE//HT3IY+4PtZr6zxYGpXBLvCpgwQCs2Va9suoeMiggoglNeyvCq0m2FS3rpfLoPv+XItNi5gbEqsjmVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730345675; c=relaxed/simple;
-	bh=WZo00wVNYghI+UvwBxqkKOlHSNW8/QkCs9Kg+Oi/GFI=;
+	s=arc-20240116; t=1730345671; c=relaxed/simple;
+	bh=XW321pUn7ogiuEZuCNtcFkcsBPkQVNaxAtwi9UUOIbs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pxPDiL9ytGEnPZAJau9h2//Ra8pogRg62l73XGPxh0hDC2xcqmbigPlFbRyFh3s3Y2NWGJKtH5wqJ36lNg2eUeUmZaw99IDPrPoDGeCKhQsp6Ji2ChXprZkekvJakkpzYtucY2lP9JECu0qDsvWn7SdswgBl1AIj5PawaFV+4zU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=AUb2mpCdjLcjcFTaKaH+skyNBFp7onWJPVoBc14+1f97WVhKARtjQOWh+lQmSzd4+byioZYRKtB0yB/bQDdFeytmm/pFV+MPFQF9ojyPlH+eJv1KoO6Lhmx/FZkzGf1/y00DakxPpNdd0sUMjCdAYlQ3+9rX7Kzad57ukfO2BiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Xf8jp63Vcz4f3lfd;
-	Thu, 31 Oct 2024 11:34:06 +0800 (CST)
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Xf8jr0R8Kz4f3jXc;
+	Thu, 31 Oct 2024 11:34:08 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 68ADB1A0568;
+	by mail.maildlp.com (Postfix) with ESMTP id C49CD1A058E;
 	Thu, 31 Oct 2024 11:34:25 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgCXcYW6+iJnhVy1AQ--.50328S9;
+	by APP4 (Coremail) with SMTP id gCh0CgCXcYW6+iJnhVy1AQ--.50328S10;
 	Thu, 31 Oct 2024 11:34:25 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: song@kernel.org,
@@ -47,9 +47,9 @@ Cc: linux-raid@vger.kernel.org,
 	yukuai1@huaweicloud.com,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com
-Subject: [PATCH RESEND 5/7] md/raid1: don't wait for Faulty rdev in wait_blocked_rdev()
-Date: Thu, 31 Oct 2024 11:31:12 +0800
-Message-Id: <20241031033114.3845582-6-yukuai1@huaweicloud.com>
+Subject: [PATCH RESEND 6/7] md/raid10: don't wait for Faulty rdev in wait_blocked_rdev()
+Date: Thu, 31 Oct 2024 11:31:13 +0800
+Message-Id: <20241031033114.3845582-7-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20241031033114.3845582-1-yukuai1@huaweicloud.com>
 References: <20241031033114.3845582-1-yukuai1@huaweicloud.com>
@@ -60,11 +60,11 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCXcYW6+iJnhVy1AQ--.50328S9
-X-Coremail-Antispam: 1UD129KBjvJXoW7Aw1UWry8ZFyftFy3Gw1rZwb_yoW8XF17pa
-	93WFWSqrW8Cw18XF1DCFy8AFyYqa1UKayIkrW3A3WUXay3Ar95Jw40vasxJrykAFZIv398
-	XF13W3y8Ca45uF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBE14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+X-CM-TRANSID:gCh0CgCXcYW6+iJnhVy1AQ--.50328S10
+X-Coremail-Antispam: 1UD129KBjvJXoW7AFWDZF48uw13Aw45Gw1rJFb_yoW8KFW7pa
+	9xGFySyFW8GF47WF1DJr4UG3WYv34xKrW2yrZrJ345X3y3Kr98GF48JryrJr95AFZxZrW3
+	WF15GrW7CayjyFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPj14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
 	z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
@@ -75,9 +75,9 @@ X-Coremail-Antispam: 1UD129KBjvJXoW7Aw1UWry8ZFyftFy3Gw1rZwb_yoW8XF17pa
 	WUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
 	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2
 	Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
-	Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMI
-	IF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUvYLPUUUUU
-	=
+	Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8Jw
+	CI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUYcTQUUUU
+	U
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
@@ -89,43 +89,82 @@ request.
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 Tested-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
 ---
- drivers/md/raid1.c | 17 ++++-------------
- 1 file changed, 4 insertions(+), 13 deletions(-)
+ drivers/md/raid10.c | 40 ++++++++++++++++++----------------------
+ 1 file changed, 18 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 1679c1e9b3d5..cd3e94dceabc 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -1425,25 +1425,16 @@ static bool wait_blocked_rdev(struct mddev *mddev, struct bio *bio)
- 		if (!rdev)
- 			continue;
+diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+index f3bf1116794a..ff73db2f6c41 100644
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -1285,9 +1285,9 @@ static void raid10_write_one_disk(struct mddev *mddev, struct r10bio *r10_bio,
  
--		if (test_bit(Blocked, &rdev->flags)) {
--			if (bio->bi_opf & REQ_NOWAIT)
--				return false;
--
--			mddev_add_trace_msg(rdev->mddev, "raid1 wait rdev %d blocked",
--					    rdev->raid_disk);
+ static void wait_blocked_dev(struct mddev *mddev, struct r10bio *r10_bio)
+ {
+-	int i;
+ 	struct r10conf *conf = mddev->private;
+ 	struct md_rdev *blocked_rdev;
++	int i;
+ 
+ retry_wait:
+ 	blocked_rdev = NULL;
+@@ -1295,40 +1295,36 @@ static void wait_blocked_dev(struct mddev *mddev, struct r10bio *r10_bio)
+ 		struct md_rdev *rdev, *rrdev;
+ 
+ 		rdev = conf->mirrors[i].rdev;
+-		rrdev = conf->mirrors[i].replacement;
+-		if (rdev && unlikely(test_bit(Blocked, &rdev->flags))) {
 -			atomic_inc(&rdev->nr_pending);
--			md_wait_for_blocked_rdev(rdev, rdev->mddev);
--			goto retry;
+-			blocked_rdev = rdev;
+-			break;
+-		}
+-		if (rrdev && unlikely(test_bit(Blocked, &rrdev->flags))) {
+-			atomic_inc(&rrdev->nr_pending);
+-			blocked_rdev = rrdev;
+-			break;
 -		}
 -
- 		/* don't write here until the bad block is acknowledged */
- 		if (test_bit(WriteErrorSeen, &rdev->flags) &&
- 		    rdev_has_badblock(rdev, bio->bi_iter.bi_sector,
--				      bio_sectors(bio)) < 0) {
-+				      bio_sectors(bio)) < 0)
-+			set_bit(BlockedBadBlocks, &rdev->flags);
-+
-+		if (rdev_blocked(rdev)) {
- 			if (bio->bi_opf & REQ_NOWAIT)
- 				return false;
+-		if (rdev && test_bit(WriteErrorSeen, &rdev->flags)) {
++		if (rdev) {
+ 			sector_t dev_sector = r10_bio->devs[i].addr;
  
--			set_bit(BlockedBadBlocks, &rdev->flags);
- 			mddev_add_trace_msg(rdev->mddev, "raid1 wait rdev %d blocked",
- 					    rdev->raid_disk);
- 			atomic_inc(&rdev->nr_pending);
+ 			/*
+ 			 * Discard request doesn't care the write result
+ 			 * so it doesn't need to wait blocked disk here.
+ 			 */
+-			if (!r10_bio->sectors)
+-				continue;
+-
+-			if (rdev_has_badblock(rdev, dev_sector,
+-					      r10_bio->sectors) < 0) {
++			if (test_bit(WriteErrorSeen, &rdev->flags) &&
++			    r10_bio->sectors &&
++			    rdev_has_badblock(rdev, dev_sector,
++					      r10_bio->sectors) < 0)
+ 				/*
+-				 * Mustn't write here until the bad block
+-				 * is acknowledged
++				 * Mustn't write here until the bad
++				 * block is acknowledged
+ 				 */
+-				atomic_inc(&rdev->nr_pending);
+ 				set_bit(BlockedBadBlocks, &rdev->flags);
++
++			if (rdev_blocked(rdev)) {
+ 				blocked_rdev = rdev;
++				atomic_inc(&rdev->nr_pending);
+ 				break;
+ 			}
+ 		}
++
++		rrdev = conf->mirrors[i].replacement;
++		if (rrdev && rdev_blocked(rrdev)) {
++			atomic_inc(&rrdev->nr_pending);
++			blocked_rdev = rrdev;
++			break;
++		}
+ 	}
+ 
+ 	if (unlikely(blocked_rdev)) {
 -- 
 2.39.2
 
