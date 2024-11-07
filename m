@@ -1,187 +1,112 @@
-Return-Path: <linux-raid+bounces-3141-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-3144-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0CFAB9BFFC8
-	for <lists+linux-raid@lfdr.de>; Thu,  7 Nov 2024 09:17:36 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6EA79BFFD4
+	for <lists+linux-raid@lfdr.de>; Thu,  7 Nov 2024 09:19:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BA11A1F22E8F
-	for <lists+linux-raid@lfdr.de>; Thu,  7 Nov 2024 08:17:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 24D6F1C2125A
+	for <lists+linux-raid@lfdr.de>; Thu,  7 Nov 2024 08:19:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F3241D8E01;
-	Thu,  7 Nov 2024 08:17:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4560819AA63;
+	Thu,  7 Nov 2024 08:19:16 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6245198A1A
-	for <linux-raid@vger.kernel.org>; Thu,  7 Nov 2024 08:17:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3012519882F
+	for <linux-raid@vger.kernel.org>; Thu,  7 Nov 2024 08:19:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730967444; cv=none; b=L0XVerTsGEHPTKpa3cbTwOSj4LIzI+BBRB2T06XOOhWZEP377RDXOjOG+g3j0qW9EkyJWzWG2ojptvdaI4Md/cPBLGGMG2/UKo117rplWeF9Mz6t32c1lTk5q5I6kTuq3qD27tYoxzN7/O+ncrH3yORfSJQ70Mqg8TErTcov+w4=
+	t=1730967556; cv=none; b=K8yGgWKgGlzqY5gQJ0jbFgaefiHX+Ke2PZl5Nu0RLoh5UJtWyprSRTx6thC21rfg4gI8PANW5m+NS9lye+8Ta0LQNclw/a75CjdFamuAJt40nSSv8XuwLtJQU0rciF+T3olh7pX/uUuT+mDlkv7Vtc61T+nHCXDDJ8J3uPLMXog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730967444; c=relaxed/simple;
-	bh=ls/rx1Ml4ziZcMhrI+Yv6BSiQ+KxmHN/MftLl+rMP8c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GNlKXFHKYA8+fGwT+Gkffp0nLH/Rd9y+HaB2rrDPZGJXMQwH4Ysef00BNg/biBDwHtkFnOov7FJcJgW41eMlKF+PnGOivuvXI+pQJZFv7HbNmwIcBLuZ0x10SIYktMI6PdV3EdbC8xlnyOMCsQ5iMaBjUoYpRrAuwDpekEtU+sI=
+	s=arc-20240116; t=1730967556; c=relaxed/simple;
+	bh=m4+HbPl4Ka87+c18fq6dglPpsXOwsT6zTAOfGOlx8lI=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=tXAwSXdK0Swrs4HHfKOGdyiI0U4X6xHA9zMIGofuzdwuwc+bjwmfbgYtjxHylgYvIxZHsGtxPosCQ2e/sVCc7I1RnEzFAWvXxdS42PVVLftQwD6XRmh9LYC+ha2CnmgXSJhVosQtHNP/cNZnejWeOSNRoVGLxT/+C1Fz0EKyjWI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4XkZg06bp8z4f3nbD
-	for <linux-raid@vger.kernel.org>; Thu,  7 Nov 2024 16:17:00 +0800 (CST)
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4XkZjF6ppPz4f3kq8
+	for <linux-raid@vger.kernel.org>; Thu,  7 Nov 2024 16:18:57 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id C95711A0359
-	for <linux-raid@vger.kernel.org>; Thu,  7 Nov 2024 16:17:19 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgBHI4eMdyxnL91fBA--.3434S8;
-	Thu, 07 Nov 2024 16:17:19 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: mariusz.tkaczyk@linux.intel.com,
-	linux-raid@vger.kernel.org
-Cc: yukuai3@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH mdadm/master v2 4/4] mdadm: add support for new lockless bitmap
-Date: Thu,  7 Nov 2024 16:13:47 +0800
-Message-Id: <20241107081347.1947132-5-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20241107081347.1947132-1-yukuai1@huaweicloud.com>
+	by mail.maildlp.com (Postfix) with ESMTP id D81801A018D
+	for <linux-raid@vger.kernel.org>; Thu,  7 Nov 2024 16:19:10 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP4 (Coremail) with SMTP id gCh0CgCXc4f9dyxnHP1fBA--.64938S3;
+	Thu, 07 Nov 2024 16:19:10 +0800 (CST)
+Subject: Re: [PATCH mdadm/master v2 0/4] remove bitmap file support and
+ reserve major number for lockless bitmap
+To: Yu Kuai <yukuai1@huaweicloud.com>, mariusz.tkaczyk@linux.intel.com,
+ linux-raid@vger.kernel.org
+Cc: yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
 References: <20241107081347.1947132-1-yukuai1@huaweicloud.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <00ca05a7-188f-a45e-bf70-8b8a5fc4d3ac@huaweicloud.com>
+Date: Thu, 7 Nov 2024 16:19:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <20241107081347.1947132-1-yukuai1@huaweicloud.com>
+Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBHI4eMdyxnL91fBA--.3434S8
-X-Coremail-Antispam: 1UD129KBjvJXoWxZF47tF1UZFy7Jw17urWDCFg_yoW5ur1DpF
-	42vr95Cr13GF4kW3W7ta4kuFZ5Jr1vyFnFkrWkZa1agr1Sgrn3ZF15GF1UXa4fGw48Jayx
-	Xrn8tw1Uu3yayrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9jb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
-	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
-	rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267
-	AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E
-	14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7
-	xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Y
-	z7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
-	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
-	1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
-	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI
-	42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvf
-	C2KfnxnUUI43ZEXa7IU8SfO7UUUUU==
+X-CM-TRANSID:gCh0CgCXc4f9dyxnHP1fBA--.64938S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrtw1UJw1kAry8AFykKw4DJwb_yoWfZFgEkF
+	yDAFZ5JFW7XFyrAFy7Xr4DZ3yUJr4jyw1UJF1DJFWIqr17Jr13Jr1UA3yjqr1rXr47Gr17
+	AryUG348Jr10yjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbVAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
+	Y487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
+	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
+	b7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
+	cVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxh
+	VjvjDU0xZFpf9x0JUSNtxUUUUU=
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-From: Yu Kuai <yukuai3@huawei.com>
+Hi, all!
 
-A new major number 6 is used for the new bitmap.
+the title "mdadm/master v2" is used in downstream, and I forgot to
+remove it, please ignore it and this is the fist version of the set.
 
-Noted that for the kernel that doesn't support lockless bitmap, create
-such array will fail:
+Thanks,
+Kuai
 
-md0: invalid bitmap file superblock: unrecognized superblock version.
-
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- Create.c | 5 ++++-
- Grow.c   | 3 ++-
- bitmap.h | 1 +
- mdadm.c  | 9 ++++++++-
- mdadm.h  | 1 +
- 5 files changed, 16 insertions(+), 3 deletions(-)
-
-diff --git a/Create.c b/Create.c
-index 29858483..3637af01 100644
---- a/Create.c
-+++ b/Create.c
-@@ -541,6 +541,8 @@ int Create(struct supertype *st, struct mddev_ident *ident, int subdevs,
- 			pr_err("At least 2 nodes are needed for cluster-md\n");
- 			return 1;
- 		}
-+	} else if (s->btype == BitmapLockless) {
-+		major_num = BITMAP_MAJOR_LOCKLESS;
- 	}
- 
- 	memset(&info, 0, sizeof(info));
-@@ -1195,7 +1197,8 @@ int Create(struct supertype *st, struct mddev_ident *ident, int subdevs,
- 	 * to stop another mdadm from finding and using those devices.
- 	 */
- 
--	if (s->btype == BitmapInternal || s->btype == BitmapCluster) {
-+	if (s->btype == BitmapInternal || s->btype == BitmapCluster ||
-+	    s->btype == BitmapLockless) {
- 		if (!st->ss->add_internal_bitmap) {
- 			pr_err("internal bitmaps not supported with %s metadata\n",
- 				st->ss->name);
-diff --git a/Grow.c b/Grow.c
-index fae5b8a7..95a8da5e 100644
---- a/Grow.c
-+++ b/Grow.c
-@@ -383,7 +383,8 @@ int Grow_addbitmap(char *devname, int fd, struct context *c, struct shape *s)
- 		free(mdi);
- 	}
- 
--	if (s->btype == BitmapInternal || s->btype == BitmapCluster) {
-+	if (s->btype == BitmapInternal || s->btype == BitmapCluster ||
-+	    s->btype == BitmapLockless) {
- 		int rv;
- 		int d;
- 		int offset_setable = 0;
-diff --git a/bitmap.h b/bitmap.h
-index 7b1f80f2..4b5d2d93 100644
---- a/bitmap.h
-+++ b/bitmap.h
-@@ -13,6 +13,7 @@
- #define BITMAP_MAJOR_HI 4
- #define	BITMAP_MAJOR_HOSTENDIAN 3
- #define	BITMAP_MAJOR_CLUSTERED 5
-+#define	BITMAP_MAJOR_LOCKLESS 6
- 
- #define BITMAP_MINOR 39
- 
-diff --git a/mdadm.c b/mdadm.c
-index 82a48722..314a5923 100644
---- a/mdadm.c
-+++ b/mdadm.c
-@@ -56,6 +56,12 @@ static mdadm_status_t set_bitmap_value(struct shape *s, struct context *c, char
- 		return MDADM_STATUS_SUCCESS;
- 	}
- 
-+	if (strcmp(val, "lockless") == 0) {
-+		s->btype = BitmapLockless;
-+		pr_info("Experimental lockless bitmap, use at your own disk!\n");
-+		return MDADM_STATUS_SUCCESS;
-+	}
-+
- 	if (strcmp(val, "clustered") == 0) {
- 		s->btype = BitmapCluster;
- 		/* Set the default number of cluster nodes
-@@ -1251,7 +1257,8 @@ int main(int argc, char *argv[])
- 			pr_err("--bitmap is required for consistency policy: %s\n",
- 			       map_num_s(consistency_policies, s.consistency_policy));
- 			exit(2);
--		} else if ((s.btype == BitmapInternal || s.btype == BitmapCluster) &&
-+		} else if ((s.btype == BitmapInternal || s.btype == BitmapCluster ||
-+			    s.btype == BitmapLockless) &&
- 			   s.consistency_policy != CONSISTENCY_POLICY_BITMAP &&
- 			   s.consistency_policy != CONSISTENCY_POLICY_JOURNAL) {
- 			pr_err("--bitmap is not compatible with consistency policy: %s\n",
-diff --git a/mdadm.h b/mdadm.h
-index af54a6ab..5e35d78c 100644
---- a/mdadm.h
-+++ b/mdadm.h
-@@ -607,6 +607,7 @@ enum bitmap_type {
- 	BitmapNone,
- 	BitmapInternal,
- 	BitmapCluster,
-+	BitmapLockless,
- 	BitmapUnknown,
- };
- 
--- 
-2.39.2
+ÔÚ 2024/11/07 16:13, Yu Kuai Ð´µÀ:
+> From: Yu Kuai <yukuai3@huawei.com>
+> 
+> Yu Kuai (4):
+>    tests/04update-uuid: remove bitmap file test
+>    tests/05r1-re-add-nosuper: remove bitmap file test
+>    mdadm: remove bitmap file support
+>    mdadm: add support for new lockless bitmap
+> 
+>   Assemble.c                | 33 +-------------
+>   Build.c                   | 35 +--------------
+>   Create.c                  | 40 ++++-------------
+>   Grow.c                    | 95 +++++----------------------------------
+>   Incremental.c             | 37 +--------------
+>   bitmap.c                  | 44 +++++++++---------
+>   bitmap.h                  |  1 +
+>   config.c                  | 17 ++++---
+>   mdadm.c                   | 83 ++++++++++++++++------------------
+>   mdadm.h                   | 19 +++++---
+>   tests/04update-uuid       | 34 --------------
+>   tests/05r1-re-add-nosuper |  5 +--
+>   12 files changed, 112 insertions(+), 331 deletions(-)
+> 
 
 
