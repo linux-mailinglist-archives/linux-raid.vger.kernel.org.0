@@ -1,51 +1,52 @@
-Return-Path: <linux-raid+bounces-3152-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-3157-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8518E9C06E9
-	for <lists+linux-raid@lfdr.de>; Thu,  7 Nov 2024 14:09:24 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id F22E49C071B
+	for <lists+linux-raid@lfdr.de>; Thu,  7 Nov 2024 14:20:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EF593B2308F
-	for <lists+linux-raid@lfdr.de>; Thu,  7 Nov 2024 13:09:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2F11A1C222C7
+	for <lists+linux-raid@lfdr.de>; Thu,  7 Nov 2024 13:20:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72884212EF0;
-	Thu,  7 Nov 2024 13:04:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BA8720EA54;
+	Thu,  7 Nov 2024 13:20:03 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ECDE20EA5E
-	for <linux-raid@vger.kernel.org>; Thu,  7 Nov 2024 13:04:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B390E1E1048
+	for <linux-raid@vger.kernel.org>; Thu,  7 Nov 2024 13:20:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730984682; cv=none; b=C70wxEBhozKredScLYamSAnQbqNuKeU4tdM67WSspbzqyKDyiPV3DDGogAcEafeP/4wVKekKZzFg3kB1otVCI8JahJBOVBp2BpDM6LQxXSRMt0Ddxy/8dGtfMct+LFd5OEBXgSLf1+iVyFgkl7Hg9BKUWJ0JSN1BzZaT348ZQaM=
+	t=1730985603; cv=none; b=WjXD2xTNeN/bAGAeC2BWJnq5O/JdhdhUd7Oktdf2oUX+i8XU61AzqCiqzd+rNWW3LnbQfV2C07tRUaoBn4fVoCnBfBl7H+kfCWvp3hrMgocRBRwi9Vk5PoDbLcygwp1/OOvnJxw/kQcwJF4IV5GTz+Mcxks1xQOuDArgDAM3xIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730984682; c=relaxed/simple;
-	bh=gKUkbdh6nr2gts5MeJm5RwQWIAq82yaHSXH45gl2tLc=;
+	s=arc-20240116; t=1730985603; c=relaxed/simple;
+	bh=47ANHkvgmwlvYqgITlZEA7Lt2D7rRrThXFSmc7ojO00=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=V2Fs04PGdosW0D+Rq19YMaxqCsCbylvjto+xMFFcJUlJschbxWFRjfXns6+nsVwEP+07id1g30lWbpx3CKjXtPCpAl366Z1Li5zhe5n4++hiXbfYJilNuHEtWLP++D1IbBvExIpUczx5l5sS/at/LIvj8/JIIPwqy4+t15PV5IM=
+	 In-Reply-To:Content-Type; b=RieTZ9aZF+5ehFVORf9NJuurpFm5JAoPWEwR3Y3chxBlrTCHBPe8lwYuSo5so98ZRLK40x/w9JxCH7EFXc0KILZeMNhpc3KLQ4CMYe1JDWLBATx6nrgX85YE/fBxafJjmxsen9LowVOnmbzrf1u58R9P1eTYz3pWTzWP4dqX39w=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Xkj2T5Msyz4f3n6G
-	for <linux-raid@vger.kernel.org>; Thu,  7 Nov 2024 21:04:17 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4XkjNH1Lt5z4f3kq7
+	for <linux-raid@vger.kernel.org>; Thu,  7 Nov 2024 21:19:43 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id A1C531A018C
-	for <linux-raid@vger.kernel.org>; Thu,  7 Nov 2024 21:04:36 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 1D70C1A06DA
+	for <linux-raid@vger.kernel.org>; Thu,  7 Nov 2024 21:19:56 +0800 (CST)
 Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP4 (Coremail) with SMTP id gCh0CgBHI4fjuixnpA1zBA--.10616S3;
-	Thu, 07 Nov 2024 21:04:36 +0800 (CST)
-Subject: Re: [PATCH V2 0/3] mdadm: remove bitmap file support
-To: Yu Kuai <yukuai1@huaweicloud.com>, mariusz.tkaczyk@linux.intel.com,
- linux-raid@vger.kernel.org
-Cc: yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20241107125839.310633-1-yukuai1@huaweicloud.com>
+	by APP4 (Coremail) with SMTP id gCh0CgBHIoZ6vixnsA90BA--.9073S3;
+	Thu, 07 Nov 2024 21:19:55 +0800 (CST)
+Subject: Re: [PATCH 1/1] md/raid5: Wait sync io to finish before changing
+ group cnt
+To: Xiao Ni <xni@redhat.com>, song@kernel.org
+Cc: yukuai1@huaweicloud.com, linux-raid@vger.kernel.org,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20241106095124.74577-1-xni@redhat.com>
 From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <d15a308f-51d0-8ed6-c209-dd6551bcfc24@huaweicloud.com>
-Date: Thu, 7 Nov 2024 21:04:34 +0800
+Message-ID: <888e7aeb-ca42-792c-5616-5cbaf0f0a952@huaweicloud.com>
+Date: Thu, 7 Nov 2024 21:19:54 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 Precedence: bulk
@@ -54,57 +55,73 @@ List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20241107125839.310633-1-yukuai1@huaweicloud.com>
+In-Reply-To: <20241106095124.74577-1-xni@redhat.com>
 Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBHI4fjuixnpA1zBA--.10616S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7GrWDXry3Ww4DXF4kJF18Xwb_yoW3trb_tF
-	yDCF95JFW7XFyrAFy3Xr4DA348Jr4jyw1UJF1DJFWjqr17Jr15Jr1UAw4jqry5Zr43Gr1U
-	AryUZrW8Jr18AjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbVkFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-	Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7Mxk0xIA0c2IEe2xFo4CEbIxv
-	r21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
-	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
-	17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcV
-	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
-	6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2Kf
-	nxnUUI43ZEXa7VUjuHq7UUUUU==
+X-CM-TRANSID:gCh0CgBHIoZ6vixnsA90BA--.9073S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zw1UWry7uryxuw43Gr1Dtrb_yoW8XF47pw
+	4qkF45Zr4UXFWYkFyDZ34q9Fy8A3WUKrZIkryaqwn5Ka43Xw15Ww43Ga45Xr4jya4Syw4I
+	yF15WF95Awn7KrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvE14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
+	IcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbV
+	WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
+	67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF
+	0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWI
+	evJa73UjIFyTuYvjfUehL0UUUUU
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-在 2024/11/07 20:58, Yu Kuai 写道:
-> From: Yu Kuai <yukuai3@huawei.com>
+在 2024/11/06 17:51, Xiao Ni 写道:
+> One customer reports a bug: raid5 is hung when changing thread cnt
+> while resync is running. The stripes are all in conf->handle_list
+> and new threads can't handle them.
 > 
-> Changes in v2:
->   - remove patch 4;
+> Commit b39f35ebe86d ("md: don't quiesce in mddev_suspend()") removes
+> pers->quiesce from mddev_suspend/resume. Before this patch, mddev_suspend
+> needs to wait for all ios including sync io to finish. Now it's used
+> to only wait normal io.
 > 
-> Yu Kuai (3):
->    tests/05r1-re-add-nosuper: remove bitmap file test
->    mdadm: remove bitmap file support
->    mdadm: add support for new lockless bitmap
+> In this patch, it calls raid5_quiesce in raid5_store_group_thread_cnt
+> directly to wait all sync requests to finish before changing the group
+> cnt.
+> 
+> Fixes: b39f35ebe86d ("md: don't quiesce in mddev_suspend()")
+> Signed-off-by: Xiao Ni <xni@redhat.com>
+> ---
+>   drivers/md/raid5.c | 4 ++++
+>   1 file changed, 4 insertions(+)
+> 
+LGTM
+Reviewed-by: Yu Kuai <yukuai3@huawei.com>
 
-Dame, I wanted to remove patch 4, but actually, patch 1 was removed. :(
-My bad.
-
-My apologize for the noise.
-Kuai
-> 
->   Assemble.c                | 33 +-------------
->   Build.c                   | 35 +--------------
->   Create.c                  | 42 ++++-------------
->   Grow.c                    | 95 +++++----------------------------------
->   Incremental.c             | 37 +--------------
->   bitmap.c                  | 44 +++++++++---------
->   bitmap.h                  |  1 +
->   config.c                  | 17 ++++---
->   mdadm.c                   | 83 ++++++++++++++++------------------
->   mdadm.h                   | 19 +++++---
->   tests/05r1-re-add-nosuper |  5 +--
->   11 files changed, 113 insertions(+), 298 deletions(-)
+> diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+> index dc2ea636d173..2fa1f270fb1d 100644
+> --- a/drivers/md/raid5.c
+> +++ b/drivers/md/raid5.c
+> @@ -7177,6 +7177,8 @@ raid5_store_group_thread_cnt(struct mddev *mddev, const char *page, size_t len)
+>   	err = mddev_suspend_and_lock(mddev);
+>   	if (err)
+>   		return err;
+> +	raid5_quiesce(mddev, true);
+> +
+>   	conf = mddev->private;
+>   	if (!conf)
+>   		err = -ENODEV;
+> @@ -7198,6 +7200,8 @@ raid5_store_group_thread_cnt(struct mddev *mddev, const char *page, size_t len)
+>   			kfree(old_groups);
+>   		}
+>   	}
+> +
+> +	raid5_quiesce(mddev, false);
+>   	mddev_unlock_and_resume(mddev);
+>   
+>   	return err ?: len;
 > 
 
 
