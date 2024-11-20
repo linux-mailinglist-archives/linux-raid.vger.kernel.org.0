@@ -1,158 +1,171 @@
-Return-Path: <linux-raid+bounces-3277-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-3279-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 042149D33C7
-	for <lists+linux-raid@lfdr.de>; Wed, 20 Nov 2024 07:50:18 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 032009D3821
+	for <lists+linux-raid@lfdr.de>; Wed, 20 Nov 2024 11:18:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 491A9283769
-	for <lists+linux-raid@lfdr.de>; Wed, 20 Nov 2024 06:50:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9E0471F233B0
+	for <lists+linux-raid@lfdr.de>; Wed, 20 Nov 2024 10:18:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58EFE15DBBA;
-	Wed, 20 Nov 2024 06:49:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E489319E7D1;
+	Wed, 20 Nov 2024 10:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kPKWJs39"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A33815B111
-	for <linux-raid@vger.kernel.org>; Wed, 20 Nov 2024 06:49:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1847189BAD;
+	Wed, 20 Nov 2024 10:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732085347; cv=none; b=oX5mg9ecUpPRhF1LnattBTzZR1Tqhp6YxV1T3uuROwH1yc4p6UKj+Q/py1hMGe/e52ZjcF2x0WAgokRnBnRc1MBl1mfTCDjJxBgrXkMXCCuJ+SJ4VdSOSHNGs7fHqZNbHSdgCRvbf73RxEg1jLcmDu8JkmC50rWt0Pjha0KROAk=
+	t=1732097924; cv=none; b=n+tURyU8Gn2mVPHzHyjUhSiAW0Itk1FkV/Yw2H8QUGDKFpuvnb07nYS7pkre/Fzvns49G9cwhSZn6/nZBQmeu/XCrShFtVnbfvbt2iCToi5dBiR7zik6jr8uyY+1JWc8cjAGv19aln5PGzaLhm2YklaChZMoLTB1xoO8psqJIfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732085347; c=relaxed/simple;
-	bh=rHR4zISWW2P40nAaXlyKJmveYMqnPJTS4EBXhTcNiT8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lfbLhZlAk3B4FaeEonTtFLZDjLNWD+cAcL4Q7RhC6LI4eHYs97USVKWd2eNTCjOZ2yz42JtPzSw+HDB4zphgd16CIdv7h1fyCs+thTCKUzVFUaQu5rp4yGp0NNGlP2roAD5a3CXYQpMB3y/BPlZmG2pzhMbXYqiN82xFgl23qrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4XtX545V8qz4f3lg1
-	for <linux-raid@vger.kernel.org>; Wed, 20 Nov 2024 14:48:40 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 3150A1A0194
-	for <linux-raid@vger.kernel.org>; Wed, 20 Nov 2024 14:49:00 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgCnzoJZhj1nRlQ5CQ--.45081S8;
-	Wed, 20 Nov 2024 14:49:00 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: mariusz.tkaczyk@linux.intel.com,
-	linux-raid@vger.kernel.org
-Cc: yukuai3@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH v3 4/4] Manage: forbid re-add to the array without metadata
-Date: Wed, 20 Nov 2024 14:46:37 +0800
-Message-Id: <20241120064637.3657385-5-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20241120064637.3657385-1-yukuai1@huaweicloud.com>
-References: <20241120064637.3657385-1-yukuai1@huaweicloud.com>
+	s=arc-20240116; t=1732097924; c=relaxed/simple;
+	bh=LkPH8U58IahTYF3y5TnmB5SV+dNexaCLUB57OTVcpgQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CDerxDIvIRN07itQV+Il6tX7tdNgF4gx9dl3ERPCrV47Ufr46dB6oj4/oZYtU+kDaeilBXzqZEk+FhXv7ASVxE08YPO3nM+EPe6iddx99u+KiEMhThZlYqDVTN29guP6QUOLT0k7JP3Y4A1qUvVBlt8UvAt3+G108M6hICsT5UE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kPKWJs39; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4AK9H3ld021838;
+	Wed, 20 Nov 2024 10:18:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=k2U2KD
+	XYF7mJbcsjBayWTxaZc86neQ5rI++P9n882lo=; b=kPKWJs39gVFE9V44reClQH
+	oiYmxB/YWc9bhBf91zvTTd9gGgpteqmDkaITzWY3I+iTiymWiuAbGyjAa7035Qyo
+	gcGdXBNBszJnUlbr96p7DJhI6aJUBskhtshcHoqMGE7wlzA6S30vBAcskUCxNhPK
+	NZOfVOCwmYRYYeYhFlkclcuZN5ti5M6F4EbH1593G1BjUbIYTfS1YmaBAVx4rY8e
+	wQtd5/nk9MFfgGqHYV8g7nNrE4GbHenRiJALMhjiaekgT/FFFmEl5iZK4btFMXT8
+	Nvhcegd/I77E00rMgIoABsuTSE1o+l1L1phmj429t1SY2lls+VTnCkhOOX0TrIKw
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42xgttckq0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 20 Nov 2024 10:18:21 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4AK8Vbko031189;
+	Wed, 20 Nov 2024 10:18:21 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 42y5qseeqg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 20 Nov 2024 10:18:20 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4AKAIJsY58327398
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 20 Nov 2024 10:18:19 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3A5A12004F;
+	Wed, 20 Nov 2024 10:18:19 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AB91F2005A;
+	Wed, 20 Nov 2024 10:18:17 +0000 (GMT)
+Received: from li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com (unknown [9.109.253.82])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 20 Nov 2024 10:18:17 +0000 (GMT)
+Date: Wed, 20 Nov 2024 15:48:15 +0530
+From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+To: Genes Lists <lists@sapience.com>
+Cc: song@kernel.org, yukuai3@huawei.com, linux-raid@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
+        linux@leemhuis.info
+Subject: Re: md-raid  6.11.8 page fault oops
+Message-ID: <Zz23Z3RK/AHSXY1I@li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com>
+References: <0b579808e848171fc64e04f0629e24735d034d32.camel@sapience.com>
+ <34333c67f5490cda041bc0cbe4336b94271d5b49.camel@sapience.com>
+ <Zzx34Mm5K42GWyKj@li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com>
+ <ef8bd4f9308dbf941076b2f7bd8a81590a09aa5e.camel@sapience.com>
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCnzoJZhj1nRlQ5CQ--.45081S8
-X-Coremail-Antispam: 1UD129KBjvJXoW7ZF48KFW8AFWxGF13AFyUGFg_yoW8tFW8pr
-	13JFyfJrykJrZIgay7CFWkZF95J3ykXF4xG39xJryIyrsrZFyjvr45Jryvv3y5ZFWruw43
-	ZF4fJr4xKFyrKFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvKb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
-	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
-	rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267
-	AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2
-	WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkE
-	bVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbV
-	WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
-	67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42
-	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF
-	0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxh
-	VjvjDU0xZFpf9x07jeVbkUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+In-Reply-To: <ef8bd4f9308dbf941076b2f7bd8a81590a09aa5e.camel@sapience.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: reiykG7LFyPxA9MFJVI11BYNXOsDmKG9
+X-Proofpoint-ORIG-GUID: reiykG7LFyPxA9MFJVI11BYNXOsDmKG9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
+ mlxscore=0 malwarescore=0 mlxlogscore=711 adultscore=0 priorityscore=1501
+ bulkscore=0 impostorscore=0 spamscore=0 lowpriorityscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2409260000
+ definitions=main-2411200070
 
-From: Yu Kuai <yukuai3@huawei.com>
+On Tue, Nov 19, 2024 at 08:31:02AM -0500, Genes Lists wrote:
+> On Tue, 2024-11-19 at 17:04 +0530, Ojaswin Mujoo wrote:
+> > > 
+> ...
+> 
+> > >  (gdb) list *(rb_first+0x13)
+> > >   0xffffffff81de1af3 is in rb_first (lib/rbtree.c:473).
+> > >   468       struct rb_node  *n;
+> > >   469
+> > >   470       n = root->rb_node;
+> > >   471       if (!n)
+> > >   472           return NULL;
+> > >   473       while (n->rb_left)
+> > 
+> > Now this looks strange, we already make sure n is not NULL and then
+> > somehow this line ends up in
+> > 
+> >  BUG: unable to handle page fault for address: 0000000000200010
+> > 
+> > Now, decoding the code with an x86 vmlinux, I see the fauling opcode
+> > faulting:
+> > 
+> > Code starting with the faulting instruction
+> > ===========================================
+> >    0:   0f 1f 80 00 00 00 00    nopl   0x0(%rax)
+> >    7:   90                      nop
+> >    8:   90                      nop
+> >    9:   90                      nop
+> >    a:   90                      nop
+> >    b:   90                      nop
+> >    c:   90                      nop
+> >    d:   90                      nop
+> >    e:   90                      nop
+> >    f:   90                      nop
+> > 
+> > Now RAX is 0x200000 but I don't think the nopl instruction should
+> > have resulted
+> > in a mem access AFA my limited understanding of x86 ISA goes.
+> > 
+> > I also don't see nopl in my vmlinux in rb_first, my binary being
+> > compiled with
+> > gcc 8.5. Are you by chance using clang or higher version or higher
+> > optimization in gcc.
+> > 
+> > Regards,
+> > ojaswin
+> 
+> I am using Arch toolchain with 
+> 
+>    gcc 14.2.1+r134+gab884fffe3fc-1
+> 
+> I do not set CFLAGS_KERNEL  so compile options are the default.
 
-re-add will not trigger full disk recovery, user should add a new disk
-to the array instead. Also update test/05r1-re-add-nosuper to reflect
-this.
+Got it, I'm still not sure what might be causing this oops. Would you
+happen to a have a reproducer that I can play around with on my system?
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- Manage.c                  | 12 ++++++++++++
- tests/05r1-re-add-nosuper | 27 +++++----------------------
- 2 files changed, 17 insertions(+), 22 deletions(-)
+Regards,
+ojaswin
+> 
+> thanks
+> 
+> gene
+> 
+> 
 
-diff --git a/Manage.c b/Manage.c
-index b9e55c43..b14a9ab9 100644
---- a/Manage.c
-+++ b/Manage.c
-@@ -1448,6 +1448,18 @@ int Manage_subdevs(char *devname, int fd,
- 		int rv, err = 0;
- 		int mj, mn;
- 
-+		if (tst->ss->external && dv->disposition == 'A') {
-+			pr_err("Cannot re-add member device %s to %s, it is not supported for external metadata, aborting.\n",
-+			       dv->devname, fd2devnm(fd));
-+			goto abort;
-+		}
-+
-+		if (array.not_persistent == 1 && dv->disposition == 'A') {
-+			pr_err("Cannot re-add member device %s to %s, array is not persistent, aborting.\n",
-+			       dv->devname, fd2devnm(fd));
-+			goto abort;
-+		}
-+
- 		raid_slot = -1;
- 		if (dv->disposition == 'c') {
- 			rv = parse_cluster_confirm_arg(dv->devname, &dv->devname, &raid_slot);
-diff --git a/tests/05r1-re-add-nosuper b/tests/05r1-re-add-nosuper
-index a3fa9503..750d7c14 100644
---- a/tests/05r1-re-add-nosuper
-+++ b/tests/05r1-re-add-nosuper
-@@ -1,7 +1,6 @@
- #
--# create a raid1, remove a drive, and readd it.
--# resync should be instant.
--# Then do some IO first.  Resync should still be very fast
-+# create a raid1 without superblock, remove a drive, and readd it.
-+# readd should fail.
- #
- mdadm -B $md0 -l1 -n2 -d1 $dev1 $dev2
- check resync
-@@ -12,24 +11,8 @@ sleep 4
- mdadm $md0 -f $dev2
- sleep 1
- mdadm $md0 -r $dev2
--mdadm $md0 --re-add $dev2
--check nosync
-+if mdadm $md0 --re-add $dev2; then
-+	err "re-add should fail"
-+fi
- 
--mdadm $md0 -f $dev2
--sleep 1
--mdadm $md0 -r $dev2
--testdev $md0 1 $size 1
--mdadm $md0 --re-add $dev2
--check wait
--cmp --bytes=$[$mdsize0*1024] $dev1 $dev2
--
--mdadm $md0 -f $dev2; sleep 1
--mdadm $md0 -r $dev2
--if dd if=/dev/zero of=$md0 ; then : ; fi
--blockdev --flushbufs $md0 # make sure writes have been sent
--mdadm $md0 --re-add $dev2
--check recovery
--check wait
--# should BLKFLSBUF and then read $dev1/$dev2...
--cmp --bytes=$[$mdsize0*1024] $file1 $file2
- mdadm -S $md0
--- 
-2.39.2
 
 
