@@ -1,51 +1,51 @@
-Return-Path: <linux-raid+bounces-3313-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-3310-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23FAA9DF8A6
-	for <lists+linux-raid@lfdr.de>; Mon,  2 Dec 2024 03:02:17 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40EFD9DF8A4
+	for <lists+linux-raid@lfdr.de>; Mon,  2 Dec 2024 03:02:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E302A2816BB
-	for <lists+linux-raid@lfdr.de>; Mon,  2 Dec 2024 02:02:15 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 66D06B2105C
+	for <lists+linux-raid@lfdr.de>; Mon,  2 Dec 2024 02:02:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00F882868B;
-	Mon,  2 Dec 2024 02:02:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1589918C31;
+	Mon,  2 Dec 2024 02:02:06 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12BC31C6BE
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12BFF1CABA
 	for <linux-raid@vger.kernel.org>; Mon,  2 Dec 2024 02:02:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733104926; cv=none; b=JXlE0W00/ttknY6ANtgkgeD8X+pOQisPMawuAYO8TXrOW/9IZ0e8QHBkobPsD+pkntMBsH49Og0JC1KN5JtfBANGYXtXABs57K9TDCsF8itYtiTRgQfK3+2GjkLJPrc5gIMDzLsHCzlxDbZZ1rycGB3U0ev9USDDUPdQ130Gpnw=
+	t=1733104925; cv=none; b=oDxyaeD7A4vUUqJ7K2ym84b4ToFUqJ2G0W0H2bqlD8nZXsfsyc8XbnHOO+2hvNNdov8jM4WNseGVz4qPl8VfwtZPpZfGY8DebVtyVo7hfxj1bBUK2OXIj11Mqd3zCN7JInHD3b5PxrDpT+1cTlmDiP0eGStD6DZuAqCkn1X4j50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733104926; c=relaxed/simple;
-	bh=ULHRvj1mA85MBsF/WtPDojfv1rE6ZTRkKC/05hi8kkQ=;
+	s=arc-20240116; t=1733104925; c=relaxed/simple;
+	bh=z369lES9dlJGVMxroWXe6Rl2IoMK5Pj1bkY4Fv0u6KY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=a1dT3ePM3apev+ZlaahnNSPwblavwhHP4b+QIA7FD88A0362MI0+quZqE4DUhPdVOSjcGURftq2vl9YF1rAxsEX3s5ZhBXXyTh8BnbNaHu5QSH9Vkpj6MuyoN67COmrIbPS2ocu3kAf6ey4UQst2diQo66aPkeftckdWaeTd+/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=huG8SKxJGuF4tT4de2XBr8h/MCuMBWMo01FhElZIqK7u6Nc/m4zPwLuU0vywuCn0d6xgcIx1vKZaQ/rZo79H6FlgF7tgvtkp3+iQL4GsKdUpV/eFtaaaslf9cMR1US/VF6wxh1K5fReRS/vmGBTUZgJDEUKkzYQiVo+HlEssjJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Y1n8N5hDrz4f3jq4
-	for <linux-raid@vger.kernel.org>; Mon,  2 Dec 2024 10:01:40 +0800 (CST)
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Y1n8H0WYBz4f3kw5
+	for <linux-raid@vger.kernel.org>; Mon,  2 Dec 2024 10:01:35 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id AB3C31A0359
+	by mail.maildlp.com (Postfix) with ESMTP id F1FF11A0568
 	for <linux-raid@vger.kernel.org>; Mon,  2 Dec 2024 10:01:54 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgDHo4cQFU1ngWmkDQ--.17049S5;
+	by APP4 (Coremail) with SMTP id gCh0CgDHo4cQFU1ngWmkDQ--.17049S6;
 	Mon, 02 Dec 2024 10:01:54 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: mariusz.tkaczyk@linux.intel.com,
 	linux-raid@vger.kernel.org
 Cc: yukuai3@huawei.com,
 	yangerkun@huawei.com
-Subject: [PATCH v4 mdadm 1/5] tests/04update-uuid: remove bitmap file test
-Date: Mon,  2 Dec 2024 09:59:09 +0800
-Message-Id: <20241202015913.3815936-2-yukuai1@huaweicloud.com>
+Subject: [PATCH v4 mdadm 2/5] tests/05r1-re-add-nosuper: remove bitmap file test
+Date: Mon,  2 Dec 2024 09:59:10 +0800
+Message-Id: <20241202015913.3815936-3-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20241202015913.3815936-1-yukuai1@huaweicloud.com>
 References: <20241202015913.3815936-1-yukuai1@huaweicloud.com>
@@ -56,79 +56,52 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDHo4cQFU1ngWmkDQ--.17049S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxJr4fJr45Cw17WF17AFyUtrb_yoW8uw4fpF
-	43AFna9r1UG3yUXFyUA34kGFnxJFyDXr48A34SgFyfGas8urZYvry8uF1Sqw4UtrWvkw1k
-	Z3WvyFWrXrW09wUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvGb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGw
-	A2048vs2IY020Ec7CjxVAFwI0_Jrv_JF4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMc
-	Ij6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_
-	Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
-	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
-	17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
-	C0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
-	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
-	73UjIFyTuYvjxUFzV1UUUUU
+X-CM-TRANSID:gCh0CgDHo4cQFU1ngWmkDQ--.17049S6
+X-Coremail-Antispam: 1UD129KBjvdXoW7XFyDCw18KF18AF4rZFyxXwb_yoW3JFb_CF
+	1fWrWxW3yxu3Z2qr18Ca1UZw4vqw43CF1FvFy5XF1fGF1UXrn3Kas7Cryaqry3urZrCFya
+	vrWUXFW3CF18CjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbV8YFVCjjxCrM7AC8VAFwI0_Xr0_Wr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7IE14v26r15M2
+	8IrcIa0xkI8VCY1x0267AKxVWUCVW8JwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK
+	021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r
+	4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx
+	0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWU
+	JVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
+	W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
+	1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
+	IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvE
+	x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
+	DU0xZFpf9x07URpBfUUUUU=
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-Prepare to remove the bitmap file support.
+Prepare to remove bitmap file support.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- tests/04update-uuid | 34 ----------------------------------
- 1 file changed, 34 deletions(-)
+ tests/05r1-re-add-nosuper | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/tests/04update-uuid b/tests/04update-uuid
-index 25314ab5..ce5a958c 100644
---- a/tests/04update-uuid
-+++ b/tests/04update-uuid
-@@ -22,40 +22,6 @@ mdadm -D /dev/md0 | grep -s > /dev/null 01234567:89abcdef:fedcba98:76543210 || {
- }
- mdadm -S /dev/md0
- 
+diff --git a/tests/05r1-re-add-nosuper b/tests/05r1-re-add-nosuper
+index 7d41fd7b..a3fa9503 100644
+--- a/tests/05r1-re-add-nosuper
++++ b/tests/05r1-re-add-nosuper
+@@ -1,12 +1,9 @@
 -
--# now if we have a bitmap, that needs updating too.
--rm -f $targetdir/bitmap
--yes | mdadm -CR --assume-clean -b $targetdir/bitmap $md0 -l5 -n3 $dev0 $dev1 $dev2
--mdadm -S /dev/md0
--mdadm -A /dev/md0 -b $targetdir/bitmap --update=uuid --uuid=0123456789abcdef:fedcba9876543210 $dev0 $dev1 $dev2
--no_errors
--mdadm -D /dev/md0 | grep -s > /dev/null 01234567:89abcdef:fedcba98:76543210 || {
--   echo Wrong uuid; mdadm -D /dev/md0 ; exit 2;
--}
--if mdadm -X $targetdir/bitmap | grep -s > /dev/null 01234567:89abcdef:fedcba98:76543210 ||
--   mdadm -X $targetdir/bitmap | grep -s > /dev/null 67452301:efcdab89:98badcfe:10325476
--then : ; else
--   echo Wrong uuid; mdadm -X $targetdir/bitmap ; exit 2;
--fi
--mdadm -S /dev/md0
--
--# and bitmap for version1
--rm -f $targetdir/bitmap
--yes | mdadm -CR --assume-clean -e1.1 -b $targetdir/bitmap $md0 -l5 -n3 $dev0 $dev1 $dev2
--mdadm -S /dev/md0
--mdadm -A /dev/md0 -b $targetdir/bitmap --update=uuid --uuid=0123456789abcdef:fedcba9876543210 $dev0 $dev1 $dev2
--no_errors
--mdadm -D /dev/md0 | grep -s > /dev/null 01234567:89abcdef:fedcba98:76543210 || {
--   echo Wrong uuid; mdadm -D /dev/md0 ; exit 2;
--}
--# -X cannot tell which byteorder to use for the UUID, so allow both.
--if mdadm -X $targetdir/bitmap | grep -s > /dev/null 01234567:89abcdef:fedcba98:76543210 ||
--   mdadm -X $targetdir/bitmap | grep -s > /dev/null 67452301:efcdab89:98badcfe:10325476
--then : ; else
--   echo Wrong uuid; mdadm -X $targetdir/bitmap ; exit 2;
--fi
--mdadm -S /dev/md0
--
- # Internal bitmaps too.
- mdadm -CR --assume-clean  -b internal --bitmap-chunk 4 $md0 -l5 -n3 $dev0 $dev1 $dev2
- mdadm -S /dev/md0
+ #
+ # create a raid1, remove a drive, and readd it.
+ # resync should be instant.
+ # Then do some IO first.  Resync should still be very fast
+ #
+-bmf=$targetdir/bitmap2
+-rm -f $bmf
+-yes | mdadm -B $md0 -l1 -n2 -b$bmf -d1 $dev1 $dev2
++mdadm -B $md0 -l1 -n2 -d1 $dev1 $dev2
+ check resync
+ check wait
+ testdev $md0 1 $size 1
 -- 
 2.39.2
 
