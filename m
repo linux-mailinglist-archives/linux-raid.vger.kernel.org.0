@@ -1,121 +1,113 @@
-Return-Path: <linux-raid+bounces-3576-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-3578-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EBE7A221D3
-	for <lists+linux-raid@lfdr.de>; Wed, 29 Jan 2025 17:35:28 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0A54A2268B
+	for <lists+linux-raid@lfdr.de>; Wed, 29 Jan 2025 23:57:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9CAFA1672CF
-	for <lists+linux-raid@lfdr.de>; Wed, 29 Jan 2025 16:35:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2D3A61886C2E
+	for <lists+linux-raid@lfdr.de>; Wed, 29 Jan 2025 22:57:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22E4519D886;
-	Wed, 29 Jan 2025 16:35:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36CEB1AF0BF;
+	Wed, 29 Jan 2025 22:57:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dev-mail.net header.i=@dev-mail.net header.b="VlF0Q+lG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="N+P55xA+"
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="1IFc64xi"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
+Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715B62FB6
-	for <linux-raid@vger.kernel.org>; Wed, 29 Jan 2025 16:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18770199EBB
+	for <linux-raid@vger.kernel.org>; Wed, 29 Jan 2025 22:57:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738168523; cv=none; b=tlZU7iy/1hj7Yt9BamWgDrUCXOfLTe2Jfcn/BGoaMzHOhSDXwnJ7gvK0dv9TYRJ2IL2B5Hs5Xtg1MYQv6/UHV+U29mfEUQURWu9p3kiFODBTT63JAvocSfxU0MGoYLxSeTXSaNwNQ5Z9ih6MobWPj4qh0k4cCweAzcpdNoQ4ZfQ=
+	t=1738191433; cv=none; b=VEZroZA6rZ6GbUqEXwe54azxAiBQ0fyBke+lRaYQ0JV5EVOe7oH8NjcqAIW2MYT8fEPDWuqqCxDYZcJ81tT7Xumc560EovmrQ/Mgms8YMUNQNVb2EfivFBZTPlhXwV+XU97VDbr2Db5V7G8hAGKKlEGytA7rZxzTR2eOqmN0Lq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738168523; c=relaxed/simple;
-	bh=pTXhUArpPD/ubKaTda8FFcIp4gv+cmGvlnT5PuY8jso=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bbM3E+4B7kMRB1uyXtGY6PqIgedMI7Q04JHpXHCTXvUczbbj/CCLbNkR/DYAylswkTOiwtNdw/LQSrL7fP+go+PKfRZf+D3mTiWGyUfwF6gS50c/ci+Wmlb6lt99dfP2mqklWS8hnqHs2pSWOKS97rqeXkfVH0YjQWvVR5bkAOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev-mail.net; spf=pass smtp.mailfrom=dev-mail.net; dkim=pass (2048-bit key) header.d=dev-mail.net header.i=@dev-mail.net header.b=VlF0Q+lG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=N+P55xA+; arc=none smtp.client-ip=103.168.172.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev-mail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev-mail.net
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfout.phl.internal (Postfix) with ESMTP id 9245213801E4;
-	Wed, 29 Jan 2025 11:35:18 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Wed, 29 Jan 2025 11:35:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dev-mail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
-	1738168518; x=1738254918; bh=5Xyr10sz5EBqta1+WOev+nXucyT5+28nEaS
-	VEOA2Cf8=; b=VlF0Q+lG6i5+vDhh31Ll8WQWh58atX1wWmEZf7WqFuz1kFeJGH6
-	gGPJuiY2MpeeZQC6UJ/bVaFvL7/3IRQhaJv5491iBj4zNsMZT16KNFuTOTgosT6m
-	uk0UWMBcCrNmiISbOAEQ4SfgVVbEu/nfNfd4nf8YRxhoYkfFp1oIGdlods1boIN2
-	EQjaQNvagmzhD9rv5aRHeRmOSMhPcoS0X2su00C7XCP3TfCtNfW0oYI9qCI3ff1V
-	oNtqyq08j8dTUc76CCPkDcZ7Vyo8zH1YxBKDfoy883TG0gCYpS8aSvRmM8iMuaeN
-	Lp8wbxiwfqhl3+gho9fzsePbaKNVFJh5TpQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738168518; x=
-	1738254918; bh=5Xyr10sz5EBqta1+WOev+nXucyT5+28nEaSVEOA2Cf8=; b=N
-	+P55xA++3hQs0Gb5KvF7SKygbpDcBRLxQcbr72C9HhBdxFhEjLFgv5f6O5Uh4aiJ
-	fZY7zK5C4BMjnG0jceekwPnscqgFeMqxGArPBYm8ur9tHglkjYoY8dN+Fz37ZKJ+
-	xmWWq9Z8uHpC4kREshf5vRH2gLo91Imjl2IY+kCcJ2oUCBbxlPQmYO2tCETTRFjI
-	LiA35iNC9bbA2RyzfYnNz0z0+9h9ti6wEVs3KJMDs8sJR7mv+TOrjqiqLWR2/mFf
-	4NBS9lZdEe63N36Gd5WWUxmLwWuTTOsBzIZkjBpZ2f+gRLp/w36lgv6Tpf9O+jQl
-	IHj4C2dVBWqYHsLdF/Q/A==
-X-ME-Sender: <xms:xliaZzD7xFUxrmx6hTIEzcsJwxRj2u4CkgRnSNMBax4Cq3a3elQ9fA>
-    <xme:xliaZ5gvwvZlRHR3pPBwYVih9r6D43muVJQlERKap2A_MxkfR1N6sel55qPNMOjF8
-    ubYusMhCHbOkNE5>
-X-ME-Received: <xmr:xliaZ-kr8S6jxwmj6oxn6Npe2VYXqoeAdTM2NBJgOd2PCFDgk17V6wAmVHfxX7PHPXx_1ufWqc9IHZk3GTrpnRx_t1BfbTe30aDbxW9G>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefgeelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpefkffggfg
-    hruffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpehpghhnugcuoehpghhnuges
-    uggvvhdqmhgrihhlrdhnvghtqeenucggtffrrghtthgvrhhnpedukeeiteeviedugfegud
-    efgefgteejffefvdetvdehhfehfeffkeduuddvieefvdenucevlhhushhtvghrufhiiigv
-    pedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehpghhnugesuggvvhdqmhgrihhlrdhnvg
-    htpdhnsggprhgtphhtthhopedvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehr
-    mhesrhhomhgrnhhrmhdrnhgvthdprhgtphhtthhopehlihhnuhigqdhrrghiugesvhhgvg
-    hrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:xliaZ1x00ncV077xm_EFXB-U3qIgtWQtdX5Jk_VE3tMhGbDkCXiatQ>
-    <xmx:xliaZ4T3OWLYn0tFdNiqw3rM_ZNKzC8Dxpy21wwgbzHDWkpPFfmeOw>
-    <xmx:xliaZ4aXpQ1P3HI0hEkqjRH99CuwyruBtIsW5v0NFTgTl7MkeMPP6w>
-    <xmx:xliaZ5R5yevmoQGpK8gqK4N1th8pAc_7YH1s30NZ--sc1mMVw2XnRg>
-    <xmx:xliaZ9J2inuPuIy8kqpkLNQwPDNIHflru4mtePyDKJweE0rMau-3o0nh>
-Feedback-ID: if6e94526:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 29 Jan 2025 11:35:17 -0500 (EST)
-Message-ID: <c1de7bb2-93f5-4d35-b226-cd924c727cb7@dev-mail.net>
-Date: Wed, 29 Jan 2025 11:35:17 -0500
+	s=arc-20240116; t=1738191433; c=relaxed/simple;
+	bh=Gok2UKBVMoxErJjkOmVg8ELvCO3trxztvfMg1lZOieI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hEjkA9WZ6Obn9VMzzxzHvE8Ni8so4zRQypVyglkynSq1gNo8fZjRXJC/hVi0GfiAdigHhf0MgzgFghXs13eRDJC0uEX/8FRANRxbQl/zTFZxG1ov8A8B25VAYqC7yyl9gCEJxYlPLSHmyTHHXuwipskS3S4Y6zAgnKo4RLGsJeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=1IFc64xi; arc=none smtp.client-ip=199.89.1.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+Received: from localhost (localhost [127.0.0.1])
+	by 009.lax.mailroute.net (Postfix) with ESMTP id 4YjyG90Tg0zlgTWM;
+	Wed, 29 Jan 2025 22:57:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:mime-version:x-mailer:message-id:date
+	:date:subject:subject:from:from:received:received; s=mr01; t=
+	1738191421; x=1740783422; bh=d4Ufct1Z2xaqO0Z9vhLVoATIlfhb6fgnPul
+	++KTAhvM=; b=1IFc64xiL1vuQ12c504J8ZAAhIZyVK1JDHCz3Ntx0lYCSZq0ybE
+	oRNq6YutyEQp4840Z2Y9lttQiSdul5xbwfxs2rTKthmQCR/1sTPQPWBvoooBP8QM
+	ETDxbiApanBdakT824c3KvYwKQEzCBdn8hOX8RekkBOxjqWbEMEzWErfQi5aNsb8
+	I4/X1YZNhKY29VDo2i+qvKBnzPa9ZeuFH76t/9NDjLazUpMcKl/14tP7ocXCJtOQ
+	hWP66o58fN5eLxl3X+ZEAHc8G4eYTwk4arfyo5TrCPNGhJPFFM8QFfGFwWoWBL2E
+	ksVvBploued2vB7GLo+6s/1w6U3DCBH1+FA==
+X-Virus-Scanned: by MailRoute
+Received: from 009.lax.mailroute.net ([127.0.0.1])
+ by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id w2DEm5bZNFnw; Wed, 29 Jan 2025 22:57:01 +0000 (UTC)
+Received: from bvanassche.mtv.corp.google.com (unknown [104.135.204.82])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4YjyG36X0ZzlgTWG;
+	Wed, 29 Jan 2025 22:56:59 +0000 (UTC)
+From: Bart Van Assche <bvanassche@acm.org>
+To: Song Liu <song@kernel.org>
+Cc: linux-raid@vger.kernel.org,
+	Bart Van Assche <bvanassche@acm.org>,
+	Yu Kuai <yukuai3@huawei.com>,
+	Coly Li <colyli@kernel.org>,
+	Mike Snitzer <snitzer@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Nathan Chancellor <nathan@kernel.org>
+Subject: [PATCH] md: Fix linear_set_limits()
+Date: Wed, 29 Jan 2025 14:56:35 -0800
+Message-ID: <20250129225636.2667932-1-bvanassche@acm.org>
+X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: pgnd@dev-mail.net
-Subject: Re: replaced all drives in RAID-10 array with larger drives ->
- failing to correctly extend array to use new/add'l space.
-Content-Language: en-US
-To: rm@romanrm.net
-Cc: linux-raid@vger.kernel.org
-References: <b57aabc1-cb65-411c-b79c-ee8aa3fb849f@dev-mail.net>
- <20250129212929.6449db3b@nvm>
-From: pgnd <pgnd@dev-mail.net>
-In-Reply-To: <20250129212929.6449db3b@nvm>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
->> what's incorrect/missing in that procedure?  how do i get the full partitions to be used by the array?
-> 
-> Did you try without specifying "--raid-devices" there?
+queue_limits_cancel_update() must only be called if
+queue_limits_start_update() is called first. Remove the
+queue_limits_cancel_update() call from linear_set_limits() because
+there is no corresponding queue_limits_start_update() call.
 
-yep.  different error
+This bug was discovered by annotating all mutex operations with clang
+thread-safety attributes and by building the kernel with clang and
+-Wthread-safety.
 
-	mdadm --grow /dev/md2 --raid-devices=4 --size=max --force
-		Change size first, then check data is intact before making other changes.
+Cc: Yu Kuai <yukuai3@huawei.com>
+Cc: Coly Li <colyli@kernel.org>
+Cc: Mike Snitzer <snitzer@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>
+Fixes: 127186cfb184 ("md: reintroduce md-linear")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+---
+ drivers/md/md-linear.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-	mdadm --grow /dev/md2 --size=max --force
-		mdadm: Cannot set device size for /dev/md2: Invalid argument
-
-
+diff --git a/drivers/md/md-linear.c b/drivers/md/md-linear.c
+index a382929ce7ba..369aed044b40 100644
+--- a/drivers/md/md-linear.c
++++ b/drivers/md/md-linear.c
+@@ -76,10 +76,8 @@ static int linear_set_limits(struct mddev *mddev)
+ 	lim.max_write_zeroes_sectors =3D mddev->chunk_sectors;
+ 	lim.io_min =3D mddev->chunk_sectors << 9;
+ 	err =3D mddev_stack_rdev_limits(mddev, &lim, MDDEV_STACK_INTEGRITY);
+-	if (err) {
+-		queue_limits_cancel_update(mddev->gendisk->queue);
++	if (err)
+ 		return err;
+-	}
+=20
+ 	return queue_limits_set(mddev->gendisk->queue, &lim);
+ }
 
