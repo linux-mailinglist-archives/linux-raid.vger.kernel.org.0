@@ -1,240 +1,359 @@
-Return-Path: <linux-raid+bounces-3643-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-3645-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 113BCA36CF0
-	for <lists+linux-raid@lfdr.de>; Sat, 15 Feb 2025 10:28:52 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72C9FA37294
+	for <lists+linux-raid@lfdr.de>; Sun, 16 Feb 2025 09:39:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BD8C43B1970
-	for <lists+linux-raid@lfdr.de>; Sat, 15 Feb 2025 09:26:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7E59E1890DDB
+	for <lists+linux-raid@lfdr.de>; Sun, 16 Feb 2025 08:39:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C9B41ADC8F;
-	Sat, 15 Feb 2025 09:26:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E2BF156678;
+	Sun, 16 Feb 2025 08:39:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e6alah9D"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B261A23A8;
-	Sat, 15 Feb 2025 09:26:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71514366
+	for <linux-raid@vger.kernel.org>; Sun, 16 Feb 2025 08:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739611563; cv=none; b=d5BwTAXjPsPtoiAyWF5aYXBe3SeIb+HrecgVtIatatd3RVPh9d/mKF+xROZja9Dn9YbtbU/FMFrGaPaOjy7lOyxe15bK79WV87fQHdqTyCni+EZpIcVypEZObLG2Ed19Z5OkRpHO85pS2vF8SE7VReBclhn/hVgyPaiJZJ7j9iw=
+	t=1739695153; cv=none; b=ZK+ZRbjW/oOsHiq16lGlQ7OgBhum1ss0hpO1GtHTZ1uu4ce++WW0pXupDGBDh5bbqETYWWt7OPxedklvpniMuEvlySAkSRI4e1G4/e8K0M98Z8S67twnQO/9f1ApUUbOxL+RBc5YZ99394QwLyUrGS4cEHgvh1Q1Rq6+5Wp33qQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739611563; c=relaxed/simple;
-	bh=/Yd6LGK/voyZCkC/3RwOpE9q0HSaaXjvFUz/GVKwcf8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ClvdprGOCULxG5BLX7a4upyc+t651/EnyP2/87rtmq6gkmBB6CyZH6BcSA9jIrWxRjImghMVq+vStTaqlYpsQZnWbqhQR7z+Z76PHvfIpDaUqZdB9IP8R4v2kUcmlRGoXmWBdeo/b9MsxI5nprH6ynF6TebdTO4RSlQeFzU/qdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Yw3Rs09H8z4f3kvM;
-	Sat, 15 Feb 2025 17:25:29 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id D4F001A06D7;
-	Sat, 15 Feb 2025 17:25:51 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgAni1+bXbBn+Q+iDw--.49525S11;
-	Sat, 15 Feb 2025 17:25:51 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: song@kernel.org,
-	yukuai3@huawei.com
-Cc: linux-raid@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH md-6.15 7/7] md: switch md-cluster to use md_submodle_head
-Date: Sat, 15 Feb 2025 17:22:25 +0800
-Message-Id: <20250215092225.2427977-8-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250215092225.2427977-1-yukuai1@huaweicloud.com>
-References: <20250215092225.2427977-1-yukuai1@huaweicloud.com>
+	s=arc-20240116; t=1739695153; c=relaxed/simple;
+	bh=3D1d3vJjKIVR+D4RQzBW0kUdCGer4OuNlv40/r26cg4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dLYt4YASIPCV2WYi353kDkXvWHcpi+jEhoo3Sx7hik+Jy+bS8rBsSQd5NTY9phNeLqqzg+QnIWTZoOqhS1NU2zJJC5XwgCo9q1CjoZXgThqYAiprA9aTFQS8JgMEsI9wrNaa/iyc3xkndBRE/qlaSn+WvIfwM9V4d8j9MAogjek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e6alah9D; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e5dc37f1991so1322571276.2
+        for <linux-raid@vger.kernel.org>; Sun, 16 Feb 2025 00:39:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739695149; x=1740299949; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WikHeLsYJbl5I5H0aiqJwGe0+Vqmm3IzCeSVJeDLi6s=;
+        b=e6alah9DEXBEFbc9o3gd3iMYuB9nW22LeyX5MbNHiyRTVVLUuJi5NZyTHWt1cGHYxN
+         /RLpUMW2owUTDwRorZx4rMHWs2LHEzFwp8wvI3B4exjQjhtlFh28dLf94vVJrZhnE7Ot
+         +cBwINkQ8hIIiINfx1Kwv4b49abLLEEdf1RwBbDgfDDdZQabagGJUWC9/51pw17YysMy
+         pBtcpRjviMCxdoGkxqR/QMx20VCiPe7XGlzQa+aI0vlvHUHjt0Yjygt4yQyFMJ3ye59I
+         yqYMYXnjiAkYn45wKNsEeS+sdm/V2ERUlMJ+N/zRPs2dpsl7qi8ZIwh+L4Fn413RS2Ks
+         BR9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739695149; x=1740299949;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WikHeLsYJbl5I5H0aiqJwGe0+Vqmm3IzCeSVJeDLi6s=;
+        b=TV5Er4HgAZ7HLfH05euUlXO3u32FEzqWHk6VqefNj2gd/hr2pjxspp1dGiy+DkLVAN
+         u7qqaxgHNq3S/d1rPpsIUK3V4ZuMZ2sVLiKBLhQzrUQXpGsspaB1O3SS8gE4NOMaTZGr
+         f7PZrmDp/T4xRlLnIXDWIT/QXecpzmM+QDS/TRhH21F9kWzjjjG9hjYT+hamBkAMVGKc
+         DGK0YnounWORSGsucNH2Dsg5+HZOjL3D5BkwpL5cTteOwaVFUp/wyle4gdBS95txlYFP
+         DoMu0p6EPrm/aH7tblrLw0yVVViA48L53m+SlsMq/oJXTpwqIRnT3lK5BNUFoBxvSzwd
+         2VkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWhdoBWd4z+96wHd3EE34GqhBMr/I+4tVFdnUcssRc1af7mlYEqwxBfzVNb/UmmoH7NuHxzDqbU/5JE@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4CiDr44oKE7UYzejdZ5cz5joVDxzUSdMVNssVyn/pyTWapGD2
+	dKAXFR3rVcw6RK3ro7KbesVZeLfk+t8lvZDqdNkGGwhWA17aU8L12G34TgP3lvK6N3H3w317DLI
+	+dsKLF64HzrifzLNR2JzcAH0K8hc=
+X-Gm-Gg: ASbGncsoZmdpA3ZUMyH82WvLF8sltZ7cFOUESa4KnODMqOozfTgPGmKVMSz+rwbV0Ca
+	DCrFDn60HRlpFUCP4faHT6RuDFFd1COjk2iZ7nSBvIRaaqHkDnHNPsKd2jxfvuZZssHoCdxfljg
+	==
+X-Google-Smtp-Source: AGHT+IGDCDsLmj9kiHmV0Hg164sO/l9/jdXE+txBUZtHcd9HqwIF/JrSAtcvtrVrOOGgbIb1lfy/2JCcEzKIzRq5x6s=
+X-Received: by 2002:a05:6902:2104:b0:e5d:929e:6311 with SMTP id
+ 3f1490d57ef6-e5dc91ee6afmr3390963276.36.1739695149210; Sun, 16 Feb 2025
+ 00:39:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAni1+bXbBn+Q+iDw--.49525S11
-X-Coremail-Antispam: 1UD129KBjvJXoW3JFWfZr1UuF13JrW7CrW8tFb_yoW7Xr4kpF
-	WSg345Jr1UJrWDWa1UGFyDZFy5Kw1xG3yUt34fJ3sagFnrWrW8JFs8Jr95Ar98Gay3JrnF
-	q3WrK3WDu3s5Ar7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPj14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-	IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWUAV
-	WUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
-	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2
-	Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
-	Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8Jw
-	CI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUYcTQUUUU
-	U
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+References: <CAAiJnjqFwETu8ZwE44jdNWk=UYbdoNJr0W7pjkgjkTy0ff8grA@mail.gmail.com>
+ <CAPhsuW56KORS78c-buACrq0TWJ+qewwh+QUmC-ePJO3LVVjeyQ@mail.gmail.com>
+ <CAAiJnjpTAXz8TyhKD4DmpgYJ21CRJh-bLEOqZUitWYONumggAw@mail.gmail.com>
+ <CAPhsuW7gjyCRdHp3cRFgNxMO2kXAjMOYgW+ekqBMX18d4657Yg@mail.gmail.com>
+ <CAAiJnjqLLK5PY84q6Ni_uZYQXwxDcQCum2-_=FAkkxOmh-VCPg@mail.gmail.com> <CAPhMem29LGKB7n8DuQcbL7zQMrA1WAYMJNBsXx3V7oL=gv8yog@mail.gmail.com>
+In-Reply-To: <CAPhMem29LGKB7n8DuQcbL7zQMrA1WAYMJNBsXx3V7oL=gv8yog@mail.gmail.com>
+From: Anton Gavriliuk <antosha20xx@gmail.com>
+Date: Sun, 16 Feb 2025 10:38:58 +0200
+X-Gm-Features: AWEUYZlMIY0Zts3gsM2P5GMgcHTl7B-PMhCsZfF8sThVokE5QkMqaMC9SoT6P44
+Message-ID: <CAAiJnjriBvYrzQHE8LB9=5j+QtOHa=NtckECj=bF_KL5y3KXFA@mail.gmail.com>
+Subject: Re: Huge lock contention during raid5 build time
+To: Shushu Yi <firnyee@gmail.com>
+Cc: Song Liu <song@kernel.org>, yukuai3@huawei.com, linux-raid@vger.kernel.org, 
+	teddyxym@outlook.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Yu Kuai <yukuai3@huawei.com>
+I will be glad to test any mdadm patches.
 
-To make code cleaner, and prepare to add kconfig for bitmap.
+I believe that mdadm should be improved to match performance of latest
+Gen5 NVMe SSDs .
 
-Also remove the unsed global variables pers_lock, md_cluster_ops and
-md_cluster_mod, and exported symbols register_md_cluster_operations(),
-unregister_md_cluster_operations() and md_cluster_ops.
+Anton
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- drivers/md/md-cluster.c | 14 ++++++++++----
- drivers/md/md-cluster.h |  3 ---
- drivers/md/md.c         | 41 ++++++-----------------------------------
- drivers/md/md.h         |  2 +-
- 4 files changed, 17 insertions(+), 43 deletions(-)
-
-diff --git a/drivers/md/md-cluster.c b/drivers/md/md-cluster.c
-index 6fd436a1d373..94221d964d4f 100644
---- a/drivers/md/md-cluster.c
-+++ b/drivers/md/md-cluster.c
-@@ -1612,7 +1612,14 @@ static int gather_bitmaps(struct md_rdev *rdev)
- 	return err;
- }
- 
--static const struct md_cluster_operations cluster_ops = {
-+static struct md_cluster_operations cluster_ops = {
-+	.head = {
-+		.type	= MD_CLUSTER,
-+		.id	= ID_CLUSTER,
-+		.name	= "cluster",
-+		.owner	= THIS_MODULE,
-+	},
-+
- 	.join   = join,
- 	.leave  = leave,
- 	.slot_number = slot_number,
-@@ -1642,13 +1649,12 @@ static int __init cluster_init(void)
- {
- 	pr_warn("md-cluster: support raid1 and raid10 (limited support)\n");
- 	pr_info("Registering Cluster MD functions\n");
--	register_md_cluster_operations(&cluster_ops, THIS_MODULE);
--	return 0;
-+	return register_md_submodule(&cluster_ops.head);
- }
- 
- static void cluster_exit(void)
- {
--	unregister_md_cluster_operations();
-+	unregister_md_submodule(&cluster_ops.head);
- }
- 
- module_init(cluster_init);
-diff --git a/drivers/md/md-cluster.h b/drivers/md/md-cluster.h
-index 4e842af11fb4..8fb06d853173 100644
---- a/drivers/md/md-cluster.h
-+++ b/drivers/md/md-cluster.h
-@@ -37,9 +37,6 @@ struct md_cluster_operations {
- 	void (*update_size)(struct mddev *mddev, sector_t old_dev_sectors);
- };
- 
--extern int register_md_cluster_operations(const struct md_cluster_operations *ops,
--		struct module *module);
--extern int unregister_md_cluster_operations(void);
- extern int md_setup_cluster(struct mddev *mddev, int nodes);
- extern void md_cluster_stop(struct mddev *mddev);
- extern void md_reload_sb(struct mddev *mddev, int raid_disk);
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index d94c9aa8c3aa..4d93cc1aaabc 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -81,13 +81,8 @@ static const char *action_name[NR_SYNC_ACTIONS] = {
- 
- static DEFINE_XARRAY(md_submodule);
- 
--static DEFINE_SPINLOCK(pers_lock);
--
- static const struct kobj_type md_ktype;
- 
--static const struct md_cluster_operations *md_cluster_ops;
--static struct module *md_cluster_mod;
--
- static DECLARE_WAIT_QUEUE_HEAD(resync_wait);
- static struct workqueue_struct *md_wq;
- 
-@@ -7452,11 +7447,12 @@ static int update_raid_disks(struct mddev *mddev, int raid_disks)
- 
- static int get_cluster_ops(struct mddev *mddev)
- {
--	spin_lock(&pers_lock);
--	mddev->cluster_ops = md_cluster_ops;
--	if (mddev->cluster_ops && !try_module_get(md_cluster_mod))
-+	xa_lock(&md_submodule);
-+	mddev->cluster_ops = xa_load(&md_submodule, ID_CLUSTER);
-+	if (mddev->cluster_ops &&
-+	    !try_module_get(mddev->cluster_ops->head.owner))
- 		mddev->cluster_ops = NULL;
--	spin_unlock(&pers_lock);
-+	xa_unlock(&md_submodule);
- 
- 	return mddev->cluster_ops == NULL ? -ENOENT : 0;
- }
-@@ -7467,7 +7463,7 @@ static void put_cluster_ops(struct mddev *mddev)
- 		return;
- 
- 	mddev->cluster_ops->leave(mddev);
--	module_put(md_cluster_mod);
-+	module_put(mddev->cluster_ops->head.owner);
- 	mddev->cluster_ops = NULL;
- }
- 
-@@ -8559,31 +8555,6 @@ void unregister_md_submodule(struct md_submodule_head *msh)
- }
- EXPORT_SYMBOL_GPL(unregister_md_submodule);
- 
--int register_md_cluster_operations(const struct md_cluster_operations *ops,
--				   struct module *module)
--{
--	int ret = 0;
--	spin_lock(&pers_lock);
--	if (md_cluster_ops != NULL)
--		ret = -EALREADY;
--	else {
--		md_cluster_ops = ops;
--		md_cluster_mod = module;
--	}
--	spin_unlock(&pers_lock);
--	return ret;
--}
--EXPORT_SYMBOL(register_md_cluster_operations);
--
--int unregister_md_cluster_operations(void)
--{
--	spin_lock(&pers_lock);
--	md_cluster_ops = NULL;
--	spin_unlock(&pers_lock);
--	return 0;
--}
--EXPORT_SYMBOL(unregister_md_cluster_operations);
--
- int md_setup_cluster(struct mddev *mddev, int nodes)
- {
- 	int ret = get_cluster_ops(mddev);
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index 873f33e2a1f6..dd6a28f5d8e6 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -603,7 +603,7 @@ struct mddev {
- 	mempool_t *serial_info_pool;
- 	void (*sync_super)(struct mddev *mddev, struct md_rdev *rdev);
- 	struct md_cluster_info		*cluster_info;
--	const struct md_cluster_operations *cluster_ops;
-+	struct md_cluster_operations *cluster_ops;
- 	unsigned int			good_device_nr;	/* good device num within cluster raid */
- 	unsigned int			noio_flag; /* for memalloc scope API */
- 
--- 
-2.39.2
-
+=D1=81=D0=B1, 15 =D1=84=D0=B5=D0=B2=D1=80. 2025=E2=80=AF=D0=B3. =D0=B2 11:2=
+5, Shushu Yi <firnyee@gmail.com>:
+>
+> Hi everyone,
+>
+> Thanks very much for testing. Is there anything I can do to forward this =
+patch?
+>
+> Best,
+> Shushu Yi
+>
+> Anton Gavriliuk <antosha20xx@gmail.com> =E4=BA=8E2025=E5=B9=B41=E6=9C=882=
+7=E6=97=A5=E5=91=A8=E4=B8=80 20:33=E5=86=99=E9=81=93=EF=BC=9A
+>>
+>> > Yes, group_thread_cnt sometimes (usually?) causes more lock
+>> > contention and lower performance.
+>>
+>> [root@memverge2 anton]# /home/anton/mdadm/mdadm --version
+>> mdadm - v4.4-15-g21e4efb1 - 2025-01-27
+>>
+>> /home/anton/mdadm/mdadm --create --verbose /dev/md0 --level=3D5
+>> --raid-devices=3D4 /dev/nvme0n1 /dev/nvme2n1 /dev/nvme3n1 /dev/nvme4n1
+>>
+>> Without group_thread_cnt (with sync_speed_max=3D3600000 only) it is not
+>> 1.4 GB/s, 1 GB/s
+>>
+>> [root@memverge2 anton]# cat /proc/mdstat
+>> Personalities : [raid6] [raid5] [raid4]
+>> md0 : active raid5 nvme4n1[4] nvme3n1[2] nvme2n1[1] nvme0n1[0]
+>>       4688044032 blocks super 1.2 level 5, 512k chunk, algorithm 2 [4/3]=
+ [UUU_]
+>>       [>....................]  recovery =3D  3.2% (50134272/1562681344)
+>> finish=3D24.5min speed=3D1027434K/sec
+>>       bitmap: 0/12 pages [0KB], 65536KB chunk
+>>
+>> > Could you please run perf-report on the perf.data? I won't be
+>> > able to see all the symbols without your kernel.
+>>
+>> [root@memverge2 anton]# perf record -g
+>> ^C[ perf record: Woken up 36 times to write data ]
+>> [ perf record: Captured and wrote 9.632 MB perf.data (61989 samples) ]
+>>
+>> [root@memverge2 anton]# perf report
+>>
+>> Samples: 61K of event 'cycles:P', Event count (approx.): 61959249145
+>>   Children      Self  Command          Shared Object
+>>           Symbol
+>> +   79.59%     0.00%  md0_raid5        [kernel.kallsyms]
+>>           [k] ret_from_fork_asm
+>> +   79.59%     0.00%  md0_raid5        [kernel.kallsyms]
+>>           [k] ret_from_fork
+>> +   79.59%     0.00%  md0_raid5        [kernel.kallsyms]
+>>           [k] kthread
+>> +   79.59%     0.00%  md0_raid5        [kernel.kallsyms]
+>>           [k] md_thread
+>> +   79.59%     0.06%  md0_raid5        [kernel.kallsyms]
+>>           [k] raid5d
+>> +   74.47%     0.67%  md0_raid5        [kernel.kallsyms]
+>>           [k] handle_active_stripes.isra
+>> +   68.27%     4.84%  md0_raid5        [kernel.kallsyms]
+>>           [k] handle_stripe
+>> +   27.47%     0.11%  md0_raid5        [kernel.kallsyms]
+>>           [k] raid_run_ops
+>> +   27.36%     0.25%  md0_raid5        [kernel.kallsyms]
+>>           [k] ops_run_compute5
+>> +   27.10%     0.07%  md0_raid5        [kernel.kallsyms]
+>>           [k] async_xor_offs
+>> +   26.42%     0.16%  md0_raid5        [kernel.kallsyms]
+>>           [k] do_sync_xor_offs
+>> +   21.94%     7.87%  md0_raid5        [kernel.kallsyms]
+>>           [k] ops_run_io
+>> +   19.34%    18.19%  md0_raid5        [kernel.kallsyms]
+>>           [k] xor_avx_4
+>> +   13.35%     0.00%  md0_resync       [kernel.kallsyms]
+>>           [k] ret_from_fork_asm
+>> +   13.35%     0.00%  md0_resync       [kernel.kallsyms]
+>>           [k] ret_from_fork
+>> +   13.35%     0.00%  md0_resync       [kernel.kallsyms]
+>>           [k] kthread
+>> +   13.35%     0.00%  md0_resync       [kernel.kallsyms]
+>>           [k] md_thread
+>> +   13.35%     0.55%  md0_resync       [kernel.kallsyms]
+>>           [k] md_do_sync.cold
+>> +   12.41%     0.69%  md0_resync       [kernel.kallsyms]
+>>           [k] raid5_sync_request
+>> +   12.18%     0.35%  md0_raid5        [kernel.kallsyms]
+>>           [k] submit_bio_noacct_nocheck
+>> +   11.67%     0.54%  md0_raid5        [kernel.kallsyms]
+>>           [k] __submit_bio
+>> +   11.06%     0.79%  md0_raid5        [kernel.kallsyms]
+>>           [k] blk_mq_submit_bio
+>> +   10.76%     9.83%  md0_raid5        [kernel.kallsyms]
+>>           [k] analyse_stripe
+>> +   10.46%     0.29%  md0_resync       [kernel.kallsyms]
+>>           [k] raid5_get_active_stripe
+>> +    6.84%     6.49%  md0_raid5        [kernel.kallsyms]
+>>           [k] memset_orig
+>> +    6.59%     0.00%  swapper          [kernel.kallsyms]
+>>           [k] common_startup_64
+>> +    6.59%     0.01%  swapper          [kernel.kallsyms]
+>>           [k] cpu_startup_entry
+>> +    6.58%     0.03%  swapper          [kernel.kallsyms]
+>>           [k] do_idle
+>> +    6.44%     0.00%  swapper          [kernel.kallsyms]
+>>           [k] start_secondary          =E2=96=92
+>> +    5.55%     0.01%  md0_raid5        [kernel.kallsyms]
+>>           [k] asm_common_interrupt     =E2=96=92
+>> +    5.53%     0.01%  md0_raid5        [kernel.kallsyms]
+>>           [k] common_interrupt         =E2=96=92
+>> +    5.45%     0.01%  md0_raid5        [kernel.kallsyms]
+>>           [k] blk_add_rq_to_plug       =E2=96=92
+>> +    5.44%     0.02%  swapper          [kernel.kallsyms]
+>>           [k] cpuidle_idle_call        =E2=96=92
+>> +    5.44%     0.01%  md0_raid5        [kernel.kallsyms]
+>>           [k] blk_mq_flush_plug_list   =E2=96=92
+>> +    5.43%     0.17%  md0_raid5        [kernel.kallsyms]
+>>           [k] blk_mq_dispatch_plug_list=E2=96=92
+>> +    5.41%     0.01%  md0_raid5        [kernel.kallsyms]
+>>           [k] __common_interrupt       =E2=96=92
+>> +    5.40%     0.03%  md0_raid5        [kernel.kallsyms]
+>>           [k] handle_edge_irq          =E2=96=92
+>> +    5.32%     0.01%  md0_raid5        [kernel.kallsyms]
+>>           [k] handle_irq_event         =E2=96=92
+>> +    5.25%     0.01%  md0_raid5        [kernel.kallsyms]
+>>           [k] __handle_irq_event_percpu=E2=96=92
+>> +    5.25%     0.01%  md0_raid5        [kernel.kallsyms]
+>>           [k] nvme_irq                 =E2=96=92
+>> +    5.18%     0.14%  md0_raid5        [kernel.kallsyms]
+>>           [k] blk_mq_insert_requests   =E2=96=92
+>> +    5.15%     0.00%  swapper          [kernel.kallsyms]
+>>           [k] cpuidle_enter            =E2=96=92
+>> +    5.15%     0.03%  swapper          [kernel.kallsyms]
+>>           [k] cpuidle_enter_state      =E2=96=92
+>> +    5.05%     1.29%  md0_raid5        [kernel.kallsyms]
+>>           [k] release_stripe_list      =E2=96=92
+>> +    5.00%     0.01%  md0_raid5        [kernel.kallsyms]
+>>           [k] blk_mq_try_issue_list_dir=E2=96=92
+>> +    4.98%     0.00%  md0_raid5        [kernel.kallsyms]
+>>           [k] __blk_mq_issue_directly  =E2=96=92
+>> +    4.97%     0.03%  md0_raid5        [kernel.kallsyms]
+>>           [k] nvme_queue_rq            =E2=96=92
+>> +    4.86%     1.03%  md0_resync       [kernel.kallsyms]
+>>           [k] init_stripe              =E2=96=92
+>> +    4.80%     0.07%  md0_raid5        [kernel.kallsyms]
+>>           [k] nvme_prep_rq.part.0      =E2=96=92
+>> +    4.57%     0.03%  md0_raid5        [kernel.kallsyms]
+>>           [k] nvme_map_data
+>> +    4.17%     0.17%  md0_raid5        [kernel.kallsyms]
+>>           [k] blk_mq_end_request_batch =E2=96=92
+>> +    3.52%     3.49%  swapper          [kernel.kallsyms]
+>>           [k] poll_idle                =E2=96=92
+>> +    3.51%     1.67%  md0_resync       [kernel.kallsyms]
+>>           [k] raid5_compute_blocknr    =E2=96=92
+>> +    3.21%     0.47%  md0_raid5        [kernel.kallsyms]
+>>           [k] blk_attempt_plug_merge   =E2=96=92
+>> +    3.13%     3.13%  md0_resync       [kernel.kallsyms]
+>>           [k] find_get_stripe          =E2=96=92
+>> +    3.01%     0.01%  md0_raid5        [kernel.kallsyms]
+>>           [k] __dma_map_sg_attrs       =E2=96=92
+>> +    3.01%     0.00%  md0_raid5        [kernel.kallsyms]
+>>           [k] dma_map_sgtable          =E2=96=92
+>> +    3.00%     2.37%  md0_raid5        [kernel.kallsyms]
+>>           [k] dma_direct_map_sg        =E2=96=92
+>> +    2.59%     2.13%  md0_raid5        [kernel.kallsyms]
+>>           [k] do_release_stripe        =E2=96=92
+>> +    2.45%     1.45%  md0_raid5        [kernel.kallsyms]
+>>           [k] __get_priority_stripe    =E2=96=92
+>> +    2.15%     2.14%  md0_resync       [kernel.kallsyms]
+>>           [k] raid5_compute_sector     =E2=96=92
+>> +    2.14%     0.35%  md0_raid5        [kernel.kallsyms]
+>>           [k] bio_attempt_back_merge   =E2=96=92
+>> +    1.99%     1.93%  md0_raid5        [kernel.kallsyms]
+>>           [k] raid5_end_read_request   =E2=96=92
+>> +    1.38%     1.00%  md0_raid5        [kernel.kallsyms]
+>>           [k] fetch_block              =E2=96=92
+>> +    1.35%     0.14%  md0_raid5        [kernel.kallsyms]
+>>           [k] release_inactive_stripe_l=E2=96=92
+>> +    1.35%     0.40%  md0_raid5        [kernel.kallsyms]
+>>           [k] ll_back_merge_fn         =E2=96=92
+>> +    1.27%     1.25%  md0_resync       [kernel.kallsyms]
+>>           [k] _raw_spin_lock_irq       =E2=96=92
+>> +    1.11%     1.11%  md0_raid5        [kernel.kallsyms]
+>>           [k] llist_reverse_order      =E2=96=92
+>> +    1.10%     0.70%  md0_raid5        [kernel.kallsyms]
+>>           [k] raid5_release_stripe     =E2=96=92
+>> +    1.05%     1.00%  md0_raid5        [kernel.kallsyms]
+>>           [k] md_wakeup_thread         =E2=96=92
+>> +    1.02%     0.97%  swapper          [kernel.kallsyms]
+>>           [k] intel_idle_irq           =E2=96=92
+>> +    0.99%     0.01%  md0_raid5        [kernel.kallsyms]
+>>           [k] __blk_rq_map_sg          =E2=96=92
+>> +    0.97%     0.84%  md0_raid5        [kernel.kallsyms]
+>>           [k] __blk_bios_map_sg        =E2=96=92
+>> +    0.91%     0.04%  md0_raid5        [kernel.kallsyms]
+>>           [k] __wake_up                =E2=96=92
+>> +    0.84%     0.74%  md0_raid5        [kernel.kallsyms]
+>>           [k] _raw_spin_lock_irqsave
+>>
+>> Anton
+>>
+>> =D0=BF=D1=82, 24 =D1=8F=D0=BD=D0=B2. 2025=E2=80=AF=D0=B3. =D0=B2 23:48, =
+Song Liu <song@kernel.org>:
+>> >
+>> > On Fri, Jan 24, 2025 at 12:00=E2=80=AFAM Anton Gavriliuk <antosha20xx@=
+gmail.com> wrote:
+>> > >
+>> > > > We need major work to make it faster so that we can keep up with
+>> > > > the speed of modern SSDs.
+>> > >
+>> > > Glad to know that this in your roadmap.
+>> > > This is very important for storage server solutions, when you can ad=
+d
+>> > > ten's NVMe SSDs Gen 4/5 in 2U server.
+>> > > I'm not a developer, but I can assist you in the testing as much as =
+required.
+>> > >
+>> > > > Could you please do a perf-record with '-g' so that we can see
+>> > > > which call paths hit the lock contention? This will help us
+>> > > > understand whether Shushu's bitmap optimization can help.
+>> > >
+>> > > default raid5 build performance
+>> > >
+>> > > [root@memverge2 ~]# cat /proc/mdstat
+>> > > Personalities : [raid6] [raid5] [raid4]
+>> > > md0 : active raid5 nvme0n1[4] nvme2n1[2] nvme3n1[1] nvme4n1[0]
+>> > >       4688044032 blocks super 1.2 level 5, 512k chunk, algorithm 2 [=
+4/3] [UUU_]
+>> > >       [>....................]  recovery =3D  0.3% (5601408/156268134=
+4)
+>> > > finish=3D125.0min speed=3D207459K/sec
+>> > >       bitmap: 0/12 pages [0KB], 65536KB chunk
+>> > >
+>> > > after set
+>> > >
+>> > > [root@memverge2 md]# echo 8 > group_thread_cnt
+>> >
+>> > Yes, group_thread_cnt sometimes (usually?) causes more lock
+>> > contention and lower performance.
+>> >
+>> > > [root@memverge2 md]# echo 3600000 > sync_speed_max
+>> > >
+>> > > [root@memverge2 ~]# cat /proc/mdstat
+>> > > Personalities : [raid6] [raid5] [raid4]
+>> > > md0 : active raid5 nvme0n1[4] nvme2n1[2] nvme3n1[1] nvme4n1[0]
+>> > >       4688044032 blocks super 1.2 level 5, 512k chunk, algorithm 2 [=
+4/3] [UUU_]
+>> > >       [=3D>...................]  recovery =3D  7.9% (124671408/15626=
+81344)
+>> > > finish=3D16.6min speed=3D1435737K/sec
+>> > >       bitmap: 0/12 pages [0KB], 65536KB chunk
+>> > >
+>> > > perf.data.gz attached.
+>> >
+>> > Could you please run perf-report on the perf.data? I won't be
+>> > able to see all the symbols without your kernel.
+>> >
+>> > Thanks,
+>> > Song
 
