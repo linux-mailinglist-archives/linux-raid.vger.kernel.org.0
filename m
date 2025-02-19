@@ -1,393 +1,167 @@
-Return-Path: <linux-raid+bounces-3677-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-3681-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69AFEA3B50A
-	for <lists+linux-raid@lfdr.de>; Wed, 19 Feb 2025 09:52:37 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0277A3BCFE
+	for <lists+linux-raid@lfdr.de>; Wed, 19 Feb 2025 12:36:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4DFB3189A156
-	for <lists+linux-raid@lfdr.de>; Wed, 19 Feb 2025 08:46:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8ADB43B15C2
+	for <lists+linux-raid@lfdr.de>; Wed, 19 Feb 2025 11:35:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A5141F3BB7;
-	Wed, 19 Feb 2025 08:38:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FBE11DEFF1;
+	Wed, 19 Feb 2025 11:34:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bQZ7Ub1j"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42CC71F4170;
-	Wed, 19 Feb 2025 08:38:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FEDC1E0E1A
+	for <linux-raid@vger.kernel.org>; Wed, 19 Feb 2025 11:34:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739954331; cv=none; b=iygcP9kh0kBeLvOPaAzFRnSa/uRb3eG7hjKkfztEHLB83HTYFhrnvSYzaStn+v8lWN0MkzN83SwaYatNSQjr6f+ap7H1BTbfvV6/5BEMo73NIqaD0JjEMtNYVqGv+wEsfZBhPaDq7T/w/4sIvqrgYDrLsYG+4XRH8aisM/h2yqo=
+	t=1739964851; cv=none; b=Tqx4lsECTxaPUzbiybMGb2y3Og0YmsLN0VibKp2Oreo+X5DpqAEhMFGDX563uwWtB1qIkR78Mq3bgyV7O8c9d9SN3JnFAbdXRUdVu96y/XTuX4BCK7O9w2qcXskaY1mvnaYpYtukU8144pAPFREPXSujF2ULX2+rF/ptMrR7GJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739954331; c=relaxed/simple;
-	bh=Mujj3ajX1kDm+W2RzmPnaKHpaHN2mJ8/XC9kXRGES+I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EaMTZPu7mJHitGxw+lEitt/+8/FMtc83SjEzk9Cnj9mSPp6YNa358EvEMYYCZn/NBYvhje4u+IVbmLyq+nAMGc9Ov+PhEkAKkPB5GuwqcqGtGgJWeb62r1/slQY9mAMfU11s1GjAQmizTbXG7i9Kj0CpuqmDbs2jdKbfT/D9fMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YyVCh46Vmz4f3jtD;
-	Wed, 19 Feb 2025 16:38:24 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id D4BAF1A0F86;
-	Wed, 19 Feb 2025 16:38:40 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgBXvGCImLVn4yQeEQ--.36560S15;
-	Wed, 19 Feb 2025 16:38:40 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: song@kernel.org,
-	yukuai3@huawei.com
-Cc: linux-raid@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH md-6.15 v4 11/11] md/md-bitmap: introduce CONFIG_MD_BITMAP
-Date: Wed, 19 Feb 2025 16:34:56 +0800
-Message-Id: <20250219083456.941760-12-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250219083456.941760-1-yukuai1@huaweicloud.com>
-References: <20250219083456.941760-1-yukuai1@huaweicloud.com>
+	s=arc-20240116; t=1739964851; c=relaxed/simple;
+	bh=q3QKNAD1HbPIZobbO74e+99+Af0xmx9FbtiKI1359x4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=OHBpsonurb1kGJLIjzhBO2SHMo0v/5HGJLINY3cxoUlitW8Bb5STmELzy6wHEx0YW7q32a9QctcZ9Dn8fjQUTDX6F8KD4HM8U1u29v8mKnZOAMbvDQtKIDhExlx5pNAdd/EZL0dnUomUgvNjAxMexOs2G683SysIGrfqE5trmP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=bQZ7Ub1j; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250219113406epoutp039848c8952db89b4734d7f1dd65796694~lmM87-T8a2854028540epoutp03J
+	for <linux-raid@vger.kernel.org>; Wed, 19 Feb 2025 11:34:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250219113406epoutp039848c8952db89b4734d7f1dd65796694~lmM87-T8a2854028540epoutp03J
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1739964846;
+	bh=PqKn35gzT2r3v5tfRxbCbfThiaGkSqsVYoyLWVULZOY=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=bQZ7Ub1jSTGq154ckB8C7e1pXJ9gsB4Etq9myUNocZmU7bSrmM9lPQX6q1Qm/juiK
+	 5V9Bu8+Q/pEXxeyTYYufmYnDFI1Oqx+dWaap+tiX7iFyLJ+psRpp0KKz/aiWvW/97y
+	 qEpbL82+w47CsYvvokdKNaoQZD76vb0j37P17ULg=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20250219113405epcas5p30367f78dc4aeb2935edd2743124675a4~lmM8Ea5Hu1304413044epcas5p3v;
+	Wed, 19 Feb 2025 11:34:05 +0000 (GMT)
+Received: from epsmges5p1new.samsung.com (unknown [182.195.38.178]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4YyZ6N0JPRz4x9Q2; Wed, 19 Feb
+	2025 11:34:04 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	EA.AC.20052.9A1C5B76; Wed, 19 Feb 2025 20:34:01 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250219113400epcas5p394cd7569eadc76acfa4a7e10f0b93109~lmM3KSst11304413044epcas5p3j;
+	Wed, 19 Feb 2025 11:34:00 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250219113400epsmtrp1e77fa577e43aa500ed817eb728b376fe~lmM3I4ZCj3182931829epsmtrp1k;
+	Wed, 19 Feb 2025 11:34:00 +0000 (GMT)
+X-AuditID: b6c32a49-3d20270000004e54-2a-67b5c1a9d0b7
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	2A.4F.18729.8A1C5B76; Wed, 19 Feb 2025 20:34:00 +0900 (KST)
+Received: from [107.122.11.51] (unknown [107.122.11.51]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250219113359epsmtip2d080602954c02a311242f790a6c46f66~lmM1my5hY1503015030epsmtip2P;
+	Wed, 19 Feb 2025 11:33:58 +0000 (GMT)
+Message-ID: <12365e80-90c2-4f85-9b74-1df0173ad6ec@samsung.com>
+Date: Wed, 19 Feb 2025 17:03:58 +0530
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBXvGCImLVn4yQeEQ--.36560S15
-X-Coremail-Antispam: 1UD129KBjvJXoWxKF4rWw4fury3Cw1ftF4UXFb_yoWfXrWfpF
-	W8XF13Cr45tFW3XayUJa4q9F1Yqr1ktr9rtryfGwn5CF9xXr98JF4rWFyUtrykGFyxZFsx
-	Za1rGFW7CF1jqF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPj14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-	IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWUAV
-	WUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
-	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2
-	Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
-	Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJw
-	CI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUYcTQUUUU
-	U
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] block: move the block layer auto-integrity code
+ into a new file
+To: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Cc: Mike Snitzer <snitzer@kernel.org>, Mikulas Patocka
+	<mpatocka@redhat.com>, Song Liu <song@kernel.org>, Yu Kuai
+	<yukuai3@huawei.com>, "Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
+	linux-raid@vger.kernel.org, target-devel@vger.kernel.org
+Content-Language: en-US
+From: Kanchan Joshi <joshi.k@samsung.com>
+In-Reply-To: <20250218182207.3982214-3-hch@lst.de>
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBJsWRmVeSWpSXmKPExsWy7bCmuu7Kg1vTDV6cY7FYfbefzWLBorks
+	FitXH2Wy2HtL26J9/i5Gi+XH/zFZTOy4ymRx4pa0xfHlf9ksWpe+ZbKYs5DNgduj5chbVo/L
+	Z0s9Nq3qZPN4sXkmo8fumw1sHh+f3mLxeL/vKpvH501yARxR2TYZqYkpqUUKqXnJ+SmZeem2
+	St7B8c7xpmYGhrqGlhbmSgp5ibmptkouPgG6bpk5QFcqKZQl5pQChQISi4uV9O1sivJLS1IV
+	MvKLS2yVUgtScgpMCvSKE3OLS/PS9fJSS6wMDQyMTIEKE7Iz+o6eYC5o5Kg4+W0+cwPjfrYu
+	Rk4OCQETiYOPTzJ2MXJxCAnsZpS4PXESK0hCSOATo8TLXnaIxDdGiaP7XjLCdFze8o8FIrGX
+	UaK1eSMzhPOWUeJW7zugDAcHr4CdxMLliSANLAKqEode3GAHsXkFBCVOznzCAmKLCshL3L81
+	AywuLBAlMfthI5gtIuAgMXvDUjaQmcwCm5gkvreuYAJJMAuIS9x6Mp8JZD6bgKbEhcmlIGFO
+	ASOJjYeOQ5XIS2x/OwfsHgmBAxwSbQ0trBBXu0hsfr2FHcIWlnh1HMaWknjZ3wZlZ0s8ePSA
+	BcKukdixuQ+q116i4c8NVpC9zEB71+/Sh9jFJ9H7+wnYORICvBIdbUIQ1YoS9yY9heoUl3g4
+	YwkrRImHxMuHTJCQWssosf78E9YJjAqzkEJlFpInZyH5ZhbC4gWMLKsYJVMLinPTU4tNCwzz
+	Usvh0Z2cn7uJEZyEtTx3MN598EHvECMTB+MhRgkOZiUR3rb6LelCvCmJlVWpRfnxRaU5qcWH
+	GE2B0TORWUo0OR+YB/JK4g1NLA1MzMzMTCyNzQyVxHmbd7akCwmkJ5akZqemFqQWwfQxcXBK
+	NTAVSa6LCFZ8wqEwT11zg+MDrh+9hbtObDOsNRQ5uvmdk03TN7mS53en1+yvF5z1Y0utV+n1
+	M2sM69U52UXKY63SvTMK3M4+bNKbLR647LfVRK/JstY6D4sqmO+UsgpNbH/Bmv+Z6zn/I516
+	n32x9hm8Z9TNE3KXFWY/fZFis+i5fI1tzIfql8J+cs9fs7DM/ffm9tnVspf3nOa52nd94Vq9
+	1bbXCn7Pnh8qnr2wrsCeaY1giNmjADXnw5W912OFl+vpNktrHt9Q3VcdlLBy+ae58rJ8E5LW
+	dF01T2I7uSrt8FHlrPOnojlWe2za5S/IvSDrZ9ve31k/TusueXy93z3SXOqZfuqaI7tj5hwV
+	s1BiKc5INNRiLipOBADgpvZjSwQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKIsWRmVeSWpSXmKPExsWy7bCSvO6Kg1vTDbZOVrVYfbefzWLBorks
+	FitXH2Wy2HtL26J9/i5Gi+XH/zFZTOy4ymRx4pa0xfHlf9ksWpe+ZbKYs5DNgduj5chbVo/L
+	Z0s9Nq3qZPN4sXkmo8fumw1sHh+f3mLxeL/vKpvH501yARxRXDYpqTmZZalF+nYJXBl9R08w
+	FzRyVJz8Np+5gXE/WxcjJ4eEgInE5S3/WLoYuTiEBHYzSpxecoMVIiEu0XztBzuELSyx8t9z
+	doii14wSt1dvASri4OAVsJNYuDwRpIZFQFXi0IsbYPW8AoISJ2c+YQGxRQXkJe7fmsEOUi4s
+	ECXx/J4dSFhEwEFi9oalbCAjmQU2MUns2L8cav5aRom+FZfAjmAGOuLWk/lMIM1sApoSFyaX
+	goQ5BYwkNh46zgRRYibRtbWLEcKWl9j+dg7zBEahWUjOmIVk0iwkLbOQtCxgZFnFKJlaUJyb
+	nltsWGCYl1quV5yYW1yal66XnJ+7iREcc1qaOxi3r/qgd4iRiYPxEKMEB7OSCG9b/ZZ0Id6U
+	xMqq1KL8+KLSnNTiQ4zSHCxK4rziL3pThATSE0tSs1NTC1KLYLJMHJxSDUz+1bsTmNJ6FGfa
+	vN0c9+yb65OO2r4H7idCZUOr9cU2agdH/txkvzC5x7+pTTlw6/3zUVXNT34tzpdZ7rvk7YJC
+	Sf2j3ebvs6TOTJDNf9w9/d76H+c3ySiu+NVTM8nWsEr/appj/rJVOaan1WdfVP4nfPbkFQ3L
+	NUbGuW0/n2ippN2J0T+SFeprI6jnee3y1X4Gdw5dx5knRX5dmy5y6F8bz47amT4+rxliHXdt
+	O8j45niEULZLbqDx9OcX1+24L/giJuKLyNb/n9sef1UTzYhQ+by94sj8EqkJThXH407pcOwv
+	Znpn+5RJWT1sXzVfiMTcUMWdP3aq1G1bm6he/bhFcEHqJIsrrnErFzO2WyuxFGckGmoxFxUn
+	AgB/6vkSKAMAAA==
+X-CMS-MailID: 20250219113400epcas5p394cd7569eadc76acfa4a7e10f0b93109
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250218182222epcas5p2aef15a84f37fab0c69af5d53dfeed240
+References: <20250218182207.3982214-1-hch@lst.de>
+	<CGME20250218182222epcas5p2aef15a84f37fab0c69af5d53dfeed240@epcas5p2.samsung.com>
+	<20250218182207.3982214-3-hch@lst.de>
 
-From: Yu Kuai <yukuai3@huawei.com>
+On 2/18/2025 11:51 PM, Christoph Hellwig wrote:
+> The code that automatically creates a integrity payload and generates /
+> verifies the checksums for bios that don't have submitter-provided
+> integrity payload currently sits right in the middle of the block
+> integrity metadata infrastruture.
 
-Now that all implementations are internal, it's sensible to add a config
-option for md-bitmap, and it's a good way for isolation.
+nit: s/infrastruture/infrastructure.
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- drivers/md/Kconfig     | 18 ++++++++++++++++++
- drivers/md/Makefile    |  3 ++-
- drivers/md/md-bitmap.c | 23 +++++++++++++++++++++--
- drivers/md/md-bitmap.h | 17 +++++++++++++++--
- drivers/md/md.c        | 40 ++++++++++++++++++++++++++++------------
- drivers/md/md.h        |  3 +--
- 6 files changed, 85 insertions(+), 19 deletions(-)
+> +static int __init blk_integrity_default_init(void)
+> +{
+> +	/*
+> +	 * kintegrityd won't block much but may burn a lot of CPU cycles.
+> +	 * Make it highpri CPU intensive wq with max concurrency of 1.
+> +	 */
+> +	kintegrityd_wq = alloc_workqueue("kintegrityd", WQ_MEM_RECLAIM |
+> +					 WQ_HIGHPRI | WQ_CPU_INTENSIVE, 1);
+> +	if (!kintegrityd_wq)
+> +		panic("Failed to create kintegrityd\n");
+> +	return 0;
+> +}
+> +subsys_initcall(blk_integrity_default_init);
 
-diff --git a/drivers/md/Kconfig b/drivers/md/Kconfig
-index 0b1870a09e1f..0da07182494c 100644
---- a/drivers/md/Kconfig
-+++ b/drivers/md/Kconfig
-@@ -37,6 +37,21 @@ config BLK_DEV_MD
- 
- 	  If unsure, say N.
- 
-+config MD_BITMAP
-+	bool "MD RAID bitmap support"
-+	default y
-+	depends on BLK_DEV_MD
-+	help
-+	  If you say Y here, support for the write intent bitmap will be
-+	  enabled. The bitmap can be used to optimize resync speed after power
-+	  failure or readding a disk, limiting it to recorded dirty sectors in
-+	  bitmap.
-+
-+	  This feature can be added to existing MD array or MD array can be
-+	  created with bitmap via mdadm(8).
-+
-+	  If unsure, say Y.
-+
- config MD_AUTODETECT
- 	bool "Autodetect RAID arrays during kernel boot"
- 	depends on BLK_DEV_MD=y
-@@ -54,6 +69,7 @@ config MD_AUTODETECT
- config MD_BITMAP_FILE
- 	bool "MD bitmap file support (deprecated)"
- 	default y
-+	depends on MD_BITMAP
- 	help
- 	  If you say Y here, support for write intent bitmaps in files on an
- 	  external file system is enabled.  This is an alternative to the internal
-@@ -174,6 +190,7 @@ config MD_RAID456
- 
- config MD_CLUSTER
- 	tristate "Cluster Support for MD"
-+	select MD_BITMAP
- 	depends on BLK_DEV_MD
- 	depends on DLM
- 	default n
-@@ -392,6 +409,7 @@ config DM_RAID
-        select MD_RAID1
-        select MD_RAID10
-        select MD_RAID456
-+       select MD_BITMAP
-        select BLK_DEV_MD
- 	help
- 	 A dm target that supports RAID1, RAID10, RAID4, RAID5 and RAID6 mappings
-diff --git a/drivers/md/Makefile b/drivers/md/Makefile
-index 87bdfc9fe14c..811731840a5c 100644
---- a/drivers/md/Makefile
-+++ b/drivers/md/Makefile
-@@ -27,7 +27,7 @@ dm-clone-y	+= dm-clone-target.o dm-clone-metadata.o
- dm-verity-y	+= dm-verity-target.o
- dm-zoned-y	+= dm-zoned-target.o dm-zoned-metadata.o dm-zoned-reclaim.o
- 
--md-mod-y	+= md.o md-bitmap.o
-+md-mod-y	+= md.o
- raid456-y	+= raid5.o raid5-cache.o raid5-ppl.o
- linear-y       += md-linear.o
- 
-@@ -38,6 +38,7 @@ linear-y       += md-linear.o
- 
- obj-$(CONFIG_MD_LINEAR)		+= linear.o
- obj-$(CONFIG_MD_RAID0)		+= raid0.o
-+obj-$(CONFIG_MD_BITMAP)		+= md-bitmap.o
- obj-$(CONFIG_MD_RAID1)		+= raid1.o
- obj-$(CONFIG_MD_RAID10)		+= raid10.o
- obj-$(CONFIG_MD_RAID456)	+= raid456.o
-diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-index e4d337c1f197..9f2678962f8d 100644
---- a/drivers/md/md-bitmap.c
-+++ b/drivers/md/md-bitmap.c
-@@ -214,6 +214,8 @@ struct bitmap {
- 	int cluster_slot;
- };
- 
-+static struct workqueue_struct *md_bitmap_wq;
-+
- static int __bitmap_resize(struct bitmap *bitmap, sector_t blocks,
- 			   int chunksize, bool init);
- 
-@@ -2965,6 +2967,12 @@ static struct attribute_group md_bitmap_group = {
- };
- 
- static struct bitmap_operations bitmap_ops = {
-+	.head = {
-+		.type	= MD_BITMAP,
-+		.id	= ID_BITMAP,
-+		.name	= "bitmap",
-+	},
-+
- 	.enabled		= bitmap_enabled,
- 	.create			= bitmap_create,
- 	.resize			= bitmap_resize,
-@@ -2999,7 +3007,18 @@ static struct bitmap_operations bitmap_ops = {
- 	.group			= &md_bitmap_group,
- };
- 
--void mddev_set_bitmap_ops(struct mddev *mddev)
-+int md_bitmap_init(void)
-+{
-+	md_bitmap_wq = alloc_workqueue("md_bitmap", WQ_MEM_RECLAIM | WQ_UNBOUND,
-+				       0);
-+	if (!md_bitmap_wq)
-+		return -ENOMEM;
-+
-+	return register_md_submodule(&bitmap_ops.head);
-+}
-+
-+void md_bitmap_exit(void)
- {
--	mddev->bitmap_ops = &bitmap_ops;
-+	destroy_workqueue(md_bitmap_wq);
-+	unregister_md_submodule(&bitmap_ops.head);
- }
-diff --git a/drivers/md/md-bitmap.h b/drivers/md/md-bitmap.h
-index fefa00bc438e..d3d50629af91 100644
---- a/drivers/md/md-bitmap.h
-+++ b/drivers/md/md-bitmap.h
-@@ -71,6 +71,8 @@ struct md_bitmap_stats {
- };
- 
- struct bitmap_operations {
-+	struct md_submodule_head head;
-+
- 	bool (*enabled)(void *data);
- 	int (*create)(struct mddev *mddev, int slot);
- 	int (*resize)(struct mddev *mddev, sector_t blocks, int chunksize);
-@@ -114,8 +116,6 @@ struct bitmap_operations {
- };
- 
- /* the bitmap API */
--void mddev_set_bitmap_ops(struct mddev *mddev);
--
- static inline bool md_bitmap_registered(struct mddev *mddev)
- {
- 	return mddev->bitmap_ops != NULL;
-@@ -156,4 +156,17 @@ static inline void md_bitmap_end_sync(struct mddev *mddev, sector_t offset,
- 	mddev->bitmap_ops->end_sync(mddev, offset, blocks);
- }
- 
-+#ifdef CONFIG_MD_BITMAP
-+int md_bitmap_init(void);
-+void md_bitmap_exit(void);
-+#else
-+static inline int md_bitmap_init(void)
-+{
-+	return 0;
-+}
-+static inline void md_bitmap_exit(void)
-+{
-+}
-+#endif
-+
- #endif
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 512012f31554..d23f120be01b 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -94,7 +94,6 @@ static struct workqueue_struct *md_wq;
-  * workqueue whith reconfig_mutex grabbed.
-  */
- static struct workqueue_struct *md_misc_wq;
--struct workqueue_struct *md_bitmap_wq;
- 
- static int remove_and_add_spares(struct mddev *mddev,
- 				 struct md_rdev *this);
-@@ -644,15 +643,34 @@ static void active_io_release(struct percpu_ref *ref)
- 
- static void no_op(struct percpu_ref *r) {}
- 
-+static void mddev_set_bitmap_ops(struct mddev *mddev, enum md_submodule_id id)
-+{
-+	xa_lock(&md_submodule);
-+	mddev->bitmap_ops = xa_load(&md_submodule, id);
-+	xa_unlock(&md_submodule);
-+	if (!mddev->bitmap_ops)
-+		pr_warn_once("md: can't find bitmap id %d\n", id);
-+}
-+
-+static void mddev_clear_bitmap_ops(struct mddev *mddev)
-+{
-+	mddev->bitmap_ops = NULL;
-+}
-+
- int mddev_init(struct mddev *mddev)
- {
-+	/* TODO: support more versions */
-+	mddev_set_bitmap_ops(mddev, ID_BITMAP);
- 
- 	if (percpu_ref_init(&mddev->active_io, active_io_release,
--			    PERCPU_REF_ALLOW_REINIT, GFP_KERNEL))
-+			    PERCPU_REF_ALLOW_REINIT, GFP_KERNEL)) {
-+		mddev_clear_bitmap_ops(mddev);
- 		return -ENOMEM;
-+	}
- 
- 	if (percpu_ref_init(&mddev->writes_pending, no_op,
- 			    PERCPU_REF_ALLOW_REINIT, GFP_KERNEL)) {
-+		mddev_clear_bitmap_ops(mddev);
- 		percpu_ref_exit(&mddev->active_io);
- 		return -ENOMEM;
- 	}
-@@ -680,7 +698,6 @@ int mddev_init(struct mddev *mddev)
- 	mddev->resync_min = 0;
- 	mddev->resync_max = MaxSector;
- 	mddev->level = LEVEL_NONE;
--	mddev_set_bitmap_ops(mddev);
- 
- 	INIT_WORK(&mddev->sync_work, md_start_sync);
- 	INIT_WORK(&mddev->del_work, mddev_delayed_delete);
-@@ -691,6 +708,7 @@ EXPORT_SYMBOL_GPL(mddev_init);
- 
- void mddev_destroy(struct mddev *mddev)
- {
-+	mddev_clear_bitmap_ops(mddev);
- 	percpu_ref_exit(&mddev->active_io);
- 	percpu_ref_exit(&mddev->writes_pending);
- }
-@@ -9968,8 +9986,12 @@ static void md_geninit(void)
- 
- static int __init md_init(void)
- {
--	int ret = -ENOMEM;
-+	int ret = md_bitmap_init();
- 
-+	if (ret)
-+		return ret;
-+
-+	ret = -ENOMEM;
- 	md_wq = alloc_workqueue("md", WQ_MEM_RECLAIM, 0);
- 	if (!md_wq)
- 		goto err_wq;
-@@ -9978,11 +10000,6 @@ static int __init md_init(void)
- 	if (!md_misc_wq)
- 		goto err_misc_wq;
- 
--	md_bitmap_wq = alloc_workqueue("md_bitmap", WQ_MEM_RECLAIM | WQ_UNBOUND,
--				       0);
--	if (!md_bitmap_wq)
--		goto err_bitmap_wq;
--
- 	ret = __register_blkdev(MD_MAJOR, "md", md_probe);
- 	if (ret < 0)
- 		goto err_md;
-@@ -10001,12 +10018,11 @@ static int __init md_init(void)
- err_mdp:
- 	unregister_blkdev(MD_MAJOR, "md");
- err_md:
--	destroy_workqueue(md_bitmap_wq);
--err_bitmap_wq:
- 	destroy_workqueue(md_misc_wq);
- err_misc_wq:
- 	destroy_workqueue(md_wq);
- err_wq:
-+	md_bitmap_exit();
- 	return ret;
- }
- 
-@@ -10309,8 +10325,8 @@ static __exit void md_exit(void)
- 	spin_unlock(&all_mddevs_lock);
- 
- 	destroy_workqueue(md_misc_wq);
--	destroy_workqueue(md_bitmap_wq);
- 	destroy_workqueue(md_wq);
-+	md_bitmap_exit();
- }
- 
- subsys_initcall(md_init);
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index 87893bd41f28..254bbab6f443 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -38,7 +38,7 @@ enum md_submodule_id {
- 	ID_RAID6	= 6,
- 	ID_RAID10	= 10,
- 	ID_CLUSTER,
--	ID_BITMAP,	/* TODO */
-+	ID_BITMAP,
- 	ID_LLBITMAP,	/* TODO */
- };
- 
-@@ -998,7 +998,6 @@ struct mdu_array_info_s;
- struct mdu_disk_info_s;
- 
- extern int mdp_major;
--extern struct workqueue_struct *md_bitmap_wq;
- void md_autostart_arrays(int part);
- int md_set_array_info(struct mddev *mddev, struct mdu_array_info_s *info);
- int md_add_new_disk(struct mddev *mddev, struct mdu_disk_info_s *info);
--- 
-2.39.2
+Now that you are using the term auto (in place of default), maybe this 
+should also be renamed to blk_integrity_auto_init.
+
+Looks good otherwise.
+Reviewed-by: Kanchan Joshi <joshi.k@samsung.com>
+
+
 
 
