@@ -1,42 +1,42 @@
-Return-Path: <linux-raid+bounces-3674-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-3679-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9A95A3B501
-	for <lists+linux-raid@lfdr.de>; Wed, 19 Feb 2025 09:51:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id EFA48A3B50E
+	for <lists+linux-raid@lfdr.de>; Wed, 19 Feb 2025 09:52:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4BF69188A670
-	for <lists+linux-raid@lfdr.de>; Wed, 19 Feb 2025 08:45:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D608D189B66F
+	for <lists+linux-raid@lfdr.de>; Wed, 19 Feb 2025 08:47:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 996971F4627;
-	Wed, 19 Feb 2025 08:38:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D0561F8BDF;
+	Wed, 19 Feb 2025 08:38:53 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934DB1C7013;
-	Wed, 19 Feb 2025 08:38:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1A01F4626;
+	Wed, 19 Feb 2025 08:38:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739954327; cv=none; b=YnO/CluNV3W6mB4GJyhVmvjIaY2vYm0lsKdTGj8ldleOFh8c8b8HhJLRAIcRFmsJ9g+g849hpQAA2/rD714t/Mplrn5mRz4wsHfzIVQhifk8ZWKZUPbktgN3nPyekY2YscEvW7sIMl+4Ezx3S6+vRibU4QBUVa09Zq48qLrby80=
+	t=1739954333; cv=none; b=Ez3uiNDgMzoWtcUpcy4dU5XoZPF++Ep7V4npeka1BxemMYpiWKEXwLXo3R0W0qpL8gu+7scbB6/PlA7SsVihjzjaAyd4S/MdrlYp4TVxRNXX04sKcMqs2SlzEr9RqoEY46cI8n21guOmuQh333ZZ/Qi+cDrEI5aPKJVQIFT/ovg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739954327; c=relaxed/simple;
-	bh=7v9KLcPmQbOBHXtC8Fk7V+NhZOCYo9e2RAUB7jV1+Nc=;
+	s=arc-20240116; t=1739954333; c=relaxed/simple;
+	bh=RacByfW6IeE3uYa1vM6ZMRbz1bij79Mds5hm70QeLwg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=povlwlsrzZYCYYURxgtIlX4txD0qneBmgmD8/vyy0Iu7gG/n3wT1AiITNahOCSxT5ahqswxkpgtxb7eu1/Tdm9F/R7xYCJ7N1+tqy4yxaYvbyuHkNp5e+YCCu+9Dn4KOAlSdhCVbaxQHsaxqzP6VXGy6nhcxndDyj0eRMMK4q8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=B3KAzHAfy5+9AiUb/FLE04duhpB7zk6WqKHHDiaIPUcTR7hsIBektYLJNBaNYKskas6cfIC/QwLnMXno1S1dsWxOyGIDngXOJpUj5jtEeJ9gN9YgBP8FYZR8E0y/JgDILIwgxGVoJcn+YhUOBjt4G2Fhm4CiqPPOM4PDAGvAHxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YyVCf37NXz4f3jt3;
-	Wed, 19 Feb 2025 16:38:22 +0800 (CST)
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4YyVCY3LqHz4f3jXL;
+	Wed, 19 Feb 2025 16:38:17 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id B48491A0F6F;
-	Wed, 19 Feb 2025 16:38:38 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 137771A0F73;
+	Wed, 19 Feb 2025 16:38:39 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgBXvGCImLVn4yQeEQ--.36560S9;
+	by APP4 (Coremail) with SMTP id gCh0CgBXvGCImLVn4yQeEQ--.36560S10;
 	Wed, 19 Feb 2025 16:38:38 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: song@kernel.org,
@@ -46,9 +46,9 @@ Cc: linux-raid@vger.kernel.org,
 	yukuai1@huaweicloud.com,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com
-Subject: [PATCH md-6.15 v4 05/11] md/md-bitmap: handle the case bitmap is not enabled before end_sync()
-Date: Wed, 19 Feb 2025 16:34:50 +0800
-Message-Id: <20250219083456.941760-6-yukuai1@huaweicloud.com>
+Subject: [PATCH md-6.15 v4 06/11] md/raid1: check bitmap before behind write
+Date: Wed, 19 Feb 2025 16:34:51 +0800
+Message-Id: <20250219083456.941760-7-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250219083456.941760-1-yukuai1@huaweicloud.com>
 References: <20250219083456.941760-1-yukuai1@huaweicloud.com>
@@ -59,10 +59,10 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBXvGCImLVn4yQeEQ--.36560S9
-X-Coremail-Antispam: 1UD129KBjvJXoWxXryfuF1DXrWrCryUJFy8AFb_yoWrGw4xp3
-	9rJFW3uw17WFW5X3WUZ34kuFyFvwnrtr9FyFyxW3s3uFyrXF9rGF4rGFyjqw1qka4fAFZ8
-	X345CrW5CF1UWrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgBXvGCImLVn4yQeEQ--.36560S10
+X-Coremail-Antispam: 1UD129KBjvJXoWxJFWUuF17Xr47ury3tw43ZFb_yoWrJF1kpa
+	yqqFn0krW5trW3XrnrAFykuFyrXw4ktF9rtrWfW34Fgr12yrn0ga1FgFyrGrnxA3s3CF45
+	Zw4YyryUWrWSqFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUBE14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -81,116 +81,114 @@ X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-This case can be handled without knowing internal implementation.
+behind write rely on bitmap, because the number of IO are recoreded in
+bitmap->behind_writes, and callers rely on bitmap_wait_behind_writes()
+to wait for IO to be done.
 
-Prepare to introduce CONFIG_MD_BITMAP.
+Hence if behind write start without bitmap, readers will not wait for
+the IO to be done because bitmap_wait_behind_writes() do nothing,
+and old data can be read.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/md/md-bitmap.c |  4 ----
- drivers/md/md-bitmap.h | 11 +++++++++++
- drivers/md/raid1.c     |  6 +++---
- drivers/md/raid10.c    |  8 +++-----
- drivers/md/raid5.c     |  4 ++--
- 5 files changed, 19 insertions(+), 14 deletions(-)
+ drivers/md/md-bitmap.c |  6 ------
+ drivers/md/raid1.c     | 45 ++++++++++++++++++++++++++----------------
+ 2 files changed, 28 insertions(+), 23 deletions(-)
 
 diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-index c7f3dfdec51f..dc937cd9d46a 100644
+index dc937cd9d46a..e4d337c1f197 100644
 --- a/drivers/md/md-bitmap.c
 +++ b/drivers/md/md-bitmap.c
-@@ -1822,10 +1822,6 @@ static void __bitmap_end_sync(struct bitmap *bitmap, sector_t offset,
- 	bitmap_counter_t *bmc;
- 	unsigned long flags;
+@@ -2033,9 +2033,6 @@ static void bitmap_start_behind_write(struct mddev *mddev)
+ 	struct bitmap *bitmap = mddev->bitmap;
+ 	int bw;
  
--	if (bitmap == NULL) {
--		*blocks = 1024;
+-	if (!bitmap)
 -		return;
--	}
- 	spin_lock_irqsave(&bitmap->counts.lock, flags);
- 	bmc = md_bitmap_get_counter(&bitmap->counts, offset, blocks, 0);
- 	if (bmc == NULL)
-diff --git a/drivers/md/md-bitmap.h b/drivers/md/md-bitmap.h
-index 6a5806ebb11a..fefa00bc438e 100644
---- a/drivers/md/md-bitmap.h
-+++ b/drivers/md/md-bitmap.h
-@@ -145,4 +145,15 @@ static inline bool md_bitmap_start_sync(struct mddev *mddev, sector_t offset,
- 	return mddev->bitmap_ops->start_sync(mddev, offset, blocks, degraded);
- }
+-
+ 	atomic_inc(&bitmap->behind_writes);
+ 	bw = atomic_read(&bitmap->behind_writes);
+ 	if (bw > bitmap->behind_writes_used)
+@@ -2049,9 +2046,6 @@ static void bitmap_end_behind_write(struct mddev *mddev)
+ {
+ 	struct bitmap *bitmap = mddev->bitmap;
  
-+static inline void md_bitmap_end_sync(struct mddev *mddev, sector_t offset,
-+				      sector_t *blocks)
-+{
-+	if (!md_bitmap_enabled(mddev)) {
-+		*blocks = 1024;
-+		return;
-+	}
-+
-+	mddev->bitmap_ops->end_sync(mddev, offset, blocks);
-+}
-+
- #endif
+-	if (!bitmap)
+-		return;
+-
+ 	if (atomic_dec_and_test(&bitmap->behind_writes))
+ 		wake_up(&bitmap->behind_wait);
+ 	pr_debug("dec write-behind count %d/%lu\n",
 diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 0cb39b8203f2..5b6a7c5e9806 100644
+index 5b6a7c5e9806..7022d2a11a27 100644
 --- a/drivers/md/raid1.c
 +++ b/drivers/md/raid1.c
-@@ -2062,7 +2062,7 @@ static void abort_sync_write(struct mddev *mddev, struct r1bio *r1_bio)
+@@ -1369,7 +1369,8 @@ static void raid1_read_request(struct mddev *mddev, struct bio *bio,
+ 				    (unsigned long long)r1_bio->sector,
+ 				    mirror->rdev->bdev);
  
- 	/* make sure these bits don't get cleared. */
- 	do {
--		mddev->bitmap_ops->end_sync(mddev, s, &sync_blocks);
-+		md_bitmap_end_sync(mddev, s, &sync_blocks);
- 		s += sync_blocks;
- 		sectors_to_go -= sync_blocks;
- 	} while (sectors_to_go > 0);
-@@ -2804,8 +2804,8 @@ static sector_t raid1_sync_request(struct mddev *mddev, sector_t sector_nr,
- 		 * We can find the current addess in mddev->curr_resync
- 		 */
- 		if (mddev->curr_resync < max_sector) /* aborted */
--			mddev->bitmap_ops->end_sync(mddev, mddev->curr_resync,
--						    &sync_blocks);
-+			md_bitmap_end_sync(mddev, mddev->curr_resync,
-+					   &sync_blocks);
- 		else /* completed sync */
- 			conf->fullsync = 0;
+-	if (test_bit(WriteMostly, &mirror->rdev->flags)) {
++	if (test_bit(WriteMostly, &mirror->rdev->flags) &&
++	    md_bitmap_enabled(mddev)) {
+ 		/*
+ 		 * Reading from a write-mostly device must take care not to
+ 		 * over-take any writes that are 'behind'
+@@ -1456,6 +1457,30 @@ static bool wait_blocked_rdev(struct mddev *mddev, struct bio *bio)
+ 	return true;
+ }
  
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index 7a5062f404a6..82ff326d56aa 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -3229,15 +3229,13 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
++static void raid1_start_write_behind(struct mddev *mddev, struct r1bio *r1_bio,
++				     struct bio *bio)
++{
++	unsigned long max_write_behind = mddev->bitmap_info.max_write_behind;
++	struct md_bitmap_stats stats;
++	int err;
++
++	/* behind write rely on bitmap, see bitmap_operations */
++	if (!md_bitmap_enabled(mddev))
++		return;
++
++	err = mddev->bitmap_ops->get_stats(mddev->bitmap, &stats);
++	if (err)
++		return;
++
++	/* Don't do behind IO if reader is waiting, or there are too many. */
++	if (!stats.behind_wait && stats.behind_writes < max_write_behind)
++		alloc_behind_master_bio(r1_bio, bio);
++
++	if (test_bit(R1BIO_BehindIO, &r1_bio->state))
++		mddev->bitmap_ops->start_behind_write(mddev);
++
++}
++
+ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
+ 				int max_write_sectors)
+ {
+@@ -1616,22 +1641,8 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
+ 			continue;
  
- 		if (mddev->curr_resync < max_sector) { /* aborted */
- 			if (test_bit(MD_RECOVERY_SYNC, &mddev->recovery))
--				mddev->bitmap_ops->end_sync(mddev,
--							    mddev->curr_resync,
--							    &sync_blocks);
-+				md_bitmap_end_sync(mddev, mddev->curr_resync,
-+						   &sync_blocks);
- 			else for (i = 0; i < conf->geo.raid_disks; i++) {
- 				sector_t sect =
- 					raid10_find_virt(conf, mddev->curr_resync, i);
- 
--				mddev->bitmap_ops->end_sync(mddev, sect,
--							    &sync_blocks);
-+				md_bitmap_end_sync(mddev, sect, &sync_blocks);
- 			}
- 		} else {
- 			/* completed sync */
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index c8bf1eb29241..908b96c2b1d5 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -6501,8 +6501,8 @@ static inline sector_t raid5_sync_request(struct mddev *mddev, sector_t sector_n
+ 		if (first_clone) {
+-			unsigned long max_write_behind =
+-				mddev->bitmap_info.max_write_behind;
+-			struct md_bitmap_stats stats;
+-			int err;
+-
+-			/* do behind I/O ?
+-			 * Not if there are too many, or cannot
+-			 * allocate memory, or a reader on WriteMostly
+-			 * is waiting for behind writes to flush */
+-			err = mddev->bitmap_ops->get_stats(mddev->bitmap, &stats);
+-			if (!err && write_behind && !stats.behind_wait &&
+-			    stats.behind_writes < max_write_behind)
+-				alloc_behind_master_bio(r1_bio, bio);
+-
+-			if (test_bit(R1BIO_BehindIO, &r1_bio->state))
+-				mddev->bitmap_ops->start_behind_write(mddev);
++			if (write_behind)
++				raid1_start_write_behind(mddev, r1_bio, bio);
+ 			first_clone = 0;
  		}
  
- 		if (mddev->curr_resync < max_sector) /* aborted */
--			mddev->bitmap_ops->end_sync(mddev, mddev->curr_resync,
--						    &sync_blocks);
-+			md_bitmap_end_sync(mddev, mddev->curr_resync,
-+					   &sync_blocks);
- 		else /* completed sync */
- 			conf->fullsync = 0;
- 		mddev->bitmap_ops->close_sync(mddev);
 -- 
 2.39.2
 
