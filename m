@@ -1,42 +1,42 @@
-Return-Path: <linux-raid+bounces-3675-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-3673-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A157A3B502
-	for <lists+linux-raid@lfdr.de>; Wed, 19 Feb 2025 09:51:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DCF1DA3B4F0
+	for <lists+linux-raid@lfdr.de>; Wed, 19 Feb 2025 09:50:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E461B1898BBD
-	for <lists+linux-raid@lfdr.de>; Wed, 19 Feb 2025 08:46:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 98C4A3A8B05
+	for <lists+linux-raid@lfdr.de>; Wed, 19 Feb 2025 08:45:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 430CC1F463C;
-	Wed, 19 Feb 2025 08:38:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E0701F4166;
+	Wed, 19 Feb 2025 08:38:45 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754361EB5F4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A52CA1C760D;
 	Wed, 19 Feb 2025 08:38:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739954328; cv=none; b=PolEjLL29mB+17x9/1dJQymrg8qpCB2v5mwqTUhtHFpX/WWRFZKvSPIh4gYEktXtBPLUbPjwknGQjBevQ28zq8boBccqqh1guMzZsoh1ylTRQioXGbv8bH/P+UNc4827y0RWPkVqrrsii8u1o6USb7GX3Bs9M5Vn//t2NP3uye8=
+	t=1739954324; cv=none; b=Egbfbq7gOKyfYYABzcVNFIzEkEN7ZdKPe5fEvfTGaM6W+rYADq5FBm+QZqsJOlohyiTOLzf2G7VNps3VfH7sKt42QM8S5afE4ESHgmAoaoYddv+LRzHafJl3UN73fXotfIdG9IaZYXigKARv1jjGZOIw27W1DHkSc0bRTdLtTzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739954328; c=relaxed/simple;
-	bh=SckS8ogEsEBJo83rOGnkVrV5liClxDDzRee8XeKAuZU=;
+	s=arc-20240116; t=1739954324; c=relaxed/simple;
+	bh=qzGa7Wvf0L6fskDeh67YcmARigHHfqduEUwCEn60IPo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ehk2lvuHskUGpLHWpsqWyxprFQQyETbCqjBmEiB4Rc3ck5uFhAkL+5Cz7syXZXxDjGySTlPimSvoH1mvO2+la6DRVbUqsSYz5sE7vkgqe1E20EZwhcbRxlqKW2DcEb6ci4NaKjKqqXoEkNmKEcuw7hWmP3Qo0XCGGwU0Nmud0eI=
+	 MIME-Version; b=kb0HYmZR9UXe7mH2+L6GPfV5PRbh3VuOh9lhOSnxhXpK2EN37Lg56pojTae8FmI+neDHFvMLfZ/Yp6Hc0Nl8pgpg+IBLObgXiZSOcEr3FzVN045QWVTvlrb1fvc0Y3HWzyXgLWt6amEJQUbCBvK2F0NJGzoeXs78Rc7Oep5Xfbg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YyVCX3QV5z4f3kw2;
-	Wed, 19 Feb 2025 16:38:16 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YyVCg3v8Kz4f3jt3;
+	Wed, 19 Feb 2025 16:38:23 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 783EA1A0F86;
+	by mail.maildlp.com (Postfix) with ESMTP id CF5841A0F6F;
 	Wed, 19 Feb 2025 16:38:39 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgBXvGCImLVn4yQeEQ--.36560S11;
+	by APP4 (Coremail) with SMTP id gCh0CgBXvGCImLVn4yQeEQ--.36560S12;
 	Wed, 19 Feb 2025 16:38:39 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: song@kernel.org,
@@ -46,9 +46,9 @@ Cc: linux-raid@vger.kernel.org,
 	yukuai1@huaweicloud.com,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com
-Subject: [PATCH md-6.15 v4 07/11] md/raid1: check before referencing mddev->bitmap_ops
-Date: Wed, 19 Feb 2025 16:34:52 +0800
-Message-Id: <20250219083456.941760-8-yukuai1@huaweicloud.com>
+Subject: [PATCH md-6.15 v4 08/11] md/raid10: check before referencing mddev->bitmap_ops
+Date: Wed, 19 Feb 2025 16:34:53 +0800
+Message-Id: <20250219083456.941760-9-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250219083456.941760-1-yukuai1@huaweicloud.com>
 References: <20250219083456.941760-1-yukuai1@huaweicloud.com>
@@ -59,10 +59,10 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBXvGCImLVn4yQeEQ--.36560S11
-X-Coremail-Antispam: 1UD129KBjvJXoWxJr43WF4rCw18urWDZw1DJrb_yoW8CFW7pw
-	srtFy3try5WrWag345ZrykuF1Fy3yxJrZrtryfW3WxWrn7GryDAFWrXFWjqF1jya45ZFy5
-	J3yDJr45CF15JF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgBXvGCImLVn4yQeEQ--.36560S12
+X-Coremail-Antispam: 1UD129KBjvJXoWxJr4DJF13Wry8ZrW8Gry7Awb_yoW5JrWfp3
+	9rtFy3tryUCrWaga15AFyku3WFv3s7tr9rtFyfWw1xGrn7GrnrJF4rWFWjqF1jva4rAF15
+	X3yDtr45CF13WF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUPj14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -85,61 +85,74 @@ Prepare to introduce CONFIG_MD_BITMAP.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/md/raid1.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ drivers/md/raid10.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 7022d2a11a27..05f1d34f6df8 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -2820,7 +2820,8 @@ static sector_t raid1_sync_request(struct mddev *mddev, sector_t sector_nr,
- 		else /* completed sync */
+diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+index 82ff326d56aa..cba1f3c8dbda 100644
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -3255,7 +3255,8 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
+ 			}
  			conf->fullsync = 0;
- 
+ 		}
 -		mddev->bitmap_ops->close_sync(mddev);
 +		if (md_bitmap_enabled(mddev))
 +			mddev->bitmap_ops->close_sync(mddev);
  		close_sync(conf);
+ 		*skipped = 1;
+ 		return sectors_skipped;
+@@ -3574,7 +3575,8 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
+ 		 * safety reason, which ensures curr_resync_completed is
+ 		 * updated in bitmap_cond_end_sync.
+ 		 */
+-		mddev->bitmap_ops->cond_end_sync(mddev, sector_nr,
++		if (md_bitmap_enabled(mddev))
++			mddev->bitmap_ops->cond_end_sync(mddev, sector_nr,
+ 					mddev_is_clustered(mddev) &&
+ 					(sector_nr + 2 * RESYNC_SECTORS > conf->cluster_sync_high));
  
- 		if (mddev_is_clustered(mddev)) {
-@@ -2857,10 +2858,11 @@ static sector_t raid1_sync_request(struct mddev *mddev, sector_t sector_nr,
- 	/* we are incrementing sector_nr below. To be safe, we check against
- 	 * sector_nr + two times RESYNC_SECTORS
+@@ -4230,7 +4232,6 @@ static int raid10_resize(struct mddev *mddev, sector_t sectors)
  	 */
--
--	mddev->bitmap_ops->cond_end_sync(mddev, sector_nr,
--		mddev_is_clustered(mddev) &&
--		(sector_nr + 2 * RESYNC_SECTORS > conf->cluster_sync_high));
-+	if (md_bitmap_enabled(mddev))
-+		mddev->bitmap_ops->cond_end_sync(mddev, sector_nr,
-+			mddev_is_clustered(mddev) &&
-+			(sector_nr + 2 * RESYNC_SECTORS >
-+			 conf->cluster_sync_high));
- 
- 	if (raise_barrier(conf, sector_nr))
- 		return 0;
-@@ -3346,15 +3348,17 @@ static int raid1_resize(struct mddev *mddev, sector_t sectors)
- 	 * worth it.
- 	 */
- 	sector_t newsize = raid1_size(mddev, sectors, 0);
+ 	struct r10conf *conf = mddev->private;
+ 	sector_t oldsize, size;
 -	int ret;
  
- 	if (mddev->external_size &&
- 	    mddev->array_sectors > newsize)
+ 	if (mddev->reshape_position != MaxSector)
+ 		return -EBUSY;
+@@ -4244,9 +4245,12 @@ static int raid10_resize(struct mddev *mddev, sector_t sectors)
+ 	    mddev->array_sectors > size)
  		return -EINVAL;
  
--	ret = mddev->bitmap_ops->resize(mddev, newsize, 0);
+-	ret = mddev->bitmap_ops->resize(mddev, size, 0);
 -	if (ret)
 -		return ret;
 +	if (md_bitmap_enabled(mddev)) {
-+		int ret = mddev->bitmap_ops->resize(mddev, newsize, 0);
++		int ret = mddev->bitmap_ops->resize(mddev, size, 0);
 +
 +		if (ret)
 +			return ret;
 +	}
  
- 	md_set_array_sectors(mddev, newsize);
+ 	md_set_array_sectors(mddev, size);
  	if (sectors > mddev->dev_sectors &&
+@@ -4512,7 +4516,7 @@ static int raid10_start_reshape(struct mddev *mddev)
+ 		oldsize = raid10_size(mddev, 0, 0);
+ 		newsize = raid10_size(mddev, 0, conf->geo.raid_disks);
+ 
+-		if (!mddev_is_clustered(mddev)) {
++		if (!mddev_is_clustered(mddev) && md_bitmap_enabled(mddev)) {
+ 			ret = mddev->bitmap_ops->resize(mddev, newsize, 0);
+ 			if (ret)
+ 				goto abort;
+@@ -4535,6 +4539,7 @@ static int raid10_start_reshape(struct mddev *mddev)
+ 			    MD_FEATURE_RESHAPE_ACTIVE)) || (oldsize == newsize))
+ 			goto out;
+ 
++		/* cluster can't be setup without bitmap */
+ 		ret = mddev->bitmap_ops->resize(mddev, newsize, 0);
+ 		if (ret)
+ 			goto abort;
 -- 
 2.39.2
 
