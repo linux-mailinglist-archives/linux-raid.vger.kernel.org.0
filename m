@@ -1,42 +1,43 @@
-Return-Path: <linux-raid+bounces-3670-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-3672-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48A69A3B4FA
-	for <lists+linux-raid@lfdr.de>; Wed, 19 Feb 2025 09:50:45 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2528CA3B4FD
+	for <lists+linux-raid@lfdr.de>; Wed, 19 Feb 2025 09:50:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3DF25188DD69
-	for <lists+linux-raid@lfdr.de>; Wed, 19 Feb 2025 08:44:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D7A261643F9
+	for <lists+linux-raid@lfdr.de>; Wed, 19 Feb 2025 08:45:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 618F51EDA01;
-	Wed, 19 Feb 2025 08:38:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 729231F3BB3;
+	Wed, 19 Feb 2025 08:38:44 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82ED31DDC3F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F551EB1BD;
 	Wed, 19 Feb 2025 08:38:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739954323; cv=none; b=QfjJwT+ki/Miqixa0zJhbWWQDZ8mV2Hw8w/1nBnMNkVylrqyaZEKOGhlsqw1hIBf7LPtyiu3KSVm6Qg5sqeuBvodbo1TBEuPYHdPN0dJrptkPVBcntIxe/lCilIZDmmYCt2XQGaVwz3f5aDNgWjdyk326xQaiqe9B9vgT98MPII=
+	t=1739954324; cv=none; b=FaO7v21fXxlgOuloIvkzDFVubvO4jH9RweE/YPOVHDc0vSaqvF2puAutxt0vtRKo/UrAu57M/YdE/a9tnEyZBFRdpFYQTIUMalOiOP600NF4PPzwgipYxA3IHhhTtgvXdJZeAOYNxweK82T3ll+g8Y4GgkJd8T7d5tFliHYjHb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739954323; c=relaxed/simple;
-	bh=UzWEyLS4m1QElei2gvXZLkx0L1q2cpSGuNlBw+FrgzE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mIauUeMMOx+0608Ugt8jzxN7C9aiFlInzPI/Pl7wGVdx2Qg8HO6zjnWk9B3165da9Pvu60tq1PeJUxf8RRawIElM6R6PCEfjMGgUh12Rvsz0rmYLiZQbr6ceaB0PjsUAYI7x8NJzB3GGezbIf8eY0/yiaPPYVHuebWlW7jPen1I=
+	s=arc-20240116; t=1739954324; c=relaxed/simple;
+	bh=j7SElxVUx+Ir8u7zXmQifeuzIkhU4xARqUt7b6JEYEo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=PFbLLRY8KXpwvKBVDHVWqUf8IYZzX41HGotYnYWzTw3SoQExzpts+GmYmEC9xB0r5fWL5mZaVTtyMOkDXoX44SvySgsfS1hvt1DktBPdUsXX5oA5hHoH11diUdVYbj0YiUc7rucT80ugmblgY81ZyByPRVFZh1OK/diFl8ezyjQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YyVCc4VbKz4f3jqL;
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YyVCc6vtCz4f3jt0;
 	Wed, 19 Feb 2025 16:38:20 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id DF7DB1A0F86;
-	Wed, 19 Feb 2025 16:38:36 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 416121A0F86;
+	Wed, 19 Feb 2025 16:38:37 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgBXvGCImLVn4yQeEQ--.36560S4;
-	Wed, 19 Feb 2025 16:38:34 +0800 (CST)
+	by APP4 (Coremail) with SMTP id gCh0CgBXvGCImLVn4yQeEQ--.36560S5;
+	Wed, 19 Feb 2025 16:38:37 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: song@kernel.org,
 	yukuai3@huawei.com
@@ -45,10 +46,12 @@ Cc: linux-raid@vger.kernel.org,
 	yukuai1@huaweicloud.com,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com
-Subject: [PATCH md-6.15 v4 00/11] md/md-bitmap: introduce CONFIG_MD_BITMAP
-Date: Wed, 19 Feb 2025 16:34:45 +0800
-Message-Id: <20250219083456.941760-1-yukuai1@huaweicloud.com>
+Subject: [PATCH md-6.15 v4 01/11] md/md-bitmap: remove the parameter 'init' for bitmap_ops->resize()
+Date: Wed, 19 Feb 2025 16:34:46 +0800
+Message-Id: <20250219083456.941760-2-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250219083456.941760-1-yukuai1@huaweicloud.com>
+References: <20250219083456.941760-1-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
@@ -56,81 +59,167 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBXvGCImLVn4yQeEQ--.36560S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7uw15Cr48Ar4xXF1rWF4Durg_yoW8tw13pa
-	9xt3y3uw15JFW7XFnxJrW8CFyFqwn7tasFkr97Gw4rWFyUZF98Xr48KF18tryqqryfXa47
-	Jr15tF18Gr18Za7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
-	JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUBVbkUUU
-	UU=
+X-CM-TRANSID:gCh0CgBXvGCImLVn4yQeEQ--.36560S5
+X-Coremail-Antispam: 1UD129KBjvJXoWxJFyxAr15tr1xWw13Jr4fXwb_yoWrKw45pa
+	12qFy3C345KrW5Wa1UXFykuFyFqw1ktr9rKryxC34fWF9rXrZrXF4rWFWqqF1Dta45ZF4a
+	qan8trWUCF1xXFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBG14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+	x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWUAVWUtw
+	CF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64
+	vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0x
+	vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUfDGrUUUUU=
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-Changes in v4:
- - rebase on the top of other patchset [1].
-Changes in v3:
- - update commit message.
-Changes in v2:
- - don't export apis, and don't support build md-bitmap as module
+It's set to 'false' for all callers, hence it's useless and can be
+removed.
 
-Due to known performance issues with md-bitmap and the unreasonable
-implementations like following:
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+---
+ drivers/md/dm-raid.c    | 2 +-
+ drivers/md/md-bitmap.c  | 5 ++---
+ drivers/md/md-bitmap.h  | 3 +--
+ drivers/md/md-cluster.c | 2 +-
+ drivers/md/raid1.c      | 2 +-
+ drivers/md/raid10.c     | 8 ++++----
+ drivers/md/raid5.c      | 2 +-
+ 7 files changed, 11 insertions(+), 13 deletions(-)
 
- - self-managed pages, bitmap_storage->filemap;
- - self-managed IO submitting like filemap_write_page();
- - global spin_lock
- ...
-
-I have decided not to continue optimizing based on the current bitmap
-implementation, and plan to invent a new lock-less bitmap. And a new
-kconfig option is a good way for isolation.
-
-However, we still encourage anyone who wants to continue optimizing the
-current implementation, the new bitmap will take some time to be ready.
-Please refer to the RFC version [2] if interested.
-
-[1] https://lore.kernel.org/all/20250215092225.2427977-1-yukuai1@huaweicloud.com/
-[2] https://lore.kernel.org/all/20250126083624.1675849-1-yukuai1@huaweicloud.com/
-
-Yu Kuai (11):
-  md/md-bitmap: remove the parameter 'init' for bitmap_ops->resize()
-  md/md-bitmap: merge md_bitmap_group into bitmap_operations
-  md/md-bitmap: add md_bitmap_registered/enabled() helper
-  md/md-bitmap: handle the case bitmap is not enabled before
-    start_sync()
-  md/md-bitmap: handle the case bitmap is not enabled before end_sync()
-  md/raid1: check bitmap before behind write
-  md/raid1: check before referencing mddev->bitmap_ops
-  md/raid10: check before referencing mddev->bitmap_ops
-  md/raid5: check before referencing mddev->bitmap_ops
-  md: check before referencing mddev->bitmap_ops
-  md/md-bitmap: introduce CONFIG_MD_BITMAP
-
- drivers/md/Kconfig      |  18 +++++++
- drivers/md/Makefile     |   3 +-
- drivers/md/dm-raid.c    |   2 +-
- drivers/md/md-bitmap.c  |  67 ++++++++++++------------
- drivers/md/md-bitmap.h  |  62 ++++++++++++++++++++--
- drivers/md/md-cluster.c |   2 +-
- drivers/md/md.c         | 112 ++++++++++++++++++++++++++++------------
- drivers/md/md.h         |   4 +-
- drivers/md/raid1-10.c   |   2 +-
- drivers/md/raid1.c      |  79 ++++++++++++++++------------
- drivers/md/raid10.c     |  48 ++++++++---------
- drivers/md/raid5.c      |  30 ++++++-----
- 12 files changed, 281 insertions(+), 148 deletions(-)
-
+diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
+index 6adc55fd90d3..498d47d13aec 100644
+--- a/drivers/md/dm-raid.c
++++ b/drivers/md/dm-raid.c
+@@ -4069,7 +4069,7 @@ static int raid_preresume(struct dm_target *ti)
+ 		int chunksize = to_bytes(rs->requested_bitmap_chunk_sectors) ?: mddev->bitmap_info.chunksize;
+ 
+ 		r = mddev->bitmap_ops->resize(mddev, mddev->dev_sectors,
+-					      chunksize, false);
++					      chunksize);
+ 		if (r)
+ 			DMERR("Failed to resize bitmap");
+ 	}
+diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
+index 9ac23e02b606..3501296abc96 100644
+--- a/drivers/md/md-bitmap.c
++++ b/drivers/md/md-bitmap.c
+@@ -2586,15 +2586,14 @@ static int __bitmap_resize(struct bitmap *bitmap, sector_t blocks,
+ 	return ret;
+ }
+ 
+-static int bitmap_resize(struct mddev *mddev, sector_t blocks, int chunksize,
+-			 bool init)
++static int bitmap_resize(struct mddev *mddev, sector_t blocks, int chunksize)
+ {
+ 	struct bitmap *bitmap = mddev->bitmap;
+ 
+ 	if (!bitmap)
+ 		return 0;
+ 
+-	return __bitmap_resize(bitmap, blocks, chunksize, init);
++	return __bitmap_resize(bitmap, blocks, chunksize, false);
+ }
+ 
+ static ssize_t
+diff --git a/drivers/md/md-bitmap.h b/drivers/md/md-bitmap.h
+index 31c93019c76b..6d1ab949ed95 100644
+--- a/drivers/md/md-bitmap.h
++++ b/drivers/md/md-bitmap.h
+@@ -73,8 +73,7 @@ struct md_bitmap_stats {
+ struct bitmap_operations {
+ 	bool (*enabled)(struct mddev *mddev);
+ 	int (*create)(struct mddev *mddev, int slot);
+-	int (*resize)(struct mddev *mddev, sector_t blocks, int chunksize,
+-		      bool init);
++	int (*resize)(struct mddev *mddev, sector_t blocks, int chunksize);
+ 
+ 	int (*load)(struct mddev *mddev);
+ 	void (*destroy)(struct mddev *mddev);
+diff --git a/drivers/md/md-cluster.c b/drivers/md/md-cluster.c
+index 94221d964d4f..db6bbc8eebbc 100644
+--- a/drivers/md/md-cluster.c
++++ b/drivers/md/md-cluster.c
+@@ -630,7 +630,7 @@ static int process_recvd_msg(struct mddev *mddev, struct cluster_msg *msg)
+ 		if (le64_to_cpu(msg->high) != mddev->pers->size(mddev, 0, 0))
+ 			ret = mddev->bitmap_ops->resize(mddev,
+ 							le64_to_cpu(msg->high),
+-							0, false);
++							0);
+ 		break;
+ 	default:
+ 		ret = -1;
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 8ecbb0beb100..4d45dd8dc6a3 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -3341,7 +3341,7 @@ static int raid1_resize(struct mddev *mddev, sector_t sectors)
+ 	    mddev->array_sectors > newsize)
+ 		return -EINVAL;
+ 
+-	ret = mddev->bitmap_ops->resize(mddev, newsize, 0, false);
++	ret = mddev->bitmap_ops->resize(mddev, newsize, 0);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+index e68aa4b134ee..fc181254ca89 100644
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -4249,7 +4249,7 @@ static int raid10_resize(struct mddev *mddev, sector_t sectors)
+ 	    mddev->array_sectors > size)
+ 		return -EINVAL;
+ 
+-	ret = mddev->bitmap_ops->resize(mddev, size, 0, false);
++	ret = mddev->bitmap_ops->resize(mddev, size, 0);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -4518,7 +4518,7 @@ static int raid10_start_reshape(struct mddev *mddev)
+ 		newsize = raid10_size(mddev, 0, conf->geo.raid_disks);
+ 
+ 		if (!mddev_is_clustered(mddev)) {
+-			ret = mddev->bitmap_ops->resize(mddev, newsize, 0, false);
++			ret = mddev->bitmap_ops->resize(mddev, newsize, 0);
+ 			if (ret)
+ 				goto abort;
+ 			else
+@@ -4540,13 +4540,13 @@ static int raid10_start_reshape(struct mddev *mddev)
+ 			    MD_FEATURE_RESHAPE_ACTIVE)) || (oldsize == newsize))
+ 			goto out;
+ 
+-		ret = mddev->bitmap_ops->resize(mddev, newsize, 0, false);
++		ret = mddev->bitmap_ops->resize(mddev, newsize, 0);
+ 		if (ret)
+ 			goto abort;
+ 
+ 		ret = mddev->cluster_ops->resize_bitmaps(mddev, newsize, oldsize);
+ 		if (ret) {
+-			mddev->bitmap_ops->resize(mddev, oldsize, 0, false);
++			mddev->bitmap_ops->resize(mddev, oldsize, 0);
+ 			goto abort;
+ 		}
+ 	}
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index d73a775b16c5..37b5bee24773 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -8331,7 +8331,7 @@ static int raid5_resize(struct mddev *mddev, sector_t sectors)
+ 	    mddev->array_sectors > newsize)
+ 		return -EINVAL;
+ 
+-	ret = mddev->bitmap_ops->resize(mddev, sectors, 0, false);
++	ret = mddev->bitmap_ops->resize(mddev, sectors, 0);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
 2.39.2
 
