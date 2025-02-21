@@ -1,115 +1,126 @@
-Return-Path: <linux-raid+bounces-3730-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-3724-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDFA5A3F1EE
-	for <lists+linux-raid@lfdr.de>; Fri, 21 Feb 2025 11:25:22 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14097A3F16E
+	for <lists+linux-raid@lfdr.de>; Fri, 21 Feb 2025 11:08:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D1D133BC994
-	for <lists+linux-raid@lfdr.de>; Fri, 21 Feb 2025 10:25:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 111A57AAD9A
+	for <lists+linux-raid@lfdr.de>; Fri, 21 Feb 2025 10:08:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3EEF205ADA;
-	Fri, 21 Feb 2025 10:25:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 329F7204C35;
+	Fri, 21 Feb 2025 10:08:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="kO6MvcX0"
+	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="JYWW2Grh"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from mail83.out.titan.email (mail83.out.titan.email [3.216.99.61])
+Received: from mail121.out.titan.email (mail121.out.titan.email [54.208.145.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E2C205AAB
-	for <linux-raid@vger.kernel.org>; Fri, 21 Feb 2025 10:25:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.216.99.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553F11F4299
+	for <linux-raid@vger.kernel.org>; Fri, 21 Feb 2025 10:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.208.145.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740133508; cv=none; b=NgeE/ZqGWO/WD13tL6cGgsr6bRGGgN7RL6ja1WdaWNVQWlGTQgBmmeDVeIZTqRYYnSieJ+GxrFv1Iuz23ri2e+k0NtZi+fI5IucEQ4ZUkirFZ4Hcmwwj1Q/Y4t1POnCVQokFBkkAoFiFhJUTyIoi3w2z0Lpx5jC28WChMoNiPcs=
+	t=1740132530; cv=none; b=kZixX7eEEnSim4qWkiuvOwwCKqzR+zI1kfOMWxy7jbvy/iz5Pcktl29fkbBSsaMx/lqZZifaczqfvbVv967X03txxUF6cD33JJo2O11SKeFjxNIudhNm4Pus0krFqzYtn1QpHLEVSK1J3SQaWu9OnO1OyPxrV/GVVSYO+70bPjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740133508; c=relaxed/simple;
-	bh=OCNBLGjhq7P3rCWeCNzmUkTv7vySlkefy44pB4kpVfE=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=KR6ssaQDQtjrS9z9z48wA+kYth0PicEtr7W5sOdoh6fu0l5BEJ57fvqTNY7/kQLayXy/dUbTDN/Pg9HNzNl8hwIWxnaVw8rEuoGPMx310wT/4zdM/t6x8n4om7fZ6lQytK2snihUD1Y09UpcuQc2rV74vw90VleMCwL8kpZlNz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=kO6MvcX0; arc=none smtp.client-ip=3.216.99.61
+	s=arc-20240116; t=1740132530; c=relaxed/simple;
+	bh=p+2rsaQ4FhCWyfKQl3y+ihQwoGzxuywBqGvV8Qy4oro=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aYd4IQhu0DPBnbYsI/c2Wd5EiPfLcgpGf4Xya366Cj1y/eSVkFsSoxZuuaAGBLhkIQ1m35uQ1FR7HJkB9Ed/RCAXuTeeDXTp/mdDFp6pB4b0XRHCjEJbtznJKPE0uAEJUjO4LDsG+NLh68ySP0pDyDd9gvLdhsyRsSMt0wCj3hE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=JYWW2Grh; arc=none smtp.client-ip=54.208.145.58
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coly.li
-DKIM-Signature: a=rsa-sha256; bh=iV8YCNjejtbcc05TVav5ewkWbUeHHVZvkhZrrE0KVD8=;
+Received: from smtp-out.flockmail.com (localhost [127.0.0.1])
+	by smtp-out.flockmail.com (Postfix) with ESMTP id 6898F140047;
+	Fri, 21 Feb 2025 10:08:48 +0000 (UTC)
+DKIM-Signature: a=rsa-sha256; bh=cqetpmvMD/jN/5sZxj0Bd7e9Bah0FkeGurb936MERnc=;
 	c=relaxed/relaxed; d=t12smtp-sign004.email;
-	h=subject:in-reply-to:cc:to:mime-version:message-id:references:date:from:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
-	q=dns/txt; s=titan1; t=1740132387; v=1;
-	b=kO6MvcX00hlwOk1XFictjJn6d+nmp42kR7UxdTamUW3Wqg15Up8dUUTaj1RpICWIWKzj96BL
-	OJZYGeYNZugaLRaXHYv4tVCClHdrWrmULeBtKzqRz9mpWhvwFBVakOvWWehe8/V5Fk15pUQR3Cs
-	Q2NTgH/oB1RRch7U/E3tGrKc=
-Received: from smtpclient.apple (unknown [141.11.218.23])
-	by smtp-out.flockmail.com (Postfix) with ESMTPA id CA0376023D;
-	Fri, 21 Feb 2025 10:06:19 +0000 (UTC)
-Content-Type: text/plain;
-	charset=utf-8
+	h=message-id:references:mime-version:from:cc:subject:to:date:in-reply-to:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
+	q=dns/txt; s=titan1; t=1740132528; v=1;
+	b=JYWW2GrhxrD87R/6VDrIuznv0wXZf8RZQe9zr+sTIISV6NXdTYjOutiXUk70VsmWxiGBZ75f
+	JSOQGAG1c9IBCwtHhIbTpRLV+kr/914VH6Adg+XcNwILI0S88RbLgTGjzj6Vr1U9rmkWekwKYoS
+	DAb9B9d42RFRyglmgNlcYs2k=
+Received: from studio.local (unknown [141.11.218.23])
+	by smtp-out.flockmail.com (Postfix) with ESMTPA id 65BF0140108;
+	Fri, 21 Feb 2025 10:08:38 +0000 (UTC)
+Date: Fri, 21 Feb 2025 18:08:36 +0800
+Feedback-ID: :i@coly.li:coly.li:flockmailId
+From: Coly Li <i@coly.li>
+To: Zheng Qixing <zhengqixing@huaweicloud.com>
+Cc: axboe@kernel.dk, song@kernel.org, colyli@kernel.org, 
+	yukuai3@huawei.com, dan.j.williams@intel.com, vishal.l.verma@intel.com, 
+	dave.jiang@intel.com, ira.weiny@intel.com, dlemoal@kernel.org, yanjun.zhu@linux.dev, 
+	kch@nvidia.com, hare@suse.de, zhengqixing@huawei.com, john.g.garry@oracle.com, 
+	geliang@kernel.org, xni@redhat.com, colyli@suse.de, linux-block@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, nvdimm@lists.linux.dev, 
+	yi.zhang@huawei.com, yangerkun@huawei.com
+Subject: Re: [PATCH 03/12] badblocks: attempt to merge adjacent badblocks
+ during ack_all_badblocks
+Message-ID: <w527neyzlfzjxzhxge2pmip7qxzwrumn5bvztjtuonu3opoyf6@7umwkulb6eeb>
+References: <20250221081109.734170-1-zhengqixing@huaweicloud.com>
+ <20250221081109.734170-4-zhengqixing@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: [PATCH 02/12] badblocks: factor out a helper try_adjacent_combine
-Feedback-ID: :i@coly.li:coly.li:flockmailId
-From: Coly Li <i@coly.li>
-In-Reply-To: <i5vkxswklce2wtn3aolrd6qrtlib3obtlzgmdix22afcurp7lz@jkxbieqcitx4>
-Date: Fri, 21 Feb 2025 18:06:07 +0800
-Cc: axboe@kernel.dk,
- song@kernel.org,
- colyli@kernel.org,
- yukuai3@huawei.com,
- dan.j.williams@intel.com,
- vishal.l.verma@intel.com,
- dave.jiang@intel.com,
- ira.weiny@intel.com,
- dlemoal@kernel.org,
- yanjun.zhu@linux.dev,
- kch@nvidia.com,
- Hannes Reinecke <hare@suse.de>,
- zhengqixing@huawei.com,
- john.g.garry@oracle.com,
- geliang@kernel.org,
- xni@redhat.com,
- colyli@suse.de,
- linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org,
- nvdimm@lists.linux.dev,
- yi.zhang@huawei.com,
- yangerkun@huawei.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0C74DE43-1DE1-4B35-8EDB-A6A088B522F8@coly.li>
-References: <20250221081109.734170-1-zhengqixing@huaweicloud.com>
- <20250221081109.734170-3-zhengqixing@huaweicloud.com>
- <i5vkxswklce2wtn3aolrd6qrtlib3obtlzgmdix22afcurp7lz@jkxbieqcitx4>
-To: Zheng Qixing <zhengqixing@huaweicloud.com>
-X-Mailer: Apple Mail (2.3826.400.131.1.6)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250221081109.734170-4-zhengqixing@huaweicloud.com>
 X-F-Verdict: SPFVALID
-X-Titan-Src-Out: 1740132387684621551.7782.6706041692806606252@prod-use1-smtp-out1001.
+X-Titan-Src-Out: 1740132528291528194.32605.5719148889041607543@prod-use1-smtp-out1003.
 X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.4 cv=bq22BFai c=1 sm=1 tr=0 ts=67b85023
+X-CMAE-Analysis: v=2.4 cv=bq22BFai c=1 sm=1 tr=0 ts=67b850b0
 	a=USBFZE4A2Ag4MGBBroF6Xg==:117 a=USBFZE4A2Ag4MGBBroF6Xg==:17
-	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=i0EeH86SAAAA:8
-	a=sdqv7Ts4B3WvE9CFP6AA:9 a=QEXdDO2ut3YA:10
+	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=i0EeH86SAAAA:8 a=VwQbUJbxAAAA:8
+	a=ZuRJGKQMYiGAcWkIlfYA:9 a=QEXdDO2ut3YA:10
+X-Virus-Scanned: ClamAV using ClamSMTP
 
+On Fri, Feb 21, 2025 at 04:11:00PM +0800, Zheng Qixing wrote:
+> From: Li Nan <linan122@huawei.com>
+> 
+> If ack and unack badblocks are adjacent, they will not be merged and will
+> remain as two separate badblocks. Even after the bad blocks are written
+> to disk and both become ack, they will still remain as two independent
+> bad blocks. This is not ideal as it wastes the limited space for
+> badblocks. Therefore, during ack_all_badblocks(), attempt to merge
+> badblocks if they are adjacent.
+> 
+> Fixes: aa511ff8218b ("badblocks: switch to the improved badblock handling code")
+> Signed-off-by: Li Nan <linan122@huawei.com>
 
+Looks good to me.
 
-> 2025=E5=B9=B42=E6=9C=8821=E6=97=A5 18:04=EF=BC=8CColy Li <i@coly.li> =
-=E5=86=99=E9=81=93=EF=BC=9A
->=20
-> On Fri, Feb 21, 2025 at 04:10:59PM +0800, Zheng Qixing wrote:
->> From: Li Nan <linan122@huawei.com>
->>=20
->> Factor out try_adjacent_combine(), and it will be used in the later =
-patch.
->>=20
->=20
-> Which patch is try_adjacent_combine() used in? I don't see that at a =
-quick glance.
+Acked-by: Coly Li <colyli@kernel.org>
 
+Thanks.
 
-OK, I see it is in ack_all_badblocks().  Ignore the above question.
+> ---
+>  block/badblocks.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/block/badblocks.c b/block/badblocks.c
+> index f069c93e986d..ad8652fbe1c8 100644
+> --- a/block/badblocks.c
+> +++ b/block/badblocks.c
+> @@ -1491,6 +1491,11 @@ void ack_all_badblocks(struct badblocks *bb)
+>  				p[i] = BB_MAKE(start, len, 1);
+>  			}
+>  		}
+> +
+> +		for (i = 0; i < bb->count ; i++)
+> +			while (try_adjacent_combine(bb, i))
+> +				;
+> +
+>  		bb->unacked_exist = 0;
+>  	}
+>  	write_sequnlock_irq(&bb->lock);
+> -- 
+> 2.39.2
+> 
 
+-- 
 Coly Li
-
 
