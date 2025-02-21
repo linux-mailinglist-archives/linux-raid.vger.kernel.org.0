@@ -1,126 +1,139 @@
-Return-Path: <linux-raid+bounces-3724-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-3726-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14097A3F16E
-	for <lists+linux-raid@lfdr.de>; Fri, 21 Feb 2025 11:08:59 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 555B8A3F17B
+	for <lists+linux-raid@lfdr.de>; Fri, 21 Feb 2025 11:11:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 111A57AAD9A
-	for <lists+linux-raid@lfdr.de>; Fri, 21 Feb 2025 10:08:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2AADD423B6E
+	for <lists+linux-raid@lfdr.de>; Fri, 21 Feb 2025 10:10:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 329F7204C35;
-	Fri, 21 Feb 2025 10:08:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FB95204F7A;
+	Fri, 21 Feb 2025 10:09:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="JYWW2Grh"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FK/STl0g"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from mail121.out.titan.email (mail121.out.titan.email [54.208.145.58])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553F11F4299
-	for <linux-raid@vger.kernel.org>; Fri, 21 Feb 2025 10:08:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.208.145.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C20204C11
+	for <linux-raid@vger.kernel.org>; Fri, 21 Feb 2025 10:09:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740132530; cv=none; b=kZixX7eEEnSim4qWkiuvOwwCKqzR+zI1kfOMWxy7jbvy/iz5Pcktl29fkbBSsaMx/lqZZifaczqfvbVv967X03txxUF6cD33JJo2O11SKeFjxNIudhNm4Pus0krFqzYtn1QpHLEVSK1J3SQaWu9OnO1OyPxrV/GVVSYO+70bPjs=
+	t=1740132594; cv=none; b=ruEHtGwigD2LBYs1yb9qApbwp5oCNS+ieNa5o43QPcVDB67ROx/MHr3ymw4VSFaOPlGybNa6SZRwl6YYhFpXX9oMDzTHs5ju0KIXB1Q9SfQCUlPuTn2pMaelVpjDSZv9UIdy2s9oV1hsuW3H9BA4OdyHpIXSzr0NbXiQTHT6GvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740132530; c=relaxed/simple;
-	bh=p+2rsaQ4FhCWyfKQl3y+ihQwoGzxuywBqGvV8Qy4oro=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aYd4IQhu0DPBnbYsI/c2Wd5EiPfLcgpGf4Xya366Cj1y/eSVkFsSoxZuuaAGBLhkIQ1m35uQ1FR7HJkB9Ed/RCAXuTeeDXTp/mdDFp6pB4b0XRHCjEJbtznJKPE0uAEJUjO4LDsG+NLh68ySP0pDyDd9gvLdhsyRsSMt0wCj3hE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=JYWW2Grh; arc=none smtp.client-ip=54.208.145.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coly.li
-Received: from smtp-out.flockmail.com (localhost [127.0.0.1])
-	by smtp-out.flockmail.com (Postfix) with ESMTP id 6898F140047;
-	Fri, 21 Feb 2025 10:08:48 +0000 (UTC)
-DKIM-Signature: a=rsa-sha256; bh=cqetpmvMD/jN/5sZxj0Bd7e9Bah0FkeGurb936MERnc=;
-	c=relaxed/relaxed; d=t12smtp-sign004.email;
-	h=message-id:references:mime-version:from:cc:subject:to:date:in-reply-to:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
-	q=dns/txt; s=titan1; t=1740132528; v=1;
-	b=JYWW2GrhxrD87R/6VDrIuznv0wXZf8RZQe9zr+sTIISV6NXdTYjOutiXUk70VsmWxiGBZ75f
-	JSOQGAG1c9IBCwtHhIbTpRLV+kr/914VH6Adg+XcNwILI0S88RbLgTGjzj6Vr1U9rmkWekwKYoS
-	DAb9B9d42RFRyglmgNlcYs2k=
-Received: from studio.local (unknown [141.11.218.23])
-	by smtp-out.flockmail.com (Postfix) with ESMTPA id 65BF0140108;
-	Fri, 21 Feb 2025 10:08:38 +0000 (UTC)
-Date: Fri, 21 Feb 2025 18:08:36 +0800
-Feedback-ID: :i@coly.li:coly.li:flockmailId
-From: Coly Li <i@coly.li>
-To: Zheng Qixing <zhengqixing@huaweicloud.com>
-Cc: axboe@kernel.dk, song@kernel.org, colyli@kernel.org, 
-	yukuai3@huawei.com, dan.j.williams@intel.com, vishal.l.verma@intel.com, 
-	dave.jiang@intel.com, ira.weiny@intel.com, dlemoal@kernel.org, yanjun.zhu@linux.dev, 
-	kch@nvidia.com, hare@suse.de, zhengqixing@huawei.com, john.g.garry@oracle.com, 
-	geliang@kernel.org, xni@redhat.com, colyli@suse.de, linux-block@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, nvdimm@lists.linux.dev, 
-	yi.zhang@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH 03/12] badblocks: attempt to merge adjacent badblocks
- during ack_all_badblocks
-Message-ID: <w527neyzlfzjxzhxge2pmip7qxzwrumn5bvztjtuonu3opoyf6@7umwkulb6eeb>
-References: <20250221081109.734170-1-zhengqixing@huaweicloud.com>
- <20250221081109.734170-4-zhengqixing@huaweicloud.com>
+	s=arc-20240116; t=1740132594; c=relaxed/simple;
+	bh=rWGDeH3+byAdvrjidwsjwhpV85/U0HX+hboTidLOSps=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MMMmNzkxbBHZc5UYem2B3ikD9+hc/2lUjhGx74BdL2NQuI38aH3B/iGUj3jnkfrcbs39HlkkLAqCFqpQkQ7wDatLEFrHNt5LrOlnYYp4d2hLH9r3rawh3l5anp4BILo/UCP7uP4LVNZbBChTP3mEVlzz7SF6alnfLXP5rIMc33Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FK/STl0g; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Message-ID: <f8ad5677-5fc9-468e-a888-8cd55c3a37d7@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740132579;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aW3oDRK1AYQyNuuKbR6ooYr7ixquPTNaTlNOorn591M=;
+	b=FK/STl0gxI5X9bIYgx7V7pl3URExAJx6qPV+gBvyTFDa84QTTo4tM5nLqveDjStJAxPGYL
+	Xe5WIK4t8mjvtwjAQGnJDFAFIR8SeX7Mf6fxKgaCBMc8SqE67H9kXj5+EuNDMja9AS7sTM
+	TEZ0YWXFy3CE7OH2UXzkdJbr3impC6s=
+Date: Fri, 21 Feb 2025 11:09:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250221081109.734170-4-zhengqixing@huaweicloud.com>
-X-F-Verdict: SPFVALID
-X-Titan-Src-Out: 1740132528291528194.32605.5719148889041607543@prod-use1-smtp-out1003.
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.4 cv=bq22BFai c=1 sm=1 tr=0 ts=67b850b0
-	a=USBFZE4A2Ag4MGBBroF6Xg==:117 a=USBFZE4A2Ag4MGBBroF6Xg==:17
-	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=i0EeH86SAAAA:8 a=VwQbUJbxAAAA:8
-	a=ZuRJGKQMYiGAcWkIlfYA:9 a=QEXdDO2ut3YA:10
-X-Virus-Scanned: ClamAV using ClamSMTP
+Subject: Re: [PATCH 06/12] badblocks: fix the using of MAX_BADBLOCKS
+To: Zheng Qixing <zhengqixing@huaweicloud.com>, axboe@kernel.dk,
+ song@kernel.org, colyli@kernel.org, yukuai3@huawei.com,
+ dan.j.williams@intel.com, vishal.l.verma@intel.com, dave.jiang@intel.com,
+ ira.weiny@intel.com, dlemoal@kernel.org, kch@nvidia.com, hare@suse.de,
+ zhengqixing@huawei.com, john.g.garry@oracle.com, geliang@kernel.org,
+ xni@redhat.com, colyli@suse.de
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-raid@vger.kernel.org, nvdimm@lists.linux.dev, yi.zhang@huawei.com,
+ yangerkun@huawei.com
+References: <20250221081109.734170-1-zhengqixing@huaweicloud.com>
+ <20250221081109.734170-7-zhengqixing@huaweicloud.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <20250221081109.734170-7-zhengqixing@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Feb 21, 2025 at 04:11:00PM +0800, Zheng Qixing wrote:
+
+On 21.02.25 09:11, Zheng Qixing wrote:
 > From: Li Nan <linan122@huawei.com>
-> 
-> If ack and unack badblocks are adjacent, they will not be merged and will
-> remain as two separate badblocks. Even after the bad blocks are written
-> to disk and both become ack, they will still remain as two independent
-> bad blocks. This is not ideal as it wastes the limited space for
-> badblocks. Therefore, during ack_all_badblocks(), attempt to merge
-> badblocks if they are adjacent.
-> 
+>
+> The number of badblocks cannot exceed MAX_BADBLOCKS, but it should be
+> allowed to equal MAX_BADBLOCKS.
+>
 > Fixes: aa511ff8218b ("badblocks: switch to the improved badblock handling code")
 > Signed-off-by: Li Nan <linan122@huawei.com>
-
-Looks good to me.
-
-Acked-by: Coly Li <colyli@kernel.org>
-
-Thanks.
-
 > ---
->  block/badblocks.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
+>   block/badblocks.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
 > diff --git a/block/badblocks.c b/block/badblocks.c
-> index f069c93e986d..ad8652fbe1c8 100644
+> index a953d2e9417f..87267bae6836 100644
 > --- a/block/badblocks.c
 > +++ b/block/badblocks.c
-> @@ -1491,6 +1491,11 @@ void ack_all_badblocks(struct badblocks *bb)
->  				p[i] = BB_MAKE(start, len, 1);
->  			}
->  		}
-> +
-> +		for (i = 0; i < bb->count ; i++)
-> +			while (try_adjacent_combine(bb, i))
-> +				;
-> +
->  		bb->unacked_exist = 0;
->  	}
->  	write_sequnlock_irq(&bb->lock);
-> -- 
-> 2.39.2
-> 
+> @@ -700,7 +700,7 @@ static bool can_front_overwrite(struct badblocks *bb, int prev,
+>   			*extra = 2;
+>   	}
+>   
+> -	if ((bb->count + (*extra)) >= MAX_BADBLOCKS)
+> +	if ((bb->count + (*extra)) > MAX_BADBLOCKS)
+>   		return false;
+
+
+In this commit,
+
+commit c3c6a86e9efc5da5964260c322fe07feca6df782
+Author: Coly Li <colyli@suse.de>
+Date:   Sat Aug 12 01:05:08 2023 +0800
+
+     badblocks: add helper routines for badblock ranges handling
+
+     This patch adds several helper routines to improve badblock ranges
+     handling. These helper routines will be used later in the improved
+     version of badblocks_set()/badblocks_clear()/badblocks_check().
+
+     - Helpers prev_by_hint() and prev_badblocks() are used to find the bad
+       range from bad table which the searching range starts at or after.
+
+The above is changed to MAX_BADBLOCKS. Thus, perhaps, the Fixes tag 
+should include the above commit?
+
+Except that, I am fine with this commit.
+
+Reviewed-by: Zhu Yanjun <yanjun.zhu@linux.dev>
+
+Zhu Yanjun
+
+
+>   
+>   	return true;
+> @@ -1135,7 +1135,7 @@ static int _badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
+>   		if ((BB_OFFSET(p[prev]) < bad.start) &&
+>   		    (BB_END(p[prev]) > (bad.start + bad.len))) {
+>   			/* Splitting */
+> -			if ((bb->count + 1) < MAX_BADBLOCKS) {
+> +			if ((bb->count + 1) <= MAX_BADBLOCKS) {
+>   				len = front_splitting_clear(bb, prev, &bad);
+>   				bb->count += 1;
+>   				cleared++;
 
 -- 
-Coly Li
+Best Regards,
+Yanjun.Zhu
+
 
