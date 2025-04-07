@@ -1,123 +1,166 @@
-Return-Path: <linux-raid+bounces-3947-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-3949-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35F90A7D1B8
-	for <lists+linux-raid@lfdr.de>; Mon,  7 Apr 2025 03:21:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1242A7D9E8
+	for <lists+linux-raid@lfdr.de>; Mon,  7 Apr 2025 11:41:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CC0EE3AE526
-	for <lists+linux-raid@lfdr.de>; Mon,  7 Apr 2025 01:21:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 94011188DCD8
+	for <lists+linux-raid@lfdr.de>; Mon,  7 Apr 2025 09:41:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AEE9211469;
-	Mon,  7 Apr 2025 01:21:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D62A22FF4C;
+	Mon,  7 Apr 2025 09:41:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wrj4Vs/n"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 695C72101AF;
-	Mon,  7 Apr 2025 01:21:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B08A22B8BD;
+	Mon,  7 Apr 2025 09:41:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743988891; cv=none; b=KCfzjs5w038FwrVk+mQ09LvLIwhj3Sg7rJsv+H9PWaDe/dqdZz79Wpc8aDJ7OtTlan4aE63BTP0AmkOpmnFmoYSZiCTClZUS5MZN8qlYUyxrqR2hZLmdNLDVoqrD9kLXI8dXbs/C+3pKhCb1LSxmrS7PhucUamBz5s6GKXCjc8U=
+	t=1744018887; cv=none; b=LRRtEj0vCy/MfFf5f9Dyjp8/EiwQAwwxVIbRo95h9QhcBBpvmhvQzXM7C1WHxyBr11YFeyubc571wN3fOisCeb90zglUhxxSZ5Kq3L0igdfnB0L3FOYWwmhlMQbKathdkFQ4QrOosy/zNR9eFeBnIf67R/75picNpJuNvUFCCS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743988891; c=relaxed/simple;
-	bh=6L77+RRua/4acu1pIvF8GpxjPnFtzZwigbVkXSwVkU8=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Vu4SGTX4FQOJ7mK8t51ADFt5pvjf8pPz1ajp6w2t6eorSeEOAKrJYQjoqLP+YxAjLKd8+xDEGWo6DLOE/eYB9IGK+ugJkQeAYwEGzM0qYSu/tTXHMleWLWboL/75b40hRgd/A8NjiaCW9rEmpchgz9te2g4qpEoY/ed2UPLZuM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZWBHQ6KSjz4f3jt7;
-	Mon,  7 Apr 2025 09:21:06 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id CB4EC1A0D62;
-	Mon,  7 Apr 2025 09:21:24 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgB321+UKPNnv2fyIg--.50539S3;
-	Mon, 07 Apr 2025 09:21:24 +0800 (CST)
-Subject: Re: [PATCH V2] md/md-bitmap: fix stats collection for external
- bitmaps
-To: Zheng Qixing <zhengqixing@huaweicloud.com>, song@kernel.org
-Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
- yi.zhang@huawei.com, yangerkun@huawei.com, zhengqixing@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20250403015322.2873369-1-zhengqixing@huaweicloud.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <50e45490-2d68-f882-97d8-a4548730caab@huaweicloud.com>
-Date: Mon, 7 Apr 2025 09:21:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1744018887; c=relaxed/simple;
+	bh=cqFVpiMLss0+HxdO2CYbfXC6D/iBdTbrM+nK40NDFG4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JVzXY//W6gF7EYM07IsiplfjPEElXEi4MzsAHGfL03zt049WCKJQUwLuMRepxFxU8t44Sp+93cXu3AdWzaE7dygAIq557I9i9yTlWlgLoic1snbOCbYl8OxYMCEFf3Sm4v6iMDFCGca+6RhaNLrDMTzHZR1SL1t33khuW6oKgTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wrj4Vs/n; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E958C4CEE9;
+	Mon,  7 Apr 2025 09:41:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744018887;
+	bh=cqFVpiMLss0+HxdO2CYbfXC6D/iBdTbrM+nK40NDFG4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Wrj4Vs/n9PxnaHaHHtmEMpxeE23Qy8lrGk4d3zss3LW8jHzTSZsCiMr6hJc+p+j2Q
+	 GLNRtgJ0DhH9Ww1/PA/9J6uJBBcnzFcj6K5cV5Cp38K5imMNe/kpNGqRgBOObcXY6B
+	 jCrY2CWl7pQpC0ZbkKeeGND8TRvCKFEHqAWWYYOsOeT41hYnu9plJ0xQrLnMSSRh2e
+	 92ncte/rG/1MsHNVe/aYtRao0MZpmsripKQ+Azt+o8HyTKGCBOcFvevIeSoM5X/DK9
+	 cQ62sFa4cxfq36tnxUuHI5WxLJFetXTDNXMILyQhF2YOG1+ZISRCKc3Dk1Fqg077xa
+	 gK1fLhXrhHfdg==
+From: Arnd Bergmann <arnd@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Brian Gerst <brgerst@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Marc Zyngier <maz@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Takashi Iwai <tiwai@suse.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-crypto@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-raid@vger.kernel.org,
+	x86@kernel.org
+Subject: [PATCH 0/4] Make gcc-8.1 and binutils-2.30 the minimum version
+Date: Mon,  7 Apr 2025 11:41:12 +0200
+Message-Id: <20250407094116.1339199-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250403015322.2873369-1-zhengqixing@huaweicloud.com>
-Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgB321+UKPNnv2fyIg--.50539S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7AFyxArWrurW8Kr13ur1Utrb_yoW8Xr4kpF
-	ZxG3W5urWrJr10gF1UZFy8ZFyrJ3ZxtrZrKr1rG3s5uFZFyF9xKry8Gas0g3ZIvryrZF4q
-	qrW5ta45Ca4j9F7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
-	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUFB
-	T5DUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-ÔÚ 2025/04/03 9:53, Zheng Qixing Ð´µÀ:
-> From: Zheng Qixing <zhengqixing@huawei.com>
-> 
-> The bitmap_get_stats() function incorrectly returns -ENOENT for external
-> bitmaps.
-> 
-> Remove the external bitmap check as the statistics should be available
-> regardless of bitmap storage location.
-> 
-> Return -EINVAL only for invalid bitmap with no storage (neither in
-> superblock nor in external file).
-> 
-> Note: "bitmap_info.external" here refers to a bitmap stored in a separate
-> file (bitmap_file), not to external metadata.
-> 
-> Fixes: 8d28d0ddb986 ("md/md-bitmap: Synchronize bitmap_get_stats() with bitmap lifetime")
-> Signed-off-by: Zheng Qixing <zhengqixing@huawei.com>
-> ---
->   drivers/md/md-bitmap.c | 5 ++---
->   1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-Applied to md-6.15
-Thanks
+From: Arnd Bergmann <arnd@arndb.de>
 
-> diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-> index 44ec9b17cfd3..37b08f26c62f 100644
-> --- a/drivers/md/md-bitmap.c
-> +++ b/drivers/md/md-bitmap.c
-> @@ -2357,9 +2357,8 @@ static int bitmap_get_stats(void *data, struct md_bitmap_stats *stats)
->   
->   	if (!bitmap)
->   		return -ENOENT;
-> -	if (bitmap->mddev->bitmap_info.external)
-> -		return -ENOENT;
-> -	if (!bitmap->storage.sb_page) /* no superblock */
-> +	if (!bitmap->mddev->bitmap_info.external &&
-> +	    !bitmap->storage.sb_page)
->   		return -EINVAL;
->   	sb = kmap_local_page(bitmap->storage.sb_page);
->   	stats->sync_size = le64_to_cpu(sb->sync_size);
-> 
+x86 already requires gcc-8.1 since linux-6.15-rc1, which led me to
+actually go through all  version checks and make this is the minimum
+for all architectures.
+
+Most of the actual resulting changes are actually for raising the
+binutils version, which eliminates version checks on x86 and arm64.
+
+Arnd Bergmann (4):
+  kbuild: require gcc-8 and binutils-2.30
+  raid6: skip avx512 checks
+  x86: remove checks for binutils-2.30 and earlier
+  arm64: drop binutils version checks
+
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nicolas Schier <nicolas@fjasle.eu>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Uros Bizjak <ubizjak@gmail.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-raid@vger.kernel.org
+Cc: x86@kernel.org
+
+ Documentation/admin-guide/README.rst          |  2 +-
+ Documentation/kbuild/makefiles.rst            |  4 +-
+ Documentation/process/changes.rst             |  4 +-
+ .../translations/it_IT/process/changes.rst    |  4 +-
+ .../translations/zh_CN/admin-guide/README.rst |  2 +-
+ arch/arm64/Kconfig                            | 37 +--------------
+ arch/arm64/Makefile                           | 21 +--------
+ arch/arm64/include/asm/rwonce.h               |  4 --
+ arch/arm64/kvm/Kconfig                        |  1 -
+ arch/arm64/lib/xor-neon.c                     |  2 +-
+ arch/um/Makefile                              |  4 +-
+ arch/x86/Kconfig.assembler                    | 29 ------------
+ arch/x86/crypto/Kconfig                       |  2 +-
+ arch/x86/crypto/Makefile                      | 12 +++--
+ arch/x86/crypto/aes-ctr-avx-x86_64.S          |  2 -
+ arch/x86/crypto/aes-xts-avx-x86_64.S          |  2 -
+ arch/x86/crypto/aesni-intel_glue.c            | 21 +--------
+ arch/x86/crypto/aria-aesni-avx-asm_64.S       | 10 -----
+ arch/x86/crypto/aria-aesni-avx2-asm_64.S      | 10 +----
+ arch/x86/crypto/aria_aesni_avx2_glue.c        |  4 +-
+ arch/x86/crypto/aria_aesni_avx_glue.c         |  4 +-
+ arch/x86/crypto/blake2s-core.S                |  4 --
+ arch/x86/crypto/blake2s-glue.c                |  6 +--
+ arch/x86/crypto/chacha_glue.c                 |  6 +--
+ arch/x86/crypto/poly1305-x86_64-cryptogams.pl |  8 ----
+ arch/x86/crypto/poly1305_glue.c               |  4 +-
+ arch/x86/crypto/sha1_ssse3_glue.c             | 10 -----
+ arch/x86/crypto/sha256_ssse3_glue.c           | 10 -----
+ include/linux/unroll.h                        |  4 +-
+ kernel/gcov/gcc_4_7.c                         |  4 --
+ lib/raid6/algos.c                             |  6 ---
+ lib/raid6/avx512.c                            |  4 --
+ lib/raid6/recov_avx512.c                      |  6 ---
+ lib/raid6/test/Makefile                       |  3 --
+ lib/test_fortify/Makefile                     |  5 +--
+ scripts/Makefile.compiler                     |  2 +-
+ scripts/gcc-plugins/gcc-common.h              | 45 -------------------
+ scripts/min-tool-version.sh                   |  6 +--
+ 38 files changed, 36 insertions(+), 278 deletions(-)
+
+-- 
+2.39.5
 
 
