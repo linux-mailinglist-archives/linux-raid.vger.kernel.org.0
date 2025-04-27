@@ -1,128 +1,127 @@
-Return-Path: <linux-raid+bounces-4049-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-4052-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81C96A9DEBF
-	for <lists+linux-raid@lfdr.de>; Sun, 27 Apr 2025 04:46:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34CE4A9E0F9
+	for <lists+linux-raid@lfdr.de>; Sun, 27 Apr 2025 10:38:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CFE43462A68
-	for <lists+linux-raid@lfdr.de>; Sun, 27 Apr 2025 02:46:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9FCB23BF19C
+	for <lists+linux-raid@lfdr.de>; Sun, 27 Apr 2025 08:37:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D5A51FDA8E;
-	Sun, 27 Apr 2025 02:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F8qyf2oo"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C9D42505C5;
+	Sun, 27 Apr 2025 08:37:15 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12AC71E4AE
-	for <linux-raid@vger.kernel.org>; Sun, 27 Apr 2025 02:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B127228CA9;
+	Sun, 27 Apr 2025 08:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745721952; cv=none; b=KAwHClZZ5lvUTGTdAqEHLhxfRo/44kadY+fZJxvg2SwWvPn5faVm+qGBXmW+ceyqInrR5vS0LQKADLfwa17FoghNiXzTbAj1JWDNMxox54+syni5t3SADctveqhZ8r8H1rF71RSyOwRSS7+Qy0tRzlPMxQK228C2D/MukOQPI14=
+	t=1745743035; cv=none; b=FkPj10FI1HJl1j66oabb0Knh8irNyB5So3TMQ9MSrgiHptYfMaeDa9Gr1Qqwkm+/5ELs/8ZzUOgdHzrbHNmMc/SIXzRXaNdnoMTuwJkMyUauegko2Q9DV1Q9dI3NSkF49fiia7MmuFzpvNbuVm77eqYk9p4n67I3vl1Q+EUA4AU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745721952; c=relaxed/simple;
-	bh=9HyWmovfxbdO9WlvHm/CrZCGdDuQYBCiz0YIKAxiQIw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UuYZe22rks5DlqkyBdHjcyuxo4TZ5EQL7+I1cXcPltkCuW1S7nltXSQAQzOUdj3b36RRAgmTkQX8GASYlDrmtSzZ4PeF1/ZkpE4wCY5tmAyXDmx/KrGu2nFPPGNAi6r3V5gNqDbWzG5NtLLB2jpWX2JnrKAtAS66I3cMnszMJD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F8qyf2oo; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745721949;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5lOD5wJKRJSGzLBcfg1idl+BdURTBGXU653f/FvKAjA=;
-	b=F8qyf2ook5WUjOC8eDxwf7LWmqHqkQ5RRfw7vB+H0EMXBndZpBQ/f85qFeLNrdZFxNMHk+
-	67W081A8a3G3kwEXCK853KE4f6PR+E+Vd5z1hU05+CpFgw7kjZvuA3d38hw+3vyhHQnaJI
-	SD97eQd4+vPkiJsUoK4GEAGzjWCY7T8=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-640-J0yYV2EjPNe-ThED1QFvRA-1; Sat, 26 Apr 2025 22:45:47 -0400
-X-MC-Unique: J0yYV2EjPNe-ThED1QFvRA-1
-X-Mimecast-MFC-AGG-ID: J0yYV2EjPNe-ThED1QFvRA_1745721946
-Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-30bff0c526cso17693851fa.0
-        for <linux-raid@vger.kernel.org>; Sat, 26 Apr 2025 19:45:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745721946; x=1746326746;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5lOD5wJKRJSGzLBcfg1idl+BdURTBGXU653f/FvKAjA=;
-        b=JHHnc23i5IHeosOGDObjCVHcaPaV72amIy4vEmuCjkzdJcHpn4qmf+MCRbp8F4ngUX
-         e/SwuKRKrfLBSRyD4fXtzk8qRdkULaon1OpRv5Asa7pXGHt4BncA1iQA8VvDRUHl+AiI
-         wmBWToqPM4agIlFzLmdqTCy2PBhrXtyIhSrZV3r/OYEjbWH9qlk12ZNwtzk2raiHpHku
-         4cGUZ/dOuXU9QGYVjjabtNWyOyfGo+aTCjONwX6VJPlWoKxfSIluUhXHnxxPqAW1yTpp
-         aYzRqp0cmJheVrGFS5r3tshyqKnQheQO8q+MXGwaASm5X/8YrZpJ/8SZdFl4ZVAFV7Cv
-         cCMw==
-X-Forwarded-Encrypted: i=1; AJvYcCWuYWpGoYYxRN7IWgIfl5nqTs/VQHG545AyHSHiXQLOyiOaJ+S0HNyh+K1iuJ00CpPEJSrE3+FkJerV@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVxqZ/0ZS5cojZvGUXhHHMwpQoncgaWdSUlZRQgWmxIEVTigYw
-	sYUSEd707b1EJ7p/ZBhteV+hmWmTjEzgoUfC/qCCE9Y9hxQETobfsRJORpf9ox8tdd/b7tD60Hc
-	LFucEBU1Oh18jZBi2zOC3FtOILaXpdd7ZdvK+AZK6wFv1LZ/RFt4qDMnNkk/hND+m4jJDvHy7VO
-	lFDhheE8BJb2Eb9bAapp+s2kUOES3lXNmnuA==
-X-Gm-Gg: ASbGncvl147pC0/zyYkS7T/wvpiwY3oj1r7PHMs/RBUbHModRiGsWMthYMrDZzPqfNz
-	9ITXO24mKodfhiZN3IsyXl/O+xF0vBT9a15q7D9nFOnq0Nh01pSJwZfSsghThBw8GMwGV9w==
-X-Received: by 2002:a2e:bc13:0:b0:30c:1441:9e84 with SMTP id 38308e7fff4ca-3190614e2efmr19465661fa.13.1745721946225;
-        Sat, 26 Apr 2025 19:45:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGS0Yc4bGIbl2/v9OhZ9z0uTs3mIqptakH90A1Qqw9fP/ktQZ1u60ZhGAtb0KMTfZsMAlADrGR3uW4Ef7E40xE=
-X-Received: by 2002:a2e:bc13:0:b0:30c:1441:9e84 with SMTP id
- 38308e7fff4ca-3190614e2efmr19465581fa.13.1745721945851; Sat, 26 Apr 2025
- 19:45:45 -0700 (PDT)
+	s=arc-20240116; t=1745743035; c=relaxed/simple;
+	bh=OUHwNKnG3YpW8fdJ7O7QdjsVE5cAIInl4Sq4+BBFX0w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=A/FVVJhhwl5oDkJpwlWn/8xcQJjfcE7NXSaNotm5zL8sJ1I5LEcEz7g+PfRq+P1LUvFlqm2njGF/o1anYcOFVFIg1qIltMHa3cAl7zpx64JuqmuMcUJRiy7oH9mPrbPemPhxxo2QrIB8HU85q6/syTO9cIt2kLZwI2036LK/TUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zlg0w67vkz4f3jt7;
+	Sun, 27 Apr 2025 16:36:48 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id A67691A09E6;
+	Sun, 27 Apr 2025 16:37:07 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP3 (Coremail) with SMTP id _Ch0CgDHGsWx7A1oOv4xKg--.7274S4;
+	Sun, 27 Apr 2025 16:37:07 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: hch@infradead.org,
+	axboe@kernel.dk,
+	xni@redhat.com,
+	agk@redhat.com,
+	snitzer@kernel.org,
+	mpatocka@redhat.com,
+	song@kernel.org,
+	yukuai3@huawei.com,
+	cl@linux.com,
+	nadav.amit@gmail.com,
+	ubizjak@gmail.com,
+	akpm@linux-foundation.org
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dm-devel@lists.linux.dev,
+	linux-raid@vger.kernel.org,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	johnny.chenyi@huawei.com
+Subject: [PATCH v2 0/9] md: fix is_mddev_idle()
+Date: Sun, 27 Apr 2025 16:29:19 +0800
+Message-Id: <20250427082928.131295-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250418010941.667138-1-yukuai1@huaweicloud.com>
- <20250418010941.667138-5-yukuai1@huaweicloud.com> <CALTww29aehPQcbcy0j+V69r+RVgzNPwNhpAQ-7wWMdD-VPfNgQ@mail.gmail.com>
- <f14eac30-ab65-85b2-3e65-de6d50ea15e2@huaweicloud.com>
-In-Reply-To: <f14eac30-ab65-85b2-3e65-de6d50ea15e2@huaweicloud.com>
-From: Xiao Ni <xni@redhat.com>
-Date: Sun, 27 Apr 2025 10:45:34 +0800
-X-Gm-Features: ATxdqUFJRCKVD9aqKTI3GFPq-KDsm4Enqte1rPq47L--gyfTK3VWtePr_uH3814
-Message-ID: <CALTww29b1MN8Q-ayFLxnRA=+=J-jrR90nrDrrY7xs1C_2k8KXQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] md: fix is_mddev_idle()
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: axboe@kernel.dk, agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com, 
-	song@kernel.org, viro@zeniv.linux.org.uk, akpm@linux-foundation.org, 
-	nadav.amit@gmail.com, ubizjak@gmail.com, cl@linux.com, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com, 
-	yangerkun@huawei.com, johnny.chenyi@huawei.com, 
-	"yukuai (C)" <yukuai3@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_Ch0CgDHGsWx7A1oOv4xKg--.7274S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrurWUJw17Jr1xury5Ww1xKrg_yoWDWwbE9F
+	WDZFyaqF4xXF13AFyqkF13ZrWjkrW8X3s8XFy2qrW5Zr93Xr1UKws0kw4Yq398WFW7u3ZY
+	yr18ur18Ar48XjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb3kFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
+	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0pRHUDLUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Sun, Apr 27, 2025 at 9:37=E2=80=AFAM Yu Kuai <yukuai1@huaweicloud.com> w=
-rote:
->
-> Hi,
->
-> =E5=9C=A8 2025/04/22 14:35, Xiao Ni =E5=86=99=E9=81=93:
-> >> +       unsigned long                   last_events;    /* IO event ti=
-mestamp */
-> > Can we use another name? Because mddev has events counter. This name
-> > can easily be confused with that counter.
->
-> Sorry for the late reply.
->
-> Sure, how about, normal_IO_events?
+From: Yu Kuai <yukuai3@huawei.com>
 
-It looks much better, thanks for this. I guess it's a typo error about
-uppercase IO, right? We usually use lowercase.
+Changes in v2:
+ - add patch 1-5
+ - add reviewed-by in patch 6,7,9
+ - rename mddev->last_events to mddev->normal_IO_events in patch 8
 
-Best Regards
-Xiao
->
-> Thanks,
-> Kuai
->
+Yu Kuai (9):
+  blk-mq: remove blk_mq_in_flight()
+  block: reuse part_in_flight_rw for part_in_flight
+  block: WARN if bdev inflight counter is negative
+  block: cleanup blk_mq_in_flight_rw()
+  block: export API to get the number of bdev inflight IO
+  md: record dm-raid gendisk in mddev
+  md: add a new api sync_io_depth
+  md: fix is_mddev_idle()
+  md: cleanup accounting for issued sync IO
+
+ block/blk-core.c          |   2 +-
+ block/blk-mq.c            |  22 ++---
+ block/blk-mq.h            |   5 +-
+ block/blk.h               |   1 -
+ block/genhd.c             |  69 ++++++++------
+ drivers/md/dm-raid.c      |   3 +
+ drivers/md/md.c           | 193 +++++++++++++++++++++++++++-----------
+ drivers/md/md.h           |  18 +---
+ drivers/md/raid1.c        |   3 -
+ drivers/md/raid10.c       |   9 --
+ drivers/md/raid5.c        |   8 --
+ include/linux/blkdev.h    |   1 -
+ include/linux/part_stat.h |   2 +
+ 13 files changed, 194 insertions(+), 142 deletions(-)
+
+-- 
+2.39.2
 
 
