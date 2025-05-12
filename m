@@ -1,42 +1,43 @@
-Return-Path: <linux-raid+bounces-4142-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-4145-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04A0FAB2CC9
-	for <lists+linux-raid@lfdr.de>; Mon, 12 May 2025 03:28:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7FC41AB2CD5
+	for <lists+linux-raid@lfdr.de>; Mon, 12 May 2025 03:29:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7467A174B52
-	for <lists+linux-raid@lfdr.de>; Mon, 12 May 2025 01:28:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7B9301899142
+	for <lists+linux-raid@lfdr.de>; Mon, 12 May 2025 01:29:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11A221E2307;
-	Mon, 12 May 2025 01:28:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC4651E3DD3;
+	Mon, 12 May 2025 01:28:10 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1421E1E1F;
-	Mon, 12 May 2025 01:28:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB0371E2823;
+	Mon, 12 May 2025 01:28:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747013287; cv=none; b=bRdjKmKlBlKFeIVH0twf8X/UPW3mziN69PnHynkLwjYDET1TsMcoqkM7M51kDxZuXw1cK3v4I4kdngd9UPvfYWHxHGiUI6PEPPLhV0gGmiR3Ur7KwTW7lG8s/iUuAwBnR1bPvJADy8hfVyT58oswsvSOxi4TUsEIrC++UdLK+Ok=
+	t=1747013290; cv=none; b=PbvLXFJagFZAe/VdMQfuCjKbAY8NM8K4dICQEuGXS/e+H/tphHcPk+XI3tz1dKegOh4nfTqzERzg6DppUXiifJw4u5r8r5PqsROMsZk1TcRa1bkUzjKX6xQPMm12X+ZG01CU4V0dEBWJcBRrKy7kbtf+aBXqArUeoGzFLGQ48jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747013287; c=relaxed/simple;
-	bh=qXmb0BvXKmaAPHPJGw6G5BNdZlVB/QxbhsD9p7+ticA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WLk/2uUgSMG/3R1W7lwxYeh4svnq3dvVozUcCiQ+t1KM0riUQpU00e4FDsaXu4GlSwEHsyqf1R81bFb3czUNJFQM2bqDuHBr1Y3ZuFCP80rWz09HoroFE7xjlfgj3FdonArrngOjGvFANGzyqmR7ECBLxZe2MqGbCz7VxSftC4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	s=arc-20240116; t=1747013290; c=relaxed/simple;
+	bh=GKPCrWIEUucXkdH2KT+WHWhcfLII+k+fcCarYpr3v28=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=oPrtdFlSCpi+6kwbQiEwiWO0NfQBZ87NzS4HcUSLRwROtDq4JC2qi8jMbrYb7Dkdaxfl14C4jJgCwThbJIavX0zeUTuk4P4sbQrSrZqJYAo65zYUtOjuaLO9EIF7Ot9ugsR9wfsekuHd8oj2guTHvRriF0JbOy061jJbArXtknE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Zwhmn3Bdmz4f3jXh;
-	Mon, 12 May 2025 09:27:37 +0800 (CST)
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zwhmm3pXPz4f3lDc;
+	Mon, 12 May 2025 09:27:36 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 2045D1A1B8C;
+	by mail.maildlp.com (Postfix) with ESMTP id AD33B1A1B8C;
 	Mon, 12 May 2025 09:28:02 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgCnC2CdTiFoNFCWMA--.55093S4;
-	Mon, 12 May 2025 09:27:59 +0800 (CST)
+	by APP4 (Coremail) with SMTP id gCh0CgCnC2CdTiFoNFCWMA--.55093S5;
+	Mon, 12 May 2025 09:28:02 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: hch@lst.de,
 	xni@redhat.com,
@@ -53,10 +54,12 @@ Cc: linux-kernel@vger.kernel.org,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com,
 	johnny.chenyi@huawei.com
-Subject: [PATCH RFC md-6.16 v3 00/19] md: introduce a new lockless bitmap
-Date: Mon, 12 May 2025 09:19:08 +0800
-Message-Id: <20250512011927.2809400-1-yukuai1@huaweicloud.com>
+Subject: [PATCH RFC md-6.16 v3 01/19] md/md-bitmap: add {start, end}_discard in bitmap_operations
+Date: Mon, 12 May 2025 09:19:09 +0800
+Message-Id: <20250512011927.2809400-2-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250512011927.2809400-1-yukuai1@huaweicloud.com>
+References: <20250512011927.2809400-1-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
@@ -64,219 +67,51 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCnC2CdTiFoNFCWMA--.55093S4
-X-Coremail-Antispam: 1UD129KBjvJXoW3GryUGry3Jr13ur1UCr4rXwb_yoWxtw4kpF
-	ZxZrn3Jrs8Jr4Ig3ZrZryxJFySq3ykJrnxJr1rA3sY9rn8Cr9avr48GayFq347Gry7JF1q
-	qF45tr9xGw1DuFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
-	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-	nIWIevJa73UjIFyTuYvjfUOv38UUUUU
+X-CM-TRANSID:gCh0CgCnC2CdTiFoNFCWMA--.55093S5
+X-Coremail-Antispam: 1UD129KBjvdXoW7XFykKF45Aw13JFyxuF4Durg_yoWfCrg_C3
+	y09Fy0gFyrWr9Ykr13Xw4FvrWqqw48GF1DWFyFgFWrZFn3Aw18Cr929ws5tr1xZFyUAa43
+	tryUWr17Xw4qgjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbkxFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGwA2048vs2IY02
+	0Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
+	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
+	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
+	vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
+	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04
+	v7MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+	AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE
+	2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
+	C2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kfnx
+	nUUI43ZEXa7VUjrHUDUUUUU==
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-changes in v3:
- - reimplement bitmap IO;
- - support skipping unwritten blocks for recovery;
- - support lazy initial recover for raid5;
- - many other changes.
+Prepare to support discard in new md bitmap.
 
-#### Background
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+---
+ drivers/md/md-bitmap.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Redundant data is used to enhance data fault tolerance, and the storage
-method for redundant data vary depending on the RAID levels. And it's
-important to maintain the consistency of redundant data.
-
-Bitmap is used to record which data blocks have been synchronized and which
-ones need to be resynchronized or recovered. Each bit in the bitmap
-represents a segment of data in the array. When a bit is set, it indicates
-that the multiple redundant copies of that data segment may not be
-consistent. Data synchronization can be performed based on the bitmap after
-power failure or readding a disk. If there is no bitmap, a full disk
-synchronization is required.
-
-#### Key Features
-
- - IO fastpath is lockless, if user issues lots of write IO to the same
- bitmap bit in a short time, only the first write have additional overhead
- to update bitmap bit, no additional overhead for the following writes;
- - support only resync or recover written data, means in the case creating
- new array or replacing with a new disk, there is no need to do a full disk
- resync/recovery;
-
-#### Key Concept
-
-##### State Machine
-
-Each bit is one byte, contain 6 difference state, see llbitmap_state. And
-there are total 8 differenct actions, see llbitmap_action, can change state:
-
-llbitmap state machine: transitions between states
-
-|           | Startwrite | Startsync | Endsync | Abortsync| Reload   | Daemon | Discard   | Stale     |
-| --------- | ---------- | --------- | ------- | -------  | -------- | ------ | --------- | --------- |
-| Unwritten | Dirty      | x         | x       | x        | x        | x      | x         | x         |
-| Clean     | Dirty      | x         | x       | x        | x        | x      | Unwritten | NeedSync  |
-| Dirty     | x          | x         | x       | x        | NeedSync | Clean  | Unwritten | NeedSync  |
-| NeedSync  | x          | Syncing   | x       | x        | x        | x      | Unwritten | x         |
-| Syncing   | x          | Syncing   | Dirty   | NeedSync | NeedSync | x      | Unwritten | NeedSync  |
-
-Typical scenarios:
-
-1) Create new array
-All bits will be set to Unwritten by default, if --assume-clean is set,
-All bits will be set to Clean instead.
-
-2) write data, raid1/raid10 have full copy of data, while raid456 doesn't and
-rely on xor data
-
-2.1) write new data to raid1/raid10:
-Unwritten --StartWrite--> Dirty
-
-2.2) write new data to raid456:
-Unwritten --StartWrite--> NeedSync
-
-Because the initial recover for raid456 is skipped, the xor data is not build
-yet, the bit must set to NeedSync first and after lazy initial recover is
-finished, the bit will finially set to Dirty(see 4.1 and 4.4);
-
-2.3) cover write
-Clean --StartWrite--> Dirty
-
-3) daemon, if the array is not degraded:
-Dirty --Daemon--> Clean
-
-For degraded array, the Dirty bit will never be cleared, prevent full disk
-recovery while readding a removed disk.
-
-4) discard
-{Clean, Dirty, NeedSync, Syncing} --Discard--> Unwritten
-
-5) resync and recover
-
-5.1) common process
-NeedSync --Startsync--> Syncing --Endsync--> Dirty --Daemon--> Clean
-
-5.2) resync after power failure
-Dirty --Reload--> NeedSync
-
-5.3) recover while replacing with a new disk
-By default, the old bitmap framework will recover all data, and llbitmap
-implement this by a new helper llbitmap_skip_sync_blocks:
-
-skip recover for bits other than dirty or clean;
-
-5.4) lazy initial recover for raid5:
-By default, the old bitmap framework will only allow new recover when there
-are spares(new disk), a new recovery flag MD_RECOVERY_LAZY_RECOVER is add
-to perform raid456 lazy recover for set bits(from 2.2).
-
- ##### Bitmap IO
-
-##### Chunksize
-
-The default bitmap size is 128k, incluing 1k bitmap super block, and
-the default size of segment of data in the array each bit(chunksize) is 64k,
-and chunksize will adjust to twice the old size each time if the total number
-bits is not less than 127k.(see llbitmap_init)
-
-##### READ
-
-While creating bitmap, all pages will be allocated and read for llbitmap,
-there won't be read afterwards
-
-##### WRITE
-
-WRITE IO is divided into logical_block_size of the array, the dirty state
-of each block is tracked independently, for example:
-
-each page is 4k, contain 8 blocks; each block is 512 bytes contain 512 bit;
-
-| page0 | page1 | ... | page 31 |
-|       |
-|        \-----------------------\
-|                                |
-| block0 | block1 | ... | block 8|
-|        |
-|         \-----------------\
-|                            |
-| bit0 | bit1 | ... | bit511 |
-
-From IO path, if one bit is changed to Dirty or NeedSync, the corresponding
-block will be marked dirty, such block must write first before the IO is
-issued. This behaviour will affect IO performance, to reduce the impact, if
-multiple bits are changed in the same block in a short time, all bits in this
-block will be changed to Dirty/NeedSync, so that there won't be any overhead
-until daemon clears dirty bits.
-
-##### Dirty Bits syncronization
-
-IO fast path will set bits to dirty, and those dirty bits will be cleared
-by daemon after IO is done. llbitmap_barrier is used to synchronize between
-IO path and daemon;
-
-IO path:
- 1) try to grab a reference, if succeed, set expire time after 5s and return;
- 2) if failed to grab a reference, wait for daemon to finish clearing dirty
- bits;
-
-Daemon(Daemon will be waken up every daemon_sleep seconds):
-For each page:
- 1) check if page expired, if not skip this page; for expired page:
- 2) suspend the page and wait for inflight write IO to be done;
- 3) change dirty page to clean;
- 4) resume the page;
-
-Noted:
-1) user must apply the following mdadm patch, and then llbitmap can be
-enabled by --bitmap=lockless
-https://lore.kernel.org/all/20250509101411.2093911-1-yukuai1@huaweicloud.com/
-2) following branch for review or test:
-https://git.kernel.org/pub/scm/linux/kernel/git/yukuai/linux.git/log/?h=yukuai/md-6.16
-
-Yu Kuai (19):
-  md/md-bitmap: add {start, end}_discard in bitmap_operations
-  md: support discard for bitmap ops
-  md/md-bitmap: remove parameter slot from bitmap_create()
-  md: add a new sysfs api bitmap_version
-  md: delay registration of bitmap_ops until creating bitmap
-  md: add a new parameter 'offset' to md_super_write()
-  md/md-bitmap: add a new helper skip_sync_blocks() in bitmap_operations
-  md/md-bitmap: add a new helper blocks_synced() in bitmap_operations
-  md: add a new recovery_flag MD_RECOVERY_LAZY_RECOVER
-  md/md-llbitmap: add data structure definition and comments
-  md/md-llbitmap: implement bitmap IO
-  md/md-llbitmap: implement bit state machine
-  md/md-llbitmap: implement APIs for page level dirty bits
-    synchronization
-  md/md-llbitmap: implement APIs to mange bitmap lifetime
-  md/md-llbitmap: implement APIs to dirty bits and clear bits
-  md/md-llbitmap: implement APIs for sync_thread
-  md/md-llbitmap: implement all bitmap operations
-  md/md-llbitmap: implement sysfs APIs
-  md/md-llbitmap: add Kconfig
-
- drivers/md/Kconfig       |   12 +
- drivers/md/Makefile      |    1 +
- drivers/md/md-bitmap.c   |    9 +-
- drivers/md/md-bitmap.h   |   25 +-
- drivers/md/md-llbitmap.c | 1465 ++++++++++++++++++++++++++++++++++++++
- drivers/md/md.c          |  221 ++++--
- drivers/md/md.h          |    8 +-
- drivers/md/raid5.c       |    6 +
- 8 files changed, 1700 insertions(+), 47 deletions(-)
- create mode 100644 drivers/md/md-llbitmap.c
-
+diff --git a/drivers/md/md-bitmap.h b/drivers/md/md-bitmap.h
+index d3d50629af91..c3fc051c88e9 100644
+--- a/drivers/md/md-bitmap.h
++++ b/drivers/md/md-bitmap.h
+@@ -94,6 +94,11 @@ struct bitmap_operations {
+ 			  unsigned long sectors);
+ 	void (*endwrite)(struct mddev *mddev, sector_t offset,
+ 			 unsigned long sectors);
++	int (*start_discard)(struct mddev *mddev, sector_t offset,
++			     unsigned long sectors);
++	void (*end_discard)(struct mddev *mddev, sector_t offset,
++			    unsigned long sectors);
++
+ 	bool (*start_sync)(struct mddev *mddev, sector_t offset,
+ 			   sector_t *blocks, bool degraded);
+ 	void (*end_sync)(struct mddev *mddev, sector_t offset, sector_t *blocks);
 -- 
 2.39.2
 
