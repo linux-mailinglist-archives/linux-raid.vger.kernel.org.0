@@ -1,43 +1,43 @@
-Return-Path: <linux-raid+bounces-4248-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-4245-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD6AFAC2DBC
-	for <lists+linux-raid@lfdr.de>; Sat, 24 May 2025 08:19:36 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30C18AC2DB5
+	for <lists+linux-raid@lfdr.de>; Sat, 24 May 2025 08:19:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 334441BA81F1
-	for <lists+linux-raid@lfdr.de>; Sat, 24 May 2025 06:19:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A3FB14E3507
+	for <lists+linux-raid@lfdr.de>; Sat, 24 May 2025 06:18:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21FDA1E0B9C;
-	Sat, 24 May 2025 06:18:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55EDA1DED5B;
+	Sat, 24 May 2025 06:18:19 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82C61C6FEA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F8219E7D0;
 	Sat, 24 May 2025 06:18:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748067499; cv=none; b=kfE8sZa3oKXacKomaCrXCjda6LRzUYEOW2WCsPsK/fEGY9Bd8xNd7MRjMQnMnYXIRUcQkWzucqre4GDbOysfKZf9fGyvOoQH7/WEeHGKwsbCMEsWpWeP+TWhO/a7Amz2IBof2Z36zuSctx9llABDd0mip1pdcrImjaC00XHPruQ=
+	t=1748067499; cv=none; b=n6OY22368OkgYqheaNfznArFy6a8lYOir+xXf2KGiZLSrhprPJcpSPeXck4Vh3jZjYkup69T34CvrfkyvMUqeReHr2XMn42A64gMLQoPnZIbb2LxSoF8V16ODffzGE82QooJVoiBigeNTItnmYvG2goQH+19aasBnmMqFGd1Ts8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748067499; c=relaxed/simple;
-	bh=Iq0ppBxeY6Azp6vaPYheESTL6fREGbM4x5RZjXBNpeY=;
+	bh=ZiWFEOYZFpVvgNRZex2vijFl/l9+Bv2ok8oLbd8tYfw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HtZnC/ShxbiVKSdEGo+2Kz5UsOKCAMahBlgXsn/7oelr1D8TgqLaf93CPMlssJTQIqgWbIjMbYUBRls4ZLvu59FYnGcdQBDFsrsMDfe272zcnApc7KAVMve3NLBWzYh2WT5Z+uB58DFKnKtKYYGuMJ/iMnucFOi4t25NrUAsb5g=
+	 MIME-Version; b=jD9W26RUDhl+pRB8uDTzkCO0YgKhPTsEshMghHgMo40Dl7UF/GwbpOa5su+fEkZ6p4kqm1gavjRuMCvkYMcWpMeBgsjVlwNoXf2iJZHXhuHIsagqdAtwhWdyKa4S8F85YdF19Xb/86iXwiMEXvlVsBD+CwQ8cjxCVvddjbLleGs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4b4Bf329R5z4f3jMQ;
-	Sat, 24 May 2025 14:17:47 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4b4Bfb24zxzYQtxb;
+	Sat, 24 May 2025 14:18:15 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id EAC5A1A0879;
-	Sat, 24 May 2025 14:18:13 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 712D11A018D;
+	Sat, 24 May 2025 14:18:14 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgCnCl+dZDFo3etkNQ--.42979S9;
-	Sat, 24 May 2025 14:18:13 +0800 (CST)
+	by APP4 (Coremail) with SMTP id gCh0CgCnCl+dZDFo3etkNQ--.42979S10;
+	Sat, 24 May 2025 14:18:14 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: hch@lst.de,
 	xni@redhat.com,
@@ -51,9 +51,9 @@ Cc: linux-doc@vger.kernel.org,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com,
 	johnny.chenyi@huawei.com
-Subject: [PATCH 05/23] md/md-bitmap: remove parameter slot from bitmap_create()
-Date: Sat, 24 May 2025 14:13:02 +0800
-Message-Id: <20250524061320.370630-6-yukuai1@huaweicloud.com>
+Subject: [PATCH 06/23] md/md-bitmap: add a new sysfs api bitmap_type
+Date: Sat, 24 May 2025 14:13:03 +0800
+Message-Id: <20250524061320.370630-7-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250524061320.370630-1-yukuai1@huaweicloud.com>
 References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
@@ -64,10 +64,10 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCnCl+dZDFo3etkNQ--.42979S9
-X-Coremail-Antispam: 1UD129KBjvJXoWxJFyrWFW8XF47KFW7XrW3GFg_yoW5Xw48p3
-	97tas3CrW3JrW3Xa1UXFyv9a45Xwn7KrZrtryxCw1rWFn8ZrnxCF4FgF1jywn8Ka4rAFs8
-	Xw15Gw18GF1Igr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgCnCl+dZDFo3etkNQ--.42979S10
+X-Coremail-Antispam: 1UD129KBjvJXoWxKryDtFy5ZF1DJw48Xw1kZrb_yoW3Jryfpa
+	y8tryayrZ5XrZaqr4xJa4q9F1Fqr1vya9Fq34Sg3s5Crn8WrsxGFWfK3WUtw1DCa4ruFnr
+	Zr45tFWUWryjvF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUmI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -86,85 +86,263 @@ X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-All callers pass in '-1' for 'slot', hence it can be removed.
+The api will be used by mdadm to set bitmap_ops while creating new array
+or assemble array, prepare to add a new bitmap.
+
+Currently available options are:
+
+cat /sys/block/md0/md/bitmap_type
+none [bitmap]
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/md/md-bitmap.c | 6 +++---
- drivers/md/md-bitmap.h | 2 +-
- drivers/md/md.c        | 6 +++---
- 3 files changed, 7 insertions(+), 7 deletions(-)
+ Documentation/admin-guide/md.rst | 73 ++++++++++++++----------
+ drivers/md/md.c                  | 96 ++++++++++++++++++++++++++++++--
+ drivers/md/md.h                  |  2 +
+ 3 files changed, 135 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-index 848626049dea..17d41a7b30ce 100644
---- a/drivers/md/md-bitmap.c
-+++ b/drivers/md/md-bitmap.c
-@@ -2185,9 +2185,9 @@ static struct bitmap *__bitmap_create(struct mddev *mddev, int slot)
- 	return ERR_PTR(err);
- }
+diff --git a/Documentation/admin-guide/md.rst b/Documentation/admin-guide/md.rst
+index 4ff2cc291d18..356d2a344f08 100644
+--- a/Documentation/admin-guide/md.rst
++++ b/Documentation/admin-guide/md.rst
+@@ -347,6 +347,49 @@ All md devices contain:
+      active-idle
+          like active, but no writes have been seen for a while (safe_mode_delay).
  
--static int bitmap_create(struct mddev *mddev, int slot)
-+static int bitmap_create(struct mddev *mddev)
- {
--	struct bitmap *bitmap = __bitmap_create(mddev, slot);
-+	struct bitmap *bitmap = __bitmap_create(mddev, -1);
++  consistency_policy
++     This indicates how the array maintains consistency in case of unexpected
++     shutdown. It can be:
++
++     none
++       Array has no redundancy information, e.g. raid0, linear.
++
++     resync
++       Full resync is performed and all redundancy is regenerated when the
++       array is started after unclean shutdown.
++
++     bitmap
++       Resync assisted by a write-intent bitmap.
++
++     journal
++       For raid4/5/6, journal device is used to log transactions and replay
++       after unclean shutdown.
++
++     ppl
++       For raid5 only, Partial Parity Log is used to close the write hole and
++       eliminate resync.
++
++     The accepted values when writing to this file are ``ppl`` and ``resync``,
++     used to enable and disable PPL.
++
++  uuid
++     This indicates the UUID of the array in the following format:
++     xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
++
++  bitmap_type
++     [RW] When read, this file will display the current and available
++     bitmap for this array. The currently active bitmap will be enclosed
++     in [] brackets. Writing an bitmap name or ID to this file will switch
++     control of this array to that new bitmap. Note that writing a new
++     bitmap for created array is forbidden.
++
++     none
++         No bitmap
++     bitmap
++         The default internal bitmap
++
++If bitmap_type is bitmap, then the md device will also contain:
++
+   bitmap/location
+      This indicates where the write-intent bitmap for the array is
+      stored.
+@@ -401,36 +444,6 @@ All md devices contain:
+      once the array becomes non-degraded, and this fact has been
+      recorded in the metadata.
  
- 	if (IS_ERR(bitmap))
- 		return PTR_ERR(bitmap);
-@@ -2649,7 +2649,7 @@ location_store(struct mddev *mddev, const char *buf, size_t len)
- 			}
+-  consistency_policy
+-     This indicates how the array maintains consistency in case of unexpected
+-     shutdown. It can be:
+-
+-     none
+-       Array has no redundancy information, e.g. raid0, linear.
+-
+-     resync
+-       Full resync is performed and all redundancy is regenerated when the
+-       array is started after unclean shutdown.
+-
+-     bitmap
+-       Resync assisted by a write-intent bitmap.
+-
+-     journal
+-       For raid4/5/6, journal device is used to log transactions and replay
+-       after unclean shutdown.
+-
+-     ppl
+-       For raid5 only, Partial Parity Log is used to close the write hole and
+-       eliminate resync.
+-
+-     The accepted values when writing to this file are ``ppl`` and ``resync``,
+-     used to enable and disable PPL.
+-
+-  uuid
+-     This indicates the UUID of the array in the following format:
+-     xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+-
+-
+ As component devices are added to an md array, they appear in the ``md``
+ directory as new directories named::
  
- 			mddev->bitmap_info.offset = offset;
--			rv = bitmap_create(mddev, -1);
-+			rv = bitmap_create(mddev);
- 			if (rv)
- 				goto out;
- 
-diff --git a/drivers/md/md-bitmap.h b/drivers/md/md-bitmap.h
-index 4d804c07dbdd..2b99ddef7a41 100644
---- a/drivers/md/md-bitmap.h
-+++ b/drivers/md/md-bitmap.h
-@@ -77,7 +77,7 @@ struct bitmap_operations {
- 	struct md_submodule_head head;
- 
- 	bool (*enabled)(void *data);
--	int (*create)(struct mddev *mddev, int slot);
-+	int (*create)(struct mddev *mddev);
- 	int (*resize)(struct mddev *mddev, sector_t blocks, int chunksize);
- 
- 	int (*load)(struct mddev *mddev);
 diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 466087cef4f9..311e52d5173d 100644
+index 311e52d5173d..4eb0c6effd5b 100644
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -6255,7 +6255,7 @@ int md_run(struct mddev *mddev)
- 	}
- 	if (err == 0 && pers->sync_request && md_bitmap_registered(mddev) &&
- 	    (mddev->bitmap_info.file || mddev->bitmap_info.offset)) {
--		err = mddev->bitmap_ops->create(mddev, -1);
-+		err = mddev->bitmap_ops->create(mddev);
- 		if (err)
- 			pr_warn("%s: failed to create bitmap (%d)\n",
- 				mdname(mddev), err);
-@@ -7324,7 +7324,7 @@ static int set_bitmap_file(struct mddev *mddev, int fd)
- 	err = 0;
- 	if (mddev->pers) {
- 		if (fd >= 0) {
--			err = mddev->bitmap_ops->create(mddev, -1);
-+			err = mddev->bitmap_ops->create(mddev);
- 			if (!err)
- 				err = mddev->bitmap_ops->load(mddev);
+@@ -672,13 +672,18 @@ static void active_io_release(struct percpu_ref *ref)
  
-@@ -7648,7 +7648,7 @@ static int update_array_info(struct mddev *mddev, mdu_array_info_t *info)
- 				mddev->bitmap_info.default_offset;
- 			mddev->bitmap_info.space =
- 				mddev->bitmap_info.default_space;
--			rv = mddev->bitmap_ops->create(mddev, -1);
-+			rv = mddev->bitmap_ops->create(mddev);
- 			if (!rv)
- 				rv = mddev->bitmap_ops->load(mddev);
+ static void no_op(struct percpu_ref *r) {}
  
+-static void mddev_set_bitmap_ops(struct mddev *mddev, enum md_submodule_id id)
++static bool mddev_set_bitmap_ops(struct mddev *mddev)
+ {
+ 	xa_lock(&md_submodule);
+-	mddev->bitmap_ops = xa_load(&md_submodule, id);
++	mddev->bitmap_ops = xa_load(&md_submodule, mddev->bitmap_id);
+ 	xa_unlock(&md_submodule);
+-	if (!mddev->bitmap_ops)
+-		pr_warn_once("md: can't find bitmap id %d\n", id);
++
++	if (!mddev->bitmap_ops) {
++		pr_warn_once("md: can't find bitmap id %d\n", mddev->bitmap_id);
++		return false;
++	}
++
++	return true;
+ }
+ 
+ static void mddev_clear_bitmap_ops(struct mddev *mddev)
+@@ -688,8 +693,10 @@ static void mddev_clear_bitmap_ops(struct mddev *mddev)
+ 
+ int mddev_init(struct mddev *mddev)
+ {
+-	/* TODO: support more versions */
+-	mddev_set_bitmap_ops(mddev, ID_BITMAP);
++	mddev->bitmap_id = ID_BITMAP;
++
++	if (!mddev_set_bitmap_ops(mddev))
++		return -EINVAL;
+ 
+ 	if (percpu_ref_init(&mddev->active_io, active_io_release,
+ 			    PERCPU_REF_ALLOW_REINIT, GFP_KERNEL)) {
+@@ -4155,6 +4162,82 @@ new_level_store(struct mddev *mddev, const char *buf, size_t len)
+ static struct md_sysfs_entry md_new_level =
+ __ATTR(new_level, 0664, new_level_show, new_level_store);
+ 
++static ssize_t
++bitmap_type_show(struct mddev *mddev, char *page)
++{
++	struct md_submodule_head *head;
++	unsigned long i;
++	ssize_t len = 0;
++
++	if (mddev->bitmap_id == ID_BITMAP_NONE)
++		len += sprintf(page + len, "[none] ");
++	else
++		len += sprintf(page + len, "none ");
++
++	xa_lock(&md_submodule);
++	xa_for_each(&md_submodule, i, head) {
++		if (head->type != MD_BITMAP)
++			continue;
++
++		if (mddev->bitmap_id == head->id)
++			len += sprintf(page + len, "[%s] ", head->name);
++		else
++			len += sprintf(page + len, "%s ", head->name);
++	}
++	xa_unlock(&md_submodule);
++
++	len += sprintf(page + len, "\n");
++	return len;
++}
++
++static ssize_t
++bitmap_type_store(struct mddev *mddev, const char *buf, size_t len)
++{
++	struct md_submodule_head *head;
++	enum md_submodule_id id;
++	unsigned long i;
++	int err;
++
++	if (mddev->bitmap_ops)
++		return -EBUSY;
++
++	err = kstrtoint(buf, 10, &id);
++	if (!err) {
++		if (id == ID_BITMAP_NONE) {
++			mddev->bitmap_id = id;
++			return len;
++		}
++
++		xa_lock(&md_submodule);
++		head = xa_load(&md_submodule, id);
++		xa_unlock(&md_submodule);
++
++		if (head && head->type == MD_BITMAP) {
++			mddev->bitmap_id = id;
++			return len;
++		}
++	}
++
++	if (cmd_match(buf, "none")) {
++		mddev->bitmap_id = ID_BITMAP_NONE;
++		return len;
++	}
++
++	xa_lock(&md_submodule);
++	xa_for_each(&md_submodule, i, head) {
++		if (head->type == MD_BITMAP && cmd_match(buf, head->name)) {
++			mddev->bitmap_id = head->id;
++			xa_unlock(&md_submodule);
++			return len;
++		}
++	}
++	xa_unlock(&md_submodule);
++	return -ENOENT;
++}
++
++static struct md_sysfs_entry md_bitmap_type =
++__ATTR(bitmap_type, 0664, bitmap_type_show, bitmap_type_store);
++
+ static ssize_t
+ layout_show(struct mddev *mddev, char *page)
+ {
+@@ -5719,6 +5802,7 @@ __ATTR(serialize_policy, S_IRUGO | S_IWUSR, serialize_policy_show,
+ static struct attribute *md_default_attrs[] = {
+ 	&md_level.attr,
+ 	&md_new_level.attr,
++	&md_bitmap_type.attr,
+ 	&md_layout.attr,
+ 	&md_raid_disks.attr,
+ 	&md_uuid.attr,
+diff --git a/drivers/md/md.h b/drivers/md/md.h
+index 13e3f9ce1b79..bf34c0a36551 100644
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -40,6 +40,7 @@ enum md_submodule_id {
+ 	ID_CLUSTER,
+ 	ID_BITMAP,
+ 	ID_LLBITMAP,	/* TODO */
++	ID_BITMAP_NONE,
+ };
+ 
+ struct md_submodule_head {
+@@ -565,6 +566,7 @@ struct mddev {
+ 	struct percpu_ref		writes_pending;
+ 	int				sync_checkers;	/* # of threads checking writes_pending */
+ 
++	enum md_submodule_id		bitmap_id;
+ 	void				*bitmap; /* the bitmap for the device */
+ 	struct bitmap_operations	*bitmap_ops;
+ 	struct {
 -- 
 2.39.2
 
