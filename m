@@ -1,43 +1,43 @@
-Return-Path: <linux-raid+bounces-4260-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-4263-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F189AC2DE8
-	for <lists+linux-raid@lfdr.de>; Sat, 24 May 2025 08:23:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F0A9AC2DEC
+	for <lists+linux-raid@lfdr.de>; Sat, 24 May 2025 08:24:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EC498189F8D0
-	for <lists+linux-raid@lfdr.de>; Sat, 24 May 2025 06:22:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BD125A409ED
+	for <lists+linux-raid@lfdr.de>; Sat, 24 May 2025 06:22:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5999B1F237D;
-	Sat, 24 May 2025 06:18:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58C661F4615;
+	Sat, 24 May 2025 06:18:27 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C091EB9F3;
-	Sat, 24 May 2025 06:18:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 774A61D54EF;
+	Sat, 24 May 2025 06:18:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748067506; cv=none; b=UsLsnpAG5fiJvXzDy8TDe4+5KW1r1zr6M7dt7Ro/T9IUh3DhdUjnUn8o5bVkizRu65wvSBfui2Xt7htVHeCGRk6HusG/sJMXy4zv3ztuDOH/TgvnJiFPTEdDxNtLh24AcQH8yxDodDdYRH35tPzzx7I/s/0uIRX2rQzYRW9ZjBU=
+	t=1748067507; cv=none; b=GCElEum/4tRNTAlsyQ/DI9mJV/i74hoid23niRGpYzBtbgw/IW2wB8RxG6792erwFtY7FAf4nYMHe/2gxv7rW3fFHzBW5tg2yVveN7JXdKmz7Vx2YIVQjja6urQjp39PoftyJeZhhSre26ZfLleIawOC/Hg++MV0no2TM4eU/Og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748067506; c=relaxed/simple;
-	bh=++g/sKcSP3o2HG7k1VLirDPrYJkkjBOAcO00ejz1BQY=;
+	s=arc-20240116; t=1748067507; c=relaxed/simple;
+	bh=lOxzkU3aFVC8gZwfFHSunwYKzPFcPBMu2IAExmH73O8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VffqRsE4r9N2ME58+YpRFMabJQqDCLzOnDPSEbVhhoIXqJ5Wo0kB9vEtG2VEkeTc+sldY9lns1ZE1HeTycwfY/LZgtyH72D1dpuEdgFe8pOJoeEQ3VTuhTa8ImzxfSUVLSYH97yAU9qlEZZlkgqnEKw0YcA4+bua5Qn16YPGrq0=
+	 MIME-Version; b=NtMzmv1ydaSqNSjeLzenwXa9rh0M/6AHimjz92jsd9momp1MRNgnKd0ywHvkcwBcR4GbDcOPCokbJUA669ThVsEY3WqalS9G8zy0JPxBCBcXOlNwEf+NqhD9SqV294i24h7G1ChYj1lrOCp1J3MZ6p2z35zrCivA80uzJBB/fG0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4b4Bfl3dRQzKHMbP;
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4b4Bfm01NBzKHMbS;
 	Sat, 24 May 2025 14:18:23 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 017E61A0359;
+	by mail.maildlp.com (Postfix) with ESMTP id 792791A0E23;
 	Sat, 24 May 2025 14:18:22 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgCnCl+dZDFo3etkNQ--.42979S25;
-	Sat, 24 May 2025 14:18:21 +0800 (CST)
+	by APP4 (Coremail) with SMTP id gCh0CgCnCl+dZDFo3etkNQ--.42979S26;
+	Sat, 24 May 2025 14:18:22 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: hch@lst.de,
 	xni@redhat.com,
@@ -51,9 +51,9 @@ Cc: linux-doc@vger.kernel.org,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com,
 	johnny.chenyi@huawei.com
-Subject: [PATCH 21/23] md/md-llbitmap: implement all bitmap operations
-Date: Sat, 24 May 2025 14:13:18 +0800
-Message-Id: <20250524061320.370630-22-yukuai1@huaweicloud.com>
+Subject: [PATCH 22/23] md/md-llbitmap: implement sysfs APIs
+Date: Sat, 24 May 2025 14:13:19 +0800
+Message-Id: <20250524061320.370630-23-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250524061320.370630-1-yukuai1@huaweicloud.com>
 References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
@@ -64,10 +64,10 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCnCl+dZDFo3etkNQ--.42979S25
-X-Coremail-Antispam: 1UD129KBjvJXoWxuF15JFyDJFykKrWrZF4fZrb_yoWrWF47pF
-	47XFy5Gr45JF1xWw13Jr97ZF1rArs2q3sFqrZ3C34rWr1UArZxKF4rWFyUJw1DXryrJFs8
-	Xw45KF45C3yrXFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgCnCl+dZDFo3etkNQ--.42979S26
+X-Coremail-Antispam: 1UD129KBjvJXoWxWF1DWryUCw18JFy3JFW8JFb_yoWrCw1Upa
+	yIg345ur45Jr1fWr17JrZrZayrWws5u3srtr97Ca4rCF1UArsIgFy8WFy8Jw1kWryfGF1D
+	Zan0grWrGF48XFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUmS14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -86,141 +86,145 @@ X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-Include following left APIs
- - llbitmap_enabled
- - llbitmap_dirty_bits
- - llbitmap_update_sb
- - llbitmap_write_all
- - llbitmap_start_behind_write
- - llbitmap_end_behind_write
- - llbitmap_wait_behind_writes
+There are 3 APIs for now:
+ - bits: readonly, show status of bitmap bits, the number of each value;
+ - metadata: readonly show bitmap metadata, include chunksize, chunkshift,
+ chunks, offset and daemon_sleep;
+ - daemon_sleep: read-write, default value is 30;
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/md/md-llbitmap.c | 114 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 114 insertions(+)
+ Documentation/admin-guide/md.rst | 13 +++++
+ drivers/md/md-llbitmap.c         | 96 ++++++++++++++++++++++++++++++++
+ 2 files changed, 109 insertions(+)
 
+diff --git a/Documentation/admin-guide/md.rst b/Documentation/admin-guide/md.rst
+index 356d2a344f08..2030772075b5 100644
+--- a/Documentation/admin-guide/md.rst
++++ b/Documentation/admin-guide/md.rst
+@@ -444,6 +444,19 @@ If bitmap_type is bitmap, then the md device will also contain:
+      once the array becomes non-degraded, and this fact has been
+      recorded in the metadata.
+ 
++If bitmap_type is llbitmap, then the md device will also contain:
++
++  llbitmap/bits
++     This is readonly, show status of bitmap bits, the number of each
++     value.
++
++  llbitmap/metadata
++     This is readonly, show bitmap metadata, include chunksize, chunkshift,
++     chunks, offset and daemon_sleep.
++
++  llbitmap/daemon_sleep
++     This is readwrite, time in seconds that daemon function will be
++     triggered to clear dirty bits.
+ As component devices are added to an md array, they appear in the ``md``
+ directory as new directories named::
+ 
 diff --git a/drivers/md/md-llbitmap.c b/drivers/md/md-llbitmap.c
-index 1b7625d3e2ed..ae664aa110a8 100644
+index ae664aa110a8..38e67d4582ad 100644
 --- a/drivers/md/md-llbitmap.c
 +++ b/drivers/md/md-llbitmap.c
-@@ -1277,4 +1277,118 @@ static void llbitmap_cond_end_sync(struct mddev *mddev, sector_t sector,
- 	sysfs_notify_dirent_safe(mddev->sysfs_completed);
+@@ -1391,4 +1391,100 @@ static void llbitmap_wait_behind_writes(struct mddev *mddev)
+ 
  }
  
-+static bool llbitmap_enabled(void *data)
++static ssize_t bits_show(struct mddev *mddev, char *page)
 +{
-+	struct llbitmap *llbitmap = data;
++	struct llbitmap *llbitmap;
++	int bits[nr_llbitmap_state] = {0};
++	loff_t start = 0;
 +
-+	return llbitmap && !test_bit(BITMAP_WRITE_ERROR, &llbitmap->flags);
-+}
-+
-+static void llbitmap_dirty_bits(struct mddev *mddev, unsigned long s,
-+				unsigned long e)
-+{
-+	llbitmap_state_machine(mddev->bitmap, s, e, BitmapActionStartwrite);
-+}
-+
-+static void llbitmap_write_sb(struct llbitmap *llbitmap)
-+{
-+	int nr_bits = DIV_ROUND_UP(BITMAP_SB_SIZE, llbitmap->io_size);
-+
-+	bitmap_fill(llbitmap->pctl[0]->dirty, nr_bits);
-+	llbitmap_write_page(llbitmap, 0);
-+	md_super_wait(llbitmap->mddev);
-+}
-+
-+static void llbitmap_update_sb(void *data)
-+{
-+	struct llbitmap *llbitmap = data;
-+	struct mddev *mddev = llbitmap->mddev;
-+	struct page *sb_page;
-+	bitmap_super_t *sb;
-+
-+	if (test_bit(BITMAP_WRITE_ERROR, &llbitmap->flags))
-+		return;
-+
-+	sb_page = llbitmap_read_page(llbitmap, 0);
-+	if (IS_ERR(sb_page)) {
-+		pr_err("%s: %s: read super block failed", __func__,
-+		       mdname(mddev));
-+		set_bit(BITMAP_WRITE_ERROR, &llbitmap->flags);
-+		return;
++	mutex_lock(&mddev->bitmap_info.mutex);
++	llbitmap = mddev->bitmap;
++	if (!llbitmap || !llbitmap->pctl) {
++		mutex_unlock(&mddev->bitmap_info.mutex);
++		return sprintf(page, "no bitmap\n");
 +	}
 +
-+	if (mddev->events < llbitmap->events_cleared)
-+		llbitmap->events_cleared = mddev->events;
-+
-+	sb = kmap_local_page(sb_page);
-+	sb->events = cpu_to_le64(mddev->events);
-+	sb->state = cpu_to_le32(llbitmap->flags);
-+	sb->chunksize = cpu_to_le32(llbitmap->chunksize);
-+	sb->sync_size = cpu_to_le64(mddev->resync_max_sectors);
-+	sb->events_cleared = cpu_to_le64(llbitmap->events_cleared);
-+	sb->sectors_reserved = cpu_to_le32(mddev->bitmap_info.space);
-+	sb->daemon_sleep = cpu_to_le32(mddev->bitmap_info.daemon_sleep);
-+
-+	kunmap_local(sb);
-+	llbitmap_write_sb(llbitmap);
-+}
-+
-+static int llbitmap_get_stats(void *data, struct md_bitmap_stats *stats)
-+{
-+	struct llbitmap *llbitmap = data;
-+
-+	memset(stats, 0, sizeof(*stats));
-+
-+	stats->missing_pages = 0;
-+	stats->pages = llbitmap->nr_pages;
-+	stats->file_pages = llbitmap->nr_pages;
-+
-+	stats->behind_writes = atomic_read(&llbitmap->behind_writes);
-+	stats->behind_wait = wq_has_sleeper(&llbitmap->behind_wait);
-+	stats->events_cleared = llbitmap->events_cleared;
-+
-+	return 0;
-+}
-+
-+/* just flag all pages as needing to be written */
-+static void llbitmap_write_all(struct mddev *mddev)
-+{
-+	int i;
-+	struct llbitmap *llbitmap = mddev->bitmap;
-+
-+	for (i = 0; i < llbitmap->nr_pages; i++) {
-+		struct llbitmap_page_ctl *pctl = llbitmap->pctl[i];
-+
-+		set_bit(LLPageDirty, &pctl->flags);
-+		bitmap_fill(pctl->dirty, llbitmap->bits_per_page);
++	if (test_bit(BITMAP_WRITE_ERROR, &llbitmap->flags)) {
++		mutex_unlock(&mddev->bitmap_info.mutex);
++		return sprintf(page, "bitmap io error\n");
 +	}
++
++	while (start < llbitmap->chunks) {
++		enum llbitmap_state c = llbitmap_read(llbitmap, start);
++
++		if (c < 0 || c >= nr_llbitmap_state)
++			pr_err("%s: invalid bit %llu state %d\n",
++			       __func__, start, c);
++		else
++			bits[c]++;
++		start++;
++	}
++
++	mutex_unlock(&mddev->bitmap_info.mutex);
++	return sprintf(page, "unwritten %d\nclean %d\ndirty %d\nneed sync %d\nsyncing %d\n",
++		       bits[BitUnwritten], bits[BitClean], bits[BitDirty],
++		       bits[BitNeedSync], bits[BitSyncing]);
 +}
 +
-+static void llbitmap_start_behind_write(struct mddev *mddev)
++static struct md_sysfs_entry llbitmap_bits =
++__ATTR_RO(bits);
++
++static ssize_t metadata_show(struct mddev *mddev, char *page)
 +{
-+	struct llbitmap *llbitmap = mddev->bitmap;
++	struct llbitmap *llbitmap;
++	ssize_t ret;
 +
-+	atomic_inc(&llbitmap->behind_writes);
++	mutex_lock(&mddev->bitmap_info.mutex);
++	llbitmap = mddev->bitmap;
++	if (!llbitmap) {
++		mutex_unlock(&mddev->bitmap_info.mutex);
++		return sprintf(page, "no bitmap\n");
++	}
++
++	ret =  sprintf(page, "chunksize %lu\nchunkshift %lu\nchunks %lu\noffset %llu\ndaemon_sleep %lu\n",
++		       llbitmap->chunksize, llbitmap->chunkshift,
++		       llbitmap->chunks, mddev->bitmap_info.offset,
++		       llbitmap->mddev->bitmap_info.daemon_sleep);
++	mutex_unlock(&mddev->bitmap_info.mutex);
++
++	return ret;
 +}
 +
-+static void llbitmap_end_behind_write(struct mddev *mddev)
++static struct md_sysfs_entry llbitmap_metadata =
++__ATTR_RO(metadata);
++
++static ssize_t
++daemon_sleep_show(struct mddev *mddev, char *page)
 +{
-+	struct llbitmap *llbitmap = mddev->bitmap;
-+
-+	if (atomic_dec_and_test(&llbitmap->behind_writes))
-+		wake_up(&llbitmap->behind_wait);
++	return sprintf(page, "%lu\n", mddev->bitmap_info.daemon_sleep);
 +}
 +
-+static void llbitmap_wait_behind_writes(struct mddev *mddev)
++static ssize_t
++daemon_sleep_store(struct mddev *mddev, const char *buf, size_t len)
 +{
-+	struct llbitmap *llbitmap = mddev->bitmap;
++	unsigned long timeout;
++	int rv = kstrtoul(buf, 10, &timeout);
 +
-+	if (!llbitmap)
-+		return;
++	if (rv)
++		return rv;
 +
-+	wait_event(llbitmap->behind_wait,
-+		   atomic_read(&llbitmap->behind_writes) == 0);
-+
++	mddev->bitmap_info.daemon_sleep = timeout;
++	return len;
 +}
++
++static struct md_sysfs_entry llbitmap_daemon_sleep =
++__ATTR_RW(daemon_sleep);
++
++static struct attribute *md_llbitmap_attrs[] = {
++	&llbitmap_bits.attr,
++	&llbitmap_metadata.attr,
++	&llbitmap_daemon_sleep.attr,
++	NULL
++};
++
++static struct attribute_group md_llbitmap_group = {
++	.name = "llbitmap",
++	.attrs = md_llbitmap_attrs,
++};
 +
  #endif /* CONFIG_MD_LLBITMAP */
 -- 
