@@ -1,104 +1,82 @@
-Return-Path: <linux-raid+bounces-4358-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-4360-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5259ACDA8C
-	for <lists+linux-raid@lfdr.de>; Wed,  4 Jun 2025 11:08:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 19FE1ACDE18
+	for <lists+linux-raid@lfdr.de>; Wed,  4 Jun 2025 14:36:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 563167A2BB9
-	for <lists+linux-raid@lfdr.de>; Wed,  4 Jun 2025 09:06:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E4F5D7A81BB
+	for <lists+linux-raid@lfdr.de>; Wed,  4 Jun 2025 12:33:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1E7428B7DB;
-	Wed,  4 Jun 2025 09:08:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bNOGFhpa"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 573E128F937;
+	Wed,  4 Jun 2025 12:34:19 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail.stoffel.org (mail.stoffel.org [172.104.24.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D884C1EEA5D
-	for <linux-raid@vger.kernel.org>; Wed,  4 Jun 2025 09:08:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439A0256C79
+	for <linux-raid@vger.kernel.org>; Wed,  4 Jun 2025 12:34:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=172.104.24.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749028087; cv=none; b=EbrMpUl0NefkbFj3TDBzZm9rDT3/Th+GNaqng7c8t4SWjZocFDaD/xNo8w3locQrO9xg/kt6Xt4aRbVC8ROJM4d20JMJa0JB4mHj/cuALK0FghSuPsMRGMrOdhlw1B7Ko4IEXc22w4YAENItzsHR5EcwIxAI0qp3BcLQLJrxdrU=
+	t=1749040459; cv=none; b=b2MX/wrVhHp6A5Yhn8uji9Zugw1cGtshHH8aCXvkRarRtSyH+uCDOvlF8WPURDHeKEj0jK0zlA6y5VxgAQ69rS1uFMK9l0YxOJGiooWBkbVd+GxEyvovlWBbHaCz0ZsaD7yiBeTfeAnmvh9k0Fz6iYoEfvCBp9THq1nihXJYTCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749028087; c=relaxed/simple;
-	bh=/4+pZbq/iBDp3gYeD1r87A2cD+DF2VS4M4q+mwfUBEs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DH0G76fFE3G/cRKqsUUXclmQwY6zTta28PTYMQFara1l1lReGVvLQCzIVGn88cMjF6DwMmfXSFSr+lgjn6WiremJB2XNPPswp4asYKzgaNsXiwcnoB/zit2Qd3ORrOKAQCQ0DxKUHQzBgHwEVQRNPK+64wa7tJbXQhtl8fq0IuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bNOGFhpa; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749028084;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MFnTVuCeAu2WNauyReoBkjeSjv2amauajv0Xs9Tquhc=;
-	b=bNOGFhpaQWy1WuUYvj4OGHGLS9SWgt+KetSc6xpUQn8BNQ0bZ5TzF6U8jLN3smPjH8yPnS
-	NW3//OGYaz2WT8mbBmhSckMledxW46EbZY7pP0AqIieHy08T7Lg5rSxfkWiIStei6wA3tJ
-	rVqAaPFI6oBvHypeHf+jo6ZhpmQv44Y=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-76-8kGhh1-WMyGQmFqcrluYHg-1; Wed,
- 04 Jun 2025 05:08:03 -0400
-X-MC-Unique: 8kGhh1-WMyGQmFqcrluYHg-1
-X-Mimecast-MFC-AGG-ID: 8kGhh1-WMyGQmFqcrluYHg_1749028082
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	s=arc-20240116; t=1749040459; c=relaxed/simple;
+	bh=VebfN2XBteKzBqUMT18SDeeL0Q3wfkpQGzbwbsPkLAA=;
+	h=MIME-Version:Content-Type:Message-ID:Date:From:To:Cc:Subject:
+	 In-Reply-To:References; b=Qve25VwmHDGwzuG9GvR81opWJKQr8DuJ+0ALEZtlxyFMNu+mAjbZTDpg5FDzboHQZ62bzFX4581ahbJnv/oO1m3c0CtTmAvBv5JNPo9DJwC6P7Pq01kOaZalz8uGcOja1Yq6YbG6tCYJpVdx0MWnOZ6SR2sYc4lxnr7aw4rtHdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=stoffel.org; spf=pass smtp.mailfrom=stoffel.org; arc=none smtp.client-ip=172.104.24.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=stoffel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stoffel.org
+Received: from quad.stoffel.org (syn-097-095-183-072.res.spectrum.com [97.95.183.72])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2F6B4195608B;
-	Wed,  4 Jun 2025 09:08:02 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.72.120.9])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E8BC2180045B;
-	Wed,  4 Jun 2025 09:07:58 +0000 (UTC)
-From: Xiao Ni <xni@redhat.com>
-To: linux-raid@vger.kernel.org
-Cc: yukuai3@huawei.com,
-	ncroxon@redhat.com,
-	song@kernel.org,
-	yukuai1@huaweicloud.com
-Subject: [PATCH 3/3] md: remove/add redundancy group only in level change
-Date: Wed,  4 Jun 2025 17:07:42 +0800
-Message-Id: <20250604090742.37089-4-xni@redhat.com>
-In-Reply-To: <20250604090742.37089-1-xni@redhat.com>
-References: <20250604090742.37089-1-xni@redhat.com>
+	by mail.stoffel.org (Postfix) with ESMTPSA id 52F4D1E38B;
+	Wed,  4 Jun 2025 08:24:30 -0400 (EDT)
+Received: by quad.stoffel.org (Postfix, from userid 1000)
+	id 6B1E8A103F; Wed,  4 Jun 2025 08:24:29 -0400 (EDT)
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Message-ID: <26688.15101.386901.684@quad.stoffel.home>
+Date: Wed, 4 Jun 2025 08:24:29 -0400
+From: "John Stoffel" <john@stoffel.org>
+To: Reindl Harald <h.reindl@thelounge.net>
+Cc: Linux RAID <linux-raid@vger.kernel.org>
+X-Clacks-Overhead: GNU Terry Pratchett
+Subject: Re: Need help increasing raid scan efficiency.
+In-Reply-To: <e6252171-45b5-4739-b2b7-683c1464de2d@thelounge.net>
+References: <20250602210514.7acd5325@Zen-II-x12.niklas.com>
+	<e6252171-45b5-4739-b2b7-683c1464de2d@thelounge.net>
+X-Mailer: VM 8.3.x under 28.2 (x86_64-pc-linux-gnu)
 
-del_gendisk is called in synchronous way now. So it doesn't need to handle
-redundancy group in stop path separately.
+>>>>> "Reindl" == Reindl Harald <h.reindl@thelounge.net> writes:
 
-Signed-off-by: Xiao Ni <xni@redhat.com>
----
- drivers/md/md.c | 2 --
- 1 file changed, 2 deletions(-)
+> Am 03.06.25 um 03:05 schrieb David Niklas:
+>> My PC suffered a rather nasty case of HW failure recently where the MB
+>> would break the CPU and RAM. I ended up with different data on different
+>> members of my RAID6 array.
+>> 
+>> I wanted to scan through the drives and take some checksums of various
+>> files in an attempt to ascertain which drives took the most data
+>> corruption damage, to try and find the date that the damage started
+>> occurring (as it was unclear when exactly this began), and to try and
+>> rescue some of the data off of the good pairs.
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 8824ce64eee2..e3bb8c725bca 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -6528,8 +6528,6 @@ static void __md_stop(struct mddev *mddev)
- 	if (mddev->private)
- 		pers->free(mddev, mddev->private);
- 	mddev->private = NULL;
--	if (pers->sync_request && mddev->to_remove == NULL)
--		mddev->to_remove = &md_redundancy_group;
- 	put_pers(pers);
- 	clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
- 
--- 
-2.32.0 (Apple Git-132)
+> forget it and restore a backup
+
+Or if your data is static, use last years backup and look for
+un-changed files and them compare the data inside them?  
+
+but yes, using a better backup system is a good idea.  I'm using
+'burp' for my home backups.  And big disks are cheap.  How much is
+your data worth to you?  
 
 
