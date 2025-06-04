@@ -1,134 +1,99 @@
-Return-Path: <linux-raid+bounces-4354-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-4356-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23FE2ACDA67
-	for <lists+linux-raid@lfdr.de>; Wed,  4 Jun 2025 10:59:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1D2AACDA89
+	for <lists+linux-raid@lfdr.de>; Wed,  4 Jun 2025 11:08:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DF376174597
-	for <lists+linux-raid@lfdr.de>; Wed,  4 Jun 2025 08:59:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 883323A4022
+	for <lists+linux-raid@lfdr.de>; Wed,  4 Jun 2025 09:07:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9175028A408;
-	Wed,  4 Jun 2025 08:59:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB9E8244676;
+	Wed,  4 Jun 2025 09:07:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hHNUfMGc"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from mail.thelounge.net (mail.thelounge.net [91.118.73.15])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6B31DED6D
-	for <linux-raid@vger.kernel.org>; Wed,  4 Jun 2025 08:59:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.118.73.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C5F1EEA5D
+	for <linux-raid@vger.kernel.org>; Wed,  4 Jun 2025 09:07:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749027569; cv=none; b=rASa3vXKjuMHcS7f0ZyVAkoAn1V9ALV/HR8l9L3az0VdNHfDNbwd9D4Mrmw9OjsjaMG4eJt7UBpHmg/gTwVL2RdRBpMhy3Av76oRn3jXGxDJiyGN3v9xQCxBeiHEvv3ehOkCK6EFvWl9Y9K/2h7QhJUTnImK9Ar3nZ4+W1dWZeA=
+	t=1749028076; cv=none; b=WDF/LxrNiOytrq6Tt/IPNl72wSK8sCTgzfZb/zYDsF4c4EkZgHHoe3YrRNLPfHwzxRG/dy0gZPZDx4Hq7ZULNul4yxXDrKSytfpVmRpoy1Odi7kB4hm/MUsYCv7R6L37HEY6EK7yVQAtudCn3mSEtfO7Bk38S7r3+9F0E2/jrrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749027569; c=relaxed/simple;
-	bh=Hnku/IC9BD1CFucKVdYfpjesdlSxxBONVStjPeqtC8M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=q2dRP3fMzrK4xoj2V8L7zMeySAPgt9V/M9iPnODZBjf5uE9AEvKemHkBesLrUMdyiMbw3nFQ8WNbBTTsPcRfGxwCQsSwlU53S+k6rSV5qgDKdz7M7a2WikdJGNDVQDenawVtN7eiH6C4Vu7bfDKAZmWUeGizq+YvMf2VWPihADU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thelounge.net; spf=pass smtp.mailfrom=thelounge.net; arc=none smtp.client-ip=91.118.73.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thelounge.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thelounge.net
-Received: from [10.10.10.2] (rh.vpn.thelounge.net [10.10.10.2])
+	s=arc-20240116; t=1749028076; c=relaxed/simple;
+	bh=pc26cPE7WP6VkqTUQTgJoHZgfIcqKKoqPs5TRsQkfG4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JJw/Ff+lmtKzSZA48ydjVqnfaUIGWPZW91aggIamStapJtEvw8LPCcCy37le4Q9kJz5ZSRpXWxOqlfSlXcQ1tXSQy2z1xFkCnTiMyqfplCY4eBc+rJ5U+Kv/so+kNTyd4q4qjQG51tk/LVmJ4v7fUOFyaHgpOelWdm+rvux6Fmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hHNUfMGc; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749028073;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=U3sqyRmr07EMIzBn6B/yVIB72ttcLEctGXHs3WzhQ44=;
+	b=hHNUfMGcYMkaEURiaSkWzfVJTkZq1fO1JmxdT7ZMolEL1mwvR6nFiiYMm5BAtSRin8DkQz
+	1p1g+qzQr6zHMT6HEoNDoeaBOooBHnZSuwnEipI20r8dsZlPMQ1890WbXGpzAivO/+VEQH
+	SMuDm4NmSGiHzoRBDzLgby8kjUM6bQg=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-488-yVjERxd2O_iO6KmjuIAUbg-1; Wed,
+ 04 Jun 2025 05:07:50 -0400
+X-MC-Unique: yVjERxd2O_iO6KmjuIAUbg-1
+X-Mimecast-MFC-AGG-ID: yVjERxd2O_iO6KmjuIAUbg_1749028069
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: h.reindl@thelounge.net)
-	by mail.thelounge.net (THELOUNGE MTA) with ESMTPSA id 4bC1jQ0xzSzXLd
-	for <linux-raid@vger.kernel.org>; Wed, 04 Jun 2025 10:59:22 +0200 (CEST)
-Message-ID: <2e10926a-54bc-4c1f-b579-c251b9a943ea@thelounge.net>
-Date: Wed, 4 Jun 2025 10:59:21 +0200
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6445C1801A00;
+	Wed,  4 Jun 2025 09:07:49 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.72.120.9])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 53164180045B;
+	Wed,  4 Jun 2025 09:07:44 +0000 (UTC)
+From: Xiao Ni <xni@redhat.com>
+To: linux-raid@vger.kernel.org
+Cc: yukuai3@huawei.com,
+	ncroxon@redhat.com,
+	song@kernel.org,
+	yukuai1@huaweicloud.com
+Subject: [PATCH V4 0/3] md: call del_gendisk in sync way
+Date: Wed,  4 Jun 2025 17:07:39 +0800
+Message-Id: <20250604090742.37089-1-xni@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Need help increasing raid scan efficiency.
-Content-Language: en-US
-To: Linux RAID <linux-raid@vger.kernel.org>
-References: <20250602210514.7acd5325@Zen-II-x12.niklas.com>
- <24815d81-2e4f-4ddf-b194-b03ea3232b91@youngman.org.uk>
- <20250603160415.61c9ca7c@Zen-II-x12.niklas.com>
-From: Reindl Harald <h.reindl@thelounge.net>
-Autocrypt: addr=h.reindl@thelounge.net; keydata=
- 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
- K4rYsjPimkSIVdrNM//wVKdCTbO+
-Organization: the lounge interactive design
-In-Reply-To: <20250603160415.61c9ca7c@Zen-II-x12.niklas.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
+Now del_gendisk is called in a queue work which has a small window
+that mdadm --stop command exits but the device node still exists.
+It causes trouble in regression tests. This patch set tries to resolve
+this problem.
 
+v1: replace MD_DELETED with MD_CLOSING
+v2: keep MD_CLOSING
+v3: call den_gendisk in mddev_unlock, and remove ->to_remove in stop path
+and adjust the order of patches
+v4: only remove the codes in stop path.
 
-Am 03.06.25 um 22:04 schrieb David Niklas:
-> On Tue, 3 Jun 2025 17:46:01 +0100
-> Wol <antlists@youngman.org.uk> wrote:
->> On 03/06/2025 02:05, David Niklas wrote:
->>> So I setup the array into read-only mode and started the array with
->>> only two of the drives. Drives 0 and 1. Then I proceeded to try and
->>> start a second pair, drives 2 and 3, so that I could scan them
->>> simultaneously. With the intent of then switching it over to 0 and 2
->>> and 1 and 3, then 0 and 3 and 1 and 2.
->>
->> BACKUP! BACKUP!! BACKUP!!!
-> 
-> It's when I was trying to make my yearly backup
+Xiao Ni (3):
+  md: call del_gendisk in control path
+  md: Don't clear MD_CLOSING until mddev is freed
+  md: remove/add redundancy group only in level change
 
-jesus - that's by far not enough
+ drivers/md/md.c | 44 ++++++++++++++++++++++++++------------------
+ drivers/md/md.h | 26 ++++++++++++++++++++++++--
+ 2 files changed, 50 insertions(+), 20 deletions(-)
 
-> When I backup, I erase the previous year
+-- 
+2.32.0 (Apple Git-132)
 
-so the first you do is delete the last known good state
-
-> as I don't have enough room otherwise
-
-seriously?
-
-an external 10 TB disk costs around 200 EUR
-an external 20 TB disk costs around 400 EUR
-
-with rsnapshot you can make daily, weekly and montly backups
-until the doctor comes because anything unchanged are only hard links
-
-> then backup the new year. As a system, it worked up until now.
-
-no, it did not as you found out the first time you needed it
-
-> It assembles fine with all the disks, the problem is the data corruption
-> that has occurred across the members
-
-and what makes you think you can fix that manually
 
