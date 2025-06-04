@@ -1,31 +1,31 @@
-Return-Path: <linux-raid+bounces-4355-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-4354-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CE4DACDA82
-	for <lists+linux-raid@lfdr.de>; Wed,  4 Jun 2025 11:06:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23FE2ACDA67
+	for <lists+linux-raid@lfdr.de>; Wed,  4 Jun 2025 10:59:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9B58A7A8E25
-	for <lists+linux-raid@lfdr.de>; Wed,  4 Jun 2025 09:04:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DF376174597
+	for <lists+linux-raid@lfdr.de>; Wed,  4 Jun 2025 08:59:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9CFD26156F;
-	Wed,  4 Jun 2025 09:06:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9175028A408;
+	Wed,  4 Jun 2025 08:59:29 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from mail.thelounge.net (mail.thelounge.net [91.118.73.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C41224B01
-	for <linux-raid@vger.kernel.org>; Wed,  4 Jun 2025 09:06:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6B31DED6D
+	for <linux-raid@vger.kernel.org>; Wed,  4 Jun 2025 08:59:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.118.73.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749027971; cv=none; b=IZwmNl15DW4LCYScV8PI/hRv6GAPsqdCHJwk8DBH/8clvUy72s4WfrqB0nsGq0DApBur8LZD3HtLn1DwczXaC7krmF4DPCap+NcbHryfvy2QGzizY1c6VnpBuAzKszSyecIBx0qU122VZlu7Izvy6V3zmDlmKxB+K+Naek5bQA0=
+	t=1749027569; cv=none; b=rASa3vXKjuMHcS7f0ZyVAkoAn1V9ALV/HR8l9L3az0VdNHfDNbwd9D4Mrmw9OjsjaMG4eJt7UBpHmg/gTwVL2RdRBpMhy3Av76oRn3jXGxDJiyGN3v9xQCxBeiHEvv3ehOkCK6EFvWl9Y9K/2h7QhJUTnImK9Ar3nZ4+W1dWZeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749027971; c=relaxed/simple;
-	bh=vyDfSGn0gmr+U9HSDbL2HjAtfVSaQZmRU0Jp7VxHYX0=;
+	s=arc-20240116; t=1749027569; c=relaxed/simple;
+	bh=Hnku/IC9BD1CFucKVdYfpjesdlSxxBONVStjPeqtC8M=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ol0aCtVvZo1xFj/iRWY6WIPKwNOu2OgfQBRUvDKq/wtPXgRmx11e4TLMY5wML7iDQiwVUzSmeILlkT4mFS53Rz2L5ZVi2yWaFflERb/3yXyDEWIjsIO6m5u62dlwP8SocE6khko+48aEZ+2LYXEoM5sffr3SmYM+RKB+SJ7xUOo=
+	 In-Reply-To:Content-Type; b=q2dRP3fMzrK4xoj2V8L7zMeySAPgt9V/M9iPnODZBjf5uE9AEvKemHkBesLrUMdyiMbw3nFQ8WNbBTTsPcRfGxwCQsSwlU53S+k6rSV5qgDKdz7M7a2WikdJGNDVQDenawVtN7eiH6C4Vu7bfDKAZmWUeGizq+YvMf2VWPihADU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thelounge.net; spf=pass smtp.mailfrom=thelounge.net; arc=none smtp.client-ip=91.118.73.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thelounge.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thelounge.net
@@ -34,10 +34,10 @@ Received: from [10.10.10.2] (rh.vpn.thelounge.net [10.10.10.2])
 	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: h.reindl@thelounge.net)
-	by mail.thelounge.net (THELOUNGE MTA) with ESMTPSA id 4bC1Qx6cBMzXLZ
-	for <linux-raid@vger.kernel.org>; Wed, 04 Jun 2025 10:46:44 +0200 (CEST)
-Message-ID: <e6252171-45b5-4739-b2b7-683c1464de2d@thelounge.net>
-Date: Wed, 4 Jun 2025 10:46:44 +0200
+	by mail.thelounge.net (THELOUNGE MTA) with ESMTPSA id 4bC1jQ0xzSzXLd
+	for <linux-raid@vger.kernel.org>; Wed, 04 Jun 2025 10:59:22 +0200 (CEST)
+Message-ID: <2e10926a-54bc-4c1f-b579-c251b9a943ea@thelounge.net>
+Date: Wed, 4 Jun 2025 10:59:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
@@ -46,9 +46,11 @@ List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: Need help increasing raid scan efficiency.
+Content-Language: en-US
 To: Linux RAID <linux-raid@vger.kernel.org>
 References: <20250602210514.7acd5325@Zen-II-x12.niklas.com>
-Content-Language: en-US
+ <24815d81-2e4f-4ddf-b194-b03ea3232b91@youngman.org.uk>
+ <20250603160415.61c9ca7c@Zen-II-x12.niklas.com>
 From: Reindl Harald <h.reindl@thelounge.net>
 Autocrypt: addr=h.reindl@thelounge.net; keydata=
  xsDNBFq9ahEBDADEQKxJxY4WUy7Ukg6JbzwAUI+VQYpnRuFKLIvcU+2x8zzf8cLaPUiNhJKN
@@ -85,22 +87,48 @@ Autocrypt: addr=h.reindl@thelounge.net; keydata=
  cTqn2HJNlhMSV0ZocQ0888Zaq2S5totXr7yuiDzwrp70m9bJY+VPDjaUtWruf2Yiez3EAhtU
  K4rYsjPimkSIVdrNM//wVKdCTbO+
 Organization: the lounge interactive design
-In-Reply-To: <20250602210514.7acd5325@Zen-II-x12.niklas.com>
+In-Reply-To: <20250603160415.61c9ca7c@Zen-II-x12.niklas.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-Am 03.06.25 um 03:05 schrieb David Niklas:
-> My PC suffered a rather nasty case of HW failure recently where the MB
-> would break the CPU and RAM. I ended up with different data on different
-> members of my RAID6 array.
+Am 03.06.25 um 22:04 schrieb David Niklas:
+> On Tue, 3 Jun 2025 17:46:01 +0100
+> Wol <antlists@youngman.org.uk> wrote:
+>> On 03/06/2025 02:05, David Niklas wrote:
+>>> So I setup the array into read-only mode and started the array with
+>>> only two of the drives. Drives 0 and 1. Then I proceeded to try and
+>>> start a second pair, drives 2 and 3, so that I could scan them
+>>> simultaneously. With the intent of then switching it over to 0 and 2
+>>> and 1 and 3, then 0 and 3 and 1 and 2.
+>>
+>> BACKUP! BACKUP!! BACKUP!!!
 > 
-> I wanted to scan through the drives and take some checksums of various
-> files in an attempt to ascertain which drives took the most data
-> corruption damage, to try and find the date that the damage started
-> occurring (as it was unclear when exactly this began), and to try and
-> rescue some of the data off of the good pairs.
+> It's when I was trying to make my yearly backup
 
-forget it and restore a backup
+jesus - that's by far not enough
+
+> When I backup, I erase the previous year
+
+so the first you do is delete the last known good state
+
+> as I don't have enough room otherwise
+
+seriously?
+
+an external 10 TB disk costs around 200 EUR
+an external 20 TB disk costs around 400 EUR
+
+with rsnapshot you can make daily, weekly and montly backups
+until the doctor comes because anything unchanged are only hard links
+
+> then backup the new year. As a system, it worked up until now.
+
+no, it did not as you found out the first time you needed it
+
+> It assembles fine with all the disks, the problem is the data corruption
+> that has occurred across the members
+
+and what makes you think you can fix that manually
 
