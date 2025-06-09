@@ -1,45 +1,45 @@
-Return-Path: <linux-raid+bounces-4386-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-4387-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78F09AD1FE0
-	for <lists+linux-raid@lfdr.de>; Mon,  9 Jun 2025 15:50:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 818D3AD1FF0
+	for <lists+linux-raid@lfdr.de>; Mon,  9 Jun 2025 15:50:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8FDC216DCC5
-	for <lists+linux-raid@lfdr.de>; Mon,  9 Jun 2025 13:48:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DC33A16EFA9
+	for <lists+linux-raid@lfdr.de>; Mon,  9 Jun 2025 13:49:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B46125C708;
-	Mon,  9 Jun 2025 13:47:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAA6E25C81D;
+	Mon,  9 Jun 2025 13:48:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H+ApJxHi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KPsLrhSd"
 X-Original-To: linux-raid@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9158BFF;
-	Mon,  9 Jun 2025 13:47:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88CB52505CB;
+	Mon,  9 Jun 2025 13:48:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749476878; cv=none; b=lJkwl0EXsmHvgruxXKoLz8lYpdxV2w2xYQFPmWw/Rmyk46DrupQNvbwW6MQ35qvjyGlyQdRjZfUHyejkrN9Ovr6i7qhQ3V+M+9QoT+pmlAd0jSYEPEZKyevY/TwyftiGIUZsge0ECyztjqhXSUNe0U+rSQS6iUWA2PwtxNw8Wbk=
+	t=1749476902; cv=none; b=IkVG7qJM+3m7mg8ah7doxLcDbz6UpiSWOoixsxuq2o6OlwvRQSOkWXoxv9xP5il51TzItgPaw7IOPuecVJ7M4wFY181agthuRySPjM36i5ODOJKwHCT/yFU5LJcZoVI64w2BKqCTwJkOHxnxsDt5fVQkuLTh1Zck4Rq15b3y7/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749476878; c=relaxed/simple;
-	bh=jqRXoo6IEZ6rg6oPtIrRxJfBWqngIj4deDagxLChHZA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Wf83uiOM+Saix4cMPjWdEX8HLNFklpXk4ZvYUokolt/qowuzE+WwD3p4uE6YMYcnrrr+eaFcXO4vMoISYvkpUYfIq+09BDUQpLCTHYWftleRI3XvOTHS+2AfaK7NoMmvyGyydd9fqaqZtQ0R5pLhRNv+SjcmvjPPEzDds+N8E4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H+ApJxHi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A435C4CEEB;
-	Mon,  9 Jun 2025 13:47:56 +0000 (UTC)
+	s=arc-20240116; t=1749476902; c=relaxed/simple;
+	bh=Sd1dYQ23MF12vY7esQXccbIq5Pvyrrajb94vy0mVtV8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lWNxTQujsSwB4/6O2B9SknbKDLATA6PpNaADBYHHTAUokwjj+yt5Z11w0Xo7wYmwSjHEFXqh9/3zMANGTELUmauYGrscYhbVk27eGMXi3NqIAk+slkzQsfJnO76nxtPJSzPmfdYq8tiFl9eFW5KA2edlKUKcxImWv9/qN3CbEUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KPsLrhSd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C13CC4CEEB;
+	Mon,  9 Jun 2025 13:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749476877;
-	bh=jqRXoo6IEZ6rg6oPtIrRxJfBWqngIj4deDagxLChHZA=;
+	s=k20201202; t=1749476902;
+	bh=Sd1dYQ23MF12vY7esQXccbIq5Pvyrrajb94vy0mVtV8=;
 	h=From:To:Cc:Subject:Date:From;
-	b=H+ApJxHiLCmI17qzf9RTIlQqEX9lqMSjUNq0RmYjdUzEae5ZfDzE/xD4r1au42we9
-	 Dxd5yqn7lFfvmW66kvQDmXbjssfNiTutAciKMRkclWqSQ77K3lWW/SGAzdyywQCYwr
-	 AvfvivRu0TjTZgd4tfEZqRH4DE3lkma3OwlJ6Ym6OaOzYO7Y36rJyyXrMXON1AuJ/e
-	 ZPo15vXWSXIIWwtRrfqvYAU5WM/dnd1AAmuTndE3wkN6B7MnNSTlr2DHRD0jAugWxe
-	 0PcB0CK1WK+UD0NNeWZebn4nNxRA3YxpItyzia7QfZqCHmYLBn8CUwNtEJPtcHrQYN
-	 o0NNOOYTrNW6A==
+	b=KPsLrhSd5e80dUKvRtsdrz1M60U2ouO+BHI2w7sab7kEEG0whzMmJgPeAUQnkGX7d
+	 mtU5pSRKv2lnhTWmtCQXgUdkhmTIc1zEN+J+kgaCOc9LoVrboH1tWjblNTQIFB4ua4
+	 pwwSzviraxVU0ve5WvV+KmTIVLJmVWUCS62ZpH4MNOx9ztu4DkNGfH6AR0sI5TXYEq
+	 eLKcSlqn1XZ+fhNuF77fxwGQk1kD+e1GHDuLqBnOpgcUJKMMAZIhWcjQlLRTCwoQY9
+	 big4+nxjurzm47710vmu2e5t+7HMCpbKeko1vE3yJJ43glNrMEqyzDH3VKCNtbsC0E
+	 NDLKiF+0s95Jw==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
@@ -49,9 +49,9 @@ Cc: Yu Kuai <yukuai3@huawei.com>,
 	Sasha Levin <sashal@kernel.org>,
 	song@kernel.org,
 	linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 01/12] md/md-bitmap: fix dm-raid max_write_behind setting
-Date: Mon,  9 Jun 2025 09:47:44 -0400
-Message-Id: <20250609134755.1345286-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 1/9] md/md-bitmap: fix dm-raid max_write_behind setting
+Date: Mon,  9 Jun 2025 09:48:12 -0400
+Message-Id: <20250609134820.1345562-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
@@ -61,7 +61,7 @@ List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.185
+X-stable-base: Linux 5.10.238
 Content-Transfer-Encoding: 8bit
 
 From: Yu Kuai <yukuai3@huawei.com>
@@ -174,7 +174,7 @@ backported to ensure consistent behavior across stable kernel versions.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-index b26e22dd9ba2e..cb84a4ab8d70f 100644
+index 91bc764a854c6..f2ba541ed89d4 100644
 --- a/drivers/md/md-bitmap.c
 +++ b/drivers/md/md-bitmap.c
 @@ -546,7 +546,7 @@ static int md_bitmap_new_disk_sb(struct bitmap *bitmap)
