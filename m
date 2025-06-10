@@ -1,36 +1,36 @@
-Return-Path: <linux-raid+bounces-4401-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-4398-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3109BAD3376
-	for <lists+linux-raid@lfdr.de>; Tue, 10 Jun 2025 12:21:58 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB4B3AD336F
+	for <lists+linux-raid@lfdr.de>; Tue, 10 Jun 2025 12:21:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C203A1887411
-	for <lists+linux-raid@lfdr.de>; Tue, 10 Jun 2025 10:22:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 994D7188683A
+	for <lists+linux-raid@lfdr.de>; Tue, 10 Jun 2025 10:21:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34DA128D8FA;
-	Tue, 10 Jun 2025 10:21:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74A1028C87F;
+	Tue, 10 Jun 2025 10:21:11 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
 	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3945B28C2BE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3934028BA8E;
 	Tue, 10 Jun 2025 10:21:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749550873; cv=none; b=ZxY986exzOCe8sePaa1WyTdBWtsHabNKOQSygtcswQsCxLh9+EqGHCE2kPZLFc/QQWHSxVLx66m26W+4O7gNEcWer1s8cOcFJ3jQTlA0ucqVwLXw71rgLAiAj7BPmw9jLnRg67aEhB/IgyVOrsF/AAZyGp4LS0GH4X2wVOl4vdU=
+	t=1749550871; cv=none; b=qvRfdc9Xzh9ixNFLPrYRSHGzFEpu/uds0in/L5kSEZdXIcK85ejwHxVT/0SXNez7rvNTjyJYaj0pVUvlououXrM60lZ8XOkn4G4yQL+HAAz70cPU2vPXvIFELzL+pdoAQRioGkOfpPhwfAhF7p6pulAfLgpEfgr7aY9kemcLrbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749550873; c=relaxed/simple;
-	bh=MVdeVWbD1VdaOOSm/f63qKJM4QL8y6p9qziBcLAyrdw=;
+	s=arc-20240116; t=1749550871; c=relaxed/simple;
+	bh=hqWQJI8onacjvRQEHq0SbLndXC4pMKKuCP3ZO9UJkJg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uHsA5YfXbhkJPXu7oBoVW3wzLCpbQxG5kJv3HDcTWPm4b8tZLnOqKHimgu8flmAWp4pRJRnzNjLlXZCWzBsIamLxSh/lRrpgS7V6Dzc7abJ17+HagTJwjwQo/DczyFl5yGr/AkFblKLMKo/YC3Yo5UElUNq5XGed1nCMF1PIqfM=
+	 MIME-Version; b=P3VPRlfo6bQ4f1QK93TR5d6OKSgDS7z1it059ibtlxNM3xTS41AcHyhrao5q/pWjDHISL8rHKATPumadHCdy2Dct+eTfXpRnctvBXSkf8qefHFxWBcu29KUP5O+1lsLOfvmoxyxnFZzWc2EWiGemHip3/d+jx9tWTCRMdxA9VsU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
 Received: from ubt.. (unknown [210.73.43.2])
-	by APP-05 (Coremail) with SMTP id zQCowADXJRQjBUhoCfqKBQ--.1934S5;
+	by APP-05 (Coremail) with SMTP id zQCowADXJRQjBUhoCfqKBQ--.1934S6;
 	Tue, 10 Jun 2025 18:12:52 +0800 (CST)
 From: Chunyan Zhang <zhangchunyan@iscas.ac.cn>
 To: Paul Walmsley <paul.walmsley@sifive.com>,
@@ -44,9 +44,9 @@ Cc: linux-riscv@lists.infradead.org,
 	linux-raid@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: [PATCH 3/4] raid6: riscv: Allow code to be compiled in userspace
-Date: Tue, 10 Jun 2025 18:12:33 +0800
-Message-Id: <20250610101234.1100660-4-zhangchunyan@iscas.ac.cn>
+Subject: [PATCH 4/4] raid6: test: Add support for RISC-V
+Date: Tue, 10 Jun 2025 18:12:34 +0800
+Message-Id: <20250610101234.1100660-5-zhangchunyan@iscas.ac.cn>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250610101234.1100660-1-zhangchunyan@iscas.ac.cn>
 References: <20250610101234.1100660-1-zhangchunyan@iscas.ac.cn>
@@ -57,107 +57,62 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowADXJRQjBUhoCfqKBQ--.1934S5
-X-Coremail-Antispam: 1UD129KBjvJXoW7ZrWfXr15Gr47Xw13AF1DZFb_yoW8Zw13pF
-	yDAF43Jr13KF1Svas3ZF18WFZ8Ja4IvryUCr47C34UZry3KrykArWkZry0yry3WrWFqFWx
-	u34UXr1fCw4Ut3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmqb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI
-	8067AKxVWUWwA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF
-	64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcV
-	CY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIE
-	c7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I
-	8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26F8l6FkdMcvjeVCF
-	s4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY1x
-	0262kKe7AKxVWUtVW8ZwCY02Avz4vE14v_Gw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC
-	6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWw
-	C2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_
-	JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
-	WUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIY
-	CTnIWIevJa73UjIFyTuYvjxU7UGYDUUUU
-X-CM-SenderInfo: x2kd0wxfkx051dq6x2xfdvhtffof0/1tbiCQ8JB2hH3wrH1QAAsg
+X-CM-TRANSID:zQCowADXJRQjBUhoCfqKBQ--.1934S6
+X-Coremail-Antispam: 1UD129KBjvdXoWrurW8tr17GryUAF1kXF48tFb_yoWkCrc_Ca
+	4Ikr92qr4xXay09anrZr9ayrs5Ar43tr1rC34rXr13JF17Kw1aga1UX3W3CFWYva15WayS
+	9FWrZF18Z34jqjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbB8YjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I
+	6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7
+	IE14v26r126s0DM28IrcIa0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC64kIII0Yj41l84x0
+	c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2
+	IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280
+	aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzV
+	Aqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_AcC_ZcWlOx8S
+	6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mx
+	kF7I0En4kS14v26r1q6r43MxkIecxEwVAFwVW8twCF04k20xvY0x0EwIxGrwCFx2IqxVCF
+	s4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
+	1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWU
+	JVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rV
+	WUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4U
+	JbIYCTnIWIevJa73UjIFyTuYvjxU7FksDUUUU
+X-CM-SenderInfo: x2kd0wxfkx051dq6x2xfdvhtffof0/1tbiDAcJB2hH3zHDsgAAs1
 
-To support userspace raid6test, this patch adds __KERNEL__ ifdef for kernel
-header inclusions also userspace wrapper definitions to allow code to be
-compiled in userspace.
+From: Chunyan Zhang <zhang.lyra@gmail.com>
 
-Signed-off-by: Chunyan Zhang <zhangchunyan@iscas.ac.cn>
+Add RISC-V code to be compiled to allow the userspace raid6test program
+to be built and run on RISC-V.
+
+Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
 ---
- lib/raid6/recov_rvv.c |  7 +------
- lib/raid6/rvv.c       | 11 ++++-------
- lib/raid6/rvv.h       | 15 +++++++++++++++
- 3 files changed, 20 insertions(+), 13 deletions(-)
+ lib/raid6/test/Makefile | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/lib/raid6/recov_rvv.c b/lib/raid6/recov_rvv.c
-index 500da521a806..8f2be833c015 100644
---- a/lib/raid6/recov_rvv.c
-+++ b/lib/raid6/recov_rvv.c
-@@ -4,13 +4,8 @@
-  * Author: Chunyan Zhang <zhangchunyan@iscas.ac.cn>
-  */
+diff --git a/lib/raid6/test/Makefile b/lib/raid6/test/Makefile
+index 8f2dd2210ba8..09bbe2b14cce 100644
+--- a/lib/raid6/test/Makefile
++++ b/lib/raid6/test/Makefile
+@@ -35,6 +35,11 @@ ifeq ($(ARCH),aarch64)
+         HAS_NEON = yes
+ endif
  
--#include <asm/vector.h>
- #include <linux/raid/pq.h>
--
--static int rvv_has_vector(void)
--{
--	return has_vector();
--}
-+#include "rvv.h"
- 
- static void __raid6_2data_recov_rvv(int bytes, u8 *p, u8 *q, u8 *dp,
- 				    u8 *dq, const u8 *pbmul,
-diff --git a/lib/raid6/rvv.c b/lib/raid6/rvv.c
-index b193ea176d5d..99dfa16d37c7 100644
---- a/lib/raid6/rvv.c
-+++ b/lib/raid6/rvv.c
-@@ -9,16 +9,13 @@
-  *	Copyright 2002-2004 H. Peter Anvin
-  */
- 
--#include <asm/vector.h>
--#include <linux/raid/pq.h>
- #include "rvv.h"
- 
-+#ifdef __KERNEL__
- #define NSIZE	(riscv_v_vsize / 32) /* NSIZE = vlenb */
--
--static int rvv_has_vector(void)
--{
--	return has_vector();
--}
-+#else
-+#define NSIZE  16
-+#endif
- 
- static void raid6_rvv1_gen_syndrome_real(int disks, unsigned long bytes, void **ptrs)
- {
-diff --git a/lib/raid6/rvv.h b/lib/raid6/rvv.h
-index 94044a1b707b..595dfbf95d4e 100644
---- a/lib/raid6/rvv.h
-+++ b/lib/raid6/rvv.h
-@@ -7,6 +7,21 @@
-  * Definitions for RISC-V RAID-6 code
-  */
- 
-+#ifdef __KERNEL__
-+#include <asm/vector.h>
-+#else
-+#define kernel_vector_begin()
-+#define kernel_vector_end()
-+#define has_vector()		(1)
-+#endif
++ifeq ($(findstring riscv,$(ARCH)),riscv)
++        CFLAGS += -I../../../arch/riscv/include -DCONFIG_RISCV=1
++        HAS_RVV = yes
++endif
 +
-+#include <linux/raid/pq.h>
-+
-+static int rvv_has_vector(void)
-+{
-+	return has_vector();
-+}
-+
- #define RAID6_RVV_WRAPPER(_n)						\
- 	static void raid6_rvv ## _n ## _gen_syndrome(int disks,		\
- 					size_t bytes, void **ptrs)	\
+ ifeq ($(findstring ppc,$(ARCH)),ppc)
+         CFLAGS += -I../../../arch/powerpc/include
+         HAS_ALTIVEC := $(shell printf '$(pound)include <altivec.h>\nvector int a;\n' |\
+@@ -63,6 +68,9 @@ else ifeq ($(HAS_ALTIVEC),yes)
+                 vpermxor1.o vpermxor2.o vpermxor4.o vpermxor8.o
+ else ifeq ($(ARCH),loongarch64)
+         OBJS += loongarch_simd.o recov_loongarch_simd.o
++else ifeq ($(HAS_RVV),yes)
++        OBJS   += rvv.o recov_rvv.o
++        CFLAGS += -DCONFIG_RISCV_ISA_V=1
+ endif
+ 
+ .c.o:
 -- 
 2.34.1
 
