@@ -1,173 +1,121 @@
-Return-Path: <linux-raid+bounces-4434-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-4436-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D850AD87DE
-	for <lists+linux-raid@lfdr.de>; Fri, 13 Jun 2025 11:30:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26D89AD8B56
+	for <lists+linux-raid@lfdr.de>; Fri, 13 Jun 2025 13:55:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EE42D7A551B
-	for <lists+linux-raid@lfdr.de>; Fri, 13 Jun 2025 09:29:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4E5131884619
+	for <lists+linux-raid@lfdr.de>; Fri, 13 Jun 2025 11:54:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF0CB291C3D;
-	Fri, 13 Jun 2025 09:29:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9B2C275B03;
+	Fri, 13 Jun 2025 11:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QuuM4ESf"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66AB3291C20;
-	Fri, 13 Jun 2025 09:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D759275AF5;
+	Fri, 13 Jun 2025 11:53:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749806992; cv=none; b=US7ARzxGSxY/QppRTpkOWbjMW1l5mTXU5wLCFZtwEmaOYcRB/pcPKvPOCGatuUx5ojhTRMwSUA3sU4RSwVBNp6O59jPBEdEKgMKIDd3STrJ+SMjqzcYtGz3Vx8kdgBKCZPta4pkcT7annXPPFOadkjLTUJixBwZUB0tgvx7gM8M=
+	t=1749815635; cv=none; b=ZmRMrqSFRoiZTVfQWLDTZEaqfg4fLR+vIBx37pAd1FGpmpaZxt5H08RzXrv9OAcjcZyX8/8HVPAUfIwPfXtzv4dmroI8B6LQLonGiHbNIdmtFp0fEMUGjhiE7quXKcG1DtfYrFgBF7+oC4oNfBwpPMoOD+S//RQyl9LEt8/Y8w8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749806992; c=relaxed/simple;
-	bh=dTFe4i14xDT19JSJo8KCeKJsJ0q9GY1gJEdMW/eHGHw=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=rYh/kBDAoJ4O+QspnLbtCaooFJeZKR8/t4GHFWd605UcYrEQPXqdCR24ofezuYnlj9/m5KVC6zm2N4eBgYt4pmgZaH0dQzWcmMDzSIz06XfQSVfMHAuJzbNgXyKLJWB1gqQxLxjc2RCzENIJbQaJxuR2qoNxdJzl9WzXKytD/q8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bJYyM5MHfzYQvlF;
-	Fri, 13 Jun 2025 17:29:47 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id B75C21A1538;
-	Fri, 13 Jun 2025 17:29:46 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgBHrGCJ70toVayHPQ--.51121S3;
-	Fri, 13 Jun 2025 17:29:46 +0800 (CST)
-Subject: Re: [PATCH] md/raid1,raid10: fix IO handle for REQ_NOWAIT
-To: Zheng Qixing <zhengqixing@huaweicloud.com>, song@kernel.org
-Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
- yi.zhang@huawei.com, yangerkun@huawei.com, zhengqixing@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20250612132141.358202-1-zhengqixing@huaweicloud.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <dfbb5d06-68aa-9acc-a13c-0863f5a25193@huaweicloud.com>
-Date: Fri, 13 Jun 2025 17:29:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1749815635; c=relaxed/simple;
+	bh=QnL8ytapLR81x2Nz1jbjY+e5l7il4Tmxcc1vZfIo0Vk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SlUVRwdjd3KHaNPfYlOGWMT7+Qg2PfAVYsbdWKY+Wg8UdQGuVs689cwX0Fx4RjL/nlYNxASCP0xQii66qhqJzbbHkf+JBpnQROGNan8/o9IFPKBoMVev1XwG/AYFhMYhy6upI6qqIy5rD6HOCmyDM/iEehQLmVfOF71uCJvdJQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QuuM4ESf; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3ddcbe64d0dso18382595ab.3;
+        Fri, 13 Jun 2025 04:53:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749815633; x=1750420433; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9qlMQMsvGVVQjXtoeIDPXQe0n38+nTzrdZ5q+564MV0=;
+        b=QuuM4ESfZtJPOqlXaDRR7S6xVgC9ooebj//yKFyC4AMQCD4M8jD+KL4Am6OV28U7GU
+         SuMSrkgxTIrb0yctacGPVQov0rj5oLHcBfykWP3picSsGQRPEHfQ4ukd55/ID9Xhby2U
+         fPqGkSAWu8qeHLnh/NRNL6jvpJUumlmJl+UTPluk5Zn8gjBr9pMXsyhNQExGWJsVi2RF
+         +SMgfgXH6w+CkGEOV0ovZuZdw5h9c9PLETxXraEgqs73ecA0B5+Y6zinKKs1DhSMs84S
+         KBG1JmfcKXWcu8NsnO49KSFkSwGMPHS1UjHeCDzt/7rrvil96OcCLlxniYoas8edJRmq
+         iRnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749815633; x=1750420433;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9qlMQMsvGVVQjXtoeIDPXQe0n38+nTzrdZ5q+564MV0=;
+        b=aBlO0onkveTH6zu7QzXe9gLQE1SLAWFl1qNZuaNrGlBb4b7uix5ty939W1fv8FnqUM
+         ZCQ6376/PSelpiTgaa1H+mQGRWJvxJ8HUd444Sr7DXLlEOszX4OTwdEhI6fSCBCq7CTa
+         CIa2ulE0Csaw/p3QtIsJE4sd9YEDDodOIsc6np4jFXl4CnhdNeCoUTUHZ07MqUXywzF8
+         QofvegQUNoF/4JvvwiARbuMc9TWD0NFbaCBpK8YPBRRoRnh+vfzWg05G7M/1N4IgvnK/
+         P5w4pxp8VZnU+3dWla7jfz8MFgYLHZBZMOpEcRWk8/YBpt87u2pWRUHRE6ZvKaMHP+PX
+         oTcw==
+X-Forwarded-Encrypted: i=1; AJvYcCUOM1Uj4UTrKJn2DaCawvtvD+O9HPKTJcsKCFEf8XvQ2RzMAf66Dm87KbH2hKK6XQQdBYmWVYKJZVnTs1c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGEeiTC/y9fLyKEeT7dUSfr0asX1JTCDi230yQX5l3M7BggQT1
+	tCKJ1TbBeXlCU30V7YCGa42533HeirpKbjGBDxMtRQPZfZGquebqPJ6QE4dCLWau9UfLyw==
+X-Gm-Gg: ASbGncsgC83/pf7a5LaiqwdLLZJMwq9FOtgi/jLNemcCw9vp/daua7rlElnOXw9JuIB
+	b8lcFvR5QZNnDO9TveqmfU60+K2MLb9ZZnZ9Kf4KN/eMvCDfwLKLZ9UORJkK8l9nMroXVBoTSsL
+	DVhVT7JAprD6hnqE/WzwDBbwlVRwKw0FmqqblUQ0HVEnl7n4VJv7Qx+W7k5fn0XYDIexW0jQ/z+
+	AgLky84r5iCsmJgbJLfoV9JfU8DMo45H1//bxDNJkSIwtf8EBtk3dkXJ6Ymy5Cm+SmX3yWGmUVt
+	yEn3oV1/+m/PqF6uWkGxnO10hPzmfn6RxSLPhrB1jfa1
+X-Google-Smtp-Source: AGHT+IE2FOGXxIVGwiqC1AaOCKkaEJj/8WaPBNsHnpbldsx8rEVj3ey5eoMJqIcdwXaI4dGyglM2rQ==
+X-Received: by 2002:a05:6a20:3d87:b0:1f5:9098:e448 with SMTP id adf61e73a8af0-21facb4c954mr3358274637.5.1749815622073;
+        Fri, 13 Jun 2025 04:53:42 -0700 (PDT)
+Received: from [127.0.0.1] ([2604:a840:3::1028])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe1642e0asm1494080a12.17.2025.06.13.04.53.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Jun 2025 04:53:41 -0700 (PDT)
+Message-ID: <0ccb9479-92ac-4c8e-afdc-a1e3f14fe401@gmail.com>
+Date: Fri, 13 Jun 2025 19:53:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250612132141.358202-1-zhengqixing@huaweicloud.com>
-Content-Type: text/plain; charset=gbk; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] md/raid1: Fix stack memory use after return in
+ raid1_reshape
+To: Yu Kuai <yukuai1@huaweicloud.com>, Song Liu <song@kernel.org>
+Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20250611090203.271488-1-wangjinchao600@gmail.com>
+ <5143c5c3-3a77-919f-0d38-8adb0e8923e9@huaweicloud.com>
+ <06935480-a959-4e3f-8e41-286d7f54754a@gmail.com>
+ <9c7d5e66-4f5f-b984-c291-f19c3d568b85@huaweicloud.com>
+ <938b0969-cace-4998-8e4a-88d445c220b1@gmail.com>
+ <8a876d8f-b8d1-46c0-d969-cbabb544eb03@huaweicloud.com>
+ <726fe46d-afd5-4247-86a0-14d7f0eeb3b3@gmail.com>
+ <c328bc72-0143-d11c-2345-72d307920428@huaweicloud.com>
+ <9275145b-3066-41e5-a971-eba219ef0d3c@gmail.com>
+ <a4f9b5a2-bf83-482e-e1fe-589f9ff004a1@huaweicloud.com>
+Content-Language: en-US
+From: Wang Jinchao <wangjinchao600@gmail.com>
+In-Reply-To: <a4f9b5a2-bf83-482e-e1fe-589f9ff004a1@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBHrGCJ70toVayHPQ--.51121S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxJF4xuw45Gr47XF4xZrW3Awb_yoW5tr48p3
-	yUGa9Yv39rGFWUu3WDtFWUZayF9w4Ygay7C3yUJ34xXas09FZ8Aa1DJ34YgF4DXrWfuw4a
-	q3ZYgw4DCFWayFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
-	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUot
-	CzDUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Hi,
-
-ÔÚ 2025/06/12 21:21, Zheng Qixing Ð´µÀ:
-> From: Zheng Qixing <zhengqixing@huawei.com>
+On 2025/6/13 17:15, Yu Kuai wrote:
+> Hi,
 > 
-> IO with REQ_NOWAIT should not set R1BIO_Uptodate when it fails,
-> and bad blocks should also be cleared when REQ_NOWAIT IO succeeds.
+> åœ¨ 2025/06/12 20:21, Wang Jinchao å†™é“:
+>> BTW, I feel raid1_reshape can be better coding with followingï¼š
 > 
-> Fixes: 9f346f7d4ea7 ("md/raid1,raid10: don't handle IO error for REQ_RAHEAD and REQ_NOWAIT")
-> Signed-off-by: Zheng Qixing <zhengqixing@huawei.com>
-> ---
->   drivers/md/raid1.c  | 11 ++++++-----
->   drivers/md/raid10.c |  9 +++++----
->   2 files changed, 11 insertions(+), 9 deletions(-)
+> And another hint:
 > 
-> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-> index 19c5a0ce5a40..a1cddd24b178 100644
-> --- a/drivers/md/raid1.c
-> +++ b/drivers/md/raid1.c
-> @@ -455,13 +455,13 @@ static void raid1_end_write_request(struct bio *bio)
->   	struct md_rdev *rdev = conf->mirrors[mirror].rdev;
->   	sector_t lo = r1_bio->sector;
->   	sector_t hi = r1_bio->sector + r1_bio->sectors;
-> -	bool ignore_error = !raid1_should_handle_error(bio) ||
-> -		(bio->bi_status && bio_op(bio) == REQ_OP_DISCARD);
-> +	bool discard_error = bio->bi_status && bio_op(bio) == REQ_OP_DISCARD;
->   
->   	/*
->   	 * 'one mirror IO has finished' event handler:
->   	 */
-> -	if (bio->bi_status && !ignore_error) {
-> +	if (bio->bi_status && !discard_error &&
-> +	    raid1_should_handle_error(bio)) {
->   		set_bit(WriteErrorSeen,	&rdev->flags);
->   		if (!test_and_set_bit(WantReplacement, &rdev->flags))
->   			set_bit(MD_RECOVERY_NEEDED, &
-> @@ -507,12 +507,13 @@ static void raid1_end_write_request(struct bio *bio)
->   		 * check this here.
->   		 */
->   		if (test_bit(In_sync, &rdev->flags) &&
-> -		    !test_bit(Faulty, &rdev->flags))
-> +		    !test_bit(Faulty, &rdev->flags) &&
-> +		    (!bio->bi_status || discard_error))
->   			set_bit(R1BIO_Uptodate, &r1_bio->state);
-
-BTW, for nowait, the error value returned to user should be -EAGAIN, not
--EIO, you'd better cook another patch to change this.
-
-Thanks,
-Kuai
-
->   
->   		/* Maybe we can clear some bad blocks. */
->   		if (rdev_has_badblock(rdev, r1_bio->sector, r1_bio->sectors) &&
-> -		    !ignore_error) {
-> +		    !bio->bi_status) {
->   			r1_bio->bios[mirror] = IO_MADE_GOOD;
->   			set_bit(R1BIO_MadeGood, &r1_bio->state);
->   		}
-> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-> index b74780af4c22..1848947b0a6d 100644
-> --- a/drivers/md/raid10.c
-> +++ b/drivers/md/raid10.c
-> @@ -458,8 +458,8 @@ static void raid10_end_write_request(struct bio *bio)
->   	int slot, repl;
->   	struct md_rdev *rdev = NULL;
->   	struct bio *to_put = NULL;
-> -	bool ignore_error = !raid1_should_handle_error(bio) ||
-> -		(bio->bi_status && bio_op(bio) == REQ_OP_DISCARD);
-> +	bool discard_error = bio->bi_status && bio_op(bio) == REQ_OP_DISCARD;
-> +	bool ignore_error = !raid1_should_handle_error(bio) || discard_error;
->   
->   	dev = find_bio_disk(conf, r10_bio, bio, &slot, &repl);
->   
-> @@ -522,13 +522,14 @@ static void raid10_end_write_request(struct bio *bio)
->   		 * check this here.
->   		 */
->   		if (test_bit(In_sync, &rdev->flags) &&
-> -		    !test_bit(Faulty, &rdev->flags))
-> +		    !test_bit(Faulty, &rdev->flags) &&
-> +		    (!bio->bi_status || discard_error))
->   			set_bit(R10BIO_Uptodate, &r10_bio->state);
->   
->   		/* Maybe we can clear some bad blocks. */
->   		if (rdev_has_badblock(rdev, r10_bio->devs[slot].addr,
->   				      r10_bio->sectors) &&
-> -		    !ignore_error) {
-> +		    !bio->bi_status) {
->   			bio_put(bio);
->   			if (repl)
->   				r10_bio->devs[slot].repl_bio = IO_MADE_GOOD;
+> The poolinfo can be removed directly, the only other place to use it
+> is r1buf_pool, and can covert to pass in conf or &conf->raid_disks.
+Thanks, I'll review these relationships carefully before refactoring.
+> 
+> Thanks,
+> Kuai
 > 
 
 
