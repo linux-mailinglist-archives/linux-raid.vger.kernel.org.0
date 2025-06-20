@@ -1,141 +1,144 @@
-Return-Path: <linux-raid+bounces-4470-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-4472-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30C4DAE1D6D
-	for <lists+linux-raid@lfdr.de>; Fri, 20 Jun 2025 16:34:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A280AE205B
+	for <lists+linux-raid@lfdr.de>; Fri, 20 Jun 2025 18:50:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 665125A6CCF
-	for <lists+linux-raid@lfdr.de>; Fri, 20 Jun 2025 14:33:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E0CBE17DACA
+	for <lists+linux-raid@lfdr.de>; Fri, 20 Jun 2025 16:50:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F37228B4FD;
-	Fri, 20 Jun 2025 14:34:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 300BE2E6128;
+	Fri, 20 Jun 2025 16:49:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DeAhNqRY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QrBU3HiE"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE02417BD3;
-	Fri, 20 Jun 2025 14:34:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B69136988;
+	Fri, 20 Jun 2025 16:49:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750430053; cv=none; b=KzWSzVKkj3whgeEI5y+I80VM/hgmrOkt77w+E0LlANpcHjX3tIiyxqJHpDzqew5/ZUXSdCaRuCaT9zlc34Li7LG4PNr1w/gwZEDz5W2pxlnxMLy3h/c1Rbt7ySWyvV8MH/+vFOxC8bWuKle/X/LgCm5i1Wx9o0D4j7V1s37qVdY=
+	t=1750438196; cv=none; b=LjlxdiGHnt71LTxCTe9Q617mg2DSDorCPUCITgjNspOz9d+hYXS6blDwiGcrFsApoltWt89YlCUQGzlkT02IcoILWdM7nP7Me+TfDm1xFCkq0rlKeVc0Xv0O8Xx/tV42eqppgQ+Clt02fAoOGRPxHtW7aB/8tie7F9l+E2ey3NU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750430053; c=relaxed/simple;
-	bh=lzjskJuu7ksH1CFy3LasEcflxgPRL8gOIIZ6qJVcPoQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tTVtjHV3JXq3l7HmV7x21NN42rlorRcBJLYTWYYN9x0E4LJ2GlVnFcKV07AklPwWtkNn/yYdstcOZ1Sgr4EQPD+Q1eWS8hB9WROeGLBET5Cuc2irT7AP5dc6qhasSQMj+/do71N1KwNNS7xDuCRdK/0ZHoK0ZKHRwtbKT9F15ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DeAhNqRY; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55K6iL2C002720;
-	Fri, 20 Jun 2025 14:33:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=vfYteA
-	MXlJGzKlkEORfRB/OXSRRP+Xi2l+/4pMid+Qw=; b=DeAhNqRYVMJTPTfWVP+p1V
-	uuhyKynIzKPEPYvpa4yifolSeT9nMApH5RcoRavIY3eUSx8waMZrh0KThf3Qd3Vd
-	7byhPZL5qKZciX3bF2A9xqTZeDDqju10a33/gg2sX/EFRNdInJMqC/wWqzG3Byb8
-	hHZgUynuBvIj4irt/LBFU4aSD6QuW3iJZoh8Hrj9gXzOrMtSJAgO+SkDPaHtdHoh
-	BwvW3q8yVhHnU43y0gQK4zjRDzFNhElNOGX4txkix2vvQ3KNqY88g8vxamKxrNAS
-	E73k4bs3SYFWPNKKnLvxjhxLxe3TgbRrQAqlwJt8Qphpl/yi/bhWYg5tSJK2EDbQ
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47beet9uh4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Jun 2025 14:33:58 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55KBROXr014275;
-	Fri, 20 Jun 2025 14:33:57 GMT
-Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 479p42u7qq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Jun 2025 14:33:57 +0000
-Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
-	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55KEXu8d55771596
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 20 Jun 2025 14:33:56 GMT
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9E9AB58055;
-	Fri, 20 Jun 2025 14:33:56 +0000 (GMT)
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A50975804E;
-	Fri, 20 Jun 2025 14:33:51 +0000 (GMT)
-Received: from [9.61.191.218] (unknown [9.61.191.218])
-	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 20 Jun 2025 14:33:51 +0000 (GMT)
-Message-ID: <ef5aceb9-a5ec-489c-88e3-f674d59299ad@linux.ibm.com>
-Date: Fri, 20 Jun 2025 20:03:50 +0530
+	s=arc-20240116; t=1750438196; c=relaxed/simple;
+	bh=aJN9w6y7QBnbQ4r1XRjZLngcDFza0KlNe7OlghFMZbE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EhPgo4m1QhEDOQjpbwQQLMlkv4SNjLpTwNqvc5m+mPmmHJcSfTtqqCxcHiBL8LOUAaZhrxTmEATpIR/XQFv9gKRVy+An4jAN1VdKGz6/lPsq0HEIZ6+j802LOMaHIawY/2GuxHxK5y0IXL2URTxauSqSyOlJ9ne+UEnK5nSUMk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QrBU3HiE; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-55350d0eedeso2091865e87.2;
+        Fri, 20 Jun 2025 09:49:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750438193; x=1751042993; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bgNgoba8Ku6R1NkqI9Xoa3piUfy8Hi2Dekxbr1KkRG0=;
+        b=QrBU3HiEbTtTa2uAm+H2HmiD7Zl2aoh3QDJu3/p5n4tI7hLVClhfz4bbA0KU/XDqGs
+         KC4CoHCs7ZJz+odydwJwC1ftCAvKTpC+xP6QWmuun19OZKABBsz9U7pYGvBXAxL1g7Xs
+         l4rzJdiqFavQiXaOPxiHHFlqjWoCtV2jfeZybQKbKEYfTKjrEW55p5Gzj4aQ01TUjuzt
+         DChRuXjjM1bR1ZDOxJLIHNHv4FjueS/D93m7RMuRQLZG34hISMBSKU264dL0dtBGaw3S
+         bIrlBRkIpSXQ5iFHgN22E1TChlZ++XLMrNm9xgRouOYAAQlMsAsbRiOwuuKJU0HhzjWB
+         ZhhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750438193; x=1751042993;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bgNgoba8Ku6R1NkqI9Xoa3piUfy8Hi2Dekxbr1KkRG0=;
+        b=PuUEEebPEvyyxscLV7+AYpVgWgy25nKxCBxUtz+co2A5prRyRTEc2U3h1iJeDTG8uj
+         V9APEfO/RL8dvYji/TzjVR7KOOOqQ2vH2Pr6MkrNRyoCfS18kJyEhdnLn79XQvkmDWMC
+         p4zOU3zipLBRGoRNGNNtcV4AE+kNn26XQoLfQrpB2sZRtid/lgXCwuWA6icfCqEkSxdh
+         c1l2kKgeuRoTed/z8C4qQugHlcVfTw+a8ieFh6MR2bgtF7AqFAxFQPLxgeitB0wJez70
+         RKIYGr8r9W4qqFvAcRNG6kD2U/6U3sgzgrwOEST9loWvXlwrm0KyYGpjmvo4xVUQ9CdC
+         cziQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU7HCDl4PqSwWpJVvG31TFOIlFll9QSmOU0LLd6B+s2QbN8Nx+0HWQNtVNIBq8+6Ge/4ONX1EVdUNKm/w==@vger.kernel.org, AJvYcCWOiTEpdDMlyFlIIX7Ck7wmIFZLTmyXVdzUqF+ZmJwi3sgZlp4ar/MNc/Lqt9lN5NehYoxh0ntyldvcnAg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTeXP0QXWR8LUSusrIcJvxZ2TtF9J/3RzHtFeqzDqvNRLL2DdV
+	qc3dEYKG0ECZn3kifd9EN7gVrRpRIWvEnllEGUeY/GmvS/wM9ytyGWsS
+X-Gm-Gg: ASbGncvhrBJyYYZFjc+naWEvIC+CfYWiCLUD7bs7BsutywuyRdKWzd7UR88jWk+hGjt
+	R3jainfje8uLHW1z7LtzceAn/merNQ+qU3ZFaLyQv8UMQj6cGQZ/LSBtfsi6j/XsJ2Sgp2cpOFv
+	rGXpr7WrGm0P78nzdoT7f5ZlebdKuo6pE2gNmZ5Fb4GProMLbWl7Xrk8/H6fxC+nXTOFvOw2u+A
+	yu7N+Q5N1ZQrkifAglf0fsu4O/IU8q/LuTej3pb2Uf5oeCOcr4CuqKd28JN7O02zhR4nBsd0pup
+	T3HzSisQZeeNxZrjTVUte8kAv8qtfjgTCRk/iahi5U1kNUwivRmEk/Pp3dMx7IQvPZTMj/fyX9u
+	ysA==
+X-Google-Smtp-Source: AGHT+IFGQGCAzcFp92UZH1SXWDZfbGHwQNVRUjCiVS53O7AK3y3IqeRrpUlCTOdnNgF6b8j3z2vw2A==
+X-Received: by 2002:a05:6512:3f27:b0:553:cf38:5ea2 with SMTP id 2adb3069b0e04-553e3ba785bmr1468836e87.3.1750438192907;
+        Fri, 20 Jun 2025 09:49:52 -0700 (PDT)
+Received: from localhost (soda.int.kasm.eu. [2001:678:a5c:1202:4fb5:f16a:579c:6dcb])
+        by smtp.gmail.com with UTF8SMTPSA id 2adb3069b0e04-553e4144358sm343128e87.17.2025.06.20.09.49.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 09:49:52 -0700 (PDT)
+Date: Fri, 20 Jun 2025 18:49:51 +0200
+From: Klara Modin <klarasmodin@gmail.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Song Liu <song@kernel.org>, Yu Kuai <yukuai3@huawei.com>, 
+	linux-raid@vger.kernel.org
+Subject: Re: [v2 PATCH] lib/raid6: Replace custom zero page with ZERO_PAGE
+Message-ID: <g7ymicehyrtnmepvpupzpds7yv3v53h3oui4sbcb5njcwsmigq@x5gtxzyw5tc6>
+References: <Z9flJNkWQICx0PXk@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/5] block: use chunk_sectors when evaluating stacked
- atomic write limits
-To: John Garry <john.g.garry@oracle.com>, agk@redhat.com, snitzer@kernel.org,
-        mpatocka@redhat.com, song@kernel.org, yukuai3@huawei.com, hch@lst.de,
-        axboe@kernel.dk
-Cc: dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-block@vger.kernel.org,
-        ojaswin@linux.ibm.com, martin.petersen@oracle.com
-References: <20250618083737.4084373-1-john.g.garry@oracle.com>
- <20250618083737.4084373-6-john.g.garry@oracle.com>
-Content-Language: en-US
-From: Nilay Shroff <nilay@linux.ibm.com>
-In-Reply-To: <20250618083737.4084373-6-john.g.garry@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: XcNidTvOBNptHj57jYIgusGfoSy_ae7g
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIwMDA5OCBTYWx0ZWRfXwUA8Hpzlr1c4 4r4qpxnTQqI6C2HqvVrcBkxl2O8VW4+Htre7pSm5yXjlUxRm5Re671h++vl6Cz1VZ+eAHinNlm1 Q3xaao9GGxmtkNZuyB3+nd3FE3c0r+e7GMFKO4ksRna0s1Y3hZIitVWCgjwN3CJJNZa7uPW1Qf9
- uCag4T1mLFVWVxo1xs3OqdLBTP5ur2jlIG1ug6zVtSndKLJdHD/tU2GftGbOCXtMgP22xxuOUQ7 Wc33OIsA4plkJgHfxBdEy0VE1RpWOALjPgiNfpilvYmqHFwcja8jz+QPUS0O5pdPye7soNqA0Hp 0JfucHqVqiy4cn2/QwTzpZosPzUdWltR6EqY8f7UcwoHnzIrMcSWSBq63Jjd3JGFWRve0bnJQ9V
- nq8fr/T+IhqUbsCh/ARjeMxDs37M3qTNx9s2xGd8NHPn6FoSVPJnVw57EX3sPhvDijmyOw2a
-X-Authority-Analysis: v=2.4 cv=PrSTbxM3 c=1 sm=1 tr=0 ts=68557156 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=yPCof4ZbAAAA:8 a=fRhigxJsmYGPnd04RnMA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: XcNidTvOBNptHj57jYIgusGfoSy_ae7g
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-20_05,2025-06-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=999
- bulkscore=0 priorityscore=1501 adultscore=0 suspectscore=0 spamscore=0
- phishscore=0 malwarescore=0 mlxscore=0 lowpriorityscore=0 impostorscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506200098
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z9flJNkWQICx0PXk@gondor.apana.org.au>
 
+Hi,
 
+On 2025-03-17 17:02:28 +0800, Herbert Xu wrote:
+> Use the system-wide zero page instead of a custom zero page.
+> 
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+> 
 
-On 6/18/25 2:07 PM, John Garry wrote:
-> The atomic write unit max value is limited by any stacked device stripe
-> size.
-> 
-> It is required that the atomic write unit is a power-of-2 factor of the
-> stripe size.
-> 
-> Currently we use io_min limit to hold the stripe size, and check for a
-> io_min <= SECTOR_SIZE when deciding if we have a striped stacked device.
-> 
-> Nilay reports that this causes a problem when the physical block size is
-> greater than SECTOR_SIZE [0].
-> 
-> Furthermore, io_min may be mutated when stacking devices, and this makes
-> it a poor candidate to hold the stripe size. Such an example (of when
-> io_min may change) would be when the io_min is less than the physical
-> block size.
-> 
-> Use chunk_sectors to hold the stripe size, which is more appropriate.
-> 
-> [0] https://lore.kernel.org/linux-block/888f3b1d-7817-4007-b3b3-1a2ea04df771@linux.ibm.com/T/#mecca17129f72811137d3c2f1e477634e77f06781
-> 
-> Signed-off-by: John Garry <john.g.garry@oracle.com>
+...
+> diff --git a/include/linux/raid/pq.h b/include/linux/raid/pq.h
+> index 98030accf641..428ca76e4deb 100644
+> --- a/include/linux/raid/pq.h
+> +++ b/include/linux/raid/pq.h
+> @@ -11,8 +11,13 @@
+>  #ifdef __KERNEL__
+>  
+>  #include <linux/blkdev.h>
+> +#include <linux/mm.h>
+>  
+> -extern const char raid6_empty_zero_page[PAGE_SIZE];
+> +/* This should be const but the raid6 code is too convoluted for that. */
+> +static inline void *raid6_get_zero_page(void)
+> +{
+> +	return page_address(ZERO_PAGE(0));
+> +}
+>  
+>  #else /* ! __KERNEL__ */
+>  /* Used for testing in user space */
+> @@ -186,6 +191,11 @@ static inline uint32_t raid6_jiffies(void)
+>  	return tv.tv_sec*1000 + tv.tv_usec/1000;
+>  }
+>  
+> +static inline void *raid6_get_zero_page(void)
+> +{
+> +	return raid6_empty_zero_page;
+> +}
+> +
+>  #endif /* ! __KERNEL__ */
+>  
+>  #endif /* LINUX_RAID_RAID6_H */
+...
 
-Looks good to me:
-Reviewed-by: Nilay Shroff <nilay@linux.ibm.com>
+Note that an RISC-V vector syndrome implementation was added in commit
+6093faaf9593 ("raid6: Add RISC-V SIMD syndrome and recovery calculations")
+which this patch does not change.
+
+Regards,
+Klara Modin
+
+Link: https://lore.kernel.org/r/20250305083707.74218-1-zhangchunyan@iscas.ac.cn
 
