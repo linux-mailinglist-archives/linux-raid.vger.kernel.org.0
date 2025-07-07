@@ -1,42 +1,42 @@
-Return-Path: <linux-raid+bounces-4553-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-4546-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C40EAFA916
-	for <lists+linux-raid@lfdr.de>; Mon,  7 Jul 2025 03:37:49 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 31955AFA8F5
+	for <lists+linux-raid@lfdr.de>; Mon,  7 Jul 2025 03:34:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AF816189C16D
-	for <lists+linux-raid@lfdr.de>; Mon,  7 Jul 2025 01:37:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3FB2F7A7A77
+	for <lists+linux-raid@lfdr.de>; Mon,  7 Jul 2025 01:33:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A533221271;
-	Mon,  7 Jul 2025 01:32:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A3A6205E3E;
+	Mon,  7 Jul 2025 01:32:45 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C04A218E8B;
-	Mon,  7 Jul 2025 01:32:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F961EF363;
+	Mon,  7 Jul 2025 01:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751851970; cv=none; b=HcRDdA+0b7B3s2sypgggHmmlbDdLIwr93aK6f7Aq3dTptdU+xcEh4AyiXIT+f7xmUQjTb3CFX1oCCOD6Hy5usKF58egb09z1bHdm3VL6x94nzQCtL+0K4YNzJE5PEIPh3y4GFcSWWTe4KOqMXRynpm/l3+JYImxGGW9xVej5BmI=
+	t=1751851965; cv=none; b=Ii3PNYxoGo8fCBvU4gHZWh/uxX16rrzrkt1uBdUp9sHcMEUkYVkGKgFiIiQ+mHE/KssT6qnishDDoncOmaKv6JkimPLNGIuONgzi2p8UDCWhsz2E6jbv+5ky8K0aixvWAW30enUhPKrTvDpbQLZCyIhLczpOn0jWiBLR9wo8LsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751851970; c=relaxed/simple;
-	bh=QYCuzQj36mgdTHmyj2WgNXVXzSnqWjjKe4HZbeg0pVk=;
+	s=arc-20240116; t=1751851965; c=relaxed/simple;
+	bh=3aIcq7J0empgvfqFLuVssNirgPyNfNfrxb7fWSBP3gw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=n2JYcx39+yYxU/Gjpacm4oXYXyxaTdOsD0xJyCndLq35wGAdbxdNRobOQhteolEcfzy+6btv82eBv3PuXsTmh/OUdUnMqrUn5L3jjxH2eYnVVAeF97FedRfTfrDQQeTPXD3yfKqyv61JWrwdpbCniGtmwm55NSRjhFCtyDJQAHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	 MIME-Version; b=nRojCHtaxjXa6NlbpM8NkJ49av/u8dqsejuXsqnM/EARtMl3yoTXigd7Q8/Co8KpYCXUrGGTLrG/NKulTa6sT5WFVL+EaIKf/8AlMPASrzyC6ds3fcuLMhmVh/7bgi02cFYb7nQT7kOrv3awTDWpUbUBD2V7pRXdvfYkgDJcPp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bb6Dn6rx9zKHMjr;
-	Mon,  7 Jul 2025 09:32:41 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bb6Dp0XPyzYQv1c;
+	Mon,  7 Jul 2025 09:32:42 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 677FF1A0FB9;
+	by mail.maildlp.com (Postfix) with ESMTP id DD1A31A1B9C;
 	Mon,  7 Jul 2025 09:32:40 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP3 (Coremail) with SMTP id _Ch0CgDnSCazI2to_nSRAw--.35890S9;
+	by APP3 (Coremail) with SMTP id _Ch0CgDnSCazI2to_nSRAw--.35890S10;
 	Mon, 07 Jul 2025 09:32:40 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: agk@redhat.com,
@@ -51,9 +51,9 @@ Cc: dm-devel@lists.linux.dev,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com,
 	johnny.chenyi@huawei.com
-Subject: [PATCH v5 05/15] md/md-bitmap: add a new parameter 'flush' to bitmap_ops->enabled
-Date: Mon,  7 Jul 2025 09:27:01 +0800
-Message-Id: <20250707012711.376844-6-yukuai1@huaweicloud.com>
+Subject: [PATCH v5 06/15] md/md-bitmap: add md_bitmap_registered/enabled() helper
+Date: Mon,  7 Jul 2025 09:27:02 +0800
+Message-Id: <20250707012711.376844-7-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250707012711.376844-1-yukuai1@huaweicloud.com>
 References: <20250707012711.376844-1-yukuai1@huaweicloud.com>
@@ -64,10 +64,10 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgDnSCazI2to_nSRAw--.35890S9
-X-Coremail-Antispam: 1UD129KBjvJXoWxZw47XFyUJr43Kr17GrWrGrg_yoW5Wr17p3
-	9rta4Fkw15JFWag3W7AFWkua45tw1kt39rKFyfC34ruFy3ZFZ8WF4rGay8ta4vva43CFsx
-	Za1rKFWUCF18WrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:_Ch0CgDnSCazI2to_nSRAw--.35890S10
+X-Coremail-Antispam: 1UD129KBjvJXoWxur1UJF48KF47uFW5ur1ftFb_yoW5Zr17p3
+	98Ja45Cr15JFWaga17AFyDua4Yqwn7tr9rtFyfC34ruFy3ZFs8GF4rGay0y3Z7X343AFsx
+	Xr15Kr1UCrWUWr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUmI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -86,87 +86,104 @@ X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-The method is only used from raid1/raid10 IO path, to check if write
-bio should be pluged, the parameter is always set to true for now,
-following patch will use this helper in other context like updating
-superblock.
+There are no functional changes, prepare to handle the case that
+mddev->bitmap_ops can be NULL, which is possible after introducing
+CONFIG_MD_BITMAP.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/md/md-bitmap.c | 19 +++++++++++++------
- drivers/md/md-bitmap.h |  2 +-
+ drivers/md/md-bitmap.c | 16 ++++------------
+ drivers/md/md-bitmap.h | 19 ++++++++++++++++++-
  drivers/md/raid1-10.c  |  2 +-
- 3 files changed, 15 insertions(+), 8 deletions(-)
+ 3 files changed, 23 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-index 0ba1da35aa84..3f52716ea6f5 100644
+index 3f52716ea6f5..da2dcb3d2122 100644
 --- a/drivers/md/md-bitmap.c
 +++ b/drivers/md/md-bitmap.c
-@@ -232,20 +232,27 @@ static inline char *bmname(struct bitmap *bitmap)
+@@ -232,8 +232,10 @@ static inline char *bmname(struct bitmap *bitmap)
  	return bitmap->mddev ? mdname(bitmap->mddev) : "mdX";
  }
  
--static bool __bitmap_enabled(struct bitmap *bitmap)
-+static bool __bitmap_enabled(struct bitmap *bitmap, bool flush)
+-static bool __bitmap_enabled(struct bitmap *bitmap, bool flush)
++static bool bitmap_enabled(void *data, bool flush)
  {
--	return bitmap->storage.filemap &&
--	       !test_bit(BITMAP_STALE, &bitmap->flags);
-+	if (!flush)
-+		return true;
++	struct bitmap *bitmap = data;
 +
-+	/*
-+	 * If caller want to flush bitmap pages to underlying disks, check if
-+	 * there are cached pages in filemap.
-+	 */
-+	return !test_bit(BITMAP_STALE, &bitmap->flags) &&
-+	       bitmap->storage.filemap != NULL;
+ 	if (!flush)
+ 		return true;
+ 
+@@ -245,16 +247,6 @@ static bool __bitmap_enabled(struct bitmap *bitmap, bool flush)
+ 	       bitmap->storage.filemap != NULL;
  }
  
--static bool bitmap_enabled(struct mddev *mddev)
-+static bool bitmap_enabled(struct mddev *mddev, bool flush)
- {
- 	struct bitmap *bitmap = mddev->bitmap;
- 
- 	if (!bitmap)
- 		return false;
- 
--	return __bitmap_enabled(bitmap);
-+	return __bitmap_enabled(bitmap, flush);
- }
- 
+-static bool bitmap_enabled(struct mddev *mddev, bool flush)
+-{
+-	struct bitmap *bitmap = mddev->bitmap;
+-
+-	if (!bitmap)
+-		return false;
+-
+-	return __bitmap_enabled(bitmap, flush);
+-}
+-
  /*
-@@ -1244,7 +1251,7 @@ static void __bitmap_unplug(struct bitmap *bitmap)
+  * check a page and, if necessary, allocate it (or hijack it if the alloc fails)
+  *
+@@ -1251,7 +1243,7 @@ static void __bitmap_unplug(struct bitmap *bitmap)
  	int dirty, need_write;
  	int writing = 0;
  
--	if (!__bitmap_enabled(bitmap))
-+	if (!__bitmap_enabled(bitmap, true))
+-	if (!__bitmap_enabled(bitmap, true))
++	if (!bitmap_enabled(bitmap, true))
  		return;
  
  	/* look at each page to see if there are any set bits that need to be
 diff --git a/drivers/md/md-bitmap.h b/drivers/md/md-bitmap.h
-index 0ceb9e97d21f..63d91831655f 100644
+index 63d91831655f..a36ed32ec0d5 100644
 --- a/drivers/md/md-bitmap.h
 +++ b/drivers/md/md-bitmap.h
 @@ -62,7 +62,7 @@ struct md_bitmap_stats {
  };
  
  struct bitmap_operations {
--	bool (*enabled)(struct mddev *mddev);
-+	bool (*enabled)(struct mddev *mddev, bool flush);
+-	bool (*enabled)(struct mddev *mddev, bool flush);
++	bool (*enabled)(void *data, bool flush);
  	int (*create)(struct mddev *mddev);
  	int (*resize)(struct mddev *mddev, sector_t blocks, int chunksize);
  
+@@ -107,4 +107,21 @@ struct bitmap_operations {
+ /* the bitmap API */
+ void mddev_set_bitmap_ops(struct mddev *mddev);
+ 
++static inline bool md_bitmap_registered(struct mddev *mddev)
++{
++	return mddev->bitmap_ops != NULL;
++}
++
++static inline bool md_bitmap_enabled(struct mddev *mddev, bool flush)
++{
++	/* bitmap_ops must be registered before creating bitmap. */
++	if (!md_bitmap_registered(mddev))
++		return false;
++
++	if (!mddev->bitmap)
++		return false;
++
++	return mddev->bitmap_ops->enabled(mddev->bitmap, flush);
++}
++
+ #endif
 diff --git a/drivers/md/raid1-10.c b/drivers/md/raid1-10.c
-index b8b3a9069701..4ad051d49cdc 100644
+index 4ad051d49cdc..0ad8b28ab7c2 100644
 --- a/drivers/md/raid1-10.c
 +++ b/drivers/md/raid1-10.c
 @@ -140,7 +140,7 @@ static inline bool raid1_add_bio_to_plug(struct mddev *mddev, struct bio *bio,
  	 * If bitmap is not enabled, it's safe to submit the io directly, and
  	 * this can get optimal performance.
  	 */
--	if (!mddev->bitmap_ops->enabled(mddev)) {
-+	if (!mddev->bitmap_ops->enabled(mddev, true)) {
+-	if (!mddev->bitmap_ops->enabled(mddev, true)) {
++	if (!md_bitmap_enabled(mddev, true)) {
  		raid1_submit_write(bio);
  		return true;
  	}
