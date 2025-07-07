@@ -1,42 +1,42 @@
-Return-Path: <linux-raid+bounces-4543-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-4545-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77BA6AFA8F0
-	for <lists+linux-raid@lfdr.de>; Mon,  7 Jul 2025 03:34:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3D50AFA8F9
+	for <lists+linux-raid@lfdr.de>; Mon,  7 Jul 2025 03:35:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B29EE3B5D26
-	for <lists+linux-raid@lfdr.de>; Mon,  7 Jul 2025 01:33:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9DAD21892D6B
+	for <lists+linux-raid@lfdr.de>; Mon,  7 Jul 2025 01:34:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A919C1F1302;
-	Mon,  7 Jul 2025 01:32:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 978B61FDA92;
+	Mon,  7 Jul 2025 01:32:44 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8AA1B983F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A111EB9F2;
 	Mon,  7 Jul 2025 01:32:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751851963; cv=none; b=JDDe6L24G7uW27KphYbdF7R0hwPlE4+jgxnM7E3Ll3gdIYIKWplsIE3zVLS8hKyeZJ4RHTD5+WESWG0YDAqSjGY5oHdebE6EMHlfWPebWMWndSHS589JJsqvlPOhdwgpWu5Pu01+f/WED9iI0zWzez5+V+GZoe0osArPzrCJ7CY=
+	t=1751851964; cv=none; b=Z/lQdEEdlgZyNPgwYVQ6PB8KNLWvv6b1VUlYbU+R1p41IXuOX78FeP4PpCknBNhnmNi7SH2G364fEkjRBQECdGnfp5+CbcyT9hxtO8TaxGpJdSBcs/eE7OXIfUVLwKeyPxlMjmtksHwvi4ygGNamdOVJG3RdLsca04XhO1X5vME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751851963; c=relaxed/simple;
-	bh=MidPMLWlgoLJE4H68Ndj32hIGOHlav/sP+7iUTFZVt0=;
+	s=arc-20240116; t=1751851964; c=relaxed/simple;
+	bh=PxYJXAj9m/swhM5aTKx6c87k0wGPrha0EvV/hJPHspc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TRlH/XmVKdvdEP7NFSFHGdEe0or9oLItDnE19vZ20HeULM6NRF5JfXBq5+Mn3DnUrKkydaxe/EnyQefHos1HuZwq1ASfxEzPV8Xo42NG+UbMA9m+C3d/o/3fLei8p8Q83JZbkGbe4Ypls5iSI34qFcrmsjNvnssz5NfHSZyPF7s=
+	 MIME-Version; b=hB02ewMPTY+P6N5ydlBRYZEDKGxZHLxXvMb7NoguEihqaz+Lwl7aCKw2/6y7V9pcfilmotnf2flpn8gHUKEX2ymp0AKBDUECHbcYlfLCnhMpO7uIvUZhl99OX7SWBE7/8jVKRPytmSzVPQEjInmm0xHIgbCz+BjMMlBYwJ/2UVQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bb6Dl3g9dzYQtrm;
-	Mon,  7 Jul 2025 09:32:39 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bb6Dm0LB2zYQtrm;
+	Mon,  7 Jul 2025 09:32:40 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 57BC51A1239;
+	by mail.maildlp.com (Postfix) with ESMTP id D60101A0FBA;
 	Mon,  7 Jul 2025 09:32:38 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP3 (Coremail) with SMTP id _Ch0CgDnSCazI2to_nSRAw--.35890S5;
+	by APP3 (Coremail) with SMTP id _Ch0CgDnSCazI2to_nSRAw--.35890S6;
 	Mon, 07 Jul 2025 09:32:38 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: agk@redhat.com,
@@ -51,9 +51,9 @@ Cc: dm-devel@lists.linux.dev,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com,
 	johnny.chenyi@huawei.com
-Subject: [PATCH v5 01/15] md/raid1: change r1conf->r1bio_pool to a pointer type
-Date: Mon,  7 Jul 2025 09:26:57 +0800
-Message-Id: <20250707012711.376844-2-yukuai1@huaweicloud.com>
+Subject: [PATCH v5 02/15] md/raid1: remove struct pool_info and related code
+Date: Mon,  7 Jul 2025 09:26:58 +0800
+Message-Id: <20250707012711.376844-3-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250707012711.376844-1-yukuai1@huaweicloud.com>
 References: <20250707012711.376844-1-yukuai1@huaweicloud.com>
@@ -64,13 +64,13 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgDnSCazI2to_nSRAw--.35890S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxtF1xCr17WrWkAw43trWfGrg_yoW7WFWxpa
-	13X3s3Gr4UZrZ3Cr4UJF4DuFyFv3ZagFWxtFWxJa1FvFnYqryrX3WUCry5GryqvFWkKrsr
-	JF98trZxZF17trJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:_Ch0CgDnSCazI2to_nSRAw--.35890S6
+X-Coremail-Antispam: 1UD129KBjvJXoW3JryDCw4xGrW3XFy8Zr1rtFb_yoW3Cr43pa
+	13Was3ZF4UXrZ3WrWkJF4DuFWY9w4xWay8GFs7Ga1FvF9aqr9aqa1jyFyFgry8ZrZ8Kw1D
+	AFn8trW3AF1UKrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUm014x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
 	Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
 	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
 	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
@@ -81,166 +81,246 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxtF1xCr17WrWkAw43trWfGrg_yoW7WFWxpa
 	kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
 	6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
 	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVj
-	vjDU0xZFpf9x0JU4OJ5UUUUU=
+	vjDU0xZFpf9x0JUQXo7UUUUU=
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-In raid1_reshape(), newpool is a stack variable.
-mempool_init() initializes newpool->wait with the stack address.
-After assigning newpool to conf->r1bio_pool, the wait queue
-need to be reinitialized, which is not ideal.
+The struct pool_info was originally introduced mainly to support reshape
+operations, serving as a parameter for mempool_init() when raid_disks
+changes. Now that mempool_create_kmalloc_pool() is sufficient for this
+purpose, struct pool_info and its related code are no longer needed.
 
-Change raid1_conf->r1bio_pool to a pointer type and
-replace mempool_init() with mempool_create_kmalloc_pool() to
-avoid referencing a stack-based wait queue.
+Remove struct pool_info and all associated code.
 
 Signed-off-by: Wang Jinchao <wangjinchao600@gmail.com>
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/md/raid1.c | 39 ++++++++++++++++++---------------------
- drivers/md/raid1.h |  2 +-
- 2 files changed, 19 insertions(+), 22 deletions(-)
+ drivers/md/raid1.c | 49 +++++++++++++---------------------------------
+ drivers/md/raid1.h | 20 -------------------
+ 2 files changed, 14 insertions(+), 55 deletions(-)
 
 diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index fd4ce2a4136f..8249cbb89fec 100644
+index 8249cbb89fec..3a31e230727c 100644
 --- a/drivers/md/raid1.c
 +++ b/drivers/md/raid1.c
-@@ -255,7 +255,7 @@ static void free_r1bio(struct r1bio *r1_bio)
- 	struct r1conf *conf = r1_bio->mddev->private;
- 
- 	put_all_bios(conf, r1_bio);
--	mempool_free(r1_bio, &conf->r1bio_pool);
-+	mempool_free(r1_bio, conf->r1bio_pool);
+@@ -127,10 +127,9 @@ static inline struct r1bio *get_resync_r1bio(struct bio *bio)
+ 	return get_resync_pages(bio)->raid_bio;
  }
  
- static void put_buf(struct r1bio *r1_bio)
-@@ -1305,9 +1305,8 @@ alloc_r1bio(struct mddev *mddev, struct bio *bio)
- 	struct r1conf *conf = mddev->private;
+-static void * r1bio_pool_alloc(gfp_t gfp_flags, void *data)
++static void *r1bio_pool_alloc(gfp_t gfp_flags, struct r1conf *conf)
+ {
+-	struct pool_info *pi = data;
+-	int size = offsetof(struct r1bio, bios[pi->raid_disks]);
++	int size = offsetof(struct r1bio, bios[conf->raid_disks * 2]);
+ 
+ 	/* allocate a r1bio with room for raid_disks entries in the bios array */
+ 	return kzalloc(size, gfp_flags);
+@@ -145,18 +144,18 @@ static void * r1bio_pool_alloc(gfp_t gfp_flags, void *data)
+ 
+ static void * r1buf_pool_alloc(gfp_t gfp_flags, void *data)
+ {
+-	struct pool_info *pi = data;
++	struct r1conf *conf = data;
  	struct r1bio *r1_bio;
+ 	struct bio *bio;
+ 	int need_pages;
+ 	int j;
+ 	struct resync_pages *rps;
  
--	r1_bio = mempool_alloc(&conf->r1bio_pool, GFP_NOIO);
--	/* Ensure no bio records IO_BLOCKED */
--	memset(r1_bio->bios, 0, conf->raid_disks * sizeof(r1_bio->bios[0]));
-+	r1_bio = mempool_alloc(conf->r1bio_pool, GFP_NOIO);
-+	memset(r1_bio, 0, offsetof(struct r1bio, bios[conf->raid_disks * 2]));
- 	init_r1bio(r1_bio, mddev, bio);
- 	return r1_bio;
- }
-@@ -3084,6 +3083,7 @@ static struct r1conf *setup_conf(struct mddev *mddev)
+-	r1_bio = r1bio_pool_alloc(gfp_flags, pi);
++	r1_bio = r1bio_pool_alloc(gfp_flags, conf);
+ 	if (!r1_bio)
+ 		return NULL;
+ 
+-	rps = kmalloc_array(pi->raid_disks, sizeof(struct resync_pages),
++	rps = kmalloc_array(conf->raid_disks * 2, sizeof(struct resync_pages),
+ 			    gfp_flags);
+ 	if (!rps)
+ 		goto out_free_r1bio;
+@@ -164,7 +163,7 @@ static void * r1buf_pool_alloc(gfp_t gfp_flags, void *data)
+ 	/*
+ 	 * Allocate bios : 1 for reading, n-1 for writing
+ 	 */
+-	for (j = pi->raid_disks ; j-- ; ) {
++	for (j = conf->raid_disks * 2; j-- ; ) {
+ 		bio = bio_kmalloc(RESYNC_PAGES, gfp_flags);
+ 		if (!bio)
+ 			goto out_free_bio;
+@@ -177,11 +176,11 @@ static void * r1buf_pool_alloc(gfp_t gfp_flags, void *data)
+ 	 * If this is a user-requested check/repair, allocate
+ 	 * RESYNC_PAGES for each bio.
+ 	 */
+-	if (test_bit(MD_RECOVERY_REQUESTED, &pi->mddev->recovery))
+-		need_pages = pi->raid_disks;
++	if (test_bit(MD_RECOVERY_REQUESTED, &conf->mddev->recovery))
++		need_pages = conf->raid_disks * 2;
+ 	else
+ 		need_pages = 1;
+-	for (j = 0; j < pi->raid_disks; j++) {
++	for (j = 0; j < conf->raid_disks * 2; j++) {
+ 		struct resync_pages *rp = &rps[j];
+ 
+ 		bio = r1_bio->bios[j];
+@@ -207,7 +206,7 @@ static void * r1buf_pool_alloc(gfp_t gfp_flags, void *data)
+ 		resync_free_pages(&rps[j]);
+ 
+ out_free_bio:
+-	while (++j < pi->raid_disks) {
++	while (++j < conf->raid_disks * 2) {
+ 		bio_uninit(r1_bio->bios[j]);
+ 		kfree(r1_bio->bios[j]);
+ 	}
+@@ -220,12 +219,12 @@ static void * r1buf_pool_alloc(gfp_t gfp_flags, void *data)
+ 
+ static void r1buf_pool_free(void *__r1_bio, void *data)
+ {
+-	struct pool_info *pi = data;
++	struct r1conf *conf = data;
  	int i;
- 	struct raid1_info *disk;
- 	struct md_rdev *rdev;
-+	size_t r1bio_size;
- 	int err = -ENOMEM;
+ 	struct r1bio *r1bio = __r1_bio;
+ 	struct resync_pages *rp = NULL;
  
- 	conf = kzalloc(sizeof(struct r1conf), GFP_KERNEL);
-@@ -3124,9 +3124,10 @@ static struct r1conf *setup_conf(struct mddev *mddev)
- 	if (!conf->poolinfo)
+-	for (i = pi->raid_disks; i--; ) {
++	for (i = conf->raid_disks * 2; i--; ) {
+ 		rp = get_resync_pages(r1bio->bios[i]);
+ 		resync_free_pages(rp);
+ 		bio_uninit(r1bio->bios[i]);
+@@ -2745,7 +2744,7 @@ static int init_resync(struct r1conf *conf)
+ 	BUG_ON(mempool_initialized(&conf->r1buf_pool));
+ 
+ 	return mempool_init(&conf->r1buf_pool, buffs, r1buf_pool_alloc,
+-			    r1buf_pool_free, conf->poolinfo);
++			    r1buf_pool_free, conf);
+ }
+ 
+ static struct r1bio *raid1_alloc_init_r1buf(struct r1conf *conf)
+@@ -2755,7 +2754,7 @@ static struct r1bio *raid1_alloc_init_r1buf(struct r1conf *conf)
+ 	struct bio *bio;
+ 	int i;
+ 
+-	for (i = conf->poolinfo->raid_disks; i--; ) {
++	for (i = conf->raid_disks * 2; i--; ) {
+ 		bio = r1bio->bios[i];
+ 		rps = bio->bi_private;
+ 		bio_reset(bio, NULL, 0);
+@@ -3120,11 +3119,6 @@ static struct r1conf *setup_conf(struct mddev *mddev)
+ 	if (!conf->tmppage)
  		goto abort;
- 	conf->poolinfo->raid_disks = mddev->raid_disks * 2;
--	err = mempool_init(&conf->r1bio_pool, NR_RAID_BIOS, r1bio_pool_alloc,
--			   rbio_pool_free, conf->poolinfo);
--	if (err)
-+
-+	r1bio_size = offsetof(struct r1bio, bios[mddev->raid_disks * 2]);
-+	conf->r1bio_pool = mempool_create_kmalloc_pool(NR_RAID_BIOS, r1bio_size);
-+	if (!conf->r1bio_pool)
+ 
+-	conf->poolinfo = kzalloc(sizeof(*conf->poolinfo), GFP_KERNEL);
+-	if (!conf->poolinfo)
+-		goto abort;
+-	conf->poolinfo->raid_disks = mddev->raid_disks * 2;
+-
+ 	r1bio_size = offsetof(struct r1bio, bios[mddev->raid_disks * 2]);
+ 	conf->r1bio_pool = mempool_create_kmalloc_pool(NR_RAID_BIOS, r1bio_size);
+ 	if (!conf->r1bio_pool)
+@@ -3134,8 +3128,6 @@ static struct r1conf *setup_conf(struct mddev *mddev)
+ 	if (err)
  		goto abort;
  
- 	err = bioset_init(&conf->bio_split, BIO_POOL_SIZE, 0, 0);
-@@ -3197,7 +3198,7 @@ static struct r1conf *setup_conf(struct mddev *mddev)
- 
-  abort:
- 	if (conf) {
--		mempool_exit(&conf->r1bio_pool);
-+		mempool_destroy(conf->r1bio_pool);
+-	conf->poolinfo->mddev = mddev;
+-
+ 	err = -EINVAL;
+ 	spin_lock_init(&conf->device_lock);
+ 	conf->raid_disks = mddev->raid_disks;
+@@ -3201,7 +3193,6 @@ static struct r1conf *setup_conf(struct mddev *mddev)
+ 		mempool_destroy(conf->r1bio_pool);
  		kfree(conf->mirrors);
  		safe_put_page(conf->tmppage);
- 		kfree(conf->poolinfo);
-@@ -3310,7 +3311,7 @@ static void raid1_free(struct mddev *mddev, void *priv)
- {
- 	struct r1conf *conf = priv;
- 
--	mempool_exit(&conf->r1bio_pool);
-+	mempool_destroy(conf->r1bio_pool);
+-		kfree(conf->poolinfo);
+ 		kfree(conf->nr_pending);
+ 		kfree(conf->nr_waiting);
+ 		kfree(conf->nr_queued);
+@@ -3314,7 +3305,6 @@ static void raid1_free(struct mddev *mddev, void *priv)
+ 	mempool_destroy(conf->r1bio_pool);
  	kfree(conf->mirrors);
  	safe_put_page(conf->tmppage);
- 	kfree(conf->poolinfo);
-@@ -3366,17 +3367,14 @@ static int raid1_reshape(struct mddev *mddev)
- 	 * At the same time, we "pack" the devices so that all the missing
+-	kfree(conf->poolinfo);
+ 	kfree(conf->nr_pending);
+ 	kfree(conf->nr_waiting);
+ 	kfree(conf->nr_queued);
+@@ -3368,7 +3358,6 @@ static int raid1_reshape(struct mddev *mddev)
  	 * devices have the higher raid_disk numbers.
  	 */
--	mempool_t newpool, oldpool;
-+	mempool_t *newpool, *oldpool;
- 	struct pool_info *newpoolinfo;
-+	size_t new_r1bio_size;
+ 	mempool_t *newpool, *oldpool;
+-	struct pool_info *newpoolinfo;
+ 	size_t new_r1bio_size;
  	struct raid1_info *newmirrors;
  	struct r1conf *conf = mddev->private;
- 	int cnt, raid_disks;
- 	unsigned long flags;
- 	int d, d2;
--	int ret;
+@@ -3400,23 +3389,15 @@ static int raid1_reshape(struct mddev *mddev)
+ 			return -EBUSY;
+ 	}
+ 
+-	newpoolinfo = kmalloc(sizeof(*newpoolinfo), GFP_KERNEL);
+-	if (!newpoolinfo)
+-		return -ENOMEM;
+-	newpoolinfo->mddev = mddev;
+-	newpoolinfo->raid_disks = raid_disks * 2;
 -
--	memset(&newpool, 0, sizeof(newpool));
--	memset(&oldpool, 0, sizeof(oldpool));
- 
- 	/* Cannot change chunk_size, layout, or level */
- 	if (mddev->chunk_sectors != mddev->new_chunk_sectors ||
-@@ -3408,18 +3406,18 @@ static int raid1_reshape(struct mddev *mddev)
- 	newpoolinfo->mddev = mddev;
- 	newpoolinfo->raid_disks = raid_disks * 2;
- 
--	ret = mempool_init(&newpool, NR_RAID_BIOS, r1bio_pool_alloc,
--			   rbio_pool_free, newpoolinfo);
--	if (ret) {
-+	new_r1bio_size = offsetof(struct r1bio, bios[raid_disks * 2]);
-+	newpool = mempool_create_kmalloc_pool(NR_RAID_BIOS, new_r1bio_size);
-+	if (!newpool) {
- 		kfree(newpoolinfo);
--		return ret;
-+		return -ENOMEM;
+ 	new_r1bio_size = offsetof(struct r1bio, bios[raid_disks * 2]);
+ 	newpool = mempool_create_kmalloc_pool(NR_RAID_BIOS, new_r1bio_size);
+ 	if (!newpool) {
+-		kfree(newpoolinfo);
+ 		return -ENOMEM;
  	}
  	newmirrors = kzalloc(array3_size(sizeof(struct raid1_info),
  					 raid_disks, 2),
  			     GFP_KERNEL);
  	if (!newmirrors) {
- 		kfree(newpoolinfo);
--		mempool_exit(&newpool);
-+		mempool_destroy(newpool);
+-		kfree(newpoolinfo);
+ 		mempool_destroy(newpool);
  		return -ENOMEM;
  	}
+@@ -3442,8 +3423,6 @@ static int raid1_reshape(struct mddev *mddev)
+ 	}
+ 	kfree(conf->mirrors);
+ 	conf->mirrors = newmirrors;
+-	kfree(conf->poolinfo);
+-	conf->poolinfo = newpoolinfo;
  
-@@ -3428,7 +3426,6 @@ static int raid1_reshape(struct mddev *mddev)
- 	/* ok, everything is stopped */
- 	oldpool = conf->r1bio_pool;
- 	conf->r1bio_pool = newpool;
--	init_waitqueue_head(&conf->r1bio_pool.wait);
- 
- 	for (d = d2 = 0; d < conf->raid_disks; d++) {
- 		struct md_rdev *rdev = conf->mirrors[d].rdev;
-@@ -3460,7 +3457,7 @@ static int raid1_reshape(struct mddev *mddev)
- 	set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
- 	md_wakeup_thread(mddev->thread);
- 
--	mempool_exit(&oldpool);
-+	mempool_destroy(oldpool);
- 	return 0;
- }
- 
+ 	spin_lock_irqsave(&conf->device_lock, flags);
+ 	mddev->degraded += (raid_disks - conf->raid_disks);
 diff --git a/drivers/md/raid1.h b/drivers/md/raid1.h
-index 33f318fcc268..652c347b1a70 100644
+index 652c347b1a70..d236ef179cfb 100644
 --- a/drivers/md/raid1.h
 +++ b/drivers/md/raid1.h
-@@ -118,7 +118,7 @@ struct r1conf {
- 	 * mempools - it changes when the array grows or shrinks
+@@ -49,22 +49,6 @@ struct raid1_info {
+ 	sector_t	seq_start;
+ };
+ 
+-/*
+- * memory pools need a pointer to the mddev, so they can force an unplug
+- * when memory is tight, and a count of the number of drives that the
+- * pool was allocated for, so they know how much to allocate and free.
+- * mddev->raid_disks cannot be used, as it can change while a pool is active
+- * These two datums are stored in a kmalloced struct.
+- * The 'raid_disks' here is twice the raid_disks in r1conf.
+- * This allows space for each 'real' device can have a replacement in the
+- * second half of the array.
+- */
+-
+-struct pool_info {
+-	struct mddev *mddev;
+-	int	raid_disks;
+-};
+-
+ struct r1conf {
+ 	struct mddev		*mddev;
+ 	struct raid1_info	*mirrors;	/* twice 'raid_disks' to
+@@ -114,10 +98,6 @@ struct r1conf {
  	 */
- 	struct pool_info	*poolinfo;
--	mempool_t		r1bio_pool;
-+	mempool_t		*r1bio_pool;
+ 	int			recovery_disabled;
+ 
+-	/* poolinfo contains information about the content of the
+-	 * mempools - it changes when the array grows or shrinks
+-	 */
+-	struct pool_info	*poolinfo;
+ 	mempool_t		*r1bio_pool;
  	mempool_t		r1buf_pool;
  
- 	struct bio_set		bio_split;
 -- 
 2.39.2
 
