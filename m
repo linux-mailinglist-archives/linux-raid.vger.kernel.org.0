@@ -1,62 +1,56 @@
-Return-Path: <linux-raid+bounces-4554-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-4559-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 49B3BAFA90E
-	for <lists+linux-raid@lfdr.de>; Mon,  7 Jul 2025 03:37:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98294AFADE6
+	for <lists+linux-raid@lfdr.de>; Mon,  7 Jul 2025 10:00:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 69B273B437C
-	for <lists+linux-raid@lfdr.de>; Mon,  7 Jul 2025 01:36:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 96A7C1AA096A
+	for <lists+linux-raid@lfdr.de>; Mon,  7 Jul 2025 08:00:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E25EB221F00;
-	Mon,  7 Jul 2025 01:32:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B05627B51A;
+	Mon,  7 Jul 2025 07:59:46 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531AF1C7017;
-	Mon,  7 Jul 2025 01:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA7231F3BA9;
+	Mon,  7 Jul 2025 07:59:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751851971; cv=none; b=CjbfPC+E8QRJ1Iq42iBykJYx8erLT4taBN4YK4HZgi+YhEuIosaobrO2CjKyOWqTW4hS4AGtO0HC0y+x40BX6rLNx9GLCjmRp25q8fiMjc8wiBm/xyBxWugJtusX3mZGK9rApJL6sQ/eAqfdSM8MFjsI3pAp929YzULWDqQO7ao=
+	t=1751875185; cv=none; b=bbIjoRP4oa//ymOXo4ipgC2XLrYteNQ0Yb1QhvwQ9a18qoY91UXcrgDCI3tqUiaO30PTmvXqZACDz1JKAT2TJe/IkT1a89T6jOpBYC7fM2Z+ToKVciHKjxriYbRzeMe3UQnpVqEy+xWn0LR3MtLrrBXHjbkLgFkaBPj625rEzcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751851971; c=relaxed/simple;
-	bh=n27BftNqXRM7r3ieQZr04aRkNFf2LZTYJj09JWVEgy8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dvAIHp1fP8GqxYTpqby4kyFHuHKdOiGPQ6Ug3bZJTaYcmyW+maz7TUtNQEBSiWaVPoRlBnyZTFcn59ZZr+oW62knnaaYdFsGY1Yvc8oLrmlBZLS9W8ftR6Z8y9/LQ2h3SHFlVn4DXX0dVX6Mfca7kwrl0EUpKWq3eHbhyissM8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	s=arc-20240116; t=1751875185; c=relaxed/simple;
+	bh=cfd+EsoWzibsQd9JRjP7jxP3pOWvpF67Kv0LT+J1AwM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=amcdb+yvT6pTCaRAi3nq6LltaeOtDBhN9k0BQZcBO89ldoMTJk+7LGWNDHbSRbPGY5iBbTayH9YnMVuQnFOmRQYtgnEV0e1iJ4AQRmEs7P6N6bNOEmWrDAanm+ljyUt365ZLzIaGneMbyqN80P4lL25LoB5gfGGaMmfH8tkFn08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bb6Dv0BJGzYQv55;
-	Mon,  7 Jul 2025 09:32:47 +0800 (CST)
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bbGqK022wzKHMxr;
+	Mon,  7 Jul 2025 15:59:41 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id D2AD01A0CEC;
-	Mon,  7 Jul 2025 09:32:45 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 719C61A0CD8;
+	Mon,  7 Jul 2025 15:59:39 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP3 (Coremail) with SMTP id _Ch0CgDnSCazI2to_nSRAw--.35890S19;
-	Mon, 07 Jul 2025 09:32:45 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: agk@redhat.com,
-	snitzer@kernel.org,
-	mpatocka@redhat.com,
-	song@kernel.org,
-	yukuai3@huawei.com
-Cc: dm-devel@lists.linux.dev,
-	linux-raid@vger.kernel.org,
+	by APP3 (Coremail) with SMTP id _Ch0CgDnSCZpfmtonKGuAw--.43238S4;
+	Mon, 07 Jul 2025 15:59:39 +0800 (CST)
+From: Zheng Qixing <zhengqixing@huaweicloud.com>
+To: song@kernel.org,
+	yukuai3@huawei.com,
+	linan122@huawei.com
+Cc: linux-raid@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	yukuai1@huaweicloud.com,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com,
-	johnny.chenyi@huawei.com
-Subject: [PATCH v5 15/15] md/md-bitmap: introduce CONFIG_MD_BITMAP
-Date: Mon,  7 Jul 2025 09:27:11 +0800
-Message-Id: <20250707012711.376844-16-yukuai1@huaweicloud.com>
+	houtao1@huawei.com,
+	zhengqixing@huawei.com
+Subject: [PATCH] md: allow removing faulty rdev during resync
+Date: Mon,  7 Jul 2025 15:54:12 +0800
+Message-Id: <20250707075412.150301-1-zhengqixing@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250707012711.376844-1-yukuai1@huaweicloud.com>
-References: <20250707012711.376844-1-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
@@ -64,327 +58,102 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgDnSCazI2to_nSRAw--.35890S19
-X-Coremail-Antispam: 1UD129KBjvJXoWxKF4rWw4fury3CrWrWFWDCFg_yoWfJF1kpF
-	WrJF15Cr45JFWaqa17Ja4DuFyYqr1ktr9rtryfGw1rCF9xXr98JF4rWFyUtrykGFyxZFsx
-	Za1rGFWUCF1UWr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmS14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-	IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
-	kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF
-	4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBI
-	daVFxhVjvjDU0xZFpf9x0JUQFxUUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CM-TRANSID:_Ch0CgDnSCZpfmtonKGuAw--.43238S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxZF13CF15CryDAryDtr1xGrg_yoW5Gw1fpa
+	1xt3Z8Gr4UJ3yrGa1DXa4kGa45Zr10qrW7tFy7Wa4fA3W3Aryvqa4rX3WjvryYya4F9F4r
+	Xw18K3y5Cr1fKaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyKb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI
+	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
+	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY
+	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
+	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
+	1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUF1v3UUUUU
+X-CM-SenderInfo: x2kh0wptl0x03j6k3tpzhluzxrxghudrp/
 
-From: Yu Kuai <yukuai3@huawei.com>
+From: Zheng Qixing <zhengqixing@huawei.com>
 
-Now that all implementations are internal, it's sensible to add a config
-option for md-bitmap, and it's a good way for isolation.
+During RAID resync, faulty rdev cannot be removed and will result in
+"Device or resource busy" error when attempting hot removal.
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Reproduction steps:
+  mdadm -Cv /dev/md0 -l1 -n3 -e1.2 /dev/sd{b..d}
+  mdadm /dev/md0 -f /dev/sdb
+  mdadm /dev/md0 -r /dev/sdb
+  -> mdadm: hot remove failed for /dev/sdb: Device or resource busy
+
+After commit 4b10a3bc67c1 ("md: ensure resync is prioritized over
+recovery"), when a device becomes faulty during resync, the
+md_choose_sync_action() function returns early without calling
+remove_and_add_spares(), preventing faulty device removal.
+
+This patch extracts a helper function remove_spares() to support
+removing faulty devices during RAID resync operations.
+
+Fixes: 4b10a3bc67c1 ("md: ensure resync is prioritized over recovery")
+Signed-off-by: Zheng Qixing <zhengqixing@huawei.com>
 ---
- drivers/md/Kconfig     | 18 ++++++++++++++++++
- drivers/md/Makefile    |  3 ++-
- drivers/md/md-bitmap.c | 23 +++++++++++++++++++++--
- drivers/md/md-bitmap.h | 17 +++++++++++++++--
- drivers/md/md.c        | 40 ++++++++++++++++++++++++++++------------
- drivers/md/md.h        |  3 +--
- 6 files changed, 85 insertions(+), 19 deletions(-)
+ drivers/md/md.c | 24 +++++++++++++++++-------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/md/Kconfig b/drivers/md/Kconfig
-index ddb37f6670de..f913579e731c 100644
---- a/drivers/md/Kconfig
-+++ b/drivers/md/Kconfig
-@@ -37,6 +37,21 @@ config BLK_DEV_MD
- 
- 	  If unsure, say N.
- 
-+config MD_BITMAP
-+	bool "MD RAID bitmap support"
-+	default y
-+	depends on BLK_DEV_MD
-+	help
-+	  If you say Y here, support for the write intent bitmap will be
-+	  enabled. The bitmap can be used to optimize resync speed after power
-+	  failure or readding a disk, limiting it to recorded dirty sectors in
-+	  bitmap.
-+
-+	  This feature can be added to existing MD array or MD array can be
-+	  created with bitmap via mdadm(8).
-+
-+	  If unsure, say Y.
-+
- config MD_AUTODETECT
- 	bool "Autodetect RAID arrays during kernel boot"
- 	depends on BLK_DEV_MD=y
-@@ -54,6 +69,7 @@ config MD_AUTODETECT
- config MD_BITMAP_FILE
- 	bool "MD bitmap file support (deprecated)"
- 	default y
-+	depends on MD_BITMAP
- 	help
- 	  If you say Y here, support for write intent bitmaps in files on an
- 	  external file system is enabled.  This is an alternative to the internal
-@@ -174,6 +190,7 @@ config MD_RAID456
- 
- config MD_CLUSTER
- 	tristate "Cluster Support for MD"
-+	select MD_BITMAP
- 	depends on BLK_DEV_MD
- 	depends on DLM
- 	default n
-@@ -393,6 +410,7 @@ config DM_RAID
-        select MD_RAID1
-        select MD_RAID10
-        select MD_RAID456
-+       select MD_BITMAP
-        select BLK_DEV_MD
- 	help
- 	 A dm target that supports RAID1, RAID10, RAID4, RAID5 and RAID6 mappings
-diff --git a/drivers/md/Makefile b/drivers/md/Makefile
-index 87bdfc9fe14c..2e18147a9c40 100644
---- a/drivers/md/Makefile
-+++ b/drivers/md/Makefile
-@@ -27,7 +27,8 @@ dm-clone-y	+= dm-clone-target.o dm-clone-metadata.o
- dm-verity-y	+= dm-verity-target.o
- dm-zoned-y	+= dm-zoned-target.o dm-zoned-metadata.o dm-zoned-reclaim.o
- 
--md-mod-y	+= md.o md-bitmap.o
-+md-mod-y	+= md.o
-+md-mod-$(CONFIG_MD_BITMAP)	+= md-bitmap.o
- raid456-y	+= raid5.o raid5-cache.o raid5-ppl.o
- linear-y       += md-linear.o
- 
-diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-index 5bd75fa6ee1d..28dd66ab8df9 100644
---- a/drivers/md/md-bitmap.c
-+++ b/drivers/md/md-bitmap.c
-@@ -224,6 +224,8 @@ struct bitmap {
- 	int cluster_slot;
- };
- 
-+static struct workqueue_struct *md_bitmap_wq;
-+
- static int __bitmap_resize(struct bitmap *bitmap, sector_t blocks,
- 			   int chunksize, bool init);
- 
-@@ -2980,6 +2982,12 @@ static struct attribute_group md_bitmap_group = {
- };
- 
- static struct bitmap_operations bitmap_ops = {
-+	.head = {
-+		.type	= MD_BITMAP,
-+		.id	= ID_BITMAP,
-+		.name	= "bitmap",
-+	},
-+
- 	.enabled		= bitmap_enabled,
- 	.create			= bitmap_create,
- 	.resize			= bitmap_resize,
-@@ -3014,7 +3022,18 @@ static struct bitmap_operations bitmap_ops = {
- 	.group			= &md_bitmap_group,
- };
- 
--void mddev_set_bitmap_ops(struct mddev *mddev)
-+int md_bitmap_init(void)
-+{
-+	md_bitmap_wq = alloc_workqueue("md_bitmap", WQ_MEM_RECLAIM | WQ_UNBOUND,
-+				       0);
-+	if (!md_bitmap_wq)
-+		return -ENOMEM;
-+
-+	return register_md_submodule(&bitmap_ops.head);
-+}
-+
-+void md_bitmap_exit(void)
- {
--	mddev->bitmap_ops = &bitmap_ops;
-+	destroy_workqueue(md_bitmap_wq);
-+	unregister_md_submodule(&bitmap_ops.head);
- }
-diff --git a/drivers/md/md-bitmap.h b/drivers/md/md-bitmap.h
-index 61cfc650c69c..42f91755a341 100644
---- a/drivers/md/md-bitmap.h
-+++ b/drivers/md/md-bitmap.h
-@@ -62,6 +62,8 @@ struct md_bitmap_stats {
- };
- 
- struct bitmap_operations {
-+	struct md_submodule_head head;
-+
- 	bool (*enabled)(void *data, bool flush);
- 	int (*create)(struct mddev *mddev);
- 	int (*resize)(struct mddev *mddev, sector_t blocks, int chunksize);
-@@ -105,8 +107,6 @@ struct bitmap_operations {
- };
- 
- /* the bitmap API */
--void mddev_set_bitmap_ops(struct mddev *mddev);
--
- static inline bool md_bitmap_registered(struct mddev *mddev)
- {
- 	return mddev->bitmap_ops != NULL;
-@@ -147,4 +147,17 @@ static inline void md_bitmap_end_sync(struct mddev *mddev, sector_t offset,
- 	mddev->bitmap_ops->end_sync(mddev, offset, blocks);
- }
- 
-+#ifdef CONFIG_MD_BITMAP
-+int md_bitmap_init(void);
-+void md_bitmap_exit(void);
-+#else
-+static inline int md_bitmap_init(void)
-+{
-+	return 0;
-+}
-+static inline void md_bitmap_exit(void)
-+{
-+}
-+#endif
-+
- #endif
 diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 2f7e8d77e7ef..c2a90d8ec06d 100644
+index 0f03b21e66e4..7f5e5a16243a 100644
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -94,7 +94,6 @@ static struct workqueue_struct *md_wq;
-  * workqueue whith reconfig_mutex grabbed.
-  */
- static struct workqueue_struct *md_misc_wq;
--struct workqueue_struct *md_bitmap_wq;
- 
- static int remove_and_add_spares(struct mddev *mddev,
- 				 struct md_rdev *this);
-@@ -670,15 +669,34 @@ static void active_io_release(struct percpu_ref *ref)
- 
- static void no_op(struct percpu_ref *r) {}
- 
-+static void mddev_set_bitmap_ops(struct mddev *mddev, enum md_submodule_id id)
-+{
-+	xa_lock(&md_submodule);
-+	mddev->bitmap_ops = xa_load(&md_submodule, id);
-+	xa_unlock(&md_submodule);
-+	if (!mddev->bitmap_ops)
-+		pr_warn_once("md: can't find bitmap id %d\n", id);
-+}
-+
-+static void mddev_clear_bitmap_ops(struct mddev *mddev)
-+{
-+	mddev->bitmap_ops = NULL;
-+}
-+
- int mddev_init(struct mddev *mddev)
- {
-+	/* TODO: support more versions */
-+	mddev_set_bitmap_ops(mddev, ID_BITMAP);
- 
- 	if (percpu_ref_init(&mddev->active_io, active_io_release,
--			    PERCPU_REF_ALLOW_REINIT, GFP_KERNEL))
-+			    PERCPU_REF_ALLOW_REINIT, GFP_KERNEL)) {
-+		mddev_clear_bitmap_ops(mddev);
- 		return -ENOMEM;
-+	}
- 
- 	if (percpu_ref_init(&mddev->writes_pending, no_op,
- 			    PERCPU_REF_ALLOW_REINIT, GFP_KERNEL)) {
-+		mddev_clear_bitmap_ops(mddev);
- 		percpu_ref_exit(&mddev->active_io);
- 		return -ENOMEM;
- 	}
-@@ -706,7 +724,6 @@ int mddev_init(struct mddev *mddev)
- 	mddev->resync_min = 0;
- 	mddev->resync_max = MaxSector;
- 	mddev->level = LEVEL_NONE;
--	mddev_set_bitmap_ops(mddev);
- 
- 	INIT_WORK(&mddev->sync_work, md_start_sync);
- 	INIT_WORK(&mddev->del_work, mddev_delayed_delete);
-@@ -717,6 +734,7 @@ EXPORT_SYMBOL_GPL(mddev_init);
- 
- void mddev_destroy(struct mddev *mddev)
- {
-+	mddev_clear_bitmap_ops(mddev);
- 	percpu_ref_exit(&mddev->active_io);
- 	percpu_ref_exit(&mddev->writes_pending);
+@@ -9456,17 +9456,11 @@ static bool md_spares_need_change(struct mddev *mddev)
+ 	return false;
  }
-@@ -10038,8 +10056,12 @@ static void md_geninit(void)
  
- static int __init md_init(void)
+-static int remove_and_add_spares(struct mddev *mddev,
+-				 struct md_rdev *this)
++static int remove_spares(struct mddev *mddev, struct md_rdev *this)
  {
--	int ret = -ENOMEM;
-+	int ret = md_bitmap_init();
+ 	struct md_rdev *rdev;
+-	int spares = 0;
+ 	int removed = 0;
  
-+	if (ret)
-+		return ret;
-+
-+	ret = -ENOMEM;
- 	md_wq = alloc_workqueue("md", WQ_MEM_RECLAIM, 0);
- 	if (!md_wq)
- 		goto err_wq;
-@@ -10048,11 +10070,6 @@ static int __init md_init(void)
- 	if (!md_misc_wq)
- 		goto err_misc_wq;
- 
--	md_bitmap_wq = alloc_workqueue("md_bitmap", WQ_MEM_RECLAIM | WQ_UNBOUND,
--				       0);
--	if (!md_bitmap_wq)
--		goto err_bitmap_wq;
+-	if (this && test_bit(MD_RECOVERY_RUNNING, &mddev->recovery))
+-		/* Mustn't remove devices when resync thread is running */
+-		return 0;
 -
- 	ret = __register_blkdev(MD_MAJOR, "md", md_probe);
- 	if (ret < 0)
- 		goto err_md;
-@@ -10071,12 +10088,11 @@ static int __init md_init(void)
- err_mdp:
- 	unregister_blkdev(MD_MAJOR, "md");
- err_md:
--	destroy_workqueue(md_bitmap_wq);
--err_bitmap_wq:
- 	destroy_workqueue(md_misc_wq);
- err_misc_wq:
- 	destroy_workqueue(md_wq);
- err_wq:
-+	md_bitmap_exit();
- 	return ret;
- }
+ 	rdev_for_each(rdev, mddev) {
+ 		if ((this == NULL || rdev == this) && rdev_removeable(rdev) &&
+ 		    !mddev->pers->hot_remove_disk(mddev, rdev)) {
+@@ -9480,6 +9474,21 @@ static int remove_and_add_spares(struct mddev *mddev,
+ 	if (removed && mddev->kobj.sd)
+ 		sysfs_notify_dirent_safe(mddev->sysfs_degraded);
  
-@@ -10379,8 +10395,8 @@ static __exit void md_exit(void)
- 	spin_unlock(&all_mddevs_lock);
++	return removed;
++}
++
++static int remove_and_add_spares(struct mddev *mddev,
++				 struct md_rdev *this)
++{
++	struct md_rdev *rdev;
++	int spares = 0;
++	int removed = 0;
++
++	if (this && test_bit(MD_RECOVERY_RUNNING, &mddev->recovery))
++		/* Mustn't remove devices when resync thread is running */
++		return 0;
++
++	removed = remove_spares(mddev, this);
+ 	if (this && removed)
+ 		goto no_add;
  
- 	destroy_workqueue(md_misc_wq);
--	destroy_workqueue(md_bitmap_wq);
- 	destroy_workqueue(md_wq);
-+	md_bitmap_exit();
- }
+@@ -9522,6 +9531,7 @@ static bool md_choose_sync_action(struct mddev *mddev, int *spares)
  
- subsys_initcall(md_init);
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index d6fba4240f97..b7dc8253efd8 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -38,7 +38,7 @@ enum md_submodule_id {
- 	ID_RAID6	= 6,
- 	ID_RAID10	= 10,
- 	ID_CLUSTER,
--	ID_BITMAP,	/* TODO */
-+	ID_BITMAP,
- 	ID_LLBITMAP,	/* TODO */
- };
- 
-@@ -1012,7 +1012,6 @@ struct mdu_array_info_s;
- struct mdu_disk_info_s;
- 
- extern int mdp_major;
--extern struct workqueue_struct *md_bitmap_wq;
- void md_autostart_arrays(int part);
- int md_set_array_info(struct mddev *mddev, struct mdu_array_info_s *info);
- int md_add_new_disk(struct mddev *mddev, struct mdu_disk_info_s *info);
+ 	/* Check if resync is in progress. */
+ 	if (mddev->recovery_cp < MaxSector) {
++		remove_spares(mddev, NULL);
+ 		set_bit(MD_RECOVERY_SYNC, &mddev->recovery);
+ 		clear_bit(MD_RECOVERY_RECOVER, &mddev->recovery);
+ 		return true;
 -- 
 2.39.2
 
