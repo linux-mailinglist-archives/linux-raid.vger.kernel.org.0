@@ -1,42 +1,42 @@
-Return-Path: <linux-raid+bounces-4784-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-4788-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 401EFB17D38
-	for <lists+linux-raid@lfdr.de>; Fri,  1 Aug 2025 09:12:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DDC4EB17D46
+	for <lists+linux-raid@lfdr.de>; Fri,  1 Aug 2025 09:13:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D88081C27F72
-	for <lists+linux-raid@lfdr.de>; Fri,  1 Aug 2025 07:12:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E5D58620E3E
+	for <lists+linux-raid@lfdr.de>; Fri,  1 Aug 2025 07:12:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2EA9218596;
-	Fri,  1 Aug 2025 07:10:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BED7221F06;
+	Fri,  1 Aug 2025 07:10:59 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D908220C47C;
-	Fri,  1 Aug 2025 07:10:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C717F21B191;
+	Fri,  1 Aug 2025 07:10:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754032255; cv=none; b=UtkGPG2CwANwf3N8PM4C5qur+o7Eu2nTvbFcQ5l4cQUd0xCQHN6RMltDYvYTk5tZAMFmUTfdr0WSoXMCRoqlTaTH8ZD+8hovRoZv2BnBrC1KCNg2GasmSrCa8mvJqHRfPy/RaLLHq3OrG6sM2WymibQGt7T2afcx7k092+DUbXc=
+	t=1754032258; cv=none; b=RmOoazxrwv2AiwQvplMEbM8TxTLh12M1YQHbRrC09K9Vm3B5KOF7xE8tCscGzHQzzQMIZyd8OIIh/aynmOsiQHE/OVDWEamtSE6j5MHPRh+rvyHKTC9tTubSUo6p8WPRZT8UpZQZWyMLVot4fcOzceh1ZJ2+QDkxy8ZAGI4+S5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754032255; c=relaxed/simple;
-	bh=qVfg7rTSjzpaykeN4MsU3/92f8+95Fkp2RPTdLBIBY0=;
+	s=arc-20240116; t=1754032258; c=relaxed/simple;
+	bh=y5nGMQMAaNHmkE08nRoNstKw2hairGJTHBze6RVXFkQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZcRaZ3ueqrkVWS7jTFBf4UDLEB3ZoNKlXQiNUtFZgC0N0papniM5+rcmTOKSnREwR3ycLKfjjczP4M6i61fyiwDJZVZ1RU0IHEzAhHwvZyvLkW+WLiVgGq+PJBFidCnh5gzNqFbPS/5C2vfel7hD+ZQqLRw/6wWZlc9pk0N+Q/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	 MIME-Version; b=m1TTKcrgUJfpdpuZjHFKWidWw2+vbKcHkX3i4ga7DLxpPm5xKUyw3N5RWjlePEX02DCK2ESvImx+Xp8UyIB11Iea3pZSw0tFUd/YDJm3B+M4THtIW1JTMw/tcyO2c1xxzLYtclZS+QXdjf1x/irmcOJAamRyd/nEWUgJP3omknw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4btcYS2sMkzKHMlp;
-	Fri,  1 Aug 2025 15:10:52 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4btcYT2pjrzYQv2m;
+	Fri,  1 Aug 2025 15:10:53 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 54ABA1A1B79;
-	Fri,  1 Aug 2025 15:10:51 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 0FF471A13B0;
+	Fri,  1 Aug 2025 15:10:52 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgDHjxByaIxoqAzACA--.18978S11;
+	by APP4 (Coremail) with SMTP id gCh0CgDHjxByaIxoqAzACA--.18978S12;
 	Fri, 01 Aug 2025 15:10:51 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: hch@lst.de,
@@ -57,9 +57,9 @@ Cc: linux-doc@vger.kernel.org,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com,
 	johnny.chenyi@huawei.com
-Subject: [PATCH v5 07/11] md/md-bitmap: add a new method skip_sync_blocks() in bitmap_operations
-Date: Fri,  1 Aug 2025 15:03:42 +0800
-Message-Id: <20250801070346.4127558-8-yukuai1@huaweicloud.com>
+Subject: [PATCH v5 08/11] md/md-bitmap: add a new method blocks_synced() in bitmap_operations
+Date: Fri,  1 Aug 2025 15:03:43 +0800
+Message-Id: <20250801070346.4127558-9-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250801070346.4127558-1-yukuai1@huaweicloud.com>
 References: <20250801070346.4127558-1-yukuai1@huaweicloud.com>
@@ -70,10 +70,10 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDHjxByaIxoqAzACA--.18978S11
-X-Coremail-Antispam: 1UD129KBjvJXoW7AryxtF15Xr1DZw4kJw1kKrg_yoW8Cw43pa
-	97JFy3Gry5Xr45Z3W7XFyDuFyFv34ktry7tFW7u3yrWr97trnxGF4Yga4vqa4DCFy3AFsx
-	Z3WYyrWrZF1Iq3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgDHjxByaIxoqAzACA--.18978S12
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZrWDWFW8XFy7WF4UWF1rZwb_yoW5Jry3pa
+	9xXasxZ3yjgr4jqF1UJayDuFyFq3s7JrW7tFWfu34ruF95KrnrWFW5ta4UtF1UKF13tasx
+	Z3Z0yrWUCr1FqrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUmS14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -86,64 +86,68 @@ X-Coremail-Antispam: 1UD129KBjvJXoW7AryxtF15Xr1DZw4kJw1kKrg_yoW8Cw43pa
 	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
 	AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI
 	42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF
-	4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBI
+	4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBI
 	daVFxhVjvjDU0xZFpf9x0pRQJ5wUUUUU=
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-This method is used to check if blocks can be skipped before calling
-into pers->sync_request(), llbitmap will use this method to skip
-resync for unwritten/clean data blocks, and recovery/check/repair for
-unwritten data blocks;
+Currently, raid456 must perform a whole array initial recovery to build
+initail xor data, then IO to the array won't have to read all the blocks
+in underlying disks.
+
+This behavior will affect IO performance a lot, and nowadays there are
+huge disks and the initial recovery can take a long time. Hence llbitmap
+will support lazy initial recovery in following patches. This method is
+used to check if data blocks is synced or not, if not then IO will still
+have to read all blocks for raid456.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Xiao Ni <xni@redhat.com>
 Reviewed-by: Hannes Reinecke <hare@suse.de>
+Reviewed-by: Xiao Ni <xni@redhat.com>
 Reviewed-by: Li Nan <linan122@huawei.com>
 ---
  drivers/md/md-bitmap.h | 1 +
- drivers/md/md.c        | 7 +++++++
- 2 files changed, 8 insertions(+)
+ drivers/md/raid5.c     | 6 ++++++
+ 2 files changed, 7 insertions(+)
 
 diff --git a/drivers/md/md-bitmap.h b/drivers/md/md-bitmap.h
-index 8616ced49077..95453696c68e 100644
+index 95453696c68e..5f41724cbcd8 100644
 --- a/drivers/md/md-bitmap.h
 +++ b/drivers/md/md-bitmap.h
-@@ -89,6 +89,7 @@ struct bitmap_operations {
- 	md_bitmap_fn *start_discard;
+@@ -90,6 +90,7 @@ struct bitmap_operations {
  	md_bitmap_fn *end_discard;
  
-+	sector_t (*skip_sync_blocks)(struct mddev *mddev, sector_t offset);
+ 	sector_t (*skip_sync_blocks)(struct mddev *mddev, sector_t offset);
++	bool (*blocks_synced)(struct mddev *mddev, sector_t offset);
  	bool (*start_sync)(struct mddev *mddev, sector_t offset,
  			   sector_t *blocks, bool degraded);
  	void (*end_sync)(struct mddev *mddev, sector_t offset, sector_t *blocks);
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 0b87e825b8b5..2dc8234d19f5 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -9395,6 +9395,12 @@ void md_do_sync(struct md_thread *thread)
- 		if (test_bit(MD_RECOVERY_INTR, &mddev->recovery))
- 			break;
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index 5285e72341a2..2121f0ff5e30 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -3748,6 +3748,7 @@ static int want_replace(struct stripe_head *sh, int disk_idx)
+ static int need_this_block(struct stripe_head *sh, struct stripe_head_state *s,
+ 			   int disk_idx, int disks)
+ {
++	struct mddev *mddev = sh->raid_conf->mddev;
+ 	struct r5dev *dev = &sh->dev[disk_idx];
+ 	struct r5dev *fdev[2] = { &sh->dev[s->failed_num[0]],
+ 				  &sh->dev[s->failed_num[1]] };
+@@ -3762,6 +3763,11 @@ static int need_this_block(struct stripe_head *sh, struct stripe_head_state *s,
+ 		 */
+ 		return 0;
  
-+		if (mddev->bitmap_ops && mddev->bitmap_ops->skip_sync_blocks) {
-+			sectors = mddev->bitmap_ops->skip_sync_blocks(mddev, j);
-+			if (sectors)
-+				goto update;
-+		}
++	/* The initial recover is not done, must read everything */
++	if (mddev->bitmap_ops && mddev->bitmap_ops->blocks_synced &&
++	    !mddev->bitmap_ops->blocks_synced(mddev, sh->sector))
++		return 1;
 +
- 		sectors = mddev->pers->sync_request(mddev, j, max_sectors,
- 						    &skipped);
- 		if (sectors == 0) {
-@@ -9410,6 +9416,7 @@ void md_do_sync(struct md_thread *thread)
- 		if (test_bit(MD_RECOVERY_INTR, &mddev->recovery))
- 			break;
- 
-+update:
- 		j += sectors;
- 		if (j > max_sectors)
- 			/* when skipping, extra large numbers can be returned. */
+ 	if (dev->toread ||
+ 	    (dev->towrite && !test_bit(R5_OVERWRITE, &dev->flags)))
+ 		/* We need this block to directly satisfy a request */
 -- 
 2.39.2
 
