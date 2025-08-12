@@ -1,31 +1,31 @@
-Return-Path: <linux-raid+bounces-4840-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-4842-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C453B22313
-	for <lists+linux-raid@lfdr.de>; Tue, 12 Aug 2025 11:27:35 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2843CB223E2
+	for <lists+linux-raid@lfdr.de>; Tue, 12 Aug 2025 11:59:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 371E53BAE7A
-	for <lists+linux-raid@lfdr.de>; Tue, 12 Aug 2025 09:23:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C6BA17AA18D
+	for <lists+linux-raid@lfdr.de>; Tue, 12 Aug 2025 09:58:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B0172DECD8;
-	Tue, 12 Aug 2025 09:22:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE41E2EB5CD;
+	Tue, 12 Aug 2025 09:58:19 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05ADA2E7F1D;
-	Tue, 12 Aug 2025 09:22:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC582EB5CE
+	for <linux-raid@vger.kernel.org>; Tue, 12 Aug 2025 09:58:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754990579; cv=none; b=jiMT2Se+5fFTrJUMVshZJODhp0rgGuY2pNDg4XZP6xJLrKOLbsaainViqwyQR/1mUwUWGcPNA6cTs+jy52UwrHrsJpPi472mYus7U7Eqg/41vON2HsFlL/dtXYU0lODxClXdEatRU6fyf0vVeY5RKfmjWEU2bljWdMgH3CkyulQ=
+	t=1754992699; cv=none; b=XysaU4QYTEg0dI++kxFDDuYqg4B6PkUnsdvaIy0GjrXPg3qGDHsIoeG3wPWFV22cwWP2P1C1eB8nmkDIxREB8aTy2epROuCKt+796wRG0kjZfmXH1wIePzosjD7h8luriARMbonwkmEYqBybpLwXunMrn0JjsKtLRoE8br0TDuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754990579; c=relaxed/simple;
-	bh=BvsZ0k0PbkyGqn8TkG/C/Ho4zobrlBEj7ZSvG/qpFTg=;
+	s=arc-20240116; t=1754992699; c=relaxed/simple;
+	bh=mjvES3UtPR/L9AYt+70fzuDBF6FCbXQ7jUxK1gMwluk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T3MgjNIRb8D08KovCfVTwrz2W3QLxkTfut4CdK3URs/J+qk31FUbigAkoK92kDFGLuTxhdX8qixjMRvdi5WkZwcZjZPg98wNy7JTt9biv4nsbZ4ZT/ARWxJ3y/P1SSr9M5ajtCpOvZPoK9ieduJpKbPtjuJmsvVaMPBvBpayaUI=
+	 In-Reply-To:Content-Type; b=DDgWMULufpFSr9IeKO0GhXQpGYHNBbx+trHPVuLmLkHdHqz4aYqJDu4H0G7F3p9HhbVcT0fyOnIDkNUd6zAxAe0JbpYHwDqW0lhfDRyKI9SIeopSO0X7RJB4YST5b82v7GIl/d5xhoEVTkAKrGr1MOn9+SHOOvhR3zN5m1d8gTY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
@@ -34,10 +34,10 @@ Received: from [141.14.220.42] (g42.guest.molgen.mpg.de [141.14.220.42])
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 0B11861E647BA;
-	Tue, 12 Aug 2025 11:22:25 +0200 (CEST)
-Message-ID: <1775d473-a77f-4ac8-8195-8547dd48d754@molgen.mpg.de>
-Date: Tue, 12 Aug 2025 11:22:24 +0200
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 17D4A61E647BB;
+	Tue, 12 Aug 2025 11:57:49 +0200 (CEST)
+Message-ID: <75175b99-57ce-4384-9b75-c91d4fe4ddad@molgen.mpg.de>
+Date: Tue, 12 Aug 2025 11:57:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
@@ -45,114 +45,169 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] md: fix sync_action incorrect display during
- resync
-To: Zheng Qixing <zhengqixing@huaweicloud.com>
-Cc: song@kernel.org, yukuai3@huawei.com, linan122@huawei.com,
- linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
- yi.zhang@huawei.com, yangerkun@huawei.com, houtao1@huawei.com,
- zhengqixing@huawei.com
-References: <20250812021738.3722569-1-zhengqixing@huaweicloud.com>
- <20250812021738.3722569-3-zhengqixing@huaweicloud.com>
+Subject: Re: [PATCH V2 1/1] md: add legacy_async_del_gendisk mode
+To: Xiao Ni <xni@redhat.com>
+Cc: yukuai1@huaweicloud.com, linux-raid@vger.kernel.org, yukuai3@huawei.com,
+ mpatocka@redhat.com, luca.boccassi@gmail.com
+References: <20250812074947.61740-1-xni@redhat.com>
 Content-Language: en-US
 From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20250812021738.3722569-3-zhengqixing@huaweicloud.com>
+In-Reply-To: <20250812074947.61740-1-xni@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Dear Zheng,
+Dear Xiao,
 
 
 Thank you for your patch.
 
-Am 12.08.25 um 04:17 schrieb Zheng Qixing:
-> From: Zheng Qixing <zhengqixing@huawei.com>
+Am 12.08.25 um 09:49 schrieb Xiao Ni:
+> commit 9e59d609763f ("md: call del_gendisk in control path") changes the
+> async way to sync way of calling del_gendisk. But it breaks mdadm
+> --assemble command. The assemble command runs like this:
+> 1. create the array
+> 2. stop the array
+> 3. access the sysfs files after stopping
 > 
-> During raid resync, if a disk becomes faulty, the operation is
-> briefly interrupted. The MD_RECOVERY_RECOVER flag triggered by
-> the disk failure causes sync_action to incorrectly show "recover"
-> instead of "resync". The same issue affects reshape operations.
+> The sync way calls del_gendisk in step2, so all sysfs files are removed.
+> Now to avoid breaking mdadm assemble command, this patch adds a parameter
+
+… the parameter legacy_async_del_gendisk …
+
+> that can be used to choose which way. The default is async way. In future,
+> we can remove this parameter when users upgrade to mdadm 4.5 which removes
+> step2.
+
+step 2
+
+Maybe say to first change the default, and then remove it.
+
 > 
-> Reproduction steps:
->    mdadm -Cv /dev/md1 -l1 -n4 -e1.2 /dev/sd{a..d} // -> resync happended
->    mdadm -f /dev/md1 /dev/sda                     // -> resync interrupted
->    cat sync_action
->    -> recover
-> 
-> Add progress checks in md_sync_action() for resync/recover/reshape
-> to ensure the interface correctly reports the actual operation type.
-> 
-> Fixes: 4b10a3bc67c1 ("md: ensure resync is prioritized over recovery")
-> Signed-off-by: Zheng Qixing <zhengqixing@huawei.com>
+> Fixes: 9e59d609763f ("md: call del_gendisk in control path")
+> Reported-by: Mikulas Patocka <mpatocka@redhat.com>
+> Closes: https://lore.kernel.org/linux-raid/CAMw=ZnQ=ET2St-+hnhsuq34rRPnebqcXqP1QqaHW5Bh4aaaZ4g@mail.gmail.com/T/#t
+> Suggested-and-reviewed-by: Yu Kuai <yukuai3@huawei.com>
+> Signed-off-by: Xiao Ni <xni@redhat.com>
 > ---
->   drivers/md/md.c | 38 ++++++++++++++++++++++++++++++++++++--
->   1 file changed, 36 insertions(+), 2 deletions(-)
+> v2: minor changes on format and log content
+>   drivers/md/md.c | 56 ++++++++++++++++++++++++++++++++++++-------------
+>   1 file changed, 42 insertions(+), 14 deletions(-)
 > 
 > diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index 4ea956a80343..798428d0870b 100644
+> index ac85ec73a409..44827f841927 100644
 > --- a/drivers/md/md.c
 > +++ b/drivers/md/md.c
-> @@ -4845,9 +4845,34 @@ static bool rdev_needs_recovery(struct md_rdev *rdev, sector_t sectors)
->   	return false;
+> @@ -339,6 +339,7 @@ static int start_readonly;
+>    * so all the races disappear.
+>    */
+>   static bool create_on_open = true;
+> +static bool legacy_async_del_gendisk = true;
+>   
+>   /*
+>    * We have a system wide 'event count' that is incremented
+> @@ -877,15 +878,18 @@ void mddev_unlock(struct mddev *mddev)
+>   		export_rdev(rdev, mddev);
+>   	}
+>   
+> -	/* Call del_gendisk after release reconfig_mutex to avoid
+> -	 * deadlock (e.g. call del_gendisk under the lock and an
+> -	 * access to sysfs files waits the lock)
+> -	 * And MD_DELETED is only used for md raid which is set in
+> -	 * do_md_stop. dm raid only uses md_stop to stop. So dm raid
+> -	 * doesn't need to check MD_DELETED when getting reconfig lock
+> -	 */
+> -	if (test_bit(MD_DELETED, &mddev->flags))
+> -		del_gendisk(mddev->gendisk);
+> +	if (!legacy_async_del_gendisk) {
+> +		/*
+> +		 * Call del_gendisk after release reconfig_mutex to avoid
+> +		 * deadlock (e.g. call del_gendisk under the lock and an
+> +		 * access to sysfs files waits the lock)
+> +		 * And MD_DELETED is only used for md raid which is set in
+> +		 * do_md_stop. dm raid only uses md_stop to stop. So dm raid
+> +		 * doesn't need to check MD_DELETED when getting reconfig lock
+> +		 */
+> +		if (test_bit(MD_DELETED, &mddev->flags))
+> +			del_gendisk(mddev->gendisk);
+> +	}
+>   }
+>   EXPORT_SYMBOL_GPL(mddev_unlock);
+>   
+> @@ -5818,6 +5822,13 @@ static void md_kobj_release(struct kobject *ko)
+>   {
+>   	struct mddev *mddev = container_of(ko, struct mddev, kobj);
+>   
+> +	if (legacy_async_del_gendisk) {
+> +		if (mddev->sysfs_state)
+> +			sysfs_put(mddev->sysfs_state);
+> +		if (mddev->sysfs_level)
+> +			sysfs_put(mddev->sysfs_level);
+> +		del_gendisk(mddev->gendisk);
+> +	}
+>   	put_disk(mddev->gendisk);
 >   }
 >   
-> +static enum sync_action md_get_active_sync_action(struct mddev *mddev)
-> +{
-> +	struct md_rdev *rdev;
-> +	bool is_recover = false;
-
-`is_recover` sounds strange to me, but I am not an expert with the code. 
-Maybe `needs_recovery`?
-
-> +
-> +	if (mddev->resync_offset < MaxSector)
-> +		return ACTION_RESYNC;
-> +
-> +	if (mddev->reshape_position != MaxSector)
-> +		return ACTION_RESHAPE;
-> +
-> +	rcu_read_lock();
-> +	rdev_for_each_rcu(rdev, mddev) {
-> +		if (rdev->raid_disk >= 0 &&
-> +		    rdev_needs_recovery(rdev, MaxSector)) {
-> +			is_recover = true;
-> +			break;
-> +		}
-> +	}
-> +	rcu_read_unlock();
-> +
-> +	return is_recover ? ACTION_RECOVER : ACTION_IDLE;
-> +}
-> +
->   enum sync_action md_sync_action(struct mddev *mddev)
+> @@ -6021,6 +6032,9 @@ static int md_alloc_and_put(dev_t dev, char *name)
 >   {
->   	unsigned long recovery = mddev->recovery;
-> +	enum sync_action active_action;
+>   	struct mddev *mddev = md_alloc(dev, name);
 >   
->   	/*
->   	 * frozen has the highest priority, means running sync_thread will be
-> @@ -4871,8 +4896,17 @@ enum sync_action md_sync_action(struct mddev *mddev)
->   	    !test_bit(MD_RECOVERY_NEEDED, &recovery))
->   		return ACTION_IDLE;
->   
-> -	if (test_bit(MD_RECOVERY_RESHAPE, &recovery) ||
-> -	    mddev->reshape_position != MaxSector)
-> +	/*
-> +	 * Check if any sync operation (resync/recover/reshape) is
-> +	 * currently active. This ensures that only one sync operation
-> +	 * can run at a time. Returns the type of active operation, or
-> +	 * ACTION_IDLE if none are active.
-> +	 */
-> +	active_action = md_get_active_sync_action(mddev);
-> +	if (active_action != ACTION_IDLE)
-> +		return active_action;
-> +
-> +	if (test_bit(MD_RECOVERY_RESHAPE, &recovery))
->   		return ACTION_RESHAPE;
->   
->   	if (test_bit(MD_RECOVERY_RECOVER, &recovery))
+> +	if (legacy_async_del_gendisk)
+> +		pr_warn("md: async del_gendisk mode will be removed please upgrade to mdadm-4.5+\n");
 
-Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Maybe add a timeframe?
+
+md: async del_gendisk mode will be removed in Linux 6.18. Please upgrade 
+to mdadm 4.5+
+
+> +
+>   	if (IS_ERR(mddev))
+>   		return PTR_ERR(mddev);
+>   	mddev_put(mddev);
+> @@ -6431,10 +6445,22 @@ static void md_clean(struct mddev *mddev)
+>   	mddev->persistent = 0;
+>   	mddev->level = LEVEL_NONE;
+>   	mddev->clevel[0] = 0;
+> -	/* if UNTIL_STOP is set, it's cleared here */
+> -	mddev->hold_active = 0;
+> -	/* Don't clear MD_CLOSING, or mddev can be opened again. */
+> -	mddev->flags &= BIT_ULL_MASK(MD_CLOSING);
+> +
+> +	/*
+> +	 * For legacy_async_del_gendisk mode, it can stop the array in the
+> +	 * middle of assembling it, then it still can access the array. So
+> +	 * it needs to clear MD_CLOSING. If not legacy_async_del_gendisk,
+> +	 * it can't open the array again after stopping it. So it doesn't
+> +	 * clear MD_CLOSING.
+> +	 */
+> +	if (legacy_async_del_gendisk && mddev->hold_active) {
+> +		clear_bit(MD_CLOSING, &mddev->flags);
+> +	} else {
+> +		/* if UNTIL_STOP is set, it's cleared here */
+> +		mddev->hold_active = 0;
+> +		/* Don't clear MD_CLOSING, or mddev can be opened again. */
+> +		mddev->flags &= BIT_ULL_MASK(MD_CLOSING);
+> +	}
+>   	mddev->sb_flags = 0;
+>   	mddev->ro = MD_RDWR;
+>   	mddev->metadata_type[0] = 0;
+> @@ -6658,7 +6684,8 @@ static int do_md_stop(struct mddev *mddev, int mode)
+>   
+>   		export_array(mddev);
+>   		md_clean(mddev);
+> -		set_bit(MD_DELETED, &mddev->flags);
+> +		if (!legacy_async_del_gendisk)
+> +			set_bit(MD_DELETED, &mddev->flags);
+>   	}
+>   	md_new_event();
+>   	sysfs_notify_dirent_safe(mddev->sysfs_state);
+> @@ -10392,6 +10419,7 @@ module_param_call(start_ro, set_ro, get_ro, NULL, S_IRUSR|S_IWUSR);
+>   module_param(start_dirty_degraded, int, S_IRUGO|S_IWUSR);
+>   module_param_call(new_array, add_named_array, NULL, NULL, S_IWUSR);
+>   module_param(create_on_open, bool, S_IRUSR|S_IWUSR);
+> +module_param(legacy_async_del_gendisk, bool, 0600);
+>   
+>   MODULE_LICENSE("GPL");
+>   MODULE_DESCRIPTION("MD RAID framework");
 
 
 Kind regards,
