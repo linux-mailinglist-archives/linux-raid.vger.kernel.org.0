@@ -1,59 +1,69 @@
-Return-Path: <linux-raid+bounces-4831-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-4833-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6862B21ABB
-	for <lists+linux-raid@lfdr.de>; Tue, 12 Aug 2025 04:25:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EBDF9B21F7B
+	for <lists+linux-raid@lfdr.de>; Tue, 12 Aug 2025 09:27:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 461F2420415
-	for <lists+linux-raid@lfdr.de>; Tue, 12 Aug 2025 02:25:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E8556502540
+	for <lists+linux-raid@lfdr.de>; Tue, 12 Aug 2025 07:27:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 311152E2DD9;
-	Tue, 12 Aug 2025 02:25:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC3192DAFCE;
+	Tue, 12 Aug 2025 07:27:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i+TU8xVu"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D8F2D876B;
-	Tue, 12 Aug 2025 02:25:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8CF32147F5
+	for <linux-raid@vger.kernel.org>; Tue, 12 Aug 2025 07:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754965524; cv=none; b=VdNi9048JmqRj36Z1xFLkF37UzmQVDZofG2DUiEAQL1VkjeGgsAXC6m688NeehnSLJd/Rw9uXEeqS11y02s+cbWdAOyXtYpC8KnwZ6B60HilTmQ2tjL9moVJt1cfiXL7kXeNtyMS+28uOzFZLhPGp8AnsL9eJs/7OqlCnQa3Vhg=
+	t=1754983646; cv=none; b=MyCazKpMthvi/j6nuuPif6X+mymBgYu0QdoagVz5z6O1RN72pWaYRIYPVsMmyaAU4o2owP2WQrDt7j6nxbNFITDXJXKKctYtXz1fD1iOm9zxqLKn7yI9Ibd2oJcjafFWN+BrCXQS1Xu2Fxn09s3E4rrUeOJPmrQZZEYENVleJbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754965524; c=relaxed/simple;
-	bh=XrBZCU++sKAMwVp23J4dHEYkGXYLvPQ1GuoJq/Q8uPY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XQ1oD+04WuP7cCHgpZ3fkM6+LpreJtHESLfdCAhOrmbM5C3i/u6uBwLqZ/pZLWj9zPr910IN9SKT2XzkhfiTp7Wh7SVtI5Gzp2G9nBtDgcYbggCaQVEZMic4dOQ5kEIS2J3uWGg/TLSYFTsKmLMxMZr6cA/fPTU0KQIibyJotyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4c1Fht5vLQzYQty3;
-	Tue, 12 Aug 2025 10:25:18 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 73DD41A1966;
-	Tue, 12 Aug 2025 10:25:17 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgDnrxAKpppoBm2ODQ--.41854S6;
-	Tue, 12 Aug 2025 10:25:17 +0800 (CST)
-From: Zheng Qixing <zhengqixing@huaweicloud.com>
-To: song@kernel.org,
-	yukuai3@huawei.com,
-	linan122@huawei.com
+	s=arc-20240116; t=1754983646; c=relaxed/simple;
+	bh=DcJb9KzTuimHdnntllA6P1MR3wybAAY7FPNB+aSh3KE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DtqCj1g9rKSs1cOO0areP6DYuztD/00/MLtC4DslRJsuff69WGG2sFz0t2nlMTMak73ruRCmhQwJYF+3CCAcNG45N/LEZMTwU+kMG6fFuWSJ0cDh35KRRqX0awOsmRoeWWy586odZQhSJVPgQmtTCKry4T8eKrwcSkMPdPQ307U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i+TU8xVu; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1754983643;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=t+JKXiVmOkSwERMfzuENvsIrDXOmUdR3fLoaEAKl8aI=;
+	b=i+TU8xVuZtdhSj4FHwnaIu/bPtelGqEmghMp2OTMXrSJ9iw8OrEPsnF8kz45R8Ukso99AQ
+	ETDPOHY+k1zLt1ypOHgNouWg7kkzoVtiRpUTUb5bEYWl/Be/bECvdQiTjGDg+IsJIGo5H5
+	z7VJfpVNZXU/fQOJcnduhhtmHzCx0Cs=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-426-vvLFyeqjP9SXHDTiDhwB7g-1; Tue,
+ 12 Aug 2025 03:27:17 -0400
+X-MC-Unique: vvLFyeqjP9SXHDTiDhwB7g-1
+X-Mimecast-MFC-AGG-ID: vvLFyeqjP9SXHDTiDhwB7g_1754983636
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7C5CB1956059;
+	Tue, 12 Aug 2025 07:27:16 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.72.120.18])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DDEBD1955F16;
+	Tue, 12 Aug 2025 07:27:12 +0000 (UTC)
+From: Xiao Ni <xni@redhat.com>
+To: yukuai@kernel.org
 Cc: linux-raid@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com,
-	houtao1@huawei.com,
-	zhengqixing@huawei.com
-Subject: [PATCH v2 2/2] md: fix sync_action incorrect display during resync
-Date: Tue, 12 Aug 2025 10:17:38 +0800
-Message-Id: <20250812021738.3722569-3-zhengqixing@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250812021738.3722569-1-zhengqixing@huaweicloud.com>
-References: <20250812021738.3722569-1-zhengqixing@huaweicloud.com>
+	yukuai3@huawei.com,
+	mpatocka@redhat.com,
+	luca.boccassi@gmail.com
+Subject: [PATCH 1/1] md: add legacy_async_del_gendisk mode
+Date: Tue, 12 Aug 2025 15:27:09 +0800
+Message-Id: <20250812072709.61059-1-xni@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
@@ -61,108 +71,141 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDnrxAKpppoBm2ODQ--.41854S6
-X-Coremail-Antispam: 1UD129KBjvJXoWxGr1rWr1rJry8Zw18uw13twb_yoW5GFW3pF
-	4IyF98Wr17JrWfJ39xA34vyFyY9w1xWrW7JFyfW34rAan3KrnYva4293W7XF98KFyavF4Y
-	q34DtFW5uF4UCF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXw
-	A2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMc
-	Ij6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_
-	Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr4
-	1l4c8EcI0Ec7CjxVAaw2AFwI0_Jw0_GFyl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
-	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r
-	43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF
-	7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
-	WUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU
-	2WrWUUUUU
-X-CM-SenderInfo: x2kh0wptl0x03j6k3tpzhluzxrxghudrp/
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-From: Zheng Qixing <zhengqixing@huawei.com>
+commit 9e59d609763f ("md: call del_gendisk in control path") changes the
+async way to sync way of calling del_gendisk. But it breaks mdadm
+--assemble command. The assemble command runs like this:
+1. create the array
+2. stop the array
+3. access the sysfs files after stopping
 
-During raid resync, if a disk becomes faulty, the operation is
-briefly interrupted. The MD_RECOVERY_RECOVER flag triggered by
-the disk failure causes sync_action to incorrectly show "recover"
-instead of "resync". The same issue affects reshape operations.
+The sync way calls del_gendisk in step2, so all sysfs files are removed.
+Now to avoid breaking mdadm assemble command, this patch adds a parameter
+that can be used to choose which way. The default is async way. In future,
+we can remove this parameter when users upgrade to mdadm 4.5 which removes
+step2.
 
-Reproduction steps:
-  mdadm -Cv /dev/md1 -l1 -n4 -e1.2 /dev/sd{a..d} // -> resync happended
-  mdadm -f /dev/md1 /dev/sda                     // -> resync interrupted
-  cat sync_action
-  -> recover
-
-Add progress checks in md_sync_action() for resync/recover/reshape
-to ensure the interface correctly reports the actual operation type.
-
-Fixes: 4b10a3bc67c1 ("md: ensure resync is prioritized over recovery")
-Signed-off-by: Zheng Qixing <zhengqixing@huawei.com>
+Fixes: 9e59d609763f ("md: call del_gendisk in control path")
+Reported-by: Mikulas Patocka <mpatocka@redhat.com>
+Closes: https://lore.kernel.org/linux-raid/CAMw=ZnQ=ET2St-+hnhsuq34rRPnebqcXqP1QqaHW5Bh4aaaZ4g@mail.gmail.com/T/#t
+Suggested-by: Yu Kuai <yukuai@kernel.org>
+Signed-off-by: Xiao Ni <xni@redhat.com>
 ---
- drivers/md/md.c | 38 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 36 insertions(+), 2 deletions(-)
+ drivers/md/md.c | 57 +++++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 43 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 4ea956a80343..798428d0870b 100644
+index ac85ec73a409..e48ee59082a5 100644
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -4845,9 +4845,34 @@ static bool rdev_needs_recovery(struct md_rdev *rdev, sector_t sectors)
- 	return false;
+@@ -339,6 +339,7 @@ static int start_readonly;
+  * so all the races disappear.
+  */
+ static bool create_on_open = true;
++static bool legacy_async_del_gendisk = true;
+ 
+ /*
+  * We have a system wide 'event count' that is incremented
+@@ -877,15 +878,18 @@ void mddev_unlock(struct mddev *mddev)
+ 		export_rdev(rdev, mddev);
+ 	}
+ 
+-	/* Call del_gendisk after release reconfig_mutex to avoid
+-	 * deadlock (e.g. call del_gendisk under the lock and an
+-	 * access to sysfs files waits the lock)
+-	 * And MD_DELETED is only used for md raid which is set in
+-	 * do_md_stop. dm raid only uses md_stop to stop. So dm raid
+-	 * doesn't need to check MD_DELETED when getting reconfig lock
+-	 */
+-	if (test_bit(MD_DELETED, &mddev->flags))
+-		del_gendisk(mddev->gendisk);
++	if (!legacy_async_del_gendisk) {
++		/*
++		 * Call del_gendisk after release reconfig_mutex to avoid
++		 * deadlock (e.g. call del_gendisk under the lock and an
++		 * access to sysfs files waits the lock)
++		 * And MD_DELETED is only used for md raid which is set in
++		 * do_md_stop. dm raid only uses md_stop to stop. So dm raid
++		 * doesn't need to check MD_DELETED when getting reconfig lock
++		 */
++		if (test_bit(MD_DELETED, &mddev->flags))
++			del_gendisk(mddev->gendisk);
++	}
+ }
+ EXPORT_SYMBOL_GPL(mddev_unlock);
+ 
+@@ -5818,6 +5822,13 @@ static void md_kobj_release(struct kobject *ko)
+ {
+ 	struct mddev *mddev = container_of(ko, struct mddev, kobj);
+ 
++	if (legacy_async_del_gendisk) {
++		if (mddev->sysfs_state)
++			sysfs_put(mddev->sysfs_state);
++		if (mddev->sysfs_level)
++			sysfs_put(mddev->sysfs_level);
++		del_gendisk(mddev->gendisk);
++	}
+ 	put_disk(mddev->gendisk);
  }
  
-+static enum sync_action md_get_active_sync_action(struct mddev *mddev)
-+{
-+	struct md_rdev *rdev;
-+	bool is_recover = false;
-+
-+	if (mddev->resync_offset < MaxSector)
-+		return ACTION_RESYNC;
-+
-+	if (mddev->reshape_position != MaxSector)
-+		return ACTION_RESHAPE;
-+
-+	rcu_read_lock();
-+	rdev_for_each_rcu(rdev, mddev) {
-+		if (rdev->raid_disk >= 0 &&
-+		    rdev_needs_recovery(rdev, MaxSector)) {
-+			is_recover = true;
-+			break;
-+		}
-+	}
-+	rcu_read_unlock();
-+
-+	return is_recover ? ACTION_RECOVER : ACTION_IDLE;
-+}
-+
- enum sync_action md_sync_action(struct mddev *mddev)
+@@ -6021,6 +6032,10 @@ static int md_alloc_and_put(dev_t dev, char *name)
  {
- 	unsigned long recovery = mddev->recovery;
-+	enum sync_action active_action;
+ 	struct mddev *mddev = md_alloc(dev, name);
  
- 	/*
- 	 * frozen has the highest priority, means running sync_thread will be
-@@ -4871,8 +4896,17 @@ enum sync_action md_sync_action(struct mddev *mddev)
- 	    !test_bit(MD_RECOVERY_NEEDED, &recovery))
- 		return ACTION_IDLE;
- 
--	if (test_bit(MD_RECOVERY_RESHAPE, &recovery) ||
--	    mddev->reshape_position != MaxSector)
-+	/*
-+	 * Check if any sync operation (resync/recover/reshape) is
-+	 * currently active. This ensures that only one sync operation
-+	 * can run at a time. Returns the type of active operation, or
-+	 * ACTION_IDLE if none are active.
-+	 */
-+	active_action = md_get_active_sync_action(mddev);
-+	if (active_action != ACTION_IDLE)
-+		return active_action;
++	if (legacy_async_del_gendisk) {
++		pr_warn("md: async del_gendisk mode will be removed.");
++		pr_warn("md: please upgrade to mdadm-4.5\n");
++	}
+ 	if (IS_ERR(mddev))
+ 		return PTR_ERR(mddev);
+ 	mddev_put(mddev);
+@@ -6431,10 +6446,22 @@ static void md_clean(struct mddev *mddev)
+ 	mddev->persistent = 0;
+ 	mddev->level = LEVEL_NONE;
+ 	mddev->clevel[0] = 0;
+-	/* if UNTIL_STOP is set, it's cleared here */
+-	mddev->hold_active = 0;
+-	/* Don't clear MD_CLOSING, or mddev can be opened again. */
+-	mddev->flags &= BIT_ULL_MASK(MD_CLOSING);
 +
-+	if (test_bit(MD_RECOVERY_RESHAPE, &recovery))
- 		return ACTION_RESHAPE;
++	/*
++	 * For legacy_async_del_gendisk mode, it can stop the array in the
++	 * middle of assembling it, then it still can access the array. So
++	 * it needs to clear MD_CLOSING. If not legacy_async_del_gendisk,
++	 * it can't open the array again after stopping it. So it doesn't
++	 * clear MD_CLOSING.
++	 */
++	if (legacy_async_del_gendisk && mddev->hold_active)
++		clear_bit(MD_CLOSING, &mddev->flags);
++	else {
++		/* if UNTIL_STOP is set, it's cleared here */
++		mddev->hold_active = 0;
++		/* Don't clear MD_CLOSING, or mddev can be opened again. */
++		mddev->flags &= BIT_ULL_MASK(MD_CLOSING);
++	}
+ 	mddev->sb_flags = 0;
+ 	mddev->ro = MD_RDWR;
+ 	mddev->metadata_type[0] = 0;
+@@ -6658,7 +6685,8 @@ static int do_md_stop(struct mddev *mddev, int mode)
  
- 	if (test_bit(MD_RECOVERY_RECOVER, &recovery))
+ 		export_array(mddev);
+ 		md_clean(mddev);
+-		set_bit(MD_DELETED, &mddev->flags);
++		if (!legacy_async_del_gendisk)
++			set_bit(MD_DELETED, &mddev->flags);
+ 	}
+ 	md_new_event();
+ 	sysfs_notify_dirent_safe(mddev->sysfs_state);
+@@ -10392,6 +10420,7 @@ module_param_call(start_ro, set_ro, get_ro, NULL, S_IRUSR|S_IWUSR);
+ module_param(start_dirty_degraded, int, S_IRUGO|S_IWUSR);
+ module_param_call(new_array, add_named_array, NULL, NULL, S_IWUSR);
+ module_param(create_on_open, bool, S_IRUSR|S_IWUSR);
++module_param(legacy_async_del_gendisk, bool, 0600);
+ 
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("MD RAID framework");
 -- 
-2.39.2
+2.32.0 (Apple Git-132)
 
 
