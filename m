@@ -1,150 +1,115 @@
-Return-Path: <linux-raid+bounces-4839-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-4841-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04EFAB2221C
-	for <lists+linux-raid@lfdr.de>; Tue, 12 Aug 2025 10:57:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BD06B22392
+	for <lists+linux-raid@lfdr.de>; Tue, 12 Aug 2025 11:44:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8EDFF580677
-	for <lists+linux-raid@lfdr.de>; Tue, 12 Aug 2025 08:50:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 838A51AA6663
+	for <lists+linux-raid@lfdr.de>; Tue, 12 Aug 2025 09:44:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50B272E2DEF;
-	Tue, 12 Aug 2025 08:50:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B05C12E975B;
+	Tue, 12 Aug 2025 09:43:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cWwadyIO"
+	dkim=pass (2048-bit key) header.d=mgml.me header.i=@mgml.me header.b="USj/UIYG"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www5210.sakura.ne.jp (www5210.sakura.ne.jp [133.167.8.150])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB702DAFB9
-	for <linux-raid@vger.kernel.org>; Tue, 12 Aug 2025 08:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4122B2E973B;
+	Tue, 12 Aug 2025 09:43:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=133.167.8.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754988622; cv=none; b=JgO762bS4UMEr6SsOz3YUerpCxIGoYb2YrkEuaR2c+Mr12EOLUDgUg30CcqmAjDr7rDLmPv9Vas1rpGayv/aHdqX6rwNo9Mhpsrax/xKHEhHfa+EoChLZynBNPjXGcL8C75x3QKMOqRI5Iky6PfECN0BuRtsxUrG+lcIPNIrdgw=
+	t=1754991820; cv=none; b=nBo+wLOnqEsVfBQ6NIGnCpY108voGbLAucNvZUhuAAeamDwQWQ5w2ArhLiBE7RJ9E7yfRtuFEy4JTHpwK32bfiMCsKlcDYbGTM9nmYkwui8c5ss6OlLNP5dZO67ylr7CkvvizjDN89JC06jo+bOjoFwAZiYb8WbC5xX3qvzDCdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754988622; c=relaxed/simple;
-	bh=K6NRFxO1IfXa8fexs0oRFsGFxaMGo/oO1tFRPKUaYN4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FohShlSK/ueHjq/SSPRn2S9qGnnnXmk3O0U72aUwVFioOVIdz9o3bD12XgOvUi99YEDGMNCskFpIFYFzvd5rhD44PEqPMgUko2jG7sQmbWo+nGcJT/mJG6cWtJVxu5zXGHGCkI7XfMp378l9kmfWJwbTfsWD/QMdBeVPWittrHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cWwadyIO; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-717b580ff2aso51342837b3.0
-        for <linux-raid@vger.kernel.org>; Tue, 12 Aug 2025 01:50:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754988617; x=1755593417; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K6NRFxO1IfXa8fexs0oRFsGFxaMGo/oO1tFRPKUaYN4=;
-        b=cWwadyIOpic0H76A+LMurBbFU9/DhmjdYRjXd1vRhFs5y2iICOxvHn4VPJEpSZx8Co
-         NW5Rzu2IwyiX/QmFHbhV3/b14DA8UXjfojBthBKiVcz6z77nYeLAsIM+X+ILPmHtU/30
-         yRN5ScR4lSmiKjk8YxKHnvmk3ia9N2n3/CRgcY6TcpR+qGFXPZwtUx6Mife36+Efm+jn
-         pQQxN3jaHLQhD42Uk8l48qcv2gApfKSu3zJKn6klA5zvb3EE50bUQcFDRWjO0h1eQisl
-         l/eHpmkug93hlM9g/BqUbrTB3guOZhg7nG7+BVQ0oCLSf2DsanVmTu1WlQr1W1B92cl9
-         zHJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754988617; x=1755593417;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K6NRFxO1IfXa8fexs0oRFsGFxaMGo/oO1tFRPKUaYN4=;
-        b=XlQGSwBU8sWATPO6EXVyMDpL6fQYLX+oABac2DIRKlNw8bMlMcck8+lZ5fU1CQpFQL
-         YmkNJiRe1FkZI1OuGXl3XdaYJ4Oqr2wtRYiRIERmmk+CVnDQ2Pc9UdoM7+tY7hRPdFZ0
-         WjiClkrW2RCdh0xa66xcyBc8x6tKi+Awjx4RqJTUyhS+y29Daiud0ssjcGHg02pp35gX
-         JS7VvNN0H8RCWH8b/rJsK1dYPOKfs7tY7cHu2baYjxjpGvrhj6IqcPeFtMzCATo+ETw6
-         PmvIaX4B2++5k05l2mIbDIf9tnL6S0wfcrGFAtkOPODTUiUoPY2RUmG4o93glhjHmBHq
-         DUiA==
-X-Forwarded-Encrypted: i=1; AJvYcCXrTiMb/xMsO+2aHQDn9LWq8C52oR3Ph7q/J8mFMFOnaaHJHFhjMBbgrmLjk3X/2LXq2xCfEV4pXIjn@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLOS/S+hV448/MXDqrIHgsm/PGXRT5LFPU+uSwvlGdfh4vktZ8
-	svVnXbgougN5sdaAVB3geTebQK7jsKgYasdlbH7QruBXOenMZasFoWGNknhosxzbDdYXM6BBQk8
-	uB+ghAysaKq9bxMOTLjuSb4HJzEvNDzo=
-X-Gm-Gg: ASbGncuty8g/MFv/XJyHmVfgzA1a8QJqBeHJaMJ9NyBMkcm/NNSChojOKunAtmtYNf7
-	m7aTgK8jeIONii6voXDA+kemYFmzT8CWd7ZmqZ6yDXdwAv+nJV7K96zeWBam+qJEJ8A/k5JaoG8
-	UF1u94gAMa4oPxSf4hJ12+bzIFYEpqE8tYIvq1bF91LXGI/iCbz6uuFdNNbFZjyGWje73riAjyX
-	u5CNqvUX/n9zkGfLgqseYZiDCktcFMDY04Bg5xyZ3laSw5Q7WAl
-X-Google-Smtp-Source: AGHT+IEpExo4eIzC2P1cwfN9bTC575LMbso8PLcBeweTySnWRR1KohZv86gc0ZDnyCacMSgEvRvMS6/B8PGqy8MW8po=
-X-Received: by 2002:a05:690c:46c9:b0:71b:6c7b:c802 with SMTP id
- 00721157ae682-71c42964ab1mr40266657b3.6.1754988617279; Tue, 12 Aug 2025
- 01:50:17 -0700 (PDT)
+	s=arc-20240116; t=1754991820; c=relaxed/simple;
+	bh=CToGfzbCXrZf0RZFLdJeWgPXCbaCfQB2JIeTz3bcaVU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZrjfjQQH7nG9G7y5QQ/VlJyrCMZTlxJLVuHOjVMf9rVpd8fuNJ8Sh5uDvzzV1Qo+EbxeQxgtWhR7kiRBmgcS4SViJmONVkyomy+7zuvD6w8ye4HIFrCK2KNurly/PyJxcn/dgeLGhR6pJEwleZF5JkJCuSHrCJ6eEeqHL8SkpU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mgml.me; spf=pass smtp.mailfrom=mgml.me; dkim=pass (2048-bit key) header.d=mgml.me header.i=@mgml.me header.b=USj/UIYG; arc=none smtp.client-ip=133.167.8.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mgml.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mgml.me
+Received: from fedora (p3671070-ipxg00g01tokaisakaetozai.aichi.ocn.ne.jp [153.172.176.70])
+	(authenticated bits=0)
+	by www5210.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 57C91Z2P059440
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Tue, 12 Aug 2025 18:01:37 +0900 (JST)
+	(envelope-from k@mgml.me)
+DKIM-Signature: a=rsa-sha256; bh=saqQ1dvGdvKJQP638fHOvs1Wmr2wZcZehtTp6FimBbM=;
+        c=relaxed/relaxed; d=mgml.me;
+        h=From:To:Subject:Date:Message-ID;
+        s=rs20250315; t=1754989297; v=1;
+        b=USj/UIYGE9RJ3CCNbGU74Zoa5eTqH5hjlGmTMcLohYbIYpLuXxhKwW2b0oif2bL5
+         NmDtSUCM9/7xPTSKglIdzWaGNNz6UnD1HmtvWNk/Z/dR1Q+0GFE2wagABzqVGCgH
+         1TWeJGWMydAl0NxjOF/f3po6QXUEkrs6setjvjkOwhOoPAm7hI6b6xHQfdDb7pCX
+         dNGA2QU1l4cpHcj6hG4M53a2ZLOfz40DiVqSBlM+prgo2SJYGtWMNC1cZmMJFYig
+         P5LLaBZ/3P15iKLJ7gn9lNwE1AlV1vfLZKriF81F7lg5CKoHauSVEdmZkrQ3Fhzs
+         P7XGNW+1y1pLhneu0rEBjg==
+From: Kenta Akagi <k@mgml.me>
+To: Song Liu <song@kernel.org>, Yu Kuai <yukuai3@huawei.com>,
+        Mariusz Tkaczyk <mtkaczyk@kernel.org>
+Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kenta Akagi <k@mgml.me>
+Subject: [PATCH] md/raid1,raid10: don't broken array on failfast metadata write fails
+Date: Tue, 12 Aug 2025 18:01:19 +0900
+Message-ID: <20250812090119.153697-1-k@mgml.me>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <f654db67-a5a5-114b-09b8-00db303daab7@redhat.com>
- <CALTww28TpRRTzjqsOXGoUrLHEk=ca85zRcDanGqgTyytA-34ow@mail.gmail.com>
- <CAMw=ZnTosW4OecBCFdVNqiw9VjSL6msUx6yYBE=9vsEn7JeKqA@mail.gmail.com>
- <8c1bf191-a741-cd7a-29dc-babf24a13777@redhat.com> <CALTww28y-cuJMAGfWjgVdjhkFB8w-z7SR48nNvdRHM01L0TGow@mail.gmail.com>
- <81648e41-fe3e-1be8-2e0e-f1f5c39564cf@huaweicloud.com> <CAMw=ZnQ=ET2St-+hnhsuq34rRPnebqcXqP1QqaHW5Bh4aaaZ4g@mail.gmail.com>
- <CAMw=ZnS+2oqGZ31wkMEFheXi_8xk1hSM1tnW=wh_wc98TGDrXw@mail.gmail.com> <CALTww2_ot_qAGwnfQDfRSj6qtaAME1ZA27XgtL_L3pfT_WoWRw@mail.gmail.com>
-In-Reply-To: <CALTww2_ot_qAGwnfQDfRSj6qtaAME1ZA27XgtL_L3pfT_WoWRw@mail.gmail.com>
-From: Luca Boccassi <luca.boccassi@gmail.com>
-Date: Tue, 12 Aug 2025 09:50:06 +0100
-X-Gm-Features: Ac12FXzyPhYbqe3eraO6dzPqWDLCtBsARxcAoJliyXDzUe1Ixxvmjvg5lBUanS4
-Message-ID: <CAMw=ZnQ_Ba-hJ0rzxZfU2dERk6E1Vhw5T5CVNT_KZ9qW9P2_nQ@mail.gmail.com>
-Subject: Re: md regression caused by commit 9e59d609763f70a992a8f3808dabcce60f14eb5c
-To: Xiao Ni <xni@redhat.com>
-Cc: Yu Kuai <yukuai1@huaweicloud.com>, Mikulas Patocka <mpatocka@redhat.com>, 
-	Song Liu <song@kernel.org>, linux-raid@vger.kernel.org, vkuznets@redhat.com, 
-	yuwatana@redhat.com, "yukuai (C)" <yukuai3@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, 12 Aug 2025 at 08:40, Xiao Ni <xni@redhat.com> wrote:
->
-> On Tue, Aug 12, 2025 at 2:32=E2=80=AFAM Luca Boccassi <luca.boccassi@gmai=
-l.com> wrote:
-> >
-> > On Fri, 8 Aug 2025 at 09:07, Luca Boccassi <luca.boccassi@gmail.com> wr=
-ote:
-> > >
-> > > On Fri, 8 Aug 2025 at 07:40, Yu Kuai <yukuai1@huaweicloud.com> wrote:
-> > > > =E5=9C=A8 2025/08/08 13:28, Xiao Ni =E5=86=99=E9=81=93:
-> > > > > I know it's not good to break mdadm by a kernel change. But somet=
-imes
-> > > > > it needs userspace tool and kernel work together to fix a problem=
-,
-> > > > > right?
-> > > > > Sorry for bringing the problem, and thanks for the suggestions. A=
-ny
-> > > > > more good suggestions?
-> > > > >
-> > > >
-> > > > Idealy, we should fix mdadm first, then after a release, fix kernel=
-.
-> > > > Sadly the transition stage is missing now. :(
-> > > >
-> > > > If we want to just avoid this problem in kernel, what I can think o=
-f is
-> > > > adding a switch and mark it deprecated for now. And in new mdadm
-> > > > releases enable that switch, and after sometime, remove mdadm legac=
-y
-> > > > code to stop array, and finally remove the deprecated switch in ker=
-nel
-> > > > then everyone will be happy :)
-> > >
-> > > Hi,
-> > >
-> > > As long as the change makes the current default behaviour backward
-> > > compatible, and the switch is used by mdadm to opt-in the new,
-> > > incompatible behaviour, then yes that sounds like a good solution,
-> > > thank you.
-> >
-> > Hi,
-> >
-> > Any update? RC1 was released with this regression. Any ETA on the fix?
-> > If it won't be ready soon, would it be possible to revert the change
-> > for now, until the fix is ready? Thanks!
-> >
->
-> Hi
->
-> I took two days for a regression test and sent the patch to the mail
-> list just now.
+It is not intended for the array to fail when a metadata write with
+MD_FAILFAST fails.
+After commit 9631abdbf406 ("md: Set MD_BROKEN for RAID1 and RAID10"),
+when md_error is called on the last device in RAID1/10,
+the MD_BROKEN flag is set on the array.
+Because of this, a failfast metadata write failure will
+make the array "broken" state.
 
-That's great news, thank you!
+If rdev is not Faulty even after calling md_error,
+the rdev is the last device, and there is nothing except
+MD_BROKEN that prevents writes to the array.
+Therefore, by clearing MD_BROKEN, the array will not become
+"broken" after a failfast metadata write failure.
+
+Fixes: 9631abdbf406 ("md: Set MD_BROKEN for RAID1 and RAID10")
+Signed-off-by: Kenta Akagi <k@mgml.me>
+---
+ drivers/md/md.c | 1 +
+ drivers/md/md.h | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index ac85ec73a409..3ec4abf02fa0 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -1002,6 +1002,7 @@ static void super_written(struct bio *bio)
+ 		md_error(mddev, rdev);
+ 		if (!test_bit(Faulty, &rdev->flags)
+ 		    && (bio->bi_opf & MD_FAILFAST)) {
++			clear_bit(MD_BROKEN, &mddev->flags);
+ 			set_bit(MD_SB_NEED_REWRITE, &mddev->sb_flags);
+ 			set_bit(LastDev, &rdev->flags);
+ 		}
+diff --git a/drivers/md/md.h b/drivers/md/md.h
+index 51af29a03079..2f87bcc5d834 100644
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -332,7 +332,7 @@ struct md_cluster_operations;
+  *			       resync lock, need to release the lock.
+  * @MD_FAILFAST_SUPPORTED: Using MD_FAILFAST on metadata writes is supported as
+  *			    calls to md_error() will never cause the array to
+- *			    become failed.
++ *			    become failed while fail_last_dev is not set.
+  * @MD_HAS_PPL:  The raid array has PPL feature set.
+  * @MD_HAS_MULTIPLE_PPLS: The raid array has multiple PPLs feature set.
+  * @MD_NOT_READY: do_md_run() is active, so 'array_state', ust not report that
+-- 
+2.50.1
+
 
