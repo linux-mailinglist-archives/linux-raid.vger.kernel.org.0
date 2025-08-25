@@ -1,41 +1,42 @@
-Return-Path: <linux-raid+bounces-4946-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-4948-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 413E1B33874
-	for <lists+linux-raid@lfdr.de>; Mon, 25 Aug 2025 10:08:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 011E5B33877
+	for <lists+linux-raid@lfdr.de>; Mon, 25 Aug 2025 10:08:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4CDA518927BE
-	for <lists+linux-raid@lfdr.de>; Mon, 25 Aug 2025 08:08:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CE10417A2EC
+	for <lists+linux-raid@lfdr.de>; Mon, 25 Aug 2025 08:08:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 467BE29A309;
-	Mon, 25 Aug 2025 08:07:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20C9329B78D;
+	Mon, 25 Aug 2025 08:07:58 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CAE288C22;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D10299943;
 	Mon, 25 Aug 2025 08:07:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756109277; cv=none; b=hgkScN8BFlgU2j38I36NQVTpN2S5wUxS7Ei9FhKZYKZ7+rwZyK9iA8YD5YjmJ8+CI//+An1V9dzb8xDqh63dwWdNKJHqNLnzUkWQ95qVxRqSu3vBwglDonuv3E8ZjwGDpbTain7BvXlMr7V9fA+wJc4NByv+43O4970+FYXUnww=
+	t=1756109277; cv=none; b=EhuZu3IZyOoj/B7dWDfHL0enp3zHAoqJuPqWKHVI4z5UUF+EpTeUMvAFApBaxVyFuolPibASa8qTb4NCZN2tUugGC+Wp/VGqH8XqYTRXm6lzD/Kzt3dZziZMDw8s3tWy1PaBnk0JB50vJ0fvNKo577x703VDIQpsQqdsIrfEo/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1756109277; c=relaxed/simple;
-	bh=qSy9J9nyQE7Bo1X2SfwCn5BJQvXE9ufcyq/8tky3LAI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=g5+T7QhyhFFfRhEMf/WBfAS0c4s7NKe1JBtF9B5YZbSKj6ArOPyfVK1wxsZdDBQs+fTjouPxP3oJntl3tdytOF2iTFrRn4H4f9T26kM1bw6gRJGnZI+F1LKhyuu27/ICdW8gJXivN+gmQnYB+9ZkmM1PsfxjiOxowdapEqB6jKg=
+	bh=N+jRalDtiGA+NO7A9NDMPwm+Cjsc99KngkTzxTTvExw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=GwJ43ASjHmnu2delc40ElXYwsmMH9GdTSV2pAz4PIAuKbWBCPbLg4YZqel4hEr0Sv4BD7z8UVFv6n11SVgt7nHhQraDSqgXKxI0qvmES3yy2OiGIt3wjo6rLtdBhQKXJXU0YpzZB4uO77n0Ze3yUQs4JH7aVLTle3XIgYXWsDGY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4c9Nh80w9yzKHNPZ;
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4c9Nh84BQ6zKHNkr;
 	Mon, 25 Aug 2025 16:07:52 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id B1BB91A1274;
-	Mon, 25 Aug 2025 16:07:51 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 303191A127A;
+	Mon, 25 Aug 2025 16:07:52 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgAncIzVGaxosLjpAA--.42805S4;
+	by APP4 (Coremail) with SMTP id gCh0CgAncIzVGaxosLjpAA--.42805S5;
 	Mon, 25 Aug 2025 16:07:51 +0800 (CST)
 From: linan666@huaweicloud.com
 To: song@kernel.org,
@@ -49,10 +50,12 @@ Cc: linux-raid@vger.kernel.org,
 	linan666@huaweicloud.com,
 	yangerkun@huawei.com,
 	yi.zhang@huawei.com
-Subject: [PATCH v3 0/2] make logical_block_size configurable
-Date: Mon, 25 Aug 2025 15:59:22 +0800
-Message-Id: <20250825075924.2696723-1-linan666@huaweicloud.com>
+Subject: [PATCH v3 1/2] md: prevent adding disks with larger logical_block_size to active arrays
+Date: Mon, 25 Aug 2025 15:59:23 +0800
+Message-Id: <20250825075924.2696723-2-linan666@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250825075924.2696723-1-linan666@huaweicloud.com>
+References: <20250825075924.2696723-1-linan666@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
@@ -60,50 +63,59 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAncIzVGaxosLjpAA--.42805S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrtr43Xr4DXFW5tFyrJF1fZwb_yoW3JwcEva
-	yxXrZ3try09Fn7Zay5urs3ZryjkF48u3s7X3Wagr4a93W3Zr18GF109r95X3WkCa4jqF1D
-	Jr1UJ3y8Ars8KjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbDxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
-	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
-	rcIFxwACI402YVCY1x02628vn2kIc2xKxwAKzVCY07xG64k0F24lc7CjxVAaw2AFwI0_Jw
-	0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
-	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrx
-	kI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v2
-	6r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8Jw
-	CI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUYWrWUUUU
-	U
+X-CM-TRANSID:gCh0CgAncIzVGaxosLjpAA--.42805S5
+X-Coremail-Antispam: 1UD129KBjvdXoWrKFyDGFyDXFW5tFW8WF45Wrg_yoWkuFXE9a
+	1Yvr92qr47GF9I9F1UZrWxZFyfKa18Wa1kXFnFgw13ua4UJF1kCF97u345J3yq9ay7AFyY
+	kr1kKw4fAr4UAjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbd8FF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGwA2048vs2IY02
+	0Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
+	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2vY
+	z4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c
+	02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE
+	4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4
+	IIrI8v6xkF7I0E8cxan2IY04v7M4kE6xkIj40Ew7xC0wCY1x0262kKe7AKxVWUtVW8ZwCF
+	04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
+	18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vI
+	r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr
+	1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUrhL5UUUUU=
 X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
 From: Li Nan <linan122@huawei.com>
 
-v3:
- - logical_block_size must not exceed PAGE_SIZE for bio device.
- - Assign lim to mddev rather than to gendisk in mddev_stack_rdev_limits().
- - Remove the patch that modifies the return value.
+When adding a disk to a md array, avoid updating the array's
+logical_block_size to match the new disk. This prevents accidental
+partition table loss that renders the array unusable.
 
-v2: No new exported interfaces are introduced.
+The later patch will introduce a way to configure the array's
+logical_block_size.
 
-Li Nan (2):
-  md: prevent adding disks with larger logical_block_size to active
-    arrays
-  md: allow configuring logical_block_size
+Signed-off-by: Li Nan <linan122@huawei.com>
+Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+---
+ drivers/md/md.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
- drivers/md/md.h                |  1 +
- include/uapi/linux/raid/md_p.h |  6 ++-
- drivers/md/md-linear.c         |  1 +
- drivers/md/md.c                | 82 ++++++++++++++++++++++++++++++++++
- drivers/md/raid0.c             |  1 +
- drivers/md/raid1.c             |  1 +
- drivers/md/raid10.c            |  1 +
- drivers/md/raid5.c             |  1 +
- 8 files changed, 92 insertions(+), 2 deletions(-)
-
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index cea8fc96abd3..206434591b97 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -6064,6 +6064,13 @@ int mddev_stack_new_rdev(struct mddev *mddev, struct md_rdev *rdev)
+ 	if (mddev_is_dm(mddev))
+ 		return 0;
+ 
++	if (queue_logical_block_size(rdev->bdev->bd_disk->queue) >
++	    queue_logical_block_size(mddev->gendisk->queue)) {
++		pr_err("%s: incompatible logical_block_size, can not add\n",
++		       mdname(mddev));
++		return -EINVAL;
++	}
++
+ 	lim = queue_limits_start_update(mddev->gendisk->queue);
+ 	queue_limits_stack_bdev(&lim, rdev->bdev, rdev->data_offset,
+ 				mddev->gendisk->disk_name);
 -- 
 2.39.2
 
