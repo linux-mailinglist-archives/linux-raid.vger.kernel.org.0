@@ -1,122 +1,167 @@
-Return-Path: <linux-raid+bounces-4950-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-4952-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62CE4B33976
-	for <lists+linux-raid@lfdr.de>; Mon, 25 Aug 2025 10:38:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 875B3B339CE
+	for <lists+linux-raid@lfdr.de>; Mon, 25 Aug 2025 10:45:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B135B7AD2DC
-	for <lists+linux-raid@lfdr.de>; Mon, 25 Aug 2025 08:36:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E5D203B3A55
+	for <lists+linux-raid@lfdr.de>; Mon, 25 Aug 2025 08:45:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0066E2D29AA;
-	Mon, 25 Aug 2025 08:33:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4CD428B7DA;
+	Mon, 25 Aug 2025 08:43:20 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A862D23B1;
-	Mon, 25 Aug 2025 08:33:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 047D027AC34;
+	Mon, 25 Aug 2025 08:43:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756110829; cv=none; b=thX0dEEjyljDpkUxHw29RMdnXrhOOgFgzLsVGWbmtbVemp2fA+kXJuDKA/Iq8/LuVDcUPixKry7gN7XdPXwumW8VF+nOMZIIwXUqsrsBRcla/OJtJNbv+l8Em7vAtmV/QmJHWcUD2tCBaJr4mLwMCddC/uM/FKKCn69Qe+Vw3pU=
+	t=1756111400; cv=none; b=eypwwmD5z/JeP0uDZMrXT1H1Zs8ZdAIU8FnykGA1nWeYLQ2KtyAwATjrTYoys5xpeYTYmizDHpDE2st2MbZXljOm0zgMfH5g+pDzjeoTnoOYCTf/cjaDb3Ki0sEYIQbW/goCSABt8tfpKiQP8gokfrHxcp0uoJZ7ZOUHcqfA9go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756110829; c=relaxed/simple;
-	bh=1W2SEYz7RYrf/YDuUuDzn0Qpp8Sw+Y8aFKYnEY+issc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MoDguzPTPYboQAywKxB/lOuc5TzOhFOrHv9B4th44FYaFnB/nf7Ee31m6vFxJ3NciKi1K1P4Hr0l/Jvwz6oNQJZAH2FflipZYgO2eY1sUSPcz1v3k5/FEESziPHF7vLAxEgGLbXr65D+fh10m3j1h1XQL5GsyQQO/5ydbF9ihaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	s=arc-20240116; t=1756111400; c=relaxed/simple;
+	bh=/HmWPUJ/QVxY3311v4PtW5t2r2BCqnsZtbdJnqGkUI8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XUSz4DJMoVRonxK0lMQYr55Y2YBmCi1T3VNRLVCaOEv9OFJ639sh+uzUeWwJ+7lrJHfVylRz+6Tc1TXzXKbIE54L3RRturM4Ta06Nt1sG/AMLx70T+G3SKfHjZEaAV4Hnvfa1NXO45zXz7PPsw23R1IcMEfiBvbo/ZFkIZOXZnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4c9PG148FszYQvyT;
-	Mon, 25 Aug 2025 16:33:45 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4c9PSz4SkjzKHMx7;
+	Mon, 25 Aug 2025 16:43:15 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 228701A13D5;
-	Mon, 25 Aug 2025 16:33:44 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.50.85.155])
-	by APP4 (Coremail) with SMTP id gCh0CgAncIzcH6xoZc7rAA--.43322S6;
-	Mon, 25 Aug 2025 16:33:44 +0800 (CST)
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-To: linux-block@vger.kernel.org,
-	linux-raid@vger.kernel.org,
-	drbd-dev@lists.linbit.com
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	john.g.garry@oracle.com,
-	hch@lst.de,
-	martin.petersen@oracle.com,
-	axboe@kernel.dk,
-	yi.zhang@huawei.com,
-	yi.zhang@huaweicloud.com,
-	yukuai3@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH 2/2] drbd: init queue_limits->max_hw_wzeroes_unmap_sectors parameter
-Date: Mon, 25 Aug 2025 16:33:20 +0800
-Message-ID: <20250825083320.797165-3-yi.zhang@huaweicloud.com>
-X-Mailer: git-send-email 2.46.1
-In-Reply-To: <20250825083320.797165-1-yi.zhang@huaweicloud.com>
-References: <20250825083320.797165-1-yi.zhang@huaweicloud.com>
+	by mail.maildlp.com (Postfix) with ESMTP id 335931A0EFD;
+	Mon, 25 Aug 2025 16:43:15 +0800 (CST)
+Received: from [10.174.179.247] (unknown [10.174.179.247])
+	by APP4 (Coremail) with SMTP id gCh0CgCX4o4hIqxo0ZfsAA--.61435S3;
+	Mon, 25 Aug 2025 16:43:14 +0800 (CST)
+Message-ID: <3e26e8a3-e0c1-cd40-af79-06424fb2d54b@huaweicloud.com>
+Date: Mon, 25 Aug 2025 16:43:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH v3 1/2] md: prevent adding disks with larger
+ logical_block_size to active arrays
+To: Paul Menzel <pmenzel@molgen.mpg.de>, Li Nan <linan666@huaweicloud.com>
+Cc: song@kernel.org, yukuai3@huawei.com, linux-raid@vger.kernel.org,
+ linux-kernel@vger.kernel.org, martin.petersen@oracle.com,
+ bvanassche@acm.org, hch@infradead.org, filipe.c.maia@gmail.com,
+ yangerkun@huawei.com, yi.zhang@huawei.com
+References: <20250825075924.2696723-1-linan666@huaweicloud.com>
+ <20250825075924.2696723-2-linan666@huaweicloud.com>
+ <76d66b0b-afaa-4835-9d55-9e61be83ce01@molgen.mpg.de>
+From: Li Nan <linan666@huaweicloud.com>
+In-Reply-To: <76d66b0b-afaa-4835-9d55-9e61be83ce01@molgen.mpg.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAncIzcH6xoZc7rAA--.43322S6
-X-Coremail-Antispam: 1UD129KBjvJXoW7uFW7JF1xGFy3KrW7WF18Grg_yoW8GF1DpF
-	47XFyIqryjgF4Ivws8Jw17ZF1rKa95JFya9ay7A3Z8W34Skrn3XF42kay3Xa12gr95Gw4F
-	q3W2yrWvk34jqrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUm014x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-	xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
-	kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
-	6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
-	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVj
-	vjDU0xZFpf9x0JUQXo7UUUUU=
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+X-CM-TRANSID:gCh0CgCX4o4hIqxo0ZfsAA--.61435S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7uw45uF1ktryxCF45Ww48Zwb_yoW8uF1Dpa
+	n7X3W5G3y7Ar10va47JF1rAFy3Xr1kGayDtry7XFWUZrZxAr12gF4xWF90gr1jqws7Jr1U
+	X3WUKrZ7uF1fJF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPI14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
+	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v
+	4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7
+	AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GF
+	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQ
+	vtAUUUUU=
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
-From: Zhang Yi <yi.zhang@huawei.com>
 
-The parameter max_hw_wzeroes_unmap_sectors in queue_limits should be
-equal to max_write_zeroes_sectors if it is set to a non-zero value.
-However, when the backend bdev is specified, this parameter is
-initialized to UINT_MAX during the call to blk_set_stacking_limits(),
-while only max_write_zeroes_sectors is adjusted. Therefore, this
-discrepancy triggers a value check failure in blk_validate_limits().
 
-Since the drvd driver doesn't yet support unmap write zeroes, so fix
-this failure by explicitly setting max_hw_wzeroes_unmap_sectors to
-zero.
+在 2025/8/25 16:10, Paul Menzel 写道:
+> Dear Li,
+> 
+> 
+> Thank you for your patch.
+> 
+> Am 25.08.25 um 09:59 schrieb linan666@huaweicloud.com:
+>> From: Li Nan <linan122@huawei.com>
+>>
+>> When adding a disk to a md array, avoid updating the array's
+>> logical_block_size to match the new disk. This prevents accidental
+>> partition table loss that renders the array unusable.
+> 
+> Do you have a reproducer to test this?
 
-Fixes: 0c40d7cb5ef3 ("block: introduce max_{hw|user}_wzeroes_unmap_sectors to queue limits")
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
----
- drivers/block/drbd/drbd_nl.c | 1 +
- 1 file changed, 1 insertion(+)
+Please try the following script:
 
-diff --git a/drivers/block/drbd/drbd_nl.c b/drivers/block/drbd/drbd_nl.c
-index e09930c2b226..91f3b8afb63c 100644
---- a/drivers/block/drbd/drbd_nl.c
-+++ b/drivers/block/drbd/drbd_nl.c
-@@ -1330,6 +1330,7 @@ void drbd_reconsider_queue_parameters(struct drbd_device *device,
- 		lim.max_write_zeroes_sectors = DRBD_MAX_BBIO_SECTORS;
- 	else
- 		lim.max_write_zeroes_sectors = 0;
-+	lim.max_hw_wzeroes_unmap_sectors = 0;
- 
- 	if ((lim.discard_granularity >> SECTOR_SHIFT) >
- 	    lim.max_hw_discard_sectors) {
+```
+#sd[de] lbs is 512, sdf is 4096
+mdadm -CR /dev/md0 -l1 -n2 /dev/sd[de] --assume-clean
+
+#512
+cat /sys/block/md0/queue/logical_block_size
+
+#create md0p1
+printf "g\nn\n\n\n\nw\n" | fdisk /dev/md0
+lsblk | grep md0
+
+mdadm --fail /dev/md0 /dev/sdd
+mdadm --add /dev/md0 /dev/sdf
+
+#4096
+cat /sys/block/md0/queue/logical_block_size
+
+#partition loss
+partprobe /dev/md0
+lsblk | grep md0
+```
+
+> 
+>> The later patch will introduce a way to configure the array's
+>> logical_block_size.
+>>
+>> Signed-off-by: Li Nan <linan122@huawei.com>
+>> Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+>> ---
+>>   drivers/md/md.c | 7 +++++++
+>>   1 file changed, 7 insertions(+)
+>>
+>> diff --git a/drivers/md/md.c b/drivers/md/md.c
+>> index cea8fc96abd3..206434591b97 100644
+>> --- a/drivers/md/md.c
+>> +++ b/drivers/md/md.c
+>> @@ -6064,6 +6064,13 @@ int mddev_stack_new_rdev(struct mddev *mddev, 
+>> struct md_rdev *rdev)
+>>       if (mddev_is_dm(mddev))
+>>           return 0;
+>> +    if (queue_logical_block_size(rdev->bdev->bd_disk->queue) >
+>> +        queue_logical_block_size(mddev->gendisk->queue)) {
+>> +        pr_err("%s: incompatible logical_block_size, can not add\n",
+>> +               mdname(mddev));
+>> +        return -EINVAL;
+>> +    }
+>> +
+>>       lim = queue_limits_start_update(mddev->gendisk->queue);
+>>       queue_limits_stack_bdev(&lim, rdev->bdev, rdev->data_offset,
+>>                   mddev->gendisk->disk_name);
+> 
+> 
+> Kind regards,
+> 
+> Paul
+> 
+> 
+> .
+
 -- 
-2.46.1
+Thanks,
+Nan
 
 
