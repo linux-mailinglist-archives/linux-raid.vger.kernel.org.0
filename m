@@ -1,43 +1,43 @@
-Return-Path: <linux-raid+bounces-4992-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-4994-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7CC6B357D0
-	for <lists+linux-raid@lfdr.de>; Tue, 26 Aug 2025 11:01:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 715F1B357CD
+	for <lists+linux-raid@lfdr.de>; Tue, 26 Aug 2025 11:01:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0981868068D
-	for <lists+linux-raid@lfdr.de>; Tue, 26 Aug 2025 09:00:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 921101B658AF
+	for <lists+linux-raid@lfdr.de>; Tue, 26 Aug 2025 09:01:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51F432FF672;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84F202FFDF4;
 	Tue, 26 Aug 2025 09:00:43 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4AF42FDC24;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A7F299AAB;
 	Tue, 26 Aug 2025 09:00:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756198843; cv=none; b=IeMKb5W3eXvYT5crbNl2JflanwHSlwDjNPcwHUqi6XN8dtCJzOzukCOPgmTS9w4XY+3KQb4Scqdg4zidIcuY9WOoY4qFCtBRBPSpmWO0makgimSRYkSDm/e84WVCyeLPvq6FVlZMDZ3QJnRmnBcDhZuUvc90E0g7s3N05LmbA8I=
+	t=1756198843; cv=none; b=ug7o9397RMN2m8bM1nPUVNcaWhjySDPgS8DibPIA2Zkhd5cnsPwDL2FFOC07GW/qDVr3cgjGko6M9ZPfpEZNnwew5umYI0LX9GPnJpCjmN1fXaBo6rg8eNgKYdMT050v9HEZKZINCuDWfP5/m2PlvqiQRjqPo08jC7hTPbTR68k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1756198843; c=relaxed/simple;
-	bh=xmOLclWHLymNJPq2KBcCgkTRP1hfYxI+YF9sV8VqEr0=;
+	bh=RGBZynnur4cyQENYoo2wIGzEb5x7LlBsw6RCRwlfddk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RpDoDOBk+P5sfD6n/B2DEJBOdUBubYCQobIoN1qxjNfBvIdEuvg/IBV+480WfRrZtyDN6ThpkIWh/QBpVG6oFca8OO+BLndLgNeThnvgYqgGs8PoPi4RFstU5pEcq3raZgSu++sS6dDBjofv7gKBqG/UH9klhOzr/VaaoozSqoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	 MIME-Version; b=ZMaYMqgFQV4DzUW2nLfrPAQo5rIHhGvhD/RwkP9n6V1KOGWu6gPgfGSoX2uTM28uRZz/KwLosDpr62jjjowfBQtErTBXK+pE1z650HTg1bT26DSdxDz0Eqf7O+W5UvDtwHwbyH1eULQIxTb2rnd1QuiLg3XbUlmg02ymmZ+SCBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4cB1pZ32s5zKHMTL;
-	Tue, 26 Aug 2025 17:00:38 +0800 (CST)
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4cB1pb10G0zKHMdG;
+	Tue, 26 Aug 2025 17:00:39 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 0C5021A1106;
+	by mail.maildlp.com (Postfix) with ESMTP id B745F1A0F16;
 	Tue, 26 Aug 2025 17:00:38 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgAncIyyd61oPOlgAQ--.7793S5;
-	Tue, 26 Aug 2025 17:00:37 +0800 (CST)
+	by APP4 (Coremail) with SMTP id gCh0CgAncIyyd61oPOlgAQ--.7793S6;
+	Tue, 26 Aug 2025 17:00:38 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: hch@infradead.org,
 	corbet@lwn.net,
@@ -58,9 +58,9 @@ Cc: linux-doc@vger.kernel.org,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com,
 	johnny.chenyi@huawei.com
-Subject: [PATCH v6 md-6.18 01/11] md: add a new parameter 'offset' to md_super_write()
-Date: Tue, 26 Aug 2025 16:51:55 +0800
-Message-Id: <20250826085205.1061353-2-yukuai1@huaweicloud.com>
+Subject: [PATCH v6 md-6.18 02/11] md: factor out a helper raid_is_456()
+Date: Tue, 26 Aug 2025 16:51:56 +0800
+Message-Id: <20250826085205.1061353-3-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250826085205.1061353-1-yukuai1@huaweicloud.com>
 References: <20250826085205.1061353-1-yukuai1@huaweicloud.com>
@@ -71,13 +71,13 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAncIyyd61oPOlgAQ--.7793S5
-X-Coremail-Antispam: 1UD129KBjvJXoW3Jr4kXF1DAFWDKr43KrWxZwb_yoW7CF4Dpa
-	yIvFyfJrWayrW2qw17JFWDua4Fq34DKrZ7Kry3C34xu3W7KrykKF15XFy8Xr98uF9xCFs8
-	Xw4jkFW7uF1IgrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmY14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+X-CM-TRANSID:gCh0CgAncIyyd61oPOlgAQ--.7793S6
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kr47Kr4xtr4fZw1xCF4UJwb_yoW8Ar4fpa
+	1fXFy3ZryUXFW3tw1DX3WkZa4Fgw1ftryqyrWxZ395XF1UJr1DKF1SqFZ2qryDWayrAFsI
+	qa1jyr48C3W0gw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmF14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
 	Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
 	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
 	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
@@ -86,19 +86,15 @@ X-Coremail-Antispam: 1UD129KBjvJXoW3Jr4kXF1DAFWDKr43KrWxZwb_yoW7CF4Dpa
 	xKxwCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
 	JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
 	kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
-	6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
-	vEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIev
-	Ja73UjIFyTuYvjTRAb10DUUUU
+	6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
+	IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2
+	KfnxnUUI43ZEXa7sRREfO5UUUUU==
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-The parameter is always set to 0 for now, following patches will use
-this helper to write llbitmap to underlying disks, allow writing
-dirty sectors instead of the whole page.
-
-Also rename md_super_write to md_write_metadata since there is nothing
-super-block specific.
+There are no functional changes, the helper will be used by llbitmap in
+following patches.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 Reviewed-by: Xiao Ni <xni@redhat.com>
@@ -106,137 +102,52 @@ Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 Reviewed-by: Li Nan <linan122@huawei.com>
 ---
- drivers/md/md-bitmap.c |  3 ++-
- drivers/md/md.c        | 52 +++++++++++++++++++++++++-----------------
- drivers/md/md.h        |  5 ++--
- 3 files changed, 36 insertions(+), 24 deletions(-)
+ drivers/md/md.c | 9 +--------
+ drivers/md/md.h | 6 ++++++
+ 2 files changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-index 5f62f2fd8f3f..b157119de123 100644
---- a/drivers/md/md-bitmap.c
-+++ b/drivers/md/md-bitmap.c
-@@ -485,7 +485,8 @@ static int __write_sb_page(struct md_rdev *rdev, struct bitmap *bitmap,
- 			return -EINVAL;
- 	}
- 
--	md_super_write(mddev, rdev, sboff + ps, (int)min(size, bitmap_limit), page);
-+	md_write_metadata(mddev, rdev, sboff + ps, (int)min(size, bitmap_limit),
-+			  page, 0);
- 	return 0;
- }
- 
 diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 61a659820779..74f876497c09 100644
+index 74f876497c09..86cf97c0a77b 100644
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -1038,15 +1038,26 @@ static void super_written(struct bio *bio)
- 		wake_up(&mddev->sb_wait);
+@@ -9121,19 +9121,12 @@ static sector_t md_sync_position(struct mddev *mddev, enum sync_action action)
+ 
+ static bool sync_io_within_limit(struct mddev *mddev)
+ {
+-	int io_sectors;
+-
+ 	/*
+ 	 * For raid456, sync IO is stripe(4k) per IO, for other levels, it's
+ 	 * RESYNC_PAGES(64k) per IO.
+ 	 */
+-	if (mddev->level == 4 || mddev->level == 5 || mddev->level == 6)
+-		io_sectors = 8;
+-	else
+-		io_sectors = 128;
+-
+ 	return atomic_read(&mddev->recovery_active) <
+-		io_sectors * sync_io_depth(mddev);
++	       (raid_is_456(mddev) ? 8 : 128) * sync_io_depth(mddev);
  }
  
--void md_super_write(struct mddev *mddev, struct md_rdev *rdev,
--		   sector_t sector, int size, struct page *page)
--{
--	/* write first size bytes of page to sector of rdev
--	 * Increment mddev->pending_writes before returning
--	 * and decrement it on completion, waking up sb_wait
--	 * if zero is reached.
--	 * If an error occurred, call md_error
--	 */
-+/**
-+ * md_write_metadata - write metadata to underlying disk, including
-+ * array superblock, badblocks, bitmap superblock and bitmap bits.
-+ * @mddev:	the array to write
-+ * @rdev:	the underlying disk to write
-+ * @sector:	the offset to @rdev
-+ * @size:	the length of the metadata
-+ * @page:	the metadata
-+ * @offset:	the offset to @page
-+ *
-+ * Write @size bytes of @page start from @offset, to @sector of @rdev, Increment
-+ * mddev->pending_writes before returning, and decrement it on completion,
-+ * waking up sb_wait. Caller must call md_super_wait() after issuing io to all
-+ * rdev. If an error occurred, md_error() will be called, and the @rdev will be
-+ * kicked out from @mddev.
-+ */
-+void md_write_metadata(struct mddev *mddev, struct md_rdev *rdev,
-+		       sector_t sector, int size, struct page *page,
-+		       unsigned int offset)
-+{
- 	struct bio *bio;
- 
- 	if (!page)
-@@ -1064,7 +1075,7 @@ void md_super_write(struct mddev *mddev, struct md_rdev *rdev,
- 	atomic_inc(&rdev->nr_pending);
- 
- 	bio->bi_iter.bi_sector = sector;
--	__bio_add_page(bio, page, size, 0);
-+	__bio_add_page(bio, page, size, offset);
- 	bio->bi_private = rdev;
- 	bio->bi_end_io = super_written;
- 
-@@ -1674,8 +1685,8 @@ super_90_rdev_size_change(struct md_rdev *rdev, sector_t num_sectors)
- 	if ((u64)num_sectors >= (2ULL << 32) && rdev->mddev->level >= 1)
- 		num_sectors = (sector_t)(2ULL << 32) - 2;
- 	do {
--		md_super_write(rdev->mddev, rdev, rdev->sb_start, rdev->sb_size,
--		       rdev->sb_page);
-+		md_write_metadata(rdev->mddev, rdev, rdev->sb_start,
-+				  rdev->sb_size, rdev->sb_page, 0);
- 	} while (md_super_wait(rdev->mddev) < 0);
- 	return num_sectors;
- }
-@@ -2323,8 +2334,8 @@ super_1_rdev_size_change(struct md_rdev *rdev, sector_t num_sectors)
- 	sb->super_offset = cpu_to_le64(rdev->sb_start);
- 	sb->sb_csum = calc_sb_1_csum(sb);
- 	do {
--		md_super_write(rdev->mddev, rdev, rdev->sb_start, rdev->sb_size,
--			       rdev->sb_page);
-+		md_write_metadata(rdev->mddev, rdev, rdev->sb_start,
-+				  rdev->sb_size, rdev->sb_page, 0);
- 	} while (md_super_wait(rdev->mddev) < 0);
- 	return num_sectors;
- 
-@@ -2833,18 +2844,17 @@ void md_update_sb(struct mddev *mddev, int force_change)
- 			continue; /* no noise on spare devices */
- 
- 		if (!test_bit(Faulty, &rdev->flags)) {
--			md_super_write(mddev,rdev,
--				       rdev->sb_start, rdev->sb_size,
--				       rdev->sb_page);
-+			md_write_metadata(mddev, rdev, rdev->sb_start,
-+					  rdev->sb_size, rdev->sb_page, 0);
- 			pr_debug("md: (write) %pg's sb offset: %llu\n",
- 				 rdev->bdev,
- 				 (unsigned long long)rdev->sb_start);
- 			rdev->sb_events = mddev->events;
- 			if (rdev->badblocks.size) {
--				md_super_write(mddev, rdev,
--					       rdev->badblocks.sector,
--					       rdev->badblocks.size << 9,
--					       rdev->bb_page);
-+				md_write_metadata(mddev, rdev,
-+						  rdev->badblocks.sector,
-+						  rdev->badblocks.size << 9,
-+						  rdev->bb_page, 0);
- 				rdev->badblocks.size = 0;
- 			}
- 
+ #define SYNC_MARKS	10
 diff --git a/drivers/md/md.h b/drivers/md/md.h
-index 081152c8de1f..cadd9bc99938 100644
+index cadd9bc99938..5ef73109d14d 100644
 --- a/drivers/md/md.h
 +++ b/drivers/md/md.h
-@@ -908,8 +908,9 @@ void md_account_bio(struct mddev *mddev, struct bio **bio);
- void md_free_cloned_bio(struct bio *bio);
+@@ -1033,6 +1033,12 @@ static inline bool mddev_is_dm(struct mddev *mddev)
+ 	return !mddev->gendisk;
+ }
  
- extern bool __must_check md_flush_request(struct mddev *mddev, struct bio *bio);
--extern void md_super_write(struct mddev *mddev, struct md_rdev *rdev,
--			   sector_t sector, int size, struct page *page);
-+void md_write_metadata(struct mddev *mddev, struct md_rdev *rdev,
-+		       sector_t sector, int size, struct page *page,
-+		       unsigned int offset);
- extern int md_super_wait(struct mddev *mddev);
- extern int sync_page_io(struct md_rdev *rdev, sector_t sector, int size,
- 		struct page *page, blk_opf_t opf, bool metadata_op);
++static inline bool raid_is_456(struct mddev *mddev)
++{
++	return mddev->level == ID_RAID4 || mddev->level == ID_RAID5 ||
++	       mddev->level == ID_RAID6;
++}
++
+ static inline void mddev_trace_remap(struct mddev *mddev, struct bio *bio,
+ 		sector_t sector)
+ {
 -- 
 2.39.2
 
