@@ -1,87 +1,104 @@
-Return-Path: <linux-raid+bounces-5165-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5167-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CFCAAB42A28
-	for <lists+linux-raid@lfdr.de>; Wed,  3 Sep 2025 21:51:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBD1DB42B87
+	for <lists+linux-raid@lfdr.de>; Wed,  3 Sep 2025 23:10:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8ABFF5E4C27
-	for <lists+linux-raid@lfdr.de>; Wed,  3 Sep 2025 19:51:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 93D765681F3
+	for <lists+linux-raid@lfdr.de>; Wed,  3 Sep 2025 21:10:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3B062E7BD5;
-	Wed,  3 Sep 2025 19:50:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC7E72EAB6B;
+	Wed,  3 Sep 2025 21:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cjsa.com header.i=@cjsa.com header.b="FwY1ofUE"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from smtp.hosts.co.uk (smtp.hosts.co.uk [85.233.160.19])
+Received: from mail1.g17.pair.com (mail1.g17.pair.com [216.92.2.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73902D8768
-	for <linux-raid@vger.kernel.org>; Wed,  3 Sep 2025 19:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.233.160.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C153235C01
+	for <linux-raid@vger.kernel.org>; Wed,  3 Sep 2025 21:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.92.2.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756929059; cv=none; b=cSiZgUIZn0x4Rh9whOjy/hBXEi9HZk0I9THNegHg6VjGGOaBDzvfoKbaQOAkNC4i1xXHbgmjQSIxRsMkvNZ1JaLAsiPoPDXtcDxWULx07BumOZyx5vzcqR+jjb6knNfXbQ0vm/pGcphmineKLFHFENUpyaSPx5mtSJuQnz+hQ/Y=
+	t=1756933828; cv=none; b=WNlPUGTNuwgnwrO4nq+wXhWmNheIu3FFPJAxB1rI/tjWhBoh/pYZ2+tAH54bygSJCf/3/vuctc7AQiAupQO7vwCRNd+p1qVCPSkOXvKhzJcNk1RU9YXBCYh6ctHGqANyV3ku4fDIBHFQuyV/KFRtQin5A1hxt/N5xkmPiau8Bow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756929059; c=relaxed/simple;
-	bh=CMTbfZFI3gOAaRxX7FthaPKS55RSJ5Jpfgxd0LxsI34=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H4gE6vpOBwuDRdPLcDEupc/IUP+kqmErh8wuWDTNc63opJua/L9yZgNFx5vwtR+lFAxRA/w0IPH/lRZMQVusiuaWtQQRsYs3HAVHsjfhMC70mi9IQLEQ2/B86cnkEUfJlwZR194GX2a3oNKvltEJNeukumEEPyXKlJKFmkkGdkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=youngman.org.uk; spf=fail smtp.mailfrom=youngman.org.uk; arc=none smtp.client-ip=85.233.160.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=youngman.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=youngman.org.uk
-Received: from host51-14-94-149.range51-14.btcentralplus.com ([51.14.94.149] helo=[192.168.1.65])
-	by smtp.hosts.co.uk with esmtpa (Exim)
-	(envelope-from <antlists@youngman.org.uk>)
-	id 1uttVO-00000000360-2uhc;
-	Wed, 03 Sep 2025 20:50:54 +0100
-Message-ID: <ec124f5e-8849-49ce-bf8e-e537452c1dd3@youngman.org.uk>
-Date: Wed, 3 Sep 2025 20:50:55 +0100
+	s=arc-20240116; t=1756933828; c=relaxed/simple;
+	bh=sAqJg9kuwTSoLUpQn3EhON171I4ZtmJ2IbEpWEIltTg=;
+	h=To:From:Subject:Date:Message-ID; b=kKq3jHyZ5Uj4TFEqC5TR6+8GvkUkeFKb8qqW6Ygv9Qy2QTJDxxuW3F2qL2e9cYwAL0lqMx0goJELCXdUsmOQ6ZW+zednbu8H05vID8QHSNe02h/T1ZoFYsfDh5jzLFmPlBTmc9bGruNgA8VHNlIPEsdFWpIrjO03f6omFpBOuyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cjsa.com; spf=pass smtp.mailfrom=cjsa.com; dkim=pass (2048-bit key) header.d=cjsa.com header.i=@cjsa.com header.b=FwY1ofUE; arc=none smtp.client-ip=216.92.2.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cjsa.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cjsa.com
+Received: from mail1.g17.pair.com (localhost [127.0.0.1])
+	by mail1.g17.pair.com (Postfix) with ESMTP id 2BD2F1682BE
+	for <linux-raid@vger.kernel.org>; Wed,  3 Sep 2025 17:04:50 -0400 (EDT)
+Received: from dymaxion.cjsa2.com (c-67-168-59-2.hsd1.wa.comcast.net [67.168.59.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail1.g17.pair.com (Postfix) with ESMTPSA id D95EA1682BC
+	for <linux-raid@vger.kernel.org>; Wed,  3 Sep 2025 17:04:49 -0400 (EDT)
+Received: from dymaxion.cjsa2.com (localhost.cjsa2.com [127.0.0.1])
+	by dymaxion.cjsa2.com (8.18.1/8.18.1/Debian-2) with ESMTPS id 583L4m063370870
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT)
+	for <linux-raid@vger.kernel.org>; Wed, 3 Sep 2025 14:04:48 -0700
+Received: (from news@localhost)
+	by dymaxion.cjsa2.com (8.18.1/8.18.1/Submit) id 583L4miM3370852
+	for linux-raid@vger.kernel.org; Wed, 3 Sep 2025 14:04:48 -0700
+To: linux-raid@vger.kernel.org
+Path: jeff
+From: Jeffery Small <jeff@cjsa.com>
+Newsgroups: local.linux.raid
+Subject: What is the best way to set up RAID-1 on new Ubuntu install
+Date: Wed, 3 Sep 2025 21:04:48 -0000 (UTC)
+Organization: CJSA LLC
+Message-ID: <109aahg$34jlp$1@dymaxion.cjsa2.com>
+Keywords: ubuntu raid
+User-Agent: nn/6.7.3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cjsa.com; h=to:from:subject:date:message-id; s=pair-202402141545; bh=JsuvorfA/hEWg9XdseuxsgqnaM/XDt/F/XqVgn7xMb4=; b=FwY1ofUEJKKZ8vUkAh22frpIOE5XyDQli3mGLVK2SM7qT6KnO+6FpyyQToZXHPRhqb8krwaCrPzXShzMMHtlvh8AEdHj3ZGsymNO+Wnk2/k2RmUTZoaFW9QxcVomZUfVpQd1i9ZG9RapXrQgfUWMR8GzF22VgNcwTRqf++d3a4KxC6hkZnjWsMObJRm7h3b+kRdzRY4vf0+Mbl+XnazY78DL+YDiT74NmaFqAFWOXpOaH0Z6H0V0a3DSdt8cRpZvGztEypInfX93mupOSUVBnmmJzxKMWnTdhclogfAJzuXUSfSJJoOtMiDnk225FX7k4aT8owdnIfIzNbO2Q9zqcg==
+X-Scanned-By: mailmunge 3.10 on 216.92.2.65
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: RAID 1 | Changing HDs
-To: "Stefanie Leisestreichler (Febas)"
- <stefanie.leisestreichler@peter-speer.de>, Roman Mamedov <rm@romanrm.net>
-Cc: linux-raid@vger.kernel.org
-References: <5c8e3075-e45a-410e-a23a-cbf0e86bdfa6@peter-speer.de>
- <20250903204521.44e91df1@nvm>
- <0bec82b1-ab30-4d3b-b254-a461d1039dbf@peter-speer.de>
-Content-Language: en-GB
-From: Wol <antlists@youngman.org.uk>
-In-Reply-To: <0bec82b1-ab30-4d3b-b254-a461d1039dbf@peter-speer.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 03/09/2025 18:47, Stefanie Leisestreichler (Febas) wrote:
-> I like this method, hopefully I have a free connector on the board.
-> 
-> But still two questions left:
-> - Do I need to turn off the computer for the new (3rd) disk to be known? 
-> If I remember correct I had try a hot spare in another scenario and 
-> wasn't able to expose the new hard disk to be recognized by lsblk or 
-> similar.
 
-As others have said, if your mobo doesn't support hotplug, DON'T TRY IT!
+I will be installing Xubuntu 24.04.3 on a newly built system having two
+4TB Samsung M.2 SSDs which will be mirrored using RAID-1.  My question is
+what is the better way to set up the mirror.  I'll have 128GB of RAM and
+will be using a swapfile after installation.
 
-Otherwise, use eSATA (or USB).>
-> Also I see problems with the device naming as long as no hd uuids are 
-> not used by having a drive appearing as /dev/sdx and with next reboot 
-> as /dev/sdn. Are my concerns reasonable or am I just too afraid?
-As others have said, it doesn't matter. Not sure if as the other person 
-said md uses uuids, or if it just scans all partitions, and looks for a 
-superblock.
-What I would say (and it's not for raid1, but definitely raid 5/6) if 
-you do have parity raid then make sure every time you change the config, 
-generate an mdadm.conf file (or whatever it's called). While md doesn't 
-use it, if you have a problem with your raid you will wish you had it!
+Method #1: After the UEFI partition is created on both disks, create GPT
+           /boot, / and /home partitions on each SSD and then create
+	   three separate mirrors:
 
-As I say, you're raid 1, you don't need it now, but if you ever do 
-change, DO IT!
+	   md0: /boot
 
-Cheers,
-Wol
+	   md1: /
+
+	   md2: /home
+
+Method #2: After the UEFI partition is created on both disks, mirror md0
+	   using the rest of the free space.  Then create GPT partitions
+	   directly on the mirror:
+
+	   md0p1: /boot
+
+	   md0p2: /
+
+	   md0p3: /home
+
+This will be a straightforward desktop workstation, with no encryption or
+support for multiple OS installs.  Are there advantages or possible pitfalls
+with either approach?
+
+I'm also considering eliminating the boot and home partitions and just
+using a single root partition which feels strange after using UNIX for over
+40 years. From a raid perspective does this also have advantages/pitfalls?
+
+Thanks.
+--
+Jeffery Small
 
