@@ -1,97 +1,181 @@
-Return-Path: <linux-raid+bounces-5153-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5166-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9E07B425FD
-	for <lists+linux-raid@lfdr.de>; Wed,  3 Sep 2025 17:52:57 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1651AB42A8E
+	for <lists+linux-raid@lfdr.de>; Wed,  3 Sep 2025 22:12:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E268D163AB6
-	for <lists+linux-raid@lfdr.de>; Wed,  3 Sep 2025 15:52:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DBAEA7A691B
+	for <lists+linux-raid@lfdr.de>; Wed,  3 Sep 2025 20:10:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40A9B28B3E2;
-	Wed,  3 Sep 2025 15:52:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31E592DFA28;
+	Wed,  3 Sep 2025 20:12:16 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from nt.romanrm.net (nt.romanrm.net [185.213.174.59])
+Received: from smtp.hosts.co.uk (smtp.hosts.co.uk [85.233.160.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1665B28BABA
-	for <linux-raid@vger.kernel.org>; Wed,  3 Sep 2025 15:52:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.213.174.59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B6D2DEA84
+	for <linux-raid@vger.kernel.org>; Wed,  3 Sep 2025 20:12:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.233.160.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756914744; cv=none; b=j9M2RoQcqOx+SdQH32uuyYLSQCk0zgSTW1rEdLZaFghmCFDAUy5ohZt+ZYFJMvMLwBTgDnEA3FYKraEq8xFtGjOlZN2FazBgV7sqGH6ePE8w12BeC9ixSP5+VhWbdljHDCvnRo9fvLV/nEHFz7us4sK0Fm/LTbOeRGnDaI4nclA=
+	t=1756930336; cv=none; b=bSPTTKVRSlaghf+pcqXvUj/5DVLtCSrR7gUQ1Su9UcBAvnqC0ms0GaGw+8TXSCXlq8XW/F19uqKlZgCjS0kEc+N1lbRPnybvWEH2jZMrFKtD78mWcYxXTkYc5hypM6epQCm8RW8EIr7lmNXtU+6rNvi+PdpBkAyjeroRB97vGsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756914744; c=relaxed/simple;
-	bh=npdI0/QZp9tKLvddebyhgchPbqE+TWwYO7mSr5tXoHk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OEqRmfGws5/UmB53L2043ifr/nY4rx7bOl1mu+qn9wytJo33TeM5Yr9b0hSNCT4WrScpY8Ayqowa4X1guUdu//QFxPtGbbSAlhKlidzNiuYnuFmQBpxIjjI5ucoly0kNkQc2DhQMAcNiLYCWc4Jc2l3Qj0ifcNehIkwFd4sncOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=romanrm.net; spf=pass smtp.mailfrom=romanrm.net; arc=none smtp.client-ip=185.213.174.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=romanrm.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=romanrm.net
-Received: from nvm (umi.0.romanrm.net [IPv6:fd39:ade8:5a17:b555:7900:fcd:12a3:6181])
-	by nt.romanrm.net (Postfix) with SMTP id 113904082F;
-	Wed,  3 Sep 2025 15:45:21 +0000 (UTC)
-Date: Wed, 3 Sep 2025 20:45:21 +0500
-From: Roman Mamedov <rm@romanrm.net>
-To: "Stefanie Leisestreichler (Febas)"
- <stefanie.leisestreichler@peter-speer.de>
-Cc: linux-raid@vger.kernel.org
-Subject: Re: RAID 1 | Changing HDs
-Message-ID: <20250903204521.44e91df1@nvm>
-In-Reply-To: <5c8e3075-e45a-410e-a23a-cbf0e86bdfa6@peter-speer.de>
-References: <5c8e3075-e45a-410e-a23a-cbf0e86bdfa6@peter-speer.de>
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1756930336; c=relaxed/simple;
+	bh=DvK0N5v3x2DlOGUlJTxNFDVWUq+JhbyfBh8CmnK/3E4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=i5iWny5tjqYwab6dwSptDuyqANjXi5iZAhOavRr2UK0XCYK3IadsEK2np0MUo9RVlGGqbHhG3GhFsc3RYlEVZGPD1Sy1uq7JIl/aSzgLslwbYquWsPv3CrrT2a45T7U9AX/pRIirpD69ymY9fV5PVmmXuw81utqWoqk75NkQ5ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=youngman.org.uk; spf=fail smtp.mailfrom=youngman.org.uk; arc=none smtp.client-ip=85.233.160.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=youngman.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=youngman.org.uk
+Received: from host51-14-94-149.range51-14.btcentralplus.com ([51.14.94.149] helo=[192.168.1.65])
+	by smtp.hosts.co.uk with esmtpa (Exim)
+	(envelope-from <antmbox@youngman.org.uk>)
+	id 1utptL-000000006rI-31vR;
+	Wed, 03 Sep 2025 16:59:23 +0100
+Message-ID: <5bc1ce31-7acb-4cdf-bd01-b6238b0e1ade@youngman.org.uk>
+Date: Wed, 3 Sep 2025 16:59:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: RAID 1 | Changing HDs
+To: "Stefanie Leisestreichler (Febas)"
+ <stefanie.leisestreichler@peter-speer.de>, linux-raid@vger.kernel.org
+References: <5c8e3075-e45a-410e-a23a-cbf0e86bdfa6@peter-speer.de>
+Content-Language: en-GB
+From: anthony <antmbox@youngman.org.uk>
+In-Reply-To: <5c8e3075-e45a-410e-a23a-cbf0e86bdfa6@peter-speer.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 3 Sep 2025 13:55:05 +0200
-"Stefanie Leisestreichler (Febas)" <stefanie.leisestreichler@peter-speer.de>
-wrote:
-
+On 03/09/2025 12:55, Stefanie Leisestreichler (Febas) wrote:
 > Hi.
 > I have the system layout shown below.
 > 
 > To avoid data loss, I want to change HDs which have about 46508 hours of 
 > up time.
-
-Do you have a free drive bay and connector in your computer (or just the
-connector)?
-
-If so, the safest would be to connect all three drives, and then:
-
-  mdadm --add (new drive)
-  mdadm --grow -n3 (array)
-  mdadm --fail --remove (old drive).
-  mdadm --grow -n2 (array)
-
+> 
 > I thought, instead of degrading, formatting, rebuilding and so on, I could
 > - shutdown the computer
+
+Why degrade? There's no need.
+
+But yes, unless you have hot-swap, you will need to shut down the 
+computer at some point ... and I'd recommend at least one reboot...
+
+First things first - do you have a spare SATA port on your mobo? Or (I 
+wouldn't particularly recommend it) an external USB thingy to drop 
+drives in? The latter will let you hot swap and avoid one reboot.
+
+Okay. Plug your new drive in however. You will know which drives are 
+your raid, so you just partition the third identically to the other two.
+
+I'm surprised if your drives are MBR not GPT - MBR has been obsolete 
+since almost forever nowadays :-) I think there's a GPT command that 
+will copy the partitioning from a different drive. "man gdisk" or "man 
+fdisk" - ignore stuff that says fdisk can't do GPT, it's long been upgraded.
+
+Okay, now you have a 2-disk mirror and a spare. Add the spare as drive 3 
+(ie you need (a) to add it to the array as a spare and then (b) update 
+the number of drives in the array to three.) You can do both in the same 
+command.
+
+Monitor /proc/mdstat, which will tell you the progress of the resync. 
+Once you've got a fully functional 3-drive array, shut the computer 
+down. Swap the new drive for the old one and reboot.
+
+/proc/mdstat will now tell you you've got a degraded 3-drive array with 
+one missing. fail and remove the missing drive, and you're now left with 
+a fully functional 2-drive array again. And at no point has your data 
+been at risk.
+
+The removed drive is, as has already been said, a fully functional 
+backup (which is why I would recommend only removing it when the system 
+is shut down and you KNOW it's clean).
+
+And I wouldn't recommend putting that drive back in the same computer, 
+without wiping it first! I don't think it will do any damage, but in my 
+experience, raid is likely to get thoroughly confused with a failed 
+drive re-appearing, and it's simpler not to do it. If you want to get 
+anything back off that drive, stick it in a different computer.
+
+
+Google for "linux raid wiki". Ignore the crap about it being "obsolete" 
+- the admins archived a site which was aimed at end users, and are 
+referring people to the kernel documentation !!! Idiots !!! The two are 
+aimed at completely different target markets!
+
+(How big are your drives? If they're anything like modern, there's a 
+very good chance they are GPT. Is the upper limit for MBR 2GB?)
+
+Cheers,
+Wol
+
 > - take i.e. /dev/sda and do
 > - dd bs=98304 conv=sync,noerror if=/dev/sda of=/dev/sdX (X standig for 
 > device name of new disk)
+> 
+> Is it save to do it this way, presuming the array is in AA-State?
+> 
+> Thanks,
+> Steffi
+> 
+> /dev/sda1:
+>            Magic : a92b4efc
+>          Version : 1.2
+>      Feature Map : 0x0
+>       Array UUID : 68c0c9ad:82ede879:2110f427:9f31c140
+>             Name : speernix15:0  (local to host speernix15)
+>    Creation Time : Sun Nov 30 19:15:35 2014
+>       Raid Level : raid1
+>     Raid Devices : 2
+> 
+>   Avail Dev Size : 1953260976 (931.39 GiB 1000.07 GB)
+>       Array Size : 976629568 (931.39 GiB 1000.07 GB)
+>    Used Dev Size : 1953259136 (931.39 GiB 1000.07 GB)
+>      Data Offset : 262144 sectors
+>     Super Offset : 8 sectors
+>     Unused Space : before=261864 sectors, after=1840 sectors
+>            State : active
+>      Device UUID : 5871292c:7fcfbd82:b0a28f1b:df7774f9
+> 
+>      Update Time : Thu Aug 28 01:00:03 2025
+>    Bad Block Log : 512 entries available at offset 264 sectors
+>         Checksum : b198f5d1 - correct
+>           Events : 38185
+> 
+>     Device Role : Active device 0
+>     Array State : AA ('A' == active, '.' == missing, 'R' == replacing)
+> /dev/sdb1:
+>            Magic : a92b4efc
+>          Version : 1.2
+>      Feature Map : 0x0
+>       Array UUID : 68c0c9ad:82ede879:2110f427:9f31c140
+>             Name : speernix15:0  (local to host speernix15)
+>    Creation Time : Sun Nov 30 19:15:35 2014
+>       Raid Level : raid1
+>     Raid Devices : 2
+> 
+>   Avail Dev Size : 1953260976 (931.39 GiB 1000.07 GB)
+>       Array Size : 976629568 (931.39 GiB 1000.07 GB)
+>    Used Dev Size : 1953259136 (931.39 GiB 1000.07 GB)
+>      Data Offset : 262144 sectors
+>     Super Offset : 8 sectors
+>     Unused Space : before=261864 sectors, after=1840 sectors
+>            State : active
+>      Device UUID : 4bbfbe7a:457829a5:dd9d2e3c:15818bca
+> 
+>      Update Time : Thu Aug 28 01:00:03 2025
+>    Bad Block Log : 512 entries available at offset 264 sectors
+>         Checksum : 144ff0ef - correct
+>           Events : 38185
+> 
+> 
+> 
 
-Very peculiar dd line you give as an example here.
-
-  - calculator tells us 98304 is 96K, but why? Usually one would just use "1M"
-    or the like here for performance reasons, and shorter to remember and type.
-
-  - noerror is "continue after read errors", but do you want it to? I don't
-    think the regular dd has the logic to pad output to an exact amount
-    of unreadable data on input errors, and if not, then the result is useless.
-
-    If you expect input to have read errors, "ddrescue" should be used.
-
-But that's all beside the point as I don't see a reason to rely on offline
-migration with dd here either.
-
--- 
-With respect,
-Roman
 
