@@ -1,40 +1,39 @@
-Return-Path: <linux-raid+bounces-5163-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5164-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CEBE0B428BC
-	for <lists+linux-raid@lfdr.de>; Wed,  3 Sep 2025 20:35:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C8E1B429AB
+	for <lists+linux-raid@lfdr.de>; Wed,  3 Sep 2025 21:19:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6F83D3B15E4
-	for <lists+linux-raid@lfdr.de>; Wed,  3 Sep 2025 18:35:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1DE73580D5D
+	for <lists+linux-raid@lfdr.de>; Wed,  3 Sep 2025 19:19:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6148B31B137;
-	Wed,  3 Sep 2025 18:35:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A2AD2D8DB0;
+	Wed,  3 Sep 2025 19:19:52 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from zenith.plouf.fr.eu.org (plouf.fr.eu.org [213.41.155.166])
+Received: from mx.febas.net (mx.febas.net [168.119.129.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F8271B0439
-	for <linux-raid@vger.kernel.org>; Wed,  3 Sep 2025 18:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.41.155.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA8F2D374A
+	for <linux-raid@vger.kernel.org>; Wed,  3 Sep 2025 19:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.129.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756924526; cv=none; b=cjGZ8mGD6dJaO8b65d0X9gwcurEgxUEnYJpHSfiEXdWPa9OyugWxFM6SaFgWJngkgnzHV8itJr7g+ra4lK0LmuejnzTwrTgmbRw+wc3l1B5zr9bolgRu6vM3BmLLm6lr7mnEAjoEJ7V8wD/J2X52s5S1NVf+rat4JkLDP4BwAGk=
+	t=1756927192; cv=none; b=V9DBfiUZRjSReo2uGcUqkroFwaviBoysfuf05LB++tslyNmtVqwVmGkQgqLT/I/1apx3rDnCEt4sEPEVCc+NbyBRHUVCeppB5ihgs3ov+qJUY4Vh8kfU9Fod7BFQ4jVECnMSB9HP+NPWaUkm9N5jcUfsqqjL5bY1jKUKL0r1LSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756924526; c=relaxed/simple;
-	bh=bIoylk9JzP5xDTUk4zGck2RyaXOAAoCQvRO5b/97SgU=;
+	s=arc-20240116; t=1756927192; c=relaxed/simple;
+	bh=5ZSN7SousGqq+DKlzJFdAU4/Bs096Nk9eYCqQLsmp5w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mr0SZnnmbPfcGm0eJ2+IRjNg9i2cnYc7rENjUuX+9xuhAwHEbXmHwbFBgpuCfDUk4GGZd65GE0RbI94dEgkx5EJ5o46UWZiJEx6n2tUW80OKi0RUsbV93Va/UqLLGPNCzto/IiLivRFTKBRzgf1Cb1y3tr+JU85BkiRF+3KdJiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=plouf.fr.eu.org; spf=pass smtp.mailfrom=plouf.fr.eu.org; arc=none smtp.client-ip=213.41.155.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=plouf.fr.eu.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=plouf.fr.eu.org
-Received: from [192.168.0.247]
-	by zenith.plouf.fr.eu.org with esmtp (Exim 4.89)
-	(envelope-from <pascal@plouf.fr.eu.org>)
-	id 1utrjN-00044u-UL; Wed, 03 Sep 2025 19:57:13 +0200
-Message-ID: <b1fa1062-7414-400a-ab90-334977e18067@plouf.fr.eu.org>
-Date: Wed, 3 Sep 2025 19:57:14 +0200
+	 In-Reply-To:Content-Type; b=USJHEKMbixSwTJf8XkN2ryBSjxIs3XwgNIg4TXuiHAH9aEQIn0utaKb4NPSzmLrVbbelT6KASPW22PbZhyZw8BgoPIBgY/f/bG86huTMKSvP/CrXjKjmtuWgbDbxnLVcBKlW89llW94sFF2UGiFtWBFB9R1xta4yT1TqZRhoAEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=peter-speer.de; spf=pass smtp.mailfrom=peter-speer.de; arc=none smtp.client-ip=168.119.129.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=peter-speer.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=peter-speer.de
+Received: from mx.febas.net (localhost [127.0.0.1])
+	by mx.febas.net (Proxmox) with ESMTP id 0CE0B61324;
+	Wed,  3 Sep 2025 21:19:44 +0200 (CEST)
+Message-ID: <7b2f14b4-caa1-4446-a773-687bd9fbfbd5@peter-speer.de>
+Date: Wed, 3 Sep 2025 21:19:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
@@ -43,31 +42,37 @@ List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: RAID 1 | Changing HDs
-Content-Language: fr
-To: "Stefanie Leisestreichler (Febas)"
- <stefanie.leisestreichler@peter-speer.de>
+To: Pascal Hambourg <pascal@plouf.fr.eu.org>
 Cc: linux-raid@vger.kernel.org
 References: <5c8e3075-e45a-410e-a23a-cbf0e86bdfa6@peter-speer.de>
  <20250903204521.44e91df1@nvm>
  <0bec82b1-ab30-4d3b-b254-a461d1039dbf@peter-speer.de>
-From: Pascal Hambourg <pascal@plouf.fr.eu.org>
-Organization: Plouf !
-In-Reply-To: <0bec82b1-ab30-4d3b-b254-a461d1039dbf@peter-speer.de>
+ <b1fa1062-7414-400a-ab90-334977e18067@plouf.fr.eu.org>
+Content-Language: de-DE
+From: "Stefanie Leisestreichler (Febas)"
+ <stefanie.leisestreichler@peter-speer.de>
+In-Reply-To: <b1fa1062-7414-400a-ab90-334977e18067@plouf.fr.eu.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 1.0.7 at mail.febas.net
+X-Virus-Status: Clean
 
-On 03/09/2025 at 19:47, Stefanie Leisestreichler (Febas) wrote:
+On 03.09.25 19:57, Pascal Hambourg wrote:
+> On 03/09/2025 at 19:47, Stefanie Leisestreichler (Febas) wrote:
+>>
+>> - Do I need to turn off the computer for the new (3rd) disk to be known? 
 > 
-> - Do I need to turn off the computer for the new (3rd) disk to be known? 
+> It depends whether the host adapter and port support hotplug. On some 
+> motherboards it must be enabled in BIOS/UEFI settings. Do not disconnect 
+> a disk while power is on if the port does not support hotplug either.
+> 
+>> Also I see problems with the device naming as long as no hd uuids are 
+>> not used by having a drive appearing as /dev/sdx and with next reboot 
+>> as /dev/sdn. Are my concerns reasonable or am I just too afraid?
+> 
+> /dev/sd* names are not persistent and cannot be relied upon. But md uses 
+> UUIDs for assembly, so it does not matter.
 
-It depends whether the host adapter and port support hotplug. On some 
-motherboards it must be enabled in BIOS/UEFI settings. Do not disconnect 
-a disk while power is on if the port does not support hotplug either.
+Thanks, Pascal for explaination.
 
-> Also I see problems with the device naming as long as no hd uuids are 
-> not used by having a drive appearing as /dev/sdx and with next reboot 
-> as /dev/sdn. Are my concerns reasonable or am I just too afraid?
-
-/dev/sd* names are not persistent and cannot be relied upon. But md uses 
-UUIDs for assembly, so it does not matter.
 
