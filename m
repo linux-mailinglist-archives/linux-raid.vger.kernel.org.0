@@ -1,140 +1,156 @@
-Return-Path: <linux-raid+bounces-5203-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5205-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 879F0B44F24
-	for <lists+linux-raid@lfdr.de>; Fri,  5 Sep 2025 09:21:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2FEFAB4522A
+	for <lists+linux-raid@lfdr.de>; Fri,  5 Sep 2025 10:55:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4C4F5561490
-	for <lists+linux-raid@lfdr.de>; Fri,  5 Sep 2025 07:21:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C1DBFA47B00
+	for <lists+linux-raid@lfdr.de>; Fri,  5 Sep 2025 08:54:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DDCE2FD1D8;
-	Fri,  5 Sep 2025 07:16:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 169F828726C;
+	Fri,  5 Sep 2025 08:54:24 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC32D2F998E;
-	Fri,  5 Sep 2025 07:16:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33DE230D35
+	for <linux-raid@vger.kernel.org>; Fri,  5 Sep 2025 08:54:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757056573; cv=none; b=JPwDDH+9NY4LulUn4T7TQsqGXHLVVZW0RDJRqMlvhvT6553HuJzzie2nl133dwNholD4O37eQ1RQiz7elJsmT7Aph79yglUsmtwoflC9K7UpOikziWYZUncD7xoDqs3urDm2l3iKJvPfZNaFPbDVC8jNueEZQi41dpPWyuFbpF4=
+	t=1757062463; cv=none; b=TM7S4yAImGZhGBb5EeY+tMmlezAmNycPQV8T46WlzZvnY1L2Hlw0iKcmPhk+Y6Ubk2lC3+Z3F9a7CrWGmUtZfkYgtIFfL3RzBxcysAKUZBD8cCyiDNhDy3XzbkJ85Eak7P7LttMrejzvZXIKu7adFlqsn2INaiKRUD344MkTDvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757056573; c=relaxed/simple;
-	bh=zCwuK8dJpH3ZAnOhb3RF+CRrX8TXAPb+Q+iAIMUJTAw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mYex2JrO/04iy9tzhSW1HyVhZJTx+yHrAHZ+JQMCBAxUraqrVnF6N/hqAyCK87AxgxjPDs4FqeaoZYWmt8AREUtQMTLNOCUH8+Ynh9QJKu6wv7nHbg8yGhjJe/jUeoB8A6R9WyvgklyHIb5Yzd2hw5XiDbPKno4hw2Iveck9K+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	s=arc-20240116; t=1757062463; c=relaxed/simple;
+	bh=0gsWYznLUFkzNfw5yvL6UvCiK4ABRKO+6Q6TPi40HIQ=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=NvgD6skdFM3p3joQV136+lVTxuFIKO5ZcTwQs2aYnEEdL8bqpqPqBJ+H/LC3r9Ch1bh3QzGxeVvR90MMriuBCdTebbfSFuhwq/hm4AfhBA83ofSAzEd1leFo2V5Y1dFRkdzBmL6TzrlQvf6/AsVHGkKrNjccFv9eupT438ksqEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4cJ71P1YdHzKHMbR;
-	Fri,  5 Sep 2025 15:16:09 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4cJ9Bf69xCzYQvbQ
+	for <linux-raid@vger.kernel.org>; Fri,  5 Sep 2025 16:54:18 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 2B1A21A104B;
-	Fri,  5 Sep 2025 15:16:09 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgAncIwkjrpowYbQBQ--.23573S20;
-	Fri, 05 Sep 2025 15:16:08 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 5BDAA1A0F2A
+	for <linux-raid@vger.kernel.org>; Fri,  5 Sep 2025 16:54:17 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgAncIw3pbpovUjYBQ--.25140S3;
+	Fri, 05 Sep 2025 16:54:17 +0800 (CST)
+Subject: Re: [PATCH] md: cleanup md_check_recovery()
+To: Wu Guanghao <wuguanghao3@huawei.com>, song@kernel.org
+Cc: linux-raid@vger.kernel.org, yangyun50@huawei.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <b6af99f8-dc0c-89c7-cd97-688a5cec1560@huawei.com>
 From: Yu Kuai <yukuai1@huaweicloud.com>
-To: hch@infradead.org,
-	colyli@kernel.org,
-	hare@suse.de,
-	dlemoal@kernel.org,
-	tieren@fnnas.com,
-	bvanassche@acm.org,
-	axboe@kernel.dk,
-	tj@kernel.org,
-	josef@toxicpanda.com,
-	song@kernel.org,
-	yukuai3@huawei.com,
-	satyat@google.com,
-	ebiggers@google.com,
-	kmo@daterainc.com,
-	akpm@linux-foundation.org,
-	neil@brown.name
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	cgroups@vger.kernel.org,
-	linux-raid@vger.kernel.org,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com,
-	johnny.chenyi@huawei.com
-Subject: [PATCH for-6.18/block 16/16] md/raid0: convert raid0_make_request() to use bio_submit_split_bioset()
-Date: Fri,  5 Sep 2025 15:06:43 +0800
-Message-Id: <20250905070643.2533483-17-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250905070643.2533483-1-yukuai1@huaweicloud.com>
-References: <20250905070643.2533483-1-yukuai1@huaweicloud.com>
+Message-ID: <1cddf736-55ed-2bf0-6361-26a9648caeba@huaweicloud.com>
+Date: Fri, 5 Sep 2025 16:54:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <b6af99f8-dc0c-89c7-cd97-688a5cec1560@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAncIwkjrpowYbQBQ--.23573S20
-X-Coremail-Antispam: 1UD129KBjvJXoW7JFy5Kr4DAF4DKw1xCryrXrb_yoW8JF1Dpw
-	sxWFW3Z3yUJFsY9wsrJas2va4rAFyjgrWUCFZrXw4kWrn2vrnFkw4Yq34FqFy5ArWrC3s8
-	Jw1qkrsxC3WUJrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPqb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
-	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
-	rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267
-	AKxVWxJr0_GcWl84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2
-	WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkE
-	bVWUJVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY1x0262kKe7
-	AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_Wr
-	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI
-	0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x
-	07jIPfQUUUUU=
+X-CM-TRANSID:gCh0CgAncIw3pbpovUjYBQ--.25140S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Aw13GF4xtF1kKF45XrWxCrg_yoW8uFyDp3
+	93tFnxCr18JFy3XF4fJ3WDua45Zr18trZFvFy3u34xJF9Yqr17G34rWr1UAFykt3929a1F
+	qw1DJF4UCr1xWaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
+	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8
+	JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7IU8
+	0fO7UUUUU==
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-From: Yu Kuai <yukuai3@huawei.com>
+Hi,
 
-Currently, raid0_make_request() will remap the original bio to underlying
-disks to prevent reordered IO. Now that bio_submit_split_bioset() will put
-original bio to the head of current->bio_list, it's safe converting to use
-this helper and bio will still be ordered.
+在 2025/09/04 19:13, Wu Guanghao 写道:
+> In md_check_recovery(), use new helpers to make code cleaner.
+> 
+> Signed-off-by: Wu Guanghao <wuguanghao3@huawei.com>
+> ---
+>   drivers/md/md.c | 41 +++++++++++++++++++++++++++++------------
+>   1 file changed, 29 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 1baaf52c603c..cbbb9ac14cf6 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -9741,6 +9741,34 @@ static void unregister_sync_thread(struct mddev *mddev)
+>   	md_reap_sync_thread(mddev);
+>   }
+> 
+> +
+> +
+> +static bool md_should_do_recovery(struct mddev *mddev)
+> +{
+> +	/*
+> +	 * As long as one of the following flags is set,
+> +	 * recovery needs to do.
+> +	 */
+> +	if (test_bit(MD_RECOVERY_NEEDED, &mddev->recovery) ||
+> +	    test_bit(MD_RECOVERY_DONE, &mddev->recovery))
+> +		return true;
+> +
+> +	/*
+> +	 * If no flags are set and it is in read-only status,
+> +	 * there is nothing to do.
+> +	 */
+> +	if (!md_is_rdwr(mddev))
+> +		return false;
+> +
+> +	if ((mddev->sb_flags & ~ (1<<MD_SB_CHANGE_PENDING)) ||
+> +	     (mddev->external == 0 && mddev->safemode == 1) ||
+> +	     (mddev->safemode == 2 && !mddev->in_sync &&
+> +	      mddev->resync_offset == MaxSector))
+> +		return true;
 
-CC: Jan Kara <jack@suse.cz>
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- drivers/md/raid0.c | 13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
+Plese also split abouve conditions and add comments.
 
-diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
-index ca08ec2e1f27..adc9e68d064d 100644
---- a/drivers/md/raid0.c
-+++ b/drivers/md/raid0.c
-@@ -607,19 +607,10 @@ static bool raid0_make_request(struct mddev *mddev, struct bio *bio)
- 		 : sector_div(sector, chunk_sects));
- 
- 	if (sectors < bio_sectors(bio)) {
--		struct bio *split = bio_split(bio, sectors, GFP_NOIO,
-+		bio = bio_submit_split_bioset(bio, sectors,
- 					      &mddev->bio_set);
--
--		if (IS_ERR(split)) {
--			bio->bi_status = errno_to_blk_status(PTR_ERR(split));
--			bio_endio(bio);
-+		if (!bio)
- 			return true;
--		}
--
--		bio_chain(split, bio);
--		trace_block_split(split, bio->bi_iter.bi_sector);
--		raid0_map_submit_bio(mddev, bio);
--		bio = split;
- 	}
- 
- 	raid0_map_submit_bio(mddev, bio);
--- 
-2.39.2
+Thanks,
+Kuai
+
+> +
+> +	return false;
+> +}
+> +
+>   /*
+>    * This routine is regularly called by all per-raid-array threads to
+>    * deal with generic issues like resync and super-block update.
+> @@ -9777,18 +9805,7 @@ void md_check_recovery(struct mddev *mddev)
+>   		flush_signals(current);
+>   	}
+> 
+> -	if (!md_is_rdwr(mddev) &&
+> -	    !test_bit(MD_RECOVERY_NEEDED, &mddev->recovery) &&
+> -	    !test_bit(MD_RECOVERY_DONE, &mddev->recovery))
+> -		return;
+> -	if ( ! (
+> -		(mddev->sb_flags & ~ (1<<MD_SB_CHANGE_PENDING)) ||
+> -		test_bit(MD_RECOVERY_NEEDED, &mddev->recovery) ||
+> -		test_bit(MD_RECOVERY_DONE, &mddev->recovery) ||
+> -		(mddev->external == 0 && mddev->safemode == 1) ||
+> -		(mddev->safemode == 2
+> -		 && !mddev->in_sync && mddev->resync_offset == MaxSector)
+> -		))
+> +	if (!md_should_do_recovery(mddev))
+>   		return;
+> 
+>   	if (mddev_trylock(mddev)) {
+> 
 
 
