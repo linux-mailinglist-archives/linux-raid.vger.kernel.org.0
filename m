@@ -1,80 +1,54 @@
-Return-Path: <linux-raid+bounces-5247-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5249-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE285B50162
-	for <lists+linux-raid@lfdr.de>; Tue,  9 Sep 2025 17:33:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE4B7B5044A
+	for <lists+linux-raid@lfdr.de>; Tue,  9 Sep 2025 19:18:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 960633A6A13
-	for <lists+linux-raid@lfdr.de>; Tue,  9 Sep 2025 15:33:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E8EEC3B3787
+	for <lists+linux-raid@lfdr.de>; Tue,  9 Sep 2025 17:18:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1207636C092;
-	Tue,  9 Sep 2025 15:28:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE6DD2F9C32;
+	Tue,  9 Sep 2025 17:18:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="WnE546bA"
+	dkim=pass (2048-bit key) header.d=mgml.me header.i=@mgml.me header.b="oyh1kGKe"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www5210.sakura.ne.jp (www5210.sakura.ne.jp [133.167.8.150])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F4157362093
-	for <linux-raid@vger.kernel.org>; Tue,  9 Sep 2025 15:28:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 999602DFA38
+	for <linux-raid@vger.kernel.org>; Tue,  9 Sep 2025 17:18:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=133.167.8.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757431697; cv=none; b=r0uqcJ0VZjcoZj5thsrywawDChsjgHDMFUZH+5n6mVn6KKBgHL0+d7J0Q0sP+OxmwaAT8FSdxF2mNgnVkHbhJsG2g0+1jRfro94hX3npKJSjlRV51a18sKTKzE389i/GjtGj5yx6p1bx6FbIhd2AbhofVkdk2c6NZJrqn9O+vKU=
+	t=1757438300; cv=none; b=EIwWV/tOkbXjiI0XQ9tIyShj28Wai8ac/QJJx6wiEFE2zqD49m0n9MDwnNfKrl12t0B/79OfNuRYmOWVIfDz5MgyWtTX4G00LUJaia1LfJeW70UFNZjhjr2lsO2kpsxDaL/H7MIdWx+qOgHxfuWCYf4Yd9qFI+T9JrdyzLkMKhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757431697; c=relaxed/simple;
-	bh=zdmMTS66pDXSVVeEoILIIh+RFkwTTy3dD9US6WLNHvI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iicBK8msw9yqIo6JzAk806sVyHbCjrsXl6A8tWx83XAnfTVArW8JpeuEIoYhZfBiSnVwfXoecKbLkIaBYGSLTFfH2j6y3MlgSJhVrwkMgqL7WGjM6/96A7xpBrwDa2GjP9cWNB11tcmbEG63EBvqimN5rx4o11PcedDfDDRL/DM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=WnE546bA; arc=none smtp.client-ip=209.85.166.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-88735894d29so207789939f.1
-        for <linux-raid@vger.kernel.org>; Tue, 09 Sep 2025 08:28:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1757431695; x=1758036495; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jN1Kj7K7CkcC2gypxZGow6Wd+LfV+1NytZv39KYFilg=;
-        b=WnE546bAGlo5G+8fg8jwTZo4lmsOMgNuGpIiLHtxNJ8GJ7O3Po14xHWH77y80XNtmG
-         TjyfjohcywWIVVHmy70qFv2w4685MgZSg4ec/xc39NOAtoAxWSPJW4CGL6F+V+G7Gvaf
-         Uf0d+Lv2fg2cqeIdD+0ln3wa0nCHnoZiImMzinbEyh7DIzvILb7/oHvq7mTtEnBPSVxK
-         xH7m4MlU06X1aUwaV1vcjgokNNf8wScfBjQzp50AwKwqMk/SSowjDIa9N+t4o/00JiJl
-         W/kIGX4EKBUjQktsif9voUWtpzY5ruvCxLcJM/H7Sfs12ReWECAitqF9zdhiixW5xgGp
-         xPCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757431695; x=1758036495;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jN1Kj7K7CkcC2gypxZGow6Wd+LfV+1NytZv39KYFilg=;
-        b=FppR4OZMqF26Lh18mB3j/ekCtwewgF65BSAcwHpAwp0c2oQsm2ItflP2ffte8SSdt9
-         J7jObqRIYGG4Blto8uuL5Pc9t3DbaTo0m8gESQlo1CoJ3qpq04rVMIlaRWRK77OoWGXO
-         /m1pfeaWE5PKNBtBXZJ4vpQfrChTm6nGpfS0z8WUZlQTqS+CvnAR5AK7Uy99Pk12h7td
-         Yffs13ckveYhOuV6SrnTJq5pkJIVlynwPL59xkB07gJEgn8AlDu/NLnCHnlnZ4kCvuT2
-         yUFskO33Rg/83TFdkkQ2jHL2gKwQEF9lkoTDYHWCQUYbT49as5ctwhbn5i1hy78Ri6Cv
-         wTVw==
-X-Forwarded-Encrypted: i=1; AJvYcCX1OL8tCmcfyFvzNVUxW6CtsSnBBvjvF74RKOFJh2NJDvodMMkYyDcoVk1Zm0vsYpM8g3crHrzBQvG6@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/LwzUpcbGuie8YAsd0YXohcmY1h6j7wf7SiVqaTOPzJ38FYKV
-	weJbOub2K0kMNpNbMsjsayi/tsCOG8zSGfGQpUsTiaZkB4et/MwKyCvvpbYtRshXhRM=
-X-Gm-Gg: ASbGncu0Ro8F7JsvsRToqzaeJBsvkZejie80MkFHvw0fstwPdv5SDewiukLrAZQ+wAf
-	AvnJcanjYyTAr7Qk28vACxIKCMq8sHhGWqnRgxtGr3tdaYPRk20SCMc9gMu93SoRjhABG8o2iFl
-	uxp7vQDyfo9x/znOfyFb+JIDxpAylAJYZv8Jt6qaBkaV5hVbX+YnRwsriFwuiJ+yljDnqWCVdBx
-	QF6tf+5b/qpkbkZZX7fr6pUo0XBqmXN/NZCaOTXhCAV8v/VWRFhvEyID7B9oLAUVZwH9NxUZ+BI
-	gmEFSpnTYeYcdB1HZ8BAm6AGorrj5phlWudg+SwnjvXxQyFfkMAdMNu1Lx+Vwf+Kw+9XRmTzORm
-	1JwKVBgctwDSLfbQ5i0wIxu0Zebu9GA3nHLnavAHk
-X-Google-Smtp-Source: AGHT+IHxQYn//P6OlMBv4Hjw7zsJ7Uk1Uew3KWJj5QRX2MyObcGnhrIGAx1/Aj6Ur5T/j8o5uW59sg==
-X-Received: by 2002:a05:6e02:1d99:b0:3f6:5e25:a5cc with SMTP id e9e14a558f8ab-3fd87781510mr141362695ab.23.1757431694832;
-        Tue, 09 Sep 2025 08:28:14 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5103baa86e9sm5847043173.9.2025.09.09.08.28.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Sep 2025 08:28:14 -0700 (PDT)
-Message-ID: <165f4091-c6c9-40f7-9b41-e89bfdd948cf@kernel.dk>
-Date: Tue, 9 Sep 2025 09:28:12 -0600
+	s=arc-20240116; t=1757438300; c=relaxed/simple;
+	bh=jFtg9uvtWBlgiSq5qvFKzkSfdyQ+8wkH/QQBmofULvo=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=hkpIAjovSUdPbxAIKlU76jIGaXCEGWmSyQdPT0InjgdX2PUPV0EugobgSbsyLbvQGFcVfSjr0I6mmypnwR9QFBPoeBaGMbTIYVntgKBWLvr6R102ORy5/+zNKxNRITGSXBRY+KZqovs1gEAfu0Fw/BdXLqtrtFSc9UzM2Wm6GtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mgml.me; spf=pass smtp.mailfrom=mgml.me; dkim=pass (2048-bit key) header.d=mgml.me header.i=@mgml.me header.b=oyh1kGKe; arc=none smtp.client-ip=133.167.8.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mgml.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mgml.me
+Received: from NEET (p4487057-ipxg00s01tokaisakaetozai.aichi.ocn.ne.jp [114.153.80.57])
+	(authenticated bits=0)
+	by www5210.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 589H7asc079535
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Wed, 10 Sep 2025 02:07:36 +0900 (JST)
+	(envelope-from k@mgml.me)
+DKIM-Signature: a=rsa-sha256; bh=C53fLZHIuuoTre7z9U9FNaSy3t4lJL6yHv3NiirB8u0=;
+        c=relaxed/relaxed; d=mgml.me;
+        h=Message-ID:Date:Subject:To:From;
+        s=rs20250315; t=1757437656; v=1;
+        b=oyh1kGKeUEdDlyAiFnk79pZYHyNGruQGkHO+wlUFEfyrod9F5Xso6KBCcqcs+Alj
+         lI87WgoWAKaybwcZh+nMycSqF6zHEsEO4IjjEJzjch05iLuc6zJqxUbFi8NJXriw
+         ZpS8LPjQoE2yR3bmZyR3qJSQSFJSwhtihbCzha8M3CwzO6w1UGhBnZ+jae3eim9H
+         sKjxbG2/feQEgMgnoDfHs41aTnSFfvxBSyzUBiHzjkRtHDtR0F0fRiVaIVUXzIsO
+         RkG7RJVcQNQ5uZFaiZ1PZOOeLmkofxNVASkOy1Beoz7e2F+nPJj4lE2VZgPyFnDE
+         3u1CI+qEe2l06fgkSHpNDg==
+Message-ID: <2a949451-23d0-44ef-94fb-46b40c98957b@mgml.me>
+Date: Wed, 10 Sep 2025 02:07:36 +0900
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
@@ -82,27 +56,91 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH for-6.18/block 00/16] block: fix reordered IO in the case
- recursive split
-To: Yu Kuai <yukuai1@huaweicloud.com>, hch@infradead.org, colyli@kernel.org,
- hare@suse.de, dlemoal@kernel.org, tieren@fnnas.com, bvanassche@acm.org,
- tj@kernel.org, josef@toxicpanda.com, song@kernel.org, yukuai3@huawei.com,
- satyat@google.com, ebiggers@google.com, kmo@daterainc.com,
- akpm@linux-foundation.org, neil@brown.name
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- cgroups@vger.kernel.org, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
- yangerkun@huawei.com, johnny.chenyi@huawei.com
-References: <20250905070643.2533483-1-yukuai1@huaweicloud.com>
+Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "yukuai (C)" <yukuai3@huawei.com>, Kenta Akagi <k@mgml.me>
+Subject: Re: [PATCH v3 1/3] md/raid1,raid10: Do not set MD_BROKEN on failfast
+ io failure
+To: Yu Kuai <yukuai1@huaweicloud.com>, Li Nan <linan666@huaweicloud.com>,
+        Song Liu <song@kernel.org>, Mariusz Tkaczyk <mtkaczyk@kernel.org>,
+        Guoqing Jiang <jgq516@gmail.com>
+References: <20250828163216.4225-1-k@mgml.me>
+ <20250828163216.4225-2-k@mgml.me>
+ <dcb72e23-d0ea-c8b3-24db-5dd515f619a8@huaweicloud.com>
+ <6b3119f1-486e-4361-b04d-5e3c67a52a91@mgml.me>
+ <3ea67e48-ce8a-9d70-a128-edf5eddf15f0@huaweicloud.com>
+ <29e337bc-9eee-4794-ae1e-184ef91b9d24@mgml.me>
+ <6edb5e2c-3f36-dc2c-3b41-9bf0e8ebb263@huaweicloud.com>
+ <7e268dff-4f29-4155-8644-45be74d4c465@mgml.me>
+ <48902d38-c2a1-b74d-d5fb-3d1cdc0b05dc@huaweicloud.com>
+ <34ebcc5b-db67-49e0-a304-4882fa82e830@mgml.me>
+ <ae39d3a6-86a2-b90d-b5d6-887b7fc28106@huaweicloud.com>
+ <7072d96b-c2d4-4225-ad4f-1cba8f683985@mgml.me>
+ <62365ca9-3cdb-c213-b0d4-5480ad734dd6@huaweicloud.com>
 Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20250905070643.2533483-1-yukuai1@huaweicloud.com>
+From: Kenta Akagi <k@mgml.me>
+In-Reply-To: <62365ca9-3cdb-c213-b0d4-5480ad734dd6@huaweicloud.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Can you spin a new version with the commit messages sorted out and with
-the missing "if defined" for BLK_CGROUP fixed up too? Looks like this is
-good to go.
+On 2025/09/09 10:02, Yu Kuai wrote:
+> Hi,
+> 
+> 在 2025/09/09 1:29, Kenta Akagi 写道:
+>> On 2025/09/08 10:20, Yu Kuai wrote:
+>>>
+>>>
+>>> 在 2025/09/02 0:48, Kenta Akagi 写道:
+>>>> In the current raid1_end_write_request implementation,
+>>>> - md_error is called only in the Failfast case.
+>>>> - Afterwards, if the rdev is not Faulty (that is, not Failfast,
+>>>>     or Failfast but the last rdev — which originally was not expected
+>>>>     MD_BROKEN in RAID1), R1BIO_WriteError is set.
+>>>> In the suggested implementation, it seems that a non-Failfast write
+>>>> failure will immediately mark the rdev as Faulty, without retries.
+>>>
+>>> I still prefer a common helper to unify the code, not sure if I still
+>>> missing something ...
+>>>
+>>> In general, if bio failed, for read/write/metadata/resync should be the
+>>> same:
+>>>
+>>> 1) failfast is set, and not last rdev, md_error();
+>>> 2) otherwise, we should always retry;
+>>>
+>>> And I do believe it's the best to unify this by a common helper.
+>>
+>> Yes, I realized that my idea is bad. Your idea is best,
+>> especially considering the error handling in super_written.
+>> I'll implement a common helper.
+>>
+>> By the way, I think md_error should only be serialized on RAID1 and 10
+>> for now. Serializing unnecessary personalities is inefficient and can
+>> lead to unfavorable results. What do you think?
+> 
+> Just make code cleaner and I don't have preference here, md_error is
+> super cold path I think.
 
--- 
-Jens Axboe
+Thank you for your advice.
+Understood.
+
+Thanks,
+Akagi
+
+> Thanks,
+> Kuai
+> 
+>>
+>> Thanks,
+>> Akagi
+>>
+>>> Thanks,
+>>> Kuai
+>>>
+>>>
+>>
+>> .
+>>
+> 
+> 
+
 
