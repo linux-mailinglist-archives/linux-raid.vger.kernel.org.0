@@ -1,164 +1,93 @@
-Return-Path: <linux-raid+bounces-5248-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5250-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 910FAB5042E
-	for <lists+linux-raid@lfdr.de>; Tue,  9 Sep 2025 19:15:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02A87B50453
+	for <lists+linux-raid@lfdr.de>; Tue,  9 Sep 2025 19:19:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B19037B4C40
-	for <lists+linux-raid@lfdr.de>; Tue,  9 Sep 2025 17:13:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8405B1657F3
+	for <lists+linux-raid@lfdr.de>; Tue,  9 Sep 2025 17:19:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53D1D2F9C32;
-	Tue,  9 Sep 2025 17:13:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2BB531691C;
+	Tue,  9 Sep 2025 17:19:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lWHpsHRr"
+	dkim=pass (1024-bit key) header.d=yukuai.org.cn header.i=hailan@yukuai.org.cn header.b="ZUv0t9YL"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9ED51D5CD1;
-	Tue,  9 Sep 2025 17:13:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757438014; cv=none; b=GCgMLWeOgtlw95SYEnp4hOrtY2RqFhS65wbA1Wi6yzTHUGqcXo/igV/yRr0fnxbQztK3g4a7UgILF/p2cvbj7hnNoZsRTBGP1TSruY17VAuyG4srrTVOE5rFdJWx8UD0hbJCEoBJW9BANkJtbsVxWn0eQ2H1IoWbR4IgjMo9Uk8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757438014; c=relaxed/simple;
-	bh=F/1KmH6Ih2AiaeEpSd/DqRQpCrUv8zbxcwx5j1/Alf0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oJiKGnkO6VzAX2IzFpa6ymk8Y2meqDi62WJq7jC9BsvdlREc5PKK1w2ysLBL4eQ9Q0xik9JtAX65MV6TL0aD977WNOL4U8PK1Ir1Kf99UFY4Qg2eXsi0RTlZskDKXXlw+TQJ/k034aWfKG1dM1L9HAtcOshRg7z/NbNnkJOCypU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lWHpsHRr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21A84C4CEF4;
-	Tue,  9 Sep 2025 17:13:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757438012;
-	bh=F/1KmH6Ih2AiaeEpSd/DqRQpCrUv8zbxcwx5j1/Alf0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=lWHpsHRrNiCYuwo7o/GaIHoR9MIkRDuM1IVT/I5CSRTlsJT34IIWfujCErIIjy47J
-	 uNDLYM7osJIEFLRvkGe4JFKB0G9yuLDdALyrfc+evwAavtaSLylqYO8kUxikDbO7Lz
-	 si1vDMxABmCGh9X3PBSynUXPWL3IrDaAJh4YKMlyyWudfElamcpmXbRKAeCHE5alHz
-	 pHAKJU2+gdiQatBSgfb52xdGLl6p4/BV7ATlDQc3RgqmxJhtqkhTf9vKNU/+GMFMoD
-	 lKAQoqcqhNqWR0wDyGUsW0hm+9XmQP5rtJYWtxX1g1aPVTP+xvv6kwfC4fH7qAj6js
-	 xHJKugZe7nOIg==
-From: Yu Kuai <yukuai@kernel.org>
-To: axboe@kernel.dk,
-	linux-block@vger.kernel.org,
-	linux-raid@vger.kernel.org
-Cc: linan122@huawei.com,
-	xni@redhat.com,
-	colyli@kernel.org,
-	yukuai3@huawei.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com,
-	johnny.chenyi@huawei.com
-Subject: [GIT PULL v2] md-6.18-20250909
-Date: Wed, 10 Sep 2025 01:13:28 +0800
-Message-ID: <20250909171328.2691074-1-yukuai@kernel.org>
-X-Mailer: git-send-email 2.51.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72F8E31D384;
+	Tue,  9 Sep 2025 17:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757438385; cv=pass; b=ruMjWc7InXnJJnI0/Ukvlw+UmCrmN2JPNtbLr6zJeEMXuhiD68YS6KQkw9UpPELXgiyMp3dKXDjhmMbo3xKwzJsa0bK6lnwaK6mjKYmB8EsR0U9EibHwVtl1w0d5N5B+DT9bVzhneG0F8dB3sgHgrekxFLhTYvGztHshUlM/cQE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757438385; c=relaxed/simple;
+	bh=6s7rAoDzB1ZmdBThLTPc5cIsdvIyxx4bJvCbPL+uRQk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=abwk7eWbzTquYdzKZDWVXU6q9zK8v/omN/ZWgSZGmcLacAqtYXAqxmpjkiXHbFtRze7I0a4ZcH5eZeXOd3+7NnRDaYftgo9H5F00yGXYsbHlTInRgRK/EacvvWElGqpRH4wmo6WozJmqdJ0lTOw/mmWVKidvtZq7r9Xu+Z5XUA8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yukuai.org.cn; spf=pass smtp.mailfrom=yukuai.org.cn; dkim=pass (1024-bit key) header.d=yukuai.org.cn header.i=hailan@yukuai.org.cn header.b=ZUv0t9YL; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yukuai.org.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yukuai.org.cn
+ARC-Seal: i=1; a=rsa-sha256; t=1757438217; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=chM6LFDKVM3oGT0Rxz/4CoW9UyDdeCRynMGcfGp8LhBDsz1Vs8AvtodB9ZfoEeCUgXF/Lwa2SCfzz4kdDnSL16O+5sPf2GtobGGpENIlJkV2g7fMUc/hrUaxZGPGDz+Pz6hg/Q6Ucu3nzk1LypUraSTD50kAd8mGMJqwNc6+x48=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1757438217; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=6s7rAoDzB1ZmdBThLTPc5cIsdvIyxx4bJvCbPL+uRQk=; 
+	b=J2L4m86XC3ks+5u9xpGvaDxi2jGRRR3JqpezhnAdThPbRBvs6QstOcr+edB8RbFGvzu7UvVa4o01a2hODY+kYNAEUo4/5lNd6Ln6YJj30tfy5U2Ftl6viJ5FIU95bj6ZAabUHdkcouWpmzfdL/kSvQWlUMUH1Ab0TQuuzhWHcjI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=yukuai.org.cn;
+	spf=pass  smtp.mailfrom=hailan@yukuai.org.cn;
+	dmarc=pass header.from=<hailan@yukuai.org.cn>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1757438217;
+	s=zmail; d=yukuai.org.cn; i=hailan@yukuai.org.cn;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=6s7rAoDzB1ZmdBThLTPc5cIsdvIyxx4bJvCbPL+uRQk=;
+	b=ZUv0t9YLcXJmna3pE+KQjxKvJuQNh1Yu3pNbbnJg+aO34xRGJ4tsLLQUKMuQZ4MW
+	kjCppifTa6KlUG0DfjvMCg+Kh+oe2qzf2gtWoIT1UYWZsKHPtPMXVV3hzRpOeNMX3wx
+	6zmYHoq4rGVXAlUyRLry1DmPknto6e4DAuBoQez0=
+Received: by mx.zohomail.com with SMTPS id 1757438214195641.9733379534401;
+	Tue, 9 Sep 2025 10:16:54 -0700 (PDT)
+Message-ID: <5c37dd28-3719-4b4b-b91c-37fab8ce65bd@yukuai.org.cn>
+Date: Wed, 10 Sep 2025 01:16:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH for-6.18/block 00/16] block: fix reordered IO in the case
+ recursive split
+To: Jens Axboe <axboe@kernel.dk>, Yu Kuai <yukuai1@huaweicloud.com>,
+ hch@infradead.org, colyli@kernel.org, hare@suse.de, dlemoal@kernel.org,
+ tieren@fnnas.com, bvanassche@acm.org, tj@kernel.org, josef@toxicpanda.com,
+ song@kernel.org, yukuai3@huawei.com, satyat@google.com, ebiggers@google.com,
+ kmo@daterainc.com, akpm@linux-foundation.org, neil@brown.name
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ cgroups@vger.kernel.org, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
+ yangerkun@huawei.com, johnny.chenyi@huawei.com
+References: <20250905070643.2533483-1-yukuai1@huaweicloud.com>
+ <165f4091-c6c9-40f7-9b41-e89bfdd948cf@kernel.dk>
+From: Yu Kuai <hailan@yukuai.org.cn>
+In-Reply-To: <165f4091-c6c9-40f7-9b41-e89bfdd948cf@kernel.dk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Hi, Jens
+Hi,
 
-Redundant data is used to enhance data fault tolerance, and the storage
-method for redundant data vary depending on the RAID levels. And it's
-important to maintain the consistency of redundant data.
+在 2025/9/9 23:28, Jens Axboe 写道:
+> Can you spin a new version with the commit messages sorted out and with
+> the missing "if defined" for BLK_CGROUP fixed up too? Looks like this is
+> good to go.
 
-Bitmap is used to record which data blocks have been synchronized and which
-ones need to be resynchronized or recovered. Each bit in the bitmap
-represents a segment of data in the array. When a bit is set, it indicates
-that the multiple redundant copies of that data segment may not be
-consistent. Data synchronization can be performed based on the bitmap after
-power failure or readding a disk. If there is no bitmap, a full disk
-synchronization is required.
+That's great! I'll do this first thing in the morning.
 
-Due to known performance issues with md-bitmap and the unreasonable
-implementations:
-
- - self-managed IO submitting like filemap_write_page();
- - global spin_lock
- - ...
-
-I have decided not to continue optimizing based on the current bitmap
-implementation, this new bitmap is invented without locking from IO fast
-path and can be used with fast disks.
-
-Key features for the new bitmap:
- - IO fastpath is lockless, if user issues lots of write IO to the same
-   bitmap bit in a short time, only the first write has additional 
-   overhead to update bitmap bit, no additional overhead for the following
-   writes;
- - support only resync or recover written data, means in the case creating
-   new array or replacing with a new disk, there is no need to do a full
-   disk resync/recovery;
-
-Please consider pulling following changes on your for-6.18/block branch,
-this pull request contains:
-
-  - add kconfig for internal bitmap, this is for isolation;
-  - introduce new experimental feature lockless bitmap(details in [1]);
-
-[1] https://lore.kernel.org/linux-raid/20250829080426.1441678-12-yukuai1@huaweicloud.com/
-
-The following changes since commit ba28afbd9eff2a6370f23ef4e6a036ab0cfda409:
-
-  blk-mq: fix blk_mq_tags double free while nr_requests grown (2025-09-05 13:52:52 -0600)
-
-are available in the Git repository at:
-
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/mdraid/linux.git tags/md-6.18-20250909
-
-for you to fetch changes up to 5ab829f1971dc99f2aac10846c378e67fc875abc:
-
-  md/md-llbitmap: introduce new lockless bitmap (2025-09-06 17:27:51 +0800)
-
-----------------------------------------------------------------
-Yu Kuai (24):
-      md/md-bitmap: remove the parameter 'init' for bitmap_ops->resize()
-      md/md-bitmap: merge md_bitmap_group into bitmap_operations
-      md/md-bitmap: add a new parameter 'flush' to bitmap_ops->enabled
-      md/md-bitmap: add md_bitmap_registered/enabled() helper
-      md/md-bitmap: handle the case bitmap is not enabled before start_sync()
-      md/md-bitmap: handle the case bitmap is not enabled before end_sync()
-      md/raid1: check bitmap before behind write
-      md/raid1: check before referencing mddev->bitmap_ops
-      md/raid10: check before referencing mddev->bitmap_ops
-      md/raid5: check before referencing mddev->bitmap_ops
-      md/dm-raid: check before referencing mddev->bitmap_ops
-      md: check before referencing mddev->bitmap_ops
-      md/md-bitmap: introduce CONFIG_MD_BITMAP
-      md: add a new parameter 'offset' to md_super_write()
-      md: factor out a helper raid_is_456()
-      md/md-bitmap: support discard for bitmap ops
-      md: add a new mddev field 'bitmap_id'
-      md/md-bitmap: add a new sysfs api bitmap_type
-      md/md-bitmap: delay registration of bitmap_ops until creating bitmap
-      md/md-bitmap: add a new method skip_sync_blocks() in bitmap_operations
-      md/md-bitmap: add a new method blocks_synced() in bitmap_operations
-      md: add a new recovery_flag MD_RECOVERY_LAZY_RECOVER
-      md/md-bitmap: make method bitmap_ops->daemon_work optional
-      md/md-llbitmap: introduce new lockless bitmap
-
- Documentation/admin-guide/md.rst |   86 +++-
- drivers/md/Kconfig               |   29 ++
- drivers/md/Makefile              |    4 +-
- drivers/md/dm-raid.c             |   18 +-
- drivers/md/md-bitmap.c           |   89 ++--
- drivers/md/md-bitmap.h           |  107 ++++-
- drivers/md/md-cluster.c          |    2 +-
- drivers/md/md-llbitmap.c         | 1626 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/md/md.c                  |  378 ++++++++++++---
- drivers/md/md.h                  |   24 +-
- drivers/md/raid1-10.c            |    2 +-
- drivers/md/raid1.c               |   79 ++--
- drivers/md/raid10.c              |   49 +-
- drivers/md/raid5.c               |   64 ++-
- 14 files changed, 2313 insertions(+), 244 deletions(-)
- create mode 100644 drivers/md/md-llbitmap.c
+Thanks,
+Kuai
 
 
