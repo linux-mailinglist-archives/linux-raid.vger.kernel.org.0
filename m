@@ -1,42 +1,43 @@
-Return-Path: <linux-raid+bounces-5292-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5290-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 829F0B52A45
-	for <lists+linux-raid@lfdr.de>; Thu, 11 Sep 2025 09:42:00 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76594B52A3F
+	for <lists+linux-raid@lfdr.de>; Thu, 11 Sep 2025 09:41:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5535A17940A
-	for <lists+linux-raid@lfdr.de>; Thu, 11 Sep 2025 07:41:57 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 269DA7B7E4D
+	for <lists+linux-raid@lfdr.de>; Thu, 11 Sep 2025 07:39:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE4B027A92F;
-	Thu, 11 Sep 2025 07:41:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7242F2773FA;
+	Thu, 11 Sep 2025 07:41:20 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D438F275B06;
-	Thu, 11 Sep 2025 07:41:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E721C27703D;
+	Thu, 11 Sep 2025 07:41:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757576483; cv=none; b=L4mEuL5UJYVjktwRSG6gcvh43SNGiEqYBB0Tco7IZGhrKJUD7goCJ7H5wWECWBVcW2vFtlSYiIYHbT6BwIkr/j/ItOjau/jH+VsNy80A5SUVXef3pb0AKkAQDGG0GJB74HZe7H72rgAhUmAfji42ZOxlYFWR5Q224NAtqR3t2x0=
+	t=1757576480; cv=none; b=M70eJBGiz9MubSpKTHuQHuU1IM9KK8al0sZLUb23UVX+DCWuzaBy7N+WdUUCeQwJ8tzoZH6j1fzhvmziI41LsZMI3G2H7wUXa0WZhBTiy3RSG479doNOIYkFgEM5hX36j9dyS8SMIAnPLZnxhIzUUArSrFH4tuYouRo0XfstsOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757576483; c=relaxed/simple;
-	bh=csZ+GoEnlez9E2uDU4rlu/nANlPIFDMYCGOgUvkeOHs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aNvBkTq0VIue1gIuRCW5RyqRyXyg+jlg+DLzCo8yKYNAxOiPWfgGS5hTit6s8GQMjwgJ7oBQWJtTv0RtuHJU/CDGfHmhNb5EY95TlplumD2IjLoTNuuM55Cty5K45047Kkhz2y3kgdcRMW3OkasCjavaFHYEzqjmdD/q2N5MniM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	s=arc-20240116; t=1757576480; c=relaxed/simple;
+	bh=GFT3xJ+Fkz80bqhMX6JXYUEgjypR4BJKo9su5SlKML8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=jDPy77/ye+6ORnTPSNrO33fIEb+wsJMNXKdbycvT6p9KaFuwkM61NMoXEEgI+TFw/EMFljCCkWJaQI8uLtgdxrrX/8Ee99SxgH2V8gjPa66PUDs6piyLF8ijscw+kwSrfxmvHZ9k7cxLMmmio+1aTPkhPSiRR6sUZSWjpIAbU48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4cMqHb3Nj8zYQtty;
-	Thu, 11 Sep 2025 15:41:15 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4cMqHZ2j4yzKHLsr;
+	Thu, 11 Sep 2025 15:41:14 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 001141A1755;
-	Thu, 11 Sep 2025 15:41:13 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id A35131A10CC;
+	Thu, 11 Sep 2025 15:41:14 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgAncY0XfcJorYmACA--.14632S4;
-	Thu, 11 Sep 2025 15:41:13 +0800 (CST)
+	by APP4 (Coremail) with SMTP id gCh0CgAncY0XfcJorYmACA--.14632S5;
+	Thu, 11 Sep 2025 15:41:14 +0800 (CST)
 From: linan666@huaweicloud.com
 To: corbet@lwn.net,
 	song@kernel.org,
@@ -53,10 +54,12 @@ Cc: martin.petersen@oracle.com,
 	linan666@huaweicloud.com,
 	yangerkun@huawei.com,
 	yi.zhang@huawei.com
-Subject: [PATCH v4 0/2] make logical_block_size configurable
-Date: Thu, 11 Sep 2025 15:31:42 +0800
-Message-Id: <20250911073144.42160-1-linan666@huaweicloud.com>
+Subject: [PATCH v4 1/2] md: prevent adding disks with larger logical_block_size to active arrays
+Date: Thu, 11 Sep 2025 15:31:43 +0800
+Message-Id: <20250911073144.42160-2-linan666@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250911073144.42160-1-linan666@huaweicloud.com>
+References: <20250911073144.42160-1-linan666@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
@@ -64,59 +67,62 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAncY0XfcJorYmACA--.14632S4
-X-Coremail-Antispam: 1UD129KBjvdXoW7Jr43WF15Jry7Cw4xtr47Arb_yoWDXFXE9a
-	1xXrZ3Kr1I9F4xZay5urs3AFyUKF48u3s7ZF43Kr43u34avr18GFWv9r98Jw1kCFyjqF1U
-	Gr1UJ3y8Ars8WjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbDxFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
-	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
-	rcIFxwACI402YVCY1x02628vn2kIc2xKxwAKzVCY07xG64k0F24lc7CjxVAaw2AFwI0_Jw
-	0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
-	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrx
-	kI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v2
-	6r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8Jw
-	CI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUY2NKUUUU
-	U
+X-CM-TRANSID:gCh0CgAncY0XfcJorYmACA--.14632S5
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zr15Zr17CFy3Wr1UZrWDurg_yoW8JFWrpa
+	97Xa4Yk348JF1akay7J3WrAFy5uws7KrZ7Kry2k3yvqFZxJr17KF43CFZ8Xr1rta93AF4a
+	qw4UKw4kua48tF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUHj14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAa
+	c4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzV
+	Aqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S
+	6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxw
+	ACI402YVCY1x02628vn2kIc2xKxwAKzVCY07xG64k0F24lc7CjxVAaw2AFwI0_Jw0_GFyl
+	42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
+	WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAK
+	I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F
+	4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
+	6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU16wuUUUUU
 X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
 From: Li Nan <linan122@huawei.com>
 
-v4:
- patch 1: add fix tag.
- patch 2:
- - add documentation for sysfs.
- - only support metadata format 1.x.
- - do not call md_update_sb when writing sysfs. mddev->pers is NULL here.
- - return directly before hold lock in lbs_store.
+When adding a disk to a md array, avoid updating the array's
+logical_block_size to match the new disk. This prevents accidental
+partition table loss that renders the array unusable.
 
-v3:
- - logical_block_size must not exceed PAGE_SIZE for bio device.
- - Assign lim to mddev rather than to gendisk in mddev_stack_rdev_limits().
- - Remove the patch that modifies the return value.
+The later patch will introduce a way to configure the array's
+logical_block_size.
 
-v2: No new exported interfaces are introduced.
+The issue was introduced before Linux 2.6.12-rc2.
 
-Li Nan (2):
-  md: prevent adding disks with larger logical_block_size to active
-    arrays
-  md: allow configuring logical_block_size
+Fixes: d2e45eace8 ("[PATCH] Fix raid "bio too big" failures")
+Signed-off-by: Li Nan <linan122@huawei.com>
+Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+---
+ drivers/md/md.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
- Documentation/admin-guide/md.rst |  7 +++
- drivers/md/md.h                  |  1 +
- include/uapi/linux/raid/md_p.h   |  3 +-
- drivers/md/md-linear.c           |  1 +
- drivers/md/md.c                  | 82 ++++++++++++++++++++++++++++++++
- drivers/md/raid0.c               |  1 +
- drivers/md/raid1.c               |  1 +
- drivers/md/raid10.c              |  1 +
- drivers/md/raid5.c               |  1 +
- 9 files changed, 97 insertions(+), 1 deletion(-)
-
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index a77c59527d4c..40f56183c744 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -6064,6 +6064,13 @@ int mddev_stack_new_rdev(struct mddev *mddev, struct md_rdev *rdev)
+ 	if (mddev_is_dm(mddev))
+ 		return 0;
+ 
++	if (queue_logical_block_size(rdev->bdev->bd_disk->queue) >
++	    queue_logical_block_size(mddev->gendisk->queue)) {
++		pr_err("%s: incompatible logical_block_size, can not add\n",
++		       mdname(mddev));
++		return -EINVAL;
++	}
++
+ 	lim = queue_limits_start_update(mddev->gendisk->queue);
+ 	queue_limits_stack_bdev(&lim, rdev->bdev, rdev->data_offset,
+ 				mddev->gendisk->disk_name);
 -- 
 2.39.2
 
