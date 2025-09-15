@@ -1,135 +1,187 @@
-Return-Path: <linux-raid+bounces-5308-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5314-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FC53B56E31
-	for <lists+linux-raid@lfdr.de>; Mon, 15 Sep 2025 04:15:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA160B56EF3
+	for <lists+linux-raid@lfdr.de>; Mon, 15 Sep 2025 05:44:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 108031898C3C
-	for <lists+linux-raid@lfdr.de>; Mon, 15 Sep 2025 02:16:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3659F189BDA0
+	for <lists+linux-raid@lfdr.de>; Mon, 15 Sep 2025 03:44:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D4B71F37D3;
-	Mon, 15 Sep 2025 02:15:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9CA726D4E5;
+	Mon, 15 Sep 2025 03:43:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=mgml.me header.i=@mgml.me header.b="sCGGOSax"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from www5210.sakura.ne.jp (www5210.sakura.ne.jp [133.167.8.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D899C2DC790;
-	Mon, 15 Sep 2025 02:15:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5E3207A38
+	for <linux-raid@vger.kernel.org>; Mon, 15 Sep 2025 03:43:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=133.167.8.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757902552; cv=none; b=YtfUHVzxN/FGhTU+QdIQAsBPSHnaTKkAf2lYnMikYV3Wxk3pL76Hn7X0DByTiuyzKorRrk71JNqiHqDEFhmKJB4Uu4kDYaK2GkZEPF2eQhIAYNOQJ3tDZTZfEWY6j9GIv44ucQ3ilQ+KbZMo1PSqzTprOCP1nf5mW1UY61rGBF0=
+	t=1757907829; cv=none; b=mfhaUIsAmqJffpPzoBuPmXu0ulq1THwafJWhHWfWZ+CQKF7U/qWc8IF4dDTizZkDxeD6dWpy8s5V5X0/lhziCPoT8e9DtHz5Pe7fBFRTentQzqQUlUv5YnsOG/ivanHz88ruTV+E4rIezzySC1+8hJKrBzjMCkLV452VjLLwu74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757902552; c=relaxed/simple;
-	bh=wk9cxB3e82vYRXRXSwGgpB9vFtSquVnq6ILEBPGlYbQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lf2eibQduQqDpN3t8XPzvkQUL7Dq85TqIcMq2xAMN5M8sMoTs0U9z433nHb9HSiyYa/SxjDkUksOOQBwlPIds0yvnVH6qdh+TDWTmxSWRwHFmrihy7azZYDjo4RvScaIs+yU8ZKEiqsJMUi595go8zvqwp5OuDT8dv2dNlkGMkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4cQ7tB4KRjzYQv4n;
-	Mon, 15 Sep 2025 10:15:46 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 2682D1A1305;
-	Mon, 15 Sep 2025 10:15:45 +0800 (CST)
-Received: from [10.174.179.247] (unknown [10.174.179.247])
-	by APP4 (Coremail) with SMTP id gCh0CgDnMY7NdsdounEuCg--.53887S3;
-	Mon, 15 Sep 2025 10:15:43 +0800 (CST)
-Message-ID: <9041896d-e4f8-c231-e8ea-5d82f8d3b0d2@huaweicloud.com>
-Date: Mon, 15 Sep 2025 10:15:41 +0800
+	s=arc-20240116; t=1757907829; c=relaxed/simple;
+	bh=o0Rd8ZJtLex7FiYuILGq5adkG8zzAY0wbNpBkBldQ/o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QPAqw6SL2xdekl6iFpO9lb7bAFzg12ZBiN9XfzGvb/8lSYH5RPUKeU+1NYNc+yTY4Ecdy1Qh2yhQis9r9+rwOwRDKlwGkO2cLsFKJdzqe4rUISmgIWoPbvBLTZs3ALR02GoUn6jyItnWyv8/3H3jYeG3p6wFPaLNyDDlk4W2EMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mgml.me; spf=pass smtp.mailfrom=mgml.me; dkim=pass (2048-bit key) header.d=mgml.me header.i=@mgml.me header.b=sCGGOSax; arc=none smtp.client-ip=133.167.8.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mgml.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mgml.me
+Received: from fedora (p4504123-ipxg00s01tokaisakaetozai.aichi.ocn.ne.jp [114.172.113.123])
+	(authenticated bits=0)
+	by www5210.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 58F3gpZh004256
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Mon, 15 Sep 2025 12:43:10 +0900 (JST)
+	(envelope-from k@mgml.me)
+DKIM-Signature: a=rsa-sha256; bh=dNMr8Y+863HpIUIHCZHjh4DHeN8AyCy4E4P46xtDhxM=;
+        c=relaxed/relaxed; d=mgml.me;
+        h=From:To:Subject:Date:Message-ID;
+        s=rs20250315; t=1757907790; v=1;
+        b=sCGGOSaxu1+J9ZIz6Xj6yxf2tVKIxEnRYCvpZrk+dFJQTP8+NGvb1qvBpBDwg7qJ
+         E72lucBkOxZ3/Wi8N3fBJ+mnwPUuqWuZ88Ego/1iTzGsTSBtDgIHSXmEma4+xW2Q
+         MESAtYOJqCm2R2haFLJf4iJknZAUiT4Ny3aTUHpcDyi55f8Yay8b+mTEl22/zxy5
+         IdbKp20yXwK2S8u/uyQqvaMOfAcvHnjH7/J7E/AqAIflsK3i1ZOwbmCA3BI8pTqS
+         lNbpm5otb9Q8zwc6C2hPN7KX3QaZyerC2dnqhgajMO5GxrIhpBHTclbXOXULipVi
+         bOZQIVYFbNQrmWiU9ZxNDA==
+From: Kenta Akagi <k@mgml.me>
+To: Song Liu <song@kernel.org>, Yu Kuai <yukuai3@huawei.com>,
+        Mariusz Tkaczyk <mtkaczyk@kernel.org>, Shaohua Li <shli@fb.com>,
+        Guoqing Jiang <jgq516@gmail.com>
+Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kenta Akagi <k@mgml.me>
+Subject: [PATCH v4 0/9] Don't set MD_BROKEN on failfast bio failure
+Date: Mon, 15 Sep 2025 12:42:01 +0900
+Message-ID: <20250915034210.8533-1-k@mgml.me>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH v4 2/2] md: allow configuring logical_block_size
-To: Xiao Ni <xni@redhat.com>, linan666@huaweicloud.com
-Cc: corbet@lwn.net, song@kernel.org, yukuai3@huawei.com, hare@suse.de,
- martin.petersen@oracle.com, bvanassche@acm.org, filipe.c.maia@gmail.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org, yangerkun@huawei.com, yi.zhang@huawei.com
-References: <20250911073144.42160-1-linan666@huaweicloud.com>
- <20250911073144.42160-3-linan666@huaweicloud.com>
- <CALTww2_z7UGXJ+ppYXrkAY8bpVrV9O3z0VfoaTOZtmX1-DXiZA@mail.gmail.com>
-From: Li Nan <linan666@huaweicloud.com>
-In-Reply-To: <CALTww2_z7UGXJ+ppYXrkAY8bpVrV9O3z0VfoaTOZtmX1-DXiZA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDnMY7NdsdounEuCg--.53887S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7CF1kJFW7GFWDury8tr45Awb_yoW8Ar18pa
-	ykZa15K3Z5tFyjy3Z7Z3Z2ga4jgw4xKa1UGry3Gw17u3y5uF1a9r4Igayjga4jyr1S9ry2
-	vr4qqr1SvF929aDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUP214x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
-	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIF
-	xwACI402YVCY1x02628vn2kIc2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14
-	v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8Zw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
-	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbQV
-	y7UUUUU==
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+
+Changes from V3:
+- The error handling in md_error() is now serialized, and a new helper
+  function, md_bio_failure_error, has been introduced.
+- MD_FAILFAST bio failures are now processed by md_bio_failure_error
+  instead of signaling via FailfastIOFailure.
+- RAID10: Fix missing reschedule of failfast read bio failure
+- Regardless of failfast, in narrow_write_error, writes that succeed
+  in retry are returned to the higher layer as success
+Changes from V2:
+- Fix to prevent the array from being marked broken for all
+  Failfast IOs, not just metadata.
+- Reflecting the review, update raid{1,10}_error to clear
+  FailfastIOFailure so that devices are properly marked Faulty.
+Changes from V1:
+- Avoid setting MD_BROKEN instead of clearing it
+- Add pr_crit() when setting MD_BROKEN
+- Fix the message may shown after all rdevs failure:
+  "Operation continuing on 0 devices"
+
+v3: https://lore.kernel.org/linux-raid/20250828163216.4225-1-k@mgml.me/
+v2: https://lore.kernel.org/linux-raid/20250817172710.4892-1-k@mgml.me/
+v1: https://lore.kernel.org/linux-raid/20250812090119.153697-1-k@mgml.me/
+
+When multiple MD_FAILFAST bios fail simultaneously on Failfast-enabled
+rdevs in RAID1/RAID10, the following issues can occur:
+* MD_BROKEN is set and the array halts, even though this should not occur
+  under the intended Failfast design.
+* Writes retried through narrow_write_error succeed, but the I/O is still
+  reported as BLK_STS_IOERR
+* RAID10 only: If a Failfast read I/O fails, it is not retried on any
+  remaining rdev, and as a result, the upper layer receives an I/O error.
+
+Simultaneous bio failures across multiple rdevs are uncommon; however,
+rdevs serviced via nvme-tcp can still experience them due to something as
+simple as an Ethernet fault. The issue can be reproduced using the
+following steps.
+
+# prepare nvmet/nvme-tcp and md array #
+sh-5.2# cat << 'EOF' > loopback-nvme.sh
+set -eu
+nqn="nqn.2025-08.io.example:nvmet-test-$1"
+back=$2
+cd /sys/kernel/config/nvmet/
+mkdir subsystems/$nqn
+echo 1 > subsystems/${nqn}/attr_allow_any_host
+mkdir subsystems/${nqn}/namespaces/1
+echo -n ${back} > subsystems/${nqn}/namespaces/1/device_path
+echo 1 > subsystems/${nqn}/namespaces/1/enable
+ports="ports/1"
+if [ ! -d $ports ]; then
+        mkdir $ports
+        cd $ports
+        echo 127.0.0.1 > addr_traddr
+        echo tcp       > addr_trtype
+        echo 4420      > addr_trsvcid
+        echo ipv4      > addr_adrfam
+        cd ../../
+fi
+ln -s /sys/kernel/config/nvmet/subsystems/${nqn} ${ports}/subsystems/
+nvme connect -t tcp -n $nqn -a 127.0.0.1 -s 4420
+EOF
+
+sh-5.2# chmod +x loopback-nvme.sh
+sh-5.2# modprobe -a nvme-tcp nvmet-tcp
+sh-5.2# truncate -s 1g a.img b.img
+sh-5.2# losetup --show -f a.img
+/dev/loop0
+sh-5.2# losetup --show -f b.img
+/dev/loop1
+sh-5.2# ./loopback-nvme.sh 0 /dev/loop0
+connecting to device: nvme0
+sh-5.2# ./loopback-nvme.sh 1 /dev/loop1
+connecting to device: nvme1
+sh-5.2# mdadm --create --verbose /dev/md0 --level=1 --raid-devices=2 \
+--failfast /dev/nvme0n1 --failfast /dev/nvme1n1
+...
+mdadm: array /dev/md0 started.
+
+# run fio #
+sh-5.2# fio --name=test --filename=/dev/md0 --rw=randrw --rwmixread=50 \
+--bs=4k --numjobs=9 --time_based --runtime=300s --group_reporting --direct=1
+
+# It can reproduce the issue by block nvme traffic during fio #
+sh-5.2# iptables -A INPUT -m tcp -p tcp --dport 4420 -j DROP;
+sh-5.2# sleep 10; # twice the default KATO value
+sh-5.2# iptables -D INPUT -m tcp -p tcp --dport 4420 -j DROP
 
 
+Patch 1–3 serve as preparatory changes for patch 4.
+Patch 4 prevents MD_FAILFAST bio failure causing the array to fail.
+Patch 5, regardless of FAILFAST, reports success to the upper layer
+if a write retry in narrow_write_error succeeds without marking badblock.
+Patch 6 fixes an issue where writes are not retried in a no-bbl
+configuration when last rdevs MD_FAILFAST bio failure.
+Patch 7 adds the missing retry path for Failfast read errors in RAID10.
+Patch 8-9 modify the pr_crit handling in raid{1,10}_error.
 
-在 2025/9/15 8:33, Xiao Ni 写道:
-> Hi Nan
-> 
-> On Thu, Sep 11, 2025 at 3:41 PM <linan666@huaweicloud.com> wrote:
->>
->> From: Li Nan <linan122@huawei.com>
->>
->> Previously, raid array used the maximum logical_block_size (LBS) of
->> all member disks. Adding a larger LBS during disk at runtime could
->> unexpectedly increase RAID's LBS, risking corruption of existing
->> partitions.
-> 
-> Could you describe more about the problem? It's better to give some
-> test steps that can be used to reproduce this problem.
+Kenta Akagi (9):
+  md/raid1,raid10: Set the LastDev flag when the configuration changes
+  md: serialize md_error()
+  md: introduce md_bio_failure_error()
+  md/raid1,raid10: Don't set MD_BROKEN on failfast bio failure
+  md/raid1,raid10: Set R{1,10}BIO_Uptodate when successful retry of a
+    failed bio
+  md/raid1,raid10: Fix missing retries Failfast write bios on no-bbl
+    rdevs
+  md/raid10: fix failfast read error not rescheduled
+  md/raid1,raid10: Add error message when setting MD_BROKEN
+  md/raid1,raid10: Fix: Operation continuing on 0 devices.
 
-Thanks for your review. I will add reproducer in the next version.
-
->>
->> Simply restricting larger-LBS disks is inflexible. In some scenarios,
->> only disks with 512 LBS are available currently, but later, disks with
->> 4k LBS may be added to the array.
->>
->> Making LBS configurable is the best way to solve this scenario.
->> After this patch, the raid will:
->>    - stores LBS in disk metadata.
->>    - add a read-write sysfs 'mdX/logical_block_size'.
->>
->> Future mdadm should support setting LBS via metadata field during RAID
->> creation and the new sysfs. Though the kernel allows runtime LBS changes,
->> users should avoid modifying it after creating partitions or filesystems
->> to prevent compatibility issues.
-> 
-> Because it only allows setting when creating an array. Can this be
-> done automatically in kernel space?
-> 
-> Best Regards
-> Xiao
-
-The kernel defaults LBS to the max among all rdevs. When creating RAID
-with mdadm, if mdadm doesn't set LBS explicitly, how does the kernel
-learn the intended value?
-
-Gunaghao previously submitted a patch related to mdadm:
-https://lore.kernel.org/all/3a9fa346-1041-400d-b954-2119c1ea001c@huawei.com/
+ drivers/md/md.c     |  61 ++++++++++++++---
+ drivers/md/md.h     |  12 +++-
+ drivers/md/raid1.c  | 156 ++++++++++++++++++++++++++++++++------------
+ drivers/md/raid10.c | 115 ++++++++++++++++++++++++++------
+ 4 files changed, 270 insertions(+), 74 deletions(-)
 
 -- 
-Thanks,
-Nan
+2.50.1
 
 
