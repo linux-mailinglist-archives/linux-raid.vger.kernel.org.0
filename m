@@ -1,61 +1,61 @@
-Return-Path: <linux-raid+bounces-5317-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5310-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CCB10B56EFE
-	for <lists+linux-raid@lfdr.de>; Mon, 15 Sep 2025 05:48:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 233CEB56EEF
+	for <lists+linux-raid@lfdr.de>; Mon, 15 Sep 2025 05:44:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 629CA1899492
-	for <lists+linux-raid@lfdr.de>; Mon, 15 Sep 2025 03:49:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A5D4E189BB75
+	for <lists+linux-raid@lfdr.de>; Mon, 15 Sep 2025 03:44:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48FD22550CD;
-	Mon, 15 Sep 2025 03:48:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5745271441;
+	Mon, 15 Sep 2025 03:43:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mgml.me header.i=@mgml.me header.b="exL+AbdH"
+	dkim=pass (2048-bit key) header.d=mgml.me header.i=@mgml.me header.b="gYNs4EVW"
 X-Original-To: linux-raid@vger.kernel.org
 Received: from www5210.sakura.ne.jp (www5210.sakura.ne.jp [133.167.8.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597811B6D06
-	for <linux-raid@vger.kernel.org>; Mon, 15 Sep 2025 03:48:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB3026F2AA
+	for <linux-raid@vger.kernel.org>; Mon, 15 Sep 2025 03:43:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=133.167.8.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757908120; cv=none; b=N4PS4kwJAUv/O8aviEfRRxPFtC7pxtB6FvFncs8sjZk/9A59OO4QwfDsxDkDbla4G6emYaRNsGYQrOyPBNeA2HbeWiY2YZGRJendtrqMjyJMJU/4GMatmFIivNL57ylqs7RNVf2NVNaBMILSZ5EgSunU6BL7nI2uLtunew+2B3Q=
+	t=1757907828; cv=none; b=NW0qdkjret2Rvef/PlJWyq1cQP1/iSlzjGTDCXmrgB543Iw9dNIcKwh7Q14SlxG8AJL3EvRSoOERXnqvqcQDQeD0Y85WJvqabBgbWWTn649P72QrDQSQx9FDkznRCLe0xVhcSZJmTbvxOck/eMclKCg+6MLvGo88jYJ8X6AwbNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757908120; c=relaxed/simple;
-	bh=Spp3/3eTGCFSeofHT3BiTDH6F7HLA3NPNTzyD9V/zOE=;
+	s=arc-20240116; t=1757907828; c=relaxed/simple;
+	bh=thSEO4XZbXdXEtOD8K6LIxHa5CcneJ4OsmAcM9CEBvM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RduXqCmc5/1ReBENQOayQWCEWknogT0sNrs4jG9dSyQ6humRj3ZbcFgzBowvlUqueJMmHuxGqErc2QA3cGiaSqQCLiJBkfpPNdFuQpJSXrq+S9G5dZsSGqXUOMgBm9PvNhwSWY1nAdesj5y4X/IcuNyi/02Iq9IJScpNChXUKgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mgml.me; spf=pass smtp.mailfrom=mgml.me; dkim=pass (2048-bit key) header.d=mgml.me header.i=@mgml.me header.b=exL+AbdH; arc=none smtp.client-ip=133.167.8.150
+	 MIME-Version; b=HZ5KAV1OLkn5yx8wLAbZ2qKZh7YEHO58lz0mFYk5S2Hy1htn/SgoaV415xgJg7Cy/O9JngQBSVvQZs0kPzh2QcVOAIXqeiKoCq06sy5CeUDNuzdphOzmuudxfDM3xmyukIGhPEDxDOCAdZMYgWvbiuplWHFsWNG9rb5trFlfxUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mgml.me; spf=pass smtp.mailfrom=mgml.me; dkim=pass (2048-bit key) header.d=mgml.me header.i=@mgml.me header.b=gYNs4EVW; arc=none smtp.client-ip=133.167.8.150
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mgml.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mgml.me
 Received: from fedora (p4504123-ipxg00s01tokaisakaetozai.aichi.ocn.ne.jp [114.172.113.123])
 	(authenticated bits=0)
-	by www5210.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 58F3gpZo004256
+	by www5210.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 58F3gpZp004256
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 15 Sep 2025 12:43:16 +0900 (JST)
+	Mon, 15 Sep 2025 12:43:17 +0900 (JST)
 	(envelope-from k@mgml.me)
-DKIM-Signature: a=rsa-sha256; bh=Egc/gZktqMRQw3A1lmXwPSLk4aYuJupWRWye4Qdc3pY=;
+DKIM-Signature: a=rsa-sha256; bh=R0HOnqHMxuP96xu16dWewxfrRPsTQLoG49PuVlo3OSI=;
         c=relaxed/relaxed; d=mgml.me;
         h=From:To:Subject:Date:Message-ID;
         s=rs20250315; t=1757907797; v=1;
-        b=exL+AbdHN16NjauwWSbDqRiPWxPkOdKM7+taj16H7+/SMJsfIoaQJilzpseOULPS
-         6Q8J61S2XI4bw8n5qWf1aDCvJQKVbScplupbAQs/ZNReZO6OkinUoX+6/QyCo6ki
-         CDffJv+HJzCkV84WOeILZkw45/NZY1zseX5F8cZMaKqgFNWfWEDvdiBgFqt0AQOt
-         nplY790Qo/mMTW59rfR2rfbSFPfZUjYDe5lLi7SqMHdd7o4HVW8U/mMEdtylfAP8
-         J4fi25/+rKreX5PQF0zrGw+qKTcFxJms4KaY1wfzeHk0XaoUft7vPmP9zfxQS2zu
-         +8JGMLZHn27CLaxoRtZ+PA==
+        b=gYNs4EVWhtbf5rniTjP3beAPOvDoy/GmNv2TdZlwiDlGHvaAOKZ4r9MF2loPlWV7
+         AKqkI2CY68d6uuuR7Ilm7gJ7CqUmRY93eswH5cayJiLcvAKOkXEJRqAOJMLbRsl5
+         WMeIA7U+/cs82yQvROapfEhj44jII6P6gRe4Y/kRp+sjLmLwE2BEEyU6syahklqc
+         0FwuZaYfZykv5xpmIm0hq1deddReOTMeF+sSLm/DGVMrfzYLaZ92HuoSfdoslIun
+         dqEHuYwQA6fxYn4MWXjxDA9NtFUM+scL0q64sXn5MSRduqKfw3amoILpXARD0CBt
+         W7FYJ0dFMOJOO6szOcRywg==
 From: Kenta Akagi <k@mgml.me>
 To: Song Liu <song@kernel.org>, Yu Kuai <yukuai3@huawei.com>,
         Mariusz Tkaczyk <mtkaczyk@kernel.org>, Shaohua Li <shli@fb.com>,
         Guoqing Jiang <jgq516@gmail.com>
 Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
         Kenta Akagi <k@mgml.me>
-Subject: [PATCH v4 7/9] md/raid10: fix failfast read error not rescheduled
-Date: Mon, 15 Sep 2025 12:42:08 +0900
-Message-ID: <20250915034210.8533-8-k@mgml.me>
+Subject: [PATCH v4 8/9] md/raid1,raid10: Add error message when setting MD_BROKEN
+Date: Mon, 15 Sep 2025 12:42:09 +0900
+Message-ID: <20250915034210.8533-9-k@mgml.me>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20250915034210.8533-1-k@mgml.me>
 References: <20250915034210.8533-1-k@mgml.me>
@@ -67,44 +67,46 @@ List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-raid10_end_read_request lacks a path to retry when a FailFast IO fails.
-As a result, when Failfast Read IOs fail on all rdevs, the upper layer
-receives EIO, without read rescheduled.
+Once MD_BROKEN is set on an array, no further writes can be
+performed to it.
+The user must be informed that the array cannot continue operation.
 
-Looking at the two commits below, it seems only raid10_end_read_request
-lacks the failfast read retry handling, while raid1_end_read_request has
-it. In RAID1, the retry works as expected.
-* commit 8d3ca83dcf9c ("md/raid10: add failfast handling for reads.")
-* commit 2e52d449bcec ("md/raid1: add failfast handling for reads.")
-
-I don't know why raid10_end_read_request lacks this, but it is probably
-just a simple oversight.
-
-This commit will make the failfast read bio for the last rdev in raid10
-retry if it fails.
-
-Fixes: 8d3ca83dcf9c ("md/raid10: add failfast handling for reads.")
 Signed-off-by: Kenta Akagi <k@mgml.me>
 ---
- drivers/md/raid10.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/md/raid1.c  | 4 ++++
+ drivers/md/raid10.c | 4 ++++
+ 2 files changed, 8 insertions(+)
 
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 55213bcd82f4..febe2849a71a 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -1786,6 +1786,10 @@ static void raid1_error(struct mddev *mddev, struct md_rdev *rdev)
+ 	if (test_bit(In_sync, &rdev->flags) &&
+ 	    (conf->raid_disks - mddev->degraded) == 1) {
+ 		set_bit(MD_BROKEN, &mddev->flags);
++		pr_crit("md/raid1:%s: Disk failure on %pg, this is the last device.\n"
++			"md/raid1:%s: Cannot continue operation (%d/%d failed).\n",
++			mdname(mddev), rdev->bdev,
++			mdname(mddev), mddev->degraded + 1, conf->raid_disks);
+ 
+ 		if (!mddev->fail_last_dev) {
+ 			conf->recovery_disabled = mddev->recovery_disabled;
 diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index 92cf3047dce6..86c0eacd37cb 100644
+index 86c0eacd37cb..be5fd77da3e1 100644
 --- a/drivers/md/raid10.c
 +++ b/drivers/md/raid10.c
-@@ -399,6 +399,11 @@ static void raid10_end_read_request(struct bio *bio)
- 		 * wait for the 'master' bio.
- 		 */
- 		set_bit(R10BIO_Uptodate, &r10_bio->state);
-+	} else if (test_bit(FailFast, &rdev->flags) &&
-+		 test_bit(R10BIO_FailFast, &r10_bio->state)) {
-+		/* This was a fail-fast read so we definitely
-+		 * want to retry */
-+		;
- 	} else if (!raid1_should_handle_error(bio)) {
- 		uptodate = 1;
- 	} else {
+@@ -2039,6 +2039,10 @@ static void raid10_error(struct mddev *mddev, struct md_rdev *rdev)
+ 
+ 	if (test_bit(In_sync, &rdev->flags) && !enough(conf, rdev->raid_disk)) {
+ 		set_bit(MD_BROKEN, &mddev->flags);
++		pr_crit("md/raid10:%s: Disk failure on %pg, this is the last device.\n"
++			"md/raid10:%s: Cannot continue operation (%d/%d failed).\n",
++			mdname(mddev), rdev->bdev,
++			mdname(mddev), mddev->degraded + 1, conf->geo.raid_disks);
+ 
+ 		if (!mddev->fail_last_dev) {
+ 			spin_unlock_irqrestore(&conf->device_lock, flags);
 -- 
 2.50.1
 
