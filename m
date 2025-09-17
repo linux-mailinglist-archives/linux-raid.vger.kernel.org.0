@@ -1,187 +1,228 @@
-Return-Path: <linux-raid+bounces-5330-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5332-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87402B7C63F
-	for <lists+linux-raid@lfdr.de>; Wed, 17 Sep 2025 14:00:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 180DDB7DD8C
+	for <lists+linux-raid@lfdr.de>; Wed, 17 Sep 2025 14:35:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 78C1D189E20B
-	for <lists+linux-raid@lfdr.de>; Wed, 17 Sep 2025 01:20:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BB6DB3A046D
+	for <lists+linux-raid@lfdr.de>; Wed, 17 Sep 2025 09:25:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBA0B21C166;
-	Wed, 17 Sep 2025 01:20:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3941306B09;
+	Wed, 17 Sep 2025 09:25:04 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C05E1E32B9;
-	Wed, 17 Sep 2025 01:20:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE032EAB68;
+	Wed, 17 Sep 2025 09:25:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758072027; cv=none; b=WUDQTGbb0sgHS7Qa1ePtygyIH6NmOFuciutz9+eOt9XQWTJF/sgjw9SHRLOYmaBy8OB8vh5+c1UkMwsRhRfSJPXso6QE3VXC8Ru9IyyQmND/Hs0z7w8r4FPGzn2ME+6i4YZ4Mj9CO5mnDUt5wyVMlwLbqjkfGW0KC2t7nV9ntw4=
+	t=1758101104; cv=none; b=u5LgkhNliIDasCex3fD2V6ItQtMMBHsXALfD3o1F6Jg0FBofshmrQiJvotNKGmm0SiDSYxHxeMNOV73KGYHPfki/IgDsZ8lmilebmdenqlMsCZ1GDt4CORGJL3EzeVsJVH0wUxCC40/I6TEW2QA58OAb3/z8ORKUmLpH7QGK5YY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758072027; c=relaxed/simple;
-	bh=jGZHf18wvFCOhPTzRINGLkXZD67i3bQzutmJMhFhaiI=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=VbJiwlNdZl1jmR/pqV31/CUoADR7dzBNV/P5rqvxdp5MRbkc57IQTAZ4YBfzNBNw9gO/mjR0bd7jGrwx3/4EzJWOtGkKsIp+y+L41YcJicAv2CYk+SCBjGTNEzMSXyY3z3eoD4ENQCrR+yheTZur22RCv9s5EaZIhXxkfrweeQY=
+	s=arc-20240116; t=1758101104; c=relaxed/simple;
+	bh=slEQ1mNfqMRsV3a08Jsr5k+RAqQYYttn6OA+jBPRlxw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AQ7dmlMake4BXIstblH9SBc4A8VVJsnoYL3wp0MNOq6ExPgWDQxQyYpReSzv+hrclG+39fVHyyxd7tnVG8TP9qJlS8s+bFagZ+aXGf9rXNzV6/pVpa9bcjnt7bB5FWnBgnCJjmgIdvLRP6Hw+OGE5RIm3fAZ/AF8CcEwyHqe6Rs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4cRLYL6xhxzYQv00;
-	Wed, 17 Sep 2025 09:20:22 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4cRYJW4YrczYQvNY;
+	Wed, 17 Sep 2025 17:24:59 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 9022C1A166F;
-	Wed, 17 Sep 2025 09:20:21 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgCn8IzRDMporI0NCw--.40294S3;
-	Wed, 17 Sep 2025 09:20:19 +0800 (CST)
-Subject: Re: [PATCH v2 1/2] md: init
- queue_limits->max_hw_wzeroes_unmap_sectors parameter
-To: Zhang Yi <yi.zhang@huaweicloud.com>, linux-block@vger.kernel.org,
- linux-raid@vger.kernel.org, drbd-dev@lists.linbit.com
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- john.g.garry@oracle.com, pmenzel@molgen.mpg.de, hch@lst.de,
- martin.petersen@oracle.com, axboe@kernel.dk, yi.zhang@huawei.com,
- yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250910111107.3247530-1-yi.zhang@huaweicloud.com>
- <20250910111107.3247530-2-yi.zhang@huaweicloud.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <f0cbf355-df20-d8a3-94d9-1ada83647a5a@huaweicloud.com>
-Date: Wed, 17 Sep 2025 09:20:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	by mail.maildlp.com (Postfix) with ESMTP id 40C7A1A148E;
+	Wed, 17 Sep 2025 17:24:58 +0800 (CST)
+Received: from [10.174.179.247] (unknown [10.174.179.247])
+	by APP4 (Coremail) with SMTP id gCh0CgD3QY5pfspohUY0Cw--.51384S3;
+	Wed, 17 Sep 2025 17:24:58 +0800 (CST)
+Message-ID: <837a4dd4-045f-a956-a241-cab1e8bc20fe@huaweicloud.com>
+Date: Wed, 17 Sep 2025 17:24:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250910111107.3247530-2-yi.zhang@huaweicloud.com>
-Content-Type: text/plain; charset=gbk; format=flowed
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH v4 5/9] md/raid1,raid10: Set R{1,10}BIO_Uptodate when
+ successful retry of a failed bio
+To: Kenta Akagi <k@mgml.me>, Song Liu <song@kernel.org>,
+ Yu Kuai <yukuai3@huawei.com>, Mariusz Tkaczyk <mtkaczyk@kernel.org>,
+ Shaohua Li <shli@fb.com>, Guoqing Jiang <jgq516@gmail.com>
+Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250915034210.8533-1-k@mgml.me>
+ <20250915034210.8533-6-k@mgml.me>
+From: Li Nan <linan666@huaweicloud.com>
+In-Reply-To: <20250915034210.8533-6-k@mgml.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCn8IzRDMporI0NCw--.40294S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxXFWUXw1fWrWDWrW5CFy7Awb_yoWrtF45pa
-	y7XFySvryUJayUAa98J34UuF4rXa45GrZFkFy3Xw1kur17Wr9rWF4fXa98XFsrZw15C3W7
-	t3W0kFZru3WYgrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Ib4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+X-CM-TRANSID:gCh0CgD3QY5pfspohUY0Cw--.51384S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxKF47Gw45AFWkCr4DKr18uFg_yoW7Ww48pa
+	yDKasayFWqq342qrnrAFWUWF9Ykw1xtFW2kr4rG3srW3Z8tr93KF48XryYgryUZr9xu3W2
+	qFs8WrWUCFsrJFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Yb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
 	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
 	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
-	e2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4I
-	kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
-	WwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
-	0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWU
-	JVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJb
-	IYCTnIWIevJa73UjIFyTuYvjxUF1v3UUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+	0267AKxVW0oVCq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487
+	Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aV
+	AFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xF
+	o4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjxUrsjjDUUUU
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
-ÔÚ 2025/09/10 19:11, Zhang Yi Ð´µÀ:
-> From: Zhang Yi <yi.zhang@huawei.com>
+
+
+åœ¨ 2025/9/15 11:42, Kenta Akagi å†™é“:
+> In the current implementation, when a write bio fails, the retry flow
+> is as follows:
+> * In bi_end_io, e.g. raid1_end_write_request, R1BIO_WriteError is
+>    set on the r1bio.
+> * The md thread calls handle_write_finished corresponding to this r1bio.
+> * Inside handle_write_finished, narrow_write_error is invoked.
+> * narrow_write_error rewrites the r1bio on a per-sector basis, marking
+>    any failed sectors as badblocks. It returns true if all sectors succeed,
+>    or if failed sectors are successfully recorded via rdev_set_badblock.
+>    It returns false if rdev_set_badblock fails or if badblocks are disabled.
+> * handle_write_finished faults the rdev if it receives false from
+>    narrow_write_error. Otherwise, it does nothing.
 > 
-> The parameter max_hw_wzeroes_unmap_sectors in queue_limits should be
-> equal to max_write_zeroes_sectors if it is set to a non-zero value.
-> However, the stacked md drivers call md_init_stacking_limits() to
-> initialize this parameter to UINT_MAX but only adjust
-> max_write_zeroes_sectors when setting limits. Therefore, this
-> discrepancy triggers a value check failure in blk_validate_limits().
+> This can cause a problem where an r1bio that succeeded on retry is
+> incorrectly reported as failed to the higher layer, for example in the
+> following case:
+> * Only one In_sync rdev exists, and
+> * The write bio initially failed but all retries in
+>    narrow_write_error succeed.
 > 
->   $ modprobe scsi_debug num_parts=2 dev_size_mb=8 lbprz=1 lbpws=1
->   $ mdadm --create /dev/md0 --level=0 --raid-device=2 /dev/sda1 /dev/sda2
->     mdadm: Defaulting to version 1.2 metadata
->     mdadm: RUN_ARRAY failed: Invalid argument
+> This commit ensures that if a write initially fails but all retries in
+> narrow_write_error succeed, R1BIO_Uptodate or R10BIO_Uptodate is set
+> and the higher layer receives a successful write status.
 > 
-> Fix this failure by explicitly setting max_hw_wzeroes_unmap_sectors to
-> max_write_zeroes_sectors. Since the linear and raid0 drivers support
-> write zeroes, so they can support unmap write zeroes operation if all of
-> the backend devices support it. However, the raid1/10/5 drivers don't
-> support write zeroes, so we have to set it to zero.
-> 
-> Fixes: 0c40d7cb5ef3 ("block: introduce max_{hw|user}_wzeroes_unmap_sectors to queue limits")
-> Reported-by: John Garry <john.g.garry@oracle.com>
-> Closes: https://lore.kernel.org/linux-block/803a2183-a0bb-4b7a-92f1-afc5097630d2@oracle.com/
-> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
-> Tested-by: John Garry <john.g.garry@oracle.com>
-> Reviewed-by: Li Nan <linan122@huawei.com>
-> Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-> Reviewed-by: Yu Kuai <yukuai3@huawei.com>
+> Signed-off-by: Kenta Akagi <k@mgml.me>
 > ---
->   drivers/md/md-linear.c | 1 +
->   drivers/md/raid0.c     | 1 +
->   drivers/md/raid1.c     | 1 +
->   drivers/md/raid10.c    | 1 +
->   drivers/md/raid5.c     | 1 +
->   5 files changed, 5 insertions(+)
+>   drivers/md/raid1.c  | 32 ++++++++++++++++++++++++++------
+>   drivers/md/raid10.c | 21 +++++++++++++++++++++
+>   2 files changed, 47 insertions(+), 6 deletions(-)
 > 
-> diff --git a/drivers/md/md-linear.c b/drivers/md/md-linear.c
-> index 5d9b08115375..3e1f165c2d20 100644
-> --- a/drivers/md/md-linear.c
-> +++ b/drivers/md/md-linear.c
-> @@ -73,6 +73,7 @@ static int linear_set_limits(struct mddev *mddev)
->   	md_init_stacking_limits(&lim);
->   	lim.max_hw_sectors = mddev->chunk_sectors;
->   	lim.max_write_zeroes_sectors = mddev->chunk_sectors;
-> +	lim.max_hw_wzeroes_unmap_sectors = mddev->chunk_sectors;
->   	lim.io_min = mddev->chunk_sectors << 9;
->   	err = mddev_stack_rdev_limits(mddev, &lim, MDDEV_STACK_INTEGRITY);
->   	if (err)
-> diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
-> index f1d8811a542a..419139ad7663 100644
-> --- a/drivers/md/raid0.c
-> +++ b/drivers/md/raid0.c
-> @@ -382,6 +382,7 @@ static int raid0_set_limits(struct mddev *mddev)
->   	md_init_stacking_limits(&lim);
->   	lim.max_hw_sectors = mddev->chunk_sectors;
->   	lim.max_write_zeroes_sectors = mddev->chunk_sectors;
-> +	lim.max_hw_wzeroes_unmap_sectors = mddev->chunk_sectors;
->   	lim.io_min = mddev->chunk_sectors << 9;
->   	lim.io_opt = lim.io_min * mddev->raid_disks;
->   	lim.chunk_sectors = mddev->chunk_sectors;
 > diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-> index bf44878ec640..d30b82beeb92 100644
+> index 8fff9dacc6e0..806f5cb33a8e 100644
 > --- a/drivers/md/raid1.c
 > +++ b/drivers/md/raid1.c
-> @@ -3211,6 +3211,7 @@ static int raid1_set_limits(struct mddev *mddev)
+> @@ -2517,6 +2517,21 @@ static void fix_read_error(struct r1conf *conf, struct r1bio *r1_bio)
+>   	}
+>   }
 >   
->   	md_init_stacking_limits(&lim);
->   	lim.max_write_zeroes_sectors = 0;
-> +	lim.max_hw_wzeroes_unmap_sectors = 0;
->   	lim.features |= BLK_FEAT_ATOMIC_WRITES;
->   	err = mddev_stack_rdev_limits(mddev, &lim, MDDEV_STACK_INTEGRITY);
->   	if (err)
+> +/**
+> + * narrow_write_error() - Retry write and set badblock
+> + * @r1_bio:	the r1bio containing the write error
+> + * @i:		which device to retry
+> + *
+> + * Rewrites the bio, splitting it at the least common multiple of the logical
+> + * block size and the badblock size. Blocks that fail to be written are marked
+> + * as bad. If badblocks are disabled, no write is attempted and false is
+> + * returned immediately.
+> + *
+> + * Return:
+> + * * %true	- all blocks were written or marked bad successfully
+> + * * %false	- bbl disabled or
+> + *		  one or more blocks write failed and could not be marked bad
+> + */
+>   static bool narrow_write_error(struct r1bio *r1_bio, int i)
+>   {
+>   	struct mddev *mddev = r1_bio->mddev;
+> @@ -2614,9 +2629,9 @@ static void handle_write_finished(struct r1conf *conf, struct r1bio *r1_bio)
+>   	int m, idx;
+>   	bool fail = false;
+>   
+> -	for (m = 0; m < conf->raid_disks * 2 ; m++)
+> +	for (m = 0; m < conf->raid_disks * 2 ; m++) {
+> +		struct md_rdev *rdev = conf->mirrors[m].rdev;
+>   		if (r1_bio->bios[m] == IO_MADE_GOOD) {
+> -			struct md_rdev *rdev = conf->mirrors[m].rdev;
+>   			rdev_clear_badblocks(rdev,
+>   					     r1_bio->sector,
+>   					     r1_bio->sectors, 0);
+> @@ -2628,12 +2643,17 @@ static void handle_write_finished(struct r1conf *conf, struct r1bio *r1_bio)
+>   			 */
+>   			fail = true;
+
+'fail' should be false when re-write is successful.
+
+>   			if (!narrow_write_error(r1_bio, m))
+> -				md_error(conf->mddev,
+> -					 conf->mirrors[m].rdev);
+> +				md_error(conf->mddev, rdev);
+>   				/* an I/O failed, we can't clear the bitmap */
+> -			rdev_dec_pending(conf->mirrors[m].rdev,
+> -					 conf->mddev);
+> +			else if (test_bit(In_sync, &rdev->flags) &&
+> +				 !test_bit(Faulty, &rdev->flags) &&
+> +				 rdev_has_badblock(rdev,
+> +						   r1_bio->sector,
+> +						   r1_bio->sectors) == 0)
+
+Clear badblock and set R10BIO_Uptodate if rdev has badblock.
+
+> +				set_bit(R1BIO_Uptodate, &r1_bio->state);
+> +			rdev_dec_pending(rdev, conf->mddev);
+>   		}
+> +	}
+>   	if (fail) {
+>   		spin_lock_irq(&conf->device_lock);
+>   		list_add(&r1_bio->retry_list, &conf->bio_end_io_list);
 > diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-> index b60c30bfb6c7..9832eefb2f15 100644
+> index b73af94a88b0..21c2821453e1 100644
 > --- a/drivers/md/raid10.c
 > +++ b/drivers/md/raid10.c
-> @@ -4008,6 +4008,7 @@ static int raid10_set_queue_limits(struct mddev *mddev)
+> @@ -2809,6 +2809,21 @@ static void fix_read_error(struct r10conf *conf, struct mddev *mddev, struct r10
+>   	}
+>   }
 >   
->   	md_init_stacking_limits(&lim);
->   	lim.max_write_zeroes_sectors = 0;
-> +	lim.max_hw_wzeroes_unmap_sectors = 0;
->   	lim.io_min = mddev->chunk_sectors << 9;
->   	lim.chunk_sectors = mddev->chunk_sectors;
->   	lim.io_opt = lim.io_min * raid10_nr_stripes(conf);
-> diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-> index 023649fe2476..e385ef1355e8 100644
-> --- a/drivers/md/raid5.c
-> +++ b/drivers/md/raid5.c
-> @@ -7732,6 +7732,7 @@ static int raid5_set_limits(struct mddev *mddev)
->   	lim.features |= BLK_FEAT_RAID_PARTIAL_STRIPES_EXPENSIVE;
->   	lim.discard_granularity = stripe;
->   	lim.max_write_zeroes_sectors = 0;
-> +	lim.max_hw_wzeroes_unmap_sectors = 0;
->   	mddev_stack_rdev_limits(mddev, &lim, 0);
->   	rdev_for_each(rdev, mddev)
->   		queue_limits_stack_bdev(&lim, rdev->bdev, rdev->new_data_offset,
-> 
-Apply patch 1 to md-6.17.
+> +/**
+> + * narrow_write_error() - Retry write and set badblock
+> + * @r10_bio:	the r10bio containing the write error
+> + * @i:		which device to retry
+> + *
+> + * Rewrites the bio, splitting it at the least common multiple of the logical
+> + * block size and the badblock size. Blocks that fail to be written are marked
+> + * as bad. If badblocks are disabled, no write is attempted and false is
+> + * returned immediately.
+> + *
+> + * Return:
+> + * * %true	- all blocks were written or marked bad successfully
+> + * * %false	- bbl disabled or
+> + *		  one or more blocks write failed and could not be marked bad
+> + */
+>   static bool narrow_write_error(struct r10bio *r10_bio, int i)
+>   {
+>   	struct bio *bio = r10_bio->master_bio;
+> @@ -2975,6 +2990,12 @@ static void handle_write_completed(struct r10conf *conf, struct r10bio *r10_bio)
+>   				fail = true;
+>   				if (!narrow_write_error(r10_bio, m))
+>   					md_error(conf->mddev, rdev);
+> +				else if (test_bit(In_sync, &rdev->flags) &&
+> +					 !test_bit(Faulty, &rdev->flags) &&
+> +					 rdev_has_badblock(rdev,
+> +							   r10_bio->devs[m].addr,
+> +							   r10_bio->sectors) == 0)
 
+Same as raid1.
+
+> +					set_bit(R10BIO_Uptodate, &r10_bio->state);
+>   				rdev_dec_pending(rdev, conf->mddev);
+>   			}
+>   			bio = r10_bio->devs[m].repl_bio;
+
+-- 
 Thanks,
-Kuai
+Nan
 
 
