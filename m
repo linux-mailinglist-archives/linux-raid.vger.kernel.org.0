@@ -1,166 +1,138 @@
-Return-Path: <linux-raid+bounces-5354-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5358-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id ACF2FB83839
-	for <lists+linux-raid@lfdr.de>; Thu, 18 Sep 2025 10:26:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5BD6BB84E34
+	for <lists+linux-raid@lfdr.de>; Thu, 18 Sep 2025 15:43:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6EE5A189C480
-	for <lists+linux-raid@lfdr.de>; Thu, 18 Sep 2025 08:27:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1B4416200DB
+	for <lists+linux-raid@lfdr.de>; Thu, 18 Sep 2025 13:43:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E83F82F3639;
-	Thu, 18 Sep 2025 08:26:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43A7830C107;
+	Thu, 18 Sep 2025 13:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BM3MYKsf"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745C62253A1;
-	Thu, 18 Sep 2025 08:26:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471041CD0C
+	for <linux-raid@vger.kernel.org>; Thu, 18 Sep 2025 13:42:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758184011; cv=none; b=jZAh2D/BUksA2ihsAvUZW/aizE/94qQYXB8AdiHuUsCAsn34iL1QuvmpwLYWOHiH5HsTI38W7n2k7aLezFh3TtxyxXppOiNZpyxXc5kGPtGCYS+KWTLVQfhNdD5VPtwbPrEJmBrmm88dfOdWIlZLihalLVQ5CBzXdp3OwuhVno4=
+	t=1758202974; cv=none; b=Hya7qa6Lprhu+w6MS1L/e/JtcWPeR0hWIFX/CEC/Xrb/hnYcjA1x/mOMhukPO52wpAcBjvEpwDJ6hOhJbprv/sTQmipN21wsrFCKLmOVoE/3j+eg8uQVNYqU8XLkgfo6gkWbq7/s2ETHIbFxya0HUnSoIQZiNLQCGErtvii4s3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758184011; c=relaxed/simple;
-	bh=jgxXsUVeX1P4B4g2XsORYY6Jl9Iyca8HlIGfYT9R2/E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S8ex31vGRSC8/eiSHWGu84glWqaIYWRbVyMNI4JyHWh0WbznqAq/V3LSv0qa9900Y0x/YVqk+9NRb551IO80oOAmNDvZdR7FIFDC0lkGk9OmyB9VIpM4UJXDcKh16biC8VaQLQCaMfbaOXuCVSizACRwMT1CkZpiWe/p/vZ90hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4cS7yl6RM7zKHN6j;
-	Thu, 18 Sep 2025 16:26:39 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id ADA8F1A1A85;
-	Thu, 18 Sep 2025 16:26:40 +0800 (CST)
-Received: from [10.174.179.247] (unknown [10.174.179.247])
-	by APP4 (Coremail) with SMTP id gCh0CgD3QY4+wstoaGihCw--.7655S3;
-	Thu, 18 Sep 2025 16:26:40 +0800 (CST)
-Message-ID: <9281d56a-c4ef-9a2b-e06b-12b00e9dccba@huaweicloud.com>
-Date: Thu, 18 Sep 2025 16:26:38 +0800
+	s=arc-20240116; t=1758202974; c=relaxed/simple;
+	bh=qd3hXY9XgHiw8cjge13Lf6hOHRKSXKhDH3/3yP9EWrc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FIxw4Ip5pmgcPCkUNnB2Mfvj/TzjX5o0W6fWXOf64upB3ezukEd0STiSSFLN1kIT9ZSPyH7M3KrjamIEquji8cX6OJD2r+M5Z35TuuQf0W1BV/EfjK3qma6DN7ZXL3geKb65p/EZh6XJc86AZRHZe5FakH81qdz5ZZzNi+ztxsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BM3MYKsf; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1758202972;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OO/zlqFI4HAQySVPIlojxj20+66UlyKTQ9bnhnA2hwE=;
+	b=BM3MYKsf5hgBuNiYA7cwEHPx3PXdcjdJlSdx8owi52ZcS7uVudgJ8LlLIQVwCzPB+OoeGC
+	Av0gA22PM9SmT7RJD7xYYsy00v6xRsmYTE4Le/5xtNnmLtNoSSVyyFnASgUf9Kxnk6e1hX
+	5pUTZBQFfp1lB6P8Ozgi0NtTugFoHDQ=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-55-O7FC1pkoMbGJIt_TjXyPxw-1; Thu,
+ 18 Sep 2025 09:42:50 -0400
+X-MC-Unique: O7FC1pkoMbGJIt_TjXyPxw-1
+X-Mimecast-MFC-AGG-ID: O7FC1pkoMbGJIt_TjXyPxw_1758202970
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D55A2180057E;
+	Thu, 18 Sep 2025 13:42:49 +0000 (UTC)
+Received: from o.redhat.com (unknown [10.45.225.144])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A95A819560B8;
+	Thu, 18 Sep 2025 13:42:47 +0000 (UTC)
+From: Heinz Mauelshagen <heinzm@redhat.com>
+To: song@kernel.org
+Cc: linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Heinz Mauelshagen <heinzm@redhat.com>
+Subject: [PATCH] md raid: fix hang when stopping arrays with metadata through dm-raid
+Date: Thu, 18 Sep 2025 15:42:42 +0200
+Message-ID: <b58dddf537d5aa7519670a4df5838e7056a37c2a.1758201368.git.heinzm@redhat.com>
+In-Reply-To: <cover.1758201368.git.heinzm@redhat.com>
+References: <cover.1758201368.git.heinzm@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH] md/raid1: skip recovery of already synced areas
-To: John Stoffel <john@stoffel.org>, linan666@huaweicloud.com
-Cc: song@kernel.org, yukuai3@huawei.com, linux-raid@vger.kernel.org,
- linux-kernel@vger.kernel.org, yangerkun@huawei.com, yi.zhang@huawei.com
-References: <20250910082544.271923-1-linan666@huaweicloud.com>
- <26827.5265.32245.268569@quad.stoffel.home>
-From: Li Nan <linan666@huaweicloud.com>
-In-Reply-To: <26827.5265.32245.268569@quad.stoffel.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgD3QY4+wstoaGihCw--.7655S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxJF4DWFy8Zr4fAF47Ww45Wrg_yoW5Xw1UpF
-	43Ja4akryDGF13Ga4kXryUGa4Fya4xGrWfGr13W347W3s8CF90gFW0gFyYgFyDAF43Xr4j
-	qw4kZ3y3uF1YqaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBj14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
-	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v
-	4I1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUvg4fUUUUU=
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
+When using device-mapper's dm-raid target, stopping a RAID array can cause the
+system to hang under specific conditions.
 
+This occurs when:
 
-在 2025/9/18 4:05, John Stoffel 写道:
->>>>>> "linan666" == linan666  <linan666@huaweicloud.com> writes:
-> 
->> From: Li Nan <linan122@huawei.com>
->> When a new disk is added during running recovery, the kernel may
->> restart recovery from the beginning of the device and submit write
->> io to ranges that have already been synchronized.
-> 
-> Isn't it beter to be safe than sorry?  If the resync fails for some
-> reason, how can we be sure the devices really are in sync if you don't
-> force the re-write?
-> 
->> Reproduce:
->>    mdadm -CR /dev/md0 -l1 -n3 /dev/sda missing missing
->>    mdadm --add /dev/md0 /dev/sdb
->>    sleep 10
->>    cat /proc/mdstat	# partially synchronized
->>    mdadm --add /dev/md0 /dev/sdc
->>    cat /proc/mdstat	# start from 0
->>    iostat 1 sdb sdc	# sdb has io, too
-> 
->> If 'rdev->recovery_offset' is ahead of the current recovery sector,
->> read from that device instead of issuing a write. It prevents
->> unnecessary writes while still preserving the chance to back up data
->> if it is the last copy.
-> 
-> 
-> Are you saying that sdb here can continute writing from block N, but
-> that your change will only force sdc to start writing from block 0?
-> Your description of the problem isn't really clear.
-> 
-Thanks for your review. You're right, I will describe it more accurately
-in the next patch.
+-  A dm-raid managed device tree is suspended from top to bottom
+   (the top-level RAID device is suspended first, followed by its
+    underlying metadata and data devices)
 
-> I think it's because you're using the word device for both the MD
-> device itself, as well as the underlying device(s) or component(s) of
-> the MD device.
-> 
-> 
-> 
->> Signed-off-by: Li Nan <linan122@huawei.com>
->> ---
->>   drivers/md/raid1.c | 6 +++++-
->>   1 file changed, 5 insertions(+), 1 deletion(-)
-> 
->> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
->> index 3e422854cafb..ac5a9b73157a 100644
->> --- a/drivers/md/raid1.c
->> +++ b/drivers/md/raid1.c
->> @@ -2894,7 +2894,8 @@ static sector_t raid1_sync_request(struct mddev *mddev, sector_t sector_nr,
->>   		    test_bit(Faulty, &rdev->flags)) {
->>   			if (i < conf->raid_disks)
->>   				still_degraded = true;
->> -		} else if (!test_bit(In_sync, &rdev->flags)) {
->> +		} else if (!test_bit(In_sync, &rdev->flags) &&
->> +			   rdev->recovery_offset <= sector_nr) {
-> bio-> bi_opf = REQ_OP_WRITE;
-> bio-> bi_end_io = end_sync_write;
+-  The top-level RAID device is then removed
 
-As Yu Kuai mentioned, I will refactor this part of the code later.
-This patch will be dropped.
+The hang happens because removing the top-level device triggers md_stop() from the
+dm-raid destructor.  This function attempts to flush the write-intent bitmap, which
+requires writing bitmap superblocks to the metadata sub-devices.  However, since
+these metadata devices are already suspended, the write operations cannot complete,
+causing the system to hang.
 
->>   			write_targets ++;
->> @@ -2903,6 +2904,9 @@ static sector_t raid1_sync_request(struct mddev *mddev, sector_t sector_nr,
->>   			sector_t first_bad = MaxSector;
->>   			sector_t bad_sectors;
->   
->> +			if (!test_bit(In_sync, &rdev->flags))
->> +				good_sectors = min(rdev->recovery_offset - sector_nr,
->> +						   (u64)good_sectors);
->>   			if (is_badblock(rdev, sector_nr, good_sectors,
->>   					&first_bad, &bad_sectors)) {
->>   				if (first_bad > sector_nr)
->> -- 
->> 2.39.2
-> 
-> 
-> 
-> .
+Fix:
 
+-  Prevent bitmap flushing when md_stop() is called from dm-raid contexts
+   and avoid a quiescing/unquescing cycle which could also cause I/O
+
+-  Avoid any I/O operations that might occur during the quiesce/unquiesce process in md_stop()
+
+This ensures that RAID array teardown can complete successfully even when the
+underlying devices are in a suspended state.
+
+Signed-off-by: Heinz Mauelshagen <heinzm@redhat.com>
+---
+ drivers/md/md.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 4e033c26fdd4..53e15bdd9ab2 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -6541,12 +6541,14 @@ static void __md_stop_writes(struct mddev *mddev)
+ {
+ 	timer_delete_sync(&mddev->safemode_timer);
+ 
+-	if (mddev->pers && mddev->pers->quiesce) {
+-		mddev->pers->quiesce(mddev, 1);
+-		mddev->pers->quiesce(mddev, 0);
+-	}
++	if (!mddev_is_dm(mddev)) {
++		if (mddev->pers && mddev->pers->quiesce) {
++			mddev->pers->quiesce(mddev, 1);
++			mddev->pers->quiesce(mddev, 0);
++		}
+ 
+-	mddev->bitmap_ops->flush(mddev);
++		mddev->bitmap_ops->flush(mddev);
++	}
+ 
+ 	if (md_is_rdwr(mddev) &&
+ 	    ((!mddev->in_sync && !mddev_is_clustered(mddev)) ||
 -- 
-Thanks,
-Nan
+2.51.0
 
 
