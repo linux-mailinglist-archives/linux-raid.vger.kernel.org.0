@@ -1,174 +1,179 @@
-Return-Path: <linux-raid+bounces-5367-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5369-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91E8FB879DB
-	for <lists+linux-raid@lfdr.de>; Fri, 19 Sep 2025 03:37:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F67FB8C0B8
+	for <lists+linux-raid@lfdr.de>; Sat, 20 Sep 2025 08:32:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F413C7B3A65
-	for <lists+linux-raid@lfdr.de>; Fri, 19 Sep 2025 01:35:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CB6343A624B
+	for <lists+linux-raid@lfdr.de>; Sat, 20 Sep 2025 06:32:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABD8A23D7DC;
-	Fri, 19 Sep 2025 01:37:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D9D422069A;
+	Sat, 20 Sep 2025 06:31:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fwd.mgml.me header.i=@fwd.mgml.me header.b="Bj02TLX+"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from www5210.sakura.ne.jp (www5210.sakura.ne.jp [133.167.8.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35CB134BA29;
-	Fri, 19 Sep 2025 01:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCFF754F81;
+	Sat, 20 Sep 2025 06:31:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=133.167.8.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758245846; cv=none; b=XUeCblrUo8eJsAZQhoz77gUW7V7C3JK4b7mhN6et8488v1+9o8pMAiQR2GTJZ4a5bq0/vu/IuJF3q4x1TWyZbcx0wsvh7GRuKJzLcpHHH/d6nsfc7fbK+Fgq6uthyQ2RJtNHyLdLUi72QZA2w33Hla3nI8m5dVRSYN9mjX1bdj0=
+	t=1758349917; cv=none; b=Fv8YKCX+oYI+/8bztdUXFkrkLhEmhZOOD/i7rbPrnYl12/mzJHcML+quOyBmf2ofg8Maw8TH2gIOlqmE7k3oI2Rs5TmC1PDZVSTofK1Yd+3qXsCapVso08/LEBbdbX0BGxKQtbaR/5/W1KGhTmwKtgMbOqxT9NlOWTjgsaBiryg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758245846; c=relaxed/simple;
-	bh=1vv7Rpartk9pOnMFVMB3X4LlMfckIVtDz67kL/p/YfI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TGHyCItrVtSvbA22MipJVRi1P5DsOl1+tPQSXBrOavVAvsVqa5jwPAbel44JtHn5opp99zauWzF8Hux9eXd5FKpk57ziw5TFy9V22VKedPpN9FpMEweSmS3L8QGu3T4OmUrcL14UVbJ1ryGxO6AU0xQTpT/RHHQQCWza05MK/Fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4cSZr233MVzYQv2h;
-	Fri, 19 Sep 2025 09:37:22 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 11CC71A16AE;
-	Fri, 19 Sep 2025 09:37:21 +0800 (CST)
-Received: from [10.174.179.247] (unknown [10.174.179.247])
-	by APP4 (Coremail) with SMTP id gCh0CgDHi2POs8xoqghBAA--.17588S3;
-	Fri, 19 Sep 2025 09:37:20 +0800 (CST)
-Message-ID: <6f0f9730-4bbe-7f3c-1b50-690bb77d5d90@huaweicloud.com>
-Date: Fri, 19 Sep 2025 09:37:18 +0800
+	s=arc-20240116; t=1758349917; c=relaxed/simple;
+	bh=6vb/9afzetWbNWekhsEKKz+g5RX9WDAS4JQOn4JeWps=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=aiLhmkQB11TTty6INLR55Paw44av+/VtEBkbstIQcky5nWh7sKZPqTK4Xspvry3L4AX8/o2gaeCrsew+8SRwiW2armYLUJYBqZLGtwT3Ml9wWjbYNTR4ufuh5//R/LgKCE9OkHK9yXv5uBXIjjT5UPsD7heihedInhBDg3leoWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fwd.mgml.me; spf=pass smtp.mailfrom=fwd.mgml.me; dkim=fail (0-bit key) header.d=fwd.mgml.me header.i=@fwd.mgml.me header.b=Bj02TLX+ reason="key not found in DNS"; arc=none smtp.client-ip=133.167.8.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fwd.mgml.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fwd.mgml.me
+Received: from NEET (p3767220-ipxg00h01tokaisakaetozai.aichi.ocn.ne.jp [180.15.208.220])
+	(authenticated bits=0)
+	by www5210.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 58K6UTaF010965
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Sat, 20 Sep 2025 15:30:30 +0900 (JST)
+	(envelope-from k@fwd.mgml.me)
+DKIM-Signature: a=rsa-sha256; bh=konQqpCDA2zLa8r0aoNTN11Z1nBGuu9K9Qo3Tk9sMFs=;
+        c=relaxed/relaxed; d=fwd.mgml.me;
+        h=Message-ID:Date:Subject:To:From;
+        s=rs20250919; t=1758349830; v=1;
+        b=Bj02TLX+L1jrzQa4FHtPX30KoIslhsyN+NavawYa/3ZzpzHD16PRdquDr+8tKgR2
+         HFVxQ6OTpxQKqOQp7YIHWG4LAyg+O7JyNNz4JLhhT8/2ANsj+fDqJyYrNlXb96Rs
+         nS2TDyNwlBE/n4G9T6ZcHV8PDsqM1uoQe/0nyDZ+nznhI4YJqWL8laRvw3lJycmj
+         XAobpgOTVKd04DUEckywO4D+SUU2SK7t9ou18EsumS9ZbRhVKqb3LRh5CAwyVZTG
+         x8eVXdOj+uaai870udGmIvFEPZ1Q9/vXPUfc1D0su20k3yb1RydDKYw5GlQq28AO
+         MRxfsboNSLH+7Hc10CuWmw==
+Message-ID: <e88ac955-9733-4e57-830b-d326557d189a@fwd.mgml.me>
+Date: Sat, 20 Sep 2025 15:30:29 +0900
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH v4 5/9] md/raid1,raid10: Set R{1,10}BIO_Uptodate when
- successful retry of a failed bio
-To: Kenta Akagi <k@mgml.me>, linan666@huaweicloud.com, song@kernel.org,
- yukuai3@huawei.com, mtkaczyk@kernel.org, shli@fb.com, jgq516@gmail.com
-Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <010601995d7867c6-b8e08c65-5db3-4616-abd3-ec03a92ec8bc-000000@ap-northeast-1.amazonses.com>
-From: Li Nan <linan666@huaweicloud.com>
-In-Reply-To: <010601995d7867c6-b8e08c65-5db3-4616-abd3-ec03a92ec8bc-000000@ap-northeast-1.amazonses.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yukuai3@huawei.com, k@fwd.mgml.me
+Subject: Re: [PATCH v4 4/9] md/raid1,raid10: Don't set MD_BROKEN on failfast
+ bio failure
+To: Yu Kuai <hailan@yukuai.org.cn>, yukuai1@huaweicloud.com, song@kernel.org,
+        mtkaczyk@kernel.org, shli@fb.com, jgq516@gmail.com
+References: <010601995d6b88a4-423a9b3c-3790-4d65-86a4-20a9ddea0686-000000@ap-northeast-1.amazonses.com>
+ <6ce45082-2913-4ca2-b382-5beff6a799c6@yukuai.org.cn>
+Content-Language: en-US
+From: Kenta Akagi <k@fwd.mgml.me>
+In-Reply-To: <6ce45082-2913-4ca2-b382-5beff6a799c6@yukuai.org.cn>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDHi2POs8xoqghBAA--.17588S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxuF4rWF4xXr1fXFy3tF13urg_yoWrAF1fpr
-	1kJF1UJryUJr18Jr1Utr1UJryUtr1UJ3WUJr18JF1UJr1Utr1jqr1UXr1jgr1UJr48Jr1U
-	Jr1UJr17Zr1UJrUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBj14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r
-	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v
-	4I1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUAxhLUUUUU=
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+
+Hi,
+
+I have changed my email address because our primary MX server
+suddenly started rejecting non-DKIM mail.
+
+On 2025/09/19 10:36, Yu Kuai wrote:
+> Hi,
+> 
+> 在 2025/9/18 23:22, Kenta Akagi 写道:
+>>>> @@ -470,7 +470,7 @@ static void raid1_end_write_request(struct bio *bio)
+>>>>                (bio->bi_opf & MD_FAILFAST) &&
+>>>>                /* We never try FailFast to WriteMostly devices */
+>>>>                !test_bit(WriteMostly, &rdev->flags)) {
+>>>> -            md_error(r1_bio->mddev, rdev);
+>>>> +            md_bio_failure_error(r1_bio->mddev, rdev, bio);
+>>>>            }
+>>> Can following check of faulty replaced with return value?
+>> In the case where raid1_end_write_request is called for a non-failfast IO,
+>> and the rdev has already been marked Faulty by another bio, it must not retry too.
+>> I think it would be simpler not to use a return value here.
+> 
+> You can just add Faulty check inside md_bio_failure_error() as well, and both
+> failfast and writemostly check.
+
+Sorry, I'm not sure I understand this part. 
+In raid1_end_write_request, this code path is also used for a regular bio,
+not only for FailFast.
+
+You mean to change md_bio_failure_error as follows:
+* If the rdev is Faulty, immediately return true.
+* If the given bio is Failfast and the rdev is not the lastdev, call md_error.
+* If the given bio is not Failfast, do nothing and return false.
+
+And then apply this?
+This is complicated. Wouldn't it be better to keep the Faulty check as it is?
+
+@@ -466,18 +466,12 @@ static void raid1_end_write_request(struct bio *bio)
+                        set_bit(MD_RECOVERY_NEEDED, &
+                                conf->mddev->recovery);
+
+-               if (test_bit(FailFast, &rdev->flags) &&
+-                   (bio->bi_opf & MD_FAILFAST) &&
+-                   /* We never try FailFast to WriteMostly devices */
+-                   !test_bit(WriteMostly, &rdev->flags)) {
+-                       md_error(r1_bio->mddev, rdev);
+-               }
+-
+                /*
+                 * When the device is faulty, it is not necessary to
+                 * handle write error.
+                 */
+-               if (!test_bit(Faulty, &rdev->flags))
++               if (!test_bit(Faulty, &rdev->flags) ||
++                   !md_bio_failure_error(r1_bio->mddev, rdev, bio))
+                        set_bit(R1BIO_WriteError, &r1_bio->state);
+                else {
+                        /* Finished with this branch */
 
 
+Or do you mean a fix like this?
 
-在 2025/9/18 23:36, Kenta Akagi 写道:
-> 
-> 
-> On 2025/09/18 15:39, Li Nan wrote:
->>
->>
->> 在 2025/9/17 21:20, Kenta Akagi 写道:
->>
->>>>>                 if (!narrow_write_error(r1_bio, m))
->>>>> -                md_error(conf->mddev,
->>>>> -                     conf->mirrors[m].rdev);
->>>>> +                md_error(conf->mddev, rdev);
->>>>>                     /* an I/O failed, we can't clear the bitmap */
->>>>> -            rdev_dec_pending(conf->mirrors[m].rdev,
->>>>> -                     conf->mddev);
->>>>> +            else if (test_bit(In_sync, &rdev->flags) &&
->>>>> +                 !test_bit(Faulty, &rdev->flags) &&
->>>>> +                 rdev_has_badblock(rdev,
->>>>> +                           r1_bio->sector,
->>>>> +                           r1_bio->sectors) == 0)
->>>>
->>>> Clear badblock and set R10BIO_Uptodate if rdev has badblock.
->>>
->>> narrow_write_error returns true when the write succeeds, or when the write
->>> fails but rdev_set_badblocks succeeds. Here, it determines that the re-write
->>> succeeded if there is no badblock in the sector to be written by r1_bio.
->>> So we should not call rdev_clear_badblocks here.
->>>
->>
->> I am trying to cleanup narrow_write_error():
->>
->> https://lore.kernel.org/linux-raid/20250917093508.456790-3-linan666@huaweicloud.com/T/#u
->>
->> It may be clearer if narrow_write_error() returns true when all fix IO
->> succeeds.
->>
->> ```
->> @@ -2553,11 +2551,17 @@ static bool narrow_write_error(struct r1bio *r1_bio, int i)
->>                  bio_trim(wbio, sector - r1_bio->sector, sectors);
->>                  wbio->bi_iter.bi_sector += rdev->data_offset;
->>
->> -               if (submit_bio_wait(wbio) < 0)
->> -                       /* failure! */
->> -                       ok = rdev_set_badblocks(rdev, sector,
->> -                                               sectors, 0)
->> -                               && ok;
->> +               if (submit_bio_wait(wbio) < 0) {
->> +                       ok = false;
->> +                       if (rdev_set_badblocks(rdev, sector, sectors, 0)) {
->> +                               /*
->> +                                * Badblocks set failed, disk marked Faulty.
->> +                                * No further operations needed.
->> +                                */
->> +                               bio_put(wbio);
->> +                               break;
->> +                       }
->> +               }
->>
->>                  bio_put(wbio);
->>                  sect_to_write -= sectors;
->> ```
->>
->> We can clear badblocks and set R10BIO_Uptodate after it. What do you think?
-> 
-> Thanks for the detailed explanation.
-> narrow_write_error now returns whether the retry write succeeded.
-> If rdev_set_badblock fails, narrow_write_error calls md_error. This looks good to me.
-> And after narrow_write_error cleanup, rdev_clear_badblock should be called.
-> 
-> BTW, I'm not familiar with the patch workflow. Should I submit my
-> handle_write_finished patch separately after your cleanup patch merged?
-> 
+@@ -466,23 +466,24 @@ static void raid1_end_write_request(struct bio *bio)
+                        set_bit(MD_RECOVERY_NEEDED, &
+                                conf->mddev->recovery);
 
-Sure, please send it separately after my cleanup patch. Thanks.
+-               if (test_bit(FailFast, &rdev->flags) &&
+-                   (bio->bi_opf & MD_FAILFAST) &&
+-                   /* We never try FailFast to WriteMostly devices */
+-                   !test_bit(WriteMostly, &rdev->flags)) {
+-                       md_error(r1_bio->mddev, rdev);
+-               }
+-
+                /*
+                 * When the device is faulty, it is not necessary to
+                 * handle write error.
+                 */
+-               if (!test_bit(Faulty, &rdev->flags))
+-                       set_bit(R1BIO_WriteError, &r1_bio->state);
+-               else {
++               if (test_bit(Faulty, &rdev->flags) ||
++                   (
++                   test_bit(FailFast, &rdev->flags) &&
++                   (bio->bi_opf & MD_FAILFAST) &&
++                   /* We never try FailFast to WriteMostly devices */
++                   !test_bit(WriteMostly, &rdev->flags) &&
++                   md_bio_failure_error(r1_bio->mddev, rdev, bio)
++                   )
++               ) {
+                        /* Finished with this branch */
+                        r1_bio->bios[mirror] = NULL;
+                        to_put = bio;
++               } else {
++                       set_bit(R1BIO_WriteError, &r1_bio->state);
+                }
+        } else {
+                /*
+
+Thanks,
+Akagi
 
 > Thanks,
-> Akagi
-> 
->> -- 
->> Thanks,
->> Nan
->>
->>
+> Kuai
 > 
 > 
 > 
-> .
-
--- 
-Thanks,
-Nan
 
 
