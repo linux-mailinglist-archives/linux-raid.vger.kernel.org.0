@@ -1,58 +1,58 @@
-Return-Path: <linux-raid+bounces-5370-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5372-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E73EB8C508
-	for <lists+linux-raid@lfdr.de>; Sat, 20 Sep 2025 11:53:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EF5B4B8C511
+	for <lists+linux-raid@lfdr.de>; Sat, 20 Sep 2025 11:54:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 539F11BC3643
-	for <lists+linux-raid@lfdr.de>; Sat, 20 Sep 2025 09:53:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D5DED1BC3602
+	for <lists+linux-raid@lfdr.de>; Sat, 20 Sep 2025 09:55:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82D692877FE;
-	Sat, 20 Sep 2025 09:53:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 548D02BEC27;
+	Sat, 20 Sep 2025 09:54:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yukuai.org.cn header.i=hailan@yukuai.org.cn header.b="GWcMkozH"
+	dkim=pass (1024-bit key) header.d=yukuai.org.cn header.i=hailan@yukuai.org.cn header.b="TtGKhf/c"
 X-Original-To: linux-raid@vger.kernel.org
 Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B081C700C
-	for <linux-raid@vger.kernel.org>; Sat, 20 Sep 2025 09:53:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36C52BE02C;
+	Sat, 20 Sep 2025 09:54:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758362012; cv=pass; b=j69kqCanBBz9eMul3UoTSIDicga9or/5v26XQVHmC8fui68VmqZG8chMiAFwK8ceLwUokfAR62jBHtmBavU06vSLrqSk+/tk0gn3gUPRvb6JK3zg1NnRAcT2F6N33fNKxWk8MCAWJm9u1BeT+z2l6Rva3fBSjeLD5/zcQZDWCHI=
+	t=1758362089; cv=pass; b=TUzy6cjbhbXLchjyMZHVgun7+cxnZMOAKL74PTsD9f2zZTUT+dtN09xBrkhcUHvOEAKGxwh3ZBCJfbw8X3LLsnIejiczjk9RCuPlE5JC8bX2RUbuL82sh+UJPxhHb0M6WY/Xe+OfDU1vBmHj0Q/LC7ZWcrn7bov361m6eB+aZ5I=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758362012; c=relaxed/simple;
-	bh=6LYO5eSRpAz4W0I/RCePE1Y3jcrxYZFTdGG0g9j6lmQ=;
+	s=arc-20240116; t=1758362089; c=relaxed/simple;
+	bh=KWQfePgXddwFd0Gk5BYgPFbgbEZBdXGjHQYPHrGTczA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YLMl0evP/nMfzFfMgkbLuE5gfWkEFDhrFnC+BCucwS21el9JpY5CCwcFiwWByYq+bbi+jQQ9QdlWfVCtDEeZM8/q9e0jZJ33H+c3oFSo/ZRwdkso75BHiJgoMrctteM00MdyPvX2gxIe4uhCafoXSdwlKdHD7tgKuxnDgAH6P+E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=yukuai.org.cn; spf=pass smtp.mailfrom=yukuai.org.cn; dkim=pass (1024-bit key) header.d=yukuai.org.cn header.i=hailan@yukuai.org.cn header.b=GWcMkozH; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=yukuai.org.cn
+	 In-Reply-To:Content-Type; b=HAcJ9d99jiQVTuxtAXZVKqvDFkcXFruxlMNlX9e8wT0FAJjIUgv0AxGw/k06hEuyxxFJ9pY55W8NXrjAt3yYi1VwyD0ar2ACwAmlcJy8Xlp22dEgiwHAj2VS6C9owUWXj2HDe/URPdGKvHzzmoD2ZSfaUdW1l58Nek3AcaN6A6I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yukuai.org.cn; spf=pass smtp.mailfrom=yukuai.org.cn; dkim=pass (1024-bit key) header.d=yukuai.org.cn header.i=hailan@yukuai.org.cn header.b=TtGKhf/c; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yukuai.org.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yukuai.org.cn
-ARC-Seal: i=1; a=rsa-sha256; t=1758361994; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1758362055; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=UDDyfVVsNZALSA/Y8d6Upjg8mhAfMbrzCsLmskjfoU15Z3LOj9vLMDgbMtecaWi+EeHKiaf1YiX2XL4xZxKCpOvyrPMTm9UbK6UdFhyC729VtG4HPp0FYPAyzDKLQybPXeDU9boDF8zxPvnL4o+S0hf5QodfW0n9OJNTp+c7urg=
+	b=c+NmoLhOjA6FQnoFfQx/eBdzyEDdY+QZjwik1Ho7k+X2UJYjRV6ThIpNrbAaPOhTq8DFacn96pRpvuPIkJL1YcmxBW+i82Rxt3R7wJ38fXr98iOA/hmv5Meanp4TrGr8QYOhVpAyY0VEuzEUaBrmXgEFZ/TfeRNR9HMofl5x1ZM=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1758361994; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=6LYO5eSRpAz4W0I/RCePE1Y3jcrxYZFTdGG0g9j6lmQ=; 
-	b=frx3yUfj4+mghRrQ0zQ+lOJcNwjcqx4C3JfxtLmFAn+9ZKJYvrfPt6BkeP51mDPk2wmhmVi5mIQDiUx8BL+8p2dAl2iOp0EODmn7W9NFwxWybTvoybvZKyh3j5Mby5SbRpGGHAxoUuV48ZzERnmBWn/vLUki9CnyFHFV8rsXpFA=
+	t=1758362055; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=SVm5bc+Jd9FLAMO+Tj/zbIrlf8uOoE/IqtAPLR3fPSU=; 
+	b=NjvQNI73a7v7/GzcfkMkNmnrpirB5cdTLWdgTzcXgxTCEKijFaa8WM3v6PV+3yUHAGcnC9Pzq35CD7GmMey2S3p16F+qx40dAJa7/y7glBtDdYwIJY7HzOPSPHgvxhUoBCGgMkHxlcEX8RWcH+7pB8JYUVbLchdY6F3w/l0LqKw=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=yukuai.org.cn;
 	spf=pass  smtp.mailfrom=hailan@yukuai.org.cn;
 	dmarc=pass header.from=<hailan@yukuai.org.cn>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1758361994;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1758362055;
 	s=zmail; d=yukuai.org.cn; i=hailan@yukuai.org.cn;
 	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=6LYO5eSRpAz4W0I/RCePE1Y3jcrxYZFTdGG0g9j6lmQ=;
-	b=GWcMkozHkHyMlI+ZjO7uTnDUrokHbgZr3mqnf3fDPMEbGyUl9QSmSXiOdwrOrRvG
-	Q8QJBlKGnTJhNEV5S04QeRaTlK0CGy5d5igxNuSr8v8fM4aAoUe9//5G97R6N3yof32
-	wXu3DRZaZ4OJOJ7nX7/4lF2c+77CpD1OwyxrIeM4=
-Received: by mx.zohomail.com with SMTPS id 1758361991728211.4295895095113;
-	Sat, 20 Sep 2025 02:53:11 -0700 (PDT)
-Message-ID: <0fd8946a-e10c-4b11-8fc1-7435e4dd77b8@yukuai.org.cn>
-Date: Sat, 20 Sep 2025 17:53:08 +0800
+	bh=SVm5bc+Jd9FLAMO+Tj/zbIrlf8uOoE/IqtAPLR3fPSU=;
+	b=TtGKhf/c0+ktWdJG0PObvX+pUlYdoQwHS6UdtWodN8v1s7TocpZlUULAfzDTL7HA
+	VHeNvTzJ+KW8uh/9CLsC/yNH/i/P2hZEIvaPgJUKDqmXwFPm8f/Hr8hIfaWGMih3mnh
+	MnMo8U0MLD1667Dc8spNNkoTRS1MhezfSh9n3LSI=
+Received: by mx.zohomail.com with SMTPS id 1758362052290800.2558743226634;
+	Sat, 20 Sep 2025 02:54:12 -0700 (PDT)
+Message-ID: <39f18982-813a-4bf5-8866-ddedf6fe664b@yukuai.org.cn>
+Date: Sat, 20 Sep 2025 17:54:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
@@ -60,28 +60,56 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Factor out code into md_should_do_recovery()
-To: Yu Kuai <yukuai1@huaweicloud.com>, Wu Guanghao <wuguanghao3@huawei.com>,
- song@kernel.org
-Cc: linux-raid@vger.kernel.org, yangyun50@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <e62894c8-d916-94bc-ef48-3c60e6e1fc5d@huawei.com>
- <d668bc92-e59d-a571-fec7-4e3a6df24b66@huaweicloud.com>
+Subject: Re: [PATCH v3] md: prevent incorrect update of resync/recovery offset
+To: linan666@huaweicloud.com, song@kernel.org, yukuai3@huawei.com
+Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+ pmenzel@molgen.mpg.de, yangerkun@huawei.com, yi.zhang@huawei.com
+References: <20250904073452.3408516-1-linan666@huaweicloud.com>
 From: Yu Kuai <hailan@yukuai.org.cn>
-In-Reply-To: <d668bc92-e59d-a571-fec7-4e3a6df24b66@huaweicloud.com>
+In-Reply-To: <20250904073452.3408516-1-linan666@huaweicloud.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-在 2025/9/11 14:23, Yu Kuai 写道:
+在 2025/9/4 15:34, linan666@huaweicloud.com 写道:
 
-> 在 2025/09/08 16:20, Wu Guanghao 写道:
->> In md_check_recovery(), use new helper to make code cleaner.
+> From: Li Nan <linan122@huawei.com>
 >
-> Reviewed-by: Yu Kuai <yukuai3@huawei.com>
-> Thanks
+> In md_do_sync(), when md_sync_action returns ACTION_FROZEN, subsequent
+> call to md_sync_position() will return MaxSector. This causes
+> 'curr_resync' (and later 'recovery_offset') to be set to MaxSector too,
+> which incorrectly signals that recovery/resync has completed, even though
+> disk data has not actually been updated.
 >
+> To fix this issue, skip updating any offset values when the sync action
+> is FROZEN. The same holds true for IDLE.
 >
+> Fixes: 7d9f107a4e94 ("md: use new helpers in md_do_sync()")
+> Signed-off-by: Li Nan <linan122@huawei.com>
+> ---
+> v3: add INTR flag, otherwise resync_min/max will be updated incorrectly.
+> v2: fix typo.
+>
+>   drivers/md/md.c | 5 +++++
+>   1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index e78f80d39271..f926695311a2 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -9397,6 +9397,11 @@ void md_do_sync(struct md_thread *thread)
+>   	}
+>   
+>   	action = md_sync_action(mddev);
+> +	if (action == ACTION_FROZEN || action == ACTION_IDLE) {
+> +		set_bit(MD_RECOVERY_INTR, &mddev->recovery);
+> +		goto skip;
+> +	}
+> +
+>   	desc = md_sync_action_name(action);
+>   	mddev->last_sync_action = action;
+>   
+
 Applied to md-6.18
 Thanks
 
