@@ -1,53 +1,53 @@
-Return-Path: <linux-raid+bounces-5435-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5437-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC8E9BDD52A
-	for <lists+linux-raid@lfdr.de>; Wed, 15 Oct 2025 10:12:01 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2AE27BDD53C
+	for <lists+linux-raid@lfdr.de>; Wed, 15 Oct 2025 10:12:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E053619265BF
-	for <lists+linux-raid@lfdr.de>; Wed, 15 Oct 2025 08:12:09 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D52C44F5DF6
+	for <lists+linux-raid@lfdr.de>; Wed, 15 Oct 2025 08:12:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 379562E7F2F;
-	Wed, 15 Oct 2025 08:11:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CD43310771;
+	Wed, 15 Oct 2025 08:11:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=h-partners.com header.i=@h-partners.com header.b="mRzTAvFj"
+	dkim=pass (1024-bit key) header.d=h-partners.com header.i=@h-partners.com header.b="cjxTj+vh"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
+Received: from canpmsgout08.his.huawei.com (canpmsgout08.his.huawei.com [113.46.200.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53712D97A2;
-	Wed, 15 Oct 2025 08:11:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3543043C6;
+	Wed, 15 Oct 2025 08:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760515868; cv=none; b=utag8F3sprQRmRi9FmfAMaLHBR0roCeWM1cQJ3LQx3H8i1okjdp2xpGzEkk9fm+QNv7vi/7JtlL/G6PCVgIvN41iwoFH+XHGN5J5cDjRPIjiV6WLtGrhROyRthG2znzoyNfbyjXLyCcqJCrhhxdGeoh4j2YfLfThqFjlPuNSgEQ=
+	t=1760515874; cv=none; b=mD6OTFro/vwcHY+xuH7Xk38h8Kr6j919o6Cy4LsSaYzeDQRv+qPVy60dVtXufcHli7Jm+045tmrPqszxdWjonmmkagRTmeM1cGBDoEfvt7sMOHk/v4TN5rKIGSj0aEA/hsiRtM88cCKSvQa+4mo5u3/wBqgVHJN+c5nyKBQNOr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760515868; c=relaxed/simple;
-	bh=xSkX9QStV5XNgrtknArp15/Z6vWH5LOT+vV2qvc637c=;
+	s=arc-20240116; t=1760515874; c=relaxed/simple;
+	bh=Etr9Y2VE7/01GdzNtlmFagLDPukouE088tXY7mskSlo=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Koc/7yhvEE8PqTF4dV46rf8aDmVlAc5hPe4qxJJG9oUFqEv05SeZg+XeBNC/ZlsV++WT52+dgNHz0QayrtfUOis5NNNGySztuEcAF0+oXRjeXX4JzwjWH6W+cKMCoOeePK1RihY1cfRWvVqgDJ44waewUT5914xp/nVpCnBKzkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=h-partners.com; dkim=pass (1024-bit key) header.d=h-partners.com header.i=@h-partners.com header.b=mRzTAvFj; arc=none smtp.client-ip=113.46.200.221
+	 MIME-Version:Content-Type; b=c0qNjmQw1/1rJ4VuYvI3fXD3mGmdJNIGLXNYK+madyC/GlfTI64y+O7zOIUe1G1/RMmIq5DK7fc573699gK695QIfVLwLh4iUU5zgoiCjQ0JoXK6oB/CumPgWl34q815IJRPEE3PDypqmYXugz9UDUSfH1M4hHZ0SJ38gyzZ550=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=h-partners.com; dkim=pass (1024-bit key) header.d=h-partners.com header.i=@h-partners.com header.b=cjxTj+vh; arc=none smtp.client-ip=113.46.200.223
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h-partners.com
 dkim-signature: v=1; a=rsa-sha256; d=h-partners.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=+Or8Opkh9ioUtYw7uDl8tHyaglcVhBzWdsmLA+KYcHQ=;
-	b=mRzTAvFjqrU0ZUAhUOu4sQk27+7iSwTOAo8P9eF/uUIDVvkavAbYqA89FhnhwwUZFl3/ZC5SA
-	QxoRoM72O6AbW5GWR8kelMDe7H0U4P3Spj9DeWNPwfynoEXb10SScsBuf/PCiXjiHZl//8CgmSV
-	ibnZd+6+WeCdcrQTNuy1rxs=
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4cmkKp3n4QzRhRh;
-	Wed, 15 Oct 2025 16:10:38 +0800 (CST)
-Received: from dggemv706-chm.china.huawei.com (unknown [10.3.19.33])
-	by mail.maildlp.com (Postfix) with ESMTPS id F1CD11800B4;
-	Wed, 15 Oct 2025 16:10:58 +0800 (CST)
+	bh=N4e7i6chQ4TVjuwXTg7dTnhyUJmzd3fmwSf1kKePOrw=;
+	b=cjxTj+vhwpqch/C7a0gRA34oPLr4ukmEo8I7K/rMGPNxtE/hOejCiThEuV6I2d6JnXHMgy9ye
+	t9dCus5hBYQAa3OEz5fZ2+gKJEZlBCy+VJk1bxclHIz30oM0wjkLDlrjShnQsd3gBo8CC6K9yEO
+	iz4tZ0HkdsmzgRvH8xF8ZCc=
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4cmkL21H1QzmV66;
+	Wed, 15 Oct 2025 16:10:50 +0800 (CST)
+Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6911A140338;
+	Wed, 15 Oct 2025 16:11:10 +0800 (CST)
 Received: from kwepemn500011.china.huawei.com (7.202.194.152) by
- dggemv706-chm.china.huawei.com (10.3.19.33) with Microsoft SMTP Server
+ dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 15 Oct 2025 16:10:58 +0800
+ 15.2.1544.11; Wed, 15 Oct 2025 16:10:59 +0800
 Received: from huawei.com (10.50.87.129) by kwepemn500011.china.huawei.com
  (7.202.194.152) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 15 Oct
@@ -58,9 +58,9 @@ To: <corbet@lwn.net>, <song@kernel.org>, <yukuai3@huawei.com>,
 CC: <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-raid@vger.kernel.org>, <martin.petersen@oracle.com>,
 	<linan666@huaweicloud.com>, <yangerkun@huawei.com>, <yi.zhang@huawei.com>
-Subject: [PATCH -next v7 1/4] md: delete md_redundancy_group when array is becoming inactive
-Date: Wed, 15 Oct 2025 16:03:51 +0800
-Message-ID: <20251015080354.3398457-2-linan122@huawei.com>
+Subject: [PATCH -next v7 2/4] md: init bioset in mddev_init
+Date: Wed, 15 Oct 2025 16:03:52 +0800
+Message-ID: <20251015080354.3398457-3-linan122@huawei.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20251015080354.3398457-1-linan122@huawei.com>
 References: <20251015080354.3398457-1-linan122@huawei.com>
@@ -77,23 +77,14 @@ X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
 
 From: Li Nan <linan122@huawei.com>
 
-'md_redundancy_group' are created in md_run() and deleted in del_gendisk(),
-but these are not paired. Writing inactive/active to sysfs array_state can
-trigger md_run() multiple times without del_gendisk(), leading to
-duplicate creation as below:
+IO operations may be needed before md_run(), such as updating metadata
+after writing sysfs. Without bioset, this triggers a NULL pointer
+dereference as below:
 
- sysfs: cannot create duplicate filename '/devices/virtual/block/md0/md/sync_action'
+ BUG: kernel NULL pointer dereference, address: 0000000000000020
  Call Trace:
-  dump_stack_lvl+0x9f/0x120
-  dump_stack+0x14/0x20
-  sysfs_warn_dup+0x96/0xc0
-  sysfs_add_file_mode_ns+0x19c/0x1b0
-  internal_create_group+0x213/0x830
-  sysfs_create_group+0x17/0x20
-  md_run+0x856/0xe60
-  ? __x64_sys_openat+0x23/0x30
-  do_md_run+0x26/0x1d0
-  array_state_store+0x559/0x760
+  md_update_sb+0x658/0xe00
+  new_level_store+0xc5/0x120
   md_attr_store+0xc9/0x1e0
   sysfs_kf_write+0x6f/0xa0
   kernfs_fop_write_iter+0x141/0x2a0
@@ -103,33 +94,153 @@ duplicate creation as below:
   x64_sys_call+0x2818/0x2880
   do_syscall_64+0xa9/0x580
   entry_SYSCALL_64_after_hwframe+0x4b/0x53
- md: cannot register extra attributes for md0
 
-Creation of it depends on 'pers', its lifecycle cannot be aligned with
-gendisk. So fix this issue by triggering 'md_redundancy_group' deletion
-when the array is becoming inactive.
+Reproducer
+```
+  mdadm -CR /dev/md0 -l1 -n2 /dev/sd[cd]
+  echo inactive > /sys/block/md0/md/array_state
+  echo 10 > /sys/block/md0/md/new_level
+```
 
-Fixes: 790abe4d77af ("md: remove/add redundancy group only in level change")
+Fixes: d981ed841930 ("md: Add new_level sysfs interface")
 Signed-off-by: Li Nan <linan122@huawei.com>
 ---
- drivers/md/md.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/md/md.c | 74 +++++++++++++++++++++++++------------------------
+ 1 file changed, 38 insertions(+), 36 deletions(-)
 
 diff --git a/drivers/md/md.c b/drivers/md/md.c
-index e2cc9f7e9a6b..852383a9143d 100644
+index 852383a9143d..d0aa8e6339f2 100644
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -6876,6 +6876,10 @@ static int do_md_stop(struct mddev *mddev, int mode)
- 		if (!md_is_rdwr(mddev))
- 			set_disk_ro(disk, 0);
+@@ -730,6 +730,8 @@ static void mddev_clear_bitmap_ops(struct mddev *mddev)
  
-+		if (mode == 2 && mddev->pers->sync_request &&
-+		    mddev->to_remove == NULL)
-+			mddev->to_remove = &md_redundancy_group;
+ int mddev_init(struct mddev *mddev)
+ {
++	int err = 0;
 +
- 		__md_stop_writes(mddev);
- 		__md_stop(mddev);
+ 	if (!IS_ENABLED(CONFIG_MD_BITMAP))
+ 		mddev->bitmap_id = ID_BITMAP_NONE;
+ 	else
+@@ -741,8 +743,26 @@ int mddev_init(struct mddev *mddev)
  
+ 	if (percpu_ref_init(&mddev->writes_pending, no_op,
+ 			    PERCPU_REF_ALLOW_REINIT, GFP_KERNEL)) {
+-		percpu_ref_exit(&mddev->active_io);
+-		return -ENOMEM;
++		err = -ENOMEM;
++		goto exit_acitve_io;
++	}
++
++	if (!bioset_initialized(&mddev->bio_set)) {
++		err = bioset_init(&mddev->bio_set, BIO_POOL_SIZE, 0, BIOSET_NEED_BVECS);
++		if (err)
++			goto exit_writes_pending;
++	}
++	if (!bioset_initialized(&mddev->sync_set)) {
++		err = bioset_init(&mddev->sync_set, BIO_POOL_SIZE, 0, BIOSET_NEED_BVECS);
++		if (err)
++			goto exit_bio_set;
++	}
++
++	if (!bioset_initialized(&mddev->io_clone_set)) {
++		err = bioset_init(&mddev->io_clone_set, BIO_POOL_SIZE,
++				  offsetof(struct md_io_clone, bio_clone), 0);
++		if (err)
++			goto exit_sync_set;
+ 	}
+ 
+ 	/* We want to start with the refcount at zero */
+@@ -773,11 +793,24 @@ int mddev_init(struct mddev *mddev)
+ 	INIT_WORK(&mddev->del_work, mddev_delayed_delete);
+ 
+ 	return 0;
++
++exit_sync_set:
++	bioset_exit(&mddev->sync_set);
++exit_bio_set:
++	bioset_exit(&mddev->bio_set);
++exit_writes_pending:
++	percpu_ref_exit(&mddev->writes_pending);
++exit_acitve_io:
++	percpu_ref_exit(&mddev->active_io);
++	return err;
+ }
+ EXPORT_SYMBOL_GPL(mddev_init);
+ 
+ void mddev_destroy(struct mddev *mddev)
+ {
++	bioset_exit(&mddev->bio_set);
++	bioset_exit(&mddev->sync_set);
++	bioset_exit(&mddev->io_clone_set);
+ 	percpu_ref_exit(&mddev->active_io);
+ 	percpu_ref_exit(&mddev->writes_pending);
+ }
+@@ -6391,29 +6424,9 @@ int md_run(struct mddev *mddev)
+ 		nowait = nowait && bdev_nowait(rdev->bdev);
+ 	}
+ 
+-	if (!bioset_initialized(&mddev->bio_set)) {
+-		err = bioset_init(&mddev->bio_set, BIO_POOL_SIZE, 0, BIOSET_NEED_BVECS);
+-		if (err)
+-			return err;
+-	}
+-	if (!bioset_initialized(&mddev->sync_set)) {
+-		err = bioset_init(&mddev->sync_set, BIO_POOL_SIZE, 0, BIOSET_NEED_BVECS);
+-		if (err)
+-			goto exit_bio_set;
+-	}
+-
+-	if (!bioset_initialized(&mddev->io_clone_set)) {
+-		err = bioset_init(&mddev->io_clone_set, BIO_POOL_SIZE,
+-				  offsetof(struct md_io_clone, bio_clone), 0);
+-		if (err)
+-			goto exit_sync_set;
+-	}
+-
+ 	pers = get_pers(mddev->level, mddev->clevel);
+-	if (!pers) {
+-		err = -EINVAL;
+-		goto abort;
+-	}
++	if (!pers)
++		return -EINVAL;
+ 	if (mddev->level != pers->head.id) {
+ 		mddev->level = pers->head.id;
+ 		mddev->new_level = pers->head.id;
+@@ -6424,8 +6437,7 @@ int md_run(struct mddev *mddev)
+ 	    pers->start_reshape == NULL) {
+ 		/* This personality cannot handle reshaping... */
+ 		put_pers(pers);
+-		err = -EINVAL;
+-		goto abort;
++		return -EINVAL;
+ 	}
+ 
+ 	if (pers->sync_request) {
+@@ -6552,12 +6564,6 @@ int md_run(struct mddev *mddev)
+ 	mddev->private = NULL;
+ 	put_pers(pers);
+ 	md_bitmap_destroy(mddev);
+-abort:
+-	bioset_exit(&mddev->io_clone_set);
+-exit_sync_set:
+-	bioset_exit(&mddev->sync_set);
+-exit_bio_set:
+-	bioset_exit(&mddev->bio_set);
+ 	return err;
+ }
+ EXPORT_SYMBOL_GPL(md_run);
+@@ -6782,10 +6788,6 @@ static void __md_stop(struct mddev *mddev)
+ 	mddev->private = NULL;
+ 	put_pers(pers);
+ 	clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+-
+-	bioset_exit(&mddev->bio_set);
+-	bioset_exit(&mddev->sync_set);
+-	bioset_exit(&mddev->io_clone_set);
+ }
+ 
+ void md_stop(struct mddev *mddev)
 -- 
 2.39.2
 
