@@ -1,66 +1,69 @@
-Return-Path: <linux-raid+bounces-5433-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5435-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B07BBDD512
-	for <lists+linux-raid@lfdr.de>; Wed, 15 Oct 2025 10:11:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC8E9BDD52A
+	for <lists+linux-raid@lfdr.de>; Wed, 15 Oct 2025 10:12:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1988C4E953A
-	for <lists+linux-raid@lfdr.de>; Wed, 15 Oct 2025 08:11:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E053619265BF
+	for <lists+linux-raid@lfdr.de>; Wed, 15 Oct 2025 08:12:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A519F2D24B1;
-	Wed, 15 Oct 2025 08:11:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 379562E7F2F;
+	Wed, 15 Oct 2025 08:11:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=h-partners.com header.i=@h-partners.com header.b="myO7X/sI"
+	dkim=pass (1024-bit key) header.d=h-partners.com header.i=@h-partners.com header.b="mRzTAvFj"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from canpmsgout10.his.huawei.com (canpmsgout10.his.huawei.com [113.46.200.225])
+Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088D0224B1F;
-	Wed, 15 Oct 2025 08:11:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53712D97A2;
+	Wed, 15 Oct 2025 08:11:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760515864; cv=none; b=dZRo2L/NbxU6LwduWVoDAU7oUSES4T/RYSlOoUDjRLbJ5Fmjb8efSx6GrVuCFHuBFtbgU/glDB2qzQUkvNJ8PgJd2+J1WbBNhG9FQnfOtbWSIMgYHA0DKaCF3LLZNzV77yxhUdKeK+2PMVddoR/uc6oGdhn24AtX2dlfBg13rFE=
+	t=1760515868; cv=none; b=utag8F3sprQRmRi9FmfAMaLHBR0roCeWM1cQJ3LQx3H8i1okjdp2xpGzEkk9fm+QNv7vi/7JtlL/G6PCVgIvN41iwoFH+XHGN5J5cDjRPIjiV6WLtGrhROyRthG2znzoyNfbyjXLyCcqJCrhhxdGeoh4j2YfLfThqFjlPuNSgEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760515864; c=relaxed/simple;
-	bh=Cz0QAQDRMXr5TPxLZtu/5pZYWl/RX/8g2S3tIWM3lKE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=j55LmgeRnjEzzPoa6z/u6eu6z11JbhbJ4dQ7BIZuxsp1pUFexrzofe+YVLgIeSEWFg/uu6f30dVPqfHpbNzrwiJMGXugllbh17AZtg8W7hzExnWcKr971qwGozucH34/eR96p6ijtd7GQcsJTJAsNNpzpxltGEQr4LZM1DUxATE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=h-partners.com; dkim=pass (1024-bit key) header.d=h-partners.com header.i=@h-partners.com header.b=myO7X/sI; arc=none smtp.client-ip=113.46.200.225
+	s=arc-20240116; t=1760515868; c=relaxed/simple;
+	bh=xSkX9QStV5XNgrtknArp15/Z6vWH5LOT+vV2qvc637c=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Koc/7yhvEE8PqTF4dV46rf8aDmVlAc5hPe4qxJJG9oUFqEv05SeZg+XeBNC/ZlsV++WT52+dgNHz0QayrtfUOis5NNNGySztuEcAF0+oXRjeXX4JzwjWH6W+cKMCoOeePK1RihY1cfRWvVqgDJ44waewUT5914xp/nVpCnBKzkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=h-partners.com; dkim=pass (1024-bit key) header.d=h-partners.com header.i=@h-partners.com header.b=mRzTAvFj; arc=none smtp.client-ip=113.46.200.221
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h-partners.com
 dkim-signature: v=1; a=rsa-sha256; d=h-partners.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=OfMvrlC6OBN0gcP3E9vB1YqFdp5QboXs6/S49Edpn0U=;
-	b=myO7X/sI1oZ0gvf0C4rWrOHsQsYSYAII/ehCiVwKyJcLZlJH6aHPv40scbdPnLRxH4kPDwoUZ
-	pv5wwx6Jb/KS5nqEiGy/z+H6Nvc9xp688jRWdemSKWy8HCLqeaYjnPb0gQBnXojEpTm6e+jsf9t
-	MYup/gKCNbO0TOghe46vkXE=
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by canpmsgout10.his.huawei.com (SkyGuard) with ESMTPS id 4cmkKp6NLXz1K97v;
+	bh=+Or8Opkh9ioUtYw7uDl8tHyaglcVhBzWdsmLA+KYcHQ=;
+	b=mRzTAvFjqrU0ZUAhUOu4sQk27+7iSwTOAo8P9eF/uUIDVvkavAbYqA89FhnhwwUZFl3/ZC5SA
+	QxoRoM72O6AbW5GWR8kelMDe7H0U4P3Spj9DeWNPwfynoEXb10SScsBuf/PCiXjiHZl//8CgmSV
+	ibnZd+6+WeCdcrQTNuy1rxs=
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4cmkKp3n4QzRhRh;
 	Wed, 15 Oct 2025 16:10:38 +0800 (CST)
-Received: from dggemv705-chm.china.huawei.com (unknown [10.3.19.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id 76BAF1A016C;
+Received: from dggemv706-chm.china.huawei.com (unknown [10.3.19.33])
+	by mail.maildlp.com (Postfix) with ESMTPS id F1CD11800B4;
 	Wed, 15 Oct 2025 16:10:58 +0800 (CST)
 Received: from kwepemn500011.china.huawei.com (7.202.194.152) by
- dggemv705-chm.china.huawei.com (10.3.19.32) with Microsoft SMTP Server
+ dggemv706-chm.china.huawei.com (10.3.19.33) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
  15.2.1544.11; Wed, 15 Oct 2025 16:10:58 +0800
 Received: from huawei.com (10.50.87.129) by kwepemn500011.china.huawei.com
  (7.202.194.152) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 15 Oct
- 2025 16:10:57 +0800
+ 2025 16:10:58 +0800
 From: <linan122@huawei.com>
 To: <corbet@lwn.net>, <song@kernel.org>, <yukuai3@huawei.com>,
 	<linan122@huawei.com>, <xni@redhat.com>, <hare@suse.de>
 CC: <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-raid@vger.kernel.org>, <martin.petersen@oracle.com>,
 	<linan666@huaweicloud.com>, <yangerkun@huawei.com>, <yi.zhang@huawei.com>
-Subject: [PATCH -next v7 0/4] make logical block size configurable
-Date: Wed, 15 Oct 2025 16:03:50 +0800
-Message-ID: <20251015080354.3398457-1-linan122@huawei.com>
+Subject: [PATCH -next v7 1/4] md: delete md_redundancy_group when array is becoming inactive
+Date: Wed, 15 Oct 2025 16:03:51 +0800
+Message-ID: <20251015080354.3398457-2-linan122@huawei.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20251015080354.3398457-1-linan122@huawei.com>
+References: <20251015080354.3398457-1-linan122@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
@@ -74,28 +77,59 @@ X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
 
 From: Li Nan <linan122@huawei.com>
 
-v7:
- - Add three prerequisite patch to fix some config lbs related issues
- - Update sb when lbs configuration is done
- - This feature should support raid0, update documentation accordingly
+'md_redundancy_group' are created in md_run() and deleted in del_gendisk(),
+but these are not paired. Writing inactive/active to sysfs array_state can
+trigger md_run() multiple times without del_gendisk(), leading to
+duplicate creation as below:
 
-Li Nan (4):
-  md: delete md_redundancy_group when array is becoming inactive
-  md: init bioset in mddev_init
-  md/raid0: Move queue limit setup before r0conf initialization
-  md: allow configuring logical block size
+ sysfs: cannot create duplicate filename '/devices/virtual/block/md0/md/sync_action'
+ Call Trace:
+  dump_stack_lvl+0x9f/0x120
+  dump_stack+0x14/0x20
+  sysfs_warn_dup+0x96/0xc0
+  sysfs_add_file_mode_ns+0x19c/0x1b0
+  internal_create_group+0x213/0x830
+  sysfs_create_group+0x17/0x20
+  md_run+0x856/0xe60
+  ? __x64_sys_openat+0x23/0x30
+  do_md_run+0x26/0x1d0
+  array_state_store+0x559/0x760
+  md_attr_store+0xc9/0x1e0
+  sysfs_kf_write+0x6f/0xa0
+  kernfs_fop_write_iter+0x141/0x2a0
+  vfs_write+0x1fc/0x5a0
+  ksys_write+0x79/0x180
+  __x64_sys_write+0x1d/0x30
+  x64_sys_call+0x2818/0x2880
+  do_syscall_64+0xa9/0x580
+  entry_SYSCALL_64_after_hwframe+0x4b/0x53
+ md: cannot register extra attributes for md0
 
- Documentation/admin-guide/md.rst |   7 ++
- drivers/md/md.h                  |   1 +
- include/uapi/linux/raid/md_p.h   |   3 +-
- drivers/md/md-linear.c           |   1 +
- drivers/md/md.c                  | 154 +++++++++++++++++++++++--------
- drivers/md/raid0.c               |  14 +--
- drivers/md/raid1.c               |   1 +
- drivers/md/raid10.c              |   1 +
- drivers/md/raid5.c               |   1 +
- 9 files changed, 140 insertions(+), 43 deletions(-)
+Creation of it depends on 'pers', its lifecycle cannot be aligned with
+gendisk. So fix this issue by triggering 'md_redundancy_group' deletion
+when the array is becoming inactive.
 
+Fixes: 790abe4d77af ("md: remove/add redundancy group only in level change")
+Signed-off-by: Li Nan <linan122@huawei.com>
+---
+ drivers/md/md.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index e2cc9f7e9a6b..852383a9143d 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -6876,6 +6876,10 @@ static int do_md_stop(struct mddev *mddev, int mode)
+ 		if (!md_is_rdwr(mddev))
+ 			set_disk_ro(disk, 0);
+ 
++		if (mode == 2 && mddev->pers->sync_request &&
++		    mddev->to_remove == NULL)
++			mddev->to_remove = &md_redundancy_group;
++
+ 		__md_stop_writes(mddev);
+ 		__md_stop(mddev);
+ 
 -- 
 2.39.2
 
