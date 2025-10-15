@@ -1,369 +1,238 @@
-Return-Path: <linux-raid+bounces-5436-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5438-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id ACF75BDD52D
-	for <lists+linux-raid@lfdr.de>; Wed, 15 Oct 2025 10:12:02 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E865BDD575
+	for <lists+linux-raid@lfdr.de>; Wed, 15 Oct 2025 10:18:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8CF1A4ED80B
-	for <lists+linux-raid@lfdr.de>; Wed, 15 Oct 2025 08:12:01 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id B2F9734693E
+	for <lists+linux-raid@lfdr.de>; Wed, 15 Oct 2025 08:18:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 258A1303A1B;
-	Wed, 15 Oct 2025 08:11:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58FA02D73B2;
+	Wed, 15 Oct 2025 08:18:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=h-partners.com header.i=@h-partners.com header.b="VWItG6M8"
+	dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b="st4WelTB"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C612E7BCC;
-	Wed, 15 Oct 2025 08:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.221
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760515871; cv=none; b=QQljLDrt0bFsCWgi2YdikU/Nq3k9jZQZM75A7O4JMM7eJfnCV82N3X1ePEUUhE8h/2jP7Ui2IS4DHCj7t9h0/2uqZAICWr9Kl85l86ZO54G7by0mW3PzmDPBfXMSvRvnbQu9MEU6yVthT3lx6J2tARnZ2xknYbXs4NytZJDpFM0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760515871; c=relaxed/simple;
-	bh=/LGMdztWoa17Vqe5AoTEVhDwUUyLIMaYtHLKh8I7CLY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uEq5VBTZTKaTqpKoKM1OSv+lNpLCqzpKFYstCL3++buLY7AtDoAilGpVMfVNLz0UUKVX5EN44HgYtn9Rjv98/B7ZsWfS7MzOzkMIJKYz6SbdruZr0x0gV/tNlWqkdw/dsVqphIleX6dkbWbTb4sIaqU4UFZ+O2dSlDajUCbFXk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=h-partners.com; dkim=pass (1024-bit key) header.d=h-partners.com header.i=@h-partners.com header.b=VWItG6M8; arc=none smtp.client-ip=113.46.200.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h-partners.com
-dkim-signature: v=1; a=rsa-sha256; d=h-partners.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=9n+b4aM/uItV0XOqZ5uzP6RIUzOvcI+uo7IjHtZRtqU=;
-	b=VWItG6M8QoNKjXSNB5nfIkjS6KwRFkgSpOveX+TF82PsUbcs1u1ByLm4OZCbGem2fpMt0OIvK
-	RgEqAkuK9pg5xD68mJR+FYpygxTWhk2IXWRJ9WqPuHcU8UF+3Y32Ay5fWxEfBcR9EZMklO9i5nv
-	WxzP6klK6UqFVoNbs54KUNw=
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4cmkKr38X6zRhXD;
-	Wed, 15 Oct 2025 16:10:40 +0800 (CST)
-Received: from dggemv706-chm.china.huawei.com (unknown [10.3.19.33])
-	by mail.maildlp.com (Postfix) with ESMTPS id DABB8180485;
-	Wed, 15 Oct 2025 16:11:00 +0800 (CST)
-Received: from kwepemn500011.china.huawei.com (7.202.194.152) by
- dggemv706-chm.china.huawei.com (10.3.19.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 15 Oct 2025 16:11:00 +0800
-Received: from huawei.com (10.50.87.129) by kwepemn500011.china.huawei.com
- (7.202.194.152) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 15 Oct
- 2025 16:10:59 +0800
-From: <linan122@huawei.com>
-To: <corbet@lwn.net>, <song@kernel.org>, <yukuai3@huawei.com>,
-	<linan122@huawei.com>, <xni@redhat.com>, <hare@suse.de>
-CC: <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-raid@vger.kernel.org>, <martin.petersen@oracle.com>,
-	<linan666@huaweicloud.com>, <yangerkun@huawei.com>, <yi.zhang@huawei.com>
-Subject: [PATCH -next v7 4/4] md: allow configuring logical block size
-Date: Wed, 15 Oct 2025 16:03:54 +0800
-Message-ID: <20251015080354.3398457-5-linan122@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20251015080354.3398457-1-linan122@huawei.com>
-References: <20251015080354.3398457-1-linan122@huawei.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FBD239E7D;
+	Wed, 15 Oct 2025 08:18:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.166.238
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760516329; cv=fail; b=r6NxzXjuUwS3VzGR9jysoAmKAF7u+3Jw4FMbVewcQi0dx5T+r2KnbCr/ur7KxY5juDRfxgr6Evr9yi8y/iHePytxNKO/xAwTFjD9cnhSm2SsAYq81nb3Wsxft2jLil0E+MOYSpqRyNKGT+csAs7nqjY94XHfKs8mmwAZUNdhsaU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760516329; c=relaxed/simple;
+	bh=FIes+g0MSynSkv6PUq24nw4utp8YBUzD4ixgR6tmQog=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Lfxe5wdnyZaKRRzbZ/b+fbiMoADquTjPBy0PUqGU12i0hczql2COIzOokbSEpauZV5NJYSUwX0+tjaCp4KXWfweJMk/UTB9IvuAXh5twzBknFHBjwMd6Ha/mAYKhntJuiXhkxsFwdYmBcmShZfj7r0VYH4v6oSC5xSOm81ait7s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b=st4WelTB; arc=fail smtp.client-ip=205.220.166.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 59F5ofSP269457;
+	Wed, 15 Oct 2025 01:17:51 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=cc:content-transfer-encoding:content-type:date:from
+	:in-reply-to:message-id:mime-version:references:subject:to; s=
+	PPS06212021; bh=9u1qmj8xOKRWkbKb/vIKHg5l8oJdWPLGeGURW9YZOhA=; b=
+	st4WelTBvAdqMjMvqjQxbZ6xaXnW5Qlw2f1LH/9ZIYlwwnuf0mRy+eA1X6oJZOQb
+	eXpg66jsF3BqSjUNmXL3maDKZXY0Gz7XyLd333GbAY8MgYp6+LIxDqW/0ZrvmjKo
+	y6ViMN6gcpAoF05MAL/xcHT7fz9b9OjSYgdPoNH1frg6tJTkjwG8aPaLBy0Qqliv
+	+wGmGdQa6QGlUbJkn3hY8j8HYiBKrIlhGEZ6mSncg+Lii72BGIZd1EmJr6V0zSG6
+	SUnVwFTsBK3gIFe4cwPCru79xpoRdShK+TH8O3i98sgs2VmfB0fD9H0FoIiEecqk
+	uBh8HL25yfGWss0FKOcrBw==
+Received: from byapr05cu005.outbound.protection.outlook.com (mail-westusazon11010000.outbound.protection.outlook.com [52.101.85.0])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 49qprdv8q6-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Wed, 15 Oct 2025 01:17:51 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aE1p61tnaBAsQqzOvuGx6qkYoH+BM8fRJnIs+A4m6rj8HJARqSVwDvqXI0++39QUSR78zQ37M0jXP+TCjRHiFS90OcwEqtox8rQur8G3dkUyzmy/roDth8isBG8mIuUBbDafn1A3e5BG8AC0168Zn2nxQ717hoLolTmGNvH+YliSJQ3Bq2a3ah1PhIuoNbiezzR+iJMfH6gfFrWlGMSrXGjq7VNjo1Ub1dtPk1YJdNsdBSTcThgzceyS5q5p3j+45Am2s1EWmxIiOTY6p9SQ6UcROWQLSna6XugLvBgXkZgPNQEk+wifKvkHSNM3suGt5/nKIcxoyhFA6qdxqslu4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9u1qmj8xOKRWkbKb/vIKHg5l8oJdWPLGeGURW9YZOhA=;
+ b=NWVnqJs8hhNYJfv+i2ga2SsQzWvN+UxXULgZRoJvEexKJOfuN1k7a8YXWaBLY2QTgWn7Wks4dAcNmphkJQkM1EFPx+KqihfOuiqBDZmAQpy207vtP7Jh3nOysIF+San3/y8+15U3rq1XqX5B2nTH4UO1QT5w6bwAmYbNFN1WJKUjxMo39mwpmHX14hk8OD2pDzsZvxY6Ew82Nw92ybp3edw9Cxs2qzusVKc6caAM+GEVmyqm8c385rix7qjfHKdeS0MoW0k+4u45wNgOpuhWqDZ0tyfsycN3HBR75JIA6k8LYRb1aRjR+Hws89kWEj2khDgr1YXF0fgyRkXN9sQsQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+Received: from SJ5PPF2F7FC4EE6.namprd11.prod.outlook.com
+ (2603:10b6:a0f:fc02::81d) by CO1PR11MB4980.namprd11.prod.outlook.com
+ (2603:10b6:303:98::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.11; Wed, 15 Oct
+ 2025 08:17:49 +0000
+Received: from SJ5PPF2F7FC4EE6.namprd11.prod.outlook.com
+ ([fe80::5cd3:aaa1:1564:3e48]) by SJ5PPF2F7FC4EE6.namprd11.prod.outlook.com
+ ([fe80::5cd3:aaa1:1564:3e48%5]) with mapi id 15.20.9228.005; Wed, 15 Oct 2025
+ 08:17:48 +0000
+Message-ID: <b7e58c57-12be-47d6-beae-aa70568bfcc4@windriver.com>
+Date: Wed, 15 Oct 2025 16:19:33 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] md: fix rcu protection in md_wakeup_thread
+To: Yu Kuai <yukuai1@huaweicloud.com>, Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com, song@kernel.org,
+        dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-raid@vger.kernel.org, "yukuai (C)" <yukuai3@huawei.com>
+References: <20251015055924.899423-1-yun.zhou@windriver.com>
+ <86705912-07a3-4a24-bacd-ad5ac2038201@molgen.mpg.de>
+ <d2574af5-9410-d296-ef74-97f3e43dc1cc@huaweicloud.com>
+ <040131e6-08f7-4f64-a317-deaa21e1a5e1@windriver.com>
+ <e60b45da-e37d-5530-1511-f6e56effebb2@huaweicloud.com>
+Content-Language: en-US
+From: "Zhou, Yun" <yun.zhou@windriver.com>
+In-Reply-To: <e60b45da-e37d-5530-1511-f6e56effebb2@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SI2PR01CA0022.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:192::14) To SJ5PPF2F7FC4EE6.namprd11.prod.outlook.com
+ (2603:10b6:a0f:fc02::81d)
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemn500011.china.huawei.com (7.202.194.152)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PPF2F7FC4EE6:EE_|CO1PR11MB4980:EE_
+X-MS-Office365-Filtering-Correlation-Id: 317a9312-81b2-4838-9e84-08de0bc353d1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Y3hUNnljS2ZMRUJya3UyRnVZbHB5SnU2QStvV1JuK0FpWVNQUUYxd1ZRVlJ2?=
+ =?utf-8?B?cmRtLzMvUEJPdE1NZEdxWVFhVkJiRlNjQnFiM0FUaWk5NHo5VVlOYUZidlJF?=
+ =?utf-8?B?V29VcUx4ZnY0RXJwUlJrWkFCbE5jbGl6dTFyblZGYVNJRW93VVFJeDFYLzJ3?=
+ =?utf-8?B?VXJPV1kvSHQ0d0lCOGZON0VoU25oZmNYM3VFZmkyRk84SVF5SWpFSE01eUJB?=
+ =?utf-8?B?bjl2cjl3UFdLVndFN1BnQnRKdlZMR0ZrWStRM2xSWGNwNVYzRnFPS1ZENSt2?=
+ =?utf-8?B?V0JCN2J1aWhTdklhd2pycHFMSndCaTcwNDVkaGVkbWlZNTREektNL1ZNYTdV?=
+ =?utf-8?B?Z3E0T1pZTUpGdjRNL1B5cGhXOVk3ZXVIbS9veDJIYlhUaU5nVittM091dENN?=
+ =?utf-8?B?aUp4WHF5K1EzT0taMzVyaURCUlZhUmpJbVQyNWt2QXd4RUtMNkl5dUVvZjgw?=
+ =?utf-8?B?V2p0bkxYSG5QUldkekxpQkFCUE5WUjZkNGpsc1ZHc2xFb09JRXZaZG9YZmdU?=
+ =?utf-8?B?S05QdmZDL1RjWGFZVnJUNVp6b1Q3UG94bjJ5a3RCVy9OQnN3Tm1kN1R3SklQ?=
+ =?utf-8?B?RWxPczZxdWtzSFNmVW1JUnY1Unh3UjI5UnJvLzFIZkhIb0puRlJtODFUQ1ZY?=
+ =?utf-8?B?d1I5NFNLbW1iUWN1ZGxBazJlV2IzaXMxb2k5MmJzV0JvbHFxdWw2c0dML25x?=
+ =?utf-8?B?bXEwa0s2cHArMXAzVTArQnlQa2VWMXZRcEQ0cEozaGtBY2kyL0o5bGpVNHFY?=
+ =?utf-8?B?VFdheHdvRHlYVmlidWtJeWxtazVPN2hmQWl6dWRUNXNDYy9yMFpSK0dGUDVN?=
+ =?utf-8?B?UXlBeGxNZnpRSnNXclJDYTdLbXpxd29QaS9kSHl3UkxsZFNxTW1aWWQ3aXZI?=
+ =?utf-8?B?anVBREhZSXFrUXF5WmloTEZNWnhJWkVpUEVFK0dnaU5lZVhCaVZkRlpIWVdn?=
+ =?utf-8?B?SHZkYk8rS1RWbkhiSjJGUlQrY1VVdkJHeVlWTjM2Tmh6VjRLMjFsMThoYmx6?=
+ =?utf-8?B?eENIbytpMGdaUW5Cc0FJK1hwTXA5Q0g1SkRFT0tGZ3A5V04zaC9ZamY1bkJ6?=
+ =?utf-8?B?QmZPRTNRcm05VVVMYzVITkhweTJLVnB4RXRpNlJjNnA4UGdQVzI3bkZ4c2dw?=
+ =?utf-8?B?NjU3S0lneENWS0lkeEc5Z3JxMEZ5bCswZk54RzdJMWI4N015M2pFc0x5YmR1?=
+ =?utf-8?B?YWFoV1VPbS8reEVra2VmZDcrM2FiZTVPcU8rRG5qRDh3dU1UazRzWFFYRGxL?=
+ =?utf-8?B?UzBPdTV1NmtzRmxXcU1uN1o2dGNVNkNtaHJNQVJ6cFVEcE8zTXZ3eXZUN0dH?=
+ =?utf-8?B?ZzZnQXFxWW11Y0pmRFVHd3VRbGJleVljbytMcWIyREpwQUhYS2gxb00xOHZu?=
+ =?utf-8?B?dnpEb0NPM2xSblN3QmRTU1RDQ1QvaWZ2aTYxS1BtUW1BRTRBOVpVSmNLUExs?=
+ =?utf-8?B?VUoyQkU2ZXdQblgyNklIYm5VMVdsSWhsZHN5WndMUzhlMG9hS2M0c1laOUZj?=
+ =?utf-8?B?MTVKM0NsVXRYQUVrUkxrNzQyNG5wWWdyOVpvcldmeThpN0JRdUcwVndtcVlV?=
+ =?utf-8?B?Wk9ybU96U0ZZdE5qVWw1MGVYak85ellISTBSQVdJWk5pTTVHVjZ0M2RTWW12?=
+ =?utf-8?B?Z3lFRjQ1czBDZVhLZW44UnJCS0ZWQ1BNMmVobjNSc2t3dEFjVWszcVF5QTZW?=
+ =?utf-8?B?Q2J3VnhISGxWS2daeXdkdEdhbHVHWkVUMVpNekJoT3FQQldDeGpnNXNkazU2?=
+ =?utf-8?B?bzI1OWJxM3hPL0FYTGgyZVVOVS9yUEIrVVEweXVxbGcwc013SzVXaUdTbGh4?=
+ =?utf-8?B?TXZYZkVaT0JDWldDQy9kVzVyK0pybFFqSTd5V3VmWFZwQTdDbnRqVlVFOWZL?=
+ =?utf-8?B?VGVoTktzc0xKMHM2YUZRZUd6eXpFRUtjd3VwNXlVVlI2eUJOdnRMWXJNanRE?=
+ =?utf-8?Q?ETbx7Ld4uESZvbPrUcOhx7Pu/m03Fagn?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ5PPF2F7FC4EE6.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bDJ4TXpvb3dkSjF6cEJoZEVDbCt2TUxQUW1GYkVMWDVIUCszd21RR0NXa1gw?=
+ =?utf-8?B?OVRoYy9JYmR2b0lvTm02WVFLT3R0VmhPY3Q5K2tIYzFrNEQ1SHg2TVNWR0NF?=
+ =?utf-8?B?S2JxdDRkazFNQW9ZRnZZQmhQZS9rZ0N4TjZSb1JTSmJUcFA1U1BJMm9kM2Q1?=
+ =?utf-8?B?U0VHeDR6a09BRXdlMnVkMUNpeHg3SHlsNjY1NlBUWmNLUG45bm4yM0lodTFo?=
+ =?utf-8?B?MDFhTUZyaGNzdmJTOVhmbEJCdU5xMnhVWkNZa05wdWFlMUVKdUpYdUpEWkVP?=
+ =?utf-8?B?ZElxa0pxK28xcEs5WGttUldjL1hDa0lhcCtRbmViNjV2RGF6K2cvYlk2UnhZ?=
+ =?utf-8?B?TFlwS3cvRXJmb000Mm5lTHB5QnlxQlFoa1M0ZzR3TnExajVRclg1QkgyckFk?=
+ =?utf-8?B?LzRoT3lDdDVhZ0tGSGQrVWtTcy9sR25uUHFHcVh1cDRORHUvMklNR1hBN3kv?=
+ =?utf-8?B?eFdaZ0dBZTViUXRjenpvT09PU0xsSFI5SWRlZzQ0T01IRkFZM3BXSElWem9p?=
+ =?utf-8?B?ZktENTRidzJoQlBKNWZnbEpPOGxseFhTZjE4by91WXZJNjArOUtLMzc2L1lN?=
+ =?utf-8?B?bVBYaVJsT0hycU5FbXBiU3R5MU1lc2Iwa3ZGaVNDdFJlY0FmWThDMHgwbEh1?=
+ =?utf-8?B?Y3ZUYnY2aEwwRVp5VEJSaVZSb1R2d2hza05KZWJ4eHlMNzZBcmtuTVdCQnBC?=
+ =?utf-8?B?ajNaRWtzemM4aHhDbUlsdTd4QTJPd0pkV2pROUxMdW5VUTZkL0MzQ3RqaVJV?=
+ =?utf-8?B?MkRPanFkZWErZ1dJNTh2aXJ4Sk5tbXhPODMvaFJxWk9INlRkbjFPMm92TkVI?=
+ =?utf-8?B?TmFRUE53cGwyU1JvQTVqMEhwZzRHN2grbXRXWWw4dnFNREQ3QlFzMktBYXZj?=
+ =?utf-8?B?MWxpM1M5V1pMN3A0c1JEQWxWNGJzUUdlYVZEVEY1ZU1Td211Sy9nZVNzYnBZ?=
+ =?utf-8?B?WSsvOElVbWpnSUkyL3Y2Nlh6ZnhvYm8vVUZhTkpEOWdBSDhFV2RPS2Y4TGZ5?=
+ =?utf-8?B?V3BSb0NTME83aWQ4K3kzSzV4c3BPaEJGc0lZazRxaExOVERDVjZZWU5uaDIy?=
+ =?utf-8?B?TUtGb2hOcDVKdjZrcFloVnNRLy92ZndUakhlb3hpMURUaXpVM09BZWtKalFZ?=
+ =?utf-8?B?RWZTMGVZVXFNTkNNVFhGSXJIRm1TU1k2U3VYUHRuMEdaYU83UzRnVjlWcTNQ?=
+ =?utf-8?B?T1k2WlhnSmZiYjIzZUpiMUhkSUxtR2tNeHI0ZzlDUi9yMksvd0wxd3k4amNj?=
+ =?utf-8?B?RTlNc2RwamdWTWd1bDJBQVZCZExUZ043M0tvNm53djBDU3dxVnlkQTUvejNV?=
+ =?utf-8?B?THlUbmh5SVM3VmdFWS91cnMxOW5WZUc5azBNVk5OZnpCdWxubm9FK1FCalRq?=
+ =?utf-8?B?cy85a2FMQmNZSHEvTm4xeWR3c0MwNjh4cC8wU2RpemhyejI0azZHcVhRUkZQ?=
+ =?utf-8?B?NW5aRm4zYzZ1VjJrT1hTQlg1elBrME5OQldMckpGMm9rTnpZenA0clJtOHZz?=
+ =?utf-8?B?N1ZBMDVKUC8xcVRjOWlKaG9PS0x0bUtsekdjVE9DcEMxSCtKMkRoN1pOM015?=
+ =?utf-8?B?dFJENUlnQjVkTnl0RHBrNHZObkkrSjNxODhWZHF1R3A1ZldXakJkN3Vna1Bm?=
+ =?utf-8?B?aHd0RThGclg0ZDEvUnNqSy9PWE9rTnREOTdxK3VxcWIzSFFwaGpLS2wyWTNq?=
+ =?utf-8?B?a0RmRHV4dlRoVXg3Wk14Uk00V293emJHeUVQQ005RmxCUWhwM0VxQWhDekVy?=
+ =?utf-8?B?RjBXQVVJQ2xDb3NOZDJTNFd4OXp4WEdoTW1NTmFRZDZEOXlmZjEwdFpZbzM2?=
+ =?utf-8?B?ZFhvbDY4Zytyc0Z5VmpVdU5XWWRnUkZMU0R5ZUpsQlpGWWszb095Mm9Pb05Z?=
+ =?utf-8?B?OVhuUytYcXVNRm9hNXhiaXdSK3BqK1pXUGJRbmxlbG5objBIaXROSVl0WkFQ?=
+ =?utf-8?B?cDdnb3dGSU9GWTd0Z2taS1Q5YkRpZ1hIZWpWc0FBTmEwZWo4bG5TUlNLcnlj?=
+ =?utf-8?B?SWdxaHRIQ216SkhGVnFNU1JHQmJaMVdweWYzWEluaFVBWHlKZGhTbjNDdW9I?=
+ =?utf-8?B?R1Vrd3JlT0QzQ05hbFVIR20wLzFOV0tEaVhpN05rMU85dWpidzZLNGpXNC9Z?=
+ =?utf-8?Q?xXvxhu9Sad6/QBb0rNq2X8d45?=
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 317a9312-81b2-4838-9e84-08de0bc353d1
+X-MS-Exchange-CrossTenant-AuthSource: SJ5PPF2F7FC4EE6.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2025 08:17:48.9143
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RanB787wsdDZEIrHDnhZq2Hd552DJBpuxzxSiYmmJ6H99+5P/SGpovsICzeOUqh46EMOElVvezmGiKdJSFd8Ng==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB4980
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDE1MDA2MiBTYWx0ZWRfX4Xdn74WVu+PF
+ t7tmhGvxmv9eAYQgqan/s/EJS6PKhcwkiGiPK9z3ifkpYOwkutPVbCPjJ91nOhbCeGVGUzGV9Jh
+ iuJnox4+yUlJEM7M7TpvRl4YWkskJCzH7TLofwxrrQUpGtXoHYYA0Lso5Egna90CZzGImUN6nFN
+ pE8LxCQbi3I3M7ykaBtAkpWeqxpCqF2bb36YYskoaYzOCy39JgIfD1wFQMP5ViAwsAT6LZkAeqV
+ /64tklccVL27YfRCcWUknBzUTEwKjE9JXJcpqTK3kLYf1BqBoYyThzTuiIwiIvCjVXOSifCXo7G
+ RyLr52gawAD3vypFL/fE6fUf3TfX6TE9/htkXlVC+DVjwLdgOAXaRmvSsSq8/WZ1oCNPY7NfEmS
+ DMOzsGkTPqQj3uh+sUnUv0UZFE8UQA==
+X-Proofpoint-GUID: YstMeyjAqb95rbSkXORzpIc2WvlppChA
+X-Authority-Analysis: v=2.4 cv=JaKxbEKV c=1 sm=1 tr=0 ts=68ef58af cx=c_pps
+ a=UFaLwPLgEuA+t4da0Yst/w==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19
+ a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19
+ a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=JaDH9CAM8n6cr9UliP0A:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=zgiPjhLxNE0A:10 a=HhbK4dLum7pmb74im6QT:22
+ a=cPQSjfK2_nFv0Q5t_7PE:22 a=pHzHmUro8NiASowvMSCR:22 a=Ew2E2A-JSTLzCXPT_086:22
+X-Proofpoint-ORIG-GUID: YstMeyjAqb95rbSkXORzpIc2WvlppChA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-15_04,2025-10-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 spamscore=0 adultscore=0 phishscore=0 clxscore=1015
+ suspectscore=0 lowpriorityscore=0 impostorscore=0 bulkscore=0
+ priorityscore=1501 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2510020000
+ definitions=main-2510150062
 
-From: Li Nan <linan122@huawei.com>
+Hi Kuai,
 
-Previously, raid array used the maximum logical block size (LBS)
-of all member disks. Adding a larger LBS disk at runtime could
-unexpectedly increase RAID's LBS, risking corruption of existing
-partitions. This can be reproduced by:
+On 10/15/25 15:57, Yu Kuai wrote:
+> CAUTION: This email comes from a non Wind River email account!
+> Do not click links or open attachments unless you recognize the sender 
+> and know the content is safe.
+>
+> Hi,
+>
+> 在 2025/10/15 15:31, Zhou, Yun 写道:
+>> This method only changes a little code. But it holds the lock before the
+>> function jumps, which seems to violate the principle of minimizing the
+>> critical area.
+>
+> use rcu to protect the function is fine, all related code is not from
+> IO fast path.
+>
+> Please also notice this patch is impossible for stable backport because
+> of too much modifications.
+>
+I will make v2 according to your suggestion.
 
-```
-  # LBS of sd[de] is 512 bytes, sdf is 4096 bytes.
-  mdadm -CRq /dev/md0 -l1 -n3 /dev/sd[de] missing --assume-clean
-
-  # LBS is 512
-  cat /sys/block/md0/queue/logical_block_size
-
-  # create partition md0p1
-  parted -s /dev/md0 mklabel gpt mkpart primary 1MiB 100%
-  lsblk | grep md0p1
-
-  # LBS becomes 4096 after adding sdf
-  mdadm --add -q /dev/md0 /dev/sdf
-  cat /sys/block/md0/queue/logical_block_size
-
-  # partition lost
-  partprobe /dev/md0
-  lsblk | grep md0p1
-```
-
-Simply restricting larger-LBS disks is inflexible. In some scenarios,
-only disks with 512 bytes LBS are available currently, but later, disks
-with 4KB LBS may be added to the array.
-
-Making LBS configurable is the best way to solve this scenario.
-After this patch, the raid will:
-  - store LBS in disk metadata
-  - add a read-write sysfs 'mdX/logical_block_size'
-
-Future mdadm should support setting LBS via metadata field during RAID
-creation and the new sysfs. Though the kernel allows runtime LBS changes,
-users should avoid modifying it after creating partitions or filesystems
-to prevent compatibility issues.
-
-Only 1.x metadata supports configurable LBS. 0.90 metadata inits all
-fields to default values at auto-detect. Supporting 0.90 would require
-more extensive changes and no such use case has been observed.
-
-Note that many RAID paths rely on PAGE_SIZE alignment, including for
-metadata I/O. A larger LBS than PAGE_SIZE will result in metadata
-read/write failures. So this config should be prevented.
-
-Signed-off-by: Li Nan <linan122@huawei.com>
----
- Documentation/admin-guide/md.rst |  7 +++
- drivers/md/md.h                  |  1 +
- include/uapi/linux/raid/md_p.h   |  3 +-
- drivers/md/md-linear.c           |  1 +
- drivers/md/md.c                  | 76 ++++++++++++++++++++++++++++++++
- drivers/md/raid0.c               |  1 +
- drivers/md/raid1.c               |  1 +
- drivers/md/raid10.c              |  1 +
- drivers/md/raid5.c               |  1 +
- 9 files changed, 91 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/admin-guide/md.rst b/Documentation/admin-guide/md.rst
-index 1c2eacc94758..0f143acd2db7 100644
---- a/Documentation/admin-guide/md.rst
-+++ b/Documentation/admin-guide/md.rst
-@@ -238,6 +238,13 @@ All md devices contain:
-      the number of devices in a raid4/5/6, or to support external
-      metadata formats which mandate such clipping.
- 
-+  logical_block_size
-+     Configure the array's logical block size in bytes. This attribute
-+     is only supported for 1.x meta. The value should be written before
-+     starting the array. The final array LBS will use the max value
-+     between this configuration and all combined device's LBS. Note that
-+     LBS cannot exceed PAGE_SIZE before RAID supports folio.
-+
-   reshape_position
-      This is either ``none`` or a sector number within the devices of
-      the array where ``reshape`` is up to.  If this is set, the three
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index afb25f727409..b0147b98c8d3 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -432,6 +432,7 @@ struct mddev {
- 	sector_t			array_sectors; /* exported array size */
- 	int				external_size; /* size managed
- 							* externally */
-+	unsigned int			logical_block_size;
- 	__u64				events;
- 	/* If the last 'event' was simply a clean->dirty transition, and
- 	 * we didn't write it to the spares, then it is safe and simple
-diff --git a/include/uapi/linux/raid/md_p.h b/include/uapi/linux/raid/md_p.h
-index ac74133a4768..310068bb2a1d 100644
---- a/include/uapi/linux/raid/md_p.h
-+++ b/include/uapi/linux/raid/md_p.h
-@@ -291,7 +291,8 @@ struct mdp_superblock_1 {
- 	__le64	resync_offset;	/* data before this offset (from data_offset) known to be in sync */
- 	__le32	sb_csum;	/* checksum up to devs[max_dev] */
- 	__le32	max_dev;	/* size of devs[] array to consider */
--	__u8	pad3[64-32];	/* set to 0 when writing */
-+	__le32  logical_block_size;	/* same as q->limits->logical_block_size */
-+	__u8	pad3[64-36];	/* set to 0 when writing */
- 
- 	/* device state information. Indexed by dev_number.
- 	 * 2 bytes per device
-diff --git a/drivers/md/md-linear.c b/drivers/md/md-linear.c
-index e80774fe94fc..e06c4dd537de 100644
---- a/drivers/md/md-linear.c
-+++ b/drivers/md/md-linear.c
-@@ -72,6 +72,7 @@ static int linear_set_limits(struct mddev *mddev)
- 
- 	md_init_stacking_limits(&lim);
- 	lim.max_hw_sectors = mddev->chunk_sectors;
-+	lim.logical_block_size = mddev->logical_block_size;
- 	lim.max_write_zeroes_sectors = mddev->chunk_sectors;
- 	lim.io_min = mddev->chunk_sectors << 9;
- 	lim.features |= BLK_FEAT_ATOMIC_WRITES;
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index d0aa8e6339f2..f7fab9d067e6 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -1996,6 +1996,7 @@ static int super_1_validate(struct mddev *mddev, struct md_rdev *freshest, struc
- 		mddev->layout = le32_to_cpu(sb->layout);
- 		mddev->raid_disks = le32_to_cpu(sb->raid_disks);
- 		mddev->dev_sectors = le64_to_cpu(sb->size);
-+		mddev->logical_block_size = le32_to_cpu(sb->logical_block_size);
- 		mddev->events = ev1;
- 		mddev->bitmap_info.offset = 0;
- 		mddev->bitmap_info.space = 0;
-@@ -2205,6 +2206,7 @@ static void super_1_sync(struct mddev *mddev, struct md_rdev *rdev)
- 	sb->chunksize = cpu_to_le32(mddev->chunk_sectors);
- 	sb->level = cpu_to_le32(mddev->level);
- 	sb->layout = cpu_to_le32(mddev->layout);
-+	sb->logical_block_size = cpu_to_le32(mddev->logical_block_size);
- 	if (test_bit(FailFast, &rdev->flags))
- 		sb->devflags |= FailFast1;
- 	else
-@@ -5933,6 +5935,67 @@ static struct md_sysfs_entry md_serialize_policy =
- __ATTR(serialize_policy, S_IRUGO | S_IWUSR, serialize_policy_show,
-        serialize_policy_store);
- 
-+static int mddev_set_logical_block_size(struct mddev *mddev,
-+				unsigned int lbs)
-+{
-+	int err = 0;
-+	struct queue_limits lim;
-+
-+	if (queue_logical_block_size(mddev->gendisk->queue) >= lbs) {
-+		pr_err("%s: Cannot set LBS smaller than mddev LBS %u\n",
-+		       mdname(mddev), lbs);
-+		return -EINVAL;
-+	}
-+
-+	lim = queue_limits_start_update(mddev->gendisk->queue);
-+	lim.logical_block_size = lbs;
-+	pr_info("%s: logical_block_size is changed, data may be lost\n",
-+		mdname(mddev));
-+	err = queue_limits_commit_update(mddev->gendisk->queue, &lim);
-+	if (err)
-+		return err;
-+
-+	mddev->logical_block_size = lbs;
-+	md_update_sb(mddev, 1);
-+	return 0;
-+}
-+
-+static ssize_t
-+lbs_show(struct mddev *mddev, char *page)
-+{
-+	return sprintf(page, "%u\n", mddev->logical_block_size);
-+}
-+
-+static ssize_t
-+lbs_store(struct mddev *mddev, const char *buf, size_t len)
-+{
-+	unsigned int lbs;
-+	int err = -EBUSY;
-+
-+	/* Only 1.x meta supports configurable LBS */
-+	if (mddev->major_version == 0)
-+		return -EINVAL;
-+
-+	if (mddev->pers)
-+		return -EBUSY;
-+
-+	err = kstrtouint(buf, 10, &lbs);
-+	if (err < 0)
-+		return -EINVAL;
-+
-+	err = mddev_lock(mddev);
-+	if (err)
-+		goto unlock;
-+
-+	err = mddev_set_logical_block_size(mddev, lbs);
-+
-+unlock:
-+	mddev_unlock(mddev);
-+	return err ?: len;
-+}
-+
-+static struct md_sysfs_entry md_logical_block_size =
-+__ATTR(logical_block_size, 0644, lbs_show, lbs_store);
- 
- static struct attribute *md_default_attrs[] = {
- 	&md_level.attr,
-@@ -5955,6 +6018,7 @@ static struct attribute *md_default_attrs[] = {
- 	&md_consistency_policy.attr,
- 	&md_fail_last_dev.attr,
- 	&md_serialize_policy.attr,
-+	&md_logical_block_size.attr,
- 	NULL,
- };
- 
-@@ -6085,6 +6149,17 @@ int mddev_stack_rdev_limits(struct mddev *mddev, struct queue_limits *lim,
- 			return -EINVAL;
- 	}
- 
-+	/*
-+	 * Before RAID adding folio support, the logical_block_size
-+	 * should be smaller than the page size.
-+	 */
-+	if (lim->logical_block_size > PAGE_SIZE) {
-+		pr_err("%s: logical_block_size must not larger than PAGE_SIZE\n",
-+			mdname(mddev));
-+		return -EINVAL;
-+	}
-+	mddev->logical_block_size = lim->logical_block_size;
-+
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(mddev_stack_rdev_limits);
-@@ -6696,6 +6771,7 @@ static void md_clean(struct mddev *mddev)
- 	mddev->chunk_sectors = 0;
- 	mddev->ctime = mddev->utime = 0;
- 	mddev->layout = 0;
-+	mddev->logical_block_size = 0;
- 	mddev->max_disks = 0;
- 	mddev->events = 0;
- 	mddev->can_decrease_events = 0;
-diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
-index 5bff8b4ded41..844131fc7247 100644
---- a/drivers/md/raid0.c
-+++ b/drivers/md/raid0.c
-@@ -382,6 +382,7 @@ static int raid0_set_limits(struct mddev *mddev)
- 	md_init_stacking_limits(&lim);
- 	lim.max_hw_sectors = mddev->chunk_sectors;
- 	lim.max_write_zeroes_sectors = mddev->chunk_sectors;
-+	lim.logical_block_size = mddev->logical_block_size;
- 	lim.io_min = mddev->chunk_sectors << 9;
- 	lim.io_opt = lim.io_min * mddev->raid_disks;
- 	lim.chunk_sectors = mddev->chunk_sectors;
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index ad2083b67ca4..e0b268383ab3 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -3211,6 +3211,7 @@ static int raid1_set_limits(struct mddev *mddev)
- 
- 	md_init_stacking_limits(&lim);
- 	lim.max_write_zeroes_sectors = 0;
-+	lim.logical_block_size = mddev->logical_block_size;
- 	lim.features |= BLK_FEAT_ATOMIC_WRITES;
- 	err = mddev_stack_rdev_limits(mddev, &lim, MDDEV_STACK_INTEGRITY);
- 	if (err)
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index 8c9201b7406d..71377d4a15d5 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -3999,6 +3999,7 @@ static int raid10_set_queue_limits(struct mddev *mddev)
- 
- 	md_init_stacking_limits(&lim);
- 	lim.max_write_zeroes_sectors = 0;
-+	lim.logical_block_size = mddev->logical_block_size;
- 	lim.io_min = mddev->chunk_sectors << 9;
- 	lim.chunk_sectors = mddev->chunk_sectors;
- 	lim.io_opt = lim.io_min * raid10_nr_stripes(conf);
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index d64eca485c43..fafcee8bb143 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -7747,6 +7747,7 @@ static int raid5_set_limits(struct mddev *mddev)
- 	stripe = roundup_pow_of_two(data_disks * (mddev->chunk_sectors << 9));
- 
- 	md_init_stacking_limits(&lim);
-+	lim.logical_block_size = mddev->logical_block_size;
- 	lim.io_min = mddev->chunk_sectors << 9;
- 	lim.io_opt = lim.io_min * (conf->raid_disks - conf->max_degraded);
- 	lim.features |= BLK_FEAT_RAID_PARTIAL_STRIPES_EXPENSIVE;
--- 
-2.39.2
-
+Thanks,
+Yun
 
