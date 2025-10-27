@@ -1,61 +1,61 @@
-Return-Path: <linux-raid+bounces-5488-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5484-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DFB7C0EDD5
-	for <lists+linux-raid@lfdr.de>; Mon, 27 Oct 2025 16:15:25 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1EA9DC0ED75
+	for <lists+linux-raid@lfdr.de>; Mon, 27 Oct 2025 16:13:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id AB0E64FAE32
-	for <lists+linux-raid@lfdr.de>; Mon, 27 Oct 2025 15:06:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BEB7119C5CA3
+	for <lists+linux-raid@lfdr.de>; Mon, 27 Oct 2025 15:06:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FA8C30C348;
-	Mon, 27 Oct 2025 15:05:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 758DB30BB8E;
+	Mon, 27 Oct 2025 15:05:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mgml.me header.i=@mgml.me header.b="hW9CUXux"
+	dkim=pass (2048-bit key) header.d=mgml.me header.i=@mgml.me header.b="CqJzhg7V"
 X-Original-To: linux-raid@vger.kernel.org
 Received: from www5210.sakura.ne.jp (www5210.sakura.ne.jp [133.167.8.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 386B430B51C
-	for <linux-raid@vger.kernel.org>; Mon, 27 Oct 2025 15:05:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDCAF3090CE
+	for <linux-raid@vger.kernel.org>; Mon, 27 Oct 2025 15:05:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=133.167.8.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761577519; cv=none; b=JakejoJ4W2K6htsK6MR1+hgf/uiBO+Cimrq9NLdlnOmhu1LW+4XHlWT0INcTASrdfRpi2q/3YoL3kiD1UwYlEamK9uJVbKKTvS6pfSdda2/Te8xqFLrKDDyBQOFpfKX3d71ZoagxJA32njv37pTQTm+BtljLf8lNILxV3etklNI=
+	t=1761577518; cv=none; b=H99+ipcd/0IbmgihEE2iifR22dqPmAFxYWxkcHmEEqddOOHOpytpQtuYvQgyXglaKJ7QMhPblNve5qG1h7qCVCuBBTbKGi7mdxMetymocGZYLGeVTWeqLx3qDJ3tIYN95EzjP9nGUzYcoQUCTEW25if78dH0WmaBMMMp0o2o68c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761577519; c=relaxed/simple;
-	bh=qtnaKSZX0v25wsW820bs4QBKufRkNlYzDoC89qHYejE=;
+	s=arc-20240116; t=1761577518; c=relaxed/simple;
+	bh=oMLUyHl2uZUJ8iKbejsBHgq428Z/NETxc5vWqBZWsbo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rVbFBk3MlistcLN9V+pESG4Q/VtmGmbrk+BMZfzA7hryDj1i/yOp38Y/nd0hyF4IT30q6GctSVJxAiRCLD6SvN+HvcDzcgNe5kAMjwdUJ2K9uQFCSrt05ecbfifzYeMepsRBjb1D7m3vi+ZuSGHZrhRVr9qG1//Oo/I0eZP/cDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mgml.me; spf=pass smtp.mailfrom=mgml.me; dkim=pass (2048-bit key) header.d=mgml.me header.i=@mgml.me header.b=hW9CUXux; arc=none smtp.client-ip=133.167.8.150
+	 MIME-Version; b=PIa/IgBnTYKRfBZWjzvUUM3did7SvNTk40Fj8pTCnUbkp8/tif6KXKH5WARux2uSWnJY3WwFW65bWDI1WGfXOi97TkHTlnz+fuqKGH/kuYTqPD6S/ZjPl0fCXfDHcZDHklRtRqdEXrwhGnJizo/0OBPCR8GM8ZLzhspP6+FxQHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mgml.me; spf=pass smtp.mailfrom=mgml.me; dkim=pass (2048-bit key) header.d=mgml.me header.i=@mgml.me header.b=CqJzhg7V; arc=none smtp.client-ip=133.167.8.150
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mgml.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mgml.me
 Received: from fedora (p3796170-ipxg00h01tokaisakaetozai.aichi.ocn.ne.jp [180.53.173.170])
 	(authenticated bits=0)
-	by www5210.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 59RF4hAp090988
+	by www5210.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 59RF4hAq090988
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Tue, 28 Oct 2025 00:04:46 +0900 (JST)
+	Tue, 28 Oct 2025 00:04:47 +0900 (JST)
 	(envelope-from k@mgml.me)
-DKIM-Signature: a=rsa-sha256; bh=HSAThXQjSym+JhHRTUbpIfpjmtQ7EdedUUveP1bgezI=;
+DKIM-Signature: a=rsa-sha256; bh=mKOpuXkFl04B6nJz7GlXTCVis5sGgEKZn5b7ybDr4b8=;
         c=relaxed/relaxed; d=mgml.me;
         h=From:To:Subject:Date:Message-ID;
         s=rs20250315; t=1761577487; v=1;
-        b=hW9CUXux59T07ebIL4gJ3lBcuOhdVBzyluDLqNy+fQ6Qx7TijJHH3byWnTcLuwKd
-         E6xSJIyQKE9j4CHTTrMe6kBGMT+Pkwwsmx6wMjUErxZejbWCXLyCmQGFtmIVFuYh
-         BBcVu05TEuFsa0emXFh1zhhWGjA+K4v2mnI/2ooTN41Zii4JXXFUfjCGKc75HaDr
-         QrAShJVl9a6JqUKWDOvuyMZqSlorFedjAVT5qQJ+xrOT3smkzat/MS3LZOmZxtcg
-         yHa0D2UigDYZc7EurY62ArFe/SB3slAZVYlCLftxcOlvG2bUvt8E07HHusqqPZUe
-         VGY7h49RvNmfTkJsezj12A==
+        b=CqJzhg7VLz45NOm+u5Bv3EQob29i3Qj/hprXVy1c6Tj9igyl3NxMK3XaQXOXSAGV
+         EN01X0o3g+ZTUR9SKsM/W8kxf2yVYS27IoercU8HXvCuFcYc/Qay88V43EZTM06d
+         ZsiDSJuugOdIM3Oqijy0nz4P7nOgPVgcgv3sWNjJ/PsulvABms/ENfygIkY1KpWH
+         HFCCm8CF+sDIUJy6U9Nskok1cW+CLOv2DkSPi/3nz0UWe/8OQDLQwHAxBoBj9sxA
+         rlX1iM/rzCw+mbmKrujahifATvaca8b+6vMH+iZNJKV9V6lzYT8exraU2cPvHzYn
+         d5D3/sXKLHAkiekTWL1rzw==
 From: Kenta Akagi <k@mgml.me>
 To: Song Liu <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>,
         Shaohua Li <shli@fb.com>, Mariusz Tkaczyk <mtkaczyk@kernel.org>,
         Guoqing Jiang <jgq516@gmail.com>
 Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
         Kenta Akagi <k@mgml.me>
-Subject: [PATCH v5 15/16] md: rename 'LastDev' rdev flag to 'RetryingSBWrite'
-Date: Tue, 28 Oct 2025 00:04:32 +0900
-Message-ID: <20251027150433.18193-16-k@mgml.me>
+Subject: [PATCH v5 16/16] md: Improve super_written() error logging
+Date: Tue, 28 Oct 2025 00:04:33 +0900
+Message-ID: <20251027150433.18193-17-k@mgml.me>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20251027150433.18193-1-k@mgml.me>
 References: <20251027150433.18193-1-k@mgml.me>
@@ -67,74 +67,48 @@ List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The rdev LastDev flag is assigned to devices
-that have had metadata written with MD_FAILFAST in a Failfast rdev,
-but whose bio failed but did not become faulty after an md_error.
-After that, the metadata write is retried by sb_flags
-MD_SB_NEED_REWRITE, but if rdev LastDev is set at this time, FailFast is
-not used and LastDev is cleared if the write is successful.
+In the current implementation, when super_write fails, the output log
+will be like this:
+ md: super_written gets error=-5
 
-Although it's called LastDev, this rdev flag actually means "metadata
-write with FailFast failed and a retry is required. Do not use FailFast
-when retrying for this rdev."
+It is unless combined with other logs - e.g. I/O error message from blk,
+it's impossible to determine which md and rdev are causing the problem,
+and if the problem occurs on multiple devices, it becomes completely
+impossible to determine from the logs where the super_write failed.
 
-This is different from what we might expect from the name LastDev,
-and can be confusing when reading the code.
+Also, currently super_written does not output logs when retrying
+metadata write.  If the metadata write fails, the array may be
+corrupted, but if it is retried and successful, then it is not.
+The user should be informed if a retry was attempted.
 
-This commit renames the LastDev flag to better reflect its actual
-behavior for improving readability. The implementation remains
-unchanged.
+This commit adds output to see which array and which device had the
+problem, and adds a message to indicate when a metadata write retry is
+scheduled.
 
 Signed-off-by: Kenta Akagi <k@mgml.me>
 ---
- drivers/md/md.c | 6 +++---
- drivers/md/md.h | 7 ++++---
- 2 files changed, 7 insertions(+), 6 deletions(-)
+ drivers/md/md.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 3c3f5703531b..1cbb4fd8bbc0 100644
+index 1cbb4fd8bbc0..4cbb31552486 100644
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -1063,10 +1063,10 @@ static void super_written(struct bio *bio)
+@@ -1058,10 +1058,13 @@ static void super_written(struct bio *bio)
+ 	struct mddev *mddev = rdev->mddev;
+ 
+ 	if (bio->bi_status) {
+-		pr_err("md: %s gets error=%d\n", __func__,
++		pr_err("md: %s: %pg: %s gets error=%d\n",
++		       mdname(mddev), rdev->bdev, __func__,
+ 		       blk_status_to_errno(bio->bi_status));
  		if (!md_cond_error(mddev, rdev, bio)
  		    && (bio->bi_opf & MD_FAILFAST)) {
++			pr_warn("md: %s: %pg: retrying metadata write\n",
++				mdname(mddev), rdev->bdev);
  			set_bit(MD_SB_NEED_REWRITE, &mddev->sb_flags);
--			set_bit(LastDev, &rdev->flags);
-+			set_bit(RetryingSBWrite, &rdev->flags);
+ 			set_bit(RetryingSBWrite, &rdev->flags);
  		}
- 	} else
--		clear_bit(LastDev, &rdev->flags);
-+		clear_bit(RetryingSBWrite, &rdev->flags);
- 
- 	bio_put(bio);
- 
-@@ -1119,7 +1119,7 @@ void md_write_metadata(struct mddev *mddev, struct md_rdev *rdev,
- 
- 	if (test_bit(MD_FAILFAST_SUPPORTED, &mddev->flags) &&
- 	    test_bit(FailFast, &rdev->flags) &&
--	    !test_bit(LastDev, &rdev->flags))
-+	    !test_bit(RetryingSBWrite, &rdev->flags))
- 		bio->bi_opf |= MD_FAILFAST;
- 
- 	atomic_inc(&mddev->pending_writes);
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index 38f9874538a6..0943cc5a86aa 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -282,9 +282,10 @@ enum flag_bits {
- 				 * It is expects that no bad block log
- 				 * is present.
- 				 */
--	LastDev,		/* Seems to be the last working dev as
--				 * it didn't fail, so don't use FailFast
--				 * any more for metadata
-+	RetryingSBWrite,	/*
-+				 * metadata write with MD_FAILFAST failed,
-+				 * so it is being retried. Failfast
-+				 * will not be used during the retry.
- 				 */
- 	CollisionCheck,		/*
- 				 * check if there is collision between raid1
 -- 
 2.50.1
 
