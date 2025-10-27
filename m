@@ -1,61 +1,61 @@
-Return-Path: <linux-raid+bounces-5473-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5475-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75217C0ED3F
-	for <lists+linux-raid@lfdr.de>; Mon, 27 Oct 2025 16:11:38 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C017CC0ED87
+	for <lists+linux-raid@lfdr.de>; Mon, 27 Oct 2025 16:13:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0D3AD19C5036
-	for <lists+linux-raid@lfdr.de>; Mon, 27 Oct 2025 15:05:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 90BA7464F73
+	for <lists+linux-raid@lfdr.de>; Mon, 27 Oct 2025 15:05:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 464412FF679;
-	Mon, 27 Oct 2025 15:05:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09E85309EF3;
+	Mon, 27 Oct 2025 15:05:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mgml.me header.i=@mgml.me header.b="gmDLhGOJ"
+	dkim=pass (2048-bit key) header.d=mgml.me header.i=@mgml.me header.b="qwVN65Pq"
 X-Original-To: linux-raid@vger.kernel.org
 Received: from www5210.sakura.ne.jp (www5210.sakura.ne.jp [133.167.8.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C662C324E
-	for <linux-raid@vger.kernel.org>; Mon, 27 Oct 2025 15:05:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD3A02E7645
+	for <linux-raid@vger.kernel.org>; Mon, 27 Oct 2025 15:05:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=133.167.8.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761577514; cv=none; b=g4TU+H/M9coDm6u3Ck2MMvN9c6ZGhFHTpgqixtxzg0KR8Le7+5i5uuwjePswa27BAfNCtKS7uxVKjdFeVmWoHoz/7AJ/cBr3MZohcW2hj83AGX3PXHuxtRS0wQd1alUAHdc7wgGTfOPXplQAkK7D7Tqm3wmPj27gtkI9OR8mlK4=
+	t=1761577516; cv=none; b=RKt4TVKga2S0Ipz0HH5ftVI2qFG7U0oMtqF7a7iDK94SBaF6JbFkSTFz8NYFpN0Y2P3/EtUryzAckY3Q1mKhVMlS/JlKRaxsmD11DAeQHGHTS9dIsMDbNVgAQ2OYMd/5q3bRXGzpUdz3SYfvJ0nSrCBYJFkwhykfC+UcZgOn9qA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761577514; c=relaxed/simple;
-	bh=fDDLXYRr8DG1J/Sy8d2/00lhjPfpEUt3qTyk2cUc91I=;
+	s=arc-20240116; t=1761577516; c=relaxed/simple;
+	bh=NCSVD5pdhokkZMeJ2d4TLtTyzKAOCn9PZfnvyBmp+ZA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K9QbWuG0DlHuL+3BJrNiMBQZntSE7XczOKbyjD/AZzj44D8ljZ6mha490FoO2fEUHvXuPJ9d2+O2hm0JpxGpCpZJQrlmFY29terqa3MHrsXxLp9LaqBbmI+DoRuol+ZTyiX+KGmkX9Mg5vhSEwNfzHYFBvKM0l8oiO5jZGTXKTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mgml.me; spf=pass smtp.mailfrom=mgml.me; dkim=pass (2048-bit key) header.d=mgml.me header.i=@mgml.me header.b=gmDLhGOJ; arc=none smtp.client-ip=133.167.8.150
+	 MIME-Version; b=akoBjEYGQpWoUg+A1GBdiKBVVqdUCQCksjyxrIt7xROCjvCJqE1EKK5bBJRjjPJ0HWqamUTn2yWB1CNfJu3m5rWNmXJ7xGLM3bMbv7olWLkjjRMnVDB1wogkXFcDA6gPJ+jm8ytEee68HTBN6cL+mEiGdCAg1oWU6c2AvW9yu8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mgml.me; spf=pass smtp.mailfrom=mgml.me; dkim=pass (2048-bit key) header.d=mgml.me header.i=@mgml.me header.b=qwVN65Pq; arc=none smtp.client-ip=133.167.8.150
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mgml.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mgml.me
 Received: from fedora (p3796170-ipxg00h01tokaisakaetozai.aichi.ocn.ne.jp [180.53.173.170])
 	(authenticated bits=0)
-	by www5210.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 59RF4hAf090988
+	by www5210.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 59RF4hAg090988
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Tue, 28 Oct 2025 00:04:45 +0900 (JST)
+	Tue, 28 Oct 2025 00:04:46 +0900 (JST)
 	(envelope-from k@mgml.me)
-DKIM-Signature: a=rsa-sha256; bh=f+Io4aR19zfdAavz436gI+/sCfOgtfjxIdEmYkp7QcM=;
+DKIM-Signature: a=rsa-sha256; bh=rED3C2j/XTprLxpQLKH9JWsM1LFO3rk8cgg9si00nUA=;
         c=relaxed/relaxed; d=mgml.me;
         h=From:To:Subject:Date:Message-ID;
         s=rs20250315; t=1761577486; v=1;
-        b=gmDLhGOJsxfZZXfRDZeX7upNwLJXLq3D8b9gzVbA8YWcN0EOmgQAwAZlt0sdQcQS
-         kTzn6DPXx/MkkKKYl1NvsZmwdT9B8aZROt3IQ7W2u9Z/UJHgAqgKXGDtqDdBFOhT
-         zErFPiEIm8l6LV5lKH1JMNJiYHkPoWp80PzHt8BJeUxb84rUIJ8Egz/gxDvDPcAg
-         JcizZCQ3FijjhEiOqsNOO/wAR0FGSHtxZdxem9w7i2LNXBWuGWZQ1WoNV5jDMIch
-         5f8cCxU2SwoK+HZCPQ4HzS9LqtKtUHPyQEdgND5g5ZMArs5GHMGmqm0m+3kyc9kU
-         2QtaHKhoXThJnAR1kFEuIg==
+        b=qwVN65PqpPXLDS0qjHoEUdm5pwL18bjIcsoUcDYRSgJHoS917MvYumn5X7yoeFA4
+         HurXMQTfH80ebiW23EhCVUGI7ohCuETYWIL+0r43CzQEazxAVEuchK6EqBGeETAA
+         VuSG82PjR1AsoVAHK/+/WaNyXHtu3hmVQeiYHgqtHzRJM22snQbWcpvYxqAsoqKG
+         PfHadLJVm77JyWesaY4V3fzfpJqkY61vqRJnbY4sGTAL50zwbaE0+tdDz2tr5sgb
+         5lqNpBTLGi3PtEiGwRn31OfZxGwZol09UAyQM6bjFn80Zdt6v4bspDT2Rc8VJdF4
+         S2dQotExAoHlzWQMsTU42A==
 From: Kenta Akagi <k@mgml.me>
 To: Song Liu <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>,
         Shaohua Li <shli@fb.com>, Mariusz Tkaczyk <mtkaczyk@kernel.org>,
         Guoqing Jiang <jgq516@gmail.com>
 Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
         Kenta Akagi <k@mgml.me>
-Subject: [PATCH v5 05/16] md/raid1: implement pers->should_error()
-Date: Tue, 28 Oct 2025 00:04:22 +0900
-Message-ID: <20251027150433.18193-6-k@mgml.me>
+Subject: [PATCH v5 06/16] md/raid10: implement pers->should_error()
+Date: Tue, 28 Oct 2025 00:04:23 +0900
+Message-ID: <20251027150433.18193-7-k@mgml.me>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20251027150433.18193-1-k@mgml.me>
 References: <20251027150433.18193-1-k@mgml.me>
@@ -71,33 +71,33 @@ The failfast feature in RAID1 and RAID10 assumes that when md_error() is
 called, the array remains functional because the last rdev neither fails
 nor sets MD_BROKEN.
 
-However, the current implementation can cause the array to lose
-its last in-sync device or be marked as MD_BROKEN, which breaks the
-assumption and can lead to array failure.
+However, the current implementation can cause the array to lose its last
+in-sync device or be marked as MD_BROKEN, which breaks the assumption
+and can lead to array failure.
 
 To address this issue, introduce a new handler, md_cond_error(), to
 ensure that failfast I/O does not mark the array as broken.
 
 md_cond_error() checks whether a device should be faulted based on
-pers->should_error().  This commit implements should_error() callback
-for raid1 personality, which returns true if faulting the specified rdev
+pers->should_error(). This commit implements should_error() callback for
+raid10 personality, which returns true if faulting the specified rdev
 would cause the mddev to become non-functional.
 
 Signed-off-by: Kenta Akagi <k@mgml.me>
 ---
- drivers/md/raid1.c | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ drivers/md/raid10.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 202e510f73a4..69b7730f3875 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -1732,6 +1732,40 @@ static void raid1_status(struct seq_file *seq, struct mddev *mddev)
- 	seq_printf(seq, "]");
+diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+index 25c0ab09807b..68dbab7b360b 100644
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -1977,6 +1977,31 @@ static int enough(struct r10conf *conf, int ignore)
+ 		_enough(conf, 1, ignore);
  }
  
 +/**
-+ * raid1_should_error() - Determine if this rdev should be failed
++ * raid10_should_error() - Determine if this rdev should be failed
 + * @mddev: affected md device
 + * @rdev: member device to check
 + * @bio: the bio that caused the failure
@@ -109,38 +109,29 @@ index 202e510f73a4..69b7730f3875 100644
 + * Returns: %false if bio is failfast and rdev is the last in-sync device.
 + *	     Otherwise %true - should fail this rdev.
 + */
-+static bool raid1_should_error(struct mddev *mddev, struct md_rdev *rdev, struct bio *bio)
++static bool raid10_should_error(struct mddev *mddev, struct md_rdev *rdev, struct bio *bio)
 +{
-+	int i;
-+	struct r1conf *conf = mddev->private;
++	struct r10conf *conf = mddev->private;
 +
 +	if (!(bio->bi_opf & MD_FAILFAST) ||
 +	    !test_bit(FailFast, &rdev->flags) ||
 +	    test_bit(Faulty, &rdev->flags))
 +		return true;
 +
-+	for (i = 0; i < conf->raid_disks; i++) {
-+		struct md_rdev *rdev2 = conf->mirrors[i].rdev;
-+
-+		if (rdev2 && rdev2 != rdev &&
-+		    test_bit(In_sync, &rdev2->flags) &&
-+		    !test_bit(Faulty, &rdev2->flags))
-+			return true;
-+	}
-+	return false;
++	return enough(conf, rdev->raid_disk);
 +}
 +
  /**
-  * raid1_error() - RAID1 error handler.
+  * raid10_error() - RAID10 error handler.
   * @mddev: affected md device.
-@@ -3486,6 +3520,7 @@ static struct md_personality raid1_personality =
- 	.free		= raid1_free,
- 	.status		= raid1_status,
- 	.error_handler	= raid1_error,
-+	.should_error	= raid1_should_error,
- 	.hot_add_disk	= raid1_add_disk,
- 	.hot_remove_disk= raid1_remove_disk,
- 	.spare_active	= raid1_spare_active,
+@@ -5116,6 +5141,7 @@ static struct md_personality raid10_personality =
+ 	.free		= raid10_free,
+ 	.status		= raid10_status,
+ 	.error_handler	= raid10_error,
++	.should_error	= raid10_should_error,
+ 	.hot_add_disk	= raid10_add_disk,
+ 	.hot_remove_disk= raid10_remove_disk,
+ 	.spare_active	= raid10_spare_active,
 -- 
 2.50.1
 
