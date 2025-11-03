@@ -1,292 +1,122 @@
-Return-Path: <linux-raid+bounces-5563-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5567-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A96C0C2BACE
-	for <lists+linux-raid@lfdr.de>; Mon, 03 Nov 2025 13:33:01 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BD3FC2C040
+	for <lists+linux-raid@lfdr.de>; Mon, 03 Nov 2025 14:14:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D3A34188ED9A
-	for <lists+linux-raid@lfdr.de>; Mon,  3 Nov 2025 12:33:02 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 29B514EF97A
+	for <lists+linux-raid@lfdr.de>; Mon,  3 Nov 2025 13:06:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02E3930C36A;
-	Mon,  3 Nov 2025 12:32:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FE4731063B;
+	Mon,  3 Nov 2025 13:06:21 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027F12FE57F;
-	Mon,  3 Nov 2025 12:32:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA1330E0E4;
+	Mon,  3 Nov 2025 13:06:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762173151; cv=none; b=FvYB2cGOPovwziyRnKSI3KGpzwIZYwO62S9K/f8IUCTMoRQ+Go/LHb4UqNryRiYdiBA9NFfcrZQei73wEDqeP3eQsigwhmiXpMAqAnydRfG8QeQPDpTfKRuC49DbZiEpGRfdVVFN63ryiylmSpRNvGifCCESJJyZ85UNjVveWqY=
+	t=1762175179; cv=none; b=kepS6h9C6RDQrZKhnka8SZhzuYNHUSmSlfQVHM323HNZbdgeCcmi8uUZhbzHoepl1sxlUmTYnPb5xUhCAsy7SIsh7wVErrs+hZxX5vN9SGQ58f87Tzrw/zxwJ9ZixmZlRg6HPGftrk0RR+cZuh3LpM5cCSb0OxXVTRg4Trk1nBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762173151; c=relaxed/simple;
-	bh=BRK0cw9ek/vbKWWU/5WFuFTQq8paZP6l279Uni3ApLk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ir7yK7Q09BPC7kVNveNOCcwsY3O05iuSYYqvd07PbLQFC8Ek5exaj+d5X8zX7qSLck8ls1GFFJbIc1Q7Fu42OgsbxdZ4+0uQveRf+nzMGmrHW+u6ZUDDuQUf+CgkWP4oH0bFjTSN7Y3hUlVdKuFRAR0cMgTPJNTan/dETOs7FKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	s=arc-20240116; t=1762175179; c=relaxed/simple;
+	bh=jyVLrsfYOAIfwh0iHMqXUD8NvA8U1ETE85ayoonOPX8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hFsZeK1C5EKZo/Av57QFB0LtRe2giGLHTVw6gOg0J6jvv58T8XESEUeLLOi2xSyqlZLMLq0bBoRoqCMqA25D8E8K+9f3BFic/HShSMeGj9M0zLvsE/cn7Ze/13TBdSZetItnJHF968EHPqqaUEaStdNrXTN1A08ytpWZ03dSVb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4d0WF15DN8zKHMWQ;
-	Mon,  3 Nov 2025 20:32:21 +0800 (CST)
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4d0Wzz0DQbzKHMMY;
+	Mon,  3 Nov 2025 21:06:07 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 082FB1A0F40;
-	Mon,  3 Nov 2025 20:32:26 +0800 (CST)
-Received: from [10.174.178.129] (unknown [10.174.178.129])
-	by APP2 (Coremail) with SMTP id Syh0CgCn_UXXoAhpp45JCg--.38025S3;
-	Mon, 03 Nov 2025 20:32:25 +0800 (CST)
-Message-ID: <2d4c41f5-6886-98a3-8ccc-54d8a4f89fdc@huaweicloud.com>
-Date: Mon, 3 Nov 2025 20:32:23 +0800
+	by mail.maildlp.com (Postfix) with ESMTP id 5D0E71A14FC;
+	Mon,  3 Nov 2025 21:06:11 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.50.87.129])
+	by APP2 (Coremail) with SMTP id Syh0CgCHK0TCqAhp+jFMCg--.19557S4;
+	Mon, 03 Nov 2025 21:06:11 +0800 (CST)
+From: linan666@huaweicloud.com
+To: corbet@lwn.net,
+	song@kernel.org,
+	yukuai@fnnas.com,
+	linan122@huawei.com,
+	xni@redhat.com,
+	hare@suse.de
+Cc: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-raid@vger.kernel.org,
+	linan666@huaweicloud.com,
+	yangerkun@huawei.com,
+	yi.zhang@huawei.com
+Subject: [PATCH v9 0/5] make logical block size configurable
+Date: Mon,  3 Nov 2025 20:57:52 +0800
+Message-Id: <20251103125757.1405796-1-linan666@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH v8 2/4] md: init bioset in mddev_init
-To: Xiao Ni <xni@redhat.com>, linan666@huaweicloud.com
-Cc: corbet@lwn.net, song@kernel.org, yukuai@fnnas.com, hare@suse.de,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org, yangerkun@huawei.com, yi.zhang@huawei.com
-References: <20251030062807.1515356-1-linan666@huaweicloud.com>
- <20251030062807.1515356-3-linan666@huaweicloud.com>
- <CALTww28LKk6bH4tuEA4DD3uAJScCVAQUBn0d0JYu3AvVjxetzQ@mail.gmail.com>
-From: Li Nan <linan666@huaweicloud.com>
-In-Reply-To: <CALTww28LKk6bH4tuEA4DD3uAJScCVAQUBn0d0JYu3AvVjxetzQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgCn_UXXoAhpp45JCg--.38025S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3GryUCr1DAFW5CrW3Jr1UJrb_yoW7Kr1xpa
-	yxJas8Kr4kJFWagry2qF1vg3WFqr1xtF4DtrW7ur1rAan2yr4kKF1Ygr48ZrykC3yvka1r
-	Ww18XFZxuF15ur7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPI14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
-	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v
-	4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7
-	AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GF
-	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQ
-	vtAUUUUU=
+X-CM-TRANSID:Syh0CgCHK0TCqAhp+jFMCg--.19557S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xw43AF1xAr15Gw1Dtw17Awb_yoWktrXE9F
+	43XF9xKr18GFy7uFyagr4furWUAF4fuFykZF9xtr45Zw1fZr47CF4q93y5X3WUuryDZFn8
+	Cr18Way8Jr4agjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbDAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr1j6F
+	4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI2
+	0VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7M4kE6xkIj40Ew7xC0wCY1x0262kKe7AKxV
+	WUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUdpnQU
+	UUUU=
 X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
+From: Li Nan <linan122@huawei.com>
 
+v9:
+ - Add new patch to intorduce check_new_feature to address forward and
+   backward compatibility
+ - Patch 5: update description of check_new_feature in md.rst
 
-在 2025/11/3 9:23, Xiao Ni 写道:
-> On Thu, Oct 30, 2025 at 2:36 PM <linan666@huaweicloud.com> wrote:
->>
->> From: Li Nan <linan122@huawei.com>
->>
->> IO operations may be needed before md_run(), such as updating metadata
->> after writing sysfs. Without bioset, this triggers a NULL pointer
->> dereference as below:
->>
->>   BUG: kernel NULL pointer dereference, address: 0000000000000020
->>   Call Trace:
->>    md_update_sb+0x658/0xe00
->>    new_level_store+0xc5/0x120
->>    md_attr_store+0xc9/0x1e0
->>    sysfs_kf_write+0x6f/0xa0
->>    kernfs_fop_write_iter+0x141/0x2a0
->>    vfs_write+0x1fc/0x5a0
->>    ksys_write+0x79/0x180
->>    __x64_sys_write+0x1d/0x30
->>    x64_sys_call+0x2818/0x2880
->>    do_syscall_64+0xa9/0x580
->>    entry_SYSCALL_64_after_hwframe+0x4b/0x53
->>
->> Reproducer
->> ```
->>    mdadm -CR /dev/md0 -l1 -n2 /dev/sd[cd]
->>    echo inactive > /sys/block/md0/md/array_state
->>    echo 10 > /sys/block/md0/md/new_level
->> ```
->>
-> 
-> Hi Li Nan
-> 
->> mddev_init() can only be called once per mddev, no need to test if bioset
->> has been initialized anymore.
-> 
-> The patch looks good to me. But I don't understand the message here.
-> This patch changes the alloc/free bioset positions. What's the meaning
-> of "no need to test if bioset has been initialized anymore"?
-> 
-> Regards
-> Xiao
+v8:
+ - Path 2: remove unnecessary bioset_initialized() check.
+ - Path 3: remove the max(blksize, ...)
+ - Path 4: set MD_SB_CHANGE_DEVS instead of call md_update_sb()
 
-Hi Xiao
+v7:
+ - Add three prerequisite patch to fix some config lbs related issues
+ - Update sb when lbs configuration is done
+ - This feature should support raid0, update documentation accordingly
 
-Thanks for your review.
+Li Nan (5):
+  md: delete md_redundancy_group when array is becoming inactive
+  md: init bioset in mddev_init
+  md/raid0: Move queue limit setup before r0conf initialization
+  md: add check_new_feature module parameter
+  md: allow configuring logical block size
 
-Sorry for causing any misunderstanding.
-Old code:
--	if (!bioset_initialized(&mddev->bio_set)) {
--		err = bioset_init(&mddev->bio_set, BIO_POOL_SIZE, 0, BIOSET_NEED_BVECS);
-
-New code:
-+	err = bioset_init(&mddev->bio_set, BIO_POOL_SIZE, 0, BIOSET_NEED_BVECS);
-
-bioset_initialized() is removed. Can I describe it as:
-   mddev_init() can only be called once per mddev, thus bioset_initialized()
-can be removed.
-
->>
->> Fixes: d981ed841930 ("md: Add new_level sysfs interface")
->> Signed-off-by: Li Nan <linan122@huawei.com>
->> ---
->>   drivers/md/md.c | 69 +++++++++++++++++++++++--------------------------
->>   1 file changed, 33 insertions(+), 36 deletions(-)
->>
->> diff --git a/drivers/md/md.c b/drivers/md/md.c
->> index f6fd55a1637b..dffc6a482181 100644
->> --- a/drivers/md/md.c
->> +++ b/drivers/md/md.c
->> @@ -730,6 +730,8 @@ static void mddev_clear_bitmap_ops(struct mddev *mddev)
->>
->>   int mddev_init(struct mddev *mddev)
->>   {
->> +       int err = 0;
->> +
->>          if (!IS_ENABLED(CONFIG_MD_BITMAP))
->>                  mddev->bitmap_id = ID_BITMAP_NONE;
->>          else
->> @@ -741,10 +743,23 @@ int mddev_init(struct mddev *mddev)
->>
->>          if (percpu_ref_init(&mddev->writes_pending, no_op,
->>                              PERCPU_REF_ALLOW_REINIT, GFP_KERNEL)) {
->> -               percpu_ref_exit(&mddev->active_io);
->> -               return -ENOMEM;
->> +               err = -ENOMEM;
->> +               goto exit_acitve_io;
->>          }
->>
->> +       err = bioset_init(&mddev->bio_set, BIO_POOL_SIZE, 0, BIOSET_NEED_BVECS);
->> +       if (err)
->> +               goto exit_writes_pending;
->> +
->> +       err = bioset_init(&mddev->sync_set, BIO_POOL_SIZE, 0, BIOSET_NEED_BVECS);
->> +       if (err)
->> +               goto exit_bio_set;
->> +
->> +       err = bioset_init(&mddev->io_clone_set, BIO_POOL_SIZE,
->> +                         offsetof(struct md_io_clone, bio_clone), 0);
->> +       if (err)
->> +               goto exit_sync_set;
->> +
->>          /* We want to start with the refcount at zero */
->>          percpu_ref_put(&mddev->writes_pending);
->>
->> @@ -773,11 +788,24 @@ int mddev_init(struct mddev *mddev)
->>          INIT_WORK(&mddev->del_work, mddev_delayed_delete);
->>
->>          return 0;
->> +
->> +exit_sync_set:
->> +       bioset_exit(&mddev->sync_set);
->> +exit_bio_set:
->> +       bioset_exit(&mddev->bio_set);
->> +exit_writes_pending:
->> +       percpu_ref_exit(&mddev->writes_pending);
->> +exit_acitve_io:
->> +       percpu_ref_exit(&mddev->active_io);
->> +       return err;
->>   }
->>   EXPORT_SYMBOL_GPL(mddev_init);
->>
->>   void mddev_destroy(struct mddev *mddev)
->>   {
->> +       bioset_exit(&mddev->bio_set);
->> +       bioset_exit(&mddev->sync_set);
->> +       bioset_exit(&mddev->io_clone_set);
->>          percpu_ref_exit(&mddev->active_io);
->>          percpu_ref_exit(&mddev->writes_pending);
->>   }
->> @@ -6393,29 +6421,9 @@ int md_run(struct mddev *mddev)
->>                  nowait = nowait && bdev_nowait(rdev->bdev);
->>          }
->>
->> -       if (!bioset_initialized(&mddev->bio_set)) {
->> -               err = bioset_init(&mddev->bio_set, BIO_POOL_SIZE, 0, BIOSET_NEED_BVECS);
->> -               if (err)
->> -                       return err;
->> -       }
->> -       if (!bioset_initialized(&mddev->sync_set)) {
->> -               err = bioset_init(&mddev->sync_set, BIO_POOL_SIZE, 0, BIOSET_NEED_BVECS);
->> -               if (err)
->> -                       goto exit_bio_set;
->> -       }
->> -
->> -       if (!bioset_initialized(&mddev->io_clone_set)) {
->> -               err = bioset_init(&mddev->io_clone_set, BIO_POOL_SIZE,
->> -                                 offsetof(struct md_io_clone, bio_clone), 0);
->> -               if (err)
->> -                       goto exit_sync_set;
->> -       }
->> -
->>          pers = get_pers(mddev->level, mddev->clevel);
->> -       if (!pers) {
->> -               err = -EINVAL;
->> -               goto abort;
->> -       }
->> +       if (!pers)
->> +               return -EINVAL;
->>          if (mddev->level != pers->head.id) {
->>                  mddev->level = pers->head.id;
->>                  mddev->new_level = pers->head.id;
->> @@ -6426,8 +6434,7 @@ int md_run(struct mddev *mddev)
->>              pers->start_reshape == NULL) {
->>                  /* This personality cannot handle reshaping... */
->>                  put_pers(pers);
->> -               err = -EINVAL;
->> -               goto abort;
->> +               return -EINVAL;
->>          }
->>
->>          if (pers->sync_request) {
->> @@ -6554,12 +6561,6 @@ int md_run(struct mddev *mddev)
->>          mddev->private = NULL;
->>          put_pers(pers);
->>          md_bitmap_destroy(mddev);
->> -abort:
->> -       bioset_exit(&mddev->io_clone_set);
->> -exit_sync_set:
->> -       bioset_exit(&mddev->sync_set);
->> -exit_bio_set:
->> -       bioset_exit(&mddev->bio_set);
->>          return err;
->>   }
->>   EXPORT_SYMBOL_GPL(md_run);
->> @@ -6784,10 +6785,6 @@ static void __md_stop(struct mddev *mddev)
->>          mddev->private = NULL;
->>          put_pers(pers);
->>          clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
->> -
->> -       bioset_exit(&mddev->bio_set);
->> -       bioset_exit(&mddev->sync_set);
->> -       bioset_exit(&mddev->io_clone_set);
->>   }
->>
->>   void md_stop(struct mddev *mddev)
->> --
->> 2.39.2
->>
-> 
-> 
-> .
+ Documentation/admin-guide/md.rst |  10 ++
+ drivers/md/md.h                  |   1 +
+ include/uapi/linux/raid/md_p.h   |   3 +-
+ drivers/md/md-linear.c           |   1 +
+ drivers/md/md.c                  | 162 +++++++++++++++++++++++--------
+ drivers/md/raid0.c               |  17 ++--
+ drivers/md/raid1.c               |   1 +
+ drivers/md/raid10.c              |   1 +
+ drivers/md/raid5.c               |   1 +
+ 9 files changed, 148 insertions(+), 49 deletions(-)
 
 -- 
-Thanks,
-Nan
+2.39.2
 
 
