@@ -1,42 +1,42 @@
-Return-Path: <linux-raid+bounces-5565-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5569-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68C5CC2BF47
-	for <lists+linux-raid@lfdr.de>; Mon, 03 Nov 2025 14:07:01 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B9E7C2BF86
+	for <lists+linux-raid@lfdr.de>; Mon, 03 Nov 2025 14:08:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8AF801888310
-	for <lists+linux-raid@lfdr.de>; Mon,  3 Nov 2025 13:06:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E6B4918937DD
+	for <lists+linux-raid@lfdr.de>; Mon,  3 Nov 2025 13:07:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0BDE30FC39;
-	Mon,  3 Nov 2025 13:06:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26BE13126A4;
+	Mon,  3 Nov 2025 13:06:23 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA05E30C37B;
-	Mon,  3 Nov 2025 13:06:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB94A2FCC10;
+	Mon,  3 Nov 2025 13:06:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762175178; cv=none; b=VWkawTILzoWanXU66qCPsYlvOHWzftJW2KC+ahJWo/GVk9/zfOSM8GR4C66uETLsZJhQhKTlX2NSNEsOCu2hvAHekLQxpXfm8WfAfOmpZ0tcshGjQgldXfY7KAcrAgRz0WYhJa/dLO28yFnewPwS5R3A56oFpda3ObWuInZi7Gk=
+	t=1762175180; cv=none; b=OXYJNJ0UuhExxnMw9TI4JLx+HHvF96pVbkDV54zpEoBYQdet/l+CgCDX2L5JN7tSmvl6us/Y0bDiRyarq3rxYMC9GXTkQwMFPeeG8a+AHH+ravbhZPAXb5QtHjIIA4rbZLasvYXiSZbuO+Rrl5AZ4yvJc0eJ6aanI+20xb2sRUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762175178; c=relaxed/simple;
-	bh=jEYk7IoOCUlwQqplPMVYUiRApi1kbzCpFpscGepfb/g=;
+	s=arc-20240116; t=1762175180; c=relaxed/simple;
+	bh=mq/gv1GTUPJA1LP4h8sMmbcHhpFRDBryKB5G+p5WkvY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HeP54iJgqp6t4QU6vYYbCm8Qnvjvhc9RHgPiwfzDxM8ezB6iafKE8A2HVkJ9qntELpLQPoasXBC7XmItxofMichNwF+M0hGrSCQwJAo/G92m55UI+g3P01CVHZgEqc9eYXoSOl17BduWbWDa95a9jbJdMObdlQGLApfd+H8lkSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	 MIME-Version; b=QDmE8qy7fNUord0O05ZINYZaL1t1Ha0cU5fnLqiKHwgCSdrizSwzModTK9PzW0aA+lUNc1imyFVxxWnTiNilmtULdjBQGWpZsLvCmj6zDrHrJESzeM2LMkW9tdqWQRJpYr5MahkDoWChijzRbPN7urnO1E9wsvJhxz42j19XDIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4d0Wzz1zCkzKHMKp;
-	Mon,  3 Nov 2025 21:06:07 +0800 (CST)
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4d0Wzp29LzzYQtqJ;
+	Mon,  3 Nov 2025 21:05:58 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 915C01A0D7D;
+	by mail.maildlp.com (Postfix) with ESMTP id AB9FC1A0359;
 	Mon,  3 Nov 2025 21:06:11 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.50.87.129])
-	by APP2 (Coremail) with SMTP id Syh0CgCHK0TCqAhp+jFMCg--.19557S6;
+	by APP2 (Coremail) with SMTP id Syh0CgCHK0TCqAhp+jFMCg--.19557S7;
 	Mon, 03 Nov 2025 21:06:11 +0800 (CST)
 From: linan666@huaweicloud.com
 To: corbet@lwn.net,
@@ -51,9 +51,9 @@ Cc: linux-doc@vger.kernel.org,
 	linan666@huaweicloud.com,
 	yangerkun@huawei.com,
 	yi.zhang@huawei.com
-Subject: [PATCH v9 2/5] md: init bioset in mddev_init
-Date: Mon,  3 Nov 2025 20:57:54 +0800
-Message-Id: <20251103125757.1405796-3-linan666@huaweicloud.com>
+Subject: [PATCH v9 3/5] md/raid0: Move queue limit setup before r0conf initialization
+Date: Mon,  3 Nov 2025 20:57:55 +0800
+Message-Id: <20251103125757.1405796-4-linan666@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20251103125757.1405796-1-linan666@huaweicloud.com>
 References: <20251103125757.1405796-1-linan666@huaweicloud.com>
@@ -64,12 +64,12 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgCHK0TCqAhp+jFMCg--.19557S6
-X-Coremail-Antispam: 1UD129KBjvJXoWxWw4kAF1ftr4DGFy3Cr1fCrg_yoWrtw1xpa
-	yxXas5Kr4kJrWag347JF1v93WrXr1xtFZrtrW7Wrn5Aa1Syr4UG3WYgF48ZFykG3ykCa15
-	Ww1rJFW3WF15ur7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:Syh0CgCHK0TCqAhp+jFMCg--.19557S7
+X-Coremail-Antispam: 1UD129KBjvJXoW7Aw1kWw43Xr15WFW5JF15XFb_yoW8Kr1rpw
+	s3K3ZIgry0gFW3WayDZrWkua4Fqa48trWDtF9xZ348Xryavr1FgFy3Xa45WFW3t3yrAF15
+	X3yYkFZ7Cr9xKrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUHY14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
 	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
 	Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
 	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAa
@@ -81,175 +81,76 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxWw4kAF1ftr4DGFy3Cr1fCrg_yoWrtw1xpa
 	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
 	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr
 	0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
-	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUHnQUUUUUU=
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUd5rcUUUUU=
 X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
 From: Li Nan <linan122@huawei.com>
 
-IO operations may be needed before md_run(), such as updating metadata
-after writing sysfs. Without bioset, this triggers a NULL pointer
-dereference as below:
+Prepare for making logical blocksize configurable. This change has no
+impact until logical block size becomes configurable.
 
- BUG: kernel NULL pointer dereference, address: 0000000000000020
- Call Trace:
-  md_update_sb+0x658/0xe00
-  new_level_store+0xc5/0x120
-  md_attr_store+0xc9/0x1e0
-  sysfs_kf_write+0x6f/0xa0
-  kernfs_fop_write_iter+0x141/0x2a0
-  vfs_write+0x1fc/0x5a0
-  ksys_write+0x79/0x180
-  __x64_sys_write+0x1d/0x30
-  x64_sys_call+0x2818/0x2880
-  do_syscall_64+0xa9/0x580
-  entry_SYSCALL_64_after_hwframe+0x4b/0x53
+Move raid0_set_limits() before create_strip_zones(). It is safe as fields
+modified in create_strip_zones() do not involve mddev configuration, and
+rdev modifications there are not used in raid0_set_limits().
 
-Reproducer
-```
-  mdadm -CR /dev/md0 -l1 -n2 /dev/sd[cd]
-  echo inactive > /sys/block/md0/md/array_state
-  echo 10 > /sys/block/md0/md/new_level
-```
+'blksize' in create_strip_zones() fetches mddev's logical block size,
+which is already the maximum aross all rdevs, so the later max() can be
+removed.
 
-mddev_init() can only be called once per mddev, no need to test if bioset
-has been initialized anymore.
-
-Fixes: d981ed841930 ("md: Add new_level sysfs interface")
 Signed-off-by: Li Nan <linan122@huawei.com>
+Reviewed-by: Xiao Ni <xni@redhat.com>
 ---
- drivers/md/md.c | 69 +++++++++++++++++++++++--------------------------
- 1 file changed, 33 insertions(+), 36 deletions(-)
+ drivers/md/raid0.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index f6fd55a1637b..dffc6a482181 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -730,6 +730,8 @@ static void mddev_clear_bitmap_ops(struct mddev *mddev)
+diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
+index e443e478645a..fbf763401521 100644
+--- a/drivers/md/raid0.c
++++ b/drivers/md/raid0.c
+@@ -68,7 +68,7 @@ static int create_strip_zones(struct mddev *mddev, struct r0conf **private_conf)
+ 	struct strip_zone *zone;
+ 	int cnt;
+ 	struct r0conf *conf = kzalloc(sizeof(*conf), GFP_KERNEL);
+-	unsigned blksize = 512;
++	unsigned int blksize = queue_logical_block_size(mddev->gendisk->queue);
  
- int mddev_init(struct mddev *mddev)
- {
-+	int err = 0;
-+
- 	if (!IS_ENABLED(CONFIG_MD_BITMAP))
- 		mddev->bitmap_id = ID_BITMAP_NONE;
- 	else
-@@ -741,10 +743,23 @@ int mddev_init(struct mddev *mddev)
+ 	*private_conf = ERR_PTR(-ENOMEM);
+ 	if (!conf)
+@@ -84,9 +84,6 @@ static int create_strip_zones(struct mddev *mddev, struct r0conf **private_conf)
+ 		sector_div(sectors, mddev->chunk_sectors);
+ 		rdev1->sectors = sectors * mddev->chunk_sectors;
  
- 	if (percpu_ref_init(&mddev->writes_pending, no_op,
- 			    PERCPU_REF_ALLOW_REINIT, GFP_KERNEL)) {
--		percpu_ref_exit(&mddev->active_io);
--		return -ENOMEM;
-+		err = -ENOMEM;
-+		goto exit_acitve_io;
- 	}
- 
-+	err = bioset_init(&mddev->bio_set, BIO_POOL_SIZE, 0, BIOSET_NEED_BVECS);
-+	if (err)
-+		goto exit_writes_pending;
-+
-+	err = bioset_init(&mddev->sync_set, BIO_POOL_SIZE, 0, BIOSET_NEED_BVECS);
-+	if (err)
-+		goto exit_bio_set;
-+
-+	err = bioset_init(&mddev->io_clone_set, BIO_POOL_SIZE,
-+			  offsetof(struct md_io_clone, bio_clone), 0);
-+	if (err)
-+		goto exit_sync_set;
-+
- 	/* We want to start with the refcount at zero */
- 	percpu_ref_put(&mddev->writes_pending);
- 
-@@ -773,11 +788,24 @@ int mddev_init(struct mddev *mddev)
- 	INIT_WORK(&mddev->del_work, mddev_delayed_delete);
- 
- 	return 0;
-+
-+exit_sync_set:
-+	bioset_exit(&mddev->sync_set);
-+exit_bio_set:
-+	bioset_exit(&mddev->bio_set);
-+exit_writes_pending:
-+	percpu_ref_exit(&mddev->writes_pending);
-+exit_acitve_io:
-+	percpu_ref_exit(&mddev->active_io);
-+	return err;
- }
- EXPORT_SYMBOL_GPL(mddev_init);
- 
- void mddev_destroy(struct mddev *mddev)
- {
-+	bioset_exit(&mddev->bio_set);
-+	bioset_exit(&mddev->sync_set);
-+	bioset_exit(&mddev->io_clone_set);
- 	percpu_ref_exit(&mddev->active_io);
- 	percpu_ref_exit(&mddev->writes_pending);
- }
-@@ -6393,29 +6421,9 @@ int md_run(struct mddev *mddev)
- 		nowait = nowait && bdev_nowait(rdev->bdev);
- 	}
- 
--	if (!bioset_initialized(&mddev->bio_set)) {
--		err = bioset_init(&mddev->bio_set, BIO_POOL_SIZE, 0, BIOSET_NEED_BVECS);
--		if (err)
--			return err;
--	}
--	if (!bioset_initialized(&mddev->sync_set)) {
--		err = bioset_init(&mddev->sync_set, BIO_POOL_SIZE, 0, BIOSET_NEED_BVECS);
--		if (err)
--			goto exit_bio_set;
--	}
+-		blksize = max(blksize, queue_logical_block_size(
+-				      rdev1->bdev->bd_disk->queue));
 -
--	if (!bioset_initialized(&mddev->io_clone_set)) {
--		err = bioset_init(&mddev->io_clone_set, BIO_POOL_SIZE,
--				  offsetof(struct md_io_clone, bio_clone), 0);
--		if (err)
--			goto exit_sync_set;
--	}
--
- 	pers = get_pers(mddev->level, mddev->clevel);
--	if (!pers) {
--		err = -EINVAL;
--		goto abort;
--	}
-+	if (!pers)
-+		return -EINVAL;
- 	if (mddev->level != pers->head.id) {
- 		mddev->level = pers->head.id;
- 		mddev->new_level = pers->head.id;
-@@ -6426,8 +6434,7 @@ int md_run(struct mddev *mddev)
- 	    pers->start_reshape == NULL) {
- 		/* This personality cannot handle reshaping... */
- 		put_pers(pers);
--		err = -EINVAL;
--		goto abort;
-+		return -EINVAL;
+ 		rdev_for_each(rdev2, mddev) {
+ 			pr_debug("md/raid0:%s:   comparing %pg(%llu)"
+ 				 " with %pg(%llu)\n",
+@@ -405,6 +402,12 @@ static int raid0_run(struct mddev *mddev)
+ 	if (md_check_no_bitmap(mddev))
+ 		return -EINVAL;
+ 
++	if (!mddev_is_dm(mddev)) {
++		ret = raid0_set_limits(mddev);
++		if (ret)
++			return ret;
++	}
++
+ 	/* if private is not null, we are here after takeover */
+ 	if (mddev->private == NULL) {
+ 		ret = create_strip_zones(mddev, &conf);
+@@ -413,11 +416,6 @@ static int raid0_run(struct mddev *mddev)
+ 		mddev->private = conf;
  	}
+ 	conf = mddev->private;
+-	if (!mddev_is_dm(mddev)) {
+-		ret = raid0_set_limits(mddev);
+-		if (ret)
+-			return ret;
+-	}
  
- 	if (pers->sync_request) {
-@@ -6554,12 +6561,6 @@ int md_run(struct mddev *mddev)
- 	mddev->private = NULL;
- 	put_pers(pers);
- 	md_bitmap_destroy(mddev);
--abort:
--	bioset_exit(&mddev->io_clone_set);
--exit_sync_set:
--	bioset_exit(&mddev->sync_set);
--exit_bio_set:
--	bioset_exit(&mddev->bio_set);
- 	return err;
- }
- EXPORT_SYMBOL_GPL(md_run);
-@@ -6784,10 +6785,6 @@ static void __md_stop(struct mddev *mddev)
- 	mddev->private = NULL;
- 	put_pers(pers);
- 	clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
--
--	bioset_exit(&mddev->bio_set);
--	bioset_exit(&mddev->sync_set);
--	bioset_exit(&mddev->io_clone_set);
- }
- 
- void md_stop(struct mddev *mddev)
+ 	/* calculate array device size */
+ 	md_set_array_sectors(mddev, raid0_size(mddev, 0, 0));
 -- 
 2.39.2
 
