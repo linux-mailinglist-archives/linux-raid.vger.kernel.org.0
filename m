@@ -1,358 +1,272 @@
-Return-Path: <linux-raid+bounces-5600-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5607-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90BB4C3AD0D
-	for <lists+linux-raid@lfdr.de>; Thu, 06 Nov 2025 13:12:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F6C6C3AE82
+	for <lists+linux-raid@lfdr.de>; Thu, 06 Nov 2025 13:36:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B44B64F3244
-	for <lists+linux-raid@lfdr.de>; Thu,  6 Nov 2025 12:10:00 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D44CB4E24CE
+	for <lists+linux-raid@lfdr.de>; Thu,  6 Nov 2025 12:36:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7964132A3FB;
-	Thu,  6 Nov 2025 12:08:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAE1232B989;
+	Thu,  6 Nov 2025 12:35:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L/vu4+E+";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="my2UgbZb"
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 607243254BE;
-	Thu,  6 Nov 2025 12:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A263208
+	for <linux-raid@vger.kernel.org>; Thu,  6 Nov 2025 12:35:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762430890; cv=none; b=iIcMC1/exZs6DSoWONtEh1wVBW+8jehua6O/hTR5h1sW052Vgf434GEhPjJvAjSC0jyOWlWQRtLh1CbQxxozFjBNoSdlmJJYYtpcxs9AQqxxmhbxgid0OVFdE1p8SCT0w7RbvjNIPd5CgoePQt3MN39/9cg6060tzmfqFwhzOZw=
+	t=1762432557; cv=none; b=bf0h0U5dLzqt49TqgVSCjp+nCMMJrYu6g6brDvCTY13XDLZhBIOwM0WEBdFzwUuFwBm2HDYylIapt0uLvQZ1hrI/OJqegNe8MAjCF4mgkONZ66k3KATm8IN9KCxE8KXk49PD3RvePk8bwbo89dFfCvbTJq0cGJDeSviMLUDQKtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762430890; c=relaxed/simple;
-	bh=4DOB4e0ZFpFX4linEplpmq8DthgmoJgwvzpTxRTkHNg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Nebu2A2QXJkOBcAAEBRzMPtgZvNzxe6/D3dEdt2S0xT5OwJ7wB06gGrtq2v52FMy+324WGesH+obDyKq9MeyMYUIR4HRTk9DcggRlo/QCd2jKAFXNiQSP9aei29l1DRpqPt/QN0kNbBjRTetncF83k/3l6OYRh9ycxH1YSyoOQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4d2LYD0dzDzYQthh;
-	Thu,  6 Nov 2025 20:07:44 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 65B161A018D;
-	Thu,  6 Nov 2025 20:08:02 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.50.87.129])
-	by APP2 (Coremail) with SMTP id Syh0CgCH3UWfjwxpEbabCw--.33933S15;
-	Thu, 06 Nov 2025 20:08:02 +0800 (CST)
-From: linan666@huaweicloud.com
-To: song@kernel.org,
-	yukuai@fnnas.com,
-	neil@brown.name,
-	namhyung@gmail.com
-Cc: linux-raid@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	xni@redhat.com,
-	k@mgml.me,
-	linan666@huaweicloud.com,
-	yangerkun@huawei.com,
-	yi.zhang@huawei.com
-Subject: [PATCH v2 11/11] md: remove recovery_disabled
-Date: Thu,  6 Nov 2025 19:59:35 +0800
-Message-Id: <20251106115935.2148714-12-linan666@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20251106115935.2148714-1-linan666@huaweicloud.com>
-References: <20251106115935.2148714-1-linan666@huaweicloud.com>
+	s=arc-20240116; t=1762432557; c=relaxed/simple;
+	bh=i+SCMf/yBk90A2KOACbcNy1ORauqmvKcDcu8Y5+nrmY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qubIVPf3flDXVVWk/dmnZq/wEwHMopLkvblBn5IfWQ3k1mdhd0menf4WtPcvwJLLlhXuZbRspAnrXpnUCipYOws7Y4UY8/ZqwPmCP/9pbxGalgTMJ1z1ieEjvk/x9MiVkP8++PzRFPilA1l18WV0SQjbs8275HX/l0BgsYnnXYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L/vu4+E+; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=my2UgbZb; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1762432553;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Jmpop8a9VO9H6iCyQ2qGa1F58ZkWSPxPmCzY41bcxvo=;
+	b=L/vu4+E+fCLbJ9Nurf7DE02yXpPqCzYHaN8Teq1O6x0ADWrIyKj1UJPrr/V/UBYgIHxbrm
+	K6ehoWEa+t1mT+w/jLD85el7ZQ9WfPCHBO4EhXXjc+cBomZiW9nvrYRqwmS/J9EYDYq7Bq
+	QHJUetcXVafiuyf8riqKL074W76XG9g=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-532-LNn4ajDKMYydXUTeadujXw-1; Thu, 06 Nov 2025 07:35:52 -0500
+X-MC-Unique: LNn4ajDKMYydXUTeadujXw-1
+X-Mimecast-MFC-AGG-ID: LNn4ajDKMYydXUTeadujXw_1762432551
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-585b3594d16so947608e87.0
+        for <linux-raid@vger.kernel.org>; Thu, 06 Nov 2025 04:35:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1762432551; x=1763037351; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Jmpop8a9VO9H6iCyQ2qGa1F58ZkWSPxPmCzY41bcxvo=;
+        b=my2UgbZbLsGPMegFm2eIGaA/p2kYanFxAQTSzy+wkEtnCxCoodtbkPdm+T8NYl/uWj
+         5nmk5Wd0Tl9aQVs4jWVQY5mBRNdvTsHA+/V5s4ZbzInJxRaNYx1hyZ/iYeJ3WnFx8ivi
+         tuMtDCMSPwTMrqluH2m/Q0QSseWw1YFuLY/kFksP23l/Yp2v0LChaGYGiSsYHxsv0Uyo
+         p7qlGpghl5Bgw2bVcyCDypjwYD0Cr6YaT0Z7xHM5KtNeevZtXRmcxv4NwaF9fK4VHt13
+         ZaP7VmoIylt5ybjUMkQbch/EdaF0Bl5hUjJJK04oKrv5R1y6i6R/y4I2wG0wO4AquuVP
+         GSMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762432551; x=1763037351;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Jmpop8a9VO9H6iCyQ2qGa1F58ZkWSPxPmCzY41bcxvo=;
+        b=uBHSbJvmKjgdhTt5egYrQj9laZbW0oUmNgPhiNX4lr6oX5Dq/s2y99OoX+DUfla3h0
+         8qmIl735pR9xhlh9cXKE7L73GhGUa8bRPMgbCElDGkOcK7rpjcB/VaB9dgfeMwkBmjyC
+         ob6WTlOqZ7A5DaAGj9ndZ3FnWVsZP1cEEHGOZ3Y994JOHeGMcK8wg6jZLSrX8moppyYm
+         lpwEfPLQRfTkIABfJJTWAzLX6TLzxGFSP6XEFBgazhnlMcHhB6ngnqDC/zcrRXESsKDl
+         RQQOUt0COXTtO2VW9tMl6FRHKp97SpPD+aUHASv8abwb+MErkm6c1CjFS+AFvJ942k/B
+         AjfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUEMDg4k0zyFQzCkwGLLheumb2yY869tnYDXAkzK0VXkULr9MgTu+zgsULW2clM+a1UBWHCcKUzaE7r@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzzb/Mq5FXxferzQans8qFnMbmi0ibb2ue++pfiTl7zcJSgtLv2
+	aqFtXAnLNfxltXx5usSMdGXAF2Zq1feHrWEh50OqwVgWVSnBzH9P03J2VB2Gr1ZVeFzKglVnjLf
+	EmNJKExbDGkI7JKUcer7A8v6JWtTW9D2ogSa1Fmuf06fS9JtNw3W58BXynqynwbNIZweusKqrrg
+	brZjaadJuX2fZakm2L6V8u3uow82lE1ASTCOc0oA==
+X-Gm-Gg: ASbGncsN4ZAuBWZ7Uj2LxsWusM657F4wE2rR/GpC0YMVXRQ5IIh+odolGdTShjPUq3L
+	yEuVAe1VxmiV8jCJ9jl6dBfBe7jDh8mCwwRbiuaAE3Yo6eOgMx0Xgz12BgKkJYZWkPYXRllXn40
+	Yyu8SaB5+iywDAKCYzlQUZ6JjfvYCNkNR1L2yzy0qZiQjNLoGksvhvVfln
+X-Received: by 2002:a05:6512:2390:b0:594:2d64:bcef with SMTP id 2adb3069b0e04-5943d55dbeemr2652136e87.3.1762432550862;
+        Thu, 06 Nov 2025 04:35:50 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF5zMwl504DegKQir6DedKv5U+7RO8JHrxD5MZPXgS6HJUP3XYHPj6qtAI6QT1cwmiHnXcrIMLdbMxHzXgMB9s=
+X-Received: by 2002:a05:6512:2390:b0:594:2d64:bcef with SMTP id
+ 2adb3069b0e04-5943d55dbeemr2652122e87.3.1762432550368; Thu, 06 Nov 2025
+ 04:35:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgCH3UWfjwxpEbabCw--.33933S15
-X-Coremail-Antispam: 1UD129KBjvJXoWxKw1fZF4fXFy5Jr4xtF48Crg_yoWfCFW3pa
-	nxJF9a9rWUXayFyF1DJFWDWFyrt3yUKa97tFyfW3y8Za43trWkXa95XFyUXFyDJFWFva1I
-	q3Z5GrW5GF1IgaUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUHq14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0V
-	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr1j6F4U
-	JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20V
-	AGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7M4kE6xkIj40Ew7xC0wCY1x0262kKe7AKxVWU
-	tVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_
-	Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQqX
-	LUUUUU=
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+References: <20251103125757.1405796-1-linan666@huaweicloud.com>
+ <20251103125757.1405796-5-linan666@huaweicloud.com> <CALTww29-7U=o=RzS=pfo-zqLYY_O2o+PXw-8PLXqFRf=wdthvQ@mail.gmail.com>
+ <a660478f-b146-05ec-a3f4-f86457b096d0@huaweicloud.com> <CALTww29v7kKgDyWqUZnteNqHDEH9_KBRY+HtSMJoquMv0sTwkg@mail.gmail.com>
+ <2c1ab8fc-99ac-44fd-892c-2eeedb9581f4@fnnas.com>
+In-Reply-To: <2c1ab8fc-99ac-44fd-892c-2eeedb9581f4@fnnas.com>
+From: Xiao Ni <xni@redhat.com>
+Date: Thu, 6 Nov 2025 20:35:38 +0800
+X-Gm-Features: AWmQ_blp62dKYFna8dJShjcW_iuwYFNvZw6cjJczWmf99698ZthRtzAA2SZuj2o
+Message-ID: <CALTww289ZzZP5TmD5qezaYZV0Mnb90abqMqR=OnAzRz3NkmhQQ@mail.gmail.com>
+Subject: Re: [PATCH v9 4/5] md: add check_new_feature module parameter
+To: yukuai@fnnas.com
+Cc: Li Nan <linan666@huaweicloud.com>, corbet@lwn.net, song@kernel.org, hare@suse.de, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-raid@vger.kernel.org, yangerkun@huawei.com, yi.zhang@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Li Nan <linan122@huawei.com>
+On Thu, Nov 6, 2025 at 11:45=E2=80=AFAM Yu Kuai <yukuai@fnnas.com> wrote:
+>
+> Hi,
+>
+> =E5=9C=A8 2025/11/4 15:17, Xiao Ni =E5=86=99=E9=81=93:
+> > On Tue, Nov 4, 2025 at 10:52=E2=80=AFAM Li Nan <linan666@huaweicloud.co=
+m> wrote:
+> >>
+> >>
+> >> =E5=9C=A8 2025/11/4 9:47, Xiao Ni =E5=86=99=E9=81=93:
+> >>> On Mon, Nov 3, 2025 at 9:06=E2=80=AFPM <linan666@huaweicloud.com> wro=
+te:
+> >>>> From: Li Nan <linan122@huawei.com>
+> >>>>
+> >>>> Raid checks if pad3 is zero when loading superblock from disk. Array=
+s
+> >>>> created with new features may fail to assemble on old kernels as pad=
+3
+> >>>> is used.
+> >>>>
+> >>>> Add module parameter check_new_feature to bypass this check.
+> >>>>
+> >>>> Signed-off-by: Li Nan <linan122@huawei.com>
+> >>>> ---
+> >>>>    drivers/md/md.c | 12 +++++++++---
+> >>>>    1 file changed, 9 insertions(+), 3 deletions(-)
+> >>>>
+> >>>> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> >>>> index dffc6a482181..5921fb245bfa 100644
+> >>>> --- a/drivers/md/md.c
+> >>>> +++ b/drivers/md/md.c
+> >>>> @@ -339,6 +339,7 @@ static int start_readonly;
+> >>>>     */
+> >>>>    static bool create_on_open =3D true;
+> >>>>    static bool legacy_async_del_gendisk =3D true;
+> >>>> +static bool check_new_feature =3D true;
+> >>>>
+> >>>>    /*
+> >>>>     * We have a system wide 'event count' that is incremented
+> >>>> @@ -1850,9 +1851,13 @@ static int super_1_load(struct md_rdev *rdev,=
+ struct md_rdev *refdev, int minor_
+> >>>>           }
+> >>>>           if (sb->pad0 ||
+> >>>>               sb->pad3[0] ||
+> >>>> -           memcmp(sb->pad3, sb->pad3+1, sizeof(sb->pad3) - sizeof(s=
+b->pad3[1])))
+> >>>> -               /* Some padding is non-zero, might be a new feature =
+*/
+> >>>> -               return -EINVAL;
+> >>>> +           memcmp(sb->pad3, sb->pad3+1, sizeof(sb->pad3) - sizeof(s=
+b->pad3[1]))) {
+> >>>> +               pr_warn("Some padding is non-zero on %pg, might be a=
+ new feature\n",
+> >>>> +                       rdev->bdev);
+> >>>> +               if (check_new_feature)
+> >>>> +                       return -EINVAL;
+> >>>> +               pr_warn("check_new_feature is disabled, data corrupt=
+ion possible\n");
+> >>>> +       }
+> >>>>
+> >>>>           rdev->preferred_minor =3D 0xffff;
+> >>>>           rdev->data_offset =3D le64_to_cpu(sb->data_offset);
+> >>>> @@ -10704,6 +10709,7 @@ module_param(start_dirty_degraded, int, S_IR=
+UGO|S_IWUSR);
+> >>>>    module_param_call(new_array, add_named_array, NULL, NULL, S_IWUSR=
+);
+> >>>>    module_param(create_on_open, bool, S_IRUSR|S_IWUSR);
+> >>>>    module_param(legacy_async_del_gendisk, bool, 0600);
+> >>>> +module_param(check_new_feature, bool, 0600);
+> >>>>
+> >>>>    MODULE_LICENSE("GPL");
+> >>>>    MODULE_DESCRIPTION("MD RAID framework");
+> >>>> --
+> >>>> 2.39.2
+> >>>>
+> >>> Hi
+> >>>
+> >>> Thanks for finding this problem in time. The default of this kernel
+> >>> module is true. I don't think people can check new kernel modules
+> >>> after updating to a new kernel. They will find the array can't
+> >>> assemble and report bugs. You already use pad3, is it good to remove
+> >>> the check about pad3 directly here?
+> >>>
+> >>> By the way, have you run the regression tests?
+> >>>
+> >>> Regards
+> >>> Xiao
+> >>>
+> >>>
+> >>> .
+> >> Hi Xiao.
+> >>
+> >> Thanks for your review.
+> >>
+> >> Deleting this check directly is risky. For example, in configurable LB=
+S:
+> >> if user sets LBS to 4K, the LBS of a RAID array assembled on old kerne=
+l
+> >> becomes 512. Forcing use of this array then risks data loss -- the
+> >> original issue this feature want to solve.
+> > You're right, we can't delete the check.
+> > For the old kernel, the array which has specified logical size can't
+> > be assembled. This patch still can't fix this problem, because it is
+> > an old kernel and this patch is for a new kernel, right?
+> > For existing arrays, they don't have such problems. They can be
+> > assembled after updating to a new kernel.
+> > So, do we need this patch?
+>
+> There is a use case for us that user may create the array with old kernel=
+, and
+> then if something bad happened in the system(may not be related to the ar=
+ray),
+> user may update to mainline releases and later switch back to our release=
+. We
+> want a solution that user can still use the array in this case.
 
-'recovery_disabled' logic is complex and confusing, originally intended to
-preserve raid in extreme scenarios. It was used in following cases:
-- When sync fails and setting badblocks also fails, kick out non-In_sync
-  rdev and block spare rdev from joining to preserve raid [1]
-- When last backup is unavailable, prevent repeated add-remove of spares
-  triggering recovery [2]
+Hi all
 
-The original issues are now resolved:
-- Error handlers in all raid types prevent last rdev from being kicked out
-- Disks with failed recovery are marked Faulty and can't re-join
+Let me check if I understand right:
+1. a machine with an old kernel has problems
+2. update to new kernel which has new feature
+3. create an array with new kernel
+4. switch back to the old kernel, so assemble fails because sb->pad3
+is used and not zero.
 
-Therefore, remove 'recovery_disabled' as it's no longer needed.
+The old kernel is right to do so. This should be expected, right?
 
-[1] 5389042ffa36 ("md: change managed of recovery_disabled.")
-[2] 4044ba58dd15 ("md: don't retry recovery of raid1 that fails due to error on source drive.")
+>
+> >
+> >> Future features may also have similar risks, so instead of deleting th=
+is
+> >> check directly, I chose to add a module parameter to give users a choi=
+ce.
+> >> What do you think?
+> > Maybe we can add a feature bit to avoid the kernel parameter. This
+> > feature bit can be set when specifying logical block size.
+>
+> The situation still stand, for unknown feature bit, we'd better to forbid
+> assembling the array to prevent data loss by default.
 
-Signed-off-by: Li Nan <linan122@huawei.com>
----
- drivers/md/md.h     |  6 ------
- drivers/md/raid1.h  |  5 -----
- drivers/md/raid10.h |  5 -----
- drivers/md/raid5.h  |  1 -
- drivers/md/md.c     |  3 ---
- drivers/md/raid1.c  | 17 +++--------------
- drivers/md/raid10.c |  8 --------
- drivers/md/raid5.c  | 10 +---------
- 8 files changed, 4 insertions(+), 51 deletions(-)
+If I understand correctly, the old kernel already refuses to assemble it.
 
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index c5b5377e9049..fdd091ad1cc3 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -493,12 +493,6 @@ struct mddev {
- 	int				ok_start_degraded;
- 
- 	unsigned long			recovery;
--	/* If a RAID personality determines that recovery (of a particular
--	 * device) will fail due to a read error on the source device, it
--	 * takes a copy of this number and does not attempt recovery again
--	 * until this number changes.
--	 */
--	int				recovery_disabled;
- 
- 	int				in_sync;	/* know to not need resync */
- 	/* 'open_mutex' avoids races between 'md_open' and 'do_md_stop', so
-diff --git a/drivers/md/raid1.h b/drivers/md/raid1.h
-index 2ebe35aaa534..c98d43a7ae99 100644
---- a/drivers/md/raid1.h
-+++ b/drivers/md/raid1.h
-@@ -93,11 +93,6 @@ struct r1conf {
- 	 */
- 	int			fullsync;
- 
--	/* When the same as mddev->recovery_disabled we don't allow
--	 * recovery to be attempted as we expect a read error.
--	 */
--	int			recovery_disabled;
--
- 	mempool_t		*r1bio_pool;
- 	mempool_t		r1buf_pool;
- 
-diff --git a/drivers/md/raid10.h b/drivers/md/raid10.h
-index da00a55f7a55..ec79d87fb92f 100644
---- a/drivers/md/raid10.h
-+++ b/drivers/md/raid10.h
-@@ -18,11 +18,6 @@
- struct raid10_info {
- 	struct md_rdev	*rdev, *replacement;
- 	sector_t	head_position;
--	int		recovery_disabled;	/* matches
--						 * mddev->recovery_disabled
--						 * when we shouldn't try
--						 * recovering this device.
--						 */
- };
- 
- struct r10conf {
-diff --git a/drivers/md/raid5.h b/drivers/md/raid5.h
-index eafc6e9ed6ee..eff2bba9d76f 100644
---- a/drivers/md/raid5.h
-+++ b/drivers/md/raid5.h
-@@ -640,7 +640,6 @@ struct r5conf {
- 					    * (fresh device added).
- 					    * Cleared when a sync completes.
- 					    */
--	int			recovery_disabled;
- 	/* per cpu variables */
- 	struct raid5_percpu __percpu *percpu;
- 	int scribble_disks;
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index d97085a7f613..4da89da82eb7 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -2579,9 +2579,6 @@ static int bind_rdev_to_array(struct md_rdev *rdev, struct mddev *mddev)
- 	list_add_rcu(&rdev->same_set, &mddev->disks);
- 	bd_link_disk_holder(rdev->bdev, mddev->gendisk);
- 
--	/* May as well allow recovery to be retried once */
--	mddev->recovery_disabled++;
--
- 	return 0;
- 
-  fail:
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index a3e135a9391f..8befaf094cfd 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -1760,7 +1760,6 @@ static void raid1_error(struct mddev *mddev, struct md_rdev *rdev)
- 		set_bit(MD_BROKEN, &mddev->flags);
- 
- 		if (!mddev->fail_last_dev) {
--			conf->recovery_disabled = mddev->recovery_disabled;
- 			spin_unlock_irqrestore(&conf->device_lock, flags);
- 			return;
- 		}
-@@ -1904,7 +1903,6 @@ static bool raid1_remove_conf(struct r1conf *conf, int disk)
- 
- 	/* Only remove non-faulty devices if recovery is not possible. */
- 	if (!test_bit(Faulty, &rdev->flags) &&
--	    rdev->mddev->recovery_disabled != conf->recovery_disabled &&
- 	    rdev->mddev->degraded < conf->raid_disks)
- 		return false;
- 
-@@ -1924,9 +1922,6 @@ static int raid1_add_disk(struct mddev *mddev, struct md_rdev *rdev)
- 	int first = 0;
- 	int last = conf->raid_disks - 1;
- 
--	if (mddev->recovery_disabled == conf->recovery_disabled)
--		return -EBUSY;
--
- 	if (rdev->raid_disk >= 0)
- 		first = last = rdev->raid_disk;
- 
-@@ -2346,7 +2341,6 @@ static void sync_request_write(struct mddev *mddev, struct r1bio *r1_bio)
- 		 */
- 		if (test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery) ||
- 		    !fix_sync_read_error(r1_bio)) {
--			conf->recovery_disabled = mddev->recovery_disabled;
- 			md_done_sync(mddev, r1_bio->sectors);
- 			md_sync_error(mddev);
- 			put_buf(r1_bio);
-@@ -2953,16 +2947,12 @@ static sector_t raid1_sync_request(struct mddev *mddev, sector_t sector_nr,
- 		*skipped = 1;
- 		put_buf(r1_bio);
- 
--		if (!ok) {
--			/* Cannot record the badblocks, so need to
-+		if (!ok)
-+			/* Cannot record the badblocks, md_error has set INTR,
- 			 * abort the resync.
--			 * If there are multiple read targets, could just
--			 * fail the really bad ones ???
- 			 */
--			conf->recovery_disabled = mddev->recovery_disabled;
--			set_bit(MD_RECOVERY_INTR, &mddev->recovery);
- 			return 0;
--		} else
-+		else
- 			return min_bad;
- 
- 	}
-@@ -3149,7 +3139,6 @@ static struct r1conf *setup_conf(struct mddev *mddev)
- 	init_waitqueue_head(&conf->wait_barrier);
- 
- 	bio_list_init(&conf->pending_bio_list);
--	conf->recovery_disabled = mddev->recovery_disabled - 1;
- 
- 	err = -EIO;
- 	for (i = 0; i < conf->raid_disks * 2; i++) {
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index bd91db9d09fc..b5a0f905229e 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -2130,8 +2130,6 @@ static int raid10_add_disk(struct mddev *mddev, struct md_rdev *rdev)
- 		mirror = first;
- 	for ( ; mirror <= last ; mirror++) {
- 		p = &conf->mirrors[mirror];
--		if (p->recovery_disabled == mddev->recovery_disabled)
--			continue;
- 		if (p->rdev) {
- 			if (test_bit(WantReplacement, &p->rdev->flags) &&
- 			    p->replacement == NULL && repl_slot < 0)
-@@ -2143,7 +2141,6 @@ static int raid10_add_disk(struct mddev *mddev, struct md_rdev *rdev)
- 		if (err)
- 			return err;
- 		p->head_position = 0;
--		p->recovery_disabled = mddev->recovery_disabled - 1;
- 		rdev->raid_disk = mirror;
- 		err = 0;
- 		if (rdev->saved_raid_disk != mirror)
-@@ -2196,7 +2193,6 @@ static int raid10_remove_disk(struct mddev *mddev, struct md_rdev *rdev)
- 	 * is not possible.
- 	 */
- 	if (!test_bit(Faulty, &rdev->flags) &&
--	    mddev->recovery_disabled != p->recovery_disabled &&
- 	    (!p->replacement || p->replacement == rdev) &&
- 	    number < conf->geo.raid_disks &&
- 	    enough(conf, -1)) {
-@@ -2535,8 +2531,6 @@ static void fix_recovery_read_error(struct r10bio *r10_bio)
- 					pr_notice("md/raid10:%s: recovery aborted due to read error\n",
- 						  mdname(mddev));
- 
--					conf->mirrors[dw].recovery_disabled
--						= mddev->recovery_disabled;
- 					set_bit(MD_RECOVERY_INTR,
- 						&mddev->recovery);
- 					break;
-@@ -4079,8 +4073,6 @@ static int raid10_run(struct mddev *mddev)
- 		    disk->replacement->saved_raid_disk < 0) {
- 			conf->fullsync = 1;
- 		}
--
--		disk->recovery_disabled = mddev->recovery_disabled - 1;
- 	}
- 
- 	if (mddev->resync_offset != MaxSector)
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 187dc66629e6..e06cf20be7c2 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -2918,7 +2918,6 @@ static void raid5_error(struct mddev *mddev, struct md_rdev *rdev)
- 
- 	if (has_failed(conf)) {
- 		set_bit(MD_BROKEN, &conf->mddev->flags);
--		conf->recovery_disabled = mddev->recovery_disabled;
- 
- 		pr_crit("md/raid:%s: Cannot continue operation (%d/%d failed).\n",
- 			mdname(mddev), mddev->degraded, conf->raid_disks);
-@@ -3723,10 +3722,8 @@ handle_failed_sync(struct r5conf *conf, struct stripe_head *sh,
- 	}
- 	md_done_sync(conf->mddev, RAID5_STRIPE_SECTORS(conf));
- 
--	if (abort) {
--		conf->recovery_disabled = conf->mddev->recovery_disabled;
-+	if (abort)
- 		md_sync_error(conf->mddev);
--	}
- }
- 
- static int want_replace(struct stripe_head *sh, int disk_idx)
-@@ -7530,8 +7527,6 @@ static struct r5conf *setup_conf(struct mddev *mddev)
- 	}
- 
- 	conf->bypass_threshold = BYPASS_THRESHOLD;
--	conf->recovery_disabled = mddev->recovery_disabled - 1;
--
- 	conf->raid_disks = mddev->raid_disks;
- 	if (mddev->reshape_position == MaxSector)
- 		conf->previous_raid_disks = mddev->raid_disks;
-@@ -8204,7 +8199,6 @@ static int raid5_remove_disk(struct mddev *mddev, struct md_rdev *rdev)
- 	 * isn't possible.
- 	 */
- 	if (!test_bit(Faulty, &rdev->flags) &&
--	    mddev->recovery_disabled != conf->recovery_disabled &&
- 	    !has_failed(conf) &&
- 	    (!p->replacement || p->replacement == rdev) &&
- 	    number < conf->raid_disks) {
-@@ -8265,8 +8259,6 @@ static int raid5_add_disk(struct mddev *mddev, struct md_rdev *rdev)
- 
- 		return 0;
- 	}
--	if (mddev->recovery_disabled == conf->recovery_disabled)
--		return -EBUSY;
- 
- 	if (rdev->saved_raid_disk < 0 && has_failed(conf))
- 		/* no point adding a device */
--- 
-2.39.2
+Regards
+Xiao
+
+>
+> Thanks,
+> Kuai
+>
+> >
+> > Regards
+> > Xiao
+> >> --
+> >> Thanks,
+> >> Nan
+> >>
+>
 
 
