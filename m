@@ -1,43 +1,43 @@
-Return-Path: <linux-raid+bounces-5604-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5606-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 037DCC3AD1F
-	for <lists+linux-raid@lfdr.de>; Thu, 06 Nov 2025 13:13:34 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 74A5BC3AD01
+	for <lists+linux-raid@lfdr.de>; Thu, 06 Nov 2025 13:12:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8ABBA4E41BE
-	for <lists+linux-raid@lfdr.de>; Thu,  6 Nov 2025 12:10:28 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id EB99B35164A
+	for <lists+linux-raid@lfdr.de>; Thu,  6 Nov 2025 12:11:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 953FC32ABD0;
-	Thu,  6 Nov 2025 12:08:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89DFE32ABFE;
+	Thu,  6 Nov 2025 12:08:17 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7469E2F6176;
-	Thu,  6 Nov 2025 12:08:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46E032C92B;
+	Thu,  6 Nov 2025 12:08:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762430893; cv=none; b=BVVWHpnLxdQ3VSCYB4MFS7+3eUaXPtPTEJxbOrgLHpxffvp1mYeUcLmlEo4Obc3O3uaCKjqlUWLM8OUcAqFC7k7cGIYU0RP2qUOSdjELYV6YvmPTdg/s1fU34Ha0GqrR3dcoKYu2m0sA8NO5UTLxfmcteDNdyWfYFLDSdpLFYak=
+	t=1762430897; cv=none; b=UzvV+vJeVlTUGWdQoiyfpQPOgFeJfFzM7QWoRr7JvG1WPBBmYoz5EHvMlSh6UZm+LHsxAILGqwO44Ug4N4iISHeUpqVhr5n82cnEEiefpcJfyRqXIRmhnmRYnd1+RoRZYYu/pNCKC09sH8O5mrhFU2cSUx8pvupJXjOED+p3P6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762430893; c=relaxed/simple;
-	bh=jYhguLBaWZEky69DWVjCyUbBwLLlsERIB3mq+blY6Ys=;
+	s=arc-20240116; t=1762430897; c=relaxed/simple;
+	bh=nKtxhoejEknn4V5i1b7tQPQVPpbTxPMqfdKksbnZBWE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eVcL0pfkeXzyigy+5XXxQMq6RM11/kIA8O3iQdGwKXWOHaoo76KMj/WroW6C0lvPxssjmq0S5RlZXn3b/4mE1Ggi9TIIUKJI/yyNplpOZ2tp/afwP/PPiCmoDISSlHz7cC0MTzrdnbzHgaK3HwFzQ1qoUqknPOXyGh2aTno9kNs=
+	 MIME-Version; b=eM7/ByaJ9D/DAan59hnoBz3LEjH0cnSQDNkMm+iebmPu6NBUfL4YD+suaXgD0i0m7jBqskrrn5BbIQqqLLspAtQ4xuE8RIhyIiKSiijlO51cUfcgPrOP/HCWMxMTxaxdcPIi64CqRe9wKJcF6GW03LEWc9tR05+RNsAHLEpTiTI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4d2LYP3WLLzKHMn1;
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4d2LYP3pZdzKHMmj;
 	Thu,  6 Nov 2025 20:07:53 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 301141A106D;
+	by mail.maildlp.com (Postfix) with ESMTP id 38BA41A1066;
 	Thu,  6 Nov 2025 20:08:02 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.50.87.129])
-	by APP2 (Coremail) with SMTP id Syh0CgCH3UWfjwxpEbabCw--.33933S12;
-	Thu, 06 Nov 2025 20:08:01 +0800 (CST)
+	by APP2 (Coremail) with SMTP id Syh0CgCH3UWfjwxpEbabCw--.33933S13;
+	Thu, 06 Nov 2025 20:08:02 +0800 (CST)
 From: linan666@huaweicloud.com
 To: song@kernel.org,
 	yukuai@fnnas.com,
@@ -50,9 +50,9 @@ Cc: linux-raid@vger.kernel.org,
 	linan666@huaweicloud.com,
 	yangerkun@huawei.com,
 	yi.zhang@huawei.com
-Subject: [PATCH v2 08/11] md: move finish_reshape to md_finish_sync()
-Date: Thu,  6 Nov 2025 19:59:32 +0800
-Message-Id: <20251106115935.2148714-9-linan666@huaweicloud.com>
+Subject: [PATCH v2 09/11] md/raid10: fix any_working flag handling in raid10_sync_request
+Date: Thu,  6 Nov 2025 19:59:33 +0800
+Message-Id: <20251106115935.2148714-10-linan666@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20251106115935.2148714-1-linan666@huaweicloud.com>
 References: <20251106115935.2148714-1-linan666@huaweicloud.com>
@@ -63,87 +63,61 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgCH3UWfjwxpEbabCw--.33933S12
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ww4Duw1DXFy5uw43Aw1fZwb_yoW8tr43pa
-	yxtFn8Gr1UJrWaga1UXa4qka4F934xGrZrtFW3C34fJw1a9w1rJF1Y9a4DXFWvya4FyrW5
-	Xw45JrWUuF109aUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUHS14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0V
-	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr1j6F4U
-	JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20V
-	AGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7M4kE6xkIj40Ew7xC0wCY1x0262kKe7AKxVWU
-	tVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
+X-CM-TRANSID:Syh0CgCH3UWfjwxpEbabCw--.33933S13
+X-Coremail-Antispam: 1UD129KBjvdXoWrtFy7uFy8Zw47GF1fKry8Krg_yoWkKFXEka
+	45ZF4Yqr1I9r12yw15Cr1SvrWSva4DWan7Gr1Utry8Z34fZ3WFkr98uas5Xw15AF98XF90
+	kw10g34Sva1DujkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbL8FF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2
+	IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28E
+	F7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr
+	1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0D
+	M2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64
+	kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8Jr0_Cr1U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I64
+	8v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r1q
+	6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	W8Jr0_Cr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
 	JwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUbQeOt
 	UUUUU==
 X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
 From: Li Nan <linan122@huawei.com>
 
-finish_reshape implementations of raid10 and raid5 only update mddev
-and rdev configurations. Move these operations to md_finish_sync() as
-it is more appropriate.
+In raid10_sync_request(), 'any_working' indicates if any IO will
+be submitted. When there's only one In_sync disk with badblocks,
+'any_working' might be set to 1 but no IO is submitted. Fix it by
+setting 'any_working' after badblock checks.
 
-No functional changes.
-
+Fixes: e875ecea266a ("md/raid10 record bad blocks as needed during recovery.")
 Signed-off-by: Li Nan <linan122@huawei.com>
+Reviewed-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/md/md.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ drivers/md/raid10.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 76fd9407e022..d97085a7f613 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -9338,6 +9338,8 @@ static void md_finish_sync(struct mddev *mddev, enum sync_action action)
- 				set_capacity_and_notify(mddev->gendisk,
- 							mddev->array_sectors);
- 		}
-+		if (mddev->pers->finish_reshape)
-+			mddev->pers->finish_reshape(mddev);
- 		break;
- 	/* */
- 	case ACTION_CHECK:
-@@ -10140,7 +10142,7 @@ void md_reap_sync_thread(struct mddev *mddev)
- {
- 	struct md_rdev *rdev;
- 	sector_t old_dev_sectors = mddev->dev_sectors;
--	bool is_reshaped = false;
-+	bool is_reshaped = test_bit(MD_RECOVERY_RESHAPE, &mddev->recovery);
+diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+index 30a3434e9cbc..2a7817b23e25 100644
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -3400,7 +3400,6 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
+ 				    !test_bit(In_sync, &rdev->flags))
+ 					continue;
+ 				/* This is where we read from */
+-				any_working = 1;
+ 				sector = r10_bio->devs[j].addr;
  
- 	/* resync has finished, collect result */
- 	md_unregister_thread(mddev, &mddev->sync_thread);
-@@ -10156,12 +10158,6 @@ void md_reap_sync_thread(struct mddev *mddev)
- 			set_bit(MD_SB_CHANGE_DEVS, &mddev->sb_flags);
- 		}
- 	}
--	if (test_bit(MD_RECOVERY_RESHAPE, &mddev->recovery) &&
--	    mddev->pers->finish_reshape) {
--		mddev->pers->finish_reshape(mddev);
--		if (mddev_is_clustered(mddev))
--			is_reshaped = true;
--	}
- 
- 	/* If array is no-longer degraded, then any saved_raid_disk
- 	 * information must be scrapped.
-@@ -10188,8 +10184,9 @@ void md_reap_sync_thread(struct mddev *mddev)
- 	 * be changed by md_update_sb, and MD_RECOVERY_RESHAPE is cleared,
- 	 * so it is time to update size across cluster.
- 	 */
--	if (mddev_is_clustered(mddev) && is_reshaped
--				      && !test_bit(MD_CLOSING, &mddev->flags))
-+	if (mddev_is_clustered(mddev) && is_reshaped &&
-+	    mddev->pers->finish_reshape &&
-+	    !test_bit(MD_CLOSING, &mddev->flags))
- 		mddev->cluster_ops->update_size(mddev, old_dev_sectors);
- 	/* flag recovery needed just to double check */
- 	set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
+ 				if (is_badblock(rdev, sector, max_sync,
+@@ -3415,6 +3414,7 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
+ 						continue;
+ 					}
+ 				}
++				any_working = 1;
+ 				bio = r10_bio->devs[0].bio;
+ 				bio->bi_next = biolist;
+ 				biolist = bio;
 -- 
 2.39.2
 
