@@ -1,42 +1,42 @@
-Return-Path: <linux-raid+bounces-5596-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5605-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF443C3AD34
-	for <lists+linux-raid@lfdr.de>; Thu, 06 Nov 2025 13:14:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13BFCC3AD20
+	for <lists+linux-raid@lfdr.de>; Thu, 06 Nov 2025 13:13:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2C1DF4230B3
-	for <lists+linux-raid@lfdr.de>; Thu,  6 Nov 2025 12:08:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 97A9B1AA2FE7
+	for <lists+linux-raid@lfdr.de>; Thu,  6 Nov 2025 12:11:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B82F932860D;
-	Thu,  6 Nov 2025 12:08:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19DF032B998;
+	Thu,  6 Nov 2025 12:08:14 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00824327202;
-	Thu,  6 Nov 2025 12:08:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747B832A3C6;
+	Thu,  6 Nov 2025 12:08:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762430886; cv=none; b=H5UaPQgn5OS970dVDeX6WBPIY8pDc++FhsXIeq4ugXfOlU70DL8FN6lRzaQsvXkZyS8cQTA5Y5/rCHa2SIT1z7FpiM9uDvOdc2UvdvtdubC8nyXZ4TwA1xwXucdFVRh3EQIHwonwdlvHJBGIOKsRD58RxnMWkYzajl3H6N/iY5Y=
+	t=1762430893; cv=none; b=rlXs5FXlD+H1MjmjWkdJRoSGmcdMC0NNM8gKWgah4PR42VBDavYq3egjae6QvMOw+7AwUpQC/7clKYpefIZci4Sd9RdmQSyGF2Z0RWliflrBTjpqER3Mb71v0LIsOHTgADV+NM94t7tC8945pMCCTU5USeFUyEqyC3DEyBKOvEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762430886; c=relaxed/simple;
-	bh=hyIee1nD4eLJgBbBJZe2nLuyi28X1H0nQ4m/U5IQXfE=;
+	s=arc-20240116; t=1762430893; c=relaxed/simple;
+	bh=SlLECH3/lEwEV2GdbCXNnDqy6izCDYPydTuc7r+jMF8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ADyyciYFsQQ12bsFwC4cmp48G5g2BIkXB09bUKEQcEOptda12XSw4smoVEJ0PGJ1J99GAFRpLLuwmTbxBzAO3UonrB2rbNjIGmvCViYmSSTOdBvMk4gJqj6UnCCNgrM8JGPBmn3cRNZ+0zrMwuGMCzZq+Ev6TKQmaDpoQYsvWmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=VHLGbf8m1UbpqzjjLfQ0ha2vGvJ1dmBZMRQNfaJsfdJxART3pZLL7X0SR13xuc1O3nJsihb9kPrZjb7n5TgCMIq9jRSMLVgk8iHIUvw9eh2nQuyBR620tfdS85n55UJHx/KWg9JzTA9/SYC1G7Uolw77/NoAoLULJG+Z41zhYYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4d2LYC4NHszYQty1;
-	Thu,  6 Nov 2025 20:07:43 +0800 (CST)
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4d2LYP29jZzKHMmN;
+	Thu,  6 Nov 2025 20:07:53 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id E304B1A119D;
+	by mail.maildlp.com (Postfix) with ESMTP id 0013F1A0B2E;
 	Thu,  6 Nov 2025 20:08:01 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.50.87.129])
-	by APP2 (Coremail) with SMTP id Syh0CgCH3UWfjwxpEbabCw--.33933S9;
+	by APP2 (Coremail) with SMTP id Syh0CgCH3UWfjwxpEbabCw--.33933S10;
 	Thu, 06 Nov 2025 20:08:01 +0800 (CST)
 From: linan666@huaweicloud.com
 To: song@kernel.org,
@@ -50,9 +50,9 @@ Cc: linux-raid@vger.kernel.org,
 	linan666@huaweicloud.com,
 	yangerkun@huawei.com,
 	yi.zhang@huawei.com
-Subject: [PATCH v2 05/11] md: mark rdev Faulty when badblocks setting fails
-Date: Thu,  6 Nov 2025 19:59:29 +0800
-Message-Id: <20251106115935.2148714-6-linan666@huaweicloud.com>
+Subject: [PATCH v2 06/11] md: remove MD_RECOVERY_ERROR handling and simplify resync_offset update
+Date: Thu,  6 Nov 2025 19:59:30 +0800
+Message-Id: <20251106115935.2148714-7-linan666@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20251106115935.2148714-1-linan666@huaweicloud.com>
 References: <20251106115935.2148714-1-linan666@huaweicloud.com>
@@ -63,10 +63,10 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgCH3UWfjwxpEbabCw--.33933S9
-X-Coremail-Antispam: 1UD129KBjvJXoWxKrWUXw15ZF47WrWxCw4UArb_yoW3Xw4kpw
-	srWasayry5GryrZ3WDArWDWF9Ykw1xtFW2yrWaqw1xu3Z5Kr9xtFW8Xry3WFyDZFy3uF42
-	qFn8WrWDZFWDGFUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:Syh0CgCH3UWfjwxpEbabCw--.33933S10
+X-Coremail-Antispam: 1UD129KBjvJXoWxWw1kGr4DCw13AF17Kry5twb_yoW5CFWkpa
+	97AFnxtrW8AFW3ZayqqrykAFWrZw4jkFWqyFW3u397AFnYyF17GFyj93W7JFWqy3sYva1a
+	q34rGF43ZF18Ww7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUHS14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -86,233 +86,87 @@ X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
 From: Li Nan <linan122@huawei.com>
 
-Currently when sync read fails and badblocks set fails (exceeding
-512 limit), rdev isn't immediately marked Faulty. Instead
-'recovery_disabled' is set and non-In_sync rdevs are removed later.
-This preserves array availability if bad regions aren't read, but bad
-sectors might be read by users before rdev removal. This occurs due
-to incorrect resync/recovery_offset updates that include these bad
-sectors.
+When sync IO failed and setting badblock also failed, unsynced disk
+might be kicked via setting 'recovery_disable' without Faulty flag.
+MD_RECOVERY_ERROR was set in md_sync_error() to prevent updating
+'resync_offset', avoiding reading the failed sync sectors.
 
-When badblocks exceed 512, keeping the disk provides little benefit
-while adding complexity. Prompt disk replacement is more important.
-Therefore when badblocks set fails, directly call md_error to mark rdev
-Faulty immediately, preventing potential data access issues.
+Previous patch ensures disk is marked Faulty when badblock setting fails.
+Remove MD_RECOVERY_ERROR handling as it's no longer needed - failed sync
+sectors are unreadable either via badblock or Faulty disk.
 
-After this change, cleanup of offset update logic and 'recovery_disabled'
-handling will follow.
+Simplify resync_offset update logic.
 
-Fixes: 5e5702898e93 ("md/raid10: Handle read errors during recovery better.")
-Fixes: 3a9f28a5117e ("md/raid1: improve handling of read failure during recovery.")
 Signed-off-by: Li Nan <linan122@huawei.com>
 ---
- drivers/md/md.c     |  8 +++++++-
- drivers/md/raid1.c  | 20 +++++++++-----------
- drivers/md/raid10.c | 35 +++++++++++++++--------------------
- drivers/md/raid5.c  | 22 +++++++++-------------
- 4 files changed, 40 insertions(+), 45 deletions(-)
+ drivers/md/md.h |  2 --
+ drivers/md/md.c | 23 +++++------------------
+ 2 files changed, 5 insertions(+), 20 deletions(-)
 
+diff --git a/drivers/md/md.h b/drivers/md/md.h
+index 18621dba09a9..c5b5377e9049 100644
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -644,8 +644,6 @@ enum recovery_flags {
+ 	MD_RECOVERY_FROZEN,
+ 	/* waiting for pers->start() to finish */
+ 	MD_RECOVERY_WAIT,
+-	/* interrupted because io-error */
+-	MD_RECOVERY_ERROR,
+ 
+ 	/* flags determines sync action, see details in enum sync_action */
+ 
 diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 1361f211a844..2bdbb5b0e9e1 100644
+index 2bdbb5b0e9e1..71988d8f5154 100644
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -10250,8 +10250,14 @@ bool rdev_set_badblocks(struct md_rdev *rdev, sector_t s, int sectors,
- 	else
- 		s += rdev->data_offset;
- 
--	if (!badblocks_set(&rdev->badblocks, s, sectors, 0))
-+	if (!badblocks_set(&rdev->badblocks, s, sectors, 0)) {
-+		/*
-+		 * Mark the disk as Faulty when setting badblocks fails,
-+		 * otherwise, bad sectors may be read.
-+		 */
-+		md_error(mddev, rdev);
- 		return false;
-+	}
- 
- 	/* Make sure they get written out promptly */
- 	if (test_bit(ExternalBbl, &rdev->flags))
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 86df18df45e5..a3e135a9391f 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -2115,8 +2115,7 @@ static int r1_sync_page_io(struct md_rdev *rdev, sector_t sector,
- 				rdev->mddev->recovery);
- 	}
- 	/* need to record an error - either for the block or the device */
--	if (!rdev_set_badblocks(rdev, sector, sectors, 0))
--		md_error(rdev->mddev, rdev);
-+	rdev_set_badblocks(rdev, sector, sectors, 0);
- 	return 0;
+@@ -8949,7 +8949,6 @@ void md_sync_error(struct mddev *mddev)
+ {
+ 	// stop recovery, signal do_sync ....
+ 	set_bit(MD_RECOVERY_INTR, &mddev->recovery);
+-	set_bit(MD_RECOVERY_ERROR, &mddev->recovery);
+ 	md_wakeup_thread(mddev->thread);
  }
+ EXPORT_SYMBOL(md_sync_error);
+@@ -9603,8 +9602,8 @@ void md_do_sync(struct md_thread *thread)
+ 	wait_event(mddev->recovery_wait, !atomic_read(&mddev->recovery_active));
  
-@@ -2441,8 +2440,7 @@ static void fix_read_error(struct r1conf *conf, struct r1bio *r1_bio)
- 		if (!success) {
- 			/* Cannot read from anywhere - mark it bad */
- 			struct md_rdev *rdev = conf->mirrors[read_disk].rdev;
--			if (!rdev_set_badblocks(rdev, sect, s, 0))
--				md_error(mddev, rdev);
-+			rdev_set_badblocks(rdev, sect, s, 0);
- 			break;
- 		}
- 		/* write it back and re-read */
-@@ -2545,7 +2543,10 @@ static bool narrow_write_error(struct r1bio *r1_bio, int i)
- 			/* failure! */
- 			ok = false;
- 			if (!rdev_set_badblocks(rdev, sector, sectors, 0)) {
--				md_error(mddev, rdev);
-+				/*
-+				 * Badblocks set failed, disk marked Faulty.
-+				 * No further operations needed.
-+				 */
- 				bio_put(wbio);
- 				break;
- 			}
-@@ -2569,14 +2570,11 @@ static void handle_sync_write_finished(struct r1conf *conf, struct r1bio *r1_bio
- 		if (bio->bi_end_io == NULL)
- 			continue;
- 		if (!bio->bi_status &&
--		    test_bit(R1BIO_MadeGood, &r1_bio->state)) {
-+		    test_bit(R1BIO_MadeGood, &r1_bio->state))
- 			rdev_clear_badblocks(rdev, r1_bio->sector, s, 0);
--		}
- 		if (bio->bi_status &&
--		    test_bit(R1BIO_WriteError, &r1_bio->state)) {
--			if (!rdev_set_badblocks(rdev, r1_bio->sector, s, 0))
--				md_error(conf->mddev, rdev);
--		}
-+		    test_bit(R1BIO_WriteError, &r1_bio->state))
-+			rdev_set_badblocks(rdev, r1_bio->sector, s, 0);
+ 	if (!test_bit(MD_RECOVERY_RESHAPE, &mddev->recovery) &&
+-	    !test_bit(MD_RECOVERY_INTR, &mddev->recovery) &&
+ 	    mddev->curr_resync >= MD_RESYNC_ACTIVE) {
++		/* All sync IO completes after recovery_active becomes 0 */
+ 		mddev->curr_resync_completed = mddev->curr_resync;
+ 		sysfs_notify_dirent_safe(mddev->sysfs_completed);
  	}
- 	put_buf(r1_bio);
- 	md_done_sync(conf->mddev, s);
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index fffc2c95660b..30a3434e9cbc 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -2604,8 +2604,7 @@ static int r10_sync_page_io(struct md_rdev *rdev, sector_t sector,
- 				&rdev->mddev->recovery);
- 	}
- 	/* need to record an error - either for the block or the device */
--	if (!rdev_set_badblocks(rdev, sector, sectors, 0))
--		md_error(rdev->mddev, rdev);
-+	rdev_set_badblocks(rdev, sector, sectors, 0);
- 	return 0;
- }
+@@ -9612,24 +9611,12 @@ void md_do_sync(struct md_thread *thread)
  
-@@ -2686,7 +2685,6 @@ static void fix_read_error(struct r10conf *conf, struct mddev *mddev, struct r10
- 				    r10_bio->devs[slot].addr
- 				    + sect,
- 				    s, 0)) {
--				md_error(mddev, rdev);
- 				r10_bio->devs[slot].bio
- 					= IO_BLOCKED;
- 			}
-@@ -2824,7 +2822,10 @@ static bool narrow_write_error(struct r10bio *r10_bio, int i)
- 			/* Failure! */
- 			ok = false;
- 			if (!rdev_set_badblocks(rdev, wsector, sectors, 0)) {
--				md_error(mddev, rdev);
-+				/*
-+				 * Badblocks set failed, disk marked Faulty.
-+				 * No further operations needed.
-+				 */
- 				bio_put(wbio);
- 				break;
- 			}
-@@ -2895,35 +2896,29 @@ static void handle_write_completed(struct r10conf *conf, struct r10bio *r10_bio)
- 			if (r10_bio->devs[m].bio == NULL ||
- 				r10_bio->devs[m].bio->bi_end_io == NULL)
- 				continue;
--			if (!r10_bio->devs[m].bio->bi_status) {
-+			if (!r10_bio->devs[m].bio->bi_status)
- 				rdev_clear_badblocks(
- 					rdev,
- 					r10_bio->devs[m].addr,
- 					r10_bio->sectors, 0);
--			} else {
--				if (!rdev_set_badblocks(
--					    rdev,
--					    r10_bio->devs[m].addr,
--					    r10_bio->sectors, 0))
--					md_error(conf->mddev, rdev);
--			}
-+			else
-+				rdev_set_badblocks(rdev,
-+						   r10_bio->devs[m].addr,
-+						   r10_bio->sectors, 0);
- 			rdev = conf->mirrors[dev].replacement;
- 			if (r10_bio->devs[m].repl_bio == NULL ||
- 				r10_bio->devs[m].repl_bio->bi_end_io == NULL)
- 				continue;
- 
--			if (!r10_bio->devs[m].repl_bio->bi_status) {
-+			if (!r10_bio->devs[m].repl_bio->bi_status)
- 				rdev_clear_badblocks(
- 					rdev,
- 					r10_bio->devs[m].addr,
- 					r10_bio->sectors, 0);
--			} else {
--				if (!rdev_set_badblocks(
--					    rdev,
--					    r10_bio->devs[m].addr,
--					    r10_bio->sectors, 0))
--					md_error(conf->mddev, rdev);
--			}
-+			else
-+				rdev_set_badblocks(rdev,
-+						   r10_bio->devs[m].addr,
-+						   r10_bio->sectors, 0);
- 		}
- 		put_buf(r10_bio);
- 	} else {
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 18415745e850..187dc66629e6 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -2817,11 +2817,9 @@ static void raid5_end_read_request(struct bio * bi)
- 		else {
- 			clear_bit(R5_ReadError, &sh->dev[i].flags);
- 			clear_bit(R5_ReWrite, &sh->dev[i].flags);
--			if (!(set_bad
--			      && test_bit(In_sync, &rdev->flags)
--			      && rdev_set_badblocks(
--				      rdev, sh->sector, RAID5_STRIPE_SECTORS(conf), 0)))
--				md_error(conf->mddev, rdev);
-+			if (!(set_bad && test_bit(In_sync, &rdev->flags)))
-+				rdev_set_badblocks(rdev, sh->sector,
-+						   RAID5_STRIPE_SECTORS(conf), 0);
- 		}
- 	}
- 	rdev_dec_pending(rdev, conf->mddev);
-@@ -3599,11 +3597,10 @@ handle_failed_stripe(struct r5conf *conf, struct stripe_head *sh,
- 			else
- 				rdev = NULL;
- 			if (rdev) {
--				if (!rdev_set_badblocks(
--					    rdev,
--					    sh->sector,
--					    RAID5_STRIPE_SECTORS(conf), 0))
--					md_error(conf->mddev, rdev);
-+				rdev_set_badblocks(rdev,
-+						   sh->sector,
-+						   RAID5_STRIPE_SECTORS(conf),
-+						   0);
- 				rdev_dec_pending(rdev, conf->mddev);
- 			}
- 		}
-@@ -5254,9 +5251,8 @@ static void handle_stripe(struct stripe_head *sh)
- 			if (test_and_clear_bit(R5_WriteError, &dev->flags)) {
- 				/* We own a safe reference to the rdev */
- 				rdev = conf->disks[i].rdev;
--				if (!rdev_set_badblocks(rdev, sh->sector,
--							RAID5_STRIPE_SECTORS(conf), 0))
--					md_error(conf->mddev, rdev);
-+				rdev_set_badblocks(rdev, sh->sector,
-+						   RAID5_STRIPE_SECTORS(conf), 0);
- 				rdev_dec_pending(rdev, conf->mddev);
- 			}
- 			if (test_and_clear_bit(R5_MadeGood, &dev->flags)) {
+ 	if (!test_bit(MD_RECOVERY_CHECK, &mddev->recovery) &&
+ 	    mddev->curr_resync > MD_RESYNC_ACTIVE) {
++		if (!test_bit(MD_RECOVERY_INTR, &mddev->recovery))
++			mddev->curr_resync = MaxSector;
++
+ 		if (test_bit(MD_RECOVERY_SYNC, &mddev->recovery)) {
+-			if (test_bit(MD_RECOVERY_INTR, &mddev->recovery)) {
+-				if (mddev->curr_resync >= mddev->resync_offset) {
+-					pr_debug("md: checkpointing %s of %s.\n",
+-						 desc, mdname(mddev));
+-					if (test_bit(MD_RECOVERY_ERROR,
+-						&mddev->recovery))
+-						mddev->resync_offset =
+-							mddev->curr_resync_completed;
+-					else
+-						mddev->resync_offset =
+-							mddev->curr_resync;
+-				}
+-			} else
+-				mddev->resync_offset = MaxSector;
++			mddev->resync_offset = mddev->curr_resync;
+ 		} else {
+-			if (!test_bit(MD_RECOVERY_INTR, &mddev->recovery))
+-				mddev->curr_resync = MaxSector;
+ 			if (!test_bit(MD_RECOVERY_RESHAPE, &mddev->recovery) &&
+ 			    test_bit(MD_RECOVERY_RECOVER, &mddev->recovery)) {
+ 				rcu_read_lock();
 -- 
 2.39.2
 
