@@ -1,81 +1,41 @@
-Return-Path: <linux-raid+bounces-5741-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5745-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85CBDC863F9
-	for <lists+linux-raid@lfdr.de>; Tue, 25 Nov 2025 18:39:34 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32707C86D26
+	for <lists+linux-raid@lfdr.de>; Tue, 25 Nov 2025 20:33:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 9456E35337A
-	for <lists+linux-raid@lfdr.de>; Tue, 25 Nov 2025 17:38:55 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 6C7DE34F0C1
+	for <lists+linux-raid@lfdr.de>; Tue, 25 Nov 2025 19:33:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2311D32C331;
-	Tue, 25 Nov 2025 17:38:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="MP3eRqnj"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C0D733A014;
+	Tue, 25 Nov 2025 19:33:48 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.hosts.co.uk (smtp.hosts.co.uk [85.233.160.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A3132AABB
-	for <linux-raid@vger.kernel.org>; Tue, 25 Nov 2025 17:38:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935A42C21C7;
+	Tue, 25 Nov 2025 19:33:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.233.160.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764092298; cv=none; b=WWYBgLRb6Lyh4Adxp1af9Vz5YNWsqqbMhNvBmEnnIHnfiRV84wnv4WtEm27I5LrhB3cqoiuCIc0Nkeu30/pAyCYQ/cs6tvZbCgJbJXIs2PbVsxUCnQmlaJV32xv9S9zKp3dilegOntSrBz5fLY0DZKDVcaiIdsQbXI2vUYxyBh4=
+	t=1764099228; cv=none; b=KqmAsChmGxyF1uXZ/BoBZfm5BlblCGYhb1ItVB30ur7MuMLPaAqBk2EM2h7PN774iLBIdq2iqYqyjPQwDnzuXRQYHe5gcc+9tEwsqn+ZBgXqpGkE8vlI1eID1FgzYy7xaLot1a0REiOcTQutb6gIFDLxfHc/9xXLucJqBLmmP2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764092298; c=relaxed/simple;
-	bh=iPGMl91c7t5RGa6luUsGuLLK2Y4Uq1XKEbahe9phnZw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PjXmBwE2/wHTj9Vi9Jz0Q7o7ufPxyYpvZBmTfwLjkPa//L6FZh61Zl8PgX0iuvk+x7ppNpgCvklnbAWtcnuY1xNqGODCW+niljpt1w2ZDnCnta+fPFYl0FYsbwHGD6UhTuU3T7OhunlUz6VRs1LBhqPrOdixgGBov6894aB8YPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=MP3eRqnj; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-948e1ec34afso221115639f.3
-        for <linux-raid@vger.kernel.org>; Tue, 25 Nov 2025 09:38:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1764092296; x=1764697096; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Y/RYkXbjr0Zws5PkDP81koxcOw7wQafJJolXOcPbtL0=;
-        b=MP3eRqnjDMu+VfgIgoXsIjZip2LrEx1us53r4meudiB9JGUbZ72aOCwHVqeWpcZFMf
-         brjS7X4GVj403fOyNyRKQvVZgImprMv3zy3CchjzM+GyfO9KuAvEZRo5BLVq7yb1JW5q
-         SDs7kehGdkBeTBcTdxTsopwd7wvwVVqvy408yKdzW0gEqgdkhuketmjwGMzY7tz/Z1Oo
-         RAYaSxGergG2kfyxRGyXiE5ezp35bLfalGIF4hzgKt+PdBqUIvuhfIChYxFmyuaIhCVf
-         CD81Odhm44Ln9mP2TZF0/SRi6UX6k8xoOAJQc44N7ZQHA+ovauUoXEg2ucKX0zVJe694
-         35EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764092296; x=1764697096;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Y/RYkXbjr0Zws5PkDP81koxcOw7wQafJJolXOcPbtL0=;
-        b=HRWx7eOx8LvjvMrZrnICbRJiEp32AT2pSMfeV54jdpLmInoptFMG388JxOCYQoFLk1
-         3LlWpUVUh6wiIOnqYGSdDplgvoeX7PJgu6xvqf1/U5pbtIDjsLZRcLLfQ2Tmqk5J7haA
-         NK7V+BDPnymYDFuqPkgtWtaAET01ZLvTd36JTlMAXTt0cI4EgzTZLLC3HkXLYy9Jo+l5
-         uy8laKO4B93jGGqruqZIMLX/XJXITE9rzGdNZPa7TNTl7JjLhSPQz/cS4qwPZvzyfWIE
-         nFu+i3EWk/eNV3kG1Sbi4Q4pw+PO3SwYzrBoEqx+KL3wNLGPSCfSCbDdtVFkcE0zcMX2
-         Yx8w==
-X-Forwarded-Encrypted: i=1; AJvYcCVxyIz5EhOk10b4LJOo2474l+cls6nPlJKXPum/KGIv9t7LNtXlOt5Of+Z5G8xYSbwXi8ysbJ4NqooE@vger.kernel.org
-X-Gm-Message-State: AOJu0YxT2QIsDC7ZkMTnspz+dnAQW2DGzEpDJrZvmolu4MR364LfLpik
-	zdGXwMzPWLAwhUNNCnNjaroNET1zPma86DA6WOxfdwrXtgCb8gR2TT9fkwjewJUVMHM=
-X-Gm-Gg: ASbGncvvP+t8917CVZlTYMXRyPqPijOocubTS0xutKTEnsw8IWjXJ7ye50763C8EFXL
-	hv7nIIQTamtZTlHvgJNR2p6MMagYaH80zZuCkwB7r+A3hEcwxmFWisZSOq3paGoa6CyUaNVwgwB
-	isw5uxFsaAteYETtywg40jwRipdnLzbJJfkF0bYt7DaCtsKjNU27SmqpyVlE1+xoKzzmIXwMLS4
-	16JSI/YRO/+WCi56GC3TGA+6Ju0fQ0T0NVJ9ZAjIbQDK7vwl8KvziqkNx/UHo9mTENDSx7UREKw
-	okYVFHyvU0oTIFy8gYR23hzZR9h/4GcUuSa7MWsv7tJI2mKcYR/EfSgTmFK3W9ZuAqGt07/BmDj
-	bm16RUQCfDO8bHc3JE3D9rCNpLS8iQCYBB4EG4GIjmIRCW9pq3MzLNFSQ7GDmdbZY92o=
-X-Google-Smtp-Source: AGHT+IEIHRk7SwMmVS4xtcTCAS6Qp+OrN5pgC4aYwqKQ9jNrDNwsm/zNssFdQ4CwiXZVR7EmZb+prg==
-X-Received: by 2002:a05:6638:c0fb:b0:5ac:cd9a:4c4c with SMTP id 8926c6da1cb9f-5b999555c41mr3179432173.2.1764092295677;
-        Tue, 25 Nov 2025 09:38:15 -0800 (PST)
-Received: from [192.168.1.99] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5b954b48bdcsm6970840173.45.2025.11.25.09.38.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Nov 2025 09:38:15 -0800 (PST)
-Message-ID: <e3f09e0c-63f4-4887-8e3a-1fb24963b627@kernel.dk>
-Date: Tue, 25 Nov 2025 10:38:13 -0700
+	s=arc-20240116; t=1764099228; c=relaxed/simple;
+	bh=Z8d8L6t2ZQbsqUZOaECLuvsJzlawxs9TeUIbzgV4MZo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=hX9gpsRawHRbtODVBF2vovhjvUs65LHZEjIsZ9q54qP8SqYZJJjSH/vVctXQcvzDSjM2PglLjarKrfac5m7gx+Go6msQEK95v4VMZox1mzYFxm+TwyBzsM1Lhv2huwWkno58QPRVdDgD+kda/G57tmrNniNW/sKsizuoR95CtpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=youngman.org.uk; spf=fail smtp.mailfrom=youngman.org.uk; arc=none smtp.client-ip=85.233.160.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=youngman.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=youngman.org.uk
+Received: from host51-14-94-149.range51-14.btcentralplus.com ([51.14.94.149] helo=[192.168.1.171])
+	by smtp.hosts.co.uk with esmtpa (Exim)
+	(envelope-from <antlists@youngman.org.uk>)
+	id 1vNxi2-000000001rw-87yg;
+	Tue, 25 Nov 2025 18:24:15 +0000
+Message-ID: <07500979-eca8-4159-b2a5-3052e9958c84@youngman.org.uk>
+Date: Tue, 25 Nov 2025 18:25:41 +0000
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
@@ -83,32 +43,121 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 1/6] block: ignore discard return value
-To: Chaitanya Kulkarni <ckulkarnilinux@gmail.com>, agk@redhat.com,
- snitzer@kernel.org, mpatocka@redhat.com, song@kernel.org, yukuai@fnnas.com,
- hch@lst.de, sagi@grimberg.me, kch@nvidia.com, jaegeuk@kernel.org,
- chao@kernel.org, cem@kernel.org
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- dm-devel@lists.linux.dev, linux-raid@vger.kernel.org,
- linux-nvme@lists.infradead.org, linux-f2fs-devel@lists.sourceforge.net,
- linux-xfs@vger.kernel.org, bpf@vger.kernel.org,
- Johannes Thumshirn <johannes.thumshirn@wdc.com>,
- "Martin K . Petersen" <martin.petersen@oracle.com>
-References: <20251124234806.75216-1-ckulkarnilinux@gmail.com>
- <20251124234806.75216-2-ckulkarnilinux@gmail.com>
+Subject: Re: WD Red SN700 4000GB, F/W: 11C120WD (Device not ready; aborting
+ reset, CSTS=0x1)
+To: Justin Piszcz <jpiszcz@lucidpixels.com>,
+ LKML <linux-kernel@vger.kernel.org>, linux-nvme@lists.infradead.org,
+ linux-raid@vger.kernel.org, Btrfs BTRFS <linux-btrfs@vger.kernel.org>
+References: <CAO9zADxCYgQVOD9A1WYoS4JcLgvsNtGGr4xEZm9CMFHXsTV8ww@mail.gmail.com>
 Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20251124234806.75216-2-ckulkarnilinux@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+From: Wol <antlists@youngman.org.uk>
+In-Reply-To: <CAO9zADxCYgQVOD9A1WYoS4JcLgvsNtGGr4xEZm9CMFHXsTV8ww@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 11/24/25 4:48 PM, Chaitanya Kulkarni wrote:
-> __blkdev_issue_discard() always returns 0, making the error check
-> in blkdev_issue_discard() dead code.
+Probably not the problem, but how old are the drives? About 2020, WD 
+started shingling the Red line (you had to move to Red Pro to get 
+conventional drives). Shingled is bad news for linux raid, but the fact 
+your drives tend to drop out when idling makes it unlikely this is the 
+problem.
 
-Shouldn't it be a void instead then?
+Cheers,
+Wol
 
--- 
-Jens Axboe
+On 25/11/2025 14:42, Justin Piszcz wrote:
+> Hello,
+> 
+> Issue/Summary:
+> 1. Usually once a month, a random WD Red SN700 4TB NVME drive will
+> drop out of a NAS array, after power cycling the device, it rebuilds
+> successfully.
+> 
+> Details:
+> 0. I use an NVME NAS (FS6712X) with WD Red SN700 4TB drives (WDS400T1R0C):
+> 1. Ever since I installed the drives, there will be a random drive
+> that drops offline every month or so, almost always when the system is
+> idle.
+> 2. I have troubleshot this with Asustor and WD/SanDisk.
+> 3. Asustor noted that they did have other users with the same
+> configuration running into this problem.
+> 4. When troubleshooting with WD/SanDisk's it was noted my main option
+> is to replace the drive, even though the issue occurs across nearly
+> all of the drives.
+> 5. The drives are up to date currently according to the WD Dashboard
+> (when removing them and checking them on another system).
+> 6. As for the device/filesystem, the FS6712X's configuration is
+> MD-RAID6 device with BTRFS on-top of it.
+> 7. The "workaround" is to power cycle the FS6712X and when it boots up
+> the MD-RAID6 re-syncs back to a healthy state.
+> 
+> I am using the latest Asus ADM/OS which uses the 6.6.x kernel:
+> 1. Linux FS6712X-EB92 6.6.x #1 SMP PREEMPT_DYNAMIC Tue Nov  4 00:53:39
+> CST 2025 x86_64 GNU/Linux
+> 
+> Questions:
+> 1. Have others experienced this failure scenario?
+> 2. Are there identified workarounds for this issue outside of power
+> cycling the device when this happens?
+> 3. Are there any debug options that can be enabled that could help to
+> pinpoint the root cause?
+> 4. Within the BIOS settings, which starts 2:18 below there are some
+> advanced settings that are shown, could there be a power saving
+> feature or other setting that can be modified to address this issue?
+> 4a. https://www.youtube.com/watch?v=YytWFtgqVy0
+> 
+> [1] The last failures have been at random times on the following days:
+> 1. August 27, 2025
+> 2. September 19th, 2025
+> 3. September 29th, 2025
+> 4. October 28th, 2025
+> 5. November 24, 2025
+> 
+> Chipset being used:
+> 1. ASMedia Technology Inc.:ASM2806 4-Port PCIe x2 Gen3 Packet Switch
+> 
+> Details:
+> 
+> 1. August 27, 2025
+> [1156824.598513] nvme nvme2: I/O 5 QID 0 timeout, reset controller
+> [1156896.035355] nvme nvme2: Device not ready; aborting reset, CSTS=0x1
+> [1156906.057936] nvme nvme2: Device not ready; aborting reset, CSTS=0x1
+> [1158185.737571] md/raid:md1: Disk failure on nvme2n1p4, disabling device.
+> [1158185.744188] md/raid:md1: Operation continuing on 11 devices.
+> 
+> 2. September 19th, 2025
+> [2001664.727044] nvme nvme9: I/O 26 QID 0 timeout, reset controller
+> [2001736.159123] nvme nvme9: Device not ready; aborting reset, CSTS=0x1
+> [2001746.180813] nvme nvme9: Device not ready; aborting reset, CSTS=0x1
+> [2002368.631788] md/raid:md1: Disk failure on nvme9n1p4, disabling device.
+> [2002368.638414] md/raid:md1: Operation continuing on 11 devices.
+> [2003213.517965] md/raid1:md0: Disk failure on nvme9n1p2, disabling device.
+> [2003213.517965] md/raid1:md0: Operation continuing on 11 devices.
+> 
+> 3.  September 29th, 2025
+> [858305.408049] nvme nvme3: I/O 8 QID 0 timeout, reset controller
+> [858376.843140] nvme nvme3: Device not ready; aborting reset, CSTS=0x1
+> [858386.865240] nvme nvme3: Device not ready; aborting reset, CSTS=0x1
+> [858386.883053] md/raid:md1: Disk failure on nvme3n1p4, disabling device.
+> [858386.889586] md/raid:md1: Operation continuing on 11 devices.
+> 
+> 4. October 28th, 2025
+> [502963.821407] nvme nvme4: I/O 0 QID 0 timeout, reset controller
+> [503035.257391] nvme nvme4: Device not ready; aborting reset, CSTS=0x1
+> [503045.282923] nvme nvme4: Device not ready; aborting reset, CSTS=0x1
+> [503142.226962] md/raid:md1: Disk failure on nvme4n1p4, disabling device.
+> [503142.233496] md/raid:md1: Operation continuing on 11 devices.
+> 
+> 5. November 24th, 2025
+> [1658454.034633] nvme nvme2: I/O 24 QID 0 timeout, reset controller
+> [1658525.470287] nvme nvme2: Device not ready; aborting reset, CSTS=0x1
+> [1658535.491803] nvme nvme2: Device not ready; aborting reset, CSTS=0x1
+> [1658535.517638] md/raid1:md0: Disk failure on nvme2n1p2, disabling device.
+> [1658535.517638] md/raid1:md0: Operation continuing on 11 devices.
+> [1659258.368386] md/raid:md1: Disk failure on nvme2n1p4, disabling device.
+> [1659258.375012] md/raid:md1: Operation continuing on 11 devices.
+> 
+> 
+> Justin
+> 
 
 
