@@ -1,40 +1,41 @@
-Return-Path: <linux-raid+bounces-5817-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5808-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37A0DCBC501
-	for <lists+linux-raid@lfdr.de>; Mon, 15 Dec 2025 04:17:49 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3BB1CBC4CD
+	for <lists+linux-raid@lfdr.de>; Mon, 15 Dec 2025 04:15:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D1AD630213E4
-	for <lists+linux-raid@lfdr.de>; Mon, 15 Dec 2025 03:16:04 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7022C3009C27
+	for <lists+linux-raid@lfdr.de>; Mon, 15 Dec 2025 03:15:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D7E331AAB4;
-	Mon, 15 Dec 2025 03:15:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D77A3191D4;
+	Mon, 15 Dec 2025 03:15:46 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 491B5318140;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3566929D26C;
 	Mon, 15 Dec 2025 03:15:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765768547; cv=none; b=CKEOy0hi+zvJB1zaVfLQD6bMxlDSBX/tq+n6X3J6zb7SDS0ak+2YFtvyOpUvyqFpn7DX1odBvb+OS5R/fghMoOUjEkXMyF+3JOV9xd3RG4pLywII3/jWWgjoyaMH1Izjkyq/52Y7oWqPLmmMIn5PD28pOV2YkY/nRfNF/ri9HzY=
+	t=1765768546; cv=none; b=D3MM1keBWX/ecGyFNMY4gCbqBlpTlVjKmIL8q1y0pe6UuLS0ZayW7OQEFCt4DoZSGMWyRtJu6oN1U8DR6+mKueeR+jW9k+bSn6rObGKOQKb8236vq3pMVmuUEoPSglkbOrSwUzmpbf61FMxy7DHIULuiTjNmfg8gjlZVYS4kFfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765768547; c=relaxed/simple;
-	bh=3Nv1TLX8TntFB3YcxUFypWsvI6cEfPZR4AlQyRheX/I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Arz5RiCZcOV/NdeKyi7nH5EHtS5AmJT9rH8i1XuZ2ZBU2Cd1CSTYqhVQzOzhhb9CQQoT74oyVRWhiCVeC/Oi2VXYDstKciZWSECMQcNMKAk3VWCnRO7gTk9ecMAbSlElacEkzlcxmb5UU8UUDNjMKZ7ocmEB7VIylGSJrmczsBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	s=arc-20240116; t=1765768546; c=relaxed/simple;
+	bh=kol7nKOTHhmzvvwout/eC/zPYeCpPmgcDVjcD0ebrX8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=DBb7Yo7egFiDuxPn2qa+kclhrgp1he9NHIMkcHiQxOftMfQ9Qd9Do2Q8KMNAoFFJElqmXuOilQc/JB/rBT40ALHoWLpNFUsx+4CEUhw7OE+tj2tr7h3legXCC/x6QpdNYqO/ZQ6L+Sj5kQnRf4yzTHI1DSoU1HlPiY5NHLO0F2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4dV4tm4lRSzYQthM;
-	Mon, 15 Dec 2025 11:15:12 +0800 (CST)
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4dV4v60lH2zKHML2;
+	Mon, 15 Dec 2025 11:15:30 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 7AA211A084D;
+	by mail.maildlp.com (Postfix) with ESMTP id 892E71A06DE;
 	Mon, 15 Dec 2025 11:15:35 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.50.87.129])
-	by APP4 (Coremail) with SMTP id gCh0CgAXd_dUfT9p8AnuAA--.53622S4;
-	Mon, 15 Dec 2025 11:15:33 +0800 (CST)
+	by APP4 (Coremail) with SMTP id gCh0CgAXd_dUfT9p8AnuAA--.53622S5;
+	Mon, 15 Dec 2025 11:15:35 +0800 (CST)
 From: linan666@huaweicloud.com
 To: song@kernel.org,
 	yukuai@fnnas.com,
@@ -46,10 +47,12 @@ Cc: linux-raid@vger.kernel.org,
 	linan666@huaweicloud.com,
 	yangerkun@huawei.com,
 	yi.zhang@huawei.com
-Subject: [PATCH v3 00/13] cleanup and bugfix of sync
-Date: Mon, 15 Dec 2025 11:04:31 +0800
-Message-Id: <20251215030444.1318434-1-linan666@huaweicloud.com>
+Subject: [PATCH v3 01/13] md/raid1: simplify uptodate handling in end_sync_write
+Date: Mon, 15 Dec 2025 11:04:32 +0800
+Message-Id: <20251215030444.1318434-2-linan666@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20251215030444.1318434-1-linan666@huaweicloud.com>
+References: <20251215030444.1318434-1-linan666@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
@@ -57,67 +60,70 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAXd_dUfT9p8AnuAA--.53622S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7Zr43XF4UKr43JF47Cw45Jrb_yoW8AF13p3
-	yfKF9xuw48WrW7Zr9xJFyUZayrC34xtay2kr13Gws7XF15ZFyxJF4xXa18WFyDXry3Ka42
-	qr1UGFsxCF18Ja7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4UJV
-	WxJr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8v
-	x2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwAKzVCY07xG64k0F24lc7CjxVAaw2AFwI
-	0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
-	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MI
-	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
-	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
-	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUdpnQU
-	UUUU=
+X-CM-TRANSID:gCh0CgAXd_dUfT9p8AnuAA--.53622S5
+X-Coremail-Antispam: 1UD129KBjvJXoW7CFy7tF4UtF1UuFWrKry8Xwb_yoW8Xw4kp3
+	yUGFW5WrW5KFZ8ZFWDGFyDZF1fKw13W3y7CrZrWw1fXFn8tr98Ga1UXrWYgFyDZFZ3Cr43
+	Xw1vkay3Aa13JFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUHY14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+	x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAa
+	c4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzV
+	Aqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr1j6F4UJwAm
+	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYx
+	C7M4IIrI8v6xkF7I0E8cxan2IY04v7M4kE6xkIj40Ew7xC0wCY1x0262kKe7AKxVWUtVW8
+	ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr
+	0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUqtCcUUUUU=
 X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
 From: Li Nan <linan122@huawei.com>
 
-v3:
- - Add new patch 4 to continue patch 3's modifications
- - Split original patch "md: update curr_resync_completed even when
-   MD_RECOVERY_INTR is set" into two patch 7/8 for clearer logic
+In end_sync_write, r1bio state is always set to either R1BIO_WriteError
+or R1BIO_MadeGood. Consequently, put_sync_write_buf() never takes the
+'else' branch that calls md_done_sync(), making the uptodate parameter
+have no practical effect.
 
-v2:
- - patch 1, 4, 8: new patches
- - patch 3: new cleanup patch for future fix, Link:
-   https://lore.kernel.org/all/8136b746-50c9-51eb-483b-f2661e86d3eb@huaweicloud.com/
- - patch 5: do not change return value of narrow_write_error()
- - patch 6: add comment of removing MD_RECOVERY_INTR
+Pass 1 to put_sync_write_buf(). A more complete cleanup will be done in
+a follow-up patch.
 
-Li Nan (13):
-  md/raid1: simplify uptodate handling in end_sync_write
-  md: factor error handling out of md_done_sync into helper
-  md/raid1,raid10: return actual write status in narrow_write_error
-  md/raid1,raid10: set Uptodate and clear badblocks if
-    narrow_write_error success
-  md/raid1,raid10: support narrow_write_error when badblocks is disabled
-  md: mark rdev Faulty when badblocks setting fails
-  md: update curr_resync_completed even when MD_RECOVERY_INTR is set
-  md: remove MD_RECOVERY_ERROR handling and simplify resync_offset
-    update
-  md: factor out sync completion update into helper
-  md: move finish_reshape to md_finish_sync()
-  md/raid10: fix any_working flag handling in raid10_sync_request
-  md/raid10: cleanup skip handling in raid10_sync_request
-  md: remove recovery_disabled
+Signed-off-by: Li Nan <linan122@huawei.com>
+Reviewed-by: Yu Kuai <yukuai@fnnas.com>
+---
+ drivers/md/raid1.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
- drivers/md/md.h     |  11 +--
- drivers/md/raid1.h  |   5 --
- drivers/md/raid10.h |   5 --
- drivers/md/raid5.h  |   1 -
- drivers/md/md.c     | 138 ++++++++++++++++----------------
- drivers/md/raid1.c  |  99 +++++++++++------------
- drivers/md/raid10.c | 186 ++++++++++++++++----------------------------
- drivers/md/raid5.c  |  40 ++++------
- 8 files changed, 207 insertions(+), 278 deletions(-)
-
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 57d50465eed1..6af75b82bc64 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -2080,13 +2080,12 @@ static void put_sync_write_buf(struct r1bio *r1_bio, int uptodate)
+ 
+ static void end_sync_write(struct bio *bio)
+ {
+-	int uptodate = !bio->bi_status;
+ 	struct r1bio *r1_bio = get_resync_r1bio(bio);
+ 	struct mddev *mddev = r1_bio->mddev;
+ 	struct r1conf *conf = mddev->private;
+ 	struct md_rdev *rdev = conf->mirrors[find_bio_disk(r1_bio, bio)].rdev;
+ 
+-	if (!uptodate) {
++	if (bio->bi_status) {
+ 		abort_sync_write(mddev, r1_bio);
+ 		set_bit(WriteErrorSeen, &rdev->flags);
+ 		if (!test_and_set_bit(WantReplacement, &rdev->flags))
+@@ -2099,7 +2098,7 @@ static void end_sync_write(struct bio *bio)
+ 		set_bit(R1BIO_MadeGood, &r1_bio->state);
+ 	}
+ 
+-	put_sync_write_buf(r1_bio, uptodate);
++	put_sync_write_buf(r1_bio, 1);
+ }
+ 
+ static int r1_sync_page_io(struct md_rdev *rdev, sector_t sector,
 -- 
 2.39.2
 
