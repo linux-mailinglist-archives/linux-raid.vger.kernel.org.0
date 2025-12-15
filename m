@@ -1,40 +1,40 @@
-Return-Path: <linux-raid+bounces-5809-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5819-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53198CBC4D0
-	for <lists+linux-raid@lfdr.de>; Mon, 15 Dec 2025 04:15:57 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D516CBC50A
+	for <lists+linux-raid@lfdr.de>; Mon, 15 Dec 2025 04:18:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B7CA4300E021
-	for <lists+linux-raid@lfdr.de>; Mon, 15 Dec 2025 03:15:49 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 37C1A3036DA0
+	for <lists+linux-raid@lfdr.de>; Mon, 15 Dec 2025 03:16:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92EB73191D0;
-	Mon, 15 Dec 2025 03:15:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42B8C31E10C;
+	Mon, 15 Dec 2025 03:15:51 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F5E315D3F;
-	Mon, 15 Dec 2025 03:15:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713E231B10D;
+	Mon, 15 Dec 2025 03:15:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765768546; cv=none; b=iaOEA4ldVyk3gZTR8lrM427Mf3vjSuEz4pUXrbWpHnFjxsk/tZAfI89pyeUAKK63zSP+01GFMLHpfcGHm5HI7/aQfQ3CXPKh1xyDUgc97JjuBXYZ+VsYCyz207+qfiyksUIFWYWsq4AjzNCy1uRutLu64fCHvUESm5iEH+LGs0Y=
+	t=1765768550; cv=none; b=C1yMpaiJUBW3FlbJbxUTMMVOxHb1TTXgJrNSVgwMuHY4AXJhJ7WmGMJIFHLVmh8n2eaXGz9E1Lh0zZWvUQdu1XlN/KqDkJqVzn5lr7wWG4E850poy6Wtfm23cv+flzMTE+/JY4/eKPuUBpzeush54SybOHAGhZuTJ2yMjDxYYzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765768546; c=relaxed/simple;
-	bh=l8psrdmpOOAj9rtpB/hJQUSWa0AnaB2PvXlBsC6U+Yk=;
+	s=arc-20240116; t=1765768550; c=relaxed/simple;
+	bh=DITdeuSDgcX/8EY6fDxXYdTjR4ZgDX/mlTbPqKaMZsA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gGUD4WRjiTlwkoh+SYPGHqvvx8Gbp7lMrVUnHotY4P3MtXDG/wlUPqB7OjEWPVpUNgv5+sq52uDYQC+j0GYH+bxHFBZ7+0fkybhooLOza+h7hEHNiGQ3DUnIwlN8al5V2IzFExXi14x4nb0nP8WrLXBu+FrS8CbK5lv4WGx2sL8=
+	 MIME-Version; b=H6qPATnqk/1ZX1/wQeF9WNe81aZnnAIN1oM8CE9UHAJLFFA1WTBJD1x2AsHxor3Wa0+P+LCQcxUkwWZSfhDugRI9uPEeGsPwu3PHdCH/0gnAS7zWnbiyAGn+AyWu3SVyhv963qp/fQvOHW0ARZVYY1iHi+B7y9YNNdWbYmRhoB4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4dV4tn0s9HzYQtn6;
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4dV4tn1DLQzYQtny;
 	Mon, 15 Dec 2025 11:15:13 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id F141C1A084B;
-	Mon, 15 Dec 2025 11:15:35 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 075F91A06DC;
+	Mon, 15 Dec 2025 11:15:36 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.50.87.129])
-	by APP4 (Coremail) with SMTP id gCh0CgAXd_dUfT9p8AnuAA--.53622S11;
+	by APP4 (Coremail) with SMTP id gCh0CgAXd_dUfT9p8AnuAA--.53622S12;
 	Mon, 15 Dec 2025 11:15:35 +0800 (CST)
 From: linan666@huaweicloud.com
 To: song@kernel.org,
@@ -47,9 +47,9 @@ Cc: linux-raid@vger.kernel.org,
 	linan666@huaweicloud.com,
 	yangerkun@huawei.com,
 	yi.zhang@huawei.com
-Subject: [PATCH v3 07/13] md: update curr_resync_completed even when MD_RECOVERY_INTR is set
-Date: Mon, 15 Dec 2025 11:04:38 +0800
-Message-Id: <20251215030444.1318434-8-linan666@huaweicloud.com>
+Subject: [PATCH v3 08/13] md: remove MD_RECOVERY_ERROR handling and simplify resync_offset update
+Date: Mon, 15 Dec 2025 11:04:39 +0800
+Message-Id: <20251215030444.1318434-9-linan666@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20251215030444.1318434-1-linan666@huaweicloud.com>
 References: <20251215030444.1318434-1-linan666@huaweicloud.com>
@@ -60,10 +60,10 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAXd_dUfT9p8AnuAA--.53622S11
-X-Coremail-Antispam: 1UD129KBjvJXoW7AFy7XryDCr4fWw1UKrWxZwb_yoW8Xr43p3
-	97JF9IkrW8ZFWayF4DXF1rZF95Z3y2yFZrAFW3W3yUAan5Aw17JFyFg3WUXFWDAr9Yqayf
-	t34rG3y3Z3W8Gw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgAXd_dUfT9p8AnuAA--.53622S12
+X-Coremail-Antispam: 1UD129KBjvJXoW7tr4UWrW8Jr4Dtr1UCF1UGFg_yoW8KF1rpa
+	93AFnxXw4UZFW3ZrWqqFykZayrZr12yrWqkFW3u393JF9ay3W7GFy293W7JFWDJ3s7AF4a
+	qa4rJFsxZ3WxWw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUHa14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -83,37 +83,72 @@ X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
 From: Li Nan <linan122@huawei.com>
 
-An error sync IO may be done and sub 'recovery_active' while its
-error handling work is pending. This work sets 'recovery_disabled'
-and MD_RECOVERY_INTR, then later removes the bad disk without Faulty
-flag. If 'curr_resync_completed' is updated before the disk is removed,
-it could lead to reading from sync-failed regions.
+Following previous patch "md: update curr_resync_completed even when
+MD_RECOVERY_INTR is set", 'curr_resync_completed' always equals
+'curr_resync' for resync, so MD_RECOVERY_ERROR can be removed.
 
-With the previous patch, error IO will set badblocks or mark rdev as
-Faulty, sync-failed regions are no longer readable. After waiting for
-'recovery_active' to reach 0 (in the previous line), all sync IO has
-*completed*, regardless of whether MD_RECOVERY_INTR is set. Thus, the
-MD_RECOVERY_INTR check can be removed.
+Also, simplify resync_offset update logic.
 
 Signed-off-by: Li Nan <linan122@huawei.com>
 ---
- drivers/md/md.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/md.h |  2 --
+ drivers/md/md.c | 21 ++++-----------------
+ 2 files changed, 4 insertions(+), 19 deletions(-)
 
+diff --git a/drivers/md/md.h b/drivers/md/md.h
+index 8871c88ceef1..698897f20385 100644
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -646,8 +646,6 @@ enum recovery_flags {
+ 	MD_RECOVERY_FROZEN,
+ 	/* waiting for pers->start() to finish */
+ 	MD_RECOVERY_WAIT,
+-	/* interrupted because io-error */
+-	MD_RECOVERY_ERROR,
+ 
+ 	/* flags determines sync action, see details in enum sync_action */
+ 
 diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 39cb8430a7b1..cda434d8fe8c 100644
+index cda434d8fe8c..29a34594c765 100644
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -9695,8 +9695,8 @@ void md_do_sync(struct md_thread *thread)
- 	wait_event(mddev->recovery_wait, !atomic_read(&mddev->recovery_active));
+@@ -9041,7 +9041,6 @@ void md_sync_error(struct mddev *mddev)
+ {
+ 	// stop recovery, signal do_sync ....
+ 	set_bit(MD_RECOVERY_INTR, &mddev->recovery);
+-	set_bit(MD_RECOVERY_ERROR, &mddev->recovery);
+ 	md_wakeup_thread(mddev->thread);
+ }
+ EXPORT_SYMBOL(md_sync_error);
+@@ -9704,24 +9703,12 @@ void md_do_sync(struct md_thread *thread)
  
- 	if (!test_bit(MD_RECOVERY_RESHAPE, &mddev->recovery) &&
--	    !test_bit(MD_RECOVERY_INTR, &mddev->recovery) &&
- 	    mddev->curr_resync >= MD_RESYNC_ACTIVE) {
-+		/* All sync IO completes after recovery_active becomes 0 */
- 		mddev->curr_resync_completed = mddev->curr_resync;
- 		sysfs_notify_dirent_safe(mddev->sysfs_completed);
- 	}
+ 	if (!test_bit(MD_RECOVERY_CHECK, &mddev->recovery) &&
+ 	    mddev->curr_resync > MD_RESYNC_ACTIVE) {
++		if (!test_bit(MD_RECOVERY_INTR, &mddev->recovery))
++			mddev->curr_resync = MaxSector;
++
+ 		if (test_bit(MD_RECOVERY_SYNC, &mddev->recovery)) {
+-			if (test_bit(MD_RECOVERY_INTR, &mddev->recovery)) {
+-				if (mddev->curr_resync >= mddev->resync_offset) {
+-					pr_debug("md: checkpointing %s of %s.\n",
+-						 desc, mdname(mddev));
+-					if (test_bit(MD_RECOVERY_ERROR,
+-						&mddev->recovery))
+-						mddev->resync_offset =
+-							mddev->curr_resync_completed;
+-					else
+-						mddev->resync_offset =
+-							mddev->curr_resync;
+-				}
+-			} else
+-				mddev->resync_offset = MaxSector;
++			mddev->resync_offset = mddev->curr_resync;
+ 		} else {
+-			if (!test_bit(MD_RECOVERY_INTR, &mddev->recovery))
+-				mddev->curr_resync = MaxSector;
+ 			if (!test_bit(MD_RECOVERY_RESHAPE, &mddev->recovery) &&
+ 			    test_bit(MD_RECOVERY_RECOVER, &mddev->recovery)) {
+ 				rcu_read_lock();
 -- 
 2.39.2
 
