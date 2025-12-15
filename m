@@ -1,40 +1,40 @@
-Return-Path: <linux-raid+bounces-5816-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5814-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A076CBC4ED
-	for <lists+linux-raid@lfdr.de>; Mon, 15 Dec 2025 04:16:34 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80B94CBC4F4
+	for <lists+linux-raid@lfdr.de>; Mon, 15 Dec 2025 04:16:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id BB0583016B85
-	for <lists+linux-raid@lfdr.de>; Mon, 15 Dec 2025 03:15:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 726E23017F30
+	for <lists+linux-raid@lfdr.de>; Mon, 15 Dec 2025 03:15:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D32D31A552;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3663431A076;
 	Mon, 15 Dec 2025 03:15:47 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4911E318136;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8B8223336;
 	Mon, 15 Dec 2025 03:15:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765768547; cv=none; b=pKhz9sJAHNzsKTmqx9s+UX52EMryC6jGft0y16+fwqvfmS1d+lm7uEwIDztaY0tCIfaXlxmvauDynQzvj2RKWj59ECO1gx614fzHBQsUa43akOmmR/K9MYmW5J4GDJz6+oktkZXa5VDFw4B4LM8mVug+ohn0VNgFFURNDs86Qwg=
+	t=1765768546; cv=none; b=dcEYeGHZmw6TI8BAUFmNVBj5MB5YLx+kPNMk2/QT+advwLrzNPCVbY0ikfDe+3bOrxXFNGbJYCy7davUHpNL8GZGk3XWTUBGw5m2zLyvE67RsZwsCxyYNwDm9FTbjbi4mrnPXflX7K/ISHHBW3toysKEuAUNepIV33oUtxknK6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765768547; c=relaxed/simple;
-	bh=ANgf1ON2d38lk0DGVyxDIbt555kkMunCAii5qM+cs54=;
+	s=arc-20240116; t=1765768546; c=relaxed/simple;
+	bh=gybHw2IprBp5g1AYsIKGzuuWWC7pYA62pR2C145dhEQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=N33gm0/9myHy38x0axk7EtvmPwOdUri5GXHB0muCj3ydUQlUmxVmUTwEzuOfTKpabkDQqe6kcxTi3u7PmCL49mvFGFAX7MMEii4D+DG7d/54gIyDLEzYSo3aththB+evXxhmk0m7xZ34Npdn5OlZksYWPdHpYeRd7OnS8FIhQFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=jccqP+gpTo16GAONvjt0domGr/TjEufnpjwgrTZXxQ+9CdpUkV3gZ61D231aErJJoSXSothEQmZzkv7EgARuUFGxT26Th9aiRt1EYFOOk5BGqRC6X82h4ZVmNrSKPu4Qpc8ta8v0YqpZrKHoH9QDuN3d+Cd39NdxfwMmfrN0GLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4dV4tn062BzYQtnc;
-	Mon, 15 Dec 2025 11:15:13 +0800 (CST)
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4dV4v636sCzKHMNq;
+	Mon, 15 Dec 2025 11:15:30 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id D337A1A06D7;
+	by mail.maildlp.com (Postfix) with ESMTP id DA6CA1A0359;
 	Mon, 15 Dec 2025 11:15:35 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.50.87.129])
-	by APP4 (Coremail) with SMTP id gCh0CgAXd_dUfT9p8AnuAA--.53622S8;
+	by APP4 (Coremail) with SMTP id gCh0CgAXd_dUfT9p8AnuAA--.53622S9;
 	Mon, 15 Dec 2025 11:15:35 +0800 (CST)
 From: linan666@huaweicloud.com
 To: song@kernel.org,
@@ -47,9 +47,9 @@ Cc: linux-raid@vger.kernel.org,
 	linan666@huaweicloud.com,
 	yangerkun@huawei.com,
 	yi.zhang@huawei.com
-Subject: [PATCH v3 04/13] md/raid1,raid10: set Uptodate and clear badblocks if narrow_write_error success
-Date: Mon, 15 Dec 2025 11:04:35 +0800
-Message-Id: <20251215030444.1318434-5-linan666@huaweicloud.com>
+Subject: [PATCH v3 05/13] md/raid1,raid10: support narrow_write_error when badblocks is disabled
+Date: Mon, 15 Dec 2025 11:04:36 +0800
+Message-Id: <20251215030444.1318434-6-linan666@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20251215030444.1318434-1-linan666@huaweicloud.com>
 References: <20251215030444.1318434-1-linan666@huaweicloud.com>
@@ -60,11 +60,11 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAXd_dUfT9p8AnuAA--.53622S8
-X-Coremail-Antispam: 1UD129KBjvJXoWxGr4kJr1kuw1fKryftFWfGrg_yoW5XF15p3
-	yDKFySy3yUJa43Zwn0yFWUuF9Ykw4IgFW7Ar4xC34DuasIqrWfGF48Xry3Wr1DAF9xu3W2
-	qFn8G3yUGF47JFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUHI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+X-CM-TRANSID:gCh0CgAXd_dUfT9p8AnuAA--.53622S9
+X-Coremail-Antispam: 1UD129KBjvJXoW7uF1xGrWxAr13WFyfWrW3KFg_yoW8Kr4xpa
+	s7GFyfJ3yruFy0va17A34j93WFv34fGFWUArW7Z3sruryxGrZ7GF4kXry5WFyjqFnxKF9F
+	q3WUCrW7C3WkGaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUHa14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
 	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
@@ -75,98 +75,81 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxGr4kJr1kuw1fKryftFWfGrg_yoW5XF15p3
 	AGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7M4kE6xkIj40Ew7xC0wCY1x0262kKe7AKxVWU
 	tVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
 	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQqXLUUU
-	UU=
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUOPfHDU
+	UUU
 X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
 From: Li Nan <linan122@huawei.com>
 
-narrow_write_error() returns true when all sectors are rewritten
-successfully. In this case, set R1BIO_Uptodate to return success
-to upper layers and clear correspondinga badblocks.
+When badblocks.shift < 0 (badblocks disabled), narrow_write_error()
+return false, preventing write error handling. Since narrow_write_error()
+only splits IO into smaller sizes and re-submits, it can work with
+badblocks disabled.
+
+Adjust to use the logical block size for block_sectors when badblocks is
+disabled, allowing narrow_write_error() to function in this case.
 
 Signed-off-by: Li Nan <linan122@huawei.com>
+Reviewed-by: Yu Kuai <yukuai@fnnas.com>
 ---
- drivers/md/raid1.c  | 24 ++++++++++++++++++++----
- drivers/md/raid10.c | 17 +++++++++++++++--
- 2 files changed, 35 insertions(+), 6 deletions(-)
+ drivers/md/raid1.c  | 8 ++++----
+ drivers/md/raid10.c | 8 ++++----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 9ffa3ab0fdcc..bd63cf039381 100644
+index bd63cf039381..8e0312fad3a2 100644
 --- a/drivers/md/raid1.c
 +++ b/drivers/md/raid1.c
-@@ -2587,9 +2587,10 @@ static void handle_write_finished(struct r1conf *conf, struct r1bio *r1_bio)
- 	int m, idx;
- 	bool fail = false;
+@@ -2503,17 +2503,17 @@ static bool narrow_write_error(struct r1bio *r1_bio, int i)
+ 	 * We currently own a reference on the rdev.
+ 	 */
  
--	for (m = 0; m < conf->raid_disks * 2 ; m++)
-+	for (m = 0; m < conf->raid_disks * 2 ; m++) {
-+		struct md_rdev *rdev = conf->mirrors[m].rdev;
-+
- 		if (r1_bio->bios[m] == IO_MADE_GOOD) {
--			struct md_rdev *rdev = conf->mirrors[m].rdev;
- 			rdev_clear_badblocks(rdev,
- 					     r1_bio->sector,
- 					     r1_bio->sectors, 0);
-@@ -2599,11 +2600,26 @@ static void handle_write_finished(struct r1conf *conf, struct r1bio *r1_bio)
- 			 * narrow down and record precise write
- 			 * errors.
- 			 */
--			fail = true;
--			narrow_write_error(r1_bio, m);
-+			if (narrow_write_error(r1_bio, m)) {
-+				/* re-write success */
-+				if (rdev_has_badblock(rdev,
-+						      r1_bio->sector,
-+						      r1_bio->sectors))
-+					rdev_clear_badblocks(rdev,
-+							     r1_bio->sector,
-+							     r1_bio->sectors, 0);
-+				if (test_bit(In_sync, &rdev->flags) &&
-+				    !test_bit(Faulty, &rdev->flags))
-+					set_bit(R1BIO_Uptodate,
-+						&r1_bio->state);
-+			} else {
-+				fail = true;
-+			}
-+
- 			rdev_dec_pending(conf->mirrors[m].rdev,
- 					 conf->mddev);
- 		}
-+	}
- 	if (fail) {
- 		spin_lock_irq(&conf->device_lock);
- 		list_add(&r1_bio->retry_list, &conf->bio_end_io_list);
+-	int block_sectors;
++	int block_sectors, lbs = bdev_logical_block_size(rdev->bdev) >> 9;
+ 	sector_t sector;
+ 	int sectors;
+ 	int sect_to_write = r1_bio->sectors;
+ 	bool ok = true;
+ 
+ 	if (rdev->badblocks.shift < 0)
+-		return false;
++		block_sectors = lbs;
++	else
++		block_sectors = roundup(1 << rdev->badblocks.shift, lbs);
+ 
+-	block_sectors = roundup(1 << rdev->badblocks.shift,
+-				bdev_logical_block_size(rdev->bdev) >> 9);
+ 	sector = r1_bio->sector;
+ 	sectors = ((sector + block_sectors)
+ 		   & ~(sector_t)(block_sectors - 1))
 diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index 21a347c4829b..db6fbd423726 100644
+index db6fbd423726..e1f63f4f1384 100644
 --- a/drivers/md/raid10.c
 +++ b/drivers/md/raid10.c
-@@ -2939,8 +2939,21 @@ static void handle_write_completed(struct r10conf *conf, struct r10bio *r10_bio)
- 					r10_bio->sectors, 0);
- 				rdev_dec_pending(rdev, conf->mddev);
- 			} else if (bio != NULL && bio->bi_status) {
--				fail = true;
--				narrow_write_error(r10_bio, m);
-+				if (narrow_write_error(r10_bio, m)) {
-+					/* re-write success */
-+					if (rdev_has_badblock(rdev,
-+							r10_bio->devs[m].addr,
-+							r10_bio->sectors))
-+						rdev_clear_badblocks(
-+							rdev,
-+							r10_bio->devs[m].addr,
-+							r10_bio->sectors, 0);
-+					if (test_bit(In_sync, &rdev->flags) &&
-+					    !test_bit(Faulty, &rdev->flags))
-+						set_bit(R10BIO_Uptodate, &r10_bio->state);
-+				} else {
-+					fail = true;
-+				}
- 				rdev_dec_pending(rdev, conf->mddev);
- 			}
- 			bio = r10_bio->devs[m].repl_bio;
+@@ -2790,17 +2790,17 @@ static bool narrow_write_error(struct r10bio *r10_bio, int i)
+ 	 * We currently own a reference to the rdev.
+ 	 */
+ 
+-	int block_sectors;
++	int block_sectors, lbs = bdev_logical_block_size(rdev->bdev) >> 9;
+ 	sector_t sector;
+ 	int sectors;
+ 	int sect_to_write = r10_bio->sectors;
+ 	bool ok = true;
+ 
+ 	if (rdev->badblocks.shift < 0)
+-		return false;
++		block_sectors = lbs;
++	else
++		block_sectors = roundup(1 << rdev->badblocks.shift, lbs);
+ 
+-	block_sectors = roundup(1 << rdev->badblocks.shift,
+-				bdev_logical_block_size(rdev->bdev) >> 9);
+ 	sector = r10_bio->sector;
+ 	sectors = ((r10_bio->sector + block_sectors)
+ 		   & ~(sector_t)(block_sectors - 1))
 -- 
 2.39.2
 
