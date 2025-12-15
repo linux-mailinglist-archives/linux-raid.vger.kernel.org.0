@@ -1,40 +1,40 @@
-Return-Path: <linux-raid+bounces-5815-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5810-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50ECACBC4EC
-	for <lists+linux-raid@lfdr.de>; Mon, 15 Dec 2025 04:16:33 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 821C6CBC4DC
+	for <lists+linux-raid@lfdr.de>; Mon, 15 Dec 2025 04:16:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 7F689301691B
-	for <lists+linux-raid@lfdr.de>; Mon, 15 Dec 2025 03:15:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 40A42300FF98
+	for <lists+linux-raid@lfdr.de>; Mon, 15 Dec 2025 03:15:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47D9631A54E;
-	Mon, 15 Dec 2025 03:15:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A74803195F0;
+	Mon, 15 Dec 2025 03:15:46 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48FF1317712;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490A2318124;
 	Mon, 15 Dec 2025 03:15:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765768547; cv=none; b=o5CuI0rA6BL5GnP0jdEXuAVLfM7V1mWCKwYWINPOebSVghCzkCiZbtFRIAA0S7to3rBi1GLsz3WfI9mwMPr7rf3eEaUdR3ctNVX50wx2etHWs/7+zqa8+4xCoiF0CcDnIVN//RxeCCFokUuIGcwpJnvlvKHkJAshSJCduQoFTYA=
+	t=1765768546; cv=none; b=PvspsZcVqTed2nra+pvbh1VB+OqxgUFznmyUYrKDMSB3QDoQHxT2DwqqLZF3ngb9QmJvyqXyOlH0nDC5QIiJySnWDbKhL0fdgNEYwHFxKJtDiRw8NjknMnUfmqzc19dcSOQqCgnpwIGDTBcx6foJlFtHph90DFoyZJldqx2rd5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765768547; c=relaxed/simple;
-	bh=YfnynV7tQSap8k62RoIosIwoGjxJZeUl2N8n5t01Ksw=;
+	s=arc-20240116; t=1765768546; c=relaxed/simple;
+	bh=1Q6aRJ3ln1H+SmIHVGviyIRT8t8LbaLDLGZHGZfxNww=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JSC/DldS3k0uLOWJ74YD65boDtWjuVL+0kVOtIfhtNm0UFEtaB8LBZvef70fQH86KCmiDZjBHsKI0xPF49XhOhbzToplHw5mXu+UTI3Q4I5iof9hB8A8IULJj50v1WiMRKFGtk48Ld/pKE8XSMW9UyUbeYzpsjhgwJCDudFjpBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=q9x/NGwGu88R8gj6ge2EfjnWbOTFp/IQaCXVKWIw0sTvuBTUUppH4B2iC8Ql06Kb1GzlMzhtHCco++lvWHfVrGg3nAx0Avr+UweopfzN48yqnRaDQiv2xXi6x9ePnuKh9PC63/BOGGM8jMISluQxI9oLh5UZauiXXVUTf0nu7pM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4dV4tm5fyTzYQtmW;
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4dV4tm68mfzYQtmW;
 	Mon, 15 Dec 2025 11:15:12 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id A21C31A084B;
+	by mail.maildlp.com (Postfix) with ESMTP id B409D1A01A5;
 	Mon, 15 Dec 2025 11:15:35 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.50.87.129])
-	by APP4 (Coremail) with SMTP id gCh0CgAXd_dUfT9p8AnuAA--.53622S6;
+	by APP4 (Coremail) with SMTP id gCh0CgAXd_dUfT9p8AnuAA--.53622S7;
 	Mon, 15 Dec 2025 11:15:35 +0800 (CST)
 From: linan666@huaweicloud.com
 To: song@kernel.org,
@@ -47,9 +47,9 @@ Cc: linux-raid@vger.kernel.org,
 	linan666@huaweicloud.com,
 	yangerkun@huawei.com,
 	yi.zhang@huawei.com
-Subject: [PATCH v3 02/13] md: factor error handling out of md_done_sync into helper
-Date: Mon, 15 Dec 2025 11:04:33 +0800
-Message-Id: <20251215030444.1318434-3-linan666@huaweicloud.com>
+Subject: [PATCH v3 03/13] md/raid1,raid10: return actual write status in narrow_write_error
+Date: Mon, 15 Dec 2025 11:04:34 +0800
+Message-Id: <20251215030444.1318434-4-linan666@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20251215030444.1318434-1-linan666@huaweicloud.com>
 References: <20251215030444.1318434-1-linan666@huaweicloud.com>
@@ -60,13 +60,13 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAXd_dUfT9p8AnuAA--.53622S6
-X-Coremail-Antispam: 1UD129KBjvJXoW3Wr4UKrWrCFyrJF1xCF15Arb_yoW3Zr4Upa
-	yDJFyrA3yUtFWavFyDAFWDua4Fy34xtFZrtFW7uwn7X3Z8tryDGF1UX3WYqFyDJa4rurW3
-	Xa1DWFW5AFyfJF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgAXd_dUfT9p8AnuAA--.53622S7
+X-Coremail-Antispam: 1UD129KBjvJXoWxJw43uw4rJrWkZr45KryUWrg_yoW5XFW5pr
+	ZrWasayryUXF1rXF4DZFW7WasYk3yxtFW2yrs3Gwsru34SyF95Ga1jqryjgry8CF9xG3Wj
+	qr45WrWUuFn8JFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUHY14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
 	Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
 	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAa
 	c4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzV
@@ -77,227 +77,95 @@ X-Coremail-Antispam: 1UD129KBjvJXoW3Wr4UKrWrCFyrJF1xCF15Arb_yoW3Zr4Upa
 	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
 	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr
 	0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
-	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUcyCJUUUUU=
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUd5rcUUUUU=
 X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
 From: Li Nan <linan122@huawei.com>
 
-The 'ok' parameter in md_done_sync() is redundant for most callers that
-always pass 'true'. Factor error handling logic into a separate helper
-function md_sync_error() to eliminate unnecessary parameter passing and
-improve code clarity.
+narrow_write_error() currently returns true when setting badblocks fails.
+Instead, return actual status of all retried writes, succeeding only when
+all retried writes complete successfully. This gives upper layers accurate
+information about write outcomes.
 
-No functional changes introduced.
+When setting badblocks fails, mark the device as faulty and return at once.
+No need to continue processing remaining sections in such cases.
 
 Signed-off-by: Li Nan <linan122@huawei.com>
-Reviewed-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/md/md.h     |  3 ++-
- drivers/md/md.c     | 17 ++++++++++-------
- drivers/md/raid1.c  | 14 +++++++-------
- drivers/md/raid10.c | 11 ++++++-----
- drivers/md/raid5.c  | 14 ++++++++------
- 5 files changed, 33 insertions(+), 26 deletions(-)
+ drivers/md/raid1.c  | 17 +++++++++--------
+ drivers/md/raid10.c | 15 +++++++++------
+ 2 files changed, 18 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index 6985f2829bbd..8871c88ceef1 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -912,7 +912,8 @@ extern const char *md_sync_action_name(enum sync_action action);
- extern void md_write_start(struct mddev *mddev, struct bio *bi);
- extern void md_write_inc(struct mddev *mddev, struct bio *bi);
- extern void md_write_end(struct mddev *mddev);
--extern void md_done_sync(struct mddev *mddev, int blocks, int ok);
-+extern void md_done_sync(struct mddev *mddev, int blocks);
-+extern void md_sync_error(struct mddev *mddev);
- extern void md_error(struct mddev *mddev, struct md_rdev *rdev);
- extern void md_finish_reshape(struct mddev *mddev);
- void md_submit_discard_bio(struct mddev *mddev, struct md_rdev *rdev,
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index e5922a682953..b452ac087612 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -9029,20 +9029,23 @@ static bool is_mddev_idle(struct mddev *mddev, int init)
- 	return idle;
- }
- 
--void md_done_sync(struct mddev *mddev, int blocks, int ok)
-+void md_done_sync(struct mddev *mddev, int blocks)
- {
- 	/* another "blocks" (512byte) blocks have been synced */
- 	atomic_sub(blocks, &mddev->recovery_active);
- 	wake_up(&mddev->recovery_wait);
--	if (!ok) {
--		set_bit(MD_RECOVERY_INTR, &mddev->recovery);
--		set_bit(MD_RECOVERY_ERROR, &mddev->recovery);
--		md_wakeup_thread(mddev->thread);
--		// stop recovery, signal do_sync ....
--	}
- }
- EXPORT_SYMBOL(md_done_sync);
- 
-+void md_sync_error(struct mddev *mddev)
-+{
-+	// stop recovery, signal do_sync ....
-+	set_bit(MD_RECOVERY_INTR, &mddev->recovery);
-+	set_bit(MD_RECOVERY_ERROR, &mddev->recovery);
-+	md_wakeup_thread(mddev->thread);
-+}
-+EXPORT_SYMBOL(md_sync_error);
-+
- /* md_write_start(mddev, bi)
-  * If we need to update some array metadata (e.g. 'active' flag
-  * in superblock) before writing, schedule a superblock update
 diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 6af75b82bc64..90ad9455f74a 100644
+index 90ad9455f74a..9ffa3ab0fdcc 100644
 --- a/drivers/md/raid1.c
 +++ b/drivers/md/raid1.c
-@@ -2062,7 +2062,7 @@ static void abort_sync_write(struct mddev *mddev, struct r1bio *r1_bio)
- 	} while (sectors_to_go > 0);
- }
+@@ -2541,11 +2541,15 @@ static bool narrow_write_error(struct r1bio *r1_bio, int i)
+ 		bio_trim(wbio, sector - r1_bio->sector, sectors);
+ 		wbio->bi_iter.bi_sector += rdev->data_offset;
  
--static void put_sync_write_buf(struct r1bio *r1_bio, int uptodate)
-+static void put_sync_write_buf(struct r1bio *r1_bio)
- {
- 	if (atomic_dec_and_test(&r1_bio->remaining)) {
- 		struct mddev *mddev = r1_bio->mddev;
-@@ -2073,7 +2073,7 @@ static void put_sync_write_buf(struct r1bio *r1_bio, int uptodate)
- 			reschedule_retry(r1_bio);
- 		else {
- 			put_buf(r1_bio);
--			md_done_sync(mddev, s, uptodate);
-+			md_done_sync(mddev, s);
+-		if (submit_bio_wait(wbio) < 0)
++		if (submit_bio_wait(wbio)) {
+ 			/* failure! */
+-			ok = rdev_set_badblocks(rdev, sector,
+-						sectors, 0)
+-				&& ok;
++			ok = false;
++			if (!rdev_set_badblocks(rdev, sector, sectors, 0)) {
++				md_error(mddev, rdev);
++				bio_put(wbio);
++				break;
++			}
++		}
+ 
+ 		bio_put(wbio);
+ 		sect_to_write -= sectors;
+@@ -2596,10 +2600,7 @@ static void handle_write_finished(struct r1conf *conf, struct r1bio *r1_bio)
+ 			 * errors.
+ 			 */
+ 			fail = true;
+-			if (!narrow_write_error(r1_bio, m))
+-				md_error(conf->mddev,
+-					 conf->mirrors[m].rdev);
+-				/* an I/O failed, we can't clear the bitmap */
++			narrow_write_error(r1_bio, m);
+ 			rdev_dec_pending(conf->mirrors[m].rdev,
+ 					 conf->mddev);
  		}
- 	}
- }
-@@ -2098,7 +2098,7 @@ static void end_sync_write(struct bio *bio)
- 		set_bit(R1BIO_MadeGood, &r1_bio->state);
- 	}
- 
--	put_sync_write_buf(r1_bio, 1);
-+	put_sync_write_buf(r1_bio);
- }
- 
- static int r1_sync_page_io(struct md_rdev *rdev, sector_t sector,
-@@ -2348,8 +2348,8 @@ static void sync_request_write(struct mddev *mddev, struct r1bio *r1_bio)
- 		if (test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery) ||
- 		    !fix_sync_read_error(r1_bio)) {
- 			conf->recovery_disabled = mddev->recovery_disabled;
--			set_bit(MD_RECOVERY_INTR, &mddev->recovery);
--			md_done_sync(mddev, r1_bio->sectors, 0);
-+			md_done_sync(mddev, r1_bio->sectors);
-+			md_sync_error(mddev);
- 			put_buf(r1_bio);
- 			return;
- 		}
-@@ -2384,7 +2384,7 @@ static void sync_request_write(struct mddev *mddev, struct r1bio *r1_bio)
- 		submit_bio_noacct(wbio);
- 	}
- 
--	put_sync_write_buf(r1_bio, 1);
-+	put_sync_write_buf(r1_bio);
- }
- 
- /*
-@@ -2575,7 +2575,7 @@ static void handle_sync_write_finished(struct r1conf *conf, struct r1bio *r1_bio
- 		}
- 	}
- 	put_buf(r1_bio);
--	md_done_sync(conf->mddev, s, 1);
-+	md_done_sync(conf->mddev, s);
- }
- 
- static void handle_write_finished(struct r1conf *conf, struct r1bio *r1_bio)
 diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index 84be4cc7e873..40c31c00dc60 100644
+index 40c31c00dc60..21a347c4829b 100644
 --- a/drivers/md/raid10.c
 +++ b/drivers/md/raid10.c
-@@ -2276,7 +2276,7 @@ static void end_sync_request(struct r10bio *r10_bio)
- 				reschedule_retry(r10_bio);
- 			else
- 				put_buf(r10_bio);
--			md_done_sync(mddev, s, 1);
-+			md_done_sync(mddev, s);
- 			break;
- 		} else {
- 			struct r10bio *r10_bio2 = (struct r10bio *)r10_bio->master_bio;
-@@ -2452,7 +2452,7 @@ static void sync_request_write(struct mddev *mddev, struct r10bio *r10_bio)
+@@ -2820,11 +2820,15 @@ static bool narrow_write_error(struct r10bio *r10_bio, int i)
+ 				   choose_data_offset(r10_bio, rdev);
+ 		wbio->bi_opf = REQ_OP_WRITE;
  
- done:
- 	if (atomic_dec_and_test(&r10_bio->remaining)) {
--		md_done_sync(mddev, r10_bio->sectors, 1);
-+		md_done_sync(mddev, r10_bio->sectors);
- 		put_buf(r10_bio);
- 	}
- }
-@@ -3757,7 +3757,7 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
- 		/* pretend they weren't skipped, it makes
- 		 * no important difference in this case
- 		 */
--		md_done_sync(mddev, sectors_skipped, 1);
-+		md_done_sync(mddev, sectors_skipped);
+-		if (submit_bio_wait(wbio) < 0)
++		if (submit_bio_wait(wbio)) {
+ 			/* Failure! */
+-			ok = rdev_set_badblocks(rdev, wsector,
+-						sectors, 0)
+-				&& ok;
++			ok = false;
++			if (!rdev_set_badblocks(rdev, wsector, sectors, 0)) {
++				md_error(mddev, rdev);
++				bio_put(wbio);
++				break;
++			}
++		}
  
- 	return sectors_skipped + nr_sectors;
-  giveup:
-@@ -4913,7 +4913,8 @@ static void reshape_request_write(struct mddev *mddev, struct r10bio *r10_bio)
- 	if (!test_bit(R10BIO_Uptodate, &r10_bio->state))
- 		if (handle_reshape_read_error(mddev, r10_bio) < 0) {
- 			/* Reshape has been aborted */
--			md_done_sync(mddev, r10_bio->sectors, 0);
-+			md_done_sync(mddev, r10_bio->sectors);
-+			md_sync_error(mddev);
- 			return;
- 		}
- 
-@@ -5071,7 +5072,7 @@ static void end_reshape_request(struct r10bio *r10_bio)
- {
- 	if (!atomic_dec_and_test(&r10_bio->remaining))
- 		return;
--	md_done_sync(r10_bio->mddev, r10_bio->sectors, 1);
-+	md_done_sync(r10_bio->mddev, r10_bio->sectors);
- 	bio_put(r10_bio->master_bio);
- 	put_buf(r10_bio);
- }
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index e57ce3295292..ce63db3e2b9d 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -3723,11 +3723,13 @@ handle_failed_sync(struct r5conf *conf, struct stripe_head *sh,
- 						   RAID5_STRIPE_SECTORS(conf), 0))
- 				abort = 1;
- 		}
--		if (abort)
--			conf->recovery_disabled =
--				conf->mddev->recovery_disabled;
- 	}
--	md_done_sync(conf->mddev, RAID5_STRIPE_SECTORS(conf), !abort);
-+	md_done_sync(conf->mddev, RAID5_STRIPE_SECTORS(conf));
-+
-+	if (abort) {
-+		conf->recovery_disabled = conf->mddev->recovery_disabled;
-+		md_sync_error(conf->mddev);
-+	}
- }
- 
- static int want_replace(struct stripe_head *sh, int disk_idx)
-@@ -5157,7 +5159,7 @@ static void handle_stripe(struct stripe_head *sh)
- 	if ((s.syncing || s.replacing) && s.locked == 0 &&
- 	    !test_bit(STRIPE_COMPUTE_RUN, &sh->state) &&
- 	    test_bit(STRIPE_INSYNC, &sh->state)) {
--		md_done_sync(conf->mddev, RAID5_STRIPE_SECTORS(conf), 1);
-+		md_done_sync(conf->mddev, RAID5_STRIPE_SECTORS(conf));
- 		clear_bit(STRIPE_SYNCING, &sh->state);
- 		if (test_and_clear_bit(R5_Overlap, &sh->dev[sh->pd_idx].flags))
- 			wake_up_bit(&sh->dev[sh->pd_idx].flags, R5_Overlap);
-@@ -5224,7 +5226,7 @@ static void handle_stripe(struct stripe_head *sh)
- 		clear_bit(STRIPE_EXPAND_READY, &sh->state);
- 		atomic_dec(&conf->reshape_stripes);
- 		wake_up(&conf->wait_for_reshape);
--		md_done_sync(conf->mddev, RAID5_STRIPE_SECTORS(conf), 1);
-+		md_done_sync(conf->mddev, RAID5_STRIPE_SECTORS(conf));
- 	}
- 
- 	if (s.expanding && s.locked == 0 &&
+ 		bio_put(wbio);
+ 		sect_to_write -= sectors;
+@@ -2936,8 +2940,7 @@ static void handle_write_completed(struct r10conf *conf, struct r10bio *r10_bio)
+ 				rdev_dec_pending(rdev, conf->mddev);
+ 			} else if (bio != NULL && bio->bi_status) {
+ 				fail = true;
+-				if (!narrow_write_error(r10_bio, m))
+-					md_error(conf->mddev, rdev);
++				narrow_write_error(r10_bio, m);
+ 				rdev_dec_pending(rdev, conf->mddev);
+ 			}
+ 			bio = r10_bio->devs[m].repl_bio;
 -- 
 2.39.2
 
