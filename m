@@ -1,40 +1,40 @@
-Return-Path: <linux-raid+bounces-5854-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5848-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46DB2CC786E
-	for <lists+linux-raid@lfdr.de>; Wed, 17 Dec 2025 13:14:50 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2867CC781B
+	for <lists+linux-raid@lfdr.de>; Wed, 17 Dec 2025 13:11:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 092F930B6E15
-	for <lists+linux-raid@lfdr.de>; Wed, 17 Dec 2025 12:11:33 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3E0293030773
+	for <lists+linux-raid@lfdr.de>; Wed, 17 Dec 2025 12:11:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04877341079;
-	Wed, 17 Dec 2025 12:11:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4042F327C1D;
+	Wed, 17 Dec 2025 12:11:15 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC673328B7D;
-	Wed, 17 Dec 2025 12:11:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF5329DB61;
+	Wed, 17 Dec 2025 12:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765973480; cv=none; b=rLEqCYwiLkGBNcG/aFT5RbvJR+MOZvnd8lwIlJIt0Aw1WmY+pYEP0jxk7t/vXQoIoVymJihqx1YahM5fRmhyef/Tje8zQiyMZn6Tfi2Dh5b2qjz5hhrSe8ERmRzzljMx/umgWg/+uYOmfjGviQg1YdNRTnesHg1jq+ODATCDs+k=
+	t=1765973475; cv=none; b=VYula+sjZ02Lp+VOEGdN/CXZ1RDc94HHDz9mq+YrioU/+PZEQC9exrb/dmkzAzy33j8NPZrGFWj3dkhOf+tozl1/hLconjzQrcihJLxB1N4VOkkFU0M6zb+D6gySy70XtMvEVWfA5gxVvF65kvrgviuxd7XhDODEOrHxf9HNJ2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765973480; c=relaxed/simple;
-	bh=vxJQfsEHOgj15WJX57QttQUdcA7U3E5FweBDf6WQcZE=;
+	s=arc-20240116; t=1765973475; c=relaxed/simple;
+	bh=2b5c/j00HnDiVyqQ13d12XMbpabeqX+G9Qgg8I9MUbY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YAkzx2EN1ajcFtvdEobaLIVnTQd/4S0lI4k0365ZIKYJ5p2/t5hfRGBZOgw/FY55kI605Dnaoims6cMKX2iXqyW8cNSDn+8EU7ElYFHpYrkmwyc0LNZkrnY/g3wd3xk2m0culQsqiNlVIftUrMpGUSKZiTNOYygWuOnq5abcVO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	 MIME-Version; b=E8xLuzGun8Tp0mIMx2w6WtzgrZ5w4arjWjs3NnfUb7jJlrGZEeFCFniiM/h6dEYxQZNSRT/Is837lBdSIX0d7383MGP4YAiOI+CHTBKGr3Rk+s84wFFEaa2FEgpAtvmCJDRHeOw50HRz1uBUe8ojP/td+RaRNutvjzXRQKxARd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4dWXh51JqmzKHN3L;
-	Wed, 17 Dec 2025 20:11:01 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.198])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4dWXgl3NG2zYQvGF;
+	Wed, 17 Dec 2025 20:10:43 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 4456640590;
+	by mail.maildlp.com (Postfix) with ESMTP id 511A340575;
 	Wed, 17 Dec 2025 20:11:10 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.50.87.129])
-	by APP4 (Coremail) with SMTP id gCh0CgAXd_fdnUJp6F0JAg--.52527S6;
+	by APP4 (Coremail) with SMTP id gCh0CgAXd_fdnUJp6F0JAg--.52527S7;
 	Wed, 17 Dec 2025 20:11:10 +0800 (CST)
 From: linan666@huaweicloud.com
 To: song@kernel.org,
@@ -45,9 +45,9 @@ Cc: linux-raid@vger.kernel.org,
 	linan666@huaweicloud.com,
 	yangerkun@huawei.com,
 	yi.zhang@huawei.com
-Subject: [PATCH 02/15] md: introduce sync_folio_io for folio support in RAID
-Date: Wed, 17 Dec 2025 20:00:00 +0800
-Message-Id: <20251217120013.2616531-3-linan666@huaweicloud.com>
+Subject: [PATCH 03/15] md: use folio for bb_folio
+Date: Wed, 17 Dec 2025 20:00:01 +0800
+Message-Id: <20251217120013.2616531-4-linan666@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20251217120013.2616531-1-linan666@huaweicloud.com>
 References: <20251217120013.2616531-1-linan666@huaweicloud.com>
@@ -58,13 +58,13 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAXd_fdnUJp6F0JAg--.52527S6
-X-Coremail-Antispam: 1UD129KBjvJXoWxXw4DXF1xCF4UCF4xJFWfGrg_yoW5Gr1fpa
-	40kasxG3y5Zw42gw13JFs7Ca4Sq34IgrWUtryfuayfW3W7KryDKF4UtF1jvF98GF98CF4x
-	t34jgay5urn5Wr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgAXd_fdnUJp6F0JAg--.52527S7
+X-Coremail-Antispam: 1UD129KBjvJXoWxWFy8tryfWF17uF4fKrW3ZFb_yoW5ZF4fpa
+	ykWasxtr45Jr1jqwsrGFWvkasYv3sxKFW8trWayw13X3W3tw15KF1UtFy7Zr98AF9xAF4k
+	Zw4UCrWUu3WIgr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUmC14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
 	Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
 	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAa
 	c4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzV
@@ -75,78 +75,105 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxXw4DXF1xCF4UCF4xJFWfGrg_yoW5Gr1fpa
 	106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AK
 	xVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7
 	xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_
-	Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUFD73UUUUU=
+	Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUB89NUUUUU=
 X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
 From: Li Nan <linan122@huawei.com>
 
-Prepare for folio support in RAID by introducing sync_folio_io(),
-matching sync_page_io()'s functionality. Differences are:
-
-- Replace input parameter 'page' with 'folio'
-- Replace __bio_add_page() calls with bio_add_folio_nofail()
-- Add new parameter 'off' to prepare for adding a folio to bio in segments,
-  e.g. in fix_recovery_read_error()
-
-sync_page_io() will be removed once full folio support is complete.
+Convert bio_page to bio_folio and use it throughout.
 
 Signed-off-by: Li Nan <linan122@huawei.com>
 ---
- drivers/md/md.h |  2 ++
- drivers/md/md.c | 27 +++++++++++++++++++++++++++
- 2 files changed, 29 insertions(+)
+ drivers/md/md.h |  3 ++-
+ drivers/md/md.c | 25 +++++++++++++------------
+ 2 files changed, 15 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/md/md.h b/drivers/md/md.h
-index a083f37374d0..410f8a6b75e7 100644
+index 410f8a6b75e7..aa6d9df50fd0 100644
 --- a/drivers/md/md.h
 +++ b/drivers/md/md.h
-@@ -920,6 +920,8 @@ void md_write_metadata(struct mddev *mddev, struct md_rdev *rdev,
- extern int md_super_wait(struct mddev *mddev);
- extern int sync_page_io(struct md_rdev *rdev, sector_t sector, int size,
- 		struct page *page, blk_opf_t opf, bool metadata_op);
-+extern int sync_folio_io(struct md_rdev *rdev, sector_t sector, int size,
-+		int off, struct folio *folio, blk_opf_t opf, bool metadata_op);
- extern void md_do_sync(struct md_thread *thread);
- extern void md_new_event(void);
- extern void md_allow_write(struct mddev *mddev);
+@@ -144,7 +144,8 @@ struct md_rdev {
+ 	struct block_device *bdev;	/* block device handle */
+ 	struct file *bdev_file;		/* Handle from open for bdev */
+ 
+-	struct page	*sb_page, *bb_page;
++	struct page	*sb_page;
++	struct folio	*bb_folio;
+ 	int		sb_loaded;
+ 	__u64		sb_events;
+ 	sector_t	data_offset;	/* start of data in array */
 diff --git a/drivers/md/md.c b/drivers/md/md.c
-index cde84c9f05eb..9dfd6f8da5b8 100644
+index 9dfd6f8da5b8..0732bbcdb95d 100644
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -1192,6 +1192,33 @@ int sync_page_io(struct md_rdev *rdev, sector_t sector, int size,
+@@ -1073,9 +1073,9 @@ void md_rdev_clear(struct md_rdev *rdev)
+ 		rdev->sb_start = 0;
+ 		rdev->sectors = 0;
+ 	}
+-	if (rdev->bb_page) {
+-		put_page(rdev->bb_page);
+-		rdev->bb_page = NULL;
++	if (rdev->bb_folio) {
++		folio_put(rdev->bb_folio);
++		rdev->bb_folio = NULL;
+ 	}
+ 	badblocks_exit(&rdev->badblocks);
  }
- EXPORT_SYMBOL_GPL(sync_page_io);
+@@ -1909,9 +1909,10 @@ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_
  
-+int sync_folio_io(struct md_rdev *rdev, sector_t sector, int size, int off,
-+		  struct folio *folio, blk_opf_t opf, bool metadata_op)
-+{
-+	struct bio bio;
-+	struct bio_vec bvec;
+ 	rdev->desc_nr = le32_to_cpu(sb->dev_number);
+ 
+-	if (!rdev->bb_page) {
+-		rdev->bb_page = alloc_page(GFP_KERNEL);
+-		if (!rdev->bb_page)
++	if (!rdev->bb_folio) {
++		rdev->bb_folio = folio_alloc(GFP_KERNEL, 0);
 +
-+	if (metadata_op && rdev->meta_bdev)
-+		bio_init(&bio, rdev->meta_bdev, &bvec, 1, opf);
-+	else
-+		bio_init(&bio, rdev->bdev, &bvec, 1, opf);
-+
-+	if (metadata_op)
-+		bio.bi_iter.bi_sector = sector + rdev->sb_start;
-+	else if (rdev->mddev->reshape_position != MaxSector &&
-+		 (rdev->mddev->reshape_backwards ==
-+		  (sector >= rdev->mddev->reshape_position)))
-+		bio.bi_iter.bi_sector = sector + rdev->new_data_offset;
-+	else
-+		bio.bi_iter.bi_sector = sector + rdev->data_offset;
-+	bio_add_folio_nofail(&bio, folio, size, off);
-+
-+	submit_bio_wait(&bio);
-+
-+	return !bio.bi_status;
-+}
-+EXPORT_SYMBOL_GPL(sync_folio_io);
-+
- static int read_disk_sb(struct md_rdev *rdev, int size)
- {
- 	if (rdev->sb_loaded)
++		if (!rdev->bb_folio)
+ 			return -ENOMEM;
+ 	}
+ 	if ((le32_to_cpu(sb->feature_map) & MD_FEATURE_BAD_BLOCKS) &&
+@@ -1930,10 +1931,10 @@ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_
+ 		if (offset == 0)
+ 			return -EINVAL;
+ 		bb_sector = (long long)offset;
+-		if (!sync_page_io(rdev, bb_sector, sectors << 9,
+-				  rdev->bb_page, REQ_OP_READ, true))
++		if (!sync_folio_io(rdev, bb_sector, sectors << 9, 0,
++				  rdev->bb_folio, REQ_OP_READ, true))
+ 			return -EIO;
+-		bbp = (__le64 *)page_address(rdev->bb_page);
++		bbp = (__le64 *)folio_address(rdev->bb_folio);
+ 		rdev->badblocks.shift = sb->bblog_shift;
+ 		for (i = 0 ; i < (sectors << (9-3)) ; i++, bbp++) {
+ 			u64 bb = le64_to_cpu(*bbp);
+@@ -2300,7 +2301,7 @@ static void super_1_sync(struct mddev *mddev, struct md_rdev *rdev)
+ 		md_error(mddev, rdev);
+ 	else {
+ 		struct badblocks *bb = &rdev->badblocks;
+-		__le64 *bbp = (__le64 *)page_address(rdev->bb_page);
++		__le64 *bbp = (__le64 *)folio_address(rdev->bb_folio);
+ 		u64 *p = bb->page;
+ 		sb->feature_map |= cpu_to_le32(MD_FEATURE_BAD_BLOCKS);
+ 		if (bb->changed) {
+@@ -2953,7 +2954,7 @@ void md_update_sb(struct mddev *mddev, int force_change)
+ 				md_write_metadata(mddev, rdev,
+ 						  rdev->badblocks.sector,
+ 						  rdev->badblocks.size << 9,
+-						  rdev->bb_page, 0);
++						  folio_page(rdev->bb_folio, 0), 0);
+ 				rdev->badblocks.size = 0;
+ 			}
+ 
+@@ -3809,7 +3810,7 @@ int md_rdev_init(struct md_rdev *rdev)
+ 	rdev->sb_events = 0;
+ 	rdev->last_read_error = 0;
+ 	rdev->sb_loaded = 0;
+-	rdev->bb_page = NULL;
++	rdev->bb_folio = NULL;
+ 	atomic_set(&rdev->nr_pending, 0);
+ 	atomic_set(&rdev->read_errors, 0);
+ 	atomic_set(&rdev->corrected_errors, 0);
 -- 
 2.39.2
 
