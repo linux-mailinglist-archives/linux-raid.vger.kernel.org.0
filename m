@@ -1,134 +1,118 @@
-Return-Path: <linux-raid+bounces-5846-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5852-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B299CC69C0
-	for <lists+linux-raid@lfdr.de>; Wed, 17 Dec 2025 09:38:21 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2861CC7836
+	for <lists+linux-raid@lfdr.de>; Wed, 17 Dec 2025 13:12:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 608603027DA4
-	for <lists+linux-raid@lfdr.de>; Wed, 17 Dec 2025 08:33:32 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E6662304E8D7
+	for <lists+linux-raid@lfdr.de>; Wed, 17 Dec 2025 12:11:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69EE82C21D4;
-	Wed, 17 Dec 2025 08:33:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b="h/tBQ9H5"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B1B5336EF9;
+	Wed, 17 Dec 2025 12:11:20 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from sg-1-11.ptr.blmpb.com (sg-1-11.ptr.blmpb.com [118.26.132.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4EC2C0284
-	for <linux-raid@vger.kernel.org>; Wed, 17 Dec 2025 08:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC74D32938B;
+	Wed, 17 Dec 2025 12:11:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765960409; cv=none; b=FJwPzlVNR8fWEypveDF/rgFbRduaWc23Fze5UiZVvAXmJaSK71l/Je7mpGZoQ3zjprFuUs2LZZL2RZp0DRIfssL8NYMzxpKz8v3eE053T5FKk/9MrvVwpMT4MUa/vy3vg2a/NAdHAvvZ1NRjKstwyt8MebplZjy/KppVQVd3xQ4=
+	t=1765973480; cv=none; b=HP0NsNu2PdZ2yNmhJzY5TP3HVEhp6i2/w6LJtNw/UNiPivVp2UlwXcdaohpNVwUcPnzv1oPWCnfpJulmxYfgJo/2vr64ZXIqiI0MSuYAbzcW47/XRxsqaXb7Uyw0dy0nxgoMd7pFM5Efpb98nB7O+hv+yLaz0OQ9X7u114cb9rU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765960409; c=relaxed/simple;
-	bh=cEhqQF+oEye5LxtG32jLoz/HcM6kT9fPsW1x6b/48t4=;
-	h=To:References:In-Reply-To:Mime-Version:Content-Type:Cc:Subject:
-	 Message-Id:From:Date; b=Rdrl6s/KGq+px05uc3IDpV1dgKGHzF7nHfYTrZqIaKeANTENdJP8nx3mT4IXMy/xkP74HSXI+RaNJakBdxONHTyYj2CQt3hb7YZokNJ8Ft7BS4e/RG3nlRqK2iocI8eux8QMI4D6lQ9B56EkdtbBlc7cz4blF7+TipxwUSu0840=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com; spf=pass smtp.mailfrom=fnnas.com; dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b=h/tBQ9H5; arc=none smtp.client-ip=118.26.132.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fnnas.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=s1; d=fnnas-com.20200927.dkim.feishu.cn; t=1765960399;
-  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
- reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=XFicmXaUPXJZtX7J0cd76Tgy9ZjX5dYeS4C5ywpYBA0=;
- b=h/tBQ9H5fkl3G3/fxEKuyTtBJwjMd0YyDuB4ZkX1frcjXSHs7axt6qEEOu2PYzxVA3zmse
- w2jewKwzPfC4/sJFTFWXR7RUrah+c+rNJPrEc+cqWVI/eYJGuD9TGF1OQav+G4gD8CgUjH
- 9+pguXpIJ4uVAYBmpJahYU5vkcVRAKxN3OsZrGPqd1MzT+Eci2h6FFzYYND+WHkyw6e03M
- ozw/UKUSOG2MnLW6FptUwpoAya4BjnQC64O8E0jkt+v3l9se9lABu48W5xLgFg4Chrc6Mm
- 50kRsL42ID/351ZfHqSwkMl3gWXekfXY7aja4Sik9Xu1X+N2uE6vi8xfLLL1Jg==
-X-Original-From: Yu Kuai <yukuai@fnnas.com>
-Content-Language: en-US
-To: "Reindl Harald" <h.reindl@thelounge.net>, 
-	"Paul Menzel" <pmenzel@molgen.mpg.de>
-References: <b3e941b0-38d1-4809-a386-34659a20415e@gmail.com> <8fd97a33-eb5a-4c88-ac8a-bfa1dd2ced61@fnnas.com> <619a9b00-43dd-4897-8bb0-9ff29a760f52@gmail.com> <f20c3a92-d562-4ac2-98b6-39ff4f3e3bbf@fnnas.com> <7cff4b89-eeff-4048-8af3-ef9d76bdedf8@molgen.mpg.de> <edbb5ba0-454a-4929-84a0-2e5b40d3ec25@fnnas.com> <2339e7f8-2369-4d77-a2fc-57b72dff6c94@thelounge.net>
-In-Reply-To: <2339e7f8-2369-4d77-a2fc-57b72dff6c94@thelounge.net>
+	s=arc-20240116; t=1765973480; c=relaxed/simple;
+	bh=IcUM9ib/XXmLldiROSun6fXKAyVvGMoK4A2ORkE1ZKk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eXI6Znk7We5dwooKXxZncb4xAp6xwrQDC4dFo0qB2ddLyNzYZIyJFe92pMXbsCu+nju9hPz7INFMrIWt1pyCrmoVwjmTBx2yjmvrlFBlN2gAb0ln+obHlA+m35l1E7jSIO9R4esDaepvMEF0WIzakOFxWK+F1EzfCL4/jB3h/Ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.177])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4dWXh50hgmzKHN2n;
+	Wed, 17 Dec 2025 20:11:01 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 2F0FA40590;
+	Wed, 17 Dec 2025 20:11:10 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.50.87.129])
+	by APP4 (Coremail) with SMTP id gCh0CgAXd_fdnUJp6F0JAg--.52527S4;
+	Wed, 17 Dec 2025 20:11:10 +0800 (CST)
+From: linan666@huaweicloud.com
+To: song@kernel.org,
+	yukuai@fnnas.com
+Cc: linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	xni@redhat.com,
+	linan666@huaweicloud.com,
+	yangerkun@huawei.com,
+	yi.zhang@huawei.com
+Subject: [PATCH 00/15] folio support for sync I/O in RAID
+Date: Wed, 17 Dec 2025 19:59:58 +0800
+Message-Id: <20251217120013.2616531-1-linan666@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-raid@vger.kernel.org
 List-Id: <linux-raid.vger.kernel.org>
 List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Received: from [192.168.1.104] ([39.182.0.136]) by smtp.feishu.cn with ESMTPS; Wed, 17 Dec 2025 16:33:15 +0800
-Content-Type: text/plain; charset=UTF-8
-Cc: <bugreports61@gmail.com>, <linux-raid@vger.kernel.org>, 
-	<linan122@huawei.com>, <xni@redhat.com>, <regressions@lists.linux.dev>, 
-	"Linus Torvalds" <torvalds@linux-foundation.org>, <yukuai@fnnas.com>
-Subject: Re: Issues with md raid 1 on kernel 6.18 after booting kernel 6.19-rc1 once
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <e8ed6876-7a27-4ef4-a4ea-841cf251f656@fnnas.com>
-X-Lms-Return-Path: <lba+269426acd+f2a5bd+vger.kernel.org+yukuai@fnnas.com>
-User-Agent: Mozilla Thunderbird
-Reply-To: yukuai@fnnas.com
-From: "Yu Kuai" <yukuai@fnnas.com>
-Date: Wed, 17 Dec 2025 16:33:14 +0800
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgAXd_fdnUJp6F0JAg--.52527S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7ur4rurW7ZF18tF4ktr17GFg_yoW8Wr43pa
+	13Wr9xZw4rGr4xAr9xXw42vr1rJryrA345Aryay3yxXFnxZFy8Kw48JayrWrWDXryfJryU
+	Wr1UKwsxWF15KFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9C14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4UJV
+	WxJr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8v
+	x2IErcIFxwAKzVCY07xG64k0F24lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr4
+	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
+	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAv
+	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
+	v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUBHqcUUUUU=
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
-Hi,
+From: Li Nan <linan122@huawei.com>
 
-=E5=9C=A8 2025/12/17 16:02, Reindl Harald =E5=86=99=E9=81=93:
->
->
-> Am 17.12.25 um 08:41 schrieb Yu Kuai:
->>>>> We'll have to backport following patch into old kernels to make
->>>>> new arrays to assemble in old kernels. ....
->>>>>
->>>>> The md array which i am talking about was not created with kernel
->>>>> 6.19, it was created sometime in 2024.
->>>>>
->>>>> It was just used in kernel 6.19 and that broke compatibility with
->>>>> my 6.18 kernel.
->>>>
->>>> I know, I mean any array that is created or assembled in new kernels
->>>> will now have lsb field stored in metadata. This field is not
->>>> defined in old kernels and that's why array can't assembled in old
->>>> kernels, due to unknown metadata.
->>>>
->>>> This is what we have to do for new features, and we're planning to
->>>> avoid the forward compatibility issue with the above patch that I
->>>> mentioned.
->>> Is there really no way around it? Just testing a new kernel and being
->>> able to go back must be supported in my opinion, at least between one
->>> or two LTS versions.
->>
->> As I said, following patch should be backported to LTS kernels to=20
->> avoid the problem.
->> https://lore.kernel.org/linux-raid/20251103125757.1405796-5-linan666@hua=
-weicloud.com=20
->>
->
-> that's nothing you can rely on - yo can write as many pachtes as you=20
-> will but if and when they are included in random binary kernels is not=20
-> controllable
->
-> the current situation is somebody tests a new kernel and after that=20
-> his RAID got unrevertable changed and can't be used with the previous=20
-> kernel
->
-> that's not expectable nor acceptable
+This patchset adds folio support to sync operations in raid1/10.
+Previously, we used 16 * 4K pages for 64K sync I/O. With this change,
+we'll use a single 64K folio instead.
 
-I'll explain a bit more about the lbs.
+This is the first step towards full folio support in RAID. Going forward,
+I will replace the remaining page-based usage with folio.
 
-There is a long long term problem from day one, and reported several times,=
- that array data
-can be broken when:
-  - user add a new disk to the array;
-  - some member disks are failed;
+The patchset was tested with mdadm. Additional fault injection stress tests
+were run under file systems.
 
-lbs in metadata is used to fix this problem. However, mdraid is designed to=
- refuse new metadata
-fields, this doesn't make sense but that's the fact.
+Li Nan (15):
+  md/raid1,raid10: clean up of RESYNC_SECTORS
+  md: introduce sync_folio_io for folio support in RAID
+  md: use folio for bb_folio
+  md/raid1: use folio for tmppage
+  md/raid10: use folio for tmppage
+  md/raid1,raid10: use folio for sync path IO
+  md: Clean up folio sync support related code
+  md/raid1: clean up useless sync_blocks handling in raid1_sync_request
+  md/raid1: fix IO error at logical block size granularity
+  md/raid10: fix IO error at logical block size granularity
+  md/raid1,raid10: clean up resync_fetch_folio
+  md: clean up resync_free_folio
+  md/raid1: clean up sync IO size calculation in raid1_sync_request
+  md/raid10: clean up sync IO size calculation in raid10_sync_request
+  md/raid1,raid10: fall back to smaller order if sync folio alloc fails
 
-Any array that is assembled or created in new kernels will have lbs filed s=
-tored in metadata, to
-prevent the data loss problem. I know we're not expecting forward compatibi=
-lity issue, but I don't
-think this is not acceptable. We'll provide a solution but we can't guarant=
-ee for any binary
-kernels.
+ drivers/md/md.h       |   5 +-
+ drivers/md/raid1.h    |   2 +-
+ drivers/md/raid10.h   |   2 +-
+ drivers/md/md.c       |  54 ++++++--
+ drivers/md/raid1-10.c |  81 ++++-------
+ drivers/md/raid1.c    | 219 +++++++++++++-----------------
+ drivers/md/raid10.c   | 303 ++++++++++++++++++++----------------------
+ 7 files changed, 310 insertions(+), 356 deletions(-)
 
---=20
-Thansk,
-Kuai
+-- 
+2.39.2
+
 
