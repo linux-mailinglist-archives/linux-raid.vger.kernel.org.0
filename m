@@ -1,41 +1,41 @@
-Return-Path: <linux-raid+bounces-5859-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5862-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84444CC7848
-	for <lists+linux-raid@lfdr.de>; Wed, 17 Dec 2025 13:14:11 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 349A6CC788E
+	for <lists+linux-raid@lfdr.de>; Wed, 17 Dec 2025 13:15:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id EC51B30636DB
-	for <lists+linux-raid@lfdr.de>; Wed, 17 Dec 2025 12:11:49 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 94316304A4FF
+	for <lists+linux-raid@lfdr.de>; Wed, 17 Dec 2025 12:12:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E4B4343D90;
-	Wed, 17 Dec 2025 12:11:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 013783446BB;
+	Wed, 17 Dec 2025 12:11:26 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB9E343201;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFCD8343204;
 	Wed, 17 Dec 2025 12:11:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765973485; cv=none; b=UXR0qPge5ZzE5zt4Z0F2eX9eBT6k5Fp5N/ZyGxDACwj9KUXxvf6/ImS+Z/CJqd6vMiQ3ZDvz400n/rAXCws3EM62s0mfBCoAzX+TYUmZ4vQ1rrgzmKAP9De5GBSXtsMcQ8Mf+xcoG6M6cEKYp2coW1lMjzT1jlBqMydEacAXVug=
+	t=1765973485; cv=none; b=MoeEcy/KwNN0K63B0dWUepUEy9e7HQCRfhuRb8soDOUDZiem4xvVK7TdX7os2bfCUDgmRuy7t5NKaDCeEb1woPpYMxQv6sZJTU0oL08Qj8NY6pNaqFNFPNm2t16F+G8D0MTc5F9lwQooZjsVlg/Hm1Ch67K+folMU9XKpBJw8nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1765973485; c=relaxed/simple;
-	bh=pQBpAPQxfq/M/ibNQjzbJURavGAoUDSIa2Jdzm/a1Uk=;
+	bh=2Ab+QkKnuMIQmLYghY2bwomLU3UwvZ3X9rWU+Rsk0E0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rA9sCDmg5NpOKKzRDXYStfKwdYZmKIQ59lFVL9OYJWd+PW59A1/hyL9WTfphQ9RszcluU3tYCXu5Rca1TOJyICQ3kUTu7YaT2fhjjbgaz+zqUmKFiiEIDB9kGAumvq695NwDG2jM+JzbgWSf/TdEaHQStbOXfgQlWGZgeSlvbLo=
+	 MIME-Version; b=nSmhN/m8xGAP3c5HBXXzr7fJTQXUJ/ehwGqgAe9Ofep8YE177nUHtwtI4Z+zT3dDYEvU0680sKfYmDiYtdUTzxRY05ujgLRNycNZsXtnHuM+g09R/yQ+eT6m9uCRx9x2WFrg8eQIVvYFiTvdwC9PF+lTy6YKm/CcfYB3Mf8imF0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4dWXh60PMjzKHN4p;
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4dWXh60pdYzKHN4w;
 	Wed, 17 Dec 2025 20:11:02 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 1FBCB40576;
+	by mail.maildlp.com (Postfix) with ESMTP id 32D5E40577;
 	Wed, 17 Dec 2025 20:11:11 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.50.87.129])
-	by APP4 (Coremail) with SMTP id gCh0CgAXd_fdnUJp6F0JAg--.52527S18;
-	Wed, 17 Dec 2025 20:11:10 +0800 (CST)
+	by APP4 (Coremail) with SMTP id gCh0CgAXd_fdnUJp6F0JAg--.52527S19;
+	Wed, 17 Dec 2025 20:11:11 +0800 (CST)
 From: linan666@huaweicloud.com
 To: song@kernel.org,
 	yukuai@fnnas.com
@@ -45,9 +45,9 @@ Cc: linux-raid@vger.kernel.org,
 	linan666@huaweicloud.com,
 	yangerkun@huawei.com,
 	yi.zhang@huawei.com
-Subject: [PATCH 14/15] md/raid10: clean up sync IO size calculation in raid10_sync_request
-Date: Wed, 17 Dec 2025 20:00:12 +0800
-Message-Id: <20251217120013.2616531-15-linan666@huaweicloud.com>
+Subject: [PATCH 15/15] md/raid1,raid10: fall back to smaller order if sync folio alloc fails
+Date: Wed, 17 Dec 2025 20:00:13 +0800
+Message-Id: <20251217120013.2616531-16-linan666@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20251217120013.2616531-1-linan666@huaweicloud.com>
 References: <20251217120013.2616531-1-linan666@huaweicloud.com>
@@ -58,10 +58,10 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAXd_fdnUJp6F0JAg--.52527S18
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cw1DAry7WF4fCF47Jw18Xwb_yoW8Gr4fpF
-	4DGr97W3y8Ja18Zw45J3WUu3WFya93trWUAr4xW3Z3WF1fCr9Fka18J3WFgFyDXFy3GrWY
-	qw18Ar45A3WkJF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgAXd_fdnUJp6F0JAg--.52527S19
+X-Coremail-Antispam: 1UD129KBjvJXoW3XFykWr48XryxtFW8AF47urg_yoW7CrWUpa
+	1UGrySv34rtFWfXa93Jr1DuF1Fk34xWFWUCFnrWwn7u3WfWryq9F4UXay5WF1DZFn8AFyj
+	q3WDAr45uFs3JaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUQF14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -80,53 +80,173 @@ X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
 From: Li Nan <linan122@huawei.com>
 
-Use 'nr_sectors' directly for sync IO size calculation. Prepare folio
-allocation failure fallback.
+RESYNC_BLOCK_SIZE (64K) has higher allocation failure chance than 4k,
+so retry with lower orders to improve allocation reliability.
 
-No functional changes.
+A r1/10_bio may have different rf->folio orders. Use minimum order as
+r1/10_bio sectors to prevent exceeding size when adding folio to IO later.
 
 Signed-off-by: Li Nan <linan122@huawei.com>
 ---
- drivers/md/raid10.c | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
+ drivers/md/raid1-10.c | 14 +++++++++++---
+ drivers/md/raid1.c    | 13 +++++++++----
+ drivers/md/raid10.c   | 28 ++++++++++++++++++++++++++--
+ 3 files changed, 46 insertions(+), 9 deletions(-)
 
+diff --git a/drivers/md/raid1-10.c b/drivers/md/raid1-10.c
+index ffbd7bd0f6e8..e966d11a81e7 100644
+--- a/drivers/md/raid1-10.c
++++ b/drivers/md/raid1-10.c
+@@ -41,12 +41,20 @@ static void rbio_pool_free(void *rbio, void *data)
+ }
+ 
+ static inline int resync_alloc_folio(struct resync_folio *rf,
+-				     gfp_t gfp_flags)
++				     gfp_t gfp_flags, int *order)
+ {
+-	rf->folio = folio_alloc(gfp_flags, get_order(RESYNC_BLOCK_SIZE));
+-	if (!rf->folio)
++	struct folio *folio;
++
++	do {
++		folio = folio_alloc(gfp_flags, *order);
++		if (folio)
++			break;
++	} while (--(*order) > 0);
++
++	if (!folio)
+ 		return -ENOMEM;
+ 
++	rf->folio = folio;
+ 	return 0;
+ }
+ 
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 2be2277d4e7e..a9af40cda7dd 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -149,6 +149,7 @@ static void * r1buf_pool_alloc(gfp_t gfp_flags, void *data)
+ 	int need_folio;
+ 	int j;
+ 	struct resync_folio *rfs;
++	int order = get_order(RESYNC_BLOCK_SIZE);
+ 
+ 	r1_bio = r1bio_pool_alloc(gfp_flags, conf);
+ 	if (!r1_bio)
+@@ -182,7 +183,7 @@ static void * r1buf_pool_alloc(gfp_t gfp_flags, void *data)
+ 		struct resync_folio *rf = &rfs[j];
+ 
+ 		if (j < need_folio) {
+-			if (resync_alloc_folio(rf, gfp_flags))
++			if (resync_alloc_folio(rf, gfp_flags, &order))
+ 				goto out_free_folio;
+ 		} else {
+ 			memcpy(rf, &rfs[0], sizeof(*rf));
+@@ -193,6 +194,7 @@ static void * r1buf_pool_alloc(gfp_t gfp_flags, void *data)
+ 		r1_bio->bios[j]->bi_private = rf;
+ 	}
+ 
++	r1_bio->sectors = 1 << (order + PAGE_SECTORS_SHIFT);
+ 	r1_bio->master_bio = NULL;
+ 
+ 	return r1_bio;
+@@ -2767,7 +2769,7 @@ static sector_t raid1_sync_request(struct mddev *mddev, sector_t sector_nr,
+ 	int write_targets = 0, read_targets = 0;
+ 	sector_t sync_blocks;
+ 	bool still_degraded = false;
+-	int good_sectors = RESYNC_SECTORS;
++	int good_sectors;
+ 	int min_bad = 0; /* number of sectors that are bad in all devices */
+ 	int idx = sector_to_idx(sector_nr);
+ 
+@@ -2849,8 +2851,11 @@ static sector_t raid1_sync_request(struct mddev *mddev, sector_t sector_nr,
+ 	r1_bio->sector = sector_nr;
+ 	r1_bio->state = 0;
+ 	set_bit(R1BIO_IsSync, &r1_bio->state);
+-	/* make sure good_sectors won't go across barrier unit boundary */
+-	good_sectors = align_to_barrier_unit_end(sector_nr, good_sectors);
++	/*
++	 * make sure good_sectors won't go across barrier unit boundary.
++	 * r1_bio->sectors <= RESYNC_SECTORS.
++	 */
++	good_sectors = align_to_barrier_unit_end(sector_nr, r1_bio->sectors);
+ 
+ 	for (i = 0; i < conf->raid_disks * 2; i++) {
+ 		struct md_rdev *rdev;
 diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index c3ef2ea38b08..f3e10e20ebb1 100644
+index f3e10e20ebb1..f0e91090097a 100644
 --- a/drivers/md/raid10.c
 +++ b/drivers/md/raid10.c
-@@ -3618,28 +3618,24 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
+@@ -135,6 +135,7 @@ static void * r10buf_pool_alloc(gfp_t gfp_flags, void *data)
+ 	int j;
+ 	int nalloc, nalloc_rf;
+ 	struct resync_folio *rfs;
++	int order = get_order(RESYNC_BLOCK_SIZE);
+ 
+ 	r10_bio = r10bio_pool_alloc(gfp_flags, conf);
+ 	if (!r10_bio)
+@@ -185,7 +186,7 @@ static void * r10buf_pool_alloc(gfp_t gfp_flags, void *data)
+ 
+ 		if (!j || test_bit(MD_RECOVERY_SYNC,
+ 				   &conf->mddev->recovery)) {
+-			if (resync_alloc_folio(rf, gfp_flags))
++			if (resync_alloc_folio(rf, gfp_flags, &order))
+ 				goto out_free_pages;
+ 		} else {
+ 			memcpy(rf, &rfs[0], sizeof(*rf));
+@@ -200,6 +201,7 @@ static void * r10buf_pool_alloc(gfp_t gfp_flags, void *data)
  		}
  	}
  
--	nr_sectors = 0;
- 	if (sector_nr + max_sync < max_sector)
- 		max_sector = sector_nr + max_sync;
- 	do {
--		int len = RESYNC_BLOCK_SIZE;
-+		nr_sectors = max_sector - sector_nr;
++	r10_bio->sectors = 1 << (order + PAGE_SECTORS_SHIFT);
+ 	return r10_bio;
  
--		if (sector_nr + (len>>9) > max_sector)
--			len = (max_sector - sector_nr) << 9;
--		if (len == 0)
-+		if (nr_sectors == 0)
- 			break;
- 		for (bio= biolist ; bio ; bio=bio->bi_next) {
- 			struct resync_folio *rf = get_resync_folio(bio);
- 
--			if (WARN_ON(!bio_add_folio(bio, rf->folio, len, 0))) {
-+			if (WARN_ON(!bio_add_folio(bio, rf->folio, nr_sectors << 9, 0))) {
- 				bio->bi_status = BLK_STS_RESOURCE;
- 				bio_endio(bio);
- 				*skipped = 1;
--				return len;
-+				return nr_sectors << 9;
- 			}
+ out_free_pages:
+@@ -3374,6 +3376,15 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
+ 						continue;
+ 					}
+ 				}
++
++				/*
++				 * RESYNC_BLOCK_SIZE folio might alloc failed in
++				 * resync_alloc_folio(). Fall back to smaller sync
++				 * size if needed.
++				 */
++				if (max_sync > r10_bio->sectors)
++					max_sync = r10_bio->sectors;
++
+ 				any_working = 1;
+ 				bio = r10_bio->devs[0].bio;
+ 				bio->bi_next = biolist;
+@@ -3525,7 +3536,15 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
  		}
--		nr_sectors += len>>9;
--		sector_nr += len>>9;
-+		sector_nr += nr_sectors;;
- 	} while (0);
- 	r10_bio->sectors = nr_sectors;
+ 		if (sync_blocks < max_sync)
+ 			max_sync = sync_blocks;
++
+ 		r10_bio = raid10_alloc_init_r10buf(conf);
++		/*
++		 * RESYNC_BLOCK_SIZE folio might alloc failed in resync_alloc_folio().
++		 * Fall back to smaller sync size if needed.
++		 */
++		if (max_sync > r10_bio->sectors)
++			max_sync = r10_bio->sectors;
++
+ 		r10_bio->state = 0;
+ 
+ 		r10_bio->mddev = mddev;
+@@ -4702,7 +4721,12 @@ static sector_t reshape_request(struct mddev *mddev, sector_t sector_nr,
+ 	r10_bio->mddev = mddev;
+ 	r10_bio->sector = sector_nr;
+ 	set_bit(R10BIO_IsReshape, &r10_bio->state);
+-	r10_bio->sectors = last - sector_nr + 1;
++	/*
++	 * RESYNC_BLOCK_SIZE folio might alloc failed in
++	 * resync_alloc_folio(). Fall back to smaller sync
++	 * size if needed.
++	 */
++	r10_bio->sectors = min_t(int, r10_bio->sectors, last - sector_nr + 1);
+ 	rdev = read_balance(conf, r10_bio, &max_sectors);
+ 	BUG_ON(!test_bit(R10BIO_Previous, &r10_bio->state));
  
 -- 
 2.39.2
