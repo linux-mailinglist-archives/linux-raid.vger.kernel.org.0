@@ -1,40 +1,40 @@
-Return-Path: <linux-raid+bounces-5850-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5854-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58C51CC7822
-	for <lists+linux-raid@lfdr.de>; Wed, 17 Dec 2025 13:11:24 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46DB2CC786E
+	for <lists+linux-raid@lfdr.de>; Wed, 17 Dec 2025 13:14:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id AE6893001E16
-	for <lists+linux-raid@lfdr.de>; Wed, 17 Dec 2025 12:11:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 092F930B6E15
+	for <lists+linux-raid@lfdr.de>; Wed, 17 Dec 2025 12:11:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92FE733A9C7;
-	Wed, 17 Dec 2025 12:11:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04877341079;
+	Wed, 17 Dec 2025 12:11:21 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE29A29B764;
-	Wed, 17 Dec 2025 12:11:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC673328B7D;
+	Wed, 17 Dec 2025 12:11:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765973475; cv=none; b=GPFHTW9BtMihN3m9ybyqbBJ73IX6OPRUN2/NqwempvdabJL9ZSc/7N0231mAN+obf/w3Vb5cwd2UzpaDqB30OgdF9FD8HoqLV+bxAX8cg8b5swncohyoS4YoY/ul5GLtC2bVkoKQmnhvCTJYu9hdgf8WhrXPLYlIdSmAZY0MGAc=
+	t=1765973480; cv=none; b=rLEqCYwiLkGBNcG/aFT5RbvJR+MOZvnd8lwIlJIt0Aw1WmY+pYEP0jxk7t/vXQoIoVymJihqx1YahM5fRmhyef/Tje8zQiyMZn6Tfi2Dh5b2qjz5hhrSe8ERmRzzljMx/umgWg/+uYOmfjGviQg1YdNRTnesHg1jq+ODATCDs+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765973475; c=relaxed/simple;
-	bh=Z81F5faV8Go/v42IbDRj5OpLIq2tSbyJukEKkImbA/M=;
+	s=arc-20240116; t=1765973480; c=relaxed/simple;
+	bh=vxJQfsEHOgj15WJX57QttQUdcA7U3E5FweBDf6WQcZE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YaqXo+11ZJZP3iCJ0KZu9qMLPIU5aXIMoBiTrbUML06P9iboEW10cSYZi8LmDKl7Ev8aBQwRUvsTIwlyu1X73EuNl2+S5VzPJFYNi4SRddR2TJcY8wq7+bmScGY5WGa9fJa/rKxjFgh+XoLILpnUyOu1w9IYSBe7+N+vog6e+r4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=YAkzx2EN1ajcFtvdEobaLIVnTQd/4S0lI4k0365ZIKYJ5p2/t5hfRGBZOgw/FY55kI605Dnaoims6cMKX2iXqyW8cNSDn+8EU7ElYFHpYrkmwyc0LNZkrnY/g3wd3xk2m0culQsqiNlVIftUrMpGUSKZiTNOYygWuOnq5abcVO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4dWXgl2kQwzYQvF4;
-	Wed, 17 Dec 2025 20:10:43 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.177])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4dWXh51JqmzKHN3L;
+	Wed, 17 Dec 2025 20:11:01 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 3B0C340575;
+	by mail.maildlp.com (Postfix) with ESMTP id 4456640590;
 	Wed, 17 Dec 2025 20:11:10 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.50.87.129])
-	by APP4 (Coremail) with SMTP id gCh0CgAXd_fdnUJp6F0JAg--.52527S5;
+	by APP4 (Coremail) with SMTP id gCh0CgAXd_fdnUJp6F0JAg--.52527S6;
 	Wed, 17 Dec 2025 20:11:10 +0800 (CST)
 From: linan666@huaweicloud.com
 To: song@kernel.org,
@@ -45,9 +45,9 @@ Cc: linux-raid@vger.kernel.org,
 	linan666@huaweicloud.com,
 	yangerkun@huawei.com,
 	yi.zhang@huawei.com
-Subject: [PATCH 01/15] md/raid1,raid10: clean up of RESYNC_SECTORS
-Date: Wed, 17 Dec 2025 19:59:59 +0800
-Message-Id: <20251217120013.2616531-2-linan666@huaweicloud.com>
+Subject: [PATCH 02/15] md: introduce sync_folio_io for folio support in RAID
+Date: Wed, 17 Dec 2025 20:00:00 +0800
+Message-Id: <20251217120013.2616531-3-linan666@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20251217120013.2616531-1-linan666@huaweicloud.com>
 References: <20251217120013.2616531-1-linan666@huaweicloud.com>
@@ -58,13 +58,13 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAXd_fdnUJp6F0JAg--.52527S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxJr4rtF4rJFWUZryDKrWrGrg_yoW5JFy8pa
-	1DGrySvw45KF47Jas7JayUua1Yy3Zrt3yUCrn5Za95uFy3XrZrXrWjqayYgF1DXFn5tFy2
-	q3WDCr4UZFy3taUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmC14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-	x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+X-CM-TRANSID:gCh0CgAXd_fdnUJp6F0JAg--.52527S6
+X-Coremail-Antispam: 1UD129KBjvJXoWxXw4DXF1xCF4UCF4xJFWfGrg_yoW5Gr1fpa
+	40kasxG3y5Zw42gw13JFs7Ca4Sq34IgrWUtryfuayfW3W7KryDKF4UtF1jvF98GF98CF4x
+	t34jgay5urn5Wr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmC14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
+	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
 	Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
 	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAa
 	c4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzV
@@ -75,78 +75,78 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxJr4rtF4rJFWUZryDKrWrGrg_yoW5JFy8pa
 	106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AK
 	xVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7
 	xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_
-	Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUfCzNUUUUU=
+	Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUFD73UUUUU=
 X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
 From: Li Nan <linan122@huawei.com>
 
-Move redundant RESYNC_SECTORS definition from raid1 and raid10
-implementations to raid1-10.c.
+Prepare for folio support in RAID by introducing sync_folio_io(),
+matching sync_page_io()'s functionality. Differences are:
 
-Simplify max_sync assignment in raid10_sync_request().
+- Replace input parameter 'page' with 'folio'
+- Replace __bio_add_page() calls with bio_add_folio_nofail()
+- Add new parameter 'off' to prepare for adding a folio to bio in segments,
+  e.g. in fix_recovery_read_error()
 
-No functional changes.
+sync_page_io() will be removed once full folio support is complete.
 
 Signed-off-by: Li Nan <linan122@huawei.com>
 ---
- drivers/md/raid1-10.c | 1 +
- drivers/md/raid1.c    | 1 -
- drivers/md/raid10.c   | 4 +---
- 3 files changed, 2 insertions(+), 4 deletions(-)
+ drivers/md/md.h |  2 ++
+ drivers/md/md.c | 27 +++++++++++++++++++++++++++
+ 2 files changed, 29 insertions(+)
 
-diff --git a/drivers/md/raid1-10.c b/drivers/md/raid1-10.c
-index 521625756128..260d7fd7ccbe 100644
---- a/drivers/md/raid1-10.c
-+++ b/drivers/md/raid1-10.c
-@@ -2,6 +2,7 @@
- /* Maximum size of each resync request */
- #define RESYNC_BLOCK_SIZE (64*1024)
- #define RESYNC_PAGES ((RESYNC_BLOCK_SIZE + PAGE_SIZE-1) / PAGE_SIZE)
-+#define RESYNC_SECTORS (RESYNC_BLOCK_SIZE >> 9)
- 
- /*
-  * Number of guaranteed raid bios in case of extreme VM load:
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 00120c86c443..407925951299 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -136,7 +136,6 @@ static void *r1bio_pool_alloc(gfp_t gfp_flags, struct r1conf *conf)
+diff --git a/drivers/md/md.h b/drivers/md/md.h
+index a083f37374d0..410f8a6b75e7 100644
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -920,6 +920,8 @@ void md_write_metadata(struct mddev *mddev, struct md_rdev *rdev,
+ extern int md_super_wait(struct mddev *mddev);
+ extern int sync_page_io(struct md_rdev *rdev, sector_t sector, int size,
+ 		struct page *page, blk_opf_t opf, bool metadata_op);
++extern int sync_folio_io(struct md_rdev *rdev, sector_t sector, int size,
++		int off, struct folio *folio, blk_opf_t opf, bool metadata_op);
+ extern void md_do_sync(struct md_thread *thread);
+ extern void md_new_event(void);
+ extern void md_allow_write(struct mddev *mddev);
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index cde84c9f05eb..9dfd6f8da5b8 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -1192,6 +1192,33 @@ int sync_page_io(struct md_rdev *rdev, sector_t sector, int size,
  }
+ EXPORT_SYMBOL_GPL(sync_page_io);
  
- #define RESYNC_DEPTH 32
--#define RESYNC_SECTORS (RESYNC_BLOCK_SIZE >> 9)
- #define RESYNC_WINDOW (RESYNC_BLOCK_SIZE * RESYNC_DEPTH)
- #define RESYNC_WINDOW_SECTORS (RESYNC_WINDOW >> 9)
- #define CLUSTER_RESYNC_WINDOW (16 * RESYNC_WINDOW)
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index 1adad768e277..1e57d9ce98e7 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -113,7 +113,6 @@ static void * r10bio_pool_alloc(gfp_t gfp_flags, void *data)
- 	return kzalloc(size, gfp_flags);
- }
- 
--#define RESYNC_SECTORS (RESYNC_BLOCK_SIZE >> 9)
- /* amount of memory to reserve for resync requests */
- #define RESYNC_WINDOW (1024*1024)
- /* maximum number of concurrent requests, memory permitting */
-@@ -3171,7 +3170,7 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
- 	struct bio *biolist = NULL, *bio;
- 	sector_t nr_sectors;
- 	int i;
--	int max_sync;
-+	int max_sync = RESYNC_SECTORS;
- 	sector_t sync_blocks;
- 	sector_t chunk_mask = conf->geo.chunk_mask;
- 	int page_idx = 0;
-@@ -3284,7 +3283,6 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
- 	 * end_sync_write if we will want to write.
- 	 */
- 
--	max_sync = RESYNC_PAGES << (PAGE_SHIFT-9);
- 	if (!test_bit(MD_RECOVERY_SYNC, &mddev->recovery)) {
- 		/* recovery... the complicated one */
- 		int j;
++int sync_folio_io(struct md_rdev *rdev, sector_t sector, int size, int off,
++		  struct folio *folio, blk_opf_t opf, bool metadata_op)
++{
++	struct bio bio;
++	struct bio_vec bvec;
++
++	if (metadata_op && rdev->meta_bdev)
++		bio_init(&bio, rdev->meta_bdev, &bvec, 1, opf);
++	else
++		bio_init(&bio, rdev->bdev, &bvec, 1, opf);
++
++	if (metadata_op)
++		bio.bi_iter.bi_sector = sector + rdev->sb_start;
++	else if (rdev->mddev->reshape_position != MaxSector &&
++		 (rdev->mddev->reshape_backwards ==
++		  (sector >= rdev->mddev->reshape_position)))
++		bio.bi_iter.bi_sector = sector + rdev->new_data_offset;
++	else
++		bio.bi_iter.bi_sector = sector + rdev->data_offset;
++	bio_add_folio_nofail(&bio, folio, size, off);
++
++	submit_bio_wait(&bio);
++
++	return !bio.bi_status;
++}
++EXPORT_SYMBOL_GPL(sync_folio_io);
++
+ static int read_disk_sb(struct md_rdev *rdev, int size)
+ {
+ 	if (rdev->sb_loaded)
 -- 
 2.39.2
 
