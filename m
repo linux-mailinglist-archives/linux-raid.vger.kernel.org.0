@@ -1,40 +1,40 @@
-Return-Path: <linux-raid+bounces-5945-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5947-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E8A7CEB6DD
-	for <lists+linux-raid@lfdr.de>; Wed, 31 Dec 2025 08:20:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 44B12CEB6E9
+	for <lists+linux-raid@lfdr.de>; Wed, 31 Dec 2025 08:20:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9012A3062E29
-	for <lists+linux-raid@lfdr.de>; Wed, 31 Dec 2025 07:18:33 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B52D030753F8
+	for <lists+linux-raid@lfdr.de>; Wed, 31 Dec 2025 07:18:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9156831282E;
-	Wed, 31 Dec 2025 07:18:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C17031328A;
+	Wed, 31 Dec 2025 07:18:27 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865A2312809;
-	Wed, 31 Dec 2025 07:18:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F54831281E;
+	Wed, 31 Dec 2025 07:18:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767165506; cv=none; b=dE7+UwvZrlqYDb1QDqD3IRMtbcua22YEHYn4FYimCUUirqb/e5k6EL3nky+ExTq/Laa8p3KTzGiIKqKLLziRzId/8fS+YEi26HnrKjWCn8bW3y/y2NLUWfsdA/U4vrhQdrJsTAdwpLD6kEl2G7qlFPFRHfyfXSongRyvclPpKO8=
+	t=1767165507; cv=none; b=d4JqW5nUuh9HuFJQSzogf5hgj5fAWXsdU4XH9iAL8Y3mTSrTWLmzZed0WNGLq22x5zImYICQcuVL5tUNKUI+kz+ZBN/sOmCaiWB8pLvZnW3H7+zJS6CLLE5xEL0p63Hzh0UTr2NgTtmbILkA/e1x7UzjcD93oEtJrQmor6w9FMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767165506; c=relaxed/simple;
-	bh=wD8FHpHqkX5jNbiYy0DINKIaJwKn7zGymIepGLy+GOs=;
+	s=arc-20240116; t=1767165507; c=relaxed/simple;
+	bh=kuTuoLRmx5kcg7dEJWeHlNg35pF688C2AAva8VDTaqM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=o9S9/lMYhN9jp5cSUJSg+6EL2dm1+oihZFY4y7HAU/+FW8K5VSc1iLZSyJ10p9TjnsA8SgfqbB0dK33ZjEkkmFyL4zatB3Nfl2U0PJIJUyrzTBrieh7IOLf3BN1LkijMhDZjLwOs0Fo/FU6v8jfEAkIdlH0TYZET7KSgbP+fl+4=
+	 MIME-Version; b=NoBU1f0JCdoxZj/0VJFZ62Y6vC0orQXPZ/R3lMEzTjg1ihDDIfUiJwWIluT9cCqd8VAWmoBjt6t7NaFwHEFPoQBzdT/fsubgBsXNbHPmQKZqbEQhD8tGgL3H8DMf9ibaOr4GMDEnd7NtcF479GlsZ1qEGIRODq1YmC+WpIgskFA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.170])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4dh1Vv3Q97zYQtpK;
+Received: from mail.maildlp.com (unknown [172.19.163.198])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4dh1Vv46k1zYQtpK;
 	Wed, 31 Dec 2025 15:17:27 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 82C9E4056C;
+	by mail.maildlp.com (Postfix) with ESMTP id 9CB1940576;
 	Wed, 31 Dec 2025 15:18:17 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.50.87.129])
-	by APP4 (Coremail) with SMTP id gCh0CgCX+PgvzlRpTtVyCA--.62349S6;
+	by APP4 (Coremail) with SMTP id gCh0CgCX+PgvzlRpTtVyCA--.62349S7;
 	Wed, 31 Dec 2025 15:18:17 +0800 (CST)
 From: Zheng Qixing <zhengqixing@huaweicloud.com>
 To: song@kernel.org,
@@ -46,9 +46,9 @@ Cc: linux-raid@vger.kernel.org,
 	houtao1@huawei.com,
 	zhengqixing@huawei.com,
 	linan122@h-partners.com
-Subject: [RFC PATCH 2/5] md: clear stale sync flags when frozen before sync starts
-Date: Wed, 31 Dec 2025 15:09:49 +0800
-Message-Id: <20251231070952.1233903-3-zhengqixing@huaweicloud.com>
+Subject: [RFC PATCH 3/5] md: simplify sync action print in status_resync
+Date: Wed, 31 Dec 2025 15:09:50 +0800
+Message-Id: <20251231070952.1233903-4-zhengqixing@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20251231070952.1233903-1-zhengqixing@huaweicloud.com>
 References: <20251231070952.1233903-1-zhengqixing@huaweicloud.com>
@@ -59,51 +59,69 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCX+PgvzlRpTtVyCA--.62349S6
-X-Coremail-Antispam: 1UD129KBjvdXoW7GFyfCF43GF4ftr4fCw17ZFb_yoWDXwcEkF
-	WUA34xWr409FWjgr1qv3WYgry5JFn3WF17WF4Sv3yrZasrur1xGrnYy3W5uw4UZws0kr9x
-	K3yDG3W3trs7KjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbf8YFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7IE14v26r15M2
-	8IrcIa0xkI8VCY1x0267AKxVW8JVW5JwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK
-	021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r
-	4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx
-	0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4UJVWxJr1lOx8S6xCaFVCjc4AY
-	6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI4
-	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
-	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
-	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20E
-	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
-	AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU82LvtUUUUU==
+X-CM-TRANSID:gCh0CgCX+PgvzlRpTtVyCA--.62349S7
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZF43Wr1rCr43JFyfuFWrAFb_yoW8Wr1kpF
+	WfAF98urWkJFyfJ3y7t348ZFWrGF1Ut347AF9xu3y5ZF1Sgas5KFyq9a1UXryDGr9Yqan8
+	Xa4kGw45uFyjkw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUWw
+	A2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMc
+	Ij6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkE
+	bVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07Upc_-UUUUU=
 X-CM-SenderInfo: x2kh0wptl0x03j6k3tpzhluzxrxghudrp/
 
 From: Zheng Qixing <zhengqixing@huawei.com>
 
-In md_check_recovery(), add clearing of all sync flags when sync is not
-running. This fixes the issue where a sync operation is requested, then
-'frozen' is executed before MD_RECOVERY_RUNNING is set, leaving stale
-operation flags that cause subsequent operations to fail with EBUSY.
+No functional change, just code cleanup to make it easier to add new
+sync actions later.
 
 Signed-off-by: Zheng Qixing <zhengqixing@huawei.com>
 ---
- drivers/md/md.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/md/md.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/md/md.c b/drivers/md/md.c
-index ccaa2e6fe079..52e09a9a9288 100644
+index 52e09a9a9288..9eeab5258189 100644
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -10336,6 +10336,9 @@ void md_check_recovery(struct mddev *mddev)
- 			queue_work(md_misc_wq, &mddev->sync_work);
- 		} else {
- 			clear_bit(MD_RECOVERY_RUNNING, &mddev->recovery);
-+			clear_bit(MD_RECOVERY_SYNC, &mddev->recovery);
-+			clear_bit(MD_RECOVERY_REQUESTED, &mddev->recovery);
-+			clear_bit(MD_RECOVERY_CHECK, &mddev->recovery);
- 			wake_up(&resync_wait);
- 		}
+@@ -8684,6 +8684,8 @@ static int status_resync(struct seq_file *seq, struct mddev *mddev)
+ 	sector_t rt, curr_mark_cnt, resync_mark_cnt;
+ 	int scale, recovery_active;
+ 	unsigned int per_milli;
++	enum sync_action action;
++	const char *sync_action_name;
  
+ 	if (test_bit(MD_RECOVERY_SYNC, &mddev->recovery) ||
+ 	    test_bit(MD_RECOVERY_RESHAPE, &mddev->recovery))
+@@ -8765,13 +8767,13 @@ static int status_resync(struct seq_file *seq, struct mddev *mddev)
+ 			seq_printf(seq, ".");
+ 		seq_printf(seq, "] ");
+ 	}
+-	seq_printf(seq, " %s =%3u.%u%% (%llu/%llu)",
+-		   (test_bit(MD_RECOVERY_RESHAPE, &mddev->recovery)?
+-		    "reshape" :
+-		    (test_bit(MD_RECOVERY_CHECK, &mddev->recovery)?
+-		     "check" :
+-		     (test_bit(MD_RECOVERY_SYNC, &mddev->recovery) ?
+-		      "resync" : "recovery"))),
++
++	action = md_sync_action(mddev);
++	if (action == ACTION_RECOVER)
++		sync_action_name = "recovery";
++	else
++		sync_action_name = md_sync_action_name(action);
++	seq_printf(seq, " %s =%3u.%u%% (%llu/%llu)", sync_action_name,
+ 		   per_milli/10, per_milli % 10,
+ 		   (unsigned long long) resync/2,
+ 		   (unsigned long long) max_sectors/2);
 -- 
 2.39.2
 
