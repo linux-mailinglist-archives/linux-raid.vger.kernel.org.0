@@ -1,40 +1,40 @@
-Return-Path: <linux-raid+bounces-5978-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-5985-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35134CF33B2
-	for <lists+linux-raid@lfdr.de>; Mon, 05 Jan 2026 12:25:37 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id BAE4ACF34F6
+	for <lists+linux-raid@lfdr.de>; Mon, 05 Jan 2026 12:41:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DDA2B30433EC
-	for <lists+linux-raid@lfdr.de>; Mon,  5 Jan 2026 11:21:48 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1BDD230376AE
+	for <lists+linux-raid@lfdr.de>; Mon,  5 Jan 2026 11:36:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C30623191C0;
-	Mon,  5 Jan 2026 11:11:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 627AA334C3F;
+	Mon,  5 Jan 2026 11:11:48 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0CF72D9EF9;
-	Mon,  5 Jan 2026 11:11:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC78330B3F;
+	Mon,  5 Jan 2026 11:11:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767611502; cv=none; b=q+2Qs53Y2hDtjqvo4kEL63GZn8mW1uXNXouRfwZpiivbBLOE4B/tsP/NyTZ/GGDP5zk7UvIxcKPQ6DMhXGPbDk9MwGwj3cnyfwvqMNDNK13bWd4D/oikqf21fpO+PsabNiGJOy7FE1Fp51WO7+5NW+fp1yMz6GIXf+Osqpxfl9w=
+	t=1767611507; cv=none; b=Lpw4gw1CDLs82iApOlr2vhRtdxi4DjUBL7A3ZthdE5SH2MV+qut7vEV8nBpsLABmR3NyK+bnJnvs482PnKxTRM+IUhFv6CmTMbJoiWL6u4y9kAbvAZTNWUuTVvrR2J+1CKO1PrduIEIqcNXwz31DGGXuRQ4p8wBlpkdFKhJ65NQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767611502; c=relaxed/simple;
-	bh=AXYleCh8ABpOR64lxyDuKkYhupTRY+KxJ/Xyp6KnLM4=;
+	s=arc-20240116; t=1767611507; c=relaxed/simple;
+	bh=uWRUdmUjfw8Jpb0zIts0NLt04xxEhZ3/kC8tMcxGYIc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mQAsLRiHeP4Kq2lrrZLSVQ0FxOV/I5Nz8EsJul3tLdWZZKDF0SIALXmpVUzZB6ZftYrVtWeimf7/x37r9PM/vtTz7+5KAcTYMgGU3ukDcodTzEUo8c6hfW9l7XXTZMEpGHQvay4RgzosBG4sKbvuavs5S/6c13gJ8mCLJO2NP6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	 MIME-Version; b=LclrVuvKPWVbJOGNdGHrucrz24O8NcJWmc0y53uPTZic4OmZaPcD/yg+qOf/1cMrPQ4VYe5uw9TXFu5WWF9r4mhNucX/3NQs4H9VbnobHagWX6GxIGDxrobne6MlbQF9BhtR9AIxMxSog/aNB02MttKkO2S/07EYAgLLyqgWgM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.170])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4dlBS35c81zKHMnt;
-	Mon,  5 Jan 2026 19:10:59 +0800 (CST)
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4dlBRg1VLczYQv4V;
+	Mon,  5 Jan 2026 19:10:39 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id DE7384056C;
+	by mail.maildlp.com (Postfix) with ESMTP id E99B14056E;
 	Mon,  5 Jan 2026 19:11:37 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.50.87.129])
-	by APP4 (Coremail) with SMTP id gCh0CgBXuPhmnFtp6EHbCg--.50545S14;
+	by APP4 (Coremail) with SMTP id gCh0CgBXuPhmnFtp6EHbCg--.50545S15;
 	Mon, 05 Jan 2026 19:11:37 +0800 (CST)
 From: linan666@huaweicloud.com
 To: song@kernel.org,
@@ -46,9 +46,9 @@ Cc: linux-raid@vger.kernel.org,
 	linan666@huaweicloud.com,
 	yangerkun@huawei.com,
 	yi.zhang@huawei.com
-Subject: [PATCH v4 10/12] md/raid10: fix any_working flag handling in raid10_sync_request
-Date: Mon,  5 Jan 2026 19:02:58 +0800
-Message-Id: <20260105110300.1442509-11-linan666@huaweicloud.com>
+Subject: [PATCH v4 11/12] md/raid10: cleanup skip handling in raid10_sync_request
+Date: Mon,  5 Jan 2026 19:02:59 +0800
+Message-Id: <20260105110300.1442509-12-linan666@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20260105110300.1442509-1-linan666@huaweicloud.com>
 References: <20260105110300.1442509-1-linan666@huaweicloud.com>
@@ -59,60 +59,232 @@ List-Subscribe: <mailto:linux-raid+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBXuPhmnFtp6EHbCg--.50545S14
-X-Coremail-Antispam: 1UD129KBjvdXoWrtFy7uFy8Zw47GF1fKry8Krg_yoWkKFXEka
-	45ZF4Yqr1I9r12yw15Gr1SvrW3Za4DWan7Cr1UtryrZ34fZ3WFkr45uas8Zw15AF98Xas0
-	kw1vgrySva1DujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbPxFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2
-	IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28E
-	F7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr
-	1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0D
-	M2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64
-	kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8Jr0_Cr1U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I64
-	8v4I1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC2
-	0s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI
-	0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
-	14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxKx2
-	IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQqXLUUUUU=
+X-CM-TRANSID:gCh0CgBXuPhmnFtp6EHbCg--.50545S15
+X-Coremail-Antispam: 1UD129KBjvJXoWxKw4UXFyrGw1UZFy7Zry7ZFb_yoWxGw4fpa
+	nxtFZrt3y8X3yrJwn8AryUWFyFyrWfJay5tr47W34Ikwn3KrsrZFWxXF40qFyDWFyrXF45
+	Xw4kXr45CasxtFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUQF14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
+	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
+	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
+	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
+	3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0V
+	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr1j6F4U
+	JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20V
+	AGYxC7M4kE6xkIj40Ew7xC0wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
+	v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY
+	67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQqXLUUUUU=
 X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
 From: Li Nan <linan122@huawei.com>
 
-In raid10_sync_request(), 'any_working' indicates if any IO will
-be submitted. When there's only one In_sync disk with badblocks,
-'any_working' might be set to 1 but no IO is submitted. Fix it by
-setting 'any_working' after badblock checks.
+Skip a sector in raid10_sync_request() when it needs no syncing or no
+readable device exists. Current skip handling is unnecessary:
 
-Fixes: e875ecea266a ("md/raid10 record bad blocks as needed during recovery.")
+- Use 'skip' label to reissue the next sector instead of return directly
+- Complete sync and return 'max_sectors' when multiple sectors are skipped
+  due to badblocks
+
+The first is error-prone. For example, commit bc49694a9e8f ("md: pass in
+max_sectors for pers->sync_request()") removed redundant max_sector
+assignments. Since skip modifies max_sectors, `goto skip` leaves
+max_sectors equal to sector_nr after the jump, which is incorrect.
+
+The second causes sync to complete erroneously when no actual sync occurs.
+For recovery, recording badblocks and continue syncing subsequent sectors
+is more suitable. For resync, just skip bad sectors and syncing subsequent
+sectors.
+
+Clean up complex and unnecessary skip code. Return immediately when a
+sector should be skipped. Reduce code paths and lower regression risk.
+
+Fixes: bc49694a9e8f ("md: pass in max_sectors for pers->sync_request()")
 Signed-off-by: Li Nan <linan122@huawei.com>
-Reviewed-by: Yu Kuai <yukuai3@huawei.com>
+Reviewed-by: Yu Kuai <yukuai@fnnas.com>
 ---
- drivers/md/raid10.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/raid10.c | 96 +++++++++++----------------------------------
+ 1 file changed, 22 insertions(+), 74 deletions(-)
 
 diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index 147d4bbdf123..01e53a43d663 100644
+index 01e53a43d663..e6b0d9e5e124 100644
 --- a/drivers/md/raid10.c
 +++ b/drivers/md/raid10.c
-@@ -3395,7 +3395,6 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
- 				    !test_bit(In_sync, &rdev->flags))
- 					continue;
- 				/* This is where we read from */
--				any_working = 1;
- 				sector = r10_bio->devs[j].addr;
+@@ -3161,11 +3161,8 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
+ 	int i;
+ 	int max_sync;
+ 	sector_t sync_blocks;
+-	sector_t sectors_skipped = 0;
+-	int chunks_skipped = 0;
+ 	sector_t chunk_mask = conf->geo.chunk_mask;
+ 	int page_idx = 0;
+-	int error_disk = -1;
  
- 				if (is_badblock(rdev, sector, max_sync,
-@@ -3410,6 +3409,7 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
- 						continue;
- 					}
+ 	/*
+ 	 * Allow skipping a full rebuild for incremental assembly
+@@ -3186,7 +3183,6 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
+ 		if (init_resync(conf))
+ 			return 0;
+ 
+- skipped:
+ 	if (sector_nr >= max_sector) {
+ 		conf->cluster_sync_low = 0;
+ 		conf->cluster_sync_high = 0;
+@@ -3238,33 +3234,12 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
+ 			mddev->bitmap_ops->close_sync(mddev);
+ 		close_sync(conf);
+ 		*skipped = 1;
+-		return sectors_skipped;
++		return 0;
+ 	}
+ 
+ 	if (test_bit(MD_RECOVERY_RESHAPE, &mddev->recovery))
+ 		return reshape_request(mddev, sector_nr, skipped);
+ 
+-	if (chunks_skipped >= conf->geo.raid_disks) {
+-		pr_err("md/raid10:%s: %s fails\n", mdname(mddev),
+-			test_bit(MD_RECOVERY_SYNC, &mddev->recovery) ?  "resync" : "recovery");
+-		if (error_disk >= 0 &&
+-		    !test_bit(MD_RECOVERY_SYNC, &mddev->recovery)) {
+-			/*
+-			 * recovery fails, set mirrors.recovery_disabled,
+-			 * device shouldn't be added to there.
+-			 */
+-			conf->mirrors[error_disk].recovery_disabled =
+-						mddev->recovery_disabled;
+-			return 0;
+-		}
+-		/*
+-		 * if there has been nothing to do on any drive,
+-		 * then there is nothing to do at all.
+-		 */
+-		*skipped = 1;
+-		return (max_sector - sector_nr) + sectors_skipped;
+-	}
+-
+ 	if (max_sector > mddev->resync_max)
+ 		max_sector = mddev->resync_max; /* Don't do IO beyond here */
+ 
+@@ -3347,7 +3322,6 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
+ 				/* yep, skip the sync_blocks here, but don't assume
+ 				 * that there will never be anything to do here
+ 				 */
+-				chunks_skipped = -1;
+ 				continue;
+ 			}
+ 			if (mrdev)
+@@ -3478,29 +3452,19 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
+ 					for (k = 0; k < conf->copies; k++)
+ 						if (r10_bio->devs[k].devnum == i)
+ 							break;
+-					if (mrdev && !test_bit(In_sync,
+-						      &mrdev->flags)
+-					    && !rdev_set_badblocks(
+-						    mrdev,
+-						    r10_bio->devs[k].addr,
+-						    max_sync, 0))
+-						any_working = 0;
+-					if (mreplace &&
+-					    !rdev_set_badblocks(
+-						    mreplace,
+-						    r10_bio->devs[k].addr,
+-						    max_sync, 0))
+-						any_working = 0;
+-				}
+-				if (!any_working)  {
+-					if (!test_and_set_bit(MD_RECOVERY_INTR,
+-							      &mddev->recovery))
+-						pr_warn("md/raid10:%s: insufficient working devices for recovery.\n",
+-						       mdname(mddev));
+-					mirror->recovery_disabled
+-						= mddev->recovery_disabled;
+-				} else {
+-					error_disk = i;
++					if (mrdev &&
++					    !test_bit(In_sync, &mrdev->flags))
++						rdev_set_badblocks(
++							mrdev,
++							r10_bio->devs[k].addr,
++							max_sync, 0);
++					if (mreplace)
++						rdev_set_badblocks(
++							mreplace,
++							r10_bio->devs[k].addr,
++							max_sync, 0);
++					pr_warn("md/raid10:%s: cannot recovery sector %llu + %d.\n",
++						mdname(mddev), r10_bio->devs[k].addr, max_sync);
  				}
-+				any_working = 1;
- 				bio = r10_bio->devs[0].bio;
- 				bio->bi_next = biolist;
- 				biolist = bio;
+ 				put_buf(r10_bio);
+ 				if (rb2)
+@@ -3541,7 +3505,8 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
+ 				rb2->master_bio = NULL;
+ 				put_buf(rb2);
+ 			}
+-			goto giveup;
++			*skipped = 1;
++			return max_sync;
+ 		}
+ 	} else {
+ 		/* resync. Schedule a read for every block at this virt offset */
+@@ -3565,7 +3530,7 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
+ 						 &mddev->recovery)) {
+ 			/* We can skip this block */
+ 			*skipped = 1;
+-			return sync_blocks + sectors_skipped;
++			return sync_blocks;
+ 		}
+ 		if (sync_blocks < max_sync)
+ 			max_sync = sync_blocks;
+@@ -3657,8 +3622,8 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
+ 						mddev);
+ 			}
+ 			put_buf(r10_bio);
+-			biolist = NULL;
+-			goto giveup;
++			*skipped = 1;
++			return max_sync;
+ 		}
+ 	}
+ 
+@@ -3678,7 +3643,8 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
+ 			if (WARN_ON(!bio_add_page(bio, page, len, 0))) {
+ 				bio->bi_status = BLK_STS_RESOURCE;
+ 				bio_endio(bio);
+-				goto giveup;
++				*skipped = 1;
++				return max_sync;
+ 			}
+ 		}
+ 		nr_sectors += len>>9;
+@@ -3746,25 +3712,7 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
+ 		}
+ 	}
+ 
+-	if (sectors_skipped)
+-		/* pretend they weren't skipped, it makes
+-		 * no important difference in this case
+-		 */
+-		md_done_sync(mddev, sectors_skipped);
+-
+-	return sectors_skipped + nr_sectors;
+- giveup:
+-	/* There is nowhere to write, so all non-sync
+-	 * drives must be failed or in resync, all drives
+-	 * have a bad block, so try the next chunk...
+-	 */
+-	if (sector_nr + max_sync < max_sector)
+-		max_sector = sector_nr + max_sync;
+-
+-	sectors_skipped += (max_sector - sector_nr);
+-	chunks_skipped ++;
+-	sector_nr = max_sector;
+-	goto skipped;
++	return nr_sectors;
+ }
+ 
+ static sector_t
 -- 
 2.39.2
 
