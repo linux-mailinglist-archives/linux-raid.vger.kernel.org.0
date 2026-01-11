@@ -1,39 +1,39 @@
-Return-Path: <linux-raid+bounces-6029-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-6030-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8276D0F917
-	for <lists+linux-raid@lfdr.de>; Sun, 11 Jan 2026 19:28:01 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EF27D0F91A
+	for <lists+linux-raid@lfdr.de>; Sun, 11 Jan 2026 19:28:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 807DB3065786
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9F02E30662BE
 	for <lists+linux-raid@lfdr.de>; Sun, 11 Jan 2026 18:27:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A28634EEF0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E31D034DCFE;
 	Sun, 11 Jan 2026 18:27:22 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3251334F462
-	for <linux-raid@vger.kernel.org>; Sun, 11 Jan 2026 18:27:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586FB34EEE4
+	for <linux-raid@vger.kernel.org>; Sun, 11 Jan 2026 18:27:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768156039; cv=none; b=CYG/USdUrJLhDa2KrKb0B6U7doGWLtMGqENB2Kw2ZCH6I2OSxV6TDOmxfsSVvzWyYzQqwrEvTMm7K5h7Uc66f3SfFC/a1RW2g39XszEhkVDSt8D7p+3LIBhbPcCn1R/qAgHaajuuWAOXpmHBcYJts2kmxVZSkSLBDv9IEvVkP1M=
+	t=1768156041; cv=none; b=IOz4H3b9ypMjzB5/9WxeJg0qMfsu42Gc0+3vz4hrWfbFQJvbIxnJbcTBowEt2w1g6qzNB2tPX/lCsDRoCnCjNN79kIUTZ0+GCnmeomV88BvHJwfQITsTeQk86VKv2IRDuFAXgq/vWE9VaMRTlTBbGRl/uqzr9wBcHxUIFkRRraw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768156039; c=relaxed/simple;
-	bh=aedvWl2UHXJ1FS4PqDkEcCNvc4f602nSGiEfpgJaBdk=;
+	s=arc-20240116; t=1768156041; c=relaxed/simple;
+	bh=VcvRT2kU2+Gnxw5qLlh6oIKyHJ18/RTCihIZilmokSg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HqQn9jjhPEJGKyD36eR90Ud3aOAjJoKm1lvMCGHjtYmlFovNeJX0tqy00qOCxNN/VAsZgIXws3WQPIKRrczqk422diPByBqBiTUNruK4fLums/QtOeXIMy53R667UFtUbPnkghPUCdwd2zjoX3LtLxXyb9YvG2zCLRhbyPf5GR0=
+	 MIME-Version; b=U/DqpQiHf2az6mq9dP4EFLrLektZ6Gcfzz7uW2SGSOEOfv5jHpkY3i//6x1k2JIecP54hX8dZyJHA52RUf0cHt4R7laaVjBNmjq+211CCgCtZ7NLW5vwRjeQAk1VPeSwVDia3/gm28RvpkTtTuMnmlI90xnevNR3u181KuCxSGI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E9BAC4CEF7;
-	Sun, 11 Jan 2026 18:27:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C5DAC116C6;
+	Sun, 11 Jan 2026 18:27:17 +0000 (UTC)
 From: Yu Kuai <yukuai@fnnas.com>
 To: linux-raid@vger.kernel.org,
 	linan122@huawei.com
 Cc: yukuai@fnnas.com
-Subject: [PATCH v3 08/11] md/raid5: align bio to io_opt
-Date: Mon, 12 Jan 2026 02:26:48 +0800
-Message-ID: <20260111182651.2097070-9-yukuai@fnnas.com>
+Subject: [PATCH v3 09/11] md/raid10: align bio to io_opt
+Date: Mon, 12 Jan 2026 02:26:49 +0800
+Message-ID: <20260111182651.2097070-10-yukuai@fnnas.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260111182651.2097070-1-yukuai@fnnas.com>
 References: <20260111182651.2097070-1-yukuai@fnnas.com>
@@ -45,50 +45,28 @@ List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-raid5 internal implementaion indicates that if write bio is aligned to
-io_opt, then full stripe write will be used, which will be best for
-bandwidth because there is no need to read extra data to build new
-xor data.
-
-Simple test in my VM, 32 disks raid5 with 64kb chunksize:
-dd if=/dev/zero of=/dev/md0 bs=100M oflag=direct
-
-Before this patch:  782 MB/s
-With this patch:    1.1 GB/s
-
-BTW, there are still other bottleneck related to stripe handler, and
-require further optimization.
+The impact is not so significant for raid10 compared to raid5, however
+it's still more appropriate to issue IOs evenly to underlying disks.
 
 Signed-off-by: Yu Kuai <yukuai@fnnas.com>
 Reviewed-by: Li Nan <linan122@huawei.com>
 ---
- drivers/md/raid5.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/md/raid10.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 30a7069cbd0c..0160cbed7389 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -59,8 +59,7 @@
- #define UNSUPPORTED_MDDEV_FLAGS		\
- 	((1L << MD_FAILFAST_SUPPORTED) |	\
- 	 (1L << MD_FAILLAST_DEV) |		\
--	 (1L << MD_SERIALIZE_POLICY) |		\
--	 (1L << MD_BIO_ALIGN))
-+	 (1L << MD_SERIALIZE_POLICY))
- 
- 
- #define cpu_to_group(cpu) cpu_to_node(cpu)
-@@ -7817,8 +7816,7 @@ static int raid5_set_limits(struct mddev *mddev)
- 	 * Limit the max sectors based on this.
- 	 */
- 	lim.max_hw_sectors = RAID5_MAX_REQ_STRIPES << RAID5_STRIPE_SHIFT(conf);
--	if ((lim.max_hw_sectors << 9) < lim.io_opt)
--		lim.max_hw_sectors = lim.io_opt >> 9;
+diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+index 09328e032f14..2c6b65b83724 100644
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -4008,6 +4008,8 @@ static int raid10_set_queue_limits(struct mddev *mddev)
+ 	err = mddev_stack_rdev_limits(mddev, &lim, MDDEV_STACK_INTEGRITY);
+ 	if (err)
+ 		return err;
++
 +	md_config_align_limits(mddev, &lim);
+ 	return queue_limits_set(mddev->gendisk->queue, &lim);
+ }
  
- 	/* No restrictions on the number of segments in the request */
- 	lim.max_segments = USHRT_MAX;
 -- 
 2.51.0
 
