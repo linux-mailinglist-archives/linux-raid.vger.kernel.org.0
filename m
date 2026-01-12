@@ -1,39 +1,39 @@
-Return-Path: <linux-raid+bounces-6042-lists+linux-raid=lfdr.de@vger.kernel.org>
+Return-Path: <linux-raid+bounces-6043-lists+linux-raid=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-raid@lfdr.de
 Delivered-To: lists+linux-raid@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58408D10924
-	for <lists+linux-raid@lfdr.de>; Mon, 12 Jan 2026 05:30:03 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97356D1091F
+	for <lists+linux-raid@lfdr.de>; Mon, 12 Jan 2026 05:30:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4DE3E3041F4C
-	for <lists+linux-raid@lfdr.de>; Mon, 12 Jan 2026 04:29:40 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id CA17B301A4F4
+	for <lists+linux-raid@lfdr.de>; Mon, 12 Jan 2026 04:29:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C72C30DD24;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 551C130E822;
 	Mon, 12 Jan 2026 04:29:40 +0000 (UTC)
 X-Original-To: linux-raid@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B7C30E0DF
-	for <linux-raid@vger.kernel.org>; Mon, 12 Jan 2026 04:29:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 623C030DEDD
+	for <linux-raid@vger.kernel.org>; Mon, 12 Jan 2026 04:29:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768192176; cv=none; b=nb/4D149FuSiLeKOETQmZDQPYH1ZB34h7iXNPiQ1EuG5Nvzs3kBgkV3IFsxDqZu1W4bZ7FUphO1q8TKMGLBfVIjhDBTf4R8v4uB/RmSrwIkX/PJpA62BMOCZmVZ8zpi6OQguM/UjmDA1sacokRxI6Azoo6cK/11u5QVW5UZ4X8c=
+	t=1768192177; cv=none; b=euM51jCsH4dy54NxX4FDta08FS2x3poguB1YsrXO7QtNu+/WqqJsh7IOSxClNbyGUNB4ez/90J/bxrpHC1Al9NHZ4I6QNbCXbfWv6N3jxQqF03/2jJq9Fzn4Y8waPIi0vUL9uiSwu7WDHuc6sOTWzkGZcdDtC6rtuBIk9KiyLRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768192176; c=relaxed/simple;
-	bh=aedvWl2UHXJ1FS4PqDkEcCNvc4f602nSGiEfpgJaBdk=;
+	s=arc-20240116; t=1768192177; c=relaxed/simple;
+	bh=VcvRT2kU2+Gnxw5qLlh6oIKyHJ18/RTCihIZilmokSg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eytLz1wSaVfZFm5689flatHbts2g4srG7bZJ5vb1XeFYRFfHCJzIwo75aBQf25UwlRm1JP90s0ZlDlEm9V5SI6MdaPRZENYH/nGRuDyWtHhYuxN0N5SuCephKUctnlY5eRjrq7FumnfhZeiYe0oQy2UN9EK+43tz7OUIfTX8yYo=
+	 MIME-Version; b=TLTJUdxxfjFTfWqtyFbg+Rg4JisAhy4HslPcogPSQu70E2LnuZYCBSbuzzpX1oNZKiRA4ihqIEi7girXu2Fe4pTurGN7dJNnbft9LmeGvQWv3QGU4IBfFijHWbiankXMhJmKE9llI7yXbsClSZrrpAMdoQq6ItWai74zfBEJ8No=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55438C19423;
-	Mon, 12 Jan 2026 04:29:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A905C116D0;
+	Mon, 12 Jan 2026 04:29:34 +0000 (UTC)
 From: Yu Kuai <yukuai@fnnas.com>
 To: linux-raid@vger.kernel.org,
 	linan122@huawei.com
 Cc: yukuai@fnnas.com
-Subject: [PATCH v4 08/11] md/raid5: align bio to io_opt
-Date: Mon, 12 Jan 2026 12:28:54 +0800
-Message-ID: <20260112042857.2334264-9-yukuai@fnnas.com>
+Subject: [PATCH v4 09/11] md/raid10: align bio to io_opt
+Date: Mon, 12 Jan 2026 12:28:55 +0800
+Message-ID: <20260112042857.2334264-10-yukuai@fnnas.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260112042857.2334264-1-yukuai@fnnas.com>
 References: <20260112042857.2334264-1-yukuai@fnnas.com>
@@ -45,50 +45,28 @@ List-Unsubscribe: <mailto:linux-raid+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-raid5 internal implementaion indicates that if write bio is aligned to
-io_opt, then full stripe write will be used, which will be best for
-bandwidth because there is no need to read extra data to build new
-xor data.
-
-Simple test in my VM, 32 disks raid5 with 64kb chunksize:
-dd if=/dev/zero of=/dev/md0 bs=100M oflag=direct
-
-Before this patch:  782 MB/s
-With this patch:    1.1 GB/s
-
-BTW, there are still other bottleneck related to stripe handler, and
-require further optimization.
+The impact is not so significant for raid10 compared to raid5, however
+it's still more appropriate to issue IOs evenly to underlying disks.
 
 Signed-off-by: Yu Kuai <yukuai@fnnas.com>
 Reviewed-by: Li Nan <linan122@huawei.com>
 ---
- drivers/md/raid5.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/md/raid10.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 30a7069cbd0c..0160cbed7389 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -59,8 +59,7 @@
- #define UNSUPPORTED_MDDEV_FLAGS		\
- 	((1L << MD_FAILFAST_SUPPORTED) |	\
- 	 (1L << MD_FAILLAST_DEV) |		\
--	 (1L << MD_SERIALIZE_POLICY) |		\
--	 (1L << MD_BIO_ALIGN))
-+	 (1L << MD_SERIALIZE_POLICY))
- 
- 
- #define cpu_to_group(cpu) cpu_to_node(cpu)
-@@ -7817,8 +7816,7 @@ static int raid5_set_limits(struct mddev *mddev)
- 	 * Limit the max sectors based on this.
- 	 */
- 	lim.max_hw_sectors = RAID5_MAX_REQ_STRIPES << RAID5_STRIPE_SHIFT(conf);
--	if ((lim.max_hw_sectors << 9) < lim.io_opt)
--		lim.max_hw_sectors = lim.io_opt >> 9;
+diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+index 09328e032f14..2c6b65b83724 100644
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -4008,6 +4008,8 @@ static int raid10_set_queue_limits(struct mddev *mddev)
+ 	err = mddev_stack_rdev_limits(mddev, &lim, MDDEV_STACK_INTEGRITY);
+ 	if (err)
+ 		return err;
++
 +	md_config_align_limits(mddev, &lim);
+ 	return queue_limits_set(mddev->gendisk->queue, &lim);
+ }
  
- 	/* No restrictions on the number of segments in the request */
- 	lim.max_segments = USHRT_MAX;
 -- 
 2.51.0
 
